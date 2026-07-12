@@ -148,31 +148,36 @@ SAFEGUARDS and the runbook’s HARD STOP.
 
 ## Architecture (issue \#122 / XARCH-2 – module contract)
 
-**Execute the issue \#122 module-contract plan, Phase 1** (READY, Effort
+**Execute the issue \#122 module-contract plan, Phase 2** (READY, Effort
 S) – planning session DONE (S372):
-`docs/planning/issue122-module-contract-plan.md`. **Phase 1 fixes a
-real, reproduced user-facing bug:**
+`docs/planning/issue122-module-contract-plan.md`. **Phase 1 DONE – S373
+(2026-07-12):** fixed the reproduced user-facing bug –
 [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
 (exported) emits `indivMeanKin`/`gu` while
 [`makeGeneticSummaryTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticSummaryTable.md)
-(exported) consumes `meanKinship`/`genomeUniqueness`, so
-`makeGeneticSummaryTable(reportGV(ped)$report)` silently returns an
-**all-`NA` table** – no error, no warning. Phase 1 adds one internal
-`@noRd` normalizer and makes
+(exported) consumed `meanKinship`/`genomeUniqueness`, so
+`makeGeneticSummaryTable(reportGV(ped)$report)` silently returned an
+all-`NA` table. New internal `@noRd` normalizer
+(`R/normalizeGvReport.R`) +
 [`makeGeneticSummaryTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticSummaryTable.md)
-tolerant of both vocabularies. Additive; **breaks no exported contract**
-(deliberate – v2.0.0 is mid-CRAN resubmission); touches no module. See
-the plan’s §6 Phase 1 for completion criteria + verification commands.
-**Read the plan’s §7 (Dragons) first** – two will bite on contact in
-later phases: the GV/consumer kinship matrices are *scope*-different,
-not *value*-different (Dragon 1, measured); and ~40
-[`deparse()`](https://rdrr.io/r/base/deparse.html) source-grep tests
-**structurally pin the very `tryCatch` error-swallowing the issue asks
-us to remove** (Dragon 2), so Phases 2 and 4 turn them red by design.
-Phases 2-5 (shared full-pedigree kinship + dead-branch removal;
-vocabulary collapse; dead-surface pruning incl. the dead `shared$config`
-chain; contract note + guard test) each remain **one session**, in
-order.
+now tolerant of both vocabularies. Additive; broke no exported contract;
+touched no module (`NAMESPACE` unchanged). Verified end-to-end against
+`qcPed` (`makeGeneticSummaryTable(reportGV(qcPed)$report)` now populates
+correctly) and via full suite (0 failed/0 error/0 warning) +
+`devtools::check()` (0/0/0). See `CHANGELOG.md`. **Phase 2 next:** kill
+`modBreedingGroups`’ dead kinship-reuse branch; hoist one shared,
+memoized, full-pedigree kinship reactive into `appServer` for
+`modSummaryStatsServer`/`modBreedingGroupsServer`. **Read the plan’s §7
+(Dragons) first** – Dragon 1 (the GV/consumer kinship matrices are
+*scope*-different, not *value*-different –
+[`identical()`](https://rdrr.io/r/base/identical.html)-gate the fix) and
+Dragon 2 (~40 [`deparse()`](https://rdrr.io/r/base/deparse.html)
+source-grep tests **structurally pin the very `tryCatch`
+error-swallowing this phase changes** – triage them before touching
+source, per the plan’s §6 Step 0) both bite on contact in Phase 2.
+Phases 3-5 (vocabulary collapse; dead-surface pruning incl. the dead
+`shared$config` chain; contract note + guard test) each remain **one
+session**, in order, after Phase 2.
 
 **Issue \#123 (XARCH-5, string-column-keyed pipeline, no validated
 seam)** (DECISION NEEDED – needs its own planning session; Effort L) –

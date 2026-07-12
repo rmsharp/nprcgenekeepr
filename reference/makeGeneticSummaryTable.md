@@ -13,11 +13,15 @@ makeGeneticSummaryTable(geneticValues)
 
 - geneticValues:
 
-  data.frame containing genetic value columns:
+  data.frame containing genetic value columns, in either of two accepted
+  vocabularies:
 
-  - `meanKinship` - Mean kinship coefficients
+  - `meanKinship` / `genomeUniqueness` (the legacy names), or
 
-  - `genomeUniqueness` - Genome uniqueness values
+  - `indivMeanKin` / `gu` (`reportGV`'s own `$report` column names)
+
+  Both are normalized internally, so `reportGV(ped)$report` may be
+  passed directly.
 
 ## Value
 

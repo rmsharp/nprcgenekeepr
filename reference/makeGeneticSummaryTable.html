@@ -65,9 +65,13 @@ Median, Q3, Max) for mean kinship and genome uniqueness values.</p>
 
 
 <dl><dt id="arg-geneticvalues">geneticValues<a class="anchor" aria-label="anchor" href="#arg-geneticvalues"></a></dt>
-<dd><p>data.frame containing genetic value columns:</p><ul><li><p><code>meanKinship</code> - Mean kinship coefficients</p></li>
-<li><p><code>genomeUniqueness</code> - Genome uniqueness values</p></li>
-</ul></dd>
+<dd><p>data.frame containing genetic value columns, in
+either of two accepted vocabularies:</p><ul><li><p><code>meanKinship</code> / <code>genomeUniqueness</code> (the legacy names),
+or</p></li>
+<li><p><code>indivMeanKin</code> / <code>gu</code> (<code>reportGV</code>'s own
+<code>$report</code> column names)</p></li>
+</ul><p>Both are normalized internally, so <code>reportGV(ped)$report</code> may be
+passed directly.</p></dd>
 
 </dl></div>
     <div class="section level2">
