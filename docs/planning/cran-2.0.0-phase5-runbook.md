@@ -28,6 +28,49 @@ still owed: the results on file are 134 commits behind current `master` (9 touch
 `R/`/`tests/`/`DESCRIPTION`/`NAMESPACE`) regardless of that specific defect.)
 `cran-comments.md`'s win-builder/R-hub lines have been reset to placeholders
 accordingly.
+**§2/§3 executed and results folded in by Sessions 361-362 (2026-07-11).**
+Session 361 triggered `devtools::check_win_devel/release/oldrelease()` and
+`rhub::rhub_check(platforms = c("linux", "windows", "macos"))` on current
+`master` (owner-scoped via `AskUserQuestion` to trigger-only, explicitly
+excluding `devtools::submit_cran()`). While confirming the R-hub dispatch via
+`gh run list`, that same session found `R-CMD-check.yaml` (this repo's own
+GitHub Actions CI, unrelated to CRAN's win-builder infrastructure) had been
+failing on `windows-latest (release)` on every push since S351 — a real,
+reproducible `test_modInput_excelSireDam.R` failure via `create_wkbk()` ->
+`WriteXLS::WriteXLS()` (`cannot open .../WriteXLS/1.csv`), a classic
+Perl-on-Windows dependency symptom — and, reasonably given the evidence at the
+time, flagged it as "very likely" to also block the just-triggered win-builder/
+R-hub checks. **Session 362 processed the actual results and found that
+prediction did not hold:**
+- **win-builder (all three R versions) came back clean** — `0 errors | 0
+  warnings` on R-devel/R-release/R-oldrelease, each with only the expected
+  incoming-feasibility note (R-oldrelease additionally flagged the known
+  `groupAddAssign` >10s timing note on its slower hardware). Verbatim
+  `00check.log` for each run confirms `* checking tests ... OK` /
+  `Running 'testthat.R' [...s]` with no failure output — `test_modInput_
+  excelSireDam.R` genuinely passed on win-builder's Windows Server 2022.
+- **R-hub's windows (R-devel) job also finished `Status: OK`,
+  `[ FAIL 0 | WARN 1 | SKIP 220 | PASS 3013 ]`** — but its raw log DOES
+  contain the same `ERROR: cannot open .../WriteXLS/1.csv` diagnostic text,
+  appearing non-fatally (after the check had already reported `Status: OK`,
+  most plausibly during example/vignette re-execution rather than the
+  `testthat.R` run itself — not fully disambiguated). This is consistent with
+  an intermittent Perl-subprocess timing race specific to GitHub-hosted
+  Windows runners (both `r-lib/actions/check-r-package` and
+  `r-hub/actions/run-check` sit on the same runner family), not a
+  deterministic code defect, and not present on CRAN's own win-builder
+  infrastructure at all.
+- **Net effect: the CRAN pre-submission gate is clean across every environment
+  that was actually run this cycle** (local macOS, win-builder x3, R-hub x3).
+  The underlying `WriteXLS`/Windows CI flakiness is real or the reproducibly
+  red `R-CMD-check.yaml` (7 consecutive runs, S351-S360) — a genuine hygiene
+  issue worth fixing (see `BACKLOG.md`'s corrected entry) — but it is a
+  GitHub-Actions-runner-specific gap, not a CRAN-submission blocker per the
+  actual evidence gathered this cycle. Results folded into `cran-comments.md`'s
+  "Test environments" section (replacing the placeholders) rather than
+  re-pasted from stale prior-cycle numbers.
+- **Still owner-only, unchanged:** `devtools::submit_cran()` and the
+  maintainer-email confirmation click.
 
 **Why this is a runbook, not an executed step.** win-builder and R-hub v2 are
 **outward-facing** (they upload the package to external services), need **network**

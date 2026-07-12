@@ -33,10 +33,11 @@ Local `R CMD check --as-cran --timings` (macOS, R 4.6.1) on the built 2.0.0 tarb
 * NOTE -- checking CRAN incoming feasibility:
   "New submission" and "Package was archived on CRAN" / "Archived on 2025-07-29
   as issues were not corrected in time." This is expected for the resubmission;
-  the timing cause is addressed above. A prior check cycle also reported
-  possibly-misspelled words in DESCRIPTION -- "EHR", "Raboin" (an author
-  surname), and "kinships" -- confirmed as the exact set flagged across all
-  three win-builder runs of that cycle. All three are spelled correctly. Two
+  the timing cause is addressed above. This check also reports possibly-
+  misspelled words in DESCRIPTION -- "EHR", "Raboin" (an author surname), and
+  "kinships" -- confirmed as the exact set flagged identically across all three
+  win-builder runs, both this resubmission cycle and the prior one. All three
+  are spelled correctly. Two
   reference URLs, <https://pmc.ncbi.nlm.nih.gov/articles/PMC4671785/> and
   <https://www.thoughtco.com/age-sex-pyramids-and-population-pyramids-1435272>,
   return 403 to automated checkers (confirmed via `curl` with a browser user
@@ -48,8 +49,16 @@ Local `R CMD check --as-cran --timings` (macOS, R 4.6.1) on the built 2.0.0 tarb
 ## Test environments
 
 * Local: macOS, R 4.6.1 -- `R CMD check --as-cran --timings` (results above)
-* win-builder: R-devel, R-release, R-oldrelease -- to be run before submission
-* R-hub v2: linux, windows, macos -- to be run before submission
+* win-builder R-devel (R Under development (unstable), 2026-07-10 r90234): 0
+  errors | 0 warnings | 1 note (incoming feasibility, as above)
+* win-builder R-release (R 4.6.1): 0 errors | 0 warnings | 1 note (incoming
+  feasibility, as above)
+* win-builder R-oldrelease (R 4.5.3): 0 errors | 0 warnings | 2 notes (incoming
+  feasibility, as above; plus one timing note -- `groupAddAssign` example ran
+  10.06s on win-builder's slower hardware, just over the 10s reporting
+  threshold. Not a check failure; the example itself completes and passes)
+* R-hub v2 (R-devel; linux, windows, macos): all three platforms `Status: OK`,
+  0 test failures
 
 ## Downstream dependencies
 

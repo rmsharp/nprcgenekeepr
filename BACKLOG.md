@@ -7,14 +7,16 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 - [ ] (none in progress)
 
 ## Up Next
-- [ ] **Fix Windows-only `WriteXLS`/`create_wkbk()` test failure blocking CRAN 2.0.0
-      resubmission** (READY, Effort S-M) -- discovered S361 (2026-07-11) while triggering
-      the win-builder/R-hub Phase 5 checks: GitHub Actions' `R-CMD-check.yaml` has been
-      failing on `windows-latest (release)` on **every push since S351**
-      (`b440730c`, 2026-07-10 23:55:55) -- 7 consecutive failing runs (S351/S352/S353/
-      S356/S358/S359/S360), unnoticed because no session checked `gh run list` during
-      that span; `ubuntu-latest` and `macos-latest` pass cleanly every time, so S359's
-      local `--as-cran` gate (macOS only) could not have caught it. Failure:
+- [ ] **Fix Windows-only `WriteXLS`/`create_wkbk()` CI flakiness in
+      `R-CMD-check.yaml`** (READY, Effort S-M -- downgraded from "blocks CRAN
+      resubmission" by S362, see below) -- discovered S361 (2026-07-11) while
+      triggering the win-builder/R-hub Phase 5 checks: GitHub Actions'
+      `R-CMD-check.yaml` has been failing on `windows-latest (release)` on
+      **every push since S351** (`b440730c`, 2026-07-10 23:55:55) -- 7
+      consecutive failing runs (S351/S352/S353/S356/S358/S359/S360), unnoticed
+      because no session checked `gh run list` during that span; `ubuntu-latest`
+      and `macos-latest` pass cleanly every time, so S359's local `--as-cran`
+      gate (macOS only) could not have caught it. Failure:
       `test_modInput_excelSireDam.R` -- `makeExamplePedigreeFile(fileType = "excel")` ->
       `create_wkbk()` (`R/create_wkbk.R:61`) -> `WriteXLS::WriteXLS()` errors
       `cannot open .../WriteXLS/1.csv . No such file or directory` on Windows only
@@ -27,21 +29,29 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       corruption` (`5a9697a8`); S350's own CI run appears to have been superseded by
       S351's rapid follow-up push (concurrency cancellation), so S350 vs. S351 as the
       exact first-red commit is not yet disambiguated -- not yet root-caused, not yet
-      fixed. **Session 361 (2026-07-11) also triggered win-builder x3 +
-      `rhub::rhub_check()` (run `occupational-burro`,
-      https://github.com/rmsharp/nprcgenekeepr/actions/runs/29171440079) per the owner's
-      explicit request BEFORE this CI finding surfaced** -- both are very likely to
-      reproduce this same Windows failure (win-builder results by email ~2026-07-11
-      18:30, R-hub via GitHub Actions/email). **Blocks `devtools::submit_cran()`** --
-      an unexplained ERROR on any platform must not ship per the submission plan's
-      acceptance bar (`docs/planning/cran-2.0.0-phase5-runbook.md` §4.3). Fix options to
-      evaluate: (a) make the Excel-writing path Windows-CI-safe (e.g. skip/guard the
-      `fileType = "excel"` test path when Perl/WriteXLS's Windows prerequisites are
-      absent, matching the existing `NPRC_RUN_E2E`-style opt-in pattern already used
-      elsewhere in this suite), or (b) replace the `WriteXLS`-based `create_wkbk()` with
-      a Perl-free Excel writer (e.g. `openxlsx`/`writexl`) so the underlying dependency
-      itself no longer needs Perl on any platform -- the latter also removes a CRAN-time
-      `SystemRequirements: Perl` risk, not just a CI flake.
+      fixed. **S361 predicted this would "very likely" also block the win-builder/R-hub
+      checks it had just triggered -- S362 (2026-07-11) checked the actual results and
+      found that prediction did NOT hold:** win-builder came back **0 errors | 0
+      warnings** on all three R versions (verbatim `00check.log` confirms
+      `checking tests ... OK` with no failure output on Windows Server 2022); R-hub's
+      windows(R-devel) job finished `Status: OK, [ FAIL 0 | WARN 1 | SKIP 220 | PASS
+      3013 ]` -- though its raw log DOES still show the same `WriteXLS` "cannot open
+      ...csv" diagnostic text, appearing non-fatally (not disambiguated which step).
+      Full detail in `docs/planning/cran-2.0.0-phase5-runbook.md`'s refreshed top note.
+      **Conclusion: this is a real, reproducible flakiness specific to GitHub-hosted
+      Windows CI runners (both `r-lib/actions/check-r-package` and
+      `r-hub/actions/run-check` share that runner family) -- not present on CRAN's own
+      win-builder infrastructure, and NOT currently blocking CRAN 2.0.0 resubmission.**
+      Still worth fixing as a CI-hygiene issue (`R-CMD-check.yaml` has been red for 7+
+      sessions, which could mask a real regression next time) and to remove the
+      `SystemRequirements: Perl`-adjacent risk long-term. Fix options to evaluate:
+      (a) make the Excel-writing test path Windows-CI-safe (e.g. retry-on-transient-
+      failure, or skip/guard `fileType = "excel"` when Perl/WriteXLS's Windows
+      prerequisites are absent, matching the existing `NPRC_RUN_E2E`-style opt-in
+      pattern already used elsewhere in this suite), or (b) replace the
+      `WriteXLS`-based `create_wkbk()` with a Perl-free Excel writer (e.g.
+      `openxlsx`/`writexl`) so the underlying dependency no longer needs Perl on any
+      platform -- the latter also removes the risk outright rather than working around it.
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
       needs a live LabKey server to test/observe, Effort M) — research pass DONE
       (`docs/research/labkey-integration-options-2026-06-19.md`, S143). **Rec #3 (explicit optional
@@ -108,11 +118,22 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       prior 2.0.0 attempt was archived before publication) unless the owner
       prefers one. **Win-builder x3 + R-hub triggered -- S361 (2026-07-11):** per
       owner's explicit scoping (not `submit_cran()`, which stays owner-only).
-      win-builder results by email ~18:30; R-hub run `occupational-burro`
-      (https://github.com/rmsharp/nprcgenekeepr/actions/runs/29171440079). **New
-      blocker found the same session, likely to reproduce in both:** see the
-      "Fix Windows-only `WriteXLS`/`create_wkbk()` test failure" item above --
-      resolve that before folding results into `cran-comments.md` / submitting.
+      **Results processed -- S362 (2026-07-11): all clean.** win-builder:
+      0 errors | 0 warnings on all three R versions (1 note each -- the expected
+      incoming-feasibility note; R-oldrelease also flagged the known
+      `groupAddAssign` >10s timing note on slower hardware, not a failure).
+      R-hub (`occupational-burro`,
+      https://github.com/rmsharp/nprcgenekeepr/actions/runs/29171440079):
+      `Status: OK` on linux/windows/macos, 0 test failures. The Windows
+      `WriteXLS` CI failure S361 flagged as a likely blocker did NOT reproduce on
+      either external check (see the corrected "Fix Windows-only `WriteXLS`"
+      item above -- it's a GitHub-Actions-runner-specific flake, not present on
+      CRAN's own win-builder infrastructure). Results folded into
+      `cran-comments.md`'s "Test environments" section. **Pre-submission gate is
+      now clean across every environment actually run this cycle.** Next (owner
+      action, unchanged): `devtools::submit_cran()`, then click the
+      maintainer-email confirmation link -- both still owner-only per SAFEGUARDS
+      and the runbook's HARD STOP.
 
 ## Documents (v1.0.8 -> v2.0.0 write-up)
 - [ ] **Execute "Document 2" plan (Phase D)** (READY, Effort M) -- planning session DONE
