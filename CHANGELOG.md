@@ -43,6 +43,14 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-12 · [ad hoc] S372 close-out commits (ledger, learnings, backlog, handoff receipt)
+- **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap in
+  the same session rather than leaving it for the next session's Phase 0 reconcile.
+  Records the close-out commit (`919e2d37`: this ledger entry + `PROJECT_LEARNINGS.md`
+  Learning 343 + `CLAUDE.md` pointer bump + `BACKLOG.md` Architecture section +
+  `SESSION_NOTES.md`/`HANDOFFS.md` handoff, `status: pending` -> `complete`) that
+  finalized the Session 372 handoff.
+
 ### 2026-07-12 · [issue #122] Architecture plan for XARCH-2 (implicit/inconsistent module contract) (Session 372)
 - **Deliverable:** `docs/planning/issue122-module-contract-plan.md` (676 lines,
   commit `12e30f80`) -- an `ARCHITECTURE_WORKSTREAM.md` plan for GitHub issue
