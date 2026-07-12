@@ -77,18 +77,35 @@ session need this block to continue the work without re-reading the whole repo?*
 ```handoff
 session: S373
 date: 2026-07-12
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Execute Phase 1 of docs/planning/issue122-module-contract-plan.md -- new internal R/normalizeGvReport.R (@noRd) + makeGeneticSummaryTable() gains dual-vocabulary tolerance. Following DEVELOPMENT_WORKSTREAM.md, gated by the project's TDD contract (RED -> GREEN -> REFACTOR).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- Phase 1 of docs/planning/issue122-module-contract-plan.md executed and committed. New internal R/normalizeGvReport.R (@noRd) + makeGeneticSummaryTable() gains dual-vocabulary tolerance, fixing the reproduced all-NA-table bug. No Shiny module touched, NAMESPACE unchanged. Phases 2-5 remain separate future sessions, starting with Phase 2.
+what_was_done: Executed Phase 1 following DEVELOPMENT_WORKSTREAM.md under strict TDD (RED -> GREEN -> REFACTOR, 3 AskUserQuestion phase gates, all approved). reportGV() (exported) emits indivMeanKin/gu; makeGeneticSummaryTable() (exported) consumed only the renamed meanKinship/genomeUniqueness, so makeGeneticSummaryTable(reportGV(ped)$report) silently returned an all-NA table with no error or warning. Added internal normalizeGvReport() (renames meanKinship/genomeUniqueness -> indivMeanKin/gu only when the canonical name is absent; idempotent; NULL-safe) and wired it into makeGeneticSummaryTable() after the existing NULL/empty guard. RED: 6 new tests (4 in new test_normalizeGvReport.R, 2 in test_makeGeneticSummaryTable.R) all failed for the predicted reason before any implementation. GREEN: minimum implementation, all 6 pass, affected-file suite literal 0 failed/0 error/0 warning (Dragon 6 baseline held). Hit and root-caused a commented_code_linter false positive (a bare #122 issue reference mid-comment tripped it -- see PROJECT_LEARNINGS.md Learning 344(a)); fixed by dropping the #. REFACTOR: widened roxygen @param on both functions, ran devtools::document() standalone (regenerated only man/makeGeneticSummaryTable.Rd, NAMESPACE untouched). Full verification: full-package suite 0/0/0 (169 skip baseline unchanged), lintr::lint_package() 0 lints, devtools::check() 0 errors/0 warnings/0 notes (~3m20s). End-to-end verified against real qcPed data: makeGeneticSummaryTable(reportGV(qcPed)$report) now populates correctly. Implementation committed at exactly 5 files (e51ee11b, the SAFEGUARDS blast-radius cap); BACKLOG.md's Phase-1-DONE/Phase-2-next update committed separately (cc6f6e8a). Also: PROJECT_LEARNINGS.md Learning 344, CLAUDE.md pointer (343->344, 372->373), CHANGELOG.md entry.
+next_steps: Pick up PHASE 2 of the plan (BACKLOG.md, READY, Effort S) -- kill modBreedingGroups' dead kinship-reuse branch (R/modBreedingGroups.R:191-196) and hoist one shared, memoized, full-pedigree kinship reactive into appServer for both modSummaryStatsServer and modBreedingGroupsServer. READ the plan's section 7 Dragons FIRST: Dragon 1 (kinship matrices are scope-different, not value-different -- identical()-gate the fix, both with and without focal animals entered) and Dragon 2 (~40 deparse() source-grep tests structurally pin the exact tryCatch this phase changes -- triage via the plan's section 6 Step 0 grep BEFORE touching source) both bite on contact in Phase 2. Phase 2 DOES change runtime wiring, so Phase 3E's live smoke test (callr::r_bg() + shiny::runApp(), per S369 precedent) is mandatory this time, unlike this session's legitimate N/A. Separately unchanged: CRAN resubmission (READY, owner-only), Document 2 Phase D (READY, Effort M), LabKey remainder (BLOCKED), issue #123/XARCH-5 (DECISION NEEDED, needs its own planning session).
+key_files: R/normalizeGvReport.R (new, the normalizer); R/makeGeneticSummaryTable.R:26-46 (call site + widened @param); tests/testthat/test_normalizeGvReport.R (new, 4 tests); tests/testthat/test_makeGeneticSummaryTable.R:36-56 (2 new tests); man/makeGeneticSummaryTable.Rd (regenerated). Plan: docs/planning/issue122-module-contract-plan.md section 6 Phase 1 (done) / Phase 2 (next), section 7 Dragons.
+gotchas: (1) Dragon 1 and Dragon 2 (see next_steps) both bite on contact in Phase 2 -- read plan section 7 in full first. (2) Phase 2 changes runtime wiring -- Phase 3E live smoke test is mandatory, unlike this session. (3) The plan's identical() verification gate for Phase 2 is mandatory, not optional -- capture before/after both with and without focal animals entered. (4) commented_code_linter false positive (Learning 344(a)): a bare #NNN issue reference immediately after a single bare word in an R source comment can trip lintr's commented-code check (R's own comment-truncation makes the surviving prefix parse as valid code) -- write "issue 122" not "issue #122" in R source comments, or verify empirically in a scratch file if unsure. (5) makeGeneticSummaryTable() still has zero live callers in any Shiny module after this session -- Phase 1 fixed the exported-function contract bug but did not wire it into the app; that wiring is out of this plan's scope entirely (not deferred to a later phase, just not part of issue #122).
+runtime_smoke: n/a -- no runtime-loaded path changed. Explicit FM #24 determination: grep -rln "makeGeneticSummaryTable" R/ shows zero call sites in any mod*.R or appServer.R (only its own tests and a @seealso doc reference it) -- not wired into the running Shiny app at all, so there is no live UI path this change touches. NAMESPACE unchanged (no exported signature moved).
+changelog_ref: CHANGELOG.md 2026-07-12 "[issue #122] Phase 1: normalize GV report vocabulary at the seam (Session 373)"
+commit: e51ee11b
 ```
+
+**Report (Phase 3G).** Deliverable: Phase 1 of the issue #122 module-contract plan, executed and
+committed (`e51ee11b`). `reportGV()` (exported) emits `indivMeanKin`/`gu`; `makeGeneticSummaryTable()`
+(exported) consumed only the renamed `meanKinship`/`genomeUniqueness`, so composing them silently
+returned an all-`NA` table. Fixed with one new internal (`@noRd`) normalizer, additive, no exported
+contract broken, no Shiny module touched. Verified by strict TDD (RED failed for the predicted
+reason, GREEN minimal, REFACTOR docs-only) and by execution against the package's own `qcPed` data
+-- `makeGeneticSummaryTable(reportGV(qcPed)$report)` now populates correctly.
+
+**+/- self-score (9/10).** **+** Held strict TDD faithfully with 3 approved phase gates; ran the
+plan's own Dragon-2 pre-check proactively rather than assuming exemption; root-caused a `lintr`
+false positive by genuine bisection instead of suppressing it (now `PROJECT_LEARNINGS.md` Learning
+344(a)); verified the fix by execution against real package data, not just unit tests; held the
+5-file blast-radius cap; ran the full `devtools::check()` build-equivalent even though not
+explicitly demanded by the plan's Phase 1 verification list. **-** The lint bisection took several
+scratch-file iterations to isolate the exact trigger -- a minor efficiency cost, though it produced
+a reusable, durable finding rather than being pure overhead.
 
 ```handoff
 session: S372

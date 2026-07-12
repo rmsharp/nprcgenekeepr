@@ -43,6 +43,25 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-12 · [issue #122] Phase 1: normalize GV report vocabulary at the seam (Session 373)
+- **Deliverable:** Executed Phase 1 of `docs/planning/issue122-module-contract-plan.md`
+  (commit `e51ee11b`), following `DEVELOPMENT_WORKSTREAM.md` under strict TDD
+  (RED -> GREEN -> REFACTOR, 3 `AskUserQuestion` phase gates). `reportGV()` (exported)
+  emits `indivMeanKin`/`gu`; `makeGeneticSummaryTable()` (exported) consumed only the
+  renamed `meanKinship`/`genomeUniqueness`, so `makeGeneticSummaryTable(reportGV(ped)
+  $report)` silently returned an all-`NA` table with no error or warning. New internal
+  (`@noRd`) `R/normalizeGvReport.R` maps either vocabulary onto `reportGV()`'s own
+  canonical column names; `makeGeneticSummaryTable()` now calls it internally. Additive:
+  `NAMESPACE` unchanged, legacy `meanKinship`/`genomeUniqueness` input still works
+  byte-for-byte (pinned by a new `identical()` regression test). Verified: RED tests
+  failed for the predicted reason before the fix; full suite 0 failed/0 error/0 warning
+  (169 skip, baseline unchanged) after; `lintr::lint_package()` 0 lints; `devtools::check()`
+  0 errors/0 warnings/0 notes; end-to-end against `qcPed` confirms
+  `makeGeneticSummaryTable(reportGV(qcPed)$report)` now populates correctly (was all-`NA`).
+  `BACKLOG.md` updated (commit `cc6f6e8a`): Phase 1 DONE, Phase 2 (dead kinship-reuse
+  branch + shared full-pedigree kinship reactive) now the READY item. Phases 2-5 remain
+  separate future sessions per the plan's session-boundary gates.
+
 ### 2026-07-12 · [ad hoc] S372 close-out commits (ledger, learnings, backlog, handoff receipt)
 - **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap in
   the same session rather than leaving it for the next session's Phase 0 reconcile.
