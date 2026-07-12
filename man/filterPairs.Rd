@@ -4,7 +4,11 @@
 \alias{filterPairs}
 \title{Filter kinship pairs by the animals' sexes}
 \usage{
-filterPairs(kin, ped, ignore = list(c("F", "F")))
+filterPairs(
+  kin,
+  ped,
+  ignore = list(c(sexCodes[["female"]], sexCodes[["female"]]))
+)
 }
 \arguments{
 \item{kin}{a dataframe with columns \code{id1}, \code{id2}, and
