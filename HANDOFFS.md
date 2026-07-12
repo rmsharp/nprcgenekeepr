@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S365
+date: 2026-07-11
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Resolve BACKLOG.md's "Tracker reconciliation" (DECISION NEEDED) item -- decide whether the remaining XARCH architecture findings get filed as GitHub issues or stay BACKLOG-only.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S364
 date: 2026-07-11
 status: complete
