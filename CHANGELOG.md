@@ -43,6 +43,14 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-12 · [ad hoc] S368 close-out commits (backlog, learning 339, session notes, handoff receipt)
+- **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap
+  in the same session rather than leaving it for the next session's Phase 0
+  reconcile. Records the two close-out commits (`0f64fa09`: ledger/learnings/
+  backlog; `48597192`: session notes + handoff receipt) that finalized this
+  session's `HANDOFFS.md` receipt (`status: pending` → `complete`) and
+  `SESSION_NOTES.md` handoff.
+
 ### 2026-07-12 · [ad hoc] Implemented BACKLOG.md's XARCH-6 remainder: de-duplicated qcStudbook() calls (Session 368)
 - **Deliverable:** `runQcStudbook()` now returns the raw first-pass `errorLst`
   alongside its existing `cleaned`/`qcResult` fields (all 3 return paths), so
