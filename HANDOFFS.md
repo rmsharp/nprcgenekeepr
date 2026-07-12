@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S371
+date: 2026-07-12
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Resolve the S358-flagged untracked-vignette-files/PED_GV_AUDIT.html policy question (PROJECT_LEARNINGS.md Learning 308). Owner decided (AskUserQuestion): delete PED_GV_AUDIT_2026-05-30.html (root, stale pandoc render of the tracked .md); delete vignettes/articles/engineering-the-2.0.0-release.html + _files/ (stale quarto render, matches the other 7 tracked articles' precedent); extend vignettes/articles/.gitignore with *.html/*_files/ patterns so future renders don't leave stray untracked output.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S370
 date: 2026-07-12
 status: complete
