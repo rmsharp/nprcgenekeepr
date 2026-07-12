@@ -16,16 +16,18 @@ validated seam) are STILL OPEN and owner-directed to GitHub issues #122 and #123
 respectively -- track them there, not here. XARCH-4 (sex-code literal
 centralization) is now also fully RESOLVED -- S367 (2026-07-12): see
 `CHANGELOG.md`. XARCH-6 (`qcStudbook()`/`modInput.R` multi-call redundancy) is
-now also fully RESOLVED -- S368 (2026-07-12): see `CHANGELOG.md`. XARCH-8 is
-PARTIALLY resolved; its narrower remaining gap (not the original full-scope
-recommendation, which is already partly superseded) is tracked below.*
-- [ ] **XARCH-8 remainder: fold column-list functions into `getSiteInfo()`**
-      (READY, Effort S) -- the dangerous duplicate-config-parser half is already
-      fixed (issue #50, S85: `appServer.R` now goes through `loadSiteConfig()` ->
-      `getSiteInfo()`). `getRequiredCols()`/`getPossibleCols()`/
-      `getIncludeColumns()` remain three separate, unrelated exported functions,
-      not referenced from `getSiteInfo()` or folded into any merged
-      defaults-then-override profile. See audit doc §3 XARCH-8.
+now also fully RESOLVED -- S368 (2026-07-12): see `CHANGELOG.md`. XARCH-8's
+narrower remaining gap is now also fully RESOLVED -- S369 (2026-07-12): see
+`CHANGELOG.md`. No items remain in this section.*
+- [ ] **Regenerate `man/filterPairs.Rd` for real** (READY, Effort XS) --
+      `filterPairs()`'s default arg was changed (S367, `"F"` -> `sexCodes[["female"]]`)
+      but `devtools::document()` was never run afterward to commit the
+      regenerated doc. Every session since that has run `devtools::document()`
+      for an unrelated roxygen edit (S368, S369) has seen this file regenerate
+      as an unrelated diff and reverted it via `git checkout` rather than fix it,
+      per FM #8 (stay on task). Now recurred 3 sessions running -- the fix is one
+      `devtools::document()` run with no other roxygen edit needed, committed on
+      its own as a docs-only change.
 
 ## Up Next
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
