@@ -43,6 +43,16 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-11 · [ad hoc] Backfilled (reconcile-on-read): S364's own close-out commit (Session 365)
+- **Deliverable:** Phase 0 ledger reconcile found `9eb07f0e` (S364's final
+  "close-out (session notes, handoff receipt)" commit) undocumented in
+  `CHANGELOG.md` — the same self-referencing gap S364 itself backfilled for
+  S363's `002eb191` at the start of this session's predecessor. The commit
+  finalized S364's `HANDOFFS.md` receipt (`status: pending` -> `complete`,
+  all six fields filled) and appended S364's full handoff to
+  `SESSION_NOTES.md`; no new deliverable, no code change. Backfilled per
+  `SESSION_RUNNER.md` Phase 0 step 6, before the orientation report.
+
 ### 2026-07-11 · [ad hoc] Fixed `test_vignettes_no_deprecated_minParentAge.R`'s chunk-blind false positive (Session 364)
 - **Deliverable:** Made the vignette checker chunk-aware so it stops flagging
   historical narrative prose as a live deprecated call. Owner-directed via the
