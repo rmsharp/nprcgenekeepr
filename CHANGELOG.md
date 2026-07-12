@@ -43,6 +43,18 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-12 · [ad hoc] Moved BACKLOG.md's Architecture follow-ups section to the top (Session 366)
+- **Deliverable:** Relocated the XARCH-4/6/8 remainder items ("Architecture
+  follow-ups") from the bottom of `BACKLOG.md` to directly after `## Active`,
+  ahead of `## Up Next`/`## Documents`/`## Audit follow-ups`, per owner direction
+  given mid-Phase-0-priorities-picker. Pure reorder — diff confirmed 34
+  insertions/34 deletions with identical content, no text changed. Commit
+  `ba9d7801`.
+
+### 2026-07-12 · [ad hoc] Session 366 claim (BACKLOG.md reorder)
+- **Deliverable:** Claimed the session to move `BACKLOG.md`'s Architecture
+  follow-ups section to the top. Commit `763af19a`.
+
 ### 2026-07-11 · [ad hoc] S365 close-out commit (session notes, handoff receipt)
 - **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap
   in the same session rather than leaving it for S366's Phase 0 reconcile.
