@@ -43,6 +43,14 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-12 · [ad hoc] S370 close-out commits (learning 341, backlog, session notes, handoff receipt)
+- **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier
+  gap in the same session rather than leaving it for the next session's
+  Phase 0 reconcile. Records the two close-out commits (`7064f834`:
+  ledger/learnings/backlog; `c4091be3`: session notes + handoff receipt)
+  that finalized this session's `HANDOFFS.md` receipt (`status: pending`
+  -> `complete`) and `SESSION_NOTES.md` handoff.
+
 ### 2026-07-12 · [ad hoc] Regenerated stale man/filterPairs.Rd via standalone devtools::document() (Session 370)
 - **Deliverable:** `man/filterPairs.Rd`'s `\usage{}` line now matches the live
   `filterPairs()` signature (`ignore = list(c(sexCodes[["female"]],

@@ -87,7 +87,7 @@ key_files: man/filterPairs.Rd (regenerated \usage{} line only), BACKLOG.md (reso
 gotchas: BACKLOG.md's Architecture follow-ups section is now durably empty -- don't expect another item there without a fresh audit. No other man/*.Rd staleness was audited (correctly out of scope for this dedicated tiny item; a broader sweep would be its own future task if warranted).
 runtime_smoke: n/a -- docs-only. No production source or runtime-loaded path changed; man/filterPairs.Rd is rendered documentation only (?filterPairs, pkgdown), not loaded by any Shiny runtime path. Explicit determination per FM #24, not a default skip.
 changelog_ref: CHANGELOG.md 2026-07-12 "Regenerated stale man/filterPairs.Rd via standalone devtools::document() (Session 370)"
-commit: pending
+commit: 0b85750c
 ```
 
 ```handoff
