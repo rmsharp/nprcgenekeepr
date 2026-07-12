@@ -43,6 +43,15 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-12 · [ad hoc] S373 close-out commits (learnings, backlog pointer, ledger, handoff receipt)
+- **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap in the
+  same session rather than leaving it for the next session's Phase 0 reconcile. Records
+  the close-out commit (`42035bdd`: this ledger entry + `PROJECT_LEARNINGS.md` Learning
+  344 + `CLAUDE.md` pointer bump + `SESSION_NOTES.md`/`HANDOFFS.md` handoff,
+  `status: pending` -> `complete`) that finalized the Session 373 handoff. Also covers
+  the `BACKLOG.md` Phase-1-DONE/Phase-2-next update (`cc6f6e8a`), already committed
+  ahead of close-out.
+
 ### 2026-07-12 · [issue #122] Phase 1: normalize GV report vocabulary at the seam (Session 373)
 - **Deliverable:** Executed Phase 1 of `docs/planning/issue122-module-contract-plan.md`
   (commit `e51ee11b`), following `DEVELOPMENT_WORKSTREAM.md` under strict TDD
