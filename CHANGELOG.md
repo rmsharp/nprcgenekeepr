@@ -43,6 +43,13 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-12 · [ad hoc] S366 close-out commit (session notes, handoff receipt)
+- **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap
+  in the same session rather than leaving it for S367's Phase 0 reconcile.
+  Records the close-out commit (`67f67f5e`) that finalized this session's
+  `HANDOFFS.md` receipt (`status: pending` → `complete`) and appended this
+  session's full handoff to `SESSION_NOTES.md`.
+
 ### 2026-07-12 · [ad hoc] Moved BACKLOG.md's Architecture follow-ups section to the top (Session 366)
 - **Deliverable:** Relocated the XARCH-4/6/8 remainder items ("Architecture
   follow-ups") from the bottom of `BACKLOG.md` to directly after `## Active`,
