@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S373
+date: 2026-07-12
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Execute Phase 1 of docs/planning/issue122-module-contract-plan.md -- new internal R/normalizeGvReport.R (@noRd) + makeGeneticSummaryTable() gains dual-vocabulary tolerance. Following DEVELOPMENT_WORKSTREAM.md, gated by the project's TDD contract (RED -> GREEN -> REFACTOR).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S372
 date: 2026-07-12
 status: complete
