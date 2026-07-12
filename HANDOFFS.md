@@ -84,6 +84,22 @@ block to continue the work without re-reading the whole repo?*
 ------------------------------------------------------------------------
 
 ``` handoff
+session: S366
+date: 2026-07-12
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- BACKLOG.md's "Architecture follow-ups" (XARCH-4/6/8 remainder) section relocated to the top of the backlog, directly after ## Active, ahead of ## Up Next/## Documents/## Audit follow-ups. Pure reorder, no content changed.
+what_was_done: AskUserQuestion picker returned "XARCH-4: centralize sex codes" but a [Request interrupted by user] event + the user's plain-text imperative ("move all of the XARCh items to top of backlog") arrived in the same exchange; treated the imperative as authoritative, not the stale picker answer (see PROJECT_LEARNINGS.md Learning 337). Claimed (763af19a, 2 files). Re-read BACKLOG.md fresh, moved the Architecture follow-ups section via 2 Edit calls (remove from bottom, insert after ## Active). Verified via git diff --stat: 34 insertions/34 deletions, content byte-identical. Committed (ba9d7801, 1 file). Added PROJECT_LEARNINGS.md Learning 337, bumped CLAUDE.md pointer (336->337, 365->366), added 2 CHANGELOG.md entries (claim, reorder work).
+next_steps: The now-top-of-backlog XARCH-4/6/8 remainder items (Effort S each) are natural next picks. Standing open items unchanged: LabKey remainder (BLOCKED), CRAN resubmission (READY, owner-only devtools::submit_cran() + email click), Document 2 Phase D (READY). The untracked vignettes/articles/*.html / PED_GV_AUDIT_2026-05-30.html policy question is still open (flagged S358 through S366) -- see PROJECT_LEARNINGS.md Learning 308 for root cause.
+key_files: BACKLOG.md (Architecture follow-ups section relocated to top; no content changed), PROJECT_LEARNINGS.md Learning 337, CLAUDE.md (pointer), CHANGELOG.md
+gotchas: This was a pure REORDER -- XARCH-4/6/8 were relocated, not started or implemented. XARCH-2/XARCH-5 remain tracked exclusively as GitHub issues #122/#123, do not re-add to BACKLOG.md. A user's plain-text message that arrives concurrently with an AskUserQuestion picker's tool result supersedes that result -- don't execute a picker answer without checking for a same-exchange override (Learning 337).
+runtime_smoke: n/a -- docs-only, no R/, tests/, app startup, or wiring code touched.
+changelog_ref: CHANGELOG.md 2026-07-12 entries for Session 366 (claim, reorder work)
+commit: ba9d7801
+```
+
+``` handoff
 session: S365
 date: 2026-07-11
 status: complete

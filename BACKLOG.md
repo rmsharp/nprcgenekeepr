@@ -8,6 +8,55 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 (none in progress)
 
+## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
+
+*Resolves the former “Tracker reconciliation” decision item (S365) –
+`docs/audits/XARCH_TRACKER_RECONCILIATION_AUDIT_2026-07-11.md`
+re-verified all 8 XARCH-1..8 findings against current source rather than
+trusting the six-week-old audit text. XARCH-1/3/7 are fully RESOLVED (no
+further tracking). XARCH-2 (implicit/ inconsistent module contract) and
+XARCH-5 (string-column-keyed pipeline, no validated seam) are STILL OPEN
+and owner-directed to GitHub issues \#122 and \#123 respectively – track
+them there, not here. XARCH-4/6/8 are PARTIALLY resolved; their narrower
+remaining gaps (not the original full-scope recommendations, which are
+already partly superseded) are tracked below.* - \[ \] **XARCH-4
+remainder: centralize sex-code literals** (READY, Effort S) – the
+`minParentAge`/species-age half of this finding is fully centralized
+(`resolveBreedingAge()` + the `speciesGestation` config table). Only the
+`M`/`F`/`U`/`H` sex-code literals remain scattered uncentralized across
+`getPotentialSires.R:22`, `calculateSexRatio.R:80`, `fillBins.R:27,31`,
+`filterPairs.R:34`, `modBreedingGroups.R:330,443-444`,
+`modSummaryStats.R:797,807` – no exported `sexCodes` constant or
+`founderSexFilter` concept exists. See audit doc §3 XARCH-4. - \[ \]
+**XARCH-6 remainder:
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)/`modInput.R`
+multi-call redundancy** (READY, Effort S) –
+[`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md)/[`processQcStudbookResult()`](https://github.com/rmsharp/nprcgenekeepr/reference/processQcStudbookResult.md)
+already give most callers one clean contract. `modInput.R:485-525` still
+calls
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+directly AND separately calls
+[`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md)
+(which itself calls
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+twice) – three
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+invocations per QC run. Already flagged as known “future polish” in
+`docs/planning/shiny-module-conversion-plan.md:85,343`. See audit doc §3
+XARCH-6. - \[ \] **XARCH-8 remainder: fold column-list functions into
+[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)**
+(READY, Effort S) – the dangerous duplicate-config-parser half is
+already fixed (issue \#50, S85: `appServer.R` now goes through
+[`loadSiteConfig()`](https://github.com/rmsharp/nprcgenekeepr/reference/loadSiteConfig.md)
+-\>
+[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)).
+[`getRequiredCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getRequiredCols.md)/[`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md)/
+[`getIncludeColumns()`](https://github.com/rmsharp/nprcgenekeepr/reference/getIncludeColumns.md)
+remain three separate, unrelated exported functions, not referenced from
+[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
+or folded into any merged defaults-then-override profile. See audit doc
+§3 XARCH-8.
+
 ## Up Next
 
 **Act on the LabKey integration research recommendations** (BLOCKED –
@@ -171,52 +220,3 @@ the control works end to end as of S351.
 resolved — see `CHANGELOG.md`. Per-item reachability notes and traps
 live in `CLAUDE.md` “Project-specific Learnings”.)* - \[ \] (none
 remaining)
-
-## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
-
-*Resolves the former “Tracker reconciliation” decision item (S365) –
-`docs/audits/XARCH_TRACKER_RECONCILIATION_AUDIT_2026-07-11.md`
-re-verified all 8 XARCH-1..8 findings against current source rather than
-trusting the six-week-old audit text. XARCH-1/3/7 are fully RESOLVED (no
-further tracking). XARCH-2 (implicit/ inconsistent module contract) and
-XARCH-5 (string-column-keyed pipeline, no validated seam) are STILL OPEN
-and owner-directed to GitHub issues \#122 and \#123 respectively – track
-them there, not here. XARCH-4/6/8 are PARTIALLY resolved; their narrower
-remaining gaps (not the original full-scope recommendations, which are
-already partly superseded) are tracked below.* - \[ \] **XARCH-4
-remainder: centralize sex-code literals** (READY, Effort S) – the
-`minParentAge`/species-age half of this finding is fully centralized
-(`resolveBreedingAge()` + the `speciesGestation` config table). Only the
-`M`/`F`/`U`/`H` sex-code literals remain scattered uncentralized across
-`getPotentialSires.R:22`, `calculateSexRatio.R:80`, `fillBins.R:27,31`,
-`filterPairs.R:34`, `modBreedingGroups.R:330,443-444`,
-`modSummaryStats.R:797,807` – no exported `sexCodes` constant or
-`founderSexFilter` concept exists. See audit doc §3 XARCH-4. - \[ \]
-**XARCH-6 remainder:
-[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)/`modInput.R`
-multi-call redundancy** (READY, Effort S) –
-[`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md)/[`processQcStudbookResult()`](https://github.com/rmsharp/nprcgenekeepr/reference/processQcStudbookResult.md)
-already give most callers one clean contract. `modInput.R:485-525` still
-calls
-[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
-directly AND separately calls
-[`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md)
-(which itself calls
-[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
-twice) – three
-[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
-invocations per QC run. Already flagged as known “future polish” in
-`docs/planning/shiny-module-conversion-plan.md:85,343`. See audit doc §3
-XARCH-6. - \[ \] **XARCH-8 remainder: fold column-list functions into
-[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)**
-(READY, Effort S) – the dangerous duplicate-config-parser half is
-already fixed (issue \#50, S85: `appServer.R` now goes through
-[`loadSiteConfig()`](https://github.com/rmsharp/nprcgenekeepr/reference/loadSiteConfig.md)
--\>
-[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)).
-[`getRequiredCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getRequiredCols.md)/[`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md)/
-[`getIncludeColumns()`](https://github.com/rmsharp/nprcgenekeepr/reference/getIncludeColumns.md)
-remain three separate, unrelated exported functions, not referenced from
-[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
-or folded into any merged defaults-then-override profile. See audit doc
-§3 XARCH-8.
