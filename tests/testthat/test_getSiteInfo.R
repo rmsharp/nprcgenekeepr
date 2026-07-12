@@ -8,9 +8,36 @@ test_that("getSiteInfo at least returns the right elements", {
       "center", "baseUrl", "schemaName", "folderPath", "queryName",
       "lkPedColumns", "mapPedColumns", "sysname", "release",
       "version", "nodename", "machine", "login", "user",
-      "effective_user", "homeDir", "configFile"
+      "effective_user", "homeDir", "configFile",
+      "requiredCols", "possibleCols", "includeColumns"
     )
   )
+})
+
+test_that("getSiteInfo folds the column-list functions in (no-config)", {
+  # XARCH-8 remainder: getRequiredCols()/getPossibleCols()/getIncludeColumns()
+  # must be reachable from getSiteInfo() itself, not just as standalone
+  # exports, on the no-config (default) branch.
+  siteInfo <- getSiteInfo(expectConfigFile = FALSE)
+  expect_identical(siteInfo$requiredCols, getRequiredCols())
+  expect_identical(siteInfo$possibleCols, getPossibleCols())
+  expect_identical(siteInfo$includeColumns, getIncludeColumns())
+})
+
+test_that("getSiteInfo folds the column-list functions in (config present)", {
+  # Same fields must also be present on the config-file branch -- both
+  # return paths in getSiteInfo() must carry the new fields identically.
+  tmp <- withr::local_tempdir()
+  withr::local_envvar(c(HOME = tmp))
+  example_cfg <- system.file("extdata", "example_nprcgenekeepr_config",
+                              package = "nprcgenekeepr")
+  cfg_name <- basename(getConfigFileName(Sys.info())[["configFile"]])
+  file.copy(example_cfg, file.path(tmp, cfg_name))
+
+  siteInfo <- getSiteInfo()
+  expect_identical(siteInfo$requiredCols, getRequiredCols())
+  expect_identical(siteInfo$possibleCols, getPossibleCols())
+  expect_identical(siteInfo$includeColumns, getIncludeColumns())
 })
 
 test_that("getSiteInfo handled Windows and non-windows opperating systems", {
