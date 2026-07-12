@@ -47,6 +47,60 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-11 · \[ad hoc\] S362 close-out commit (session notes, handoff receipt)
+
+- **Deliverable:** Closes this session’s own `CHANGELOG.md` ledger
+  frontier gap in the same session rather than leaving it for the next
+  session’s Phase 0 reconcile (mirroring the S349-S361 precedent for
+  self-closing gaps). Records the results- processing/correction work
+  logged below. Commit `27a2ab31`.
+
+### 2026-07-11 · \[ad hoc\] Processed CRAN 2.0.0 win-builder/R-hub results; corrected S361’s Windows-blocker prediction (Session 362)
+
+- **Deliverable:** User pasted the three win-builder completion emails
+  (Status: 1/2/1 NOTE, no ERROR/WARNING) — directly contradicting S361’s
+  “very likely to reproduce” prediction about the Windows `WriteXLS` CI
+  failure. Fetched the raw `00check.log` for each (via `curl`, not an
+  AI-paraphrased `WebFetch` summary, given the stakes): all three
+  confirm `checking tests ... OK` with zero failure output. Checked the
+  R-hub run S361 dispatched (`occupational-burro`, run 29171440079) —
+  all 3 jobs (linux/windows/macos, R-devel) green; pulled the windows
+  job’s actual log rather than trusting the checkmark, found
+  `Status: OK, [ FAIL 0 | WARN 1 | SKIP 220 | PASS 3013 ]` — though the
+  same `WriteXLS` “cannot open … csv” diagnostic text does appear
+  non-fatally. **Conclusion: the pre-submission gate is clean across
+  every environment actually run this cycle (local macOS, win-builder
+  x3, R-hub x3); the Windows `WriteXLS` CI flakiness is real and
+  reproducible on GitHub-hosted Windows runners specifically, but is not
+  present on CRAN’s own win-builder infrastructure and is not currently
+  blocking submission.** Updated `cran-comments.md`’s “Test
+  environments” section with the real per-platform results
+  (CRAN-facing-only, no internal narrative). Put the full investigation
+  in `docs/planning/cran-2.0.0-phase5-runbook.md` (owner-facing).
+  Corrected both of S361’s `BACKLOG.md` entries: the WriteXLS item
+  downgraded from “blocks CRAN resubmission” to a CI-hygiene item (still
+  open, still worth fixing); the CRAN item updated to record the clean
+  results — the only remaining step is now exactly
+  `devtools::submit_cran()` + the maintainer- email confirmation click,
+  both still owner-only. Added `PROJECT_LEARNINGS.md` Learning 333
+  (verify a probability-hedged prediction against the actual result once
+  it lands; two “Windows CI” surfaces are not the same environment).
+  Bumped `CLAUDE.md`’s learnings/session-count pointer (332→333,
+  361→362). Self-caught and fixed two mistakes before commit: a
+  fabricated R-devel version number, and a duplicated
+  `## Downstream dependencies` header from an imprecise edit. Phase 3E:
+  N/A, justified — no `R/`/`tests/`/`DESCRIPTION`/`NAMESPACE` touched;
+  no `submit_cran()` or other outward-facing action taken.
+
+### 2026-07-11 · \[ad hoc\] Claimed session to process win-builder/R-hub results (Session 362)
+
+- **Deliverable:** Phase 1B claim stub in `SESSION_NOTES.md` and a
+  `status: pending` receipt in `HANDOFFS.md` for processing S361’s
+  win-builder/R-hub results. Commit `8ad229cb`. (Note: investigation of
+  the pasted emails + the R-hub run happened before this claim, per the
+  session notes — read-only calls only, no repo file touched before this
+  commit.)
+
 ### 2026-07-11 · \[ad hoc\] S361 close-out commit (session notes, handoff receipt)
 
 - **Deliverable:** Closes this session’s own `CHANGELOG.md` ledger
