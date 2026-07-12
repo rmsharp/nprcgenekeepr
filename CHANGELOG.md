@@ -43,6 +43,40 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-11 · [ad hoc] Resolved BACKLOG.md's XARCH tracker-reconciliation decision (Session 365)
+- **Deliverable:** Re-verified all 8 XARCH-1..8 architecture findings
+  (`TECH_DEBT_AUDIT_2026-05-30.md`) against current source rather than trusting
+  the six-week-old audit text, since `BACKLOG.md`'s "Tracker reconciliation" item
+  had gone stale (its own "#1–#39" issue range and "XARCH-2..8 remaining" framing
+  no longer matched reality — see `PROJECT_LEARNINGS.md` Learning 336). Used a
+  background `Workflow` (7 read-only agents, one per remaining finding, 98 tool
+  calls, 0 errors) to grep/read current `R/*.R` source directly. Result:
+  XARCH-1/3/7 fully RESOLVED (1 and 7 as side effects of the monolith-deletion
+  migration, issue #27; 3 independently closed in S358); XARCH-2 and XARCH-5
+  STILL fully OPEN, unchanged from the original audit; XARCH-4/6/8 PARTIALLY
+  resolved with materially narrower remaining gaps than originally described.
+  Presented the accurate 8-item status table to the owner via `AskUserQuestion`
+  (three options: issues for the 2 fully-open items only / issues for all 5
+  unresolved / BACKLOG-only). **Owner chose issues for the 2 fully-open items.**
+  Filed GitHub issue #122 (XARCH-2, module contract implicit/inconsistent) and
+  #123 (XARCH-5, string-column-keyed pipeline with no validated seam), each with
+  current-state evidence, not the stale original audit prose. Wrote
+  `docs/audits/XARCH_TRACKER_RECONCILIATION_AUDIT_2026-07-11.md` documenting the
+  full re-verification and decision. Removed `BACKLOG.md`'s resolved "Tracker
+  reconciliation" section; replaced with three narrow-scope follow-up items for
+  XARCH-4/6/8's actual remaining gaps (sex-code literal centralization;
+  `qcStudbook()`/`modInput.R` multi-call redundancy; column-list-function
+  unification into `getSiteInfo()`). Added `PROJECT_LEARNINGS.md` Learning 336.
+  Bumped `CLAUDE.md`'s pointer (335→336, 364→365). No `R/`/`tests/` files
+  changed — a decision-and-documentation session, TDD phase gates not applicable
+  (no new observable code unit). Phase 3E: n/a, no runtime behavior changed.
+  Commit `e87038bc`.
+
+### 2026-07-11 · [ad hoc] Claimed session to resolve XARCH tracker-reconciliation decision (Session 365)
+- **Deliverable:** Phase 1B claim stub in `SESSION_NOTES.md` and a
+  `status: pending` receipt in `HANDOFFS.md` for resolving `BACKLOG.md`'s
+  "Tracker reconciliation" (DECISION NEEDED) item. Commit `3b91a624`.
+
 ### 2026-07-11 · [ad hoc] Backfilled (reconcile-on-read): S364's own close-out commit (Session 365)
 - **Deliverable:** Phase 0 ledger reconcile found `9eb07f0e` (S364's final
   "close-out (session notes, handoff receipt)" commit) undocumented in
