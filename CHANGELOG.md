@@ -46,10 +46,10 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 ### 2026-07-13 · [ad hoc] S375 close-out commits (learnings, backlog pointer, ledger, handoff receipt)
 - **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap in the
   same session rather than leaving it for the next session's Phase 0 reconcile. Records
-  the `BACKLOG.md` Phase-3-DONE/Phase-4-next update (`2d03c521`) and this close-out
-  commit (this ledger entry + `PROJECT_LEARNINGS.md` Learning 346 + `CLAUDE.md` pointer
-  bump + `SESSION_NOTES.md`/`HANDOFFS.md` handoff, `status: pending` -> `complete`) that
-  finalized the Session 375 handoff.
+  the `BACKLOG.md` Phase-3-DONE/Phase-4-next update (`2d03c521`) and the close-out
+  commit (`af539f70`: this ledger entry + `PROJECT_LEARNINGS.md` Learning 346 +
+  `CLAUDE.md` pointer bump + `SESSION_NOTES.md`/`HANDOFFS.md` handoff, `status: pending`
+  -> `complete`) that finalized the Session 375 handoff.
 
 ### 2026-07-13 · [issue #122] Phase 3: collapse to one canonical vocabulary (Session 375)
 - **Deliverable:** Executed Phase 3 of `docs/planning/issue122-module-contract-plan.md`
