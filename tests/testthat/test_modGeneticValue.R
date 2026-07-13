@@ -256,8 +256,8 @@ test_that("modGeneticValueServer geneticValues returns all results", {
       gv <- result$geneticValues()
       expect_true(is.data.frame(gv))
       expect_true(nrow(gv) > 0)
-      # geneticValues() renames columns (indivMeanKin->meanKinship, gu->genomeUniqueness)
-      # so we just check same number of rows, not equality
+      # geneticValues() returns gvResults() directly (issue #122 Phase 3) --
+      # same number of rows, checked here rather than object identity.
       expect_equal(nrow(gv), nrow(gvResults()))
     }
   )
@@ -1272,11 +1272,11 @@ test_that("modGeneticValueServer geneticValues has expected columns", {
       result <- session$getReturned()
       gv <- result$geneticValues()
 
-      # geneticValues() renames columns to standard names:
-      # indivMeanKin -> meanKinship, gu -> genomeUniqueness
-      expect_true("meanKinship" %in% names(gv))
+      # geneticValues() returns gvResults() directly -- canonical names,
+      # no renaming (issue #122 Phase 3 vocabulary collapse).
+      expect_true("indivMeanKin" %in% names(gv))
       expect_true("zScores" %in% names(gv))
-      expect_true("genomeUniqueness" %in% names(gv))
+      expect_true("gu" %in% names(gv))
     }
   )
 })

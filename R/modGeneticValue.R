@@ -341,19 +341,12 @@ modGeneticValueServer <- function(id, pedigree,
       results <- gvResults()
       fullRes <- fullResults()
 
-      # Use indivMeanKin and gu column names from reportGV
-      mkCol <- if ("indivMeanKin" %in% names(results))
-                 "indivMeanKin"
-               else
-                 "meanKinship"
-      guCol <- if ("gu" %in% names(results)) "gu" else "genomeUniqueness"
-
       summaryData <- data.frame(
         Metric = c("Animals Analyzed", "Mean Kinship (avg)",
                    "Genome Uniqueness (avg)"),
         Value = c(nrow(results),
-                  sprintf("%.4f", mean(results[[mkCol]], na.rm = TRUE)),
-                  sprintf("%.4f", mean(results[[guCol]], na.rm = TRUE))),
+                  sprintf("%.4f", mean(results$indivMeanKin, na.rm = TRUE)),
+                  sprintf("%.4f", mean(results$gu, na.rm = TRUE))),
         stringsAsFactors = FALSE
       )
 
@@ -442,14 +435,7 @@ modGeneticValueServer <- function(id, pedigree,
       req(gvResults())
       results <- gvResults()
 
-      # Use correct column names
-      mkCol <- if ("indivMeanKin" %in% names(results))
-                 "indivMeanKin"
-               else
-                 "meanKinship"
-      guCol <- if ("gu" %in% names(results)) "gu" else "genomeUniqueness"
-
-      plot(results[[mkCol]], results[[guCol]],
+      plot(results$indivMeanKin, results$gu,
            xlab = "Mean Kinship", ylab = "Genome Uniqueness",
            main = "Genetic Value Analysis",
            pch = 19L, col = ifelse(results$rank <= 10L, "red", "blue"))
@@ -468,18 +454,7 @@ modGeneticValueServer <- function(id, pedigree,
     )
 
     list(
-      geneticValues = reactive({
-        gv <- gvResults()
-        if (is.null(gv)) return(NULL)
-        # Rename columns to standard names expected by other modules
-        if ("indivMeanKin" %in% names(gv)) {
-          names(gv)[names(gv) == "indivMeanKin"] <- "meanKinship"
-        }
-        if ("gu" %in% names(gv)) {
-          names(gv)[names(gv) == "gu"] <- "genomeUniqueness"
-        }
-        gv
-      }),
+      geneticValues = reactive(gvResults()),
       topAnimals = reactive({
         gv <- gvResults()
         if (is.null(gv)) return(NULL)
