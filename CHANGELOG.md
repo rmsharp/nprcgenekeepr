@@ -43,6 +43,58 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-13 · [ad hoc] S375 close-out commits (learnings, backlog pointer, ledger, handoff receipt)
+- **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap in the
+  same session rather than leaving it for the next session's Phase 0 reconcile. Records
+  the `BACKLOG.md` Phase-3-DONE/Phase-4-next update (`2d03c521`) and this close-out
+  commit (this ledger entry + `PROJECT_LEARNINGS.md` Learning 346 + `CLAUDE.md` pointer
+  bump + `SESSION_NOTES.md`/`HANDOFFS.md` handoff, `status: pending` -> `complete`) that
+  finalized the Session 375 handoff.
+
+### 2026-07-13 · [issue #122] Phase 3: collapse to one canonical vocabulary (Session 375)
+- **Deliverable:** Executed Phase 3 of `docs/planning/issue122-module-contract-plan.md`
+  following `DEVELOPMENT_WORKSTREAM.md` under strict TDD (RED -> GREEN -> REFACTOR, 3
+  `AskUserQuestion` phase gates, plus a 4th gate resolving a self-caught process
+  deviation -- see below). Deleted `modGeneticValue`'s `geneticValues` reactive rename
+  closure (`indivMeanKin`/`gu` -> `meanKinship`/`genomeUniqueness`) so it now returns
+  `gvResults()` directly, and the now-redundant `mkCol`/`guCol` dual-vocabulary display
+  probes in `gvSummary`/`gvScatterPlot` (commit `0a6e91c2`). Migrated
+  `R/modSummaryStats.R`'s ~13 `gv$meanKinship`/`gv$genomeUniqueness` read sites
+  (histograms, boxplot guards, quartile summaries, the `summaryStats` renderUI, the
+  returned `summaryData` reactive) plus its `@param` doc, to canonical `indivMeanKin`/
+  `gu` (commit `0acb29db`). Migrated `R/modORIPReporting.R`'s 4 read sites (commit
+  `1f8436e8`). `rg 'meanKinship|genomeUniqueness' R/mod*.R` now returns zero hits
+  outside two verified out-of-scope exclusions: the unrelated `genomeUniquenessSE`/
+  `guSE` fallback in `gvSummary`, and the `meanKinshipBoxPlotGG`/`meanKinshipBoxPlot`
+  reactive/list-key identifiers (not data columns; renaming the exported list key would
+  be an exported-contract change, out of scope per the plan's Dragon 5).
+  Five of the plan's originally-cited 12 test files (its own prose claimed "15") turned
+  out to be false positives on firsthand verification -- `test_modBreedingGroups.R`,
+  `test_modFounderStats.R`, `test_makeGeneticSummaryTable.R`,
+  `test_modGeneticValue_coverage.R`, `test-e2e-genetic-value-tutorial.R` -- none
+  actually exercise the migrated read sites (see `PROJECT_LEARNINGS.md` Learning 346).
+  The other 7 test files' fixtures/assertions were flipped to canonical vocabulary as
+  RED, confirmed failing for the predicted reason against unmigrated source, then
+  GREEN. Full suite 0 failed/0 error/0 warning/167 skipped (baseline unchanged);
+  `devtools::check()` 0 errors/0 warnings/0 notes (both before and after a standalone
+  `devtools::document()` that regenerated only `man/modSummaryStatsServer.Rd`,
+  `NAMESPACE` unchanged). End-to-end verification against the real 280-animal `qcPed`
+  fixture: `geneticValues()` confirmed identical to `gvResults()`; `modSummaryStats`/
+  `modORIPReporting` confirmed to render the exact same independently-computed mean
+  values -- satisfying the plan's "byte-identical... must be re-proved, not assumed"
+  DONE criterion by execution. Phase 3E (mandatory -- runtime read paths in three
+  live-wired modules changed): the repo's existing `NPRC_RUN_E2E=true` browser e2e
+  suite across all 5 relevant files -- `test-e2e-genetic-value-module.R` (7/7),
+  `test-e2e-genetic-value-detailed.R` (7/7), `test-e2e-genetic-value-tutorial.R` (8/8),
+  `test-e2e-summary-statistics-module.R` (8/8), `test-e2e-orip-module.R` (4/4), all
+  34/34 passing against the real modified app. One self-caught and disclosed
+  phase-gate violation (bundled a REFACTOR-phase roxygen doc edit into the GREEN commit
+  without a separate gate) -- resolved via an explicit 4th `AskUserQuestion` before
+  continuing; see `PROJECT_LEARNINGS.md` Learning 346(c). Split into three commits per
+  `SAFEGUARDS.md`'s 5-file blast-radius cap: `modGeneticValue` + its test (2 files),
+  `modSummaryStats` + its Rd + 3 test files (5 files), and the remaining 2 test files +
+  `modORIPReporting` (4 files).
+
 ### 2026-07-12 · [ad hoc] S374 close-out commits (backlog pointer, learnings, ledger, handoff receipt)
 - **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap in the
   same session rather than leaving it for the next session's Phase 0 reconcile. Records
