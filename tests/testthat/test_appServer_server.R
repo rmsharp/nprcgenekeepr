@@ -388,3 +388,75 @@ test_that("appServer mounts the ORIP module only for an ONPRC configuration", {
   )
   expect_true(orip$mounted)
 })
+
+# =============================================================================
+# 7. Shared kinship reactive (issue #122 Phase 2): appServer hoists ONE
+#    full-pedigree kinship reactive and threads it into both
+#    modSummaryStatsServer and modBreedingGroupsServer, instead of each module
+#    independently recomputing it. See
+#    docs/planning/issue122-module-contract-plan.md section 6 Phase 2 / section
+#    4.3 (Dragon 1: this must be the FULL pedigree, never GV's
+#    population-filtered gvResults$kinshipMatrix).
+# =============================================================================
+
+test_that(paste("appServer passes the SAME shared kinship reactive to both",
+                "modSummaryStatsServer and modBreedingGroupsServer",
+                "(issue #122 Phase 2)"), {
+  capturedSummaryKin <- NULL
+  capturedBreedingKin <- NULL
+  capturedSummaryValue <- NULL
+
+  captureSummaryStats <- function(id, ..., kinshipMatrix) {
+    capturedSummaryKin <<- kinshipMatrix
+    invisible(NULL)
+  }
+  captureBreedingGroups <- function(id, ..., kinshipMatrix) {
+    capturedBreedingKin <<- kinshipMatrix
+    # appServer reads bgResults$groups() into shared$breedingGroups (issue
+    # #112 S4); return a minimal valid shape so that unrelated observer
+    # doesn't crash.
+    list(groups = shiny::reactive(NULL))
+  }
+
+  test_ped <- data.frame(
+    id   = c("F1", "F2", "O1"),
+    sire = c(NA, NA, "F1"),
+    dam  = c(NA, NA, "F2"),
+    sex  = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  testthat::with_mocked_bindings(
+    modInputServer = stubInput,
+    modPedigreeServer = stubPed,
+    modGeneticValueServer = stubGV,
+    modSummaryStatsServer = captureSummaryStats,
+    modBreedingGroupsServer = captureBreedingGroups,
+    modPyramidServer = noopServer,
+    modGeneticDiversityServer = noopServer,
+    modPotentialParentsServer = noopServer,
+    .package = "nprcgenekeepr",
+    {
+      muffleConfig(shiny::testServer(appServer, {
+        session$flushReact()
+        ctl$ped(test_ped)
+        session$flushReact()
+        # Reactives can only be evaluated inside the live testServer session.
+        capturedSummaryValue <<- capturedSummaryKin()
+      }))
+    }
+  )
+
+  expect_true(is.function(capturedSummaryKin))
+  expect_true(is.function(capturedBreedingKin))
+  # Same reactive OBJECT passed to both -- proves kinship is hoisted once,
+  # not independently recomputed per consumer.
+  expect_identical(capturedSummaryKin, capturedBreedingKin)
+
+  expected_ped <- test_ped
+  expected_ped$gen <- findGeneration(expected_ped$id, expected_ped$sire,
+                                     expected_ped$dam)
+  expected <- kinship(expected_ped$id, expected_ped$sire, expected_ped$dam,
+                      expected_ped$gen)
+  expect_equal(capturedSummaryValue, expected)
+})

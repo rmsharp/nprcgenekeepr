@@ -306,15 +306,39 @@ appServer <- function(input, output, session) {
     shared$geneticValues <- gvResults$geneticValues()
   })
 
+  # Shared full-pedigree kinship reactive (issue #122 Phase 2) -- computed
+  # once from shared$currentPedigree with the GV-tab overrides applied, and
+  # threaded into both Summary Stats and Breeding Groups instead of each
+  # recomputing it independently. This is the FULL pedigree, never
+  # gvResults$kinshipMatrix (which is population-filtered to focal animals --
+  # see the module-contract plan's Dragon 1). Matches each consumer's own
+  # prior recompute formula exactly, so the shared value is identical to what
+  # either module computed on its own.
+  sharedKinshipMatrix <- reactive({
+    req(shared$currentPedigree)
+    ped <- shared$currentPedigree
+    if (!"gen" %in% names(ped)) {
+      ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
+    }
+    kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
+    overrides <- if (is.null(gvResults$kinshipOverrides)) {
+      NULL
+    } else {
+      gvResults$kinshipOverrides()
+    }
+    applyKinshipOverridesToMatrix(kmat, overrides)
+  })
+
   # Summary Statistics Module -- thread the GV-tab kinship overrides (issue #13
   # Slice 3) so the relationship table and kinship export reflect them even when
-  # the GV analysis was not run first (summary stats always recomputes kinship
-  # because kinshipMatrix is NULL here).
+  # the GV analysis was not run first. kinshipMatrix now points at the shared
+  # reactive above (issue #122 Phase 2); its own recompute fallback stays
+  # (Dragon 3: summary stats must render before GV is ever run).
   modSummaryStatsServer( # nolint: object_usage_linter
     "summaryStats",
     geneticValues = reactive(shared$geneticValues),
     pedigree = reactive(shared$currentPedigree),
-    kinshipMatrix = NULL,
+    kinshipMatrix = sharedKinshipMatrix,
     founderStats = gvResults$founderStats,
     kinshipOverrides = gvResults$kinshipOverrides
   )
@@ -334,11 +358,14 @@ appServer <- function(input, output, session) {
 
   # Breeding Groups Module -- thread the GV-tab kinship overrides (issue #13
   # Slice 3) so group formation reflects them on the fallback recompute path
-  # (used when no GV output is available), regardless of tab order.
+  # (used when the shared kinship reactive is unavailable), regardless of tab
+  # order. kinshipMatrix points at the same shared reactive as Summary Stats
+  # above (issue #122 Phase 2) -- kinship is computed once, not twice.
   bgResults <- modBreedingGroupsServer(
     "breedingGroups",
     pedigree = reactive(shared$currentPedigree),
     geneticValues = reactive(shared$geneticValues),
+    kinshipMatrix = sharedKinshipMatrix,
     kinshipOverrides = gvResults$kinshipOverrides
   )
 
