@@ -47,8 +47,8 @@ makeTestGeneticValues <- function(ids) {
   n <- length(ids)
   data.frame(
     id = ids,
-    meanKinship = runif(n, 0.1, 0.4),
-    genomeUniqueness = runif(n, 0.5, 0.9),
+    indivMeanKin = runif(n, 0.1, 0.4),
+    gu = runif(n, 0.5, 0.9),
     stringsAsFactors = FALSE
   )
 }

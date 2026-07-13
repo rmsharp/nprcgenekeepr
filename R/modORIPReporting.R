@@ -207,8 +207,8 @@ modORIPReportingServer <- function(id, pedigree = NULL, geneticValues = NULL,
       }
 
       # Calculate metrics
-      meanMK <- mean(gv$meanKinship, na.rm = TRUE)
-      meanGU <- mean(gv$genomeUniqueness, na.rm = TRUE)
+      meanMK <- mean(gv$indivMeanKin, na.rm = TRUE)
+      meanGU <- mean(gv$gu, na.rm = TRUE)
 
       tags$div(
         tags$table(
@@ -281,8 +281,8 @@ modORIPReportingServer <- function(id, pedigree = NULL, geneticValues = NULL,
             Category = rep("Genetic Diversity", 2L),
             Metric = c("Mean Kinship", "Mean Genome Uniqueness"),
             Value = c(
-              sprintf("%.4f", mean(gv$meanKinship, na.rm = TRUE)),
-              sprintf("%.4f", mean(gv$genomeUniqueness, na.rm = TRUE))
+              sprintf("%.4f", mean(gv$indivMeanKin, na.rm = TRUE)),
+              sprintf("%.4f", mean(gv$gu, na.rm = TRUE))
             ),
             stringsAsFactors = FALSE
           ))

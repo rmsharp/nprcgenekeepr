@@ -22,11 +22,11 @@ oripTestPed <- data.frame(
   stringsAsFactors = FALSE
 )
 
-# Genetic values: meanKinship averages to 0.30, genomeUniqueness to 0.70.
+# Genetic values: indivMeanKin averages to 0.30, gu to 0.70.
 oripTestGv <- data.frame(
   id = c("F1", "F2", "F3", "O1", "O2"),
-  meanKinship = c(0.10, 0.20, 0.30, 0.40, 0.50),
-  genomeUniqueness = c(0.90, 0.80, 0.70, 0.60, 0.50),
+  indivMeanKin = c(0.10, 0.20, 0.30, 0.40, 0.50),
+  gu = c(0.90, 0.80, 0.70, 0.60, 0.50),
   stringsAsFactors = FALSE
 )
 
@@ -148,8 +148,8 @@ test_that("geneticDiversity prompts to run analysis when values are empty", {
   skip_if_not_installed("shiny")
 
   emptyGv <- data.frame(
-    id = character(), meanKinship = numeric(),
-    genomeUniqueness = numeric(), stringsAsFactors = FALSE
+    id = character(), indivMeanKin = numeric(),
+    gu = numeric(), stringsAsFactors = FALSE
   )
   shiny::testServer(
     modORIPReportingServer,

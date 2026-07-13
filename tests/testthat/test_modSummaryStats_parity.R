@@ -20,8 +20,8 @@
 makeParityGV <- function() {
   data.frame(
     id = c("A", "B", "C", "D", "E"),
-    meanKinship = c(0.10, 0.15, 0.20, 0.25, 0.30),
-    genomeUniqueness = c(0.90, 0.85, 0.80, 0.75, 0.70),
+    indivMeanKin = c(0.10, 0.15, 0.20, 0.25, 0.30),
+    gu = c(0.90, 0.85, 0.80, 0.75, 0.70),
     zScores = c(-1.2, -0.6, 0.0, 0.6, 1.2),
     stringsAsFactors = FALSE
   )
@@ -113,8 +113,8 @@ test_that("Summary module exposes MK and GU quartile summaries", {
       result <- session$getReturned()
       expect_true("mkSummary" %in% names(result))
       expect_true("guSummary" %in% names(result))
-      expect_equal(result$mkSummary(), summary(gv$meanKinship))
-      expect_equal(result$guSummary(), summary(gv$genomeUniqueness))
+      expect_equal(result$mkSummary(), summary(gv$indivMeanKin))
+      expect_equal(result$guSummary(), summary(gv$gu))
     }
   )
 })
