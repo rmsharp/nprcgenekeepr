@@ -142,12 +142,36 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       the repo's existing browser e2e suite (`NPRC_RUN_E2E=true` -- not just `NOT_CRAN`),
       `test-e2e-breeding-groups-module.R` (7/7) and `test-e2e-summary-statistics-module.R`
       (8/8) both pass against the real modified `appServer`. See `CHANGELOG.md`.
-      **Phase 3 next:** vocabulary collapse -- delete the rename closure
-      (`R/modGeneticValue.R:470-482`), migrate `modSummaryStats`/`modORIPReporting` to
-      canonical `indivMeanKin`/`gu` names. Depends on Phase 1 (done). See the plan's §6
-      Phase 3 for the full site list and verification checklist.
-      Phases 4-5 (dead-surface pruning incl. the dead `shared$config` chain; contract
-      note + guard test) each remain **one session**, in order, after Phase 3.
+      **Phase 3 DONE -- S375 (2026-07-13):** vocabulary collapse. Deleted the
+      `geneticValues` rename closure (`R/modGeneticValue.R`) so it returns `gvResults()`
+      directly, and the now-redundant `mkCol`/`guCol` dual-vocabulary display probes in
+      `gvSummary`/`gvScatterPlot`; migrated `modSummaryStats.R` (~13 sites) and
+      `modORIPReporting.R` (4 sites) to canonical `indivMeanKin`/`gu`. `rg
+      'meanKinship|genomeUniqueness' R/mod*.R` now returns zero hits outside two verified
+      out-of-scope exclusions: the unrelated `genomeUniquenessSE`/`guSE` fallback in
+      `gvSummary` (a different vocabulary concern the plan doesn't touch) and the
+      `meanKinshipBoxPlotGG`/`meanKinshipBoxPlot` reactive/list-key identifiers (not data
+      columns; renaming the exported list key would be an exported-contract change, out
+      of scope per Dragon 5). Five of the plan's originally-cited 12 test files turned out
+      to be false positives on firsthand verification (`test_modBreedingGroups.R`,
+      `test_modFounderStats.R`, `test_makeGeneticSummaryTable.R`,
+      `test_modGeneticValue_coverage.R`, `test-e2e-genetic-value-tutorial.R` -- none
+      actually exercise the migrated read sites); the other 7 were updated. Verified: full
+      suite 0 failed/0 error/0 warning/167 skipped (baseline unchanged);
+      `devtools::check()` 0/0/0; end-to-end against the real 280-animal `qcPed` fixture
+      (`geneticValues()` identical to `gvResults()`; `modSummaryStats`/`modORIPReporting`
+      render the exact same mean values computed independently); Phase 3E live smoke test
+      via the repo's existing e2e suite -- `test-e2e-genetic-value-module.R` (7/7),
+      `test-e2e-genetic-value-detailed.R` (7/7), `test-e2e-genetic-value-tutorial.R`
+      (8/8), `test-e2e-summary-statistics-module.R` (8/8), `test-e2e-orip-module.R` (4/4),
+      all against the real modified app. See `CHANGELOG.md`.
+      **Phase 4 next:** prune the dead surface (the dead `shared$config` chain incl. a
+      real design decision on delete-vs-wire, `shared$qcResults`, `modSummaryStats`'
+      12 unread returned reactives, `modInput`'s undocumented `@return` elements) and
+      replace the blanket `tryCatch(..., error = function(e) NULL)` swallow in `appServer`
+      with explicit `req()`/contract guards. Depends on Phases 1-3 (all done). Dragon 2
+      bites hardest here -- see the plan's §6 Phase 4 and §7 Dragon 2 before starting.
+      Phase 5 (contract note + guard test) remains **one session** after Phase 4.
 - [ ] **Issue #123 (XARCH-5, string-column-keyed pipeline, no validated seam)** (DECISION
       NEEDED -- needs its own planning session; Effort L) -- related to #122 but
       explicitly **out of scope** of the S372 plan. Track on GitHub.
