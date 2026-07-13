@@ -147,15 +147,21 @@ modBreedingGroupsUI <- function(id) {
 #' @param pedigree reactive returning pedigree data frame with columns:
 #'   id, sire, dam, sex, and optionally birth, exit, gen.
 #' @param geneticValues optional reactive returning genetic value results
-#'   from \code{\link{modGeneticValueServer}}. If provided and contains a
-#'   kinship matrix, it will be used instead of calculating one.
+#'   from \code{\link{modGeneticValueServer}}, used to source the
+#'   \code{topRanked} animal-source candidate list. Unrelated to kinship.
+#' @param kinshipMatrix optional reactive returning a kinship matrix,
+#'   typically a full-pedigree matrix shared with
+#'   \code{\link{modSummaryStatsServer}} (e.g. from \code{appServer}) rather
+#'   than independently recomputed. If NULL, the module calculates kinship
+#'   from the pedigree.
 #' @param kinshipOverrides optional reactive returning a validated
 #'   outside-information kinship-override data frame (\code{id1}, \code{id2},
 #'   \code{kinship}); see \code{\link{applyKinshipOverrides}}.
-#'   When the module recomputes kinship from the pedigree (no genetic value
-#'   output), the overrides are applied to that matrix so group formation
-#'   reflects them regardless of tab order. \code{NULL} (the default) is a
-#'   no-op. The genetic-value-output path already carries overrides.
+#'   When the module recomputes kinship from the pedigree (the shared
+#'   \code{kinshipMatrix} is unavailable), the overrides are applied to that
+#'   matrix so group formation reflects them regardless of tab order.
+#'   \code{NULL} (the default) is a no-op. A provided \code{kinshipMatrix} is
+#'   expected to already carry overrides applied at its source.
 #'
 #' @return List with reactive components:
 #' \itemize{
@@ -179,19 +185,21 @@ modBreedingGroupsUI <- function(id) {
 #' @family Shiny modules
 #' @export
 modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
+                                    kinshipMatrix = NULL,
                                     kinshipOverrides = NULL) {
   moduleServer(id, function(input, output, session) {
 
     # Store results from groupAddAssign
     groupResults <- reactiveVal(NULL)
 
-    # Helper: Get kinship matrix from geneticValues or calculate from pedigree
-    getKinshipMatrix <- function(ped, gvReactive, overrides = NULL) {
-      # Try to get kinship from geneticValues module
-      if (!is.null(gvReactive) && is.function(gvReactive)) {
-        gvData <- tryCatch(gvReactive(), error = function(e) NULL)
-        if (!is.null(gvData) && "kinship" %in% names(gvData)) {
-          return(gvData$kinship)
+    # Helper: use the shared kinship matrix (issue #122 Phase 2) if provided,
+    # else calculate from pedigree
+    getKinshipMatrix <- function(ped, kinshipMatrix, overrides = NULL) {
+      # Try the shared kinship matrix first
+      if (!is.null(kinshipMatrix)) {
+        kmat <- tryCatch(kinshipMatrix(), error = function(e) NULL)
+        if (!is.null(kmat)) {
+          return(kmat)
         }
       }
 
@@ -252,7 +260,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
 
         incProgress(0.2, detail = "Calculating kinship")
         kmat <- getKinshipMatrix(
-          ped, geneticValues,
+          ped, kinshipMatrix,
           if (is.null(kinshipOverrides)) NULL else kinshipOverrides()
         )
 

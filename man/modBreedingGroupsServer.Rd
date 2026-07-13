@@ -8,6 +8,7 @@ modBreedingGroupsServer(
   id,
   pedigree,
   geneticValues = NULL,
+  kinshipMatrix = NULL,
   kinshipOverrides = NULL
 )
 }
@@ -18,16 +19,23 @@ modBreedingGroupsServer(
 id, sire, dam, sex, and optionally birth, exit, gen.}
 
 \item{geneticValues}{optional reactive returning genetic value results
-from \code{\link{modGeneticValueServer}}. If provided and contains a
-kinship matrix, it will be used instead of calculating one.}
+from \code{\link{modGeneticValueServer}}, used to source the
+\code{topRanked} animal-source candidate list. Unrelated to kinship.}
+
+\item{kinshipMatrix}{optional reactive returning a kinship matrix,
+typically a full-pedigree matrix shared with
+\code{\link{modSummaryStatsServer}} (e.g. from \code{appServer}) rather
+than independently recomputed. If NULL, the module calculates kinship
+from the pedigree.}
 
 \item{kinshipOverrides}{optional reactive returning a validated
 outside-information kinship-override data frame (\code{id1}, \code{id2},
 \code{kinship}); see \code{\link{applyKinshipOverrides}}.
-When the module recomputes kinship from the pedigree (no genetic value
-output), the overrides are applied to that matrix so group formation
-reflects them regardless of tab order. \code{NULL} (the default) is a
-no-op. The genetic-value-output path already carries overrides.}
+When the module recomputes kinship from the pedigree (the shared
+\code{kinshipMatrix} is unavailable), the overrides are applied to that
+matrix so group formation reflects them regardless of tab order.
+\code{NULL} (the default) is a no-op. A provided \code{kinshipMatrix} is
+expected to already carry overrides applied at its source.}
 }
 \value{
 List with reactive components:

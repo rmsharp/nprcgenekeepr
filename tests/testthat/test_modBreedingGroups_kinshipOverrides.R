@@ -40,7 +40,7 @@ test_that(paste("modBreedingGroupsServer applies a kinship override on the",
       kinshipOverrides = shiny::reactive({ ovrFrame("F1", "F2", 0.4) })
     ),
     {
-      km <- getKinshipMatrix(pedigree(), geneticValues, kinshipOverrides())
+      km <- getKinshipMatrix(pedigree(), kinshipMatrix, kinshipOverrides())
       expect_equal(km["F1", "F2"], 0.4)
       expect_equal(km["F2", "F1"], 0.4)           # symmetric write
     }
@@ -66,7 +66,7 @@ test_that(paste("modBreedingGroupsServer fallback is byte-identical with no",
       kinshipOverrides = shiny::reactive({ NULL })
     ),
     {
-      km <- getKinshipMatrix(pedigree(), geneticValues, kinshipOverrides())
+      km <- getKinshipMatrix(pedigree(), kinshipMatrix, kinshipOverrides())
       expect_equal(km, expected)
     }
   )
@@ -86,7 +86,7 @@ test_that(paste("modBreedingGroupsServer warn-drops an override id absent from",
     ),
     {
       expect_warning(
-        km <- getKinshipMatrix(pedigree(), geneticValues, kinshipOverrides())
+        km <- getKinshipMatrix(pedigree(), kinshipMatrix, kinshipOverrides())
       )
       expect_true(is.matrix(km))
       expect_true("F1" %in% rownames(km))
