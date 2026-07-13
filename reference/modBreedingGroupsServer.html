@@ -67,6 +67,7 @@ groups while maximizing group sizes.</p>
 <span>  <span class="va">id</span>,</span>
 <span>  <span class="va">pedigree</span>,</span>
 <span>  geneticValues <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  kinshipMatrix <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  kinshipOverrides <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -86,18 +87,27 @@ id, sire, dam, sex, and optionally birth, exit, gen.</p></dd>
 
 <dt id="arg-geneticvalues">geneticValues<a class="anchor" aria-label="anchor" href="#arg-geneticvalues"></a></dt>
 <dd><p>optional reactive returning genetic value results
-from <code><a href="modGeneticValueServer.html">modGeneticValueServer</a></code>. If provided and contains a
-kinship matrix, it will be used instead of calculating one.</p></dd>
+from <code><a href="modGeneticValueServer.html">modGeneticValueServer</a></code>, used to source the
+<code>topRanked</code> animal-source candidate list. Unrelated to kinship.</p></dd>
+
+
+<dt id="arg-kinshipmatrix">kinshipMatrix<a class="anchor" aria-label="anchor" href="#arg-kinshipmatrix"></a></dt>
+<dd><p>optional reactive returning a kinship matrix,
+typically a full-pedigree matrix shared with
+<code><a href="modSummaryStatsServer.html">modSummaryStatsServer</a></code> (e.g. from <code>appServer</code>) rather
+than independently recomputed. If NULL, the module calculates kinship
+from the pedigree.</p></dd>
 
 
 <dt id="arg-kinshipoverrides">kinshipOverrides<a class="anchor" aria-label="anchor" href="#arg-kinshipoverrides"></a></dt>
 <dd><p>optional reactive returning a validated
 outside-information kinship-override data frame (<code>id1</code>, <code>id2</code>,
 <code>kinship</code>); see <code><a href="applyKinshipOverrides.html">applyKinshipOverrides</a></code>.
-When the module recomputes kinship from the pedigree (no genetic value
-output), the overrides are applied to that matrix so group formation
-reflects them regardless of tab order. <code>NULL</code> (the default) is a
-no-op. The genetic-value-output path already carries overrides.</p></dd>
+When the module recomputes kinship from the pedigree (the shared
+<code>kinshipMatrix</code> is unavailable), the overrides are applied to that
+matrix so group formation reflects them regardless of tab order.
+<code>NULL</code> (the default) is a no-op. A provided <code>kinshipMatrix</code> is
+expected to already carry overrides applied at its source.</p></dd>
 
 </dl></div>
     <div class="section level2">

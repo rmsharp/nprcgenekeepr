@@ -47,6 +47,76 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-12 · \[ad hoc\] S374 close-out commits (backlog pointer, learnings, ledger, handoff receipt)
+
+- **Deliverable:** Closes this session’s own `CHANGELOG.md` ledger
+  frontier gap in the same session rather than leaving it for the next
+  session’s Phase 0 reconcile. Records the `BACKLOG.md`
+  Phase-2-DONE/Phase-3-next update (`654bbabf`) and the close-out commit
+  (`e7cc7fff`: this ledger entry + `PROJECT_LEARNINGS.md` Learning 345 +
+  `CLAUDE.md` pointer bump + `SESSION_NOTES.md`/`HANDOFFS.md` handoff,
+  `status: pending` -\> `complete`) that finalized the Session 374
+  handoff.
+
+### 2026-07-12 · \[issue \#122\] Phase 2: share one full-pedigree kinship reactive, kill the dead reuse branch (Session 374)
+
+- **Deliverable:** Executed Phase 2 of
+  `docs/planning/issue122-module-contract-plan.md` following
+  `DEVELOPMENT_WORKSTREAM.md` under strict TDD (RED -\> GREEN -\>
+  REFACTOR, 3 `AskUserQuestion` phase gates). Deleted
+  `modBreedingGroups`’ unreachable `gvReactive`-based kinship-reuse
+  branch (`shared$geneticValues` is a data frame, never has a `$kinship`
+  element – confirmed by inspection, not the plan’s framing alone;
+  commit `3009c83b`). Hoisted one shared, memoized, full-pedigree
+  `sharedKinshipMatrix` reactive into `appServer` (commit `6351c180`),
+  computed via the identical
+  [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)+`applyKinshipOverridesToMatrix()`
+  formula each consumer already used, and threaded it to both
+  `modSummaryStatsServer` (already accepted `kinshipMatrix`, previously
+  always `NULL`) and `modBreedingGroupsServer` (new `kinshipMatrix`
+  param). Recompute fallback retained in both consumers (Dragon 3 –
+  summary stats must render before GV is ever run). Dragon 1 sidestepped
+  by construction, not avoidance: the shared reactive reads
+  `shared$currentPedigree` directly, never `gvResults $kinshipMatrix`
+  (GV’s population-filtered matrix) – proved via
+  [`setPopulation()`](https://github.com/rmsharp/nprcgenekeepr/reference/setPopulation.md)’s
+  source (only flags a `population` column, never filters rows) and
+  empirically via the plan’s mandatory
+  [`identical()`](https://rdrr.io/r/base/identical.html) regression gate
+  against the real 280-animal `qcPed` fixture, with and without focal
+  animals (all 4 checks
+  [`identical()`](https://rdrr.io/r/base/identical.html) TRUE). RED: 6
+  test sites across 3 files (2 new tests in
+  `tests/testthat/test_modBreedingGroups_sharedKinship.R`; 3 existing
+  direct-helper-call sites renamed in
+  `test_modBreedingGroups_kinshipOverrides.R`; 1 new appServer wiring
+  test in `test_appServer_server.R` asserting
+  [`identical()`](https://rdrr.io/r/base/identical.html) object identity
+  between what both consumers receive), each confirmed failing for the
+  predicted reason before any implementation. GREEN: full suite 0
+  failed/0 error/0 warning (167 skipped); `devtools::check()` 0 errors/0
+  notes/1 expected codoc WARNING (the new `kinshipMatrix` param
+  undocumented). REFACTOR: added `@param kinshipMatrix`, corrected the
+  now-stale `@param geneticValues`/`@param kinshipOverrides` prose
+  describing the deleted branch; `devtools::document()` standalone
+  regenerated only `man/modBreedingGroupsServer.Rd`, `NAMESPACE`
+  unchanged. Re-ran `devtools::check()`: 0 errors/0 warnings/0 notes.
+  Phase 3E (mandatory – this phase changes runtime wiring): the repo’s
+  existing browser e2e suite, gated behind `NPRC_RUN_E2E=true` (a second
+  opt-in beyond `NOT_CRAN`/`skip_on_cran()` this session discovered
+  rather than writing a bespoke
+  [`callr::r_bg()`](https://callr.r-lib.org/reference/r_bg.html)
+  script), `test-e2e-breeding-groups-module.R` (7/7) and
+  `test-e2e-summary-statistics-module.R` (8/8) both pass against the
+  real modified `appServer`. Two self-caught test-authoring bugs fixed
+  during GREEN verification (a mocked-module stub returning bare `NULL`
+  crashed an unrelated `appServer` observer reading its return value; a
+  captured reactive was evaluated outside its live `testServer()`
+  session) – see `PROJECT_LEARNINGS.md` Learning 345. Split into two
+  commits per `SAFEGUARDS.md`’s 5-file blast-radius cap:
+  `modBreedingGroups`-scoped RED+GREEN+REFACTOR (4 files) and
+  `appServer`-scoped hoist (2 files).
+
 ### 2026-07-12 · \[ad hoc\] S373 close-out commits (learnings, backlog pointer, ledger, handoff receipt)
 
 - **Deliverable:** Closes this session’s own `CHANGELOG.md` ledger

@@ -84,6 +84,41 @@ block to continue the work without re-reading the whole repo?*
 ------------------------------------------------------------------------
 
 ``` handoff
+session: S374
+date: 2026-07-12
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: Issue #122 module-contract plan Phase 2 DONE. Phase 3 (vocabulary collapse) next -- see BACKLOG.md.
+what_was_done: Deleted modBreedingGroups' unreachable gvReactive-based kinship-reuse branch; hoisted one shared, memoized, full-pedigree sharedKinshipMatrix reactive into appServer, threaded to both modSummaryStatsServer and modBreedingGroupsServer (new kinshipMatrix param). Recompute fallback retained (Dragon 3). Dragon 1 sidestepped by construction (never wires gvResults$kinshipMatrix), proved via setPopulation() source + the plan's mandatory identical() gate on real qcPed, with/without focal animals. Strict TDD RED (6 sites, 3 files) -> GREEN -> REFACTOR (@param docs, devtools::document() standalone). Full suite 0/0/0; devtools::check() 0 errors/0 warnings/0 notes. Phase 3E: repo's existing NPRC_RUN_E2E=true browser e2e suite, 7/7 + 8/8 passing. Commits 3009c83b (modBreedingGroups, 4 files), 6351c180 (appServer, 2 files).
+next_steps: Phase 3 (vocabulary collapse) -- delete the rename closure at R/modGeneticValue.R:470-482, migrate modSummaryStats (~13 sites)/modORIPReporting (4 sites) to canonical indivMeanKin/gu names. Read plan section 6 Phase 3 for the exact site list; re-verify line numbers before trusting them. devtools::document() standalone after roxygen edits (Learning 341). Phase 3E live smoke test required again -- check NPRC_RUN_E2E=true e2e coverage first (Learning 345(a)).
+key_files: R/modBreedingGroups.R:181-263 (kinshipMatrix param, rewritten getKinshipMatrix), R/appServer.R:303-370 (sharedKinshipMatrix reactive + both wirings), tests/testthat/test_modBreedingGroups_sharedKinship.R (new), tests/testthat/test_modBreedingGroups_kinshipOverrides.R (3 renamed calls), tests/testthat/test_appServer_server.R:391-459 (new wiring test), man/modBreedingGroupsServer.Rd (regenerated), docs/planning/issue122-module-contract-plan.md section 6 Phase 2 / section 7 Dragons.
+gotchas: A Shiny reactive captured from a with_mocked_bindings() stub inside shiny::testServer() cannot be evaluated after the block exits (module session destroyed) -- read its value inside the live block. A capture-only stub replacing a real child module must still return every field the caller reads downstream (e.g. list(groups = reactive(NULL))), not bare NULL, or an unrelated observer crashes. The plan's own Dragon-2 citation for test_modErrorHandling.R:180-184 is imprecise for Phase 2 -- that test's tryCatch/showNotification pin is satisfied by an unrelated, untouched eventReactive block, not the deleted dead branch; verify plan citations against source, don't trust them. See PROJECT_LEARNINGS.md Learning 345.
+runtime_smoke: PERFORMED -- test-e2e-breeding-groups-module.R (7/7) and test-e2e-summary-statistics-module.R (8/8) under NOT_CRAN=true NPRC_RUN_E2E=true, real chromote browser sessions against the modified appServer.
+changelog_ref: CHANGELOG.md 2026-07-12 "Phase 2: share one full-pedigree kinship reactive, kill the dead reuse branch (Session 374)"
+commit: 3009c83b, 6351c180
+```
+
+GREEN-\>REFACTOR throughout, 3 AskUserQuestion phase gates, all approved
+with no modification. Held the plan’s mandatory identical() regression
+gate and Phase 3E live smoke test as non-negotiable given they change
+runtime wiring, per the plan’s own requirement and FM \#24. Self-score
+9/10: +faithful TDD with all 6 RED sites confirmed failing for the
+predicted reason, +did not trust the plan’s Dragon-2 citation at face
+value and verified it against source (found it imprecise), +discovered
+and used a stronger Phase 3E artifact (NPRC_RUN_E2E e2e suite) than the
+plan’s own suggestion, +self-caught and fixed two test-authoring bugs
+during GREEN verification via reading actual errors rather than
+guessing, +held the 5-file blast-radius cap via a two-commit split;
+-jumped to the Phase 0 priorities-picker AskUserQuestion before
+rendering the required prose report, self-caught and corrected before
+any further action but should not have happened. Predecessor (S373)
+scored 8/10 – accurate and specific on the two dragons/gates that
+mattered most, but silent on the existing e2e infrastructure and the 3
+existing tests that would need updating for the renamed helper param,
+both discovered independently this session.
+
+``` handoff
 session: S373
 date: 2026-07-12
 status: complete

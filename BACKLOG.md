@@ -148,7 +148,7 @@ SAFEGUARDS and the runbook’s HARD STOP.
 
 ## Architecture (issue \#122 / XARCH-2 – module contract)
 
-**Execute the issue \#122 module-contract plan, Phase 2** (READY, Effort
+**Execute the issue \#122 module-contract plan, Phase 3** (READY, Effort
 S) – planning session DONE (S372):
 `docs/planning/issue122-module-contract-plan.md`. **Phase 1 DONE – S373
 (2026-07-12):** fixed the reproduced user-facing bug –
@@ -164,20 +164,39 @@ now tolerant of both vocabularies. Additive; broke no exported contract;
 touched no module (`NAMESPACE` unchanged). Verified end-to-end against
 `qcPed` (`makeGeneticSummaryTable(reportGV(qcPed)$report)` now populates
 correctly) and via full suite (0 failed/0 error/0 warning) +
-`devtools::check()` (0/0/0). See `CHANGELOG.md`. **Phase 2 next:** kill
-`modBreedingGroups`’ dead kinship-reuse branch; hoist one shared,
-memoized, full-pedigree kinship reactive into `appServer` for
-`modSummaryStatsServer`/`modBreedingGroupsServer`. **Read the plan’s §7
-(Dragons) first** – Dragon 1 (the GV/consumer kinship matrices are
-*scope*-different, not *value*-different –
-[`identical()`](https://rdrr.io/r/base/identical.html)-gate the fix) and
-Dragon 2 (~40 [`deparse()`](https://rdrr.io/r/base/deparse.html)
-source-grep tests **structurally pin the very `tryCatch`
-error-swallowing this phase changes** – triage them before touching
-source, per the plan’s §6 Step 0) both bite on contact in Phase 2.
-Phases 3-5 (vocabulary collapse; dead-surface pruning incl. the dead
-`shared$config` chain; contract note + guard test) each remain **one
-session**, in order, after Phase 2.
+`devtools::check()` (0/0/0). See `CHANGELOG.md`. **Phase 2 DONE – S374
+(2026-07-12):** killed `modBreedingGroups`’ unreachable kinship-reuse
+branch (never once returned a matrix – `shared$geneticValues` is a data
+frame, never had a `$kinship` element); hoisted one shared, memoized,
+full-pedigree `sharedKinshipMatrix` reactive into `appServer`
+([`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)+`applyKinshipOverridesToMatrix()`,
+matching each consumer’s own prior recompute formula exactly), threaded
+to both `modSummaryStatsServer` and `modBreedingGroupsServer` (new
+`kinshipMatrix` param) instead of each independently recomputing it.
+Recompute fallback retained in both consumers (Dragon 3). Dragon 1
+sidestepped by construction: the shared reactive is always
+full-pedigree, never `gvResults$kinshipMatrix` – confirmed via
+[`setPopulation()`](https://github.com/rmsharp/nprcgenekeepr/reference/setPopulation.md)’s
+source (only flags a `population` column, never filters rows) and
+empirically via the plan’s mandatory
+[`identical()`](https://rdrr.io/r/base/identical.html) gate against the
+real 280-animal `qcPed` fixture, with and without focal animals. Dragon
+2’s cited `test_modErrorHandling.R:180-184` pin
+(`modBreedingGroupsServer` tryCatch/showNotification) stayed green
+unmodified – the deleted dead branch was not that test’s actual tryCatch
+source (a second, unrelated one lives in the group-formation
+`eventReactive`). Verified: full suite 0 failed/0 error/0 warning;
+`devtools::check()` 0/0/0; Phase 3E live smoke test via the repo’s
+existing browser e2e suite (`NPRC_RUN_E2E=true` – not just `NOT_CRAN`),
+`test-e2e-breeding-groups-module.R` (7/7) and
+`test-e2e-summary-statistics-module.R` (8/8) both pass against the real
+modified `appServer`. See `CHANGELOG.md`. **Phase 3 next:** vocabulary
+collapse – delete the rename closure (`R/modGeneticValue.R:470-482`),
+migrate `modSummaryStats`/`modORIPReporting` to canonical
+`indivMeanKin`/`gu` names. Depends on Phase 1 (done). See the plan’s §6
+Phase 3 for the full site list and verification checklist. Phases 4-5
+(dead-surface pruning incl. the dead `shared$config` chain; contract
+note + guard test) each remain **one session**, in order, after Phase 3.
 
 **Issue \#123 (XARCH-5, string-column-keyed pipeline, no validated
 seam)** (DECISION NEEDED – needs its own planning session; Effort L) –

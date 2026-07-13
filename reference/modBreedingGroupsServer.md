@@ -12,6 +12,7 @@ modBreedingGroupsServer(
   id,
   pedigree,
   geneticValues = NULL,
+  kinshipMatrix = NULL,
   kinshipOverrides = NULL
 )
 ```
@@ -30,19 +31,28 @@ modBreedingGroupsServer(
 - geneticValues:
 
   optional reactive returning genetic value results from
-  [`modGeneticValueServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modGeneticValueServer.md).
-  If provided and contains a kinship matrix, it will be used instead of
-  calculating one.
+  [`modGeneticValueServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modGeneticValueServer.md),
+  used to source the `topRanked` animal-source candidate list. Unrelated
+  to kinship.
+
+- kinshipMatrix:
+
+  optional reactive returning a kinship matrix, typically a
+  full-pedigree matrix shared with
+  [`modSummaryStatsServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modSummaryStatsServer.md)
+  (e.g. from `appServer`) rather than independently recomputed. If NULL,
+  the module calculates kinship from the pedigree.
 
 - kinshipOverrides:
 
   optional reactive returning a validated outside-information
   kinship-override data frame (`id1`, `id2`, `kinship`); see
   [`applyKinshipOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md).
-  When the module recomputes kinship from the pedigree (no genetic value
-  output), the overrides are applied to that matrix so group formation
-  reflects them regardless of tab order. `NULL` (the default) is a
-  no-op. The genetic-value-output path already carries overrides.
+  When the module recomputes kinship from the pedigree (the shared
+  `kinshipMatrix` is unavailable), the overrides are applied to that
+  matrix so group formation reflects them regardless of tab order.
+  `NULL` (the default) is a no-op. A provided `kinshipMatrix` is
+  expected to already carry overrides applied at its source.
 
 ## Value
 
