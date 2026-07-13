@@ -59,6 +59,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 `what_was_done: pending` are legal at write time (the receipt ships in the very commit whose sha it
 would name); the next session reconciles them to real shas.
 
+```handoff
+session: S376
+date: 2026-07-13
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Execute issue #122 module-contract plan Phase 4 (prune the dead surface) -- session claimed, work beginning.
+what_was_done: pending
+next_steps: pending
+key_files: docs/planning/issue122-module-contract-plan.md (Phase 4 section 6, Dragon 2 section 7)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
 ## Three files, three questions, one shared key
 
 - **`SESSION_NOTES.md`** — the *transient scratchpad*: rich working notes, overwritten every session.
