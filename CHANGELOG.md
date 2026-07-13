@@ -43,6 +43,14 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-12 · [ad hoc] S374 close-out commits (backlog pointer, learnings, ledger, handoff receipt)
+- **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap in the
+  same session rather than leaving it for the next session's Phase 0 reconcile. Records
+  the `BACKLOG.md` Phase-2-DONE/Phase-3-next update (`654bbabf`) and the close-out
+  commit (`e7cc7fff`: this ledger entry + `PROJECT_LEARNINGS.md` Learning 345 +
+  `CLAUDE.md` pointer bump + `SESSION_NOTES.md`/`HANDOFFS.md` handoff, `status: pending`
+  -> `complete`) that finalized the Session 374 handoff.
+
 ### 2026-07-12 · [issue #122] Phase 2: share one full-pedigree kinship reactive, kill the dead reuse branch (Session 374)
 - **Deliverable:** Executed Phase 2 of `docs/planning/issue122-module-contract-plan.md`
   following `DEVELOPMENT_WORKSTREAM.md` under strict TDD (RED -> GREEN -> REFACTOR, 3
