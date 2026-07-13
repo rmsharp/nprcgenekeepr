@@ -84,6 +84,40 @@ block to continue the work without re-reading the whole repo?*
 ------------------------------------------------------------------------
 
 ``` handoff
+session: S375
+date: 2026-07-13
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: Issue #122 module-contract plan Phase 3 DONE. Phase 4 (prune dead surface, replace tryCatch swallow) next -- see BACKLOG.md.
+what_was_done: Deleted modGeneticValue's geneticValues rename closure (now returns gvResults() directly) and the redundant mkCol/guCol dual-vocab display probes; migrated modSummaryStats.R (~13 sites + @param doc) and modORIPReporting.R (4 sites) to canonical indivMeanKin/gu. Verified 5 of the plan's 12 cited test files were false positives (consumer never reads the flagged column, or already dual-vocab tolerant) by tracing each consumer firsthand; updated the 7 real ones. Strict TDD RED (7 files) -> GREEN -> REFACTOR (@param doc, devtools::document() standalone). Full suite 0/0/0/167 skipped; devtools::check() 0/0/0. End-to-end against real 280-animal qcPed: geneticValues() identical to gvResults(); modSummaryStats/modORIPReporting render the exact same independently-computed values. Phase 3E: NPRC_RUN_E2E=true across 5 e2e files, 34/34 passing. Self-caught and disclosed one phase-gate violation (bundled a REFACTOR doc edit into GREEN) via a 4th AskUserQuestion. Commits 0a6e91c2 (modGeneticValue, 2 files), 0acb29db (modSummaryStats, 5 files), 1f8436e8 (modORIPReporting, 4 files).
+next_steps: Execute Phase 4 of docs/planning/issue122-module-contract-plan.md -- prune the dead site-config chain (config params on modInputServer/modPedigreeServer, shared$config; a real delete-vs-wire design decision per the plan's §10), the dead shared$qcResults write, modSummaryStats' 12 unread returned reactives, modInput's undocumented @return elements, and replace appServer's blanket tryCatch(..., error = function(e) NULL) swallow (6-7 sites) with explicit req()/contract guards. Read the plan's §6 Phase 4 and §7 Dragon 2 (structural deparse() tests designed to go red) before starting.
+key_files: R/modGeneticValue.R:339-457 (probe + closure deletion); R/modSummaryStats.R (~13 sites + @param); R/modORIPReporting.R:209-211,283-285; 7 test files (see CHANGELOG.md); man/modSummaryStatsServer.Rd (regenerated). Plan: docs/planning/issue122-module-contract-plan.md section 6 Phase 4 (line 412), section 7 Dragon 2 (line 499).
+gotchas: (1) Dragon 2 bites hardest in Phase 4 -- ~3 structural deparse() tests (test_modErrorHandling.R:180-184,240-246, test_modSiteConfig.R:132-141, test_loadSiteConfig.R:80-81) are DESIGNED to go red; triage them first, rewrite to assert behavior. (2) The site-config delete-vs-wire choice is a real design decision (plan §10), likely its own pre-RED AskUserQuestion scope gate separate from the TDD phase gates. (3) Re-verify the plan's own Phase 4 citations firsthand before trusting them -- this session found 5 false-positive test-file citations and a "15 vs 12" count mismatch in the SAME plan for Phase 3. (4) devtools::document() standalone, never bundled with the code edit -- this session self-caught exactly that mistake, don't repeat it.
+runtime_smoke: NOT_CRAN=true NPRC_RUN_E2E=true across test-e2e-genetic-value-module.R (7/7), test-e2e-genetic-value-detailed.R (7/7), test-e2e-genetic-value-tutorial.R (8/8), test-e2e-summary-statistics-module.R (8/8), test-e2e-orip-module.R (4/4) -- 34/34 passing against the real modified app.
+changelog_ref: CHANGELOG.md 2026-07-13 S375 entry
+commit: 0a6e91c2, 0acb29db, 1f8436e8, 2d03c521 (BACKLOG.md)
+```
+
+\<Self-score breakdown: +held strict TDD faithfully; +independently
+verified the plan’s own grep-derived test-file inventory rather than
+trusting it, finding 5 false positives and a 15-vs-12 count mismatch;
++ran genuine end-to-end verification against real qcPed data, not just
+unit tests; +ran the mandatory Phase 3E live smoke test via the
+strongest available option (5 e2e files, 34/34); +held the 5-file
+blast-radius cap across 3 concern-scoped commits. -self-caught
+phase-gate violation (bundled a REFACTOR-phase doc edit into GREEN
+without a separate gate) – disclosed and corrected before anything was
+committed, but shouldn’t have happened; -a minor miscount in the PRE-RED
+gate proposal (said “5 fixture blocks” for
+test_modSummaryStats_ggplots.R when only 3 needed edits), caught and
+corrected during execution. Predecessor (S374) scored 8/10 – precise on
+rename-closure location, doc-standalone, and the NPRC_RUN_E2E option,
+but silent on the possibility that some of the plan’s own cited test
+files might not need editing at all, a discovery this session had to
+make independently.\>
+
+``` handoff
 session: S374
 date: 2026-07-12
 status: complete

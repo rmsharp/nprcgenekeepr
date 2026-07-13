@@ -26,8 +26,8 @@ modSummaryStatsServer(
 - geneticValues:
 
   reactive returning genetic value analysis results. Must be a data
-  frame with columns `id`, `meanKinship`, and `genomeUniqueness`.
-  Optional `zScore` column enables z-score plots.
+  frame with columns `id`, `indivMeanKin`, and `gu`. Optional `zScore`
+  column enables z-score plots.
 
 - pedigree:
 
