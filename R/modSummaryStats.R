@@ -250,8 +250,8 @@ modSummaryStatsUI <- function(id) {
 #'
 #' @param id character vector of length 1. Module namespace identifier.
 #' @param geneticValues reactive returning genetic value analysis results.
-#'   Must be a data frame with columns \code{id}, \code{meanKinship}, and
-#'   \code{genomeUniqueness}. Optional \code{zScore} column enables z-score
+#'   Must be a data frame with columns \code{id}, \code{indivMeanKin}, and
+#'   \code{gu}. Optional \code{zScore} column enables z-score
 #'    plots.
 #' @param pedigree reactive returning pedigree data frame with columns
 #'   \code{id}, \code{sire}, \code{dam}, and \code{sex}. Optionally \code{gen}.
@@ -418,7 +418,7 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
     mkHistogramPlot <- reactive({
       req(geneticValues())
       gv <- geneticValues()
-      mk <- gv$meanKinship
+      mk <- gv$indivMeanKin
       avg <- mean(mk, na.rm = TRUE)
       brx <- pretty(range(mk, na.rm = TRUE), 25L)
 
@@ -480,7 +480,7 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
     guHistogramPlot <- reactive({
       req(geneticValues())
       gv <- geneticValues()
-      gu <- gv$genomeUniqueness
+      gu <- gv$gu
       avg <- mean(gu, na.rm = TRUE)
       brx <- pretty(range(gu, na.rm = TRUE), 25L)
 
@@ -507,8 +507,8 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
     meanKinshipBoxPlotGG <- reactive({
       req(geneticValues())
       gv <- geneticValues()
-      if (!"meanKinship" %in% names(gv)) return(NULL)
-      mk <- gv$meanKinship
+      if (!"indivMeanKin" %in% names(gv)) return(NULL)
+      mk <- gv$indivMeanKin
 
       df <- data.frame(x = "", y = mk)
       ggplot2::ggplot(df, ggplot2::aes(x = x, y = y)) +
@@ -567,8 +567,8 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
     guBoxPlotGG <- reactive({
       req(geneticValues())
       gv <- geneticValues()
-      if (!"genomeUniqueness" %in% names(gv)) return(NULL)
-      gu <- gv$genomeUniqueness
+      if (!"gu" %in% names(gv)) return(NULL)
+      gu <- gv$gu
 
       df <- data.frame(x = "", y = gu)
       ggplot2::ggplot(df, ggplot2::aes(x = x, y = y)) +
@@ -591,12 +591,12 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
     # (monolith Summary Statistics tab parity, server.r:545-630)
     mkSummaryData <- reactive({
       req(geneticValues())
-      summary(geneticValues()$meanKinship)
+      summary(geneticValues()$indivMeanKin)
     })
 
     guSummaryData <- reactive({
       req(geneticValues())
-      summary(geneticValues()$genomeUniqueness)
+      summary(geneticValues()$gu)
     })
 
     # One distribution-table row: label + Min/1stQ/Mean/Median/3rdQ/Max
@@ -718,10 +718,9 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
         tags$ul(
           tags$li(paste("Animals analyzed:", nrow(gv))),
           tags$li(paste("Mean kinship (average):",
-                        sprintf("%.4f", mean(gv$meanKinship, na.rm = TRUE)))),
+                        sprintf("%.4f", mean(gv$indivMeanKin, na.rm = TRUE)))),
           tags$li(paste("Genome uniqueness (average):",
-                        sprintf("%.4f", mean(gv$genomeUniqueness,
-                                             na.rm = TRUE))))
+                        sprintf("%.4f", mean(gv$gu, na.rm = TRUE))))
         ),
         founderTbl,
         br(),
@@ -900,8 +899,8 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
         gv <- geneticValues()
         list(
           nAnimals = nrow(gv),
-          meanMK = mean(gv$meanKinship, na.rm = TRUE),
-          meanGU = mean(gv$genomeUniqueness, na.rm = TRUE)
+          meanMK = mean(gv$indivMeanKin, na.rm = TRUE),
+          meanGU = mean(gv$gu, na.rm = TRUE)
         )
       }),
       relationships = reactive(relationshipData()),

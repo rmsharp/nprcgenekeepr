@@ -23,14 +23,14 @@ covPed <- function() {
   )
 }
 
-# Genetic values carrying meanKinship, genomeUniqueness AND the real plural
+# Genetic values carrying indivMeanKin, gu AND the real plural
 # "zScores" column, so the z-score plots are non-NULL and their download
 # handlers write real files.
 covGV <- function() {
   data.frame(
     id = c("F1", "F2", "F3", "O1", "O2", "O3"),
-    meanKinship = c(0.10, 0.15, 0.20, 0.25, 0.30, 0.35),
-    genomeUniqueness = c(0.90, 0.85, 0.80, 0.75, 0.70, 0.65),
+    indivMeanKin = c(0.10, 0.15, 0.20, 0.25, 0.30, 0.35),
+    gu = c(0.90, 0.85, 0.80, 0.75, 0.70, 0.65),
     zScores = c(-1.2, -0.6, 0.0, 0.6, 1.2, 0.3),
     stringsAsFactors = FALSE
   )
@@ -68,12 +68,12 @@ test_that("getKinshipMatrix converts a data.table pedigree to a data.frame", {
 
 # ---- boxplot NULL guards (modSummaryStats.R L510 and L570) -----------------
 
-test_that("meanKinshipBoxPlot is NULL when the meanKinship column is absent", {
+test_that("meanKinshipBoxPlot is NULL when the indivMeanKin column is absent", {
   skip_if_not_installed("shiny")
   skip_if_not_installed("ggplot2")
 
   gv <- data.frame(id = c("A", "B", "C"),
-                   genomeUniqueness = c(0.9, 0.8, 0.7),
+                   gu = c(0.9, 0.8, 0.7),
                    stringsAsFactors = FALSE)
 
   shiny::testServer(
@@ -89,12 +89,12 @@ test_that("meanKinshipBoxPlot is NULL when the meanKinship column is absent", {
   )
 })
 
-test_that("guBoxPlot is NULL when the genomeUniqueness column is absent", {
+test_that("guBoxPlot is NULL when the gu column is absent", {
   skip_if_not_installed("shiny")
   skip_if_not_installed("ggplot2")
 
   gv <- data.frame(id = c("A", "B", "C"),
-                   meanKinship = c(0.1, 0.2, 0.3),
+                   indivMeanKin = c(0.1, 0.2, 0.3),
                    stringsAsFactors = FALSE)
 
   shiny::testServer(

@@ -98,8 +98,8 @@ test_that("modSummaryStatsServer returns expected reactive list", {
 
   test_gv <- data.frame(
     id = c("A", "B", "C", "D", "E"),
-    meanKinship = c(0.1, 0.15, 0.2, 0.25, 0.3),
-    genomeUniqueness = c(0.9, 0.85, 0.8, 0.75, 0.7),
+    indivMeanKin = c(0.1, 0.15, 0.2, 0.25, 0.3),
+    gu = c(0.9, 0.85, 0.8, 0.75, 0.7),
     stringsAsFactors = FALSE
   )
 
@@ -134,8 +134,8 @@ test_that("modSummaryStatsServer returns correct summary data", {
 
   test_gv <- data.frame(
     id = c("A", "B", "C", "D", "E"),
-    meanKinship = c(0.1, 0.2, 0.3, 0.4, 0.5),
-    genomeUniqueness = c(0.9, 0.8, 0.7, 0.6, 0.5),
+    indivMeanKin = c(0.1, 0.2, 0.3, 0.4, 0.5),
+    gu = c(0.9, 0.8, 0.7, 0.6, 0.5),
     stringsAsFactors = FALSE
   )
 
@@ -170,8 +170,8 @@ test_that("modSummaryStatsServer handles genetic values with z-scores", {
 
   test_gv <- data.frame(
     id = c("A", "B", "C"),
-    meanKinship = c(0.15, 0.25, 0.35),
-    genomeUniqueness = c(0.85, 0.75, 0.65),
+    indivMeanKin = c(0.15, 0.25, 0.35),
+    gu = c(0.85, 0.75, 0.65),
     zScore = c(-1.0, 0.0, 1.0),
     stringsAsFactors = FALSE
   )
@@ -206,8 +206,8 @@ test_that("modSummaryStatsServer handles pedigree with founders", {
 
   test_gv <- data.frame(
     id = c("F1", "F2", "F3", "C1", "C2"),
-    meanKinship = runif(5, 0.1, 0.4),
-    genomeUniqueness = runif(5, 0.5, 0.9),
+    indivMeanKin = runif(5, 0.1, 0.4),
+    gu = runif(5, 0.5, 0.9),
     stringsAsFactors = FALSE
   )
 
@@ -241,8 +241,8 @@ test_that("modSummaryStatsServer works with kinship matrix", {
 
   test_gv <- data.frame(
     id = c("A", "B", "C"),
-    meanKinship = c(0.2, 0.25, 0.3),
-    genomeUniqueness = c(0.8, 0.75, 0.7),
+    indivMeanKin = c(0.2, 0.25, 0.3),
+    gu = c(0.8, 0.75, 0.7),
     stringsAsFactors = FALSE
   )
 
@@ -288,8 +288,8 @@ test_that("modSummaryStatsServer founder table shows FG +/- SE when fgSE present
 
   test_gv <- data.frame(
     id = c("A", "B", "C"),
-    meanKinship = c(0.1, 0.2, 0.3),
-    genomeUniqueness = c(0.9, 0.8, 0.7),
+    indivMeanKin = c(0.1, 0.2, 0.3),
+    gu = c(0.9, 0.8, 0.7),
     stringsAsFactors = FALSE
   )
   test_ped <- data.frame(
@@ -332,8 +332,8 @@ test_that("modSummaryStatsServer founder table shows Gene Diversity (GD) beside 
 
   test_gv <- data.frame(
     id = c("A", "B", "C"),
-    meanKinship = c(0.1, 0.2, 0.3),
-    genomeUniqueness = c(0.9, 0.8, 0.7),
+    indivMeanKin = c(0.1, 0.2, 0.3),
+    gu = c(0.9, 0.8, 0.7),
     stringsAsFactors = FALSE
   )
   test_ped <- data.frame(
@@ -378,8 +378,8 @@ test_that("modSummaryStatsServer shows a separate Effective Population Size bloc
 
   test_gv <- data.frame(
     id = c("A", "B", "C"),
-    meanKinship = c(0.1, 0.2, 0.3),
-    genomeUniqueness = c(0.9, 0.8, 0.7),
+    indivMeanKin = c(0.1, 0.2, 0.3),
+    gu = c(0.9, 0.8, 0.7),
     stringsAsFactors = FALSE
   )
   test_ped <- data.frame(
@@ -426,8 +426,8 @@ test_that("modSummaryStatsServer shows a Variance Ne column in the Effective Pop
 
   test_gv <- data.frame(
     id = c("A", "B", "C"),
-    meanKinship = c(0.1, 0.2, 0.3),
-    genomeUniqueness = c(0.9, 0.8, 0.7),
+    indivMeanKin = c(0.1, 0.2, 0.3),
+    gu = c(0.9, 0.8, 0.7),
     stringsAsFactors = FALSE
   )
   test_ped <- data.frame(

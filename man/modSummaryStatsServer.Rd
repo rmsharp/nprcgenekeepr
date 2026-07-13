@@ -17,8 +17,8 @@ modSummaryStatsServer(
 \item{id}{character vector of length 1. Module namespace identifier.}
 
 \item{geneticValues}{reactive returning genetic value analysis results.
-Must be a data frame with columns \code{id}, \code{meanKinship}, and
-\code{genomeUniqueness}. Optional \code{zScore} column enables z-score
+Must be a data frame with columns \code{id}, \code{indivMeanKin}, and
+\code{gu}. Optional \code{zScore} column enables z-score
 plots.}
 
 \item{pedigree}{reactive returning pedigree data frame with columns

@@ -441,8 +441,8 @@ test_that("histograms handle missing zScore column gracefully", {
   # Data without zScore column
   test_gv <- data.frame(
     id = paste0("Animal", 1:10),
-    meanKinship = runif(10, 0.1, 0.4),
-    genomeUniqueness = runif(10, 0.5, 0.9),
+    indivMeanKin = runif(10, 0.1, 0.4),
+    gu = runif(10, 0.5, 0.9),
     stringsAsFactors = FALSE
   )
   test_ped <- data.frame(
@@ -475,8 +475,8 @@ test_that("plots handle single data point", {
 
   test_gv <- data.frame(
     id = "SingleAnimal",
-    meanKinship = 0.25,
-    genomeUniqueness = 0.75,
+    indivMeanKin = 0.25,
+    gu = 0.75,
     zScore = 0.0,
     stringsAsFactors = FALSE
   )
@@ -509,8 +509,8 @@ test_that("plots handle NA values in data", {
 
   test_gv <- data.frame(
     id = paste0("Animal", 1:10),
-    meanKinship = c(0.1, 0.2, NA, 0.3, 0.4, NA, 0.5, 0.6, 0.7, 0.8),
-    genomeUniqueness = c(0.9, NA, 0.8, 0.7, NA, 0.6, 0.5, 0.4, 0.3, 0.2),
+    indivMeanKin = c(0.1, 0.2, NA, 0.3, 0.4, NA, 0.5, 0.6, 0.7, 0.8),
+    gu = c(0.9, NA, 0.8, 0.7, NA, 0.6, 0.5, 0.4, 0.3, 0.2),
     zScore = c(-1, 0, NA, 1, -0.5, NA, 0.5, -1.5, 1.5, 0),
     stringsAsFactors = FALSE
   )
