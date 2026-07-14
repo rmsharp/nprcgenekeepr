@@ -43,6 +43,13 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-14 · [issue #122] Close the GitHub issue (Session 377)
+- **Action:** Owner confirmed via `AskUserQuestion` (S377's close-out report flagged
+  that the issue remained open even though all 5 plan phases were DONE and
+  `BACKLOG.md`'s tracking was resolved). Closed with `gh issue close 122`, comment
+  summarizing the 5-phase resolution (S373-S377) and pointing to `CHANGELOG.md` and
+  `docs/architecture/module-contract.md`. Non-commit action; recorded here per FM #27.
+
 ### 2026-07-14 · [issue #122] Phase 5: write the contract down and make it enforceable (Session 377)
 - **Deliverable:** Executed Phase 5 (the final phase) of
   `docs/planning/issue122-module-contract-plan.md` following
