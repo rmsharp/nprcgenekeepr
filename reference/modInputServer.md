@@ -6,7 +6,7 @@ pedigree and genotype data files, and quality control validation.
 ## Usage
 
 ``` r
-modInputServer(id, config = NULL)
+modInputServer(id)
 ```
 
 ## Arguments
@@ -14,10 +14,6 @@ modInputServer(id, config = NULL)
 - id:
 
   character vector of length 1. Module namespace identifier.
-
-- config:
-
-  optional reactive expression returning configuration data.
 
 ## Value
 
@@ -36,6 +32,15 @@ A list with reactive components:
   species+sex breeding-age table default)
 
 - `isReady` - Logical indicating if data is ready for next step
+
+- `debugMode` - Logical reflecting the Input tab's "Debug on" checkbox
+
+- `changedCols` - Renamed/changed-column diagnostics from QC
+
+- `errorLst` - The QC error list, used for dynamic tab management
+
+- `pedigreeFileName` - The uploaded file's name, used for dynamic tab
+  management
 
 ## See also
 

@@ -6,7 +6,7 @@ selection, pedigree processing, filtering, and data export.
 ## Usage
 
 ``` r
-modPedigreeServer(id, studbook, config = NULL)
+modPedigreeServer(id, studbook)
 ```
 
 ## Arguments
@@ -18,10 +18,6 @@ modPedigreeServer(id, studbook, config = NULL)
 - studbook:
 
   reactive returning the cleaned studbook data from modInput.
-
-- config:
-
-  optional reactive returning configuration.
 
 ## Value
 
