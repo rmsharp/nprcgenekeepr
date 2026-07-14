@@ -165,13 +165,65 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `test-e2e-genetic-value-detailed.R` (7/7), `test-e2e-genetic-value-tutorial.R`
       (8/8), `test-e2e-summary-statistics-module.R` (8/8), `test-e2e-orip-module.R` (4/4),
       all against the real modified app. See `CHANGELOG.md`.
-      **Phase 4 next:** prune the dead surface (the dead `shared$config` chain incl. a
-      real design decision on delete-vs-wire, `shared$qcResults`, `modSummaryStats`'
-      12 unread returned reactives, `modInput`'s undocumented `@return` elements) and
-      replace the blanket `tryCatch(..., error = function(e) NULL)` swallow in `appServer`
-      with explicit `req()`/contract guards. Depends on Phases 1-3 (all done). Dragon 2
-      bites hardest here -- see the plan's §6 Phase 4 and §7 Dragon 2 before starting.
-      Phase 5 (contract note + guard test) remains **one session** after Phase 4.
+      **Phase 4 DONE -- S376 (2026-07-13):** pruned the dead surface, with two
+      corrections to the plan's own premises found by extending its evidence-based
+      inventory to `tests/` (as the plan's own Phase 4 "scope check" warns to do).
+      **(1) Site-config chain:** owner chose (via `AskUserQuestion`, per the plan's
+      §10 "ask before deleting") to delete the dead `config` param threading only --
+      neither `modInputServer` nor `modPedigreeServer` ever read it in their bodies;
+      the LabKey-connection fields are sourced independently elsewhere
+      (`getDemographics()` -> `setLabKeyDefaults()` -> its own `getSiteInfo()` default
+      arg) and the column-validation fields via direct `getRequiredCols()`/
+      `getPossibleCols()`/`getIncludeColumns()` calls in `qcStudbook()`; a test passing
+      a non-`NULL` config (`test_modInput.R`, now deleted) proved it was behaviorally
+      inert. `shared$config <- loadSiteConfig()` stays at boot (independent issue #50
+      regression coverage). **New, unflagged finding (out of scope, noted not fixed):**
+      `appServer.R`'s `getSiteInfo(expectConfigFile = FALSE)` call for ORIP-tab gating
+      is unprotected by `tryCatch`, so a malformed (but present) config file would
+      still crash boot through that path -- issue #50's fix is incomplete elsewhere;
+      flagged below as a new item, not fixed this session (scope discipline). **(2)
+      `modSummaryStats`' "12 unread reactives" -- the plan's premise was false:** ~53
+      active `testServer()$getReturned()` assertion sites across 4 test files
+      (`test_modSummaryStats_ggplots.R`, `_parity.R`, `_relationships.R`, `.R`) read
+      these exact 12 reactives -- they are the module's only mechanism for
+      unit-testing internal histogram/boxplot rendering, relationship
+      classification, and summary-stat parity, not dead code. Owner chose (via
+      `AskUserQuestion`) to skip this item entirely; **Phase 5's guard test must not
+      inherit this same wrong assumption.** Delivered: removed `shared$qcResults`
+      (dead write, never read); replaced `appServer`'s blanket
+      `tryCatch(..., error = function(e) NULL)` swallow with `req()` at the
+      `cleanedStudbook`/`qcSummary` observers and a narrowed
+      `tryCatch(shiny.silent.error = function(e) NULL)` for `changedCols` (kept
+      independent of `errorLst`/`fileName` in the same observer -- a naive blanket
+      `req()` would have wrongly blocked the Error List tab logic when only
+      `changedCols` wasn't ready, a regression the plan didn't flag); documented
+      `modInputServer`'s 4 previously-undocumented `@return` elements. Verified: full
+      suite 3802 passed/0 failed/0 error/0 warning/167 skipped (baseline unchanged);
+      `devtools::check()` 0 errors/0 warnings/0 notes; lintr 0 lints across all 14
+      changed files; Phase 3E live smoke test via the repo's existing e2e suite --
+      `test-e2e-input-detailed.R` (6/6), `test-e2e-input-incomplete-final-line.R`
+      (2/2), `test-e2e-input-module.R` (5/5), `test-e2e-input-tutorial.R` (8/8),
+      `test-e2e-pedigree-detailed.R` (8/8), `test-e2e-pedigree-module.R` (6/6),
+      `test-e2e-pedigree-tutorial.R` (13/13), all against the real modified app. See
+      `CHANGELOG.md`.
+      **Phase 5 next:** contract note (`docs/architecture/module-contract.md`) +
+      guard test asserting every `mod*Server` returns a named list of reactives whose
+      elements are all functions; bring `modInput` up to the contract and document it
+      as the reference implementation. Depends on Phases 1-4 (all done). **Must not
+      assume `modSummaryStats`' 12 returns are dead** (Phase 4's corrected finding
+      above) -- the guard test needs to account for a module that legitimately
+      returns reactives no *production* caller consumes but real tests do.
+- [ ] **Unprotected `getSiteInfo()` call at the ORIP-tab gate** (READY, Effort S) --
+      found during issue #122 Phase 4 (S376), out of that phase's scope so noted, not
+      fixed. `R/appServer.R:347`'s `oripSiteInfo <- getSiteInfo(expectConfigFile =
+      FALSE)` is not `tryCatch`-guarded: a present-but-malformed site-config file
+      (e.g. missing the required `center` key) makes `getParamDef()` `stop()`,
+      propagating uncaught through this call and crashing app boot -- the exact issue
+      #50 crash class `loadSiteConfig()` (`appServer.R:63`) was built to prevent, but
+      `loadSiteConfig()`'s own protection only covers its own call site, not this
+      independent, unwrapped `getSiteInfo()` call a few lines later. Fix: wrap in
+      `tryCatch` (mirroring `loadSiteConfig()`'s pattern) or route through
+      `loadSiteConfig()`'s already-safe result.
 - [ ] **Issue #123 (XARCH-5, string-column-keyed pipeline, no validated seam)** (DECISION
       NEEDED -- needs its own planning session; Effort L) -- related to #122 but
       explicitly **out of scope** of the S372 plan. Track on GitHub.
