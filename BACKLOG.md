@@ -154,65 +154,21 @@ vocabulary-composition fix, S374 kinship dedup, S375 vocabulary
 collapse, S376 dead-surface pruning, S377 contract doc + guard test).
 The living contract is `docs/architecture/module-contract.md`; it is
 enforced by `tests/testthat/test_moduleContract.R`. `modInput` is the
-reference implementation.* - \[ \] (none remaining) - \[ \]
-**Unprotected
+reference implementation.* - \[ \] (none remaining) - \[ \] **4
+lower-severity unguarded
 [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
-call at the ORIP-tab gate, `appServer.R` half – RESOLVED S378.**
-`R/appServer.R:347`’s `oripSiteInfo <- getSiteInfo(...)` is now
-`tryCatch`-guarded (mirroring
-[`loadSiteConfig()`](https://github.com/rmsharp/nprcgenekeepr/reference/loadSiteConfig.md)’s
-pattern), fails closed (ORIP tab hidden) on a malformed config, and the
-`siteConfig` reactive at the old line 354 reuses the single parsed value
-instead of re-calling
-[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md).
-See `CHANGELOG.md`. **Discovered incomplete by this same session’s live
-Phase 3E check – see the new `appUI.R` item immediately below, which is
-what remains open.** - \[ \] **Unprotected
-[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
-call in `appUI.R`’s default argument (sibling of the `appServer.R` item
-just above)** (READY, Effort S) – found via a live
-[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
-boot during S378’s Phase 3E check of the `appServer.R` fix (not by
-static grep – `shiny::testServer(appServer, ...)` cannot catch this; it
-only exercises
-[`appServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/appServer.md),
-never
-[`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)).
-`R/appUI.R:20`:
-`appUI <- function(siteInfo = getSiteInfo(expectConfigFile = FALSE))` –
-the default-argument expression is evaluated the first time `siteInfo`
-is referenced inside the function body, which happens on every real call
-([`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
-calls
-[`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
-with no argument). A present-but-malformed site-config file
-(e.g. missing the required `center` key) makes `getParamDef()`
-[`stop()`](https://rdrr.io/r/base/stop.html), propagating uncaught – so
-app boot still crashes on a malformed config, via UI construction
-instead of the server, even after the `appServer.R` fix. Same crash
-class as issue \#50 and the `appServer.R` item above. Fix shape: a
-default argument can’t itself contain a multi-line `tryCatch`, so wrap
-inside the function body instead – e.g. `siteInfo = NULL` as the
-default, then
-`if (is.null(siteInfo)) siteInfo <- tryCatch(getSiteInfo(expectConfigFile = FALSE), error = function(e) { flog.warn(...); NULL })`
-as the first body statement, with
-`showOrip <- shouldShowOripTab(siteInfo$center, ...)` guarded the same
-way the `appServer.R` fix guards it (`!is.null(siteInfo) && ...`). RED
-test: call `appUI(siteInfo = NULL)`-triggering-default (i.e. call
-[`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
-with no arg) against a temp `HOME` holding a malformed config file,
-`expect_no_error()`. **Already grepped (S378) so this item doesn’t have
-to be rediscovered piecemeal – `grep -rn "getSiteInfo(" R/` found,
-beyond this and the resolved `appServer.R` item, four call sites of the
-SAME unguarded-call shape but a DIFFERENT severity class, noted here for
-completeness, deliberately NOT bundled into this item’s fix:** (1)
-`R/modORIPReporting.R:148` and `:244` – both are the `else` branch of
+call sites** (READY, Effort S) – found by S378’s
+`grep -rn "getSiteInfo(" R/` inventory while fixing the
+`appServer.R`/`appUI.R` ORIP-tab-gate sibling pair (both now resolved –
+see `CHANGELOG.md` 2026-07-14 S378/S379 entries), deliberately NOT
+bundled into either fix. **(1)** `R/modORIPReporting.R:148` and `:244` –
+both are the `else` branch of
 `if (!is.null(siteConfig)) tryCatch(siteConfig(), error = ...) else getSiteInfo(expectConfigFile = FALSE)`;
 DEAD in the real running app (`appServer.R` always passes a non-`NULL`
 `siteConfig`), only reachable if
 [`modORIPReportingServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modORIPReportingServer.md)
-is ever called directly without that argument – lower priority than this
-item, not a live boot-crash path. (2) `R/appServer.R:124` –
+is ever called directly without that argument – lowest priority, not a
+live boot-crash path. **(2)** `R/appServer.R:124` –
 `getSiteInfo()$homeDir` inside the “Debug on” checkbox’s `observeEvent`;
 fires only on a user-triggered UI action (not boot), and per
 `PROJECT_LEARNINGS.md` Learning 347(d) an observer’s uncaught error
@@ -220,16 +176,16 @@ surfaces to Shiny as a non-fatal
 [`warning()`](https://rdrr.io/r/base/warning.html), not a full-process
 crash – same root defect (unguarded
 [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)),
-materially lower severity (one broken feature vs. the whole app failing
-to boot), a candidate for its own small follow-up, not this one. (3)
+materially lower severity (one broken feature vs. the whole app failing
+to boot), a candidate for its own small follow-up. **(3)**
 `R/getLkDirectAncestors.R:26`, `R/setLabKeyDefaults.R:44` (default arg),
 `R/getPedigreeSource.R:83`, `R/getDemographics.R:39` – all
 user-triggered LabKey-fetch call sites, unrelated to app boot or ORIP
 gating; a broader “should
 [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
 itself be defensive” question, explicitly a DIFFERENT, out-of-scope
-concern from the issue \#50 / ORIP-tab-gate crash class this item and
-its resolved sibling belong to – do not fold into this item. - \[ \]
+concern from the issue \#50 / ORIP-tab-gate crash class the two resolved
+items belonged to – do not fold into one fix without re-scoping. - \[ \]
 **Issue \#123 (XARCH-5, string-column-keyed pipeline, no validated
 seam)** (DECISION NEEDED – needs its own planning session; Effort L) –
 related to \#122 but explicitly **out of scope** of the S372 plan. Track

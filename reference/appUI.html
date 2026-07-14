@@ -54,7 +54,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">appUI</span><span class="op">(</span>siteInfo <span class="op">=</span> <span class="fu"><a href="getSiteInfo.html">getSiteInfo</a></span><span class="op">(</span>expectConfigFile <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">appUI</span><span class="op">(</span>siteInfo <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -63,11 +63,14 @@
 
 <dl><dt id="arg-siteinfo">siteInfo<a class="anchor" aria-label="anchor" href="#arg-siteinfo"></a></dt>
 <dd><p>Named list of site configuration as returned by
-<code><a href="getSiteInfo.html">getSiteInfo</a></code>; defaults to
-<code>getSiteInfo(expectConfigFile = FALSE)</code>. Its <code>center</code> and
-<code>configFile</code> elements gate the Oregon (ONPRC)-specific ORIP Reporting
-tab, which is shown only for an actual ONPRC configuration (see
-<code><a href="shouldShowOripTab.html">shouldShowOripTab</a></code>).</p></dd>
+<code><a href="getSiteInfo.html">getSiteInfo</a></code>; defaults to <code>NULL</code>, in which case it is
+resolved internally via <code>getSiteInfo(expectConfigFile = FALSE)</code>. A
+present-but-malformed site-config file makes that call fail; the failure
+is caught and logged (<code><a href="https://rdrr.io/pkg/futile.logger/man/flog.logger.html" class="external-link">futile.logger::flog.warn</a></code>) rather than
+propagating, and the UI falls back to hiding the ORIP Reporting tab. Its
+<code>center</code> and <code>configFile</code> elements gate the Oregon
+(ONPRC)-specific ORIP Reporting tab, which is shown only for an actual
+ONPRC configuration (see <code><a href="shouldShowOripTab.html">shouldShowOripTab</a></code>).</p></dd>
 
 </dl></div>
     <div class="section level2">

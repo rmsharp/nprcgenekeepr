@@ -5,7 +5,7 @@ Main Application UI for nprcgenekeepr
 ## Usage
 
 ``` r
-appUI(siteInfo = getSiteInfo(expectConfigFile = FALSE))
+appUI(siteInfo = NULL)
 ```
 
 ## Arguments
@@ -14,9 +14,15 @@ appUI(siteInfo = getSiteInfo(expectConfigFile = FALSE))
 
   Named list of site configuration as returned by
   [`getSiteInfo`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md);
-  defaults to `getSiteInfo(expectConfigFile = FALSE)`. Its `center` and
-  `configFile` elements gate the Oregon (ONPRC)-specific ORIP Reporting
-  tab, which is shown only for an actual ONPRC configuration (see
+  defaults to `NULL`, in which case it is resolved internally via
+  `getSiteInfo(expectConfigFile = FALSE)`. A present-but-malformed
+  site-config file makes that call fail; the failure is caught and
+  logged
+  ([`futile.logger::flog.warn`](https://rdrr.io/pkg/futile.logger/man/flog.logger.html))
+  rather than propagating, and the UI falls back to hiding the ORIP
+  Reporting tab. Its `center` and `configFile` elements gate the Oregon
+  (ONPRC)-specific ORIP Reporting tab, which is shown only for an actual
+  ONPRC configuration (see
   [`shouldShowOripTab`](https://github.com/rmsharp/nprcgenekeepr/reference/shouldShowOripTab.md)).
 
 ## Value

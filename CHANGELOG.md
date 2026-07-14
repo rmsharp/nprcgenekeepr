@@ -47,6 +47,55 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-14 · \[ad hoc\] Guard the unprotected `getSiteInfo()` call in `appUI.R`’s default argument (Session 379)
+
+- **Deliverable:** `R/appUI.R:20`’s
+  `appUI <- function(siteInfo = getSiteInfo(expectConfigFile = FALSE))`
+  evaluated its default-argument expression on first reference inside
+  the function body – which happens on every real call
+  ([`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+  calls
+  [`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
+  with no argument). A present-but-malformed site-config file
+  (e.g. missing the required `center` key) made `getParamDef()`
+  [`stop()`](https://rdrr.io/r/base/stop.html), propagating uncaught and
+  crashing app boot via UI construction – the sibling of the
+  `appServer.R` half fixed in Session 378, found by that same session’s
+  live Phase 3E check and filed as a precisely-scoped `BACKLOG.md` item
+  (fix shape + ready-to-run RED test included). Fixed by changing the
+  default to `NULL` and resolving it via a body-level `tryCatch`
+  mirroring `appServer.R`’s exact pattern (log via
+  [`futile.logger::flog.warn`](https://rdrr.io/pkg/futile.logger/man/flog.logger.html),
+  fall back to `NULL`), guarding the downstream `showOrip` computation
+  with `!is.null(siteInfo) &&` so the `NULL` fallback fails closed (ORIP
+  tab hidden) instead of crashing
+  [`file.exists()`](https://rdrr.io/r/base/files.html) on a `NULL`
+  argument. Applied the BACKLOG item’s fix shape and RED test recipe
+  verbatim; added a second RED test (fails-closed ORIP-tab-absence
+  assertion) mirroring `test_appServer_server.R`’s existing pair. Strict
+  TDD RED-\>GREEN throughout (REFACTOR declared unneeded); 2 new tests
+  in `tests/testthat/test_appUI_siteinfo.R`.
+- **Verification:** target test file 2/2 passed; `test_appUI_version.R`
+  (regression) 3/3 passed; full suite 3217 passed/169 skipped/0 failed/0
+  error/0 warning; `devtools::check()` (both plain and `--no-manual`
+  variants) 0 errors/0 warnings/0 notes; lintr 0 lints on both changed
+  files. Phase 3E: live
+  [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+  boot performed (not declared N/A) –
+  `shinyApp(ui = appUI(), server = appServer)` construction against a
+  malformed config succeeded without crashing (the exact point that
+  crashed pre-fix), and the emitted `flog.warn` log line confirmed the
+  `tryCatch` guard’s catch branch executed as designed. The subsequent
+  browser-stability check hit an unrelated, pre-existing environment
+  issue (the exact `modBreedingGroupsServer` stale-system-library
+  signature `PROJECT_LEARNINGS.md` Learning 349(d) already documented) –
+  recognized by signature match rather than re-diagnosed; see Learning
+  350 for the full detail. This closes the `appServer.R`/`appUI.R`
+  sibling-bug pair from the issue \#50 crash class; `BACKLOG.md`’s
+  severity-graded inventory of 4 further, lower-severity unguarded
+  [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
+  call sites remains open, deliberately out of this session’s scope.
+
 ### 2026-07-14 · \[ad hoc\] Guard the unprotected `getSiteInfo()` call at the ORIP-tab gate, `appServer.R` half (Session 378)
 
 - **Deliverable:** `R/appServer.R:347`’s
