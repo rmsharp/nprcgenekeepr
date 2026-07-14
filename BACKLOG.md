@@ -110,109 +110,12 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       and the runbook's HARD STOP.
 
 ## Architecture (issue #122 / XARCH-2 -- module contract)
-- [ ] **Execute the issue #122 module-contract plan, Phase 3** (READY, Effort S) --
-      planning session DONE (S372): `docs/planning/issue122-module-contract-plan.md`.
-      **Phase 1 DONE -- S373 (2026-07-12):** fixed the reproduced user-facing bug --
-      `reportGV()` (exported) emits `indivMeanKin`/`gu` while `makeGeneticSummaryTable()`
-      (exported) consumed `meanKinship`/`genomeUniqueness`, so
-      `makeGeneticSummaryTable(reportGV(ped)$report)` silently returned an all-`NA` table.
-      New internal `@noRd` normalizer (`R/normalizeGvReport.R`) + `makeGeneticSummaryTable()`
-      now tolerant of both vocabularies. Additive; broke no exported contract; touched no
-      module (`NAMESPACE` unchanged). Verified end-to-end against `qcPed`
-      (`makeGeneticSummaryTable(reportGV(qcPed)$report)` now populates correctly) and via
-      full suite (0 failed/0 error/0 warning) + `devtools::check()` (0/0/0). See
-      `CHANGELOG.md`.
-      **Phase 2 DONE -- S374 (2026-07-12):** killed `modBreedingGroups`' unreachable
-      kinship-reuse branch (never once returned a matrix -- `shared$geneticValues` is a
-      data frame, never had a `$kinship` element); hoisted one shared, memoized,
-      full-pedigree `sharedKinshipMatrix` reactive into `appServer`
-      (`kinship()`+`applyKinshipOverridesToMatrix()`, matching each consumer's own prior
-      recompute formula exactly), threaded to both `modSummaryStatsServer` and
-      `modBreedingGroupsServer` (new `kinshipMatrix` param) instead of each independently
-      recomputing it. Recompute fallback retained in both consumers (Dragon 3). Dragon 1
-      sidestepped by construction: the shared reactive is always full-pedigree, never
-      `gvResults$kinshipMatrix` -- confirmed via `setPopulation()`'s source (only flags a
-      `population` column, never filters rows) and empirically via the plan's mandatory
-      `identical()` gate against the real 280-animal `qcPed` fixture, with and without
-      focal animals. Dragon 2's cited `test_modErrorHandling.R:180-184` pin
-      (`modBreedingGroupsServer` tryCatch/showNotification) stayed green unmodified --
-      the deleted dead branch was not that test's actual tryCatch source (a second,
-      unrelated one lives in the group-formation `eventReactive`). Verified: full suite
-      0 failed/0 error/0 warning; `devtools::check()` 0/0/0; Phase 3E live smoke test via
-      the repo's existing browser e2e suite (`NPRC_RUN_E2E=true` -- not just `NOT_CRAN`),
-      `test-e2e-breeding-groups-module.R` (7/7) and `test-e2e-summary-statistics-module.R`
-      (8/8) both pass against the real modified `appServer`. See `CHANGELOG.md`.
-      **Phase 3 DONE -- S375 (2026-07-13):** vocabulary collapse. Deleted the
-      `geneticValues` rename closure (`R/modGeneticValue.R`) so it returns `gvResults()`
-      directly, and the now-redundant `mkCol`/`guCol` dual-vocabulary display probes in
-      `gvSummary`/`gvScatterPlot`; migrated `modSummaryStats.R` (~13 sites) and
-      `modORIPReporting.R` (4 sites) to canonical `indivMeanKin`/`gu`. `rg
-      'meanKinship|genomeUniqueness' R/mod*.R` now returns zero hits outside two verified
-      out-of-scope exclusions: the unrelated `genomeUniquenessSE`/`guSE` fallback in
-      `gvSummary` (a different vocabulary concern the plan doesn't touch) and the
-      `meanKinshipBoxPlotGG`/`meanKinshipBoxPlot` reactive/list-key identifiers (not data
-      columns; renaming the exported list key would be an exported-contract change, out
-      of scope per Dragon 5). Five of the plan's originally-cited 12 test files turned out
-      to be false positives on firsthand verification (`test_modBreedingGroups.R`,
-      `test_modFounderStats.R`, `test_makeGeneticSummaryTable.R`,
-      `test_modGeneticValue_coverage.R`, `test-e2e-genetic-value-tutorial.R` -- none
-      actually exercise the migrated read sites); the other 7 were updated. Verified: full
-      suite 0 failed/0 error/0 warning/167 skipped (baseline unchanged);
-      `devtools::check()` 0/0/0; end-to-end against the real 280-animal `qcPed` fixture
-      (`geneticValues()` identical to `gvResults()`; `modSummaryStats`/`modORIPReporting`
-      render the exact same mean values computed independently); Phase 3E live smoke test
-      via the repo's existing e2e suite -- `test-e2e-genetic-value-module.R` (7/7),
-      `test-e2e-genetic-value-detailed.R` (7/7), `test-e2e-genetic-value-tutorial.R`
-      (8/8), `test-e2e-summary-statistics-module.R` (8/8), `test-e2e-orip-module.R` (4/4),
-      all against the real modified app. See `CHANGELOG.md`.
-      **Phase 4 DONE -- S376 (2026-07-13):** pruned the dead surface, with two
-      corrections to the plan's own premises found by extending its evidence-based
-      inventory to `tests/` (as the plan's own Phase 4 "scope check" warns to do).
-      **(1) Site-config chain:** owner chose (via `AskUserQuestion`, per the plan's
-      §10 "ask before deleting") to delete the dead `config` param threading only --
-      neither `modInputServer` nor `modPedigreeServer` ever read it in their bodies;
-      the LabKey-connection fields are sourced independently elsewhere
-      (`getDemographics()` -> `setLabKeyDefaults()` -> its own `getSiteInfo()` default
-      arg) and the column-validation fields via direct `getRequiredCols()`/
-      `getPossibleCols()`/`getIncludeColumns()` calls in `qcStudbook()`; a test passing
-      a non-`NULL` config (`test_modInput.R`, now deleted) proved it was behaviorally
-      inert. `shared$config <- loadSiteConfig()` stays at boot (independent issue #50
-      regression coverage). **New, unflagged finding (out of scope, noted not fixed):**
-      `appServer.R`'s `getSiteInfo(expectConfigFile = FALSE)` call for ORIP-tab gating
-      is unprotected by `tryCatch`, so a malformed (but present) config file would
-      still crash boot through that path -- issue #50's fix is incomplete elsewhere;
-      flagged below as a new item, not fixed this session (scope discipline). **(2)
-      `modSummaryStats`' "12 unread reactives" -- the plan's premise was false:** ~53
-      active `testServer()$getReturned()` assertion sites across 4 test files
-      (`test_modSummaryStats_ggplots.R`, `_parity.R`, `_relationships.R`, `.R`) read
-      these exact 12 reactives -- they are the module's only mechanism for
-      unit-testing internal histogram/boxplot rendering, relationship
-      classification, and summary-stat parity, not dead code. Owner chose (via
-      `AskUserQuestion`) to skip this item entirely; **Phase 5's guard test must not
-      inherit this same wrong assumption.** Delivered: removed `shared$qcResults`
-      (dead write, never read); replaced `appServer`'s blanket
-      `tryCatch(..., error = function(e) NULL)` swallow with `req()` at the
-      `cleanedStudbook`/`qcSummary` observers and a narrowed
-      `tryCatch(shiny.silent.error = function(e) NULL)` for `changedCols` (kept
-      independent of `errorLst`/`fileName` in the same observer -- a naive blanket
-      `req()` would have wrongly blocked the Error List tab logic when only
-      `changedCols` wasn't ready, a regression the plan didn't flag); documented
-      `modInputServer`'s 4 previously-undocumented `@return` elements. Verified: full
-      suite 3802 passed/0 failed/0 error/0 warning/167 skipped (baseline unchanged);
-      `devtools::check()` 0 errors/0 warnings/0 notes; lintr 0 lints across all 14
-      changed files; Phase 3E live smoke test via the repo's existing e2e suite --
-      `test-e2e-input-detailed.R` (6/6), `test-e2e-input-incomplete-final-line.R`
-      (2/2), `test-e2e-input-module.R` (5/5), `test-e2e-input-tutorial.R` (8/8),
-      `test-e2e-pedigree-detailed.R` (8/8), `test-e2e-pedigree-module.R` (6/6),
-      `test-e2e-pedigree-tutorial.R` (13/13), all against the real modified app. See
-      `CHANGELOG.md`.
-      **Phase 5 next:** contract note (`docs/architecture/module-contract.md`) +
-      guard test asserting every `mod*Server` returns a named list of reactives whose
-      elements are all functions; bring `modInput` up to the contract and document it
-      as the reference implementation. Depends on Phases 1-4 (all done). **Must not
-      assume `modSummaryStats`' 12 returns are dead** (Phase 4's corrected finding
-      above) -- the guard test needs to account for a module that legitimately
-      returns reactives no *production* caller consumes but real tests do.
+*Resolved -- S372 planning session through S377 execution (Phases 1-5, all DONE); see
+`CHANGELOG.md` for the per-phase detail (S373 vocabulary-composition fix, S374 kinship
+dedup, S375 vocabulary collapse, S376 dead-surface pruning, S377 contract doc + guard
+test). The living contract is `docs/architecture/module-contract.md`; it is enforced by
+`tests/testthat/test_moduleContract.R`. `modInput` is the reference implementation.*
+- [ ] (none remaining)
 - [ ] **Unprotected `getSiteInfo()` call at the ORIP-tab gate** (READY, Effort S) --
       found during issue #122 Phase 4 (S376), out of that phase's scope so noted, not
       fixed. `R/appServer.R:347`'s `oripSiteInfo <- getSiteInfo(expectConfigFile =
