@@ -4,15 +4,18 @@
 \alias{appUI}
 \title{Main Application UI for nprcgenekeepr}
 \usage{
-appUI(siteInfo = getSiteInfo(expectConfigFile = FALSE))
+appUI(siteInfo = NULL)
 }
 \arguments{
 \item{siteInfo}{Named list of site configuration as returned by
-\code{\link{getSiteInfo}}; defaults to
-\code{getSiteInfo(expectConfigFile = FALSE)}. Its \code{center} and
-\code{configFile} elements gate the Oregon (ONPRC)-specific ORIP Reporting
-tab, which is shown only for an actual ONPRC configuration (see
-\code{\link{shouldShowOripTab}}).}
+\code{\link{getSiteInfo}}; defaults to \code{NULL}, in which case it is
+resolved internally via \code{getSiteInfo(expectConfigFile = FALSE)}. A
+present-but-malformed site-config file makes that call fail; the failure
+is caught and logged (\code{futile.logger::flog.warn}) rather than
+propagating, and the UI falls back to hiding the ORIP Reporting tab. Its
+\code{center} and \code{configFile} elements gate the Oregon
+(ONPRC)-specific ORIP Reporting tab, which is shown only for an actual
+ONPRC configuration (see \code{\link{shouldShowOripTab}}).}
 }
 \value{
 A \code{shiny.tag.list} object (as produced by

@@ -4,11 +4,14 @@
 #' Main Application UI for nprcgenekeepr
 #'
 #' @param siteInfo Named list of site configuration as returned by
-#'   \code{\link{getSiteInfo}}; defaults to
-#'   \code{getSiteInfo(expectConfigFile = FALSE)}. Its \code{center} and
-#'   \code{configFile} elements gate the Oregon (ONPRC)-specific ORIP Reporting
-#'   tab, which is shown only for an actual ONPRC configuration (see
-#'   \code{\link{shouldShowOripTab}}).
+#'   \code{\link{getSiteInfo}}; defaults to \code{NULL}, in which case it is
+#'   resolved internally via \code{getSiteInfo(expectConfigFile = FALSE)}. A
+#'   present-but-malformed site-config file makes that call fail; the failure
+#'   is caught and logged (\code{futile.logger::flog.warn}) rather than
+#'   propagating, and the UI falls back to hiding the ORIP Reporting tab. Its
+#'   \code{center} and \code{configFile} elements gate the Oregon
+#'   (ONPRC)-specific ORIP Reporting tab, which is shown only for an actual
+#'   ONPRC configuration (see \code{\link{shouldShowOripTab}}).
 #' @return A \code{shiny.tag.list} object (as produced by
 #'   \code{shiny::tagList()}) describing the complete GeneKeepR user interface;
 #'   pass it as the \code{ui} argument to \code{shiny::shinyApp()} or
@@ -17,12 +20,32 @@
 #' @importFrom shiny navbarPage tabPanel icon fluidRow column div h1 p hr
 #' @importFrom shiny actionButton navbarMenu tags includeScript
 #' @export
-appUI <- function(siteInfo = getSiteInfo(expectConfigFile = FALSE)) {
+appUI <- function(siteInfo = NULL) {
+
+  # The getSiteInfo() call is wrapped in tryCatch (mirroring appServer.R's
+  # ORIP-gate guard, issue #50 crash class) so a present-but-malformed config
+  # file can never crash THIS call site -- the UI-side twin of the
+  # appServer.R gate, found live-testing that fix (S378) and fixed here (the
+  # BACKLOG.md "appUI.R" item).
+  if (is.null(siteInfo)) {
+    siteInfo <- tryCatch(
+      getSiteInfo(expectConfigFile = FALSE),
+      error = function(e) {
+        futile.logger::flog.warn(
+          "Failed to load site configuration for ORIP gating: %s",
+          conditionMessage(e),
+          name = "nprcgenekeepr"
+        )
+        NULL
+      }
+    )
+  }
 
   # ORIP Reporting is Oregon (ONPRC)-specific; show its tab only for an actual
-  # ONPRC site configuration (#49).
-  showOrip <- shouldShowOripTab(siteInfo$center,
-                                file.exists(siteInfo$configFile))
+  # ONPRC site configuration (#49). Fails closed (tab hidden) if siteInfo
+  # could not be resolved.
+  showOrip <- !is.null(siteInfo) &&
+    shouldShowOripTab(siteInfo$center, file.exists(siteInfo$configFile))
 
   # Include data-ready JavaScript for E2E testing
   dataReadyJS <- system.file("www", "js", "data-ready.js",
