@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S380
+date: 2026-07-14
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Guard the 3 lower-severity unguarded getSiteInfo() call sites scoped this session (R/modORIPReporting.R:148,244 dead-code else branch; R/appServer.R:124 Debug-checkbox observer) -- non-LabKey subset of BACKLOG.md's "4 lower-severity unguarded getSiteInfo() call sites" item. The 4 LabKey-fetch sites stay out of scope per the backlog's own re-scoping note.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S379
 date: 2026-07-14
 status: complete
