@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S378
+date: 2026-07-14
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Guard the unprotected getSiteInfo(expectConfigFile = FALSE) call at R/appServer.R:347 -- a present-but-malformed site-config file crashes app boot via getParamDef()'s stop(), the same issue #50 crash class loadSiteConfig() was built to prevent but doesn't cover this independent call site.
+what_was_done: pending
+next_steps: pending
+key_files: R/appServer.R:347 (target), R/loadSiteConfig.R (existing tryCatch pattern to mirror), tests/testthat/test_appServer_server.R (existing appServer testServer() suite), tests/testthat/test_loadSiteConfig.R (existing #50 regression pattern).
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S377
 date: 2026-07-14
 status: complete
