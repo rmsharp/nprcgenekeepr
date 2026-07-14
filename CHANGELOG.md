@@ -43,6 +43,42 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-14 · [issue #122] Phase 5: write the contract down and make it enforceable (Session 377)
+- **Deliverable:** Executed Phase 5 (the final phase) of
+  `docs/planning/issue122-module-contract-plan.md` following
+  `DEVELOPMENT_WORKSTREAM.md` under strict TDD, classified PRE-RED -> REFACTOR (not
+  RED -> GREEN): firsthand verification found all 10 `mod*Server` functions already
+  satisfied the "named list of reactives, all elements functions" shape before any
+  edit, so there was no failing behavior for a RED test to drive -- a characterization
+  guard, per the project's established precedent (`PROJECT_LEARNINGS.md` Learning
+  277). Wrote `docs/architecture/module-contract.md` (the §4.4 contract as a living
+  standards doc, house-styled on `docs/conventions/ROXYGEN_EXAMPLES_POLICY.md`, citing
+  `modInput` as the reference implementation and documenting two deliberate contract
+  exceptions: `modGvAndBgDescServer`'s bare `NULL` return, and `gestationTable`'s
+  bare-`reactiveValues` read into `modPotentialParentsServer`, Dragon 4). Added
+  `tests/testthat/test_moduleContract.R`, a cross-cutting guard test exercising all 10
+  `mod*Server` functions via `shiny::testServer()` with args mirroring `appServer.R`'s
+  real call sites, asserting an exhaustive named-list-of-functions shape for 9 modules
+  plus the declared NULL exception for the 10th; proved the guard's non-vacuity with an
+  explicit negative control (3 deliberately broken module stand-ins, each caught).
+  Added a roxygen `@note` to `modInputServer` citing the contract doc and marking it
+  the reference implementation; `devtools::document()` run standalone (regenerated only
+  `man/modInputServer.Rd`, `NAMESPACE` unchanged). **Finding: `modInput` was already
+  fully contract-compliant** -- S376's Phase 4 work (dead `config` param removal,
+  completing its `@return` docs) had already, as a side effect, cleared Phase 5's
+  stated "bring modInput up to the contract" prerequisite; the plan's own §4.4
+  blockquote and S376's handoff gotcha both still described it as non-compliant,
+  stale relative to S376's own commits. Also fixed a `.gitignore` gap discovered while
+  committing: `docs/*` was blanket-ignored with a per-subdirectory allowlist that did
+  not yet include `docs/architecture/`, which would have silently dropped the new
+  contract doc from every commit. Verified: full suite 3870 passed/0 failed/0 error/0
+  warning/167 skipped (3802 baseline + 68 new guard-test expectations);
+  `devtools::check()` 0 errors/0 warnings/0 notes; lintr 0 lints on both changed files.
+  Phase 3E: N/A, declared explicitly -- no runtime behavior changed (docs + a new test
+  file only). **Issue #122 (XARCH-2) is now fully resolved** -- all 5 plan phases DONE
+  across S373-S377; `BACKLOG.md`'s "Architecture (issue #122)" section pruned to a
+  resolved pointer. See `PROJECT_LEARNINGS.md` Learning 348, `BACKLOG.md`.
+
 ### 2026-07-13 · [issue #122] Phase 4: prune the dead surface (Session 376)
 - **Deliverable:** Executed Phase 4 of `docs/planning/issue122-module-contract-plan.md`
   following `DEVELOPMENT_WORKSTREAM.md` under strict TDD (RED -> GREEN -> REFACTOR, 2
