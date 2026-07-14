@@ -62,16 +62,16 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S379
 date: 2026-07-14
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Guard the unprotected getSiteInfo(expectConfigFile = FALSE) default-argument call in R/appUI.R:20 -- the sibling bug S378's live Phase 3E check found but left out of scope.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Guarded R/appUI.R:20's unprotected getSiteInfo() default-argument call (DONE). This closes the appServer.R/appUI.R sibling-bug pair from the issue #50 crash class. Follow-up filed: BACKLOG.md "4 lower-severity unguarded getSiteInfo() call sites" (S378's severity-graded inventory, now standing on its own).
+what_was_done: R/appUI.R: changed appUI <- function(siteInfo = getSiteInfo(expectConfigFile = FALSE)) to siteInfo = NULL, resolved via a body-level tryCatch mirroring appServer.R's exact pattern (futile.logger::flog.warn on error, fall back to NULL); guarded showOrip with !is.null(siteInfo) && so a NULL fallback fails closed instead of crashing file.exists(NULL); updated the @param roxygen doc; devtools::document() regenerated man/appUI.Rd. Applied BACKLOG.md's fully-specified fix shape and RED test recipe verbatim (filed by S378); added a second RED test (fails-closed ORIP-tab-absence assertion). Strict TDD RED->GREEN (REFACTOR declared unneeded, 0 lints), 2 AskUserQuestion phase gates (no pre-RED scope decision needed -- fix shape had no open alternative). Verification: target file 2/2 passed; test_appUI_version.R regression 3/3 passed; full suite 3217 passed/169 skipped/0 failed/0 error/0 warning; devtools::check() (plain and --no-manual variants) both 0/0/0; lintr 0/0; grep confirmed explicit-siteInfo callers (test_modORIPReporting.R) unaffected. Phase 3E live shinytest2::AppDriver boot: shinyApp(ui = appUI(), server = appServer) construction against a malformed config succeeded without crashing (the exact point that crashed pre-fix); WARN log line confirmed the tryCatch guard fired. Subsequent AppDriver browser-stability check hit the exact, already-documented Learning 349(d) modBreedingGroupsServer stale-system-library signature -- recognized by match, not re-diagnosed. Pruned BACKLOG.md per [[backlog-vs-changelog-placement]]: removed both the appServer.R and appUI.R resolved items entirely (rather than leaving RESOLVED status lines), re-filed the still-open 4-site inventory as its own standalone item. Wrote PROJECT_LEARNINGS.md Learning 350 (2 sub-findings). Commit: pending (lands in this close-out commit).
+next_steps: No immediate follow-up required for THIS bug class -- the appServer.R/appUI.R sibling pair is fully resolved. Pick from BACKLOG.md's remaining open items: the standalone "4 lower-severity unguarded getSiteInfo() call sites" item (READY, Effort S, lowest of the four internally but still open); CRAN resubmission (READY, owner-only); Document 2 Phase D (READY, Effort M); LabKey integration remainder (BLOCKED, needs a live LabKey server); issue #123/XARCH-5 (DECISION NEEDED, needs its own planning session).
+key_files: R/appUI.R:4-51 (roxygen @param + the fix), man/appUI.Rd (regenerated), tests/testthat/test_appUI_siteinfo.R (new, 2 tests), CHANGELOG.md (2026-07-14 S379 entry), BACKLOG.md (both getSiteInfo()-pair items removed, replaced with the standalone 4-site item), PROJECT_LEARNINGS.md Learning 350, CLAUDE.md (learnings-count pointer refreshed to 350).
+gotchas: (1) The appServer.R/appUI.R sibling-bug pair (issue #50 crash class) is now FULLY resolved -- don't re-open either without re-confirming against current source first. (2) The [e2e-subprocess-lib]/Learning 349(d) modBreedingGroupsServer staleness trap (missing openxlsx in the system library) is STILL unfixed -- any future live AppDriver check needing full browser-stability confirmation will hit it again; fixing it is its own small infrastructure task. (3) NOT_CRAN=true is still needed even OUTSIDE test_that() for a live shinytest2/chromote check (Learning 349(c), re-confirmed). (4) BACKLOG.md hygiene: close out a completed item by REMOVING it, not by leaving a "RESOLVED S<N>" status line -- per [[backlog-vs-changelog-placement]] (user-flagged twice); this session had to self-correct an initial draft that repeated S378's own non-compliant precedent.
+runtime_smoke: Performed, not declared N/A -- live shinytest2::AppDriver boot with a malformed config confirmed the exact point that crashed pre-fix (shinyApp construction) now succeeds, with a WARN log line as direct positive evidence the guard fired. The subsequent browser-stability sub-check hit an unrelated, already-documented environment issue (Learning 349(d)) -- same limitation S378 hit on its second check, not a new finding.
+changelog_ref: CHANGELOG.md 2026-07-14 S379 entry
 commit: pending
 ```
 
