@@ -72,7 +72,7 @@ key_files: R/appServer.R:38-39 (new @importFrom flog.warn), R/appServer.R:346-37
 gotchas: (1) appUI.R:20's identical bug is the next pickup, already scoped in BACKLOG.md. (2) A live shinytest2/chromote check needs NOT_CRAN=true even OUTSIDE test_that() -- an ad-hoc script fails with a bare "Reason: On CRAN" otherwise. (3) AppDriver$new() accepts a shiny.appobj directly (no system-library install needed) for a "does it crash" check, but the subprocess can still resolve STALE code for functions the passed object calls by name -- not reliable for wiring/signature regressions here (the system library is missing openxlsx, added S363, so R CMD INSTALL there currently fails; a separate concern, not fixed this session).
 runtime_smoke: Performed, not declared N/A -- live shinytest2::AppDriver boot with a malformed config found the appUI.R gap (the actual point of doing this). A second live check (valid-config regression) was inconclusive due to an unrelated, pre-existing e2e-subprocess-staleness issue; happy path verified indirectly (unchanged code + existing passing testServer() coverage).
 changelog_ref: CHANGELOG.md 2026-07-14 S378 entry
-commit: pending
+commit: 8bd90042 (implementation + tests, 2 files), 31b49d34 (ledger + learnings, 3 files)
 ```
 
 ```handoff
