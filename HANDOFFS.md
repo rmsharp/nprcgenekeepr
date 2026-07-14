@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S379
+date: 2026-07-14
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Guard the unprotected getSiteInfo(expectConfigFile = FALSE) default-argument call in R/appUI.R:20 -- the sibling bug S378's live Phase 3E check found but left out of scope.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S378
 date: 2026-07-14
 status: complete
