@@ -168,7 +168,6 @@ modPedigreeUI <- function(id) {
 #'
 #' @param id character vector of length 1. Module namespace identifier.
 #' @param studbook reactive returning the cleaned studbook data from modInput.
-#' @param config optional reactive returning configuration.
 #'
 #' @return A list of reactive values:
 #' \itemize{
@@ -195,7 +194,7 @@ modPedigreeUI <- function(id) {
 #' @importFrom utils read.csv write.csv
 #' @family Shiny modules
 #' @export
-modPedigreeServer <- function(id, studbook, config = NULL) {
+modPedigreeServer <- function(id, studbook) {
   moduleServer(id, function(input, output, session) {
 
     # Reactive value to store focal animal IDs

@@ -242,7 +242,6 @@ modInputUI <- function(id) {
 #' of pedigree and genotype data files, and quality control validation.
 #'
 #' @param id character vector of length 1. Module namespace identifier.
-#' @param config optional reactive expression returning configuration data.
 #'
 #' @return A list with reactive components:
 #' \itemize{
@@ -254,6 +253,13 @@ modInputUI <- function(id) {
 #'   \item \code{minDamAge} - The minimum dam age floor (numeric, or
 #'     \code{NULL} to use the species+sex breeding-age table default)
 #'   \item \code{isReady} - Logical indicating if data is ready for next step
+#'   \item \code{debugMode} - Logical reflecting the Input tab's "Debug on"
+#'     checkbox
+#'   \item \code{changedCols} - Renamed/changed-column diagnostics from QC
+#'   \item \code{errorLst} - The QC error list, used for dynamic tab
+#'     management
+#'   \item \code{pedigreeFileName} - The uploaded file's name, used for
+#'     dynamic tab management
 #' }
 #'
 #' @seealso \code{\link{modInputUI}} for the user interface.
@@ -263,7 +269,7 @@ modInputUI <- function(id) {
 #' @importFrom DT renderDT
 #' @family Shiny modules
 #' @export
-modInputServer <- function(id, config = NULL) {
+modInputServer <- function(id) {
 
   moduleServer(id, function(input, output, session) {
 

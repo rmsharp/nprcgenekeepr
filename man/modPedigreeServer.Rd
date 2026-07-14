@@ -4,14 +4,12 @@
 \alias{modPedigreeServer}
 \title{Pedigree Browser Module - Server Function}
 \usage{
-modPedigreeServer(id, studbook, config = NULL)
+modPedigreeServer(id, studbook)
 }
 \arguments{
 \item{id}{character vector of length 1. Module namespace identifier.}
 
 \item{studbook}{reactive returning the cleaned studbook data from modInput.}
-
-\item{config}{optional reactive returning configuration.}
 }
 \value{
 A list of reactive values:

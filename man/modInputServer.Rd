@@ -4,12 +4,10 @@
 \alias{modInputServer}
 \title{Data Input and Quality Control Module - Server Function}
 \usage{
-modInputServer(id, config = NULL)
+modInputServer(id)
 }
 \arguments{
 \item{id}{character vector of length 1. Module namespace identifier.}
-
-\item{config}{optional reactive expression returning configuration data.}
 }
 \value{
 A list with reactive components:
@@ -22,6 +20,13 @@ A list with reactive components:
 \item \code{minDamAge} - The minimum dam age floor (numeric, or
 \code{NULL} to use the species+sex breeding-age table default)
 \item \code{isReady} - Logical indicating if data is ready for next step
+\item \code{debugMode} - Logical reflecting the Input tab's "Debug on"
+checkbox
+\item \code{changedCols} - Renamed/changed-column diagnostics from QC
+\item \code{errorLst} - The QC error list, used for dynamic tab
+management
+\item \code{pedigreeFileName} - The uploaded file's name, used for
+dynamic tab management
 }
 }
 \description{

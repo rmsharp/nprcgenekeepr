@@ -48,7 +48,6 @@ appServer <- function(input, output, session) {
     speciesOverrides = NULL,
     currentStudbook = NULL,
     currentPedigree = NULL,
-    qcResults = NULL,
     geneticValues = NULL,
     breedingGroups = NULL
   )
@@ -102,7 +101,7 @@ appServer <- function(input, output, session) {
   # ========================================
 
   # Input and Quality Control Module
-  inputResults <- modInputServer("dataInput", config = reactive(shared$config))
+  inputResults <- modInputServer("dataInput")
 
   # ========================================
   # Debug Logging (opt-in via the Input tab's "Debug on" checkbox)
@@ -136,27 +135,23 @@ appServer <- function(input, output, session) {
     }
   }, ignoreInit = FALSE, ignoreNULL = FALSE)
 
-  # Update shared data when input/QC completes
-  # Use tryCatch to prevent errors from blocking reactive graph
+  # Update shared data when input/QC completes. req() halts silently until
+  # cleanedStudbook() is ready (its own internal req(qcResults()) guard);
+  # any other error is a genuine contract violation and now surfaces instead
+  # of being swallowed.
   observe({
-    studbook <- tryCatch(inputResults$cleanedStudbook(),
-                         error = function(e) NULL)
-    if (!is.null(studbook)) {
-      shared$currentStudbook <- studbook
-      shared$qcResults <- tryCatch(inputResults$qcSummary(),
-                                   error = function(e) NULL)
-    }
+    shared$currentStudbook <- req(inputResults$cleanedStudbook())
   })
 
   # ========================================
   # QC Result Notifications
   # ========================================
 
-  # Show QC results via notifications and auto-navigate to appropriate tab
+  # Show QC results via notifications and auto-navigate to appropriate tab.
+  # req() halts silently until qcSummary() is ready; any other error now
+  # surfaces instead of being swallowed.
   observe({
-    # Try to get qcSummary - will be NULL until data is processed
-    qcSummary <- tryCatch(inputResults$qcSummary(), error = function(e) NULL)
-    if (is.null(qcSummary)) return()
+    qcSummary <- req(inputResults$qcSummary())
 
     hasErrors <- qcSummary$errors > 0L
     hasWarnings <- qcSummary$warnings > 0L
@@ -201,14 +196,19 @@ appServer <- function(input, output, session) {
   errorTabShown <- reactiveVal(FALSE)
   changedColsTabShown <- reactiveVal(FALSE)
 
-  # Observe QC results to manage Error List tab
+  # Observe QC results to manage Error List tab. errorLst/fileName never
+  # raise (storedErrorLst()/storedFileName() have no internal req()), so they
+  # are read directly. changedCols has its own internal req(qcResults()) and
+  # must stay independent of errorLst/fileName here -- a not-yet-ready
+  # changedCols must not block the Error List tab logic below, which only
+  # needs errorLst/fileName -- so only Shiny's own not-ready signal
+  # (shiny.silent.error) is caught; any other error still surfaces.
   observe({
     # Get errorLst and file name from input module
-    errorLst <- tryCatch(inputResults$errorLst(), error = function(e) NULL)
-    fileName <- tryCatch(inputResults$pedigreeFileName(),
-                         error = function(e) NULL)
+    errorLst <- inputResults$errorLst()
+    fileName <- inputResults$pedigreeFileName()
     changedCols <- tryCatch(inputResults$changedCols(),
-                            error = function(e) NULL)
+                            shiny.silent.error = function(e) NULL)
 
     # Check if we should show the Error List tab
     showErrors <- !is.null(errorLst) && !is.null(fileName) &&
@@ -277,8 +277,7 @@ appServer <- function(input, output, session) {
   # Pedigree Browser Module
   pedigreeResults <- modPedigreeServer(
     "pedigree",
-    studbook = reactive(shared$currentStudbook),
-    config = reactive(shared$config)
+    studbook = reactive(shared$currentStudbook)
   )
 
   # Update shared data when pedigree is created
