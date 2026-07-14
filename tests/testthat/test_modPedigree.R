@@ -79,8 +79,7 @@ test_that("modPedigreeServer returns expected reactive list", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       # Initialize required inputs
@@ -121,8 +120,7 @@ test_that("modPedigreeServer returns correct pedigree data", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       # With unknown IDs displayed
@@ -154,8 +152,7 @@ test_that("modPedigreeServer filters unknown IDs correctly", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       # With unknown IDs hidden
@@ -188,8 +185,7 @@ test_that("modPedigreeServer returns correct animal count", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -217,8 +213,7 @@ test_that("modPedigreeServer focal animals starts empty", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -249,8 +244,7 @@ test_that("modPedigreeServer isReady returns correct status", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -278,8 +272,7 @@ test_that("modPedigreeServer parses focal animal IDs from text area", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -315,8 +308,7 @@ test_that("modPedigreeServer parses focal IDs with various separators", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -352,8 +344,7 @@ test_that("modPedigreeServer parses focal IDs with semicolon separator", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -388,8 +379,7 @@ test_that("modPedigreeServer clearFocalAnimals clears IDs when TRUE", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -430,8 +420,7 @@ test_that("modPedigreeServer trims pedigree based on focal animals", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -475,8 +464,7 @@ test_that("modPedigreeServer handles empty focal animal text", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -511,8 +499,7 @@ test_that("modPedigreeServer handles whitespace-only focal animal text", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -547,8 +534,7 @@ test_that("modPedigreeServer trims whitespace from focal IDs", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -587,8 +573,7 @@ test_that("modPedigreeServer deduplicates focal animal IDs", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -623,8 +608,7 @@ test_that("modPedigreeServer handles tab-separated focal IDs", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -659,8 +643,7 @@ test_that("modPedigreeServer trim with no focal animals shows full pedigree", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -697,8 +680,7 @@ test_that("modPedigreeServer focal animal file handling", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -748,8 +730,7 @@ test_that("modPedigreeServer combines text and file focal IDs", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -795,8 +776,7 @@ test_that("modPedigreeServer handles trim with non-matching focal IDs", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -843,8 +823,7 @@ test_that("modPedigreeServer cleared file is not re-read on the next update", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -889,8 +868,7 @@ test_that("modPedigreeServer cleared text is not re-read on the next update", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -948,8 +926,7 @@ test_that("modPedigreeServer loads a newly chosen file after a clear", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -996,8 +973,7 @@ test_that("modPedigreeServer loads newly typed text after a clear", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(

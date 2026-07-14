@@ -17,7 +17,7 @@ test_that("a failed focal-file read is caught, leaving typed IDs intact", {
 
   shiny::testServer(
     modPedigreeServer,
-    args = list(studbook = shiny::reactive({ covModPed() }), config = NULL),
+    args = list(studbook = shiny::reactive({ covModPed() })),
     {
       # A datapath that does not exist makes read.csv() throw; the tryCatch
       # error branch must catch it, so the typed IDs still survive.
@@ -46,7 +46,7 @@ test_that("the export download handler writes the pedigree to CSV", {
 
   shiny::testServer(
     modPedigreeServer,
-    args = list(studbook = shiny::reactive({ covModPed() }), config = NULL),
+    args = list(studbook = shiny::reactive({ covModPed() })),
     {
       session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
 

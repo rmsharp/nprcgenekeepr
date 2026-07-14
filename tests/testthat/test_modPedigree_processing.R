@@ -26,8 +26,7 @@ test_that("modPedigreeServer adds population column to pedigree", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -59,8 +58,7 @@ test_that("modPedigreeServer sets all animals as population when no focal animal
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -93,8 +91,7 @@ test_that("modPedigreeServer sets only focal animals as population", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -140,8 +137,7 @@ test_that("modPedigreeServer trimPedigree includes ancestors of focal animals", 
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -184,8 +180,7 @@ test_that("modPedigreeServer trimPedigree includes grandparents", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -229,8 +224,7 @@ test_that("modPedigreeServer trimPedigree handles multiple focal animals", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -272,8 +266,7 @@ test_that("modPedigreeServer trimPedigree includes descendants of focal animals"
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -316,8 +309,7 @@ test_that("modPedigreeServer trimPedigree is strict-lineal: excludes siblings an
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -361,8 +353,7 @@ test_that("modPedigreeServer adds pedNum column", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -395,8 +386,7 @@ test_that("modPedigreeServer pedNum identifies separate pedigrees", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -443,8 +433,7 @@ test_that("modPedigreeServer preserves or adds gen column", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -475,8 +464,7 @@ test_that("modPedigreeServer gen column has correct generation numbers", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -517,8 +505,7 @@ test_that("modPedigreeServer returns processedPedigree with all expected columns
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -555,8 +542,7 @@ test_that("modPedigreeServer processedPedigree updates when focal animals change
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -603,8 +589,7 @@ test_that("modPedigreeServer returns populationCount reactive", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -637,8 +622,7 @@ test_that("modPedigreeServer works with examplePedigree data", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ examplePedigree }),
-      config = NULL
+      studbook = shiny::reactive({ examplePedigree })
     ),
     {
       session$setInputs(
@@ -668,8 +652,7 @@ test_that("modPedigreeServer trimPedigree works with examplePedigree", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ examplePedigree }),
-      config = NULL
+      studbook = shiny::reactive({ examplePedigree })
     ),
     {
       session$setInputs(
@@ -716,8 +699,7 @@ test_that("modPedigreeServer handles single animal pedigree", {
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       session$setInputs(
@@ -751,8 +733,7 @@ test_that("modPedigreeServer handles pedigree with circular reference gracefully
   shiny::testServer(
     modPedigreeServer,
     args = list(
-      studbook = shiny::reactive({ test_studbook }),
-      config = NULL
+      studbook = shiny::reactive({ test_studbook })
     ),
     {
       # findGeneration now emits a warning for ids it cannot place (NEW-40);
