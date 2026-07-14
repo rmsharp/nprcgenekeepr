@@ -43,6 +43,43 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-13 · [issue #122] Phase 4: prune the dead surface (Session 376)
+- **Deliverable:** Executed Phase 4 of `docs/planning/issue122-module-contract-plan.md`
+  following `DEVELOPMENT_WORKSTREAM.md` under strict TDD (RED -> GREEN -> REFACTOR, 2
+  pre-RED `AskUserQuestion` scope decisions plus the 3 phase gates). Removed the dead
+  `config` param from `modInputServer`/`modPedigreeServer` and its `appServer.R`
+  call-site args -- neither module ever read it; `shared$config <- loadSiteConfig()`
+  stays at boot (independent issue #50 regression coverage). Deleted the dead
+  `shared$qcResults` write (never read anywhere). Replaced `appServer`'s blanket
+  `tryCatch(..., error = function(e) NULL)` swallow with `req()` at the
+  `cleanedStudbook`/`qcSummary` observers and a narrowed
+  `tryCatch(shiny.silent.error = function(e) NULL)` for `changedCols` (preserving its
+  independence from `errorLst`/`fileName` in the same observer). Documented
+  `modInputServer`'s 4 previously-undocumented `@return` elements (source: 5
+  concern-scoped commits -- `fb9e0b5c` source+docs, `ecdda66b` modInput test
+  migration, `4b461527` modPedigree test migration, `03bfce99` contract-guard
+  behavioral tests, `2df12dd0` `BACKLOG.md` update). **Two plan-premise corrections
+  found by extending the plan's own §8 evidence-based-inventory discipline past its
+  stated boundary:** (1) skipped item 3 entirely -- the plan's "`modSummaryStats`' 12
+  unread reactives" claim was measured only against `appServer.R` consumption; ~53
+  active `testServer()$getReturned()` assertion sites across 4 test files prove they
+  are load-bearing test infrastructure, not dead code; (2) the site-config
+  delete-vs-wire decision (the plan's own flagged "real design decision," §10 item 1)
+  resolved to delete-threading-only after three converging checks (source inspection,
+  independent call-graph tracing of the LabKey/column-validation paths, and an
+  existing test proving arbitrary config content was already behaviorally inert).
+  Also surfaced, out of scope and not fixed: `appServer.R:347`'s unprotected
+  `getSiteInfo()` call at the ORIP-tab gate (new `BACKLOG.md` item). Verified: full
+  suite 3802 passed/0 failed/0 error/0 warning/167 skipped (baseline unchanged);
+  `devtools::check()` 0 errors/0 warnings/0 notes; lintr 0 lints across all 14 changed
+  files; `devtools::document()` run standalone, touching only the 2 expected `.Rd`
+  files (`NAMESPACE` unchanged); Phase 3E live smoke test via the repo's existing e2e
+  suite -- `test-e2e-input-detailed.R` (6/6), `test-e2e-input-incomplete-final-line.R`
+  (2/2), `test-e2e-input-module.R` (5/5), `test-e2e-input-tutorial.R` (8/8),
+  `test-e2e-pedigree-detailed.R` (8/8), `test-e2e-pedigree-module.R` (6/6),
+  `test-e2e-pedigree-tutorial.R` (13/13), all against the real modified app. See
+  `PROJECT_LEARNINGS.md` Learning 347, `BACKLOG.md`.
+
 ### 2026-07-13 · [ad hoc] S375 close-out commits (learnings, backlog pointer, ledger, handoff receipt)
 - **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap in the
   same session rather than leaving it for the next session's Phase 0 reconcile. Records
