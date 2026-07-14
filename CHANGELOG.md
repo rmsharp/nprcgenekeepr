@@ -47,6 +47,57 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-14 · \[ad hoc\] Guard the unprotected `getSiteInfo()` call at the ORIP-tab gate, `appServer.R` half (Session 378)
+
+- **Deliverable:** `R/appServer.R:347`’s
+  `oripSiteInfo <- getSiteInfo(expectConfigFile = FALSE)` was not
+  `tryCatch`-guarded: a present-but-malformed site-config file (e.g.
+  missing the required `center` key) made `getParamDef()`
+  [`stop()`](https://rdrr.io/r/base/stop.html), propagating uncaught and
+  crashing app boot – the same issue \#50 crash class
+  [`loadSiteConfig()`](https://github.com/rmsharp/nprcgenekeepr/reference/loadSiteConfig.md)
+  was built to prevent, recurring at this independent call site (found
+  and filed as a `BACKLOG.md` item during issue \#122 Phase 4, S376 /
+  `PROJECT_LEARNINGS.md` Learning 347(e)). Fixed by wrapping the call in
+  `tryCatch` mirroring
+  [`loadSiteConfig()`](https://github.com/rmsharp/nprcgenekeepr/reference/loadSiteConfig.md)’s
+  pattern (log via
+  [`futile.logger::flog.warn`](https://rdrr.io/pkg/futile.logger/man/flog.logger.html),
+  fall back to `NULL`), guarding the downstream
+  [`shouldShowOripTab()`](https://github.com/rmsharp/nprcgenekeepr/reference/shouldShowOripTab.md)
+  call with `!is.null(oripSiteInfo) &&` so the `NULL` fallback fails
+  closed (ORIP tab hidden) instead of crashing
+  [`file.exists()`](https://rdrr.io/r/base/files.html) on a `NULL`
+  argument, and reusing the single parsed value for the `siteConfig`
+  reactive instead of re-calling
+  [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
+  a second time. Strict TDD RED-\>GREEN throughout (REFACTOR declared
+  unneeded); 2 new tests in `tests/testthat/test_appServer_server.R`
+  (section 6b).
+- **Scope correction:** A live Phase 3E
+  [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+  boot check (required because this changes runtime boot behavior;
+  [`shiny::testServer()`](https://rdrr.io/pkg/shiny/man/testServer.html)
+  alone cannot construct
+  [`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md))
+  found the fix incomplete – `R/appUI.R:20` has an independent,
+  identical unguarded `getSiteInfo(expectConfigFile = FALSE)`
+  default-argument call that still crashes app boot on a malformed
+  config. Owner chose (via `AskUserQuestion`) to file this separately
+  rather than expand scope; see the new `BACKLOG.md` item (which also
+  inventories 4 further unguarded
+  [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
+  call sites of lower severity, found by the same session’s `grep`
+  sweep). The `appServer.R` code comment was corrected to not overclaim
+  “app boot” broadly.
+- **Verification:** target test file 27/27 passed; full suite 3215
+  passed/169 skipped/0 failed/0 error/0 warning; `devtools::check()` 0
+  errors/0 warnings/0 notes; lintr 0 lints on both changed files. Phase
+  3E: live `AppDriver` boot performed (not declared N/A) – see
+  `PROJECT_LEARNINGS.md` Learning 349 for the full detail including a
+  second, inconclusive live check (unrelated pre-existing
+  e2e-subprocess-staleness artifact).
+
 ### 2026-07-14 · \[issue \#122\] Close the GitHub issue (Session 377)
 
 - **Action:** Owner confirmed via `AskUserQuestion` (S377’s close-out

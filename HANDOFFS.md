@@ -68,6 +68,22 @@ are legal at write time (the receipt ships in the very commit whose sha
 it would name); the next session reconciles them to real shas.
 
 ``` handoff
+session: S378
+date: 2026-07-14
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: Guarded R/appServer.R:347's unprotected getSiteInfo() call (DONE, scoped to appServer.R). A live Phase 3E check found appUI.R:20 has an independent, identical unguarded getSiteInfo() default-argument call that still crashes app boot on a malformed config -- owner chose to file it separately (new BACKLOG.md item, ready to pick up) rather than expand this session's scope.
+what_was_done: R/appServer.R: wrapped the getSiteInfo(expectConfigFile = FALSE) call in tryCatch mirroring loadSiteConfig()'s pattern (log via futile.logger::flog.warn, fall back to NULL); guarded the shouldShowOripTab() call with !is.null(oripSiteInfo) && so the NULL fallback fails closed instead of crashing file.exists(NULL); reused the single parsed value for the siteConfig reactive instead of a second getSiteInfo() call; added flog.warn to the existing @importFrom roxygen line (NAMESPACE unchanged, already present via loadSiteConfig.R). Added 2 tests to tests/testthat/test_appServer_server.R (section 6b). Strict TDD RED->GREEN (REFACTOR declared unneeded), 1 pre-RED AskUserQuestion scope decision (rejected a "reuse shared$config" alternative -- verified non-viable due to Shiny observe/flush timing) plus the 3 phase gates. Live Phase 3E AppDriver boot (shiny.appobj passed directly, NOT_CRAN=true) found appUI.R's sibling bug -- surfaced via AskUserQuestion, owner chose narrower scope; corrected the appServer.R comment's overclaim and filed a precise BACKLOG.md item (with a grep inventory of 4 more lower-severity unguarded getSiteInfo() sites). Verification: target file 27/27 passed; full suite 3215 passed/169 skipped/0 failed/0 error/0 warning; devtools::check() 0/0/0; lintr 0/0. Wrote PROJECT_LEARNINGS.md Learning 349 (4 sub-findings). Commit: pending (lands in this close-out commit).
+next_steps: Pick up the new BACKLOG.md item "Unprotected getSiteInfo() call in appUI.R's default argument" -- fix shape and a ready-to-run RED test are already spelled out there. Before starting, re-grep getSiteInfo(` across R/ to confirm the inventory hasn't changed. Other standing items unchanged: CRAN resubmission (READY, owner-only); Document 2 Phase D (READY, Effort M); issue #123/XARCH-5 (DECISION NEEDED, needs its own planning session).
+key_files: R/appServer.R:38-39 (new @importFrom flog.warn), R/appServer.R:346-373 (the fix + corrected comment), tests/testthat/test_appServer_server.R (new section 6b, 2 tests), BACKLOG.md (appServer.R item resolved, new appUI.R item + 4-site inventory), PROJECT_LEARNINGS.md Learning 349.
+gotchas: (1) appUI.R:20's identical bug is the next pickup, already scoped in BACKLOG.md. (2) A live shinytest2/chromote check needs NOT_CRAN=true even OUTSIDE test_that() -- an ad-hoc script fails with a bare "Reason: On CRAN" otherwise. (3) AppDriver$new() accepts a shiny.appobj directly (no system-library install needed) for a "does it crash" check, but the subprocess can still resolve STALE code for functions the passed object calls by name -- not reliable for wiring/signature regressions here (the system library is missing openxlsx, added S363, so R CMD INSTALL there currently fails; a separate concern, not fixed this session).
+runtime_smoke: Performed, not declared N/A -- live shinytest2::AppDriver boot with a malformed config found the appUI.R gap (the actual point of doing this). A second live check (valid-config regression) was inconclusive due to an unrelated, pre-existing e2e-subprocess-staleness issue; happy path verified indirectly (unchanged code + existing passing testServer() coverage).
+changelog_ref: CHANGELOG.md 2026-07-14 S378 entry
+commit: 8bd90042 (implementation + tests, 2 files), 31b49d34 (ledger + learnings, 3 files)
+```
+
+``` handoff
 session: S377
 date: 2026-07-14
 status: complete
