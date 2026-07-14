@@ -36,6 +36,7 @@
 #' @importFrom shiny showNotification tabPanel div h3 p hr icon uiOutput
 #' @importFrom shiny verbatimTextOutput isolate
 #' @importFrom futile.logger flog.logger flog.threshold flog.debug flog.info
+#' @importFrom futile.logger flog.warn
 #' @importFrom futile.logger INFO DEBUG appender.file
 #' @export
 appServer <- function(input, output, session) {
@@ -343,15 +344,35 @@ appServer <- function(input, output, session) {
   )
 
   # ORIP Reporting Module (ONPRC-only, #49) -- mount only for an actual ONPRC
-  # site configuration, matching the conditional ORIP tab in appUI().
-  oripSiteInfo <- getSiteInfo(expectConfigFile = FALSE)
-  if (shouldShowOripTab(oripSiteInfo$center,
+  # site configuration, matching the conditional ORIP tab in appUI(). The
+  # getSiteInfo() call is wrapped in tryCatch (mirroring loadSiteConfig()'s
+  # pattern, issue #50) so a present-but-malformed config file can never crash
+  # THIS call site -- the same crash class, recurring here independently of
+  # loadSiteConfig()'s own protection. NOTE: appUI()'s own
+  # getSiteInfo(expectConfigFile = FALSE) default-argument call (the UI-side
+  # twin of this exact gate) is a SEPARATE, still-unguarded instance of the
+  # same bug -- a malformed config file can still crash app boot via that
+  # call, discovered live-testing this fix; tracked as its own BACKLOG.md
+  # item, deliberately out of scope here.
+  oripSiteInfo <- tryCatch(
+    getSiteInfo(expectConfigFile = FALSE),
+    error = function(e) {
+      futile.logger::flog.warn(
+        "Failed to load site configuration for ORIP gating: %s",
+        conditionMessage(e),
+        name = "nprcgenekeepr"
+      )
+      NULL
+    }
+  )
+  if (!is.null(oripSiteInfo) &&
+      shouldShowOripTab(oripSiteInfo$center,
                         file.exists(oripSiteInfo$configFile))) {
     modORIPReportingServer(
       "oripReporting",
       pedigree = reactive(shared$currentPedigree),
       geneticValues = reactive(shared$geneticValues),
-      siteConfig = reactive(getSiteInfo(expectConfigFile = FALSE))
+      siteConfig = reactive(oripSiteInfo)
     )
   }
 
