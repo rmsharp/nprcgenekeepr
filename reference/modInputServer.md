@@ -42,6 +42,13 @@ A list with reactive components:
 - `pedigreeFileName` - The uploaded file's name, used for dynamic tab
   management
 
+## Note
+
+(Developer note) This module is the reference implementation of the
+package's internal Shiny module contract – see
+`docs/architecture/module-contract.md` in the package source (a
+developer-only file; it does not ship with the installed package).
+
 ## See also
 
 [`modInputUI`](https://github.com/rmsharp/nprcgenekeepr/reference/modInputUI.md)

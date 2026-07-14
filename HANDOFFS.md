@@ -68,6 +68,22 @@ are legal at write time (the receipt ships in the very commit whose sha
 it would name); the next session reconciles them to real shas.
 
 ``` handoff
+session: S377
+date: 2026-07-14
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: Issue #122 module-contract plan Phase 5 DONE. Issue #122 (XARCH-2) fully resolved -- all 5 phases complete. GitHub issue #122 itself not yet closed (flagged for owner).
+what_was_done: Wrote docs/architecture/module-contract.md (the section-4.4 contract as a living standards doc, house-styled on docs/conventions/ROXYGEN_EXAMPLES_POLICY.md; cites modInput as the reference implementation; documents 2 deliberate exceptions -- modGvAndBgDescServer's bare NULL, and gestationTable's bare-reactiveValues read into modPotentialParentsServer per Dragon 4). Added tests/testthat/test_moduleContract.R, a guard test exercising all 10 mod*Server functions via shiny::testServer() with args mirroring appServer.R's real call sites, asserting a named-list-of-functions shape for 9 modules plus the declared NULL exception for the 10th; proved non-vacuity with an explicit negative control (3 broken stand-ins, all caught). Added modInputServer's @note roxygen citation; devtools::document() standalone (only man/modInputServer.Rd regenerated). Classified PRE-RED->REFACTOR (not RED->GREEN): firsthand verification of all 10 modules found everything already compliant before any edit -- modInput's 2 plan-cited defects were already fixed by S376's own Phase 4 work as a side effect, without S376 or the plan's blockquote realizing this cleared Phase 5's stated prerequisite. Also fixed a .gitignore gap (docs/* blanket-ignore with a per-subdirectory allowlist that didn't include docs/architecture/, which silently dropped the new doc from git status). Pruned BACKLOG.md's issue #122 section to a resolved pointer. Full suite 3870 passed/0/0/0/167 skipped (3802 baseline + 68 new); devtools::check() 0/0/0; lintr 0/0 on changed files. Commit: pending (this receipt lands in the same close-out commit).
+next_steps: Pick the next BACKLOG item: unprotected getSiteInfo() call at appServer.R:347 (READY, Effort S); issue #123/XARCH-5 (DECISION NEEDED, needs its own planning session, Effort L); CRAN resubmission (READY, owner-only action, nothing left for an agent); Document 2 Phase D (READY, Effort M). Consider whether to close GitHub issue #122 (XARCH-2) now that all 5 plan phases are DONE -- this session deliberately did not close it unilaterally (visible action on a shared system).
+key_files: docs/architecture/module-contract.md (new), tests/testthat/test_moduleContract.R (new), R/modInput.R:265-269 (new @note roxygen block), man/modInputServer.Rd (regenerated), .gitignore:47-48 (new docs/architecture/ allowlist exception).
+gotchas: (1) Issue #122 GitHub issue itself is NOT closed -- only the BACKLOG.md tracking is resolved; ask the owner before closing the actual GitHub issue. (2) Any NEW docs/<topic>/ subdirectory added in a future session will hit the same .gitignore trap this session found (docs/* blanket-ignored, per-subdirectory allowlist) unless also added to .gitignore's allowlist -- check with `git status --short <new-dir>/` right after creating it. (3) A background research fork returned a result unrelated to the prompt this session (single unrelated sentence after ~157s) -- do not trust or extrapolate from a fork result that doesn't answer what was asked; redo directly instead.
+runtime_smoke: N/A, declared explicitly -- no runtime behavior changed (docs + a new test file only; roxygen @note is a documentation-only comment). Matches the project's CRAN-Phase-1-metadata precedent for docs/test-only sessions.
+changelog_ref: CHANGELOG.md 2026-07-14 S377 entry
+commit: 044f998b (implementation, 5 files), b6e264ba (BACKLOG.md)
+```
+
+``` handoff
 session: S376
 date: 2026-07-13
 status: complete
