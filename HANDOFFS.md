@@ -72,7 +72,7 @@ key_files: R/appUI.R:4-51 (roxygen @param + the fix), man/appUI.Rd (regenerated)
 gotchas: (1) The appServer.R/appUI.R sibling-bug pair (issue #50 crash class) is now FULLY resolved -- don't re-open either without re-confirming against current source first. (2) The [e2e-subprocess-lib]/Learning 349(d) modBreedingGroupsServer staleness trap (missing openxlsx in the system library) is STILL unfixed -- any future live AppDriver check needing full browser-stability confirmation will hit it again; fixing it is its own small infrastructure task. (3) NOT_CRAN=true is still needed even OUTSIDE test_that() for a live shinytest2/chromote check (Learning 349(c), re-confirmed). (4) BACKLOG.md hygiene: close out a completed item by REMOVING it, not by leaving a "RESOLVED S<N>" status line -- per [[backlog-vs-changelog-placement]] (user-flagged twice); this session had to self-correct an initial draft that repeated S378's own non-compliant precedent.
 runtime_smoke: Performed, not declared N/A -- live shinytest2::AppDriver boot with a malformed config confirmed the exact point that crashed pre-fix (shinyApp construction) now succeeds, with a WARN log line as direct positive evidence the guard fired. The subsequent browser-stability sub-check hit an unrelated, already-documented environment issue (Learning 349(d)) -- same limitation S378 hit on its second check, not a new finding.
 changelog_ref: CHANGELOG.md 2026-07-14 S379 entry
-commit: pending
+commit: b9ccf98e (implementation + tests, 3 files), 9dc9ec20 (ledger + learnings, 3 files)
 ```
 
 ```handoff
