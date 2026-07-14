@@ -98,7 +98,7 @@ test_that("modInputServer returns expected reactive list", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       # Check return value structure
       result <- session$getReturned()
@@ -130,7 +130,7 @@ test_that("modInputServer handles file type changes", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       # Test file type selection
       session$setInputs(fileType = "fileTypeExcel")
@@ -147,7 +147,7 @@ test_that("modInputServer handles file content selection", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       # Test different file content options
       session$setInputs(fileContent = "pedFile")
@@ -170,7 +170,7 @@ test_that("modInputServer handles debug mode", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(debugger = TRUE)
       result <- session$getReturned()
@@ -187,7 +187,7 @@ test_that("modInputServer handles separator selection", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(fileType = "fileTypeText")
       session$setInputs(separator = ",")
@@ -207,7 +207,7 @@ test_that("modInputServer isReady returns FALSE before data processing", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       result <- session$getReturned()
       # Before any data is loaded, isReady should error or return FALSE
@@ -221,7 +221,7 @@ test_that("modInputServer qcSummary requires data", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       result <- session$getReturned()
       # Before any data is loaded, qcSummary should error
@@ -251,7 +251,7 @@ test_that("modInputServer activeFile reactive returns NULL for pedFile with no u
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(fileContent = "pedFile")
       # Without file upload, activeFile should return NULL
@@ -266,7 +266,7 @@ test_that("modInputServer activeFile reactive returns NULL for commonPedGenoFile
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(fileContent = "commonPedGenoFile")
       file_result <- activeFile()
@@ -280,7 +280,7 @@ test_that("modInputServer activeFile reactive returns NULL for separatePedGenoFi
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(fileContent = "separatePedGenoFile")
       file_result <- activeFile()
@@ -294,7 +294,7 @@ test_that("modInputServer activeFile reactive returns NULL for focalAnimals with
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(fileContent = "focalAnimals")
       file_result <- activeFile()
@@ -312,7 +312,7 @@ test_that("modInputServer cleanedStudbook requires qcResults", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       result <- session$getReturned()
       # Before any data is loaded, cleanedStudbook should error
@@ -326,7 +326,7 @@ test_that("modInputServer genotypeData requires qcResults", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       result <- session$getReturned()
       # Before any data is loaded, genotypeData should error
@@ -340,7 +340,7 @@ test_that("modInputServer returns all seven expected reactive components", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       result <- session$getReturned()
       expect_equal(length(result), 10)
@@ -361,7 +361,7 @@ test_that("modInputServer debugMode starts as FALSE by default", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(debugger = FALSE)
       result <- session$getReturned()
@@ -375,7 +375,7 @@ test_that("modInputServer debugMode toggles correctly", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       result <- session$getReturned()
 
@@ -400,7 +400,7 @@ test_that("modInputServer handles Excel file type with comma separator", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(fileType = "fileTypeExcel", separator = ",")
       expect_equal(input$fileType, "fileTypeExcel")
@@ -414,7 +414,7 @@ test_that("modInputServer handles Text file type with tab separator", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(fileType = "fileTypeText", separator = "\t")
       expect_equal(input$fileType, "fileTypeText")
@@ -428,7 +428,7 @@ test_that("modInputServer handles Text file type with semicolon separator", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(fileType = "fileTypeText", separator = ";")
       expect_equal(input$fileType, "fileTypeText")
@@ -446,7 +446,7 @@ test_that("modInputServer activeFile switches based on fileContent pedFile", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       # Set fileContent to pedFile
       session$setInputs(fileContent = "pedFile")
@@ -463,7 +463,7 @@ test_that("modInputServer activeFile switches based on fileContent commonPedGeno
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(fileContent = "commonPedGenoFile")
       expect_equal(input$fileContent, "commonPedGenoFile")
@@ -477,7 +477,7 @@ test_that("modInputServer activeFile switches based on fileContent separatePedGe
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(fileContent = "separatePedGenoFile")
       expect_equal(input$fileContent, "separatePedGenoFile")
@@ -491,7 +491,7 @@ test_that("modInputServer activeFile switches based on fileContent focalAnimals"
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(fileContent = "focalAnimals")
       expect_equal(input$fileContent, "focalAnimals")
@@ -509,7 +509,7 @@ test_that("modInputServer maintains input state across multiple changes", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       # Set initial state
       session$setInputs(
@@ -645,7 +645,7 @@ test_that("modInputServer works with different namespaces", {
   # Test that multiple instances with different IDs work independently
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(minSireAge = "3.0", minDamAge = "3.0")
       result <- session$getReturned()
@@ -677,7 +677,7 @@ test_that("modInputServer cycles through all file content types", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       content_types <- c("pedFile", "commonPedGenoFile",
                         "separatePedGenoFile", "focalAnimals")
@@ -697,7 +697,7 @@ test_that("modInputServer cycles through all separator types", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(fileType = "fileTypeText")
       separators <- c(",", ";", "\t")
@@ -706,42 +706,6 @@ test_that("modInputServer cycles through all separator types", {
         session$setInputs(separator = sep)
         expect_equal(input$separator, sep)
       }
-    }
-  )
-})
-
-# ============================================================================
-# Server Tests - Config parameter handling
-# ============================================================================
-
-test_that("modInputServer handles NULL config", {
-  skip_if_not_installed("shiny")
-
-  shiny::testServer(
-    modInputServer,
-    args = list(config = NULL),
-    {
-      result <- session$getReturned()
-      expect_true(is.list(result))
-      expect_equal(length(result), 10)
-    }
-  )
-})
-
-test_that("modInputServer handles reactive config", {
-  skip_if_not_installed("shiny")
-
-  test_config <- shiny::reactive({
-    list(setting1 = "value1", setting2 = "value2")
-  })
-
-  shiny::testServer(
-    modInputServer,
-    args = list(config = test_config),
-    {
-      result <- session$getReturned()
-      expect_true(is.list(result))
-      expect_equal(length(result), 10)
     }
   )
 })
@@ -782,7 +746,7 @@ test_that("modInputServer focalAnimals path builds pedigree from the EHR (mocked
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(
         fileContent = "focalAnimals",
@@ -822,7 +786,7 @@ test_that("modInputServer focalAnimals path surfaces the EHR-failure errorLst", 
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(
         fileContent = "focalAnimals",
@@ -869,7 +833,7 @@ test_that("modInputServer focalAnimals path builds pedigree from a FILE (offline
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(
         fileContent = "focalAnimals",
@@ -911,7 +875,7 @@ test_that("modInputServer offline focal-file path surfaces a File Read Error on 
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(
         fileContent = "focalAnimals",
@@ -957,7 +921,7 @@ test_that("modInputServer offline focal-file path reports a missing-column pedig
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(
         fileContent = "focalAnimals",

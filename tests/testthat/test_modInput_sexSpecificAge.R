@@ -49,7 +49,7 @@ test_that("modInputUI renders separate Sire and Dam age fields", {
 
 test_that("modInputServer exposes minSireAge and minDamAge reactives", {
   skip_if_not_installed("shiny")
-  shiny::testServer(modInputServer, args = list(config = NULL), {
+  shiny::testServer(modInputServer, {
     result <- session$getReturned()
     expect_true("minSireAge" %in% names(result))
     expect_true("minDamAge" %in% names(result))
@@ -64,7 +64,7 @@ test_that("modInputServer exposes minSireAge and minDamAge reactives", {
 
 test_that("modInputServer returns NULL floors when both fields are blank", {
   skip_if_not_installed("shiny")
-  shiny::testServer(modInputServer, args = list(config = NULL), {
+  shiny::testServer(modInputServer, {
     session$setInputs(minSireAge = "", minDamAge = "")
     result <- session$getReturned()
     expect_null(result$minSireAge())
@@ -76,7 +76,7 @@ test_that("modInputServer returns NULL floors when both fields are blank", {
 
 test_that("modInputServer resolves a typed sire floor, blank dam stays NULL", {
   skip_if_not_installed("shiny")
-  shiny::testServer(modInputServer, args = list(config = NULL), {
+  shiny::testServer(modInputServer, {
     session$setInputs(minSireAge = "4", minDamAge = "")
     result <- session$getReturned()
     expect_equal(result$minSireAge(), 4)
@@ -86,7 +86,7 @@ test_that("modInputServer resolves a typed sire floor, blank dam stays NULL", {
 
 test_that("modInputServer resolves both typed floors independently", {
   skip_if_not_installed("shiny")
-  shiny::testServer(modInputServer, args = list(config = NULL), {
+  shiny::testServer(modInputServer, {
     session$setInputs(minSireAge = "3.5", minDamAge = "2.5")
     result <- session$getReturned()
     expect_equal(result$minSireAge(), 3.5)
@@ -98,7 +98,7 @@ test_that("modInputServer resolves both typed floors independently", {
 
 test_that("modInputServer maps invalid or whitespace floor input to NULL", {
   skip_if_not_installed("shiny")
-  shiny::testServer(modInputServer, args = list(config = NULL), {
+  shiny::testServer(modInputServer, {
     expect_no_warning({
       session$setInputs(minSireAge = "invalid", minDamAge = "  ")
       result <- session$getReturned()
@@ -139,7 +139,7 @@ test_that("getData threads parsed sire/dam floors into the QC callees", {
     .package = "nprcgenekeepr"
   )
 
-  shiny::testServer(modInputServer, args = list(config = NULL), {
+  shiny::testServer(modInputServer, {
     session$setInputs(fileContent = "pedFile", fileType = "fileTypeExcel",
                       minSireAge = "4", minDamAge = "2.5")
     session$setInputs(pedigreeFileOne = list(name = basename(path),
@@ -172,7 +172,7 @@ test_that("getData passes NULL floors to the QC callees when fields are blank", 
     .package = "nprcgenekeepr"
   )
 
-  shiny::testServer(modInputServer, args = list(config = NULL), {
+  shiny::testServer(modInputServer, {
     session$setInputs(fileContent = "pedFile", fileType = "fileTypeExcel",
                       minSireAge = "", minDamAge = "")
     session$setInputs(pedigreeFileOne = list(name = basename(path),

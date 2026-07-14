@@ -22,7 +22,7 @@ test_that("readDataFile preserves alphanumeric sire/dam IDs from Excel uploads",
   on.exit(unlink(excelFile))
   makeExamplePedigreeFile(excelFile, fileType = "excel")
 
-  shiny::testServer(modInputServer, args = list(config = NULL), {
+  shiny::testServer(modInputServer, {
     excel <- readDataFile(
       list(name = "examplePedigree.xlsx", datapath = excelFile),
       "fileTypeExcel", ","
@@ -49,7 +49,7 @@ test_that("modInputServer processing an Excel upload does not collapse the pedig
   on.exit(unlink(excelFile))
   makeExamplePedigreeFile(excelFile, fileType = "excel")
 
-  shiny::testServer(modInputServer, args = list(config = NULL), {
+  shiny::testServer(modInputServer, {
     session$setInputs(
       fileContent = "pedFile", fileType = "fileTypeExcel",
       minSireAge = "2.0", minDamAge = "2.0"

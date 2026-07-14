@@ -265,7 +265,7 @@ test_that("modInputServer calls qcStudbook when processing data", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       # Simulate file upload
       session$setInputs(
@@ -311,7 +311,7 @@ test_that("modInputServer returns errors from qcStudbook", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(
         fileContent = "pedFile",
@@ -352,7 +352,7 @@ test_that("modInputServer isReady returns TRUE for valid pedigree", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(
         fileContent = "pedFile",
@@ -389,7 +389,7 @@ test_that("modInputServer qcSummary includes error and warning counts", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(
         fileContent = "pedFile",
@@ -489,7 +489,7 @@ test_that("modInputServer returns changedCols information", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       result <- session$getReturned()
 
@@ -518,7 +518,7 @@ test_that("modInputServer merges an uploaded genotype file in separate mode", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(
         fileContent = "separatePedGenoFile",
@@ -579,7 +579,7 @@ test_that("modInputServer invokes qcStudbook exactly twice per QC run on a clean
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(
         fileContent = "pedFile",
@@ -621,7 +621,7 @@ test_that("modInputServer invokes qcStudbook exactly once per QC run on an error
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(
         fileContent = "pedFile",
@@ -655,7 +655,7 @@ test_that("modInputServer's errorLst reactive still exposes the raw qcStudbook e
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(
         fileContent = "pedFile",
@@ -696,7 +696,7 @@ test_that("modInputServer degrades gracefully on a malformed genotype file", {
 
   shiny::testServer(
     modInputServer,
-    args = list(config = NULL),
+    args = list(),
     {
       session$setInputs(
         fileContent = "separatePedGenoFile",

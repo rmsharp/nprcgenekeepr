@@ -73,7 +73,7 @@ test_that("readDataFile handles NULL, Excel, and read errors", {
                       package = "nprcgenekeepr")
   skip_if(xlsx == "")
 
-  shiny::testServer(modInputServer, args = list(config = NULL), {
+  shiny::testServer(modInputServer, {
     # A NULL file short-circuits to NULL before any read is attempted.
     expect_null(readDataFile(NULL, "fileTypeExcel", ","))
 
@@ -98,7 +98,7 @@ test_that("readDataFile handles NULL, Excel, and read errors", {
 
 test_that("activeFile returns NULL for an unrecognized fileContent", {
   skip_if_not_installed("shiny")
-  shiny::testServer(modInputServer, args = list(config = NULL), {
+  shiny::testServer(modInputServer, {
     session$setInputs(fileContent = "unrecognizedContent")
     expect_null(activeFile())
   })
@@ -108,7 +108,7 @@ test_that("activeFile returns NULL for an unrecognized fileContent", {
 
 test_that("getData with no uploaded file leaves results unset", {
   skip_if_not_installed("shiny")
-  shiny::testServer(modInputServer, args = list(config = NULL), {
+  shiny::testServer(modInputServer, {
     session$setInputs(fileContent = "pedFile")
     session$setInputs(getData = 1)
     # The "Please select a file first" guard returns before storing anything.
@@ -120,7 +120,7 @@ test_that("getData with no uploaded file leaves results unset", {
 
 test_that("getData surfaces a File Read Error for an unreadable file", {
   skip_if_not_installed("shiny")
-  shiny::testServer(modInputServer, args = list(config = NULL), {
+  shiny::testServer(modInputServer, {
     session$setInputs(fileContent = "pedFile", fileType = "fileTypeExcel",
                       minSireAge = "2.0", minDamAge = "2.0")
     session$setInputs(pedigreeFileOne = list(
@@ -143,7 +143,7 @@ test_that("getData maps blank sire/dam floors to the table default", {
   skip_if_not_installed("shiny")
   path <- write_pedgood_csv()
   on.exit(unlink(path), add = TRUE)
-  shiny::testServer(modInputServer, args = list(config = NULL), {
+  shiny::testServer(modInputServer, {
     session$setInputs(fileContent = "pedFile", fileType = "fileTypeExcel",
                       minSireAge = "", minDamAge = "")
     session$setInputs(pedigreeFileOne = list(name = basename(path),
@@ -171,7 +171,7 @@ test_that("getData surfaces a QC Processing Error when the QC run fails", {
     runQcStudbook = function(...) stop("run boom"),
     .package = "nprcgenekeepr"
   )
-  shiny::testServer(modInputServer, args = list(config = NULL), {
+  shiny::testServer(modInputServer, {
     session$setInputs(fileContent = "pedFile", fileType = "fileTypeExcel",
                       minSireAge = "2.0", minDamAge = "2.0")
     session$setInputs(pedigreeFileOne = list(name = basename(path),
@@ -200,7 +200,7 @@ test_that("getData tolerates a qcStudbook warning during raw QC", {
     },
     .package = "nprcgenekeepr"
   )
-  shiny::testServer(modInputServer, args = list(config = NULL), {
+  shiny::testServer(modInputServer, {
     session$setInputs(fileContent = "pedFile", fileType = "fileTypeExcel",
                       minSireAge = "2.0", minDamAge = "2.0")
     session$setInputs(pedigreeFileOne = list(name = basename(path),
@@ -216,7 +216,7 @@ test_that("getData tolerates a qcStudbook warning during raw QC", {
 test_that("qcSummaryUI renders the warning panel and changedCols is exposed", {
   skip_if_not_installed("shiny")
   local_debug_logging()
-  shiny::testServer(modInputServer, args = list(config = NULL), {
+  shiny::testServer(modInputServer, {
     storedResults(make_stored(
       n_errors = 0L, n_warnings = 1L,
       cleaned = data.frame(id = "A", stringsAsFactors = FALSE),
@@ -244,7 +244,7 @@ test_that("qcSummaryUI renders the warning panel and changedCols is exposed", {
 test_that("populated results render qcErrors and drive all three downloads", {
   skip_if_not_installed("shiny")
   local_debug_logging()
-  shiny::testServer(modInputServer, args = list(config = NULL), {
+  shiny::testServer(modInputServer, {
     storedResults(make_stored(
       n_errors = 1L, n_warnings = 1L,
       cleaned = data.frame(id = c("A", "B"), stringsAsFactors = FALSE)
