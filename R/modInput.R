@@ -262,6 +262,11 @@ modInputUI <- function(id) {
 #'     dynamic tab management
 #' }
 #'
+#' @note (Developer note) This module is the reference implementation of the
+#'   package's internal Shiny module contract -- see
+#'   \code{docs/architecture/module-contract.md} in the package source (a
+#'   developer-only file; it does not ship with the installed package).
+#'
 #' @seealso \code{\link{modInputUI}} for the user interface.
 #' @seealso \code{\link{modPedigreeServer}} for using the cleaned data.
 #' @importFrom shiny moduleServer reactive eventReactive req showNotification
