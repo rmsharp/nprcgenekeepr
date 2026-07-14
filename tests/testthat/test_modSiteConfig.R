@@ -125,24 +125,19 @@ test_that("modORIPReportingServer is a proper module server", {
 # Tests for site-aware behavior
 # =============================================================================
 
-test_that("modules receive site config", {
+test_that("modInputServer and modPedigreeServer no longer declare a config
+parameter (issue #122 Phase 4)", {
   skip_if_not_installed("shiny")
 
-  # Check that key modules accept config parameter
-  # modInputServer should have config parameter
+  # The config param threaded shared$config into these two modules, but
+  # neither module ever read it (docs/planning/issue122-module-contract-plan.md
+  # section 2.6): the site info that actually matters to the app (LabKey
+  # connection defaults, required/possible column lists) is sourced
+  # independently elsewhere. Phase 4 removes the dead parameter.
   input_args <- names(formals(modInputServer))
-  expect_true("config" %in% input_args)
-})
-
-test_that("site config affects module behavior", {
-  skip_if_not_installed("shiny")
-
-  # Check that config is used in module (not just accepted)
-  input_source <- deparse(modInputServer)
-  input_text <- paste(input_source, collapse = "\n")
-
-  # Should reference config in the body
-  expect_true(grepl("config", input_text))
+  pedigree_args <- names(formals(modPedigreeServer))
+  expect_false("config" %in% input_args)
+  expect_false("config" %in% pedigree_args)
 })
 
 # =============================================================================

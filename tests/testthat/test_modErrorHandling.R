@@ -234,17 +234,13 @@ test_that("modules use req() for reactive dependencies", {
 # =============================================================================
 # Tests for appServer error handling
 # =============================================================================
-
-test_that("appServer handles module initialization errors", {
-  skip_if_not_installed("shiny")
-
-  # Check that appServer includes error handling
-  server_source <- deparse(appServer)
-  server_text <- paste(server_source, collapse = "\n")
-
-  # Should have tryCatch for safe initialization
-  expect_true(grepl("tryCatch", server_text))
-})
+# "appServer handles module initialization errors" (a deparse(appServer) grep
+# for the literal string "tryCatch") was replaced by
+# test_appServer_server.R's "a genuine error from a child module surfaces
+# instead of being silently swallowed" (issue #122 Phase 4): the old test
+# passed merely because SOME tryCatch existed in appServer's source, never
+# because it verified a shape-mismatch bug actually surfaces rather than being
+# masqueraded as "no data yet" -- the actual contract this phase establishes.
 
 test_that("appServer handles QC errors with dynamic tabs", {
   skip_if_not_installed("shiny")

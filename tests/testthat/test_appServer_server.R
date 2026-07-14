@@ -460,3 +460,46 @@ test_that(paste("appServer passes the SAME shared kinship reactive to both",
                       expected_ped$gen)
   expect_equal(capturedSummaryValue, expected)
 })
+
+# =============================================================================
+# 8. Contract guards surface genuine errors; only Shiny's own not-ready signal
+#    is silently absorbed (issue #122 Phase 4 -- replaces the blanket
+#    tryCatch(..., error = function(e) NULL) swallow with explicit
+#    req()/contract guards, per
+#    docs/planning/issue122-module-contract-plan.md section 6 Phase 4).
+# =============================================================================
+
+brokenInput <- function(id, ...) {
+  list(
+    cleanedStudbook = shiny::reactive(stop("boom: shape mismatch")),
+    genotypeData = shiny::reactive(NULL),
+    qcSummary = shiny::reactive(NULL),
+    minSireAge = shiny::reactive(NULL),
+    minDamAge = shiny::reactive(NULL),
+    isReady = shiny::reactive(FALSE),
+    debugMode = shiny::reactive(FALSE),
+    changedCols = shiny::reactive(NULL),
+    errorLst = shiny::reactive(NULL),
+    pedigreeFileName = shiny::reactive(NULL)
+  )
+}
+
+test_that("a genuine error from cleanedStudbook surfaces instead of being
+silently swallowed", {
+  # An observer error under shiny::testServer() surfaces as a warning (Shiny's
+  # standard non-fatal reactive-error reporting), not a thrown R error -- but
+  # it surfaces, which is the point: before this phase, tryCatch(..., error =
+  # function(e) NULL) swallowed it to NULL with no trace at all.
+  testthat::with_mocked_bindings(
+    modInputServer = brokenInput,
+    .package = "nprcgenekeepr",
+    {
+      expect_warning(
+        muffleConfig(shiny::testServer(appServer, {
+          session$flushReact()
+        })),
+        "boom"
+      )
+    }
+  )
+})
