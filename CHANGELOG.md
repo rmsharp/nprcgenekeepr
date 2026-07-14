@@ -43,6 +43,37 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-14 · [ad hoc] Guard the unprotected `getSiteInfo()` call at the ORIP-tab gate, `appServer.R` half (Session 378)
+- **Deliverable:** `R/appServer.R:347`'s `oripSiteInfo <- getSiteInfo(expectConfigFile
+  = FALSE)` was not `tryCatch`-guarded: a present-but-malformed site-config file (e.g.
+  missing the required `center` key) made `getParamDef()` `stop()`, propagating
+  uncaught and crashing app boot -- the same issue #50 crash class `loadSiteConfig()`
+  was built to prevent, recurring at this independent call site (found and filed as a
+  `BACKLOG.md` item during issue #122 Phase 4, S376 / `PROJECT_LEARNINGS.md` Learning
+  347(e)). Fixed by wrapping the call in `tryCatch` mirroring `loadSiteConfig()`'s
+  pattern (log via `futile.logger::flog.warn`, fall back to `NULL`), guarding the
+  downstream `shouldShowOripTab()` call with `!is.null(oripSiteInfo) &&` so the `NULL`
+  fallback fails closed (ORIP tab hidden) instead of crashing `file.exists()` on a
+  `NULL` argument, and reusing the single parsed value for the `siteConfig` reactive
+  instead of re-calling `getSiteInfo()` a second time. Strict TDD RED->GREEN
+  throughout (REFACTOR declared unneeded); 2 new tests in
+  `tests/testthat/test_appServer_server.R` (section 6b).
+- **Scope correction:** A live Phase 3E `shinytest2::AppDriver` boot check (required
+  because this changes runtime boot behavior; `shiny::testServer()` alone cannot
+  construct `appUI()`) found the fix incomplete -- `R/appUI.R:20` has an independent,
+  identical unguarded `getSiteInfo(expectConfigFile = FALSE)` default-argument call
+  that still crashes app boot on a malformed config. Owner chose (via
+  `AskUserQuestion`) to file this separately rather than expand scope; see the new
+  `BACKLOG.md` item (which also inventories 4 further unguarded `getSiteInfo()` call
+  sites of lower severity, found by the same session's `grep` sweep). The
+  `appServer.R` code comment was corrected to not overclaim "app boot" broadly.
+- **Verification:** target test file 27/27 passed; full suite 3215 passed/169
+  skipped/0 failed/0 error/0 warning; `devtools::check()` 0 errors/0 warnings/0 notes;
+  lintr 0 lints on both changed files. Phase 3E: live `AppDriver` boot performed (not
+  declared N/A) -- see `PROJECT_LEARNINGS.md` Learning 349 for the full detail
+  including a second, inconclusive live check (unrelated pre-existing
+  e2e-subprocess-staleness artifact).
+
 ### 2026-07-14 · [issue #122] Close the GitHub issue (Session 377)
 - **Action:** Owner confirmed via `AskUserQuestion` (S377's close-out report flagged
   that the issue remained open even though all 5 plan phases were DONE and
