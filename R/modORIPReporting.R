@@ -145,7 +145,24 @@ modORIPReportingServer <- function(id, pedigree = NULL, geneticValues = NULL,
       config <- if (!is.null(siteConfig)) {
         tryCatch(siteConfig(), error = function(e) NULL)
       } else {
-        getSiteInfo(expectConfigFile = FALSE)
+        # getSiteInfo() is wrapped in tryCatch (mirroring appServer.R's/
+        # appUI.R's ORIP-gate guard, issue #50 crash class) so a
+        # present-but-malformed config file can never crash THIS call site.
+        # BACKLOG.md's "4 lower-severity unguarded getSiteInfo() call sites"
+        # (1): unreachable via appServer.R's real wiring (it always passes a
+        # non-NULL siteConfig), but reachable if this module is ever mounted
+        # directly without one.
+        tryCatch(
+          getSiteInfo(expectConfigFile = FALSE),
+          error = function(e) {
+            futile.logger::flog.warn(
+              "Failed to load site configuration for ORIP display: %s",
+              conditionMessage(e),
+              name = "nprcgenekeepr"
+            )
+            NULL
+          }
+        )
       }
 
       if (is.null(config)) {
@@ -241,7 +258,20 @@ modORIPReportingServer <- function(id, pedigree = NULL, geneticValues = NULL,
         config <- if (!is.null(siteConfig)) {
           tryCatch(siteConfig(), error = function(e) NULL)
         } else {
-          getSiteInfo(expectConfigFile = FALSE)
+          # Same getSiteInfo() guard as the siteInfo renderer above --
+          # BACKLOG.md's "4 lower-severity unguarded getSiteInfo() call
+          # sites" (1).
+          tryCatch(
+            getSiteInfo(expectConfigFile = FALSE),
+            error = function(e) {
+              futile.logger::flog.warn(
+                "Failed to load site configuration for ORIP report export: %s",
+                conditionMessage(e),
+                name = "nprcgenekeepr"
+              )
+              NULL
+            }
+          )
         }
 
         report <- data.frame(

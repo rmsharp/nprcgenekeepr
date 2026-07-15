@@ -121,12 +121,32 @@ appServer <- function(input, output, session) {
   # multi-session Shiny Server worker, or this package's own test suite).
   observeEvent(inputResults$debugMode(), {
     if (isTRUE(inputResults$debugMode())) {
-      nprcgenekeeprLog <- file.path(getSiteInfo()$homeDir, "nprcgenekeepr.log")
-      futile.logger::flog.logger(
-        "nprcgenekeepr",
-        futile.logger::DEBUG,
-        appender = futile.logger::appender.file(nprcgenekeeprLog)
+      # getSiteInfo() is wrapped in tryCatch (mirroring the ORIP-gate guard
+      # below, issue #50 crash class) so a present-but-malformed config file
+      # cannot crash this observer -- BACKLOG.md's "4 lower-severity
+      # unguarded getSiteInfo() call sites" (2). Fails closed: file logging
+      # is silently skipped (stays on whatever the logger is already
+      # registered for) rather than the observer erroring out.
+      debugSiteInfo <- tryCatch(
+        getSiteInfo(),
+        error = function(e) {
+          futile.logger::flog.warn(
+            "Failed to load site configuration for the debug log path: %s",
+            conditionMessage(e),
+            name = "nprcgenekeepr"
+          )
+          NULL
+        }
       )
+      if (!is.null(debugSiteInfo)) {
+        nprcgenekeeprLog <- file.path(debugSiteInfo$homeDir,
+                                       "nprcgenekeepr.log")
+        futile.logger::flog.logger(
+          "nprcgenekeepr",
+          futile.logger::DEBUG,
+          appender = futile.logger::appender.file(nprcgenekeeprLog)
+        )
+      }
     } else {
       futile.logger::flog.logger(
         "nprcgenekeepr",

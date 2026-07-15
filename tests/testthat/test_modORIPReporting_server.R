@@ -72,6 +72,38 @@ test_that("siteInfo falls back to getSiteInfo when siteConfig is NULL", {
   )
 })
 
+test_that(paste("siteInfo shows a fallback message (not a crash) when the",
+                 "site config file is malformed"), {
+  skip_if_not_installed("shiny")
+
+  # BACKLOG: "4 lower-severity unguarded getSiteInfo() call sites" (1) -- the
+  # else-branch getSiteInfo(expectConfigFile = FALSE) call above is
+  # unreachable via appServer.R's real wiring (it always passes a non-NULL
+  # siteConfig), but IS reachable if modORIPReportingServer() is ever called
+  # directly without that argument, exactly as this test does. A
+  # present-but-malformed config file (missing the required 'center' key)
+  # makes getParamDef() stop(), the same issue #50 crash class the
+  # appServer.R/appUI.R ORIP-gate guards (S378/S379) fixed at their own,
+  # independent call sites.
+  tmp <- withr::local_tempdir()
+  withr::local_envvar(c(HOME = tmp))
+  cfg_name <- basename(getConfigFileName(Sys.info())[["configFile"]])
+  writeLines(c("baseUrl = \"http://example\"", "schemaName = \"study\""),
+             file.path(tmp, cfg_name))
+
+  shiny::testServer(
+    modORIPReportingServer,
+    args = list(),
+    {
+      html <- NULL
+      expect_no_error({
+        html <- as.character(output$siteInfo)
+      })
+      expect_true(any(grepl("Site configuration not available", html)))
+    }
+  )
+})
+
 test_that("siteInfo shows a fallback message when siteConfig errors", {
   skip_if_not_installed("shiny")
 
@@ -210,6 +242,38 @@ test_that("downloadORIPReport omits colony/diversity when data are absent", {
       expect_true("Site" %in% report$Category)
       expect_false("Colony" %in% report$Category)
       expect_false("Genetic Diversity" %in% report$Category)
+    }
+  )
+})
+
+test_that(paste("downloadORIPReport omits the Site section (not a crash)",
+                 "when the site config file is malformed"), {
+  skip_if_not_installed("shiny")
+
+  # Same BACKLOG item as the siteInfo malformed-config test above, applied to
+  # the downloadHandler's identical else-branch getSiteInfo() call.
+  tmp <- withr::local_tempdir()
+  withr::local_envvar(c(HOME = tmp))
+  cfg_name <- basename(getConfigFileName(Sys.info())[["configFile"]])
+  writeLines(c("baseUrl = \"http://example\"", "schemaName = \"study\""),
+             file.path(tmp, cfg_name))
+
+  shiny::testServer(
+    modORIPReportingServer,
+    args = list(
+      pedigree = shiny::reactive(oripTestPed),
+      geneticValues = shiny::reactive(oripTestGv)
+    ),
+    {
+      path <- NULL
+      expect_no_error({
+        path <- output$downloadORIPReport
+      })
+      report <- utils::read.csv(path, stringsAsFactors = FALSE)
+
+      expect_false("Site" %in% report$Category)
+      expect_true("Colony" %in% report$Category)
+      expect_true("Genetic Diversity" %in% report$Category)
     }
   )
 })
