@@ -146,6 +146,27 @@ Next (owner action, unchanged): `devtools::submit_cran()`, then click
 the maintainer-email confirmation link – both still owner-only per
 SAFEGUARDS and the runbook’s HARD STOP.
 
+**Fix the stale system-library `openxlsx` gap blocking
+full-browser-stability
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+checks** (READY, Effort S) – the R CMD INSTALL system library
+`AppDriver` subprocesses resolve packages from is missing `openxlsx`
+(added to `DESCRIPTION` by S363, never installed system-wide), so any
+live browser-stability check that goes beyond “does construction/boot
+crash” fails on a stale
+`modBreedingGroupsServer: unused argument (kinshipMatrix = ...)`
+signature (a pre-issue-#122-Phase-2 argument list) instead of exercising
+the code actually under test. Hit independently by 3 sessions now (S378
+`PROJECT_LEARNINGS.md` Learning 349(d), S379 Learning 350(b), S380
+Learning 351(c)) – each recognized the signature and worked around it
+rather than fixing it, since it was out of that session’s own declared
+scope. Fix:
+`RENV_CONFIG_AUTOLOADER_ENABLED=false R CMD INSTALL --library=<system-lib> .`
+after first installing `openxlsx` into that library (the exact blocker
+S378 hit attempting this). Modifies a shared system library, not project
+source – its own small infra session, not bundled into a feature/bugfix
+session.
+
 ## Architecture (issue \#122 / XARCH-2 – module contract)
 
 *Resolved – S372 planning session through S377 execution (Phases 1-5,
@@ -155,41 +176,27 @@ collapse, S376 dead-surface pruning, S377 contract doc + guard test).
 The living contract is `docs/architecture/module-contract.md`; it is
 enforced by `tests/testthat/test_moduleContract.R`. `modInput` is the
 reference implementation.* - \[ \] (none remaining) - \[ \] **4
-lower-severity unguarded
+remaining unguarded
 [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
-call sites** (READY, Effort S) – found by S378’s
-`grep -rn "getSiteInfo(" R/` inventory while fixing the
-`appServer.R`/`appUI.R` ORIP-tab-gate sibling pair (both now resolved –
-see `CHANGELOG.md` 2026-07-14 S378/S379 entries), deliberately NOT
-bundled into either fix. **(1)** `R/modORIPReporting.R:148` and `:244` –
-both are the `else` branch of
-`if (!is.null(siteConfig)) tryCatch(siteConfig(), error = ...) else getSiteInfo(expectConfigFile = FALSE)`;
-DEAD in the real running app (`appServer.R` always passes a non-`NULL`
-`siteConfig`), only reachable if
-[`modORIPReportingServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modORIPReportingServer.md)
-is ever called directly without that argument – lowest priority, not a
-live boot-crash path. **(2)** `R/appServer.R:124` –
-`getSiteInfo()$homeDir` inside the “Debug on” checkbox’s `observeEvent`;
-fires only on a user-triggered UI action (not boot), and per
-`PROJECT_LEARNINGS.md` Learning 347(d) an observer’s uncaught error
-surfaces to Shiny as a non-fatal
-[`warning()`](https://rdrr.io/r/base/warning.html), not a full-process
-crash – same root defect (unguarded
-[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)),
-materially lower severity (one broken feature vs. the whole app failing
-to boot), a candidate for its own small follow-up. **(3)**
-`R/getLkDirectAncestors.R:26`, `R/setLabKeyDefaults.R:44` (default arg),
-`R/getPedigreeSource.R:83`, `R/getDemographics.R:39` – all
-user-triggered LabKey-fetch call sites, unrelated to app boot or ORIP
-gating; a broader “should
+call sites (LabKey-fetch, out of the ORIP-tab-gate crash class)**
+(DECISION NEEDED – needs its own re-scoping before a fix shape is
+picked, Effort S) – found by S378’s `grep -rn "getSiteInfo(" R/`
+inventory. The 3 ORIP-tab-gate-adjacent sites from that same inventory
+(`R/modORIPReporting.R:148`/`:244`’s dead-code `else` branch,
+`R/appServer.R:124`’s Debug-checkbox observer) are now resolved – S380,
+see `CHANGELOG.md`. Remaining: `R/getLkDirectAncestors.R:26`,
+`R/setLabKeyDefaults.R:44` (default arg), `R/getPedigreeSource.R:83`,
+`R/getDemographics.R:39` – all user-triggered LabKey-fetch call sites,
+unrelated to app boot or ORIP gating; a broader “should
 [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
 itself be defensive” question, explicitly a DIFFERENT, out-of-scope
-concern from the issue \#50 / ORIP-tab-gate crash class the two resolved
-items belonged to – do not fold into one fix without re-scoping. - \[ \]
-**Issue \#123 (XARCH-5, string-column-keyed pipeline, no validated
-seam)** (DECISION NEEDED – needs its own planning session; Effort L) –
-related to \#122 but explicitly **out of scope** of the S372 plan. Track
-on GitHub.
+concern from the issue \#50 / ORIP-tab-gate crash class the three
+resolved sites belonged to – do not fold into one fix without re-scoping
+(flagged when originally filed by S378, reconfirmed at S380’s pre-RED
+scope gate). - \[ \] **Issue \#123 (XARCH-5, string-column-keyed
+pipeline, no validated seam)** (DECISION NEEDED – needs its own planning
+session; Effort L) – related to \#122 but explicitly **out of scope** of
+the S372 plan. Track on GitHub.
 
 ## Documents (v1.0.8 -\> v2.0.0 write-up)
 
