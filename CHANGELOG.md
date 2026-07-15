@@ -43,6 +43,61 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-14 · [ad hoc] Guard 3 lower-severity unguarded `getSiteInfo()` call sites (Session 380)
+- **Deliverable:** Fixed the non-LabKey subset of `BACKLOG.md`'s "4 lower-severity
+  unguarded `getSiteInfo()` call sites" item (filed by Session 378 alongside the
+  `appServer.R`/`appUI.R` ORIP-tab-gate sibling pair, resolved Sessions 378-379).
+  Owner-scoped via `AskUserQuestion` at Phase 1 to the 3 sites tied to the same
+  issue #50 crash class, leaving the item's own explicitly-flagged 4 LabKey-fetch
+  sites for a separate re-scoping session (now standing alone in `BACKLOG.md`).
+  **(1)** `R/modORIPReporting.R:148` (`output$siteInfo`'s `else` branch) and `:244`
+  (`downloadORIPReport`'s `else` branch) -- both call
+  `getSiteInfo(expectConfigFile = FALSE)` unguarded; dead in the real running app
+  (`appServer.R` always passes a non-`NULL` `siteConfig`), reachable only if
+  `modORIPReportingServer()` is mounted directly without one. Wrapped both in
+  `tryCatch` mirroring `appServer.R`'s/`appUI.R`'s established pattern
+  (`futile.logger::flog.warn` on error, fall back to `NULL`); the existing
+  `is.null(config)`/`!is.null(config)` checks downstream already fail closed.
+  **(2)** `R/appServer.R:124` -- `getSiteInfo()$homeDir` inside the "Debug on"
+  checkbox's `observeEvent`, live-reachable via a real user action (not boot).
+  Wrapped in `tryCatch`; on error, logs via `flog.warn` and skips registering the
+  file appender entirely (fails closed to whatever logging destination is already
+  active, rather than the observer erroring out). Strict TDD RED->GREEN throughout
+  (REFACTOR declared unneeded -- 0 lints, each fix a direct mirror of an
+  established pattern); 1 pre-RED `AskUserQuestion` scope decision (which of the
+  item's 3 heterogeneous classes to fix this session) plus the 3 phase gates. 3 new
+  tests: 2 in `tests/testthat/test_modORIPReporting_server.R`, 1 in
+  `tests/testthat/test_appServer_logging.R` (using `expect_no_warning()`, not
+  `expect_no_error()`, per `PROJECT_LEARNINGS.md` Learning 347(d)'s empirically-
+  confirmed condition class -- a Shiny observer's uncaught error surfaces to
+  `shiny::testServer()` as `base::warning()`, not a thrown error). Found and fixed
+  an unrelated, pre-existing test-isolation gap while writing the third test: the
+  process-global `futile.logger` "nprcgenekeepr" registry could carry a stale file
+  appender from an earlier `test_that()` block's now-deleted `withr::local_tempdir()`
+  into this test, making the *already-fixed* ORIP-gate guard's own `flog.warn()`
+  call throw "cannot open the connection" for a reason unrelated to the code under
+  test -- fixed by explicitly resetting the logger to console at the top of the new
+  test rather than depending on file-internal test execution order.
+- **Verification:** target files: `test_modORIPReporting_server.R` 14/14 passed;
+  `test_appServer_logging.R` 4/4 passed. Full suite 3225 passed/169 skipped/0
+  failed/0 error/0 warning. `devtools::check()` 0 errors/0 warnings/0 notes. lintr 0
+  lints on all 4 changed files. `grep -rn "getSiteInfo(" R/` confirmed the 4
+  LabKey-fetch sites remain untouched, exactly as scoped. Phase 3E: the two
+  `modORIPReporting.R` sites are dead code in the live app (no live path can reach
+  them), so `shiny::testServer()` coverage is the correct and only ceiling. The
+  `appServer.R:124` site is live-reachable, so a live `shinytest2::AppDriver` check
+  was attempted (malformed config, then set the Debug checkbox input) -- boot
+  proceeded correctly past the malformed-config ORIP gate (confirmed by its `WARN`
+  log line), but the session failed to stabilize before the checkbox interaction
+  could fire, on the SAME already-documented `modBreedingGroupsServer`
+  stale-system-library signature `PROJECT_LEARNINGS.md` Learnings 349(d)/350
+  catalogued -- recognized by signature match (third occurrence), not
+  re-diagnosed. Per Learning 349(d)'s own practical rule (prefer `testServer()` over
+  `AppDriver` for wiring/interaction-level checks in this stale-library
+  environment), the already-GREEN `testServer()` coverage is treated as the
+  sufficient verification ceiling for this call site; see Learning 351 for the full
+  detail.
+
 ### 2026-07-14 · [ad hoc] Guard the unprotected `getSiteInfo()` call in `appUI.R`'s default argument (Session 379)
 - **Deliverable:** `R/appUI.R:20`'s `appUI <- function(siteInfo = getSiteInfo(expectConfigFile
   = FALSE))` evaluated its default-argument expression on first reference inside the
