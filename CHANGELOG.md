@@ -43,6 +43,32 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-14 · [ad hoc] Fix the stale-library gap blocking full `shinytest2::AppDriver` checks (Session 381)
+- **Deliverable:** Fixed `BACKLOG.md`'s "stale system-library `openxlsx` gap" item (filed
+  Session 380 after 3 sessions -- S378/S379/S380 -- independently hit a
+  `modBreedingGroupsServer: unused argument (kinshipMatrix = ...)` signature blocking
+  live `shinytest2::AppDriver` checks). Root-cause investigation corrected the
+  diagnosis: the actual stale copy was NOT in a system library (R 4.6.1's system
+  library has neither `nprcgenekeepr` nor `openxlsx` installed at all) but in the
+  **renv project library**'s own installed `nprcgenekeepr` copy, which nobody had
+  reinstalled since before issue #122 Phase 2 added the `kinshipMatrix` parameter.
+- **Fix:** `R CMD INSTALL --library=<renv project library> .` (current source) --
+  `renv::install(".")` was tried first and fails on this project with
+  `cp: cannot copy a directory ... into itself` (it naively copies the whole project
+  tree into its own nested `renv/staging/`; plain `R CMD INSTALL` respects
+  `.Rbuildignore` and avoids this).
+- **Verification:** RED reproduced the exact documented failure via the
+  S378-380 recipe (`shiny.appobj` built from `pkgload::load_all()` source, passed
+  directly to `AppDriver$new()`). GREEN re-ran the identical script post-install:
+  construction succeeded, `set_inputs(mainNavbar = "Breeding Groups")` +
+  `wait_for_idle()` succeeded, tab confirmed active -- both construction- and
+  interaction-level proof in one pass. Full regression suite re-run clean (0
+  failed/0 error/0 warning, 169 skipped baseline, unaffected since no `R/`/`tests/`
+  source changed); the pre-existing directory-based E2E suite
+  (`test-e2e-breeding-groups-module.R`) passed 7/7 both before and after. No R
+  source changed -- pure environment/library fix; REFACTOR declared unneeded.
+- **See:** `PROJECT_LEARNINGS.md` Learning 352.
+
 ### 2026-07-14 · [ad hoc] Guard 3 lower-severity unguarded `getSiteInfo()` call sites (Session 380)
 - **Deliverable:** Fixed the non-LabKey subset of `BACKLOG.md`'s "4 lower-severity
   unguarded `getSiteInfo()` call sites" item (filed by Session 378 alongside the
