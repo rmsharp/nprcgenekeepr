@@ -43,6 +43,51 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-15 · [issue #123] Architecture plan for XARCH-5 string-column-keyed pipeline (Session 385)
+- **Deliverable:** `docs/planning/issue123-xarch5-column-schema-plan.md` -- a planning
+  session (no implementation), following `ARCHITECTURE_WORKSTREAM.md`, for issue #123
+  (XARCH-5, "Rigid pipeline threads fat data frames keyed by string column names, no
+  validated seam"), tagged `DECISION NEEDED -- needs its own planning session; Effort L`
+  in `BACKLOG.md` since the 2026-07-11 tracker-reconciliation audit filed it.
+- **Method:** a 35-agent background research pass (6 independent inventory readers, 24
+  adversarial re-verifiers, 4 independent alternative-design agents, 1 judge; 0 agent
+  errors, 479 tool calls), all re-deriving claims from current source at HEAD `b534e08d`
+  rather than trusting the issue text.
+- **Key findings:** (1) reproduced the issue's defect by execution, not inference --
+  `reportGV()` called on a pedigree missing `sex` returns successfully with no error/
+  warning, silently omitting the `sex` column and corrupting `nMaleFounders`/
+  `nFemaleFounders`/`total` from 3/17/20 to 0/0/0; (2) traced the full
+  `qcStudbook -> setPopulation/trimPedigree -> createPedTree -> kinship/calcA ->
+  reportGV -> groupAddAssign` chain and found only 3 functions in the whole chain
+  perform an explicit, named-column existence check with a clear diagnostic; (3) found
+  9 additional hand-maintained column-name-vector duplicates beyond the 3 the issue
+  names (`getRequiredCols`/`getPossibleCols`/`getIncludeColumns`); (4) found a 3rd
+  unguarded site with the byte-identical silent-drop pattern, not named by the issue:
+  `R/gvaConvergence.R:161`; (5) confirmed all 8 pipeline functions and all 3 column
+  getters are `@export`ed -- no internal-only cover exists, raising real CRAN-timing
+  risk (v2.0.0 mid-resubmission) for any exported-contract change.
+- **Decision:** rejected the issue's literal recommendation (a full S3
+  `pedigree`/`gvReport` class, each pipeline stage accepting/returning it) as
+  disproportionate -- only 3 of 7 implied functions actually round-trip a
+  pedigree-shaped data.frame, and every touched function is exported mid-resubmission,
+  the same risk category the sibling issue #122 plan's Dragon 5 already flagged.
+  **Adopted instead:** consolidate the 3 getters into one internal schema (zero
+  exported-contract change, existing pinned tests as the regression guard) plus an
+  explicit `setdiff`+`stop()` validator (reusing an idiom already tested in this
+  codebase, `checkKinshipOverrides.R`) at the 2 issue-named sites plus the 3rd found
+  site -- judged to fit one ordinary TDD session (Effort S/M), not the Effort L
+  originally estimated for the literal recommendation.
+- **`BACKLOG.md`:** updated the issue #123 item from `DECISION NEEDED` to `READY`,
+  Effort S/M, pointing at the plan for implementation.
+- **TDD:** N/A -- planning-only session, no implementation code, per the project's
+  established precedent for planning/audit sessions (matches S372's and S365's
+  close-outs).
+- **Verification:** full regression suite re-run after the doc-only session: 0 failed/
+  0 error/0 warning, 169 skipped baseline (unchanged, as expected for a session with
+  zero `R/`/`tests/` changes). Every line-number citation in the plan was independently
+  re-read and confirmed against current source in this session (not taken on the
+  research workflow's word alone).
+
 ### 2026-07-15 · [ad hoc] Delete 18 stale untracked leftover files (Session 384)
 - **Deliverable:** Resolved `BACKLOG.md`'s "clean up stale untracked leftover files"
   item (filed Session 383). Deleted 18 untracked files confirmed dead, in two
