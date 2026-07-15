@@ -146,27 +146,6 @@ Next (owner action, unchanged): `devtools::submit_cran()`, then click
 the maintainer-email confirmation link – both still owner-only per
 SAFEGUARDS and the runbook’s HARD STOP.
 
-**Fix the stale system-library `openxlsx` gap blocking
-full-browser-stability
-[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
-checks** (READY, Effort S) – the R CMD INSTALL system library
-`AppDriver` subprocesses resolve packages from is missing `openxlsx`
-(added to `DESCRIPTION` by S363, never installed system-wide), so any
-live browser-stability check that goes beyond “does construction/boot
-crash” fails on a stale
-`modBreedingGroupsServer: unused argument (kinshipMatrix = ...)`
-signature (a pre-issue-#122-Phase-2 argument list) instead of exercising
-the code actually under test. Hit independently by 3 sessions now (S378
-`PROJECT_LEARNINGS.md` Learning 349(d), S379 Learning 350(b), S380
-Learning 351(c)) – each recognized the signature and worked around it
-rather than fixing it, since it was out of that session’s own declared
-scope. Fix:
-`RENV_CONFIG_AUTOLOADER_ENABLED=false R CMD INSTALL --library=<system-lib> .`
-after first installing `openxlsx` into that library (the exact blocker
-S378 hit attempting this). Modifies a shared system library, not project
-source – its own small infra session, not bundled into a feature/bugfix
-session.
-
 ## Architecture (issue \#122 / XARCH-2 – module contract)
 
 *Resolved – S372 planning session through S377 execution (Phases 1-5,
