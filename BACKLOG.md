@@ -174,9 +174,32 @@ unguarded
 [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
 call sites” design-decision item is RESOLVED: decline, no code change –
 S383 (2026-07-15). See `CHANGELOG.md`.) - \[ \] **Issue \#123 (XARCH-5,
-string-column-keyed pipeline, no validated seam)** (DECISION NEEDED –
-needs its own planning session; Effort L) – related to \#122 but
-explicitly **out of scope** of the S372 plan. Track on GitHub.
+string-column-keyed pipeline, no validated seam)** (READY, Effort S/M –
+re-scoped down from the original Effort L) – **planning session DONE,
+S385 (2026-07-15):**
+`docs/planning/issue123-xarch5-column-schema-plan.md`. A 35-agent
+research pass reproduced the issue’s defect by execution
+([`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+on a pedigree missing `sex` silently corrupts founder counts to 0/0/0,
+no error/warning) and adversarially judged 4 design alternatives.
+**Decision: reject the issue’s literal “full S3 class” recommendation**
+(only 3 of 7 implied pipeline functions actually round-trip a
+pedigree-shaped frame; all 8 pipeline functions + all 3 column getters
+are `@export`ed mid-CRAN-resubmission – same risk category the sibling
+issue \#122 plan’s Dragon 5 already rejected). **Adopt instead:**
+consolidate
+[`getRequiredCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getRequiredCols.md)/[`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md)/[`getIncludeColumns()`](https://github.com/rmsharp/nprcgenekeepr/reference/getIncludeColumns.md)
+into one internal schema (pass-through getters, zero exported-contract
+change) + an explicit
+`setdiff`+[`stop()`](https://rdrr.io/r/base/stop.html) validator at 3
+silent-drop sites (`reportGV.R:211`, `qcStudbook.R:316`, and a 3rd site
+found during research, `gvaConvergence.R:161`, not named by the issue).
+Fits one ordinary RED-\>GREEN-\>REFACTOR session (see the plan’s
+Migration Path). Next: implement Phase 1 of the plan. Explicitly NOT in
+scope (see plan §10): the other 9 hardcoded column-list duplicates found
+during research, or validation at any other pipeline stage
+(`setPopulation`-\> `groupAddAssign`) – issue \#123 should be updated to
+partial/scoped closure after implementation, not closed outright.
 
 ## Documents (v1.0.8 -\> v2.0.0 write-up)
 
