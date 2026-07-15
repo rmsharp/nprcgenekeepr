@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S381
+date: 2026-07-14
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix the stale system-library openxlsx gap blocking full-browser-stability shinytest2::AppDriver checks (BACKLOG.md item, filed S380).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S380
 date: 2026-07-14
 status: complete
