@@ -72,7 +72,7 @@ key_files: R/getLkDirectAncestors.R:26-38 (new tryCatch(error=) guard), R/getPed
 gotchas: (1) The remaining 2 getSiteInfo() sites now stand as their OWN BACKLOG.md item -- a genuine design decision, not a copy of this session's fix shape. (2) getSiteInfo()'s two failure branches are NOT symmetric: missing config WARNS and falls back to usable defaults (not a failure, must propagate); malformed-but-present config THROWS (a real failure). Any future getSiteInfo() guard must catch error only, never warning. (3) The real malformed-config-file fixture recipe (HOME env var override + config file missing the center key) is established in test_appUI_siteinfo.R/test_appServer_server.R -- reused here for Phase 3E. (4) Standing items unchanged: CRAN resubmission (READY, owner-only); Document 2 Phase D (READY, Effort M); LabKey integration remainder (BLOCKED); issue #123/XARCH-5 (DECISION NEEDED).
 runtime_smoke: Performed, not declared N/A -- built a real (non-mocked) malformed config file and called both fixed functions directly: both returned NULL cleanly, no uncaught error, proof against the actual getTokenList/getParamDef parsing failure rather than a synthetic simulated one. Also re-confirmed the real missing-config warn-and-continue path is unbroken.
 changelog_ref: CHANGELOG.md 2026-07-14 S382 entry
-commit: 748cacb6 (session claim), pending (close-out commit lands next)
+commit: 748cacb6 (session claim), 4f67e094 (close-out: fix + tests + ledger + learnings + backlog)
 ```
 
 ```handoff
