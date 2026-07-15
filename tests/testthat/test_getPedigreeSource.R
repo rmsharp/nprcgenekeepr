@@ -86,6 +86,39 @@ test_that("getPedigreeSource('labkey') returns NULL when the fetch errors", {
   expect_null(getPedigreeSource(sourceType = "labkey", siteInfo = fakeSite))
 })
 
+## BACKLOG.md "4 remaining unguarded getSiteInfo() call sites": when siteInfo
+## is not supplied, getPedigreeSource("labkey") falls back to calling
+## getSiteInfo() itself (line 83), currently unguarded even though this
+## function's own docs promise NULL on any labkey-source fetch failure. A
+## PRESENT but malformed configuration file can make getSiteInfo()'s parser
+## throw (distinct from a missing file, which only warns and falls back to
+## defaults -- see the companion test below).
+test_that("getPedigreeSource('labkey') returns NULL when getSiteInfo() errors (malformed config)", {
+  skip_if_not_installed("mockery")
+  mockery::stub(getPedigreeSource, "getSiteInfo",
+                function(...) stop("simulated malformed config"))
+  expect_null(getPedigreeSource(sourceType = "labkey"))
+})
+
+test_that("getPedigreeSource('labkey') still propagates a getSiteInfo() warning (missing config is not treated as a failure)", {
+  skip_if_not_installed("mockery")
+  fakeSite <- list(lkPedColumns = c("Id", "gender"),
+                   mapPedColumns = c("id", "sex"))
+  mockery::stub(getPedigreeSource, "getSiteInfo", function(...) {
+    warning("simulated missing config")
+    fakeSite
+  })
+  mockery::stub(
+    getPedigreeSource, "getDemographics",
+    mockery::mock(data.frame(Id = "S1", gender = "M", stringsAsFactors = FALSE))
+  )
+  expect_warning(
+    result <- getPedigreeSource(sourceType = "labkey"),
+    "simulated missing config"
+  )
+  expect_identical(names(result), fakeSite$mapPedColumns)
+})
+
 test_that("getPedigreeSource() rejects an unknown source", {
   expect_error(getPedigreeSource(sourceType = "bogus"), "should be one of")
 })

@@ -22,6 +22,18 @@ test_that("getLkDirectAncestors returns NULL when getDemographics errors", {
   expect_null(suppressWarnings(getLkDirectAncestors(ids = "O1")))
 })
 
+## BACKLOG.md "4 remaining unguarded getSiteInfo() call sites": getSiteInfo()
+## itself is unguarded here, and its parser can throw on a PRESENT but
+## malformed configuration file (distinct from the missing-file case above,
+## which only warns and falls back to defaults). Mirrors the getDemographics
+## guard immediately below it in the same function.
+test_that("getLkDirectAncestors returns NULL when getSiteInfo() errors (malformed config)", {
+  skip_if_not_installed("mockery")
+  mockery::stub(getLkDirectAncestors, "getSiteInfo",
+                function(...) stop("simulated malformed config"))
+  expect_null(getLkDirectAncestors(ids = "O1"))
+})
+
 test_that("getLkDirectAncestors walks the sire/dam chain to all ancestors", {
   skip_if_not_installed("mockery")
   fixture <- data.frame(

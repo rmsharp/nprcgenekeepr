@@ -43,6 +43,38 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-14 · [ad hoc] Guard 2 of the 4 remaining unguarded `getSiteInfo()` call sites (Session 382)
+- **Deliverable:** Guarded `R/getPedigreeSource.R:83` and `R/getLkDirectAncestors.R:26` --
+  the 2 of `BACKLOG.md`'s "4 remaining unguarded `getSiteInfo()` call sites" (filed
+  Session 378, standing DECISION NEEDED since Session 380) that have an existing local
+  fail-soft pattern to mirror. Investigation confirmed `getSiteInfo()` genuinely can throw
+  (a present-but-malformed config file makes its regex-based parser raise an uncaught
+  error, distinct from a missing config file, which only warns and falls back to
+  defaults), and that both sites' own functions already wrap an adjacent `getDemographics()`
+  call in `tryCatch(warning=,error=) -> NULL` -- `getPedigreeSource()`'s own docstring
+  already promises `NULL` on any labkey-source fetch failure, a contract the unguarded
+  `getSiteInfo()` call was silently breaking. The other 2 sites
+  (`R/setLabKeyDefaults.R:44`, `R/getDemographics.R:39`) have no local pattern to mirror
+  and are split off into a new, separately-scoped `BACKLOG.md` item (need a genuine design
+  decision, not a mirrored guard).
+- **Fix:** Wrapped each `getSiteInfo()` call in `tryCatch(error=)` **only** (not
+  `warning=`), `flog.debug`+`stri_c`+`NULL`-fallback, mirroring the adjacent
+  `getDemographics()` guard's idiom but deliberately narrower: `getSiteInfo()`'s
+  missing-config warning is an intentional non-failure fallback that must still
+  propagate (a naive full `warning=,error=` mirror would have silently swallowed it and
+  regressed `getLkDirectAncestors.R`'s own pre-existing warning-propagation test).
+- **Verification:** Strict TDD (pre-RED scope decision, PRE-RED->RED, RED->GREEN,
+  GREEN->REFACTOR, all via `AskUserQuestion`; REFACTOR declared unneeded). RED confirmed
+  1 new failing test per target file against unmodified source. GREEN: both target files
+  pass; full regression suite 0 failed/0 error/0 warning (169 skipped baseline, unchanged);
+  `devtools::check()` 0 errors/0 warnings/0 notes; `lintr` 0 lints on all 4 changed files.
+  Phase 3E performed with real (non-mocked) evidence: built an actual malformed config
+  file (missing `center`, reusing `test_appUI_siteinfo.R`'s established fixture) and
+  called both real functions directly -- both returned `NULL` cleanly with no uncaught
+  error; also re-confirmed the missing-config warn-and-continue path still propagates and
+  completes correctly, unbroken by the new guard.
+- **See:** `PROJECT_LEARNINGS.md` Learning 353.
+
 ### 2026-07-14 · [ad hoc] Fix the stale-library gap blocking full `shinytest2::AppDriver` checks (Session 381)
 - **Deliverable:** Fixed `BACKLOG.md`'s "stale system-library `openxlsx` gap" item (filed
   Session 380 after 3 sessions -- S378/S379/S380 -- independently hit a
