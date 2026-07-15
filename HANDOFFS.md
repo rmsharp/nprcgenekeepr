@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S385
+date: 2026-07-15
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Architecture plan for issue #123 (XARCH-5, string-column-keyed pipeline, no validated seam), following ARCHITECTURE_WORKSTREAM.md. Planning session only -- deliverable is a plan document in docs/planning/, not implementation.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S384
 date: 2026-07-15
 status: complete
