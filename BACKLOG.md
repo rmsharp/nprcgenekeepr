@@ -110,15 +110,9 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       and the runbook's HARD STOP.
 
 ## Housekeeping
-- [ ] **Clean up stale untracked leftover files from past dead-code removals** (READY,
-      Effort S) -- discovered S383, unrelated to that session's deliverable, so left
-      untouched. `R/agePyramidPlot.R`, `R/fixGenotypeCols.R`, `R/getSimSires.R`,
-      `R/makeGeneticDiversityDashboard.R` (each deleted from git tracking as dead code
-      in a past session -- S268/S280/S285-300) and `inst/_pkgdown.yml` (migrated to
-      root `_pkgdown.yml` S354), plus `PED_GV_AUDIT_2026-05-30.html` (an untracked
-      rendered audit artifact), are still sitting on disk as untracked files -- none
-      are `.gitignore`d. Verify each is genuinely superseded/redundant (not a
-      resurrected in-progress edit) before deleting or adding to `.gitignore`.
+- [ ] (none remaining -- the "clean up stale untracked leftover files" item (filed
+      S383) is RESOLVED: 18 confirmed-dead untracked files deleted -- S384
+      (2026-07-15). See `CHANGELOG.md`.)
 
 ## Architecture (issue #122 / XARCH-2 -- module contract)
 *Resolved -- S372 planning session through S377 execution (Phases 1-5, all DONE); see

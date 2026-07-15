@@ -43,6 +43,54 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-15 · [ad hoc] Delete 18 stale untracked leftover files (Session 384)
+- **Deliverable:** Resolved `BACKLOG.md`'s "clean up stale untracked leftover files"
+  item (filed Session 383). Deleted 18 untracked files confirmed dead, in two
+  batches.
+- **Batch 1 (the 6 originally flagged, S383):** `PED_GV_AUDIT_2026-05-30.html`
+  (rendered audit output, already the subject of a full owner-decided policy
+  resolution at Session 371 that deleted it once before -- yet present again,
+  with its *original* 2026-05-30 filesystem creation timestamp intact, not a
+  fresh regeneration); `R/agePyramidPlot.R`, `R/fixGenotypeCols.R`,
+  `R/getSimSires.R`, `R/makeGeneticDiversityDashboard.R` (each removed from git
+  tracking as dead code in a past session -- S268/S280/S285/S300 -- via real
+  `git rm` commits that also deleted the working-tree copy at the time);
+  `inst/_pkgdown.yml` (migrated to root `_pkgdown.yml` at S354).
+- **Batch 2 (12 more, discovered mid-deletion when removing batch 1 revealed
+  further previously-hidden untracked files in `git status`):**
+  `tests/testthat/test_fixGenotypeCols.R` / `test_makeGeneticDiversityDashboard.R`
+  (companion tests to batch-1 dead source files, deleted alongside them in the
+  same original commits per those commits' own messages); `test_runGeneKeepR_alias.R`
+  (tested an inverted, obsolete design reversed at issue #110/S276; superseded by
+  the currently-tracked `test_runModularApp_alias.R`); `vignettes/manual_components/
+  _bg_algorithm.Rmd` / `_bg_formation.Rmd` (deletion commit `45335ea9` explicitly
+  calls them "confirmed-orphan vignette source files," superseded by the
+  currently-tracked `_breeding_group_algorithm.Rmd`/`_breeding_group_formation.Rmd`);
+  7 `vignettes/shiny_app_use/*.png` screenshots (explicitly flagged in `HANDOFFS.md`
+  as "stale (2024-12-16, pre-migration) and must not be reused as-is," not
+  referenced by any filename in the currently-tracked `ColonyManagerTutorial.Rmd`,
+  very likely among the "8 deleted" screenshots from the S347 Phase B regeneration
+  pass that never actually left disk).
+- **Verification:** Each file independently checked via `git log`/`git show` history
+  and cross-reference grep against currently-tracked files before deletion -- none
+  referenced by any live document, test, or NAMESPACE export. Full regression suite
+  re-run after both batches: 0 failed/0 error/0 warning, 169 skipped baseline
+  (unchanged). No `R/`/`tests/` package behavior changed -- only dead files removed.
+  TDD N/A (file deletion, no implementation).
+- **Open question, not resolved this session:** why previously and verifiably
+  deleted files (some removed via real `git rm` commits that delete the
+  working-tree copy, one the subject of its own dedicated resolution session)
+  reappeared on disk with original timestamps intact. Checked and ruled out:
+  iCloud Drive sync (not on an iCloud-synced path), an in-progress Time Machine
+  backup, relevant local Time Machine snapshots, `~/.Trash` contents, and shell
+  history for `cp`/`rsync`/`tar` commands touching these paths -- none explain it.
+  Deleting some of the files also caused previously-hidden untracked files (batch
+  2) to newly appear in `git status`, itself unexplained (`core.untrackedCache`/
+  `core.fsmonitor` are unset, so a stale-cache explanation doesn't obviously apply
+  either). See `PROJECT_LEARNINGS.md` Learning 355.
+- **BACKLOG.md:** item resolved/pruned per the established "none remaining -- see
+  CHANGELOG.md" pointer convention.
+
 ### 2026-07-15 · [ad hoc] Decline the `setLabKeyDefaults()`/`getDemographics()` `getSiteInfo()` design decision -- no code change (Session 383)
 - **Deliverable:** Resolved `BACKLOG.md`'s "`setLabKeyDefaults()`/`getDemographics()`'s
   unguarded `getSiteInfo()` call sites need a design decision" item (split off Session
