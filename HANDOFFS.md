@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S386
+date: 2026-07-15
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement Phase 1 of docs/planning/issue123-xarch5-column-schema-plan.md (issue #123, XARCH-5) -- consolidate getRequiredCols()/getPossibleCols()/getIncludeColumns() into one internal column schema + add a setdiff+stop() validator at 3 silent-drop sites (reportGV.R:211, qcStudbook.R:316, gvaConvergence.R:161). Strict TDD (RED->GREEN->REFACTOR), following DEVELOPMENT_WORKSTREAM.md.
+what_was_done: pending
+next_steps: pending
+key_files: docs/planning/issue123-xarch5-column-schema-plan.md (the plan being implemented)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S385
 date: 2026-07-15
 status: complete
