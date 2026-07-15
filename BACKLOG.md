@@ -154,28 +154,47 @@ vocabulary-composition fix, S374 kinship dedup, S375 vocabulary
 collapse, S376 dead-surface pruning, S377 contract doc + guard test).
 The living contract is `docs/architecture/module-contract.md`; it is
 enforced by `tests/testthat/test_moduleContract.R`. `modInput` is the
-reference implementation.* - \[ \] (none remaining) - \[ \] **4
-remaining unguarded
+reference implementation.* - \[ \] (none remaining) - \[ \] (none
+remaining – the former “4 remaining unguarded
 [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
-call sites (LabKey-fetch, out of the ORIP-tab-gate crash class)**
-(DECISION NEEDED – needs its own re-scoping before a fix shape is
-picked, Effort S) – found by S378’s `grep -rn "getSiteInfo(" R/`
-inventory. The 3 ORIP-tab-gate-adjacent sites from that same inventory
-(`R/modORIPReporting.R:148`/`:244`’s dead-code `else` branch,
-`R/appServer.R:124`’s Debug-checkbox observer) are now resolved – S380,
-see `CHANGELOG.md`. Remaining: `R/getLkDirectAncestors.R:26`,
-`R/setLabKeyDefaults.R:44` (default arg), `R/getPedigreeSource.R:83`,
-`R/getDemographics.R:39` – all user-triggered LabKey-fetch call sites,
-unrelated to app boot or ORIP gating; a broader “should
+call sites” item is now fully resolved:
+`R/getPedigreeSource.R:83`/`R/getLkDirectAncestors.R:26` guarded S382
+(see `CHANGELOG.md`); `R/modORIPReporting.R:148`/`:244`,
+`R/appServer.R:124` guarded S380. The remaining 2 sites now stand as
+their own item below, since they need a genuinely different design
+decision.) - \[ \]
+**[`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)‘s
+unguarded
 [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
-itself be defensive” question, explicitly a DIFFERENT, out-of-scope
-concern from the issue \#50 / ORIP-tab-gate crash class the three
-resolved sites belonged to – do not fold into one fix without re-scoping
-(flagged when originally filed by S378, reconfirmed at S380’s pre-RED
-scope gate). - \[ \] **Issue \#123 (XARCH-5, string-column-keyed
-pipeline, no validated seam)** (DECISION NEEDED – needs its own planning
-session; Effort L) – related to \#122 but explicitly **out of scope** of
-the S372 plan. Track on GitHub.
+call sites need a design decision, not a mirrored guard\*\* (DECISION
+NEEDED – needs a design decision before a fix shape is picked, Effort
+S-M) – split off from the “4 remaining unguarded
+[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
+call sites” item by S382 (see `CHANGELOG.md`), which guarded the 2 sites
+that had a mirrorable local fail-soft idiom (`R/getPedigreeSource.R:83`,
+`R/getLkDirectAncestors.R:26`) and left these 2 alone. Remaining:
+`R/setLabKeyDefaults.R:44` (`siteInfo = getSiteInfo()` default arg) and
+`R/getDemographics.R:39` (`siteInfo <- getSiteInfo()` at the top of the
+function). Neither has an adjacent local pattern to mirror, and both
+functions’ own docs describe “let it throw, caller wraps it” as the
+intended contract
+([`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)’s
+own `@examples` shows the CALLER doing the `tryCatch`). The actual
+decision needed: should
+[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
+itself become defensive (catch its own internal parsing errors, fall
+back to defaults+warn like it already does for a missing file – fixes
+all ~20 current callers at once, but changes the core function’s
+contract), or should these 2 functions each adopt a NEW fail-soft
+contract they don’t currently have (a larger, more disruptive change for
+[`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md),
+whose current callers may rely on the error propagating)? Do not guard
+these 2 sites with the same mirrored-tryCatch shape used for the other 2
+without first deciding this (flagged at S382’s pre-RED scope gate). - \[
+\]** Issue \#123 (XARCH-5, string-column-keyed pipeline, no validated
+seam)\*\* (DECISION NEEDED – needs its own planning session; Effort L) –
+related to \#122 but explicitly **out of scope** of the S372 plan. Track
+on GitHub.
 
 ## Documents (v1.0.8 -\> v2.0.0 write-up)
 
