@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S382
+date: 2026-07-14
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Guard the 2 of BACKLOG.md's "4 remaining unguarded getSiteInfo() call sites" that have an existing local fail-soft pattern to mirror (R/getPedigreeSource.R:83, R/getLkDirectAncestors.R:26). Scope decided via AskUserQuestion: the other 2 (setLabKeyDefaults.R:44, getDemographics.R:39) become a new, separately-scoped BACKLOG.md item.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending (session claim commit lands next)
+```
+
+```handoff
 session: S381
 date: 2026-07-14
 status: complete
