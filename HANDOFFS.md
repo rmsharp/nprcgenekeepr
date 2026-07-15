@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S383
+date: 2026-07-15
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Resolve BACKLOG.md's "setLabKeyDefaults()/getDemographics() unguarded getSiteInfo() call sites" DECISION NEEDED item (split off from S382).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S382
 date: 2026-07-14
 status: complete
