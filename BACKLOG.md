@@ -146,6 +146,20 @@ Next (owner action, unchanged): `devtools::submit_cran()`, then click
 the maintainer-email confirmation link – both still owner-only per
 SAFEGUARDS and the runbook’s HARD STOP.
 
+## Housekeeping
+
+**Clean up stale untracked leftover files from past dead-code removals**
+(READY, Effort S) – discovered S383, unrelated to that session’s
+deliverable, so left untouched. `R/agePyramidPlot.R`,
+`R/fixGenotypeCols.R`, `R/getSimSires.R`,
+`R/makeGeneticDiversityDashboard.R` (each deleted from git tracking as
+dead code in a past session – S268/S280/S285-300) and
+`inst/_pkgdown.yml` (migrated to root `_pkgdown.yml` S354), plus
+`PED_GV_AUDIT_2026-05-30.html` (an untracked rendered audit artifact),
+are still sitting on disk as untracked files – none are
+`.gitignore`d. Verify each is genuinely superseded/redundant (not a
+resurrected in-progress edit) before deleting or adding to `.gitignore`.
+
 ## Architecture (issue \#122 / XARCH-2 – module contract)
 
 *Resolved – S372 planning session through S377 execution (Phases 1-5,
@@ -162,39 +176,15 @@ call sites” item is now fully resolved:
 (see `CHANGELOG.md`); `R/modORIPReporting.R:148`/`:244`,
 `R/appServer.R:124` guarded S380. The remaining 2 sites now stand as
 their own item below, since they need a genuinely different design
-decision.) - \[ \]
-**[`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)‘s
+decision.) - \[ \] (none remaining – the
+“[`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
 unguarded
 [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
-call sites need a design decision, not a mirrored guard\*\* (DECISION
-NEEDED – needs a design decision before a fix shape is picked, Effort
-S-M) – split off from the “4 remaining unguarded
-[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
-call sites” item by S382 (see `CHANGELOG.md`), which guarded the 2 sites
-that had a mirrorable local fail-soft idiom (`R/getPedigreeSource.R:83`,
-`R/getLkDirectAncestors.R:26`) and left these 2 alone. Remaining:
-`R/setLabKeyDefaults.R:44` (`siteInfo = getSiteInfo()` default arg) and
-`R/getDemographics.R:39` (`siteInfo <- getSiteInfo()` at the top of the
-function). Neither has an adjacent local pattern to mirror, and both
-functions’ own docs describe “let it throw, caller wraps it” as the
-intended contract
-([`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)’s
-own `@examples` shows the CALLER doing the `tryCatch`). The actual
-decision needed: should
-[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
-itself become defensive (catch its own internal parsing errors, fall
-back to defaults+warn like it already does for a missing file – fixes
-all ~20 current callers at once, but changes the core function’s
-contract), or should these 2 functions each adopt a NEW fail-soft
-contract they don’t currently have (a larger, more disruptive change for
-[`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md),
-whose current callers may rely on the error propagating)? Do not guard
-these 2 sites with the same mirrored-tryCatch shape used for the other 2
-without first deciding this (flagged at S382’s pre-RED scope gate). - \[
-\]** Issue \#123 (XARCH-5, string-column-keyed pipeline, no validated
-seam)\*\* (DECISION NEEDED – needs its own planning session; Effort L) –
-related to \#122 but explicitly **out of scope** of the S372 plan. Track
-on GitHub.
+call sites” design-decision item is RESOLVED: decline, no code change –
+S383 (2026-07-15). See `CHANGELOG.md`.) - \[ \] **Issue \#123 (XARCH-5,
+string-column-keyed pipeline, no validated seam)** (DECISION NEEDED –
+needs its own planning session; Effort L) – related to \#122 but
+explicitly **out of scope** of the S372 plan. Track on GitHub.
 
 ## Documents (v1.0.8 -\> v2.0.0 write-up)
 
