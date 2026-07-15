@@ -62,17 +62,17 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S383
 date: 2026-07-15
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Resolve BACKLOG.md's "setLabKeyDefaults()/getDemographics() unguarded getSiteInfo() call sites" DECISION NEEDED item (split off from S382).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: Resolved BACKLOG.md's "setLabKeyDefaults()/getDemographics() unguarded getSiteInfo() call sites" DECISION NEEDED item (split off S382). Decision: decline, no code change (DONE).
+what_was_done: Traced getDemographics()'s real callers (R/getLkDirectAncestors.R:46, R/getPedigreeSource.R:103) and found both already wrap the ENTIRE getDemographics(...) call in tryCatch(warning=,error=)->NULL, so a getSiteInfo() error thrown inside it already propagates out and is already caught today. setLabKeyDefaults()'s own getSiteInfo() default arg is dead code in-package (its sole caller always passes siteInfo explicitly); its @examples already show external callers wrapping the whole call. Posed a 3-option pre-RED scope AskUserQuestion (decline / make getSiteInfo() defensive / wrap locally anyway); owner picked decline. No RED/GREEN/REFACTOR gates -- no implementation written. Self-caught and corrected a Phase 1B ordering slip (investigated before claiming the session) mid-session. Discovered and flagged (untouched) 6 untracked leftover files from past dead-code-removal sessions, filed as a new BACKLOG Housekeeping item. Updated BACKLOG.md, CHANGELOG.md (2026-07-15 entry), PROJECT_LEARNINGS.md Learning 354, CLAUDE.md (learnings pointer). Commit: pending (lands in this close-out commit).
+next_steps: Pick from BACKLOG.md's remaining open items: new Housekeeping item (untracked leftover files, READY, Effort S); CRAN resubmission (READY, Effort S, owner-only: devtools::submit_cran() + email confirmation click); Document 2 Phase D (READY, Effort M); LabKey integration remainder (BLOCKED, needs a live LabKey server); issue #123/XARCH-5 (DECISION NEEDED, needs its own planning session).
+key_files: R/getSiteInfo.R (read only), R/setLabKeyDefaults.R:44 (read only), R/getDemographics.R:39 (read only), R/getLkDirectAncestors.R:46, R/getPedigreeSource.R:103 (read -- existing outer guards), BACKLOG.md (item resolved, new Housekeeping item), CHANGELOG.md (2026-07-15 S383 entry), PROJECT_LEARNINGS.md Learning 354, CLAUDE.md (learnings pointer).
+gotchas: (1) The getSiteInfo() design-decision BACKLOG item is CLOSED -- do not reopen or re-derive; reasoning is in CHANGELOG.md 2026-07-15 / Learning 354. (2) General pattern for any future "unguarded call site" item: trace the ENCLOSING function's real callers before scoping a fix -- R's error propagates to the FIRST enclosing tryCatch, wherever it lives; a line with no LOCAL tryCatch can still be fully protected by an OUTER one. (3) 6 untracked leftover files (R/agePyramidPlot.R, R/fixGenotypeCols.R, R/getSimSires.R, R/makeGeneticDiversityDashboard.R, PED_GV_AUDIT_2026-05-30.html, inst/_pkgdown.yml) left untouched on disk, filed as a new BACKLOG Housekeeping item -- verify each is genuinely superseded before deleting. (4) Standing items unchanged: CRAN resubmission (READY, owner-only); Document 2 Phase D (READY, Effort M); LabKey integration remainder (BLOCKED); issue #123/XARCH-5 (DECISION NEEDED).
+runtime_smoke: n/a -- decision-only, zero R/tests/ files changed, no runtime behavior to verify.
+changelog_ref: CHANGELOG.md 2026-07-15 S383 entry
+commit: cbe89ef5 (session claim), 4490fb26 (close-out: decision + docs + ledger + learnings + backlog)
 ```
 
 ```handoff
