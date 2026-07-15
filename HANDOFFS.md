@@ -72,7 +72,7 @@ key_files: BACKLOG.md (Housekeeping item resolved), CHANGELOG.md (2026-07-15 S38
 gotchas: (1) PED_GV_AUDIT_2026-05-30.html and several R/tests/vignettes files independently reappeared as untracked cruft across multiple past sessions despite verified prior deletions (some via real git rm commits) -- if this happens again, it's a KNOWN recurring pattern (see PROJECT_LEARNINGS.md Learning 355 for what's been checked and ruled out: iCloud, Time Machine, Trash, shell history, git untracked-cache config), not a fresh anomaly needing re-diagnosis from zero. (2) Always re-run git status after any deletion pass on this repo -- removing one batch of untracked files can reveal another. (3) Standing items unchanged: CRAN resubmission (READY, owner-only); Document 2 Phase D (READY, Effort M); LabKey integration remainder (BLOCKED); issue #123/XARCH-5 (DECISION NEEDED).
 runtime_smoke: Performed, not declared N/A -- full regression suite re-run after both deletion batches: 0 failed/0 error/0 warning, 169 skipped baseline unchanged. Meaningful because untracked test files for now-deleted dead functions were being silently run by testthat::test_dir() alongside their untracked source files before this cleanup.
 changelog_ref: CHANGELOG.md 2026-07-15 S384 entry
-commit: 875983f5 (session claim), pending (close-out commit lands next)
+commit: 875983f5 (session claim), 3b313a7b (close-out: delete files + docs + ledger + learnings + backlog); receipt-sha reconcile done in two commits (4b0e5131, then this fix) after a self-caught ordering slip -- 4b0e5131 landed before this sha field was actually filled in
 ```
 
 ```handoff
