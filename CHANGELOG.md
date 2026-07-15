@@ -43,6 +43,35 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-15 · [ad hoc] Decline the `setLabKeyDefaults()`/`getDemographics()` `getSiteInfo()` design decision -- no code change (Session 383)
+- **Deliverable:** Resolved `BACKLOG.md`'s "`setLabKeyDefaults()`/`getDemographics()`'s
+  unguarded `getSiteInfo()` call sites need a design decision" item (split off Session
+  382). Decision: **decline -- no code change.** Both remaining sites
+  (`R/setLabKeyDefaults.R:44` default arg, `R/getDemographics.R:39`) already satisfy
+  their own documented "let it throw, caller wraps it" contract in every real,
+  reachable call path, so no fix was warranted.
+- **Investigation:** `getDemographics()` has exactly 2 real callers
+  (`R/getLkDirectAncestors.R:46`, `R/getPedigreeSource.R:103`), and both already wrap
+  the *entire* `getDemographics(...)` call in `tryCatch(warning=,error=) -> NULL` --
+  the same guard pattern Session 382 used as its mirror source one function up. Since
+  `getDemographics()`'s body is `siteInfo <- getSiteInfo(); setLabKeyDefaults(siteInfo);
+  labkey.selectRows(...)`, any error `getSiteInfo()` throws inside it already propagates
+  out and is already caught by that existing outer guard today. `setLabKeyDefaults()`'s
+  own `getSiteInfo()` default argument is dead code in-package (its sole in-package
+  caller, `getDemographics()`, always passes `siteInfo` explicitly); its own `@examples`
+  already show an external caller passing `getSiteInfo(expectConfigFile = FALSE)`
+  explicitly and wrapping the whole `setLabKeyDefaults(...)` call in `tryCatch`.
+- **Options considered (pre-RED scope `AskUserQuestion`):** (1) decline -- no code
+  change [chosen]; (2) make `getSiteInfo()` itself defensive (fixes ~20 callers at
+  once, but risks silently using the WRONG center's `baseUrl`/`schemaName`/
+  `lkPedColumns` on a malformed config -- wrong data instead of a loud, caught
+  failure); (3) wrap these 2 sites locally anyway, redundant with the existing outer
+  guard, at the cost of contradicting the functions' documented contract. No RED/GREEN/
+  REFACTOR gates -- no implementation was written.
+- **BACKLOG.md:** item resolved/pruned per its established "none remaining -- see
+  CHANGELOG.md" pointer convention.
+- **See:** `PROJECT_LEARNINGS.md` Learning 354.
+
 ### 2026-07-14 · [ad hoc] Guard 2 of the 4 remaining unguarded `getSiteInfo()` call sites (Session 382)
 - **Deliverable:** Guarded `R/getPedigreeSource.R:83` and `R/getLkDirectAncestors.R:26` --
   the 2 of `BACKLOG.md`'s "4 remaining unguarded `getSiteInfo()` call sites" (filed
