@@ -60,6 +60,29 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S392
+date: 2026-07-16
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: CRAN's actual incoming-check rejected the real 2.0.0 submission (owner ran
+  it out-of-session; confirmed via uncommitted CRAN-SUBMISSION SHA == HEAD 03736837) --
+  Windows r-devel flagged "Overall checktime 12 min > 10 min", the same failure class
+  that archived this package in 2025. Fixing via skip_on_cran() on the true
+  convergence-stress tests + trimming iteration counts in the next-heaviest
+  genuinely-CRAN-relevant files (owner-picked "Hybrid" strategy). Also updating
+  BACKLOG/SESSION_NOTES/cran-comments.md to reflect the real rejection and committing
+  CRAN-SUBMISSION with a CHANGELOG entry.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S391
 date: 2026-07-16
 status: complete
