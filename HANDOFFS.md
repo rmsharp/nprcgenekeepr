@@ -65,10 +65,12 @@ date: 2026-07-16
 status: pending
 self_score: pending
 predecessor_score: pending
-active_task: Facilitate and document the owner's CRAN 2.0.0 resubmission
-  decision (BACKLOG.md's DECISION NEEDED item: resubmit now at ~656s, wait for
-  a quieter win-builder day, or hold for new ideas) -- S392-394 exhausted the
-  safely-findable technical levers.
+active_task: REDIRECTED after Phase 0 (owner instruction) -- re-open the CRAN
+  2.0.0 checktime investigation with wider scope than S392-394 (test
+  structure changes and previously-protected iteration counts now explicitly
+  authorized). A 7-agent investigation Workflow is running; one clean
+  candidate already hand-diagnosed (test_pkgdown_reference_config.R calls
+  pkgdown::as_pkgdown() 3x redundantly, 13.1s of ~80s local total).
 what_was_done: pending
 next_steps: pending
 key_files: pending
