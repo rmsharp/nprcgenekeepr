@@ -175,13 +175,23 @@ and explicitly scoped the session (via `AskUserQuestion`) to trigger
 now. Found `origin/master` 5 commits behind local, including S389’s
 actual `.Names=` fix (unpushed) – R-hub checks GitHub’s copy, so pushed
 first (confirmed via `AskUserQuestion`) to avoid silently re-testing
-pre-fix code. Dispatched `check_win_devel/release/oldrelease()` (results
-by email, ~15-30 min) and
+pre-fix code. Dispatched `check_win_devel/release/oldrelease()` and
 `rhub::rhub_check(platforms=c("linux","windows","macos"))` (run
-“hillocked-veery”, confirmed via `gh run list`). **Results not yet in –
-async.** Next (owner action or follow-on session): once results land,
-fold them into `cran-comments.md` §Test environments (mirroring the
-S361-\>S362 split), confirm the `.Names=` NOTE is gone, then
+“hillocked-veery”). **Results processed – S391 (2026-07-16): all
+clean.** Win-builder: `0 errors | 0 warnings | 1 note` on all three R
+versions (the expected incoming-feasibility note; verbatim `00check.log`
+confirms `checking R code for possible problems ... OK` on all three,
+confirming S389’s fix resolved the NOTE on R-devel itself).
+R-oldrelease’s prior timing note did not recur. Only one URL
+(thoughtco.com) flagged this cycle vs. two previously (PMC’s
+automated-checker flag appears intermittent). R-hub: all three platforms
+`Status: OK` (zero notes), `[ FAIL 0 | WARN 0 | SKIP 221 | PASS 3140 ]`
+– fully clean, improving on the S361/362 cycle’s 1 WARN (the `WriteXLS`
+Windows flake, confirmed absent, consistent with S363’s `openxlsx`
+migration). **The CRAN pre-submission gate is now clean across every
+environment run this cycle** (local macOS, win-builder x3, R-hub x3) –
+see `cran-comments.md` and `docs/planning/cran-2.0.0-phase5-runbook.md`
+for full detail. Next (owner action, unchanged):
 `devtools::submit_cran()` and click the maintainer-email confirmation
 link – still owner-only per SAFEGUARDS and the runbook’s HARD STOP.
 

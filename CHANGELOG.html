@@ -71,6 +71,18 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-16--ad-hoc-process-win-builder--r-hub-results-for-cran-200-gate--fully-clean-session-391">2026-07-16 · [ad hoc] Process win-builder + R-hub results for CRAN 2.0.0 gate – fully clean (Session 391)<a class="anchor" aria-label="anchor" href="#id_2026-07-16--ad-hoc-process-win-builder--r-hub-results-for-cran-200-gate--fully-clean-session-391"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Processed the win-builder x3 results (owner shared the 3 emails) and R-hub (“hillocked-veery”) once it completed, dispatched by Session 390 – confirms the S389 <code>.Names=</code> NOTE is resolved and refreshes the CRAN 2.0.0 pre-submission gate.</li>
+<li>
+<strong>Win-builder (verbatim <code>00check.log</code> read via <code>curl</code>, not just the email summary):</strong> all three environments (R-devel, R-release, R-oldrelease) <code>0 errors | 0 warnings | 1 note</code> (expected incoming-feasibility note only). <code>* checking R code for possible problems ... OK</code> on all three – confirms S389’s fix resolved the deprecated <code>.Names=</code> NOTE on R-devel itself, the exact environment that originally flagged it. R-oldrelease’s prior <code>groupAddAssign</code> &gt;10s timing note did not recur. Only one URL (thoughtco.com, 400) flagged this cycle vs. two in an earlier cycle (the PMC URL’s automated-checker flag appears intermittent, not a fixed pass/fail).</li>
+<li>
+<strong>R-hub (read via <code>gh run view --log</code>, not just job conclusion):</strong> all three platforms (linux/windows/macos, R-devel) <code>Status: OK</code> with zero notes, <code>[ FAIL 0 | WARN 0 | SKIP 221 | PASS 3140 ]</code> – fully clean, improving on the S361/362 cycle’s 1 WARN (the intermittent Windows <code>WriteXLS</code> flake); confirmed absent here, consistent with S363’s <code>openxlsx</code> migration having fully resolved it.</li>
+<li>
+<strong>Net result: the CRAN 2.0.0 pre-submission gate is clean across every environment run this cycle</strong> (local macOS, win-builder x3, R-hub x3). Folded into <code>cran-comments.md</code> §Test environments and <code>docs/planning/cran-2.0.0-phase5-runbook.md</code>. Next: owner-only <code>devtools::submit_cran()</code> + maintainer-email confirmation click.</li>
+<li>TDD Phase: N/A (build/verify/release-mechanics action; no <code>R/</code>/<code>tests/</code> code changed this session).</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-16--ad-hoc-re-trigger-win-builder--r-hub-for-cran-200-gate-push-local-ahead-commits-session-390">2026-07-16 · [ad hoc] Re-trigger win-builder + R-hub for CRAN 2.0.0 gate; push local-ahead commits (Session 390)<a class="anchor" aria-label="anchor" href="#id_2026-07-16--ad-hoc-re-trigger-win-builder--r-hub-for-cran-200-gate-push-local-ahead-commits-session-390"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> Owner picked “CRAN resubmission” from the Phase 0 priorities list; scoped this session (via <code>AskUserQuestion</code>) to re-trigger win-builder x3 and R-hub now, mirroring the S361 precedent. Results are asynchronous (win-builder by email in ~15-30 min; R-hub via GitHub Actions) — a follow-on session folds them into <code>cran-comments.md</code>, mirroring the S361→S362 split.</li>

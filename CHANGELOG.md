@@ -47,6 +47,37 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-16 · \[ad hoc\] Process win-builder + R-hub results for CRAN 2.0.0 gate – fully clean (Session 391)
+
+- **Deliverable:** Processed the win-builder x3 results (owner shared
+  the 3 emails) and R-hub (“hillocked-veery”) once it completed,
+  dispatched by Session 390 – confirms the S389 `.Names=` NOTE is
+  resolved and refreshes the CRAN 2.0.0 pre-submission gate.
+- **Win-builder (verbatim `00check.log` read via `curl`, not just the
+  email summary):** all three environments (R-devel, R-release,
+  R-oldrelease) `0 errors | 0 warnings | 1 note` (expected
+  incoming-feasibility note only).
+  `* checking R code for possible problems ... OK` on all three –
+  confirms S389’s fix resolved the deprecated `.Names=` NOTE on R-devel
+  itself, the exact environment that originally flagged it.
+  R-oldrelease’s prior `groupAddAssign` \>10s timing note did not recur.
+  Only one URL (thoughtco.com, 400) flagged this cycle vs. two in an
+  earlier cycle (the PMC URL’s automated-checker flag appears
+  intermittent, not a fixed pass/fail).
+- **R-hub (read via `gh run view --log`, not just job conclusion):** all
+  three platforms (linux/windows/macos, R-devel) `Status: OK` with zero
+  notes, `[ FAIL 0 | WARN 0 | SKIP 221 | PASS 3140 ]` – fully clean,
+  improving on the S361/362 cycle’s 1 WARN (the intermittent Windows
+  `WriteXLS` flake); confirmed absent here, consistent with S363’s
+  `openxlsx` migration having fully resolved it.
+- **Net result: the CRAN 2.0.0 pre-submission gate is clean across every
+  environment run this cycle** (local macOS, win-builder x3, R-hub x3).
+  Folded into `cran-comments.md` §Test environments and
+  `docs/planning/cran-2.0.0-phase5-runbook.md`. Next: owner-only
+  `devtools::submit_cran()` + maintainer-email confirmation click.
+- TDD Phase: N/A (build/verify/release-mechanics action; no
+  `R/`/`tests/` code changed this session).
+
 ### 2026-07-16 · \[ad hoc\] Re-trigger win-builder + R-hub for CRAN 2.0.0 gate; push local-ahead commits (Session 390)
 
 - **Deliverable:** Owner picked “CRAN resubmission” from the Phase 0
