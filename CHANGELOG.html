@@ -71,6 +71,16 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-15--issue-123-update-github-issue-123-to-reflect-partial-scoped-closure-session-387">2026-07-15 · [issue #123] Update GitHub issue #123 to reflect partial, scoped closure (Session 387)<a class="anchor" aria-label="anchor" href="#id_2026-07-15--issue-123-update-github-issue-123-to-reflect-partial-scoped-closure-session-387"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Per <code>docs/planning/issue123-xarch5-column-schema-plan.md</code> §10 decision 5, posted a comment to issue #123 (XARCH-5) summarizing S386’s Phase 1 implementation, linking the plan and the <code>BACKLOG.md</code> tracking entry, and naming the plan’s own escalation triggers for the still-out-of-scope full S3 <code>pedigree</code>/<code>gvReport</code> class rewrite. TDD N/A – GitHub issue comment, no <code>R/</code> or <code>tests/</code> changed. The issue is left <strong>OPEN</strong> (not closed outright), per the plan’s explicit instruction. <a href="https://github.com/rmsharp/nprcgenekeepr/issues/123#issuecomment-4986749021" class="uri">https://github.com/rmsharp/nprcgenekeepr/issues/123#issuecomment-4986749021</a>
+</li>
+<li>
+<strong>Verification:</strong> Confirmed post-hoc via <code>gh api repos/rmsharp/nprcgenekeepr/issues/123</code> – <code>state: open</code>, <code>comments: 1</code> – rather than trusting the CLI’s returned URL alone.</li>
+<li>
+<strong>Not done this session (unchanged from S386):</strong> the other 9 hardcoded column-list duplicates; validation at any other pipeline stage (<code>setPopulation</code>-&gt;<code>groupAddAssign</code>); the <code>nprcgenekeeprGV</code> print-method wrinkle.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-15--issue-123-implement-phase-1-of-the-xarch-5-column-schema-plan-session-386">2026-07-15 · [issue #123] Implement Phase 1 of the XARCH-5 column-schema plan (Session 386)<a class="anchor" aria-label="anchor" href="#id_2026-07-15--issue-123-implement-phase-1-of-the-xarch-5-column-schema-plan-session-386"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> Implemented <code>docs/planning/issue123-xarch5-column-schema-plan.md</code> §7 Phase 1 (S385’s planning-session output), following <code>DEVELOPMENT_WORKSTREAM.md</code> under the project’s Strict TDD contract (RED-&gt;GREEN-&gt;REFACTOR, REFACTOR declared unneeded).</li>

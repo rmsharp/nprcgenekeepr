@@ -78,13 +78,13 @@ suppressWarnings(getSiteInfo())
 #> [1] "Linux"
 #> 
 #> $release
-#> [1] "6.17.0-1018-azure"
+#> [1] "6.17.0-1020-azure"
 #> 
 #> $version
-#> [1] "#18~24.04.1-Ubuntu SMP Thu May 28 16:39:11 UTC 2026"
+#> [1] "#20~24.04.1-Ubuntu SMP Fri Jun 19 20:09:14 UTC 2026"
 #> 
 #> $nodename
-#> [1] "runnervm5mmn9"
+#> [1] "runnervm3jd5f"
 #> 
 #> $machine
 #> [1] "x86_64"
@@ -145,13 +145,13 @@ getSiteInfo(expectConfigFile = FALSE)
 #> [1] "Linux"
 #> 
 #> $release
-#> [1] "6.17.0-1018-azure"
+#> [1] "6.17.0-1020-azure"
 #> 
 #> $version
-#> [1] "#18~24.04.1-Ubuntu SMP Thu May 28 16:39:11 UTC 2026"
+#> [1] "#20~24.04.1-Ubuntu SMP Fri Jun 19 20:09:14 UTC 2026"
 #> 
 #> $nodename
-#> [1] "runnervm5mmn9"
+#> [1] "runnervm3jd5f"
 #> 
 #> $machine
 #> [1] "x86_64"
