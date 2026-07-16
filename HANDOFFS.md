@@ -62,17 +62,17 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S389
 date: 2026-07-16
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Fix tests/testthat/test_getParamDef.R:27's deprecated .Names= usage flagged by a fresh owner-run win-builder check (checking R code for possible problems NOTE). TDD Phase: N/A (redundant deprecated-syntax removal, no behavior change).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 10
+active_task: Fix tests/testthat/test_getParamDef.R:27's deprecated .Names= usage flagged by a fresh owner-run win-builder check (checking R code for possible problems NOTE) -- DONE. TDD Phase: N/A (redundant deprecated-syntax removal, no behavior change).
+what_was_done: Owner ran devtools::check_win_devel() after S388 and got a new NOTE: structure(..., .Names=...) in test_getParamDef.R:27, deprecated special-name usage, an R-devel-specific check local R 4.6.1 doesn't reproduce. Read the flagged line: .Names= was redundant, since list(param=..., tokenVec=...)'s inline argument names already set those exact names. Grepped the whole R/tests/vignettes/inst tree for other occurrences; found R/data.R:337 but confirmed it's inside non-@examples roxygen prose, never parsed as code, so left untouched. Posed the fix-shape decision via AskUserQuestion (drop structure() entirely / minimal-diff rename / defer) before editing -- owner picked dropping the wrapper. Claimed the session (commit 3355dde9) before editing. Replaced structure(list(...), .Names=c(...)) with plain list(param=..., tokenVec=...) -- zero change to actual list contents. Verified: single-file test (4/4 assertions unchanged) and full regression suite (0 failed/0 error/0 warning, 3238 passed, 169 skipped baseline unchanged). Re-grepped post-fix: zero remaining .Names occurrences in live code. Updated BACKLOG.md and CHANGELOG.md, explicitly noting the fix is NOT yet confirmed against win-builder (local R can't reproduce this check). Commit: pending (lands in this close-out commit).
+next_steps: Owner's call: re-trigger win-builder (devtools::check_win_devel/release/oldrelease()) to confirm this NOTE is actually resolved -- this session could not verify that locally. Also still open: R-hub re-trigger (both outward-facing, owner-scoped per S388/S361 precedent), then devtools::submit_cran() + email confirmation. Other standing BACKLOG items unchanged: Document 2 Phase D (READY, Effort M); LabKey remainder (BLOCKED).
+key_files: tests/testthat/test_getParamDef.R:4-27 (fixed), BACKLOG.md (CRAN item updated), CHANGELOG.md (new 2026-07-16 S389 entry), HANDOFFS.md (this receipt).
+gotchas: Local R (4.6.1, release) does not reproduce win-builder's R-devel-specific "deprecated special names in structure()" check -- a clean local R CMD check does NOT guarantee win-builder is also clean; some checks are R-devel-only. Watch for other R-devel-only findings on the next win-builder run that local checks can't catch.
+runtime_smoke: n/a for application runtime (test-fixture change only, no Shiny app/service registration touched) -- satisfied instead by single-file test + full regression suite (0/0/0, 3238 passed). A full local R CMD check --as-cran would add no confirmation value since local R doesn't reproduce the specific check that flagged this NOTE; true confirmation awaits the owner's next win-builder run.
+changelog_ref: CHANGELOG.md 2026-07-16 "Fix deprecated .Names= usage flagged by win-builder (Session 389)"
+commit: pending (lands in this close-out commit)
 ```
 
 ```handoff

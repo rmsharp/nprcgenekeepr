@@ -114,10 +114,25 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       results on file are still from S361/362, now also 25 commits stale --
       re-triggering them (owner-scoped, outward-facing) is still open before
       submission. See `docs/planning/cran-2.0.0-phase5-runbook.md` and
-      `PROJECT_LEARNINGS.md` Learning 358. Next (owner action, unchanged):
-      decide whether to re-trigger win-builder/R-hub, then
-      `devtools::submit_cran()` and click the maintainer-email confirmation
-      link -- all still owner-only per SAFEGUARDS and the runbook's HARD STOP.
+      `PROJECT_LEARNINGS.md` Learning 358. **Owner-run win-builder finding fixed
+      S389 (2026-07-16):** owner ran `devtools::check_win_devel()` after S388 and
+      it returned a second NOTE not previously on file -- `checking R code for
+      possible problems` flagged deprecated `structure(..., .Names = ...)` usage
+      in `tests/testthat/test_getParamDef.R:27` (an R-devel-specific check; local
+      R 4.6.1 does not reproduce it, so S388's local re-verify could not have
+      caught it). Fixed by dropping the redundant `structure()` wrapper entirely
+      (the list's names were already set by the inline `list(param=...,
+      tokenVec=...)` construction, so `.Names=` was dead re-assertion, not a
+      second names-setting). Confirmed no other live-code `.Names` occurrence
+      exists (`R/data.R:337`'s is inside non-`@examples` roxygen prose, never
+      parsed as code). Full regression suite re-run clean (0 failed/0 error/0
+      warning, 3238 passed, 169 skipped baseline unchanged). **Not yet confirmed
+      against win-builder itself** -- local R can't reproduce this specific
+      check; confirmation awaits the next win-builder run. Next (owner action,
+      unchanged): decide whether to re-trigger win-builder/R-hub (this fix
+      should also resolve the new NOTE), then `devtools::submit_cran()` and
+      click the maintainer-email confirmation link -- all still owner-only per
+      SAFEGUARDS and the runbook's HARD STOP.
 
 ## Housekeeping
 - [ ] (none remaining -- the "clean up stale untracked leftover files" item (filed

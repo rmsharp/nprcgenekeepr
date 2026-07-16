@@ -43,6 +43,25 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-16 · [ad hoc] Fix deprecated `.Names=` usage flagged by win-builder (Session 389)
+- **Deliverable:** Owner ran `devtools::check_win_devel()` after S388's close-out
+  and it returned a NOTE not previously on file: `checking R code for possible
+  problems` flagged `structure(..., .Names = ...)` in
+  `tests/testthat/test_getParamDef.R:27` as a deprecated special-name call. An
+  R-devel-specific check — local R 4.6.1 does not reproduce it, so S388's local
+  re-verify could not have caught it.
+- **Fix:** Dropped the `structure()` wrapper entirely — `tokens <- list(param =
+  ..., tokenVec = ...)` — since the names were already set by the inline
+  `list(param=..., tokenVec=...)` construction; `.Names=` was a dead
+  re-assertion, not a second names-setting. Zero behavior change.
+- **Verification:** Confirmed no other live-code `.Names` occurrence exists
+  (`R/data.R:337`'s is inside non-`@examples` roxygen prose, never parsed as
+  code). Single-file test and full regression suite both clean (0 failed/0
+  error/0 warning, 3238 passed, 169 skipped baseline unchanged). Not yet
+  confirmed against win-builder itself — awaits the owner's next run.
+- TDD Phase: N/A (redundant deprecated-syntax removal, no behavior change, not
+  new implementation logic).
+
 ### 2026-07-16 · [ad hoc] Re-verify CRAN 2.0.0 local `--as-cran` gate on current master (Session 388)
 - **Deliverable:** Re-ran `R CMD build .` + `R CMD check --as-cran --timings` on
   current `master` (`79380fba`) before the owner-only `devtools::submit_cran()`

@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 library(testthat)
-tokens <- structure(list(
+tokens <- list(
   param = c(
     "center", "baseUrl", "schemaName", "folderPath", "queryName",
     "lkPedColumns", "mapPedColumns", "sqlServerDSN", "sqlServerPed",
@@ -24,7 +24,7 @@ tokens <- structure(list(
     ),
     c("cd.id", "where", "m.id", "in", "'", "ids_str", "'")
   )
-), .Names = c("param", "tokenVec"))
+)
 test_that("getParamDef returns the correct values", {
   expect_identical(getParamDef(tokens, "baseUrl"), "http://vger/labkey")
   expect_identical(getParamDef(tokens, "center"), "SNPRC")
