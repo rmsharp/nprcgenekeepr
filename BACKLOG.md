@@ -68,7 +68,9 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       measured + per-center query availability/permissions are confirmed; needs a live LabKey server to
       test/observe, and a naive focal-id server filter is incompatible with the client-side
       connected-component walk).
-- [ ] **CRAN resubmission of v2.0.0** (READY, Effort S) -- CRAN responded 2026-07-09:
+- [ ] **CRAN resubmission of v2.0.0** (BLOCKED -- needs a fresh win-builder Windows
+      re-run to confirm the S392 checktime fix before any resubmission, Effort S) --
+      CRAN responded 2026-07-09:
       the v2.0.0 submission (S329, `devtools::submit_cran()`, `CRAN-SUBMISSION` sha
       `8ca8bb24`) was archived before publication because `appServer()` unconditionally
       wrote `~/nprcgenekeepr.log` on every boot, violating CRAN Policy. **Fixed in
@@ -154,6 +156,43 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       full detail. Next (owner action, unchanged): `devtools::submit_cran()`
       and click the maintainer-email confirmation link -- still owner-only per
       SAFEGUARDS and the runbook's HARD STOP.
+      **Real CRAN submission REJECTED -- S392 (2026-07-16):** the owner ran the
+      submission out-of-session (evidenced by the uncommitted `CRAN-SUBMISSION`
+      dated 2026-07-16 06:17 UTC, SHA matching the S391 close-out commit). CRAN's
+      actual incoming automatic check (distinct from the win-builder pretests
+      above) rejected it: Windows r-devel flagged "Overall checktime 12 min >
+      10 min" -- the same failure class ("Tested elapsed times") that archived
+      this package in 2025. Verbatim `00check.log` fetch (not the email summary)
+      showed the note is NOT in the check log itself -- it's a separate wall-clock
+      summary CRAN's incoming pipeline computes only for real submissions, driven
+      by `checking tests ... [334s]` (the dominant cost), `checking examples ...
+      [79s]`, and `checking re-building of vignette outputs ... [79s]`; Debian's
+      equivalent totals stayed under 5 min, so this is Windows-VM-speed-specific,
+      not a universal regression. **Fixed:** `skip_on_cran()` on the 10
+      true convergence-stress `test_that` blocks in `test_gvaConvergence.R` /
+      `test_gvaConvergence_kinshipOverrides.R` (nMax = 3000L/800L blocks; local
+      dev-mode profiling misleadingly counted 4 other "slow" files that never
+      actually run on CRAN -- 3 are `rmsharp`-username-gated,
+      `test_pkgdown_reference_config.R` skips once `_pkgdown.yml` is absent from
+      the built tarball, confirmed via `.Rbuildignore`); `guIter` 100L->20L at the
+      ~23 `test_reportGV.R` call sites whose assertions don't depend on gu
+      magnitude (verified via full regression + spot-checked deterministic
+      properties); `nMax` 3000L->1600L in `vignettes/gvaConvergence.Rmd` (re-
+      rendered clean, `recommendedIter`/`converged`/`nRankable` all unchanged).
+      **Reverted, not applied:** lowering `guIter` in the `reportGV()`/
+      `groupAddAssign()` roxygen `@examples` and in
+      `vignettes/a2interactive.Rmd` -- empirically confirmed this introduces a
+      NEW `checkFgDegeneracy` warning ("Founder genome equivalents undefined") on
+      that fixture at guIter <= 30, which would make the check worse, not
+      better; left at the original guIter = 50/50L. Full regression: 0 failed/0
+      error/0 warning in both dev and CRAN mode; local CRAN-relevant test-file
+      total dropped from ~70s to ~43s (~38%) in `pkgload::load_all()`-based
+      profiling (not an official `R CMD check --as-cran` run -- that hung on
+      this machine, apparently on `renv` project auto-activation, both with and
+      without `R_PROFILE_USER` disabled; abandoned after ~30 min, worked around
+      via `NOT_CRAN`-controlled `testthat::test_dir()` profiling instead). Next:
+      a fresh win-builder Windows-devel trigger to confirm the real checktime
+      drops with margin, before any resubmission attempt.
 
 ## Housekeeping
 - [ ] (none remaining -- the "clean up stale untracked leftover files" item (filed

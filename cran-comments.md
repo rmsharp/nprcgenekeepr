@@ -24,6 +24,22 @@ changes, including breaking changes: rejection of a period in `id`, `sire`, or
 `dam` values; removed exports; and `runGeneKeepR()` remaining the primary Shiny
 entry point, with `runModularApp()` as a soft-deprecated alias.
 
+**2026-07-16 update:** a real submission attempt (via `devtools::submit_cran()`)
+was rejected by CRAN's actual incoming automatic check -- distinct from the
+win-builder pretests below, which do not run this gate -- for Windows r-devel
+"Overall checktime 12 min > 10 min", driven mainly by `checking tests`
+(334s), with `checking examples` (79s) and `checking re-building of vignette
+outputs` (79s) also contributing; Debian's equivalent run stayed under 5 min,
+so this is specific to Windows win-builder's slower VM, not a universal
+regression. This is the same failure class ("Tested elapsed times") that
+archived this package in 2025. Fixed by gating the true gene-drop
+convergence-stress tests behind `skip_on_cran()` and trimming gene-drop
+iteration counts at test call sites whose assertions do not depend on the
+gu-magnitude they'd affect (full regression suite re-confirmed 0 errors/0
+warnings in both dev and CRAN test modes). The local timing figures below
+predate this fix and this rejection cycle; they will be refreshed once a
+fresh win-builder Windows run confirms the real checktime improvement.
+
 ## R CMD check results
 
 Local `R CMD check --as-cran --timings` (macOS, R 4.6.1) on the built 2.0.0 tarball:
@@ -51,6 +67,11 @@ Local `R CMD check --as-cran --timings` (macOS, R 4.6.1) on the built 2.0.0 tarb
   appears on this machine's current toolchain.)
 
 ## Test environments
+
+**Note:** the results below predate the 2026-07-16 real-submission rejection and
+subsequent checktime fix (see the update note above) -- none of these pretest
+runs exercise CRAN's incoming "Overall checktime" gate. A fresh win-builder
+Windows run is needed to confirm the fix before resubmission.
 
 * Local: macOS, R 4.6.1 -- `R CMD check --as-cran --timings` (results above)
 * win-builder R-devel (R Under development (unstable), 2026-07-15 r90261): 0
