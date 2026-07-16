@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S388
+date: 2026-07-15
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Re-verify the local CRAN --as-cran gate remains clean on current master (25 commits touching R/tests/DESCRIPTION/NAMESPACE since the last confirmed run, S359 commit 19ae5657) before the owner-only devtools::submit_cran() step. TDD Phase: N/A (build/verify action, no R/ or tests/ code changed).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S387
 date: 2026-07-15
 status: complete
