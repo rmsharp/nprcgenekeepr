@@ -313,6 +313,7 @@ qcStudbook <- function(sb, minSireAge = NULL, minDamAge = NULL,
     sb <- sb <- removeDuplicates(sb)
   }
 
+  assertRequiredColsPresent(colnames(sb), getRequiredCols(), "qcStudbook(sb)")
   cols <- intersect(getPossibleCols(), colnames(sb))
   novelCols <- colnames(sb)[!colnames(sb) %in% cols]
   sb <- sb[, c(cols, novelCols)]

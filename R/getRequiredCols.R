@@ -22,5 +22,5 @@
 #' library(nprcgenekeepr)
 #' getRequiredCols()
 getRequiredCols <- function() {
-  c("id", "sire", "dam", "sex", "birth")
+  .nprcColumnSchema$required
 }

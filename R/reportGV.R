@@ -236,6 +236,12 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
   fgSE <- calcFGSE(ped, alleles)
 
   # Calculating known founders
+  # Issue #123 (XARCH-5) Phase 1: guarded here, not at the includeCols
+  # intersect above -- calcFEFG() (called just above) has no dependency on
+  # 'sex' and must still run (and surface its own partial-parentage error,
+  # test_calcFEFG.R) for a sex-less pedigree; 'sex' is not actually
+  # dereferenced until founders$sex immediately below.
+  assertRequiredColsPresent(names(ped), c("id", "sex"), "reportGV(ped)")
   founders <- ped[isFounder(ped), ]
   males <- founders[(founders$sex == "M") &
     !isGeneratedUnknownId(founders$id), ]

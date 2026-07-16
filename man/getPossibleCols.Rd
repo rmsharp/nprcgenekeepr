@@ -21,8 +21,9 @@ species of the individual (e.g. "rhesus"). Recognized as a first-class
 column rather than retained as an unrecognized novel column.}
 \item{gen}{ -- integer vector with the generation number of the
 individual}
-\item{birth}{ -- Date or \code{NA} (optional) with the individual's birth
-date}
+\item{birth}{ -- Date or \code{NA} with the individual's birth date. This
+is one of the required columns (see \code{\link{getRequiredCols}}); the
+date value itself may be \code{NA} if unknown.}
 \item{exit}{ -- Date or \code{NA} (optional) with the individual's exit
 date
 (death, or departure if applicable)}

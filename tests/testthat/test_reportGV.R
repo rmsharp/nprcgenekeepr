@@ -713,3 +713,21 @@ test_that("reportGV warn-drops a non-proband override id rather than aborting th
   expect_equal(gvr$kinship["0K7VJN", "N2XF08"], 0.25)
 })
 
+# ---------------------------------------------------------------------------
+# Issue #123 (XARCH-5) Phase 1: today, reportGV() called on a pedigree missing
+# 'sex' returns SUCCESSFULLY with no error/warning, silently dropping 'sex'
+# from $report and corrupting nMaleFounders/nFemaleFounders/total to 0/0/0
+# (reproduced by execution, docs/planning/issue123-xarch5-column-schema-plan.md
+# S2.3). After the fix, the same call must instead error clearly, naming the
+# missing column, before any founder-count corruption occurs.
+# ---------------------------------------------------------------------------
+test_that("reportGV errors clearly when 'sex' is missing instead of silently corrupting founder counts (issue #123 / XARCH-5)", {
+  pedNoSex <- nprcgenekeepr::qcPed
+  pedNoSex$sex <- NULL
+  expect_error(
+    reportGV(pedNoSex, guIter = 20L, guThresh = 3L, byID = TRUE,
+             updateProgress = NULL),
+    "required column\\(s\\) missing.*sex"
+  )
+})
+

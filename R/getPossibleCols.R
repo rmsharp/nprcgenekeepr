@@ -19,8 +19,9 @@
 #' column rather than retained as an unrecognized novel column.}
 #' \item{gen}{ -- integer vector with the generation number of the
 #' individual}
-#' \item{birth}{ -- Date or \code{NA} (optional) with the individual's birth
-#' date}
+#' \item{birth}{ -- Date or \code{NA} with the individual's birth date. This
+#' is one of the required columns (see \code{\link{getRequiredCols}}); the
+#' date value itself may be \code{NA} if unknown.}
 #' \item{exit}{ -- Date or \code{NA} (optional) with the individual's exit
 #'  date
 #' (death, or departure if applicable)}
@@ -50,10 +51,5 @@
 #' library(nprcgenekeepr)
 #' getPossibleCols()
 getPossibleCols <- function() {
-  c(
-    "id", "sire", "dam", "sex", "species", "gen", "birth", "exit", "death",
-    "age", "ancestry", "population", "origin", "status", "condition",
-    "departure", "spf", "vasxOvx", "pedNum", "first", "second", "first_name",
-    "second_name", "recordStatus"
-  )
+  .nprcColumnSchema$possible
 }

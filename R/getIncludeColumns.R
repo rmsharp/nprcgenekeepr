@@ -13,8 +13,5 @@
 #' @examples
 #' getIncludeColumns()
 getIncludeColumns <- function() {
-  c(
-    "id", "sex", "age", "birth", "exit", "population", "condition", "origin",
-    "first_name", "second_name"
-  )
+  .nprcColumnSchema$include
 }

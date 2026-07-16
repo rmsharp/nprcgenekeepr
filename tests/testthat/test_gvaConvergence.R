@@ -271,3 +271,27 @@ test_that("gvaConvergence returns NA metrics when no proband is rankable", {
   expect_true(all(is.na(res$convergence$rankAgreement)))
 })
 
+# --------------------------------------------------------------------------
+# Issue #123 (XARCH-5) Phase 1: gvaConvergence.R:161 carries the byte-for-byte
+# identical unguarded `intersect(getIncludeColumns(), names(ped))` pattern as
+# reportGV.R:211 (found during the S385 research pass, not named by the
+# original issue). Today, a pedigree missing 'sex' completes silently -- no
+# error, no warning -- with 'sex' simply absent from the internal demographics
+# subset. After the fix, the same call must instead error clearly, mirroring
+# the reportGV.R guard.
+# --------------------------------------------------------------------------
+test_that("gvaConvergence errors clearly when 'sex' is missing instead of silently continuing (issue #123 / XARCH-5)", {
+  fped <- data.frame(
+    id = c("A", "B", "C", "D", "E", "F"),
+    sire = rep(NA_character_, 6L), dam = rep(NA_character_, 6L),
+    sex = c("M", "F", "M", "F", "M", "F"),
+    stringsAsFactors = FALSE
+  )
+  fped$gen <- findGeneration(fped$id, fped$sire, fped$dam)
+  fped$sex <- NULL
+  expect_error(
+    gvaConvergence(fped, nMax = 200L, grid = c(25L, 50L), seed = 1L),
+    "required column\\(s\\) missing.*sex"
+  )
+})
+

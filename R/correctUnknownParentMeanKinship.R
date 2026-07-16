@@ -138,7 +138,7 @@ correctUnknownParentMeanKinship <- function(indivMeanKin, ped,
                                             gestationDefault = NULL) {
   flagged <- character(0L)
   ## Cohort formation needs id/parentage/sex/birth; without them, no correction.
-  if (!all(c("id", "sire", "dam", "sex", "birth") %in% names(ped))) {
+  if (!all(getRequiredCols() %in% names(ped))) {
     return(list(indivMeanKin = indivMeanKin, flagged = flagged))
   }
   candidateIds <- names(indivMeanKin)

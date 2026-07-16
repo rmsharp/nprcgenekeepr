@@ -43,6 +43,51 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-15 · [issue #123] Implement Phase 1 of the XARCH-5 column-schema plan (Session 386)
+- **Deliverable:** Implemented `docs/planning/issue123-xarch5-column-schema-plan.md` §7
+  Phase 1 (S385's planning-session output), following `DEVELOPMENT_WORKSTREAM.md` under
+  the project's Strict TDD contract (RED->GREEN->REFACTOR, REFACTOR declared unneeded).
+- **Changes:** new `R/columnSchema.R` (`@noRd`) -- internal `.nprcColumnSchema` list,
+  single source of truth for the 3 column-name vectors; `getRequiredCols()`/
+  `getPossibleCols()`/`getIncludeColumns()` bodies replaced with one-line pass-throughs
+  (byte-identical return values, zero exported-contract change, existing
+  `expect_identical` pins unmodified and still green). New `R/assertRequiredColsPresent.R`
+  (`@noRd`) -- `setdiff`+`stop()` validator mirroring the already-tested
+  `checkKinshipOverrides()` idiom -- wired at 3 silent-drop sites: `R/qcStudbook.R:316`
+  and `R/gvaConvergence.R:161` exactly as the plan specified; `R/reportGV.R` relocated
+  from the plan's literal proposed site (before the `includeCols` intersect) to
+  immediately before `founders$sex` -- see Gotcha below. Also implemented the plan's
+  2 small consistency decisions: `R/correctUnknownParentMeanKinship.R:141`'s inline
+  `c("id","sire","dam","sex","birth")` duplicate now calls `getRequiredCols()`; and
+  `getPossibleCols()`'s roxygen no longer mismarks `birth` "(optional)" (Dragon 3).
+- **New tests:** `tests/testthat/test_assertRequiredColsPresent.R` (new, 5 tests);
+  `tests/testthat/test_reportGV.R` (+1 -- the reproduced-bug repro inverted into a RED
+  test, now green); `tests/testthat/test_qcStudbook.R` (+1 -- Dragon 2's contrived-fault
+  guard, via `mockery::stub`); `tests/testthat/test_gvaConvergence.R` (+1 -- mirrors the
+  `reportGV.R` case).
+- **Gotcha found via full-suite verification, not the plan's own cited pinned-test
+  list:** the plan's literal guard placement (before `reportGV.R`'s `includeCols`
+  intersect, i.e. before `calcFEFG()` is called) regressed `test_calcFEFG.R:66`
+  ("reportGV surfaces the partial-parentage error through its real caller"), which
+  calls `reportGV()` directly on `lacy1989Ped` -- a bundled dataset with NO `sex`
+  column at all -- expecting the call to reach `calcFEFG()`'s own pre-existing
+  partial-parentage diagnostic. Root-caused via `grep -n` on the current file (not the
+  plan's cited line numbers) and fixed by relocating the guard to `founders$sex`'s
+  actual first dereference, after `calcFEFG()`. See `PROJECT_LEARNINGS.md` Learning 357.
+- **Verification:** full regression suite 0 failed/0 error/0 warning, 169 skipped
+  baseline (unchanged, matches pre-session exactly); 0 new lints on all 13 changed/new
+  files (`lintr`); `devtools::check()` Status: OK (0 errors, 0 warnings, only the
+  pre-existing installed-size INFO); live scripted Phase 3E smoke test (not only
+  `testthat`) confirmed the fixed `reportGV()` error path and unaffected
+  `qcStudbook()`/`gvaConvergence()` behavior in one interactive R session.
+- **Not in scope** (plan §10, unchanged by this session): the other 9 hardcoded
+  column-list duplicates found during S385's research; validation at any other pipeline
+  stage (`setPopulation`->`groupAddAssign`); the half-built `nprcgenekeeprGV`
+  print-method wrinkle. GitHub issue #123 itself not updated this session (an
+  external/shared-system action outside this session's approved TDD-gate scope) --
+  flagged in `BACKLOG.md` as an owner follow-up per the plan's own §10 recommendation
+  (partial, scoped closure, not closed outright).
+
 ### 2026-07-15 · [issue #123] Architecture plan for XARCH-5 string-column-keyed pipeline (Session 385)
 - **Deliverable:** `docs/planning/issue123-xarch5-column-schema-plan.md` -- a planning
   session (no implementation), following `ARCHITECTURE_WORKSTREAM.md`, for issue #123

@@ -390,3 +390,23 @@ test_that("qcStudbook minParentAge alias emits a deprecation warning", {
     qcStudbook(nprcgenekeepr::examplePedigree, minParentAge = 2.0)
   )
 })
+
+## Issue #123 (XARCH-5) Phase 1, Dragon 2: no known code path drops a required
+## column between checkRequiredCols() (~line 210) and the line-316 reorder --
+## checkRequiredCols() already guarantees id/sire/dam/sex/birth ~100 lines
+## earlier in the same function. This is a defense-in-depth guard against a
+## FUTURE internal regression, not a fix for an observed-today bug -- stated
+## honestly here, per the plan's own Dragon 2 caveat. The fault below is
+## CONTRIVED by stubbing removeDuplicates() to strip 'sex' from its returned
+## data.frame, simulating a hypothetical future internal fault reaching line
+## 316, rather than reproducing any bug this codebase actually exhibits.
+test_that("qcStudbook's line-316 guard fires on a contrived internal fault (issue #123 / XARCH-5 Dragon 2)", {
+  mockery::stub(qcStudbook, "removeDuplicates", function(sb, ...) {
+    sb$sex <- NULL
+    sb
+  })
+  expect_error(
+    qcStudbook(pedOne, minParentAge = NULL),
+    "required column\\(s\\) missing.*sex"
+  )
+})

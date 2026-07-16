@@ -157,6 +157,7 @@ gvaConvergence <- function(ped, pop = NULL, nMax = 3000L, guThresh = 1L,
   )$indivMeanKin
   zScores <- scale(indivMeanKin)
 
+  assertRequiredColsPresent(names(ped), c("id", "sex"), "gvaConvergence(ped)")
   rownames(ped) <- ped$id
   includeCols <- intersect(getIncludeColumns(), names(ped))
   demographics <- ped[probands, c(includeCols, "sire", "dam")]
