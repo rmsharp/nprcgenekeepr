@@ -40,6 +40,20 @@ warnings in both dev and CRAN test modes). The local timing figures below
 predate this fix and this rejection cycle; they will be refreshed once a
 fresh win-builder Windows run confirms the real checktime improvement.
 
+**2026-07-16 follow-up:** the fresh win-builder Windows-devel run confirmed the fix
+works as intended (verbatim `testthat.Rout`: all 10 new `skip_on_cran()` guards
+fired, 0 FAIL/0 WARN) -- `checking tests` dropped `334s -> 245s` -- but the reported
+total check time landed at `655s` (10 min 55s), still ~55s over the 10-minute mark.
+Found and fixed one more real contributor: `vignettes/simulatedKValues.Rmd`'s
+`createSimKinships(n = 1000L)` call (4.07s alone on a 17-row pedigree, superlinear
+in `n`) reduced to `n = 500L` (1.28s), preserving the short-vs-long convergence
+narrative it illustrates. A broader sweep of all vignettes and roxygen `@examples`
+for other large iteration-like parameters found no further safe lever -- the
+`examples` phase's ~45s of its 78s is fixed per-topic overhead, not attributable to
+any single example, and `ColonyManagerTutorial.Rmd` (the largest local vignette
+render) is `.Rbuildignore`'d and irrelevant to the real build. A fresh win-builder
+run is needed to measure this additional trim's real impact.
+
 ## R CMD check results
 
 Local `R CMD check --as-cran --timings` (macOS, R 4.6.1) on the built 2.0.0 tarball:

@@ -16,7 +16,7 @@ vignette: >
 
 This vignette provides a quick example of how to estimate kinship coefficients
 using simulation. One simulation uses 100 iterations and the other uses the 
-same setup with 1000 simulations to illustrate the type of kinship coefficient
+same setup with 500 simulations to illustrate the type of kinship coefficient
 estimate variance you can expect with a simple pedigree exhibiting partial 
 parentage for some of the members.
 
@@ -197,7 +197,7 @@ A much larger simulation
 
 ```{r much-larger-simulation}
 set.seed(1L)
-n <- 1000L
+n <- 500L
 simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
 kValues <- kinshipMatricesToKValues(simKinships)
 extractKValue(kValues, id1 = "A", id2 = "F", simulation = 1L:10L)
@@ -206,10 +206,10 @@ counts$kinshipIds[1L:3L]
 counts$kinshipValues[1L:3L]
 counts$kinshipCounts[1L:3L]
 
-stats_1000 <- summarizeKinshipValues(counts)
-nrow(stats_1000[stats_1000$sd > 0.0, ])
+stats_500 <- summarizeKinshipValues(counts)
+nrow(stats_500[stats_500$sd > 0.0, ])
 
-kable(stats_1000[stats_1000$sd > 0.0, ], longtable = TRUE) |>
+kable(stats_500[stats_500$sd > 0.0, ], longtable = TRUE) |>
   kable_styling(
     latex_options = c("striped", "repeat_header"),
     repeat_header_method = "replace",
@@ -222,7 +222,7 @@ Comparing the values and variation found for the various kinship values:
 
 ```{r comparison-10-1000}
 stats_short <- stats_10[stats_10$sd > 0.0, ]
-stats_long <- stats_1000[stats_1000$sd > 0.0, ]
+stats_long <- stats_500[stats_500$sd > 0.0, ]
 
 ## Align the short and long summaries by animal pair: the sd > 0 sets can
 ## differ in size between simulation lengths, so join on the ID pair rather
@@ -246,7 +246,7 @@ kable(comprison,
   digits = c(0L, 0L, 4L, 4L, 4L, 4L, 4L, 4L),
   caption = stri_c(
     "Comparision of estimated kinships between simulations ",
-    "of 10 (short) and 1000 (long)"
+    "of 10 (short) and 500 (long)"
   )
 ) |>
   kable_styling(
@@ -259,7 +259,7 @@ kable(comprison,
 
 ```{r comparison-100-1000}
 stats_short <- stats_100[stats_100$sd > 0.0, ]
-stats_long <- stats_1000[stats_1000$sd > 0.0, ]
+stats_long <- stats_500[stats_500$sd > 0.0, ]
 
 ## Align the short and long summaries by animal pair: the sd > 0 sets can
 ## differ in size between simulation lengths, so join on the ID pair rather
@@ -283,7 +283,7 @@ kable(comprison,
   digits = c(0L, 0L, 4L, 4L, 4L, 4L, 4L, 4L),
   caption = stri_c(
     "Comparision of estimated kinships between simulations ",
-    "of 100 (short) and 1000 (long)"
+    "of 100 (short) and 500 (long)"
   )
 ) |>
   kable_styling(
