@@ -60,6 +60,27 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S393
+date: 2026-07-16
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: S392's fresh win-builder Windows-devel check came back real but
+  insufficient: tests phase dropped 334s->245s (confirmed via testthat.Rout -- all 10
+  skip_on_cran() additions fired, 0 FAIL/0 WARN) but total reported check time (655s)
+  is still ~55s over CRAN's 10-minute mark. Owner chose to continue optimizing rather
+  than risk resubmission at this margin, given this exact failure class already
+  archived the package once. Finding further safe test-suite savings.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S392
 date: 2026-07-16
 status: complete
