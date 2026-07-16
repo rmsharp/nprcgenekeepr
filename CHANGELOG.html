@@ -71,6 +71,26 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-16--ad-hoc-confirm-s392s-checktime-fix-worked-find-its-still-55s-short-trim-further-session-393">2026-07-16 · [ad hoc] Confirm S392’s checktime fix worked, find it’s still ~55s short, trim further (Session 393)<a class="anchor" aria-label="anchor" href="#id_2026-07-16--ad-hoc-confirm-s392s-checktime-fix-worked-find-its-still-55s-short-trim-further-session-393"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> S392’s win-builder Windows-devel re-check came back. Fetched the verbatim <code>00check.log</code>/<code>testthat.Rout</code>/<code>nprcgenekeepr-Ex.timings</code> (not the summary email) rather than trusting “Status: 1 NOTE” at face value.</li>
+<li>
+<strong>Confirmed working exactly as designed:</strong> <code>testthat.Rout</code> shows all 10 <code>skip_on_cran()</code> additions fired correctly (under the “On CRAN (193)” category alongside 183 pre-existing skips) – <code>tests</code> phase dropped <code>334s -&gt; 245s</code> (−89s), <code>0 FAIL / 0 WARN</code>, 3099 passed / 231 skipped.</li>
+<li>
+<strong>But the total is still short of the goal:</strong> summed timed steps dropped <code>628s -&gt; 534s</code>, and the email’s reported total check time dropped to <code>655s</code> (10 min 55s) – an improvement, but still ~55s OVER the 10-minute mark, close enough that resubmitting now risks repeating the exact rejection. Owner chose (<code>AskUserQuestion</code>) to keep optimizing rather than resubmit at this margin.</li>
+<li>
+<strong>Diagnosed why “vignette rebuild” (79s) hadn’t moved despite the S392 <code>gvaConvergence.Rmd</code> fix:</strong> per-vignette render timing showed <code>ColonyManagerTutorial.Rmd</code> (16.58s locally, the largest by far) is actually <code>.Rbuildignore</code>’d (line 31) – excluded from the real build entirely, so its cost was never part of the problem. <code>a2interactive.Rmd</code> (10.07s) is the real dominant vignette, blocked from further trimming by the same <code>checkFgDegeneracy</code> risk found in S392. <code>gvaConvergence.Rmd</code> was never the dominant contributor, explaining the unchanged aggregate figure.</li>
+<li>
+<strong>Found and fixed one more real, safe lever:</strong> <code>vignettes/simulatedKValues.Rmd</code>’s <code>createSimKinships(..., n = 1000L)</code> call cost 4.07s alone on a 17-row pedigree (a superlinear-in-<code>n</code> cost); reduced to <code>n = 500L</code> (1.28s, a 68% cut for a 50% <code>n</code> reduction) after confirming the mean-sd/row-count pattern is unchanged, preserving the short-vs-long convergence narrative. Updated the two hardcoded “1000” captions and the <code>stats_1000</code> variable name to match; re-rendered clean.</li>
+<li>
+<strong>Broader sweep for other missed levers:</strong> grepped all vignettes and R/ roxygen <code>@examples</code> for other large iteration-like literals; found only two more candidates, both false alarms – <code>R/calcFG.R</code>’s <code>n=1000</code> example runs on a 7-row toy pedigree (negligible), and <code>R/data.R:273</code>’s <code>guIter=10000</code> is inside <code>@source</code> prose describing one-time historical data generation, not a real executed example. <code>test_appServer_server.R</code> (557 lines, 27 <code>testServer()</code> blocks testing real app wiring) and the rest of the “tests” long tail (200+ files, mostly Shiny-testServer overhead) have no comparable iteration-count lever without cutting real coverage.</li>
+<li>
+<strong>Verification:</strong> full regression 0 failed/0 error/0 warning (CRAN mode, 3197 passed/179 skipped, unchanged from S392’s post-fix baseline).</li>
+<li>
+<strong>Next:</strong> dispatched <code>devtools::check_win_devel()</code> again to measure the real impact of this additional trim.</li>
+<li>TDD Phase: REFACTOR (vignette content/parameter reduction only; no production behavior change).</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-16--ad-hoc-fix-real-cran-incoming-check-rejection-windows-overall-checktime--10-min-session-392">2026-07-16 · [ad hoc] Fix real CRAN incoming-check rejection: Windows “Overall checktime” &gt; 10 min (Session 392)<a class="anchor" aria-label="anchor" href="#id_2026-07-16--ad-hoc-fix-real-cran-incoming-check-rejection-windows-overall-checktime--10-min-session-392"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> A real 2.0.0 submission (owner ran <code>devtools::submit_cran()</code> out-of-session; evidenced by the uncommitted <code>CRAN-SUBMISSION</code> dated 2026-07-16 06:17 UTC, SHA matching the S391 close-out commit <code>03736837</code>) was <strong>rejected</strong> by CRAN’s actual incoming automatic check – distinct from the win-builder pretests this project’s own sessions have been running, which do not exercise this gate. Windows r-devel flagged “Overall checktime 12 min &gt; 10 min” – the same failure class (“Tested elapsed times”) that archived this package in 2025.</li>

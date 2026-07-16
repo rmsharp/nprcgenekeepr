@@ -68,6 +68,87 @@ are legal at write time (the receipt ships in the very commit whose sha
 it would name); the next session reconciles them to real shas.
 
 ``` handoff
+session: S393
+date: 2026-07-16
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Confirmed S392's skip_on_cran() fix works (tests 334s->245s, 0 FAIL/0
+  WARN) but total check time (655s) was still ~55s over the 10-min mark. Diagnosed
+  why vignette-rebuild hadn't moved (ColonyManagerTutorial.Rmd, the largest local
+  render, is .Rbuildignore'd and irrelevant; a2interactive.Rmd is the real dominant
+  vignette, blocked by the checkFgDegeneracy risk). Found and fixed one more real
+  lever (simulatedKValues.Rmd's createSimKinships n=1000L->500L), confirmed via a
+  broad sweep that no further safe lever exists, and dispatched a fresh win-builder
+  Windows-devel check -- DONE (fix + dispatch; results asynchronous).
+what_was_done: Fetched verbatim 00check.log/nprcgenekeepr-Ex.timings/testthat.Rout
+  from the win-builder result (not the summary email) -- confirmed all 10
+  skip_on_cran() additions fired under the "On CRAN (193)" category, tests dropped
+  334s->245s, but summed timed steps only dropped 628s->534s and the reported total
+  (655s) implies ~121s of untimed overhead, still ~55s over 600s. Timed each of the 5
+  source-tree vignettes individually: ColonyManagerTutorial.Rmd (16.58s, largest) is
+  confirmed .Rbuildignore'd (line 31) and therefore irrelevant to the real build --
+  also separately out of scope since BACKLOG.md's Document 2 item already owns
+  deciding its fate. a2interactive.Rmd (10.07s) is the real dominant vignette,
+  already known blocked by S392's checkFgDegeneracy finding. simulatedKValues.Rmd
+  (5.56s) was the one real unaddressed lever: createSimKinships(n=1000L) alone costs
+  4.07s on a 17-row pedigree (superlinear in n -- halving n to 500 cut time 68%, not
+  50%). Verified the mean-sd/row-count pattern is materially unchanged at n=500,
+  applied the reduction, updated 2 hardcoded "1000" captions + the stats_1000
+  variable name, re-rendered clean. A broader sweep across all tests/vignettes/
+  roxygen @examples for other large iteration parameters found only false alarms
+  (mock-function defaults already skip_on_cran()'d; tiny 7-row-pedigree calls;
+  @source prose, not executed code). Full regression re-confirmed clean (CRAN mode
+  3197 passed/179 skipped/0 failed/0 error/0 warning, unchanged from S392's
+  baseline). Committed: 80a852f0 (fix+docs), 08c9d29c (dispatch-ETA). Dispatched
+  devtools::check_win_devel() again.
+next_steps: Win-builder Windows-devel results due by email ~01:22 PM 2026-07-16
+  (rmsharp@me.com) -- fetch the verbatim 00check.log/testthat.Rout/Ex.timings (not
+  just the email) and confirm the total is now comfortably under 600s, not just
+  barely under. If still over: (a) the ~121s "untimed overhead" gap's reducibility
+  is unexplored, (b) test_appServer_server.R (557 lines/27 testServer() blocks,
+  3.57s local, largest remaining single test file) is a real-coverage file, not a
+  skip_on_cran() candidate -- any change there needs more care than a parameter
+  trim. devtools::submit_cran() remains owner-only regardless of outcome.
+key_files: vignettes/simulatedKValues.Rmd (n=1000L->500L + 2 captions + variable
+  rename), BACKLOG.md (CRAN item updated twice), cran-comments.md (2026-07-16
+  follow-up note), CHANGELOG.md (new S393 entry), PROJECT_LEARNINGS.md (Learning
+  361), CLAUDE.md (learning-count refresh), HANDOFFS.md (this receipt).
+gotchas: Do NOT touch vignettes/ColonyManagerTutorial.Rmd for CRAN-timing purposes --
+  it's .Rbuildignore'd (irrelevant) AND its fate is a separate, owner-ratified
+  decision under BACKLOG.md's "Document 2" item. Do NOT re-attempt lowering guIter in
+  reportGV()/groupAddAssign()'s roxygen examples or vignettes/a2interactive.Rmd --
+  confirmed guIter<=30 triggers checkFgDegeneracy there (S392, re-confirmed by trust
+  this session). Before trusting ANY local render/test-timing profile as a stand-in
+  for the real CRAN check, check .Rbuildignore and skip guards for every file in the
+  profile, not just suspected ones (Learning 361).
+runtime_smoke: n/a -- vignette content/parameter changes only, no R/ production
+  runtime behavior changed. Equivalent verification: full regression suite (0
+  failed/0 error/0 warning) + direct vignette re-render (HTML-inspected, no genuine
+  warnings/errors).
+changelog_ref: CHANGELOG.md 2026-07-16 "Confirm S392's checktime fix worked, find it's still ~55s short, trim further (Session 393)"
+commit: 80a852f0 / 08c9d29c
+```
+
+\<Self-score 9/10. Strengths: fetched verbatim check-result files rather
+than trusting the summary email; checked .Rbuildignore before investing
+effort in the largest local vignette render, avoiding both a repeat of
+S392’s local-profiling-mismatch class of mistake and a scope collision
+with the separately-owned Document 2 decision; empirically verified the
+simulatedKValues.Rmd n-reduction preserves its narrative before applying
+it, learning directly from S392’s checkFgDegeneracy near-miss; ran a
+genuinely broad sweep and correctly discarded 4 false-alarm candidates
+by checking context rather than assuming from parameter names.
+Weaknesses: the fix found is modest relative to the ~55s gap – did not
+fully close it despite a thorough sweep (stated honestly, not oversold);
+did not investigate whether the ~121s untimed overhead gap is itself
+reducible, leaving that open for the next session.\>
+
+``` handoff
+session: S392
+date: 2026-07-16
+
+```handoff
 session: S392
 date: 2026-07-16
 status: complete

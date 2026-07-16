@@ -47,6 +47,58 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-16 · \[ad hoc\] Confirm S392’s checktime fix worked, find it’s still ~55s short, trim further (Session 393)
+
+- **Deliverable:** S392’s win-builder Windows-devel re-check came back.
+  Fetched the verbatim
+  `00check.log`/`testthat.Rout`/`nprcgenekeepr-Ex.timings` (not the
+  summary email) rather than trusting “Status: 1 NOTE” at face value.
+- **Confirmed working exactly as designed:** `testthat.Rout` shows all
+  10 `skip_on_cran()` additions fired correctly (under the “On CRAN
+  (193)” category alongside 183 pre-existing skips) – `tests` phase
+  dropped `334s -> 245s` (−89s), `0 FAIL / 0 WARN`, 3099 passed / 231
+  skipped.
+- **But the total is still short of the goal:** summed timed steps
+  dropped `628s -> 534s`, and the email’s reported total check time
+  dropped to `655s` (10 min 55s) – an improvement, but still ~55s OVER
+  the 10-minute mark, close enough that resubmitting now risks repeating
+  the exact rejection. Owner chose (`AskUserQuestion`) to keep
+  optimizing rather than resubmit at this margin.
+- **Diagnosed why “vignette rebuild” (79s) hadn’t moved despite the S392
+  `gvaConvergence.Rmd` fix:** per-vignette render timing showed
+  `ColonyManagerTutorial.Rmd` (16.58s locally, the largest by far) is
+  actually `.Rbuildignore`’d (line 31) – excluded from the real build
+  entirely, so its cost was never part of the problem.
+  `a2interactive.Rmd` (10.07s) is the real dominant vignette, blocked
+  from further trimming by the same `checkFgDegeneracy` risk found in
+  S392. `gvaConvergence.Rmd` was never the dominant contributor,
+  explaining the unchanged aggregate figure.
+- **Found and fixed one more real, safe lever:**
+  `vignettes/simulatedKValues.Rmd`’s `createSimKinships(..., n = 1000L)`
+  call cost 4.07s alone on a 17-row pedigree (a superlinear-in-`n`
+  cost); reduced to `n = 500L` (1.28s, a 68% cut for a 50% `n`
+  reduction) after confirming the mean-sd/row-count pattern is
+  unchanged, preserving the short-vs-long convergence narrative. Updated
+  the two hardcoded “1000” captions and the `stats_1000` variable name
+  to match; re-rendered clean.
+- **Broader sweep for other missed levers:** grepped all vignettes and
+  R/ roxygen `@examples` for other large iteration-like literals; found
+  only two more candidates, both false alarms – `R/calcFG.R`’s `n=1000`
+  example runs on a 7-row toy pedigree (negligible), and
+  `R/data.R:273`’s `guIter=10000` is inside `@source` prose describing
+  one-time historical data generation, not a real executed example.
+  `test_appServer_server.R` (557 lines, 27 `testServer()` blocks testing
+  real app wiring) and the rest of the “tests” long tail (200+ files,
+  mostly Shiny-testServer overhead) have no comparable iteration-count
+  lever without cutting real coverage.
+- **Verification:** full regression 0 failed/0 error/0 warning (CRAN
+  mode, 3197 passed/179 skipped, unchanged from S392’s post-fix
+  baseline).
+- **Next:** dispatched `devtools::check_win_devel()` again to measure
+  the real impact of this additional trim.
+- TDD Phase: REFACTOR (vignette content/parameter reduction only; no
+  production behavior change).
+
 ### 2026-07-16 · \[ad hoc\] Fix real CRAN incoming-check rejection: Windows “Overall checktime” \> 10 min (Session 392)
 
 - **Deliverable:** A real 2.0.0 submission (owner ran
