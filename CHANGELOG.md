@@ -47,6 +47,57 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-16 · \[ad hoc\] Fix deprecated `.Names=` usage flagged by win-builder (Session 389)
+
+- **Deliverable:** Owner ran `devtools::check_win_devel()` after S388’s
+  close-out and it returned a NOTE not previously on file:
+  `checking R code for possible problems` flagged
+  `structure(..., .Names = ...)` in
+  `tests/testthat/test_getParamDef.R:27` as a deprecated special-name
+  call. An R-devel-specific check — local R 4.6.1 does not reproduce it,
+  so S388’s local re-verify could not have caught it.
+- **Fix:** Dropped the
+  [`structure()`](https://rdrr.io/r/base/structure.html) wrapper
+  entirely — `tokens <- list(param = ..., tokenVec = ...)` — since the
+  names were already set by the inline `list(param=..., tokenVec=...)`
+  construction; `.Names=` was a dead re-assertion, not a second
+  names-setting. Zero behavior change.
+- **Verification:** Confirmed no other live-code `.Names` occurrence
+  exists (`R/data.R:337`’s is inside non-`@examples` roxygen prose,
+  never parsed as code). Single-file test and full regression suite both
+  clean (0 failed/0 error/0 warning, 3238 passed, 169 skipped baseline
+  unchanged). Not yet confirmed against win-builder itself — awaits the
+  owner’s next run.
+- TDD Phase: N/A (redundant deprecated-syntax removal, no behavior
+  change, not new implementation logic).
+
+### 2026-07-16 · \[ad hoc\] Re-verify CRAN 2.0.0 local `--as-cran` gate on current master (Session 388)
+
+- **Deliverable:** Re-ran `R CMD build .` +
+  `R CMD check --as-cran --timings` on current `master` (`79380fba`)
+  before the owner-only `devtools::submit_cran()` step, since 25 commits
+  touched `R/`/`tests/`/`DESCRIPTION`/`NAMESPACE` since the last
+  confirmed run (S359, `19ae5657`) — more than double the 9-commit
+  threshold that triggered a mandatory re-run at S359 itself. Owner
+  scoped this session to local re-verify only, via `AskUserQuestion`;
+  win-builder/R-hub re-triggering deferred to the owner.
+- **Result:** `0 errors | 0 warnings | 1 note` (expected
+  incoming-feasibility note only). Timings unchanged within noise:
+  examples 23s (slowest `groupAddAssign` 1.486s), tests 87s, vignette
+  rebuild 20s. `cran-comments.md`’s existing prose numbers remain
+  accurate as written — no edit needed there.
+- **Gotcha found and documented:** `R CMD check` run from outside the
+  package root does not activate renv (`.Rprofile` only sources
+  `renv/activate.R` from the package root), producing a false
+  `ERROR: Package required but not available: 'openxlsx'`. Fixed by
+  running from the package root with `--output=<scratch-dir>` to keep
+  check artifacts out of the repo tree. See `PROJECT_LEARNINGS.md`
+  Learning 358.
+- Updated `docs/planning/cran-2.0.0-phase5-runbook.md` and
+  `BACKLOG.md`’s CRAN item with the re-verification result and the
+  residual win-builder/R-hub staleness. TDD Phase: N/A (build/verify
+  action, no `R/`/`tests/` code changed).
+
 ### 2026-07-15 · \[issue \#123\] Update GitHub issue \#123 to reflect partial, scoped closure (Session 387)
 
 - **Deliverable:** Per
