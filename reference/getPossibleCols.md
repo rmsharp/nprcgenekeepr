@@ -43,7 +43,10 @@ The possible columns are as follows:
 
 - birth:
 
-  – Date or `NA` (optional) with the individual's birth date
+  – Date or `NA` with the individual's birth date. This is one of the
+  required columns (see
+  [`getRequiredCols`](https://github.com/rmsharp/nprcgenekeepr/reference/getRequiredCols.md));
+  the date value itself may be `NA` if unknown.
 
 - exit:
 

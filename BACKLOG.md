@@ -174,32 +174,38 @@ unguarded
 [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
 call sites” design-decision item is RESOLVED: decline, no code change –
 S383 (2026-07-15). See `CHANGELOG.md`.) - \[ \] **Issue \#123 (XARCH-5,
-string-column-keyed pipeline, no validated seam)** (READY, Effort S/M –
-re-scoped down from the original Effort L) – **planning session DONE,
-S385 (2026-07-15):**
-`docs/planning/issue123-xarch5-column-schema-plan.md`. A 35-agent
-research pass reproduced the issue’s defect by execution
-([`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-on a pedigree missing `sex` silently corrupts founder counts to 0/0/0,
-no error/warning) and adversarially judged 4 design alternatives.
-**Decision: reject the issue’s literal “full S3 class” recommendation**
-(only 3 of 7 implied pipeline functions actually round-trip a
-pedigree-shaped frame; all 8 pipeline functions + all 3 column getters
-are `@export`ed mid-CRAN-resubmission – same risk category the sibling
-issue \#122 plan’s Dragon 5 already rejected). **Adopt instead:**
-consolidate
+string-column-keyed pipeline, no validated seam) – follow-up note only**
+(READY, Effort XS, owner action) – **Phase 1 implementation DONE, S386
+(2026-07-15):** planning session (S385) DONE first –
+`docs/planning/issue123-xarch5-column-schema-plan.md`. Implemented: new
+`R/columnSchema.R` (internal `.nprcColumnSchema`, `@noRd`) consolidating
 [`getRequiredCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getRequiredCols.md)/[`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md)/[`getIncludeColumns()`](https://github.com/rmsharp/nprcgenekeepr/reference/getIncludeColumns.md)
-into one internal schema (pass-through getters, zero exported-contract
-change) + an explicit
-`setdiff`+[`stop()`](https://rdrr.io/r/base/stop.html) validator at 3
-silent-drop sites (`reportGV.R:211`, `qcStudbook.R:316`, and a 3rd site
-found during research, `gvaConvergence.R:161`, not named by the issue).
-Fits one ordinary RED-\>GREEN-\>REFACTOR session (see the plan’s
-Migration Path). Next: implement Phase 1 of the plan. Explicitly NOT in
-scope (see plan §10): the other 9 hardcoded column-list duplicates found
-during research, or validation at any other pipeline stage
-(`setPopulation`-\> `groupAddAssign`) – issue \#123 should be updated to
-partial/scoped closure after implementation, not closed outright.
+into pass-throughs (zero exported-contract change, byte-identical return
+values); new `R/assertRequiredColsPresent.R` (`@noRd`, mirrors the
+tested
+[`checkKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkKinshipOverrides.md)
+`setdiff`+[`stop()`](https://rdrr.io/r/base/stop.html) idiom) wired at 3
+silent-drop sites – `R/reportGV.R` (guard placed immediately before
+`founders$sex`, NOT at the plan’s literal `includeCols`-intersect site –
+see gotcha below), `R/qcStudbook.R:316`, `R/gvaConvergence.R:161`. Also:
+`R/correctUnknownParentMeanKinship.R:141`’s inline column-list duplicate
+now calls
+[`getRequiredCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getRequiredCols.md);
+[`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md)’s
+roxygen no longer mismarks `birth` “(optional)”. Strict TDD
+RED-\>GREEN-\>REFACTOR (REFACTOR declared unneeded, 0 lints); full
+regression suite 0 failed/0 error/0 warning, 169 skipped baseline
+(unchanged); `devtools::check()` Status OK; live scripted Phase 3E smoke
+test confirmed. Explicitly NOT in scope (plan §10, unchanged): the other
+9 hardcoded column-list duplicates found during research; validation at
+any other pipeline stage (`setPopulation`-\>`groupAddAssign`); the
+half-built `nprcgenekeeprGV` print-method wrinkle. **Remaining action
+(owner, not a coding session):** per the plan’s own §10 recommendation,
+update GitHub issue \#123 to reflect partial, scoped closure (link
+`docs/planning/issue123-xarch5-column-schema-plan.md` and this BACKLOG
+entry) rather than closing it outright – not done this session (posting
+to a shared GitHub issue was outside this session’s approved TDD-gate
+scope; flagging rather than acting unilaterally).
 
 ## Documents (v1.0.8 -\> v2.0.0 write-up)
 
