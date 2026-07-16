@@ -43,6 +43,21 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-15 · [issue #123] Update GitHub issue #123 to reflect partial, scoped closure (Session 387)
+- **Deliverable:** Per `docs/planning/issue123-xarch5-column-schema-plan.md` §10
+  decision 5, posted a comment to issue #123 (XARCH-5) summarizing S386's Phase 1
+  implementation, linking the plan and the `BACKLOG.md` tracking entry, and naming
+  the plan's own escalation triggers for the still-out-of-scope full S3
+  `pedigree`/`gvReport` class rewrite. TDD N/A -- GitHub issue comment, no `R/` or
+  `tests/` changed. The issue is left **OPEN** (not closed outright), per the
+  plan's explicit instruction.
+  https://github.com/rmsharp/nprcgenekeepr/issues/123#issuecomment-4986749021
+- **Verification:** Confirmed post-hoc via `gh api repos/rmsharp/nprcgenekeepr/issues/123`
+  -- `state: open`, `comments: 1` -- rather than trusting the CLI's returned URL alone.
+- **Not done this session (unchanged from S386):** the other 9 hardcoded
+  column-list duplicates; validation at any other pipeline stage
+  (`setPopulation`->`groupAddAssign`); the `nprcgenekeeprGV` print-method wrinkle.
+
 ### 2026-07-15 · [issue #123] Implement Phase 1 of the XARCH-5 column-schema plan (Session 386)
 - **Deliverable:** Implemented `docs/planning/issue123-xarch5-column-schema-plan.md` §7
   Phase 1 (S385's planning-session output), following `DEVELOPMENT_WORKSTREAM.md` under

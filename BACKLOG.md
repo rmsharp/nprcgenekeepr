@@ -129,31 +129,11 @@ test). The living contract is `docs/architecture/module-contract.md`; it is enfo
 - [ ] (none remaining -- the "`setLabKeyDefaults()`/`getDemographics()` unguarded
       `getSiteInfo()` call sites" design-decision item is RESOLVED: decline, no code
       change -- S383 (2026-07-15). See `CHANGELOG.md`.)
-- [ ] **Issue #123 (XARCH-5, string-column-keyed pipeline, no validated seam) --
-      follow-up note only** (READY, Effort XS, owner action) -- **Phase 1 implementation
-      DONE, S386 (2026-07-15):** planning session (S385) DONE first --
-      `docs/planning/issue123-xarch5-column-schema-plan.md`. Implemented: new
-      `R/columnSchema.R` (internal `.nprcColumnSchema`, `@noRd`) consolidating
-      `getRequiredCols()`/`getPossibleCols()`/`getIncludeColumns()` into pass-throughs
-      (zero exported-contract change, byte-identical return values); new
-      `R/assertRequiredColsPresent.R` (`@noRd`, mirrors the tested
-      `checkKinshipOverrides()` `setdiff`+`stop()` idiom) wired at 3 silent-drop sites --
-      `R/reportGV.R` (guard placed immediately before `founders$sex`, NOT at the plan's
-      literal `includeCols`-intersect site -- see gotcha below), `R/qcStudbook.R:316`,
-      `R/gvaConvergence.R:161`. Also: `R/correctUnknownParentMeanKinship.R:141`'s inline
-      column-list duplicate now calls `getRequiredCols()`; `getPossibleCols()`'s roxygen
-      no longer mismarks `birth` "(optional)". Strict TDD RED->GREEN->REFACTOR (REFACTOR
-      declared unneeded, 0 lints); full regression suite 0 failed/0 error/0 warning, 169
-      skipped baseline (unchanged); `devtools::check()` Status OK; live scripted Phase 3E
-      smoke test confirmed. Explicitly NOT in scope (plan §10, unchanged): the other 9
-      hardcoded column-list duplicates found during research; validation at any other
-      pipeline stage (`setPopulation`->`groupAddAssign`); the half-built
-      `nprcgenekeeprGV` print-method wrinkle. **Remaining action (owner, not a coding
-      session):** per the plan's own §10 recommendation, update GitHub issue #123 to
-      reflect partial, scoped closure (link `docs/planning/issue123-xarch5-column-schema-plan.md`
-      and this BACKLOG entry) rather than closing it outright -- not done this session
-      (posting to a shared GitHub issue was outside this session's approved TDD-gate
-      scope; flagging rather than acting unilaterally).
+- [ ] (none remaining -- issue #123 (XARCH-5) Phase 1 implementation (S386) and the
+      follow-up GitHub issue comment reflecting partial, scoped closure (S387,
+      2026-07-15, https://github.com/rmsharp/nprcgenekeepr/issues/123#issuecomment-4986749021)
+      are both done; the issue is left OPEN, per the plan's own §10 decision 5, pending
+      the escalation triggers it names. See `CHANGELOG.md`.)
 
 ## Documents (v1.0.8 -> v2.0.0 write-up)
 - [ ] **Execute "Document 2" plan (Phase D)** (READY, Effort M) -- planning session DONE

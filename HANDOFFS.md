@@ -62,17 +62,17 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S387
 date: 2026-07-15
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Update GitHub issue #123 (XARCH-5) to reflect partial, scoped closure per docs/planning/issue123-xarch5-column-schema-plan.md Sec.10 decision 5 -- link the plan and the BACKLOG.md entry; do not close the issue outright.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: n/a -- GitHub issue comment, no R/ package runtime behavior changed
-changelog_ref: pending
-commit: pending (lands in this claim commit)
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Update GitHub issue #123 (XARCH-5) to reflect partial, scoped closure per docs/planning/issue123-xarch5-column-schema-plan.md Sec.10 decision 5 -- DONE. TDD Phase: N/A (GitHub issue comment, no R/ or tests/ changed). Issue left OPEN per the plan's explicit instruction.
+what_was_done: Read the plan's Sec.9 impact analysis and Sec.10 decision 5 for the exact recommended framing. Checked issue #123's live state via `gh api repos/rmsharp/nprcgenekeepr/issues/123` (gh issue view fails on this repo's deprecated-projectCards GraphQL bug). Drafted a comment summarizing S386's Phase 1 implementation (commit 8a5465d8), the plan's rejection of the issue's literal S3-class recommendation (Sec.4/Sec.5), and the plan's escalation triggers (a)/(b)/(c) for revisiting it. Presented the full draft to the owner and confirmed before posting (a shared, visible-to-others action) -- approved as drafted, 0 edits. Posted via `gh issue comment 123 --body-file`: https://github.com/rmsharp/nprcgenekeepr/issues/123#issuecomment-4986749021. Verified post-hoc via gh api (state: open, comments: 1) rather than trusting the CLI's returned URL alone. Updated BACKLOG.md (pruned the completed item to a one-line pointer) and CHANGELOG.md (new 2026-07-15 S387 entry). Also broadened a personal cross-session memory (gh-pr-edit-projectcards-workaround) to note gh issue view hits the same bug -- no new PROJECT_LEARNINGS.md entry, since this is already thoroughly documented there. Commit: pending (lands in this close-out commit).
+next_steps: Pick from the standing BACKLOG priorities: Document 2 Phase D (READY, Effort M); LabKey integration remainder (BLOCKED -- needs a live LabKey server, Effort M); CRAN resubmission v2.0.0 (READY, Effort S, owner-only -- devtools::submit_cran() + email confirmation click). None more urgent than another.
+key_files: docs/planning/issue123-xarch5-column-schema-plan.md Sec.9/Sec.10 (read, not modified), BACKLOG.md (issue #123 item pruned), CHANGELOG.md (new 2026-07-15 S387 entry), HANDOFFS.md (this receipt), GitHub issue #123 comment (https://github.com/rmsharp/nprcgenekeepr/issues/123#issuecomment-4986749021).
+gotchas: gh issue view <N> fails on this repo with the deprecated-projectCards GraphQL error (same bug as gh pr edit, see gh-pr-edit-projectcards-workaround memory and PROJECT_LEARNINGS.md); use `gh api repos/:owner/:repo/issues/<N>` instead. gh issue comment/list and gh api reads/writes are all unaffected. Issue #123 is deliberately left OPEN, not closed -- see the posted comment's escalation triggers for when to revisit the full S3 class rewrite.
+runtime_smoke: n/a -- GitHub issue comment, no R/ package runtime behavior changed. Verified GitHub-side state instead (issue state: open, comments: 1, via gh api).
+changelog_ref: CHANGELOG.md 2026-07-15 "Update GitHub issue #123 to reflect partial, scoped closure (Session 387)"
+commit: pending (lands in this close-out commit)
 ```
 
 ```handoff
