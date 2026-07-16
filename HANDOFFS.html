@@ -85,6 +85,19 @@ is `pending` at the Phase 1B claim and `complete` at
 close-out; a third value, `reconciled`, is written *only* by a later session's Phase 0 reconcile
 when it reconstructs a receipt a crashed session never completed — you never write it yourself.</code></pre>
 <p><code>self_score</code> and <code>predecessor_score</code> are distinct keys so one can never stand in for the other; omit <code>predecessor_score</code> on Session 1 (there is no predecessor to score). <code>commit: pending</code> and <code>what_was_done: pending</code> are legal at write time (the receipt ships in the very commit whose sha it would name); the next session reconciles them to real shas.</p>
+<pre class="handoff"><code>session: S391
+date: 2026-07-16
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Process win-builder x3 results (owner shared the 3 emails) that S390 dispatched -- confirm the S389 .Names= NOTE is gone, check R-hub ("hillocked-veery") once complete, fold results into cran-comments.md Sec.4. TDD Phase: N/A (build/verify/release-mechanics).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending</code></pre>
 <pre class="handoff"><code>session: S390
 date: 2026-07-16
 status: complete
