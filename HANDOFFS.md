@@ -62,22 +62,51 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S394
 date: 2026-07-16
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: S393's simulatedKValues.Rmd fix confirmed real (vignette rebuild
-  79s->66s) via a fresh win-builder re-check, but offset by run-to-run noise
-  elsewhere -- total (656s) essentially unchanged from S392's 655s, still ~55s over
-  the 10-min mark. No test silently relies on an expensive default iteration count
-  (checked). Owner chose to attempt one more round on the "tests" phase's long tail
-  of small Shiny-testServer-driven files, since tests (245-246s) is the dominant,
-  stable, most controllable cost -- more invasive this time (touches real coverage).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Closed out the 3-session CRAN 2.0.0 checktime effort (S392-394).
+  Confirmed S393's fix was real (vignette rebuild 79s->66s) but offset by run-to-run
+  noise (total 656s, unchanged from S392's 655s). Investigated the "tests" long tail
+  as directed, caught a profiling-methodology error before it caused a wrong edit,
+  found no further safe lever, and closed out with owner agreement -- DONE.
+what_was_done: Fetched the verbatim 00check.log for the fresh win-builder result --
+  confirmed simulatedKValues.Rmd's fix was real (vignette rebuild 79s->66s) but fully
+  offset by noise elsewhere (examples +6s, R-code-check +2s, HTML manual +5s).
+  Confirmed via a multi-line-aware search that no test relies on an unspecified
+  default iteration count. Profiled 8 Shiny-testServer-heavy candidate files by
+  looping test_file() calls in one session -- test_appServer_server.R showed a
+  suspicious 22.951s/10-tests (uniform ~2.3s/test), which would have justified
+  consolidating tests into fewer session mounts. Re-verified by re-running that file
+  alone in a fresh session: 3.929s, under a fifth of the looped figure. Re-profiled
+  all 8 files individually: combined total 16.9s, all genuine appServer()-wiring
+  coverage (added by prior sessions to close a real 0%-coverage gap), not redundant
+  overhead -- not a safe consolidation target for that size of payoff. Documented as
+  PROJECT_LEARNINGS.md Learning 362. Updated BACKLOG.md (CRAN item retagged DECISION
+  NEEDED), cran-comments.md (final S394 summary), CHANGELOG.md (S394 entry),
+  CLAUDE.md (learning-count refresh). No test/vignette/R code changed this session.
+next_steps: The CRAN 2.0.0 checktime effort is closed for now -- real, verified
+  progress (tests 334s->245s, vignette rebuild 79s->66s, both confirmed across
+  independent win-builder runs) but total check time is stable at ~655-656s, ~55s
+  over the 10-min mark. The one genuinely unexplored angle: the ~119-121s
+  "untimed overhead" gap between summed check-log steps and the reported total --
+  nobody has investigated whether this is reducible. The resubmit/wait/hold decision
+  at the current margin is the owner's, not a session's; devtools::submit_cran()
+  remains owner-only.
+key_files: BACKLOG.md (CRAN item retagged), cran-comments.md (final S394 summary
+  note), CHANGELOG.md (new S394 entry), PROJECT_LEARNINGS.md (Learning 362),
+  CLAUDE.md (learning-count refresh), HANDOFFS.md (this receipt).
+gotchas: Don't re-run the S392-394 sweeps without new information -- three rounds
+  found no further safe lever. Standing warnings still apply: do NOT touch
+  vignettes/ColonyManagerTutorial.Rmd (.Rbuildignore'd, separately owned by the
+  Document 2 backlog item) or lower guIter in reportGV()/groupAddAssign()'s roxygen
+  examples or vignettes/a2interactive.Rmd (triggers checkFgDegeneracy at
+  guIter<=30). When profiling per-file test timing for any future decision, always
+  re-verify a surprising number in complete isolation (fresh Rscript invocation)
+  before trusting it -- see Learning 362.
+runtime_smoke: n/a -- investigation and documentation only, no R/ production runtime
+  behavior, tests, or vignettes changed this session.
+changelog_ref: CHANGELOG.md 2026-07-16 "Close out the CRAN checktime effort: real progress, practical floor reached (Session 394)"
 commit: pending
 ```
 
