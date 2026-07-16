@@ -54,6 +54,24 @@ any single example, and `ColonyManagerTutorial.Rmd` (the largest local vignette
 render) is `.Rbuildignore`'d and irrelevant to the real build. A fresh win-builder
 run is needed to measure this additional trim's real impact.
 
+**2026-07-16 second follow-up (S394, final for this cycle):** the second fresh
+win-builder run confirmed the `simulatedKValues.Rmd` trim is real (`checking
+re-building of vignette outputs` dropped `79s -> 66s`), but the gain was fully
+offset by run-to-run noise elsewhere (`examples`/`checking R code`/HTML manual all
+moved up a few seconds between runs) -- reported total landed at `656s`, essentially
+unchanged from the prior `655s`. A further investigation of the "tests" phase's
+long tail of small Shiny-`testServer()`-driven files (the dominant remaining cost at
+245-246s) found only ~17s of local headroom, all of it genuine test coverage
+(deliberately added by prior sessions to close a real `appServer()` coverage gap),
+not redundant overhead -- not a safe trade to consolidate for that size of payoff.
+**Net result across three sessions (S392-394):** `tests` reduced `334s -> 245s`
+(robust, reproducible), `vignette rebuild` reduced `79s -> 66s` (robust,
+reproducible); total check time reduced from an extrapolated ~720s to a stable
+~655-656s -- real, meaningful progress, but still ~55s over CRAN's 10-minute mark.
+No further safe, mechanical lever was found after three rounds of investigation.
+Remaining path forward (resubmit anyway, wait for a quieter win-builder day, or
+hold for new ideas) is an owner decision, not a further engineering task.
+
 ## R CMD check results
 
 Local `R CMD check --as-cran --timings` (macOS, R 4.6.1) on the built 2.0.0 tarball:

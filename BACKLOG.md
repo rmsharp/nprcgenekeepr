@@ -68,11 +68,10 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       measured + per-center query availability/permissions are confirmed; needs a live LabKey server to
       test/observe, and a naive focal-id server filter is incompatible with the client-side
       connected-component walk).
-- [ ] **CRAN resubmission of v2.0.0** (BLOCKED -- S393's additional
-      `simulatedKValues.Rmd` trim dispatched to a fresh win-builder Windows-devel
-      check, results due ~01:22 PM 2026-07-16; S392's fix alone landed at 655s,
-      ~55s over the 10-min mark -- process the new result before any resubmission,
-      Effort S) -- CRAN responded 2026-07-09:
+- [ ] **CRAN resubmission of v2.0.0** (DECISION NEEDED -- owner-only: resubmit at
+      the current ~656s checktime, wait for a quieter win-builder day, or hold for
+      new ideas; S392-394 exhausted the safely-findable technical levers (see
+      S394's close-out), Effort S) -- CRAN responded 2026-07-09:
       the v2.0.0 submission (S329, `devtools::submit_cran()`, `CRAN-SUBMISSION` sha
       `8ca8bb24`) was archived before publication because `appServer()` unconditionally
       wrote `~/nprcgenekeepr.log` on every boot, violating CRAN Policy. **Fixed in
