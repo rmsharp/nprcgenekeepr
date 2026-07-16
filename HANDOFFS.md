@@ -60,6 +60,28 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S394
+date: 2026-07-16
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: S393's simulatedKValues.Rmd fix confirmed real (vignette rebuild
+  79s->66s) via a fresh win-builder re-check, but offset by run-to-run noise
+  elsewhere -- total (656s) essentially unchanged from S392's 655s, still ~55s over
+  the 10-min mark. No test silently relies on an expensive default iteration count
+  (checked). Owner chose to attempt one more round on the "tests" phase's long tail
+  of small Shiny-testServer-driven files, since tests (245-246s) is the dominant,
+  stable, most controllable cost -- more invasive this time (touches real coverage).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S393
 date: 2026-07-16
 status: complete
