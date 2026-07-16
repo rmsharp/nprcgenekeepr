@@ -47,6 +47,57 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-16 · \[ad hoc\] Close out the CRAN checktime effort: real progress, practical floor reached (Session 394)
+
+- **Deliverable:** S393’s fresh win-builder Windows-devel result
+  confirmed the `simulatedKValues.Rmd` fix was real
+  (`checking re-building of vignette outputs` `79s -> 66s`), but the
+  gain was fully offset by run-to-run noise elsewhere
+  (`examples`/`checking R code`/manual generation each moved up a few
+  seconds between runs) – total check time landed at `656s`, essentially
+  unchanged from S392’s `655s`. Investigated one more angle (the “tests”
+  phase’s long tail of small Shiny-`testServer()`-driven files) and
+  concluded, with owner agreement, that no further safe lever exists –
+  closing out this three-session effort.
+- **Caught and corrected a profiling methodology error before it caused
+  a wrong action:** looping
+  [`testthat::test_file()`](https://testthat.r-lib.org/reference/test_file.html)
+  calls sequentially within one R session inflated
+  `test_appServer_server.R`’s apparent cost by ~5.8x (22.951s looped vs.
+  3.929s in true isolation) – re-profiling all 8 candidate files
+  individually (each its own fresh session) gave a combined total of
+  only ~16.9s, all of it genuine
+  [`appServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/appServer.md)-wiring
+  coverage deliberately added by prior sessions to close a real
+  0%-coverage gap, not redundant overhead. Documented as
+  `PROJECT_LEARNINGS.md` Learning 362 – a third, distinct way a local
+  profiling number can misrepresent reality, alongside Learnings
+  360/361.
+- **Also confirmed (targeted search):** no test file silently relies on
+  an expensive default iteration count
+  ([`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)’s
+  `guIter=1000L`,
+  [`geneDrop()`](https://github.com/rmsharp/nprcgenekeepr/reference/geneDrop.md)’s
+  `n=1000L`,
+  [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)’s
+  `nMax=3000L`) – every real call either overrides it or runs on a
+  negligibly small pedigree.
+- **Net result across S392-394:** `tests` reduced `334s -> 245s`
+  (robust, reproducible across 2 independent win-builder runs);
+  `vignette rebuild` reduced `79s -> 66s` (robust, reproducible); total
+  check time reduced from an extrapolated ~720s to a stable ~655-656s.
+  Real, meaningful, verified progress – but still ~55s over CRAN’s
+  10-minute mark, and no further safe, mechanical lever was found after
+  three rounds of investigation (declined to consolidate real Shiny test
+  coverage for an estimated ~17s-local/60-85s-Windows ceiling, given the
+  cost to test independence/diagnostic quality).
+- **Next:** owner decision, not a further engineering task – resubmit at
+  the current margin, wait for a quieter win-builder day, or hold for
+  new ideas. `BACKLOG.md`’s CRAN item retagged DECISION NEEDED
+  accordingly.
+- TDD Phase: N/A (investigation and documentation only this session; no
+  code changed).
+
 ### 2026-07-16 · \[ad hoc\] Confirm S392’s checktime fix worked, find it’s still ~55s short, trim further (Session 393)
 
 - **Deliverable:** S392’s win-builder Windows-devel re-check came back.
