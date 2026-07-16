@@ -62,17 +62,17 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S391
 date: 2026-07-16
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Process win-builder x3 results (owner shared the 3 emails) that S390 dispatched -- confirm the S389 .Names= NOTE is gone, check R-hub ("hillocked-veery") once complete, fold results into cran-comments.md Sec.4. TDD Phase: N/A (build/verify/release-mechanics).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 10
+active_task: Process win-builder x3 results (owner shared the 3 emails) and R-hub ("hillocked-veery") that S390 dispatched -- confirm the S389 .Names= NOTE is gone, fold results into cran-comments.md Sec.4 -- DONE. All environments clean. TDD Phase: N/A (build/verify/release-mechanics action, no R/tests code changed).
+what_was_done: Fetched verbatim 00check.log for all 3 win-builder environments via curl (not just the email summary or an AI-summarized WebFetch) -- all three 0 errors/0 warnings/1 note, and `checking R code for possible problems ... OK` on all three, confirming S389's fix resolved the NOTE on R-devel itself. Investigated a discrepancy (only 1 URL flagged vs. cran-comments.md's prior 2) by grepping source -- PMC URL still present in DESCRIPTION:20, so its non-appearance this cycle is checker intermittency, not a fix; reported factually. Polled R-hub completion via Bash run_in_background + until-loop (single-notification wait, not Monitor). On completion, pulled actual job logs via gh run view --log (not just conclusion:success) -- all 3 platforms Status: OK (zero notes), FAIL 0 | WARN 0 | SKIP 221 | PASS 3140, confirming the S361/362 cycle's WriteXLS Windows flake (1 WARN) does not recur (consistent with S363's openxlsx migration). Folded all results into cran-comments.md (NOTE prose + Test environments), docs/planning/cran-2.0.0-phase5-runbook.md (refresh-log entry), BACKLOG.md (CRAN item), and CHANGELOG.md (new S391 entry). Two Edit calls initially failed because old_string was composed from memory rather than the file's actual text -- checked git status/diff to rule out an external edit (FM #22) before re-reading and retrying correctly. Commit: pending (lands in this close-out commit).
+next_steps: The CRAN 2.0.0 pre-submission gate is now clean across every environment run this cycle (local macOS, win-builder x3, R-hub x3) -- no known outstanding technical blocker. Only remaining step is owner-only: devtools::submit_cran() (or the web form) + click the maintainer-email confirmation link -- per SAFEGUARDS and the runbook's HARD STOP, cannot be delegated to a session. Other standing items: Document 2 Phase D (READY, Effort M); LabKey remainder (BLOCKED).
+key_files: cran-comments.md (NOTE prose + Test environments updated), docs/planning/cran-2.0.0-phase5-runbook.md (S390/391 refresh-log entry), BACKLOG.md (CRAN item), CHANGELOG.md (new 2026-07-16 S391 entry), HANDOFFS.md (this receipt).
+gotchas: The CRAN gate is fully green everywhere it has been run -- do not re-trigger win-builder/R-hub again without a code change since the last confirmed run (would just burn external resources for no new information). PMC-URL automated-checker intermittency (flagged one cycle, absent the next) is worth a passing watch on any future win-builder run but is not a blocker -- both flagged URLs are confirmed reachable in a browser. Always fetch verbatim check logs (curl/gh run view --log) rather than trusting email/job-conclusion summaries alone -- this is how the WriteXLS-flake-resolution and the .Names=-fix-confirmation were actually verified, not assumed.
+runtime_smoke: Satisfied by the deliverable itself (unlike S390) -- win-builder x3 and R-hub x3 are now both confirmed clean via verbatim log inspection, the strongest verification available short of CRAN's own review.
+changelog_ref: CHANGELOG.md 2026-07-16 "Process win-builder + R-hub results for CRAN 2.0.0 gate -- fully clean (Session 391)"
+commit: pending (lands in this close-out commit)
 ```
 
 ```handoff

@@ -36,12 +36,16 @@ Local `R CMD check --as-cran --timings` (macOS, R 4.6.1) on the built 2.0.0 tarb
   the timing cause is addressed above. This check also reports possibly-
   misspelled words in DESCRIPTION -- "EHR", "Raboin" (an author surname), and
   "kinships" -- confirmed as the exact set flagged identically across all three
-  win-builder runs, both this resubmission cycle and the prior one. All three
-  are spelled correctly. Two
-  reference URLs, <https://pmc.ncbi.nlm.nih.gov/articles/PMC4671785/> and
-  <https://www.thoughtco.com/age-sex-pyramids-and-population-pyramids-1435272>,
-  return 403 to automated checkers (confirmed via `curl` with a browser user
-  agent and an independent fetch, both blocked) but are reachable in a browser.
+  win-builder runs, both this resubmission cycle and the two prior ones. All
+  three are spelled correctly. One
+  reference URL, <https://www.thoughtco.com/age-sex-pyramids-and-population-pyramids-1435272>,
+  returns a 400 to automated checkers (confirmed identically across all three
+  win-builder environments this cycle) but is reachable in a browser. A second
+  reference URL, <https://pmc.ncbi.nlm.nih.gov/articles/PMC4671785/>, was
+  flagged (403) in an earlier check cycle but was NOT flagged in this cycle's
+  win-builder runs -- automated URL-reachability checks against PMC appear
+  intermittent rather than a fixed pass/fail; it too is reachable in a
+  browser.
 
   (The local-only HTML-manual-Tidy note previously listed here no longer
   appears on this machine's current toolchain.)
@@ -49,16 +53,23 @@ Local `R CMD check --as-cran --timings` (macOS, R 4.6.1) on the built 2.0.0 tarb
 ## Test environments
 
 * Local: macOS, R 4.6.1 -- `R CMD check --as-cran --timings` (results above)
-* win-builder R-devel (R Under development (unstable), 2026-07-10 r90234): 0
-  errors | 0 warnings | 1 note (incoming feasibility, as above)
+* win-builder R-devel (R Under development (unstable), 2026-07-15 r90261): 0
+  errors | 0 warnings | 1 note (incoming feasibility, as above). Re-run
+  2026-07-16 (Session 390/391) to confirm the deprecated `structure(...,
+  .Names=...)` NOTE fixed in Session 389 is resolved -- confirmed: `checking R
+  code for possible problems ... OK` on this run.
 * win-builder R-release (R 4.6.1): 0 errors | 0 warnings | 1 note (incoming
-  feasibility, as above)
-* win-builder R-oldrelease (R 4.5.3): 0 errors | 0 warnings | 2 notes (incoming
-  feasibility, as above; plus one timing note -- `groupAddAssign` example ran
-  10.06s on win-builder's slower hardware, just over the 10s reporting
-  threshold. Not a check failure; the example itself completes and passes)
-* R-hub v2 (R-devel; linux, windows, macos): all three platforms `Status: OK`,
-  0 test failures
+  feasibility, as above). Same re-run and confirmation as R-devel above.
+* win-builder R-oldrelease (R 4.5.3): 0 errors | 0 warnings | 1 note (incoming
+  feasibility, as above). Same re-run and confirmation as R-devel above; the
+  prior cycle's `groupAddAssign` >10s timing note on this platform's slower
+  hardware did NOT recur this cycle.
+* R-hub v2 (R-devel; linux, windows, macos): all three platforms `Status: OK`
+  (0 notes), `[ FAIL 0 | WARN 0 | SKIP 221 | PASS 3140 ]` -- fully clean, an
+  improvement over the prior cycle's 1 WARN (the intermittent Windows
+  `WriteXLS` flake, fixed S363 by switching to `openxlsx`, does not recur
+  here). Run "hillocked-veery",
+  <https://github.com/rmsharp/nprcgenekeepr/actions/runs/29473979892>.
 
 ## Downstream dependencies
 

@@ -98,6 +98,38 @@ these same 25 commits — the owner chose not to re-trigger them this session
 and will decide when to (mirroring the S361 owner-scoped precedent) before
 running `devtools::submit_cran()`.
 
+**Refreshed again by Sessions 390/391 (2026-07-16)** — owner picked CRAN
+resubmission from the Phase 0 priorities list and explicitly scoped (via
+`AskUserQuestion`) triggering win-builder x3 + R-hub now, specifically to
+confirm S389's `.Names=` fix (a deprecated `structure()` call flagged by an
+R-devel-only check) actually resolved on win-builder. Before dispatching,
+found `origin/master` 5 commits behind local — including S389's actual fix
+commit (`264596b6`), not just documentation — and R-hub checks the code **on
+GitHub**, not local; pushed first (confirmed via a second `AskUserQuestion`,
+since it is a distinct shared-state action) to avoid R-hub silently re-testing
+the pre-fix code (see `PROJECT_LEARNINGS.md` Learning 359). Dispatched
+`check_win_devel/release/oldrelease()` and `rhub::rhub_check(platforms=
+c("linux","windows","macos"))` (run "hillocked-veery"). **Win-builder results
+(processed S391): all three environments `0 errors | 0 warnings | 1 note`**
+(the expected incoming-feasibility note only) — verbatim `00check.log` for
+each confirms `* checking R code for possible problems ... OK`, confirming
+S389's fix resolved the NOTE on R-devel itself, the exact environment that
+originally flagged it. R-oldrelease's prior `groupAddAssign` >10s timing note
+did not recur. Only one URL (thoughtco.com, 400) was flagged this cycle vs.
+two in an earlier cycle (the PMC URL's automated-checker flag appears
+intermittent, not a fixed pass/fail) — `cran-comments.md` updated to reflect
+this. **R-hub results (processed S391): all three platforms `Status: OK`
+(zero notes), `[ FAIL 0 | WARN 0 | SKIP 221 | PASS 3140 ]`** — fully clean,
+an improvement over the S361/362 cycle's 1 WARN (the intermittent Windows
+`WriteXLS` flake that session diagnosed as GitHub-Actions-runner-specific;
+confirmed absent here, consistent with S363's `openxlsx` migration having
+fully resolved it). **Net effect: the CRAN pre-submission gate is now clean
+across every environment run this cycle** (local macOS, win-builder x3,
+R-hub x3) — the S389 fix is confirmed resolved everywhere, and no new
+finding surfaced. Results are already folded into `cran-comments.md` this
+session. **Still owner-only, unchanged:** `devtools::submit_cran()` and the
+maintainer-email confirmation click remain the owner's next action.
+
 **Why this is a runbook, not an executed step.** win-builder and R-hub v2 are
 **outward-facing** (they upload the package to external services), need **network**
 access and your **GitHub token**, and return results **asynchronously** (win-builder by
