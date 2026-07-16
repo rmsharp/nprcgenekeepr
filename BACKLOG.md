@@ -128,11 +128,21 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       parsed as code). Full regression suite re-run clean (0 failed/0 error/0
       warning, 3238 passed, 169 skipped baseline unchanged). **Not yet confirmed
       against win-builder itself** -- local R can't reproduce this specific
-      check; confirmation awaits the next win-builder run. Next (owner action,
-      unchanged): decide whether to re-trigger win-builder/R-hub (this fix
-      should also resolve the new NOTE), then `devtools::submit_cran()` and
-      click the maintainer-email confirmation link -- all still owner-only per
-      SAFEGUARDS and the runbook's HARD STOP.
+      check; confirmation awaits the next win-builder run.
+      **Win-builder x3 + R-hub re-triggered -- S390 (2026-07-16):** owner
+      picked this item from the Phase 0 priorities list and explicitly scoped
+      the session (via `AskUserQuestion`) to trigger now. Found `origin/master`
+      5 commits behind local, including S389's actual `.Names=` fix (unpushed)
+      -- R-hub checks GitHub's copy, so pushed first (confirmed via
+      `AskUserQuestion`) to avoid silently re-testing pre-fix code. Dispatched
+      `check_win_devel/release/oldrelease()` (results by email, ~15-30 min) and
+      `rhub::rhub_check(platforms=c("linux","windows","macos"))` (run
+      "hillocked-veery", confirmed via `gh run list`). **Results not yet in --
+      async.** Next (owner action or follow-on session): once results land,
+      fold them into `cran-comments.md` §Test environments (mirroring the
+      S361->S362 split), confirm the `.Names=` NOTE is gone, then
+      `devtools::submit_cran()` and click the maintainer-email confirmation
+      link -- still owner-only per SAFEGUARDS and the runbook's HARD STOP.
 
 ## Housekeeping
 - [ ] (none remaining -- the "clean up stale untracked leftover files" item (filed

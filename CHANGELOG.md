@@ -43,6 +43,38 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-16 · [ad hoc] Re-trigger win-builder + R-hub for CRAN 2.0.0 gate; push local-ahead commits (Session 390)
+- **Deliverable:** Owner picked "CRAN resubmission" from the Phase 0 priorities
+  list; scoped this session (via `AskUserQuestion`) to re-trigger win-builder x3
+  and R-hub now, mirroring the S361 precedent. Results are asynchronous
+  (win-builder by email in ~15-30 min; R-hub via GitHub Actions) — a follow-on
+  session folds them into `cran-comments.md`, mirroring the S361→S362 split.
+- **Finding before dispatch:** `origin/master` was 5 commits behind local
+  `master`, and one of those commits was S389's actual `.Names=` code fix
+  (`264596b6`) — not documentation. R-hub checks the code **on GitHub**, not
+  local working tree, so dispatching R-hub without pushing first would have
+  silently re-tested the pre-fix code and produced a false confirmation.
+  Confirmed via `git log origin/master..master` and `git branch -r --contains
+  264596b6` (empty — fix was unpushed). Pushed to origin first (plain
+  fast-forward, 5 commits, no force), confirmed via `AskUserQuestion` since
+  pushing is a shared-state action beyond the original trigger scope.
+- **Dispatched:** `devtools::check_win_devel()` / `check_win_release()` /
+  `check_win_oldrelease()` — all three dispatched OK, results by email to
+  `rmsharp@me.com` in ~15-30 min. `rhub::rhub_doctor()` confirmed clean setup;
+  `rhub::rhub_check(platforms=c("linux","windows","macos"))` dispatched as run
+  "hillocked-veery" (confirmed via `gh run list`), superseding the owner's own
+  pre-fix "cyclopean-iguanodon" R-hub run (2026-07-16 ~01:15, triggered directly
+  by the owner before this session, per owner confirmation — informational
+  only, no session/CHANGELOG gap).
+- **Verification:** Dispatch confirmed for all 4 triggers (3 win-builder + 1
+  R-hub); actual pass/fail results are not yet available this session (async).
+  Phase 3E runtime smoke test: n/a in the traditional sense — this deliverable
+  IS the verification-in-flight; the actual confirmation (does S389's fix
+  resolve the NOTE, do all platforms stay green) awaits results landing in a
+  follow-on session.
+- TDD Phase: N/A (build/verify/release-mechanics action; no `R/`/`tests/` code
+  changed this session).
+
 ### 2026-07-16 · [ad hoc] Fix deprecated `.Names=` usage flagged by win-builder (Session 389)
 - **Deliverable:** Owner ran `devtools::check_win_devel()` after S388's close-out
   and it returned a NOTE not previously on file: `checking R code for possible
