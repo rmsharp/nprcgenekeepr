@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S389
+date: 2026-07-16
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix tests/testthat/test_getParamDef.R:27's deprecated .Names= usage flagged by a fresh owner-run win-builder check (checking R code for possible problems NOTE). TDD Phase: N/A (redundant deprecated-syntax removal, no behavior change).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S388
 date: 2026-07-16
 status: complete
