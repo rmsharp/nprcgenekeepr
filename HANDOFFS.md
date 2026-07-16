@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S387
+date: 2026-07-15
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Update GitHub issue #123 (XARCH-5) to reflect partial, scoped closure per docs/planning/issue123-xarch5-column-schema-plan.md Sec.10 decision 5 -- link the plan and the BACKLOG.md entry; do not close the issue outright.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: n/a -- GitHub issue comment, no R/ package runtime behavior changed
+changelog_ref: pending
+commit: pending (lands in this claim commit)
+```
+
+```handoff
 session: S386
 date: 2026-07-15
 status: complete
