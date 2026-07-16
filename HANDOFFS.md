@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S390
+date: 2026-07-16
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Re-trigger win-builder (devtools::check_win_devel/release/oldrelease()) and R-hub (rhub::rhub_check platforms=c("linux","windows","macos")) on current master per docs/planning/cran-2.0.0-phase5-runbook.md Sec.2-3 -- refreshes the CRAN 2.0.0 pre-submission gate (last run S361/362, now 27 commits stale) and confirms whether S389's .Names= fix resolved the deprecated-special-names NOTE. Owner explicitly scoped this session to trigger now via AskUserQuestion, mirroring the S361 precedent; devtools::submit_cran() stays owner-only regardless. TDD Phase: N/A (build/verify/release-mechanics action).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S389
 date: 2026-07-16
 status: complete
