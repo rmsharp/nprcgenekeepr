@@ -110,14 +110,14 @@ length(fx$pop)    # offspring (the analyzed population)
 #> [1] 70
 ```
 
-We assess iteration counts from 25 up to 1500 (a fixed `seed` makes the
+We assess iteration counts from 25 up to 800 (a fixed `seed` makes the
 curve reproducible):
 
 ``` r
 
 conv <- gvaConvergence(
-  fx$ped, pop = fx$pop, nMax = 3000L,
-  grid = c(25L, 50L, 100L, 200L, 400L, 800L, 1500L), seed = 11L
+  fx$ped, pop = fx$pop, nMax = 1600L,
+  grid = c(25L, 50L, 100L, 200L, 400L, 800L), seed = 11L
 )
 
 kable(
@@ -131,13 +131,12 @@ kable(
 
 | Iterations (N) | Top-20 overlap | Kendall agreement |
 |---------------:|---------------:|------------------:|
-|             25 |           0.75 |             0.701 |
-|             50 |           0.80 |             0.781 |
-|            100 |           0.85 |             0.853 |
-|            200 |           1.00 |             0.916 |
-|            400 |           1.00 |             0.945 |
-|            800 |           1.00 |             0.953 |
-|           1500 |           1.00 |             0.971 |
+|             25 |           0.80 |             0.790 |
+|             50 |           0.80 |             0.766 |
+|            100 |           1.00 |             0.945 |
+|            200 |           0.95 |             0.901 |
+|            400 |           1.00 |             0.925 |
+|            800 |           1.00 |             0.952 |
 
 Selection-order reproducibility vs. iteration count (half-sib web).
 {.table .table .table-striped .table-hover

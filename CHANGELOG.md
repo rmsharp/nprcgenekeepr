@@ -47,6 +47,85 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-16 · \[ad hoc\] Fix real CRAN incoming-check rejection: Windows “Overall checktime” \> 10 min (Session 392)
+
+- **Deliverable:** A real 2.0.0 submission (owner ran
+  `devtools::submit_cran()` out-of-session; evidenced by the uncommitted
+  `CRAN-SUBMISSION` dated 2026-07-16 06:17 UTC, SHA matching the S391
+  close-out commit `03736837`) was **rejected** by CRAN’s actual
+  incoming automatic check – distinct from the win-builder pretests this
+  project’s own sessions have been running, which do not exercise this
+  gate. Windows r-devel flagged “Overall checktime 12 min \> 10 min” –
+  the same failure class (“Tested elapsed times”) that archived this
+  package in 2025.
+- **Diagnosis:** Fetched verbatim `00check.log` for both flavors (not
+  the email summary): the “Overall checktime” note is NOT in the check
+  log itself – it’s a separate wall-clock summary CRAN’s incoming
+  pipeline computes only for real submissions. Windows:
+  `checking tests ... [334s]` (dominant), `checking examples ... [79s]`,
+  `checking re-building of vignette outputs ... [79s]`. Debian’s
+  equivalent run stayed under 5 min – Windows-VM-speed-specific, not a
+  universal regression. Local
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)-based
+  profiling of the slowest test files was initially misleading: 3 files
+  (`test_fillGroupMembers.R`, `test_fillGroupMembersWithSexRatio.R`,
+  `test_groupAddAssign.R`) are gated on
+  `skip_if_not(Sys.info()[...] == "rmsharp")` and never run on
+  CRAN/win-builder/R-hub at all, and `test_pkgdown_reference_config.R`’s
+  tests skip immediately once `_pkgdown.yml` is absent – confirmed
+  `.Rbuildignore`’d (so absent from the real built tarball). A
+  from-scratch `R CMD build .` + check hung for 30+ minutes on this
+  machine (0.6 CPU-seconds burned; apparently `renv` project
+  auto-activation-related, persisted even with `R_PROFILE_USER`
+  disabled) – abandoned in favor of `NOT_CRAN`-controlled
+  [`testthat::test_dir()`](https://testthat.r-lib.org/reference/test_dir.html)
+  profiling, which correctly respects `skip_on_cran()` the same way a
+  real CRAN check does.
+- **Fix:** `skip_on_cran()` added to the 10 true gene-drop
+  convergence-stress `test_that` blocks (`nMax = 3000L`/`800L`, full
+  budget regardless of where the metric converges) in
+  `test_gvaConvergence.R` (6 blocks) and
+  `test_gvaConvergence_kinshipOverrides.R` (4 blocks); their
+  cheap/structural siblings (`nMax <= 200L`) are untouched and still run
+  everywhere. `guIter` reduced 100L-\>20L at the ~23 `test_reportGV.R`
+  call sites whose assertions (`indivMeanKin`, `parentage`,
+  `neSexRatio`/`neVariance`/kinship-matrix equality) are deterministic
+  and do not depend on gu-magnitude; sites on the tiny 10-row
+  `makeOriginTestPed()` fixture (already `guIter = 1000L` but cheap
+  regardless) and the pre-existing `skip_on_cran()`-gated `fgSE` test
+  were left untouched. `nMax` reduced 3000L-\>1600L (grid ceiling
+  1500L-\>800L) in `vignettes/gvaConvergence.Rmd`; re-rendered clean
+  with `recommendedIter`/`converged`/`nRankable` all unchanged
+  (800/TRUE/70) and every narrative claim still accurate.
+- **Reverted, not applied:** lowering `guIter` in the
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)/
+  [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+  roxygen `@examples` (3 source files: `R/reportGV.R`,
+  `R/groupAddAssign.R`, `R/summary.nprcgenekeeprErr.R`) and in
+  `vignettes/a2interactive.Rmd` (2 call sites) – empirically confirmed
+  (same seed/pipeline as each surface) this introduces a NEW
+  `checkFgDegeneracy` warning (“Founder genome equivalents undefined”)
+  on that fixture at `guIter <= 30`, which would trade a timing NOTE for
+  a real WARNING. Reverted to the original `guIter = 50`/`50L`;
+  `man/*.Rd` regenerated back to byte-identical original content,
+  confirmed via `git diff`.
+- **Verification:** Full regression suite 0 failed/0 error/0 warning in
+  both dev mode (`NOT_CRAN=true`: 3895 passed, 167 skipped) and CRAN
+  mode (`NOT_CRAN` unset: 3197 passed, 179 skipped). Local CRAN-relevant
+  test-file total dropped from ~70s to ~43s (~38%) in the controlled
+  profiling (not an official `R CMD check --as-cran` timing – that run
+  hung on this machine; see Diagnosis above). `cran-comments.md` and
+  `BACKLOG.md` updated to reflect the real rejection (not “gate fully
+  clean”) and this fix.
+- **Dispatched (owner-approved via `AskUserQuestion`, mirroring the
+  S361/S390 precedent that pretest triggers are session-doable):**
+  `devtools::check_win_devel()` – results due by email ~11:59 AM
+  2026-07-16. Processing them is the next session’s work (mirroring the
+  S390-\>S391 split). `devtools::submit_cran()` itself remains
+  owner-only per SAFEGUARDS.
+- TDD Phase: REFACTOR (test/example/vignette runtime reduction; no
+  production behavior change; full regression suite green throughout).
+
 ### 2026-07-16 · \[ad hoc\] Process win-builder + R-hub results for CRAN 2.0.0 gate – fully clean (Session 391)
 
 - **Deliverable:** Processed the win-builder x3 results (owner shared

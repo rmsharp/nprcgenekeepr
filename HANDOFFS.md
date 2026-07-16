@@ -68,6 +68,87 @@ are legal at write time (the receipt ships in the very commit whose sha
 it would name); the next session reconciles them to real shas.
 
 ``` handoff
+session: S392
+date: 2026-07-16
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: Fixed CRAN's real incoming-check rejection of the v2.0.0 resubmission
+  (Windows "Overall checktime 12 min > 10 min", owner ran submit_cran() out-of-session).
+  Gated the true gene-drop convergence-stress tests behind skip_on_cran(), trimmed
+  guIter/nMax at verified-safe call sites, updated the ledger/backlog to reflect the
+  real rejection, committed the real CRAN-SUBMISSION event, and dispatched a fresh
+  win-builder Windows-devel check (results due ~11:59 AM 2026-07-16) -- DONE.
+what_was_done: Fetched verbatim 00check.log for both flavors via curl (not the email
+  summary) -- confirmed "Overall checktime" is a CRAN-incoming-only wall-clock summary,
+  not in the check log itself; Windows tests phase [334s] dominant, examples [79s] and
+  vignette-rebuild [79s] secondary. Local pkgload::load_all()-based profiling was
+  initially misleading -- 3 files are rmsharp-username-gated (never run on CRAN) and
+  test_pkgdown_reference_config.R skips once _pkgdown.yml is absent (confirmed
+  .Rbuildignore'd); found via reading every candidate file, not assumed. skip_on_cran()
+  added to 10 true convergence-stress test_that blocks across test_gvaConvergence.R (6)
+  and test_gvaConvergence_kinshipOverrides.R (4); guIter 100L->20L at 23
+  test_reportGV.R sites verified gu-magnitude-independent. Attempted the same trim in
+  reportGV()/groupAddAssign()'s roxygen @examples -- caught a NEW checkFgDegeneracy
+  warning via direct testing, reverted cleanly (git diff empty vs HEAD after
+  devtools::document()). Applied that lesson test-first to vignettes/a2interactive.Rmd
+  (same risk confirmed, skipped without editing) and vignettes/gvaConvergence.Rmd
+  (different function, no degeneracy risk -- nMax 3000L->1600L applied, re-rendered
+  clean, recommendedIter/converged/nRankable unchanged at 800/TRUE/70). Full regression:
+  0 failed/0 error/0 warning in both dev mode (3895 passed) and CRAN mode (3197 passed,
+  179 skipped); local CRAN-relevant test total ~70s->~43s (~38%). Updated BACKLOG.md/
+  cran-comments.md/CHANGELOG.md/PROJECT_LEARNINGS.md (Learning 360)/CLAUDE.md. Three
+  commits: c24b1c24 (code/test/vignette fix), 17506e34 (docs/ledger), 7043e9c1
+  (CRAN-SUBMISSION event record). Dispatched devtools::check_win_devel() (owner-approved
+  via AskUserQuestion, mirroring S361/S390 precedent).
+next_steps: Win-builder Windows-devel results due by email ~11:59 AM 2026-07-16
+  (rmsharp@me.com) -- fetch the verbatim 00check.log (not just the email), confirm the
+  timing dropped with real margin and no "Overall checktime" note recurs. If still
+  close to 10 min, next levers: test_appServer_server.R/test_modSummaryStats*.R/
+  test_modPedigree.R (not yet investigated), or more headroom on test_reportGV.R's
+  guIter=20. devtools::submit_cran() remains owner-only regardless of how clean the
+  fresh run comes back.
+key_files: tests/testthat/test_gvaConvergence.R (6 skip_on_cran() adds),
+  tests/testthat/test_gvaConvergence_kinshipOverrides.R (4 skip_on_cran() adds),
+  tests/testthat/test_reportGV.R (23 guIter sites), vignettes/gvaConvergence.Rmd:119-125,
+  BACKLOG.md, cran-comments.md, CHANGELOG.md, PROJECT_LEARNINGS.md (Learning 360),
+  CLAUDE.md, CRAN-SUBMISSION, HANDOFFS.md (this receipt).
+gotchas: Do NOT re-attempt lowering guIter in reportGV()/groupAddAssign()'s roxygen
+  examples or vignettes/a2interactive.Rmd without re-testing empirically first --
+  guIter<=30 reliably triggers a NEW checkFgDegeneracy warning on that fixture
+  (Learning 360b). The R CMD build . hang (Learning 360c, ~30+ min, 0.6 CPU-seconds,
+  cause unresolved) persisted even with R_PROFILE_USER disabled -- devtools::
+  check_win_devel()'s internal pkgbuild::build() did NOT hit it, a viable alternative
+  path if a future session needs an authoritative local R CMD check --as-cran run.
+runtime_smoke: n/a -- test-execution-policy/gene-drop-iteration/vignette-content
+  changes only, no R/ production runtime behavior changed. Equivalent verification:
+  full regression suite (0 failed/0 error/0 warning both NOT_CRAN states) + vignette
+  re-render confirmed via direct HTML inspection.
+changelog_ref: CHANGELOG.md 2026-07-16 "Fix real CRAN incoming-check rejection: Windows Overall checktime > 10 min (Session 392)"
+commit: c24b1c24 / 17506e34 / 7043e9c1
+```
+
+\<Self-score 8/10. Strengths: fetched verbatim check logs rather than
+trusting summaries; read every candidate file (and grepped beyond them)
+before proposing edits, catching 4 false-positive files and 2 real
+contributors the initial profile missed; caught the checkFgDegeneracy
+regression via direct empirical testing before it shipped, on both the
+file where it was found the hard way and the one tested proactively
+afterward; respected the 5-file blast-radius cap across 3 concern-scoped
+commits; posed both the fix-strategy and win-builder-dispatch decisions
+via AskUserQuestion rather than assuming scope. Weaknesses:
+edited+regenerated docs for the first roxygen-example trim before
+testing its safety (should have tested first, as was correctly done
+afterward); sank ~30 min into two R CMD build hangs before pivoting to a
+working profiling alternative – should have pivoted after the first; the
+build hang’s true cause remains unresolved, flagged honestly rather than
+presented as solved.\>
+
+``` handoff
+session: S391
+date: 2026-07-16
+
+```handoff
 session: S391
 date: 2026-07-16
 status: complete
