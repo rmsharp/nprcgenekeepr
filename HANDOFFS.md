@@ -70,17 +70,17 @@ it would name); the next session reconciles them to real shas.
 ``` handoff
 session: S390
 date: 2026-07-16
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Re-trigger win-builder (devtools::check_win_devel/release/oldrelease()) and R-hub (rhub::rhub_check platforms=c("linux","windows","macos")) on current master per docs/planning/cran-2.0.0-phase5-runbook.md Sec.2-3 -- refreshes the CRAN 2.0.0 pre-submission gate (last run S361/362, now 27 commits stale) and confirms whether S389's .Names= fix resolved the deprecated-special-names NOTE. Owner explicitly scoped this session to trigger now via AskUserQuestion, mirroring the S361 precedent; devtools::submit_cran() stays owner-only regardless. TDD Phase: N/A (build/verify/release-mechanics action).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: Re-trigger win-builder (devtools::check_win_devel/release/oldrelease()) and R-hub (rhub::rhub_check platforms=c("linux","windows","macos")) on current master per docs/planning/cran-2.0.0-phase5-runbook.md Sec.2-3 -- refreshes the CRAN 2.0.0 pre-submission gate (last run S361/362, now 27+ commits stale) and confirms whether S389's .Names= fix resolved the deprecated-special-names NOTE -- DONE (dispatch side; results are async). TDD Phase: N/A (build/verify/release-mechanics action, no R/tests code changed).
+what_was_done: Owner picked CRAN resubmission from the Phase 0 priorities list. Checked R environment first (R 4.6.1, devtools/rhub/gitcreds all present) before posing the trigger-scope AskUserQuestion (session triggers now / owner runs themselves / hold) -- owner picked "session triggers now," mirroring S361. Claimed the session (commit cda19a67) before any technical work. Before dispatching, checked origin sync: git log origin/master..master found 5 commits ahead, git branch -r --contains 264596b6 was empty -- S389's actual .Names= fix commit was unpushed, and R-hub checks GitHub's copy of master, not local. Posed a second AskUserQuestion (push then trigger both / win-builder only, skip R-hub) since pushing is a distinct shared-state action -- owner picked "push then trigger both." git push origin master (fast-forward, 971bf3c9..cda19a67, no force). Dispatched devtools::check_win_devel()/check_win_release()/check_win_oldrelease() -- all confirmed ("results in 15-30 mins" to rmsharp@me.com). Ran rhub::rhub_doctor() (all green) then rhub::rhub_check(platforms=c("linux","windows","macos")) -- dispatched as run "hillocked-veery" (id 29473979892), confirmed in_progress via gh run list. While confirming, found an unlogged completed R-hub run "cyclopean-iguanodon" (2026-07-16 ~01:15, success) -- asked the owner directly rather than assuming; owner confirmed they triggered it themselves before S389's fix existed (informational only, mirrors the S389 check_win_devel() owner-run precedent, no CHANGELOG gap to backfill). Updated CHANGELOG.md, BACKLOG.md's CRAN item, added PROJECT_LEARNINGS.md Learning 359 (push-before-R-hub gap) and bumped CLAUDE.md's cross-reference count (358->359, Sessions 1-388+ -> 1-390+). Commit: pending (lands in this close-out commit).
+next_steps: Results are NOT yet in -- check rmsharp@me.com for 3 win-builder emails (~15-30 min after ~05:30) and gh run list / https://github.com/rmsharp/nprcgenekeepr/actions for "hillocked-veery" (R-hub, historically 30-45 min). Once in: confirm the .Names= NOTE is actually gone on win-builder R-devel specifically, fold all results into cran-comments.md Sec.4 (replacing the stale S361/362 numbers), then devtools::submit_cran() + maintainer-email-confirmation-click (owner-only, HARD STOP, unchanged). Mirrors the S361->S362 trigger/process split. Other standing items: Document 2 Phase D (READY, Effort M); LabKey remainder (BLOCKED).
+key_files: docs/planning/cran-2.0.0-phase5-runbook.md (read, Sec.2-3 followed), cran-comments.md (read, NOT yet updated -- awaits results), BACKLOG.md (CRAN item updated), CHANGELOG.md (new 2026-07-16 S390 entry), PROJECT_LEARNINGS.md (Learning 359), CLAUDE.md (cross-reference count), HANDOFFS.md (this receipt).
+gotchas: R-hub checks the code ON GITHUB, not local working tree -- if local is ahead of origin by even one non-doc commit, R-hub silently re-tests stale code instead of erroring (see Learning 359). Always diff origin/master..master and check whether any ahead commit touches R/tests/DESCRIPTION/NAMESPACE before trusting an R-hub dispatch. Win-builder is unaffected (uploads the local tarball directly). R-hub run ids/labels: "hillocked-veery" = this session (post-fix, authoritative); "cyclopean-iguanodon" = owner's own pre-fix run, superseded, ignore its result.
+runtime_smoke: Not satisfiable this session -- stated explicitly, not silently skipped. The actual verification (do the checks pass, is the .Names= NOTE gone) is asynchronous; "4 triggers dispatched without error" confirms the checks are running, not that they will pass. A follow-on session must read the actual results.
+changelog_ref: CHANGELOG.md 2026-07-16 "Re-trigger win-builder + R-hub for CRAN 2.0.0 gate; push local-ahead commits (Session 390)"
+commit: pending (lands in this close-out commit)
 ```
 
 ``` handoff
