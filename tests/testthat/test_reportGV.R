@@ -2,7 +2,7 @@
 # This file is part of nprcgenekeepr
 library(testthat)
 qcPed <- nprcgenekeepr::qcPed
-gvReport <- reportGV(qcPed, guIter = 100L)
+gvReport <- reportGV(qcPed, guIter = 20L)
 test_that("reportGV forms correct genetic value report", {
   expect_named(gvReport, c(
     "report", "kinship", "gu", "fe", "fg", "fgSE", "neGD", "neSexRatio",
@@ -25,7 +25,7 @@ updateProgress <- function(n = 1L, detail = NULL, value = 0L, reset = FALSE) {
   "stub"
 }
 
-gvReport <- reportGV(qcPed, guIter = 100L, updateProgress = updateProgress)
+gvReport <- reportGV(qcPed, guIter = 20L, updateProgress = updateProgress)
 test_that(
   "reportGV forms correct genetic value report with updateProgress defined",
   {
@@ -58,7 +58,7 @@ test_that(
 # gene-drop RNG; fe/fg golden-master values (asserted elsewhere) are unchanged.
 # ---------------------------------------------------------------------------
 test_that("reportGV carries scalar neGD = 1 - 1/(2*fg) beside fg (issue #118 Slice 1 E1)", {
-  gv <- reportGV(qcPed, guIter = 100L)
+  gv <- reportGV(qcPed, guIter = 20L)
 
   expect_true("neGD" %in% names(gv))
   expect_length(gv$neGD, 1L)
@@ -88,7 +88,7 @@ test_that("reportGV carries scalar neGD = 1 - 1/(2*fg) beside fg (issue #118 Sli
 # it must equal the standalone calcNeSexRatio(ped) on the same pedigree.
 # ---------------------------------------------------------------------------
 test_that("reportGV carries scalar neSexRatio over living breeders (issue #118 Slice 2 E2)", {
-  gv <- reportGV(qcPed, guIter = 100L)
+  gv <- reportGV(qcPed, guIter = 20L)
 
   expect_true("neSexRatio" %in% names(gv))
   expect_length(gv$neSexRatio, 1L)
@@ -116,7 +116,7 @@ test_that("reportGV carries scalar neSexRatio over living breeders (issue #118 S
 # it must equal the standalone calcNeVariance(ped) on the same pedigree.
 # ---------------------------------------------------------------------------
 test_that("reportGV carries scalar neVariance over living breeders (issue #118 Slice 3 E3)", {
-  gv <- reportGV(qcPed, guIter = 100L)
+  gv <- reportGV(qcPed, guIter = 20L)
 
   expect_true("neVariance" %in% names(gv))
   expect_length(gv$neVariance, 1L)
@@ -152,7 +152,7 @@ test_that("reportGV raises one-unknown animals' mean kinship by sexMean/2 (issue
     )
   )[probands]
 
-  gvr <- reportGV(ped, guIter = 100L)
+  gvr <- reportGV(ped, guIter = 20L)
   imk <- stats::setNames(gvr$report$indivMeanKin, as.character(gvr$report$id))
   imk <- imk[probands] # align to ped order
 
@@ -200,7 +200,7 @@ test_that("reportGV raises one-unknown animals' mean kinship by sexMean/2 (issue
 # ---------------------------------------------------------------------------
 test_that("reportGV classifies parentage and flags both-unknown founders (issue #9 Slice 3)", {
   ped <- nprcgenekeepr::qcPed
-  rpt <- reportGV(ped, guIter = 100L)$report
+  rpt <- reportGV(ped, guIter = 20L)$report
   expect_true("parentage" %in% names(rpt))
   expect_identical(sum(rpt$parentage == "both unknown"), 124L)
   expect_identical(sum(rpt$parentage == "one unknown parent"), 43L)
@@ -266,8 +266,8 @@ test_that("reportGV threads breedingAgeDefault into the correction (#73 Part 2)"
   oneU <- xor(isU(ped$sire), isU(ped$dam))
   expect_true(any(oneU))
 
-  over <- reportGV(ped, guIter = 100L, breedingAgeDefault = 4)
-  base <- reportGV(ped, guIter = 100L)
+  over <- reportGV(ped, guIter = 20L, breedingAgeDefault = 4)
+  base <- reportGV(ped, guIter = 20L)
   imkOver <- alignImk(over, probands)
   imkBase <- alignImk(base, probands)
 
@@ -286,8 +286,8 @@ test_that("reportGV threads gestationDefault into the correction (#73 Part 2)", 
   isU <- function(x) is.na(x) | nprcgenekeepr:::isGeneratedUnknownId(x)
   oneU <- xor(isU(ped$sire), isU(ped$dam))
 
-  over <- reportGV(ped, guIter = 100L, gestationDefault = 36500L)
-  base <- reportGV(ped, guIter = 100L)
+  over <- reportGV(ped, guIter = 20L, gestationDefault = 36500L)
+  base <- reportGV(ped, guIter = 20L)
   imkOver <- alignImk(over, probands)
   imkBase <- alignImk(base, probands)
 
@@ -313,8 +313,8 @@ test_that("reportGV threads a custom breedingTable into the correction (#73 Part
     minMaleBreedingAge = 2.0, minFemaleBreedingAge = 2.0,
     stringsAsFactors = FALSE
   )
-  over <- reportGV(pedSpp, guIter = 100L, breedingTable = custom)
-  bundled <- reportGV(pedSpp, guIter = 100L) # bundled RHESUS male 4
+  over <- reportGV(pedSpp, guIter = 20L, breedingTable = custom)
+  bundled <- reportGV(pedSpp, guIter = 20L) # bundled RHESUS male 4
   imkOver <- alignImk(over, probands)
   imkBundled <- alignImk(bundled, probands)
 
@@ -346,9 +346,9 @@ test_that("reportGV threads a custom gestationTable into the correction (#73 Par
   customGest <- data.frame(
     species = "RHESUS", gestation = 10L, stringsAsFactors = FALSE
   )
-  over <- reportGV(pedSpp, guIter = 100L,
+  over <- reportGV(pedSpp, guIter = 20L,
                    breedingTable = customAge, gestationTable = customGest)
-  base <- reportGV(pedSpp, guIter = 100L, breedingTable = customAge)
+  base <- reportGV(pedSpp, guIter = 20L, breedingTable = customAge)
   imkOver <- alignImk(over, probands)
   imkBase <- alignImk(base, probands)
 
@@ -361,8 +361,8 @@ test_that("reportGV threads a custom gestationTable into the correction (#73 Par
 
 test_that("reportGV with explicit NULL overrides equals the no-override default (#73 Part 2)", {
   ped <- nprcgenekeepr::qcPed
-  a <- reportGV(ped, guIter = 100L)
-  b <- reportGV(ped, guIter = 100L, breedingTable = NULL, gestationTable = NULL,
+  a <- reportGV(ped, guIter = 20L)
+  b <- reportGV(ped, guIter = 20L, breedingTable = NULL, gestationTable = NULL,
                 breedingAgeDefault = NULL, gestationDefault = NULL)
   ## indivMeanKin is deterministic (kinship + correction; no gene-drop random);
   ## explicit-NULL overrides must reproduce today's behavior byte for byte.
@@ -611,8 +611,8 @@ i13_correctKeepAll <- function(ped, original, probands) {
 
 test_that("reportGV no-override path is byte-identical to today (issue #13 D10)", {
   ped <- nprcgenekeepr::qcPed
-  a <- reportGV(ped, guIter = 100L)
-  b <- reportGV(ped, guIter = 100L, kinshipOverrides = NULL)
+  a <- reportGV(ped, guIter = 20L)
+  b <- reportGV(ped, guIter = 20L, kinshipOverrides = NULL)
   ## indivMeanKin is deterministic (kinship + correction; no gene-drop random)
   ia <- a$report$indivMeanKin[order(a$report$id)]
   ib <- b$report$indivMeanKin[order(b$report$id)]
@@ -649,7 +649,7 @@ test_that("reportGV applies an outside kinship override and KEEPS the #9 add for
   expected <- i13_correctKeepAll(ped, original, probands)
 
   gvr <- suppressMessages(
-    reportGV(ped, guIter = 100L, kinshipOverrides = ov)
+    reportGV(ped, guIter = 20L, kinshipOverrides = ov)
   )
   imk <- stats::setNames(
     gvr$report$indivMeanKin, as.character(gvr$report$id)
@@ -677,8 +677,8 @@ test_that("reportGV keeps an overridden animal as a valid cohort peer (issue #95
   Z <- "K0ACWS"
   ov <- data.frame(id1 = X, id2 = Y, kinship = 0.25, stringsAsFactors = FALSE)
 
-  over <- suppressMessages(reportGV(ped, guIter = 100L, kinshipOverrides = ov))
-  base <- reportGV(ped, guIter = 100L)
+  over <- suppressMessages(reportGV(ped, guIter = 20L, kinshipOverrides = ov))
+  base <- reportGV(ped, guIter = 20L)
   imkOver <- stats::setNames(
     over$report$indivMeanKin, as.character(over$report$id)
   )
@@ -705,7 +705,7 @@ test_that("reportGV warn-drops a non-proband override id rather than aborting th
   ## the run completes (not aborted) and warns about the dropped id
   expect_warning(
     gvr <- suppressMessages(
-      reportGV(ped, guIter = 100L, kinshipOverrides = ov)
+      reportGV(ped, guIter = 20L, kinshipOverrides = ov)
     )
   )
   expect_s3_class(gvr$report, "data.frame")

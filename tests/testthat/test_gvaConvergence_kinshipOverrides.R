@@ -67,6 +67,7 @@ makeConvFixtureOv <- function() {
 # byte-identical to the no-override run -- the default code path is untouched.
 # --------------------------------------------------------------------------
 test_that("gvaConvergence with NULL or zero-row overrides equals the no-override run", {
+  skip_on_cran() # nMax = 800L convergence-stress fixture; see test_gvaConvergence.R banner
   fx <- makeConvFixtureOv()
   base <- gvaConvergence(fx$ped, pop = fx$pop, nMax = 800L, seed = 11L)
 
@@ -95,6 +96,7 @@ test_that("gvaConvergence with NULL or zero-row overrides equals the no-override
 # so the perturbation is robust (verified to move the curve at this nMax/seed).
 # --------------------------------------------------------------------------
 test_that("gvaConvergence applies kinship overrides to the ranking (deterministic)", {
+  skip_on_cran() # nMax = 800L convergence-stress fixture; see test_gvaConvergence.R banner
   fx <- makeConvFixtureOv()
   off <- fx$pop
   ov <- data.frame(
@@ -124,6 +126,7 @@ test_that("gvaConvergence applies kinship overrides to the ranking (deterministi
 # aborts the diagnostic. With only an out-of-set row, the result equals baseline.
 # --------------------------------------------------------------------------
 test_that("gvaConvergence warn-drops an out-of-set override id without aborting", {
+  skip_on_cran() # nMax = 800L convergence-stress fixture; see test_gvaConvergence.R banner
   fx <- makeConvFixtureOv()
   # founders (e.g. S001) are excluded from the proband population
   expect_false("S001" %in% fx$pop)
@@ -148,6 +151,7 @@ test_that("gvaConvergence warn-drops an out-of-set override id without aborting"
 # leaf and gvaConvergence must not swallow that error.
 # --------------------------------------------------------------------------
 test_that("gvaConvergence errors on an override above the PSD bound", {
+  skip_on_cran() # nMax = 800L convergence-stress fixture; see test_gvaConvergence.R banner
   fx <- makeConvFixtureOv()
   # an offspring pair's self-kinship is ~0.5, so the bound is ~0.5; 0.9 exceeds it
   badVal <- data.frame(

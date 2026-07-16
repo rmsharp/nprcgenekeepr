@@ -82,6 +82,7 @@ makeConvergenceFixture <- function() {
 # flag, the criteria used, and the rankable / Undetermined diagnostics.
 # --------------------------------------------------------------------------
 test_that("gvaConvergence returns a well-formed convergence object", {
+  skip_on_cran() # nMax = 3000L convergence-stress fixture; see file banner
   fx <- makeConvergenceFixture()
   res <- gvaConvergence(fx$ped, pop = fx$pop, nMax = 3000L, seed = 11L)
 
@@ -115,6 +116,7 @@ test_that("gvaConvergence returns a well-formed convergence object", {
 # be deterministic (TDD contract); the diagnostic must not be flaky.
 # --------------------------------------------------------------------------
 test_that("gvaConvergence is deterministic under a fixed seed", {
+  skip_on_cran() # nMax = 3000L convergence-stress fixture; see file banner
   fx <- makeConvergenceFixture()
   a <- gvaConvergence(fx$ped, pop = fx$pop, nMax = 3000L, seed = 11L)
   b <- gvaConvergence(fx$ped, pop = fx$pop, nMax = 3000L, seed = 11L)
@@ -132,6 +134,7 @@ test_that("gvaConvergence is deterministic under a fixed seed", {
 # for both would be useless; this is the test bundled data cannot exercise.
 # --------------------------------------------------------------------------
 test_that("gvaConvergence recommends more iterations for the hard pedigree than for qcPed", {
+  skip_on_cran() # nMax = 3000L convergence-stress fixture; see file banner
   fx <- makeConvergenceFixture()
   hard <- gvaConvergence(fx$ped, pop = fx$pop, nMax = 3000L, seed = 11L)
   easy <- gvaConvergence(nprcgenekeepr::qcPed, nMax = 3000L, seed = 11L)
@@ -159,6 +162,7 @@ test_that("gvaConvergence recommends more iterations for the hard pedigree than 
 # the SMALLEST assessed N meeting both; every smaller N must fail at least one.
 # --------------------------------------------------------------------------
 test_that("recommendedIter is the smallest iteration count meeting both criteria", {
+  skip_on_cran() # nMax = 3000L convergence-stress fixture; see file banner
   fx <- makeConvergenceFixture()
   res <- gvaConvergence(fx$ped, pop = fx$pop, nMax = 3000L, seed = 11L)
   skip_if(is.na(res$recommendedIter))
@@ -186,6 +190,7 @@ test_that("recommendedIter is the smallest iteration count meeting both criteria
 # founders, leaving 156 rankable animals (matches test_reportGV.R).
 # --------------------------------------------------------------------------
 test_that("gvaConvergence excludes the issue #76 Undetermined set and reports its count", {
+  skip_on_cran() # nMax = 3000L still runs the full gene drop regardless of qcPed's fast convergence
   res <- gvaConvergence(nprcgenekeepr::qcPed, nMax = 3000L, seed = 11L)
   expect_identical(as.integer(res$nUndetermined), 124L)
   expect_identical(
@@ -200,6 +205,7 @@ test_that("gvaConvergence excludes the issue #76 Undetermined set and reports it
 # iterations -> smaller variation in the estimates" relationship from issue #2.
 # --------------------------------------------------------------------------
 test_that("gvaConvergence agreement improves from the smallest to the largest iteration count", {
+  skip_on_cran() # nMax = 3000L convergence-stress fixture; see file banner
   fx <- makeConvergenceFixture()
   cv <- gvaConvergence(fx$ped, pop = fx$pop, nMax = 3000L, seed = 11L)$convergence
   n <- nrow(cv)

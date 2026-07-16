@@ -116,13 +116,13 @@ nrow(fx$ped)      # total animals (founders + offspring)
 length(fx$pop)    # offspring (the analyzed population)
 ```
 
-We assess iteration counts from 25 up to 1500 (a fixed `seed` makes the curve
+We assess iteration counts from 25 up to 800 (a fixed `seed` makes the curve
 reproducible):
 
 ```{r fixture-convergence}
 conv <- gvaConvergence(
-  fx$ped, pop = fx$pop, nMax = 3000L,
-  grid = c(25L, 50L, 100L, 200L, 400L, 800L, 1500L), seed = 11L
+  fx$ped, pop = fx$pop, nMax = 1600L,
+  grid = c(25L, 50L, 100L, 200L, 400L, 800L), seed = 11L
 )
 
 kable(
