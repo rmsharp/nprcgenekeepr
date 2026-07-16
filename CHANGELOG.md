@@ -100,9 +100,11 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
   official `R CMD check --as-cran` timing -- that run hung on this machine;
   see Diagnosis above). `cran-comments.md` and `BACKLOG.md` updated to reflect
   the real rejection (not "gate fully clean") and this fix.
-- **Next (unchanged, still needed):** a fresh win-builder Windows-devel trigger
-  to confirm the real checktime drops with margin before any resubmission
-  attempt; `devtools::submit_cran()` itself remains owner-only per SAFEGUARDS.
+- **Dispatched (owner-approved via `AskUserQuestion`, mirroring the S361/S390
+  precedent that pretest triggers are session-doable):**
+  `devtools::check_win_devel()` -- results due by email ~11:59 AM 2026-07-16.
+  Processing them is the next session's work (mirroring the S390->S391 split).
+  `devtools::submit_cran()` itself remains owner-only per SAFEGUARDS.
 - TDD Phase: REFACTOR (test/example/vignette runtime reduction; no production
   behavior change; full regression suite green throughout).
 
