@@ -104,10 +104,20 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       instead of `WriteXLS`, removing the Perl-on-Windows dependency entirely;
       see `CHANGELOG.md`. Results folded into
       `cran-comments.md`'s "Test environments" section. **Pre-submission gate is
-      now clean across every environment actually run this cycle.** Next (owner
-      action, unchanged): `devtools::submit_cran()`, then click the
-      maintainer-email confirmation link -- both still owner-only per SAFEGUARDS
-      and the runbook's HARD STOP.
+      now clean across every environment actually run this cycle.** **Local gate
+      re-verified S388 (2026-07-16):** 25 commits touched `R/`/`tests/`/
+      `DESCRIPTION`/`NAMESPACE` since the S359 confirmation -- `R CMD build .` +
+      `R CMD check --as-cran --timings` re-run on current `master` (`79380fba`)
+      still returns `0 errors | 0 warnings | 1 note` (timings unchanged within
+      noise). `cran-comments.md`'s existing prose numbers remain accurate, no
+      edit needed. Owner scoped this re-verify to local-only; win-builder/R-hub
+      results on file are still from S361/362, now also 25 commits stale --
+      re-triggering them (owner-scoped, outward-facing) is still open before
+      submission. See `docs/planning/cran-2.0.0-phase5-runbook.md` and
+      `PROJECT_LEARNINGS.md` Learning 358. Next (owner action, unchanged):
+      decide whether to re-trigger win-builder/R-hub, then
+      `devtools::submit_cran()` and click the maintainer-email confirmation
+      link -- all still owner-only per SAFEGUARDS and the runbook's HARD STOP.
 
 ## Housekeeping
 - [ ] (none remaining -- the "clean up stale untracked leftover files" item (filed

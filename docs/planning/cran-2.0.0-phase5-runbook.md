@@ -72,6 +72,32 @@ prediction did not hold:**
 - **Still owner-only, unchanged:** `devtools::submit_cran()` and the
   maintainer-email confirmation click.
 
+**Refreshed again by Session 388 (2026-07-16)** — 25 commits touched
+`R/`/`tests/`/`DESCRIPTION`/`NAMESPACE` since the S359 gate (`19ae5657`),
+including the full XARCH-2 module-contract refactor (S372-377) and XARCH-5
+Phase 1 (S386) — the same order of staleness that triggered a mandatory
+re-run at S359 (which flagged only 9 commits). Owner scoped this session to
+**local re-verify only** (via `AskUserQuestion`), explicitly deferring
+win-builder/R-hub re-triggering. Re-ran `R CMD build .` (from the package
+root, so renv resolves `openxlsx` and the rest of the project library —
+running `R CMD check` from outside the package root, without renv active,
+produces a false `ERROR: Package required but not available: 'openxlsx'`;
+use `R CMD check --output=<dir>` to keep check artifacts out of the repo tree
+while still running from the package root) + `R CMD check --as-cran
+--timings` on current `master` (`79380fba`, package code unchanged from
+`971bf3c9` — the claim commit touched only `SESSION_NOTES.md`/`HANDOFFS.md`)
+in the scratch directory. Result: **`0 errors | 0 warnings | 1 note`**
+(the expected incoming-feasibility note only) — timings essentially
+unchanged from S359/S362: examples 23s (slowest single example
+`groupAddAssign` 1.486s), tests 87s, vignette rebuild 20s — all inside prior
+headroom. **`cran-comments.md`'s existing prose numbers ("about 1.4s",
+"about 23s", "about 86s", "about 21s") remain accurate as written; no edit
+needed.** **Residual staleness, explicitly accepted this session:**
+win-builder/R-hub results on file are still from S361/362, i.e. from before
+these same 25 commits — the owner chose not to re-trigger them this session
+and will decide when to (mirroring the S361 owner-scoped precedent) before
+running `devtools::submit_cran()`.
+
 **Why this is a runbook, not an executed step.** win-builder and R-hub v2 are
 **outward-facing** (they upload the package to external services), need **network**
 access and your **GitHub token**, and return results **asynchronously** (win-builder by

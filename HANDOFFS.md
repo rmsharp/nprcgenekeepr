@@ -61,18 +61,18 @@ would name); the next session reconciles them to real shas.
 
 ```handoff
 session: S388
-date: 2026-07-15
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Re-verify the local CRAN --as-cran gate remains clean on current master (25 commits touching R/tests/DESCRIPTION/NAMESPACE since the last confirmed run, S359 commit 19ae5657) before the owner-only devtools::submit_cran() step. TDD Phase: N/A (build/verify action, no R/ or tests/ code changed).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+date: 2026-07-16
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: Re-verify the local CRAN --as-cran gate remains clean on current master (25 commits touching R/tests/DESCRIPTION/NAMESPACE since the last confirmed run, S359 commit 19ae5657) before the owner-only devtools::submit_cran() step -- DONE. TDD Phase: N/A (build/verify action, no R/ or tests/ code changed).
+what_was_done: Checked gate currency before claiming: git log 19ae5657..HEAD found 25 commits touching R/tests/DESCRIPTION/NAMESPACE since S359's last confirmed run, exceeding the 9-commit threshold that triggered a mandatory re-run at S359 itself. Owner scoped this session to local-only re-verify via AskUserQuestion. Built the tarball with R CMD build . (from the package root, so renv resolves openxlsx and the rest of the project library -- a first attempt from the scratchpad directory produced a false ERROR: Package required but not available: 'openxlsx' since R CMD check/build only activate renv from the package root). Ran R CMD check --as-cran --timings --output=<scratch-dir> from the package root: 0 errors | 0 warnings | 1 note (expected incoming-feasibility note only), timings unchanged within noise (examples 23s, tests 87s, vignette rebuild 20s, slowest example groupAddAssign 1.486s). Confirmed cran-comments.md's existing prose numbers remain accurate, no edit needed. Updated docs/planning/cran-2.0.0-phase5-runbook.md and BACKLOG.md's CRAN item with the re-verification result and the explicitly-deferred win-builder/R-hub re-trigger. Added PROJECT_LEARNINGS.md Learning 358 (renv/cwd R CMD check gotcha + CRAN-gate-staleness process gap) and updated CLAUDE.md's learnings cross-reference count (357->358). Added CHANGELOG.md 2026-07-16 S388 entry. Commit: pending (lands in this close-out commit).
+next_steps: Pick from the standing BACKLOG priorities: Document 2 Phase D (READY, Effort M); LabKey integration remainder (BLOCKED -- needs a live LabKey server, Effort M); CRAN resubmission (owner-only from here -- decide whether to re-trigger win-builder/R-hub, since those results are now also 25-commits stale, then devtools::submit_cran() + email confirmation click).
+key_files: docs/planning/cran-2.0.0-phase5-runbook.md (S388 refresh-log entry), BACKLOG.md (CRAN item updated), cran-comments.md (read, confirmed accurate, not modified), PROJECT_LEARNINGS.md (Learning 358), CLAUDE.md (cross-reference count), CHANGELOG.md (new 2026-07-16 S388 entry), HANDOFFS.md (this receipt). Build/check artifacts in the session scratchpad, not the repo.
+gotchas: R CMD build/R CMD check must run FROM the package root for renv to activate (.Rprofile sources renv/activate.R) -- running elsewhere produces a false "Package required but not available" ERROR. Use R CMD check --output=<dir> <tarball> from the package root to keep .Rcheck artifacts out of the repo tree while renv stays active. Win-builder/R-hub results on file are still from S361/362, now also 25-commits stale -- re-triggering is outward-facing (network + GitHub token) and owner-scoped per the S361 precedent, pose via AskUserQuestion before triggering.
+runtime_smoke: Satisfied by the deliverable itself -- R CMD check --as-cran installs the package, loads the namespace, runs the full example suite (23s) and full test suite (87s), and rebuilds all vignettes (20s) in a clean R session. No separate smoke test needed; this IS the runtime verification.
+changelog_ref: CHANGELOG.md 2026-07-16 "Re-verify CRAN 2.0.0 local --as-cran gate on current master (Session 388)"
+commit: pending (lands in this close-out commit)
 ```
 
 ```handoff
