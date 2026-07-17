@@ -62,20 +62,74 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S396
 date: 2026-07-16
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Dispatch a fresh win-builder Windows-devel check
-  (devtools::check_win_devel()) to confirm S395's CRAN checktime fixes
-  resolve the archived-rejection failure class, before the CRAN 2.0.0
-  resubmit/wait/hold decision.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE (dispatch only) -- dispatched a fresh win-builder
+  Windows-devel check (devtools::check_win_devel()) to confirm S395's
+  CRAN checktime fixes resolve the archived-rejection failure class
+  ("Overall checktime 12 min > 10 min" on Windows r-devel). Results are
+  asynchronous (~15-30 min via email) -- processing them is the next
+  session's work, mirroring the S361->S362 and S390->S391 split.
+what_was_done: Confirmed a clean, in-sync tree at Phase 0 (no ghost
+  session, CHANGELOG.md/HANDOFFS.md both current). Scoped narrowly to
+  BACKLOG.md's literal "Next" text -- one win-builder Windows-devel check,
+  not the broader S390 pattern (x3 win-builder + R-hub) -- since the
+  BACKLOG item itself calls for only that single Effort-S action this
+  cycle. Ran devtools::check_win_devel(quiet = FALSE) from the project
+  root; build succeeded (nprcgenekeepr_2.0.0.tar.gz, vignettes rebuilt
+  OK), uploaded to win-builder.r-project.org R-devel queue. Dispatch
+  confirmed: results due to rmsharp@me.com by ~10:46 PM 2026-07-16.
+  git status confirmed clean both before and after the build. Commit
+  a2ad6c13 (session claim); no further code/doc commit needed beyond
+  this close-out commit since no implementation changed.
+next_steps: When the win-builder email arrives (~10:46 PM 2026-07-16),
+  fetch the verbatim 00check.log (not just the email summary, per this
+  project's established practice -- see S391). Confirm "0 errors | 0
+  warnings" AND explicitly check for an "Overall checktime" wall-clock
+  summary line (the exact failure class that archived the real
+  submission in S392) -- win-builder's own check log format may or may
+  not surface that summary the same way CRAN's incoming pipeline does,
+  so verify against the actual timing figures in the log, don't infer
+  from "0 errors/0 warnings" alone. If clean, update cran-comments.md's
+  Test Environments section and BACKLOG.md's CRAN item with the
+  confirmed result, then present the resubmit/wait/hold decision to the
+  owner via AskUserQuestion (devtools::submit_cran() remains owner-only
+  per SAFEGUARDS.md).
+key_files: BACKLOG.md (CRAN resubmission item, ~lines 71-88 pre-session);
+  cran-comments.md (Test Environments section to update with the new
+  result); docs/planning/cran-2.0.0-phase5-runbook.md (full runbook and
+  HARD STOP on submit_cran()); CHANGELOG.md 2026-07-16 S396 entry.
+gotchas: (1) devtools::check_win_devel() uploads a tarball built from the
+  LOCAL working tree via FTP -- unlike R-hub, it does NOT test GitHub's
+  copy, so no push was a precondition here (contrast S390, which had to
+  push before dispatching R-hub). (2) renv::status() reports an
+  out-of-sync warning (rlang 1.2.0!=1.3.0, zip repo/version drift) on
+  every Rscript invocation in this project currently -- pre-existing,
+  unrelated to the package's own DESCRIPTION/build, does not block
+  check_win_devel() dispatch; don't chase it as part of this task.
+  (3) Local R CMD check --as-cran already confirmed 0 errors/0
+  warnings/1 note with tests 59s/examples 22s/vignette-rebuild 17s (S395)
+  -- comfortably under the 10-minute threshold on local macOS hardware,
+  but the archived rejection happened specifically because win-builder's
+  Windows VM runs slower than local hardware -- a clean local check is
+  necessary but was already proven NOT sufficient; the win-builder
+  Windows result is the one that actually confirms or refutes the fix.
+runtime_smoke: n/a -- release-mechanics/verification action, no runtime
+  application behavior changed.
+changelog_ref: CHANGELOG.md 2026-07-16 S396 entry
+commit: a2ad6c13 (session claim); this receipt is finalized in the
+  close-out commit that follows.
+```
+<Score breakdown: predecessor 9/10 -- BACKLOG's literal "Next" text gave
+this session an unambiguous, correctly-scoped single action with no
+rediscovery cost; only ding is not having a fallback line for what to do
+if the archived-rejection checktime note reappears despite S395's fixes.
+Self 8/10 -- correctly scoped narrow (declined implicit S390-pattern
+scope creep), verified tree cleanliness before/after the build, correctly
+classified TDD N/A; docked one point for not explicitly weighing/
+surfacing the R-hub-and-other-win-builder-variants tradeoff as a
+considered-and-declined option rather than simply not raising it.>
 ```
 
 ```handoff
