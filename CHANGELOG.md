@@ -43,6 +43,16 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-17 · [ad hoc] Trim cran-comments.md to code changes + final timing values (Session 397 addendum)
+- **Deliverable:** owner feedback -- `cran-comments.md` (a CRAN-reviewer-facing
+  document) had accumulated a session-by-session process narrative (S392-397
+  "update"/"follow-up" paragraphs, dead-end investigations, staleness caveats)
+  that doesn't belong in front of a reviewer. Rewrote to: what code changed to
+  fix the "Overall checktime" rejection (one bullet list), and the final
+  timing values only. Process history stays in `CHANGELOG.md`/
+  `PROJECT_LEARNINGS.md`, where it already lived in full. ~2000 words -> ~470
+  words (76% reduction).
+
 ### 2026-07-17 · [ad hoc] Process win-builder Windows-devel result for CRAN 2.0.0 checktime fix -- confirms fix, owner decides to resubmit (Session 397)
 - **Deliverable:** processed S396's dispatched `devtools::check_win_devel()`
   result (owner pasted the arrived `00check.log` and email text) -- confirm
