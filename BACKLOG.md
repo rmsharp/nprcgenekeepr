@@ -111,11 +111,12 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       Full detail in `cran-comments.md`'s 2026-07-17 update note. **Owner
       decision (S397, 2026-07-17, via `AskUserQuestion`): resubmit now.**
       **Submitted -- owner ran `devtools::submit_cran()` 2026-07-17;
-      package uploaded successfully to the CRAN submission team.** Awaiting
-      the maintainer-email confirmation click (if not already done) and
-      then CRAN's actual review outcome -- asynchronous, owner-only, no
-      further engineering action open unless CRAN rejects it again. CRAN
-      responded 2026-07-09 to the PRIOR (S329) attempt:
+      package uploaded successfully to the CRAN submission team, and the
+      maintainer-email confirmation link was clicked the same day.** Now
+      fully in CRAN's review queue -- awaiting CRAN's actual review outcome,
+      asynchronous and owner-only, no further engineering action open
+      unless CRAN rejects it again. CRAN responded 2026-07-09 to the PRIOR
+      (S329) attempt:
       the v2.0.0 submission (S329, `devtools::submit_cran()`, `CRAN-SUBMISSION` sha
       `8ca8bb24`) was archived before publication because `appServer()` unconditionally
       wrote `~/nprcgenekeepr.log` on every boot, violating CRAN Policy. **Fixed in
