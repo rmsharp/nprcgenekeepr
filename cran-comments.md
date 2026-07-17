@@ -7,7 +7,7 @@ were not corrected in time"). It had been accepted and published as 1.0.8 on
 2025-07-26; the issue was "Tested elapsed times" (CRAN example/test/vignette
 timing limits).
 
-A real submission attempt on 2026-07-16 was rejected by CRAN's incoming
+A submission attempt on 2026-07-16 was rejected by CRAN's incoming
 automatic check for Windows r-devel with the same failure class: "Overall
 checktime 12 min > 10 min". Fixed by:
 
@@ -41,9 +41,10 @@ tarball: `examples` 22s, `tests` 59s, `re-building of vignette outputs` 17s.
 
 * NOTE -- checking CRAN incoming feasibility: "New submission" and "Package
   was archived on CRAN" / "Archived on 2025-07-29 as issues were not
-  corrected in time." Expected for the resubmission. Also reports
-  possibly-misspelled words in DESCRIPTION -- "EHR", "Raboin" (an author
-  surname), and "kinships" -- all spelled correctly. One reference URL,
+  corrected in time." Expected for the resubmission.
+* Words identified as possible misspellings in DESCRIPTION: EHR, Raboin,
+  and kinships are all correctly spelled.
+* One reference URL,
   <https://www.thoughtco.com/age-sex-pyramids-and-population-pyramids-1435272>,
   returns a 400 to automated checkers but is reachable in a browser.
 
