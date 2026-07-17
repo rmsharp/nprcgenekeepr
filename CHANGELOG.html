@@ -71,6 +71,18 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-16--ad-hoc-dispatch-win-builder-windows-devel-re-check-for-cran-200-gate-session-396">2026-07-16 · [ad hoc] Dispatch win-builder Windows-devel re-check for CRAN 2.0.0 gate (Session 396)<a class="anchor" aria-label="anchor" href="#id_2026-07-16--ad-hoc-dispatch-win-builder-windows-devel-re-check-for-cran-200-gate-session-396"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> owner picked this item from the Phase 0 priorities list; <code>BACKLOG.md</code>’s CRAN item named one specific next step – dispatch a fresh win-builder Windows-devel check to confirm S395’s checktime fixes before the resubmit/wait/hold decision. Deliberately scoped to just this single check (not the fuller S390 pattern of x3 win-builder variants + R-hub), matching the item’s own Effort S next-step scope rather than expanding it.</li>
+<li>
+<strong>Preflight:</strong> confirmed a clean, in-sync <code>git status</code> (<code>master</code> == <code>origin/master</code>) before dispatch. Unlike R-hub (which tests GitHub’s copy and needed a push in S390), <code>devtools::check_win_devel()</code> builds and uploads a tarball from the LOCAL working tree, so no push was a precondition here.</li>
+<li>
+<strong>Dispatched:</strong> <code>devtools::check_win_devel(quiet = FALSE)</code> from the project root. Build succeeded cleanly (<code>nprcgenekeepr_2.0.0.tar.gz</code>, vignettes rebuilt OK, routine empty-directory pruning under <code>inst/extdata/</code> only). Confirmed uploaded to win-builder.r-project.org’s R-devel queue; results due to <code>rmsharp@me.com</code> by ~10:46 PM 2026-07-16. <code>git status</code> re-confirmed clean after the build (temp build artifacts never touched the tracked tree).</li>
+<li>
+<strong>Verification:</strong> dispatch confirmed via the <code>devtools::check_win_devel()</code> console output naming the results ETA; actual pass/fail results are not yet available this session (asynchronous, mirroring the S361-&gt;S362 and S390-&gt;S391 split – processing them is the next session’s work).</li>
+<li>TDD Phase: N/A (release-mechanics/verification action; no <code>R/</code>/<code>tests/</code> code changed this session, matching S391’s precedent classification).</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-16--ad-hoc-re-open-cran-checktime-investigation-with-wider-scope-session-395">2026-07-16 · [ad hoc] Re-open CRAN checktime investigation with wider scope (Session 395)<a class="anchor" aria-label="anchor" href="#id_2026-07-16--ad-hoc-re-open-cran-checktime-investigation-with-wider-scope-session-395"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> owner redirected the closed-out S392-394 effort mid-session, explicitly authorizing test STRUCTURE changes and previously-protected iteration counts that those sessions deliberately avoided. A 7-agent investigation workflow re-profiled the full CRAN-mode test suite from scratch (methodology fix: <code>NOT_CRAN</code> must stay <em>unset</em>, not <code>"true"</code>, to mirror real CRAN skip behavior – caught and corrected before the baseline was taken) and produced risk-rated, empirically-verified fix proposals for every top offender file.</li>

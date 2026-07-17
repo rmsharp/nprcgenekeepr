@@ -116,13 +116,19 @@ once verified against a real `R CMD check` on the built tarball
 every real CRAN check) – kept as a harmless local-dev-loop speedup only,
 not counted toward the checktime goal. Real local
 `R CMD check --as-cran --timings`: `tests` 59s / `examples` 22s /
-`vignette-rebuild` 17s, `0 errors | 0 warnings | 1 note`. Next: dispatch
-a fresh win-builder Windows-devel check to confirm the real combined
-impact – see `cran-comments.md` for full detail – before the
-resubmit/wait/hold decision below, Effort S) – CRAN responded
-2026-07-09: the v2.0.0 submission (S329, `devtools::submit_cran()`,
-`CRAN-SUBMISSION` sha `8ca8bb24`) was archived before publication
-because
+`vignette-rebuild` 17s, `0 errors | 0 warnings | 1 note`. **Win-builder
+Windows-devel re-check dispatched – S396 (2026-07-16):**
+`devtools::check_win_devel()` run from the project root (clean, in-sync
+tree confirmed before and after); results due to `rmsharp@me.com` by
+~10:46 PM 2026-07-16. Deliberately scoped to this single check (not the
+fuller S390 pattern of x3 win-builder + R-hub), matching this item’s own
+Effort S next-step scope. Processing the result (verbatim `00check.log`,
+checking specifically for an “Overall checktime” note, not just “0
+errors/0 warnings”) is the next session’s work, mirroring the
+S390-\>S391 split – before the resubmit/wait/hold decision below, Effort
+S) – CRAN responded 2026-07-09: the v2.0.0 submission (S329,
+`devtools::submit_cran()`, `CRAN-SUBMISSION` sha `8ca8bb24`) was
+archived before publication because
 [`appServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/appServer.md)
 unconditionally wrote `~/nprcgenekeepr.log` on every boot, violating
 CRAN Policy. **Fixed in S349** (`R/appServer.R`: the file appender is

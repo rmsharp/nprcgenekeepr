@@ -47,6 +47,37 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-16 · \[ad hoc\] Dispatch win-builder Windows-devel re-check for CRAN 2.0.0 gate (Session 396)
+
+- **Deliverable:** owner picked this item from the Phase 0 priorities
+  list; `BACKLOG.md`’s CRAN item named one specific next step – dispatch
+  a fresh win-builder Windows-devel check to confirm S395’s checktime
+  fixes before the resubmit/wait/hold decision. Deliberately scoped to
+  just this single check (not the fuller S390 pattern of x3 win-builder
+  variants + R-hub), matching the item’s own Effort S next-step scope
+  rather than expanding it.
+- **Preflight:** confirmed a clean, in-sync `git status` (`master` ==
+  `origin/master`) before dispatch. Unlike R-hub (which tests GitHub’s
+  copy and needed a push in S390), `devtools::check_win_devel()` builds
+  and uploads a tarball from the LOCAL working tree, so no push was a
+  precondition here.
+- **Dispatched:** `devtools::check_win_devel(quiet = FALSE)` from the
+  project root. Build succeeded cleanly (`nprcgenekeepr_2.0.0.tar.gz`,
+  vignettes rebuilt OK, routine empty-directory pruning under
+  `inst/extdata/` only). Confirmed uploaded to
+  win-builder.r-project.org’s R-devel queue; results due to
+  `rmsharp@me.com` by ~10:46 PM 2026-07-16. `git status` re-confirmed
+  clean after the build (temp build artifacts never touched the tracked
+  tree).
+- **Verification:** dispatch confirmed via the
+  `devtools::check_win_devel()` console output naming the results ETA;
+  actual pass/fail results are not yet available this session
+  (asynchronous, mirroring the S361-\>S362 and S390-\>S391 split –
+  processing them is the next session’s work).
+- TDD Phase: N/A (release-mechanics/verification action; no
+  `R/`/`tests/` code changed this session, matching S391’s precedent
+  classification).
+
 ### 2026-07-16 · \[ad hoc\] Re-open CRAN checktime investigation with wider scope (Session 395)
 
 - **Deliverable:** owner redirected the closed-out S392-394 effort
