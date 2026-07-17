@@ -91,57 +91,69 @@ status: complete
 self_score: 8
 predecessor_score: 8
 active_task: DONE -- processed S396's win-builder Windows-devel result for
-  the CRAN 2.0.0 checktime fix. Check time in seconds: 588, 12s under
-  CRAN's 600s mark (down from the S392-394 cycle's 655-656s). Owner decided
-  (AskUserQuestion): resubmit now. Next action is the owner running
-  devtools::submit_cran() themselves -- owner-only per SAFEGUARDS/the
-  runbook HARD STOP. No further engineering action open on this item unless
-  CRAN rejects it again.
+  the CRAN 2.0.0 checktime fix, trimmed cran-comments.md per owner feedback,
+  and recorded the owner's real CRAN v2.0.0 submission through to maintainer
+  confirmation. **v2.0.0 is now fully in CRAN's review queue** -- no
+  engineering action open on this item unless CRAN rejects it again.
 what_was_done: Read cran-comments.md's own S393 precedent before computing
-  anything from the owner's pasted 00check.log -- this surfaced the
-  project's established distinction between a bracket-summed total (476s,
-  what the pasted log alone would have produced) and "the email's reported
-  total check time" (the actual authoritative figure). Asked the owner for
-  the full email text; got Installation time 30s / Check time 588s -- 112s
-  higher than the bracket-sum, avoiding a wrong number. Updated
-  cran-comments.md (new 2026-07-17 narrative paragraph + Test environments
-  section) and BACKLOG.md's CRAN item with the confirmed result. Presented
-  the resubmit/wait/hold decision via AskUserQuestion; owner chose resubmit
-  now. Recorded the decision in BACKLOG.md. Documented the near-miss as
-  PROJECT_LEARNINGS.md Learning 364. Commits: 9eccd624 (session claim);
-  this receipt finalizes in the close-out commit that follows.
-next_steps: No engineering action open on the CRAN item -- the owner runs
-  devtools::submit_cran() and clicks the maintainer-email confirmation link
-  themselves (owner-only). If CRAN rejects again, the next session should
-  fetch the verbatim rejection detail (not just the summary) before
-  proposing any fix, per this project's established practice. Otherwise,
-  BACKLOG.md's next READY item is "Execute Document 2 Phase D" (Effort M) --
-  see docs/planning/document2-colony-manager-guide-plan.md Section 6 Phase
-  D for full completion criteria.
-key_files: cran-comments.md (2026-07-17 S397 narrative paragraph + Test
-  environments section, lines ~119-144 and ~172-209 pre-session); BACKLOG.md
-  (CRAN item, ~lines 71-115 pre-session); CHANGELOG.md 2026-07-17 S397 entry;
-  PROJECT_LEARNINGS.md Learning 364.
+  anything from the owner's pasted 00check.log -- surfaced the project's
+  established distinction between a bracket-summed total (476s, what the
+  pasted log alone would have produced) and "the email's reported total
+  check time" (the actual authoritative figure). Asked the owner for the
+  full email text; got Installation time 30s / Check time 588s -- 112s
+  higher than the bracket-sum, avoiding a wrong number (PROJECT_LEARNINGS.md
+  Learning 364). Updated cran-comments.md and BACKLOG.md's CRAN item with
+  the confirmed result (12s under CRAN's 600s mark). Presented the
+  resubmit/wait/hold decision via AskUserQuestion; owner chose resubmit now.
+  **Addenda after initial close-out:** (1) owner flagged cran-comments.md as
+  too wordy for a CRAN-reviewer-facing doc -- rewrote to code changes +
+  final timing values only (~2000 -&gt; ~470 words); saved as a new MEMORY.md
+  feedback entry. (2) owner wording edits ("real" dropped; misspelled-words
+  NOTE split into its own bullet). (3) owner asked me to submit; declined
+  (devtools::submit_cran() is owner-only per SAFEGUARDS/the runbook HARD
+  STOP, matching the option they'd already picked) -- confirmed the tree
+  clean instead, owner ran it themselves and reported success. (4) owner
+  confirmed the maintainer-email confirmation link was also clicked.
+  BACKLOG.md/CHANGELOG.md updated at each step; one missing CHANGELOG entry
+  (the wording-fix commit) caught and backfilled during this close-out.
+  Commits: 9eccd624, c02cf028, 64858c8c, 3c7486b9, db54d325, 7586998d,
+  61804eb8, plus this final close-out commit.
+next_steps: No engineering action open on the CRAN item -- v2.0.0 is
+  submitted and maintainer-confirmed, awaiting CRAN's asynchronous review.
+  If CRAN rejects again, the next session should fetch the verbatim
+  rejection detail (not just the summary) before proposing any fix, per
+  this project's established practice (S392/S397 both did this
+  successfully). Otherwise, BACKLOG.md's next READY item is "Execute
+  Document 2 Phase D" (Effort M) -- see
+  docs/planning/document2-colony-manager-guide-plan.md Section 6 Phase D
+  for full completion criteria.
+key_files: cran-comments.md (now ~470 words -- code changes + final timing
+  values only, no per-session narrative); BACKLOG.md (CRAN item, now marked
+  submitted + maintainer-confirmed); CHANGELOG.md 2026-07-17 S397 entries
+  (5 total, newest-first); PROJECT_LEARNINGS.md Learning 364;
+  ~/.claude/.../memory/no-process-narrative-in-reviewer-facing-docs.md (new
+  feedback memory).
 gotchas: (1) win-builder's emailed "Check time in seconds" total is NOT
   reconstructible by summing the 00check.log body's individual [Ns] step
   brackets -- it lives in the email's separate wrapper text alongside
   "Installation time in seconds," and is meaningfully higher (112s in this
   case) than the bracket-sum. Always ask for/fetch that literal line rather
-  than deriving a substitute. (2) win-builder's "Check time" remains a proxy
-  for CRAN's own "Overall checktime" (the real incoming-pipeline figure),
-  not proven identical -- 12s of margin on a proxy metric is real progress
-  but not a guarantee against a repeat rejection; the owner was told this
-  explicitly before deciding. (3) win-builder R-release/R-oldrelease/R-hub
+  than deriving a substitute. (2) win-builder R-release/R-oldrelease/R-hub
   results on file are still Session 390/391-era, unconfirmed against the
   S392-395 checktime fixes (not expected at risk, since the checktime gate
-  is Windows-r-devel-specific, but not verified). (4) Gmail MCP access was
-  expired this session (token needs re-auth) -- could not independently
-  check for the win-builder email; relied on the owner pasting it directly.
+  is Windows-r-devel-specific, but not verified) -- cran-comments.md no
+  longer flags this explicitly per the trim (it's in CHANGELOG.md/here
+  instead). (3) Gmail MCP access was expired this session (token needs
+  re-auth) -- could not independently check for the win-builder email or
+  the CRAN confirmation email; relied on the owner reporting both directly.
+  (4) cran-comments.md is now established as reviewer-facing -- end-state
+  only, no per-session process narrative going forward; that history lives
+  in CHANGELOG.md/PROJECT_LEARNINGS.md.
 runtime_smoke: n/a -- release-mechanics/verification + documentation action,
   no runtime application behavior changed.
-changelog_ref: CHANGELOG.md 2026-07-17 S397 entry
-commit: 9eccd624 (session claim); this receipt is finalized in the
-  close-out commit that follows.</code></pre>
+changelog_ref: CHANGELOG.md 2026-07-17 S397 entries (5 total)
+commit: 61804eb8 (last addendum before this receipt); this receipt is
+  finalized in the close-out commit that follows.</code></pre>
 <pre class="handoff"><code>session: S396
 date: 2026-07-16
 status: complete
