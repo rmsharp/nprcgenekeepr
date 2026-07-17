@@ -47,6 +47,16 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-17 · \[ad hoc\] Submit v2.0.0 to CRAN, maintainer confirmation clicked (Session 397 addendum, owner action)
+
+- **Action:** owner ran `devtools::submit_cran()` (per the resubmit
+  decision recorded above) – package uploaded successfully to the CRAN
+  submission team – and clicked the maintainer-email confirmation link
+  the same day. v2.0.0 is now fully in CRAN’s review queue. Awaiting
+  CRAN’s actual review outcome; asynchronous and owner-only.
+  `BACKLOG.md`’s CRAN item updated to reflect the confirmed-submitted
+  status.
+
 ### 2026-07-17 · \[ad hoc\] Trim cran-comments.md to code changes + final timing values (Session 397 addendum)
 
 - **Deliverable:** owner feedback – `cran-comments.md` (a

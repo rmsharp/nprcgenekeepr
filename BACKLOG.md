@@ -141,11 +141,13 @@ now stale relative to the S392-395 fixes (not expected at risk from the
 checktime-specific issue, which is Windows-r-devel-specific, but
 unconfirmed against current code). Full detail in `cran-comments.md`’s
 2026-07-17 update note. **Owner decision (S397, 2026-07-17, via
-`AskUserQuestion`): resubmit now.** Next action is the owner running
-`devtools::submit_cran()` and clicking the maintainer-email confirmation
-link – owner-only per SAFEGUARDS/the runbook HARD STOP, no further
-engineering action this cycle unless CRAN rejects it again. CRAN
-responded 2026-07-09: the v2.0.0 submission (S329,
+`AskUserQuestion`): resubmit now.** **Submitted – owner ran
+`devtools::submit_cran()` 2026-07-17; package uploaded successfully to
+the CRAN submission team, and the maintainer-email confirmation link was
+clicked the same day.** Now fully in CRAN’s review queue – awaiting
+CRAN’s actual review outcome, asynchronous and owner-only, no further
+engineering action open unless CRAN rejects it again. CRAN responded
+2026-07-09 to the PRIOR (S329) attempt: the v2.0.0 submission (S329,
 `devtools::submit_cran()`, `CRAN-SUBMISSION` sha `8ca8bb24`) was
 archived before publication because
 [`appServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/appServer.md)
