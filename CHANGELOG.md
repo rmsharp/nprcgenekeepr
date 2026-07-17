@@ -47,6 +47,118 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-16 · \[ad hoc\] Re-open CRAN checktime investigation with wider scope (Session 395)
+
+- **Deliverable:** owner redirected the closed-out S392-394 effort
+  mid-session, explicitly authorizing test STRUCTURE changes and
+  previously-protected iteration counts that those sessions deliberately
+  avoided. A 7-agent investigation workflow re-profiled the full
+  CRAN-mode test suite from scratch (methodology fix: `NOT_CRAN` must
+  stay *unset*, not `"true"`, to mirror real CRAN skip behavior – caught
+  and corrected before the baseline was taken) and produced risk-rated,
+  empirically-verified fix proposals for every top offender file.
+- **Landed Bundle A (5 files, Low risk, zero coverage loss, all verified
+  empirically against pre-existing assertions):**
+  `tests/testthat/test_pkgdown_reference_config.R` (compute
+  [`pkgdown::as_pkgdown()`](https://pkgdown.r-lib.org/reference/as_pkgdown.html)
+  once instead of 3x, 13.1s -\> 3.76s locally – **later discovered
+  CRAN-irrelevant, see below**); `test_reportGV.R` (hoist 3 identical
+  `guIter=1000L` fixture computations to 1, 4.98s -\> 2.64s);
+  `test_appServer_dynamicTabs.R` (build
+  [`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
+  once, share between 2 read-only checks, 1.75s -\> 0.25s);
+  `test_appServer_server.R` + `test_appServer_logging.R` (several tests
+  left 4-7 downstream Shiny child modules un-stubbed despite reading
+  nothing from them – added the missing stubs, matching a pattern
+  already used correctly elsewhere in the same files; 3.85s -\> 1.53s
+  and ~2.07s -\> 0.30s respectively).
+- **Full regression suite re-confirmed clean after Bundle A:**
+  `0 failed | 0 error | 0 warning`, same `1387` tests / `179` skipped as
+  the pre-change baseline (identical coverage, no tests dropped). Suite
+  wall clock (local, CRAN-mode): `94.1s -> 74.6s`.
+- **Investigated and explicitly NOT changed (documented, not silently
+  dropped):** `test_fillGroupMembers*.R` (gated
+  `skip_if_not(user=="rmsharp")` – zero effect on CRAN regardless of any
+  fix); `test_getPotentialParents.R`’s one 3.3s test (genuine full-scale
+  regression test for a real historical bug, no test-level lever);
+  further `guIter`/`iter` reduction in examples/vignettes (the
+  `guIter<=30` degeneracy guardrail re-verified as noisy/non-monotonic –
+  guIter=25 fails, 20 and 30 pass – no safe threshold found);
+  `Config/testthat/parallel: true` (mechanism confirmed real and
+  CRAN-honored, ~1.65x measured local speedup, but requires a
+  `Config/testthat/edition: 3` migration across 264 files not audited
+  this session – deferred as a separate future effort); the ~121s
+  “untimed overhead” gap (confirmed structural: only 18 of 99
+  `R CMD check` steps get individual timing; not a package-specific
+  defect).
+- **New findings flagged for owner attention (not actioned this
+  session):**
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)/[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)/`summary.nprcgenekeeprErr.R`’s
+  unseeded `@examples` measured a 25% chance per check run of triggering
+  a real `checkFgDegeneracy()` warning – a live robustness gap,
+  independent of checktime. `test_addAnimalsWithNoRelative.R` runs the
+  same expensive full-colony computation as the CRAN-irrelevant
+  fillGroupMembers files, but unconditionally (no skip guard) – genuine
+  ~5.85s local CRAN cost this session’s baseline missed (runs outside
+  any `test_that()` block); no fix proposed yet.
+- **Bundle C dropped after discovery, not landed:**
+  `test_groupAddAssign.R`’s proposed `iter=1000->50` fix turned out to
+  be pointless for the stated goal – every one of its 7 `test_that()`
+  blocks is gated `skip_if_not(Sys.info()[["user"]]=="rmsharp")`, so the
+  whole file already contributes zero time to any real CRAN/win-builder
+  check (confirmed empirically, same class of finding as the
+  fillGroupMembers files above). Owner redirected to investigate the
+  `test_addAnimalsWithNoRelative.R` lead instead.
+- **Landed instead: `test_addAnimalsWithNoRelative.R` fixture swap (Low
+  risk).**
+  [`addAnimalsWithNoRelative()`](https://github.com/rmsharp/nprcgenekeepr/reference/addAnimalsWithNoRelative.md)
+  is a trivial NA-fill loop whose own roxygen `@examples` already use a
+  smaller `qcPed` fixture (280 rows) instead of the full
+  `examplePedigree` (3694 rows) this test used, with no historical-bug
+  significance found in git log for the larger scale. Swapped to the
+  smaller, already-precedented fixture; updated the 3 assertions to the
+  freshly-verified deterministic values (`length(kin)`: 2416 -\> 591;
+  replaced an arbitrary relative-count assertion on `"1SPLS8"` with a
+  direct [`is.na()`](https://rdrr.io/r/base/NA.html) check – it is in
+  fact the NA-fill branch at this scale, more precisely testing the
+  function’s actual purpose; added a length-34 check on `"0DAV0I"`,
+  independently corroborated against the value already shipped in the
+  function’s own roxygen example). Local cost: ~5.85s -\> ~0.01s – the
+  single largest genuinely-CRAN-relevant fix found this session, since
+  this file (unlike the fillGroupMembers files) has no skip guard and
+  runs unconditionally on every real CRAN check.
+- **Full regression suite re-confirmed clean after both changes:**
+  `0 failed | 0 error | 0 warning`, same `1387` tests / `179` skipped as
+  the original baseline throughout (dev-mode
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  profiling). Cumulative local wall clock (CRAN-mode, single
+  `test_dir()` run): `94.1s -> 68.1s` (~28% reduction).
+- **Critical correction, caught before close-out by running the actual
+  build-equivalent, not just dev-mode profiling:** `R CMD build .` +
+  `R CMD check --as-cran --timings` against the real built tarball
+  (first attempt errored on a stale library path from running outside
+  the renv-activated working directory – re-run correctly) revealed that
+  the `test_pkgdown_reference_config.R` fix – this session’s headline
+  number – is **CRAN-irrelevant**: `_pkgdown.yml` is `.Rbuildignore`’d
+  and never ships in the built tarball, so all 3 of that file’s tests
+  already skip on every real CRAN/win-builder check
+  (`_pkgdown.yml absent; guard not applicable`, confirmed in the real
+  `testthat.Rout`) – a fact `BACKLOG.md` already recorded from S392 that
+  this session’s dev-mode-only baseline missed. The fix is a harmless
+  local-dev-loop speedup only, same class of dead end as the dropped
+  [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+  change. The `test_appServer_*`/
+  `test_reportGV.R`/`test_addAnimalsWithNoRelative.R` fixes are
+  confirmed genuinely CRAN-relevant (none appear in any skip category of
+  the real check). **Real `R CMD check --as-cran --timings` result:**
+  `examples` 22s, `tests` 59s, `re-building of vignette outputs` 17s,
+  `0 errors | 0 warnings | 1 note`,
+  `[ FAIL 0 | WARN 0 | SKIP 208 | PASS 3210 ]`. See `cran-comments.md`
+  for full detail; not yet confirmed against win-builder.
+- TDD Phase: REFACTOR (test-file structure/fixture/parameter changes
+  only; no new production-code behavior – precedent: S393’s vignette
+  `n=1000->500` parameter reduction).
+
 ### 2026-07-16 · \[ad hoc\] Close out the CRAN checktime effort: real progress, practical floor reached (Session 394)
 
 - **Deliverable:** S393’s fresh win-builder Windows-devel result

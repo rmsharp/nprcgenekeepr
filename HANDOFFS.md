@@ -68,6 +68,75 @@ are legal at write time (the receipt ships in the very commit whose sha
 it would name); the next session reconciles them to real shas.
 
 ``` handoff
+session: S395
+date: 2026-07-17
+status: complete
+self_score: 7
+predecessor_score: 8
+active_task: DONE -- re-opened the CRAN 2.0.0 checktime investigation with
+  owner-authorized wider scope (test structure + previously-protected
+  iteration counts). Landed 2 real CRAN-relevant fixes, correctly declined
+  a 3rd (verified pointless before implementing), caught and corrected a
+  4th (looked like the biggest win, verified CRAN-irrelevant before
+  close-out). Win-builder confirmation is the next concrete step, not done
+  this session.
+what_was_done: Bundle A (5 files, commit 3af7651f) -- pkgdown::as_pkgdown()
+  hoisted 3x->1x (test_pkgdown_reference_config.R, later found
+  CRAN-irrelevant, see gotchas); test_reportGV.R guIter=1000L fixture
+  hoisted 3x->1x; test_appServer_dynamicTabs.R appUI() hoisted;
+  test_appServer_server.R/test_appServer_logging.R missing downstream
+  Shiny-module stubs added to under-stubbed with_mocked_bindings blocks.
+  Investigated+dropped test_groupAddAssign.R iter=1000->50 (rmsharp-gated
+  file, zero real CRAN benefit -- not implemented). Landed
+  test_addAnimalsWithNoRelative.R fixture swap (commit d7981a09,
+  examplePedigree->qcPed, ~5.85s->~0.01s, the session's only genuinely
+  large CRAN-relevant win). Ran real R CMD check --as-cran --timings on
+  the built tarball (commit 7eefa048), which surfaced the pkgdown
+  correction; updated cran-comments.md/CHANGELOG.md/BACKLOG.md accordingly.
+  Full local dev-mode regression suite clean throughout (0 failed/0
+  error/0 warning, 1387 tests/179 skipped, unchanged coverage). Real R CMD
+  check: examples 22s / tests 59s / vignette-rebuild 17s, 0 errors | 0
+  warnings | 1 note, FAIL 0 | WARN 0 | SKIP 208 | PASS 3210.
+next_steps: Dispatch a fresh win-builder Windows-devel check (S390
+  precedent, explicit owner scoping via AskUserQuestion first) to confirm
+  the real combined impact of this session's 2 genuine fixes before any
+  resubmit/wait/hold decision. Before touching any other previously-slow
+  test file, grep PROJECT_LEARNINGS.md/BACKLOG.md for that file's name
+  first (Learning 363).
+key_files: test_pkgdown_reference_config.R (CRAN-irrelevant but harmless,
+  see gotchas), test_reportGV.R:392-488, test_appServer_dynamicTabs.R:127-145,
+  test_appServer_server.R, test_appServer_logging.R,
+  test_addAnimalsWithNoRelative.R, cran-comments.md, CHANGELOG.md,
+  BACKLOG.md (CRAN item), PROJECT_LEARNINGS.md Learning 363
+gotchas: (1) pkgdown fix is real but CRAN-irrelevant -- don't count it in
+  any future checktime tally. (2) Win-builder not yet re-triggered --
+  local numbers are promising (~13.8s CRAN-relevant local savings) but
+  unconfirmed at real scale. (3) Grep PROJECT_LEARNINGS.md/BACKLOG.md for
+  a file's name before touching it again -- this session paid for
+  skipping that once (Learning 363). (4) Two flagged-not-fixed findings:
+  unseeded reportGV()/groupAddAssign()/summary.nprcgenekeeprErr.R
+  @examples (~25% checkFgDegeneracy warning risk per run, independent of
+  checktime); R/addAnimalsWithNoRelative.R's own roxygen comment ("should
+  be 259") is stale (actual 591) -- minor, not fixed, out of scope. (5)
+  Standing: do not touch ColonyManagerTutorial.Rmd or lower guIter in
+  reportGV()/groupAddAssign() examples or a2interactive.Rmd -- degeneracy
+  guardrail re-verified real but noisier than documented (guIter=25
+  fails, 20/30 pass). (6) Config/testthat/parallel:true confirmed real
+  and CRAN-honored (~1.65x local) but needs a Config/testthat/edition:3
+  migration across 264 files, not audited -- future effort. (7)
+  submit_cran() owner-only. (8) Document 2 Phase D (READY, Effort M);
+  LabKey remainder (BLOCKED) unchanged.
+runtime_smoke: n/a -- test-file-only changes, no R/ production code
+  changed. Real R CMD check --as-cran on the built tarball (this
+  session's equivalent verification) confirms the changed tests execute
+  correctly under the actual CRAN mechanism, not just dev-mode.
+changelog_ref: 2026-07-16/17 CHANGELOG.md entries "Re-open CRAN checktime
+  investigation with wider scope" (2 entries, the second appending the
+  real-check correction)
+commit: 7eefa048
+```
+
+``` handoff
 session: S394
 date: 2026-07-16
 status: complete

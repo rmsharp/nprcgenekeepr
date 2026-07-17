@@ -100,11 +100,27 @@ availability/permissions are confirmed; needs a live LabKey server to
 test/observe, and a naive focal-id server filter is incompatible with
 the client-side connected-component walk).
 
-**CRAN resubmission of v2.0.0** (DECISION NEEDED – owner-only: resubmit
-at the current ~656s checktime, wait for a quieter win-builder day, or
-hold for new ideas; S392-394 exhausted the safely-findable technical
-levers (see S394’s close-out), Effort S) – CRAN responded 2026-07-09:
-the v2.0.0 submission (S329, `devtools::submit_cran()`,
+**CRAN resubmission of v2.0.0** (DECISION NEEDED – owner-only, but a
+win-builder re-check is READY as the immediate next step first: S395
+(2026-07-17) re-opened the effort S392-394 had closed as exhausted, with
+owner authorization to change test structure and previously-protected
+iteration counts. Landed 2 more real, verified-safe levers (Shiny
+testServer stub-completeness/fixture-hoisting across `test_appServer_*`/
+`test_reportGV.R`, and a fixture-size fix to
+`test_addAnimalsWithNoRelative.R` – ~5.85s -\> ~0.01s locally, the
+session’s single biggest genuinely-CRAN-relevant win). Caught and
+corrected one false lead before it shipped: the session’s other headline
+number (`test_pkgdown_reference_config.R`) turned out CRAN-irrelevant
+once verified against a real `R CMD check` on the built tarball
+(`_pkgdown.yml` is `.Rbuildignore`’d, so that file already skips on
+every real CRAN check) – kept as a harmless local-dev-loop speedup only,
+not counted toward the checktime goal. Real local
+`R CMD check --as-cran --timings`: `tests` 59s / `examples` 22s /
+`vignette-rebuild` 17s, `0 errors | 0 warnings | 1 note`. Next: dispatch
+a fresh win-builder Windows-devel check to confirm the real combined
+impact – see `cran-comments.md` for full detail – before the
+resubmit/wait/hold decision below, Effort S) – CRAN responded
+2026-07-09: the v2.0.0 submission (S329, `devtools::submit_cran()`,
 `CRAN-SUBMISSION` sha `8ca8bb24`) was archived before publication
 because
 [`appServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/appServer.md)
