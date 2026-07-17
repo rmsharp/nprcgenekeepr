@@ -228,6 +228,10 @@ test_that("appServer shows QC notifications for pass, error, and warning", {
     modPedigreeServer = stubPed,
     modGeneticValueServer = stubGV,
     modBreedingGroupsServer = stubBG,
+    modPyramidServer = noopServer,
+    modSummaryStatsServer = noopServer,
+    modGeneticDiversityServer = noopServer,
+    modPotentialParentsServer = noopServer,
     showNotification = recNote,
     .package = "nprcgenekeepr",
     {
@@ -265,6 +269,10 @@ test_that("appServer inserts and removes the Error List tab", {
     modPedigreeServer = stubPed,
     modGeneticValueServer = stubGV,
     modBreedingGroupsServer = stubBG,
+    modPyramidServer = noopServer,
+    modSummaryStatsServer = noopServer,
+    modGeneticDiversityServer = noopServer,
+    modPotentialParentsServer = noopServer,
     .package = "nprcgenekeepr",
     {
       muffleConfig(shiny::testServer(appServer, {
@@ -308,6 +316,10 @@ test_that("appServer inserts the Changed Columns tab in both positions", {
     modPedigreeServer = stubPed,
     modGeneticValueServer = stubGV,
     modBreedingGroupsServer = stubBG,
+    modPyramidServer = noopServer,
+    modSummaryStatsServer = noopServer,
+    modGeneticDiversityServer = noopServer,
+    modPotentialParentsServer = noopServer,
     .package = "nprcgenekeepr",
     {
       muffleConfig(shiny::testServer(appServer, {
@@ -364,6 +376,14 @@ test_that("appServer mounts the ORIP module only for an ONPRC configuration", {
   # Default environment: shouldShowOripTab() is FALSE -> module not mounted.
   orip$mounted <- FALSE
   testthat::with_mocked_bindings(
+    modInputServer = stubInput,
+    modPedigreeServer = stubPed,
+    modGeneticValueServer = stubGV,
+    modBreedingGroupsServer = stubBG,
+    modPyramidServer = noopServer,
+    modSummaryStatsServer = noopServer,
+    modGeneticDiversityServer = noopServer,
+    modPotentialParentsServer = noopServer,
     modORIPReportingServer = stubOrip,
     .package = "nprcgenekeepr",
     {
@@ -378,6 +398,14 @@ test_that("appServer mounts the ORIP module only for an ONPRC configuration", {
   orip$mounted <- FALSE
   testthat::with_mocked_bindings(
     shouldShowOripTab = function(center, hasConfigFile) TRUE,
+    modInputServer = stubInput,
+    modPedigreeServer = stubPed,
+    modGeneticValueServer = stubGV,
+    modBreedingGroupsServer = stubBG,
+    modPyramidServer = noopServer,
+    modSummaryStatsServer = noopServer,
+    modGeneticDiversityServer = noopServer,
+    modPotentialParentsServer = noopServer,
     modORIPReportingServer = stubOrip,
     .package = "nprcgenekeepr",
     {
@@ -407,10 +435,23 @@ test_that("appServer boots without crashing when the site config file is malform
   writeLines(c("baseUrl = \"http://example\"", "schemaName = \"study\""),
              file.path(tmp, cfg_name))
 
-  expect_no_error(
-    muffleConfig(shiny::testServer(appServer, {
-      session$flushReact()
-    }))
+  testthat::with_mocked_bindings(
+    modInputServer = stubInput,
+    modPedigreeServer = stubPed,
+    modGeneticValueServer = stubGV,
+    modBreedingGroupsServer = stubBG,
+    modPyramidServer = noopServer,
+    modSummaryStatsServer = noopServer,
+    modGeneticDiversityServer = noopServer,
+    modPotentialParentsServer = noopServer,
+    .package = "nprcgenekeepr",
+    {
+      expect_no_error(
+        muffleConfig(shiny::testServer(appServer, {
+          session$flushReact()
+        }))
+      )
+    }
   )
 })
 
@@ -430,6 +471,14 @@ test_that(paste("appServer does not mount the ORIP module when the site",
   }
 
   testthat::with_mocked_bindings(
+    modInputServer = stubInput,
+    modPedigreeServer = stubPed,
+    modGeneticValueServer = stubGV,
+    modBreedingGroupsServer = stubBG,
+    modPyramidServer = noopServer,
+    modSummaryStatsServer = noopServer,
+    modGeneticDiversityServer = noopServer,
+    modPotentialParentsServer = noopServer,
     modORIPReportingServer = stubOrip,
     .package = "nprcgenekeepr",
     {

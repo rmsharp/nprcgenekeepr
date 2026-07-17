@@ -43,6 +43,58 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-16 · [ad hoc] Re-open CRAN checktime investigation with wider scope, land Bundle A (Session 395)
+- **Deliverable:** owner redirected the closed-out S392-394 effort mid-session,
+  explicitly authorizing test STRUCTURE changes and previously-protected iteration
+  counts that those sessions deliberately avoided. A 7-agent investigation
+  workflow re-profiled the full CRAN-mode test suite from scratch (methodology
+  fix: `NOT_CRAN` must stay *unset*, not `"true"`, to mirror real CRAN skip
+  behavior -- caught and corrected before the baseline was taken) and produced
+  risk-rated, empirically-verified fix proposals for every top offender file.
+- **Landed Bundle A (5 files, Low risk, zero coverage loss, all verified
+  empirically against pre-existing assertions):**
+  `tests/testthat/test_pkgdown_reference_config.R` (compute
+  `pkgdown::as_pkgdown()` once instead of 3x -- the single biggest offender file
+  in the suite, 13.1s -> 3.76s); `test_reportGV.R` (hoist 3 identical
+  `guIter=1000L` fixture computations to 1, 4.98s -> 2.64s);
+  `test_appServer_dynamicTabs.R` (build `appUI()` once, share between 2
+  read-only checks, 1.75s -> 0.25s); `test_appServer_server.R` +
+  `test_appServer_logging.R` (several tests left 4-7 downstream Shiny child
+  modules un-stubbed despite reading nothing from them -- added the missing
+  stubs, matching a pattern already used correctly elsewhere in the same files;
+  3.85s -> 1.53s and ~2.07s -> 0.30s respectively).
+- **Full regression suite re-confirmed clean after Bundle A:** `0 failed | 0
+  error | 0 warning`, same `1387` tests / `179` skipped as the pre-change
+  baseline (identical coverage, no tests dropped). Suite wall clock (local,
+  CRAN-mode): `94.1s -> 74.6s`.
+- **Investigated and explicitly NOT changed (documented, not silently
+  dropped):** `test_fillGroupMembers*.R` (gated `skip_if_not(user=="rmsharp")`
+  -- zero effect on CRAN regardless of any fix); `test_getPotentialParents.R`'s
+  one 3.3s test (genuine full-scale regression test for a real historical bug,
+  no test-level lever); further `guIter`/`iter` reduction in examples/vignettes
+  (the `guIter<=30` degeneracy guardrail re-verified as noisy/non-monotonic --
+  guIter=25 fails, 20 and 30 pass -- no safe threshold found);
+  `Config/testthat/parallel: true` (mechanism confirmed real and CRAN-honored,
+  ~1.65x measured local speedup, but requires a `Config/testthat/edition: 3`
+  migration across 264 files not audited this session -- deferred as a
+  separate future effort); the ~121s "untimed overhead" gap (confirmed
+  structural: only 18 of 99 `R CMD check` steps get individual timing; not a
+  package-specific defect).
+- **New findings flagged for owner attention (not actioned this session):**
+  `reportGV()`/`groupAddAssign()`/`summary.nprcgenekeeprErr.R`'s unseeded
+  `@examples` measured a 25% chance per check run of triggering a real
+  `checkFgDegeneracy()` warning -- a live robustness gap, independent of
+  checktime. `test_addAnimalsWithNoRelative.R` runs the same expensive
+  full-colony computation as the CRAN-irrelevant fillGroupMembers files, but
+  unconditionally (no skip guard) -- genuine ~5.85s local CRAN cost this
+  session's baseline missed (runs outside any `test_that()` block); no fix
+  proposed yet.
+- Session in progress: Bundle C (`test_groupAddAssign.R` `iter=1000->50`,
+  Medium risk) still to land; see `HANDOFFS.md`/`SESSION_NOTES.md` for status.
+- TDD Phase: REFACTOR (test-file structure/parameter changes only; no new
+  assertions, no production-code behavior change -- precedent: S393's vignette
+  `n=1000->500` parameter reduction).
+
 ### 2026-07-16 · [ad hoc] Close out the CRAN checktime effort: real progress, practical floor reached (Session 394)
 - **Deliverable:** S393's fresh win-builder Windows-devel result confirmed the
   `simulatedKValues.Rmd` fix was real (`checking re-building of vignette outputs`

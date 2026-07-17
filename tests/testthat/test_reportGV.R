@@ -402,10 +402,15 @@ makeOriginTestPed <- function() {
   ped
 }
 
+## The 3 tests below all call reportGV() on this identical fixture with the
+## same seed/guIter/guThresh; compute it once and share it rather than
+## repeating the same guIter = 1000L gene-drop 3x.
+originTestPed <- makeOriginTestPed()
+set.seed(17L)
+originTestGv <- reportGV(originTestPed, guIter = 1000L, guThresh = 2L)
+
 test_that("reportGV de-inflates gu to 0 for unknown-origin both-unknown animals, preserving imports (issue #76)", {
-  ped <- makeOriginTestPed()
-  set.seed(17L)
-  gv <- reportGV(ped, guIter = 1000L, guThresh = 2L)
+  gv <- originTestGv
 
   rptGu <- stats::setNames(gv$report$gu, as.character(gv$report$id))
   eltGu <- stats::setNames(gv$gu$gu, rownames(gv$gu))
@@ -425,9 +430,7 @@ test_that("reportGV de-inflates gu to 0 for unknown-origin both-unknown animals,
 })
 
 test_that("reportGV gu de-inflation predicate is U-id aware, not raw is.na (issue #76)", {
-  ped <- makeOriginTestPed()
-  set.seed(17L)
-  gv <- reportGV(ped, guIter = 1000L, guThresh = 2L)
+  gv <- originTestGv
 
   rptGu <- stats::setNames(gv$report$gu, as.character(gv$report$id))
   eltGu <- stats::setNames(gv$gu$gu, rownames(gv$gu))
@@ -455,9 +458,7 @@ test_that("reportGV gu de-inflation predicate is U-id aware, not raw is.na (issu
 # somewhere) deterministic; the fixture has a recorded-origin import branch.
 # ---------------------------------------------------------------------------
 test_that("reportGV carries a guSE column in $report and $gu (issue #2 Slice 1)", {
-  ped <- makeOriginTestPed()
-  set.seed(17L)
-  gv <- reportGV(ped, guIter = 1000L, guThresh = 2L)
+  gv <- originTestGv
 
   ## both surfaces carry a numeric guSE column
   expect_true("guSE" %in% names(gv$report))

@@ -128,20 +128,19 @@ test_that("getChangedColsTab returns a tabPanel", {
 # Tests for appUI dynamic tab support
 # =============================================================================
 
-test_that("appUI navbar has an id for dynamic tab manipulation", {
-  ui <- appUI()
-  ui_html <- as.character(ui)
+# appUI() takes no arguments and returns static, deterministic HTML with no
+# test-mutated state; the two structural checks below build it once and share
+# the rendered HTML rather than each building it separately.
+dynamicTabsUiHtml <- as.character(appUI())
 
+test_that("appUI navbar has an id for dynamic tab manipulation", {
   # The navbar should have id="mainNavbar" for insertTab/removeTab
-  expect_true(grepl("mainNavbar", ui_html))
+  expect_true(grepl("mainNavbar", dynamicTabsUiHtml))
 })
 
 test_that("appUI Input tab can be used as target for dynamic tabs", {
-  ui <- appUI()
-  ui_html <- as.character(ui)
-
   # Input tab must exist as a target for inserting error/changed cols tabs
-  expect_true(grepl("Input", ui_html))
+  expect_true(grepl("Input", dynamicTabsUiHtml))
 })
 
 # =============================================================================

@@ -56,6 +56,30 @@ muffleConfig <- function(expr) {
   )
 }
 
+# ---- Stubs for the child servers this file's tests don't drive -------------
+# Every test below needs modInputServer's real (or test-specific mock)
+# debugMode wiring -- that's what's under test -- but none of them read from
+# modPedigreeServer/modGeneticValueServer/modBreedingGroupsServer or the four
+# downstream modules. Stubbing those keeps each testServer(appServer, ...)
+# mount from paying for real modules whose output no test here reads.
+stubPed <- function(id, ...) list(
+  pedigree = shiny::reactive(NULL), processedPedigree = shiny::reactive(NULL),
+  focalAnimals = shiny::reactive(NULL), nAnimals = shiny::reactive(0L),
+  populationCount = shiny::reactive(0L), isReady = shiny::reactive(FALSE)
+)
+stubGV <- function(id, ...) list(
+  geneticValues = shiny::reactive(NULL), topAnimals = shiny::reactive(NULL),
+  nAnalyzed = shiny::reactive(0L), kinshipMatrix = shiny::reactive(NULL),
+  kinshipOverrides = shiny::reactive(NULL), founderStats = shiny::reactive(NULL),
+  maleFounders = shiny::reactive(NULL), femaleFounders = shiny::reactive(NULL)
+)
+stubBG <- function(id, ...) list(
+  groups = shiny::reactive(NULL), nGroups = shiny::reactive(0L),
+  score = shiny::reactive(0L), unassigned = shiny::reactive(character(0L)),
+  groupKinship = shiny::reactive(NULL)
+)
+noopServer <- function(id, ...) invisible(NULL)
+
 test_that("appServer does not create a log file at boot when debugMode is FALSE", {
   tmp <- withr::local_tempdir()
   withr::local_envvar(c(HOME = tmp))
@@ -63,11 +87,24 @@ test_that("appServer does not create a log file at boot when debugMode is FALSE"
 
   # Real modInputServer mounts here (debugMode defaults to FALSE -- see
   # test_modInput.R "modInputServer debugMode starts as FALSE by default"),
-  # matching the exact boot path CRAN's check exercised.
-  muffleConfig(shiny::testServer(appServer, {
-    session$flushReact()
-    futile.logger::flog.info("logging probe", name = "nprcgenekeepr")
-  }))
+  # matching the exact boot path CRAN's check exercised. The other child
+  # modules are stubbed -- this test reads nothing from them.
+  testthat::with_mocked_bindings(
+    modPedigreeServer = stubPed,
+    modGeneticValueServer = stubGV,
+    modBreedingGroupsServer = stubBG,
+    modPyramidServer = noopServer,
+    modSummaryStatsServer = noopServer,
+    modGeneticDiversityServer = noopServer,
+    modPotentialParentsServer = noopServer,
+    .package = "nprcgenekeepr",
+    {
+      muffleConfig(shiny::testServer(appServer, {
+        session$flushReact()
+        futile.logger::flog.info("logging probe", name = "nprcgenekeepr")
+      }))
+    }
+  )
 
   expect_false(file.exists(logPath))
 })
@@ -94,6 +131,13 @@ test_that("appServer writes the log file only after debugMode flips to TRUE", {
         debugMode = shiny::reactive(debugFlag())
       )
     },
+    modPedigreeServer = stubPed,
+    modGeneticValueServer = stubGV,
+    modBreedingGroupsServer = stubBG,
+    modPyramidServer = noopServer,
+    modSummaryStatsServer = noopServer,
+    modGeneticDiversityServer = noopServer,
+    modPotentialParentsServer = noopServer,
     .package = "nprcgenekeepr",
     {
       muffleConfig(shiny::testServer(appServer, {
@@ -159,6 +203,13 @@ test_that(paste("appServer's debug-log observer fails closed (console",
         debugMode = shiny::reactive(debugFlag())
       )
     },
+    modPedigreeServer = stubPed,
+    modGeneticValueServer = stubGV,
+    modBreedingGroupsServer = stubBG,
+    modPyramidServer = noopServer,
+    modSummaryStatsServer = noopServer,
+    modGeneticDiversityServer = noopServer,
+    modPotentialParentsServer = noopServer,
     .package = "nprcgenekeepr",
     {
       expect_no_warning(
@@ -208,6 +259,13 @@ test_that("appServer resets to console logging even when debugMode's first read 
         debugMode = shiny::reactive(NULL)
       )
     },
+    modPedigreeServer = stubPed,
+    modGeneticValueServer = stubGV,
+    modBreedingGroupsServer = stubBG,
+    modPyramidServer = noopServer,
+    modSummaryStatsServer = noopServer,
+    modGeneticDiversityServer = noopServer,
+    modPotentialParentsServer = noopServer,
     .package = "nprcgenekeepr",
     {
       muffleConfig(shiny::testServer(appServer, {
