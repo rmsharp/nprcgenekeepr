@@ -71,6 +71,19 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-17--ad-hoc-process-win-builder-windows-devel-result-for-cran-200-checktime-fix--confirms-fix-owner-decides-to-resubmit-session-397">2026-07-17 · [ad hoc] Process win-builder Windows-devel result for CRAN 2.0.0 checktime fix – confirms fix, owner decides to resubmit (Session 397)<a class="anchor" aria-label="anchor" href="#id_2026-07-17--ad-hoc-process-win-builder-windows-devel-result-for-cran-200-checktime-fix--confirms-fix-owner-decides-to-resubmit-session-397"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> processed S396’s dispatched <code>devtools::check_win_devel()</code> result (owner pasted the arrived <code>00check.log</code> and email text) – confirm whether the S392-395 checktime fixes clear CRAN’s 10-minute mark, update <code>cran-comments.md</code>/<code>BACKLOG.md</code>, present the resubmit/wait/hold decision.</li>
+<li>
+<strong>Result:</strong> <code>checking tests</code> <code>245s -&gt; 200s</code> (-45s); <code>examples</code> 80s and <code>re-building of vignette outputs</code> 65s essentially unchanged (no further safe lever, per S395). Win-builder’s own reported totals (email footer, not a bracket-sum of the log’s <code>[Ns]</code> steps): Installation time 30s, <strong>Check time 588s</strong> – down from the S392-394 cycle’s 655-656s, and the first result since the archived rejection to land under CRAN’s 600s mark (12s margin). <code>Status: 1 NOTE</code> (incoming feasibility only, no WARN/ERROR). Caveat carried forward: win-builder’s “Check time” is a proxy for CRAN’s own “Overall checktime” (the real incoming-pipeline figure that rejected S392’s submission), not proven identical.</li>
+<li>
+<strong>Caught before shipping:</strong> almost cited a bracket-summed total (476s) reconstructed from the pasted log alone, before re-reading <code>cran-comments.md</code>’s own S393 precedent (which explicitly distinguishes “summed timed steps” from “the email’s reported total check time”) and asking the owner for the full email text – revealed the real figure (588s) is 112s higher than the bracket-sum. Documented as <code>PROJECT_LEARNINGS.md</code> Learning 364.</li>
+<li>
+<strong>Updated:</strong> <code>cran-comments.md</code> (new 2026-07-17 narrative paragraph + “Test environments” section, flagging win-builder R-release/R-oldrelease/ R-hub as stale relative to the S392-395 fixes) and <code>BACKLOG.md</code>’s CRAN item.</li>
+<li>
+<strong>Owner decision (via <code>AskUserQuestion</code>, owner-only per SAFEGUARDS/the runbook HARD STOP): resubmit now.</strong> Next action is the owner running <code>devtools::submit_cran()</code> themselves; no further engineering action this cycle unless CRAN rejects it again.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-16--ad-hoc-dispatch-win-builder-windows-devel-re-check-for-cran-200-gate-session-396">2026-07-16 · [ad hoc] Dispatch win-builder Windows-devel re-check for CRAN 2.0.0 gate (Session 396)<a class="anchor" aria-label="anchor" href="#id_2026-07-16--ad-hoc-dispatch-win-builder-windows-devel-re-check-for-cran-200-gate-session-396"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> owner picked this item from the Phase 0 priorities list; <code>BACKLOG.md</code>’s CRAN item named one specific next step – dispatch a fresh win-builder Windows-devel check to confirm S395’s checktime fixes before the resubmit/wait/hold decision. Deliberately scoped to just this single check (not the fuller S390 pattern of x3 win-builder variants + R-hub), matching the item’s own Effort S next-step scope rather than expanding it.</li>
