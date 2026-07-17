@@ -54,9 +54,9 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 - **Landed Bundle A (5 files, Low risk, zero coverage loss, all verified
   empirically against pre-existing assertions):**
   `tests/testthat/test_pkgdown_reference_config.R` (compute
-  `pkgdown::as_pkgdown()` once instead of 3x -- the single biggest offender file
-  in the suite, 13.1s -> 3.76s); `test_reportGV.R` (hoist 3 identical
-  `guIter=1000L` fixture computations to 1, 4.98s -> 2.64s);
+  `pkgdown::as_pkgdown()` once instead of 3x, 13.1s -> 3.76s locally --
+  **later discovered CRAN-irrelevant, see below**); `test_reportGV.R` (hoist
+  3 identical `guIter=1000L` fixture computations to 1, 4.98s -> 2.64s);
   `test_appServer_dynamicTabs.R` (build `appUI()` once, share between 2
   read-only checks, 1.75s -> 0.25s); `test_appServer_server.R` +
   `test_appServer_logging.R` (several tests left 4-7 downstream Shiny child
@@ -114,8 +114,28 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
   unconditionally on every real CRAN check.
 - **Full regression suite re-confirmed clean after both changes:** `0 failed
   | 0 error | 0 warning`, same `1387` tests / `179` skipped as the original
-  baseline throughout. Cumulative local wall clock (CRAN-mode, single
-  `test_dir()` run): `94.1s -> 68.1s` (~28% reduction).
+  baseline throughout (dev-mode `pkgload::load_all()` profiling). Cumulative
+  local wall clock (CRAN-mode, single `test_dir()` run): `94.1s -> 68.1s`
+  (~28% reduction).
+- **Critical correction, caught before close-out by running the actual
+  build-equivalent, not just dev-mode profiling:** `R CMD build .` +
+  `R CMD check --as-cran --timings` against the real built tarball (first
+  attempt errored on a stale library path from running outside the
+  renv-activated working directory -- re-run correctly) revealed that the
+  `test_pkgdown_reference_config.R` fix -- this session's headline number --
+  is **CRAN-irrelevant**: `_pkgdown.yml` is `.Rbuildignore`'d and never
+  ships in the built tarball, so all 3 of that file's tests already skip on
+  every real CRAN/win-builder check (`_pkgdown.yml absent; guard not
+  applicable`, confirmed in the real `testthat.Rout`) -- a fact `BACKLOG.md`
+  already recorded from S392 that this session's dev-mode-only baseline
+  missed. The fix is a harmless local-dev-loop speedup only, same class of
+  dead end as the dropped `groupAddAssign()` change. The `test_appServer_*`/
+  `test_reportGV.R`/`test_addAnimalsWithNoRelative.R` fixes are confirmed
+  genuinely CRAN-relevant (none appear in any skip category of the real
+  check). **Real `R CMD check --as-cran --timings` result:** `examples` 22s,
+  `tests` 59s, `re-building of vignette outputs` 17s, `0 errors | 0 warnings
+  | 1 note`, `[ FAIL 0 | WARN 0 | SKIP 208 | PASS 3210 ]`. See
+  `cran-comments.md` for full detail; not yet confirmed against win-builder.
 - TDD Phase: REFACTOR (test-file structure/fixture/parameter changes only; no
   new production-code behavior -- precedent: S393's vignette `n=1000->500`
   parameter reduction).

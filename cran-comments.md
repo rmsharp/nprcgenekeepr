@@ -72,6 +72,50 @@ No further safe, mechanical lever was found after three rounds of investigation.
 Remaining path forward (resubmit anyway, wait for a quieter win-builder day, or
 hold for new ideas) is an owner decision, not a further engineering task.
 
+**2026-07-17 (S395): owner re-opened the effort with wider scope** -- test
+STRUCTURE changes and previously-protected iteration counts, both explicitly
+avoided by S392-394, were put back on the table. A 7-agent investigation
+found several candidate fixes; one (`test_pkgdown_reference_config.R`,
+hoisting 3 redundant `pkgdown::as_pkgdown()` calls to 1) looked like the
+single biggest local win (13.1s -> 3.76s) but turned out, on verification
+against the real built-tarball `R CMD check` run, to be **irrelevant to CRAN**
+-- `_pkgdown.yml` is `.Rbuildignore`'d and never ships in the tarball, so all
+3 of that file's tests already skip on every real CRAN/win-builder check
+(`_pkgdown.yml absent; guard not applicable`, confirmed in the real
+`testthat.Rout`); the fix is a harmless local-dev-loop speedup only, same
+class of dead end as the `groupAddAssign()` finding below. **Two changes
+confirmed genuinely CRAN-relevant** (verified: neither appears in any skip
+category of the real `R CMD check` run): several `test_appServer_*`/
+`test_reportGV.R` tests left downstream Shiny child modules un-stubbed or
+repeated identical fixture computation despite reading nothing new from
+them (several seconds each, structural fixes only, no coverage loss); and
+`test_addAnimalsWithNoRelative.R` ran an expensive full-3694-row-colony
+kinship computation unconditionally (no CRAN skip guard, unlike sibling
+files that turned out to be `rmsharp`-login-gated and so contribute zero
+real CRAN cost) -- swapped to the smaller `qcPed` fixture already used in
+the same function's own roxygen `@examples`, with no historical-bug reason
+found for the larger scale (~5.85s -> ~0.01s locally, the single largest
+genuinely-CRAN-relevant fix found this session). A proposed `groupAddAssign()`
+`iter=1000->50` change was investigated, verified safe, then DROPPED before
+implementation once discovered that `test_groupAddAssign.R`'s entire file is
+gated the same `rmsharp`-login-only way -- it already contributes zero time
+to any real CRAN check, so the fix would have been pointless for this goal.
+Full local regression suite re-confirmed clean throughout (`0 failed | 0
+error | 0 warning`, identical `1387` tests / `179` skipped coverage under
+dev-mode profiling). **Real `R CMD check --as-cran --timings` on the built
+tarball** (the authoritative check, run from a renv-activated working
+directory after an earlier attempt failed on a stale library path):
+`examples` 22s, `tests` 59s, `re-building of vignette outputs` 17s,
+`0 errors | 0 warnings | 1 note` (the same expected incoming-feasibility
+note), `[ FAIL 0 | WARN 0 | SKIP 208 | PASS 3210 ]`. **Not yet confirmed
+against win-builder** -- the CRAN-relevant local savings (appServer*/
+reportGV structural fixes plus the addAnimalsWithNoRelative fixture swap,
+excluding the CRAN-irrelevant pkgdown fix) total ~13.8s local; at this
+project's own established ~2.5-3x local-to-Windows-VM scaling that's
+directionally ~35-40s off the 245s win-builder `tests` phase, but a fresh
+win-builder run is needed to measure the real combined impact before any
+resubmission decision.
+
 ## R CMD check results
 
 Local `R CMD check --as-cran --timings` (macOS, R 4.6.1) on the built 2.0.0 tarball:
