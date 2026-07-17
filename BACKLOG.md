@@ -68,33 +68,52 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       measured + per-center query availability/permissions are confirmed; needs a live LabKey server to
       test/observe, and a naive focal-id server filter is incompatible with the client-side
       connected-component walk).
-- [ ] **CRAN resubmission of v2.0.0** (DECISION NEEDED -- owner-only, but a
-      win-builder re-check is READY as the immediate next step first: S395
-      (2026-07-17) re-opened the effort S392-394 had closed as exhausted, with
-      owner authorization to change test structure and previously-protected
-      iteration counts. Landed 2 more real, verified-safe levers (Shiny
-      testServer stub-completeness/fixture-hoisting across `test_appServer_*`/
-      `test_reportGV.R`, and a fixture-size fix to
-      `test_addAnimalsWithNoRelative.R` -- ~5.85s -> ~0.01s locally, the
-      session's single biggest genuinely-CRAN-relevant win). Caught and
-      corrected one false lead before it shipped: the session's other headline
-      number (`test_pkgdown_reference_config.R`) turned out CRAN-irrelevant
-      once verified against a real `R CMD check` on the built tarball
-      (`_pkgdown.yml` is `.Rbuildignore`'d, so that file already skips on
-      every real CRAN check) -- kept as a harmless local-dev-loop speedup only,
-      not counted toward the checktime goal. Real local `R CMD check --as-cran
-      --timings`: `tests` 59s / `examples` 22s / `vignette-rebuild` 17s,
-      `0 errors | 0 warnings | 1 note`. **Win-builder Windows-devel
-      re-check dispatched -- S396 (2026-07-16):** `devtools::check_win_devel()`
-      run from the project root (clean, in-sync tree confirmed before and
-      after); results due to `rmsharp@me.com` by ~10:46 PM 2026-07-16.
-      Deliberately scoped to this single check (not the fuller S390
-      pattern of x3 win-builder + R-hub), matching this item's own Effort
-      S next-step scope. Processing the result (verbatim `00check.log`,
-      checking specifically for an "Overall checktime" note, not just
-      "0 errors/0 warnings") is the next session's work, mirroring the
-      S390->S391 split -- before the resubmit/wait/hold
-      decision below, Effort S) -- CRAN responded 2026-07-09:
+- [ ] **CRAN resubmission of v2.0.0** (DECISION NEEDED -- owner-only:
+      `devtools::submit_cran()` itself, per SAFEGUARDS/the runbook's HARD
+      STOP. S395 (2026-07-17) re-opened the effort S392-394 had closed as
+      exhausted, with owner authorization to change test structure and
+      previously-protected iteration counts. Landed 2 more real,
+      verified-safe levers (Shiny testServer stub-completeness/
+      fixture-hoisting across `test_appServer_*`/`test_reportGV.R`, and a
+      fixture-size fix to `test_addAnimalsWithNoRelative.R` -- ~5.85s ->
+      ~0.01s locally, the session's single biggest genuinely-CRAN-relevant
+      win). Caught and corrected one false lead before it shipped: the
+      session's other headline number (`test_pkgdown_reference_config.R`)
+      turned out CRAN-irrelevant once verified against a real `R CMD check`
+      on the built tarball (`_pkgdown.yml` is `.Rbuildignore`'d, so that file
+      already skips on every real CRAN check) -- kept as a harmless
+      local-dev-loop speedup only, not counted toward the checktime goal.
+      Real local `R CMD check --as-cran --timings`: `tests` 59s /
+      `examples` 22s / `vignette-rebuild` 17s, `0 errors | 0 warnings |
+      1 note`. **Win-builder Windows-devel re-check dispatched -- S396
+      (2026-07-16):** `devtools::check_win_devel()` run from the project
+      root (clean, in-sync tree confirmed before and after); results due to
+      `rmsharp@me.com` by ~10:46 PM 2026-07-16. Deliberately scoped to this
+      single check (not the fuller S390 pattern of x3 win-builder + R-hub),
+      matching this item's own Effort S next-step scope. **Result processed
+      -- S397 (2026-07-17): confirms real savings, first result under the
+      10-minute mark, thin margin.** `checking tests` `245s -> 200s` (-45s);
+      `examples` 80s and `vignette rebuild` 65s essentially unchanged (no
+      further safe lever, per S395). Win-builder's own reported totals
+      (email footer): Installation time 30s, **Check time 588s** -- down
+      from the S392-394 cycle's 655-656s, and under CRAN's 600s mark by
+      **12s**. `Status: 1 NOTE` (incoming feasibility only, same flags as
+      every prior cycle, no WARN/ERROR). Caveat: win-builder's "Check time"
+      is the best available proxy for CRAN's own "Overall checktime" (the
+      real incoming-pipeline figure that rejected S392's submission,
+      extrapolated at ~720s) but not proven identical, and S394 already
+      measured several seconds of run-to-run VM-load noise -- 12s of margin
+      on a proxy metric is real progress but not a guarantee against a
+      repeat rejection. win-builder R-release/R-oldrelease and R-hub are
+      still the Session 390/391 results, now stale relative to the S392-395
+      fixes (not expected at risk from the checktime-specific issue, which
+      is Windows-r-devel-specific, but unconfirmed against current code).
+      Full detail in `cran-comments.md`'s 2026-07-17 update note. **Owner
+      decision (S397, 2026-07-17, via `AskUserQuestion`): resubmit now.**
+      Next action is the owner running `devtools::submit_cran()` and
+      clicking the maintainer-email confirmation link -- owner-only per
+      SAFEGUARDS/the runbook HARD STOP, no further engineering action this
+      cycle unless CRAN rejects it again. CRAN responded 2026-07-09:
       the v2.0.0 submission (S329, `devtools::submit_cran()`, `CRAN-SUBMISSION` sha
       `8ca8bb24`) was archived before publication because `appServer()` unconditionally
       wrote `~/nprcgenekeepr.log` on every boot, violating CRAN Policy. **Fixed in

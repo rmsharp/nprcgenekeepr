@@ -43,6 +43,37 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-17 · [ad hoc] Process win-builder Windows-devel result for CRAN 2.0.0 checktime fix -- confirms fix, owner decides to resubmit (Session 397)
+- **Deliverable:** processed S396's dispatched `devtools::check_win_devel()`
+  result (owner pasted the arrived `00check.log` and email text) -- confirm
+  whether the S392-395 checktime fixes clear CRAN's 10-minute mark, update
+  `cran-comments.md`/`BACKLOG.md`, present the resubmit/wait/hold decision.
+- **Result:** `checking tests` `245s -> 200s` (-45s); `examples` 80s and
+  `re-building of vignette outputs` 65s essentially unchanged (no further
+  safe lever, per S395). Win-builder's own reported totals (email footer,
+  not a bracket-sum of the log's `[Ns]` steps): Installation time 30s,
+  **Check time 588s** -- down from the S392-394 cycle's 655-656s, and the
+  first result since the archived rejection to land under CRAN's 600s mark
+  (12s margin). `Status: 1 NOTE` (incoming feasibility only, no WARN/ERROR).
+  Caveat carried forward: win-builder's "Check time" is a proxy for CRAN's
+  own "Overall checktime" (the real incoming-pipeline figure that rejected
+  S392's submission), not proven identical.
+- **Caught before shipping:** almost cited a bracket-summed total (476s)
+  reconstructed from the pasted log alone, before re-reading
+  `cran-comments.md`'s own S393 precedent (which explicitly distinguishes
+  "summed timed steps" from "the email's reported total check time") and
+  asking the owner for the full email text -- revealed the real figure
+  (588s) is 112s higher than the bracket-sum. Documented as
+  `PROJECT_LEARNINGS.md` Learning 364.
+- **Updated:** `cran-comments.md` (new 2026-07-17 narrative paragraph +
+  "Test environments" section, flagging win-builder R-release/R-oldrelease/
+  R-hub as stale relative to the S392-395 fixes) and `BACKLOG.md`'s CRAN
+  item.
+- **Owner decision (via `AskUserQuestion`, owner-only per SAFEGUARDS/the
+  runbook HARD STOP): resubmit now.** Next action is the owner running
+  `devtools::submit_cran()` themselves; no further engineering action this
+  cycle unless CRAN rejects it again.
+
 ### 2026-07-16 · [ad hoc] Dispatch win-builder Windows-devel re-check for CRAN 2.0.0 gate (Session 396)
 - **Deliverable:** owner picked this item from the Phase 0 priorities list;
   `BACKLOG.md`'s CRAN item named one specific next step -- dispatch a fresh

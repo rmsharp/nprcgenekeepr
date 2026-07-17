@@ -116,6 +116,33 @@ directionally ~35-40s off the 245s win-builder `tests` phase, but a fresh
 win-builder run is needed to measure the real combined impact before any
 resubmission decision.
 
+**2026-07-17 (S397): fresh win-builder Windows-devel run processed --
+confirms real, further savings, first result under the 10-minute mark, but
+with a thin margin.** S396 dispatched `devtools::check_win_devel()`
+(2026-07-16); the result email arrived 2026-07-17. Verbatim `00check.log`:
+`checking tests` `245s -> 200s` (-45s, close to S395's own ~35-40s
+prediction), `checking examples` 80s (unchanged -- no further safe lever, as
+S395 found), `checking re-building of vignette outputs` 65s (unchanged from
+S394's 66s within noise), `Status: 1 NOTE` (incoming feasibility only, same
+misspelled-word/thoughtco.com-URL flags as every prior cycle, no WARN/ERROR).
+**The email's own reported totals (footer, not summed from the log's
+`[Ns]` steps -- the distinction S392-394 established): Installation time in
+seconds: 30, Check time in seconds: 588** -- down from the S392-394 cycle's
+655-656s, and the first result since the archived rejection to land under
+CRAN's 10-minute (600s) mark, with **12s of margin**. **Caveat, carried
+forward from S392's original finding:** win-builder's "Check time in
+seconds" is the best available proxy for CRAN's own "Overall checktime" (the
+real incoming-pipeline figure that rejected the S392 submission, extrapolated
+at ~720s from its literal "12 min" wording) but is not proven identical --
+different infrastructure, and S394 already measured several seconds of
+run-to-run VM-load noise between consecutive win-builder runs. Three
+consecutive cycles of genuine, reproducible reduction (~720s extrapolated ->
+655-656s -> 588s) is real progress, but 12s of margin on a proxy metric is
+not a guarantee against a repeat "Overall checktime" rejection on a live
+resubmission. Remaining path forward (resubmit now, run one more win-builder
+check to see if the margin holds under different VM load, or hold) is an
+owner decision, not a further engineering task.
+
 ## R CMD check results
 
 Local `R CMD check --as-cran --timings` (macOS, R 4.6.1) on the built 2.0.0 tarball:
@@ -144,28 +171,41 @@ Local `R CMD check --as-cran --timings` (macOS, R 4.6.1) on the built 2.0.0 tarb
 
 ## Test environments
 
-**Note:** the results below predate the 2026-07-16 real-submission rejection and
-subsequent checktime fix (see the update note above) -- none of these pretest
-runs exercise CRAN's incoming "Overall checktime" gate. A fresh win-builder
-Windows run is needed to confirm the fix before resubmission.
+**Note:** win-builder R-devel has now been re-confirmed against the S392-395
+checktime fixes (S397, 2026-07-17 -- Check time in seconds: 588, under CRAN's
+600s mark by 12s; see the update note above for the full breakdown and the
+proxy-metric caveat). **win-builder R-release/R-oldrelease and R-hub below are
+still the Session 390/391 (2026-07-16) results -- stale relative to the
+S392-395 checktime fixes**, which touched only test files, not these
+platforms' pass/fail status. CRAN's "Overall checktime" gate that drove the
+archived rejection is specific to Windows r-devel (S392: Debian's equivalent
+run stayed under 5 min), so R-release/R-oldrelease/R-hub are not expected to
+be at risk from that specific issue, but a fresh run against current code is
+still owed before a real resubmission for full confidence.
 
 * Local: macOS, R 4.6.1 -- `R CMD check --as-cran --timings` (results above)
-* win-builder R-devel (R Under development (unstable), 2026-07-15 r90261): 0
-  errors | 0 warnings | 1 note (incoming feasibility, as above). Re-run
-  2026-07-16 (Session 390/391) to confirm the deprecated `structure(...,
-  .Names=...)` NOTE fixed in Session 389 is resolved -- confirmed: `checking R
-  code for possible problems ... OK` on this run.
+* **win-builder R-devel (R Under development (unstable), 2026-07-16 r90264):
+  0 errors | 0 warnings | 1 note (incoming feasibility, as above);
+  `checking tests` 200s / `checking examples` 80s / `checking re-building of
+  vignette outputs` 65s; win-builder's own reported totals: Installation time
+  30s, Check time 588s.** Confirms the S392-395 checktime fixes (S397,
+  2026-07-17); see the update note above for full detail and the margin
+  caveat. Earlier run 2026-07-16 (Session 390/391, pre-checktime-fix code)
+  confirmed the deprecated `structure(..., .Names=...)` NOTE fixed in Session
+  389 is resolved.
 * win-builder R-release (R 4.6.1): 0 errors | 0 warnings | 1 note (incoming
-  feasibility, as above). Same re-run and confirmation as R-devel above.
+  feasibility, as above). Last run Session 390/391 (2026-07-16) -- see the
+  staleness note above.
 * win-builder R-oldrelease (R 4.5.3): 0 errors | 0 warnings | 1 note (incoming
-  feasibility, as above). Same re-run and confirmation as R-devel above; the
-  prior cycle's `groupAddAssign` >10s timing note on this platform's slower
-  hardware did NOT recur this cycle.
+  feasibility, as above). Last run Session 390/391 (2026-07-16) -- see the
+  staleness note above; that cycle's `groupAddAssign` >10s timing note on
+  this platform's slower hardware did NOT recur.
 * R-hub v2 (R-devel; linux, windows, macos): all three platforms `Status: OK`
   (0 notes), `[ FAIL 0 | WARN 0 | SKIP 221 | PASS 3140 ]` -- fully clean, an
   improvement over the prior cycle's 1 WARN (the intermittent Windows
   `WriteXLS` flake, fixed S363 by switching to `openxlsx`, does not recur
-  here). Run "hillocked-veery",
+  here). Last run Session 390/391 (2026-07-16) -- see the staleness note
+  above. Run "hillocked-veery",
   <https://github.com/rmsharp/nprcgenekeepr/actions/runs/29473979892>.
 
 ## Downstream dependencies
