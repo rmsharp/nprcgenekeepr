@@ -50,6 +50,17 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
   v2.0.0 is now fully in CRAN's review queue. Awaiting CRAN's actual review
   outcome; asynchronous and owner-only. `BACKLOG.md`'s CRAN item updated to
   reflect the confirmed-submitted status.
+- **Submitted commit:** `CRAN-SUBMISSION` records `Date: 2026-07-17
+  14:51:08 UTC`, `SHA: db54d3257a1655a5582c3b201136f0ec868575bb` (the
+  wording-fixes commit) -- confirming exactly which tree state CRAN
+  received.
+
+### 2026-07-17 · [ad hoc] Wording fixes to cran-comments.md (Session 397 addendum)
+- **Deliverable:** owner edits -- dropped "real" from "A real submission
+  attempt" (all submissions are real; the word added nothing); split the
+  misspelled-words NOTE into its own bullet using standard CRAN-comments
+  phrasing ("Words identified as possible misspellings in DESCRIPTION: ...
+  are all correctly spelled").
 
 ### 2026-07-17 · [ad hoc] Trim cran-comments.md to code changes + final timing values (Session 397 addendum)
 - **Deliverable:** owner feedback -- `cran-comments.md` (a CRAN-reviewer-facing
