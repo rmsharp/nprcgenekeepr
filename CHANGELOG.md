@@ -43,7 +43,7 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
-### 2026-07-16 · [ad hoc] Re-open CRAN checktime investigation with wider scope, land Bundle A (Session 395)
+### 2026-07-16 · [ad hoc] Re-open CRAN checktime investigation with wider scope (Session 395)
 - **Deliverable:** owner redirected the closed-out S392-394 effort mid-session,
   explicitly authorizing test STRUCTURE changes and previously-protected iteration
   counts that those sessions deliberately avoided. A 7-agent investigation
@@ -89,11 +89,36 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
   unconditionally (no skip guard) -- genuine ~5.85s local CRAN cost this
   session's baseline missed (runs outside any `test_that()` block); no fix
   proposed yet.
-- Session in progress: Bundle C (`test_groupAddAssign.R` `iter=1000->50`,
-  Medium risk) still to land; see `HANDOFFS.md`/`SESSION_NOTES.md` for status.
-- TDD Phase: REFACTOR (test-file structure/parameter changes only; no new
-  assertions, no production-code behavior change -- precedent: S393's vignette
-  `n=1000->500` parameter reduction).
+- **Bundle C dropped after discovery, not landed:** `test_groupAddAssign.R`'s
+  proposed `iter=1000->50` fix turned out to be pointless for the stated goal
+  -- every one of its 7 `test_that()` blocks is gated
+  `skip_if_not(Sys.info()[["user"]]=="rmsharp")`, so the whole file already
+  contributes zero time to any real CRAN/win-builder check (confirmed
+  empirically, same class of finding as the fillGroupMembers files above).
+  Owner redirected to investigate the `test_addAnimalsWithNoRelative.R` lead
+  instead.
+- **Landed instead: `test_addAnimalsWithNoRelative.R` fixture swap (Low
+  risk).** `addAnimalsWithNoRelative()` is a trivial NA-fill loop whose own
+  roxygen `@examples` already use a smaller `qcPed` fixture (280 rows) instead
+  of the full `examplePedigree` (3694 rows) this test used, with no
+  historical-bug significance found in git log for the larger scale. Swapped
+  to the smaller, already-precedented fixture; updated the 3 assertions to
+  the freshly-verified deterministic values (`length(kin)`: 2416 -> 591;
+  replaced an arbitrary relative-count assertion on `"1SPLS8"` with a direct
+  `is.na()` check -- it is in fact the NA-fill branch at this scale, more
+  precisely testing the function's actual purpose; added a length-34 check on
+  `"0DAV0I"`, independently corroborated against the value already shipped in
+  the function's own roxygen example). Local cost: ~5.85s -> ~0.01s -- the
+  single largest genuinely-CRAN-relevant fix found this session, since this
+  file (unlike the fillGroupMembers files) has no skip guard and runs
+  unconditionally on every real CRAN check.
+- **Full regression suite re-confirmed clean after both changes:** `0 failed
+  | 0 error | 0 warning`, same `1387` tests / `179` skipped as the original
+  baseline throughout. Cumulative local wall clock (CRAN-mode, single
+  `test_dir()` run): `94.1s -> 68.1s` (~28% reduction).
+- TDD Phase: REFACTOR (test-file structure/fixture/parameter changes only; no
+  new production-code behavior -- precedent: S393's vignette `n=1000->500`
+  parameter reduction).
 
 ### 2026-07-16 · [ad hoc] Close out the CRAN checktime effort: real progress, practical floor reached (Session 394)
 - **Deliverable:** S393's fresh win-builder Windows-devel result confirmed the
