@@ -109,7 +109,7 @@ gotchas: This repo has no "urgent"/"high priority" GitHub label (only
   clean articles' cross-references.
 runtime_smoke: n/a -- docs/issue-filing only, no runtime behavior changed.
 changelog_ref: CHANGELOG.md 2026-07-18 [issue #124] entry
-commit: pending
+commit: 517a5775
 ```
 <free-text prose: Session 400 filed GitHub issue #124 documenting broken
 "Read deeper (R-API walkthrough)" links on the published colony-manager-
