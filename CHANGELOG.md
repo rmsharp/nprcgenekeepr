@@ -43,6 +43,42 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-18 · [BL-CRAN200] Process CRAN's real incoming-pretest auto-check result for the 2.0.0 submission (Session 399)
+- **Deliverable:** owner pasted CRAN's auto-processed email for the real
+  2026-07-17 `devtools::submit_cran()` submission -- verify the actual
+  `00check.log` files (not just the email summary) and update
+  `BACKLOG.md`/`HANDOFFS.md` accordingly. No `R/`/`tests/` code touched;
+  TDD phase N/A.
+- **Result:** fetched both `00check.log`s directly
+  (win-builder.r-project.org incoming-pretest logs). Windows r-devel and
+  Debian both returned `Status: 1 NOTE` -- the standard incoming-feasibility
+  note only (new submission, archived-package history, DESCRIPTION spelling
+  flags), no WARN/ERROR. Timing breakdown holds the S392-395 fixes on the
+  real submission: Windows `tests` 205s / `examples` 79s / `vignette
+  outputs` 65s; Debian `tests` 89s / `examples` 43s / `vignette outputs`
+  29s.
+- **Reconciled a discrepancy:** the email footer reported "Check time in
+  seconds: 604" -- 4s over the 600s mark that caused the S392 archival-class
+  rejection -- yet the submission was not rejected. Explicitly searched the
+  raw check log text for "Overall checktime" / "checktime": neither phrase
+  appears anywhere. The only "Tested elapsed times" occurrence is quoted
+  historical CRAN-db-override metadata from the 2025-07-29 archival, not a
+  fresh flag on this submission. Second data point (after S397's 588s) that
+  the win-builder-style footer "Check time" is not the same measure as
+  CRAN's own incoming-pipeline "Overall checktime" gate.
+- **Also fixed:** a stale cross-reference in `BACKLOG.md`'s CRAN item --
+  it cited "cran-comments.md's 2026-07-17 update note," a section already
+  removed by the S397 addendum trim (`3c7486b9`) before this session
+  started. Corrected in the same edit. `cran-comments.md` itself needed no
+  change -- it already reflects accurate pre-submission code-changes/timing
+  content per the S397-established "final values only, no session
+  narrative" convention.
+- **Status:** package is "pending a manual inspection," per the email,
+  typically within 10 working days. No further engineering action open
+  unless CRAN's reviewer responds with a rejection or change request.
+  Corrected `BACKLOG.md`'s stale "DECISION NEEDED" tag (flagged S398) to
+  "BLOCKED -- awaiting CRAN's manual review."
+
 ### 2026-07-17 · [ad hoc] S398 addendum -- investigate and resolve post-commit screenshot drift
 - **Deliverable:** a post-commit `git status` showed 30 of 33 just-committed screenshot
   files as locally modified again (small byte-size deltas, plausibly capture-to-capture

@@ -62,20 +62,67 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S399
 date: 2026-07-18
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Process the real CRAN incoming-pretest auto-check email for the
-  v2.0.0 submission (received 2026-07-18) -- verify actual 00check.log
-  content, update cran-comments.md/BACKLOG.md, reconcile the reported 604s
-  check time against the 600s archival threshold.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- processed CRAN's real incoming-pretest auto-check
+  result for the v2.0.0 submission. Package auto-processed cleanly
+  (Status: 1 NOTE, both Windows r-devel and Debian), now pending CRAN's
+  manual reviewer (typically ~10 working days per the email). No
+  engineering action open unless CRAN rejects or requests changes.
+what_was_done: Fetched both real 00check.log files directly (not just the
+  email summary) -- confirmed Status: 1 NOTE on Windows r-devel and Debian
+  (standard incoming-feasibility note only, no WARN/ERROR), and that the
+  S392-395 checktime fixes hold on the real submission (Windows tests
+  205s/examples 79s/vignette 65s; Debian tests 89s/examples 43s/vignette
+  29s). Reconciled the email footer's "Check time in seconds: 604" (4s
+  over the 600s archival-rejection threshold) against the raw log text:
+  searched explicitly for "Overall checktime"/"checktime" -- neither
+  phrase appears anywhere; the only "Tested elapsed times" occurrence is
+  quoted historical CRAN-db-override metadata from the 2025-07-29
+  archival, not a fresh flag. Updated BACKLOG.md's CRAN item: corrected
+  the stale "DECISION NEEDED" tag (self-flagged by S398, left uncorrected)
+  to "BLOCKED -- awaiting CRAN's manual review"; appended the verified
+  finding; fixed a stale cross-reference to a "cran-comments.md 2026-07-17
+  update note" section already removed by the S397 addendum trim (commit
+  3c7486b9, predating this session). Confirmed cran-comments.md itself
+  needed no edit (S397's "final values only, no process narrative"
+  convention). Added PROJECT_LEARNINGS.md Learning 367 and updated
+  CLAUDE.md's learning-count claim (366 -> 367). Commit `3cc07cc0`
+  (Phase 1B claim) -- deliverable commit sha follows.
+next_steps: No READY, unblocked BACKLOG item remains. Both open items
+  (LabKey integration remainder, CRAN v2.0.0) are BLOCKED on external
+  state -- a live LabKey server, and now CRAN's manual reviewer response
+  (expect ~10 working days from 2026-07-18, i.e. roughly by early August
+  2026). Next session's Phase 0 should re-render the priorities list fresh
+  and explicitly ask the owner whether a CRAN response has arrived before
+  assuming nothing is actionable -- exactly the pattern that made this
+  session's own task legible. If still blocked, consider a scoping session
+  to turn one of the informational open GitHub issues (#116 Genetic
+  Diversity Flags column, #36 chimp-specific age-pyramid settings, #28
+  timestamped-location parent inference, #123/XARCH-5) into a proper
+  BACKLOG item.
+key_files: BACKLOG.md (CRAN item, tag correction + S399 finding +
+  cross-reference fix); CHANGELOG.md (2026-07-18 S399 entry,
+  [BL-CRAN200]); PROJECT_LEARNINGS.md (Learning 367); CLAUDE.md:235
+  (learning count 366 -> 367); cran-comments.md (read, confirmed no edit
+  needed -- see "Test environments" section for the pre-submission
+  timing numbers this session verified against, not modified).
+gotchas: (1) the win-builder/incoming-pretest email's own "Check time"
+  footer figure is NOT the same measure as CRAN's actual "Overall
+  checktime" incoming-pipeline gate -- a figure over 600s in the footer
+  does not by itself mean rejection; always grep the raw check log for
+  the literal "Overall checktime" phrase to disambiguate (Learning 367).
+  (2) A "CRAN repository db overrides" block quoting "Tested elapsed
+  times." is backward-looking metadata about a PRIOR archival, not a
+  live flag on the current submission -- easy to misread at a glance.
+  (3) cran-comments.md is deliberately trimmed to code-changes + final
+  values only (S397 convention) -- do not add session-narrative prose
+  there; that belongs in CHANGELOG.md/BACKLOG.md.
+runtime_smoke: n/a -- docs/tracking-file work only, no runtime behavior
+  changed.
+changelog_ref: CHANGELOG.md 2026-07-18 entry, [BL-CRAN200]
+commit: pending -- to be backfilled same-session per S398's own precedent
 ```
 
 ```handoff

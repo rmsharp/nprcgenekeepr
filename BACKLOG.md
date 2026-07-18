@@ -68,9 +68,12 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       measured + per-center query availability/permissions are confirmed; needs a live LabKey server to
       test/observe, and a naive focal-id server filter is incompatible with the client-side
       connected-component walk).
-- [ ] **CRAN resubmission of v2.0.0** (DECISION NEEDED -- owner-only:
-      `devtools::submit_cran()` itself, per SAFEGUARDS/the runbook's HARD
-      STOP. S395 (2026-07-17) re-opened the effort S392-394 had closed as
+- [ ] **CRAN resubmission of v2.0.0** (BLOCKED -- awaiting CRAN's manual
+      reviewer response to the 2026-07-17 submission, no engineering action
+      open, Effort: N/A. The prior "DECISION NEEDED -- owner-only:
+      `devtools::submit_cran()`" tag is now stale -- that decision was made
+      and acted on S397/owner action below; flagged stale S398, corrected
+      S399.) S395 (2026-07-17) re-opened the effort S392-394 had closed as
       exhausted, with owner authorization to change test structure and
       previously-protected iteration counts. Landed 2 more real,
       verified-safe levers (Shiny testServer stub-completeness/
@@ -108,11 +111,37 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       still the Session 390/391 results, now stale relative to the S392-395
       fixes (not expected at risk from the checktime-specific issue, which
       is Windows-r-devel-specific, but unconfirmed against current code).
-      Full detail in `cran-comments.md`'s 2026-07-17 update note. **Owner
+      Full detail in `cran-comments.md`'s "Test environments" section (the
+      dated "2026-07-17 update note" this line previously cited was removed
+      by the S397 addendum trim to code-changes-only content, commit
+      `3c7486b9` -- stale cross-reference caught and fixed S399). **Owner
       decision (S397, 2026-07-17, via `AskUserQuestion`): resubmit now.**
       **Submitted -- owner ran `devtools::submit_cran()` 2026-07-17;
       package uploaded successfully to the CRAN submission team, and the
-      maintainer-email confirmation link was clicked the same day.** Now
+      maintainer-email confirmation link was clicked the same day.**
+      **CRAN's own incoming-pretest auto-check confirmed clean -- S399
+      (2026-07-18):** the real submission (not a manually-triggered
+      win-builder pretest) auto-processed with `Status: 1 NOTE` on both
+      Windows r-devel and Debian (the standard incoming-feasibility note
+      only -- new submission, archived-package history, DESCRIPTION
+      spelling flags -- no WARN/ERROR). Verified against the actual
+      `00check.log` files (not just the email summary), per this project's
+      own established practice: Windows `checking tests` 205s / `examples`
+      79s / `re-building of vignette outputs` 65s; Debian `tests` 89s /
+      `examples` 43s / `vignette outputs` 29s -- consistent with the
+      S392-395 fixes holding on the real submission, not just the
+      pre-submission pretest. **Reconciled the checktime caveat:** the
+      email footer reported "Check time in seconds: 604" (4s over the 600s
+      mark that caused the prior S392 archival-class rejection), but the
+      actual check log contains no "Overall checktime" flag anywhere --
+      the only "Tested elapsed times" occurrence is quoted historical
+      metadata from the 2025-07-29 CRAN db override, not a fresh flag on
+      this submission. This is a second data point (after S397's 588s)
+      that the win-builder-style footer "Check time" figure is not the
+      same measure as CRAN's own incoming-pipeline "Overall checktime" gate
+      -- a submission whose footer exceeded 600s was NOT auto-rejected.
+      Email states the package is "pending a manual inspection," typical
+      response within 10 working days. Now
       fully in CRAN's review queue -- awaiting CRAN's actual review outcome,
       asynchronous and owner-only, no further engineering action open
       unless CRAN rejects it again. CRAN responded 2026-07-09 to the PRIOR
