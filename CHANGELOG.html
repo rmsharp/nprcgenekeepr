@@ -71,6 +71,24 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-18--ad-hoc-s399-handoffsmd-receipt-commit-sha-backfill-closed-same-session">2026-07-18 · [ad hoc] S399 HANDOFFS.md receipt commit-sha backfill, closed same-session<a class="anchor" aria-label="anchor" href="#id_2026-07-18--ad-hoc-s399-handoffsmd-receipt-commit-sha-backfill-closed-same-session"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> filled in this session’s own <code>HANDOFFS.md</code> receipt’s <code>commit: pending</code> placeholder with the real deliverable commit sha (<code>d911ce8f</code>), matching the S331-S398 precedent of closing this within the same session rather than leaving it for the next session’s Phase 0 reconcile.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-07-18--bl-cran200-process-crans-real-incoming-pretest-auto-check-result-for-the-200-submission-session-399">2026-07-18 · [BL-CRAN200] Process CRAN’s real incoming-pretest auto-check result for the 2.0.0 submission (Session 399)<a class="anchor" aria-label="anchor" href="#id_2026-07-18--bl-cran200-process-crans-real-incoming-pretest-auto-check-result-for-the-200-submission-session-399"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> owner pasted CRAN’s auto-processed email for the real 2026-07-17 <code>devtools::submit_cran()</code> submission – verify the actual <code>00check.log</code> files (not just the email summary) and update <code>BACKLOG.md</code>/<code>HANDOFFS.md</code> accordingly. No <code>R/</code>/<code>tests/</code> code touched; TDD phase N/A.</li>
+<li>
+<strong>Result:</strong> fetched both <code>00check.log</code>s directly (win-builder.r-project.org incoming-pretest logs). Windows r-devel and Debian both returned <code>Status: 1 NOTE</code> – the standard incoming-feasibility note only (new submission, archived-package history, DESCRIPTION spelling flags), no WARN/ERROR. Timing breakdown holds the S392-395 fixes on the real submission: Windows <code>tests</code> 205s / <code>examples</code> 79s / <code>vignette outputs</code> 65s; Debian <code>tests</code> 89s / <code>examples</code> 43s / <code>vignette outputs</code> 29s.</li>
+<li>
+<strong>Reconciled a discrepancy:</strong> the email footer reported “Check time in seconds: 604” – 4s over the 600s mark that caused the S392 archival-class rejection – yet the submission was not rejected. Explicitly searched the raw check log text for “Overall checktime” / “checktime”: neither phrase appears anywhere. The only “Tested elapsed times” occurrence is quoted historical CRAN-db-override metadata from the 2025-07-29 archival, not a fresh flag on this submission. Second data point (after S397’s 588s) that the win-builder-style footer “Check time” is not the same measure as CRAN’s own incoming-pipeline “Overall checktime” gate.</li>
+<li>
+<strong>Also fixed:</strong> a stale cross-reference in <code>BACKLOG.md</code>’s CRAN item – it cited “cran-comments.md’s 2026-07-17 update note,” a section already removed by the S397 addendum trim (<code>3c7486b9</code>) before this session started. Corrected in the same edit. <code>cran-comments.md</code> itself needed no change – it already reflects accurate pre-submission code-changes/timing content per the S397-established “final values only, no session narrative” convention.</li>
+<li>
+<strong>Status:</strong> package is “pending a manual inspection,” per the email, typically within 10 working days. No further engineering action open unless CRAN’s reviewer responds with a rejection or change request. Corrected <code>BACKLOG.md</code>’s stale “DECISION NEEDED” tag (flagged S398) to “BLOCKED – awaiting CRAN’s manual review.”</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-17--ad-hoc-s398-addendum--investigate-and-resolve-post-commit-screenshot-drift">2026-07-17 · [ad hoc] S398 addendum – investigate and resolve post-commit screenshot drift<a class="anchor" aria-label="anchor" href="#id_2026-07-17--ad-hoc-s398-addendum--investigate-and-resolve-post-commit-screenshot-drift"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> a post-commit <code>git status</code> showed 30 of 33 just-committed screenshot files as locally modified again (small byte-size deltas, plausibly capture-to-capture PNG-encoding non-determinism, except <code>potential_parents_results.png</code> at ~33x larger). Investigated via file mtimes and a visual re-check of the uncommitted content (still correct, just a different capture) before deciding how to proceed – discarded the drift (<code>git restore</code>) back to the already-verified committed state rather than re-committing an unreviewed variant, then re-confirmed <code>quarto render</code> still resolves cleanly against the restored state.</li>
