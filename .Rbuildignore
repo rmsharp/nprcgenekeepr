@@ -25,7 +25,6 @@ inst/extdata/meeting_notes\.html$
 ^\.Rhistory\ 2$
 ^vignettes/shiny_app_use_original$
 ^vignettes/shiny_app_use_original/.*\.png$
-^vignettes/shiny_app_use$
 ^vignettes/interactive\.Rmd$
 ^vignettes/shiny_app_use\.Rmd$
 ^vignettes/ColonyManagerTutorial\.Rmd$

@@ -1,9 +1,21 @@
 # Copyright(c) 2017-2026 R. Mark Sharp
 # This file is part of nprcgenekeepr
 #
-# Regenerates the current-UI screenshots in vignettes/shiny_app_use/ that
-# ColonyManagerTutorial.Rmd (and "colony-manager-guide.qmd", Document 2 --
-# docs/planning/document2-colony-manager-guide-plan.md) rely on. Driven by
+# Regenerates the current-UI screenshots in vignettes/articles/shiny_app_use/
+# that "colony-manager-guide.qmd" (Document 2 --
+# docs/planning/document2-colony-manager-guide-plan.md) relies on -- moved
+# there from vignettes/shiny_app_use/ in Session 398 (Phase D) once it became
+# clear pkgdown only copies non-qmd/Rmd files living UNDER vignettes/articles/
+# alongside the article that references them (the sibling-directory
+# "../shiny_app_use/x.png" path resolved fine in an isolated `quarto render`,
+# since that runs directly against the source tree, but produced 33 broken
+# image links once the article was copied into the actual pkgdown site
+# structure -- SAFEGUARDS.md "Verify Render-Dependency Completeness": a clean
+# render is not proof the referenced assets survive publication). The
+# now-retired ColonyManagerTutorial.Rmd (see its current content) used to
+# rely on this directory too, via R-code-embedded image rendering rather
+# than markdown image links, which sidestepped this asset-copying question
+# entirely. Driven by
 # shinytest2::AppDriver against the live modular GeneKeepR app
 # (inst/shinytest/app.R) and the shipped data(examplePedigree)/data(focalAnimals)
 # example data, per the plan's Phase A gap inventory (plan doc Section 3A).
@@ -56,7 +68,7 @@ library(shinytest2)
 # testthat dependency, so source()-ing them outside the test harness is safe.
 source(file.path("tests", "testthat", "helper-shinytest2.R"))
 
-SHOT_DIR <- file.path("vignettes", "shiny_app_use")
+SHOT_DIR <- file.path("vignettes", "articles", "shiny_app_use")
 if (!dir.exists(SHOT_DIR)) dir.create(SHOT_DIR, recursive = TRUE)
 
 results <- list()
@@ -103,24 +115,22 @@ do_step <- function(label, expr) {
 
 app_dir <- system.file("shinytest", package = "nprcgenekeepr")
 
-# DRAGON FOUND THIS SESSION (data-corruption bug, not fixed -- out of Phase B
-# scope, flagged to BACKLOG.md as high priority): makeExamplePedigreeFile(...,
-# fileType = "excel") + readDataFile()'s readxl::read_excel(file$datapath)
-# (R/modInput.R, no col_types argument) silently corrupts sire/dam for the
-# shipped example pedigree -- readxl infers column type from early rows,
-# guesses "logical" because many early sire/dam values are blank, then
-# converts every later alphanumeric ID to NA once it can't parse it as
-# logical. Confirmed this session: 2026/2026 (100%) of non-blank sire values
-# and 2023/2026 dam values become NA on an Excel round-trip of
-# data(examplePedigree), with 4049 readxl warnings never surfaced to the
-# user. This is the SAME code path any real user's Excel-format pedigree
-# upload goes through -- not specific to this script. The tutorial's own
-# instructions default to Excel ("we will use an Excel file..."); until the
-# bug is fixed, this script uses CSV instead so the captured screenshots
-# reproduce Phase A's already-confirmed numbers (54/962/332) rather than
-# silently depicting a broken-pedigree state. Phase C must account for this
-# -- either wait for a fix, or explicitly narrate CSV as the demonstrated
-# format.
+# DRAGON FOUND SESSION 347 (data-corruption bug), FIXED SESSION 350:
+# makeExamplePedigreeFile(..., fileType = "excel") + readDataFile()'s
+# readxl::read_excel(file$datapath) (R/modInput.R, no col_types argument)
+# silently corrupted sire/dam for the shipped example pedigree -- readxl
+# infers column type from early rows, guesses "logical" because many early
+# sire/dam values are blank, then converts every later alphanumeric ID to NA
+# once it can't parse it as logical. Confirmed Session 347: 2026/2026 (100%)
+# of non-blank sire values and 2023/2026 dam values became NA on an Excel
+# round-trip of data(examplePedigree), with 4049 readxl warnings never
+# surfaced to the user -- the SAME code path any real user's Excel-format
+# pedigree upload goes through. Root-cause fixed Session 350: readDataFile()
+# now routes Excel reads through readExcelPOSIXToCharacter() (col_types =
+# "text"), so both CSV and Excel round-trip correctly. This script still
+# uses CSV (simpler, no behavioral difference now that the fix has landed)
+# so the captured screenshots continue to reproduce Phase A's confirmed
+# numbers (54/962/332).
 example_file <- makeExamplePedigreeFile(
   file.path(tempdir(), "Example_Pedigree.csv"),
   fileType = "csv"
@@ -392,11 +402,13 @@ shot(app, "ss_export_mean_kinship_coefficient_histogram.png",
 ## ss_kinship_matrix.png, ss_first_order_relationships.png, and
 ## ss_female_founders.png illustrate the CONTENTS of an exported CSV opened
 ## in a spreadsheet program ("The first few rows of such a file are shown
-## below" -- ColonyManagerTutorial.Rmd L549, L564, L580), not app UI. Like
-## examplePedigreeTutorial.png / examplePedigreeTutorial_with_alleles.png,
-## shinytest2::AppDriver cannot produce these, and they are unaffected by
-## the Shiny-module migration -- left untouched, matching the treatment
-## Phase A already gave the two examplePedigreeTutorial files.
+## below" -- the now-retired ColonyManagerTutorial.Rmd's original L549,
+## L564, L580), not app UI -- shinytest2::AppDriver cannot produce these,
+## and they are unaffected by the Shiny-module migration. The sibling
+## examplePedigreeTutorial.png / examplePedigreeTutorial_with_alleles.png
+## files (same category, static data-file illustrations) were deleted in
+## Session 398 once retiring ColonyManagerTutorial.Rmd left them with zero
+## references anywhere in the repo.
 
 # --------------------------------------------------------------------------
 # Breeding Group Formation tab
@@ -475,24 +487,6 @@ do_step("select group 6 in Group Detail", {
 shot(app, "breeding_group_6_seed_grps_grp_6_kinship.png",
      selector = "#breedingGroups-moduleContainer")
 
-# breeding_group_sex_ratio_specification.png -- kept name, updated framing.
-# DRAGON FOUND THIS SESSION (not fixed -- out of Phase B scope, flagged to
-# BACKLOG.md): the current UI's "Custom" sexRatio radio choice has NO
-# accompanying numeric-value input anywhere in modBreedingGroupsUI(); the
-# server's parseSexRatio(input$sexRatio) tries as.numeric("custom"), which
-# is NA and silently falls back to 0.0 -- identical to "None". The tutorial's
-# "sex ratio of 2.5" demonstration (N7) cannot currently be reproduced
-# through the UI at all. This screenshot shows the "Custom" option selected
-# (the option exists) but Phase C must NOT claim a working numeric-ratio
-# demonstration until this gap is fixed.
-do_step("select Custom sex ratio (see dragon note above)", {
-  app$set_inputs(`breedingGroups-sexRatio` = "custom",
-                 `breedingGroups-withKinship` = FALSE, wait_ = FALSE)
-  app$wait_for_idle(timeout = 10000)
-})
-shot(app, "breeding_group_sex_ratio_specification.png",
-     selector = "#breedingGroups-moduleContainer")
-
 # --------------------------------------------------------------------------
 # Genetic Diversity tab (NEW -- Document 2 Phase C addition, issue #112).
 # Not part of Phase A's 34-screenshot gap inventory (the source tutorial
@@ -500,9 +494,9 @@ shot(app, "breeding_group_sex_ratio_specification.png",
 # Phase A's tab-coverage decision put this tab in Section 3's scope, and
 # Phase C's drafting session found no screenshot existed for it. The
 # heat map needs formed breeding groups + a completed GVA run + its kinship
-# matrix, all already produced above; selecting "Custom" sex ratio just now
-# did not re-form groups, so shared$breedingGroups is still the
-# kinship-enabled 6-group result.
+# matrix, all already produced above -- captured here, BEFORE the Custom
+# sex-ratio demo below re-forms groups, so shared$breedingGroups is still
+# the kinship-enabled 6-group result the article's caption describes.
 # --------------------------------------------------------------------------
 do_step("navigate to Genetic Diversity", {
   app$set_inputs(mainNavbar = "Genetic Diversity")
@@ -530,6 +524,41 @@ do_step("wait for potential-parents results", {
   app$wait_for_idle(timeout = 15000)
 })
 shot(app, "potential_parents_results.png")
+
+# --------------------------------------------------------------------------
+# Breeding Groups: Custom sex-ratio numeric demo (N7) -- Session 398 Phase D
+# addition, captured LAST (after Genetic Diversity/Potential Parents, which
+# depend on the earlier kinship-enabled 6-group result) so re-forming groups
+# here does not disturb their state.
+# FIXED (Session 351, since this script's original dragon note): the
+# "Custom" sexRatio radio choice now reveals a conditionalPanel-gated
+# numericInput("customSexRatio", "Custom ratio (F per M):", value = 1.0,
+# min = 0.5, max = 20.0, step = 0.5), and parseSexRatio() reads it directly
+# (R/modBreedingGroups.R:62-73, 222-230). This capture demonstrates a real
+# working ratio (N7, matching the retired tutorial's own "2.5" example) with
+# 6 fresh, unseeded groups rather than only showing the option selected.
+# --------------------------------------------------------------------------
+do_step("navigate back to Breeding Groups", {
+  app$set_inputs(mainNavbar = "Breeding Groups")
+})
+do_step("set Custom ratio 2.5, 6 groups, form (N7 demo)", {
+  app$set_inputs(`breedingGroups-nGroups` = 6,
+                 `breedingGroups-sexRatio` = "custom",
+                 `breedingGroups-customSexRatio` = 2.5,
+                 `breedingGroups-seedGroups` = FALSE,
+                 `breedingGroups-withKinship` = FALSE, wait_ = FALSE)
+  click_element_safe(app, "#breedingGroups-formGroups")
+})
+do_step("wait for custom-ratio group formation to complete", {
+  if (!wait_for_module_ready(app, "breedingGroups", timeout = 180000)) {
+    stop("custom-ratio group formation did not complete within 180s")
+  }
+})
+do_step("open Groups sub-tab for the custom-ratio result", {
+  click_element_safe(app, "a[data-value='Groups']")
+})
+shot(app, "breeding_group_sex_ratio_specification.png",
+     selector = "#breedingGroups-moduleContainer")
 
 # --------------------------------------------------------------------------
 # Summary
