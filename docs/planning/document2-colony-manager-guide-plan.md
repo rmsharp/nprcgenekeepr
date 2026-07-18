@@ -18,8 +18,13 @@ data corruption; non-functional Custom sex-ratio control) recorded to `BACKLOG.m
 extension to Phase B's capture script (owner-approved), and a third new finding (the
 shipped example pedigree lacks a `fromCenter` column, so Potential Parents cannot be
 demonstrated with populated results) recorded to `BACKLOG.md`.
-Phase D remains a future, separately approved session; no phase is bundled with
-another (FM #26).
+**Phase D (assemble, audit, verify, publish) is now DONE** (Session 398, 2026-07-17) —
+see §6 Phase D and §9 for the full claim-source audit (which found all three of Phase
+B/C's flagged production issues had already been fixed the same day, S350/351/353,
+and the article was still describing them as live bugs), the `pkgdown`
+asset-copying structural fix (`vignettes/shiny_app_use/` → `vignettes/articles/
+shiny_app_use/`), and the owner's retire/redirect decision for
+`ColonyManagerTutorial.Rmd`. **This plan is fully executed — no phase remains.**
 
 **Workstream:** Adapted `docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md`
 (Phases 2/3/4/6), matching Document 1's own adaptation
@@ -516,19 +521,97 @@ resolved per Phase A's inventory.
 > 5), remain Phase D's job. **Next: Phase D** (assemble, verify, decide the source
 > tutorial's fate, publish).
 
-### Phase D — Assemble, verify, decide `ColonyManagerTutorial.Rmd`'s fate, publish · risk MEDIUM (irreversible-ish: public visibility, see §9 dragon 4)
+### Phase D — Assemble, verify, decide `ColonyManagerTutorial.Rmd`'s fate, publish · risk MEDIUM (irreversible-ish: public visibility, see §9 dragon 4) · ✅ DONE (Session 398)
 
-**What DONE looks like:** Abstract, Introduction, Conclusion drafted; full claim-source
-audit (workstream Phase 6) over the whole article; complete render verification matching
-the S107-110 / Document-1 pattern (`quarto render` + `pkgdown::build_article()` +
-`R CMD build .` + `tar tzf` tarball check confirming zero CRAN risk); spot-check 2-3
-unmodified existing articles still render; `AskUserQuestion` resolving §12 decision 3
-(retire/redirect `ColonyManagerTutorial.Rmd` now that its content is public, or keep both
-— avoiding anti-pattern #14 companion-paper drift either way); cleanup of render
-artifacts before staging.
-**Verification:** the full Verification Checklist, §10.
-**Session boundary:** this is the publish gate — the article should not be considered
-public-ready until this phase's checklist is green.
+> **✅ Implemented in Session 398 (2026-07-17), whole phase, no split.** The
+> Abstract/Introduction/Conclusion were already full drafts from Phase C (S348),
+> not placeholders as originally expected — this phase's own work was the full
+> claim-source audit and everything downstream of it.
+>
+> **Full claim-source audit (workstream Phase 6):** fanned out 5 parallel
+> agents, one per article section, each independently re-verifying every
+> claim against current `R/` source, live `Rscript`/`pkgload::load_all()`
+> checks, `gh issue view`, and file existence — not the article's own prose.
+> Findings: 3 genuine errors fixed (Mermaid pipeline diagram omitted two real
+> edges — Pedigree→Breeding-Groups and GVA→Genetic-Diversity; the founders-CSV
+> column list had a typo, "sires"→"sire", and omitted 3 real columns
+> `ancestry`/`origin`/`status`; the "three export buttons" claim undercounted
+> and mislabeled a 12-button tab). **The load-bearing finding:** all three
+> "still-broken" bug callouts in the Phase C draft (Excel-upload corruption,
+> Custom sex-ratio, Potential-Parents `fromCenter`) had actually been fixed
+> the same day Phase C drafted them (Sessions 350/351/353, 2026-07-10, all
+> same-day same-cycle fixes) — the article was shipping stale "still broken"
+> warnings about bugs that no longer existed.
+>
+> **Owner decision (`AskUserQuestion`):** "Full correction" — regenerate the
+> two affected screenshots and rewrite all 3 callouts to describe the fixed
+> behavior, rather than a text-only patch leaving stale pre-fix screenshots
+> in place. Extended `colony-manager-guide-screenshots.R`'s Custom-sex-ratio
+> capture block to actually exercise the now-working `customSexRatio` numeric
+> input (a real N7 demo, deferred by Phase C) and re-ran the full script
+> (73/73 steps). **Self-caught regression:** the first re-run placed the new
+> Custom-ratio group-formation *before* the Genetic Diversity capture,
+> silently changing the state Genetic Diversity's heatmap depends on (6
+> seeded/kinship groups → 7 fresh ones) — caught by re-inspecting the
+> regenerated heatmap image itself (6 rows expected, 7 rendered), fixed by
+> moving the Custom-ratio block to run last, and confirmed clean on re-run.
+> **Second self-caught issue:** group formation with a Custom sex ratio is a
+> stochastic search (`Number of simulations` default 10) — a first live run's
+> exact per-group sizes (1,3,3,3,3,3,4) did not reproduce on the very next
+> run (2,2,2,2,2,5,5) despite the same inputs; rewrote the prose to describe
+> the setup and note the search is stochastic rather than assert one run's
+> exact numbers as a stable fact, applying this plan's own N6 precedent to a
+> case the plan itself hadn't flagged as stochastic.
+>
+> **Structural fix beyond the qmd text:** an isolated `quarto render` passed
+> cleanly (images resolve via `../shiny_app_use/...` against the real
+> sibling directory still on disk in the source tree), but
+> `pkgdown::build_article()` revealed this project's first image-heavy
+> pkgdown article ever built — none of the 6 existing sibling articles use
+> image files — exposed a real gap: pkgdown copies non-qmd files living
+> *under* `vignettes/articles/`, not a sibling directory one level up, so
+> all 33 image references would have 404'd on the actual published site
+> despite every render command exiting 0 (`SAFEGUARDS.md` "Verify
+> Render-Dependency Completeness" — build success is not asset-use success).
+> Fixed by moving `vignettes/shiny_app_use/` → `vignettes/articles/shiny_app_use/`
+> (`git mv`, preserving history), rewriting all 33 image paths and the
+> capture script's `SHOT_DIR`, and updating `.Rbuildignore` (removed the now-
+> stale `^vignettes/shiny_app_use$` line; the pre-existing `^vignettes/articles$`
+> pattern already covers the new nested location). Re-verified: images now
+> copy into `pkgdown_site/articles/shiny_app_use/` and resolve in the built
+> HTML.
+>
+> **`ColonyManagerTutorial.Rmd`'s fate (§12 decision 3), via `AskUserQuestion`:
+> retire/redirect (the plan's own recommendation).** Replaced its 748-line
+> content with a short redirect note pointing to the new public article;
+> confirmed zero functional references anywhere in the repo beyond
+> historical mentions in `SESSION_NOTES.md`/`CHANGELOG.md` and descriptive
+> `#'` comments in 5 `test-e2e-*-tutorial.R` files (harmless — they describe
+> the test's origin, not a live dependency). This orphaned 6 previously
+> tracked screenshot files that existed only for the retired tutorial
+> (`examplePedigreeTutorial.png`/`_with_alleles.png`, the 3
+> `opening_screen_top/middle/bottom.png` crops Phase A had already marked
+> for retirement, and `pb_cleared_focal_animals_combined.png` + its `.idraw`
+> source) — deleted after confirming zero remaining references, per this
+> plan's own Phase A precedent for exactly this kind of orphan.
+>
+> **Full verification (§9 checklist, this session):** `quarto render` clean
+> (zero missing images, zero unresolved `@sec-`/`@tbl-`/`@fig-` refs, Mermaid
+> embedded) both before and after the path fix; `pkgdown::build_article()`
+> succeeds and all 33 images now resolve in the built site;
+> `R CMD build .` + `tar tzf` confirms zero CRAN risk (neither the article,
+> the retired tutorial, nor `vignettes/articles/shiny_app_use/` appear in the
+> shipped tarball); 3 sibling articles spot-checked
+> (`engineering-the-2.0.0-release.qmd` renders clean;
+> `breeding-group-formation.qmd`/`age-sex-pyramid.qmd` fail identically on
+> `library(nprcgenekeepr)` — confirmed pre-existing, reproduces the same way
+> run directly from `vignettes/articles/` regardless of any change this
+> session, matching S348's own documented precedent); full regression suite
+> 0 failed / 0 error / 0 warning; all render byproducts cleaned before
+> committing.
+>
+> **Session boundary respected:** all §9 checklist items addressed; the
+> article is public-ready.
 
 ---
 
@@ -588,25 +671,50 @@ capture (§5, §9 dragon 1).
 
 Before Phase D closes:
 
-- [ ] Every numeric or dated claim in the article traces to a re-derived-this-session
+- [x] Every numeric or dated claim in the article traces to a re-derived-this-session
       value (Phase A) or an original-construction figure, not carried forward
-      uncritically from `ColonyManagerTutorial.Rmd`
-- [ ] No claim uses present-relative dating without an explicit "(as of 2026-07-10)"
-      (or later drafting-session date)-style stamp
-- [ ] Every figure/screenshot has stated provenance (capture script + date, or
-      "original construction" for the Mermaid diagram)
-- [ ] `quarto render` succeeds with no warnings; no unresolved `?@fig-x`/`?@tbl-x`
-- [ ] `pkgdown::build_article()` succeeds
-- [ ] `R CMD build .` + `tar tzf` confirms the new article and any new data/screenshot
-      subfolder do not ship (zero CRAN risk, matching S107-110 and Document 1)
-- [ ] The six existing `vignettes/articles/*.qmd` plus Document 1 still render
-      (spot-check, workstream Phase 6 discipline)
-- [ ] No search/extraction artifacts left anywhere touched this session
-- [ ] The article does not cite the pkgdown Reference page's grouped structure unless
-      independently re-verified live at draft time (§8 dragon 5)
-- [ ] `ColonyManagerTutorial.Rmd`'s fate (§12 decision 3) is resolved, not left
+      uncritically from `ColonyManagerTutorial.Rmd` — re-verified fresh this session
+      (Session 398) by 5 parallel audit agents against current source/live checks; 3
+      genuine errors fixed (Mermaid diagram edges, founders-CSV columns, export-button
+      count/labels), 3 stale "still broken" claims fixed (Excel upload, Custom sex
+      ratio, Potential Parents `fromCenter`) that had actually been fixed same-day as
+      Phase C's draft
+- [x] No claim uses present-relative dating without an explicit "(as of 2026-07-10)"
+      (or later drafting-session date)-style stamp — bumped to "as of 2026-07-17"
+      (Abstract, Introduction scope stamp, export-count sentence) to reflect this
+      session's actual re-verification date
+- [x] Every figure/screenshot has stated provenance (capture script + date, or
+      "original construction" for the Mermaid diagram) — unchanged from Phase C, still
+      accurate
+- [x] `quarto render` succeeds with no warnings; no unresolved `?@fig-x`/`?@tbl-x` —
+      confirmed clean both before and after the `vignettes/articles/shiny_app_use/`
+      path fix (Session 398)
+- [x] `pkgdown::build_article()` succeeds — confirmed Session 398, using the article's
+      actual pkgdown-internal name `articles/colony-manager-guide` (not the bare
+      basename S348's sanity check tried, which was pkgdown's real "Can't find
+      article" cause, not an uninitialized-cache issue as originally guessed)
+- [x] `R CMD build .` + `tar tzf` confirms the new article and any new data/screenshot
+      subfolder do not ship (zero CRAN risk, matching S107-110 and Document 1) —
+      confirmed Session 398: neither the article, the retired tutorial, nor
+      `vignettes/articles/shiny_app_use/` appear in the built tarball
+- [x] The six existing `vignettes/articles/*.qmd` plus Document 1 still render
+      (spot-check, workstream Phase 6 discipline) — Document 1
+      (`engineering-the-2.0.0-release.qmd`) renders clean; 2 of the 6 feature articles
+      spot-checked fail on `library(nprcgenekeepr)`, confirmed pre-existing (reproduces
+      identically run directly from `vignettes/articles/`, unrelated to any change this
+      session — matches S348's own documented precedent for this environment
+      limitation)
+- [x] No search/extraction artifacts left anywhere touched this session — render
+      byproducts (`.html`, `_files/`) and the local `pkgdown_site/` test build removed
+      before committing
+- [x] The article does not cite the pkgdown Reference page's grouped structure unless
+      independently re-verified live at draft time (§8 dragon 5) — confirmed the
+      article makes no such claim (Section 2's export-count discussion never mentions
+      the Reference page's structure)
+- [x] `ColonyManagerTutorial.Rmd`'s fate (§12 decision 3) is resolved, not left
       ambiguous — either explicitly retired/redirected or explicitly kept with a stated
-      reason
+      reason — **retired/redirected** (owner decision via `AskUserQuestion`, Session
+      398): content replaced with a short redirect note to the new public article
 
 ---
 
@@ -645,11 +753,10 @@ Before Phase D closes:
    (`AskUserQuestion`, 2026-07-10): automated** (`shinytest2::AppDriver`-driven,
    checked-in, reproducible), with manual post-processing (crop/annotate) only where a
    specific illustrative point (e.g., the red-oval highlight) genuinely needs it.
-3. **Fate of `ColonyManagerTutorial.Rmd` after porting (§8 dragon 4).** Retire it (e.g.,
-   replace its content with a redirect note to the new public article) once Document 2
-   ships, or keep both in parallel? Recommend: retire/redirect, to avoid anti-pattern
-   #14 companion-paper drift (a source vignette silently diverging from its port over
-   time) — but this is the owner's call, resolve at Phase D.
+3. ~~**Fate of `ColonyManagerTutorial.Rmd` after porting (§8 dragon 4).**~~ **RESOLVED
+   — Session 398 (`AskUserQuestion`, 2026-07-17): retire/redirect**, per this plan's
+   own recommendation — content replaced with a short redirect note to the new public
+   article, avoiding anti-pattern #14 companion-paper drift.
 4. **Timing of the pkgdown Reference-index fix (§1's separate finding).** Independent of
    Document 2's own timeline — fix before Document 2 references the Reference page, or
    let Document 2 ship first and fix separately? Either is fine as long as Document 2's
@@ -660,5 +767,7 @@ Before Phase D closes:
    confirmed as proposed** — `vignettes/articles/colony-manager-guide.qmd` —
    "nprcgenekeepr: Purpose, Approach, and a Colony Manager's Guide to Practice."
 
-**Remaining open: decisions 3 and 4 only**, both explicitly deferred (3 to Phase D, 4
-independent of this plan's own timeline) — neither blocks Phase B from starting.
+**Remaining open: decision 4 only** — independent of this plan's own timeline; Document
+2's own text was confirmed (Session 398) to make no claim about the pkgdown Reference
+page's grouped structure at all, so this article's own correctness does not depend on
+when (or whether) that separate config fix lands.

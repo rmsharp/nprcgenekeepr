@@ -43,6 +43,61 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-17 · [BL-Document2PhaseD] Execute Document 2 Phase D -- claim-source audit, pkgdown asset fix, retire ColonyManagerTutorial.Rmd (Session 398)
+- **Deliverable:** `docs/planning/document2-colony-manager-guide-plan.md` §6 Phase D --
+  the publish gate for `vignettes/articles/colony-manager-guide.qmd`. TDD phase N/A
+  throughout (docs/vignette work, no `R/`/`tests/` code touched).
+- **Full claim-source audit (workstream Phase 6):** 5 parallel agents, one per article
+  section, independently re-verified every claim against current `R/` source, live
+  `Rscript`/`pkgload::load_all()` checks, `gh issue view`, and file existence. Found and
+  fixed 3 genuine errors (Mermaid pipeline diagram missing two real edges -- Pedigree->
+  Breeding-Groups, GVA->Genetic-Diversity; founders-CSV column list typo "sires"->"sire"
+  plus 3 missing columns `ancestry`/`origin`/`status`; "three export buttons" claim
+  undercounting a 12-button tab). **Load-bearing finding:** all three "still broken"
+  callouts drafted in Phase C (Excel-upload corruption, Custom sex-ratio, Potential-
+  Parents `fromCenter`) had actually been fixed the same day (S350/351/353, 2026-07-10)
+  -- the article was shipping stale bug warnings for bugs that no longer existed.
+- **Owner decision (`AskUserQuestion`): full correction** -- regenerated the 2 affected
+  screenshots (extended `colony-manager-guide-screenshots.R`'s Custom-sex-ratio block to
+  exercise the now-working `customSexRatio` numeric input, the N7 demo Phase C deferred)
+  and rewrote all 3 callouts to describe the fixed behavior, rather than a text-only
+  patch leaving stale pre-fix images in place. Self-caught and fixed two issues during
+  this work: (1) the first re-run placed the new Custom-ratio group formation *before*
+  the Genetic Diversity capture, silently changing the state its heatmap depends on (6
+  seeded/kinship groups -> 7 fresh ones) -- caught by re-inspecting the regenerated
+  image, fixed by moving the block to run last; (2) Custom-ratio group formation is a
+  stochastic search (`Number of simulations` default 10) -- one run's exact per-group
+  sizes did not reproduce on the next run with identical inputs, so the prose describes
+  the setup and stochastic nature rather than asserting one run's numbers as fact.
+- **Structural fix (`SAFEGUARDS.md` "Verify Render-Dependency Completeness"):** an
+  isolated `quarto render` passed cleanly, but `pkgdown::build_article()` -- this
+  project's first image-heavy pkgdown article ever built -- revealed the 33 image
+  references would 404 on the actual published site: pkgdown only copies non-qmd files
+  living *under* `vignettes/articles/`, not a sibling directory. Fixed by `git mv
+  vignettes/shiny_app_use vignettes/articles/shiny_app_use`, rewriting all 33 image
+  paths + the capture script's `SHOT_DIR`, and updating `.Rbuildignore` (removed the
+  now-stale `^vignettes/shiny_app_use$` line; the existing `^vignettes/articles$`
+  pattern already covers the new nested location). Re-verified images now resolve in
+  the built `pkgdown_site/`.
+- **`ColonyManagerTutorial.Rmd` fate resolved (`AskUserQuestion`): retire/redirect** --
+  replaced its 748-line content with a short redirect note to the new public article.
+  Deleted 6 now-orphaned tracked screenshot files that existed only for the retired
+  tutorial (`examplePedigreeTutorial.png`/`_with_alleles.png`, the 3
+  `opening_screen_top/middle/bottom.png` crops Phase A had already flagged for
+  retirement, `pb_cleared_focal_animals_combined.png` + its `.idraw` source), confirming
+  zero remaining references first.
+- **Verification:** `quarto render` clean (zero missing images, zero unresolved
+  `@sec-`/`@tbl-`/`@fig-` refs, Mermaid embedded) before and after the path fix;
+  `pkgdown::build_article("articles/colony-manager-guide")` succeeds, all 33 images
+  resolve in the built site; `R CMD build .` + `tar tzf` confirms zero CRAN risk
+  (neither the article, the retired tutorial, nor the screenshot folder ship); 3
+  sibling articles spot-checked (`engineering-the-2.0.0-release.qmd` clean;
+  `breeding-group-formation.qmd`/`age-sex-pyramid.qmd` fail identically on
+  `library(nprcgenekeepr)`, confirmed pre-existing per S348's own precedent, not a
+  regression); full regression suite 0 failed / 0 error / 0 warning.
+- **`BACKLOG.md`:** removed the resolved Document 2 item (plan fully executed, no phase
+  remains).
+
 ### 2026-07-17 · [ad hoc] Submit v2.0.0 to CRAN, maintainer confirmation clicked (Session 397 addendum, owner action)
 - **Action:** owner ran `devtools::submit_cran()` (per the resubmit decision
   recorded above) -- package uploaded successfully to the CRAN submission
