@@ -43,6 +43,12 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-18 · [ad hoc] S399 HANDOFFS.md receipt commit-sha backfill, closed same-session
+- **Deliverable:** filled in this session's own `HANDOFFS.md` receipt's `commit: pending`
+  placeholder with the real deliverable commit sha (`d911ce8f`), matching the
+  S331-S398 precedent of closing this within the same session rather than leaving it
+  for the next session's Phase 0 reconcile.
+
 ### 2026-07-18 · [BL-CRAN200] Process CRAN's real incoming-pretest auto-check result for the 2.0.0 submission (Session 399)
 - **Deliverable:** owner pasted CRAN's auto-processed email for the real
   2026-07-17 `devtools::submit_cran()` submission -- verify the actual

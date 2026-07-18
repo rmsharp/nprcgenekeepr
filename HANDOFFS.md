@@ -122,7 +122,7 @@ gotchas: (1) the win-builder/incoming-pretest email's own "Check time"
 runtime_smoke: n/a -- docs/tracking-file work only, no runtime behavior
   changed.
 changelog_ref: CHANGELOG.md 2026-07-18 entry, [BL-CRAN200]
-commit: pending -- to be backfilled same-session per S398's own precedent
+commit: `d911ce8f` (deliverable); `3cc07cc0` (Phase 1B claim)
 ```
 
 ```handoff
