@@ -85,6 +85,57 @@ is `pending` at the Phase 1B claim and `complete` at
 close-out; a third value, `reconciled`, is written *only* by a later session's Phase 0 reconcile
 when it reconstructs a receipt a crashed session never completed — you never write it yourself.</code></pre>
 <p><code>self_score</code> and <code>predecessor_score</code> are distinct keys so one can never stand in for the other; omit <code>predecessor_score</code> on Session 1 (there is no predecessor to score). <code>commit: pending</code> and <code>what_was_done: pending</code> are legal at write time (the receipt ships in the very commit whose sha it would name); the next session reconciles them to real shas.</p>
+<pre class="handoff"><code>session: S400
+date: 2026-07-18
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- filed GitHub issue #124 for the broken "Read deeper"
+  links on the published colony-manager-guide article. No code fix applied
+  this session; the issue itself was the deliverable.
+what_was_done: WebFetch-confirmed live that all 6 Section-2-table "Read
+  deeper (R-API walkthrough)" links resolve to .qmd source, not .html.
+  Grepped colony-manager-guide.qmd and found 4 more instances of the same
+  pattern outside the table (lines 22, 46, 370, 530; 10 affected links
+  total). Confirmed via a repo-wide grep that no other article source file
+  has this pattern -- isolated to this file. Root-caused to
+  vignettes/articles/_quarto.yml's Quarto-project declaration (makes the
+  .qmd-link-with-auto-rewrite convention available, but pkgdown's
+  mixed-mode Quarto build isn't performing the rewrite). Checked for an
+  existing duplicate issue (none). Filed issue #124 with the full link
+  inventory, root cause, and two candidate fixes. Added a BACKLOG.md "Up
+  Next" entry (READY, Effort S) and the CHANGELOG.md ledger entry
+  ([issue #124]). Commit `23c25bd2` (Phase 1B claim) -- deliverable commit
+  sha follows.
+next_steps: Fix issue #124 -- either (a) root-cause why pkgdown's Quarto
+  project build isn't rewriting .qmd links to .html at render time
+  (preferred, keeps the maintainable source convention), or (b) directly
+  retarget the 10 affected links in colony-manager-guide.qmd (lines 22,
+  46, 95-99, 370, 530) to their rendered .html filenames, then rebuild
+  (pkgdown::build_article("colony-manager-guide") or the project's
+  standard pkgdown build) and spot-check the live output links resolve to
+  HTML, not downloads. This is docs/vignette-source work (TDD N/A,
+  matching S398's Document-2 precedent) -- confirm that classification
+  holds before starting if pkgdown config changes are needed for option
+  (a). Both BACKLOG.md CRAN/LabKey items remain externally blocked;
+  re-check CRAN response status per S399's next_steps if issue #124 is not
+  picked.
+key_files: vignettes/articles/colony-manager-guide.qmd:22,46,95-99,370,530
+  (the 10 affected links); vignettes/articles/_quarto.yml (Quarto-project
+  declaration, root cause); BACKLOG.md (new "Up Next" entry);
+  CHANGELOG.md (2026-07-18 S400 entry, [issue #124]).
+gotchas: This repo has no "urgent"/"high priority" GitHub label (only
+  "low priority" exists as the inverse signal) -- issue #124's priority is
+  stated in title/body text only, not a label; if grepping for urgent
+  issues later, search title text, not labels. The pkgdown mixed-mode
+  Quarto build (vignettes/articles/_quarto.yml) is shared by every
+  .qmd article in this directory -- if option (a) (root-cause the
+  render-time rewrite) is chosen, verify it doesn't regress the other 5
+  clean articles' cross-references.
+runtime_smoke: n/a -- docs/issue-filing only, no runtime behavior changed.
+changelog_ref: CHANGELOG.md 2026-07-18 [issue #124] entry
+commit: 517a5775</code></pre>
+<p>&lt;free-text prose: Session 400 filed GitHub issue #124 documenting broken “Read deeper (R-API walkthrough)” links on the published colony-manager- guide article – owner-reported, confirmed live via WebFetch, root-caused to a pkgdown/Quarto mixed-mode rendering gap, scoped beyond the single flagged column to all 10 affected links in the file via a full grep sweep. No code fix this session per the literal ask (“create… as an urgent issue”); the fix is deferred to a future session per SESSION_RUNNER’s plan/implementation-boundary discipline. Self-score 9/10: thorough root cause and full-file scope sweep, appropriate 1-and-done boundary (investigate + file, not fix). The one gap (no formal priority-label infrastructure in this repo) was worked around but not raised as its own question – defensible scope discipline, noted for awareness.&gt;</p>
 <pre class="handoff"><code>session: S399
 date: 2026-07-18
 status: complete

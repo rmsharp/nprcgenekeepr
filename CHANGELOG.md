@@ -47,6 +47,36 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-18 · \[issue \#124\] File urgent issue: colony-manager-guide’s “Read deeper” links point to .qmd not .html (Session 400)
+
+- **Deliverable:** owner reported that Section 2’s “Read deeper (R-API
+  walkthrough)” table column on the published colony-manager-guide
+  article links to raw `.qmd` source instead of rendered `.html` – file
+  one urgent GitHub issue. No `R/`/`tests/` code touched; no code fix
+  this session; TDD phase N/A.
+- **Investigation:** `WebFetch`-confirmed live on
+  <https://rmsharp.github.io/nprcgenekeepr/articles/colony-manager-guide.html>
+  – all 6 Section-2-table links resolve to `.qmd`. Grepped
+  `vignettes/articles/colony-manager-guide.qmd` and found 4 more
+  instances of the same pattern outside the table (lines 22, 46, 370,
+  530; 10 total affected links). Confirmed via
+  `grep -rl '\.qmd)' vignettes/articles/*.qmd` that no other article
+  source file has this pattern – isolated to this one file. Root-caused
+  to `vignettes/articles/_quarto.yml`’s Quarto-project declaration
+  (`project: render: ['*.qmd']`), which is what makes the
+  `.qmd`-link-with-auto-rewrite-to-`.html` convention available in
+  Quarto – the source correctly uses that convention, but pkgdown’s
+  mixed-mode Quarto build is evidently not performing the rewrite.
+- **Result:** filed [issue
+  \#124](https://github.com/rmsharp/nprcgenekeepr/issues/124) (`bug`
+  label; no “urgent” label exists in this repo, so priority is stated in
+  the title/body instead) with the full link inventory, root cause, and
+  two candidate fixes (root-cause the pkgdown/Quarto rewrite, or
+  directly retarget the 10 links to `.html`) for the implementing
+  session to choose between. Added a `BACKLOG.md` “Up Next” entry
+  (READY, Effort S) pointing at the issue so it surfaces in the next
+  Phase 0 priorities list.
+
 ### 2026-07-18 · \[ad hoc\] S399 HANDOFFS.md receipt commit-sha backfill, closed same-session
 
 - **Deliverable:** filled in this session’s own `HANDOFFS.md` receipt’s

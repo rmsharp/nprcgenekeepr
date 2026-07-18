@@ -30,6 +30,25 @@ behind (S367 origin, flagged S368/S369) is now also RESOLVED – S370
 
 ## Up Next
 
+**Fix broken “Read deeper” links in the colony-manager-guide article**
+(READY, Effort S) – GitHub issue
+[\#124](https://github.com/rmsharp/nprcgenekeepr/issues/124) (filed
+S400, 2026-07-18, owner-reported urgent). Section 2’s “Read deeper
+(R-API walkthrough)” table column on the live published site
+(<https://rmsharp.github.io/nprcgenekeepr/articles/colony-manager-guide.html>)
+links to raw `.qmd` source files instead of rendered `.html` pages (6
+links in the table; 4 more of the same pattern elsewhere in the same
+file –
+`vignettes/articles/colony-manager-guide.qmd:22,46,95-99,370,530`, 10
+total). Root cause: `vignettes/articles/_quarto.yml` makes this a Quarto
+project, so the source’s `.qmd`-link convention expects Quarto’s
+project-level auto-rewrite to `.html` at render time – pkgdown’s
+mixed-mode Quarto build is evidently not performing that rewrite. No
+other article source file has this pattern (isolated to this one file).
+Issue \#124 lists two fix options (root-cause the pkgdown/Quarto
+rewrite, or directly retarget the 10 links to `.html`) for the
+implementing session to choose between.
+
 **Act on the LabKey integration research recommendations** (BLOCKED –
 remainder needs a live LabKey server to test/observe, Effort M) —
 research pass DONE
