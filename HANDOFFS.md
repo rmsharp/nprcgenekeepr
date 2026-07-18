@@ -60,6 +60,25 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S398
+date: 2026-07-17
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Execute Document 2 Phase D (assemble/audit/verify/publish-gate
+  the colony-manager-guide article; resolve ColonyManagerTutorial.Rmd's
+  fate). In progress.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+(claim stub -- filled at close-out)
+
+```handoff
 session: S397
 date: 2026-07-17
 status: complete
