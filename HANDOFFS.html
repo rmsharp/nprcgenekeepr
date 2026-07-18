@@ -23,7 +23,7 @@
     <li><a class="dropdown-item" href="articles/age-sex-pyramid.html">Age-Sex Pyramid Plots</a></li>
     <li><a class="dropdown-item" href="articles/breeding-group-formation.html">Forming Breeding Groups</a></li>
     <li><a class="dropdown-item" href="articles/colony-manager-guide.html">nprcgenekeepr: Purpose, Approach, and a Colony Manager's Guide to Practice</a></li>
-    <li><a class="dropdown-item" href="articles/ColonyManagerTutorial.html">GeneKeepR: A Colony Manager's Tutorial</a></li>
+    <li><a class="dropdown-item" href="articles/ColonyManagerTutorial.html">GeneKeepR: A Colony Manager's Tutorial (retired)</a></li>
     <li><a class="dropdown-item" href="articles/engineering-the-2.0.0-release.html">Engineering nprcgenekeepr 2.0.0: Modular Architecture, Expanded Capability, and an AI-Assisted Development Process</a></li>
     <li><a class="dropdown-item" href="articles/fg-se-validation.html">Validating the Founder-Genome-Equivalent Standard Error</a></li>
     <li><a class="dropdown-item" href="articles/genetic-value-analysis.html">Genetic Value Analysis</a></li>
@@ -85,6 +85,77 @@ is `pending` at the Phase 1B claim and `complete` at
 close-out; a third value, `reconciled`, is written *only* by a later session's Phase 0 reconcile
 when it reconstructs a receipt a crashed session never completed — you never write it yourself.</code></pre>
 <p><code>self_score</code> and <code>predecessor_score</code> are distinct keys so one can never stand in for the other; omit <code>predecessor_score</code> on Session 1 (there is no predecessor to score). <code>commit: pending</code> and <code>what_was_done: pending</code> are legal at write time (the receipt ships in the very commit whose sha it would name); the next session reconciles them to real shas.</p>
+<pre class="handoff"><code>session: S398
+date: 2026-07-17
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- Document 2 Phase D fully executed (the publish gate).
+  Full claim-source audit, screenshot regeneration, pkgdown asset-copying
+  structural fix, ColonyManagerTutorial.Rmd retired. Document 2
+  (docs/planning/document2-colony-manager-guide-plan.md) is now fully
+  executed end to end -- no phase remains.
+what_was_done: 5-agent parallel claim-source audit found and fixed 3
+  genuine errors (Mermaid diagram missing 2 edges, founders-CSV column
+  typo + 3 missing columns, "three export buttons" undercounting a
+  12-button tab) and 3 stale callouts describing bugs (Excel-upload,
+  Custom sex-ratio, Potential-Parents fromCenter) that had actually been
+  fixed the same day Phase C drafted them (S350/351/353). Regenerated 2
+  screenshots via the checked-in shinytest2 script (extended to exercise
+  the now-working Custom sex-ratio numeric input); self-caught and fixed
+  a script-ordering regression (Genetic Diversity heatmap group count)
+  and a stochastic-output over-specific-claim issue (group formation is
+  a randomized search, not deterministic). Retired ColonyManagerTutorial.Rmd
+  to a redirect note; deleted 6 now-orphaned screenshot files. Found and
+  fixed a real structural gap: pkgdown only copies asset files living
+  under vignettes/articles/, not a sibling directory -- moved
+  vignettes/shiny_app_use/ to vignettes/articles/shiny_app_use/ (git mv),
+  rewrote 33 image paths + the capture script + .Rbuildignore. Full
+  verification green: quarto render, pkgdown::build_article(), R CMD
+  build + tar tzf (zero CRAN risk), 3 sibling articles spot-checked, full
+  regression suite 0/0/0. Commits `ac8033d0` (deliverable), `cf3ee7db`
+  (ledger/backlog/plan), `b1ac7508` (this receipt).
+next_steps: No READY, unblocked BACKLOG item remains as of this close-out
+  -- both remaining items (LabKey integration remainder, CRAN v2.0.0) are
+  BLOCKED on external state (a live LabKey server; CRAN's async review
+  response). Next session's Phase 0 should re-render the priorities list
+  fresh (check whether CRAN has responded, whether LabKey access has
+  become available) before assuming nothing is actionable. If still
+  blocked, consider a scoping/planning session to turn one of the
+  informational open GitHub issues (#116 Genetic Diversity Flags column,
+  #36 chimp-specific age-pyramid settings, #28 timestamped-location
+  parent inference, or the smaller #12/#11/#5 items) into a proper
+  BACKLOG item -- none of these are currently scoped enough to start
+  directly.
+key_files: docs/planning/document2-colony-manager-guide-plan.md (§6 Phase
+  D, §9 checklist, §11 decision 3 -- all now resolved/checked);
+  vignettes/articles/colony-manager-guide.qmd (the published article);
+  vignettes/articles/colony-manager-guide-screenshots.R (SHOT_DIR now
+  vignettes/articles/shiny_app_use/, Custom-ratio block moved to run
+  last); vignettes/ColonyManagerTutorial.Rmd (now a retirement redirect
+  note, was 748 lines); .Rbuildignore (removed the stale
+  ^vignettes/shiny_app_use$ line).
+gotchas: (1) pkgdown::build_article() needs the "articles/&lt;name&gt;" prefix
+  pkgdown uses internally, not the bare basename -- "Can't find article"
+  means try that, not "cache needs initializing" (S348's own guess was
+  wrong). (2) Custom sex-ratio group formation (R/modBreedingGroups.R) is
+  a stochastic search (Number of simulations default 10) -- two runs
+  with identical inputs gave different per-group compositions; never
+  cite an exact sub-breakdown from one run as a stable fact, describe
+  the setup and note it varies (matches the plan's own N6 precedent for
+  the GVA ranking cutover). (3) `library(nprcgenekeepr)` fails when R is
+  started from within vignettes/articles/ (renv activation doesn't
+  inherit there) -- pre-existing environment limitation, not a
+  regression; this is why 2 of 6 sibling feature articles can't be
+  locally re-rendered in this dev environment (confirmed pre-existing
+  per S348's identical finding).
+runtime_smoke: n/a for R/ code (none touched this session) -- but the
+  shinytest2 capture script IS itself a live runtime exercise of the
+  actual running Shiny app: 73/73 steps succeeded against the current
+  modular app, confirming the article's tab-by-tab claims match live
+  behavior, not just static source-reading.
+changelog_ref: CHANGELOG.md 2026-07-17 [BL-Document2PhaseD] entry
+commit: b1ac7508 (deliverable in ac8033d0, ledger/backlog in cf3ee7db)</code></pre>
 <pre class="handoff"><code>session: S397
 date: 2026-07-17
 status: complete

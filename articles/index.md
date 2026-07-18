@@ -12,8 +12,8 @@
   Groups](https://github.com/rmsharp/nprcgenekeepr/articles/breeding-group-formation.md):
 - [nprcgenekeepr: Purpose, Approach, and a Colony Manager's Guide to
   Practice](https://github.com/rmsharp/nprcgenekeepr/articles/colony-manager-guide.md):
-- [GeneKeepR: A Colony Manager's
-  Tutorial](https://github.com/rmsharp/nprcgenekeepr/articles/ColonyManagerTutorial.md):
+- [GeneKeepR: A Colony Manager's Tutorial
+  (retired)](https://github.com/rmsharp/nprcgenekeepr/articles/ColonyManagerTutorial.md):
 - [Engineering nprcgenekeepr 2.0.0: Modular Architecture, Expanded
   Capability, and an AI-Assisted Development
   Process](https://github.com/rmsharp/nprcgenekeepr/articles/engineering-the-2.0.0-release.md):

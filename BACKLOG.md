@@ -322,42 +322,13 @@ are both done; the issue is left OPEN, per the plan’s own §10 decision
 
 ## Documents (v1.0.8 -\> v2.0.0 write-up)
 
-**Execute “Document 2” plan (Phase D)** (READY, Effort M) – planning
-session DONE (S345), Phase A DONE (S346), Phase B DONE (S347), **Phase C
-DONE (S348)**: `docs/planning/document2-colony-manager-guide-plan.md` §6
-Phase C. Drafted `vignettes/articles/colony-manager-guide.qmd`
-(Abstract, Introduction, Sections 1-3, Conclusion); Section 3
-ported/modernized from `ColonyManagerTutorial.Rmd` using Phase B’s
-screenshots and Phase A’s re-derived N1/N2/N3/N4 numbers verbatim.
-Owner-resolved pre-drafting decisions: Input-tab narrates CSV with an
-inline Excel-bug caveat; Breeding-Groups subsection covers None/Harem
-fully, omits the Custom-ratio numeric demo (N7). Extended
-`colony-manager-guide-screenshots.R` with 2 more captures
-(owner-approved) for the Genetic Diversity and Potential Parents tabs,
-which Phase B’s tutorial-figure-based inventory had no way to include.
-`quarto render` of the article in isolation succeeds cleanly (zero
-missing images, zero unresolved cross-references). Next: **Phase D** –
-assemble (Abstract/Introduction/Conclusion full pass), full claim-source
-audit, decide `ColonyManagerTutorial.Rmd`’s fate (§11 decision 3),
-re-verify the pkgdown Reference-page citation live (§8 dragon 5 – the
-underlying dead-config bug this dragon flagged is now **fixed**, S354:
-root `_pkgdown.yml` carries the grouped `reference:` block and is
-re-synced against current `NAMESPACE`; see below and `CHANGELOG.md`.
-Phase D’s live re-verify is now confirming a real, working grouped
-Reference page, not chasing a still-open bug), and run the full
-verification checklist (§9:
-[`pkgdown::build_article()`](https://pkgdown.r-lib.org/reference/build_articles.html),
-`R CMD build .` + tarball check, spot-check sibling articles). See the
-plan’s §6 Phase D for full completion criteria. All three findings Phase
-C’s screenshot capture surfaced are now **fixed** (Excel-upload
-corruption S350; non-functional Custom sex ratio S351;
-missing-`fromCenter` example data S353 – see below and `CHANGELOG.md`),
-so Phase D can update the Potential Parents subsection to show the
-now-populated result (1,587 candidates) instead of only the
-graceful-degradation screenshot, if desired. The Custom-ratio numeric
-demo (N7), omitted from Section 3’s Breeding-Groups subsection per
-S348’s pre-drafting decision, can also be added in Phase D if desired –
-the control works end to end as of S351.
+(none remaining – Document 2
+(`docs/planning/document2-colony-manager-guide-plan.md`) is fully
+executed: planning DONE (S345), Phase A DONE (S346), Phase B DONE
+(S347), Phase C DONE (S348), **Phase D DONE (S398, 2026-07-17)** – full
+claim-source audit, `pkgdown`/`R CMD build` verification, and the
+`ColonyManagerTutorial.Rmd` retire/redirect decision. See
+`CHANGELOG.md`.)
 
 ## Audit follow-ups
 

@@ -43,7 +43,7 @@
     <li><a class="dropdown-item" href="../articles/age-sex-pyramid.html">Age-Sex Pyramid Plots</a></li>
     <li><a class="dropdown-item" href="../articles/breeding-group-formation.html">Forming Breeding Groups</a></li>
     <li><a class="dropdown-item" href="../articles/colony-manager-guide.html">nprcgenekeepr: Purpose, Approach, and a Colony Manager's Guide to Practice</a></li>
-    <li><a class="dropdown-item" href="../articles/ColonyManagerTutorial.html">GeneKeepR: A Colony Manager's Tutorial</a></li>
+    <li><a class="dropdown-item" href="../articles/ColonyManagerTutorial.html">GeneKeepR: A Colony Manager's Tutorial (retired)</a></li>
     <li><a class="dropdown-item" href="../articles/engineering-the-2.0.0-release.html">Engineering nprcgenekeepr 2.0.0: Modular Architecture, Expanded Capability, and an AI-Assisted Development Process</a></li>
     <li><a class="dropdown-item" href="../articles/fg-se-validation.html">Validating the Founder-Genome-Equivalent Standard Error</a></li>
     <li><a class="dropdown-item" href="../articles/genetic-value-analysis.html">Genetic Value Analysis</a></li>
@@ -84,12 +84,12 @@
 
     <section class="level2"><h2 id="sec-abstract">Abstract<a class="anchor" aria-label="anchor" href="#sec-abstract"></a>
 </h2>
-<p><code>nprcgenekeepr</code> provides genetic tools for primate-colony management: studbook quality control, pedigree construction and browsing, age-sex demographic display, genetic value analysis, and breeding-group formation, delivered through both a Shiny application (<code><a href="../reference/runGeneKeepR.html">runGeneKeepR()</a></code>) and an exposed R API. This article is a practical, screenshot-illustrated guide for colony managers and primate-center bioinformatics staff, complementing the engineering account in <a href="engineering-the-2.0.0-release.qmd">“Engineering nprcgenekeepr 2.0.0”</a> and the six feature-depth articles listed in <a href="#sec-approach" class="quarto-xref">Section 4</a>. Section 1 explains why the package exists; Section 2 maps its five function groups onto the app’s tabs and onto the two ways to use them (point-and-click or scripted); Section 3 walks a colony manager through the entire application, tab by tab, using the package’s own shipped example pedigree. Two production issues surfaced during this article’s own preparation are called out where they affect the walkthrough rather than glossed over: an Excel-upload defect that can silently corrupt sire/dam IDs (worked around here by using CSV), and a “Custom” breeding-group sex ratio option with no numeric input yet wired to it. All claims in this article are current as of 2026-07-10.</p>
+<p><code>nprcgenekeepr</code> provides genetic tools for primate-colony management: studbook quality control, pedigree construction and browsing, age-sex demographic display, genetic value analysis, and breeding-group formation, delivered through both a Shiny application (<code><a href="../reference/runGeneKeepR.html">runGeneKeepR()</a></code>) and an exposed R API. This article is a practical, screenshot-illustrated guide for colony managers and primate-center bioinformatics staff, complementing the engineering account in <a href="engineering-the-2.0.0-release.qmd">“Engineering nprcgenekeepr 2.0.0”</a> and the six feature-depth articles listed in <a href="#sec-approach" class="quarto-xref">Section 4</a>. Section 1 explains why the package exists; Section 2 maps its five function groups onto the app’s tabs and onto the two ways to use them (point-and-click or scripted); Section 3 walks a colony manager through the entire application, tab by tab, using the package’s own shipped example pedigree. This article’s own preparation surfaced and fixed three production issues along the way – an Excel-upload defect that could silently corrupt sire/dam IDs, a “Custom” breeding-group sex ratio option with no numeric input, and a shipped example pedigree missing a column the Potential Parents tab needs to demonstrate populated results – each described where it arose rather than glossed over. All claims in this article are current as of 2026-07-17.</p>
 </section><section class="level2"><h2 id="sec-introduction">Introduction<a class="anchor" aria-label="anchor" href="#sec-introduction"></a>
 </h2>
 <p>This article is an onboarding guide to <code>nprcgenekeepr</code> for the audience it was built for: primate-center bioinformatics staff and colony managers evaluating or learning to use the package. It answers three questions in order – <strong>why</strong> the package exists, <strong>how</strong> its capabilities are organized, and <strong>what it looks like to actually use it</strong> – using the Shiny application (<code><a href="../reference/runGeneKeepR.html">runGeneKeepR()</a></code>) as the walkthrough’s frame of reference.</p>
 <p>It is one of three documents that together cover the package from different angles. <a href="engineering-the-2.0.0-release.qmd">“Engineering nprcgenekeepr 2.0.0”</a> documents the modular-architecture migration and development process behind the current application – read it for the <em>how it was built</em> story. Six shorter feature articles (linked from <a href="#sec-approach" class="quarto-xref">Section 4</a>’s table) each walk one capability in depth, directly through the R API rather than the Shiny app. This article does neither of those jobs: it is the practical, tab-by-tab guide to <em>using</em> the application as shipped, aimed at a reader who wants to load a pedigree and get results, not read source code.</p>
-<p><strong>Scope.</strong> Every claim below describing the current application – tab list, control labels, default values, and any number tied to the package’s own <code>data(examplePedigree)</code> example data – was re-verified directly against the source and a live run of the app, as of 2026-07-10. Nothing here is carried forward uncritically from earlier tutorials.</p>
+<p><strong>Scope.</strong> Every claim below describing the current application – tab list, control labels, default values, and any number tied to the package’s own <code>data(examplePedigree)</code> example data – was re-verified directly against the source and a live run of the app, as of 2026-07-17. Nothing here is carried forward uncritically from earlier tutorials.</p>
 </section><section class="level2"><h2 id="sec-purpose">Section 1 – Purpose: Why nprcgenekeepr Exists<a class="anchor" aria-label="anchor" href="#sec-purpose"></a>
 </h2>
 <p>The goal of <code>nprcgenekeepr</code> is to implement genetic tools for colony management. It was initially conceived and developed as a Shiny web application at the Oregon National Primate Research Center (ONPRC) to facilitate analyses that center routinely performs, and has since been enhanced so that its underlying functions can also be used directly in R scripts rather than only through the Shiny interface (see <a href="#sec-approach" class="quarto-xref">Section 4</a>’s “two ways to use them”).</p>
@@ -161,15 +161,17 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
   C --&gt; D["Potential Parents&lt;br/&gt;tab"]
   C --&gt; E["Age-Sex Pyramid&lt;br/&gt;tab"]
   C --&gt; F["Genetic Value Analysis&lt;br/&gt;tab"]
-  F --&gt; G["Breeding Groups&lt;br/&gt;tab"]
+  C --&gt; G["Breeding Groups&lt;br/&gt;tab"]
+  F --&gt; G
   G --&gt; H["Genetic Diversity&lt;br/&gt;tab"]
+  F --&gt; H
 </pre>
 </div>
 <p></p></figure><p></p>
 </div>
 </div>
 </div>
-<p><strong>Two ways to use it.</strong> Everything in this pipeline is available both through the Shiny application walked in <a href="#sec-practice" class="quarto-xref">Section 5</a> and as directly callable R functions – <code>NAMESPACE</code> exports 182 functions as of 2026-07-10. An open GitHub issue (<a href="https://github.com/rmsharp/nprcgenekeepr/issues/37">#37</a>) tracks, function by function, which exports the Shiny app itself exercises versus which exist primarily for scripted or batch workflows; its own most recent re-verification (2026-06-16) predates the current export count, so treat its exact split as directional rather than a precise current figure. The practical takeaway for this article’s audience: if a task in <a href="#sec-practice" class="quarto-xref">Section 5</a> feels like it should be scriptable – batch-processing several pedigrees, or running a workflow without a browser – it very likely already is; the six feature articles in <a href="#tbl-function-groups" class="quarto-xref">Table 1</a> are worked examples of exactly that.</p>
+<p><strong>Two ways to use it.</strong> Everything in this pipeline is available both through the Shiny application walked in <a href="#sec-practice" class="quarto-xref">Section 5</a> and as directly callable R functions – <code>NAMESPACE</code> exports 182 functions as of 2026-07-17. An open GitHub issue (<a href="https://github.com/rmsharp/nprcgenekeepr/issues/37">#37</a>) tracks, function by function, which exports the Shiny app itself exercises versus which exist primarily for scripted or batch workflows; its own most recent re-verification (2026-06-16) predates the current export count, so treat its exact split as directional rather than a precise current figure. The practical takeaway for this article’s audience: if a task in <a href="#sec-practice" class="quarto-xref">Section 5</a> feels like it should be scriptable – batch-processing several pedigrees, or running a workflow without a browser – it very likely already is; the six feature articles in <a href="#tbl-function-groups" class="quarto-xref">Table 1</a> are worked examples of exactly that.</p>
 </section><section class="level2"><h2 id="sec-practice">Section 3 – Practice: A Colony Manager’s Walkthrough<a class="anchor" aria-label="anchor" href="#sec-practice"></a>
 </h2>
 <p>This section walks every tab of the Shiny application in order, using the package’s own shipped example data (<code>data(examplePedigree)</code>, <code>data(focalAnimals)</code>) throughout so every step below is reproducible. Start the application with:</p>
@@ -180,25 +182,25 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 </div>
 <p>(<code><a href="../reference/runModularApp.html">runModularApp()</a></code> also still launches the application but is deprecated in favor of <code><a href="../reference/runGeneKeepR.html">runGeneKeepR()</a></code>.) The complete online documentation, including the function reference and this article’s companions, is at <a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link uri">https://rmsharp.github.io/nprcgenekeepr/</a>.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/home_tab_landing.png" alt="GeneKeepR Home tab showing a welcome panel and six quick-link cards to Input, Pedigree Browser, Age-Sex Pyramid, Genetic Value Analysis, Summary Statistics, and Breeding Groups."></p>
+<figure><p><img src="shiny_app_use/home_tab_landing.png" alt="GeneKeepR Home tab showing a welcome panel and six quick-link cards to Input, Pedigree Browser, Age-Sex Pyramid, Genetic Value Analysis, Summary Statistics, and Breeding Groups."></p>
 <figcaption>The Home tab, the application’s landing page, with quick links to each major tab.</figcaption></figure>
 </div>
 <section class="level3"><h3 id="uploading-a-pedigree-file">Uploading a Pedigree File<a class="anchor" aria-label="anchor" href="#uploading-a-pedigree-file"></a>
 </h3>
 <p>The <strong>Input</strong> tab’s “Input Format” sub-tab documents the exact file formats and column requirements accepted – consult it directly rather than a description here, since it is kept in sync with the package’s actual reader code and this article is not.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/input_format_subtab.png" alt="Input tab showing the Input Format documentation sub-tab with file structure guidance."></p>
+<figure><p><img src="shiny_app_use/input_format_subtab.png" alt="Input tab showing the Input Format documentation sub-tab with file structure guidance."></p>
 <figcaption>The Input tab’s “Input Format” documentation sub-tab.</figcaption></figure>
 </div>
 <p>Choose a <strong>File Type</strong> (Excel or Text) and a <strong>File Content</strong> option – pedigree only, pedigree and genotypes together or in separate files, or focal animals only (built from a database connection or, offline, from a second uploaded pedigree file) – then browse for the file itself.</p>
 <div>
 <blockquote>
-<p><strong>Warning</strong></p>
-<p><strong>Use CSV, not Excel, until this is fixed.</strong> As of 2026-07-10, uploading an Excel workbook shaped like the package’s own shipped example pedigree (several placeholder-parent rows before alphanumeric IDs) silently corrupts the sire/dam columns: <code>readxl</code> infers those columns’ type from the early blank rows, guesses <code>logical</code>, and then converts every later alphanumeric ID it cannot parse as logical to <code>NA</code> – with no warning surfaced to the user. This is the same upload path any Excel-format pedigree goes through, not an artifact of any particular file. <strong>This walkthrough therefore uses CSV</strong>, which round-trips byte-identically and is unaffected. Check the project’s <a href="https://github.com/rmsharp/nprcgenekeepr/issues">GitHub issue tracker</a> for this defect’s fix status before relying on the Excel path.</p>
+<p><strong>Note</strong></p>
+<p><strong>Fixed before publication.</strong> An earlier draft of this walkthrough found that uploading an Excel workbook shaped like the package’s own shipped example pedigree (several placeholder-parent rows before alphanumeric IDs) silently corrupted the sire/dam columns: <code>readxl</code> inferred those columns’ type from the early blank rows, guessed <code>logical</code>, and converted every later alphanumeric ID it could not parse as logical to <code>NA</code> – with no warning surfaced to the user. This affected the same upload path any Excel-format pedigree goes through, not just this example file. <strong>Fixed</strong> by routing the Excel read through the same <code>col_types = "text"</code> helper the package’s other Excel readers already use, so both CSV and Excel now round-trip correctly. This walkthrough continues to use CSV below for simplicity, not to work around any remaining defect.</p>
 </blockquote>
 </div>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/opening_screen_top_red_oval.png" alt="Input tab sidebar showing File Type, File Content, and file-selection controls before a file is chosen."></p>
+<figure><p><img src="shiny_app_use/opening_screen_top_red_oval.png" alt="Input tab sidebar showing File Type, File Content, and file-selection controls before a file is chosen."></p>
 <figcaption>The Input tab’s file-selection sidebar, before a file is chosen.</figcaption></figure>
 </div>
 <div class="cell">
@@ -206,17 +208,17 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/makeExamplePedigreeFile.html">makeExamplePedigreeFile</a></span><span class="op">(</span>fileType <span class="op">=</span> <span class="st">"csv"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/input_example_pedigree_xlsx.png" alt="Input tab showing the example pedigree file selected for upload."></p>
+<figure><p><img src="shiny_app_use/input_example_pedigree_xlsx.png" alt="Input tab showing the example pedigree file selected for upload."></p>
 <figcaption>After selecting the example pedigree file.</figcaption></figure>
 </div>
 <p>Two optional fields, <strong>Minimum Sire Age</strong> and <strong>Minimum Dam Age</strong>, are each left blank by default so that a species- and sex-specific breeding-age default is used automatically; type a number in either field to override that sex’s floor (for macaques, which may reproduce as early as two years of age, a value of 2 is appropriate for both).</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/input_minParentAgeSequence.png" alt="Input tab showing the Minimum Sire Age and Minimum Dam Age fields both set to 2."></p>
+<figure><p><img src="shiny_app_use/input_minParentAgeSequence.png" alt="Input tab showing the Minimum Sire Age and Minimum Dam Age fields both set to 2."></p>
 <figcaption>Minimum sire and dam age fields filled in.</figcaption></figure>
 </div>
 <p>Selecting <strong>Read and Check Pedigree</strong> reads the file and validates it – checking that every required column is present and that the pedigree is internally consistent (parent-of-the-right-sex, no duplicate IDs, valid dates, and more; the full set of checks is listed below). Results appear on the “QC Summary” sub-tab. For the shipped example pedigree read as CSV, this reports <strong>Records Processed: 3,694, Errors: 0, Warnings: 1</strong>.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/read_and_check_pedigree.png" alt="QC Summary sub-tab showing Records Processed 3694, Errors 0, Warnings 1."></p>
+<figure><p><img src="shiny_app_use/read_and_check_pedigree.png" alt="QC Summary sub-tab showing Records Processed 3694, Errors 0, Warnings 1."></p>
 <figcaption>QC Summary after reading and checking the example pedigree.</figcaption></figure>
 </div>
 <div class="cell">
@@ -280,44 +282,44 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 </h3>
 <p>The <strong>Pedigree Browser</strong> tab displays the pedigree in a paged table (10, 25, 50, or 100 rows at a time) with a <strong>Display Unknown IDs</strong> option. Unknown IDs (UIDs) are placeholder IDs the application generates, by default starting with the letter U, for the unrecorded parent of an animal with only one known parent.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/pb_10_rows_display_unknown_ids.png" alt="Pedigree Browser table with Display Unknown IDs checked, showing UNKNOWN placeholder IDs."></p>
+<figure><p><img src="shiny_app_use/pb_10_rows_display_unknown_ids.png" alt="Pedigree Browser table with Display Unknown IDs checked, showing UNKNOWN placeholder IDs."></p>
 <figcaption>Pedigree Browser with Display Unknown IDs checked (the default).</figcaption></figure>
 </div>
 <p>Unchecking <strong>Display Unknown IDs</strong> removes those placeholder rows. For the example pedigree, the row count reduces from <strong>3,694 to 2,322</strong> – the difference, 1,372, is the number of UNKNOWN placeholder animals the application generated to stand in for unrecorded parents.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/pb_no_unknown_displayed.png" alt="Pedigree Browser table with Display Unknown IDs unchecked, showing 2322 rows."></p>
+<figure><p><img src="shiny_app_use/pb_no_unknown_displayed.png" alt="Pedigree Browser table with Display Unknown IDs unchecked, showing 2322 rows."></p>
 <figcaption>Pedigree Browser with Display Unknown IDs unchecked.</figcaption></figure>
 </div>
 <p><strong>Focal animals.</strong> The middle panel lets you narrow the browser to a subset of the pedigree – your <em>focal animals</em> – either by typing IDs directly or by uploading a CSV file of IDs.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/pb_focal_animal_text_box.png" alt="Pedigree Browser Focal Animals panel with an empty text area for entering animal IDs."></p>
+<figure><p><img src="shiny_app_use/pb_focal_animal_text_box.png" alt="Pedigree Browser Focal Animals panel with an empty text area for entering animal IDs."></p>
 <figcaption>The Focal Animals panel, before any IDs are entered.</figcaption></figure>
 </div>
 <p>Typing five IDs (<code>FJS7RQ, H6T2FF, HEVL3L, I04JZV, S63QDN</code>), unchecking <strong>Display Unknown IDs</strong>, checking <strong>Trim pedigree based on focal animals</strong>, and selecting <strong>Update Focal Animals</strong> keeps only those five animals and their ancestors and descendants – <strong>54 animals</strong> in total for this example.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/pb_5_focal_animals_small.png" alt="Pedigree Browser table trimmed to 54 animals related to 5 focal animals."></p>
+<figure><p><img src="shiny_app_use/pb_5_focal_animals_small.png" alt="Pedigree Browser table trimmed to 54 animals related to 5 focal animals."></p>
 <figcaption>The Pedigree Browser trimmed to 5 focal animals and their relatives (54 animals total).</figcaption></figure>
 </div>
 <p>A larger focal-animal list works the same way. The package ships a second example object, <code>data(focalAnimals)</code>, with 327 IDs; uploading it as a CSV via <strong>Choose CSV file with focal animals</strong> and trimming keeps those animals plus everyone needed to connect them – <strong>962 animals</strong> in total.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/pb_selection_large_focal_group.png" alt="Pedigree Browser showing a larger focal-animal CSV file selected for upload."></p>
+<figure><p><img src="shiny_app_use/pb_selection_large_focal_group.png" alt="Pedigree Browser showing a larger focal-animal CSV file selected for upload."></p>
 <figcaption>Uploading a larger focal-animal list (the shipped <code>focalAnimals</code> example, 327 IDs).</figcaption></figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/pb_select_trim_for_focal_animals.png" alt="Pedigree Browser with Trim pedigree based on focal animals checked, ready to update."></p>
+<figure><p><img src="shiny_app_use/pb_select_trim_for_focal_animals.png" alt="Pedigree Browser with Trim pedigree based on focal animals checked, ready to update."></p>
 <figcaption>Trim pedigree option selected, before clicking Update.</figcaption></figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/pb_trimmed_for_focal_animals.png" alt="Pedigree Browser table trimmed to 962 animals related to the larger focal-animal list."></p>
+<figure><p><img src="shiny_app_use/pb_trimmed_for_focal_animals.png" alt="Pedigree Browser table trimmed to 962 animals related to the larger focal-animal list."></p>
 <figcaption>The pedigree trimmed to the larger focal group (962 animals total).</figcaption></figure>
 </div>
 <p>Checking <strong>Clear Focal Animals</strong> and selecting <strong>Update Focal Animals</strong> again reads an empty ID list, restoring the full, untrimmed pedigree.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/pb_focal_animals_before_clear.png" alt="Pedigree Browser before clearing the focal-animal list, still trimmed."></p>
+<figure><p><img src="shiny_app_use/pb_focal_animals_before_clear.png" alt="Pedigree Browser before clearing the focal-animal list, still trimmed."></p>
 <figcaption>Before clearing the focal-animal list.</figcaption></figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/pb_focal_animals_after_clear.png" alt="Pedigree Browser after clearing the focal-animal list, showing the full untrimmed pedigree."></p>
+<figure><p><img src="shiny_app_use/pb_focal_animals_after_clear.png" alt="Pedigree Browser after clearing the focal-animal list, showing the full untrimmed pedigree."></p>
 <figcaption>After clearing the focal-animal list – the full pedigree is restored.</figcaption></figure>
 </div>
 <p>A population must be defined here before proceeding to Genetic Value Analysis. The rest of this walkthrough continues with the <strong>full, untrimmed</strong> example pedigree (the focal-animal trim above illustrates the feature, not the population used for the remaining tabs) – matching the shipped <code>examplePedigree</code>’s own downstream numbers below.</p>
@@ -325,7 +327,7 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 </h3>
 <p>The <strong>Age-Sex Pyramid</strong> tab displays a standard population pyramid for whichever pedigree population is currently selected in Pedigree Browser, with options for age units, color scheme, and whether to show counts. For the full example pedigree, it shows <strong>332 living animals</strong> (123 male, 209 female).</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/age_plot.png" alt="Age-Sex Pyramid plot showing 332 living animals, 123 male and 209 female."></p>
+<figure><p><img src="shiny_app_use/age_plot.png" alt="Age-Sex Pyramid plot showing 332 living animals, 123 male and 209 female."></p>
 <figcaption>The Age-Sex Pyramid for the full example pedigree (332 living animals).</figcaption></figure>
 </div>
 </section><section class="level3"><h3 id="genetic-value-analysis">Genetic Value Analysis<a class="anchor" aria-label="anchor" href="#genetic-value-analysis"></a>
@@ -334,69 +336,69 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 <p>Genome uniqueness is estimated by a gene-drop simulation (MacCluer et al. 1986; Ballou and Lacy 1995): unique alleles are assigned to every pedigree founder and simulated forward through the pedigree according to Mendelian rules. Because it is an estimate, each value carries a sampling standard error (the <code>guSE</code> column) that shrinks roughly with the square root of the iteration count – but what actually matters for breeding decisions is whether the <em>ranking order</em> has stabilized, not just whether <code>guSE</code> is small. The default is <strong>1,000 iterations</strong>, which experience with the pedigrees this package has been used on gives a stable selection order; to check whether 1,000 is enough for a specific pedigree, run <code><a href="../reference/gvaConvergence.html">gvaConvergence()</a></code> (see the <em>Gene-Drop Iteration Convergence</em> vignette, <code><a href="../articles/gvaConvergence.html">vignette("gvaConvergence", package = "nprcgenekeepr")</a></code>).</p>
 <p>An optional <strong>Kinship Overrides</strong> panel accepts a CSV or Excel file of outside-information kinship values (columns <code>id1</code>, <code>id2</code>, <code>kinship</code>) for specific pairs – for example, genotype-confirmed relatedness that disagrees with the pedigree. Overrides apply to rankings, breeding groups, and summary statistics regardless of tab order, though the Summary Statistics relationship <em>label</em> stays pedigree-derived even when its displayed value is overridden.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/gva_calculating.png" alt="Genetic Value Analysis tab showing analysis options and the optional Kinship Overrides panel, ready to run."></p>
+<figure><p><img src="shiny_app_use/gva_calculating.png" alt="Genetic Value Analysis tab showing analysis options and the optional Kinship Overrides panel, ready to run."></p>
 <figcaption>Genetic Value Analysis, ready to run (1000 iterations, threshold 4, Kinship Overrides panel visible).</figcaption></figure>
 </div>
 <p>Selecting <strong>Run Analysis</strong> starts the gene-drop process. When it completes, a results table shows each animal’s rank, mean kinship, genome uniqueness, and a <code>value</code> column classifying it as High Value, Low Value, or Undetermined. “Show top N” and an ID filter control how many rows are displayed.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/gva_first_high_value.png" alt="Genetic Value Analysis results table showing the top-ranked animals by genetic value."></p>
+<figure><p><img src="shiny_app_use/gva_first_high_value.png" alt="Genetic Value Analysis results table showing the top-ranked animals by genetic value."></p>
 <figcaption>Genetic Value Analysis results, default view (top 20).</figcaption></figure>
 </div>
 <p><strong>A correction to an older claim.</strong> Animals with no recorded parentage (“Undetermined” – typically imports or very young animals not yet assigned parents) are <em>not</em> automatically high value. Since issue #9’s ranking correction (<code>R/modGeneticValue.R:289-301</code>), the results table sorts Undetermined animals to the <em>bottom</em> of the ranking, so a genuinely uncertain genome-uniqueness estimate no longer inflates them to the top. Because the exact row at which values transition from High to Low is a property of one stochastic gene-drop run, this article does not pin a specific row number to it – widening “Show top N” (to 500 below) shows the full distribution instead.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/gva_high_and_low_value.png" alt="Genetic Value Analysis results table widened to 500 rows, showing the transition from High Value to Low Value and Undetermined animals sorted to the bottom."></p>
+<figure><p><img src="shiny_app_use/gva_high_and_low_value.png" alt="Genetic Value Analysis results table widened to 500 rows, showing the transition from High Value to Low Value and Undetermined animals sorted to the bottom."></p>
 <figcaption>Genetic Value Analysis results widened to show more of the ranking, including lower-ranked and Undetermined animals.</figcaption></figure>
 </div>
 </section><section class="level3"><h3 id="summary-statistics">Summary Statistics<a class="anchor" aria-label="anchor" href="#summary-statistics"></a>
 </h3>
 <p>The <strong>Summary Statistics and Plots</strong> tab uses the results from Genetic Value Analysis. Definitions of genome uniqueness and kinship are on the <strong>Genetic Value Analysis and Breeding Group Description</strong> tab; founder-equivalent and founder-genome-equivalent definitions are at the bottom of this tab (see also <a href="fg-se-validation.qmd">“Validating the Founder-Genome-Equivalent Standard Error”</a>).</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/ss_first_view.png" alt="Summary Statistics tab showing the first view of genetic diversity metrics."></p>
+<figure><p><img src="shiny_app_use/ss_first_view.png" alt="Summary Statistics tab showing the first view of genetic diversity metrics."></p>
 <figcaption>Summary Statistics, first view.</figcaption></figure>
 </div>
-<p>Three export buttons – <strong>Export Kinship Matrix</strong>, <strong>First-Order Relationships</strong>, and <strong>Export Female/Male Founders</strong> – produce CSV files whose contents are illustrated below (opened in a spreadsheet program, not captured from the app itself, since these depict exported file contents rather than application UI):</p>
+<p>The tab has several export buttons producing CSV files, three of which are illustrated below (opened in a spreadsheet program, not captured from the app itself, since these depict exported file contents rather than application UI): <strong>Export Kinship Matrix</strong>, <strong>Export First-Order Relationships</strong>, and <strong>Export Female Founders</strong> (a separate <strong>Export Male Founders</strong> button produces the same column structure for males). The tab also has <strong>Export All Relationships</strong> and <strong>Export Relationship Classes</strong> buttons, plus six further buttons for exporting the six summary plots below as PNGs, not illustrated here:</p>
 <ul>
 <li>
 <p>The kinship matrix has a row and column for every analyzed individual, plus a first row and first column of IDs.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/ss_kinship_matrix.png" alt="Spreadsheet view of an exported kinship matrix CSV file."></p>
+<figure><p><img src="shiny_app_use/ss_kinship_matrix.png" alt="Spreadsheet view of an exported kinship matrix CSV file."></p>
 <figcaption>First few rows of an exported kinship matrix CSV.</figcaption></figure>
 </div>
 </li>
 <li>
 <p>The first-order relationships file has columns <code>id</code>, <code>parents</code>, <code>offspring</code>, <code>siblings</code>, and <code>total</code>, counted from known relationships.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/ss_first_order_relationships.png" alt="Spreadsheet view of an exported first-order relationships CSV file."></p>
+<figure><p><img src="shiny_app_use/ss_first_order_relationships.png" alt="Spreadsheet view of an exported first-order relationships CSV file."></p>
 <figcaption>First few rows of an exported first-order-relationships CSV.</figcaption></figure>
 </div>
 </li>
 <li>
-<p>The founders files have columns <code>id</code>, <code>sires</code>, <code>dam</code>, <code>sex</code>, <code>gen</code>, <code>birth</code>, <code>exit</code>, <code>age</code>, <code>recordStatus</code>, <code>population</code>, and <code>pedNum</code>.</p>
+<p>The founders files have columns <code>id</code>, <code>sire</code>, <code>dam</code>, <code>sex</code>, <code>gen</code>, <code>birth</code>, <code>exit</code>, <code>age</code>, <code>ancestry</code>, <code>origin</code>, <code>status</code>, <code>recordStatus</code>, <code>population</code>, and <code>pedNum</code>.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/ss_female_founders.png" alt="Spreadsheet view of an exported female-founders CSV file."></p>
+<figure><p><img src="shiny_app_use/ss_female_founders.png" alt="Spreadsheet view of an exported female-founders CSV file."></p>
 <figcaption>First few rows of an exported female-founders CSV.</figcaption></figure>
 </div>
 </li>
 </ul>
 <p>Six plots – histograms and boxplots of kinship coefficients, their Z-scores, and genome uniqueness scores – are shown together and can each be exported as a PNG.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/ss_trimmed_all_plots.png" alt="Six summary plots: histograms and boxplots of kinship coefficients, Z-scores, and genome uniqueness."></p>
+<figure><p><img src="shiny_app_use/ss_trimmed_all_plots.png" alt="Six summary plots: histograms and boxplots of kinship coefficients, Z-scores, and genome uniqueness."></p>
 <figcaption>All six summary plots together.</figcaption></figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/ss_export_mean_kinship_coefficient_histogram.png" alt="Exported mean kinship coefficient histogram plot."></p>
+<figure><p><img src="shiny_app_use/ss_export_mean_kinship_coefficient_histogram.png" alt="Exported mean kinship coefficient histogram plot."></p>
 <figcaption>One exported plot: the mean kinship coefficient histogram.</figcaption></figure>
 </div>
 </section><section class="level3"><h3 id="breeding-group-formation">Breeding Group Formation<a class="anchor" aria-label="anchor" href="#breeding-group-formation"></a>
 </h3>
 <p>The <strong>Breeding Groups</strong> tab forms candidate breeding groups from a source population you choose (top-ranked animals from Genetic Value Analysis, an uploaded list, or all available animals), subject to a maximum kinship threshold, a target number of groups, and a minimum breeding age.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/breeding_group_first_view.png" alt="Breeding Group Formation tab showing the configuration panel: source, number of groups, kinship threshold, sex ratio, and minimum age."></p>
+<figure><p><img src="shiny_app_use/breeding_group_first_view.png" alt="Breeding Group Formation tab showing the configuration panel: source, number of groups, kinship threshold, sex ratio, and minimum age."></p>
 <figcaption>Breeding Group Formation, initial configuration.</figcaption></figure>
 </div>
 <p>Selecting <strong>Form Groups</strong> with the number of groups set to 1 produces a single group under the <strong>Groups</strong> sub-tab.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/breeding_group_1.png" alt="Breeding Group Formation results showing one formed group."></p>
+<figure><p><img src="shiny_app_use/breeding_group_1.png" alt="Breeding Group Formation results showing one formed group."></p>
 <figcaption>One breeding group formed.</figcaption></figure>
 </div>
 <p><strong>Sex ratio.</strong> Three options control how each group’s sex composition is constrained:</p>
@@ -406,26 +408,31 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 <li>
 <strong>Harem (1M:NF)</strong> – each group is seeded with a single male and filled with females.</li>
 <li>
-<strong>Custom</strong> – intended to target an arbitrary females-per-male ratio.</li>
+<strong>Custom</strong> – a “Custom ratio (F per M):” numeric field appears (default 1.0, range 0.5-20.0) targeting an arbitrary females-per-male ratio.</li>
 </ul>
 <div>
 <blockquote>
-<p><strong>Warning</strong></p>
-<p><strong>“Custom” has no numeric input yet.</strong> As of 2026-07-10, selecting “Custom” gives no way to enter the desired ratio anywhere in the UI; internally it is treated the same as “None.” A future release will add the missing numeric field – check the project’s <a href="https://github.com/rmsharp/nprcgenekeepr/issues">GitHub issue tracker</a> for status before relying on a specific custom ratio.</p>
+<p><strong>Note</strong></p>
+<p><strong>Fixed before publication.</strong> An earlier draft of this walkthrough found selecting “Custom” gave no way to enter the desired ratio anywhere in the UI – internally it was treated the same as “None.” <strong>Fixed</strong> by adding the numeric field described above; group formation now uses that value as the target ratio.</p>
 </blockquote>
+</div>
+<p>The screenshot below shows one working example: the default 20 top-ranked candidate animals, a target ratio of 2.5 females per male, and “Number of groups” set to 6. Because group formation is a randomized search (the default <strong>Number of simulations</strong> is 10), the exact number and composition of groups formed varies from run to run rather than reproducing identically – this particular run produced 7 groups, each drawn toward the target ratio where enough candidates of each sex were available.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="shiny_app_use/breeding_group_sex_ratio_specification.png" alt="Breeding Group Formation Groups sub-tab showing 7 groups formed in one run using a Custom sex ratio of 2.5 females per male; the exact group count and composition vary between runs."></p>
+<figcaption>Breeding groups formed with a Custom sex ratio of 2.5 (females per male) – one run of the randomized search.</figcaption></figure>
 </div>
 <p><strong>Seeding groups with specific animals.</strong> Behavioral constraints – an existing social group, or an infant that should stay with its dam – can be accommodated by checking <strong>Seed groups with specific animals</strong>, which opens one text area per group for listing the animals that must be assigned to it; the algorithm fills in the remaining membership around those seeds. The screenshot below shows the six text areas this creates for a 6-group run, before any IDs are typed into them.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/breeding_group_6_infants_with_dam.png" alt="Breeding Group Formation showing six empty per-group seed text areas for a 6-group run."></p>
+<figure><p><img src="shiny_app_use/breeding_group_6_infants_with_dam.png" alt="Breeding Group Formation showing six empty per-group seed text areas for a 6-group run."></p>
 <figcaption>The six per-group seed text areas (Number of groups = 6), shown empty.</figcaption></figure>
 </div>
 <p>Each formed group’s full membership, and – if <strong>Include kinship in display of groups</strong> was checked before forming – its within-group kinship values, can be reviewed on the <strong>Group Detail</strong> sub-tab, one group at a time.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/breeding_group_first_group_no_kinship_seeds_indicated.png" alt="Group Detail sub-tab showing one formed group's membership without kinship values."></p>
+<figure><p><img src="shiny_app_use/breeding_group_first_group_no_kinship_seeds_indicated.png" alt="Group Detail sub-tab showing one formed group's membership without kinship values."></p>
 <figcaption>Group Detail for one formed group (no kinship shown).</figcaption></figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/breeding_group_6_seed_grps_grp_6_kinship.png" alt="Group Detail sub-tab showing group membership with within-group kinship values included."></p>
+<figure><p><img src="shiny_app_use/breeding_group_6_seed_grps_grp_6_kinship.png" alt="Group Detail sub-tab showing group membership with within-group kinship values included."></p>
 <figcaption>Group Detail with kinship values included, viewing a different group of the same 6-group run.</figcaption></figure>
 </div>
 <p>A <strong>Statistics</strong> sub-tab summarizes all formed groups at once. Groups and their kinship matrices can each be exported individually to a file and location you choose.</p>
@@ -433,7 +440,7 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 </h3>
 <p>The <strong>Genetic Diversity</strong> tab (issue <a href="https://github.com/rmsharp/nprcgenekeepr/issues/112">#112</a>) is new since the package’s original tutorial-era documentation. It monitors the diversity of breeding groups <em>after</em> they are formed: once groups exist (Breeding Groups tab) and a Genetic Value Analysis has been run, it renders a red/yellow/green heat map with one row per group and one column per metric – <strong>Value</strong> (the proportion of low-value animals in the group), <strong>Origin</strong> (Indian- vs. Chinese-origin status, shown only when the pedigree has an <code>ancestry</code> column), <strong>Production</strong> (whether age-appropriate breeding females are present for the selected <strong>Housing type</strong>, “Shelter pens” or “Corral”), and <strong>Inbreeding</strong> (within-group kinship risk involving the group’s male). A group with no assessed value, or an undefined Inbreeding result, is scored red rather than shown as healthy, so missing data surfaces instead of hiding as a false green. Until groups are formed and an analysis has run, the tab shows guidance instead of an empty plot.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/genetic_diversity_heatmap.png" alt="Genetic Diversity heat map with 6 rows (one per breeding group) and 4 columns (Value, Origin, Production, Inbreeding), each cell colored red, yellow, or green."></p>
+<figure><p><img src="shiny_app_use/genetic_diversity_heatmap.png" alt="Genetic Diversity heat map with 6 rows (one per breeding group) and 4 columns (Value, Origin, Production, Inbreeding), each cell colored red, yellow, or green."></p>
 <figcaption>The Genetic Diversity heat map for the 6 breeding groups formed above.</figcaption></figure>
 </div>
 </section><section class="level3"><h3 id="potential-parents">Potential Parents<a class="anchor" aria-label="anchor" href="#potential-parents"></a>
@@ -442,16 +449,17 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 <div>
 <blockquote>
 <p><strong>Note</strong></p>
-<p>This particular walkthrough’s example pedigree does not demonstrate a populated result: the shipped <code>data(examplePedigree)</code> has no <code>fromCenter</code> (colony-origin) column, which this feature requires to identify which animals are in-colony candidates versus animals whose origin is unrecorded. Rather than fabricate a populated example, the screenshot below shows the application’s own, correctly-degraded response to that condition – a real and useful thing to know if your own pedigree is missing this column.</p>
+<p><strong>Fixed before publication.</strong> An earlier draft of this walkthrough found the shipped <code>data(examplePedigree)</code> had no <code>fromCenter</code> (colony-origin) column, which this feature requires to identify which animals are in-colony candidates versus animals whose origin is unrecorded – so this section could only show the application’s own correctly-degraded empty-result response rather than a populated example. <strong>Fixed</strong> by deriving a real <code>fromCenter</code> column for the shipped example pedigree from its existing <code>origin</code>/<code>recordStatus</code> fields; the screenshot below now shows real results. If your own pedigree is missing this column, you will see that same correctly-degraded response instead of the populated table below.</p>
 </blockquote>
 </div>
+<p>Selecting <strong>Find Potential Parents</strong> against the full example pedigree reports “Found candidate parents for <strong>1,587</strong> animal(s) with at least one unknown parent,” in a sortable, paginated, CSV-downloadable table.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="../shiny_app_use/potential_parents_results.png" alt="Potential Parents tab showing a warning that the dataset has no colony-origin (fromCenter) field, so potential parents cannot be identified, and an empty results table."></p>
-<figcaption>Potential Parents on a pedigree with no <code>fromCenter</code> column: the app reports it plainly rather than showing (or silently omitting) incorrect results.</figcaption></figure>
+<figure><p><img src="shiny_app_use/potential_parents_results.png" alt="Potential Parents tab showing a results table of candidate sires and dams for 1,587 animals with at least one unknown parent."></p>
+<figcaption>Potential Parents results for the full example pedigree (1,587 animals with at least one candidate parent found).</figcaption></figure>
 </div>
 </section></section><section class="level2"><h2 id="sec-conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#sec-conclusion"></a>
 </h2>
-<p>This article covered why <code>nprcgenekeepr</code> exists, how its five function groups map onto the Shiny application’s tabs and onto a scriptable R API, and what it looks like to actually use every tab of that application against the package’s own example data. For more depth on any one capability, see the six feature articles in <a href="#tbl-function-groups" class="quarto-xref">Table 1</a>; for the story of how the current modular application came to be, see <a href="engineering-the-2.0.0-release.qmd">“Engineering nprcgenekeepr 2.0.0”</a>. Please report questions, comments, or bugs – including the two production issues flagged above (the Excel-upload defect and the “Custom” sex-ratio gap), neither of which is yet tracked as a numbered GitHub issue – through the <a href="https://github.com/rmsharp/nprcgenekeepr/issues">GitHub issue tracker</a>.</p>
+<p>This article covered why <code>nprcgenekeepr</code> exists, how its five function groups map onto the Shiny application’s tabs and onto a scriptable R API, and what it looks like to actually use every tab of that application against the package’s own example data. For more depth on any one capability, see the six feature articles in <a href="#tbl-function-groups" class="quarto-xref">Table 1</a>; for the story of how the current modular application came to be, see <a href="engineering-the-2.0.0-release.qmd">“Engineering nprcgenekeepr 2.0.0”</a>. This article’s own preparation surfaced and fixed three production issues along the way – an Excel-upload sire/dam corruption defect, a non-functional “Custom” breeding-group sex ratio, and a shipped example pedigree missing the column the Potential Parents tab needs to demonstrate populated results – each described where it arose in Section 3. Please report any further questions, comments, or bugs through the <a href="https://github.com/rmsharp/nprcgenekeepr/issues">GitHub issue tracker</a>.</p>
 <p>This work has been supported in part by NIH grants P51 RR13986 to the Southwest National Primate Research Center and P51 OD011092 to the Oregon National Primate Research Center.</p>
 </section><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
