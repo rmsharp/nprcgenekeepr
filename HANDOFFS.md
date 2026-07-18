@@ -60,6 +60,25 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S400
+date: 2026-07-18
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: File one urgent GitHub issue -- the "Read deeper (R-API
+  walkthrough)" column in Section 2 of the published colony-manager-guide
+  pkgdown article links to raw .qmd source instead of rendered .html.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<free-text prose: pending>
+
+```handoff
 session: S399
 date: 2026-07-18
 status: complete
