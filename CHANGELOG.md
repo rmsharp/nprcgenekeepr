@@ -43,6 +43,16 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-17 · [ad hoc] S398 addendum -- investigate and resolve post-commit screenshot drift
+- **Deliverable:** a post-commit `git status` showed 30 of 33 just-committed screenshot
+  files as locally modified again (small byte-size deltas, plausibly capture-to-capture
+  PNG-encoding non-determinism, except `potential_parents_results.png` at ~33x larger).
+  Investigated via file mtimes and a visual re-check of the uncommitted content (still
+  correct, just a different capture) before deciding how to proceed -- discarded the
+  drift (`git restore`) back to the already-verified committed state rather than
+  re-committing an unreviewed variant, then re-confirmed `quarto render` still resolves
+  cleanly against the restored state.
+
 ### 2026-07-17 · [ad hoc] S398 HANDOFFS.md receipt commit-sha backfill, closed same-session
 - **Deliverable:** filled in this session's own `HANDOFFS.md` receipt's `commit: pending`
   placeholders with the three real close-out commit shas (`ac8033d0` deliverable,
