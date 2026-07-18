@@ -88,8 +88,8 @@ what_was_done: 5-agent parallel claim-source audit found and fixed 3
   rewrote 33 image paths + the capture script + .Rbuildignore. Full
   verification green: quarto render, pkgdown::build_article(), R CMD
   build + tar tzf (zero CRAN risk), 3 sibling articles spot-checked, full
-  regression suite 0/0/0. Commit `pending` (filled in a same-session
-  follow-up commit once this commit's own sha is known).
+  regression suite 0/0/0. Commits `ac8033d0` (deliverable), `cf3ee7db`
+  (ledger/backlog/plan), `b1ac7508` (this receipt).
 next_steps: No READY, unblocked BACKLOG item remains as of this close-out
   -- both remaining items (LabKey integration remainder, CRAN v2.0.0) are
   BLOCKED on external state (a live LabKey server; CRAN's async review
@@ -130,11 +130,8 @@ runtime_smoke: n/a for R/ code (none touched this session) -- but the
   modular app, confirming the article's tab-by-tab claims match live
   behavior, not just static source-reading.
 changelog_ref: CHANGELOG.md 2026-07-17 [BL-Document2PhaseD] entry
-commit: pending
+commit: b1ac7508 (deliverable in ac8033d0, ledger/backlog in cf3ee7db)
 ```
-(commit sha to be backfilled in a same-session follow-up commit, per the
-S331-S347 precedent of closing this within the session rather than
-leaving it for the next session's Phase 0 reconcile)
 
 ```handoff
 session: S397
