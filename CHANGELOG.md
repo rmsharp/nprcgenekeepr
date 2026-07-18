@@ -43,6 +43,13 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-17 · [ad hoc] S398 HANDOFFS.md receipt commit-sha backfill, closed same-session
+- **Deliverable:** filled in this session's own `HANDOFFS.md` receipt's `commit: pending`
+  placeholders with the three real close-out commit shas (`ac8033d0` deliverable,
+  `cf3ee7db` ledger/backlog/plan, `b1ac7508` this receipt itself), matching the
+  S331-S347 precedent of closing this within the same session rather than leaving it
+  for the next session's Phase 0 reconcile.
+
 ### 2026-07-17 · [BL-Document2PhaseD] Execute Document 2 Phase D -- claim-source audit, pkgdown asset fix, retire ColonyManagerTutorial.Rmd (Session 398)
 - **Deliverable:** `docs/planning/document2-colony-manager-guide-plan.md` §6 Phase D --
   the publish gate for `vignettes/articles/colony-manager-guide.qmd`. TDD phase N/A
