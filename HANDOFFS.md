@@ -60,6 +60,25 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S399
+date: 2026-07-18
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Process the real CRAN incoming-pretest auto-check email for the
+  v2.0.0 submission (received 2026-07-18) -- verify actual 00check.log
+  content, update cran-comments.md/BACKLOG.md, reconcile the reported 604s
+  check time against the 600s archival threshold.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S398
 date: 2026-07-17
 status: complete
