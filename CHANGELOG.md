@@ -43,6 +43,19 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-20 · [ad hoc] Branch-merge-strategy decision for fix/figure2-contrast-engineering-2.0.0-release (Session 405)
+- **Deliverable:** owner-picked from the Phase 0 priorities-list `AskUserQuestion` --
+  resolve the DECISION NEEDED item (first flagged S402, tracked in `BACKLOG.md` since
+  S404) on whether to merge the branch now or keep accumulating work on it.
+- **Decision (via `AskUserQuestion`):** keep accumulating further article work on
+  `fix/figure2-contrast-engineering-2.0.0-release`; do not open a PR/merge yet. All
+  four fixes already on the branch (S401-S404) remain independently verified and
+  complete; none are blocked by staying unmerged. `BACKLOG.md` item left open
+  (decision recorded, not resolved) since the branch itself is still unmerged and the
+  merge-vs-continue choice will be revisited again in a future session.
+- **Verification:** documentation-only action, no `R/`/`tests/` code touched; TDD
+  Phase N/A (decision-recording bookkeeping, not implementation).
+
 ### 2026-07-20 · [issue #124] Fix broken "Read deeper" links in colony-manager-guide.qmd (Session 404)
 - **Deliverable:** owner-picked from the Phase 0 priorities-list `AskUserQuestion` --
   fix the 10 broken "Read deeper" links on the live published `colony-manager-guide`

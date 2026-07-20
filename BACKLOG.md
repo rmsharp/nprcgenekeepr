@@ -45,15 +45,17 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       (HTTP 200) before editing; rendered output re-verified to contain zero remaining
       `.qmd` hrefs. **Issue #124 stays open** -- the fix is on the unmerged/unpushed branch
       below, not yet live on the published site. See `CHANGELOG.md`.)
-- [ ] **Decide branch-merge strategy for `fix/figure2-contrast-engineering-2.0.0-release`**
-      (DECISION NEEDED -- owner-only, Effort S) -- 10 commits (S401 Figure 2 contrast fix,
-      S402 Figure 2 subgraph-title/node-box overlap fix, S403 colony-manager-guide Mermaid
-      theme defensive fix, S404 colony-manager-guide "Read deeper" link fix), still unmerged
-      to `master` and unpushed to `origin` as of S404 (owner explicitly scoped S404 to stay
-      off `master`). All four fixes are independently verified and complete. Owner should
-      decide: open a PR/merge now, or keep accumulating "other aspects of the article" work
-      on this branch first. First flagged in S402's handoff, carried through S403 and S404
-      without being tracked in `BACKLOG.md` itself until now.
+- [ ] **Branch-merge strategy for `fix/figure2-contrast-engineering-2.0.0-release`**
+      (DECISION MADE -- owner, S405, 2026-07-20, via `AskUserQuestion`: **keep
+      accumulating** further article work on this branch; do not open a PR/merge yet)
+      -- 10 commits (S401 Figure 2 contrast fix, S402 Figure 2 subgraph-title/node-box
+      overlap fix, S403 colony-manager-guide Mermaid theme defensive fix, S404
+      colony-manager-guide "Read deeper" link fix), still unmerged to `master` and
+      unpushed to `origin`. All four fixes remain independently verified and complete;
+      none are blocked on the merge. Item stays open (not resolved) since the branch
+      itself is still unmerged and the decision is to keep adding to it -- revisit the
+      merge-vs-continue choice again in a future session. First flagged in S402's
+      handoff, tracked in `BACKLOG.md` since S404.
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
       needs a live LabKey server to test/observe, Effort M) — research pass DONE
       (`docs/research/labkey-integration-options-2026-06-19.md`, S143). **Rec #3 (explicit optional

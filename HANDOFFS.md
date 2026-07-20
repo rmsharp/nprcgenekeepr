@@ -62,18 +62,33 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S405
 date: 2026-07-20
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS -- record the owner's branch-merge-strategy decision
-  for fix/figure2-contrast-engineering-2.0.0-release (keep accumulating, do
-  not merge yet) in BACKLOG.md and CHANGELOG.md.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- recorded the owner's branch-merge-strategy decision
+  (keep accumulating, do not merge yet) for
+  fix/figure2-contrast-engineering-2.0.0-release in BACKLOG.md/CHANGELOG.md.
+what_was_done: Presented the Phase 0 priorities list via AskUserQuestion;
+  owner picked the branch-merge DECISION NEEDED item. Framed the actual
+  merge-vs-continue choice as a second AskUserQuestion; owner chose keep
+  accumulating. Reworded BACKLOG.md's branch-merge item to DECISION MADE
+  (left open, not resolved -- branch still unmerged). Added CHANGELOG.md
+  [ad hoc] entry. Commits: 923bdcb0 (claim), pending (close-out).
+next_steps: No engineering action open from this deliverable. Branch
+  fix/figure2-contrast-engineering-2.0.0-release (4 fixes, S401-S404) stays
+  unmerged/unpushed pending either more owner-directed article work or a
+  future revisit of the merge question. LabKey (BLOCKED, needs live server)
+  and CRAN resubmission (BLOCKED, awaiting CRAN reviewer) both unchanged.
+key_files: BACKLOG.md (branch-merge item, DECISION NEEDED -> DECISION MADE),
+  CHANGELOG.md (2026-07-20 S405 [ad hoc] entry), SESSION_NOTES.md (full S405
+  writeup).
+gotchas: BACKLOG.md's "DECISION MADE" wording is NOT "item resolved" -- the
+  bullet stays open because the branch remains unmerged and may still grow.
+  gh issue view/list still hit the deprecated-projectCards bug on this repo
+  (S260/S387/S404 precedent) -- use gh api instead.
+runtime_smoke: n/a -- pure BACKLOG.md/CHANGELOG.md decision-recording
+  bookkeeping, no R package runtime behavior touched.
+changelog_ref: CHANGELOG.md 2026-07-20 S405 entry ([ad hoc])
 commit: pending
 ```
 (receipt completed at Phase 3D close-out)
