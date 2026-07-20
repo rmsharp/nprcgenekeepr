@@ -89,7 +89,7 @@ gotchas: BACKLOG.md's "DECISION MADE" wording is NOT "item resolved" -- the
 runtime_smoke: n/a -- pure BACKLOG.md/CHANGELOG.md decision-recording
   bookkeeping, no R package runtime behavior touched.
 changelog_ref: CHANGELOG.md 2026-07-20 S405 entry ([ad hoc])
-commit: pending
+commit: 3484ab22
 ```
 (receipt completed at Phase 3D close-out)
 
