@@ -43,6 +43,43 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-20 · [issue #124] Fix broken "Read deeper" links in colony-manager-guide.qmd (Session 404)
+- **Deliverable:** owner-picked from the Phase 0 priorities-list `AskUserQuestion` --
+  fix the 10 broken "Read deeper" links on the live published `colony-manager-guide`
+  article (issue #124, filed S400, owner-reported URGENT): all resolved to raw `.qmd`
+  source files (triggering browser downloads) instead of the intended rendered
+  `.html` pages. Same branch as S401-S403 (`fix/figure2-contrast-engineering-2.0.0-release`,
+  owner explicitly scoped this session to stay off `master`). No `R/`/`tests/` code
+  touched; TDD phase N/A throughout (markdown link hrefs only, confirmed via an
+  explicit pre-work `AskUserQuestion`, same precedent as S401-403).
+- **Approach decision (pre-work `AskUserQuestion`):** issue #124 offered two options --
+  root-cause the pkgdown/Quarto `.qmd`->`.html` auto-rewrite, or directly retarget the
+  10 links to `.html`. Verified first: a bare local `quarto render` of this project
+  (no pkgdown involved, no `type: website` in `vignettes/articles/_quarto.yml`) leaves
+  `.qmd` hrefs unrewritten too -- falsifying the issue's "pkgdown's mixed-mode build
+  doesn't perform the rewrite" framing. The rewrite is a Quarto `type: website`/`book`
+  project feature this directory's `_quarto.yml` never enables, under pkgdown or
+  otherwise; fixing that would mean adding `type: website`, a bigger cross-cutting
+  change to the documented mixed-mode pkgdown/Quarto integration -- out of scope for
+  this Effort-S fix per `SAFEGUARDS.md`. Owner confirmed: direct link retarget.
+- **Fix:** changed all 10 `.qmd` hrefs to `.html` directly in
+  `vignettes/articles/colony-manager-guide.qmd` (lines 26, 50, 99-103, 374, 534 --
+  2 in-prose `engineering-the-2.0.0-release` references, the 6-link Section 2
+  function-group table, and 2 more `fg-se-validation`/`engineering-the-2.0.0-release`
+  in-prose references). Pre-verified all 7 distinct link targets exist live at the
+  exact same relative path (`curl` HTTP 200 for each `https://rmsharp.github.io/
+  nprcgenekeepr/articles/<name>.html`) before editing. Post-edit: `quarto render`
+  succeeded cleanly; grepped the rendered output directly and confirmed all 7
+  targets resolve to `.html` hrefs with zero remaining `.qmd` hrefs.
+- **Documented:** `PROJECT_LEARNINGS.md` Learning 372 (corrects Learning 368's
+  "pkgdown fails to perform the rewrite" framing to "the rewrite mechanism was
+  never enabled for this project type"). `BACKLOG.md`'s issue #124 item resolved;
+  added a new tracked item for the still-open branch-merge decision (first flagged
+  in S402's handoff, carried through S403/S404 without a `BACKLOG.md` entry until
+  now).
+- **Note:** issue #124 stays open on GitHub -- the fix is on the unmerged/unpushed
+  branch, not yet live on the published site.
+
 ### 2026-07-19 · [ad hoc] Verify the low-contrast Mermaid defect in colony-manager-guide.qmd -- not affected, applied theme:default defensively anyway (Session 403)
 - **Deliverable:** owner picked this item from the S401-authored `BACKLOG.md` "Up
   Next" list (via the Phase 0 priorities-list `AskUserQuestion`) -- verify the

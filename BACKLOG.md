@@ -31,21 +31,29 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `PROJECT_LEARNINGS.md` Learning 371, which corrects Learning 369's root-cause claim).
       `format: html: mermaid: theme: default` applied to this file's frontmatter anyway, owner
       directed, as a defensive/future-proofing measure. See `CHANGELOG.md`.)
-- [ ] **Fix broken "Read deeper" links in the colony-manager-guide article**
-      (READY, Effort S) -- GitHub issue [#124](https://github.com/rmsharp/nprcgenekeepr/issues/124)
-      (filed S400, 2026-07-18, owner-reported urgent). Section 2's "Read deeper
-      (R-API walkthrough)" table column on the live published site
-      (https://rmsharp.github.io/nprcgenekeepr/articles/colony-manager-guide.html)
-      links to raw `.qmd` source files instead of rendered `.html` pages (6 links
-      in the table; 4 more of the same pattern elsewhere in the same file --
-      `vignettes/articles/colony-manager-guide.qmd:22,46,95-99,370,530`, 10 total).
-      Root cause: `vignettes/articles/_quarto.yml` makes this a Quarto project, so
-      the source's `.qmd`-link convention expects Quarto's project-level
-      auto-rewrite to `.html` at render time -- pkgdown's mixed-mode Quarto build
-      is evidently not performing that rewrite. No other article source file has
-      this pattern (isolated to this one file). Issue #124 lists two fix options
-      (root-cause the pkgdown/Quarto rewrite, or directly retarget the 10 links to
-      `.html`) for the implementing session to choose between.
+- [ ] (none remaining -- the "fix broken 'Read deeper' links in the colony-manager-guide
+      article" item (issue [#124](https://github.com/rmsharp/nprcgenekeepr/issues/124), filed
+      S400) is RESOLVED on the `fix/figure2-contrast-engineering-2.0.0-release` branch --
+      fixed S404 (2026-07-20): all 10 `.qmd` hrefs retargeted directly to `.html`
+      (`vignettes/articles/colony-manager-guide.qmd:26,50,99-103,374,534`). Pre-work
+      verification found Learning 368's "pkgdown's mixed-mode build doesn't perform the
+      rewrite" framing was incomplete -- a bare local `quarto render` of the same project
+      (no pkgdown involved) produces the identical unrewritten `.qmd` href, because the
+      rewrite is a `type: website`/`book` Quarto project feature this directory's
+      `_quarto.yml` never enables (see `PROJECT_LEARNINGS.md` Learning 372, which corrects
+      Learning 368). All 7 distinct link targets confirmed live at the fixed relative path
+      (HTTP 200) before editing; rendered output re-verified to contain zero remaining
+      `.qmd` hrefs. **Issue #124 stays open** -- the fix is on the unmerged/unpushed branch
+      below, not yet live on the published site. See `CHANGELOG.md`.)
+- [ ] **Decide branch-merge strategy for `fix/figure2-contrast-engineering-2.0.0-release`**
+      (DECISION NEEDED -- owner-only, Effort S) -- 10 commits (S401 Figure 2 contrast fix,
+      S402 Figure 2 subgraph-title/node-box overlap fix, S403 colony-manager-guide Mermaid
+      theme defensive fix, S404 colony-manager-guide "Read deeper" link fix), still unmerged
+      to `master` and unpushed to `origin` as of S404 (owner explicitly scoped S404 to stay
+      off `master`). All four fixes are independently verified and complete. Owner should
+      decide: open a PR/merge now, or keep accumulating "other aspects of the article" work
+      on this branch first. First flagged in S402's handoff, carried through S403 and S404
+      without being tracked in `BACKLOG.md` itself until now.
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
       needs a live LabKey server to test/observe, Effort M) — research pass DONE
       (`docs/research/labkey-integration-options-2026-06-19.md`, S143). **Rec #3 (explicit optional

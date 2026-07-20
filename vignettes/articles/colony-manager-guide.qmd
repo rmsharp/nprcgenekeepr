@@ -23,7 +23,7 @@ display, genetic value analysis, and breeding-group formation, delivered
 through both a Shiny application (`runGeneKeepR()`) and an exposed R API. This
 article is a practical, screenshot-illustrated guide for colony managers and
 primate-center bioinformatics staff, complementing the engineering account in
-["Engineering nprcgenekeepr 2.0.0"](engineering-the-2.0.0-release.qmd) and the
+["Engineering nprcgenekeepr 2.0.0"](engineering-the-2.0.0-release.html) and the
 six feature-depth articles listed in @sec-approach. Section 1 explains why the
 package exists; Section 2 maps its five function groups onto the app's tabs
 and onto the two ways to use them (point-and-click or scripted); Section 3
@@ -47,7 +47,7 @@ or learning to use the package. It answers three questions in order --
 
 It is one of three documents that together cover the package from different
 angles. ["Engineering nprcgenekeepr
-2.0.0"](engineering-the-2.0.0-release.qmd) documents the modular-architecture
+2.0.0"](engineering-the-2.0.0-release.html) documents the modular-architecture
 migration and development process behind the current application -- read it
 for the *how it was built* story. Six shorter feature articles (linked from
 @sec-approach's table) each walk one capability in depth, directly through
@@ -96,11 +96,11 @@ that demonstrates the same underlying functions directly through the R API.
 
 | # | Function group | App tab(s) | Read deeper (R-API walkthrough) |
 |---|---|---|---|
-| 1 | Quality control of studbooks | Input | [Studbook Quality Control](studbook-quality-control.qmd) |
-| 2 | Pedigree construction and browsing, including identifying candidate parents for animals with unknown parentage | Pedigree Browser, Potential Parents | [Building a Focal-Animal Pedigree Offline](offline-focal-animal-workflow.qmd) |
-| 3 | Age-sex demographic display | Age-Sex Pyramid | [Age-Sex Pyramid Plots](age-sex-pyramid.qmd) |
-| 4 | Genetic value analysis (mean kinship, genome uniqueness) | Genetic Value Analysis, Genetic Value Analysis and Breeding Group Description | [Genetic Value Analysis](genetic-value-analysis.qmd); [Validating the Founder-Genome-Equivalent Standard Error](fg-se-validation.qmd) |
-| 5 | Breeding-group formation and ongoing diversity monitoring | Breeding Groups, Genetic Diversity | [Forming Breeding Groups](breeding-group-formation.qmd) |
+| 1 | Quality control of studbooks | Input | [Studbook Quality Control](studbook-quality-control.html) |
+| 2 | Pedigree construction and browsing, including identifying candidate parents for animals with unknown parentage | Pedigree Browser, Potential Parents | [Building a Focal-Animal Pedigree Offline](offline-focal-animal-workflow.html) |
+| 3 | Age-sex demographic display | Age-Sex Pyramid | [Age-Sex Pyramid Plots](age-sex-pyramid.html) |
+| 4 | Genetic value analysis (mean kinship, genome uniqueness) | Genetic Value Analysis, Genetic Value Analysis and Breeding Group Description | [Genetic Value Analysis](genetic-value-analysis.html); [Validating the Founder-Genome-Equivalent Standard Error](fg-se-validation.html) |
+| 5 | Breeding-group formation and ongoing diversity monitoring | Breeding Groups, Genetic Diversity | [Forming Breeding Groups](breeding-group-formation.html) |
 
 : Function groups, the app tabs that expose them, and the companion articles
 that demonstrate them via the R API. {#tbl-function-groups}
@@ -371,7 +371,7 @@ Analysis. Definitions of genome uniqueness and kinship are on the **Genetic
 Value Analysis and Breeding Group Description** tab; founder-equivalent and
 founder-genome-equivalent definitions are at the bottom of this tab (see also
 ["Validating the Founder-Genome-Equivalent Standard
-Error"](fg-se-validation.qmd)).
+Error"](fg-se-validation.html)).
 
 ![Summary Statistics, first view.](shiny_app_use/ss_first_view.png){fig-alt="Summary Statistics tab showing the first view of genetic diversity metrics."}
 
@@ -531,7 +531,7 @@ it looks like to actually use every tab of that application against the
 package's own example data. For more depth on any one capability, see the six
 feature articles in @tbl-function-groups; for the story of how the current
 modular application came to be, see ["Engineering nprcgenekeepr
-2.0.0"](engineering-the-2.0.0-release.qmd). This article's own preparation
+2.0.0"](engineering-the-2.0.0-release.html). This article's own preparation
 surfaced and fixed three production issues along the way -- an Excel-upload
 sire/dam corruption defect, a non-functional "Custom" breeding-group sex
 ratio, and a shipped example pedigree missing the column the Potential

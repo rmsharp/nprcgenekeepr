@@ -62,20 +62,58 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S404
 date: 2026-07-20
-status: pending
-self_score: pending
-predecessor_score: 9
-active_task: Fix broken "Read deeper" links in colony-manager-guide.qmd
-  (issue #124) -- retarget 10 .qmd hrefs to .html.
-what_was_done: pending
-next_steps: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- fixed all 10 broken "Read deeper" links in
+  vignettes/articles/colony-manager-guide.qmd (issue #124). Direct .qmd->.html
+  retarget, owner-confirmed approach. Same branch as S401-S403
+  (fix/figure2-contrast-engineering-2.0.0-release), still unmerged/unpushed
+  per explicit owner instruction to stay off master this session.
+what_was_done: Tested issue #124's stated root cause (pkgdown's mixed-mode
+  build "not performing" Quarto's .qmd->.html rewrite) directly via a bare
+  local quarto render with no pkgdown involved -- found the .qmd hrefs still
+  unrewritten, falsifying that framing. Real cause: the rewrite is a Quarto
+  type:website/book project feature; vignettes/articles/_quarto.yml sets only
+  project:render:[...], no type: key, so the rewrite never fires here under
+  pkgdown or otherwise. Pre-verified all 7 distinct link targets live at
+  HTTP 200 at the same relative path, then retargeted all 10 .qmd hrefs to
+  .html directly (5 Edit calls: 2 in-prose engineering-the-2.0.0-release
+  refs, the 6-link Section 2 table, 2 more fg-se-validation/engineering
+  in-prose refs). quarto render succeeded cleanly; grepped the rendered
+  output's href= attributes directly, confirmed 7/7 targets resolve to
+  .html and zero .qmd hrefs remain. Recorded PROJECT_LEARNINGS.md Learning
+  372 (corrects Learning 368's root-cause framing). Commit sha filled below
+  at close-out (see `commit:` field; the HANDOFFS.md receipt sha itself is
+  backfilled next session per this project's established pattern).
+next_steps: (1) Branch-merge decision for
+  fix/figure2-contrast-engineering-2.0.0-release -- now formally tracked in
+  BACKLOG.md (10 commits: S401/S402/S403/S404 fixes, all independently
+  verified complete) -- owner decides merge-now vs. keep-accumulating.
+  (2) LabKey integration (BLOCKED, needs live server) and CRAN resubmission
+  (BLOCKED, awaiting CRAN review) both unchanged, no action open. Issue #124
+  stays open on GitHub until the branch is merged/deployed -- do not close it
+  from this fix alone.
 key_files: vignettes/articles/colony-manager-guide.qmd:26,50,99-103,374,534
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+  (the fix); PROJECT_LEARNINGS.md Learning 372 (root-cause writeup, corrects
+  Learning 368); CHANGELOG.md 2026-07-20 S404 entry; BACKLOG.md (#124 item
+  resolved, branch-merge-decision item added).
+gotchas: (1) gh issue view/list still hit the deprecated-projectCards
+  GraphQL error on this repo -- use `gh api repos/rmsharp/nprcgenekeepr/issues/<N>`
+  instead. (2) A Quarto project's .qmd->.html auto-rewrite needs
+  type:website/book in _quarto.yml -- this directory never sets it, so ANY
+  future cross-article link added anywhere in vignettes/articles/ must be
+  authored as a direct .html href from the start, not the .qmd convention,
+  or it will reproduce this exact defect. (3) Live site still shows the
+  ORIGINAL broken .qmd links (fix is real in source/CHANGELOG/LEARNINGS, not
+  yet deployed) -- same unmerged-branch caveat S403 left for Figure 2.
+runtime_smoke: n/a -- Quarto vignette-article markdown-link change, no R
+  package runtime behavior touched. Verified via quarto render + direct
+  href= inspection of rendered output + live-target HTTP-200 pre-check.
+changelog_ref: CHANGELOG.md 2026-07-20 [issue #124] entry
 commit: pending
 ```
-(stub written at Phase 1B claim; overwritten with the full receipt at close-out)
+(receipt completed at Phase 3D close-out)
 
 ```handoff
 session: S403
