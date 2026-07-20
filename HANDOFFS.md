@@ -62,21 +62,38 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S406
 date: 2026-07-20
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS -- (1) render engineering-the-2.0.0-release.qmd,
-  (2) audit the other 6 vignettes/articles/*.qmd files for the same
-  qmd-vs-html link defect issue #124 found, fix any found.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- rendered engineering-the-2.0.0-release.qmd (clean,
+  exit 0) and audited the other 6 vignettes/articles/*.qmd files for the
+  qmd-vs-html link defect issue #124 found. Zero links of any kind found in
+  any of the 6 files -- verified via a positive-control check against files
+  known to contain links, not just a bare zero-match grep. No fixes needed.
+what_was_done: Two AskUserQuestion gates to pin the owner's directional
+  "continue accumulating article work" answer into a concrete deliverable.
+  Claimed session (2bda92f8). quarto render engineering-the-2.0.0-release.qmd
+  (exit 0, 0 warnings/errors). grep swept the 6 other qmd files for
+  qmd-targeting links (0 found), broadened to any link syntax (0 found),
+  then ran the same pattern against 2 files known to contain links (46/44
+  matches) to confirm the search itself works before trusting the null
+  result. Documented the discipline as PROJECT_LEARNINGS.md Learning 373.
+next_steps: No engineering action open. Branch
+  fix/figure2-contrast-engineering-2.0.0-release (11 commits) stays
+  unmerged/unpushed, DECISION MADE (keep accumulating) per S405. LabKey and
+  CRAN resubmission remain BLOCKED, unchanged from S405.
+key_files: PROJECT_LEARNINGS.md (Learning 373); SESSION_NOTES.md (S406
+  entry); no vignettes/articles/*.qmd content changed.
+gotchas: Bash tool shell cwd persists across calls in a session -- a
+  cd-containing command leaves later calls in that directory; run pwd
+  before trusting relative paths. "6/6 audited, 0 defects" means these
+  files have zero links of any kind, not zero qmd-specific links among
+  other checked links -- see Learning 373.
+runtime_smoke: n/a -- docs/vignette-article verification only, no R package
+  runtime behavior touched.
+changelog_ref: 2026-07-20 S406 entry, [ad hoc]
 commit: pending
 ```
-<pending>
 
 ```handoff
 session: S405

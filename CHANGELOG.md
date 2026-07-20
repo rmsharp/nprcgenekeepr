@@ -43,6 +43,23 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-20 · [ad hoc] Render engineering-the-2.0.0-release.qmd + audit 6 articles for the issue-#124 link defect class (Session 406)
+- **Deliverable:** owner-directed. (1) Render `vignettes/articles/engineering-the-2.0.0-release.qmd`
+  and confirm clean render. (2) Audit the other 6 `vignettes/articles/*.qmd` files
+  (age-sex-pyramid, breeding-group-formation, fg-se-validation, genetic-value-analysis,
+  offline-focal-animal-workflow, studbook-quality-control) for the same defect class
+  issue #124 found in `colony-manager-guide.qmd` -- cross-article links resolving to raw
+  `.qmd` source instead of rendered `.html` -- and fix any found.
+- **Result:** `quarto render` of `engineering-the-2.0.0-release.qmd` succeeded cleanly
+  (exit 0, 0 warnings/errors). The 6-file audit found zero links of any kind in any of
+  the 6 files (not just zero `.qmd`-specific links) -- verified via a positive control
+  (the same search pattern against 2 files known to contain real links, returning 46/44
+  matches) before trusting the null result, rather than reporting "0 findings" from a
+  bare zero-match grep alone. No fixes were needed; no `.qmd` file content changed.
+- **Verification:** documentation-only action, no `R/`/`tests/` code touched; TDD Phase
+  N/A (verification/audit, zero edits made). Discipline documented as
+  `PROJECT_LEARNINGS.md` Learning 373.
+
 ### 2026-07-20 · [ad hoc] Branch-merge-strategy decision for fix/figure2-contrast-engineering-2.0.0-release (Session 405)
 - **Deliverable:** owner-picked from the Phase 0 priorities-list `AskUserQuestion` --
   resolve the DECISION NEEDED item (first flagged S402, tracked in `BACKLOG.md` since
