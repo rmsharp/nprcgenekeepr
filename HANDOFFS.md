@@ -92,7 +92,7 @@ gotchas: Bash tool shell cwd persists across calls in a session -- a
 runtime_smoke: n/a -- docs/vignette-article verification only, no R package
   runtime behavior touched.
 changelog_ref: 2026-07-20 S406 entry, [ad hoc]
-commit: pending
+commit: 49837f31
 ```
 
 ```handoff
