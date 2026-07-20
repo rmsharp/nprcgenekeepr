@@ -24,6 +24,25 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
 - [ ] (none remaining)
 
 ## Up Next
+- [ ] **Fix Figure 2's subgraph-title/node-box text overlap in engineering-the-2.0.0-release.qmd**
+      (READY, Effort S) -- discovered S401 (2026-07-19) while fixing Figure 2's low contrast (see
+      `CHANGELOG.md`). Both subgraph titles ("After -- R/appUI.R + R/appServer.R, port 6013";
+      "Before -- inst/application/, port 6012") wrap onto a second line that visually overlaps/
+      truncates against the first child node box beneath it (`appUI.R`/`ui.r`) -- a pre-existing
+      Mermaid flowchart layout defect, orthogonal to the contrast fix and still present after it.
+      `vignettes/articles/engineering-the-2.0.0-release.qmd:150-166` (the `{mermaid}` flowchart
+      cell). Likely fix: shorten the subgraph title text, or add vertical spacing/padding between
+      the subgraph label and its first child node. One of the "other aspects of the article" the
+      owner named as follow-up work when scoping S401 to contrast only.
+- [ ] **Verify + likely fix the same low-contrast Mermaid defect in colony-manager-guide.qmd**
+      (READY, Effort S) -- flagged S401 (2026-07-19), unverified. `colony-manager-guide.qmd`'s own
+      Mermaid diagram (`vignettes/articles/colony-manager-guide.qmd:115`) is rendered through the
+      identical pkgdown mixed-mode Quarto pipeline as `engineering-the-2.0.0-release.qmd`'s Figure 2
+      (same bare frontmatter, no `mermaid` theme config) -- near-certainly has the same undefined-
+      `--mermaid-*`-CSS-variable low-contrast defect (see `CHANGELOG.md`'s S401 entry and
+      `PROJECT_LEARNINGS.md` Learning 369 for the root cause and fix pattern). Not confirmed via a
+      live screenshot this session -- out of scope (a different article). If confirmed, the fix is
+      the same one-line `format: html: mermaid: theme: default` addition to this file's frontmatter.
 - [ ] **Fix broken "Read deeper" links in the colony-manager-guide article**
       (READY, Effort S) -- GitHub issue [#124](https://github.com/rmsharp/nprcgenekeepr/issues/124)
       (filed S400, 2026-07-18, owner-reported urgent). Section 2's "Read deeper

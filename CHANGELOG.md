@@ -43,6 +43,62 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-19 · [ad hoc] Fix low-contrast Mermaid diagram colors in engineering-the-2.0.0-release.qmd Figure 2 (Session 401)
+- **Deliverable:** owner flagged low contrast in Figure 2 (the monolith-vs-modular
+  architecture diagram) via a screenshot of the published article. Fix scoped to
+  contrast only, on a new branch `fix/figure2-contrast-engineering-2.0.0-release` --
+  "other aspects of the article" explicitly deferred to future sessions. No
+  `R/`/`tests/` code touched; TDD phase N/A (Quarto vignette-article rendering
+  config, not production R code).
+- **Root cause:** the published page renders both Mermaid diagrams in this article
+  client-side via `mermaid.js` (`<pre class="mermaid mermaid-js">`), using Quarto's
+  bundled `mermaid-init.js`. Its fallback path applies a `themeCSS` built entirely
+  from `--mermaid-*` CSS custom properties (`--mermaid-node-bg-color`,
+  `--mermaid-fg-color`, etc.) -- but those variables are normally defined by
+  Quarto's own bootswatch SCSS theme pipeline (`:root { --mermaid-*: ...; }`),
+  which only runs when Quarto compiles its own site/book theme. pkgdown's
+  mixed-mode Quarto integration (`vignettes/articles/_quarto.yml`) renders each
+  `.qmd` to a fragment and re-wraps it in pkgdown's own Bootstrap template --
+  Quarto's `--mermaid-*` variable block is never generated or linked, so every
+  themed color falls back to an undefined/inherited value on the live site,
+  producing the muddy, low-contrast look the owner flagged. Confirmed empirically:
+  fetched the live published HTML plus its `mermaid-init.js`/`mermaid.css`, and
+  none of the loaded stylesheets (`bootstrap.min.css`, `mermaid.css`, etc.)
+  define any `--mermaid-*` custom property.
+- **Fix:** added `format: html: mermaid: theme: default` to this qmd's own YAML
+  frontmatter -- Quarto's documented "Mermaid's Built-in Themes" escape hatch
+  (quarto.org/docs/authoring/diagrams.html). It makes Quarto emit
+  `<meta name="mermaid-theme" content="default">`, which switches
+  `mermaid-init.js` onto its other branch: Mermaid's own complete, literal-color
+  "default" theme, with no dependency on any page-supplied CSS variable.
+  Document-scoped (applies to both Mermaid diagrams in this file: Figure 2's
+  architecture flowchart and Figure 4's TDD-cycle state diagram), not
+  site-wide -- `colony-manager-guide.qmd`'s own separate Mermaid diagram is
+  unaffected and very likely has the identical defect (unverified, flagged in
+  `BACKLOG.md` for a future session, out of scope here).
+- **Verification:** `quarto render` on the file confirmed the meta tag lands in
+  the output `<head>`. Rendered the file, served it in headless Chrome
+  (`--headless --screenshot`), and visually confirmed both diagrams now render
+  with clear, legible contrast (pale lavender/yellow fills, black text) in place
+  of the dark, muddy boxes in the owner's screenshot. Also attempted the real
+  `pkgdown::build_article()` pipeline for higher-fidelity verification; aborted
+  it after it triggered an unrelated, unrequested favicon-cache regeneration
+  (`pkgdown/favicon/`, a live external-API call) as a side effect of
+  `init_site()` -- deleted that untracked output rather than committing it, and
+  relied on the `quarto render` + headless-browser verification as sufficient
+  (matches `SAFEGUARDS.md`'s "Documentation (Quarto, LaTeX)" build-equivalent row).
+- **Known follow-up (separate item, not fixed here):** Figure 2's subgraph
+  title text ("After -- R/appUI.R + ...", "Before -- inst/application/, ...")
+  visibly overlaps/truncates against the first child node box in both
+  subgraphs -- a pre-existing layout defect, orthogonal to contrast, still
+  present after this fix. Flagged in `BACKLOG.md` for the "other aspects of
+  the article" follow-up session the owner named.
+- **Process gap (self-flagged):** Phase 1B (claim the session before any
+  technical work) was skipped this session -- investigation and the fix began
+  immediately after branch creation, with the `SESSION_NOTES.md`/`HANDOFFS.md`
+  claim written only retroactively at close-out. See `PROJECT_LEARNINGS.md`
+  Learning 369 and this session's `SESSION_NOTES.md` self-assessment.
+
 ### 2026-07-18 · [issue #124] File urgent issue: colony-manager-guide's "Read deeper" links point to .qmd not .html (Session 400)
 - **Deliverable:** owner reported that Section 2's "Read deeper (R-API
   walkthrough)" table column on the published colony-manager-guide article
