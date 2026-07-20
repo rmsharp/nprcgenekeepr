@@ -60,6 +60,23 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S402
+date: 2026-07-19
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix Figure 2's subgraph-title/node-box text overlap in engineering-the-2.0.0-release.qmd (vignettes/articles/engineering-the-2.0.0-release.qmd:150-166)
+what_was_done: pending
+next_steps: pending
+key_files: vignettes/articles/engineering-the-2.0.0-release.qmd:150-166
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<pending -- filled at Phase 3D close-out>
+
+```handoff
 session: S401
 date: 2026-07-19
 status: complete
