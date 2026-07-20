@@ -60,6 +60,26 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S403
+date: 2026-07-19
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Verify + likely fix the low-contrast Mermaid defect in
+  vignettes/articles/colony-manager-guide.qmd, owner-picked from the
+  S401-authored BACKLOG.md "Up Next" item via the Phase 0 priorities-list
+  AskUserQuestion.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<pending -- filled at Phase 3D close-out>
+
+```handoff
 session: S402
 date: 2026-07-19
 status: complete
