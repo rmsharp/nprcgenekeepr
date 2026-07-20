@@ -1,5 +1,9 @@
 ---
 title: "Engineering nprcgenekeepr 2.0.0: Modular Architecture, Expanded Capability, and an AI-Assisted Development Process"
+format:
+  html:
+    mermaid:
+      theme: default
 ---
 
 ```{r}
