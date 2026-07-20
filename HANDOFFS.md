@@ -119,7 +119,7 @@ runtime_smoke: n/a -- Quarto/pkgdown rendering-config change, no R package
   screenshots (cropped with PIL) instead, this change's actual "runtime"
   surface, same as S401's precedent.
 changelog_ref: CHANGELOG.md 2026-07-19 [ad hoc] entry (Session 402)
-commit: pending
+commit: 79525f60
 ```
 <free-text prose: Session 402 fixed Figure 2's subgraph-title/node-box text
 overlap in engineering-the-2.0.0-release.qmd, the item S401 discovered and
