@@ -62,19 +62,81 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S402
 date: 2026-07-19
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Fix Figure 2's subgraph-title/node-box text overlap in engineering-the-2.0.0-release.qmd (vignettes/articles/engineering-the-2.0.0-release.qmd:150-166)
-what_was_done: pending
-next_steps: pending
-key_files: vignettes/articles/engineering-the-2.0.0-release.qmd:150-166
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- fixed Figure 2's subgraph-title/node-box text overlap in
+  engineering-the-2.0.0-release.qmd, owner-picked from the S401-authored
+  BACKLOG.md "Up Next" item. Same branch as S401
+  (fix/figure2-contrast-engineering-2.0.0-release).
+what_was_done: Both subgraph titles ("After -- R/appUI.R + R/appServer.R, port
+  6013"; "Before -- inst/application/, port 6012") wrapped onto extra lines
+  that rendered fully HIDDEN behind the top of the first child node box
+  beneath them, not merely close to it. Root cause: Mermaid's default
+  subgraph-title vertical-space reservation assumes ~1 line; a wrapped title
+  gets no extra room, and the wrap point is unpredictable per-title (an
+  un-splittable "inst/application/," token forced a 3-line wrap on "Before"
+  vs. 2 lines on the near-identical-width "After"). Fixed in two parts: (1)
+  pinned the wrap point with a manual <br/> in each subgraph's bracketed
+  label text so both wrap to a matched, predictable 2 lines; (2) added
+  `%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 30, "bottom":
+  5}}}}%%` as the mermaid cell's first line to reserve space for that fixed
+  height (confirmed supported by Quarto's bundled Mermaid v11.2.0 via grep on
+  mermaid.min.js). Verified via quarto render + headless-Chrome screenshots,
+  PIL-cropped tightly over each title/box boundary at every iteration (a
+  full-page screenshot alone missed that the first fix attempt, margin-only,
+  left the "Before" title's 3rd line still hidden). Figure 4 re-checked as a
+  regression guard -- unaffected, S401's contrast fix still intact. Diff:
+  vignettes/articles/engineering-the-2.0.0-release.qmd only, 3 lines changed.
+  Recorded CHANGELOG.md [ad hoc] entry and PROJECT_LEARNINGS.md Learning 370;
+  removed the resolved item from BACKLOG.md.
+next_steps: One item remains in BACKLOG.md "Up Next" (READY, Effort S):
+  verify + likely fix the identical low-contrast Mermaid defect in
+  colony-manager-guide.qmd:115 (flagged S401, unverified -- same fix pattern
+  as Learning 369, `format: html: mermaid: theme: default` in that file's own
+  frontmatter). Issue #124 (broken "Read deeper" links, also in
+  colony-manager-guide.qmd) and the CRAN 2.0.0 resubmission (BLOCKED,
+  awaiting CRAN's manual reviewer response, no engineering action open) are
+  unchanged. This branch is not yet merged to master -- owner should decide
+  whether to merge/open a PR now (both BACKLOG "Up Next" Figure-2 items are
+  now done) or continue accumulating "other aspects of the article" work on
+  it first.
+key_files: vignettes/articles/engineering-the-2.0.0-release.qmd:153-171 (the
+  fix); PROJECT_LEARNINGS.md Learning 370 (full root-cause + fix writeup);
+  CHANGELOG.md (2026-07-19 S402 entry, [ad hoc]); BACKLOG.md (item removed).
+gotchas: A Mermaid subgraph title's automatic word-wrap point is NOT
+  predictable from title length or box width alone -- an un-splittable long
+  token (e.g. a bare path like "inst/application/,") can force an extra line
+  break that a visually-similar sibling title doesn't hit. Don't trust a
+  full-page screenshot as "verified fixed" for this class of defect --
+  crop tightly over the specific title/box boundary with PIL (or equivalent)
+  before treating a wrap-related fix as done, since a still-hidden 3rd line
+  can look fine from a distance. The pkgdown::build_article() favicon
+  side-effect S401 flagged still applies if a future session uses the real
+  pkgdown pipeline instead of quarto render + headless Chrome.
+runtime_smoke: n/a -- Quarto/pkgdown rendering-config change, no R package
+  runtime behavior changed. Verified via quarto render + headless-Chrome
+  screenshots (cropped with PIL) instead, this change's actual "runtime"
+  surface, same as S401's precedent.
+changelog_ref: CHANGELOG.md 2026-07-19 [ad hoc] entry (Session 402)
 commit: pending
 ```
-<pending -- filled at Phase 3D close-out>
+<free-text prose: Session 402 fixed Figure 2's subgraph-title/node-box text
+overlap in engineering-the-2.0.0-release.qmd, the item S401 discovered and
+deferred while fixing the same figure's low contrast. Root-caused to
+Mermaid's default subgraph-title vertical-space reservation being
+insufficient for a wrapped title, with an unpredictable per-title wrap
+point compounding it. Fixed by pinning the wrap with a manual <br/> plus
+sizing subGraphTitleMargin to match, verified via headless-Chrome
+screenshots cropped tightly over each title/box boundary -- catching a
+still-present defect after a first fix attempt that looked resolved at
+full-page zoom. Self-score 9/10: correct Phase 1B discipline (fixing S401's
+self-flagged gap), did not trust a first-pass visual fix, verified
+regressions in the unrelated Figure 4 diagram and S401's own contrast fix,
+kept scope tight to one file/3 lines. The one deduction: the first fix
+attempt (margin alone) was under-verified before being treated as resolved
+-- a closer crop on the higher-risk subgraph earlier would have caught the
+gap on the first iteration instead of the second.>
 
 ```handoff
 session: S401

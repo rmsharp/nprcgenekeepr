@@ -43,6 +43,43 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-19 · [ad hoc] Fix Figure 2's subgraph-title/node-box text overlap in engineering-the-2.0.0-release.qmd (Session 402)
+- **Deliverable:** owner picked this item from the S401-authored `BACKLOG.md` "Up
+  Next" list (via the Phase 0 priorities-list `AskUserQuestion`) -- both Figure 2
+  subgraph titles ("After -- R/appUI.R + R/appServer.R, port 6013"; "Before --
+  inst/application/, port 6012") wrapped onto extra lines that rendered fully
+  hidden behind the top of the first child node box beneath them (`appUI.R`/
+  `ui.r`). Same branch as S401 (`fix/figure2-contrast-engineering-2.0.0-release`).
+  No `R/`/`tests/` code touched; TDD phase N/A throughout (Mermaid diagram markup,
+  confirmed via an explicit pre-work `AskUserQuestion`, same precedent as S401).
+- **Root cause:** confirmed via a full-page headless-Chrome screenshot of the
+  rendered article that Mermaid's default subgraph-title vertical-space
+  reservation assumes roughly one line; a title long enough to word-wrap gets no
+  extra room, so wrapped lines render underneath (hidden by) the first child
+  node's box. The wrap point itself was unpredictable: the "Before" title's
+  un-splittable `inst/application/,` token forced a 3-line wrap while the
+  visually-similar "After" title wrapped to only 2 lines at a near-identical box
+  width -- caught only by cropping tightly over each title/box boundary with `PIL`
+  after a full-page screenshot looked "mostly fixed."
+- **Fix (two parts):** (1) pinned the exact wrap point with a manual `<br/>`
+  inside each subgraph's bracketed label text, instead of trusting Mermaid's
+  automatic word-wrap, so both titles wrap to a matched, predictable 2 lines; (2)
+  added `%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 30, "bottom":
+  5}}}}%%` as the first line of the `{mermaid}` code cell to reserve enough
+  vertical space for that now-fixed 2-line height -- confirmed supported by
+  Quarto's bundled Mermaid runtime (`mermaid.min.js`, v11.2.0 as of Quarto
+  1.7.33, `grep`-confirmed for the `subGraphTitleMargin` key).
+- **Verification:** `quarto render` clean; headless-Chrome screenshots at each
+  iteration, cropped with `PIL` directly over both subgraph title/box boundaries,
+  confirmed both titles now render fully above their node boxes with no
+  clipping/overlap. Figure 4 (the unrelated TDD-cycle state diagram, not a
+  flowchart with subgraphs) re-checked as a regression guard -- unaffected,
+  S401's contrast fix (`format: html: mermaid: theme: default`) still intact.
+- **Diff:** `vignettes/articles/engineering-the-2.0.0-release.qmd` only -- 1 line
+  added (the init directive) + 2 subgraph-title lines edited (added `<br/>`).
+  Recorded `PROJECT_LEARNINGS.md` Learning 370; removed the resolved item from
+  `BACKLOG.md`'s "Up Next" list.
+
 ### 2026-07-19 · [ad hoc] Fix low-contrast Mermaid diagram colors in engineering-the-2.0.0-release.qmd Figure 2 (Session 401)
 - **Deliverable:** owner flagged low contrast in Figure 2 (the monolith-vs-modular
   architecture diagram) via a screenshot of the published article. Fix scoped to

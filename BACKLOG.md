@@ -24,16 +24,6 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
 - [ ] (none remaining)
 
 ## Up Next
-- [ ] **Fix Figure 2's subgraph-title/node-box text overlap in engineering-the-2.0.0-release.qmd**
-      (READY, Effort S) -- discovered S401 (2026-07-19) while fixing Figure 2's low contrast (see
-      `CHANGELOG.md`). Both subgraph titles ("After -- R/appUI.R + R/appServer.R, port 6013";
-      "Before -- inst/application/, port 6012") wrap onto a second line that visually overlaps/
-      truncates against the first child node box beneath it (`appUI.R`/`ui.r`) -- a pre-existing
-      Mermaid flowchart layout defect, orthogonal to the contrast fix and still present after it.
-      `vignettes/articles/engineering-the-2.0.0-release.qmd:150-166` (the `{mermaid}` flowchart
-      cell). Likely fix: shorten the subgraph title text, or add vertical spacing/padding between
-      the subgraph label and its first child node. One of the "other aspects of the article" the
-      owner named as follow-up work when scoping S401 to contrast only.
 - [ ] **Verify + likely fix the same low-contrast Mermaid defect in colony-manager-guide.qmd**
       (READY, Effort S) -- flagged S401 (2026-07-19), unverified. `colony-manager-guide.qmd`'s own
       Mermaid diagram (`vignettes/articles/colony-manager-guide.qmd:115`) is rendered through the
