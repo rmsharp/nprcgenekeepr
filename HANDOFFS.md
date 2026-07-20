@@ -112,7 +112,7 @@ runtime_smoke: n/a -- Quarto/pkgdown rendering-config change, no R package
   runtime behavior changed. Verified via quarto render + headless-Chrome
   screenshot instead (this change's actual "runtime" surface).
 changelog_ref: CHANGELOG.md 2026-07-19 [ad hoc] entry
-commit: pending
+commit: 4869e541
 ```
 <free-text prose: Session 401 fixed Figure 2's low-contrast Mermaid diagram
 colors in engineering-the-2.0.0-release.qmd, owner-reported via a screenshot
