@@ -60,6 +60,24 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S404
+date: 2026-07-20
+status: pending
+self_score: pending
+predecessor_score: 9
+active_task: Fix broken "Read deeper" links in colony-manager-guide.qmd
+  (issue #124) -- retarget 10 .qmd hrefs to .html.
+what_was_done: pending
+next_steps: pending
+key_files: vignettes/articles/colony-manager-guide.qmd:26,50,99-103,374,534
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+(stub written at Phase 1B claim; overwritten with the full receipt at close-out)
+
+```handoff
 session: S403
 date: 2026-07-19
 status: complete
