@@ -1,5 +1,9 @@
 ---
 title: "nprcgenekeepr: Purpose, Approach, and a Colony Manager's Guide to Practice"
+format:
+  html:
+    mermaid:
+      theme: default
 ---
 
 ```{r}

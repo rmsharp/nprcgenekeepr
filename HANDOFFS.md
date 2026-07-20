@@ -62,22 +62,64 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S403
 date: 2026-07-19
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Verify + likely fix the low-contrast Mermaid defect in
-  vignettes/articles/colony-manager-guide.qmd, owner-picked from the
-  S401-authored BACKLOG.md "Up Next" item via the Phase 0 priorities-list
-  AskUserQuestion.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- verified the low-contrast Mermaid defect flagged S401 is
+  NOT present in vignettes/articles/colony-manager-guide.qmd (diagram has no
+  subgraphs, can't hit the actual cluster-CSS bug). Applied
+  format.html.mermaid.theme:default anyway, owner-directed defensively. Same
+  branch as S401/S402 (fix/figure2-contrast-engineering-2.0.0-release).
+what_was_done: Fetched the live published colony-manager-guide.html and
+  rendered it in headless Chrome -- its flowchart LR diagram (zero subgraph
+  blocks) renders with clean, legible light-lavender node boxes and dark
+  text, contradicting BACKLOG.md's "near-certainly the same defect"
+  extrapolation from S401. Root-caused via the live page's rendered DOM
+  (chrome --dump-dom) and its inline SVG <style>: deps/bootstrap-5.3.8/
+  bootstrap.min.css DOES define the --mermaid-* variables (Learning 369's
+  "none of the stylesheets define them" claim does not hold) -- .node styling
+  uses a sane light-bg/dark-text pair, but .cluster (subgraph) styling uses
+  a dark-on-dark pair (both --mermaid-fg-color--lightest and --mermaid-fg-
+  color derive from the same dark --bs-body-color). Confirmed against the
+  live, still-undeployed engineering-the-2.0.0-release.html: its Figure 2
+  subgraph titles currently render gray-on-dark-gray right now, while its
+  plain node boxes inside those subgraphs are fine -- one page proving both
+  halves of the diagnosis. Presented the "not affected" finding via
+  AskUserQuestion before touching any file; owner chose to apply the fix
+  anyway as future-proofing. Applied format: html: mermaid: theme: default
+  to colony-manager-guide.qmd's frontmatter, re-rendered + re-screenshotted,
+  no regression. Recorded CHANGELOG.md [ad hoc] entry, PROJECT_LEARNINGS.md
+  Learning 371 (corrects Learning 369), resolved the BACKLOG.md item.
+next_steps: No open item remains from the Figure-2-family work. Two things
+  carry forward from S402, still unaddressed: (1) branch-merge decision --
+  fix/figure2-contrast-engineering-2.0.0-release (9 commits) is still
+  unmerged to master and unpushed to origin -- owner should decide whether to
+  open a PR/merge now (all three "Up Next" items done) or keep accumulating
+  "other aspects of the article" work on it. (2) Issue #124 (broken "Read
+  deeper" links in colony-manager-guide.qmd) and the CRAN 2.0.0 resubmission
+  (BLOCKED, awaiting CRAN's manual reviewer response) are unchanged.
+key_files: vignettes/articles/colony-manager-guide.qmd:1-6 (the fix);
+  PROJECT_LEARNINGS.md Learning 371 (root-cause writeup, corrects Learning
+  369); CHANGELOG.md (2026-07-19 S403 entry, [ad hoc]); BACKLOG.md (item
+  resolved).
+gotchas: A local `quarto render` is NOT a faithful proxy for pkgdown's
+  live-site CSS when a Mermaid diagram uses subgraphs -- they link different
+  Bootstrap builds (Quarto's own hashed bootstrap-<hash>.min.css vs.
+  pkgdown's shared deps/bootstrap-5.3.8/bootstrap.min.css). quarto render
+  remains valid for confirming a theme:default FIX (bypasses the CSS-var
+  path via literal colors) but NOT for reproducing/ruling out the unfixed
+  defect -- that needs the actual live/pkgdown-built page. Also: the live
+  site currently still shows Figure 2's ORIGINAL unfixed rendering (S401's
+  fix isn't deployed yet) -- don't be confused by this pre-merge.
+runtime_smoke: n/a -- Quarto/pkgdown rendering-config change, no R package
+  runtime behavior touched. Verified via quarto render (build equivalent)
+  + headless-Chrome real-browser render at every step.
+changelog_ref: CHANGELOG.md 2026-07-19 S403 entry, [ad hoc]
 commit: pending
 ```
-<pending -- filled at Phase 3D close-out>
+<Full self-assessment and predecessor evaluation are in SESSION_NOTES.md's
+"Session 402 Handoff Evaluation (by Session 403)" and "Self-assessment
+(Session 403)" sections -- 8/10 predecessor, 9/10 self.>
 
 ```handoff
 session: S402

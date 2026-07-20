@@ -43,6 +43,56 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-19 · [ad hoc] Verify the low-contrast Mermaid defect in colony-manager-guide.qmd -- not affected, applied theme:default defensively anyway (Session 403)
+- **Deliverable:** owner picked this item from the S401-authored `BACKLOG.md` "Up
+  Next" list (via the Phase 0 priorities-list `AskUserQuestion`) -- verify the
+  low-contrast Mermaid defect S401 flagged as "near-certainly" also present in
+  `colony-manager-guide.qmd:115`'s diagram (same bare frontmatter, same pkgdown
+  mixed-mode Quarto pipeline as Figure 2). Same branch as S401/S402
+  (`fix/figure2-contrast-engineering-2.0.0-release`). No `R/`/`tests/` code
+  touched; TDD phase N/A throughout (Quarto vignette-article frontmatter,
+  confirmed via an explicit pre-work `AskUserQuestion`, same precedent as
+  S401/S402).
+- **Verification result: NOT affected.** Fetched the live published page and
+  rendered it in headless Chrome -- `colony-manager-guide.qmd`'s diagram
+  (`flowchart LR`, plain nodes, zero `subgraph` blocks) renders with clean,
+  legible light-lavender node boxes and dark text, no muddy/dark-on-dark look.
+- **Root cause, corrected from Learning 369:** Learning 369's claim that "none
+  of the loaded stylesheets... define any `--mermaid-*` custom property" does
+  not hold -- `deps/bootstrap-5.3.8/bootstrap.min.css` (pkgdown's bundled
+  Bootstrap) *does* define them at `:root`. The actual defect is narrower and
+  specific to **subgraph/cluster styling**: `--mermaid-fg-color--lightest`
+  (cluster background) and `--mermaid-fg-color` (cluster title text) are BOTH
+  derived from `--bs-body-color` (the page's dark body-text color) -- a
+  dark-on-dark formula bug. Plain `.node` styling uses a different, sane pair
+  (`--mermaid-node-bg-color: RGBA(var(--bs-primary-rgb), 0.1)`, a light tint,
+  vs. dark text) that renders fine. Confirmed directly: the live
+  `engineering-the-2.0.0-release.html` page (S401/S402's fix not yet
+  merged/deployed) still shows Figure 2's subgraph titles rendering
+  barely-legible gray-on-dark-gray right now, while its plain node boxes
+  inside are fine -- the same live page proves both halves of this diagnosis
+  at once. `colony-manager-guide.qmd`'s diagram has no `subgraph` blocks, so
+  it structurally cannot hit the broken code path.
+- **Methodology note:** a standalone `quarto render` is not a faithful proxy
+  for the pkgdown-built site's CSS environment where subgraphs are involved --
+  confirmed the local render links a *different*, Quarto-generated
+  `bootstrap-<hash>.min.css` (not pkgdown's shared `deps/bootstrap-5.3.8/`
+  copy). `quarto render` remains valid for confirming a `theme: default` FIX
+  (which bypasses the CSS-variable path entirely via literal colors), but is
+  not reliable evidence for reproducing or ruling out the *unfixed* defect --
+  that requires checking the actual live/pkgdown-built page.
+- **Owner decision (via `AskUserQuestion`):** apply `format: html: mermaid:
+  theme: default` to `colony-manager-guide.qmd`'s frontmatter anyway, as a
+  defensive/future-proofing measure even though verification showed it isn't
+  currently needed (in case a subgraph is ever added to this diagram).
+  Re-rendered and re-verified via `quarto render` + headless-Chrome screenshot
+  after applying -- diagram still renders cleanly (Mermaid's own literal
+  default-theme colors), no regression.
+- **Diff:** `vignettes/articles/colony-manager-guide.qmd` only -- 3 lines
+  added (frontmatter `format.html.mermaid.theme: default`). Recorded
+  `PROJECT_LEARNINGS.md` Learning 371 (corrects/refines Learning 369); removed
+  the resolved item from `BACKLOG.md`'s "Up Next" list.
+
 ### 2026-07-19 · [ad hoc] Fix Figure 2's subgraph-title/node-box text overlap in engineering-the-2.0.0-release.qmd (Session 402)
 - **Deliverable:** owner picked this item from the S401-authored `BACKLOG.md` "Up
   Next" list (via the Phase 0 priorities-list `AskUserQuestion`) -- both Figure 2
