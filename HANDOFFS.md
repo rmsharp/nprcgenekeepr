@@ -111,7 +111,7 @@ runtime_smoke: n/a -- Quarto vignette-article markdown-link change, no R
   package runtime behavior touched. Verified via quarto render + direct
   href= inspection of rendered output + live-target HTTP-200 pre-check.
 changelog_ref: CHANGELOG.md 2026-07-20 [issue #124] entry
-commit: pending
+commit: 9c86434b
 ```
 (receipt completed at Phase 3D close-out)
 
