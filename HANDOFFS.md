@@ -60,6 +60,25 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S405
+date: 2026-07-20
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: IN PROGRESS -- record the owner's branch-merge-strategy decision
+  for fix/figure2-contrast-engineering-2.0.0-release (keep accumulating, do
+  not merge yet) in BACKLOG.md and CHANGELOG.md.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+(receipt completed at Phase 3D close-out)
+
+```handoff
 session: S404
 date: 2026-07-20
 status: complete
