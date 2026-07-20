@@ -115,7 +115,7 @@ runtime_smoke: n/a -- Quarto/pkgdown rendering-config change, no R package
   runtime behavior touched. Verified via quarto render (build equivalent)
   + headless-Chrome real-browser render at every step.
 changelog_ref: CHANGELOG.md 2026-07-19 S403 entry, [ad hoc]
-commit: pending
+commit: 965dfdf2
 ```
 <Full self-assessment and predecessor evaluation are in SESSION_NOTES.md's
 "Session 402 Handoff Evaluation (by Session 403)" and "Self-assessment
