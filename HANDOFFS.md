@@ -70,22 +70,61 @@ it would name); the next session reconciles them to real shas.
 ``` handoff
 session: S409
 date: 2026-07-21
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Remove "nprcgenekeepr: " prefix from the colony-manager-guide
-  article's title, and move it to the top of the Articles dropdown (add
-  an articles: navbar config to _pkgdown.yml, none existed before).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- removed "nprcgenekeepr: " prefix from the
+  colony-manager-guide article's title, and moved it to the top of the
+  Articles dropdown (added an articles: navbar config to _pkgdown.yml,
+  none existed before). Confirmed live.
+what_was_done: Investigated pkgdown::as_pkgdown(".")$vignettes$name for
+  exact contents: identifiers (articles/ prefix needed for vignettes/
+  articles/*.qmd, not for top-level vignettes/*.Rmd). Read pkgdown:::
+  navbar_articles() source directly -- found adding articles: without a
+  navbar: field on the section collapses the whole dropdown to a single
+  "Articles" link. Presented full plan via AskUserQuestion before
+  editing. Claimed session (ea4d764f). Edited colony-manager-guide.qmd
+  title, added _pkgdown.yml articles: section (navbar: ~, 12 entries,
+  this one first), synced the one other verbatim title quote in
+  _ColonyManagerTutorial.Rmd. Verified: called navbar_articles()
+  directly and inspected the generated menu (12 entries, correct order,
+  no fallback link); rebuilt just the affected article + home page
+  locally (build_article + build_home) and grepped rendered title/h1/
+  navbar; full regression 0/0/0 (3198 passed). Committed (7e9dfe2a),
+  pushed, watched pkgdown redeploy (gh run watch), polled the LIVE
+  navbar (not just git tree) until it showed the new order.
+next_steps: No open item from this deliverable. LabKey (BLOCKED, needs
+  live server) and CRAN resubmission (BLOCKED, awaiting CRAN reviewer)
+  remain open, unchanged.
+key_files: vignettes/articles/colony-manager-guide.qmd:2 (title);
+  _pkgdown.yml (new articles: section, navbar: ~ required);
+  vignettes/_ColonyManagerTutorial.Rmd:8 (synced quote); CHANGELOG.md
+  (2026-07-21 S409 entry, [ad hoc]).
+gotchas: (1) Adding a custom articles: config to _pkgdown.yml WITHOUT a
+  navbar: field on at least one section collapses the ENTIRE Articles
+  dropdown into a single link to articles/index.html -- always include
+  navbar: ~ (or a heading string) on any section meant to populate the
+  dropdown, verified against pkgdown:::navbar_articles()'s real source.
+  (2) contents: entries for articles: (same as reference:) must use
+  each article's pkgdown "name" via pkgdown::as_pkgdown(".")$vignettes$
+  name, not guessed from the filename -- vignettes/articles/*.qmd files
+  carry an articles/ prefix, top-level vignettes/*.Rmd files do not;
+  mixing this up throws "Can't find article" from build_article(). (3)
+  A single-article local rebuild (build_article + build_home) verifies
+  a small config/frontmatter change much faster than a full
+  build_site(). (4) Continue applying the S408 CDN-lag lesson: poll the
+  actual live HTTP response after any pkgdown redeploy, not just the
+  deploy job's green checkmark or the gh-pages git tree.
+runtime_smoke: Three-layer verification: pkgdown:::navbar_articles()
+  direct inspection (menu structure correct pre-build); local
+  build_article + build_home (rendered title/h1/navbar correct);
+  live site post-deploy (gh run watch + polled HTTP, navbar and article
+  page both confirmed live). Full regression suite also re-run clean
+  (0 failed/0 error/0 warning, 3198 passed) though no R/tests code was
+  touched.
+changelog_ref: 2026-07-21 S409 entry, CHANGELOG.md, [ad hoc]
+commit: 7e9dfe2a
 ```
-
-(receipt completed at Phase 3D close-out)
 
 ``` handoff
 session: S408
