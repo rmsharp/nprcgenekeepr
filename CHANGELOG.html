@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">nprcgenekeepr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,6 +70,17 @@
 </div>
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
+<div class="section level3">
+<h3 id="id_2026-07-21--ad-hoc-tag-cran-submitted-commit-as-v200-bump-master-to-2009000-session-407">2026-07-21 · [ad hoc] Tag CRAN-submitted commit as v2.0.0, bump master to 2.0.0.9000 (Session 407)<a class="anchor" aria-label="anchor" href="#id_2026-07-21--ad-hoc-tag-cran-submitted-commit-as-v200-bump-master-to-2009000-session-407"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> owner-directed release engineering, on <code>master</code>. Tag the exact commit <code>CRAN-SUBMISSION</code> records as uploaded to CRAN (<code>db54d3257a1655a5582c3b201136f0ec868575bb</code>, 2026-07-17) as <code>v2.0.0</code>, then move <code>master</code>’s development version forward so work isn’t blocked on CRAN’s pending review outcome.</li>
+<li>
+<strong>Actions:</strong> created annotated tag <code>v2.0.0</code> at the recorded submission commit and pushed it to <code>origin</code>. Bumped <code>DESCRIPTION</code>’s <code>Version</code> from <code>2.0.0</code> to <code>2.0.0.9000</code>; added a matching <code>NEWS.Rmd</code>/<code>NEWS.md</code> “2.0.0.9000 (development version)” heading. Added a <code>BACKLOG.md</code> note on the CRAN item recording that the owner has since learned CRAN requires a version increment for any resubmission – a future fix-and-resubmit ships as <code>2.0.1</code>, never a second <code>2.0.0</code> attempt, so the <code>v2.0.0</code> tag will never need to move.</li>
+<li>
+<strong>Verification:</strong> <code><a href="https://pkgload.r-lib.org/reference/load_all.html" class="external-link">pkgload::load_all()</a></code> confirmed the package loads cleanly with the bumped version (<code><a href="https://rdrr.io/r/utils/packageDescription.html" class="external-link">packageVersion()</a></code> reports <code>2.0.0.9000</code>); <code>NEWS.Rmd</code> rendered cleanly to <code>NEWS.md</code> via <code><a href="https://pkgs.rstudio.com/rmarkdown/reference/render.html" class="external-link">rmarkdown::render()</a></code>. Grepped <code>R/</code>/<code>tests/</code> for hardcoded <code>"2.0.0"</code> strings – all are <code>lifecycle::deprecate_*(when = "2.0.0", ...)</code> historical markers or comments, none compare against the live package version, so none needed changing.</li>
+<li>
+<strong>TDD Phase:</strong> N/A – metadata/release-engineering only (<code>DESCRIPTION</code>, <code>NEWS.Rmd</code>/<code>NEWS.md</code>, <code>BACKLOG.md</code>), no <code>R/</code>/<code>tests/</code> code touched.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="id_2026-07-18--issue-124-file-urgent-issue-colony-manager-guides-read-deeper-links-point-to-qmd-not-html-session-400">2026-07-18 · [issue #124] File urgent issue: colony-manager-guide’s “Read deeper” links point to .qmd not .html (Session 400)<a class="anchor" aria-label="anchor" href="#id_2026-07-18--issue-124-file-urgent-issue-colony-manager-guides-read-deeper-links-point-to-qmd-not-html-session-400"></a></h3>
 <ul><li>

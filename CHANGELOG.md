@@ -47,6 +47,34 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-21 · \[ad hoc\] Tag CRAN-submitted commit as v2.0.0, bump master to 2.0.0.9000 (Session 407)
+
+- **Deliverable:** owner-directed release engineering, on `master`. Tag
+  the exact commit `CRAN-SUBMISSION` records as uploaded to CRAN
+  (`db54d3257a1655a5582c3b201136f0ec868575bb`, 2026-07-17) as `v2.0.0`,
+  then move `master`’s development version forward so work isn’t blocked
+  on CRAN’s pending review outcome.
+- **Actions:** created annotated tag `v2.0.0` at the recorded submission
+  commit and pushed it to `origin`. Bumped `DESCRIPTION`’s `Version`
+  from `2.0.0` to `2.0.0.9000`; added a matching `NEWS.Rmd`/`NEWS.md`
+  “2.0.0.9000 (development version)” heading. Added a `BACKLOG.md` note
+  on the CRAN item recording that the owner has since learned CRAN
+  requires a version increment for any resubmission – a future
+  fix-and-resubmit ships as `2.0.1`, never a second `2.0.0` attempt, so
+  the `v2.0.0` tag will never need to move.
+- **Verification:**
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  confirmed the package loads cleanly with the bumped version
+  ([`packageVersion()`](https://rdrr.io/r/utils/packageDescription.html)
+  reports `2.0.0.9000`); `NEWS.Rmd` rendered cleanly to `NEWS.md` via
+  [`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html).
+  Grepped `R/`/`tests/` for hardcoded `"2.0.0"` strings – all are
+  `lifecycle::deprecate_*(when = "2.0.0", ...)` historical markers or
+  comments, none compare against the live package version, so none
+  needed changing.
+- **TDD Phase:** N/A – metadata/release-engineering only (`DESCRIPTION`,
+  `NEWS.Rmd`/`NEWS.md`, `BACKLOG.md`), no `R/`/`tests/` code touched.
+
 ### 2026-07-18 · \[issue \#124\] File urgent issue: colony-manager-guide’s “Read deeper” links point to .qmd not .html (Session 400)
 
 - **Deliverable:** owner reported that Section 2’s “Read deeper (R-API

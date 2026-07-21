@@ -26,12 +26,12 @@ Source:
 
 Raboin M, Therneau T, Vinson A, Sharp R, Schultz M (2026).
 *nprcgenekeepr: Genetic Tools for Colony Management*. R package version
-2.0.0, <https://rmsharp.github.io/nprcgenekeepr/>.
+2.0.0.9000, <https://rmsharp.github.io/nprcgenekeepr/>.
 
     @Manual{,
       title = {nprcgenekeepr: Genetic Tools for Colony Management},
       author = {Michael Raboin and Terry Therneau and Amanda Vinson and R. Mark Sharp and Matthew Schultz},
       year = {2026},
-      note = {R package version 2.0.0},
+      note = {R package version 2.0.0.9000},
       url = {https://rmsharp.github.io/nprcgenekeepr/},
     }

@@ -68,6 +68,54 @@ are legal at write time (the receipt ships in the very commit whose sha
 it would name); the next session reconciles them to real shas.
 
 ``` handoff
+session: S407
+date: 2026-07-21
+status: complete
+self_score: 9
+predecessor_score: 7
+active_task: DONE -- tagged the exact CRAN-submitted commit
+  (db54d3257a1655a5582c3b201136f0ec868575bb) as v2.0.0 (pushed to origin),
+  bumped master's DESCRIPTION to 2.0.0.9000, added a matching NEWS.Rmd/
+  NEWS.md dev-version heading, and noted in BACKLOG.md that any future
+  CRAN resubmission must ship as 2.0.1 (owner-confirmed CRAN requirement),
+  so the v2.0.0 tag never needs to move.
+what_was_done: Two AskUserQuestion gates (tag-naming/release-form tradeoff,
+  then TDD-N/A + push-scope confirmation) before any edit. Claimed session
+  on master (26c3fc7a). Created+pushed annotated tag v2.0.0. Bumped
+  DESCRIPTION Version 2.0.0 -> 2.0.0.9000; added NEWS.Rmd dev-version
+  heading, rendered to NEWS.md via rmarkdown::render(). Grepped R/tests
+  for hardcoded "2.0.0" strings (all lifecycle::deprecate_* historical
+  markers, none live-version-dependent). Verified via pkgload::load_all()
+  + packageVersion() the package loads cleanly reporting 2.0.0.9000.
+  Appended a BACKLOG.md note recording the 2.0.1-resubmission fact.
+  Commits: 26c3fc7a (claim), 3f7839ef (version bump + BACKLOG note),
+  pending (close-out).
+next_steps: No engineering action open. If CRAN accepts the pending 2.0.0
+  review, nothing further needed. If CRAN requires changes, resubmission
+  must bump DESCRIPTION to 2.0.1 (never 2.0.0.9000 as a submission target,
+  never a second 2.0.0 attempt) -- see BACKLOG.md's CRAN item. The
+  still-unmerged fix/figure2-contrast-engineering-2.0.0-release branch
+  (11 commits) is untouched by this session, unchanged from S405's
+  DECISION MADE (keep accumulating).
+key_files: DESCRIPTION:4 (Version: 2.0.0.9000); NEWS.Rmd/NEWS.md (new dev
+  heading); BACKLOG.md (CRAN item, S407 note); CHANGELOG.md (S407 entry).
+  Tag v2.0.0 at db54d3257a1655a5582c3b201136f0ec868575bb, pushed to origin.
+gotchas: master and the feature branch have diverged copies of
+  SESSION_NOTES.md/HANDOFFS.md/PROJECT_LEARNINGS.md/BACKLOG.md (feature
+  branch has S401-406's entries master lacks; master now has S407's
+  entries the feature branch lacks) -- expect real merge conflicts, not a
+  fast-forward, whenever the feature branch merges. Do not bump
+  DESCRIPTION to 2.0.1 preemptively -- only at the moment of an actual
+  resubmission. Same gh issue view/list deprecated-projectCards workaround
+  as S260/S387/S404-406 applies.
+runtime_smoke: pkgload::load_all() + packageVersion() confirmed clean load
+  reporting 2.0.0.9000 -- the appropriate check for a DESCRIPTION-only
+  change (no service registration/startup config/dispatch touched).
+changelog_ref: 2026-07-21 S407 entry, [ad hoc]
+commit: 23908045
+```
+
+``` handoff
 session: S400
 date: 2026-07-18
 status: complete

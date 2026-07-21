@@ -331,7 +331,24 @@ around via `NOT_CRAN`-controlled
 [`testthat::test_dir()`](https://testthat.r-lib.org/reference/test_dir.html)
 profiling instead). Next: a fresh win-builder Windows-devel trigger to
 confirm the real checktime drops with margin, before any resubmission
-attempt.
+attempt. **Submission commit tagged, `master` moved to a dev version –
+S407 (2026-07-21):** the exact commit `CRAN-SUBMISSION` recorded as
+uploaded (`db54d3257a1655a5582c3b201136f0ec868575bb`) is now tagged
+`v2.0.0` (pushed to `origin`), permanently marking what was actually
+submitted regardless of review outcome. `master`’s `DESCRIPTION`
+`Version` moved to `2.0.0.9000` (development version) so work can
+continue independent of CRAN’s pending decision; `NEWS.Rmd`/`NEWS.md`
+gained a matching “2.0.0.9000 (development version)” heading. **Owner
+has since learned CRAN requires a version increment for any
+resubmission** – if the pending 2.0.0 review comes back requiring
+changes, the fix-and- resubmit package must ship as **2.0.1**, not a
+second attempt at 2.0.0. The `v2.0.0` tag therefore never needs to move:
+it is the one and only submission that will ever carry that version
+number. Next engineering action, whenever CRAN responds: if accepted, no
+further action needed here (routine post-release housekeeping only). If
+changes are required, bump `DESCRIPTION` to `2.0.1` (not `2.0.0.9000` as
+a submission target – that suffix is dev-only and CRAN will not accept
+it), apply the required fix, and resubmit.
 
 ## Housekeeping
 
