@@ -60,6 +60,26 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S407
+date: 2026-07-21
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: IN PROGRESS -- tag the CRAN-submitted commit as v2.0.0, bump
+  master's DESCRIPTION to 2.0.0.9000, add a NEWS.Rmd dev-version heading.
+  Done on master; Sessions 401-406 (unmerged) are on
+  fix/figure2-contrast-engineering-2.0.0-release, not reflected here.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<pending>
+
+```handoff
 session: S400
 date: 2026-07-18
 status: complete
