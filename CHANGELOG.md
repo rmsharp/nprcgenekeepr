@@ -81,6 +81,18 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
   build, so no risk of losing anything not reproducible by the next build. Owner
   confirmed via `AskUserQuestion` before touching CI/CD config (new scope beyond the
   merge itself).
+- **Verified live, post-redeploy:** pushed the `clean: true` fix (`f5b73edf`), watched
+  the triggered `pkgdown.yaml` run to completion (`gh run watch`), then confirmed via
+  `git ls-tree -r origin/gh-pages` the branch dropped from 981 to 650 files with zero
+  remaining `ColonyManagerTutorial` matches. Live HTTP checks (after a ~15s GitHub
+  Pages CDN propagation delay, confirmed via response `age`/`x-cache` headers, then
+  polled to clear): `ColonyManagerTutorial.html`, `01ColonyManagerTutorial.html`,
+  `06ColonyManagerTutorial.html`, and `_ColonyManagerTutorial.html` (the renamed file's
+  own would-be published path) all now correctly 404; the doubled-path URL also 404s
+  (as intended -- it was never meant to resolve); `colony-manager-guide.html` itself
+  (200) now has **zero** remaining `.qmd`-targeting hrefs -- confirms S404's original
+  branch fix, not just this session's rename, is also now genuinely live for the first
+  time. Issue #124 is fully resolved live, not just fixed in source.
 - **TDD Phase:** N/A throughout -- git merge conflict resolution (docs/ledger files
   only) and one CI/CD YAML config line, no `R/`/`tests/` code touched.
 
