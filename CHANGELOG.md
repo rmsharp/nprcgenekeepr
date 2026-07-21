@@ -43,6 +43,17 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-21 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit 4e5baf5e -- S407 close-out (Session 408)
+- **Deliverable:** Phase 0 ledger reconcile found one commit past the `CHANGELOG.md`
+  frontier (`14ace3bb`, S407's deliverable entry below): `4e5baf5e` "docs: S407 --
+  close-out handoff, self-assessment, HANDOFFS.md receipt". That commit only wrote
+  `HANDOFFS.md`/`SESSION_NOTES.md` (the Phase 3A/3B/3D close-out material for S407's
+  already-logged deliverable) -- no new engineering action beyond what the S407 entry
+  below already records. The gap is the same self-referential pattern S406/S407 each
+  backfilled for their predecessor's `HANDOFFS.md` `commit:` field (S405 backfilled
+  `e3b45f9f`, S406 backfilled `27e43c69`): the close-out commit's own sha cannot be
+  recorded inside itself, so this session's Phase 0 records it after the fact.
+
 ### 2026-07-21 · [issue #124] Fix ColonyManagerTutorial.Rmd's doubled-path link + exclude it from pkgdown; live-site link sweep (Session 407)
 - **Deliverable:** owner-reported live 404 (`.../articles/articles/colony-manager-guide.qmd`)
   traced to `vignettes/ColonyManagerTutorial.Rmd:9` (the retired-tutorial stub, merged to
