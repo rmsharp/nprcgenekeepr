@@ -60,6 +60,25 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S409
+date: 2026-07-21
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Remove "nprcgenekeepr: " prefix from the colony-manager-guide
+  article's title, and move it to the top of the Articles dropdown (add
+  an articles: navbar config to _pkgdown.yml, none existed before).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+(receipt completed at Phase 3D close-out)
+
+```handoff
 session: S408
 date: 2026-07-21
 status: complete
