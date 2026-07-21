@@ -47,6 +47,59 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-21 · \[issue \#124\] Merge fix/figure2-contrast-engineering-2.0.0-release into master; fix pkgdown deploy clean:false so stale pages actually get removed (Session 408)
+
+- **Deliverable:** owner-approved merge of
+  `fix/figure2-contrast-engineering-2.0.0-release` (S401-407, 22
+  commits: Figure 2 contrast/layout fixes, Mermaid theme defensive fix,
+  colony-manager-guide.qmd link fixes, and the ColonyManagerTutorial.Rmd
+  doubled-path fix) into `master`, which had independently diverged with
+  its own S407 (CRAN v2.0.0 tag + `2.0.0.9000` dev-version bump). Real
+  3-way merge, not a fast-forward: 4 conflicts (`BACKLOG.md` auto-merged
+  cleanly; `CHANGELOG.md`/`HANDOFFS.md`/`SESSION_NOTES.md` required
+  manual resolution – both sides had independently prepended entries at
+  the same insertion point) – resolved by interleaving both sides’
+  entries in actual chronological order (master’s S407 tag/bump commits,
+  10:58-11:01, precede the branch’s S407 link-fix commits, 11:24-11:45,
+  same day), preserving every entry from both histories rather than
+  discarding either side. No `R/`/`tests/` code conflicts; `DESCRIPTION`
+  untouched by the branch, so master’s `2.0.0.9000` carried through
+  automatically. Verified before committing:
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  clean load, full regression suite `0 failed/0 error/0 warning` (3198
+  passed, 179 skipped), and `R CMD build .` + `tar tzf` confirming
+  `_ColonyManagerTutorial.Rmd` correctly excluded from the tarball.
+  Pushed to `origin/master` (`dd8e53fd`), triggering the pkgdown
+  redeploy.
+- **Second defect found during live-site verification (not from either
+  merged branch):** post-deploy, the owner-reported doubled-path URL
+  correctly still 404s (it was never meant to resolve), but
+  `https://.../articles/ColonyManagerTutorial.html` – the OLD,
+  un-prefixed page – was still live (HTTP 200) and still contained the
+  exact `.qmd`-targeting link issue \#124 tracks. Root cause:
+  `.github/workflows/pkgdown.yaml`’s deploy step used `clean: false`
+  (`JamesIves/github-pages-deploy-action@v4.5.0`), so every pkgdown
+  deploy has only ever *added* files to `gh-pages`, never removed stale
+  ones – confirmed via `git ls-tree -r origin/gh-pages`: 981 files
+  including THREE separate old copies of this tutorial
+  (`01ColonyManagerTutorial.html`, `06ColonyManagerTutorial.html`,
+  `ColonyManagerTutorial.html`) from past renames, none ever cleaned up.
+  This meant the source-level fix (renaming to
+  `_ColonyManagerTutorial.Rmd`, excluding it from the pkgdown build)
+  could not actually resolve the live defect – a page already deployed
+  from a prior build stays live regardless of what the current build
+  excludes.
+- **Fix:** `.github/workflows/pkgdown.yaml` `clean: false` -\>
+  `clean: true`. Checked for hand-maintained `gh-pages` assets a clean
+  deploy might destroy before making the change – found only
+  `.nojekyll`, which pkgdown regenerates automatically on every build,
+  so no risk of losing anything not reproducible by the next build.
+  Owner confirmed via `AskUserQuestion` before touching CI/CD config
+  (new scope beyond the merge itself).
+- **TDD Phase:** N/A throughout – git merge conflict resolution
+  (docs/ledger files only) and one CI/CD YAML config line, no
+  `R/`/`tests/` code touched.
+
 ### 2026-07-21 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit 4e5baf5e – S407 close-out (Session 408)
 
 - **Deliverable:** Phase 0 ledger reconcile found one commit past the
