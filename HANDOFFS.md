@@ -60,6 +60,26 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S408
+date: 2026-07-21
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Merge fix/figure2-contrast-engineering-2.0.0-release (S401-407,
+  22 commits) into master, resolving the divergence master's own S407
+  (above) already flagged as expected. Push to origin/master, verify the
+  pkgdown redeploy fixes issue #124 live, close out the issue.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+(receipt completed at Phase 3D close-out)
+
+```handoff
 session: S407
 date: 2026-07-21
 status: complete
