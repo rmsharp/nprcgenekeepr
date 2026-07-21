@@ -43,6 +43,43 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-21 · [issue #124] Fix ColonyManagerTutorial.Rmd's doubled-path link + exclude it from pkgdown; live-site link sweep (Session 407)
+- **Deliverable:** owner-reported live 404 (`.../articles/articles/colony-manager-guide.qmd`)
+  traced to `vignettes/ColonyManagerTutorial.Rmd:9` (the retired-tutorial stub, merged to
+  `master` via S398, not the unmerged branch S404 fixed). Two stacked defects: (1) a relative
+  link with a doubled `articles/` path segment -- this file itself renders under
+  pkgdown's `/articles/`, so its own `articles/`-prefixed relative link doubled to
+  `/articles/articles/...`; (2) the same issue-#124 `.qmd`-vs-`.html` defect class. Fixed
+  by retargeting the link to the absolute published URL
+  (`https://rmsharp.github.io/nprcgenekeepr/articles/colony-manager-guide.html`), and,
+  owner-directed, additionally stopped the retired stub from being published at all:
+  renamed `vignettes/ColonyManagerTutorial.Rmd` -> `vignettes/_ColonyManagerTutorial.Rmd`
+  (`git mv`) and updated `.Rbuildignore`'s pattern to match. pkgdown's `build_articles()`
+  skips any vignette whose filename starts with `_` (documented convention, already used by
+  this project's own `vignettes/manual_components/_*.Rmd` child documents) -- verified
+  against the installed pkgdown 2.2.0's actual `package_vignettes()` source (not assumed),
+  which confirmed the rename excludes the file from both the built tarball (`R CMD build`
+  + `tar tzf`, re-verified) and the pkgdown article build. This makes the file's own
+  "never part of the public pkgdown site" claim actually true -- previously false, since no
+  `_pkgdown.yml` exclusion existed and a locally-built `docs/articles/ColonyManagerTutorial.html`
+  artifact was found as evidence pkgdown had been building and serving it. Full regression
+  suite re-run clean (0 failed / 0 error / 0 warning) though no `R/`/`tests/` code was
+  touched. **Owner also directed a full live-site link sweep** of
+  `https://rmsharp.github.io/nprcgenekeepr/` (all 13 published articles plus the
+  articles/reference/news index hub pages): fetched each page, resolved every internal
+  `href` to a fully-qualified URL via proper relative-link resolution (not string-matching),
+  and HTTP-checked all 238 unique targets. Findings: (a) the one 404 above (fixed this
+  session); (b) `colony-manager-guide.html`'s own 6 `.qmd`-targeting links (the original
+  issue-#124 defect) still show live -- these return HTTP 200, not 404, because pkgdown's
+  Quarto build also copies the raw `.qmd` source alongside the rendered `.html`, so the link
+  "works" but serves the wrong content; this is the fix already committed on the unmerged
+  `fix/figure2-contrast-engineering-2.0.0-release` branch (S404), not yet deployed, not a
+  new finding; (c) no other broken or misdirected links found across all remaining 231
+  targets. TDD Phase: N/A throughout -- markdown link, filename rename, and
+  `.Rbuildignore` pattern only, no `R/`/`tests/` code touched, confirmed via an explicit
+  pre-work `AskUserQuestion` (same precedent as S401-404). See `BACKLOG.md` and the issue
+  #124 comment thread for the full write-up.
+
 ### 2026-07-20 · [ad hoc] Render engineering-the-2.0.0-release.qmd + audit 6 articles for the issue-#124 link defect class (Session 406)
 - **Deliverable:** owner-directed. (1) Render `vignettes/articles/engineering-the-2.0.0-release.qmd`
   and confirm clean render. (2) Audit the other 6 `vignettes/articles/*.qmd` files

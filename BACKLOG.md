@@ -44,7 +44,22 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       Learning 368). All 7 distinct link targets confirmed live at the fixed relative path
       (HTTP 200) before editing; rendered output re-verified to contain zero remaining
       `.qmd` hrefs. **Issue #124 stays open** -- the fix is on the unmerged/unpushed branch
-      below, not yet live on the published site. See `CHANGELOG.md`.)
+      below, not yet live on the published site. See `CHANGELOG.md`.
+      **A second, distinct instance found and fixed S407 (2026-07-21)** -- owner-reported
+      live 404 at `.../articles/articles/colony-manager-guide.qmd`, traced to
+      `vignettes/ColonyManagerTutorial.Rmd:9` (the retired-tutorial stub, already merged to
+      `master` via S398, unlike the branch above): a relative link with a doubled
+      `articles/` path segment (this file renders under `/articles/` too, so its own
+      `articles/`-prefixed relative link doubled) plus the same `.qmd`-vs-`.html` defect.
+      Fixed by pointing the link at the absolute published URL, and by renaming the file to
+      `_ColonyManagerTutorial.Rmd` -- pkgdown's `build_articles()` skips any leading-`_`
+      vignette by documented convention (verified against the installed pkgdown 2.2.0's own
+      `package_vignettes()` source, not assumed), which finally makes true the file's own
+      claim that it is not part of the public site (previously false: no `_pkgdown.yml`
+      exclusion existed, so pkgdown was building and serving it). Owner also directed a full
+      live-site link sweep (all 13 published articles + articles/reference/news index hubs,
+      238 resolved internal targets, HTTP-checked) -- no other broken links found; see
+      `CHANGELOG.md` and the issue #124 comment thread for the full sweep result.)
 - [ ] **Branch-merge strategy for `fix/figure2-contrast-engineering-2.0.0-release`**
       (DECISION MADE -- owner, S405, 2026-07-20, via `AskUserQuestion`: **keep
       accumulating** further article work on this branch; do not open a PR/merge yet)
