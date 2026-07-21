@@ -62,19 +62,70 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S407
 date: 2026-07-21
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS -- fix broken link in vignettes/ColonyManagerTutorial.Rmd:9
-  (doubled articles/ path + .qmd->.html, issue #124 defect class) and exclude
-  that file from the pkgdown article build in _pkgdown.yml.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: DONE -- fixed the broken "Read deeper" link in
+  vignettes/ColonyManagerTutorial.Rmd:9 (doubled articles/ path + the
+  issue-#124 .qmd-vs-.html defect), renamed it to
+  _ColonyManagerTutorial.Rmd so pkgdown stops publishing it, and completed
+  an owner-directed full live-site link sweep (238 targets, HTTP-checked).
+  Findings folded into issue #124 via a gh api comment. No open item
+  remains from this session's deliverable.
+what_was_done: Traced owner-reported live 404 to
+  vignettes/ColonyManagerTutorial.Rmd:9 via grep (doubled articles/ path +
+  wrong extension). AskUserQuestion for fix scope (also stop publishing)
+  and tracking (fold into #124), then TDD:N/A confirmation. Claimed session
+  (f39ed2ea). Live-site sweep: resolved 238 internal hrefs across 13
+  articles + index hubs via urljoin, HTTP-checked all -- 1 real 404 (this
+  bug), colony-manager-guide.html's 6 known .qmd links return 200 not 404
+  (raw source served alongside rendered html), no other breaks. Corrected
+  own plan mid-session: verified via pkgdown::build_articles() help +
+  installed package_vignettes() source that _pkgdown.yml exclusion was the
+  WRONG mechanism; used the documented leading-underscore filename
+  convention instead (git mv to _ColonyManagerTutorial.Rmd), matching this
+  project's existing manual_components/_*.Rmd precedent. Verified via R CMD
+  build + tar tzf + full regression (0 failed/error/warning). Posted
+  findings to issue #124 (gh api, caught and fixed a -f vs -F file-read
+  flag mistake by diff-verifying the posted comment). Recorded
+  CHANGELOG.md/BACKLOG.md/PROJECT_LEARNINGS.md (Learning 374). Committed in
+  two commits (3381b6b4 rename-only due to a truncated git add, caught via
+  git show --stat; 14ace3bb the actual content, caught and fixed same
+  session).
+next_steps: No open item from this deliverable. Branch
+  fix/figure2-contrast-engineering-2.0.0-release now has 13 commits, still
+  unmerged/unpushed; S405's "keep accumulating" decision unchanged, not
+  revisited this session. LabKey (BLOCKED, needs live server) and CRAN
+  resubmission (BLOCKED, awaiting CRAN reviewer response) remain open with
+  no engineering action available this cycle.
+key_files: vignettes/_ColonyManagerTutorial.Rmd (renamed, link fixed,
+  prose corrected); .Rbuildignore:30 (pattern updated); BACKLOG.md (#124
+  item extended); CHANGELOG.md (2026-07-21 S407 entry); PROJECT_LEARNINGS.md
+  Learning 374; issue #124 comment
+  (https://github.com/rmsharp/nprcgenekeepr/issues/124#issuecomment-5036567566).
+gotchas: (1) _pkgdown.yml's articles:/contents: field controls only the
+  index/navbar, NOT which vignettes get built/served -- the real exclusion
+  mechanism is a leading-underscore filename. (2) A link returning HTTP 200
+  is not necessarily correct -- pkgdown's Quarto build copies raw .qmd
+  source alongside rendered .html, so a wrong-extension link "works" (200)
+  while serving the wrong content; check content-identity, not just status
+  code. (3) gh api -f field=@file does NOT read from file (that's -F,
+  typed field); -f treats @file as a literal string -- verify any gh api
+  post by fetching it back. (4) git mv followed by further edits to the
+  same file, then a git add listing both old and new paths, will abort on
+  the nonexistent old path and can silently leave the edits unstaged while
+  the bare rename commits -- verify with git show --stat HEAD after any
+  commit following a rename. (5) gh issue view/list deprecated-projectCards
+  workaround (S260/S387/404-406) still applies; untested whether gh issue
+  comment itself is affected -- used gh api directly.
+runtime_smoke: n/a -- vignette-source markdown/filename + .Rbuildignore
+  pattern only, no R runtime behavior touched. Verified via R CMD build +
+  tar tzf + full regression suite + pkgdown's own package_vignettes()
+  filter replicated against the real tree. Live site still shows the
+  pre-fix 404 -- fix is on the same unmerged/unpushed branch as S401-404's,
+  not yet deployed (same caveat those sessions left).
+changelog_ref: 2026-07-21 S407 entry, CHANGELOG.md
+commit: 14ace3bb
 ```
 
 ```handoff
