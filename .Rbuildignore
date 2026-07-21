@@ -27,7 +27,7 @@ inst/extdata/meeting_notes\.html$
 ^vignettes/shiny_app_use_original/.*\.png$
 ^vignettes/interactive\.Rmd$
 ^vignettes/shiny_app_use\.Rmd$
-^vignettes/ColonyManagerTutorial\.Rmd$
+^vignettes/_ColonyManagerTutorial\.Rmd$
 ^vignettes/Development_Plans.Rmd$
 README\.*\.png$
 # An Rmarkdown file used to generate README.md

@@ -1,0 +1,18 @@
+---
+title: "GeneKeepR: A Colony Manager's Tutorial (retired)"
+---
+
+**This tutorial has been retired (2026-07-17).** Its content -- purpose,
+approach, and a tab-by-tab walkthrough -- has been ported, modernized, and
+re-verified against the current modular application into the public article
+["nprcgenekeepr: Purpose, Approach, and a Colony Manager's Guide to
+Practice"](https://rmsharp.github.io/nprcgenekeepr/articles/colony-manager-guide.html),
+part of the package's online documentation at <https://rmsharp.github.io/nprcgenekeepr/>.
+
+This file is excluded from the built package (`.Rbuildignore`) and, as of
+2026-07-21, is also excluded from pkgdown's article build via its leading-
+underscore filename (`pkgdown::build_articles()`'s documented convention for
+skipping non-article `.Rmd` files) so it is no longer part of the public
+site; it is kept only as a historical record and is not maintained further.
+See `docs/planning/document2-colony-manager-guide-plan.md` §12 decision 3
+and `CHANGELOG.md`'s Session 398 entry for the retirement decision.
