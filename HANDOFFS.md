@@ -104,7 +104,7 @@ runtime_smoke: pkgload::load_all() + packageVersion() confirmed clean load
   reporting 2.0.0.9000 -- the appropriate check for a DESCRIPTION-only
   change (no service registration/startup config/dispatch touched).
 changelog_ref: 2026-07-21 S407 entry, [ad hoc]
-commit: pending
+commit: 23908045
 ```
 
 ```handoff
