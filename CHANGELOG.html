@@ -78,6 +78,10 @@
 <li>
 <strong>Fix:</strong> <code>.github/workflows/pkgdown.yaml</code> <code>clean: false</code> -&gt; <code>clean: true</code>. Checked for hand-maintained <code>gh-pages</code> assets a clean deploy might destroy before making the change – found only <code>.nojekyll</code>, which pkgdown regenerates automatically on every build, so no risk of losing anything not reproducible by the next build. Owner confirmed via <code>AskUserQuestion</code> before touching CI/CD config (new scope beyond the merge itself).</li>
 <li>
+<strong>Verified live, post-redeploy:</strong> pushed the <code>clean: true</code> fix (<code>f5b73edf</code>), watched the triggered <code>pkgdown.yaml</code> run to completion (<code>gh run watch</code>), then confirmed via <code>git ls-tree -r origin/gh-pages</code> the branch dropped from 981 to 650 files with zero remaining <code>ColonyManagerTutorial</code> matches. Live HTTP checks (after a ~15s GitHub Pages CDN propagation delay, confirmed via response <code>age</code>/<code>x-cache</code> headers, then polled to clear): <code>ColonyManagerTutorial.html</code>, <code>01ColonyManagerTutorial.html</code>, <code>06ColonyManagerTutorial.html</code>, and <code>_ColonyManagerTutorial.html</code> (the renamed file’s own would-be published path) all now correctly 404; the doubled-path URL also 404s (as intended – it was never meant to resolve); <code>colony-manager-guide.html</code> itself
+<ol start="200" style="list-style-type: decimal"><li>now has <strong>zero</strong> remaining <code>.qmd</code>-targeting hrefs – confirms S404’s original branch fix, not just this session’s rename, is also now genuinely live for the first time. Issue #124 is fully resolved live, not just fixed in source.</li>
+</ol></li>
+<li>
 <strong>TDD Phase:</strong> N/A throughout – git merge conflict resolution (docs/ledger files only) and one CI/CD YAML config line, no <code>R/</code>/<code>tests/</code> code touched.</li>
 </ul></div>
 <div class="section level3">

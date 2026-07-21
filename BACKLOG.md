@@ -75,21 +75,26 @@ existed, so pkgdown was building and serving it). Owner also directed a
 full live-site link sweep (all 13 published articles +
 articles/reference/news index hubs, 238 resolved internal targets,
 HTTP-checked) – no other broken links found; see `CHANGELOG.md` and the
-issue \#124 comment thread for the full sweep result.)
+issue \#124 comment thread for the full sweep result. **Merged and
+deployed live – S408 (2026-07-21):** owner approved merging
+`fix/figure2-contrast-engineering-2.0.0-release` into `master`
+(`dd8e53fd`) now that the CRAN v2.0.0 submission is sufficiently
+handled. Live verification after deploy found a second, unrelated defect
+blocking the fix from actually taking effect:
+`.github/workflows/pkgdown.yaml`’s `clean: false` deploy step meant
+`gh-pages` had only ever accumulated files, never removed stale ones
+(981 files, including 3 old copies of this same tutorial, one still
+serving the exact `.qmd`-targeting link live). Fixed (`clean: true`,
+`f5b73edf`), redeployed, verified: `gh-pages` dropped to 650 files, zero
+`ColonyManagerTutorial` matches, all stale URLs 404,
+`colony-manager-guide.html` has zero remaining `.qmd` hrefs. **Issue
+\#124 is now fully resolved live**, not just in source. See
+`CHANGELOG.md`.)
 
-**Branch-merge strategy for
-`fix/figure2-contrast-engineering-2.0.0-release`** (DECISION MADE –
-owner, S405, 2026-07-20, via `AskUserQuestion`: **keep accumulating**
-further article work on this branch; do not open a PR/merge yet) – 10
-commits (S401 Figure 2 contrast fix, S402 Figure 2
-subgraph-title/node-box overlap fix, S403 colony-manager-guide Mermaid
-theme defensive fix, S404 colony-manager-guide “Read deeper” link fix),
-still unmerged to `master` and unpushed to `origin`. All four fixes
-remain independently verified and complete; none are blocked on the
-merge. Item stays open (not resolved) since the branch itself is still
-unmerged and the decision is to keep adding to it – revisit the
-merge-vs-continue choice again in a future session. First flagged in
-S402’s handoff, tracked in `BACKLOG.md` since S404.
+(none remaining – the “Branch-merge strategy for
+`fix/figure2-contrast-engineering-2.0.0-release`” item is RESOLVED:
+merged into `master` and deployed live – S408 (2026-07-21), see the
+issue \#124 item above and `CHANGELOG.md`.)
 
 **Act on the LabKey integration research recommendations** (BLOCKED –
 remainder needs a live LabKey server to test/observe, Effort M) —
