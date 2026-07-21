@@ -47,6 +47,72 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-21 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit 4e5baf5e – S407 close-out (Session 408)
+
+- **Deliverable:** Phase 0 ledger reconcile found one commit past the
+  `CHANGELOG.md` frontier (`14ace3bb`, S407’s deliverable entry below):
+  `4e5baf5e` “docs: S407 – close-out handoff, self-assessment,
+  HANDOFFS.md receipt”. That commit only wrote
+  `HANDOFFS.md`/`SESSION_NOTES.md` (the Phase 3A/3B/3D close-out
+  material for S407’s already-logged deliverable) – no new engineering
+  action beyond what the S407 entry below already records. The gap is
+  the same self-referential pattern S406/S407 each backfilled for their
+  predecessor’s `HANDOFFS.md` `commit:` field (S405 backfilled
+  `e3b45f9f`, S406 backfilled `27e43c69`): the close-out commit’s own
+  sha cannot be recorded inside itself, so this session’s Phase 0
+  records it after the fact.
+
+### 2026-07-21 · \[issue \#124\] Fix ColonyManagerTutorial.Rmd’s doubled-path link + exclude it from pkgdown; live-site link sweep (Session 407)
+
+- **Deliverable:** owner-reported live 404
+  (`.../articles/articles/colony-manager-guide.qmd`) traced to
+  `vignettes/ColonyManagerTutorial.Rmd:9` (the retired-tutorial stub,
+  merged to `master` via S398, not the unmerged branch S404 fixed). Two
+  stacked defects: (1) a relative link with a doubled `articles/` path
+  segment – this file itself renders under pkgdown’s `/articles/`, so
+  its own `articles/`-prefixed relative link doubled to
+  `/articles/articles/...`; (2) the same issue-#124 `.qmd`-vs-`.html`
+  defect class. Fixed by retargeting the link to the absolute published
+  URL
+  (`https://rmsharp.github.io/nprcgenekeepr/articles/colony-manager-guide.html`),
+  and, owner-directed, additionally stopped the retired stub from being
+  published at all: renamed `vignettes/ColonyManagerTutorial.Rmd` -\>
+  `vignettes/_ColonyManagerTutorial.Rmd` (`git mv`) and updated
+  `.Rbuildignore`’s pattern to match. pkgdown’s `build_articles()` skips
+  any vignette whose filename starts with `_` (documented convention,
+  already used by this project’s own
+  `vignettes/manual_components/_*.Rmd` child documents) – verified
+  against the installed pkgdown 2.2.0’s actual `package_vignettes()`
+  source (not assumed), which confirmed the rename excludes the file
+  from both the built tarball (`R CMD build`
+  - `tar tzf`, re-verified) and the pkgdown article build. This makes
+    the file’s own “never part of the public pkgdown site” claim
+    actually true – previously false, since no `_pkgdown.yml` exclusion
+    existed and a locally-built
+    `docs/articles/ColonyManagerTutorial.html` artifact was found as
+    evidence pkgdown had been building and serving it. Full regression
+    suite re-run clean (0 failed / 0 error / 0 warning) though no
+    `R/`/`tests/` code was touched. **Owner also directed a full
+    live-site link sweep** of `https://rmsharp.github.io/nprcgenekeepr/`
+    (all 13 published articles plus the articles/reference/news index
+    hub pages): fetched each page, resolved every internal `href` to a
+    fully-qualified URL via proper relative-link resolution (not
+    string-matching), and HTTP-checked all 238 unique targets.
+    Findings: (a) the one 404 above (fixed this session); (b)
+    `colony-manager-guide.html`’s own 6 `.qmd`-targeting links (the
+    original issue-#124 defect) still show live – these return HTTP 200,
+    not 404, because pkgdown’s Quarto build also copies the raw `.qmd`
+    source alongside the rendered `.html`, so the link “works” but
+    serves the wrong content; this is the fix already committed on the
+    unmerged `fix/figure2-contrast-engineering-2.0.0-release` branch
+    (S404), not yet deployed, not a new finding; (c) no other broken or
+    misdirected links found across all remaining 231 targets. TDD Phase:
+    N/A throughout – markdown link, filename rename, and `.Rbuildignore`
+    pattern only, no `R/`/`tests/` code touched, confirmed via an
+    explicit pre-work `AskUserQuestion` (same precedent as S401-404).
+    See `BACKLOG.md` and the issue \#124 comment thread for the full
+    write-up.
+
 ### 2026-07-21 · \[ad hoc\] Tag CRAN-submitted commit as v2.0.0, bump master to 2.0.0.9000 (Session 407)
 
 - **Deliverable:** owner-directed release engineering, on `master`. Tag
@@ -74,6 +140,260 @@ here.
   needed changing.
 - **TDD Phase:** N/A – metadata/release-engineering only (`DESCRIPTION`,
   `NEWS.Rmd`/`NEWS.md`, `BACKLOG.md`), no `R/`/`tests/` code touched.
+
+### 2026-07-20 · \[ad hoc\] Render engineering-the-2.0.0-release.qmd + audit 6 articles for the issue-#124 link defect class (Session 406)
+
+- **Deliverable:** owner-directed. (1) Render
+  `vignettes/articles/engineering-the-2.0.0-release.qmd` and confirm
+  clean render. (2) Audit the other 6 `vignettes/articles/*.qmd` files
+  (age-sex-pyramid, breeding-group-formation, fg-se-validation,
+  genetic-value-analysis, offline-focal-animal-workflow,
+  studbook-quality-control) for the same defect class issue \#124 found
+  in `colony-manager-guide.qmd` – cross-article links resolving to raw
+  `.qmd` source instead of rendered `.html` – and fix any found.
+- **Result:** `quarto render` of `engineering-the-2.0.0-release.qmd`
+  succeeded cleanly (exit 0, 0 warnings/errors). The 6-file audit found
+  zero links of any kind in any of the 6 files (not just zero
+  `.qmd`-specific links) – verified via a positive control (the same
+  search pattern against 2 files known to contain real links, returning
+  46/44 matches) before trusting the null result, rather than reporting
+  “0 findings” from a bare zero-match grep alone. No fixes were needed;
+  no `.qmd` file content changed.
+- **Verification:** documentation-only action, no `R/`/`tests/` code
+  touched; TDD Phase N/A (verification/audit, zero edits made).
+  Discipline documented as `PROJECT_LEARNINGS.md` Learning 373.
+
+### 2026-07-20 · \[ad hoc\] Branch-merge-strategy decision for fix/figure2-contrast-engineering-2.0.0-release (Session 405)
+
+- **Deliverable:** owner-picked from the Phase 0 priorities-list
+  `AskUserQuestion` – resolve the DECISION NEEDED item (first flagged
+  S402, tracked in `BACKLOG.md` since S404) on whether to merge the
+  branch now or keep accumulating work on it.
+- **Decision (via `AskUserQuestion`):** keep accumulating further
+  article work on `fix/figure2-contrast-engineering-2.0.0-release`; do
+  not open a PR/merge yet. All four fixes already on the branch
+  (S401-S404) remain independently verified and complete; none are
+  blocked by staying unmerged. `BACKLOG.md` item left open (decision
+  recorded, not resolved) since the branch itself is still unmerged and
+  the merge-vs-continue choice will be revisited again in a future
+  session.
+- **Verification:** documentation-only action, no `R/`/`tests/` code
+  touched; TDD Phase N/A (decision-recording bookkeeping, not
+  implementation).
+
+### 2026-07-20 · \[issue \#124\] Fix broken “Read deeper” links in colony-manager-guide.qmd (Session 404)
+
+- **Deliverable:** owner-picked from the Phase 0 priorities-list
+  `AskUserQuestion` – fix the 10 broken “Read deeper” links on the live
+  published `colony-manager-guide` article (issue \#124, filed S400,
+  owner-reported URGENT): all resolved to raw `.qmd` source files
+  (triggering browser downloads) instead of the intended rendered
+  `.html` pages. Same branch as S401-S403
+  (`fix/figure2-contrast-engineering-2.0.0-release`, owner explicitly
+  scoped this session to stay off `master`). No `R/`/`tests/` code
+  touched; TDD phase N/A throughout (markdown link hrefs only, confirmed
+  via an explicit pre-work `AskUserQuestion`, same precedent as
+  S401-403).
+- **Approach decision (pre-work `AskUserQuestion`):** issue \#124
+  offered two options – root-cause the pkgdown/Quarto `.qmd`-\>`.html`
+  auto-rewrite, or directly retarget the 10 links to `.html`. Verified
+  first: a bare local `quarto render` of this project (no pkgdown
+  involved, no `type: website` in `vignettes/articles/_quarto.yml`)
+  leaves `.qmd` hrefs unrewritten too – falsifying the issue’s
+  “pkgdown’s mixed-mode build doesn’t perform the rewrite” framing. The
+  rewrite is a Quarto `type: website`/`book` project feature this
+  directory’s `_quarto.yml` never enables, under pkgdown or otherwise;
+  fixing that would mean adding `type: website`, a bigger cross-cutting
+  change to the documented mixed-mode pkgdown/Quarto integration – out
+  of scope for this Effort-S fix per `SAFEGUARDS.md`. Owner confirmed:
+  direct link retarget.
+- **Fix:** changed all 10 `.qmd` hrefs to `.html` directly in
+  `vignettes/articles/colony-manager-guide.qmd` (lines 26, 50, 99-103,
+  374, 534 – 2 in-prose `engineering-the-2.0.0-release` references, the
+  6-link Section 2 function-group table, and 2 more
+  `fg-se-validation`/`engineering-the-2.0.0-release` in-prose
+  references). Pre-verified all 7 distinct link targets exist live at
+  the exact same relative path (`curl` HTTP 200 for each
+  `https://rmsharp.github.io/ nprcgenekeepr/articles/<name>.html`)
+  before editing. Post-edit: `quarto render` succeeded cleanly; grepped
+  the rendered output directly and confirmed all 7 targets resolve to
+  `.html` hrefs with zero remaining `.qmd` hrefs.
+- **Documented:** `PROJECT_LEARNINGS.md` Learning 372 (corrects Learning
+  368’s “pkgdown fails to perform the rewrite” framing to “the rewrite
+  mechanism was never enabled for this project type”). `BACKLOG.md`’s
+  issue \#124 item resolved; added a new tracked item for the still-open
+  branch-merge decision (first flagged in S402’s handoff, carried
+  through S403/S404 without a `BACKLOG.md` entry until now).
+- **Note:** issue \#124 stays open on GitHub – the fix is on the
+  unmerged/unpushed branch, not yet live on the published site.
+
+### 2026-07-19 · \[ad hoc\] Verify the low-contrast Mermaid defect in colony-manager-guide.qmd – not affected, applied theme:default defensively anyway (Session 403)
+
+- **Deliverable:** owner picked this item from the S401-authored
+  `BACKLOG.md` “Up Next” list (via the Phase 0 priorities-list
+  `AskUserQuestion`) – verify the low-contrast Mermaid defect S401
+  flagged as “near-certainly” also present in
+  `colony-manager-guide.qmd:115`’s diagram (same bare frontmatter, same
+  pkgdown mixed-mode Quarto pipeline as Figure 2). Same branch as
+  S401/S402 (`fix/figure2-contrast-engineering-2.0.0-release`). No
+  `R/`/`tests/` code touched; TDD phase N/A throughout (Quarto
+  vignette-article frontmatter, confirmed via an explicit pre-work
+  `AskUserQuestion`, same precedent as S401/S402).
+- **Verification result: NOT affected.** Fetched the live published page
+  and rendered it in headless Chrome – `colony-manager-guide.qmd`’s
+  diagram (`flowchart LR`, plain nodes, zero `subgraph` blocks) renders
+  with clean, legible light-lavender node boxes and dark text, no
+  muddy/dark-on-dark look.
+- **Root cause, corrected from Learning 369:** Learning 369’s claim that
+  “none of the loaded stylesheets… define any `--mermaid-*` custom
+  property” does not hold – `deps/bootstrap-5.3.8/bootstrap.min.css`
+  (pkgdown’s bundled Bootstrap) *does* define them at `:root`. The
+  actual defect is narrower and specific to **subgraph/cluster
+  styling**: `--mermaid-fg-color--lightest` (cluster background) and
+  `--mermaid-fg-color` (cluster title text) are BOTH derived from
+  `--bs-body-color` (the page’s dark body-text color) – a dark-on-dark
+  formula bug. Plain `.node` styling uses a different, sane pair
+  (`--mermaid-node-bg-color: RGBA(var(--bs-primary-rgb), 0.1)`, a light
+  tint, vs. dark text) that renders fine. Confirmed directly: the live
+  `engineering-the-2.0.0-release.html` page (S401/S402’s fix not yet
+  merged/deployed) still shows Figure 2’s subgraph titles rendering
+  barely-legible gray-on-dark-gray right now, while its plain node boxes
+  inside are fine – the same live page proves both halves of this
+  diagnosis at once. `colony-manager-guide.qmd`’s diagram has no
+  `subgraph` blocks, so it structurally cannot hit the broken code path.
+- **Methodology note:** a standalone `quarto render` is not a faithful
+  proxy for the pkgdown-built site’s CSS environment where subgraphs are
+  involved – confirmed the local render links a *different*,
+  Quarto-generated `bootstrap-<hash>.min.css` (not pkgdown’s shared
+  `deps/bootstrap-5.3.8/` copy). `quarto render` remains valid for
+  confirming a `theme: default` FIX (which bypasses the CSS-variable
+  path entirely via literal colors), but is not reliable evidence for
+  reproducing or ruling out the *unfixed* defect – that requires
+  checking the actual live/pkgdown-built page.
+- **Owner decision (via `AskUserQuestion`):** apply
+  `format: html: mermaid: theme: default` to
+  `colony-manager-guide.qmd`’s frontmatter anyway, as a
+  defensive/future-proofing measure even though verification showed it
+  isn’t currently needed (in case a subgraph is ever added to this
+  diagram). Re-rendered and re-verified via `quarto render` +
+  headless-Chrome screenshot after applying – diagram still renders
+  cleanly (Mermaid’s own literal default-theme colors), no regression.
+- **Diff:** `vignettes/articles/colony-manager-guide.qmd` only – 3 lines
+  added (frontmatter `format.html.mermaid.theme: default`). Recorded
+  `PROJECT_LEARNINGS.md` Learning 371 (corrects/refines Learning 369);
+  removed the resolved item from `BACKLOG.md`’s “Up Next” list.
+
+### 2026-07-19 · \[ad hoc\] Fix Figure 2’s subgraph-title/node-box text overlap in engineering-the-2.0.0-release.qmd (Session 402)
+
+- **Deliverable:** owner picked this item from the S401-authored
+  `BACKLOG.md` “Up Next” list (via the Phase 0 priorities-list
+  `AskUserQuestion`) – both Figure 2 subgraph titles (“After –
+  R/appUI.R + R/appServer.R, port 6013”; “Before – inst/application/,
+  port 6012”) wrapped onto extra lines that rendered fully hidden behind
+  the top of the first child node box beneath them (`appUI.R`/ `ui.r`).
+  Same branch as S401
+  (`fix/figure2-contrast-engineering-2.0.0-release`). No `R/`/`tests/`
+  code touched; TDD phase N/A throughout (Mermaid diagram markup,
+  confirmed via an explicit pre-work `AskUserQuestion`, same precedent
+  as S401).
+- **Root cause:** confirmed via a full-page headless-Chrome screenshot
+  of the rendered article that Mermaid’s default subgraph-title
+  vertical-space reservation assumes roughly one line; a title long
+  enough to word-wrap gets no extra room, so wrapped lines render
+  underneath (hidden by) the first child node’s box. The wrap point
+  itself was unpredictable: the “Before” title’s un-splittable
+  `inst/application/,` token forced a 3-line wrap while the
+  visually-similar “After” title wrapped to only 2 lines at a
+  near-identical box width – caught only by cropping tightly over each
+  title/box boundary with `PIL` after a full-page screenshot looked
+  “mostly fixed.”
+- **Fix (two parts):** (1) pinned the exact wrap point with a manual
+  `<br/>` inside each subgraph’s bracketed label text, instead of
+  trusting Mermaid’s automatic word-wrap, so both titles wrap to a
+  matched, predictable 2 lines; (2) added
+  `%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 30, "bottom": 5}}}}%%`
+  as the first line of the `{mermaid}` code cell to reserve enough
+  vertical space for that now-fixed 2-line height – confirmed supported
+  by Quarto’s bundled Mermaid runtime (`mermaid.min.js`, v11.2.0 as of
+  Quarto 1.7.33, `grep`-confirmed for the `subGraphTitleMargin` key).
+- **Verification:** `quarto render` clean; headless-Chrome screenshots
+  at each iteration, cropped with `PIL` directly over both subgraph
+  title/box boundaries, confirmed both titles now render fully above
+  their node boxes with no clipping/overlap. Figure 4 (the unrelated
+  TDD-cycle state diagram, not a flowchart with subgraphs) re-checked as
+  a regression guard – unaffected, S401’s contrast fix
+  (`format: html: mermaid: theme: default`) still intact.
+- **Diff:** `vignettes/articles/engineering-the-2.0.0-release.qmd` only
+  – 1 line added (the init directive) + 2 subgraph-title lines edited
+  (added `<br/>`). Recorded `PROJECT_LEARNINGS.md` Learning 370; removed
+  the resolved item from `BACKLOG.md`’s “Up Next” list.
+
+### 2026-07-19 · \[ad hoc\] Fix low-contrast Mermaid diagram colors in engineering-the-2.0.0-release.qmd Figure 2 (Session 401)
+
+- **Deliverable:** owner flagged low contrast in Figure 2 (the
+  monolith-vs-modular architecture diagram) via a screenshot of the
+  published article. Fix scoped to contrast only, on a new branch
+  `fix/figure2-contrast-engineering-2.0.0-release` – “other aspects of
+  the article” explicitly deferred to future sessions. No `R/`/`tests/`
+  code touched; TDD phase N/A (Quarto vignette-article rendering config,
+  not production R code).
+- **Root cause:** the published page renders both Mermaid diagrams in
+  this article client-side via `mermaid.js`
+  (`<pre class="mermaid mermaid-js">`), using Quarto’s bundled
+  `mermaid-init.js`. Its fallback path applies a `themeCSS` built
+  entirely from `--mermaid-*` CSS custom properties
+  (`--mermaid-node-bg-color`, `--mermaid-fg-color`, etc.) – but those
+  variables are normally defined by Quarto’s own bootswatch SCSS theme
+  pipeline (`:root { --mermaid-*: ...; }`), which only runs when Quarto
+  compiles its own site/book theme. pkgdown’s mixed-mode Quarto
+  integration (`vignettes/articles/_quarto.yml`) renders each `.qmd` to
+  a fragment and re-wraps it in pkgdown’s own Bootstrap template –
+  Quarto’s `--mermaid-*` variable block is never generated or linked, so
+  every themed color falls back to an undefined/inherited value on the
+  live site, producing the muddy, low-contrast look the owner flagged.
+  Confirmed empirically: fetched the live published HTML plus its
+  `mermaid-init.js`/`mermaid.css`, and none of the loaded stylesheets
+  (`bootstrap.min.css`, `mermaid.css`, etc.) define any `--mermaid-*`
+  custom property.
+- **Fix:** added `format: html: mermaid: theme: default` to this qmd’s
+  own YAML frontmatter – Quarto’s documented “Mermaid’s Built-in Themes”
+  escape hatch (quarto.org/docs/authoring/diagrams.html). It makes
+  Quarto emit `<meta name="mermaid-theme" content="default">`, which
+  switches `mermaid-init.js` onto its other branch: Mermaid’s own
+  complete, literal-color “default” theme, with no dependency on any
+  page-supplied CSS variable. Document-scoped (applies to both Mermaid
+  diagrams in this file: Figure 2’s architecture flowchart and Figure
+  4’s TDD-cycle state diagram), not site-wide –
+  `colony-manager-guide.qmd`’s own separate Mermaid diagram is
+  unaffected and very likely has the identical defect (unverified,
+  flagged in `BACKLOG.md` for a future session, out of scope here).
+- **Verification:** `quarto render` on the file confirmed the meta tag
+  lands in the output `<head>`. Rendered the file, served it in headless
+  Chrome (`--headless --screenshot`), and visually confirmed both
+  diagrams now render with clear, legible contrast (pale lavender/yellow
+  fills, black text) in place of the dark, muddy boxes in the owner’s
+  screenshot. Also attempted the real
+  [`pkgdown::build_article()`](https://pkgdown.r-lib.org/reference/build_articles.html)
+  pipeline for higher-fidelity verification; aborted it after it
+  triggered an unrelated, unrequested favicon-cache regeneration
+  (`pkgdown/favicon/`, a live external-API call) as a side effect of
+  `init_site()` – deleted that untracked output rather than committing
+  it, and relied on the `quarto render` + headless-browser verification
+  as sufficient (matches `SAFEGUARDS.md`’s “Documentation (Quarto,
+  LaTeX)” build-equivalent row).
+- **Known follow-up (separate item, not fixed here):** Figure 2’s
+  subgraph title text (“After – R/appUI.R + …”, “Before –
+  inst/application/, …”) visibly overlaps/truncates against the first
+  child node box in both subgraphs – a pre-existing layout defect,
+  orthogonal to contrast, still present after this fix. Flagged in
+  `BACKLOG.md` for the “other aspects of the article” follow-up session
+  the owner named.
+- **Process gap (self-flagged):** Phase 1B (claim the session before any
+  technical work) was skipped this session – investigation and the fix
+  began immediately after branch creation, with the
+  `SESSION_NOTES.md`/`HANDOFFS.md` claim written only retroactively at
+  close-out. See `PROJECT_LEARNINGS.md` Learning 369 and this session’s
+  `SESSION_NOTES.md` self-assessment.
 
 ### 2026-07-18 · \[issue \#124\] File urgent issue: colony-manager-guide’s “Read deeper” links point to .qmd not .html (Session 400)
 

@@ -43,7 +43,6 @@
     <li><a class="dropdown-item" href="../articles/age-sex-pyramid.html">Age-Sex Pyramid Plots</a></li>
     <li><a class="dropdown-item" href="../articles/breeding-group-formation.html">Forming Breeding Groups</a></li>
     <li><a class="dropdown-item" href="../articles/colony-manager-guide.html">nprcgenekeepr: Purpose, Approach, and a Colony Manager's Guide to Practice</a></li>
-    <li><a class="dropdown-item" href="../articles/ColonyManagerTutorial.html">GeneKeepR: A Colony Manager's Tutorial (retired)</a></li>
     <li><a class="dropdown-item" href="../articles/engineering-the-2.0.0-release.html">Engineering nprcgenekeepr 2.0.0: Modular Architecture, Expanded Capability, and an AI-Assisted Development Process</a></li>
     <li><a class="dropdown-item" href="../articles/fg-se-validation.html">Validating the Founder-Genome-Equivalent Standard Error</a></li>
     <li><a class="dropdown-item" href="../articles/genetic-value-analysis.html">Genetic Value Analysis</a></li>
@@ -84,11 +83,11 @@
 
     <section class="level2"><h2 id="sec-abstract">Abstract<a class="anchor" aria-label="anchor" href="#sec-abstract"></a>
 </h2>
-<p><code>nprcgenekeepr</code> provides genetic tools for primate-colony management: studbook quality control, pedigree construction and browsing, age-sex demographic display, genetic value analysis, and breeding-group formation, delivered through both a Shiny application (<code><a href="../reference/runGeneKeepR.html">runGeneKeepR()</a></code>) and an exposed R API. This article is a practical, screenshot-illustrated guide for colony managers and primate-center bioinformatics staff, complementing the engineering account in <a href="engineering-the-2.0.0-release.qmd">“Engineering nprcgenekeepr 2.0.0”</a> and the six feature-depth articles listed in <a href="#sec-approach" class="quarto-xref">Section 4</a>. Section 1 explains why the package exists; Section 2 maps its five function groups onto the app’s tabs and onto the two ways to use them (point-and-click or scripted); Section 3 walks a colony manager through the entire application, tab by tab, using the package’s own shipped example pedigree. This article’s own preparation surfaced and fixed three production issues along the way – an Excel-upload defect that could silently corrupt sire/dam IDs, a “Custom” breeding-group sex ratio option with no numeric input, and a shipped example pedigree missing a column the Potential Parents tab needs to demonstrate populated results – each described where it arose rather than glossed over. All claims in this article are current as of 2026-07-17.</p>
+<p><code>nprcgenekeepr</code> provides genetic tools for primate-colony management: studbook quality control, pedigree construction and browsing, age-sex demographic display, genetic value analysis, and breeding-group formation, delivered through both a Shiny application (<code><a href="../reference/runGeneKeepR.html">runGeneKeepR()</a></code>) and an exposed R API. This article is a practical, screenshot-illustrated guide for colony managers and primate-center bioinformatics staff, complementing the engineering account in <a href="engineering-the-2.0.0-release.html">“Engineering nprcgenekeepr 2.0.0”</a> and the six feature-depth articles listed in <a href="#sec-approach" class="quarto-xref">Section 4</a>. Section 1 explains why the package exists; Section 2 maps its five function groups onto the app’s tabs and onto the two ways to use them (point-and-click or scripted); Section 3 walks a colony manager through the entire application, tab by tab, using the package’s own shipped example pedigree. This article’s own preparation surfaced and fixed three production issues along the way – an Excel-upload defect that could silently corrupt sire/dam IDs, a “Custom” breeding-group sex ratio option with no numeric input, and a shipped example pedigree missing a column the Potential Parents tab needs to demonstrate populated results – each described where it arose rather than glossed over. All claims in this article are current as of 2026-07-17.</p>
 </section><section class="level2"><h2 id="sec-introduction">Introduction<a class="anchor" aria-label="anchor" href="#sec-introduction"></a>
 </h2>
 <p>This article is an onboarding guide to <code>nprcgenekeepr</code> for the audience it was built for: primate-center bioinformatics staff and colony managers evaluating or learning to use the package. It answers three questions in order – <strong>why</strong> the package exists, <strong>how</strong> its capabilities are organized, and <strong>what it looks like to actually use it</strong> – using the Shiny application (<code><a href="../reference/runGeneKeepR.html">runGeneKeepR()</a></code>) as the walkthrough’s frame of reference.</p>
-<p>It is one of three documents that together cover the package from different angles. <a href="engineering-the-2.0.0-release.qmd">“Engineering nprcgenekeepr 2.0.0”</a> documents the modular-architecture migration and development process behind the current application – read it for the <em>how it was built</em> story. Six shorter feature articles (linked from <a href="#sec-approach" class="quarto-xref">Section 4</a>’s table) each walk one capability in depth, directly through the R API rather than the Shiny app. This article does neither of those jobs: it is the practical, tab-by-tab guide to <em>using</em> the application as shipped, aimed at a reader who wants to load a pedigree and get results, not read source code.</p>
+<p>It is one of three documents that together cover the package from different angles. <a href="engineering-the-2.0.0-release.html">“Engineering nprcgenekeepr 2.0.0”</a> documents the modular-architecture migration and development process behind the current application – read it for the <em>how it was built</em> story. Six shorter feature articles (linked from <a href="#sec-approach" class="quarto-xref">Section 4</a>’s table) each walk one capability in depth, directly through the R API rather than the Shiny app. This article does neither of those jobs: it is the practical, tab-by-tab guide to <em>using</em> the application as shipped, aimed at a reader who wants to load a pedigree and get results, not read source code.</p>
 <p><strong>Scope.</strong> Every claim below describing the current application – tab list, control labels, default values, and any number tied to the package’s own <code>data(examplePedigree)</code> example data – was re-verified directly against the source and a live run of the app, as of 2026-07-17. Nothing here is carried forward uncritically from earlier tutorials.</p>
 </section><section class="level2"><h2 id="sec-purpose">Section 1 – Purpose: Why nprcgenekeepr Exists<a class="anchor" aria-label="anchor" href="#sec-purpose"></a>
 </h2>
@@ -114,33 +113,33 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 <td>1</td>
 <td>Quality control of studbooks</td>
 <td>Input</td>
-<td><a href="studbook-quality-control.qmd">Studbook Quality Control</a></td>
+<td><a href="studbook-quality-control.html">Studbook Quality Control</a></td>
 </tr>
 <tr class="even">
 <td>2</td>
 <td>Pedigree construction and browsing, including identifying candidate parents for animals with unknown parentage</td>
 <td>Pedigree Browser, Potential Parents</td>
-<td><a href="offline-focal-animal-workflow.qmd">Building a Focal-Animal Pedigree Offline</a></td>
+<td><a href="offline-focal-animal-workflow.html">Building a Focal-Animal Pedigree Offline</a></td>
 </tr>
 <tr class="odd">
 <td>3</td>
 <td>Age-sex demographic display</td>
 <td>Age-Sex Pyramid</td>
-<td><a href="age-sex-pyramid.qmd">Age-Sex Pyramid Plots</a></td>
+<td><a href="age-sex-pyramid.html">Age-Sex Pyramid Plots</a></td>
 </tr>
 <tr class="even">
 <td>4</td>
 <td>Genetic value analysis (mean kinship, genome uniqueness)</td>
 <td>Genetic Value Analysis, Genetic Value Analysis and Breeding Group Description</td>
 <td>
-<a href="genetic-value-analysis.qmd">Genetic Value Analysis</a>; <a href="fg-se-validation.qmd">Validating the Founder-Genome-Equivalent Standard Error</a>
+<a href="genetic-value-analysis.html">Genetic Value Analysis</a>; <a href="fg-se-validation.html">Validating the Founder-Genome-Equivalent Standard Error</a>
 </td>
 </tr>
 <tr class="odd">
 <td>5</td>
 <td>Breeding-group formation and ongoing diversity monitoring</td>
 <td>Breeding Groups, Genetic Diversity</td>
-<td><a href="breeding-group-formation.qmd">Forming Breeding Groups</a></td>
+<td><a href="breeding-group-formation.html">Forming Breeding Groups</a></td>
 </tr>
 </tbody>
 </table>
@@ -351,7 +350,7 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 </div>
 </section><section class="level3"><h3 id="summary-statistics">Summary Statistics<a class="anchor" aria-label="anchor" href="#summary-statistics"></a>
 </h3>
-<p>The <strong>Summary Statistics and Plots</strong> tab uses the results from Genetic Value Analysis. Definitions of genome uniqueness and kinship are on the <strong>Genetic Value Analysis and Breeding Group Description</strong> tab; founder-equivalent and founder-genome-equivalent definitions are at the bottom of this tab (see also <a href="fg-se-validation.qmd">“Validating the Founder-Genome-Equivalent Standard Error”</a>).</p>
+<p>The <strong>Summary Statistics and Plots</strong> tab uses the results from Genetic Value Analysis. Definitions of genome uniqueness and kinship are on the <strong>Genetic Value Analysis and Breeding Group Description</strong> tab; founder-equivalent and founder-genome-equivalent definitions are at the bottom of this tab (see also <a href="fg-se-validation.html">“Validating the Founder-Genome-Equivalent Standard Error”</a>).</p>
 <div class="quarto-figure quarto-figure-center">
 <figure><p><img src="shiny_app_use/ss_first_view.png" alt="Summary Statistics tab showing the first view of genetic diversity metrics."></p>
 <figcaption>Summary Statistics, first view.</figcaption></figure>
@@ -459,7 +458,7 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 </div>
 </section></section><section class="level2"><h2 id="sec-conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#sec-conclusion"></a>
 </h2>
-<p>This article covered why <code>nprcgenekeepr</code> exists, how its five function groups map onto the Shiny application’s tabs and onto a scriptable R API, and what it looks like to actually use every tab of that application against the package’s own example data. For more depth on any one capability, see the six feature articles in <a href="#tbl-function-groups" class="quarto-xref">Table 1</a>; for the story of how the current modular application came to be, see <a href="engineering-the-2.0.0-release.qmd">“Engineering nprcgenekeepr 2.0.0”</a>. This article’s own preparation surfaced and fixed three production issues along the way – an Excel-upload sire/dam corruption defect, a non-functional “Custom” breeding-group sex ratio, and a shipped example pedigree missing the column the Potential Parents tab needs to demonstrate populated results – each described where it arose in Section 3. Please report any further questions, comments, or bugs through the <a href="https://github.com/rmsharp/nprcgenekeepr/issues">GitHub issue tracker</a>.</p>
+<p>This article covered why <code>nprcgenekeepr</code> exists, how its five function groups map onto the Shiny application’s tabs and onto a scriptable R API, and what it looks like to actually use every tab of that application against the package’s own example data. For more depth on any one capability, see the six feature articles in <a href="#tbl-function-groups" class="quarto-xref">Table 1</a>; for the story of how the current modular application came to be, see <a href="engineering-the-2.0.0-release.html">“Engineering nprcgenekeepr 2.0.0”</a>. This article’s own preparation surfaced and fixed three production issues along the way – an Excel-upload sire/dam corruption defect, a non-functional “Custom” breeding-group sex ratio, and a shipped example pedigree missing the column the Potential Parents tab needs to demonstrate populated results – each described where it arose in Section 3. Please report any further questions, comments, or bugs through the <a href="https://github.com/rmsharp/nprcgenekeepr/issues">GitHub issue tracker</a>.</p>
 <p>This work has been supported in part by NIH grants P51 RR13986 to the Southwest National Primate Research Center and P51 OD011092 to the Oregon National Primate Research Center.</p>
 </section><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {

@@ -30,24 +30,66 @@ behind (S367 origin, flagged S368/S369) is now also RESOLVED – S370
 
 ## Up Next
 
-**Fix broken “Read deeper” links in the colony-manager-guide article**
-(READY, Effort S) – GitHub issue
-[\#124](https://github.com/rmsharp/nprcgenekeepr/issues/124) (filed
-S400, 2026-07-18, owner-reported urgent). Section 2’s “Read deeper
-(R-API walkthrough)” table column on the live published site
-(<https://rmsharp.github.io/nprcgenekeepr/articles/colony-manager-guide.html>)
-links to raw `.qmd` source files instead of rendered `.html` pages (6
-links in the table; 4 more of the same pattern elsewhere in the same
-file –
-`vignettes/articles/colony-manager-guide.qmd:22,46,95-99,370,530`, 10
-total). Root cause: `vignettes/articles/_quarto.yml` makes this a Quarto
-project, so the source’s `.qmd`-link convention expects Quarto’s
-project-level auto-rewrite to `.html` at render time – pkgdown’s
-mixed-mode Quarto build is evidently not performing that rewrite. No
-other article source file has this pattern (isolated to this one file).
-Issue \#124 lists two fix options (root-cause the pkgdown/Quarto
-rewrite, or directly retarget the 10 links to `.html`) for the
-implementing session to choose between.
+(none remaining – the “verify + likely fix the same low-contrast Mermaid
+defect in colony-manager-guide.qmd” item (flagged S401) is RESOLVED:
+verified S403 (2026-07-19) – NOT affected (the diagram is a plain
+`flowchart LR` with zero `subgraph` blocks; the actual defect is scoped
+to subgraph/cluster CSS, not a blanket pkgdown-mixed-mode issue – see
+`PROJECT_LEARNINGS.md` Learning 371, which corrects Learning 369’s
+root-cause claim). `format: html: mermaid: theme: default` applied to
+this file’s frontmatter anyway, owner directed, as a
+defensive/future-proofing measure. See `CHANGELOG.md`.)
+
+(none remaining – the “fix broken ‘Read deeper’ links in the
+colony-manager-guide article” item (issue
+[\#124](https://github.com/rmsharp/nprcgenekeepr/issues/124), filed
+S400) is RESOLVED on the
+`fix/figure2-contrast-engineering-2.0.0-release` branch – fixed S404
+(2026-07-20): all 10 `.qmd` hrefs retargeted directly to `.html`
+(`vignettes/articles/colony-manager-guide.qmd:26,50,99-103,374,534`).
+Pre-work verification found Learning 368’s “pkgdown’s mixed-mode build
+doesn’t perform the rewrite” framing was incomplete – a bare local
+`quarto render` of the same project (no pkgdown involved) produces the
+identical unrewritten `.qmd` href, because the rewrite is a
+`type: website`/`book` Quarto project feature this directory’s
+`_quarto.yml` never enables (see `PROJECT_LEARNINGS.md` Learning 372,
+which corrects Learning 368). All 7 distinct link targets confirmed live
+at the fixed relative path (HTTP 200) before editing; rendered output
+re-verified to contain zero remaining `.qmd` hrefs. **Issue \#124 stays
+open** – the fix is on the unmerged/unpushed branch below, not yet live
+on the published site. See `CHANGELOG.md`. **A second, distinct instance
+found and fixed S407 (2026-07-21)** – owner-reported live 404 at
+`.../articles/articles/colony-manager-guide.qmd`, traced to
+`vignettes/ColonyManagerTutorial.Rmd:9` (the retired-tutorial stub,
+already merged to `master` via S398, unlike the branch above): a
+relative link with a doubled `articles/` path segment (this file renders
+under `/articles/` too, so its own `articles/`-prefixed relative link
+doubled) plus the same `.qmd`-vs-`.html` defect. Fixed by pointing the
+link at the absolute published URL, and by renaming the file to
+`_ColonyManagerTutorial.Rmd` – pkgdown’s `build_articles()` skips any
+leading-`_` vignette by documented convention (verified against the
+installed pkgdown 2.2.0’s own `package_vignettes()` source, not
+assumed), which finally makes true the file’s own claim that it is not
+part of the public site (previously false: no `_pkgdown.yml` exclusion
+existed, so pkgdown was building and serving it). Owner also directed a
+full live-site link sweep (all 13 published articles +
+articles/reference/news index hubs, 238 resolved internal targets,
+HTTP-checked) – no other broken links found; see `CHANGELOG.md` and the
+issue \#124 comment thread for the full sweep result.)
+
+**Branch-merge strategy for
+`fix/figure2-contrast-engineering-2.0.0-release`** (DECISION MADE –
+owner, S405, 2026-07-20, via `AskUserQuestion`: **keep accumulating**
+further article work on this branch; do not open a PR/merge yet) – 10
+commits (S401 Figure 2 contrast fix, S402 Figure 2
+subgraph-title/node-box overlap fix, S403 colony-manager-guide Mermaid
+theme defensive fix, S404 colony-manager-guide “Read deeper” link fix),
+still unmerged to `master` and unpushed to `origin`. All four fixes
+remain independently verified and complete; none are blocked on the
+merge. Item stays open (not resolved) since the branch itself is still
+unmerged and the decision is to keep adding to it – revisit the
+merge-vs-continue choice again in a future session. First flagged in
+S402’s handoff, tracked in `BACKLOG.md` since S404.
 
 **Act on the LabKey integration research recommendations** (BLOCKED –
 remainder needs a live LabKey server to test/observe, Effort M) —

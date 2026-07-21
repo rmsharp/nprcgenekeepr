@@ -11,7 +11,7 @@ and an exposed R API. This article is a practical,
 screenshot-illustrated guide for colony managers and primate-center
 bioinformatics staff, complementing the engineering account in
 [“Engineering nprcgenekeepr
-2.0.0”](https://github.com/rmsharp/nprcgenekeepr/articles/engineering-the-2.0.0-release.qmd)
+2.0.0”](https://github.com/rmsharp/nprcgenekeepr/articles/engineering-the-2.0.0-release.md)
 and the six feature-depth articles listed in [Section 4](#sec-approach).
 Section 1 explains why the package exists; Section 2 maps its five
 function groups onto the app’s tabs and onto the two ways to use them
@@ -38,7 +38,7 @@ as the walkthrough’s frame of reference.
 
 It is one of three documents that together cover the package from
 different angles. [“Engineering nprcgenekeepr
-2.0.0”](https://github.com/rmsharp/nprcgenekeepr/articles/engineering-the-2.0.0-release.qmd)
+2.0.0”](https://github.com/rmsharp/nprcgenekeepr/articles/engineering-the-2.0.0-release.md)
 documents the modular-architecture migration and development process
 behind the current application – read it for the *how it was built*
 story. Six shorter feature articles (linked from
@@ -89,11 +89,11 @@ functions directly through the R API.
 
 | \# | Function group | App tab(s) | Read deeper (R-API walkthrough) |
 |----|----|----|----|
-| 1 | Quality control of studbooks | Input | [Studbook Quality Control](https://github.com/rmsharp/nprcgenekeepr/articles/studbook-quality-control.qmd) |
-| 2 | Pedigree construction and browsing, including identifying candidate parents for animals with unknown parentage | Pedigree Browser, Potential Parents | [Building a Focal-Animal Pedigree Offline](https://github.com/rmsharp/nprcgenekeepr/articles/offline-focal-animal-workflow.qmd) |
-| 3 | Age-sex demographic display | Age-Sex Pyramid | [Age-Sex Pyramid Plots](https://github.com/rmsharp/nprcgenekeepr/articles/age-sex-pyramid.qmd) |
-| 4 | Genetic value analysis (mean kinship, genome uniqueness) | Genetic Value Analysis, Genetic Value Analysis and Breeding Group Description | [Genetic Value Analysis](https://github.com/rmsharp/nprcgenekeepr/articles/genetic-value-analysis.qmd); [Validating the Founder-Genome-Equivalent Standard Error](https://github.com/rmsharp/nprcgenekeepr/articles/fg-se-validation.qmd) |
-| 5 | Breeding-group formation and ongoing diversity monitoring | Breeding Groups, Genetic Diversity | [Forming Breeding Groups](https://github.com/rmsharp/nprcgenekeepr/articles/breeding-group-formation.qmd) |
+| 1 | Quality control of studbooks | Input | [Studbook Quality Control](https://github.com/rmsharp/nprcgenekeepr/articles/studbook-quality-control.md) |
+| 2 | Pedigree construction and browsing, including identifying candidate parents for animals with unknown parentage | Pedigree Browser, Potential Parents | [Building a Focal-Animal Pedigree Offline](https://github.com/rmsharp/nprcgenekeepr/articles/offline-focal-animal-workflow.md) |
+| 3 | Age-sex demographic display | Age-Sex Pyramid | [Age-Sex Pyramid Plots](https://github.com/rmsharp/nprcgenekeepr/articles/age-sex-pyramid.md) |
+| 4 | Genetic value analysis (mean kinship, genome uniqueness) | Genetic Value Analysis, Genetic Value Analysis and Breeding Group Description | [Genetic Value Analysis](https://github.com/rmsharp/nprcgenekeepr/articles/genetic-value-analysis.md); [Validating the Founder-Genome-Equivalent Standard Error](https://github.com/rmsharp/nprcgenekeepr/articles/fg-se-validation.md) |
+| 5 | Breeding-group formation and ongoing diversity monitoring | Breeding Groups, Genetic Diversity | [Forming Breeding Groups](https://github.com/rmsharp/nprcgenekeepr/articles/breeding-group-formation.md) |
 
 Table 1: Function groups, the app tabs that expose them, and the
 companion articles that demonstrate them via the R API.
@@ -429,7 +429,7 @@ Value Analysis. Definitions of genome uniqueness and kinship are on the
 founder-equivalent and founder-genome-equivalent definitions are at the
 bottom of this tab (see also [“Validating the Founder-Genome-Equivalent
 Standard
-Error”](https://github.com/rmsharp/nprcgenekeepr/articles/fg-se-validation.qmd)).
+Error”](https://github.com/rmsharp/nprcgenekeepr/articles/fg-se-validation.md)).
 
 ![Summary Statistics tab showing the first view of genetic diversity
 metrics.](shiny_app_use/ss_first_view.png)
@@ -650,7 +650,7 @@ application against the package’s own example data. For more depth on
 any one capability, see the six feature articles in
 [Table 1](#tbl-function-groups); for the story of how the current
 modular application came to be, see [“Engineering nprcgenekeepr
-2.0.0”](https://github.com/rmsharp/nprcgenekeepr/articles/engineering-the-2.0.0-release.qmd).
+2.0.0”](https://github.com/rmsharp/nprcgenekeepr/articles/engineering-the-2.0.0-release.md).
 This article’s own preparation surfaced and fixed three production
 issues along the way – an Excel-upload sire/dam corruption defect, a
 non-functional “Custom” breeding-group sex ratio, and a shipped example

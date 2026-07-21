@@ -44,7 +44,6 @@
     <li><a class="dropdown-item" href="../articles/age-sex-pyramid.html">Age-Sex Pyramid Plots</a></li>
     <li><a class="dropdown-item" href="../articles/breeding-group-formation.html">Forming Breeding Groups</a></li>
     <li><a class="dropdown-item" href="../articles/colony-manager-guide.html">nprcgenekeepr: Purpose, Approach, and a Colony Manager's Guide to Practice</a></li>
-    <li><a class="dropdown-item" href="../articles/ColonyManagerTutorial.html">GeneKeepR: A Colony Manager's Tutorial (retired)</a></li>
     <li><a class="dropdown-item" href="../articles/engineering-the-2.0.0-release.html">Engineering nprcgenekeepr 2.0.0: Modular Architecture, Expanded Capability, and an AI-Assisted Development Process</a></li>
     <li><a class="dropdown-item" href="../articles/fg-se-validation.html">Validating the Founder-Genome-Equivalent Standard Error</a></li>
     <li><a class="dropdown-item" href="../articles/genetic-value-analysis.html">Genetic Value Analysis</a></li>
@@ -120,13 +119,14 @@ Figure 1: Commits per month across the full v1.0.8 -&gt; v2.0.0 range (<a href=
 <p></p>
 <figure class=""><p></p>
 <div>
-<pre class="mermaid mermaid-js">flowchart TB
-  subgraph Before["Before -- inst/application/, port 6012"]
+<pre class="mermaid mermaid-js">%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 30, "bottom": 5}}}}%%
+flowchart TB
+  subgraph Before["Before -- inst/application/,&lt;br/&gt;port 6012"]
     direction TB
     ui1["ui.r (53 lines)&lt;br/&gt;sources 8 uitp*.R panel files"] --&gt; srv1
     srv1["server.r (1,304 lines)&lt;br/&gt;one monolithic reactive block"]
   end
-  subgraph After["After -- R/appUI.R + R/appServer.R, port 6013"]
+  subgraph After["After -- R/appUI.R +&lt;br/&gt;R/appServer.R, port 6013"]
     direction TB
     ui2["appUI.R&lt;br/&gt;composes 10 modXXXUI() calls"]
     srv2["appServer.R&lt;br/&gt;shared reactiveValues()"]
