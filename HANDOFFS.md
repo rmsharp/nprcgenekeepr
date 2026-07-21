@@ -60,6 +60,24 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S407
+date: 2026-07-21
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: IN PROGRESS -- fix broken link in vignettes/ColonyManagerTutorial.Rmd:9
+  (doubled articles/ path + .qmd->.html, issue #124 defect class) and exclude
+  that file from the pkgdown article build in _pkgdown.yml.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S406
 date: 2026-07-20
 status: complete
