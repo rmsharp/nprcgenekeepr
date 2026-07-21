@@ -47,6 +47,46 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-21 · \[ad hoc\] Rename colony-manager-guide article title, reorder it to top of Articles dropdown (Session 409)
+
+- **Deliverable:** owner-directed. (1) Remove the “nprcgenekeepr:”
+  prefix from the colony-manager-guide article’s title (was
+  `"nprcgenekeepr: Purpose, Approach, and a Colony Manager's Guide to Practice"`,
+  now `"Purpose, Approach, and a Colony Manager's Guide to Practice"`) –
+  this is also the Articles dropdown’s display text, pulled directly
+  from the vignette’s own title. (2) Move it to the top of the Articles
+  dropdown. `_pkgdown.yml` had no `articles:` config at all, so the
+  dropdown was pkgdown’s default alphabetical listing – added one.
+- **Verified against pkgdown 2.2.0’s actual source before writing the
+  config, not just its docs:** `navbar_articles()` collapses the ENTIRE
+  dropdown into a single “Articles” link to `articles/index.html` if a
+  custom `articles:` config exists but none of its sections declare a
+  `navbar:` field – so the added section includes `navbar: ~` to keep
+  the full per-article list. `contents:` entries must use each article’s
+  pkgdown “name” (confirmed via
+  `pkgdown::as_pkgdown(".")$vignettes$name`):
+  `vignettes/articles/ *.qmd` files need the `articles/` prefix
+  (e.g. `articles/colony-manager-guide`); top-level `vignettes/*.Rmd`
+  files (e.g. `a2interactive`) do not. All 12 existing articles listed
+  explicitly, `articles/colony-manager-guide` first, the rest kept in
+  their previous (alphabetical) relative order.
+- **Consistency:** `vignettes/_ColonyManagerTutorial.Rmd:8` (the
+  retired, unpublished stub) quoted the old title verbatim in its own
+  link text – updated to match.
+  `docs/planning/document2-colony-manager-guide-plan.md` left untouched
+  (historical planning record, not live content).
+- **Verified:** directly inspected `pkgdown:::navbar_articles()`’s
+  generated menu structure (not just the YAML) – confirms 12 entries,
+  correct order, no fallback “More articles…” link. Rebuilt the actual
+  article + home page locally
+  (`pkgdown::build_article("articles/colony-manager-guide")` +
+  [`pkgdown::build_home()`](https://pkgdown.r-lib.org/reference/build_home.html))
+  and grepped the rendered HTML’s `<title>`/`<h1>`/navbar – all match.
+  Full regression suite: `0 failed/0 error/0 warning` (3198 passed, no
+  `R/`/`tests/` code touched).
+- **TDD Phase:** N/A throughout – vignette frontmatter + `_pkgdown.yml`
+  config only.
+
 ### 2026-07-21 · \[ad hoc\] Close-out: predecessor evaluation, self-assessment, Learning 375, HANDOFFS.md receipt (Session 408)
 
 - **Deliverable:** Phase 3 close-out for this session’s merge + pkgdown

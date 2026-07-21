@@ -1,4 +1,4 @@
-# nprcgenekeepr: Purpose, Approach, and a Colony Manager’s Guide to Practice
+# Purpose, Approach, and a Colony Manager’s Guide to Practice
 
 ## Abstract
 

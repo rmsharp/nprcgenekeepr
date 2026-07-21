@@ -1,7 +1,9 @@
 # Articles
 
-### All vignettes
+### Articles
 
+- [Purpose, Approach, and a Colony Manager's Guide to
+  Practice](https://github.com/rmsharp/nprcgenekeepr/articles/colony-manager-guide.md):
 - [Interactive Use of
   nprcgenekeepr](https://github.com/rmsharp/nprcgenekeepr/articles/a2interactive.md):
 - [Genetic Management Tools
@@ -10,8 +12,6 @@
   Plots](https://github.com/rmsharp/nprcgenekeepr/articles/age-sex-pyramid.md):
 - [Forming Breeding
   Groups](https://github.com/rmsharp/nprcgenekeepr/articles/breeding-group-formation.md):
-- [nprcgenekeepr: Purpose, Approach, and a Colony Manager's Guide to
-  Practice](https://github.com/rmsharp/nprcgenekeepr/articles/colony-manager-guide.md):
 - [Engineering nprcgenekeepr 2.0.0: Modular Architecture, Expanded
   Capability, and an AI-Assisted Development
   Process](https://github.com/rmsharp/nprcgenekeepr/articles/engineering-the-2.0.0-release.md):
