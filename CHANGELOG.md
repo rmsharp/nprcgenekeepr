@@ -43,6 +43,16 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-21 · [ad hoc] Close-out: predecessor evaluation, self-assessment, HANDOFFS.md receipt (Session 409)
+- **Deliverable:** Phase 3 close-out for this session's title/dropdown change (see the
+  entry below). Evaluated S408's handoff (9/10 -- its CDN-cache-lag verification
+  discipline was directly reused this session). Self-assessed 9/10. Completed the
+  `HANDOFFS.md` S409 receipt (`status: pending` -> `complete`). Co-staged in this same
+  commit so this close-out action doesn't recreate the self-referential `CHANGELOG.md`
+  gap the S408 session's own Phase 0 reconcile found and fixed.
+- **TDD Phase:** N/A -- pure documentation/close-out bookkeeping, no `R/`/`tests/` code
+  touched.
+
 ### 2026-07-21 · [ad hoc] Rename colony-manager-guide article title, reorder it to top of Articles dropdown (Session 409)
 - **Deliverable:** owner-directed. (1) Remove the "nprcgenekeepr: " prefix from the
   colony-manager-guide article's title (was `"nprcgenekeepr: Purpose, Approach, and a
