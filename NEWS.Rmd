@@ -12,6 +12,11 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+# nprcgenekeepr 2.0.0.9000 (development version)
+- Development continues here while CRAN's 2.0.0 submission (2026-07-17,
+  tagged `v2.0.0`) is under review. If CRAN requires a resubmission, it
+  will ship as 2.0.1, not a second 2.0.0 attempt.
+
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes
   - **(breaking)** `qcStudbook()` and `geneDrop()` now reject `id`, `sire`, or
