@@ -34,6 +34,34 @@ template:
       src: man/figures/card.png
       alt: "Conserve Genes"
 
+# Explicit articles: navbar order (S409) -- pkgdown's default (no articles:
+# key at all) lists articles alphabetically by name; this section pins
+# colony-manager-guide to the top, keeping every other article in its
+# previous (alphabetical) relative order. `navbar: ~` is required on this
+# section: without it, pkgdown collapses the whole dropdown into a single
+# "Articles" link to articles/index.html instead of listing every article
+# (verified against the installed pkgdown 2.2.0's navbar_articles() source,
+# not assumed from the docs alone). `contents:` entries use each article's
+# pkgdown "name" (its path relative to vignettes/, confirmed via
+# pkgdown::as_pkgdown(".")$vignettes$name) -- articles/*.qmd files need the
+# articles/ prefix; top-level vignettes/*.Rmd files do not.
+articles:
+- title: Articles
+  navbar: ~
+  contents:
+  - articles/colony-manager-guide
+  - a2interactive
+  - a3manual
+  - articles/age-sex-pyramid
+  - articles/breeding-group-formation
+  - articles/engineering-the-2.0.0-release
+  - articles/fg-se-validation
+  - articles/genetic-value-analysis
+  - gvaConvergence
+  - articles/offline-focal-animal-workflow
+  - simulatedKValues
+  - articles/studbook-quality-control
+
 # Moved here from the shadowed, dead inst/_pkgdown.yml (BACKLOG.md, S345/S354):
 # pkgdown's config resolver only ever reads the FIRST config file it finds, in
 # order _pkgdown.yml / _pkgdown.yaml / pkgdown/_pkgdown.yml / pkgdown/_pkgdown.yaml

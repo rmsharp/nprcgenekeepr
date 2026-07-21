@@ -5,7 +5,7 @@ title: "GeneKeepR: A Colony Manager's Tutorial (retired)"
 **This tutorial has been retired (2026-07-17).** Its content -- purpose,
 approach, and a tab-by-tab walkthrough -- has been ported, modernized, and
 re-verified against the current modular application into the public article
-["nprcgenekeepr: Purpose, Approach, and a Colony Manager's Guide to
+["Purpose, Approach, and a Colony Manager's Guide to
 Practice"](https://rmsharp.github.io/nprcgenekeepr/articles/colony-manager-guide.html),
 part of the package's online documentation at <https://rmsharp.github.io/nprcgenekeepr/>.
 
