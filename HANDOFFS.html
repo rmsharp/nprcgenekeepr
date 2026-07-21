@@ -86,20 +86,74 @@ when it reconstructs a receipt a crashed session never completed — you never w
 <p><code>self_score</code> and <code>predecessor_score</code> are distinct keys so one can never stand in for the other; omit <code>predecessor_score</code> on Session 1 (there is no predecessor to score). <code>commit: pending</code> and <code>what_was_done: pending</code> are legal at write time (the receipt ships in the very commit whose sha it would name); the next session reconciles them to real shas.</p>
 <pre class="handoff"><code>session: S408
 date: 2026-07-21
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Merge fix/figure2-contrast-engineering-2.0.0-release (S401-407,
-  22 commits) into master, resolving the divergence master's own S407
-  (above) already flagged as expected. Push to origin/master, verify the
-  pkgdown redeploy fixes issue #124 live, close out the issue.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending</code></pre>
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- merged fix/figure2-contrast-engineering-2.0.0-release
+  (S401-407, 22 commits) into master, resolving master's own independent
+  S407 divergence (CRAN v2.0.0 tag + 2.0.0.9000 bump). Found and fixed a
+  second, deploy-pipeline defect (pkgdown.yaml clean:false) blocking the
+  merged fix from actually taking effect live. Verified live, closed
+  issue #124.
+what_was_done: git log/merge-tree investigation before acting (found
+  master's divergence + 4 real file conflicts, no code conflicts).
+  Claimed session (6e665173). Merged, resolved BACKLOG.md (auto-clean)/
+  CHANGELOG.md/HANDOFFS.md/SESSION_NOTES.md (manual, by commit
+  timestamp) conflicts via git show &lt;ref&gt;:&lt;file&gt; extraction, not raw
+  marker editing. Verified: load_all clean, full regression 0/0/0 (3198
+  passed), R CMD build + tar tzf. Committed (dd8e53fd), pushed, watched
+  pkgdown.yaml deploy (gh run watch). Live-checked: doubled-path URL
+  404s correctly, but articles/ColonyManagerTutorial.html (old,
+  unprefixed) still live (200) with the same .qmd-targeting defect.
+  Root-caused to clean:false on the JamesIves deploy action -- gh-pages
+  had 981 files, 3 old copies of this tutorial, never cleaned across
+  every past deploy. Checked for assets a clean deploy would lose (only
+  .nojekyll, auto-regenerated) before proposing the fix via
+  AskUserQuestion. Fixed clean:false-&gt;true (f5b73edf), pushed, watched
+  redeploy, confirmed via git ls-tree (981-&gt;650 files) and live HTTP
+  (caught and correctly diagnosed a ~15s CDN-cache false negative via
+  x-origin-cache/x-cache headers before it cleared on a poll loop).
+  Closed issue #124 via gh api (-F body=@file, per S407's -f/-F gotcha).
+  Updated BACKLOG.md/CHANGELOG.md (2 entries)/PROJECT_LEARNINGS.md
+  (Learning 375)/CLAUDE.md (stale learning-count refresh).
+next_steps: No open item from this deliverable. The now-fully-merged
+  fix/figure2-contrast-engineering-2.0.0-release branch is safe to
+  delete (local+origin) but wasn't -- ask the owner or do it if
+  directed next session. LabKey (BLOCKED, needs live server) and CRAN
+  resubmission (BLOCKED, awaiting CRAN reviewer) remain open, unchanged.
+key_files: .github/workflows/pkgdown.yaml:52 (clean: true, the actual
+  root-cause fix); CHANGELOG.md (2 2026-07-21 S408 entries, [issue
+  #124]); BACKLOG.md (branch-merge-strategy + issue #124 items
+  resolved); PROJECT_LEARNINGS.md Learning 375; CLAUDE.md:235; issue
+  #124 closing comment
+  (https://github.com/rmsharp/nprcgenekeepr/issues/124#issuecomment-5037212991).
+gotchas: (1) clean:false on a GitHub Pages deploy action means the
+  deploy is purely additive -- a source-level exclude/rename fix cannot
+  take live effect if the deploy step never removes stale prior output;
+  a local R CMD build/tarball check cannot catch this, since it never
+  touches the deploy step. (2) Immediately post-redeploy, live HTTP
+  checks can return stale CDN-cached responses for ~15-30s even though
+  gh-pages' own git tree is already correct -- check git ls-tree as the
+  source of truth; if a live check disagrees, check x-origin-cache/
+  x-cache headers before concluding the deploy failed. (3) Two branches
+  can each run a full session under the identical session number with
+  no collision if numbering is per-branch -- both this project's S407s
+  self-documented the split, making chronological merge ordering (by
+  commit timestamp, not session number) straightforward. (4) For
+  multi-way merge conflicts across ledger/notes files, extract clean
+  blocks from each side's PRE-merge file via git show &lt;ref&gt;:&lt;file&gt;
+  rather than hand-editing raw conflict-marker text -- avoids
+  transcription risk on large files.
+runtime_smoke: Full runtime verification chain: pkgload::load_all()
+  clean load + full regression suite (0 failed/0 error/0 warning, 3198
+  passed) + R CMD build/tar tzf (local); gh run watch on both the merge
+  deploy and the clean:true redeploy (both green); git ls-tree
+  origin/gh-pages before/after (981-&gt;650 files); live HTTP checks on 6
+  distinct URLs plus a grep of colony-manager-guide.html's actual
+  rendered hrefs, with a CDN-cache-lag false negative caught and
+  correctly diagnosed via response headers rather than assumed.
+changelog_ref: 2026-07-21 S408 entries (2), CHANGELOG.md, [issue #124]
+commit: a30380be</code></pre>
 <pre class="handoff"><code>session: S407
 date: 2026-07-21
 status: complete

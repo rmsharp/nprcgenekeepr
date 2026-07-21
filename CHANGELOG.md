@@ -47,6 +47,26 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-21 · \[ad hoc\] Close-out: predecessor evaluation, self-assessment, Learning 375, HANDOFFS.md receipt (Session 408)
+
+- **Deliverable:** Phase 3 close-out for this session’s merge + pkgdown
+  deploy fix (see the `[issue #124]` entry below). Evaluated both
+  predecessor S407 handoffs (branch’s link-fix session and master’s
+  independently-diverged CRAN tag/version-bump session, 9/10 each –
+  master’s `gotchas` field explicitly predicted the exact 4-file merge
+  conflict this session hit). Self-assessed 9/10. Recorded
+  `PROJECT_LEARNINGS.md` Learning 375 (deploy-pipeline
+  additive-only-clean as a defect class distinct from a source-level
+  fix, plus the CDN-propagation-lag verification gotcha) and refreshed
+  `CLAUDE.md`’s stale learning-count/file-size cross-reference
+  (370/1.7MB -\> 375/1.6MB). Completed the `HANDOFFS.md` S408 receipt
+  (`status: pending` -\> `complete`). Co-staged in this same commit
+  specifically so this close-out action doesn’t recreate the exact
+  self-referential `CHANGELOG.md` gap this session’s own Phase 0
+  reconcile found and backfilled for S407’s close-out commit.
+- **TDD Phase:** N/A – pure documentation/close-out bookkeeping, no
+  `R/`/`tests/` code touched.
+
 ### 2026-07-21 · \[issue \#124\] Merge fix/figure2-contrast-engineering-2.0.0-release into master; fix pkgdown deploy clean:false so stale pages actually get removed (Session 408)
 
 - **Deliverable:** owner-approved merge of
