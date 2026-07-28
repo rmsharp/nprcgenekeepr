@@ -60,6 +60,23 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S414
+date: 2026-07-28
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Owner-directed (not from BACKLOG.md): (1) track the newly-added inst/extdata/Master_Genetic_metrics_2_14_15.pdf; (2) investigate inst/extdata's current contents/usage across the package and produce reorganization suggestions -- recommendations only, no reorg implemented until the owner picks a direction (owner explicitly flagged that any reorg affects the package's use of these files via system.file()).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<in progress>
+
+```handoff
 session: S413
 date: 2026-07-28
 status: complete

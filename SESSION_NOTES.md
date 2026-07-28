@@ -6,6 +6,21 @@
 
 ## ACTIVE TASK
 
+### What Session 414 Did
+**Deliverable:** Owner-directed (not from `BACKLOG.md`): (1) track the newly-added
+`inst/extdata/Master_Genetic_metrics_2_14_15.pdf` (owner placed the file, wants it
+committed); (2) investigate `inst/extdata/`'s current contents and how each item is
+actually referenced across the package, then produce reorganization suggestions --
+recommendations only, no reorg implemented this session pending the owner's choice
+(owner explicitly flagged that any reorg affects the package's own use of these files).
+(IN PROGRESS)
+**Started:** 2026-07-28
+**Status:** Session claimed. Work beginning. TDD Phase: N/A -- investigation/data-file
+tracking, no production code touched.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
 ### What Session 413 Did
 **Deliverable:** Owner-directed (not from `BACKLOG.md`): a plan to announce, advertise,
 and correspond regarding nprcgenekeepr's availability and features to the national
