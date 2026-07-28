@@ -140,12 +140,12 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
 - [ ] (none remaining -- the "clean up stale untracked leftover files" item (filed
       S383) is RESOLVED: 18 confirmed-dead untracked files deleted -- S384
       (2026-07-15). See `CHANGELOG.md`.)
-- [ ] **`README.Rmd` leaves an untracked `README.html` byproduct on every render**
-      (READY, Effort S -- flagged S410, `PROJECT_LEARNINGS.md` Learning 376(b)):
-      unlike `NEWS.Rmd` (`html_preview: false`), `README.Rmd`'s frontmatter has no
-      `html_preview: false`, and `README.html` is not `.gitignore`'d. Fix is either
-      one-line frontmatter addition or a `.gitignore` entry -- deferred as
-      out-of-scope for S410's own approved Phase 6 task, not because it's risky.
+- [ ] (none remaining -- the "`README.Rmd` leaves an untracked `README.html`
+      byproduct on every render" item (flagged S410, `PROJECT_LEARNINGS.md`
+      Learning 376(b)) is RESOLVED: `html_preview: false` added to
+      `README.Rmd`'s `output: github_document` frontmatter, mirroring
+      `NEWS.Rmd`'s already-working pattern -- S411 (2026-07-28). Verified by
+      re-rendering: no `README.html` byproduct produced. See `CHANGELOG.md`.)
 
 ## Architecture (issue #122 / XARCH-2 -- module contract)
 *Resolved -- S372 planning session through S377 execution (Phases 1-5, all DONE); see

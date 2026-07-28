@@ -43,6 +43,19 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-28 · [ad hoc] Stop README.Rmd from leaving an untracked README.html byproduct (Session 411)
+- **Deliverable:** Owner-picked from the Phase 0 priorities list, resolving the
+  Housekeeping item flagged S410 (`PROJECT_LEARNINGS.md` Learning 376(b)).
+  Added `html_preview: false` to `README.Rmd`'s `output: github_document`
+  frontmatter, mirroring `NEWS.Rmd`'s already-working pattern (`NEWS.Rmd:4-7`).
+- **Actions:** Verified via a clean pre-render version check (installed
+  `2.0.0.9000` matched `DESCRIPTION`, no reinstall needed) then re-rendering
+  `README.Rmd`: no `README.html` byproduct produced, and `README.md`'s content
+  was unchanged (already current from S410's same-day render). Isolated
+  3-line diff on `README.Rmd` only. `BACKLOG.md` Housekeeping item resolved.
+- **TDD Phase:** N/A -- Quarto/R-Markdown frontmatter + rendering only, no
+  `R/`/`tests/` code touched.
+
 ### 2026-07-28 · [ad hoc] Close-out: predecessor evaluation, self-assessment, Learning 376, HANDOFFS.md receipt (Session 410)
 - **Deliverable:** Phase 3 close-out for this session's CRAN post-acceptance housekeeping
   (see the entry below). Evaluated S409's handoff (8/10 -- clean state and an accurately

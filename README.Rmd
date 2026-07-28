@@ -2,7 +2,9 @@
 title: "README"
 author: "R. Mark Sharp, Ph.D."
 date: "`r Sys.Date()`"
-output: github_document
+output:
+   github_document:
+     html_preview: false
 ---
 
 # nprcgenekeepr <a href="https://github.com/rmsharp/nprcgenekeepr"><img src="man/figures/logo.png" align="right" height="138" alt="" /></a>
