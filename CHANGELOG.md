@@ -47,6 +47,752 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-28 · \[ad hoc\] Close-out: predecessor evaluation, self-assessment, Learning 376, HANDOFFS.md receipt (Session 410)
+
+- **Deliverable:** Phase 3 close-out for this session’s CRAN
+  post-acceptance housekeeping (see the entry below). Evaluated S409’s
+  handoff (8/10 – clean state and an accurately BLOCKED CRAN item let
+  this session recognize instantly that today’s new information resolved
+  it, though the handoff had no direct content overlap with today’s
+  externally triggered task). Self-assessed 8/10 (docked for not
+  surfacing the `gh release create` vs. `usethis::use_github_release()`
+  deviation as its own decision point, and for only partially verifying
+  binary-flavor publication 2 days post-accept). Added
+  `PROJECT_LEARNINGS.md` Learning 376 (installed-vs-source package
+  version trap when re-rendering
+  [`getVersion()`](https://github.com/rmsharp/nprcgenekeepr/reference/getVersion.md)-dependent
+  docs, plus the `README.html` render byproduct gap) and a `BACKLOG.md`
+  Housekeeping follow-up item for the latter. Bumped `CLAUDE.md`’s
+  learning-count cross-reference (375 -\> 376). Completed the
+  `HANDOFFS.md` S410 receipt (`status: pending` -\> `complete`).
+- **TDD Phase:** N/A – pure documentation/close-out bookkeeping, no
+  `R/`/`tests/` code touched.
+
+### 2026-07-28 · \[ad hoc\] CRAN 2.0.0 post-acceptance housekeeping – Phase 6 (Session 410)
+
+- **Deliverable:** owner-directed, triggered by CRAN’s automated
+  Windows-binary-build notification email. Independently confirmed via
+  CRAN’s live package page (cran.r-project.org/package=nprcgenekeepr):
+  version 2.0.0, published 2026-07-26 – the pending submission (tagged
+  `v2.0.0`, S407) was accepted. Executed the remaining steps of the
+  pre-declared Phase 6 (Post-acceptance) from
+  `docs/planning/cran-2.0.0-submission-plan.md:324` (the `v2.0.0` tag
+  and the `DESCRIPTION` dev-version bump to `2.0.0.9000` were already
+  done ahead of time in S407, before the acceptance was known).
+- **Actions:** (1) Created the missing GitHub Release for `v2.0.0`
+  (github.com/rmsharp/nprcgenekeepr/releases/tag/v2.0.0) –
+  `gh release list` showed none existed (v1.0.7 was still “Latest”);
+  notes drawn from `NEWS.md`’s “2.0.0 (20260708)” section plus a
+  one-line submission/acceptance-date header. Verified live via
+  `gh release view`. (2) Deleted the tracked, `.Rbuildignore`’d
+  `CRAN-SUBMISSION` file – its job (tracking the pending submission) is
+  resolved, matching this project’s own precedent (`96a0f67c`,
+  post-1.0.8-acceptance). (3) Fixed `NEWS.Rmd`’s “2.0.0.9000
+  (development version)” note, which read “…is under review” – now
+  records the actual acceptance/publication dates; re-rendered to
+  `NEWS.md` (isolated 3-line diff). (4) Re-knit `README.Rmd` -\>
+  `README.md`, owner-directed additional scope: the shipped `README.md`
+  showed “Version 2.0.0 (2026-07-07)”, stale independent of today’s news
+  – it predated the S407 dev-version bump and was never re-rendered
+  after it. Discovered the locally *installed* package was also stale
+  (still `2.0.0`, not `2.0.0.9000`), which would have rendered an
+  inconsistent version string; reinstalled
+  (`devtools::install(quick = TRUE)`) before rendering – isolated 2-line
+  diff (date + version string only). (5) Updated `BACKLOG.md`’s CRAN
+  resubmission item to record acceptance.
+- **Verified:** `gh release view v2.0.0` / `gh release list` confirm the
+  release is live and marked “Latest”; `git diff NEWS.md` /
+  `git diff README.md` both isolated to the intended lines;
+  `packageVersion("nprcgenekeepr")` confirmed `2.0.0.9000`
+  post-reinstall; repo-wide grep swept for other stale “under
+  review”/“pending” CRAN-status language.
+- **TDD Phase:** N/A throughout – packaging/release/documentation
+  housekeeping only, no `R/`/`tests/` code touched.
+
+### 2026-07-21 · \[ad hoc\] Close-out: predecessor evaluation, self-assessment, HANDOFFS.md receipt (Session 409)
+
+- **Deliverable:** Phase 3 close-out for this session’s title/dropdown
+  change (see the entry below). Evaluated S408’s handoff (9/10 – its
+  CDN-cache-lag verification discipline was directly reused this
+  session). Self-assessed 9/10. Completed the `HANDOFFS.md` S409 receipt
+  (`status: pending` -\> `complete`). Co-staged in this same commit so
+  this close-out action doesn’t recreate the self-referential
+  `CHANGELOG.md` gap the S408 session’s own Phase 0 reconcile found and
+  fixed.
+- **TDD Phase:** N/A – pure documentation/close-out bookkeeping, no
+  `R/`/`tests/` code touched.
+
+### 2026-07-21 · \[ad hoc\] Rename colony-manager-guide article title, reorder it to top of Articles dropdown (Session 409)
+
+- **Deliverable:** owner-directed. (1) Remove the “nprcgenekeepr:”
+  prefix from the colony-manager-guide article’s title (was
+  `"nprcgenekeepr: Purpose, Approach, and a Colony Manager's Guide to Practice"`,
+  now `"Purpose, Approach, and a Colony Manager's Guide to Practice"`) –
+  this is also the Articles dropdown’s display text, pulled directly
+  from the vignette’s own title. (2) Move it to the top of the Articles
+  dropdown. `_pkgdown.yml` had no `articles:` config at all, so the
+  dropdown was pkgdown’s default alphabetical listing – added one.
+- **Verified against pkgdown 2.2.0’s actual source before writing the
+  config, not just its docs:** `navbar_articles()` collapses the ENTIRE
+  dropdown into a single “Articles” link to `articles/index.html` if a
+  custom `articles:` config exists but none of its sections declare a
+  `navbar:` field – so the added section includes `navbar: ~` to keep
+  the full per-article list. `contents:` entries must use each article’s
+  pkgdown “name” (confirmed via
+  `pkgdown::as_pkgdown(".")$vignettes$name`):
+  `vignettes/articles/ *.qmd` files need the `articles/` prefix
+  (e.g. `articles/colony-manager-guide`); top-level `vignettes/*.Rmd`
+  files (e.g. `a2interactive`) do not. All 12 existing articles listed
+  explicitly, `articles/colony-manager-guide` first, the rest kept in
+  their previous (alphabetical) relative order.
+- **Consistency:** `vignettes/_ColonyManagerTutorial.Rmd:8` (the
+  retired, unpublished stub) quoted the old title verbatim in its own
+  link text – updated to match.
+  `docs/planning/document2-colony-manager-guide-plan.md` left untouched
+  (historical planning record, not live content).
+- **Verified:** directly inspected `pkgdown:::navbar_articles()`’s
+  generated menu structure (not just the YAML) – confirms 12 entries,
+  correct order, no fallback “More articles…” link. Rebuilt the actual
+  article + home page locally
+  (`pkgdown::build_article("articles/colony-manager-guide")` +
+  [`pkgdown::build_home()`](https://pkgdown.r-lib.org/reference/build_home.html))
+  and grepped the rendered HTML’s `<title>`/`<h1>`/navbar – all match.
+  Full regression suite: `0 failed/0 error/0 warning` (3198 passed, no
+  `R/`/`tests/` code touched).
+- **TDD Phase:** N/A throughout – vignette frontmatter + `_pkgdown.yml`
+  config only.
+
+### 2026-07-21 · \[ad hoc\] Close-out: predecessor evaluation, self-assessment, Learning 375, HANDOFFS.md receipt (Session 408)
+
+- **Deliverable:** Phase 3 close-out for this session’s merge + pkgdown
+  deploy fix (see the `[issue #124]` entry below). Evaluated both
+  predecessor S407 handoffs (branch’s link-fix session and master’s
+  independently-diverged CRAN tag/version-bump session, 9/10 each –
+  master’s `gotchas` field explicitly predicted the exact 4-file merge
+  conflict this session hit). Self-assessed 9/10. Recorded
+  `PROJECT_LEARNINGS.md` Learning 375 (deploy-pipeline
+  additive-only-clean as a defect class distinct from a source-level
+  fix, plus the CDN-propagation-lag verification gotcha) and refreshed
+  `CLAUDE.md`’s stale learning-count/file-size cross-reference
+  (370/1.7MB -\> 375/1.6MB). Completed the `HANDOFFS.md` S408 receipt
+  (`status: pending` -\> `complete`). Co-staged in this same commit
+  specifically so this close-out action doesn’t recreate the exact
+  self-referential `CHANGELOG.md` gap this session’s own Phase 0
+  reconcile found and backfilled for S407’s close-out commit.
+- **TDD Phase:** N/A – pure documentation/close-out bookkeeping, no
+  `R/`/`tests/` code touched.
+
+### 2026-07-21 · \[issue \#124\] Merge fix/figure2-contrast-engineering-2.0.0-release into master; fix pkgdown deploy clean:false so stale pages actually get removed (Session 408)
+
+- **Deliverable:** owner-approved merge of
+  `fix/figure2-contrast-engineering-2.0.0-release` (S401-407, 22
+  commits: Figure 2 contrast/layout fixes, Mermaid theme defensive fix,
+  colony-manager-guide.qmd link fixes, and the ColonyManagerTutorial.Rmd
+  doubled-path fix) into `master`, which had independently diverged with
+  its own S407 (CRAN v2.0.0 tag + `2.0.0.9000` dev-version bump). Real
+  3-way merge, not a fast-forward: 4 conflicts (`BACKLOG.md` auto-merged
+  cleanly; `CHANGELOG.md`/`HANDOFFS.md`/`SESSION_NOTES.md` required
+  manual resolution – both sides had independently prepended entries at
+  the same insertion point) – resolved by interleaving both sides’
+  entries in actual chronological order (master’s S407 tag/bump commits,
+  10:58-11:01, precede the branch’s S407 link-fix commits, 11:24-11:45,
+  same day), preserving every entry from both histories rather than
+  discarding either side. No `R/`/`tests/` code conflicts; `DESCRIPTION`
+  untouched by the branch, so master’s `2.0.0.9000` carried through
+  automatically. Verified before committing:
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  clean load, full regression suite `0 failed/0 error/0 warning` (3198
+  passed, 179 skipped), and `R CMD build .` + `tar tzf` confirming
+  `_ColonyManagerTutorial.Rmd` correctly excluded from the tarball.
+  Pushed to `origin/master` (`dd8e53fd`), triggering the pkgdown
+  redeploy.
+- **Second defect found during live-site verification (not from either
+  merged branch):** post-deploy, the owner-reported doubled-path URL
+  correctly still 404s (it was never meant to resolve), but
+  `https://.../articles/ColonyManagerTutorial.html` – the OLD,
+  un-prefixed page – was still live (HTTP 200) and still contained the
+  exact `.qmd`-targeting link issue \#124 tracks. Root cause:
+  `.github/workflows/pkgdown.yaml`’s deploy step used `clean: false`
+  (`JamesIves/github-pages-deploy-action@v4.5.0`), so every pkgdown
+  deploy has only ever *added* files to `gh-pages`, never removed stale
+  ones – confirmed via `git ls-tree -r origin/gh-pages`: 981 files
+  including THREE separate old copies of this tutorial
+  (`01ColonyManagerTutorial.html`, `06ColonyManagerTutorial.html`,
+  `ColonyManagerTutorial.html`) from past renames, none ever cleaned up.
+  This meant the source-level fix (renaming to
+  `_ColonyManagerTutorial.Rmd`, excluding it from the pkgdown build)
+  could not actually resolve the live defect – a page already deployed
+  from a prior build stays live regardless of what the current build
+  excludes.
+- **Fix:** `.github/workflows/pkgdown.yaml` `clean: false` -\>
+  `clean: true`. Checked for hand-maintained `gh-pages` assets a clean
+  deploy might destroy before making the change – found only
+  `.nojekyll`, which pkgdown regenerates automatically on every build,
+  so no risk of losing anything not reproducible by the next build.
+  Owner confirmed via `AskUserQuestion` before touching CI/CD config
+  (new scope beyond the merge itself).
+- **Verified live, post-redeploy:** pushed the `clean: true` fix
+  (`f5b73edf`), watched the triggered `pkgdown.yaml` run to completion
+  (`gh run watch`), then confirmed via `git ls-tree -r origin/gh-pages`
+  the branch dropped from 981 to 650 files with zero remaining
+  `ColonyManagerTutorial` matches. Live HTTP checks (after a ~15s GitHub
+  Pages CDN propagation delay, confirmed via response `age`/`x-cache`
+  headers, then polled to clear): `ColonyManagerTutorial.html`,
+  `01ColonyManagerTutorial.html`, `06ColonyManagerTutorial.html`, and
+  `_ColonyManagerTutorial.html` (the renamed file’s own would-be
+  published path) all now correctly 404; the doubled-path URL also 404s
+  (as intended – it was never meant to resolve);
+  `colony-manager-guide.html` itself
+  200. now has **zero** remaining `.qmd`-targeting hrefs – confirms
+       S404’s original branch fix, not just this session’s rename, is
+       also now genuinely live for the first time. Issue \#124 is fully
+       resolved live, not just fixed in source.
+- **TDD Phase:** N/A throughout – git merge conflict resolution
+  (docs/ledger files only) and one CI/CD YAML config line, no
+  `R/`/`tests/` code touched.
+
+### 2026-07-21 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit 4e5baf5e – S407 close-out (Session 408)
+
+- **Deliverable:** Phase 0 ledger reconcile found one commit past the
+  `CHANGELOG.md` frontier (`14ace3bb`, S407’s deliverable entry below):
+  `4e5baf5e` “docs: S407 – close-out handoff, self-assessment,
+  HANDOFFS.md receipt”. That commit only wrote
+  `HANDOFFS.md`/`SESSION_NOTES.md` (the Phase 3A/3B/3D close-out
+  material for S407’s already-logged deliverable) – no new engineering
+  action beyond what the S407 entry below already records. The gap is
+  the same self-referential pattern S406/S407 each backfilled for their
+  predecessor’s `HANDOFFS.md` `commit:` field (S405 backfilled
+  `e3b45f9f`, S406 backfilled `27e43c69`): the close-out commit’s own
+  sha cannot be recorded inside itself, so this session’s Phase 0
+  records it after the fact.
+
+### 2026-07-21 · \[issue \#124\] Fix ColonyManagerTutorial.Rmd’s doubled-path link + exclude it from pkgdown; live-site link sweep (Session 407)
+
+- **Deliverable:** owner-reported live 404
+  (`.../articles/articles/colony-manager-guide.qmd`) traced to
+  `vignettes/ColonyManagerTutorial.Rmd:9` (the retired-tutorial stub,
+  merged to `master` via S398, not the unmerged branch S404 fixed). Two
+  stacked defects: (1) a relative link with a doubled `articles/` path
+  segment – this file itself renders under pkgdown’s `/articles/`, so
+  its own `articles/`-prefixed relative link doubled to
+  `/articles/articles/...`; (2) the same issue-#124 `.qmd`-vs-`.html`
+  defect class. Fixed by retargeting the link to the absolute published
+  URL
+  (`https://rmsharp.github.io/nprcgenekeepr/articles/colony-manager-guide.html`),
+  and, owner-directed, additionally stopped the retired stub from being
+  published at all: renamed `vignettes/ColonyManagerTutorial.Rmd` -\>
+  `vignettes/_ColonyManagerTutorial.Rmd` (`git mv`) and updated
+  `.Rbuildignore`’s pattern to match. pkgdown’s `build_articles()` skips
+  any vignette whose filename starts with `_` (documented convention,
+  already used by this project’s own
+  `vignettes/manual_components/_*.Rmd` child documents) – verified
+  against the installed pkgdown 2.2.0’s actual `package_vignettes()`
+  source (not assumed), which confirmed the rename excludes the file
+  from both the built tarball (`R CMD build`
+  - `tar tzf`, re-verified) and the pkgdown article build. This makes
+    the file’s own “never part of the public pkgdown site” claim
+    actually true – previously false, since no `_pkgdown.yml` exclusion
+    existed and a locally-built
+    `docs/articles/ColonyManagerTutorial.html` artifact was found as
+    evidence pkgdown had been building and serving it. Full regression
+    suite re-run clean (0 failed / 0 error / 0 warning) though no
+    `R/`/`tests/` code was touched. **Owner also directed a full
+    live-site link sweep** of `https://rmsharp.github.io/nprcgenekeepr/`
+    (all 13 published articles plus the articles/reference/news index
+    hub pages): fetched each page, resolved every internal `href` to a
+    fully-qualified URL via proper relative-link resolution (not
+    string-matching), and HTTP-checked all 238 unique targets.
+    Findings: (a) the one 404 above (fixed this session); (b)
+    `colony-manager-guide.html`’s own 6 `.qmd`-targeting links (the
+    original issue-#124 defect) still show live – these return HTTP 200,
+    not 404, because pkgdown’s Quarto build also copies the raw `.qmd`
+    source alongside the rendered `.html`, so the link “works” but
+    serves the wrong content; this is the fix already committed on the
+    unmerged `fix/figure2-contrast-engineering-2.0.0-release` branch
+    (S404), not yet deployed, not a new finding; (c) no other broken or
+    misdirected links found across all remaining 231 targets. TDD Phase:
+    N/A throughout – markdown link, filename rename, and `.Rbuildignore`
+    pattern only, no `R/`/`tests/` code touched, confirmed via an
+    explicit pre-work `AskUserQuestion` (same precedent as S401-404).
+    See `BACKLOG.md` and the issue \#124 comment thread for the full
+    write-up.
+
+### 2026-07-21 · \[ad hoc\] Tag CRAN-submitted commit as v2.0.0, bump master to 2.0.0.9000 (Session 407)
+
+- **Deliverable:** owner-directed release engineering, on `master`. Tag
+  the exact commit `CRAN-SUBMISSION` records as uploaded to CRAN
+  (`db54d3257a1655a5582c3b201136f0ec868575bb`, 2026-07-17) as `v2.0.0`,
+  then move `master`’s development version forward so work isn’t blocked
+  on CRAN’s pending review outcome.
+- **Actions:** created annotated tag `v2.0.0` at the recorded submission
+  commit and pushed it to `origin`. Bumped `DESCRIPTION`’s `Version`
+  from `2.0.0` to `2.0.0.9000`; added a matching `NEWS.Rmd`/`NEWS.md`
+  “2.0.0.9000 (development version)” heading. Added a `BACKLOG.md` note
+  on the CRAN item recording that the owner has since learned CRAN
+  requires a version increment for any resubmission – a future
+  fix-and-resubmit ships as `2.0.1`, never a second `2.0.0` attempt, so
+  the `v2.0.0` tag will never need to move.
+- **Verification:**
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  confirmed the package loads cleanly with the bumped version
+  ([`packageVersion()`](https://rdrr.io/r/utils/packageDescription.html)
+  reports `2.0.0.9000`); `NEWS.Rmd` rendered cleanly to `NEWS.md` via
+  [`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html).
+  Grepped `R/`/`tests/` for hardcoded `"2.0.0"` strings – all are
+  `lifecycle::deprecate_*(when = "2.0.0", ...)` historical markers or
+  comments, none compare against the live package version, so none
+  needed changing.
+- **TDD Phase:** N/A – metadata/release-engineering only (`DESCRIPTION`,
+  `NEWS.Rmd`/`NEWS.md`, `BACKLOG.md`), no `R/`/`tests/` code touched.
+
+### 2026-07-20 · \[ad hoc\] Render engineering-the-2.0.0-release.qmd + audit 6 articles for the issue-#124 link defect class (Session 406)
+
+- **Deliverable:** owner-directed. (1) Render
+  `vignettes/articles/engineering-the-2.0.0-release.qmd` and confirm
+  clean render. (2) Audit the other 6 `vignettes/articles/*.qmd` files
+  (age-sex-pyramid, breeding-group-formation, fg-se-validation,
+  genetic-value-analysis, offline-focal-animal-workflow,
+  studbook-quality-control) for the same defect class issue \#124 found
+  in `colony-manager-guide.qmd` – cross-article links resolving to raw
+  `.qmd` source instead of rendered `.html` – and fix any found.
+- **Result:** `quarto render` of `engineering-the-2.0.0-release.qmd`
+  succeeded cleanly (exit 0, 0 warnings/errors). The 6-file audit found
+  zero links of any kind in any of the 6 files (not just zero
+  `.qmd`-specific links) – verified via a positive control (the same
+  search pattern against 2 files known to contain real links, returning
+  46/44 matches) before trusting the null result, rather than reporting
+  “0 findings” from a bare zero-match grep alone. No fixes were needed;
+  no `.qmd` file content changed.
+- **Verification:** documentation-only action, no `R/`/`tests/` code
+  touched; TDD Phase N/A (verification/audit, zero edits made).
+  Discipline documented as `PROJECT_LEARNINGS.md` Learning 373.
+
+### 2026-07-20 · \[ad hoc\] Branch-merge-strategy decision for fix/figure2-contrast-engineering-2.0.0-release (Session 405)
+
+- **Deliverable:** owner-picked from the Phase 0 priorities-list
+  `AskUserQuestion` – resolve the DECISION NEEDED item (first flagged
+  S402, tracked in `BACKLOG.md` since S404) on whether to merge the
+  branch now or keep accumulating work on it.
+- **Decision (via `AskUserQuestion`):** keep accumulating further
+  article work on `fix/figure2-contrast-engineering-2.0.0-release`; do
+  not open a PR/merge yet. All four fixes already on the branch
+  (S401-S404) remain independently verified and complete; none are
+  blocked by staying unmerged. `BACKLOG.md` item left open (decision
+  recorded, not resolved) since the branch itself is still unmerged and
+  the merge-vs-continue choice will be revisited again in a future
+  session.
+- **Verification:** documentation-only action, no `R/`/`tests/` code
+  touched; TDD Phase N/A (decision-recording bookkeeping, not
+  implementation).
+
+### 2026-07-20 · \[issue \#124\] Fix broken “Read deeper” links in colony-manager-guide.qmd (Session 404)
+
+- **Deliverable:** owner-picked from the Phase 0 priorities-list
+  `AskUserQuestion` – fix the 10 broken “Read deeper” links on the live
+  published `colony-manager-guide` article (issue \#124, filed S400,
+  owner-reported URGENT): all resolved to raw `.qmd` source files
+  (triggering browser downloads) instead of the intended rendered
+  `.html` pages. Same branch as S401-S403
+  (`fix/figure2-contrast-engineering-2.0.0-release`, owner explicitly
+  scoped this session to stay off `master`). No `R/`/`tests/` code
+  touched; TDD phase N/A throughout (markdown link hrefs only, confirmed
+  via an explicit pre-work `AskUserQuestion`, same precedent as
+  S401-403).
+- **Approach decision (pre-work `AskUserQuestion`):** issue \#124
+  offered two options – root-cause the pkgdown/Quarto `.qmd`-\>`.html`
+  auto-rewrite, or directly retarget the 10 links to `.html`. Verified
+  first: a bare local `quarto render` of this project (no pkgdown
+  involved, no `type: website` in `vignettes/articles/_quarto.yml`)
+  leaves `.qmd` hrefs unrewritten too – falsifying the issue’s
+  “pkgdown’s mixed-mode build doesn’t perform the rewrite” framing. The
+  rewrite is a Quarto `type: website`/`book` project feature this
+  directory’s `_quarto.yml` never enables, under pkgdown or otherwise;
+  fixing that would mean adding `type: website`, a bigger cross-cutting
+  change to the documented mixed-mode pkgdown/Quarto integration – out
+  of scope for this Effort-S fix per `SAFEGUARDS.md`. Owner confirmed:
+  direct link retarget.
+- **Fix:** changed all 10 `.qmd` hrefs to `.html` directly in
+  `vignettes/articles/colony-manager-guide.qmd` (lines 26, 50, 99-103,
+  374, 534 – 2 in-prose `engineering-the-2.0.0-release` references, the
+  6-link Section 2 function-group table, and 2 more
+  `fg-se-validation`/`engineering-the-2.0.0-release` in-prose
+  references). Pre-verified all 7 distinct link targets exist live at
+  the exact same relative path (`curl` HTTP 200 for each
+  `https://rmsharp.github.io/ nprcgenekeepr/articles/<name>.html`)
+  before editing. Post-edit: `quarto render` succeeded cleanly; grepped
+  the rendered output directly and confirmed all 7 targets resolve to
+  `.html` hrefs with zero remaining `.qmd` hrefs.
+- **Documented:** `PROJECT_LEARNINGS.md` Learning 372 (corrects Learning
+  368’s “pkgdown fails to perform the rewrite” framing to “the rewrite
+  mechanism was never enabled for this project type”). `BACKLOG.md`’s
+  issue \#124 item resolved; added a new tracked item for the still-open
+  branch-merge decision (first flagged in S402’s handoff, carried
+  through S403/S404 without a `BACKLOG.md` entry until now).
+- **Note:** issue \#124 stays open on GitHub – the fix is on the
+  unmerged/unpushed branch, not yet live on the published site.
+
+### 2026-07-19 · \[ad hoc\] Verify the low-contrast Mermaid defect in colony-manager-guide.qmd – not affected, applied theme:default defensively anyway (Session 403)
+
+- **Deliverable:** owner picked this item from the S401-authored
+  `BACKLOG.md` “Up Next” list (via the Phase 0 priorities-list
+  `AskUserQuestion`) – verify the low-contrast Mermaid defect S401
+  flagged as “near-certainly” also present in
+  `colony-manager-guide.qmd:115`’s diagram (same bare frontmatter, same
+  pkgdown mixed-mode Quarto pipeline as Figure 2). Same branch as
+  S401/S402 (`fix/figure2-contrast-engineering-2.0.0-release`). No
+  `R/`/`tests/` code touched; TDD phase N/A throughout (Quarto
+  vignette-article frontmatter, confirmed via an explicit pre-work
+  `AskUserQuestion`, same precedent as S401/S402).
+- **Verification result: NOT affected.** Fetched the live published page
+  and rendered it in headless Chrome – `colony-manager-guide.qmd`’s
+  diagram (`flowchart LR`, plain nodes, zero `subgraph` blocks) renders
+  with clean, legible light-lavender node boxes and dark text, no
+  muddy/dark-on-dark look.
+- **Root cause, corrected from Learning 369:** Learning 369’s claim that
+  “none of the loaded stylesheets… define any `--mermaid-*` custom
+  property” does not hold – `deps/bootstrap-5.3.8/bootstrap.min.css`
+  (pkgdown’s bundled Bootstrap) *does* define them at `:root`. The
+  actual defect is narrower and specific to **subgraph/cluster
+  styling**: `--mermaid-fg-color--lightest` (cluster background) and
+  `--mermaid-fg-color` (cluster title text) are BOTH derived from
+  `--bs-body-color` (the page’s dark body-text color) – a dark-on-dark
+  formula bug. Plain `.node` styling uses a different, sane pair
+  (`--mermaid-node-bg-color: RGBA(var(--bs-primary-rgb), 0.1)`, a light
+  tint, vs. dark text) that renders fine. Confirmed directly: the live
+  `engineering-the-2.0.0-release.html` page (S401/S402’s fix not yet
+  merged/deployed) still shows Figure 2’s subgraph titles rendering
+  barely-legible gray-on-dark-gray right now, while its plain node boxes
+  inside are fine – the same live page proves both halves of this
+  diagnosis at once. `colony-manager-guide.qmd`’s diagram has no
+  `subgraph` blocks, so it structurally cannot hit the broken code path.
+- **Methodology note:** a standalone `quarto render` is not a faithful
+  proxy for the pkgdown-built site’s CSS environment where subgraphs are
+  involved – confirmed the local render links a *different*,
+  Quarto-generated `bootstrap-<hash>.min.css` (not pkgdown’s shared
+  `deps/bootstrap-5.3.8/` copy). `quarto render` remains valid for
+  confirming a `theme: default` FIX (which bypasses the CSS-variable
+  path entirely via literal colors), but is not reliable evidence for
+  reproducing or ruling out the *unfixed* defect – that requires
+  checking the actual live/pkgdown-built page.
+- **Owner decision (via `AskUserQuestion`):** apply
+  `format: html: mermaid: theme: default` to
+  `colony-manager-guide.qmd`’s frontmatter anyway, as a
+  defensive/future-proofing measure even though verification showed it
+  isn’t currently needed (in case a subgraph is ever added to this
+  diagram). Re-rendered and re-verified via `quarto render` +
+  headless-Chrome screenshot after applying – diagram still renders
+  cleanly (Mermaid’s own literal default-theme colors), no regression.
+- **Diff:** `vignettes/articles/colony-manager-guide.qmd` only – 3 lines
+  added (frontmatter `format.html.mermaid.theme: default`). Recorded
+  `PROJECT_LEARNINGS.md` Learning 371 (corrects/refines Learning 369);
+  removed the resolved item from `BACKLOG.md`’s “Up Next” list.
+
+### 2026-07-19 · \[ad hoc\] Fix Figure 2’s subgraph-title/node-box text overlap in engineering-the-2.0.0-release.qmd (Session 402)
+
+- **Deliverable:** owner picked this item from the S401-authored
+  `BACKLOG.md` “Up Next” list (via the Phase 0 priorities-list
+  `AskUserQuestion`) – both Figure 2 subgraph titles (“After –
+  R/appUI.R + R/appServer.R, port 6013”; “Before – inst/application/,
+  port 6012”) wrapped onto extra lines that rendered fully hidden behind
+  the top of the first child node box beneath them (`appUI.R`/ `ui.r`).
+  Same branch as S401
+  (`fix/figure2-contrast-engineering-2.0.0-release`). No `R/`/`tests/`
+  code touched; TDD phase N/A throughout (Mermaid diagram markup,
+  confirmed via an explicit pre-work `AskUserQuestion`, same precedent
+  as S401).
+- **Root cause:** confirmed via a full-page headless-Chrome screenshot
+  of the rendered article that Mermaid’s default subgraph-title
+  vertical-space reservation assumes roughly one line; a title long
+  enough to word-wrap gets no extra room, so wrapped lines render
+  underneath (hidden by) the first child node’s box. The wrap point
+  itself was unpredictable: the “Before” title’s un-splittable
+  `inst/application/,` token forced a 3-line wrap while the
+  visually-similar “After” title wrapped to only 2 lines at a
+  near-identical box width – caught only by cropping tightly over each
+  title/box boundary with `PIL` after a full-page screenshot looked
+  “mostly fixed.”
+- **Fix (two parts):** (1) pinned the exact wrap point with a manual
+  `<br/>` inside each subgraph’s bracketed label text, instead of
+  trusting Mermaid’s automatic word-wrap, so both titles wrap to a
+  matched, predictable 2 lines; (2) added
+  `%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 30, "bottom": 5}}}}%%`
+  as the first line of the `{mermaid}` code cell to reserve enough
+  vertical space for that now-fixed 2-line height – confirmed supported
+  by Quarto’s bundled Mermaid runtime (`mermaid.min.js`, v11.2.0 as of
+  Quarto 1.7.33, `grep`-confirmed for the `subGraphTitleMargin` key).
+- **Verification:** `quarto render` clean; headless-Chrome screenshots
+  at each iteration, cropped with `PIL` directly over both subgraph
+  title/box boundaries, confirmed both titles now render fully above
+  their node boxes with no clipping/overlap. Figure 4 (the unrelated
+  TDD-cycle state diagram, not a flowchart with subgraphs) re-checked as
+  a regression guard – unaffected, S401’s contrast fix
+  (`format: html: mermaid: theme: default`) still intact.
+- **Diff:** `vignettes/articles/engineering-the-2.0.0-release.qmd` only
+  – 1 line added (the init directive) + 2 subgraph-title lines edited
+  (added `<br/>`). Recorded `PROJECT_LEARNINGS.md` Learning 370; removed
+  the resolved item from `BACKLOG.md`’s “Up Next” list.
+
+### 2026-07-19 · \[ad hoc\] Fix low-contrast Mermaid diagram colors in engineering-the-2.0.0-release.qmd Figure 2 (Session 401)
+
+- **Deliverable:** owner flagged low contrast in Figure 2 (the
+  monolith-vs-modular architecture diagram) via a screenshot of the
+  published article. Fix scoped to contrast only, on a new branch
+  `fix/figure2-contrast-engineering-2.0.0-release` – “other aspects of
+  the article” explicitly deferred to future sessions. No `R/`/`tests/`
+  code touched; TDD phase N/A (Quarto vignette-article rendering config,
+  not production R code).
+- **Root cause:** the published page renders both Mermaid diagrams in
+  this article client-side via `mermaid.js`
+  (`<pre class="mermaid mermaid-js">`), using Quarto’s bundled
+  `mermaid-init.js`. Its fallback path applies a `themeCSS` built
+  entirely from `--mermaid-*` CSS custom properties
+  (`--mermaid-node-bg-color`, `--mermaid-fg-color`, etc.) – but those
+  variables are normally defined by Quarto’s own bootswatch SCSS theme
+  pipeline (`:root { --mermaid-*: ...; }`), which only runs when Quarto
+  compiles its own site/book theme. pkgdown’s mixed-mode Quarto
+  integration (`vignettes/articles/_quarto.yml`) renders each `.qmd` to
+  a fragment and re-wraps it in pkgdown’s own Bootstrap template –
+  Quarto’s `--mermaid-*` variable block is never generated or linked, so
+  every themed color falls back to an undefined/inherited value on the
+  live site, producing the muddy, low-contrast look the owner flagged.
+  Confirmed empirically: fetched the live published HTML plus its
+  `mermaid-init.js`/`mermaid.css`, and none of the loaded stylesheets
+  (`bootstrap.min.css`, `mermaid.css`, etc.) define any `--mermaid-*`
+  custom property.
+- **Fix:** added `format: html: mermaid: theme: default` to this qmd’s
+  own YAML frontmatter – Quarto’s documented “Mermaid’s Built-in Themes”
+  escape hatch (quarto.org/docs/authoring/diagrams.html). It makes
+  Quarto emit `<meta name="mermaid-theme" content="default">`, which
+  switches `mermaid-init.js` onto its other branch: Mermaid’s own
+  complete, literal-color “default” theme, with no dependency on any
+  page-supplied CSS variable. Document-scoped (applies to both Mermaid
+  diagrams in this file: Figure 2’s architecture flowchart and Figure
+  4’s TDD-cycle state diagram), not site-wide –
+  `colony-manager-guide.qmd`’s own separate Mermaid diagram is
+  unaffected and very likely has the identical defect (unverified,
+  flagged in `BACKLOG.md` for a future session, out of scope here).
+- **Verification:** `quarto render` on the file confirmed the meta tag
+  lands in the output `<head>`. Rendered the file, served it in headless
+  Chrome (`--headless --screenshot`), and visually confirmed both
+  diagrams now render with clear, legible contrast (pale lavender/yellow
+  fills, black text) in place of the dark, muddy boxes in the owner’s
+  screenshot. Also attempted the real
+  [`pkgdown::build_article()`](https://pkgdown.r-lib.org/reference/build_articles.html)
+  pipeline for higher-fidelity verification; aborted it after it
+  triggered an unrelated, unrequested favicon-cache regeneration
+  (`pkgdown/favicon/`, a live external-API call) as a side effect of
+  `init_site()` – deleted that untracked output rather than committing
+  it, and relied on the `quarto render` + headless-browser verification
+  as sufficient (matches `SAFEGUARDS.md`’s “Documentation (Quarto,
+  LaTeX)” build-equivalent row).
+- **Known follow-up (separate item, not fixed here):** Figure 2’s
+  subgraph title text (“After – R/appUI.R + …”, “Before –
+  inst/application/, …”) visibly overlaps/truncates against the first
+  child node box in both subgraphs – a pre-existing layout defect,
+  orthogonal to contrast, still present after this fix. Flagged in
+  `BACKLOG.md` for the “other aspects of the article” follow-up session
+  the owner named.
+- **Process gap (self-flagged):** Phase 1B (claim the session before any
+  technical work) was skipped this session – investigation and the fix
+  began immediately after branch creation, with the
+  `SESSION_NOTES.md`/`HANDOFFS.md` claim written only retroactively at
+  close-out. See `PROJECT_LEARNINGS.md` Learning 369 and this session’s
+  `SESSION_NOTES.md` self-assessment.
+
+### 2026-07-18 · \[issue \#124\] File urgent issue: colony-manager-guide’s “Read deeper” links point to .qmd not .html (Session 400)
+
+- **Deliverable:** owner reported that Section 2’s “Read deeper (R-API
+  walkthrough)” table column on the published colony-manager-guide
+  article links to raw `.qmd` source instead of rendered `.html` – file
+  one urgent GitHub issue. No `R/`/`tests/` code touched; no code fix
+  this session; TDD phase N/A.
+- **Investigation:** `WebFetch`-confirmed live on
+  <https://rmsharp.github.io/nprcgenekeepr/articles/colony-manager-guide.html>
+  – all 6 Section-2-table links resolve to `.qmd`. Grepped
+  `vignettes/articles/colony-manager-guide.qmd` and found 4 more
+  instances of the same pattern outside the table (lines 22, 46, 370,
+  530; 10 total affected links). Confirmed via
+  `grep -rl '\.qmd)' vignettes/articles/*.qmd` that no other article
+  source file has this pattern – isolated to this one file. Root-caused
+  to `vignettes/articles/_quarto.yml`’s Quarto-project declaration
+  (`project: render: ['*.qmd']`), which is what makes the
+  `.qmd`-link-with-auto-rewrite-to-`.html` convention available in
+  Quarto – the source correctly uses that convention, but pkgdown’s
+  mixed-mode Quarto build is evidently not performing the rewrite.
+- **Result:** filed [issue
+  \#124](https://github.com/rmsharp/nprcgenekeepr/issues/124) (`bug`
+  label; no “urgent” label exists in this repo, so priority is stated in
+  the title/body instead) with the full link inventory, root cause, and
+  two candidate fixes (root-cause the pkgdown/Quarto rewrite, or
+  directly retarget the 10 links to `.html`) for the implementing
+  session to choose between. Added a `BACKLOG.md` “Up Next” entry
+  (READY, Effort S) pointing at the issue so it surfaces in the next
+  Phase 0 priorities list.
+
+### 2026-07-18 · \[ad hoc\] S399 HANDOFFS.md receipt commit-sha backfill, closed same-session
+
+- **Deliverable:** filled in this session’s own `HANDOFFS.md` receipt’s
+  `commit: pending` placeholder with the real deliverable commit sha
+  (`d911ce8f`), matching the S331-S398 precedent of closing this within
+  the same session rather than leaving it for the next session’s Phase 0
+  reconcile.
+
+### 2026-07-18 · \[BL-CRAN200\] Process CRAN’s real incoming-pretest auto-check result for the 2.0.0 submission (Session 399)
+
+- **Deliverable:** owner pasted CRAN’s auto-processed email for the real
+  2026-07-17 `devtools::submit_cran()` submission – verify the actual
+  `00check.log` files (not just the email summary) and update
+  `BACKLOG.md`/`HANDOFFS.md` accordingly. No `R/`/`tests/` code touched;
+  TDD phase N/A.
+- **Result:** fetched both `00check.log`s directly
+  (win-builder.r-project.org incoming-pretest logs). Windows r-devel and
+  Debian both returned `Status: 1 NOTE` – the standard
+  incoming-feasibility note only (new submission, archived-package
+  history, DESCRIPTION spelling flags), no WARN/ERROR. Timing breakdown
+  holds the S392-395 fixes on the real submission: Windows `tests` 205s
+  / `examples` 79s / `vignette outputs` 65s; Debian `tests` 89s /
+  `examples` 43s / `vignette outputs` 29s.
+- **Reconciled a discrepancy:** the email footer reported “Check time in
+  seconds: 604” – 4s over the 600s mark that caused the S392
+  archival-class rejection – yet the submission was not rejected.
+  Explicitly searched the raw check log text for “Overall checktime” /
+  “checktime”: neither phrase appears anywhere. The only “Tested elapsed
+  times” occurrence is quoted historical CRAN-db-override metadata from
+  the 2025-07-29 archival, not a fresh flag on this submission. Second
+  data point (after S397’s 588s) that the win-builder-style footer
+  “Check time” is not the same measure as CRAN’s own incoming-pipeline
+  “Overall checktime” gate.
+- **Also fixed:** a stale cross-reference in `BACKLOG.md`’s CRAN item –
+  it cited “cran-comments.md’s 2026-07-17 update note,” a section
+  already removed by the S397 addendum trim (`3c7486b9`) before this
+  session started. Corrected in the same edit. `cran-comments.md` itself
+  needed no change – it already reflects accurate pre-submission
+  code-changes/timing content per the S397-established “final values
+  only, no session narrative” convention.
+- **Status:** package is “pending a manual inspection,” per the email,
+  typically within 10 working days. No further engineering action open
+  unless CRAN’s reviewer responds with a rejection or change request.
+  Corrected `BACKLOG.md`’s stale “DECISION NEEDED” tag (flagged S398) to
+  “BLOCKED – awaiting CRAN’s manual review.”
+
+### 2026-07-17 · \[ad hoc\] S398 addendum – investigate and resolve post-commit screenshot drift
+
+- **Deliverable:** a post-commit `git status` showed 30 of 33
+  just-committed screenshot files as locally modified again (small
+  byte-size deltas, plausibly capture-to-capture PNG-encoding
+  non-determinism, except `potential_parents_results.png` at ~33x
+  larger). Investigated via file mtimes and a visual re-check of the
+  uncommitted content (still correct, just a different capture) before
+  deciding how to proceed – discarded the drift (`git restore`) back to
+  the already-verified committed state rather than re-committing an
+  unreviewed variant, then re-confirmed `quarto render` still resolves
+  cleanly against the restored state.
+
+### 2026-07-17 · \[ad hoc\] S398 HANDOFFS.md receipt commit-sha backfill, closed same-session
+
+- **Deliverable:** filled in this session’s own `HANDOFFS.md` receipt’s
+  `commit: pending` placeholders with the three real close-out commit
+  shas (`ac8033d0` deliverable, `cf3ee7db` ledger/backlog/plan,
+  `b1ac7508` this receipt itself), matching the S331-S347 precedent of
+  closing this within the same session rather than leaving it for the
+  next session’s Phase 0 reconcile.
+
+### 2026-07-17 · \[BL-Document2PhaseD\] Execute Document 2 Phase D – claim-source audit, pkgdown asset fix, retire ColonyManagerTutorial.Rmd (Session 398)
+
+- **Deliverable:**
+  `docs/planning/document2-colony-manager-guide-plan.md` §6 Phase D –
+  the publish gate for `vignettes/articles/colony-manager-guide.qmd`.
+  TDD phase N/A throughout (docs/vignette work, no `R/`/`tests/` code
+  touched).
+- **Full claim-source audit (workstream Phase 6):** 5 parallel agents,
+  one per article section, independently re-verified every claim against
+  current `R/` source, live
+  `Rscript`/[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  checks, `gh issue view`, and file existence. Found and fixed 3 genuine
+  errors (Mermaid pipeline diagram missing two real edges – Pedigree-\>
+  Breeding-Groups, GVA-\>Genetic-Diversity; founders-CSV column list
+  typo “sires”-\>“sire” plus 3 missing columns
+  `ancestry`/`origin`/`status`; “three export buttons” claim
+  undercounting a 12-button tab). **Load-bearing finding:** all three
+  “still broken” callouts drafted in Phase C (Excel-upload corruption,
+  Custom sex-ratio, Potential- Parents `fromCenter`) had actually been
+  fixed the same day (S350/351/353, 2026-07-10) – the article was
+  shipping stale bug warnings for bugs that no longer existed.
+- **Owner decision (`AskUserQuestion`): full correction** – regenerated
+  the 2 affected screenshots (extended
+  `colony-manager-guide-screenshots.R`’s Custom-sex-ratio block to
+  exercise the now-working `customSexRatio` numeric input, the N7 demo
+  Phase C deferred) and rewrote all 3 callouts to describe the fixed
+  behavior, rather than a text-only patch leaving stale pre-fix images
+  in place. Self-caught and fixed two issues during this work: (1) the
+  first re-run placed the new Custom-ratio group formation *before* the
+  Genetic Diversity capture, silently changing the state its heatmap
+  depends on (6 seeded/kinship groups -\> 7 fresh ones) – caught by
+  re-inspecting the regenerated image, fixed by moving the block to run
+  last; (2) Custom-ratio group formation is a stochastic search
+  (`Number of simulations` default 10) – one run’s exact per-group sizes
+  did not reproduce on the next run with identical inputs, so the prose
+  describes the setup and stochastic nature rather than asserting one
+  run’s numbers as fact.
+- **Structural fix (`SAFEGUARDS.md` “Verify Render-Dependency
+  Completeness”):** an isolated `quarto render` passed cleanly, but
+  [`pkgdown::build_article()`](https://pkgdown.r-lib.org/reference/build_articles.html)
+  – this project’s first image-heavy pkgdown article ever built –
+  revealed the 33 image references would 404 on the actual published
+  site: pkgdown only copies non-qmd files living *under*
+  `vignettes/articles/`, not a sibling directory. Fixed by
+  `git mv vignettes/shiny_app_use vignettes/articles/shiny_app_use`,
+  rewriting all 33 image paths + the capture script’s `SHOT_DIR`, and
+  updating `.Rbuildignore` (removed the now-stale
+  `^vignettes/shiny_app_use$` line; the existing `^vignettes/articles$`
+  pattern already covers the new nested location). Re-verified images
+  now resolve in the built `pkgdown_site/`.
+- **`ColonyManagerTutorial.Rmd` fate resolved (`AskUserQuestion`):
+  retire/redirect** – replaced its 748-line content with a short
+  redirect note to the new public article. Deleted 6 now-orphaned
+  tracked screenshot files that existed only for the retired tutorial
+  (`examplePedigreeTutorial.png`/`_with_alleles.png`, the 3
+  `opening_screen_top/middle/bottom.png` crops Phase A had already
+  flagged for retirement, `pb_cleared_focal_animals_combined.png` + its
+  `.idraw` source), confirming zero remaining references first.
+- **Verification:** `quarto render` clean (zero missing images, zero
+  unresolved `@sec-`/`@tbl-`/`@fig-` refs, Mermaid embedded) before and
+  after the path fix;
+  `pkgdown::build_article("articles/colony-manager-guide")` succeeds,
+  all 33 images resolve in the built site; `R CMD build .` + `tar tzf`
+  confirms zero CRAN risk (neither the article, the retired tutorial,
+  nor the screenshot folder ship); 3 sibling articles spot-checked
+  (`engineering-the-2.0.0-release.qmd` clean;
+  `breeding-group-formation.qmd`/`age-sex-pyramid.qmd` fail identically
+  on
+  [`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/),
+  confirmed pre-existing per S348’s own precedent, not a regression);
+  full regression suite 0 failed / 0 error / 0 warning.
+- **`BACKLOG.md`:** removed the resolved Document 2 item (plan fully
+  executed, no phase remains).
+
+### 2026-07-17 · \[ad hoc\] Submit v2.0.0 to CRAN, maintainer confirmation clicked (Session 397 addendum, owner action)
+
+- **Action:** owner ran `devtools::submit_cran()` (per the resubmit
+  decision recorded above) – package uploaded successfully to the CRAN
+  submission team – and clicked the maintainer-email confirmation link
+  the same day. v2.0.0 is now fully in CRAN’s review queue. Awaiting
+  CRAN’s actual review outcome; asynchronous and owner-only.
+  `BACKLOG.md`’s CRAN item updated to reflect the confirmed-submitted
+  status.
+- **Submitted commit:** `CRAN-SUBMISSION` records
+  `Date: 2026-07-17 14:51:08 UTC`,
+  `SHA: db54d3257a1655a5582c3b201136f0ec868575bb` (the wording-fixes
+  commit) – confirming exactly which tree state CRAN received.
+
+### 2026-07-17 · \[ad hoc\] Wording fixes to cran-comments.md (Session 397 addendum)
+
+- **Deliverable:** owner edits – dropped “real” from “A real submission
+  attempt” (all submissions are real; the word added nothing); split the
+  misspelled-words NOTE into its own bullet using standard CRAN-comments
+  phrasing (“Words identified as possible misspellings in DESCRIPTION: …
+  are all correctly spelled”).
+
 ### 2026-07-17 · \[ad hoc\] Trim cran-comments.md to code changes + final timing values (Session 397 addendum)
 
 - **Deliverable:** owner feedback – `cran-comments.md` (a

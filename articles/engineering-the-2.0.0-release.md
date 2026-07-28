@@ -130,13 +130,14 @@ passes `reactive(shared$...)` down to the modules that need it – an
 explicit, if still informal, module contract.
 
 ``` mermaid
+%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 30, "bottom": 5}}}}%%
 flowchart TB
-  subgraph Before["Before -- inst/application/, port 6012"]
+  subgraph Before["Before -- inst/application/,<br/>port 6012"]
     direction TB
     ui1["ui.r (53 lines)<br/>sources 8 uitp*.R panel files"] --> srv1
     srv1["server.r (1,304 lines)<br/>one monolithic reactive block"]
   end
-  subgraph After["After -- R/appUI.R + R/appServer.R, port 6013"]
+  subgraph After["After -- R/appUI.R +<br/>R/appServer.R, port 6013"]
     direction TB
     ui2["appUI.R<br/>composes 10 modXXXUI() calls"]
     srv2["appServer.R<br/>shared reactiveValues()"]

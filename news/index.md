@@ -1,5 +1,11 @@
 # Changelog
 
+## nprcgenekeepr 2.0.0.9000 (development version)
+
+- CRAN’s 2.0.0 submission (2026-07-17, tagged `v2.0.0`) was accepted and
+  published 2026-07-26. Development continues here on top of it; any
+  future CRAN resubmission ships as 2.0.1, not a second 2.0.0 attempt.
+
 ## nprcgenekeepr 2.0.0 (20260708)
 
 CRAN release: 2026-07-26

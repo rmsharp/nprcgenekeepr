@@ -30,6 +30,72 @@ behind (S367 origin, flagged S368/S369) is now also RESOLVED – S370
 
 ## Up Next
 
+(none remaining – the “verify + likely fix the same low-contrast Mermaid
+defect in colony-manager-guide.qmd” item (flagged S401) is RESOLVED:
+verified S403 (2026-07-19) – NOT affected (the diagram is a plain
+`flowchart LR` with zero `subgraph` blocks; the actual defect is scoped
+to subgraph/cluster CSS, not a blanket pkgdown-mixed-mode issue – see
+`PROJECT_LEARNINGS.md` Learning 371, which corrects Learning 369’s
+root-cause claim). `format: html: mermaid: theme: default` applied to
+this file’s frontmatter anyway, owner directed, as a
+defensive/future-proofing measure. See `CHANGELOG.md`.)
+
+(none remaining – the “fix broken ‘Read deeper’ links in the
+colony-manager-guide article” item (issue
+[\#124](https://github.com/rmsharp/nprcgenekeepr/issues/124), filed
+S400) is RESOLVED on the
+`fix/figure2-contrast-engineering-2.0.0-release` branch – fixed S404
+(2026-07-20): all 10 `.qmd` hrefs retargeted directly to `.html`
+(`vignettes/articles/colony-manager-guide.qmd:26,50,99-103,374,534`).
+Pre-work verification found Learning 368’s “pkgdown’s mixed-mode build
+doesn’t perform the rewrite” framing was incomplete – a bare local
+`quarto render` of the same project (no pkgdown involved) produces the
+identical unrewritten `.qmd` href, because the rewrite is a
+`type: website`/`book` Quarto project feature this directory’s
+`_quarto.yml` never enables (see `PROJECT_LEARNINGS.md` Learning 372,
+which corrects Learning 368). All 7 distinct link targets confirmed live
+at the fixed relative path (HTTP 200) before editing; rendered output
+re-verified to contain zero remaining `.qmd` hrefs. **Issue \#124 stays
+open** – the fix is on the unmerged/unpushed branch below, not yet live
+on the published site. See `CHANGELOG.md`. **A second, distinct instance
+found and fixed S407 (2026-07-21)** – owner-reported live 404 at
+`.../articles/articles/colony-manager-guide.qmd`, traced to
+`vignettes/ColonyManagerTutorial.Rmd:9` (the retired-tutorial stub,
+already merged to `master` via S398, unlike the branch above): a
+relative link with a doubled `articles/` path segment (this file renders
+under `/articles/` too, so its own `articles/`-prefixed relative link
+doubled) plus the same `.qmd`-vs-`.html` defect. Fixed by pointing the
+link at the absolute published URL, and by renaming the file to
+`_ColonyManagerTutorial.Rmd` – pkgdown’s `build_articles()` skips any
+leading-`_` vignette by documented convention (verified against the
+installed pkgdown 2.2.0’s own `package_vignettes()` source, not
+assumed), which finally makes true the file’s own claim that it is not
+part of the public site (previously false: no `_pkgdown.yml` exclusion
+existed, so pkgdown was building and serving it). Owner also directed a
+full live-site link sweep (all 13 published articles +
+articles/reference/news index hubs, 238 resolved internal targets,
+HTTP-checked) – no other broken links found; see `CHANGELOG.md` and the
+issue \#124 comment thread for the full sweep result. **Merged and
+deployed live – S408 (2026-07-21):** owner approved merging
+`fix/figure2-contrast-engineering-2.0.0-release` into `master`
+(`dd8e53fd`) now that the CRAN v2.0.0 submission is sufficiently
+handled. Live verification after deploy found a second, unrelated defect
+blocking the fix from actually taking effect:
+`.github/workflows/pkgdown.yaml`’s `clean: false` deploy step meant
+`gh-pages` had only ever accumulated files, never removed stale ones
+(981 files, including 3 old copies of this same tutorial, one still
+serving the exact `.qmd`-targeting link live). Fixed (`clean: true`,
+`f5b73edf`), redeployed, verified: `gh-pages` dropped to 650 files, zero
+`ColonyManagerTutorial` matches, all stale URLs 404,
+`colony-manager-guide.html` has zero remaining `.qmd` hrefs. **Issue
+\#124 is now fully resolved live**, not just in source. See
+`CHANGELOG.md`.)
+
+(none remaining – the “Branch-merge strategy for
+`fix/figure2-contrast-engineering-2.0.0-release`” item is RESOLVED:
+merged into `master` and deployed live – S408 (2026-07-21), see the
+issue \#124 item above and `CHANGELOG.md`.)
+
 **Act on the LabKey integration research recommendations** (BLOCKED –
 remainder needs a live LabKey server to test/observe, Effort M) —
 research pass DONE
@@ -100,195 +166,35 @@ availability/permissions are confirmed; needs a live LabKey server to
 test/observe, and a naive focal-id server filter is incompatible with
 the client-side connected-component walk).
 
-**CRAN resubmission of v2.0.0** (DECISION NEEDED – owner-only:
-`devtools::submit_cran()` itself, per SAFEGUARDS/the runbook’s HARD
-STOP. S395 (2026-07-17) re-opened the effort S392-394 had closed as
-exhausted, with owner authorization to change test structure and
-previously-protected iteration counts. Landed 2 more real, verified-safe
-levers (Shiny testServer stub-completeness/ fixture-hoisting across
-`test_appServer_*`/`test_reportGV.R`, and a fixture-size fix to
-`test_addAnimalsWithNoRelative.R` – ~5.85s -\> ~0.01s locally, the
-session’s single biggest genuinely-CRAN-relevant win). Caught and
-corrected one false lead before it shipped: the session’s other headline
-number (`test_pkgdown_reference_config.R`) turned out CRAN-irrelevant
-once verified against a real `R CMD check` on the built tarball
-(`_pkgdown.yml` is `.Rbuildignore`’d, so that file already skips on
-every real CRAN check) – kept as a harmless local-dev-loop speedup only,
-not counted toward the checktime goal. Real local
-`R CMD check --as-cran --timings`: `tests` 59s / `examples` 22s /
-`vignette-rebuild` 17s, `0 errors | 0 warnings | 1 note`. **Win-builder
-Windows-devel re-check dispatched – S396 (2026-07-16):**
-`devtools::check_win_devel()` run from the project root (clean, in-sync
-tree confirmed before and after); results due to `rmsharp@me.com` by
-~10:46 PM 2026-07-16. Deliberately scoped to this single check (not the
-fuller S390 pattern of x3 win-builder + R-hub), matching this item’s own
-Effort S next-step scope. **Result processed – S397 (2026-07-17):
-confirms real savings, first result under the 10-minute mark, thin
-margin.** `checking tests` `245s -> 200s` (-45s); `examples` 80s and
-`vignette rebuild` 65s essentially unchanged (no further safe lever, per
-S395). Win-builder’s own reported totals (email footer): Installation
-time 30s, **Check time 588s** – down from the S392-394 cycle’s 655-656s,
-and under CRAN’s 600s mark by **12s**. `Status: 1 NOTE` (incoming
-feasibility only, same flags as every prior cycle, no WARN/ERROR).
-Caveat: win-builder’s “Check time” is the best available proxy for
-CRAN’s own “Overall checktime” (the real incoming-pipeline figure that
-rejected S392’s submission, extrapolated at ~720s) but not proven
-identical, and S394 already measured several seconds of run-to-run
-VM-load noise – 12s of margin on a proxy metric is real progress but not
-a guarantee against a repeat rejection. win-builder
-R-release/R-oldrelease and R-hub are still the Session 390/391 results,
-now stale relative to the S392-395 fixes (not expected at risk from the
-checktime-specific issue, which is Windows-r-devel-specific, but
-unconfirmed against current code). Full detail in `cran-comments.md`’s
-2026-07-17 update note. **Owner decision (S397, 2026-07-17, via
-`AskUserQuestion`): resubmit now.** Next action is the owner running
-`devtools::submit_cran()` and clicking the maintainer-email confirmation
-link – owner-only per SAFEGUARDS/the runbook HARD STOP, no further
-engineering action this cycle unless CRAN rejects it again. CRAN
-responded 2026-07-09: the v2.0.0 submission (S329,
-`devtools::submit_cran()`, `CRAN-SUBMISSION` sha `8ca8bb24`) was
-archived before publication because
-[`appServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/appServer.md)
-unconditionally wrote `~/nprcgenekeepr.log` on every boot, violating
-CRAN Policy. **Fixed in S349** (`R/appServer.R`: the file appender is
-now gated behind the “Debug on” checkbox’s already-tested `debugMode`
-reactive, never written unconditionally; see `CHANGELOG.md` 2026-07-10
-S349 entry for full verification detail incl. a live-browser Phase 3E
-smoke test). **Local pre-submission gate re-confirmed – S359
-(2026-07-11):** `R CMD build .` + `R CMD check --as-cran --timings` on
-current `master` (134 commits since the archived sha, 9 touching
-`R/`/`tests/`/`DESCRIPTION`/`NAMESPACE`) –
-`0 errors | 0 warnings | 1 note` (the expected incoming-feasibility note
-only; the local HTML-manual note is gone). **Important:** the
-win-builder/R-hub results that were on file in `cran-comments.md`
-predated the S349 fix (captured the day before, on the exact sha that
-was archived) – reset to placeholders; see
-`docs/planning/cran-2.0.0-phase5-runbook.md`’s refreshed top note for
-the full ancestry check. Next (owner action, unchanged): re-run the
-win-builder / R-hub pre-submission checks (now genuinely required, not
-just stale-by-time) and resubmit via `devtools::submit_cran()`. No
-version bump is required (the prior 2.0.0 attempt was archived before
-publication) unless the owner prefers one. **Win-builder x3 + R-hub
-triggered – S361 (2026-07-11):** per owner’s explicit scoping (not
-`submit_cran()`, which stays owner-only). **Results processed – S362
-(2026-07-11): all clean.** win-builder: 0 errors \| 0 warnings on all
-three R versions (1 note each – the expected incoming-feasibility note;
-R-oldrelease also flagged the known `groupAddAssign` \>10s timing note
-on slower hardware, not a failure). R-hub (`occupational-burro`,
-<https://github.com/rmsharp/nprcgenekeepr/actions/runs/29171440079>):
-`Status: OK` on linux/windows/macos, 0 test failures. The Windows
-`WriteXLS` CI failure S361 flagged as a likely blocker did NOT reproduce
-on either external check – it was a GitHub-Actions-runner-specific
-flake, not present on CRAN’s own win-builder infrastructure.
-**Root-caused and fixed S363 (2026-07-11):**
-[`create_wkbk()`](https://github.com/rmsharp/nprcgenekeepr/reference/create_wkbk.md)
-now writes `.xlsx` via `openxlsx` instead of `WriteXLS`, removing the
-Perl-on-Windows dependency entirely; see `CHANGELOG.md`. Results folded
-into `cran-comments.md`’s “Test environments” section. **Pre-submission
-gate is now clean across every environment actually run this cycle.**
-**Local gate re-verified S388 (2026-07-16):** 25 commits touched
-`R/`/`tests/`/ `DESCRIPTION`/`NAMESPACE` since the S359 confirmation –
-`R CMD build .` + `R CMD check --as-cran --timings` re-run on current
-`master` (`79380fba`) still returns `0 errors | 0 warnings | 1 note`
-(timings unchanged within noise). `cran-comments.md`’s existing prose
-numbers remain accurate, no edit needed. Owner scoped this re-verify to
-local-only; win-builder/R-hub results on file are still from S361/362,
-now also 25 commits stale – re-triggering them (owner-scoped,
-outward-facing) is still open before submission. See
-`docs/planning/cran-2.0.0-phase5-runbook.md` and `PROJECT_LEARNINGS.md`
-Learning 358. **Owner-run win-builder finding fixed S389 (2026-07-16):**
-owner ran `devtools::check_win_devel()` after S388 and it returned a
-second NOTE not previously on file –
-`checking R code for possible problems` flagged deprecated
-`structure(..., .Names = ...)` usage in
-`tests/testthat/test_getParamDef.R:27` (an R-devel-specific check; local
-R 4.6.1 does not reproduce it, so S388’s local re-verify could not have
-caught it). Fixed by dropping the redundant
-[`structure()`](https://rdrr.io/r/base/structure.html) wrapper entirely
-(the list’s names were already set by the inline
-`list(param=..., tokenVec=...)` construction, so `.Names=` was dead
-re-assertion, not a second names-setting). Confirmed no other live-code
-`.Names` occurrence exists (`R/data.R:337`’s is inside non-`@examples`
-roxygen prose, never parsed as code). Full regression suite re-run clean
-(0 failed/0 error/0 warning, 3238 passed, 169 skipped baseline
-unchanged). **Not yet confirmed against win-builder itself** – local R
-can’t reproduce this specific check; confirmation awaits the next
-win-builder run. **Win-builder x3 + R-hub re-triggered – S390
-(2026-07-16):** owner picked this item from the Phase 0 priorities list
-and explicitly scoped the session (via `AskUserQuestion`) to trigger
-now. Found `origin/master` 5 commits behind local, including S389’s
-actual `.Names=` fix (unpushed) – R-hub checks GitHub’s copy, so pushed
-first (confirmed via `AskUserQuestion`) to avoid silently re-testing
-pre-fix code. Dispatched `check_win_devel/release/oldrelease()` and
-`rhub::rhub_check(platforms=c("linux","windows","macos"))` (run
-“hillocked-veery”). **Results processed – S391 (2026-07-16): all
-clean.** Win-builder: `0 errors | 0 warnings | 1 note` on all three R
-versions (the expected incoming-feasibility note; verbatim `00check.log`
-confirms `checking R code for possible problems ... OK` on all three,
-confirming S389’s fix resolved the NOTE on R-devel itself).
-R-oldrelease’s prior timing note did not recur. Only one URL
-(thoughtco.com) flagged this cycle vs. two previously (PMC’s
-automated-checker flag appears intermittent). R-hub: all three platforms
-`Status: OK` (zero notes), `[ FAIL 0 | WARN 0 | SKIP 221 | PASS 3140 ]`
-– fully clean, improving on the S361/362 cycle’s 1 WARN (the `WriteXLS`
-Windows flake, confirmed absent, consistent with S363’s `openxlsx`
-migration). **The CRAN pre-submission gate is now clean across every
-environment run this cycle** (local macOS, win-builder x3, R-hub x3) –
-see `cran-comments.md` and `docs/planning/cran-2.0.0-phase5-runbook.md`
-for full detail. Next (owner action, unchanged):
-`devtools::submit_cran()` and click the maintainer-email confirmation
-link – still owner-only per SAFEGUARDS and the runbook’s HARD STOP.
-**Real CRAN submission REJECTED – S392 (2026-07-16):** the owner ran the
-submission out-of-session (evidenced by the uncommitted
-`CRAN-SUBMISSION` dated 2026-07-16 06:17 UTC, SHA matching the S391
-close-out commit). CRAN’s actual incoming automatic check (distinct from
-the win-builder pretests above) rejected it: Windows r-devel flagged
-“Overall checktime 12 min \> 10 min” – the same failure class (“Tested
-elapsed times”) that archived this package in 2025. Verbatim
-`00check.log` fetch (not the email summary) showed the note is NOT in
-the check log itself – it’s a separate wall-clock summary CRAN’s
-incoming pipeline computes only for real submissions, driven by
-`checking tests ... [334s]` (the dominant cost),
-`checking examples ... [79s]`, and
-`checking re-building of vignette outputs ... [79s]`; Debian’s
-equivalent totals stayed under 5 min, so this is
-Windows-VM-speed-specific, not a universal regression. **Fixed:**
-`skip_on_cran()` on the 10 true convergence-stress `test_that` blocks in
-`test_gvaConvergence.R` / `test_gvaConvergence_kinshipOverrides.R` (nMax
-= 3000L/800L blocks; local dev-mode profiling misleadingly counted 4
-other “slow” files that never actually run on CRAN – 3 are
-`rmsharp`-username-gated, `test_pkgdown_reference_config.R` skips once
-`_pkgdown.yml` is absent from the built tarball, confirmed via
-`.Rbuildignore`); `guIter` 100L-\>20L at the ~23 `test_reportGV.R` call
-sites whose assertions don’t depend on gu magnitude (verified via full
-regression + spot-checked deterministic properties); `nMax`
-3000L-\>1600L in `vignettes/gvaConvergence.Rmd` (re- rendered clean,
-`recommendedIter`/`converged`/`nRankable` all unchanged). **Reverted,
-not applied:** lowering `guIter` in the
-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)/
-[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
-roxygen `@examples` and in `vignettes/a2interactive.Rmd` – empirically
-confirmed this introduces a NEW `checkFgDegeneracy` warning (“Founder
-genome equivalents undefined”) on that fixture at guIter \<= 30, which
-would make the check worse, not better; left at the original guIter =
-50/50L. Full regression: 0 failed/0 error/0 warning in both dev and CRAN
-mode; local CRAN-relevant test-file total dropped from ~70s to ~43s
-(~38%) in
-[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)-based
-profiling (not an official `R CMD check --as-cran` run – that hung on
-this machine, apparently on `renv` project auto-activation, both with
-and without `R_PROFILE_USER` disabled; abandoned after ~30 min, worked
-around via `NOT_CRAN`-controlled
-[`testthat::test_dir()`](https://testthat.r-lib.org/reference/test_dir.html)
-profiling instead). Next: a fresh win-builder Windows-devel trigger to
-confirm the real checktime drops with margin, before any resubmission
-attempt.
+(none remaining – the “CRAN resubmission of v2.0.0” item is RESOLVED:
+**CRAN accepted the 2.0.0 submission and published it 2026-07-26**
+(confirmed live via CRAN’s own package page and CRAN’s automated
+Windows-binary-build notification email). The full submission saga –
+archived 2025-07-29, resubmitted, rejected S392 on Windows checktime,
+fixed and resubmitted S395-397, CRAN’s incoming-pretest confirmed clean
+S399 – is recorded session-by-session in `CHANGELOG.md`. **Phase 6
+(Post-acceptance, `docs/planning/cran-2.0.0-submission-plan.md:324`)
+executed – S410 (2026-07-28):** the `v2.0.0` GitHub Release created (the
+tag and the `DESCRIPTION` dev-version bump to `2.0.0.9000` were already
+done ahead of time in S407); `CRAN-SUBMISSION` deleted (its job is
+resolved); `NEWS.Rmd`’s stale “under review” dev-version note fixed. See
+`CHANGELOG.md`. If a future CRAN cycle requires a fix-and-resubmit, it
+ships as **2.0.1** – the `v2.0.0` tag never moves, since it is the one
+and only submission that will ever carry that version number.
 
 ## Housekeeping
 
 (none remaining – the “clean up stale untracked leftover files” item
 (filed S383) is RESOLVED: 18 confirmed-dead untracked files deleted –
 S384 (2026-07-15). See `CHANGELOG.md`.)
+
+**`README.Rmd` leaves an untracked `README.html` byproduct on every
+render** (READY, Effort S – flagged S410, `PROJECT_LEARNINGS.md`
+Learning 376(b)): unlike `NEWS.Rmd` (`html_preview: false`),
+`README.Rmd`’s frontmatter has no `html_preview: false`, and
+`README.html` is not `.gitignore`’d. Fix is either one-line frontmatter
+addition or a `.gitignore` entry – deferred as out-of-scope for S410’s
+own approved Phase 6 task, not because it’s risky.
 
 ## Architecture (issue \#122 / XARCH-2 – module contract)
 
@@ -320,42 +226,13 @@ are both done; the issue is left OPEN, per the plan’s own §10 decision
 
 ## Documents (v1.0.8 -\> v2.0.0 write-up)
 
-**Execute “Document 2” plan (Phase D)** (READY, Effort M) – planning
-session DONE (S345), Phase A DONE (S346), Phase B DONE (S347), **Phase C
-DONE (S348)**: `docs/planning/document2-colony-manager-guide-plan.md` §6
-Phase C. Drafted `vignettes/articles/colony-manager-guide.qmd`
-(Abstract, Introduction, Sections 1-3, Conclusion); Section 3
-ported/modernized from `ColonyManagerTutorial.Rmd` using Phase B’s
-screenshots and Phase A’s re-derived N1/N2/N3/N4 numbers verbatim.
-Owner-resolved pre-drafting decisions: Input-tab narrates CSV with an
-inline Excel-bug caveat; Breeding-Groups subsection covers None/Harem
-fully, omits the Custom-ratio numeric demo (N7). Extended
-`colony-manager-guide-screenshots.R` with 2 more captures
-(owner-approved) for the Genetic Diversity and Potential Parents tabs,
-which Phase B’s tutorial-figure-based inventory had no way to include.
-`quarto render` of the article in isolation succeeds cleanly (zero
-missing images, zero unresolved cross-references). Next: **Phase D** –
-assemble (Abstract/Introduction/Conclusion full pass), full claim-source
-audit, decide `ColonyManagerTutorial.Rmd`’s fate (§11 decision 3),
-re-verify the pkgdown Reference-page citation live (§8 dragon 5 – the
-underlying dead-config bug this dragon flagged is now **fixed**, S354:
-root `_pkgdown.yml` carries the grouped `reference:` block and is
-re-synced against current `NAMESPACE`; see below and `CHANGELOG.md`.
-Phase D’s live re-verify is now confirming a real, working grouped
-Reference page, not chasing a still-open bug), and run the full
-verification checklist (§9:
-[`pkgdown::build_article()`](https://pkgdown.r-lib.org/reference/build_articles.html),
-`R CMD build .` + tarball check, spot-check sibling articles). See the
-plan’s §6 Phase D for full completion criteria. All three findings Phase
-C’s screenshot capture surfaced are now **fixed** (Excel-upload
-corruption S350; non-functional Custom sex ratio S351;
-missing-`fromCenter` example data S353 – see below and `CHANGELOG.md`),
-so Phase D can update the Potential Parents subsection to show the
-now-populated result (1,587 candidates) instead of only the
-graceful-degradation screenshot, if desired. The Custom-ratio numeric
-demo (N7), omitted from Section 3’s Breeding-Groups subsection per
-S348’s pre-drafting decision, can also be added in Phase D if desired –
-the control works end to end as of S351.
+(none remaining – Document 2
+(`docs/planning/document2-colony-manager-guide-plan.md`) is fully
+executed: planning DONE (S345), Phase A DONE (S346), Phase B DONE
+(S347), Phase C DONE (S348), **Phase D DONE (S398, 2026-07-17)** – full
+claim-source audit, `pkgdown`/`R CMD build` verification, and the
+`ColonyManagerTutorial.Rmd` retire/redirect decision. See
+`CHANGELOG.md`.)
 
 ## Audit follow-ups
 
