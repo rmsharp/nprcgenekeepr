@@ -146,15 +146,13 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `README.Rmd`'s `output: github_document` frontmatter, mirroring
       `NEWS.Rmd`'s already-working pattern -- S411 (2026-07-28). Verified by
       re-rendering: no `README.html` byproduct produced. See `CHANGELOG.md`.)
-- [ ] **`CLAUDE.md`'s "Clean regression read" command needs a `pkgload::load_all()`
-      call added** (READY, Effort S -- flagged S411, `PROJECT_LEARNINGS.md`
-      Learning 377): the documented command
-      (`as.data.frame(testthat::test_dir("tests/testthat", reporter="silent",
-      stop_on_failure=FALSE))`) produces mass-spurious failures (32 failed/268
-      error/113 warning vs. the true 0/0/0) when run standalone, because unlike
-      the neighboring "Fast single-file test" row it doesn't call
-      `pkgload::load_all(".", quiet=TRUE)` first. Fix: add the same `load_all()`
-      call to the "Clean regression read" row's documented command text.
+- [ ] (none remaining -- the "`CLAUDE.md`'s 'Clean regression read' command
+      needs a `pkgload::load_all()` call added" item (flagged S411,
+      `PROJECT_LEARNINGS.md` Learning 377) is RESOLVED: `pkgload::load_all(".",
+      quiet=TRUE)` prepended to the documented command text (`CLAUDE.md:149`) --
+      S412 (2026-07-28). Verified by running the fixed command verbatim: 0
+      failed/0 error/0 warning, 3198 passed, 179 skipped, matching the known-good
+      baseline. See `CHANGELOG.md`.)
 
 ## Architecture (issue #122 / XARCH-2 -- module contract)
 *Resolved -- S372 planning session through S377 execution (Phases 1-5, all DONE); see

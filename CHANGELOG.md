@@ -43,6 +43,21 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-28 · [BL-RegressionReadDoc] Fix `CLAUDE.md`'s "Clean regression read" command to prepend `pkgload::load_all()` (Session 412)
+- **Deliverable:** Owner-picked from the Phase 0 priorities list, resolving the
+  Housekeeping item flagged S411 (`PROJECT_LEARNINGS.md` Learning 377). Added
+  `pkgload::load_all(".", quiet=TRUE);` before the `testthat::test_dir(...)`
+  call in the documented "Clean regression read" command (`CLAUDE.md:149`),
+  matching the neighboring "Fast single-file test" row's existing pattern, plus
+  an inline parenthetical explaining why `load_all()` must run first.
+- **Actions:** Verified by running the fixed command exactly as now documented:
+  0 failed/0 error/0 warning, 3198 passed, 179 skipped -- matching the known-good
+  S410/S411 baseline. Isolated 1-line diff on `CLAUDE.md` only. `BACKLOG.md`
+  Housekeeping item resolved. No new `PROJECT_LEARNINGS.md` entry added -- this
+  session applied Learning 377's already-diagnosed fix verbatim with no new
+  pattern or anti-pattern discovered.
+- **TDD Phase:** N/A -- documentation-only change, no `R/`/`tests/` code touched.
+
 ### 2026-07-28 · [ad hoc] Close-out: predecessor evaluation, self-assessment, Learning 377, HANDOFFS.md receipt (Session 411)
 - **Deliverable:** Phase 3 close-out for this session's README.html byproduct fix
   (see the entry below). Evaluated S410's handoff (9/10 -- named the exact fix
