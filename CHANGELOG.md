@@ -43,6 +43,22 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-28 · [ad hoc] Close-out: predecessor evaluation, self-assessment, Learning 377, HANDOFFS.md receipt (Session 411)
+- **Deliverable:** Phase 3 close-out for this session's README.html byproduct fix
+  (see the entry below). Evaluated S410's handoff (9/10 -- named the exact fix
+  mechanism up front in both its `SESSION_NOTES.md` gotcha and
+  `PROJECT_LEARNINGS.md` Learning 376(b), sparing this session the diagnosis
+  step). Self-assessed 9/10 (docked for not fully root-causing why
+  `testthat::test_dir()` alone produces mass-spurious failures, and for not
+  surfacing the pre-existing `.DS_Store` drift in the close-out report body
+  itself). Added `PROJECT_LEARNINGS.md` Learning 377 (the `CLAUDE.md`
+  "Clean regression read" command needs a preceding `pkgload::load_all()`, or
+  it reports a false mass regression) and a `BACKLOG.md` Housekeeping item for
+  the doc fix. Bumped `CLAUDE.md`'s learning-count cross-reference (376 -> 377).
+  Completed the `HANDOFFS.md` S411 receipt (`status: pending` -> `complete`).
+- **TDD Phase:** N/A -- pure documentation/close-out bookkeeping, no
+  `R/`/`tests/` code touched.
+
 ### 2026-07-28 · [ad hoc] Stop README.Rmd from leaving an untracked README.html byproduct (Session 411)
 - **Deliverable:** Owner-picked from the Phase 0 priorities list, resolving the
   Housekeeping item flagged S410 (`PROJECT_LEARNINGS.md` Learning 376(b)).

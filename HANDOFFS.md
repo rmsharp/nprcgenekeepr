@@ -62,17 +62,17 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S411
 date: 2026-07-28
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Add html_preview: false to README.Rmd's output: github_document frontmatter (mirrors NEWS.Rmd) so it stops leaving an untracked README.html byproduct on every render (BACKLOG.md Housekeeping item, Learning 376(b)).
-what_was_done: pending
-next_steps: pending
-key_files: README.Rmd (frontmatter), BACKLOG.md (Housekeeping item), PROJECT_LEARNINGS.md Learning 376(b)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: README.html byproduct fix DONE. New Housekeeping item added (CLAUDE.md regression-command doc gap, Learning 377), not yet fixed. LabKey integration recs still BLOCKED. 9 open GitHub issues untriaged.
+what_was_done: Added html_preview: false to README.Rmd's output: github_document frontmatter (mirrors NEWS.Rmd), resolving the Housekeeping item flagged S410 (Learning 376(b)). Verified: installed version matched DESCRIPTION (no reinstall needed); re-render produced no README.html and left README.md content unchanged; full regression suite 0/0/0 (3198 passed, 179 skipped) matching S410's baseline, after discovering CLAUDE.md's documented "Clean regression read" command needs a preceding pkgload::load_all() (else 32 failed/268 error/113 warning false alarm) -- now PROJECT_LEARNINGS.md Learning 377 + a new BACKLOG.md item. Bumped CLAUDE.md's stale learning-count cross-reference (376->377). Commit: 8e44049a (claim stub: a010375b).
+next_steps: Pick from BACKLOG.md: (a) CLAUDE.md's "Clean regression read" command needs a load_all() call added (READY, Effort S, Learning 377), or (b) LabKey integration recs (BLOCKED, needs live LabKey server). Time-gated: re-check CRAN's landing page for macOS/other binary-flavor publication. 9 open GitHub issues remain untriaged.
+key_files: README.Rmd:4-6 (the fix), CLAUDE.md:235 (learning-count bump), BACKLOG.md (item resolved + new item added), CHANGELOG.md (2026-07-28 S411 entries), PROJECT_LEARNINGS.md Learning 377
+gotchas: Always run pkgload::load_all(".", quiet=TRUE) immediately before any testthat::test_dir()/test_local() regression run -- CLAUDE.md's literal command text omits it, producing mass-spurious failures unrelated to anything actually broken (Learning 377). A test run whose counts don't match a same-day predecessor's baseline is a signal to check the invocation before reporting a regression. .DS_Store shows modified in git status -- pre-existing, unrelated, left untouched.
+runtime_smoke: n/a -- docs/rendering-config only, no R/ package runtime behavior changed
+changelog_ref: CHANGELOG.md 2026-07-28 "Stop README.Rmd from leaving an untracked README.html byproduct (Session 411)"
+commit: 8e44049a
 ```
 
 ```handoff
