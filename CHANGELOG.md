@@ -47,6 +47,44 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-28 · \[ad hoc\] Close-out: predecessor evaluation, self-assessment, HANDOFFS.md receipt (Session 412)
+
+- **Deliverable:** Phase 3 close-out for this session’s `CLAUDE.md`
+  regression- command fix (see the entry below). Evaluated S411’s
+  handoff (10/10 – the `gotchas` field and `PROJECT_LEARNINGS.md`
+  Learning 377 both named the exact fix mechanism and location, and the
+  `BACKLOG.md` item text was itself an executable spec, leaving this
+  session pure execution + verification with no independent diagnosis
+  needed). Self-assessed 9/10 (docked for not independently
+  investigating the still-open root-cause question Learning 377 left
+  unresolved – correctly judged out of this session’s Effort-S scope,
+  but flagged as a still-open curiosity rather than treated as fully
+  closed). Deliberately added no new `PROJECT_LEARNINGS.md` numbered
+  entry – this session discovered nothing new beyond what Learning 377
+  already diagnosed. Completed the `HANDOFFS.md` S412 receipt
+  (`status: pending` -\> `complete`).
+- **TDD Phase:** N/A – pure documentation/close-out bookkeeping, no
+  `R/`/`tests/` code touched.
+
+### 2026-07-28 · \[BL-RegressionReadDoc\] Fix `CLAUDE.md`’s “Clean regression read” command to prepend `pkgload::load_all()` (Session 412)
+
+- **Deliverable:** Owner-picked from the Phase 0 priorities list,
+  resolving the Housekeeping item flagged S411 (`PROJECT_LEARNINGS.md`
+  Learning 377). Added `pkgload::load_all(".", quiet=TRUE);` before the
+  `testthat::test_dir(...)` call in the documented “Clean regression
+  read” command (`CLAUDE.md:149`), matching the neighboring “Fast
+  single-file test” row’s existing pattern, plus an inline parenthetical
+  explaining why `load_all()` must run first.
+- **Actions:** Verified by running the fixed command exactly as now
+  documented: 0 failed/0 error/0 warning, 3198 passed, 179 skipped –
+  matching the known-good S410/S411 baseline. Isolated 1-line diff on
+  `CLAUDE.md` only. `BACKLOG.md` Housekeeping item resolved. No new
+  `PROJECT_LEARNINGS.md` entry added – this session applied Learning
+  377’s already-diagnosed fix verbatim with no new pattern or
+  anti-pattern discovered.
+- **TDD Phase:** N/A – documentation-only change, no `R/`/`tests/` code
+  touched.
+
 ### 2026-07-28 · \[ad hoc\] Close-out: predecessor evaluation, self-assessment, Learning 377, HANDOFFS.md receipt (Session 411)
 
 - **Deliverable:** Phase 3 close-out for this session’s README.html

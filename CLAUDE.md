@@ -204,9 +204,11 @@ The build-equivalent for this R package (relocated here from
 
 **Clean regression read** (the `test-app-*`/`test-e2e-*` files are
 pre-existing baseline noise — see Learning \#2/#4 below):
-`as.data.frame(testthat::test_dir("tests/testthat", reporter="silent", stop_on_failure=FALSE))`,
+`pkgload::load_all(".", quiet=TRUE); as.data.frame(testthat::test_dir("tests/testthat", reporter="silent", stop_on_failure=FALSE))`,
 then check `sum(failed)` **and** `sum(error)`, isolating true offenders
-with `!grepl("test-app-|test-e2e-", file)`.
+with `!grepl("test-app-|test-e2e-", file)`. (`load_all()` must run first
+— without it this command produces mass-spurious failures unrelated to
+anything actually broken; see Learning 377.)
 
 ------------------------------------------------------------------------
 
