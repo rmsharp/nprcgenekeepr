@@ -62,17 +62,17 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S412
 date: 2026-07-28
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Fix CLAUDE.md's "Clean regression read" command to prepend pkgload::load_all(".", quiet=TRUE), per Learning 377.
-what_was_done: pending
-next_steps: pending
-key_files: CLAUDE.md (the "Clean regression read" row)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 10
+active_task: DONE -- fixed CLAUDE.md's "Clean regression read" command to prepend pkgload::load_all(".", quiet=TRUE), per Learning 377. LabKey integration recs still BLOCKED. 9 open GitHub issues untriaged.
+what_was_done: Prepended pkgload::load_all(".", quiet=TRUE); to the documented testthat::test_dir(...) command at CLAUDE.md:149, plus an inline parenthetical citing Learning 377. Verified by running the fixed command verbatim: 0 failed/0 error/0 warning, 3198 passed, 179 skipped -- matching the known-good S410/S411 baseline exactly. Isolated 1-line diff. BACKLOG.md item resolved; no new PROJECT_LEARNINGS.md entry added (Learning 377 already fully diagnosed this; nothing new discovered). Commit: 96d76a1d (claim stub: ce530b8d).
+next_steps: Pick from BACKLOG.md: LabKey integration recs (BLOCKED, needs live LabKey server, Effort M) is the only remaining Housekeeping/Up-Next item. Time-gated: re-check CRAN's landing page for macOS/other binary-flavor publication. 9 open GitHub issues remain untriaged (#123, #116, #37, #36, #28, #12, #11, #10, #5).
+key_files: CLAUDE.md:149 (the fix), BACKLOG.md (item resolved), CHANGELOG.md (2026-07-28 S412 entry, [BL-RegressionReadDoc])
+gotchas: The open question from Learning 377 -- why testthat::test_dir() alone produces mass-spurious failures without a preceding load_all() -- remains unresolved; the fix is a reliable workaround, not a root cause. .DS_Store continues to show modified in git status -- pre-existing, unrelated, left untouched again.
+runtime_smoke: n/a -- docs-only change to CLAUDE.md's documented command text, no R/ package runtime behavior changed; verified instead by running the fixed command itself and confirming it reproduces the known-good baseline
+changelog_ref: CHANGELOG.md 2026-07-28 "Fix CLAUDE.md's 'Clean regression read' command to prepend pkgload::load_all() (Session 412)"
+commit: 96d76a1d
 ```
 
 ```handoff

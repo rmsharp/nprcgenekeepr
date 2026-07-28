@@ -43,6 +43,22 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-28 · [ad hoc] Close-out: predecessor evaluation, self-assessment, HANDOFFS.md receipt (Session 412)
+- **Deliverable:** Phase 3 close-out for this session's `CLAUDE.md` regression-
+  command fix (see the entry below). Evaluated S411's handoff (10/10 -- the
+  `gotchas` field and `PROJECT_LEARNINGS.md` Learning 377 both named the exact
+  fix mechanism and location, and the `BACKLOG.md` item text was itself an
+  executable spec, leaving this session pure execution + verification with no
+  independent diagnosis needed). Self-assessed 9/10 (docked for not
+  independently investigating the still-open root-cause question Learning 377
+  left unresolved -- correctly judged out of this session's Effort-S scope,
+  but flagged as a still-open curiosity rather than treated as fully closed).
+  Deliberately added no new `PROJECT_LEARNINGS.md` numbered entry -- this
+  session discovered nothing new beyond what Learning 377 already diagnosed.
+  Completed the `HANDOFFS.md` S412 receipt (`status: pending` -> `complete`).
+- **TDD Phase:** N/A -- pure documentation/close-out bookkeeping, no
+  `R/`/`tests/` code touched.
+
 ### 2026-07-28 · [BL-RegressionReadDoc] Fix `CLAUDE.md`'s "Clean regression read" command to prepend `pkgload::load_all()` (Session 412)
 - **Deliverable:** Owner-picked from the Phase 0 priorities list, resolving the
   Housekeeping item flagged S411 (`PROJECT_LEARNINGS.md` Learning 377). Added

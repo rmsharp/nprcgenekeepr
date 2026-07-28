@@ -10,11 +10,101 @@
 **Deliverable:** Owner-picked from the Phase 0 priorities list (Housekeeping
 item, flagged S411, `PROJECT_LEARNINGS.md` Learning 377): fix `CLAUDE.md`'s
 documented "Clean regression read" command, which produces mass-spurious
-failures unless preceded by `pkgload::load_all(".", quiet=TRUE)`.
-**Started:** 2026-07-28
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are
-recorded in `CHANGELOG.md` at Phase 3F.
+failures unless preceded by `pkgload::load_all(".", quiet=TRUE)`. **DONE.**
+**Started/Completed:** 2026-07-28 / 2026-07-28
+**Status:** DONE. TDD Phase: N/A throughout -- documentation-only change
+(`CLAUDE.md`'s build-equivalent command text), no `R/`/`tests/` code touched.
+
+**What happened, in order:** **(1)** Phase 0 orientation found both
+`CHANGELOG.md` and `HANDOFFS.md` ledgers already reconciled to HEAD (zero
+commit gap since S411's close-out) -- no backfill needed. Presented the
+rendered priorities list via `AskUserQuestion` (2 numbered items: this fix and
+the BLOCKED LabKey item); owner picked this item. **(2)** No separate
+fix-approach `AskUserQuestion` was needed -- unlike S410/S411's genuine
+multi-option choices, this item's own `BACKLOG.md` text already fully
+specified the fix ("add the same `load_all()` call to the ... documented
+command text"), leaving no real alternative to weigh. **(3)** Claimed the
+session (`ce530b8d`). Located the exact line (`grep -n` confirmed
+`CLAUDE.md:149`, one row below the already-correct "Fast single-file test"
+row at `:147`) and re-read it immediately before editing, per
+`SAFEGUARDS.md` "Read Before Edit". Edited `CLAUDE.md:149` to prepend
+`pkgload::load_all(".", quiet=TRUE);` to the documented command, plus an
+inline parenthetical citing Learning 377 so the "why" travels with the fix.
+**(4)** Verified by running the now-fixed command exactly as newly
+documented: `0 failed/0 error/0 warning, 3198 passed, 179 skipped` --
+matching the known-good S410/S411 baseline exactly. Isolated 1-line
+`git diff` on `CLAUDE.md` only. **(5)** Updated `BACKLOG.md` (resolved the
+item) and `CHANGELOG.md` (dated `[BL-RegressionReadDoc]` entry). Did not add
+a new `PROJECT_LEARNINGS.md` numbered entry -- Learning 377 already fully
+diagnosed the root cause and prescribed this exact fix; this session applied
+it verbatim with no new pattern or anti-pattern to record.
+**Ledger:** See `CHANGELOG.md` 2026-07-28 S412 entry (`[BL-RegressionReadDoc]`).
+
+**Session 411 Handoff Evaluation (by Session 412): 10/10.** **What helped:**
+S411's handoff didn't just point at the problem -- its `gotchas` field and
+`PROJECT_LEARNINGS.md` Learning 377 both stated the exact fix mechanism
+("`load_all()` immediately before any `test_dir()`/`test_local()` regression
+run") and the exact location (the "Clean regression read" row, one below the
+already-correct "Fast single-file test" row), and the `BACKLOG.md` item text
+S411 wrote was itself an executable spec ("Fix: add the same `load_all()`
+call to the ... row's documented command text"). This session needed zero
+independent diagnosis -- only execution and verification. **What was
+missing:** nothing material. **What was wrong:** nothing found -- the
+predicted fix, once applied, reproduced S410/S411's exact known-good baseline
+(0/0/0, 3198 passed, 179 skipped) on the first try. **ROI:** very high --
+this is close to the ideal case the Phase 3D minimum-requirements table
+describes: a handoff so complete the next session is pure execution.
+
+**Self-assessment (Session 412): 9/10.** **Strengths:** (1) followed
+`SAFEGUARDS.md` "Read Before Edit" -- re-read the target line via a fresh
+`grep`/`Read` immediately before editing rather than trusting the line
+number recalled from the Phase 0 orientation context; (2) verified the fix
+by actually running the now-documented command text verbatim, not just by
+inspecting the diff -- closing the loop that the fix produces the claimed
+0/0/0 baseline, not merely that the text now "looks right"; (3) correctly
+judged that a separate fix-approach `AskUserQuestion` (as S410/S411 used for
+genuine multi-option choices) was unnecessary here, since the `BACKLOG.md`
+item left no real alternative to weigh -- avoided manufacturing a decision
+point that didn't exist; (4) declined to add a padding `PROJECT_LEARNINGS.md`
+entry for a session that discovered nothing new, rather than mechanically
+following the pattern of recent sessions that did add one -- kept the
+learnings ledger to genuine new patterns/anti-patterns per its own stated
+purpose. **Weaknesses:** (1) did not independently attempt to root-cause
+*why* `test_dir()` alone uses a stale/partially-attached namespace (the open
+question S411's Learning 377 explicitly left unresolved) -- correctly judged
+out of this session's Effort-S scope, but worth flagging as a still-open
+curiosity rather than treating it as fully closed; (2) the `[BL-...]`
+CHANGELOG tag label (`RegressionReadDoc`) was invented fresh rather than
+checked against any existing per-item tag convention beyond the two
+precedent examples (`BL-CRAN200`, `BL-Document2PhaseD`) -- a minor risk if a
+future session expects a different naming scheme for the same item family.
+**Compared to previous sessions in this workstream:** the cleanest, most
+mechanical instance yet of this project's now well-established "the
+predecessor pre-diagnoses, this session executes and verifies" pattern seen
+across S404-S411 -- here taken to its logical endpoint, since the fix was
+fully specified before this session started.
+
+**Handoff to Session 413:**
+- **What's next:** No open item remains from this session's deliverable. One
+  Housekeeping item remains BLOCKED in `BACKLOG.md`: **LabKey integration
+  research recommendations** (needs a live LabKey server to test/observe,
+  Effort M) -- not actionable without server access. Time-gated, not yet due:
+  re-check CRAN's landing page for macOS/other binary-flavor publication
+  (only source + Windows confirmed as of S410). 9 open GitHub issues remain
+  untriaged, no priority set among them (#123, #116, #37, #36, #28, #12, #11,
+  #10, #5).
+- **Key files:** `CLAUDE.md:149` (the fix -- "Clean regression read" row);
+  `BACKLOG.md` (item resolved); `CHANGELOG.md` (2026-07-28 S412 entry,
+  `[BL-RegressionReadDoc]`).
+- **Gotchas:** (1) The open question from Learning 377 -- *why* does
+  `testthat::test_dir()` alone (without a preceding `load_all()`) produce
+  mass-spurious failures on this project -- remains unresolved; the fix is a
+  reliable workaround, not a root-cause fix, so if this class of failure ever
+  recurs in a *different* command or context, don't assume it's automatically
+  the same known issue without checking. (2) `.DS_Store` continues to show
+  modified in `git status` -- long-standing, pre-existing, unrelated macOS
+  Finder cruft; left untouched again this session, out of scope.
+- **Self-assessment score:** 9/10 (see above for full breakdown).
 
 ### What Session 411 Did
 **Deliverable:** Owner-picked from the Phase 0 priorities list (Housekeeping
