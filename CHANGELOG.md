@@ -47,6 +47,60 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-28 · \[ad hoc\] NPRC outreach and announcement plan (Session 413)
+
+- **Deliverable:** Owner-directed (not from `BACKLOG.md`):
+  `docs/planning/nprc-outreach-announcement-plan.md`, a plan to
+  announce, advertise, and correspond about nprcgenekeepr 2.0.0 to the
+  national primate research center (NPRC) network and specifically the
+  NPRC Genetics and Genomics Working Group. Planning-session
+  deliverable; TDD Phase N/A throughout, no `R/`/`tests/` code touched.
+- **Change:** Scoped via `AskUserQuestion` (owner corrected the initial
+  audience assumption – Amanda Vinson is no longer in the program;
+  redirected toward Jeff Rogers as a possible lead and toward also
+  researching colony managers/head veterinarians per center). Ran an
+  8-agent background Workflow (`wf_13dc386e-06e`, 266 web
+  fetches/searches, ~470K tokens) researching current Working Group
+  leadership and per-center colony-manager/head-veterinarian contacts,
+  while the owner supplied additional contacts in real time. The plan
+  covers: purpose and timing rationale (CRAN 2.0.0 published 2026-07-26;
+  both companion pkgdown articles live), a three-tier audience map
+  (Working Group, center directors, colony managers/veterinarians),
+  tailored key messages per audience, available channels (direct
+  correspondence is the only realistic one – no consortium tool-listing
+  process was found), a sourced 7-center contact roster (director +
+  colony-manager/ head-veterinarian-equivalent + genetics contact, each
+  with a source and explicit confidence/caveats), a generic phased
+  timeline, 5 named risks, and ready-to-edit draft materials (a Working
+  Group outreach email, a colony-manager/veterinarian email, a one-page
+  feature summary, and a presentation/demo outline).
+- **Research findings folded in:** the Working Group’s own page names no
+  chair at all, current or historical – the plan explicitly warns
+  against citing anyone as “current chair” rather than defaulting to the
+  last-known name (Jeffrey Rogers), recommending a direct ask to
+  `support@nhprc.org` instead. A colony-manager could not be named at 3
+  of 7 centers (Southwest, Tulane, Washington) despite each site
+  describing the role – reported honestly as not-found rather than
+  guessed. One real contact-detail discrepancy was flagged rather than
+  silently resolved (two spellings of Jon Hennebold’s email). One
+  research agent independently caught and rejected a
+  search-engine-invented pair of fictitious veterinarian names at
+  Washington NPRC before it could enter the plan – preserved as a
+  documented warning.
+- **Public-repo judgment call:** before the close-out commit, explicitly
+  asked the owner whether a document naming real third parties’ direct
+  work emails/phone numbers (all independently already public on
+  institutional sites, but newly aggregated here) should be committed
+  and pushed to this public repo as-is, kept local-only, or split into
+  public/private versions. Owner chose commit+push as-is.
+- **Also:** added a `BACKLOG.md` “Outreach” item tracking the remaining
+  owner-executed next steps (review/edit drafts, confirm recipients,
+  send – not a further coding task); added `PROJECT_LEARNINGS.md`
+  Learnings 378-379 (the workstream/publishing judgment calls an
+  external-facing plan introduces; the value and uneven cost of
+  instructing research agents to report not-found rather than
+  fabricate); updated `CLAUDE.md`’s learning-count cross-reference.
+
 ### 2026-07-28 · \[ad hoc\] Close-out: predecessor evaluation, self-assessment, HANDOFFS.md receipt (Session 412)
 
 - **Deliverable:** Phase 3 close-out for this session’s `CLAUDE.md`

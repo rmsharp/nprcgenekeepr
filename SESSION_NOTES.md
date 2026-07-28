@@ -7,6 +7,161 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 413 Did
+
+**Deliverable:** Owner-directed (not from `BACKLOG.md`): a plan to
+announce, advertise, and correspond regarding nprcgenekeepr’s
+availability and features to the national primate centers, specifically
+the NPRC Genetics and Genomics Working Group. **DONE.**
+**Started/Completed:** 2026-07-28 / 2026-07-28 **Status:** DONE. TDD
+Phase: N/A throughout – planning-document deliverable
+(`docs/planning/nprc-outreach-announcement-plan.md`), no `R/`/`tests/`
+code touched.
+
+**What happened, in order:** **(1)** Scope confirmed via
+`AskUserQuestion` across two rounds – the first round was rejected by
+the owner, who wanted to clarify audience context first (Amanda Vinson,
+the initially-proposed warm WG contact, is no longer in the program; the
+owner redirected toward Jeff Rogers as a possible lead and toward also
+finding colony managers/head veterinarians per center). A trimmed second
+round confirmed the remaining two open parameters: strategy document +
+ready-to-edit draft materials (draft outreach email, one-page feature
+summary, presentation outline) as appendices; no known target event, so
+the plan proposes a generic timeline. **(2)** Claimed the session
+(`6995b72c`). **(3)** Launched a background Workflow (`wf_13dc386e-06e`,
+8 parallel agents: 1 per NPRC center + 1 on Working Group leadership;
+266 web fetches/ searches, ~470K tokens) to research current contacts,
+while conversationally continuing to receive owner-sourced contacts in
+real time (Dr. Martha Lyke/SNPRC, Jon Hennebold/ ONPRC, Jessica
+Phillips/WNPRC, plus general Washington/Emory contacts) and
+independently verifying the NPRC network’s own public structure (7
+centers, the Working Group’s own page, Jeffrey Rogers’ current
+Baylor/Wisconsin-NPRC affiliation) via direct WebSearch/ WebFetch.
+**(4)** Drafted the full plan (purpose, why-now, 3-tier audience map,
+tailored messaging, channels, generic phased timeline, 5 named risks,
+appendices) and checkpoint-committed it (`5f113b73`) before the
+background Workflow returned. **(5)** Folded in the completed Workflow’s
+findings: the Working Group’s own page names no chair at all (current or
+historical) – corrected the plan to explicitly warn against citing
+anyone as “current chair” rather than defaulting to the last-known name:
+a sourced, per-center contact roster (director +
+colony-manager/head-veterinarian- equivalent + genetics contact, each
+with a source) replacing the placeholder table; one real contact-detail
+discrepancy flagged rather than silently resolved (two different
+spellings found for Jon Hennebold’s email); one caught hallucination
+preserved as a documented warning (a search-summary invented two
+fictitious veterinarian names at Washington NPRC; the research agent
+verified and rejected them). **(6)** Before the final commit, explicitly
+asked the owner (`AskUserQuestion`) whether a document naming real third
+parties’ direct contact details should be committed and pushed to this
+public repo as-is, kept local-only, or split into public/private
+versions – owner chose commit+push as-is. **(7)** Added a `BACKLOG.md`
+“Outreach” item and two new `PROJECT_LEARNINGS.md` entries (378, 379)
+capturing the two genuinely new patterns this session surfaced (an
+external-facing plan’s workstream/publishing judgment calls; the value
+and cost of “report not-found, don’t fabricate” research-agent
+instructions). **Ledger:** See `CHANGELOG.md` 2026-07-28 S413 entry
+(`[ad hoc]`).
+
+**Session 412 Handoff Evaluation (by Session 413): 9/10.** **What
+helped:** the handoff itself was complete and accurate by its own
+standard – all six minimum requirements filled, specific `next_steps`
+(LabKey item BLOCKED, time-gated CRAN recheck, 9 untriaged issues),
+exact key files, an honest unresolved gotcha (why `test_dir()` alone
+produces spurious failures), and a verified commit sha. **What was
+missing:** nothing the handoff itself could reasonably have included –
+this session’s actual deliverable came directly from the owner
+mid-conversation, not from anything in `BACKLOG.md` S412 curated, so the
+handoff’s `next_steps` had essentially zero direct applicability to what
+this session actually did. That is not a defect in S412’s handoff; a
+handoff cannot anticipate an out-of-band owner directive, and the same
+“orient, then the owner redirects” pattern has recurred before in this
+project’s history (e.g. S339). **What was wrong:** nothing found –
+re-verified the claimed 0/0/0 regression baseline was never touched or
+invalidated by anything this session did (no `R/`/`tests/` code changed
+at all). **ROI:** the handoff’s practical ROI for *this specific
+session* was low only because the task source changed, not because the
+handoff was weak – scoring it on its own construction, it meets the same
+9/10 bar S412 itself claimed.
+
+**Self-assessment (Session 413): 8/10.** **Strengths:** (1) recognized
+this was a genuinely novel deliverable type for this project (an
+external-facing outreach plan) with no existing `SESSION_RUNNER.md`
+workstream mapping, and correctly applied the general Planning Sessions
+guidance rather than forcing it into DEVELOPMENT_WORKSTREAM or inventing
+false code scope; (2) used the Workflow tool for real parallel fan-out
+(8 independent per-target research agents) where it was actually the
+right shape of problem, rather than serializing external research or,
+conversely, reaching for Workflow reflexively where it wouldn’t have
+helped; (3) instructed research agents to explicitly refuse to fabricate
+facts, which paid off directly – 3 of 7 centers’ colony-manager roles
+were honestly reported not-found rather than guessed, and one agent
+independently caught and rejected a search-engine-invented pair of
+fictitious veterinarian names before it could enter the plan; (4)
+flagged rather than silently resolved a real data conflict (two
+spellings of Jon Hennebold’s email); (5) recognized mid-session that
+committing named third parties’ direct contact details into a public
+repo was a distinct judgment call from anything this project’s documents
+had done before, and surfaced it explicitly via `AskUserQuestion` rather
+than assuming either “of course, it’s already public” or “of course not,
+redact it” by default; (6) kept the plan’s own boundary explicit and
+repeated (§8 item 5: no correspondence is sent by an agent session) even
+though the owner never asked for anything to be sent. **Weaknesses:**
+(1) the first `AskUserQuestion` round proposed Amanda Vinson as the
+recommended warm WG contact without first checking whether she was still
+affiliated – a quick verification (or simply asking rather than
+recommending) would have avoided presenting an inaccurate default that
+the owner then had to correct; a more careful first pass costs little
+and this is a repeatable mistake to avoid (recommend, don’t assert, when
+a fact is asserted from background knowledge rather than checked); (2)
+California’s roster entry rests entirely on secondary sources because
+the center’s own site blocked every direct-fetch attempt (Cloudflare) –
+clearly flagged in the document, but it is the weakest-sourced entry in
+the roster and was not independently cross-checked by any second method
+beyond what the research agent already tried; (3) did not verify whether
+any of the seven centers’ current staff directories are more current
+than what a same-day web search surfaces (e.g. by asking the owner, who
+may have more current personal knowledge of specific individuals beyond
+what they already volunteered) before treating the roster as complete
+enough to stop researching. **Compared to previous sessions in this
+workstream:** this is the first session in the project’s history to
+produce an external-facing, non-code, non-technical-documentation
+deliverable naming real third parties – there is no directly comparable
+prior session to benchmark against; the closest analogues (S339-S408’s
+Document 1/2 planning and review sessions) share the “plan is the
+deliverable, sourced facts only, no fabrication” discipline but never
+touched external-stakeholder contact data.
+
+**Handoff to Session 414:** - **What’s next:** No open item remains from
+this session’s own deliverable – the plan is complete and committed.
+`BACKLOG.md`’s new “Outreach” item tracks the remaining owner-executed
+steps (review/edit drafts, confirm recipients, send) – **not a coding
+task to pick up** unless the owner specifically wants help drafting a
+follow-up. Otherwise, the same items S412 left stand: LabKey integration
+recs (BLOCKED, needs live LabKey server, Effort M); a time-gated CRAN
+macOS/binary-flavor recheck; 9 open GitHub issues remain untriaged
+(#123, \#116, \#37, \#36, \#28, \#12, \#11, \#10, \#5). - **Key files:**
+`docs/planning/nprc-outreach-announcement-plan.md` (the plan itself, 529
+lines); `BACKLOG.md` (new “Outreach” section); `PROJECT_LEARNINGS.md`
+Learnings 378-379; `CLAUDE.md:235` (learning-count cross-reference
+updated to match). - **Gotchas:** (1) the plan’s contact roster names
+real people’s direct work emails/phone numbers – if a future session
+touches this document again, re-verify currency before relying on any
+name in it (§8 item 2 of the plan itself documents why: 4 of 7 centers
+have renamed within the last year, correlating with several director
+changes found mid-research); (2) Jon Hennebold’s email has two
+conflicting spellings on record (`hennebjo@ohsu.edu` owner-supplied
+vs. `henneboj@ohsu.edu` sourced this session) – unresolved, flagged in
+the plan itself, do not pick one without asking; (3) the Working Group’s
+current (2026) chair remains genuinely unconfirmed after a dedicated
+research pass – this is not a research gap to close later, the source
+itself (the Working Group’s own page) names no chair at all; the plan’s
+own recommendation is to ask `support@nhprc.org` directly rather than
+keep searching; (4) `.DS_Store` continues to show modified in
+`git status` – long-standing, pre-existing, unrelated macOS Finder
+cruft; left untouched again this session. - **Self-assessment score:**
+8/10 (see above for full breakdown).
+
 ### What Session 412 Did
 
 **Deliverable:** Owner-picked from the Phase 0 priorities list
