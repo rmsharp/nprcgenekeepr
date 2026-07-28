@@ -11,7 +11,7 @@ birthdate can be shifted (maxDelta)."><meta property="og:image" content="https:/
 
     <a class="navbar-brand me-2" href="../index.html">nprcgenekeepr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,11 +22,12 @@ birthdate can be shifted (maxDelta)."><meta property="og:image" content="https:/
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/colony-manager-guide.html">Purpose, Approach, and a Colony Manager's Guide to Practice</a></li>
-    <li><a class="dropdown-item" href="../articles/a2interactive.html">Interactive Use of nprcgenekeepr</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/a2interactive.html">Interactive Use of nprcgenekeepr</a></li>
     <li><a class="dropdown-item" href="../articles/a3manual.html">Genetic Management Tools Manual</a></li>
     <li><a class="dropdown-item" href="../articles/age-sex-pyramid.html">Age-Sex Pyramid Plots</a></li>
     <li><a class="dropdown-item" href="../articles/breeding-group-formation.html">Forming Breeding Groups</a></li>
+    <li><a class="dropdown-item" href="../articles/colony-manager-guide.html">nprcgenekeepr: Purpose, Approach, and a Colony Manager's Guide to Practice</a></li>
+    <li><a class="dropdown-item" href="../articles/ColonyManagerTutorial.html">GeneKeepR: A Colony Manager's Tutorial</a></li>
     <li><a class="dropdown-item" href="../articles/engineering-the-2.0.0-release.html">Engineering nprcgenekeepr 2.0.0: Modular Architecture, Expanded Capability, and an AI-Assisted Development Process</a></li>
     <li><a class="dropdown-item" href="../articles/fg-se-validation.html">Validating the Founder-Genome-Equivalent Standard Error</a></li>
     <li><a class="dropdown-item" href="../articles/genetic-value-analysis.html">Genetic Value Analysis</a></li>
@@ -47,7 +48,7 @@ birthdate can be shifted (maxDelta)."><meta property="og:image" content="https:/
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Obfuscate a pedigree by aliasing IDs and shifting dates</h1>
-      <small class="dont-index">Source: <a href="https://github.com/rmsharp/nprcgenekeepr/blob/master/R/obfuscatePed.R"><code>R/obfuscatePed.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/rmsharp/nprcgenekeepr/blob/v2.0.0/R/obfuscatePed.R"><code>R/obfuscatePed.R</code></a></small>
       <div class="d-none name"><code>obfuscatePed.Rd</code></div>
     </div>
 
@@ -119,15 +120,15 @@ and the values being the new alias values. Defaults to <code>FALSE</code>.</p></
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3 s1 &lt;NA&gt; &lt;NA&gt;   M   0 2000-07-18 &lt;NA&gt; 26.0     original</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 s2 &lt;NA&gt; &lt;NA&gt;   M   0 2005-06-19 &lt;NA&gt; 21.1     original</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 o1   s1   d1   F   1 2015-02-04 &lt;NA&gt; 11.5     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 o2   s1   d2   F   1 2009-03-17 &lt;NA&gt; 17.3     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 o2   s1   d2   F   1 2009-03-17 &lt;NA&gt; 17.4     original</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7 o3   s2   d2   F   1 2012-04-11 &lt;NA&gt; 14.3     original</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8 o4   s2   d2   M   1 2008-04-13 &lt;NA&gt; 18.3     original</span>
 <span class="r-in"><span><span class="va">obfuscatedPed</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       id   sire    dam sex gen      birth exit  age recordStatus</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 LS7SJB   &lt;NA&gt;   &lt;NA&gt;   F   0 2003-03-17 &lt;NA&gt; 23.3     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 P4MENX   &lt;NA&gt;   &lt;NA&gt;   F   0 2002-05-29 &lt;NA&gt; 24.1     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 LS7SJB   &lt;NA&gt;   &lt;NA&gt;   F   0 2003-03-17 &lt;NA&gt; 23.4     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 P4MENX   &lt;NA&gt;   &lt;NA&gt;   F   0 2002-05-29 &lt;NA&gt; 24.2     original</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3 NZZUQQ   &lt;NA&gt;   &lt;NA&gt;   M   0 2000-07-10 &lt;NA&gt; 26.0     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 KV6EPH   &lt;NA&gt;   &lt;NA&gt;   M   0 2005-05-30 &lt;NA&gt; 21.1     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 KV6EPH   &lt;NA&gt;   &lt;NA&gt;   M   0 2005-05-30 &lt;NA&gt; 21.2     original</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 QER817 NZZUQQ LS7SJB   F   1 2015-01-22 &lt;NA&gt; 11.5     original</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 RWRDIS NZZUQQ P4MENX   F   1 2009-02-26 &lt;NA&gt; 17.4     original</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7 N7TLJ2 KV6EPH P4MENX   F   1 2012-03-27 &lt;NA&gt; 14.3     original</span>

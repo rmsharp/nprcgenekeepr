@@ -30,72 +30,6 @@ behind (S367 origin, flagged S368/S369) is now also RESOLVED – S370
 
 ## Up Next
 
-(none remaining – the “verify + likely fix the same low-contrast Mermaid
-defect in colony-manager-guide.qmd” item (flagged S401) is RESOLVED:
-verified S403 (2026-07-19) – NOT affected (the diagram is a plain
-`flowchart LR` with zero `subgraph` blocks; the actual defect is scoped
-to subgraph/cluster CSS, not a blanket pkgdown-mixed-mode issue – see
-`PROJECT_LEARNINGS.md` Learning 371, which corrects Learning 369’s
-root-cause claim). `format: html: mermaid: theme: default` applied to
-this file’s frontmatter anyway, owner directed, as a
-defensive/future-proofing measure. See `CHANGELOG.md`.)
-
-(none remaining – the “fix broken ‘Read deeper’ links in the
-colony-manager-guide article” item (issue
-[\#124](https://github.com/rmsharp/nprcgenekeepr/issues/124), filed
-S400) is RESOLVED on the
-`fix/figure2-contrast-engineering-2.0.0-release` branch – fixed S404
-(2026-07-20): all 10 `.qmd` hrefs retargeted directly to `.html`
-(`vignettes/articles/colony-manager-guide.qmd:26,50,99-103,374,534`).
-Pre-work verification found Learning 368’s “pkgdown’s mixed-mode build
-doesn’t perform the rewrite” framing was incomplete – a bare local
-`quarto render` of the same project (no pkgdown involved) produces the
-identical unrewritten `.qmd` href, because the rewrite is a
-`type: website`/`book` Quarto project feature this directory’s
-`_quarto.yml` never enables (see `PROJECT_LEARNINGS.md` Learning 372,
-which corrects Learning 368). All 7 distinct link targets confirmed live
-at the fixed relative path (HTTP 200) before editing; rendered output
-re-verified to contain zero remaining `.qmd` hrefs. **Issue \#124 stays
-open** – the fix is on the unmerged/unpushed branch below, not yet live
-on the published site. See `CHANGELOG.md`. **A second, distinct instance
-found and fixed S407 (2026-07-21)** – owner-reported live 404 at
-`.../articles/articles/colony-manager-guide.qmd`, traced to
-`vignettes/ColonyManagerTutorial.Rmd:9` (the retired-tutorial stub,
-already merged to `master` via S398, unlike the branch above): a
-relative link with a doubled `articles/` path segment (this file renders
-under `/articles/` too, so its own `articles/`-prefixed relative link
-doubled) plus the same `.qmd`-vs-`.html` defect. Fixed by pointing the
-link at the absolute published URL, and by renaming the file to
-`_ColonyManagerTutorial.Rmd` – pkgdown’s `build_articles()` skips any
-leading-`_` vignette by documented convention (verified against the
-installed pkgdown 2.2.0’s own `package_vignettes()` source, not
-assumed), which finally makes true the file’s own claim that it is not
-part of the public site (previously false: no `_pkgdown.yml` exclusion
-existed, so pkgdown was building and serving it). Owner also directed a
-full live-site link sweep (all 13 published articles +
-articles/reference/news index hubs, 238 resolved internal targets,
-HTTP-checked) – no other broken links found; see `CHANGELOG.md` and the
-issue \#124 comment thread for the full sweep result. **Merged and
-deployed live – S408 (2026-07-21):** owner approved merging
-`fix/figure2-contrast-engineering-2.0.0-release` into `master`
-(`dd8e53fd`) now that the CRAN v2.0.0 submission is sufficiently
-handled. Live verification after deploy found a second, unrelated defect
-blocking the fix from actually taking effect:
-`.github/workflows/pkgdown.yaml`’s `clean: false` deploy step meant
-`gh-pages` had only ever accumulated files, never removed stale ones
-(981 files, including 3 old copies of this same tutorial, one still
-serving the exact `.qmd`-targeting link live). Fixed (`clean: true`,
-`f5b73edf`), redeployed, verified: `gh-pages` dropped to 650 files, zero
-`ColonyManagerTutorial` matches, all stale URLs 404,
-`colony-manager-guide.html` has zero remaining `.qmd` hrefs. **Issue
-\#124 is now fully resolved live**, not just in source. See
-`CHANGELOG.md`.)
-
-(none remaining – the “Branch-merge strategy for
-`fix/figure2-contrast-engineering-2.0.0-release`” item is RESOLVED:
-merged into `master` and deployed live – S408 (2026-07-21), see the
-issue \#124 item above and `CHANGELOG.md`.)
-
 **Act on the LabKey integration research recommendations** (BLOCKED –
 remainder needs a live LabKey server to test/observe, Effort M) —
 research pass DONE
@@ -166,13 +100,10 @@ availability/permissions are confirmed; needs a live LabKey server to
 test/observe, and a naive focal-id server filter is incompatible with
 the client-side connected-component walk).
 
-**CRAN resubmission of v2.0.0** (BLOCKED – awaiting CRAN’s manual
-reviewer response to the 2026-07-17 submission, no engineering action
-open, Effort: N/A. The prior “DECISION NEEDED – owner-only:
-`devtools::submit_cran()`” tag is now stale – that decision was made and
-acted on S397/owner action below; flagged stale S398, corrected S399.)
-S395 (2026-07-17) re-opened the effort S392-394 had closed as exhausted,
-with owner authorization to change test structure and
+**CRAN resubmission of v2.0.0** (DECISION NEEDED – owner-only:
+`devtools::submit_cran()` itself, per SAFEGUARDS/the runbook’s HARD
+STOP. S395 (2026-07-17) re-opened the effort S392-394 had closed as
+exhausted, with owner authorization to change test structure and
 previously-protected iteration counts. Landed 2 more real, verified-safe
 levers (Shiny testServer stub-completeness/ fixture-hoisting across
 `test_appServer_*`/`test_reportGV.R`, and a fixture-size fix to
@@ -209,41 +140,14 @@ R-release/R-oldrelease and R-hub are still the Session 390/391 results,
 now stale relative to the S392-395 fixes (not expected at risk from the
 checktime-specific issue, which is Windows-r-devel-specific, but
 unconfirmed against current code). Full detail in `cran-comments.md`’s
-“Test environments” section (the dated “2026-07-17 update note” this
-line previously cited was removed by the S397 addendum trim to
-code-changes-only content, commit `3c7486b9` – stale cross-reference
-caught and fixed S399). **Owner decision (S397, 2026-07-17, via
-`AskUserQuestion`): resubmit now.** **Submitted – owner ran
-`devtools::submit_cran()` 2026-07-17; package uploaded successfully to
-the CRAN submission team, and the maintainer-email confirmation link was
-clicked the same day.** **CRAN’s own incoming-pretest auto-check
-confirmed clean – S399 (2026-07-18):** the real submission (not a
-manually-triggered win-builder pretest) auto-processed with
-`Status: 1 NOTE` on both Windows r-devel and Debian (the standard
-incoming-feasibility note only – new submission, archived-package
-history, DESCRIPTION spelling flags – no WARN/ERROR). Verified against
-the actual `00check.log` files (not just the email summary), per this
-project’s own established practice: Windows `checking tests` 205s /
-`examples` 79s / `re-building of vignette outputs` 65s; Debian `tests`
-89s / `examples` 43s / `vignette outputs` 29s – consistent with the
-S392-395 fixes holding on the real submission, not just the
-pre-submission pretest. **Reconciled the checktime caveat:** the email
-footer reported “Check time in seconds: 604” (4s over the 600s mark that
-caused the prior S392 archival-class rejection), but the actual check
-log contains no “Overall checktime” flag anywhere – the only “Tested
-elapsed times” occurrence is quoted historical metadata from the
-2025-07-29 CRAN db override, not a fresh flag on this submission. This
-is a second data point (after S397’s 588s) that the win-builder-style
-footer “Check time” figure is not the same measure as CRAN’s own
-incoming-pipeline “Overall checktime” gate – a submission whose footer
-exceeded 600s was NOT auto-rejected. Email states the package is
-“pending a manual inspection,” typical response within 10 working days.
-Now fully in CRAN’s review queue – awaiting CRAN’s actual review
-outcome, asynchronous and owner-only, no further engineering action open
-unless CRAN rejects it again. CRAN responded 2026-07-09 to the PRIOR
-(S329) attempt: the v2.0.0 submission (S329, `devtools::submit_cran()`,
-`CRAN-SUBMISSION` sha `8ca8bb24`) was archived before publication
-because
+2026-07-17 update note. **Owner decision (S397, 2026-07-17, via
+`AskUserQuestion`): resubmit now.** Next action is the owner running
+`devtools::submit_cran()` and clicking the maintainer-email confirmation
+link – owner-only per SAFEGUARDS/the runbook HARD STOP, no further
+engineering action this cycle unless CRAN rejects it again. CRAN
+responded 2026-07-09: the v2.0.0 submission (S329,
+`devtools::submit_cran()`, `CRAN-SUBMISSION` sha `8ca8bb24`) was
+archived before publication because
 [`appServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/appServer.md)
 unconditionally wrote `~/nprcgenekeepr.log` on every boot, violating
 CRAN Policy. **Fixed in S349** (`R/appServer.R`: the file appender is
@@ -378,24 +282,7 @@ around via `NOT_CRAN`-controlled
 [`testthat::test_dir()`](https://testthat.r-lib.org/reference/test_dir.html)
 profiling instead). Next: a fresh win-builder Windows-devel trigger to
 confirm the real checktime drops with margin, before any resubmission
-attempt. **Submission commit tagged, `master` moved to a dev version –
-S407 (2026-07-21):** the exact commit `CRAN-SUBMISSION` recorded as
-uploaded (`db54d3257a1655a5582c3b201136f0ec868575bb`) is now tagged
-`v2.0.0` (pushed to `origin`), permanently marking what was actually
-submitted regardless of review outcome. `master`’s `DESCRIPTION`
-`Version` moved to `2.0.0.9000` (development version) so work can
-continue independent of CRAN’s pending decision; `NEWS.Rmd`/`NEWS.md`
-gained a matching “2.0.0.9000 (development version)” heading. **Owner
-has since learned CRAN requires a version increment for any
-resubmission** – if the pending 2.0.0 review comes back requiring
-changes, the fix-and- resubmit package must ship as **2.0.1**, not a
-second attempt at 2.0.0. The `v2.0.0` tag therefore never needs to move:
-it is the one and only submission that will ever carry that version
-number. Next engineering action, whenever CRAN responds: if accepted, no
-further action needed here (routine post-release housekeeping only). If
-changes are required, bump `DESCRIPTION` to `2.0.1` (not `2.0.0.9000` as
-a submission target – that suffix is dev-only and CRAN will not accept
-it), apply the required fix, and resubmit.
+attempt.
 
 ## Housekeeping
 
@@ -433,13 +320,42 @@ are both done; the issue is left OPEN, per the plan’s own §10 decision
 
 ## Documents (v1.0.8 -\> v2.0.0 write-up)
 
-(none remaining – Document 2
-(`docs/planning/document2-colony-manager-guide-plan.md`) is fully
-executed: planning DONE (S345), Phase A DONE (S346), Phase B DONE
-(S347), Phase C DONE (S348), **Phase D DONE (S398, 2026-07-17)** – full
-claim-source audit, `pkgdown`/`R CMD build` verification, and the
-`ColonyManagerTutorial.Rmd` retire/redirect decision. See
-`CHANGELOG.md`.)
+**Execute “Document 2” plan (Phase D)** (READY, Effort M) – planning
+session DONE (S345), Phase A DONE (S346), Phase B DONE (S347), **Phase C
+DONE (S348)**: `docs/planning/document2-colony-manager-guide-plan.md` §6
+Phase C. Drafted `vignettes/articles/colony-manager-guide.qmd`
+(Abstract, Introduction, Sections 1-3, Conclusion); Section 3
+ported/modernized from `ColonyManagerTutorial.Rmd` using Phase B’s
+screenshots and Phase A’s re-derived N1/N2/N3/N4 numbers verbatim.
+Owner-resolved pre-drafting decisions: Input-tab narrates CSV with an
+inline Excel-bug caveat; Breeding-Groups subsection covers None/Harem
+fully, omits the Custom-ratio numeric demo (N7). Extended
+`colony-manager-guide-screenshots.R` with 2 more captures
+(owner-approved) for the Genetic Diversity and Potential Parents tabs,
+which Phase B’s tutorial-figure-based inventory had no way to include.
+`quarto render` of the article in isolation succeeds cleanly (zero
+missing images, zero unresolved cross-references). Next: **Phase D** –
+assemble (Abstract/Introduction/Conclusion full pass), full claim-source
+audit, decide `ColonyManagerTutorial.Rmd`’s fate (§11 decision 3),
+re-verify the pkgdown Reference-page citation live (§8 dragon 5 – the
+underlying dead-config bug this dragon flagged is now **fixed**, S354:
+root `_pkgdown.yml` carries the grouped `reference:` block and is
+re-synced against current `NAMESPACE`; see below and `CHANGELOG.md`.
+Phase D’s live re-verify is now confirming a real, working grouped
+Reference page, not chasing a still-open bug), and run the full
+verification checklist (§9:
+[`pkgdown::build_article()`](https://pkgdown.r-lib.org/reference/build_articles.html),
+`R CMD build .` + tarball check, spot-check sibling articles). See the
+plan’s §6 Phase D for full completion criteria. All three findings Phase
+C’s screenshot capture surfaced are now **fixed** (Excel-upload
+corruption S350; non-functional Custom sex ratio S351;
+missing-`fromCenter` example data S353 – see below and `CHANGELOG.md`),
+so Phase D can update the Potential Parents subsection to show the
+now-populated result (1,587 candidates) instead of only the
+graceful-degradation screenshot, if desired. The Custom-ratio numeric
+demo (N7), omitted from Section 3’s Breeding-Groups subsection per
+S348’s pre-drafting decision, can also be added in Phase D if desired –
+the control works end to end as of S351.
 
 ## Audit follow-ups
 
