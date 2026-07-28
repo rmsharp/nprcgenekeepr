@@ -184,6 +184,26 @@ and only submission that will ever carry that version number.
 
 ## Housekeeping
 
+**`inst/extdata/` reorganization** (READY for Phase 1, Effort L overall
+– 4 phases, each its own session; Phase 1 alone is Effort S) – plan
+complete: `docs/planning/extdata-reorganization-plan.md` (S414,
+owner-directed by adding `Master_Genetic_metrics_2_14_15.pdf`, which
+prompted a request for reorg suggestions). Phase 1 (relocate 11
+dev-scratch + 9 zero-reference orphaned files + 3 empty dirs out of
+`inst/extdata/` into the existing, already-`.Rbuildignore`’d `dev/`
+directory; fixes `create_nprcgenekeepr_hexbadge.R` unintentionally
+shipping in the tarball as a side effect) is READY now – zero
+[`system.file()`](https://rdrr.io/r/base/system.file.html) call sites
+change. Phases 2-4 (subfolder the 10 load-bearing files into
+`inst/extdata/examples/`, update ~50 call sites across
+`R/`/`tests/`/`vignettes/`/ `man/`/`data-raw/`, re-render affected docs,
+place the new PDF) have 4 open decisions the owner should weigh in on
+first (plan §10): the PDF’s actual intended home (shipped
+`inst/extdata/reference/` vs. non-shipped), the `examples/` subfolder
+name, archive-vs-delete for the 9 orphaned files, and whether
+`vignettes/a2interactive.R` is hand-maintained or
+[`knitr::purl()`](https://rdrr.io/pkg/knitr/man/knit.html)-generated.
+
 (none remaining – the “clean up stale untracked leftover files” item
 (filed S383) is RESOLVED: 18 confirmed-dead untracked files deleted –
 S384 (2026-07-15). See `CHANGELOG.md`.)

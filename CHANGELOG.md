@@ -47,6 +47,45 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-28 · \[ad hoc\] `inst/extdata/` reorganization plan + PDF tracking (Session 414)
+
+- **Deliverable:** Owner-directed (not from `BACKLOG.md`; triggered by
+  the owner adding `Master_Genetic_metrics_2_14_15.pdf` to
+  `inst/extdata/`, which prompted a request for reorganization
+  suggestions): (1) tracked the new PDF; (2) wrote
+  `docs/planning/extdata-reorganization-plan.md`, a 4-phase plan to
+  split `inst/extdata/`’s 43 mixed items into load-bearing example data
+  (`inst/extdata/examples/`), unchanged UI-guidance HTML
+  (`ui_guidance/`), and relocated dev-scratch/orphaned content
+  (`dev/extdata-scratch/`). Planning-session deliverable; TDD Phase N/A
+  throughout, no `R/`/`tests/` code touched.
+- **Change:** Tracked the PDF as its own isolated commit (`0fa3973e`).
+  Delegated an initial reference-mapping sweep to a search subagent,
+  then cross-verified with direct `grep -rn` sweeps across `R/`,
+  `tests/`, `vignettes/`, `man/`, `data-raw/`, `README.Rmd`,
+  `.Rbuildignore`, `.gitignore` – caught real gaps the subagent’s
+  filename-driven search missed (two whole test files, a hardcoded
+  non-[`system.file()`](https://rdrr.io/r/base/system.file.html)
+  relative path in `vignettes/a2interactive.Rmd`/`.R`, two
+  GitHub-blob-URL mentions embedded in rendered vignette artifacts).
+  Presented 4 reorg-scope options via `AskUserQuestion`; owner picked
+  the fullest scope. Wrote the plan with a full evidence-based inventory
+  (~50 call sites across 3 `R/` files, ~15 test files, 2 `data-raw/`
+  provenance scripts, 2 vignette sources, 4 generated `man/*.Rd` files),
+  4 “dragons,” and 4 open decisions for the owner – no reorg implemented
+  this session, per `SAFEGUARDS.md`’s plan-mode gate for cross-module
+  changes and `SESSION_RUNNER.md`’s Planning Sessions discipline (the
+  plan is the deliverable; implementation is separate future sessions).
+- **Also:** Added a `BACKLOG.md` Housekeeping item tracking the plan
+  (Phase 1 READY, Phases 2-4 pending 2 of the 4 open decisions);
+  `PROJECT_LEARNINGS.md` Learning 380 (a delegated subagent’s
+  filename-driven grep is a starting map, not a final inventory – verify
+  it directly before citing it as evidence in a migration plan);
+  `CLAUDE.md:235`’s learning-count cross-reference (379 -\> 380).
+- **Verification:** N/A for the plan itself (no code changed); the one
+  file-tracking action (`git add`+commit the PDF) needed no test/build
+  verification.
+
 ### 2026-07-28 · \[ad hoc\] NPRC outreach and announcement plan (Session 413)
 
 - **Deliverable:** Owner-directed (not from `BACKLOG.md`):

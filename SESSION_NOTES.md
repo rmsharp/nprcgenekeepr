@@ -7,6 +7,164 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 414 Did
+
+**Deliverable:** Owner-directed (not from `BACKLOG.md`): (1) track the
+newly-added `inst/extdata/Master_Genetic_metrics_2_14_15.pdf`; (2)
+investigate `inst/extdata/`’s current contents and produce a full
+reorganization plan, owner explicitly flagging that any reorg affects
+the package’s own use of these files. **DONE** (plan written; no reorg
+implemented – implementation is separate future sessions per Planning
+Sessions guidance). **Started/Completed:** 2026-07-28 / 2026-07-28
+**Status:** DONE. TDD Phase: N/A throughout – investigation, data-file
+tracking, and a planning-document deliverable; no `R/`/`tests/` code
+touched.
+
+**What happened, in order:** **(1)** Claimed the session (`21cad54a`)
+immediately on receiving the task, before any technical work, per Phase
+1B. **(2)** Tracked the PDF as its own isolated commit (`0fa3973e`) at
+its current flat location, deferring the “where does it ultimately
+belong” question to the reorg plan’s own open decisions (§10) rather
+than guessing a destination. **(3)** Inventoried `inst/extdata/`
+directly (`ls`, `find`, `git ls-files`) – 43 items, 2.5MB, only the new
+PDF untracked. **(4)** Delegated an initial reference-mapping sweep
+(which files are actually read by `R/`/tests/vignettes code) to a
+general-purpose search subagent – see `PROJECT_LEARNINGS.md` Learning
+380: its report was a strong starting map but self-admittedly incomplete
+for the single most-used file. **(5)** Cross-verified with direct
+`grep -rn`/`grep -rln` sweeps across `R/`, `tests/`, `vignettes/`,
+`man/`, `data-raw/`, `README.Rmd`, `.Rbuildignore`, `.gitignore` – this
+caught real gaps the subagent missed: two whole test files, a hardcoded
+non-[`system.file()`](https://rdrr.io/r/base/system.file.html) relative
+path in `vignettes/a2interactive.Rmd`/`.R`, and two GitHub-blob-URL
+mentions embedded in rendered vignette artifacts. **(6)** Presented four
+reorg-scope options via `AskUserQuestion`; owner picked the fullest
+scope (“Cleanup + subfolder the used files”), which carries real blast
+radius (~50 call sites across `R/`/tests/vignettes/ man/data-raw).
+**(7)** Per `SAFEGUARDS.md` (“refactoring always requires plan mode
+approval”) and `SESSION_RUNNER.md`’s Planning Sessions guidance (the
+plan is the deliverable; implementation is a separate session), wrote
+`docs/planning/extdata-reorganization-plan.md` – a 4-phase migration
+plan (each phase one session) with the full evidence-based inventory, 4
+dragons, and 4 open decisions for the owner – rather than implementing
+any of it in this same session (would be FM \#18,
+planning-to-implementation bleed). **(8)** Added a `BACKLOG.md`
+Housekeeping item tracking the plan with its READY/open-decision status,
+and `PROJECT_LEARNINGS.md` Learning 380 (the
+subagent-inventory-incompleteness pattern), plus the `CLAUDE.md`
+learning-count cross-reference update (379 -\> 380, Learning \#7
+discipline). **Ledger:** See `CHANGELOG.md` 2026-07-28 S414 entry
+(`[ad hoc]`).
+
+**Session 413 Handoff Evaluation (by Session 414): 9/10.** **What
+helped:** the handoff was complete by its own six-requirement standard –
+accurate `active_task`, a commit-sha-bearing `what_was_done`, specific
+`next_steps`, exact `key_files`, and honest `gotchas` (including the
+`.DS_Store` note, independently re-confirmed still accurate: `.DS_Store`
+showed modified again at this session’s very start). Re-verified every
+carried claim firsthand rather than trusting it from memory:
+`BACKLOG.md`’s Outreach item exists exactly as described, and the
+LabKey/CRAN/9-untriaged-issues standing items all matched
+`gh issue list` and `BACKLOG.md`’s current text. **What was missing:**
+nothing the handoff could reasonably have included – this session’s
+actual deliverable came from an out-of-band owner directive (adding a
+PDF, which prompted a reorg request) that arrived mid-Phase-0, before
+S413’s own named `next_steps` were ever presented to the owner for a
+pick. This is the same “orient, then the owner redirects” shape S413
+itself named when scoring S412’s handoff, now recurring a third time in
+three consecutive sessions (S412, S413, S414) – worth naming as a
+pattern in its own right: this project’s owner directs work
+conversationally at least as often as via `BACKLOG.md` triage. **What
+was wrong:** nothing found. **ROI:** low for this specific session’s
+practical use (the task source changed before the handoff’s own
+next_steps could be acted on), but that is not a defect in S413’s
+construction – scored on its own merits, it meets the bar S413 itself
+claimed for S412.
+
+**Self-assessment (Session 414): 9/10.** **Strengths:** (1) recognized
+that the owner’s chosen reorg scope (“Cleanup + subfolder the used
+files”) crossed into `SAFEGUARDS.md`’s “refactor across module
+boundaries requires plan mode” territory and refused to implement any of
+it in this session despite real temptation to “just do the low-risk
+Phase 1 now” – stayed disciplined against FM \#18
+(planning-to-implementation bleed) even after the owner had explicitly
+picked the fuller scope; (2) did not trust a single subagent research
+pass for the plan’s Evidence-Based Inventory – ran an independent,
+direct `grep -rn` sweep afterward specifically because the subagent’s
+own report self-admitted incompleteness (“many other…”), which caught
+real gaps (two missed test files, a hardcoded
+non-[`system.file()`](https://rdrr.io/r/base/system.file.html) path, two
+embedded GitHub-blob-URL mentions) that would have silently shipped as
+gaps in the plan otherwise – converted the catch into a new, reusable
+`PROJECT_LEARNINGS.md` entry (380) rather than quietly fixing it and
+moving on; (3) handled the two owner asks (track the PDF; produce reorg
+suggestions) as separable actions – the unambiguous git-tracking
+instruction landed as its own immediate, isolated commit, rather than
+making it wait on the open-ended investigation; (4) surfaced 4 genuine
+open decisions explicitly in the plan (§10) rather than silently
+defaulting each one, including the one this session had no way to answer
+itself (the new PDF’s actual intended audience). **Weaknesses:** (1) the
+user interrupted mid-Phase-0-orientation-report (before the
+priorities-list `AskUserQuestion` was ever presented) with a new,
+unrelated task – `SESSION_RUNNER.md` doesn’t script this exact case (it
+scripts “task arrives in the user’s first message,” not “task arrives
+mid-orientation-report”); treated it as an immediate Phase 1 task
+receipt and moved forward without circling back to finish or re-offer
+the abandoned priorities list, which was a reasonable judgment call but
+is a genuine protocol gray area worth naming rather than treating as
+obviously correct; (2) did not ask the owner up front about the new
+PDF’s intended audience before drafting the plan’s default
+recommendation (`inst/extdata/reference/`) – left it as an open decision
+instead, which is defensible but a single clarifying question earlier
+might have avoided writing a default that may turn out wrong; (3) the
+initial subagent delegation prompt did not explicitly call out “trace
+hardcoded relative paths, not just
+[`system.file()`](https://rdrr.io/r/base/system.file.html) calls” –
+tightening that instruction up front might have caught Dragon 1 in the
+first pass rather than requiring a second, independent verification
+sweep. **Compared to previous sessions in this workstream:** closest
+structural comparable is
+`docs/planning/issue122-module-contract-plan.md` (S372) – both are
+migration-shaped plans with grep-based inventories, phase-by-phase
+migration paths, and a named “Dragons” section; this session
+deliberately mirrored that template’s structure rather than inventing a
+new one. Also comparable to S413’s “plan is the deliverable, no code,
+defer implementation” discipline, applied here to a file-layout
+migration instead of an outreach document.
+
+**Handoff to Session 415:** - **What’s next:** Owner picks either (a)
+`BACKLOG.md`’s new “inst/extdata/ reorganization” item – Phase 1
+(`docs/planning/extdata-reorganization-plan.md` §6) is READY now with
+zero open decisions blocking it; Phases 2-4 need at least open decisions
+\#2 (`examples/` subfolder naming) and \#4 (`a2interactive.R`’s
+generation status) resolved first (plan §10) – or (b) any of the older
+standing items unchanged since S412/S413: LabKey integration recs
+(BLOCKED, Effort M), a time-gated CRAN binary-flavor recheck, 9
+untriaged GitHub issues (#123, \#116, \#37, \#36, \#28, \#12, \#11,
+\#10, \#5), or the Outreach plan’s owner-executed follow-up (not a
+coding task). - **Key files:**
+`docs/planning/extdata-reorganization-plan.md` (the plan – all 4 phases,
+full evidence-based inventory in §8, 4 dragons in §7, 4 open decisions
+in §10); `BACKLOG.md` Housekeeping section (new item);
+`PROJECT_LEARNINGS.md` Learning 380; `CLAUDE.md:235` (learning-count
+cross-reference, 379 -\> 380). - **Gotchas:** (1) Phase 1 of the reorg
+plan is genuinely self-contained and
+zero-[`system.file()`](https://rdrr.io/r/base/system.file.html)-risk –
+it does NOT need any of §10’s open decisions resolved first, don’t wait
+on them to start it; (2) this session’s own `grep -rn` sweep of §8’s
+inventory was thorough and caught real gaps in the initial subagent
+pass, but Phase 2’s own verification commands still mandate a FRESH
+exhaustive grep immediately before touching any file (per the plan’s own
+Dragon 1) – don’t skip it just because this session’s inventory looks
+solid, since the source tree may have changed by then; (3) `.DS_Store`
+continues to show modified – long-standing, pre-existing, untouched
+again this session; (4) `vignettes/a2interactive.R`’s generation status
+(hand-written companion script
+vs. [`knitr::purl()`](https://rdrr.io/pkg/knitr/man/knit.html) output
+from `a2interactive.Rmd`) is unconfirmed – resolve before Phase 2
+touches it. - **Self-assessment score:** 9/10 (see above for full
+breakdown).
+
 ### What Session 413 Did
 
 **Deliverable:** Owner-directed (not from `BACKLOG.md`): a plan to
