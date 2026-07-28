@@ -47,6 +47,43 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-28 · \[ad hoc\] Close-out: predecessor evaluation, self-assessment, Learning 377, HANDOFFS.md receipt (Session 411)
+
+- **Deliverable:** Phase 3 close-out for this session’s README.html
+  byproduct fix (see the entry below). Evaluated S410’s handoff (9/10 –
+  named the exact fix mechanism up front in both its `SESSION_NOTES.md`
+  gotcha and `PROJECT_LEARNINGS.md` Learning 376(b), sparing this
+  session the diagnosis step). Self-assessed 9/10 (docked for not fully
+  root-causing why
+  [`testthat::test_dir()`](https://testthat.r-lib.org/reference/test_dir.html)
+  alone produces mass-spurious failures, and for not surfacing the
+  pre-existing `.DS_Store` drift in the close-out report body itself).
+  Added `PROJECT_LEARNINGS.md` Learning 377 (the `CLAUDE.md` “Clean
+  regression read” command needs a preceding
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html),
+  or it reports a false mass regression) and a `BACKLOG.md` Housekeeping
+  item for the doc fix. Bumped `CLAUDE.md`’s learning-count
+  cross-reference (376 -\> 377). Completed the `HANDOFFS.md` S411
+  receipt (`status: pending` -\> `complete`).
+- **TDD Phase:** N/A – pure documentation/close-out bookkeeping, no
+  `R/`/`tests/` code touched.
+
+### 2026-07-28 · \[ad hoc\] Stop README.Rmd from leaving an untracked README.html byproduct (Session 411)
+
+- **Deliverable:** Owner-picked from the Phase 0 priorities list,
+  resolving the Housekeeping item flagged S410 (`PROJECT_LEARNINGS.md`
+  Learning 376(b)). Added `html_preview: false` to `README.Rmd`’s
+  `output: github_document` frontmatter, mirroring `NEWS.Rmd`’s
+  already-working pattern (`NEWS.Rmd:4-7`).
+- **Actions:** Verified via a clean pre-render version check (installed
+  `2.0.0.9000` matched `DESCRIPTION`, no reinstall needed) then
+  re-rendering `README.Rmd`: no `README.html` byproduct produced, and
+  `README.md`’s content was unchanged (already current from S410’s
+  same-day render). Isolated 3-line diff on `README.Rmd` only.
+  `BACKLOG.md` Housekeeping item resolved.
+- **TDD Phase:** N/A – Quarto/R-Markdown frontmatter + rendering only,
+  no `R/`/`tests/` code touched.
+
 ### 2026-07-28 · \[ad hoc\] Close-out: predecessor evaluation, self-assessment, Learning 376, HANDOFFS.md receipt (Session 410)
 
 - **Deliverable:** Phase 3 close-out for this session’s CRAN

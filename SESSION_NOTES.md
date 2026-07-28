@@ -7,6 +7,138 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 411 Did
+
+**Deliverable:** Owner-picked from the Phase 0 priorities list
+(Housekeeping item, flagged S410, `PROJECT_LEARNINGS.md` Learning
+376(b)): stop `README.Rmd` from leaving an untracked, non-`.gitignore`’d
+`README.html` byproduct on every render, by adding `html_preview: false`
+to its `output: github_document` frontmatter – mirroring `NEWS.Rmd`’s
+already-working pattern. **DONE.** **Started/Completed:** 2026-07-28 /
+2026-07-28 **Status:** DONE. TDD Phase: N/A throughout –
+Quarto/R-Markdown frontmatter + rendering only, no `R/`/`tests/` code
+touched, confirmed via an explicit pre-work `AskUserQuestion` (both the
+task pick and the fix-approach choice).
+
+**What happened, in order:** **(1)** Phase 0 orientation found both
+`CHANGELOG.md` and `HANDOFFS.md` ledgers already reconciled to HEAD
+(zero commit gap since S410’s close-out) – no backfill needed. Presented
+the rendered priorities list via `AskUserQuestion`; owner picked the
+README.html byproduct item. **(2)** Investigated before proposing a fix:
+read `README.Rmd`’s frontmatter (plain `output: github_document`, no
+`html_preview: false`) against `NEWS.Rmd`’s (already nests
+`html_preview: false`, produces no byproduct) and confirmed no
+`.gitignore` entry for `README.html` exists. Presented three concrete
+options (frontmatter fix / `.gitignore` entry / both) via
+`AskUserQuestion`; owner chose the frontmatter fix, matching the
+already-proven `NEWS.Rmd` pattern. **(3)** Claimed the session
+(`a010375b`). Edited `README.Rmd:4-6` to nest
+`output: github_document: html_preview: false`. **(4)** Verified before
+trusting the render: compared installed package version (`2.0.0.9000`)
+against `DESCRIPTION` (`2.0.0.9000`) – matched, no reinstall needed (per
+`PROJECT_LEARNINGS.md` Learning 376(a)’s trap). Deleted any stray
+`README.html`, re-rendered `README.Rmd`, confirmed no `README.html`
+byproduct was produced and `README.md`’s content was unchanged (already
+current from S410’s same-day render) – isolated 3-line diff on
+`README.Rmd` only. **(5)** Ran the full regression suite as a
+post-change sanity check. The first attempt used `CLAUDE.md`’s literal
+documented “Clean regression read” command verbatim and returned a
+false-alarm mass regression (32 failed/268 error/113 warning) –
+recognized this couldn’t plausibly be caused by a doc-rendering
+frontmatter tweak, re-ran with a preceding
+`pkgload::load_all(".", quiet=TRUE)` (the incantation the neighboring
+“Fast single-file test” row already uses but the “Clean regression read”
+row’s own text omits), which returned the true, matching baseline: 0
+failed/0 error/0 warning, 3198 passed, 179 skipped – identical to S410’s
+same-day run. Root cause not fully diagnosed but the workaround is
+reliable and documented (`PROJECT_LEARNINGS.md` Learning 377). **(6)**
+Updated `BACKLOG.md` (resolved the README.html item; added a new small
+Housekeeping item flagging the `CLAUDE.md` regression-command doc gap,
+per Learning 377 – deferred as out-of-scope for this session’s own
+approved fix, not because it’s risky) and `CHANGELOG.md` (dated
+`[ad hoc]` entry for the fix). Committed the deliverable (`8e44049a`).
+**Ledger:** See `CHANGELOG.md` 2026-07-28 S411 entries (`[ad hoc]`).
+
+**Session 410 Handoff Evaluation (by Session 411): 9/10.** **What
+helped:** S410’s handoff named the exact fix mechanism up front
+(“`README.Rmd` should gain `html_preview: false` (matching `NEWS.Rmd`’s
+own frontmatter)”) in both `SESSION_NOTES.md` gotcha (2) and
+`PROJECT_LEARNINGS.md` Learning 376(b) – this session didn’t have to
+rediscover the diagnosis from scratch, only verify it and get owner
+sign-off on the exact approach. The `BACKLOG.md` Housekeeping item S410
+wrote was accurate, correctly tagged READY/Effort S, and matched what
+this session actually did with no drift. **What was missing:** nothing
+material – the one thing this session had to discover independently (the
+`CLAUDE.md` regression-command gap) is unrelated to S410’s own
+deliverable and not something S410 could have anticipated. **What was
+wrong:** nothing found. **ROI:** high – S410’s Learning 376(b)
+functioned almost as a mini pre-written plan for this session’s fix,
+saving the investigation step entirely.
+
+**Self-assessment (Session 411): 9/10.** **Strengths:** (1) did not
+silently trust the false-alarm mass-regression result – recognized it
+was implausible given the tiny, doc-only diff, diagnosed the actual
+cause (a gap in `CLAUDE.md`’s own documented command, not a real
+regression) before reporting anything to the owner, and turned the
+near-miss into a new Learning + `BACKLOG.md` item rather than silently
+working around it and moving on; (2) verified the
+installed-vs-`DESCRIPTION` version match before trusting the render, per
+S410’s own Learning 376(a) trap, rather than assuming “no version bump
+this session” made the check unnecessary; (3) presented both the task
+pick and the fix-approach choice via `AskUserQuestion` before touching
+any file, consistent with this project’s established doc/release-session
+convention; (4) confirmed `README.md`’s content was byte-for-byte
+unchanged after the frontmatter fix (not just that no `README.html`
+appeared), closing the loop that the fix changed only *how* the file
+renders, not *what* it renders; (5) updated the stale “376 learnings”
+cross-reference in `CLAUDE.md` proactively (Learning \#7 discipline)
+rather than leaving it to a future audit to catch. **Weaknesses:** (1)
+did not fully root-cause *why*
+[`testthat::test_dir()`](https://testthat.r-lib.org/reference/test_dir.html)
+alone (without a preceding `load_all()`) produces mass-spurious failures
+– documented the reliable workaround and a plausible-but-unconfirmed
+hypothesis (stale/ partially-attached installed namespace) rather than
+digging into `testthat`’s package-discovery internals, which would have
+been a larger side investigation than this session’s approved scope
+justified; (2) left `.DS_Store`’s pre-existing modified-but-uncommitted
+state untouched and unmentioned in the close-out report body (only noted
+inline during execution) – should have surfaced it explicitly in the
+close-out summary as “found, not touched, unrelated to this session”
+rather than only in an intermediate turn. **Compared to previous
+sessions in this workstream:** continues the S404-S410 pattern (a
+seventh/eighth instance) of not trusting a first-pass verification
+result at face value – here, catching a scary but false regression
+signal before it could have derailed the close-out with an unnecessary
+rollback-and-debug detour.
+
+**Handoff to Session 412:** - **What’s next:** No open item remains from
+this session’s deliverable. Two Housekeeping items remain in
+`BACKLOG.md`: **`CLAUDE.md`’s “Clean regression read” command needs a
+`load_all()` call added** (READY, Effort S – new this session, Learning
+377) and the pre-existing **LabKey integration recs** (BLOCKED, needs a
+live LabKey server). Time-gated, not yet due: re-check CRAN’s landing
+page for macOS/other binary-flavor publication (only source + Windows
+confirmed as of S410). 9 open GitHub issues remain untriaged, no
+priority set among them. - **Key files:** `README.Rmd:4-6` (the fix);
+`CLAUDE.md:235` (learning-count cross-reference, bumped 376-\>377);
+`BACKLOG.md` (README.html item resolved, new
+`CLAUDE.md`-regression-command item added); `CHANGELOG.md` (2026-07-28
+S411 entry, `[ad hoc]`); `PROJECT_LEARNINGS.md` Learning 377
+(regression- command trap). - **Gotchas:** (1) Always run
+`pkgload::load_all(".", quiet=TRUE)` immediately before any
+[`testthat::test_dir()`](https://testthat.r-lib.org/reference/test_dir.html)/`test_local()`
+regression run – `CLAUDE.md`’s literal “Clean regression read” command
+text doesn’t say to, but omitting it produces mass-spurious failures
+unrelated to anything actually broken (`PROJECT_LEARNINGS.md` Learning
+377). (2) A test run whose failed/error/warning counts don’t match a
+same-day predecessor’s baseline is a signal to check the test
+*invocation* before treating it as a real regression, especially when
+the session’s actual diff is small and unrelated to test infrastructure.
+(3) `.DS_Store` shows as locally modified in `git status` –
+pre-existing, unrelated macOS Finder cruft, not this session’s doing;
+left untouched, out of scope. - **Self-assessment score:** 9/10 (see
+above for full breakdown).
+
 ### What Session 410 Did
 
 **Deliverable:** Owner-directed: execute the pre-declared Phase 6
