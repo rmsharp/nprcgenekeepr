@@ -6,6 +6,26 @@
 
 ## ACTIVE TASK
 
+### What Session 413 Did
+**Deliverable:** Owner-directed (not from `BACKLOG.md`): a plan to announce, advertise,
+and correspond regarding nprcgenekeepr's availability and features to the national
+primate centers, specifically the NPRC Genetics and Genomics Working Group. (IN
+PROGRESS)
+**Started:** 2026-07-28
+**Status:** Session claimed. Scope confirmed via `AskUserQuestion` (2 rounds -- audience
+context clarified conversationally after owner rejected the first question set; the
+final confirmed scope: strategy document + ready-to-edit draft materials (draft
+outreach email, one-page feature summary, presentation outline) as appendices; no known
+target event, so the plan proposes a generic timeline). Contact research in progress
+(background Workflow `wf_13dc386e-06e` researching current WG leadership + per-center
+colony manager/head veterinarian contacts; owner also independently supplying contacts
+in real time: Dr. Martha Lyke (SNPRC/Texas Biomed, mlyke@txbiomed.org), Jon Hennebold
+PhD (ONPRC, hennebjo@ohsu.edu), Jessica Phillips PhD (WNPRC, jphillips@primate.wisc.edu),
+plus general center contacts for Washington and Emory). Work beginning on the plan
+document itself.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### What Session 412 Did
 **Deliverable:** Owner-picked from the Phase 0 priorities list (Housekeeping
 item, flagged S411, `PROJECT_LEARNINGS.md` Learning 377): fix `CLAUDE.md`'s
