@@ -154,6 +154,26 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       failed/0 error/0 warning, 3198 passed, 179 skipped, matching the known-good
       baseline. See `CHANGELOG.md`.)
 
+## Outreach
+- [ ] **NPRC outreach & announcement plan** (DECISION NEEDED -- owner review/edit of
+      drafts + send timing; Effort N/A, not a coding task) -- plan complete:
+      `docs/planning/nprc-outreach-announcement-plan.md` (S413, owner-directed, not
+      from this backlog). Covers audiences (the NPRC Genetics and Genomics Working
+      Group, plus each of the 7 centers' colony-manager/veterinarian contacts), tailored
+      messaging, channels, a sourced 7-center contact roster (director + colony-manager/
+      head-veterinarian-equivalent + genetics contact per center, each with a source),
+      a generic timeline, 5 named risks, and ready-to-edit draft materials (WG email,
+      colony-manager/vet email, one-page feature summary, presentation outline). Two
+      items remain genuinely unresolved after dedicated research, not just undone: the
+      Working Group's current (2026) chair could not be confirmed (recommended action:
+      ask `support@nhprc.org` directly, see the plan's §3/§8); and a colony-manager
+      contact could not be named at 3 of 7 centers (Southwest, Tulane, Washington --
+      the role is undocumented by name on each center's own site). **Next steps are
+      owner-executed, real-world actions** (review/edit the drafts, confirm exact
+      recipients, send) per the plan's own §7 -- pick this up in a future session only
+      if the owner wants help drafting a specific follow-up, not as a general "send the
+      emails" coding task. See `CHANGELOG.md`.
+
 ## Architecture (issue #122 / XARCH-2 -- module contract)
 *Resolved -- S372 planning session through S377 execution (Phases 1-5, all DONE); see
 `CHANGELOG.md` for the per-phase detail (S373 vocabulary-composition fix, S374 kinship

@@ -1,6 +1,7 @@
 # NPRC Outreach & Announcement Plan — nprcgenekeepr 2.0.0
 
-**Status:** DRAFT — Phase 1 (contact roster) in progress
+**Status:** DRAFT — Phase 1 (contact roster) complete; awaiting owner review & sign-off
+(Phase 2) before any correspondence is sent
 **Owner:** R. Mark Sharp, Ph.D. (package maintainer)
 **Session:** S413 (2026-07-28)
 **Deliverable type:** Planning session per `SESSION_RUNNER.md` §Planning Sessions — this
@@ -52,11 +53,19 @@ The natural home audience: geneticists and genomics staff across the 7 centers d
 the kind of colony-genetics work this package automates (studbook QC, kinship/genome-
 uniqueness ranking, breeding-group design).
 
-- **Leadership status:** Jeffrey Rogers (Associate Professor, Molecular and Human
-  Genetics, Baylor College of Medicine; listed as Core Scientist, Wisconsin NPRC;
-  `jr13@bcm.edu`) chaired this group and was still affiliated with it as of 2025 (owner
-  confirmation). **Current (2026) chair status is unconfirmed** — background research in
-  progress (see §6, §8 item 1).
+- **Leadership status (researched exhaustively, still unresolved):** Jeffrey Rogers
+  (Associate Professor, Molecular and Human Genetics, Baylor College of Medicine; Core
+  Scientist, Wisconsin NPRC; `jr13@bcm.edu`) chaired this group and was still affiliated
+  with it as of 2025 (owner confirmation). A dedicated background research pass
+  (Session S413: 8 web searches/fetches targeting this question specifically) could
+  **not** confirm he is still chair in 2026 and could **not** find a named successor —
+  the Working Group's own page (nprcresearch.org) names **no chair or leadership at
+  all**, current or historical; the only leadership-adjacent evidence found is a 2017
+  article thanking three individuals (Ferguson, Norgren, Rogers) with no titles
+  attached, nine years stale. **Do not cite anyone as "current chair" in outreach.**
+  Recommended first move: email the Working Group's own published contact,
+  `support@nhprc.org`, and ask directly who currently chairs it, rather than addressing
+  a named individual who may no longer hold the role (see §8 item 1).
 - **General fallback contact:** `support@nhprc.org` (published on the Working Group's
   own page).
 - **Named individual contact identified:** **Dr. Martha Lyke**, Staff Scientist, Cole
@@ -80,10 +89,13 @@ and animal health at each colony — a distinct audience from the Working Group'
 research-genetics focus, and arguably the audience with the most immediate practical
 use for the tool.
 
-- **Status:** background research in progress (a parallel research pass is
-  specifically targeting named colony-manager/head-veterinarian contacts per center;
-  results were not yet available when this draft was written — see §6 and the note at
-  the top of this section once updated).
+- **Status:** background research complete (Session S413) — a named head-veterinarian
+  (or the closest equivalent regulatory role, e.g. "Attending Veterinarian") was found
+  for all 7 centers. A named colony-manager was confirmed with reasonable confidence at
+  4 of 7 (California, Emory, Oregon, Wisconsin); at the remaining 3 (Southwest, Tulane,
+  Washington) the role is described on the center's own site but **no current
+  incumbent is publicly named anywhere** — reported as "not found," not guessed. See
+  the full per-center detail in §6.
 
 ## 4. Key messages (tailored per audience)
 
@@ -139,33 +151,184 @@ use for the tool.
    R users outside the NPRC consortium itself. Flagged as a possible future add-on, not
    drafted here, since the specific ask was the Working Group and the NPRC network.
 
-## 6. Contact roster (as of 2026-07-28)
+## 6. Contact roster (as of 2026-07-28 — updated after background research, Session S413)
 
-**Sourcing note:** Director and research-coordination-unit contacts below come from the
-NPRC Consortium's own published contact page
-(<https://www.nprcresearch.org/Research/Page/Contact_the_National_Primate_Research_Centers>),
-fetched this session. Named genetics-relevant individual contacts marked "owner-sourced"
-were supplied directly by the package owner during this session, independent of the
-consortium contact page (cross-confirmed where the same name appears on both).
-Colony-manager/head-veterinarian columns are placeholders pending the in-progress
-background research pass — **do not treat blanks below as "none exists"; treat them as
-"not yet confirmed."**
+**Sourcing:** Director and research-coordination-unit contacts come from the NPRC
+Consortium's own published contact page
+(<https://www.nprcresearch.org/Research/Page/Contact_the_National_Primate_Research_Centers>).
+Colony-manager and head-veterinarian contacts come from a dedicated background research
+pass (8 parallel agents, one per center + one on Working Group leadership; 266 web
+fetches/searches total) that fetched each center's own official site directly wherever
+possible and explicitly refused to fabricate a name where none was publicly confirmable.
+Contacts marked "owner-sourced" were supplied directly by the package owner during this
+session, independent of either research pass.
 
-| Center (current official name) | Director | Research-coordination contact | Named genetics/scientific contact | Colony manager | Head veterinarian |
-|---|---|---|---|---|---|
-| California NPRC (UC Davis) | Karen Bales, PhD (Interim) | conductingresearch_cnprc@ucdavis.edu, (530) 752-0447 | *(not yet identified)* | *(pending)* | *(pending)* |
-| Emory National Primate Research Center (recently renamed Emory National Biomedical Research Center; Atlanta) | R. Paul Johnson, MD | ENPRC-nprcresearch@emory.edu, (404) 727-7740 (also enprc-study-intent@emory.edu for research-initiation) | *(not yet identified)* | *(pending)* | *(pending)* |
-| Oregon NPRC (OHSU, Beaverton) | Rudolf P. Bohm Jr., DVM, DACLAM | — | **Jon Hennebold, PhD** (Associate Director for Research), hennebjo@ohsu.edu (owner-sourced, cross-confirmed on consortium page) | *(pending)* | Director is himself DVM/DACLAM-credentialed — worth confirming whether he *is* the head-vet contact or delegates to a distinct role |
-| Southwest NPRC (Texas Biomed, San Antonio) | Corinna Ross, PhD | SNPRCresearch@txbiomed.org, (210) 258-9822 | **Dr. Martha Lyke**, Staff Scientist, Cole Lab, mlyke@txbiomed.org (owner-sourced; see §3) | *(pending)* | *(pending)* |
-| Tulane National Biomedical Research Center (Covington, LA) | Jay Rappaport, PhD | paye@tulane.edu, (985) 871-6486 | *(not yet identified)* | *(pending)* | *(pending)* |
-| Washington National Biomedical Research Center (U. Washington, Seattle) | Deborah H. Fuller, PhD | nprcinfo@uw.edu, (206) 543-0440 | *(not yet identified — owner also found nprcinfo@uw.edu independently)* | *(pending)* | *(pending)* |
-| Wisconsin NPRC (UW-Madison) | Ricardo Carrion, PhD | — | **Dr. Jessica Phillips** (Scientific Protocol Implementation), jphillips@primate.wisc.edu, (608) 209-7108 (owner-sourced, cross-confirmed on consortium page) | *(pending)* | *(pending)* |
+**Important, confirmed this session: 4 of the 7 centers have recently dropped "Primate"
+from their name** (Emory, Washington, and Tulane confirmed via each center's own site;
+California's site-level rebrand to "National Biomedical Research Institute" postdates
+January 2026 and has not yet propagated to federal/consortium records, which still say
+"California National Primate Research Center"). Southwest, Oregon, and Wisconsin remain
+unchanged. **Use each center's own currently-preferred name** in correspondence (given
+below), but expect federal/consortium-level references to lag behind — see §8 item 2.
 
-**Working Group leadership:** Jeffrey Rogers, jr13@bcm.edu — status unconfirmed for
-2026 (see §3, §8 item 1). Fallback: support@nhprc.org.
+### Working Group leadership (Tier 1)
 
-*(This table will be updated once the in-progress background contact research
-completes; see the follow-up note planned for §9.)*
+**Unresolved after dedicated research — see §3.** Jeffrey Rogers (`jr13@bcm.edu`) was
+the last confirmed chair (2025); no 2026 source confirms or denies this. **Recommended
+action: email `support@nhprc.org` and ask, rather than assume.**
+
+### California National Primate Research Center
+
+- **Current official name:** site itself now says "National Biomedical Research
+  Institute (NBRI)"; federal (NIH ORIP) and consortium records still say "California
+  National Primate Research Center (CNPRC)" — the rebrand is very recent (site
+  content only, not yet propagated). Use "CNPRC" for now; consider double-checking
+  before sending.
+- **Director:** Karen L. Bales, Ph.D. — appointed effective 2026-01-01.
+- **Colony manager (closest equivalent, moderate confidence):** Diane E. Stockinger,
+  DVM, DACLAM — `dstockinger@ucdavis.edu`. Title characterization relies on secondary
+  sources (not a directly verified official staff page); the prior exact-title holder
+  (Jennifer Short) retired ~2020 and should not be used.
+- **Head veterinarian (closest equivalent):** Jeffrey A. Roberts, DVM, DACLAM —
+  Associate Director, Primate Services; `jaroberts@ucdavis.edu`, 530-752-6490 (email/
+  phone sourced from a 2016 article — likely still valid for a long-tenured faculty
+  member, but not independently re-confirmed this year).
+- **Also relevant:** Lisa A. Miller, Ph.D. (Associate Director, Research Services) —
+  the clearest current leadership-tier equivalent if a more senior contact than an
+  operations-level one is preferred. General contact: `cnprc-info@ucdavis.edu`.
+- **Access note:** the center's own website blocked automated fetching (Cloudflare
+  403) for every method tried; the above was reconstructed from independent secondary
+  sources (NIH ORIP's directory, UC Davis News, UC Davis Profiles), not read directly
+  off the center's own pages. Recommend a human open
+  <https://nbri.ucdavis.edu/contact-us> directly to get a first-party org chart before
+  relying on this for anything time-sensitive.
+
+### Emory National Biomedical Research Center
+
+- **Current official name:** Emory National Biomedical Research Center (ENBRC) —
+  renamed from Emory National Primate Research Center (itself renamed away from
+  "Yerkes National Primate Research Center" in April 2022). Confirmed via the center's
+  own site redirect (enprc.emory.edu → enbrc.emory.edu).
+- **Director:** R. Paul Johnson, MD.
+- **Colony manager:** Daniel Coppeto, PhD — Colony Director, Division of Animal
+  Resources. **No individual email/phone published anywhere on the official site** —
+  route through `enbrc-hr@emory.edu` or the general line if needed; do not guess an
+  address.
+- **Head veterinarian:** Joyce Cohen, VMD, DACLAM — Associate Director for Animal
+  Resources and Attending Veterinarian; `joyce.cohen@emory.edu` (sourced from her
+  official bio page).
+- **Also relevant:** Fawn Connor-Stroud, DVM, DACLAM (Assistant Division Chief) and
+  Jennifer Wood, VMD, DACLAM (Chief of Clinical Operations) — alternative veterinary
+  contacts if Cohen is not the right fit. General contact: `enbrc@emory.edu`,
+  404-727-7712.
+
+### Oregon National Primate Research Center
+
+- **Current official name:** unchanged — "Oregon National Primate Research Center
+  (ONPRC)."
+- **Director:** Rudolf P. "Skip" Bohm, Jr., DVM, DACLAM — `bohm@ohsu.edu`; former
+  Chair, NIH Nonhuman Primate Breeding Colony Management Consortium (directly
+  relevant background for this outreach).
+- **Colony manager (closest equivalent):** Lauren Drew Martin, DVM, DACLAM —
+  Associate Director, Animal Resources & Research Support; also Director, Time-Mated
+  Breeding Program; `martilau@ohsu.edu`, 503-346-5141.
+- **Head veterinarian:** Jeffrey J. Stanton, DVM, MA, DACLAM — Attending Veterinarian,
+  OHSU West Campus; `stantoje@ohsu.edu`, 503-346-5283 (email independently confirmed
+  inside an official OHSU-hosted 2025-2026 ONPRC Outreach Overview PDF, not just a
+  search-engine snippet).
+- **Genetics/Tier-1 contact:** Jon Hennebold, PhD — Associate Director for Research.
+  **⚠ Email discrepancy:** owner-supplied as `hennebjo@ohsu.edu`; this session's
+  research independently sourced `henneboj@ohsu.edu` from
+  <https://www.ohsu.edu/onprc/contact-us> (same two letters, transposed). **Confirm the
+  correct address directly before sending anything to him** — do not assume either
+  spelling.
+- **Also relevant:** Lisa Kendig, Chief Operating Officer, `kendigl@ohsu.edu`.
+
+### Southwest National Primate Research Center
+
+- **Current official name:** unchanged — "Southwest National Primate Research Center
+  (SNPRC)," hosted at Texas Biomedical Research Institute (a private institute, not a
+  university).
+- **Director:** Corinna Ross, PhD.
+- **Colony manager:** **not found.** No individual holds an exact "Colony Manager"
+  title on SNPRC's own Leadership Group page. Closest operational analogue: Journey
+  Cole, Assistant Director of Operations (coordinates animal resources/study
+  scheduling) — not a colony-management title per se, reported as a lead, not a match.
+- **Head veterinarian:** Kathryn Shelton, DVM, PhD, DACLAM — Associate Director for
+  Veterinary Resources & Institute Attending Veterinarian. No individual email/phone
+  published anywhere; use the general line (210) 258-9400 or
+  <https://snprc.org/contact-us/>.
+- **Genetics/Tier-1 contact:** Dr. Martha Lyke, Staff Scientist, Cole Lab —
+  `mlyke@txbiomed.org` (owner-sourced; see §3) — corresponding author on a 2026 SNPRC
+  rhesus-colony genetic-structure study, independent of and complementary to the
+  Tier-3 names above.
+- **General contact:** `SNPRCresearch@txbiomed.org`, (210) 258-9822.
+
+### Tulane National Biomedical Research Center
+
+- **Current official name:** Tulane National Biomedical Research Center (TNBRC) —
+  renamed from Tulane National Primate Research Center effective 2025-10-09 (confirmed
+  via a Tulane News press release and the tnprc.tulane.edu → tnbrc.tulane.edu
+  redirect).
+- **Director:** Jay Rappaport, PhD — Director and Chief Academic Officer.
+- **Colony manager:** **not found.** TNBRC's own site describes a "breeding colony
+  manager" role (part of the Breeding Colony Management Committee) but does not name
+  the current incumbent anywhere checked (Leadership, Divisions, Animal Resources,
+  Contact Us).
+- **Head veterinarian:** Kasi Russell-Lodrigue, DVM, PhD, DACLAM — Associate Director
+  and Chief Veterinary Medical Officer, Chair of the Division of Veterinary Medicine;
+  `kerussel@tulane.edu`, (985) 871-6496 (sourced from her own official faculty page — a
+  different, likely-stale phone number appeared in a third-party directory and was
+  deliberately not used).
+- **Genetics/Tier-1 contact:** Eric Vallender, PhD — Director, Genetics and Genome
+  Banking Core (maintains the colony's DNA/pedigree archive); `evallender@tulane.edu`.
+  Directly relevant to a genetics-focused pitch.
+- **Also relevant:** Pyone Pyone Aye, PhD — Director of Collaborative Research,
+  `paye@tulane.edu` (matches the contact the consortium page itself listed).
+
+### Washington National Biomedical Research Center
+
+- **Current official name:** Washington National Biomedical Research Center (WaNBRC)
+  — renamed from Washington National Primate Research Center; confirmed via the
+  center's own "New Name, Same Mission" page and a Feb. 2026 student-newspaper
+  article. (Do not confuse with Wisconsin's WNPRC, a different institution — an early
+  search result nearly conflated the two.)
+- **Director:** Deborah H. Fuller, PhD — permanent director as of 2024-11-01.
+- **Colony manager:** **not found.** The official site describes a Colony Manager
+  role within its staffing structure but never names the current incumbent on any
+  page checked.
+- **Head veterinarian (moderate confidence):** Christina L. Cruzen, DVM, DACLAM —
+  listed as Interim Associate Director, Animal Resources per the NIH ORIP directory
+  (206-616-6254); she separately holds the university-wide UW "Attending Veterinarian
+  & Director" role. No public email found — do not guess one.
+- **⚠ Discarded during research:** a web-search summary invented two fictitious
+  veterinarian names ("Dr. Lane," "Dr. Barras") attributed to WaNPRC; the research
+  agent found zero corroboration for either and explicitly did not report them. Flagged
+  here so this fabrication doesn't resurface from a different search later.
+- **General contact:** `nprcinfo@uw.edu`, (206) 543-0440 (matches what the owner found
+  independently).
+
+### Wisconsin National Primate Research Center
+
+- **Current official name:** unchanged — "Wisconsin National Primate Research Center
+  (WNPRC)."
+- **Director:** Ricardo Carrion, Jr., PhD — began 2025-11-03, succeeding Jon Levine
+  (stepped down 2024-12-31); Dr. Capuano (below) served as interim director between.
+- **Colony manager (probable, not verbatim-confirmed):** Bonnie Friscino —
+  `friscino@primate.wisc.edu`, listed as the sole named contact under "Colony
+  Services" on the official contact page, distinct from five named supervisors; no
+  page explicitly attaches the title "Colony Manager" to her name, but the
+  organizational structure strongly implies it.
+- **Head veterinarian:** Saverio "Buddy" Capuano, DVM, DACLAM — Associate Director of
+  Animal Services / Attending Veterinarian; `capuano@primate.wisc.edu`, (608) 263-3571
+  (confirmed via his own staff bio page — highest-confidence contact in this table).
+- **Genetics/Tier-1 contact:** Dr. Jessica Phillips (Scientific Protocol
+  Implementation), `jphillips@primate.wisc.edu`, (608) 209-7108 (owner-sourced; role
+  is research/regulatory rather than colony-management, complementary to the Tier-3
+  names above, not independently re-confirmed by this session's research pass).
+- **Also relevant:** Dr. Shreya Patel Larson (Veterinary Services Head),
+  `slarson@primate.wisc.edu`; Janet Walasek (Colony Records),
+  `colrecords@primate.wisc.edu`.
 
 ## 7. Timeline (generic — no known target event)
 
@@ -175,7 +338,7 @@ one is known (e.g. a confirmed Working Group call).
 
 | Phase | What DONE looks like | Notes |
 |---|---|---|
-| **1. Confirm the roster** | Working Group chair confirmed (or a documented best-available fallback), and a named colony-manager and/or head-veterinarian contact identified for all 7 centers, each with a source. | In progress this session — background research pass + owner's own lookups. |
+| **1. Confirm the roster** | Working Group chair confirmed (or a documented best-available fallback), and a named colony-manager and/or head-veterinarian contact identified for all 7 centers, each with a source. | **DONE this session.** WG chair: no confirmable name — documented fallback (`support@nhprc.org`) in place. Head-veterinarian-equivalent found for all 7 centers; colony-manager found for 4/7, honestly reported not-found for the other 3 (§6). |
 | **2. Owner review & sign-off** | Owner has read and edited the draft correspondence (Appendices A/A2), confirmed exact recipients, and approved send order (Working Group first, per §5). | Owner-only step — cannot be delegated. |
 | **3. Initial outreach — Working Group** | Email sent to the confirmed Working Group contact; either a reply received or a 2–3 week follow-up date reached with no reply. | First send, per §5 item 1. |
 | **4. Per-center outreach** | Practitioner email (Appendix A2) sent to Tier 2/3 contacts at all 7 centers; replies/no-replies logged. | Per §5 item 2; can run in parallel with Phase 3 follow-up waiting, not necessarily strictly sequential. |
@@ -192,13 +355,19 @@ where the owner wants help drafting a specific follow-up.
    currently chairs the group, the fallback is the general `support@nhprc.org`
    address — lower-signal than a named individual. **Decision needed (owner):** send to
    the general address now, or hold for a confirmed name.
-2. **Contact information may be stale.** Staff turnover is normal, and the fact that
-   three of the seven centers have recently been renamed from "National Primate
-   Research Center" to "National Biomedical Research Center" suggests active
-   organizational change across the network right now — which raises the odds that
-   other listed roles/contacts have also recently changed. Recommend a light-touch
-   verification (e.g. a quick check of each center's current staff directory) before
-   any mass-send, rather than trusting a single scraped contact page as final.
+2. **Contact information may be stale — now confirmed as a live pattern, not just a
+   risk.** Background research (§6) confirmed 4 of 7 centers have renamed themselves
+   within roughly the last year (Emory, Washington, Tulane fully; California's site
+   rebrand is newer still and hasn't reached federal records yet) — active
+   organizational change is happening across the network right now, and it directly
+   coincided with several *director* changes turning up mid-research (Wisconsin:
+   new director Nov. 2025; California: new director Jan. 2026; Washington: director
+   made permanent Nov. 2024 after an interim period). Several roles below also could
+   not be confirmed to the individual level at all (colony manager at Southwest,
+   Tulane, and Washington) despite a dedicated research pass. **Do not treat any name
+   in §6 as guaranteed current** — a light-touch verification (a quick call, or
+   checking the center's current staff directory the day before sending) is
+   recommended before any actual send, not just at plan-writing time.
 3. **Tone and authorship.** The email should come from the owner as the package's
    current maintainer, referencing the tool's ONPRC/SNPRC origin and its peer-reviewed
    methodological basis — framed as "here's a shared resource from within the network,"
@@ -217,14 +386,15 @@ where the owner wants help drafting a specific follow-up.
 - [x] Plan document written with sourced facts (grep-based evidence from this repo's
       own `DESCRIPTION`/`NEWS.md`/`CHANGELOG.md`, plus WebSearch/WebFetch-sourced facts
       about the external NPRC network, all cited inline).
-- [ ] Contact roster (§6) finalized — pending in-progress background research; **this
-      item blocks close-out** and will be updated in place once results return.
-  - [ ] append a short **"Session 413 addendum"** note once the background research
-      pass (`wf_13dc386e-06e`) completes, resolving any of: WG chair status, per-center
-      colony-manager names, per-center head-veterinarian names, or any corrected
-      official center names.
-- [ ] Each phase in §7 has explicit completion criteria (done above) and is marked as
-      an owner-executed action beyond Phase 1, not a further coding session.
+- [x] Contact roster (§6) finalized: background research pass (`wf_13dc386e-06e`, 8
+      agents, 266 fetches/searches) completed and folded in. WG chair status remains
+      genuinely unresolved (not a gap in research — the source itself names no one);
+      head-veterinarian-equivalent found for all 7 centers; colony-manager found for
+      4 of 7, honestly reported as not-found (not guessed) for the other 3. One
+      unresolved contact-detail discrepancy flagged (Jon Hennebold's email, §6) for the
+      owner to resolve before sending.
+- [x] Each phase in §7 has explicit completion criteria (see the table) and is marked
+      as an owner-executed action beyond Phase 1, not a further coding session.
 - [ ] Close-out: evaluate S412's handoff, self-assess, write the `HANDOFFS.md` receipt,
       record the `CHANGELOG.md` ledger entry, commit, STOP.
 

@@ -62,16 +62,16 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S413
 date: 2026-07-28
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Develop a plan (docs/planning/) to announce, advertise, and correspond regarding nprcgenekeepr's availability and features to the national primate centers, specifically the NPRC Genetics and Genomics Working Group.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- wrote docs/planning/nprc-outreach-announcement-plan.md, a plan to announce nprcgenekeepr 2.0.0 to the NPRC network and the Genetics and Genomics Working Group. Owner review/sign-off + sending is the owner's own next step, not a further coding session.
+what_was_done: Scoped via two AskUserQuestion rounds (first rejected by owner to correct audience context -- Amanda Vinson no longer in the program). Launched an 8-agent background Workflow (wf_13dc386e-06e) researching current WG leadership + per-center colony-manager/head-veterinarian contacts (266 fetches/searches), while the owner supplied contacts conversationally in real time. Drafted and checkpoint-committed the plan (5f113b73), then folded in the completed research: the WG's own page names no chair at all (corrected the plan to warn against citing anyone as current chair); replaced the placeholder contact table with a sourced 7-center roster; flagged one real discrepancy (two spellings of Jon Hennebold's email) and preserved one caught hallucination (a search-summary's fictitious veterinarian names) as a documented warning. Explicitly asked the owner whether to commit+push a document naming real third parties to this public repo -- owner approved as-is. Added a BACKLOG.md Outreach item and PROJECT_LEARNINGS.md Learnings 378-379.
+next_steps: No open item from this session's own deliverable. BACKLOG.md's new Outreach item tracks owner-executed follow-up (review/edit drafts, confirm recipients, send) -- not a coding pickup unless the owner wants help drafting a specific follow-up. Otherwise unchanged from S412: LabKey integration recs (BLOCKED, Effort M), time-gated CRAN binary-flavor recheck, 9 untriaged GitHub issues (#123, #116, #37, #36, #28, #12, #11, #10, #5).
+key_files: docs/planning/nprc-outreach-announcement-plan.md (the plan, 529 lines), BACKLOG.md (new Outreach section), PROJECT_LEARNINGS.md Learnings 378-379, CLAUDE.md:235 (learning-count cross-ref).
+gotchas: The roster names real people's direct emails/phones -- re-verify currency before reuse (4 of 7 centers renamed within the last year, correlating with several director changes). Jon Hennebold's email has two conflicting spellings on record, unresolved -- do not pick one without asking. The WG's current chair is genuinely unconfirmed, not just unresearched -- the source itself names no one; the plan's own recommendation is to ask support@nhprc.org directly rather than keep searching. .DS_Store still shows modified -- pre-existing, untouched.
+runtime_smoke: n/a -- docs-only planning deliverable, no R/ package runtime behavior changed.
+changelog_ref: CHANGELOG.md 2026-07-28 "NPRC outreach and announcement plan (Session 413)"
 commit: pending
 ```
 
