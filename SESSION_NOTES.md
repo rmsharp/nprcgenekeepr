@@ -12,16 +12,162 @@
 triggered by CRAN's Windows-binary-build notification email confirming the
 2.0.0 submission was accepted (independently confirmed via CRAN's live
 package page: version 2.0.0, published 2026-07-26). Tag + dev-version bump
-were already done ahead of time in S407; this session covers the
+were already done ahead of time in S407; this session covered the
 remainder: create the missing v2.0.0 GitHub Release, delete
 `CRAN-SUBMISSION`, update `NEWS.Rmd`'s stale "under review" dev-version
 note, re-knit `README.md` (independently stale since the S407 dev-version
-bump), and update `BACKLOG.md`/`CHANGELOG.md`. (IN PROGRESS)
-**Started:** 2026-07-28
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are
-recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the
-crash breadcrumb for the next session's reconcile.
+bump, owner-approved additional scope), and update `BACKLOG.md`/
+`CHANGELOG.md`. **DONE.**
+**Started/Completed:** 2026-07-28 / 2026-07-28
+**Status:** DONE. TDD Phase: N/A throughout -- packaging/release/
+documentation housekeeping only, no `R/`/`tests/` code touched, confirmed
+via an explicit pre-work `AskUserQuestion`.
+
+**What happened, in order:** **(1)** User shared a CRAN automated
+Windows-binary-build notification email. Rather than taking it at face
+value, `WebFetch`'d CRAN's live package page directly -- confirmed version
+2.0.0, published 2026-07-26 (the pending S397/S399 submission had been
+accepted). **(2)** Found this project already had a pre-declared,
+owner-approved plan for exactly this moment:
+`docs/planning/cran-2.0.0-submission-plan.md`'s Phase 6 (Post-acceptance,
+3 steps: tag, GitHub release, dev-version bump). Investigated before
+proposing: `gh release list` showed no v2.0.0 release existed (v1.0.7
+still "Latest"); confirmed the tag + dev-version bump were already done
+ahead of time in S407, before acceptance was known. Separately noticed
+`README.md` was stale independent of today's news (predated the S407
+dev-version bump, never re-rendered after it). **(3)** Presented the full
+plan -- exactly the remaining Phase 6 steps plus the README finding -- via
+`AskUserQuestion` before touching any file; owner chose to bundle the
+README fix in. **(4)** Claimed the session (`9e78a3b7`). Created the
+`v2.0.0` GitHub Release manually via `gh release create` (notes from
+`NEWS.md`'s 2.0.0 section) rather than `usethis::use_github_release()` as
+the plan literally named -- a deliberate deviation for more control/
+transparency on an already-dev-bumped tree, not surfaced to the owner as
+its own decision point (see self-assessment weakness #2). Deleted
+`CRAN-SUBMISSION` (`.Rbuildignore`'d, job resolved, matching this
+project's own precedent at `96a0f67c`). Fixed `NEWS.Rmd`'s stale "under
+review" note, re-rendered to `NEWS.md` (isolated 3-line diff). Re-knit
+`README.Rmd` -> `README.md`: first render silently used the STALE
+*installed* package version (`2.0.0`, not the source tree's
+`2.0.0.9000`) since nobody had reinstalled since S407's bump -- caught by
+comparing `packageVersion()` against `DESCRIPTION` before trusting the
+render, fixed via `devtools::install(quick = TRUE, upgrade = FALSE)`,
+re-rendered clean (isolated 2-line diff: date + version string only; see
+`PROJECT_LEARNINGS.md` Learning 376). Removed a stray untracked
+`README.html` byproduct the render left behind (not `.gitignore`'d).
+Pruned `BACKLOG.md`'s ~220-line, multi-session CRAN saga down to a
+concise resolved-item pointer (full session-by-session history already in
+`CHANGELOG.md`, confirmed via grep before pruning). Added a small
+Housekeeping follow-up item for the `README.html` byproduct gap
+(Learning 376(b)) rather than fixing it in-session (out of this session's
+approved scope). **(5)** Verified before committing: `gh release view` /
+`gh release list` confirm the release live and marked "Latest"; `git
+diff` on `NEWS.md`/`README.md` both isolated to intended lines; full
+regression suite `0 failed/0 error/0 warning` (3198 passed, 179 skipped,
+matching the S409 baseline exactly) as a post-reinstall sanity check;
+repo-wide grep swept for other stale "under review"/"pending" CRAN-status
+language in live docs (none found outside historical ledgers, which are
+correctly append-only and untouched).
+**Ledger:** See `CHANGELOG.md` 2026-07-28 S410 entry (`[ad hoc]`).
+
+**Session 409 Handoff Evaluation (by Session 410): 8/10.** **What helped:**
+S409 closed out cleanly (clean tree, both ledgers reconciled to HEAD,
+no ghost sessions) -- Phase 0 orientation this session found zero gaps to
+untangle before the actual task could start. Its BACKLOG.md entry
+correctly recorded the CRAN resubmission item as BLOCKED with no
+engineering action open, which is exactly what let this session recognize
+instantly that today's new information (the CRAN email) resolved that
+specific, already-documented item rather than needing to reconstruct its
+status from scratch. **What was missing:** nothing S409 could have
+anticipated -- this session's actual trigger (a CRAN acceptance email) is
+an external event unrelated to S409's own pkgdown-dropdown deliverable;
+its handoff had no direct bearing on solving today's task beyond the
+clean, accurately-documented state it left behind. **What was wrong:**
+nothing found. **ROI:** moderate -- the handoff's value this session was
+infrastructural (a trustworthy starting state) rather than content
+directly reused, which is a fair, expected outcome when consecutive
+sessions address unrelated triggers.
+
+**Self-assessment (Session 410): 8/10.** **Strengths:** (1) did not take
+the CRAN email at face value -- independently `WebFetch`'d CRAN's live
+package page before treating acceptance as confirmed, consistent with
+this project's established discipline (`PROJECT_LEARNINGS.md` Learning 95)
+of verifying external CRAN state firsthand rather than trusting a
+secondhand summary; (2) found and followed the project's own pre-declared
+Phase 6 plan rather than improvising post-acceptance steps from scratch,
+and caught that 2 of its 3 steps were already done ahead of time in S407;
+(3) presented the full plan (including a tangential finding, README's
+independent staleness) via `AskUserQuestion` before touching any file,
+per this project's established convention for doc/release sessions even
+though TDD phase is N/A; (4) investigated root cause before re-rendering
+README rather than just re-running the render and shipping whatever came
+out -- found the locally *installed* package was stale relative to
+`DESCRIPTION`, which would have produced a wrong, inconsistent version
+string had it gone unnoticed; this is now `PROJECT_LEARNINGS.md`
+Learning 376; (5) cleaned up a stray `README.html` render byproduct
+rather than leaving accidental untracked cruft, and separately logged its
+root cause as a small Housekeeping backlog item instead of silently
+expanding scope to fix the frontmatter/`.gitignore` gap in-session; (6)
+pruned `BACKLOG.md`'s multi-session CRAN saga to a concise resolved
+pointer only after confirming (via grep) the full detail already lived
+safely in `CHANGELOG.md`, consistent with this project's own
+BACKLOG-vs-CHANGELOG convention; (7) ran a full regression suite as a
+post-reinstall sanity check even though no `R/`/`tests/` code was touched,
+and did a repo-wide grep sweep for other stale CRAN-status language
+before declaring the sweep complete, rather than trusting the two files
+named in the plan were the only ones needing a fix. **Weaknesses:** (1)
+did not check whether CRAN's macOS binary (or other flavors) had also
+published -- only confirmed the source tarball (via `WebFetch`) and the
+Windows binary (via the triggering email); the Phase 6 plan's own
+verification step ("verify... across flavors after a few days") is only
+partially satisfied 2 days post-publish, and this should be flagged as a
+still-open, time-gated check for a future session rather than silently
+treated as fully verified; (2) chose to create the GitHub Release via
+manual `gh release create` instead of `usethis::use_github_release()` as
+the plan literally specified -- a reasoned, deliberate deviation (more
+transparency/control on an already-dev-bumped tree, avoiding an R
+function's less-predictable interactive behavior in this state), but this
+specific HOW-to-execute choice was decided unilaterally mid-session
+rather than surfaced as its own option in the original `AskUserQuestion`,
+which only described the WHAT (create the release) -- a stricter reading
+of "ask when deviating from an approved plan's literal steps" would have
+raised it explicitly. **Compared to previous sessions in this workstream:**
+continues the S404-S409 pattern of verifying a stated/assumed mechanism
+against real, firsthand state before trusting it (here: CRAN's actual
+live package page, and the actual installed package version, rather than
+the email's wording or an assumed-fresh render) -- a seventh instance.
+
+**Handoff to Session 411:**
+- **What's next:** No open item remains from this session's deliverable.
+  CRAN 2.0.0's post-acceptance housekeeping (Phase 6) is complete: GitHub
+  Release live, `CRAN-SUBMISSION` deleted, `NEWS.Rmd`/`README.Rmd` current.
+  Two backlog items remain: **LabKey integration recs** (BLOCKED, needs a
+  live LabKey server) and the new **README.html byproduct** housekeeping
+  item (READY, Effort S -- see `BACKLOG.md` Housekeeping section, Learning
+  376(b)). Time-gated, not yet due: re-check CRAN's landing page in a few
+  more days to confirm binaries have published across all flavors (macOS
+  unconfirmed as of this session; only source + Windows confirmed).
+- **Key files:** `docs/planning/cran-2.0.0-submission-plan.md:324` (Phase 6
+  spec, now executed); `NEWS.Rmd:15-17` (fixed dev-version note);
+  `README.Rmd` (frontmatter gap, Learning 376(b), not yet fixed);
+  `BACKLOG.md` (CRAN item resolved-pointer + new Housekeeping item);
+  `CHANGELOG.md` (2026-07-28 S410 entry, `[ad hoc]`);
+  `PROJECT_LEARNINGS.md` Learning 376 (installed-vs-source version trap).
+- **Gotchas:** (1) Before re-rendering ANY `.Rmd` that calls
+  `getVersion()`/`packageVersion()` after a `DESCRIPTION` version bump,
+  reinstall the package first (`devtools::install(quick = TRUE, upgrade =
+  FALSE)`) -- `pkgload::load_all()` correctly tracks the source tree, but
+  `rmarkdown::render()` runs in a fresh session against whatever's
+  actually installed in the library, which can silently lag by a full
+  version segment with no warning. (2) `README.Rmd` leaves an untracked,
+  ungitignored `README.html` byproduct on every render -- remove it before
+  committing, or fix the underlying frontmatter/`.gitignore` gap (now a
+  BACKLOG.md Housekeeping item). (3) The `v2.0.0` git tag's own message
+  still says "pending review" -- this is intentionally NOT rewritten (tag
+  messages are historical, immutable-by-convention records of what was
+  known when the tag was made); the GitHub Release description is the
+  living, correct-as-of-now status instead.
+- **Self-assessment score:** 8/10 (see above for full breakdown).
 
 ### What Session 409 Did
 **Deliverable:** Owner-directed: remove the "nprcgenekeepr: " prefix from

@@ -62,21 +62,52 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S410
 date: 2026-07-28
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Execute pre-declared Phase 6 (Post-acceptance) from
-  docs/planning/cran-2.0.0-submission-plan.md now that CRAN accepted
-  2.0.0 (confirmed live, published 2026-07-26). Create v2.0.0 GitHub
-  Release, delete CRAN-SUBMISSION, fix stale NEWS.Rmd dev-version note,
-  re-knit README.md, update BACKLOG.md/CHANGELOG.md.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- executed pre-declared Phase 6 (Post-acceptance) from
+  docs/planning/cran-2.0.0-submission-plan.md now that CRAN accepted 2.0.0
+  (confirmed live, published 2026-07-26). v2.0.0 GitHub Release live,
+  CRAN-SUBMISSION deleted, NEWS.Rmd/README.Rmd current, BACKLOG.md/
+  CHANGELOG.md updated.
+what_was_done: WebFetch'd CRAN's live package page to independently
+  confirm acceptance before acting on the email. Found the pre-declared
+  Phase 6 plan; tag + dev-version bump already done in S407. Created
+  v2.0.0 GitHub Release via gh release create (github.com/rmsharp/
+  nprcgenekeepr/releases/tag/v2.0.0). Deleted CRAN-SUBMISSION. Fixed
+  NEWS.Rmd's stale "under review" note, re-rendered NEWS.md. Reinstalled
+  the package (devtools::install) after discovering the first
+  README.Rmd render silently used the stale installed 2.0.0 instead of
+  source 2.0.0.9000; re-rendered clean, removed the stray untracked
+  README.html byproduct. Pruned BACKLOG.md's CRAN item to a resolved
+  pointer (full history stays in CHANGELOG.md). Full regression suite
+  0 failed/0 error/0 warning (3198 passed) as a post-reinstall sanity
+  check. Added PROJECT_LEARNINGS.md Learning 376. Commits: 9e78a3b7
+  (claim), 6f51fdb0 (Phase 6 execution).
+next_steps: Nothing open from this deliverable. Two backlog items remain:
+  LabKey integration recs (BLOCKED, needs live LabKey server) and the new
+  README.html byproduct housekeeping item (READY, Effort S, see
+  BACKLOG.md Housekeeping + Learning 376(b)). Time-gated, not yet due:
+  re-check CRAN's landing page in a few more days to confirm binaries
+  published across all flavors (only source + Windows confirmed so far).
+key_files: docs/planning/cran-2.0.0-submission-plan.md:324 (Phase 6 spec,
+  now executed), NEWS.Rmd:15-17 (fixed note), README.Rmd (html_preview
+  gap, Learning 376(b), not yet fixed), BACKLOG.md (CRAN resolved-pointer
+  + new Housekeeping item), PROJECT_LEARNINGS.md Learning 376.
+gotchas: Reinstall the package (devtools::install) before re-rendering
+  any .Rmd calling getVersion()/packageVersion() after a DESCRIPTION
+  bump -- rmarkdown::render() uses the installed library, not
+  pkgload::load_all()'s source tree, and can silently lag a full version
+  segment with no warning. README.Rmd leaves an untracked, ungitignored
+  README.html on every render (BACKLOG.md Housekeeping item, not yet
+  fixed). The v2.0.0 git tag message still says "pending review" --
+  intentionally left as a historical record; the GitHub Release
+  description is the current-status source of truth instead.
+runtime_smoke: n/a -- docs/packaging-only session, no R/ runtime behavior
+  changed. Full regression suite run anyway as a post-reinstall sanity
+  check (0 failed/0 error/0 warning, 3198 passed, matching S409 baseline).
+changelog_ref: CHANGELOG.md 2026-07-28 S410 entry (ad hoc)
+commit: 6f51fdb0
 ```
 (receipt completed at Phase 3D close-out)
 

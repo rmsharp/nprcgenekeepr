@@ -43,6 +43,22 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-28 · [ad hoc] Close-out: predecessor evaluation, self-assessment, Learning 376, HANDOFFS.md receipt (Session 410)
+- **Deliverable:** Phase 3 close-out for this session's CRAN post-acceptance housekeeping
+  (see the entry below). Evaluated S409's handoff (8/10 -- clean state and an accurately
+  BLOCKED CRAN item let this session recognize instantly that today's new information
+  resolved it, though the handoff had no direct content overlap with today's externally
+  triggered task). Self-assessed 8/10 (docked for not surfacing the `gh release create`
+  vs. `usethis::use_github_release()` deviation as its own decision point, and for only
+  partially verifying binary-flavor publication 2 days post-accept). Added
+  `PROJECT_LEARNINGS.md` Learning 376 (installed-vs-source package version trap when
+  re-rendering `getVersion()`-dependent docs, plus the `README.html` render byproduct
+  gap) and a `BACKLOG.md` Housekeeping follow-up item for the latter. Bumped `CLAUDE.md`'s
+  learning-count cross-reference (375 -> 376). Completed the `HANDOFFS.md` S410 receipt
+  (`status: pending` -> `complete`).
+- **TDD Phase:** N/A -- pure documentation/close-out bookkeeping, no `R/`/`tests/` code
+  touched.
+
 ### 2026-07-28 · [ad hoc] CRAN 2.0.0 post-acceptance housekeeping -- Phase 6 (Session 410)
 - **Deliverable:** owner-directed, triggered by CRAN's automated Windows-binary-build
   notification email. Independently confirmed via CRAN's live package page
