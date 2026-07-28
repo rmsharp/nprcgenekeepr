@@ -6,6 +6,16 @@
 
 ## ACTIVE TASK
 
+### What Session 412 Did
+**Deliverable:** Owner-picked from the Phase 0 priorities list (Housekeeping
+item, flagged S411, `PROJECT_LEARNINGS.md` Learning 377): fix `CLAUDE.md`'s
+documented "Clean regression read" command, which produces mass-spurious
+failures unless preceded by `pkgload::load_all(".", quiet=TRUE)`.
+**Started:** 2026-07-28
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F.
+
 ### What Session 411 Did
 **Deliverable:** Owner-picked from the Phase 0 priorities list (Housekeeping
 item, flagged S410, `PROJECT_LEARNINGS.md` Learning 376(b)): stop `README.Rmd`

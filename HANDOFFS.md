@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S412
+date: 2026-07-28
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix CLAUDE.md's "Clean regression read" command to prepend pkgload::load_all(".", quiet=TRUE), per Learning 377.
+what_was_done: pending
+next_steps: pending
+key_files: CLAUDE.md (the "Clean regression read" row)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S411
 date: 2026-07-28
 status: complete
