@@ -6,6 +6,23 @@
 
 ## ACTIVE TASK
 
+### What Session 410 Did
+**Deliverable:** Owner-directed: execute the pre-declared Phase 6
+(Post-acceptance) from `docs/planning/cran-2.0.0-submission-plan.md`,
+triggered by CRAN's Windows-binary-build notification email confirming the
+2.0.0 submission was accepted (independently confirmed via CRAN's live
+package page: version 2.0.0, published 2026-07-26). Tag + dev-version bump
+were already done ahead of time in S407; this session covers the
+remainder: create the missing v2.0.0 GitHub Release, delete
+`CRAN-SUBMISSION`, update `NEWS.Rmd`'s stale "under review" dev-version
+note, re-knit `README.md` (independently stale since the S407 dev-version
+bump), and update `BACKLOG.md`/`CHANGELOG.md`. (IN PROGRESS)
+**Started:** 2026-07-28
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the
+crash breadcrumb for the next session's reconcile.
+
 ### What Session 409 Did
 **Deliverable:** Owner-directed: remove the "nprcgenekeepr: " prefix from
 the colony-manager-guide article's title (affects the Articles dropdown

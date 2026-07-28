@@ -60,6 +60,27 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S410
+date: 2026-07-28
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Execute pre-declared Phase 6 (Post-acceptance) from
+  docs/planning/cran-2.0.0-submission-plan.md now that CRAN accepted
+  2.0.0 (confirmed live, published 2026-07-26). Create v2.0.0 GitHub
+  Release, delete CRAN-SUBMISSION, fix stale NEWS.Rmd dev-version note,
+  re-knit README.md, update BACKLOG.md/CHANGELOG.md.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+(receipt completed at Phase 3D close-out)
+
+```handoff
 session: S409
 date: 2026-07-21
 status: complete
