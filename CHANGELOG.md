@@ -43,6 +43,41 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-28 · [ad hoc] CRAN 2.0.0 post-acceptance housekeeping -- Phase 6 (Session 410)
+- **Deliverable:** owner-directed, triggered by CRAN's automated Windows-binary-build
+  notification email. Independently confirmed via CRAN's live package page
+  (cran.r-project.org/package=nprcgenekeepr): version 2.0.0, published 2026-07-26 --
+  the pending submission (tagged `v2.0.0`, S407) was accepted. Executed the remaining
+  steps of the pre-declared Phase 6 (Post-acceptance) from
+  `docs/planning/cran-2.0.0-submission-plan.md:324` (the `v2.0.0` tag and the
+  `DESCRIPTION` dev-version bump to `2.0.0.9000` were already done ahead of time in
+  S407, before the acceptance was known).
+- **Actions:** (1) Created the missing GitHub Release for `v2.0.0`
+  (github.com/rmsharp/nprcgenekeepr/releases/tag/v2.0.0) -- `gh release list` showed
+  none existed (v1.0.7 was still "Latest"); notes drawn from `NEWS.md`'s
+  "2.0.0 (20260708)" section plus a one-line submission/acceptance-date header.
+  Verified live via `gh release view`. (2) Deleted the tracked, `.Rbuildignore`'d
+  `CRAN-SUBMISSION` file -- its job (tracking the pending submission) is resolved,
+  matching this project's own precedent (`96a0f67c`, post-1.0.8-acceptance). (3)
+  Fixed `NEWS.Rmd`'s "2.0.0.9000 (development version)" note, which read "...is under
+  review" -- now records the actual acceptance/publication dates; re-rendered to
+  `NEWS.md` (isolated 3-line diff). (4) Re-knit `README.Rmd` -> `README.md`,
+  owner-directed additional scope: the shipped `README.md` showed "Version 2.0.0
+  (2026-07-07)", stale independent of today's news -- it predated the S407
+  dev-version bump and was never re-rendered after it. Discovered the locally
+  *installed* package was also stale (still `2.0.0`, not `2.0.0.9000`), which would
+  have rendered an inconsistent version string; reinstalled
+  (`devtools::install(quick = TRUE)`) before rendering -- isolated 2-line diff (date +
+  version string only). (5) Updated `BACKLOG.md`'s CRAN resubmission item to record
+  acceptance.
+- **Verified:** `gh release view v2.0.0` / `gh release list` confirm the release is
+  live and marked "Latest"; `git diff NEWS.md` / `git diff README.md` both isolated to
+  the intended lines; `packageVersion("nprcgenekeepr")` confirmed `2.0.0.9000`
+  post-reinstall; repo-wide grep swept for other stale "under review"/"pending"
+  CRAN-status language.
+- **TDD Phase:** N/A throughout -- packaging/release/documentation housekeeping only,
+  no `R/`/`tests/` code touched.
+
 ### 2026-07-21 · [ad hoc] Close-out: predecessor evaluation, self-assessment, HANDOFFS.md receipt (Session 409)
 - **Deliverable:** Phase 3 close-out for this session's title/dropdown change (see the
   entry below). Evaluated S408's handoff (9/10 -- its CDN-cache-lag verification
