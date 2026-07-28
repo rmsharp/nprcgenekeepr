@@ -62,19 +62,18 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S414
 date: 2026-07-28
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Owner-directed (not from BACKLOG.md): (1) track the newly-added inst/extdata/Master_Genetic_metrics_2_14_15.pdf; (2) investigate inst/extdata's current contents/usage across the package and produce reorganization suggestions -- recommendations only, no reorg implemented until the owner picks a direction (owner explicitly flagged that any reorg affects the package's use of these files via system.file()).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- tracked inst/extdata/Master_Genetic_metrics_2_14_15.pdf; wrote docs/planning/extdata-reorganization-plan.md, a 4-phase plan to reorganize inst/extdata/. No reorg implemented -- implementation is separate future sessions (Planning Sessions discipline; SAFEGUARDS.md plan-mode gate for cross-module changes).
+what_was_done: Claimed session (21cad54a). Tracked the new PDF as its own isolated commit (0fa3973e) at its current flat location. Inventoried inst/extdata/ directly (43 items, 2.5MB). Delegated an initial reference-mapping sweep to a search subagent, then cross-verified with direct grep -rn sweeps across R/, tests/, vignettes/, man/, data-raw/, README.Rmd, .Rbuildignore, .gitignore -- caught real gaps the subagent missed (two whole test files, a hardcoded non-system.file() relative path in vignettes/a2interactive.Rmd/.R, two embedded GitHub-blob-URL mentions). Presented 4 reorg-scope options via AskUserQuestion; owner picked the fullest scope. Wrote the 4-phase migration plan with full evidence-based inventory, 4 dragons, and 4 open decisions rather than implementing (would be FM #18). Added a BACKLOG.md Housekeeping item, PROJECT_LEARNINGS.md Learning 380, and the CLAUDE.md learning-count cross-ref update.
+next_steps: Owner picks either (a) BACKLOG.md's new "inst/extdata reorganization" item -- Phase 1 is READY now, zero open decisions blocking it; Phases 2-4 need open decisions #2 (subfolder naming) and #4 (a2interactive.R generation status) resolved first (plan Sec 10) -- or (b) the older standing items unchanged since S412/S413: LabKey integration recs (BLOCKED, Effort M), a time-gated CRAN binary-flavor recheck, 9 untriaged GitHub issues (#123, #116, #37, #36, #28, #12, #11, #10, #5), or the Outreach plan's owner-executed follow-up.
+key_files: docs/planning/extdata-reorganization-plan.md (the plan -- 4 phases, evidence-based inventory Sec 8, 4 dragons Sec 7, 4 open decisions Sec 10), BACKLOG.md Housekeeping section (new item), PROJECT_LEARNINGS.md Learning 380, CLAUDE.md:235 (learning-count cross-ref, 379 -> 380).
+gotchas: Phase 1 of the reorg plan is self-contained and zero-system.file()-risk -- does NOT need Sec 10's open decisions resolved first. This session's own grep sweep of Sec 8's inventory was thorough but Phase 2's own verification commands still mandate a FRESH exhaustive grep immediately before touching any file (Dragon 1) -- don't skip it. .DS_Store continues to show modified -- long-standing, pre-existing, untouched again. vignettes/a2interactive.R's generation status (hand-written vs. knitr::purl() output) is unconfirmed -- resolve before Phase 2 touches it.
+runtime_smoke: n/a -- docs-only planning deliverable plus one data-file commit, no R/ package runtime behavior changed.
+changelog_ref: CHANGELOG.md 2026-07-28 "inst/extdata reorganization plan + PDF tracking (Session 414)"
 commit: pending
 ```
-<in progress>
 
 ```handoff
 session: S413
