@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S411
+date: 2026-07-28
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Add html_preview: false to README.Rmd's output: github_document frontmatter (mirrors NEWS.Rmd) so it stops leaving an untracked README.html byproduct on every render (BACKLOG.md Housekeeping item, Learning 376(b)).
+what_was_done: pending
+next_steps: pending
+key_files: README.Rmd (frontmatter), BACKLOG.md (Housekeeping item), PROJECT_LEARNINGS.md Learning 376(b)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S410
 date: 2026-07-28
 status: complete

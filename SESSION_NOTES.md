@@ -6,6 +6,18 @@
 
 ## ACTIVE TASK
 
+### What Session 411 Did
+**Deliverable:** Owner-picked from Phase 0 priorities list (Housekeeping item,
+flagged S410, `PROJECT_LEARNINGS.md` Learning 376(b)): stop `README.Rmd` from
+leaving an untracked, non-`.gitignore`'d `README.html` byproduct on every
+render, by adding `html_preview: false` to its `output: github_document`
+frontmatter -- mirroring `NEWS.Rmd`'s already-working pattern. (IN PROGRESS)
+**Started:** 2026-07-28
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the
+crash breadcrumb for the next session's reconcile.
+
 ### What Session 410 Did
 **Deliverable:** Owner-directed: execute the pre-declared Phase 6
 (Post-acceptance) from `docs/planning/cran-2.0.0-submission-plan.md`,
