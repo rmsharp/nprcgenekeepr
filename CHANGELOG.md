@@ -43,6 +43,53 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-28 · [ad hoc] `inst/extdata/` reorganization Phase 2: subfolder the 10 load-bearing files into examples/ (Session 416)
+- **Deliverable:** Owner-picked from `BACKLOG.md`'s Housekeeping section: execute
+  Phase 2 of `docs/planning/extdata-reorganization-plan.md` (S414) -- create
+  `inst/extdata/examples/`, migrate the 10 load-bearing files, update every
+  `system.file()`/hardcoded-path call site. TDD Phase: N/A -- file relocation +
+  path-reference updates in existing tests/prose, no new `R/` production logic.
+- **Pre-execution decisions resolved:** subfolder name **`examples/`** (owner-picked
+  via `AskUserQuestion` over `fixtures/`/`sample-data/`/`package-data/`, plan §10 #2).
+  `vignettes/a2interactive.R`'s generation status (plan §10 #4, Dragon 4): initially
+  misjudged from the `%\VignetteEngine{knitr::rmarkdown_notangle}` directive as
+  hand-maintained; owner corrected -- `.Rmd` files are the source, `.R`/`.md`/`.html`
+  are generated derivatives, and any drift ahead of the `.Rmd` is a bug to fix.
+  Confirmed further: `vignettes/*.R`/`*.md`/`*.html` are gitignored
+  (`.gitignore:18,20,22`), never git-tracked -- so the tracked-source fix is the
+  `.Rmd` edit alone; the stale local `a2interactive.R` (3 commits behind its `.Rmd`)
+  was regenerated via `knitr::purl()` as a courtesy, producing no commit. Noted, not
+  fixed (unrelated, out of scope): `vignettes/gvaConvergence.R` and
+  `vignettes/simulatedKValues.R` show the same local staleness pattern but reference
+  no `extdata` path.
+- **Change:** Re-ran a fresh, independent exhaustive `grep -rn` for all 10 filenames
+  across `R/`, `tests/`, `vignettes/`, `man/`, `data-raw/`, `README.Rmd`, `docs/`,
+  `.github/` before touching anything (Dragon 1), rather than trusting the plan's own
+  §8.1 inventory as final. `git mv`'d all 10 load-bearing files into
+  `inst/extdata/examples/` (2 checkpoint commits of 5). Updated the central
+  `get_test_data_path()` test helper (fixes every caller through it); ~28 individual
+  `system.file()` call sites across 15 test files; 7 path-bearing roxygen/comment
+  prose sites (`R/defaultSiteParams.R:16`, `R/loadSiteConfig.R:11`,
+  `data-raw/rhesusGenotypes.R:18`, `data-raw/rhesusPedigree.R:9`, plus 2 test-file
+  comments) -- correctly left `R/data.R`'s 4 extdata mentions untouched since they're
+  plain filenames with no path prefix, still accurate post-move; the one hardcoded
+  path in `vignettes/a2interactive.Rmd:90`. Regenerated `man/loadSiteConfig.Rd` via
+  `devtools::document()` -- the only one of the plan's 5 named `.Rd` files that
+  actually needed it, confirming the `R/data.R` scoping call was correct.
+- **Verification:** Fresh regression suite exactly matches the pre-move baseline (0
+  failed/0 error/0 warning, 3198 passed, 179 skipped, S412); `R CMD build` tarball
+  confirmed all 10 files ship under `examples/` and nothing remains at the old flat
+  path; `devtools::check()` 0 errors/0 warnings, 1 NOTE (the same pre-existing,
+  unrelated spelling gap S415 found -- confirmed untouched by this session's diff via
+  `git log` on `NEWS.md`/`inst/WORDLIST`/`tests/spelling.R`); grep sweep confirmed the
+  only 3 remaining un-migrated references are exactly what the plan defers to Phase 3
+  (`vignettes/manual_components/_summary_of_major_functions.Rmd`'s GitHub blob URL
+  source, plus its 2 gitignored rendered byproducts `a3manual.md`/`.html`).
+- **Commits:** `082a0cc4` (S416 claim), `bbf3ec9a`/`f35d809f` (file moves),
+  `c38b107e` (helper + R/ + data-raw prose), `6f87d91b`/`70206939`/`58ff752f`/
+  `44066adf` (test call sites), `f6282c3c` (a2interactive.Rmd), `487d0c09`
+  (man/loadSiteConfig.Rd regen).
+
 ### 2026-07-28 · [ad hoc] `inst/extdata/` reorganization Phase 1: relocate dev-scratch + orphaned content (Session 415)
 - **Deliverable:** Owner-picked from `BACKLOG.md`'s Housekeeping section: execute
   Phase 1 of `docs/planning/extdata-reorganization-plan.md` (S414) -- relocate

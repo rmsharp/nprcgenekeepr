@@ -137,13 +137,13 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       that version number.
 
 ## Housekeeping
-- [ ] **`inst/extdata/` reorganization -- Phases 2-4** (DECISION NEEDED -- 2 of 4 open
-      decisions block Phase 2, Effort L for the remaining 3 phases, each its own
-      session) -- plan: `docs/planning/extdata-reorganization-plan.md` (S414). **Phase 1
-      DONE -- S415 (2026-07-28):** relocated the 12 dev-scratch + 12 orphaned
-      zero-reference items (24 total -- the plan's own summary table undercounted this
-      as "11 + 9"; `PROJECT_LEARNINGS.md` Learning 381) into `dev/extdata-scratch/`,
-      removed 3 empty untracked dirs (`claude/`, `dev_scripts/`, `uat/`) + the now-empty
+- [ ] **`inst/extdata/` reorganization -- Phases 3-4** (READY, Effort M for the
+      remaining 2 phases, each its own session) -- plan:
+      `docs/planning/extdata-reorganization-plan.md` (S414). **Phase 1 DONE -- S415
+      (2026-07-28):** relocated the 12 dev-scratch + 12 orphaned zero-reference items
+      (24 total -- the plan's own summary table undercounted this as "11 + 9";
+      `PROJECT_LEARNINGS.md` Learning 381) into `dev/extdata-scratch/`, removed 3 empty
+      untracked dirs (`claude/`, `dev_scripts/`, `uat/`) + the now-empty
       `code_under_development/`, and deleted 11 now-obsolete `.Rbuildignore` lines (the
       10 the plan named plus one it missed, Learning 381) + 10 dead `.gitignore` lines.
       Verified: `devtools::check()` 0 errors/0 warnings (see the new spelling-NOTE item
@@ -151,13 +151,35 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       tarball no longer contains `create_nprcgenekeepr_hexbadge.R` or any other
       dev-scratch item; regression suite unchanged at 0 failed/0 error/0 warning, 3198
       passed, 179 skipped (S412 baseline). See `CHANGELOG.md`.
-      **Phases 2-4** (subfolder the 10 load-bearing files into
-      `inst/extdata/examples/`, update ~50 call sites across `R/`/`tests/`/`vignettes/`/
-      `man/`/`data-raw/`, re-render affected docs, place the new PDF) still have 2 open
-      decisions blocking Phase 2 (plan §10): the `examples/` subfolder name, and whether
-      `vignettes/a2interactive.R` is hand-maintained or `knitr::purl()`-generated. (The
-      other 2 open decisions -- the PDF's intended home, archive-vs-delete for the
-      orphaned files -- don't block Phase 2, only Phase 4/the archive question.)
+      **Phase 2 DONE -- S416 (2026-07-28):** both blocking open decisions resolved first
+      -- subfolder name **`examples/`** (owner-picked via `AskUserQuestion`), and
+      `vignettes/a2interactive.R`'s generation status (owner-directed: `.Rmd` files are
+      the source; `.R`/`.md`/`.html` are generated derivatives -- confirmed also
+      gitignored/untracked, `.gitignore:18,20,22`, so the tracked-source fix is the
+      `.Rmd` edit alone; the local `.R` copy was regenerated via `knitr::purl()` as a
+      courtesy, not committed). `git mv`'d all 10 load-bearing files into
+      `inst/extdata/examples/`; updated the central `get_test_data_path()` test helper,
+      ~28 individual `system.file()` call sites across 15 test files, 7 path-bearing
+      roxygen/comment prose sites (`R/defaultSiteParams.R`, `R/loadSiteConfig.R`,
+      `data-raw/rhesusGenotypes.R`, `data-raw/rhesusPedigree.R`, plus 2 test-file
+      comments), and the one hardcoded path in `vignettes/a2interactive.Rmd`; regenerated
+      `man/loadSiteConfig.Rd` (the only one of the plan's 5 named `.Rd` files that
+      actually needed it -- the other 4 are generated from `R/data.R`, whose extdata
+      mentions are plain filenames with no path prefix, confirmed unaffected).
+      Verified: fresh regression suite exactly matches baseline (0 failed/0 error/0
+      warning, 3198 passed, 179 skipped); `R CMD build` tarball confirmed shipping all 10
+      files under `examples/` and nothing at the old flat path; `devtools::check()` 0
+      errors/0 warnings, 1 NOTE (the same pre-existing, unrelated spelling gap from S415,
+      confirmed untouched by this session's diff); grep sweep confirmed the only 3
+      remaining un-migrated references are exactly the ones the plan defers to Phase 3
+      (`vignettes/manual_components/_summary_of_major_functions.Rmd`'s GitHub blob URL
+      source, plus its 2 gitignored rendered byproducts). See `CHANGELOG.md`.
+      **Phase 3-4** (re-render `a3manual`/`a2interactive`/offline-focal-animal-workflow
+      rendered artifacts; place the new PDF) remain -- **2 of the plan's 4 open
+      decisions are now resolved (subfolder name, a2interactive.R generation status);
+      the other 2 -- the PDF's intended home (§10 #1), and whether the archive-vs-delete
+      question for the orphaned files (§10 #3) is worth revisiting now that Phase 1
+      already executed the archive default -- only affect Phase 4, not Phase 3.)
 - [ ] **`NEWS.md:8` spelling-check NOTE -- `CRAN's`/`resubmission` missing from
       `inst/WORDLIST`** (READY, Effort S) -- discovered S415 (2026-07-28) while running
       `devtools::check()` as Phase 1's verification step for the `inst/extdata/` reorg
