@@ -43,6 +43,29 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-29 · [ad hoc] Genetic-metrics PDF vs. package capability audit (Session 419)
+- **Deliverable:** Owner-directed, not from `BACKLOG.md`: audit comparing the
+  recommendations in `inst/extdata/reference/Master_Genetic_metrics_2_14_15.pdf` (NHP
+  Genetics and Genomics Working Group, Feb 2015) against `nprcgenekeepr`'s actual
+  capabilities. TDD Phase: N/A -- audit/documentation deliverable, no `R/`/`tests/`
+  production code touched.
+- **Method:** read the 10-page PDF in full; ran a 14-agent `Workflow` (7 recommendation
+  dimensions, each investigated then independently adversarially re-verified against
+  actual source), following this project's own `PED_GV_AUDIT_2026-05-30.md` precedent.
+- **Result:** `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md` -- 37
+  findings (16 implemented / 9 partial / 12 missing) plus a per-dimension list of
+  additional package capabilities the PDF never asked for. Notable gaps: no configurable
+  ranking-priority scheme, no multiple-candidate breeding-group output, no kinship/
+  genome-uniqueness distribution-shape statistics, no marker-based (SNP/STR) kinship or
+  parentage verification, no cross-center pedigree integration. Notable additions beyond
+  the PDF: the full Shiny app, LabKey EHR integration, studbook QC, kinship-override
+  system, ORIP reporting, founder-equivalent statistics with Monte Carlo standard
+  errors. Did not file new `BACKLOG.md` items for the gaps found -- left to the owner.
+- **Process note:** caught one verify-stage agent's own false claim
+  (`readKinshipOverrides`/`checkKinshipOverrides` "don't exist" -- they do, confirmed via
+  `ls R/`/`NAMESPACE`) before it reached the final document. See `PROJECT_LEARNINGS.md`
+  Learning 386.
+
 ### 2026-07-28 · [ad hoc] `inst/extdata/` reorganization Phase 4: place the PDF, final repo-wide sweep -- plan now fully executed (Session 418)
 - **Deliverable:** Owner-picked from S417's priorities list: execute Phase 4 of
   `docs/planning/extdata-reorganization-plan.md` -- resolve the plan's 2 remaining
