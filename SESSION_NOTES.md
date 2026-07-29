@@ -6,6 +6,16 @@
 
 ## ACTIVE TASK
 
+### What Session 423 Did
+**Deliverable:** Write an implementation plan for closing GitHub issue #125
+(configurable genetic-value ranking-priority scheme + surface multiple
+breeding-group candidates) (IN PROGRESS)
+**Started:** 2026-07-29
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the
+crash breadcrumb for the next session's reconcile.
+
 ### What Session 422 Did
 **Deliverable:** Owner-picked from S421's priorities list: triage
 `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md`'s 12 missing/9 partial
