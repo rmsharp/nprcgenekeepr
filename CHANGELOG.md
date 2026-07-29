@@ -47,6 +47,50 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-29 · \[issue \#125\] Implement Slice 1: configurable genetic-value ranking-priority scheme (Session 424)
+
+- **Deliverable:** `R/orderReport.R` gained
+  `guCutoff`/`zScoreCutoff`/`axisPriority` parameters (each
+  `NULL`-defaulting to today’s hardcoded `10L`/`0.25`/`"gu"` behavior);
+  `R/reportGV.R` threads the same 3 params straight through; a new
+  “Ranking Scheme” control (Combined default / Categorical, with
+  Priority axis and both cutoffs) was added to the Genetic Value
+  Analysis tab in `R/modGeneticValue.R`. Full strict-TDD session (RED
+  -\> GREEN -\> REFACTOR, phase-gated via `AskUserQuestion`), per
+  `docs/planning/issue125-ranking-priority-multi-candidate-plan.md`
+  Section 4 Slice 1.
+- **Process:** re-verified every plan citation firsthand before writing
+  any test (zero drift since S423). Wrote 7 new failing tests across
+  `test_orderReport.R`/`test_reportGV.R`/`test_modGeneticValue.R`,
+  confirmed each failed for the right reason, then implemented. Caught
+  and fixed a real regression during GREEN: 2 pre-existing
+  `local_mocked_bindings(reportGV = function(...))` test stubs had
+  hardcoded the old signature and would have broken. Refactored
+  duplicated tier-claim logic into two named closures. Fixed the
+  vignette prose (`genetic-value-analysis.qmd`) to describe both ranking
+  schemes, since the app’s actual default (combined score) differs from
+  what a direct
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+  script call demonstrates.
+- **Verification:** full regression suite 0 failed/0 error/0 warning
+  (3907 passed, up from 3198), `devtools::check()` 0 errors/0 warnings/0
+  notes, and a full Phase 3E runtime smoke test via
+  `shinytest2`/chromote driving the real app (real 3,694-row pedigree
+  upload through the actual Input tab, QC confirmed, GVA run under 4
+  rankScheme/axisPriority/cutoff configurations, full-CSV-export
+  comparison confirmed genuine differentiation – 15-316 animals changed
+  value/rank per comparison).
+- **Result:** Slice 1 shipped (commits `9d627dca` RED, `fdab2eb5`
+  GREEN+REFACTOR, `986eb7d8` docs/NEWS – split retroactively into 3
+  checkpoint commits after a mid-session Blast Radius cap check found 10
+  files uncommitted at once). `PROJECT_LEARNINGS.md` Learnings 389-391
+  added (a `shinytest2` smoke-test gotcha sequence; a tied-value-block
+  false-negative trap; the per-phase-gate Blast Radius check gap).
+  `BACKLOG.md`’s `Active` section now carries Slice 2 as
+  `(READY, Effort L)`. Slice 2 (multi-candidate breeding groups) remains
+  – a separate future session; issue \#125 stays open until both slices
+  ship.
+
 ### 2026-07-29 · \[issue \#125\] Write implementation plan: configurable ranking-priority scheme + multi-candidate breeding groups (Session 423)
 
 - **Deliverable:**

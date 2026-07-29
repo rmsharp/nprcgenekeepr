@@ -64,7 +64,10 @@
 <span>  gestationTable <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  breedingAgeDefault <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  gestationDefault <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  kinshipOverrides <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  kinshipOverrides <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  guCutoff <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  zScoreCutoff <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  axisPriority <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -140,6 +143,28 @@ set are warn-dropped (the run is not aborted). An override REFINES the
 named kinship cell; it does not suppress the <code>+ sexMean / 2</code>
 unknown-parent correction, which is kept for every animal missing one
 parent. See <code><a href="applyKinshipOverrides.html">applyKinshipOverrides</a></code>.</p></dd>
+
+
+<dt id="arg-gucutoff">guCutoff<a class="anchor" aria-label="anchor" href="#arg-gucutoff"></a></dt>
+<dd><p>Optional numeric genome-uniqueness threshold passed through
+to <code>orderReport</code> (internal), above which an animal qualifies
+for the high-uniqueness ranking tier. <code>NULL</code> (the default) resolves to
+<code>10L</code>. Not to be confused with <code>guThresh</code>, above, which is the
+unrelated allele-rarity threshold used to <em>compute</em> <code>gu</code> itself.</p></dd>
+
+
+<dt id="arg-zscorecutoff">zScoreCutoff<a class="anchor" aria-label="anchor" href="#arg-zscorecutoff"></a></dt>
+<dd><p>Optional numeric mean-kinship z-score threshold passed
+through to <code>orderReport</code> (internal), at or below which an
+animal qualifies for the low-kinship ranking tier. <code>NULL</code> (the
+default) resolves to <code>0.25</code>.</p></dd>
+
+
+<dt id="arg-axispriority">axisPriority<a class="anchor" aria-label="anchor" href="#arg-axispriority"></a></dt>
+<dd><p>Optional string, one of <code>"gu"</code> or <code>"mk"</code>,
+passed through to <code>orderReport</code> (internal), naming which axis's
+cutoff-filter is applied first when ranking. <code>NULL</code> (the default)
+resolves to <code>"gu"</code>, today's behavior.</p></dd>
 
 </dl></div>
     <div class="section level2">

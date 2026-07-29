@@ -159,19 +159,27 @@ The key columns:
 | `value` | a `High Value` / `Low Value` (occasionally `Undetermined`) flag |
 | `rank` | integer rank, 1 = most valuable |
 
-The `rank` and `value` columns come from the ranking scheme in
-`orderReport()` and
-[`rankSubjects()`](https://github.com/rmsharp/nprcgenekeepr/reference/rankSubjects.md),
-which sorts the population into ordered tiers:
+The `rank` and `value` columns above come from the **categorical**
+ranking scheme in `orderReport()` and
+[`rankSubjects()`](https://github.com/rmsharp/nprcgenekeepr/reference/rankSubjects.md)
+– calling
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+directly, as this article does, always uses it. It sorts the population
+into ordered tiers:
 
 1.  imported founders with no offspring;
-2.  animals with genome uniqueness above 10%, by **descending genome
-    uniqueness** (ties broken by ascending mean kinship) – this is where
-    carrying rare alleles earns a high rank;
+2.  animals with genome uniqueness above a high-uniqueness cutoff (10%
+    by default), by **descending genome uniqueness** (ties broken by
+    ascending mean kinship) – this is where carrying rare alleles earns
+    a high rank;
 3.  the remaining animals whose standardized mean kinship is at or below
-    0.25 (i.e. no more related to the colony than about average), by
-    **ascending mean kinship** – least related ranked highest;
+    a low-kinship z-score cutoff (0.25 by default), by **ascending mean
+    kinship** – least related ranked highest;
 4.  everyone else, flagged `Low Value`, by ascending mean kinship.
+
+Which cutoff is checked first – so it claims any animal that qualifies
+for both – is the tiers’ **priority axis** (genome uniqueness by
+default).
 
 Tiers 1–3 are flagged `High Value`. Because tier 2 ranks on genome
 uniqueness and tier 3 on mean kinship, the two metrics can disagree –
@@ -198,6 +206,16 @@ table(rpt$value)
 #> High Value  Low Value 
 #>        207        120
 ```
+
+> Scripting
+> [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+> directly, as above, always returns this categorical tiered scheme. The
+> Shiny app’s Genetic Value Analysis tab defaults to a different
+> **combined score** instead (`rank(indivMeanKin - gu)`, a single
+> continuous ranking that also balances both metrics, but without
+> discrete cutoffs or tiers). Select “Categorical” from the app’s
+> Ranking Scheme control – with its Priority axis and cutoff
+> sub-controls – to reproduce the tiered ordering shown here.
 
 ## Colony-level diversity
 

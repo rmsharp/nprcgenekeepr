@@ -68,6 +68,22 @@ are legal at write time (the receipt ships in the very commit whose sha
 it would name); the next session reconciles them to real shas.
 
 ``` handoff
+session: S424
+date: 2026-07-29
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- Slice 1 of the issue #125 plan (configurable genetic-value ranking-priority scheme) implemented, verified, committed. Slice 2 (multi-candidate breeding groups) remains, a separate future session.
+what_was_done: Full strict-TDD RED->GREEN->REFACTOR (AskUserQuestion-gated at every transition). Added guCutoff/zScoreCutoff/axisPriority (NULL-defaulting to today's 10L/0.25/"gu") to orderReport(), threaded through reportGV(), and a new "Ranking Scheme" UI control (combined default / categorical) with axisPriority/cutoff sub-controls in modGeneticValue.R. Fixed 2 pre-existing test mocks with stale reportGV() signatures (real regression caught during GREEN). Refactored duplicated tier-claim logic into two closures. Fixed vignette prose to describe both ranking schemes. Full regression suite 0/0/0 (3907 passed, up from 3198), devtools::check() 0 errors/0 warnings/0 notes, and a full Phase 3E runtime smoke test via shinytest2/chromote driving the real app (real 3694-row file upload, 4 live configurations, full-CSV-export differentiation confirmed: 15-316 animals changed value/rank per scheme comparison). Commits: 9d627dca (RED tests), fdab2eb5 (GREEN+REFACTOR), 986eb7d8 (docs/NEWS) -- split retroactively into 3 checkpoint commits after finding 10 files had accumulated uncommitted (Blast Radius violation, see gotchas).
+next_steps: Slice 2 (surface multiple breeding-group candidates -- R/groupAddAssign.R/R/groupMembersReturn.R/R/modBreedingGroups.R) is the plan's remaining, independent slice -- full strict-TDD session, do not bundle with anything else. Tag it (READY, Effort L) in BACKLOG.md's Active section explicitly -- not done in this session (see SESSION_NOTES.md handoff evaluation for why this matters).
+key_files: docs/planning/issue125-ranking-priority-multi-candidate-plan.md Section 4 Slice 2 (next session's spec); R/groupAddAssign.R:164-193, R/groupMembersReturn.R:19-33, R/modBreedingGroups.R (Slice 2 scope); tests/testthat/helper-shinytest2.R (established AppDriver idioms); PROJECT_LEARNINGS.md Learnings 389-391.
+gotchas: (1) shinytest2::AppDriver needs NOT_CRAN=true set (else an uncaught skip_on_cran() throws) and devtools::install() run first (load_all() doesn't reach the AppDriver's fresh subprocess); use get_screenshot()/get_logs()/get_download(), not screenshot()/get_log(); DT server-side tables need a name-keyed DOM JS read or get_download(), not get_value(output=...) (Learning 389). (2) A tied-value block at a ranking metric's extreme makes "did the visible top rows change" misleading -- compare full exports (Learning 390). (3) Check git status --short at every TDD phase-gate transition, not just before the close-out commit (Learning 391). (4) test_groupAddAssign.R/test_modBreedingGroups_groupAddAssign.R are maintainer-machine-gated (Sys.info() check) -- Slice 2 RED tests must respect this.
+runtime_smoke: PASS -- shinytest2/chromote drove the real app end to end (real 3694-row pedigree upload, QC, GVA run under 4 rankScheme/axisPriority/cutoff configurations, screenshots captured, full CSV export comparison confirmed genuine differentiation). No console errors attributable to the new controls (only pre-existing, unrelated shinyBS reference errors from R/modSummaryStats.R).
+changelog_ref: CHANGELOG.md 2026-07-29 S424 entry
+commit: 986eb7d8 (docs, latest of 3 checkpoint commits; close-out commit sha to follow)
+```
+
+``` handoff
 session: S423
 date: 2026-07-29
 status: complete

@@ -6,7 +6,13 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 ## Active
 
-(none in progress)
+**Slice 2 of the issue \#125 plan – surface multiple breeding-group
+candidates** (READY, Effort L) – `R/groupAddAssign.R`/
+`R/groupMembersReturn.R`/`R/modBreedingGroups.R`, per
+`docs/planning/issue125-ranking-priority-multi-candidate-plan.md`
+Section 4 Slice 2. Full strict-TDD session (RED -\> GREEN -\> REFACTOR,
+phase-gated). Independent of Slice 1 (S424, DONE – see `CHANGELOG.md`) –
+do not bundle. Closes issue \#125 when done.
 
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 

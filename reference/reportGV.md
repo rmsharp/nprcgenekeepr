@@ -16,7 +16,10 @@ reportGV(
   gestationTable = NULL,
   breedingAgeDefault = NULL,
   gestationDefault = NULL,
-  kinshipOverrides = NULL
+  kinshipOverrides = NULL,
+  guCutoff = NULL,
+  zScoreCutoff = NULL,
+  axisPriority = NULL
 )
 ```
 
@@ -94,6 +97,27 @@ reportGV(
   suppress the `+ sexMean / 2` unknown-parent correction, which is kept
   for every animal missing one parent. See
   [`applyKinshipOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md).
+
+- guCutoff:
+
+  Optional numeric genome-uniqueness threshold passed through to
+  `orderReport` (internal), above which an animal qualifies for the
+  high-uniqueness ranking tier. `NULL` (the default) resolves to `10L`.
+  Not to be confused with `guThresh`, above, which is the unrelated
+  allele-rarity threshold used to *compute* `gu` itself.
+
+- zScoreCutoff:
+
+  Optional numeric mean-kinship z-score threshold passed through to
+  `orderReport` (internal), at or below which an animal qualifies for
+  the low-kinship ranking tier. `NULL` (the default) resolves to `0.25`.
+
+- axisPriority:
+
+  Optional string, one of `"gu"` or `"mk"`, passed through to
+  `orderReport` (internal), naming which axis's cutoff-filter is applied
+  first when ranking. `NULL` (the default) resolves to `"gu"`, today's
+  behavior.
 
 ## Value
 
