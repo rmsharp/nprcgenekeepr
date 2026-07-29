@@ -49,6 +49,19 @@
 #' named kinship cell; it does not suppress the \code{+ sexMean / 2}
 #' unknown-parent correction, which is kept for every animal missing one
 #' parent. See \code{\link{applyKinshipOverrides}}.
+#' @param guCutoff Optional numeric genome-uniqueness threshold passed through
+#' to \code{orderReport} (internal), above which an animal qualifies
+#' for the high-uniqueness ranking tier. \code{NULL} (the default) resolves to
+#' \code{10L}. Not to be confused with \code{guThresh}, above, which is the
+#' unrelated allele-rarity threshold used to \emph{compute} \code{gu} itself.
+#' @param zScoreCutoff Optional numeric mean-kinship z-score threshold passed
+#' through to \code{orderReport} (internal), at or below which an
+#' animal qualifies for the low-kinship ranking tier. \code{NULL} (the
+#' default) resolves to \code{0.25}.
+#' @param axisPriority Optional string, one of \code{"gu"} or \code{"mk"},
+#' passed through to \code{orderReport} (internal), naming which axis's
+#' cutoff-filter is applied first when ranking. \code{NULL} (the default)
+#' resolves to \code{"gu"}, today's behavior.
 #' @return An object of class \code{nprcgenekeeprGV}: a list with elements
 #' \code{report} (a dataframe with the genetic value report, with animals
 #' ranked in order of descending value; it carries both a \code{gu} column and a
@@ -123,7 +136,9 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
                      byID = TRUE, updateProgress = NULL,
                      breedingTable = NULL, gestationTable = NULL,
                      breedingAgeDefault = NULL, gestationDefault = NULL,
-                     kinshipOverrides = NULL) {
+                     kinshipOverrides = NULL,
+                     guCutoff = NULL, zScoreCutoff = NULL,
+                     axisPriority = NULL) {
   # Generates a genetic value report for a provided pedigree
 
   ## If user has limited the population of interest by defining 'pop',
@@ -279,7 +294,9 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
     demographics, indivMeanKin, zScores, gu, guSE, offspring, parentage
   )
   finalData <- list(
-    report = orderReport(finalData, ped),
+    report = orderReport(finalData, ped,
+                         guCutoff = guCutoff, zScoreCutoff = zScoreCutoff,
+                         axisPriority = axisPriority),
     kinship = kmat,
     gu = cbind(gu, guSE),
     fe = feFg$FE,

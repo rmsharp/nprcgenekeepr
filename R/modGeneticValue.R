@@ -20,6 +20,7 @@
 #' @importFrom shiny NS div h3 fluidRow column wellPanel h4 icon numericInput
 #' @importFrom shiny checkboxInput sliderInput actionButton tabsetPanel tabPanel
 #' @importFrom shiny br downloadButton plotOutput tableOutput includeHTML
+#' @importFrom shiny conditionalPanel
 #' @family Shiny modules
 #' @export
 modGeneticValueUI <- function(id) {
@@ -41,6 +42,24 @@ modGeneticValueUI <- function(id) {
                selectInput(ns("threshold"),
                            "Genome Uniqueness Threshold:",
                            choices = c(1L, 2L, 3L, 4L, 5L), selected = 4L),
+               selectInput(ns("rankScheme"), "Ranking Scheme:",
+                           choices = c(
+                             "Combined (kinship - uniqueness)" = "combined",
+                             "Categorical (priority order)" = "categorical"
+                           ), selected = "combined"),
+               conditionalPanel(
+                 condition = "input.rankScheme == 'categorical'", ns = ns,
+                 selectInput(ns("axisPriority"), "Priority axis:",
+                             choices = c(
+                               "Genome uniqueness first" = "gu",
+                               "Mean kinship first" = "mk"
+                             ), selected = "gu"),
+                 numericInput(ns("guCutoff"), "High-uniqueness cutoff:",
+                              value = 10, min = 0),
+                 numericInput(ns("zScoreCutoff"),
+                              "Low-kinship z-score cutoff:",
+                              value = 0.25, step = 0.05)
+               ),
                checkboxInput(ns("calcGenomeUniqueness"),
                              "Calculate Genome Uniqueness", TRUE),
                checkboxInput(ns("calcMeanKinship"),
@@ -172,6 +191,23 @@ modGeneticValueServer <- function(id, pedigree,
       if (is.null(thr)) 4L else as.integer(thr)
     })
 
+    # Issue #125 Slice 1: ranking-scheme selection + its cutoff/axis
+    # sub-controls, mirroring the guThreshold NULL-safe reactive above.
+    rankScheme <- reactive({
+      rs <- input$rankScheme
+      if (is.null(rs)) "combined" else rs
+    })
+    axisPriorityChoice <- reactive({
+      ap <- input$axisPriority
+      if (is.null(ap)) "gu" else ap
+    })
+    guCutoffChoice <- reactive({
+      input$guCutoff
+    })
+    zScoreCutoffChoice <- reactive({
+      input$zScoreCutoff
+    })
+
     # Issue #13 Slice 2: read an uploaded outside-information kinship override
     # file (id1, id2, kinship) and validate it. Soft / non-fatal in the app
     # (D5): a bad file warns and is ignored; the GV run is never aborted. A
@@ -273,7 +309,10 @@ modGeneticValueServer <- function(id, pedigree,
           gestationTable = ov$gestationTable,
           breedingAgeDefault = ov$breedingAgeDefault,
           gestationDefault = ov$gestationDefault,
-          kinshipOverrides = kinshipOverrideData()
+          kinshipOverrides = kinshipOverrideData(),
+          guCutoff = guCutoffChoice(),
+          zScoreCutoff = zScoreCutoffChoice(),
+          axisPriority = axisPriorityChoice()
         )
 
         # Store full results
@@ -283,6 +322,14 @@ modGeneticValueServer <- function(id, pedigree,
         report <- gvReport$report
         if (!"indivMeanKin" %in% names(report)) {
           # Handle edge case where report might not have expected columns
+          return(report)
+        }
+
+        # Issue #125 Slice 1 (D1): "categorical" leaves reportGV()'s native
+        # orderReport()/rankSubjects() tiered rank/value untouched -- it is
+        # already correctly ordered and correctly NA-ranked (see #2B). Only
+        # the default "combined" scheme recomputes the continuous score below.
+        if (identical(rankScheme(), "categorical")) {
           return(report)
         }
 
