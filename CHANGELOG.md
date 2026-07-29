@@ -83,13 +83,15 @@ here.
 - **Result:** Slice 1 shipped (commits `9d627dca` RED, `fdab2eb5`
   GREEN+REFACTOR, `986eb7d8` docs/NEWS – split retroactively into 3
   checkpoint commits after a mid-session Blast Radius cap check found 10
-  files uncommitted at once). `PROJECT_LEARNINGS.md` Learnings 389-391
-  added (a `shinytest2` smoke-test gotcha sequence; a tied-value-block
-  false-negative trap; the per-phase-gate Blast Radius check gap).
-  `BACKLOG.md`’s `Active` section now carries Slice 2 as
-  `(READY, Effort L)`. Slice 2 (multi-candidate breeding groups) remains
-  – a separate future session; issue \#125 stays open until both slices
-  ship.
+  files uncommitted at once; close-out receipt in `8274395b`; `6a02fc6e`
+  added the learnings/backlog-tag/stale-count-fix content described
+  below, as a follow-on commit after the receipt).
+  `PROJECT_LEARNINGS.md` Learnings 389-391 added (a `shinytest2`
+  smoke-test gotcha sequence; a tied-value-block false-negative trap;
+  the per-phase-gate Blast Radius check gap). `BACKLOG.md`’s `Active`
+  section now carries Slice 2 as `(READY, Effort L)`. Slice 2
+  (multi-candidate breeding groups) remains – a separate future session;
+  issue \#125 stays open until both slices ship.
 
 ### 2026-07-29 · \[issue \#125\] Write implementation plan: configurable ranking-priority scheme + multi-candidate breeding groups (Session 423)
 
