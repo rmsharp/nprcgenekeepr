@@ -26,6 +26,15 @@ R. Mark Sharp, Ph.D.
   `groupAddAssign()`'s return value gains a `candidates` list field for
   scripted use; the existing top-level `group`/`score`/`groupKin` fields
   are unchanged (they alias the best candidate).
+- The Breeding Group Formation tab gained an **Include animals by**
+  control (issue \#128): the existing top-N cutoff stays the default,
+  unchanged; a new **Genetic-value floor** option excludes any candidate
+  whose Genetic Value Analysis result is "Low Value" instead of applying
+  a fixed count, for all three animal-source choices. Animals labeled
+  "Undetermined" still pass (a data gap, not evidence of low value); an
+  animal with no Genetic Value Analysis result at all does not pass.
+  Leaving the control at its default ("Top N ranked") reproduces today's
+  exact behavior.
 
 # nprcgenekeepr 2.0.0 (20260708)
 

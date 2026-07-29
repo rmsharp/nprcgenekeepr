@@ -27,8 +27,25 @@ The left panel provides controls for group formation:
   - *Upload list*: Provide a custom list of candidate animal IDs
   - *All available*: Use all animals in the current population
 
-- **Number of top animals**: When using "Top ranked" source, specify how many
-  of the highest genetic value animals to include (default: 20).
+- **Include animals by**: Choose how candidates are screened for eligibility,
+  independent of Source:
+  - *Top N ranked* (default): Include only the top-N ranked animals when the
+    source is "Top ranked" (see "Number of top animals" below); no genetic-
+    value screening for "Upload list"/"All available".
+  - *Genetic-value floor*: Exclude any animal whose Genetic Value Analysis
+    result is "Low Value", for all three Source choices. Animals labeled
+    "Undetermined" (missing parentage/origin data) still pass, since a data
+    gap is not evidence of low genetic value. An animal with no Genetic
+    Value Analysis result at all (for example, one excluded from that
+    report's population) does not pass the floor. This mode ignores "Number
+    of top animals" entirely, so a viable animal is never excluded purely
+    for ranking outside a fixed count, and a mediocre top-N no longer
+    automatically qualifies. Requires having run Genetic Value Analysis
+    first, for any Source choice.
+
+- **Number of top animals**: When using "Top ranked" source with the
+  "Top N ranked" inclusion criterion, specify how many of the highest
+  genetic value animals to include (default: 20).
 
 - **Number of groups**: How many breeding groups to form (default: 3, range: 1-20).
 
