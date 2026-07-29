@@ -72,7 +72,7 @@ key_files: docs/planning/issue125-ranking-priority-multi-candidate-plan.md Secti
 gotchas: (1) shinytest2::AppDriver needs NOT_CRAN=true set (else an uncaught skip_on_cran() throws) and devtools::install() run first (load_all() doesn't reach the AppDriver's fresh subprocess); use get_screenshot()/get_logs()/get_download(), not screenshot()/get_log(); DT server-side tables need a name-keyed DOM JS read or get_download(), not get_value(output=...) (Learning 389). (2) A tied-value block at a ranking metric's extreme makes "did the visible top rows change" misleading -- compare full exports (Learning 390). (3) Check git status --short at every TDD phase-gate transition, not just before the close-out commit (Learning 391). (4) test_groupAddAssign.R/test_modBreedingGroups_groupAddAssign.R are maintainer-machine-gated (Sys.info() check) -- Slice 2 RED tests must respect this.
 runtime_smoke: PASS -- shinytest2/chromote drove the real app end to end (real 3694-row pedigree upload, QC, GVA run under 4 rankScheme/axisPriority/cutoff configurations, screenshots captured, full CSV export comparison confirmed genuine differentiation). No console errors attributable to the new controls (only pre-existing, unrelated shinyBS reference errors from R/modSummaryStats.R).
 changelog_ref: CHANGELOG.md 2026-07-29 S424 entry
-commit: 986eb7d8 (docs, latest of 3 checkpoint commits; close-out commit sha to follow)
+commit: 986eb7d8 (docs, latest of 3 checkpoint commits); close-out receipt 8274395b; 6a02fc6e (follow-on: learnings 389-391, BACKLOG.md Slice 2 tag, CLAUDE.md stale-count fix -- reconciled at S425 Phase 0, see CHANGELOG.md)
 ```
 
 ```handoff

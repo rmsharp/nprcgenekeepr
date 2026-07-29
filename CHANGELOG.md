@@ -70,7 +70,9 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
   genuine differentiation -- 15-316 animals changed value/rank per comparison).
 - **Result:** Slice 1 shipped (commits `9d627dca` RED, `fdab2eb5` GREEN+REFACTOR,
   `986eb7d8` docs/NEWS -- split retroactively into 3 checkpoint commits after a
-  mid-session Blast Radius cap check found 10 files uncommitted at once).
+  mid-session Blast Radius cap check found 10 files uncommitted at once; close-out
+  receipt in `8274395b`; `6a02fc6e` added the learnings/backlog-tag/stale-count-fix
+  content described below, as a follow-on commit after the receipt).
   `PROJECT_LEARNINGS.md` Learnings 389-391 added (a `shinytest2` smoke-test gotcha
   sequence; a tied-value-block false-negative trap; the per-phase-gate Blast Radius
   check gap). `BACKLOG.md`'s `Active` section now carries Slice 2 as
