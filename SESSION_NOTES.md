@@ -7,6 +7,173 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 418 Did
+
+**Deliverable:** Owner-picked from S417’s priorities list: execute
+**Phase 4** of `docs/planning/extdata-reorganization-plan.md` – resolve
+the plan’s 2 remaining open decisions, place
+`Master_Genetic_metrics_2_14_15.pdf`, and run the plan’s final repo-wide
+sweep grep. **DONE. The `inst/extdata/` reorganization plan is now fully
+executed (Phases 1-4 all DONE, S414-S418).** **Started/Completed:**
+2026-07-28 / 2026-07-28 **Status:** DONE. TDD Phase: N/A throughout –
+file relocation + rendered-doc refresh, no new `R/` production logic,
+matching S414-417 precedent for this same plan.
+
+**What happened, in order:** **(1)** Resolved plan §10’s 2 remaining
+open decisions via `AskUserQuestion` (before claiming, since both were
+blocking): PDF placement -\> **`inst/extdata/reference/`**
+(end-user-facing reference material analogous to `ui_guidance/`, the
+plan’s own default); orphaned-files archive-vs-delete -\> **keep
+archived** at `dev/extdata-scratch/`, no change from Phase 1. **(2)**
+Claimed the session (`218ea38c`). **(3)** Re-ran a fresh, independent
+grep for the PDF’s filename before touching it (per this workstream’s
+now-standard Dragon 1 discipline) – found no references outside
+planning/session-notes prose, confirming it’s safe to move. `git mv`’d
+it to `inst/extdata/reference/`. **(4)** Ran the plan’s prescribed Phase
+4 final repo-wide sweep grep. Triaged every hit: `README.md` was a
+genuine miss – `README.Rmd` (only 48 lines) pulls its actual content via
+five ```` ```{r child = "..."} ``` ```` chunks, one of which is exactly
+`vignettes/manual_components/_summary_of_major_functions.Rmd`, the file
+S417 already fixed for a stale GitHub blob URL. S417’s Phase-3
+render-target list (`a3manual.Rmd`, `a2interactive.Rmd`,
+`offline-focal-animal-workflow.qmd`) never included `README.Rmd`, so
+`README.md` sat stale with the pre-Phase-2 flat
+`inst/extdata/example_nprcgenekeepr_config` path for one full session,
+invisible to a plain grep of `README.Rmd`’s own source (the string only
+exists in the CHILD file, not the parent). Re-rendered `README.Rmd` -\>
+`README.md` picked up the fix cleanly, no stray `README.html` byproduct
+(S411’s `html_preview: false` fix still holds). Every other sweep hit
+(dated entries in `NEWS.Rmd`/`NEWS.md`, and prose in
+`docs/planning/issue13-kinship-overrides-plan.md`,
+`docs/planning/issue73-part2-user-configurable-plan.md`,
+`docs/research/labkey-integration-options-2026-06-19.md`,
+`docs/planning/quarto-documentation-future-proofing-analysis.md` – the
+last explicitly self-described as “rationale… left intact”) triaged as
+false positives: dated historical prose correctly describing repo state
+as it existed when written, not living references. **(5)** Discovered
+but deliberately deferred: `ROADMAP.md:21-22` still frames “the
+`inst/extdata/` developer docs” as a documentation-engine category, but
+Phase 1 (S415) already relocated all 3 of those dev docs to
+`dev/extdata-scratch/` – this is an editorial/policy-prose call (what
+should the sentence now say?), not a mechanical path fix, so filed as a
+new `BACKLOG.md` Housekeeping item rather than rewritten unilaterally.
+**(6)** Verified: `R CMD build` tarball (`tar tzf`) ships the PDF at
+`inst/extdata/reference/` and nothing at the old flat path; regression
+suite exact baseline (0/0/0, 3198 passed, 179 skipped);
+`devtools::check()` 0 errors/0 warnings, 1 NOTE (same pre-existing
+`NEWS.md:8` spelling gap, confirmed untouched – read from the raw check
+log’s `Status:` line per Learning 382, which again disagreed with the
+colored summary’s “0 notes”). **(7)** Updated `BACKLOG.md` (Phase 4
+DONE, plan fully executed; new ROADMAP.md staleness item filed),
+`CHANGELOG.md`, `PROJECT_LEARNINGS.md` (new Learning 385), `CLAUDE.md`’s
+learning-count cross-reference (384 -\> 385). **Ledger:** See
+`CHANGELOG.md` 2026-07-28 S418 entry (`[ad hoc]`).
+
+**Session 417 Handoff Evaluation (by Session 418): 7/10.** **What
+helped:** the exact `DECISION NEEDED first, not READY` framing was
+accurate and directly usable – both `AskUserQuestion` prompts this
+session opened with came straight from the handoff’s own plan-§10
+pointers (#1 PDF placement, \#3 archive-vs-delete), with no need to
+re-derive the decision framing from the plan myself; the Phase 4 §6
+section pointer was correct; gotcha (1)’s “re-run a fresh Dragon-1 grep…
+even at Phase 4” reminder was directly actionable and is exactly the
+discipline that caught the `README.md` staleness this session found.
+**What was missing:** S417’s own handoff – written by the same session
+that had just fixed `_summary_of_major_functions.Rmd:66`’s blob URL –
+never flagged that `README.Rmd` `child=`-includes that exact file and
+might need a matching re-render. S417 had the information in hand (it
+had just edited that file) but didn’t trace which OTHER documents
+consume it as a child doc; this cost real investigation time this
+session (an initially confusing `grep README.Rmd` returning nothing,
+followed by reading the full 48-line file to discover the `child=` chunk
+structure) that a single handoff sentence – “check whether any other
+document `child=`-includes `_summary_of_major_functions.Rmd` before
+considering Phase 3 fully closed” – would have prevented outright.
+**What was wrong:** nothing factually incorrect; the gap is an omission,
+not an error. **ROI:** net positive – the accurate decision framing and
+plan pointers saved meaningfully more time than the README gap cost, and
+this workstream’s now-standing Dragon-1-at-every-phase-boundary
+discipline caught the gap regardless of whether the handoff mentioned
+it, exactly as the same discipline caught S417’s own Phase-3 gap the
+session before. See `PROJECT_LEARNINGS.md` Learning 385.
+
+**Self-assessment (Session 418): 8/10.** **Strengths:** (1) resolved
+both plan §10 decisions via `AskUserQuestion` before claiming the
+session, per the “ask, don’t infer” project convention, rather than
+assuming either the PDF’s audience or the archive-vs-delete call; (2)
+re-ran a fresh, independent grep before touching the PDF despite the
+file having zero references anywhere – did not skip Dragon 1 just
+because the move looked trivially safe; (3) did not stop at “the grep
+sweep is clean” after the PDF move – ran the plan’s own prescribed Phase
+4 sweep command and genuinely investigated every hit rather than
+pattern-matching them all as historical noise, which is what surfaced
+the real `README.md` staleness; (4) traced the `README.md` anomaly to
+its actual root cause (a `child=`-doc structure invisible to a
+source-file grep) instead of assuming `README.Rmd`/`README.md` had
+simply drifted out of sync via some other mechanism, and fixed it the
+correct way (re-render, not hand-edit the artifact); (5) triaged the
+remaining ~8 sweep hits individually against a clear test (dated
+historical prose describing past state vs. a live, currently-followable
+reference) rather than either fixing everything found or dismissing
+everything as noise; (6) found the `ROADMAP.md` staleness but did not
+unilaterally rewrite policy-adjacent editorial prose – filed it for
+owner input instead, respecting session scope boundaries; (7) confirmed
+the PDF ships from the correct new location via an actual
+`R CMD build` + `tar tzf` content check, not just a `git mv` diff.
+**Weaknesses:** (1) spent several tool calls confused by
+`grep README.Rmd` returning nothing before reading the full file and
+finding the `child=` structure – a faster path would have been to
+`grep -rn` the CHILD FILE’S OWN PATH across the repo immediately upon
+finding a stale-but-unexplained hit, rather than first re-grepping the
+suspected parent’s source for the stale string itself; noted as the
+`README.md` Learning 385’s own practical rule for next time. **Compared
+to previous sessions in this workstream:** this is the fourth
+consecutive session (S415-S418) whose own Dragon-1/Phase-boundary
+re-verification catches a real gap the plan or a prior session’s handoff
+didn’t fully anticipate – extends \[\[Learning 384\]\]’s lesson (Dragon
+1 at every phase boundary) into a new failure shape: not a phase’s prose
+undercounting scope (S417’s case) but a fix’s own rendered-CONSUMERS
+being incompletely enumerated across sibling documents that share a
+child include.
+
+**Handoff to Session 419:** - **What’s next:** The `inst/extdata/`
+reorganization plan (S414-S418) is fully closed – no further work on it.
+Owner picks from remaining `BACKLOG.md` items: (a) `ROADMAP.md:21-22`’s
+stale doc-engine-policy line (READY, Effort S, this session’s own
+discovery – needs owner input on the intended wording now that the
+“developer docs” it names have moved to `dev/extdata-scratch/`); (b)
+`NEWS.md:8` spelling-check NOTE (READY, Effort S, unchanged since S415,
+still a 2-word hand-edit to `inst/WORDLIST`); (c) older standing items:
+LabKey integration recs (BLOCKED, Effort M), 9 untriaged GitHub issues
+(#123, \#116, \#37, \#36, \#28, \#12, \#11, \#10, \#5), or the Outreach
+plan’s owner-executed follow-up (not a coding task). - **Key files:**
+`BACKLOG.md` Housekeeping section (extdata reorg now fully DONE; new
+`ROADMAP.md` staleness item); `PROJECT_LEARNINGS.md` Learning 385;
+`CLAUDE.md:235` (learning-count cross-reference, 384 -\> 385);
+`README.Rmd` (48 lines, `child=`-includes 5 files from
+`vignettes/manual_components/` – read this structure before assuming
+`README.Rmd`’s own source text is the full picture of what `README.md`
+contains); `ROADMAP.md:21-22` (the flagged staleness, not yet fixed). -
+**Gotchas:** (1) **`README.Rmd` is a thin shell, not the real content**
+– its actual body comes from five
+```` ```{r child = "vignettes/manual_components/_*.Rmd"} ``` ````
+chunks; a fix landing in ANY of those 5 child files means `README.md`
+needs a re-render too, and grepping `README.Rmd`’s own source for the
+fixed string will find nothing (the string lives only in the child file
+and in `README.md`’s rendered output) – see `PROJECT_LEARNINGS.md`
+Learning 385. (2) When any future session fixes a stray reference inside
+a file, check whether OTHER documents `child=`-include or otherwise
+embed that same file before considering the fix’s blast radius closed –
+grep for the fixed file’s own path, not just re-grep the string being
+fixed. (3) `ROADMAP.md:21-22`’s “the `inst/extdata/` developer docs”
+line needs an owner decision on wording, not a mechanical fix – see the
+new `BACKLOG.md` item. (4) `.DS_Store`/`inst/.DS_Store` remain harmless,
+unfixed, out-of-scope artifacts (unchanged since S415). (5) Branch was
+up to date with `origin/master` at this session’s start – confirm this
+is still true at your own Phase 0 before assuming a push is (or isn’t)
+owed; this session did not push. - **Self-assessment score:** 8/10 (see
+above for full breakdown).
+
 ### What Session 417 Did
 
 **Deliverable:** Owner-picked from S416’s priorities list: execute

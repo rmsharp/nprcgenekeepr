@@ -47,6 +47,50 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-28 · \[ad hoc\] `inst/extdata/` reorganization Phase 4: place the PDF, final repo-wide sweep – plan now fully executed (Session 418)
+
+- **Deliverable:** Owner-picked from S417’s priorities list: execute
+  Phase 4 of `docs/planning/extdata-reorganization-plan.md` – resolve
+  the plan’s 2 remaining open decisions, place
+  `Master_Genetic_metrics_2_14_15.pdf`, and run the plan’s final
+  repo-wide sweep grep. TDD Phase: N/A – file relocation + rendered-doc
+  refresh, no `R/` production logic.
+- **Decisions resolved via `AskUserQuestion` before claiming the session
+  (plan §10):** (1) PDF placement -\> `inst/extdata/reference/`
+  (end-user-facing reference material analogous to `ui_guidance/`, the
+  plan’s own default); (3) orphaned-files archive-vs-delete -\> keep
+  archived at `dev/extdata-scratch/`, no change from Phase 1.
+- **Execution:** re-ran a fresh, independent grep for the PDF’s filename
+  before touching it (none found outside planning/session-notes prose)
+  and `git mv`’d it to `inst/extdata/reference/`. Ran the plan’s
+  prescribed final sweep grep, which found `README.md` stale relative to
+  its already-fixed source: `README.Rmd` `child=`-includes
+  `vignettes/manual_components/_summary_of_major_functions.Rmd` (the
+  exact file S417 fixed for a stale GitHub blob URL), but `README.Rmd`
+  was never in S417’s Phase-3 render target list, so `README.md` still
+  linked the pre-Phase-2 flat
+  `inst/extdata/example_nprcgenekeepr_config` path. Re-rendered
+  `README.Rmd` to pick up the fix – see `PROJECT_LEARNINGS.md`
+  Learning 385. All other sweep hits triaged and confirmed as false
+  positives: dated historical prose in `NEWS.Rmd`/`NEWS.md` and various
+  `docs/planning/`/`docs/research/` documents, correctly describing repo
+  state as it existed when each was written, left unedited.
+- **Discovered but deferred (owner-input editorial call, not a
+  mechanical fix):** `ROADMAP.md:21-22` still describes “the
+  `inst/extdata/` developer docs” as a documentation-engine category,
+  but Phase 1 (S415) already relocated all 3 of those dev docs out of
+  `inst/extdata/` to `dev/extdata-scratch/` – filed as a new
+  `BACKLOG.md` Housekeeping item rather than rewritten unilaterally.
+- **Verify:** `R CMD build` tarball ships the PDF at
+  `inst/extdata/reference/` and nothing at the old flat path (confirmed
+  via `tar tzf`); regression suite exact baseline (0/0/0, 3198 passed,
+  179 skipped); `devtools::check()` 0 errors/0 warnings, 1 NOTE (same
+  pre-existing `NEWS.md:8` spelling gap, confirmed untouched – read from
+  the raw check log’s `Status:` line per Learning 382).
+- **`inst/extdata/` reorganization plan is now fully executed (Phases
+  1-4 all DONE)** – `docs/planning/extdata-reorganization-plan.md`, S414
+  (plan) through S418 (this session).
+
 ### 2026-07-28 · \[ad hoc\] `inst/extdata/` reorganization Phase 3: fix + re-render the rendered artifacts still embedding the old flat path (Session 417)
 
 - **Deliverable:** Owner-picked from S416’s priorities list: execute

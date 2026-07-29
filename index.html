@@ -76,7 +76,7 @@
 <h1 id="nprcgenekeepr-">nprcgenekeepr 
 <a class="anchor" aria-label="anchor" href="#nprcgenekeepr-"></a>
 </h1>
-<p>Version 2.0.0.9000 (2026-07-28)</p>
+<p>Version 2.0.0.9000 (2026-07-29)</p>
 <!-- badges: start -->
 
 <div class="section level2">
@@ -142,7 +142,7 @@ A Practical Approach for Designing Breeding Groups to Maximize Genetic Diversity
 </h3>
 <p>The user can enter a list of focal animals in a CSV file that will be used to create a pedigree containing all direct relative (ancestors and descendants) via the <strong>labkey.selectRows</strong> function within the <strong>Rlabkey</strong> package if a database connection is provided via a configuration file and the user has read permission on a LabKey server with the demographic data in an <strong>EHR</strong> (Electronic Health Record) module.</p>
 <p>Two configuration files are needed to use the database features of nprcgenekeepr with LabKey. The first file is named <strong>_netrc</strong> on Microsoft Windows operating systems and <strong>.netrc</strong> otherwise, allows the user to authenticate with LabKey through the LabKey API and is fully described by <a href="https://www.labkey.org/Documentation/wiki-page.view?name=netrc" class="external-link">LabKey documentation</a></p>
-<p>The second file is named <strong>_nprcgenekeepr_config</strong> on Microsoft Windows operating systems and <strong>.nprcgenekeepr_config</strong> otherwise and is the <code>nprcgenekeepr</code> <a href="https://github.com/rmsharp/nprcgenekeepr/blob/master/inst/extdata/example_nprcgenekeepr_config">configuration file</a> An image of this example configuration file is included as a data object and can be loaded and viewed with the following lines of R code in the R console.</p>
+<p>The second file is named <strong>_nprcgenekeepr_config</strong> on Microsoft Windows operating systems and <strong>.nprcgenekeepr_config</strong> otherwise and is the <code>nprcgenekeepr</code> <a href="https://github.com/rmsharp/nprcgenekeepr/blob/master/inst/extdata/examples/example_nprcgenekeepr_config">configuration file</a> An image of this example configuration file is included as a data object and can be loaded and viewed with the following lines of R code in the R console.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"exampleNprcgenekeeprConfig"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/View.html" class="external-link">View</a></span><span class="op">(</span><span class="va">exampleNprcgenekeeprConfig</span><span class="op">)</span></span></code></pre></div>
