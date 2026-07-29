@@ -386,3 +386,31 @@ claim-source audit, `pkgdown`/`R CMD build` verification, and the
 resolved — see `CHANGELOG.md`. Per-item reachability notes and traps
 live in `CLAUDE.md` “Project-specific Learnings”.)* - \[ \] (none
 remaining)
+
+## Genetic-metrics PDF audit follow-ups (from GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md)
+
+*S419’s capability-comparison audit
+(`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md`)
+compared the package against the 2015 NHP Genetics and Genomics Working
+Group PDF and found 12 missing / 9 partial findings (of 37 total).
+Triaged S422 (2026-07-29) via owner `AskUserQuestion` picks – all 6
+findings/clusters owner-directed to file as GitHub issues, tracked
+there, not here: **\#125** (configurable ranking-priority scheme +
+surface multiple breeding-group candidates, Dimensions 1 & 2), **\#126**
+(kinship/genome-uniqueness distribution shape statistics – skewness,
+kurtosis, Dimension 3), **\#127** (surface
+`correctUnknownParentMeanKinship()`’s silently-dropped `flagged` list,
+Dimension 4), **\#128** (breeding-group exclusion is top-N rank-based,
+not a genetic-value floor, Dimension 2), **\#129**
+(pedigree-diagram/tree visualization, currently table-only, Dimension
+7), **\#130** (marker-based
+kinship/heterozygosity/parentage-verification + cross-center identity
+resolution, Dimensions 5 & 6). 1 finding (NGS/whole-genome/MHC-specific/
+linkage-disequilibrium methods, Dimension 5) declined, no action – the
+source PDF itself frames these as speculative future work even in 2015,
+matching the audit’s own Recommendation \#5. The remaining findings
+(PMX/MateRx/Pedscope/PedSys tool-comparison notes, the “make pedigree
+available to researchers” governance recommendation) are descriptive or
+already-adequately-served, not gaps requiring tracking. See
+`CHANGELOG.md`.* - \[ \] (none remaining – all actionable items tracked
+via GitHub issues \#125-#130 above.)

@@ -68,6 +68,22 @@ are legal at write time (the receipt ships in the very commit whose sha
 it would name); the next session reconciles them to real shas.
 
 ``` handoff
+session: S422
+date: 2026-07-29
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md's 12 missing/9 partial findings triaged. 6 GitHub issues filed (#125-#130), 1 finding declined (NGS/MHC/LD-block, per audit's own Recommendation #5). BACKLOG.md new section added.
+what_was_done: Read the full 292-line audit, reused its own Recommendations clustering to collapse 21 non-implemented findings into 6 decision units + 1 already-settled decline. Cross-checked all 9 pre-existing open issues for overlap (none found). Presented the 6 clusters via AskUserQuestion (2 calls, 4+2 single-select questions); owner picked "File GitHub issue" for all 6. Ran gh label list before filing -- found this project's documented 5-state Issue Lifecycle labels were never provisioned; filed all 6 with `enhancement` matching the repo's actual convention. Filed issues #125-#130, added BACKLOG.md "Genetic-metrics PDF audit follow-ups" section, CHANGELOG.md [ad hoc] entry, PROJECT_LEARNINGS.md Learning 387, and fixed CLAUDE.md's stale learning-count claim (386->387, 1-419+->1-422+).
+next_steps: No task claimed for S423. Standing: (a) LabKey integration recs (BLOCKED, needs live server); (b) NPRC outreach plan (DECISION NEEDED, owner-executed); (c) issues #125-#130 need their own design/scoping before implementation (see each body's Scope note); (d) whether to provision the 5-state Issue Lifecycle labels (Learning 387) is its own open decision; (e) 8 pre-existing open issues (#123, #37, #36, #28, #12, #11, #10, #5) remain un-mirrored into BACKLOG.md.
+key_files: docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md (source, unedited); BACKLOG.md (new section); PROJECT_LEARNINGS.md Learning 387; CLAUDE.md:235.
+gotchas: (1) .DS_Store files remain harmless out-of-scope, unchanged since S415/S419-421. (2) This repo has NOT provisioned DEVELOPMENT_WORKSTREAM.md's 5-state Issue Lifecycle labels -- gh label list shows only stock GitHub labels + a custom "low priority"; don't assume needs-triage/ready-for-agent/etc. exist without checking. (3) Branch was up to date with origin/master at this session's Phase 0 -- re-verify at your own.
+runtime_smoke: n/a -- no R/tests code touched; pure triage, GitHub issue filing, and documentation
+changelog_ref: CHANGELOG.md 2026-07-29 S422 entry
+commit: 6b277000 (claim); close-out commit sha to follow
+```
+
+``` handoff
 session: S421
 date: 2026-07-29
 status: complete
