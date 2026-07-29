@@ -11,21 +11,139 @@
 priorities list): execute **Phase 2** of `docs/planning/extdata-reorganization-plan.md`
 -- create `inst/extdata/examples/`, migrate the 10 load-bearing files, update all
 `system.file()`/hardcoded-path call sites (~50 across `R/`, `tests/`, `vignettes/`,
-`man/`, `data-raw/`). (IN PROGRESS)
-**Started:** 2026-07-28
-**Status:** Session claimed. Resolving the plan's remaining open pre-Phase-2 decision
-(subfolder name, plan Sec 10 #2) via `AskUserQuestion` before any file edits. Decision
-#4 (`vignettes/a2interactive.R` generation status) resolved directly by the owner
-during Phase 0/1: `.Rmd` files are the source; `.R`/`.md`/`.html` are generated
-derivatives (confirmed also gitignored/untracked -- `.gitignore:18,20,22` --
-`git status --ignored` shows `vignettes/a2interactive.R` etc. as `!!`). Phase 2 will
-therefore edit only `vignettes/a2interactive.Rmd:90` (the tracked source), not the
-local `.R` copy. Noted, not fixed (out of scope): `vignettes/gvaConvergence.R` and
-`vignettes/simulatedKValues.R` show the same local staleness pattern relative to their
-`.Rmd` sources, but neither references `inst/extdata/` -- unrelated to this reorg.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
-next session's reconcile.
+`man/`, `data-raw/`). **DONE.**
+**Started/Completed:** 2026-07-28 / 2026-07-28
+**Status:** DONE. TDD Phase: N/A throughout -- file relocation + path-reference updates
+in existing tests/prose, no new `R/` production logic, matching S414/S415 precedent for
+this same plan.
+
+**What happened, in order:** **(1)** Claimed the session (`082a0cc4`) after both open
+pre-Phase-2 decisions were being resolved -- see gotcha (2) below re: ordering slip.
+**(2)** Resolved plan §10's two Phase-2-blocking open decisions: subfolder name
+**`examples/`**, owner-picked via `AskUserQuestion` over `fixtures/`/`sample-data/`/
+`package-data/`; `vignettes/a2interactive.R`'s generation status (Dragon 4) --
+investigated via the `.Rmd`'s own `%\VignetteEngine{knitr::rmarkdown_notangle}`
+directive, zero `purl()` calls anywhere in the repo, and git history showing the `.R`
+frozen 3 commits behind the `.Rmd`, and from that evidence WRONGLY concluded
+"hand-maintained," presenting it as a "(Recommended)" `AskUserQuestion` answer. The
+owner rejected that tool call and corrected directly: `.Rmd` files are the source;
+`.R`/`.md`/`.html` are generated derivatives, and any drift ahead of the `.Rmd` is a bug
+to fix -- see `PROJECT_LEARNINGS.md` Learning 383. Follow-up confirmed the correction
+further: `vignettes/*.R`/`*.md`/`*.html` are ALL gitignored (`.gitignore:18,20,22`,
+`git status --ignored` shows every one as `!!`), so the tracked-source fix was the
+`.Rmd` edit alone; the stale local `.R` was regenerated via `knitr::purl()` as a
+courtesy (no commit, since gitignored). Noted, not fixed (unrelated, out of scope):
+`vignettes/gvaConvergence.R`/`simulatedKValues.R` show the same local staleness pattern
+but reference no `extdata` path. **(3)** Re-ran a fresh, independent exhaustive
+`grep -rn` for all 10 filenames across `R/`, `tests/`, `vignettes/`, `man/`,
+`data-raw/`, `README.Rmd`, `docs/`, `.github/` before touching anything (Dragon 1),
+rather than trusting the plan's own §8.1 inventory as final -- this also surfaced that
+`docs/*` (pkgdown site output) is gitignored except a whitelisted set of prose
+subdirectories, and correctly scoped which path-bearing prose sites needed edits (7)
+vs. which plain-filename mentions (`R/data.R`'s 4 sites) did not. **(4)** `git mv`'d all
+10 load-bearing files into `inst/extdata/examples/` (2 checkpoint commits of 5).
+**(5)** Updated the central `get_test_data_path()` helper, ~28 individual
+`system.file()` call sites across 15 test files, 7 path-bearing prose sites, and the one
+hardcoded vignette path, across 9 further checkpoint commits (splitting one 6-file batch
+into two to respect the 5-file blast-radius cap). **(6)** Regenerated
+`man/loadSiteConfig.Rd` via `devtools::document()` -- the only one of the plan's 5 named
+`.Rd` files that actually needed it, confirming step (3)'s R/data.R scoping call.
+**(7)** Ran Phase 2's full prescribed verification: regression suite exact baseline
+match (0/0/0, 3198 passed, 179 skipped); `R CMD build` tarball confirmed all 10 files
+under `examples/`, nothing at the old flat path; `devtools::check()` 0 errors/0
+warnings, 1 NOTE (same pre-existing spelling gap S415 found, confirmed untouched via
+`git log`); grep sweep confirmed the only 3 remaining un-migrated references are exactly
+what the plan defers to Phase 3. **(8)** Updated `BACKLOG.md` (Phase 2 marked DONE,
+both blocking decisions resolved, Phase 3-4 now READY-pending-2-non-blocking-decisions),
+`CHANGELOG.md`, `PROJECT_LEARNINGS.md` (Learning 383), `CLAUDE.md`'s learning-count
+cross-reference (382 -> 383), and this project's own auto-memory (a new
+`ask-dont-infer-source-vs-generated` cross-session feedback memory).
+**Ledger:** See `CHANGELOG.md` 2026-07-28 S416 entry (`[ad hoc]`).
+
+**Session 415 Handoff Evaluation (by Session 416): 8/10.** **What helped:** correctly
+identified Phase 2 as blocked on exactly 2 of the plan's 4 open decisions and named both
+precisely (subfolder name; a2interactive.R generation status), pointed to the exact plan
+section, and its "don't start it without asking" gotcha was followed to the letter --
+both decisions were resolved via `AskUserQuestion`/direct owner correction before any
+file was touched. **What was missing:** the handoff simply named Dragon 4 as an open
+question without additional investigative help or a caution that indirect technical
+evidence (a VignetteEngine directive, git history) could produce a plausible-but-wrong
+answer -- not a fabrication or omission on S415's part (S415 never investigated this
+question itself, correctly deferring it), but a session picking this up cold had no
+warning that this particular decision was riskier to reason about from evidence alone
+than the subfolder-naming one. **What was wrong:** nothing -- every claim S415 made
+(baseline test counts, the 1 NOTE, the file counts) was independently re-verified this
+session and matched exactly. **ROI:** high -- the precise decision-count and plan-section
+pointers meant this session spent zero time rediscovering what was blocking Phase 2,
+even though resolving decision #4 took an unplanned wrong turn.
+
+**Self-assessment (Session 416): 8/10.** **Strengths:** (1) followed Dragon 1's
+requirement to re-run an independent exhaustive grep before touching any file rather
+than trusting the plan's §8.1 inventory as final, and used that fresh pass to correctly
+distinguish path-bearing prose (needs editing) from plain-filename mentions (doesn't) --
+confirmed against `devtools::document()`'s actual output as an independent check, not
+just the initial grep judgment; (2) did real forensic investigation (VignetteEngine
+directive, repo-wide `purl()` search, git log) before answering Dragon 4, rather than
+guessing, and when corrected, verified the correction against further hard evidence
+(`.gitignore`, `git status --ignored`) instead of just accepting it uncritically; (3)
+found and correctly declined to fix an out-of-scope side-finding (gvaConvergence.R/
+simulatedKValues.R staleness) -- flagged rather than "while I'm at it" fixed
+(`SAFEGUARDS.md`); (4) respected the 5-file blast-radius cap across 9 checkpoint commits
+for a ~35-call-site, 20+-file change, splitting an over-cap 6-file batch correctly; (5)
+ran the plan's full prescribed verification and again did not take `devtools::check()`'s
+"0 notes ✔" summary at face value, checking the raw `Status: 1 NOTE` line and confirming
+via `git log` the NOTE's source was untouched this session (repeating S415's Learning
+382 discipline). **Weaknesses:** (1) presented the WRONG conclusion about
+`a2interactive.R`'s generation status as a confident "(Recommended)" `AskUserQuestion`
+option, when the actual evidence only proved automated tangling was disabled, not that
+manual hand-maintenance was the convention -- should have asked an open question instead
+of a confident recommendation; captured as `PROJECT_LEARNINGS.md` Learning 383 and a new
+cross-session auto-memory so this doesn't recur; (2) did the Dragon 1/Dragon 4
+investigative work (reads/greps) before writing the Phase 1B session-claim stub, a
+literal ordering violation of "immediately... before any technical work" -- no material
+harm (investigation is read-only, and the stub landed before any file edit), but a
+discipline gap worth naming. **Compared to previous sessions in this workstream:**
+closest comparable is S414/S415's "don't trust a single pass, verify independently"
+discipline -- this session extended it to a harder case where the independent
+verification itself first produced a wrong answer requiring owner correction, not just
+an incomplete-but-directionally-right one (S414's subagent gap, S415's count
+discrepancy). The correction-and-recovery was handled well; the initial
+overconfident-presentation mistake is the session's one real avoidable defect.
+
+**Handoff to Session 417:**
+- **What's next:** Owner picks (a) Phase 3 of the `inst/extdata/` reorg -- re-render
+  `vignettes/manual_components/_summary_of_major_functions.Rmd`'s GitHub blob URL +
+  `vignettes/a3manual.Rmd`, `vignettes/a2interactive.Rmd`, and
+  `vignettes/articles/offline-focal-animal-workflow.qmd` (plan §6 Phase 3) -- READY, no
+  blocking decisions; (b) Phase 4 (place the new PDF; final repo-wide sweep) -- still has
+  2 open, non-blocking decisions (PDF's intended home, §10 #1; whether to revisit
+  archive-vs-delete for the orphaned files now that Phase 1 already archived them, §10
+  #3); (c) the `NEWS.md:8` spelling-check NOTE item (READY, Effort S, `BACKLOG.md`
+  Housekeeping) -- unchanged since S415, still a 2-word hand-edit to `inst/WORDLIST`;
+  (d) any older standing items: LabKey integration recs (BLOCKED, Effort M), 9 untriaged
+  GitHub issues (#123, #116, #37, #36, #28, #12, #11, #10, #5), or the Outreach plan's
+  owner-executed follow-up (not a coding task).
+- **Key files:** `docs/planning/extdata-reorganization-plan.md` (Phase 3 section §6,
+  remaining open decisions §10 #1/#3); `inst/extdata/examples/` (new home of the 10
+  load-bearing files); `tests/testthat/helper-shinytest2.R:177-179`
+  (`get_test_data_path()`, now inserts the `examples` segment); `BACKLOG.md`
+  Housekeeping section (Phase 2 marked DONE); `PROJECT_LEARNINGS.md` Learning 383;
+  `CLAUDE.md:235` (learning-count cross-reference, 382 -> 383).
+- **Gotchas:** (1) Phase 3's targets are all rendered-artifact re-renders of already
+  Phase-2-fixed (`a2interactive.Rmd`) or Phase-3-scoped (`_summary_of_major_functions.Rmd`
+  GitHub blob URL, `offline-focal-animal-workflow.qmd`) sources -- `vignettes/*.R`/`*.md`/
+  `*.html` are gitignored local build byproducts (confirmed `.gitignore:18,20,22`), so
+  re-rendering them produces no git diff for those files themselves, only for any
+  `.Rmd`/`.qmd` source edits Phase 3 makes; (2) when investigating a "which paired file
+  is the source" question anywhere else in this codebase, ask the owner rather than
+  inferring from build-pipeline evidence alone -- see Learning 383 and the new
+  `ask-dont-infer-source-vs-generated` auto-memory; a disabled automated build step does
+  not prove no manual regeneration convention exists; (3) `.DS_Store` continues to show
+  modified, and `inst/.DS_Store` remains untracked -- both harmless macOS artifacts,
+  unfixed (out of scope, unchanged since S415); (4) this branch is now well ahead of
+  `origin/master` (unpushed since at least S415) -- per the `push-close-out-docs-to-origin`
+  convention, consider pushing before or during a future session's close-out.
+- **Self-assessment score:** 8/10 (see above for full breakdown).
 
 ### What Session 415 Did
 **Deliverable:** Owner-picked from `BACKLOG.md`'s Housekeeping section (S414's plan):

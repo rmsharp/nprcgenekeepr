@@ -62,17 +62,17 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S416
 date: 2026-07-28
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Phase 2 of docs/planning/extdata-reorganization-plan.md -- create inst/extdata/examples/, migrate the 10 load-bearing files, update all system.file()/hardcoded-path call sites (~50 across R/, tests/, vignettes/, man/, data-raw/). Resolving the plan's remaining open decision (subfolder name, plan Sec10 #2) via AskUserQuestion before any file edits.
-what_was_done: pending
-next_steps: pending
-key_files: docs/planning/extdata-reorganization-plan.md (Phase 2 Sec6, evidence-based inventory Sec8.1/8.2)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- executed Phase 2 of docs/planning/extdata-reorganization-plan.md: created inst/extdata/examples/, migrated the 10 load-bearing files, updated the central test helper + ~28 individual system.file() call sites + 7 path-bearing prose sites + the one hardcoded vignette path, regenerated man/loadSiteConfig.Rd. Both blocking open decisions resolved (subfolder name examples/; a2interactive.R generation status). Phase 3-4 remain separate future sessions.
+what_was_done: Claimed session (082a0cc4). Resolved plan Sec10's 2 blocking open decisions: subfolder name examples/ (AskUserQuestion pick over fixtures/sample-data/package-data/); a2interactive.R generation status -- initially misjudged as hand-maintained from VignetteEngine notangle + git history evidence, presented as a Recommended AskUserQuestion answer, REJECTED and corrected by the owner (.Rmd is source; .R/.md/.html are generated derivatives, drift is a bug) -- see PROJECT_LEARNINGS.md Learning 383. Confirmed further via .gitignore: vignettes/*.R/*.md/*.html are all gitignored, never committed. Re-ran a fresh exhaustive grep (Dragon 1) before touching any file. git mv'd all 10 files into inst/extdata/examples/ (2 commits). Updated get_test_data_path() helper, ~28 system.file() call sites across 15 test files, 7 path-bearing prose sites, 1 hardcoded vignette path (9 further checkpoint commits, one 6-file batch split into two for the 5-file cap). Regenerated man/loadSiteConfig.Rd via devtools::document(). Verified: regression suite exact baseline (0/0/0, 3198 passed, 179 skipped); R CMD build tarball confirms all 10 files under examples/; devtools::check() 0 errors/0 warnings, 1 NOTE (same pre-existing spelling gap S415 found, confirmed untouched); grep sweep confirms only the 3 Phase-3-deferred references remain. Updated BACKLOG.md, CHANGELOG.md, PROJECT_LEARNINGS.md (Learning 383), CLAUDE.md learning-count (382->383), and a new cross-session auto-memory.
+next_steps: Owner picks (a) Phase 3 of the reorg -- READY, no blocking decisions, re-render _summary_of_major_functions.Rmd/a3manual.Rmd/a2interactive.Rmd/offline-focal-animal-workflow.qmd (plan Sec6 Phase3); (b) Phase 4 -- 2 open non-blocking decisions remain (PDF home Sec10#1, archive-vs-delete revisit Sec10#3); (c) the NEWS.md:8 spelling-NOTE item (READY, Effort S, unchanged since S415); (d) older standing items: LabKey (BLOCKED, Effort M), 9 untriaged issues, Outreach follow-up.
+key_files: docs/planning/extdata-reorganization-plan.md (Phase 3 Sec6, open decisions Sec10 #1/#3), inst/extdata/examples/ (10 relocated files), tests/testthat/helper-shinytest2.R:177-179, BACKLOG.md Housekeeping section, PROJECT_LEARNINGS.md Learning 383, CLAUDE.md:235
+gotchas: Phase 3's targets are rendered-artifact re-renders of already-fixed or Phase-3-scoped sources -- vignettes/*.R/*.md/*.html are gitignored local byproducts, so re-rendering produces no git diff for those files themselves, only for .Rmd/.qmd source edits. When investigating a "which paired file is the source" question anywhere in this codebase, ask the owner rather than inferring from build-pipeline evidence alone (Learning 383). .DS_Store/inst/.DS_Store remain harmless untouched artifacts. This branch is well ahead of origin/master (unpushed since at least S415) -- consider pushing per the push-close-out-docs-to-origin convention.
+runtime_smoke: Partial via the existing e2e suite -- the regression suite (0/0/0, all passing) includes real shinytest2::AppDriver E2E tests that upload these exact relocated fixture files (obfuscated_rhesus_mhc_ped.csv, ExamplePedigree.csv/.txt, etc.) through the live Shiny app's real file-input/QC pipeline, exercising the changed system.file() paths through actual runtime dispatch, not just unit-level file-existence checks. No separate manual runGeneKeepR() click-through was performed beyond that.
+changelog_ref: CHANGELOG.md 2026-07-28 "inst/extdata/ reorganization Phase 2: subfolder the 10 load-bearing files into examples/ (Session 416)"
+commit: 082a0cc4,bbf3ec9a,f35d809f,c38b107e,6f87d91b,70206939,58ff752f,44066adf,f6282c3c,487d0c09,473e5309,8e87f886
 ```
 
 ```handoff
