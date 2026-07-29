@@ -39,6 +39,13 @@ test_that("modBreedingGroupsUI includes a custom sex ratio numeric input", {
   expect_true(grepl("customSexRatio", ui_html))
 })
 
+test_that("modBreedingGroupsUI includes a candidate-grouping selector (issue #125 Slice 2)", {
+  ui <- modBreedingGroupsUI("test")
+  ui_html <- as.character(ui)
+
+  expect_true(grepl("candidateChoice", ui_html))
+})
+
 test_that("modBreedingGroupsUI's nTopAnimals conditionalPanel condition is unprefixed", {
   ui <- modBreedingGroupsUI("test")
   ui_html <- as.character(ui)
@@ -1169,6 +1176,39 @@ test_that("viewGrp out-of-range selection clamps to the last group", {
       df <- utils::read.csv(output$downloadGroup, check.names = FALSE,
                             stringsAsFactors = FALSE)
       expect_setequal(as.character(df[["Ego ID"]]), lastGrp)
+    }
+  )
+})
+
+test_that(paste("modBreedingGroupsServer's default candidate selection",
+                 "preserves pre-Slice-2 groups()/score()/unassigned()",
+                 "shape (issue #125 Slice 2 regression)"), {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeBgViewPed(14L)
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped }),
+      geneticValues = NULL
+    ),
+    {
+      session$setInputs(
+        animalSource = "all", nGroups = 3, maxKinship = 0.25,
+        sexRatio = "none"
+      )
+      session$setInputs(formGroups = 1)
+
+      result <- session$getReturned()
+      groups <- result$groups()
+      score <- result$score()
+      unassigned <- result$unassigned()
+
+      expect_true(is.list(groups))
+      for (g in groups) expect_true(is.character(g))
+      expect_true(is.numeric(score))
+      expect_true(is.character(unassigned))
     }
   )
 })

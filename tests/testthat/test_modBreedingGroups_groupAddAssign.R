@@ -355,7 +355,10 @@ test_that(paste("modBreedingGroupsServer threads the custom numeric sex",
   local_mocked_bindings(
     groupAddAssign = function(..., sexRatio = 0.0) {
       recorder$sexRatio <- sexRatio
-      list(group = list(character(0L)), score = 0L)
+      list(
+        group = list(character(0L)), score = 0L,
+        candidates = list(list(group = list(character(0L)), score = 0L))
+      )
     }
   )
 
@@ -778,6 +781,130 @@ test_that("modBreedingGroupsServer works with examplePedigree subset", {
         ids <- if (is.character(group)) group else group$id
         expect_true(all(ids %in% test_ped$id))
       }
+    }
+  )
+})
+
+# =============================================================================
+# Tests: Issue #125 Slice 2 -- multiple breeding-group candidates selector
+# =============================================================================
+
+test_that("modBreedingGroupsServer's groups() reflects the selected candidate", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeBreedingGroupTestPed(nFounders = 6, nOffspring = 12)
+
+  local_mocked_bindings(
+    groupAddAssign = function(...) {
+      list(
+        group = list(c("F1", "F2")), score = 5L,
+        candidates = list(
+          list(group = list(c("F1", "F2")), score = 5L),
+          list(group = list(c("F3", "F4")), score = 3L)
+        )
+      )
+    }
+  )
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped }),
+      geneticValues = NULL
+    ),
+    {
+      session$setInputs(
+        animalSource = "all", nGroups = 2, maxKinship = 0.25,
+        sexRatio = "none"
+      )
+      session$setInputs(formGroups = 1)
+
+      result <- session$getReturned()
+      # Default (candidateChoice unset) matches today's single-best behavior.
+      expect_equal(result$groups(), list(c("F1", "F2")))
+
+      session$setInputs(candidateChoice = "2")
+      expect_equal(result$groups(), list(c("F3", "F4")))
+    }
+  )
+})
+
+test_that("selecting a different candidate does not re-invoke groupAddAssign()", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeBreedingGroupTestPed(nFounders = 6, nOffspring = 12)
+  recorder <- new.env(parent = emptyenv())
+  recorder$callCount <- 0L
+
+  local_mocked_bindings(
+    groupAddAssign = function(...) {
+      recorder$callCount <- recorder$callCount + 1L
+      list(
+        group = list(c("F1", "F2")), score = 5L,
+        candidates = list(
+          list(group = list(c("F1", "F2")), score = 5L),
+          list(group = list(c("F3", "F4")), score = 3L)
+        )
+      )
+    }
+  )
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped }),
+      geneticValues = NULL
+    ),
+    {
+      session$setInputs(
+        animalSource = "all", nGroups = 2, maxKinship = 0.25,
+        sexRatio = "none"
+      )
+      session$setInputs(formGroups = 1)
+      session$getReturned()$groups()
+
+      session$setInputs(candidateChoice = "2")
+      session$getReturned()$groups()
+    }
+  )
+
+  expect_equal(recorder$callCount, 1L)
+})
+
+test_that("candidateChoice out-of-range selection clamps to the last candidate", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeBreedingGroupTestPed(nFounders = 6, nOffspring = 12)
+
+  local_mocked_bindings(
+    groupAddAssign = function(...) {
+      list(
+        group = list(c("F1", "F2")), score = 5L,
+        candidates = list(
+          list(group = list(c("F1", "F2")), score = 5L),
+          list(group = list(c("F3", "F4")), score = 3L),
+          list(group = list(c("F5", "F6")), score = 1L)
+        )
+      )
+    }
+  )
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped }),
+      geneticValues = NULL
+    ),
+    {
+      session$setInputs(
+        animalSource = "all", nGroups = 2, maxKinship = 0.25,
+        sexRatio = "none"
+      )
+      session$setInputs(formGroups = 1)
+      session$setInputs(candidateChoice = "99")
+
+      result <- session$getReturned()
+      expect_equal(result$groups(), list(c("F5", "F6")))
     }
   )
 })
