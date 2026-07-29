@@ -70,6 +70,15 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-29--issue-125-write-implementation-plan-configurable-ranking-priority-scheme--multi-candidate-breeding-groups-session-423">2026-07-29 · [issue #125] Write implementation plan: configurable ranking-priority scheme + multi-candidate breeding groups (Session 423)<a class="anchor" aria-label="anchor" href="#id_2026-07-29--issue-125-write-implementation-plan-configurable-ranking-priority-scheme--multi-candidate-breeding-groups-session-423"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> <code>docs/planning/issue125-ranking-priority-multi-candidate-plan.md</code> – an evidence-based implementation plan for closing issue #125, ratified via <code>AskUserQuestion</code> this session, no <code>R/</code>/<code>tests/</code> code changed.</li>
+<li>
+<strong>Process:</strong> launched a 6-agent research workflow reading the ranking (<code>R/orderReport.R</code>/<code>R/rankSubjects.R</code>/<code>R/modGeneticValue.R</code>) and breeding-group (<code>R/groupAddAssign.R</code>/<code>R/groupMembersReturn.R</code>/<code>R/modBreedingGroups.R</code>) code firsthand, plus config/adapter precedent, before drafting any design. Found that issue #125’s own text (from the audit that filed it) cites <code>R/orderReport.R</code>’s categorical scheme, but the Shiny app actually displays a second, independently hardcoded scheme (<code>R/modGeneticValue.R:294</code>, <code>rank(indivMeanKin - gu)</code>) that unconditionally overrides it – a correction to the issue’s premise, surfaced to the owner before ratifying scope. Presented 4 load-bearing decisions via one <code>AskUserQuestion</code> call; owner ratified: expose the categorical scheme’s internal cutoffs (not just a scheme toggle), a Shiny UI control (not a config-file key), top-5 distinct-scoring deduplicated breeding-group candidates, ranking-scheme first as Slice 1.</li>
+<li>
+<strong>Result:</strong> plan document written with a firsthand evidence-based inventory (every claim cited <code>file:line</code>), a RATIFIED design-decisions section, two vertical slices (Slice 1: ranking-scheme configurability; Slice 2: multi-candidate breeding groups) each with RED/GREEN/DONE-looks-like/Verify/session-boundary/dragons, and a ratification record. <code>PROJECT_LEARNINGS.md</code> Learning 388 added (the audit-can-be-one-layer-shallow pattern; a <code>ScheduleWakeup</code> misuse caught and corrected mid-session).</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-29--ad-hoc-triage-genetic-metrics-pdf-capability-audit-findings-session-422">2026-07-29 · [ad hoc] Triage genetic-metrics PDF capability audit findings (Session 422)<a class="anchor" aria-label="anchor" href="#id_2026-07-29--ad-hoc-triage-genetic-metrics-pdf-capability-audit-findings-session-422"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> Owner-picked from S421’s priorities list: triage <code>docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md</code>’s 12 missing/9 partial findings (of 37 total) into tracked items.</li>

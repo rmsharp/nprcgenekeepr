@@ -7,6 +7,177 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 423 Did
+
+**Deliverable:** Write an implementation plan for closing GitHub issue
+\#125 (configurable genetic-value ranking-priority scheme + surface
+multiple breeding-group candidates). **DONE.** **Started/Completed:**
+2026-07-29 / 2026-07-29 **Status:** DONE. TDD Phase: N/A throughout –
+planning/architecture deliverable
+(`docs/planning/issue125-ranking-priority-multi-candidate-plan.md`), no
+`R/`/`tests/` code touched.
+
+**What happened, in order:** **(1)** Ran Phase 0 orientation in full
+(SAFEGUARDS.md, SESSION_NOTES.md, `gh issue list`, `git status`/`log`/
+`diff --stat`, `methodology_dashboard.py` (Health 98/100), ledger
+reconcile for `CHANGELOG.md`/`HANDOFFS.md` – both frontiers sat at HEAD,
+clean, no backfill needed). Rendered the priorities list; the user’s
+first message after orientation was a direct follow-up question, not a
+picklist selection, so no `AskUserQuestion` picklist was used for task
+selection this session – the user asked which existing issues addressed
+a specific configurability concern, then directly asked for a plan to
+close issue \#125. **(2)** Answered the follow-up (issues \#125 and
+\#128 both map to the concern; confirmed via `gh issue view` on both
+bodies) before any plan work began. **(3)** On receiving “make a plan to
+close issue \#125,” classified this as a Planning Session (Architecture
+workstream) per `SESSION_RUNNER.md`’s Phase 1 mapping, stated the
+deliverable back to the user, then claimed the session (commit
+`b314870e`) before any research. **(4)** Read
+`ARCHITECTURE_WORKSTREAM.md` and two precedent plans
+(`issue73-part2-user-configurable-plan.md`,
+`issue9-gva-unknown-parent-ranking-plan.md`) to match this project’s
+established plan-document structure and its `NULL`-default
+override-threading idiom. **(5)** Launched a 6-agent background research
+`Workflow` (`wf_cdbcc7a5-22c`) to read
+`R/orderReport.R`/`R/rankSubjects.R`/ `R/modGeneticValue.R` (ranking +
+display), `R/groupAddAssign.R`/
+`R/groupMembersReturn.R`/`R/modBreedingGroups.R` (breeding-group
+candidates), the config/adapter precedent files, and a full call-site
+inventory, firsthand – rather than drafting from the issue’s own
+citations alone. **Misused `ScheduleWakeup`** immediately after
+launching the workflow (its `<<autonomous-loop-dynamic>>` sentinel is
+`/loop`-specific, not a general “wait for background work” mechanism);
+caught before it fired and cancelled via `stop: true` – no harness
+confusion resulted, but the call was unnecessary regardless (workflow
+completions notify automatically). **(6)** The workflow’s research
+surfaced a materially important correction: issue \#125’s own text (from
+the audit that filed it) cited `R/orderReport.R`’s categorical tier
+scheme as *the* hardcoded ranking priority, but that scheme is not what
+the Shiny app actually displays – `R/modGeneticValue.R:294`
+unconditionally overrides it with a second, independently-hardcoded
+continuous formula (`rank(indivMeanKin - gu)`). **(7)** Surfaced this
+correction plus 3 other load-bearing decisions (mechanism,
+breeding-group candidate count, slice order) to the owner via one
+4-question `AskUserQuestion` call, mirroring the project’s established
+issue9/issue73 ratification pattern, before writing the plan. Owner
+ratified: also expose the categorical scheme’s internal cutoffs (not
+just a combined-vs-categorical toggle); a Shiny UI control (not a
+config-file key); top-5 distinct-scoring, deduplicated breeding-group
+candidates; ranking-scheme first as Slice 1. **(8)** Did direct
+follow-up verification (grep + read) of the exact
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)/`modGeneticValue.R`
+call sites and disambiguated the existing `guThresh` parameter (an
+unrelated allele-rarity threshold) from the new `guCutoff` parameter
+this plan introduces – a real naming-collision trap the sub-agent
+summaries alone would not have flagged. **(9)** Wrote
+`docs/planning/issue125-ranking-priority-multi-candidate-plan.md`
+(evidence- based inventory with every claim cited `file:line`; RATIFIED
+design decisions; two vertical slices with
+RED/GREEN/DONE/Verify/dragons; a ratification record). **(10)** Appended
+`PROJECT_LEARNINGS.md` Learning 388 (the audit-can-be-one-layer-shallow
+pattern + the `ScheduleWakeup` caution). **Runtime smoke test:** n/a –
+planning deliverable only, no `R/`/`tests/` code or Shiny runtime
+behavior changed this session. **Ledger:** See `CHANGELOG.md` 2026-07-29
+S423 entry (`[issue #125]`).
+
+**Session 422 Handoff Evaluation (by Session 423): 9/10.** **What
+helped:** the handoff’s `next_steps` item (c) named issues \#125-#130 as
+needing “their own design/scoping session before implementation – see
+each issue body’s Scope note” – this is exactly what the user asked for
+this session (a plan for \#125), with zero rediscovery needed of which
+issue or what “done” meant. Gotchas (1)/(2)/(3) (`.DS_Store` noise,
+label-provisioning gap, branch state) were all re-confirmed
+accurate/still-true at this session’s own Phase 0. **What was missing:**
+nothing that would be fair to hold against S422 – the two-ranking-scheme
+correction this session found required firsthand code research S422’s
+own triage/filing scope never called for; S422 correctly scoped its own
+session to triage, not design. **What was wrong:** nothing identified.
+**ROI:** high – the handoff’s specific pointer to issue \#125-130’s own
+“Scope note” as needing a design session was the key value-add; the
+substantive research/design work was necessarily this session’s own
+regardless of handoff depth.
+
+**Self-assessment (Session 423): 9/10.** **Strengths:** (1) did not
+draft the plan from the GitHub issue’s own citations alone – ran a
+firsthand research workflow first, which caught a real, load-bearing
+correction to the issue’s premise (the app doesn’t even use the scheme
+the issue cites as broken) before any design decision was locked in; (2)
+surfaced all 4 load-bearing scope/mechanism/count/ordering decisions via
+`AskUserQuestion` before writing the plan, matching this project’s
+established issue9/issue73 ratification convention, rather than
+unilaterally picking defaults; (3) did direct follow-up verification of
+exact call sites and caught a real naming-collision trap (`guThresh`
+vs. the new `guCutoff`) the sub-agent research alone did not flag; (4)
+every claim in the plan document is cited `file:line`, matching this
+project’s evidentiary standard for planning documents; (5) correctly
+scoped this session to exactly one deliverable (the plan document) and
+did not begin implementing – no `R/`/`tests/` files touched; (6) caught
+and self-corrected a tool misuse (`ScheduleWakeup` outside `/loop`)
+immediately, before it could cause confusion, and recorded it as a
+caution for future sessions. **Weaknesses:** (1) did not independently
+re-verify every single line-number claim from the 6 research agents –
+did a direct verification pass on the ranking-scheme half
+(`reportGV.R`/`modGeneticValue.R` call sites, the `guThresh`
+disambiguation) but relied on the research workflow’s own citations for
+the breeding-groups half (`groupAddAssign.R`/
+`groupMembersReturn.R`/`modBreedingGroups.R`) without a full independent
+re-derivation; a reasonable efficiency trade-off (mirrors Learning 386’s
+adversarial-verification precedent) but not exhaustive; (2) the brief
+`ScheduleWakeup` misuse, while caught immediately, was still a real
+process slip that should not have happened – the tool’s scope should
+have been checked before calling it, not after. **Compared to previous
+sessions:** matches S415-422’s discipline (full traceability, cited
+evidence, `AskUserQuestion`-gated judgment calls,
+`BACKLOG.md`/`CHANGELOG.md`/ `PROJECT_LEARNINGS.md` kept in sync
+same-session); matches issue9/issue73’s established planning-session bar
+(evidence-based inventory, RATIFIED design section, per-slice dragons,
+ratification record) on a plan of comparable depth and complexity.
+
+**Handoff to Session 424:** - **What’s next:** No task is claimed.
+`BACKLOG.md`’s “Active” section remains empty. The plan
+(`docs/planning/issue125-ranking-priority-multi-candidate-plan.md`) is
+ready for its first implementation session: **Slice 1** (configurable
+ranking-priority scheme – `R/orderReport.R`/`R/reportGV.R`/
+`R/modGeneticValue.R`, plus a vignette prose fix), a full strict-TDD
+session (RED -\> GREEN -\> REFACTOR, phase-gated via `AskUserQuestion`
+per the Development Process Contract). **Do not bundle Slice 1 with
+Slice 2** (multi-candidate breeding groups) – they are independent,
+separately ratified as two sessions (FM \#18/#25). Standing, untouched
+this session: (a) LabKey integration remaining recs (BLOCKED – needs a
+live LabKey server); (b) NPRC outreach plan (DECISION NEEDED – owner
+review/edit/ send); (c) issues \#126/#127/#129/#130 (the other 4
+clusters from S422’s triage) still need their own design/scoping
+sessions; (d) whether to provision this project’s documented five-state
+Issue Lifecycle GitHub labels (Learning 387) remains its own open
+decision; (e) 8 pre-existing open issues remain un-mirrored into
+`BACKLOG.md`, unchanged. - **Key files:**
+`docs/planning/issue125-ranking-priority-multi-candidate-plan.md` (this
+session’s deliverable – read in full before starting Slice 1);
+`R/orderReport.R:31-99`, `R/rankSubjects.R:33-57` (categorical scheme,
+plan §2A); `R/modGeneticValue.R:266-277,294-301` (app’s override
+scheme + the exact
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+call site, plan §2B); `R/groupAddAssign.R:164-193`,
+`R/groupMembersReturn.R:19-33`, `R/modBreedingGroups.R` (Slice 2, plan
+§2C-D); `PROJECT_LEARNINGS.md` Learning 388. - **Gotchas:** (1)
+`.DS_Store`/`inst/.DS_Store`/`inst/extdata/.DS_Store` remain harmless,
+unfixed, out-of-scope artifacts (unchanged since S415/S419-422). (2)
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+already has an unrelated `guThresh` parameter (allele-rarity threshold
+for
+[`calcGU()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md))
+– do NOT conflate it with the plan’s new `guCutoff` parameter
+(classifies an already-computed `gu` value into the `highGu` tier); see
+the plan’s Dragon R1. (3) This repo has NOT provisioned the
+`DEVELOPMENT_WORKSTREAM.md` five-state Issue Lifecycle labels –
+unchanged since S422, `gh label list` confirms only stock labels +
+`low priority`. (4) At this session’s Phase 0, branch was up to date
+with `origin/master` – re-verify at your own Phase 0. (5) Only use
+`ScheduleWakeup` inside an actual `/loop` invocation – a plain
+background `Workflow`/`Task` needs no wakeup, its completion
+notification is automatic (see Learning 388). - **Self-assessment
+score:** 9/10 (see above for full breakdown).
+
 ### What Session 422 Did
 
 **Deliverable:** Owner-picked from S421’s priorities list: triage
