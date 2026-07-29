@@ -6,6 +6,19 @@
 
 ## ACTIVE TASK
 
+### What Session 424 Did
+**Deliverable:** Implement Slice 1 of the issue #125 plan (configurable
+genetic-value ranking-priority scheme -- `R/orderReport.R`/`R/reportGV.R`/
+`R/modGeneticValue.R` + vignette prose fix), per
+`docs/planning/issue125-ranking-priority-multi-candidate-plan.md` §4 Slice 1.
+(IN PROGRESS)
+**Started:** 2026-07-29
+**Status:** Session claimed. Work beginning. Full strict-TDD session
+(RED -> GREEN -> REFACTOR, phase-gated via `AskUserQuestion` per the
+Development Process Contract), following `DEVELOPMENT_WORKSTREAM.md`.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F.
+
 ### What Session 423 Did
 **Deliverable:** Write an implementation plan for closing GitHub issue #125
 (configurable genetic-value ranking-priority scheme + surface multiple

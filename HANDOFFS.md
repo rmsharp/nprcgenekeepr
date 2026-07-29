@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S424
+date: 2026-07-29
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement Slice 1 of the issue #125 plan (configurable ranking-priority scheme) per docs/planning/issue125-ranking-priority-multi-candidate-plan.md Section 4 Slice 1. Full strict-TDD session (RED -> GREEN -> REFACTOR), phase-gated.
+what_was_done: pending
+next_steps: pending
+key_files: docs/planning/issue125-ranking-priority-multi-candidate-plan.md (the plan); R/orderReport.R, R/reportGV.R, R/modGeneticValue.R, vignettes/articles/genetic-value-analysis.qmd:133-134
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S423
 date: 2026-07-29
 status: complete
