@@ -6,6 +6,17 @@
 
 ## ACTIVE TASK
 
+### What Session 425 Did
+**Deliverable:** Implement Slice 2 of the issue #125 plan (surface multiple
+breeding-group candidates -- `R/groupAddAssign.R`/`R/groupMembersReturn.R`/
+`R/modBreedingGroups.R`) per
+`docs/planning/issue125-ranking-priority-multi-candidate-plan.md` §4 Slice 2.
+**IN PROGRESS.**
+**Started:** 2026-07-29
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F.
+
 ### What Session 424 Did
 **Deliverable:** Implement Slice 1 of the issue #125 plan (configurable
 genetic-value ranking-priority scheme -- `R/orderReport.R`/`R/reportGV.R`/

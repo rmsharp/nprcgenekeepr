@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S425
+date: 2026-07-29
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: IN PROGRESS -- Slice 2 of the issue #125 plan (surface multiple breeding-group candidates -- R/groupAddAssign.R/R/groupMembersReturn.R/R/modBreedingGroups.R), per docs/planning/issue125-ranking-priority-multi-candidate-plan.md Section 4 Slice 2.
+what_was_done: pending
+next_steps: pending
+key_files: docs/planning/issue125-ranking-priority-multi-candidate-plan.md Section 4 Slice 2; R/groupAddAssign.R:164-193; R/groupMembersReturn.R:19-33; R/modBreedingGroups.R.
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S424
 date: 2026-07-29
 status: complete
