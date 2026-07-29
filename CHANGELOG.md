@@ -43,6 +43,31 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-29 · [issue #125] Write implementation plan: configurable ranking-priority scheme + multi-candidate breeding groups (Session 423)
+- **Deliverable:** `docs/planning/issue125-ranking-priority-multi-candidate-plan.md` --
+  an evidence-based implementation plan for closing issue #125, ratified via
+  `AskUserQuestion` this session, no `R/`/`tests/` code changed.
+- **Process:** launched a 6-agent research workflow reading the ranking
+  (`R/orderReport.R`/`R/rankSubjects.R`/`R/modGeneticValue.R`) and breeding-group
+  (`R/groupAddAssign.R`/`R/groupMembersReturn.R`/`R/modBreedingGroups.R`) code
+  firsthand, plus config/adapter precedent, before drafting any design. Found that
+  issue #125's own text (from the audit that filed it) cites `R/orderReport.R`'s
+  categorical scheme, but the Shiny app actually displays a second, independently
+  hardcoded scheme (`R/modGeneticValue.R:294`, `rank(indivMeanKin - gu)`) that
+  unconditionally overrides it -- a correction to the issue's premise, surfaced to the
+  owner before ratifying scope. Presented 4 load-bearing decisions via one
+  `AskUserQuestion` call; owner ratified: expose the categorical scheme's internal
+  cutoffs (not just a scheme toggle), a Shiny UI control (not a config-file key),
+  top-5 distinct-scoring deduplicated breeding-group candidates, ranking-scheme first
+  as Slice 1.
+- **Result:** plan document written with a firsthand evidence-based inventory
+  (every claim cited `file:line`), a RATIFIED design-decisions section, two vertical
+  slices (Slice 1: ranking-scheme configurability; Slice 2: multi-candidate breeding
+  groups) each with RED/GREEN/DONE-looks-like/Verify/session-boundary/dragons, and a
+  ratification record. `PROJECT_LEARNINGS.md` Learning 388 added (the
+  audit-can-be-one-layer-shallow pattern; a `ScheduleWakeup` misuse caught and
+  corrected mid-session).
+
 ### 2026-07-29 · [ad hoc] Triage genetic-metrics PDF capability audit findings (Session 422)
 - **Deliverable:** Owner-picked from S421's priorities list: triage
   `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md`'s 12 missing/9

@@ -62,17 +62,17 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S423
 date: 2026-07-29
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Write an implementation plan for closing GitHub issue #125 (configurable genetic-value ranking-priority scheme + surface multiple breeding-group candidates). Plan-writing session -- no R/tests code.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- docs/planning/issue125-ranking-priority-multi-candidate-plan.md written, RATIFIED via AskUserQuestion, ready for Slice 1 RED (a separate future session).
+what_was_done: Answered a follow-up question (which issues address a configurability concern: #125 and #128). Launched a 6-agent research workflow (wf_cdbcc7a5-22c) reading orderReport.R/rankSubjects.R/modGeneticValue.R, groupAddAssign.R/groupMembersReturn.R/modBreedingGroups.R, and config/adapter precedent firsthand. Found the app's displayed ranking (modGeneticValue.R:294, rank(indivMeanKin - gu)) is NOT the scheme issue #125's own text cites (orderReport.R's categorical tiers) -- a correction to the issue's premise. Surfaced this plus 3 other decisions via one 4-question AskUserQuestion; owner ratified: expose internal cutoffs too, Shiny UI mechanism, top-5 distinct-scoring breeding-group candidates, ranking-scheme-first slice order. Verified exact call sites directly (reportGV()/modGeneticValue.R, disambiguated guThresh vs new guCutoff). Wrote the plan document (evidence-based inventory, 2 vertical slices, dragons, ratification record). Added PROJECT_LEARNINGS.md Learning 388.
+next_steps: Slice 1 (configurable ranking-priority scheme) is the first implementation session -- full strict-TDD RED->GREEN->REFACTOR, phase-gated. Do NOT bundle with Slice 2 (multi-candidate breeding groups). See the plan's Session-boundary notes.
+key_files: docs/planning/issue125-ranking-priority-multi-candidate-plan.md (this session's deliverable); R/orderReport.R:31-99, R/modGeneticValue.R:266-277,294-301 (Slice 1); R/groupAddAssign.R:164-193, R/modBreedingGroups.R (Slice 2); PROJECT_LEARNINGS.md Learning 388.
+gotchas: (1) reportGV() already has an unrelated guThresh param (calcGU allele-rarity threshold) -- do not conflate with the plan's new guCutoff (classifies gu into the highGu tier). (2) ScheduleWakeup's autonomous-loop-dynamic sentinel is /loop-specific -- do not use it as a generic background-task wait; Workflow/Task notifications are automatic. (3) This repo still has not provisioned the 5-state Issue Lifecycle labels (Learning 387), unchanged.
+runtime_smoke: n/a -- planning deliverable only, no R/tests code or Shiny runtime behavior changed
+changelog_ref: CHANGELOG.md 2026-07-29 S423 entry
+commit: b314870e (claim); close-out commit sha to follow
 ```
 
 ```handoff
