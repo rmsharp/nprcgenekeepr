@@ -8,6 +8,15 @@ R. Mark Sharp, Ph.D.
 - CRAN's 2.0.0 submission (2026-07-17, tagged `v2.0.0`) was accepted and
   published 2026-07-26. Development continues here on top of it; any
   future CRAN resubmission ships as 2.0.1, not a second 2.0.0 attempt.
+- The Genetic Value Analysis tab gained a configurable **Ranking
+  Scheme** control (issue \#125): the existing combined
+  kinship/uniqueness score stays the default, unchanged; a new
+  categorical priority-tier scheme is now selectable alongside it, with
+  adjustable high-uniqueness and low-kinship cutoffs and a choice of
+  which axis takes priority when an animal qualifies for both.
+  `reportGV()` gained matching `guCutoff`, `zScoreCutoff`, and
+  `axisPriority` arguments for scripted use, each defaulting to today's
+  behavior when omitted.
 
 # nprcgenekeepr 2.0.0 (20260708)
 
