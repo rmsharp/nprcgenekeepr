@@ -6,6 +6,17 @@
 
 ## ACTIVE TASK
 
+### What Session 419 Did
+**Deliverable:** Owner-directed (not from `BACKLOG.md`): audit comparing the
+recommendations in `inst/extdata/reference/Master_Genetic_metrics_2_14_15.pdf` (NHP
+Genetics and Genomics Working Group, Feb 2015) against `nprcgenekeepr`'s actual
+capabilities -- note additional package capabilities and any missing features. (IN
+PROGRESS)
+**Started:** 2026-07-29
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded
+in `CHANGELOG.md` at Phase 3F.
+
 ### What Session 418 Did
 **Deliverable:** Owner-picked from S417's priorities list: execute **Phase 4** of
 `docs/planning/extdata-reorganization-plan.md` -- resolve the plan's 2 remaining open

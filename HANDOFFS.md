@@ -60,6 +60,23 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S419
+date: 2026-07-29
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Owner-directed audit comparing inst/extdata/reference/Master_Genetic_metrics_2_14_15.pdf (NHP Genetics and Genomics Working Group, Feb 2015 recommendations) against nprcgenekeepr's actual capabilities -- note additional package capabilities and missing features.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+(stub written at claim -- filled at close-out)
+
+```handoff
 session: S418
 date: 2026-07-28
 status: complete
