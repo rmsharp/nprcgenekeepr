@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S420
+date: 2026-07-29
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix ROADMAP.md:21-22's stale doc-engine-policy line -- path-only fix, inst/extdata/ developer docs -> dev/extdata-scratch/ developer docs (owner-picked from S419's priorities list; wording resolved via AskUserQuestion before claim).
+what_was_done: pending
+next_steps: pending
+key_files: ROADMAP.md:21-22
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S419
 date: 2026-07-29
 status: complete

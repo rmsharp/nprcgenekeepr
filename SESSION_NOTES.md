@@ -6,6 +6,21 @@
 
 ## ACTIVE TASK
 
+### What Session 420 Did
+**Deliverable:** Owner-picked from S419's priorities list: fix `ROADMAP.md`'s stale
+doc-engine-policy line (`ROADMAP.md:21-22`), flagged S418 -- the sentence still names
+`inst/extdata/` as the location of the 3 developer docs (`claude_code.qmd`,
+`software_design_doc.qmd`, `meeting_notes.qmd`), but those files were relocated to
+`dev/extdata-scratch/` during the extdata reorg's Phase 1 (S415). Owner resolved the
+open wording decision via `AskUserQuestion` before claiming: **path-only fix** --
+swap `inst/extdata/ developer docs` for `dev/extdata-scratch/ developer docs`, keep
+the doc-engine-policy category otherwise unchanged. (IN PROGRESS)
+**Started:** 2026-07-29
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded
+in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for
+the next session's reconcile.
+
 ### What Session 419 Did
 **Deliverable:** Owner-directed (not from `BACKLOG.md`): audit comparing the
 recommendations in `inst/extdata/reference/Master_Genetic_metrics_2_14_15.pdf` (NHP
