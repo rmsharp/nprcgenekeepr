@@ -13,7 +13,6 @@
 ^[0-9]+_cran-comments\.md$
 ^codecov\.yml$
 ^docs$
-inst/extdata/meeting_notes\.html$
 ^\.gitignore$
 ^tests/testthat/test_basic\.R$
 ^R/testingScript\.R$
@@ -38,11 +37,6 @@ README\.*\.png$
 ^NOTES\ todo\.txt$
 # Used for continuous integration testing with travis
 ^\.github$
-^inst/extdata/.*\.docx$
-^inst/extdata/code_under_development$
-^inst/extdata/script_used_to_look_for_gdata_dependency\.R$
-^inst/extdata/meeting_notes\.
-^inst/extdata/rhesus_studbook*$
 ^CODE_OF_CONDUCT\.md$
 ^rsconnect*$
 ^rsconnect/*$
@@ -100,9 +94,4 @@ README\.*\.png$
 # also catch copies in subdirs, e.g. man/.DS_Store and inst/extdata/.Rapp.history.
 \.DS_Store$
 \.Rapp\.history$
-^inst/extdata/.*\.qmd$
-^inst/extdata/README_modules\.md$
-^inst/extdata/example_usage\.R$
-^inst/extdata/trulyUnknownParents\.R$
-^inst/extdata/submission\.txt$
 ^inst/_pkgdown\.yml$
