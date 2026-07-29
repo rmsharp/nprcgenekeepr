@@ -24,14 +24,14 @@ Hybrid (Quarto + R Markdown)** — adopted 2026-06-17, Option B of
 `docs/planning/quarto-documentation-future-proofing-analysis.md`. The
 four CRAN vignettes stay on `knitr`/`rmarkdown` (zero CRAN risk); new
 and non-CRAN documentation moves to Quarto — pkgdown articles (mixed
-`.qmd`/`.Rmd` mode), slide decks (`revealjs`), and the `inst/extdata/`
-developer docs. The long-form manual is repositioned onto the Quarto
-website and dropped from the CRAN vignette set (§6.3(b)), coordinated
-with the CRAN resubmission. Implementation is per-slice, in separate
-sessions — see the analysis doc §7.1. **Slice 1 done (S106):**
-`inst/extdata/meeting_notes.Rmd` → `.qmd` (build-ignored dev doc).
-**Slice 2 done (S107):** pkgdown mixed `.qmd`/`.Rmd` mode stood up
-(`vignettes/articles/_quarto.yml`) + first Quarto article
+`.qmd`/`.Rmd` mode), slide decks (`revealjs`), and the
+`dev/extdata-scratch/` developer docs. The long-form manual is
+repositioned onto the Quarto website and dropped from the CRAN vignette
+set (§6.3(b)), coordinated with the CRAN resubmission. Implementation is
+per-slice, in separate sessions — see the analysis doc §7.1. **Slice 1
+done (S106):** `inst/extdata/meeting_notes.Rmd` → `.qmd` (build-ignored
+dev doc). **Slice 2 done (S107):** pkgdown mixed `.qmd`/`.Rmd` mode
+stood up (`vignettes/articles/_quarto.yml`) + first Quarto article
 `vignettes/articles/breeding-group-formation.qmd` (build-ignored,
 website-only, zero CRAN risk; verified via `quarto render` +
 [`pkgdown::build_article`](https://pkgdown.r-lib.org/reference/build_articles.html)).

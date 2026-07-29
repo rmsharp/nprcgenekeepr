@@ -7,6 +7,132 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 420 Did
+
+**Deliverable:** Owner-picked from S419’s priorities list: fix
+`ROADMAP.md`’s stale doc-engine-policy line (`ROADMAP.md:21-22`),
+flagged S418 – the sentence still named `inst/extdata/` as the location
+of the 3 developer docs (`claude_code.qmd`, `software_design_doc.qmd`,
+`meeting_notes.qmd`), but those files were relocated to
+`dev/extdata-scratch/` during the extdata reorg’s Phase 1 (S415).
+**DONE.** **Started/Completed:** 2026-07-29 / 2026-07-29 **Status:**
+DONE. TDD Phase: N/A throughout – pure prose fix in `ROADMAP.md`, no
+`R/`/`tests/` production code touched.
+
+**What happened, in order:** **(1)** Confirmed via `find`/`grep` that
+the 3 named dev docs actually live at
+`dev/extdata-scratch/{claude_code,software_design_doc,meeting_notes}.qmd`
+and that no other current-state doc still claims the old `inst/extdata/`
+location (only dated historical prose in
+`CHANGELOG.md`/`BACKLOG.md`/`HANDOFFS.md`/`SESSION_NOTES.md`/
+`docs/planning/quarto-documentation-future-proofing-analysis.md`
+describes the old location, correctly left unedited per this project’s
+established precedent for dated historical prose, S418). **(2)**
+Resolved the open editorial wording call (BACKLOG.md’s own text: “does
+‘developer docs’ still mean this file set now that it lives in `dev/`,
+or should the doc-engine policy itself be revisited for
+scratch-relocated files?”) via `AskUserQuestion` **before** claiming the
+session, offering the owner a concrete before/after preview of both
+options (path-only fix vs. drop-the-category-and-add-a-note). Owner
+picked **path-only fix**. **(3)** Claimed the session (`0c3f90cf`).
+**(4)** Made the one-line edit (`ROADMAP.md:21`): `inst/extdata/`
+developer docs -\> `dev/extdata-scratch/` developer docs. **(5)**
+Verified `ROADMAP.md` isn’t wired into any build/render pipeline (no
+`.yml`/`.yaml`/`DESCRIPTION` references it) – a plain top-level
+project-management doc, so the build-equivalent for this deliverable is
+the grep sweep in step 1, not `devtools::check()`/the test suite
+(nothing in `R/`/`tests/` changed). **(6)** Updated `BACKLOG.md`’s
+Housekeeping entry to RESOLVED, matching the section’s existing style
+for closed items. **Runtime smoke test:** n/a – docs-only deliverable,
+no runtime behavior changed. **Ledger:** See `CHANGELOG.md` 2026-07-29
+S420 entry (`[ad hoc]`).
+
+**Session 419 Handoff Evaluation (by Session 420): 8/10.** **What
+helped:** the handoff’s “(b) pick up any standing `BACKLOG.md` item S418
+already listed (`ROADMAP.md:21-22` wording, …)” line named the exact
+task the owner ended up picking, with the exact line reference already
+in hand – meaningful time saved not having to rediscover it from a cold
+`BACKLOG.md` read. The `next_steps` framing (task list, no single
+recommendation) matched the reality that S419 left multiple independent
+options rather than one obvious next step, which is exactly what this
+session’s priorities-list `AskUserQuestion` needed. **What was
+missing:** the handoff’s `key_files` list didn’t point at `BACKLOG.md`’s
+own fuller entry for the `ROADMAP.md` item or
+`docs/planning/extdata-reorganization-plan.md` (where the actual
+substance – which 3 files, where they moved, why – lives); this session
+had to independently re-derive that context via `find`/`grep` rather
+than being pointed at it directly. Minor, since `BACKLOG.md` is this
+project’s own authoritative store for open items and S419 wasn’t the
+session that wrote that entry (S418 was) – not reasonably owed a deep
+link into an item S419 didn’t originate. **What was wrong:** gotcha (4)
+(“this session’s commits are not yet pushed to origin/master – confirm
+at your own Phase 0”) was already stale by the time this session’s Phase
+0 ran – `git status` found the branch already up to date with
+`origin/master`, meaning S419’s commits reached origin sometime between
+S419’s close-out and this session’s start (outside either session’s own
+actions – likely an owner-side push). Not a defect in S419’s handoff (it
+accurately reported the state *as of S419’s own close-out*), but a
+reminder that push-state gotchas are the most likely field to go stale
+between sessions. **ROI:** high – the one directly-actionable line (the
+`ROADMAP.md` item pointer) was worth more than the modest cost of the
+handoff’s other, now-superseded gotcha.
+
+**Self-assessment (Session 420): 9/10.** **Strengths:** (1) treated the
+BACKLOG.md item’s own explicit framing of this as “an
+editorial/policy-prose call … left for a session with owner input on the
+intended wording” as a hard requirement, not a suggestion – ran a
+dedicated `AskUserQuestion` with a concrete before/after preview of both
+real options *before* claiming the session, rather than picking one
+unilaterally or claiming first and asking mid-task; (2) independently
+re-verified the current location of the 3 files via `find`/`grep` rather
+than trusting BACKLOG.md’s prose claim at face value (the file “Ask,
+don’t infer” / “Observation vs decision” project conventions both point
+this direction); (3) checked for other current-state documents making
+the same now-stale claim before declaring the fix complete, and
+correctly distinguished current-state prose (nothing else found) from
+dated historical prose (several hits, correctly left alone, matching
+S418’s own established disposition for this exact class of false
+positive); (4) confirmed `ROADMAP.md` has no build/render dependency
+before treating a grep sweep (rather than `devtools::check()`) as
+sufficient verification for this deliverable – avoided both under- and
+over-verifying; (5) updated `BACKLOG.md` to RESOLVED in the same
+session, matching the section’s own established convention for closed
+Housekeeping items, so the next session’s `BACKLOG.md` read doesn’t
+re-surface this as open. **Weaknesses:** (1) this was a small,
+single-line, mechanical deliverable once the wording decision was
+resolved – little opportunity to demonstrate depth beyond correct
+process adherence; scored 9 rather than 10 only because the task itself
+offered limited surface area to show it, not because of any identified
+gap in execution. **Compared to previous sessions:** most similar in
+shape to S418’s own Phase 4 decision-then-execute pattern (resolve a
+flagged editorial/blocking decision via `AskUserQuestion` before
+claiming, then execute the now-unblocked mechanical fix) – this session
+is that same pattern applied to the one item S418 itself explicitly
+deferred rather than resolved.
+
+**Handoff to Session 421:** - **What’s next:** No task is claimed.
+`BACKLOG.md`’s “Active” section remains empty. Standing items from
+S419’s priorities list, untouched this session: (a) review
+`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md` and
+decide whether any of its 12 “missing”/9 “partial” findings should
+become `BACKLOG.md`/GitHub issue items; (b) `NEWS.md:8` spelling-check
+NOTE – hand-add `CRAN's`/`resubmission` to `inst/WORDLIST` (do NOT run
+[`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html)
+wholesale, S230 convention); (c) LabKey integration remaining recs
+(BLOCKED – needs a live LabKey server); (d) NPRC outreach plan (DECISION
+NEEDED – owner review/edit/send, not a coding task); (e) 9 open GitHub
+issues (#123 XARCH-5, \#116, \#37, \#36, \#28, \#12, \#11, \#10, \#5),
+none yet mirrored into `BACKLOG.md` as pickable items. - **Key files:**
+`ROADMAP.md:21` (this session’s one-line fix); `BACKLOG.md` Housekeeping
+section (item marked RESOLVED this session). - **Gotchas:** (1)
+`.DS_Store`/`inst/.DS_Store`/`inst/extdata/.DS_Store` remain harmless,
+unfixed, out-of-scope artifacts (unchanged since S415/S419). (2) Branch
+was up to date with `origin/master` at this session’s Phase 0 – confirm
+this is still true at your own Phase 0 before assuming a push is owed
+(see the S419 handoff-evaluation note above: this field is the one most
+likely to have changed between sessions). - **Self-assessment score:**
+9/10 (see above for full breakdown).
+
 ### What Session 419 Did
 
 **Deliverable:** Owner-directed (not from `BACKLOG.md`): audit comparing

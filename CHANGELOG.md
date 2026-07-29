@@ -47,6 +47,27 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-29 · \[BL-RoadmapDocEnginePath\] Fix `ROADMAP.md`’s stale doc-engine-policy line (Session 420)
+
+- **Deliverable:** Owner-picked from S419’s priorities list, per
+  `BACKLOG.md`’s Housekeeping item flagged S418. `ROADMAP.md:21` still
+  named `inst/extdata/` as the location of the 3 developer docs
+  (`claude_code.qmd`, `software_design_doc.qmd`, `meeting_notes.qmd`),
+  but those files were relocated to `dev/extdata-scratch/` during the
+  extdata reorg’s Phase 1 (S415). TDD Phase: N/A – pure prose fix, no
+  `R/`/`tests/` production code touched.
+- **Decision:** the wording call BACKLOG.md flagged as
+  owner-input-needed (keep the doc-engine-policy category and fix the
+  path, vs. drop the category since these are now archived scratch
+  files) was resolved via `AskUserQuestion` before claiming the session.
+  Owner picked **path-only fix**.
+- **Result:** `ROADMAP.md:21` now reads `dev/extdata-scratch/` developer
+  docs instead of `inst/extdata/` developer docs. Verified via
+  `find`/`grep` that the 3 files actually live there and that no other
+  current-state document still makes the old claim (only dated
+  historical prose does, correctly left unedited). `BACKLOG.md`’s
+  Housekeeping entry marked RESOLVED.
+
 ### 2026-07-29 · \[ad hoc\] Genetic-metrics PDF vs. package capability audit (Session 419)
 
 - **Deliverable:** Owner-directed, not from `BACKLOG.md`: audit

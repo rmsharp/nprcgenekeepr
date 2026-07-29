@@ -70,6 +70,15 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-29--bl-roadmapdocenginepath-fix-roadmapmds-stale-doc-engine-policy-line-session-420">2026-07-29 · [BL-RoadmapDocEnginePath] Fix <code>ROADMAP.md</code>’s stale doc-engine-policy line (Session 420)<a class="anchor" aria-label="anchor" href="#id_2026-07-29--bl-roadmapdocenginepath-fix-roadmapmds-stale-doc-engine-policy-line-session-420"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Owner-picked from S419’s priorities list, per <code>BACKLOG.md</code>’s Housekeeping item flagged S418. <code>ROADMAP.md:21</code> still named <code>inst/extdata/</code> as the location of the 3 developer docs (<code>claude_code.qmd</code>, <code>software_design_doc.qmd</code>, <code>meeting_notes.qmd</code>), but those files were relocated to <code>dev/extdata-scratch/</code> during the extdata reorg’s Phase 1 (S415). TDD Phase: N/A – pure prose fix, no <code>R/</code>/<code>tests/</code> production code touched.</li>
+<li>
+<strong>Decision:</strong> the wording call BACKLOG.md flagged as owner-input-needed (keep the doc-engine-policy category and fix the path, vs. drop the category since these are now archived scratch files) was resolved via <code>AskUserQuestion</code> before claiming the session. Owner picked <strong>path-only fix</strong>.</li>
+<li>
+<strong>Result:</strong> <code>ROADMAP.md:21</code> now reads <code>dev/extdata-scratch/</code> developer docs instead of <code>inst/extdata/</code> developer docs. Verified via <code>find</code>/<code>grep</code> that the 3 files actually live there and that no other current-state document still makes the old claim (only dated historical prose does, correctly left unedited). <code>BACKLOG.md</code>’s Housekeeping entry marked RESOLVED.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-29--ad-hoc-genetic-metrics-pdf-vs-package-capability-audit-session-419">2026-07-29 · [ad hoc] Genetic-metrics PDF vs. package capability audit (Session 419)<a class="anchor" aria-label="anchor" href="#id_2026-07-29--ad-hoc-genetic-metrics-pdf-vs-package-capability-audit-session-419"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> Owner-directed, not from <code>BACKLOG.md</code>: audit comparing the recommendations in <code>inst/extdata/reference/Master_Genetic_metrics_2_14_15.pdf</code> (NHP Genetics and Genomics Working Group, Feb 2015) against <code>nprcgenekeepr</code>’s actual capabilities. TDD Phase: N/A – audit/documentation deliverable, no <code>R/</code>/<code>tests/</code> production code touched.</li>
