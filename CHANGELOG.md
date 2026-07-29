@@ -43,6 +43,22 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-29 · [BL-WordlistCranResubmission] Fix `NEWS.md:8` spelling-check NOTE (Session 421)
+- **Deliverable:** Owner-picked from S420's priorities list, per `BACKLOG.md`'s
+  Housekeeping item flagged S415/discovered via `devtools::check()`. `NEWS.md:8`'s
+  S410 edit ("CRAN's 2.0.0 submission... any future CRAN resubmission ships as
+  2.0.1") introduced `CRAN's` and `resubmission` without adding them to
+  `inst/WORDLIST`, producing a real `Status: 1 NOTE` in the raw `R CMD check` log
+  (`PROJECT_LEARNINGS.md` Learning 382). TDD Phase: N/A -- `inst/WORDLIST` is a
+  curated spelling-check word list, not production `R/`/`tests/` code.
+- **Result:** hand-added `CRAN's` (between `ColonyManagerTutorial`/`Curation`) and
+  `resubmission` (between `resetPopulation`/`retentions`) to `inst/WORDLIST`,
+  matching the file's existing case-insensitive collation order -- did not run
+  `spelling::update_wordlist()` wholesale, per the project's "avoid reconcile tools
+  on curated files" convention (S230). Verified: `devtools::check()` raw log
+  `Status: OK`, 0 errors/0 warnings/0 notes (the spelling NOTE is gone); regression
+  suite exact baseline match (0 failed/0 error/0 warning, 3198 passed, 179 skipped).
+
 ### 2026-07-29 · [BL-RoadmapDocEnginePath] Fix `ROADMAP.md`'s stale doc-engine-policy line (Session 420)
 - **Deliverable:** Owner-picked from S419's priorities list, per `BACKLOG.md`'s
   Housekeeping item flagged S418. `ROADMAP.md:21` still named `inst/extdata/` as the

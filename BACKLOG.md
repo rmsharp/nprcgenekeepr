@@ -224,23 +224,12 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       docs, matching where the 3 dev docs (`claude_code.qmd`,
       `software_design_doc.qmd`, `meeting_notes.qmd`) actually live since the
       extdata reorg's Phase 1 (S415) -- S420 (2026-07-29). See `CHANGELOG.md`.)
-- [ ] **`NEWS.md:8` spelling-check NOTE -- `CRAN's`/`resubmission` missing from
-      `inst/WORDLIST`** (READY, Effort S) -- discovered S415 (2026-07-28) while running
-      `devtools::check()` as Phase 1's verification step for the `inst/extdata/` reorg
-      above; unrelated to that reorg (confirmed via `git log` on `tests/spelling.R`/
-      `inst/WORDLIST`/`NEWS.md` -- none touched by S415). Root cause: S410's
-      post-CRAN-acceptance `NEWS.md` edit ("CRAN's 2.0.0 submission... any future CRAN
-      resubmission ships as 2.0.1") introduced both words without adding them to
-      `inst/WORDLIST` (which already has lowercase `cran` but not `CRAN's` or
-      `resubmission`), producing a real `Status: 1 NOTE` in the raw `R CMD check` log
-      that `devtools::check()`'s own colored one-line summary ("0 notes ✔") silently
-      disagreed with -- see `PROJECT_LEARNINGS.md` Learning 382. Undetected until now
-      because the project's routine "Clean regression read" (`CLAUDE.md`) runs
-      `testthat::test_dir()` directly and doesn't invoke a full `devtools::check()`
-      every session. Fix: hand-add `CRAN's` and `resubmission` to `inst/WORDLIST`
-      (do NOT run `spelling::update_wordlist()` wholesale -- it deletes curation, per
-      the existing "Avoid reconcile tools on curated files" project convention, S230);
-      re-run `devtools::check()` to confirm 0 NOTE.
+- [ ] (none remaining -- the "`NEWS.md:8` spelling-check NOTE -- `CRAN's`/`resubmission`
+      missing from `inst/WORDLIST`" item (discovered S415, 2026-07-28) is RESOLVED:
+      both words hand-added to `inst/WORDLIST` in their case-insensitive-collation
+      position (not via `spelling::update_wordlist()`, per S230 convention) -- S421
+      (2026-07-29). Verified: `devtools::check()` raw log `Status: OK`, 0 notes.
+      See `CHANGELOG.md`.)
 - [ ] (none remaining -- the "clean up stale untracked leftover files" item (filed
       S383) is RESOLVED: 18 confirmed-dead untracked files deleted -- S384
       (2026-07-15). See `CHANGELOG.md`.)
