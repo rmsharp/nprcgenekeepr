@@ -6,6 +6,18 @@
 
 ## ACTIVE TASK
 
+### What Session 429 Did
+**Deliverable:** Implement the ratified issue #126 plan
+(`docs/planning/issue126-distribution-shape-stats-plan.md`) -- add
+bias-adjusted skewness/kurtosis (Joanes & Gill 1998) for mean kinship and
+genome uniqueness to the live Summary Statistics distribution table
+(`R/modSummaryStats.R`) and `makeGeneticSummaryTable()`. One vertical slice.
+Owner-picked via `AskUserQuestion` at Phase 0. (IN PROGRESS)
+**Started:** 2026-07-29
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F.
+
 ### What Session 428 Did
 **Deliverable:** Write a design/scoping plan for closing issue #126 (kinship/
 genome-uniqueness distribution-shape statistics -- skewness, kurtosis), per

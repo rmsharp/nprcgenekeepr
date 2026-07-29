@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S429
+date: 2026-07-29
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement the ratified issue #126 plan (docs/planning/issue126-distribution-shape-stats-plan.md) -- skewness/kurtosis for mean kinship and genome uniqueness, one vertical slice.
+what_was_done: pending
+next_steps: pending
+key_files: docs/planning/issue126-distribution-shape-stats-plan.md; R/modSummaryStats.R:590-739,890-928; R/makeGeneticSummaryTable.R; R/summarizeKinshipValues.R (deferred, do not change); tests/testthat/test_modSummaryStats_parity.R:95-141, tests/testthat/test_moduleContract.R:39-47
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S428
 date: 2026-07-29
 status: complete
