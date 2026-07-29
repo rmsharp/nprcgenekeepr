@@ -199,10 +199,36 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       untouched -- read from the raw check log's `Status:` line per Learning 382, not
       the colored summary, which again showed 0 notes). See `CHANGELOG.md`,
       `PROJECT_LEARNINGS.md` Learning 384.
-      **Phase 4** (place the new PDF; final repo-wide sweep) remains -- 2 open,
-      non-blocking decisions: the PDF's intended home (§10 #1), and whether the
-      archive-vs-delete question for the orphaned files (§10 #3) is worth revisiting
-      now that Phase 1 already executed the archive default.
+      **Phase 4 DONE -- S418 (2026-07-28):** both open decisions resolved via
+      `AskUserQuestion`: PDF placement -> `inst/extdata/reference/` (end-user-facing
+      reference material, plan's own default); orphaned-files archive-vs-delete ->
+      keep archived at `dev/extdata-scratch/`, no change from Phase 1. `git mv`'d
+      the PDF; ran the plan's final repo-wide sweep grep, which found `README.md`
+      stale relative to its already-fixed source (`README.Rmd` `child=`-includes
+      `_summary_of_major_functions.Rmd`, fixed by S417, but never re-rendered) --
+      re-rendered `README.Rmd` to pick up the fix; see `PROJECT_LEARNINGS.md`
+      Learning 385. All other sweep hits triaged as false positives: dated
+      historical prose in `NEWS.Rmd`/`NEWS.md` and `docs/planning/`/`docs/research/`
+      documents describing repo state as it existed when written, correctly left
+      unedited. Verified: `R CMD build` tarball ships the PDF at
+      `inst/extdata/reference/` and nothing at the old flat path; regression suite
+      exact baseline (0/0/0, 3198 passed, 179 skipped); `devtools::check()` 0
+      errors/0 warnings, 1 NOTE (same pre-existing spelling gap below, confirmed
+      untouched). **The `inst/extdata/` reorganization plan is now fully executed
+      (Phases 1-4 all DONE).** See `CHANGELOG.md`.
+- [ ] **`ROADMAP.md`'s doc-engine-policy line is now stale** (READY, Effort S,
+      discovered S418 while triaging the extdata-reorg Phase 4 sweep grep) --
+      `ROADMAP.md:21-22` still describes "the `inst/extdata/` developer docs" as a
+      documentation-engine category, but all 3 of those dev docs
+      (`claude_code.qmd`, `software_design_doc.qmd`, `meeting_notes.qmd`) were
+      relocated out of `inst/extdata/` entirely to `dev/extdata-scratch/` during
+      this same reorg plan's Phase 1 (S415) -- the physical location the sentence
+      names no longer exists. Not fixed this session: rewriting the sentence is an
+      editorial/policy-prose call (does "developer docs" still mean this file set
+      now that it lives in `dev/`, or should the doc-engine policy itself be
+      revisited for scratch-relocated files?), not a mechanical path substitution
+      like the rest of this plan's fixes -- left for a session with owner input
+      on the intended wording.
 - [ ] **`NEWS.md:8` spelling-check NOTE -- `CRAN's`/`resubmission` missing from
       `inst/WORDLIST`** (READY, Effort S) -- discovered S415 (2026-07-28) while running
       `devtools::check()` as Phase 1's verification step for the `inst/extdata/` reorg
