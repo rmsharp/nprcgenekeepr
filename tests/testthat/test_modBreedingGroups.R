@@ -46,7 +46,7 @@ test_that("modBreedingGroupsUI includes a candidate-grouping selector (issue #12
   expect_true(grepl("candidateChoice", ui_html))
 })
 
-test_that("modBreedingGroupsUI's nTopAnimals conditionalPanel condition is unprefixed", {
+test_that("modBreedingGroupsUI's nTopAnimals conditionalPanel condition is unprefixed and compound (issue #128)", {
   ui <- modBreedingGroupsUI("test")
   ui_html <- as.character(ui)
 
@@ -58,14 +58,31 @@ test_that("modBreedingGroupsUI's nTopAnimals conditionalPanel condition is unpre
   # the panel permanently hidden. Scoped to the data-display-if attribute
   # itself (not the whole HTML) because the radioButtons widget's own id
   # legitimately contains the namespaced "test-animalSource" string.
+  #
+  # Issue #128: the nTopAnimals control is only relevant when BOTH the
+  # source is "topRanked" AND the inclusion criterion is the top-N
+  # scheme ("topN") -- selecting the genetic-value floor bypasses
+  # nTopAnimals entirely (plan Dragon P3), so the condition becomes a
+  # compound AND. shiny::conditionalPanel HTML-escapes "&&" to "&amp;&amp;"
+  # in the data-display-if attribute (verified empirically, not assumed).
   displayIfAttrs <- regmatches(
     ui_html, gregexpr('data-display-if="[^"]*"', ui_html)
   )[[1]]
 
-  expect_true(any(grepl("input.animalSource == &#39;topRanked&#39;",
-                         displayIfAttrs, fixed = TRUE)))
+  expect_true(any(grepl(
+    paste0("input.animalSource == &#39;topRanked&#39; &amp;&amp; ",
+           "input.inclusionCriterion == &#39;topN&#39;"),
+    displayIfAttrs, fixed = TRUE)))
   expect_false(any(grepl("test-animalSource", displayIfAttrs,
                           fixed = TRUE)))
+})
+
+test_that("modBreedingGroupsUI includes an inclusionCriterion control (issue #128)", {
+  ui <- modBreedingGroupsUI("test")
+  ui_html <- as.character(ui)
+
+  expect_true(grepl("inclusionCriterion", ui_html))
+  expect_true(grepl("Genetic-value floor", ui_html))
 })
 
 test_that("modBreedingGroupsUI uses correct namespace", {
@@ -235,6 +252,154 @@ test_that("modBreedingGroupsServer forms groups with topRanked source", {
 
       expect_true(is.list(groups))
       expect_equal(length(groups), 4)
+    }
+  )
+})
+
+# =============================================================================
+# Server Tests - Genetic-Value Floor Inclusion Criterion (issue #128)
+#
+# groups()+unassigned() together are exactly the full computed candidateIds
+# set (modBreedingGroups.R: `unassignedIds <- setdiff(candidateIds,
+# assignedIds)`), so their union is a deterministic proxy for "which ids
+# were considered as candidates" regardless of the MIS algorithm's own
+# stochastic group assignment -- no set.seed() needed for these assertions.
+# =============================================================================
+
+test_that("valueFloor excludes Low Value ids, includes Undetermined, and ignores nTopAnimals (topRanked)", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- data.frame(
+    id = paste0("Animal", 1:8),
+    sire = rep(NA, 8),
+    dam = rep(NA, 8),
+    sex = rep(c("M", "F"), 4),
+    stringsAsFactors = FALSE
+  )
+
+  test_gv <- data.frame(
+    id = paste0("Animal", 1:8),
+    value = c("High Value", "High Value", "Low Value", "Low Value",
+              "Undetermined", "Undetermined", "High Value", "Low Value"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped }),
+      geneticValues = shiny::reactive({ test_gv })
+    ),
+    {
+      session$setInputs(
+        animalSource = "topRanked",
+        inclusionCriterion = "valueFloor",
+        nTopAnimals = 2, # deliberately small: must be IGNORED under valueFloor
+        nGroups = 1,
+        maxKinship = 0.25,
+        sexRatio = "none"
+      )
+
+      session$setInputs(formGroups = 1)
+
+      result <- session$getReturned()
+      allCandidates <- sort(c(unlist(result$groups()), result$unassigned()))
+
+      expect_setequal(
+        allCandidates,
+        c("Animal1", "Animal2", "Animal5", "Animal6", "Animal7")
+      )
+    }
+  )
+})
+
+test_that("valueFloor excludes ids absent from the GV report entirely (Dragon P1, animalSource = all)", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- data.frame(
+    id = paste0("Animal", 1:6),
+    sire = rep(NA, 6),
+    dam = rep(NA, 6),
+    sex = rep(c("M", "F"), 3),
+    stringsAsFactors = FALSE
+  )
+
+  # Animal5/Animal6 are in the pedigree but have NO row in geneticValues() --
+  # a materially different case from "Undetermined" (which requires a row
+  # present with that label). The floor's fail-safe default: absent means
+  # excluded, never silently admitted.
+  test_gv <- data.frame(
+    id = paste0("Animal", 1:4),
+    value = c("High Value", "Low Value", "Undetermined", "High Value"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped }),
+      geneticValues = shiny::reactive({ test_gv })
+    ),
+    {
+      session$setInputs(
+        animalSource = "all",
+        inclusionCriterion = "valueFloor",
+        nGroups = 1,
+        maxKinship = 0.25,
+        sexRatio = "none"
+      )
+
+      session$setInputs(formGroups = 1)
+
+      result <- session$getReturned()
+      allCandidates <- sort(c(unlist(result$groups()), result$unassigned()))
+
+      expect_setequal(allCandidates, c("Animal1", "Animal3", "Animal4"))
+    }
+  )
+})
+
+test_that("valueFloor excludes ids absent from the GV report entirely (Dragon P1, animalSource = custom)", {
+  skip_if_not_installed("shiny")
+
+  # Today "custom" (Upload list) falls through to ped$id identically to
+  # "all" (plan Context: the custom source is vestigial/non-functional) --
+  # this pins that the value-floor narrowing applies identically to it.
+  test_ped <- data.frame(
+    id = paste0("Animal", 1:6),
+    sire = rep(NA, 6),
+    dam = rep(NA, 6),
+    sex = rep(c("M", "F"), 3),
+    stringsAsFactors = FALSE
+  )
+
+  test_gv <- data.frame(
+    id = paste0("Animal", 1:4),
+    value = c("High Value", "Low Value", "Undetermined", "High Value"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped }),
+      geneticValues = shiny::reactive({ test_gv })
+    ),
+    {
+      session$setInputs(
+        animalSource = "custom",
+        inclusionCriterion = "valueFloor",
+        nGroups = 1,
+        maxKinship = 0.25,
+        sexRatio = "none"
+      )
+
+      session$setInputs(formGroups = 1)
+
+      result <- session$getReturned()
+      allCandidates <- sort(c(unlist(result$groups()), result$unassigned()))
+
+      expect_setequal(allCandidates, c("Animal1", "Animal3", "Animal4"))
     }
   )
 })
