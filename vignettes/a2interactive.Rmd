@@ -87,7 +87,7 @@ This writes _ExamplePedigree.csv_ to a place you select within your file
 system.
 
 ```{r get-file-name, eval = TRUE, echo = FALSE, include = FALSE}
-pedigreeFile <- "../inst/extdata/ExamplePedigree.csv"
+pedigreeFile <- "../inst/extdata/examples/ExamplePedigree.csv"
 ```
 
 You use the file name provided by the __makeExamplePedigreeFile__ function
