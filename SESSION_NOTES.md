@@ -7,6 +7,385 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 427 Did
+
+**Deliverable:** Implement Slice 1 of the ratified issue \#128 plan
+(`docs/planning/issue128-genetic-value-floor-plan.md`) – a genetic-value
+floor as a user-selectable alternative to the existing top-N inclusion
+criterion in the Breeding Groups module. Owner-picked via
+`AskUserQuestion` at Phase 0. **DONE. Closes issue \#128.**
+**Started/Completed:** 2026-07-29 / 2026-07-29 **Status:** DONE. TDD
+phases RED -\> GREEN -\> REFACTOR (skipped, code already clean), all
+phase-gated via `AskUserQuestion` per the Development Process Contract,
+following `DEVELOPMENT_WORKSTREAM.md`.
+
+**What happened, in order:** **(1)** Ran Phase 0 orientation in full
+(SAFEGUARDS.md, SESSION_NOTES.md, `gh issue list`, `git status`/`log`/
+`diff --stat`, `methodology_dashboard.py` (Health 98/100), ledger
+reconcile – `CHANGELOG.md`/`HANDOFFS.md` frontiers both at HEAD, clean,
+no backfill needed). Rendered the priorities list (3 numbered items) via
+`AskUserQuestion`; owner picked “Implement issue \#128 plan.” **(2)**
+Read the ratified plan
+(`docs/planning/issue128-genetic-value-floor-plan.md`) in full, stated
+the deliverable back to the owner, claimed the session (`ccb50a42`)
+before any technical work. **(3)** Re-read `R/modBreedingGroups.R` and
+`tests/testthat/test_modBreedingGroups.R` current state – confirmed the
+plan’s cited line numbers matched live source exactly (zero drift since
+ratification), satisfying the vertical-slice contract-reverification
+gate. **(4)** PRE-RED-\>RED `AskUserQuestion` gate approved. Wrote 6 new
+tests in `test_modBreedingGroups.R` (`20b97653`): an updated
+compound-condition `conditionalPanel` test (empirically verified the
+exact `&amp;&amp;` HTML-escaping via a standalone `conditionalPanel()`
+render before writing the assertion, rather than guessing), a new
+“control exists” UI test, and 3 new
+[`shiny::testServer()`](https://rdrr.io/pkg/shiny/man/testServer.html)
+value-floor tests (topRanked Low-Value-exclusion/
+Undetermined-inclusion/nTopAnimals-bypass; `animalSource == "all"` and
+`== "custom"` Dragon-P1 report-absent-id fail-safe). All 6 failed for
+the correct reason (old positional-slice/no-filtering behavior still
+active); all pre-existing tests in the file stayed green, unmodified.
+**(5)** RED-\>GREEN gate approved. Implemented the `inclusionCriterion`
+UI radio + the two-step `candidateIds` restructure (raw pool, then
+narrow-by-criterion) in `R/modBreedingGroups.R` (`d575bae3`) exactly per
+the plan’s Scope/Dragons (P1-P4). All 6 new tests plus every
+pre-existing test in the file went green; `lintr` clean except one
+pre-existing, untouched line (407). **(6)** GREEN-\>REFACTOR gate: owner
+picked “skip – already clean” (no behavior-change refactor performed).
+**(7)** Updated
+`vignettes/manual_components/_breeding_group_formation.Rmd` and
+`NEWS.Rmd`/`NEWS.md` (rendered via
+[`rmarkdown::render`](https://pkgs.rstudio.com/rmarkdown/reference/render.html))
+(`bfe36cd8`); confirmed
+`vignettes/articles/breeding-group-formation.qmd` needed no change (it
+documents
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)‘s
+return value, untouched by this slice). **(8)** Verification: targeted
+test file green; clean regression read 0 failed/0 error/0 warning, 3928
+passed (up from S425’s 3907 baseline); `devtools::check()` 0 errors/0
+warnings/0 notes. **(9)** Phase 3E runtime smoke test: built a small
+synthetic pedigree (16 founders + 24 offspring, 40 rows, Learning 395
+precedent – NOT the full bundled example) in scratch, drove the live app
+via
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+through Input -\> Genetic Value Analysis (`runAnalysis`) -\> Breeding
+Groups. Hit and fixed two new E2E-harness gotchas along the way
+(Learnings 397/398: `AppDriver$new()`’s internal `skip_on_cran()` guard
+needs `NOT_CRAN=true` set in a standalone script; the module’s
+`data-ready` attribute never resets between repeat `formGroups` clicks
+in one `AppDriver` session, so `app$wait_for_idle()` had to replace
+`wait_for_module_ready()` after the first click). Confirmed: “Top N
+ranked” (default) still bounds to exactly `nTopAnimals` (5);
+“Genetic-value floor” bypasses that bound (40, the full pedigree) for
+all three `animalSource` choices, with zero crashes. Caveat, disclosed
+to the owner mid-session: this particular synthetic pedigree’s real GVA
+run produced zero “Low Value” animals, so the smoke test visually proved
+the truncation-bypass but not visual exclusion – exclusion is proven
+deterministically instead by the RED unit tests’ controlled fixtures.
+**(10)** Owner asked mid-session whether the new functionality has E2E
+regression coverage; answered honestly (server-level `testServer()`
+tests are committed/CI-run; the E2E smoke test is a one-off, uncommitted
+Phase 3E script, matching issue \#125 Slices 1/2’s own precedent of no
+permanent `test-e2e-*.R` addition) and asked via `AskUserQuestion`
+whether to add one as new scope – owner chose “leave as-is,” confirming
+precedent. **(11)** Added `PROJECT_LEARNINGS.md` Learnings 397-398,
+fixed `CLAUDE.md`’s stale “396 learnings”/Session count.
+
+**Session 426 Handoff Evaluation (by Session 427): 9/10.** **What
+helped:** the plan document itself
+(`docs/planning/issue128-genetic-value-floor-plan.md`) was the single
+most valuable artifact this session used – its Evidence-based-inventory
+(§2), Ratified decisions (§3), and especially the Dragons (§6, P1-P4)
+translated almost directly into RED test scenarios and GREEN
+implementation choices; zero citation drift found on re-verification
+against live source. The handoff’s `gotchas` field named all four
+Dragons specifically and in the exact order they mattered during
+implementation. `next_steps` correctly scoped the session (“do not
+bundle with anything else”) and the standing-items list (LabKey, NPRC
+outreach, issues \#126/#127/#129/#130, stale BACKLOG header, vestigial
+“Upload list” option) was accurate and untouched by this session, as
+expected. **What was missing:** nothing that blocked the work – the two
+E2E-harness gotchas (Learnings 397/398) discovered this session were
+genuinely new (no prior session had driven this app’s `AppDriver`
+through multiple sequential data-mutating clicks in one session, or run
+outside a
+[`testthat::test_that()`](https://testthat.r-lib.org/reference/test_that.html)
+context), so S426 had no way to anticipate them; they’re outside the
+plan’s own scope (the R/ feature, not the E2E test harness). **What was
+wrong:** nothing substantive – every citation and Dragon held exactly as
+described. The handoff’s `commit:` field (“3b72cb6a (claim); close-out
+commit sha to follow”) was left unresolved – a minor, understandable gap
+(a commit cannot cite its own sha), immaterial to using the handoff.
+**ROI:** very high – the plan’s own RED/ GREEN/DONE-looks-like/Verify
+sections were detailed enough to implement against nearly verbatim, with
+minimal additional design work needed this session.
+
+**Self-assessment (Session 427): 9/10.** **Strengths:** (1) followed the
+full RED-\>GREEN-\>REFACTOR gate cycle faithfully via `AskUserQuestion`
+at every transition, per the Development Process Contract; (2)
+re-verified the plan’s cited line numbers against live source before
+writing any code (zero drift found), and empirically verified
+`conditionalPanel`’s exact `&&`-to-`&amp;&amp;` HTML-escaping via a
+standalone R script before writing the RED assertion, rather than
+guessing at escaping and risking a wrong-reason test failure; (3)
+discovered and correctly diagnosed (not worked around with a hack) two
+real shinytest2/E2E-harness gotchas mid-session, recording both as new
+learnings for future sessions; (4) ran the full verification stack
+before closing out – targeted test file, full regression suite (0/0/0,
+3928 passed), `devtools:: check()` (0/0/0), and a real runtime smoke
+test against the live app, not just “build passes”; (5) kept the change
+scoped exactly to the plan’s boundary (`R/modBreedingGroups.R` + one
+vignette fragment + NEWS) – zero touches to
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)/the
+filter chain/other modules, per Dragon P4; (6) answered the owner’s
+mid-session E2E-coverage question with a precise, honest split (what IS
+vs is NOT regression-protected) rather than a vague reassurance, and
+surfaced the “add E2E now?” scope decision via `AskUserQuestion` rather
+than deciding unilaterally. **Weaknesses:** (1) the smoke-test synthetic
+pedigree happened to produce zero “Low Value” animals from the real GVA
+run, so the live-UI verification demonstrated the truncation-bypass half
+of the floor’s behavior but not the exclusion half visually (exclusion
+is proven only at the unit level); a session with more budget might have
+iterated the fixture once to force a guaranteed Low-Value animal into
+the live demo; (2) the two E2E-harness gotchas cost real iteration
+cycles to diagnose (one failed run each) – unavoidable given they were
+genuinely novel to this codebase’s test history, but worth noting; (3)
+did not set a deepest-reasoning-effort mode explicitly at session start
+(same noted, not-agent-actionable gap S426 also flagged). **Compared to
+previous sessions:** mirrors S424/S425’s TDD execution discipline for a
+single vertical slice (RED commit, then GREEN commit, then docs commit,
+full verification, runtime smoke) implementing a previously-ratified
+plan, with one addition – proactively answering and escalating a scope
+question the owner raised mid-close-out rather than deferring it.
+
+**Handoff to Session 428:** - **What’s next:** No task is claimed. Issue
+\#128 is closed. Standing, untouched this session: (a) LabKey
+integration remaining recs (BLOCKED – needs a live LabKey server); (b)
+NPRC outreach plan (DECISION NEEDED – owner review/edit/send); (c)
+issues \#126/#127/#129/#130 (need their own design/scoping sessions);
+(d) whether to provision this project’s five-state Issue Lifecycle
+GitHub labels remains open; (e) `BACKLOG.md`’s stale `inst/extdata/`
+Phase 4 header (flagged S425, re-confirmed S426, still unfixed – a
+1-line docs-only correction); (f) the vestigial “Upload list”
+`animalSource` UI option (no `fileInput`/handling anywhere, silently
+behaves like “All available”) – recommend filing as its own small
+separate issue, not folded into this session’s work (it predates and is
+unrelated to the genetic-value floor). (g) NEW this session: a candidate
+future improvement to `tests/testthat/helper-shinytest2.R` and each
+Shiny module – no module currently sends a
+`setDataLoading`/`ready = FALSE` message when a new async run starts, so
+`data-ready` never resets between runs in one `AppDriver` session
+(Learning 398) – only matters if a future E2E test needs to click the
+same trigger more than once per session; not filed as an issue, just
+flagged here. - **Key files:** `R/modBreedingGroups.R:40-53,269-306`
+(the shipped feature);
+`tests/testthat/test_modBreedingGroups.R:49-85,259-402` (the new/updated
+tests); `NEWS.Rmd`/`NEWS.md`;
+`vignettes/manual_components/ _breeding_group_formation.Rmd`;
+`PROJECT_LEARNINGS.md` Learnings 397-398. - **Gotchas:** (1) if a future
+session extends this feature, remember the `inclusionCriterion`
+default-missing-input handling (`is.null(input$inclusionCriterion)` -\>
+`"topN"`) –
+[`shiny::testServer()`](https://rdrr.io/pkg/shiny/man/testServer.html)
+tests that don’t explicitly set an input leave it `NULL`, unlike a live
+browser session where the UI’s `selected = "topN"` renders it non-NULL
+from the start; both paths must resolve to the same default. (2)
+Learnings 397/398 (E2E-harness mechanics) apply to any FUTURE ad hoc
+smoke-test script for this app, not just this session’s. (3)
+`.DS_Store`/ `inst/.DS_Store`/`inst/extdata/.DS_Store` and
+`docs/planning/issue125-ranking-priority-multi-candidate-plan.html`
+remain harmless, unfixed, out-of-scope artifacts, unchanged from
+S425/S426. - **Self-assessment score:** 9/10 (see above for full
+breakdown). - **Runtime smoke test:** DONE – see §9 above. Live app
+driven end-to-end through Input -\> Genetic Value Analysis -\> Breeding
+Groups; both `inclusionCriterion` values verified functionally distinct
+with zero crashes.
+
+### What Session 426 Did
+
+**Deliverable:** Write a design/scoping plan for closing issue \#128
+(breeding-group exclusion is top-N rank-based, not a genetic-value floor
+– Dimension 2 configurability gap from
+`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md`), per
+issue \#128’s own scope note (“this is a design question, not a quick
+fix… Needs a design decision before implementation”). Owner-directed:
+“plan on closing issue \#128.” **DONE.**
+`docs/planning/issue128-genetic-value-floor-plan.md` written, RATIFIED
+via `AskUserQuestion`, ready for a future implementation session’s RED
+phase. **Started/Completed:** 2026-07-29 / 2026-07-29 **Status:** DONE.
+TDD phases (RED/GREEN/REFACTOR) are inapplicable to this deliverable –
+it is a plan, following S423’s precedent for the sibling issue \#125
+plan. No `R/`/`tests/`/`man/`/`NAMESPACE`/`data/` content changed.
+
+**What happened, in order:** **(1)** Ran Phase 0 orientation in full
+(SAFEGUARDS.md, SESSION_NOTES.md, `gh issue list`,
+`git status`/`log`/`diff --stat`, `methodology_dashboard.py` (Health
+98/100), ledger reconcile for `CHANGELOG.md`/ `HANDOFFS.md` – both
+frontiers sat at HEAD (`fefacb30`), clean, no backfill needed). Rendered
+the priorities list (3 numbered items) via `AskUserQuestion`; the owner
+first asked a clarifying question (“what issues pertain to (a)
+configurability/ multiplicity from the audit”) before answering the
+picker – answered it directly by reading
+`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md` in full
+and verifying issue \#125’s closure against current source
+(`R/orderReport.R:20-31,43- 55`), not just BACKLOG/CHANGELOG narrative;
+identified issue \#128 as the one cluster-(a) finding still open. Owner
+then directed: “plan on closing issue \#128” / “continue.” **(2)** Read
+issue \#128’s actual GitHub body (`gh api`) – confirmed its own scope
+note explicitly calls this “a design question, not a quick fix,”
+matching the Planning Sessions protocol (plan is the deliverable, do not
+implement). Compared `DESIGN_WORKSTREAM.md` (UI/UX-specific)
+vs. `ARCHITECTURE_WORKSTREAM.md` (technical design decisions) and chose
+to follow the same unnamed-but-consistent pattern S423 used for the
+sibling issue \#125 plan (research workflow -\> ratify via
+`AskUserQuestion` -\> write plan), rather than force-fit either
+workstream doc’s full template. Stated the deliverable back to the
+owner, claimed the session (`3b72cb6a`) before any research. **(3)**
+Launched a 4-agent research workflow (`wf_9eb79cd3- 488`) reading
+`R/modBreedingGroups.R` (top-N mechanism), `R/groupAddAssign.R`/
+`R/groupMembersReturn.R`/the filter chain
+(`filterThreshold`/`filterPairs`/
+`filterAge`/`getAnimalsWithHighKinship`), the ranking fields available
+post-issue- \#125
+(`R/rankSubjects.R`/`R/orderReport.R`/`R/reportGV.R`/`R/modGeneticValue.R`),
+and `docs/architecture/module-contract.md` + the existing test
+inventory, firsthand, current on-disk state. Findings: the audit’s own
+`:253-258` line citation had drifted (real logic now at `:269-275`); the
+top-N cutoff is a pure positional head- slice never reading
+`rank`/`value`; no genetic-value floor exists anywhere in the
+group-formation chain (all existing filters are kinship/sex/age-based);
+issue \#125’s `value` column (`guCutoff`/`zScoreCutoff`-derived) is a
+stable, reusable signal across ranking schemes; the best insertion point
+is caller-side in `modBreedingGroups.R`, not inside the exported
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md);
+and a vestigial, unrelated “Upload list” UI option (no `fileInput`
+anywhere) was found as a side finding, flagged out of scope. **(4)**
+Personally re-read the primary source lines each finding cited
+(`R/modBreedingGroups.R:36-53,150-204,255-354`) and confirmed every
+quote matched exactly – then did a targeted follow-up the workflow
+itself hadn’t covered: checked whether `geneticValues()`’s report
+necessarily covers every id in `animalSource == "all"`’s full `ped$id`
+pool. It doesn’t – `R/reportGV.R:144-149`/`R/modGeneticValue.R:268-278`
+default the GV population to *living* animals only – a real gap distinct
+from the ratified “Undetermined passes” rule, now the plan’s own Dragon
+P1 with a required RED test (`PROJECT_LEARNINGS.md` Learning 396).
+**(5)** Presented 4 load-bearing design decisions via one
+`AskUserQuestion` call (mechanism: replace/supplement/user-selectable;
+floor signal: reuse `value` vs. new cutoff; Undetermined pass/fail;
+scope: all 3 sources vs. topRanked-only) – owner ratified all 4
+recommended options. **(6)** Wrote
+`docs/planning/issue128-genetic-value-floor-plan.md`, mirroring S423’s
+issue-125-plan structure (Context / Evidence-based inventory / Ratified
+decisions / one vertical slice with
+RED-GREEN-DONE-Verify-session-boundary / Dragons / Ratification record),
+scoped as a single slice (unlike issue \#125’s two independent slices)
+since this is one coherent capability confined to
+`R/modBreedingGroups.R`. **(7)** Added `PROJECT_LEARNINGS.md` Learning
+396 and fixed `CLAUDE.md`’s stale “395 learnings” count (396).
+
+**Session 425 Handoff Evaluation (by Session 426): 9/10.** **What
+helped:** the “standing items” list (LabKey BLOCKED, NPRC outreach
+DECISION NEEDED, issues \#126-130 needing their own design/scoping
+sessions, the stale BACKLOG.md `inst/extdata/` header) gave a complete,
+accurate picture during orientation with no reconstruction needed – and
+correctly anticipated that \#128 (like its siblings) would need its own
+design/scoping session before implementation, exactly what this session
+did. The ledger reconcile (§6) was genuinely clean (`CHANGELOG.md`/
+`HANDOFFS.md` frontiers both at HEAD) – no crash-recovery overhead.
+**What was missing:** nothing session-specific – S425’s own deliverable
+was closing \#125, not picking the next task, so it correctly left “no
+task claimed” rather than speculating which of 5 standing items would be
+picked next; the actual pick (#128) came from the owner directly. **What
+was wrong:** nothing identified – every claim held (the stale BACKLOG.md
+header finding was independently re-confirmed during this session’s own
+orientation). **ROI:** high – near-zero time spent reconstructing
+standing context; all of it spent on the actual research/design work.
+
+**Self-assessment (Session 426): 9/10.** **Strengths:** (1) completed
+research (workflow + own follow-up reads) before drafting any design
+decisions, exactly following the Planning Sessions “evidence-based
+inventory” mandate; (2) personally re-verified every subagent-cited line
+number against live source before writing the plan, catching zero
+citation drift but one substantive domain gap (the GV-report
+population-scope nuance, Dragon P1) none of the four agents’ narrow
+prompts had individually covered – a genuine independent-verification
+catch, not just trusting the delegated research (`PROJECT_LEARNINGS.md`
+Learning 396); (3) correctly identified, and explicitly declined, an
+over-fragmentation temptation – scoped this as ONE vertical slice
+(unlike issue \#125’s two), since the ratified design is a single
+coherent capability confined to one file; (4) made a real architecture
+decision independently (caller-side pre-filter in `modBreedingGroups.R`,
+not a new
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+parameter) with clear rationale, rather than escalating every
+micro-decision to the owner via `AskUserQuestion` – reserved that tool
+for the 4 decisions that were genuinely the owner’s preference to make;
+(5) answered the owner’s mid-orientation clarifying question with
+source-code verification (checked `R/orderReport.R`’s current
+parameters), not just BACKLOG/CHANGELOG prose. **Weaknesses:** (1) the
+first `AskUserQuestion` attempt (asking “which item should this session
+pick up?”) was premature – came before the owner’s own clarifying
+question about audit clustering was answered; should have recognized a
+detailed technical question mid-orientation as a signal to hold the
+picker question until the owner signaled readiness to choose; (2) did
+not explicitly set a maximum-reasoning-effort mode at session start per
+the Planning Sessions checklist (“Set your agent’s deepest available
+reasoning mode… e.g. `/effort max`”) – no tool exists for the agent
+itself to invoke this (it is a user-facing slash command), and S423’s
+own session log shows the same gap, so this may be a standing,
+not-actionable-by-the-agent limitation worth flagging rather than a
+fixable oversight; not treated as a defect here but noted for a future
+session/owner decision. **Compared to previous sessions:** closely
+mirrors S423’s issue-125-planning structure (workflow research -\>
+`AskUserQuestion` ratification -\> plan write) – a faithful replication
+of established precedent – while adding one discipline not explicitly
+recorded in S423’s own log: a dedicated personal-verification pass over
+the delegated research findings that caught a real gap before it reached
+the plan, rather than after.
+
+**Handoff to Session 427:** - **What’s next:** No task is claimed.
+`docs/planning/issue128-genetic-value-floor- plan.md` is written and
+ratified; the natural next step is its one implementation slice (full
+strict-TDD RED-\>GREEN-\>REFACTOR, phase-gated) – but that is a separate
+future session’s pick, not assumed here. Standing, untouched this
+session: (a) LabKey integration remaining recs (BLOCKED – needs a live
+LabKey server); (b) NPRC outreach plan (DECISION NEEDED – owner
+review/edit/send); (c) issues \#126/#127/#129/#130 (the other 4 clusters
+from S422’s triage) still need their own design/scoping sessions; (d)
+whether to provision this project’s five-state Issue Lifecycle GitHub
+labels (Learning 387) remains its own open decision; (e) `BACKLOG.md`’s
+stale `inst/extdata/` Phase 4 header (flagged S425, re-confirmed this
+session, still unfixed – a 1-line docs-only correction); (f) the
+vestigial “Upload list” `animalSource` UI option found this session (§1
+of the new plan) – no `fileInput`/handling anywhere, silently behaves
+like “All available” – recommend filing as its own small separate issue,
+not folded into \#128’s implementation. - **Key files:**
+`docs/planning/issue128-genetic-value-floor-plan.md` (this session’s
+deliverable – read in full before implementing);
+`R/modBreedingGroups.R: 40-53,150-204,255-354` (the only file the plan’s
+one slice touches); `PROJECT_LEARNINGS.md` Learning 396;
+`BACKLOG.md:6-9` (stale header, still unfixed). - **Gotchas:** (1) the
+plan’s Dragon P1 (ids absent from the GV report entirely, because
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+defaults its population to living animals only – `R/reportGV.R:144-149`)
+needs its own RED test; do not conflate it with the ratified
+“Undetermined animals pass” rule (D3), which only covers ids *present*
+in the report with that label. (2) Dragon P2: the new
+`req(geneticValues())` gate must be conditional on
+`inclusionCriterion == "valueFloor"`, not unconditional – gating it
+unconditionally would break the existing “form groups from all available
+animals with zero GV run” workflow. (3) Dragon P4: do not add a new
+parameter to
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)’s
+exported signature for this feature – the plan deliberately keeps the
+floor entirely inside `modBreedingGroups.R` (see the plan’s §2B
+rationale). (4) `.DS_Store`/`inst/.DS_Store`/`inst/extdata/.DS_Store`
+and now also `docs/planning/issue128-genetic-value-floor-plan.html` (if
+anyone renders the new plan’s `.md` in a browser) remain harmless,
+unfixed, out-of-scope artifacts, same as the pre-existing issue125
+one. - **Self-assessment score:** 9/10 (see above for full breakdown). -
+**Runtime smoke test:** N/A – planning deliverable only; no `R/`,
+`tests/`, or Shiny runtime behavior changed this session.
+
 ### What Session 425 Did
 
 **Deliverable:** Implement Slice 2 of the issue \#125 plan (surface

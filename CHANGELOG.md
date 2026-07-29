@@ -47,6 +47,84 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-29 · \[issue \#128\] Implement genetic-value floor as an alternative breeding-group inclusion criterion (Session 427)
+
+- **Deliverable:** `R/modBreedingGroups.R` gains an “Include animals by”
+  control (`inclusionCriterion`: `"topN"` default / `"valueFloor"`)
+  implementing Slice 1 of
+  `docs/planning/issue128-genetic-value-floor-plan.md`. Selecting the
+  genetic-value floor excludes any candidate whose `value` (from issue
+  \#125’s `orderReport()`) is `"Low Value"`, for all three
+  `animalSource` choices, bypassing `nTopAnimals` entirely;
+  `"Undetermined"` animals pass, ids absent from the GV report entirely
+  do not (Dragon P1 fail-safe). Full strict TDD: RED (`20b97653`, 6 new
+  tests) -\> GREEN (`d575bae3`) -\> REFACTOR (skipped, owner-approved –
+  code already clean), each phase gated via `AskUserQuestion`. Docs:
+  `vignettes/manual_components/ _breeding_group_formation.Rmd` +
+  `NEWS.Rmd`/`NEWS.md` (`bfe36cd8`). **Closes issue \#128.**
+- **Verification:** targeted test file green; clean regression read 0
+  failed/0 error/0 warning, 3928 passed (up from 3907);
+  `devtools::check()` 0 errors/0 warnings/0 notes; Phase 3E runtime
+  smoke test against the live app (small synthetic pedigree, Learning
+  395 precedent) confirmed Top-N-ranked unchanged (bounded to
+  `nTopAnimals`) and the genetic-value floor bypassing that bound for
+  all 3 `animalSource` choices, zero crashes.
+- **Learnings:** `PROJECT_LEARNINGS.md` 397 (a standalone
+  [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+  script needs `NOT_CRAN=true` set itself, or `AppDriver$new()`’s
+  internal `skip_on_cran()` guard aborts with an opaque “Error: Reason:
+  On CRAN”), 398 (no Shiny module in this app resets `data-ready` before
+  a new async run, so `wait_for_module_ready()` reads a stale `"true"`
+  on a second click in one `AppDriver` session – use
+  `app$wait_for_idle()` instead after the first click).
+- **Scope note:** E2E regression coverage was discussed with the owner
+  mid-session (server-level `testServer()` tests are committed/CI-run;
+  the Phase 3E browser smoke test is a one-off, uncommitted script) –
+  owner confirmed via `AskUserQuestion` to leave it at that, matching
+  issue \#125 Slices 1/2’s own precedent of no permanent `test-e2e-*.R`
+  addition for this module.
+
+### 2026-07-29 · \[issue \#128\] Write design/scoping plan: genetic-value floor as an alternative breeding-group inclusion criterion (Session 426)
+
+- **Deliverable:** `docs/planning/issue128-genetic-value-floor-plan.md`
+  – an evidence-based design plan for closing issue \#128, ratified via
+  `AskUserQuestion` this session, no `R/`/`tests/` code changed.
+- **Process:** answered the owner’s clarifying question (which issues
+  address the audit’s “configurability/multiplicity” cluster) via
+  source-code verification before proceeding. Launched a 4-agent
+  research workflow reading `R/modBreedingGroups.R`’s top-N mechanism,
+  `R/groupAddAssign.R`’s filter chain, the ranking fields available
+  post-issue-#125, and the module contract/test inventory firsthand.
+  Personally re-verified every cited line against live source, then
+  independently found (not from the workflow) that
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+  defaults its GV population to living animals only
+  (`R/reportGV.R:144-149`), meaning a value-floor over the “All
+  available” source will meet ids absent from the report entirely –
+  distinct from the ratified “Undetermined passes” rule, recorded as the
+  plan’s own Dragon P1 with a required RED test. Presented 4
+  load-bearing decisions via one `AskUserQuestion` call; owner ratified
+  all 4 recommended options: mechanism = user-selectable alternative to
+  top-N (not replace/ supplement), floor signal = reuse the existing
+  `value` column (no new cutoff), “Undetermined” animals pass the floor,
+  and the floor applies to all 3 `animalSource` choices, not just “Top
+  ranked.”
+- **Result:** plan document written with a firsthand evidence-based
+  inventory (every claim cited `file:line`, re-verified against current
+  source), a RATIFIED design-decisions section, one vertical slice
+  (confined to `R/modBreedingGroups.R` – no
+  [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+  signature change, per the plan’s own architecture rationale) with
+  RED/GREEN/DONE-looks-like/Verify/session- boundary/dragons, and a
+  ratification record. `PROJECT_LEARNINGS.md` Learning 396 added
+  (independently re-verifying a research workflow’s findings, both
+  citations and cross-cutting domain nuances, before writing a plan);
+  `CLAUDE.md`’s stale “395 learnings” count fixed to 396. Side finding,
+  filed for a future session (not fixed here): the “Upload list”
+  `animalSource` UI option has no `fileInput`/ handling anywhere and
+  silently behaves like “All available” – recommend its own small
+  separate issue.
+
 ### 2026-07-29 · \[issue \#125\] Implement Slice 2: surface multiple breeding-group candidates; close issue \#125 (Session 425)
 
 - **Deliverable:** `R/groupAddAssign.R` now retains up to 5 distinct

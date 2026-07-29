@@ -668,9 +668,31 @@ IDs</li>
 population</li>
 </ul>
 </li>
+<li>
+<p><strong>Include animals by</strong>: Choose how candidates are
+screened for eligibility, independent of Source:</p>
+<ul>
+<li>
+<em>Top N ranked</em> (default): Include only the top-N ranked
+animals when the source is “Top ranked” (see “Number of top animals”
+below); no genetic- value screening for “Upload list”/“All
+available”.</li>
+<li>
+<em>Genetic-value floor</em>: Exclude any animal whose Genetic Value
+Analysis result is “Low Value”, for all three Source choices. Animals
+labeled “Undetermined” (missing parentage/origin data) still pass, since
+a data gap is not evidence of low genetic value. An animal with no
+Genetic Value Analysis result at all (for example, one excluded from
+that report’s population) does not pass the floor. This mode ignores
+“Number of top animals” entirely, so a viable animal is never excluded
+purely for ranking outside a fixed count, and a mediocre top-N no longer
+automatically qualifies. Requires having run Genetic Value Analysis
+first, for any Source choice.</li>
+</ul>
+</li>
 <li><p><strong>Number of top animals</strong>: When using “Top ranked”
-source, specify how many of the highest genetic value animals to include
-(default: 20).</p></li>
+source with the “Top N ranked” inclusion criterion, specify how many of
+the highest genetic value animals to include (default: 20).</p></li>
 <li><p><strong>Number of groups</strong>: How many breeding groups to
 form (default: 3, range: 1-20).</p></li>
 <li><p><strong>Max kinship threshold</strong>: Maximum allowed kinship
