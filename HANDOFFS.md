@@ -60,6 +60,23 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S415
+date: 2026-07-28
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Owner-picked from BACKLOG.md's Housekeeping section: execute Phase 1 of docs/planning/extdata-reorganization-plan.md -- relocate inst/extdata/'s dev-scratch + orphaned items into dev/extdata-scratch/, remove 3 empty untracked dirs, delete obsolete .Rbuildignore/.gitignore lines. Phases 2-4 stay separate future sessions.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<in progress>
+
+```handoff
 session: S414
 date: 2026-07-28
 status: complete

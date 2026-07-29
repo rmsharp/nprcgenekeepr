@@ -6,6 +6,20 @@
 
 ## ACTIVE TASK
 
+### What Session 415 Did
+**Deliverable:** Owner-picked from `BACKLOG.md`'s Housekeeping section (S414's plan):
+execute **Phase 1** of `docs/planning/extdata-reorganization-plan.md` -- relocate
+`inst/extdata/`'s dev-scratch + orphaned (zero-reference) items into
+`dev/extdata-scratch/`, remove the 3 empty untracked directories, and delete the
+now-obsolete `.Rbuildignore`/`.gitignore` lines that reference them. (IN PROGRESS)
+**Started:** 2026-07-28
+**Status:** Session claimed. Work beginning. TDD Phase: N/A -- file relocation +
+build-config cleanup (`.Rbuildignore`/`.gitignore`), no `R/`/`tests/` production logic
+touched.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
 ### What Session 414 Did
 **Deliverable:** Owner-directed (not from `BACKLOG.md`): (1) track the newly-added
 `inst/extdata/Master_Genetic_metrics_2_14_15.pdf`; (2) investigate `inst/extdata/`'s
