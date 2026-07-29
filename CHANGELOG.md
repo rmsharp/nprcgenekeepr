@@ -43,6 +43,30 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-29 · [ad hoc] Triage genetic-metrics PDF capability audit findings (Session 422)
+- **Deliverable:** Owner-picked from S421's priorities list: triage
+  `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md`'s 12 missing/9
+  partial findings (of 37 total) into tracked items.
+- **Process:** presented the audit's own recommendation clusters to the owner via 6
+  `AskUserQuestion` picks (File GitHub issue / BACKLOG.md item only / Decline, no
+  action). Owner picked "File GitHub issue" for all 6.
+- **Result:** filed GitHub issues #125 (configurable ranking-priority scheme +
+  surface multiple breeding-group candidates, Dimensions 1 & 2), #126
+  (kinship/genome-uniqueness distribution shape statistics -- skewness, kurtosis,
+  Dimension 3), #127 (surface `correctUnknownParentMeanKinship()`'s silently-dropped
+  `flagged` list, Dimension 4), #128 (breeding-group exclusion is top-N rank-based,
+  not a genetic-value floor, Dimension 2), #129 (pedigree-diagram/tree
+  visualization, currently table-only, Dimension 7), #130 (marker-based
+  kinship/heterozygosity/parentage-verification + cross-center identity
+  resolution, Dimensions 5 & 6). Declined, no action: NGS/whole-genome/
+  MHC-specific/linkage-disequilibrium methods (Dimension 5) -- the audit's own
+  Recommendation #5 already concluded these are speculative future work per the
+  source PDF itself, not a present-day gap. Added a new `BACKLOG.md` section
+  ("Genetic-metrics PDF audit follow-ups") recording the disposition of all 21
+  findings, pointing at the 6 issue numbers.
+- **Runtime smoke test:** n/a -- no `R/`/`tests/` code touched; pure triage/issue
+  filing + `BACKLOG.md` documentation.
+
 ### 2026-07-29 · [BL-WordlistCranResubmission] Fix `NEWS.md:8` spelling-check NOTE (Session 421)
 - **Deliverable:** Owner-picked from S420's priorities list, per `BACKLOG.md`'s
   Housekeeping item flagged S415/discovered via `devtools::check()`. `NEWS.md:8`'s

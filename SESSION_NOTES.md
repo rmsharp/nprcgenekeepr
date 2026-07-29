@@ -9,11 +9,121 @@
 ### What Session 422 Did
 **Deliverable:** Owner-picked from S421's priorities list: triage
 `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md`'s 12 missing/9 partial
-findings -- decide which become tracked GitHub issues / `BACKLOG.md` items. (IN PROGRESS)
-**Started:** 2026-07-29
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+findings -- decide which become tracked GitHub issues / `BACKLOG.md` items. **DONE.**
+**Started/Completed:** 2026-07-29 / 2026-07-29
+**Status:** DONE. TDD Phase: N/A throughout -- pure triage/issue-filing + `BACKLOG.md`/
+`CHANGELOG.md` documentation, no `R/`/`tests/` production code touched.
+
+**What happened, in order:** **(1)** Ran Phase 0 orientation in full (SAFEGUARDS.md,
+SESSION_NOTES.md, `gh issue list`, `git status`/`log`/`diff --stat`,
+`methodology_dashboard.py` (Health 98/100), ledger reconcile for `CHANGELOG.md`/
+`HANDOFFS.md` -- both frontiers sat at HEAD, clean, no backfill needed). Rendered the
+priorities list (4 items) and offered it via `AskUserQuestion`; owner picked the
+genetic-metrics audit triage. **(2)** Read the full 292-line audit
+(`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md`) to build a triage
+plan from its 37 findings (16 implemented, 9 partial, 12 missing). Reused the audit's
+own "Recommendations" section clustering rather than asking one question per raw
+finding: 5 of the 21 non-implemented findings (NGS/MHC/linkage-disequilibrium methods,
+Dimension 5) were already explicitly declined by the audit's own Recommendation #5 (the
+source PDF frames these as speculative future work even in 2015), so recorded directly
+as "declined, no action" without a fresh ask. The remaining findings collapsed into 6
+coherent decision clusters. **(3)** Checked the 9 pre-existing open GitHub issues for
+overlap with the 6 clusters -- none found. **(4)** Presented the 6 clusters to the
+owner via 6 single-select `AskUserQuestion` prompts (2 tool calls, 4+2 questions), each
+offering "File GitHub issue" / "BACKLOG.md item only" / "Decline, no action." Owner
+picked "File GitHub issue" for all 6. **(5)** Claimed the session (`6b277000`),
+committed before any issue-filing/BACKLOG edits. **(6)** Ran `gh label list` before
+filing -- found this project has never provisioned the `DEVELOPMENT_WORKSTREAM.md`
+§Issue Lifecycle five-state labels (`needs-triage`/`needs-info`/`ready-for-agent`/
+`ready-for-human`/`wontfix`); only GitHub's stock labels plus a custom `low priority`
+exist, and all 9 pre-existing open issues use only `enhancement` or no label. Filed all
+6 new issues with `enhancement` to match the repo's actual existing convention rather
+than unilaterally inventing lifecycle labels (see `PROJECT_LEARNINGS.md` Learning 387).
+**(7)** Filed GitHub issues #125 (ranking-priority scheme + multiple breeding-group
+candidates, Dimensions 1&2), #126 (kinship/GU distribution shape stats -- skewness/
+kurtosis, Dimension 3), #127 (surface `correctUnknownParentMeanKinship()`'s
+silently-dropped `flagged` list, Dimension 4), #128 (breeding-group top-N vs.
+genetic-value floor, Dimension 2), #129 (pedigree-diagram/tree visualization, Dimension
+7), #130 (marker-based kinship/heterozygosity/parentage-verification + cross-center
+identity resolution, Dimensions 5&6) -- each body cites the audit, the specific
+`R/`-file:line evidence, scope notes, and the required agent-authored-triage
+disclaimer. **(8)** Added a new `BACKLOG.md` section ("Genetic-metrics PDF audit
+follow-ups") recording the disposition of all 21 non-implemented findings, pointing at
+the 6 issue numbers. **(9)** Added the `CHANGELOG.md` `[ad hoc]` entry, appended
+`PROJECT_LEARNINGS.md` Learning 387 (the label-provisioning gap +
+clustering/no-re-ask patterns), and updated `CLAUDE.md`'s stale "386 learnings"/
+"Sessions 1-419+" count claim to 387/1-422+.
+**Runtime smoke test:** n/a -- no `R/`/`tests/` code touched; pure triage, GitHub issue
+filing, and documentation.
+**Ledger:** See `CHANGELOG.md` 2026-07-29 S422 entry (`[ad hoc]`).
+
+**Session 421 Handoff Evaluation (by Session 422): 8/10.** **What helped:** the
+handoff's `next_steps` item (a) named the exact audit file path
+(`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md`) and framed the task
+as "review... decide whether findings should become BACKLOG.md/GitHub issue items" --
+exactly the deliverable this session executed, with zero rediscovery needed of which
+document to review or what "done" meant. Gotchas (2) (`inst/WORDLIST` collation) and
+(3) (branch-push state re-verify) were both re-confirmed accurate/still-true at this
+session's own Phase 0. **What was missing:** the handoff didn't summarize the audit's
+own finding count/structure (37 findings, 7 dimensions) -- this session had to read the
+full document itself to build the triage clusters. Not a fair deduction though: S421
+never touched or read that audit itself (it inherited the item as a standing backlog
+line from S420's own handoff), so it had no first-hand basis to summarize it further.
+**What was wrong:** nothing identified. **ROI:** high -- the exact file path and task
+framing were the key value-add; the substantive reading/clustering work was
+necessarily this session's own regardless of handoff depth.
+
+**Self-assessment (Session 422): 8/10.** **Strengths:** (1) full Phase 0 orientation
+completed, including ledger reconcile, before any task work; (2) resolved the task
+scope via `AskUserQuestion` (which item to pick up) before claiming, then the 6
+per-cluster disposition decisions also via `AskUserQuestion` before any GitHub/file
+mutation -- no unilateral judgment calls on what should be tracked; (3) reused the
+audit's own recommendation-clustering rather than manufacturing 21 separate
+micro-decisions, and correctly split out the 2 findings the audit itself left
+ungrouped (top-N-vs-value-floor, pedigree-diagram) as their own decisions rather than
+folding them into a cluster they didn't belong to; (4) cross-checked all 9 pre-existing
+open issues for overlap before filing anything new -- avoided any duplicate issue;
+(5) caught a real documented-vs-actual gap (`gh label list` showing the project's
+own documented Issue Lifecycle label scheme was never provisioned) via a cheap,
+direct check before acting, rather than assuming the methodology doc's label names
+existed -- matched the existing repo convention instead of unilaterally inventing
+labels, and surfaced the adoption question as its own open item (Learning 387) rather
+than deciding it. **Weaknesses:** (1) did not independently re-verify the audit's own
+file:line citations against current `R/` source before citing them in the 6 new issue
+bodies -- trusted the audit's own adversarially-verified claims (per its Method
+section) rather than re-deriving from primary source; a reasonable efficiency
+trade-off given the audit's own verification rigor (Learning 386 documents that even
+that process caught and corrected one verifier error), but not a full independent
+re-derivation. **Compared to previous sessions:** matches S415-421's discipline
+(full traceability, cited evidence, `AskUserQuestion`-gated judgment calls, `BACKLOG.md`/
+`CHANGELOG.md` kept in sync same-session); correctly ordered Phase 1B this time (claim
+stub committed *before* any issue-filing or `BACKLOG.md` edit), unlike S421's
+self-caught ordering lapse.
+
+**Handoff to Session 423:**
+- **What's next:** No task is claimed. `BACKLOG.md`'s "Active" section remains empty.
+  Standing items, untouched this session: (a) LabKey integration remaining recs
+  (BLOCKED -- needs a live LabKey server); (b) NPRC outreach plan (DECISION NEEDED --
+  owner review/edit/send, not a coding task); (c) the 6 newly-filed issues (#125-#130)
+  themselves are `needs-triage`-equivalent (no acceptance criteria locked in yet;
+  several explicitly need a design/scoping session before implementation -- see each
+  issue body's "Scope note"); (d) whether to provision this project's documented
+  five-state Issue Lifecycle GitHub labels (`PROJECT_LEARNINGS.md` Learning 387) is
+  now its own open decision; (e) 3 pre-existing open GitHub issues (#123 XARCH-5, #37,
+  #36, #28, #12, #11, #10, #5) remain un-mirrored into `BACKLOG.md`, unchanged.
+- **Key files:** `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md`
+  (source audit, unedited); `BACKLOG.md` (new "Genetic-metrics PDF audit follow-ups"
+  section); `PROJECT_LEARNINGS.md` Learning 387 (label-provisioning gap +
+  clustering/no-re-ask patterns); `CLAUDE.md:235` (learning-count claim updated).
+- **Gotchas:** (1) `.DS_Store`/`inst/.DS_Store`/`inst/extdata/.DS_Store` remain
+  harmless, unfixed, out-of-scope artifacts (unchanged since S415/S419/S420/S421).
+  (2) This project's GitHub repo has NOT provisioned the `DEVELOPMENT_WORKSTREAM.md`
+  §Issue Lifecycle five-state labels -- `gh label list` shows only stock GitHub labels
+  + a custom `low priority`; issues #125-#130 (and all 9 pre-existing open issues) use
+  only `enhancement`/blank, not lifecycle-state labels. Don't assume those label names
+  exist without checking first. (3) At this session's Phase 0, branch was up to date
+  with `origin/master` -- re-verify at your own Phase 0.
+- **Self-assessment score:** 8/10 (see above for full breakdown).
 
 ### What Session 421 Did
 **Deliverable:** Owner-picked from S420's priorities list: fix the `NEWS.md:8`
