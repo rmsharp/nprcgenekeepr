@@ -6,6 +6,18 @@
 
 ## ACTIVE TASK
 
+### What Session 427 Did
+**Deliverable:** Implement Slice 1 of the ratified issue #128 plan
+(`docs/planning/issue128-genetic-value-floor-plan.md`) -- a genetic-value floor as
+a user-selectable alternative to the existing top-N inclusion criterion in the
+Breeding Groups module. Owner-picked via `AskUserQuestion` at Phase 0. (IN
+PROGRESS)
+**Started:** 2026-07-29
+**Status:** Session claimed. Work beginning. TDD phase: PRE-RED.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+
 ### What Session 426 Did
 **Deliverable:** Write a design/scoping plan for closing issue #128 (breeding-group
 exclusion is top-N rank-based, not a genetic-value floor -- Dimension 2

@@ -60,6 +60,23 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S427
+date: 2026-07-29
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement Slice 1 of the ratified issue #128 plan (docs/planning/issue128-genetic-value-floor-plan.md) -- genetic-value floor as a user-selectable alternative inclusion criterion in R/modBreedingGroups.R. TDD phase: PRE-RED.
+what_was_done: pending
+next_steps: pending
+key_files: docs/planning/issue128-genetic-value-floor-plan.md (the plan being implemented); R/modBreedingGroups.R (the only file this slice touches)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+(Session in progress -- this stub will be overwritten at Phase 3D close-out.)
+
+```handoff
 session: S426
 date: 2026-07-29
 status: complete
