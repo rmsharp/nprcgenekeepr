@@ -6,6 +6,20 @@
 
 ## ACTIVE TASK
 
+### What Session 428 Did
+**Deliverable:** Write a design/scoping plan for closing issue #126 (kinship/
+genome-uniqueness distribution-shape statistics -- skewness, kurtosis), per
+`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md` Dimension 3 /
+Recommendation #2. Owner-directed: "let's plan for #126 during this session,"
+plus a sequencing decision to record in `BACKLOG.md` (planning+implementing
+#127 and #129 follow #126's implementation; planning #130 follows all three).
+(IN PROGRESS)
+**Started:** 2026-07-29
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the
+crash breadcrumb for the next session's reconcile.
+
 ### What Session 427 Did
 **Deliverable:** Implement Slice 1 of the ratified issue #128 plan
 (`docs/planning/issue128-genetic-value-floor-plan.md`) -- a genetic-value floor as
