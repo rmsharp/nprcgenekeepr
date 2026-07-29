@@ -68,6 +68,22 @@ are legal at write time (the receipt ships in the very commit whose sha
 it would name); the next session reconciles them to real shas.
 
 ``` handoff
+session: S421
+date: 2026-07-29
+status: complete
+self_score: 7
+predecessor_score: 8
+active_task: DONE -- NEWS.md:8 spelling-check NOTE fixed (CRAN's/resubmission hand-added to inst/WORDLIST). BACKLOG.md item marked RESOLVED.
+what_was_done: Read NEWS.md:8 and inst/WORDLIST to confirm the exact 2 words and derive their case-insensitive-collation insertion points (the file is not strict-ASCII sorted). Added CRAN's between ColonyManagerTutorial/Curation, resubmission between resetPopulation/retentions (edited bottom-up). Self-caught a Phase 1B ordering violation (edited before claiming) and corrected by committing the claim stub (7ae74651) separately before the close-out commit. Verified via devtools::check() raw log Status: OK, 0 errors/0 warnings/0 notes; regression suite exact baseline match (0/0/0, 3198 passed, 179 skipped).
+next_steps: No task claimed for S422. Standing options: (a) review docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md and decide on filing its 12 missing/9 partial findings; (b) LabKey integration remaining recs (BLOCKED, needs live LabKey server); (c) NPRC outreach plan (DECISION NEEDED, owner-executed); (d) 9 open GitHub issues not yet mirrored into BACKLOG.md.
+key_files: inst/WORDLIST (2-line addition); NEWS.md:8 (source of the 2 words, unedited); BACKLOG.md Housekeeping section (item marked RESOLVED).
+gotchas: (1) inst/WORDLIST sorts case-insensitively (e.g. "errored" before "ErrorTab"), not strict ASCII -- find insertion points by case-insensitive comparison, don't append or assume ASCII order. (2) .DS_Store/inst/.DS_Store/inst/extdata/.DS_Store remain harmless out-of-scope artifacts, unchanged since S415/S419/S420. (3) Branch was up to date with origin/master at this session's Phase 0 -- re-verify at your own Phase 0, this field has gone stale between sessions before.
+runtime_smoke: n/a -- inst/WORDLIST only affects devtools::check()'s spelling test, no application runtime behavior changed
+changelog_ref: CHANGELOG.md 2026-07-29 S421 entry
+commit: 7ae74651 (claim); close-out commit sha to follow
+```
+
+``` handoff
 session: S420
 date: 2026-07-29
 status: complete

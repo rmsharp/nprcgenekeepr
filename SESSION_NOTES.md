@@ -7,6 +7,118 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 421 Did
+
+**Deliverable:** Owner-picked from S420’s priorities list: fix the
+`NEWS.md:8` spelling-check NOTE by hand-adding `CRAN's`/`resubmission`
+to `inst/WORDLIST`. **DONE.** **Started/Completed:** 2026-07-29 /
+2026-07-29 **Status:** DONE. TDD Phase: N/A throughout – `inst/WORDLIST`
+is a curated spelling-check word list, not `R/`/`tests/` production
+code.
+
+**What happened, in order:** **(1)** Ran Phase 0 orientation in full
+(SAFEGUARDS.md, SESSION_NOTES.md, `gh issue list`,
+`git status`/`log`/`diff --stat`, `methodology_dashboard.py`, ledger
+reconcile for `CHANGELOG.md`/`HANDOFFS.md` – both frontiers sat at HEAD,
+clean, no backfill needed). **(2)** Rendered the priorities list and
+offered it via `AskUserQuestion`; owner picked the WORDLIST fix. **(3)**
+Read `inst/WORDLIST` and `NEWS.md:8` to confirm the exact two words
+(`CRAN's`, `resubmission`) and their needed collation position – noted
+the file sorts case-insensitively (e.g. `errored` before `ErrorTab`),
+not strict ASCII, so insertion point was derived by comparison, not
+appended at the end. **(4)** Made the two-word edit (editing the lower
+line, `resetPopulation`/`resubmission`/ `retentions`, before the higher
+line, `ColonyManagerTutorial`/`CRAN's`/`Curation`, per this project’s
+“edit files in reverse line order” convention). **(5)** **Process gap,
+self-caught:** made this edit *before* writing the Phase 1B claim stub,
+violating “claim before any technical work.” Corrected by writing the
+claim stub and committing it (`7ae74651`) separately from the close-out
+commit, matching the project’s established claim/close-out commit-pair
+pattern, so the commit history still reads correctly even though the
+actual edit order was briefly out of sequence. **(6)** Verified via
+`devtools::check()`: raw log `Status: OK`, 0 errors/0 warnings/0 notes
+(confirms the spelling NOTE is gone; read the `Status:` line per
+Learning 382, not just the colored summary). **(7)** Ran the documented
+“Clean regression read”: 0 failed/0 error/0 warning, 3198 passed, 179
+skipped – exact match to the S412-S420 baseline. **(8)** Updated
+`BACKLOG.md`’s Housekeeping entry to RESOLVED and added the
+`CHANGELOG.md` entry. **Runtime smoke test:** n/a – `inst/WORDLIST` only
+affects `devtools::check()`’s spelling test, not application runtime
+behavior. **Ledger:** See `CHANGELOG.md` 2026-07-29 S421 entry
+(`[BL-WordlistCranResubmission]`).
+
+**Session 420 Handoff Evaluation (by Session 421): 8/10.** **What
+helped:** the handoff’s `next_steps`/priorities-list line named this
+exact item with its file path (`inst/WORDLIST`) and the do-not-do
+([`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html)
+wholesale) already in hand – no rediscovery needed of either the target
+words or the S230 convention that governs how to edit this specific
+file. **What was missing:** the handoff didn’t flag that `inst/WORDLIST`
+uses case-insensitive collation rather than strict ASCII sort, so this
+session had to derive the correct insertion point by manual comparison
+rather than being told the sort rule up front – minor, since this is
+discoverable in under a minute by reading the file, and S420 had no
+direct reason to know this (S420’s own task never touched
+`inst/WORDLIST`). **What was wrong:** nothing identified – the “Branch
+was up to date with origin/master” gotcha S420 flagged as the volatile
+field was re-checked at this session’s own Phase 0 and remained true.
+**ROI:** high – the file path, the two exact words, and the
+do-not-wholesale-regenerate warning together saved meaningfully more
+time than the handoff cost to read.
+
+**Self-assessment (Session 421): 7/10.** **Strengths:** (1) full Phase 0
+orientation completed before any task work, including the ledger
+reconcile step; (2) verified the exact words and insertion positions
+from source (`NEWS.md:8`, the WORDLIST file itself) rather than trusting
+the BACKLOG.md prose description alone – caught the
+case-insensitive-collation detail this way; (3) followed the S230 “avoid
+reconcile tools on curated files” convention explicitly rather than
+reaching for
+[`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html),
+which would have been faster but would have silently deleted unrelated
+curation; (4) verified via the raw `devtools::check()` log’s `Status:`
+line per Learning 382, not the colored summary alone, and additionally
+ran the full regression suite for baseline parity even though
+`devtools::check()` alone would have sufficed as the build-equivalent;
+(5) self-caught and transparently documented the Phase 1B ordering
+violation rather than silently omitting it. **Weaknesses:** (1) the core
+process violation – edited `inst/WORDLIST` before writing and committing
+the Phase 1B claim stub, exactly the “eager to start” failure mode (#1)
+and “literal minimum” pattern the protocol exists to prevent; the
+recovery (separate claim commit before the close-out commit) preserved a
+clean commit history but the actual chronology briefly departed from the
+mandated order; scored 7 rather than 9-10 specifically for this, not for
+the technical work itself, which was correct and fully verified.
+**Compared to previous sessions:** technical execution matches S420’s
+standard (small, single-purpose, fully verified, BACKLOG.md/CHANGELOG.md
+kept in sync); process discipline is a step below S418-420, none of
+which show a claim-stub-after-edit ordering lapse.
+
+**Handoff to Session 422:** - **What’s next:** No task is claimed.
+`BACKLOG.md`’s “Active” section remains empty. Standing items, untouched
+this session: (a) review
+`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md` and
+decide whether any of its 12 “missing”/9 “partial” findings should
+become `BACKLOG.md`/GitHub issue items; (b) LabKey integration remaining
+recs (BLOCKED – needs a live LabKey server); (c) NPRC outreach plan
+(DECISION NEEDED – owner review/edit/send, not a coding task); (d) 9
+open GitHub issues (#123 XARCH-5, \#116, \#37, \#36, \#28, \#12, \#11,
+\#10, \#5), none yet mirrored into `BACKLOG.md` as pickable items. -
+**Key files:** `inst/WORDLIST` (this session’s two-line addition, near
+`ColonyManagerTutorial`/`Curation` and `resetPopulation`/`retentions`);
+`BACKLOG.md` Housekeeping section (item marked RESOLVED this session). -
+**Gotchas:** (1) `.DS_Store`/`inst/.DS_Store`/`inst/extdata/.DS_Store`
+remain harmless, unfixed, out-of-scope artifacts (unchanged since
+S415/S419/S420). (2) `inst/WORDLIST` sorts case-insensitively, not
+strict ASCII – when adding future entries, find the insertion point by
+case-insensitive comparison with neighboring entries, not by appending
+or by ASCII sort assumptions. (3) At this session’s Phase 0, branch was
+up to date with `origin/master` – re-verify at your own Phase 0 per the
+now-recurring pattern of this field going stale between sessions. -
+**Self-assessment score:** 7/10 (see above for full breakdown – the
+deduction is entirely a Phase 1B ordering lapse, self-caught and
+corrected, not a defect in the technical deliverable).
+
 ### What Session 420 Did
 
 **Deliverable:** Owner-picked from S419’s priorities list: fix
