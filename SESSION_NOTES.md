@@ -6,6 +6,15 @@
 
 ## ACTIVE TASK
 
+### What Session 422 Did
+**Deliverable:** Owner-picked from S421's priorities list: triage
+`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md`'s 12 missing/9 partial
+findings -- decide which become tracked GitHub issues / `BACKLOG.md` items. (IN PROGRESS)
+**Started:** 2026-07-29
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### What Session 421 Did
 **Deliverable:** Owner-picked from S420's priorities list: fix the `NEWS.md:8`
 spelling-check NOTE by hand-adding `CRAN's`/`resubmission` to `inst/WORDLIST`. **DONE.**

@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S422
+date: 2026-07-29
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: IN PROGRESS -- triaging GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md's 12 missing/9 partial findings into GitHub issues / BACKLOG.md items.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S421
 date: 2026-07-29
 status: complete
