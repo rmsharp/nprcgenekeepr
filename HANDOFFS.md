@@ -62,17 +62,17 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S420
 date: 2026-07-29
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Fix ROADMAP.md:21-22's stale doc-engine-policy line -- path-only fix, inst/extdata/ developer docs -> dev/extdata-scratch/ developer docs (owner-picked from S419's priorities list; wording resolved via AskUserQuestion before claim).
-what_was_done: pending
-next_steps: pending
-key_files: ROADMAP.md:21-22
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- ROADMAP.md:21's stale doc-engine-policy line fixed (path-only: inst/extdata/ developer docs -> dev/extdata-scratch/ developer docs). BACKLOG.md item marked RESOLVED.
+what_was_done: Resolved the open editorial wording call (flagged S418, deferred as owner-input-needed) via AskUserQuestion with a before/after preview of both real options, before claiming the session. Owner picked path-only fix. Claimed (0c3f90cf). Verified via find/grep that the 3 dev docs (claude_code.qmd, software_design_doc.qmd, meeting_notes.qmd) actually live at dev/extdata-scratch/ and that no other current-state doc still claims the old inst/extdata/ location (only dated historical prose does, correctly left unedited). Made the one-line ROADMAP.md:21 edit. Confirmed ROADMAP.md has no build/render wiring, so the grep sweep is the build-equivalent here, not devtools::check(). Updated BACKLOG.md's Housekeeping entry to RESOLVED.
+next_steps: No task claimed for S421. Standing options: (a) review docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md and decide on filing its 12 missing/9 partial findings; (b) NEWS.md:8 spelling NOTE -- hand-add CRAN's/resubmission to inst/WORDLIST; (c) LabKey integration remaining recs (BLOCKED, needs live LabKey server); (d) NPRC outreach plan (DECISION NEEDED, owner-executed); (e) 9 open GitHub issues not yet mirrored into BACKLOG.md.
+key_files: ROADMAP.md:21 (the fix); BACKLOG.md Housekeeping section (item marked RESOLVED).
+gotchas: (1) .DS_Store/inst/.DS_Store/inst/extdata/.DS_Store remain harmless, unfixed, out-of-scope artifacts (unchanged since S415/S419). (2) Branch was up to date with origin/master at this session's Phase 0, contradicting S419's own "not yet pushed" gotcha -- push state is the field most likely to go stale between sessions; re-verify at your own Phase 0 rather than trusting the prior handoff's claim.
+runtime_smoke: n/a -- docs-only deliverable, no runtime behavior changed
+changelog_ref: CHANGELOG.md 2026-07-29 S420 entry
+commit: 0c3f90cf (claim); close-out commit sha to follow
 ```
 
 ```handoff

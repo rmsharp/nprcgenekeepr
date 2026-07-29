@@ -18,7 +18,7 @@ integration testing and CRAN-submission preparation.
   `docs/planning/quarto-documentation-future-proofing-analysis.md`. The four CRAN vignettes
   stay on `knitr`/`rmarkdown` (zero CRAN risk); new and non-CRAN documentation moves to Quarto
   — pkgdown articles (mixed `.qmd`/`.Rmd` mode), slide decks (`revealjs`), and the
-  `inst/extdata/` developer docs. The long-form manual is repositioned onto the Quarto website
+  `dev/extdata-scratch/` developer docs. The long-form manual is repositioned onto the Quarto website
   and dropped from the CRAN vignette set (§6.3(b)), coordinated with the CRAN resubmission.
   Implementation is per-slice, in separate sessions — see the analysis doc §7.1.
   **Slice 1 done (S106):** `inst/extdata/meeting_notes.Rmd` → `.qmd` (build-ignored dev doc).

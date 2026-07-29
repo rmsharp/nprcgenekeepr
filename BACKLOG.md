@@ -216,19 +216,14 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       errors/0 warnings, 1 NOTE (same pre-existing spelling gap below, confirmed
       untouched). **The `inst/extdata/` reorganization plan is now fully executed
       (Phases 1-4 all DONE).** See `CHANGELOG.md`.
-- [ ] **`ROADMAP.md`'s doc-engine-policy line is now stale** (READY, Effort S,
-      discovered S418 while triaging the extdata-reorg Phase 4 sweep grep) --
-      `ROADMAP.md:21-22` still describes "the `inst/extdata/` developer docs" as a
-      documentation-engine category, but all 3 of those dev docs
-      (`claude_code.qmd`, `software_design_doc.qmd`, `meeting_notes.qmd`) were
-      relocated out of `inst/extdata/` entirely to `dev/extdata-scratch/` during
-      this same reorg plan's Phase 1 (S415) -- the physical location the sentence
-      names no longer exists. Not fixed this session: rewriting the sentence is an
-      editorial/policy-prose call (does "developer docs" still mean this file set
-      now that it lives in `dev/`, or should the doc-engine policy itself be
-      revisited for scratch-relocated files?), not a mechanical path substitution
-      like the rest of this plan's fixes -- left for a session with owner input
-      on the intended wording.
+- [ ] (none remaining -- the "`ROADMAP.md`'s doc-engine-policy line is now stale"
+      item (flagged S418) is RESOLVED: owner resolved the editorial wording call
+      via `AskUserQuestion` -- **path-only fix**, keeping the doc-engine-policy
+      category and just correcting the location -- `ROADMAP.md:21-22` now reads
+      `dev/extdata-scratch/` developer docs instead of `inst/extdata/` developer
+      docs, matching where the 3 dev docs (`claude_code.qmd`,
+      `software_design_doc.qmd`, `meeting_notes.qmd`) actually live since the
+      extdata reorg's Phase 1 (S415) -- S420 (2026-07-29). See `CHANGELOG.md`.)
 - [ ] **`NEWS.md:8` spelling-check NOTE -- `CRAN's`/`resubmission` missing from
       `inst/WORDLIST`** (READY, Effort S) -- discovered S415 (2026-07-28) while running
       `devtools::check()` as Phase 1's verification step for the `inst/extdata/` reorg
