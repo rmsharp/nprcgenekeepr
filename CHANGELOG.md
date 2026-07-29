@@ -47,6 +47,176 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-28 · \[ad hoc\] `inst/extdata/` reorganization Phase 3: fix + re-render the rendered artifacts still embedding the old flat path (Session 417)
+
+- **Deliverable:** Owner-picked from S416’s priorities list: execute
+  Phase 3 of `docs/planning/extdata-reorganization-plan.md` – re-render
+  `a3manual.Rmd`, `a2interactive.Rmd`, and
+  `vignettes/articles/offline-focal-animal-workflow.qmd` so their
+  rendered outputs match Phase 2’s `examples/` path. TDD Phase: N/A –
+  vignette source path fixes + re-renders, no new `R/` production logic.
+- **Scope correction found by this session’s own Dragon 1 grep (not
+  trusting the plan’s Phase 3 prose, or Phase 2’s completion, as
+  final):** the plan’s Phase 3 text described all 3 targets uniformly as
+  re-render work, but
+  `vignettes/articles/offline-focal-animal-workflow.qmd:104,106` still
+  called `system.file("extdata", "<file>", package = ...)` directly with
+  no `examples` segment – confirmed in R this returned `""` (broken)
+  since Phase 2 moved the files. The plan’s own §8.1 evidence table had
+  already listed this exact call site; only the Phase 3 prose summary
+  undercounted it. Fixed as the source bug it was. Also fixed the stale
+  GitHub blob URL in
+  `vignettes/manual_components/_summary_of_major_functions.Rmd:66`
+  (still pointed at the pre-Phase-2 flat path). See
+  `PROJECT_LEARNINGS.md` Learning 384.
+- **Re-rendered all 3 targets:** `a3manual.Rmd` via
+  `rmarkdown::render(output_format = rmarkdown::html_vignette(keep_md = TRUE))`
+  (the default render doesn’t refresh the gitignored `.md` byproduct;
+  `keep_md = TRUE` was needed to also update it); `a2interactive.Rmd`
+  via
+  [`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html);
+  the `.qmd` pkgdown article via `quarto render` from within
+  `vignettes/articles/` (its `_quarto.yml` project context) – required a
+  throwaway local package install
+  (`devtools::install(build_vignettes = FALSE, dependencies = FALSE)`,
+  plus `R_LIBS_USER` pointed at the renv library so the quarto
+  subprocess’s fresh R session could find it) since the article’s
+  [`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/)
+  call needs a real install, not just
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html).
+- **Verification (all per plan §6 Phase 3, plus this session’s own
+  additions):** the rendered article’s `[shipped]` chunk executed
+  cleanly with `dim(colonyPed)` = `2922 x 11` (real data, not an error)
+  – proof the fixed
+  [`system.file()`](https://rdrr.io/r/base/system.file.html) calls
+  resolve at runtime, not just syntactically; the plan’s prescribed
+  `grep -rln "inst/extdata/example_nprcgenekeepr_config\|inst/extdata/ExamplePedigree" vignettes/*.html vignettes/*.md`
+  returned nothing, broadened to also cover `vignettes/articles/*.html`
+  (nothing); `gh api` confirmed the GitHub blob URL target
+  (`inst/extdata/examples/example_nprcgenekeepr_config`) actually exists
+  on `origin/master` – Dragon 2’s “manual link click” requirement, done
+  via API rather than a browser; regression suite exact baseline match
+  (0 failed/0 error/0 warning, 3198 passed, 179 skipped);
+  `devtools::check()` 0 errors/0 warnings, 1 NOTE – the same
+  pre-existing, unrelated `NEWS.md:8` spelling gap from S415/S416,
+  confirmed untouched by this session’s diff, read from the raw check
+  log’s `Status:` line per Learning 382 (the colored summary again
+  showed 0 notes).
+- Updated `BACKLOG.md` (Phase 3 marked DONE, Phase 4’s 2 open decisions
+  restated), `PROJECT_LEARNINGS.md` (Learning 384), `CLAUDE.md`’s
+  learning-count cross-reference (383 -\> 384).
+
+### 2026-07-28 · \[ad hoc\] `inst/extdata/` reorganization Phase 2: subfolder the 10 load-bearing files into examples/ (Session 416)
+
+- **Deliverable:** Owner-picked from `BACKLOG.md`’s Housekeeping
+  section: execute Phase 2 of
+  `docs/planning/extdata-reorganization-plan.md` (S414) – create
+  `inst/extdata/examples/`, migrate the 10 load-bearing files, update
+  every
+  [`system.file()`](https://rdrr.io/r/base/system.file.html)/hardcoded-path
+  call site. TDD Phase: N/A – file relocation + path-reference updates
+  in existing tests/prose, no new `R/` production logic.
+- **Pre-execution decisions resolved:** subfolder name **`examples/`**
+  (owner-picked via `AskUserQuestion` over
+  `fixtures/`/`sample-data/`/`package-data/`, plan §10 \#2).
+  `vignettes/a2interactive.R`’s generation status (plan §10 \#4, Dragon
+  4): initially misjudged from the
+  `%\VignetteEngine{knitr::rmarkdown_notangle}` directive as
+  hand-maintained; owner corrected – `.Rmd` files are the source,
+  `.R`/`.md`/`.html` are generated derivatives, and any drift ahead of
+  the `.Rmd` is a bug to fix. Confirmed further:
+  `vignettes/*.R`/`*.md`/`*.html` are gitignored
+  (`.gitignore:18,20,22`), never git-tracked – so the tracked-source fix
+  is the `.Rmd` edit alone; the stale local `a2interactive.R` (3 commits
+  behind its `.Rmd`) was regenerated via
+  [`knitr::purl()`](https://rdrr.io/pkg/knitr/man/knit.html) as a
+  courtesy, producing no commit. Noted, not fixed (unrelated, out of
+  scope): `vignettes/gvaConvergence.R` and
+  `vignettes/simulatedKValues.R` show the same local staleness pattern
+  but reference no `extdata` path.
+- **Change:** Re-ran a fresh, independent exhaustive `grep -rn` for all
+  10 filenames across `R/`, `tests/`, `vignettes/`, `man/`, `data-raw/`,
+  `README.Rmd`, `docs/`, `.github/` before touching anything (Dragon 1),
+  rather than trusting the plan’s own §8.1 inventory as final.
+  `git mv`’d all 10 load-bearing files into `inst/extdata/examples/` (2
+  checkpoint commits of 5). Updated the central `get_test_data_path()`
+  test helper (fixes every caller through it); ~28 individual
+  [`system.file()`](https://rdrr.io/r/base/system.file.html) call sites
+  across 15 test files; 7 path-bearing roxygen/comment prose sites
+  (`R/defaultSiteParams.R:16`, `R/loadSiteConfig.R:11`,
+  `data-raw/rhesusGenotypes.R:18`, `data-raw/rhesusPedigree.R:9`, plus 2
+  test-file comments) – correctly left `R/data.R`’s 4 extdata mentions
+  untouched since they’re plain filenames with no path prefix, still
+  accurate post-move; the one hardcoded path in
+  `vignettes/a2interactive.Rmd:90`. Regenerated `man/loadSiteConfig.Rd`
+  via `devtools::document()` – the only one of the plan’s 5 named `.Rd`
+  files that actually needed it, confirming the `R/data.R` scoping call
+  was correct.
+- **Verification:** Fresh regression suite exactly matches the pre-move
+  baseline (0 failed/0 error/0 warning, 3198 passed, 179 skipped, S412);
+  `R CMD build` tarball confirmed all 10 files ship under `examples/`
+  and nothing remains at the old flat path; `devtools::check()` 0
+  errors/0 warnings, 1 NOTE (the same pre-existing, unrelated spelling
+  gap S415 found – confirmed untouched by this session’s diff via
+  `git log` on `NEWS.md`/`inst/WORDLIST`/`tests/spelling.R`); grep sweep
+  confirmed the only 3 remaining un-migrated references are exactly what
+  the plan defers to Phase 3
+  (`vignettes/manual_components/_summary_of_major_functions.Rmd`’s
+  GitHub blob URL source, plus its 2 gitignored rendered byproducts
+  `a3manual.md`/`.html`).
+- **Commits:** `082a0cc4` (S416 claim), `bbf3ec9a`/`f35d809f` (file
+  moves), `c38b107e` (helper + R/ + data-raw prose),
+  `6f87d91b`/`70206939`/`58ff752f`/ `44066adf` (test call sites),
+  `f6282c3c` (a2interactive.Rmd), `487d0c09` (man/loadSiteConfig.Rd
+  regen).
+
+### 2026-07-28 · \[ad hoc\] `inst/extdata/` reorganization Phase 1: relocate dev-scratch + orphaned content (Session 415)
+
+- **Deliverable:** Owner-picked from `BACKLOG.md`’s Housekeeping
+  section: execute Phase 1 of
+  `docs/planning/extdata-reorganization-plan.md` (S414) – relocate
+  `inst/extdata/`’s dev-scratch and orphaned (zero-reference) items into
+  `dev/extdata-scratch/`, remove empty untracked directories, and delete
+  the now-obsolete `.Rbuildignore`/`.gitignore` lines that named them.
+  TDD Phase: N/A – file relocation + build-config cleanup, no
+  `R/`/`tests/` production logic touched.
+- **Change:** Independently re-verified the plan’s item list against
+  current ground truth before moving anything – the plan’s own summary
+  table (“11 + 9” = 20 items) disagreed with both its own enumerated
+  §4/§8.5 list (24 items) and its Phase 1 prose (“19 items”); reconciled
+  via direct `find`/`git ls-files`/`grep -rln` against the actual
+  `inst/extdata/` tree (`PROJECT_LEARNINGS.md` Learning 381), which also
+  caught one obsolete `.Rbuildignore` line
+  (`inst/extdata/meeting_notes\.html$`) the plan’s own §8.3 list had
+  missed. Relocated 24 confirmed-zero-reference items (12 dev-scratch +
+  12 orphaned) via `git mv` in 5 checkpoint commits (5-file blast-radius
+  cap, `SAFEGUARDS.md`), removed 3 empty untracked dirs (`claude/`,
+  `dev_scripts/`, `uat/`) plus the now-empty `code_under_development/`,
+  deleted 11 obsolete `.Rbuildignore` lines and 10 dead `.gitignore`
+  lines (2 separate commits).
+- **Verification:** Regression suite unchanged – 0 failed/0 error/0
+  warning, 3198 passed, 179 skipped, matching the S412 baseline exactly.
+  `R CMD build` tarball confirmed clean:
+  `create_nprcgenekeepr_hexbadge.R` (the file that previously shipped
+  unintentionally) and the rest of the dev-scratch/orphaned cluster are
+  gone; only the 10 load-bearing files + the new PDF + `ui_guidance/`
+  remain in the shipped `inst/extdata/`. `devtools::check()`: 0 errors/0
+  warnings, but the raw log’s own `Status: 1 NOTE` directly contradicted
+  devtools’ colored “0 notes ✔” summary line – traced to a pre-existing,
+  unrelated `NEWS.md:8` spelling-check gap (`CRAN's`/ `resubmission`
+  missing from `inst/WORDLIST`, introduced by S410, five sessions before
+  this one; confirmed untouched by this session’s diff) rather than
+  anything this session’s changes caused. Reported rather than silently
+  fixed (scope discipline, `SAFEGUARDS.md`) – see the new `BACKLOG.md`
+  Housekeeping item. `PROJECT_LEARNINGS.md` Learning 382.
+- **Also:** Updated the `BACKLOG.md` reorg item to Phase 1 DONE / Phases
+  2-4 status; added a new Housekeeping item for the spelling NOTE; added
+  `PROJECT_LEARNINGS.md` Learnings 381-382; updated `CLAUDE.md`’s
+  learning-count cross-reference (380 -\> 382). Phases 2-4 remain
+  separate future sessions (2 of 4 open decisions still block Phase 2
+  per the plan’s §10) – not started, per `SESSION_RUNNER.md`’s Vertical
+  Slice session-boundary discipline (FM \#18).
+
 ### 2026-07-28 · \[ad hoc\] `inst/extdata/` reorganization plan + PDF tracking (Session 414)
 
 - **Deliverable:** Owner-directed (not from `BACKLOG.md`; triggered by

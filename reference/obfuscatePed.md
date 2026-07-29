@@ -72,7 +72,7 @@ obfuscatedPed
 #>       id   sire    dam sex gen      birth exit  age recordStatus
 #> 1 LS7SJB   <NA>   <NA>   F   0 2003-03-17 <NA> 23.4     original
 #> 2 P4MENX   <NA>   <NA>   F   0 2002-05-29 <NA> 24.2     original
-#> 3 NZZUQQ   <NA>   <NA>   M   0 2000-07-10 <NA> 26.0     original
+#> 3 NZZUQQ   <NA>   <NA>   M   0 2000-07-10 <NA> 26.1     original
 #> 4 KV6EPH   <NA>   <NA>   M   0 2005-05-30 <NA> 21.2     original
 #> 5 QER817 NZZUQQ LS7SJB   F   1 2015-01-22 <NA> 11.5     original
 #> 6 RWRDIS NZZUQQ P4MENX   F   1 2009-02-26 <NA> 17.4     original

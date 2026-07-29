@@ -184,25 +184,108 @@ and only submission that will ever carry that version number.
 
 ## Housekeeping
 
-**`inst/extdata/` reorganization** (READY for Phase 1, Effort L overall
-– 4 phases, each its own session; Phase 1 alone is Effort S) – plan
-complete: `docs/planning/extdata-reorganization-plan.md` (S414,
-owner-directed by adding `Master_Genetic_metrics_2_14_15.pdf`, which
-prompted a request for reorg suggestions). Phase 1 (relocate 11
-dev-scratch + 9 zero-reference orphaned files + 3 empty dirs out of
-`inst/extdata/` into the existing, already-`.Rbuildignore`’d `dev/`
-directory; fixes `create_nprcgenekeepr_hexbadge.R` unintentionally
-shipping in the tarball as a side effect) is READY now – zero
+**`inst/extdata/` reorganization – Phase 4** (DECISION NEEDED – 2 open,
+non-blocking decisions, Effort M) – plan:
+`docs/planning/extdata-reorganization-plan.md` (S414). **Phase 1 DONE –
+S415 (2026-07-28):** relocated the 12 dev-scratch + 12 orphaned
+zero-reference items (24 total – the plan’s own summary table
+undercounted this as “11 + 9”; `PROJECT_LEARNINGS.md` Learning 381) into
+`dev/extdata-scratch/`, removed 3 empty untracked dirs (`claude/`,
+`dev_scripts/`, `uat/`) + the now-empty `code_under_development/`, and
+deleted 11 now-obsolete `.Rbuildignore` lines (the 10 the plan named
+plus one it missed, Learning 381) + 10 dead `.gitignore` lines.
+Verified: `devtools::check()` 0 errors/0 warnings (see the new
+spelling-NOTE item below re: the 1 NOTE found, unrelated to this reorg –
+Learning 382); `R CMD build` tarball no longer contains
+`create_nprcgenekeepr_hexbadge.R` or any other dev-scratch item;
+regression suite unchanged at 0 failed/0 error/0 warning, 3198 passed,
+179 skipped (S412 baseline). See `CHANGELOG.md`. **Phase 2 DONE – S416
+(2026-07-28):** both blocking open decisions resolved first – subfolder
+name **`examples/`** (owner-picked via `AskUserQuestion`), and
+`vignettes/a2interactive.R`’s generation status (owner-directed: `.Rmd`
+files are the source; `.R`/`.md`/`.html` are generated derivatives –
+confirmed also gitignored/untracked, `.gitignore:18,20,22`, so the
+tracked-source fix is the `.Rmd` edit alone; the local `.R` copy was
+regenerated via
+[`knitr::purl()`](https://rdrr.io/pkg/knitr/man/knit.html) as a
+courtesy, not committed). `git mv`’d all 10 load-bearing files into
+`inst/extdata/examples/`; updated the central `get_test_data_path()`
+test helper, ~28 individual
 [`system.file()`](https://rdrr.io/r/base/system.file.html) call sites
-change. Phases 2-4 (subfolder the 10 load-bearing files into
-`inst/extdata/examples/`, update ~50 call sites across
-`R/`/`tests/`/`vignettes/`/ `man/`/`data-raw/`, re-render affected docs,
-place the new PDF) have 4 open decisions the owner should weigh in on
-first (plan §10): the PDF’s actual intended home (shipped
-`inst/extdata/reference/` vs. non-shipped), the `examples/` subfolder
-name, archive-vs-delete for the 9 orphaned files, and whether
-`vignettes/a2interactive.R` is hand-maintained or
-[`knitr::purl()`](https://rdrr.io/pkg/knitr/man/knit.html)-generated.
+across 15 test files, 7 path-bearing roxygen/comment prose sites
+(`R/defaultSiteParams.R`, `R/loadSiteConfig.R`,
+`data-raw/rhesusGenotypes.R`, `data-raw/rhesusPedigree.R`, plus 2
+test-file comments), and the one hardcoded path in
+`vignettes/a2interactive.Rmd`; regenerated `man/loadSiteConfig.Rd` (the
+only one of the plan’s 5 named `.Rd` files that actually needed it – the
+other 4 are generated from `R/data.R`, whose extdata mentions are plain
+filenames with no path prefix, confirmed unaffected). Verified: fresh
+regression suite exactly matches baseline (0 failed/0 error/0 warning,
+3198 passed, 179 skipped); `R CMD build` tarball confirmed shipping all
+10 files under `examples/` and nothing at the old flat path;
+`devtools::check()` 0 errors/0 warnings, 1 NOTE (the same pre-existing,
+unrelated spelling gap from S415, confirmed untouched by this session’s
+diff); grep sweep confirmed the only 3 remaining un-migrated references
+are exactly the ones the plan defers to Phase 3
+(`vignettes/manual_components/_summary_of_major_functions.Rmd`’s GitHub
+blob URL source, plus its 2 gitignored rendered byproducts). See
+`CHANGELOG.md`. **Phase 3 DONE – S417 (2026-07-28):** re-ran the plan’s
+own Dragon 1 grep before touching anything (never trust a prior
+session’s or the plan’s own phase prose as final) and found the plan’s
+Phase 3 “What DONE looks like” text undersold the actual scope:
+`vignettes/articles/offline-focal-animal-workflow.qmd:104,106` called
+`system.file("extdata", "<file>", ...)` directly with no `examples`
+segment – confirmed in R this returned `""` (broken) since Phase 2 moved
+the files, even though the plan’s own §8.1 evidence table had already
+listed this exact call site. Fixed as the source bug it was, not just a
+re-render target. Also fixed the stale GitHub blob URL in
+`vignettes/manual_components/_summary_of_major_functions.Rmd:66`.
+Re-rendered all 3 targets (`a3manual.Rmd` with `keep_md = TRUE` to also
+refresh the gitignored `.md` byproduct; `a2interactive.Rmd`; the `.qmd`
+pkgdown article via `quarto render`, which required a throwaway local
+package install – `devtools::install()` – since the article’s
+[`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/)
+call needs a real install, not just
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)).
+Verified: the fixed
+[`system.file()`](https://rdrr.io/r/base/system.file.html) calls resolve
+and return real data in the rendered article (`dim(colonyPed)` = 2922 x
+11, not an error); the plan’s prescribed grep sweep plus a broadened
+check of `vignettes/articles/*.html` both return zero stale-path hits;
+`gh api` confirmed the GitHub blob URL target actually exists on
+`origin/master` (Dragon 2’s “manual link click” requirement); regression
+suite exact baseline match (0/0/0, 3198 passed, 179 skipped);
+`devtools::check()` 0 errors/0 warnings, 1 NOTE (same pre-existing
+spelling gap below, confirmed untouched – read from the raw check log’s
+`Status:` line per Learning 382, not the colored summary, which again
+showed 0 notes). See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning
+384. **Phase 4** (place the new PDF; final repo-wide sweep) remains – 2
+open, non-blocking decisions: the PDF’s intended home (§10 \#1), and
+whether the archive-vs-delete question for the orphaned files (§10 \#3)
+is worth revisiting now that Phase 1 already executed the archive
+default.
+
+**`NEWS.md:8` spelling-check NOTE – `CRAN's`/`resubmission` missing from
+`inst/WORDLIST`** (READY, Effort S) – discovered S415 (2026-07-28) while
+running `devtools::check()` as Phase 1’s verification step for the
+`inst/extdata/` reorg above; unrelated to that reorg (confirmed via
+`git log` on `tests/spelling.R`/ `inst/WORDLIST`/`NEWS.md` – none
+touched by S415). Root cause: S410’s post-CRAN-acceptance `NEWS.md` edit
+(“CRAN’s 2.0.0 submission… any future CRAN resubmission ships as 2.0.1”)
+introduced both words without adding them to `inst/WORDLIST` (which
+already has lowercase `cran` but not `CRAN's` or `resubmission`),
+producing a real `Status: 1 NOTE` in the raw `R CMD check` log that
+`devtools::check()`’s own colored one-line summary (“0 notes ✔”)
+silently disagreed with – see `PROJECT_LEARNINGS.md` Learning 382.
+Undetected until now because the project’s routine “Clean regression
+read” (`CLAUDE.md`) runs
+[`testthat::test_dir()`](https://testthat.r-lib.org/reference/test_dir.html)
+directly and doesn’t invoke a full `devtools::check()` every session.
+Fix: hand-add `CRAN's` and `resubmission` to `inst/WORDLIST` (do NOT run
+[`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html)
+wholesale – it deletes curation, per the existing “Avoid reconcile tools
+on curated files” project convention, S230); re-run `devtools::check()`
+to confirm 0 NOTE.
 
 (none remaining – the “clean up stale untracked leftover files” item
 (filed S383) is RESOLVED: 18 confirmed-dead untracked files deleted –

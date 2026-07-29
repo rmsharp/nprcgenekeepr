@@ -112,9 +112,9 @@ which returns the path inside the installed package.
 
 ``` r
 
-focalListFile <- system.file("extdata", "focalAnimalsShortList.csv",
+focalListFile <- system.file("extdata", "examples", "focalAnimalsShortList.csv",
   package = "nprcgenekeepr")
-pedigreeFile <- system.file("extdata", "ExamplePedigree.csv",
+pedigreeFile <- system.file("extdata", "examples", "ExamplePedigree.csv",
   package = "nprcgenekeepr")
 
 colonyPed <- getFocalAnimalPedFromFile(focalListFile, pedigreeFile)

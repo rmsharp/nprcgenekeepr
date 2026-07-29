@@ -138,9 +138,9 @@
 <p>The package ships a realistic pair you can use the same way: a five-ID focal list and the example colony pedigree it resolves into. Reference them with <code><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file()</a></code>, which returns the path inside the installed package.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">focalListFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"focalAnimalsShortList.csv"</span>,</span>
+<code class="sourceCode R"><span><span class="va">focalListFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"examples"</span>, <span class="st">"focalAnimalsShortList.csv"</span>,</span>
 <span>  package <span class="op">=</span> <span class="st">"nprcgenekeepr"</span><span class="op">)</span></span>
-<span><span class="va">pedigreeFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ExamplePedigree.csv"</span>,</span>
+<span><span class="va">pedigreeFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"examples"</span>, <span class="st">"ExamplePedigree.csv"</span>,</span>
 <span>  package <span class="op">=</span> <span class="st">"nprcgenekeepr"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">colonyPed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getFocalAnimalPedFromFile.html">getFocalAnimalPedFromFile</a></span><span class="op">(</span><span class="va">focalListFile</span>, <span class="va">pedigreeFile</span><span class="op">)</span></span>

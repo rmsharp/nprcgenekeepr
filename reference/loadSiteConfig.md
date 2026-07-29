@@ -5,10 +5,10 @@ Reads the user's site-configuration file (`~/.nprcgenekeepr_config`, or
 [`getSiteInfo`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
 parser, which handles the documented configuration format (comment
 lines, blank lines, and multi-line / quoted / comma-separated values;
-see `inst/extdata/example_nprcgenekeepr_config`). The call is wrapped in
-`tryCatch` so that a missing or malformed configuration file can never
-crash the application on boot: in that case a warning is logged and
-`NULL` is returned.
+see `inst/extdata/examples/example_nprcgenekeepr_config`). The call is
+wrapped in `tryCatch` so that a missing or malformed configuration file
+can never crash the application on boot: in that case a warning is
+logged and `NULL` is returned.
 
 ## Usage
 
