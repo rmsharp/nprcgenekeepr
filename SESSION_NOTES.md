@@ -10,15 +10,120 @@
 **Deliverable:** Owner-picked from `BACKLOG.md`'s Housekeeping section (S414's plan):
 execute **Phase 1** of `docs/planning/extdata-reorganization-plan.md` -- relocate
 `inst/extdata/`'s dev-scratch + orphaned (zero-reference) items into
-`dev/extdata-scratch/`, remove the 3 empty untracked directories, and delete the
-now-obsolete `.Rbuildignore`/`.gitignore` lines that reference them. (IN PROGRESS)
-**Started:** 2026-07-28
-**Status:** Session claimed. Work beginning. TDD Phase: N/A -- file relocation +
-build-config cleanup (`.Rbuildignore`/`.gitignore`), no `R/`/`tests/` production logic
-touched.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
-next session's reconcile.
+`dev/extdata-scratch/`, remove the empty untracked directories, and delete the
+now-obsolete `.Rbuildignore`/`.gitignore` lines that reference them. **DONE.**
+**Started/Completed:** 2026-07-28 / 2026-07-28
+**Status:** DONE. TDD Phase: N/A throughout -- file relocation + build-config cleanup
+(`.Rbuildignore`/`.gitignore`), no `R/`/`tests/` production logic touched.
+
+**What happened, in order:** **(1)** Claimed the session (`4f427682`) immediately on
+receiving the task, per Phase 1B. **(2)** Before moving anything, independently
+reconciled the plan's own item list against ground truth (`find`, `git ls-files`) --
+the plan's §2 summary table ("11 + 9" = 20 items) disagreed with both its own §4/§8.5
+enumerated list (24 items) and its Phase 1 prose ("19 items"); built the real list from
+the plan's most granular enumeration and re-ran a fresh `grep -rln` for each of the 24
+exact filenames (excluding `inst/`), confirming zero real references for all 24 and
+catching one obsolete `.Rbuildignore` line the plan's own §8.3 list had missed
+(`inst/extdata/meeting_notes\.html$`) -- see `PROJECT_LEARNINGS.md` Learning 381.
+**(3)** Relocated all 24 items (12 dev-scratch + 12 orphaned) via `git mv` in 5
+checkpoint commits (5-file blast-radius cap, `SAFEGUARDS.md`), removed the 3 empty
+untracked dirs (`claude/`, `dev_scripts/`, `uat/`) plus the now-empty
+`code_under_development/` left behind by the move. **(4)** Edited `.Rbuildignore`
+(11 obsolete lines removed, one commit) and `.gitignore` (10 dead lines removed, one
+commit). **(5)** Ran Phase 1's prescribed verification: regression suite unchanged
+(0 failed/0 error/0 warning, 3198 passed, 179 skipped -- exact S412 baseline match);
+`R CMD build` tarball confirmed `create_nprcgenekeepr_hexbadge.R` and the rest of the
+dev-scratch cluster no longer ship; `devtools::check()` returned 0 errors/0 warnings,
+but its colored "0 notes ✔" summary directly contradicted the raw log's own
+`Status: 1 NOTE` -- did not take the friendlier summary at face value, traced the NOTE
+to a pre-existing, unrelated `NEWS.md:8` spelling gap (`CRAN's`/`resubmission` missing
+from `inst/WORDLIST`, introduced by S410, confirmed untouched by this session's diff)
+and reported it rather than silently fixing it (scope discipline) -- see
+`PROJECT_LEARNINGS.md` Learning 382. **(6)** Updated `BACKLOG.md` (Phase 1 marked DONE,
+new spelling-NOTE Housekeeping item added), `CHANGELOG.md`, and `CLAUDE.md`'s
+learning-count cross-reference (380 -> 382).
+**Ledger:** See `CHANGELOG.md` 2026-07-28 S415 entry (`[ad hoc]`).
+
+**Session 414 Handoff Evaluation (by Session 415): 8/10.** **What helped:** very high
+practical value -- correctly identified Phase 1 as self-contained and zero-risk ("does
+NOT need any of §10's open decisions resolved first"), named the exact `BACKLOG.md`
+item and plan section, and its gotcha #2 ("Phase 2's own verification commands still
+mandate a FRESH exhaustive grep... don't skip it just because this session's inventory
+looks solid") turned out to generalize correctly to Phase 1 too, even though it was
+written with Phase 2 specifically in mind -- this session followed that instinct and it
+paid off (caught the missed `.Rbuildignore` line). **What was missing:** the handoff
+(inheriting from the plan) repeated the plan's own "11 dev-scratch + 9 orphaned" count
+without flagging that the plan's own §4/§8.5 enumeration and Phase 1 prose disagreed
+with that number and each other -- not a fabrication (it accurately summarized what the
+plan said), but a "the plan's own math doesn't add up, verify independently" caveat
+would have been a useful addition. **What was wrong:** nothing independently
+introduced by the handoff -- the count issue originates in the plan document itself
+(S414), which the handoff faithfully summarized. **ROI:** high -- despite the count gap,
+the handoff's file/section pointers and the "zero-`system.file()`-risk" framing made
+this session's execution phase fast and low-friction; the extra ground-truth
+reconciliation this session did was cheap (a few grep commands) relative to the risk it
+would have caught had the plan's undercounted list been trusted blindly.
+
+**Self-assessment (Session 415): 9/10.** **Strengths:** (1) did not trust the plan's own
+summary counts -- reconciled against `ls`/`git ls-files` ground truth and the plan's
+most granular enumeration before touching any file, catching both the internal
+count discrepancy and a missed `.Rbuildignore` line, converting the catch into a
+reusable `PROJECT_LEARNINGS.md` entry (381) rather than silently fixing and moving on;
+(2) respected the 5-file blast-radius cap across 5 checkpoint commits for a 24-item
+move, using `git mv` throughout to preserve file history/blame; (3) ran the plan's full
+prescribed verification (not just the fast `test_dir()` regression read) and did not
+accept `devtools::check()`'s green one-line summary at face value when it visibly
+contradicted the raw log's `Status: 1 NOTE` -- root-caused the discrepancy to a
+pre-existing, session-unrelated gap (confirmed via `git log` that this session never
+touched `tests/spelling.R`/`inst/WORDLIST`/`NEWS.md`) and reported + backlogged it
+rather than either silently shipping a masked NOTE or scope-creeping into fixing it
+mid-session (`SAFEGUARDS.md`); (4) declared TDD Phase: N/A consistently and correctly
+for a file-relocation + build-config task with no `R/`/`tests/` logic change, matching
+established project convention. **Weaknesses:** (1) trusted the plan's own "already
+dead -- no such file exists" annotations for two `.Rbuildignore` lines (the `.docx` and
+`rhesus_studbook` patterns) rather than independently re-confirming no such files exist
+anywhere in the tree before removing them -- low risk (removing an already-dead ignore
+pattern has zero behavioral effect either way) but not verified firsthand; (2) started
+`devtools::check()` and the `R CMD build` tarball check sequentially rather than
+recognizing upfront that `devtools::check()` would take several minutes and kicking off
+both in parallel from the start -- cost a few minutes of session wall-clock, not a
+correctness issue. **Compared to previous sessions in this workstream:** closest
+structural comparable is S414 itself -- both apply "don't trust a single pass, verify
+independently" discipline to this same reorg plan, this session extending it from
+"verify the plan's file-reference claims" (S414, Learning 380) to "verify the plan's
+own internal counts and enumeration" (this session, Learning 381).
+
+**Handoff to Session 416:**
+- **What's next:** Owner picks (a) Phase 2 of the `inst/extdata/` reorg -- still
+  BLOCKED on 2 of the plan's 4 open decisions (§10 #2: `examples/` subfolder naming;
+  §10 #4: `vignettes/a2interactive.R`'s generation status) -- resolve those via
+  `AskUserQuestion` before starting any call-site edits; (b) the new `NEWS.md:8`
+  spelling-check NOTE item (READY, Effort S, `BACKLOG.md` Housekeeping) -- a 2-word
+  hand-edit to `inst/WORDLIST`; (c) any of the older standing items: LabKey integration
+  recs (BLOCKED, Effort M), a time-gated CRAN binary-flavor recheck, 9 untriaged GitHub
+  issues (#123, #116, #37, #36, #28, #12, #11, #10, #5), or the Outreach plan's
+  owner-executed follow-up (not a coding task).
+- **Key files:** `docs/planning/extdata-reorganization-plan.md` (Phase 2 section §6,
+  open decisions §10); `dev/extdata-scratch/` (new home of the 24 relocated items);
+  `.Rbuildignore`/`.gitignore` (both trimmed, 21 lines removed total); `BACKLOG.md`
+  Housekeeping section (both items updated/added); `PROJECT_LEARNINGS.md` Learnings
+  381-382; `CLAUDE.md:235` (learning-count cross-reference, 380 -> 382).
+- **Gotchas:** (1) Phase 2 genuinely needs both open decisions resolved first -- don't
+  start it without asking; (2) the `NEWS.md` spelling-NOTE fix should be a small,
+  isolated hand-edit to `inst/WORDLIST` (add `CRAN's` and `resubmission`) -- do NOT run
+  `spelling::update_wordlist()` wholesale, it deletes existing curation (project
+  convention since S230); (3) `.DS_Store` continues to show modified, and a new
+  untracked `inst/.DS_Store` also appeared this session -- both harmless macOS
+  artifacts; `.gitignore` has no blanket `\.DS_Store$` pattern (only a
+  `vignettes/`-scoped one), which is why `inst/.DS_Store` shows as untracked -- noted,
+  not fixed (out of this session's scope); (4) `.claude/settings.local.json` still has
+  a stale allowed-Bash-command entry referencing the now-moved
+  `inst/extdata/software_design_doc.qmd` path -- harmless local permission cache, not
+  part of the repo's real behavior, surfaced during this session's verification grep
+  and left untouched; (5) Phase 1's own verification (regression suite, tarball
+  contents) matched the pre-move baseline exactly -- only the pre-existing, unrelated
+  spelling NOTE differs from a fully clean `devtools::check()`.
+- **Self-assessment score:** 9/10 (see above for full breakdown).
 
 ### What Session 414 Did
 **Deliverable:** Owner-directed (not from `BACKLOG.md`): (1) track the newly-added

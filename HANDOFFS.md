@@ -62,19 +62,18 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S415
 date: 2026-07-28
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Owner-picked from BACKLOG.md's Housekeeping section: execute Phase 1 of docs/planning/extdata-reorganization-plan.md -- relocate inst/extdata/'s dev-scratch + orphaned items into dev/extdata-scratch/, remove 3 empty untracked dirs, delete obsolete .Rbuildignore/.gitignore lines. Phases 2-4 stay separate future sessions.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- executed Phase 1 of docs/planning/extdata-reorganization-plan.md: relocated 24 dev-scratch/orphaned items from inst/extdata/ into dev/extdata-scratch/, removed empty untracked dirs, deleted 21 obsolete .Rbuildignore/.gitignore lines. Phases 2-4 remain separate future sessions, still blocked on 2 of the plan's 4 open decisions (examples/ subfolder naming; a2interactive.R generation status).
+what_was_done: Claimed session (4f427682). Independently reconciled the plan's own conflicting item counts (11+9=20 vs 24 enumerated vs "19" in prose) against ls/git ls-files/grep ground truth before moving anything, catching a missed .Rbuildignore line (PROJECT_LEARNINGS.md Learning 381). Relocated 24 confirmed-zero-reference items via git mv across 5 checkpoint commits (5-file blast-radius cap), removed 3 empty untracked dirs + the now-empty code_under_development/. Edited .Rbuildignore (11 lines removed) and .gitignore (10 lines removed), each its own commit. Verified: regression suite exact baseline match (0/0/0, 3198 passed, 179 skipped); R CMD build tarball confirms create_nprcgenekeepr_hexbadge.R and the dev-scratch cluster no longer ship; devtools::check() 0 errors/0 warnings, but caught its "0 notes" summary contradicting the raw log's "Status: 1 NOTE" -- traced to a pre-existing, session-unrelated NEWS.md/WORDLIST spelling gap from S410, reported not fixed (Learning 382). Updated BACKLOG.md (Phase 1 DONE, new spelling-NOTE item), CHANGELOG.md, CLAUDE.md learning-count (380->382).
+next_steps: Owner picks (a) Phase 2 of the reorg -- BLOCKED on 2 open decisions (plan Sec10 #2/#4), resolve via AskUserQuestion first; (b) the new NEWS.md:8 spelling-NOTE item (READY, Effort S -- 2-word inst/WORDLIST hand-edit); (c) older standing items unchanged: LabKey (BLOCKED, Effort M), CRAN binary-flavor recheck, 9 untriaged issues, Outreach follow-up.
+key_files: docs/planning/extdata-reorganization-plan.md (Phase 2 Sec6, open decisions Sec10), dev/extdata-scratch/ (24 relocated items), .Rbuildignore + .gitignore (both trimmed), BACKLOG.md Housekeeping section, PROJECT_LEARNINGS.md Learnings 381-382, CLAUDE.md:235
+gotchas: Phase 2 needs both open decisions resolved before any call-site edits. The spelling-NOTE fix is a small inst/WORDLIST hand-edit (CRAN's, resubmission) -- do NOT run spelling::update_wordlist() wholesale, it deletes curation (S230 convention). .DS_Store + new untracked inst/.DS_Store remain harmless, unfixed (out of scope). .claude/settings.local.json has one stale path reference to the moved software_design_doc.qmd -- harmless local cache, left untouched.
+runtime_smoke: n/a -- file relocation + .Rbuildignore/.gitignore cleanup only; zero system.file() call sites changed, no R/ runtime dispatch touched. Build-equivalent (devtools::check() + R CMD build tarball inspection) run instead, per SAFEGUARDS.md's build-equivalent table for this project type.
+changelog_ref: CHANGELOG.md 2026-07-28 "inst/extdata/ reorganization Phase 1: relocate dev-scratch + orphaned content (Session 415)"
 commit: pending
 ```
-<in progress>
 
 ```handoff
 session: S414

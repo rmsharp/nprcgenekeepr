@@ -137,21 +137,44 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       that version number.
 
 ## Housekeeping
-- [ ] **`inst/extdata/` reorganization** (READY for Phase 1, Effort L overall --
-      4 phases, each its own session; Phase 1 alone is Effort S) -- plan complete:
-      `docs/planning/extdata-reorganization-plan.md` (S414, owner-directed by adding
-      `Master_Genetic_metrics_2_14_15.pdf`, which prompted a request for reorg
-      suggestions). Phase 1 (relocate 11 dev-scratch + 9 zero-reference orphaned files
-      + 3 empty dirs out of `inst/extdata/` into the existing, already-`.Rbuildignore`'d
-      `dev/` directory; fixes `create_nprcgenekeepr_hexbadge.R` unintentionally shipping
-      in the tarball as a side effect) is READY now -- zero `system.file()` call sites
-      change. Phases 2-4 (subfolder the 10 load-bearing files into
+- [ ] **`inst/extdata/` reorganization -- Phases 2-4** (DECISION NEEDED -- 2 of 4 open
+      decisions block Phase 2, Effort L for the remaining 3 phases, each its own
+      session) -- plan: `docs/planning/extdata-reorganization-plan.md` (S414). **Phase 1
+      DONE -- S415 (2026-07-28):** relocated the 12 dev-scratch + 12 orphaned
+      zero-reference items (24 total -- the plan's own summary table undercounted this
+      as "11 + 9"; `PROJECT_LEARNINGS.md` Learning 381) into `dev/extdata-scratch/`,
+      removed 3 empty untracked dirs (`claude/`, `dev_scripts/`, `uat/`) + the now-empty
+      `code_under_development/`, and deleted 11 now-obsolete `.Rbuildignore` lines (the
+      10 the plan named plus one it missed, Learning 381) + 10 dead `.gitignore` lines.
+      Verified: `devtools::check()` 0 errors/0 warnings (see the new spelling-NOTE item
+      below re: the 1 NOTE found, unrelated to this reorg -- Learning 382); `R CMD build`
+      tarball no longer contains `create_nprcgenekeepr_hexbadge.R` or any other
+      dev-scratch item; regression suite unchanged at 0 failed/0 error/0 warning, 3198
+      passed, 179 skipped (S412 baseline). See `CHANGELOG.md`.
+      **Phases 2-4** (subfolder the 10 load-bearing files into
       `inst/extdata/examples/`, update ~50 call sites across `R/`/`tests/`/`vignettes/`/
-      `man/`/`data-raw/`, re-render affected docs, place the new PDF) have 4 open
-      decisions the owner should weigh in on first (plan §10): the PDF's actual intended
-      home (shipped `inst/extdata/reference/` vs. non-shipped), the `examples/`
-      subfolder name, archive-vs-delete for the 9 orphaned files, and whether
-      `vignettes/a2interactive.R` is hand-maintained or `knitr::purl()`-generated.
+      `man/`/`data-raw/`, re-render affected docs, place the new PDF) still have 2 open
+      decisions blocking Phase 2 (plan §10): the `examples/` subfolder name, and whether
+      `vignettes/a2interactive.R` is hand-maintained or `knitr::purl()`-generated. (The
+      other 2 open decisions -- the PDF's intended home, archive-vs-delete for the
+      orphaned files -- don't block Phase 2, only Phase 4/the archive question.)
+- [ ] **`NEWS.md:8` spelling-check NOTE -- `CRAN's`/`resubmission` missing from
+      `inst/WORDLIST`** (READY, Effort S) -- discovered S415 (2026-07-28) while running
+      `devtools::check()` as Phase 1's verification step for the `inst/extdata/` reorg
+      above; unrelated to that reorg (confirmed via `git log` on `tests/spelling.R`/
+      `inst/WORDLIST`/`NEWS.md` -- none touched by S415). Root cause: S410's
+      post-CRAN-acceptance `NEWS.md` edit ("CRAN's 2.0.0 submission... any future CRAN
+      resubmission ships as 2.0.1") introduced both words without adding them to
+      `inst/WORDLIST` (which already has lowercase `cran` but not `CRAN's` or
+      `resubmission`), producing a real `Status: 1 NOTE` in the raw `R CMD check` log
+      that `devtools::check()`'s own colored one-line summary ("0 notes ✔") silently
+      disagreed with -- see `PROJECT_LEARNINGS.md` Learning 382. Undetected until now
+      because the project's routine "Clean regression read" (`CLAUDE.md`) runs
+      `testthat::test_dir()` directly and doesn't invoke a full `devtools::check()`
+      every session. Fix: hand-add `CRAN's` and `resubmission` to `inst/WORDLIST`
+      (do NOT run `spelling::update_wordlist()` wholesale -- it deletes curation, per
+      the existing "Avoid reconcile tools on curated files" project convention, S230);
+      re-run `devtools::check()` to confirm 0 NOTE.
 - [ ] (none remaining -- the "clean up stale untracked leftover files" item (filed
       S383) is RESOLVED: 18 confirmed-dead untracked files deleted -- S384
       (2026-07-15). See `CHANGELOG.md`.)

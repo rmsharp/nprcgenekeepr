@@ -43,6 +43,44 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-28 · [ad hoc] `inst/extdata/` reorganization Phase 1: relocate dev-scratch + orphaned content (Session 415)
+- **Deliverable:** Owner-picked from `BACKLOG.md`'s Housekeeping section: execute
+  Phase 1 of `docs/planning/extdata-reorganization-plan.md` (S414) -- relocate
+  `inst/extdata/`'s dev-scratch and orphaned (zero-reference) items into
+  `dev/extdata-scratch/`, remove empty untracked directories, and delete the
+  now-obsolete `.Rbuildignore`/`.gitignore` lines that named them. TDD Phase: N/A --
+  file relocation + build-config cleanup, no `R/`/`tests/` production logic touched.
+- **Change:** Independently re-verified the plan's item list against current ground
+  truth before moving anything -- the plan's own summary table ("11 + 9" = 20 items)
+  disagreed with both its own enumerated §4/§8.5 list (24 items) and its Phase 1 prose
+  ("19 items"); reconciled via direct `find`/`git ls-files`/`grep -rln` against the
+  actual `inst/extdata/` tree (`PROJECT_LEARNINGS.md` Learning 381), which also caught
+  one obsolete `.Rbuildignore` line (`inst/extdata/meeting_notes\.html$`) the plan's
+  own §8.3 list had missed. Relocated 24 confirmed-zero-reference items (12
+  dev-scratch + 12 orphaned) via `git mv` in 5 checkpoint commits (5-file blast-radius
+  cap, `SAFEGUARDS.md`), removed 3 empty untracked dirs (`claude/`, `dev_scripts/`,
+  `uat/`) plus the now-empty `code_under_development/`, deleted 11 obsolete
+  `.Rbuildignore` lines and 10 dead `.gitignore` lines (2 separate commits).
+- **Verification:** Regression suite unchanged -- 0 failed/0 error/0 warning, 3198
+  passed, 179 skipped, matching the S412 baseline exactly. `R CMD build` tarball
+  confirmed clean: `create_nprcgenekeepr_hexbadge.R` (the file that previously shipped
+  unintentionally) and the rest of the dev-scratch/orphaned cluster are gone; only the
+  10 load-bearing files + the new PDF + `ui_guidance/` remain in the shipped
+  `inst/extdata/`. `devtools::check()`: 0 errors/0 warnings, but the raw log's own
+  `Status: 1 NOTE` directly contradicted devtools' colored "0 notes ✔" summary line --
+  traced to a pre-existing, unrelated `NEWS.md:8` spelling-check gap (`CRAN's`/
+  `resubmission` missing from `inst/WORDLIST`, introduced by S410, five sessions
+  before this one; confirmed untouched by this session's diff) rather than anything
+  this session's changes caused. Reported rather than silently fixed (scope
+  discipline, `SAFEGUARDS.md`) -- see the new `BACKLOG.md` Housekeeping item.
+  `PROJECT_LEARNINGS.md` Learning 382.
+- **Also:** Updated the `BACKLOG.md` reorg item to Phase 1 DONE / Phases 2-4 status;
+  added a new Housekeeping item for the spelling NOTE; added `PROJECT_LEARNINGS.md`
+  Learnings 381-382; updated `CLAUDE.md`'s learning-count cross-reference (380 -> 382).
+  Phases 2-4 remain separate future sessions (2 of 4 open decisions still block Phase
+  2 per the plan's §10) -- not started, per `SESSION_RUNNER.md`'s Vertical Slice
+  session-boundary discipline (FM #18).
+
 ### 2026-07-28 · [ad hoc] `inst/extdata/` reorganization plan + PDF tracking (Session 414)
 - **Deliverable:** Owner-directed (not from `BACKLOG.md`; triggered by the owner adding
   `Master_Genetic_metrics_2_14_15.pdf` to `inst/extdata/`, which prompted a request for
