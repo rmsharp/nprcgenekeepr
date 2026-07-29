@@ -13,7 +13,7 @@
 #' These tests are OPT-IN (NPRC_RUN_E2E=true) and skipped otherwise; see
 #' helper-shinytest2.R::create_test_app(). They drive the INSTALLED package, so
 #' run devtools::install() first -- the installed copy must carry the module and
-#' the inst/extdata/rhesusPedigree_fromCenter.csv fixture.
+#' the inst/extdata/examples/rhesusPedigree_fromCenter.csv fixture.
 library(testthat)
 
 # The fromCenter demo fixture (375 animals; added in Session 81) yields exactly
