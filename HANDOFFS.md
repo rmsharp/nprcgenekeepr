@@ -62,17 +62,17 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S426
 date: 2026-07-29
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Write a design/scoping plan for closing issue #128 (breeding-group exclusion top-N-vs-genetic-value-floor mechanism), per issue #128's own scope note.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- docs/planning/issue128-genetic-value-floor-plan.md written, RATIFIED via AskUserQuestion, ready for a future implementation session's RED phase.
+what_was_done: Answered the owner's clarifying question (which issues address the audit's "configurability/multiplicity" cluster: #125 closed, #128 open) via source-code verification. Launched a 4-agent research workflow (wf_9eb79cd3-488) reading R/modBreedingGroups.R (top-N mechanism), R/groupAddAssign.R/filter chain, ranking fields post-#125, and module-contract/tests, firsthand. Personally re-verified every cited line against live source, then found (via own follow-up grep, not the workflow) that reportGV() defaults its GV population to living animals only (R/reportGV.R:144-149) -- meaning a value-floor over animalSource=="all" will meet ids absent from the report entirely, distinct from the ratified "Undetermined passes" rule -- recorded as the plan's Dragon P1 with a required RED test (PROJECT_LEARNINGS.md Learning 396). Presented 4 load-bearing decisions via one AskUserQuestion call; owner ratified all 4 recommended options: mechanism = user-selectable alternative (not replace/supplement), floor signal = reuse the existing `value` column (not a new cutoff), Undetermined animals pass, floor applies to all 3 animalSource choices. Wrote the plan (one vertical slice, confined to R/modBreedingGroups.R -- no groupAddAssign() signature change, per its own §2B rationale). Added PROJECT_LEARNINGS.md Learning 396, fixed CLAUDE.md's stale "395 learnings" count.
+next_steps: The plan's one implementation slice (full strict-TDD RED->GREEN->REFACTOR, phase-gated via AskUserQuestion) is the next session for this issue -- do not bundle with anything else. See the plan's own "Scope"/RED/GREEN/DONE-looks-like/Dragons sections. Also standing, untouched: LabKey (BLOCKED), NPRC outreach (DECISION NEEDED), issues #126/#127/#129/#130 (need their own design/scoping sessions), BACKLOG.md's stale inst/extdata/ header (1-line fix), and a newly-found vestigial "Upload list" animalSource UI option (no fileInput anywhere) -- recommend filing separately, not folding into #128's implementation.
+key_files: docs/planning/issue128-genetic-value-floor-plan.md (this session's deliverable, read in full before implementing); R/modBreedingGroups.R:40-53,150-204,255-354 (the only file the plan's slice touches); PROJECT_LEARNINGS.md Learning 396; BACKLOG.md:6-9 (stale header, still unfixed).
+gotchas: (1) Dragon P1 (ids absent from the GV report entirely) needs its own RED test -- distinct from the ratified "Undetermined passes" rule (D3), which only covers ids present in the report with that label. (2) Dragon P2: the new req(geneticValues()) gate must be conditional on inclusionCriterion == "valueFloor" only -- an unconditional gate breaks the existing "form groups from all available animals, zero GV run required" workflow. (3) Dragon P4: do not add a parameter to groupAddAssign()'s exported signature for this feature -- keep it entirely inside modBreedingGroups.R. (4) The existing test_modBreedingGroups.R:49-69 conditionalPanel test asserts the CURRENT single-condition string -- it needs updating in place (Dragon P3), not left stale alongside a new test. (5) .DS_Store junk files + a possible future issue128-genetic-value-floor-plan.html render remain harmless, out-of-scope artifacts.
+runtime_smoke: n/a -- planning deliverable only, no R/tests code or Shiny runtime behavior changed this session.
+changelog_ref: CHANGELOG.md 2026-07-29 S426 entry
+commit: 3b72cb6a (claim); close-out commit sha to follow
 ```
 
 ```handoff

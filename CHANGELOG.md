@@ -43,6 +43,39 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-29 · [issue #128] Write design/scoping plan: genetic-value floor as an alternative breeding-group inclusion criterion (Session 426)
+- **Deliverable:** `docs/planning/issue128-genetic-value-floor-plan.md` -- an
+  evidence-based design plan for closing issue #128, ratified via `AskUserQuestion`
+  this session, no `R/`/`tests/` code changed.
+- **Process:** answered the owner's clarifying question (which issues address the
+  audit's "configurability/multiplicity" cluster) via source-code verification
+  before proceeding. Launched a 4-agent research workflow reading
+  `R/modBreedingGroups.R`'s top-N mechanism, `R/groupAddAssign.R`'s filter chain,
+  the ranking fields available post-issue-#125, and the module contract/test
+  inventory firsthand. Personally re-verified every cited line against live source,
+  then independently found (not from the workflow) that `reportGV()` defaults its
+  GV population to living animals only (`R/reportGV.R:144-149`), meaning a
+  value-floor over the "All available" source will meet ids absent from the report
+  entirely -- distinct from the ratified "Undetermined passes" rule, recorded as
+  the plan's own Dragon P1 with a required RED test. Presented 4 load-bearing
+  decisions via one `AskUserQuestion` call; owner ratified all 4 recommended
+  options: mechanism = user-selectable alternative to top-N (not replace/
+  supplement), floor signal = reuse the existing `value` column (no new cutoff),
+  "Undetermined" animals pass the floor, and the floor applies to all 3
+  `animalSource` choices, not just "Top ranked."
+- **Result:** plan document written with a firsthand evidence-based inventory
+  (every claim cited `file:line`, re-verified against current source), a RATIFIED
+  design-decisions section, one vertical slice (confined to
+  `R/modBreedingGroups.R` -- no `groupAddAssign()` signature change, per the plan's
+  own architecture rationale) with RED/GREEN/DONE-looks-like/Verify/session-
+  boundary/dragons, and a ratification record. `PROJECT_LEARNINGS.md` Learning 396
+  added (independently re-verifying a research workflow's findings, both citations
+  and cross-cutting domain nuances, before writing a plan); `CLAUDE.md`'s stale
+  "395 learnings" count fixed to 396. Side finding, filed for a future session (not
+  fixed here): the "Upload list" `animalSource` UI option has no `fileInput`/
+  handling anywhere and silently behaves like "All available" -- recommend its own
+  small separate issue.
+
 ### 2026-07-29 · [issue #125] Implement Slice 2: surface multiple breeding-group candidates; close issue #125 (Session 425)
 - **Deliverable:** `R/groupAddAssign.R` now retains up to 5 distinct candidate
   groupings per run (a new `candidates` list field), deduplicated by

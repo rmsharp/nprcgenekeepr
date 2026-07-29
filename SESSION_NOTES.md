@@ -13,14 +13,154 @@ configurability gap from
 `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md`), per issue #128's
 own scope note ("this is a design question, not a quick fix... Needs a design
 decision before implementation"). Owner-directed: "plan on closing issue #128."
-(IN PROGRESS)
-**Started:** 2026-07-29
-**Status:** Session claimed. Work beginning. TDD phases (RED/GREEN/REFACTOR) are
-inapplicable to this deliverable -- it is a plan, following S423's precedent for the
-sibling issue #125 plan.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded
-in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb
-for the next session's reconcile.
+**DONE.** `docs/planning/issue128-genetic-value-floor-plan.md` written, RATIFIED via
+`AskUserQuestion`, ready for a future implementation session's RED phase.
+**Started/Completed:** 2026-07-29 / 2026-07-29
+**Status:** DONE. TDD phases (RED/GREEN/REFACTOR) are inapplicable to this
+deliverable -- it is a plan, following S423's precedent for the sibling issue #125
+plan. No `R/`/`tests/`/`man/`/`NAMESPACE`/`data/` content changed.
+
+**What happened, in order:** **(1)** Ran Phase 0 orientation in full (SAFEGUARDS.md,
+SESSION_NOTES.md, `gh issue list`, `git status`/`log`/`diff --stat`,
+`methodology_dashboard.py` (Health 98/100), ledger reconcile for `CHANGELOG.md`/
+`HANDOFFS.md` -- both frontiers sat at HEAD (`fefacb30`), clean, no backfill needed).
+Rendered the priorities list (3 numbered items) via `AskUserQuestion`; the owner
+first asked a clarifying question ("what issues pertain to (a) configurability/
+multiplicity from the audit") before answering the picker -- answered it directly by
+reading `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md` in full and
+verifying issue #125's closure against current source (`R/orderReport.R:20-31,43-
+55`), not just BACKLOG/CHANGELOG narrative; identified issue #128 as the one
+cluster-(a) finding still open. Owner then directed: "plan on closing issue #128" /
+"continue." **(2)** Read issue #128's actual GitHub body (`gh api`) -- confirmed its
+own scope note explicitly calls this "a design question, not a quick fix," matching
+the Planning Sessions protocol (plan is the deliverable, do not implement). Compared
+`DESIGN_WORKSTREAM.md` (UI/UX-specific) vs. `ARCHITECTURE_WORKSTREAM.md` (technical
+design decisions) and chose to follow the same unnamed-but-consistent pattern S423
+used for the sibling issue #125 plan (research workflow -> ratify via
+`AskUserQuestion` -> write plan), rather than force-fit either workstream doc's full
+template. Stated the deliverable back to the owner, claimed the session (`3b72cb6a`)
+before any research. **(3)** Launched a 4-agent research workflow (`wf_9eb79cd3-
+488`) reading `R/modBreedingGroups.R` (top-N mechanism), `R/groupAddAssign.R`/
+`R/groupMembersReturn.R`/the filter chain (`filterThreshold`/`filterPairs`/
+`filterAge`/`getAnimalsWithHighKinship`), the ranking fields available post-issue-
+#125 (`R/rankSubjects.R`/`R/orderReport.R`/`R/reportGV.R`/`R/modGeneticValue.R`), and
+`docs/architecture/module-contract.md` + the existing test inventory, firsthand,
+current on-disk state. Findings: the audit's own `:253-258` line citation had
+drifted (real logic now at `:269-275`); the top-N cutoff is a pure positional head-
+slice never reading `rank`/`value`; no genetic-value floor exists anywhere in the
+group-formation chain (all existing filters are kinship/sex/age-based); issue #125's
+`value` column (`guCutoff`/`zScoreCutoff`-derived) is a stable, reusable signal
+across ranking schemes; the best insertion point is caller-side in
+`modBreedingGroups.R`, not inside the exported `groupAddAssign()`; and a vestigial,
+unrelated "Upload list" UI option (no `fileInput` anywhere) was found as a side
+finding, flagged out of scope. **(4)** Personally re-read the primary source lines
+each finding cited (`R/modBreedingGroups.R:36-53,150-204,255-354`) and confirmed
+every quote matched exactly -- then did a targeted follow-up the workflow itself
+hadn't covered: checked whether `geneticValues()`'s report necessarily covers every
+id in `animalSource == "all"`'s full `ped$id` pool. It doesn't --
+`R/reportGV.R:144-149`/`R/modGeneticValue.R:268-278` default the GV population to
+*living* animals only -- a real gap distinct from the ratified "Undetermined passes"
+rule, now the plan's own Dragon P1 with a required RED test (`PROJECT_LEARNINGS.md`
+Learning 396). **(5)** Presented 4 load-bearing design decisions via one
+`AskUserQuestion` call (mechanism: replace/supplement/user-selectable; floor signal:
+reuse `value` vs. new cutoff; Undetermined pass/fail; scope: all 3 sources vs.
+topRanked-only) -- owner ratified all 4 recommended options. **(6)** Wrote
+`docs/planning/issue128-genetic-value-floor-plan.md`, mirroring S423's issue-125-plan
+structure (Context / Evidence-based inventory / Ratified decisions / one vertical
+slice with RED-GREEN-DONE-Verify-session-boundary / Dragons / Ratification record),
+scoped as a single slice (unlike issue #125's two independent slices) since this is
+one coherent capability confined to `R/modBreedingGroups.R`. **(7)** Added
+`PROJECT_LEARNINGS.md` Learning 396 and fixed `CLAUDE.md`'s stale "395 learnings"
+count (396).
+
+**Session 425 Handoff Evaluation (by Session 426): 9/10.** **What helped:** the
+"standing items" list (LabKey BLOCKED, NPRC outreach DECISION NEEDED, issues
+#126-130 needing their own design/scoping sessions, the stale BACKLOG.md
+`inst/extdata/` header) gave a complete, accurate picture during orientation with no
+reconstruction needed -- and correctly anticipated that #128 (like its siblings)
+would need its own design/scoping session before implementation, exactly what this
+session did. The ledger reconcile (§6) was genuinely clean (`CHANGELOG.md`/
+`HANDOFFS.md` frontiers both at HEAD) -- no crash-recovery overhead. **What was
+missing:** nothing session-specific -- S425's own deliverable was closing #125, not
+picking the next task, so it correctly left "no task claimed" rather than
+speculating which of 5 standing items would be picked next; the actual pick (#128)
+came from the owner directly. **What was wrong:** nothing identified -- every
+claim held (the stale BACKLOG.md header finding was independently re-confirmed
+during this session's own orientation). **ROI:** high -- near-zero time spent
+reconstructing standing context; all of it spent on the actual research/design work.
+
+**Self-assessment (Session 426): 9/10.** **Strengths:** (1) completed research
+(workflow + own follow-up reads) before drafting any design decisions, exactly
+following the Planning Sessions "evidence-based inventory" mandate; (2) personally
+re-verified every subagent-cited line number against live source before writing the
+plan, catching zero citation drift but one substantive domain gap (the GV-report
+population-scope nuance, Dragon P1) none of the four agents' narrow prompts had
+individually covered -- a genuine independent-verification catch, not just trusting
+the delegated research (`PROJECT_LEARNINGS.md` Learning 396); (3) correctly
+identified, and explicitly declined, an over-fragmentation temptation -- scoped this
+as ONE vertical slice (unlike issue #125's two), since the ratified design is a
+single coherent capability confined to one file; (4) made a real architecture
+decision independently (caller-side pre-filter in `modBreedingGroups.R`, not a new
+`groupAddAssign()` parameter) with clear rationale, rather than escalating every
+micro-decision to the owner via `AskUserQuestion` -- reserved that tool for the 4
+decisions that were genuinely the owner's preference to make; (5) answered the
+owner's mid-orientation clarifying question with source-code verification (checked
+`R/orderReport.R`'s current parameters), not just BACKLOG/CHANGELOG prose. **Weaknesses:**
+(1) the first `AskUserQuestion` attempt (asking "which item should this session
+pick up?") was premature -- came before the owner's own clarifying question about
+audit clustering was answered; should have recognized a detailed technical question
+mid-orientation as a signal to hold the picker question until the owner signaled
+readiness to choose; (2) did not explicitly set a maximum-reasoning-effort mode at
+session start per the Planning Sessions checklist ("Set your agent's deepest
+available reasoning mode... e.g. `/effort max`") -- no tool exists for the agent
+itself to invoke this (it is a user-facing slash command), and S423's own session
+log shows the same gap, so this may be a standing, not-actionable-by-the-agent
+limitation worth flagging rather than a fixable oversight; not treated as a defect
+here but noted for a future session/owner decision. **Compared to previous
+sessions:** closely mirrors S423's issue-125-planning structure (workflow research
+-> `AskUserQuestion` ratification -> plan write) -- a faithful replication of
+established precedent -- while adding one discipline not explicitly recorded in
+S423's own log: a dedicated personal-verification pass over the delegated research
+findings that caught a real gap before it reached the plan, rather than after.
+
+**Handoff to Session 427:**
+- **What's next:** No task is claimed. `docs/planning/issue128-genetic-value-floor-
+  plan.md` is written and ratified; the natural next step is its one implementation
+  slice (full strict-TDD RED->GREEN->REFACTOR, phase-gated) -- but that is a
+  separate future session's pick, not assumed here. Standing, untouched this
+  session: (a) LabKey integration remaining recs (BLOCKED -- needs a live LabKey
+  server); (b) NPRC outreach plan (DECISION NEEDED -- owner review/edit/send); (c)
+  issues #126/#127/#129/#130 (the other 4 clusters from S422's triage) still need
+  their own design/scoping sessions; (d) whether to provision this project's
+  five-state Issue Lifecycle GitHub labels (Learning 387) remains its own open
+  decision; (e) `BACKLOG.md`'s stale `inst/extdata/` Phase 4 header (flagged S425,
+  re-confirmed this session, still unfixed -- a 1-line docs-only correction); (f)
+  the vestigial "Upload list" `animalSource` UI option found this session (§1 of the
+  new plan) -- no `fileInput`/handling anywhere, silently behaves like "All
+  available" -- recommend filing as its own small separate issue, not folded into
+  #128's implementation.
+- **Key files:** `docs/planning/issue128-genetic-value-floor-plan.md` (this
+  session's deliverable -- read in full before implementing); `R/modBreedingGroups.R:
+  40-53,150-204,255-354` (the only file the plan's one slice touches);
+  `PROJECT_LEARNINGS.md` Learning 396; `BACKLOG.md:6-9` (stale header, still
+  unfixed).
+- **Gotchas:** (1) the plan's Dragon P1 (ids absent from the GV report entirely,
+  because `reportGV()` defaults its population to living animals only --
+  `R/reportGV.R:144-149`) needs its own RED test; do not conflate it with the
+  ratified "Undetermined animals pass" rule (D3), which only covers ids *present* in
+  the report with that label. (2) Dragon P2: the new `req(geneticValues())` gate
+  must be conditional on `inclusionCriterion == "valueFloor"`, not unconditional --
+  gating it unconditionally would break the existing "form groups from all
+  available animals with zero GV run" workflow. (3) Dragon P4: do not add a new
+  parameter to `groupAddAssign()`'s exported signature for this feature -- the plan
+  deliberately keeps the floor entirely inside `modBreedingGroups.R` (see the plan's
+  §2B rationale). (4) `.DS_Store`/`inst/.DS_Store`/`inst/extdata/.DS_Store` and now
+  also `docs/planning/issue128-genetic-value-floor-plan.html` (if anyone renders the
+  new plan's `.md` in a browser) remain harmless, unfixed, out-of-scope artifacts,
+  same as the pre-existing issue125 one.
+- **Self-assessment score:** 9/10 (see above for full breakdown).
+- **Runtime smoke test:** N/A -- planning deliverable only; no `R/`, `tests/`, or
+  Shiny runtime behavior changed this session.
 
 ### What Session 425 Did
 **Deliverable:** Implement Slice 2 of the issue #125 plan (surface multiple
