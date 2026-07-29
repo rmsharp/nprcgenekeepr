@@ -108,7 +108,7 @@ test_that("E2E: Genetic Value mentions Value Designation", {
   # 8e-6b: drive the real GVA pipeline so the rankings table renders. The Value
   # designation ("High Value"/"Low Value"/"Undetermined") is added by
   # rankSubjects() (orderReport.R) and only appears once reportGV() has run.
-  fixture <- system.file("extdata", "obfuscated_rhesus_mhc_ped.csv",
+  fixture <- system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                          package = "nprcgenekeepr")
   if (!upload_and_wait(app, fixture)) skip("Upload/QC did not complete")
 
@@ -166,7 +166,7 @@ test_that("E2E: Genetic Value has Z-score display", {
   # 8e-6b: drive the real GVA pipeline so the rankings table renders. zScores is
   # a reportGV() output column (reportGV.R:144) shown as a DT header only once
   # the analysis has run.
-  fixture <- system.file("extdata", "obfuscated_rhesus_mhc_ped.csv",
+  fixture <- system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                          package = "nprcgenekeepr")
   if (!upload_and_wait(app, fixture)) skip("Upload/QC did not complete")
 

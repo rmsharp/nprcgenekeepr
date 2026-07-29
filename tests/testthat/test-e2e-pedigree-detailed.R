@@ -69,7 +69,7 @@ test_that("E2E: Pedigree browser has data table", {
   app <- create_app_driver(app_dir, "e2e_ped_table")
   on.exit(app$stop(), add = TRUE)
 
-  fixture <- system.file("extdata", "obfuscated_rhesus_mhc_ped.csv",
+  fixture <- system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                          package = "nprcgenekeepr")
   loaded <- upload_and_wait(app, fixture)
   if (!loaded) skip("Upload/QC did not complete")

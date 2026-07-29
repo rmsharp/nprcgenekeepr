@@ -43,7 +43,7 @@ test_that("Counter works before and after file upload", {
   Sys.sleep(0.5)
 
   # Upload file
-  test_file <- system.file("extdata", "ExamplePedigree.txt", package = "nprcgenekeepr")
+  test_file <- system.file("extdata", "examples", "ExamplePedigree.txt", package = "nprcgenekeepr")
   cat("Uploading file:", test_file, "\n")
   app$upload_file(`dataInput-pedigreeFileOne` = test_file)
   Sys.sleep(1)

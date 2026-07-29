@@ -31,7 +31,7 @@ test_that("E2E: Pedigree Browser has row count display options", {
   app <- create_app_driver(app_dir, "e2e_ped_row_count")
   on.exit(app$stop(), add = TRUE)
 
-  fixture <- system.file("extdata", "obfuscated_rhesus_mhc_ped.csv",
+  fixture <- system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                          package = "nprcgenekeepr")
   loaded <- upload_and_wait(app, fixture)
   if (!loaded) skip("Upload/QC did not complete")
@@ -175,7 +175,7 @@ test_that("E2E: Clear Focal Animals resets the file input and typed IDs", {
   on.exit(app$stop(), add = TRUE)
 
   # Load a studbook so the Pedigree Browser tab is fully live.
-  fixture <- system.file("extdata", "obfuscated_rhesus_mhc_ped.csv",
+  fixture <- system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                          package = "nprcgenekeepr")
   loaded <- upload_and_wait(app, fixture)
   if (!loaded) skip("Upload/QC did not complete")
