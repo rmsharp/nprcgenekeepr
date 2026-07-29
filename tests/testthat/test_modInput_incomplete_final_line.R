@@ -22,7 +22,7 @@ library(shiny)
 # QC is clean), written WITHOUT a trailing final newline -> 4 lines, which
 # triggers the incomplete-final-line warning S89 muffles.
 tiny_no_final_newline <- function(ext = ".csv") {
-  src <- system.file("extdata", "ExamplePedigree.csv",
+  src <- system.file("extdata", "examples", "ExamplePedigree.csv",
                      package = "nprcgenekeepr")
   ln <- readLines(src, warn = FALSE)[1:4]
   dest <- tempfile(fileext = ext)

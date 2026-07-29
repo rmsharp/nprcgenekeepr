@@ -119,7 +119,7 @@ test_that(
 # The columns will be renamed to: id, sex, birth, death, departure, dam, sire
 create_mock_ped_data <- function(ids = NULL, include_dates = TRUE) {
   # Create base pedigree data matching focal animals from focalAnimalsShortList
-  # These IDs are from inst/extdata/focalAnimalsShortList.csv
+  # These IDs are from inst/extdata/examples/focalAnimalsShortList.csv
   base_data <- data.frame(
     col1 = c("FJS7RQ", "H6T2FF", "HEVL3L", "I04JZV", "S63QDN",
              "PARENT1", "PARENT2", "PARENT3", "PARENT4"),
@@ -294,7 +294,7 @@ test_that("getFocalAnimalPed removes rows with NA id", {
 test_that("getFocalAnimalPed works with focalAnimalsShortList.csv", {
   skip_if_not_installed("mockery")
 
-  focal_file <- system.file("extdata", "focalAnimalsShortList.csv",
+  focal_file <- system.file("extdata", "examples", "focalAnimalsShortList.csv",
                             package = "nprcgenekeepr")
   skip_if(focal_file == "", "focalAnimalsShortList.csv not found")
 
@@ -537,7 +537,7 @@ test_that("getFocalAnimalPed passes focal IDs to getLkDirectRelatives", {
 test_that("getFocalAnimalPed works with larger focalAnimals.csv", {
   skip_if_not_installed("mockery")
 
-  focal_file <- system.file("extdata", "focalAnimals.csv",
+  focal_file <- system.file("extdata", "examples", "focalAnimals.csv",
                             package = "nprcgenekeepr")
   skip_if(focal_file == "", "focalAnimals.csv not found")
 

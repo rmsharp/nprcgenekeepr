@@ -69,7 +69,7 @@ local_debug_logging <- function(env = parent.frame()) {
 test_that("readDataFile handles NULL, Excel, and read errors", {
   skip_if_not_installed("shiny")
   skip_if_not_installed("readxl")
-  xlsx <- system.file("extdata", "2022-05-02_Deidentified_Pedigree.xlsx",
+  xlsx <- system.file("extdata", "examples", "2022-05-02_Deidentified_Pedigree.xlsx",
                       package = "nprcgenekeepr")
   skip_if(xlsx == "")
 

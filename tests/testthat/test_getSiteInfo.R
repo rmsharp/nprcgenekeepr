@@ -29,7 +29,7 @@ test_that("getSiteInfo folds the column-list functions in (config present)", {
   # return paths in getSiteInfo() must carry the new fields identically.
   tmp <- withr::local_tempdir()
   withr::local_envvar(c(HOME = tmp))
-  example_cfg <- system.file("extdata", "example_nprcgenekeepr_config",
+  example_cfg <- system.file("extdata", "examples", "example_nprcgenekeepr_config",
                               package = "nprcgenekeepr")
   cfg_name <- basename(getConfigFileName(Sys.info())[["configFile"]])
   file.copy(example_cfg, file.path(tmp, cfg_name))
