@@ -41,12 +41,19 @@ modBreedingGroupsUI <- function(id) {
                             choices = c("Top ranked" = "topRanked",
                                         "Upload list" = "custom",
                                         "All available" = "all")),
+               radioButtons(ns("inclusionCriterion"), "Include animals by:",
+                            choices = c("Top N ranked" = "topN",
+                                        "Genetic-value floor" = "valueFloor"),
+                            selected = "topN"),
                conditionalPanel(
                  # ns = ns already scopes this panel's input lookups to the
                  # module namespace client-side, so the condition uses the
                  # unprefixed field name (sprintf(..., ns("animalSource"))
-                 # would double-prefix and never match).
-                 condition = "input.animalSource == 'topRanked'",
+                 # would double-prefix and never match). nTopAnimals only
+                 # matters when the top-N inclusion criterion is selected
+                 # (issue #128) -- the genetic-value floor bypasses it.
+                 condition = paste0("input.animalSource == 'topRanked' && ",
+                                    "input.inclusionCriterion == 'topN'"),
                  ns = ns,
                  numericInput(ns("nTopAnimals"), "Number of top animals:",
                               value = 20L, min = 5L, max = 100L)
@@ -265,13 +272,42 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
       withProgress(message = "Forming breeding groups...", {
         ped <- pedigree()
 
-        # Get candidate IDs based on source selection
-        candidateIds <- if (input$animalSource == "topRanked") {
+        # Raw candidate pool based on source selection, unnarrowed (issue
+        # #128): "topRanked" yields the full ranked id list in report order;
+        # "custom"/"all" yield every pedigree id. The top-N cutoff moved out
+        # of this step into the inclusion-criterion narrowing below.
+        rawPool <- if (input$animalSource == "topRanked") {
           req(geneticValues())
-          gv <- geneticValues()
-          gv$id[seq_len(min(input$nTopAnimals, length(gv$id)))]
+          geneticValues()$id
         } else {
           ped$id
+        }
+
+        # Narrow the raw pool by inclusion criterion (issue #128). A missing
+        # input$inclusionCriterion defaults to "topN", reproducing today's
+        # exact behavior for all three sources unless the user actively
+        # selects the genetic-value floor.
+        inclusionCriterion <- if (is.null(input$inclusionCriterion)) {
+          "topN"
+        } else {
+          input$inclusionCriterion
+        }
+        candidateIds <- if (inclusionCriterion == "valueFloor") {
+          # req(geneticValues()) gates ALL three sources here -- previously
+          # only topRanked needed a prior GV run. An id with no row in
+          # geneticValues() at all fails the floor (a fail-safe default,
+          # distinct from an id present with value == "Undetermined", which
+          # passes): `passingIds` only ever contains ids that ARE in the
+          # report, so a rawPool id absent from the report is never a member
+          # and is excluded by the %in% filter below.
+          req(geneticValues())
+          gv <- geneticValues()
+          passingIds <- gv$id[gv$value != "Low Value"]
+          rawPool[rawPool %in% passingIds]
+        } else if (input$animalSource == "topRanked") {
+          rawPool[seq_len(min(input$nTopAnimals, length(rawPool)))]
+        } else {
+          rawPool
         }
 
         incProgress(0.2, detail = "Calculating kinship")
