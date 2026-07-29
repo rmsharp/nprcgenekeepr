@@ -62,19 +62,18 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S427
 date: 2026-07-29
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Implement Slice 1 of the ratified issue #128 plan (docs/planning/issue128-genetic-value-floor-plan.md) -- genetic-value floor as a user-selectable alternative inclusion criterion in R/modBreedingGroups.R. TDD phase: PRE-RED.
-what_was_done: pending
-next_steps: pending
-key_files: docs/planning/issue128-genetic-value-floor-plan.md (the plan being implemented); R/modBreedingGroups.R (the only file this slice touches)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- Slice 1 of the ratified issue #128 plan shipped (genetic-value floor as a user-selectable alternative inclusion criterion in R/modBreedingGroups.R). Issue #128 closed.
+what_was_done: Re-verified the plan's cited line numbers against live source (zero drift). RED (20b97653): 6 new tests in test_modBreedingGroups.R -- an updated compound-condition conditionalPanel test (escaping empirically verified via a standalone R script first), a new inclusionCriterion-control-exists UI test, and 3 new testServer() value-floor tests (topRanked Low-Value exclusion/Undetermined inclusion/nTopAnimals bypass; animalSource=="all"/"custom" Dragon-P1 report-absent-id fail-safe). All 6 failed for the correct reason; pre-existing tests stayed green. GREEN (d575bae3): inclusionCriterion UI radio + two-step candidateIds restructure (raw pool, then narrow-by-criterion) per the plan's Dragons P1-P4. All tests green; lintr clean except one pre-existing untouched line. REFACTOR: owner chose skip (code already clean). Docs (bfe36cd8): vignette fragment + NEWS.Rmd/NEWS.md (rendered). Verification: targeted file green; clean regression read 0 failed/0 error/0 warning, 3928 passed (up from 3907); devtools::check() 0/0/0. Phase 3E runtime smoke test: built a small synthetic pedigree (16 founders + 24 offspring, Learning 395 precedent), drove the live app via shinytest2::AppDriver through Input -> Genetic Value Analysis -> Breeding Groups; confirmed Top-N-ranked still bounds to nTopAnimals (5) and Genetic-value-floor bypasses that bound (40, full pedigree) for all 3 animalSource choices, zero crashes. Discovered and fixed 2 new E2E-harness gotchas along the way (Learnings 397/398). Owner asked mid-session whether this is E2E-regression-protected; answered honestly (server-level only, matching issue #125's own precedent) and owner confirmed via AskUserQuestion to leave it at that (no new E2E test added this session).
+next_steps: No task claimed for S428. Standing, untouched: LabKey (BLOCKED), NPRC outreach (DECISION NEEDED), issues #126/#127/#129/#130 (need design/scoping sessions), five-state Issue Lifecycle labels decision, BACKLOG.md's stale inst/extdata/ header (1-line fix), the vestigial "Upload list" animalSource UI option (recommend filing separately). NEW: a candidate future improvement (not filed) -- no Shiny module in this app sends a setDataLoading/ready=FALSE message when a new async run starts, so data-ready never resets between repeat runs in one AppDriver session (Learning 398); only matters if a future E2E test needs multiple clicks per session.
+key_files: R/modBreedingGroups.R:40-53,269-306 (the shipped feature); tests/testthat/test_modBreedingGroups.R:49-85,259-402 (new/updated tests); NEWS.Rmd/NEWS.md; vignettes/manual_components/_breeding_group_formation.Rmd; PROJECT_LEARNINGS.md Learnings 397-398.
+gotchas: (1) inclusionCriterion's default-missing-input handling (is.null(input$inclusionCriterion) -> "topN") matters because shiny::testServer() leaves an unset input NULL, unlike a live browser session where the UI's selected="topN" renders it non-NULL from the start -- both paths must resolve to the same default, and do. (2) Learnings 397/398 (shinytest2 NOT_CRAN gotcha; data-ready staleness on repeat clicks) apply to any future ad hoc smoke-test script for this app. (3) .DS_Store junk + the pre-existing issue125 plan .html render remain harmless, unfixed, out-of-scope artifacts.
+runtime_smoke: DONE -- live app driven Input -> Genetic Value Analysis -> Breeding Groups; Top-N-ranked (5) vs Genetic-value-floor (40, all 3 animalSource choices) confirmed functionally distinct, zero crashes. Caveat: this run's synthetic pedigree produced zero "Low Value" animals from the real GVA, so exclusion itself was proven only at the unit-test level, not visually in this smoke run.
+changelog_ref: CHANGELOG.md 2026-07-29 S427 entry
+commit: 20b97653 (RED), d575bae3 (GREEN), bfe36cd8 (docs); close-out commit sha to follow
 ```
-(Session in progress -- this stub will be overwritten at Phase 3D close-out.)
 
 ```handoff
 session: S426

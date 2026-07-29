@@ -43,6 +43,36 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-29 · [issue #128] Implement genetic-value floor as an alternative breeding-group inclusion criterion (Session 427)
+- **Deliverable:** `R/modBreedingGroups.R` gains an "Include animals by" control
+  (`inclusionCriterion`: `"topN"` default / `"valueFloor"`) implementing Slice 1 of
+  `docs/planning/issue128-genetic-value-floor-plan.md`. Selecting the genetic-value
+  floor excludes any candidate whose `value` (from issue #125's `orderReport()`) is
+  `"Low Value"`, for all three `animalSource` choices, bypassing `nTopAnimals`
+  entirely; `"Undetermined"` animals pass, ids absent from the GV report entirely do
+  not (Dragon P1 fail-safe). Full strict TDD: RED (`20b97653`, 6 new tests) -> GREEN
+  (`d575bae3`) -> REFACTOR (skipped, owner-approved -- code already clean), each
+  phase gated via `AskUserQuestion`. Docs: `vignettes/manual_components/
+  _breeding_group_formation.Rmd` + `NEWS.Rmd`/`NEWS.md` (`bfe36cd8`).
+  **Closes issue #128.**
+- **Verification:** targeted test file green; clean regression read 0 failed/0
+  error/0 warning, 3928 passed (up from 3907); `devtools::check()` 0 errors/0
+  warnings/0 notes; Phase 3E runtime smoke test against the live app (small
+  synthetic pedigree, Learning 395 precedent) confirmed Top-N-ranked unchanged
+  (bounded to `nTopAnimals`) and the genetic-value floor bypassing that bound for
+  all 3 `animalSource` choices, zero crashes.
+- **Learnings:** `PROJECT_LEARNINGS.md` 397 (a standalone `shinytest2::AppDriver`
+  script needs `NOT_CRAN=true` set itself, or `AppDriver$new()`'s internal
+  `skip_on_cran()` guard aborts with an opaque "Error: Reason: On CRAN"), 398 (no
+  Shiny module in this app resets `data-ready` before a new async run, so
+  `wait_for_module_ready()` reads a stale `"true"` on a second click in one
+  `AppDriver` session -- use `app$wait_for_idle()` instead after the first click).
+- **Scope note:** E2E regression coverage was discussed with the owner mid-session
+  (server-level `testServer()` tests are committed/CI-run; the Phase 3E browser
+  smoke test is a one-off, uncommitted script) -- owner confirmed via
+  `AskUserQuestion` to leave it at that, matching issue #125 Slices 1/2's own
+  precedent of no permanent `test-e2e-*.R` addition for this module.
+
 ### 2026-07-29 · [issue #128] Write design/scoping plan: genetic-value floor as an alternative breeding-group inclusion criterion (Session 426)
 - **Deliverable:** `docs/planning/issue128-genetic-value-floor-plan.md` -- an
   evidence-based design plan for closing issue #128, ratified via `AskUserQuestion`

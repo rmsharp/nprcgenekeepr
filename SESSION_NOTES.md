@@ -10,13 +10,173 @@
 **Deliverable:** Implement Slice 1 of the ratified issue #128 plan
 (`docs/planning/issue128-genetic-value-floor-plan.md`) -- a genetic-value floor as
 a user-selectable alternative to the existing top-N inclusion criterion in the
-Breeding Groups module. Owner-picked via `AskUserQuestion` at Phase 0. (IN
-PROGRESS)
-**Started:** 2026-07-29
-**Status:** Session claimed. Work beginning. TDD phase: PRE-RED.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are
-recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
-breadcrumb for the next session's reconcile.
+Breeding Groups module. Owner-picked via `AskUserQuestion` at Phase 0.
+**DONE. Closes issue #128.**
+**Started/Completed:** 2026-07-29 / 2026-07-29
+**Status:** DONE. TDD phases RED -> GREEN -> REFACTOR (skipped, code already
+clean), all phase-gated via `AskUserQuestion` per the Development Process
+Contract, following `DEVELOPMENT_WORKSTREAM.md`.
+
+**What happened, in order:** **(1)** Ran Phase 0 orientation in full
+(SAFEGUARDS.md, SESSION_NOTES.md, `gh issue list`, `git status`/`log`/
+`diff --stat`, `methodology_dashboard.py` (Health 98/100), ledger reconcile --
+`CHANGELOG.md`/`HANDOFFS.md` frontiers both at HEAD, clean, no backfill
+needed). Rendered the priorities list (3 numbered items) via `AskUserQuestion`;
+owner picked "Implement issue #128 plan." **(2)** Read the ratified plan
+(`docs/planning/issue128-genetic-value-floor-plan.md`) in full, stated the
+deliverable back to the owner, claimed the session (`ccb50a42`) before any
+technical work. **(3)** Re-read `R/modBreedingGroups.R` and
+`tests/testthat/test_modBreedingGroups.R` current state -- confirmed the
+plan's cited line numbers matched live source exactly (zero drift since
+ratification), satisfying the vertical-slice contract-reverification gate.
+**(4)** PRE-RED->RED `AskUserQuestion` gate approved. Wrote 6 new tests in
+`test_modBreedingGroups.R` (`20b97653`): an updated compound-condition
+`conditionalPanel` test (empirically verified the exact `&amp;&amp;`
+HTML-escaping via a standalone `conditionalPanel()` render before writing the
+assertion, rather than guessing), a new "control exists" UI test, and 3 new
+`shiny::testServer()` value-floor tests (topRanked Low-Value-exclusion/
+Undetermined-inclusion/nTopAnimals-bypass; `animalSource == "all"` and
+`== "custom"` Dragon-P1 report-absent-id fail-safe). All 6 failed for the
+correct reason (old positional-slice/no-filtering behavior still active); all
+pre-existing tests in the file stayed green, unmodified. **(5)** RED->GREEN
+gate approved. Implemented the `inclusionCriterion` UI radio + the two-step
+`candidateIds` restructure (raw pool, then narrow-by-criterion) in
+`R/modBreedingGroups.R` (`d575bae3`) exactly per the plan's Scope/Dragons
+(P1-P4). All 6 new tests plus every pre-existing test in the file went green;
+`lintr` clean except one pre-existing, untouched line (407). **(6)**
+GREEN->REFACTOR gate: owner picked "skip -- already clean" (no behavior-change
+refactor performed). **(7)** Updated
+`vignettes/manual_components/_breeding_group_formation.Rmd` and
+`NEWS.Rmd`/`NEWS.md` (rendered via `rmarkdown::render`) (`bfe36cd8`); confirmed
+`vignettes/articles/breeding-group-formation.qmd` needed no change (it
+documents `groupAddAssign()`'s return value, untouched by this slice).
+**(8)** Verification: targeted test file green; clean regression read 0
+failed/0 error/0 warning, 3928 passed (up from S425's 3907 baseline);
+`devtools::check()` 0 errors/0 warnings/0 notes. **(9)** Phase 3E runtime
+smoke test: built a small synthetic pedigree (16 founders + 24 offspring, 40
+rows, Learning 395 precedent -- NOT the full bundled example) in scratch,
+drove the live app via `shinytest2::AppDriver` through Input -> Genetic Value
+Analysis (`runAnalysis`) -> Breeding Groups. Hit and fixed two new E2E-harness
+gotchas along the way (Learnings 397/398: `AppDriver$new()`'s internal
+`skip_on_cran()` guard needs `NOT_CRAN=true` set in a standalone script; the
+module's `data-ready` attribute never resets between repeat `formGroups`
+clicks in one `AppDriver` session, so `app$wait_for_idle()` had to replace
+`wait_for_module_ready()` after the first click). Confirmed: "Top N ranked"
+(default) still bounds to exactly `nTopAnimals` (5); "Genetic-value floor"
+bypasses that bound (40, the full pedigree) for all three `animalSource`
+choices, with zero crashes. Caveat, disclosed to the owner mid-session: this
+particular synthetic pedigree's real GVA run produced zero "Low Value"
+animals, so the smoke test visually proved the truncation-bypass but not
+visual exclusion -- exclusion is proven deterministically instead by the RED
+unit tests' controlled fixtures. **(10)** Owner asked mid-session whether the
+new functionality has E2E regression coverage; answered honestly (server-level
+`testServer()` tests are committed/CI-run; the E2E smoke test is a one-off,
+uncommitted Phase 3E script, matching issue #125 Slices 1/2's own precedent of
+no permanent `test-e2e-*.R` addition) and asked via `AskUserQuestion` whether
+to add one as new scope -- owner chose "leave as-is," confirming precedent.
+**(11)** Added `PROJECT_LEARNINGS.md` Learnings 397-398, fixed `CLAUDE.md`'s
+stale "396 learnings"/Session count.
+
+**Session 426 Handoff Evaluation (by Session 427): 9/10.** **What helped:**
+the plan document itself (`docs/planning/issue128-genetic-value-floor-plan.md`)
+was the single most valuable artifact this session used -- its
+Evidence-based-inventory (§2), Ratified decisions (§3), and especially the
+Dragons (§6, P1-P4) translated almost directly into RED test scenarios and
+GREEN implementation choices; zero citation drift found on re-verification
+against live source. The handoff's `gotchas` field named all four Dragons
+specifically and in the exact order they mattered during implementation.
+`next_steps` correctly scoped the session ("do not bundle with anything
+else") and the standing-items list (LabKey, NPRC outreach, issues
+#126/#127/#129/#130, stale BACKLOG header, vestigial "Upload list" option) was
+accurate and untouched by this session, as expected. **What was missing:**
+nothing that blocked the work -- the two E2E-harness gotchas (Learnings
+397/398) discovered this session were genuinely new (no prior session had
+driven this app's `AppDriver` through multiple sequential data-mutating clicks
+in one session, or run outside a `testthat::test_that()` context), so S426
+had no way to anticipate them; they're outside the plan's own scope (the R/
+feature, not the E2E test harness). **What was wrong:** nothing substantive --
+every citation and Dragon held exactly as described. The handoff's `commit:`
+field ("3b72cb6a (claim); close-out commit sha to follow") was left
+unresolved -- a minor, understandable gap (a commit cannot cite its own sha),
+immaterial to using the handoff. **ROI:** very high -- the plan's own RED/
+GREEN/DONE-looks-like/Verify sections were detailed enough to implement
+against nearly verbatim, with minimal additional design work needed this
+session.
+
+**Self-assessment (Session 427): 9/10.** **Strengths:** (1) followed the full
+RED->GREEN->REFACTOR gate cycle faithfully via `AskUserQuestion` at every
+transition, per the Development Process Contract; (2) re-verified the plan's
+cited line numbers against live source before writing any code (zero drift
+found), and empirically verified `conditionalPanel`'s exact `&&`-to-`&amp;&amp;`
+HTML-escaping via a standalone R script before writing the RED assertion,
+rather than guessing at escaping and risking a wrong-reason test failure; (3)
+discovered and correctly diagnosed (not worked around with a hack) two real
+shinytest2/E2E-harness gotchas mid-session, recording both as new learnings
+for future sessions; (4) ran the full verification stack before closing out --
+targeted test file, full regression suite (0/0/0, 3928 passed), `devtools::
+check()` (0/0/0), and a real runtime smoke test against the live app, not
+just "build passes"; (5) kept the change scoped exactly to the plan's
+boundary (`R/modBreedingGroups.R` + one vignette fragment + NEWS) -- zero
+touches to `groupAddAssign()`/the filter chain/other modules, per Dragon P4;
+(6) answered the owner's mid-session E2E-coverage question with a precise,
+honest split (what IS vs is NOT regression-protected) rather than a vague
+reassurance, and surfaced the "add E2E now?" scope decision via
+`AskUserQuestion` rather than deciding unilaterally. **Weaknesses:** (1) the
+smoke-test synthetic pedigree happened to produce zero "Low Value" animals
+from the real GVA run, so the live-UI verification demonstrated the
+truncation-bypass half of the floor's behavior but not the exclusion half
+visually (exclusion is proven only at the unit level); a session with more
+budget might have iterated the fixture once to force a guaranteed Low-Value
+animal into the live demo; (2) the two E2E-harness gotchas cost real
+iteration cycles to diagnose (one failed run each) -- unavoidable given they
+were genuinely novel to this codebase's test history, but worth noting; (3)
+did not set a deepest-reasoning-effort mode explicitly at session start (same
+noted, not-agent-actionable gap S426 also flagged). **Compared to previous
+sessions:** mirrors S424/S425's TDD execution discipline for a single
+vertical slice (RED commit, then GREEN commit, then docs commit, full
+verification, runtime smoke) implementing a previously-ratified plan, with
+one addition -- proactively answering and escalating a scope question the
+owner raised mid-close-out rather than deferring it.
+
+**Handoff to Session 428:**
+- **What's next:** No task is claimed. Issue #128 is closed. Standing,
+  untouched this session: (a) LabKey integration remaining recs (BLOCKED --
+  needs a live LabKey server); (b) NPRC outreach plan (DECISION NEEDED --
+  owner review/edit/send); (c) issues #126/#127/#129/#130 (need their own
+  design/scoping sessions); (d) whether to provision this project's
+  five-state Issue Lifecycle GitHub labels remains open; (e) `BACKLOG.md`'s
+  stale `inst/extdata/` Phase 4 header (flagged S425, re-confirmed S426, still
+  unfixed -- a 1-line docs-only correction); (f) the vestigial "Upload list"
+  `animalSource` UI option (no `fileInput`/handling anywhere, silently
+  behaves like "All available") -- recommend filing as its own small separate
+  issue, not folded into this session's work (it predates and is unrelated to
+  the genetic-value floor). (g) NEW this session: a candidate future
+  improvement to `tests/testthat/helper-shinytest2.R` and each Shiny module --
+  no module currently sends a `setDataLoading`/`ready = FALSE` message when a
+  new async run starts, so `data-ready` never resets between runs in one
+  `AppDriver` session (Learning 398) -- only matters if a future E2E test
+  needs to click the same trigger more than once per session; not filed as an
+  issue, just flagged here.
+- **Key files:** `R/modBreedingGroups.R:40-53,269-306` (the shipped feature);
+  `tests/testthat/test_modBreedingGroups.R:49-85,259-402` (the new/updated
+  tests); `NEWS.Rmd`/`NEWS.md`; `vignettes/manual_components/
+  _breeding_group_formation.Rmd`; `PROJECT_LEARNINGS.md` Learnings 397-398.
+- **Gotchas:** (1) if a future session extends this feature, remember the
+  `inclusionCriterion` default-missing-input handling
+  (`is.null(input$inclusionCriterion)` -> `"topN"`) -- `shiny::testServer()`
+  tests that don't explicitly set an input leave it `NULL`, unlike a live
+  browser session where the UI's `selected = "topN"` renders it non-NULL from
+  the start; both paths must resolve to the same default. (2) Learnings
+  397/398 (E2E-harness mechanics) apply to any FUTURE ad hoc smoke-test
+  script for this app, not just this session's. (3) `.DS_Store`/
+  `inst/.DS_Store`/`inst/extdata/.DS_Store` and
+  `docs/planning/issue125-ranking-priority-multi-candidate-plan.html` remain
+  harmless, unfixed, out-of-scope artifacts, unchanged from S425/S426.
+- **Self-assessment score:** 9/10 (see above for full breakdown).
+- **Runtime smoke test:** DONE -- see §9 above. Live app driven end-to-end
+  through Input -> Genetic Value Analysis -> Breeding Groups; both
+  `inclusionCriterion` values verified functionally distinct with zero
+  crashes.
 
 ### What Session 426 Did
 **Deliverable:** Write a design/scoping plan for closing issue #128 (breeding-group
