@@ -17,6 +17,18 @@
   gained matching `guCutoff`, `zScoreCutoff`, and `axisPriority`
   arguments for scripted use, each defaulting to today’s behavior when
   omitted.
+- The Breeding Group Formation tab now surfaces up to 5 distinct
+  candidate groupings per run (issue
+  [\#125](https://github.com/rmsharp/nprcgenekeepr/issues/125)), instead
+  of only the single best-scoring one, with a new selector to switch
+  among them (and a comparison table of each candidate’s score) without
+  re-running the group-formation algorithm. Leaving the selector at its
+  default (the best-scoring candidate) is unchanged from today’s
+  behavior.
+  [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)’s
+  return value gains a `candidates` list field for scripted use; the
+  existing top-level `group`/`score`/`groupKin` fields are unchanged
+  (they alias the best candidate).
 
 ## nprcgenekeepr 2.0.0 (20260708)
 

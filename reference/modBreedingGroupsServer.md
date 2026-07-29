@@ -54,6 +54,14 @@ modBreedingGroupsServer(
   `NULL` (the default) is a no-op. A provided `kinshipMatrix` is
   expected to already carry overrides applied at its source.
 
+  Up to 5 distinct candidate groupings are formed per run (issue \#125),
+  with a "Candidate grouping" selector letting the user switch among
+  them without re-running
+  [`groupAddAssign`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md).
+  All reactive components below reflect the currently-selected
+  candidate, defaulting to the best-scoring one – identical to the
+  single-solution behavior prior to issue \#125.
+
 ## Value
 
 List with reactive components:

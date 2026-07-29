@@ -7,6 +7,237 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 425 Did
+
+**Deliverable:** Implement Slice 2 of the issue \#125 plan (surface
+multiple breeding-group candidates –
+`R/groupAddAssign.R`/`R/groupMembersReturn.R`/ `R/modBreedingGroups.R`)
+per `docs/planning/issue125-ranking-priority-multi-candidate-plan.md` §4
+Slice 2. **DONE.** Both slices of issue \#125 now shipped – **issue
+\#125 closed.** **Started/Completed:** 2026-07-29 / 2026-07-29
+**Status:** DONE. TDD Phase: RED -\> GREEN -\> REFACTOR, all phase-gated
+via `AskUserQuestion` per the Development Process Contract, following
+`DEVELOPMENT_WORKSTREAM.md`.
+
+**What happened, in order:** **(1)** Ran Phase 0 orientation in full
+(SAFEGUARDS.md, SESSION_NOTES.md, `gh issue list`, `git status`/`log`/
+`diff --stat`, `methodology_dashboard.py` (Health 98/100)). Ledger
+reconcile (step 6) found a real gap: commit `6a02fc6e` (S424’s
+learnings/backlog-tag/ stale-count-fix follow-on) postdated the S424
+close-out receipt commit (`8274395b`) and was never cited by hash in
+`CHANGELOG.md`/`HANDOFFS.md`, even though its content was already
+narrated there. Backfilled the missing citations in both files,
+committed separately (`2dd36961`), pushed to origin (per the standing
+“keep local==origin” convention). Rendered the priorities list (2
+numbered READY items, since the `inst/extdata/` Phase 4 BACKLOG.md line
+was found to be stale drift – its header still said DECISION NEEDED
+though its own body showed Phases 1-4 all done since S418; flagged, not
+touched, out of scope). Owner picked “Issue \#125 Slice 2” via
+`AskUserQuestion`. **(2)** Read the full plan document §4 Slice 2 and
+`DEVELOPMENT_WORKSTREAM.md`, stated the deliverable back to the owner,
+claimed the session before any technical work. **(3)** **PRE-RED:**
+re-read `R/groupAddAssign.R`, `R/groupMembersReturn.R`,
+`R/modBreedingGroups.R` (full), `R/appServer.R`/`R/appUI.R`’s
+mount/consumption sites, all 3 target test files, and
+`docs/architecture/module-contract.md` – confirmed every one of the
+plan’s `file:line` citations still held exactly (zero drift since S423
+wrote the plan same-day as S424’s Slice 1). Grepped for `expect_named`
+exact-field-set risk (Dragon R5) – clean. Worked out a concrete GREEN
+design (dedup/retention algorithm with canonicalized partition
+signatures, `groupMembersReturn()` restructure, the
+`modBreedingGroups.R` candidate-selector wiring reusing the
+`viewGrp`/`selectedGroup` pattern) and presented it in full via the
+PRE-RED-\>RED gate; approved. **(4)** **RED:** wrote 8 new tests – 3 in
+`test_groupAddAssign.R` (dedup-to-1-candidate on a mutually-unrelated
+fixture; \<=5 retained candidates on the real `qcBreeders` fixture;
+top-level `group`/`score` aliasing `candidates[[1]]`), 3 in
+`test_modBreedingGroups_groupAddAssign.R` (mocked candidate-selector
+effect; no-reinvocation call-counter; out-of-range clamp), 2 in
+`test_modBreedingGroups.R` (UI selector-presence; default-selection
+backward-compat regression). Empirically validated both new
+`test_groupAddAssign.R` fixtures via exploratory scripts BEFORE writing
+the assertions (confirmed the “mutually unrelated” fixture produces
+exactly 1 distinct partition across 20 trials, and the real `qcBreeders`
+fixture produces 1000/1000 distinct partitions across 1000 trials)
+rather than guessing. 5 of 8 failed for the right reason (missing
+`candidates` field / no-op selector / absent UI element); 3 passed
+immediately as backward-compat/ invariant pins (a property that’s
+vacuously true before the feature exists), flagged explicitly rather
+than silently – matching S424’s own established precedent for this exact
+situation. **(5)** RED-\>GREEN gate approved; **GREEN:** implemented the
+bounded-5, partition-content-deduped retention list in
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+(O(iter x 5), comparing each trial only against the current retained
+set); restructured `groupMembersReturn()` (internal, zero direct tests,
+free to redesign); added the `candidateChoice` selector + comparison
+table + `selectedCandidateIdx`/`breedingGroups` reactive pair to
+`modBreedingGroups.R`, keeping
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+invocation isolated to the button-triggered `runFormation` eventReactive
+only. **Found and fixed 2 real pre-existing-test regressions:** an
+exact-length assertion (`length(group) == 3L`, broken by the additive
+`candidates` field despite Dragon R5’s `expect_named`-only grep coming
+back clean – Learning 392) and a stale
+`local_mocked_bindings(groupAddAssign = ...)` stub missing the new field
+(same category as S424’s stale-`reportGV`-mock fix). All 3 targeted test
+files green; full regression 0/0/0 (3923 passed); `devtools::check()`
+0/0/0 after fixing a roxygen markdown-link-parsing issue
+(`[/\code{...}]` misparsed as a broken cross-reference). **(6)**
+GREEN-\>REFACTOR gate approved; **REFACTOR:** extracted a
+`selectedCandidate()` reactive replacing 4 repeated
+`groupResults()$candidates[[idx]]` lookups (`breedingGroups`, `score`,
+`unassigned`, `groupKinship`, the `viewGrp`-populating observer’s
+`hasUnused` check) – no behavior change, re-verified green (regression
+0/0/0, `devtools::check()` 0/0/0). Committed each phase separately as it
+completed (RED `6b64e151`; GREEN+REFACTOR `3e5dc35f`; docs/NEWS
+`11e83ec2`) – directly applying S424’s own Learning 391 rather than
+accumulating a Blast Radius violation. **(7)** Docs: NEWS entry, and
+corrected now-doubly-stale prose in
+`vignettes/articles/breeding-group-formation.qmd` (“the result is a list
+with two elements” -\> three, `candidates` explained) – rendered via
+`quarto render` (needed `R_LIBS_USER` pointed at the renv library;
+quarto’s R subprocess doesn’t source the project’s
+`.Rprofile`/`renv/activate.R` from a subdirectory) to confirm
+`names(haremGrp)` shows the new field live. **(8) Phase 3E runtime smoke
+test** (hard-gated, Shiny wiring change): reinstalled the package
+(`devtools::install()`), drove the real app via `shinytest2`/chromote.
+First attempt used the full 3,694-row bundled example pedigree with
+`animalSource = "all"` – far too slow for a live MIS search (had to
+background the run); switched to a small (40-row, QC-pre-verified)
+synthetic pedigree instead (Learning 395). Uploaded it, formed 3 groups,
+and initially found what looked like a real bug: the new
+`candidateChoice` selector’s raw DOM `<option>` list showed only 1 entry
+despite a server-side debug trace confirming `updateSelectInput()`
+received all 5 correctly-labeled candidates. Investigated rather than
+either panicking or shrugging it off: tried swapping `updateSelectInput`
+for `updateSelectizeInput` (no change, ruling out the update function),
+then queried the widget’s own `el.selectize.options` JS API directly –
+all 5 candidates were genuinely present and correctly labeled. The
+native `<select>`’s DOM never mirrors selectize’s real option list once
+selectize takes over (by design); confirmed the SAME (correct) behavior
+on the pre-existing `viewGrp` selector, so this was never a regression
+at all (Learning 393). Reverted the speculative `updateSelectizeInput`
+change back to the established `updateSelectInput` convention (net diff:
+zero). Fully verified end to end: 5 real, distinct,
+independently-selectable candidates; switching to candidate 2 genuinely
+changed the displayed groups; switching back to candidate 1 reproduced
+identical *content* (a raw-HTML mismatch traced to DT’s own
+auto-incrementing per-render widget id, not a data defect – Learning
+394); the downstream Genetic Diversity tab still worked with a
+non-default candidate selected. **(9)** Closed GitHub issue \#125 (both
+slices now shipped) with a summary comment; recorded as a non-commit
+action in `CHANGELOG.md` per FM \#27. Appended `PROJECT_LEARNINGS.md`
+Learnings 392-395 and fixed `CLAUDE.md`’s stale “391 learnings” count.
+Removed the completed Slice 2 item from `BACKLOG.md`’s `Active` section.
+**Runtime smoke test:** see (8) above – full pass, verified via the
+correct instrument after an initial false-alarm. **Ledger:** See
+`CHANGELOG.md` 2026-07-29 S425 entry (`[issue #125]`).
+
+**Session 424 Handoff Evaluation (by Session 425): 9/10.** **What
+helped:** essentially everything – the plan document was directly
+executable a second time running (this session’s own PRE-RED re-read
+confirmed zero drift on every `file:line` citation in §4 Slice 2, just
+as S424 found for Slice 1), and S424’s `key_files`/`gotchas` pointed at
+exactly the right line ranges (`R/groupAddAssign.R:164-193`,
+`R/groupMembersReturn.R:19-33`, the maintainer-machine gate on
+`test_groupAddAssign.R`). The explicit “tag Slice 2 in `BACKLOG.md`’s
+`Active` section” instruction, flagged as a gap in S424’s OWN handoff
+evaluation of S423, was actually followed through by S424 itself in a
+follow-on commit (`6a02fc6e`) found during this session’s ledger
+reconcile – meaning the tag WAS present and directly readable from
+`BACKLOG.md` at this session’s Phase 0, with no reconstruction from
+`SESSION_NOTES.md` narrative needed, a genuine improvement over the gap
+S424 itself inherited from S423. **What was missing:** nothing session-
+specific – one plan-level (not handoff-level) gap surfaced during GREEN:
+Dragon R5’s `expect_named`-only grep missed an equally-fragile
+`length(x) == N` assertion in a pre-existing test (Learning 392); this
+is a gap in the PLAN’s own risk-flagging (authored by S423), not in
+S424’s handoff to this session. **What was wrong:** nothing identified –
+every technical claim held. **ROI:** very high, same as S424’s own
+evaluation of S423 – near-zero rediscovery time, all of it spent on
+implementation and verification.
+
+**Self-assessment (Session 425): 9/10.** **Strengths:** (1) followed the
+strict-TDD RED-\>GREEN-\>REFACTOR contract exactly, with a real
+`AskUserQuestion` gate spelling out concrete actions at every phase
+transition; (2) re-read every target file fresh and confirmed zero drift
+before writing a single test; (3) empirically validated BOTH new RED
+fixtures via exploratory scripts before committing to the assertions,
+rather than guessing at partition-diversity behavior; (4) caught two
+real pre-existing-test regressions during GREEN, one of which was a
+genuinely NEW discovery beyond what the plan’s own Dragon R5 anticipated
+(recorded as Learning 392, not just repeated from precedent); (5)
+extracted a clean, behavior-preserving REFACTOR; (6) committed each TDD
+phase separately as it completed, directly applying S424’s Learning 391
+rather than repeating the near-miss; (7) ran a genuine Phase 3E runtime
+smoke test with a real browser and, when the first read looked like a
+real bug, investigated rigorously via the widget’s OWN JS API rather
+than either declaring the feature broken or dismissing the concern –
+correctly identified a false-alarm and reverted the speculative fix
+rather than leaving unnecessary code in place; (8) caught a SECOND
+potential false-alarm (candidate-1-vs-candidate-1 HTML mismatch)
+mid-verification and correctly diagnosed it via a targeted stripped-tags
+comparison rather than assuming either “broken” or “fine”; (9) closed
+the GitHub issue with a clear summary and recorded the non-commit action
+in the ledger per FM \#27. **Weaknesses:** (1) the initial Phase 3E
+attempt used the full 3,694-row example pedigree, which was
+impractically slow and required a background task before the scale
+problem was diagnosed – should have started with a small synthetic
+pedigree from the outset (Learning 395 records this for next time); (2)
+spent a full debug cycle (including an unnecessary
+`updateSelectizeInput` detour) chasing the selectize DOM-vs-API
+discrepancy – checking `el.selectize.options` FIRST, before trusting a
+raw DOM read, would have been faster (Learning 393). **Compared to
+previous sessions:** this is the project’s first back-to-back
+Slice-1-then-Slice-2 sequential TDD implementation on the same plan
+document (S424 then S425); it adds a discipline not exercised in S424’s
+own Phase 3E (which investigated two initially-alarming-but-real
+findings) – verifying that the VERIFICATION INSTRUMENT ITSELF is
+measuring the right thing before concluding a feature is broken, rather
+than only investigating the feature’s behavior.
+
+**Handoff to Session 426:** - **What’s next:** No task is claimed. Issue
+\#125 is fully closed (both slices shipped). Standing, untouched this
+session: (a) LabKey integration remaining recs (BLOCKED – needs a live
+LabKey server); (b) NPRC outreach plan (DECISION NEEDED – owner
+review/edit/send); (c) issues \#126/#127/#128/#129/#130 (the other 4
+clusters from S422’s triage) still need their own design/scoping
+sessions; (d) whether to provision this project’s five-state Issue
+Lifecycle GitHub labels (Learning 387) remains its own open decision;
+(e) 8 pre-existing open issues remain un-mirrored into `BACKLOG.md`,
+unchanged. **New this session:** `BACKLOG.md`’s Housekeeping section has
+a stale header on the `inst/extdata/` reorganization item – it still
+reads `(DECISION NEEDED -- 2 open, non-blocking decisions, Effort M)`
+even though the item’s own body text shows “Phases 1-4 all DONE” (S418,
+2026-07-28). Every sibling item in that section was correctly rewritten
+to `(none remaining -- ...)`; this one wasn’t. A future session (or this
+session, if reopened) should fix just that header line to match its own
+body – a 1-line docs-only correction, not a real decision. - **Key
+files:** `R/groupAddAssign.R:164-` (new retention loop +
+`canonicalizePartition()`), `R/groupMembersReturn.R` (restructured
+return-packaging), `R/modBreedingGroups.R:259-471` (the new
+`runFormation`/`selectedCandidateIdx`/`selectedCandidate`/`breedingGroups`
+reactive chain + `candidateChoice`/`candidateComparison` UI);
+`PROJECT_LEARNINGS.md` Learnings 392-395; `BACKLOG.md:6-9` (the stale
+header noted above). - **Gotchas:** (1)
+`.DS_Store`/`inst/.DS_Store`/`inst/extdata/.DS_Store` and
+`docs/planning/issue125-ranking-priority-multi-candidate-plan.html`
+remain harmless, unfixed, out-of-scope artifacts. (2) When smoke-testing
+ANY `selectInput()`-backed control via raw JS: query
+`el.selectize.options`, never `sel.options`/`outerHTML` – the native
+select does not mirror selectize’s real choice list (Learning 393). (3)
+When comparing two `app$get_html()` snapshots of DT-containing output
+for equality, strip tags first – DT’s auto-incrementing per-render
+widget id makes raw-HTML comparison unreliable even for identical data
+(Learning 394). (4) For any future MIS/breeding-group live smoke test,
+use a small synthetic pedigree, not the full bundled example (Learning
+395). (5)
+`test_groupAddAssign.R`/`test_modBreedingGroups_groupAddAssign.R` are
+maintainer-machine-gated
+(`skip_if_not(Sys.info()[...user...] == "rmsharp")`) – confirmed this
+session’s environment matches. - **Self-assessment score:** 9/10 (see
+above for full breakdown).
+
 ### What Session 424 Did
 
 **Deliverable:** Implement Slice 1 of the issue \#125 plan (configurable

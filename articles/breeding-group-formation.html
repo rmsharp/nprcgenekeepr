@@ -165,11 +165,11 @@
 <span>  harem <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
-<p>The result is a list with two elements, <code>group</code> and <code>score</code>. <code>group</code> holds one character vector of animal IDs per group, followed by a final element collecting any candidates left unplaced (a lone <code>NA</code> when every candidate was assigned):</p>
+<p>The result is a list with <code>group</code>, <code>score</code>, and <code>candidates</code> elements (plus <code>groupKin</code> when <code>withKin = TRUE</code>). <code>group</code> holds one character vector of animal IDs per group, followed by a final element collecting any candidates left unplaced (a lone <code>NA</code> when every candidate was assigned) – this is the best-scoring solution found. <code>candidates</code> holds up to 5 distinct candidate groupings (deduplicated by group membership, not merely by score, so two equally-scoring but differently-composed groupings both appear); <code>group</code> and <code>score</code> above are simply the first, best-scoring entry of <code>candidates</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">haremGrp</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "group" "score"</span></span>
+<span><span class="co">#&gt; [1] "group"      "score"      "candidates"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/lengths.html" class="external-link">lengths</a></span><span class="op">(</span><span class="va">haremGrp</span><span class="op">$</span><span class="va">group</span><span class="op">)</span> <span class="co"># size of each group; the last is the unplaced pool</span></span>
 <span><span class="co">#&gt; [1] 30 33 32 28 39 28  1</span></span>
 <span><span class="va">haremGrp</span><span class="op">$</span><span class="va">group</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>     <span class="co"># the first harem group</span></span>

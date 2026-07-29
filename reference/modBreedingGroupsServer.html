@@ -106,7 +106,12 @@ When the module recomputes kinship from the pedigree (the shared
 <code>kinshipMatrix</code> is unavailable), the overrides are applied to that
 matrix so group formation reflects them regardless of tab order.
 <code>NULL</code> (the default) is a no-op. A provided <code>kinshipMatrix</code> is
-expected to already carry overrides applied at its source.</p></dd>
+expected to already carry overrides applied at its source.</p>
+<p>Up to 5 distinct candidate groupings are formed per run (issue #125), with
+a "Candidate grouping" selector letting the user switch among them without
+re-running <code><a href="groupAddAssign.html">groupAddAssign</a></code>. All reactive components below
+reflect the currently-selected candidate, defaulting to the best-scoring
+one – identical to the single-solution behavior prior to issue #125.</p></dd>
 
 </dl></div>
     <div class="section level2">

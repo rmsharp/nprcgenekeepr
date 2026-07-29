@@ -132,15 +132,20 @@ haremGrp <- groupAddAssign(
 )
 ```
 
-The result is a list with two elements, `group` and `score`. `group`
-holds one character vector of animal IDs per group, followed by a final
-element collecting any candidates left unplaced (a lone `NA` when every
-candidate was assigned):
+The result is a list with `group`, `score`, and `candidates` elements
+(plus `groupKin` when `withKin = TRUE`). `group` holds one character
+vector of animal IDs per group, followed by a final element collecting
+any candidates left unplaced (a lone `NA` when every candidate was
+assigned) – this is the best-scoring solution found. `candidates` holds
+up to 5 distinct candidate groupings (deduplicated by group membership,
+not merely by score, so two equally-scoring but differently-composed
+groupings both appear); `group` and `score` above are simply the first,
+best-scoring entry of `candidates`:
 
 ``` r
 
 names(haremGrp)
-#> [1] "group" "score"
+#> [1] "group"      "score"      "candidates"
 lengths(haremGrp$group) # size of each group; the last is the unplaced pool
 #> [1] 30 33 32 28 39 28  1
 haremGrp$group[[1]]     # the first harem group

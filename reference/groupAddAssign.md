@@ -100,11 +100,20 @@ groupAddAssign(
 
 ## Value
 
-A list with list items `group`, `score` and optionally `groupKin`. The
-list item `group` contains a list of the best group(s) produced during
-the simulation. The list item `score` provides the score associated with
-the group(s). The list item `groupKin` contains the subset of the
-kinship matrix that is specific for each group formed.
+A list with list items `group`, `score`, `candidates` and optionally
+`groupKin`. The list item `group` contains a list of the best group(s)
+produced during the simulation (an alias for `candidates[[1]]$group`,
+kept for backward compatibility). The list item `score` provides the
+score associated with the group(s) (an alias for
+`candidates[[1]]$score`). The list item `candidates` is a list of up to
+5 distinct candidate solutions (issue \#125), each a list with its own
+`group`, `score` and, when `withKin = TRUE`, `groupKin`, ordered
+best-scoring first. Candidates are deduplicated by partition content,
+not by score – two trials with the same score but different membership
+both count as distinct candidates; two trials with identical membership
+count once. The list item `groupKin` contains the subset of the kinship
+matrix that is specific for each group formed in the best candidate (an
+alias for `candidates[[1]]$groupKin`).
 
 ## Details
 
@@ -175,42 +184,42 @@ haremGrp <- groupAddAssign(
 )
 haremGrp$group
 #> [[1]]
-#>  [1] "80KACX" "1CIRC9" "AW400C" "TQEMY6" "XFWVVX" "MH88T6" "SHG3RB" "WJXIH9"
-#>  [9] "0X4W26" "K3TNHP" "YLRNIK" "1FAZ0K" "1SSCJC" "H2J6UA" "1SPLS8" "5IAFMK"
-#> [17] "AP1YLW" "Q17CG3" "G8MCV7" "3YJIMV" "QQMBT1" "7NE2UT" "Q8U9LB" "FL170P"
-#> [25] "W0GUKI" "AIHJ8Z" "7ZNY75" "Y0TCYX" "3DTD2N" "5EDIEE" "DPXEQE" "DCJJYS"
-#> [33] "0IIAEN" "QCENKM" "01QRQ4"
+#>  [1] "Z25D52" "T3QPW5" "TXZUKC" "5EDIEE" "S222R3" "CRPXY7" "TYEWF1" "VWC5ZH"
+#>  [9] "PU7RSG" "AP1YLW" "G58RGY" "WJXIH9" "W5WIRP" "EX5K0S" "DPXEQE" "DI4AHD"
+#> [17] "TQEMY6" "EMV4P6" "5W621W" "LYSLPP" "B134XZ" "967Y3D" "0IIAEN" "2F6J3U"
+#> [25] "N4NV8B" "S5H1GC" "PYPM1W" "Q17CG3" "30J3CQ" "XYRDKV"
 #> 
 #> [[2]]
-#>  [1] "09LFE4" "PVY432" "S7IWWA" "WK89I9" "XYRDKV" "MX4J7G" "AFZKBS" "CHK1ZX"
-#>  [9] "FG0SFA" "PYPM1W" "8JUUJ9" "0XTZQ1" "F7I2ED" "NK802Y" "G58RGY" "S3EBGZ"
-#> [17] "CMMUKU" "TYEWF1" "321LLB" "F45799" "I5CI33" "ESUIAF" "J3F6PD" "KZY6PD"
-#> [25] "B134XZ" "1GF3GM" "TXZUKC" "3SKITJ" "NN3GDQ" "LYSLPP" "465ERA" "CS23RV"
+#>  [1] "YDRD81" "1SPLS8" "C18V6I" "Y6DB6L" "R5AYJK" "92UG4N" "WNEAS6" "S056D5"
+#>  [9] "3GECJJ" "414N7M" "99BMJW" "RJ4JPC" "MPIQ4N" "KZY6PD" "6X6BG9" "MKY9TK"
+#> [17] "G8MCV7" "QW2Z3R" "JLFKV8" "X694YR" "0HYZ23" "DHNQ1W" "PI4VHT" "HE0SCR"
+#> [25] "1CIRC9" "AR5U44" "ZH3YG1" "KX0RJ3" "FL170P" "G25E3F" "D33J06"
 #> 
 #> [[3]]
-#>  [1] "FLIZQI" "0HYZ23" "GCBYDW" "6F9FB8" "EMV4P6" "D9P18Y" "5W621W" "Q7U139"
-#>  [9] "QRZK48" "ZATMEE" "72LYDE" "MYUMMX" "0SGJ12" "ZH3YG1" "87AQLF" "VWC5ZH"
-#> [17] "D4B0RM" "PU7RSG" "38K2SR" "5KWNMZ" "D33J06" "MTCAIG" "N79QXB" "N4NV8B"
-#> [25] "7B9CA6" "S5H1GC" "WKY2SZ" "YTJ2UL" "GIIEUD" "1QVS67" "DRXMW4" "PI4VHT"
-#> [33] "DI4AHD" "JLFKV8" "FJS7RQ"
+#>  [1] "LDND6J" "9MG040" "50D77I" "5ERY5Z" "W0GUKI" "3DTD2N" "F45799" "E5Q33K"
+#>  [9] "IH1KPA" "5IAFMK" "B1WVCN" "ZQXZYB" "GAS52W" "DCJJYS" "PJ72W1" "87AQLF"
+#> [17] "W6MDVK" "S7IWWA" "M9PVG5" "TEACA3" "QRZK48" "13B1QL" "3YJIMV" "WK89I9"
+#> [25] "321LLB" "D9P18Y" "N79QXB"
 #> 
 #> [[4]]
-#>  [1] "ZW2X4N" "SCFSBF" "30J3CQ" "HE0SCR" "LS184H" "50D77I" "Z904TJ" "6X6BG9"
-#>  [9] "AZ3L0D" "XEC0M5" "ZPS15A" "RVHVTZ" "PJ72W1" "DKIM6U" "R5AYJK" "WI38KZ"
-#> [17] "13B1QL" "6KWVRI" "EX5K0S" "PBAFJF" "N5QBWD" "AR17R5" "9P0DES" "92UG4N"
-#> [25] "414N7M" "WNEAS6" "GAS52W" "QW2Z3R" "KEA4QG"
+#>  [1] "TBCE78" "DH9WJQ" "7NE2UT" "SCFSBF" "MH88T6" "MX4J7G" "ZPS15A" "FG0SFA"
+#>  [9] "DKIM6U" "0XTZQ1" "1KJ2MG" "QWKFBH" "PVY432" "6F9FB8" "Z904TJ" "FB5L3N"
+#> [17] "6KWVRI" "72LYDE" "F7I2ED" "QCENKM" "NN3GDQ" "5BPBUI" "38K2SR" "3SKITJ"
+#> [25] "7B9CA6" "7RA57Q" "RVHVTZ" "1CZM30" "H2J6UA" "AW400C" "FJS7RQ" "8JUUJ9"
+#> [33] "CS23RV" "1GF3GM" "DRXMW4" "GIIEUD" "B228Q6"
 #> 
 #> [[5]]
-#>  [1] "K7900I" "BCJJKN" "967Y3D" "E5Q33K" "YFCIHJ" "SH3FB7" "MPIQ4N" "5EDLL7"
-#>  [9] "CLSVU6" "WLMGS1" "GTLA8R" "3GECJJ" "83HQBN" "BKWE4D" "B1WVCN" "C18V6I"
-#> [17] "IH1KPA" "DHNQ1W" "2Z4YLY" "MB6NYQ" "S056D5" "QCA36T" "5ERY5Z" "W5WIRP"
-#> [25] "AR5U44" "M9PVG5" "BS3RLE" "ILVQVB" "WTE53B" "5BPBUI" "EZ2F8A" "MKY9TK"
+#>  [1] "5IYDXN" "AZ3L0D" "LS184H" "GCBYDW" "1FAZ0K" "1SSCJC" "LVYYNY" "I8ABC7"
+#>  [9] "YTJ2UL" "5KWNMZ" "AR17R5" "83HQBN" "QQMBT1" "KEA4QG" "Q8U9LB" "Y0TCYX"
+#> [17] "CLSVU6" "9P0DES" "AFZKBS" "ILVQVB" "S3EBGZ" "WKY2SZ" "NK802Y" "PBAFJF"
+#> [25] "SH3FB7" "Q7U139" "BKWE4D" "BCJJKN" "EZ2F8A" "WLMGS1" "1VP3UC" "1QVS67"
+#> [33] "MB6NYQ"
 #> 
 #> [[6]]
-#>  [1] "PHB6TE" "1KJ2MG" "9MG040" "7RA57Q" "G25E3F" "T3QPW5" "B228Q6" "MFKT9C"
-#>  [9] "1VP3UC" "RJ4JPC" "ZQXZYB" "99BMJW" "1CZM30" "FB5L3N" "LVYYNY" "Y6DB6L"
-#> [17] "KX0RJ3" "46ZHKN" "TEACA3" "W6MDVK" "2F6J3U" "X694YR" "DH9WJQ" "S222R3"
-#> [25] "QWKFBH" "I8ABC7" "CRPXY7"
+#>  [1] "B2YJJP" "7ZNY75" "MTCAIG" "YFCIHJ" "WTE53B" "BS3RLE" "XEC0M5" "SHG3RB"
+#>  [9] "I5CI33" "ZATMEE" "0SGJ12" "CHK1ZX" "GTLA8R" "YLRNIK" "D4B0RM" "ESUIAF"
+#> [17] "N5QBWD" "5EDLL7" "0X4W26" "46ZHKN" "CMMUKU" "2Z4YLY" "QCA36T" "MFKT9C"
+#> [25] "K3TNHP" "MYUMMX" "WI38KZ" "01QRQ4" "J3F6PD" "465ERA" "AIHJ8Z" "XFWVVX"
 #> 
 #> [[7]]
 #> [1] NA
