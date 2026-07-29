@@ -170,12 +170,12 @@ upload_and_wait <- function(app, file_path, file_input_id = "pedigreeFileOne",
 
 #' Get standard test data file path
 #'
-#' Returns the path to a test data file in inst/extdata.
+#' Returns the path to a test data file in inst/extdata/examples.
 #'
 #' @param filename The name of the test file
 #' @return Full path to the test file
 get_test_data_path <- function(filename) {
-  system.file("extdata", filename, package = "nprcgenekeepr")
+  system.file("extdata", "examples", filename, package = "nprcgenekeepr")
 }
 
 #' Locate the Shiny app directory for the shinytest2 E2E tests

@@ -13,7 +13,7 @@
 #' \code{lkPedColumns} is center-specific: ONPRC uses the lookup-traversal form
 #' \code{Id/parents/dam} / \code{Id/parents/sire} (curated genetic-preferred
 #' parentage); SNPRC uses flat \code{dam} / \code{sire} (direct columns). See
-#' \code{inst/extdata/example_nprcgenekeepr_config}. \code{mapPedColumns} is the
+#' \code{inst/extdata/examples/example_nprcgenekeepr_config}. \code{mapPedColumns} is the
 #' one-to-one rename of \code{lkPedColumns} to the package's internal names.
 #'
 #' @return A named list of seven elements: \code{center}, \code{baseUrl},

@@ -15,7 +15,7 @@
 #' already-corrected object is a no-op (idempotent).
 #'
 #' A value-identical export ships at
-#' inst/extdata/obfuscated_rhesus_mhc_breeder_genotypes.csv and serves as an
+#' inst/extdata/examples/obfuscated_rhesus_mhc_breeder_genotypes.csv and serves as an
 #' independent cross-check that the coercion preserves all values.
 #'
 #' Run from the package root:
