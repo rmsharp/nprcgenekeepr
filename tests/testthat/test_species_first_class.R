@@ -65,7 +65,7 @@ test_that("the shipped JMAC header maps species into a canonical column", {
   # species column. Its full QC run halts on a pre-existing sire/dam data
   # conflict unrelated to #46, so we assert on the import column mapping --
   # exactly the "recognized/retained as a first-class field" requirement.
-  f <- system.file("extdata", "deidentified_jmac_ped.csv",
+  f <- system.file("extdata", "examples", "deidentified_jmac_ped.csv",
                    package = "nprcgenekeepr")
   skip_if(!nzchar(f) || !file.exists(f), "shipped JMAC example not found")
   hdr <- names(read.csv(f, nrows = 1L, stringsAsFactors = FALSE,

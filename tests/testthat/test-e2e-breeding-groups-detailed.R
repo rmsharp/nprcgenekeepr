@@ -95,7 +95,7 @@ test_that("E2E: Breeding Groups has export functionality", {
   app <- create_app_driver(app_dir, "e2e_bg_export")
   on.exit(app$stop(), add = TRUE)
 
-  fixture <- system.file("extdata", "obfuscated_rhesus_mhc_ped.csv",
+  fixture <- system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                          package = "nprcgenekeepr")
   if (!upload_and_wait(app, fixture)) skip("Upload/QC did not complete")
 

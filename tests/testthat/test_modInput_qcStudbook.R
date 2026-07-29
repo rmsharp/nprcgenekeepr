@@ -509,9 +509,9 @@ test_that("modInputServer merges an uploaded genotype file in separate mode", {
 
   # Shipped fixtures: 375-row pedigree + 31-row genotype whose ids are a
   # subset of the pedigree ids (0 orphan rows, 0 QC errors on merge).
-  pedPath <- system.file("extdata", "obfuscated_rhesus_mhc_ped.csv",
+  pedPath <- system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                          package = "nprcgenekeepr")
-  genoPath <- system.file("extdata",
+  genoPath <- system.file("extdata", "examples",
                           "obfuscated_rhesus_mhc_breeder_genotypes.csv",
                           package = "nprcgenekeepr")
   skip_if(pedPath == "" || genoPath == "")
@@ -683,7 +683,7 @@ test_that("modInputServer's errorLst reactive still exposes the raw qcStudbook e
 test_that("modInputServer degrades gracefully on a malformed genotype file", {
   skip_if_not_installed("shiny")
 
-  pedPath <- system.file("extdata", "obfuscated_rhesus_mhc_ped.csv",
+  pedPath <- system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                          package = "nprcgenekeepr")
   skip_if(pedPath == "")
 

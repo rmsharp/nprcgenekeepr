@@ -721,7 +721,7 @@ test_that("modInputServer cycles through all separator types", {
 
 test_that("modInputServer focalAnimals path builds pedigree from the EHR (mocked)", {
   skip_if_not_installed("shiny")
-  shortlist <- system.file("extdata", "focalAnimalsShortList.csv",
+  shortlist <- system.file("extdata", "examples", "focalAnimalsShortList.csv",
                            package = "nprcgenekeepr")
   focal_ids <- as.character(read.csv(shortlist, stringsAsFactors = FALSE)[, 1L])
 
@@ -773,7 +773,7 @@ test_that("modInputServer focalAnimals path builds pedigree from the EHR (mocked
 
 test_that("modInputServer focalAnimals path surfaces the EHR-failure errorLst", {
   skip_if_not_installed("shiny")
-  shortlist <- system.file("extdata", "focalAnimalsShortList.csv",
+  shortlist <- system.file("extdata", "examples", "focalAnimalsShortList.csv",
                            package = "nprcgenekeepr")
 
   # A NULL from the LabKey seam makes getFocalAnimalPed return an
@@ -819,10 +819,10 @@ test_that("modInputServer focalAnimals path surfaces the EHR-failure errorLst", 
 
 test_that("modInputServer focalAnimals path builds pedigree from a FILE (offline, no EHR)", {
   skip_if_not_installed("shiny")
-  shortlist <- system.file("extdata", "focalAnimalsShortList.csv",
+  shortlist <- system.file("extdata", "examples", "focalAnimalsShortList.csv",
                            package = "nprcgenekeepr")
   focal_ids <- as.character(read.csv(shortlist, stringsAsFactors = FALSE)[, 1L])
-  pedFile <- system.file("extdata", "ExamplePedigree.csv",
+  pedFile <- system.file("extdata", "examples", "ExamplePedigree.csv",
                          package = "nprcgenekeepr")
 
   testthat::local_mocked_bindings(
@@ -863,7 +863,7 @@ test_that("modInputServer focalAnimals path builds pedigree from a FILE (offline
 
 test_that("modInputServer offline focal-file path surfaces a File Read Error on a bad pedigree file", {
   skip_if_not_installed("shiny")
-  shortlist <- system.file("extdata", "focalAnimalsShortList.csv",
+  shortlist <- system.file("extdata", "examples", "focalAnimalsShortList.csv",
                            package = "nprcgenekeepr")
   badPed <- file.path(tempdir(), "no_such_pedigree.csv")
 
@@ -906,7 +906,7 @@ test_that("modInputServer offline focal-file path surfaces a File Read Error on 
 
 test_that("modInputServer offline focal-file path reports a missing-column pedigree file", {
   skip_if_not_installed("shiny")
-  shortlist <- system.file("extdata", "focalAnimalsShortList.csv",
+  shortlist <- system.file("extdata", "examples", "focalAnimalsShortList.csv",
                            package = "nprcgenekeepr")
   badPed <- tempfile(fileext = ".csv")
   utils::write.csv(data.frame(id = c("A", "B"), stringsAsFactors = FALSE),
