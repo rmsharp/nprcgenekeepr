@@ -6,6 +6,22 @@
 
 ## ACTIVE TASK
 
+### What Session 426 Did
+**Deliverable:** Write a design/scoping plan for closing issue #128 (breeding-group
+exclusion is top-N rank-based, not a genetic-value floor -- Dimension 2
+configurability gap from
+`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md`), per issue #128's
+own scope note ("this is a design question, not a quick fix... Needs a design
+decision before implementation"). Owner-directed: "plan on closing issue #128."
+(IN PROGRESS)
+**Started:** 2026-07-29
+**Status:** Session claimed. Work beginning. TDD phases (RED/GREEN/REFACTOR) are
+inapplicable to this deliverable -- it is a plan, following S423's precedent for the
+sibling issue #125 plan.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded
+in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb
+for the next session's reconcile.
+
 ### What Session 425 Did
 **Deliverable:** Implement Slice 2 of the issue #125 plan (surface multiple
 breeding-group candidates -- `R/groupAddAssign.R`/`R/groupMembersReturn.R`/
