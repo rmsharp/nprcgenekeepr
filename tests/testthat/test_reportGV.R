@@ -298,6 +298,42 @@ test_that("reportGV threads gestationDefault into the correction (#73 Part 2)", 
   )))
 })
 
+# Issue #125 Slice 1: reportGV threads guCutoff/zScoreCutoff/axisPriority
+# straight through to orderReport() with no branching (Dragon R2 -- orderReport
+# itself resolves the NULL defaults).
+test_that("reportGV threads guCutoff/zScoreCutoff/axisPriority into orderReport (#125 Slice 1)", {
+  ped <- nprcgenekeepr::qcPed
+  set.seed(1L)
+  base <- reportGV(ped, guIter = 20L)
+  set.seed(1L)
+  over <- reportGV(
+    ped, guIter = 20L,
+    guCutoff = 0L, zScoreCutoff = 0L, axisPriority = "mk"
+  )
+
+  aligned <- merge(
+    base$report[, c("id", "value", "rank")],
+    over$report[, c("id", "value", "rank")],
+    by = "id", suffixes = c(".base", ".over")
+  )
+  expect_true(
+    any(aligned$value.base != aligned$value.over) ||
+      any(aligned$rank.base != aligned$rank.over)
+  )
+})
+
+test_that("reportGV with explicit default cutoffs matches the bare call (backward compat, #125 Slice 1)", {
+  ped <- nprcgenekeepr::qcPed
+  set.seed(1L)
+  base <- reportGV(ped, guIter = 20L)
+  set.seed(1L)
+  explicit <- reportGV(
+    ped, guIter = 20L,
+    guCutoff = 10L, zScoreCutoff = 0.25, axisPriority = "gu"
+  )
+  expect_identical(base$report, explicit$report)
+})
+
 test_that("reportGV threads a custom breedingTable into the correction (#73 Part 2)", {
   ped <- nprcgenekeepr::qcPed
   pedSpp <- ped

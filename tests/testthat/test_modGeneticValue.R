@@ -235,6 +235,61 @@ test_that("modGeneticValueServer gvResults rank is sequential", {
 })
 
 # ============================================================================
+# Server Tests - rankScheme (issue #125 Slice 1)
+# ============================================================================
+
+test_that("modGeneticValueServer rankScheme = 'categorical' displays orderReport's native tiered order, not the combined score (#125 Slice 1)", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeValidTestPed(nFounders = 8, nOffspring = 16)
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped })
+    ),
+    {
+      session$setInputs(nIterations = 100)
+      session$setInputs(rankScheme = "categorical")
+      session$setInputs(runAnalysis = 1)
+
+      results <- gvResults()
+      native <- fullResults()$report
+
+      expect_identical(as.character(results$id), as.character(native$id))
+      expect_identical(results$rank, native$rank)
+      expect_identical(results$value, native$value)
+    }
+  )
+})
+
+test_that("modGeneticValueServer default rankScheme (unset) still produces today's combined-score ordering (backward compat, #125 Slice 1)", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeValidTestPed(nFounders = 8, nOffspring = 16)
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped })
+    ),
+    {
+      session$setInputs(nIterations = 100)
+      session$setInputs(runAnalysis = 1)
+
+      results <- gvResults()
+      native <- fullResults()$report
+
+      combined <- rank(native$indivMeanKin - native$gu)
+      demote <- !is.na(native$value) & native$value == "Undetermined"
+      expectedOrder <- native$id[order(demote, combined)]
+
+      expect_identical(as.character(results$id), as.character(expectedOrder))
+    }
+  )
+})
+
+# ============================================================================
 # Server Tests - Return values after analysis
 # ============================================================================
 
@@ -1610,7 +1665,9 @@ test_that("modGeneticValueServer threads speciesOverrides into reportGV (#73 Par
                         byID = TRUE, updateProgress = NULL,
                         breedingTable = NULL, gestationTable = NULL,
                         breedingAgeDefault = NULL, gestationDefault = NULL,
-                        kinshipOverrides = NULL) {
+                        kinshipOverrides = NULL,
+                        guCutoff = NULL, zScoreCutoff = NULL,
+                        axisPriority = NULL) {
       captured$breedingTable <- breedingTable
       captured$gestationTable <- gestationTable
       captured$breedingAgeDefault <- breedingAgeDefault
@@ -1661,7 +1718,9 @@ test_that("modGeneticValueServer defaults to no overrides (backward compat, #73 
                         byID = TRUE, updateProgress = NULL,
                         breedingTable = NULL, gestationTable = NULL,
                         breedingAgeDefault = NULL, gestationDefault = NULL,
-                        kinshipOverrides = NULL) {
+                        kinshipOverrides = NULL,
+                        guCutoff = NULL, zScoreCutoff = NULL,
+                        axisPriority = NULL) {
       captured$args <- list(breedingTable, gestationTable,
                             breedingAgeDefault, gestationDefault)
       fakeGvReport()

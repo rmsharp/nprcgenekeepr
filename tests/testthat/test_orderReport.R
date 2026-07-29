@@ -85,3 +85,81 @@ test_that("orderReport uses getFounders when parentage absent", {
   expect_false(out$value[out$id == "K1"] == "Undetermined")
   expect_identical(nrow(out), nrow(rptNoParentage))
 })
+
+# Issue #125 Slice 1: orderReport gains guCutoff/zScoreCutoff/axisPriority,
+# each NULL-defaulting to today's hardcoded 10L / 0.25 / "gu" behavior.
+test_that("orderReport with explicit default cutoffs matches the bare call (backward compat, #125 Slice 1)", {
+  rpt1 <- nprcgenekeepr:::orderReport(rpt, ped)
+  rpt2 <- nprcgenekeepr:::orderReport(
+    rpt, ped,
+    guCutoff = 10L, zScoreCutoff = 0.25, axisPriority = "gu"
+  )
+  expect_identical(rpt1, rpt2)
+})
+
+test_that("orderReport axisPriority = 'mk' flips which tier claims a dual-qualifying animal (#125 Slice 1)", {
+  # DUAL1 qualifies for BOTH gu > 10 and zScores <= 0.25; GUONLY qualifies only
+  # for the gu axis; MKONLY qualifies only for the mk axis.
+  rptX <- data.frame(
+    id             = c("DUAL1", "GUONLY", "MKONLY"),
+    sire           = c("S1", "S1", "S1"),
+    dam            = c("D1", "D1", "D1"),
+    gu             = c(15, 20, 2),
+    zScores        = c(0.05, 0.5, 0.20),
+    totalOffspring = c(0L, 0L, 0L),
+    parentage      = c("known", "known", "known"),
+    stringsAsFactors = FALSE
+  )
+  pedX <- data.frame(
+    id   = c("DUAL1", "GUONLY", "MKONLY", "S1", "D1"),
+    sire = c("S1", "S1", "S1", NA, NA),
+    dam  = c("D1", "D1", "D1", NA, NA),
+    stringsAsFactors = FALSE
+  )
+
+  outGu <- nprcgenekeepr:::orderReport(rptX, pedX) # default axisPriority = "gu"
+  outMk <- nprcgenekeepr:::orderReport(rptX, pedX, axisPriority = "mk")
+
+  # gu-priority (today's behavior): highGu (gu > 10) is filtered FIRST, so
+  # DUAL1 is claimed by the highGu tier alongside GUONLY, sorted by
+  # descending gu; MKONLY is the only animal left for the lowMk tier.
+  expect_identical(outGu$id, c("GUONLY", "DUAL1", "MKONLY"))
+
+  # mk-priority: lowMk (zScores <= 0.25) is filtered FIRST instead, so DUAL1
+  # is claimed by the lowMk tier alongside MKONLY, sorted by ascending
+  # zScores; GUONLY is the only animal left for the highGu tier.
+  expect_identical(outMk$id, c("DUAL1", "MKONLY", "GUONLY"))
+})
+
+test_that("orderReport custom guCutoff/zScoreCutoff change tier membership (#125 Slice 1)", {
+  # Y1 sits between the default and custom cutoffs on both axes; Y2 always
+  # qualifies for lowMk under gu-priority. Under the default cutoffs (10 /
+  # 0.25) both animals land in lowMk (Y2 first, ascending zScores). Under the
+  # custom cutoffs (guCutoff = 5 / zScoreCutoff = 0.1), Y1's gu = 8 now clears
+  # the lower guCutoff, moving it into highGu ahead of Y2's lowMk tier.
+  rptY <- data.frame(
+    id             = c("Y1", "Y2"),
+    sire           = c("S1", "S1"),
+    dam            = c("D1", "D1"),
+    gu             = c(8, 3),
+    zScores        = c(0.15, 0.05),
+    totalOffspring = c(0L, 0L),
+    parentage      = c("known", "known"),
+    stringsAsFactors = FALSE
+  )
+  pedY <- data.frame(
+    id   = c("Y1", "Y2", "S1", "D1"),
+    sire = c("S1", "S1", NA, NA),
+    dam  = c("D1", "D1", NA, NA),
+    stringsAsFactors = FALSE
+  )
+
+  outDefault <- nprcgenekeepr:::orderReport(rptY, pedY)
+  outCustom <- nprcgenekeepr:::orderReport(
+    rptY, pedY,
+    guCutoff = 5L, zScoreCutoff = 0.1
+  )
+
+  expect_identical(outDefault$id, c("Y2", "Y1"))
+  expect_identical(outCustom$id, c("Y1", "Y2"))
+})
