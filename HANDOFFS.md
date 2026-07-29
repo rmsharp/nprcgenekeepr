@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S417
+date: 2026-07-28
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Executing Phase 3 of docs/planning/extdata-reorganization-plan.md -- re-render vignettes/a3manual.Rmd, vignettes/a2interactive.Rmd, vignettes/articles/offline-focal-animal-workflow.qmd (and fix a source call-site bug found by this session's own Dragon-1 grep: offline-focal-animal-workflow.qmd's system.file() calls missing the examples segment).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S416
 date: 2026-07-28
 status: complete

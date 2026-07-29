@@ -6,6 +6,23 @@
 
 ## ACTIVE TASK
 
+### What Session 417 Did
+**Deliverable:** Owner-picked from S416's priorities list: execute **Phase 3** of
+`docs/planning/extdata-reorganization-plan.md` -- re-render the rendered artifacts whose
+sources embed the pre-Phase-2 flat `inst/extdata/<file>` path
+(`vignettes/manual_components/_summary_of_major_functions.Rmd`, `vignettes/a3manual.Rmd`,
+`vignettes/a2interactive.Rmd`, `vignettes/articles/offline-focal-animal-workflow.qmd`).
+(IN PROGRESS)
+**Started:** 2026-07-28
+**Status:** Session claimed. Work beginning. Fresh Dragon-1 grep (before touching any
+file) found the plan's Phase 3 prose undersold the scope: `offline-focal-animal-
+workflow.qmd:104,106` calls `system.file("extdata", "<file>", ...)` directly with no
+`examples` segment -- confirmed in R this now returns `""` (broken) since Phase 2 moved
+the files. Plan's own Sec8.1 evidence table already listed this call site; treating it as
+the source fix it is, not just a re-render.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### What Session 416 Did
 **Deliverable:** Owner-picked from `BACKLOG.md`'s Housekeeping section (S415's
 priorities list): execute **Phase 2** of `docs/planning/extdata-reorganization-plan.md`
