@@ -53,13 +53,22 @@
 #' will be called during each iteration to update a
 #' \code{shiny::Progress} object.
 #'
-#' @return A list with list items \code{group}, \code{score} and optionally
-#' \code{groupKin}.
+#' @return A list with list items \code{group}, \code{score}, \code{candidates}
+#' and optionally \code{groupKin}.
 #' The list item \code{group} contains a list of the best group(s) produced
-#' during the simulation.
-#' The list item \code{score} provides the score associated with the group(s).
+#' during the simulation (an alias for \code{candidates[[1]]$group}, kept for
+#' backward compatibility).
+#' The list item \code{score} provides the score associated with the group(s)
+#' (an alias for \code{candidates[[1]]$score}).
+#' The list item \code{candidates} is a list of up to 5 distinct candidate
+#' solutions (issue #125), each a list with its own \code{group}, \code{score}
+#' and, when \code{withKin = TRUE}, \code{groupKin}, ordered best-scoring
+#' first. Candidates are deduplicated by partition content, not by score --
+#' two trials with the same score but different membership both count as
+#' distinct candidates; two trials with identical membership count once.
 #' The list item \code{groupKin} contains the subset of the kinship matrix
-#' that is specific for each group formed.
+#' that is specific for each group formed in the best candidate (an alias for
+#' \code{candidates[[1]]$groupKin}).
 #'
 #' @references Vinson, A. and Raboin, M.J. (2015) "A Practical Approach for
 #' Designing Breeding Groups to Maximize Genetic Diversity in a Large Colony
@@ -161,9 +170,17 @@ groupAddAssign <- function(candidates,
     )
   }
 
-  # Starting the group assignment simulation
-  savedScore <- -1L
-  savedGroupMembers <- list()
+  # Starting the group assignment simulation. Up to 5 distinct candidate
+  # solutions are retained (issue #125), deduplicated by canonicalized
+  # partition content -- not merely by score, since two trials with the same
+  # score but different membership both count (see canonicalizePartition()
+  # below, Dragon R4). Each new trial is compared only against the current
+  # up-to-5 retained candidates, not the full trial history so far
+  # (O(iter x 5), not O(iter^2)): safe because a partition's score is a pure
+  # function of its own membership, so a partition once evicted for scoring
+  # no better than the retained set can never later re-qualify at that same
+  # score.
+  retained <- list()
 
   for (k in 1L:iter) {
     groupMembers <- fillGroupMembers(
@@ -173,10 +190,26 @@ groupAddAssign <- function(candidates,
 
     # Score the resulting groups
     score <- min(lengths(groupMembers))
+    signature <- canonicalizePartition(groupMembers)
 
-    if (score > savedScore) {
-      savedGroupMembers <- groupMembers
-      savedScore <- score
+    alreadyRetained <- any(vapply(
+      retained, function(r) identical(r$signature, signature), logical(1L)
+    ))
+
+    if (!alreadyRetained) {
+      if (length(retained) < 5L) {
+        retained[[length(retained) + 1L]] <- list(
+          groupMembers = groupMembers, score = score, signature = signature
+        )
+      } else {
+        retainedScores <- vapply(retained, function(r) r$score, numeric(1L))
+        worstIdx <- which.min(retainedScores)
+        if (score > retainedScores[worstIdx]) {
+          retained[[worstIdx]] <- list(
+            groupMembers = groupMembers, score = score, signature = signature
+          )
+        }
+      }
     }
 
     # Updating the progress bar, if applicable
@@ -185,10 +218,37 @@ groupAddAssign <- function(candidates,
     }
   }
 
-  savedGroupMembers <- addGroupOfUnusedAnimals(
-    savedGroupMembers, candidates,
-    ped, minAge, harem
-  )
+  # Best candidate first; ties broken by discovery order (order() is not
+  # guaranteed stable for all methods, so break ties explicitly rather than
+  # relying on it).
+  retainedScores <- vapply(retained, function(r) r$score, numeric(1L))
+  retained <- retained[order(-retainedScores, seq_along(retained))]
 
-  groupMembersReturn(savedGroupMembers, savedScore, withKin, kmat)
+  retained <- lapply(retained, function(r) {
+    r$groupMembers <- addGroupOfUnusedAnimals(
+      r$groupMembers, candidates, ped, minAge, harem
+    )
+    r
+  })
+
+  groupMembersReturn(retained, withKin, kmat)
+}
+
+#' Canonicalize a group partition for equality comparison
+#'
+#' Sorts IDs within each group, then sorts groups by their own signature, so
+#' two partitions that differ only in group order or within-group ID order
+#' compare as identical. Used to deduplicate candidate solutions by partition
+#' content rather than by score (issue #125, Dragon R4).
+#'
+#' @param groupMembers List of character vectors, one per group.
+#' @return A single character string signature.
+#' @noRd
+canonicalizePartition <- function(groupMembers) {
+  groupSignatures <- vapply(
+    groupMembers,
+    function(g) paste(sort(g), collapse = ","),
+    character(1L)
+  )
+  paste(sort(groupSignatures), collapse = ";")
 }

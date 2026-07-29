@@ -71,13 +71,22 @@ will be called during each iteration to update a
 \code{shiny::Progress} object.}
 }
 \value{
-A list with list items \code{group}, \code{score} and optionally
-\code{groupKin}.
+A list with list items \code{group}, \code{score}, \code{candidates}
+and optionally \code{groupKin}.
 The list item \code{group} contains a list of the best group(s) produced
-during the simulation.
-The list item \code{score} provides the score associated with the group(s).
+during the simulation (an alias for \code{candidates[[1]]$group}, kept for
+backward compatibility).
+The list item \code{score} provides the score associated with the group(s)
+(an alias for \code{candidates[[1]]$score}).
+The list item \code{candidates} is a list of up to 5 distinct candidate
+solutions (issue #125), each a list with its own \code{group}, \code{score}
+and, when \code{withKin = TRUE}, \code{groupKin}, ordered best-scoring
+first. Candidates are deduplicated by partition content, not by score --
+two trials with the same score but different membership both count as
+distinct candidates; two trials with identical membership count once.
 The list item \code{groupKin} contains the subset of the kinship matrix
-that is specific for each group formed.
+that is specific for each group formed in the best candidate (an alias for
+\code{candidates[[1]]$groupKin}).
 }
 \description{
 Part of Group Formation

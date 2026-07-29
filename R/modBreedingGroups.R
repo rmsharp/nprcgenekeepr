@@ -90,6 +90,11 @@ modBreedingGroupsUI <- function(id) {
              )
       ),
       column(8L,
+             wellPanel(
+               selectInput(ns("candidateChoice"), "Candidate grouping:",
+                           choices = NULL),
+               tableOutput(ns("candidateComparison"))
+             ),
              tabsetPanel(
                tabPanel("Groups", br(), uiOutput(ns("groupsDisplay"))),
                tabPanel("Statistics", br(), tableOutput(ns("groupStats"))),
@@ -162,6 +167,12 @@ modBreedingGroupsUI <- function(id) {
 #'   matrix so group formation reflects them regardless of tab order.
 #'   \code{NULL} (the default) is a no-op. A provided \code{kinshipMatrix} is
 #'   expected to already carry overrides applied at its source.
+#'
+#' Up to 5 distinct candidate groupings are formed per run (issue #125), with
+#' a "Candidate grouping" selector letting the user switch among them without
+#' re-running \code{\link{groupAddAssign}}. All reactive components below
+#' reflect the currently-selected candidate, defaulting to the best-scoring
+#' one -- identical to the single-solution behavior prior to issue #125.
 #'
 #' @return List with reactive components:
 #' \itemize{
@@ -240,7 +251,12 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
       validGroups[!vapply(validGroups, is.null, logical(1L))]
     }
 
-    breedingGroups <- eventReactive(input$formGroups, {
+    # Runs groupAddAssign() once per "Form Groups" click and stores the full
+    # multi-candidate result (issue #125 Slice 2). Kept separate from
+    # `breedingGroups` (below) so that changing the candidate selection never
+    # re-invokes groupAddAssign() -- only this eventReactive's own trigger
+    # (input$formGroups) does.
+    runFormation <- eventReactive(input$formGroups, {
       req(pedigree())
 
       # E2E determinism hook (gated; no-op in production). See gatedSeed().
@@ -326,7 +342,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
             type = "error",
             duration = 10L
           )
-          list(group = list(character(0L)), score = 0L)
+          list(candidates = list(list(group = list(character(0L)), score = 0L)))
         } else {
           tryCatch({
             groupAddAssign(
@@ -352,33 +368,36 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
               type = "error",
               duration = 10L
             )
-            list(group = list(character(0L)), score = 0L)
+            list(candidates = list(list(group = list(character(0L)), score = 0L)))
           })
         }
 
-        # Process results
-        validGroups <- filterValidGroups(result$group)
-        assignedIds <- unlist(validGroups)
-        unassignedIds <- setdiff(candidateIds, assignedIds)
+        # Process every retained candidate (issue #125 Slice 2), not just the
+        # best: each gets its own validGroups/unassigned/hasUnused, so the
+        # selector below (`selectedCandidateIdx`) can switch among them
+        # without re-running groupAddAssign(). kmat is retained once, at the
+        # top level -- it does not vary by candidate.
+        candidateViews <- lapply(result$candidates, function(cand) {
+          validGroups <- filterValidGroups(cand$group)
+          assignedIds <- unlist(validGroups)
+          unassignedIds <- setdiff(candidateIds, assignedIds)
 
-        # The unused-animals group is the last element appended by
-        # addGroupOfUnusedAnimals(); it survives filterValidGroups() only when
-        # it is non-empty, in which case it is the last element of validGroups.
-        lastRaw <- result$group[[length(result$group)]]
-        hasUnused <- !(length(lastRaw) == 0L || all(is.na(lastRaw)))
+          # The unused-animals group is the last element appended by
+          # addGroupOfUnusedAnimals(); it survives filterValidGroups() only
+          # when non-empty, in which case it is validGroups' last element.
+          lastRaw <- cand$group[[length(cand$group)]]
+          hasUnused <- !(length(lastRaw) == 0L || all(is.na(lastRaw)))
 
-        # Store full results for other reactives. kmat is retained so the
-        # Group Detail tab can derive each group's kinship submatrix via
-        # filterKinMatrix() without re-deriving the matrix (display-only;
-        # the group-formation result above is unchanged).
-        groupResults(list(
-          group = validGroups,
-          score = result$score,
-          groupKin = result$groupKin,
-          unassigned = unassignedIds,
-          kmat = kmat,
-          hasUnused = hasUnused
-        ))
+          list(
+            validGroups = validGroups,
+            score = cand$score,
+            groupKin = cand$groupKin,
+            unassigned = unassignedIds,
+            hasUnused = hasUnused
+          )
+        })
+
+        groupResults(list(candidates = candidateViews, kmat = kmat))
 
         incProgress(0.5, detail = "Complete")
 
@@ -388,8 +407,67 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
           ready = TRUE
         ))
 
-        validGroups
+        candidateViews[[1L]]$validGroups
       })
+    })
+
+    # Index of the currently-selected candidate grouping (issue #125 Slice 2),
+    # clamped to the number of retained candidates -- mirrors `selectedGroup`
+    # below, one level up (candidate solutions rather than groups within one
+    # solution).
+    selectedCandidateIdx <- reactive({
+      res <- groupResults()
+      req(!is.null(res))
+      n <- length(res$candidates)
+      req(n >= 1L)
+      withinIntegerRange(input$candidateChoice, minimum = 1L,
+                         maximum = n)[1L]
+    })
+
+    # Populate the candidate selector whenever a new formation result is
+    # available. Mirrors the `viewGrp`-populating observe() below.
+    observe({
+      res <- groupResults()
+      req(!is.null(res))
+      n <- length(res$candidates)
+      req(n >= 1L)
+      scores <- vapply(res$candidates, function(cand) cand$score, numeric(1L))
+      labels <- sprintf("Candidate %d (score %s)", seq_len(n), scores)
+      updateSelectInput(session, "candidateChoice",
+                        choices = stats::setNames(seq_len(n), labels),
+                        selected = 1L)
+    })
+
+    # The currently-selected candidate's full view model (validGroups, score,
+    # groupKin, unassigned, hasUnused) -- the single read point every reactive
+    # below uses instead of repeating groupResults()$candidates[[idx]].
+    selectedCandidate <- reactive({
+      res <- groupResults()
+      req(!is.null(res))
+      res$candidates[[selectedCandidateIdx()]]
+    })
+
+    # The selected candidate's group-membership list -- a plain reactive(),
+    # not an eventReactive, so switching candidates re-derives this without
+    # re-invoking groupAddAssign() (only runFormation()'s own trigger,
+    # input$formGroups, does that). Leaving candidateChoice at its default
+    # (index 1, the best-scoring candidate) is byte-identical to pre-Slice-2
+    # behavior.
+    breedingGroups <- reactive({
+      runFormation()
+      selectedCandidate()$validGroups
+    })
+
+    output$candidateComparison <- renderTable({
+      res <- groupResults()
+      req(!is.null(res))
+      data.frame(
+        Candidate = seq_along(res$candidates),
+        Score = vapply(res$candidates, function(cand) cand$score, numeric(1L)),
+        Groups = vapply(res$candidates,
+                        function(cand) length(cand$validGroups), integer(1L)),
+        stringsAsFactors = FALSE
+      )
     })
 
     # Seed-group textareas: one per requested group, shown only when seeding is
@@ -473,9 +551,8 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
     observe({
       n <- length(breedingGroups())
       req(n >= 1L)
-      res <- groupResults()
       labels <- paste("Group", seq_len(n))
-      if (isTRUE(res$hasUnused)) {
+      if (isTRUE(selectedCandidate()$hasUnused)) {
         labels[n] <- "Unused"
       }
       updateSelectInput(session, "viewGrp",
@@ -536,17 +613,17 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
       score = reactive({
         res <- groupResults()
         if (is.null(res)) return(0L)
-        res$score
+        selectedCandidate()$score
       }),
       unassigned = reactive({
         res <- groupResults()
         if (is.null(res)) return(character(0L))
-        res$unassigned
+        selectedCandidate()$unassigned
       }),
       groupKinship = reactive({
         res <- groupResults()
         if (is.null(res)) return(NULL)
-        res$groupKin
+        selectedCandidate()$groupKin
       })
     )
   })

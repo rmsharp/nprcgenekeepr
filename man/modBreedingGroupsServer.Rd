@@ -35,7 +35,13 @@ When the module recomputes kinship from the pedigree (the shared
 \code{kinshipMatrix} is unavailable), the overrides are applied to that
 matrix so group formation reflects them regardless of tab order.
 \code{NULL} (the default) is a no-op. A provided \code{kinshipMatrix} is
-expected to already carry overrides applied at its source.}
+expected to already carry overrides applied at its source.
+
+Up to 5 distinct candidate groupings are formed per run (issue #125), with
+a "Candidate grouping" selector letting the user switch among them without
+re-running \code{\link{groupAddAssign}}. All reactive components below
+reflect the currently-selected candidate, defaulting to the best-scoring
+one -- identical to the single-solution behavior prior to issue #125.}
 }
 \value{
 List with reactive components:
