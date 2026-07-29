@@ -5,12 +5,6 @@
 ^cran-comments\.md$
 images
 images/*
-inst/extdata/BaboonLivingForMetrics.csv
-inst/extdata/RhesusMasterForMetrics.csv
-inst/extdata/Notes.txt
-inst/extdata/PSCPO*.*
-inst/extdata/notes.*
-!inst/extdata/notes.Rmd
 nprcgenekeepr_*.tar.gz
 nprcgenekeepr.Rcheck/
 R/groupAssign.R
@@ -27,10 +21,6 @@ vignettes/*.html
 vignettes/*.pdf
 vignettes/*.R
 vignettes/\.DS\_Store$
-inst/extdata/meeting_notes.html
-inst/extdata/meeting_notes.tex
-inst/extdata/meeting_notes.pdf
-inst/extdata/simulatedKValues.pdf
 docs/*
 !docs/methodology/
 !docs/methodology/**
