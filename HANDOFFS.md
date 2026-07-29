@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S418
+date: 2026-07-28
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Execute Phase 4 of docs/planning/extdata-reorganization-plan.md -- place Master_Genetic_metrics_2_14_15.pdf at inst/extdata/reference/ (owner-decided) and run the plan's final repo-wide sweep grep. Orphaned-files archive-vs-delete decision resolved as no-change (keep archived).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S417
 date: 2026-07-28
 status: complete

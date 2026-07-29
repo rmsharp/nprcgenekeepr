@@ -6,6 +6,18 @@
 
 ## ACTIVE TASK
 
+### What Session 418 Did
+**Deliverable:** Owner-picked from S417's priorities list: execute **Phase 4** of
+`docs/planning/extdata-reorganization-plan.md` -- place `Master_Genetic_metrics_2_14_15.pdf`
+and run the plan's final repo-wide sweep grep.
+**Started:** 2026-07-28
+**Status:** Session claimed. Work beginning. Both plan §10 open decisions resolved via
+`AskUserQuestion` before claiming: (1) PDF placement -> `inst/extdata/reference/`
+(end-user-facing reference material, plan's own default); (3) archive-vs-delete for the
+9 orphaned files -> keep archived at `dev/extdata-scratch/`, no change from Phase 1.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### What Session 417 Did
 **Deliverable:** Owner-picked from S416's priorities list: execute **Phase 3** of
 `docs/planning/extdata-reorganization-plan.md` -- re-render the rendered artifacts whose
