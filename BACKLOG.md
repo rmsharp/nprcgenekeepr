@@ -137,8 +137,8 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       that version number.
 
 ## Housekeeping
-- [ ] **`inst/extdata/` reorganization -- Phases 3-4** (READY, Effort M for the
-      remaining 2 phases, each its own session) -- plan:
+- [ ] **`inst/extdata/` reorganization -- Phase 4** (DECISION NEEDED -- 2 open,
+      non-blocking decisions, Effort M) -- plan:
       `docs/planning/extdata-reorganization-plan.md` (S414). **Phase 1 DONE -- S415
       (2026-07-28):** relocated the 12 dev-scratch + 12 orphaned zero-reference items
       (24 total -- the plan's own summary table undercounted this as "11 + 9";
@@ -174,12 +174,35 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       remaining un-migrated references are exactly the ones the plan defers to Phase 3
       (`vignettes/manual_components/_summary_of_major_functions.Rmd`'s GitHub blob URL
       source, plus its 2 gitignored rendered byproducts). See `CHANGELOG.md`.
-      **Phase 3-4** (re-render `a3manual`/`a2interactive`/offline-focal-animal-workflow
-      rendered artifacts; place the new PDF) remain -- **2 of the plan's 4 open
-      decisions are now resolved (subfolder name, a2interactive.R generation status);
-      the other 2 -- the PDF's intended home (§10 #1), and whether the archive-vs-delete
-      question for the orphaned files (§10 #3) is worth revisiting now that Phase 1
-      already executed the archive default -- only affect Phase 4, not Phase 3.)
+      **Phase 3 DONE -- S417 (2026-07-28):** re-ran the plan's own Dragon 1 grep before
+      touching anything (never trust a prior session's or the plan's own phase prose as
+      final) and found the plan's Phase 3 "What DONE looks like" text undersold the
+      actual scope: `vignettes/articles/offline-focal-animal-workflow.qmd:104,106`
+      called `system.file("extdata", "<file>", ...)` directly with no `examples`
+      segment -- confirmed in R this returned `""` (broken) since Phase 2 moved the
+      files, even though the plan's own §8.1 evidence table had already listed this
+      exact call site. Fixed as the source bug it was, not just a re-render target.
+      Also fixed the stale GitHub blob URL in
+      `vignettes/manual_components/_summary_of_major_functions.Rmd:66`. Re-rendered all
+      3 targets (`a3manual.Rmd` with `keep_md = TRUE` to also refresh the gitignored
+      `.md` byproduct; `a2interactive.Rmd`; the `.qmd` pkgdown article via `quarto
+      render`, which required a throwaway local package install --
+      `devtools::install()` -- since the article's `library(nprcgenekeepr)` call needs
+      a real install, not just `pkgload::load_all()`). Verified: the fixed
+      `system.file()` calls resolve and return real data in the rendered article
+      (`dim(colonyPed)` = 2922 x 11, not an error); the plan's prescribed grep sweep
+      plus a broadened check of `vignettes/articles/*.html` both return zero stale-path
+      hits; `gh api` confirmed the GitHub blob URL target actually exists on
+      `origin/master` (Dragon 2's "manual link click" requirement); regression suite
+      exact baseline match (0/0/0, 3198 passed, 179 skipped); `devtools::check()` 0
+      errors/0 warnings, 1 NOTE (same pre-existing spelling gap below, confirmed
+      untouched -- read from the raw check log's `Status:` line per Learning 382, not
+      the colored summary, which again showed 0 notes). See `CHANGELOG.md`,
+      `PROJECT_LEARNINGS.md` Learning 384.
+      **Phase 4** (place the new PDF; final repo-wide sweep) remains -- 2 open,
+      non-blocking decisions: the PDF's intended home (§10 #1), and whether the
+      archive-vs-delete question for the orphaned files (§10 #3) is worth revisiting
+      now that Phase 1 already executed the archive default.
 - [ ] **`NEWS.md:8` spelling-check NOTE -- `CRAN's`/`resubmission` missing from
       `inst/WORDLIST`** (READY, Effort S) -- discovered S415 (2026-07-28) while running
       `devtools::check()` as Phase 1's verification step for the `inst/extdata/` reorg

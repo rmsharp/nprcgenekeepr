@@ -12,16 +12,145 @@
 sources embed the pre-Phase-2 flat `inst/extdata/<file>` path
 (`vignettes/manual_components/_summary_of_major_functions.Rmd`, `vignettes/a3manual.Rmd`,
 `vignettes/a2interactive.Rmd`, `vignettes/articles/offline-focal-animal-workflow.qmd`).
-(IN PROGRESS)
-**Started:** 2026-07-28
-**Status:** Session claimed. Work beginning. Fresh Dragon-1 grep (before touching any
-file) found the plan's Phase 3 prose undersold the scope: `offline-focal-animal-
-workflow.qmd:104,106` calls `system.file("extdata", "<file>", ...)` directly with no
-`examples` segment -- confirmed in R this now returns `""` (broken) since Phase 2 moved
-the files. Plan's own Sec8.1 evidence table already listed this call site; treating it as
-the source fix it is, not just a re-render.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+**DONE.**
+**Started/Completed:** 2026-07-28 / 2026-07-28
+**Status:** DONE. TDD Phase: N/A throughout -- vignette/article source path fixes +
+re-renders, no new `R/` production logic, matching S414/S415/S416 precedent for this
+same plan.
+
+**What happened, in order:** **(1)** Claimed the session (`d442dac2`). **(2)** Re-ran a
+fresh, independent Dragon-1 grep before touching any file (never trust the plan's own
+phase prose, or a prior session's handoff, as final) and found the plan's Phase 3 "What
+DONE looks like" text undersold the actual scope: `vignettes/articles/offline-focal-
+animal-workflow.qmd:104,106` called `system.file("extdata", "<file>", package = ...)`
+directly with no `examples` segment -- confirmed in R this now returned `""` (broken)
+since Phase 2 moved the underlying files. The plan's own §8.1 evidence table had already
+listed this exact call site; only the Phase 3 prose summary undercounted it as a plain
+re-render target. **(3)** Fixed both source references: the broken `system.file()` calls
+in `offline-focal-animal-workflow.qmd`, and the stale GitHub blob URL in
+`_summary_of_major_functions.Rmd:66` (still pointed at the pre-Phase-2 flat path).
+Committed as one checkpoint (`52674e48`, 2 files). **(4)** Re-rendered all 3 targets:
+`a3manual.Rmd` via `rmarkdown::render(output_format = rmarkdown::html_vignette(keep_md =
+TRUE))` -- the default render doesn't refresh the gitignored `.md` byproduct, `keep_md =
+TRUE` was needed; `a2interactive.Rmd` via plain `rmarkdown::render()`; the `.qmd` pkgdown
+article via `quarto render` from within `vignettes/articles/`'s own `_quarto.yml`
+project context -- required a throwaway local package install
+(`devtools::install(build_vignettes = FALSE, dependencies = FALSE)`) plus `R_LIBS_USER`
+pointed at the renv library, since quarto's R subprocess doesn't inherit the parent
+session's `pkgload::load_all()` state or renv activation, and the article's own
+`library(nprcgenekeepr)` call needs a real install. **(5)** Verification: the rendered
+article's `[shipped]` chunk executed cleanly with `dim(colonyPed)` = `2922 x 11` (real
+data, not an error) -- proof the fixed `system.file()` calls resolve at runtime, not just
+syntactically; the plan's prescribed grep sweep (plus a broadened check of
+`vignettes/articles/*.html`, the plan's literal command only covered `vignettes/*.html`/
+`*.md`) returned zero stale-path hits; `gh api` confirmed the GitHub blob URL target
+actually exists on `origin/master` (Dragon 2's "manual link click" requirement, done via
+API rather than a browser); regression suite exact baseline match (0/0/0, 3198 passed,
+179 skipped); `devtools::check()` 0 errors/0 warnings, 1 NOTE -- read from the raw check
+log's `Status:` line per Learning 382 (the colored summary/structured `res$notes` object
+again said 0, exactly the discrepancy Learning 382 warns about) -- confirmed the same
+pre-existing, unrelated `NEWS.md:8` spelling gap, untouched by this session's diff.
+**(6)** Updated `BACKLOG.md` (Phase 3 marked DONE, Phase 4's 2 open decisions restated),
+`CHANGELOG.md`, `PROJECT_LEARNINGS.md` (new Learning 384), `CLAUDE.md`'s learning-count
+cross-reference (383 -> 384).
+**Ledger:** See `CHANGELOG.md` 2026-07-28 S417 entry (`[ad hoc]`).
+
+**Session 416 Handoff Evaluation (by Session 417): 7/10.** **What helped:** precise,
+accurate list of the exact 4 files/targets to touch, correct plan-section pointer (§6
+Phase 3), the gitignored-byproduct gotcha (independently re-verified true this session --
+`.gitignore:18,20,22` does cover `vignettes/*.R`/`*.md`/`*.html`), and an accurate "READY,
+no blocking decisions" framing that held up -- no owner decision was actually needed to
+execute Phase 3. **What was missing:** gotcha (1) stated "Phase 3's targets are all
+rendered-artifact re-renders of already-fixed... sources" -- this was NOT accurate for
+`offline-focal-animal-workflow.qmd`, which this session's own Dragon-1 grep found still
+had a broken, unfixed `system.file()` call site. S416 had just used the plan's §8.1
+evidence table for other purposes in its own session (citing it to correctly scope
+Phase-2 prose-vs-plain-filename sites) but didn't cross-check that same table against its
+own Phase-3 handoff framing -- a session that trusted the handoff at face value and
+skipped its own fresh grep (easy to imagine for a phase explicitly billed as low-risk
+"just re-rendering") would have shipped a silently-broken pkgdown article, since neither
+`R CMD check` nor the test suite touches `vignettes/articles/*.qmd`. **What was wrong:**
+the gotcha-1 claim above, specifically. **ROI:** still net positive -- the accurate file
+list and plan pointers meant no time was lost on navigation, and the gap didn't cost this
+session real time (Dragon 1 discipline is mandatory regardless of what a handoff claims),
+but it is exactly the kind of gap that could cost a less-careful future session real
+damage, so it is flagged directly rather than noted as a minor omission -- see
+`PROJECT_LEARNINGS.md` Learning 384.
+
+**Self-assessment (Session 417): 8/10.** **Strengths:** (1) did not trust the plan's own
+Phase 3 prose, or S416's handoff summary of it, despite both reading as complete and
+low-risk -- re-ran the Dragon 1 grep before touching any file per the plan's own mandate,
+and this caught a genuine broken source call site neither had flagged; (2) verified the
+fix resolves at actual runtime, not just syntactically -- confirmed via R directly
+(`system.file()` returning `""` before, a real path after) and via the full
+quarto-rendered article showing real output (`dim(colonyPed)` = `2922 x 11`), a stronger
+check than a grep pass alone; (3) did Dragon 2's "manual link click" requirement for
+real, via `gh api` against `origin/master`, rather than skipping it or trusting the URL
+string's shape; (4) diagnosed and correctly worked around an environment gotcha (quarto's
+R subprocess not inheriting the parent session's renv activation) via `R_LIBS_USER`,
+rather than giving up on the pkgdown-article render or silently skipping it; (5) read the
+raw `devtools::check()` log's `Status:` line rather than the colored summary/structured
+object -- the third consecutive session to apply Learning 382's discipline, and this time
+it actually mattered (the object said 0 notes, the raw log said 1); (6) stayed inside
+Phase 3's boundary -- did not touch the PDF placement or run Phase 4's full-repo sweep
+grep even though both would have been easy reaches while already in the files.
+**Weaknesses:** (1) a `cd vignettes/articles && quarto render ...` command left the
+working directory changed for subsequent tool calls (Bash's cwd persists across calls),
+which produced a confusing detour -- a `devtools::install()` call failed to find
+`devtools` because it silently ran from the wrong directory (no `.Rprofile`/renv
+activation there), costing several extra diagnostic tool calls before the root cause
+(wrong cwd, not a missing package) was traced; should have used a subshell
+`(cd vignettes/articles && quarto render ...)` or explicitly `cd`'d back immediately
+after. **Compared to previous sessions in this workstream:** closest comparable is the
+same "don't trust a single pass, verify independently" lineage as S414/S415/S416 (Dragon
+1 applied to a subagent's search, Dragon 1 applied to a plan's own summary counts, Dragon
+1 applied to indirect technical evidence) -- this session's instance is Dragon 1 applied
+to a multi-session plan's own PHASE-BOUNDARY PROSE, one level later in the plan's
+lifecycle than any prior session tested it, and the first case in this workstream where
+the thing being distrusted was an immediately-preceding session's own confident,
+otherwise-accurate handoff rather than the plan document itself.
+
+**Handoff to Session 418:**
+- **What's next:** Owner picks (a) Phase 4 of the `inst/extdata/` reorg -- **DECISION
+  NEEDED first**, not READY: place `Master_Genetic_metrics_2_14_15.pdf` (plan §10 #1 --
+  ask the owner directly whether it's end-user-facing reference material analogous to
+  `ui_guidance/`, which would put it at `inst/extdata/reference/`, or a
+  personal/research reference with no package-user audience, which belongs somewhere
+  non-shipped like `dev/`) and decide whether to revisit archive-vs-delete for the 9
+  orphaned files Phase 1 already archived (§10 #3, low-stakes -- Phase 1's archive
+  choice is easily reversible via `git mv`). Once both are resolved, Phase 4 also runs
+  one final repo-wide sweep grep (plan §6 Phase 4's verification block) for any straggler
+  `inst/extdata/` reference this and prior phases' targeted greps missed; (b) the
+  `NEWS.md:8` spelling-check NOTE item (READY, Effort S, `BACKLOG.md` Housekeeping) --
+  unchanged since S415, still a 2-word hand-edit to `inst/WORDLIST`; (c) any older
+  standing items: LabKey integration recs (BLOCKED, Effort M), 9 untriaged GitHub issues
+  (#123, #116, #37, #36, #28, #12, #11, #10, #5), or the Outreach plan's owner-executed
+  follow-up (not a coding task).
+- **Key files:** `docs/planning/extdata-reorganization-plan.md` (Phase 4 section §6,
+  open decisions §10 #1/#3); `BACKLOG.md` Housekeeping section (Phase 3 now DONE);
+  `PROJECT_LEARNINGS.md` Learning 384; `CLAUDE.md:235` (learning-count cross-reference,
+  383 -> 384); `vignettes/articles/offline-focal-animal-workflow.qmd:104-107` (this
+  session's source fix); `vignettes/manual_components/_summary_of_major_functions.Rmd:66`
+  (this session's source fix).
+- **Gotchas:** (1) **Do not trust a plan's per-phase "What DONE looks like" prose as a
+  scope boundary, even at Phase 4** -- re-run a fresh Dragon-1 grep against the current
+  tree before starting, per Learning 384; the plan's own §8.1/§8.2 evidence tables are
+  more reliable than any phase's prose summary. (2) Rendering `vignettes/articles/*.qmd`
+  via `quarto render` requires the package actually **installed** (`library(...)` call),
+  not just `pkgload::load_all()` -- quarto spawns its own R subprocess that does not
+  inherit the parent session's loaded state, and if that subprocess's cwd isn't the repo
+  root (no `.Rprofile`), it won't even pick up renv activation; use
+  `devtools::install(build_vignettes = FALSE, dependencies = FALSE)` plus
+  `R_LIBS_USER=<renv library path>` (get the path from
+  `renv::paths$library()` run from the repo root) if this comes up again. (3) **Bash cwd
+  persists across tool calls in this harness** -- a `cd dir && cmd` without cd'ing back
+  leaves every subsequent command running from `dir`, which silently breaks anything
+  relying on repo-root-relative `.Rprofile`/renv activation; prefer a subshell
+  `(cd dir && cmd)` or explicitly `cd` back immediately after. (4) `.DS_Store`/
+  `inst/.DS_Store` remain harmless, unfixed, out-of-scope artifacts (unchanged since
+  S415). (5) Branch is up to date with `origin/master` as of this session's start --
+  confirm this is still true at your own Phase 0 before assuming a push is owed.
+- **Self-assessment score:** 8/10 (see above for full breakdown).
 
 ### What Session 416 Did
 **Deliverable:** Owner-picked from `BACKLOG.md`'s Housekeeping section (S415's

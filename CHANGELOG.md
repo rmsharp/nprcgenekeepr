@@ -43,6 +43,51 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-28 · [ad hoc] `inst/extdata/` reorganization Phase 3: fix + re-render the rendered artifacts still embedding the old flat path (Session 417)
+- **Deliverable:** Owner-picked from S416's priorities list: execute Phase 3 of
+  `docs/planning/extdata-reorganization-plan.md` -- re-render `a3manual.Rmd`,
+  `a2interactive.Rmd`, and `vignettes/articles/offline-focal-animal-workflow.qmd` so
+  their rendered outputs match Phase 2's `examples/` path. TDD Phase: N/A -- vignette
+  source path fixes + re-renders, no new `R/` production logic.
+- **Scope correction found by this session's own Dragon 1 grep (not trusting the
+  plan's Phase 3 prose, or Phase 2's completion, as final):** the plan's Phase 3
+  text described all 3 targets uniformly as re-render work, but
+  `vignettes/articles/offline-focal-animal-workflow.qmd:104,106` still called
+  `system.file("extdata", "<file>", package = ...)` directly with no `examples`
+  segment -- confirmed in R this returned `""` (broken) since Phase 2 moved the
+  files. The plan's own §8.1 evidence table had already listed this exact call
+  site; only the Phase 3 prose summary undercounted it. Fixed as the source bug it
+  was. Also fixed the stale GitHub blob URL in
+  `vignettes/manual_components/_summary_of_major_functions.Rmd:66` (still pointed
+  at the pre-Phase-2 flat path). See `PROJECT_LEARNINGS.md` Learning 384.
+- **Re-rendered all 3 targets:** `a3manual.Rmd` via `rmarkdown::render(output_format
+  = rmarkdown::html_vignette(keep_md = TRUE))` (the default render doesn't refresh
+  the gitignored `.md` byproduct; `keep_md = TRUE` was needed to also update it);
+  `a2interactive.Rmd` via `rmarkdown::render()`; the `.qmd` pkgdown article via
+  `quarto render` from within `vignettes/articles/` (its `_quarto.yml` project
+  context) -- required a throwaway local package install
+  (`devtools::install(build_vignettes = FALSE, dependencies = FALSE)`, plus
+  `R_LIBS_USER` pointed at the renv library so the quarto subprocess's fresh R
+  session could find it) since the article's `library(nprcgenekeepr)` call needs a
+  real install, not just `pkgload::load_all()`.
+- **Verification (all per plan §6 Phase 3, plus this session's own additions):**
+  the rendered article's `[shipped]` chunk executed cleanly with `dim(colonyPed)` =
+  `2922 x 11` (real data, not an error) -- proof the fixed `system.file()` calls
+  resolve at runtime, not just syntactically; the plan's prescribed
+  `grep -rln "inst/extdata/example_nprcgenekeepr_config\|inst/extdata/ExamplePedigree"
+  vignettes/*.html vignettes/*.md` returned nothing, broadened to also cover
+  `vignettes/articles/*.html` (nothing); `gh api` confirmed the GitHub blob URL
+  target (`inst/extdata/examples/example_nprcgenekeepr_config`) actually exists on
+  `origin/master` -- Dragon 2's "manual link click" requirement, done via API
+  rather than a browser; regression suite exact baseline match (0 failed/0 error/0
+  warning, 3198 passed, 179 skipped); `devtools::check()` 0 errors/0 warnings, 1
+  NOTE -- the same pre-existing, unrelated `NEWS.md:8` spelling gap from S415/S416,
+  confirmed untouched by this session's diff, read from the raw check log's
+  `Status:` line per Learning 382 (the colored summary again showed 0 notes).
+- Updated `BACKLOG.md` (Phase 3 marked DONE, Phase 4's 2 open decisions restated),
+  `PROJECT_LEARNINGS.md` (Learning 384), `CLAUDE.md`'s learning-count
+  cross-reference (383 -> 384).
+
 ### 2026-07-28 · [ad hoc] `inst/extdata/` reorganization Phase 2: subfolder the 10 load-bearing files into examples/ (Session 416)
 - **Deliverable:** Owner-picked from `BACKLOG.md`'s Housekeeping section: execute
   Phase 2 of `docs/planning/extdata-reorganization-plan.md` (S414) -- create

@@ -62,17 +62,17 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S417
 date: 2026-07-28
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Executing Phase 3 of docs/planning/extdata-reorganization-plan.md -- re-render vignettes/a3manual.Rmd, vignettes/a2interactive.Rmd, vignettes/articles/offline-focal-animal-workflow.qmd (and fix a source call-site bug found by this session's own Dragon-1 grep: offline-focal-animal-workflow.qmd's system.file() calls missing the examples segment).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: DONE -- executed Phase 3 of docs/planning/extdata-reorganization-plan.md: fixed 2 stale/broken inst/extdata/ path references (offline-focal-animal-workflow.qmd's broken system.file() calls, _summary_of_major_functions.Rmd's stale GitHub blob URL), re-rendered all 3 Phase-3 targets (a3manual.Rmd, a2interactive.Rmd, offline-focal-animal-workflow.qmd), ran full Phase 3 verification. Phase 4 remains, blocked on 2 non-blocking-for-Phase-3 owner decisions.
+what_was_done: Claimed session (d442dac2). Re-ran a fresh Dragon-1 grep before touching any file and found the plan's Phase 3 prose undersold scope: offline-focal-animal-workflow.qmd:104,106 called system.file("extdata","<file>",...) with no examples segment, confirmed broken (returns "") since Phase 2 moved the files -- plan's own Sec8.1 evidence table had listed this call site, only the Phase 3 prose undercounted it. Fixed both that and _summary_of_major_functions.Rmd:66's stale GitHub blob URL (commit 52674e48). Re-rendered a3manual.Rmd (rmarkdown::render with html_vignette(keep_md=TRUE) to also refresh the gitignored .md byproduct), a2interactive.Rmd (rmarkdown::render), and the .qmd pkgdown article via quarto render (required a throwaway devtools::install() + R_LIBS_USER pointed at the renv library, since quarto's R subprocess needs a real install for library(nprcgenekeepr) and doesn't inherit parent-session state). Verified: rendered article's [shipped] chunk produced dim(colonyPed)=2922x11 (real data, proving the fix resolves at runtime); plan's grep sweep + a broadened vignettes/articles/*.html check both return nothing; gh api confirmed the GitHub blob URL target exists on origin/master (Dragon 2 manual-link-check); regression suite exact baseline (0/0/0, 3198 passed, 179 skipped); devtools::check() 0 errors/0 warnings, 1 NOTE (same pre-existing NEWS.md:8 spelling gap, confirmed untouched, read from the raw check log's Status line per Learning 382 -- the colored summary/res$notes object again wrongly showed 0). Updated BACKLOG.md (Phase 3 DONE), CHANGELOG.md, PROJECT_LEARNINGS.md (new Learning 384), CLAUDE.md learning-count (383->384).
+next_steps: Owner picks (a) Phase 4 -- DECISION NEEDED first (PDF home Sec10#1, archive-vs-delete revisit Sec10#3), then final repo-wide sweep grep (plan Sec6 Phase4); (b) NEWS.md:8 spelling-NOTE item (READY, Effort S, unchanged since S415); (c) older standing items: LabKey (BLOCKED, Effort M), 9 untriaged issues, Outreach follow-up.
+key_files: docs/planning/extdata-reorganization-plan.md (Phase 4 Sec6, open decisions Sec10 #1/#3), BACKLOG.md Housekeeping section, PROJECT_LEARNINGS.md Learning 384, CLAUDE.md:235, vignettes/articles/offline-focal-animal-workflow.qmd:104-107, vignettes/manual_components/_summary_of_major_functions.Rmd:66
+gotchas: Do not trust a plan's per-phase "What DONE looks like" prose as a scope boundary, even at Phase 4 -- re-run a fresh Dragon-1 grep against the current tree first, per Learning 384. Rendering vignettes/articles/*.qmd via quarto needs the package actually installed (devtools::install(build_vignettes=FALSE, dependencies=FALSE)) plus R_LIBS_USER pointed at the renv library -- quarto's R subprocess doesn't inherit pkgload::load_all() state, and if its cwd isn't repo root it won't pick up renv activation either. Bash cwd persists across tool calls in this harness -- a bare `cd dir && cmd` leaves later commands running from dir; use a subshell `(cd dir && cmd)` or cd back explicitly. .DS_Store/inst/.DS_Store remain harmless unfixed artifacts. Branch was up to date with origin/master at this session's start.
+runtime_smoke: Direct -- the actual changed runtime code path (the fixed system.file() calls) was executed for real via quarto-rendering the offline-focal-animal-workflow.qmd article end to end, producing dim(colonyPed)=2922x11 real output, not just a grep/syntax check. Plus the full e2e shinytest2 regression suite (0/0/0) exercises the unrelated-but-adjacent system.file() paths through the live Shiny app. No separate manual runGeneKeepR() click-through was performed -- not needed, since this session touched no R/mod*.R Shiny app code.
+changelog_ref: CHANGELOG.md 2026-07-28 "inst/extdata/ reorganization Phase 3: fix + re-render the rendered artifacts still embedding the old flat path (Session 417)"
+commit: d442dac2,52674e48
 ```
 
 ```handoff
