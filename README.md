@@ -5,7 +5,7 @@ R. Mark Sharp, Ph.D.
 
 # nprcgenekeepr <a href="https://github.com/rmsharp/nprcgenekeepr"><img src="man/figures/logo.png" align="right" height="138" alt="" /></a>
 
-Version 2.0.0.9000 (2026-07-28)
+Version 2.0.0.9000 (2026-07-29)
 
 <!-- badges: start -->
 
@@ -154,7 +154,7 @@ documentation](https://www.labkey.org/Documentation/wiki-page.view?name=netrc)
 The second file is named **\_nprcgenekeepr_config** on Microsoft Windows
 operating systems and **.nprcgenekeepr_config** otherwise and is the
 `nprcgenekeepr` [configuration
-file](https://github.com/rmsharp/nprcgenekeepr/blob/master/inst/extdata/example_nprcgenekeepr_config)
+file](https://github.com/rmsharp/nprcgenekeepr/blob/master/inst/extdata/examples/example_nprcgenekeepr_config)
 An image of this example configuration file is included as a data object
 and can be loaded and viewed with the following lines of R code in the R
 console.
