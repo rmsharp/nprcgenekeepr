@@ -43,6 +43,58 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-29 · [issue #125] Implement Slice 2: surface multiple breeding-group candidates; close issue #125 (Session 425)
+- **Deliverable:** `R/groupAddAssign.R` now retains up to 5 distinct candidate
+  groupings per run (a new `candidates` list field), deduplicated by
+  canonicalized partition content rather than by score (Dragon R4) --
+  comparing each trial only against the current up-to-5 retained set
+  (O(iter x 5)). `R/groupMembersReturn.R` restructured to package the
+  retained list, aliasing the existing `group`/`score`/`groupKin` fields to
+  the best (first) candidate for backward compatibility. `R/modBreedingGroups.R`
+  gained a "Candidate grouping" selector and a comparison table; the
+  button-triggered algorithm run (`runFormation`) processes every retained
+  candidate, and a new `selectedCandidateIdx`/`selectedCandidate` reactive
+  pair (mirroring the existing `selectedGroup` pattern) lets
+  `breedingGroups()`/`score()`/`unassigned()`/`groupKinship()` re-derive from
+  the selection as a plain `reactive()` -- switching candidates never
+  re-invokes `groupAddAssign()`. Leaving the selector at its default (the
+  best-scoring candidate) is byte-identical to prior behavior. Full
+  strict-TDD session (RED -> GREEN -> REFACTOR, phase-gated via
+  `AskUserQuestion`), per
+  `docs/planning/issue125-ranking-priority-multi-candidate-plan.md` Section 4
+  Slice 2.
+- **Process:** re-verified every plan citation firsthand before writing any
+  test (zero drift since S423 -- every cited `file:line` matched exactly,
+  down to specific line numbers). Wrote 8 new tests across
+  `test_groupAddAssign.R`/`test_modBreedingGroups_groupAddAssign.R`/
+  `test_modBreedingGroups.R`; 5 failed for the right reason pre-GREEN, 3
+  (a no-reinvocation call-counter test and a default-selection backward-compat
+  regression test) passed immediately as backward-compat/invariant pins,
+  matching S424's established precedent for flagging such pins explicitly.
+  Fixed one pre-existing test's exact-length assertion
+  (`length(group) == 3L` -> `4L`) and one pre-existing `groupAddAssign` mock
+  stub returning the old pre-#125 shape -- both broke on the new additive
+  `candidates` field despite Dragon R5's `expect_named`-only grep coming back
+  clean (see `PROJECT_LEARNINGS.md` Learning 392). REFACTOR extracted a
+  `selectedCandidate()` reactive to remove 4 repeated
+  `groupResults()$candidates[[idx]]` lookups.
+- **Verification:** full regression suite 0 failed/0 error/0 warning (3923
+  passed, up from 3907), `devtools::check()` 0 errors/0 warnings/0 notes, and
+  a full Phase 3E runtime smoke test via `shinytest2`/chromote driving the
+  real app (a small synthetic 40-row pedigree -- the bundled 3,694-row
+  example was impractically slow for a live MIS search, Learning 395):
+  confirmed 5 real, distinct, independently-selectable candidates via
+  selectize's own JS API (the native `<select>`'s DOM `<option>` list is not
+  a reliable proxy for a selectize widget's real choices, Learning 393),
+  switching candidates genuinely changed the displayed groups, switching back
+  reproduced identical content (Learning 394), and the downstream Genetic
+  Diversity tab still worked with a non-default candidate selected.
+- **Result:** Slice 2 shipped (commits `6b64e151` RED, `3e5dc35f`
+  GREEN+REFACTOR, `11e83ec2` docs/NEWS -- checkpointed per-phase this time,
+  per Learning 391). `PROJECT_LEARNINGS.md` Learnings 392-395 added.
+  **Both slices of the issue #125 plan are now shipped; issue #125 closed**
+  (closing comment summarizes both slices).
+
 ### 2026-07-29 · [issue #125] Implement Slice 1: configurable genetic-value ranking-priority scheme (Session 424)
 - **Deliverable:** `R/orderReport.R` gained `guCutoff`/`zScoreCutoff`/`axisPriority`
   parameters (each `NULL`-defaulting to today's hardcoded `10L`/`0.25`/`"gu"`
