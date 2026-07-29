@@ -6,6 +6,27 @@
 
 ## ACTIVE TASK
 
+### What Session 416 Did
+**Deliverable:** Owner-picked from `BACKLOG.md`'s Housekeeping section (S415's
+priorities list): execute **Phase 2** of `docs/planning/extdata-reorganization-plan.md`
+-- create `inst/extdata/examples/`, migrate the 10 load-bearing files, update all
+`system.file()`/hardcoded-path call sites (~50 across `R/`, `tests/`, `vignettes/`,
+`man/`, `data-raw/`). (IN PROGRESS)
+**Started:** 2026-07-28
+**Status:** Session claimed. Resolving the plan's remaining open pre-Phase-2 decision
+(subfolder name, plan Sec 10 #2) via `AskUserQuestion` before any file edits. Decision
+#4 (`vignettes/a2interactive.R` generation status) resolved directly by the owner
+during Phase 0/1: `.Rmd` files are the source; `.R`/`.md`/`.html` are generated
+derivatives (confirmed also gitignored/untracked -- `.gitignore:18,20,22` --
+`git status --ignored` shows `vignettes/a2interactive.R` etc. as `!!`). Phase 2 will
+therefore edit only `vignettes/a2interactive.Rmd:90` (the tracked source), not the
+local `.R` copy. Noted, not fixed (out of scope): `vignettes/gvaConvergence.R` and
+`vignettes/simulatedKValues.R` show the same local staleness pattern relative to their
+`.Rmd` sources, but neither references `inst/extdata/` -- unrelated to this reorg.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
 ### What Session 415 Did
 **Deliverable:** Owner-picked from `BACKLOG.md`'s Housekeeping section (S414's plan):
 execute **Phase 1** of `docs/planning/extdata-reorganization-plan.md` -- relocate

@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S416
+date: 2026-07-28
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Phase 2 of docs/planning/extdata-reorganization-plan.md -- create inst/extdata/examples/, migrate the 10 load-bearing files, update all system.file()/hardcoded-path call sites (~50 across R/, tests/, vignettes/, man/, data-raw/). Resolving the plan's remaining open decision (subfolder name, plan Sec10 #2) via AskUserQuestion before any file edits.
+what_was_done: pending
+next_steps: pending
+key_files: docs/planning/extdata-reorganization-plan.md (Phase 2 Sec6, evidence-based inventory Sec8.1/8.2)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S415
 date: 2026-07-28
 status: complete
