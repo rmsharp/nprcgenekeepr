@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S421
+date: 2026-07-29
+status: pending
+self_score: <pending>
+predecessor_score: <pending>
+active_task: IN PROGRESS -- fix NEWS.md:8 spelling-check NOTE by hand-adding CRAN's/resubmission to inst/WORDLIST; re-verify devtools::check() shows 0 NOTE.
+what_was_done: pending
+next_steps: pending
+key_files: inst/WORDLIST; NEWS.md:8
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S420
 date: 2026-07-29
 status: complete

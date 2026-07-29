@@ -6,6 +6,15 @@
 
 ## ACTIVE TASK
 
+### What Session 421 Did
+**Deliverable:** Owner-picked from S420's priorities list: fix the `NEWS.md:8`
+spelling-check NOTE by hand-adding `CRAN's`/`resubmission` to `inst/WORDLIST`
+(IN PROGRESS).
+**Started:** 2026-07-29
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded
+in `CHANGELOG.md` at Phase 3F.
+
 ### What Session 420 Did
 **Deliverable:** Owner-picked from S419's priorities list: fix `ROADMAP.md`'s stale
 doc-engine-policy line (`ROADMAP.md:21-22`), flagged S418 -- the sentence still named
