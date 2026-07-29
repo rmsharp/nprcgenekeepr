@@ -7,6 +7,158 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 419 Did
+
+**Deliverable:** Owner-directed (not from `BACKLOG.md`): audit comparing
+the recommendations in
+`inst/extdata/reference/Master_Genetic_metrics_2_14_15.pdf` (NHP
+Genetics and Genomics Working Group, Feb 2015) against `nprcgenekeepr`’s
+actual capabilities – note additional package capabilities and any
+missing features. **DONE.**
+`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md`.
+**Started/Completed:** 2026-07-29 / 2026-07-29 **Status:** DONE. TDD
+Phase: N/A throughout – audit/documentation deliverable, no
+`R/`/`tests/` production code touched.
+
+**What happened, in order:** **(1)** Read the 10-page PDF in full
+(`Read` tool’s PDF support). **(2)** Pulled a function inventory
+(`ls R/`, `grep NAMESPACE`) and read
+`docs/methodology/workstreams/AUDIT_WORKSTREAM.md` +
+`PED_GV_AUDIT_2026-05-30.md` (this project’s own precedent for a
+multi-agent capability audit with adversarial verification) to shape the
+approach. **(3)** Claimed the session (`06e1e4a4`) before the heavier
+investigation, per Phase 1B. **(4)** Ran a 14-agent `Workflow`: 7
+recommendation “dimensions” extracted from the PDF (Genetic Value
+Analysis & Ranking; Breeding Group Formation; Colony/Population Genetic
+Health Reporting; Pedigree Data Collection/QC/ Parentage;
+Marker/Genomics-Based Methods; Cross-Center Integration & Data
+Governance; Tooling Comparison & Additional Capabilities), each
+investigated by one agent (given the exact PDF excerpt plus a seed file
+list, not a re-read-the-PDF instruction) then independently
+adversarially re-verified by a second agent instructed to re-derive
+every claim from source rather than trust the first pass. **(5)** Caught
+one verifier’s own false “correction” (claimed
+`readKinshipOverrides`/`checkKinshipOverrides` don’t exist) by checking
+`ls R/`/`NAMESPACE` directly – both are real, exported functions; see
+new `PROJECT_LEARNINGS.md` Learning 386. **(6)** Synthesized all 37
+findings (16 implemented / 9 partial / 12 missing) into the audit
+document, following `AUDIT_WORKSTREAM.md`’s report structure adapted for
+a capability-comparison (no severity ratings; status is
+implemented/partial/missing). Deliberately did NOT file new `BACKLOG.md`
+items for the feature gaps found – left that decision to the owner, per
+this project’s “observation vs. decision” / “ask, don’t infer”
+conventions; the audit document’s own closing line says so explicitly.
+**(7)** Updated `PROJECT_LEARNINGS.md` (new Learning 386), `CLAUDE.md`’s
+learning-count cross-reference (385 -\> 386, session range 418+ -\>
+419+). **Runtime smoke test:** n/a – docs-only deliverable, no runtime
+behavior changed. **Ledger:** See `CHANGELOG.md` 2026-07-29 S419 entry
+(`[ad hoc]`).
+
+**Session 418 Handoff Evaluation (by Session 419): 6/10.** **What
+helped:** the “Branch was up to date with `origin/master` at this
+session’s start – confirm this is still true at your own Phase 0”
+reminder was directly useful and matched what this session’s own Phase 0
+`git status`/`git log` found (clean, up to date) – a small but real
+time-saver since it told me what to expect before I checked. The handoff
+itself met all 6 minimum requirements (active task, commit hashes, next
+steps, key files, gotchas, self-score) – a well-formed handoff by the
+letter of Phase 3D. **What was missing / low ROI:** the owner’s actual
+instruction this session (“examine the PDF, compare against the
+package”) was a completely different, owner-directed task unrelated to
+any of S418’s four listed “what’s next” options (ROADMAP.md wording,
+NEWS.md spelling, LabKey, GitHub issues) – none of that handoff content
+ended up load-bearing for this session’s actual work. This isn’t a
+defect in S418’s handoff (a handoff can’t anticipate an unrelated task
+the owner will introduce next), but it means most of the detailed
+gotchas (README.Rmd child-include structure, ROADMAP.md wording
+decision) went unused here. **What was wrong:** nothing factually
+incorrect. **ROI:** modest and narrow – one useful line (branch/push
+state), the rest inapplicable through no fault of the handoff’s own
+quality. Scored 6/10 rather than higher purely to reflect actual
+applicability to this session, not the handoff’s craftsmanship, which
+was fine.
+
+**Self-assessment (Session 419): 8/10.** **Strengths:** (1) followed
+Phase 0 orientation in full despite the user’s very first message after
+the report being a direct, self-contained task, and completed the
+mandatory `AskUserQuestion` priorities gate before the user redirected –
+did not skip orientation just because the task was clear; (2) claimed
+the session (Phase 1B stub + `HANDOFFS.md` pending receipt, committed)
+before starting the heavy multi-agent investigation, not after; (3)
+matched this project’s own established precedent
+(`PED_GV_AUDIT_2026-05-30.md`’s workflow-plus-adversarial- verification
+method) rather than inventing a new approach from scratch; (4) caught a
+verify-stage agent’s own false claim before it reached the final
+document, rather than treating “adversarially verified” as automatically
+trustworthy – see Learning 386; (5) explicitly distinguished
+simulation-seeded genotype handling (gene-drop) from real empirical
+marker-based analysis throughout the report, a nuance easy to blur and
+directly relevant to accurately answering “does the package do X”; (6)
+calibrated severity/framing honestly – did not inflate the
+NGS/MHC/LD-block absence into an urgent gap, since the source PDF itself
+frames those as 2015-era speculative future work, not a present
+requirement (avoiding `AUDIT_WORKSTREAM.md`’s named “severity inflation”
+anti-pattern); (7) did not unilaterally file `BACKLOG.md` items for
+discovered feature gaps, leaving that call to the owner. **Weaknesses:**
+(1) spot-checked only the one verifier claim I happened to already hold
+ground truth for from an earlier orchestrator-side scan – did not
+independently re-verify a sample of the other 36 findings myself, so
+it’s possible (though not confirmed) that other verifier claims across
+the 7 dimensions carry similar undetected errors; a future session
+treating this audit as authoritative should still spot-check any claim
+it plans to act on directly against source, same as this session had to
+for the one it caught; (2) the 14-agent workflow scale (7 dimensions x
+investigate+verify) was sized for a thorough capability audit rather
+than the more conversational “examine and compare, note
+capabilities/gaps” framing of the original ask – justified here by
+ultracode being active and by this project’s own audit-workstream
+convention favoring thoroughness for comparison-against-a-standard
+tasks, but worth naming as a proportionality judgment call rather than
+an obviously-correct default. **Compared to previous sessions:** this is
+the first session in recent memory to run a capability-comparison audit
+against an external (non-code) reference document rather than auditing
+code/docs for internal consistency or defects – extends this project’s
+audit-workstream usage into a new task shape while reusing its
+established multi-agent-plus-verification method unchanged.
+
+**Handoff to Session 420:** - **What’s next:** No task is claimed.
+`BACKLOG.md`’s “Active” section remains empty. The owner may want to:
+(a) review
+`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md` and
+decide whether any of its 12 “missing” findings should become
+`BACKLOG.md`/GitHub issue items (the document deliberately does not do
+this itself); (b) pick up any of the standing `BACKLOG.md` items S418
+already listed and left untouched this session (ROADMAP.md:21-22
+wording, NEWS.md:8 spelling NOTE, LabKey integration recs, 9 untriaged
+GitHub issues, Outreach plan follow-up) – none were touched this
+session, all still stand exactly as S418 left them. - **Key files:**
+`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md` (this
+session’s deliverable, all 37 findings with <file:line> citations);
+`PROJECT_LEARNINGS.md` Learning 386; `CLAUDE.md:235` (learning-count
+cross-reference, 385 -\> 386);
+`inst/extdata/reference/Master_Genetic_metrics_2_14_15.pdf` (the source
+document, in case any follow-up session needs to re-check a claim
+against it). - **Gotchas:** (1) The audit’s 12 “missing” and 9 “partial”
+findings are candidates for future feature-request `BACKLOG.md`/issue
+items, but none have been filed – don’t assume they’re already tracked
+anywhere; check with the owner before filing rather than converting all
+12 unilaterally (some, like the NGS/MHC/LD-block absence, are explicitly
+NOT recommended as action items in the audit’s own text, since the
+source PDF itself frames those as future speculation). (2) The audit’s
+findings were produced by a 14-agent workflow with independent
+adversarial verification, but Learning 386 shows even a verify-stage
+agent can produce a confidently-worded false claim – if a future session
+plans to ACT on any specific finding (not just read the report), re-
+confirm that finding’s <file:line> citation directly before relying on
+it, especially any claim that something “doesn’t exist.” (3)
+`.DS_Store`/`inst/.DS_Store` remain harmless, unfixed, out-of-scope
+artifacts (unchanged since S415; `inst/extdata/.DS_Store` also appeared
+as a new untracked file this session, same harmless category). (4)
+Branch was up to date with `origin/master` at this session’s start; this
+session’s commits have not yet been pushed – confirm at your own Phase 0
+whether a push is owed. - **Self-assessment score:** 8/10 (see above for
+full breakdown).
+
 ### What Session 418 Did
 
 **Deliverable:** Owner-picked from S417’s priorities list: execute

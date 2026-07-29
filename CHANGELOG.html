@@ -70,6 +70,17 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-29--ad-hoc-genetic-metrics-pdf-vs-package-capability-audit-session-419">2026-07-29 · [ad hoc] Genetic-metrics PDF vs. package capability audit (Session 419)<a class="anchor" aria-label="anchor" href="#id_2026-07-29--ad-hoc-genetic-metrics-pdf-vs-package-capability-audit-session-419"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Owner-directed, not from <code>BACKLOG.md</code>: audit comparing the recommendations in <code>inst/extdata/reference/Master_Genetic_metrics_2_14_15.pdf</code> (NHP Genetics and Genomics Working Group, Feb 2015) against <code>nprcgenekeepr</code>’s actual capabilities. TDD Phase: N/A – audit/documentation deliverable, no <code>R/</code>/<code>tests/</code> production code touched.</li>
+<li>
+<strong>Method:</strong> read the 10-page PDF in full; ran a 14-agent <code>Workflow</code> (7 recommendation dimensions, each investigated then independently adversarially re-verified against actual source), following this project’s own <code>PED_GV_AUDIT_2026-05-30.md</code> precedent.</li>
+<li>
+<strong>Result:</strong> <code>docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md</code> – 37 findings (16 implemented / 9 partial / 12 missing) plus a per-dimension list of additional package capabilities the PDF never asked for. Notable gaps: no configurable ranking-priority scheme, no multiple-candidate breeding-group output, no kinship/ genome-uniqueness distribution-shape statistics, no marker-based (SNP/STR) kinship or parentage verification, no cross-center pedigree integration. Notable additions beyond the PDF: the full Shiny app, LabKey EHR integration, studbook QC, kinship-override system, ORIP reporting, founder-equivalent statistics with Monte Carlo standard errors. Did not file new <code>BACKLOG.md</code> items for the gaps found – left to the owner.</li>
+<li>
+<strong>Process note:</strong> caught one verify-stage agent’s own false claim (<code>readKinshipOverrides</code>/<code>checkKinshipOverrides</code> “don’t exist” – they do, confirmed via <code>ls R/</code>/<code>NAMESPACE</code>) before it reached the final document. See <code>PROJECT_LEARNINGS.md</code> Learning 386.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-28--ad-hoc-instextdata-reorganization-phase-4-place-the-pdf-final-repo-wide-sweep--plan-now-fully-executed-session-418">2026-07-28 · [ad hoc] <code>inst/extdata/</code> reorganization Phase 4: place the PDF, final repo-wide sweep – plan now fully executed (Session 418)<a class="anchor" aria-label="anchor" href="#id_2026-07-28--ad-hoc-instextdata-reorganization-phase-4-place-the-pdf-final-repo-wide-sweep--plan-now-fully-executed-session-418"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> Owner-picked from S417’s priorities list: execute Phase 4 of <code>docs/planning/extdata-reorganization-plan.md</code> – resolve the plan’s 2 remaining open decisions, place <code>Master_Genetic_metrics_2_14_15.pdf</code>, and run the plan’s final repo-wide sweep grep. TDD Phase: N/A – file relocation + rendered-doc refresh, no <code>R/</code> production logic.</li>
