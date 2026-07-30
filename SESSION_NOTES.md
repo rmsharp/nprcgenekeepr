@@ -6,6 +6,22 @@
 
 ## ACTIVE TASK
 
+### What Session 437 Did
+**Deliverable:** Fix the pre-existing `shinyBS is not defined` JS console
+error (`Uncaught ReferenceError: shinyBS is not defined`, fires 12x per
+app load), flagged as a Housekeeping item in `BACKLOG.md` (discovered
+S433 as a side effect of adding `app$get_logs()` console-error checking
+to the issue #129 Diagram-tab E2E test). Owner-picked via the Phase 0
+priorities `AskUserQuestion` (owner first asked whether the NPRC
+outreach plan could be worked in parallel with another item; declined
+per the "1 and done" / FM #26 rule plus outreach being owner-only,
+non-coding work -- then picked this item outright).
+**Started:** 2026-07-30
+**Status:** Session claimed. Work beginning (PRE-RED: investigating
+root cause before writing tests).
+**Ledger:** `CHANGELOG: pending` -- set at claim; recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### What Session 436 Did
 **Deliverable:** File GitHub issues for the 8 recommendations in S435's
 `docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md` audit

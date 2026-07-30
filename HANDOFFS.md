@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S437
+date: 2026-07-30
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix pre-existing `shinyBS is not defined` console error (Housekeeping item, discovered S433), owner-picked over Plan #130 / pick-up-#131-139 / NPRC-outreach-in-parallel (declined, FM #26).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S436
 date: 2026-07-30
 status: complete
