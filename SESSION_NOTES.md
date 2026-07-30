@@ -9,16 +9,182 @@
 ### What Session 436 Did
 **Deliverable:** File GitHub issues for the 8 recommendations in S435's
 `docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md` audit
-(matching the S419->S422 audit->triage precedent), prioritized per
-owner direction: 2, 3, 4, 1, 8, 7, then 5, then 6 (6 explicitly
-deprioritized/delayed). Owner-directed via `AskUserQuestion` response
-to the Phase 0 priorities picker (owner typed a free-text answer rather
-than selecting one of the 4 rendered options). (IN PROGRESS)
-**Started:** 2026-07-30
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions
-are recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is
-the crash breadcrumb for the next session's reconcile.
+(matching the S419->S422 audit->triage precedent), prioritized per owner
+direction: 2, 3, 4, 1, 8, 7, then 5, then 6 (6 explicitly deprioritized/
+delayed). Owner-directed via a free-text reply to the Phase 0 priorities
+picker (not one of the 4 rendered options). **DONE**, plus one
+owner-directed scope addition mid-session (documentation checklist +
+gap discovery, see below).
+**Started/Completed:** 2026-07-30 / 2026-07-30
+**Status:** DONE. Pure triage/issue-filing + documentation -- no TDD
+phases apply (no `R/`/`tests/` code touched).
+
+**What happened, in order:** **(1)** Phase 0 orientation in full
+(`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue
+list`, `git status`/`log`/`diff --stat`, `methodology_dashboard.py`
+(Health 98/100), ledger reconcile -- `CHANGELOG.md`/`HANDOFFS.md`
+frontiers both at HEAD). Rendered the priorities list (4 numbered items)
+via `AskUserQuestion`; owner replied free-text instead of picking an
+option: "add issues for 1, 2, 3, 4, 5, 6 (indicated delayed due to low
+priority), 7, 8. Prioritise in the following order: 2, 3, 4, 1, 8, and
+7" -- referring to the audit's own Recommendation numbers 1-8, not the
+4 rendered picker options. Claimed the session (`b573c69a`); also fixed
+a small Phase-0 HANDOFFS.md reconcile item this session's own
+orientation had flagged but not yet fixed (S435's receipt `commit:
+pending` self-reference backfilled to `db00a40d`). **(2)** Read the full
+audit report (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`)
+to get the exact text of all 8 Recommendations, and the S422 triage
+precedent (`gh api` issue bodies for #126-128, `gh label list`,
+`PROJECT_LEARNINGS.md` Learning 387) to match established issue-body
+format, labels (`enhancement`; `low priority` is a real, already-used
+repo label), and the `gh api` workaround for `gh issue view`'s
+deprecated-`projectCards` failure. **(3)** A mid-turn owner message
+arrived while drafting issue bodies: "overlay kinship2 type
+genetics-domain conventions onto our existing code... generate pedigree
+files with the additional needed columns for testing... use kinship2's
+conventions where applicable for naming and domain definitions" -- folded
+into the two data-model-adding issue bodies (#133 affected-status ->
+kinship2's `affected` argument convention; #137 twin/zygosity ->
+kinship2's `relation` argument convention) as forward-looking
+implementation guidance, not treated as license to implement in this
+session. **(4)** Filed all 8 issues via `gh issue create` in the
+owner-specified priority order (Rec #2->#131, #3->#132, #4->#133,
+#1->#134, #8->#135, #7->#136, #5->#137 [unranked by the owner, placed
+last-but-one as an inference, flagged as such], #6->#138 [explicitly
+deprioritized, `low priority` label applied]) -- including
+Recommendations 4-7, which the audit itself scored "no action"; each
+such issue body preserves the audit's original disposition text
+verbatim rather than silently reframing it as newly-endorsed. **(5)** A
+second mid-turn owner message arrived: "this plan needs to include
+augmenting articles and tutorials to describe the purpose and use of
+these new features." Checked whether this was already true for the base
+feature these 8 issues extend (issue #129, shipped S433/S434) and found
+it was not: `grep` across every `vignettes/**/*.Rmd` and
+`vignettes/articles/*.qmd` for Diagram-tab terms returned zero matches --
+neither `vignettes/manual_components/_pedigree_browser.Rmd` nor
+`vignettes/articles/colony-manager-guide.qmd` mentions the Diagram tab
+at all, despite both already covering the pre-existing Table view. Filed
+**issue #139** to track this pre-existing documentation gap (not fixed
+in this triage-only session, per Learning 407's precedent); added a
+documentation-scope comment to each of issues #131-#138; recorded the
+convention durably as `CLAUDE.md`'s new "Tutorial/article documentation
+checklist" (modeled on the existing issue-#120 citation checklist).
+**(6)** Replaced `BACKLOG.md`'s `## Pedigree diagram vs kinship2 audit
+follow-ups` per-item candidate bullets with a resolved summary paragraph
+pointing at all 9 filed issue numbers (#131-#139), matching S422's own
+collapse-to-summary convention (tracked on GitHub, not duplicated in
+`BACKLOG.md`). Added `PROJECT_LEARNINGS.md` Learning 411 (owner can
+override an audit's own "no action" disposition; preserve the audit's
+original reasoning in the filed issue) and Learning 412 (a
+forward-looking directive is worth checking against current state, not
+just applied prospectively -- this is exactly how issue #139 was
+discovered). Updated `CLAUDE.md`'s learnings-count cross-reference
+(410->412, Sessions 1-435+->1-436+).
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**Session 435 Handoff Evaluation (by Session 436): 9/10.** **What
+helped:** the handoff correctly reported both candidate next steps
+(triage the audit follow-ups, or plan issue #130) as independently
+READY, with accurate `key_files` pointers (the audit doc, the
+`BACKLOG.md` follow-ups section, `PROJECT_LEARNINGS.md` Learning 410)
+that made Phase 0 orientation and the subsequent research phase fast --
+reading the cited audit doc and Learning 410 directly, with no need to
+reconstruct context. The ledger/receipt state was exactly as claimed
+(both frontiers at HEAD, one `commit: pending` self-reference correctly
+flagged as "reconciled by the next session's Phase 0," which this
+session did). **What was missing:** nothing that mattered -- the owner
+picked option (a) as expected, and the handoff's framing of it (4
+candidates, Finding #1 highest-priority per the audit) was accurate,
+even though the owner's own priority order ultimately diverged from the
+audit's suggested one (not a handoff defect -- a session owner is
+always free to set a different priority). **What was wrong:** nothing
+found. **ROI:** high -- the audit doc citation and Learning 410 pointer
+were used directly, with no rediscovery needed.
+
+**Self-assessment (Session 436): 8/10.** **Strengths:** (1) matched
+established project convention precisely before acting -- read the
+audit report in full for exact Recommendation text, checked the S422
+precedent's actual issue bodies via `gh api` (not just its CHANGELOG
+summary) for body format/label conventions, and ran `gh label list`
+before filing rather than assuming a label scheme, per Learning 387's
+own practical rule; (2) preserved the owner's stated priority order and
+the audit's own "no action" disposition text verbatim rather than
+silently reordering or reframing them, and explicitly flagged the one
+item (Rec #5/issue #137) the owner's order left unranked as this
+session's own inference rather than a stated decision; (3) treated two
+mid-turn owner steering messages as genuine scope-shaping input rather
+than ignoring them or over-reacting -- folded the kinship2
+domain-convention directive into the two relevant issue bodies without
+starting implementation, and checked the documentation directive
+against current state rather than only applying it forward, which is
+what surfaced issue #139; (4) did not silently fix the newly-discovered
+issue #129 documentation gap mid-session -- filed it as a tracked issue
+and recorded a durable close-out convention instead, matching Learning
+407's established precedent. **Weaknesses:** (1) the owner's original
+free-text answer ("add issues for 1, 2, 3, 4, 5, 6 ... 7, 8") required
+inference to map onto the audit's Recommendation numbers rather than
+the rendered picker's 4 options -- correct in hindsight (confirmed by
+re-reading the audit report, which does have exactly 8 numbered
+Recommendations) but this session proceeded on that inference without
+explicitly re-confirming it with the owner before filing 9 GitHub
+issues, a moderately consequential, externally-visible action; a
+stricter reading of "observation vs decision" discipline might have
+asked a single confirming question first. (2) filed issue #139 and the
+CLAUDE.md checklist addition as an in-session scope addition rather than
+asking whether it should be its own separate session -- justified here
+because it was small (one tracking issue + 8 comments + one doc-gap
+report, no code), directly prompted by explicit owner steering rather
+than self-initiated "while I'm at it," and consistent with this
+session's own established triage-and-track pattern, but it is still a
+second distinct sub-deliverable layered onto the original single
+deliverable and worth naming explicitly rather than absorbing silently.
+**Compared to previous sessions:** matches S422's triage rigor (checked
+actual label usage and issue-body precedent before filing, not just
+assumed convention) and extends it with two things S422 didn't need to
+handle: an owner override of a source document's own "no action"
+verdicts, and a live mid-session scope addition that required checking
+current repo state rather than just applying a rule going forward.
+
+**Handoff to Session 437:**
+- **What's next:** Multiple independent READY options -- owner picks:
+  **(a)** Plan issue #130 (marker-based kinship/heterozygosity/
+  parentage-verification + cross-center identity resolution), still
+  READY Effort M per the original S428 sequencing chain, entirely
+  unaffected by this session. **(b)** Pick up any of the 9 newly-filed
+  issues (#131-#139) in the owner's stated priority order (#131 first);
+  each already has an `enhancement` label, a documentation-scope
+  comment, and (where applicable) a kinship2 domain-convention note in
+  its body -- a picking session should start with issue #139 (the
+  documentation gap) or #131 (highest owner priority) rather than #134
+  despite the audit's own framing of #134 as most important, since the
+  owner explicitly reordered it to priority 4. **(c)** NPRC outreach &
+  announcement plan review (DECISION NEEDED, owner-only, not a coding
+  task) -- unrelated, still open from before this session.
+- **Key files:** `BACKLOG.md` `## Pedigree diagram vs kinship2 audit
+  follow-ups` section (collapsed summary, all 9 issue numbers + the
+  owner's exact priority order); `CLAUDE.md` "Tutorial/article
+  documentation checklist" (new durable convention); `PROJECT_LEARNINGS.md`
+  Learning 411 (owner-override-of-audit-disposition pattern) and Learning
+  412 (forward-looking-directive-check-current-state pattern); GitHub
+  issues #131-#139 (each issue body is the fullest single-place summary
+  of its own scope, disposition, and priority).
+- **Gotchas:** (1) issue #137 (twin/zygosity)'s priority position (7 of
+  8) was this session's own inference, not a stated owner decision --
+  the owner's explicit order only named 2,3,4,1,8,7 plus 6 (deprioritized);
+  if exact ordering among #137 and the explicitly-ranked items ever
+  matters, confirm with the owner rather than trusting this session's
+  placement. (2) issues #133/#137 (the two data-model-adding follow-ups)
+  are the ones the kinship2 domain-convention directive applies to most
+  directly (`affected`/`relation` argument naming) -- re-read their
+  issue bodies before starting implementation, not just `BACKLOG.md`'s
+  summary. (3) `.DS_Store` files and
+  `docs/planning/issue125-ranking-priority-multi-candidate-plan.html`
+  remain harmless, unfixed, out-of-scope artifacts, unchanged since S425.
+- **Self-assessment score:** 8/10 (see above for full breakdown).
+- **Runtime smoke test:** N/A -- pure triage/issue-filing + documentation
+  deliverable, no `R/` or `tests/` code touched, no runtime behavior
+  changed. Not silently skipped: explicitly not applicable per Phase
+  3E's own carve-out for non-runtime deliverables.
 
 ### What Session 435 Did
 **Deliverable:** Audit report comparing the just-shipped pedigree-diagram

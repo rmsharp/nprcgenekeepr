@@ -224,6 +224,8 @@ Phase 0 STOP-and-wait-for-the-user: the question itself **is** the wait.
 
 **Citation checklist (issue #120, 2026-07-08):** any session that adds a new displayed statistic/estimator to the package must update `inst/extdata/ui_guidance/population_genetics_terms.html` (or the relevant UI guidance page) and the statistic's own roxygen `@references` in the same session that ships it, rather than deferring to a later audit. (Source: `docs/audits/ISSUE_120_CITATION_COVERAGE_AUDIT_2026-07-08.md` Structural Observation 1 — citation gaps correlated with recency, not centrality: the metrics missing coverage were consistently the ones added without their own citation pass.)
 
+**Tutorial/article documentation checklist (owner-directed, 2026-07-30, Session 436):** a plan that ships a new user-facing Shiny feature (a new tab, control, or interaction pattern) must include a documentation phase updating the relevant tutorial/article (`vignettes/articles/colony-manager-guide.qmd` and/or the matching `vignettes/manual_components/*.Rmd` component) describing the feature's purpose and use — not just code + tests + `NEWS.md`. Surfaced when a mid-session owner directive ("this plan needs to include augmenting articles and tutorials") prompted a check that found issue #129's already-shipped pedigree-diagram Diagram tab (S433/S434) has **zero** mentions in any vignette or article (`grep` across `vignettes/**/*.Rmd`/`vignettes/articles/*.qmd` returns nothing) — tracked as GitHub issue #139 rather than fixed retroactively in the triage session that found it, per the established "report an incidentally-discovered, unrelated pre-existing gap, don't fix it mid-session" precedent (`PROJECT_LEARNINGS.md` Learning 382).
+
 **CHANGELOG.md ledger-format resolution (2026-07-08, Session 325 — "freeze legacy, go forward"):** canonical v3.1+ defines `CHANGELOG.md` as an "Authoritative Action Ledger" — dated `### YYYY-MM-DD · [issue #N] | [BL-N] | [ad hoc]` entries, one per action. This project's pre-existing ~30+-session history (dated subsections, no source tag) was **not** retroactively migrated — owner chose (via `AskUserQuestion`) to freeze it as-is rather than run a multi-session migration campaign to re-tag 303 already-closed entries. `CHANGELOG.md` now has a `## Legacy history (pre-ledger format, Sessions 1-324)` marker: everything below it is untouched original-format history; everything above it (from Session 325 forward) uses the canonical `[SOURCE]`-tagged format. New entries always go above the marker, never inside it.
 
 ### Development Process Contract override
@@ -232,7 +234,7 @@ This project runs **Strict Test-Driven Development** (see the "Development Proce
 
 ### Project-specific Learnings
 
-Project institutional memory (Sessions 1–435+; 410 learnings, ~1.8 MB) lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md) — extracted from this file to keep `CLAUDE.md` within its size budget (Claude Code targets ~200 lines / ~25 KB). **Read it when you need prior-session context; append new learnings there, not here.** Base methodology-level learnings remain in `SESSION_RUNNER.md`.
+Project institutional memory (Sessions 1–436+; 412 learnings, ~1.8 MB) lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md) — extracted from this file to keep `CLAUDE.md` within its size budget (Claude Code targets ~200 lines / ~25 KB). **Read it when you need prior-session context; append new learnings there, not here.** Base methodology-level learnings remain in `SESSION_RUNNER.md`.
 
 ### Project-specific Failure Modes
 

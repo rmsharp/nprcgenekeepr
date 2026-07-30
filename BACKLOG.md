@@ -272,35 +272,36 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       baseline. See `CHANGELOG.md`.)
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
-*S435's capability-comparison audit (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`,
-owner-directed, not from the prior sequencing chain) compared the just-shipped issue #129
-pedigree-diagram feature against kinship2's pedigree-drawing feature set (17-point checklist, 8
-findings). Recommendations 1-3 and 8 are actionable candidates awaiting owner triage (not yet filed
-as GitHub issues); recommendations 4-7 are "no action" (data-model-gated or already a
-plan-ratified tradeoff) and are not tracked here. None imply reopening issue #129 or revisiting the
+*S435's capability-comparison audit (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`)
+compared the just-shipped issue #129 pedigree-diagram feature against kinship2's pedigree-drawing
+feature set (17-point checklist, 8 findings, 8 recommendations). Triaged S436 (2026-07-30) via
+explicit owner direction (free-text, not per-item `AskUserQuestion` picks): **all 8 recommendations**
+filed as GitHub issues, tracked there, not here -- including Recommendations 4-7, which the audit
+itself scored "no action" (data-model-gated, or an already-ratified Dragon-P3 scope tradeoff);
+filing tracks the idea for future consideration and does not reverse the audit's own assessment
+(each issue body preserves the audit's original disposition text verbatim). Owner set an explicit
+priority order that **inverts** the audit's own suggested ordering (which rated Finding #1 highest):
+**#131** (diagram image/print export, Finding #3/Rec #2, priority 1) -- **#132** (in-app
+shape-to-sex legend, Finding #6/Rec #3, priority 2, also resolves plan Dragon P5) -- **#133**
+(affected/phenotype/genotype status encoding, Finding #2/Rec #4, priority 3, data-model gated) --
+**#134** (verify inbreeding-loop/consanguinity rendering, Finding #1/Rec #1, priority 4, resolves
+plan Dragon P2 / `PROJECT_LEARNINGS.md` Learning 410) -- **#135** (hover tooltips + search/highlight,
+Rec #8, priority 5) -- **#136** (name labels instead of ID-only, Finding #8/Rec #7, priority 6,
+data-model gated) -- **#137** (twin/zygosity encoding, Finding #5/Rec #5, priority unranked by the
+owner, placed 7th as an inference not a stated decision) -- **#138** (full-colony rendering beyond
+the 1,500-node cap, Finding #7/Rec #6, priority 8 -- explicitly deprioritized/delayed by the owner,
+`low priority` GitHub label applied). Owner also directed (mid-session, 2026-07-30) a broader goal:
+overlay kinship2's genetics-domain naming conventions onto the pedigree data model where applicable
+when these are implemented, and build test pedigree fixtures with the corresponding added columns --
+folded into #133 (kinship2's `affected` argument convention) and #137 (kinship2's `relation`
+argument convention), the two data-model-adding items. Owner also directed that any plan
+implementing one of #131-#138 must include a documentation phase (`vignettes/articles/
+colony-manager-guide.qmd` and/or `vignettes/manual_components/_pedigree_browser.Rmd`), now recorded
+as `CLAUDE.md`'s "Tutorial/article documentation checklist" -- checking whether this was already
+true for the base feature found it was not: **issue #139** tracks that issue #129's already-shipped
+Diagram tab has zero tutorial/article coverage today. See `PROJECT_LEARNINGS.md` Learning 411 and
+`CHANGELOG.md` for the full S436 triage record. None imply reopening issue #129 or revisiting the
 visNetwork-vs-kinship2 technology decision (D2), which stands as ratified.*
-- [ ] **Verify inbreeding-loop/consanguinity rendering (audit Finding #1, DECISION NEEDED --
-      candidate for a GitHub issue, Effort S)** -- the ratified plan's own Dragon P2 (Slice-1
-      required verification) was never actually resolved across S433/S434: construct a known-loop
-      pedigree fixture and run it through the shipped Diagram tab to confirm vis.js's hierarchical
-      layout degrades gracefully (or doesn't). Highest-priority of the four candidates -- directly
-      touches the package's core genetic-management purpose. See `PROJECT_LEARNINGS.md` Learning
-      410 (a plan Dragon silently going untracked across a multi-slice close-out).
-- [ ] **Add diagram image/print export (audit Finding #3, DECISION NEEDED -- candidate for a
-      GitHub issue, Effort S)** -- the Diagram tab's only export today is the pre-existing CSV
-      `downloadButton`; no way to save/print/screenshot the rendered network diagram itself for a
-      husbandry report or IACUC document. Scope as its own small follow-on slice using
-      `visNetwork`'s own PNG export hook.
-- [ ] **Add an in-app shape-to-sex legend (audit Finding #6, DECISION NEEDED -- candidate for a
-      GitHub issue, Effort S)** -- the Diagram tab's shape-to-sex mapping (square/dot/star/triangle)
-      is documented only in code comments/NEWS.md prose, never surfaced in the running app. Small,
-      low-effort; also resolves the plan's own Dragon P5 note that the H/U shape choices were never
-      validated against real data.
-- [ ] **Hover tooltips + search/highlight (audit Recommendation #8, DECISION NEEDED -- optional,
-      low priority, Effort S)** -- not a kinship2-comparison gap (kinship2 has neither either), but
-      a low-cost enhancement to the existing `visNetwork` dependency's own unused
-      `visOptions(highlightNearest=...)`/tooltip capability, worth a future issue only if UI polish
-      time becomes available.
 
 ## Outreach
 - [ ] **NPRC outreach & announcement plan** (DECISION NEEDED -- owner review/edit of

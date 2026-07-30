@@ -62,19 +62,19 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S436
 date: 2026-07-30
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: File GitHub issues for the 8 recommendations in S435's docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md audit, prioritized per owner direction (2, 3, 4, 1, 8, 7, then 5, then 6 -- 6 explicitly deprioritized/delayed).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- filed all 8 recommendations from S435's kinship2-comparison audit as GitHub issues #131-#138, owner-prioritized (2,3,4,1,8,7,then 5,then 6). Plus a mid-session owner scope addition: filed issue #139 (issue #129's Diagram tab has zero tutorial/article coverage) and a new CLAUDE.md documentation-checklist convention.
+what_was_done: Read the full audit report for exact Recommendation text; checked the S422 triage precedent (gh api issue bodies, gh label list) for body/label conventions. Filed issues #131 (image export), #132 (legend), #133 (affected-status, data-model gated), #134 (loop verification), #135 (hover/search), #136 (name labels, data-model gated), #137 (twin/zygosity, data-model gated), #138 (full-colony rendering, low-priority label) in the owner's stated priority order, each preserving the audit's own disposition text verbatim (including the 4 the audit itself scored "no action"). Folded a mid-turn owner directive (overlay kinship2 domain-naming conventions -- affected/relation arguments) into #133/#137. A second mid-turn directive (plans must include tutorial/article updates) prompted a check against current state: found issue #129's shipped Diagram tab has zero vignette/article coverage, filed as issue #139, commented the same expectation onto #131-#138, and recorded the convention in CLAUDE.md's new "Tutorial/article documentation checklist". Collapsed BACKLOG.md's follow-up candidates into a resolved summary (S422 convention). Added PROJECT_LEARNINGS.md Learning 411 (owner can override an audit's "no action" verdict) and Learning 412 (check a forward-looking directive against current state). Also backfilled HANDOFFS.md's S435 commit:pending self-reference to db00a40d. Commit: b573c69a (claim) + this close-out commit.
+next_steps: Owner picks: (a) Plan issue #130 (marker-based kinship/heterozygosity/parentage-verification + cross-center identity resolution), READY Effort M, unaffected by this session; (b) pick up any of issues #131-#139 in the owner's stated priority order (#131 first, or #139 for the documentation gap); (c) NPRC outreach & announcement plan review (DECISION NEEDED, owner-only).
+key_files: BACKLOG.md `## Pedigree diagram vs kinship2 audit follow-ups` (collapsed summary, all 9 issue numbers + priority order); CLAUDE.md "Tutorial/article documentation checklist" (new convention); PROJECT_LEARNINGS.md Learning 411 + Learning 412; GitHub issues #131-#139 (each is the fullest single-place summary of its own scope).
+gotchas: (1) issue #137's priority position (7 of 8) is this session's own inference, not a stated owner decision -- the owner's explicit order only named 2,3,4,1,8,7 plus 6 (deprioritized); confirm with the owner if exact ordering matters. (2) issues #133/#137 are where the kinship2 domain-convention directive applies most directly (affected/relation argument naming) -- re-read their bodies before implementing. (3) .DS_Store files and docs/planning/issue125-ranking-priority-multi-candidate-plan.html remain harmless, unfixed, out-of-scope artifacts, unchanged since S425.
+runtime_smoke: n/a -- pure triage/issue-filing + documentation deliverable, no R/ or tests/ code touched, no runtime behavior changed.
+changelog_ref: CHANGELOG.md Session 436 entry, 2026-07-30, [ad hoc] Triage pedigree-diagram-vs-kinship2 audit recommendations
+commit: pending -- reconciled by the next session's Phase 0 (this receipt is written before the final close-out commit)
 ```
-Claimed at Phase 1B; to be filled at close-out (Phase 3D).
+Claimed at Phase 1B; filled at close-out (Phase 3D). Session 435's handoff scored 9/10: accurate READY-option framing (triage vs. plan #130) with correct key_files pointers (audit doc, BACKLOG.md section, Learning 410) made orientation and research fast, and the ledger state was exactly as claimed. This session's own weakness: proceeded on an inference mapping the owner's free-text "1,2,3...8" reply onto the audit's own Recommendation numbers (rather than the 4 rendered picker options) before filing 9 externally-visible GitHub issues, without an explicit confirming question first -- correct in hindsight but a moderately consequential action taken on an unconfirmed inference.
 
 ```handoff
 session: S435

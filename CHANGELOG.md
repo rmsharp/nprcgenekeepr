@@ -43,6 +43,54 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-30 · [ad hoc] Triage pedigree-diagram-vs-kinship2 audit recommendations (Session 436)
+- **Deliverable:** Owner-picked (free-text response, not a rendered `AskUserQuestion` option) from
+  S435's priorities list: triage `docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`'s
+  8 recommendations into GitHub issues, matching the S419→S422 audit→triage precedent. TDD Phase:
+  N/A — pure triage/issue-filing + `BACKLOG.md`/`PROJECT_LEARNINGS.md` documentation, no `R/`/`tests/`
+  code touched.
+- **Process:** owner directed filing **all 8** recommendations as issues in one free-text reply,
+  including Recommendations 4–7, which the audit itself scored "no action" (data-model-gated, or an
+  already-ratified Dragon-P3 scope tradeoff) — each such issue body preserves the audit's original
+  disposition text verbatim rather than silently reframing it as newly-endorsed. Owner also gave an
+  explicit priority order (2, 3, 4, 1, 8, 7, then 5 unranked, then 6 explicitly deprioritized/delayed)
+  that inverts the audit's own suggested ordering (which rated Finding #1 highest); recorded as-given.
+  Mid-session, owner also directed a broader goal — overlay kinship2's genetics-domain naming
+  conventions onto the pedigree data model where applicable when these are implemented, and build
+  test pedigree fixtures with the corresponding added columns — folded into the two
+  data-model-adding issue bodies (#133's `affected` argument convention, #137's `relation` argument
+  convention) as forward-looking guidance, not treated as license to implement in this session.
+- **Result:** filed GitHub issues #131 (diagram image/print export, Finding #3), #132 (in-app
+  shape-to-sex legend, Finding #6, also resolves plan Dragon P5), #133 (affected/phenotype/genotype
+  status encoding, Finding #2, data-model gated), #134 (verify inbreeding-loop/consanguinity
+  rendering, Finding #1, resolves plan Dragon P2 / `PROJECT_LEARNINGS.md` Learning 410), #135 (hover
+  tooltips + search/highlight, Recommendation #8), #136 (name labels instead of ID-only, Finding #8,
+  data-model gated), #137 (twin/zygosity encoding, Finding #5, data-model gated), #138 (full-colony
+  rendering beyond the 1,500-node cap, Finding #7, `low priority` GitHub label applied). All labeled
+  `enhancement`, matching this repo's existing convention (verified via `gh label list` before
+  filing, per `PROJECT_LEARNINGS.md` Learning 387's precedent). Replaced `BACKLOG.md`'s
+  `## Pedigree diagram vs kinship2 audit follow-ups` per-item candidates with a resolved summary
+  paragraph pointing at the 8 issue numbers (tracked there, not in `BACKLOG.md`), matching S422's
+  own collapse convention. Added `PROJECT_LEARNINGS.md` Learning 411 (owner can override an audit's
+  own "no action" disposition; preserve the audit's original reasoning in the filed issue). Updated
+  `CLAUDE.md`'s learnings-count cross-reference (410→412, Sessions 1-435+→1-436+). Also backfilled
+  `HANDOFFS.md`'s S435 receipt `commit: pending` placeholder to `db00a40d` (a Phase-0 HANDOFFS
+  reconcile item flagged but not fixed during this session's own orientation).
+- **Mid-session scope addition:** a second owner steering message directed that any plan
+  implementing these follow-up issues must include updating the relevant tutorial/article
+  (`vignettes/articles/colony-manager-guide.qmd` and/or `vignettes/manual_components/
+  _pedigree_browser.Rmd`) describing the feature's purpose and use. Checking whether the
+  already-shipped issue #129 base feature already followed this found it had not — zero mentions of
+  the Diagram tab in any vignette/article (`grep` across all `.Rmd`/`.qmd` sources returns nothing).
+  Filed **issue #139** to track that pre-existing documentation gap rather than fixing it in this
+  triage-only session (per `PROJECT_LEARNINGS.md` Learning 407's precedent). Added a comment to each
+  of issues #131–#138 recording the same documentation-scope expectation. Recorded the convention
+  durably as `CLAUDE.md`'s new "Tutorial/article documentation checklist" (modeled on the existing
+  issue-#120 citation checklist). Added `PROJECT_LEARNINGS.md` Learning 412 (a forward-looking
+  directive is worth checking against current state, not just applied prospectively).
+- **Runtime smoke test:** n/a — no `R/`/`tests/` code touched; pure triage/issue filing +
+  `BACKLOG.md`/`PROJECT_LEARNINGS.md`/`CLAUDE.md` documentation.
+
 ### 2026-07-30 · [ad hoc] Audit: pedigree diagram (issue #129) vs kinship2 feature comparison (Session 435)
 - **Deliverable:** `docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`, a
   17-point capability-comparison audit (`AUDIT_WORKSTREAM.md`) between the just-shipped
