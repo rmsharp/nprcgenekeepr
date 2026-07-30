@@ -6,6 +6,17 @@
 
 ## ACTIVE TASK
 
+### What Session 435 Did
+**Deliverable:** Audit report comparing the just-shipped pedigree-diagram
+feature (issue #129 Slices 1+2, visNetwork-based Diagram tab with
+click-to-navigate) against kinship2's pedigree-drawing feature set, per
+`AUDIT_WORKSTREAM.md`. Owner-directed (not from BACKLOG.md's sequencing
+chain). **IN PROGRESS.**
+**Started:** 2026-07-30
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F.
+
 ### What Session 434 Did
 **Deliverable:** Implement issue #129 Slice 2 (click-to-navigate interactivity)
 following `docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md`
