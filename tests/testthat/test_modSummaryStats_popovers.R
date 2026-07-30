@@ -233,3 +233,37 @@ test_that("modSummaryStatsServer sets up popovers for boxplots", {
     skip("addPopover not yet implemented")
   }
 })
+
+# =============================================================================
+# Tests for the shinyBS JS/CSS resource-path registration (Housekeeping item,
+# "shinyBS is not defined" console error, discovered S433)
+# =============================================================================
+
+test_that("loading the package registers shinyBS's 'sbs' resource path", {
+  skip_if_not_installed("shinyBS")
+
+  expect_true(
+    "sbs" %in% names(shiny::resourcePaths()),
+    info = paste(
+      "shinyBS's JS/CSS assets (shinyBS.js/shinyBS.css) are served under the",
+      "'sbs' resource path only if shiny::addResourcePath() has run.",
+      "shinyBS's own .onAttach() hook does this, but this package only ever",
+      "calls shinyBS::popify()/addPopover() via `::`, which loads (but never",
+      "attaches) the shinyBS namespace -- so its .onAttach() hook never",
+      "fires, and the popover script tags' shinyBS.addTooltip(...) calls",
+      "throw 'shinyBS is not defined' in the browser console."
+    )
+  )
+})
+
+test_that(".onLoad does not error when shinyBS is unavailable", {
+  # .onLoad is a dot-prefixed package hook, not exported even under
+  # pkgload::load_all()'s export_all default, so it is accessed via :::
+  # and copied to a local binding before mockery::stub() can replace calls
+  # inside it (mockery re-assigns by deparsed name, which must be a plain
+  # identifier -- a `:::`-qualified expression is not one).
+  onLoadFn <- nprcgenekeepr:::.onLoad
+  mockery::stub(onLoadFn, "requireNamespace", FALSE)
+
+  expect_no_error(onLoadFn(libname = "x", pkgname = "nprcgenekeepr"))
+})
