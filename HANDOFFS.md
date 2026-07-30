@@ -68,6 +68,68 @@ are legal at write time (the receipt ships in the very commit whose sha
 it would name); the next session reconciles them to real shas.
 
 ``` handoff
+session: S434
+date: 2026-07-30
+status: complete
+self_score: 9
+predecessor_score: 10
+active_task: DONE -- implemented issue #129 Slice 2 (click-to-navigate interactivity). Clicking a Diagram-tab node now re-centers the population on that animal. Both slices of issue #129 are shipped; issue #129 is closed on GitHub. Planning issue #130 is next.
+what_was_done: R/modPedigree.R's output$pedigreeDiagram gained visNetwork::visEvents(click = ...), JS-interpolating session$ns("pedigreeDiagram_click"); a new observeEvent(input$pedigreeDiagram_click, ...) writes the clicked node id(s) into the existing focalIds() reactiveVal, guarded against a background (no-node) click. Strict TDD PRE-RED->RED->GREEN (REFACTOR skipped, owner-gated). Pre-RED found and corrected a real gap in the ratified plan: visNetwork does NOT auto-bind clicks to a Shiny input (the plan assumed it did) -- confirmed hands-on via grepping the installed visNetwork 2.1.4 JS source plus a live throwaway shinytest2/chromote app; visEvents(click=...) must be wired explicitly (Learning 408). RED: 3 new shiny::testServer() tests (5 assertions) in tests/testthat/test_modPedigree.R, confirmed failing for the right reason before GREEN; GREEN passed on the first attempt (89/89 in the file). Verify: full regression 0/0/0 (3280 passed, up from 3275; 182 skipped); devtools::check() raw Status: OK (0/0/0), re-verified after all doc edits. Live E2E click-through smoke test (tests/testthat/test-e2e-pedigree-module.R) initially failed for a non-implementation reason -- diagnosed and fixed a second real finding: DT::renderDT output is suspended while its tabPanel is hidden (Shiny's suspendWhenHidden default), so the test must switch back to the Table tab before asserting (Learning 409). NEWS.Rmd's existing Slice-1 bullet amended in place (not duplicated) to describe the shipped click-to-navigate behavior, rendered to NEWS.md. BACKLOG.md sequencing note updated; GitHub issue #129 closed via gh issue close with a summary comment covering both S433/S434 work. Commit: aede6561 (claim) + the GREEN/close-out commit made at the end of this session.
+next_steps: Plan issue #130 (marker-based kinship/heterozygosity/parentage-verification + cross-center identity resolution, Dimensions 5 & 6 of the 2015 NHP Genetics/Genomics WG PDF audit) -- READY, Effort M, no other open item remains in the owner-ratified sequencing chain. Follow ARCHITECTURE_WORKSTREAM.md, the same pattern S428/S430/S432 used for #125/#127/#129. No existing plan document for #130 -- a from-scratch planning session.
+key_files: R/modPedigree.R:387-413 (the new visEvents/observeEvent click-to-navigate code); tests/testthat/test_modPedigree.R:1081-1195 (3 new testServer RED tests); tests/testthat/test-e2e-pedigree-module.R:211-280 (the new live click-through E2E test, incl. the suspendWhenHidden fix); docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md Section 4 "Slice 2" (now fully executed, historical reference only).
+gotchas: (1) DT::renderDT (or any tabsetPanel-nested output) is suspended while its tab is inactive -- an E2E assertion against it must switch to that tab first, even when the interaction happened on a different tab (Learning 409); (2) a third-party htmlwidget's Shiny-event-binding documentation can be wrong about what's automatic vs. needing explicit wiring -- verify against the installed package's actual JS source + a live throwaway app, not documentation prose (Learning 408); (3) a pre-existing, unrelated "shinyBS is not defined" console error still fires on every page load (BACKLOG.md Housekeeping item, found S433, unfixed, out of scope again this session); (4) inst/extdata/ reorg's stale "DECISION NEEDED" BACKLOG header (body proves Phase 4 is done) remains unfixed, flagged again S430/S433; (5) .DS_Store files and docs/planning/issue125-ranking-priority-multi-candidate-plan.html remain harmless, unfixed, out-of-scope artifacts, unchanged since S425.
+runtime_smoke: DONE, live. shinytest2/chromote E2E test against a real running app instance confirms clicking a known animal (EBG407) in the Diagram tab visibly changes the Table tab's contents to that individual's own trimmed ancestor/descendant set, with no diagram-related console error.
+changelog_ref: CHANGELOG.md Session 434 entry, 2026-07-30, [issue #129] Implement Slice 2
+commit: pending -- reconciled by the next session's Phase 0 (this receipt is written before the final close-out commit)
+```
+
+Claimed at Phase 1B; filled at close-out (Phase 3D). Session 433’s
+handoff scored 10/10 (see SESSION_NOTES.md for the full breakdown): the
+“What’s next” section named the exact plan section, the exact Dragon to
+resolve first (P4), and pointed at a ready-made E2E test scaffold, all
+of which this session used directly, with zero gaps found. This
+session’s own weakness: the first E2E test draft assumed a hidden tab’s
+output stays live, which turned out false and cost one debugging
+iteration to diagnose and fix (Learning 409) – otherwise TDD discipline
+held throughout (RED confirmed failing for the right reason, GREEN
+passed first attempt, live E2E verification performed and a real finding
+fixed rather than worked around).
+
+``` handoff
+session: S433
+date: 2026-07-30
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- implemented issue #129 Slice 1 (core pedigree-diagram render). The Pedigree Browser tab has a new Diagram view alongside the existing Table view. Slice 2 (click-to-navigate) is the next session per the ratified plan.
+what_was_done: New exported makePedigreeDiagramData(ped) (R/makePedigreeDiagramData.R) converts a pedigree data frame into visNetwork-ready {nodes, edges} (sex-shape mapping, level=gen, directed sire/dam edges). R/modPedigree.R's table area is now a tabsetPanel(Table/Diagram) mirroring modPyramid.R's precedent, with a renderVisNetwork output gated by a 1500-node size threshold (shows a message instead of an unbounded render above it). visNetwork added to DESCRIPTION Imports. Strict TDD PRE-RED->RED->GREEN (REFACTOR skipped, owner-gated). Pre-RED installed visNetwork and confirmed its API surface live, re-verified every plan citation firsthand, found a real 145-member known-loop case in examplePedigree, and decided the size-threshold mitigation. RED: 13 new/extended assertions across 2 test files, confirmed all failed for the right reason. GREEN caught and fixed a real bug (bare ns() vs session$ns() in server code) via the RED test itself. Verify: full regression 0/0/0 (3275 passed, 181 skipped, up from 3198/179 baseline); devtools::check() raw Status: OK (0/0/0) after fixing a _pkgdown.yml reference gap and adding 3 words to inst/WORDLIST (1 mine, 2 pre-existing from issue #125's S423-era work, fixed inline as a deliberate deviation from Learning 382's precedent -- recorded as Learning 407 for owner review); live shinytest2/chromote E2E smoke test against the bundled 375-row fixture confirms the Diagram tab renders, binds, throws no diagram-related console error, and shows correct sex-shape/edge data for a known real trio (queried the live vis.js DataSet via HTMLWidgets.find(), since canvas-rendered widgets have no DOM-inspectable content -- Learning 406). Also discovered and filed (not fixed) a pre-existing, unrelated shinyBS console error to BACKLOG.md. NEWS.Rmd/NEWS.md, _pkgdown.yml, BACKLOG.md, CHANGELOG.md, CLAUDE.md's learning-count cross-reference, and PROJECT_LEARNINGS.md (Learnings 405-407) all updated.
+next_steps: Implement issue #129 Slice 2 (click-to-navigate interactivity) -- follow docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md Section 4 "Slice 2". Its own Pre-RED must confirm the input$pedigreeDiagram_click event-binding convention against the now-live Slice 1 widget (Dragon P4) before writing RED tests. Alternatively planning issue #130 may be picked up first -- the plan's Cross-slice notes say Slice 1 alone already satisfies issue #129's core ask, so there is no hard ordering requirement.
+key_files: docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md section 4 "Slice 2"; R/modPedigree.R:225-293 (focalIds reactiveVal/observeEvent chain Slice 2 writes into), R/modPedigree.R:349-394 (new Diagram tab UI/server code Slice 2 extends); R/makePedigreeDiagramData.R (Slice 1 conversion function, unchanged by Slice 2); tests/testthat/test-e2e-pedigree-module.R (2 new Diagram-tab E2E tests, a ready-made scaffold for driving a live widget click).
+gotchas: (1) inside modPedigreeServer, always use session$ns(...) for a new namespaced id, never bare ns(...) -- the bare binding only exists in the sibling UI function (Learning 405); (2) visNetwork renders to canvas -- any E2E assertion about widget content needs app$get_js() + HTMLWidgets.find(id) + w.network.body.data.nodes/edges, not get_html()/grepl() (Learning 406); Slice 2's click-event mechanism is Dragon P4, not yet hands-on-confirmed; (3) a pre-existing, unrelated shinyBS is not defined console error fires on every page load (BACKLOG.md) -- don't mistake it for a Slice-2 regression; (4) Learning 407 flags an unconfirmed process deviation (fixing incidentally-discovered pre-existing issues inline vs. deferring to BACKLOG.md per Learning 382) -- read it before repeating the pattern; (5) the inst/extdata/ reorg BACKLOG entry's stale "DECISION NEEDED" header (body proves it's done) is still unfixed, flagged again this session.
+runtime_smoke: DONE, live. shinytest2/chromote E2E tests against a real running app instance (bundled obfuscated_rhesus_mhc_ped.csv fixture) confirm the Diagram tab renders, binds, throws no diagram-related console error, and shows correct node/edge/shape data for a known trio.
+changelog_ref: CHANGELOG.md 2026-07-30 issue #129 entry (Session 433)
+commit: pending
+```
+
+**Self-assessment 9/10.** Strengths: followed the plan’s Pre-RED
+instruction literally (installed visNetwork and hands-on-verified its
+API before writing RED); re-verified every plan citation firsthand
+rather than trusting S432’s line numbers; made and documented a genuine
+plan-delegated design decision (the 1500-node threshold) with explicit
+evidence-based reasoning; TDD discipline held throughout, and RED caught
+a real bug (the ns() scoping mistake) immediately; solved a genuinely
+novel testing problem (verifying canvas-rendered widget content in
+shinytest2) instead of writing a hollow test; was transparent about a
+real process deviation (Learning 407) instead of quietly normalizing it.
+Weaknesses: the Learning 407 deviation itself was a unilateral call made
+without pausing to ask, in a project culture that otherwise uses
+AskUserQuestion for comparable decisions – the owner should confirm
+whether this was the right call; Dragon P2’s known-loop case was found
+but not specifically exercised in the E2E smoke test (the plan’s own
+DONE criteria only required “a known trio,” not specifically a loop
+case).
+
+``` handoff
 session: S432
 date: 2026-07-29
 status: complete

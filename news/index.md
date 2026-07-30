@@ -66,6 +66,20 @@
   animal. Previously this information was silently discarded; there was
   no way to tell such an animal apart from one whose correction
   succeeded.
+- The Pedigree Browser tab gained a **Diagram** view (issue
+  [\#129](https://github.com/rmsharp/nprcgenekeepr/issues/129), Slice
+  1): alongside the existing sortable table, a new tab renders the same
+  focal-animal-trimmed population as an interactive pedigree diagram –
+  sex-shaped nodes (square/dot/star/triangle), directed sire/dam edges,
+  and a generation-ordered top-down layout – via a new `visNetwork`
+  dependency. Diagrams above 1,500 animals show an informative message
+  instead of an unbounded render; narrow the focal-animal selection to
+  view one. Clicking a node (issue
+  [\#129](https://github.com/rmsharp/nprcgenekeepr/issues/129), Slice 2)
+  now re-centers the population on that animal, re-driving the same
+  focal-animal selection the Table tab and focal-animal text box already
+  share – switch back to the Table tab (or enable “Trim pedigree based
+  on focal animals”) to see the new selection reflected there.
 
 ## nprcgenekeepr 2.0.0 (20260708)
 

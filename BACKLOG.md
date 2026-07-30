@@ -193,6 +193,24 @@ and only submission that will ever carry that version number.
 
 ## Housekeeping
 
+**Pre-existing `shinyBS is not defined` JS console error on every page
+load** (READY, Effort S) – discovered S433 (2026-07-30) as a side effect
+of adding `app$get_logs()` console-error checking to the new issue \#129
+Slice 1 Diagram-tab E2E test
+(`tests/testthat/ test-e2e-pedigree-module.R`).
+`Uncaught ReferenceError: shinyBS is not defined` fires 12 times per
+app-load session (confirmed unrelated to issue \#129 – no `shinyBS` code
+was touched this session; `shinyBS` is a `Suggests` dependency used
+elsewhere in the app for tooltips/popovers, per `DESCRIPTION`). Not
+fixed this session, per `PROJECT_LEARNINGS.md` Learning 382’s
+scope-discipline precedent (report an incidentally -discovered,
+unrelated pre-existing defect rather than fix it mid-session) – reported
+here instead. No prior E2E test had inspected `app$get_logs()`, so this
+had not previously surfaced. Needs a dedicated look: likely a missing
+`shinyBS` JS dependency load (a script tag ordering issue, or a
+`shinyBS::shinyBSDep()`/similar bootstrap call the app’s UI never
+invokes) rather than a removed R-side call.
+
 **`inst/extdata/` reorganization – Phase 4** (DECISION NEEDED – 2 open,
 non-blocking decisions, Effort M) – plan:
 `docs/planning/extdata-reorganization-plan.md` (S414). **Phase 1 DONE –
@@ -432,9 +450,23 @@ surfaces), see `CHANGELOG.md`. **Planning issue \#129 is now DONE – S432
 (2026-07-29):**
 `docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md`
 ratified (D1 extend `modPedigree.R`; D2 visNetwork; D3 reuse the
-existing strict-lineal trim; D4 multi-slice). **Implement issue \#129
-Slice 1** (core pedigree-diagram render) is next (READY, Effort M);
-**Slice 2** (click-to-navigate interactivity) follows Slice 1, as its
-own future session. **Planning \#130** (marker-based
-kinship/heterozygosity/parentage-verification) comes only after \#129’s
-Slice 1 ships.
+existing strict-lineal trim; D4 multi-slice). **Implementing issue \#129
+Slice 1 is now DONE – S433 (2026-07-30):** the Pedigree Browser tab
+gained a Diagram view (new
+[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md) +
+`modPedigree.R` Table/Diagram tabsetPanel + `visNetwork` dependency),
+see `CHANGELOG.md`. **Implementing issue \#129 Slice 2 is now DONE –
+S434 (2026-07-30, closes issue \#129):** clicking a diagram node
+re-centers the population on that animal via the existing `focalIds`
+reactive path (`visNetwork::visEvents(click = ...)` + a new
+`observeEvent` in `modPedigree.R`). Pre-RED found and corrected a real
+gap in the ratified plan’s mechanism assumption: visNetwork does not
+auto-bind node clicks to a Shiny input (`input$<id>_click`) the way the
+plan’s design section assumed – confirmed hands-on that
+`visEvents(click = ...)` must be wired explicitly. See `CHANGELOG.md`,
+`PROJECT_LEARNINGS.md` Learning 408. **Both slices of issue \#129 are
+now shipped; issue \#129 itself is closed as part of this session’s
+close-out.** **Planning \#130** (marker-based
+kinship/heterozygosity/parentage-verification + cross-center identity
+resolution) is next (READY, Effort M) – no other open item in this
+sequencing chain remains.
