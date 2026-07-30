@@ -327,12 +327,13 @@ remaining findings (PMX/MateRx/Pedscope/PedSys tool-comparison notes, the "make 
 to researchers" governance recommendation) are descriptive or already-adequately-served, not gaps
 requiring tracking. See `CHANGELOG.md`.*
 - [ ] **Sequencing decision (owner-directed, S428, 2026-07-29):** #126 is now
-      DONE -- S429 (2026-07-29, see `CHANGELOG.md`). **Planning issue #127 is
-      now DONE -- S430 (2026-07-29):** ratified plan at
-      `docs/planning/issue127-surface-uncorrected-kinship-flag-plan.md` (see
-      `CHANGELOG.md`), ready for a future implementation session's RED phase
-      (READY, Effort S). **Implementing #127, and planning + implementing
-      #129, are next** (either order between them is the owner's call when
-      picked up); **planning #130 follows all three** (#127 implementation,
-      #129 plan+implementation). Each still needs its own session when its
-      turn comes -- this only fixes the order, not the content.
+      DONE -- S429 (2026-07-29, see `CHANGELOG.md`). Planning issue #127 was
+      DONE -- S430 (2026-07-29). **Implementing issue #127 is now DONE --
+      S431 (2026-07-29, closes issue #127):** `reportGV()`'s `$report` carries
+      a new boolean `flagged` column (all bundled/live surfaces), see
+      `CHANGELOG.md`. **Plan + implement issue #129** (pedigree-diagram/tree
+      visualization, currently table-only) is next -- needs its own
+      scoping/architecture-or-design session first, not straight-to
+      -implementation (READY, Effort M/L). **Planning #130** (marker-based
+      kinship/heterozygosity/parentage-verification) comes only after #129
+      ships.

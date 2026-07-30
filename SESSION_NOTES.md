@@ -13,11 +13,202 @@ boolean `flagged` column to `reportGV()`'s `$report`, surfacing
 `correctUnknownParentMeanKinship()`'s previously-silently-dropped
 uncorrected-animal list to the live Genetic Value DT table and both CSV
 downloads. One vertical slice. Owner-picked via `AskUserQuestion` at Phase 0.
-**Started:** 2026-07-29
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are
-recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the
-crash breadcrumb for the next session's reconcile.
+**DONE. Closes issue #127.**
+**Started/Completed:** 2026-07-29 / 2026-07-29
+**Status:** DONE. Strict TDD PRE-RED -> RED -> GREEN (REFACTOR skipped, owner
+-gated, already clean), all phase-gated via `AskUserQuestion` per the
+Development Process Contract, following `DEVELOPMENT_WORKSTREAM.md`.
+
+**What happened, in order:** **(1)** Ran Phase 0 orientation in full
+(`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list`, `git status`/`log`/
+`diff --stat`, `methodology_dashboard.py` (Health 98/100), ledger reconcile --
+`CHANGELOG.md`/`HANDOFFS.md` frontiers both at HEAD, clean, no backfill
+needed). Rendered the priorities list (2 numbered items) via
+`AskUserQuestion`; owner picked "Implement issue #127." **(2)** Pre-RED:
+re-read all 5 files the plan's contract names
+(`R/reportGV.R`, `R/correctUnknownParentMeanKinship.R`, `R/orderReport.R`,
+`R/rankSubjects.R`, `tests/testthat/test_reportGV.R`) firsthand -- every
+cited line number and claim matched live source exactly, no drift. Stated
+the deliverable back to the owner, claimed the session (`9d2f9335`) before
+any technical work, then posted the D2 (`gvaConvergence()` deferral) decision
+as an issue #127 comment (per the plan's own Pre-RED step). **(3)** RED:
+added one new `test_that()` (the plan's hand-verified 14-row `flagPed`
+fixture, asserting `flagged` is `TRUE` for `Q1` and `FALSE` for every other
+row), extended both golden `expect_named()` assertions and the bundled-report
+regression check. Ran the targeted file: all 7 new/extended
+assertions failed for the correct reason (missing `flagged` column); every
+pre-existing assertion stayed green. **(4)** GREEN: applied the plan's
+call-site change and `cbind()` addition to `R/reportGV.R`, the `@return`
+roxygen clause, and a one-line deferral comment at
+`R/gvaConvergence.R:152-157`. **Found and fixed a real regression from my own
+edit:** the roxygen `\link{correctUnknownParentMeanKinship}` produced an R CMD
+check WARNING (that function is `@noRd`, no Rd page to link to) -- fixed by
+matching the existing house convention (`\code{...()}`, no `\link`, per
+`R/gvaConvergence.R:74`'s own precedent). **(5)** Hit a real, unanticipated
+blocker regenerating the bundled `qcPedGvReport`/`pedWithGenotypeReport`
+objects: the plan's documented recipe (`set.seed(10);
+reportGV(ped, guIter=10000)`) does NOT reproduce the golden-master
+`fg=52.7546854` in this environment (R 4.6.1) -- confirmed via a
+stash/unstash differential test that this is **pre-existing environment/RNG
+drift, not caused by this session's code change** (even fully-unmodified
+`reportGV()` at HEAD reproduces a different value, `52.7641277282` -- an
+exact digit-for-digit match to S206's own "non-reproducible, contaminated"
+value per the S210 comment history). Raised this as a scope decision via
+`AskUserQuestion` rather than silently picking a path; owner chose "full
+regen + update golden master." Regenerated both bundled objects, re-pinned
+`test_reportGV.R`'s `fg` golden-master assertion to the new reproducible
+value, then **found a wider blast radius than the plan anticipated**:
+`tests/testthat/test_summary.nprcgenekeeprGV.R` independently hardcodes the
+same stale `52.75` display value in 3 assertions (reads the same bundled
+object's `summary()` output) -- found via a repo-wide grep sweep, fixed all
+3. **(6)** Verified exhaustively: all 6 directly-affected test files pass
+under `NOT_CRAN=true`; full clean regression read via the exact CLAUDE.md
+-documented recipe reproduces the established baseline precisely (0 failed/0
+error/0 warning, 3250 passed/179 skipped, matching S429's flagged
+"~3210-3250" range byte-for-byte) -- confirming zero regression; a broader
+`NOT_CRAN=true` sweep (Learning 288) also came back clean (0/0/0, 3968
+passed/167 skipped -- the jump is file-level `skip_on_cran()` unlocking, not
+drift, confirmed by comparing both readings side by side).
+`devtools::check(vignettes=FALSE)`: 0 errors/0 warnings/**0 notes**
+(better than the plan's expected "1 known pre-existing spelling NOTE" --
+that NOTE did not reproduce this run). **(7)** Citation checklist: checked
+`inst/extdata/ui_guidance/population_genetics_terms.html` directly --
+confirmed (not assumed) it has no entry for `parentage` or the gu
+de-inflation "Undetermined" policy either (the page covers statistic
+definitions/citations, not report-column bookkeeping), so `flagged` needs no
+new entry, matching the plan's prediction and this session's own precedent
+check. **(8)** Phase 3E runtime smoke test: drove the live modular Shiny app
+via `shinytest2`/`chromote` (`NPRC_RUN_E2E=true`). The plan's hand-built
+14-row `flagPed` fixture hit unexplained friction in the app's live
+input-processing gate (the identical fixture already runs cleanly through
+the full `reportGV()` pipeline via `Rscript` in the RED test -- an
+unrelated, un-investigated QC-gate interaction, not a defect in this
+session's change) -- rather than debug an out-of-scope tangent, pivoted to
+the plan's own documented fallback: drove the **already-proven**
+`obfuscated_rhesus_mhc_ped.csv` + `nIterations=100` E2E pattern (Learning
+400) instead. Live-confirmed the `flagged` column renders as a real,
+sortable DT column header in the live Genetic Value rankings table
+(`aria-label="flagged: activate to sort column ascending"`) -- proving the
+zero-new-plumbing DT-render claim live, on top of the already-rigorous
+`Rscript`-level proof of the actual `TRUE`/`FALSE` values via the RED test.
+**(9)** REFACTOR: owner-gated skip via `AskUserQuestion`, matching the
+S424/S425/S427/S429 precedent for small additive slices -- no duplication or
+structural debt in the 2-file, ~95-line diff.
+
+**Session 430 Handoff Evaluation (by Session 431): 9/10.** **What helped:**
+the "Handoff to Session 431" section's key-files list (exact line numbers
+for `R/reportGV.R:180-186,293`, `R/gvaConvergence.R:152-157`,
+`tests/testthat/test_reportGV.R:7-18,32-43,557-564`) was accurate to the
+character against live source at Pre-RED re-verification -- zero drift found,
+saving a full re-derivation. The gotchas list (don't reuse the unit-test
+fixture unmodified; the §4.2 `flagPed` fixture is ready to paste; both
+bundled objects will regenerate all-`FALSE`) were all confirmed true and
+directly useful. **What was missing:** the handoff (reasonably, since S430
+was a planning-only session with no `R/`/`tests/`/`data/` changes) had no way
+to anticipate the RNG-reproducibility drift in the bundled-object
+regeneration recipe, or the `test_summary.nprcgenekeeprGV.R` blast-radius
+gap -- both were genuinely undiscoverable without actually running the
+regeneration, which is implementation-phase work by design. **What was
+wrong:** nothing -- every claim held. **ROI:** high -- the Pre-RED
+re-verification was fast specifically because the plan's citations were
+exact, and the "gvaConvergence() deferral needs an issue comment" instruction
+was executed directly from the handoff with no ambiguity.
+
+**Self-assessment (Session 431): 9/10.** **Strengths:** (1) treated the
+RNG-reproducibility mismatch as a genuine blocker rather than silently
+picking a path -- stopped, differentially tested (stash/unstash) to prove the
+drift was pre-existing and not caused by this session's own edit, then
+surfaced the real tradeoff to the owner via `AskUserQuestion` rather than
+guessing; (2) did not stop at "my directly-touched test file now passes" --
+ran a repo-wide grep sweep for the stale golden value BEFORE declaring GREEN
+done, which caught `test_summary.nprcgenekeeprGV.R`'s 3 independent hardcoded
+assertions that the plan's own blast-radius analysis had not anticipated;
+(3) caught and fixed a real R CMD check regression from my own roxygen edit
+(an invalid `\link{}` to a `@noRd` function) by finding and matching the
+project's own existing convention, rather than deleting the cross-reference
+or suppressing the warning; (4) when the live E2E smoke test hit friction on
+the plan's synthetic fixture, diagnosed enough to confirm the friction was
+unrelated to this session's actual change (the same fixture already proven
+correct via the full `reportGV()` pipeline through `Rscript`) before
+pivoting to the plan's own documented fallback, rather than either forcing
+the synthetic fixture to work (scope creep into unrelated QC-gate debugging)
+or skipping the live smoke test entirely (Failure Mode #24). **Weaknesses:**
+(1) the live E2E friction with the hand-built fixture was diagnosed only
+partially (confirmed it wasn't the reportGV() computation, via `app$get_logs()`
+console output) but not root-caused -- if a future session needs a
+flagged-in-the-UI live proof (not just column-presence), this specific gap
+would need real investigation, flagged below as a gotcha, not silently
+dropped; (2) the RNG-reproducibility drift discovery, while handled
+correctly (stopped, tested, asked), added real session time; a
+pre-regeneration reproducibility check baked into the plan's own Pre-RED
+step (rather than discovered mid-GREEN) would have surfaced the decision
+point earlier. **Compared to previous sessions:** matches the S206/S210
+precedent (`PROJECT_LEARNINGS.md` Learnings 192/196) for "verify the
+documented recipe reproduces the committed value BEFORE saving, re-surface a
+moved value to the owner as a decision rather than silently correcting it" --
+applied here for the first time to a `fg` value that had ALREADY drifted
+once before (S210's own "fix"), which those two learnings did not
+anticipate.
+
+**Handoff to Session 432:**
+- **What's next:** Per the owner's ratified sequencing (`BACKLOG.md`, S428):
+  issue #127 is now closed. Remaining: **plan + implement issue #129**
+  (pedigree-diagram/tree visualization, currently table-only) -- needs its
+  own scoping/architecture-or-design session first, not straight-to
+  -implementation. **Planning #130** (marker-based kinship/heterozygosity/
+  parentage-verification) comes only after #129 ships. Standing, untouched
+  this session: (a) LabKey integration remaining recs (BLOCKED -- needs a
+  live LabKey server); (b) NPRC outreach plan (DECISION NEEDED -- owner
+  review/edit/send); (c) five-state Issue Lifecycle GitHub labels decision
+  (still open); (d) the vestigial "Upload list" `animalSource` UI option
+  (`R/modBreedingGroups.R:42`, no `fileInput`/handling anywhere -- recommend
+  filing as its own small issue); (e) the `inst/extdata/` reorg BACKLOG
+  entry's stale header (flagged S430, not yet fixed -- low priority prune).
+  **New this session:** (f) the bundled `qcPedGvReport`/`pedWithGenotypeReport`
+  golden-master `fg` value has now drifted TWICE from its "documented,
+  reproducible" recipe (S206's contaminated save -> S210's "fix" to
+  `52.7546854` -> this session's re-regeneration landing back on
+  `52.7641277282`, matching S206's original value almost exactly) -- the
+  recipe's actual reproducibility across R versions/environments is now
+  genuinely in question, not just a one-off fluke. Worth a small dedicated
+  investigation (or at minimum, a `BACKLOG.md`/`PROJECT_LEARNINGS.md` note)
+  if it drifts a third time. (g) the live E2E smoke test could not get the
+  plan's own 14-row synthetic `flagPed` fixture through the app's live
+  input-processing gate (uploaded fine, QC completed, but the GVA module
+  never signaled ready after clicking "Run Analysis" -- `app$get_logs()`
+  showed no error, just no completion within 90s) -- root cause
+  undiagnosed; the pivot to the proven `obfuscated_rhesus_mhc_ped.csv`
+  fixture fully substituted for THIS session's purposes (column-presence
+  confirmed live; TRUE/FALSE-value correctness independently proven via
+  `Rscript`), but if a future session needs a live UI proof of an actual
+  `TRUE` flagged row, this gap needs real investigation first.
+- **Key files:** `R/reportGV.R:180-193,293-296,120-127` (the `flagged`
+  computation, `cbind()`, and `@return` roxygen); `R/gvaConvergence.R:152-157`
+  (the deferred second caller, now commented); `tests/testthat/test_reportGV.R`
+  (the new `flagPed`-fixture test + 3 extended assertions);
+  `tests/testthat/test_summary.nprcgenekeeprGV.R:31,40,51` (the 3 re-pinned
+  `52.76` display assertions); `data/qcPedGvReport.RData`,
+  `data/pedWithGenotypeReport.RData` (regenerated, now carry `flagged`,
+  all-`FALSE`, `fg=52.7641277282`).
+- **Gotchas:** (1) the bundled-object `fg` golden master is now
+  `52.7641277` (7-decimal display), NOT `52.7546854` -- do not "fix" it back;
+  see (f) above for the drift history; (2) do not reuse the `flagPed` CSV
+  fixture (`/private/tmp/.../scratchpad/flagPed.csv`, scratch-only, not
+  committed) for a live E2E test without first diagnosing why the GVA module
+  never reached ready -- see (g) above; (3) `.DS_Store`/`inst/.DS_Store`/
+  `inst/extdata/.DS_Store` and
+  `docs/planning/issue125-ranking-priority-multi-candidate-plan.html`
+  remain harmless, unfixed, out-of-scope artifacts, unchanged since S425;
+  (4) `test_calcGeneDiversity.R:18-19` and `R/calcGeneDiversity.R:31`'s
+  roxygen example both still reference the OLD `52.75` FG value in
+  illustrative-only comments/examples (not assertions against the live
+  bundled object) -- left untouched, cosmetically stale but not incorrect,
+  out of this session's scope.
+- **Self-assessment score:** 9/10 (see above for full breakdown).
+- **Runtime smoke test:** DONE (live) -- see step (8) above. Confirmed the
+  `flagged` column renders as a real sortable DT column header in the live
+  Genetic Value rankings table via `shinytest2`/`chromote` against the
+  bundled `obfuscated_rhesus_mhc_ped.csv` fixture.
 
 ### What Session 430 Did
 **Deliverable:** Write a design/scoping architecture plan for closing issue #127

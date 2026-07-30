@@ -43,6 +43,51 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-29 · [issue #127] Surface correctUnknownParentMeanKinship()'s silently-dropped flagged list (Session 431)
+- **Deliverable:** Implemented the ratified plan
+  (`docs/planning/issue127-surface-uncorrected-kinship-flag-plan.md`). `reportGV()`'s
+  `$report` gains a boolean `flagged` column (`TRUE` for a one-unknown-parent
+  animal left uncorrected for lack of an eligible breeding-age peer cohort,
+  `FALSE` otherwise), reaching the live Genetic Value DT table and both CSV
+  downloads with no other plumbing changes, via the same `cbind()` mechanism
+  the existing `parentage` column uses. `R/gvaConvergence.R`'s identical,
+  deliberately-deferred discard is now documented with a comment pointing at
+  the issue #127 D2 comment. One vertical slice, strict TDD PRE-RED → RED →
+  GREEN (REFACTOR skipped, owner-gated, already clean), all phase transitions
+  gated via `AskUserQuestion`.
+- **Verify:** RED confirmed all 7 new/extended assertions failed for the
+  correct reason before GREEN. `devtools::check(vignettes=FALSE)`: 0
+  errors/0 warnings/0 notes (fixed a self-introduced R CMD check WARNING
+  along the way — an invalid `\link{}` to a `@noRd` function, corrected to
+  match the project's existing `\code{...()}` convention). Full clean
+  regression read via the documented recipe reproduces the established
+  baseline exactly (0/0/0, 3250 passed/179 skipped); a broader
+  `NOT_CRAN=true` sweep also came back clean. Phase 3E: live-drove the
+  modular Shiny app (`shinytest2`/`chromote`) and confirmed `flagged` renders
+  as a real, sortable DT column in the live Genetic Value rankings table.
+- **Bundled-data regeneration finding (scope-gated via `AskUserQuestion`):**
+  regenerating `qcPedGvReport`/`pedWithGenotypeReport` via the documented
+  recipe does not reproduce the S210-established golden-master `fg` value in
+  this environment (R 4.6.1) — confirmed via a stash/unstash differential
+  test to be pre-existing RNG/environment drift, not caused by this
+  session's own change (it reproduces `52.7641277282`, matching S206's own
+  original "non-reproducible" value almost exactly). Owner chose full regen
+  + re-pin over a deterministic-splice workaround. A repo-wide grep before
+  declaring GREEN done found the SAME stale value independently hardcoded in
+  3 more assertions in `tests/testthat/test_summary.nprcgenekeeprGV.R` (not
+  named in the plan's own blast-radius analysis) — fixed all 3. See
+  `PROJECT_LEARNINGS.md` Learnings 402–403.
+- **Docs:** `man/reportGV.Rd` (new `flagged` `@return` clause),
+  `man/qcPedGvReport.Rd`/`man/pedWithGenotypeReport.Rd` (incidental,
+  unrelated pre-existing staleness fixed as a `devtools::document()`
+  byproduct — top-level list length `11` → `14`, already true before this
+  session's regen). `NEWS.Rmd`/`NEWS.md` updated. Citation checklist: checked
+  `inst/extdata/ui_guidance/population_genetics_terms.html` directly — no new
+  entry needed (confirmed, not assumed: no existing entry covers `parentage`
+  or the gu de-inflation "Undetermined" policy either, so `flagged` follows
+  the same precedent). `BACKLOG.md` sequencing item updated; `CLAUDE.md`
+  learning count corrected.
+
 ### 2026-07-29 · [issue #127] Plan surfacing correctUnknownParentMeanKinship()'s silently-dropped flagged list (Session 430)
 - **Deliverable:** `docs/planning/issue127-surface-uncorrected-kinship-flag-plan.md`,
   ratified via `AskUserQuestion`. Architecture-workstream planning session

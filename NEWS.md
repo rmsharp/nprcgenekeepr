@@ -46,6 +46,13 @@ R. Mark Sharp, Ph.D.
   underlying values are too few or have zero variance to compute.
   `modSummaryStatsServer()` gained matching `mkShape`/`guShape`
   return-list reactives for scripted use.
+- The Genetic Value Analysis rankings table (and both CSV downloads)
+  gained a **flagged** column (issue \#127): `TRUE` for a
+  one-unknown-parent animal that `reportGV()`'s mean-kinship correction
+  left uncorrected for lack of an eligible contemporaneous breeding-age
+  peer cohort, `FALSE` for every other animal. Previously this
+  information was silently discarded; there was no way to tell such an
+  animal apart from one whose correction succeeded.
 
 # nprcgenekeepr 2.0.0 (20260708)
 
