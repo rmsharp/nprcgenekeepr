@@ -220,12 +220,16 @@ Funtions designed for interactive use
   : Calculate genome uniqueness for each population ID
 - [`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md)
   : Calculate the standard error of genome uniqueness
+- [`calcKurtosis()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcKurtosis.md)
+  : Calculate bias-adjusted sample excess kurtosis
 - [`calcNeSexRatio()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeSexRatio.md)
   : Calculate the demographic sex-ratio effective population size
 - [`calcNeVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeVariance.md)
   : Calculate the variance effective population size
 - [`calcRetention()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcRetention.md)
   : Calculate allelic retention
+- [`calcSkewness()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcSkewness.md)
+  : Calculate bias-adjusted sample skewness
 - [`calculateSexRatio()`](https://github.com/rmsharp/nprcgenekeepr/reference/calculateSexRatio.md)
   : Calculate the sex ratio of a set of animals
 - [`checkChangedColsLst()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkChangedColsLst.md)

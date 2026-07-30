@@ -7,6 +7,232 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 429 Did
+
+**Deliverable:** Implement the ratified issue \#126 plan
+(`docs/planning/issue126-distribution-shape-stats-plan.md`) – add
+bias-adjusted skewness/kurtosis (Joanes & Gill 1998) for mean kinship
+and genome uniqueness to the live Summary Statistics distribution table
+(`R/modSummaryStats.R`) and
+[`makeGeneticSummaryTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticSummaryTable.md).
+One vertical slice. Owner-picked via `AskUserQuestion` at Phase 0.
+**DONE. Closes issue \#126.** **Started/Completed:** 2026-07-29 /
+2026-07-29 **Status:** DONE. TDD phases RED -\> GREEN -\> REFACTOR
+(skipped, code already clean), all phase-gated via `AskUserQuestion` per
+the Development Process Contract, following `DEVELOPMENT_WORKSTREAM.md`.
+
+**What happened, in order:** **(1)** Ran Phase 0 orientation in full
+(SAFEGUARDS.md, SESSION_NOTES.md, `gh issue list`, `git status`/`log`/
+`diff --stat`, `methodology_dashboard.py` (Health 98/100), ledger
+reconcile – `CHANGELOG.md`/`HANDOFFS.md` frontiers both at HEAD, clean,
+no backfill needed). Rendered the priorities list (3 numbered items) via
+`AskUserQuestion`; owner picked “Implement issue \#126 plan.” **(2)**
+Read the ratified plan in full, stated the deliverable back to the
+owner, claimed the session (`44f5c40d`) before any technical work.
+**(3)** Pre-RED: re-read `R/modSummaryStats.R`,
+`R/makeGeneticSummaryTable.R`, and the two cited test files firsthand –
+confirmed every one of the plan’s cited line numbers matched live source
+exactly (zero drift since ratification), satisfying the vertical-slice
+contract-reverification gate. Posted the
+[`summarizeKinshipValues()`](https://github.com/rmsharp/nprcgenekeepr/reference/summarizeKinshipValues.md)
+deferral as a comment on issue \#126 itself
+(<https://github.com/rmsharp/nprcgenekeepr/issues/126#issuecomment-5124608624>),
+per the plan’s own Pre-RED instruction. **(4)** PRE-RED-\>RED gate
+approved. Used `Rscript` to hand-verify the exact `G1`/`G2` golden
+values for every RED fixture before writing assertions (not estimated by
+eye), including confirming the plan’s own worked-example values
+(mean-kinship skewness 0.3756/excess kurtosis -0.9982) reproduce
+exactly. Wrote 2 new test files
+(`test_calcSkewness.R`/`test_calcKurtosis.R`, 6-7 `test_that()` blocks
+each: hand-computed exact value, small-n degeneracy, zero-variance
+degeneracy on the REAL bundled `qcPedGvReport$gu` case, `na.rm`
+handling, and the plan’s own worked example) and extended 3 existing
+test files (`test_makeGeneticSummaryTable.R`,
+`test_modSummaryStats_parity.R`, `test_moduleContract.R`). All
+new/changed assertions failed for the correct reason (missing
+functions/columns, not typos); every pre-existing assertion in every
+touched file stayed green (`e26c0234`). **(5)** RED-\>GREEN gate
+approved. Implemented `R/calcSkewness.R`/`R/calcKurtosis.R` (roxygen
+styled on `R/calcNeSexRatio.R`’s template) and extended
+`R/makeGeneticSummaryTable.R` /`R/modSummaryStats.R` exactly per the
+plan’s Scope/Dragons (P1-P5). Discovered and fixed one real (not
+spurious) interaction: a pre-existing `test_makeGeneticSummaryTable.R`
+fixture used n=3 rows, which is legitimately degenerate for kurtosis
+(needs n\>3, Dragon P3) – widened to n=4, preserving the test’s original
+vocabulary-parity intent. All new tests green; every pre-existing test
+in every touched file stayed green (`e64b7fe3`). **(6)**
+GREEN-\>REFACTOR gate: owner picked “skip – already clean” (matches
+S424/S425/S427 precedent for similarly small slices). **(7)** Verify:
+fixed one genuinely stale passed-count baseline discrepancy discovered
+during the clean regression read – this environment’s actual pre-session
+baseline on the unchanged prior commit (`b1f320cc`) is 3210 passed/179
+skipped, not the 3928 recorded in S427/S428’s `HANDOFFS.md`; root-caused
+via `git stash` (non-destructive) rather than accepting either number on
+faith, confirmed deterministic across repeated runs, confirmed this
+session’s own additions land exactly as expected (3210 + 36 new = 3246).
+Fixed a real `devtools::check()` NOTE regression (the “All exposed
+functions” `_pkgdown.yml` reference group was missing the two new
+exports, caught by `test_pkgdown_reference_config.R`) and 2 real `lintr`
+findings (a `commented_code_linter` false-positive from a trailing `/`
+in a comment, fixed by rewording; an `implicit_integer_linter` hit on
+`m2 == 0`, fixed to `0.0`) plus one legitimate `na.rm` object-name lint,
+resolved with a targeted `# nolint` matching base R’s own convention and
+the ratified plan’s spec, not a rename. Added `skewness`/`kurtosis`/
+`Pearson`/`Joanes`/`reactives` to `inst/WORDLIST` by hand (S230/S421
+convention); the last of the five (`reactives`, from this session’s own
+NEWS bullet) was only caught by a full `devtools::check()` run, not the
+direct
+[`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+call, since the two use different comparison mechanics. Final
+`devtools::check()`: 0 errors/0 warnings, 1 NOTE (the same pre-existing
+`deduplicated`/`selectable` spelling gap tracked since S415 – confirmed
+unchanged, not new). Updated
+`inst/extdata/ui_guidance/population_genetics_terms.html` (citation
+checklist, issue \#120) and `NEWS.Rmd`/`NEWS.md` (rendered). **(8)**
+Phase 3E runtime smoke test: took 8 attempts to get right (see Learning
+400) – building a fresh 40-row synthetic pedigree (Learning 395’s own
+precedent, applied without re-checking it against a GVA-touching
+feature) caused the GVA module’s data-ready signal to never fire even
+after a 90s poll, and the first several attempts also never overrode the
+GVA module’s 1000-iteration default. Grepping the committed E2E suite
+for `runAnalysis` found `test-e2e-genetic-value-tutorial.R`’s exact
+working pattern (the bundled `obfuscated_rhesus_mhc_ped.csv` fixture +
+`nIterations=100`); switching to it worked immediately with zero further
+changes. Confirmed live: the Summary Statistics tab renders real
+Skewness/Kurtosis values for both Mean Kinship (-0.0744/-1.3524) and
+Genome Uniqueness (1.3461/1.0389) on that fixture, with the pre-existing
+Min/1st Qu./Mean/Median/3rd Qu./Max columns and the founder/ Ne blocks
+unaffected. **(9)** Closed issue \#126 on GitHub with a summary comment.
+Added `PROJECT_LEARNINGS.md` Learning 400, fixed `CLAUDE.md`’s stale
+“399 learnings”/session count.
+
+**Session 428 Handoff Evaluation (by Session 429): 9/10.** **What
+helped:** the plan document itself
+(`docs/planning/issue126-distribution-shape-stats-plan.md`) was the
+single most valuable artifact this session used – its ratified
+Scope/Formula/ Layout/API decisions (Sec.5), the worked example with
+exact golden values (Sec.4), and especially the Dragons (Sec.7, P1-P5)
+translated almost directly into RED test scenarios and GREEN
+implementation choices; zero citation drift found on re-verification
+against live source. The handoff’s `gotchas` field named the
+zero-variance degeneracy, the excess-vs-raw kurtosis convention, and the
+golden-master discipline specifically, and all three mattered during
+implementation. `next_steps` correctly scoped the session (implement
+\#126 first) and the standing-items list (LabKey, NPRC outreach,
+five-state labels decision, the vestigial “Upload list” option) was
+accurate and untouched by this session, as expected. **What was
+missing:** the handoff could not have anticipated the two E2E-harness
+gotchas this session hit (Learning 400) – S428 was a planning-only
+session with no `R/`/`tests/` changes and no reason to have driven the
+GVA module’s AppDriver flow itself; this is squarely a Phase 3E
+discovery, not a planning gap. **What was wrong:** nothing – every
+citation, formula, and Dragon held exactly as described; the
+worked-example golden values (0.3756/-0.9982) reproduced exactly via
+independent `Rscript` verification before use in tests. **ROI:** very
+high – the plan’s own RED/GREEN/DONE-looks-like/Verify sections were
+detailed enough to implement against nearly verbatim, with almost all of
+this session’s genuine new discovery work landing in Verify (the stale
+baseline count, the pkgdown NOTE, the lint findings) and Phase 3E (the
+E2E harness gotchas) – exactly the categories a planning session cannot
+pre-empt.
+
+**Self-assessment (Session 429): 9/10.** **Strengths:** (1) did not
+trust a suspicious clean-regression-read number at face value – when the
+passed count (3246) came in far below the previously-recorded S427/S428
+baseline (3928), root-caused it via a non-destructive `git stash`
+comparison against the unchanged prior commit rather than either
+alarming the user with an unverified regression claim or silently
+accepting a number that didn’t add up; found the true baseline is 3210
+in this environment, confirmed this session’s own delta lands exactly as
+expected, and recorded the discrepancy for the record without letting it
+block close-out; (2) treated a `devtools::check()` NOTE (missing
+`_pkgdown.yml` export coverage) and 2 lintr findings as real defects to
+fix, not artifacts to wave away, while correctly recognizing which of
+the remaining findings (the `na.rm` parameter name, the pre-existing
+`deduplicated`/`selectable` spelling gap) were legitimate, precedented
+exceptions rather than things to silently “fix” by breaking established
+convention; (3) discovered a genuine (non-spurious) interaction between
+the new Kurtosis column and a pre-existing 3-row test fixture, diagnosed
+it correctly as a real degeneracy (not a bug in the implementation), and
+fixed the fixture minimally while preserving the test’s original intent;
+(4) persisted through 8 iterations of Phase 3E debugging rather than
+declaring the smoke test “impossible in this environment” prematurely,
+and once blocked, searched the committed test suite for precedent
+(`grep -rln "runAnalysis"`) instead of continuing to guess – found the
+exact fix in one search; (5) recorded the E2E-harness discoveries as a
+new learning (400) generalizing beyond this one session, in the same
+spirit as S427’s Learnings 397/398. **Weaknesses:** (1) the first 4
+Phase 3E attempts were genuinely trial-and-error (wrong selector timing
+guesses, then a wrong assumption about `app$get_log()`’s method name)
+before switching to the more efficient “grep the committed suite for
+precedent” strategy – that search should have been the FIRST move, not
+the fifth, given `PROJECT_LEARNINGS.md` Learning 395/397/398 already
+flagged this exact class of harness gotcha as a known recurring risk;
+(2) did not fully root-cause WHY the hand-built synthetic pedigree
+specifically hung the GVA module (left as an open question in Learning
+400, out of this session’s scope once a working alternative was found) –
+a future session hitting the same symptom would still need to diagnose
+it fresh. **Compared to previous sessions:** mirrors S427’s
+implementation-session discipline (full RED-\>GREEN-\>REFACTOR gate
+cycle, plan-citation re-verification, Phase 3E smoke test, 2 new
+Learnings) with an added corrective habit – treating a suspicious
+verification number as a signal to investigate rather than either alarm
+or accept, matching this session’s own S428 predecessor’s discipline of
+not trusting cited evidence at face value, now applied to numeric
+verification output instead of document citations.
+
+**Handoff to Session 430:** - **What’s next:** Per the owner’s
+sequencing decision (`BACKLOG.md`, ratified S428): **plan + implement
+issue \#127 next** (surface `correctUnknownParentMeanKinship()`’s
+silently-dropped flagged (uncorrected-animal) list), then **\#129**
+(pedigree-diagram/tree visualization) – either order between those two
+is the owner’s call at that time. **Planning \#130** (marker-based
+kinship/heterozygosity/ parentage-verification) comes only after both
+\#127 and \#129 are fully shipped. Each needs its own scoping/design
+session first (following S423/S426/S428’s planning-session precedent)
+before an implementation session – do not skip straight to
+implementation from the bare issue text. Standing, untouched this
+session: (a) LabKey integration remaining recs (BLOCKED – needs a live
+LabKey server); (b) NPRC outreach plan (DECISION NEEDED – owner
+review/edit/send); (c) five-state Issue Lifecycle GitHub labels decision
+(still open); (d) the vestigial “Upload list” `animalSource` UI option
+(`R/modBreedingGroups.R:42`, no `fileInput`/handling anywhere –
+recommend filing as its own small issue). - **Key files:**
+`R/calcSkewness.R`/`R/calcKurtosis.R` (the new pure functions);
+`R/makeGeneticSummaryTable.R:56-107` (script-user-parity table);
+`R/modSummaryStats.R:592-635,698-729,932-935` (the live surface);
+`tests/testthat/test_calcSkewness.R`/`test_calcKurtosis.R` (unit tests,
+usable as a template for any future pure-vector-statistic addition);
+`docs/planning/issue126-distribution-shape-stats-plan.md` (the shipped
+plan, for reference on this feature’s design rationale);
+`PROJECT_LEARNINGS.md` Learning 400 (E2E Phase-3E-for-GVA-features
+gotchas – read before any future GVA-touching smoke test). -
+**Gotchas:** (1) before writing ANY new Phase 3E AppDriver script that
+touches the Genetic Value Analysis module,
+`grep -rln "runAnalysis" tests/testthat/test-e2e-*.R` FIRST and crib the
+fixture + `app$set_inputs(`geneticValue-nIterations`= 100)` pattern from
+an already-passing committed test – do not build a fresh synthetic
+pedigree or leave GVA options at their UI defaults (Learning 400); (2)
+use `app$get_logs()` (plural), not `get_log()`, for AppDriver console
+diagnostics; (3) this app’s headless-chromote console reliably throws
+`Uncaught ReferenceError: shinyBS is not defined` at page load –
+confirmed harmless (the already-passing committed E2E suite hits it too)
+and not worth re-investigating; (4) this environment’s TRUE
+clean-regression-read baseline (unchanged commits) is 3210 passed/179
+skipped, not 3928 as S427/S428’s `HANDOFFS.md` records – if a future
+session sees ~3928 again, that would itself be worth investigating
+(environment drift?), but do not be alarmed by a ~3210-3250 range on
+this environment; (5) `.DS_Store`/
+`inst/.DS_Store`/`inst/extdata/.DS_Store` and
+`docs/planning/issue125-ranking-priority-multi-candidate-plan.html`
+remain harmless, unfixed, out-of-scope artifacts, unchanged from
+S425-S429. - **Self-assessment score:** 9/10 (see above for full
+breakdown). - **Runtime smoke test:** DONE – live app driven Input -\>
+Genetic Value Analysis -\> Summary Statistics; confirmed real (non-N/A)
+Skewness/Kurtosis values render for both Mean Kinship and Genome
+Uniqueness, existing columns and founder/Ne blocks unaffected. See
+Learning 400 for the 8-attempt debugging path.
+
 ### What Session 428 Did
 
 **Deliverable:** Write a design/scoping plan for closing issue \#126

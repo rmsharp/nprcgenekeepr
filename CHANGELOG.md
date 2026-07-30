@@ -47,6 +47,60 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-29 · \[issue \#126\] Implement kinship/genome-uniqueness distribution-shape statistics (Session 429)
+
+- **Deliverable:** Implemented the ratified plan
+  (`docs/planning/issue126-distribution-shape-stats-plan.md`), one
+  vertical slice. Closes issue \#126. New exported functions
+  [`calcSkewness()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcSkewness.md)/
+  [`calcKurtosis()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcKurtosis.md)
+  (`R/calcSkewness.R`, `R/calcKurtosis.R`) compute the bias-adjusted
+  Fisher-Pearson skewness (`G1`) and excess kurtosis (`G2`) coefficients
+  (Joanes & Gill 1998, “Method 2”), `NA`-guarded for `n <= 2`/ `n <= 3`
+  and zero-variance degeneracy. `R/modSummaryStats.R`’s live
+  distribution table (`distTbl`) and `R/makeGeneticSummaryTable()` both
+  gain Skewness/Kurtosis columns for Mean Kinship and Genome Uniqueness;
+  [`modSummaryStatsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modSummaryStatsServer.md)’s
+  return list gains `mkShape`/`guShape` reactives (matching the existing
+  `mkSummary`/`guSummary` precedent).
+  [`summarizeKinshipValues()`](https://github.com/rmsharp/nprcgenekeepr/reference/summarizeKinshipValues.md)
+  is unchanged, per the plan’s ratified scope decision (deferred,
+  recorded on the issue itself pre-RED).
+- **Process:** Full strict TDD (RED -\> GREEN, REFACTOR skipped – code
+  already clean), each phase gated via `AskUserQuestion`. RED added
+  `tests/testthat/test_calcSkewness.R`/`test_calcKurtosis.R` (new) and
+  extended
+  `test_makeGeneticSummaryTable.R`/`test_modSummaryStats_parity.R`/
+  `test_moduleContract.R`; all new/changed assertions failed for the
+  correct reason, every pre-existing assertion in each touched file
+  stayed green. One pre-existing test fixture
+  (`test_makeGeneticSummaryTable.R`’s vocabulary-parity test) needed
+  widening from n=3 to n=4 rows – a real, correct interaction with the
+  plan’s own Dragon P3 (kurtosis needs n \> 3), not a regression.
+- **Verify:** Targeted + clean full regression read 0 failed/0 error/0
+  warning, 3246 passed (this environment’s true pre-session baseline on
+  the unchanged prior commit is 3210, not the 3928 previously recorded
+  in S427/S428’s `HANDOFFS.md` – confirmed via `git stash`, not caused
+  by this session; flagged, not chased further). `devtools::check()`: 0
+  errors/0 warnings, 1 NOTE (the same pre-existing
+  `deduplicated`/`selectable` spelling gap tracked since S415, unrelated
+  to this session). `inst/WORDLIST` updated (`skewness`, `kurtosis`,
+  `Pearson`, `Joanes`, `reactives`, hand-added). `_pkgdown.yml`’s “All
+  exposed functions” group updated with both new exports (a pre-existing
+  repo-wide guard test, `test_pkgdown_reference_config.R`, caught the
+  omission). `lintr` clean on all touched files (one targeted
+  `# nolint: object_name_linter.` for `na.rm`, matching base R’s own
+  convention and the ratified plan’s spec). Citation checklist (issue
+  \#120): `inst/extdata/ui_guidance/ population_genetics_terms.html`’s
+  GU/MK entries updated with a skewness/ kurtosis explanation.
+  `NEWS.Rmd`/`NEWS.md` updated. Phase 3E runtime smoke test: live app
+  driven Input -\> Genetic Value Analysis -\> Summary Statistics;
+  confirmed real Skewness/Kurtosis values render for both Mean Kinship
+  and Genome Uniqueness on the bundled `obfuscated_rhesus_mhc_ped.csv`
+  fixture, with the existing Min/1st Qu./Mean/Median/3rd Qu./Max columns
+  and the founder/Ne blocks unaffected.
+- Issue \#126 closed on GitHub with a summary comment.
+
 ### 2026-07-29 · \[issue \#126\] Plan kinship/genome-uniqueness distribution-shape statistics (Session 428)
 
 - **Deliverable:**

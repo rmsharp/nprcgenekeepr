@@ -6,15 +6,11 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 ## Active
 
-**Implement the ratified issue \#126 plan** (READY, Effort S) – plan:
-`docs/planning/issue126-distribution-shape-stats-plan.md` (S428,
-2026-07-29, ratified via `AskUserQuestion`). Adds bias-adjusted
-skewness/kurtosis (Joanes & Gill 1998) for mean kinship and genome
-uniqueness to the live Summary Statistics distribution table
-(`R/modSummaryStats.R`) and the
-[`makeGeneticSummaryTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticSummaryTable.md)
-script-user-parity helper; one vertical slice, one session. Closes issue
-\#126.
+(none remaining – issue \#126 (kinship/genome-uniqueness
+distribution-shape statistics) is DONE – S429 (2026-07-29): see
+`CHANGELOG.md`. Per the owner-ratified sequencing below, planning +
+implementing \#127 and \#129 (either order) are next; planning \#130
+follows all three.)
 
 (none remaining – Slice 2 of the issue \#125 plan (surface multiple
 breeding-group candidates) is DONE – S425 (2026-07-29): see
@@ -426,9 +422,10 @@ matching the audit’s own Recommendation \#5. The remaining findings
 available to researchers” governance recommendation) are descriptive or
 already-adequately-served, not gaps requiring tracking. See
 `CHANGELOG.md`.* - \[ \] **Sequencing decision (owner-directed, S428,
-2026-07-29):** \#126’s plan is ratified and ready to implement now (see
-the Active section above). **Planning and implementing \#127 and \#129
-follow \#126’s implementation** (not before); **planning \#130 follows
-all three** (#126 implementation, \#127 plan+implementation, \#129
-plan+implementation). Each still needs its own scoping/design session
-when its turn comes – this only fixes the order, not the content.
+2026-07-29):** \#126 is now DONE – S429 (2026-07-29, see
+`CHANGELOG.md`). **Planning and implementing \#127 and \#129 are next**
+(either order between the two is the owner’s call when picked up);
+**planning \#130 follows all three** (#126 implementation, \#127
+plan+implementation, \#129 plan+implementation). Each still needs its
+own scoping/design session when its turn comes – this only fixes the
+order, not the content.

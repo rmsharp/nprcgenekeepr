@@ -56,9 +56,11 @@ Other genetic value analysis:
 [`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md),
 [`calcGU()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md),
 [`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md),
+[`calcKurtosis()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcKurtosis.md),
 [`calcNeSexRatio()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeSexRatio.md),
 [`calcNeVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeVariance.md),
-[`calcRetention()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcRetention.md)
+[`calcRetention()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcRetention.md),
+[`calcSkewness()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcSkewness.md)
 
 ## Examples
 
