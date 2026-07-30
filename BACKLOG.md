@@ -169,7 +169,22 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       fix, just with a different console error). Not fixed this session, per
       `PROJECT_LEARNINGS.md` Learning 382/407's scope-discipline precedent --
       filed as [issue #140](https://github.com/rmsharp/nprcgenekeepr/issues/140)
-      instead. See `CHANGELOG.md`.)
+      instead. **Issue #140 itself is now RESOLVED -- S438 (2026-07-30):**
+      fixed via a JS shim (`inst/www/js/shinyBS-popover-fix.js`, included in
+      `R/appUI.R` the same way as `data-ready.js`) that overrides shinyBS's
+      mutable `addTooltip` global to guard the `.popover("destroy")`/
+      `.tooltip("destroy")` calls that throw under Bootstrap 4.6.0 (Bootstrap
+      4 renamed `destroy` -> `dispose`, so the unguarded call fires
+      unconditionally, not just when no instance exists). Chosen over 2 other
+      researched options (vendor/patch `shinyBS.js`; migrate to
+      `bslib::tooltip()`/`popover()`, which turned out to hard-require
+      Bootstrap 5 and was out of scope). Verified live via `shinytest2`/
+      `chromote`: zero console errors AND a real `bs.popover` instance now
+      attaches to both a `popify()`-wrapped button and all 3 `addPopover()`
+      targets -- popovers/tooltips are now actually functional, not just
+      error-free (matching Learning 414's precedent: verify the underlying
+      claim, not just the absence of the originally-reported error). See
+      `CHANGELOG.md`.)
 - [ ] **`inst/extdata/` reorganization -- Phase 4** (DECISION NEEDED -- 2 open,
       non-blocking decisions, Effort M) -- plan:
       `docs/planning/extdata-reorganization-plan.md` (S414). **Phase 1 DONE -- S415
@@ -263,6 +278,22 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       position (not via `spelling::update_wordlist()`, per S230 convention) -- S421
       (2026-07-29). Verified: `devtools::check()` raw log `Status: OK`, 0 notes.
       See `CHANGELOG.md`.)
+- [ ] **`test-e2e-data-ready.R`'s "appUI includes data-ready.js" test doesn't
+      actually verify content inclusion** (discovered S438, Effort S) --
+      incidentally found while writing a stronger test for issue #140's fix:
+      `tags$head(...)` content is dropped entirely by `as.character()` on a
+      raw `tagList`/`shiny.tag` (only surfaces through Shiny's real
+      page-serving pipeline or `htmltools::renderTags(...)$head`), so this
+      existing test's assertion (`inherits(app_ui, "shiny.tag.list") ||
+      inherits(app_ui, "shiny.tag")`) passes regardless of whether
+      `data-ready.js` is actually included -- it cannot fail even if the
+      `includeScript()` line were deleted. Not fixed this session (unrelated
+      file, out of this session's TDD scope), per `PROJECT_LEARNINGS.md`
+      Learning 382/407's precedent. A future session should replace it with
+      an `htmltools::renderTags(app_ui)$head` assertion, matching the
+      pattern used for the new shim test in
+      `tests/testthat/test_modSummaryStats_popovers.R` (S438). See
+      `PROJECT_LEARNINGS.md` Learning 415.
 - [ ] (none remaining -- the "clean up stale untracked leftover files" item (filed
       S383) is RESOLVED: 18 confirmed-dead untracked files deleted -- S384
       (2026-07-15). See `CHANGELOG.md`.)

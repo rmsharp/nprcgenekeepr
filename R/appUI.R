@@ -51,9 +51,17 @@ appUI <- function(siteInfo = NULL) {
   dataReadyJS <- system.file("www", "js", "data-ready.js",
                               package = "nprcgenekeepr")
 
+  # Fix for shinyBS's popover-destroy defect under Bootstrap 4.6.0 (#140)
+  shinyBSPopoverFixJS <- system.file("www", "js", "shinyBS-popover-fix.js",
+                                      package = "nprcgenekeepr")
+
   tagList(
     # Include the data-ready JavaScript if it exists
     if (file.exists(dataReadyJS)) tags$head(includeScript(dataReadyJS)),
+    # Include the shinyBS popover-destroy fix if it exists
+    if (file.exists(shinyBSPopoverFixJS)) {
+      tags$head(includeScript(shinyBSPopoverFixJS))
+    },
 
     navbarPage(
     title = "GeneKeepR",

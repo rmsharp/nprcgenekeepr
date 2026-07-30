@@ -43,6 +43,59 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-30 · [issue #140] Fix shinyBS popover/tooltip destroy defect under Bootstrap 4.6.0 (Session 438)
+- **Deliverable:** Owner-picked from the Phase 0 priorities list (over planning issue #130, issue #131,
+  and NPRC outreach review). TDD phases: PRE-RED (parallel research of 3 candidate fix directions named
+  in the issue, then an owner-picked approach) → RED (2 failing tests) → GREEN (implementation, plus one
+  in-flight test-design fix) → REFACTOR (skipped, owner-confirmed nothing to restructure).
+- **Root cause:** shinyBS 0.65.0's `shinyBS.js` calls `$id.popover("destroy")` / `$id.tooltip("destroy")`
+  unconditionally before initializing a new instance. Bootstrap 4 renamed `destroy` → `dispose`;
+  `_jQueryInterface`'s regex no longer recognizes `"destroy"` as a no-op, so it creates a new (empty)
+  instance and then throws looking up `data["destroy"]`, one line before the real init call — fires
+  every time under this app's pinned `bslib::bs_theme(version = 4L, bootswatch = "flatly")`
+  (`R/appUI.R`), not just "no instance yet."
+- **Research (3 parallel agents, before the pre-RED `AskUserQuestion`):** Option A (vendor/patch
+  `shinyBS.js`, Effort S — found 4 unguarded destroy calls, not just the 1 reported; requires
+  documenting a vendored modified GPL-3 file inside this MIT package, stale-on-update risk). Option B
+  (JS shim overriding `shinyBS.addTooltip`, Effort S — root-caused the defect; both `popify()`'s direct
+  call and `addPopover()`'s Shiny custom-message path read that one mutable global at call time, so one
+  override fixes both; no third-party file modified) — **chosen**. Option C (migrate to
+  `bslib::tooltip()`/`popover()`, Effort L not M — confirmed by direct reproduction that both hard-require
+  Bootstrap ≥5 via `tag_require()`, forcing a whole-app BS4→5 theme migration far outside this issue's
+  scope; the 3 server-side `addPopover()` sites also have no clean bslib equivalent) — declined as
+  out-of-scope for a single bugfix session.
+- **Fix:** new `inst/www/js/shinyBS-popover-fix.js` — a self-polling IIFE that waits for
+  `window.shinyBS.addTooltip`, then overrides it with a corrected version that only calls
+  `destroy` when an existing `bs.tooltip`/`bs.popover` plugin instance is attached (bounded to 40
+  poll attempts so it can't loop forever if shinyBS is absent, a `Suggests` dependency). Included via
+  `tags$head(includeScript(...))` in `R/appUI.R`, the same mechanism already used for `data-ready.js`.
+  2 new tests in `tests/testthat/test_modSummaryStats_popovers.R`. Added `htmltools` to `Suggests`
+  (test-only dependency for `htmltools::renderTags()`).
+- **In-flight test-design finding:** the RED-phase "appUI includes the shim" test initially asserted
+  against `as.character(appUI())`, which passed for the WRONG reason (matched shinyBS's own unrelated
+  inline invocation script, not the new shim) because `as.character()` silently drops ALL
+  `tags$head(...)` content on a raw tag tree. Fixed to assert against `htmltools::renderTags(app_ui)$head`
+  instead. See `PROJECT_LEARNINGS.md` Learning 415 — also surfaced that the project's pre-existing
+  `test-e2e-data-ready.R` "appUI includes data-ready.js" test has the identical gap (zero real content
+  coverage); reported to `BACKLOG.md` rather than fixed here (unrelated file, out of scope).
+- **Verification:** 2 new unit tests pass; full regression suite exact-clean (0 failed/0 error/0
+  warning, 3287 passed — up from 3282 — 182 skipped); `devtools::check()` 0 errors/0 warnings/0 notes
+  (after adding `htmltools` to `Suggests`, which fixed one transient WARNING). **Phase 3E live
+  `shinytest2`/`chromote` smoke test** (mandatory — changes JS/dependency-loading behavior): zero
+  console errors of any kind on the Summary Statistics tab, AND direct DOM inspection confirms a real
+  `bs.popover` instance now attaches to both a `popify()`-wrapped download button and all 3
+  `addPopover()` targets (`mkBox`/`zscoreBox`/`guBox`) — popovers/tooltips are now actually functional,
+  not just error-free, per Learning 414's precedent (verify the underlying claim, not just the absence
+  of the originally-reported error).
+- **GitHub issue #140 closed**, with the fix/verification summary posted as a closing comment (a
+  placeholder "test" comment briefly posted while closing was edited in place with the real summary,
+  not left as noise). `BACKLOG.md`'s Housekeeping item updated to record the resolution.
+  `PROJECT_LEARNINGS.md` Learnings 415 (`as.character()` drops `tags$head()` content;
+  `htmltools::renderTags()` is the correct tool) and 416 (`shinytest2::AppDriver$get_logs()`, not
+  `$get_log()` — the wrong name fails with an opaque `attempt to apply non-function`, not a clear
+  "method not found") added. `CLAUDE.md`'s learnings-count cross-reference updated (414→416, Sessions
+  1-437+→1-438+).
+
 ### 2026-07-30 · [BL-shinyBS-console-error] Fix pre-existing "shinyBS is not defined" JS console error (Session 437)
 - **Deliverable:** Owner-picked from the Phase 0 priorities list (over Planning issue #130, picking up
   issues #131-#139, and NPRC outreach -- owner first asked whether outreach could run in parallel with

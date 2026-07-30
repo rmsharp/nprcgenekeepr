@@ -267,3 +267,55 @@ test_that(".onLoad does not error when shinyBS is unavailable", {
 
   expect_no_error(onLoadFn(libname = "x", pkgname = "nprcgenekeepr"))
 })
+
+# =============================================================================
+# Tests for the shinyBS popover-destroy JS shim (issue #140, discovered S437)
+#
+# shinyBS 0.65.0's shinyBS.js calls $id.popover("destroy") before initializing
+# a popover; Bootstrap 4.6.0 (this app's pinned theme, R/appUI.R) renamed
+# destroy -> dispose, so that call throws and the popover is never created.
+# Fix: a JS shim (inst/www/js/shinyBS-popover-fix.js) overrides the mutable
+# global shinyBS.addTooltip property with a corrected version, guarding the
+# destroy call on both the tooltip and popover branches. Following the
+# test-e2e-data-ready.R precedent, R-level tests assert the shim file exists
+# and is wired into appUI(); actual in-browser behavior (no console error, a
+# real bs.popover instance attaches) is verified by the mandatory Phase 3E
+# live shinytest2/chromote smoke test, not a permanent unit test here.
+# =============================================================================
+
+test_that("shinyBS-popover-fix.js exists and targets the right defect", {
+  js_file <- system.file("www", "js", "shinyBS-popover-fix.js",
+                          package = "nprcgenekeepr")
+  expect_true(file.exists(js_file))
+
+  js_text <- paste(readLines(js_file), collapse = "\n")
+
+  # Must override shinyBS's mutable addTooltip property (the single choke
+  # point both popify()'s direct call and addPopover()'s custom-message path
+  # funnel through).
+  expect_match(js_text, "shinyBS.addTooltip")
+  # Must guard the popover-destroy call that throws under Bootstrap 4.6.0.
+  expect_match(js_text, "bs.popover")
+})
+
+test_that("appUI includes the shinyBS popover-destroy JS shim", {
+  skip_if_not_installed("htmltools")
+
+  js_file <- system.file("www", "js", "shinyBS-popover-fix.js",
+                          package = "nprcgenekeepr")
+  skip_if(!file.exists(js_file), "shim JS file not present yet")
+
+  # includeScript() inlines the file's content into tags$head(), same
+  # mechanism already used for data-ready.js (R/appUI.R). as.character() on
+  # the raw tag tree drops <head> content entirely (a plain tagList is not
+  # rendered through Shiny's page-serving pipeline) -- confirmed this is
+  # true even for the pre-existing, working data-ready.js include, not
+  # something this fix broke. htmltools::renderTags() is the correct way to
+  # inspect head content outside a live app.
+  app_ui <- nprcgenekeepr::appUI()
+  rendered <- htmltools::renderTags(app_ui)
+  js_text <- paste(readLines(js_file), collapse = "\n")
+
+  expect_true(grepl("shinyBS.addTooltip", rendered$head, fixed = TRUE))
+  expect_true(grepl(js_text, rendered$head, fixed = TRUE))
+})

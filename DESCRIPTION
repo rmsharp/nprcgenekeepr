@@ -61,6 +61,7 @@ Suggests:
     dplyr,
     grid,
     shinytest2,
+    htmltools,
     kableExtra,
     knitr,
     markdown,

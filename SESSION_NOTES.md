@@ -11,17 +11,193 @@
 (shinyBS popovers/tooltips are non-functional -- Bootstrap 4.6.0 rejects
 shinyBS.js's `popover("destroy")` call), owner-picked via the Phase 0
 priorities `AskUserQuestion` from a 4-option list (issue #130 planning,
-issue #131, issue #140, NPRC outreach review). (IN PROGRESS)
-**Started:** 2026-07-30
-**Status:** Session claimed. PRE-RED root-cause investigation of the 3
-candidate fix directions named in the issue body (vendor/patch
-`shinyBS.js`, JS-layer catch-and-ignore shim, migrate to
-`bslib::tooltip()`/`bslib::popover()`) is in progress via 3 parallel
-research agents, ahead of the pre-RED fix-approach `AskUserQuestion`
-required by `CLAUDE.md`'s TDD phase-gate format.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions
-are recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is
-the crash breadcrumb for the next session's reconcile.
+issue #131, issue #140, NPRC outreach review).
+**Started/Completed:** 2026-07-30 / 2026-07-30
+**Status:** DONE. Full TDD cycle: PRE-RED (3-agent parallel research of the
+issue's 3 candidate fix directions, owner picked one via `AskUserQuestion`)
+-> RED (2 failing tests) -> GREEN (implementation, incl. one in-flight
+test-design fix) -> REFACTOR (skipped, owner-confirmed nothing to
+restructure). Every phase transition gated via `AskUserQuestion` per
+`CLAUDE.md`'s Phase-gate format.
+
+**What happened, in order:** **(1)** Phase 0 orientation in full
+(`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue
+list`, `git status`/`log`/`diff --stat`, `methodology_dashboard.py`
+(Health 98/100), ledger reconcile -- `CHANGELOG.md`/`HANDOFFS.md`
+frontiers both at HEAD, clean, no ghost session). Rendered the priorities
+list (4 numbered items) via `AskUserQuestion`; owner picked issue #140.
+Claimed the session (`c0299034`). **(2)** PRE-RED: read issue #140's full
+body (`gh api`, since `gh issue view` hits the known `projectCards`
+GraphQL-deprecation bug on this repo -- see
+`gh-pr-edit-projectcards-workaround` memory), then launched 3 parallel
+research agents (one per candidate fix direction the issue named) rather
+than researching serially, so the pre-RED `AskUserQuestion` could present
+an evidence-based comparison instead of a guess. **Option A** (vendor/patch
+`shinyBS.js`): found 4 unguarded destroy calls, not just the 1 reported
+(tooltip branch + `removeTooltip()` share the same latent defect);
+GPL-3-in-MIT-package vendoring/attribution concern; stale-on-update risk.
+**Option B** (JS shim overriding `shinyBS.addTooltip`): root-caused the
+defect precisely (Bootstrap 4 renamed `destroy`->`dispose`;
+`_jQueryInterface`'s regex doesn't match `"destroy"`, so it creates a new
+instance then throws unconditionally, not just when no instance exists);
+confirmed both `popify()`'s direct call and `addPopover()`'s Shiny
+custom-message path read the same mutable global at call time, so one
+override fixes both. **Option C** (migrate to `bslib::tooltip()`/
+`popover()`): confirmed BY DIRECT REPRODUCTION (not just reading docs)
+that both hard-require Bootstrap >=5 via `tag_require()`, throwing
+`"popover() requires Bootstrap 5 or higher"` under this app's pinned
+`bs_theme(version = 4L, ...)` -- Effort L, not M, and out of scope for a
+single bugfix session (would force a whole-app BS4->5 migration). Owner
+picked Option B via `AskUserQuestion`. **(3)** RED: added 2 tests to
+`tests/testthat/test_modSummaryStats_popovers.R`, following the
+`test-e2e-data-ready.R` precedent (static file-existence/content
+assertions; live behavior verified separately in Phase 3E, not as a
+permanent unit test). Confirmed both failed for the expected reason
+(`file.exists()` FALSE) before any implementation. **(4)** GREEN: added
+`inst/www/js/shinyBS-popover-fix.js` (self-polling IIFE, bounded to 40
+attempts, overriding `shinyBS.addTooltip` with a destroy-guarded version)
+and one include line in `R/appUI.R` (same `tags$head(includeScript(...))`
+pattern as `data-ready.js`). Mid-GREEN, discovered the appUI-inclusion
+test passed for the WRONG reason -- `as.character(appUI())` matched
+shinyBS's OWN unrelated inline invocation script (which also contains the
+substring `"shinyBS.addTooltip"`), not this session's shim, because
+`as.character()` silently drops ALL `tags$head(...)` content on a raw tag
+tree (confirmed true even for the pre-existing, working `data-ready.js`
+include -- not a defect this session introduced). Fixed the test to use
+`htmltools::renderTags(app_ui)$head` instead, which correctly required
+adding `htmltools` to `DESCRIPTION`'s `Suggests` (caught by
+`devtools::check()`'s "unstated dependencies in tests" WARNING). Full
+regression suite exact-clean (0/0/0, 3287 passed vs. 3282 baseline, 182
+skipped); `devtools::check()` 0/0/0 after the `htmltools` fix. **(5)**
+Phase 3E mandatory runtime smoke test: live `shinytest2`/`chromote` launch
+confirmed BOTH that zero console errors occur on the Summary Statistics
+tab AND that a real `bs.popover` plugin instance now attaches (via direct
+`$('#id').data('bs.popover')` inspection) to a `popify()`-wrapped button
+AND all 3 `addPopover()` targets -- i.e. popovers are actually functional,
+not just error-free, directly applying Learning 414's precedent from the
+prior session. (Hit one tooling snag: `app$get_log()` doesn't exist in
+`shinytest2` 0.5.1 -- the correct method is `$get_logs()` -- see Learning
+416.) **(6)** REFACTOR gate: owner confirmed skip (0 new lint issues, no
+diff lines >80 chars, implementation already minimal). **(7)** Close-out:
+closed [issue #140](https://github.com/rmsharp/nprcgenekeepr/issues/140)
+via `gh api` (fixing a placeholder "test" comment accidentally posted
+while testing `gh issue close`'s behavior, edited in place with the real
+summary rather than left as noise); updated `BACKLOG.md`'s Housekeeping
+item to record the resolution, plus a new item reporting an incidentally
+-discovered, unrelated pre-existing gap (`test-e2e-data-ready.R`'s "appUI
+includes data-ready.js" test provides zero real content coverage for the
+identical `as.character()`/`tags$head()` reason -- not fixed this session,
+per Learning 382/407's scope-discipline precedent); added
+`PROJECT_LEARNINGS.md` Learnings 415 (`as.character()` drops
+`tags$head()` content) and 416 (`shinytest2::AppDriver$get_logs()`, not
+`$get_log()`); updated `CLAUDE.md`'s learnings-count cross-reference
+(414->416, Sessions 1-437+->1-438+).
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**Session 437 Handoff Evaluation (by Session 438): 9/10.** **What
+helped:** the handoff's `next_steps`/priorities framing (4 independent
+options: plan #130, issue #131, NPRC outreach, and the newly-filed issue
+#140) was accurate and current -- all 4 were still exactly as described
+when this session's Phase 0 rendered them, with correct pointers (issue
+#140's body, `BACKLOG.md`'s Housekeeping section). The `gotchas` field
+directly saved time twice: the `.onLoad`/`:::`/`mockery::stub` note
+wasn't needed this session (different code path), but the
+`shinytest2::AppDriver$new()` outside `testthat` needing
+`Sys.setenv(NOT_CRAN = "true")` note was used verbatim in this session's
+own Phase 3E smoke-test script and worked on the first try. **What was
+missing:** the handoff didn't flag that issue #140's own body already
+named 3 candidate fix directions with enough specificity to research in
+parallel before picking one -- this session had to independently decide
+to launch 3 research agents rather than that being suggested groundwork;
+a minor gap since the issue body itself (linked in the handoff) contained
+everything needed. **What was wrong:** nothing found -- the `commit:
+pending` field in the S437 `HANDOFFS.md` receipt was reconciled by this
+session (see below) rather than being an error, matching the documented
+"receipt ships in the same commit whose sha it would name" convention.
+**ROI:** high -- the accurate options framing plus the working
+`NOT_CRAN` gotcha meant zero time spent on rediscovery for either.
+
+**Self-assessment (Session 438): 9/10.** **Strengths:** (1) used 3
+parallel research agents to evaluate all 3 candidate fix directions
+BEFORE the pre-RED `AskUserQuestion`, rather than researching the
+owner-preferred-sounding option first and stopping -- this is what
+surfaced Option C's hard Bootstrap-5 requirement (confirmed by direct
+reproduction, not assumed from documentation) before it could be
+mistakenly treated as a same-scope alternative to A/B; (2) followed the
+established `test-e2e-data-ready.R` precedent for RED-phase test design
+(static assertions + a separate mandatory live smoke test) rather than
+inventing a new, heavier test-only-dependency approach (V8 JS execution),
+which the owner explicitly declined via the PRE-RED->RED gate's second
+option; (3) caught the RED test's own false-positive-pass defect
+mid-GREEN by checking a distinguishing marker (`MAX_ATTEMPTS`) rather
+than trusting the first green run, and traced it to a genuine, generally
+-applicable `as.character()`/`tags$head()` gap rather than just patching
+the assertion string; (4) ran Phase 3E's live smoke test checking BOTH
+error-absence AND functional attachment at ALL 4 relevant DOM targets (1
+`popify()` site + all 3 `addPopover()` sites), not just the 1 originally
+-reported location, directly extending Learning 414's precedent from the
+immediately preceding session; (5) reported the incidentally-discovered
+`test-e2e-data-ready.R` test-coverage gap to `BACKLOG.md` rather than
+fixing it, correctly applying the established scope-discipline precedent
+to a second, independent instance in the same session. **Weaknesses:**
+(1) tested `gh issue close`'s syntax with a literal placeholder ("test")
+comment argument against the REAL issue #140 rather than a scratch/dry
+run, which actually closed the issue with that comment attached --
+required an immediate `gh api` PATCH to fix the comment body before
+proceeding; the closure itself was correct (the issue genuinely was
+being closed as part of this session's work), but the placeholder text
+should never have been sent to a live comment in the first place; (2) an
+early debugging step used `awk` with `NR` across two input files, which
+silently produces WRONG per-file line numbers once past the first file's
+length (needed `FNR`) -- caught by noticing the reported line numbers
+(353, 487) exceeded the file's actual length, but cost one extra
+diagnostic round-trip. **Compared to previous sessions:** matches S437's
+standard of live-verifying the ACTUAL functional claim (not just
+error-absence) at Phase 3E, and extends the "verify hands-on, don't
+trust static reading" discipline (Learnings 405/406/408/409/414) to a
+NEW class of target -- a test's own passing status, not just an
+implementation's runtime behavior or a plan's documentation claim.
+
+**Handoff to Session 439:**
+- **What's next:** Independent READY options remain, none affected by
+  this session: **(a)** Plan issue #130 (marker-based
+  kinship/heterozygosity/parentage-verification + cross-center identity
+  resolution), READY Effort M, unchanged. **(b)** Pick up any of issues
+  #131-#139 (owner's stated priority order, #131 first) -- unaffected.
+  **(c)** NPRC outreach & announcement plan review (DECISION NEEDED,
+  owner-only). **(d)** NEW, Effort S: fix `test-e2e-data-ready.R`'s
+  "appUI includes data-ready.js" test, which currently provides zero real
+  content-inclusion coverage (`as.character()` drops `tags$head()`
+  content silently) -- replace with an `htmltools::renderTags(app_ui)$head`
+  assertion matching the pattern this session used in
+  `tests/testthat/test_modSummaryStats_popovers.R`.
+- **Key files:** `inst/www/js/shinyBS-popover-fix.js` (new, the JS shim
+  fix); `R/appUI.R` (the one new `includeScript()` line, alongside
+  `data-ready.js`'s existing one); `tests/testthat/test_modSummaryStats_popovers.R:270-323`
+  (the 2 new tests, incl. the `htmltools::renderTags()$head` pattern for
+  testing `tags$head()` inclusion); `DESCRIPTION` (new `htmltools`
+  Suggests entry); `BACKLOG.md`'s Housekeeping section (issue #140
+  resolution note + the new `test-e2e-data-ready.R` gap item); GitHub
+  issue #140 (closed, fullest single-place root-cause + fix + verification
+  summary).
+- **Gotchas:** (1) `as.character()` on a raw Shiny `tagList`/`shiny.tag`
+  object silently drops ALL `tags$head(...)` content -- never assert
+  head-injected asset inclusion (scripts, stylesheets) against
+  `as.character()`/`grepl()`; use `htmltools::renderTags(ui)$head`
+  instead. (2) `shinytest2::AppDriver`'s console-log accessor is
+  `$get_logs()` (plural) -- `$get_log()` doesn't exist and fails with the
+  opaque `Error: attempt to apply non-function`, not a clear
+  "method not found." (3) The shinyBS popover fix is now genuinely
+  functional (verified live), unlike S437's fix which only removed the
+  console error without restoring the feature -- do not confuse this
+  session's fix with S437's when reading `CHANGELOG.md` history. (4)
+  `.DS_Store` files and `docs/planning/issue125-ranking-priority-multi-candidate-plan.html`
+  remain harmless, unfixed, out-of-scope artifacts, unchanged since S425.
+- **Self-assessment score:** 9/10 (see above for full breakdown).
+- **Runtime smoke test:** DONE (not skipped) -- live `shinytest2`/
+  `chromote` app launch confirming both zero console errors AND real
+  `bs.popover` plugin-instance attachment at all 4 relevant DOM targets
+  (1 `popify()` site + 3 `addPopover()` sites).
 
 ### What Session 437 Did
 **Deliverable:** Fix the pre-existing `shinyBS is not defined` JS console
