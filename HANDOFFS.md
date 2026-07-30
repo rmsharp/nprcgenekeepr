@@ -60,6 +60,23 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S436
+date: 2026-07-30
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: File GitHub issues for the 8 recommendations in S435's docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md audit, prioritized per owner direction (2, 3, 4, 1, 8, 7, then 5, then 6 -- 6 explicitly deprioritized/delayed).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+Claimed at Phase 1B; to be filled at close-out (Phase 3D).
+
+```handoff
 session: S435
 date: 2026-07-30
 status: complete
@@ -72,7 +89,7 @@ key_files: docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md (full
 gotchas: (1) this audit's kinship2-side citations are current as of kinship2 v1.9.6.2 (2025-09-04) -- re-verify if acted on much later, kinship2 could update; (2) verification depth on the kinship2 side was targeted (3 claims spot-checked hands-on via WebFetch), not exhaustive -- unlike S434's Dragon P4 resolution, this session verified kinship2's documentation but never installed kinship2 and ran it against a real pedigree to observe actual rendered output; a fully rigorous follow-up on Finding #1 should do that hands-on verification, not just re-read documentation; (3) .DS_Store files and docs/planning/issue125-ranking-priority-multi-candidate-plan.html remain harmless, unfixed, out-of-scope artifacts, unchanged since S425.
 runtime_smoke: n/a -- docs/audit-only deliverable, no R/ or tests/ code touched, no runtime behavior changed.
 changelog_ref: CHANGELOG.md Session 435 entry, 2026-07-30, [ad hoc] Audit: pedigree diagram vs kinship2 feature comparison
-commit: pending -- reconciled by the next session's Phase 0 (this receipt is written before the final close-out commit)
+commit: db00a40d
 ```
 Claimed at Phase 1B; filled at close-out (Phase 3D). Session 434's handoff scored 9/10: accurate, verifiable state (issue #129 shipped/closed, both ledgers at HEAD) made Phase 0 orientation fast, even though this session's owner-directed task (an ad hoc audit) diverged from the handoff's suggested next step (Plan #130) -- a session owner redirecting is not a handoff defect. This session's own weakness: verification of the kinship2 side was targeted (3 claims via WebFetch) rather than the hands-on, running-code standard S434 set with Dragon P4 -- the headline finding (inbreeding-loop rendering, Finding #1) would benefit from an actual kinship2 install-and-render pass in a follow-up, not just documentation re-reading.
 

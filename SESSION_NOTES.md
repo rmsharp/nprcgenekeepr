@@ -6,6 +6,20 @@
 
 ## ACTIVE TASK
 
+### What Session 436 Did
+**Deliverable:** File GitHub issues for the 8 recommendations in S435's
+`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md` audit
+(matching the S419->S422 audit->triage precedent), prioritized per
+owner direction: 2, 3, 4, 1, 8, 7, then 5, then 6 (6 explicitly
+deprioritized/delayed). Owner-directed via `AskUserQuestion` response
+to the Phase 0 priorities picker (owner typed a free-text answer rather
+than selecting one of the 4 rendered options). (IN PROGRESS)
+**Started:** 2026-07-30
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions
+are recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is
+the crash breadcrumb for the next session's reconcile.
+
 ### What Session 435 Did
 **Deliverable:** Audit report comparing the just-shipped pedigree-diagram
 feature (issue #129 Slices 1+2, visNetwork-based Diagram tab with
