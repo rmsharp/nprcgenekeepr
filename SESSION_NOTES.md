@@ -7,6 +7,189 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 440 Did
+
+**Deliverable:** Implement [issue
+\#131](https://github.com/rmsharp/nprcgenekeepr/issues/131) (add diagram
+image/print export to the Pedigree Diagram tab), owner-picked via the
+Phase 0 priorities `AskUserQuestion` from a 4-option list (plan issue
+\#130, issue \#131, `CLAUDE.md` NOT_CRAN doc fix, NPRC outreach review).
+**Started/Completed:** 2026-07-30 / 2026-07-30 **Status:** DONE. Full
+TDD cycle: PRE-RED (hands-on verification of
+[`visNetwork::visExport()`](https://rdrr.io/pkg/visNetwork/man/visExport.html)’s
+offline-safety and single-format limitation, no multi-agent research
+needed – the facts were directly checkable) -\> a separate pre-RED
+`AskUserQuestion` for the export-format scope decision (PNG chosen over
+PDF/JPEG) -\> RED (1 failing test, proven) -\> GREEN (implementation +
+documentation phase, both verified) -\> REFACTOR (skipped,
+owner-confirmed nothing to restructure). All three gated phase
+transitions (PRE-RED-\>RED, RED-\>GREEN, GREEN-\>REFACTOR) via
+`AskUserQuestion` per `CLAUDE.md`’s Phase-gate format, plus the separate
+pre-RED scope-decision question.
+
+**What happened, in order:** **(1)** Phase 0 orientation in full
+(`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, `git status`/`log`/`diff --stat`,
+`methodology_dashboard.py` (Health 98/100), ledger reconcile –
+`CHANGELOG.md`/`HANDOFFS.md` frontiers both at HEAD, clean, no ghost
+session). Rendered the priorities list (4 numbered items) via
+`AskUserQuestion`; owner picked issue \#131. Claimed the session
+(`87b5d044`). **(2)** PRE-RED: read `R/modPedigree.R`’s existing
+Diagram-tab render block and the CSV `downloadButton`/`downloadHandler`
+pattern already in the file. Located the installed `visNetwork` 2.1.4
+package’s cache directory directly and confirmed `visExport()`’s JS deps
+(FileSaver/Blob/canvas-toBlob/ html2canvas/jsPDF) ship bundled inside
+the package tree, not fetched from a CDN. Read `visExport()`’s R source
+directly (not its help page) and found `graph$x$export <- export` is a
+single, overwritten slot – only one export format/button possible per
+widget, not additive. Proved the mechanism end-to-end by temporarily
+adding `visExport()` to the real render block inside a
+[`shiny::testServer()`](https://rdrr.io/pkg/shiny/man/testServer.html)
+session and inspecting the resulting JSON payload (confirmed the exact
+field names/values to assert on: `"type":"png"`,
+`"name":"pedigree_diagram.png"`, `"label":"Export Diagram (PNG)"`, plus
+the `deps` array listing all 5 JS libraries); reverted, confirmed
+`git diff --stat R/modPedigree.R` empty. **(3)** Separate pre-RED scope
+`AskUserQuestion` (per `CLAUDE.md`’s “a pre-RED scope/approach decision…
+is a separate `AskUserQuestion`” rule): owner picked PNG over PDF/JPEG.
+**(4)** PRE-RED-\>RED gate `AskUserQuestion`: owner approved. **(5)**
+RED: added one `test_that()` to `tests/testthat/test_modPedigree.R`
+(after the Slice 2 tests) asserting the widget’s JSON payload contains
+the export config; ran it against the unmodified code and confirmed all
+3 assertions failed for the expected reason (no other tests affected).
+**(6)** RED-\>GREEN gate: owner approved. **(7)** GREEN: added the
+`visExport()` pipe stage to `R/modPedigree.R`; re-ran the test file –
+all pass. Added the documentation phase (`CLAUDE.md`’s Tutorial/article
+documentation checklist, since this ships a new UI control): a “Data
+Table and Diagram” section in
+`vignettes/manual_components/_pedigree_browser.Rmd`, scoped to the new
+export button only (full Diagram-tab coverage stays issue \#139’s
+separate scope) – render-verified via
+[`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)
+of `a3manual.Rmd`, confirming the new text appears in the rendered HTML.
+Ran the full clean regression read (0 failed/0 error/0 warning, 3290
+passed, 182 skipped) and `devtools::check()` (0 errors/0 warnings/0
+notes). Ran a live `shinytest2`/ `chromote` Phase 3E smoke test (ad hoc
+script, not committed): confirmed the export button renders, is
+clickable with zero console errors, AND – since
+`app$get_download()`/`expect_download()` only cover real Shiny
+`downloadHandler` outputs, not this purely client-side `FileSaver.js`
+save – overrode the chromote session’s download behavior to a temp
+directory and verified a real `pedigree_diagram.png` (17,374 bytes) with
+a valid PNG magic -number signature (`89 50 4E 47 0D 0A 1A 0A`)
+materialized after the click. **(8)** GREEN-\>REFACTOR gate: owner
+confirmed skip (minimal, pattern-matching change; nothing to
+restructure). **(9)** Close-out: `BACKLOG.md`’s
+pedigree-diagram-audit-follow-ups section updated (issue \#131 item
+resolved); `PROJECT_LEARNINGS.md` Learnings 418/419 added; `CLAUDE.md`’s
+learnings-count cross-reference updated (417-\>419, Sessions
+1-439+-\>1-440+); recorded this session’s action in `CHANGELOG.md`.
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**Session 439 Handoff Evaluation (by Session 440): 8/10.** **What
+helped:** the handoff’s `next_steps` enumerated 4 independent,
+accurately-scoped READY options (matching exactly what this session’s
+own Phase 0 investigation of `BACKLOG.md`/`gh issue list` found, no
+discrepancies) – this let the rendered priorities-list `AskUserQuestion`
+present a clean, evidence-backed choice rather than requiring
+rediscovery of what was actually open. **What was missing:** nothing
+that should have been there – S439’s own deliverable (the
+`test-e2e-data-ready.R` fix) was on an independent code path from issue
+\#131, so its `key_files`/`gotchas` fields correctly had nothing
+\#131-specific to offer; the one gotcha this session needed
+(`NOT_CRAN`/`skip_on_cran()`) WAS already documented in S439’s `gotchas`
+field, just not applied on this session’s first attempt (see
+self-assessment weakness below) – not a handoff gap. **What was wrong:**
+nothing found. **ROI:** solid – the accurate options list meant zero
+backlog-state rediscovery was needed at Phase 0, though the ceiling on
+ROI for a “pick one of N independent items” handoff is inherently lower
+than one where the predecessor’s own file pointers carry directly into
+the next session’s actual work.
+
+**Self-assessment (Session 440): 8/10.** **Strengths:** (1) verified
+`visExport()`’s offline-safety and single-format limitation hands-on by
+reading the installed package’s actual file tree and R source, not its
+CRAN-metadata description – caught a real design constraint (one format
+only) before it could surprise GREEN; (2) surfaced that constraint as
+its own pre-RED `AskUserQuestion`, per `CLAUDE.md`’s explicit rule that
+a pre-RED scope/approach decision is a separate question from the
+phase-gate itself, rather than silently defaulting to PNG or folding the
+choice into the RED gate’s options; (3) proved RED validity by running
+the new test against unmodified code and confirming all 3 assertions
+failed for the right reason; (4) extended Learning 414’s “verify the
+underlying feature actually works, don’t trust absence-of-error”
+precedent one step further than any prior session in this run: rather
+than stopping at “button exists, zero console errors on click,”
+configured the live chromote session’s own download behavior to capture
+and inspect the actual downloaded file’s bytes and PNG magic number –
+genuine end-to-end proof, not an error-absence inference; (5) kept the
+documentation-phase addition tightly scoped to the shipped feature (the
+new export button) rather than expanding into issue \#139’s separate
+full-Diagram-tab-coverage scope, matching the established
+scope-discipline precedent (Learnings 382/407) applied to a
+documentation task rather than a code fix. **Weaknesses:** (1) the ad
+hoc Phase 3E smoke -test script hit Learning 417’s
+`NOT_CRAN`/`skip_on_cran()` trap on its first run, even though S439’s
+own immediately-prior handoff had just documented this exact gotcha in
+its `gotchas` field – corrected quickly (one
+[`Sys.setenv()`](https://rdrr.io/r/base/Sys.setenv.html) line) once the
+symptom (“Reason: On CRAN” from a bare Rscript invocation) was
+recognized, but a freshly-read gotcha should ideally be applied
+proactively rather than rediscovered by hitting it again; (2)
+`get_download()`/`expect_download()` were tried first and found not to
+apply before landing on the chromote-download-behavior approach – a
+minor, harmless bit of trial-and-error rather than going straight to the
+right tool, though the exploration is what produced Learning 419’s
+generalizable finding. **Compared to previous sessions:** matches
+S437-439’s standard of proving claims hands-on against a live instance
+rather than trusting static reading or a narrow test’s passing status,
+here extended from “a plugin instance attaches” (S438) or “a test’s
+assertion actually discriminates” (S439) to “real downloaded file bytes
+with a correct signature exist on disk” – a new, more rigorous instance
+of the same discipline.
+
+**Handoff to Session 441:** - **What’s next:** Independent READY options
+remain, none affected by this session: **(a)** Plan issue \#130
+(marker-based kinship/heterozygosity/ parentage-verification +
+cross-center identity resolution), READY Effort M, unchanged. **(b)**
+Pick up any of issues \#132-#139 (owner’s stated priority order for
+\#132-138: \#132 next, then \#133, \#134, \#135, \#136, \#137, \#138;
+\#139 – tutorial coverage for the whole Diagram tab – is separate and
+unranked in that order) – unaffected by this session, which only touched
+\#131. **(c)** NPRC outreach & announcement plan review (DECISION
+NEEDED, owner-only). **(d)** `CLAUDE.md`’s NOT_CRAN doc fix (READY,
+Effort S, unchanged from S439’s handoff) – the documented “Fast
+single-file test” one-liner still silently skips any file with a
+top-level `skip_on_cran()` call; this session’s own smoke-test script
+re-hit the same trap (Learning 419), reinforcing the fix is worth doing
+soon. - **Key files:** `R/modPedigree.R:387-409` (the diagram render
+block, including the new `visExport()` pipe stage at the end);
+`tests/testthat/ test_modPedigree.R:1195-1228` (the new test);
+`vignettes/manual_components/_pedigree_browser.Rmd` (the new “Data Table
+and Diagram” section); `BACKLOG.md`’s pedigree-diagram-audit-follow-ups
+section (this session’s resolution note for \#131). - **Gotchas:**
+[`visNetwork::visExport()`](https://rdrr.io/pkg/visNetwork/man/visExport.html)
+supports exactly ONE export format per widget (`graph$x$export` is a
+single overwritten slot) – do not call it twice expecting two buttons.
+`output$<id>` inside
+[`shiny::testServer()`](https://rdrr.io/pkg/shiny/man/testServer.html)
+for an htmlwidget output is the raw JSON payload (a `"json"`-classed
+string), directly [`grepl()`](https://rdrr.io/r/base/grep.html)-able –
+confirmed hands-on this session, a useful pattern for any future
+htmlwidget-config test. `NOT_CRAN` must be set
+(`Sys.setenv(NOT_CRAN = "true")`) for ANY bare `Rscript` script that
+reaches a `skip_on_cran()` call anywhere in its dependency chain, not
+only a direct
+[`testthat::test_file()`](https://testthat.r-lib.org/reference/test_file.html)
+call (Learning 417, reconfirmed/extended by Learning 419 this session).
+`get_download()`/`expect_download()` only work for real Shiny
+`downloadHandler` outputs – a client-side JS download (FileSaver.js,
+`visExport()`, or any other htmlwidget export) needs
+`app$get_chromote_session()$Browser$setDownloadBehavior(...)` instead.
+`.DS_Store` files and `docs/planning/issue125-*.html` remain harmless,
+unfixed, out-of-scope artifacts, unchanged since S425. -
+**Self-assessment score:** 8/10 (breakdown above).
+
 ### What Session 439 Did
 
 **Deliverable:** Fix `test-e2e-data-ready.R`’s “appUI includes
@@ -207,7 +390,7 @@ unconditionally, not just when no instance exists); confirmed both
 `popify()`’s direct call and `addPopover()`’s Shiny custom-message path
 read the same mutable global at call time, so one override fixes both.
 **Option C** (migrate to
-[`bslib::tooltip()`](https://rdrr.io/pkg/bslib/man/tooltip.html)/
+[`bslib::tooltip()`](https://rstudio.github.io/bslib/reference/tooltip.html)/
 `popover()`): confirmed BY DIRECT REPRODUCTION (not just reading docs)
 that both hard-require Bootstrap \>=5 via `tag_require()`, throwing
 `"popover() requires Bootstrap 5 or higher"` under this app’s pinned
@@ -547,12 +730,12 @@ Housekeeping item; a picking session should read the issue body in full
 `shinyBS.js`, catch-and-ignore the destroy error at the JS
 custom-message-handler layer, or replace `popify()`/`addPopover()` with
 a different tooltip/popover mechanism such as
-[`bslib::tooltip()`](https://rdrr.io/pkg/bslib/man/tooltip.html)/
-[`bslib::popover()`](https://rdrr.io/pkg/bslib/man/popover.html)) before
-picking a fix approach, since none of the three has been evaluated
-yet. - **Key files:** `R/zzz.R` (new, the `.onLoad()` fix, 6 lines);
-`tests/testthat/test_modSummaryStats_popovers.R:239-268` (the 2 new
-tests, including the
+[`bslib::tooltip()`](https://rstudio.github.io/bslib/reference/tooltip.html)/
+[`bslib::popover()`](https://rstudio.github.io/bslib/reference/popover.html))
+before picking a fix approach, since none of the three has been
+evaluated yet. - **Key files:** `R/zzz.R` (new, the `.onLoad()` fix, 6
+lines); `tests/testthat/test_modSummaryStats_popovers.R:239-268` (the 2
+new tests, including the
 [`mockery::stub`](https://rdrr.io/pkg/mockery/man/stub.html)
 local-binding pattern for dot-prefixed internal functions);
 `BACKLOG.md`’s Housekeeping section (resolved item + issue \#140

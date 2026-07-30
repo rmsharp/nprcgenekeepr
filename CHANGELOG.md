@@ -47,6 +47,62 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-30 · \[issue \#131\] Add diagram image/print export to the Pedigree Diagram tab (Session 440)
+
+- **Deliverable:** Owner-picked from the Phase 0 priorities list (over
+  planning issue \#130, the `CLAUDE.md` `NOT_CRAN` doc fix, and NPRC
+  outreach review). TDD phases: PRE-RED (verified
+  [`visNetwork::visExport()`](https://rdrr.io/pkg/visNetwork/man/visExport.html)
+  hands-on: bundled offline JS deps, single-format-per-widget limit) → a
+  separate pre-RED `AskUserQuestion` for the export-format scope
+  decision (PNG chosen over PDF/JPEG) → RED (1 failing test) → GREEN
+  (implementation + documentation phase) → REFACTOR (skipped,
+  owner-confirmed nothing to restructure).
+- **Fix:** added
+  `visNetwork::visExport(type = "png", name = "pedigree_diagram", label = "Export Diagram (PNG)")`
+  to the existing pipe chain in `R/modPedigree.R`’s `renderVisNetwork()`
+  block. Zero new package dependencies — `visExport()`’s JS libraries
+  (FileSaver/Blob/canvas-toBlob/html2canvas/ jsPDF) ship bundled inside
+  the already-a-dependency `visNetwork` package as htmlwidget deps,
+  confirmed offline/no-CDN by locating the files in the installed
+  package tree and by inspecting the rendered widget’s `deps` array
+  inside a
+  [`shiny::testServer()`](https://rdrr.io/pkg/shiny/man/testServer.html)
+  session.
+- **Design decision:** `visExport()` supports exactly one export format
+  per widget (`graph$x$export <- export`, a single overwritten slot,
+  confirmed from its R source) — surfaced as its own pre-RED
+  `AskUserQuestion` (PNG vs PDF vs JPEG); owner picked PNG, matching the
+  issue’s own named example.
+- **Test:** new
+  `test_that("modPedigreeServer's diagram widget offers a PNG export button", ...)`
+  in `tests/testthat/test_modPedigree.R` asserts the widget’s raw JSON
+  payload (`output$pedigreeDiagram` inside `testServer()`) contains the
+  export config; confirmed to fail for the expected reason before the
+  fix (all 3 assertions FALSE).
+- **Documentation phase** (per `CLAUDE.md`’s Tutorial/article
+  documentation checklist): added a “Data Table and Diagram” section to
+  `vignettes/manual_components/_pedigree_browser.Rmd` describing the
+  Diagram tab and its new export button, scoped to this session’s
+  feature (full Diagram-tab tutorial coverage remains issue \#139’s
+  separate scope); render-verified via
+  [`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)
+  of `a3manual.Rmd`, confirming the new text appears in the rendered
+  output.
+- **Verification:** regression suite 0 failed/0 error/0 warning (3290
+  passed, 182 skipped); `devtools::check()` 0 errors/0 warnings/0 notes.
+  Phase 3E runtime smoke test: live `shinytest2`/ `chromote` session
+  confirmed the button is genuinely functional, not just error-free —
+  clicking it produced a real `pedigree_diagram.png` file (17,374 bytes)
+  with a valid PNG magic-number signature, captured by overriding the
+  chromote session’s download behavior to a temp directory
+  (`get_download()`/ `expect_download()` don’t apply, since this is a
+  purely client-side JS download with no backing Shiny output).
+  `PROJECT_LEARNINGS.md` Learnings 418/419 added. `BACKLOG.md`’s
+  pedigree-diagram-audit follow-ups section updated (issue \#131 item
+  resolved). `CLAUDE.md`’s learnings-count cross-reference updated
+  (417→419, Sessions 1-439+→1-440+).
+
 ### 2026-07-30 · \[BL-test-e2e-data-ready\] Fix `test-e2e-data-ready.R`’s hollow “appUI includes data-ready.js” test (Session 439)
 
 - **Deliverable:** Owner-picked from the Phase 0 priorities list (over
@@ -119,7 +175,7 @@ here.
   `popify()`’s direct call and `addPopover()`’s Shiny custom-message
   path read that one mutable global at call time, so one override fixes
   both; no third-party file modified) — **chosen**. Option C (migrate to
-  [`bslib::tooltip()`](https://rdrr.io/pkg/bslib/man/tooltip.html)/`popover()`,
+  [`bslib::tooltip()`](https://rstudio.github.io/bslib/reference/tooltip.html)/`popover()`,
   Effort L not M — confirmed by direct reproduction that both
   hard-require Bootstrap ≥5 via `tag_require()`, forcing a whole-app
   BS4→5 theme migration far outside this issue’s scope; the 3

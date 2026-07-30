@@ -231,7 +231,7 @@ the same way as `data-ready.js`) that overrides shinyBS’s mutable
 4 renamed `destroy` -\> `dispose`, so the unguarded call fires
 unconditionally, not just when no instance exists). Chosen over 2 other
 researched options (vendor/patch `shinyBS.js`; migrate to
-[`bslib::tooltip()`](https://rdrr.io/pkg/bslib/man/tooltip.html)/`popover()`,
+[`bslib::tooltip()`](https://rstudio.github.io/bslib/reference/tooltip.html)/`popover()`,
 which turned out to hard-require Bootstrap 5 and was out of scope).
 Verified live via `shinytest2`/ `chromote`: zero console errors AND a
 real `bs.popover` instance now attaches to both a `popify()`-wrapped
@@ -457,7 +457,32 @@ not: **issue \#139** tracks that issue \#129’s already-shipped Diagram
 tab has zero tutorial/article coverage today. See `PROJECT_LEARNINGS.md`
 Learning 411 and `CHANGELOG.md` for the full S436 triage record. None
 imply reopening issue \#129 or revisiting the visNetwork-vs-kinship2
-technology decision (D2), which stands as ratified.*
+technology decision (D2), which stands as ratified.* - \[ \] (none
+remaining – **issue \#131** (diagram image/print export, priority 1) is
+RESOLVED: fixed S440 (2026-07-30). Added
+`visNetwork::visExport(type = "png", name = "pedigree_diagram", label = "Export Diagram (PNG)")`
+to the existing pipe chain in `R/modPedigree.R`’s `renderVisNetwork()`
+block – zero new package dependencies (`visExport()`’s JS libs –
+FileSaver/Blob/canvas-toBlob/ html2canvas/jsPDF – ship bundled inside
+`visNetwork` itself as htmlwidget deps, confirmed offline/no-CDN
+hands-on; see `PROJECT_LEARNINGS.md` Learning 418). PNG chosen over
+PDF/JPEG via owner `AskUserQuestion` (`visExport()` supports exactly one
+format per widget, confirmed from its R source – not additive). New unit
+test in `tests/testthat/test_modPedigree.R` asserts the widget’s JSON
+payload carries the export config. Documentation phase per `CLAUDE.md`’s
+Tutorial/article documentation checklist: added a “Data Table and
+Diagram” section to `vignettes/manual_components/_pedigree_browser.Rmd`
+describing the Diagram tab and its new export button (scoped to this
+session’s feature only – full Diagram-tab tutorial coverage remains
+issue \#139’s separate scope). Verified: regression suite 0/0/0 (3290
+passed, 182 skipped); `devtools::check()` 0 errors/0 warnings/0 notes;
+live `shinytest2`/`chromote` runtime smoke test confirmed the button is
+genuinely functional, not just error-free – clicking it produced a real
+`pedigree_diagram.png` file (17,374 bytes) with a valid PNG magic-number
+signature, captured via the chromote session’s own download-behavior
+override (`PROJECT_LEARNINGS.md` Learning 419, since `get_download()`/
+`expect_download()` don’t apply to a purely client-side JS download with
+no backing Shiny output). See `CHANGELOG.md`.)
 
 ## Outreach
 

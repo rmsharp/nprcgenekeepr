@@ -68,6 +68,22 @@ are legal at write time (the receipt ships in the very commit whose sha
 it would name); the next session reconciles them to real shas.
 
 ``` handoff
+session: S440
+date: 2026-07-30
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- implemented issue #131 (add diagram image/print export to the Pedigree Diagram tab). Full TDD cycle (PRE-RED with hands-on visExport() verification/RED/GREEN incl. documentation phase/REFACTOR-skipped), all phase gates plus a separate pre-RED scope-decision question via AskUserQuestion. Live runtime verification confirms the export produces a real, correctly-signed PNG file, not just an error-free click.
+what_was_done: Added visNetwork::visExport(type="png", name="pedigree_diagram", label="Export Diagram (PNG)") to the existing pipe chain in R/modPedigree.R's renderVisNetwork() block (line ~402-407). Zero new package dependencies -- visExport()'s JS libs (FileSaver/Blob/canvas-toBlob/html2canvas/jsPDF) ship bundled inside visNetwork itself as htmlwidget deps, confirmed offline/no-CDN by locating the files in the installed package tree and by inspecting the rendered widget's deps array inside a shiny::testServer() session. visExport() supports exactly one format per widget (graph$x$export is a single overwritten slot, confirmed from its R source) -- surfaced as its own pre-RED AskUserQuestion; owner picked PNG over PDF/JPEG. New test in tests/testthat/test_modPedigree.R:1195-1228 asserts the widget's raw JSON payload carries the export config; proven to fail for the expected reason before the fix. Documentation phase (CLAUDE.md's Tutorial/article checklist): added a "Data Table and Diagram" section to vignettes/manual_components/_pedigree_browser.Rmd, scoped to the new button only (full Diagram-tab coverage stays issue #139's scope); render-verified via rmarkdown::render() of a3manual.Rmd. Verified: regression suite 0/0/0 (3290 passed, 182 skipped); devtools::check() 0/0/0. BACKLOG.md's pedigree-diagram-audit-follow-ups section updated (issue #131 resolved). PROJECT_LEARNINGS.md Learnings 418/419 added. CLAUDE.md learnings-count cross-ref updated (417->419, Sessions 1-439+->1-440+). Commit: 87b5d044 (claim) + this close-out commit.
+next_steps: Owner picks: (a) Plan issue #130 (READY, Effort M, unaffected); (b) pick up any of issues #132-#139 in owner's priority order (#132 next; #139 -- full Diagram-tab tutorial coverage -- is separate, not touched by this session's scoped doc addition); (c) NPRC outreach plan review (DECISION NEEDED, owner-only); (d) CLAUDE.md's NOT_CRAN doc fix (READY, Effort S, unchanged from S439 -- this session's own smoke-test script re-hit the same NOT_CRAN/skip_on_cran() trap, reinforcing it's worth doing soon).
+key_files: R/modPedigree.R:387-409 (diagram render block incl. the new visExport() stage); tests/testthat/test_modPedigree.R:1195-1228 (the new test); vignettes/manual_components/_pedigree_browser.Rmd (new "Data Table and Diagram" section); BACKLOG.md pedigree-diagram-audit-follow-ups section.
+gotchas: visNetwork::visExport() supports exactly ONE export format per widget -- calling it twice does not add a second button. output$<id> inside shiny::testServer() for an htmlwidget output is the raw JSON payload (a "json"-classed string), directly grepl()-able. NOT_CRAN must be set for ANY bare Rscript script reaching a skip_on_cran() call anywhere in its dependency chain, not only a direct testthat::test_file() call (Learning 417/419). get_download()/expect_download() only work for real Shiny downloadHandler outputs -- a client-side JS download needs app$get_chromote_session()$Browser$setDownloadBehavior(...) instead. .DS_Store/docs/planning/issue125-*.html remain harmless, unchanged since S425.
+runtime_smoke: DONE -- live shinytest2/chromote smoke test confirming the export button renders, is clickable with zero console errors, AND produces a real pedigree_diagram.png file (17,374 bytes) with a valid PNG magic-number signature, captured via the chromote session's own download-behavior override.
+changelog_ref: CHANGELOG.md [issue #131] entry, this close-out commit
+commit: pending
+```
+
+``` handoff
 session: S439
 date: 2026-07-30
 status: complete
