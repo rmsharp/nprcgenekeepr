@@ -47,6 +47,52 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-30 · \[BL-test-e2e-data-ready\] Fix `test-e2e-data-ready.R`’s hollow “appUI includes data-ready.js” test (Session 439)
+
+- **Deliverable:** Owner-picked from the Phase 0 priorities list (over
+  planning issue \#130, issue \#131, and NPRC outreach review). TDD
+  phases: PRE-RED (root-cause reproduction, established-pattern reuse) →
+  RED (rewrote the assertion, proved it can fail) → GREEN (no production
+  code change needed) → REFACTOR (skipped, owner-confirmed nothing to
+  restructure).
+- **Root cause:** the existing test computed
+  `ui_html <- as.character(app_ui)` but never asserted against it — its
+  only expectation checked `inherits(app_ui, "shiny.tag.list")`, which
+  is unconditionally true regardless of whether `data-ready.js` is
+  actually included. Compounded by `PROJECT_LEARNINGS.md` Learning 415
+  (S438): [`as.character()`](https://rdrr.io/r/base/character.html) on a
+  raw `tagList`/`shiny.tag` silently drops all `tags$head(...)` content
+  anyway, so even a content-based
+  [`as.character()`](https://rdrr.io/r/base/character.html)/[`grepl()`](https://rdrr.io/r/base/grep.html)
+  assertion would have been unreliable.
+- **Fix:** rewrote the test to assert
+  `htmltools::renderTags(app_ui)$head` contains both a distinguishing
+  marker (`"setDataReady"`) and the full `data-ready.js` file text,
+  mirroring `test_modSummaryStats_popovers.R`’s established
+  shim-inclusion test (S438).
+- **RED proof (no new feature exists to drive a natural failure):**
+  temporarily disabled `R/appUI.R`’s `includeScript(dataReadyJS)` line
+  (`if (FALSE && file.exists(dataReadyJS)) ...`), ran the rewritten
+  test, confirmed both new assertions failed for the expected reason,
+  then reverted — `git diff --stat R/appUI.R` confirmed byte-identical
+  to `HEAD` after revert, so this session shipped a test-only diff.
+- **Verification:** regression suite 0 failed/0 error/0 warning (4006
+  passed, 170 skipped, with `NOT_CRAN=true` set — see Learning 417
+  below); `devtools::check()` 0 errors/0 warnings/0 notes. Phase 3E
+  runtime smoke test: n/a — test-only change, no runtime behavior
+  affected (stated explicitly per `SESSION_RUNNER.md` §3E, not silently
+  skipped).
+- **Incidental discovery:** `CLAUDE.md`’s documented “Fast single-file
+  test” one-liner doesn’t set `NOT_CRAN`, so running it against any file
+  with a top-level `skip_on_cran()` (as in `test-e2e-data-ready.R:10`)
+  silently skips the entire file rather than running it — filed to
+  `BACKLOG.md` per the established “report, don’t fix mid-session”
+  precedent (Learning 382/407), not fixed here. `PROJECT_LEARNINGS.md`
+  Learning 417 added. `BACKLOG.md`’s Housekeeping section updated (the
+  fixed item resolved; the new `NOT_CRAN` gap filed). `CLAUDE.md`’s
+  learnings-count cross-reference updated (416→417, Sessions
+  1-438+→1-439+).
+
 ### 2026-07-30 · \[issue \#140\] Fix shinyBS popover/tooltip destroy defect under Bootstrap 4.6.0 (Session 438)
 
 - **Deliverable:** Owner-picked from the Phase 0 priorities list (over
@@ -73,7 +119,7 @@ here.
   `popify()`’s direct call and `addPopover()`’s Shiny custom-message
   path read that one mutable global at call time, so one override fixes
   both; no third-party file modified) — **chosen**. Option C (migrate to
-  [`bslib::tooltip()`](https://rstudio.github.io/bslib/reference/tooltip.html)/`popover()`,
+  [`bslib::tooltip()`](https://rdrr.io/pkg/bslib/man/tooltip.html)/`popover()`,
   Effort L not M — confirmed by direct reproduction that both
   hard-require Bootstrap ≥5 via `tag_require()`, forcing a whole-app
   BS4→5 theme migration far outside this issue’s scope; the 3

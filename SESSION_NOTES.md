@@ -7,6 +7,166 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 439 Did
+
+**Deliverable:** Fix `test-e2e-data-ready.R`’s “appUI includes
+data-ready.js” test, which provided zero real content-inclusion coverage
+(owner-picked via the Phase 0 priorities `AskUserQuestion` from a
+4-option list: plan issue \#130, issue \#131, this test-coverage gap,
+NPRC outreach review). **Started/Completed:** 2026-07-30 / 2026-07-30
+**Status:** DONE. Full TDD cycle: PRE-RED (root-cause reproduction,
+reused an established pattern – no multi-agent research needed, the
+approach was unambiguous) -\> RED (rewrote the assertion, proved it
+could fail) -\> GREEN (no production code change needed – the feature
+was already correct) -\> REFACTOR (skipped, owner-confirmed nothing to
+restructure). Both gated phase transitions (PRE-RED-\>RED,
+GREEN-\>REFACTOR) via `AskUserQuestion` per `CLAUDE.md`’s Phase-gate
+format.
+
+**What happened, in order:** **(1)** Phase 0 orientation in full
+(`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, `git status`/`log`/`diff --stat`,
+`methodology_dashboard.py` (Health 98/100), ledger reconcile –
+`CHANGELOG.md`/`HANDOFFS.md` frontiers both at HEAD, clean, no ghost
+session). Rendered the priorities list (4 numbered items) via
+`AskUserQuestion`; owner picked the `test-e2e-data-ready.R` fix. Claimed
+the session (`928c4dc6`). **(2)** PRE-RED: read the current test
+(`tests/testthat/test-e2e-data-ready.R:91-99`) and confirmed its only
+assertion checks `inherits(app_ui, "shiny.tag.list")` – unconditionally
+true, never actually inspecting `ui_html`’s content. Read the
+established fix pattern from S438
+(`test_modSummaryStats_popovers.R:301-321`,
+`htmltools::renderTags(app_ui)$head`). Reproduced the root cause
+directly: `grepl("setDataReady", as.character(appUI()))` -\> FALSE,
+`grepl("setDataReady", htmltools::renderTags(appUI())$head)` -\> TRUE,
+confirming Learning 415 generalizes to this second, independent test.
+Confirmed `htmltools` is already a `DESCRIPTION` `Suggests` dependency
+(added S438), so no dependency change needed. Did not launch parallel
+research agents for this PRE-RED (unlike S438) – the approach was
+unambiguous given the directly-analogous precedent already in the same
+codebase; a multi-agent fan-out would have been disproportionate to an
+Effort-S, single-assertion fix. **(3)** RED: rewrote the test to assert
+`htmltools::renderTags(app_ui)$head` contains both a distinguishing
+marker (`"setDataReady"`) and the full `data-ready.js` file text,
+mirroring S438’s pattern exactly. Since the feature already existed (no
+new production code to drive a natural RED), proved the new test could
+actually fail by temporarily disabling `R/appUI.R`’s
+`includeScript(dataReadyJS)` line
+(`if (FALSE && file.exists(dataReadyJS)) ...`); ran the file with
+`Sys.setenv(NOT_CRAN = "true")` (needed because the file’s top-level
+`skip_on_cran()` otherwise silently skips the WHOLE file when run via a
+standalone
+[`testthat::test_file()`](https://testthat.r-lib.org/reference/test_file.html)
+– see the new Learning 417 below) and confirmed both new assertions
+failed for the expected reason. Reverted the temporary disable;
+`git diff --stat R/appUI.R` confirmed byte-identical to `HEAD`. **(4)**
+GREEN: re-ran the test file – all tests pass, confirming GREEN with zero
+production-code diff. Ran the full clean regression read (0 failed/0
+error/0 warning, 4006 passed, 170 skipped – fewer skipped than S438’s
+182 because `NOT_CRAN` was explicitly set this run, running some
+previously-CRAN-skipped tests) and `devtools::check()` (0 errors/0
+warnings/0 notes) before presenting the GREEN-\>REFACTOR gate. **(5)**
+REFACTOR: owner confirmed skip (single `test_that()` block, already
+matches the established pattern verbatim, nothing to restructure).
+**(6)** Close-out: updated `BACKLOG.md`’s Housekeeping section (resolved
+the fixed item; filed a new item for the incidentally-discovered
+`NOT_CRAN`/`skip_on_cran()` gap in `CLAUDE.md`’s documented
+fast-single-file-test command, per Learning 382/407’s scope-discipline
+precedent – not fixed this session); added `PROJECT_LEARNINGS.md`
+Learning 417; updated `CLAUDE.md`’s learnings-count cross-reference
+(416-\>417, Sessions 1-438+-\>1-439+); recorded this session’s action in
+`CHANGELOG.md`. **Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this
+close-out).
+
+**Session 438 Handoff Evaluation (by Session 439): 9/10.** **What
+helped:** the handoff’s `next_steps` item (d) named this exact task with
+correct scope, effort estimate, and root cause; the `gotchas` field’s
+[`as.character()`](https://rdrr.io/r/base/character.html)-drops-`tags$head()`-content
+note was directly load -bearing, and the `key_files` pointer to
+`test_modSummaryStats_popovers.R:270-323` let this session copy the
+established pattern verbatim rather than re-derive it from first
+principles – near-zero rediscovery cost. **What was missing:** the
+handoff didn’t flag that proving RED for this specific file would hit
+`skip_on_cran()`’s file-wide-skip interaction with `NOT_CRAN` – a minor,
+legitimately undiscoverable-without-attempting gap (S438 never ran this
+file standalone outside `devtools::test()`/`test_dir()`, which set
+`NOT_CRAN` automatically), and this session closed the gap for the next
+one via Learning 417 rather than leaving it implicit. **What was
+wrong:** nothing found. **ROI:** high – the accurate pattern pointer and
+root -cause explanation meant essentially all discovery work was already
+done; the one gap this session hit (`NOT_CRAN`) was self-contained and
+quickly diagnosed from the file’s own top-level `skip_on_cran()` call.
+
+**Self-assessment (Session 439): 9/10.** **Strengths:** (1) reused the
+established `htmltools::renderTags(app_ui)$head` pattern from S438
+exactly rather than inventing a new approach, matching project
+convention and the owner’s own stated preference for consistency; (2)
+proved the rewritten test could actually fail by temporarily disabling
+the real feature and confirming the expected failure – a
+mutation-testing-style proof that this retrofitted test is genuinely
+meaningful, not just “looks more thorough,” extending the “verify
+hands-on, don’t trust the first result” discipline (Learnings
+405/406/408/409/414) to a case with zero new production code; (3)
+confirmed the temporary `R/appUI.R` change reverted cleanly
+(`git diff --stat` empty) before proceeding to GREEN, so no disable code
+risked shipping; (4) caught and documented a new, generally-applicable
+testing-infrastructure gotcha (`skip_on_cran()`/`NOT_CRAN` interaction
+with standalone
+[`testthat::test_file()`](https://testthat.r-lib.org/reference/test_file.html))
+rather than silently working around it, and reported it via `BACKLOG.md`
+rather than fixing the shared `CLAUDE.md` command mid-session, correctly
+applying the established scope-discipline precedent to a third,
+independent instance; (5) ran the full regression suite AND
+`devtools::check()` before the GREEN-\>REFACTOR gate so the owner
+approved REFACTOR-skip against real, current numbers rather than a
+promise. **Weaknesses:** (1) skipped the multi-agent PRE-RED research
+pattern S438 used – justified here (an unambiguous, directly-analogous
+precedent already existed in the same codebase for an Effort-S fix), but
+worth flagging explicitly rather than leaving it as an unexplained
+divergence from the immediately preceding session’s process; (2) Phase
+3E runtime smoke test is `n/a` (test-only change, no runtime behavior
+affected) – stated explicitly per `SESSION_RUNNER.md` §3E rather than
+silently omitted, but this is the first session in this recent run with
+a genuinely empty Phase 3E, worth confirming that framing holds up under
+the next session’s Phase 3A review. **Compared to previous sessions:**
+matches S437/S438’s standard of proving claims hands-on rather than
+trusting static reading, applied here to a test’s own discriminating
+power rather than an implementation’s runtime behavior or a plan’s
+documentation claim (S438’s Learning 414/416 precedent, generalized to a
+third context).
+
+**Handoff to Session 440:** - **What’s next:** Independent READY options
+remain, none affected by this session: **(a)** Plan issue \#130
+(marker-based kinship/heterozygosity/parentage-verification +
+cross-center identity resolution), READY Effort M, unchanged. **(b)**
+Pick up any of issues \#131-#139 (owner’s stated priority order, \#131
+first) – unaffected. **(c)** NPRC outreach & announcement plan review
+(DECISION NEEDED, owner-only). **(d)** NEW, Effort S: add
+`Sys.setenv(NOT_CRAN = "true")` to `CLAUDE.md`’s documented “Fast
+single-file test” one-liner (or note the caveat), since it currently
+silently skips the entire file for any test file with a top-level
+`skip_on_cran()` call (e.g. `test-e2e-data-ready.R:10`) – see
+`PROJECT_LEARNINGS.md` Learning 417. - **Key files:**
+`tests/testthat/test-e2e-data-ready.R:91-108` (the fixed test);
+`R/appUI.R` (unchanged – confirmed byte-identical to `HEAD` after this
+session’s temporary RED-proof disable/revert); `CLAUDE.md:149` (the
+“Fast single-file test” command that needs the `NOT_CRAN` fix, item (d)
+above); `BACKLOG.md`’s Housekeeping section (this session’s resolution
+note + the new `NOT_CRAN` gap item). - **Gotchas:** `skip_on_cran()`
+called at file top level (outside any `test_that()`) silently skips the
+ENTIRE file, not just a following context, when run via a standalone
+[`testthat::test_file()`](https://testthat.r-lib.org/reference/test_file.html)
+that doesn’t set `NOT_CRAN` –
+`devtools::test()`/[`testthat::test_dir()`](https://testthat.r-lib.org/reference/test_dir.html)/`R CMD check`
+all set it automatically and are unaffected; prepend
+`Sys.setenv(NOT_CRAN = "true")` when iterating on such a file directly.
+[`as.character()`](https://rdrr.io/r/base/character.html) on a raw Shiny
+`tagList`/`shiny.tag` still silently drops ALL `tags$head()` content
+(Learning 415, reconfirmed here) – never assert head-injected content
+against it. `.DS_Store` files and `docs/planning/issue125-*.html` remain
+harmless, unfixed, out-of-scope artifacts, unchanged since S425. -
+**Self-assessment score:** 9/10 (breakdown above).
+
 ### What Session 438 Did
 
 **Deliverable:** Fix [issue
@@ -47,7 +207,7 @@ unconditionally, not just when no instance exists); confirmed both
 `popify()`’s direct call and `addPopover()`’s Shiny custom-message path
 read the same mutable global at call time, so one override fixes both.
 **Option C** (migrate to
-[`bslib::tooltip()`](https://rstudio.github.io/bslib/reference/tooltip.html)/
+[`bslib::tooltip()`](https://rdrr.io/pkg/bslib/man/tooltip.html)/
 `popover()`): confirmed BY DIRECT REPRODUCTION (not just reading docs)
 that both hard-require Bootstrap \>=5 via `tag_require()`, throwing
 `"popover() requires Bootstrap 5 or higher"` under this app’s pinned
@@ -387,12 +547,12 @@ Housekeeping item; a picking session should read the issue body in full
 `shinyBS.js`, catch-and-ignore the destroy error at the JS
 custom-message-handler layer, or replace `popify()`/`addPopover()` with
 a different tooltip/popover mechanism such as
-[`bslib::tooltip()`](https://rstudio.github.io/bslib/reference/tooltip.html)/
-[`bslib::popover()`](https://rstudio.github.io/bslib/reference/popover.html))
-before picking a fix approach, since none of the three has been
-evaluated yet. - **Key files:** `R/zzz.R` (new, the `.onLoad()` fix, 6
-lines); `tests/testthat/test_modSummaryStats_popovers.R:239-268` (the 2
-new tests, including the
+[`bslib::tooltip()`](https://rdrr.io/pkg/bslib/man/tooltip.html)/
+[`bslib::popover()`](https://rdrr.io/pkg/bslib/man/popover.html)) before
+picking a fix approach, since none of the three has been evaluated
+yet. - **Key files:** `R/zzz.R` (new, the `.onLoad()` fix, 6 lines);
+`tests/testthat/test_modSummaryStats_popovers.R:239-268` (the 2 new
+tests, including the
 [`mockery::stub`](https://rdrr.io/pkg/mockery/man/stub.html)
 local-binding pattern for dot-prefixed internal functions);
 `BACKLOG.md`’s Housekeeping section (resolved item + issue \#140
