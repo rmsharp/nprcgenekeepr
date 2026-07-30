@@ -35,6 +35,17 @@ R. Mark Sharp, Ph.D.
   animal with no Genetic Value Analysis result at all does not pass.
   Leaving the control at its default ("Top N ranked") reproduces today's
   exact behavior.
+- The Genetic Value Analysis Summary Statistics tab's Mean Kinship /
+  Genome Uniqueness distribution table gained **Skewness** and
+  **Kurtosis** columns (issue \#126), alongside the existing Min/1st
+  Quartile/Mean/Median/3rd Quartile/Max columns;
+  `makeGeneticSummaryTable()` gained the same two columns for script
+  use. Both are the bias-adjusted Fisher-Pearson estimators (Joanes &
+  Gill 1998), exposed as new exported functions
+  `calcSkewness()`/`calcKurtosis()`; either reads "N/A" when the
+  underlying values are too few or have zero variance to compute.
+  `modSummaryStatsServer()` gained matching `mkShape`/`guShape`
+  return-list reactives for scripted use.
 
 # nprcgenekeepr 2.0.0 (20260708)
 

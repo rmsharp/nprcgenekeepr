@@ -26,6 +26,7 @@ Gilpin
 HEVL
 JW
 JZV
+Joanes
 Kimura
 Kinships
 LabKey
@@ -48,6 +49,7 @@ ORCID
 ORIP
 PEDSYS
 POSIXct
+Pearson
 Ped
 PedAlleles
 PedTree
@@ -208,6 +210,7 @@ kValues
 kindepth
 kinships
 kmat
+kurtosis
 labkey
 lifecycle
 lintr
@@ -289,6 +292,7 @@ qcResult
 qcStudbook
 queryName
 rbindlist
+reactives
 readExcelPOSIXToCharacter
 recordStatus
 recordkeeping
@@ -324,6 +328,7 @@ simParent
 sireAge
 sireAndDam
 sireBirth
+skewness
 smallPed
 smallPedTree
 sortable
