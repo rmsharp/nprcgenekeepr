@@ -197,7 +197,14 @@ breeders; <code>NA</code> when fewer than two living breeders; see
 and
 <code>femaleFounders</code> (dataframes of the known male and female founder
 records), <code>nMaleFounders</code> and <code>nFemaleFounders</code> (the counts of
-those founders), and <code>total</code> (the total number of known founders).</p>
+those founders), and <code>total</code> (the total number of known founders).
+<code>report</code> also carries a <code>flagged</code> column (issue #127):
+<code>TRUE</code> for a one-unknown-parent animal left uncorrected by
+<code>correctUnknownParentMeanKinship()</code> for lack of an eligible
+breeding-age peer cohort (or a missing birth date); <code>FALSE</code> for every
+other animal, including one-unknown-parent animals that were successfully
+corrected and all fully-known/both-unknown animals (which are never
+candidates for this correction).</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

@@ -421,7 +421,7 @@ examined.</p>
 <span><span class="co">##  [5] "exit"            "population"      "origin"          "sire"           </span></span>
 <span><span class="co">##  [9] "dam"             "indivMeanKin"    "zScores"         "gu"             </span></span>
 <span><span class="co">## [13] "guSE"            "totalOffspring"  "livingOffspring" "parentage"      </span></span>
-<span><span class="co">## [17] "value"           "rank"</span></span></code></pre>
+<span><span class="co">## [17] "flagged"         "value"           "rank"</span></span></code></pre>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">trimmedGeneticValue</span><span class="op">$</span><span class="va">report</span><span class="op">)</span> <span class="co">## Number of rows</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 327</span></span></code></pre>
@@ -441,9 +441,9 @@ lines are included.</p>
 <colgroup>
 <col width="2%">
 <col width="1%">
-<col width="6%">
+<col width="5%">
 <col width="4%">
-<col width="4%">
+<col width="3%">
 <col width="9%">
 <col width="2%">
 <col width="3%">
@@ -455,8 +455,9 @@ lines are included.</p>
 <col width="6%">
 <col width="6%">
 <col width="7%">
-<col width="7%">
 <col width="2%">
+<col width="7%">
+<col width="1%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">Ego ID</th>
@@ -474,6 +475,7 @@ lines are included.</p>
 <th align="right">NA</th>
 <th align="right">Total Offspring</th>
 <th align="right">Living Offspring</th>
+<th align="left">NA</th>
 <th align="left">NA</th>
 <th align="left">Value Designation</th>
 <th align="right">Rank</th>
@@ -496,6 +498,7 @@ lines are included.</p>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="left">one unknown parent</td>
+<td align="left">TRUE</td>
 <td align="left">High Value</td>
 <td align="right">1</td>
 </tr>
@@ -516,6 +519,7 @@ lines are included.</p>
 <td align="right">1</td>
 <td align="right">1</td>
 <td align="left">one unknown parent</td>
+<td align="left">FALSE</td>
 <td align="left">High Value</td>
 <td align="right">2</td>
 </tr>
@@ -536,6 +540,7 @@ lines are included.</p>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="left">one unknown parent</td>
+<td align="left">FALSE</td>
 <td align="left">High Value</td>
 <td align="right">3</td>
 </tr>
@@ -556,6 +561,7 @@ lines are included.</p>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="left">one unknown parent</td>
+<td align="left">FALSE</td>
 <td align="left">High Value</td>
 <td align="right">4</td>
 </tr>
@@ -576,6 +582,7 @@ lines are included.</p>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="left">one unknown parent</td>
+<td align="left">FALSE</td>
 <td align="left">High Value</td>
 <td align="right">5</td>
 </tr>
@@ -596,6 +603,7 @@ lines are included.</p>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="left">known</td>
+<td align="left">FALSE</td>
 <td align="left">High Value</td>
 <td align="right">6</td>
 </tr>
@@ -616,6 +624,7 @@ lines are included.</p>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="left">one unknown parent</td>
+<td align="left">FALSE</td>
 <td align="left">High Value</td>
 <td align="right">7</td>
 </tr>
@@ -636,6 +645,7 @@ lines are included.</p>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="left">known</td>
+<td align="left">FALSE</td>
 <td align="left">High Value</td>
 <td align="right">8</td>
 </tr>
@@ -656,6 +666,7 @@ lines are included.</p>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="left">one unknown parent</td>
+<td align="left">FALSE</td>
 <td align="left">High Value</td>
 <td align="right">9</td>
 </tr>
@@ -676,6 +687,7 @@ lines are included.</p>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="left">known</td>
+<td align="left">FALSE</td>
 <td align="left">High Value</td>
 <td align="right">10</td>
 </tr>
@@ -1235,7 +1247,7 @@ that have generated the errors.</p>
 <code class="sourceCode R"><span><span class="va">pedOne</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="../reference/pedOne.html">pedOne</a></span> <span class="co"># put it in the local environment</span></span>
 <span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">pedOne</span>, minSireAge <span class="op">=</span> <span class="fl">0.0</span>, minDamAge <span class="op">=</span> <span class="fl">0.0</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `qcStudbook()`:</span></span></span>
-<span><span class="co">## <span style="color: #BBBB00;">!</span> Parents with low age at birth of offspring are listed in /tmp/RtmpAcCoXb/lowParentAge.csv.</span></span></code></pre>
+<span><span class="co">## <span style="color: #BBBB00;">!</span> Parents with low age at birth of offspring are listed in /tmp/RtmpqGGRWb/lowParentAge.csv.</span></span></code></pre>
 <p>The contents of <em>lowParentAge.csv</em> is shown below.</p>
 <table class="table">
 <colgroup>
@@ -1420,7 +1432,7 @@ the following line of code:</p>
 <span><span class="co">## 2941 0VLW56 6KPKH7 MMEHXV</span></span></code></pre>
 <div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">elapsed_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_elapsed_time_str.html">get_elapsed_time_str</a></span><span class="op">(</span><span class="va">start_time</span><span class="op">)</span></span></code></pre></div>
-<p>The current date and time is 2026-07-30 02:07:41.384447. The
+<p>The current date and time is 2026-07-30 03:37:06.800673. The
 processing time for this document was 20 seconds..</p>
 <div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>

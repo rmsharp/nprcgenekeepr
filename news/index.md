@@ -56,6 +56,16 @@
   [`modSummaryStatsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modSummaryStatsServer.md)
   gained matching `mkShape`/`guShape` return-list reactives for scripted
   use.
+- The Genetic Value Analysis rankings table (and both CSV downloads)
+  gained a **flagged** column (issue
+  [\#127](https://github.com/rmsharp/nprcgenekeepr/issues/127)): `TRUE`
+  for a one-unknown-parent animal that
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)’s
+  mean-kinship correction left uncorrected for lack of an eligible
+  contemporaneous breeding-age peer cohort, `FALSE` for every other
+  animal. Previously this information was silently discarded; there was
+  no way to tell such an animal apart from one whose correction
+  succeeded.
 
 ## nprcgenekeepr 2.0.0 (20260708)
 

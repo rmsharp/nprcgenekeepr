@@ -128,13 +128,13 @@ interest, already sorted from most to least genetically valuable.
 
 rpt <- gv[["report"]]
 dim(rpt)
-#> [1] 327  18
+#> [1] 327  19
 names(rpt)
 #>  [1] "id"              "sex"             "age"             "birth"          
 #>  [5] "exit"            "population"      "origin"          "sire"           
 #>  [9] "dam"             "indivMeanKin"    "zScores"         "gu"             
 #> [13] "guSE"            "totalOffspring"  "livingOffspring" "parentage"      
-#> [17] "value"           "rank"
+#> [17] "flagged"         "value"           "rank"
 head(rpt[, c("id", "sex", "age", "indivMeanKin", "zScores", "gu",
   "value", "rank")], 8)
 #>       id sex  age indivMeanKin    zScores gu      value rank
