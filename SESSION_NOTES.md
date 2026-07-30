@@ -6,6 +6,19 @@
 
 ## ACTIVE TASK
 
+### What Session 431 Did
+**Deliverable:** Implement the ratified issue #127 plan
+(`docs/planning/issue127-surface-uncorrected-kinship-flag-plan.md`) -- add a
+boolean `flagged` column to `reportGV()`'s `$report`, surfacing
+`correctUnknownParentMeanKinship()`'s previously-silently-dropped
+uncorrected-animal list to the live Genetic Value DT table and both CSV
+downloads. One vertical slice. Owner-picked via `AskUserQuestion` at Phase 0.
+**Started:** 2026-07-29
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the
+crash breadcrumb for the next session's reconcile.
+
 ### What Session 430 Did
 **Deliverable:** Write a design/scoping architecture plan for closing issue #127
 (surface `correctUnknownParentMeanKinship()`'s silently-dropped `flagged`
