@@ -6,6 +6,18 @@
 
 ## ACTIVE TASK
 
+### What Session 440 Did
+**Deliverable:** Implement [issue #131](https://github.com/rmsharp/nprcgenekeepr/issues/131)
+(add diagram image/print export to the Pedigree Diagram tab), owner-picked via
+the Phase 0 priorities `AskUserQuestion` from a 4-option list (plan issue
+#130, issue #131, CLAUDE.md NOT_CRAN doc fix, NPRC outreach review).
+(IN PROGRESS)
+**Started:** 2026-07-30
+**Status:** Session claimed. Work beginning -- PRE-RED research.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the
+crash breadcrumb for the next session's reconcile.
+
 ### What Session 439 Did
 **Deliverable:** Fix `test-e2e-data-ready.R`'s "appUI includes data-ready.js"
 test, which provided zero real content-inclusion coverage (owner-picked via
