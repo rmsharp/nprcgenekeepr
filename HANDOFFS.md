@@ -62,19 +62,18 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S441
 date: 2026-07-30
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS -- plan issue #130 (marker-based kinship/heterozygosity/parentage-verification + cross-center identity resolution), one architecture document per docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- planned issue #130 (marker-based kinship/heterozygosity/parentage-verification + cross-center identity resolution), one architecture document per docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md. Planning-only session, no R/tests/man/NAMESPACE/data content changed.
+what_was_done: Wrote docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md. Evidence base: a 5-agent parallel research Workflow (issue text; audit Dimension 5/6 findings + S422 triage trail; existing kinship/genetic-diversity code inventory; cross-center/LabKey architecture inventory; domain-standards survey of marker-kinship/parentage/cross-institution-identity methods), followed by firsthand re-verification of every load-bearing claim (DESCRIPTION, R/columnSchema.R, R/kinship.R, R/addGenotype.R, R/checkGenotypeFile.R, R/hasGenotype.R, R/getGVGenotype.R, R/reportGV.R:142-229, R/meanKinship.R, R/getPedigreeSource.R, R/convertFromCenter.R, docs/architecture/module-contract.md all read directly) -- no citation drift found. Ratified 6 decisions via 2 AskUserQuestion rounds, all recommended options accepted: D1 long/tidy multi-locus genotype format; D2 native KING-robust kinship in base R (no new hard dependency -- DESCRIPTION confirmed zero Bioconductor deps, avoiding a CRAN-publishability risk); D4 Mendelian-exclusion parentage verification; D5 deterministic cross-reference-table cross-center linking (extends getPedigreeSource()'s provider pattern); D6 new dedicated modMarkerGenetics module; D7 five vertical slices in dependency order. Key finding during drafting: re-reading the audit's exact Dimension-6 wording showed Slice 5 (cross-center differentiation stat) needs Slice 1's genotype model but NOT Slice 4's identity-linking -- a population-level two-dataset comparison, not per-animal -- correcting the dependency graph from an assumed linear chain to a tree (PROJECT_LEARNINGS.md Learning 420). Deliberately did not assert KING-robust's or the differentiation statistic's exact formula in the plan (Dragons P1/P2), to avoid propagating an unverified derivation. BACKLOG.md's #130 sequencing item updated (planning DONE, Slice 1 next). PROJECT_LEARNINGS.md Learnings 420/421 added. CLAUDE.md learnings-count cross-ref updated (419->421, Sessions 1-440+->1-441+). Commit: 951e9680 (claim) + this close-out commit.
+next_steps: Owner picks: (a) Implement Slice 1 of the #130 plan (marker-based kinship, native KING-robust + multi-locus genotype foundation) -- plan section 4 Slice 1, READY Effort M, full TDD session; implementing session's own Pre-RED must resolve Dragons P1 (biallelic-vs-multiallelic), P2 (source KING-robust's exact formula from a citable reference, not written into the plan), P3 (build/choose a multi-locus test fixture, rhesusGenotypes is single-locus only) before writing RED tests. (b) Slice 4 of #130 (cross-center identity linking) is fully independent of Slice 1 and could be done first instead -- a real ordering choice, not just Slice 1 by default. (c) Issue #132 (diagram legend, READY Effort S, unaffected). (d) CLAUDE.md's NOT_CRAN doc fix (READY Effort S, unchanged). (e) NPRC outreach plan review (DECISION NEEDED, owner-only, unaffected).
+key_files: docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md (whole plan; section 4 Slice 1 is the immediate target, section 6 Dragons P1-P3 are Slice 1's Pre-RED blockers, section 3 has all 6 ratified decisions with rationale); R/kinship.R:62-104 (pedigree-kinship algorithm, matrix-shape pattern to mirror); R/reportGV.R:159-178 (the exact extension seam -- kmat built independently of genotype); R/columnSchema.R:15-24 (schema, no multi-locus slot yet); R/getPedigreeSource.R:38-122 (precedent pattern for Slice 4's new provider); docs/architecture/module-contract.md (new-module rules for modMarkerGenetics).
+gotchas: rhesusGenotypes (bundled example data) is single-locus/MHC-only, not usable as-is for multi-locus testing (Dragon P3). DESCRIPTION has zero Bioconductor dependencies today -- do not add one for kinship estimation, that reopens D2/Dragon P5. checkGenotypeFile()/addGenotype()/hasGenotype()/getGVGenotype()/geneDrop() (existing single-locus gene-drop path) must not be modified by any #130 slice -- new, sibling functions only. KING-robust's exact formula was deliberately not written into the plan -- source it at Pre-RED, do not reconstruct from memory (Dragon P2). ScheduleWakeup is /loop-only -- do not call it to wait on a background Workflow/Agent task-notification (Learning 421).
+runtime_smoke: n/a -- planning/docs-only session, no runtime behavior changed (no R/ or tests/ content touched).
+changelog_ref: CHANGELOG.md [issue #130] entry, this close-out commit
 commit: pending
 ```
-<claim stub -- filled at Phase 3D close-out>
 
 ```handoff
 session: S440

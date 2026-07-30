@@ -43,6 +43,40 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-30 · [issue #130] Plan marker-based kinship/heterozygosity/parentage-verification + cross-center identity resolution (Session 441)
+- **Deliverable:** one architecture-planning document,
+  `docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md`, following
+  `ARCHITECTURE_WORKSTREAM.md`. Owner-picked from the Phase 0 priorities list (over issue #132's
+  diagram legend, the `CLAUDE.md` `NOT_CRAN` doc fix, and NPRC outreach review). No `R/`, `tests/`,
+  `man/`, `NAMESPACE`, or `data/` content changed — planning only.
+- **Evidence base:** a 5-agent parallel research `Workflow` (issue #130's own text; the audit's
+  Dimension 5/6 findings + the S422 triage trail; the existing kinship/genetic-diversity code
+  inventory; the cross-center/LabKey architecture inventory; a domain-standards survey of
+  marker-kinship/parentage/cross-institution-identity methods), followed by firsthand re-verification
+  of every load-bearing claim (`DESCRIPTION`, `R/columnSchema.R`, `R/kinship.R`, `R/addGenotype.R`,
+  `R/checkGenotypeFile.R`, `R/hasGenotype.R`, `R/getGVGenotype.R`, `R/reportGV.R:142-229`,
+  `R/meanKinship.R`, `R/getPedigreeSource.R`, `R/convertFromCenter.R`,
+  `docs/architecture/module-contract.md` all read directly) — no citation drift found.
+- **Ratified decisions** (6, via `AskUserQuestion`, all recommended options accepted): D1 multi-locus
+  genotype format is long/tidy; D2 marker kinship is a native KING-robust implementation in base R
+  (no new hard dependency — avoids a Bioconductor `Imports` on this CRAN-published package); D4
+  parentage verification is Mendelian exclusion in base R; D5 cross-center identity linking is a
+  deterministic, curator-supplied cross-reference table (extending the `getPedigreeSource()` provider
+  pattern); D6 the new capabilities get a dedicated `modMarkerGenetics` module; D7 the work is five
+  vertical slices in dependency order. (D3, heterozygosity approach, was derived from D1 rather than
+  separately ratified — no reasonable contested alternative.)
+- **Key finding:** re-reading the audit's exact Dimension-6 wording showed the cross-center
+  identity-by-state differentiation statistic (Slice 5) needs Slice 1's genotype model but **not**
+  Slice 4's identity-linking capability — a population-level, two-dataset comparison, not a
+  per-animal-identity operation — changing the plan's dependency graph from an assumed linear chain to
+  a tree with two independently-schedulable leaves (`PROJECT_LEARNINGS.md` Learning 420).
+- **Learnings:** `PROJECT_LEARNINGS.md` Learnings 420 (audit/issue prose bundling does not imply a
+  technical dependency — verify the real dependency graph) and 421 (`ScheduleWakeup` is `/loop`-only;
+  do not use it to wait on a background `Workflow`/`Agent` task-notification) added. `CLAUDE.md`
+  learnings-count cross-reference updated (419→421, Sessions 1-440+→1-441+).
+- **`BACKLOG.md`** updated: the issue #130 sequencing item now records planning as DONE, with
+  implementing Slice 1 as the next step.
+
 ### 2026-07-30 · [issue #131] Add diagram image/print export to the Pedigree Diagram tab (Session 440)
 - **Deliverable:** Owner-picked from the Phase 0 priorities list (over planning issue #130, the
   `CLAUDE.md` `NOT_CRAN` doc fix, and NPRC outreach review). TDD phases: PRE-RED (verified

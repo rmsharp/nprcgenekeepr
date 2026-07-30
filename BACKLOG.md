@@ -479,7 +479,16 @@ requiring tracking. See `CHANGELOG.md`.*
       assumed -- confirmed hands-on that `visEvents(click = ...)` must be
       wired explicitly. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning
       408. **Both slices of issue #129 are now shipped; issue #129 itself is
-      closed as part of this session's close-out.** **Planning #130**
-      (marker-based kinship/heterozygosity/parentage-verification +
-      cross-center identity resolution) is next (READY, Effort M) -- no other
-      open item in this sequencing chain remains.
+      closed as part of this session's close-out.** **Planning #130 is now
+      DONE -- S441 (2026-07-30):**
+      `docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md`
+      ratified (D1 long/tidy multi-locus genotype format; D2 native
+      KING-robust kinship in base R, no new hard dependency; D4 Mendelian
+      -exclusion parentage verification; D5 deterministic cross-reference
+      -table cross-center identity linking; D6 new dedicated
+      `modMarkerGenetics` module; D7 five vertical slices in dependency
+      order -- Slice 1 marker kinship first, Slices 2/3/5 depend on it,
+      Slice 4 cross-center linking is fully independent). See
+      `CHANGELOG.md`. **Implementing Slice 1 (marker-based kinship +
+      multi-locus genotype foundation) is next (READY, Effort M)** -- no
+      other open item in this sequencing chain remains.

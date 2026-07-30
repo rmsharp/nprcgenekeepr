@@ -13,12 +13,174 @@ identity resolution) -- one architecture document, following
 `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`. Owner-picked via
 the Phase 0 priorities `AskUserQuestion` from a 4-option list (plan issue
 #130, issue #132 diagram legend, `CLAUDE.md` NOT_CRAN doc fix, NPRC outreach
-review). (IN PROGRESS)
-**Started:** 2026-07-30
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are
-recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the
-crash breadcrumb for the next session's reconcile.
+review).
+**Started/Completed:** 2026-07-30 / 2026-07-30
+**Status:** DONE. Planning-only session (TDD phases inapplicable, per
+project precedent) -- no `R/`, `tests/`, `man/`, `NAMESPACE`, or `data/`
+content changed. Deliverable:
+`docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md`.
+
+**What happened, in order:** **(1)** Phase 0 orientation in full
+(`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list`,
+`git status`/`log`/`diff --stat`, `methodology_dashboard.py` (Health
+98/100), ledger reconcile -- `CHANGELOG.md`/`HANDOFFS.md` frontiers both
+clean, no ghost session, no undocumented commits). Rendered the priorities
+list (4 numbered items) via `AskUserQuestion`; owner picked planning issue
+#130. **Process slip:** the `AskUserQuestion` was fired before the mandatory
+prose orientation report was rendered, violating `CLAUDE.md`'s "render the
+list, then immediately follow it with the question" ordering -- caught in
+the very next message and corrected by rendering the full report
+retroactively before proceeding to Phase 1 (see self-assessment weakness
+below). Claimed the session (`951e9680`). **(2)** Research: launched a
+5-agent parallel `Workflow` (issue #130's own text; the audit's Dimension
+5/6 findings + the S422 triage trail; the existing kinship/genetic-diversity
+code inventory; the cross-center/LabKey architecture inventory; a
+domain-standards survey of marker-kinship/parentage/cross-institution
+-identity methods) -- matching S432's (#129 planning) established pattern
+for this issue family. **Process slip:** immediately after launching,
+mistakenly called `ScheduleWakeup` (a `/loop`-only tool) to "wait" for the
+background workflow, treating it as a general wait primitive; caught on
+re-reading the tool's own description and cancelled (`stop: true`) in the
+same turn before it could fire -- see `PROJECT_LEARNINGS.md` Learning 421.
+**(3)** On the research workflow's completion, re-verified every
+load-bearing claim firsthand rather than trusting subagent text alone:
+directly read `DESCRIPTION` (confirmed zero Bioconductor dependencies --
+the load-bearing fact behind D2), `R/columnSchema.R`, `R/kinship.R`,
+`R/addGenotype.R`, `R/checkGenotypeFile.R`, `R/hasGenotype.R`,
+`R/getGVGenotype.R`, `R/reportGV.R:142-229` (confirmed the exact kinship
+-matrix extension seam -- `kmat` at line 162-165 and `genotype` at line 159
+are built independently and never touch before the gene-drop call at line
+203), `R/meanKinship.R`, `R/getPedigreeSource.R`, `R/convertFromCenter.R`,
+and `docs/architecture/module-contract.md` -- all citations confirmed
+accurate, no drift (per Learning 399's named risk for this issue family).
+**(4)** Ratified 6 architecture decisions via two `AskUserQuestion` rounds
+(4 questions then 2), all recommended options accepted: D1 long/tidy
+multi-locus genotype format; D2 native KING-robust kinship in base R (no
+new hard dependency, avoiding a Bioconductor `Imports` on this
+CRAN-published package); D4 Mendelian-exclusion parentage verification; D5
+deterministic cross-reference-table cross-center linking (extending the
+`getPedigreeSource()` provider pattern); D6 new dedicated
+`modMarkerGenetics` module; D7 five vertical slices in dependency order.
+**(5)** Wrote the full plan document, mirroring the established local
+template (issue129's plan) -- Context, Evidence-based inventory, Ratified
+decisions, 5-slice implementation plan with DONE criteria per slice,
+Cross-slice notes, Dragons, ratification record. A genuine finding during
+drafting: re-reading the audit's exact Dimension-6 wording showed Slice 5
+(cross-center differentiation statistic) needs Slice 1's genotype model but
+**not** Slice 4's identity-linking capability -- a population-level,
+two-dataset comparison, not a per-animal operation -- changing the
+dependency graph from an assumed linear chain to a tree with two
+independent leaves (`PROJECT_LEARNINGS.md` Learning 420). Deliberately did
+**not** assert KING-robust's exact closed-form formula or a specific
+cross-center differentiation-statistic formula in the plan, to avoid
+propagating an unverified derivation -- flagged as Dragons P1/P2, deferred
+to each relevant slice's own Pre-RED. **(6)** Close-out: `BACKLOG.md`'s
+issue #130 sequencing item updated (planning DONE, implementing Slice 1
+next); `PROJECT_LEARNINGS.md` Learnings 420/421 added; `CLAUDE.md`'s
+learnings-count cross-reference updated (419->421, Sessions
+1-440+->1-441+); recorded this session's action in `CHANGELOG.md`.
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**Session 440 Handoff Evaluation (by Session 441): 8/10.** **What helped:**
+the handoff's `next_steps` enumerated 4 independent, accurately-scoped READY
+options (plan #130, issues #132-#139 in owner's priority order, NPRC
+outreach review, the `NOT_CRAN` doc fix) -- this matched exactly what this
+session's own Phase 0 investigation found, letting the priorities-list
+`AskUserQuestion` render without any backlog-state rediscovery. **What was
+missing:** nothing that should have been there -- #130 hadn't been touched
+by S440, so a plain "READY, Effort M, unaffected" pointer (with no file
+references of its own) was exactly the right amount of information for an
+item nobody had started. **What was wrong:** nothing found -- this
+session's own research independently confirmed no #130 planning document
+existed prior to this session, matching S440's implicit assumption.
+**ROI:** solid, same ceiling reasoning S440 itself named for a "pick one of
+N independent items" handoff -- ROI here was less about saving discovery
+time on #130 specifically (there was nothing to discover) and more about
+the accurate options list meaning zero time was spent re-verifying the
+other 3 options were still live before rendering the picker.
+
+**Self-assessment (Session 441): 8/10.** **Strengths:** (1) scaled the
+research approach to the task -- a 5-agent parallel `Workflow`, matching
+S432's established precedent for this issue family, appropriately sized
+for a 4-capability-bundled issue the audit itself said needed its own
+scoping session; (2) did not delegate final understanding to subagents --
+verified every load-bearing claim firsthand against real source (11 files
+read directly) before writing any claim into the plan, per this project's
+"never delegate understanding" discipline; (3) caught the CRAN/Bioconductor
+dependency constraint (D2) by directly reading `DESCRIPTION` rather than
+assuming -- a load-bearing architectural fact no subagent's text had
+independently surfaced; (4) found and corrected a real dependency-graph
+error (Slice 5 does not need Slice 4) before it became load-bearing for
+future sessions, captured as Learning 420; (5) explicitly declined to
+assert unverified statistical formulas (KING-robust's closed form, the
+cross-center differentiation statistic) rather than let confident-sounding
+domain knowledge stand in for a verified citation -- named as Dragons P1/P2
+for each relevant slice's own Pre-RED, an honesty-over-confidence choice
+matching this project's verify-before-writing ethos, and a subtler
+safeguard than the usual "verify the file path" check since a wrong formula
+is far harder to catch downstream than a wrong citation. **Weaknesses:**
+(1) fired the Phase 0 priorities-list `AskUserQuestion` before rendering
+the mandatory prose report, an out-of-order execution of a documented
+`CLAUDE.md` protocol step -- caught and corrected in the very next message,
+but should have been caught before firing the tool call; (2) mis-used
+`ScheduleWakeup` (a `/loop`-only tool) as a general "wait for background
+work" primitive immediately after launching the research `Workflow` --
+caught and cancelled in the same turn before it could misfire, now captured
+as Learning 421 to prevent recurrence; (3) `SESSION_RUNNER.md`'s Planning
+Sessions guidance to "set your agent's deepest available reasoning mode at
+session start" had no directly available lever in this environment (no
+`/effort`-equivalent skill surfaced this session) -- proceeded at the
+session's inherited reasoning effort without an explicit escalation
+mechanism, which should be named honestly rather than silently treated as
+satisfied. **Compared to previous sessions:** extends S432's "N-agent
+research `Workflow` + firsthand re-verification of every load-bearing
+claim" pattern to a larger, 4-capability-bundled issue, and adds a
+discipline not explicit in S432's own write-up -- declining to assert
+unverified numeric/statistical formulas rather than let plausible-sounding
+recalled math substitute for a citation.
+
+**Handoff to Session 442:**
+- **What's next:** **(a)** Implement Slice 1 of the #130 plan (marker-based
+  kinship via native KING-robust + the multi-locus genotype foundation),
+  per `docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md`
+  §4 Slice 1 (READY, Effort M) -- a full TDD session (RED->GREEN->REFACTOR).
+  **The implementing session's own Pre-RED must resolve Dragons P1
+  (biallelic-vs-multiallelic mismatch), P2 (pull KING-robust's exact
+  formula from Manichaikul et al. 2010 or a citable secondary source -- NOT
+  written into the plan), and P3 (build or choose a multi-locus test
+  fixture -- `rhesusGenotypes` is single-locus, not usable as-is) before
+  writing RED tests.** **(b)** Slice 4 of #130 (cross-center identity
+  linking, plan §4) is fully independent of Slice 1 and could be picked up
+  first instead, if preferred -- worth surfacing to the owner as a real
+  ordering choice, not just Slice 1 by default. **(c)** Issue #132 (diagram
+  shape-to-sex legend, READY, Effort S, unaffected). **(d)** `CLAUDE.md`'s
+  NOT_CRAN doc fix (READY, Effort S, unchanged from S439/S440's handoffs).
+  **(e)** NPRC outreach plan review (DECISION NEEDED, owner-only,
+  unaffected).
+- **Key files:**
+  `docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md` (the
+  whole plan; §4 Slice 1 is the immediate implementation target, §6 Dragons
+  P1-P3 are Slice 1's Pre-RED blockers, §3 has all 6 ratified decisions with
+  rationale); `R/kinship.R:62-104` (the pedigree-kinship algorithm, pattern
+  to mirror for the matrix shape); `R/reportGV.R:159-178` (the exact
+  extension seam -- `kmat` built independently of `genotype`);
+  `R/columnSchema.R:15-24` (schema with no multi-locus slot yet);
+  `R/getPedigreeSource.R:38-122` (precedent pattern for Slice 4's new
+  provider); `docs/architecture/module-contract.md` (new-module rules for
+  `modMarkerGenetics`).
+- **Gotchas:** `rhesusGenotypes` (bundled example data) is single-locus/
+  MHC-only -- NOT usable as-is for multi-locus testing (Dragon P3, plan
+  §6). `DESCRIPTION` currently has **zero** Bioconductor dependencies --
+  do not add one for kinship estimation; that reopens a decision this plan
+  explicitly closed (D2, Dragon P5). `checkGenotypeFile()`/`addGenotype()`/
+  `hasGenotype()`/`getGVGenotype()`/`geneDrop()` (the existing single-locus
+  gene-drop path) must **not** be modified by any #130 slice -- new,
+  sibling functions only (plan §2C). The exact KING-robust formula was
+  deliberately **not** written into the plan -- source it from a citable
+  reference at Pre-RED, do not reconstruct from memory (Dragon P2).
+  `ScheduleWakeup` is `/loop`-only -- do not call it to wait on a
+  background `Workflow`/`Agent` task-notification (Learning 421).
+- **Self-assessment score:** 8/10 (breakdown above).
 
 ### What Session 440 Did
 **Deliverable:** Implement [issue #131](https://github.com/rmsharp/nprcgenekeepr/issues/131)
