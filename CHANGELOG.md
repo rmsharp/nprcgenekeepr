@@ -101,7 +101,9 @@ here.
   `PROJECT_LEARNINGS.md` Learnings 418/419 added. `BACKLOG.md`’s
   pedigree-diagram-audit follow-ups section updated (issue \#131 item
   resolved). `CLAUDE.md`’s learnings-count cross-reference updated
-  (417→419, Sessions 1-439+→1-440+).
+  (417→419, Sessions 1-439+→1-440+). **Issue \#131 closed via `gh api`**
+  (per the established `gh-pr-edit-projectcards-workaround`), with a
+  closing comment summarizing the fix and verification.
 
 ### 2026-07-30 · \[BL-test-e2e-data-ready\] Fix `test-e2e-data-ready.R`’s hollow “appUI includes data-ready.js” test (Session 439)
 
