@@ -62,19 +62,21 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S433
 date: 2026-07-30
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Implement issue #129 Slice 1 (core pedigree-diagram render) -- docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md Section 4. Session claimed, work not yet started.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- implemented issue #129 Slice 1 (core pedigree-diagram render). The Pedigree Browser tab has a new Diagram view alongside the existing Table view. Slice 2 (click-to-navigate) is the next session per the ratified plan.
+what_was_done: New exported makePedigreeDiagramData(ped) (R/makePedigreeDiagramData.R) converts a pedigree data frame into visNetwork-ready {nodes, edges} (sex-shape mapping, level=gen, directed sire/dam edges). R/modPedigree.R's table area is now a tabsetPanel(Table/Diagram) mirroring modPyramid.R's precedent, with a renderVisNetwork output gated by a 1500-node size threshold (shows a message instead of an unbounded render above it). visNetwork added to DESCRIPTION Imports. Strict TDD PRE-RED->RED->GREEN (REFACTOR skipped, owner-gated). Pre-RED installed visNetwork and confirmed its API surface live, re-verified every plan citation firsthand, found a real 145-member known-loop case in examplePedigree, and decided the size-threshold mitigation. RED: 13 new/extended assertions across 2 test files, confirmed all failed for the right reason. GREEN caught and fixed a real bug (bare ns() vs session$ns() in server code) via the RED test itself. Verify: full regression 0/0/0 (3275 passed, 181 skipped, up from 3198/179 baseline); devtools::check() raw Status: OK (0/0/0) after fixing a _pkgdown.yml reference gap and adding 3 words to inst/WORDLIST (1 mine, 2 pre-existing from issue #125's S423-era work, fixed inline as a deliberate deviation from Learning 382's precedent -- recorded as Learning 407 for owner review); live shinytest2/chromote E2E smoke test against the bundled 375-row fixture confirms the Diagram tab renders, binds, throws no diagram-related console error, and shows correct sex-shape/edge data for a known real trio (queried the live vis.js DataSet via HTMLWidgets.find(), since canvas-rendered widgets have no DOM-inspectable content -- Learning 406). Also discovered and filed (not fixed) a pre-existing, unrelated shinyBS console error to BACKLOG.md. NEWS.Rmd/NEWS.md, _pkgdown.yml, BACKLOG.md, CHANGELOG.md, CLAUDE.md's learning-count cross-reference, and PROJECT_LEARNINGS.md (Learnings 405-407) all updated.
+next_steps: Implement issue #129 Slice 2 (click-to-navigate interactivity) -- follow docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md Section 4 "Slice 2". Its own Pre-RED must confirm the input$pedigreeDiagram_click event-binding convention against the now-live Slice 1 widget (Dragon P4) before writing RED tests. Alternatively planning issue #130 may be picked up first -- the plan's Cross-slice notes say Slice 1 alone already satisfies issue #129's core ask, so there is no hard ordering requirement.
+key_files: docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md section 4 "Slice 2"; R/modPedigree.R:225-293 (focalIds reactiveVal/observeEvent chain Slice 2 writes into), R/modPedigree.R:349-394 (new Diagram tab UI/server code Slice 2 extends); R/makePedigreeDiagramData.R (Slice 1 conversion function, unchanged by Slice 2); tests/testthat/test-e2e-pedigree-module.R (2 new Diagram-tab E2E tests, a ready-made scaffold for driving a live widget click).
+gotchas: (1) inside modPedigreeServer, always use session$ns(...) for a new namespaced id, never bare ns(...) -- the bare binding only exists in the sibling UI function (Learning 405); (2) visNetwork renders to canvas -- any E2E assertion about widget content needs app$get_js() + HTMLWidgets.find(id) + w.network.body.data.nodes/edges, not get_html()/grepl() (Learning 406); Slice 2's click-event mechanism is Dragon P4, not yet hands-on-confirmed; (3) a pre-existing, unrelated shinyBS is not defined console error fires on every page load (BACKLOG.md) -- don't mistake it for a Slice-2 regression; (4) Learning 407 flags an unconfirmed process deviation (fixing incidentally-discovered pre-existing issues inline vs. deferring to BACKLOG.md per Learning 382) -- read it before repeating the pattern; (5) the inst/extdata/ reorg BACKLOG entry's stale "DECISION NEEDED" header (body proves it's done) is still unfixed, flagged again this session.
+runtime_smoke: DONE, live. shinytest2/chromote E2E tests against a real running app instance (bundled obfuscated_rhesus_mhc_ped.csv fixture) confirm the Diagram tab renders, binds, throws no diagram-related console error, and shows correct node/edge/shape data for a known trio.
+changelog_ref: CHANGELOG.md 2026-07-30 issue #129 entry (Session 433)
 commit: pending
 ```
-<claim-time stub -- filled at Phase 3D close-out>
+<free-text prose>
+
+**Self-assessment 9/10.** Strengths: followed the plan's Pre-RED instruction literally (installed visNetwork and hands-on-verified its API before writing RED); re-verified every plan citation firsthand rather than trusting S432's line numbers; made and documented a genuine plan-delegated design decision (the 1500-node threshold) with explicit evidence-based reasoning; TDD discipline held throughout, and RED caught a real bug (the ns() scoping mistake) immediately; solved a genuinely novel testing problem (verifying canvas-rendered widget content in shinytest2) instead of writing a hollow test; was transparent about a real process deviation (Learning 407) instead of quietly normalizing it. Weaknesses: the Learning 407 deviation itself was a unilateral call made without pausing to ask, in a project culture that otherwise uses AskUserQuestion for comparable decisions -- the owner should confirm whether this was the right call; Dragon P2's known-loop case was found but not specifically exercised in the E2E smoke test (the plan's own DONE criteria only required "a known trio," not specifically a loop case).
 
 ```handoff
 session: S432

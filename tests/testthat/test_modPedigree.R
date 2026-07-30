@@ -1002,3 +1002,78 @@ test_that("modPedigreeServer loads newly typed text after a clear", {
     }
   )
 })
+
+## Issue #129 Slice 1 -- pedigree diagram (Table/Diagram tab) tests.
+
+test_that("modPedigreeUI has a tabbed Table/Diagram layout", {
+  ui <- modPedigreeUI("test")
+  ui_html <- as.character(ui)
+
+  expect_true(grepl("Table", ui_html))
+  expect_true(grepl("Diagram", ui_html))
+  expect_true(grepl("pedigreeDiagram", ui_html))
+})
+
+test_that("modPedigreeServer renders the diagram widget under the size limit", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE
+      )
+      session$flushReact()
+
+      html <- output$pedigreeDiagramUI$html
+      expect_true(grepl("visNetwork", html))
+    }
+  )
+})
+
+test_that(
+  "modPedigreeServer shows an informative message above the size limit", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  n <- 1600L
+  bigId <- sprintf("A%04d", seq_len(n))
+  test_studbook <- data.frame(
+    id = bigId,
+    sire = NA_character_,
+    dam = NA_character_,
+    sex = rep(c("M", "F"), length.out = n),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE
+      )
+      session$flushReact()
+
+      html <- output$pedigreeDiagramUI$html
+      expect_false(grepl("visNetwork", html))
+      expect_true(grepl("exceeds|limit", html, ignore.case = TRUE))
+    }
+  )
+})

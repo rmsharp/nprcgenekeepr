@@ -57,6 +57,15 @@ knitr::opts_chunk$set(echo = TRUE)
   eligible contemporaneous breeding-age peer cohort, `FALSE` for every other
   animal. Previously this information was silently discarded; there was no
   way to tell such an animal apart from one whose correction succeeded.
+- The Pedigree Browser tab gained a **Diagram** view (issue #129, Slice 1):
+  alongside the existing sortable table, a new tab renders the same
+  focal-animal-trimmed population as an interactive pedigree diagram --
+  sex-shaped nodes (square/dot/star/triangle), directed sire/dam edges, and a
+  generation-ordered top-down layout -- via a new `visNetwork` dependency.
+  Diagrams above 1,500 animals show an informative message instead of an
+  unbounded render; narrow the focal-animal selection to view one.
+  Click-to-navigate (clicking a node to re-center the selection) is planned
+  as a follow-up slice, not yet available.
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes

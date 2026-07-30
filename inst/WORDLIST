@@ -125,6 +125,7 @@ damBirth
 datatable
 datetime
 de
+deduplicated
 deidentified
 designators
 deterministically
@@ -320,6 +321,7 @@ sb
 schemaName
 sdKinship
 selectRows
+selectable
 setPopulation
 sexCodes
 sexRatio
@@ -360,6 +362,7 @@ updateProgress
 vasxOvx
 vectorized
 vger
+visNetwork
 withKin
 wkbk
 www

@@ -291,6 +291,7 @@ reference:
   - '`makeGroupMembers`'
   - '`makeGroupNum`'
   - '`makeGrpNum`'
+  - '`makePedigreeDiagramData`'
   - '`makeRelationClassesTable`'
   - '`makeSimPed`'
   - '`mapIdsToObfuscated`'

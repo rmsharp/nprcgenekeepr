@@ -15,7 +15,7 @@
 #' @seealso \code{\link{modPedigreeServer}} for server logic.
 #' @importFrom shiny NS div h3 h4 fluidRow column wellPanel helpText tags
 #' @importFrom shiny fileInput actionButton checkboxInput downloadButton
-#' @importFrom shiny includeHTML br uiOutput
+#' @importFrom shiny includeHTML br uiOutput tabsetPanel tabPanel
 #' @importFrom DT DTOutput
 #' @family Shiny modules
 #' @export
@@ -141,12 +141,15 @@ modPedigreeUI <- function(id) {
       )
     ),
 
-    # Pedigree data table
+    # Pedigree data table / diagram
     fluidRow(
       column(
         12L,
         br(),
-        DT::DTOutput(ns("pedigreeTable"))
+        tabsetPanel(
+          tabPanel("Table", DT::DTOutput(ns("pedigreeTable"))),
+          tabPanel("Diagram", uiOutput(ns("pedigreeDiagramUI")))
+        )
       )
     )
   )
@@ -354,6 +357,43 @@ modPedigreeServer <- function(id, studbook) {
       scrollX = TRUE,
       search = list(regex = TRUE)
     ))
+
+    # Pedigree diagram (issue #129 Slice 1). Above this many nodes, show an
+    # informative message instead of rendering the widget rather than an
+    # unbounded render -- the largest evidenced focal-trimmed working set is
+    # 962 (vignettes/articles/colony-manager-guide.qmd), while a full,
+    # untrimmed colony runs into the thousands.
+    pedigreeDiagramMaxNodes <- 1500L
+
+    output$pedigreeDiagramUI <- renderUI({
+      req(pedigreeData())
+      n <- nrow(pedigreeData())
+      if (n > pedigreeDiagramMaxNodes) {
+        div(
+          class = "alert alert-warning",
+          sprintf(
+            paste(
+              "Diagram not shown: %d animals exceeds the %d-animal display",
+              "limit. Narrow the focal-animal selection to view a diagram."
+            ),
+            n, pedigreeDiagramMaxNodes
+          )
+        )
+      } else {
+        visNetwork::visNetworkOutput(session$ns("pedigreeDiagram"))
+      }
+    })
+
+    output$pedigreeDiagram <- visNetwork::renderVisNetwork({
+      req(pedigreeData())
+      data <- pedigreeData()
+      req(nrow(data) <= pedigreeDiagramMaxNodes)
+      diagramData <- makePedigreeDiagramData(data)
+      visNetwork::visNetwork(diagramData$nodes, diagramData$edges) |>
+        visNetwork::visHierarchicalLayout(
+          direction = "UD", sortMethod = "directed"
+        )
+    })
 
     # Signal data-ready when pedigree is available (for E2E testing)
     observe({

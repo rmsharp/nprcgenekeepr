@@ -54,7 +54,8 @@ Imports:
     sessioninfo,
     shiny,
     stringi,
-    utils
+    utils,
+    visNetwork
 Suggests:
     covr,
     dplyr,

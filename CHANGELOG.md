@@ -43,6 +43,55 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-30 · [issue #129] Implement Slice 1: core pedigree diagram render (Session 433)
+- **Deliverable:** Implemented the ratified plan's Slice 1
+  (`docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md` §4).
+  New exported `makePedigreeDiagramData(ped)` (`R/makePedigreeDiagramData.R`)
+  is a pure function converting a pedigree data frame into a
+  `visNetwork`-ready `list(nodes, edges)`: sex-shape mapping (F→dot,
+  M→square, H→star, U→triangle), `level = gen` for hierarchical layout,
+  directed sire/dam→child edges. `R/modPedigree.R`'s pedigree-table area is
+  now a `tabsetPanel("Table"/"Diagram")` (mirroring `modPyramid.R`'s
+  existing Plot/Statistics precedent); the new Diagram tab renders via
+  `visNetwork::renderVisNetwork()` + `visHierarchicalLayout(direction =
+  "UD", sortMethod = "directed")`, with a 1,500-node size guard (Dragon P3)
+  that shows an informative message instead of an unbounded render above
+  that threshold — preserving D3's invariant that the diagram always shows
+  exactly the same population the Table tab does. `visNetwork` added to
+  `DESCRIPTION` Imports (the project's first GPL dependency, arms-length
+  `Imports:` of an MIT-licensed package, per Dragon P6). One vertical
+  slice, strict TDD PRE-RED → RED → GREEN (REFACTOR skipped, owner-gated,
+  already clean), all phase transitions gated via `AskUserQuestion`.
+  Pre-RED resolved Dragons P1 (visNetwork installed + API surface
+  confirmed live), P2 (a real 145-member known-loop case found in
+  `examplePedigree` for future reference), P5 (shape choices confirmed
+  against live `visNetwork` docs and real `sex` factor level counts).
+  NEWS.Rmd gained a Slice-1-scoped bullet (rendered to NEWS.md).
+  Incidentally discovered (via this session's own `devtools::check()`
+  verification, not this session's diff) two pre-existing, unrelated
+  spelling-NOTE words from issue #125's S423-era work (`deduplicated`,
+  `selectable`) undetected since S421 — fixed inline alongside this
+  session's own `visNetwork` WORDLIST addition rather than deferred to
+  `BACKLOG.md`, a deliberate deviation from `PROJECT_LEARNINGS.md` Learning
+  382's precedent, recorded as Learning 407 for owner review. Also
+  discovered a pre-existing, unrelated `shinyBS is not defined` JS console
+  error (not fixed — filed to `BACKLOG.md` per Learning 382, contrast case
+  for Learning 407). `_pkgdown.yml` reference index updated for the new
+  exported function. `PROJECT_LEARNINGS.md` gained Learnings 405–407.
+- **Verify:** RED confirmed 13 new/extended assertions failed for the
+  correct reason (function/UI/output didn't exist) before GREEN. Full
+  clean regression read: 0 failed/0 error/0 warning, 3275 passed, 181
+  skipped (up from the 3198/179 S412-era baseline). `devtools::check()`:
+  raw log `Status: OK`, 0 errors/0 warnings/0 notes (read from the raw
+  `Status:` line per Learning 382, not the colored summary alone). Live
+  `shinytest2`/`chromote` E2E smoke test against the bundled
+  `obfuscated_rhesus_mhc_ped.csv` fixture (375 rows): Diagram tab renders
+  a bound `visNetwork` widget with no diagram-related console error;
+  queried the live vis.js `DataSet` instance directly (canvas-rendered
+  widgets have no DOM-inspectable node/edge content — Learning 406) and
+  confirmed a known real trio's (`EBG407`/`U5VLXP`/`PH0IXL`) sex-shapes and
+  directed sire/dam→child edges render correctly.
+
 ### 2026-07-29 · [issue #129] Architecture plan: pedigree-diagram/tree visualization (Session 432)
 - **Deliverable:** `docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md`
   — following `ARCHITECTURE_WORKSTREAM.md` (chosen over `DESIGN_WORKSTREAM.md`:
