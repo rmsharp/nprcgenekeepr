@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S438
+date: 2026-07-30
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix issue #140 (shinyBS popovers/tooltips non-functional under Bootstrap 4.6.0). Owner-picked via the Phase 0 priorities AskUserQuestion. PRE-RED fix-approach investigation in progress (3 parallel research agents evaluating the issue's 3 candidate fix directions), ahead of the pre-RED AskUserQuestion required before declaring RED.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S437
 date: 2026-07-30
 status: complete

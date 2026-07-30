@@ -6,6 +6,23 @@
 
 ## ACTIVE TASK
 
+### What Session 438 Did
+**Deliverable:** Fix [issue #140](https://github.com/rmsharp/nprcgenekeepr/issues/140)
+(shinyBS popovers/tooltips are non-functional -- Bootstrap 4.6.0 rejects
+shinyBS.js's `popover("destroy")` call), owner-picked via the Phase 0
+priorities `AskUserQuestion` from a 4-option list (issue #130 planning,
+issue #131, issue #140, NPRC outreach review). (IN PROGRESS)
+**Started:** 2026-07-30
+**Status:** Session claimed. PRE-RED root-cause investigation of the 3
+candidate fix directions named in the issue body (vendor/patch
+`shinyBS.js`, JS-layer catch-and-ignore shim, migrate to
+`bslib::tooltip()`/`bslib::popover()`) is in progress via 3 parallel
+research agents, ahead of the pre-RED fix-approach `AskUserQuestion`
+required by `CLAUDE.md`'s TDD phase-gate format.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions
+are recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is
+the crash breadcrumb for the next session's reconcile.
+
 ### What Session 437 Did
 **Deliverable:** Fix the pre-existing `shinyBS is not defined` JS console
 error, flagged as a Housekeeping item in `BACKLOG.md` (discovered S433).
