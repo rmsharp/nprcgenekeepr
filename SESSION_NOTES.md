@@ -6,6 +6,17 @@
 
 ## ACTIVE TASK
 
+### What Session 432 Did
+**Deliverable:** Plan/scope issue #129 (pedigree-diagram/tree visualization,
+currently table-only) following `ARCHITECTURE_WORKSTREAM.md` -- per the
+owner-ratified S428 sequencing (issue #127 shipped S431; #129 is next).
+Owner-picked via `AskUserQuestion` at Phase 0.
+**Started:** 2026-07-29
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the
+crash breadcrumb for the next session's reconcile.
+
 ### What Session 431 Did
 **Deliverable:** Implement the ratified issue #127 plan
 (`docs/planning/issue127-surface-uncorrected-kinship-flag-plan.md`) -- add a
