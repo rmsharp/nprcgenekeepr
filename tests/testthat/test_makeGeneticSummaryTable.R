@@ -38,7 +38,11 @@ test_that("makeGeneticSummaryTable formats real statistics without 'N/A'", {
 ## all-N/A table with no error or warning.
 
 test_that("makeGeneticSummaryTable accepts reportGV()'s own indivMeanKin/gu vocabulary", {
-  gv <- data.frame(id = 1:3, indivMeanKin = c(.1, .2, .3), gu = c(.9, .8, .7))
+  ## n = 4 (not 3): kurtosis (issue #126) needs n > 3 to be non-degenerate
+  ## (plan Dragon P3) -- n = 3 would legitimately produce "N/A" for Kurtosis
+  ## alone, unrelated to what this test verifies (vocabulary acceptance).
+  gv <- data.frame(id = 1:4, indivMeanKin = c(.1, .2, .3, .4),
+                    gu = c(.9, .8, .7, .6))
   html <- makeGeneticSummaryTable(gv)
   expect_false(grepl("N/A", html, fixed = TRUE))
 })
@@ -53,4 +57,43 @@ test_that("makeGeneticSummaryTable is vocabulary-agnostic: same values, identica
     gu = c(0.9, 0.8, 0.7, 0.6, 0.5)
   )
   expect_identical(makeGeneticSummaryTable(legacy), makeGeneticSummaryTable(canonical))
+})
+
+## Issue #126: Skewness/Kurtosis columns (bias-adjusted G1/excess G2,
+## Joanes & Gill 1998) added alongside the existing Min/1st Qu./Mean/Median/
+## 3rd Qu./Max columns -- golden-master discipline (plan Dragon P5): the
+## existing columns above must be unaffected, only gain two new ones.
+
+test_that("makeGeneticSummaryTable's header gains Skewness and Kurtosis columns", {
+  gv <- data.frame(
+    meanKinship = c(0.1, 0.2, 0.3, 0.4, 0.5),
+    genomeUniqueness = c(0.9, 0.8, 0.7, 0.6, 0.5)
+  )
+  html <- makeGeneticSummaryTable(gv)
+  expect_true(grepl("<th>Skewness</th>", html, fixed = TRUE))
+  expect_true(grepl("<th>Kurtosis</th>", html, fixed = TRUE))
+})
+
+test_that("makeGeneticSummaryTable reports correct Skewness/Kurtosis values", {
+  ## c(0.1, 0.2, 0.3, 0.4, 0.5) is exactly symmetric (5 evenly spaced points):
+  ## G1 = 0, G2 (excess) = -1.2 -- computed independently and pinned here.
+  gv <- data.frame(
+    meanKinship = c(0.1, 0.2, 0.3, 0.4, 0.5),
+    genomeUniqueness = c(0.9, 0.8, 0.7, 0.6, 0.5)
+  )
+  html <- makeGeneticSummaryTable(gv)
+  expect_true(grepl("0.0000", html, fixed = TRUE))
+  expect_true(grepl("-1.2000", html, fixed = TRUE))
+})
+
+test_that("makeGeneticSummaryTable renders 'N/A' Skewness/Kurtosis for a zero-variance column", {
+  ## Real, non-hypothetical degeneracy: qcPedGvReport$report$gu is uniformly
+  ## 0 today (plan Sec.4) -- the m2 == 0 guard must render 'N/A', not crash
+  ## or silently produce NaN/Inf in the HTML.
+  gv <- data.frame(
+    indivMeanKin = c(0.1, 0.2, 0.3, 0.4, 0.5),
+    gu = rep(0, 5L)
+  )
+  html <- makeGeneticSummaryTable(gv)
+  expect_true(grepl("N/A", html, fixed = TRUE))
 })

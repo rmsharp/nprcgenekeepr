@@ -41,9 +41,9 @@ moduleContractServers <- list(
     args = list(geneticValues = shiny::reactive(NULL),
                 pedigree = shiny::reactive(NULL)),
     names = c("summaryData", "relationships", "relationClasses",
-              "firstOrderCounts", "mkSummary", "guSummary", "mkHistogram",
-              "zscoreHistogram", "guHistogram", "meanKinshipBoxPlot",
-              "zscoreBoxPlot", "guBoxPlot")
+              "firstOrderCounts", "mkSummary", "guSummary", "mkShape",
+              "guShape", "mkHistogram", "zscoreHistogram", "guHistogram",
+              "meanKinshipBoxPlot", "zscoreBoxPlot", "guBoxPlot")
   ),
   modORIPReporting = list(
     server = modORIPReportingServer,

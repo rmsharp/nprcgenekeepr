@@ -140,6 +140,64 @@ test_that("Summary tab renders the MK/GU quartile distribution tables", {
   )
 })
 
+## Issue #126: mkShape/guShape reactives + Skewness/Kurtosis columns on the
+## live distTbl (plan Sec.2/6, ratified Q4). Both makeParityGV() vectors
+## (indivMeanKin, gu) are 5 evenly spaced points -- exactly symmetric, so
+## skewness = 0 and excess kurtosis = -1.2 for both (same closed-form result
+## as the makeGeneticSummaryTable() fixture).
+
+test_that("Summary module exposes mkShape and guShape skewness/kurtosis", {
+  skip_if_not_installed("shiny")
+  gv <- makeParityGV()
+  ped <- makeParityPed()
+
+  shiny::testServer(
+    modSummaryStatsServer,
+    args = list(
+      geneticValues = shiny::reactive(gv),
+      pedigree = shiny::reactive(ped),
+      kinshipMatrix = NULL
+    ),
+    {
+      result <- session$getReturned()
+      expect_true("mkShape" %in% names(result))
+      expect_true("guShape" %in% names(result))
+      expect_equal(
+        result$mkShape(),
+        list(skewness = calcSkewness(gv$indivMeanKin),
+             kurtosis = calcKurtosis(gv$indivMeanKin))
+      )
+      expect_equal(
+        result$guShape(),
+        list(skewness = calcSkewness(gv$gu),
+             kurtosis = calcKurtosis(gv$gu))
+      )
+    }
+  )
+})
+
+test_that("Summary tab renders Skewness/Kurtosis columns in the distribution table", {
+  skip_if_not_installed("shiny")
+  gv <- makeParityGV()
+  ped <- makeParityPed()
+
+  shiny::testServer(
+    modSummaryStatsServer,
+    args = list(
+      geneticValues = shiny::reactive(gv),
+      pedigree = shiny::reactive(ped),
+      kinshipMatrix = NULL
+    ),
+    {
+      html <- as.character(output$summaryStats$html)
+      expect_match(html, "Skewness")
+      expect_match(html, "Kurtosis")
+      expect_match(html, "0.0000")
+      expect_match(html, "-1.2000")
+    }
+  )
+})
+
 # ---- Item 3: founder table on the Summary tab ------------------------------
 
 test_that("Summary tab renders the founder table when founderStats is supplied", {
