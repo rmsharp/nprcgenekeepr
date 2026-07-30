@@ -62,17 +62,17 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S432
 date: 2026-07-29
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Plan/scope issue #129 (pedigree-diagram/tree visualization, currently table-only) following ARCHITECTURE_WORKSTREAM.md, per owner-ratified S428 sequencing.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- wrote and ratified the architecture plan for issue #129 (pedigree-diagram/tree visualization). docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md is ready for a future implementation session's RED phase (Slice 1). No code changed -- planning deliverable only.
+what_was_done: Chose ARCHITECTURE_WORKSTREAM.md over DESIGN_WORKSTREAM.md (technology-fit/data-model decision, not layout). Ran a 4-agent parallel research Workflow (data-flow inventory, CRAN-live-verified tech survey, module-contract review, prior-plan-convention research), then independently re-verified every load-bearing claim firsthand before drafting. Ratified 4 scope decisions via AskUserQuestion: D1 extend modPedigree.R with a new Diagram tab (not a new module, matching modPyramid.R's existing tabsetPanel precedent); D2 visNetwork (MIT license, native Shiny interactivity) over kinship2/pedtools/ggpedigree; D3 reuse the existing strict-lineal trim, not the broader connected-component-with-collaterals semantics; D4 multi-slice (Slice 1 core render, Slice 2 click-to-navigate deferred). Wrote the plan following the #125 multi-slice structural template. Ran a second, independent adversarial-verification Workflow (citation audit + live CRAN fact-check) before ratification -- found and fixed 1 BLOCKING citation error (a vignette citation misattributed a "962" figure to a location that actually says "377") plus 4 minor line-range citations and 2 moderate technology-survey undercounts; both decision-critical claims (visNetwork MIT license, pedtools R>=4.2 floor) held up. Owner ratified the corrected plan. Recorded Learning 404 (citation-pooling failure mode + the now-2-for-2 pattern of adversarial verification catching real errors). Updated BACKLOG.md sequencing note and CHANGELOG.md.
+next_steps: Implement issue #129 Slice 1 (core pedigree-diagram render) -- follow docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md Section 4 "Slice 1". Its own Pre-RED must (a) re-verify plan citations firsthand and (b) install visNetwork + confirm its documented API surface (visNetworkOutput/renderVisNetwork/visHierarchicalLayout) actually behaves as described -- the plan's mechanism was never hands-on-verified (Dragon P1). Slice 2 (click-to-navigate) and planning #130 both wait until Slice 1 ships.
+key_files: docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md (full ratified plan; Section 4 Slice 1 is the starting point, Section 6 dragons P1-P6 name every open risk); R/modPedigree.R (UI 145-151 for the new tabsetPanel, server ~349 area for the new renderVisNetwork output, 378-398 unchanged return list); R/modPyramid.R:66-69 (tabsetPanel precedent Slice 1 mirrors); DESCRIPTION (needs visNetwork added to Imports).
+gotchas: visNetwork is NOT installed in this dev environment -- Slice 1 Pre-RED must install it and confirm the API before writing RED tests (Dragon P1); inbreeding-loop rendering is unverified -- check against a known-loop case in examplePedigree (Dragon P2); the U/H sex-shape mapping (triangle/star) is this plan's own proposal, not verified (Dragon P5); if input$trimPedigree is off, pedigreeData() could be the full untrimmed pedigree (thousands of rows) -- needs a concrete size-mitigation decision (Dragon P3); .DS_Store artifacts and the issue125 plan .html remain harmless, unchanged since S425.
+runtime_smoke: n/a -- docs-only planning session, no R/tests/runtime behavior changed. Confirmed inapplicable per Phase 3E's own criteria (no startup config, service registration, wiring, dispatch, or config resolution changed).
+changelog_ref: CHANGELOG.md 2026-07-29 [issue #129] "Architecture plan: pedigree-diagram/tree visualization" entry (Session 432)
+commit: pending -- close-out commit sha to follow
 ```
 
 ```handoff

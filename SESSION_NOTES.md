@@ -11,11 +11,203 @@
 currently table-only) following `ARCHITECTURE_WORKSTREAM.md` -- per the
 owner-ratified S428 sequencing (issue #127 shipped S431; #129 is next).
 Owner-picked via `AskUserQuestion` at Phase 0.
-**Started:** 2026-07-29
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are
-recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the
-crash breadcrumb for the next session's reconcile.
+**DONE.** `docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md`
+written, adversarially verified, and RATIFIED via `AskUserQuestion`, ready
+for a future implementation session's RED phase (Slice 1).
+**Started/Completed:** 2026-07-29 / 2026-07-29
+**Status:** DONE. TDD phases (RED/GREEN/REFACTOR) are inapplicable to this
+deliverable -- it is a plan, following S423/S426/S428/S430 precedent. No
+`R/`/`tests/`/`man/`/`NAMESPACE`/`data/` content changed.
+
+**What happened, in order:** **(1)** Ran Phase 0 orientation in full
+(`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list`,
+`git status`/`log`/`diff --stat`, `methodology_dashboard.py` (Health
+98/100), ledger reconcile -- `CHANGELOG.md`/`HANDOFFS.md` frontiers both at
+HEAD, clean, no backfill needed). Rendered the priorities list (3 numbered
+items) via `AskUserQuestion`; owner picked "Plan/scope issue #129."
+Compared `ARCHITECTURE_WORKSTREAM.md` vs `DESIGN_WORKSTREAM.md`; picked
+Architecture (a technology-fit/data-model/module-contract decision --
+choosing a rendering library and an integration shape -- not a layout/
+panel-arrangement decision), matching S430's own reasoning for #127 but
+applied here to a case that leans architecture even more clearly. Verified
+`createPedTree.R` firsthand before committing to this framing (confirmed
+it's an unrelated sire/dam lookup structure, not existing diagram
+infrastructure -- genuinely greenfield). Stated the deliverable back to
+the owner, claimed the session (`e9b154ef`) before any technical work.
+**(2)** Research: launched a 4-agent parallel `Workflow` (pedigree data
+-flow/rendering-surface inventory; CRAN-live-verified diagram-library
+technology survey; module-contract + app-wiring review; prior-plan
+-convention + full issue/audit-text research), per this session's
+Ultracode directive and the S430 precedent. Findings: `modPedigree.R:349`
+(`DT::renderDT`) is the sole pedigree rendering surface app-wide; zero
+existing diagram-library dependency; two divergent focal-scoping
+algorithms already exist (strict-lineal trim vs. broader connected
+-component-with-collaterals); a real, evidenced architectural shortcut
+exists (`modPyramid.R`'s existing Plot/Statistics `tabsetPanel` precedent,
+directly reusable for a Table/Diagram toggle inside `modPedigree.R`
+instead of a new module); a live CRAN survey of 10 candidate rendering
+packages (kinship2, pedtools, BGmisc, ggpedigree, visNetwork, networkD3,
+DiagrammeR, collapsibleTree, ggraph, tidygraph) with verified version/
+license/dependency facts. **(3)** Verified firsthand (not trusting the
+research agents' output alone, per the vertical-slice/high-parallelism
+"apply adversarial refutation to your own agents' output" guidance): the
+sole-rendering-surface claim, the R version floor, the `focalAnimals`
+-has-zero-consumers claim, the `modPyramid.R` tabsetPanel precedent, and
+the module-contract's six rules -- all confirmed exactly via direct
+`grep`/`Read`. **(4)** Ratified 4 scope decisions via `AskUserQuestion`:
+D1 extend `modPedigree.R` with a new Diagram tab (not a new module); D2
+`visNetwork` as the rendering technology (over kinship2/ggpedigree/defer
+-to-spike); D3 reuse the existing strict-lineal trim (not the broader
+connected-component semantics); D4 multi-slice (Slice 1 core render,
+Slice 2 click-to-navigate, deferred). **(5)** Checked whether `visNetwork`
+is installed in this environment before designing its mechanism --
+confirmed NOT installed (`requireNamespace("visNetwork", quietly=TRUE)` ->
+`FALSE`) -- flagged this honestly in the plan (Dragon P1) rather than
+designing as if hands-on-verified. Confirmed `findGeneration()`'s
+generation-numbering convention (`gen=0` for founders, increasing away)
+firsthand, which resolved the hierarchical-layout-direction question
+without needing to run the library. **(6)** Wrote the plan
+(`docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md`),
+following the #125 plan's multi-slice structural convention (lettered
+evidence inventory 2A-2F, prose-bullet ratified decisions, a full repeated
+Scope/RED/GREEN/DONE-criteria/Dragons block per slice, Cross-slice notes,
+flat-bulleted dragons list, owner-ratification-checklist closing) rather
+than #127's single-slice table-based structure, since D4 ratified multi
+-slice. **(7)** Ran a second, independent adversarial-verification
+`Workflow` (2 agents: a citation audit re-deriving every `file:line`
+citation/quote from live source; an independent live-CRAN fact-check of
+the technology-survey table) before presenting the plan for ratification
+-- caught and fixed 1 BLOCKING citation error (a vignette citation,
+`a2interactive.html:1810`, that was made to support a "962" figure it
+does not contain -- the real number there is "377"; the correct "962"
+citation lives only in a different document, `colony-manager-guide.qmd`)
+plus 4 minor off-by-one line-range citations, and 2 moderate (non
+-decision-changing) technology-survey undercounts (ggpedigree's missing
+`stringr` dependency; DiagrammeR's understated 7-vs-18-package import
+count). Both decision-critical claims (visNetwork's MIT license; pedtools'
+R>=4.2 floor) held up under independent re-verification. Fixed all 7
+findings before presenting. **(8)** Owner ratified the corrected plan via
+`AskUserQuestion`. **(9)** Recorded Learning 404 (`PROJECT_LEARNINGS.md`)
+-- the specific citation-pooling failure mode that produced the blocking
+error, plus the now-2-for-2 pattern (after S430/#127) of adversarial
+verification finding real, ratification-blocking errors on a plan's first
+pass -- elevating that step from "good practice" to "load-bearing, budget
+for it to find something."
+
+**Session 431 Handoff Evaluation (by Session 432): 9/10.** **What helped:**
+the "Handoff to Session 432" section's framing of #129 as needing "its own
+scoping/architecture-or-design session first, not straight-to
+-implementation" set up this session's Phase 1 workstream choice correctly
+before any research began, and the sequencing (`#129` next, `#130` after)
+matched `BACKLOG.md`'s own live sequencing note exactly, so there was no
+ambiguity about what to pick up. **What was missing:** nothing critical --
+S431's specific technical gotchas (the `fg` golden-master RNG drift, the
+live-E2E friction with a hand-built `flagPed` fixture) were about
+`reportGV()`/kinship internals entirely unrelated to this session's
+pedigree-diagram-visualization task, so naturally didn't transfer; this
+isn't a flaw in the handoff, just a case where a prior session's
+implementation-specific gotchas don't carry across an issue boundary into
+an unrelated planning session. **What was wrong:** nothing -- every claim
+held. **ROI:** high -- the next-steps pointer was immediately actionable
+with zero re-derivation needed.
+
+**Self-assessment (Session 432): 9/10.** **Strengths:** (1) chose the
+workstream document deliberately (Architecture over Design) with stated,
+verifiable reasoning rather than defaulting, and independently confirmed
+the "genuinely greenfield, no existing diagram infra" premise before
+committing to that framing; (2) ran a 4-agent parallel research workflow
+matching both the Ultracode directive and the S430 precedent, then did
+NOT stop at the research agents' output -- independently re-verified every
+load-bearing claim firsthand before drafting any ratified decision; (3)
+posed all 4 real scope decisions via `AskUserQuestion` with substantive,
+tradeoff-honest option descriptions (not just a recommended pick with no
+alternative reasoning) before writing the plan, so the owner's ratification
+was informed, not rubber-stamped; (4) ran a genuine, independent
+adversarial-verification workflow over the freshly-drafted plan and found
+-- and fixed -- a real, blocking-severity citation error before
+presenting for ratification, exactly the failure the step exists to catch;
+(5) was honest about a real limitation (visNetwork not installed in this
+environment, so the mechanism design is documentation-derived rather than
+hands-on-verified) instead of glossing over it, flagging it as a named
+Dragon for the implementing session's own Pre-RED rather than presenting
+undue confidence. **Weaknesses:** (1) the blocking citation error itself
+-- when synthesizing multiple research findings into one summary sentence,
+treated the specific numbers as "supporting color" rather than "load
+-bearing," so didn't apply the same firsthand-verification rigor to them
+before drafting that was applied to the decision-critical claims; caught
+only by the adversarial pass, not by this session's own first-pass
+verification (recorded as Learning 404, with a concrete rule: pair each
+number with its own citation inline when synthesizing across sources); (2)
+could not hands-on-verify visNetwork's actual rendering behavior
+(inbreeding-loop handling, click-event input-binding convention) in this
+session, since the package isn't installed and installing it felt like it
+was reaching past a planning-only session's scope -- an honest, disclosed
+limitation (Dragon P1/P2/P4) rather than a process failure, but it does
+mean Slice 1's mechanism design carries more inherent risk than #127's
+plan did (which had actual `Rscript`-verified worked examples). **Compared
+to previous sessions:** matches S430's overall rigor (research fan-out,
+firsthand verification, adversarial re-verification before ratification,
+`AskUserQuestion`-gated ratification at every decision point) and confirms
+a real pattern rather than a one-off: S430's own adversarial pass for
+#127 also found "1 blocking + 4 minor" citation errors on first pass --
+this session found the identical shape of result independently, which is
+new evidence (not just a repeated claim) that the adversarial-verification
+step is consistently load-bearing across different planning sessions, not
+exceptional.
+
+**Handoff to Session 433:**
+- **What's next:** Per the owner-ratified sequencing (`BACKLOG.md`, S428,
+  updated this session): planning issue #129 is now DONE. **Implement
+  issue #129 Slice 1** (core pedigree-diagram render) is next -- follow
+  `docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md` §4
+  "Slice 1," starting with its own Pre-RED (re-verify every plan citation
+  firsthand, per house convention, AND install `visNetwork` + confirm its
+  documented API surface actually behaves as described -- Dragon P1 is
+  the load-bearing risk to resolve first, since this plan's mechanism was
+  never hands-on-verified). Slice 2 (click-to-navigate) and planning #130
+  both wait until Slice 1 ships. Standing, untouched this session: (a)
+  LabKey integration remaining recs (BLOCKED -- needs a live LabKey
+  server); (b) NPRC outreach plan (DECISION NEEDED -- owner review/edit/
+  send); (c) five-state Issue Lifecycle GitHub labels decision (still
+  open); (d) the vestigial "Upload list" `animalSource` UI option
+  (`R/modBreedingGroups.R:42`, no `fileInput`/handling anywhere --
+  recommend filing as its own small issue); (e) the `inst/extdata/` reorg
+  BACKLOG entry's stale header (flagged S430, not yet fixed -- low
+  priority prune); (f) the bundled `qcPedGvReport`/`pedWithGenotypeReport`
+  golden-master `fg` value's two-time drift (S431 finding -- worth a
+  dedicated look if it drifts a third time); (g) S431's live-E2E friction
+  with its own hand-built `flagPed` fixture (root cause undiagnosed).
+- **Key files:** `docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md`
+  (the full ratified plan -- §4 "Slice 1" is the next session's starting
+  point, §6 "Here be dragons" P1-P6 name every unresolved risk); `R/modPedigree.R`
+  (the file Slice 1 extends -- UI lines 145-151 for the new tabsetPanel,
+  server line 349 area for the new `renderVisNetwork` output, lines 378
+  -398 for the unchanged return list); `R/modPyramid.R:66-69` (the
+  tabsetPanel precedent Slice 1's UI change mirrors); `R/createPedTree.R`,
+  `R/findGeneration.R` (raw material for the new node/edge conversion
+  function, not directly reusable as-is); `DESCRIPTION` (needs `visNetwork`
+  added to `Imports`).
+- **Gotchas:** (1) `visNetwork` is NOT installed in this development
+  environment -- Slice 1's own Pre-RED must install it and confirm
+  `visNetworkOutput()`/`renderVisNetwork()`/`visHierarchicalLayout()`
+  exist and behave as documented before writing RED tests (plan Dragon
+  P1); (2) inbreeding-loop rendering behavior is unverified -- confirm
+  against a known-loop case in `examplePedigree` before treating the
+  layout as safe (Dragon P2); (3) the sex-shape mapping for `"U"`/`"H"`
+  (`"triangle"`/`"star"` proposed) is this plan's own proposal, not a
+  verified convention -- confirm against real data before treating as
+  final (Dragon P5); (4) if `input$trimPedigree` is off, `pedigreeData()`
+  could be the full untrimmed pedigree (thousands of rows) -- Slice 1
+  needs a concrete size-mitigation decision, not an unbounded render
+  (Dragon P3); (5) `.DS_Store`/`inst/.DS_Store`/`inst/extdata/.DS_Store`
+  and `docs/planning/issue125-ranking-priority-multi-candidate-plan.html`
+  remain harmless, unfixed, out-of-scope artifacts, unchanged since S425.
+- **Self-assessment score:** 9/10 (see above for full breakdown).
+- **Runtime smoke test:** N/A -- docs-only planning session, no `R/`/
+  `tests/`/runtime behavior changed. Not silently skipped: explicitly
+  confirmed inapplicable per Phase 3E's own criteria (no startup
+  configuration, service registration, integration wiring, dispatch, or
+  config resolution changed).
 
 ### What Session 431 Did
 **Deliverable:** Implement the ratified issue #127 plan

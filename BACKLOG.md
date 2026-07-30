@@ -331,9 +331,12 @@ requiring tracking. See `CHANGELOG.md`.*
       DONE -- S430 (2026-07-29). **Implementing issue #127 is now DONE --
       S431 (2026-07-29, closes issue #127):** `reportGV()`'s `$report` carries
       a new boolean `flagged` column (all bundled/live surfaces), see
-      `CHANGELOG.md`. **Plan + implement issue #129** (pedigree-diagram/tree
-      visualization, currently table-only) is next -- needs its own
-      scoping/architecture-or-design session first, not straight-to
-      -implementation (READY, Effort M/L). **Planning #130** (marker-based
-      kinship/heterozygosity/parentage-verification) comes only after #129
-      ships.
+      `CHANGELOG.md`. **Planning issue #129 is now DONE -- S432 (2026-07-29):**
+      `docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md`
+      ratified (D1 extend `modPedigree.R`; D2 visNetwork; D3 reuse the
+      existing strict-lineal trim; D4 multi-slice). **Implement issue #129
+      Slice 1** (core pedigree-diagram render) is next (READY, Effort M);
+      **Slice 2** (click-to-navigate interactivity) follows Slice 1, as its
+      own future session. **Planning #130** (marker-based
+      kinship/heterozygosity/parentage-verification) comes only after #129's
+      Slice 1 ships.

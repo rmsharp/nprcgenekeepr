@@ -43,6 +43,36 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-29 · [issue #129] Architecture plan: pedigree-diagram/tree visualization (Session 432)
+- **Deliverable:** `docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md`
+  — following `ARCHITECTURE_WORKSTREAM.md` (chosen over `DESIGN_WORKSTREAM.md`:
+  a technology-fit/data-model/module-contract decision, not a layout
+  decision). Evidence base: a 4-agent parallel research `Workflow`
+  (pedigree data-flow/rendering-surface inventory; CRAN-live-verified
+  diagram-library technology survey; module-contract + app-wiring review;
+  prior-plan-convention + full issue/audit-text research), plus firsthand
+  verification of every load-bearing claim, per `PROJECT_LEARNINGS.md`
+  Learning 399's standing instruction for this issue specifically. Ratified
+  4 scope decisions via `AskUserQuestion`: **D1** extend `R/modPedigree.R`
+  with a new "Diagram" tab (matching `modPyramid.R`'s existing Plot/
+  Statistics `tabsetPanel` precedent), not a new module; **D2** `visNetwork`
+  as the rendering library (MIT-licensed, native Shiny interactivity,
+  hand-built pedigree semantics) over kinship2/pedtools/ggpedigree; **D3**
+  the diagram reuses `modPedigree.R`'s existing strict-lineal
+  ancestors-union-descendants trim (`pedigreeData()`), not the broader
+  connected-component-with-collaterals semantics; **D4** multi-slice —
+  Slice 1 (core diagram render) is the next implementation session, Slice 2
+  (click-to-navigate interactivity) is deferred to a separate future
+  session. A second, independent adversarial-verification `Workflow` (2
+  agents: a citation audit re-deriving every `file:line` citation from live
+  source; an independent live CRAN fact-check of the technology-survey
+  table) ran before ratification — found and fixed 1 blocking + 4 minor
+  citation errors and 2 moderate technology-survey undercounts (none
+  changed the D2 recommendation); see `PROJECT_LEARNINGS.md` Learning 404.
+  No `R/`/`tests/`/`man/`/`NAMESPACE`/`data/` content changed — planning
+  deliverable only.
+- **Verify:** N/A (planning session; no code, no runtime behavior changed).
+
 ### 2026-07-29 · [issue #127] Surface correctUnknownParentMeanKinship()'s silently-dropped flagged list (Session 431)
 - **Deliverable:** Implemented the ratified plan
   (`docs/planning/issue127-surface-uncorrected-kinship-flag-plan.md`). `reportGV()`'s
