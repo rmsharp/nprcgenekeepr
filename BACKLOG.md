@@ -345,6 +345,52 @@ by running the fixed command verbatim: 0 failed/0 error/0 warning, 3198
 passed, 179 skipped, matching the known-good baseline. See
 `CHANGELOG.md`.)
 
+## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
+
+*S435’s capability-comparison audit
+(`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`)
+compared the just-shipped issue \#129 pedigree-diagram feature against
+kinship2’s pedigree-drawing feature set (17-point checklist, 8 findings,
+8 recommendations). Triaged S436 (2026-07-30) via explicit owner
+direction (free-text, not per-item `AskUserQuestion` picks): **all 8
+recommendations** filed as GitHub issues, tracked there, not here –
+including Recommendations 4-7, which the audit itself scored “no action”
+(data-model-gated, or an already-ratified Dragon-P3 scope tradeoff);
+filing tracks the idea for future consideration and does not reverse the
+audit’s own assessment (each issue body preserves the audit’s original
+disposition text verbatim). Owner set an explicit priority order that
+**inverts** the audit’s own suggested ordering (which rated Finding \#1
+highest): **\#131** (diagram image/print export, Finding \#3/Rec \#2,
+priority 1) – **\#132** (in-app shape-to-sex legend, Finding \#6/Rec
+\#3, priority 2, also resolves plan Dragon P5) – **\#133**
+(affected/phenotype/genotype status encoding, Finding \#2/Rec \#4,
+priority 3, data-model gated) – **\#134** (verify
+inbreeding-loop/consanguinity rendering, Finding \#1/Rec \#1, priority
+4, resolves plan Dragon P2 / `PROJECT_LEARNINGS.md` Learning 410) –
+**\#135** (hover tooltips + search/highlight, Rec \#8, priority 5) –
+**\#136** (name labels instead of ID-only, Finding \#8/Rec \#7, priority
+6, data-model gated) – **\#137** (twin/zygosity encoding, Finding
+\#5/Rec \#5, priority unranked by the owner, placed 7th as an inference
+not a stated decision) – **\#138** (full-colony rendering beyond the
+1,500-node cap, Finding \#7/Rec \#6, priority 8 – explicitly
+deprioritized/delayed by the owner, `low priority` GitHub label
+applied). Owner also directed (mid-session, 2026-07-30) a broader goal:
+overlay kinship2’s genetics-domain naming conventions onto the pedigree
+data model where applicable when these are implemented, and build test
+pedigree fixtures with the corresponding added columns – folded into
+\#133 (kinship2’s `affected` argument convention) and \#137 (kinship2’s
+`relation` argument convention), the two data-model-adding items. Owner
+also directed that any plan implementing one of \#131-#138 must include
+a documentation phase (`vignettes/articles/ colony-manager-guide.qmd`
+and/or `vignettes/manual_components/_pedigree_browser.Rmd`), now
+recorded as `CLAUDE.md`’s “Tutorial/article documentation checklist” –
+checking whether this was already true for the base feature found it was
+not: **issue \#139** tracks that issue \#129’s already-shipped Diagram
+tab has zero tutorial/article coverage today. See `PROJECT_LEARNINGS.md`
+Learning 411 and `CHANGELOG.md` for the full S436 triage record. None
+imply reopening issue \#129 or revisiting the visNetwork-vs-kinship2
+technology decision (D2), which stands as ratified.*
+
 ## Outreach
 
 **NPRC outreach & announcement plan** (DECISION NEEDED – owner

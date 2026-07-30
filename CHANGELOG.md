@@ -47,6 +47,115 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-30 · \[ad hoc\] Triage pedigree-diagram-vs-kinship2 audit recommendations (Session 436)
+
+- **Deliverable:** Owner-picked (free-text response, not a rendered
+  `AskUserQuestion` option) from S435’s priorities list: triage
+  `docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`’s 8
+  recommendations into GitHub issues, matching the S419→S422
+  audit→triage precedent. TDD Phase: N/A — pure triage/issue-filing +
+  `BACKLOG.md`/`PROJECT_LEARNINGS.md` documentation, no `R/`/`tests/`
+  code touched.
+- **Process:** owner directed filing **all 8** recommendations as issues
+  in one free-text reply, including Recommendations 4–7, which the audit
+  itself scored “no action” (data-model-gated, or an already-ratified
+  Dragon-P3 scope tradeoff) — each such issue body preserves the audit’s
+  original disposition text verbatim rather than silently reframing it
+  as newly-endorsed. Owner also gave an explicit priority order (2, 3,
+  4, 1, 8, 7, then 5 unranked, then 6 explicitly deprioritized/delayed)
+  that inverts the audit’s own suggested ordering (which rated Finding
+  \#1 highest); recorded as-given. Mid-session, owner also directed a
+  broader goal — overlay kinship2’s genetics-domain naming conventions
+  onto the pedigree data model where applicable when these are
+  implemented, and build test pedigree fixtures with the corresponding
+  added columns — folded into the two data-model-adding issue bodies
+  (#133’s `affected` argument convention, \#137’s `relation` argument
+  convention) as forward-looking guidance, not treated as license to
+  implement in this session.
+- **Result:** filed GitHub issues \#131 (diagram image/print export,
+  Finding \#3), \#132 (in-app shape-to-sex legend, Finding \#6, also
+  resolves plan Dragon P5), \#133 (affected/phenotype/genotype status
+  encoding, Finding \#2, data-model gated), \#134 (verify
+  inbreeding-loop/consanguinity rendering, Finding \#1, resolves plan
+  Dragon P2 / `PROJECT_LEARNINGS.md` Learning 410), \#135 (hover
+  tooltips + search/highlight, Recommendation \#8), \#136 (name labels
+  instead of ID-only, Finding \#8, data-model gated), \#137
+  (twin/zygosity encoding, Finding \#5, data-model gated), \#138
+  (full-colony rendering beyond the 1,500-node cap, Finding \#7,
+  `low priority` GitHub label applied). All labeled `enhancement`,
+  matching this repo’s existing convention (verified via `gh label list`
+  before filing, per `PROJECT_LEARNINGS.md` Learning 387’s precedent).
+  Replaced `BACKLOG.md`’s
+  `## Pedigree diagram vs kinship2 audit follow-ups` per-item candidates
+  with a resolved summary paragraph pointing at the 8 issue numbers
+  (tracked there, not in `BACKLOG.md`), matching S422’s own collapse
+  convention. Added `PROJECT_LEARNINGS.md` Learning 411 (owner can
+  override an audit’s own “no action” disposition; preserve the audit’s
+  original reasoning in the filed issue). Updated `CLAUDE.md`’s
+  learnings-count cross-reference (410→412, Sessions 1-435+→1-436+).
+  Also backfilled `HANDOFFS.md`’s S435 receipt `commit: pending`
+  placeholder to `db00a40d` (a Phase-0 HANDOFFS reconcile item flagged
+  but not fixed during this session’s own orientation).
+- **Mid-session scope addition:** a second owner steering message
+  directed that any plan implementing these follow-up issues must
+  include updating the relevant tutorial/article
+  (`vignettes/articles/colony-manager-guide.qmd` and/or
+  `vignettes/manual_components/ _pedigree_browser.Rmd`) describing the
+  feature’s purpose and use. Checking whether the already-shipped issue
+  \#129 base feature already followed this found it had not — zero
+  mentions of the Diagram tab in any vignette/article (`grep` across all
+  `.Rmd`/`.qmd` sources returns nothing). Filed **issue \#139** to track
+  that pre-existing documentation gap rather than fixing it in this
+  triage-only session (per `PROJECT_LEARNINGS.md` Learning 407’s
+  precedent). Added a comment to each of issues \#131–#138 recording the
+  same documentation-scope expectation. Recorded the convention durably
+  as `CLAUDE.md`’s new “Tutorial/article documentation checklist”
+  (modeled on the existing issue-#120 citation checklist). Added
+  `PROJECT_LEARNINGS.md` Learning 412 (a forward-looking directive is
+  worth checking against current state, not just applied prospectively).
+- **Runtime smoke test:** n/a — no `R/`/`tests/` code touched; pure
+  triage/issue filing + `BACKLOG.md`/`PROJECT_LEARNINGS.md`/`CLAUDE.md`
+  documentation.
+
+### 2026-07-30 · \[ad hoc\] Audit: pedigree diagram (issue \#129) vs kinship2 feature comparison (Session 435)
+
+- **Deliverable:**
+  `docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`, a
+  17-point capability-comparison audit (`AUDIT_WORKSTREAM.md`) between
+  the just-shipped issue \#129 pedigree-diagram feature
+  (visNetwork-based Diagram tab, Slices 1+2) and kinship2’s
+  pedigree-drawing feature set. Owner-directed (not from the prior
+  GitHub-issue sequencing chain, not a TDD/code-implementation session —
+  no `R/`/`tests/` code touched). Ran a 3-agent research-then-synthesize
+  workflow (one agent surveyed the shipped implementation firsthand, one
+  researched kinship2’s actual feature set from its CRAN
+  manual/vignettes/GitHub source, one synthesized both into the
+  comparison), then independently re-verified every nprcgenekeepr-side
+  citation against live source and re-verified three consequential
+  kinship2 claims via direct `WebFetch` against CRAN/GitHub (the `sex`
+  argument’s 4 codes, the sex-to-shape `polylist` + deceased-slash +
+  `arcconnect()` duplicate-instance-arc source, and that no
+  `plot.pedigreeList` S3 method exists in the current package —
+  confirmed live against kinship2’s own `NAMESPACE`, correcting the
+  ratified plan’s own survey-table citation). 8 findings: 4
+  kinship2-only (affected-status shading, twin/zygosity encoding, legend
+  functions, node-label substitutability — the latter two gated by
+  nprcgenekeepr’s own data model lacking a name/affected field), 1
+  nprcgenekeepr-only (click-to-navigate + free pan/zoom —
+  architecturally impossible for kinship2’s static base-graphics
+  design), 1 both-lack (no full-colony/arbitrary-scale rendering
+  solution in either package), and 1 finding
+  (inbreeding-loop/consanguinity rendering) that is the audit’s headline
+  result: the ratified plan’s own Dragon P2 (required Slice-1
+  verification) was never actually resolved across S433 or S434’s
+  close-outs — recorded as `PROJECT_LEARNINGS.md` Learning 410. Added 4
+  candidate follow-up items to `BACKLOG.md`
+  (`## Pedigree diagram vs kinship2 audit follow-ups`), awaiting owner
+  triage before any are filed as GitHub issues, per the same
+  audit→triage pattern S419→S422 used for the prior capability audit. No
+  action implied on the visNetwork-vs-kinship2 technology decision (D2),
+  which stands as ratified.
+
 ### 2026-07-30 · \[issue \#129\] Implement Slice 2: click-to-navigate interactivity (Session 434, closes issue \#129)
 
 - **Deliverable:** Implemented the ratified plan’s Slice 2

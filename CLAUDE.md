@@ -303,6 +303,23 @@ Observation 1 — citation gaps correlated with recency, not centrality:
 the metrics missing coverage were consistently the ones added without
 their own citation pass.)
 
+**Tutorial/article documentation checklist (owner-directed, 2026-07-30,
+Session 436):** a plan that ships a new user-facing Shiny feature (a new
+tab, control, or interaction pattern) must include a documentation phase
+updating the relevant tutorial/article
+(`vignettes/articles/colony-manager-guide.qmd` and/or the matching
+`vignettes/manual_components/*.Rmd` component) describing the feature’s
+purpose and use — not just code + tests + `NEWS.md`. Surfaced when a
+mid-session owner directive (“this plan needs to include augmenting
+articles and tutorials”) prompted a check that found issue \#129’s
+already-shipped pedigree-diagram Diagram tab (S433/S434) has **zero**
+mentions in any vignette or article (`grep` across
+`vignettes/**/*.Rmd`/`vignettes/articles/*.qmd` returns nothing) —
+tracked as GitHub issue \#139 rather than fixed retroactively in the
+triage session that found it, per the established “report an
+incidentally-discovered, unrelated pre-existing gap, don’t fix it
+mid-session” precedent (`PROJECT_LEARNINGS.md` Learning 382).
+
 **CHANGELOG.md ledger-format resolution (2026-07-08, Session 325 —
 “freeze legacy, go forward”):** canonical v3.1+ defines `CHANGELOG.md`
 as an “Authoritative Action Ledger” — dated
@@ -331,7 +348,7 @@ workstream **and** the RED→GREEN→REFACTOR gates.
 
 ### Project-specific Learnings
 
-Project institutional memory (Sessions 1–434+; 409 learnings, ~1.8 MB)
+Project institutional memory (Sessions 1–436+; 412 learnings, ~1.8 MB)
 lives in
 [`PROJECT_LEARNINGS.md`](https://github.com/rmsharp/nprcgenekeepr/PROJECT_LEARNINGS.md)
 — extracted from this file to keep `CLAUDE.md` within its size budget
