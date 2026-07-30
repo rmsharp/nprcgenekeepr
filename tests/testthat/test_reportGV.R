@@ -13,7 +13,7 @@ test_that("reportGV forms correct genetic value report", {
     c(
       "id", "sex", "age", "birth", "exit", "population", "sire", "dam",
       "indivMeanKin", "zScores", "gu", "guSE", "totalOffspring",
-      "livingOffspring", "parentage", "value", "rank"
+      "livingOffspring", "parentage", "flagged", "value", "rank"
     )
   )
   expect_identical(nrow(gvReport$report), nrow(qcPed))
@@ -38,7 +38,7 @@ test_that(
       c(
         "id", "sex", "age", "birth", "exit", "population", "sire", "dam",
         "indivMeanKin", "zScores", "gu", "guSE", "totalOffspring",
-        "livingOffspring", "parentage", "value", "rank"
+        "livingOffspring", "parentage", "flagged", "value", "rank"
       )
     )
     expect_identical(nrow(gvReport$report), nrow(qcPed))
@@ -209,6 +209,54 @@ test_that("reportGV classifies parentage and flags both-unknown founders (issue 
   expect_true(all(rpt$value[rpt$parentage == "both unknown"] == "Undetermined"))
   ## known and one-unknown animals are not flagged as no-parentage
   expect_true(all(rpt$value[rpt$parentage != "both unknown"] != "Undetermined"))
+})
+
+# ---------------------------------------------------------------------------
+# Issue #127: reportGV surfaces correctUnknownParentMeanKinship()'s previously
+# silently-dropped `flagged` list as a boolean `flagged` report column -- TRUE
+# for a one-unknown-parent animal left uncorrected for lack of an eligible
+# breeding-age peer cohort, FALSE otherwise. flagPed (plan
+# docs/planning/issue127-surface-uncorrected-kinship-flag-plan.md Sec 4.2) is a
+# hand-verified 14-row fixture that survives reportGV()'s FULL pipeline
+# (calcFEFG / calcFounderContributions need an explicit U-id row and a founder
+# pool >= ~9, not a bare NA parent or a too-small pedigree -- see
+# PROJECT_LEARNINGS.md Learning 401) and produces exactly one flagged animal:
+# Q1 (sire U0003 unknown, dam known), whose only candidate male peers (M1/M2)
+# are not 2+ years older than her.
+# ---------------------------------------------------------------------------
+makeFlagTestPed <- function() {
+  flagPed <- data.frame(
+    id    = c("U0001", "U0002", "M1", "F1", "M2", "F2", "P1", "O1", "O2", "O3",
+              "too_young_male", "dam_known", "U0003", "Q1"),
+    sire  = c(NA, NA, NA, NA, NA, NA, "U0001", "M1", "M2", "M1",
+              NA, NA, NA, "U0003"),
+    dam   = c(NA, NA, NA, NA, NA, NA, "U0002", "F1", "F2", "F2",
+              NA, NA, NA, "dam_known"),
+    sex   = c("M", "F", "M", "F", "M", "F", "M", "F", "M", "F",
+              "M", "F", "M", "F"),
+    origin = c(NA, NA, NA, NA, "CHINA", "CHINA", NA, NA, NA, NA,
+               NA, NA, NA, NA),
+    birth = as.Date(c(
+      "2000-01-01", "2000-01-01", "2000-01-01", "2000-01-01",
+      "2000-01-01", "2000-01-01", NA, "2010-01-01", "2010-01-01", "2010-01-01",
+      "2009-06-01", "1995-01-01", NA, "2000-06-01"
+    )),
+    stringsAsFactors = FALSE
+  )
+  flagPed$gen <- findGeneration(flagPed$id, flagPed$sire, flagPed$dam)
+  flagPed
+}
+
+test_that("reportGV surfaces a boolean flagged column for uncorrected one-unknown animals (issue #127)", {
+  flagPed <- makeFlagTestPed()
+  gv <- reportGV(flagPed, guIter = 5L)
+
+  expect_true("flagged" %in% names(gv$report))
+  expect_true(is.logical(gv$report$flagged))
+
+  flg <- stats::setNames(gv$report$flagged, as.character(gv$report$id))
+  expect_true(flg[["Q1"]])
+  expect_false(any(flg[names(flg) != "Q1"]))
 })
 
 # ---------------------------------------------------------------------------
@@ -559,7 +607,7 @@ test_that("bundled GV reports are regenerated to the current reportGV structure 
                    nprcgenekeepr::pedWithGenotypeReport)) {
     expect_true(all(c("nMaleFounders", "nFemaleFounders") %in% names(rpt)))
     expect_true("guSE" %in% names(rpt$gu))
-    expect_true(all(c("guSE", "parentage") %in% names(rpt$report)))
+    expect_true(all(c("guSE", "parentage", "flagged") %in% names(rpt$report)))
   }
 })
 
