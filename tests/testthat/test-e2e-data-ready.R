@@ -89,13 +89,23 @@ test_that("data-ready.js is included in the package", {
 })
 
 test_that("appUI includes data-ready.js", {
-  # The appUI function should include the JavaScript file
-  app_ui <- nprcgenekeepr::appUI()
-  ui_html <- as.character(app_ui)
+  skip_if_not_installed("htmltools")
 
-  # Check that tagList wrapper exists (indicating JS inclusion logic)
-  expect_true(inherits(app_ui, "shiny.tag.list") ||
-              inherits(app_ui, "shiny.tag"))
+  js_file <- system.file("www", "js", "data-ready.js",
+                          package = "nprcgenekeepr")
+  skip_if(!file.exists(js_file), "data-ready.js not present")
+
+  # as.character() on a raw shiny.tag.list drops tags$head() content
+  # entirely -- htmltools::renderTags() is the correct way to inspect
+  # head-injected content outside a live app (see
+  # test_modSummaryStats_popovers.R's shinyBS-popover-fix.js test,
+  # S438/PROJECT_LEARNINGS.md Learning 415).
+  app_ui <- nprcgenekeepr::appUI()
+  rendered <- htmltools::renderTags(app_ui)
+  js_text <- paste(readLines(js_file), collapse = "\n")
+
+  expect_true(grepl("setDataReady", rendered$head, fixed = TRUE))
+  expect_true(grepl(js_text, rendered$head, fixed = TRUE))
 })
 
 test_that("helper-shinytest2.R functions are available", {

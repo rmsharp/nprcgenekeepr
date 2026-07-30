@@ -278,22 +278,41 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       position (not via `spelling::update_wordlist()`, per S230 convention) -- S421
       (2026-07-29). Verified: `devtools::check()` raw log `Status: OK`, 0 notes.
       See `CHANGELOG.md`.)
-- [ ] **`test-e2e-data-ready.R`'s "appUI includes data-ready.js" test doesn't
-      actually verify content inclusion** (discovered S438, Effort S) --
-      incidentally found while writing a stronger test for issue #140's fix:
-      `tags$head(...)` content is dropped entirely by `as.character()` on a
-      raw `tagList`/`shiny.tag` (only surfaces through Shiny's real
-      page-serving pipeline or `htmltools::renderTags(...)$head`), so this
-      existing test's assertion (`inherits(app_ui, "shiny.tag.list") ||
-      inherits(app_ui, "shiny.tag")`) passes regardless of whether
-      `data-ready.js` is actually included -- it cannot fail even if the
-      `includeScript()` line were deleted. Not fixed this session (unrelated
-      file, out of this session's TDD scope), per `PROJECT_LEARNINGS.md`
-      Learning 382/407's precedent. A future session should replace it with
-      an `htmltools::renderTags(app_ui)$head` assertion, matching the
-      pattern used for the new shim test in
-      `tests/testthat/test_modSummaryStats_popovers.R` (S438). See
-      `PROJECT_LEARNINGS.md` Learning 415.
+- [ ] (none remaining -- the "`test-e2e-data-ready.R`'s 'appUI includes
+      data-ready.js' test doesn't actually verify content inclusion" item
+      (discovered S438, 2026-07-30) is RESOLVED: fixed S439 (2026-07-30).
+      Replaced the hollow `inherits(app_ui, "shiny.tag.list") ||
+      inherits(app_ui, "shiny.tag")` assertion with
+      `htmltools::renderTags(app_ui)$head` content checks (a distinguishing
+      marker `"setDataReady"` plus a full-file-text match), matching the
+      pattern from `test_modSummaryStats_popovers.R` (S438). RED proven by
+      temporarily disabling `R/appUI.R`'s `includeScript(dataReadyJS)` line
+      (`if (FALSE && file.exists(dataReadyJS)) ...`), confirming the new test
+      fails for the expected reason (both `grepl()` assertions FALSE), then
+      reverting -- `git diff --stat R/appUI.R` confirmed byte-identical to
+      HEAD after revert, so no production code changed this session. GREEN:
+      regression suite 0 failed/0 error/0 warning (4006 passed, 170 skipped);
+      `devtools::check()` 0 errors/0 warnings/0 notes. REFACTOR: owner
+      -confirmed skip (single `test_that()` block, already matches the
+      established pattern verbatim). Phase 3E: n/a -- test-only change, no
+      runtime behavior affected. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
+      Learning 417.)
+- [ ] **`CLAUDE.md`'s "Fast single-file test" command silently skips the
+      entire file for any test file that calls `skip_on_cran()` at top level**
+      (discovered S439, Effort S) -- incidentally found while proving RED for
+      the `test-e2e-data-ready.R` fix above: the documented one-liner
+      (`Rscript -e 'suppressMessages(pkgload::load_all(".", quiet=TRUE));
+      testthat::test_file(...)'`) doesn't set `NOT_CRAN`, so a file-level
+      `skip_on_cran()` (as in `test-e2e-data-ready.R:10`) skips ALL tests in
+      that file with reason "On CRAN" and reports a bare `S`, not the
+      expected failures/passes -- `devtools::test()`/`testthat::test_dir()`/
+      `R CMD check` set `NOT_CRAN=true` automatically and are unaffected. Not
+      fixed this session (a shared-command documentation change is outside
+      this session's single-test-file TDD scope), per `PROJECT_LEARNINGS.md`
+      Learning 382/407's precedent. A future session should prepend
+      `Sys.setenv(NOT_CRAN = "true")` to the documented command (or note the
+      caveat) in `CLAUDE.md`'s "Build / Test / Verify" section. See
+      `PROJECT_LEARNINGS.md` Learning 417.
 - [ ] (none remaining -- the "clean up stale untracked leftover files" item (filed
       S383) is RESOLVED: 18 confirmed-dead untracked files deleted -- S384
       (2026-07-15). See `CHANGELOG.md`.)

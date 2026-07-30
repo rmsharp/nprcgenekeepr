@@ -62,16 +62,16 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S439
 date: 2026-07-30
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Fix test-e2e-data-ready.R's "appUI includes data-ready.js" test, which currently provides zero real content-inclusion coverage.
-what_was_done: pending
-next_steps: pending
-key_files: tests/testthat/test-e2e-data-ready.R:91-99 (the test being fixed)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- fixed test-e2e-data-ready.R's hollow "appUI includes data-ready.js" test. Full TDD cycle (PRE-RED/RED/GREEN/REFACTOR-skipped), both phase gates via AskUserQuestion. No production code changed -- the feature was already correct, only the test's assertion was inadequate.
+what_was_done: Root cause: the existing test computed ui_html <- as.character(app_ui) but never asserted against it -- its only expectation checked inherits(app_ui, "shiny.tag.list"), unconditionally true regardless of whether data-ready.js is included. Rewrote to assert htmltools::renderTags(app_ui)$head contains a distinguishing marker ("setDataReady") and the full file text, mirroring test_modSummaryStats_popovers.R's established pattern (S438). Proved RED validity (no new feature exists to drive a natural failure) by temporarily disabling R/appUI.R's includeScript(dataReadyJS) line, confirming the rewritten test failed for the expected reason (with NOT_CRAN=true set -- see gotchas), then reverting -- git diff --stat R/appUI.R confirmed byte-identical to HEAD. Verified: regression suite 0/0/0 (4006 passed, 170 skipped); devtools::check() 0/0/0. Phase 3E: n/a, test-only change, stated explicitly. BACKLOG.md Housekeeping updated (item resolved; new NOT_CRAN gap filed). PROJECT_LEARNINGS.md Learning 417 added. CLAUDE.md learnings-count cross-ref updated (416->417, Sessions 1-438+->1-439+). Commit: 928c4dc6 (claim) + this close-out commit.
+next_steps: Owner picks: (a) Plan issue #130 (READY, Effort M, unaffected); (b) pick up issues #131-#139 in owner's priority order (unaffected); (c) NPRC outreach plan review (DECISION NEEDED, owner-only); (d) NEW, Effort S -- add Sys.setenv(NOT_CRAN = "true") to CLAUDE.md's "Fast single-file test" one-liner (CLAUDE.md:149), which currently silently skips the entire file for any test file with a top-level skip_on_cran() call.
+key_files: tests/testthat/test-e2e-data-ready.R:91-108 (the fixed test); R/appUI.R (unchanged, confirmed byte-identical post-revert); CLAUDE.md:149 (needs the NOT_CRAN fix, item (d)); BACKLOG.md Housekeeping section.
+gotchas: skip_on_cran() at file top level silently skips the ENTIRE file (not just a context) when run via standalone testthat::test_file() without NOT_CRAN set -- devtools::test()/test_dir()/R CMD check set it automatically. as.character() on a raw shiny.tag/tagList still drops ALL tags$head() content (Learning 415, reconfirmed). .DS_Store/docs/planning/issue125-*.html remain harmless, unchanged since S425.
+runtime_smoke: n/a -- test-only change, no runtime behavior affected (R/appUI.R confirmed unchanged from HEAD).
+changelog_ref: CHANGELOG.md [BL-test-e2e-data-ready] entry, this close-out commit
 commit: pending
 ```
 
