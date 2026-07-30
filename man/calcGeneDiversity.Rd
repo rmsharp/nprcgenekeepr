@@ -48,8 +48,10 @@ Other genetic value analysis:
 \code{\link[=calcFGSE]{calcFGSE()}},
 \code{\link[=calcGU]{calcGU()}},
 \code{\link[=calcGUSE]{calcGUSE()}},
+\code{\link[=calcKurtosis]{calcKurtosis()}},
 \code{\link[=calcNeSexRatio]{calcNeSexRatio()}},
 \code{\link[=calcNeVariance]{calcNeVariance()}},
-\code{\link[=calcRetention]{calcRetention()}}
+\code{\link[=calcRetention]{calcRetention()}},
+\code{\link[=calcSkewness]{calcSkewness()}}
 }
 \concept{genetic value analysis}

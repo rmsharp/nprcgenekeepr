@@ -58,6 +58,13 @@ makeGeneticSummaryTable <- function(geneticValues) {
     sprintf(paste0("%.", digits, "f"), x)
   }
 
+  # Issue #126: distribution-shape statistics (bias-adjusted skewness and
+  # excess kurtosis, Joanes & Gill 1998) alongside the six-number summary.
+  mkSkew <- fmt(calcSkewness(mk))
+  mkKurt <- fmt(calcKurtosis(mk))
+  guSkew <- fmt(calcSkewness(gu))
+  guKurt <- fmt(calcKurtosis(gu))
+
   # Build HTML table
   html <- paste0(
     '<table class="table table-condensed table-bordered">',
@@ -70,6 +77,8 @@ makeGeneticSummaryTable <- function(geneticValues) {
     "<th>Median</th>",
     "<th>3rd Quartile</th>",
     "<th>Max</th>",
+    "<th>Skewness</th>",
+    "<th>Kurtosis</th>",
     "</tr>",
     "</thead>",
     "<tbody>",
@@ -81,6 +90,8 @@ makeGeneticSummaryTable <- function(geneticValues) {
     "<td>", fmt(mkSum["Median"]), "</td>",
     "<td>", fmt(mkSum["3rd Qu."]), "</td>",
     "<td>", fmt(mkSum["Max."]), "</td>",
+    "<td>", mkSkew, "</td>",
+    "<td>", mkKurt, "</td>",
     "</tr>",
     "<tr>",
     "<td><strong>Genome Uniqueness</strong></td>",
@@ -90,6 +101,8 @@ makeGeneticSummaryTable <- function(geneticValues) {
     "<td>", fmt(guSum["Median"]), "</td>",
     "<td>", fmt(guSum["3rd Qu."]), "</td>",
     "<td>", fmt(guSum["Max."]), "</td>",
+    "<td>", guSkew, "</td>",
+    "<td>", guKurt, "</td>",
     "</tr>",
     "</tbody>",
     "</table>"

@@ -599,8 +599,28 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
       summary(geneticValues()$gu)
     })
 
-    # One distribution-table row: label + Min/1stQ/Mean/Median/3rdQ/Max
-    quartileRow <- function(label, s) {
+    # Issue #126: distribution-shape statistics (bias-adjusted skewness and
+    # excess kurtosis, Joanes & Gill 1998) for the same two populations.
+    mkShapeData <- reactive({
+      req(geneticValues())
+      mk <- geneticValues()$indivMeanKin
+      list(skewness = calcSkewness(mk), kurtosis = calcKurtosis(mk))
+    })
+
+    guShapeData <- reactive({
+      req(geneticValues())
+      gu <- geneticValues()$gu
+      list(skewness = calcSkewness(gu), kurtosis = calcKurtosis(gu))
+    })
+
+    # One distribution-table row: label + Min/1stQ/Mean/Median/3rdQ/Max +
+    # Skewness/Kurtosis (issue #126).
+    fmtShape <- function(x) {
+      if (is.na(x)) return("N/A")
+      sprintf("%.4f", x)
+    }
+
+    quartileRow <- function(label, s, shape) {
       tags$tr(
         tags$td(label),
         tags$td(sprintf("%.4f", s["Min."])),
@@ -608,7 +628,9 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
         tags$td(sprintf("%.4f", s["Mean"])),
         tags$td(sprintf("%.4f", s["Median"])),
         tags$td(sprintf("%.4f", s["3rd Qu."])),
-        tags$td(sprintf("%.4f", s["Max."]))
+        tags$td(sprintf("%.4f", s["Max."])),
+        tags$td(fmtShape(shape$skewness)),
+        tags$td(fmtShape(shape$kurtosis))
       )
     }
 
@@ -705,11 +727,13 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
           tags$th("Mean"),
           tags$th("Median"),
           tags$th("3rd Quartile"),
-          tags$th("Max")
+          tags$th("Max"),
+          tags$th("Skewness"),
+          tags$th("Kurtosis")
         )),
         tags$tbody(
-          quartileRow("Mean Kinship", mkSummaryData()),
-          quartileRow("Genome Uniqueness", guSummaryData())
+          quartileRow("Mean Kinship", mkSummaryData(), mkShapeData()),
+          quartileRow("Genome Uniqueness", guSummaryData(), guShapeData())
         )
       )
 
@@ -908,6 +932,8 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
       firstOrderCounts = reactive(firstOrderData()),
       mkSummary = mkSummaryData,
       guSummary = guSummaryData,
+      mkShape = mkShapeData,
+      guShape = guShapeData,
       # ggplot2-based plot reactives for download handlers
       mkHistogram = reactive(mkHistogramPlot()),
       zscoreHistogram = reactive(zscoreHistogramPlot()),
