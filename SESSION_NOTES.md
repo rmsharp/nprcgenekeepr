@@ -6,6 +6,18 @@
 
 ## ACTIVE TASK
 
+### What Session 439 Did
+**Deliverable:** Fix `test-e2e-data-ready.R`'s "appUI includes data-ready.js"
+test, which currently provides zero real content-inclusion coverage
+(owner-picked via the Phase 0 priorities `AskUserQuestion` from a 4-option
+list: plan issue #130, issue #131, this test-coverage gap, NPRC outreach
+review). (IN PROGRESS)
+**Started:** 2026-07-30
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the
+crash breadcrumb for the next session's reconcile.
+
 ### What Session 438 Did
 **Deliverable:** Fix [issue #140](https://github.com/rmsharp/nprcgenekeepr/issues/140)
 (shinyBS popovers/tooltips are non-functional -- Bootstrap 4.6.0 rejects
