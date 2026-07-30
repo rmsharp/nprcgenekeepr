@@ -47,6 +47,42 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-29 · \[issue \#126\] Plan kinship/genome-uniqueness distribution-shape statistics (Session 428)
+
+- **Deliverable:**
+  `docs/planning/issue126-distribution-shape-stats-plan.md` – ratified
+  plan (via `AskUserQuestion`) to add bias-adjusted skewness/kurtosis
+  (Joanes & Gill 1998, `G1`/`G2`) for mean kinship and genome uniqueness
+  to the live Summary Statistics distribution table
+  (`R/modSummaryStats.R`) and the
+  [`makeGeneticSummaryTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticSummaryTable.md)
+  script-user-parity helper, as one vertical slice/one session. Key
+  finding: the issue’s own citations pointed at the wrong surfaces –
+  [`makeGeneticSummaryTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticSummaryTable.md)
+  has no runtime caller (a dead helper, same class of drift as issue
+  \#118’s Dragon F1) and
+  [`summarizeKinshipValues()`](https://github.com/rmsharp/nprcgenekeepr/reference/summarizeKinshipValues.md)
+  operates on a different population (simulated pairwise kinship values
+  from an unrelated Monte Carlo vignette workflow, not the colony-wide
+  per-animal distribution the PDF’s Dimension 3 actually asks about);
+  the real live surface is `R/modSummaryStats.R:590-714`.
+  [`summarizeKinshipValues()`](https://github.com/rmsharp/nprcgenekeepr/reference/summarizeKinshipValues.md)
+  is explicitly deferred, not implemented, recorded as a follow-on
+  decision on the issue itself at the implementing session’s Pre-RED
+  step. Worked example computed on the bundled
+  [`nprcgenekeepr::qcPedGvReport`](https://github.com/rmsharp/nprcgenekeepr/reference/qcPedGvReport.md)
+  dataset (no gene-drop re-run): mean kinship skewness 0.3756 / excess
+  kurtosis -0.9982 (n=280); genome uniqueness is degenerate (`sd = 0`)
+  in that fixture, giving a real, non-hypothetical `NA` test case for
+  the zero-variance guard. `BACKLOG.md` updated: the ratified plan added
+  to `## Active` (READY, Effort S); the owner-directed sequencing
+  decision recorded under “Genetic-metrics PDF audit follow-ups” –
+  planning and implementing \#127 and \#129 follow \#126’s
+  implementation; planning \#130 follows all three.
+- **Verify:** N/A – planning session, no
+  `R/`/`tests/`/`man/`/`NAMESPACE`/ `data/` content changed (TDD phases
+  inapplicable, per S423/S426 precedent).
+
 ### 2026-07-29 · \[issue \#128\] Implement genetic-value floor as an alternative breeding-group inclusion criterion (Session 427)
 
 - **Deliverable:** `R/modBreedingGroups.R` gains an “Include animals by”

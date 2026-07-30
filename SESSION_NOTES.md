@@ -7,6 +7,216 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 428 Did
+
+**Deliverable:** Write a design/scoping plan for closing issue \#126
+(kinship/ genome-uniqueness distribution-shape statistics – skewness,
+kurtosis), per
+`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md`
+Dimension 3 / Recommendation \#2. Owner-directed: “let’s plan for \#126
+during this session,” plus a sequencing decision to record in
+`BACKLOG.md` (planning+implementing \#127 and \#129 follow \#126’s
+implementation; planning \#130 follows all three). **DONE.**
+`docs/planning/issue126-distribution-shape-stats-plan.md` written,
+RATIFIED via `AskUserQuestion`, ready for a future implementation
+session’s RED phase. **Started/Completed:** 2026-07-29 / 2026-07-29
+**Status:** DONE. TDD phases (RED/GREEN/REFACTOR) are inapplicable to
+this deliverable – it is a plan, following S423/S426 precedent. No
+`R/`/`tests/`/ `man/`/`NAMESPACE`/`data/` content changed.
+
+**What happened, in order:** **(1)** Ran Phase 0 orientation in full
+(SAFEGUARDS.md, SESSION_NOTES.md, `gh issue list`, `git status`/`log`/
+`diff --stat`, `methodology_dashboard.py` (Health 98/100), ledger
+reconcile – `CHANGELOG.md`/`HANDOFFS.md` frontiers both at HEAD, clean,
+no backfill needed). Rendered the priorities list (4 numbered items) via
+`AskUserQuestion`; before answering, the owner asked a clarifying
+question (“which open issues address anything requiring molecular/marker
+data as a primary input, and does item 3 cover them?”) – answered
+directly by re-reading
+`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md` in
+full: only issue \#130 addresses that cluster (Dimensions 4’s parentage-
+verification finding, 5, and 6); the other three issues bundled in item
+3 (#126/#127/#129) are pedigree/gene-drop-based, not molecular, and the
+bundling in the priorities list was misleading. Owner then directed:
+“let’s plan for \#126 during this session,” plus the \#127/#129/#130
+sequencing decision. **(2)** Fetched issue \#126’s actual GitHub body
+(`gh api`) – confirmed its own scope note frames this as “a
+comparatively small, well-scoped addition… acceptance criteria could
+plausibly be made explicit enough for a `ready-for-agent`-equivalent
+implementation session,” unlike issue \#128’s “design question, not a
+quick fix” framing. Compared `ARCHITECTURE_WORKSTREAM. md`
+(data/algorithm decisions) vs. `DESIGN_WORKSTREAM.md` (UI/UX-specific);
+picked Architecture as the applicable workstream doc since this is about
+which population/formula/display-surface, not visual design. Stated the
+deliverable back to the owner, claimed the session (`6c88cb34`) before
+any technical work. **(3)** Evidence-based inventory: read
+`R/summarizeKinship Values.R` and `R/makeGeneticSummaryTable.R` (entire,
+both the issue’s own citations), `DESCRIPTION` (confirmed no
+`moments`/`e1071` dependency exists), then grepped every call site of
+both functions outside their own definition files. **Major finding:**
+[`makeGeneticSummaryTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticSummaryTable.md)
+has zero runtime callers (only an `@seealso`/roxygen doc mention) – a
+dead helper, the same class of drift issue \#118’s plan found in
+[`makeFounderStatsTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeFounderStatsTable.md)
+(its own Dragon F1). Further grepping `R/modSummaryStats.R` found the
+actual live distribution-table surface at `:590-714`
+(`mkSummaryData`/`guSummaryData` reactives calling base
+[`summary()`](https://rdrr.io/r/base/summary.html) directly,
+`quartileRow()`, `distTbl`) – a THIRD code path the issue/audit never
+cited. Also determined
+[`summarizeKinshipValues()`](https://github.com/rmsharp/nprcgenekeepr/reference/summarizeKinshipValues.md)
+operates on an architecturally distinct population (simulated pairwise
+kinship values from the `createSimKinships`/ `kinshipMatricesToKValues`
+Monte Carlo parentage-uncertainty workflow, used only by the standalone
+`simulatedKValues` vignette) – not the colony-wide per-animal
+distribution the PDF’s Dimension 3 actually asks about. Read
+`test_summarizeKinshipValues.R`, `test_makeGeneticSummaryTable.R`,
+`test_modSummaryStats_parity.R`, `test_moduleContract.R` (confirmed
+`mkSummary`/`guSummary` are already declared/tested return-list fields
+with no internal consumer – the precedent this plan’s API decision
+follows), `docs/architecture/module-contract.md`,
+`population_genetics_terms.html`, `NEWS.Rmd`, `inst/WORDLIST` (confirmed
+“skewness”/“kurtosis”/“Pearson”/ “Joanes” all absent). **(4)** Computed
+a worked example on the bundled
+[`nprcgenekeepr::qcPedGvReport`](https://github.com/rmsharp/nprcgenekeepr/reference/qcPedGvReport.md)
+dataset (no gene-drop re-run, no package code touched): mean-kinship
+skewness 0.3756 / excess kurtosis -0.9982 (n=280); genome uniqueness is
+degenerate (`sd = 0`) in that fixture – a real, non-hypothetical
+zero-variance `NA` case, not just a contrived unit-test fixture. **(5)**
+Ratified 4 decisions via one `AskUserQuestion` call before finalizing
+the document (mirroring S426/issue \#128’s precedent of ratifying during
+the planning session itself, since this feature was small enough not to
+need a two-stage ratify-then-implement gate): scope (live surface +
+[`makeGeneticSummaryTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticSummaryTable.md);
+[`summarizeKinshipValues()`](https://github.com/rmsharp/nprcgenekeepr/reference/summarizeKinshipValues.md)
+deferred), formula (bias-adjusted Fisher-Pearson `G1`/`G2`, Joanes &
+Gill 1998), layout (extend the existing distribution table with 2
+columns, not a separate block – unlike issue \#118’s Ne block, this
+doesn’t cross a population boundary), and API (return
+`mkShape`/`guShape` from `modSummaryStatsServer`, matching the existing
+`mkSummary`/`guSummary` precedent). **(6)** Wrote
+`docs/planning/issue126-distribution-shape-stats-plan.md` (461 lines)
+with the ratified decisions documented as decided (not open), a Dragons
+section (5 items, most load-bearing: P1 the citation-drift finding, P2
+the real zero-variance degeneracy), and a single-vertical-slice
+implementation plan (RED/GREEN/REFACTOR/DONE/Verify), consistent with
+the issue’s own framing that this is smaller than issue \#118’s
+4-session estimator family. **(7)** Updated `BACKLOG.md`: added the
+ratified plan to `## Active` (READY, Effort S), and recorded the owner’s
+\#127/#129/#130 sequencing decision under “Genetic-metrics PDF audit
+follow-ups.”
+
+**Session 427 Handoff Evaluation (by Session 428): 9/10.** **What
+helped:** the “Standing, untouched” list in S427’s handoff correctly
+named issues \#126/#127/#129/#130 as needing “their own design/scoping
+sessions” – exactly what this session did for \#126 first. The list of
+other standing items (LabKey BLOCKED, NPRC outreach DECISION NEEDED,
+five-state labels decision, `BACKLOG.md`’s stale header, the vestigial
+“Upload list” option) was accurate and untouched by this session, as
+expected – none were relevant to this session’s task, so their continued
+accuracy could only be confirmed, not exercised. **What was missing:**
+nothing that blocked the work – S427’s handoff correctly scoped its own
+deliverable and had no reason to anticipate issue \#126’s specific
+content, which this session had to research fresh (as expected for any
+not-yet-scoped issue). **What was wrong:** nothing – S427’s claims held.
+**ROI:** high, though this session’s actual leverage came from the
+underlying audit document
+(`GENETIC_METRICS_PDF_CAPABILITY_ AUDIT_2026-07-29.md`) and the issue118
+plan (structural template), not from S427’s handoff specifically, since
+S427’s task (implementing \#128) was unrelated to this session’s task
+(planning \#126).
+
+**Self-assessment (Session 428): 9/10.** **Strengths:** (1) did not
+trust the issue body’s own citations at face value – grepped every call
+site of both named functions and discovered one was a dead helper and
+the other operated on a wholly different population, redirecting the
+plan onto the surface that actually matters for the PDF’s ask (mirrors
+issue \#118’s own F1 discipline, applied to a fresh issue rather than
+just following precedent blindly); (2) computed a real worked example on
+bundled data rather than only describing formulas abstractly, which
+surfaced a genuine zero-variance degeneracy in live data (not a
+hypothetical edge case) and made the Dragons section concrete; (3)
+ratified all load-bearing decisions (scope/formula/layout/API) via
+`AskUserQuestion` before finalizing the document, so the future
+implementing session has zero open design questions, matching the
+issue’s own “ready-for-agent-equivalent” framing; (4) correctly
+recognized this feature’s shape differs from issue \#118’s (one
+statistical transform reused across two surfaces, vs. three
+architecturally distinct estimators) and scoped it as one vertical slice
+instead of mechanically copying a 4-session structure; (5) answered the
+owner’s mid-session clarifying question (about which issues address
+molecular/marker-primary-input findings) by re-reading the source audit
+directly rather than reasoning from memory of the earlier summary, and
+explicitly flagged that my own priorities-list bundling had been
+misleading. **Weaknesses:** (1) did not set a deepest-reasoning-effort
+mode explicitly at session start (the same noted, not-agent-actionable
+gap S426/S427 also flagged – no `/effort`-equivalent tool is available
+to this session’s interface); (2) the plan explicitly defers
+[`summarizeKinshipValues ()`](https://github.com/rmsharp/nprcgenekeepr/reference/summarizeKinshipValues.md)
+rather than resolving whether it should ever get skewness/kurtosis –
+correct per the ratified scope decision, but means a small piece of the
+issue’s literal text is left formally unaddressed until a future,
+independent decision. **Compared to previous sessions:** mirrors S426’s
+planning-session discipline for issue \#128 (evidence-based inventory,
+ratify before writing, cite exact <file:line> evidence) with an added
+corrective step – discovering and correcting citation drift in the issue
+body itself, not just re-verifying line numbers against source.
+
+**Handoff to Session 429:** - **What’s next:** Issue \#126 has a
+ratified, ready-to-implement plan
+(`docs/planning/issue126-distribution-shape-stats-plan.md`) – one
+vertical slice, one session, per the plan’s own §6. Per the owner’s
+sequencing decision (recorded in `BACKLOG.md`), **implement \#126 next**
+(not \#127/#129/#130 yet) – following the plan’s Pre-RED/RED/GREEN/
+REFACTOR/Verify sections exactly, including commenting the
+[`summarizeKinshipValues()`](https://github.com/rmsharp/nprcgenekeepr/reference/summarizeKinshipValues.md)
+deferral on issue \#126 itself at Pre-RED, and the citation-checklist
+doc update (`population_genetics_terms.html`, issue \#120 convention) in
+the same session, not deferred. After \#126 ships: planning+implementing
+\#127, then \#129 (either order between those two is the owner’s call at
+that time – the ratified sequencing only fixes “#126 first,
+\#130-planning last”); planning \#130 comes only after all three.
+Standing, untouched this session: (a) LabKey integration remaining recs
+(BLOCKED – needs a live LabKey server); (b) NPRC outreach plan (DECISION
+NEEDED – owner review/edit/send); (c) five-state Issue Lifecycle GitHub
+labels decision (still open); (d) `BACKLOG.md`’s stale `inst/extdata/`
+Phase-4 header line (143) – still reads “DECISION NEEDED” though Phase 4
+finished S418 (1-line docs fix, unrelated to this session’s work); (e)
+the vestigial “Upload list” `animalSource` UI option
+(`R/modBreedingGroups.R:42`, no `fileInput`/handling anywhere –
+recommend filing as its own small issue). - **Key files:**
+`docs/planning/issue126-distribution-shape-stats-plan.md` (the plan, all
+sections load-bearing for the implementing session);
+`R/modSummaryStats.R:590-739,890-928` (the live surface to change);
+`R/makeGeneticSummaryTable.R` (entire, the script-user-parity surface to
+change); `R/summarizeKinshipValues.R` (deferred, do NOT change per the
+ratified scope); `tests/testthat/test_modSummaryStats_parity.R:95-141`,
+`tests/testthat/test_moduleContract.R:39-47` (render/return-list test
+templates); `BACKLOG.md` (Active section + audit-follow-ups sequencing
+note); `inst/WORDLIST` (needs “skewness”/“kurtosis”/“Pearson”/“Joanes”
+added at implementation time, hand-added per the S230/S421
+convention). - **Gotchas:** (1) do not add a `moments`/`e1071`
+dependency – the plan ratified hand-rolled `G1`/`G2` formulas (§3),
+consistent with how
+`calcNeSexRatio`/`calcNeVariance`/`calcGeneDiversity` already hand-roll
+their own formulas; (2) the zero-variance `NA` guard is not
+defensive-only – `nprcgenekeepr::qcPedGvReport$report$gu` is uniformly
+`0` today, so a real bundled fixture will exercise it; use it directly
+in the RED test rather than only a contrived vector; (3) `G2` must be
+**excess** kurtosis (subtract 3), not raw – a normal distribution should
+read `0`, matching every common stats package’s default (Dragon P4); (4)
+extend `distTbl`’s existing columns, do not build a new separate block –
+unlike issue \#118’s Ne block, MK/GU skewness/kurtosis are the exact
+same population already shown in that table, so a separate block would
+duplicate labeling for no reason (ratified Q3); (5)
+`.DS_Store`/`inst/.DS_Store`/ `inst/extdata/.DS_Store` and
+`docs/planning/issue125-ranking-priority-multi-candidate-plan.html`
+remain harmless, unfixed, out-of-scope artifacts, unchanged from
+S425-S427. - **Self-assessment score:** 9/10 (see above for full
+breakdown). - **Runtime smoke test:** N/A – docs-only planning session,
+no `R/`/ `tests/`/`man/`/`NAMESPACE`/`data/` content changed (consistent
+with S423/S426 precedent for plan-document deliverables).
+
 ### What Session 427 Did
 
 **Deliverable:** Implement Slice 1 of the ratified issue \#128 plan
