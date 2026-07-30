@@ -62,17 +62,17 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S430
 date: 2026-07-29
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Write a design/scoping architecture plan for closing issue #127 (surface correctUnknownParentMeanKinship()'s silently-dropped flagged uncorrected-animal list).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- wrote and ratified the architecture plan for issue #127 (surface correctUnknownParentMeanKinship()'s silently-dropped flagged uncorrected-animal list). No R/tests/man/NAMESPACE/data content changed; implementation is a future session's RED phase.
+what_was_done: Launched a 4-agent parallel research Workflow (call-site inventory, UI-warning precedent, audit text + existing test coverage, prior-plan convention survey), then verified every load-bearing claim firsthand via Rscript rather than trusting the agents alone. Found a real, non-hypothetical instance of the gap: 4/327 examplePedigree animals (5IAFMK/BCJJKN/GCBYDW/KZM9RB) are silently left uncorrected today. Ratified 3 scope decisions via AskUserQuestion: boolean flagged column (not the recommended human-readable label); gvaConvergence() deferred out-of-scope; column-only, no Shiny notification. Hand-built and verified a 14-row synthetic pedigree that survives reportGV()'s full pipeline and produces exactly one flagged animal (Q1), discovering along the way that a unit-test-scale bare-NA fixture fails inside calcFEFG() and a too-small founder pool fails inside calcFounderContributions() -- recorded as PROJECT_LEARNINGS.md Learning 401. Wrote docs/planning/issue127-surface-uncorrected-kinship-flag-plan.md, then ran a SECOND independent adversarial-verification Workflow (citation audit + fixture re-execution) before ratification -- caught and fixed 1 blocking citation error (wrong file name) and 4 minor ones. Owner ratified the corrected plan via AskUserQuestion. Updated CHANGELOG.md, BACKLOG.md (sequencing item), CLAUDE.md (stale learning count), PROJECT_LEARNINGS.md (Learning 401).
+next_steps: Implement issue #127 per the ratified plan (docs/planning/issue127-surface-uncorrected-kinship-flag-plan.md) via strict TDD RED -> GREEN -> REFACTOR, phase-gated via AskUserQuestion -- re-verify the plan's cited line numbers at Pre-RED first. Then plan + implement issue #129 (pedigree-diagram/tree visualization) -- either order between #127 implementation and #129 is the owner's call. Planning #130 comes only after both #127 and #129 ship. Standing, untouched: LabKey (BLOCKED), NPRC outreach (DECISION NEEDED), five-state Issue Lifecycle labels decision, the vestigial "Upload list" animalSource UI option (R/modBreedingGroups.R:42), and the inst/extdata/ reorg BACKLOG entry's stale "Phase 4, DECISION NEEDED" header (its own body confirms Phases 1-4 are all DONE).
+key_files: docs/planning/issue127-surface-uncorrected-kinship-flag-plan.md (the ratified plan); R/reportGV.R:180-186,293 (call-site and cbind() changes); R/gvaConvergence.R:152-157 (deferred second caller, needs only a comment); tests/testthat/test_reportGV.R:7-18,32-43,557-564 (exact assertions to extend); PROJECT_LEARNINGS.md Learning 401 (full-pipeline synthetic-fixture gotchas).
+gotchas: Do not reuse test_correctUnknownParentMeanKinship.R's own unit-test fixtures unmodified for a reportGV()-level test -- bare NA parents fail calcFEFG() (Learning 401); the plan's §4.2 flagPed fixture (14 rows) is already hand-verified and ready to paste directly into the RED test; both bundled qcPedGvReport/pedWithGenotypeReport objects must be regenerated at GREEN and will both come back all-FALSE for flagged (their source pedigrees genuinely have zero flagged animals, confirmed this session -- not a bug); .DS_Store/inst/.DS_Store/inst/extdata/.DS_Store and docs/planning/issue125-ranking-priority-multi-candidate-plan.html remain harmless unfixed artifacts, unchanged since S425.
+runtime_smoke: n/a -- docs-only planning deliverable, no R/tests/man/NAMESPACE/data content changed
+changelog_ref: CHANGELOG.md [issue #127] entry, Session 430
+commit: c9c5c7b1 (claim); close-out commit sha to follow
 ```
 
 ```handoff

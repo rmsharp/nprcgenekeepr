@@ -327,9 +327,12 @@ remaining findings (PMX/MateRx/Pedscope/PedSys tool-comparison notes, the "make 
 to researchers" governance recommendation) are descriptive or already-adequately-served, not gaps
 requiring tracking. See `CHANGELOG.md`.*
 - [ ] **Sequencing decision (owner-directed, S428, 2026-07-29):** #126 is now
-      DONE -- S429 (2026-07-29, see `CHANGELOG.md`). **Planning and
-      implementing #127 and #129 are next** (either order between the two is
-      the owner's call when picked up); **planning #130 follows all three**
-      (#126 implementation, #127 plan+implementation, #129
-      plan+implementation). Each still needs its own scoping/design session
-      when its turn comes -- this only fixes the order, not the content.
+      DONE -- S429 (2026-07-29, see `CHANGELOG.md`). **Planning issue #127 is
+      now DONE -- S430 (2026-07-29):** ratified plan at
+      `docs/planning/issue127-surface-uncorrected-kinship-flag-plan.md` (see
+      `CHANGELOG.md`), ready for a future implementation session's RED phase
+      (READY, Effort S). **Implementing #127, and planning + implementing
+      #129, are next** (either order between them is the owner's call when
+      picked up); **planning #130 follows all three** (#127 implementation,
+      #129 plan+implementation). Each still needs its own session when its
+      turn comes -- this only fixes the order, not the content.

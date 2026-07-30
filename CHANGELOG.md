@@ -43,6 +43,34 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-29 · [issue #127] Plan surfacing correctUnknownParentMeanKinship()'s silently-dropped flagged list (Session 430)
+- **Deliverable:** `docs/planning/issue127-surface-uncorrected-kinship-flag-plan.md`,
+  ratified via `AskUserQuestion`. Architecture-workstream planning session
+  (per S428 precedent) for the next issue in the owner-ratified #126/#127/#129/#130
+  sequencing. A parallel research fan-out (4 agents) plus firsthand verification
+  found the issue's own framing accurate (no citation drift, unlike #126) and a
+  real, non-hypothetical instance of the gap: 4 of 327 animals in the bundled
+  `examplePedigree` (`5IAFMK`/`BCJJKN`/`GCBYDW`/`KZM9RB`) are silently left
+  uncorrected today. Design: add a boolean `flagged` column to `reportGV()`'s
+  `$report` via the same `cbind()` mechanism the existing `parentage` column
+  uses (`R/reportGV.R:293`), reaching the live Genetic Value DT table and both
+  CSV downloads (`R/modGeneticValue.R:379-384`, `:491-501`) with no other
+  plumbing. Ratified scope decisions: boolean column format; `gvaConvergence()`
+  (a second, independent caller with the identical discard) deferred as
+  out-of-scope, to be recorded as an issue #127 comment at Pre-RED; no
+  additional Shiny notification. A second, independent adversarial-verification
+  workflow pass re-checked every cited line number against live source and
+  re-executed both worked examples (the real `examplePedigree` case and a
+  hand-built 14-row synthetic fixture proven to run through the full
+  `reportGV()` pipeline) via `Rscript`, catching and fixing one blocking
+  citation error (a wrong file name) and several minor ones before
+  ratification. Added `PROJECT_LEARNINGS.md` Learning 401 (a unit-test-scale
+  synthetic pedigree with a bare `NA` parent is not sufficient to exercise
+  `reportGV()`'s full pipeline — `calcFEFG()`/`calcFounderContributions()`
+  have stricter requirements than the correction function alone). No `R/`,
+  `tests/`, `man/`, `NAMESPACE`, or `data/` content changed — implementation
+  is a separate future session's RED phase.
+
 ### 2026-07-29 · [issue #126] Implement kinship/genome-uniqueness distribution-shape statistics (Session 429)
 - **Deliverable:** Implemented the ratified plan
   (`docs/planning/issue126-distribution-shape-stats-plan.md`), one vertical
