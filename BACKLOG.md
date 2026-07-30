@@ -271,6 +271,37 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       failed/0 error/0 warning, 3198 passed, 179 skipped, matching the known-good
       baseline. See `CHANGELOG.md`.)
 
+## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
+*S435's capability-comparison audit (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`,
+owner-directed, not from the prior sequencing chain) compared the just-shipped issue #129
+pedigree-diagram feature against kinship2's pedigree-drawing feature set (17-point checklist, 8
+findings). Recommendations 1-3 and 8 are actionable candidates awaiting owner triage (not yet filed
+as GitHub issues); recommendations 4-7 are "no action" (data-model-gated or already a
+plan-ratified tradeoff) and are not tracked here. None imply reopening issue #129 or revisiting the
+visNetwork-vs-kinship2 technology decision (D2), which stands as ratified.*
+- [ ] **Verify inbreeding-loop/consanguinity rendering (audit Finding #1, DECISION NEEDED --
+      candidate for a GitHub issue, Effort S)** -- the ratified plan's own Dragon P2 (Slice-1
+      required verification) was never actually resolved across S433/S434: construct a known-loop
+      pedigree fixture and run it through the shipped Diagram tab to confirm vis.js's hierarchical
+      layout degrades gracefully (or doesn't). Highest-priority of the four candidates -- directly
+      touches the package's core genetic-management purpose. See `PROJECT_LEARNINGS.md` Learning
+      410 (a plan Dragon silently going untracked across a multi-slice close-out).
+- [ ] **Add diagram image/print export (audit Finding #3, DECISION NEEDED -- candidate for a
+      GitHub issue, Effort S)** -- the Diagram tab's only export today is the pre-existing CSV
+      `downloadButton`; no way to save/print/screenshot the rendered network diagram itself for a
+      husbandry report or IACUC document. Scope as its own small follow-on slice using
+      `visNetwork`'s own PNG export hook.
+- [ ] **Add an in-app shape-to-sex legend (audit Finding #6, DECISION NEEDED -- candidate for a
+      GitHub issue, Effort S)** -- the Diagram tab's shape-to-sex mapping (square/dot/star/triangle)
+      is documented only in code comments/NEWS.md prose, never surfaced in the running app. Small,
+      low-effort; also resolves the plan's own Dragon P5 note that the H/U shape choices were never
+      validated against real data.
+- [ ] **Hover tooltips + search/highlight (audit Recommendation #8, DECISION NEEDED -- optional,
+      low priority, Effort S)** -- not a kinship2-comparison gap (kinship2 has neither either), but
+      a low-cost enhancement to the existing `visNetwork` dependency's own unused
+      `visOptions(highlightNearest=...)`/tooltip capability, worth a future issue only if UI polish
+      time becomes available.
+
 ## Outreach
 - [ ] **NPRC outreach & announcement plan** (DECISION NEEDED -- owner review/edit of
       drafts + send timing; Effort N/A, not a coding task) -- plan complete:

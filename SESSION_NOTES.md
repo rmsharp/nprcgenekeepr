@@ -11,11 +11,151 @@
 feature (issue #129 Slices 1+2, visNetwork-based Diagram tab with
 click-to-navigate) against kinship2's pedigree-drawing feature set, per
 `AUDIT_WORKSTREAM.md`. Owner-directed (not from BACKLOG.md's sequencing
-chain). **IN PROGRESS.**
-**Started:** 2026-07-30
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are
-recorded in `CHANGELOG.md` at Phase 3F.
+chain). **DONE.**
+**Started/Completed:** 2026-07-30 / 2026-07-30
+**Status:** DONE. Docs/audit-only deliverable -- no TDD phases apply (no
+`R/`/`tests/` code touched).
+
+**What happened, in order:** **(1)** Ran Phase 0 orientation in full
+(`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list`,
+`git status`/`log`/`diff --stat`, `methodology_dashboard.py` (Health
+98/100), ledger reconcile -- `CHANGELOG.md`/`HANDOFFS.md` frontiers both at
+HEAD, clean, no backfill needed). Rendered the priorities list, but only 1
+numbered item existed (Planning #130), so per `CLAUDE.md`'s "skip the
+picker below 2 items" rule fell back to the prose report + wait. Owner then
+directed a different task outright: compare the just-shipped issue #129
+pedigree-diagram feature set to kinship2's. **(2)** Identified this as a
+capability-comparison audit (`AUDIT_WORKSTREAM.md`), stated the deliverable
+back to the owner, claimed the session (`52886039`) before any research.
+**(3)** Research: ran a 3-agent Workflow (research-then-synthesize) -- one
+agent surveyed the shipped implementation firsthand (`R/modPedigree.R`,
+`R/makePedigreeDiagramData.R`, tests, NEWS.md, the ratified plan), a second
+researched kinship2's actual pedigree-drawing feature set from its CRAN
+reference manual, three vignettes, and GitHub-mirrored source (kinship2 is
+not installed locally), cross-checking but not relying solely on this
+project's own prior kinship2 research in the issue #129 plan. A third
+agent synthesized both into a 17-point comparison. Mid-flight, the owner
+independently supplied their own kinship2-vs-visNetwork comparison table;
+declined to treat it as the deliverable (the point of running independent
+primary-source research was to verify claims, not rely on one secondhand
+table) but did fold its content into the final report's Structural
+Observations/Findings as a corroborating cross-check once the workflow
+returned. **(4)** Verification (not delegated to the workflow): re-read
+every nprcgenekeepr-side citation directly against live source
+(`R/makePedigreeDiagramData.R` in full, `R/modPedigree.R:360-413`) --
+confirmed exact. Independently re-verified 3 of the report's most
+consequential kinship2 claims via direct `WebFetch` against live
+CRAN/GitHub sources rather than trusting the workflow's citations alone:
+(a) kinship2's live `NAMESPACE` confirms no `plot.pedigreeList` S3 method
+exists in the current package (only `S3method(plot, pedigree)` and
+`S3method(plot, pedigree.shrink)`) -- corrects the ratified issue #129
+plan's own survey-table citation; (b) the CRAN reference manual PDF
+(read via `Read` with `pages="20-22"`) confirms the `pedigree()` `sex`
+argument's 4 codes (1=male/2=female/3=unknown/4=terminated) verbatim; (c)
+the live `plot.pedigree.R` GitHub source confirms the sex-to-shape
+`polylist` (square/circle/diamond/triangle), the deceased-status diagonal
+slash, and the `arcconnect()` dashed-arc code for duplicate-instance
+(inbreeding-loop) rendering, all verbatim. **(5)** Wrote the final report
+to `docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`: 17-row
+comparison table, 8 findings (4 kinship2-only, 1 nprcgenekeepr-only, 1
+both-lack, 2 data-model-gated), structural observations, and
+recommendations. **Headline finding:** the ratified plan's own Dragon P2
+(inbreeding-loop rendering, flagged as required Slice-1 verification) was
+never actually resolved across S433 or S434's close-outs -- no loop
+fixture exists in any Diagram-tab test. **(6)** Added 4 candidate
+follow-up items to `BACKLOG.md` (`## Pedigree diagram vs kinship2 audit
+follow-ups`) for owner triage, matching the S419-audit -> S422-triage
+precedent -- did NOT unilaterally file new GitHub issues (that is a
+separate, owner-gated triage step, not part of the audit deliverable).
+Recorded `PROJECT_LEARNINGS.md` Learning 410 (a plan Dragon silently
+untracked across a multi-slice close-out); updated `CLAUDE.md`'s
+learnings-count cross-reference (409->410, Sessions 1-434+->1-435+).
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**Session 434 Handoff Evaluation (by Session 435): 9/10.** **What helped:**
+the handoff correctly reported issue #129 as fully shipped and closed, with
+an accurate, verifiable `git status`/ledger state (both frontiers at HEAD,
+nothing to reconcile) -- this made Phase 0 orientation fast and confident.
+**What was missing:** nothing that mattered for THIS session's actual
+work -- the handoff's "what's next" (Plan issue #130) is a different,
+still-valid recommendation for the other sequencing chain; the owner chose
+to direct a different, ad hoc task instead, which is not a handoff defect.
+**What was wrong:** nothing found. **ROI:** high for orientation purposes
+even though this session's actual deliverable diverged from the handoff's
+suggested next step -- the handoff's job is to leave an accurate, complete
+picture of state, which it did; a session owner is always free to redirect,
+and did.
+
+**Self-assessment (Session 435): 8/10.** **Strengths:** (1) did not accept
+either the workflow's synthesized report or the owner-supplied comparison
+table at face value -- independently re-verified every local citation
+against live source and 3 of the most consequential kinship2 claims via
+direct `WebFetch` against CRAN/GitHub, catching and confirming a real
+correction to the ratified plan's own citation (`plot.pedigreeList` does
+not exist in the current kinship2 package); (2) surfaced a genuine,
+previously-invisible process finding (Dragon P2 silently untracked across
+2 prior close-outs) rather than a superficial side-by-side feature list,
+and recorded it as both an audit Finding and a `PROJECT_LEARNINGS.md`
+entry (Learning 410) so it's discoverable both ways; (3) respected the
+audit/triage boundary -- added BACKLOG.md candidates for owner review
+rather than unilaterally filing new GitHub issues, matching the
+established S419->S422 precedent; (4) correctly treated the owner's
+mid-flight comparison table as a corroborating input to verify against,
+not a substitute for the independent research already in flight, and said
+so explicitly at the time rather than silently switching plans.
+**Weaknesses:** (1) verification depth on the kinship2 side was targeted
+(3 of the report's ~20 distinct claims spot-checked hands-on) rather than
+exhaustive -- unlike S434's Dragon P4 resolution, which built and ran a
+live throwaway app against the actual library, this session verified
+kinship2's *documentation* claims but never installed kinship2 and ran it
+against a real pedigree to observe its actual rendered output first-hand;
+a fully rigorous audit would have done that, especially for the
+headline inbreeding-loop finding. (2) did not independently verify the
+`doubleFirstCousinPedigree()`-does-not-exist claim (trusted the research
+agent's GitHub directory-listing claim without a second look) -- lower
+stakes than the other claims but still unverified by this session
+directly. **Compared to previous sessions:** matches the audit-workstream
+rigor of S419 (multi-agent research, structured findings, BACKLOG
+follow-ups for triage) and extends it with an added independent-verification
+pass the S419 audit's own close-out notes don't describe having done;
+falls short of S433/S434's standard of *hands-on, running-code*
+verification for the one finding (Finding #1) where that standard would
+have mattered most.
+
+**Handoff to Session 436:**
+- **What's next:** Two independent, unrelated options are both READY --
+  the owner should pick, this is not a sequencing decision this session
+  can make: **(a)** Triage this audit's 4 candidate `BACKLOG.md` items
+  (`## Pedigree diagram vs kinship2 audit follow-ups`) via `AskUserQuestion`
+  -- decide which of Findings #1/#3/#6/#8 become GitHub issues, matching
+  the S419->S422 audit->triage pattern; the highest-priority candidate is
+  Finding #1 (verify inbreeding-loop rendering -- resolves the plan's own
+  unresolved Dragon P2, `PROJECT_LEARNINGS.md` Learning 410). **(b)** Plan
+  issue #130 (marker-based kinship/heterozygosity/parentage-verification +
+  cross-center identity resolution) -- still READY, Effort M, per the
+  original owner-ratified sequencing chain from S428, unaffected by this
+  session's ad hoc audit.
+- **Key files:** `docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`
+  (this session's full deliverable -- 17-row comparison table, 8 findings,
+  recommendations); `BACKLOG.md` `## Pedigree diagram vs kinship2 audit
+  follow-ups` section (the 4 triage candidates); `PROJECT_LEARNINGS.md`
+  Learning 410 (the Dragon-tracking process gap this audit surfaced).
+- **Gotchas:** (1) if Session 436 picks up Finding #1's triage/verification,
+  note the plan's Dragon P2 text is at
+  `docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md:581-589`
+  -- read it before writing a loop-fixture test, since it names the exact
+  concern (vis.js hierarchical layout on a DAG with a repeated individual);
+  (2) this audit's kinship2-side citations were sourced from a live CRAN
+  package version (v1.9.6.2, 2025-09-04) that could drift on a future
+  session if kinship2 itself is updated -- treat citations as current as of
+  2026-07-30, re-verify if acted on much later; (3) `.DS_Store` files and
+  `docs/planning/issue125-ranking-priority-multi-candidate-plan.html`
+  remain harmless, unfixed, out-of-scope artifacts, unchanged since S425.
+- **Self-assessment score:** 8/10 (see above for full breakdown).
+- **Runtime smoke test:** N/A -- docs/audit-only deliverable, no `R/` or
+  `tests/` code touched, no runtime behavior changed. Not silently skipped:
+  explicitly not applicable per Phase 3E's own carve-out for non-runtime
+  deliverables.
 
 ### What Session 434 Did
 **Deliverable:** Implement issue #129 Slice 2 (click-to-navigate interactivity)

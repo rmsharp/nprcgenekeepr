@@ -43,6 +43,35 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-30 · [ad hoc] Audit: pedigree diagram (issue #129) vs kinship2 feature comparison (Session 435)
+- **Deliverable:** `docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`, a
+  17-point capability-comparison audit (`AUDIT_WORKSTREAM.md`) between the just-shipped
+  issue #129 pedigree-diagram feature (visNetwork-based Diagram tab, Slices 1+2) and
+  kinship2's pedigree-drawing feature set. Owner-directed (not from the prior GitHub-issue
+  sequencing chain, not a TDD/code-implementation session — no `R/`/`tests/` code touched).
+  Ran a 3-agent research-then-synthesize workflow (one agent surveyed the shipped
+  implementation firsthand, one researched kinship2's actual feature set from its CRAN
+  manual/vignettes/GitHub source, one synthesized both into the comparison), then
+  independently re-verified every nprcgenekeepr-side citation against live source and
+  re-verified three consequential kinship2 claims via direct `WebFetch` against
+  CRAN/GitHub (the `sex` argument's 4 codes, the sex-to-shape `polylist` +
+  deceased-slash + `arcconnect()` duplicate-instance-arc source, and that no
+  `plot.pedigreeList` S3 method exists in the current package — confirmed live against
+  kinship2's own `NAMESPACE`, correcting the ratified plan's own survey-table citation).
+  8 findings: 4 kinship2-only (affected-status shading, twin/zygosity encoding, legend
+  functions, node-label substitutability — the latter two gated by nprcgenekeepr's own
+  data model lacking a name/affected field), 1 nprcgenekeepr-only (click-to-navigate +
+  free pan/zoom — architecturally impossible for kinship2's static base-graphics
+  design), 1 both-lack (no full-colony/arbitrary-scale rendering solution in either
+  package), and 1 finding (inbreeding-loop/consanguinity rendering) that is the audit's
+  headline result: the ratified plan's own Dragon P2 (required Slice-1 verification)
+  was never actually resolved across S433 or S434's close-outs — recorded as
+  `PROJECT_LEARNINGS.md` Learning 410. Added 4 candidate follow-up items to
+  `BACKLOG.md` (`## Pedigree diagram vs kinship2 audit follow-ups`), awaiting owner
+  triage before any are filed as GitHub issues, per the same audit→triage pattern
+  S419→S422 used for the prior capability audit. No action implied on the
+  visNetwork-vs-kinship2 technology decision (D2), which stands as ratified.
+
 ### 2026-07-30 · [issue #129] Implement Slice 2: click-to-navigate interactivity (Session 434, closes issue #129)
 - **Deliverable:** Implemented the ratified plan's Slice 2
   (`docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md` §4).
