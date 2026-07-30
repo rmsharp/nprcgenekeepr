@@ -43,6 +43,48 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-30 · [issue #129] Implement Slice 2: click-to-navigate interactivity (Session 434, closes issue #129)
+- **Deliverable:** Implemented the ratified plan's Slice 2
+  (`docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md` §4).
+  Clicking a node in the Diagram tab now re-centers the population on that
+  animal, re-driving the same `focalIds` reactive path the existing
+  focal-animal textarea already drives (`processedPedigree` →
+  `pedigreeData`) — no duplicate trim logic. `R/modPedigree.R`'s
+  `output$pedigreeDiagram` gained `visNetwork::visEvents(click = ...)`,
+  JS-interpolating `session$ns("pedigreeDiagram_click")` (never a bare
+  `ns()`, Learning 405); a new `observeEvent(input$pedigreeDiagram_click,
+  ...)` reads the clicked node id(s) and writes them into `focalIds()`,
+  guarded (`req(length(...) > 0L)`) against a background (no-node) canvas
+  click, which sends an empty `nodes.nodes` array. One vertical slice,
+  strict TDD PRE-RED → RED → GREEN (REFACTOR skipped, owner-gated, already
+  minimal), all phase transitions gated via `AskUserQuestion`.
+  **Pre-RED (Dragon P4) found and corrected a real gap in the ratified
+  plan's own mechanism assumption:** the plan stated visNetwork exposes
+  click events as a Shiny input "without extra JavaScript" — grepping the
+  installed `visNetwork` 2.1.4 JS source (`htmlwidgets/visNetwork.js`)
+  showed no such auto-binding exists, and a live throwaway
+  `shinytest2`/`chromote` app confirmed `visEvents(click = ...)` must be
+  wired explicitly, and that a background click yields `NULL` on the R
+  side (see `PROJECT_LEARNINGS.md` Learning 408). RED: 3 new
+  `shiny::testServer()` assertions in `tests/testthat/test_modPedigree.R`
+  (click sets `focalAnimals()`, click recomputes the trim via `pedigree()`,
+  a background click is a no-op), confirmed failing for the right reason
+  before GREEN. Verify: full clean regression read (0 failed/0 error/0
+  warning, 3280 passed, up from 3275; 182 skipped, up from 181);
+  `devtools::check()` raw log `Status: OK` (0 errors/0 warnings/0 notes).
+  Live E2E click-through smoke test (Phase 3E,
+  `tests/testthat/test-e2e-pedigree-module.R`) confirmed the Table tab
+  visibly updates after a Diagram-tab node click — but only after
+  discovering and working around a second real finding: `DT::renderDT`'s
+  output is suspended while its `tabPanel` is not the active tab (Shiny's
+  `outputOptions(suspendWhenHidden = TRUE)` default), so the test must
+  switch back to the Table tab before asserting its content, not read it
+  while still on the Diagram tab (Learning 409). NEWS.Rmd's Slice-1 bullet
+  amended in place to describe the now-shipped click-to-navigate behavior
+  (rendered to NEWS.md). **Both slices of issue #129 are now shipped;
+  issue #129 closed** via `gh issue close` with a summary comment covering
+  both sessions' work.
+
 ### 2026-07-30 · [issue #129] Implement Slice 1: core pedigree diagram render (Session 433)
 - **Deliverable:** Implemented the ratified plan's Slice 1
   (`docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md` §4).

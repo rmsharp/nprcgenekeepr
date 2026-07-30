@@ -64,8 +64,11 @@ knitr::opts_chunk$set(echo = TRUE)
   generation-ordered top-down layout -- via a new `visNetwork` dependency.
   Diagrams above 1,500 animals show an informative message instead of an
   unbounded render; narrow the focal-animal selection to view one.
-  Click-to-navigate (clicking a node to re-center the selection) is planned
-  as a follow-up slice, not yet available.
+  Clicking a node (issue #129, Slice 2) now re-centers the population on
+  that animal, re-driving the same focal-animal selection the Table tab and
+  focal-animal text box already share -- switch back to the Table tab (or
+  enable "Trim pedigree based on focal animals") to see the new selection
+  reflected there.
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes

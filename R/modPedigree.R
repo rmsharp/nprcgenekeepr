@@ -392,7 +392,24 @@ modPedigreeServer <- function(id, studbook) {
       visNetwork::visNetwork(diagramData$nodes, diagramData$edges) |>
         visNetwork::visHierarchicalLayout(
           direction = "UD", sortMethod = "directed"
-        )
+        ) |>
+        # visNetwork does not auto-bind node clicks to a Shiny input -- wire
+        # it explicitly (confirmed hands-on, issue #129 Slice 2 Pre-RED).
+        visNetwork::visEvents(click = sprintf(
+          "function(nodes) { Shiny.setInputValue('%s', nodes.nodes); }",
+          session$ns("pedigreeDiagram_click")
+        ))
+    })
+
+    # Click-to-navigate (issue #129 Slice 2): clicking a diagram node sets it
+    # as the new focal-animal selection, reusing the same focalIds path the
+    # focal-animal textarea already drives. A background (no-node) click
+    # sends an empty nodes.nodes array -- guarded against here so it does not
+    # clear the current selection.
+    observeEvent(input$pedigreeDiagram_click, {
+      clickedNodes <- input$pedigreeDiagram_click
+      req(length(clickedNodes) > 0L)
+      focalIds(as.character(clickedNodes))
     })
 
     # Signal data-ready when pedigree is available (for E2E testing)

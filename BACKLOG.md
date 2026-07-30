@@ -354,11 +354,17 @@ requiring tracking. See `CHANGELOG.md`.*
       Slice 1 is now DONE -- S433 (2026-07-30):** the Pedigree Browser tab
       gained a Diagram view (new `makePedigreeDiagramData()` + `modPedigree.R`
       Table/Diagram tabsetPanel + `visNetwork` dependency), see `CHANGELOG.md`.
-      **Slice 2** (click-to-navigate interactivity) is next (READY, Effort M)
-      -- follow `docs/planning/issue129-pedigree-diagram-tree-visualization
-      -plan.md` §4 "Slice 2," starting with its own Pre-RED per Dragon P4
-      (confirm the `input$pedigreeDiagram_click` event-binding convention
-      against the now-live Slice 1 widget). **Planning #130** (marker-based
-      kinship/heterozygosity/parentage-verification) follows Slice 2, or may
-      be picked up in either order per the plan's own note that Slice 1 alone
-      already satisfies issue #129's core ask.
+      **Implementing issue #129 Slice 2 is now DONE -- S434 (2026-07-30,
+      closes issue #129):** clicking a diagram node re-centers the population
+      on that animal via the existing `focalIds` reactive path
+      (`visNetwork::visEvents(click = ...)` + a new `observeEvent` in
+      `modPedigree.R`). Pre-RED found and corrected a real gap in the ratified
+      plan's mechanism assumption: visNetwork does not auto-bind node clicks
+      to a Shiny input (`input$<id>_click`) the way the plan's design section
+      assumed -- confirmed hands-on that `visEvents(click = ...)` must be
+      wired explicitly. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning
+      408. **Both slices of issue #129 are now shipped; issue #129 itself is
+      closed as part of this session's close-out.** **Planning #130**
+      (marker-based kinship/heterozygosity/parentage-verification +
+      cross-center identity resolution) is next (READY, Effort M) -- no other
+      open item in this sequencing chain remains.

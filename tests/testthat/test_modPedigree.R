@@ -1077,3 +1077,117 @@ test_that(
     }
   )
 })
+
+## Issue #129 Slice 2 -- click-to-navigate interactivity tests.
+
+test_that("modPedigreeServer sets focalIds from a diagram node click", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C", "D", "E"),
+    sire = c(NA, NA, "A", "A", "B"),
+    dam = c(NA, NA, "B", NA, NA),
+    sex = c("M", "F", "F", "M", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE,
+        pedigreeDiagram_click = "D"
+      )
+      session$flushReact()
+
+      result <- session$getReturned()
+      expect_equal(result$focalAnimals(), "D")
+    }
+  )
+})
+
+test_that("modPedigreeServer recomputes pedigreeData after a diagram click", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C", "D", "E"),
+    sire = c(NA, NA, "A", "A", "B"),
+    dam = c(NA, NA, "B", NA, NA),
+    sex = c("M", "F", "F", "M", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = TRUE,
+        pedigreeDiagram_click = "C"
+      )
+      session$flushReact()
+
+      result <- session$getReturned()
+      # Clicking C sets it as the sole focal animal; trimming includes C's
+      # ancestors (A, B) plus C itself. D/E are C's half-sibs, not
+      # descendants of C, so they stay excluded -- the same trim semantics
+      # the textarea-driven focal path already exercises elsewhere in this
+      # file (reusing processedPedigree -> pedigreeData, no duplicate logic).
+      expect_setequal(result$pedigree()$id, c("A", "B", "C"))
+
+      # A second click on a different node re-drives the same trim path to
+      # that node's own connected component, proving the diagram click
+      # recomputes pedigreeData() rather than just setting a static value.
+      session$setInputs(pedigreeDiagram_click = "A")
+      session$flushReact()
+      expect_setequal(result$pedigree()$id, c("A", "C", "D"))
+    }
+  )
+})
+
+test_that("modPedigreeServer ignores a background diagram click", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C", "D", "E"),
+    sire = c(NA, NA, "A", "A", "B"),
+    dam = c(NA, NA, "B", NA, NA),
+    sex = c("M", "F", "F", "M", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE,
+        pedigreeDiagram_click = "D"
+      )
+      session$flushReact()
+      result <- session$getReturned()
+      expect_equal(result$focalAnimals(), "D")
+
+      # A background (no-node) canvas click emits an empty `nodes.nodes`
+      # array (confirmed hands-on, Pre-RED this session: deserializes to an
+      # empty/NULL R value) -- it must not clear or otherwise change the
+      # current selection.
+      session$setInputs(pedigreeDiagram_click = character(0))
+      session$flushReact()
+      expect_equal(result$focalAnimals(), "D")
+    }
+  )
+})

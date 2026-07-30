@@ -207,3 +207,85 @@ test_that("E2E: Pedigree Browser Diagram tab shows a known trio's data", {
   expect_match(edgesToChild, '"from":"PH0IXL"',
                info = "Dam -> child edge should exist")
 })
+
+## issue #129 Slice 2 -- click-to-navigate interactivity smoke test.
+
+test_that(
+  "E2E: Pedigree Browser Diagram tab click-to-navigate updates the Table tab",
+  {
+  skip_if_not_installed("shinytest2")
+  skip_if_not_installed("chromote")
+  skip_if_not_installed("visNetwork")
+  skip_on_cran()
+
+  app_dir <- create_test_app()
+  app <- create_app_driver(app_dir, "e2e_pedigree_diagram_click_nav")
+  on.exit(app$stop(), add = TRUE)
+
+  fixture <- system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                         package = "nprcgenekeepr")
+  loaded <- upload_and_wait(app, fixture)
+  if (!loaded) skip("Upload/QC did not complete")
+
+  success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
+  if (!success) skip("Could not navigate to Pedigree tab")
+
+  ## Table is the default active tabPanel -- confirm the untrimmed baseline
+  ## while it is actually visible (its DT output is suspended, per Shiny's
+  ## tabPanel default, whenever the tab is hidden -- discovered live this
+  ## session -- so reading it later while on the Diagram tab would return a
+  ## stale/frozen snapshot rather than a live one).
+  before <- get_html_safe(app, "#pedigree-pedigreeTable")
+  expect_match(before, "of 375 entries",
+               info = "No focal animal set yet -- table is still untrimmed")
+
+  clicked <- click_element_safe(app, 'a[data-value="Diagram"]')
+  if (!clicked) skip("Could not switch to the Diagram tab")
+
+  ## Enable trimming so a diagram click has a visible filtering effect on
+  ## the Table tab (pedigreeData() only trims once a focal animal is set).
+  app$set_inputs(`pedigree-trimPedigree` = TRUE)
+  app$wait_for_idle(timeout = E2E_TIMEOUT)
+
+  ## Simulate a real node click via the live vis.js Network instance -- the
+  ## click-event input-binding convention confirmed hands-on this session's
+  ## Pre-RED (visEvents(click = ...) sets a Shiny input carrying
+  ## nodes.nodes, the clicked node id array; visNetwork does not bind this
+  ## automatically).
+  clickResult <- app$get_js(paste0(
+    "(() => { const w = HTMLWidgets.find('#pedigree-pedigreeDiagram'); ",
+    "if (!w) return 'no widget'; ",
+    "w.network.emit('click', {nodes: ['EBG407'], edges: [], event: {}, ",
+    "pointer: {DOM: {x:0,y:0}, canvas: {x:0,y:0}}}); ",
+    "return 'emitted'; })()"
+  ))
+  if (!identical(clickResult, "emitted")) {
+    skip("visNetwork widget instance not found")
+  }
+  app$wait_for_idle(timeout = E2E_TIMEOUT)
+
+  ## Switch back to the Table tab -- this both mirrors what a real user
+  ## does after clicking a diagram node, and is required for the DT output
+  ## to actually recompute/redraw (it was suspended while hidden above).
+  switchedBack <- click_element_safe(app, 'a[data-value="Table"]')
+  if (!switchedBack) skip("Could not switch back to the Table tab")
+  app$wait_for_idle(timeout = E2E_TIMEOUT)
+
+  after <- get_html_safe(app, "#pedigree-pedigreeTable")
+  expect_match(after, "EBG407",
+               info = "Clicked animal should appear in the now-trimmed table")
+  expect_false(
+    grepl("of 375 entries", after),
+    info = paste("Table tab should visibly change (trim to a smaller set)",
+                  "after the diagram click")
+  )
+
+  logs <- app$get_logs()
+  diagramErrors <- logs[logs$level == "throw" &
+                          grepl("vis|network|pedigreeDiagram", logs$message,
+                                ignore.case = TRUE), ]
+  expect_equal(
+    nrow(diagramErrors), 0L,
+    info = "No visNetwork/diagram-related console error from the click handler"
+  )
+})
