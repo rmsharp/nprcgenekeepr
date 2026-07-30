@@ -6,6 +6,19 @@
 
 ## ACTIVE TASK
 
+### What Session 433 Did
+**Deliverable:** Implement issue #129 Slice 1 (core pedigree-diagram render)
+following `docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md`
+§4, per `DEVELOPMENT_WORKSTREAM.md`. Owner-picked via `AskUserQuestion` at
+Phase 0 (top of 4 rendered priorities). (IN PROGRESS)
+**Started:** 2026-07-30
+**Status:** Session claimed. Work beginning at Pre-RED (installing
+`visNetwork`, re-verifying plan citations per Dragon P1 before any RED
+tests).
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the
+crash breadcrumb for the next session's reconcile.
+
 ### What Session 432 Did
 **Deliverable:** Plan/scope issue #129 (pedigree-diagram/tree visualization,
 currently table-only) following `ARCHITECTURE_WORKSTREAM.md` -- per the
