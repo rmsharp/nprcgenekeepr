@@ -91,6 +91,13 @@
 #' \code{femaleFounders} (dataframes of the known male and female founder
 #' records), \code{nMaleFounders} and \code{nFemaleFounders} (the counts of
 #' those founders), and \code{total} (the total number of known founders).
+#' \code{report} also carries a \code{flagged} column (issue #127):
+#' \code{TRUE} for a one-unknown-parent animal left uncorrected by
+#' \code{correctUnknownParentMeanKinship()} for lack of an eligible
+#' breeding-age peer cohort (or a missing birth date); \code{FALSE} for every
+#' other animal, including one-unknown-parent animals that were successfully
+#' corrected and all fully-known/both-unknown animals (which are never
+#' candidates for this correction).
 #'
 #' @export
 #' @examples
@@ -177,13 +184,18 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
   # longer falsely elevates an animal's genetic value. Known and both-unknown
   # animals are left unchanged. This feeds both the z-scores below and the
   # report column, so both rank paths reflect it; kinship() is untouched.
-  indivMeanKin <-
+  mkCorrection <-
     correctUnknownParentMeanKinship(indivMeanKin, ped,
       gestationTable = gestationTable,
       breedingTable = breedingTable,
       breedingAgeDefault = breedingAgeDefault,
       gestationDefault = gestationDefault
-    )$indivMeanKin
+    )
+  indivMeanKin <- mkCorrection$indivMeanKin
+  # Issue #127: probands %in% mkCorrection$flagged (not the reverse) keeps
+  # flagged a plain logical vector in probands order, ready to cbind()
+  # alongside indivMeanKin/zScores/gu/etc. with no name-alignment step.
+  flagged <- probands %in% mkCorrection$flagged
 
   zScores <- scale(indivMeanKin)
 
@@ -291,7 +303,8 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
   guSE$guSE[undetermined] <- 0.0
 
   finalData <- cbind(
-    demographics, indivMeanKin, zScores, gu, guSE, offspring, parentage
+    demographics, indivMeanKin, zScores, gu, guSE, offspring, parentage,
+    flagged
   )
   finalData <- list(
     report = orderReport(finalData, ped,

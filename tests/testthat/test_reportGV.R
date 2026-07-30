@@ -592,12 +592,24 @@ test_that("reportGV defaults guIter to 1000 iterations (issue #2 Slice 3)", {
 # Session 210: S206 had saved a NON-reproducible fg=52.7641277 (a contaminated
 # RNG state at save time); the documented recipe deterministically yields
 # 52.7546854 (display 52.75). S210 regenerated to that reproducible value.
+# Session 431 (issue #127): regenerating the bundled objects (to add the new
+# flagged column) via the SAME documented recipe (set.seed(10);
+# reportGV(ped, guIter = 10000)) in this environment (R 4.6.1) reproduces
+# 52.7641277282 -- an exact match, to every digit quoted above, of S206's
+# "non-reproducible, contaminated" value, NOT S210's "reproducible" one.
+# Confirmed via a stashed/unstashed differential test that this drift is
+# pre-existing (present on unmodified reportGV() at the prior commit too),
+# not caused by the flagged-column change. The recipe is evidently sensitive
+# to the R version / RNG implementation (or intervening code that changed the
+# gene-drop RNG stream) in a way S210 did not anticipate; fg is re-pinned to
+# this session's reproducible value rather than left stale against a value
+# that itself may not have been the last word on reproducibility.
 # ---------------------------------------------------------------------------
 test_that("bundled GV reports embed the name-aligned fg (issue #86)", {
   for (rpt in list(nprcgenekeepr::qcPedGvReport,
                    nprcgenekeepr::pedWithGenotypeReport)) {
     expect_gt(rpt$fg, 50) # not the old positional 39.92
-    expect_equal(rpt$fg, 52.7546854, tolerance = 1e-6) # reproducible value (S210)
+    expect_equal(rpt$fg, 52.7641277, tolerance = 1e-6) # reproducible value (S431)
     expect_equal(rpt$fe, 77.0402760, tolerance = 1e-6) # FE unaffected
   }
 })

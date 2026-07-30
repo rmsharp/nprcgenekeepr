@@ -149,6 +149,11 @@ gvaConvergence <- function(ped, pop = NULL, nMax = 3000L, guThresh = 1L,
   prepared <- prepareKinshipOverrides(kmat, kinshipOverrides)
   kmat <- prepared$kmat
   indivMeanKin <- meanKinship(kmat)[probands]
+  # Issue #127 (D2, deliberate deferral, see issue #127 comment): $flagged is
+  # discarded here too, but gvaConvergence() is a script-facing diagnostic
+  # function, not wired into the live Shiny UI, so reportGV()'s new flagged
+  # report column alone satisfies the issue's "at least one user-facing
+  # surface" acceptance criterion.
   indivMeanKin <- correctUnknownParentMeanKinship(
     indivMeanKin, ped,
     gestationTable = gestationTable, breedingTable = breedingTable,

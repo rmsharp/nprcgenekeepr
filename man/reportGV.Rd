@@ -116,6 +116,13 @@ and
 \code{femaleFounders} (dataframes of the known male and female founder
 records), \code{nMaleFounders} and \code{nFemaleFounders} (the counts of
 those founders), and \code{total} (the total number of known founders).
+\code{report} also carries a \code{flagged} column (issue #127):
+\code{TRUE} for a one-unknown-parent animal left uncorrected by
+\code{correctUnknownParentMeanKinship()} for lack of an eligible
+breeding-age peer cohort (or a missing birth date); \code{FALSE} for every
+other animal, including one-unknown-parent animals that were successfully
+corrected and all fully-known/both-unknown animals (which are never
+candidates for this correction).
 }
 \description{
 This is the main function for the Genetic Value Analysis.

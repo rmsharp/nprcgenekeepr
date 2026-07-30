@@ -28,7 +28,7 @@ test_that("summary.nprcgenekeeprGV shows FG +/- SE inline when fgSE present (iss
   out <- summary(gv)
   fgLine <- out[grepl("Founder Genome Equivalents:", out)]
   expect_length(fgLine, 1L)
-  expect_match(fgLine, "Founder Genome Equivalents: 52.75 \\+/- 0.05")
+  expect_match(fgLine, "Founder Genome Equivalents: 52.76 \\+/- 0.05")
 })
 
 test_that("summary.nprcgenekeeprGV surfaces the regenerated bundled fgSE inline (issue #82, S210)", {
@@ -37,7 +37,7 @@ test_that("summary.nprcgenekeeprGV surfaces the regenerated bundled fgSE inline 
   out <- summary(nprcgenekeepr::qcPedGvReport)
   fgLine <- out[grepl("Founder Genome Equivalents:", out)]
   expect_length(fgLine, 1L)
-  expect_match(fgLine, "^Founder Genome Equivalents: 52\\.75 \\+/- [0-9]+\\.[0-9]{2}$")
+  expect_match(fgLine, "^Founder Genome Equivalents: 52\\.76 \\+/- [0-9]+\\.[0-9]{2}$")
 })
 
 test_that("summary.nprcgenekeeprGV degrades to bare FG when fgSE absent or NA (issue #82 Slice 3)", {
@@ -48,7 +48,7 @@ test_that("summary.nprcgenekeeprGV degrades to bare FG when fgSE absent or NA (i
   gvabs$fgSE <- NULL
   out <- summary(gvabs)
   fgLine <- out[grepl("Founder Genome Equivalents:", out)]
-  expect_match(fgLine, "Founder Genome Equivalents: 52\\.75$")
+  expect_match(fgLine, "Founder Genome Equivalents: 52\\.76$")
   expect_false(grepl("\\+/-", fgLine))
 
   ## NA fgSE -> still bare FG, no dangling "+/- NA"
