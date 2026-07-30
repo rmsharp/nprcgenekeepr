@@ -7,6 +7,202 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 430 Did
+
+**Deliverable:** Write a design/scoping architecture plan for closing
+issue \#127 (surface `correctUnknownParentMeanKinship()`’s
+silently-dropped `flagged` uncorrected-animal list to a user-visible
+surface), per the owner-ratified S428 sequencing decision. Owner-picked
+via `AskUserQuestion` at Phase 0. **DONE.**
+`docs/planning/issue127-surface-uncorrected-kinship-flag-plan.md`
+written, adversarially verified, and RATIFIED via `AskUserQuestion`,
+ready for a future implementation session’s RED phase.
+**Started/Completed:** 2026-07-29 / 2026-07-29 **Status:** DONE. TDD
+phases (RED/GREEN/REFACTOR) are inapplicable to this deliverable – it is
+a plan, following S423/S426/S428 precedent. No
+`R/`/`tests/`/`man/`/`NAMESPACE`/`data/` content changed.
+
+**What happened, in order:** **(1)** Ran Phase 0 orientation in full
+(`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, `git status`/`log`/`diff --stat`,
+`methodology_dashboard.py` (Health 98/100), ledger reconcile –
+`CHANGELOG.md`/`HANDOFFS.md` frontiers both at HEAD, clean, no backfill
+needed). Rendered the priorities list (4 numbered items) via
+`AskUserQuestion`; owner picked “Plan issue \#127.” Compared
+`ARCHITECTURE_WORKSTREAM.md` vs `DESIGN_WORKSTREAM.md`; picked
+Architecture (a data/API-surface decision, matching S428’s \#126
+precedent, not visual-design work). Stated the deliverable back to the
+owner, claimed the session (`c9c5c7b1`) before any technical work.
+**(2)** Research: launched a 4-agent parallel `Workflow` (call-site
+inventory, UI-warning precedent, audit-text + existing-test-coverage,
+prior-plan convention survey) rather than researching solo, per this
+session’s Ultracode directive. Findings: `reportGV.R:180-186` and
+`gvaConvergence.R:152-157` both discard `$flagged` identically;
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)‘s
+`$report` is the only report table a live user ever sees
+(`modGeneticValue.R`’s DT table + 2 CSV downloads); the existing
+`parentage` column (added via plain
+[`cbind()`](https://rdrr.io/r/base/cbind.html), confirmed surviving
+`orderReport()`/[`rankSubjects()`](https://github.com/rmsharp/nprcgenekeepr/reference/rankSubjects.md)
+untouched) is a precedented, zero-new- plumbing insertion point; zero
+conditional-styling precedent exists anywhere in the package. **(3)**
+Verified firsthand (not trusting the research agents’ output alone, per
+the vertical-slice/high-parallelism “apply adversarial refutation to
+your own agents’ output” guidance): confirmed every load-bearing line
+number directly; ran the full pre-correction pipeline against the
+bundled `examplePedigree` (327 probands) and found a **real,
+non-hypothetical instance of the gap**: 4 animals
+(`5IAFMK`/`BCJJKN`/`GCBYDW`/`KZM9RB`) silently left uncorrected today.
+**(4)** Ratified 3 scope decisions via `AskUserQuestion`: boolean column
+format (not the recommended human-readable label);
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+deferred out-of-scope (recommended, accepted); column-only, no Shiny
+notification (recommended, accepted). **(5)** Hand-built and verified
+(via `Rscript`, through several failed attempts) a 14-row synthetic
+pedigree that survives
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)‘s
+**full** pipeline and produces exactly one flagged animal (`Q1`) –
+discovering along the way that
+`test_correctUnknownParentMeanKinship.R`’s own bare-`NA` fixture throws
+inside
+[`calcFEFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFEFG.md)
+when run through the full pipeline (needs an explicit U-id row instead),
+and that a too-small founder pool throws inside
+`calcFounderContributions()`/[`colMeans()`](https://rdrr.io/r/base/colSums.html)
+(needs \>= ~9 founders) – both new findings, recorded as
+`PROJECT_LEARNINGS.md` Learning 401. **(6)** Wrote the plan
+(`docs/planning/issue127-surface-uncorrected- kinship-flag-plan.md`),
+matching the \#126 plan’s structure/tone conventions. **(7)** Ran a
+second, independent adversarial-verification `Workflow` (2 agents: a
+citation audit re-checking every <file:line/snippet> against live
+source; a fixture-execution audit independently re-running both worked
+examples via `Rscript`) before presenting the plan for ratification –
+caught and fixed one blocking citation error (`R/orderReport.R:297`
+should have read `R/reportGV.R:297`) and 4 minor ones (a test-count
+undercount, an imprecise line-offset claim, an imprecise notification-
+precedent line number, and an overstated `@source`-tag claim for one of
+the two bundled report objects). Both worked examples’ exact numeric/id
+claims were independently reproduced byte-for-byte. **(8)** Owner
+ratified the corrected plan via `AskUserQuestion`.
+
+**Session 429 Handoff Evaluation (by Session 430): 9/10.** **What
+helped:** the “Handoff to Session 430” section’s sequencing was
+unambiguous (“plan + implement issue \#127 next… then \#129 – either
+order”) and the standing- items list (LabKey, NPRC outreach, five-state
+labels, the vestigial “Upload list” option) was accurate and untouched
+by this session, as expected. The `gotchas` field’s Phase-3E-specific
+warnings (E2E harness pitfalls) were not directly relevant to this
+planning-only session but cost nothing to skip over. **What was
+missing:** nothing structural – this was a clean continuation with no
+ambiguity about what to pick up next. **What was wrong:** nothing found.
+**ROI:** high – the sequencing decision meant zero time was spent
+deciding what to work on; all of this session’s effort went into the
+actual research/design/verification work.
+
+**Self-assessment (Session 430): 9/10.** **Strengths:** (1) used a
+parallel research `Workflow` for the evidence-based inventory rather
+than serial solo greps, then a SECOND, independent
+adversarial-verification `Workflow` to re-check the drafted plan before
+presenting it for ratification – caught one blocking citation error
+(wrong file name) that would otherwise have sent a future implementing
+session hunting for a call site in the wrong file; (2) did not stop at
+the research agents’ claims – independently re-ran the real
+`examplePedigree` case and hand-built/verified the RED-test fixture
+myself via `Rscript` before publishing either in the plan, catching two
+genuine pipeline-level failure modes
+([`calcFEFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFEFG.md)‘s
+stricter-than-the- correction-function parentage requirement;
+`calcFounderContributions()`’s founder-count degeneracy) that a plan
+written from the research agents’ summary alone, or from analogy to the
+existing unit-test fixture, would have missed entirely; (3) found and
+hand-verified a REAL, non-hypothetical instance of the bug on bundled
+data (4/327 `examplePedigree` animals) rather than resting the plan’s
+worked example on a purely synthetic scenario, matching this project’s
+established “real data over contrived fixtures” convention; (4)
+correctly recognized `test_correctUnknownParentMeanKinship.R`’s existing
+“empty cohort” fixture as the natural starting point but did not assume
+it would work unmodified one layer up – verified before trusting.
+**Weaknesses:** (1) the first two attempts at a full-pipeline RED
+fixture failed (bare-`NA` parent, then too-few-founders) before the
+third succeeded – both failures were informative and are now recorded as
+Learning 401, but a more careful upfront read of
+[`calcFEFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFEFG.md)/`calcFounderContributions()`
+might have anticipated at least the U-id requirement before the first
+`Rscript` attempt; (2) the plan’s first draft had 5 citation
+inaccuracies (1 blocking, 4 minor) that only surfaced via the dedicated
+adversarial-verification pass – a sign that even careful firsthand
+verification during drafting still benefits from an independent second
+check before publication, not evidence the first-pass verification was
+skipped. **Compared to previous sessions:** mirrors S428/S429’s
+planning- session discipline (research before drafting, ratify scope
+decisions via `AskUserQuestion`, hand-verify worked examples via
+`Rscript`) with two additions specific to this Ultracode session:
+parallel-`Workflow` research fan-out instead of solo sequential greps,
+and a dedicated second-pass adversarial-verification workflow before
+ratification (not just self-review) – both new to this session’s
+practice, not previously used in S428/S429.
+
+**Handoff to Session 431:** - **What’s next:** Per the owner’s ratified
+sequencing (`BACKLOG.md`, S428, updated this session): **implement issue
+\#127** (the ratified plan is at
+`docs/planning/issue127-surface-uncorrected-kinship-flag-plan.md` –
+follow it via strict TDD RED -\> GREEN -\> REFACTOR, phase-gated via
+`AskUserQuestion`), **and plan + implement issue \#129**
+(pedigree-diagram/ tree visualization) – either order between the two is
+the owner’s call. **Planning \#130** (marker-based
+kinship/heterozygosity/parentage- verification) comes only after both
+\#127 and \#129 are fully shipped. Do not skip straight to \#127
+implementation without re-verifying the plan’s cited line numbers first
+(Pre-RED contract-reverification gate) – the plan itself was correct as
+ratified, but this project’s own precedent (S429 re-verifying \#126’s
+plan) and this session’s own experience (5 citation fixes needed even
+after firsthand verification) both argue for it. Standing, untouched
+this session: (a) LabKey integration remaining recs (BLOCKED – needs a
+live LabKey server); (b) NPRC outreach plan (DECISION NEEDED – owner
+review/edit/send); (c) five-state Issue Lifecycle GitHub labels decision
+(still open); (d) the vestigial “Upload list” `animalSource` UI option
+(`R/modBreedingGroups.R:42`, no `fileInput`/handling anywhere –
+recommend filing as its own small issue); (e) the `inst/extdata/` reorg
+BACKLOG entry’s stale header (says “Phase 4, DECISION NEEDED” but its
+own body confirms Phases 1-4 are all DONE – worth a small prune pass,
+flagged this session’s orientation report, not yet fixed). - **Key
+files:**
+`docs/planning/issue127-surface-uncorrected-kinship-flag-plan.md` (the
+ratified plan – read it in full before starting RED, its Pre-RED section
+names the exact re-verification steps); `R/reportGV.R:180-186,293` (the
+call-site and [`cbind()`](https://rdrr.io/r/base/cbind.html) changes);
+`R/gvaConvergence.R:152-157` (the deferred second caller – needs only a
+comment, per the plan’s D2);
+`tests/testthat/test_reportGV.R:7-18,32-43,557-564` (the exact
+assertions to extend); `PROJECT_LEARNINGS.md` Learning 401 (the
+full-pipeline synthetic-fixture gotchas – read before building any new
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)-
+level test fixture, including for \#129). - **Gotchas:** (1) do not
+reuse `test_correctUnknownParentMeanKinship.R`’s own unit-test fixtures
+unmodified for a
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)-level
+test – they use bare `NA` for missing parents, which
+[`calcFEFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFEFG.md)
+rejects (Learning 401); build (or reuse) a fixture with explicit U-id
+placeholder rows and a founder pool of comparable size to
+`test_reportGV.R`’s own `makeOriginTestPed()` (10 rows, 6 founders) or
+larger; (2) the plan’s §4.2 fixture (`flagPed`, 14 rows) is already
+hand-verified and ready to paste directly into the RED test – no need to
+re-derive it; (3) both bundled `qcPedGvReport`/`pedWithGenotypeReport`
+objects must be regenerated at GREEN per their own documented recipe
+(`R/data.R:264-280`/`:311-324`) – they will both regenerate with an
+all-`FALSE` `flagged` column (their source pedigrees genuinely have zero
+flagged animals, confirmed this session – not a bug); (4)
+`.DS_Store`/`inst/.DS_Store`/ `inst/extdata/.DS_Store` and
+`docs/planning/issue125-ranking-priority-multi-candidate-plan.html`
+remain harmless, unfixed, out-of-scope artifacts, unchanged since
+S425. - **Self-assessment score:** 9/10 (see above for full
+breakdown). - **Runtime smoke test:** N/A – docs-only planning
+deliverable, no `R/`/ `tests/`/`man/`/`NAMESPACE`/`data/` content
+changed. Per `SESSION_RUNNER.md` Phase 3E, a runtime smoke test is
+required only for deliverables that change runtime behavior; this
+session’s implementation-plan document does not.
+
 ### What Session 429 Did
 
 **Deliverable:** Implement the ratified issue \#126 plan
