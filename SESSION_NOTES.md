@@ -7,6 +7,212 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 437 Did
+
+**Deliverable:** Fix the pre-existing `shinyBS is not defined` JS
+console error, flagged as a Housekeeping item in `BACKLOG.md`
+(discovered S433). Owner-picked via the Phase 0 priorities
+`AskUserQuestion` (owner first asked whether the NPRC outreach plan
+could be worked in parallel with another item; declined per the “1 and
+done” / FM \#26 rule plus outreach being owner-only, non-coding work –
+then picked this item outright). **Started/Completed:** 2026-07-30 /
+2026-07-30 **Status:** DONE. Full TDD cycle: PRE-RED (root-cause
+diagnosis) -\> RED (2 failing tests) -\> GREEN (implementation) -\>
+REFACTOR (skipped, owner-confirmed nothing to restructure). Every phase
+transition gated via `AskUserQuestion` per `CLAUDE.md`’s Phase-gate
+format, including a separate pre-RED scope/approach decision (fix
+location) before RED.
+
+**What happened, in order:** **(1)** Phase 0 orientation in full
+(`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, `git status`/`log`/`diff --stat`,
+`methodology_dashboard.py` (Health 98/100), ledger reconcile –
+`CHANGELOG.md`/`HANDOFFS.md` frontiers both at HEAD, clean). Rendered
+the priorities list (4 numbered items) via `AskUserQuestion`; owner
+asked a clarifying question first (“can I have you work on NPRC outreach
+and 1, 2, or 3 at the same time?”) – answered no, citing
+`SESSION_RUNNER.md`’s “1 and done” rule and FM \#26 (bundling two
+different capabilities into one session, even via parallel subagents, is
+the exact failure mode it guards against), plus the outreach item not
+actually being executable coding work right now (drafts complete, needs
+the owner’s own review/edit/send). Owner then picked the shinyBS
+console-error fix. Claimed the session (`c895a00f`). **(2)** PRE-RED
+root-cause diagnosis: grepped for `shinyBS` usage
+(`R/modSummaryStats.R`’s 12 `popify()` + 3 `addPopover()` calls, all via
+`::`, never
+[`library(shinyBS)`](https://github.com/federicomarini/shinyBS/)), read
+shinyBS 0.65.0’s installed source (`shinyBSDep`, `.onAttach`,
+`createTooltipOrPopoverOnUI`), and confirmed EXPERIMENTALLY (not just
+from reading source) that `"sbs" %in% names(shiny::resourcePaths())` is
+`FALSE` after
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html) +
+building
+[`modSummaryStatsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modSummaryStatsUI.md)
+– proving shinyBS’s `.onAttach()` (which registers that resource path,
+serving `shinyBS.js`/`shinyBS.css`) never fires, because `::` only
+triggers `.onLoad()`, never attachment. Presented this diagnosis + 2
+fix-approach options via `AskUserQuestion`; owner picked the recommended
+one (a new `R/zzz.R` package-level `.onLoad()` hook, over a narrower
+per-UI-call alternative). **(3)** RED: added 2 tests to
+`tests/testthat/test_modSummaryStats_popovers.R` – resource-path
+registration check, and a `.onLoad()`-doesn’t-error-when-shinyBS-
+unavailable edge case (via
+[`mockery::stub`](https://rdrr.io/pkg/mockery/man/stub.html), discovered
+mid-RED that `.onLoad` isn’t visible unqualified even under
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)’s
+`export_all` default – fixed by copying it to a local binding via `:::`
+before stubbing, since
+[`mockery::stub()`](https://rdrr.io/pkg/mockery/man/stub.html)’s
+deparsed-name reassignment needs a plain identifier). Confirmed both
+failed for the expected reasons before writing any implementation.
+**(4)** GREEN: added `R/zzz.R` (6 lines, `.onLoad()` guarded by
+[`requireNamespace("shinyBS", quietly = TRUE)`](https://rdrr.io/r/base/ns-load.html)).
+Both new tests passed; full regression suite exact-clean (0/0/0, 3282
+passed, 182 skipped); `devtools::check()` 0 errors/0 warnings/0 notes.
+**(5)** Phase 3E runtime smoke test (mandatory – this changes
+dependency-loading behavior): live `shinytest2`/`chromote` app launch
+confirmed the `ReferenceError: shinyBS is not defined` no longer occurs.
+This same live check surfaced a SECOND, previously-hidden, unrelated
+defect: shinyBS 0.65.0’s JS is incompatible with this app’s bundled
+Bootstrap 4.6.0 popover plugin (`shinyBS.js:207`’s
+`$id.popover("destroy")` throws before the actual `$id.popover(opts)`
+init call on the next line) – confirmed via direct DOM inspection that 0
+popover-wrapped buttons ever get a `bs.popover` instance attached,
+meaning popovers were non-functional before this fix (JS never loaded)
+AND remain non-functional after it (JS loads, crashes one line before
+doing anything). Surfaced this to the owner via `AskUserQuestion` before
+proceeding rather than silently deciding either way; owner confirmed
+“ship as-is, file new issue” (matching `PROJECT_LEARNINGS.md` Learning
+382/407’s precedent) over expanding this session’s scope to also fix it.
+**(6)** REFACTOR gate: owner confirmed skip (implementation already
+minimal, 0 new lint issues, no lines \>80 chars in the diff). **(7)**
+Close-out: filed [issue
+\#140](https://github.com/rmsharp/nprcgenekeepr/issues/140) for the
+popover-`destroy` defect (`bug` label, `## Summary`/`Evidence`/
+`Root cause`/`Why it matters`/`Discovery` format matching the existing
+issue \#117 precedent); updated `BACKLOG.md`’s Housekeeping item to
+“(none remaining – RESOLVED …)” recording both the fix and issue \#140;
+added `PROJECT_LEARNINGS.md` Learnings 413 (`.onAttach()` vs `.onLoad()`
+for `Suggests`-only, `::`-accessed dependencies) and 414 (fixing a
+masking bug can leave the real feature just as broken, with a different
+error – Phase 3E must verify the underlying claim, not just the absence
+of the originally-reported message); updated `CLAUDE.md`’s
+learnings-count cross-reference (412-\>414, Sessions 1-436+-\>1-437+).
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**Session 436 Handoff Evaluation (by Session 437): 9/10.** **What
+helped:** the handoff’s priorities list (options a/b/c) was accurate and
+current – Planning issue \#130, picking up issues \#131-#139, and the
+NPRC outreach review were all still exactly as described, with correct
+`key_files` pointers. This let Phase 0 orientation move quickly into a
+real task-selection conversation rather than needing rediscovery. The
+ledger/receipt state was exactly as claimed (both frontiers at HEAD).
+**What was missing:** the handoff’s 3 options didn’t include the shinyBS
+console-error Housekeeping item as a 4th option even though it was
+READY, Effort S, and sitting in `BACKLOG.md`’s Housekeeping section at
+the time S436 wrote its handoff – this session’s own Phase 0 found it
+independently via the full `BACKLOG.md` sweep, but a more complete S436
+handoff could have surfaced it directly as a 4th candidate (the
+render-the-priorities-list convention caps at 4 rendered options, so
+there was room). Not a significant defect – the item was still found via
+this session’s own orientation – but worth naming. **What was wrong:**
+nothing found. **ROI:** high – the accurate priorities-list framing
+meant no time was spent re-verifying stale claims.
+
+**Self-assessment (Session 437): 9/10.** **Strengths:** (1) followed the
+full TDD phase-gate protocol precisely – a separate pre-RED scope
+decision `AskUserQuestion` (fix approach) before the PRE-RED-\>RED gate,
+matching `CLAUDE.md`’s explicit requirement that these be distinct
+questions; (2) diagnosed the root cause experimentally (checked
+[`shiny::resourcePaths()`](https://rdrr.io/pkg/shiny/man/resourcePaths.html)
+directly) rather than stopping at a plausible- sounding theory from
+reading `.onAttach()`’s source; (3) did not treat “both new unit tests
+pass + `devtools::check()` clean” as sufficient proof of a working fix –
+ran the mandatory Phase 3E live runtime smoke test specifically because
+this change touches dependency-loading behavior, and that live test is
+what caught the second, deeper popover-`destroy` defect that no unit
+test could have surfaced; (4) when that second defect appeared
+mid-session, stopped and surfaced it to the owner via `AskUserQuestion`
+rather than silently deciding to either fix it (scope creep) or ignore
+it (incomplete reporting) – matching the project’s “observation vs
+decision” convention; (5) filed the follow-up defect as a
+properly-formatted GitHub issue matching established precedent
+(`gh label list` checked first, body format matched to an existing
+`bug`-labeled issue) rather than improvising a new format.
+**Weaknesses:** (1) the initial RED-phase test for `.onLoad()`’s
+unavailable-shinyBS edge case used a naive `mockery::stub(.onLoad, ...)`
+call that failed with “object ‘.onLoad’ not found” – `.onLoad` being
+invisible unqualified even under `export_all=TRUE` was not anticipated
+before writing the test, costing one extra diagnostic round-trip (though
+the fix – a local `:::`-copied binding – was found quickly and is now
+recorded as part of the test’s own inline comment for future readers,
+not just tucked into a learning); (2) did not verify ahead of time
+whether `shinytest2` AppDriver required `NOT_CRAN=true` to run outside
+`testthat`’s own environment (hit “Reason: On CRAN” on the first ad hoc
+smoke-test attempt) – a minor, quickly-resolved friction point, not a
+consequential one. **Compared to previous sessions:** this is the first
+session since the issue \#129 Diagram-tab work (S433/S434,
+`PROJECT_LEARNINGS.md` Learnings 405/406/408/409) to again demonstrate
+the “verify hands-on against a live instance, don’t trust a passing unit
+test or static reading alone” discipline – but extends it in a new
+direction: those sessions used live verification to catch an
+*implementation* bug before it shipped; this session used it to discover
+that a *fix* which passed all its own tests didn’t actually restore the
+feature it appeared to restore, which is a subtler and arguably more
+consequential class of gap for a “housekeeping” task to get right.
+
+**Handoff to Session 438:** - **What’s next:** Multiple independent
+READY options remain, all unaffected by this session: **(a)** Plan issue
+\#130 (marker-based kinship/heterozygosity/parentage-verification +
+cross-center identity resolution), READY Effort M, unchanged. **(b)**
+Pick up any of issues \#131-#139 (owner’s stated priority order, \#131
+first) – unaffected. **(c)** NPRC outreach & announcement plan review
+(DECISION NEEDED, owner-only). **(d)** NEW: [issue
+\#140](https://github.com/rmsharp/nprcgenekeepr/issues/140) (shinyBS
+popovers/tooltips non-functional under Bootstrap 4.6.0, discovered this
+session) – not yet triaged into `BACKLOG.md` beyond a pointer in the
+Housekeeping item; a picking session should read the issue body in full
+(it names 3 candidate fix directions: patch/vendor a corrected
+`shinyBS.js`, catch-and-ignore the destroy error at the JS
+custom-message-handler layer, or replace `popify()`/`addPopover()` with
+a different tooltip/popover mechanism such as
+[`bslib::tooltip()`](https://rstudio.github.io/bslib/reference/tooltip.html)/
+[`bslib::popover()`](https://rstudio.github.io/bslib/reference/popover.html))
+before picking a fix approach, since none of the three has been
+evaluated yet. - **Key files:** `R/zzz.R` (new, the `.onLoad()` fix, 6
+lines); `tests/testthat/test_modSummaryStats_popovers.R:239-268` (the 2
+new tests, including the
+[`mockery::stub`](https://rdrr.io/pkg/mockery/man/stub.html)
+local-binding pattern for dot-prefixed internal functions);
+`BACKLOG.md`’s Housekeeping section (resolved item + issue \#140
+pointer); `CHANGELOG.md`’s `[BL-shinyBS-console-error]` entry (full
+root-cause + verification detail); GitHub issue \#140 (fullest
+single-place description of the newly-discovered popover-`destroy`
+defect and candidate fixes). - **Gotchas:** (1)
+`.onLoad`/`.onAttach`/other dot-prefixed package hooks are NOT visible
+unqualified in a testthat test environment even under
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)’s
+`export_all=TRUE` default – access via `pkgname:::.onLoad` and copy to a
+local binding before
+[`mockery::stub()`](https://rdrr.io/pkg/mockery/man/stub.html)-ing it (a
+`:::`-qualified expression is not a valid target for mockery’s
+deparsed-name reassignment). (2) `shinytest2::AppDriver$new()` run
+outside a `testthat` context needs `Sys.setenv(NOT_CRAN = "true")`
+first, or it fails immediately with “Reason: On CRAN”. (3) Issue \#140
+is a genuine, currently-unfixed functional gap (popovers/tooltips do not
+work at all in the live app) – do not assume this session’s fix restored
+working tooltips; it only removed one (of two) blocking errors on that
+code path. (4) `.DS_Store` files and
+`docs/planning/issue125-ranking-priority-multi-candidate-plan.html`
+remain harmless, unfixed, out-of-scope artifacts, unchanged since
+S425. - **Self-assessment score:** 9/10 (see above for full
+breakdown). - **Runtime smoke test:** DONE (not skipped) – live
+`shinytest2`/ `chromote` app launch, twice: once confirming the
+`shinyBS is not defined` `ReferenceError` no longer occurs, once
+confirming (via direct DOM/jQuery-data inspection) that popovers still
+don’t functionally attach, which is what led to filing issue \#140
+instead of closing out silently on a narrowly-passing fix.
+
 ### What Session 436 Did
 
 **Deliverable:** File GitHub issues for the 8 recommendations in S435’s

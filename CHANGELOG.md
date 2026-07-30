@@ -47,6 +47,67 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-30 · \[BL-shinyBS-console-error\] Fix pre-existing “shinyBS is not defined” JS console error (Session 437)
+
+- **Deliverable:** Owner-picked from the Phase 0 priorities list (over
+  Planning issue \#130, picking up issues \#131-#139, and NPRC outreach
+  – owner first asked whether outreach could run in parallel with
+  another item; declined per the “1 and done” / FM \#26 rule). TDD
+  phases: PRE-RED (root-cause diagnosis) → RED (2 failing tests) → GREEN
+  (implementation) → REFACTOR (skipped, owner-confirmed nothing to
+  restructure).
+- **Root cause:** `R/modSummaryStats.R` accesses shinyBS only via
+  [`shinyBS::popify()`](https://rdrr.io/pkg/shinyBS/man/popify.html)/
+  [`shinyBS::addPopover()`](https://rdrr.io/pkg/shinyBS/man/addPopover.html)
+  (`::`), never
+  [`library(shinyBS)`](https://github.com/federicomarini/shinyBS/).
+  shinyBS’s `.onAttach()` hook — which registers the `"sbs"`
+  [`shiny::addResourcePath()`](https://rdrr.io/pkg/shiny/man/resourcePaths.html)
+  serving `shinyBS.js`/`shinyBS.css` — only fires on package *attach*,
+  never on the namespace *load* that `::` triggers. Confirmed
+  experimentally: `"sbs" %in% names(shiny::resourcePaths())` was `FALSE`
+  after
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html) +
+  building
+  [`modSummaryStatsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modSummaryStatsUI.md).
+  The unloaded `shinyBS.js` meant `popify()`’s/`addPopover()`’s inline
+  `shinyBS.addTooltip(...)` script threw
+  `ReferenceError: shinyBS is not defined`.
+- **Fix:** new `R/zzz.R` with `.onLoad(libname, pkgname)` calling
+  `shiny::addResourcePath("sbs", system.file("www", package = "shinyBS"))`,
+  guarded by
+  [`requireNamespace("shinyBS", quietly = TRUE)`](https://rdrr.io/r/base/ns-load.html)
+  (shinyBS is a `Suggests` dependency). 2 new unit tests in
+  `tests/testthat/test_modSummaryStats_popovers.R`: resource path is
+  registered after package load (`skip_if_not_installed("shinyBS")`);
+  `.onLoad()` doesn’t error when shinyBS is unavailable (via
+  [`mockery::stub`](https://rdrr.io/pkg/mockery/man/stub.html) on a
+  local copy of the dot-prefixed internal function, since `.onLoad`
+  isn’t exported even under
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)’s
+  `export_all` default).
+- **Verification:** regression suite exact-clean (0 failed/0 error/0
+  warning, 3282 passed, 182 skipped); `devtools::check()` 0 errors/0
+  warnings/0 notes. **Phase 3E runtime smoke test (mandatory — this
+  changes dependency-loading behavior):** live `shinytest2`/`chromote`
+  app launch confirmed the `ReferenceError: shinyBS is not defined` no
+  longer occurs.
+- **Discovery mid-verification:** the live smoke test surfaced a second,
+  previously-hidden, *unrelated* defect — shinyBS 0.65.0’s JS is
+  incompatible with this app’s bundled Bootstrap 4.6.0 popover plugin
+  (`shinyBS.js:207`’s defensive `$id.popover("destroy")` call throws
+  `TypeError: No method named "destroy"` before the actual
+  `$id.popover(opts)` init call on the next line, so popovers/tooltips
+  remain completely non-functional — confirmed via DOM inspection, 0 of
+  the popover-wrapped buttons ever get a `bs.popover` plugin instance
+  attached — same functional brokenness as before this fix, just a
+  different console error). Not fixed this session, per
+  `PROJECT_LEARNINGS.md` Learning 382/407’s scope-discipline precedent
+  (owner-confirmed via `AskUserQuestion`) — filed as [issue
+  \#140](https://github.com/rmsharp/nprcgenekeepr/issues/140) instead.
+  `BACKLOG.md`’s Housekeeping item updated to reflect both the fix and
+  the new follow-up issue.
+
 ### 2026-07-30 · \[ad hoc\] Triage pedigree-diagram-vs-kinship2 audit recommendations (Session 436)
 
 - **Deliverable:** Owner-picked (free-text response, not a rendered

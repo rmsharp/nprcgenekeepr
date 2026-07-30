@@ -193,23 +193,37 @@ and only submission that will ever carry that version number.
 
 ## Housekeeping
 
-**Pre-existing `shinyBS is not defined` JS console error on every page
-load** (READY, Effort S) – discovered S433 (2026-07-30) as a side effect
-of adding `app$get_logs()` console-error checking to the new issue \#129
-Slice 1 Diagram-tab E2E test
-(`tests/testthat/ test-e2e-pedigree-module.R`).
-`Uncaught ReferenceError: shinyBS is not defined` fires 12 times per
-app-load session (confirmed unrelated to issue \#129 – no `shinyBS` code
-was touched this session; `shinyBS` is a `Suggests` dependency used
-elsewhere in the app for tooltips/popovers, per `DESCRIPTION`). Not
-fixed this session, per `PROJECT_LEARNINGS.md` Learning 382’s
-scope-discipline precedent (report an incidentally -discovered,
-unrelated pre-existing defect rather than fix it mid-session) – reported
-here instead. No prior E2E test had inspected `app$get_logs()`, so this
-had not previously surfaced. Needs a dedicated look: likely a missing
-`shinyBS` JS dependency load (a script tag ordering issue, or a
-`shinyBS::shinyBSDep()`/similar bootstrap call the app’s UI never
-invokes) rather than a removed R-side call.
+(none remaining – the “Pre-existing `shinyBS is not defined` JS console
+error on every page load” item (discovered S433, 2026-07-30) is
+RESOLVED: fixed S437 (2026-07-30). Root cause confirmed experimentally:
+this package only ever accesses shinyBS via
+[`shinyBS::popify()`](https://rdrr.io/pkg/shinyBS/man/popify.html)/
+[`shinyBS::addPopover()`](https://rdrr.io/pkg/shinyBS/man/addPopover.html)
+(`R/modSummaryStats.R`), never
+[`library(shinyBS)`](https://github.com/federicomarini/shinyBS/) – so
+shinyBS’s own `.onAttach()` hook (which registers the `"sbs"`
+[`shiny::addResourcePath()`](https://rdrr.io/pkg/shiny/man/resourcePaths.html)
+serving `shinyBS.js`/`shinyBS.css`) never fires, since `.onAttach()`
+only runs on attach, not on the namespace load that `::` triggers. Fixed
+by adding `R/zzz.R` with a package `.onLoad()` that registers the same
+resource path itself, guarded by
+[`requireNamespace("shinyBS", quietly = TRUE)`](https://rdrr.io/r/base/ns-load.html)
+(shinyBS is a `Suggests` dependency). 2 new unit tests added to
+`tests/testthat/test_modSummaryStats_popovers.R` (resource path
+registered; `.onLoad()` doesn’t error when shinyBS is unavailable, via
+[`mockery::stub`](https://rdrr.io/pkg/mockery/man/stub.html)). Verified
+live via `shinytest2`/`chromote`: the
+`ReferenceError: shinyBS is not defined` no longer occurs on app load.
+**Live verification surfaced a second, previously-hidden, unrelated
+defect** – shinyBS 0.65.0’s JS is incompatible with this app’s bundled
+Bootstrap 4.6.0 popover plugin (`shinyBS.js:207`’s defensive
+`.popover("destroy")` call throws before the actual init call, so
+popovers/tooltips remain completely non-functional, same as before this
+fix, just with a different console error). Not fixed this session, per
+`PROJECT_LEARNINGS.md` Learning 382/407’s scope-discipline precedent –
+filed as [issue
+\#140](https://github.com/rmsharp/nprcgenekeepr/issues/140) instead. See
+`CHANGELOG.md`.)
 
 **`inst/extdata/` reorganization – Phase 4** (DECISION NEEDED – 2 open,
 non-blocking decisions, Effort M) – plan:
