@@ -398,7 +398,14 @@ modPedigreeServer <- function(id, studbook) {
         visNetwork::visEvents(click = sprintf(
           "function(nodes) { Shiny.setInputValue('%s', nodes.nodes); }",
           session$ns("pedigreeDiagram_click")
-        ))
+        )) |>
+        # Image export (issue #131): visExport() bundles its own JS deps
+        # (FileSaver/Blob/canvas-toBlob/html2canvas/jsPDF) as htmlwidget
+        # dependencies -- no CDN calls, confirmed hands-on Pre-RED.
+        visNetwork::visExport(
+          type = "png", name = "pedigree_diagram",
+          label = "Export Diagram (PNG)"
+        )
     })
 
     # Click-to-navigate (issue #129 Slice 2): clicking a diagram node sets it

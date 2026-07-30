@@ -1191,3 +1191,40 @@ test_that("modPedigreeServer ignores a background diagram click", {
     }
   )
 })
+
+## Issue #131 -- diagram PNG export button.
+
+test_that("modPedigreeServer's diagram widget offers a PNG export button", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE
+      )
+      session$flushReact()
+
+      # output$pedigreeDiagram is the widget's raw JSON payload inside
+      # testServer() (confirmed hands-on, Pre-RED this session) -- the
+      # export config visNetwork::visExport() attaches lands in x.export.
+      widgetJson <- output$pedigreeDiagram
+      expect_true(grepl('"export"', widgetJson))
+      expect_true(grepl('"type":"png"', widgetJson))
+      expect_true(grepl("pedigree_diagram\\.png", widgetJson))
+    }
+  )
+})
