@@ -6,6 +6,18 @@
 
 ## ACTIVE TASK
 
+### What Session 443 Did
+**Deliverable:** Implement Slice 2 of the [issue #130](https://github.com/rmsharp/nprcgenekeepr/issues/130)
+plan (heterozygosity diagnostic -- observed vs. expected heterozygosity),
+per `docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md`
+§4. Owner-picked via the Phase 0 priorities `AskUserQuestion` from a
+4-option list (Slice 2, Slice 3, Slice 4, Slice 5 of issue #130).
+**Started:** 2026-07-30
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions
+are recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is
+the crash breadcrumb for the next session's reconcile.
+
 ### What Session 442 Did
 **Deliverable:** Implement Slice 1 of the [issue #130](https://github.com/rmsharp/nprcgenekeepr/issues/130)
 plan (marker-based KING-robust kinship + multi-locus genotype foundation),
