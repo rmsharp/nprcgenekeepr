@@ -1,14 +1,11 @@
-# ORIP Reporting Module - UI Function
+# Marker Genetics Module - UI Function
 
-Creates user interface for ORIP (Office of Research Infrastructure
-Programs) reporting. This module will contain formatted reports suitable
-for submission to ORIP as part of primate center grant reporting
-requirements.
+Marker Genetics Module - UI Function
 
 ## Usage
 
 ``` r
-modORIPReportingUI(id)
+modMarkerGeneticsUI(id)
 ```
 
 ## Arguments
@@ -19,26 +16,13 @@ modORIPReportingUI(id)
 
 ## Value
 
-A `div` object containing the ORIP reporting UI.
-
-## Details
-
-The ORIP Reporting tab provides summary statistics and formatted reports
-for submission to the Office of Research Infrastructure Programs. This
-includes:
-
-- Colony demographics summary
-
-- Genetic diversity metrics
-
-- Breeding program statistics
-
-- Founder representation analysis
+A `div` containing the marker-genetics UI: a marker genotype file upload
+control, a guidance area, and the pedigree-vs- marker mean-kinship
+comparison table.
 
 ## See also
 
-[`modORIPReportingServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modORIPReportingServer.md)
-for server logic.
+[`modMarkerGeneticsServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modMarkerGeneticsServer.md)
 
 Other Shiny modules:
 [`modBreedingGroupsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsServer.md),
@@ -52,8 +36,8 @@ Other Shiny modules:
 [`modInputServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modInputServer.md),
 [`modInputUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modInputUI.md),
 [`modMarkerGeneticsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modMarkerGeneticsServer.md),
-[`modMarkerGeneticsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modMarkerGeneticsUI.md),
 [`modORIPReportingServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modORIPReportingServer.md),
+[`modORIPReportingUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modORIPReportingUI.md),
 [`modPedigreeServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPedigreeServer.md),
 [`modPedigreeUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPedigreeUI.md),
 [`modPotentialParentsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPotentialParentsServer.md),

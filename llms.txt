@@ -282,6 +282,9 @@ Funtions designed for interactive use
   : Add placeholder IDs for unknown parents
 - [`assignAlleles()`](https://github.com/rmsharp/nprcgenekeepr/reference/assignAlleles.md)
   : Assign parent alleles randomly
+- [`buildMarkerGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/buildMarkerGenotypeMatrix.md)
+  : Pivot a long-format marker genotype table into a wide genotype
+  matrix
 - [`calcA()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcA.md)
   : Count each individual's rare alleles per simulation
 - [`calcAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcAge.md)
@@ -300,6 +303,8 @@ Funtions designed for interactive use
   : Calculate allelic retention
 - [`checkGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkGenotypeFile.md)
   : Check genotype file
+- [`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)
+  : Check a long-format multi-locus marker genotype file
 - [`checkParentAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkParentAge.md)
   : Check parent ages against a minimum age
 - [`correctParentSex()`](https://github.com/rmsharp/nprcgenekeepr/reference/correctParentSex.md)
@@ -354,6 +359,9 @@ Funtions designed for interactive use
   : Generate a kinship matrix
 - [`makeExamplePedigreeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeExamplePedigreeFile.md)
   : Write copy of nprcgenekeepr::examplePedigree into a file
+- [`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)
+  : Estimate pairwise kinship directly from marker genotypes
+  (KING-robust)
 - [`obfuscateDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateDate.md)
   : Obfuscate dates with a random day offset
 - [`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
@@ -409,6 +417,9 @@ Funtions designed for interactive use
   : Main Application UI for nprcgenekeepr
 - [`assignAlleles()`](https://github.com/rmsharp/nprcgenekeepr/reference/assignAlleles.md)
   : Assign parent alleles randomly
+- [`buildMarkerGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/buildMarkerGenotypeMatrix.md)
+  : Pivot a long-format marker genotype table into a wide genotype
+  matrix
 - [`calcA()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcA.md)
   : Count each individual's rare alleles per simulation
 - [`calcAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcAge.md)
@@ -447,6 +458,8 @@ Funtions designed for interactive use
   : Check genotype file
 - [`checkKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkKinshipOverrides.md)
   : Validate a kinship overrides table
+- [`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)
+  : Check a long-format multi-locus marker genotype file
 - [`checkParentAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkParentAge.md)
   : Check parent ages against a minimum age
 - [`checkRequiredCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkRequiredCols.md)
@@ -651,6 +664,9 @@ Funtions designed for interactive use
   : Make a simulated pedigree from representative sires and dams
 - [`mapIdsToObfuscated()`](https://github.com/rmsharp/nprcgenekeepr/reference/mapIdsToObfuscated.md)
   : Map IDs to Obfuscated IDs
+- [`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)
+  : Estimate pairwise kinship directly from marker genotypes
+  (KING-robust)
 - [`meanKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/meanKinship.md)
   : Calculate mean kinship for each animal in a kinship matrix
 - [`modBreedingGroupsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsServer.md)
@@ -674,6 +690,10 @@ Funtions designed for interactive use
   : Data Input and Quality Control Module - Server Function
 - [`modInputUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modInputUI.md)
   : Data Input and Quality Control Module - UI Function
+- [`modMarkerGeneticsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modMarkerGeneticsServer.md)
+  : Marker Genetics Module - Server Function
+- [`modMarkerGeneticsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modMarkerGeneticsUI.md)
+  : Marker Genetics Module - UI Function
 - [`modORIPReportingServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modORIPReportingServer.md)
   : ORIP Reporting Module - Server Function
 - [`modORIPReportingUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modORIPReportingUI.md)

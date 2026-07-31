@@ -47,6 +47,133 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-30 · \[issue \#130\] Implement Slice 1 – marker-based KING-robust kinship + multi-locus genotype foundation (Session 442)
+
+- **Deliverable:** full TDD cycle (PRE-RED→RED→GREEN→REFACTOR, each
+  transition `AskUserQuestion`-gated per `CLAUDE.md`) implementing Slice
+  1 of
+  `docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md`
+  §4: new
+  [`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)
+  (validates the D1 long-format `id`/`locus`/`allele1`/`allele2` table,
+  rejects any locus with more than 2 distinct alleles),
+  [`buildMarkerGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/buildMarkerGenotypeMatrix.md)
+  (long-to-wide `id` x `locus` pivot),
+  [`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)
+  (the “between-family” KING-robust estimator, Manichaikul et al. 2010
+  Eq. 11), and a new `modMarkerGenetics` Shiny module (D6) surfacing a
+  per-animal pedigree-vs-marker mean-kinship comparison table
+  (`indivMeanKin` alongside new `markerMeanKin`), wired into
+  `appUI.R`/`appServer.R` as a new “Marker Genetics” tab. The existing
+  single-locus genotype path (`checkGenotypeFile`/`addGenotype`/
+  `hasGenotype`/`getGVGenotype`/`geneDrop`) is completely untouched, per
+  the plan’s own §2C.
+- **Pre-RED (Dragons P1/P2/P3):** a 3-agent research `Workflow` sourced
+  the KING-robust formula from the primary 2010 paper AND an independent
+  secondary source (Hail docs, after 3 other suggested venues
+  cited-but-didn’t-reproduce the algebra), then an adversarial
+  cross-check agent verified the two agree by literal algebraic
+  reduction and caught a real discrepancy — one sourcing agent’s own
+  commentary named the wrong equation as “most commonly cited,”
+  contradicted by the other’s direct KING/PLINK2/SNPRelate/GENESIS/Hail
+  software survey. Resolved: implement Eq. 11 (the general-purpose,
+  no-prior-family-knowledge form). Biallelic-only constraint (P1)
+  confirmed structurally by both sources — no citable multiallelic
+  variant exists anywhere checked — resolved as a validation rule
+  ([`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)
+  rejects \>2-allele loci), correctly excluding the bundled
+  `rhesusGenotypes` (MHC-haplotype, plausibly multiallelic) as invalid
+  input to the new function. Fixture (P3): a hand-built
+  3-animal/10-locus biallelic parent/offspring/unrelated trio, with
+  exact expected KING-robust values derived via an independent
+  standalone reference script (not the package’s own code) before any
+  RED test was written — the later GREEN implementation matched every
+  value exactly on the first run.
+- **A real bug in the RED test itself, caught during GREEN
+  verification:** `test_modMarkerGenetics.R` called the server’s
+  returned reactives as bare names instead of via
+  `session$getReturned()$<name>()`, the established convention every
+  other per-module test file uses — fixed once discovered (see
+  `PROJECT_LEARNINGS.md` Learning 424).
+- **Citation checklist (issue \#120):** new “Marker-Based Kinship
+  (KING-robust)” entry added to
+  `inst/extdata/ui_guidance/population_genetics_terms.html` with the
+  formula, variable definitions, and citation;
+  [`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)’s
+  own roxygen `@references` added in the same commit it was written.
+- **Tutorial/article documentation checklist (S436):** new “Marker
+  Genetics” section added to
+  `vignettes/articles/colony-manager-guide.qmd` Section 3, with a
+  live-captured screenshot of the populated comparison table
+  (`vignettes/articles/shiny_app_use/marker_genetics_comparison.png`).
+- **Phase 3E live smoke test:** `shinytest2`/`chromote` confirmed the
+  tab uploads a genotype file, computes real KING-robust values matching
+  the hand-verified fixture exactly, and joins them with real
+  pedigree-based `indivMeanKin` values with zero related console errors.
+  A first attempt’s throwaway pedigree fixture used blank fields for
+  missing parents and silently failed QC (`indivMeanKin` rendered blank)
+  — root-caused to this project’s CSV convention requiring literal `NA`
+  text, not a blank field, for a missing parent (confirmed against the
+  bundled `ExamplePedigree.csv`); corrected, giving a fully clean “QC
+  passed! 4 records processed” run and screenshot. See
+  `PROJECT_LEARNINGS.md` Learning 425.
+- **Verified:** full clean regression read 0 failed/0 error/0 warning
+  (4067 passed, 170 skipped); `devtools::check()` 0 errors/0 warnings/0
+  notes.
+- **BACKLOG.md** issue \#130 sequencing item updated (Slice 1 DONE;
+  Slices 2/3/4/5 next, any order per the plan’s dependency graph).
+  `PROJECT_LEARNINGS.md` Learnings 422-425 added; `CLAUDE.md`’s
+  learnings-count cross-reference updated (421→425, Sessions
+  1-441+→1-442+).
+
+### 2026-07-30 · \[issue \#130\] Plan marker-based kinship/heterozygosity/parentage-verification + cross-center identity resolution (Session 441)
+
+- **Deliverable:** one architecture-planning document,
+  `docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md`,
+  following `ARCHITECTURE_WORKSTREAM.md`. Owner-picked from the Phase 0
+  priorities list (over issue \#132’s diagram legend, the `CLAUDE.md`
+  `NOT_CRAN` doc fix, and NPRC outreach review). No `R/`, `tests/`,
+  `man/`, `NAMESPACE`, or `data/` content changed — planning only.
+- **Evidence base:** a 5-agent parallel research `Workflow` (issue
+  \#130’s own text; the audit’s Dimension 5/6 findings + the S422 triage
+  trail; the existing kinship/genetic-diversity code inventory; the
+  cross-center/LabKey architecture inventory; a domain-standards survey
+  of marker-kinship/parentage/cross-institution-identity methods),
+  followed by firsthand re-verification of every load-bearing claim
+  (`DESCRIPTION`, `R/columnSchema.R`, `R/kinship.R`, `R/addGenotype.R`,
+  `R/checkGenotypeFile.R`, `R/hasGenotype.R`, `R/getGVGenotype.R`,
+  `R/reportGV.R:142-229`, `R/meanKinship.R`, `R/getPedigreeSource.R`,
+  `R/convertFromCenter.R`, `docs/architecture/module-contract.md` all
+  read directly) — no citation drift found.
+- **Ratified decisions** (6, via `AskUserQuestion`, all recommended
+  options accepted): D1 multi-locus genotype format is long/tidy; D2
+  marker kinship is a native KING-robust implementation in base R (no
+  new hard dependency — avoids a Bioconductor `Imports` on this
+  CRAN-published package); D4 parentage verification is Mendelian
+  exclusion in base R; D5 cross-center identity linking is a
+  deterministic, curator-supplied cross-reference table (extending the
+  `getPedigreeSource()` provider pattern); D6 the new capabilities get a
+  dedicated `modMarkerGenetics` module; D7 the work is five vertical
+  slices in dependency order. (D3, heterozygosity approach, was derived
+  from D1 rather than separately ratified — no reasonable contested
+  alternative.)
+- **Key finding:** re-reading the audit’s exact Dimension-6 wording
+  showed the cross-center identity-by-state differentiation statistic
+  (Slice 5) needs Slice 1’s genotype model but **not** Slice 4’s
+  identity-linking capability — a population-level, two-dataset
+  comparison, not a per-animal-identity operation — changing the plan’s
+  dependency graph from an assumed linear chain to a tree with two
+  independently-schedulable leaves (`PROJECT_LEARNINGS.md` Learning
+  420).
+- **Learnings:** `PROJECT_LEARNINGS.md` Learnings 420 (audit/issue prose
+  bundling does not imply a technical dependency — verify the real
+  dependency graph) and 421 (`ScheduleWakeup` is `/loop`-only; do not
+  use it to wait on a background `Workflow`/`Agent` task-notification)
+  added. `CLAUDE.md` learnings-count cross-reference updated (419→421,
+  Sessions 1-440+→1-441+).
+- **`BACKLOG.md`** updated: the issue \#130 sequencing item now records
+  planning as DONE, with implementing Slice 1 as the next step.
+
 ### 2026-07-30 · \[issue \#131\] Add diagram image/print export to the Pedigree Diagram tab (Session 440)
 
 - **Deliverable:** Owner-picked from the Phase 0 priorities list (over

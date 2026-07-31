@@ -604,6 +604,38 @@ yellow, or green.](shiny_app_use/genetic_diversity_heatmap.png)
 
 The Genetic Diversity heat map for the 6 breeding groups formed above.
 
+### Marker Genetics
+
+The **Marker Genetics** tab (issue
+[\#130](https://github.com/rmsharp/nprcgenekeepr/issues/130)) is new
+since the original tutorial-era documentation. Every other analysis in
+`nprcgenekeepr` estimates kinship from the recorded pedigree; this tab
+estimates kinship directly from a marker genotype panel instead – an
+independent check on relatedness that does not depend on the pedigree
+being complete or correct, matching how NPRC genetics working groups
+already use SNP panels (e.g. Ancestry-Informative-Marker and
+Genetic-Management panels) for parentage, kinship, and colony
+genetic-management decisions in practice.
+
+Upload a marker genotype file with one row per animal x locus (columns
+`id`, `locus`, `allele1`, `allele2` – see the file format guidance on
+the tab itself) to compute the **KING-robust** kinship estimator
+(Manichaikul et al. 2010), which requires biallelic markers and is
+robust to population substructure. The tab displays a per-animal
+comparison table: the pedigree-based mean kinship already shown on the
+Genetic Value Analysis tab, alongside the new marker-based mean kinship
+– letting a colony manager see at a glance where the two estimates agree
+or diverge for a given animal.
+
+![Marker Genetics tab showing a comparison table with three rows (P, C,
+U) and two kinship columns, indivMeanKin and markerMeanKin, with
+different numeric values in each column for the same
+animal.](shiny_app_use/marker_genetics_comparison.png)
+
+The Marker Genetics comparison table for a small example
+parent/offspring/unrelated trio: pedigree-based mean kinship
+(indivMeanKin) alongside marker-based mean kinship (markerMeanKin).
+
 ### Potential Parents
 
 The **Potential Parents** tab (issue

@@ -605,7 +605,33 @@ plan’s design section assumed – confirmed hands-on that
 `visEvents(click = ...)` must be wired explicitly. See `CHANGELOG.md`,
 `PROJECT_LEARNINGS.md` Learning 408. **Both slices of issue \#129 are
 now shipped; issue \#129 itself is closed as part of this session’s
-close-out.** **Planning \#130** (marker-based
-kinship/heterozygosity/parentage-verification + cross-center identity
-resolution) is next (READY, Effort M) – no other open item in this
-sequencing chain remains.
+close-out.** **Planning \#130 is now DONE – S441 (2026-07-30):**
+`docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md`
+ratified (D1 long/tidy multi-locus genotype format; D2 native
+KING-robust kinship in base R, no new hard dependency; D4 Mendelian
+-exclusion parentage verification; D5 deterministic cross-reference
+-table cross-center identity linking; D6 new dedicated
+`modMarkerGenetics` module; D7 five vertical slices in dependency order
+– Slice 1 marker kinship first, Slices 2/3/5 depend on it, Slice 4
+cross-center linking is fully independent). See `CHANGELOG.md`.
+**Implementing Slice 1 (marker-based kinship + multi-locus genotype
+foundation) is now DONE – S442 (2026-07-30):** new
+[`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)/[`buildMarkerGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/buildMarkerGenotypeMatrix.md)/
+[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)
+(KING-robust, Manichaikul et al. 2010 Eq. 11, sourced and cross-verified
+from two independent references at Pre-RED) plus a new
+`modMarkerGenetics` module (D6) surfacing a pedigree-vs-marker
+mean-kinship comparison table, wired into `appUI.R`/`appServer.R` as a
+new “Marker Genetics” tab. Full TDD cycle
+(PRE-RED-\>RED-\>GREEN-\>REFACTOR, all `AskUserQuestion`-gated);
+citation checklist (`population_genetics_terms.html` + roxygen
+`@references`) and tutorial checklist (`colony-manager-guide.qmd`
+“Marker Genetics” section + live screenshot) both done in-session.
+Verified: regression suite 0/0/0 (4067 passed, 170 skipped);
+`devtools::check()` 0 errors/0 warnings/0 notes; live
+`shinytest2`/`chromote` smoke test confirmed a real, correctly -computed
+comparison table with no console errors. See `CHANGELOG.md`,
+`PROJECT_LEARNINGS.md` Learnings 422-425. **Implementing Slice 2, 3, or
+5 (all depend on Slice 1, now shipped) or Slice 4 (independent) is next
+(READY, Effort M each)** – no other open item in this sequencing chain
+remains.

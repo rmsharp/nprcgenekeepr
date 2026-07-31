@@ -1,14 +1,21 @@
-# ORIP Reporting Module - UI Function
+# Marker Genetics Module - Server Function
 
-Creates user interface for ORIP (Office of Research Infrastructure
-Programs) reporting. This module will contain formatted reports suitable
-for submission to ORIP as part of primate center grant reporting
-requirements.
+Reads an uploaded long-format marker genotype file (D1 format: `id`,
+`locus`, `allele1`, `allele2`), validates and pivots it
+([`checkMarkerGenotypeFile`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md),
+[`buildMarkerGenotypeMatrix`](https://github.com/rmsharp/nprcgenekeepr/reference/buildMarkerGenotypeMatrix.md)),
+estimates marker-based kinship independent of pedigree
+([`markerKinship`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)),
+and surfaces a per-animal comparison of pedigree-based mean kinship
+(`indivMeanKin`, already computed upstream and passed in via
+`kinshipMatrix`) alongside the new marker-based mean kinship
+(`markerMeanKin`) – an independent check on the pedigree-implied
+relatedness, not a replacement for it.
 
 ## Usage
 
 ``` r
-modORIPReportingUI(id)
+modMarkerGeneticsServer(id, kinshipMatrix)
 ```
 
 ## Arguments
@@ -17,28 +24,31 @@ modORIPReportingUI(id)
 
   character vector of length 1. Module namespace identifier.
 
+- kinshipMatrix:
+
+  reactive returning the full pedigree-based kinship matrix (row and
+  column names are animal IDs), or `NULL` while upstream analysis has
+  not yet been run.
+
 ## Value
 
-A `div` object containing the ORIP reporting UI.
+A list with four reactive elements: `markerGenotype`, the raw uploaded
+genotype data frame (or `NULL` before upload); `markerKinshipMatrix`,
+the marker-based `id` x `id` kinship matrix (or `NULL`);
+`comparisonTable`, the per-animal `indivMeanKin`/`markerMeanKin`
+comparison data frame (or `NULL`); and `isReady`, `TRUE` once
+`comparisonTable` has a value.
 
 ## Details
 
-The ORIP Reporting tab provides summary statistics and formatted reports
-for submission to the Office of Research Infrastructure Programs. This
-includes:
-
-- Colony demographics summary
-
-- Genetic diversity metrics
-
-- Breeding program statistics
-
-- Founder representation analysis
+This module never touches the existing single-locus genotype path
+(`checkGenotypeFile`/`addGenotype`/`hasGenotype`/
+`getGVGenotype`/`geneDrop`) – the D1 long-format schema is a new,
+sibling concern.
 
 ## See also
 
-[`modORIPReportingServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modORIPReportingServer.md)
-for server logic.
+[`modMarkerGeneticsUI`](https://github.com/rmsharp/nprcgenekeepr/reference/modMarkerGeneticsUI.md)
 
 Other Shiny modules:
 [`modBreedingGroupsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsServer.md),
@@ -51,9 +61,9 @@ Other Shiny modules:
 [`modGvAndBgDescUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modGvAndBgDescUI.md),
 [`modInputServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modInputServer.md),
 [`modInputUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modInputUI.md),
-[`modMarkerGeneticsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modMarkerGeneticsServer.md),
 [`modMarkerGeneticsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modMarkerGeneticsUI.md),
 [`modORIPReportingServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modORIPReportingServer.md),
+[`modORIPReportingUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modORIPReportingUI.md),
 [`modPedigreeServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPedigreeServer.md),
 [`modPedigreeUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPedigreeUI.md),
 [`modPotentialParentsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPotentialParentsServer.md),
