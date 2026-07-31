@@ -2,6 +2,7 @@ AlleleTable
 Allelic
 BG
 Ballou
+Bioinformatics
 CEPH
 CICD
 CMD
@@ -11,6 +12,7 @@ CRAN's
 Curation
 DDR
 DT
+Daly
 Deidentified
 Displaymode
 EHR
@@ -39,8 +41,12 @@ MJ
 MacBook
 MacCluer
 Macaca
+Manichaikul
 Metzger
+Mychaleckyj
 NHP
+Nei
+Nei's
 Nonrestricted
 ONPRC
 ONPRC's
@@ -48,6 +54,7 @@ ONPRC’s
 ORCID
 ORIP
 PEDSYS
+PLINK
 POSIXct
 Pearson
 Ped
@@ -72,6 +79,7 @@ Reformats
 Rhub
 Rlabkey
 Rmd
+Roychoudhury
 SIMWALK
 SNPRC
 Sortable
@@ -92,6 +100,7 @@ al
 alleleFreq
 allelic
 baseUrl
+biallelic
 birthdate
 bottlenecked
 byID
@@ -357,6 +366,7 @@ txbiomed
 ui
 uitpInput
 un
+uninterpretable
 untyped
 updateProgress
 vasxOvx
