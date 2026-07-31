@@ -515,6 +515,8 @@ tab, alongside the new marker-based mean kinship -- letting a colony
 manager see at a glance where the two estimates agree or diverge for a
 given animal.
 
+![The Marker Genetics comparison table for a small example parent/offspring/unrelated trio: pedigree-based mean kinship (indivMeanKin) alongside marker-based mean kinship (markerMeanKin).](shiny_app_use/marker_genetics_comparison.png){fig-alt="Marker Genetics tab showing a comparison table with three rows (P, C, U) and two kinship columns, indivMeanKin and markerMeanKin, with different numeric values in each column for the same animal."}
+
 ### Potential Parents
 
 The **Potential Parents** tab (issue
