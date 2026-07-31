@@ -490,5 +490,22 @@ requiring tracking. See `CHANGELOG.md`.*
       order -- Slice 1 marker kinship first, Slices 2/3/5 depend on it,
       Slice 4 cross-center linking is fully independent). See
       `CHANGELOG.md`. **Implementing Slice 1 (marker-based kinship +
-      multi-locus genotype foundation) is next (READY, Effort M)** -- no
+      multi-locus genotype foundation) is now DONE -- S442 (2026-07-30):**
+      new `checkMarkerGenotypeFile()`/`buildMarkerGenotypeMatrix()`/
+      `markerKinship()` (KING-robust, Manichaikul et al. 2010 Eq. 11,
+      sourced and cross-verified from two independent references at
+      Pre-RED) plus a new `modMarkerGenetics` module (D6) surfacing a
+      pedigree-vs-marker mean-kinship comparison table, wired into
+      `appUI.R`/`appServer.R` as a new "Marker Genetics" tab. Full TDD
+      cycle (PRE-RED->RED->GREEN->REFACTOR, all `AskUserQuestion`-gated);
+      citation checklist (`population_genetics_terms.html` + roxygen
+      `@references`) and tutorial checklist (`colony-manager-guide.qmd`
+      "Marker Genetics" section + live screenshot) both done in-session.
+      Verified: regression suite 0/0/0 (4067 passed, 170 skipped);
+      `devtools::check()` 0 errors/0 warnings/0 notes; live
+      `shinytest2`/`chromote` smoke test confirmed a real, correctly
+      -computed comparison table with no console errors. See
+      `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learnings 422-425.
+      **Implementing Slice 2, 3, or 5 (all depend on Slice 1, now shipped)
+      or Slice 4 (independent) is next (READY, Effort M each)** -- no
       other open item in this sequencing chain remains.

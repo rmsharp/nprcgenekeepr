@@ -6,6 +6,208 @@
 
 ## ACTIVE TASK
 
+### What Session 442 Did
+**Deliverable:** Implement Slice 1 of the [issue #130](https://github.com/rmsharp/nprcgenekeepr/issues/130)
+plan (marker-based KING-robust kinship + multi-locus genotype foundation),
+per `docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md`
+§4. Owner-picked via the Phase 0 priorities `AskUserQuestion` from a
+4-option list (Slice 1, Slice 4 as an alternative ordering, issue #132,
+the `CLAUDE.md` NOT_CRAN doc fix).
+**Started/Completed:** 2026-07-30 / 2026-07-30
+**Status:** DONE. Full TDD cycle: PRE-RED (research) -> RED -> GREEN ->
+REFACTOR, every phase transition `AskUserQuestion`-gated per `CLAUDE.md`.
+
+**What happened, in order:** **(1)** Phase 0 orientation in full
+(`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue
+list`, `git status`/`log`/`diff --stat`, `methodology_dashboard.py`
+(Health 98/100), ledger reconcile -- `CHANGELOG.md`/`HANDOFFS.md`
+frontiers both clean, no ghost session, no undocumented commits).
+Rendered the priorities list; owner picked Slice 1. **(2)** Pre-RED:
+launched a 3-agent research `Workflow` to resolve Dragons P1 (biallelic
+-vs-multiallelic), P2 (source KING-robust's exact formula from a citable
+reference, not memory), and P3 (fixture design) -- sourced the formula
+from the primary 2010 paper AND an independent secondary source (Hail
+docs), then an adversarial cross-check agent verified the two agree by
+literal algebraic reduction and caught a real discrepancy in one
+sourcing agent's own commentary (which equation is "commonly cited");
+resolved via the project's own use-case fit (`PROJECT_LEARNINGS.md`
+Learning 422). Confirmed the biallelic-only constraint structurally (no
+citable multiallelic variant exists anywhere checked) -- resolved as a
+validation rule, not a formula gap. Derived the RED fixture's exact
+expected values via an independent standalone reference script before
+writing any test (Learning 423). Presented findings; owner approved
+PRE-RED->RED. **(3)** RED: 4 new test files (`test_checkMarkerGenotypeFile.R`,
+`test_buildMarkerGenotypeMatrix.R`, `test_markerKinship.R`,
+`test_modMarkerGenetics.R`) + a `test_moduleContract.R` entry, all
+confirmed failing for the right reason ("could not find function", not
+a wrong-reason error); committed (`08db257f`). Owner approved RED->GREEN.
+**(4)** GREEN in 2 checkpoints, each respecting the 5-file blast-radius
+cap by splitting source from `devtools::document()`-generated output:
+checkpoint 1 (`deb0baec` + `9bcf47e5`) -- `checkMarkerGenotypeFile()`/
+`buildMarkerGenotypeMatrix()`/`markerKinship()` (KING-robust Eq. 11, the
+"between-family"/general-purpose estimator), all 3 core-engine test
+files passing, full regression clean, a `_pkgdown.yml` reference-coverage
+gap the new exports triggered fixed in the same checkpoint; checkpoint 2
+(`c0917a69` + `0031cd84`) -- new `modMarkerGenetics` module (mirrors
+`modGeneticDiversity.R`'s `safeRead()` pattern) wired into `appUI.R`/
+`appServer.R` (`kinshipMatrix = sharedKinshipMatrix`). Found and fixed a
+real bug in the RED test itself during GREEN verification: bare reactive
+calls (`isReady()`) instead of `session$getReturned()$isReady()`, the
+established convention every other per-module test file uses -- a RED
+-phase test-authoring bug that survives the RED gate undetected because
+it fails "could not find function" either way (Learning 424). **(5)**
+Owner approved GREEN->REFACTOR with one minor cleanup (`97cceb1b`):
+`checkMarkerGenotypeFile()`'s duplicate-detection logic simplified (no
+behavior change, re-verified). Both `CLAUDE.md`-mandated checklists done
+in the same commit -- citation (new "Marker-Based Kinship (KING-robust)"
+entry in `population_genetics_terms.html`, `markerKinship()`'s own
+roxygen `@references` already added at authorship) and tutorial/article
+(new "Marker Genetics" section in `colony-manager-guide.qmd`). **(6)**
+Phase 3E (`7c5ca473`): live `shinytest2`/`chromote` smoke test -- uploaded
+a genotype file, confirmed real KING-robust values matching the hand
+-verified fixture exactly, joined with real pedigree-based `indivMeanKin`,
+zero related console errors. A first-attempt throwaway pedigree fixture
+used blank fields for missing parents and silently failed QC (the
+`indivMeanKin` column rendered blank); root-caused to this project's
+CSV convention requiring literal `NA` text, not a blank field, confirmed
+against the bundled `ExamplePedigree.csv` (Learning 425); fixed, giving
+a fully clean "QC passed! 4 records processed" run and a real screenshot
+now in the guide article. **(7)** Close-out: `BACKLOG.md`'s #130
+sequencing item updated (Slice 1 DONE; Slices 2/3/4/5 next);
+`PROJECT_LEARNINGS.md` Learnings 422-425 added; `CLAUDE.md`'s
+learnings-count cross-reference updated (421->425, Sessions
+1-441+->1-442+); recorded in `CHANGELOG.md` and `HANDOFFS.md`.
+**Verified throughout:** full clean regression 0/0/0 (4067 passed, 170
+skipped); `devtools::check()` 0 errors/0 warnings/0 notes.
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**Session 441 Handoff Evaluation (by Session 442): 9/10.** **What
+helped:** the handoff's Dragons P1/P2/P3 framing named exactly what
+needed independent verification before any RED test could be trusted,
+which directly shaped this session's Pre-RED research design (the
+cross-verification workflow); the key-files list (`kinship.R:62-104`,
+`reportGV.R:159-178`, `columnSchema.R:15-24`, `getPedigreeSource.R:38-122`,
+`module-contract.md`) were all directly used and accurate -- `kinship.R`'s
+diagonal convention was mirrored in `markerKinship()`, `reportGV.R`'s
+extension seam confirmed nothing there needed touching, and
+`module-contract.md` directly shaped `modMarkerGenetics`'s design (all 6
+rules). The gotchas list was exactly right: the `rhesusGenotypes`
+single-locus warning prevented wasted effort trying to reuse it; "source
+the formula from a citable reference, do not reconstruct from memory"
+is precisely what this session did, and it caught a real near-miss (one
+research agent's own unprompted claim about which equation is "commonly
+cited" was wrong). **What was missing:** nothing structural -- the plan's
+deliberately vague "whatever shape the kinship estimator needs" for the
+matrix-builder's output left the exact character-matrix design as this
+session's own call, which was the right amount of freedom, not a gap.
+**What was wrong:** nothing found. **ROI:** very high -- the Dragons
+framing meant zero time was spent debating whether formula verification
+was necessary; it was already flagged as mandatory, so this session
+went straight to designing a rigorous cross-verification approach
+instead of deciding whether one was needed.
+
+**Self-assessment (Session 442): 8/10.** **Strengths:** (1) resolved
+Dragons P1/P2 via genuine cross-verification (2 independent sources +
+an adversarial cross-check agent that caught and corrected a real
+discrepancy) rather than trusting a single source or memory, extending
+this project's "never delegate understanding" discipline into formula
+-sourcing specifically (Learning 422); (2) derived RED test expected
+values via an independent standalone reference script before writing
+any assertion, then confirmed the later independent implementation
+matched exactly -- real evidence the fixture was correct, not just
+self-consistent (Learning 423); (3) caught a real bug in my own RED
+test file during GREEN verification (bare reactive calls) rather than
+accepting a plausible-looking "could not find function" failure at face
+value, fixed it, and captured the pattern so future module tests don't
+repeat it (Learning 424); (4) the Phase 3E live smoke test caught a
+real issue with a throwaway pedigree fixture rather than accepting a
+partially-broken screenshot, root-caused it against the bundled example
+data's actual convention, and got a fully clean, fully-populated result
+(Learning 425); (5) respected the 5-file blast-radius cap throughout via
+checkpointed commits; (6) completed both `CLAUDE.md`-mandated checklists
+(citation + tutorial/article) in the same session that shipped the
+feature, avoiding the issue #139 precedent of a late gap.
+**Weaknesses:** (1) **skipped Phase 1B entirely** -- went straight from
+the Phase 0 `AskUserQuestion` pick into Pre-RED research with no
+`SESSION_NOTES.md` claim stub and no `HANDOFFS.md` `status: pending`
+receipt written first; caught only at Phase 3D, with no pending stub to
+overwrite, this session's `HANDOFFS.md` block had to be written directly
+as `status: complete`. No actual crash occurred so no harm resulted, but
+the safety margin that stub exists for was absent for the entire
+session -- a real protocol miss, not a minor one. (2) the RED-test bug
+(bare reactive calls) was avoidable: I checked `test_modInput_coverage.R`
+for the file-upload input-simulation idiom before writing
+`test_modMarkerGenetics.R`, but did not cross-check an existing per
+-module test file's RETURN-value access pattern from the same class of
+file, which would have caught it before RED, not after. (3) spent real
+iteration on the smoke-test pedigree fixture's QC failure (blank vs.
+`NA` convention) before finding the root cause -- checking the bundled
+`ExamplePedigree.csv`'s actual convention proactively, before writing
+the ad hoc fixture, would have avoided the detour. **Compared to
+previous sessions:** this is the first implementation session in the
+#130 family (S441 was planning-only) and a materially larger TDD cycle
+than S440's single-line `visExport()` addition -- 3 new engine
+functions, 1 new module wired into 2 app files, 4 new test files. It
+establishes the pattern Slices 2/3/4/5 should follow: independent
+-source formula cross-verification at Pre-RED, and an independent
+reference-script oracle for any "hand-verifiable fixture" requirement.
+
+**Handoff to Session 443:**
+- **What's next:** Slices 2, 3, and 5 all now depend on Slice 1 (shipped
+  this session) and are READY; Slice 4 remains fully independent and was
+  already READY. **(a)** Slice 2 (heterozygosity diagnostic, plan §4,
+  Effort M) -- Pre-RED must independently source the observed/expected
+  heterozygosity (Ho/He) formulas, matching this session's
+  cross-verification pattern; plan Dragon P4 (Slice 3's genotyping-error
+  tolerance) does not apply here but is worth re-reading regardless.
+  **(b)** Slice 3 (Mendelian-exclusion parentage verification, plan §4,
+  Effort M) -- Pre-RED must resolve Dragon P4 (an unset genotyping-error
+  -tolerance threshold; the plan explicitly warns against a hardcoded
+  magic number). **(c)** Slice 4 (cross-center identity linking, plan §4,
+  Effort M) -- fully independent of Slice 1, could be picked up first
+  instead; Pre-RED must resolve Dragon P6 (Shiny-wiring scope is open).
+  **(d)** Slice 5 (cross-center differentiation statistic, plan §4,
+  Effort M) -- depends on Slice 1; Pre-RED must independently source a
+  differentiation-statistic formula (e.g. Weir & Cockerham 1984 Fst has
+  multiple competing estimators, per Dragon P2) using this session's
+  same 2-source-plus-adversarial-cross-check pattern. **(e)** Issue #132
+  (diagram legend, READY, Effort S, unaffected). **(f)** `CLAUDE.md`'s
+  NOT_CRAN doc fix (READY, Effort S, unchanged from S439-S441's
+  handoffs). **(g)** NPRC outreach plan review (DECISION NEEDED,
+  owner-only, unaffected).
+- **Key files:** `R/checkMarkerGenotypeFile.R`, `R/buildMarkerGenotypeMatrix.R`,
+  `R/markerKinship.R` (the 3 new core-engine functions, each fully
+  roxygen-documented with the formula and citation -- read these before
+  Slice 2/3/5's own implementations to match the established style and
+  the shared D1 long-format contract); `R/modMarkerGenetics.R` (the new
+  module -- Slices 2/3/5 extend this SAME module with new tabs/tables,
+  not new modules, per the plan's D6 rationale); `tests/testthat/test_markerKinship.R`
+  (the hand-verified-fixture derivation pattern -- reuse this exact
+  technique, including the standalone-reference-script step, for
+  Slices 2/3/5's own fixtures); `docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md`
+  §4 (Slices 2-5's own scope) and §6 (remaining Dragons P4/P6/P7).
+- **Gotchas:** `shiny::testServer()`'s returned reactives are NOT
+  bare-callable in the test block -- use `result <- session$getReturned()`
+  then `result$name()` (Learning 424); a bare-name RED failure looks
+  identical to the correct "function doesn't exist" RED failure, so this
+  bug survives the RED gate undetected unless checked against an
+  existing per-module test file's exact pattern first. This project's
+  pedigree CSV "no parent" convention is literal `NA` text, not a blank
+  field (Learning 425). `checkMarkerGenotypeFile()`/
+  `buildMarkerGenotypeMatrix()`/`markerKinship()` require **biallelic**
+  markers only -- `rhesusGenotypes` (MHC-haplotype) is correctly NOT
+  valid input; re-check biallelic-ness before reusing any existing
+  fixture for Slices 2/3/5. `DESCRIPTION` still has zero Bioconductor
+  dependencies -- do not add one (D2/Dragon P5, binding for every
+  remaining slice). The 5-file blast-radius cap was applied by splitting
+  each layer's source change from its `devtools::document()`-generated
+  NAMESPACE/`man/*.Rd` output into a separate commit -- a judgment call
+  worth the owner's explicit confirmation or challenge, not silently
+  assumed settled. **This session skipped Phase 1B** (no claim stub, no
+  pending `HANDOFFS.md` receipt) -- do not repeat that; write the stub
+  immediately after the task is picked, before any technical work.
+- **Self-assessment score:** 8/10 (breakdown above).
+
 ### What Session 441 Did
 **Deliverable:** Plan [issue #130](https://github.com/rmsharp/nprcgenekeepr/issues/130)
 (marker-based kinship/heterozygosity/parentage-verification + cross-center
