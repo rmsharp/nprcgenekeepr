@@ -9,6 +9,16 @@
 ## buildMarkerGenotypeMatrix() -> markerKinship(). This file spot-checks
 ## behavior; the exhaustive named-list-of-reactives shape check lives in
 ## test_moduleContract.R (module-contract.md rule 2), not duplicated here.
+##
+## RED (issue #130 Slice 2): the module gains a "Heterozygosity" tab
+## (mirroring modPedigree's tabsetPanel(tabPanel("Table", ...),
+## tabPanel("Diagram", ...)) pattern -- here tabPanel("Kinship Comparison",
+## ...) alongside a new tabPanel("Heterozygosity", ...)) and a new
+## `heterozygosityTable` reactive: a per-animal id/ho/he data.frame, where
+## `ho` is markerObservedHeterozygosity() (per-animal) and `he` is
+## markerExpectedHeterozygosity()'s population-wide meanHe repeated on
+## every row -- a direct observed-vs-expected diagnostic comparison, same
+## shape convention as the existing indivMeanKin/markerMeanKin table.
 
 library(testthat)
 
@@ -85,5 +95,52 @@ test_that("modMarkerGenetics computes the pedigree-vs-marker comparison table", 
     expect_equal(tbl$markerMeanKin[tbl$id == "P"], 0.7 / 3)
     expect_equal(tbl$markerMeanKin[tbl$id == "C"], 0.4 / 3)
     expect_equal(tbl$markerMeanKin[tbl$id == "U"], 0.2 / 3)
+  })
+})
+
+test_that("modMarkerGeneticsUI has a Kinship Comparison / Heterozygosity tabsetPanel", {
+  ui <- modMarkerGeneticsUI("test")
+  ui_html <- as.character(ui)
+
+  expect_true(grepl("Kinship Comparison", ui_html))
+  expect_true(grepl("Heterozygosity", ui_html))
+})
+
+test_that("modMarkerGenetics computes the per-animal Ho vs. population He heterozygosity table", {
+  skip_if_not_installed("shiny")
+  ## Same hand-verified fixture as test_markerHeterozygosity.R: X/Y/Z across
+  ## 4 biallelic loci, Y missing L4. Ho: X=0.75, Y=1/3, Z=0.25. Mean He
+  ## (population, across all 4 loci): 115/288.
+  hetGenotype <- data.frame(
+    id = c(rep("X", 4L), rep("Y", 3L), rep("Z", 4L)),
+    locus = c(paste0("L", 1L:4L), paste0("L", c(1L, 2L, 3L)), paste0("L", 1L:4L)),
+    allele1 = c("A", "A", "A", "A", "A", "A", "B", "B", "A", "A", "A"),
+    allele2 = c("A", "B", "B", "B", "B", "A", "B", "B", "A", "B", "A"),
+    stringsAsFactors = FALSE
+  )
+  hetGenotypeFilePath <- tempfile(fileext = ".csv")
+  write.csv(hetGenotype, hetGenotypeFilePath, row.names = FALSE)
+
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix)), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "hetGenotype.csv", datapath = hetGenotypeFilePath
+    ))
+
+    tbl <- result$heterozygosityTable()
+    expect_s3_class(tbl, "data.frame")
+    expect_identical(sort(names(tbl)), sort(c("id", "ho", "he")))
+
+    tbl <- tbl[order(tbl$id), ]
+    expect_equal(tbl$ho[tbl$id == "X"], 0.75)
+    expect_equal(tbl$ho[tbl$id == "Y"], 1 / 3)
+    expect_equal(tbl$ho[tbl$id == "Z"], 0.25)
+
+    ## Population-wide meanHe is repeated on every row for direct
+    ## per-animal observed-vs-expected comparison.
+    expect_equal(tbl$he[tbl$id == "X"], 115 / 288)
+    expect_equal(tbl$he[tbl$id == "Y"], 115 / 288)
+    expect_equal(tbl$he[tbl$id == "Z"], 115 / 288)
   })
 })
