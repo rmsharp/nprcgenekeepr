@@ -183,7 +183,9 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/makeRelationClassesTable.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/makeSimPed.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/mapIdsToObfuscated.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/markerExpectedHeterozygosity.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/markerObservedHeterozygosity.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/meanKinship.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsServer.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsUI.html</loc></url>

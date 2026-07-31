@@ -359,9 +359,14 @@ Funtions designed for interactive use
   : Generate a kinship matrix
 - [`makeExamplePedigreeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeExamplePedigreeFile.md)
   : Write copy of nprcgenekeepr::examplePedigree into a file
+- [`markerExpectedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerExpectedHeterozygosity.md)
+  : Compute per-locus and population-wide expected heterozygosity from
+  marker genotypes
 - [`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)
   : Estimate pairwise kinship directly from marker genotypes
   (KING-robust)
+- [`markerObservedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerObservedHeterozygosity.md)
+  : Compute per-animal observed heterozygosity from marker genotypes
 - [`obfuscateDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateDate.md)
   : Obfuscate dates with a random day offset
 - [`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
@@ -664,9 +669,14 @@ Funtions designed for interactive use
   : Make a simulated pedigree from representative sires and dams
 - [`mapIdsToObfuscated()`](https://github.com/rmsharp/nprcgenekeepr/reference/mapIdsToObfuscated.md)
   : Map IDs to Obfuscated IDs
+- [`markerExpectedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerExpectedHeterozygosity.md)
+  : Compute per-locus and population-wide expected heterozygosity from
+  marker genotypes
 - [`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)
   : Estimate pairwise kinship directly from marker genotypes
   (KING-robust)
+- [`markerObservedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerObservedHeterozygosity.md)
+  : Compute per-animal observed heterozygosity from marker genotypes
 - [`meanKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/meanKinship.md)
   : Calculate mean kinship for each animal in a kinship matrix
 - [`modBreedingGroupsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsServer.md)

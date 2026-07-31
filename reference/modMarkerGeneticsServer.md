@@ -10,7 +10,11 @@ and surfaces a per-animal comparison of pedigree-based mean kinship
 (`indivMeanKin`, already computed upstream and passed in via
 `kinshipMatrix`) alongside the new marker-based mean kinship
 (`markerMeanKin`) – an independent check on the pedigree-implied
-relatedness, not a replacement for it.
+relatedness, not a replacement for it. A second tab surfaces the
+heterozygosity diagnostic: per-animal observed heterozygosity
+([`markerObservedHeterozygosity`](https://github.com/rmsharp/nprcgenekeepr/reference/markerObservedHeterozygosity.md))
+alongside population-level expected heterozygosity
+([`markerExpectedHeterozygosity`](https://github.com/rmsharp/nprcgenekeepr/reference/markerExpectedHeterozygosity.md)).
 
 ## Usage
 
@@ -32,12 +36,14 @@ modMarkerGeneticsServer(id, kinshipMatrix)
 
 ## Value
 
-A list with four reactive elements: `markerGenotype`, the raw uploaded
+A list with five reactive elements: `markerGenotype`, the raw uploaded
 genotype data frame (or `NULL` before upload); `markerKinshipMatrix`,
 the marker-based `id` x `id` kinship matrix (or `NULL`);
 `comparisonTable`, the per-animal `indivMeanKin`/`markerMeanKin`
-comparison data frame (or `NULL`); and `isReady`, `TRUE` once
-`comparisonTable` has a value.
+comparison data frame (or `NULL`); `heterozygosityTable`, the per-animal
+`ho`/`he` heterozygosity data frame (`he` is the population-wide mean
+expected heterozygosity, repeated per row) (or `NULL`); and `isReady`,
+`TRUE` once `comparisonTable` has a value.
 
 ## Details
 

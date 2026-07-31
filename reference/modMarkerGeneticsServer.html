@@ -7,7 +7,11 @@ estimates marker-based kinship independent of pedigree
 pedigree-based mean kinship (indivMeanKin, already computed
 upstream and passed in via kinshipMatrix) alongside the new
 marker-based mean kinship (markerMeanKin) – an independent check
-on the pedigree-implied relatedness, not a replacement for it."><meta property="og:description" content="Reads an uploaded long-format marker genotype file (D1 format: id,
+on the pedigree-implied relatedness, not a replacement for it. A second
+tab surfaces the heterozygosity diagnostic: per-animal observed
+heterozygosity (markerObservedHeterozygosity) alongside
+population-level expected heterozygosity
+(markerExpectedHeterozygosity)."><meta property="og:description" content="Reads an uploaded long-format marker genotype file (D1 format: id,
 locus, allele1, allele2), validates and pivots it
 (checkMarkerGenotypeFile, buildMarkerGenotypeMatrix),
 estimates marker-based kinship independent of pedigree
@@ -15,7 +19,11 @@ estimates marker-based kinship independent of pedigree
 pedigree-based mean kinship (indivMeanKin, already computed
 upstream and passed in via kinshipMatrix) alongside the new
 marker-based mean kinship (markerMeanKin) – an independent check
-on the pedigree-implied relatedness, not a replacement for it."><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
+on the pedigree-implied relatedness, not a replacement for it. A second
+tab surfaces the heterozygosity diagnostic: per-animal observed
+heterozygosity (markerObservedHeterozygosity) alongside
+population-level expected heterozygosity
+(markerExpectedHeterozygosity)."><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -72,7 +80,11 @@ estimates marker-based kinship independent of pedigree
 pedigree-based mean kinship (<code>indivMeanKin</code>, already computed
 upstream and passed in via <code>kinshipMatrix</code>) alongside the new
 marker-based mean kinship (<code>markerMeanKin</code>) – an independent check
-on the pedigree-implied relatedness, not a replacement for it.</p>
+on the pedigree-implied relatedness, not a replacement for it. A second
+tab surfaces the heterozygosity diagnostic: per-animal observed
+heterozygosity (<code><a href="markerObservedHeterozygosity.html">markerObservedHeterozygosity</a></code>) alongside
+population-level expected heterozygosity
+(<code><a href="markerExpectedHeterozygosity.html">markerExpectedHeterozygosity</a></code>).</p>
     </div>
 
     <div class="section level2">
@@ -96,11 +108,14 @@ upstream analysis has not yet been run.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list with four reactive elements: <code>markerGenotype</code>, the
+    <p>A list with five reactive elements: <code>markerGenotype</code>, the
 raw uploaded genotype data frame (or <code>NULL</code> before upload);
 <code>markerKinshipMatrix</code>, the marker-based <code>id</code> x <code>id</code>
 kinship matrix (or <code>NULL</code>); <code>comparisonTable</code>, the per-animal
 <code>indivMeanKin</code>/<code>markerMeanKin</code> comparison data frame (or
+<code>NULL</code>); <code>heterozygosityTable</code>, the per-animal
+<code>ho</code>/<code>he</code> heterozygosity data frame (<code>he</code> is the
+population-wide mean expected heterozygosity, repeated per row) (or
 <code>NULL</code>); and <code>isReady</code>, <code>TRUE</code> once
 <code>comparisonTable</code> has a value.</p>
     </div>

@@ -47,6 +47,89 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-31 · \[issue \#130\] Implement Slice 2 – heterozygosity diagnostic (observed vs. expected) (Session 443)
+
+- **Deliverable:** full TDD cycle (PRE-RED→RED→GREEN→REFACTOR, each
+  transition `AskUserQuestion`-gated per `CLAUDE.md`) implementing Slice
+  2 of
+  `docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md`
+  §4: new
+  [`markerObservedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerObservedHeterozygosity.md)
+  (per-animal Ho, fraction of non-missing marker loci heterozygous) and
+  [`markerExpectedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerExpectedHeterozygosity.md)
+  (per-locus He = 1-Σp² from population allele frequencies, plus the
+  unweighted mean across loci), both reusing Slice 1’s
+  [`buildMarkerGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/buildMarkerGenotypeMatrix.md)
+  output directly. `modMarkerGenetics` gained a new “Heterozygosity” tab
+  (`tabsetPanel` alongside the existing “Kinship Comparison” tab)
+  showing a per-animal `ho`/`he` comparison table (`he` = population
+  meanHe repeated per row).
+- **Pre-RED (Ho/He formula sourcing):** a 3-agent research `Workflow` (2
+  independent sources + adversarial cross-check) confirmed
+  `He = 1 - Σp²` (Nei 1973 PNAS gene diversity) and per-animal Ho
+  (fraction of heterozygous genotyped loci) as the standard forms — and
+  caught a real citation-accuracy gap in the ratified plan’s D3/§2G
+  text: neither VCFtools nor PLINK’s `--het` option reports columns
+  named Ho/He (both report `O(HOM)`/`E(HOM)`/an inbreeding coefficient F
+  instead), so this slice’s own roxygen `@references` cites Nei (1973)
+  directly rather than propagating that imprecision (plan text left as
+  historical record, not retroactively edited). Owner scoped the slice
+  to the plain/biased He form only (matching ratified D3 exactly) via
+  `AskUserQuestion`, explicitly deferring the Nei & Roychoudhury (1974)
+  small-sample-corrected estimator and standardized multilocus
+  heterozygosity (sMLH) as documented future enhancements.
+- **Fixture:** a hand-built X/Y/Z trio across 4 biallelic loci (Y
+  missing L4, to lock in each animal’s own non-missing-loci
+  denominator), with exact expected Ho/He values derived via an
+  independent standalone reference script before any RED test was
+  written.
+- **A real bug in the RED test itself, caught before commit:** a 2×2
+  matrix literal in `test_markerHeterozygosity.R` supplied 6 values
+  instead of 4 — fixed during the RED-confirm step, before the RED
+  commit.
+- **A real, previously-undetected defect fixed along the way:** S442’s
+  own `HANDOFFS.md` receipt claimed `devtools::check()` “0 errors/0
+  warnings/0 notes,” but the raw check log’s `Status:` line actually
+  said `1 NOTE` for spelling the whole time
+  (`Manichaikul`/`Mychaleckyj`/`Daly`/
+  `Bioinformatics`/`PLINK`/`biallelic`/`uninterpretable`, introduced by
+  Slice 1, were never added to `inst/WORDLIST`) — the exact discrepancy
+  `PROJECT_LEARNINGS.md` Learning 382 warns against, undetected until
+  this session read the `Status:` line for its own new citation words.
+  Fixed both the inherited gap and this session’s own new words (`Nei`,
+  `Nei's`, `Roychoudhury`) by hand in `inst/WORDLIST`. One unrelated,
+  genuinely pre-existing word (`IACUC`, `_pedigree_browser.Rmd`) remains
+  and is reported, not fixed, in `BACKLOG.md` (out of scope).
+- **Citation checklist (issue \#120):** new “Heterozygosity (Observed
+  vs. Expected)” entry added to
+  `inst/extdata/ui_guidance/population_genetics_terms.html`, citing
+  Nei (1973) directly;
+  [`markerObservedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerObservedHeterozygosity.md)/[`markerExpectedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerExpectedHeterozygosity.md)’s
+  own roxygen `@references` added at authorship.
+- **Tutorial/article checklist (S436 rule):** new paragraph + screenshot
+  in `vignettes/articles/colony-manager-guide.qmd`’s Marker Genetics
+  section describing the Heterozygosity tab.
+- **Phase 3E:** live `shinytest2`/`chromote` smoke test — uploaded the
+  hand-verified X/Y/Z genotype file, confirmed the Heterozygosity tab
+  renders `ho`/`he` values matching the fixture exactly
+  (0.75/0.3333/0.25 and 0.3993 repeated), zero related console errors,
+  real screenshot captured for the guide article.
+- **Verified throughout:** full clean regression 0/0/0 (4096 passed, up
+  from S442’s 4067 baseline; 170 skipped, unchanged);
+  `devtools::check()` down to the single pre-existing, unrelated `IACUC`
+  spelling NOTE (see above).
+- **`BACKLOG.md`:** \#130 sequencing item updated (Slice 2 DONE; Slices
+  3/4/5 next); new Housekeeping item for the `IACUC` spelling gap.
+- **Learnings:** `PROJECT_LEARNINGS.md` Learnings 426-427 added (the
+  Learning-382 recurrence, and `spell_check_package()`
+  vs. `spelling.R`’s `spell_check_test()` scope difference);
+  `CLAUDE.md`’s learnings-count cross-reference updated (425→427,
+  Sessions 1-442+→1-443+).
+- Commits: `86f57086` (claim), `330f3abe` (RED), `48e14f86` (GREEN
+  checkpoint 1/2, source), `37462333` (GREEN checkpoint 2/2, generated
+  docs), `00bcee16` (WORDLIST fix), `ce71221d` (citation + tutorial
+  checklists), `958d2b22` (Phase 3E screenshot), this close-out commit.
+
 ### 2026-07-30 · \[issue \#130\] Implement Slice 1 – marker-based KING-robust kinship + multi-locus genotype foundation (Session 442)
 
 - **Deliverable:** full TDD cycle (PRE-RED→RED→GREEN→REFACTOR, each

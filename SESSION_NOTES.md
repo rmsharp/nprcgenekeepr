@@ -7,6 +7,229 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 443 Did
+
+**Deliverable:** Implement Slice 2 of the [issue
+\#130](https://github.com/rmsharp/nprcgenekeepr/issues/130) plan
+(heterozygosity diagnostic – observed vs. expected heterozygosity), per
+`docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md` §4.
+Owner-picked via the Phase 0 priorities `AskUserQuestion` from a
+4-option list (Slice 2, Slice 3, Slice 4, Slice 5 of issue \#130).
+**Started/Completed:** 2026-07-30 / 2026-07-31 **Status:** DONE. Full
+TDD cycle: PRE-RED (research) -\> RED -\> GREEN -\> REFACTOR, every
+phase transition `AskUserQuestion`-gated per `CLAUDE.md`. This session’s
+Phase 1B claim stub was written immediately (correcting S442’s own
+documented miss on this exact step).
+
+**What happened, in order:** **(1)** Phase 0 orientation in full
+(`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, `git status`/`log`/`diff --stat`,
+`methodology_dashboard.py` (Health 98/100), ledger reconcile –
+`CHANGELOG.md`/`HANDOFFS.md` frontiers both clean, no ghost session, no
+undocumented commits). Rendered the priorities list; owner picked Slice
+2. **(2)** Phase 1B: claimed the session immediately (`86f57086`) –
+`SESSION_NOTES.md` stub + `HANDOFFS.md` `status: pending` receipt,
+before any technical work. **(3)** Read Slice 1’s actual implementation
+directly (`R/checkMarkerGenotypeFile.R`,
+`R/buildMarkerGenotypeMatrix.R`, `R/markerKinship.R`,
+`R/modMarkerGenetics.R`, their test files, `R/meanKinship.R`,
+`docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md`
+§3-6) before any Pre-RED delegation. **(4)** Pre-RED: launched a 3-agent
+research `Workflow` (2 independent sources + an adversarial cross-check)
+to source the Ho/He formulas – confirmed `He = 1 - Sigma p^2` (Nei 1973
+PNAS) and per-animal Ho (fraction of heterozygous genotyped loci), and
+the cross-check agent caught a real citation-accuracy gap in the
+ratified plan’s D3/§2G text (VCFtools/PLINK `--het` do not report Ho/He
+by name – both report O(HOM)/E(HOM)/an inbreeding coefficient F instead)
+and a citation-title error in the academic-sourcing agent’s own report
+(Nei & Roychoudhury 1974’s actual title omits “interpopulation”).
+Presented findings; owner picked “Plain He only” (matching ratified D3
+exactly, deferring the small-sample-corrected estimator and sMLH as
+documented future enhancements) via `AskUserQuestion`. **(5)** Designed
+and hand-verified the RED fixture (X/Y/Z trio, 4 biallelic loci, Y
+missing L4) via an independent standalone Rscript (not the future
+implementation) before writing any test assertion, matching Learning
+423’s precedent. Owner approved PRE-RED-\>RED. **(6)** RED: new
+`test_markerHeterozygosity.R` + extended
+`test_modMarkerGenetics.R`/`test_moduleContract.R`; caught and fixed a
+real bug in my own RED test (a 2x2 matrix literal supplying 6 values
+instead of 4) before committing (`330f3abe`). Owner approved
+RED-\>GREEN. **(7)** GREEN in 2 checkpoints, again splitting source from
+`devtools::document()`-generated output: checkpoint 1 (`48e14f86`) –
+[`markerObservedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerObservedHeterozygosity.md)/[`markerExpectedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerExpectedHeterozygosity.md) +
+`modMarkerGenetics`’s new Heterozygosity tab/`heterozygosityTable`
+reactive, all 3 test files passing, full regression clean (4096 passed,
+up from S442’s 4067 baseline); checkpoint 2 (`37462333`) – NAMESPACE/
+man pages + a `_pkgdown.yml` reference-coverage fix (same gap class
+Slice 1 hit). `devtools::check()` then surfaced a real,
+previously-undetected defect: the raw `Status:` line said `1 NOTE` for
+spelling even though S442’s own `HANDOFFS.md` claimed “0 notes” – 7
+proper nouns from Slice 1’s own roxygen were never added to
+`inst/WORDLIST`. Fixed both the inherited gap and this session’s own new
+words (`00bcee16`), leaving only one unrelated pre-existing word
+(`IACUC`, `_pedigree_browser.Rmd`), reported in `BACKLOG.md`, not fixed
+(out of scope). **(8)** Owner approved GREEN-\>REFACTOR as “skip” (both
+`CLAUDE.md`-mandated checklists already done, no code-level refactor
+need found) – citation (`ce71221d`: new “Heterozygosity” entry in
+`population_genetics_terms.html`) and tutorial/article (same commit: new
+paragraph in `colony-manager-guide.qmd`’s Marker Genetics section).
+**(9)** Phase 3E (`958d2b22`): live `shinytest2`/`chromote` smoke test –
+uploaded the hand-verified genotype file, confirmed the Heterozygosity
+tab renders `ho`/`he` matching the fixture exactly (0.75/0.3333/0.25 and
+0.3993 repeated), zero related console errors, screenshot captured for
+the guide article. One process wrinkle: a stale/delayed `ScheduleWakeup`
+fallback prompt (checking on the completed Pre-RED workflow) arrived out
+of order and appeared to interrupt an in-flight `AskUserQuestion` –
+handled by pausing, reporting current state plainly, and asking the user
+to clarify rather than guessing either interpretation; the user
+confirmed “go to green” and the gate was re-issued. **(10)** Close-out:
+`BACKLOG.md`’s \#130 sequencing item updated (Slice 2 DONE; Slices 3/4/5
+next) + a new Housekeeping item for the `IACUC` spelling gap;
+`PROJECT_LEARNINGS.md` Learnings 426-427 added; `CLAUDE.md`’s
+learnings-count cross-reference updated (425-\>427, Sessions
+1-442+-\>1-443+); recorded in `CHANGELOG.md` and `HANDOFFS.md`.
+**Verified throughout:** full clean regression 0/0/0 (4096 passed, 170
+skipped); `devtools::check()` down to the single pre-existing, unrelated
+`IACUC` spelling NOTE (read from the raw `Status:` line, not the colored
+summary, per Learning 382/426). **Ledger:** recorded in `CHANGELOG.md`
+at Phase 3F (this close-out).
+
+**Session 442 Handoff Evaluation (by Session 443): 8/10.** **What
+helped:** the handoff’s explicit “(a) Slice 2 … Pre-RED must
+independently source the Ho/He formulas, matching this session’s
+cross-verification pattern” directly named exactly what needed
+independent verification before RED, which directly shaped this
+session’s Pre-RED research design; the key-files list
+(`R/checkMarkerGenotypeFile.R`, `R/buildMarkerGenotypeMatrix.R`,
+`R/markerKinship.R`, `R/modMarkerGenetics.R`,
+`tests/testthat/test_markerKinship.R`) was fully accurate and directly
+reused (the `marker*` naming convention, the shared `genotypeMatrix`
+input contract, the independent-reference-script fixture-derivation
+technique). The
+[`shiny::testServer()`](https://rdrr.io/pkg/shiny/man/testServer.html)
+bare-callable gotcha (Learning 424) was correctly avoided from the start
+by reading an existing per-module test file’s exact access pattern
+first. **What was missing:** the handoff didn’t flag that S442’s own “0
+errors/0 warnings/0 notes” claim was inaccurate – the raw check log
+actually said `1 NOTE` for spelling the whole time, caught only when
+this session read the `Status:` line for its own new citation words (see
+Learning 426). This wasn’t discoverable from the handoff text itself,
+but it is a real gap between what was claimed and what was true. **What
+was wrong:** the “0 errors/0 warnings/0 notes” line in S442’s
+`HANDOFFS.md` receipt, per the above. **ROI:** still strongly positive –
+the accurate key-files/gotchas list and Dragons framing saved real time
+and prevented a repeat of Learning 424’s bug, and the one inaccuracy was
+a small, easily-fixed papercut that didn’t cost any wasted
+implementation effort (this session would have run `devtools::check()`
+and read its `Status:` line regardless, per its own Build/Test/Verify
+obligation).
+
+**Self-assessment (Session 443): 9/10.** **Strengths:** (1) wrote the
+Phase 1B claim stub immediately, correcting S442’s own documented miss
+on that exact step; (2) Pre-RED’s adversarial cross-check agent earned
+its keep twice over – it caught a real citation-accuracy gap in the
+ratified plan text (VCFtools/PLINK framing) AND a citation-title
+fabrication in the academic-sourcing agent’s own report, neither of
+which either single sourcing agent alone would have surfaced; (3)
+derived the RED fixture’s exact expected values via an independent
+standalone Rscript before writing any assertion, matching Learning 423’s
+discipline exactly, and verified hand arithmetic against the script’s
+actual output rather than trusting mental math; (4) caught a real bug in
+my own RED test (matrix dimension mismatch) during the RED-confirm step,
+before committing; (5) found and fixed a real, previously-undetected
+defect – S442’s inaccurate “0 notes” self-report – by correctly applying
+Learning 382’s own rule (read the `Status:` line, not the colored
+summary) to my own verification, closing a gap that had silently
+persisted since S442; (6) completed both `CLAUDE.md`-mandated checklists
+in the same session that shipped the feature; (7) Phase 3E’s live smoke
+test was clean on the first try with a real, correctly-computed
+screenshot; (8) respected the 5-file blast-radius cap throughout via
+checkpointed commits (GREEN checkpoint 2 landed exactly at 5 files, not
+over). **Weaknesses:** (1) a stale/delayed `ScheduleWakeup` fallback
+prompt arrived out of order and appeared to interrupt an in-flight
+`AskUserQuestion` mid-gate – handled correctly (paused, reported state,
+asked rather than guessed) but a cleaner practice going forward is to
+stop scheduling further fallback wakeups once the async work they exist
+to check on has already completed and synchronous work has resumed, to
+avoid the race entirely; (2) did not investigate whether the
+Learning-382 mis-application pattern (trusting the colored
+`devtools::check()` summary over the raw `Status:` line) recurred in
+sessions before S442 too – fixed the concrete instance found, but didn’t
+audit for a broader pattern (a legitimate scope boundary for a
+single-deliverable session, not omitted by oversight). **Compared to
+previous sessions:** this is the second implementation session in the
+\#130 family, following S442’s exact TDD/Pre-RED-cross-verification/
+fixture-derivation pattern; materially smaller in scope than S442 (2 new
+functions vs. 3, one new UI tab within an existing module vs. a whole
+new module) but held to the same rigor throughout, and found + fixed one
+real defect S442 left behind along the way.
+
+**Handoff to Session 444:** - **What’s next:** Slice 3 and Slice 5 both
+now depend on Slices 1 and 2 (both shipped) and are READY; Slice 4
+remains fully independent and was already READY. **(a)** Slice 3
+(Mendelian-exclusion parentage verification, plan §4, Effort M) –
+Pre-RED must resolve Dragon P4 (an unset genotyping-error-tolerance
+threshold; the plan explicitly warns against a hardcoded magic number –
+pick a conservative, documented, tunable default). **(b)** Slice 4
+(cross-center identity linking, plan §4, Effort M) – fully independent,
+could be picked up first instead; Pre-RED must resolve Dragon P6
+(Shiny-wiring scope is open). **(c)** Slice 5 (cross-center
+differentiation statistic, plan §4, Effort M) – depends on Slice 1;
+Pre-RED must independently source a differentiation-statistic formula
+(e.g. Weir & Cockerham 1984 Fst has multiple competing estimators, per
+Dragon P2) using this session’s same
+2-source-plus-adversarial-cross-check pattern – and budget time to
+independently verify any tool-citation claims in the plan text before
+trusting them (this session found the plan’s own VCFtools/PLINK framing
+was imprecise; the same discipline applies to whatever Fst
+software/citation convention gets proposed). **(d)** Issue \#132
+(diagram legend, READY, Effort S, unaffected). **(e)** `CLAUDE.md`’s
+NOT_CRAN doc fix (READY, Effort S, unchanged from S439-S443’s handoffs).
+**(f)** The `IACUC` spelling-NOTE housekeeping item (READY, Effort S,
+trivial one-word `inst/WORDLIST` fix, unrelated to marker genetics).
+**(g)** NPRC outreach plan review (DECISION NEEDED, owner-only,
+unaffected). - **Key files:** `R/markerHeterozygosity.R` (the 2 new
+functions, each fully roxygen-documented with the formula and the
+corrected Nei 1973 citation – read this before Slice 3/5’s own
+implementations to match the established style); `R/modMarkerGenetics.R`
+(Slices 3/5 extend this SAME module with new tabs/tables, not new
+modules, per D6 – the `genotypeMatrixR` reactive this session added is
+the shared intermediate every slice’s server logic should reuse, not
+recompute); `tests/testthat/test_markerHeterozygosity.R` (the
+hand-verified-fixture derivation pattern, including the
+standalone-reference-script step – reuse this exact technique for Slices
+3/5’s own fixtures);
+`docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md` §4
+(Slices 3-5’s own scope) and §6 (remaining Dragons P4/P6/P7);
+`inst/WORDLIST` (case-insensitive-collation-position hand-editing
+convention – confirmed again this session; do not use
+[`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html)). -
+**Gotchas:** `devtools::check()`’s colored bottom-line summary can say
+“0 notes” while the raw `00check.log`’s `Status:` line says otherwise
+(Learning 382, recurred and fixed this session as Learning 426) – ALWAYS
+read the raw `Status:` line, and when adding any new roxygen
+`@references`/citation block with author surnames or domain jargon,
+immediately spell-check and fix `inst/WORDLIST` in the same session,
+don’t defer.
+[`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+and `tests/spelling.R`’s actual `spell_check_test()` scan different
+scopes (Learning 427) – diagnose against the real check-relevant scope
+(`Rscript tests/spelling.R` or the raw `00check.log`), not a direct
+`spell_check_package()` call, or you will over-scope the fix chasing
+pkgdown-article words the check doesn’t even see.
+[`shiny::testServer()`](https://rdrr.io/pkg/shiny/man/testServer.html)’s
+returned reactives are NOT bare-callable – use
+`result <- session$getReturned()` then `result$name()` (Learning 424,
+re-confirmed, not re-broken, this session). `DESCRIPTION` still has zero
+Bioconductor dependencies – do not add one (D2/Dragon P5, binding for
+every remaining slice). Do not call `ScheduleWakeup` to “wait” on a
+background `Workflow`/`Agent` call’s task-notification (Learning 421) –
+and once that async work has actually completed and synchronous work has
+resumed, stop scheduling further fallback wakeups entirely, to avoid a
+stale wakeup racing an in-flight `AskUserQuestion` (this session’s own
+process wrinkle, item 1 in the self-assessment weaknesses above). -
+**Self-assessment score:** 9/10 (breakdown above).
+
 ### What Session 442 Did
 
 **Deliverable:** Implement Slice 1 of the [issue
