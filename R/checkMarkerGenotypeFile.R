@@ -56,11 +56,12 @@ checkMarkerGenotypeFile <- function(genotype) {
   }
   names(genotype) <- c("id", "locus", "allele1", "allele2")
 
-  key <- paste(genotype$id, genotype$locus, sep = "\r")
-  if (anyDuplicated(key)) {
-    dupes <- unique(key[duplicated(key)])
+  isDupe <- duplicated(genotype[c("id", "locus")])
+  if (any(isDupe)) {
+    dupes <- unique(paste(genotype$id[isDupe], genotype$locus[isDupe],
+                           sep = " x "))
     stop("Marker genotype file has duplicate id x locus row(s): ",
-         paste(gsub("\r", " x ", dupes, fixed = TRUE), collapse = ", "), ".")
+         paste(dupes, collapse = ", "), ".")
   }
 
   alleleCounts <- tapply(

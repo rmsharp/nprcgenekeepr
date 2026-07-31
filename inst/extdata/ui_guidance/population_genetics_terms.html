@@ -203,3 +203,32 @@
   </p>
     </em>
 
+    <em>
+    <p style="padding-left: 10px">
+    <b>Marker-Based Kinship (KING-robust):</b>
+    <br>
+    Marker-based kinship estimates relatedness directly from a marker
+  genotype panel, independent of the recorded pedigree -- an independent
+  check on the pedigree-implied Mean Kinship (MK) above, not a replacement
+  for it. It uses the "KING-robust" estimator, which is robust to
+  population substructure and requires no assumed reference population.
+  </p>
+    <p style="padding-left: 50px; padding-bottom: 15px">
+    &phi;<sub>ij</sub> = 0.5 + (2N<sub>AaAa</sub> - 4N<sub>AAaa</sub> -
+  N<sub>Aa</sub><sup>(i)</sup> - N<sub>Aa</sub><sup>(j)</sup>) /
+  (4 min(N<sub>Aa</sub><sup>(i)</sup>, N<sub>Aa</sub><sup>(j)</sup>))
+  </p>
+    <p style="padding-left: 10px; padding-bottom: 25px">
+    Where, over the marker loci genotyped in both animals i and j,
+  N<sub>AaAa</sub> is the number of loci at which both are heterozygous,
+  N<sub>AAaa</sub> is the number of loci at which they have opposite
+  homozygous genotypes, and N<sub>Aa</sub><sup>(i)</sup>/
+  N<sub>Aa</sub><sup>(j)</sup> are each animal's own heterozygous-locus
+  count. The estimator requires biallelic markers and is not bounded below
+  by zero -- a negative value indicates more divergent ancestry than the
+  reference sample, not an error. Manichaikul A, Mychaleckyj JC, Rich SS,
+  Daly K, Sale M, Chen WM. 2010. Robust relationship inference in
+  genome-wide association studies. Bioinformatics 26(22):2867-2873.
+  </p>
+    </em>
+
