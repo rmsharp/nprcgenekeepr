@@ -145,6 +145,17 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       that version number.
 
 ## Housekeeping
+- [ ] **`devtools::check()`'s one remaining spelling NOTE: `IACUC`
+      (`_pedigree_browser.Rmd:55`) not in `inst/WORDLIST`** (discovered
+      S443, 2026-07-31, Effort S) -- incidentally found while fixing the
+      marker-genetics-family spelling gap for issue #130 Slices 1/2 (see
+      `PROJECT_LEARNINGS.md` Learning 426); wholly unrelated to marker
+      genetics/heterozygosity, so not fixed mid-session per the
+      established report-don't-fix precedent (Learning 382/407, issue
+      #139). A future session should hand-add `IACUC` to `inst/WORDLIST`
+      in its case-insensitive-collation position (not via
+      `spelling::update_wordlist()`, per S230 convention) to reach a
+      genuine 0-errors/0-warnings/0-notes `devtools::check()`.
 - [ ] (none remaining -- the "Pre-existing `shinyBS is not defined` JS console
       error on every page load" item (discovered S433, 2026-07-30) is
       RESOLVED: fixed S437 (2026-07-30). Root cause confirmed experimentally:
@@ -506,6 +517,22 @@ requiring tracking. See `CHANGELOG.md`.*
       `shinytest2`/`chromote` smoke test confirmed a real, correctly
       -computed comparison table with no console errors. See
       `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learnings 422-425.
-      **Implementing Slice 2, 3, or 5 (all depend on Slice 1, now shipped)
-      or Slice 4 (independent) is next (READY, Effort M each)** -- no
-      other open item in this sequencing chain remains.
+      **Implementing Slice 2 (heterozygosity diagnostic) is now DONE --
+      S443 (2026-07-31):** new `markerObservedHeterozygosity()`/
+      `markerExpectedHeterozygosity()` (Nei 1973 gene diversity,
+      cross-verified and citation-corrected at Pre-RED away from the
+      plan's imprecise "VCFtools/PLINK --het" framing) plus a new
+      Heterozygosity tab in `modMarkerGenetics` (per-animal `ho` vs.
+      population `he`). Full TDD cycle (PRE-RED->RED->GREEN->REFACTOR,
+      all `AskUserQuestion`-gated); citation and tutorial checklists both
+      done in-session. Verified: regression suite 0/0/0 (4096 passed,
+      170 skipped); `devtools::check()` down to the single pre-existing,
+      unrelated `IACUC` spelling NOTE below (fixed the marker-genetics
+      -family spelling gap S442 left unresolved along the way -- see
+      `PROJECT_LEARNINGS.md` Learning 426); live `shinytest2`/`chromote`
+      smoke test confirmed real, correctly-computed values with no
+      console errors. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
+      Learnings 426-427.
+      **Implementing Slice 3 or Slice 5 (both depend on Slice 1, now
+      shipped) or Slice 4 (independent) is next (READY, Effort M
+      each)** -- no other open item in this sequencing chain remains.
