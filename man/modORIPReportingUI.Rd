@@ -42,6 +42,8 @@ Other Shiny modules:
 \code{\link[=modGvAndBgDescUI]{modGvAndBgDescUI()}},
 \code{\link[=modInputServer]{modInputServer()}},
 \code{\link[=modInputUI]{modInputUI()}},
+\code{\link[=modMarkerGeneticsServer]{modMarkerGeneticsServer()}},
+\code{\link[=modMarkerGeneticsUI]{modMarkerGeneticsUI()}},
 \code{\link[=modORIPReportingServer]{modORIPReportingServer()}},
 \code{\link[=modPedigreeServer]{modPedigreeServer()}},
 \code{\link[=modPedigreeUI]{modPedigreeUI()}},
