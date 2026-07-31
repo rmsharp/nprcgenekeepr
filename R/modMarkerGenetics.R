@@ -13,7 +13,7 @@
 #'
 #' @seealso \code{\link{modMarkerGeneticsServer}}
 #' @importFrom shiny NS div h3 fluidRow column wellPanel fileInput
-#' @importFrom shiny uiOutput
+#' @importFrom shiny uiOutput tabsetPanel tabPanel
 #' @importFrom DT DTOutput
 #' @family Shiny modules
 #' @export
@@ -36,7 +36,10 @@ modMarkerGeneticsUI <- function(id) {
       ),
       column(8L,
              uiOutput(ns("guidance")),
-             DT::DTOutput(ns("comparisonTable"))
+             tabsetPanel(
+               tabPanel("Kinship Comparison", DT::DTOutput(ns("comparisonTable"))),
+               tabPanel("Heterozygosity", DT::DTOutput(ns("heterozygosityTable")))
+             )
       )
     )
   )
@@ -52,7 +55,11 @@ modMarkerGeneticsUI <- function(id) {
 #' pedigree-based mean kinship (\code{indivMeanKin}, already computed
 #' upstream and passed in via \code{kinshipMatrix}) alongside the new
 #' marker-based mean kinship (\code{markerMeanKin}) -- an independent check
-#' on the pedigree-implied relatedness, not a replacement for it.
+#' on the pedigree-implied relatedness, not a replacement for it. A second
+#' tab surfaces the heterozygosity diagnostic: per-animal observed
+#' heterozygosity (\code{\link{markerObservedHeterozygosity}}) alongside
+#' population-level expected heterozygosity
+#' (\code{\link{markerExpectedHeterozygosity}}).
 #'
 #' This module never touches the existing single-locus genotype path
 #' (\code{checkGenotypeFile}/\code{addGenotype}/\code{hasGenotype}/
@@ -64,11 +71,14 @@ modMarkerGeneticsUI <- function(id) {
 #'   matrix (row and column names are animal IDs), or \code{NULL} while
 #'   upstream analysis has not yet been run.
 #'
-#' @return A list with four reactive elements: \code{markerGenotype}, the
+#' @return A list with five reactive elements: \code{markerGenotype}, the
 #'   raw uploaded genotype data frame (or \code{NULL} before upload);
 #'   \code{markerKinshipMatrix}, the marker-based \code{id} x \code{id}
 #'   kinship matrix (or \code{NULL}); \code{comparisonTable}, the per-animal
 #'   \code{indivMeanKin}/\code{markerMeanKin} comparison data frame (or
+#'   \code{NULL}); \code{heterozygosityTable}, the per-animal
+#'   \code{ho}/\code{he} heterozygosity data frame (\code{he} is the
+#'   population-wide mean expected heterozygosity, repeated per row) (or
 #'   \code{NULL}); and \code{isReady}, \code{TRUE} once
 #'   \code{comparisonTable} has a value.
 #'
@@ -95,14 +105,21 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix) {
       getGenotypes(input$genotypeFile$datapath, sep = ",")
     })
 
-    markerKmat <- reactive({
+    genotypeMatrixR <- reactive({
       raw <- rawGenotype()
       if (is.null(raw)) {
         return(NULL)
       }
       checked <- checkMarkerGenotypeFile(raw)
-      genotypeMatrix <- buildMarkerGenotypeMatrix(checked)
-      markerKinship(genotypeMatrix)
+      buildMarkerGenotypeMatrix(checked)
+    })
+
+    markerKmat <- reactive({
+      gmat <- genotypeMatrixR()
+      if (is.null(gmat)) {
+        return(NULL)
+      }
+      markerKinship(gmat)
     })
 
     comparison <- reactive({
@@ -129,8 +146,31 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix) {
       )
     })
 
+    heterozygosity <- reactive({
+      gmat <- genotypeMatrixR()
+      if (is.null(gmat)) {
+        return(NULL)
+      }
+      ho <- markerObservedHeterozygosity(gmat)
+      he <- markerExpectedHeterozygosity(gmat)
+
+      data.frame(
+        id = names(ho),
+        ho = as.numeric(ho),
+        he = he$meanHe,
+        stringsAsFactors = FALSE,
+        row.names = NULL
+      )
+    })
+
     output$comparisonTable <- DT::renderDT({
       tbl <- comparison()
+      req(tbl)
+      tbl
+    })
+
+    output$heterozygosityTable <- DT::renderDT({
+      tbl <- heterozygosity()
       req(tbl)
       tbl
     })
@@ -161,6 +201,7 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix) {
       markerGenotype = reactive(rawGenotype()),
       markerKinshipMatrix = reactive(markerKmat()),
       comparisonTable = reactive(comparison()),
+      heterozygosityTable = reactive(heterozygosity()),
       isReady = reactive(!is.null(comparison()))
     )
   })
