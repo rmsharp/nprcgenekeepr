@@ -47,9 +47,10 @@ test_that("modMarkerGenetics is not ready before a genotype file is uploaded", {
   skip_if_not_installed("shiny")
   shiny::testServer(modMarkerGeneticsServer,
     args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix)), {
-    expect_false(isReady())
-    expect_null(markerKinshipMatrix())
-    expect_null(comparisonTable())
+    result <- session$getReturned()
+    expect_false(result$isReady())
+    expect_null(result$markerKinshipMatrix())
+    expect_null(result$comparisonTable())
   })
 })
 
@@ -57,17 +58,18 @@ test_that("modMarkerGenetics computes the pedigree-vs-marker comparison table", 
   skip_if_not_installed("shiny")
   shiny::testServer(modMarkerGeneticsServer,
     args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix)), {
+    result <- session$getReturned()
     session$setInputs(genotypeFile = list(
       name = "markerGenotype.csv", datapath = genotypeFilePath
     ))
 
-    expect_true(isReady())
+    expect_true(result$isReady())
 
-    kmat <- markerKinshipMatrix()
+    kmat <- result$markerKinshipMatrix()
     expect_identical(dimnames(kmat), list(c("P", "C", "U"), c("P", "C", "U")))
     expect_equal(kmat["P", "C"], 0.2)
 
-    tbl <- comparisonTable()
+    tbl <- result$comparisonTable()
     expect_s3_class(tbl, "data.frame")
     expect_identical(sort(names(tbl)), sort(c("id", "indivMeanKin", "markerMeanKin")))
     expect_identical(sort(tbl$id), c("C", "P", "U"))

@@ -239,6 +239,15 @@ appUI <- function(siteInfo = NULL) {
     ),
 
     # ====================
+    # Marker Genetics Tab (issue #130 Slice 1)
+    # ====================
+    tabPanel(
+      "Marker Genetics",
+      icon = icon("dna"),
+      modMarkerGeneticsUI("markerGenetics")
+    ),
+
+    # ====================
     # Potential Parents Tab
     # ====================
     tabPanel(

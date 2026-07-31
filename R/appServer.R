@@ -427,6 +427,14 @@ appServer <- function(input, output, session) {
     kinshipMatrix = gvResults$kinshipMatrix
   )
 
+  # Marker Genetics Module (issue #130 Slice 1) -- an independent,
+  # genotype-driven check on relatedness, alongside (not in place of) the
+  # pedigree-based kinship already computed above.
+  modMarkerGeneticsServer(
+    "markerGenetics",
+    kinshipMatrix = sharedKinshipMatrix
+  )
+
   # Potential Parents Module -- follow the Input-tab sire/dam age floors
   # (issue #119 Slice 4) so candidate screening honors the same minimums as QC;
   # blank fields resolve to NULL -> the species+sex breeding-age table default.
