@@ -73,6 +73,12 @@ moduleContractServers <- list(
     server = modPotentialParentsServer,
     args = list(),
     names = c("potentialParents", "tableData", "gestationDefault")
+  ),
+  modMarkerGenetics = list(
+    server = modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(NULL)),
+    names = c("markerGenotype", "markerKinshipMatrix", "comparisonTable",
+              "isReady")
   )
 )
 
