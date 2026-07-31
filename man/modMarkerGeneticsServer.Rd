@@ -14,11 +14,14 @@ matrix (row and column names are animal IDs), or \code{NULL} while
 upstream analysis has not yet been run.}
 }
 \value{
-A list with four reactive elements: \code{markerGenotype}, the
+A list with five reactive elements: \code{markerGenotype}, the
 raw uploaded genotype data frame (or \code{NULL} before upload);
 \code{markerKinshipMatrix}, the marker-based \code{id} x \code{id}
 kinship matrix (or \code{NULL}); \code{comparisonTable}, the per-animal
 \code{indivMeanKin}/\code{markerMeanKin} comparison data frame (or
+\code{NULL}); \code{heterozygosityTable}, the per-animal
+\code{ho}/\code{he} heterozygosity data frame (\code{he} is the
+population-wide mean expected heterozygosity, repeated per row) (or
 \code{NULL}); and \code{isReady}, \code{TRUE} once
 \code{comparisonTable} has a value.
 }
@@ -31,7 +34,11 @@ estimates marker-based kinship independent of pedigree
 pedigree-based mean kinship (\code{indivMeanKin}, already computed
 upstream and passed in via \code{kinshipMatrix}) alongside the new
 marker-based mean kinship (\code{markerMeanKin}) -- an independent check
-on the pedigree-implied relatedness, not a replacement for it.
+on the pedigree-implied relatedness, not a replacement for it. A second
+tab surfaces the heterozygosity diagnostic: per-animal observed
+heterozygosity (\code{\link{markerObservedHeterozygosity}}) alongside
+population-level expected heterozygosity
+(\code{\link{markerExpectedHeterozygosity}}).
 }
 \details{
 This module never touches the existing single-locus genotype path
