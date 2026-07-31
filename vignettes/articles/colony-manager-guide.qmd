@@ -517,6 +517,18 @@ given animal.
 
 ![The Marker Genetics comparison table for a small example parent/offspring/unrelated trio: pedigree-based mean kinship (indivMeanKin) alongside marker-based mean kinship (markerMeanKin).](shiny_app_use/marker_genetics_comparison.png){fig-alt="Marker Genetics tab showing a comparison table with three rows (P, C, U) and two kinship columns, indivMeanKin and markerMeanKin, with different numeric values in each column for the same animal."}
 
+A second **Heterozygosity** tab (also part of issue #130) surfaces a
+related but distinct diagnostic from the same uploaded genotype file: each
+animal's observed heterozygosity (`ho`, the fraction of its genotyped loci
+at which it carries two different alleles) alongside the population's
+expected heterozygosity (`he`, Nei's gene diversity computed from marker
+allele frequencies and averaged across loci). Observed running below
+expected across the population points toward inbreeding or population
+substructure; observed running above expected points the other way, toward
+outbreeding.
+
+![The Heterozygosity tab for the same example trio: observed heterozygosity (ho) per animal alongside the population's expected heterozygosity (he).](shiny_app_use/marker_genetics_heterozygosity.png){fig-alt="Marker Genetics Heterozygosity tab showing a table with three rows (X, Y, Z) and two columns, ho and he, with per-animal observed heterozygosity values and the same population-wide expected heterozygosity value repeated on every row."}
+
 ### Potential Parents
 
 The **Potential Parents** tab (issue
