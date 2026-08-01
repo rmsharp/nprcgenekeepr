@@ -345,6 +345,7 @@ reference:
   - '`removeUninformativeFounders`'
   - '`removeUnknownAnimals`'
   - '`reportGV`'
+  - '`resolveCrossCenterIds`'
   - '`runGeneKeepR`'
   - '`runModularApp`'
   - '`runQcStudbook`'
