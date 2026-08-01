@@ -62,16 +62,16 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S446
 date: 2026-08-01
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Implement Slice 4 of issue #130 (cross-center identity linking, deterministic cross-reference table), per docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md section 4. Session claimed, work beginning.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- implemented Slice 4 of issue #130 (cross-center identity linking, deterministic cross-reference table), per docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md section 4. Full TDD cycle, all AskUserQuestion-gated.
+what_was_done: New R/resolveCrossCenterIds.R (base R, no new dependency): resolveCrossCenterIds(pedA, pedB, mapping) collapses a curator-confirmed cross-center identity link so a transferred animal becomes one node with its real parents intact, instead of an artificial founder at the receiving center (issue #130's named failure mode, D5). Validates id/sire/dam/idA/idB; rejects duplicate mapping rows, missing id references, conflicting non-NA recorded parents, and undeclared id collisions. Dragon P6 (Shiny-wiring scope) resolved via its own AskUserQuestion (separate from the phase gate): script-callable function only this session, no modInput.R UI change. RED fixture hand-verified against the package's real kinship()/findGeneration() before any assertion -- proved both the bug (kinship(S1,O1)==0 on a naive un-merged combination) and the fix (==0.125, correct cross-center aunt/nephew coefficient), Learning 432. Commits: 88ad276f (claim), b18a9242 (RED, 10 test blocks/18 expectations), 246f2cff (GREEN). Also pushed the previously-uncommunicated fd61f100 (S445's own un-pushed close-out commit) to origin/master at the owner's explicit request before starting.
+next_steps: (a) Slice 5 (cross-center differentiation statistic, Effort M, depends on Slice 1 not Slice 4, READY -- Pre-RED must independently source a differentiation-statistic formula, Fst has multiple estimators per Dragon P2, budget for genuine disagreement per Learning 430). (b) NEWS.Rmd checklist decision (DECISION NEEDED, owner-only, Effort S -- issue #130 Slices 1-4 shipped 4 functions + a module/tab with zero NEWS.Rmd entries, unlike sibling issues #125-#129; filed BACKLOG.md Housekeeping, Learning 433). (c) Issue #132 (diagram legend, READY, Effort S). (d) CLAUDE.md NOT_CRAN doc fix (READY, Effort S). (e) IACUC spelling-NOTE housekeeping (READY, Effort S). (f) NPRC outreach plan review (DECISION NEEDED, owner-only). (g) S445's open methodology question (/doctor-session Phase 0/1B exemption) remains unresolved, not touched this session.
+key_files: R/resolveCrossCenterIds.R (new function + bindPedigreeRows() @noRd helper), tests/testthat/test_resolveCrossCenterIds.R (fixture + 10 test blocks), man/resolveCrossCenterIds.Rd + NAMESPACE (generated), _pkgdown.yml:348 (new reference-coverage line). For Slice 5: docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md sections 4/6 (Dragon P2), R/markerKinship.R/R/buildMarkerGenotypeMatrix.R (Slice 1 foundation), R/modMarkerGenetics.R (new Cross-Center tab target).
+gotchas: All of S444/S445's carried-forward gotchas apply unchanged (raw Status: line discipline, inst/WORDLIST byte-order convention, literal-NA pedigree fixtures, direct-Rscript AppDriver invocation, testServer non-bare-callable reactives, no new Bioconductor dependency, never attempt interactive sudo from a tool call). New this session: modInput.R already has a two-file "focalAnimals" input pattern that would template a future Slice-4 Shiny UI, but it's one of five already-complex conditionalPanel branches -- budget real scope, not a quick addition. getPedigreeSource()'s requirePedColumns is a function-local closure, not reusable outside that file -- any new function needing the same id/sire/dam check must write its own small copy.
+runtime_smoke: n/a -- no Shiny/runtime behavior changed this session (Dragon P6 scope decision: script-callable function only, no UI wiring). Verified instead via targeted test file (18/18), full regression suite (0/0/0, 3443 passed), and devtools::check() (0/0/0).
+changelog_ref: CHANGELOG.md [issue #130] "Implement Slice 4 -- cross-center identity linking" entry, this close-out commit
 commit: pending
 ```
 

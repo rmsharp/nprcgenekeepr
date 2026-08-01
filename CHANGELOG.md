@@ -43,6 +43,50 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-01 · [issue #130] Implement Slice 4 -- cross-center identity linking (Session 446)
+- **Deliverable:** full TDD cycle (PRE-RED→RED→GREEN, REFACTOR owner-confirmed skip, each
+  transition `AskUserQuestion`-gated per `CLAUDE.md`) implementing Slice 4 of
+  `docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md` §4: new
+  `resolveCrossCenterIds(pedA, pedB, mapping)` (base R, no new dependency) collapses a
+  curator-confirmed cross-center identity link so a transferred animal becomes one node with
+  its real parents intact, instead of the artificial-founder failure mode issue #130 names
+  directly. Validates `id`/`sire`/`dam` on both pedigrees and `idA`/`idB` on the mapping table;
+  rejects duplicate mapping rows, missing id references, conflicting non-`NA` recorded parents
+  between the two sides, and an id string present in both pedigrees but undeclared in the
+  mapping (fail loud, matching D5's deterministic/auditable design and the
+  `getPedigreeSource()` style).
+- **Pre-RED (Dragon P6 -- Shiny-wiring scope, the plan's own open call):** presented as its own
+  `AskUserQuestion` (separate from the PRE-RED→RED phase gate, per `CLAUDE.md`'s phase-gate
+  format). Owner chose script-callable function only, this session -- no `modInput.R` UI change
+  -- matching the plan's own cited precedent of `getFileDirectRelatives()` shipping standalone
+  before any UI wiring, and keeping the session to one layer given `modInput.R`'s existing
+  five-branch file-content complexity.
+- **Fixture:** hand-built two-center pedigree pair (Center A: `P1`/`P2` founders, their child
+  `T1` later transferred, `T1`'s full sibling `S1`; Center B: `X9` = the same physical animal as
+  `T1` recorded as an artificial founder, `Q1` founder, `O1` = `X9`×`Q1`'s child) + a mapping
+  linking `T1`↔`X9`. Expected values hand-verified against the package's own real
+  `kinship()`/`findGeneration()` before any RED assertion was written -- both the fix
+  (`kinship(S1, O1) == 0.125`, the correct cross-center aunt/nephew coefficient on the merged
+  pedigree) and the bug itself (`== 0` on a naive un-merged combination), extending Learning
+  423's "verify with an independent script" precedent to a deliberate before/after comparison.
+  See `PROJECT_LEARNINGS.md` Learning 432.
+- **Verified:** targeted test file 18/18 expectations; full clean regression suite 0 failed/0
+  error/0 warning (3443 passed, 182 skipped); `devtools::check()` 0 errors/0 warnings/0 notes
+  (fixed one Rd cross-reference warning to a `@noRd` function along the way); `_pkgdown.yml`
+  reference-coverage entry added same-session (the gap class Slice 1 hit and fixed
+  retroactively). No live runtime/`shinytest2` smoke test -- n/a, no Shiny UI shipped this
+  session (Dragon P6 decision).
+- **Citation checklist (issue #120) / Tutorial checklist (S436):** both N/A this slice -- no new
+  displayed statistic and no new UI shipped.
+- **Discovery, not fixed this session:** issue #130's Slices 1-4 (S442-S446) collectively shipped
+  4 new exported functions + a new Shiny module/tab with zero `NEWS.Rmd` entries, unlike sibling
+  issues #125-#129 which each got one -- `CLAUDE.md` has no `NEWS.Rmd` checklist analogous to its
+  citation/tutorial ones. Filed to `BACKLOG.md` as an owner decision item per the established
+  report-don't-fix precedent (Learning 382/407). See `PROJECT_LEARNINGS.md` Learning 433.
+- Also pushed the previously-uncommunicated `fd61f100` (Session 445's close-out commit, left
+  un-pushed at that session's end) to `origin/master` at the owner's explicit Phase 0 request,
+  before starting Slice 4.
+
 ### 2026-08-01 · [ad hoc] Claude Code Doctor cleanup + CLAUDE.md derivable-content trim (Session 445)
 - **Deliverable:** Ran the `/doctor` Claude Code health-check (install health, skill/plugin usage,
   checked-in `CLAUDE.md` derivability, hook timing, version currency, permission defaults, denied-
