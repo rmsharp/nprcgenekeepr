@@ -6,6 +6,18 @@
 
 ## ACTIVE TASK
 
+### What Session 447 Did
+**Deliverable:** Implement Slice 5 of the [issue #130](https://github.com/rmsharp/nprcgenekeepr/issues/130)
+plan (cross-center identity-by-state differentiation statistic), per
+`docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md` §4 (depends on Slice 1,
+shipped -- not Slice 4). Owner-picked via the Phase 0 priorities `AskUserQuestion` from a 4-option
+list (Slice 5, NEWS.Rmd checklist decision, issue #132, CLAUDE.md NOT_CRAN doc fix).
+**Started:** 2026-08-01
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 446 Did
 **Deliverable:** Implement Slice 4 of the [issue #130](https://github.com/rmsharp/nprcgenekeepr/issues/130)
 plan (cross-center identity linking, deterministic cross-reference table), per
