@@ -11,7 +11,11 @@ on the pedigree-implied relatedness, not a replacement for it. A second
 tab surfaces the heterozygosity diagnostic: per-animal observed
 heterozygosity (markerObservedHeterozygosity) alongside
 population-level expected heterozygosity
-(markerExpectedHeterozygosity)."><meta property="og:description" content="Reads an uploaded long-format marker genotype file (D1 format: id,
+(markerExpectedHeterozygosity). A third tab surfaces the
+Mendelian-exclusion parentage diagnostic
+(markerParentageExclusion): the pedigree's recorded
+dam/sire cross-referenced against the uploaded genotypes, flagging any
+recorded parent the genotype evidence contradicts."><meta property="og:description" content="Reads an uploaded long-format marker genotype file (D1 format: id,
 locus, allele1, allele2), validates and pivots it
 (checkMarkerGenotypeFile, buildMarkerGenotypeMatrix),
 estimates marker-based kinship independent of pedigree
@@ -23,7 +27,11 @@ on the pedigree-implied relatedness, not a replacement for it. A second
 tab surfaces the heterozygosity diagnostic: per-animal observed
 heterozygosity (markerObservedHeterozygosity) alongside
 population-level expected heterozygosity
-(markerExpectedHeterozygosity)."><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
+(markerExpectedHeterozygosity). A third tab surfaces the
+Mendelian-exclusion parentage diagnostic
+(markerParentageExclusion): the pedigree's recorded
+dam/sire cross-referenced against the uploaded genotypes, flagging any
+recorded parent the genotype evidence contradicts."><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -84,12 +92,16 @@ on the pedigree-implied relatedness, not a replacement for it. A second
 tab surfaces the heterozygosity diagnostic: per-animal observed
 heterozygosity (<code><a href="markerObservedHeterozygosity.html">markerObservedHeterozygosity</a></code>) alongside
 population-level expected heterozygosity
-(<code><a href="markerExpectedHeterozygosity.html">markerExpectedHeterozygosity</a></code>).</p>
+(<code><a href="markerExpectedHeterozygosity.html">markerExpectedHeterozygosity</a></code>). A third tab surfaces the
+Mendelian-exclusion parentage diagnostic
+(<code><a href="markerParentageExclusion.html">markerParentageExclusion</a></code>): the <code>pedigree</code>'s recorded
+dam/sire cross-referenced against the uploaded genotypes, flagging any
+recorded parent the genotype evidence contradicts.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">modMarkerGeneticsServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">kinshipMatrix</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">modMarkerGeneticsServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">kinshipMatrix</span>, <span class="va">pedigree</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -105,10 +117,16 @@ population-level expected heterozygosity
 matrix (row and column names are animal IDs), or <code>NULL</code> while
 upstream analysis has not yet been run.</p></dd>
 
+
+<dt id="arg-pedigree">pedigree<a class="anchor" aria-label="anchor" href="#arg-pedigree"></a></dt>
+<dd><p>reactive returning the current pedigree data frame
+(columns <code>id</code>, <code>sire</code>, <code>dam</code>), or <code>NULL</code> while
+upstream analysis has not yet been run.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list with five reactive elements: <code>markerGenotype</code>, the
+    <p>A list with six reactive elements: <code>markerGenotype</code>, the
 raw uploaded genotype data frame (or <code>NULL</code> before upload);
 <code>markerKinshipMatrix</code>, the marker-based <code>id</code> x <code>id</code>
 kinship matrix (or <code>NULL</code>); <code>comparisonTable</code>, the per-animal
@@ -116,8 +134,11 @@ kinship matrix (or <code>NULL</code>); <code>comparisonTable</code>, the per-ani
 <code>NULL</code>); <code>heterozygosityTable</code>, the per-animal
 <code>ho</code>/<code>he</code> heterozygosity data frame (<code>he</code> is the
 population-wide mean expected heterozygosity, repeated per row) (or
-<code>NULL</code>); and <code>isReady</code>, <code>TRUE</code> once
-<code>comparisonTable</code> has a value.</p>
+<code>NULL</code>); <code>exclusionTable</code>, the
+<code><a href="markerParentageExclusion.html">markerParentageExclusion</a></code> flagged-pairs data frame (or
+<code>NULL</code> before a genotype file and a pedigree are both available);
+and <code>isReady</code>, <code>TRUE</code> once <code>comparisonTable</code> has a
+value.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

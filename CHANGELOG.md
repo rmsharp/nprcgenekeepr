@@ -47,6 +47,72 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-08-01 · \[issue \#130\] Implement Slice 3 – Mendelian-exclusion parentage verification (Session 444)
+
+- **Deliverable:** full TDD cycle (PRE-RED→RED→GREEN→REFACTOR, each
+  transition `AskUserQuestion`-gated per `CLAUDE.md`) implementing Slice
+  3 of
+  `docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md`
+  §4: new
+  `markerParentageExclusion(genotypeMatrix, pedigree, maxExclusions = 2L)`
+  flags a pedigree’s recorded dam/sire as Mendelian-inconsistent with an
+  offspring’s marker genotype (opposite- homozygote conflicts over
+  jointly-genotyped loci), directly targeting the issue’s named ~5%
+  dam-misidentification problem. `modMarkerGenetics` gained a new
+  `pedigree` server parameter, an `exclusionTable` reactive, and a
+  “Parentage Exclusion” tab (long-format flagged-pairs table:
+  `id`/`parentId`/`role`/`exclusionCount`/`nLoci`/`flagged`).
+  `appServer.R` wires the live `shared$currentPedigree` into the module.
+- **Pre-RED (Dragon P4 – genotyping-error-tolerance threshold):** a
+  3-agent research `Workflow` (2 independent sources + adversarial
+  cross-check) found no fabricated citations, but a REAL numeric
+  disagreement between the two honestly-sourced reports: Cifuentes et
+  al. (2006, human paternity testing) said exclude at ≥3 mismatches; a
+  bison/cattle microsatellite parentage- testing patent (Schnabel et
+  al. 2000) said exclude at ≥2. The cross-check independently
+  re-verified both primary sources itself (not just the reports’
+  paraphrases) and broke the tie by grepping this package’s own
+  `R/checkMarkerGenotypeFile.R` to confirm the marker model is
+  biallelic-only, favoring the SNP/biallelic-calibrated precedent
+  (Cifuentes 2006 + de Groot et al. 2025, a real captive
+  rhesus/cynomolgus macaque colony parentage precedent tolerating up to
+  3 mismatches) over the microsatellite-calibrated one. Owner picked
+  `maxExclusions = 2` (flag only at 3+ inconsistent loci) via
+  `AskUserQuestion`.
+- **Fixture:** a hand-built 9-animal/5-locus pedigree+genotype set with
+  boundary cases at exactly 2 (tolerated) and exactly 3 (flagged)
+  mismatches, an ungenotyped-recorded-parent skip case, an
+  unknown-parent skip case, and a separate zero-shared-loci NA case —
+  exact expected values derived via an independent standalone reference
+  script before any RED test was written.
+- **`inst/WORDLIST` sort-convention discovery:** fixing the spelling
+  NOTE for 14 new roxygen citation words found (via empirical
+  `sort(..., method = "radix")` verification) that the file’s actual
+  sort convention is byte-order/radix, not case-insensitive collation as
+  prior sessions’ shorthand described it — see `PROJECT_LEARNINGS.md`
+  Learning 428.
+- **Verified:** full clean regression suite 0 failed/0 error/0 warning
+  (3425 passed, 182 skipped), confirmed via a controlled
+  `git stash`/restore before/after comparison against the pre-Slice-3
+  baseline; `devtools::check()` down to the single pre-existing,
+  unrelated `IACUC` spelling NOTE (`BACKLOG.md`, out of scope); live
+  `shinytest2`/`chromote` smoke test confirmed real, correctly-computed
+  exclusion counts/flags (0/false for a true dam, 3/true for a
+  falsely-recorded sire) with zero console errors, screenshot captured
+  for the guide article.
+- **Citation checklist (issue \#120):** new “Mendelian-Exclusion
+  Parentage Verification” entry in
+  `inst/extdata/ui_guidance/population_genetics_terms.html`.
+- **Tutorial/article checklist (S436):** new paragraph + screenshot in
+  `vignettes/articles/colony-manager-guide.qmd`’s Marker Genetics
+  section.
+- See `PROJECT_LEARNINGS.md` Learnings 428–430 (WORDLIST byte-order
+  convention; ad-hoc
+  [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+  script gotchas – [`source()`](https://rdrr.io/r/base/source.html)
+  vs. direct invocation, method names; the Pre-RED cross-check’s
+  project-source tie-break pattern for genuine source disagreements).
+
 ### 2026-07-31 · \[issue \#130\] Implement Slice 2 – heterozygosity diagnostic (observed vs. expected) (Session 443)
 
 - **Deliverable:** full TDD cycle (PRE-RED→RED→GREEN→REFACTOR, each

@@ -160,6 +160,8 @@ Funtions designed for interactive use
   (KING-robust)
 - [`markerObservedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerObservedHeterozygosity.md)
   : Compute per-animal observed heterozygosity from marker genotypes
+- [`markerParentageExclusion()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md)
+  : Flag Mendelian-inconsistent recorded parents from marker genotypes
 - [`obfuscateDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateDate.md)
   : Obfuscate dates with a random day offset
 - [`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
@@ -470,6 +472,8 @@ Funtions designed for interactive use
   (KING-robust)
 - [`markerObservedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerObservedHeterozygosity.md)
   : Compute per-animal observed heterozygosity from marker genotypes
+- [`markerParentageExclusion()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md)
+  : Flag Mendelian-inconsistent recorded parents from marker genotypes
 - [`meanKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/meanKinship.md)
   : Calculate mean kinship for each animal in a kinship matrix
 - [`modBreedingGroupsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsServer.md)

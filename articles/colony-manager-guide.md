@@ -656,6 +656,30 @@ The Heterozygosity tab for the same example trio: observed
 heterozygosity (ho) per animal alongside the population’s expected
 heterozygosity (he).
 
+A third **Parentage Exclusion** tab (also part of issue \#130)
+cross-references the current pedigree’s recorded dam and sire against
+the same uploaded genotype file: for each animal with a genotyped
+recorded parent, it counts the marker loci at which the two are
+Mendelian-inconsistent (both homozygous for a different allele – no
+shared allele is possible) and flags any recorded parent whose genotype
+evidence contradicts the pedigree, directly targeting real-world
+dam/sire misidentification. A single mismatching locus does not trigger
+a flag on its own, since ordinary genotyping error or mutation can
+produce an isolated mismatch even for a true parent-offspring pair – the
+tab flags a recorded parent only once its exclusion count exceeds a
+conservative, tunable tolerance (3 or more inconsistent loci by
+default).
+
+![Marker Genetics Parentage Exclusion tab showing a table with two rows:
+C's dam P with 0 exclusions and flagged false, and C's sire U with 3
+exclusions and flagged
+true.](shiny_app_use/marker_genetics_parentage_exclusion.png)
+
+The Parentage Exclusion tab: C’s recorded dam (P) is
+Mendelian-consistent (0 exclusions, not flagged); C’s recorded sire
+(falsely set to the unrelated U) is Mendelian-inconsistent (3
+exclusions, flagged).
+
 ### Potential Parents
 
 The **Potential Parents** tab (issue

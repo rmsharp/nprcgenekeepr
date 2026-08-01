@@ -659,7 +659,31 @@ spelling NOTE below (fixed the marker-genetics -family spelling gap S442
 left unresolved along the way – see `PROJECT_LEARNINGS.md` Learning
 426); live `shinytest2`/`chromote` smoke test confirmed real,
 correctly-computed values with no console errors. See `CHANGELOG.md`,
-`PROJECT_LEARNINGS.md` Learnings 426-427. **Implementing Slice 3 or
-Slice 5 (both depend on Slice 1, now shipped) or Slice 4 (independent)
-is next (READY, Effort M each)** – no other open item in this sequencing
-chain remains.
+`PROJECT_LEARNINGS.md` Learnings 426-427. **Implementing Slice 3
+(Mendelian-exclusion parentage verification) is now DONE – S444
+(2026-08-01):** new
+[`markerParentageExclusion()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md)
+(opposite-homozygote conflict counting over jointly-genotyped loci,
+cross-referenced against the pedigree’s recorded dam/sire) plus a new
+Parentage Exclusion tab in `modMarkerGenetics` (flagged-pairs table:
+`id`/`parentId`/`role`/`exclusionCount`/`nLoci`/`flagged`). Dragon P4
+(genotyping-error tolerance) resolved at Pre-RED via a
+2-source-plus-adversarial-cross-check research `Workflow`:
+`maxExclusions = 2` (flag only at 3+ inconsistent loci), citing
+Cifuentes et al. 2006 and de Groot et al. 2025 (a real captive
+rhesus/cynomolgus colony precedent) over the alternative bison/cattle
+microsatellite convention, owner-approved via `AskUserQuestion`. Full
+TDD cycle (PRE-RED-\>RED-\>GREEN-\>REFACTOR, all
+`AskUserQuestion`-gated); citation and tutorial checklists both done
+in-session. Verified: regression suite 0/0/0 (3425 passed, 182 skipped);
+`devtools::check()` down to the single pre-existing, unrelated `IACUC`
+spelling NOTE (own new citation words fixed in `inst/WORDLIST`
+same-session, see `PROJECT_LEARNINGS.md` Learning 428); live
+`shinytest2`/`chromote` smoke test confirmed real, correctly-computed
+exclusion counts/flags (0/false for a true dam, 3/true for a
+falsely-recorded sire) with no console errors. See `CHANGELOG.md`,
+`PROJECT_LEARNINGS.md` Learnings 428-430. **Implementing Slice 4
+(cross-center identity linking, fully independent) or Slice 5
+(cross-center differentiation statistic, depends on Slice 1, now
+shipped) is next (READY, Effort M each)** – no other open item in this
+sequencing chain remains.

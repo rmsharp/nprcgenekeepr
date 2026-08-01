@@ -15,11 +15,16 @@ heterozygosity diagnostic: per-animal observed heterozygosity
 ([`markerObservedHeterozygosity`](https://github.com/rmsharp/nprcgenekeepr/reference/markerObservedHeterozygosity.md))
 alongside population-level expected heterozygosity
 ([`markerExpectedHeterozygosity`](https://github.com/rmsharp/nprcgenekeepr/reference/markerExpectedHeterozygosity.md)).
+A third tab surfaces the Mendelian-exclusion parentage diagnostic
+([`markerParentageExclusion`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md)):
+the `pedigree`'s recorded dam/sire cross-referenced against the uploaded
+genotypes, flagging any recorded parent the genotype evidence
+contradicts.
 
 ## Usage
 
 ``` r
-modMarkerGeneticsServer(id, kinshipMatrix)
+modMarkerGeneticsServer(id, kinshipMatrix, pedigree)
 ```
 
 ## Arguments
@@ -34,16 +39,26 @@ modMarkerGeneticsServer(id, kinshipMatrix)
   column names are animal IDs), or `NULL` while upstream analysis has
   not yet been run.
 
+- pedigree:
+
+  reactive returning the current pedigree data frame (columns `id`,
+  `sire`, `dam`), or `NULL` while upstream analysis has not yet been
+  run.
+
 ## Value
 
-A list with five reactive elements: `markerGenotype`, the raw uploaded
+A list with six reactive elements: `markerGenotype`, the raw uploaded
 genotype data frame (or `NULL` before upload); `markerKinshipMatrix`,
 the marker-based `id` x `id` kinship matrix (or `NULL`);
 `comparisonTable`, the per-animal `indivMeanKin`/`markerMeanKin`
 comparison data frame (or `NULL`); `heterozygosityTable`, the per-animal
 `ho`/`he` heterozygosity data frame (`he` is the population-wide mean
-expected heterozygosity, repeated per row) (or `NULL`); and `isReady`,
-`TRUE` once `comparisonTable` has a value.
+expected heterozygosity, repeated per row) (or `NULL`);
+`exclusionTable`, the
+[`markerParentageExclusion`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md)
+flagged-pairs data frame (or `NULL` before a genotype file and a
+pedigree are both available); and `isReady`, `TRUE` once
+`comparisonTable` has a value.
 
 ## Details
 
