@@ -7,6 +7,207 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 446 Did
+
+**Deliverable:** Implement Slice 4 of the [issue
+\#130](https://github.com/rmsharp/nprcgenekeepr/issues/130) plan
+(cross-center identity linking, deterministic cross-reference table),
+per `docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md`
+§4. Owner-picked via the Phase 0 priorities `AskUserQuestion` from a
+4-option list (Slice 4, Slice 5, issue \#132, NPRC outreach plan); owner
+also directed pushing the pending `fd61f100` (S445 close-out) commit to
+`origin/master` first, done at Phase 0. **Started/Completed:**
+2026-08-01 / 2026-08-01 **Status:** DONE. Full TDD cycle: PRE-RED
+(Dragon P6 scope decision) -\> RED -\> GREEN -\> REFACTOR
+(owner-confirmed skip, no changes needed), every phase transition
+`AskUserQuestion`-gated.
+
+**What happened, in order:** **(1)** Phase 0 orientation in full
+(`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list` – 18 open issues, `git status`/`log`/ `diff --stat`,
+`methodology_dashboard.py` Health 98/100 Risk MEDIUM (commit-velocity
+flag, not a named defect), ledger reconcile –
+`CHANGELOG.md`/`HANDOFFS.md` frontiers both at `HEAD`, no ghost session,
+no undocumented commits). Rendered the priorities list +
+`AskUserQuestion` picker; owner picked Slice 4 AND directed pushing the
+un-pushed `fd61f100` first – done (`91b019c4..fd61f100` fast-forwarded
+to `origin/master`) before any technical work. **(2)** Phase 1B: claimed
+the session (`88ad276f`) – stub + `HANDOFFS.md` `status: pending`
+receipt, before any technical work. **(3)** Pre-RED research: read
+`getPedigreeSource.R`/`getFileDirectRelatives.R`/`getFocalAnimalPedFromFile.R`
+(the D5 precedent family), `modInput.R`’s existing file-content branches
+(found the “focalAnimals” two-file pattern that a Shiny-wired Slice 4
+would mirror, and confirmed it’s one of five already-complex conditional
+branches), `kinship.R`/`findGeneration.R`/`reportGV.R` (the
+DONE-criteria verification path), `columnSchema.R` (confirmed no
+per-record center column exists), and `test_moduleContract.R` (confirmed
+a script-callable-only function needs no module-contract entry). **(4)**
+Presented Dragon P6 (plan §6’s own open Shiny-wiring-scope call) as its
+own `AskUserQuestion`, separate from the phase-transition gate, per
+`CLAUDE.md`’s phase-gate format. Owner picked script-callable function
+only, this session – matching the plan’s own cited
+[`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md)
+precedent and keeping the session to one layer. **(5)** Designed the RED
+fixture (two-center pedigree pair with a transferred animal, `T1`/`X9`,
+recorded as an artificial founder at the receiving center) and
+hand-verified expected values via a standalone `Rscript` call into the
+package’s REAL
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)/[`findGeneration()`](https://github.com/rmsharp/nprcgenekeepr/reference/findGeneration.md)
+functions BEFORE writing any test assertion (Learning 423 precedent) –
+confirmed both the bug (`kinship(S1,O1) == 0` on a naive un-merged
+combination) and the fix (`== 0.125`, the correct cross-center
+aunt/nephew coefficient), a new technique extension recorded as Learning
+432. Owner approved PRE-RED-\>RED. **(6)** RED: new
+`tests/testthat/test_resolveCrossCenterIds.R` (10 test blocks / 18
+expectations: the merge-correctness proof, the kinship proof, and 4
+validation-error cases), confirmed all failing for
+`could not find function "resolveCrossCenterIds"`; committed
+(`b18a9242`). Owner approved RED-\>GREEN. **(7)** GREEN:
+`R/resolveCrossCenterIds.R` (base R, no new dependency) – validates
+`id`/`sire`/`dam`/`idA`/`idB`, rejects duplicate mapping rows/missing
+references/conflicting recorded parents/undeclared id collisions,
+rewrites every mapped `idB` reference to its canonical `idA`, prefers
+non-`NA` parents from either side. Fixed one `devtools::check()`
+Rd-cross-reference WARNING (a `\link{}` to the `@noRd`
+`getPedigreeSource()`, which has no man page) before declaring GREEN
+done. `devtools::document()` regenerated
+`NAMESPACE`/`man/resolveCrossCenterIds.Rd`; added the `_pkgdown.yml`
+“All exposed functions” reference-coverage entry same-session (the exact
+gap class Slice 1 hit and had to fix retroactively). Ran `lintr` as due
+diligence: fixed one `nonportable_path_linter` false positive (“and/or”
+misread as a path, suppressed the same way as elsewhere in the
+codebase); left 3 `paste(collapse=", ")` style warnings alone, matching
+an identical unaddressed pattern already present in the Slice 1-3
+sibling files. Verified: targeted test file 18/18; full clean regression
+0 failed/0 error/0 warning (3443 passed, 182 skipped);
+`devtools::check()` 0/0/0; committed (`246f2cff`). **(8)** Owner
+approved GREEN-\>REFACTOR with “skip, close out” – no structural changes
+needed; citation/tutorial checklists confirmed N/A (no displayed
+statistic, no UI shipped this session). **(9)** Discovered, while
+checking whether Slice 4 needed a `NEWS.Rmd` entry, that issue \#130’s
+Slices 1-4 collectively have ZERO `NEWS.Rmd` entries (unlike sibling
+issues \#125-#129) – not fixed this session (report-don’t-fix precedent,
+Learning 382/407), filed to `BACKLOG.md` as an owner decision item,
+recorded as Learning 433. **Verified throughout:** RED fixture
+hand-verified against real package functions before any assertion was
+written; GREEN verified via the targeted test file, full regression
+suite, AND `devtools::check()` (not just the targeted file alone); no
+live `shinytest2` smoke test – correctly n/a, since no Shiny/runtime
+behavior was changed this session (Dragon P6 decision), not a silently
+skipped verification gate. **Ledger:** recorded in `CHANGELOG.md` at
+Phase 3F (this close-out).
+
+**Session 445 Handoff Evaluation (by Session 446): 8/10.** Structurally
+complete against all 6 minimum requirements (S445 itself scored this
+honestly at the file level). For THIS session’s specific task, S445’s
+own next-steps section was a faithful, accurate pass-through of S444’s
+original Slice-4/5 framing (S445 explicitly did not touch the \#130
+workstream itself) – and that pass-through was directly load-bearing: it
+correctly named Dragon P6 (“Pre-RED must resolve Dragon P6, Shiny-wiring
+scope”) as Slice 4’s first open question, which is exactly where this
+session’s Pre-RED research started. Docked 2 points not for any defect
+but because the handoff offered zero NEW Slice-4-specific research value
+beyond relaying S444’s own content – a limitation S445 itself predicted
+and did not overclaim (“should be evaluated for real by whichever
+session next implements Slice 4 or Slice 5” – this session). ROI: net
+positive – the Dragon P6 framing saved a re-derivation step, even though
+the informational content originated two sessions earlier.
+
+**Self-assessment (Session 446): 9/10.** **Strengths:** (1) full Phase 0
+orientation and Phase 1B claim performed before any technical work,
+correcting the exact gap S445 self-scored itself down for; (2) followed
+the owner’s compound instruction (“push fd61f100; and then Slice 4”) in
+the correct order, verified the push landed cleanly before proceeding;
+(3) resolved Dragon P6 via its own dedicated `AskUserQuestion`, separate
+from the phase-transition gate, per `CLAUDE.md`‘s explicit rule for
+pre-RED scope decisions; (4) hand-verified the RED fixture against the
+package’s REAL
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)/[`findGeneration()`](https://github.com/rmsharp/nprcgenekeepr/reference/findGeneration.md)
+functions before writing any assertion, and additionally proved the
+fixture was DISCRIMINATING (not just correct) by also computing the
+naive/broken value – a genuine extension of Learning 423’s precedent,
+recorded as Learning 432; (5) verified GREEN with the full regression
+suite and `devtools::check()`, not just the targeted test file, and
+caught a real Rd cross-reference WARNING before declaring done; (6)
+proactively ran `lintr`, fixed a real (if minor) issue matching house
+convention, and did NOT scope-creep into fixing an unrelated
+pre-existing pattern in sibling files; (7) correctly identified and
+stated (rather than silently skipping) that the citation, tutorial, AND
+live-runtime-smoke checklists are all N/A this session, each for a
+verifiable reason (no displayed statistic; no UI shipped; Dragon P6’s
+own scope decision); (8) discovered and transparently reported the
+`NEWS.Rmd` coverage gap across the whole issue \#130 slice family, filed
+as a decision item rather than either silently ignoring it or
+unilaterally fixing 4 sessions’ worth of retroactive history.
+**Weaknesses:** (1) did not raise the `NEWS.Rmd` gap as its own
+`AskUserQuestion` mid-session when discovered – resolved it by
+precedent-matching (Slices 1-3 of the same issue never got one, so Slice
+4 alone shouldn’t either) rather than asking the owner directly;
+defensible but a stricter session might have surfaced it as an explicit
+choice rather than inferring the consistent path; (2) the
+`bindPedigreeRows()` `@noRd` helper’s column-union-with-NA-fill behavior
+is real but untested by any RED assertion (the fixture’s pedA/pedB both
+have only `id`/`sire`/`dam`, so a column-set mismatch never gets
+exercised) – correct and necessary for realistic inputs (constructed
+merged rows only ever have 3 columns while sliced original rows could
+carry more), but its own dedicated test coverage was not added, a minor
+gap in an otherwise thoroughly-verified GREEN. **Compared to previous
+sessions:** matches S443/S444’s 9/8 full-discipline TDD standard (Phase
+0/1B/PRE-RED/RED/GREEN/REFACTOR gates all executed as designed, all
+verification tiers run, not just claimed) and directly corrects the
+specific process gap S445 self-scored itself down for (skipped Phase
+0/1B).
+
+**Handoff to Session 447:** - **What’s next:** **(a)** Slice 5
+(cross-center differentiation statistic, plan §4, Effort M, depends on
+Slice 1 – shipped – not Slice 4, READY – Pre-RED must independently
+source a differentiation-statistic formula; Fst has multiple competing
+estimators per Dragon P2, budget for a genuine numeric disagreement per
+Learning 430’s precedent, resolved via grepping the actual
+implementation constraint the way Slice 3’s Pre-RED did). **(b)**
+`NEWS.Rmd` checklist decision (DECISION NEEDED, owner-only, Effort S) –
+ratify a checklist analogous to the citation/tutorial ones, or
+explicitly decide script-only utilities are exempt; separately decide
+whether Slices 1-4 warrant a backfilled entry now that the gap is
+visible (`BACKLOG.md` Housekeeping, Learning 433). **(c)** Issue \#132
+(diagram legend, READY, Effort S). **(d)** `CLAUDE.md`’s NOT_CRAN doc
+fix (READY, Effort S, unchanged since S439). **(e)** `IACUC`
+spelling-NOTE housekeeping (READY, Effort S). **(f)** NPRC outreach plan
+review (DECISION NEEDED, owner-only). **(g)** The open methodology
+question from S445 (whether `/doctor`-style sessions are exempt from
+Phase 0/1B) remains unresolved – not touched this session, since this
+was a full feature-implementation session with no ambiguity about which
+protocol applies. - **Key files:** `R/resolveCrossCenterIds.R` (the new
+function, ~200 lines incl. roxygen + the `bindPedigreeRows()` `@noRd`
+helper), `tests/testthat/test_resolveCrossCenterIds.R` (the fixture + 10
+test blocks), `man/resolveCrossCenterIds.Rd` + `NAMESPACE` (generated,
+do not hand-edit), `_pkgdown.yml:348` (new reference-coverage line). For
+Slice 5:
+`docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md`
+§4/§6 (Dragon P2), the existing
+`R/markerKinship.R`/`R/buildMarkerGenotypeMatrix.R` (Slice 1’s genotype
+foundation Slice 5 depends on), `R/modMarkerGenetics.R` (where a new
+“Cross-Center” tab would go, reusing Slice 1’s upload pattern twice). -
+**Gotchas:** all of S444/S445’s carried-forward gotchas still apply
+unchanged (raw `Status:` line discipline, `inst/WORDLIST` byte-order
+convention, literal-`NA` pedigree fixtures, direct-`Rscript`-invocation
+for
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html),
+`testServer()` non-bare-callable reactives, no new Bioconductor
+dependency, never attempt interactive `sudo` from a tool call). **New
+this session:** `modInput.R` already has a two-file input pattern
+(“focalAnimals” content type: focal-id file + optional offline pedigree
+file) that would be the concrete template if a future session ever wires
+Slice 4’s Shiny UI – but it’s one of five already-complex
+`conditionalPanel` branches, so budget real scope for that, not a quick
+addition. `getPedigreeSource()`’s own column-validation helper
+(`requirePedColumns`) is a function-local closure, not reusable outside
+`getPedigreeSource.R` itself – any new function needing the same
+`id`/`sire`/`dam` check must write its own small copy (as
+[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)
+did), not attempt to call it directly. - **Self-assessment score:** 9/10
+(breakdown above).
+
 ### What Session 445 Did
 
 **Deliverable:** Ad hoc Claude Code Doctor (`/doctor`) health-check and

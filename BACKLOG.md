@@ -193,6 +193,23 @@ and only submission that will ever carry that version number.
 
 ## Housekeeping
 
+**`NEWS.Rmd` has no checklist analogous to the citation/tutorial
+checklists, and it shows: issue \#130’s Slices 1-4 (S442-S446) shipped 4
+new exported functions + a new Shiny module/tab with ZERO `NEWS.Rmd`
+entries between them** (discovered S446, 2026-08-01, DECISION NEEDED,
+Effort S) – unlike sibling issues \#125-#129 (same S422 audit-triage
+batch), which each got a `NEWS.Rmd` entry in their own shipping session.
+Not fixed retroactively for Slices 1-3 (out of scope, per the
+established report-don’t-fix precedent, Learning 382/407) and not added
+unilaterally for Slice 4 alone (would add yet more inconsistency without
+resolving the policy gap). A future session should either (a) ratify a
+`NEWS.Rmd` checklist in `CLAUDE.md` analogous to the citation (issue
+\#120) and tutorial/ article (S436) ones, or (b) explicitly decide
+internal/ scriptable-only utility functions with no shipped UI are
+exempt until they gain one – and separately decide whether Slices 1-4
+warrant a backfilled `NEWS.Rmd` entry now that the gap is visible. See
+`PROJECT_LEARNINGS.md` Learning 433.
+
 **`devtools::check()`’s one remaining spelling NOTE: `IACUC`
 (`_pedigree_browser.Rmd:55`) not in `inst/WORDLIST`** (discovered S443,
 2026-07-31, Effort S) – incidentally found while fixing the
@@ -683,7 +700,31 @@ same-session, see `PROJECT_LEARNINGS.md` Learning 428); live
 exclusion counts/flags (0/false for a true dam, 3/true for a
 falsely-recorded sire) with no console errors. See `CHANGELOG.md`,
 `PROJECT_LEARNINGS.md` Learnings 428-430. **Implementing Slice 4
-(cross-center identity linking, fully independent) or Slice 5
-(cross-center differentiation statistic, depends on Slice 1, now
-shipped) is next (READY, Effort M each)** – no other open item in this
-sequencing chain remains.
+(cross-center identity linking) is now DONE – S446 (2026-08-01):** new
+`resolveCrossCenterIds(pedA, pedB, mapping)` (base R, no new dependency)
+collapsing a curator-confirmed cross-center identity link so a
+transferred animal becomes one node with its real parents intact,
+instead of the artificial founder issue \#130 names as its literal
+failure mode. Dragon P6 (Shiny-wiring scope) resolved via
+`AskUserQuestion`: script-callable function only this session, no
+`modInput.R` UI change, matching the plan’s own cited
+[`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md)
+precedent. Full TDD cycle (PRE-RED-\>RED-\>GREEN, REFACTOR
+owner-confirmed skip, all `AskUserQuestion`-gated); RED fixture
+hand-verified against the package’s real
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)/[`findGeneration()`](https://github.com/rmsharp/nprcgenekeepr/reference/findGeneration.md)
+before any assertion was written, proving both the bug
+(`kinship(S1,O1) == 0` on a naive un-merged combination) and the fix
+(`== 0.125`, the correct aunt/nephew coefficient across the two centers)
+– see `PROJECT_LEARNINGS.md` Learning 432. Citation and tutorial/article
+checklists are N/A this slice (no new displayed statistic, no new UI
+shipped). Verified: targeted test file 18/18 expectations; regression
+suite 0/0/0 (3443 passed, 182 skipped); `devtools::check()` 0 errors/0
+warnings/0 notes; `_pkgdown.yml` reference-coverage entry added
+same-session (the gap class Slice 1 hit and had to fix retroactively).
+See `CHANGELOG.md`. **Implementing Slice 5 (cross-center differentiation
+statistic, depends on Slice 1, now shipped) is next (READY, Effort M)**
+– Pre-RED must independently source a differentiation-statistic formula
+(Fst has multiple competing estimators, Dragon P2) and budget for a
+genuine numeric disagreement per Learning 430’s precedent. No other open
+item in this sequencing chain remains.

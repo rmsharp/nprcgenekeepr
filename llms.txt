@@ -758,6 +758,8 @@ Funtions designed for interactive use
   : Remove placeholder animals added for unknown parents
 - [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
   : Generate a genetic value report for a pedigree
+- [`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)
+  : Merge two centers' pedigrees via a curator-confirmed identity link
 - [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
   : Run the GeneKeepR Shiny Application
 - [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
