@@ -68,6 +68,22 @@ are legal at write time (the receipt ships in the very commit whose sha
 it would name); the next session reconciles them to real shas.
 
 ``` handoff
+session: S445
+date: 2026-08-01
+status: complete
+self_score: 4
+predecessor_score: 8 (structural-quality assessment only -- not exercised this session, see SESSION_NOTES.md; a real ROI score belongs to whichever session next implements Slice 4/5)
+active_task: DONE -- ad hoc Claude Code Doctor (/doctor) health-check and cleanup pass, unrelated to the issue #130 workstream. Not a feature-implementation session.
+what_was_done: Ran /doctor's full read-only diagnostic sweep (install health, skill/plugin usage across a 50-session/~3.5-day transcript window plus lifetime counters, checked-in CLAUDE.md derivability, hook timing, version currency, permission defaults, denied-command patterns); presented a consolidated report; two AskUserQuestion confirmation gates (combined cleanup gate, separate permission gate), both approved. Applied: disabled 8 zero-lifetime-use skills (caveman, find-skills, improve-codebase-architecture, slidespeak, to-issues, to-prd, write-a-skill, zoom-out) and 2 zero-use plugins (clangd-lsp, swift-lsp) via skillOverrides/enabledPlugins in ~/.claude/settings.json (plus caveman's project-local override changed name-only -> off); set permissions.defaultMode=auto in ~/.claude/settings.json; all via a jq --slurpfile/mktemp merge, never string-interpolating harvested names. Trimmed CLAUDE.md: removed a stale version number (1.1.0.9000, contradicted DESCRIPTION's real 2.0.0.9000) and three DESCRIPTION-duplicating sections (Core Functions, two Package Structure layout bullets, Online Documentation) -- 43 lines, committed 91b019c4 with only CLAUDE.md staged, pushed to origin/master on explicit request. Attempted the Check-0-proposed sudo npm uninstall directly and via the ! prefix -- both failed (no controlling TTY for sudo); handed the command to the user's own terminal, then independently verified the removal (empty /usr/local/lib/node_modules/@anthropic-ai/, absent /usr/local/bin/claude symlink, which -a claude clean, empty npm -g list) -- Learning 431. This close-out itself ran only because the user explicitly asked ("phase 3 close-out"), not self-initiated.
+next_steps: Unchanged from S444's handoff (this session did not touch the #130 workstream): (a) Slice 4 (cross-center identity linking, READY, Effort M, Pre-RED must resolve Dragon P6). (b) Slice 5 (cross-center differentiation statistic, READY, Effort M, depends on shipped Slice 1, Pre-RED must source a differentiation-statistic formula per Dragon P2, budget for genuine disagreement per Learning 430). (c) Issue #132 (diagram legend, READY, Effort S). (d) CLAUDE.md NOT_CRAN doc fix (READY, Effort S). (e) IACUC spelling-NOTE housekeeping (READY, Effort S). (f) NPRC outreach plan review (DECISION NEEDED, owner-only). (g) New: an open methodology question (whether /doctor-style sessions are exempt from Phase 0/1B) needs an owner decision -- see SESSION_NOTES.md.
+key_files: No #130-relevant files changed this session. Touched only CLAUDE.md (trim, this repo) and ~/.claude/settings.json / .claude/settings.local.json (outside this repo, Claude Code tooling config). S444's key-files list (R/markerParentageExclusion.R, R/modMarkerGenetics.R, tests/testthat/test_markerParentageExclusion.R, docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md sections 4/6, inst/WORDLIST) remains the relevant list for Slice 4/5.
+gotchas: All of S444's carried-forward gotchas still apply unchanged (raw Status: line discipline, inst/WORDLIST byte-order convention, literal-NA pedigree fixtures, direct-Rscript AppDriver invocation, testServer non-bare-callable reactives, no new Bioconductor dependency). New this session: never attempt interactive sudo from inside a Claude Code tool call, not even via the ! prefix -- no controlling TTY either way (Learning 431); hand the command to the user's own terminal and verify the outcome independently.
+runtime_smoke: n/a -- no R-package/Shiny runtime behavior was changed (Claude Code tooling config + a CLAUDE.md documentation trim only).
+changelog_ref: CHANGELOG.md [ad hoc] "Claude Code Doctor cleanup + CLAUDE.md derivable-content trim" entry, this close-out commit
+commit: pending
+```
+
+``` handoff
 session: S444
 date: 2026-08-01
 status: complete

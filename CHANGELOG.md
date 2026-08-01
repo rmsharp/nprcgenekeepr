@@ -47,6 +47,27 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-08-01 · \[ad hoc\] Claude Code Doctor cleanup + CLAUDE.md derivable-content trim (Session 445)
+
+- **Deliverable:** Ran the `/doctor` Claude Code health-check (install
+  health, skill/plugin usage, checked-in `CLAUDE.md` derivability, hook
+  timing, version currency, permission defaults, denied- command
+  patterns) and applied its confirmed findings. Repo-visible outcome:
+  `CLAUDE.md` trimmed of a stale version number (had drifted from
+  `DESCRIPTION`’s real `2.0.0.9000`) and three sections duplicating
+  `DESCRIPTION`’s own `Description:`/`URL:` fields
+  (`### Core Functions`, two `### Package Structure` layout bullets,
+  `### Online Documentation`) – 43 lines removed, committed `91b019c4`,
+  pushed to `origin/master`. Non-repo outcome (Claude Code tooling
+  config, not tracked in this repository): 8 unused skills and 2 unused
+  LSP plugins disabled, auto permission mode set as the default, a stale
+  leftover npm-global Claude Code install removed from the machine.
+- **Process note:** this session skipped `SESSION_RUNNER.md` Phase 0
+  orientation and Phase 1B session-claim entirely, reconciled
+  retroactively at Phase 3D only because the user explicitly requested
+  close-out – see `SESSION_NOTES.md`/`HANDOFFS.md` (S445) and
+  `PROJECT_LEARNINGS.md` Learning 431.
+
 ### 2026-08-01 · \[issue \#130\] Implement Slice 3 – Mendelian-exclusion parentage verification (Session 444)
 
 - **Deliverable:** full TDD cycle (PRE-RED→RED→GREEN→REFACTOR, each
