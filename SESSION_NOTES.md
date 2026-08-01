@@ -6,6 +6,21 @@
 
 ## ACTIVE TASK
 
+### What Session 446 Did
+**Deliverable:** Implement Slice 4 of the [issue #130](https://github.com/rmsharp/nprcgenekeepr/issues/130)
+plan (cross-center identity linking, deterministic cross-reference table), per
+`docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md` §4. Owner-picked via the
+Phase 0 priorities `AskUserQuestion` from a 4-option list (Slice 4, Slice 5, issue #132, NPRC
+outreach plan); owner also directed pushing the pending `fd61f100` (S445 close-out) commit to
+`origin/master` first, done at Phase 0. (IN PROGRESS)
+**Started:** 2026-08-01
+**Status:** Session claimed. Work beginning. Full TDD cycle planned: PRE-RED (resolve Dragon P6 --
+this slice's own open Shiny-wiring-scope call, plan §6) -> RED -> GREEN -> REFACTOR, every phase
+transition `AskUserQuestion`-gated per `CLAUDE.md`.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 445 Did
 **Deliverable:** Ad hoc Claude Code Doctor (`/doctor`) health-check and cleanup pass, unrelated to
 the issue #130 workstream -- not a feature-implementation session. User-initiated (`/doctor`

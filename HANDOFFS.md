@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S446
+date: 2026-08-01
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement Slice 4 of issue #130 (cross-center identity linking, deterministic cross-reference table), per docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md section 4. Session claimed, work beginning.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S445
 date: 2026-08-01
 status: complete
