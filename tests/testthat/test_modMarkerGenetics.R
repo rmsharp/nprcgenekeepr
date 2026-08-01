@@ -19,6 +19,13 @@
 ## markerExpectedHeterozygosity()'s population-wide meanHe repeated on
 ## every row -- a direct observed-vs-expected diagnostic comparison, same
 ## shape convention as the existing indivMeanKin/markerMeanKin table.
+##
+## RED (issue #130 Slice 3): the module gains a new `pedigree` reactive
+## server parameter (matching modGeneticDiversity/modPotentialParents'
+## precedent) and a "Parentage Exclusion" tab backed by a new
+## `exclusionTable` reactive -- markerParentageExclusion() cross-referenced
+## against the pedigree's recorded dam/sire, surfaced as a flagged-pairs
+## table (module-contract canonical `flagged` vocabulary).
 
 library(testthat)
 
@@ -56,7 +63,8 @@ pedKinshipMatrix <- matrix(
 test_that("modMarkerGenetics is not ready before a genotype file is uploaded", {
   skip_if_not_installed("shiny")
   shiny::testServer(modMarkerGeneticsServer,
-    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix)), {
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
     result <- session$getReturned()
     expect_false(result$isReady())
     expect_null(result$markerKinshipMatrix())
@@ -67,7 +75,8 @@ test_that("modMarkerGenetics is not ready before a genotype file is uploaded", {
 test_that("modMarkerGenetics computes the pedigree-vs-marker comparison table", {
   skip_if_not_installed("shiny")
   shiny::testServer(modMarkerGeneticsServer,
-    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix)), {
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
     result <- session$getReturned()
     session$setInputs(genotypeFile = list(
       name = "markerGenotype.csv", datapath = genotypeFilePath
@@ -98,12 +107,13 @@ test_that("modMarkerGenetics computes the pedigree-vs-marker comparison table", 
   })
 })
 
-test_that("modMarkerGeneticsUI has a Kinship Comparison / Heterozygosity tabsetPanel", {
+test_that("modMarkerGeneticsUI has a Kinship Comparison / Heterozygosity / Parentage Exclusion tabsetPanel", {
   ui <- modMarkerGeneticsUI("test")
   ui_html <- as.character(ui)
 
   expect_true(grepl("Kinship Comparison", ui_html))
   expect_true(grepl("Heterozygosity", ui_html))
+  expect_true(grepl("Parentage Exclusion", ui_html))
 })
 
 test_that("modMarkerGenetics computes the per-animal Ho vs. population He heterozygosity table", {
@@ -122,7 +132,8 @@ test_that("modMarkerGenetics computes the per-animal Ho vs. population He hetero
   write.csv(hetGenotype, hetGenotypeFilePath, row.names = FALSE)
 
   shiny::testServer(modMarkerGeneticsServer,
-    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix)), {
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
     result <- session$getReturned()
     session$setInputs(genotypeFile = list(
       name = "hetGenotype.csv", datapath = hetGenotypeFilePath
@@ -142,5 +153,56 @@ test_that("modMarkerGenetics computes the per-animal Ho vs. population He hetero
     expect_equal(tbl$he[tbl$id == "X"], 115 / 288)
     expect_equal(tbl$he[tbl$id == "Y"], 115 / 288)
     expect_equal(tbl$he[tbl$id == "Z"], 115 / 288)
+  })
+})
+
+test_that("modMarkerGenetics computes a Mendelian-exclusion parentage table against the recorded pedigree", {
+  skip_if_not_installed("shiny")
+  ## Same P/C/U fixture as above. C's recorded dam is P (the true
+  ## parent/offspring pair per test_markerKinship.R) -- 0 exclusions,
+  ## verified by this slice's Pre-RED standalone reference script. C's
+  ## recorded sire is falsely set to U (the unrelated founder) -- 3
+  ## exclusions (L2, L3, L10), exceeding the default maxExclusions = 2, so
+  ## it must be flagged.
+  pedigree <- data.frame(id = c("P", "C", "U"), sire = c(NA, "U", NA),
+                          dam = c(NA, "P", NA), stringsAsFactors = FALSE)
+
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(pedigree)), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "markerGenotype.csv", datapath = genotypeFilePath
+    ))
+
+    tbl <- result$exclusionTable()
+    expect_s3_class(tbl, "data.frame")
+    expect_identical(sort(names(tbl)),
+                      sort(c("id", "parentId", "role", "exclusionCount",
+                              "nLoci", "flagged")))
+    expect_identical(nrow(tbl), 2L)
+
+    cDam <- tbl[tbl$id == "C" & tbl$role == "dam", ]
+    expect_identical(cDam$parentId, "P")
+    expect_identical(cDam$exclusionCount, 0L)
+    expect_false(cDam$flagged)
+
+    cSire <- tbl[tbl$id == "C" & tbl$role == "sire", ]
+    expect_identical(cSire$parentId, "U")
+    expect_identical(cSire$exclusionCount, 3L)
+    expect_true(cSire$flagged)
+  })
+})
+
+test_that("modMarkerGenetics's exclusion table is not ready before a pedigree is supplied", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "markerGenotype.csv", datapath = genotypeFilePath
+    ))
+    expect_null(result$exclusionTable())
   })
 })
