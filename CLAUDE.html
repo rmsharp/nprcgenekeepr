@@ -57,42 +57,12 @@
 
 <div class="section level2">
 <h2 id="project-overview">Project Overview<a class="anchor" aria-label="anchor" href="#project-overview"></a></h2>
-<p><strong>nprcgenekeepr</strong> (Version 1.1.0.9000) is an R package implementing Genetic Tools for Colony Management. Initially conceived and developed as a Shiny web application at the Oregon National Primate Research Center (ONPRC), it has been enhanced to have more capability as a Shiny application and to expose functions for use either interactively or in R scripts.</p>
+<p><strong>nprcgenekeepr</strong> is an R package implementing Genetic Tools for Colony Management. Initially conceived and developed as a Shiny web application at the Oregon National Primate Research Center (ONPRC), it has been enhanced to have more capability as a Shiny application and to expose functions for use either interactively or in R scripts.</p>
 <p>This work has been supported in part by NIH grants P51 RR13986 to the Southwest National Primate Research Center and P51 OD011092 to the Oregon National Primate Research Center.</p>
-<div class="section level3">
-<h3 id="core-functions">Core Functions<a class="anchor" aria-label="anchor" href="#core-functions"></a></h3>
-<ol style="list-style-type: decimal"><li>
-<p><strong>Quality Control</strong> - Validation of studbooks from text files, Excel workbooks, and LabKey EHR pedigrees. Checks include:</p>
-<ul><li>Parent record verification</li>
-<li>Sex validation (no male dams, female sires)</li>
-<li>Duplicate detection</li>
-<li>Date validation</li>
-<li>Minimum parent age verification (default 2 years)</li>
-</ul></li>
-<li><p><strong>Pedigree Creation</strong> - Building pedigrees from animal lists using LabKey EHR integration via <code>Rlabkey</code> package</p></li>
-<li><p><strong>Age-Sex Pyramid Plots</strong> - Visual display of living animals by age and sex for demographic analysis</p></li>
-<li>
-<p><strong>Genetic Value Analysis Reports</strong> - Ranking scheme using:</p>
-<ul><li>Mean kinship (indicates inter-relatedness with colony)</li>
-<li>Genome uniqueness (indicates presence of rare alleles)</li>
-<li>Animals with low mean kinship or high genome uniqueness rank higher</li>
-</ul></li>
-<li>
-<p><strong>Breeding Group Formation</strong> - Creating potential breeding groups that:</p>
-<ul><li>Avoid mating of closely related animals</li>
-<li>Support optional sex ratio constraints</li>
-<li>Support harem group configuration</li>
-<li>Maximize genetic diversity</li>
-</ul></li>
-</ol></div>
 <div class="section level3">
 <h3 id="package-structure">Package Structure<a class="anchor" aria-label="anchor" href="#package-structure"></a></h3>
 <ul><li>
 <code>R/</code> - Package functions and Shiny modules (<code>appUI.R</code> + <code>appServer.R</code> + <code>mod*.R</code> are the canonical modular Shiny application, launched by <code><a href="reference/runGeneKeepR.html">runGeneKeepR()</a></code>)</li>
-<li>
-<code>inst/extdata/</code> - Example data and configuration files</li>
-<li>
-<code>tests/testthat/</code> - Unit tests</li>
 </ul></div>
 <div class="section level3">
 <h3 id="running-the-application">Running the Application<a class="anchor" aria-label="anchor" href="#running-the-application"></a></h3>
@@ -103,10 +73,6 @@
 <div class="section level3">
 <h3 id="key-references">Key References<a class="anchor" aria-label="anchor" href="#key-references"></a></h3>
 <p>Vinson, A; Raboin, MJ. “A Practical Approach for Designing Breeding Groups to Maximize Genetic Diversity in a Large Colony of Captive Rhesus Macaques (<em>Macaca mulatta</em>)” <em>Journal of the American Association for Laboratory Animal Science</em>, 2015 Nov, Vol.54(6), pp.700-707</p>
-</div>
-<div class="section level3">
-<h3 id="online-documentation">Online Documentation<a class="anchor" aria-label="anchor" href="#online-documentation"></a></h3>
-<p><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link uri">https://rmsharp.github.io/nprcgenekeepr/</a></p>
 <hr></div>
 </div>
 <div class="section level2">
