@@ -12,11 +12,209 @@ plan (Mendelian-exclusion parentage verification), per
 `docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md` §4.
 Owner-picked via the Phase 0 priorities `AskUserQuestion` from a 4-option
 list (Slice 3, Slice 4, Slice 5 of issue #130, issue #132).
-**Started:** 2026-08-01
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are
-recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the
-crash breadcrumb for the next session's reconcile.
+**Started/Completed:** 2026-08-01 / 2026-08-01
+**Status:** DONE. Full TDD cycle: PRE-RED (research) -> RED -> GREEN ->
+REFACTOR, every phase transition `AskUserQuestion`-gated per `CLAUDE.md`.
+
+**What happened, in order:** **(1)** Phase 0 orientation in full
+(`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list`,
+`git status`/`log`/`diff --stat`, `methodology_dashboard.py` (Health
+98/100), ledger reconcile -- `CHANGELOG.md`/`HANDOFFS.md` frontiers both
+clean, no ghost session, no undocumented commits). Flagged pre-existing,
+untouched local noise (`.DS_Store` files, an `renv.lock` package-version
+bump, an untracked local render of the already-closed issue #125 plan) per
+Safeguards, without acting on it. Rendered the priorities list; owner
+picked Slice 3. **(2)** Phase 1B: claimed the session immediately
+(`497f9770`) -- `SESSION_NOTES.md` stub + `HANDOFFS.md` `status: pending`
+receipt, before any technical work. **(3)** Read Slice 1/2's actual
+implementation directly (`R/markerKinship.R`, `R/checkMarkerGenotypeFile.R`,
+`R/buildMarkerGenotypeMatrix.R`, `R/markerHeterozygosity.R`,
+`R/modMarkerGenetics.R`, their test files, `docs/architecture/module-contract.md`,
+`R/appServer.R`'s wiring, `R/correctUnknownParentMeanKinship.R`'s
+`flagged`-vocabulary precedent) before any Pre-RED delegation. **(4)**
+Pre-RED: launched a 3-agent research `Workflow` (2 independent sources + an
+adversarial cross-check) to resolve Dragon P4 (the plan's own
+unset genotyping-error-tolerance threshold) -- both sourcing agents were
+independently re-verified by the cross-check (it downloaded and
+text-extracted the primary PDFs/patent itself, not just trusted either
+report's paraphrase); no fabricated citations found, but the two reports
+gave a REAL, non-fabrication disagreement (Cifuentes 2006's biallelic/SNP-
+adjacent >=3 vs. the bison/cattle microsatellite patent's >=2). The
+cross-check broke the tie by grepping this package's own
+`R/checkMarkerGenotypeFile.R` to confirm the marker model is biallelic-only
+(not assumed), favoring the SNP-calibrated precedent. Presented findings;
+owner picked `maxExclusions = 2` (flag at 3+) via `AskUserQuestion`. **(5)**
+Designed the RED fixture (9 animals/5 loci, boundary cases at exactly 2 and
+exactly 3 mismatches, an ungenotyped-parent skip case, an unknown-parent
+skip case, a zero-shared-loci NA case) and hand-verified it via an
+independent standalone Rscript before writing any test assertion, matching
+Learning 423's precedent. Owner approved PRE-RED->RED. **(6)** RED: new
+`test_markerParentageExclusion.R` + extended `test_modMarkerGenetics.R`/
+`test_moduleContract.R`, all confirmed failing for the right reason
+("could not find function" / "unused argument"); committed (`cc6f72cd`).
+Owner approved RED->GREEN. **(7)** GREEN in 2 checkpoints: checkpoint 1
+(`d59e2342`) -- `markerParentageExclusion()` + `modMarkerGenetics`'s new
+`pedigree` server param/`exclusionTable` reactive/"Parentage Exclusion" tab
++ `appServer.R` wiring (`shared$currentPedigree`), all 3 target test files
+passing, full regression clean verified via a controlled `git stash`/
+restore comparison against the pre-Slice-3 baseline (0 failed/0 error/0
+warning both before-minus-my-tests and after); checkpoint 2 (`47028699`) --
+NAMESPACE/man pages + `_pkgdown.yml` reference-coverage fix (same gap class
+Slice 1/2 hit). `devtools::check()` then surfaced the expected spelling
+NOTE for 14 new roxygen words -- fixed via `inst/WORDLIST` (`b517874e`),
+discovering along the way that the file's real sort convention is
+byte-order/radix, not case-insensitive collation as prior sessions'
+shorthand described it (`PROJECT_LEARNINGS.md` Learning 428), leaving only
+the pre-existing, unrelated `IACUC` NOTE (read from the raw `Status:` line,
+not the colored summary, per Learning 382/426). **(8)** Owner approved
+GREEN->REFACTOR: no code-level refactor need found; citation (`3c2b159a`:
+new "Mendelian-Exclusion Parentage Verification" entry in
+`population_genetics_terms.html`) and tutorial/article (same commit: new
+paragraph + screenshot reference in `colony-manager-guide.qmd`'s Marker
+Genetics section). **(9)** Phase 3E (`db7307fa`): live `shinytest2`/
+`chromote` smoke test -- uploaded a hand-verified P/C/U pedigree + marker
+genotype file, confirmed the Parentage Exclusion tab renders
+`exclusionCount`/`flagged` matching the fixture exactly (C's true dam P:
+0/false; C's falsely-recorded sire U: 3/true), zero console errors,
+screenshot captured for the guide article. Hit two real process wrinkles
+along the way, both resolved and recorded as new learnings: a hand-authored
+smoke-test pedigree CSV using blank founder fields (not literal `NA`) broke
+QC exactly as Learning 425 already warned -- re-hit despite having read
+that learning at Phase 0, a genuine self-critique below -- and a
+`shinytest2::AppDriver` script silently misbehaved when invoked via
+`Rscript -e "source(...)"` instead of directly as `Rscript script.R`
+(Learning 429). **(10)** Close-out: `BACKLOG.md`'s #130 sequencing item
+updated (Slice 3 DONE; Slices 4/5 next) + `PROJECT_LEARNINGS.md` Learnings
+428-430 added; `CLAUDE.md`'s learnings-count cross-reference updated
+(427->430, Sessions 1-443+->1-444+); recorded in `CHANGELOG.md` and
+`HANDOFFS.md`.
+**Verified throughout:** full clean regression 0/0/0 (3425 passed, 182
+skipped); `devtools::check()` down to the single pre-existing, unrelated
+`IACUC` spelling NOTE (read from the raw `Status:` line, per Learning
+382/426); live `shinytest2`/`chromote` smoke test confirmed real,
+correctly-computed exclusion counts/flags with no console errors.
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**Session 443 Handoff Evaluation (by Session 444): 9/10.** **What helped:**
+the handoff's explicit Dragon P4 framing ("Pre-RED must resolve... pick a
+conservative, documented, tunable default") directly named exactly what
+needed independent sourcing before RED, matching this session's Pre-RED
+design one-for-one; the key-files list (`R/markerHeterozygosity.R`,
+`R/modMarkerGenetics.R`, `tests/testthat/test_markerHeterozygosity.R`,
+the plan's §4/§6) was fully accurate and directly reused, especially the
+explicit call-out that "the `genotypeMatrixR` reactive is the shared
+intermediate every slice's server logic should reuse, not recompute" --
+followed exactly, no recomputation added. The gotchas list (raw `Status:`
+line discipline, `spelling::spell_check_package()` vs. `tests/spelling.R`
+scope difference, `shiny::testServer()`'s `session$getReturned()`
+requirement, the `DESCRIPTION`/Bioconductor constraint, the
+`ScheduleWakeup` stale-wakeup-race warning) was all directly useful and
+none of it needed rediscovery this session. **What was missing:** the
+handoff's key-files list didn't flag `R/correctUnknownParentMeanKinship.R`
+or `docs/architecture/module-contract.md` as reference points for the
+`flagged`-column canonical-vocabulary convention this slice needed, though
+this was discoverable (and discovered) via the plan text's own citation
+of "qcStudbook()'s existing flagged-issue-list vocabulary" and a targeted
+grep -- a minor gap, not a blocker. **What was wrong:** nothing found.
+**ROI:** strongly positive -- the accurate Dragon P4 framing and key-files
+list saved real Pre-RED research design time, and the gotchas list
+directly prevented re-treading three separate known traps (Status-line,
+spelling-scope, testServer bare-callable) that this session's own work
+would otherwise have had to rediscover from scratch.
+
+**Self-assessment (Session 444): 8/10.** **Strengths:** (1) wrote the
+Phase 1B claim stub immediately; (2) Pre-RED's cross-check agent correctly
+identified a GENUINE disagreement between two honestly-sourced reports
+(not a citation error) and resolved it using project-source evidence (a
+grep of `checkMarkerGenotypeFile.R`) rather than re-reading either report
+more carefully -- a real methodological step forward from S442/S443's
+citation-accuracy-focused cross-checks, recorded as Learning 430 for
+Slice 5's benefit; (3) derived the RED fixture's exact expected values via
+an independent standalone Rscript, including boundary cases at exactly
+`maxExclusions` and `maxExclusions + 1`, before writing any assertion;
+(4) caught and fixed a real algorithmic bug in my own `inst/WORDLIST`
+insertion approach (a `Position()`-based scan silently mis-placing 8 of 14
+words due to one existing curator exception) before committing, by
+empirically verifying the file's true sort convention rather than trusting
+eyeball placement; (5) verified GREEN's full regression suite via a
+controlled `git stash`/restore before/after comparison rather than trusting
+a single raw pass count against a remembered historical figure that turned
+out to be a red herring; (6) Phase 3E's live smoke test correctly verified
+BOTH the not-flagged and flagged cases with real computed values, not just
+"no console errors." **Weaknesses:** (1) hand-authored the Phase 3E smoke
+pedigree CSV with blank founder fields instead of literal `NA` text --
+exactly the mistake Learning 425 already documents from S442's own Phase
+3E, despite this session having read that learning during Phase 0
+orientation-adjacent file reading; re-reading a learning is not the same
+as actively checking new fixture-authoring work against it in the moment,
+a real process gap worth calling out plainly rather than glossing over;
+(2) spent real time (multiple failed debug rounds) on the `source()` vs.
+direct-`Rscript`-invocation AppDriver behavior difference before finding
+the workaround -- now recorded as Learning 429 so the next Phase 3E script
+doesn't repeat it, but this session paid the full discovery cost itself.
+**Compared to previous sessions:** third implementation session in the
+#130 family, following S442/S443's exact TDD/Pre-RED-cross-verification/
+fixture-derivation pattern; the Pre-RED cross-check work was genuinely
+harder than S442/S443's (a real numeric disagreement to resolve, not just
+citation accuracy to confirm), and the session met that bar, but the two
+Phase 3E process wrinkles (one a repeated known mistake, one a newly
+discovered one) are why this session scores 8/10 rather than matching
+S443's 9/10 self-assessment.
+
+**Handoff to Session 445:**
+- **What's next:** Slice 4 (cross-center identity linking, plan §4, Effort
+  M) is fully independent and READY -- Pre-RED must resolve Dragon P6
+  (Shiny-wiring scope is open: whether cross-center linking gets a UI in
+  the same session it ships as an exported function, or is deferred
+  further, per the plan's own text). Slice 5 (cross-center differentiation
+  statistic, plan §4, Effort M) depends on Slice 1 (shipped) -- Pre-RED
+  must independently source a differentiation-statistic formula (Fst has
+  multiple competing estimators, Dragon P2) using the SAME 2-source-plus-
+  adversarial-cross-check pattern, and per this session's own Learning 430,
+  budget for a GENUINE numeric disagreement between sources (not just a
+  citation-accuracy check) -- resolve it the same way this session did:
+  grep the actual implementation constraint (e.g. what marker-format
+  assumptions Slice 1 already locked in) rather than re-reading sources
+  more carefully. Both are now the only two remaining slices in the #130
+  family. Also still open, unaffected by either slice: issue #132 (diagram
+  legend, READY, Effort S); `CLAUDE.md`'s NOT_CRAN doc fix (READY, Effort
+  S, unchanged since S439); the `IACUC` spelling-NOTE housekeeping item
+  (READY, Effort S, trivial one-word `inst/WORDLIST` fix); NPRC outreach
+  plan review (DECISION NEEDED, owner-only).
+- **Key files:** `R/markerParentageExclusion.R` (the new function, fully
+  roxygen-documented with the formula, the corrected threshold citations,
+  and the panel-size/error-rate caveat -- read this before Slice 4/5's own
+  implementations to match the established style); `R/modMarkerGenetics.R`
+  (Slice 5 extends this SAME module with a new tab, not a new module, per
+  D6 -- the `genotypeMatrixR` reactive is still the shared intermediate to
+  reuse); `tests/testthat/test_markerParentageExclusion.R` (the
+  hand-verified-fixture derivation pattern including explicit boundary
+  cases at the threshold and threshold+1, and the skip-vs-NA distinction
+  for unrecorded/ungenotyped parents -- reuse this exact technique);
+  `docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md` §4
+  (Slices 4-5's own scope) and §6 (remaining Dragons P2/P6/P7);
+  `inst/WORDLIST` (confirmed this session to be byte-order/radix-sorted,
+  not case-insensitive -- see Learning 428 before hand-placing new words).
+- **Gotchas:** `devtools::check()`'s colored bottom-line summary can still
+  say "0 notes" while the raw `00check.log`'s `Status:` line disagrees
+  (Learning 382/426) -- ALWAYS read the raw line. Any new roxygen citation
+  block needs its proper nouns added to `inst/WORDLIST` in the SAME
+  session, using the byte-order/radix convention (Learning 428), not eyeball
+  case-insensitive placement. Any hand-authored pedigree CSV for a live/E2E
+  smoke test MUST use literal `NA` text for missing sire/dam, never a blank
+  field (Learning 425 -- this session re-hit this exact trap once before
+  fixing it; don't be the fourth session to hit it). Any ad-hoc
+  `shinytest2::AppDriver` Phase 3E script must be invoked as
+  `[NOT_CRAN=true] Rscript script.R` directly, never
+  `Rscript -e "source('script.R')"` (Learning 429); its log/screenshot
+  methods are `$get_logs()`/`$get_screenshot()`, not `$get_log()`/
+  `$screenshot()`. `shiny::testServer()`'s returned reactives are NOT
+  bare-callable -- use `result <- session$getReturned()` then
+  `result$name()` (Learning 424). `DESCRIPTION` still has zero Bioconductor
+  dependencies -- do not add one (D2/Dragon P5, binding for Slice 5). Do
+  not call `ScheduleWakeup` to "wait" on a background `Workflow`/`Agent`
+  call's task-notification (Learning 421).
+- **Self-assessment score:** 8/10 (breakdown above).
 
 ### What Session 443 Did
 **Deliverable:** Implement Slice 2 of the [issue #130](https://github.com/rmsharp/nprcgenekeepr/issues/130)
