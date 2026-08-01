@@ -4,7 +4,7 @@
 \alias{modMarkerGeneticsServer}
 \title{Marker Genetics Module - Server Function}
 \usage{
-modMarkerGeneticsServer(id, kinshipMatrix)
+modMarkerGeneticsServer(id, kinshipMatrix, pedigree)
 }
 \arguments{
 \item{id}{character vector of length 1. Module namespace identifier.}
@@ -12,9 +12,13 @@ modMarkerGeneticsServer(id, kinshipMatrix)
 \item{kinshipMatrix}{reactive returning the full pedigree-based kinship
 matrix (row and column names are animal IDs), or \code{NULL} while
 upstream analysis has not yet been run.}
+
+\item{pedigree}{reactive returning the current pedigree data frame
+(columns \code{id}, \code{sire}, \code{dam}), or \code{NULL} while
+upstream analysis has not yet been run.}
 }
 \value{
-A list with five reactive elements: \code{markerGenotype}, the
+A list with six reactive elements: \code{markerGenotype}, the
 raw uploaded genotype data frame (or \code{NULL} before upload);
 \code{markerKinshipMatrix}, the marker-based \code{id} x \code{id}
 kinship matrix (or \code{NULL}); \code{comparisonTable}, the per-animal
@@ -22,8 +26,11 @@ kinship matrix (or \code{NULL}); \code{comparisonTable}, the per-animal
 \code{NULL}); \code{heterozygosityTable}, the per-animal
 \code{ho}/\code{he} heterozygosity data frame (\code{he} is the
 population-wide mean expected heterozygosity, repeated per row) (or
-\code{NULL}); and \code{isReady}, \code{TRUE} once
-\code{comparisonTable} has a value.
+\code{NULL}); \code{exclusionTable}, the
+\code{\link{markerParentageExclusion}} flagged-pairs data frame (or
+\code{NULL} before a genotype file and a pedigree are both available);
+and \code{isReady}, \code{TRUE} once \code{comparisonTable} has a
+value.
 }
 \description{
 Reads an uploaded long-format marker genotype file (D1 format: \code{id},
@@ -38,7 +45,11 @@ on the pedigree-implied relatedness, not a replacement for it. A second
 tab surfaces the heterozygosity diagnostic: per-animal observed
 heterozygosity (\code{\link{markerObservedHeterozygosity}}) alongside
 population-level expected heterozygosity
-(\code{\link{markerExpectedHeterozygosity}}).
+(\code{\link{markerExpectedHeterozygosity}}). A third tab surfaces the
+Mendelian-exclusion parentage diagnostic
+(\code{\link{markerParentageExclusion}}): the \code{pedigree}'s recorded
+dam/sire cross-referenced against the uploaded genotypes, flagging any
+recorded parent the genotype evidence contradicts.
 }
 \details{
 This module never touches the existing single-locus genotype path
