@@ -429,10 +429,13 @@ appServer <- function(input, output, session) {
 
   # Marker Genetics Module (issue #130 Slice 1) -- an independent,
   # genotype-driven check on relatedness, alongside (not in place of) the
-  # pedigree-based kinship already computed above.
+  # pedigree-based kinship already computed above. Slice 3 adds a
+  # pedigree-recorded-parent Mendelian-exclusion diagnostic, so the module
+  # also needs the current pedigree.
   modMarkerGeneticsServer(
     "markerGenetics",
-    kinshipMatrix = sharedKinshipMatrix
+    kinshipMatrix = sharedKinshipMatrix,
+    pedigree = reactive(shared$currentPedigree)
   )
 
   # Potential Parents Module -- follow the Input-tab sire/dam age floors

@@ -38,7 +38,8 @@ modMarkerGeneticsUI <- function(id) {
              uiOutput(ns("guidance")),
              tabsetPanel(
                tabPanel("Kinship Comparison", DT::DTOutput(ns("comparisonTable"))),
-               tabPanel("Heterozygosity", DT::DTOutput(ns("heterozygosityTable")))
+               tabPanel("Heterozygosity", DT::DTOutput(ns("heterozygosityTable"))),
+               tabPanel("Parentage Exclusion", DT::DTOutput(ns("exclusionTable")))
              )
       )
     )
@@ -59,7 +60,11 @@ modMarkerGeneticsUI <- function(id) {
 #' tab surfaces the heterozygosity diagnostic: per-animal observed
 #' heterozygosity (\code{\link{markerObservedHeterozygosity}}) alongside
 #' population-level expected heterozygosity
-#' (\code{\link{markerExpectedHeterozygosity}}).
+#' (\code{\link{markerExpectedHeterozygosity}}). A third tab surfaces the
+#' Mendelian-exclusion parentage diagnostic
+#' (\code{\link{markerParentageExclusion}}): the \code{pedigree}'s recorded
+#' dam/sire cross-referenced against the uploaded genotypes, flagging any
+#' recorded parent the genotype evidence contradicts.
 #'
 #' This module never touches the existing single-locus genotype path
 #' (\code{checkGenotypeFile}/\code{addGenotype}/\code{hasGenotype}/
@@ -70,8 +75,11 @@ modMarkerGeneticsUI <- function(id) {
 #' @param kinshipMatrix reactive returning the full pedigree-based kinship
 #'   matrix (row and column names are animal IDs), or \code{NULL} while
 #'   upstream analysis has not yet been run.
+#' @param pedigree reactive returning the current pedigree data frame
+#'   (columns \code{id}, \code{sire}, \code{dam}), or \code{NULL} while
+#'   upstream analysis has not yet been run.
 #'
-#' @return A list with five reactive elements: \code{markerGenotype}, the
+#' @return A list with six reactive elements: \code{markerGenotype}, the
 #'   raw uploaded genotype data frame (or \code{NULL} before upload);
 #'   \code{markerKinshipMatrix}, the marker-based \code{id} x \code{id}
 #'   kinship matrix (or \code{NULL}); \code{comparisonTable}, the per-animal
@@ -79,15 +87,18 @@ modMarkerGeneticsUI <- function(id) {
 #'   \code{NULL}); \code{heterozygosityTable}, the per-animal
 #'   \code{ho}/\code{he} heterozygosity data frame (\code{he} is the
 #'   population-wide mean expected heterozygosity, repeated per row) (or
-#'   \code{NULL}); and \code{isReady}, \code{TRUE} once
-#'   \code{comparisonTable} has a value.
+#'   \code{NULL}); \code{exclusionTable}, the
+#'   \code{\link{markerParentageExclusion}} flagged-pairs data frame (or
+#'   \code{NULL} before a genotype file and a pedigree are both available);
+#'   and \code{isReady}, \code{TRUE} once \code{comparisonTable} has a
+#'   value.
 #'
 #' @seealso \code{\link{modMarkerGeneticsUI}}
 #' @importFrom shiny moduleServer reactive renderUI observe req div
 #' @importFrom DT renderDT
 #' @family Shiny modules
 #' @export
-modMarkerGeneticsServer <- function(id, kinshipMatrix) {
+modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
   moduleServer(id, function(input, output, session) {
 
     ## Upstream absence (pedigree kinship not yet computed) is treated as
@@ -163,6 +174,18 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix) {
       )
     })
 
+    exclusion <- reactive({
+      gmat <- genotypeMatrixR()
+      if (is.null(gmat)) {
+        return(NULL)
+      }
+      ped <- safeRead(pedigree)
+      if (is.null(ped)) {
+        return(NULL)
+      }
+      markerParentageExclusion(gmat, ped)
+    })
+
     output$comparisonTable <- DT::renderDT({
       tbl <- comparison()
       req(tbl)
@@ -171,6 +194,12 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix) {
 
     output$heterozygosityTable <- DT::renderDT({
       tbl <- heterozygosity()
+      req(tbl)
+      tbl
+    })
+
+    output$exclusionTable <- DT::renderDT({
+      tbl <- exclusion()
       req(tbl)
       tbl
     })
@@ -202,6 +231,7 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix) {
       markerKinshipMatrix = reactive(markerKmat()),
       comparisonTable = reactive(comparison()),
       heterozygosityTable = reactive(heterozygosity()),
+      exclusionTable = reactive(exclusion()),
       isReady = reactive(!is.null(comparison()))
     )
   })
