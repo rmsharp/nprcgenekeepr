@@ -1,3 +1,4 @@
+Acuna
 AlleleTable
 Allelic
 BG
@@ -6,6 +7,7 @@ Bioinformatics
 CEPH
 CICD
 CMD
+Cifuentes
 Codecov
 ColonyManagerTutorial
 CRAN's
@@ -25,10 +27,15 @@ Foose
 GV
 GeneKeepR
 Gilpin
+Groot
+Heijmans
 HEVL
+ICAR
+ISAG
 JW
 JZV
 Joanes
+Jonquera
 Kimura
 Kinships
 LabKey
@@ -79,6 +86,7 @@ Reformats
 Rhub
 Rlabkey
 Rmd
+Rouweler
 Roychoudhury
 SIMWALK
 SNPRC
@@ -93,6 +101,7 @@ UIDs
 Vandeberg
 Vectorized
 Vn
+Vos
 YYYY
 YYYYMMDD
 addIdRecords
@@ -110,6 +119,7 @@ changedCols
 checkChangedColsLst
 checkErrorLst
 checkRequiredCols
+checkable
 ci
 coeficient
 coeficients
@@ -204,6 +214,7 @@ heterozygosity
 heterozygous
 hh
 homozygosity
+homozygotes
 homozygous
 hovertext
 http
@@ -248,6 +259,7 @@ minDamAge
 minKinship
 minParentAge
 minSireAge
+misidentification
 missingColumns
 mk
 modInput
@@ -317,6 +329,7 @@ reselect
 resetPopulation
 resubmission
 retentions
+retune
 rhesusGenotypes
 rhesusPedigree
 rlang
@@ -366,6 +379,7 @@ txbiomed
 ui
 uitpInput
 un
+ungenotyped
 uninterpretable
 untyped
 updateProgress
