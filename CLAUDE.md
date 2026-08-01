@@ -15,39 +15,13 @@
 
 ## Project Overview
 
-**nprcgenekeepr** (Version 1.1.0.9000) is an R package implementing Genetic Tools for Colony Management. Initially conceived and developed as a Shiny web application at the Oregon National Primate Research Center (ONPRC), it has been enhanced to have more capability as a Shiny application and to expose functions for use either interactively or in R scripts.
+**nprcgenekeepr** is an R package implementing Genetic Tools for Colony Management. Initially conceived and developed as a Shiny web application at the Oregon National Primate Research Center (ONPRC), it has been enhanced to have more capability as a Shiny application and to expose functions for use either interactively or in R scripts.
 
 This work has been supported in part by NIH grants P51 RR13986 to the Southwest National Primate Research Center and P51 OD011092 to the Oregon National Primate Research Center.
-
-### Core Functions
-
-1. **Quality Control** - Validation of studbooks from text files, Excel workbooks, and LabKey EHR pedigrees. Checks include:
-   - Parent record verification
-   - Sex validation (no male dams, female sires)
-   - Duplicate detection
-   - Date validation
-   - Minimum parent age verification (default 2 years)
-
-2. **Pedigree Creation** - Building pedigrees from animal lists using LabKey EHR integration via `Rlabkey` package
-
-3. **Age-Sex Pyramid Plots** - Visual display of living animals by age and sex for demographic analysis
-
-4. **Genetic Value Analysis Reports** - Ranking scheme using:
-   - Mean kinship (indicates inter-relatedness with colony)
-   - Genome uniqueness (indicates presence of rare alleles)
-   - Animals with low mean kinship or high genome uniqueness rank higher
-
-5. **Breeding Group Formation** - Creating potential breeding groups that:
-   - Avoid mating of closely related animals
-   - Support optional sex ratio constraints
-   - Support harem group configuration
-   - Maximize genetic diversity
 
 ### Package Structure
 
 - `R/` - Package functions and Shiny modules (`appUI.R` + `appServer.R` + `mod*.R` are the canonical modular Shiny application, launched by `runGeneKeepR()`)
-- `inst/extdata/` - Example data and configuration files
-- `tests/testthat/` - Unit tests
 
 ### Running the Application
 
@@ -59,10 +33,6 @@ runGeneKeepR()   # runModularApp() is a deprecated alias that calls this
 ### Key References
 
 Vinson, A; Raboin, MJ. "A Practical Approach for Designing Breeding Groups to Maximize Genetic Diversity in a Large Colony of Captive Rhesus Macaques (*Macaca mulatta*)" *Journal of the American Association for Laboratory Animal Science*, 2015 Nov, Vol.54(6), pp.700-707
-
-### Online Documentation
-
-https://rmsharp.github.io/nprcgenekeepr/
 
 ---
 
