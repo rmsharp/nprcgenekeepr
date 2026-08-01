@@ -111,11 +111,13 @@ resolveCrossCenterIds <- function(pedA, pedB, mapping) {
   }
 
   if (anyDuplicated(mapping$idA) > 0L || anyDuplicated(mapping$idB) > 0L) {
+    # nolint start: nonportable_path_linter
     stop(
       "resolveCrossCenterIds(): 'mapping' must link each id at most once; ",
       "found duplicate idA and/or idB values.",
       call. = FALSE
     )
+    # nolint end: nonportable_path_linter
   }
 
   missingA <- setdiff(mapping$idA, pedA$id)
