@@ -6,6 +6,18 @@
 
 ## ACTIVE TASK
 
+### What Session 456 Did
+**Deliverable:** Add a "Pedigree Diagram" demonstration section to `vignettes/a2interactive.Rmd`
+covering `makePedigreeDiagramData()` and the diagram export capability -- owner-directed
+(free-text task, not from a Phase 0 priorities pick), fulfilling `CLAUDE.md`'s deferred
+`a2interactive.Rmd` script-callable-function checklist for the pedigree-diagram function family
+(#129/#131/#132/#135), which the S450 marker-genetics backfill pass did not cover.
+**Started:** 2026-08-02
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 455 Did
 **Deliverable:** Document the Pedigree Diagram tab (GitHub issue #139) in the manual/tutorial --
 close the depth gap between `vignettes/manual_components/_pedigree_browser.Rmd` (mechanics/

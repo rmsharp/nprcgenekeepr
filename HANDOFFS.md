@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S456
+date: 2026-08-02
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Add a "Pedigree Diagram" demonstration section to vignettes/a2interactive.Rmd (makePedigreeDiagramData() + a live visNetwork diagram with working PNG export), fulfilling CLAUDE.md's deferred a2interactive.Rmd script-callable-function checklist for the pedigree-diagram function family (#129/#131/#132/#135).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S455
 date: 2026-08-02
 status: complete
