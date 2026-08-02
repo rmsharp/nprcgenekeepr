@@ -7,6 +7,268 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 456 Did
+
+**Deliverable:** Add a “Pedigree Diagram” demonstration section to
+`vignettes/a2interactive.Rmd` covering
+[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+and the diagram export capability – owner-directed (free-text task, not
+from a Phase 0 priorities pick), fulfilling `CLAUDE.md`’s deferred
+`a2interactive.Rmd` script-callable-function checklist for the
+pedigree-diagram function family (#129/#131/#132/#135), which the S450
+marker-genetics backfill pass did not cover. **Started/Completed:**
+2026-08-02 / 2026-08-02 **Status:** DONE. Documentation-only session –
+no `R/` or `tests/` files changed, so the TDD RED/GREEN/REFACTOR gates
+did not apply (S448/S451/S452/S453/S455 precedent). No GitHub issue to
+close (free-text owner directive, not filed).
+
+**What happened, in order:** **(1)** Phase 0 orientation in full
+(`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `SESSION_NOTES.md` ACTIVE TASK
+section, `gh issue list` – 13 open issues,
+`git status`/`log`/`diff --stat`, `methodology_dashboard.py` Health
+98/100 medium risk, ledger reconcile – `CHANGELOG.md` frontier one
+commit behind `HEAD` but that gap commit (`d8436bed`,
+SESSION_NOTES/HANDOFFS only) was already covered by S455’s own CHANGELOG
+entry, not a new unrecorded action; `HANDOFFS.md` frontier exactly at
+`HEAD`; no ghost session). Reported the same pre-existing uncommitted
+drift prior sessions flagged, left untouched. Rendered the priorities
+list + `AskUserQuestion` picker (2 numbered items – NPRC outreach
+review, LabKey recommendations); the user instead asked a clarifying,
+off-picker question about UAT for the pedigree display feature, then
+gave a concrete free-text task pointed first at `vignettes/a3manual.Rmd`
+and immediately self-corrected to `vignettes/a2interactive.Rmd`. **(2)**
+Research before claiming: read `a3manual.Rmd` (confirmed it’s just a
+child-doc includer; the real content lives in
+`vignettes/manual_components/_pedigree_browser.Rmd`, already fully
+documented by S440/S454/S455) before the user’s correction; then read
+the actually-meant `a2interactive.Rmd` in full (1094 lines) to learn its
+established convention (real executed R code producing real output
+inline throughout, unlike `colony-manager-guide.qmd`’s screenshot-based
+style); confirmed
+[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+is exported (`NAMESPACE:137`, `@export` in
+`R/makePedigreeDiagramData.R`) and read `R/modPedigree.R:387-467` to
+capture the Shiny app’s exact `visNetwork` pipe chain (layout, export,
+legend, search options) so the vignette demo reproduces it faithfully,
+correctly excluding the Shiny-specific `visEvents(click = ...)`
+click-to-navigate wiring (would throw a `ReferenceError` on `Shiny`
+outside a live session). Confirmed `trimmedPed` (already built earlier
+in the tutorial, 704 rows) already carries the `gen` column
+[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+requires (via
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)),
+so no new object needed. **(3)** Stated the plan back to the user (no
+formal `AskUserQuestion` gate – TDD gates don’t apply to doc-only work,
+and the scope was already well-specified by the user’s own instruction
+plus the file’s own established convention) and claimed the session
+(`3030841a`) – stub + `HANDOFFS.md` `status: pending` receipt, before
+any content edits. **(4)** Implementation: new “Pedigree Diagram”
+section inserted before “Genetic Value Analysis”, reusing `trimmedPed`.
+Two chunks: `makePedigreeDiagramData(trimmedPed)` (data prep, with
+[`names()`](https://rdrr.io/r/base/names.html)/[`nrow()`](https://rdrr.io/r/base/nrow.html)
+inspection matching the file’s own established pattern of showing real
+output after each new function), then the full `visNetwork` pipe chain
+reproducing `R/modPedigree.R`’s rendering (hierarchical layout, working
+`visExport(type = "png", ...)` button, shape-to-sex legend,
+`nodesIdSelection`/`highlightNearest` search). Closing prose uses an
+inline `` `r nrow(trimmedPed)` `` substitution to state the diagram’s
+real size. **(5)** Verification:
+[`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)
+clean (2.8 MB output); grepped the rendered HTML to confirm the new
+“Pedigree Diagram” heading, the embedded `visNetwork` widget JS, 3
+“Export Diagram” mentions, `nodesIdSelection` config, and the
+correctly-substituted “704 animals” prose are all genuinely present –
+not just that the render didn’t error. Live functional check: a bare
+[`chromote::ChromoteSession`](https://rstudio.github.io/chromote/reference/ChromoteSession.html)
+(no
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+– confirmed unnecessary since `visExport()` is pure client-side JS with
+no Shiny dependency) against the rendered HTML file, with
+`Page$setDownloadBehavior()` set before navigation; located and clicked
+the real “Export Diagram (PNG)” button via `Runtime$evaluate()`;
+confirmed a real `pedigree_diagram.png` (26,626 bytes) was written with
+a valid PNG magic-number signature (`89 50 4E 47 0D 0A 1A 0A`) – the
+same “functional, not just error-free” standard S434/S438/S440/S454
+established, applied here for the first time to a non-Shiny rendered
+document (new `PROJECT_LEARNINGS.md` Learning 445). Separately confirmed
+zero console errors/warnings via `Console$enable()` +
+`Console$messageAdded()`. Spelling: an ad hoc
+`spelling::spell_check_package(vignettes = TRUE)` call found 2 new words
+this session’s content introduced (`makePedigreeDiagramData`,
+`diagramData`, the latter a local variable name matching
+`R/modPedigree.R`’s own naming) – neither was previously in
+`inst/WORDLIST`; added both in `LC_ALL=C` byte-collation position (S230
+convention), then re-verified `a2interactive.Rmd` contributes zero
+flagged words. Full regression suite exact baseline match (0 failed/0
+error, 3509 passed, same 10 pre-existing `test_modMarkerGenetics.R`
+warnings) – confirming no drift, though no `R/`/`tests/` files were
+touched. Phase 3E: the live `chromote` functional check above serves as
+the runtime-equivalent smoke test for this session’s
+genuinely-interactive new content (not literally “n/a” like a pure-prose
+doc session, since a working htmlwidget was added, not just text).
+**(6)** No GitHub issue to close (this was a free-text owner directive,
+not a filed issue or `BACKLOG.md` item) – `CHANGELOG.md` entry tagged
+`[ad hoc]`. No `NEWS.Rmd`/tutorial-article checklist trigger (no new
+exported function or Shiny feature shipped –
+[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+already existed and was already exported; this session only added its
+`a2interactive.Rmd` coverage). No citation checklist trigger (no new
+displayed statistic/estimator). No `BACKLOG.md` bullet added (no
+pre-existing backlog item was tracking this gap; the `a2interactive.Rmd`
+checklist’s own “identify functions added since the last pass” language
+in `CLAUDE.md` already covers future recurrence). **(7)** Close-out
+documentation: new `PROJECT_LEARNINGS.md` Learning 445 (bare
+[`chromote::ChromoteSession`](https://rstudio.github.io/chromote/reference/ChromoteSession.html)
+suffices for live-functional verification of a non-Shiny-dependent
+interactive feature rendered in a static HTML vignette – no
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+needed). `CLAUDE.md` learnings cross-reference count updated (444-\>445,
+Sessions 1-455+-\>1-456+). `CHANGELOG.md` new dated `[ad hoc]` entry
+(this close-out). Commits split into checkpoints per `SAFEGUARDS.md`’s
+per-commit blast-radius cap: `3030841a` (claim, 2 files), `c3a5d244`
+(doc content + WORDLIST, 2 files), `f6dfafab` (ledger/learnings, 3
+files). **Verified:** rendered-output verification (not just source-text
+presence) via grep on the rendered HTML; genuine functional verification
+of the export button (not just “renders without error”) via chromote
+clicking it and inspecting the real downloaded file’s magic number; zero
+console errors/warnings; spelling and regression-suite checks confirming
+no drift. **Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this
+close-out).
+
+**Session 455 Handoff Evaluation (by Session 456): 9/10.** This
+session’s actual task (documenting
+[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+in `a2interactive.Rmd`) was an out-of-band, free-text owner directive
+given mid-Phase-0, not one of S455’s “next steps” (a)-(h) – so the
+handoff’s predictive list naturally couldn’t anticipate it, and that is
+not a flaw to score against; a handoff cannot predict every direction an
+owner might independently take. What IS fairly scored: every factual
+claim S455 made that this session could independently re-check turned
+out accurate. The regression-suite baseline S455 reported (0 failed/0
+error, 3509 passed, 10 pre-existing `test_modMarkerGenetics.R` warnings)
+was reproduced byte-for-byte by this session’s own re-run. The
+`CHANGELOG.md`/`HANDOFFS.md` frontier claims were independently
+reconfirmed exactly where S455 left them at Phase 0 reconcile. **What
+helped:** the accurate baseline meant this session could trust “0
+failed/0 error, 3509 passed” as a known-good starting point rather than
+having to establish it from scratch with no prior reference. **What was
+missing:** nothing that a handoff could reasonably be expected to
+supply, given the task it turned out to receive was not among the ones
+it could have foreseen. **What was wrong:** no inaccuracies found in any
+of S455’s own claims that this session had occasion to verify. **ROI:**
+positive – the Phase 0 orientation (ledger reconcile, baseline trust)
+was faster because of the handoff’s accuracy, even though its “next
+steps” prediction wasn’t what actually got picked up.
+
+**Self-assessment (Session 456): 9/10.** **Strengths:** (1) read
+`R/modPedigree.R`’s actual `visNetwork` pipe chain before writing the
+vignette demo, rather than reconstructing it from the
+`_pedigree_browser.Rmd` prose description alone – caught and
+deliberately excluded the Shiny-specific `visEvents(click = ...)` wiring
+that would have broken standalone (Learning 6 applied: read
+implementations, not descriptions); (2) recognized `a2interactive.Rmd`’s
+own established convention (real executed code + real output, unlike
+screenshot-based `colony-manager-guide.qmd`) and matched it, rather than
+defaulting to a screenshot-style demonstration that wouldn’t fit the
+file; (3) verified the rendered HTML actually contains the new content
+(grep on real output), not just that the render command exited 0; (4)
+extended the project’s “verify actually functional, not just error-free”
+standard (established S434/S438/ S440/S454 via `shinytest2`) to a
+genuinely new context – a non-Shiny static HTML file – via a bare
+[`chromote::ChromoteSession`](https://rstudio.github.io/chromote/reference/ChromoteSession.html),
+correctly reasoning that
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+was unnecessary overhead since the feature under test has no Shiny
+dependency; this produced a real, independently-verifiable artifact
+(`pedigree_diagram.png` with a correct magic number), not just a passing
+assertion; (5) proactively found and fixed the spelling implication of
+the new content (2 new words) via the established `inst/WORDLIST`
+hand-insertion convention (S230), rather than waiting for a future
+session’s `devtools::check()` to surface it as a NOTE; (6) correctly
+determined no `NEWS.Rmd`/tutorial-article/citation checklist applied and
+stated why, rather than either skipping the check silently or adding an
+entry that wasn’t warranted. **Weaknesses:** (1) initially read the
+wrong file (`a3manual.Rmd`) before the user’s own self-correction to
+`a2interactive.Rmd` – the user’s first message did explicitly name
+`a3manual.Rmd`, so this wasn’t a misreading of their instruction, but it
+cost one file read’s worth of work that a clarifying question up front
+might have avoided, had the path looked inconsistent with the earlier
+UAT conversation about the Diagram tab specifically; (2) did not pose a
+formal `AskUserQuestion` scope gate before implementing (e.g., over
+diagram size – reusing the full 704-row `trimmedPed` vs. a smaller
+curated subset), instead deciding unilaterally that reusing the existing
+object was consistent with the file’s own pattern – a reasonable call
+under Auto Mode’s “make the reasonable call and keep going” guidance,
+but a session with more owner back-and-forth available might have
+surfaced this as an explicit choice, matching the project’s general
+precedent (S449, S455) of gating documentation-depth decisions.
+**Compared to previous sessions:** matches S440/S454’s standard of
+verifying a feature is genuinely functional, not merely error-free, and
+extends it to a new verification context (a non-Shiny rendered document)
+for the first time – a legitimately new pattern (Learning 445) rather
+than a repeat application of the existing `shinytest2` pattern.
+**Self-assessment score:** 9/10 (breakdown above).
+
+**Handoff to Session 457:** - **What’s next:** unchanged from S455’s own
+list, since this session’s task was an out-of-band addition, not a pick
+from it: **(a)** NPRC outreach plan review (DECISION NEEDED, owner-only,
+unchanged) – plan complete at
+`docs/planning/nprc-outreach-announcement-plan.md`. **(b)** The open
+methodology question from S445 (whether `/doctor`-style sessions are
+exempt from Phase 0/1B) remains unresolved. **(c)** LabKey integration
+research recommendations (BLOCKED – needs a live LabKey server). **(d)**
+Issue \#133 (data-model gated, still blocked). **(e)** Issues \#136/#137
+(data-model gated). **(f)** Issue \#138 (deprioritized, low priority
+label). **(g)** Data-hygiene aside (unchanged across
+S453/S454/S455/S456): `BACKLOG.md`’s “`inst/extdata/` reorganization –
+Phase 4” bullet header still says `(DECISION NEEDED...)` even though the
+body confirms Phases 1-4 are all DONE – worth a one-line tag fix
+whenever a session next touches that section. **(h)** 5 open GitHub
+issues remain unmirrored into `BACKLOG.md` (#116, \#37, \#36, \#28, plus
+legacy \#12/#11/#10/#5) – informational, FYI only, surfaced in this
+session’s Phase 0 report but not independently triaged. **(i)** The
+`a2interactive.Rmd` script-callable-function checklist (`CLAUDE.md`) is
+now current for the pedigree-diagram family (#129/#131/#132/#135) as
+well as the marker-genetics family (#130, S450) – a future session
+shipping a NEW exported, script-callable function should check whether
+it needs its own `a2interactive.Rmd` section, per that checklist’s own
+prospective rule. - **Key files:** `vignettes/a2interactive.Rmd:345-403`
+(new “Pedigree Diagram” section –
+[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+demo + full `visNetwork` render/export/legend/search pipe chain),
+`R/modPedigree.R:387-467` (the Shiny app’s own pipe chain this section
+reproduces – re-read this first if the Shiny app’s diagram options ever
+change, so the vignette doesn’t drift out of sync), `inst/WORDLIST` (2
+new words, `makePedigreeDiagramData`/`diagramData`, in byte-collation
+position near lines 167/263), `PROJECT_LEARNINGS.md` Learning 445 (bare
+[`chromote::ChromoteSession`](https://rstudio.github.io/chromote/reference/ChromoteSession.html)
+pattern for verifying non-Shiny interactive vignette content – reusable
+any time a future session needs to verify an htmlwidget embedded in a
+rendered document rather than a live Shiny app), `CHANGELOG.md` (new
+`[ad hoc]` entry, 2026-08-02). - **Gotchas:** all of S442-S455’s
+carried-forward gotchas still apply where relevant (2 iCloud-sync
+duplicate files, `R/appServer 2.R`/`R/modMarkerGenetics 2.R`, still
+present, leave untouched; 3 untracked `.DS_Store` files, same benign
+class, leave untouched; don’t trust a predecessor’s `devtools::check()`
+claim, OR a backlog/issue item’s own stated scope, at face value –
+Learnings 437/441). **New this session:** Learning 445 – if a future
+session needs to verify an interactive feature (widget, JS behavior)
+embedded in a rendered vignette/article rather than the live Shiny app,
+check whether the feature actually depends on a Shiny session (grep the
+source for `Shiny.setInputValue`/`session$ns()` scoped to that specific
+piece) before reaching for
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+– a bare
+[`chromote::ChromoteSession`](https://rstudio.github.io/chromote/reference/ChromoteSession.html)
+against the rendered HTML file is sufficient and simpler for anything
+that works standalone. Also (process note, not a numbered learning):
+`spelling::spell_check_package(vignettes = TRUE)` respects
+`inst/WORDLIST` and is a more accurate pre-commit spelling check than
+[`spelling::spell_check_files()`](https://docs.ropensci.org/spelling//reference/spell_check_files.html),
+which ignores the project’s WORDLIST entirely and produces a flood of
+false-positive-looking flags on words the project has already
+accepted. - **Self-assessment score:** 9/10 (breakdown above).
+
 ### What Session 455 Did
 
 **Deliverable:** Document the Pedigree Diagram tab (GitHub issue \#139)

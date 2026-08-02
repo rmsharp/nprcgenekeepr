@@ -47,6 +47,41 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-08-02 · \[ad hoc\] Add a Pedigree Diagram demonstration section to vignettes/a2interactive.Rmd (Session 456)
+
+- **Deliverable:** owner-directed (free-text task). Fulfills
+  `CLAUDE.md`’s deferred `a2interactive.Rmd` script-callable-function
+  checklist for the pedigree-diagram function family (issues
+  \#129/#131/#132/#135) – the S450 marker-genetics backfill pass did not
+  cover it, and no prior session had. Documentation-only – no `R/` or
+  `tests/` files changed, so the TDD RED/GREEN/REFACTOR gates did not
+  apply (S448/S451/S452/S453/S455 precedent).
+- New “Pedigree Diagram” section demonstrating the exported
+  [`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+  piped into
+  [`visNetwork::visNetwork()`](https://rdrr.io/pkg/visNetwork/man/visNetwork.html)
+  with the same layout/export/legend/search options `R/modPedigree.R`
+  uses, reproducing the Shiny app’s Diagram tab exactly (minus the
+  Shiny-specific click-to-navigate wiring, confirmed by reading
+  `R/modPedigree.R` first). Reuses the `trimmedPed` object already built
+  earlier in the tutorial.
+- Verified:
+  [`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)
+  clean; grepped rendered HTML to confirm the new section, the live
+  `visNetwork` widget, and the correct inline `nrow(trimmedPed)`
+  substitution are present. Live functional check via a bare
+  [`chromote::ChromoteSession`](https://rstudio.github.io/chromote/reference/ChromoteSession.html)
+  (no `shinytest2` needed – the export button is pure client-side JS)
+  against the rendered HTML: clicking “Export Diagram (PNG)” produced a
+  real `pedigree_diagram.png` with a valid PNG magic-number signature;
+  zero console errors/warnings. `inst/WORDLIST` gained 2 new words
+  (`makePedigreeDiagramData`, `diagramData`) in byte-collation order;
+  [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+  confirmed the file now contributes zero flagged words. Full regression
+  suite unchanged at 0 failed/0 error (3509 passed, same 10 pre-existing
+  `test_modMarkerGenetics.R` warnings). See `PROJECT_LEARNINGS.md`
+  Learning 445.
+
 ### 2026-08-02 · \[issue \#139\] Document the Pedigree Diagram tab in the manual/tutorial (Session 455)
 
 - **Deliverable:** owner-picked via the Phase 0 priorities

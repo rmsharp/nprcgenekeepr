@@ -314,6 +314,86 @@ Plot.](a2interactive_files/figure-html/plot-focal-age-sex-pyramid-1.png)
 
     ## [1] 5.1 4.1 4.1 2.1
 
+## Pedigree Diagram
+
+The Pedigree Browser’s Diagram tab in the Shiny application renders a
+pedigree as a hierarchical family-tree diagram, with a button to export
+the current view as a PNG image. Both are built on two script-callable
+functions that work identically outside the Shiny application:
+**makePedigreeDiagramData** prepares a pedigree’s node/edge data, and
+**visNetwork::visNetwork** (from the **visNetwork** package, a
+dependency of **nprcgenekeepr**) renders it. See the “Diagram view” part
+of the *colony-manager-guide* article for the equivalent point-and-click
+workflow and screenshots.
+
+We reuse the *trimmedPed* pedigree built earlier in this tutorial, which
+already has the **gen** column **makePedigreeDiagramData** requires.
+
+``` r
+
+diagramData <- makePedigreeDiagramData(trimmedPed)
+names(diagramData)
+```
+
+    ## [1] "nodes" "edges"
+
+``` r
+
+nrow(diagramData$nodes)
+```
+
+    ## [1] 704
+
+``` r
+
+nrow(diagramData$edges)
+```
+
+    ## [1] 1004
+
+**makePedigreeDiagramData** returns a list of two data frames: *nodes*
+(one row per animal, shaped by sex – dot = Female, square = Male, star =
+Hermaphrodite, triangle = Unknown, diamond = Other/Unrecorded – with an
+HTML hover-tooltip giving ID, sex, generation, sire, and dam) and
+*edges* (one directed edge per known sire or dam, pointing from parent
+to child).
+
+Piping *diagramData* into **visNetwork::visNetwork** and the same
+layout, export, legend, and search options `R/modPedigree.R` uses
+reproduces the Diagram tab’s rendering exactly, including a genuinely
+working **Export Diagram (PNG)** button – try it below.[^4]
+
+``` r
+
+visNetwork::visNetwork(diagramData$nodes, diagramData$edges) |>
+  visNetwork::visHierarchicalLayout(direction = "UD", sortMethod = "directed") |>
+  visNetwork::visExport(
+    type = "png", name = "pedigree_diagram",
+    label = "Export Diagram (PNG)"
+  ) |>
+  visNetwork::visLegend(
+    addNodes = data.frame(
+      label = c(
+        "Female", "Male", "Hermaphrodite", "Unknown", "Other / Unrecorded"
+      ),
+      shape = c("dot", "square", "star", "triangle", "diamond"),
+      stringsAsFactors = FALSE
+    ),
+    useGroups = FALSE, position = "right", main = "Sex",
+    width = 0.28, stepY = 65L
+  ) |>
+  visNetwork::visOptions(
+    nodesIdSelection = TRUE,
+    highlightNearest = list(enabled = TRUE, hover = TRUE, degree = 1L,
+                             algorithm = "all")
+  )
+```
+
+The **Select by id** dropdown above the diagram lets you jump straight
+to a specific animal and dims every node except it and its direct
+connections – useful for locating one animal in a diagram this size (704
+animals) without narrowing the pedigree further.
+
 ## Genetic Value Analysis
 
 Your genetic value analysis must be carefully performed. The next three
@@ -980,7 +1060,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/Rtmp4uc88r/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpxSP5Y5/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -1411,8 +1491,8 @@ into one number for a quick between-center comparison.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-08-02 16:49:36.69495. The processing
-time for this document was 21 seconds..
+The current date and time is 2026-08-02 20:51:52.249808. The processing
+time for this document was 17 seconds..
 
 ``` r
 
@@ -1450,24 +1530,25 @@ sessionInfo()
     ## 
     ## loaded via a namespace (and not attached):
     ##  [1] gtable_0.3.6         anytime_0.3.13       xfun_0.60            bslib_0.11.0        
-    ##  [5] htmlwidgets_1.6.4    lattice_0.22-9       vctrs_0.7.3          tools_4.6.1         
-    ##  [9] generics_0.1.4       tibble_3.3.1         pkgconfig_2.0.3      Matrix_1.7-5        
-    ## [13] data.table_1.18.4    checkmate_2.3.4      RColorBrewer_1.1-3   S7_0.2.2            
-    ## [17] desc_1.4.3           readxl_1.5.0         lifecycle_1.0.5      compiler_4.6.1      
-    ## [21] farver_2.1.2         stringr_1.6.0        textshaping_1.0.5    Rlabkey_3.5.0       
-    ## [25] httpuv_1.6.17        htmltools_0.5.9      sass_0.4.10          yaml_2.3.12         
-    ## [29] htmlTable_2.5.0      later_1.4.8          pillar_1.11.1        pkgdown_2.2.1       
-    ## [33] jquerylib_0.1.4      DT_0.34.0            cachem_1.1.0         sessioninfo_1.2.4   
-    ## [37] mime_0.13            tidyselect_1.2.1     zip_3.0.1            digest_0.6.39       
-    ## [41] dplyr_1.2.1          labeling_0.4.3       fastmap_1.2.0        grid_4.6.1          
-    ## [45] cli_3.6.6            magrittr_2.0.5       withr_3.0.3          shinyBS_0.65.0      
-    ## [49] scales_1.4.0         promises_1.5.0       backports_1.5.1      plotrix_3.8-14      
-    ## [53] lubridate_1.9.5      timechange_0.4.0     rmarkdown_2.31       lambda.r_1.2.4      
-    ## [57] httr_1.4.8           otel_0.2.0           futile.logger_1.4.9  cellranger_1.1.0    
-    ## [61] ragg_1.5.2           openxlsx_4.2.8.1     shiny_1.14.0         evaluate_1.0.5      
-    ## [65] rlang_1.3.0          futile.options_1.0.1 Rcpp_1.1.2           xtable_1.8-8        
-    ## [69] glue_1.8.1           formatR_1.14         renv_1.2.3           rstudioapi_0.19.0   
-    ## [73] jsonlite_2.0.0       R6_2.6.1             systemfonts_1.3.2    fs_2.1.0
+    ##  [5] visNetwork_2.1.4     htmlwidgets_1.6.4    lattice_0.22-9       vctrs_0.7.3         
+    ##  [9] tools_4.6.1          generics_0.1.4       tibble_3.3.1         pkgconfig_2.0.3     
+    ## [13] Matrix_1.7-5         data.table_1.18.4    checkmate_2.3.4      RColorBrewer_1.1-3  
+    ## [17] S7_0.2.2             desc_1.4.3           readxl_1.5.0         lifecycle_1.0.5     
+    ## [21] compiler_4.6.1       farver_2.1.2         stringr_1.6.0        textshaping_1.0.5   
+    ## [25] Rlabkey_3.5.0        httpuv_1.6.17        htmltools_0.5.9      sass_0.4.10         
+    ## [29] yaml_2.3.12          htmlTable_2.5.0      later_1.4.8          pillar_1.11.1       
+    ## [33] pkgdown_2.2.1        jquerylib_0.1.4      DT_0.34.0            cachem_1.1.0        
+    ## [37] sessioninfo_1.2.4    mime_0.13            tidyselect_1.2.1     zip_3.0.1           
+    ## [41] digest_0.6.39        dplyr_1.2.1          labeling_0.4.3       fastmap_1.2.0       
+    ## [45] grid_4.6.1           cli_3.6.6            magrittr_2.0.5       withr_3.0.3         
+    ## [49] shinyBS_0.65.0       scales_1.4.0         promises_1.5.0       backports_1.5.1     
+    ## [53] plotrix_3.8-14       lubridate_1.9.5      timechange_0.4.0     rmarkdown_2.31      
+    ## [57] lambda.r_1.2.4       httr_1.4.8           otel_0.2.0           futile.logger_1.4.9 
+    ## [61] cellranger_1.1.0     ragg_1.5.2           openxlsx_4.2.8.1     shiny_1.14.0        
+    ## [65] evaluate_1.0.5       rlang_1.3.0          futile.options_1.0.1 Rcpp_1.1.2          
+    ## [69] xtable_1.8-8         glue_1.8.1           formatR_1.14         renv_1.2.3          
+    ## [73] rstudioapi_0.19.0    jsonlite_2.0.0       R6_2.6.1             systemfonts_1.3.2   
+    ## [77] fs_2.1.0
 
 [^1]: Setting *minDamAge* to 3.5 and above will cause an error along
     with the creation of a file *~/lowParentAge.csv* that will list the
@@ -1480,3 +1561,8 @@ sessionInfo()
     object if it does not already exist.
 
 [^3]: All animals within the colony have a known birth date.
+
+[^4]: The Diagram tab’s click-to-navigate behavior (clicking a node
+    narrows the focal-animal selection to it) is Shiny-specific – it
+    relies on a live Shiny session to receive the click event – and is
+    therefore not reproduced here.
