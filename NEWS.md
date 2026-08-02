@@ -103,6 +103,12 @@ R. Mark Sharp, Ph.D.
   each node shape means (dot = Female, square = Male, star =
   Hermaphrodite, triangle = Unknown, diamond = Other/Unrecorded), so
   this no longer has to be looked up outside the app.
+- The Pedigree Browser's Diagram tab gained **hover tooltips and a
+  search/highlight dropdown** (issue \#135): hovering any animal now
+  shows its ID, sex, generation, sire, and dam; a new "Select by id"
+  dropdown lets you jump straight to an animal by ID, dimming everything
+  except it and its direct connections. `makePedigreeDiagramData()`'s
+  returned node data gains a `title` field for scripted use.
 
 # nprcgenekeepr 2.0.0 (20260708)
 

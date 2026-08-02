@@ -58,6 +58,11 @@ Clicking a node re-centers the population on that animal, the same as entering
 its ID in the focal-animals text area. An **Export Diagram (PNG)** button,
 shown in the diagram's own corner, saves the current diagram view as a PNG
 image file -- useful for husbandry reports, IACUC documents, or presentations.
+Hovering any node shows its ID, sex, generation, sire, and dam. A **Select by
+id** dropdown above the diagram lets you jump straight to a specific animal by
+ID, dimming every node except it and its direct connections -- useful for
+locating one animal in a large, busy diagram without narrowing the
+focal-animal selection.
 
 ### Module Interface
 
