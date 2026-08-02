@@ -12,34 +12,165 @@ close the depth gap between `vignettes/manual_components/_pedigree_browser.Rmd` 
 reference) and `vignettes/articles/colony-manager-guide.qmd` (task-oriented tutorial). Owner-picked
 via the Phase 0 priorities `AskUserQuestion` from a 2-option list (this item, NPRC outreach plan
 review).
-**Started:** 2026-08-02
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Started/Completed:** 2026-08-02 / 2026-08-02
+**Status:** DONE. Documentation-only session -- no `R/` or `tests/` files changed, so the TDD
+RED/GREEN/REFACTOR gates did not apply (S448/S451/S452/S453 precedent). Issue closed.
 
-**Scope (research + `AskUserQuestion` before claiming):** research found issue #139's "zero
-coverage" premise partially overtaken by events -- #131 (S440) added an Export-PNG-scoped Diagram
-section to `_pedigree_browser.Rmd` only; #132 (S449) added a minimal legend-scoped "Diagram view"
-intro to `colony-manager-guide.qmd` only (explicitly not full #139 scope, per that session's own
-`AskUserQuestion`); #135 (S454) extended `_pedigree_browser.Rmd`'s Diagram paragraph with hover-
-tooltip/search coverage, touching only that file. Net result: `_pedigree_browser.Rmd` now covers
-base rendering, 1,500-node cap, click-to-navigate, Export PNG, hover tooltip, and Select-by-id
-search/highlight, but is missing the shape-to-sex legend (#132's feature, documented only in the
-other file). `colony-manager-guide.qmd` covers base rendering + the legend (1 screenshot) but is
-missing click-to-navigate, the node cap, Export PNG, hover tooltip, and Select-by-id search/
-highlight -- a real depth gap versus the Table view's 9-screenshot treatment in the same file.
-Owner picked "prose-only" depth for the `colony-manager-guide.qmd` expansion (no new screenshots)
-over "prose + one new screenshot" or "full screenshot parity" -- via `AskUserQuestion`.
-**Plan:** (1) `_pedigree_browser.Rmd` -- add the shape-to-sex legend description to the existing
-"Data Table and Diagram" section, prose-only, matching that file's established no-screenshot
-style. (2) `colony-manager-guide.qmd` -- extend the existing "Diagram view" paragraph (~line 305)
-to cover click-to-navigate, the 1,500-node cap, Export PNG, hover tooltip, and Select-by-id search/
-highlight, prose-only per the owner's depth pick. No `R/` or `tests/` files change -- TDD RED/
-GREEN/REFACTOR gates do not apply (S448/S451/S452/S453 precedent for non-implementation/doc-only
-sessions). No new displayed statistic, no new exported function, no new user-facing Shiny feature
-shipped (documenting already-shipped features) -- the citation/`NEWS.Rmd`/`a2interactive.Rmd`
-checklists do not apply; the tutorial/article checklist IS this session's deliverable.
+**What happened, in order:** **(1)** Phase 0 orientation in full (`SESSION_RUNNER.md`,
+`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list` -- 14 open issues, `git status`/`log`/
+`diff --stat`, `methodology_dashboard.py` Health 98/100 medium risk, ledger reconcile --
+`CHANGELOG.md`/`HANDOFFS.md` frontiers both at `HEAD`, no ghost session, no undocumented commits).
+Reported the same pre-existing uncommitted drift prior sessions flagged (`renv.lock`, `.DS_Store`
+x3, the 2 iCloud-sync duplicate `R/* 2.R` files, the stray plan-render HTML) -- left untouched
+throughout. Rendered the priorities list + `AskUserQuestion` picker (2 numbered items -- issue
+#139, NPRC outreach review); owner picked issue #139. **(2)** Research before claiming: read issue
+#139's full body, `_pedigree_browser.Rmd`, and `colony-manager-guide.qmd`'s Diagram-related prose,
+plus the `CHANGELOG.md` entries for #131/#132/#134/#135 to determine exactly which file each
+touched. Found #139's "zero coverage" premise partially overtaken by events (see the research
+summary that was here at claim time, now superseded by this full write-up): #131 (S440) added an
+Export-PNG-scoped Diagram section to `_pedigree_browser.Rmd` only; #132 (S449) added a minimal
+legend-scoped "Diagram view" intro to `colony-manager-guide.qmd` only (explicitly not full #139
+scope, per that session's own `AskUserQuestion`); #135 (S454) extended `_pedigree_browser.Rmd`'s
+Diagram paragraph with hover-tooltip/search coverage, touching only that file. Net result:
+`_pedigree_browser.Rmd` covered 5 of 6 shipped Diagram-tab features but was missing the
+shape-to-sex legend; `colony-manager-guide.qmd` covered only base rendering + the legend (1
+screenshot), missing the other 5 features entirely -- a real depth gap versus the Table view's
+9-screenshot treatment in the same file. Posed one `AskUserQuestion` scope decision (screenshot
+depth for the `colony-manager-guide.qmd` expansion); owner picked "prose-only" over "prose + one
+new screenshot" or "full screenshot parity". **(3)** Phase 1B: claimed the session (`185b7533`) --
+stub + `HANDOFFS.md` `status: pending` receipt, before any content edits. **(4)** Implementation:
+added the shape-to-sex legend description to `_pedigree_browser.Rmd`'s existing "Data Table and
+Diagram" section (prose-only, matching that file's no-screenshot style; fixed a resulting
+line-wrap overflow on re-read). Extended `colony-manager-guide.qmd`'s "Diagram view" paragraph
+(~line 305) to cover click-to-navigate, the 1,500-node cap, Export PNG, hover tooltip, and
+Select-by-id search/highlight, prose-only, matching that file's task-oriented voice (verified the
+exact shape-to-sex mapping against `R/makePedigreeDiagramData.R`'s `shapeMap` and
+`R/modPedigree.R`'s `visLegend()` call before writing prose, rather than trusting the existing
+fig-alt text alone). **(5)** Verification: `a3manual.Rmd` (parent of `_pedigree_browser.Rmd`)
+rendered via `rmarkdown::render()`, new legend text confirmed present via `grepl()` on the rendered
+HTML. `colony-manager-guide.qmd` rendered via `quarto render --to html`, zero errors, new prose
+confirmed present via `grep` on the rendered HTML; confirmed render byproducts are gitignored
+(`git status` showed only the `.qmd` source modified). `tests/spelling.R` (the actual hook
+`devtools::check()` uses, found at `tests/spelling.R` rather than a `tests/testthat/` file) run
+directly -- clean, no new flagged words from either edit (`Hermaphrodite` is a recognized
+dictionary word, no `inst/WORDLIST` addition needed). Full regression suite via
+`testthat::test_dir()`: 0 failed/0 error, 3509 passed, 10 pre-existing warnings all isolated to
+`test_modMarkerGenetics.R` (unrelated -- no `R/` files touched this session, confirmed this matches
+S454's own baseline count). Phase 3E: n/a -- documentation-only change, no Shiny/runtime behavior
+affected. **(6)** GitHub: posted a verification comment on issue #139
+(`https://github.com/rmsharp/nprcgenekeepr/issues/139#issuecomment-5159297837`) and closed it via
+`gh api` (state PATCH). **(7)** `BACKLOG.md` new resolved-item bullet (matching the
+#131/#132/#134/#135 format) in the "Pedigree diagram vs kinship2 audit follow-ups" section.
+**(8)** Close-out documentation: new `PROJECT_LEARNINGS.md` Learning 444 (the "and/or" checklist
+flexibility can leave sibling doc files with an asymmetric cumulative gap across a feature family
+shipped incrementally over several sessions, even though each individual session was
+checklist-compliant) -- caught and fixed a citation error while writing it (`[[Learning 7]]`/
+`[[Learning 10]]` initially cited `SESSION_RUNNER.md`'s framework-learnings table using
+`PROJECT_LEARNINGS.md`'s own internal link syntax; grepped the destination per Learning 7's own
+rule, found no match, and rewrote as a plain textual reference to the correct document/row).
+`CLAUDE.md` learnings cross-reference count updated (443->444, Sessions 1-454+->1-455+).
+`CHANGELOG.md` new dated `[issue #139]` entry (this close-out). No `NEWS.Rmd` entry -- this session
+shipped no new feature/function, only documentation of already-shipped ones (S453 audit-only
+precedent). Commits split into 3 <=5-file checkpoints per `SAFEGUARDS.md`'s per-commit blast-radius
+cap: `185b7533` (claim, 2 files), `139c97cf` (doc content, 3 files), `2d6f2d98` (ledger/learnings,
+3 files).
+**Verified:** rendered-output verification for both files (not just source-text presence) --
+`a3manual.Rmd`/`colony-manager-guide.qmd` both actually render clean with the new prose confirmed
+present in their rendered HTML, plus the spelling and regression-suite checks above.
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**Session 454 Handoff Evaluation (by Session 455): 9/10.** Item (a) of "next steps" named exactly
+this session's task ("Issue #139 -- document the pedigree-diagram Diagram tab in the
+manual/tutorial (currently zero coverage for issue #129's original feature; this session's #135
+doc edit covers only #135's own feature). READY, Effort S/M, unchanged since S449.") -- directly
+load-bearing, and the Phase 0 priorities picker surfaced it as one of 2 clean options. **What
+helped most:** the parenthetical "this session's #135 doc edit covers only #135's own feature" was
+the single most useful sentence in the whole handoff -- it told this session exactly where to look
+for the residual gap instead of re-discovering from scratch that #139 wasn't fully zero-coverage
+anymore. **What was missing:** the handoff's Effort S/M estimate turned out roughly right for the
+actual writing, but didn't anticipate the research step needed to establish WHICH parts were
+already covered by #131/#132/#135 -- reasonable, since giving that level of detail would have
+required S454 to do this session's own research work. **What was wrong:** no inaccuracies found in
+S454's own claims (independently re-confirmed: `CHANGELOG.md`/`HANDOFFS.md` frontiers were exactly
+where S454 left them, at `HEAD`; the regression-suite baseline of 3509 passed/10 warnings matched
+exactly). **ROI:** positive -- correctly identified #139 as the next unblocked, non-owner-gated
+item, and its one-sentence caveat about #135's own doc scope saved a full re-derivation of the
+coverage-gap research.
+
+**Self-assessment (Session 455): 9/10.** **Strengths:** (1) did NOT take issue #139's own "zero
+coverage" framing at face value -- re-verified against the actual current state of both doc files
+and the CHANGELOG history of #131/#132/#135, discovering the premise was stale and the real gap
+was an asymmetry, not a total absence (a materially different, more precise scope than the issue
+text alone would have produced); (2) surfaced the real screenshot-depth judgment call via
+`AskUserQuestion` rather than silently picking a depth, consistent with this project's established
+pattern of treating documentation-depth choices as owner decisions (#132's own precedent); (3)
+verified the exact shape-to-sex mapping against the actual `R/makePedigreeDiagramData.R` source
+before writing prose, rather than trusting the pre-existing fig-alt caption text at face value;
+(4) verified both edits against their REAL rendered output (`rmarkdown::render()` /
+`quarto render`), not just source-text presence -- catching that render byproducts are correctly
+gitignored as a side effect; (5) ran the actual spelling-check mechanism `devtools::check()` uses
+(`tests/spelling.R`) rather than an ad hoc approximation, after first locating it correctly;
+(6) caught and self-corrected a real citation error in its own new Learning 444 entry before
+committing it -- applying Learning 7's own "grep the destination" rule reflexively while writing
+about a closely related failure mode; (7) split close-out into multiple <=5-file checkpoint
+commits per `SAFEGUARDS.md`, matching S454's own precedent.
+**Weaknesses:** (1) the first citation attempt in Learning 444 ([[Learning 7]]/[[Learning 10]])
+should have been checked against the destination BEFORE writing it, not caught by a subsequent
+grep -- a more careful first pass would have avoided the correction step entirely; (2) did not
+add a new live screenshot to `colony-manager-guide.qmd` even though the "prose + one new
+screenshot" option was available and arguably would have most concretely illustrated the
+Select-by-id dim/highlight effect -- a reasonable owner call given the explicit "Effort S/M"
+framing, but worth noting as the road not taken.
+**Compared to previous sessions:** matches S453's audit-first discipline (verify the actual current
+state before assuming a backlog/issue item's stated scope is still accurate -- Learning 441)
+applied to a documentation gap rather than a code/config claim, and extends the tutorial/article
+documentation checklist's own "and/or" precedent (S436) by identifying and naming, for the first
+time, the cumulative cross-file risk that flexibility creates over a multi-session feature family
+(new Learning 444) -- a documentation-specific instance of the SESSION_RUNNER.md Learning
+7/10 pattern (diff-scoped completeness checks miss what's stale OUTSIDE the diff) that no prior
+Diagram-tab session had named explicitly.
+**Self-assessment score:** 9/10 (breakdown above).
+
+**Handoff to Session 456:**
+- **What's next:** **(a)** NPRC outreach plan review (DECISION NEEDED, owner-only, unchanged) --
+  plan complete at `docs/planning/nprc-outreach-announcement-plan.md`. **(b)** The open methodology
+  question from S445 (whether `/doctor`-style sessions are exempt from Phase 0/1B) remains
+  unresolved. **(c)** LabKey integration research recommendations (BLOCKED -- needs a live LabKey
+  server). **(d)** Issue #133 (data-model gated, still blocked) -- next in the #131-#138 sequencing
+  chain after #135, but still blocked. **(e)** Issues #136 (name labels, data-model gated), #137
+  (twin/zygosity, data-model gated) remain further down S436's priority order, both gated.
+  **(f)** Issue #138 (full-colony rendering beyond the 1,500-node cap) -- explicitly
+  deprioritized/delayed by the owner, `low priority` GitHub label. **(g)** Data-hygiene aside
+  (informational, unchanged across S453/S454/S455): `BACKLOG.md`'s "`inst/extdata/` reorganization
+  -- Phase 4" bullet header still says `(DECISION NEEDED...)` even though the body confirms Phases
+  1-4 are all DONE -- worth a one-line tag fix whenever a session next touches that section. **(h)**
+  The #131-#138 pedigree-diagram-audit follow-up sequence and its own documentation debt (#139) are
+  now BOTH fully resolved except for the data-model-gated items (#133/#136/#137) and the explicitly
+  deprioritized #138 -- there is no more "easy" item left in this family; the next unblocked pick
+  is genuinely one of (a)-(c) above, or a fresh backlog/issue triage pass.
+- **Key files:** `vignettes/manual_components/_pedigree_browser.Rmd:55-58` (shape-to-sex legend
+  sentence added to the Diagram paragraph), `vignettes/articles/colony-manager-guide.qmd:~310-321`
+  (Diagram view paragraph extended with the 5 previously-missing features), `BACKLOG.md` (new
+  issue #139 resolved-item bullet after the #135 entry, "Pedigree diagram vs kinship2 audit
+  follow-ups" section), `PROJECT_LEARNINGS.md` Learning 444 (the "and/or" checklist
+  cross-file-asymmetry risk, reusable if a future session touches ANY doc checklist with an
+  "and/or" file choice across a multi-session feature family), `CHANGELOG.md` (new `[issue #139]`
+  entry).
+- **Gotchas:** all of S442-S454's carried-forward gotchas still apply where relevant (2 iCloud-sync
+  duplicate files, `R/appServer 2.R`/`R/modMarkerGenetics 2.R`, still present, leave untouched; 3
+  untracked `.DS_Store` files, same benign class, leave untouched; don't trust a predecessor's
+  `devtools::check()` claim, OR a backlog/issue item's own stated scope, at face value -- Learnings
+  437/441). **New this session:** Learning 444 -- a documentation checklist's "and/or" flexibility
+  (touch ONE of two sibling doc files, not necessarily both) is individually reasonable per session
+  but can leave the two files with a cumulative asymmetric coverage gap across a feature family
+  shipped over several sessions, since no single session's own diff checks the OTHER file's running
+  total -- when closing out a multi-session doc debt item, diff both files against each other, not
+  just against the one feature being documented that session. Also (process note, not a numbered
+  learning): the actual spelling-check hook this project's `devtools::check()` runs is
+  `tests/spelling.R` (top-level `tests/`, not `tests/testthat/`) -- `Rscript tests/spelling.R` is
+  faster than a full `devtools::check()` for a documentation-only session that just needs a
+  spelling regression check.
+- **Self-assessment score:** 9/10 (breakdown above).
 
 ### What Session 454 Did
 **Deliverable:** Add hover tooltips + search/highlight to the Pedigree Diagram tab (GitHub issue
