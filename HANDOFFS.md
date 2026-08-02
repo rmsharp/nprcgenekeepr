@@ -60,6 +60,23 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S454
+date: 2026-08-02
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: IN PROGRESS -- add hover tooltips + search/highlight to the Pedigree Diagram tab (issue #135, priority 5 in S436's #131-#138 sequencing order). Pre-RED scope resolved via AskUserQuestion: tooltip shows ID/sex/generation/sire/dam; search/highlight via ID-select dropdown + highlight-on-hover.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<in progress -- this receipt is completed at Phase 3D close-out>
+
+```handoff
 session: S453
 date: 2026-08-02
 status: complete

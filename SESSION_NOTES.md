@@ -6,6 +6,23 @@
 
 ## ACTIVE TASK
 
+### What Session 454 Did
+**Deliverable:** Add hover tooltips + search/highlight to the Pedigree Diagram tab (GitHub issue
+#135, `docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md` Finding #11/Recommendation
+#8, priority 5 in S436's owner-set #131-#138 sequencing order). Owner-picked via the Phase 0
+priorities `AskUserQuestion` from a 3-option list (this item, issue #139 doc gap, NPRC outreach
+plan review). (IN PROGRESS)
+**Started:** 2026-08-02
+**Status:** Session claimed. Work beginning. Pre-RED hands-on research confirmed feasibility
+(`visNetwork` 2.1.4's `visOptions(nodesIdSelection=, highlightNearest=)` and vis.js's native
+`title`-field hover tooltip). Two pre-RED scope decisions resolved via `AskUserQuestion`: tooltip
+shows ID/sex/generation/sire/dam; search/highlight uses an ID-select dropdown +
+highlight-on-**hover** (not click, to avoid overlapping the existing click-to-navigate handler from
+issue #129 Slice 2).
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 453 Did
 **Deliverable:** Verify inbreeding-loop/consanguinity rendering in the Pedigree Diagram tab
 (GitHub issue #134, `docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md` Finding #1/
