@@ -625,9 +625,26 @@ requiring tracking. See `CHANGELOG.md`.*
       0 errors/0 warnings/0 notes; `_pkgdown.yml` reference-coverage entry
       added same-session (the gap class Slice 1 hit and had to fix
       retroactively). See `CHANGELOG.md`.
-      **Implementing Slice 5 (cross-center differentiation statistic,
-      depends on Slice 1, now shipped) is next (READY, Effort M)** -- Pre-RED
-      must independently source a differentiation-statistic formula (Fst
-      has multiple competing estimators, Dragon P2) and budget for a
-      genuine numeric disagreement per Learning 430's precedent. No other
-      open item in this sequencing chain remains.
+      **Implementing Slice 5 (cross-center differentiation statistic) is
+      now DONE -- S447 (2026-08-01), closing out issue #130's entire
+      5-slice sequencing chain:** new `markerFst(genotypeMatrixA,
+      genotypeMatrixB)` computing Hudson's Fst (Bhatia et al. 2013 Eq.10,
+      citing Hudson, Slatkin & Maddison 1992), ratio-of-sums pooling across
+      loci, base R only. Dragon P2 (estimator choice) resolved via a
+      5-agent Pre-RED research `Workflow` (3 research angles + adversarial
+      verification + synthesis) -- the adversarial pass found the first
+      pass's own "Weir & Cockerham (1984)" formula was an incomplete,
+      ~40%-off special case, confirmed against 3 independent sources; the
+      synthesis recommended switching to Hudson's estimator entirely,
+      per Bhatia et al.'s own explicit recommendation for two-named-
+      population pairwise comparisons -- see `PROJECT_LEARNINGS.md`
+      Learning 434. `modMarkerGenetics` gained a Cross-Center tab (second
+      file input). Full TDD cycle (PRE-RED->RED->GREEN, REFACTOR
+      owner-confirmed skip, all `AskUserQuestion`-gated); citation and
+      tutorial/article checklists both done in-session. Verified: full
+      regression suite 0/0 (3476 passed, 182 skipped); `devtools::check()`
+      0 errors/0 warnings/0 notes; live `shinytest2`/`chromote` smoke test
+      confirmed real, correctly-computed Fst values (byte-exact match to
+      the hand-verified fixture) with no console errors. **Issue #130 is
+      now fully implemented across all 5 slices; no open item remains in
+      this sequencing chain.** See `CHANGELOG.md`.
