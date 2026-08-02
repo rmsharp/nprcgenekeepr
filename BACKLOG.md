@@ -496,6 +496,28 @@ visNetwork-vs-kinship2 technology decision (D2), which stands as ratified.*
       documentation checklists. Closed via GitHub comment
       (`https://github.com/rmsharp/nprcgenekeepr/issues/135#issuecomment-5156062877`).
       See `CHANGELOG.md`.)
+- [ ] (none remaining -- **issue #139** (document the pedigree-diagram Diagram
+      tab in the manual/tutorial, discovered S436 while triaging the #131-#138
+      follow-ups) is RESOLVED: documented S455 (2026-08-02). Closed the depth
+      gap left by #131/#132/#135 each scoping their own doc update to one file
+      only -- added the shape-to-sex legend description to
+      `vignettes/manual_components/_pedigree_browser.Rmd` (previously missing
+      there, #132's own feature) and extended `vignettes/articles/
+      colony-manager-guide.qmd`'s "Diagram view" paragraph to cover
+      click-to-navigate, the 1,500-node cap, the Export Diagram (PNG) button,
+      the hover tooltip, and the Select by id search/highlight dropdown
+      (previously missing there). Owner picked prose-only depth
+      (`AskUserQuestion`) over adding new screenshots. Documentation-only --
+      no `R/` or `tests/` files changed, so the TDD RED/GREEN/REFACTOR gates
+      did not apply (S448/S451/S452/S453 precedent). Verified: `a3manual.Rmd`
+      (parent of `_pedigree_browser.Rmd`) rendered via `rmarkdown::render()`
+      with the new text present; `colony-manager-guide.qmd` rendered via
+      `quarto render` with zero errors and the new text present;
+      `tests/spelling.R` clean (no new flagged words); regression suite
+      unchanged at 0 failed/0 error (3509 passed, same 10 pre-existing
+      `test_modMarkerGenetics.R` baseline warnings). Closed via GitHub comment
+      (`https://github.com/rmsharp/nprcgenekeepr/issues/139#issuecomment-5159297837`).
+      See `CHANGELOG.md`.)
 
 ## Outreach
 - [ ] **NPRC outreach & announcement plan** (DECISION NEEDED -- owner review/edit of
