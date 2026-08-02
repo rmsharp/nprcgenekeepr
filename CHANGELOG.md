@@ -47,6 +47,62 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-08-01 · \[issue \#132\] Add an in-app shape-to-sex legend to the Pedigree Diagram tab (Session 449)
+
+- **Deliverable:** implemented issue \#132 (owner-picked via the Phase 0
+  priorities `AskUserQuestion`). The Pedigree Browser’s Diagram tab now
+  shows a shape-to-sex legend to the right of the diagram: dot = Female,
+  square = Male, star = Hermaphrodite, triangle = Unknown, diamond =
+  Other / Unrecorded – matching
+  [`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)’s
+  existing shape mapping. Full TDD cycle (PRE-RED scope decisions → RED
+  → GREEN → REFACTOR-skipped), every phase transition
+  `AskUserQuestion`-gated.
+- **Implementation choice (owner-picked via `AskUserQuestion`):**
+  [`visNetwork::visLegend()`](https://rdrr.io/pkg/visNetwork/man/visLegend.html)
+  (native, same shape renderer as the diagram itself – no approximation)
+  over a hand-rolled static HTML/CSS panel with Unicode glyphs. Verified
+  via the `visNetwork.js` source (`instance.network.on(key, ...)` binds
+  `visEvents()`’s click-to-navigate handler only to the main network,
+  never `instance.legend`) that legend clicks cannot trigger navigation
+  – confirmed live too: emitting a click on a legend node left the
+  focal-animal selection and Table tab unchanged. Position: right of the
+  diagram (owner-picked).
+- **Layout fix found live during verification (Pre-RED/GREEN):** the
+  default `visLegend()` spacing (`stepY=100`) and width (`width=0.2`)
+  didn’t comfortably fit 5 entries within the diagram widget’s fixed
+  400px height – the longest label (“Other / Unrecorded”) clipped
+  against the legend canvas’s own `overflow:hidden` boundary, and the
+  last row crowded the export button below it. Tuned `stepY=65`,
+  `width=0.28`; re-verified live via a `shinytest2`/`chromote`
+  screenshot before and after.
+- **Tests:** new unit test (`tests/testthat/test_modPedigree.R`,
+  asserting the widget’s `x.legend` config: position, title, all 5
+  label/shape pairs, and the tuned `width`/`stepY`) and new E2E smoke
+  test (`tests/testthat/test-e2e-pedigree-module.R`, querying the live
+  legend `vis.Network` DataSet – static-HTML text matching does not work
+  here since the legend renders to an HTML5 canvas, discovered mid-RED
+  and corrected). RED confirmed clean on both (11 failed unit
+  expectations / 5 failed e2e expectations, isolated to the new tests
+  only); GREEN confirmed clean (0 failed/0 error on both, full
+  regression suite 0/0/0 non-baseline, `devtools::check()` 0 errors – 1
+  warning/1 note both pre-existing and unrelated, S448 baseline).
+- **Documentation checklists (same session, per `CLAUDE.md`):**
+  `NEWS.Rmd`/`NEWS.md` gained a new bullet (2.0.0.9000 section);
+  incidentally re-rendering also fixed a stale S448 NEWS.Rmd→NEWS.md
+  render mismatch (the “Kinship Comparison” sub-tab phrase was in
+  `NEWS.Rmd` but missing from the committed `NEWS.md`). Tutorial/article
+  checklist resolved via `AskUserQuestion` given a real tension – the
+  base Diagram tab (issue \#129) itself has zero tutorial coverage,
+  tracked as open issue \#139 – owner picked a minimal “Diagram view”
+  intro + the legend (not the full \#139 scope) in
+  `vignettes/articles/colony-manager-guide.qmd`, with a note left on
+  issue \#139 so a future session doesn’t start from zero. New live
+  screenshot: `vignettes/articles/shiny_app_use/pb_diagram_legend.png`.
+- **GitHub:** issue \#132 closed with implementation summary; issue
+  \#139 noted (not closed) with the minimal-intro exception.
+- **Commits:** `9158521a` (claim).
+
 ### 2026-08-01 · \[BL-NewsRmdChecklist\] Ratify a NEWS.Rmd entry checklist + backfill issue \#130 Slices 1-5 (Session 448)
 
 - **Deliverable:** resolved the `NEWS.Rmd` checklist `BACKLOG.md`

@@ -7,6 +7,240 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 449 Did
+
+**Deliverable:** Implement [issue
+\#132](https://github.com/rmsharp/nprcgenekeepr/issues/132) (add an
+in-app shape-to-sex legend to the Pedigree Diagram tab). Owner-picked
+via the Phase 0 priorities `AskUserQuestion` from a 4-option list
+(a2interactive.Rmd decision, issue \#132, CLAUDE.md NOT_CRAN doc fix,
+spelling-NOTE housekeeping). **Started/Completed:** 2026-08-01 /
+2026-08-01 **Status:** DONE. Full TDD cycle: PRE-RED (research + 2
+scope-decision `AskUserQuestion` calls) -\> RED -\> GREEN -\> REFACTOR
+(owner-confirmed skip), every phase transition `AskUserQuestion`-gated.
+
+**What happened, in order:** **(1)** Phase 0 orientation in full
+(`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list` – 17 open issues, `git status`/`log`/ `diff --stat`,
+`methodology_dashboard.py` Health 98/100, ledger reconcile –
+`CHANGELOG.md`/ `HANDOFFS.md` frontiers both at `HEAD` `decbd227`, no
+ghost session, no undocumented commits). Rendered the priorities list +
+`AskUserQuestion` picker (4 numbered items); owner picked issue \#132.
+**(2)** Pre-RED research: read
+`R/modPedigree.R`/`R/makePedigreeDiagramData.R`, existing Diagram-tab
+unit and E2E tests for conventions. Grepped the installed `visNetwork`
+package’s own `htmlwidgets/visNetwork.js` source (not just its R docs)
+to resolve the implementation-choice question before asking it:
+confirmed
+[`visNetwork::visLegend()`](https://rdrr.io/pkg/visNetwork/man/visLegend.html)
+renders as a fully independent `vis.Network` instance
+(`instance.legend`, distinct from `instance.network`) and that
+`visEvents(click = ...)` binds only to `instance.network`
+(`instance.network.on(key, ...)`) – so a legend click structurally
+cannot fire the existing click-to-navigate handler. **(3)** Phase 1B:
+claimed the session (`9158521a`) – stub + `HANDOFFS.md`
+`status: pending` receipt, before any technical work. **(4)** Two
+PRE-RED scope `AskUserQuestion` calls: (a) implementation approach –
+owner picked
+[`visNetwork::visLegend()`](https://rdrr.io/pkg/visNetwork/man/visLegend.html)
+(native, pixel-accurate) over a hand-rolled static HTML/Unicode-glyph
+panel; (b) legend position – owner picked right of the diagram. **(5)**
+RED: added a unit test (`tests/testthat/test_modPedigree.R`, asserting
+the widget’s `x.legend` JSON config) and an E2E test
+(`tests/testthat/test-e2e-pedigree-module.R`). First E2E draft asserted
+static-HTML text matching, which failed for the WRONG reason once GREEN
+landed (the legend renders to an HTML5 canvas, not DOM text, same
+limitation the pre-existing “known trio’s data” E2E test already worked
+around) – caught this by actually running the corrected test against
+GREEN code and getting an unexpected pass/fail pattern, fixed the test
+to query the live `vis.Network` DataSet via JS instead (matching the
+existing `get_diagram_node()` pattern), then re-verified RED-then-GREEN
+cleanly (`git stash` the implementation, confirm the corrected test
+fails for the right reason – the missing legend title – then restore).
+RED confirmed clean on both surfaces: 11 failed unit expectations / 5
+failed E2E expectations, isolated to only the 2 new tests
+(`NPRC_RUN_E2E=true` opt-in env var discovered this session – E2E tests
+otherwise all skip silently with reason “opt-in,” a gotcha not
+previously documented). **(6)** GREEN: added
+`visNetwork::visLegend(addNodes = ..., useGroups = FALSE, position = "right", main = "Sex")`
+to the `renderVisNetwork()` pipe in `R/modPedigree.R`, after the
+existing `visExport()` call. Both new tests green; fixed one
+`nonportable_path_linter` false positive (the “Other / Unrecorded”
+label’s `/`) via the project’s established `# nolint:` convention.
+**(7)** REFACTOR: owner-confirmed skip (single small, already-clean
+addition). **(8)** Phase 3E live runtime smoke test via
+`shinytest2`/`chromote`: confirmed the legend renders with the exact 5
+expected label/shape pairs; captured a screenshot for the tutorial
+article; found and fixed a real layout defect live (default
+`stepY=100`/`width=0.2` didn’t fit 5 rows in the diagram widget’s fixed
+400px height – the longest label clipped against the legend canvas’s own
+`overflow:hidden` boundary and crowded the export button) by tuning
+`stepY=65`/`width=0.28`, then re-verified the fix live and strengthened
+the unit test to assert the tuned values. Also independently confirmed
+click-safety live (not just via the source read from step 2): emitted a
+real `click` event on the live legend network instance and confirmed the
+Table tab’s row count was unchanged before/after. **(9)** Documentation
+checklists (`CLAUDE.md`, same session): `NEWS.Rmd` gained a new bullet;
+re-rendering to `NEWS.md` incidentally fixed a stale S448 render
+mismatch (see Learning 438 below). Tutorial/article checklist required
+an `AskUserQuestion` given a real tension – the base Diagram tab (issue
+\#129) itself has zero tutorial coverage (tracked as open issue \#139) –
+owner picked a minimal “Diagram view” intro + the legend in
+`vignettes/articles/colony-manager-guide.qmd` (not the fuller issue
+\#139 scope), with a note left on issue \#139 so a future session has a
+head start rather than starting from zero. **(10)** GitHub: issue \#132
+closed with an implementation summary comment; issue \#139 noted (not
+closed). **Verified:** unit test 0 failed/0 error (105 expectations);
+E2E test 0 failed/0 error (28 expectations, live browser); full
+regression suite 0 failed/0 error (3487 passed, 10 pre-existing baseline
+warnings from `test_modMarkerGenetics.R` fixture data, unrelated);
+`devtools::check()` (raw `Status:` line, per Learning 382): 0 errors, 1
+warning (the iCloud-sync duplicate files, owner-confirmed pre-existing
+artifact, unrelated), 1 note (the pre-existing 12-word spelling gap,
+unrelated – confirmed this session’s own new legend text introduced zero
+new spelling flags); live `shinytest2`/`chromote` smoke test (legend
+content, screenshot, click-safety, zero console errors) – both before
+AND after the `stepY`/`width` layout fix. **Ledger:** recorded in
+`CHANGELOG.md` at Phase 3F (this close-out).
+
+**Session 448 Handoff Evaluation (by Session 449): 8/10.** Item (b) of
+“what’s next” named exactly this session’s task (issue \#132, “READY,
+Effort S”) with an accurate one-line context – directly load-bearing, no
+rediscovery needed to identify or scope the task. The carried-forward
+gotchas (raw `Status:` line discipline, `inst/WORDLIST` convention,
+do-NOT-trust-a-predecessor’s- `devtools::check()`-claim-at-face-value)
+were all accurate and useful, though this session’s own
+`devtools::check()` re-verification happened to match S448’s claim
+exactly (no discrepancy this time). **What was wrong:** S448’s own
+close-out claimed “Re-rendered `NEWS.Rmd` -\> `NEWS.md`… git diff
+confirmed the render touched exactly the 5 new bullets, no reflow churn”
+– this session’s own re-render (for an unrelated new bullet) surfaced a
+diff on an EXISTING bullet: the committed `NEWS.md` was missing a
+“starting with a Kinship Comparison sub-tab” phrase that `NEWS.Rmd`
+already had, meaning S448 rendered once, then made a content fix to
+`NEWS.Rmd` afterward (S448’s own notes describe catching and fixing this
+omission), and the “re-rendered… diff confirmed” claim described that
+EARLIER render, not a final one taken after the last edit. New
+`PROJECT_LEARNINGS.md` Learning 438 records this – notably, this is now
+the third consecutive session (S447’s check claim caught by S448 –
+Learning 437; now S448’s own render claim caught by S449) where a
+predecessor’s verification narrative didn’t fully hold up on independent
+re-check, worth flagging as a pattern for a future session to consider
+(see Handoff below). **ROI:** still clearly net positive – the
+load-bearing task identification (item b) and accurate gotchas saved
+real time; the render-mismatch miss cost nothing beyond noticing it as a
+side effect of doing this session’s own mandated re-render correctly.
+
+**Self-assessment (Session 449): 9/10.** **Strengths:** (1) resolved the
+implementation-choice question by reading the actual installed library’s
+JS source BEFORE presenting the `AskUserQuestion`, so the option
+descriptions themselves carried real evidence (event-binding verified at
+the source, not assumed) rather than surface-level tradeoffs; (2) caught
+the E2E test’s own wrong assumption (static HTML matching vs. canvas
+rendering) by actually running it against GREEN code and noticing the
+failure pattern didn’t make sense, rather than treating a “passes”
+result as sufficient without checking it exercised the right thing; (3)
+did a genuine RED-then-GREEN re-verification of the CORRECTED E2E test
+via `git stash` (not just trusting the first RED run before the test was
+fixed); (4) found and fixed a real, live layout defect (legend clipping)
+rather than shipping a mechanically-passing-but-visually-broken feature,
+and strengthened the unit test to lock in the fix as tested behavior,
+not just a screenshot workaround; (5) verified click-safety BOTH via
+source-code reasoning AND an independent live click-emit test, rather
+than treating either alone as sufficient for a claim with real
+regression risk (an accidental focal-animal hijack on every legend
+click); (6) surfaced the tutorial/article checklist tension (issue
+\#129/#139’s undocumented Diagram tab vs. this session’s own checklist
+obligation) as an explicit `AskUserQuestion` rather than silently
+picking a side; (7) closed issue \#132 and left an accurate, scoped note
+on issue \#139 rather than either closing \#139 prematurely or ignoring
+the interaction entirely; (8) two new `PROJECT_LEARNINGS.md` entries
+(438, 439) capture genuinely new, non-obvious patterns – the
+render-staleness-after-edit trap, and the source-read-then-live-confirm
+technique for third-party widget event isolation. **Weaknesses:** (1)
+the first `visLegend()` layout (default `stepY`/`width`) shipped without
+being visually checked before the Phase 3E smoke test – the clipping
+defect was real and would have reached a live screenshot/user-facing
+state had this session not happened to take a verification screenshot; a
+plan that visually previewed the widget earlier (e.g., during GREEN, not
+deferred to Phase 3E) might have caught this sooner, though the outcome
+was still caught and fixed in-session; (2) did not attempt the
+`_pedigree_browser.Rmd` reference-manual-component half of the tutorial
+checklist at all (scoped out via the `AskUserQuestion`, but worth naming
+explicitly as a real gap left for issue \#139, not just implied).
+**Compared to previous sessions:** matches S447-S448’s discipline of
+verifying claims against live/source evidence rather than assumption,
+and extends the “verify a predecessor’s own claim” practice from S448’s
+check-result focus to a render-staleness-shaped variant; the source-read
+technique (JS internals) for a UI risk question is a new dimension not
+exercised by nearby sessions, closer in spirit to S447’s primary-source
+research technique (Learning 434) than to S442-S448’s check-verification
+pattern.
+
+**Handoff to Session 450:** - **What’s next:** issue \#132 is closed.
+Remaining items from the priorities list, updated for this session’s
+changes: **(a)** `vignettes/a2interactive.Rmd` documentation-checklist
+decision (DECISION NEEDED, owner-only, Effort S – unchanged since S447,
+Learning 435). **(b)** `CLAUDE.md`‘s NOT_CRAN doc fix (READY, Effort S,
+unchanged since S439). **(c)** The spelling-NOTE housekeeping item
+(READY, Effort S – 12 words, unchanged since S448; see `BACKLOG.md`
+Housekeeping for the exact list and radix-position guidance). **(d)**
+NPRC outreach plan review (DECISION NEEDED, owner-only). **(e)** The
+open methodology question from S445 (whether `/doctor`-style sessions
+are exempt from Phase 0/1B) remains unresolved. **(f)** Issue \#139
+(document the full Diagram tab – click-to-navigate, export button, node
+interactions, `_pedigree_browser.Rmd` reference-manual coverage) – now
+has a small head start (a minimal “Diagram view” intro + the
+shape-to-sex legend already exist in `colony-manager-guide.qmd`) but the
+fuller scope is still open. **(g)** S448’s own suggestion (spot-check
+other recent sessions’ `devtools::check()`/verification claims) remains
+open, and this session adds a second, related data point: a future
+session could consider whether `CLAUDE.md`’s “NEWS.Rmd entry checklist”
+paragraph should explicitly say “re-render is the literal last step
+before committing” to guard against the specific
+render-staleness-after-edit pattern in Learning 438 – not urgent, a
+documentation-of-a-documentation-process question, not filed as its own
+`BACKLOG.md` item this session (would be scope creep on a session
+already past its single deliverable). - **Key files:**
+`R/modPedigree.R:392-431` (the `renderVisNetwork()` pipe – `visLegend()`
+call with the tuned `stepY`/`width`),
+`tests/testthat/test_modPedigree.R` (new “Issue \#132” section,
+~1232-1281), `tests/testthat/test-e2e-pedigree-module.R` (new “issue
+\#132” E2E test, queries `w.legend.body.data.nodes.get()` – the pattern
+to reuse for any future canvas-rendered-content E2E assertion),
+`NEWS.Rmd`/`NEWS.md` (new bullet, 2.0.0.9000 section),
+`vignettes/articles/colony-manager-guide.qmd` (new “Diagram view”
+paragraph + image, end of the Pedigree Browser section),
+`vignettes/articles/shiny_app_use/pb_diagram_legend.png` (new live
+screenshot), `PROJECT_LEARNINGS.md` Learnings 438-439, `CLAUDE.md`
+(learnings cross-reference count updated), `CHANGELOG.md` (this
+session’s entry). - **Gotchas:** all of S442-S448’s carried-forward
+gotchas still apply unchanged where relevant (raw `Status:` line
+discipline – Learning 382; `inst/WORDLIST` byte-order/radix convention –
+Learning 428; do NOT trust a predecessor’s self-reported
+`devtools::check()` claim at face value – Learning 437; 2 iCloud-sync
+duplicate files, `R/appServer 2.R`/`R/modMarkerGenetics 2.R`, may still
+recur – leave untouched). **New this session:** (1) E2E tests in this
+project need BOTH `NOT_CRAN=true` AND `NPRC_RUN_E2E=true` set to
+actually run via direct `Rscript` – without the latter they all silently
+skip with reason “End-to-end Shiny tests are opt-in,” which reads
+identically to a real skip and is easy to miss; (2) do NOT assert
+canvas-rendered widget content (visNetwork nodes/legend, likely other
+htmlwidgets) via static `get_html_safe()`/DOM-text matching in an E2E
+test – query the live `vis.Network` DataSet via `app$get_js()` instead
+(see `get_diagram_node()` in `test-e2e-pedigree-module.R` for the
+pattern); (3) any source-\>rendered-artifact re-render claim
+(`NEWS.Rmd`-\>`NEWS.md`, etc.) is only as fresh as the LAST render taken
+after the LAST source edit – Learning 438; (4) when verifying a
+third-party htmlwidget’s undocumented event-isolation behavior, read the
+installed package’s own client-side JS source for the actual binding
+site, then independently confirm live – Learning 439; (5)
+`AppDriver$get_screenshot()`’s `selector` param scopes the capture to
+one DOM element (useful for a widget-only screenshot without page
+chrome), and re-running it against an existing output path errors
+`EEXIST` unless the old file is removed first. - **Self-assessment
+score:** 9/10 (breakdown above).
+
 ### What Session 448 Did
 
 **Deliverable:** Resolve the `NEWS.Rmd` checklist decision (BACKLOG.md

@@ -68,6 +68,36 @@ are legal at write time (the receipt ships in the very commit whose sha
 it would name); the next session reconciles them to real shas.
 
 ``` handoff
+session: S449
+date: 2026-08-01
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- implemented issue #132 (in-app shape-to-sex legend on the Pedigree Diagram tab), per DEVELOPMENT_WORKSTREAM.md. Full TDD cycle, all AskUserQuestion-gated. Issue #132 closed.
+what_was_done: New visNetwork::visLegend() call in R/modPedigree.R's renderVisNetwork() pipe (after visExport()): 5-entry legend (dot=Female, square=Male, star=Hermaphrodite, triangle=Unknown, diamond=Other/Unrecorded) matching makePedigreeDiagramData()'s existing shape mapping, positioned right of the diagram (both owner-picked via AskUserQuestion over a hand-rolled Unicode-glyph alternative). Verified via the installed visNetwork.js source (instance.network.on(...) binds visEvents() clicks only to the main network, never instance.legend) and live click-emit testing that legend clicks cannot trigger the existing click-to-navigate handler. Found and fixed a real layout defect live (default stepY=100/width=0.2 clipped the longest label and crowded the export button within the widget's fixed 400px height) via stepY=65/width=0.28, locked into the unit test. Unit test (test_modPedigree.R) + E2E test (test-e2e-pedigree-module.R, querying the live vis.Network legend DataSet via JS -- static HTML matching does not work for canvas-rendered content, corrected mid-RED). Same-session NEWS.Rmd bullet + minimal "Diagram view" intro in colony-manager-guide.qmd (owner-picked over deferring to issue #139, which still tracks the Diagram tab's fuller documentation). Commits: 9158521a (claim).
+next_steps: (a) vignettes/a2interactive.Rmd documentation-checklist decision (DECISION NEEDED, owner-only, Effort S, unchanged since S447/Learning 435). (b) CLAUDE.md's NOT_CRAN doc fix (READY, Effort S, unchanged since S439). (c) Spelling-NOTE housekeeping (READY, Effort S, 12 words, unchanged since S448). (d) NPRC outreach plan review (DECISION NEEDED, owner-only). (e) S445's open Phase 0/1B /doctor-exemption methodology question remains unresolved. (f) Issue #139 (full Diagram-tab documentation) now has a small head start (minimal intro + legend already in colony-manager-guide.qmd) but click-to-navigate/export/node-interaction/_pedigree_browser.Rmd coverage is still open. (g) Consider whether CLAUDE.md's NEWS.Rmd checklist should explicitly say "re-render is the literal last step before committing" per Learning 438 -- not filed as its own BACKLOG.md item, flagged only.
+key_files: R/modPedigree.R:392-431 (visLegend() call), tests/testthat/test_modPedigree.R (new Issue #132 section), tests/testthat/test-e2e-pedigree-module.R (new E2E test, canvas-DataSet-query pattern), NEWS.Rmd + NEWS.md, vignettes/articles/colony-manager-guide.qmd, vignettes/articles/shiny_app_use/pb_diagram_legend.png (new screenshot), PROJECT_LEARNINGS.md Learnings 438-439, CLAUDE.md (learnings count), CHANGELOG.md.
+gotchas: All of S442-S448's carried-forward gotchas apply where relevant (raw Status: line discipline -- Learning 382; inst/WORDLIST convention -- Learning 428; do not trust a predecessor's devtools::check() claim at face value -- Learning 437; 2 iCloud-sync duplicate files may recur, leave untouched). New this session: (1) E2E tests need BOTH NOT_CRAN=true AND NPRC_RUN_E2E=true set via direct Rscript, or they silently skip with reason "opt-in"; (2) do not assert canvas-rendered widget content via static HTML/DOM-text matching in an E2E test -- query the live vis.Network DataSet via app$get_js() instead; (3) a source->rendered-artifact re-render claim is only as fresh as the LAST render taken after the LAST source edit -- Learning 438; (4) verify a third-party htmlwidget's undocumented event-isolation behavior by reading its own client-side JS source for the actual binding site, then confirm live -- Learning 439; (5) AppDriver$get_screenshot()'s selector param scopes to one DOM element; re-running against an existing path errors EEXIST unless removed first.
+runtime_smoke: Live shinytest2/chromote smoke test of the running app: uploaded the real fixture CSV, navigated to the Diagram tab, confirmed the legend's live vis.Network DataSet contains exactly the 5 expected label/shape pairs, captured a screenshot (vignettes/articles/shiny_app_use/pb_diagram_legend.png), emitted a real click on the live legend network and confirmed the Table tab's row count was unchanged before/after (click-safety), zero console errors -- run twice, before and after the stepY/width layout fix.
+changelog_ref: CHANGELOG.md [issue #132] "Add an in-app shape-to-sex legend to the Pedigree Diagram tab" entry, this close-out commit
+commit: pending
+```
+
+Full narrative in SESSION_NOTES.md “What Session 449 Did.” Self-score
+9/10: source-verified the implementation-choice question before asking
+it (visNetwork.js binding site), caught and fixed the E2E test’s own
+wrong static-HTML assumption via actual run-and-inspect rather than
+trusting a pass, found and fixed a real live layout defect (legend
+clipping) rather than shipping a
+mechanically-passing-but-visually-broken feature, verified click-safety
+both via source reasoning AND independent live click-emit, and surfaced
+the tutorial/article-checklist tension (issue \#139) as an explicit
+decision rather than silently picking a side. Docked one point: the
+layout defect wasn’t caught until Phase 3E rather than during GREEN, and
+the `_pedigree_browser.Rmd` half of the tutorial checklist was
+explicitly scoped out, not just implied.
+
+``` handoff
 session: S446
 date: 2026-08-01
 status: complete
