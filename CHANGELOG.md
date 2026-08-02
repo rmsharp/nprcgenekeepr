@@ -43,6 +43,33 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-02 · [ad hoc] Pedigree Diagram mating-line/sibship-line feasibility plan, ratified Option 2 (Session 457)
+- **Deliverable:** `docs/planning/pedigree-diagram-mating-lines-plan.md` (Architecture workstream)
+  answering the BACKLOG item S456 filed: is a kinship2-style mating-line/sibship-line convention
+  achievable inside the ratified visNetwork (D2) decision, or does D2 need reopening?
+- Read `R/makePedigreeDiagramData.R`/`R/modPedigree.R:387-468` in full (current: one edge per
+  known parent, no union-node concept, `visHierarchicalLayout()` with no manual coordinates).
+  Read the original D2 ratification text and found it had already explicitly named and accepted
+  this exact tradeoff at ratification time.
+- Owner supplied 2 reference papers mid-session (Mäkinen et al. 2005 CraneFoot; Fuchsberger et al.
+  2008 PedVizApi) via `inst/extdata/reference/` (investigated before use, used as research input,
+  deliberately not committed — copyright). Ran a 3-agent parallel research `Workflow`
+  (implementation inventory; the owner's 2 cited kinship2 URLs; vis.js's actual capabilities).
+- Built and `chromote`-screenshotted 3 empirical `visNetwork` proof-of-concept widgets, confirming
+  the technique **is** achievable (a hand-computed-coordinate union-node + sibship-bar-waypoint
+  approach produces true right-angle lines) but requires abandoning `visHierarchicalLayout()`
+  entirely — cross-verified directly against the bundled `vis-network.min.js` source (no
+  orthogonal edge-routing primitive exists; hierarchical layout cannot pin a node's free-axis
+  position). Corrected an imprecise "Finding #8" citation in the originating BACKLOG item.
+- Presented 4 options (reopen D2 — not recommended; full parity; a smaller partial
+  `visNetworkProxy`-based step; decline) with an Impact Analysis table. Owner ratified **Option 2
+  (full kinship2-parity layout on visNetwork)** via `AskUserQuestion`. Filed the concrete next
+  step (a dedicated Option 2 design planning session) in `BACKLOG.md`.
+- No implementation this session, per `SESSION_RUNNER.md`'s planning/implementation boundary.
+  New `PROJECT_LEARNINGS.md` Learning 446. Verified: full regression suite exact baseline match
+  (0 failed/0 error, 3509 passed, 183 skipped, 10 pre-existing warnings) as a no-drift sanity
+  check, even though no `R/`/`tests/` files were touched.
+
 ### 2026-08-02 · [ad hoc] File BACKLOG.md item: Pedigree Diagram lacks kinship2-style mating/sibship lines (Session 456 close-out)
 - **Deliverable:** owner review of the shipped Diagram section noted the underlying Diagram tab
   itself (`R/modPedigree.R`, `R/makePedigreeDiagramData.R`) -- not just the vignette demo --
