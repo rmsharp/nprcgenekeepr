@@ -6,6 +6,21 @@
 
 ## ACTIVE TASK
 
+### What Session 450 Did
+**Deliverable:** Resolve the `a2interactive.Rmd` documentation-checklist decision (`BACKLOG.md`
+Housekeeping item, filed S447, `PROJECT_LEARNINGS.md` Learning 435). Owner-picked via the Phase 0
+priorities `AskUserQuestion` from a 4-option list (this item, the NOT_CRAN doc fix, spelling-NOTE
+housekeeping, NPRC outreach review). Owner then picked option (a) (extend `CLAUDE.md`'s checklist,
+deferred/post-review) over option (b) (scope out as acceptable), via a follow-up `AskUserQuestion`,
+and directed backfilling issue #130's 5 marker-genetics functions' `a2interactive.Rmd` demonstration
+sections in this same session (a second follow-up `AskUserQuestion`), rather than deferring the
+backfill to a future session.
+**Started:** 2026-08-02
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 449 Did
 **Deliverable:** Implement [issue #132](https://github.com/rmsharp/nprcgenekeepr/issues/132)
 (add an in-app shape-to-sex legend to the Pedigree Diagram tab). Owner-picked via the Phase 0
