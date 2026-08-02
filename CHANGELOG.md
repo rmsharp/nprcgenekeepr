@@ -43,6 +43,59 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-02 · [BL-a2interactiveChecklist] Ratify a deferred a2interactive.Rmd checklist + backfill issue #130's marker-genetics functions (Session 450)
+- **Deliverable:** resolved the `a2interactive.Rmd` documentation-checklist `BACKLOG.md` Housekeeping
+  decision item (filed S447, `PROJECT_LEARNINGS.md` Learning 435) via two `AskUserQuestion` calls --
+  a policy choice and a separate backfill choice, mirroring S448's `NEWS.Rmd` checklist resolution
+  pattern (Learning 436). Owner picked option (a) (extend the checklist, deferred) and separately
+  directed backfilling issue #130's 5 marker-genetics functions in this same session.
+- **Policy (ratified in `CLAUDE.md` "Additional close-out checks"):** new exported, script-callable
+  functions should eventually get a demonstration section in `vignettes/a2interactive.Rmd` -- but
+  unlike the citation/tutorial-article/`NEWS.Rmd` checklists, this is explicitly DEFERRED, not
+  same-session: coverage happens in a dedicated pass after a feature has stabilized, to avoid
+  documenting something that may still change. Applies prospectively from this session forward.
+- **Backfill:** added a new "## Marker Genetics" section to `vignettes/a2interactive.Rmd` (6
+  subsections: preparing a marker genotype file, marker-based kinship, heterozygosity diagnostic,
+  parentage verification/Mendelian exclusion, cross-center identity linking, cross-center Fst)
+  demonstrating `checkMarkerGenotypeFile()`, `buildMarkerGenotypeMatrix()`, `markerKinship()`,
+  `markerObservedHeterozygosity()`/`markerExpectedHeterozygosity()`, `markerParentageExclusion()`,
+  `resolveCrossCenterIds()`, and `markerFst()`. Reused the SAME hand-verified fixtures already
+  backing the Shiny app's own Marker Genetics tab screenshots in `colony-manager-guide.qmd` (the
+  P/C/U kinship/parentage trio, the X/Y/Z heterozygosity trio, and the Center A/B Fst fixture, all
+  sourced from `test_modMarkerGenetics.R`) so the tutorial's printed numbers match the article's
+  tables. Every demo chunk verified against the real package (scratch script + full
+  `rmarkdown::render()`) before being narrated in prose.
+- **Incidental discovery + fix (stale local install, `PROJECT_LEARNINGS.md` Learning 440):**
+  rendering failed with `could not find function "markerParentageExclusion"` -- the locally
+  installed package copy (`find.package("nprcgenekeepr")`, distinct from `pkgload::load_all()`)
+  had lagged 3 slices behind source (S444/S446/S447 never triggered a `devtools::install()`
+  refresh). Fixed via `devtools::install(quiet = TRUE, upgrade = FALSE, dependencies = FALSE)`
+  (the `upgrade = "never"` form used at S417 now errors on the current `devtools` version) before
+  re-rendering -- not caused by this session's own diff (no `R/` source changed).
+- **Spelling gate:** this session's own new content (function names in prose, plus "STR"/
+  "misrecorded") introduced 14 new `devtools::check()` spelling flags. Hand-added all 14 to
+  `inst/WORDLIST` in case-insensitive radix-sort position (not via `spelling::update_wordlist()`,
+  per S230 convention), following the file's established two-block (uppercase-initial then
+  lowercase-initial) sort structure. Left the existing, separately-tracked 12-word pre-existing gap
+  (`Bhatia`/`Chesser`/`Cockerham`/`Fst`/`FST`/`Gst`/`Hedrick`/`IACUC`/`Maddison`/`Meirmans`/
+  `Sankararaman`/`Slatkin`/`monomorphic`) untouched -- it remains its own open `BACKLOG.md`
+  Housekeeping item, out of scope for this session.
+- **Cleanup:** removed a stray `vignettes/a2interactive.knit.md` intermediate byproduct left by an
+  earlier verification render (gitignored, never staged, but confused a raw ad hoc
+  `spelling::spell_check_package()` scan with gibberish base64-looking tokens from rendered example
+  data before its removal).
+- **`BACKLOG.md`:** Housekeeping item marked resolved. **`PROJECT_LEARNINGS.md`:** Learning 440
+  added; `CLAUDE.md`'s learnings cross-reference count updated (439→440, Sessions 1-449+→1-450+).
+- **Verified:** `vignettes/a2interactive.Rmd` renders cleanly end-to-end via `rmarkdown::render()`
+  (132 chunks, no errors); clean regression read 0 failed/0 error (3489 passed, 183 skipped, 10
+  pre-existing baseline warnings from `test_modMarkerGenetics.R` fixture data, unchanged and
+  unrelated); `devtools::check()` raw `Status:` line (per Learning 382): 1 warning (pre-existing
+  iCloud-sync duplicate-file artifact, unrelated), 1 note (the pre-existing, separately-tracked
+  12-word spelling gap, unrelated) -- confirmed via the raw `spelling.Rout`/`spelling.Rout.save`
+  diff that zero new words from this session's own content remain flagged.
+- **Phase 3E:** n/a -- documentation-only change (a vignette + `CLAUDE.md` policy text), no
+  Shiny/runtime behavior affected.
+
 ### 2026-08-01 · [issue #132] Add an in-app shape-to-sex legend to the Pedigree Diagram tab (Session 449)
 - **Deliverable:** implemented issue #132 (owner-picked via the Phase 0 priorities
   `AskUserQuestion`). The Pedigree Browser's Diagram tab now shows a shape-to-sex legend to the

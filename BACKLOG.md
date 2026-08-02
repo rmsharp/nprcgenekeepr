@@ -159,37 +159,34 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       the script-callable `resolveCrossCenterIds()`), re-rendered to
       `NEWS.md` -- diff confirmed exactly the 5 new bullets, no reflow
       churn. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 433.)
-- [ ] **`vignettes/a2interactive.Rmd` (the scriptable/interactive-R
-      tutorial) has no checklist analogous to the Shiny-app-facing
-      tutorial/article checklist, and issue #130's entire marker-genetics
-      function family has ZERO mentions there** (discovered S447,
-      2026-08-01, owner-directed, DECISION NEEDED, Effort S) --
-      `CLAUDE.md`'s existing "Tutorial/article documentation checklist"
-      (S436) only names `vignettes/articles/colony-manager-guide.qmd` and
-      `vignettes/manual_components/*.Rmd` (the Shiny-app-facing surfaces);
-      it does not cover `a2interactive.Rmd`, the separate
-      scriptable/direct-function-call tutorial. Confirmed via grep: zero
-      hits for "marker"/"genotype"/"Fst"/"heterozygosity"/"crossCenter" in
-      the file's 875 lines -- every existing "kinship" mention there is the
-      pre-existing pedigree-based `kinship()`, not the new marker-based
-      family (`markerKinship()`, `markerObservedHeterozygosity()`/
-      `markerExpectedHeterozygosity()`, `markerParentageExclusion()`,
-      `resolveCrossCenterIds()`, `markerFst()`). **Owner-directed
-      constraint (2026-08-01): unlike the existing same-session citation/
-      tutorial-article checklists, incorporating a new feature into
-      `a2interactive.Rmd` should NOT happen in the shipping session --
-      wait until the feature has been fully reviewed first, to avoid
-      premature effort documenting something that may still change.** A
-      future session should either (a) extend `CLAUDE.md`'s existing
-      checklist to also require `a2interactive.Rmd` coverage for any new
-      exported, script-callable function (not just Shiny UI features) as a
-      deferred, post-review step -- distinct from the citation/tutorial
-      checklists' same-session requirement -- analogous to how the citation
-      and tutorial/article checklists were each ratified, or (b) explicitly
-      scope `a2interactive.Rmd` as covering only a curated subset of the
-      package's capabilities and decide this gap is acceptable -- and
-      separately decide whether to backfill demonstration sections for the
-      already-shipped issue #130 functions now that the gap is visible.
+- [ ] (none remaining -- the "`vignettes/a2interactive.Rmd` has no checklist
+      analogous to the Shiny-app-facing tutorial/article checklist, and
+      issue #130's entire marker-genetics function family has ZERO mentions
+      there" item (discovered S447, 2026-08-01, `PROJECT_LEARNINGS.md`
+      Learning 435) is RESOLVED -- S450 (2026-08-02): owner picked option
+      (a) via `AskUserQuestion` -- extended `CLAUDE.md`'s existing
+      documentation-checklist family with a new, explicitly DEFERRED
+      (not same-session) rule requiring `a2interactive.Rmd` coverage for
+      new exported, script-callable functions, added post-review rather
+      than in the shipping session (`CLAUDE.md` "Additional close-out
+      checks"). Owner also directed backfilling issue #130's 5
+      already-shipped marker-genetics functions in this same session (a
+      second, separate `AskUserQuestion`), mirroring the `NEWS.Rmd`
+      checklist's own one-time backfill precedent (Learning 436). Added a
+      new "## Marker Genetics" section to `vignettes/a2interactive.Rmd`
+      (6 subsections: preparing a marker genotype file, marker-based
+      kinship, heterozygosity diagnostic, parentage verification, cross-
+      center identity linking, cross-center Fst) reusing the SAME
+      hand-verified fixtures already used by the Shiny app's own
+      Marker Genetics tab screenshots in `colony-manager-guide.qmd` (the
+      P/C/U kinship/parentage trio, the X/Y/Z heterozygosity trio, and the
+      Center A/B Fst fixture from `test_modMarkerGenetics.R`), so the
+      tutorial's printed numbers match the article's tables. Every demo
+      chunk verified against the real installed package (not hand-derived)
+      before and after embedding -- see `PROJECT_LEARNINGS.md` Learning
+      440 for a stale-local-install trap hit and fixed along the way
+      (`devtools::install()` needed first; the local install lagged 3
+      slices behind source). See `CHANGELOG.md`.)
 - [ ] **`devtools::check()`'s spelling NOTE is broader than previously
       tracked: 12+ words missing from `inst/WORDLIST`, including
       Slice 5's own `markerFst.Rd` citation terms** (discovered S443

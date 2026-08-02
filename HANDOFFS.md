@@ -62,19 +62,28 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S450
 date: 2026-08-02
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS -- resolve the a2interactive.Rmd documentation-checklist decision (extend CLAUDE.md's checklist, deferred/post-review) and backfill a2interactive.Rmd demonstration sections for issue #130's 5 marker-genetics functions (markerKinship, markerObservedHeterozygosity/markerExpectedHeterozygosity, markerParentageExclusion, resolveCrossCenterIds, markerFst), per owner direction via 3 AskUserQuestion calls.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- resolved the a2interactive.Rmd documentation-checklist BACKLOG.md Housekeeping item (filed S447, Learning 435): ratified a deferred, post-review checklist rule in CLAUDE.md and backfilled a2interactive.Rmd demonstration sections for issue #130's 5 marker-genetics functions, per DEVELOPMENT_WORKSTREAM-adjacent ad hoc documentation work (no dedicated workstream doc matched; no TDD gates, doc-only session per S448 precedent).
+what_was_done: Added a new "## Marker Genetics" section (~218 lines, 6 subsections) to vignettes/a2interactive.Rmd demonstrating checkMarkerGenotypeFile(), buildMarkerGenotypeMatrix(), markerKinship(), markerObservedHeterozygosity()/markerExpectedHeterozygosity(), markerParentageExclusion(), resolveCrossCenterIds(), and markerFst() -- reusing the same hand-verified fixtures already backing colony-manager-guide.qmd's Marker Genetics screenshots (from test_markerKinship.R/test_markerHeterozygosity.R/test_markerParentageExclusion.R/test_markerFst.R/test_modMarkerGenetics.R) so the tutorial's numbers match the article's tables. Every demo chunk verified via a scratch script against the real package, then via a full rmarkdown::render() (132 chunks, no errors) whose plain-text output was read to confirm every prose claim. Diagnosed and fixed a stale local package install (3 slices behind source, S444/S446/S447 never triggered devtools::install()) via NAMESPACE diff -- new PROJECT_LEARNINGS.md Learning 440. Ratified the new CLAUDE.md checklist rule (deferred/post-review, not same-session). Fixed 14 new devtools::check() spelling flags this session's own content introduced (inst/WORDLIST, radix-sort position), left the separately-tracked pre-existing 12-word gap untouched. Removed a stray vignettes/a2interactive.knit.md byproduct from the render-verification step. BACKLOG.md Housekeeping item marked resolved. Commits: 324de84a (claim).
+next_steps: (a) CLAUDE.md's NOT_CRAN doc fix (READY, Effort S, unchanged since S439) -- the "Fast single-file test" command doesn't set NOT_CRAN=true, so a top-level skip_on_cran() file silently bare-skips. (b) Spelling-NOTE housekeeping (READY, Effort S, unchanged since S448 -- still 12 words missing from inst/WORDLIST, confirmed present and untouched this session; this session's own WORDLIST edits are a worked example of the exact mechanics). (c) The new a2interactive.Rmd checklist rule is a standing obligation -- a future session should periodically check for exported script-callable functions shipped since 2026-08-02 and add demonstration sections once stabilized. (d) NPRC outreach plan review (DECISION NEEDED, owner-only, unchanged). (e) S445's open /doctor Phase 0/1B exemption question remains unresolved. (f) Issue #139 (full Diagram-tab documentation) unchanged since S449. (g) Pedigree-diagram audit-queue items #133 (data-model gated)/#134 (verify inbreeding-loop rendering) remain open per S436's priority order, not picked up.
+key_files: vignettes/a2interactive.Rmd (new Marker Genetics section, inserted before the elapsed-time/session-info closing chunks), CLAUDE.md "Additional close-out checks" (new checklist entry + updated learnings count), inst/WORDLIST (14 new entries, case-insensitive radix-sort position), BACKLOG.md Housekeeping (item resolved), PROJECT_LEARNINGS.md Learning 440, CHANGELOG.md (this session's entry).
+gotchas: All of S442-S449's carried-forward gotchas still apply (raw Status: line discipline -- Learning 382, reconfirmed live this session when the colored check() summary object again diverged from the raw log; inst/WORDLIST radix convention -- Learning 428; do not trust a predecessor's devtools::check() claim at face value -- Learning 437; 2 iCloud-sync duplicate files still present, leave untouched). New this session: (1) the locally installed package copy can lag several sessions behind source even when pkgload::load_all() is current -- before rendering any library(nprcgenekeepr)-calling .Rmd/.qmd, diff the installed NAMESPACE against source or unconditionally devtools::install() first -- Learning 440; (2) devtools::install()'s upgrade argument must be a logical, not the string "never" used at S417 -- errors on the current devtools version; (3) rmarkdown::render() can leave a stray <name>.knit.md next to the source .Rmd even with output_dir set elsewhere -- clean it up before an ad hoc full-package spelling::spell_check_package() scan, or its gibberish rendered-data tokens drown the real signal; (4) devtools::check()'s actual spelling gate only flags a DIFF from spelling.Rout.save, not an absolute zero bar -- a raw full-package spell_check_package() scan is a poor proxy for "did my session introduce a new flag," always check the real check() diff.
+runtime_smoke: n/a -- documentation-only change (a vignette + CLAUDE.md policy text), no Shiny/runtime behavior affected. Build-equivalent instead: full rmarkdown::render() of vignettes/a2interactive.Rmd (132 chunks, 0 errors), clean regression read (0 failed/0 error, 3489 passed, 183 skipped, 10 pre-existing baseline warnings unchanged), devtools::check() raw Status: line (1 warning/1 note, both pre-existing and unrelated, confirmed via spelling.Rout diff that zero new words from this session remain flagged).
+changelog_ref: CHANGELOG.md [BL-a2interactiveChecklist] "Ratify a deferred a2interactive.Rmd checklist + backfill issue #130's marker-genetics functions" entry, this close-out commit
 commit: pending
 ```
-(stub -- filled at Phase 3D close-out)
+Full narrative in SESSION_NOTES.md "What Session 450 Did." Self-score 9/10: reused already-verified
+test fixtures for narrative and correctness-by-construction, verified every demo chunk against the
+real package before AND after embedding in prose, diagnosed a genuine stale-install defect via
+mechanical NAMESPACE diff rather than guessing, fixed exactly this session's own new spelling flags
+while correctly leaving a separately-tracked pre-existing gap untouched, and caught/cleaned a stray
+render byproduct via an anomaly in an ad hoc verification scan. Weaknesses: ran the first
+devtools::check() quiet=TRUE (empty log, had to redo non-quiet) and did not anticipate the stray
+.knit.md byproduct until its second-order effect surfaced it. Predecessor (S449) scored 9/10: item
+(a) of its handoff named this exact task with accurate context, and all 4 carried-forward gotchas
+paid off directly this session.
 
 ```handoff
 session: S449
