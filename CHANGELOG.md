@@ -47,6 +47,75 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-08-01 · \[issue \#130\] Implement Slice 5 – cross-center Fst (Session 447)
+
+- **Deliverable:** full TDD cycle (PRE-RED→RED→GREEN, REFACTOR
+  owner-confirmed skip, each transition `AskUserQuestion`-gated per
+  `CLAUDE.md`) implementing Slice 5 of
+  `docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md`
+  §4 – the last slice in the issue’s owner-ratified sequencing chain.
+  New `markerFst(genotypeMatrixA, genotypeMatrixB)` (base R, no new
+  dependency): Hudson’s Fst estimator (Bhatia, Patterson, Sankararaman &
+  Price 2013, *Genome Research* 23(9):1514-1521, Eq. 10, citing Hudson,
+  Slatkin & Maddison 1992, *Genetics* 132(2):583-589), computed per
+  shared biallelic locus and pooled across loci as a ratio of sums (not
+  a mean of per-locus ratios). `R/modMarkerGenetics.R` gained a Center-B
+  genotype file input and a new “Cross-Center” tab.
+- **Pre-RED (Dragon P2 – estimator choice, the plan’s own flagged
+  risk):** resolved via a 5-agent research `Workflow` (3 parallel angles
+  – Weir & Cockerham 1984 primary-source research, alternatives
+  research, captive-NHP-colony precedent research – plus a dedicated
+  adversarial verification stage and a synthesis stage). The adversarial
+  pass found the first pass’s own “Weir & Cockerham (1984)” formula was
+  an incomplete, ~40%-off special case (missing a heterozygosity-driven
+  third variance component), confirmed against 3 independent sources not
+  used by the first pass – `PROJECT_LEARNINGS.md` Learning 434. The
+  synthesis recommended switching estimator families entirely to
+  Hudson’s, per Bhatia et al.’s own explicit recommendation for
+  two-named-population pairwise comparisons (unbiased by sample-size
+  ratio, unlike Weir & Cockerham). Presented as its own
+  `AskUserQuestion` (separate from the phase gate); owner chose Hudson’s
+  estimator, the recommendation.
+- **Fixture:** hand-derived two-center, two-locus toy example (Center A
+  n=4, Center B n=6) via exact-fraction arithmetic during Pre-RED
+  research, cross-checked against 2 independently- fetched primary
+  sources. Expected values: `perLocus[["L1"]] = 58/1001`,
+  `perLocus[["L2"]] = 139/308`, `pooledFst = 614/2233`. 5 RED test
+  blocks in the new `tests/testthat/test_markerFst.R` plus 3 new blocks
+  in `tests/testthat/test_modMarkerGenetics.R` (Cross-Center tab UI +
+  `testServer()` reactive tests) cover this fixture plus edge cases:
+  locus-intersection restriction, zero-genotyped-individuals-locus
+  exclusion, both-centers- monomorphic `NA`-not-`NaN`, and an unclamped
+  negative value.
+- **Mid-session owner directives, both addressed in place:** (1) the
+  roxygen/citation documentation must carry the full rationale for the
+  estimator choice, not just the citation – added to
+  [`markerFst()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md)’s
+  own `@details`, a new section in
+  `inst/extdata/ui_guidance/population_genetics_terms.html`, and a new
+  subsection in `vignettes/articles/colony-manager-guide.qmd`. (2) filed
+  a `BACKLOG.md` Housekeeping item ensuring new features get discussed
+  in `vignettes/a2interactive.Rmd` (a third documentation surface,
+  distinct from the existing citation/tutorial-article checklists,
+  confirmed via grep to have zero issue \#130 coverage across its 875
+  lines) – revised in place per a follow-up directive to record a
+  deferred-until-fully-reviewed cadence, not the same-session pattern of
+  the existing checklists – `PROJECT_LEARNINGS.md` Learning 435.
+- **Verified:** targeted test files green; full clean regression suite 0
+  failed/0 error (3476 passed, 182 skipped) – caught and fixed 2 real
+  GREEN-phase gaps (`test_moduleContract.R`’s registered reactive-name
+  list; `_pkgdown.yml`’s reference-coverage list) that the targeted test
+  run alone would have missed; `devtools::check()` 0 errors/0 warnings/0
+  notes (run twice, before and after a doc-regeneration fix caught
+  mid-session); a live `shinytest2`/`chromote` smoke test of the running
+  app uploaded two real CSV files through the browser and confirmed the
+  rendered Cross-Center table’s values matched the hand-verified fixture
+  exactly, with no console errors. Citation checklist (issue \#120) and
+  tutorial/article checklist (S436) both completed same-session. Issue
+  \#130 is now fully implemented across all 5 slices – closed with a
+  summary comment
+  (<https://github.com/rmsharp/nprcgenekeepr/issues/130#issuecomment-5154242857>).
+
 ### 2026-08-01 · \[issue \#130\] Implement Slice 4 – cross-center identity linking (Session 446)
 
 - **Deliverable:** full TDD cycle (PRE-RED→RED→GREEN, REFACTOR

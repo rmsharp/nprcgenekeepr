@@ -210,6 +210,43 @@ exempt until they gain one – and separately decide whether Slices 1-4
 warrant a backfilled `NEWS.Rmd` entry now that the gap is visible. See
 `PROJECT_LEARNINGS.md` Learning 433.
 
+**`vignettes/a2interactive.Rmd` (the scriptable/interactive-R tutorial)
+has no checklist analogous to the Shiny-app-facing tutorial/article
+checklist, and issue \#130’s entire marker-genetics function family has
+ZERO mentions there** (discovered S447, 2026-08-01, owner-directed,
+DECISION NEEDED, Effort S) – `CLAUDE.md`‘s existing “Tutorial/article
+documentation checklist” (S436) only names
+`vignettes/articles/colony-manager-guide.qmd` and
+`vignettes/manual_components/*.Rmd` (the Shiny-app-facing surfaces); it
+does not cover `a2interactive.Rmd`, the separate
+scriptable/direct-function-call tutorial. Confirmed via grep: zero hits
+for “marker”/“genotype”/“Fst”/“heterozygosity”/“crossCenter” in the
+file’s 875 lines – every existing “kinship” mention there is the
+pre-existing pedigree-based
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md),
+not the new marker-based family
+([`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md),
+[`markerObservedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerObservedHeterozygosity.md)/
+[`markerExpectedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerExpectedHeterozygosity.md),
+[`markerParentageExclusion()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md),
+[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md),
+[`markerFst()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md)).
+**Owner-directed constraint (2026-08-01): unlike the existing
+same-session citation/ tutorial-article checklists, incorporating a new
+feature into `a2interactive.Rmd` should NOT happen in the shipping
+session – wait until the feature has been fully reviewed first, to avoid
+premature effort documenting something that may still change.** A future
+session should either (a) extend `CLAUDE.md`’s existing checklist to
+also require `a2interactive.Rmd` coverage for any new exported,
+script-callable function (not just Shiny UI features) as a deferred,
+post-review step – distinct from the citation/tutorial checklists’
+same-session requirement – analogous to how the citation and
+tutorial/article checklists were each ratified, or (b) explicitly scope
+`a2interactive.Rmd` as covering only a curated subset of the package’s
+capabilities and decide this gap is acceptable – and separately decide
+whether to backfill demonstration sections for the already-shipped issue
+\#130 functions now that the gap is visible.
+
 **`devtools::check()`’s one remaining spelling NOTE: `IACUC`
 (`_pedigree_browser.Rmd:55`) not in `inst/WORDLIST`** (discovered S443,
 2026-07-31, Effort S) – incidentally found while fixing the
@@ -723,8 +760,25 @@ suite 0/0/0 (3443 passed, 182 skipped); `devtools::check()` 0 errors/0
 warnings/0 notes; `_pkgdown.yml` reference-coverage entry added
 same-session (the gap class Slice 1 hit and had to fix retroactively).
 See `CHANGELOG.md`. **Implementing Slice 5 (cross-center differentiation
-statistic, depends on Slice 1, now shipped) is next (READY, Effort M)**
-– Pre-RED must independently source a differentiation-statistic formula
-(Fst has multiple competing estimators, Dragon P2) and budget for a
-genuine numeric disagreement per Learning 430’s precedent. No other open
-item in this sequencing chain remains.
+statistic) is now DONE – S447 (2026-08-01), closing out issue \#130’s
+entire 5-slice sequencing chain:** new
+`markerFst(genotypeMatrixA, genotypeMatrixB)` computing Hudson’s Fst
+(Bhatia et al. 2013 Eq.10, citing Hudson, Slatkin & Maddison 1992),
+ratio-of-sums pooling across loci, base R only. Dragon P2 (estimator
+choice) resolved via a 5-agent Pre-RED research `Workflow` (3 research
+angles + adversarial verification + synthesis) – the adversarial pass
+found the first pass’s own “Weir & Cockerham (1984)” formula was an
+incomplete, ~40%-off special case, confirmed against 3 independent
+sources; the synthesis recommended switching to Hudson’s estimator
+entirely, per Bhatia et al.’s own explicit recommendation for two-named-
+population pairwise comparisons – see `PROJECT_LEARNINGS.md` Learning
+434. `modMarkerGenetics` gained a Cross-Center tab (second file input).
+Full TDD cycle (PRE-RED-\>RED-\>GREEN, REFACTOR owner-confirmed skip,
+all `AskUserQuestion`-gated); citation and tutorial/article checklists
+both done in-session. Verified: full regression suite 0/0 (3476 passed,
+182 skipped); `devtools::check()` 0 errors/0 warnings/0 notes; live
+`shinytest2`/`chromote` smoke test confirmed real, correctly-computed
+Fst values (byte-exact match to the hand-verified fixture) with no
+console errors. **Issue \#130 is now fully implemented across all 5
+slices; no open item remains in this sequencing chain.** See
+`CHANGELOG.md`.

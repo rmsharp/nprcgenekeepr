@@ -15,7 +15,13 @@ population-level expected heterozygosity
 Mendelian-exclusion parentage diagnostic
 (markerParentageExclusion): the pedigree's recorded
 dam/sire cross-referenced against the uploaded genotypes, flagging any
-recorded parent the genotype evidence contradicts."><meta property="og:description" content="Reads an uploaded long-format marker genotype file (D1 format: id,
+recorded parent the genotype evidence contradicts. A fourth tab, &quot;Cross-
+Center&quot;, surfaces a between-population differentiation statistic
+(markerFst) between the first uploaded file (implicitly
+&quot;Center A&quot;) and a second, independently uploaded Center B genotype file
+– a population-level, two-dataset comparison, unrelated to the
+per-animal cross-center identity linking of
+resolveCrossCenterIds (Slice 4)."><meta property="og:description" content="Reads an uploaded long-format marker genotype file (D1 format: id,
 locus, allele1, allele2), validates and pivots it
 (checkMarkerGenotypeFile, buildMarkerGenotypeMatrix),
 estimates marker-based kinship independent of pedigree
@@ -31,7 +37,13 @@ population-level expected heterozygosity
 Mendelian-exclusion parentage diagnostic
 (markerParentageExclusion): the pedigree's recorded
 dam/sire cross-referenced against the uploaded genotypes, flagging any
-recorded parent the genotype evidence contradicts."><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
+recorded parent the genotype evidence contradicts. A fourth tab, &quot;Cross-
+Center&quot;, surfaces a between-population differentiation statistic
+(markerFst) between the first uploaded file (implicitly
+&quot;Center A&quot;) and a second, independently uploaded Center B genotype file
+– a population-level, two-dataset comparison, unrelated to the
+per-animal cross-center identity linking of
+resolveCrossCenterIds (Slice 4)."><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -96,7 +108,13 @@ population-level expected heterozygosity
 Mendelian-exclusion parentage diagnostic
 (<code><a href="markerParentageExclusion.html">markerParentageExclusion</a></code>): the <code>pedigree</code>'s recorded
 dam/sire cross-referenced against the uploaded genotypes, flagging any
-recorded parent the genotype evidence contradicts.</p>
+recorded parent the genotype evidence contradicts. A fourth tab, "Cross-
+Center", surfaces a between-population differentiation statistic
+(<code><a href="markerFst.html">markerFst</a></code>) between the first uploaded file (implicitly
+"Center A") and a second, independently uploaded Center B genotype file
+– a population-level, two-dataset comparison, unrelated to the
+per-animal cross-center identity linking of
+<code><a href="resolveCrossCenterIds.html">resolveCrossCenterIds</a></code> (Slice 4).</p>
     </div>
 
     <div class="section level2">
@@ -126,7 +144,7 @@ upstream analysis has not yet been run.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list with six reactive elements: <code>markerGenotype</code>, the
+    <p>A list with eight reactive elements: <code>markerGenotype</code>, the
 raw uploaded genotype data frame (or <code>NULL</code> before upload);
 <code>markerKinshipMatrix</code>, the marker-based <code>id</code> x <code>id</code>
 kinship matrix (or <code>NULL</code>); <code>comparisonTable</code>, the per-animal
@@ -137,8 +155,12 @@ population-wide mean expected heterozygosity, repeated per row) (or
 <code>NULL</code>); <code>exclusionTable</code>, the
 <code><a href="markerParentageExclusion.html">markerParentageExclusion</a></code> flagged-pairs data frame (or
 <code>NULL</code> before a genotype file and a pedigree are both available);
-and <code>isReady</code>, <code>TRUE</code> once <code>comparisonTable</code> has a
-value.</p>
+<code>crossCenterGenotypeB</code>, the raw uploaded Center B genotype data
+frame (or <code>NULL</code> before upload); <code>crossCenterTable</code>, the
+<code><a href="markerFst.html">markerFst</a></code> <code>locus</code>/<code>fst</code> data frame with a
+trailing <code>"Pooled"</code> row (or <code>NULL</code> before both center files
+are uploaded); and <code>isReady</code>, <code>TRUE</code> once
+<code>comparisonTable</code> has a value.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

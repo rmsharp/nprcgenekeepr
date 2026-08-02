@@ -467,6 +467,9 @@ Funtions designed for interactive use
 - [`markerExpectedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerExpectedHeterozygosity.md)
   : Compute per-locus and population-wide expected heterozygosity from
   marker genotypes
+- [`markerFst()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md)
+  : Compute a between-center allele-frequency differentiation statistic
+  (Fst)
 - [`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)
   : Estimate pairwise kinship directly from marker genotypes
   (KING-robust)

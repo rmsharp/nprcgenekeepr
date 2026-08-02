@@ -19,7 +19,15 @@ A third tab surfaces the Mendelian-exclusion parentage diagnostic
 ([`markerParentageExclusion`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md)):
 the `pedigree`'s recorded dam/sire cross-referenced against the uploaded
 genotypes, flagging any recorded parent the genotype evidence
-contradicts.
+contradicts. A fourth tab, "Cross- Center", surfaces a
+between-population differentiation statistic
+([`markerFst`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md))
+between the first uploaded file (implicitly "Center A") and a second,
+independently uploaded Center B genotype file – a population-level,
+two-dataset comparison, unrelated to the per-animal cross-center
+identity linking of
+[`resolveCrossCenterIds`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)
+(Slice 4).
 
 ## Usage
 
@@ -47,7 +55,7 @@ modMarkerGeneticsServer(id, kinshipMatrix, pedigree)
 
 ## Value
 
-A list with six reactive elements: `markerGenotype`, the raw uploaded
+A list with eight reactive elements: `markerGenotype`, the raw uploaded
 genotype data frame (or `NULL` before upload); `markerKinshipMatrix`,
 the marker-based `id` x `id` kinship matrix (or `NULL`);
 `comparisonTable`, the per-animal `indivMeanKin`/`markerMeanKin`
@@ -57,7 +65,12 @@ expected heterozygosity, repeated per row) (or `NULL`);
 `exclusionTable`, the
 [`markerParentageExclusion`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md)
 flagged-pairs data frame (or `NULL` before a genotype file and a
-pedigree are both available); and `isReady`, `TRUE` once
+pedigree are both available); `crossCenterGenotypeB`, the raw uploaded
+Center B genotype data frame (or `NULL` before upload);
+`crossCenterTable`, the
+[`markerFst`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md)
+`locus`/`fst` data frame with a trailing `"Pooled"` row (or `NULL`
+before both center files are uploaded); and `isReady`, `TRUE` once
 `comparisonTable` has a value.
 
 ## Details

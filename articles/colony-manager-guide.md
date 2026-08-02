@@ -680,6 +680,37 @@ Mendelian-consistent (0 exclusions, not flagged); C’s recorded sire
 (falsely set to the unrelated U) is Mendelian-inconsistent (3
 exclusions, flagged).
 
+A fourth **Cross-Center** tab (also part of issue \#130) answers a
+different question than the other three: not “how related are these
+animals,” but “how genetically differentiated are two separate
+colonies.” Upload a second marker genotype file for a second center (the
+first uploaded file becomes “Center A”), and the tab computes **Hudson’s
+Fst** – a standard allele-frequency differentiation statistic – at every
+marker locus genotyped in both centers, plus a single pooled summary
+value. A value near zero means the two centers’ allele frequencies at
+that locus are essentially indistinguishable; a larger value (Fst can
+range up to 1, and can occasionally come out slightly negative due to
+sampling noise) means the two populations have drifted apart at that
+marker.
+
+Hudson’s estimator was chosen over the more commonly-cited Weir &
+Cockerham (1984) estimator specifically because it is not biased by an
+imbalance between the two centers’ sample sizes – a real concern here,
+since different centers plausibly submit marker panels for different
+numbers of animals. The per-locus values are pooled into the single
+summary as a *ratio of sums* rather than a simple average, because
+averaging per-locus ratios directly is a well-documented source of bias
+for this kind of statistic.
+
+![Marker Genetics Cross-Center tab showing a table with three rows --
+L1, L2, and Pooled -- and one fst column with a distinct numeric
+differentiation value in each
+row.](shiny_app_use/marker_genetics_cross_center.png)
+
+The Cross-Center tab comparing two example centers at 2 marker loci:
+per-locus Fst (L1, L2) alongside the pooled summary value across both
+loci.
+
 ### Potential Parents
 
 The **Potential Parents** tab (issue

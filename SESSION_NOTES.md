@@ -7,6 +7,263 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 447 Did
+
+**Deliverable:** Implement Slice 5 of the [issue
+\#130](https://github.com/rmsharp/nprcgenekeepr/issues/130) plan
+(cross-center identity-by-state differentiation statistic), per
+`docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md` §4
+(depends on Slice 1, shipped – not Slice 4). Owner-picked via the Phase
+0 priorities `AskUserQuestion` from a 4-option list (Slice 5, NEWS.Rmd
+checklist decision, issue \#132, CLAUDE.md NOT_CRAN doc fix).
+**Started/Completed:** 2026-08-01 / 2026-08-01 **Status:** DONE. Full
+TDD cycle: PRE-RED (multi-agent research `Workflow` + adversarial
+verification, Dragon P2 estimator-choice `AskUserQuestion`) -\> RED -\>
+GREEN -\> REFACTOR (owner-confirmed skip), every phase transition
+`AskUserQuestion`-gated.
+
+**What happened, in order:** **(1)** Phase 0 orientation in full
+(`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list` – 18 open issues, `git status`/`log`/ `diff --stat`,
+`methodology_dashboard.py` Health 98/100, ledger reconcile –
+`CHANGELOG.md`/ `HANDOFFS.md` frontiers both at `HEAD` `5d055adb`, no
+ghost session, no undocumented commits; also found and fixed S446’s own
+completed `HANDOFFS.md` receipt still carrying `commit: pending` –
+backfilled to the real `5d055adb`, folded into the Phase 1B claim
+commit). Rendered the priorities list + `AskUserQuestion` picker (first
+4 of 6 numbered items); owner picked Slice 5. **(2)** Phase 1B: claimed
+the session (`e8ce2bae`) – stub + `HANDOFFS.md` `status: pending`
+receipt, before any technical work. **(3)** Pre-RED: read the Slice 1-4
+sibling code (`R/markerKinship.R`, `R/buildMarkerGenotypeMatrix.R`,
+`R/checkMarkerGenotypeFile.R`, `R/markerHeterozygosity.R`,
+`R/markerParentageExclusion.R`, `R/modMarkerGenetics.R`) for
+conventions, then launched a 5-agent research `Workflow` (3 parallel
+angles – Weir & Cockerham 1984 primary-source research, alternatives
+\[Hudson/Nei\] research, captive-NHP-colony precedent research –
+followed by a dedicated adversarial verification stage and a synthesis
+stage) to resolve Dragon P2 (the plan’s own flagged “Fst has multiple
+competing estimators” risk). The adversarial pass found the first pass’s
+own “Weir & Cockerham (1984)” formula was an incomplete, ~40%-off
+special case (missing a heterozygosity-driven third variance component),
+confirmed against 3 independent sources (a non-Weir-authored paper plus
+2 independently-written open-source implementations) – new Learning 434,
+a technique extension beyond Learning 430’s precedent (there, two
+sources disagreed on a number; here, a single honestly-cited source
+under-reported a formula’s true shape). The synthesis recommended
+switching estimator families entirely, to Hudson’s (Bhatia et al. 2013’s
+own explicit recommendation for two-named-population pairwise
+comparisons, unbiased by sample-size ratio) – independently verified the
+Hudson 1992 DOI via `WebSearch` before it went into a citation.
+Presented as its own Dragon-P2 `AskUserQuestion` (separate from the
+phase gate, per `CLAUDE.md`’s rule); owner picked Hudson’s estimator
+(the recommendation). **(4)** Mid-session, the owner gave two
+directives, addressed in place: (a) the roxygen/citation documentation
+must carry the full rationale for the estimator choice, not just the
+citation – done in `markerFst.R`’s `@details`,
+`population_genetics_terms.html`’s new section, and the tutorial
+article’s new subsection; (b) file a `BACKLOG.md` item ensuring new
+features get discussed in `vignettes/a2interactive.Rmd` (a third
+documentation surface, distinct from the existing
+citation/tutorial-article checklists, confirmed via grep to have ZERO
+issue \#130 coverage across 875 lines) – then, per a follow-up
+directive, revised that same item in place to record that (unlike the
+existing same-session checklists) `a2interactive.Rmd` updates should be
+deferred until a feature is fully reviewed, not done in the shipping
+session – new Learning 435. **(5)** RED: new
+`tests/testthat/test_markerFst.R` (5 test blocks: hand-verified
+two-locus/two-center fixture, locus-intersection restriction,
+zero-genotyped-individuals-locus exclusion, both-centers- monomorphic
+NA-not-NaN, unclamped negative value) plus 3 new blocks appended to
+`test_modMarkerGenetics.R` (Cross-Center tab UI + `testServer()`
+reactive tests); all 8 confirmed failing for the expected reason
+(missing function / missing reactive), committed (`a319e0c5`). **(6)**
+GREEN: `R/markerFst.R`
+([`markerFst()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md),
+base R, Hudson’s estimator, ratio-of-sums pooling) +
+`R/modMarkerGenetics.R`’s Cross-Center tab wiring (second file input,
+new reactive, new DT output). Fixed 2 real regression failures found by
+the FULL clean regression read (not just the targeted files):
+`test_moduleContract.R` needed the 2 new returned-reactive names
+registered; `_pkgdown.yml` needed a `markerFst` reference-coverage
+entry. Also updated the citation checklist
+(`population_genetics_terms.html`) and tutorial article
+(`colony-manager-guide.qmd`, new subsection + a real screenshot from the
+live smoke test below) per the mandatory checklists.
+`devtools::document()` regenerated
+`NAMESPACE`/`man/markerFst.Rd`/`man/modMarkerGeneticsServer.Rd` (had to
+re-run after later roxygen edits – caught the drift before committing).
+Ran `lintr`: fixed genuinely new lints introduced this session
+(implicit-integer literals in the Fst formula, one line-length
+overflow); left 2 lint classes alone (non-`fixed=TRUE` `strsplit`,
+`paste(collapse=)`) because they match identical, already-unaddressed
+patterns in the Slice 1-4 sibling files (S446 precedent). Verified:
+targeted tests green; full clean regression 0 failed/0 error (3476
+passed, 182 skipped); `devtools::check()` 0/0/0 (twice, before and after
+the doc-regeneration fix); a real live `shinytest2`/`chromote` smoke
+test of the running app – uploaded two real CSV files through the
+browser to the Cross-Center tab and confirmed the rendered table’s
+values matched the hand-verified fixture EXACTLY (`0.05794205794205797`
+= 58/1001, `0.4512987012987014` = 139/308, `0.2749664128974474` =
+614/2233), no console errors (only the pre-existing, unrelated
+[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)
+“no shared heterozygous locus” warning from the fixture data); committed
+(`0f730a54`). **(7)** Owner approved GREEN-\>REFACTOR with “skip, close
+out” – no structural changes needed (matches established conventions;
+the small `rawGenotypeB`/`genotypeMatrixBR` duplication of the existing
+`rawGenotype`/`genotypeMatrixR` pattern is intentionally left as-is, per
+`CLAUDE.md`’s no-premature-abstraction guidance). **Verified
+throughout:** Pre-RED formula hand-derived via exact-fraction arithmetic
+and cross-checked against 2 independently-fetched primary sources before
+any RED assertion was written; RED confirmed failing for the right
+reason; GREEN verified via targeted tests, full regression,
+`devtools::check()`, AND a live browser-driven smoke test with
+byte-exact value matching – not just “no errors.” **Ledger:** recorded
+in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**Session 446 Handoff Evaluation (by Session 447): 9/10.** Structurally
+complete against all 6 minimum requirements. For THIS session’s specific
+task, S446’s next-steps item (a) was exactly accurate and directly
+load-bearing: it correctly named Slice 5 as depending on Slice 1 (not
+Slice 4), correctly flagged “Pre-RED must independently source a
+differentiation-statistic formula, Fst has multiple estimators per
+Dragon P2, budget for a genuine numeric disagreement per Learning 430’s
+precedent” – which is exactly what happened, in a more consequential
+form than even that framing anticipated (not just a numeric disagreement
+between sources, but a switch of estimator families entirely). The “Key
+files” list (the plan’s §4/§6, `R/markerKinship.R`/
+`R/buildMarkerGenotypeMatrix.R`, `R/modMarkerGenetics.R`) named exactly
+the files this session ended up reading and touching. Docked 1 point not
+for any defect but because S446 could not have anticipated the SPECIFIC
+nature of Slice 5’s complexity (which Weir & Cockerham formula, not just
+which estimator family) – an inherent limit of Pre-RED-stage research,
+not a gap in the handoff itself. ROI: strongly net positive – the Dragon
+P2 framing meant this session started research already knowing exactly
+where the risk lived, rather than discovering it cold.
+
+**Self-assessment (Session 447): 9/10.** **Strengths:** (1) full Phase 0
+orientation and Phase 1B claim performed before any technical work,
+including catching and fixing a real process gap (S446’s own completed
+`HANDOFFS.md` receipt still carrying `commit: pending`); (2) ran a
+genuine multi-agent Pre-RED research `Workflow` (3 angles + adversarial
+verification + synthesis) rather than trusting a single pass or memory –
+this caught a real, ~40%-material formula error before it could reach a
+RED test, a concrete instance of the adversarial-verification discipline
+this project values, extended to a new failure shape (Learning 434); (3)
+independently verified the Hudson 1992 DOI via `WebSearch` before it
+went into a citation, rather than trusting the synthesis agent’s own
+flagged-as-unverified guess; (4) presented the estimator choice via its
+own dedicated `AskUserQuestion` (Dragon P2), separate from the
+phase-transition gate, per `CLAUDE.md`‘s explicit rule; (5) RED fixtures
+hand-derived via exact-fraction arithmetic from the research pass’s own
+toy example, covering real edge cases (locus intersection,
+zero-individuals exclusion, monomorphic NA-not-NaN, unclamped negative)
+– all confirmed failing for the right reason; (6) GREEN passed on the
+first real attempt with zero debugging back-and-forth, a signal the RED
+tests and research were sound; (7) faithfully incorporated both
+mid-session owner directives – the documentation-rationale requirement
+(roxygen `@details` + citation-checklist HTML + tutorial article, not
+just a bare citation) and the `a2interactive.Rmd` BACKLOG item,
+including revising that item in place when a follow-up directive changed
+its cadence policy rather than treating the two directives as redundant;
+(8) the FULL clean regression read (not just targeted files) caught 2
+real GREEN-phase gaps (`test_moduleContract.R`, `_pkgdown.yml`) that the
+targeted test run alone would have missed; (9) ran a REAL live
+`shinytest2`/`chromote` smoke test against the actual running app –
+uploaded two real files through the browser and confirmed byte-exact
+matching values, not just “no errors”; (10) ran `lintr`, fixed genuinely
+new lints, and correctly left alone 2 lint classes that match
+already-unaddressed sibling-file patterns, matching S446’s own precedent
+reasoning rather than either over-fixing or ignoring lint output
+entirely. **Weaknesses:** (1) the ad hoc smoke-test script needed 2
+iterations to get right (a leftover no-op `app$click()` line caught
+before running; a wrong method name, `$screenshot()` vs
+`$get_screenshot()`) – minor, self-caught, no wasted commits, but shows
+a moment of sloppy first- draft scripting; (2) the Cross-Center tab’s
+specific UI shape (a second file input alongside the existing one; the
+pooled value as a trailing “Pooled” row in the same DT table rather than
+a separate element) was a unilateral design call within the RED gate’s
+already-approved description, not surfaced as its own explicit choice –
+reasonable and disclosed, but a stricter session might have asked; (3)
+the combined-loci triallelic edge case (each center’s file independently
+biallelic per
+[`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md),
+but the two centers’ combined allele set at a shared locus could still
+exceed 2 alleles) was identified during design but deliberately left
+untested and undefended against, to stay within the RED gate’s approved
+scope – documented as an explicit limitation in
+[`markerFst()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md)’s
+own roxygen rather than silently ignored, but it remains a real,
+closeable gap. **Compared to previous sessions:** matches S442-S446’s
+full-discipline TDD standard (all gates executed as designed, all
+verification tiers run, not just claimed); the multi-agent adversarial
+Pre-RED research pass is a genuine extension of Learning 430’s
+precedent, catching a more consequential class of error (a single
+source’s own completeness gap, not just inter-source disagreement) than
+any prior slice’s Pre-RED caught.
+
+**Handoff to Session 448:** - **What’s next:** issue \#130’s entire
+owner-ratified sequencing chain (Slices 1-5, plan §4) is now DONE – no
+further slice remains. Remaining items from the BACKLOG/priorities list
+S447 inherited and did not touch: **(a)** `NEWS.Rmd` checklist decision
+(DECISION NEEDED, owner-only, Effort S – unchanged, still open; issue
+\#130’s Slices 1-4 shipped with zero `NEWS.Rmd` entries, Learning 433;
+Slice 5 also shipped with none, for the same reason – no ratified policy
+exists yet either way). **(b)** `vignettes/a2interactive.Rmd`
+documentation-checklist decision (DECISION NEEDED, owner-only, Effort S
+– new this session, `BACKLOG.md` Housekeeping, Learning 435 – do NOT do
+the actual `a2interactive.Rmd` backfill work until the owner explicitly
+signals the review-then-document gate is satisfied). **(c)** Issue \#132
+(diagram legend, READY, Effort S). **(d)** `CLAUDE.md`’s NOT_CRAN doc
+fix (READY, Effort S, unchanged since S439). **(e)** `IACUC`
+spelling-NOTE housekeeping (READY, Effort S – note: this session’s
+`devtools::check()` runs both came back a clean 0/0/0 with no NOTE at
+all, which is inconsistent with `BACKLOG.md` still listing this as open;
+a future session should re-verify whether this is already resolved or
+environment-dependent before doing the fix). **(f)** NPRC outreach plan
+review (DECISION NEEDED, owner-only). **(g)** The open methodology
+question from S445 (whether `/doctor`-style sessions are exempt from
+Phase 0/1B) remains unresolved. - **Key files:** `R/markerFst.R` (the
+new function + full estimator-choice rationale in its own roxygen
+`@details`), `tests/testthat/test_markerFst.R` (5 test blocks),
+`R/modMarkerGenetics.R` (Cross-Center tab: `genotypeFileB` input,
+`rawGenotypeB`/`genotypeMatrixBR`/`crossCenter` reactives,
+`crossCenterTable` output), `tests/testthat/test_modMarkerGenetics.R` (3
+new blocks), `tests/testthat/test_moduleContract.R` (2 new registered
+reactive names),
+`inst/extdata/ui_guidance/population_genetics_terms.html` (new
+Cross-Center section), `vignettes/articles/colony-manager-guide.qmd`
+(new subsection, ~line 547) +
+`vignettes/articles/shiny_app_use/marker_genetics_cross_center.png`
+(real screenshot), `_pkgdown.yml` (new reference-coverage line),
+`man/markerFst.Rd` + `man/ modMarkerGeneticsServer.Rd` + `NAMESPACE`
+(generated, do not hand-edit), `PROJECT_LEARNINGS.md` Learnings 434-435,
+`BACKLOG.md` Housekeeping (the `a2interactive.Rmd` item). - **Gotchas:**
+all of S444-S446’s carried-forward gotchas still apply unchanged (raw
+`Status:` line discipline, `inst/WORDLIST` byte-order convention,
+literal-`NA` pedigree fixtures, direct-`Rscript`-invocation for
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+– **must set `NOT_CRAN=true`** in the environment or
+`shinytest2`/`skip_on_cran()`-guarded code halts with “Reason: On CRAN”
+even outside `testthat` (new this session, Learning candidate not yet
+filed separately – see Learning 429’s adjacent method-name gotchas,
+which this session independently re-hit: `$get_screenshot()` not
+`$screenshot()`), `testServer()` non-bare-callable reactives, no new
+Bioconductor dependency, never attempt interactive `sudo` from a tool
+call). **New this session:**
+[`markerFst()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md)
+assumes each shared locus’s COMBINED two-center allele set has exactly 2
+alleles (relying on
+[`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)’s
+per-file biallelic enforcement) and does not defend against a
+cross-center third-allele mismatch – documented as a known limitation in
+its own roxygen, not tested; a future session touching this function
+should close that gap deliberately, not assume it’s already handled. The
+`_pkgdown.yml` “All exposed functions” reference-coverage list is
+enforced by `test_pkgdown_reference_config.R` – any new exported
+function needs an entry there or the full regression read (not just a
+targeted test) will catch it, exactly as it did this session. -
+**Self-assessment score:** 9/10 (breakdown above).
+
 ### What Session 446 Did
 
 **Deliverable:** Implement Slice 4 of the [issue
