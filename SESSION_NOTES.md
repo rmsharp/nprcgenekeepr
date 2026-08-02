@@ -7,6 +7,284 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 457 Did
+
+**Deliverable:** A planning document (Architecture workstream)
+evaluating whether a kinship2-style mating-line/sibship-line convention
+(horizontal line joining two mates, dropping to a horizontal sibship
+line their children hang from) is achievable within the ratified
+visNetwork (D2) decision from
+`docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md`, or
+what reopening D2 would cost – owner-picked via the Phase 0 priorities
+`AskUserQuestion` from a 3-option list (this item, LabKey
+recommendations, NPRC outreach review). **Started/Completed:**
+2026-08-02 / 2026-08-02 **Status:** DONE. Planning-only, no `R/` or
+`tests/` files changed, so the TDD RED/GREEN/REFACTOR gates did not
+apply (S448/S451/S452/S453/S455/S456 precedent). Owner ratified **Option
+2 (full kinship2-parity layout on visNetwork)**; a follow-up
+implementation-design planning session is filed in `BACKLOG.md`, not
+implemented this session, per `SESSION_RUNNER.md`’s planning/
+implementation boundary.
+
+**What happened, in order:** **(1)** Phase 0 orientation in full
+(`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `SESSION_NOTES.md` ACTIVE TASK
+section, `gh issue list` – 13 open issues,
+`git status`/`log`/`diff --stat`, `methodology_dashboard.py` Health
+94/100 medium risk (down slightly from S456’s 98/100, same pre-existing
+large-cached-file/branch-count flags, not a new issue), ledger reconcile
+– `CHANGELOG.md` frontier one commit behind `HEAD`, investigated and
+confirmed a no-op (the gap commit `7459ce94` only finalized
+`SESSION_NOTES.md`/`HANDOFFS.md` receipts for an action already logged
+in the immediately preceding commit’s own `CHANGELOG.md` entry; not a
+new unrecorded action); `HANDOFFS.md` frontier exactly at `HEAD`; no
+ghost session). Rendered the priorities list + `AskUserQuestion` picker
+(3 numbered items – this pedigree mating-lines item, LabKey
+recommendations, NPRC outreach review); owner picked this item. Mid-
+session, before claiming, the owner sent a technical hint (“I expect the
+need for horizontal and vertical connecting lines means that the
+creation of invisible nodes will be necessary”) – treated as a
+hypothesis to verify empirically, not a given, consistent with this
+project’s “documentation-level verification” anti-pattern warning.
+**(2)** Claimed the session (stub + `HANDOFFS.md` `status: pending`
+receipt) before any research. While orienting toward research,
+discovered 2 new untracked PDF files had appeared in
+`inst/extdata/reference/` mid-session (`5201430.pdf`,
+`bioinformatics_24_2_279.pdf`) – neither created by this session.
+Investigated before acting (per this project’s “check before acting on
+unfamiliar files” convention, not assumed): read both in full, confirmed
+they are genuinely on-topic (Mäkinen et al. 2005 “High-throughput
+pedigree drawing” / CraneFoot; Fuchsberger et al. 2008 “PedVizApi”),
+inferred the owner supplied them via this Documents-folder’s iCloud sync
+(this project’s established pattern for cross-device file delivery, per
+the pre-existing `R/* 2.R` duplicate-file gotcha) – used as research
+input, explicitly NOT committed to the repository given their copyright
+status (Nature Publishing Group / Oxford University Press), and flagged
+this decision transparently in the plan doc’s own §6 rather than
+silently choosing either extreme. **(3)** Research: launched a 3-agent
+parallel `Workflow` (implementation inventory of
+`R/makePedigreeDiagramData.R`/`R/modPedigree.R:380-470`/the D2
+ratification text/the audit’s “Finding \#8” citation; the owner’s 2
+cited kinship2 URLs; vis.js’s actual edge-routing/layout capabilities)
+while independently reading the 2 supplied papers in full and building 3
+empirical `visNetwork` POCs via `chromote` screenshots (Case A: today’s
+shipped direct-edge behavior, reproducing the owner’s exact complaint;
+Case B: a union node at the same hierarchical `level` as both parents
+under vis.js’s DEFAULT auto-layout, showing partial improvement but no
+midpoint guarantee and no sibship bar; Case C: a first attempt at full
+manual-coordinate placement that had a real self-authored construction
+bug – caught by re-inspecting the screenshot rather than mistaking it
+for a vis.js limitation – corrected to Case C2, which achieved the exact
+target convention: true right-angle horizontal mate-line, vertical drop,
+horizontal sibship bar, vertical drops to each child). Independently
+verified vis.js’s actual capabilities against the bundled source in the
+INSTALLED `visNetwork` 2.1.4 package (`vis-network.min.js` grep,
+`docjs/network/edges.html`/`layout.html`), not just generic web
+documentation that might not match this exact version – confirmed no
+orthogonal edge-routing primitive exists (`smooth.type` values including
+`'horizontal'`/`'vertical'` are still Bezier curves, only `smooth:false`
+gives a literal straight line) and hierarchical layout cannot pin a
+node’s free-axis position (`x`/`y` “has no effect” under hierarchical
+layout, per the bundled docs). The parallel `Workflow` found the
+original D2 ratification text had already explicitly named and accepted
+this exact tradeoff at ratification time (“no kinship2-style specialized
+inbreeding-loop compact alignment”), and found the BACKLOG item’s own
+“Finding \#8” citation was imprecise (the audit’s “Multiple
+mates/spouses” item is checklist table row 8, not prose Finding \#8, an
+unrelated node-labels finding) – corrected in the plan doc. Also found a
+still-open, maintainer-acknowledged vis.js GitHub issue
+(`visjs/vis-network#181`, filed 2019, unresolved through 2021)
+confirming this is a known, unsolved library gap, not something the
+project missed, plus 2 independent real-world attempts (a CodePen
+family-tree demo, a production genealogy site) that corroborate the
+multi-mate/half-sib case as still-unsolved even elsewhere. **(4)**
+Mid-drafting, the owner sent 2 more messages: a point that kinship2
+cannot dynamically expose per-node metadata the way the current
+`title`-tooltip feature (issue \#135) does (folded into the plan doc’s
+Option 1 cost analysis as a second, independent reason beyond the
+already-covered interactivity-regression cost); and a question asking
+whether using the “Fable” model would add value for this task – answered
+honestly (no reliable basis to predict an advantage, since this task’s
+outcome rests on verified evidence – source code, an empirical POC – not
+on a quality dimension where model choice would obviously matter) rather
+than fabricating a confident claim. **(5)** Wrote
+`docs/planning/pedigree-diagram-mating-lines-plan.md` (Context /
+Decision options / Impact analysis / Verification plan / a note on the
+unfiled-PDF disposition / an owner -ratification-record section,
+following `ARCHITECTURE_WORKSTREAM.md`’s template), presenting 4 options
+(reopen D2 – not recommended; full parity; a smaller
+`visNetworkProxy`-based partial step; decline) with an honest Impact
+Analysis table. Posed an `AskUserQuestion` ratification gate (mirroring
+the original D2 plan’s own §7 “Owner ratification record” convention)
+rather than picking silently or leaving the document open-ended – owner
+ratified **Option 2 (full kinship2-parity layout)**. Updated the plan
+doc’s status/§7 in place to record the ratification and named the
+concrete next step (a dedicated follow-up design planning session, not
+implemented here). Updated `BACKLOG.md`’s item: marked this session’s
+feasibility-planning phase DONE, added a new READY-tagged follow-up item
+for the Option 2 design session with a concrete list of what it must
+resolve (crossing-minimization algorithm, multi-mate/half-sib
+representation, loop-safety re-verification), citing the plan doc’s
+exact sections to read first. **(6)** Verification: full regression
+suite run as a no-drift sanity check even though no `R/`/`tests/` files
+were touched (matching S455/S456 precedent for doc-only sessions) –
+exact baseline match (0 failed/0 error, 3509 passed, 183 skipped, 10
+pre-existing `test_modMarkerGenetics.R` warnings). Phase 3E: n/a – no
+runtime behavior changed (a planning document and 2 backlog-tracking
+files only); the empirical POC verification in step (3) already
+established the technical claims underpinning the plan’s recommendation
+are not merely documentation-level. **Ledger:** recorded in
+`CHANGELOG.md` at Phase 3F (this close-out).
+
+**Session 456 Handoff Evaluation (by Session 457): 9/10.** This
+session’s actual task (item (j) from S456’s own “next steps” list) was
+picked directly off the handoff, so it is fairly scored end-to-end.
+**What helped:** item (j)’s description was accurate and directly
+actionable – “touches the ratified D2 (visNetwork) decision… read the
+plan doc’s §3 D2/§7 ratification record first if picked up” was exactly
+the right first move, and its gotcha note (“an invisible-union-node
+technique may achieve the mating-line convention without reopening it”)
+was prescient – it correctly previewed the shape of this session’s
+eventual finding, though S456 had no way to know that without the
+hands-on POC work this session did. The regression-suite baseline S456
+reported (0 failed/0 error, 3509 passed) was reproduced byte-for-byte.
+**What was missing:** nothing a handoff could reasonably be expected to
+supply – the empirical verification needed to turn the hypothesis into a
+confirmed finding was inherently this session’s own work. **What was
+wrong:** no inaccuracies found in any of S456’s claims this session had
+occasion to verify. **ROI:** clearly positive – both the accurate
+baseline and the correctly-scoped, correctly -hypothesized next-step
+description saved real orientation time.
+
+**Self-assessment (Session 457): 9/10.** **Strengths:** (1) treated the
+owner’s “invisible nodes” hint as a hypothesis to verify, not a given –
+built and screenshotted 3 real `visNetwork` POCs via `chromote` rather
+than reasoning about vis.js’s capabilities from memory or documentation
+alone, matching this project’s established “verify actually functional”
+standard (Learnings 419/445) applied here for the first time to an
+architecture-feasibility question rather than a shipped feature; (2)
+cross-verified web research against the INSTALLED package’s actual
+bundled source (`vis-network.min.js`, the bundled `docjs/` HTML docs)
+rather than trusting generic vis.js documentation that might not match
+the exact bundled version – caught the precise mechanism (only
+`smooth:false` gives a literal straight line; hierarchical layout cannot
+pin free-axis position) directly from source, not secondhand; (3) caught
+and corrected my own POC construction bug (a missing sibship-bar edge in
+the first Case C attempt) by re-inspecting the actual screenshot before
+drawing any conclusion from it, rather than mistaking a scripting
+mistake for a library limitation; (4) read the ORIGINAL D2 ratification
+text in full before concluding anything, finding it had already
+explicitly named and accepted this exact tradeoff – this reframed the
+plan’s entire Context section more usefully than treating the gap as a
+fresh discovery would have; (5) found and corrected an imprecise
+citation in the originating BACKLOG item (the audit’s “Finding \#8”
+vs. checklist table row 8) via the research workflow, rather than
+propagating the same imprecision into the new plan doc; (6) handled the
+unexpected mid-session appearance of 2 untracked copyrighted PDFs
+carefully – investigated content before use, used them as legitimate
+research input, explicitly declined to commit them given copyright
+status, and surfaced that disposition decision transparently rather than
+silently choosing either extreme; (7) posed a ratification
+`AskUserQuestion` at the natural decision point (mirroring the D2 plan’s
+own §7 convention) so the plan doc closes with a recorded decision, not
+an open question; (8) answered the owner’s “would Fable help” question
+honestly (no fabricated claim of a specific advantage) rather than
+inventing a confident-sounding answer with no basis. **Weaknesses:** (1)
+the Case C -\> C2 construction-bug detour cost real time that a more
+careful first-draft POC script would have avoided – caught before it
+reached the plan doc, but still a process inefficiency; (2) the
+`visNetworkProxy`’s `visMoveNode()`/`visGetPositions()` escape hatch
+named for Option 3 rests on the research `Workflow` agent’s
+documentation reading, not this session’s own hands-on verification the
+way Case A/B/C2 were – flagged as such in the plan doc’s §2.2 table, but
+a future session picking up Option 3 specifically should hands-on verify
+it before relying on it, per this project’s own “documentation-level
+verification” anti-pattern; (3) did not attempt even a toy-scale
+prototype of Option 2’s hardest unsolved piece (crossing-minimization at
+colony scale) – appropriate scoping for a feasibility-and-options
+planning session per `SESSION_RUNNER.md`’s planning/implementation
+boundary, not a gap, but worth being explicit that this remains
+genuinely unexplored beyond citing CraneFoot/kinship2 as prior art.
+**Compared to previous sessions:** extends this project’s “verify
+actually functional, not just plausible” standard (established
+S434/S438/S440/S454/S445 for shipped features) to a NEW context – a
+pre-implementation feasibility question – via a hands-on empirical POC
+rather than research -only reasoning, which is a legitimately new
+application of an existing project value, not a repeat.
+**Self-assessment score:** 9/10 (breakdown above).
+
+**Handoff to Session 458:** - **What’s next:** **(a) NEW, most concrete
+item:** Pedigree Diagram Option 2 design planning session (READY, Effort
+L, `BACKLOG.md`) – design the crossing-minimization algorithm,
+multi-mate/half-sib representation, and loop-safety re-verification
+approach for a full kinship2-parity layout on visNetwork; read
+`docs/planning/pedigree-diagram-mating-lines-plan.md` in full first
+(especially §2.2/§2.3’s vis.js-capability findings and the 3 POC
+descriptions), then §3 Option 2 and §7. This is itself a planning
+session (design decisions, not implementation) per the plan doc’s own
+scope note. **(b)** NPRC outreach plan review (DECISION NEEDED,
+owner-only, unchanged across S455/S456/S457) – plan complete at
+`docs/planning/nprc-outreach-announcement-plan.md`. **(c)** Open
+methodology question from S445 (whether `/doctor`-style sessions are
+exempt from Phase 0/1B) remains unresolved. **(d)** LabKey integration
+research recommendations (BLOCKED – needs a live LabKey server). **(e)**
+Issue \#133 (data-model gated). **(f)** Issues \#136/#137 (data-model
+gated). **(g)** Issue \#138 (deprioritized). **(h)** `BACKLOG.md`‘s
+“`inst/extdata/` reorganization – Phase 4” bullet header still says
+`DECISION NEEDED` though the body confirms all 4 phases DONE – one-line
+tag fix whenever a session next touches that section. **(i)** 8 open
+GitHub issues remain unmirrored into `BACKLOG.md` (#116, \#37, \#36,
+\#28, legacy \#12/#11/#10/ \#5) – informational only. **(j)** The 2
+owner-supplied reference PDFs (`inst/extdata/reference/5201430.pdf`,
+`bioinformatics_24_2_279.pdf`) remain on disk, untracked, not committed
+(copyright reasons, see the plan doc’s §6) – a future session should
+confirm with the owner whether to delete them, leave them, or handle
+differently, rather than letting them sit indefinitely as unexplained
+untracked files. - **Key files:**
+`docs/planning/pedigree-diagram-mating-lines-plan.md` (the full plan –
+read before any Option 2 design work), `BACKLOG.md` (updated item:
+feasibility-planning DONE +new Option 2 design-session follow-up item,
+“Pedigree diagram vs kinship2 audit follow-ups” section),
+`R/makePedigreeDiagramData.R:67-73` (today’s one-edge-per-parent
+construction, the code a future Option 2 implementation would
+replace/extend), `R/modPedigree.R:387-468` (the render pipe chain – note
+`visHierarchicalLayout()` would need to be replaced by fixed coordinates
+for Option 2, per the plan doc’s empirical finding),
+`R/findGeneration.R` (computes generation/level only – confirmed no
+existing crossing-minimization/x-ordering capability exists anywhere in
+this codebase, a future Option 2 session starts from zero on that
+piece),
+`docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md:364-381`
+(D2’s original ratification text, already named this tradeoff),
+`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md:67`
+(the checklist table row 8 this session’s plan doc correctly re-cited,
+distinct from the document’s unrelated prose “Finding \#8”). -
+**Gotchas:** all prior sessions’ carried-forward gotchas still apply (2
+iCloud-sync duplicate files,
+`R/appServer 2.R`/`R/modMarkerGenetics 2.R`; 3 untracked `.DS_Store`;
+don’t trust a predecessor’s `devtools::check()` claim or a
+backlog/issue’s stated scope at face value – Learnings 437/441). **New
+this session:** (1) vis.js’s `smooth.type` values named `'horizontal'`/
+`'vertical'` are NOT literal right-angle lines – they are still Bezier
+curves whose control point is biased toward that axis; only
+`smooth: FALSE` gives a true straight `lineTo()` segment – a future
+session must not assume the named types alone solve orthogonal routing
+(verified directly from the bundled `vis-network.min.js` source, not
+just documentation prose). (2) `visHierarchicalLayout()` and
+fixed/manual node coordinates are mutually exclusive in practice – a
+node’s `x`/`y` “has no effect… when using hierarchical layout” per the
+bundled docs, so any Option 2 implementation must choose between
+vis.js’s automatic layout (today’s behavior, handles colony scale +
+inbreeding loops for free) or full manual positioning (achieves the
+aesthetic, but a future session must independently re-solve
+scale/loop-safety) – there is no partial combination of the two
+documented anywhere. (3) `visNetworkProxy`’s `visMoveNode()`/
+`visGetPositions()` (the mechanism behind Option 3) is Shiny-proxy-only,
+not available in a static/knitr render – fine for `modPedigree.R`’s live
+Diagram tab, but this session did NOT hands-on verify it
+(research-workflow-sourced only) – verify hands-on before relying on it
+if Option 3 is ever picked up instead of Option 2. - **Self-assessment
+score:** 9/10 (breakdown above).
+
 ### What Session 456 Did
 
 **Deliverable:** Add a “Pedigree Diagram” demonstration section to

@@ -519,7 +519,7 @@ technology decision (D2), which stands as ratified.* - \[ \] (none
 remaining – **issue \#131** (diagram image/print export, priority 1) is
 RESOLVED: fixed S440 (2026-07-30). Added
 `visNetwork::visExport(type = "png", name = "pedigree_diagram", label = "Export Diagram (PNG)")`
-to the existing pipe chain in `R/modPedigree.R`’s `renderVisNetwork()`
+to the existing pipe chain in `R/modPedigree.R`‘s `renderVisNetwork()`
 block – zero new package dependencies (`visExport()`’s JS libs –
 FileSaver/Blob/canvas-toBlob/ html2canvas/jsPDF – ship bundled inside
 `visNetwork` itself as htmlwidget deps, confirmed offline/no-CDN
@@ -622,47 +622,51 @@ with the new text present; `colony-manager-guide.qmd` rendered via
 unchanged at 0 failed/0 error (3509 passed, same 10 pre-existing
 `test_modMarkerGenetics.R` baseline warnings). Closed via GitHub comment
 (`https://github.com/rmsharp/nprcgenekeepr/issues/139#issuecomment-5159297837`).
-See `CHANGELOG.md`.) - \[ \] **Pedigree Diagram tab does not visually
-indicate mating/couple relationships** (DECISION NEEDED – needs a
-dedicated planning session to evaluate feasibility within the ratified
-visNetwork/D2 choice from
-`docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md`,
-Effort M, discovered S456 2026-08-02 while reviewing the Diagram section
-added to `vignettes/a2interactive.Rmd`) – owner-observed, citing two
-kinship2 references as current-best-practice examples
+See `CHANGELOG.md`.) - \[ \] (feasibility planning DONE – S457,
+2026-08-02, see `docs/planning/pedigree-diagram-mating-lines-plan.md`
+and `CHANGELOG.md`. **Pedigree Diagram tab does not visually indicate
+mating/couple relationships** (originally discovered S456 2026-08-02
+while reviewing the Diagram section added to
+`vignettes/a2interactive.Rmd`) – owner-observed, citing two kinship2
+references
 (`https://epilepsygenetics.blog/2014/04/03/straight-lines-the-art-of-drawing-pedigrees-using-kinship2/`,
-`https://rpubs.com/dliupress/pedigreedemo`) and specifically noting “the
-clarity provided by horizontal and vertical lines instead of lines with
-various slopes.” Standard pedigree-chart convention (kinship2’s
-`plot.pedigree()` and similar tools) connects two mates with a
-horizontal line, then drops a vertical line from its midpoint to a
-horizontal sibship line their children hang from – immediately showing
-which two individuals are a breeding pair. `R/modPedigree.R`’s Diagram
-tab instead draws a separate, directly-sloped `visNetwork` edge from
-each parent straight to each child
-(`R/makePedigreeDiagramData.R:47-53`), with vis.js’s generic
-hierarchical layout choosing edge routing – no visual link between two
-co-parents, and edge slope varies with node position rather than
-following a fixed horizontal/vertical grid. Related to, but distinct
-from, `docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`
-Finding \#8 (“Multiple mates/spouses”), which scored the absent
-union/couple-node concept “Equivalent-different-approach” and left it
-un-actioned – that finding’s framing was specifically about
-childless/remarriage unions (which nprcgenekeepr’s edges-only-from-
-real-children model has no need to represent), not this broader
-visual-clarity question about ALL mated pairs, including ones with
-recorded children. A future planning session should evaluate: (a)
-whether a mating-line/sibship-line convention is achievable inside the
-ratified visNetwork choice (e.g. via invisible “union” helper nodes, a
-documented technique for simulating pedigree-style mating symbols in
-generic hierarchical graph layouts) without reopening D2; (b) if not,
-what reopening D2 would cost against its own ratified rationale (native
-Shiny interactivity, MIT license, `R/modPedigree.R`’s existing
-multi-view module structure); (c) whether addressing this also naturally
-resolves Finding \#8’s narrower framing. No implementation attempted
-this session – planning-only, per `SESSION_RUNNER.md`’s “the plan is the
-deliverable” rule for any item touching a previously-ratified
-architecture decision.
+`https://rpubs.com/dliupress/pedigreedemo`). S457 answered the
+feasibility question empirically: built and screenshotted 3 `visNetwork`
+POCs via `chromote`, confirming a true kinship2-style mate-line +
+sibship-bar convention **is** achievable inside the ratified visNetwork
+(D2) choice via invisible union/waypoint nodes with hand-computed
+coordinates (`visHierarchicalLayout()` must be abandoned in favor of
+fixed positions – confirmed from the bundled vis.js source that
+hierarchical layout cannot pin a node’s free-axis position, and that no
+orthogonal edge-routing primitive exists at all). Read the D2 ratified
+plan’s own text and found it had already explicitly named and accepted
+this exact tradeoff at ratification time. Corrected the prior citation
+of “Finding \#8” – the audit’s “Multiple mates/spouses” item is
+checklist table row 8, not prose Finding \#8 (a different, unrelated
+node-labels finding); the table row’s own “Equivalent-different
+-approach” disposition was about childless/remarriage unions
+specifically, not this broader question. Owner ratified **Option 2 –
+full kinship2-parity layout on visNetwork** (over: reopen D2/switch to
+kinship2 – not recommended, would regress 4 shipped interactive features
+and lose dynamic per-node metadata exposure kinship2 has no analog for;
+a smaller partial `visNetworkProxy`-repositioned mate-line-only step; or
+decline) via `AskUserQuestion`.) - \[ \] **Pedigree Diagram: full
+kinship2-parity layout (Option 2 design session)** (READY, Effort L,
+filed S457 2026-08-02) – the next step per
+`docs/planning/pedigree-diagram-mating-lines-plan.md` §3 Option 2 and
+§7: a dedicated follow-up planning session to design (a) a
+crossing-minimization node-ordering algorithm for colony-scale pedigrees
+(informed by CraneFoot’s duplicate-transformation and kinship2’s
+`align.pedigree`, both cited in the plan doc – no existing capability in
+this codebase today,
+[`findGeneration()`](https://github.com/rmsharp/nprcgenekeepr/reference/findGeneration.md)
+computes generation number only), (b) how multi-mate/half-sib fan-out is
+represented (more than one union node per individual), and (c) how issue
+\#134’s verified inbreeding-loop-safe rendering gets re-established
+under a hand-rolled layout instead of inherited from vis.js’s current
+auto-layout. Read `docs/planning/pedigree-diagram-mating-lines-plan.md`
+in full first, including the 3 POC screenshots’ described geometry in
+§2.3 and the vis.js source-level findings in §2.2.
 
 ## Outreach
 
