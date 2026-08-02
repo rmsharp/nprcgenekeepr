@@ -165,6 +165,7 @@ deidentified
 designators
 deterministically
 diag
+diagramData
 dir
 dontrun
 donttest
@@ -260,6 +261,7 @@ magrittr
 makeExamplePedigreeFile
 makeGeneticDiversityDashboard
 makeGroupNum
+makePedigreeDiagramData
 maleDams
 maleFounders
 mapIdsToObfuscated
