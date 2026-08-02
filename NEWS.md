@@ -65,6 +65,38 @@ R. Mark Sharp, Ph.D.
   the Table tab and focal-animal text box already share -- switch back
   to the Table tab (or enable "Trim pedigree based on focal animals") to
   see the new selection reflected there.
+- A new **Marker Genetics** tab was added (issue \#130, Slice 1)
+  alongside the existing pedigree-based analyses: given an uploaded
+  multi-locus marker genotype file, it computes a KING-robust
+  marker-based kinship estimate (Manichaikul et al. 2010) for each pair
+  of genotyped animals and displays it side by side with the existing
+  pedigree-based kinship, so a curator can spot pedigree/marker
+  mean-kinship disagreements. New exported functions
+  `checkMarkerGenotypeFile()`, `buildMarkerGenotypeMatrix()`, and
+  `markerKinship()` support the same computation for scripted use.
+- The Marker Genetics tab gained a **Heterozygosity** sub-tab (issue
+  \#130, Slice 2): per-animal observed heterozygosity alongside the
+  population's expected heterozygosity (Nei 1973 gene diversity),
+  computed from the same uploaded genotype file. New exported functions
+  `markerObservedHeterozygosity()` and `markerExpectedHeterozygosity()`.
+- The Marker Genetics tab gained a **Parentage Exclusion** sub-tab
+  (issue \#130, Slice 3): cross-references each animal's
+  pedigree-recorded dam/sire against the uploaded genotypes and flags
+  any recorded parent contradicted by 3 or more opposite-homozygote
+  loci, a genotyping-error-tolerant Mendelian-exclusion threshold
+  (Cifuentes et al. 2006). New exported function
+  `markerParentageExclusion()`.
+- New exported function `resolveCrossCenterIds(pedA, pedB, mapping)`
+  (issue \#130, Slice 4) merges two centers' pedigrees using a
+  curator-confirmed cross-center identity-link table, so a transferred
+  animal becomes one node with its real recorded parents intact instead
+  of an artificial founder at the receiving center. Script-callable
+  only; no Shiny UI change this slice.
+- The Marker Genetics tab gained a **Cross-Center** sub-tab (issue
+  \#130, Slice 5): given a second, independently uploaded Center B
+  genotype file, computes Hudson's Fst (Bhatia et al. 2013) between the
+  two centers' populations at each shared locus, plus a pooled estimate
+  across loci. New exported function `markerFst()`.
 
 # nprcgenekeepr 2.0.0 (20260708)
 

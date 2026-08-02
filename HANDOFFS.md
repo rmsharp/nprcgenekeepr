@@ -78,16 +78,16 @@ commit: 5d055adb
 ```handoff
 session: S448
 date: 2026-08-01
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Resolve the NEWS.Rmd checklist decision (BACKLOG.md Housekeeping, Learning 433) -- ratify a broad checklist in CLAUDE.md (owner-decided) and backfill issue #130 Slices 1-5 into NEWS.Rmd (owner-decided).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: DONE -- resolved the NEWS.Rmd checklist BACKLOG.md Housekeeping decision item (Learning 433): ratified a broad checklist in CLAUDE.md and backfilled issue #130 Slices 1-5 into NEWS.Rmd, both owner-decided via AskUserQuestion. Documentation/policy deliverable, no code changes, TDD gates did not apply.
+what_was_done: CLAUDE.md gained a new "NEWS.Rmd entry checklist" paragraph in "Additional close-out checks": any session shipping a new exported function or new user-facing Shiny feature/control must add a NEWS.Rmd entry in the same session it ships (mirrors the citation/issue #120 and tutorial-article/S436 checklists). NEWS.Rmd gained 5 new bullets in the 2.0.0.9000 section covering issue #130's Slices 1-5 (Marker Genetics tab + Kinship Comparison/Heterozygosity/Parentage Exclusion/Cross-Center sub-tabs, plus resolveCrossCenterIds()), cross-checked against actual source (R/modMarkerGenetics.R tab labels, markerFst.R/markerParentageExclusion.R roxygen) not written from memory; re-rendered to NEWS.md via rmarkdown::render(), diff confirmed exactly the 5 bullets, no reflow churn. BACKLOG.md: NEWS.Rmd item resolved; the pre-existing "IACUC" spelling item broadened to its true 12-word scope (see below). inst/WORDLIST: added "homozygote" (this session's own new word). PROJECT_LEARNINGS.md: Learning 436 (ratify-AND-backfill resolution pattern) and Learning 437 (a predecessor's self-reported devtools::check() claim needs independent re-verification, not blind trust) added; CLAUDE.md's learnings cross-reference count updated. Incidental: fixed S447's own HANDOFFS.md receipt still carrying commit:pending (backfilled to afb979bc), folded into the Phase 1B claim commit cd49ff84.
+next_steps: (a) vignettes/a2interactive.Rmd documentation-checklist decision (DECISION NEEDED, owner-only, Effort S, unchanged since S447/Learning 435 -- do not backfill until the owner signals the review-then-document gate is satisfied). (b) Issue #132 (diagram legend, READY, Effort S). (c) CLAUDE.md's NOT_CRAN doc fix (READY, Effort S, unchanged since S439). (d) The spelling-NOTE housekeeping item, BROADENED this session to 12 words (not just IACUC) -- see BACKLOG.md Housekeeping for the exact word list and radix-position guidance (READY, Effort S). (e) NPRC outreach plan review (DECISION NEEDED, owner-only). (f) S445's open Phase 0/1B /doctor-exemption methodology question remains unresolved. (g) New: consider spot-checking other recent sessions' own devtools::check()/verification claims, given S447's did not hold up (Learning 437) -- not urgent, but a newly-surfaced trust question.
+key_files: CLAUDE.md (new NEWS.Rmd checklist paragraph, "Additional close-out checks"), NEWS.Rmd + NEWS.md (5 new bullets, 2.0.0.9000 section), BACKLOG.md (Housekeeping: NEWS.Rmd item resolved, spelling-NOTE item broadened), inst/WORDLIST (homozygote added), PROJECT_LEARNINGS.md Learnings 436-437, CHANGELOG.md (this session's entry), HANDOFFS.md (S447's commit field backfilled).
+gotchas: All of S442-S447's carried-forward gotchas apply where relevant (raw Status: line discipline -- Learning 382, doubly relevant this session; inst/WORDLIST byte-order/radix convention -- Learning 428). New this session: (1) do NOT trust a predecessor's self-reported devtools::check() result at face value if your own session incidentally re-exercises the same check surface (e.g. re-rendering NEWS.Rmd triggers the same tests/spelling.R gate R CMD check runs) -- verify independently, using a clean git worktree at their exact commit to isolate whether a gap is pre-existing (Learning 437); (2) Bash tool run_in_background:true already backgrounds the whole command -- do not also append a trailing & inside the command string, or the log truncates prematurely after the build step; (3) ScheduleWakeup is for /loop dynamic-mode pacing, not a general "wait for my own background task" mechanism -- a run_in_background Bash task's own completion notification is already sufficient; (4) 2 iCloud-sync duplicate files (R/appServer 2.R, R/modMarkerGenetics 2.R) may still be present/recurring -- owner-confirmed sync-lag artifacts, not in-progress work, leave untouched unless directed otherwise.
+runtime_smoke: n/a -- documentation/policy-only change (CLAUDE.md, NEWS.Rmd/NEWS.md, BACKLOG.md, inst/WORDLIST, PROJECT_LEARNINGS.md, CHANGELOG.md); no R/ source, Shiny UI, or runtime behavior changed this session.
+changelog_ref: CHANGELOG.md [BL-NewsRmdChecklist] "Ratify a NEWS.Rmd entry checklist + backfill issue #130 Slices 1-5" entry, this close-out commit
 commit: pending
 ```
 
