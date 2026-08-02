@@ -6,6 +6,17 @@
 
 ## ACTIVE TASK
 
+### What Session 459 Did
+**Deliverable:** Implementation (Development workstream) -- Pedigree Diagram Option 2 Slice 1:
+build and unit-test `.buildMatingUnitForest()` (D1 mating-unit identification + D2 deterministic
+anchor selection) per `docs/planning/pedigree-diagram-option2-layout-design-plan.md` §3 D1/D2 and
+§9's dragon flag (validate anchor assignment as its own tested step before any positioning code).
+**Started:** 2026-08-02
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 458 Did
 **Deliverable:** A planning document (Architecture workstream) designing Option 2 (full
 kinship2-parity mating-line/sibship-line layout on visNetwork, ratified S457) -- the
