@@ -304,16 +304,18 @@ The **Table** tab is an interactive data table. Features include:
 
 The **Diagram** tab renders the same pedigree as a hierarchical
 family-tree diagram (up to 1,500 animals – narrow the focal-animal
-selection above that). Clicking a node re-centers the population on that
-animal, the same as entering its ID in the focal-animals text area. An
-**Export Diagram (PNG)** button, shown in the diagram’s own corner,
-saves the current diagram view as a PNG image file – useful for
-husbandry reports, IACUC documents, or presentations. Hovering any node
-shows its ID, sex, generation, sire, and dam. A **Select by id**
-dropdown above the diagram lets you jump straight to a specific animal
-by ID, dimming every node except it and its direct connections – useful
-for locating one animal in a large, busy diagram without narrowing the
-focal-animal selection.
+selection above that). Each node is shaped by sex – dot = Female, square
+= Male, star = Hermaphrodite, triangle = Unknown, diamond =
+Other/Unrecorded – with a legend to the right of the diagram showing the
+same mapping. Clicking a node re-centers the population on that animal,
+the same as entering its ID in the focal-animals text area. An **Export
+Diagram (PNG)** button, shown in the diagram’s own corner, saves the
+current diagram view as a PNG image file – useful for husbandry reports,
+IACUC documents, or presentations. Hovering any node shows its ID, sex,
+generation, sire, and dam. A **Select by id** dropdown above the diagram
+lets you jump straight to a specific animal by ID, dimming every node
+except it and its direct connections – useful for locating one animal in
+a large, busy diagram without narrowing the focal-animal selection.
 
 ### Module Interface
 

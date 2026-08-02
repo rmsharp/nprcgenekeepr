@@ -353,6 +353,19 @@ diagram.](shiny_app_use/pb_diagram_legend.png)
 
 The Pedigree Browser Diagram tab with its shape-to-sex legend.
 
+Diagrams render up to **1,500 animals** – for larger populations, narrow
+the focal-animal selection first (see **Focal animals** above). Hovering
+any node shows its ID, sex, generation, sire, and dam without leaving
+the diagram. Clicking a node re-centers the population on that animal,
+the same as typing its ID into the focal-animals text area above – a
+quick way to explore a different branch of the pedigree. A **Select by
+id** dropdown above the diagram lets you jump straight to one animal by
+ID, dimming every other node except it and its direct connections –
+useful for finding one animal in a large, busy diagram. An **Export
+Diagram (PNG)** button in the diagram’s own corner saves the current
+view as an image file, useful for husbandry reports, IACUC documents, or
+presentations.
+
 ### Age-Sex Pyramid
 
 The **Age-Sex Pyramid** tab displays a standard population pyramid for
