@@ -405,6 +405,32 @@ modPedigreeServer <- function(id, studbook) {
         visNetwork::visExport(
           type = "png", name = "pedigree_diagram",
           label = "Export Diagram (PNG)"
+        ) |>
+        # Shape-to-sex legend (issue #132): renders as its own, separate
+        # vis.Network instance (confirmed in the visNetwork.js source,
+        # Pre-RED) -- its clicks do not reach the click-to-navigate handler
+        # bound above via visEvents().
+        visNetwork::visLegend(
+          addNodes = data.frame(
+            label = c("Female", "Male", "Hermaphrodite", "Unknown",
+                       "Other / Unrecorded"), # nolint: nonportable_path_linter
+            shape = c("dot", "square", "star", "triangle", "diamond"),
+            stringsAsFactors = FALSE
+          ),
+          useGroups = FALSE,
+          position = "right",
+          main = "Sex",
+          # Default width (0.2) clips the longest label ("Other /
+          # Unrecorded") against the legend canvas's own overflow:hidden
+          # boundary (confirmed hands-on, Pre-RED) -- widened enough for it
+          # to render in full.
+          width = 0.28,
+          # Default stepY (100) spaces 5 entries across 400 world-units,
+          # which does not comfortably fit the widget's fixed 400px height
+          # alongside the export button below it (confirmed hands-on,
+          # Pre-RED) -- tightened so all 5 legend rows render without
+          # crowding the button.
+          stepY = 65L
         )
     })
 

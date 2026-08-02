@@ -1228,3 +1228,57 @@ test_that("modPedigreeServer's diagram widget offers a PNG export button", {
     }
   )
 })
+
+## Issue #132 -- shape-to-sex legend on the Diagram tab.
+
+test_that("modPedigreeServer's diagram widget offers a shape-to-sex legend", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  # M/F-only fixture: star/triangle/diamond shapes and the Hermaphrodite/
+  # Unknown/Other labels below cannot come from the diagram's own nodes, so
+  # their presence in the widget JSON unambiguously proves the legend.
+  test_studbook <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE
+      )
+      session$flushReact()
+
+      # output$pedigreeDiagram is the widget's raw JSON payload inside
+      # testServer() (Learning from the issue #131 export test above) --
+      # visNetwork::visLegend()'s config lands in x.legend.
+      widgetJson <- output$pedigreeDiagram
+      expect_true(grepl('"legend"', widgetJson))
+      expect_true(grepl('"position":"right"', widgetJson))
+      expect_true(grepl('"text":"Sex"', widgetJson))
+      expect_true(grepl('"Female"', widgetJson))
+      expect_true(grepl('"Male"', widgetJson))
+      expect_true(grepl('"Hermaphrodite"', widgetJson))
+      expect_true(grepl('"Unknown"', widgetJson))
+      expect_true(grepl("Other / Unrecorded", widgetJson))
+      expect_true(grepl('"star"', widgetJson))
+      expect_true(grepl('"triangle"', widgetJson))
+      expect_true(grepl('"diamond"', widgetJson))
+      # width/stepY tuned live (Pre-RED) so all 5 rows -- including the
+      # longest label, "Other / Unrecorded" -- render without clipping
+      # against the legend canvas's own overflow:hidden boundary or
+      # crowding the export button below it.
+      expect_true(grepl('"width":0.28', widgetJson))
+      expect_true(grepl('"stepY":65', widgetJson))
+    }
+  )
+})

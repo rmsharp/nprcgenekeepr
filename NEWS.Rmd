@@ -99,6 +99,11 @@ knitr::opts_chunk$set(echo = TRUE)
   computes Hudson's Fst (Bhatia et al. 2013) between the two centers'
   populations at each shared locus, plus a pooled estimate across loci. New
   exported function `markerFst()`.
+- The Pedigree Browser's Diagram tab gained an in-app **shape-to-sex
+  legend** (issue #132): a panel next to the diagram now shows what each
+  node shape means (dot = Female, square = Male, star = Hermaphrodite,
+  triangle = Unknown, diamond = Other/Unrecorded), so this no longer has to
+  be looked up outside the app.
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes

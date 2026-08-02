@@ -65,15 +65,16 @@ R. Mark Sharp, Ph.D.
   the Table tab and focal-animal text box already share -- switch back
   to the Table tab (or enable "Trim pedigree based on focal animals") to
   see the new selection reflected there.
-- A new **Marker Genetics** tab was added (issue \#130, Slice 1)
-  alongside the existing pedigree-based analyses: given an uploaded
-  multi-locus marker genotype file, it computes a KING-robust
-  marker-based kinship estimate (Manichaikul et al. 2010) for each pair
-  of genotyped animals and displays it side by side with the existing
-  pedigree-based kinship, so a curator can spot pedigree/marker
-  mean-kinship disagreements. New exported functions
-  `checkMarkerGenotypeFile()`, `buildMarkerGenotypeMatrix()`, and
-  `markerKinship()` support the same computation for scripted use.
+- A new **Marker Genetics** tab, starting with a **Kinship Comparison**
+  sub-tab, was added (issue \#130, Slice 1) alongside the existing
+  pedigree-based analyses: given an uploaded multi-locus marker genotype
+  file, it computes a KING-robust marker-based kinship estimate
+  (Manichaikul et al. 2010) for each pair of genotyped animals and
+  displays it side by side with the existing pedigree-based kinship, so
+  a curator can spot pedigree/marker mean-kinship disagreements. New
+  exported functions `checkMarkerGenotypeFile()`,
+  `buildMarkerGenotypeMatrix()`, and `markerKinship()` support the same
+  computation for scripted use.
 - The Marker Genetics tab gained a **Heterozygosity** sub-tab (issue
   \#130, Slice 2): per-animal observed heterozygosity alongside the
   population's expected heterozygosity (Nei 1973 gene diversity),
@@ -97,6 +98,11 @@ R. Mark Sharp, Ph.D.
   genotype file, computes Hudson's Fst (Bhatia et al. 2013) between the
   two centers' populations at each shared locus, plus a pooled estimate
   across loci. New exported function `markerFst()`.
+- The Pedigree Browser's Diagram tab gained an in-app **shape-to-sex
+  legend** (issue \#132): a panel next to the diagram now shows what
+  each node shape means (dot = Female, square = Male, star =
+  Hermaphrodite, triangle = Unknown, diamond = Other/Unrecorded), so
+  this no longer has to be looked up outside the app.
 
 # nprcgenekeepr 2.0.0 (20260708)
 

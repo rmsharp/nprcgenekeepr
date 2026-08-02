@@ -289,3 +289,68 @@ test_that(
     info = "No visNetwork/diagram-related console error from the click handler"
   )
 })
+
+## issue #132 -- shape-to-sex legend smoke test.
+
+test_that("E2E: Pedigree Browser Diagram tab shows a shape-to-sex legend", {
+  skip_if_not_installed("shinytest2")
+  skip_if_not_installed("chromote")
+  skip_if_not_installed("visNetwork")
+  skip_on_cran()
+
+  app_dir <- create_test_app()
+  app <- create_app_driver(app_dir, "e2e_pedigree_diagram_legend")
+  on.exit(app$stop(), add = TRUE)
+
+  fixture <- system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                         package = "nprcgenekeepr")
+  loaded <- upload_and_wait(app, fixture)
+  if (!loaded) skip("Upload/QC did not complete")
+
+  success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
+  if (!success) skip("Could not navigate to Pedigree tab")
+
+  clicked <- click_element_safe(app, 'a[data-value="Diagram"]')
+  if (!clicked) skip("Could not switch to the Diagram tab")
+
+  ## The legend title renders as plain DOM text, but the legend's shapes are
+  ## drawn on their own HTML5 canvas (a separate vis.Network instance,
+  ## instance.legend -- confirmed in the visNetwork.js source, Pre-RED), so
+  ## its node labels/shapes are not DOM-inspectable via static HTML the way
+  ## the title is. Query the live legend DataSet directly, the same
+  ## mechanism get_diagram_node() above uses for the main network.
+  html <- get_html_safe(app, "#pedigree-pedigreeDiagram")
+  expect_match(html, "Sex",
+               info = "Diagram tab should show the legend title")
+
+  legendNodes <- app$get_js(paste0(
+    "(() => { const w = HTMLWidgets.find('#pedigree-pedigreeDiagram'); ",
+    "if (!w || !w.legend) return 'null'; ",
+    "return JSON.stringify(w.legend.body.data.nodes.get()); })()"
+  ))
+  if (identical(legendNodes, "null")) skip("Legend widget instance not found")
+
+  expect_match(legendNodes, '"label":"Female"',
+               info = "Legend should label the dot shape as Female")
+  expect_match(legendNodes, '"shape":"dot"',
+               info = "Legend should render the Female entry as a dot")
+  expect_match(legendNodes, '"label":"Male"',
+               info = "Legend should label the square shape as Male")
+  expect_match(legendNodes, '"shape":"square"',
+               info = "Legend should render the Male entry as a square")
+  expect_match(legendNodes, '"label":"Hermaphrodite"',
+               info = "Legend should label the star shape as Hermaphrodite")
+  expect_match(legendNodes, '"shape":"star"',
+               info = "Legend should render the Hermaphrodite entry as a star")
+  expect_match(legendNodes, '"label":"Unknown"',
+               info = "Legend should label the triangle shape as Unknown")
+  expect_match(legendNodes, '"shape":"triangle"',
+               info = "Legend should render the Unknown entry as a triangle")
+
+  logs <- app$get_logs()
+  diagramErrors <- logs[logs$level == "throw" &
+                          grepl("vis|network|pedigreeDiagram", logs$message,
+                                ignore.case = TRUE), ]
+  expect_equal(nrow(diagramErrors), 0L,
+               info = "No visNetwork/legend-related console error")
+})
