@@ -270,7 +270,10 @@ straightforward recursive contour-merge is very unlikely to need BJL's specific 
 (which exists to fix a case where Walker's *original* implementation could degrade to O(n^2) on
 pathological inputs); if a future session's profiling at the node-count ceiling shows a real
 problem, upgrading the merge step to BJL's apportioning technique is a well-scoped, isolated
-follow-up, not something to build speculatively now.
+follow-up, not something to build speculatively now -- tracked as
+[issue #141](https://github.com/rmsharp/nprcgenekeepr/issues/141), labeled `premature
+optimization` specifically so it is not picked up until profiling/evidence shows the need is
+real.
 
 ### D4 -- Founder/root ordering
 
@@ -463,7 +466,10 @@ runtime impact, matching this project's "small, additive, per-session slice" pre
   direct implementation of any one of them. An implementation session should expect this to need
   its own careful edge-case testing (deeply unbalanced trees, a founder with many mating units,
   wide sibships) rather than assuming citing the literature is equivalent to having verified
-  behavior against it.
+  behavior against it. If that testing (or later production profiling) surfaces a genuine
+  quadratic-degradation case, [issue #141](https://github.com/rmsharp/nprcgenekeepr/issues/141)
+  tracks upgrading to Buchheim-Jünger-Leipert's apportioning technique -- filed but deliberately
+  not scheduled (`premature optimization` label) until that evidence exists.
 
 ---
 

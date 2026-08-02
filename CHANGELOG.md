@@ -43,6 +43,23 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-02 · [issue #141] File "upgrade D3 to Buchheim-Jünger-Leipert if profiling shows a need" as a deliberately-unscheduled issue (Session 458, same-conversation follow-up)
+- **Deliverable:** [issue #141](https://github.com/rmsharp/nprcgenekeepr/issues/141), owner-directed
+  after this session's own close-out: formalize
+  `docs/planning/pedigree-diagram-option2-layout-design-plan.md` §3 D3/§9's deferred
+  Buchheim-Jünger-Leipert optimization as a tracked GitHub issue, explicitly labeled so it is not
+  picked up speculatively.
+- Created a new repository label, `premature optimization` (description: "Deferred until
+  profiling/evidence shows the need is real -- do not implement speculatively"), since no existing
+  label captured this evidence-gated-deferral semantics (`low priority` is priority-based, not
+  condition-based). Filed the issue with both `enhancement` and `premature optimization` labels,
+  naming the specific triggering condition (profiling at the node-count ceiling, or a real
+  pathological-shape colony pedigree, showing quadratic degradation) that would justify picking it
+  up, and the D-decisions it does NOT affect (D1/D2/D4/D5/D6 are independent of which
+  tree-positioning algorithm runs after D1's transformation).
+- Cross-referenced issue #141 back into the design doc at both citing locations (§3 D3, §9 dragons)
+  so a future reader following either path finds the tracked issue rather than a dead-end mention.
+
 ### 2026-08-02 · [ad hoc] Pedigree Diagram Option 2 layout design -- crossing-minimization, multi-mate/half-sib representation, loop-safety, ratified as written (Session 458)
 - **Deliverable:** `docs/planning/pedigree-diagram-option2-layout-design-plan.md` (Architecture
   workstream) -- the dedicated follow-up design session `docs/planning/
