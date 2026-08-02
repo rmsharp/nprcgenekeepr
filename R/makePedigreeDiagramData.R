@@ -13,7 +13,9 @@
 #'   parents; \code{gen} an integer generation number, 0 for founders, as
 #'   produced by \code{\link{findGeneration}}).
 #' @return A list with two data frames: \code{nodes} (\code{id}, \code{label},
-#'   \code{shape}, \code{level}) and \code{edges} (\code{from}, \code{to}).
+#'   \code{shape}, \code{level}, \code{title}) and \code{edges} (\code{from},
+#'   \code{to}). \code{title} is an HTML hover-tooltip string (issue #135)
+#'   giving ID, sex, generation, sire, and dam.
 #'
 #' @examples
 #' library(nprcgenekeepr)
@@ -36,11 +38,29 @@ makePedigreeDiagramData <- function(ped) {
   shapes <- unname(shapeMap[as.character(ped$sex)])
   shapes[is.na(shapes)] <- "diamond"
 
+  # Same sex vocabulary as the Diagram tab's own shape-to-sex legend (issue
+  # #132, R/modPedigree.R) -- an unmapped sex code falls back to its
+  # "Other / Unrecorded" label, not just "diamond" shape.
+  sexLabelMap <- c(F = "Female", M = "Male", H = "Hermaphrodite",
+                    U = "Unknown")
+  sexLabels <- unname(sexLabelMap[as.character(ped$sex)])
+  sexLabels[is.na(sexLabels)] <- "Other / Unrecorded"
+
+  sireLabels <- ifelse(is.na(ped$sire), "Unknown", .escapeHtml(ped$sire))
+  damLabels <- ifelse(is.na(ped$dam), "Unknown", .escapeHtml(ped$dam))
+
+  titles <- sprintf(
+    paste0("<b>ID:</b> %s<br><b>Sex:</b> %s<br><b>Generation:</b> %s",
+           "<br><b>Sire:</b> %s<br><b>Dam:</b> %s"),
+    .escapeHtml(ped$id), sexLabels, ped$gen, sireLabels, damLabels
+  )
+
   nodes <- data.frame(
     id = ped$id,
     label = ped$id,
     shape = shapes,
     level = ped$gen,
+    title = titles,
     stringsAsFactors = FALSE
   )
 
@@ -53,4 +73,20 @@ makePedigreeDiagramData <- function(ped) {
   )
 
   list(nodes = nodes, edges = edges)
+}
+
+#' Escape HTML special characters for use in a vis.js node tooltip
+#'
+#' vis.js renders a node's \code{title} field as innerHTML, so raw
+#' \code{&}/\code{<}/\code{>} characters in an id/sire/dam value would
+#' otherwise corrupt the tooltip markup (issue #135).
+#'
+#' @param x character vector.
+#' @return character vector with \code{&}, \code{<}, \code{>} escaped.
+#' @noRd
+.escapeHtml <- function(x) {
+  x <- gsub("&", "&amp;", x, fixed = TRUE)
+  x <- gsub("<", "&lt;", x, fixed = TRUE)
+  x <- gsub(">", "&gt;", x, fixed = TRUE)
+  x
 }

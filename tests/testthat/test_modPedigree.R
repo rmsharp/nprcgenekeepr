@@ -1282,3 +1282,83 @@ test_that("modPedigreeServer's diagram widget offers a shape-to-sex legend", {
     }
   )
 })
+
+## Issue #135 -- ID-select search dropdown + hover-highlight on the Diagram
+## tab. hoverNearest (not the visNetwork default click-based highlight) is
+## used deliberately so the highlight effect does not overlap the existing
+## click-to-navigate handler (issue #129 Slice 2) bound above.
+
+test_that(
+  "modPedigreeServer's diagram widget offers an ID-select search dropdown", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE
+      )
+      session$flushReact()
+
+      # output$pedigreeDiagram is the widget's raw JSON payload inside
+      # testServer() (Learning from the issue #131/#132 tests above) --
+      # visNetwork::visOptions()'s nodesIdSelection config lands in
+      # x.idselection.
+      widgetJson <- output$pedigreeDiagram
+      expect_true(grepl('"idselection":{"enabled":true', widgetJson,
+                         fixed = TRUE))
+      expect_true(grepl('"main":"Select by id"', widgetJson, fixed = TRUE))
+    }
+  )
+})
+
+test_that(
+  "modPedigreeServer's diagram widget highlights connected nodes on hover,
+   not click", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE
+      )
+      session$flushReact()
+
+      # visNetwork::visOptions()'s highlightNearest config lands in
+      # x.highlight. hoverNearest:true confirms the highlight trigger is
+      # hover, not visNetwork's own click-based default -- verified hands-on
+      # Pre-RED that a bare list(enabled = TRUE) key is "hover", not
+      # "hoverNearest", in visOptions()'s own validation.
+      widgetJson <- output$pedigreeDiagram
+      expect_true(grepl('"highlight":{"enabled":true,"hoverNearest":true',
+                         widgetJson, fixed = TRUE))
+    }
+  )
+})

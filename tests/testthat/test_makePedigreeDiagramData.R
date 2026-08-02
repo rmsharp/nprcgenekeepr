@@ -92,3 +92,94 @@ test_that("makePedigreeDiagramData scales correctly on examplePedigree", {
   expectedEdges <- sum(!is.na(ped$sire)) + sum(!is.na(ped$dam))
   expect_equal(nrow(result$edges), expectedEdges)
 })
+
+## Issue #135 -- hover tooltips (node `title` field).
+
+test_that("makePedigreeDiagramData adds a title field to nodes", {
+  data("smallPed", package = "nprcgenekeepr")
+  result <- makePedigreeDiagramData(smallPed)
+  expect_true("title" %in% names(result$nodes))
+  expect_equal(length(result$nodes$title), nrow(result$nodes))
+})
+
+test_that(
+  "makePedigreeDiagramData's title includes id, sex, generation, sire, dam", {
+  trio <- data.frame(
+    id = c("P1", "P2", "C1"),
+    sire = c(NA, NA, "P1"),
+    dam = c(NA, NA, "P2"),
+    sex = factor(c("M", "F", "M"), levels = c("F", "M", "H", "U")),
+    gen = c(0L, 0L, 1L),
+    stringsAsFactors = FALSE
+  )
+  result <- makePedigreeDiagramData(trio)
+  childTitle <- result$nodes$title[result$nodes$id == "C1"]
+  expect_true(grepl("ID:</b> C1", childTitle, fixed = TRUE))
+  expect_true(grepl("Sex:</b> Male", childTitle, fixed = TRUE))
+  expect_true(grepl("Generation:</b> 1", childTitle, fixed = TRUE))
+  expect_true(grepl("Sire:</b> P1", childTitle, fixed = TRUE))
+  expect_true(grepl("Dam:</b> P2", childTitle, fixed = TRUE))
+})
+
+test_that(
+  "makePedigreeDiagramData spells out sex in the title, matching the legend
+   (issue #132)'s own Female/Male/Hermaphrodite/Unknown labels", {
+  ped <- data.frame(
+    id = c("Fid", "Mid", "Hid", "Uid"),
+    sire = NA_character_,
+    dam = NA_character_,
+    sex = factor(c("F", "M", "H", "U"), levels = c("F", "M", "H", "U")),
+    gen = 0L,
+    stringsAsFactors = FALSE
+  )
+  result <- makePedigreeDiagramData(ped)
+  titles <- setNames(result$nodes$title, result$nodes$id)
+  expect_true(grepl("Sex:</b> Female", titles[["Fid"]], fixed = TRUE))
+  expect_true(grepl("Sex:</b> Male", titles[["Mid"]], fixed = TRUE))
+  expect_true(grepl("Sex:</b> Hermaphrodite", titles[["Hid"]], fixed = TRUE))
+  expect_true(grepl("Sex:</b> Unknown", titles[["Uid"]], fixed = TRUE))
+})
+
+test_that(
+  "makePedigreeDiagramData's title shows 'Other / Unrecorded' for an
+   unmapped sex code, matching the legend's own label", {
+  ped <- data.frame(
+    id = "X1", sire = NA_character_, dam = NA_character_,
+    sex = factor("Z", levels = c("F", "M", "H", "U", "Z")), gen = 0L,
+    stringsAsFactors = FALSE
+  )
+  result <- makePedigreeDiagramData(ped)
+  expect_true(
+    grepl("Sex:</b> Other / Unrecorded", result$nodes$title, fixed = TRUE)
+  )
+})
+
+test_that(
+  "makePedigreeDiagramData's title shows Unknown for missing sire/dam", {
+  founder <- data.frame(
+    id = "F1", sire = NA_character_, dam = NA_character_,
+    sex = factor("F", levels = c("F", "M", "H", "U")), gen = 0L,
+    stringsAsFactors = FALSE
+  )
+  result <- makePedigreeDiagramData(founder)
+  expect_true(grepl("Sire:</b> Unknown", result$nodes$title, fixed = TRUE))
+  expect_true(grepl("Dam:</b> Unknown", result$nodes$title, fixed = TRUE))
+})
+
+test_that(
+  "makePedigreeDiagramData's title HTML-escapes id/sire/dam text", {
+  ped <- data.frame(
+    id = c("A&B<C>", "Kid"),
+    sire = c(NA, "A&B<C>"),
+    dam = NA_character_,
+    sex = factor(c("F", "M"), levels = c("F", "M", "H", "U")),
+    gen = c(0L, 1L),
+    stringsAsFactors = FALSE
+  )
+  result <- makePedigreeDiagramData(ped)
+  parentTitle <- result$nodes$title[result$nodes$id == "A&B<C>"]
+  childTitle <- result$nodes$title[result$nodes$id == "Kid"]
+  expect_false(grepl("A&B<C>", parentTitle, fixed = TRUE))
+  expect_true(grepl("A&amp;B&lt;C&gt;", parentTitle, fixed = TRUE))
+  expect_true(grepl("Sire:</b> A&amp;B&lt;C&gt;", childTitle, fixed = TRUE))
+})

@@ -431,6 +431,39 @@ modPedigreeServer <- function(id, studbook) {
           # Pre-RED) -- tightened so all 5 legend rows render without
           # crowding the button.
           stepY = 65L
+        ) |>
+        # Search + highlight (issue #135): nodesIdSelection adds a
+        # "Select by id" dropdown; highlightNearest dims non-connected
+        # nodes. hover = TRUE (not visOptions()'s own click-based default)
+        # so the highlight trigger is hover, not click -- click is already
+        # bound above to click-to-navigate (issue #129 Slice 2), and the
+        # two would otherwise both fire on the same click. NOTE: the list
+        # key is "hover", not "hoverNearest" -- the latter is only the name
+        # of the OUTPUT JSON field this produces (confirmed against
+        # visNetwork:::visOptions()'s source, PROJECT_LEARNINGS.md
+        # Learning 443).
+        #
+        # KNOWN TRADE-OFF (Learning 443, owner-accepted): nodesIdSelection
+        # injects its own Shiny-bound <select> elements client-side,
+        # outside this renderUI()-wrapped container's normal diff cycle.
+        # From the SECOND reactive re-render onward (e.g. two consecutive
+        # click-to-navigate actions), this can log one transient, benign
+        # "[shiny] Duplicate input IDs were found" console warning -- the
+        # DOM always ends with exactly one live element (no permanent
+        # duplication) and all diagram interactivity keeps working
+        # correctly afterward (verified hands-on via shinytest2/chromote).
+        # Root cause is visNetwork's own client-side widget lifecycle, not
+        # this package's code; a structural fix (e.g. visNetworkProxy()
+        # incremental updates instead of a full renderVisNetwork()
+        # re-render) was judged disproportionate to what the audit itself
+        # scored "optional, low-priority... UI polish" and would risk the
+        # three already-shipped Diagram-tab features above (click-to-
+        # navigate, export, legend).
+        visNetwork::visOptions(
+          nodesIdSelection = TRUE,
+          highlightNearest = list(
+            enabled = TRUE, hover = TRUE, degree = 1L, algorithm = "all"
+          )
         )
     })
 
