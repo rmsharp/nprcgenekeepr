@@ -326,12 +326,74 @@ dependency of **nprcgenekeepr**) renders it. See the “Diagram view” part
 of the *colony-manager-guide* article for the equivalent point-and-click
 workflow and screenshots.
 
-We reuse the *trimmedPed* pedigree built earlier in this tutorial, which
-already has the **gen** column **makePedigreeDiagramData** requires.
+The *trimmedPed* pedigree built earlier in this tutorial has 704 animals
+– realistic for the live Shiny application’s pan-and-zoom canvas, but
+too dense for a single static demonstration to usefully show every
+feature at once. It is also limited to the *Female*, *Male*, and
+*Unknown* sex codes that happen to occur in the bundled example data –
+the *Hermaphrodite* and unrecorded-sex shapes never appear in it. So
+instead we build a small, synthesized pedigree spanning a few
+generations, deliberately including all five sex codes
+**makePedigreeDiagramData** recognizes.[^4]
 
 ``` r
 
-diagramData <- makePedigreeDiagramData(trimmedPed)
+founders <- data.frame(
+  id = c(paste0("F", 1L:4L), paste0("M", 1L:4L)),
+  sire = NA_character_, dam = NA_character_,
+  sex = c(rep("F", 4L), rep("M", 4L)),
+  stringsAsFactors = FALSE
+)
+gen1 <- data.frame(
+  id = paste0("C", 1L:12L),
+  sire = c(
+    "M1", "M1", "M1", "M2", "M2", "M3", "M3", "M3", "M4", "M4", "M1", "M1"
+  ),
+  dam = c(
+    "F1", "F1", "F1", "F2", "F2", "F3", "F3", "F3", "F4", "F4", "F2", "F2"
+  ),
+  sex = c("F", "M", "H", "F", "M", "M", "F", "U", "F", "M", "F", "M"),
+  stringsAsFactors = FALSE
+)
+gen2 <- data.frame(
+  id = paste0("D", 1L:9L),
+  sire = c("C2", "C2", "C5", "C5", "C5", "C6", "C10", "C10", "C12"),
+  dam = c("C4", "C4", "C7", "C7", "C7", "C1", "C9", "C9", "C11"),
+  sex = c("F", "M", "M", "F", "M", "F", "M", "F", "F"),
+  stringsAsFactors = FALSE
+)
+gen3 <- data.frame(
+  id = paste0("E", 1L:4L),
+  sire = c("D2", "D2", "D5", "D7"),
+  dam = c("D4", "D4", "D8", "D6"),
+  sex = c("F", "M", "U", NA_character_),
+  stringsAsFactors = FALSE
+)
+demoPed <- rbind(founders, gen1, gen2, gen3)
+demoPed$gen <- findGeneration(demoPed$id, demoPed$sire, demoPed$dam)
+nrow(demoPed)
+```
+
+    ## [1] 33
+
+``` r
+
+table(demoPed$sex, useNA = "ifany")
+```
+
+    ## 
+    ##    F    H    M    U <NA> 
+    ##   15    1   14    2    1
+
+Sex code **H** (*C3*) and the unrecorded sex code (*E4*, `NA`) each
+appear exactly once, alongside code **U** (*C8* and *E3*) and the
+ordinary **F**/ **M** codes that make up the rest – enough for every one
+of the five node shapes to appear in the diagram below at least once,
+across 4 generations and 33 animals.
+
+``` r
+
+diagramData <- makePedigreeDiagramData(demoPed)
 names(diagramData)
 ```
 
@@ -342,14 +404,14 @@ names(diagramData)
 nrow(diagramData$nodes)
 ```
 
-    ## [1] 704
+    ## [1] 33
 
 ``` r
 
 nrow(diagramData$edges)
 ```
 
-    ## [1] 1004
+    ## [1] 50
 
 **makePedigreeDiagramData** returns a list of two data frames: *nodes*
 (one row per animal, shaped by sex – dot = Female, square = Male, star =
@@ -361,7 +423,7 @@ to child).
 Piping *diagramData* into **visNetwork::visNetwork** and the same
 layout, export, legend, and search options `R/modPedigree.R` uses
 reproduces the Diagram tab’s rendering exactly, including a genuinely
-working **Export Diagram (PNG)** button – try it below.[^4]
+working **Export Diagram (PNG)** button – try it below.[^5]
 
 ``` r
 
@@ -391,8 +453,10 @@ visNetwork::visNetwork(diagramData$nodes, diagramData$edges) |>
 
 The **Select by id** dropdown above the diagram lets you jump straight
 to a specific animal and dims every node except it and its direct
-connections – useful for locating one animal in a diagram this size (704
-animals) without narrowing the pedigree further.
+connections – useful for locating one animal in a diagram this size, and
+just as useful in a real diagram of 704 animals like the one built
+earlier in this tutorial, where finding one animal by eye is much
+harder.
 
 ## Genetic Value Analysis
 
@@ -1060,7 +1124,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpxSP5Y5/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/Rtmp22i5Lj/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -1491,8 +1555,8 @@ into one number for a quick between-center comparison.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-08-02 20:51:52.249808. The processing
-time for this document was 17 seconds..
+The current date and time is 2026-08-02 21:13:24.86001. The processing
+time for this document was 21 seconds..
 
 ``` r
 
@@ -1562,7 +1626,10 @@ sessionInfo()
 
 [^3]: All animals within the colony have a known birth date.
 
-[^4]: The Diagram tab’s click-to-navigate behavior (clicking a node
+[^4]: This pedigree is entirely synthetic – constructed for this
+    tutorial, not drawn from any real colony’s records.
+
+[^5]: The Diagram tab’s click-to-navigate behavior (clicking a node
     narrows the focal-animal selection to it) is Shiny-specific – it
     relies on a live Shiny session to receive the click event – and is
     therefore not reproduced here.

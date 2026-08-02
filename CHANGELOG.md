@@ -47,6 +47,36 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-08-02 · \[ad hoc\] Synthesize a small demo pedigree for the Pedigree Diagram section (Session 456 follow-up)
+
+- **Deliverable:** owner review of the just-shipped “Pedigree Diagram”
+  section (below) found the reused 704-row `trimmedPed` diagram too
+  large and insufficiently diverse (only the `F`/`M`/`U` sex codes occur
+  in the bundled real data) for demonstrating all five node shapes at
+  once. Replaced with a synthesized 33-animal, 4-generation pedigree
+  deliberately covering `F`/`M`/`H`/`U`/`NA` (“Other/Unrecorded”) –
+  confirmed via
+  [`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+  output that all 5 shapes (dot/square/star/triangle/diamond) actually
+  appear at least once. Prose flags the pedigree as synthetic (new
+  footnote), explains why `trimmedPed` alone couldn’t serve, and ties
+  back to the real `trimmedPed`-scale diagram to motivate the search
+  feature. Same session, not a new claim/close-out cycle – direct owner
+  revision of work not yet accepted, addressed within the same
+  conversation.
+- Verified:
+  [`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)
+  clean; grepped rendered HTML to confirm the new prose and correct
+  inline `nrow(demoPed)`/generation-count substitutions (4 generations,
+  33 animals). Re-ran the live
+  [`chromote::ChromoteSession`](https://rstudio.github.io/chromote/reference/ChromoteSession.html)
+  functional check: Export Diagram (PNG) still produces a real PNG
+  (valid magic number), zero console errors.
+  [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+  confirmed zero new flagged words (no further `inst/WORDLIST` changes
+  needed). Full regression suite unchanged (0 failed/0 error, 3509
+  passed, same 10 pre-existing warnings). Commit: `36fbf3f2`.
+
 ### 2026-08-02 · \[ad hoc\] Add a Pedigree Diagram demonstration section to vignettes/a2interactive.Rmd (Session 456)
 
 - **Deliverable:** owner-directed (free-text task). Fulfills
