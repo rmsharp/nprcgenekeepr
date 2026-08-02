@@ -13,6 +13,33 @@ covering `makePedigreeDiagramData()` and the diagram export capability -- owner-
 `a2interactive.Rmd` script-callable-function checklist for the pedigree-diagram function family
 (#129/#131/#132/#135), which the S450 marker-genetics backfill pass did not cover.
 **Started/Completed:** 2026-08-02 / 2026-08-02
+
+**Follow-up (same session/conversation, after the close-out below):** owner reviewed the shipped
+section and found the reused 704-row `trimmedPed` diagram too large and insufficiently diverse
+(the real bundled example data contains only the `F`/`M`/`U` sex codes -- no `H`, no unrecorded/
+`NA`) to demonstrate all five node shapes at once. Replaced with a small, hand-designed synthetic
+pedigree: 8 founders (4 F, 4 M) -> 12 gen-1 children (deliberately including one `H` and one `U`)
+-> 9 gen-2 grandchildren -> 4 gen-3 great-grandchildren (including a second `U` and one `NA`,
+"Other/Unrecorded"), 33 animals across 4 generations total. Designed the id/sire/dam/sex
+structure directly in R first (outside the vignette) and sanity-checked it with the REAL
+`findGeneration()` (not hand-assigned generation numbers) to catch any parentage-assignment
+mistakes before writing it into the tutorial -- confirmed generation counts 8/12/9/4 and all 5
+`makePedigreeDiagramData()` shapes (dot/square/star/triangle/diamond) present exactly as
+intended. Added a new footnote flagging the pedigree as synthetic (not real colony data);
+renumbered the pre-existing click-to-navigate footnote from `[^4]` to `[^5]` to keep sequential
+labels, verified via grep that every footnote label pairs exactly once (reference + definition).
+Re-rendered, re-grepped the HTML for the new prose/inline-`r`-substitutions (4 generations, 33
+animals), re-ran the live `chromote::ChromoteSession` functional check (Export Diagram (PNG)
+still produces a real, valid PNG; zero console errors), re-ran `spelling::spell_check_package()`
+(clean, no further `inst/WORDLIST` changes needed -- `demoPed` did not trigger a new flag), and
+reran the full regression suite (unchanged baseline, 0 failed/0 error, 3509 passed). Committed
+separately (`36fbf3f2`, not folded into the earlier commits, since those were already pushed to
+`origin/master`) with a new appended `CHANGELOG.md` entry (not an edit to the original entry,
+preserving append-only history) and updated `HANDOFFS.md`'s S456 receipt in place to describe the
+final, corrected deliverable. Treated as a continuation of Session 456 rather than a new claimed
+session -- this was the owner reviewing and correcting work not yet fully accepted, within the
+same unbroken conversation, not a new/different deliverable (Failure Mode #2 "keep going" is
+about starting something NEW after finishing; this is finishing the SAME thing correctly).
 **Status:** DONE. Documentation-only session -- no `R/` or `tests/` files changed, so the TDD
 RED/GREEN/REFACTOR gates did not apply (S448/S451/S452/S453/S455 precedent). No GitHub issue to
 close (free-text owner directive, not filed).
