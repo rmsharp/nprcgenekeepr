@@ -367,22 +367,16 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       established pattern verbatim). Phase 3E: n/a -- test-only change, no
       runtime behavior affected. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
       Learning 417.)
-- [ ] **`CLAUDE.md`'s "Fast single-file test" command silently skips the
-      entire file for any test file that calls `skip_on_cran()` at top level**
-      (discovered S439, Effort S) -- incidentally found while proving RED for
-      the `test-e2e-data-ready.R` fix above: the documented one-liner
-      (`Rscript -e 'suppressMessages(pkgload::load_all(".", quiet=TRUE));
-      testthat::test_file(...)'`) doesn't set `NOT_CRAN`, so a file-level
-      `skip_on_cran()` (as in `test-e2e-data-ready.R:10`) skips ALL tests in
-      that file with reason "On CRAN" and reports a bare `S`, not the
-      expected failures/passes -- `devtools::test()`/`testthat::test_dir()`/
-      `R CMD check` set `NOT_CRAN=true` automatically and are unaffected. Not
-      fixed this session (a shared-command documentation change is outside
-      this session's single-test-file TDD scope), per `PROJECT_LEARNINGS.md`
-      Learning 382/407's precedent. A future session should prepend
-      `Sys.setenv(NOT_CRAN = "true")` to the documented command (or note the
-      caveat) in `CLAUDE.md`'s "Build / Test / Verify" section. See
-      `PROJECT_LEARNINGS.md` Learning 417.
+- [ ] (none remaining -- the "`CLAUDE.md`'s 'Fast single-file test' command
+      silently skips the entire file for any test file that calls
+      `skip_on_cran()` at top level" item (discovered S439, `PROJECT_LEARNINGS.md`
+      Learning 417) is RESOLVED -- S451 (2026-08-02): `Sys.setenv(NOT_CRAN =
+      "true")` prepended to the documented one-liner in `CLAUDE.md`'s "Build /
+      Test / Verify" section, with a parenthetical explaining why and citing
+      Learning 417. Verified by reproducing the bug first (the OLD command
+      against `test-e2e-data-ready.R` reports a bare `S`/"On CRAN") then
+      confirming the NEW command runs all 34 expectations for real. See
+      `CHANGELOG.md`.)
 - [ ] (none remaining -- the "clean up stale untracked leftover files" item (filed
       S383) is RESOLVED: 18 confirmed-dead untracked files deleted -- S384
       (2026-07-15). See `CHANGELOG.md`.)

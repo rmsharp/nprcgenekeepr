@@ -43,6 +43,23 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-02 · [BL-notCranFastTest] Fix CLAUDE.md's "Fast single-file test" command to set NOT_CRAN=true (Session 451)
+- **Deliverable:** resolved the `BACKLOG.md` Housekeeping item (discovered S439, `PROJECT_LEARNINGS.md`
+  Learning 417) noting that `CLAUDE.md`'s documented "Fast single-file test" one-liner doesn't set
+  `NOT_CRAN`, so a file with a top-level `skip_on_cran()` (e.g. `test-e2e-data-ready.R:10`) silently
+  bare-skips ("On CRAN") instead of reporting real results.
+- **Fix:** prepended `Sys.setenv(NOT_CRAN = "true")` to the documented `Rscript -e '...'` one-liner in
+  `CLAUDE.md`'s "Build / Test / Verify" section, with a parenthetical explaining why and citing
+  Learning 417.
+- **Verified:** reproduced the bug first -- the OLD command against `test-e2e-data-ready.R` reports a
+  bare `S` (skipped, reason "On CRAN"); the NEW command runs all 34 real expectations (all passing).
+  Docs-only change, no `R/` code touched, no runtime behavior affected (Phase 3E n/a). Confirmed
+  `PROJECT_LEARNINGS.md` Learning 417 exists and matches the citation. Grepped the repo for other
+  stale references to the old command text -- none found outside `BACKLOG.md`'s own now-resolved
+  description; all `docs/planning/*.md` verify-command examples already independently include
+  `NOT_CRAN=true` and needed no change.
+- `BACKLOG.md` Housekeeping item marked resolved.
+
 ### 2026-08-02 · [BL-a2interactiveChecklist] Ratify a deferred a2interactive.Rmd checklist + backfill issue #130's marker-genetics functions (Session 450)
 - **Deliverable:** resolved the `a2interactive.Rmd` documentation-checklist `BACKLOG.md` Housekeeping
   decision item (filed S447, `PROJECT_LEARNINGS.md` Learning 435) via two `AskUserQuestion` calls --

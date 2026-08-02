@@ -11,11 +11,123 @@
 before running the test (`BACKLOG.md` Housekeeping item, filed S439, `PROJECT_LEARNINGS.md`
 Learning 417). Owner-picked via the Phase 0 priorities `AskUserQuestion` from a 4-option list
 (this item, spelling-NOTE housekeeping, NPRC outreach plan review, issue #139 doc gap).
-**Started:** 2026-08-02
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Started/Completed:** 2026-08-02 / 2026-08-02
+**Status:** DONE. Documentation-only fix to a shared tooling command in `CLAUDE.md` -- no `R/`
+code changed, no new displayed statistic, no new exported function, no new user-facing Shiny
+feature, so none of the citation/tutorial-article/`NEWS.Rmd`/`a2interactive.Rmd` close-out
+checklists apply, and the TDD RED/GREEN/REFACTOR gates did not apply (per the S448 precedent
+for doc-only sessions).
+
+**What happened, in order:** **(1)** Phase 0 orientation in full (`SESSION_RUNNER.md`,
+`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list` -- 16 open issues, `git status`/`log`/
+`diff --stat`, `methodology_dashboard.py` Health 98/100 medium risk (benign: vendored pkgdown
+jQuery bundle + branch-count noise, consistent with prior sessions), ledger reconcile --
+`CHANGELOG.md`/`HANDOFFS.md` frontiers both at `HEAD` `55090d38`, no ghost session, no
+undocumented commits). Reported pre-existing uncommitted drift (`renv.lock`, `.DS_Store`, the 2
+iCloud-sync duplicate `R/*  2.R` files, a stray untracked plan-render HTML) per `SAFEGUARDS.md`
+-- left untouched throughout. Also flagged a data-hygiene note (not acted on): `BACKLOG.md`'s
+"`inst/extdata/` reorganization -- Phase 4" bullet still carries a stale `(DECISION NEEDED...)`
+tag even though its own body confirms Phases 1-4 are all DONE. Rendered the priorities list +
+`AskUserQuestion` picker (4 numbered items, +1 more noted below the picker per the 4-item cap
+convention); owner picked this item. **(2)** Phase 1B: claimed the session (`5b9e514c`) -- stub
++ `HANDOFFS.md` `status: pending` receipt, before any technical work. **(3)** Re-read the exact
+target line (`CLAUDE.md:117`) immediately before editing, per the Read-Before-Edit rule.
+**(4)** Confirmed the bug empirically BEFORE fixing: ran the OLD documented command against
+`tests/testthat/test-e2e-data-ready.R` (the file that originally surfaced this gap, per Learning
+417) -- reproduced the exact reported symptom, a bare `S` (skipped, reason "On CRAN"). **(5)**
+Applied the fix: prepended `Sys.setenv(NOT_CRAN = "true")` to the documented one-liner, plus a
+parenthetical explaining why and citing Learning 417. **(6)** Re-ran the NEW command against the
+same test file -- confirmed it now runs all 34 real expectations (all passing), proving the fix
+works, not just that the text changed. **(7)** Grepped the whole repo for other stale references
+to the old command text (Learning #7/#10 cross-reference-completeness discipline) -- found none
+outside `BACKLOG.md`'s own description of this exact item; every `docs/planning/*.md` verify-
+command example already independently includes `NOT_CRAN=true` in its own command and needed no
+change. Confirmed `PROJECT_LEARNINGS.md` Learning 417 exists and matches the citation added to
+`CLAUDE.md`. **(8)** `BACKLOG.md` Housekeeping item marked resolved, matching the established
+"(none remaining -- ... RESOLVED ...)" convention used by every other closed item in that file.
+**(9)** `CHANGELOG.md`: new dated, `[BL-notCranFastTest]`-tagged entry recorded at close-out
+(this step).
+**Verified:** direct before/after empirical reproduction (see step 4/6 above) -- the strongest
+available evidence for this specific one-line claim, stronger than a generic `devtools::check()`
+would provide, since `CLAUDE.md` is a repo-root file outside the package's own checked sources
+(`R/`, `vignettes/`, `DESCRIPTION`) and a package-wide check would not exercise this change at
+all. Phase 3E (runtime smoke test): **n/a -- docs-only, no runtime behavior changed** (this
+fixes a documented developer-tooling command, not app code or config).
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**Session 450 Handoff Evaluation (by Session 451): 9/10.** Item (a) of "next steps" named
+exactly this session's task (the `CLAUDE.md` NOT_CRAN doc fix, "READY, Effort S, unchanged since
+S439") with the exact fix already spelled out ("prepend `Sys.setenv(NOT_CRAN = "true")` to the
+documented command") -- directly load-bearing, zero rediscovery needed to identify, scope, or
+even draft the fix text, and the Phase 0 priorities picker surfaced it as one of 4 clean options.
+The carried-forward gotcha about the 2 iCloud-sync duplicate files (`R/appServer 2.R`/
+`R/modMarkerGenetics 2.R`) was directly useful -- this session saw the same untracked files in
+`git status` and correctly left them untouched without re-investigating. **What was missing:**
+nothing critical to this session's own task -- the handoff's item (a) was already a complete,
+actionable spec. **What was wrong:** no inaccuracies found in S450's claims (independently
+re-confirmed: `CHANGELOG.md`/`HANDOFFS.md` frontiers were exactly where S450 left them, at HEAD).
+**ROI:** clearly net positive -- the exact fix text and the scoping context (which BACKLOG item,
+which Learning, which effort tag) both paid off directly, and the file-list gotcha saved a
+re-investigation of already-known drift.
+
+**Self-assessment (Session 451): 9/10.** **Strengths:** (1) reproduced the bug empirically with
+the OLD command before touching anything, rather than trusting the backlog description's
+characterization of the symptom -- direct, falsifiable evidence the fix addresses the real
+defect, not just a plausible-sounding one; (2) re-ran the NEW command against the same test file
+afterward, confirming the fix by outcome (34 real expectations run) rather than just by inspecting
+the edited text; (3) applied Learning #7/#10's cross-reference-completeness discipline -- grepped
+the whole repo (not just the one line) for other stale copies of the old command text before
+declaring the fix complete, and explicitly confirmed the cited Learning 417 actually exists and
+matches; (4) correctly scoped verification to the claim actually being made -- recognized that a
+repo-root documentation file isn't part of the package's own checked sources, so a full
+`devtools::check()`/regression suite would add process weight without adding real signal for
+this specific one-line change, and used direct empirical reproduction instead; (5) correctly
+recognized this session needed none of the citation/tutorial/`NEWS.Rmd`/`a2interactive.Rmd`
+close-out checklists (no new statistic, function, or Shiny feature shipped) rather than applying
+them reflexively; (6) flagged an incidentally-discovered, unrelated pre-existing gap (the stale
+`inst/extdata/` Phase 4 tag in `BACKLOG.md`) without fixing it mid-session, per the established
+"report, don't fix" precedent (`PROJECT_LEARNINGS.md` Learning 382/407).
+**Weaknesses:** none identified this session -- the task was narrow, well-specified by the
+predecessor's handoff, and the fix matched the backlog item's own suggested text exactly, leaving
+little room for the kind of judgment calls that produce weaknesses worth naming.
+**Compared to previous sessions:** matches the established discipline (S447-S450) of verifying
+claims against live/real evidence rather than assumption -- here applied to the smallest possible
+unit (a single documented shell command) with a before/after empirical pair, and extends
+Learning #7/#10's cross-reference grep discipline to a plain command-text change, not just a
+numbered-set or citation edit.
+
+**Handoff to Session 452:**
+- **What's next:** remaining items from the priorities list, unchanged since S450 except as
+  noted: **(a)** The spelling-NOTE housekeeping item (READY, Effort S -- unchanged since S448;
+  12 words missing from `inst/WORDLIST`: `Bhatia`, `Chesser`, `Cockerham`, `Fst`/`FST`, `Gst`,
+  `Hedrick`, `Maddison`, `Meirmans`, `Sankararaman`, `Slatkin`, `monomorphic`; see `BACKLOG.md`
+  Housekeeping for the exact list and radix-position guidance). **(b)** Issue #139 (document the
+  pedigree-diagram Diagram tab in the manual/tutorial -- currently zero coverage) unchanged since
+  S449. **(c)** NPRC outreach plan review (DECISION NEEDED, owner-only, unchanged). **(d)** The
+  open methodology question from S445 (whether `/doctor`-style sessions are exempt from Phase
+  0/1B) remains unresolved. **(e)** The pedigree-diagram audit-queue's next items, #133
+  (data-model gated, still blocked) and #134 (verify inbreeding-loop rendering -- NOT data-model
+  gated, could be picked up out of the owner's original #133-before-#134 priority order since
+  #133 remains blocked), unchanged since S436's owner-set priority order. **(f)** Data-hygiene
+  aside (informational, not a backlog item): `BACKLOG.md`'s "`inst/extdata/` reorganization --
+  Phase 4" bullet header still says `(DECISION NEEDED -- 2 open, non-blocking decisions, Effort
+  M)` even though the body text confirms Phases 1-4 are all DONE -- worth a one-line tag fix
+  whenever a session next touches that section, but not itself worth a dedicated session.
+- **Key files:** `CLAUDE.md:117` (the fixed "Fast single-file test" command, now with
+  `Sys.setenv(NOT_CRAN = "true")` prepended plus a citation to Learning 417), `BACKLOG.md`
+  Housekeeping (item marked resolved), `CHANGELOG.md` (this session's `[BL-notCranFastTest]`
+  entry), `tests/testthat/test-e2e-data-ready.R:10` (the file used to empirically reproduce and
+  confirm the fix -- not itself modified).
+- **Gotchas:** all of S442-S450's carried-forward gotchas still apply unchanged where relevant
+  (raw `Status:` line discipline -- Learning 382; `inst/WORDLIST` byte-order/radix convention --
+  Learning 428; do NOT trust a predecessor's self-reported `devtools::check()` claim at face
+  value -- Learning 437; 2 iCloud-sync duplicate files, `R/appServer 2.R`/`R/modMarkerGenetics
+  2.R`, still present, leave untouched; the locally installed package copy can lag source --
+  Learning 440, only relevant when a vignette/article calls `library(nprcgenekeepr)`, not
+  triggered this session since no render was needed). **New this session:** none -- this was a
+  straightforward, narrowly-scoped backlog item execution with no novel trap encountered, so no
+  new `PROJECT_LEARNINGS.md` entry was warranted.
+- **Self-assessment score:** 9/10 (breakdown above).
 
 ### What Session 450 Did
 **Deliverable:** Resolve the `a2interactive.Rmd` documentation-checklist decision (`BACKLOG.md`
