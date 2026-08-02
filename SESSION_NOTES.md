@@ -7,6 +7,212 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 448 Did
+
+**Deliverable:** Resolve the `NEWS.Rmd` checklist decision (BACKLOG.md
+Housekeeping item, `PROJECT_LEARNINGS.md` Learning 433, filed S446).
+Owner-picked via the Phase 0 priorities `AskUserQuestion` from a
+4-option list (this item, `a2interactive.Rmd` decision, issue \#132,
+`CLAUDE.md` NOT_CRAN doc fix). **Started/Completed:** 2026-08-01 /
+2026-08-01 **Status:** DONE. Documentation/policy deliverable – no code
+changes, so the TDD RED/GREEN/ REFACTOR gates did not apply this
+session; verification was the doc build-equivalent (a clean `NEWS.Rmd`
+render) plus `devtools::check()`.
+
+**What happened, in order:** **(1)** Phase 0 orientation in full
+(`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list` – 17 open issues, `git status`/`log`/ `diff --stat`,
+`methodology_dashboard.py` Health 98/100, ledger reconcile –
+`CHANGELOG.md`/ `HANDOFFS.md` frontiers both at `HEAD` `afb979bc`, no
+ghost session, no undocumented commits). Rendered the priorities list +
+`AskUserQuestion` picker (4 numbered items); owner picked this item.
+**(2)** Two owner decisions via a single two-question `AskUserQuestion`
+call: (a) ratify a BROAD `NEWS.Rmd` checklist in `CLAUDE.md` – any
+session shipping a new exported function OR a new user-facing Shiny
+feature/control must add a `NEWS.Rmd` entry in the same session it
+ships, mirroring the citation (issue \#120) and tutorial/article (S436)
+checklists; (b) backfill issue \#130’s Slices 1-5 into the existing
+2.0.0.9000 `NEWS.Rmd` section now, as a one-time exception to the
+general report-don’t-fix precedent – see new `PROJECT_LEARNINGS.md`
+Learning 436 (the ratify-AND-backfill resolution pattern). **(3)** Phase
+1B: claimed the session (`cd49ff84`) – stub + `HANDOFFS.md`
+`status: pending` receipt, before any technical work; incidentally found
+and fixed S447’s own `HANDOFFS.md` receipt still carrying
+`commit: pending` (backfilled to the real `afb979bc`, same reconcile
+pattern S447 applied to S446), folded into the claim commit. **(4)**
+Discovered mid-session: two new untracked files (`R/appServer 2.R`,
+`R/modMarkerGenetics 2.R`) appeared after Phase 0 – investigated (diffed
+against the real files: strictly older content, owner-only file
+permissions, stale timestamps), confirmed with the owner to be iCloud
+Drive sync-lag duplicate artifacts, not in-progress work; left untouched
+(not this session’s to clean up). **(5)** Ratified the checklist text in
+`CLAUDE.md` “Additional close-out checks” (new paragraph after the
+tutorial/article checklist, before the CHANGELOG ledger-format one).
+Authored 5 new `NEWS.Rmd` bullets covering issue \#130’s entire slice
+family (Marker Genetics tab + Kinship
+Comparison/Heterozygosity/Parentage Exclusion/Cross-Center sub-tabs,
+plus the script-callable
+[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)),
+cross-checked against the actual `R/modMarkerGenetics.R` tab labels,
+`R/markerFst.R`/`R/markerParentageExclusion.R` roxygen, and function
+signatures (not written from memory of `BACKLOG.md` prose alone) –
+caught and fixed one omission (the Slice-1 sub-tab is literally named
+“Kinship Comparison”; my first draft didn’t name it, unlike the other
+three slices’ bullets). Re-rendered `NEWS.Rmd` -\> `NEWS.md` via
+[`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html);
+`git diff` confirmed the render touched exactly the 5 new bullets, no
+reflow churn (`NEWS.Rmd`’s existing `html_preview: false` avoided the
+`NEWS.html` litter of Learning 122/136). Updated `BACKLOG.md` (item
+resolved) and `CHANGELOG.md`. **(6)** Ran `devtools::check()` to verify:
+surfaced 1 WARNING (the iCloud duplicate files above – untracked,
+unrelated) and 1 NOTE (a spelling gap). Isolated whether the NOTE was
+caused by this session’s edits using a clean `git worktree` at S447’s
+own final commit (`afb979bc`) plus a direct
+[`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+call there: confirmed 12 words (`Bhatia`, `Chesser`, `Cockerham`,
+`Fst`/`FST`, `Gst`, `Hedrick`, `Maddison`, `Meirmans`, `Sankararaman`,
+`Slatkin`, `monomorphic` – all from S447’s own `markerFst.Rd` citations
+– plus the pre-existing, already-tracked `IACUC`) were ALREADY missing
+from `inst/WORDLIST` at that commit, before this session touched
+anything – meaning S447’s own self-reported “`devtools::check()` 0/0/0”
+claim does not hold up under re-verification. New `PROJECT_LEARNINGS.md`
+Learning 437 records this (a predecessor’s own verification claim needs
+the same trust-but-verify treatment as any other claim). Fixed only the
+ONE word this session’s own `NEWS.Rmd` edit introduced (`homozygote`,
+radix-position-verified against its neighbors in `inst/WORDLIST`);
+broadened the existing `BACKLOG.md` “IACUC” item to record the fuller,
+re-verified scope for a future session, rather than fixing the
+pre-existing 12-word gap mid-session (report-don’t-fix precedent,
+Learning 382/407). **Verified:** `NEWS.Rmd`/`NEWS.md` render clean, diff
+scoped to exactly the intended 5 bullets; `devtools::check()` final
+state (raw `00check.log` `Status:` line, per Learning 382): **0 errors,
+1 warning, 1 note** – the warning is the iCloud-sync duplicate files
+(`R/appServer 2.R`, `R/modMarkerGenetics 2.R`, untracked, confirmed by
+the owner as sync-lag artifacts, unrelated to this session); the note is
+the pre-existing 12-word spelling gap above, confirmed present already
+at S447’s own commit and NOT introduced by this session (this session’s
+own new word, `homozygote`, is fixed and no longer appears in the
+flagged list). Regression suite not separately run (no R/ source or test
+file touched this session; `devtools::check()`’s own “checking tests”
+step already re-ran the full suite as part of its “Running ‘testthat.R’”
+phase, with no new failures reported). **Ledger:** recorded in
+`CHANGELOG.md` at Phase 3F (this close-out).
+
+**Session 447 Handoff Evaluation (by Session 448): 7/10.** Structurally
+complete against the 6 minimum requirements, and item (a) of “what’s
+next” named exactly this session’s task (the `NEWS.Rmd` checklist
+decision) with an accurate one-line context (“issue \#130 Slices 1-4
+shipped 4 functions + a module/tab with zero `NEWS.Rmd` entries”) –
+directly load-bearing, no rediscovery needed. **What helped:** the
+key-files list, gotchas, and next-steps items (b)-(g) were all accurate
+and saved real time (none required correction). **What was wrong:** the
+handoff’s own verification claim – “`devtools::check()` 0/0/0 (twice,
+before and after the doc-regeneration fix)” – does not hold up under
+re-verification. This session found 1 WARNING + 1 NOTE on a fresh check,
+and confirmed via a clean `git worktree` at S447’s exact commit that the
+NOTE’s underlying 12-word spelling gap (all from S447’s own
+`markerFst.Rd` citations) was ALREADY present at that commit – meaning
+S447’s self-reported clean check was inaccurate at the time it was
+written, not a regression introduced later. This is a real, non-trivial
+miss in an otherwise strong handoff: `devtools::check()` status is
+exactly the kind of claim a handoff should get right, and this one
+didn’t – see new `PROJECT_LEARNINGS.md` Learning 437. **ROI:** still net
+positive (the accurate 90% of the handoff saved far more time than the
+inaccurate check claim cost, since this session’s own task didn’t depend
+on `markerFst.Rd`’s cleanliness), but the miss is real and worth a lower
+score than S447 itself gave S446 (9/10) for a comparably strong handoff.
+
+**Self-assessment (Session 448): 8/10.** **Strengths:** (1) resolved
+both sub-decisions via two separate `AskUserQuestion` calls (policy
+choice, backfill choice) rather than bundling them, avoiding the trap
+Learning 436 records; (2) verified the NEWS.Rmd bullets against the
+actual source (`R/modMarkerGenetics.R` tab labels,
+`R/markerFst.R`/`R/markerParentageExclusion.R` roxygen) rather than
+writing from memory of `BACKLOG.md` prose, catching and fixing one real
+omission (the Slice-1 sub-tab’s actual name) before it shipped; (3)
+investigated the unexpected mid-session appearance of 2 untracked files
+rather than ignoring or deleting them, correctly identified them as sync
+artifacts (owner-confirmed) and left them untouched; (4) did not stop at
+“the check shows a WARNING/NOTE” – used a clean `git worktree` at S447’s
+exact commit to determine, with direct evidence, whether the gap was
+pre-existing or something this session caused, rather than assuming
+either way; (5) scoped the fix correctly: added only the one word this
+session’s own edit introduced (`homozygote`) to `inst/WORDLIST`, left
+the pre-existing 12-word gap for a future session per the established
+report-don’t-fix precedent, and updated the existing (previously
+undersold) `BACKLOG.md` item with the fuller, re-verified scope rather
+than silently leaving it stale; (6) two new `PROJECT_LEARNINGS.md`
+entries (436, 437) capture genuinely new, non-obvious patterns, not
+restatements of existing ones. **Weaknesses:** (1) the first
+`devtools::check()` background-task invocation was botched (an internal
+`&` combined with `run_in_background: true` caused the log to truncate
+after the build step) – self-caught and corrected on the second attempt,
+but a wasted ~30 seconds and a moment of not reading the tool’s own
+guidance carefully enough; (2) misused `ScheduleWakeup` (a tool
+documented as being for `/loop` dynamic-mode pacing) as a generic “wait
+for a background task” mechanism outside of a `/loop` context, when the
+background bash task’s own completion notification was already
+sufficient – harmless in outcome (the task notification still arrived
+correctly) but not the tool’s intended use; (3) did not attempt to
+determine WHY S447’s own check came back falsely clean (e.g., a
+different check invocation, a `spelling` package/dictionary version
+difference) – treated as out of scope for this session’s deliverable,
+which is defensible, but leaves that root cause genuinely unexplained
+for whoever picks up the `BACKLOG.md` item. **Compared to previous
+sessions:** matches S442-S447’s discipline of verifying claims against
+source rather than memory, and extends it one step further by
+adversarially checking a *predecessor’s own* verification claim rather
+than only this session’s new work – a new dimension of scrutiny not
+exercised by prior sessions in this run (S442-S447 checked their OWN
+claims carefully; this session checked S447’s).
+
+**Handoff to Session 449:** - **What’s next:** issue \#130’s entire
+5-slice sequencing chain remains fully shipped; no further slice work
+remains. Remaining items from the `BACKLOG.md`/priorities list, updated
+for this session’s changes: **(a)** `vignettes/a2interactive.Rmd`
+documentation-checklist decision (DECISION NEEDED, owner-only, Effort S
+– unchanged since S447, Learning 435; do NOT do the actual
+`a2interactive.Rmd` backfill work until the owner explicitly signals the
+review-then- document gate is satisfied). **(b)** Issue \#132 (diagram
+legend, READY, Effort S, unaffected). **(c)** `CLAUDE.md`‘s NOT_CRAN doc
+fix (READY, Effort S, unchanged since S439). **(d)** The spelling-NOTE
+housekeeping item (READY, Effort S – **broadened this session**: 12
+words, not just `IACUC`; see `BACKLOG.md` Housekeeping for the exact
+list and radix-position guidance). **(e)** NPRC outreach plan review
+(DECISION NEEDED, owner-only). **(f)** The open methodology question
+from S445 (whether `/doctor`-style sessions are exempt from Phase 0/1B)
+remains unresolved. **(g) New this session:** consider whether other
+recent sessions’ own `devtools::check()`/verification claims should be
+spot-checked, given S447’s did not hold up (Learning 437) – not urgent,
+but a real, newly-surfaced question about how much to trust
+self-reported verification in this project’s own history. - **Key
+files:** `CLAUDE.md` (new “NEWS.Rmd entry checklist” paragraph,
+“Additional close-out checks”), `NEWS.Rmd`/`NEWS.md` (5 new bullets,
+2.0.0.9000 section), `BACKLOG.md` (Housekeeping: the `NEWS.Rmd` item
+resolved, the spelling-NOTE item broadened), `inst/WORDLIST`
+(`homozygote` added), `PROJECT_LEARNINGS.md` Learnings 436-437,
+`CHANGELOG.md` (this session’s entry). - **Gotchas:** all of S442-S447’s
+carried-forward gotchas still apply unchanged where relevant (raw
+`Status:` line discipline – Learning 382, doubly relevant this session;
+`inst/WORDLIST` byte-order/radix convention – Learning 428;
+direct-`Rscript` invocation needs `NOT_CRAN=true` for
+`shinytest2`/`skip_on_cran()`-guarded code). **New this session:** (1)
+do NOT trust a predecessor’s self-reported `devtools::check()` result at
+face value if your own session incidentally re-exercises the same check
+surface – verify independently, using a clean `git worktree` at their
+exact commit if you need to isolate whether a gap is pre-existing
+(Learning 437); (2) `Bash` tool `run_in_background: true` already
+backgrounds the whole command – do NOT also append a trailing `&` inside
+the command string, or the log truncates prematurely; (3)
+`ScheduleWakeup` is for `/loop` dynamic-mode pacing, not a general “wait
+for my own background task” mechanism – a `run_in_background` Bash
+task’s own completion notification is already sufficient; (4) 2
+iCloud-sync duplicate files (`R/appServer 2.R`,
+`R/modMarkerGenetics 2.R`) may still be present/recurring in the working
+tree – owner-confirmed sync-lag artifacts, not in-progress work; leave
+untouched unless the owner directs otherwise. - **Self-assessment
+score:** 8/10 (breakdown above).
+
 ### What Session 447 Did
 
 **Deliverable:** Implement Slice 5 of the [issue

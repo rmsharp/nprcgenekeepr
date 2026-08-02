@@ -47,6 +47,72 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-08-01 · \[BL-NewsRmdChecklist\] Ratify a NEWS.Rmd entry checklist + backfill issue \#130 Slices 1-5 (Session 448)
+
+- **Deliverable:** resolved the `NEWS.Rmd` checklist `BACKLOG.md`
+  Housekeeping decision item (filed S446, `PROJECT_LEARNINGS.md`
+  Learning 433) via two `AskUserQuestion` calls – a policy choice and a
+  separate backfill choice. Owner picked the broad policy option and the
+  backfill option on both.
+- **Policy (ratified in `CLAUDE.md` “Additional close-out checks”):**
+  any session that ships a new exported function or a new user-facing
+  Shiny feature/control must add a `NEWS.Rmd` entry in the same session
+  it ships, mirroring the existing citation (issue \#120) and
+  tutorial/article (Session 436) checklists. Applies prospectively from
+  this session forward.
+- **Backfill:** added 5 `NEWS.Rmd` bullets to the 2.0.0.9000 section
+  covering issue \#130’s entire shipped slice family – the new **Marker
+  Genetics** tab (Slice 1:
+  [`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md),
+  [`buildMarkerGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/buildMarkerGenotypeMatrix.md),
+  [`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)),
+  its **Heterozygosity** sub-tab (Slice 2:
+  [`markerObservedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerObservedHeterozygosity.md)/[`markerExpectedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerExpectedHeterozygosity.md)),
+  its **Parentage Exclusion** sub-tab (Slice 3:
+  [`markerParentageExclusion()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md)),
+  the script-callable
+  [`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)
+  (Slice 4, no UI), and its **Cross-Center** sub-tab (Slice 5:
+  [`markerFst()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md)).
+  Re-rendered `NEWS.Rmd` → `NEWS.md` via
+  [`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html);
+  `git diff` confirmed the render touched exactly the 5 new bullets, no
+  reflow churn (`NEWS.Rmd`’s existing `html_preview: false` avoided the
+  `NEWS.html` litter documented in `PROJECT_LEARNINGS.md` Learning
+  122/136).
+- **`BACKLOG.md`:** Housekeeping item marked resolved.
+  **`PROJECT_LEARNINGS.md`:** Learning 436 added (the
+  ratify-AND-backfill resolution pattern); `CLAUDE.md`’s learnings
+  cross-reference count updated (435→437, Sessions 1-447+→1-448+).
+- **Incidental (folded into the Phase 1B claim commit, not a separate
+  deliverable):** found and fixed S447’s own `HANDOFFS.md` receipt still
+  carrying `commit: pending` – backfilled to the real `afb979bc`, the
+  same reconcile pattern S447 itself applied to S446’s receipt.
+- **Incidental discovery (BACKLOG.md item broadened, not fixed
+  mid-session):** `devtools::check()` surfaced 1 WARNING (untracked
+  iCloud-sync duplicate files in `R/`, owner-confirmed sync-lag
+  artifacts, unrelated) and 1 NOTE (a spelling gap). A clean
+  `git worktree` at S447’s own final commit (`afb979bc`) confirmed 12
+  words – `Bhatia`, `Chesser`, `Cockerham`, `Fst`/`FST`, `Gst`,
+  `Hedrick`, `Maddison`, `Meirmans`, `Sankararaman`, `Slatkin`,
+  `monomorphic` (S447’s own `markerFst.Rd` citations) plus the
+  already-tracked `IACUC` – were ALREADY missing from `inst/WORDLIST`
+  before this session touched anything, meaning S447’s own self-reported
+  “`devtools::check()` 0/0/0” does not hold up under re-verification.
+  Fixed only this session’s own new word (`homozygote`, added to
+  `inst/WORDLIST`); broadened the existing `BACKLOG.md` spelling-NOTE
+  item with the fuller scope for a future session. New
+  `PROJECT_LEARNINGS.md` Learning 437 (a predecessor’s self-reported
+  verification claim needs the same trust-but-verify treatment as any
+  other claim).
+- **Verified:** `NEWS.Rmd`/`NEWS.md` render clean, diff scoped to
+  exactly the 5 new bullets; `devtools::check()` raw `Status:` line (per
+  Learning 382): 0 errors, 1 warning, 1 note (both
+  pre-existing/environmental, detailed above, neither introduced by this
+  session).
+- **Phase 3E:** n/a – documentation/policy-only change, no runtime
+  behavior affected.
+
 ### 2026-08-01 · \[issue \#130\] Implement Slice 5 – cross-center Fst (Session 447)
 
 - **Deliverable:** full TDD cycle (PRE-RED→RED→GREEN, REFACTOR

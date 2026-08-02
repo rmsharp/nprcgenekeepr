@@ -281,6 +281,29 @@ triage session that found it, per the established “report an
 incidentally-discovered, unrelated pre-existing gap, don’t fix it
 mid-session” precedent (`PROJECT_LEARNINGS.md` Learning 382).
 
+**NEWS.Rmd entry checklist (owner-directed, 2026-08-01, Session 448):**
+any session that ships a new exported function or a new user-facing
+Shiny feature/control must add a `NEWS.Rmd` entry (in the current
+development-version section, matching the style of existing entries) in
+the same session it ships, rather than deferring to a later audit —
+mirroring the citation (issue \#120) and tutorial/article (Session 436)
+checklists above. Ratified after issue \#130’s entire 5-slice sequencing
+chain (Slices 1-5, Sessions 442-447:
+[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md),
+[`markerObservedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerObservedHeterozygosity.md)/[`markerExpectedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerExpectedHeterozygosity.md),
+[`markerParentageExclusion()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md),
+[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md),
+[`markerFst()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md),
+plus the new Marker Genetics Shiny module) shipped with zero `NEWS.Rmd`
+entries between them, unlike sibling issues \#125-#129 from the same
+audit-triage batch, each of which got one in its own shipping session
+(`BACKLOG.md` Housekeeping, `PROJECT_LEARNINGS.md` Learning 433). Slices
+1-5 were backfilled retroactively this session (Session 448) as a
+one-time exception to the general no-retroactive-fix precedent above,
+since the gap spans the package’s entire user-visible changelog for a
+shipped capability; the checklist applies prospectively, same-session,
+from here on.
+
 **CHANGELOG.md ledger-format resolution (2026-07-08, Session 325 —
 “freeze legacy, go forward”):** canonical v3.1+ defines `CHANGELOG.md`
 as an “Authoritative Action Ledger” — dated
@@ -309,7 +332,7 @@ workstream **and** the RED→GREEN→REFACTOR gates.
 
 ### Project-specific Learnings
 
-Project institutional memory (Sessions 1–447+; 435 learnings, ~1.9 MB)
+Project institutional memory (Sessions 1–448+; 437 learnings, ~1.9 MB)
 lives in
 [`PROJECT_LEARNINGS.md`](https://github.com/rmsharp/nprcgenekeepr/PROJECT_LEARNINGS.md)
 — extracted from this file to keep `CLAUDE.md` within its size budget

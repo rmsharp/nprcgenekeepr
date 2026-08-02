@@ -193,22 +193,20 @@ and only submission that will ever carry that version number.
 
 ## Housekeeping
 
-**`NEWS.Rmd` has no checklist analogous to the citation/tutorial
-checklists, and it shows: issue \#130’s Slices 1-4 (S442-S446) shipped 4
-new exported functions + a new Shiny module/tab with ZERO `NEWS.Rmd`
-entries between them** (discovered S446, 2026-08-01, DECISION NEEDED,
-Effort S) – unlike sibling issues \#125-#129 (same S422 audit-triage
-batch), which each got a `NEWS.Rmd` entry in their own shipping session.
-Not fixed retroactively for Slices 1-3 (out of scope, per the
-established report-don’t-fix precedent, Learning 382/407) and not added
-unilaterally for Slice 4 alone (would add yet more inconsistency without
-resolving the policy gap). A future session should either (a) ratify a
-`NEWS.Rmd` checklist in `CLAUDE.md` analogous to the citation (issue
-\#120) and tutorial/ article (S436) ones, or (b) explicitly decide
-internal/ scriptable-only utility functions with no shipped UI are
-exempt until they gain one – and separately decide whether Slices 1-4
-warrant a backfilled `NEWS.Rmd` entry now that the gap is visible. See
-`PROJECT_LEARNINGS.md` Learning 433.
+(none remaining – the “`NEWS.Rmd` has no checklist analogous to the
+citation/tutorial checklists” item (discovered S446, 2026-08-01) is
+RESOLVED: owner ratified a broad checklist via `AskUserQuestion` – any
+session shipping a new exported function OR a user-facing Shiny
+feature/control must add a `NEWS.Rmd` entry in the same session it
+ships, mirroring the citation (issue \#120) and tutorial/article (S436)
+checklists. Recorded in `CLAUDE.md`’s “Additional close-out checks” –
+S448 (2026-08-01). Owner also directed backfilling issue \#130’s Slices
+1-5 as a one-time exception: 5 new `NEWS.Rmd` bullets added to the
+2.0.0.9000 section (Marker Genetics tab + Kinship, Heterozygosity,
+Parentage Exclusion, and Cross-Center sub-tabs, plus the script-callable
+[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)),
+re-rendered to `NEWS.md` – diff confirmed exactly the 5 new bullets, no
+reflow churn. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 433.)
 
 **`vignettes/a2interactive.Rmd` (the scriptable/interactive-R tutorial)
 has no checklist analogous to the Shiny-app-facing tutorial/article
@@ -247,18 +245,32 @@ capabilities and decide this gap is acceptable – and separately decide
 whether to backfill demonstration sections for the already-shipped issue
 \#130 functions now that the gap is visible.
 
-**`devtools::check()`’s one remaining spelling NOTE: `IACUC`
-(`_pedigree_browser.Rmd:55`) not in `inst/WORDLIST`** (discovered S443,
-2026-07-31, Effort S) – incidentally found while fixing the
-marker-genetics-family spelling gap for issue \#130 Slices 1/2 (see
-`PROJECT_LEARNINGS.md` Learning 426); wholly unrelated to marker
-genetics/heterozygosity, so not fixed mid-session per the established
-report-don’t-fix precedent (Learning 382/407, issue \#139). A future
-session should hand-add `IACUC` to `inst/WORDLIST` in its
-case-insensitive-collation position (not via
+\*\*`devtools::check()`‘s spelling NOTE is broader than previously
+tracked: 12+ words missing from `inst/WORDLIST`, including Slice 5’s own
+`markerFst.Rd` citation terms\*\* (discovered S443 as just `IACUC`;
+broadened S448, 2026-08-01, READY, Effort S) – S447’s own handoff
+flagged this item as possibly already resolved (“this session’s
+`devtools::check()` runs both came back a clean 0/0/0 with no NOTE at
+all”); re-verified S448 while rendering `NEWS.md` and found the
+OPPOSITE: `devtools::check()`’s “checking tests” step
+(`tests/spelling.R` vs. its `Rout.save` comparison) currently reports 1
+NOTE, and a direct `spelling::spell_check_package(vignettes = TRUE)` run
+confirms it – not just `IACUC` (`_pedigree_browser.Rmd:55`), but also
+`Bhatia`, `Chesser`, `Cockerham`, `Fst`/`FST`, `Gst`, `Hedrick`,
+`Maddison`, `Meirmans`, `Sankararaman`, `Slatkin`, and `monomorphic`
+(all from `markerFst.Rd`’s own citations, Session 447/issue \#130 Slice
+5) are also missing. **Confirmed via a clean-worktree check at S447’s
+own final commit (`afb979bc`) that every one of these was ALREADY
+missing before S448 touched anything** – so this is not something S448
+introduced; S447’s own “0/0/0” self-report for this check dimension does
+not hold up under re-verification. (S448 fixed only its own single new
+word, `homozygote`, introduced by this session’s `NEWS.Rmd` backfill –
+see `inst/WORDLIST`.) A future session should hand-add the remaining 12
+words to `inst/WORDLIST` in radix-sort position (not via
 [`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html),
 per S230 convention) to reach a genuine 0-errors/0-warnings/0-notes
-`devtools::check()`.
+`devtools::check()`, and should also spot-check whether other recent
+sessions’ own spelling-fix claims hold up, given this one didn’t.
 
 (none remaining – the “Pre-existing `shinyBS is not defined` JS console
 error on every page load” item (discovered S433, 2026-07-30) is
