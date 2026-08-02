@@ -6,6 +6,22 @@
 
 ## ACTIVE TASK
 
+### What Session 448 Did
+**Deliverable:** Resolve the `NEWS.Rmd` checklist decision (BACKLOG.md Housekeeping item,
+`PROJECT_LEARNINGS.md` Learning 433, filed S446). Owner-picked via the Phase 0 priorities
+`AskUserQuestion` from a 4-option list (this item, `a2interactive.Rmd` decision, issue #132,
+`CLAUDE.md` NOT_CRAN doc fix). (IN PROGRESS)
+**Started:** 2026-08-01
+**Status:** Session claimed. Owner resolved both sub-decisions via `AskUserQuestion`: (1) ratify a
+broad `NEWS.Rmd` checklist in `CLAUDE.md` mirroring the citation (issue #120) and tutorial/article
+(S436) checklists -- any session shipping a new exported function OR a user-facing Shiny
+feature/control must add a `NEWS.Rmd` entry in the same session it ships; (2) backfill issue #130's
+Slices 1-5 into the existing 2.0.0.9000 `NEWS.Rmd` block now. Work beginning: ratify the checklist
+text, author the backfill entries, re-render `NEWS.md`, update `BACKLOG.md`.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 447 Did
 **Deliverable:** Implement Slice 5 of the [issue #130](https://github.com/rmsharp/nprcgenekeepr/issues/130)
 plan (cross-center identity-by-state differentiation statistic), per

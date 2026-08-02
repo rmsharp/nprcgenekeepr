@@ -76,6 +76,22 @@ commit: 5d055adb
 ```
 
 ```handoff
+session: S448
+date: 2026-08-01
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Resolve the NEWS.Rmd checklist decision (BACKLOG.md Housekeeping, Learning 433) -- ratify a broad checklist in CLAUDE.md (owner-decided) and backfill issue #130 Slices 1-5 into NEWS.Rmd (owner-decided).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S447
 date: 2026-08-01
 status: complete
@@ -88,7 +104,7 @@ key_files: R/markerFst.R (new function + estimator-choice rationale in roxygen),
 gotchas: All of S444-S446's carried-forward gotchas apply unchanged. New this session: direct-Rscript shinytest2::AppDriver invocation MUST set NOT_CRAN=true in the environment or execution halts with "Reason: On CRAN" even outside testthat; AppDriver's screenshot method is $get_screenshot() not $screenshot() (re-hit from Learning 429). markerFst() assumes each shared locus's COMBINED two-center allele set has exactly 2 alleles (relies on checkMarkerGenotypeFile()'s per-file biallelic enforcement) and does not defend against a cross-center third-allele mismatch -- documented as a known limitation, not tested; close deliberately if ever touched. _pkgdown.yml's "All exposed functions" reference-coverage list is enforced by test_pkgdown_reference_config.R -- any new exported function needs an entry or the full regression read (not the targeted test alone) will catch it.
 runtime_smoke: Live shinytest2/chromote smoke test of the running app: uploaded two real CSV files through the browser to the Cross-Center tab; rendered values matched the hand-verified fixture exactly (0.05794205794205797=58/1001, 0.4512987012987014=139/308, 0.2749664128974474=614/2233), no console errors (only the pre-existing markerKinship() warning from the fixture data). Screenshot saved to vignettes/articles/shiny_app_use/marker_genetics_cross_center.png.
 changelog_ref: CHANGELOG.md [issue #130] "Implement Slice 5 -- cross-center Fst" entry, this close-out commit
-commit: pending
+commit: afb979bc
 ```
 
 ```handoff
