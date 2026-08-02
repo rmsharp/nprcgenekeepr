@@ -1247,7 +1247,7 @@ that have generated the errors.</p>
 <code class="sourceCode R"><span><span class="va">pedOne</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="../reference/pedOne.html">pedOne</a></span> <span class="co"># put it in the local environment</span></span>
 <span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">pedOne</span>, minSireAge <span class="op">=</span> <span class="fl">0.0</span>, minDamAge <span class="op">=</span> <span class="fl">0.0</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `qcStudbook()`:</span></span></span>
-<span><span class="co">## <span style="color: #BBBB00;">!</span> Parents with low age at birth of offspring are listed in /tmp/RtmpLFnzkZ/lowParentAge.csv.</span></span></code></pre>
+<span><span class="co">## <span style="color: #BBBB00;">!</span> Parents with low age at birth of offspring are listed in /tmp/RtmpUu2fB6/lowParentAge.csv.</span></span></code></pre>
 <p>The contents of <em>lowParentAge.csv</em> is shown below.</p>
 <table class="table">
 <colgroup>
@@ -1430,11 +1430,249 @@ the following line of code:</p>
 <span><span class="co">## 2922 531HAC UMV4BE 5DIPZN</span></span>
 <span><span class="co">## 2924 85ESBB UQFY9C Q2RK1E</span></span>
 <span><span class="co">## 2941 0VLW56 6KPKH7 MMEHXV</span></span></code></pre>
+</div>
+<div class="section level2">
+<h2 id="marker-genetics">Marker Genetics<a class="anchor" aria-label="anchor" href="#marker-genetics"></a>
+</h2>
+<p>Everything up to this point has estimated kinship and diversity from
+a <em>recorded</em> pedigree – <strong>kinship</strong>,
+<strong>reportGV</strong>, and the rest all assume the sire/dam
+relationships in your pedigree data are correct. The functions in this
+section instead estimate relatedness, heterozygosity, parentage
+consistency, and between-center differentiation directly from a marker
+genotype panel (e.g. a SNP or STR panel), independent of any known
+pedigree. This is the same functionality behind the Shiny application’s
+<strong>Marker Genetics</strong> tab – see the “Marker Genetics” section
+of the <em>colony-manager-guide</em> article for the equivalent
+point-and-click workflow and screenshots. The small example genotypes
+below match the ones used there, so the numbers you see printed here are
+the same numbers shown in that article’s tables.</p>
+<div class="section level3">
+<h3 id="preparing-a-marker-genotype-file">Preparing a Marker Genotype File<a class="anchor" aria-label="anchor" href="#preparing-a-marker-genotype-file"></a>
+</h3>
+<p>A marker genotype file is long-format: one row per <em>id</em> x
+<em>locus</em>, with columns <em>id</em>, <em>locus</em>,
+<em>allele1</em>, and <em>allele2</em>. (This is a different shape from
+the single-locus <em>first_name</em>/<em>second_name</em> genotype
+format used earlier by
+<strong>addGenotype</strong>/<strong>geneDrop</strong> – the two are
+unrelated.) You would normally read this from a CSV file with
+<strong>read.csv</strong>, the same way the pedigree file was read in at
+the start of this tutorial; here we build a small example directly, for
+a parent (<em>P</em>), her offspring (<em>C</em>), and an unrelated
+founder (<em>U</em>), genotyped at 10 biallelic loci.</p>
 <div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">elapsed_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_elapsed_time_str.html">get_elapsed_time_str</a></span><span class="op">(</span><span class="va">start_time</span><span class="op">)</span></span></code></pre></div>
-<p>The current date and time is 2026-08-02 02:57:14.081257. The
-processing time for this document was 17 seconds..</p>
+<code class="sourceCode R"><span><span class="va">markerGenotype</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"P"</span>, <span class="fl">10L</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="fl">10L</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"U"</span>, <span class="fl">10L</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  locus <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"L"</span>, <span class="fl">1L</span><span class="op">:</span><span class="fl">10L</span><span class="op">)</span>, <span class="fl">3L</span><span class="op">)</span>,</span>
+<span>  allele1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>,</span>
+<span>    <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>,</span>
+<span>    <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>, <span class="st">"B"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  allele2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>,</span>
+<span>    <span class="st">"B"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>,</span>
+<span>    <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"B"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><strong>checkMarkerGenotypeFile</strong> validates the column shape
+and rejects any locus with more than two distinct alleles (the
+estimators below all require biallelic markers).
+<strong>buildMarkerGenotypeMatrix</strong> then pivots the checked
+long-format table into the wide <em>id</em> x <em>locus</em> matrix the
+rest of this section’s functions consume, one cell per individual/locus
+combination (e.g. <code>"A/B"</code>), or <code>NA</code> where that
+individual has no genotype call at that locus.</p>
 <div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">markerGenotype</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/checkMarkerGenotypeFile.html">checkMarkerGenotypeFile</a></span><span class="op">(</span><span class="va">markerGenotype</span><span class="op">)</span></span>
+<span><span class="va">genotypeMatrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/buildMarkerGenotypeMatrix.html">buildMarkerGenotypeMatrix</a></span><span class="op">(</span><span class="va">markerGenotype</span><span class="op">)</span></span>
+<span><span class="va">genotypeMatrix</span></span></code></pre></div>
+<pre><code><span><span class="co">##   L1    L2    L3    L4    L5    L6    L7    L8    L9    L10  </span></span>
+<span><span class="co">## P "A/A" "A/B" "A/B" "B/B" "A/A" "A/B" "B/B" "A/B" "A/A" "A/B"</span></span>
+<span><span class="co">## C "A/B" "A/A" "B/B" "A/B" "A/A" "A/B" "B/B" "A/B" "A/B" "A/A"</span></span>
+<span><span class="co">## U "A/B" "B/B" "A/A" "A/B" "A/B" "A/A" "A/B" "B/B" "A/B" "B/B"</span></span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="marker-based-kinship">Marker-Based Kinship<a class="anchor" aria-label="anchor" href="#marker-based-kinship"></a>
+</h3>
+<p><strong>markerKinship</strong> estimates pairwise kinship directly
+from <em>genotypeMatrix</em>, using the “KING-robust” estimator
+(Manichaikul et al. 2010) – the same estimator implemented by KING,
+PLINK2, and <code>SNPRelate::snpgdsIBDKING</code>. It never looks at
+recorded parentage, so it is useful as an independent cross-check on the
+pedigree-based kinship computed by
+<strong>kinship</strong>/<strong>reportGV</strong> above.</p>
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">markerKmat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/markerKinship.html">markerKinship</a></span><span class="op">(</span><span class="va">genotypeMatrix</span><span class="op">)</span></span>
+<span><span class="va">markerKmat</span></span></code></pre></div>
+<pre><code><span><span class="co">##     P    C    U</span></span>
+<span><span class="co">## P 0.5  0.2  0.0</span></span>
+<span><span class="co">## C 0.2  0.5 -0.3</span></span>
+<span><span class="co">## U 0.0 -0.3  0.5</span></span></code></pre>
+<p><em>P</em> and <em>C</em> are the true parent/offspring pair in this
+example, and their marker-based kinship (0.2) is clearly higher than
+either pair involving the unrelated founder <em>U</em>. The KING-robust
+estimator is not bounded below by zero – <em>C</em> and <em>U</em>’s
+negative estimate here is informative (more divergent ancestry than the
+reference panel), not an error.</p>
+</div>
+<div class="section level3">
+<h3 id="heterozygosity-diagnostic">Heterozygosity Diagnostic<a class="anchor" aria-label="anchor" href="#heterozygosity-diagnostic"></a>
+</h3>
+<p><strong>markerObservedHeterozygosity</strong> computes, per animal,
+the fraction of its genotyped loci at which it is heterozygous
+(<em>Ho</em>). <strong>markerExpectedHeterozygosity</strong> computes
+Nei’s (1973) gene diversity (<em>He</em>) at each locus from the
+population’s allele frequencies, plus the unweighted mean across loci as
+a population-wide summary – the standard observed-vs-expected
+heterozygosity diagnostic. Both take the same <em>genotypeMatrix</em>
+shape as <strong>markerKinship</strong>. This example uses three animals
+(<em>X</em>, <em>Y</em>, <em>Z</em>) genotyped at 4 loci, with
+<em>Y</em> missing a call at <em>L4</em>.</p>
+<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">hetGenotype</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="fl">4L</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"Y"</span>, <span class="fl">3L</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"Z"</span>, <span class="fl">4L</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  locus <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"L"</span>, <span class="fl">1L</span><span class="op">:</span><span class="fl">4L</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"L"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1L</span>, <span class="fl">2L</span>, <span class="fl">3L</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"L"</span>, <span class="fl">1L</span><span class="op">:</span><span class="fl">4L</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  allele1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span><span class="op">)</span>,</span>
+<span>  allele2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"A"</span><span class="op">)</span>,</span>
+<span>  stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">hetGenotype</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/checkMarkerGenotypeFile.html">checkMarkerGenotypeFile</a></span><span class="op">(</span><span class="va">hetGenotype</span><span class="op">)</span></span>
+<span><span class="va">hetMatrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/buildMarkerGenotypeMatrix.html">buildMarkerGenotypeMatrix</a></span><span class="op">(</span><span class="va">hetGenotype</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/markerObservedHeterozygosity.html">markerObservedHeterozygosity</a></span><span class="op">(</span><span class="va">hetMatrix</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##         X         Y         Z </span></span>
+<span><span class="co">## 0.7500000 0.3333333 0.2500000</span></span></code></pre>
+<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/markerExpectedHeterozygosity.html">markerExpectedHeterozygosity</a></span><span class="op">(</span><span class="va">hetMatrix</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## $perLocus</span></span>
+<span><span class="co">##        L1        L2        L3        L4 </span></span>
+<span><span class="co">## 0.5000000 0.2777778 0.4444444 0.3750000 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $meanHe</span></span>
+<span><span class="co">## [1] 0.3993056</span></span></code></pre>
+<p>Note <em>Y</em>’s observed heterozygosity is computed over its own 3
+genotyped loci (1/3), not over all 4 – a missing call at one locus does
+not lower an animal’s own <em>Ho</em>, since the denominator is always
+that animal’s own non-missing loci, not the full panel.</p>
+</div>
+<div class="section level3">
+<h3 id="parentage-verification-mendelian-exclusion">Parentage Verification (Mendelian Exclusion)<a class="anchor" aria-label="anchor" href="#parentage-verification-mendelian-exclusion"></a>
+</h3>
+<p><strong>markerParentageExclusion</strong> cross-references a
+pedigree’s recorded dam/sire against each animal’s marker genotype and
+flags a recorded parent whose genotype evidence contradicts simple
+Mendelian inheritance – directly useful for catching the kind of
+dam/sire misidentification a paper pedigree alone cannot reveal. A locus
+counts as a conflict only when the animal and the candidate parent are
+each homozygous for a <em>different</em> allele (“opposite
+homozygotes”); by default (<code>maxExclusions = 2</code>) a recorded
+parent is only flagged once 3 or more such conflicts accumulate, since a
+single mismatching locus can arise from ordinary genotyping error even
+for a true parent.</p>
+<p>We reuse the P/C/U <em>genotypeMatrix</em> from above, with a
+pedigree in which <em>C</em>’s recorded dam (<em>P</em>) is correct, but
+<em>C</em>’s recorded sire has been (deliberately, for this example)
+misrecorded as the unrelated <em>U</em>.</p>
+<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pedigree</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"P"</span>, <span class="st">"C"</span>, <span class="st">"U"</span><span class="op">)</span>, sire <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="st">"U"</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>                        dam <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="st">"P"</span>, <span class="cn">NA</span><span class="op">)</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/markerParentageExclusion.html">markerParentageExclusion</a></span><span class="op">(</span><span class="va">genotypeMatrix</span>, <span class="va">pedigree</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##   id parentId role exclusionCount nLoci flagged</span></span>
+<span><span class="co">## 1  C        P  dam              0    10   FALSE</span></span>
+<span><span class="co">## 2  C        U sire              3    10    TRUE</span></span></code></pre>
+<p><em>C</em>’s true dam (<em>P</em>) has zero exclusions and is not
+flagged; <em>C</em>’s falsely recorded sire (<em>U</em>) has 3
+exclusions, exceeding the default <code>maxExclusions = 2</code>, and is
+correctly flagged.</p>
+</div>
+<div class="section level3">
+<h3 id="cross-center-identity-linking">Cross-Center Identity Linking<a class="anchor" aria-label="anchor" href="#cross-center-identity-linking"></a>
+</h3>
+<p>When an animal transfers between centers that use independent id
+namespaces, the receiving center often has no way to know the animal’s
+real parents and records it as an artificial founder – losing its actual
+lineage even though the originating center’s records still have it.
+<strong>resolveCrossCenterIds</strong> fixes this: given a
+curator-confirmed mapping between the two centers’ ids for the same
+physical animal, it merges the two centers’ pedigrees into one,
+preferring whichever side actually recorded a parent.</p>
+<p>In this example, <em>T1</em> (in Center A’s pedigree, <em>pedA</em>)
+and <em>X9</em> (in Center B’s pedigree, <em>pedB</em>) are the same
+physical animal – Center B recorded it as a founder (both parents
+<code>NA</code>) because it never knew <em>T1</em>’s real parents, which
+Center A does have.</p>
+<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pedA</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"P1"</span>, <span class="st">"P2"</span>, <span class="st">"T1"</span><span class="op">)</span>, sire <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="st">"P1"</span><span class="op">)</span>, dam <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="st">"P2"</span><span class="op">)</span>,</span>
+<span>  stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">pedB</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X9"</span>, <span class="st">"O1"</span><span class="op">)</span>, sire <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="st">"X9"</span><span class="op">)</span>, dam <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>  stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">mapping</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>idA <span class="op">=</span> <span class="st">"T1"</span>, idB <span class="op">=</span> <span class="st">"X9"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/resolveCrossCenterIds.html">resolveCrossCenterIds</a></span><span class="op">(</span><span class="va">pedA</span>, <span class="va">pedB</span>, <span class="va">mapping</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##   id sire  dam</span></span>
+<span><span class="co">## 1 P1 &lt;NA&gt; &lt;NA&gt;</span></span>
+<span><span class="co">## 2 P2 &lt;NA&gt; &lt;NA&gt;</span></span>
+<span><span class="co">## 3 T1   P1   P2</span></span>
+<span><span class="co">## 4 O1   T1 &lt;NA&gt;</span></span></code></pre>
+<p>The merged pedigree has a single row for <em>T1</em> with its real
+parents (<em>P1</em>, <em>P2</em>) intact, and <em>O1</em> – recorded at
+Center B as <em>X9</em>’s offspring – now correctly points to
+<em>T1</em> as its sire.</p>
+</div>
+<div class="section level3">
+<h3 id="cross-center-differentiation-fst">Cross-Center Differentiation (Fst)<a class="anchor" aria-label="anchor" href="#cross-center-differentiation-fst"></a>
+</h3>
+<p><strong>markerFst</strong> takes a different, population-level view:
+rather than linking individual animals across centers, it estimates
+Hudson’s Fst (Hudson, Slatkin &amp; Maddison 1992, as given in closed
+form by Bhatia et al. 2013) – how differentiated two centers’ colonies
+are in allele frequency, at each locus genotyped by both, plus a single
+pooled summary across loci. The pooled value is a ratio of summed
+numerators and denominators, not a mean of the per-locus ratios, which
+Bhatia et al. show is materially biased.</p>
+<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">centerAGenotype</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"CA1"</span>, <span class="fl">2L</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"CA2"</span>, <span class="fl">2L</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"CA3"</span>, <span class="fl">2L</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"CA4"</span>, <span class="fl">2L</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  locus <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"L1"</span>, <span class="st">"L2"</span><span class="op">)</span>, <span class="fl">4L</span><span class="op">)</span>,</span>
+<span>  allele1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"A"</span><span class="op">)</span>,</span>
+<span>  allele2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"A"</span><span class="op">)</span>,</span>
+<span>  stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">centerBGenotype</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"CB1"</span>, <span class="fl">2L</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"CB2"</span>, <span class="fl">2L</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"CB3"</span>, <span class="fl">2L</span><span class="op">)</span>,</span>
+<span>         <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"CB4"</span>, <span class="fl">2L</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"CB5"</span>, <span class="fl">2L</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"CB6"</span>, <span class="fl">2L</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  locus <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"L1"</span>, <span class="st">"L2"</span><span class="op">)</span>, <span class="fl">6L</span><span class="op">)</span>,</span>
+<span>  allele1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"A"</span><span class="op">)</span>,</span>
+<span>  allele2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"B"</span><span class="op">)</span>,</span>
+<span>  stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">matrixA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/buildMarkerGenotypeMatrix.html">buildMarkerGenotypeMatrix</a></span><span class="op">(</span><span class="fu"><a href="../reference/checkMarkerGenotypeFile.html">checkMarkerGenotypeFile</a></span><span class="op">(</span><span class="va">centerAGenotype</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">matrixB</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/buildMarkerGenotypeMatrix.html">buildMarkerGenotypeMatrix</a></span><span class="op">(</span><span class="fu"><a href="../reference/checkMarkerGenotypeFile.html">checkMarkerGenotypeFile</a></span><span class="op">(</span><span class="va">centerBGenotype</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/markerFst.html">markerFst</a></span><span class="op">(</span><span class="va">matrixA</span>, <span class="va">matrixB</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## $perLocus</span></span>
+<span><span class="co">##         L1         L2 </span></span>
+<span><span class="co">## 0.05794206 0.45129870 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $pooledFst</span></span>
+<span><span class="co">## [1] 0.2749664</span></span></code></pre>
+<p><em>L2</em> shows substantially more differentiation between the two
+centers than <em>L1</em> does in this example; the pooled value
+summarizes both loci into one number for a quick between-center
+comparison.</p>
+<div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">elapsed_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_elapsed_time_str.html">get_elapsed_time_str</a></span><span class="op">(</span><span class="va">start_time</span><span class="op">)</span></span></code></pre></div>
+<p>The current date and time is 2026-08-02 04:18:53.664103. The
+processing time for this document was 21 seconds..</p>
+<div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.6.1 (2026-06-24)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu</span></span>
@@ -1485,6 +1723,7 @@ processing time for this document was 17 seconds..</p>
 <span><span class="co">## [65] rlang_1.3.0          futile.options_1.0.1 Rcpp_1.1.2           xtable_1.8-8        </span></span>
 <span><span class="co">## [69] glue_1.8.1           formatR_1.14         renv_1.2.3           rstudioapi_0.19.0   </span></span>
 <span><span class="co">## [73] jsonlite_2.0.0       R6_2.6.1             systemfonts_1.3.2    fs_2.1.0</span></span></code></pre>
+</div>
 </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -161,7 +161,10 @@ The build-equivalent for this R package (relocated here from
 | Test suite | `devtools::test()` or [`testthat::test_local()`](https://testthat.r-lib.org/reference/test_package.html) | All tests pass |
 
 **Fast single-file test:**
-`Rscript -e 'suppressMessages(pkgload::load_all(".", quiet=TRUE)); testthat::test_file("tests/testthat/test_X.R", reporter="summary")'`
+`Rscript -e 'Sys.setenv(NOT_CRAN = "true"); suppressMessages(pkgload::load_all(".", quiet=TRUE)); testthat::test_file("tests/testthat/test_X.R", reporter="summary")'`
+(sets `NOT_CRAN` first — without it, a file with a top-level
+`skip_on_cran()` silently bare-skips instead of running; see
+`PROJECT_LEARNINGS.md` Learning 417.)
 
 **Clean regression read** (the `test-app-*`/`test-e2e-*` files are
 pre-existing baseline noise — see Learning \#2/#4 below):
@@ -304,6 +307,32 @@ since the gap spans the package’s entire user-visible changelog for a
 shipped capability; the checklist applies prospectively, same-session,
 from here on.
 
+**`a2interactive.Rmd` script-callable-function checklist
+(owner-directed, 2026-08-02, Session 450):** any new exported,
+script-callable function should eventually get a demonstration section
+in `vignettes/a2interactive.Rmd` (the scriptable/interactive-R tutorial)
+— but unlike the citation, tutorial/article, and `NEWS.Rmd` checklists
+above, this coverage is **deferred, not same-session**: it happens in a
+dedicated documentation pass after the feature has been fully reviewed
+and has stabilized, not in the shipping session itself, to avoid
+documenting something that may still change. A future session picking up
+this work should identify any exported, script-callable functions (not
+Shiny-UI-only features, which the tutorial/article checklist already
+covers) added since the last `a2interactive.Rmd` documentation pass and
+add matching demonstration sections. Ratified after issue \#130’s entire
+marker-genetics function family
+([`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md),
+[`markerObservedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerObservedHeterozygosity.md)/[`markerExpectedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerExpectedHeterozygosity.md),
+[`markerParentageExclusion()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md),
+[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md),
+[`markerFst()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md))
+shipped across Sessions 442-447 with zero `a2interactive.Rmd` mentions —
+discovered S447 (`BACKLOG.md` Housekeeping, `PROJECT_LEARNINGS.md`
+Learning 435) and backfilled this session as a one-time exception,
+matching the `NEWS.Rmd` checklist’s own backfill precedent; the
+checklist itself applies prospectively, as a deferred obligation, from
+here on.
+
 **CHANGELOG.md ledger-format resolution (2026-07-08, Session 325 —
 “freeze legacy, go forward”):** canonical v3.1+ defines `CHANGELOG.md`
 as an “Authoritative Action Ledger” — dated
@@ -332,7 +361,7 @@ workstream **and** the RED→GREEN→REFACTOR gates.
 
 ### Project-specific Learnings
 
-Project institutional memory (Sessions 1–449+; 439 learnings, ~1.9 MB)
+Project institutional memory (Sessions 1–450+; 440 learnings, ~1.9 MB)
 lives in
 [`PROJECT_LEARNINGS.md`](https://github.com/rmsharp/nprcgenekeepr/PROJECT_LEARNINGS.md)
 — extracted from this file to keep `CLAUDE.md` within its size budget

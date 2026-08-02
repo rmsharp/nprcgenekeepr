@@ -980,7 +980,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpLFnzkZ/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpUu2fB6/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -1136,13 +1136,283 @@ examplePedigree[unlist(exampleLoops), c("id", "sire", "dam")][1L:10L, ]
     ## 2924 85ESBB UQFY9C Q2RK1E
     ## 2941 0VLW56 6KPKH7 MMEHXV
 
+## Marker Genetics
+
+Everything up to this point has estimated kinship and diversity from a
+*recorded* pedigree – **kinship**, **reportGV**, and the rest all assume
+the sire/dam relationships in your pedigree data are correct. The
+functions in this section instead estimate relatedness, heterozygosity,
+parentage consistency, and between-center differentiation directly from
+a marker genotype panel (e.g. a SNP or STR panel), independent of any
+known pedigree. This is the same functionality behind the Shiny
+application’s **Marker Genetics** tab – see the “Marker Genetics”
+section of the *colony-manager-guide* article for the equivalent
+point-and-click workflow and screenshots. The small example genotypes
+below match the ones used there, so the numbers you see printed here are
+the same numbers shown in that article’s tables.
+
+### Preparing a Marker Genotype File
+
+A marker genotype file is long-format: one row per *id* x *locus*, with
+columns *id*, *locus*, *allele1*, and *allele2*. (This is a different
+shape from the single-locus *first_name*/*second_name* genotype format
+used earlier by **addGenotype**/**geneDrop** – the two are unrelated.)
+You would normally read this from a CSV file with **read.csv**, the same
+way the pedigree file was read in at the start of this tutorial; here we
+build a small example directly, for a parent (*P*), her offspring (*C*),
+and an unrelated founder (*U*), genotyped at 10 biallelic loci.
+
+``` r
+
+markerGenotype <- data.frame(
+  id = c(rep("P", 10L), rep("C", 10L), rep("U", 10L)),
+  locus = rep(paste0("L", 1L:10L), 3L),
+  allele1 = c(
+    "A", "A", "A", "B", "A", "A", "B", "A", "A", "A",
+    "A", "A", "B", "A", "A", "A", "B", "A", "A", "A",
+    "A", "B", "A", "A", "A", "A", "A", "B", "A", "B"
+  ),
+  allele2 = c(
+    "A", "B", "B", "B", "A", "B", "B", "B", "A", "B",
+    "B", "A", "B", "B", "A", "B", "B", "B", "B", "A",
+    "B", "B", "A", "B", "B", "A", "B", "B", "B", "B"
+  ),
+  stringsAsFactors = FALSE
+)
+```
+
+**checkMarkerGenotypeFile** validates the column shape and rejects any
+locus with more than two distinct alleles (the estimators below all
+require biallelic markers). **buildMarkerGenotypeMatrix** then pivots
+the checked long-format table into the wide *id* x *locus* matrix the
+rest of this section’s functions consume, one cell per individual/locus
+combination (e.g. `"A/B"`), or `NA` where that individual has no
+genotype call at that locus.
+
+``` r
+
+markerGenotype <- checkMarkerGenotypeFile(markerGenotype)
+genotypeMatrix <- buildMarkerGenotypeMatrix(markerGenotype)
+genotypeMatrix
+```
+
+    ##   L1    L2    L3    L4    L5    L6    L7    L8    L9    L10  
+    ## P "A/A" "A/B" "A/B" "B/B" "A/A" "A/B" "B/B" "A/B" "A/A" "A/B"
+    ## C "A/B" "A/A" "B/B" "A/B" "A/A" "A/B" "B/B" "A/B" "A/B" "A/A"
+    ## U "A/B" "B/B" "A/A" "A/B" "A/B" "A/A" "A/B" "B/B" "A/B" "B/B"
+
+### Marker-Based Kinship
+
+**markerKinship** estimates pairwise kinship directly from
+*genotypeMatrix*, using the “KING-robust” estimator (Manichaikul et al.
+2010) – the same estimator implemented by KING, PLINK2, and
+`SNPRelate::snpgdsIBDKING`. It never looks at recorded parentage, so it
+is useful as an independent cross-check on the pedigree-based kinship
+computed by **kinship**/**reportGV** above.
+
+``` r
+
+markerKmat <- markerKinship(genotypeMatrix)
+markerKmat
+```
+
+    ##     P    C    U
+    ## P 0.5  0.2  0.0
+    ## C 0.2  0.5 -0.3
+    ## U 0.0 -0.3  0.5
+
+*P* and *C* are the true parent/offspring pair in this example, and
+their marker-based kinship (0.2) is clearly higher than either pair
+involving the unrelated founder *U*. The KING-robust estimator is not
+bounded below by zero – *C* and *U*’s negative estimate here is
+informative (more divergent ancestry than the reference panel), not an
+error.
+
+### Heterozygosity Diagnostic
+
+**markerObservedHeterozygosity** computes, per animal, the fraction of
+its genotyped loci at which it is heterozygous (*Ho*).
+**markerExpectedHeterozygosity** computes Nei’s (1973) gene diversity
+(*He*) at each locus from the population’s allele frequencies, plus the
+unweighted mean across loci as a population-wide summary – the standard
+observed-vs-expected heterozygosity diagnostic. Both take the same
+*genotypeMatrix* shape as **markerKinship**. This example uses three
+animals (*X*, *Y*, *Z*) genotyped at 4 loci, with *Y* missing a call at
+*L4*.
+
+``` r
+
+hetGenotype <- data.frame(
+  id = c(rep("X", 4L), rep("Y", 3L), rep("Z", 4L)),
+  locus = c(paste0("L", 1L:4L), paste0("L", c(1L, 2L, 3L)), paste0("L", 1L:4L)),
+  allele1 = c("A", "A", "A", "A", "A", "A", "B", "B", "A", "A", "A"),
+  allele2 = c("A", "B", "B", "B", "B", "A", "B", "B", "A", "B", "A"),
+  stringsAsFactors = FALSE
+)
+hetGenotype <- checkMarkerGenotypeFile(hetGenotype)
+hetMatrix <- buildMarkerGenotypeMatrix(hetGenotype)
+```
+
+``` r
+
+markerObservedHeterozygosity(hetMatrix)
+```
+
+    ##         X         Y         Z 
+    ## 0.7500000 0.3333333 0.2500000
+
+``` r
+
+markerExpectedHeterozygosity(hetMatrix)
+```
+
+    ## $perLocus
+    ##        L1        L2        L3        L4 
+    ## 0.5000000 0.2777778 0.4444444 0.3750000 
+    ## 
+    ## $meanHe
+    ## [1] 0.3993056
+
+Note *Y*’s observed heterozygosity is computed over its own 3 genotyped
+loci (1/3), not over all 4 – a missing call at one locus does not lower
+an animal’s own *Ho*, since the denominator is always that animal’s own
+non-missing loci, not the full panel.
+
+### Parentage Verification (Mendelian Exclusion)
+
+**markerParentageExclusion** cross-references a pedigree’s recorded
+dam/sire against each animal’s marker genotype and flags a recorded
+parent whose genotype evidence contradicts simple Mendelian inheritance
+– directly useful for catching the kind of dam/sire misidentification a
+paper pedigree alone cannot reveal. A locus counts as a conflict only
+when the animal and the candidate parent are each homozygous for a
+*different* allele (“opposite homozygotes”); by default
+(`maxExclusions = 2`) a recorded parent is only flagged once 3 or more
+such conflicts accumulate, since a single mismatching locus can arise
+from ordinary genotyping error even for a true parent.
+
+We reuse the P/C/U *genotypeMatrix* from above, with a pedigree in which
+*C*’s recorded dam (*P*) is correct, but *C*’s recorded sire has been
+(deliberately, for this example) misrecorded as the unrelated *U*.
+
+``` r
+
+pedigree <- data.frame(id = c("P", "C", "U"), sire = c(NA, "U", NA),
+                        dam = c(NA, "P", NA), stringsAsFactors = FALSE)
+```
+
+``` r
+
+markerParentageExclusion(genotypeMatrix, pedigree)
+```
+
+    ##   id parentId role exclusionCount nLoci flagged
+    ## 1  C        P  dam              0    10   FALSE
+    ## 2  C        U sire              3    10    TRUE
+
+*C*’s true dam (*P*) has zero exclusions and is not flagged; *C*’s
+falsely recorded sire (*U*) has 3 exclusions, exceeding the default
+`maxExclusions = 2`, and is correctly flagged.
+
+### Cross-Center Identity Linking
+
+When an animal transfers between centers that use independent id
+namespaces, the receiving center often has no way to know the animal’s
+real parents and records it as an artificial founder – losing its actual
+lineage even though the originating center’s records still have it.
+**resolveCrossCenterIds** fixes this: given a curator-confirmed mapping
+between the two centers’ ids for the same physical animal, it merges the
+two centers’ pedigrees into one, preferring whichever side actually
+recorded a parent.
+
+In this example, *T1* (in Center A’s pedigree, *pedA*) and *X9* (in
+Center B’s pedigree, *pedB*) are the same physical animal – Center B
+recorded it as a founder (both parents `NA`) because it never knew
+*T1*’s real parents, which Center A does have.
+
+``` r
+
+pedA <- data.frame(
+  id = c("P1", "P2", "T1"), sire = c(NA, NA, "P1"), dam = c(NA, NA, "P2"),
+  stringsAsFactors = FALSE
+)
+pedB <- data.frame(
+  id = c("X9", "O1"), sire = c(NA, "X9"), dam = c(NA, NA),
+  stringsAsFactors = FALSE
+)
+mapping <- data.frame(idA = "T1", idB = "X9", stringsAsFactors = FALSE)
+```
+
+``` r
+
+resolveCrossCenterIds(pedA, pedB, mapping)
+```
+
+    ##   id sire  dam
+    ## 1 P1 <NA> <NA>
+    ## 2 P2 <NA> <NA>
+    ## 3 T1   P1   P2
+    ## 4 O1   T1 <NA>
+
+The merged pedigree has a single row for *T1* with its real parents
+(*P1*, *P2*) intact, and *O1* – recorded at Center B as *X9*’s offspring
+– now correctly points to *T1* as its sire.
+
+### Cross-Center Differentiation (Fst)
+
+**markerFst** takes a different, population-level view: rather than
+linking individual animals across centers, it estimates Hudson’s Fst
+(Hudson, Slatkin & Maddison 1992, as given in closed form by Bhatia et
+al. 2013) – how differentiated two centers’ colonies are in allele
+frequency, at each locus genotyped by both, plus a single pooled summary
+across loci. The pooled value is a ratio of summed numerators and
+denominators, not a mean of the per-locus ratios, which Bhatia et
+al. show is materially biased.
+
+``` r
+
+centerAGenotype <- data.frame(
+  id = c(rep("CA1", 2L), rep("CA2", 2L), rep("CA3", 2L), rep("CA4", 2L)),
+  locus = rep(c("L1", "L2"), 4L),
+  allele1 = c("A", "A", "A", "A", "A", "A", "B", "A"),
+  allele2 = c("A", "A", "A", "B", "B", "B", "B", "A"),
+  stringsAsFactors = FALSE
+)
+centerBGenotype <- data.frame(
+  id = c(rep("CB1", 2L), rep("CB2", 2L), rep("CB3", 2L),
+         rep("CB4", 2L), rep("CB5", 2L), rep("CB6", 2L)),
+  locus = rep(c("L1", "L2"), 6L),
+  allele1 = c("A", "B", "B", "A", "A", "B", "B", "B", "A", "B", "B", "A"),
+  allele2 = c("B", "B", "B", "B", "B", "B", "B", "B", "A", "B", "B", "B"),
+  stringsAsFactors = FALSE
+)
+matrixA <- buildMarkerGenotypeMatrix(checkMarkerGenotypeFile(centerAGenotype))
+matrixB <- buildMarkerGenotypeMatrix(checkMarkerGenotypeFile(centerBGenotype))
+```
+
+``` r
+
+markerFst(matrixA, matrixB)
+```
+
+    ## $perLocus
+    ##         L1         L2 
+    ## 0.05794206 0.45129870 
+    ## 
+    ## $pooledFst
+    ## [1] 0.2749664
+
+*L2* shows substantially more differentiation between the two centers
+than *L1* does in this example; the pooled value summarizes both loci
+into one number for a quick between-center comparison.
+
 ``` r
 
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-08-02 02:57:14.081257. The processing
-time for this document was 17 seconds..
+The current date and time is 2026-08-02 04:18:53.664103. The processing
+time for this document was 21 seconds..
 
 ``` r
 
