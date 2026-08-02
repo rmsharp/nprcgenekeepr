@@ -72,7 +72,7 @@ key_files: docs/planning/pedigree-diagram-mating-lines-plan.md (the full plan), 
 gotchas: All prior sessions' carried-forward gotchas apply (2 iCloud-sync duplicate files, 3 untracked .DS_Store; don't trust a predecessor's devtools::check() claim or a backlog item's stated scope at face value -- Learnings 437/441). New: (1) vis.js smooth.type 'horizontal'/'vertical' are still Bezier curves, not literal right angles -- only smooth:FALSE gives a true straight line (verified from bundled source). (2) visHierarchicalLayout() and manual/fixed node coordinates are mutually exclusive in practice -- a node's x/y "has no effect" under hierarchical layout. (3) visNetworkProxy's visMoveNode()/visGetPositions() (Option 3's mechanism) is Shiny-proxy-only and was NOT hands-on verified this session (research-workflow-sourced only) -- verify hands-on before relying on it if Option 3 is ever picked up.
 runtime_smoke: n/a -- planning document + 2 backlog-tracking files only, no runtime code changed. The empirical POC verification (3 chromote-screenshotted visNetwork widgets) already established the technical claims underpinning the plan's recommendation are not merely documentation-level.
 changelog_ref: CHANGELOG.md 2026-08-02 [ad hoc] entry (Session 457)
-commit: pending
+commit: ff61de60
 ```
 
 ```handoff
