@@ -6,6 +6,19 @@
 
 ## ACTIVE TASK
 
+### What Session 452 Did
+**Deliverable:** Fix `devtools::check()`'s spelling NOTE by hand-adding the 12 words missing from
+`inst/WORDLIST` (`BACKLOG.md` Housekeeping item, discovered S443/broadened S448, unchanged through
+S451's handoff): `Bhatia`, `Chesser`, `Cockerham`, `Fst`/`FST`, `Gst`, `Hedrick`, `Maddison`,
+`Meirmans`, `Sankararaman`, `Slatkin`, `monomorphic`. Owner-picked via the Phase 0 priorities
+`AskUserQuestion` from a 4-option list (this item, issue #139 doc gap, issue #134 verify
+inbreeding-loop rendering, NPRC outreach review).
+**Started:** 2026-08-02
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 451 Did
 **Deliverable:** Fix `CLAUDE.md`'s "Fast single-file test" command so it sets `NOT_CRAN=true`
 before running the test (`BACKLOG.md` Housekeeping item, filed S439, `PROJECT_LEARNINGS.md`
