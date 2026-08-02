@@ -6,6 +6,22 @@
 
 ## ACTIVE TASK
 
+### What Session 457 Did
+**Deliverable:** A planning document (Architecture workstream) evaluating whether a
+kinship2-style mating-line/sibship-line convention (horizontal line joining two mates,
+dropping to a horizontal sibship line their children hang from) is achievable within the
+ratified visNetwork (D2) decision from
+`docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md`, or what reopening D2
+would cost -- owner-picked via the Phase 0 priorities `AskUserQuestion` from a 3-option list
+(this item, LabKey recommendations, NPRC outreach review). Owner supplied a mid-session
+technical hint: expects invisible helper nodes will be necessary to draw the horizontal/
+vertical connecting lines. (IN PROGRESS)
+**Started:** 2026-08-02
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 456 Did
 **Deliverable:** Add a "Pedigree Diagram" demonstration section to `vignettes/a2interactive.Rmd`
 covering `makePedigreeDiagramData()` and the diagram export capability -- owner-directed

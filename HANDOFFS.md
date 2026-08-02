@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S457
+date: 2026-08-02
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: IN PROGRESS -- planning document (Architecture workstream) evaluating whether a kinship2-style mating-line/sibship-line convention is achievable within the ratified visNetwork (D2) decision from docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md, or what reopening D2 would cost. Owner-picked via Phase 0 priorities AskUserQuestion. Owner supplied a mid-session technical hint: expects invisible helper nodes will be necessary for the horizontal/vertical connecting lines.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S456
 date: 2026-08-02
 status: complete
