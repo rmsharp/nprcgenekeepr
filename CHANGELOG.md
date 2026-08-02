@@ -43,6 +43,22 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-02 · [ad hoc] File BACKLOG.md item: Pedigree Diagram lacks kinship2-style mating/sibship lines (Session 456 close-out)
+- **Deliverable:** owner review of the shipped Diagram section noted the underlying Diagram tab
+  itself (`R/modPedigree.R`, `R/makePedigreeDiagramData.R`) -- not just the vignette demo --
+  draws directly-sloped parent-to-child `visNetwork` edges with no horizontal mating line
+  connecting two co-parents and no sibship line, unlike kinship2-style pedigree-chart convention
+  (two reference examples cited: epilepsygenetics.blog's kinship2 post, an RPubs kinship2 demo).
+  This touches the ratified D2 (visNetwork) technology decision from
+  `docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md`, so per
+  `SESSION_RUNNER.md`'s planning-session rules it was filed as a new `BACKLOG.md` item for a
+  future dedicated planning session rather than investigated or implemented in this
+  documentation session. Related to, but distinct from, the S435 kinship2-comparison audit's
+  Finding #8 (scored "Equivalent-different-approach" for the narrower childless-union question,
+  left un-actioned) -- this item's visual-clarity framing covers ALL mated pairs, not just
+  childless/remarriage unions. No code or vignette changes this entry; `BACKLOG.md` "Pedigree
+  diagram vs kinship2 audit follow-ups" section only.
+
 ### 2026-08-02 · [ad hoc] Synthesize a small demo pedigree for the Pedigree Diagram section (Session 456 follow-up)
 - **Deliverable:** owner review of the just-shipped "Pedigree Diagram" section (below) found the
   reused 704-row `trimmedPed` diagram too large and insufficiently diverse (only the `F`/`M`/`U`

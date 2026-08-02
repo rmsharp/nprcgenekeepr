@@ -518,6 +518,45 @@ visNetwork-vs-kinship2 technology decision (D2), which stands as ratified.*
       `test_modMarkerGenetics.R` baseline warnings). Closed via GitHub comment
       (`https://github.com/rmsharp/nprcgenekeepr/issues/139#issuecomment-5159297837`).
       See `CHANGELOG.md`.)
+- [ ] **Pedigree Diagram tab does not visually indicate mating/couple
+      relationships** (DECISION NEEDED -- needs a dedicated planning session
+      to evaluate feasibility within the ratified visNetwork/D2 choice from
+      `docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md`,
+      Effort M, discovered S456 2026-08-02 while reviewing the Diagram
+      section added to `vignettes/a2interactive.Rmd`) -- owner-observed,
+      citing two kinship2 references as current-best-practice examples
+      (`https://epilepsygenetics.blog/2014/04/03/straight-lines-the-art-of-drawing-pedigrees-using-kinship2/`,
+      `https://rpubs.com/dliupress/pedigreedemo`) and specifically noting
+      "the clarity provided by horizontal and vertical lines instead of
+      lines with various slopes." Standard pedigree-chart convention
+      (kinship2's `plot.pedigree()` and similar tools) connects two mates
+      with a horizontal line, then drops a vertical line from its midpoint
+      to a horizontal sibship line their children hang from -- immediately
+      showing which two individuals are a breeding pair. `R/modPedigree.R`'s
+      Diagram tab instead draws a separate, directly-sloped `visNetwork`
+      edge from each parent straight to each child (`R/makePedigreeDiagramData.R:47-53`),
+      with vis.js's generic hierarchical layout choosing edge routing --
+      no visual link between two co-parents, and edge slope varies with
+      node position rather than following a fixed horizontal/vertical grid.
+      Related to, but distinct from, `docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`
+      Finding #8 ("Multiple mates/spouses"), which scored the absent
+      union/couple-node concept "Equivalent-different-approach" and left it
+      un-actioned -- that finding's framing was specifically about
+      childless/remarriage unions (which nprcgenekeepr's edges-only-from-
+      real-children model has no need to represent), not this broader
+      visual-clarity question about ALL mated pairs, including ones with
+      recorded children. A future planning session should evaluate: (a)
+      whether a mating-line/sibship-line convention is achievable inside
+      the ratified visNetwork choice (e.g. via invisible "union" helper
+      nodes, a documented technique for simulating pedigree-style mating
+      symbols in generic hierarchical graph layouts) without reopening D2;
+      (b) if not, what reopening D2 would cost against its own ratified
+      rationale (native Shiny interactivity, MIT license, `R/modPedigree.R`'s
+      existing multi-view module structure); (c) whether addressing this
+      also naturally resolves Finding #8's narrower framing. No
+      implementation attempted this session -- planning-only, per
+      `SESSION_RUNNER.md`'s "the plan is the deliverable" rule for any item
+      touching a previously-ratified architecture decision.
 
 ## Outreach
 - [ ] **NPRC outreach & announcement plan** (DECISION NEEDED -- owner review/edit of
