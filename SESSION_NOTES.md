@@ -6,6 +6,41 @@
 
 ## ACTIVE TASK
 
+### What Session 455 Did
+**Deliverable:** Document the Pedigree Diagram tab (GitHub issue #139) in the manual/tutorial --
+close the depth gap between `vignettes/manual_components/_pedigree_browser.Rmd` (mechanics/
+reference) and `vignettes/articles/colony-manager-guide.qmd` (task-oriented tutorial). Owner-picked
+via the Phase 0 priorities `AskUserQuestion` from a 2-option list (this item, NPRC outreach plan
+review).
+**Started:** 2026-08-02
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
+**Scope (research + `AskUserQuestion` before claiming):** research found issue #139's "zero
+coverage" premise partially overtaken by events -- #131 (S440) added an Export-PNG-scoped Diagram
+section to `_pedigree_browser.Rmd` only; #132 (S449) added a minimal legend-scoped "Diagram view"
+intro to `colony-manager-guide.qmd` only (explicitly not full #139 scope, per that session's own
+`AskUserQuestion`); #135 (S454) extended `_pedigree_browser.Rmd`'s Diagram paragraph with hover-
+tooltip/search coverage, touching only that file. Net result: `_pedigree_browser.Rmd` now covers
+base rendering, 1,500-node cap, click-to-navigate, Export PNG, hover tooltip, and Select-by-id
+search/highlight, but is missing the shape-to-sex legend (#132's feature, documented only in the
+other file). `colony-manager-guide.qmd` covers base rendering + the legend (1 screenshot) but is
+missing click-to-navigate, the node cap, Export PNG, hover tooltip, and Select-by-id search/
+highlight -- a real depth gap versus the Table view's 9-screenshot treatment in the same file.
+Owner picked "prose-only" depth for the `colony-manager-guide.qmd` expansion (no new screenshots)
+over "prose + one new screenshot" or "full screenshot parity" -- via `AskUserQuestion`.
+**Plan:** (1) `_pedigree_browser.Rmd` -- add the shape-to-sex legend description to the existing
+"Data Table and Diagram" section, prose-only, matching that file's established no-screenshot
+style. (2) `colony-manager-guide.qmd` -- extend the existing "Diagram view" paragraph (~line 305)
+to cover click-to-navigate, the 1,500-node cap, Export PNG, hover tooltip, and Select-by-id search/
+highlight, prose-only per the owner's depth pick. No `R/` or `tests/` files change -- TDD RED/
+GREEN/REFACTOR gates do not apply (S448/S451/S452/S453 precedent for non-implementation/doc-only
+sessions). No new displayed statistic, no new exported function, no new user-facing Shiny feature
+shipped (documenting already-shipped features) -- the citation/`NEWS.Rmd`/`a2interactive.Rmd`
+checklists do not apply; the tutorial/article checklist IS this session's deliverable.
+
 ### What Session 454 Did
 **Deliverable:** Add hover tooltips + search/highlight to the Pedigree Diagram tab (GitHub issue
 #135, `docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md` Finding #11/Recommendation

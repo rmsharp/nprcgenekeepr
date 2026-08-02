@@ -60,6 +60,23 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S455
+date: 2026-08-02
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: IN PROGRESS -- documenting the Pedigree Diagram tab (issue #139) in the manual/tutorial. Owner picked prose-only depth for the colony-manager-guide.qmd expansion via AskUserQuestion.
+what_was_done: pending
+next_steps: pending
+key_files: vignettes/manual_components/_pedigree_browser.Rmd (add shape-to-sex legend description), vignettes/articles/colony-manager-guide.qmd (~line 305, extend Diagram view paragraph: click-to-navigate, 1500-node cap, Export PNG, hover tooltip, Select-by-id search/highlight)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+Claim stub -- filled in at Phase 3D close-out.
+
+```handoff
 session: S454
 date: 2026-08-02
 status: complete
