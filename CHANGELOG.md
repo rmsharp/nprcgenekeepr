@@ -43,6 +43,39 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-02 · [issue #139] Document the Pedigree Diagram tab in the manual/tutorial (Session 455)
+- **Deliverable:** owner-picked via the Phase 0 priorities `AskUserQuestion` from a 2-option list
+  (this item, NPRC outreach plan review). Documentation-only -- no `R/` or `tests/` files changed,
+  so the TDD RED/GREEN/REFACTOR gates did not apply (S448/S451/S452/S453 precedent for
+  non-implementation sessions).
+- **Research finding:** issue #139's "zero coverage" premise was partially overtaken by events --
+  #131 (S440), #132 (S449), and #135 (S454) each scoped their own doc update to one of the two
+  files only, leaving an asymmetric gap: `vignettes/manual_components/_pedigree_browser.Rmd`
+  covered 5 of 6 shipped Diagram-tab features but was missing the shape-to-sex legend (#132's own
+  feature, documented only in the other file); `vignettes/articles/colony-manager-guide.qmd`
+  covered only base rendering + the legend, missing click-to-navigate, the 1,500-node cap, Export
+  PNG, hover tooltip, and Select-by-id search/highlight entirely -- versus the Table view's
+  9-screenshot depth in the same file. New `PROJECT_LEARNINGS.md` Learning 444 records this as a
+  general risk of the checklist's "and/or" flexibility across a feature family shipped
+  incrementally over several sessions.
+- **Fix:** added the shape-to-sex legend description to `_pedigree_browser.Rmd`'s existing "Data
+  Table and Diagram" section, prose-only, matching that file's established no-screenshot style.
+  Extended `colony-manager-guide.qmd`'s "Diagram view" paragraph to cover the 5 missing features,
+  prose-only per an owner `AskUserQuestion` depth pick (over "prose + one screenshot" or "full
+  screenshot parity"), matching that file's task-oriented voice.
+- **Verification:** `a3manual.Rmd` (parent of `_pedigree_browser.Rmd`) rendered via
+  `rmarkdown::render()`, new legend text confirmed present in the output. `colony-manager-guide.qmd`
+  rendered via `quarto render --to html`, zero errors, new prose confirmed present in the output.
+  `tests/spelling.R` clean (no new flagged words from either edit). Full regression suite unchanged
+  at 0 failed/0 error (3509 passed, same 10 pre-existing `test_modMarkerGenetics.R` baseline
+  warnings, unrelated to this session -- no `R/` files touched). Phase 3E: n/a -- documentation-only
+  change, no Shiny/runtime behavior affected.
+- **GitHub:** issue #139 closed via `gh api` comment
+  (`https://github.com/rmsharp/nprcgenekeepr/issues/139#issuecomment-5159297837`) + state PATCH.
+  `BACKLOG.md` new resolved-item bullet (matching the #131/#132/#134/#135 format) in the "Pedigree
+  diagram vs kinship2 audit follow-ups" section. `PROJECT_LEARNINGS.md` Learning 444 added.
+  `CLAUDE.md` learnings cross-reference count updated (443->444, Sessions 1-454+->1-455+).
+
 ### 2026-08-02 · [issue #135] Add hover tooltips + search/highlight to the Pedigree Diagram tab (Session 454)
 - **Deliverable:** resolves audit Recommendation #8 (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`
   Finding #11, priority 5 of the owner-set #131-#138 order). Strict TDD: PRE-RED (hands-on
