@@ -68,6 +68,27 @@ are legal at write time (the receipt ships in the very commit whose sha
 it would name); the next session reconciles them to real shas.
 
 ``` handoff
+session: S454
+date: 2026-08-02
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- added hover tooltips + search/highlight to the Pedigree Diagram tab (issue #135, priority 5 in S436's #131-#138 order), resolving audit Recommendation #8. Full TDD cycle PRE-RED->RED->GREEN->REFACTOR(skipped, owner-confirmed). Issue closed.
+what_was_done: makePedigreeDiagramData() nodes gain a title field (HTML hover tooltip: ID/sex-spelled-out/generation/sire/dam, HTML-escaped via new .escapeHtml() helper). modPedigree.R's Diagram widget gained visOptions(nodesIdSelection=TRUE, highlightNearest=list(enabled=TRUE, hover=TRUE, degree=1, algorithm="all")) -- a search dropdown + highlight-on-hover (not click, to avoid overlapping the existing click-to-navigate handler). 10 new unit tests. Full regression 0 failed/0 error (3509 passed); devtools::check() 0 errors/1 pre-existing warning/0 notes. Live shinytest2/chromote verification: real node title matches exactly; real DOM search dropdown populated with all 375 IDs; a real change event genuinely dims an unrelated node while a connected one stays normal (highlight logic actually executes); click-to-navigate unaffected. Found and owner-resolved (AskUserQuestion, "accept + document") a transient benign [shiny] Duplicate input IDs console warning from the 2nd+ reactive re-render onward -- documented in code and new PROJECT_LEARNINGS.md Learning 443. NEWS.Rmd/NEWS.md, vignettes/manual_components/_pedigree_browser.Rmd, BACKLOG.md, CLAUDE.md updated. inst/WORDLIST gained "dropdown" after a spelling-NOTE regression from the new prose. Closed issue #135 via GitHub comment (https://github.com/rmsharp/nprcgenekeepr/issues/135#issuecomment-5156062877) + gh api. Commits: 478cc1e8 (claim), plus checkpoint commits at this close-out (see commit field).
+next_steps: (a) Issue #139 -- document the pedigree-diagram Diagram tab in the manual/tutorial (currently zero coverage for issue #129's original feature; this session's #135 doc edit covers only #135's own feature). READY, Effort S/M, unchanged since S449. (b) NPRC outreach plan review (DECISION NEEDED, owner-only, unchanged). (c) Open methodology question from S445 (are /doctor-style sessions exempt from Phase 0/1B?) unresolved. (d) LabKey integration research recommendations (BLOCKED -- needs a live LabKey server). (e) Issue #133 (data-model gated, still blocked) -- next in the #131-#138 chain after #135, but blocked. (f) Issues #136/#137 (data-model gated) and #138 (deprioritized, low priority label) remain further down the priority order. (g) Data-hygiene aside: BACKLOG.md's "inst/extdata/ reorganization -- Phase 4" bullet header still says "(DECISION NEEDED...)" though its body confirms Phases 1-4 are all DONE -- worth a one-line tag fix next time that section is touched.
+key_files: R/makePedigreeDiagramData.R:41-56,78-92 (title field + .escapeHtml()), R/modPedigree.R:435-462 (visOptions() call + accepted-trade-off comment), tests/testthat/test_makePedigreeDiagramData.R (8 new tests), tests/testthat/test_modPedigree.R (2 new tests), PROJECT_LEARNINGS.md Learning 443 (hover-vs-hoverNearest key gotcha + duplicate-input-ID trade-off), vignettes/manual_components/_pedigree_browser.Rmd (Diagram paragraph extended), NEWS.Rmd/NEWS.md, inst/WORDLIST (new entry: dropdown).
+gotchas: visNetwork::visOptions()'s highlightNearest list uses "hover" as the INPUT key though the OUTPUT JSON field is "hoverNearest" -- deparse() the function body when a documented arg doesn't validate as expected. Any visNetwork option creating its own Shiny-bound DOM elements client-side (nodesIdSelection/selectedBy) can log a transient duplicate-input-ID warning under 2+ renderUI()-driven re-renders (not 1) -- reproduce with 2+ re-renders before concluding an interaction is clean. Adding NEWS/vignette prose late in a session can introduce a new devtools::check() spelling NOTE even with zero R/ changes -- re-check after prose edits too. All S442-S453 carried-forward gotchas (iCloud duplicate files, DS_Store, don't trust a predecessor's check claim at face value) still apply, untouched this session.
+runtime_smoke: PASS -- live shinytest2/chromote verification against the real shipped app (fixture obfuscated_rhesus_mhc_ped.csv, known trio EBG407/U5VLXP/PH0IXL): live node title field matches expected format; real DOM search dropdown populated with 375 real IDs; a real change event dims an unrelated node while a connected node stays normal (highlight logic genuinely executes); click-to-navigate regression-checked and unaffected. This IS this session's Phase 3E verification, not a separate afterthought check.
+changelog_ref: CHANGELOG.md 2026-08-02 [issue #135] entry (Session 454)
+commit: pending -- reconciled by next session's Phase 0 (checkpoint commits follow this receipt's own commit due to the 5-file blast-radius cap)
+```
+
+Full write-up (implementation plan, TDD gate history, live-verification
+detail, self-assessment +/- breakdown) is in `SESSION_NOTES.md` under
+“What Session 454 Did” – this block is the durable, machine-checkable
+proxy per the format note above.
+
+``` handoff
 session: S453
 date: 2026-08-02
 status: complete

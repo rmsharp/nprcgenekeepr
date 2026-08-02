@@ -564,6 +564,41 @@ legible diamond-shaped render. Conclusion: vis.js’s hierarchical layout
 handles a real inbreeding loop correctly per the plan’s own P2 pass
 criteria. Closed via GitHub comment
 (`https://github.com/rmsharp/nprcgenekeepr/issues/134#issuecomment-5155638782`).
+See `CHANGELOG.md`.) - \[ \] (none remaining – **issue \#135** (hover
+tooltips + search/highlight, priority 5, resolves audit Recommendation
+\#8) is RESOLVED: implemented and live-verified S454 (2026-08-02).
+[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)’s
+nodes gain an HTML `title` field (ID/sex-spelled-out/generation/sire/
+dam, HTML-escaped) for vis.js’s native hover tooltip; the Diagram widget
+gained
+`visOptions(nodesIdSelection = TRUE, highlightNearest = list(enabled = TRUE, hover = TRUE, ...))`
+– a “Select by id” search dropdown, highlighting on hover (not click, to
+avoid overlapping the existing click-to-navigate handler, issue \#129
+Slice 2). TDD RED-\>GREEN (REFACTOR skipped, owner-confirmed – GREEN
+already matched the file’s established style): 10 new unit tests (8 on
+[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md),
+2 on the widget’s JSON config, matching the \#131/#132 pattern);
+regression suite 0 failed/0 error (3509 passed, unchanged 10 baseline
+warnings); `devtools::check()` 0 errors/1 warning (pre-existing iCloud
+duplicate-file artifact)/0 notes. Live `shinytest2`/`chromote`
+verification against the real app (same known trio as
+`test-e2e-pedigree-module.R`): live node `title` matches exactly; the
+real DOM search dropdown is populated with all 375 IDs; a real `change`
+event genuinely dims an unrelated node while leaving a connected one
+normal (confirmed the highlight logic executes, not just that config is
+present); click-to-navigate unaffected. One accepted trade-off
+documented in code and `PROJECT_LEARNINGS.md` Learning 443:
+`nodesIdSelection` can log one transient, benign
+`[shiny] Duplicate input IDs were found` console warning from the second
+reactive re-render onward (no permanent DOM duplication, no functional
+impact) – a structural fix was judged disproportionate to this
+“optional, low-priority… UI polish” issue and would risk the 3
+already-shipped Diagram-tab features; owner-directed (`AskUserQuestion`)
+to accept and document rather than fix. `NEWS.Rmd`/`NEWS.md` and
+`vignettes/manual_components/ _pedigree_browser.Rmd` updated per the
+tutorial/article and NEWS.Rmd documentation checklists. Closed via
+GitHub comment
+(`https://github.com/rmsharp/nprcgenekeepr/issues/135#issuecomment-5156062877`).
 See `CHANGELOG.md`.)
 
 ## Outreach

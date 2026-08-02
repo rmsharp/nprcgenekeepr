@@ -7,6 +7,228 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 454 Did
+
+**Deliverable:** Add hover tooltips + search/highlight to the Pedigree
+Diagram tab (GitHub issue \#135,
+`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`
+Finding \#11/Recommendation \#8, priority 5 in S436’s owner-set
+\#131-#138 sequencing order). Owner-picked via the Phase 0 priorities
+`AskUserQuestion` from a 3-option list (this item, issue \#139 doc gap,
+NPRC outreach plan review). **Started/Completed:** 2026-08-02 /
+2026-08-02 **Status:** DONE. Full strict-TDD cycle: PRE-RED -\> RED -\>
+GREEN -\> REFACTOR (skipped, owner-confirmed). New user-facing Shiny
+feature – `NEWS.Rmd`/tutorial-article documentation checklists both
+applied. Issue closed.
+
+**What happened, in order:** **(1)** Phase 0 orientation in full
+(`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list` – 15 open issues, `git status`/`log`/ `diff --stat`,
+`methodology_dashboard.py` Health 98/100 medium risk, ledger reconcile –
+`CHANGELOG.md`/`HANDOFFS.md` frontiers both at `HEAD`, no ghost session,
+no undocumented commits). Reported the same pre-existing uncommitted
+drift prior sessions flagged (`renv.lock`, `.DS_Store` x3, the 2
+iCloud-sync duplicate `R/* 2.R` files, the stray plan-render HTML) –
+left untouched throughout. Rendered the priorities list +
+`AskUserQuestion` picker (3 numbered items); owner picked issue \#135.
+**(2)** PRE-RED: hands-on research confirmed `visNetwork` 2.1.4’s
+`visOptions(nodesIdSelection=, highlightNearest=)` and vis.js’s native
+`title`-field hover tooltip; two owner `AskUserQuestion` scope decisions
+(tooltip content; search/highlight mechanism + hover-not-click trigger,
+to avoid overlapping the existing click-to-navigate handler). **(3)**
+Phase 1B: claimed the session (`478cc1e8`) – stub + `HANDOFFS.md`
+`status: pending` receipt, before any technical work. **(4)**
+`AskUserQuestion` PRE-RED-\>RED gate approved; wrote 10 failing tests (8
+in `tests/testthat/test_makePedigreeDiagramData.R` for the new `title`
+field, 2 in `tests/testthat/test_modPedigree.R` for the widget’s
+`idselection`/`highlight` JSON config, matching the \#131/#132 pattern);
+confirmed both groups fail for the right reason. **(5)**
+`AskUserQuestion` RED-\>GREEN gate approved; implemented the minimum:
+`title` field + new internal `.escapeHtml()` helper in
+`R/makePedigreeDiagramData.R`;
+`visOptions(nodesIdSelection = TRUE, highlightNearest = list(enabled = TRUE, hover = TRUE, degree = 1L, algorithm = "all"))`
+appended to `R/modPedigree.R`’s existing pipe chain. All 10 new tests
+pass; full regression suite 0 failed/0 error (3509 passed);
+`devtools::check()` 0 errors/1 warning (pre-existing iCloud artifact)/0
+notes. **(6)** `AskUserQuestion` GREEN-\>REFACTOR gate: owner confirmed
+skip (GREEN already matched the file’s established style). **(7)** Phase
+3E live verification via `shinytest2`/`chromote` against the real
+shipped app (same known trio as `test-e2e-pedigree-module.R`): confirmed
+the live node `title` matches the expected format exactly; found and
+queried the REAL DOM search dropdown
+(`#nodeSelectpedigree-pedigreeDiagram`, 376 options = 375 real IDs +
+blank); dispatched a genuine `change` DOM event selecting `EBG407` and
+confirmed an unrelated node’s `color` became the configured dim
+`hideColor` while the connected sire node stayed `color: null` – proving
+the highlight logic executes, not just that its config is present;
+re-confirmed click-to-navigate still works unaffected. **(8)** This live
+check also surfaced a genuine, reproducible-on-demand finding: a
+transient `[shiny] Duplicate input IDs were found` console warning from
+the SECOND reactive re-render onward (isolated via a controlled repro –
+1 re-render is clean, 2+ triggers it every time; final DOM always has
+exactly 1 live element, no permanent duplication, no functional
+regression in any of the 3 already-shipped Diagram-tab features).
+Surfaced to the owner via `AskUserQuestion`; owner picked “accept +
+document” over “also file a tracking issue” or “attempt a fix now” (a
+`visNetworkProxy()`-based structural fix was judged disproportionate to
+the audit’s own “optional, low-priority” framing of this issue and risks
+the 3 already-shipped features). Documented in an inline code comment
+(`R/modPedigree.R`) and new `PROJECT_LEARNINGS.md` Learning 443 (which
+also records the `hoverNearest`-vs-`hover` input/output key-name
+mismatch in `visOptions()`’s undocumented validation, found the same
+way). **(9)** Close-out documentation: `NEWS.Rmd`/`NEWS.md` new bullet;
+`vignettes/manual_components/_pedigree_browser.Rmd` Diagram paragraph
+extended (prose-only, matching that file’s own no-screenshot style, not
+the screenshot-heavy `colony-manager-guide.qmd` – a proportionate choice
+under the CLAUDE.md rule’s “and/or”). Adding this prose surfaced a new
+un-listed word (“dropdown”) in `devtools::check()`’s spelling test;
+hand-added to `inst/WORDLIST` in `LC_ALL=C` position (S230 convention)
+and re-verified `devtools::check()` clean (0/1/0, same pre-existing
+warning). **(10)** Posted a verification comment on issue \#135
+(`https://github.com/rmsharp/nprcgenekeepr/issues/135#issuecomment-5156062877`)
+and closed it via `gh api`. **(11)** `BACKLOG.md` new resolved-item
+bullet (matching \#131/#134’s format); `PROJECT_LEARNINGS.md` Learning
+443; `CLAUDE.md` Learnings cross-reference count updated (442-\>443,
+Sessions 1-453+-\>1-454+); `CHANGELOG.md` new dated `[issue #135]` entry
+(this close-out). **Verified:** live `shinytest2`/`chromote`
+structural + interactive check against the real shipped app satisfies
+Phase 3E directly (see step 7-8 above), not as a separate afterthought.
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**Session 453 Handoff Evaluation (by Session 454): 9/10.** Item (a) of
+“next steps” named exactly this session’s task (“Issue \#135 (hover
+tooltips + search/highlight, priority 5 in S436’s order) is now the next
+unblocked item in the \#131-#138 sequencing chain – \#131/#132/#134
+done, \#133 still blocked. READY.”) – directly load-bearing, and the
+Phase 0 priorities picker surfaced it as one of 3 clean options. The
+carried-forward uncommitted-drift list was independently re-confirmed
+accurate (same files, same benign class). **What was missing:** an
+Effort estimate for \#135 (S453 explicitly flagged this as “not yet
+estimated”) – turned out to be a genuinely medium-sized feature once the
+live-verification tier surfaced the duplicate-input-ID finding, not a
+trivial one-liner; a rough estimate would have been hard to give without
+the same hands-on `visOptions()` research this session did anyway, so
+this isn’t really a fault. **What was wrong:** no inaccuracies found in
+S453’s own claims (independently re-confirmed:
+`CHANGELOG.md`/`HANDOFFS.md` frontiers were exactly where S453 left
+them, at `HEAD`). **ROI:** positive – correctly identified \#135 as the
+next unblocked item in priority order, saving a priority-re-derivation
+step.
+
+**Self-assessment (Session 454): 9/10.** **Strengths:** (1) did hands-on
+`visOptions()` research BEFORE proposing scope, catching a real API
+surface trap (`highlightNearest`’s `hover` vs `hoverNearest`
+input/output key mismatch) before it could cause a RED-test-writing
+mistake; (2) surfaced two genuine pre-RED scope decisions (tooltip
+content; search/highlight mechanism + click-vs-hover trigger, given the
+pre-existing click-to-navigate handler) via `AskUserQuestion` rather
+than guessing, and reasoned through the click/hover interaction risk
+BEFORE the owner had to point it out; (3) followed the full TDD gate
+sequence (PRE-RED-\>RED-\>GREEN-\>REFACTOR) exactly, each with a
+concrete `AskUserQuestion` spelling out the next phase’s actions; (4)
+live verification went well beyond config-presence checking (the
+\#131/#132 precedent) to a REAL DOM `change` event that produced and
+confirmed a REAL visual side effect (node dimming) – matching Learning
+414’s “verify the underlying claim, not just the absence of the
+originally-reported error” at a new level of rigor for this feature
+class; (5) that same live verification surfaced a genuine,
+reproducible-on-demand defect (the duplicate-input-ID warning) that
+config-only or `testServer()` verification would have completely missed,
+then isolated its exact trigger condition (2+ vs 1 re-render) via a
+controlled repro rather than reporting a vague “there’s a warning”; (6)
+took the finding to the owner via `AskUserQuestion` rather than either
+silently shipping it or unilaterally over-fixing it with a
+disproportionate structural change; (7) caught and fixed a real
+`devtools::check()` spelling regression this session’s OWN documentation
+prose introduced (“dropdown”), rather than treating “the code passes” as
+sufficient without re-checking after later doc edits; (8) split the
+close-out into multiple \<=5-file checkpoint commits per
+`SAFEGUARDS.md`’s per-commit blast-radius cap, rather than one large
+commit, since this session did not have a pre-declared vertical-slice
+plan-mode contract. **Weaknesses:** (1) the first live-verification
+attempt at a synthetic mouse-hover (computing `canvasToDOM()`
+coordinates and dispatching a `mousemove` event) landed off-canvas
+(negative Y) and found no tooltip DOM element – rather than debugging
+the coordinate math further, fell back to the (still solid, but less
+end-to-end) data-presence check on the `title` field, matching the
+project’s own established “verify our code’s contribution, not
+third-party library internals” boundary, but a cleaner coordinate
+calculation might have closed this gap fully; (2) the initial
+duplicate-input-ID repro script combined two re-render triggers (trim
+toggle AND a diagram click) in one pass, requiring a second, more
+surgical isolation script to determine that ONE trigger alone is clean
+and it’s specifically the SECOND re-render that matters – could have
+isolated this in one pass with a more deliberate step-by-step design
+from the start. **Compared to previous sessions:** matches
+S433/S434/S437/S438/S440/S453’s discipline of live, evidence-based
+verification over “should work” reasoning, and extends it: unlike prior
+Diagram-tab sessions (which verified via widget-JSON-config presence,
+e.g. #131/#132), this session triggered a REAL DOM event and observed a
+REAL behavioral side effect as primary evidence for the interactive
+feature, and used that same live-verification pass to catch a genuine
+defect no unit test or config check could have found – closer in spirit
+to S437’s “live verification surfaced a second, previously-hidden
+defect” precedent, but this time the defect was directly caused by the
+very feature being shipped (not an unrelated pre-existing one), so it
+was resolved via an owner decision in the SAME session rather than filed
+as a separate follow-up issue.
+
+**Handoff to Session 455:** - **What’s next:** **(a)** Issue \#139
+(document the pedigree-diagram Diagram tab in the manual/tutorial –
+currently zero coverage) is now the most clearly READY item; Effort S/M,
+unchanged since S449 (note: this session’s own \#135 doc-checklist edit
+to `_pedigree_browser.Rmd` covers \#135’s OWN feature only, not \#129’s
+original zero-coverage gap that \#139 tracks). **(b)** NPRC outreach
+plan review (DECISION NEEDED, owner-only, unchanged) – plan complete at
+`docs/planning/nprc-outreach-announcement-plan.md`. **(c)** The open
+methodology question from S445 (whether `/doctor`-style sessions are
+exempt from Phase 0/1B) remains unresolved. **(d)** LabKey integration
+research recommendations (BLOCKED – needs a live LabKey server). **(e)**
+Issue \#133 (data-model gated, still blocked) – now the next item in the
+\#131-#138 sequencing chain after \#135, but still blocked. **(f)**
+Issues \#136 (name labels, data-model gated), \#137 (twin/zygosity,
+data-model gated) remain further down S436’s priority order, both gated.
+**(g)** Issue \#138 (full-colony rendering beyond the 1,500-node cap) –
+explicitly deprioritized/delayed by the owner, `low priority` GitHub
+label. **(h)** Data-hygiene aside (informational, unchanged):
+`BACKLOG.md`’s “`inst/extdata/` reorganization – Phase 4” bullet header
+still says `(DECISION NEEDED...)` even though the body confirms Phases
+1-4 are all DONE – worth a one-line tag fix whenever a session next
+touches that section. - **Key files:** `R/makePedigreeDiagramData.R`
+(new `title` field + `.escapeHtml()` helper, lines ~41-56, ~78-92),
+`R/modPedigree.R` (new `visOptions()` call in `renderVisNetwork()`’s
+pipe chain, ~lines 435-462, including the accepted-trade-off comment),
+`tests/testthat/ test_makePedigreeDiagramData.R` (8 new tests after the
+`examplePedigree` test), `tests/testthat/test_modPedigree.R` (2 new
+tests after the \#132 legend test), `PROJECT_LEARNINGS.md` Learning 443
+(the `hover`-vs-`hoverNearest` key gotcha + the duplicate-input-ID
+trade-off, both reusable if a future session touches `visOptions()`
+again), `vignettes/manual_components/_pedigree_browser.Rmd` (Diagram
+paragraph extended), `NEWS.Rmd`/`NEWS.md` (new bullet), `inst/WORDLIST`
+(new entry: `dropdown`). - **Gotchas:** all of S442-S453’s
+carried-forward gotchas still apply where relevant (2 iCloud-sync
+duplicate files, `R/appServer 2.R`/`R/modMarkerGenetics 2.R`, still
+present, leave untouched; 3 untracked `.DS_Store` files, same benign
+class, leave untouched; don’t trust a predecessor’s `devtools::check()`
+claim, OR a backlog/issue item’s own stated scope, at face value –
+Learnings 437/441). **New this session:** Learning 443 – (1)
+[`visNetwork::visOptions()`](https://rdrr.io/pkg/visNetwork/man/visOptions.html)’s
+`highlightNearest` list uses `hover` as the INPUT key even though the
+OUTPUT JSON field is named `hoverNearest` –
+[`deparse()`](https://rdrr.io/r/base/deparse.html) the function body
+when a documented argument doesn’t validate as expected, don’t trust
+[`?help`](https://rdrr.io/r/utils/help.html) alone; (2) any `visNetwork`
+option that creates its own Shiny-bound DOM elements client-side
+(`nodesIdSelection`/`selectedBy`, unlike passive config like
+`visExport`/`visLegend`) can produce a transient duplicate-input-ID
+console warning under repeated `renderUI()`-driven full-container
+re-render – reproduce with 2+ re-renders, not just 1, before concluding
+an interaction is clean. Also: adding new NEWS/vignette prose can
+introduce a new `devtools::check()` spelling NOTE even when no `R/` code
+changed – re-run the spelling check (or full `devtools::check()`) after
+ANY prose addition this late in a session, not just after code
+changes. - **Self-assessment score:** 9/10 (breakdown above).
+
 ### What Session 453 Did
 
 **Deliverable:** Verify inbreeding-loop/consanguinity rendering in the

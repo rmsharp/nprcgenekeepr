@@ -47,6 +47,61 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-08-02 · \[issue \#135\] Add hover tooltips + search/highlight to the Pedigree Diagram tab (Session 454)
+
+- **Deliverable:** resolves audit Recommendation \#8
+  (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`
+  Finding \#11, priority 5 of the owner-set \#131-#138 order). Strict
+  TDD: PRE-RED (hands-on `visOptions()` research + two owner
+  `AskUserQuestion` scope decisions) -\> RED (10 failing tests) -\>
+  GREEN (minimum implementation) -\> REFACTOR skipped (owner-confirmed,
+  GREEN already matched the file’s established style).
+- **Data layer:** `R/makePedigreeDiagramData.R`’s returned nodes gain a
+  `title` field – an HTML hover-tooltip string (ID, sex spelled out
+  matching the shape-to-sex legend’s own
+  Female/Male/Hermaphrodite/Unknown/“Other / Unrecorded” labels,
+  generation, sire, dam – `Unknown` for missing parents; id/sire/dam
+  HTML-escaped via a new internal `.escapeHtml()` helper). 8 new unit
+  tests in `tests/testthat/test_makePedigreeDiagramData.R`.
+- **UI layer:** `R/modPedigree.R`’s Diagram tab widget gained
+  `visOptions(nodesIdSelection = TRUE, highlightNearest = list(enabled = TRUE, hover = TRUE, degree = 1, algorithm = "all"))`
+  – a “Select by id” search dropdown, and highlight-on-**hover** (not
+  visOptions()’s own click-based default) so it doesn’t overlap the
+  existing click-to-navigate handler (issue \#129 Slice 2). 2 new tests
+  asserting the widget JSON config, matching the \#131/#132 pattern.
+- **Verified:** full regression suite 0 failed/0 error (3509 passed, 10
+  pre-existing baseline warnings, unchanged); `devtools::check()` 0
+  errors/1 warning (pre-existing iCloud duplicate-file artifact)/0 notes
+  (a new WORDLIST entry, “dropdown”, was needed after adding
+  NEWS/tutorial prose). Live `shinytest2`/`chromote` verification
+  against the real app and the same known trio
+  `test-e2e-pedigree-module.R` uses (`obfuscated_rhesus_mhc_ped.csv`):
+  live node `title` matches exactly; the real DOM search dropdown is
+  populated with all 375 IDs; a real `change` event genuinely dims an
+  unrelated node while leaving a connected one normal (the highlight
+  logic executes, not just its config); click-to-navigate unaffected.
+- **Accepted trade-off (owner-directed via `AskUserQuestion`),
+  `PROJECT_LEARNINGS.md` Learning 443:** `nodesIdSelection` injects its
+  own Shiny-bound `<select>` elements client-side, outside the normal
+  `renderUI()` container-diff cycle – from the second reactive re-render
+  onward this can log one transient, benign
+  `[shiny] Duplicate input IDs were found` console warning (no permanent
+  DOM duplication, no functional impact); a structural fix
+  (`visNetworkProxy()`-based incremental updates) was judged
+  disproportionate to this audit’s own “optional, low-priority… UI
+  polish” framing and would risk the 3 already-shipped Diagram-tab
+  features – accepted and documented in code and this learning rather
+  than fixed.
+- **Documentation checklists:** `NEWS.Rmd`/`NEWS.md` new bullet;
+  `vignettes/manual_components/_pedigree_browser.Rmd` Diagram paragraph
+  extended (tutorial/article checklist – proportionate prose-only
+  addition to this file’s existing no-screenshot style, not
+  `colony-manager-guide.qmd`, matching the CLAUDE.md rule’s “and/or”).
+  `BACKLOG.md` new resolved-item bullet; `CLAUDE.md` Learnings
+  cross-reference count updated (442-\>443, Sessions 1-453+-\>1-454+).
+  Closed via GitHub comment
+  (`https://github.com/rmsharp/nprcgenekeepr/issues/135#issuecomment-5156062877`).
+
 ### 2026-08-02 · \[issue \#134\] Verify inbreeding-loop/consanguinity rendering in the Pedigree Diagram tab – closed, no code change (Session 453)
 
 - **Deliverable:** resolved plan Dragon P2
