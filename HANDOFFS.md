@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S458
+date: 2026-08-02
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: IN PROGRESS -- designing Option 2 (full kinship2-parity mating-line/sibship-line layout on visNetwork, ratified S457): the crossing-minimization node-ordering algorithm, multi-mate/half-sib fan-out representation, and loop-safety re-verification approach. Following docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S457
 date: 2026-08-02
 status: complete

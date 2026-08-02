@@ -6,6 +6,19 @@
 
 ## ACTIVE TASK
 
+### What Session 458 Did
+**Deliverable:** A planning document (Architecture workstream) designing Option 2 (full
+kinship2-parity mating-line/sibship-line layout on visNetwork, ratified S457) -- the
+crossing-minimization node-ordering algorithm, multi-mate/half-sib fan-out representation, and
+loop-safety re-verification approach per `docs/planning/pedigree-diagram-mating-lines-plan.md`
+S3/S7 -- owner-picked via the Phase 0 priorities `AskUserQuestion` from a 3-option list (this
+item, LabKey recommendations, NPRC outreach review). (IN PROGRESS)
+**Started:** 2026-08-02
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 457 Did
 **Deliverable:** A planning document (Architecture workstream) evaluating whether a
 kinship2-style mating-line/sibship-line convention (horizontal line joining two mates,
