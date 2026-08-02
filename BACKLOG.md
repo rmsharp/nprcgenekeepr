@@ -519,7 +519,7 @@ technology decision (D2), which stands as ratified.* - \[ \] (none
 remaining – **issue \#131** (diagram image/print export, priority 1) is
 RESOLVED: fixed S440 (2026-07-30). Added
 `visNetwork::visExport(type = "png", name = "pedigree_diagram", label = "Export Diagram (PNG)")`
-to the existing pipe chain in `R/modPedigree.R`‘s `renderVisNetwork()`
+to the existing pipe chain in `R/modPedigree.R`’s `renderVisNetwork()`
 block – zero new package dependencies (`visExport()`’s JS libs –
 FileSaver/Blob/canvas-toBlob/ html2canvas/jsPDF – ship bundled inside
 `visNetwork` itself as htmlwidget deps, confirmed offline/no-CDN
@@ -650,23 +650,45 @@ full kinship2-parity layout on visNetwork** (over: reopen D2/switch to
 kinship2 – not recommended, would regress 4 shipped interactive features
 and lose dynamic per-node metadata exposure kinship2 has no analog for;
 a smaller partial `visNetworkProxy`-repositioned mate-line-only step; or
-decline) via `AskUserQuestion`.) - \[ \] **Pedigree Diagram: full
-kinship2-parity layout (Option 2 design session)** (READY, Effort L,
-filed S457 2026-08-02) – the next step per
-`docs/planning/pedigree-diagram-mating-lines-plan.md` §3 Option 2 and
-§7: a dedicated follow-up planning session to design (a) a
-crossing-minimization node-ordering algorithm for colony-scale pedigrees
-(informed by CraneFoot’s duplicate-transformation and kinship2’s
-`align.pedigree`, both cited in the plan doc – no existing capability in
-this codebase today,
-[`findGeneration()`](https://github.com/rmsharp/nprcgenekeepr/reference/findGeneration.md)
-computes generation number only), (b) how multi-mate/half-sib fan-out is
-represented (more than one union node per individual), and (c) how issue
-\#134’s verified inbreeding-loop-safe rendering gets re-established
-under a hand-rolled layout instead of inherited from vis.js’s current
-auto-layout. Read `docs/planning/pedigree-diagram-mating-lines-plan.md`
-in full first, including the 3 POC screenshots’ described geometry in
-§2.3 and the vis.js source-level findings in §2.2.
+decline) via `AskUserQuestion`.) - \[ \] (design DONE – S458,
+2026-08-02, see
+`docs/planning/pedigree-diagram-option2-layout-design-plan.md` and
+`CHANGELOG.md`. **Pedigree Diagram: full kinship2-parity layout (Option
+2 design session)** – designed and owner-ratified (a) a
+mating-unit/individual-duplication transformation (CraneFoot-derived)
+that resolves crossing-minimization ordering, (b) multi-mate/half-sib
+fan-out representation, and (c) inbreeding-loop safety **via one single
+mechanism** – a real fixture
+(`inst/extdata/examples/ obfuscated_rhesus_mhc_ped.csv`) confirmed this
+session to exercise both (b) and (c) simultaneously through the same
+individual (`8LKBV9`, issue \#134’s own loop fixture, independently
+confirmed to also be a 3-mate individual). A tree-native positioning
+algorithm (simplified Reingold-Tilford/Walker contour-merge, not
+kinship2’s undocumented internals, not a full Buchheim-Jünger-Leipert
+implementation, not an off-the-shelf R package – `igraph`/`data.tree`
+are GPL and `ggraph` transitively depends on GPL `igraph`, confirmed
+this session) computes final coordinates for the transformed forest.
+Owner ratified via `AskUserQuestion` with one editorial direction:
+non-human-centric terminology throughout (`sire`/`dam`/`mate`/`mating`,
+not `husband`/`wife`/`marriage`/`spouse`).) - \[ \] **Pedigree Diagram:
+Option 2 implementation, Slice 1 (mating-unit transformation)** (READY,
+Effort L, filed S458 2026-08-02) – the first implementation slice per
+`docs/planning/pedigree-diagram-option2-layout-design-plan.md` §6
+Migration Path step 1: build and unit-test `.buildMatingUnitForest()`
+(D1: mating-unit identification + D2: deterministic anchor selection) as
+a standalone, independently-testable function before any rendering
+change – per the design doc’s own §9 “here be dragons” flag, the anchor
+assignment must be validated as a separate step (every individual anchor
+at exactly one mating unit) before any positioning code is written. Read
+the design doc in full first, especially §3 D1/D2 and §8’s test-fixture
+list (reuses the existing 6-node half-sib fixture from issue \#134 plus
+a new fixture extracted from `8LKBV9`’s real 3-mate structure in the
+bundled E2E pedigree). Follow TDD RED-\>GREEN-\>REFACTOR (this is a
+code-shipping session, unlike the preceding planning sessions).
+Subsequent slices (positioning algorithm, `R/modPedigree.R` render-chain
+switch, the 4 shipped-feature integrations) are separate follow-up
+sessions per the design doc’s own Migration Path and the vertical-slice
+gates in `SESSION_RUNNER.md`.
 
 ## Outreach
 
