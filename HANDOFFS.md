@@ -72,7 +72,7 @@ key_files: docs/planning/pedigree-diagram-option2-layout-design-plan.md (the ful
 gotchas: All prior sessions' carried-forward gotchas apply (2 iCloud-sync duplicate files, 3 untracked .DS_Store; don't trust a predecessor's devtools::check() claim or a backlog item's stated scope at face value -- Learnings 437/441). New: (1) do not library()-load a system-installed R package into this project's renv session via .libPaths() manipulation -- an R-version-mismatched compiled dependency can segfault the process; download the CRAN source tarball instead (Learning 447). (2) An MIT License: field does not rule out a GPL dependency -- check Imports/Depends too (Learning 448). (3) D1's transformation nearly doubles node count on real data (375->742) -- issue #138's cap MUST be re-measured once Slice 1's successors ship; this will not visibly break if skipped.
 runtime_smoke: n/a -- planning document + 2 backlog-tracking files only, no runtime code changed.
 changelog_ref: CHANGELOG.md 2026-08-02 [ad hoc] entry (Session 458)
-commit: pending
+commit: 2d189ad9
 ```
 
 ```handoff
