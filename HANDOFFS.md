@@ -60,6 +60,23 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S451
+date: 2026-08-02
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix CLAUDE.md's "Fast single-file test" command so it sets NOT_CRAN=true before running the test (BACKLOG.md Housekeeping item, filed S439, PROJECT_LEARNINGS.md Learning 417) -- a file with a top-level skip_on_cran() currently silently bare-skips under the documented command.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<free-text prose: the durable proxy for the Phase 3G spoken report, plus the +/- self-score breakdown>
+
+```handoff
 session: S450
 date: 2026-08-02
 status: complete

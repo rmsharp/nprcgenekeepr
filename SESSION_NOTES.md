@@ -6,6 +6,17 @@
 
 ## ACTIVE TASK
 
+### What Session 451 Did
+**Deliverable:** Fix `CLAUDE.md`'s "Fast single-file test" command so it sets `NOT_CRAN=true`
+before running the test (`BACKLOG.md` Housekeeping item, filed S439, `PROJECT_LEARNINGS.md`
+Learning 417). Owner-picked via the Phase 0 priorities `AskUserQuestion` from a 4-option list
+(this item, spelling-NOTE housekeeping, NPRC outreach plan review, issue #139 doc gap).
+**Started:** 2026-08-02
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 450 Did
 **Deliverable:** Resolve the `a2interactive.Rmd` documentation-checklist decision (`BACKLOG.md`
 Housekeeping item, filed S447, `PROJECT_LEARNINGS.md` Learning 435). Owner-picked via the Phase 0
