@@ -31,6 +31,10 @@ modMarkerGeneticsUI <- function(id) {
              wellPanel(
                fileInput(ns("genotypeFile"),
                          "Select Marker Genotype File (CSV)",
+                         accept = c(".csv")),
+               fileInput(ns("genotypeFileB"),
+                         paste("Select Center B Marker Genotype File",
+                               "(CSV, for Cross-Center comparison)"),
                          accept = c(".csv"))
              )
       ),
@@ -39,7 +43,8 @@ modMarkerGeneticsUI <- function(id) {
              tabsetPanel(
                tabPanel("Kinship Comparison", DT::DTOutput(ns("comparisonTable"))),
                tabPanel("Heterozygosity", DT::DTOutput(ns("heterozygosityTable"))),
-               tabPanel("Parentage Exclusion", DT::DTOutput(ns("exclusionTable")))
+               tabPanel("Parentage Exclusion", DT::DTOutput(ns("exclusionTable"))),
+               tabPanel("Cross-Center", DT::DTOutput(ns("crossCenterTable")))
              )
       )
     )
@@ -64,7 +69,13 @@ modMarkerGeneticsUI <- function(id) {
 #' Mendelian-exclusion parentage diagnostic
 #' (\code{\link{markerParentageExclusion}}): the \code{pedigree}'s recorded
 #' dam/sire cross-referenced against the uploaded genotypes, flagging any
-#' recorded parent the genotype evidence contradicts.
+#' recorded parent the genotype evidence contradicts. A fourth tab, "Cross-
+#' Center", surfaces a between-population differentiation statistic
+#' (\code{\link{markerFst}}) between the first uploaded file (implicitly
+#' "Center A") and a second, independently uploaded Center B genotype file
+#' -- a population-level, two-dataset comparison, unrelated to the
+#' per-animal cross-center identity linking of
+#' \code{\link{resolveCrossCenterIds}} (Slice 4).
 #'
 #' This module never touches the existing single-locus genotype path
 #' (\code{checkGenotypeFile}/\code{addGenotype}/\code{hasGenotype}/
@@ -79,7 +90,7 @@ modMarkerGeneticsUI <- function(id) {
 #'   (columns \code{id}, \code{sire}, \code{dam}), or \code{NULL} while
 #'   upstream analysis has not yet been run.
 #'
-#' @return A list with six reactive elements: \code{markerGenotype}, the
+#' @return A list with eight reactive elements: \code{markerGenotype}, the
 #'   raw uploaded genotype data frame (or \code{NULL} before upload);
 #'   \code{markerKinshipMatrix}, the marker-based \code{id} x \code{id}
 #'   kinship matrix (or \code{NULL}); \code{comparisonTable}, the per-animal
@@ -90,8 +101,12 @@ modMarkerGeneticsUI <- function(id) {
 #'   \code{NULL}); \code{exclusionTable}, the
 #'   \code{\link{markerParentageExclusion}} flagged-pairs data frame (or
 #'   \code{NULL} before a genotype file and a pedigree are both available);
-#'   and \code{isReady}, \code{TRUE} once \code{comparisonTable} has a
-#'   value.
+#'   \code{crossCenterGenotypeB}, the raw uploaded Center B genotype data
+#'   frame (or \code{NULL} before upload); \code{crossCenterTable}, the
+#'   \code{\link{markerFst}} \code{locus}/\code{fst} data frame with a
+#'   trailing \code{"Pooled"} row (or \code{NULL} before both center files
+#'   are uploaded); and \code{isReady}, \code{TRUE} once
+#'   \code{comparisonTable} has a value.
 #'
 #' @seealso \code{\link{modMarkerGeneticsUI}}
 #' @importFrom shiny moduleServer reactive renderUI observe req div
@@ -186,6 +201,37 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
       markerParentageExclusion(gmat, ped)
     })
 
+    rawGenotypeB <- reactive({
+      if (is.null(input$genotypeFileB)) {
+        return(NULL)
+      }
+      getGenotypes(input$genotypeFileB$datapath, sep = ",")
+    })
+
+    genotypeMatrixBR <- reactive({
+      raw <- rawGenotypeB()
+      if (is.null(raw)) {
+        return(NULL)
+      }
+      checked <- checkMarkerGenotypeFile(raw)
+      buildMarkerGenotypeMatrix(checked)
+    })
+
+    crossCenter <- reactive({
+      gmatA <- genotypeMatrixR()
+      gmatB <- genotypeMatrixBR()
+      if (is.null(gmatA) || is.null(gmatB)) {
+        return(NULL)
+      }
+      fst <- markerFst(gmatA, gmatB)
+
+      data.frame(
+        locus = c(names(fst$perLocus), "Pooled"),
+        fst = c(as.numeric(fst$perLocus), fst$pooledFst),
+        stringsAsFactors = FALSE
+      )
+    })
+
     output$comparisonTable <- DT::renderDT({
       tbl <- comparison()
       req(tbl)
@@ -200,6 +246,12 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
 
     output$exclusionTable <- DT::renderDT({
       tbl <- exclusion()
+      req(tbl)
+      tbl
+    })
+
+    output$crossCenterTable <- DT::renderDT({
+      tbl <- crossCenter()
       req(tbl)
       tbl
     })
@@ -232,6 +284,8 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
       comparisonTable = reactive(comparison()),
       heterozygosityTable = reactive(heterozygosity()),
       exclusionTable = reactive(exclusion()),
+      crossCenterGenotypeB = reactive(rawGenotypeB()),
+      crossCenterTable = reactive(crossCenter()),
       isReady = reactive(!is.null(comparison()))
     )
   })

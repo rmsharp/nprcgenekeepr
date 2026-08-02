@@ -18,7 +18,7 @@ upstream analysis has not yet been run.}
 upstream analysis has not yet been run.}
 }
 \value{
-A list with six reactive elements: \code{markerGenotype}, the
+A list with eight reactive elements: \code{markerGenotype}, the
 raw uploaded genotype data frame (or \code{NULL} before upload);
 \code{markerKinshipMatrix}, the marker-based \code{id} x \code{id}
 kinship matrix (or \code{NULL}); \code{comparisonTable}, the per-animal
@@ -29,8 +29,12 @@ population-wide mean expected heterozygosity, repeated per row) (or
 \code{NULL}); \code{exclusionTable}, the
 \code{\link{markerParentageExclusion}} flagged-pairs data frame (or
 \code{NULL} before a genotype file and a pedigree are both available);
-and \code{isReady}, \code{TRUE} once \code{comparisonTable} has a
-value.
+\code{crossCenterGenotypeB}, the raw uploaded Center B genotype data
+frame (or \code{NULL} before upload); \code{crossCenterTable}, the
+\code{\link{markerFst}} \code{locus}/\code{fst} data frame with a
+trailing \code{"Pooled"} row (or \code{NULL} before both center files
+are uploaded); and \code{isReady}, \code{TRUE} once
+\code{comparisonTable} has a value.
 }
 \description{
 Reads an uploaded long-format marker genotype file (D1 format: \code{id},
@@ -49,7 +53,13 @@ population-level expected heterozygosity
 Mendelian-exclusion parentage diagnostic
 (\code{\link{markerParentageExclusion}}): the \code{pedigree}'s recorded
 dam/sire cross-referenced against the uploaded genotypes, flagging any
-recorded parent the genotype evidence contradicts.
+recorded parent the genotype evidence contradicts. A fourth tab, "Cross-
+Center", surfaces a between-population differentiation statistic
+(\code{\link{markerFst}}) between the first uploaded file (implicitly
+"Center A") and a second, independently uploaded Center B genotype file
+-- a population-level, two-dataset comparison, unrelated to the
+per-animal cross-center identity linking of
+\code{\link{resolveCrossCenterIds}} (Slice 4).
 }
 \details{
 This module never touches the existing single-locus genotype path

@@ -162,6 +162,37 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       until they gain one -- and separately decide whether Slices 1-4
       warrant a backfilled `NEWS.Rmd` entry now that the gap is visible.
       See `PROJECT_LEARNINGS.md` Learning 433.
+- [ ] **`vignettes/a2interactive.Rmd` (the scriptable/interactive-R
+      tutorial) has no checklist analogous to the Shiny-app-facing
+      tutorial/article checklist, and issue #130's entire marker-genetics
+      function family has ZERO mentions there** (discovered S447,
+      2026-08-01, owner-directed, DECISION NEEDED, Effort S) --
+      `CLAUDE.md`'s existing "Tutorial/article documentation checklist"
+      (S436) only names `vignettes/articles/colony-manager-guide.qmd` and
+      `vignettes/manual_components/*.Rmd` (the Shiny-app-facing surfaces);
+      it does not cover `a2interactive.Rmd`, the separate
+      scriptable/direct-function-call tutorial. Confirmed via grep: zero
+      hits for "marker"/"genotype"/"Fst"/"heterozygosity"/"crossCenter" in
+      the file's 875 lines -- every existing "kinship" mention there is the
+      pre-existing pedigree-based `kinship()`, not the new marker-based
+      family (`markerKinship()`, `markerObservedHeterozygosity()`/
+      `markerExpectedHeterozygosity()`, `markerParentageExclusion()`,
+      `resolveCrossCenterIds()`, `markerFst()`). **Owner-directed
+      constraint (2026-08-01): unlike the existing same-session citation/
+      tutorial-article checklists, incorporating a new feature into
+      `a2interactive.Rmd` should NOT happen in the shipping session --
+      wait until the feature has been fully reviewed first, to avoid
+      premature effort documenting something that may still change.** A
+      future session should either (a) extend `CLAUDE.md`'s existing
+      checklist to also require `a2interactive.Rmd` coverage for any new
+      exported, script-callable function (not just Shiny UI features) as a
+      deferred, post-review step -- distinct from the citation/tutorial
+      checklists' same-session requirement -- analogous to how the citation
+      and tutorial/article checklists were each ratified, or (b) explicitly
+      scope `a2interactive.Rmd` as covering only a curated subset of the
+      package's capabilities and decide this gap is acceptable -- and
+      separately decide whether to backfill demonstration sections for the
+      already-shipped issue #130 functions now that the gap is visible.
 - [ ] **`devtools::check()`'s one remaining spelling NOTE: `IACUC`
       (`_pedigree_browser.Rmd:55`) not in `inst/WORDLIST`** (discovered
       S443, 2026-07-31, Effort S) -- incidentally found while fixing the

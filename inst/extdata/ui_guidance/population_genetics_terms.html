@@ -280,3 +280,38 @@
   </p>
     </em>
 
+    <em>
+    <p style="padding-left: 10px">
+    <b>Cross-Center Differentiation (Hudson's Fst):</b>
+    <br>
+    This statistic answers a different question than the marker-based
+  kinship above: not how related two <em>animals</em> are, but how
+  differentiated two <em>centers'</em> allele frequencies are at the same
+  marker loci -- a population-level, between-dataset comparison, not a
+  per-animal one. Hudson's estimator was chosen over the more commonly-cited
+  Weir &amp; Cockerham (1984) estimator because it is not biased by an
+  imbalance between the two centers' sample sizes, which real per-center
+  marker panels are expected to have.
+  </p>
+    <p style="padding-left: 50px; padding-bottom: 15px">
+    F<sub>ST</sub> = [(p<sub>1</sub> - p<sub>2</sub>)<sup>2</sup> -
+  p<sub>1</sub>(1-p<sub>1</sub>)/(n<sub>1</sub>-1) -
+  p<sub>2</sub>(1-p<sub>2</sub>)/(n<sub>2</sub>-1)] /
+  [p<sub>1</sub>(1-p<sub>2</sub>) + p<sub>2</sub>(1-p<sub>1</sub>)]
+  </p>
+    <p style="padding-left: 10px; padding-bottom: 25px">
+    Where p<sub>1</sub>/p<sub>2</sub> are the two centers' sample allele
+  frequencies at a shared marker locus and n<sub>1</sub>/n<sub>2</sub> are
+  their allele counts. Per-locus values are pooled into a single summary as
+  a <em>ratio of sums</em>, not a mean of per-locus ratios -- averaging
+  per-locus ratios directly is a documented source of bias for this
+  statistic. A value near zero indicates negligible differentiation at that
+  locus; the statistic can range up to 1, and can come out slightly negative
+  due to sampling noise (not clamped to zero). Hudson RR, Slatkin M,
+  Maddison WP. 1992. Estimation of levels of gene flow from DNA sequence
+  data. Genetics 132(2):583-589. Bhatia G, Patterson N, Sankararaman S,
+  Price AL. 2013. Estimating and interpreting FST: The impact of rare
+  variants. Genome Research 23(9):1514-1521.
+  </p>
+    </em>
+

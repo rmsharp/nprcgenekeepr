@@ -304,6 +304,7 @@ reference:
   - '`makeSimPed`'
   - '`mapIdsToObfuscated`'
   - '`markerExpectedHeterozygosity`'
+  - '`markerFst`'
   - '`markerKinship`'
   - '`markerObservedHeterozygosity`'
   - '`markerParentageExclusion`'
