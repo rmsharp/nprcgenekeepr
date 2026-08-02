@@ -9,15 +9,190 @@
 ### What Session 458 Did
 **Deliverable:** A planning document (Architecture workstream) designing Option 2 (full
 kinship2-parity mating-line/sibship-line layout on visNetwork, ratified S457) -- the
-crossing-minimization node-ordering algorithm, multi-mate/half-sib fan-out representation, and
-loop-safety re-verification approach per `docs/planning/pedigree-diagram-mating-lines-plan.md`
-S3/S7 -- owner-picked via the Phase 0 priorities `AskUserQuestion` from a 3-option list (this
-item, LabKey recommendations, NPRC outreach review). (IN PROGRESS)
-**Started:** 2026-08-02
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+crossing-minimization node-ordering algorithm (D1/D2/D3/D4), multi-mate/half-sib fan-out
+representation (D1), and loop-safety re-verification approach (D1, same mechanism), per
+`docs/planning/pedigree-diagram-mating-lines-plan.md` §3/§7 -- owner-picked via the Phase 0
+priorities `AskUserQuestion` from a 3-option list (this item, LabKey recommendations, NPRC outreach
+review).
+**Started/Completed:** 2026-08-02 / 2026-08-02
+**Status:** DONE. Planning-only, no `R/` or `tests/` files changed, so the TDD RED/GREEN/REFACTOR
+gates did not apply (S448/S451/S452/S453/S455/S456/S457 precedent). Owner ratified the design as
+written (D1-D6) via `AskUserQuestion`, with one editorial direction applied in the same turn:
+non-human-centric terminology throughout (`sire`/`dam`/`mate`/`mating`, not
+`husband`/`wife`/`marriage`/`spouse`). A READY implementation Slice 1 follow-up is filed in
+`BACKLOG.md`, not implemented this session, per `SESSION_RUNNER.md`'s planning/implementation
+boundary.
+
+**What happened, in order:** **(1)** Phase 0 orientation in full (`SESSION_RUNNER.md`,
+`SAFEGUARDS.md`, `SESSION_NOTES.md` ACTIVE TASK section, `gh issue list` -- 13 open issues,
+`git status`/`log`/`diff --stat`, `methodology_dashboard.py` Health 94/100 medium risk (unchanged
+from S457), ledger reconcile -- `CHANGELOG.md` frontier one commit behind `HEAD`, investigated and
+confirmed a no-op (the gap commit `8022b653` only backfilled `HANDOFFS.md`'s own `commit: pending`
+field with the SHA of the commit that carried an action already logged in that same commit's
+`CHANGELOG.md` entry -- the identical pattern S457 itself found and reported for its own
+predecessor gap; not a new unrecorded action); `HANDOFFS.md` frontier exactly at `HEAD`; no ghost
+session). Rendered the priorities list + `AskUserQuestion` picker (3 numbered items -- this Option
+2 design item, LabKey recommendations, NPRC outreach review); owner picked this item (after an
+initial accidental-window-focus false start that the owner corrected before answering for real).
+**(2)** Claimed the session (stub + `HANDOFFS.md` `status: pending` receipt) before any research.
+**(3)** Read `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md` and
+`docs/planning/pedigree-diagram-mating-lines-plan.md` in full (both required first-reads named by
+the BACKLOG item itself). Directly re-verified the codebase firsthand rather than trusting the
+prior plan doc's summary from memory (`R/findGeneration.R`, `R/makePedigreeDiagramData.R`,
+`R/modPedigree.R:355-468`), confirming via a fresh grep sweep that no crossing-minimization/
+x-ordering/union-node capability exists anywhere in `R/` today. **(4)** Downloaded the REAL
+kinship2 1.9.6.2 source from CRAN (`curl`+`tar`) after the system-installed copy's version
+mismatch with this project's `renv` environment caused an R segfault on `library(kinship2)` --
+recovered by reading the plain-text source directly instead of loading the package (new Learning
+447). Ran a 2-agent parallel `Workflow` at `effort: max` (kinship2's actual `align.pedigree`/
+`alignped1-4`/`besthint`/`autohint` source + its `align_code_details.Rmd` vignette; a general
+crossing-minimization/tree-drawing literature survey re-reading the Mäkinen et al. 2005 CraneFoot
+PDF in full for its "duplicate transformation" mechanics) while independently: querying the real
+bundled 375-animal/9-generation E2E fixture
+(`inst/extdata/examples/obfuscated_rhesus_mhc_ped.csv`) and finding it already contains 237 distinct
+mating pairs and 73 multi-mate individuals, including `8LKBV9` -- the SAME individual issue #134
+already used as its consanguineous-loop verification fixture, now also confirmed as a 3-mate
+individual, empirically demonstrating that the multi-mate and loop-safety problems are the same
+structural case; and checking (via `curl` against each candidate's own CRAN `DESCRIPTION`) that
+`igraph`/`data.tree` are GPL and `ggraph` (MIT) transitively hard-`Imports` GPL `igraph` -- no
+off-the-shelf R tree-layout package is available without a GPL dependency (new Learning 448),
+consistent with this project's D2 MIT-only precedent. **(5)** Synthesized both research streams
+(condensed in the plan doc's §2, full detail in the workflow journal) into 6 concrete D-series
+decisions (§3): D1 mating-unit/individual-duplication transformation (CraneFoot-derived, resolves
+multi-mate AND loop-safety via one mechanism); D2 deterministic anchor-selection rule (explicitly
+rejecting kinship2's uncapped factorial founder-order search); D3 a simplified Reingold-Tilford/
+Walker-style contour-merge positioning algorithm (not full Buchheim-Jünger-Leipert, not an
+off-the-shelf package); D4 founder ordering by data row order (same anti-factorial-search
+rationale); D5 partial-parentage fallback; D6 integration adaptations for the 4 already-shipped
+Diagram-tab features (click-to-navigate, tooltip, legend, search). Computed and included a
+concrete, previously-unflagged finding: the transformation nearly doubles node count on the real
+fixture (375 individuals -> 742 total nodes), meaning issue #138's 1,500-node cap must be
+re-measured under the new model, not assumed unchanged. Wrote
+`docs/planning/pedigree-diagram-option2-layout-design-plan.md` following
+`ARCHITECTURE_WORKSTREAM.md`'s template (Context/Decision/Rationale/Alternatives
+Considered/Migration Path/Impact Analysis/Verification Plan), plus this project's own "here be
+dragons" and ratification-record conventions. **(6)** Posed an `AskUserQuestion` ratification gate;
+owner selected "proceed as written" with one editorial direction (non-human-centric terminology) --
+applied via 5 targeted edits (kinship2's own literal `spouselist` variable name preserved verbatim
+as a source citation; all other husband/wife/marriage/spouse usages replaced with
+sire/dam/male/female/mate/mating). Updated the plan doc's §10 ratification record and status line
+in place. **(7)** Updated `BACKLOG.md`: marked this session's design item DONE, filed a new
+READY-tagged Slice 1 implementation follow-up (the mating-unit transformation, `.
+buildMatingUnitForest()`, per the design doc's own Migration Path step 1 and its own "here be
+dragons" flag about anchor-assignment validation). **(8)** Verification: full regression suite run
+as a no-drift sanity check even though no `R/`/`tests/` files were touched (matching S455/S456/S457
+precedent for doc-only sessions) -- exact baseline match (0 failed/0 error, 3509 passed, 183
+skipped, 10 pre-existing `test_modMarkerGenetics.R` warnings). Phase 3E: n/a -- no runtime behavior
+changed (a planning document and 2 backlog-tracking files only).
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**Session 457 Handoff Evaluation (by Session 458): 9/10.** This session's actual task (item (a)
+from S457's own "next steps" list) was picked directly off the handoff, so it is fairly scored
+end-to-end. **What helped:** item (a)'s description was accurate and directly actionable -- "design
+the crossing-minimization algorithm, multi-mate/half-sib representation, and loop-safety
+re-verification approach... read the plan doc in full first (especially §2.2/§2.3's vis.js-capability
+findings and the 3 POC descriptions)" was exactly the right first move, and the key-files list
+(`R/makePedigreeDiagramData.R:67-73`, `R/modPedigree.R:387-468`, `R/findGeneration.R`) pointed
+directly at the exact files this session needed to re-verify. The gotchas list's vis.js-capability
+findings (smooth-type is not orthogonal; hierarchical layout and manual coordinates are mutually
+exclusive) were load-bearing constraints this session's §1.1 explicitly built on rather than
+re-discovering. The regression-suite baseline S457 reported (0 failed/0 error, 3509 passed) was
+reproduced byte-for-byte. **What was missing:** nothing a handoff could reasonably be expected to
+supply -- the actual algorithm-design research (kinship2 source, general literature, license check)
+was inherently this session's own work, not something a predecessor could have pre-computed.
+**What was wrong:** no inaccuracies found in any of S457's claims this session had occasion to
+verify. **ROI:** clearly positive -- the accurate baseline, the correct next-step framing, and the
+carried-forward vis.js-capability gotchas all saved real orientation time.
+
+**Self-assessment (Session 458): 9/10.** **Strengths:** (1) treated the S457 plan doc's Case
+C2 finding as a hard, load-bearing constraint on every downstream decision (§1.1) rather than
+re-litigating it; (2) re-verified the codebase firsthand (fresh reads + a fresh grep sweep) rather
+than trusting the prior plan doc's summary from memory, per this project's FM #20/Learning-6
+convention, and found the exact reference counts (`findGeneration()`: 41 files, corrected from an
+initial 34-file eyeball miscount caught before it reached the final document -- re-ran the exact
+`grep | wc -l` command rather than trusting a first visual count); (3) recovered cleanly from a
+real R segfault (system-installed kinship2 vs. this project's `renv` R version) by downloading the
+actual CRAN source tarball instead of persisting with a risky loaded-package approach, turning a
+dead end into a genuinely stronger research method (reading real source instead of a paraphrase)
+and a new, reusable Learning (447); (4) ran the license-transitivity check that the plan doc's own
+D2 precedent implied was needed but had never actually been performed for a NEW candidate package
+(`ggraph`) -- catching a real trap (an MIT-licensed wrapper transitively depending on GPL) rather
+than assuming the top-level license field was sufficient (Learning 448); (5) found and used a
+concrete, real fixture (`8LKBV9`) that empirically demonstrates this design's core insight -- that
+multi-mate and loop-safety are the same structural problem -- rather than only asserting the claim
+abstractly; (6) computed and flagged a concrete, previously-unstated cost (the ~2x node-count
+increase under the transformation) that a less hands-on design pass could easily have missed
+entirely, since nothing in the code would visibly break if it were skipped; (7) applied the owner's
+mid-ratification vocabulary correction (non-human-centric terms) as a targeted, verified sweep
+(grepped for remaining instances after editing, not just trusted the edits were complete) rather
+than a partial pass.
+**Weaknesses:** (1) the D3 positioning algorithm is explicitly flagged in the design doc's own §9
+as "inspired by," not a direct port of, the cited literature -- appropriately honest for a design
+document, but it means an implementation session will need real, careful edge-case testing this
+document could not itself perform; (2) did not attempt even a toy-scale prototype of D3's
+contour-merge algorithm (e.g. a small `chromote` POC analogous to S457's Case C2), relying instead
+on the literature survey and this session's own reasoning -- appropriate scoping for a design
+session per `SESSION_RUNNER.md`'s planning/implementation boundary (Learning #6, "a plan written
+from memory of a file read is an assumption" -- inverted here: this design's positioning algorithm
+IS partly reasoned rather than hands-on-verified, and the doc says so explicitly in §9, but a
+future implementer should not skip building a real POC before trusting D3's geometry); (3) the
+initial priorities-list `AskUserQuestion` had a false start (owner clicked to focus the terminal
+window, not to select an option) -- handled correctly (did not treat it as a real answer, asked
+again) but worth noting as a real interaction to watch for.
+**Compared to previous sessions:** extends S457's "verify actually functional, not just plausible"
+standard from an empirical browser POC (S457's own contribution) to primary-source literature
+research (downloading and reading real kinship2 source and the real CraneFoot PDF rather than
+relying on secondhand descriptions) and a NEW check this project had not previously formalized
+(transitive license verification for a candidate dependency) -- a legitimately new application of
+an existing project value, not a repeat.
+**Self-assessment score:** 9/10 (breakdown above).
+
+**Handoff to Session 459:**
+- **What's next:** **(a) NEW, most concrete item:** Pedigree Diagram Option 2 implementation
+  Slice 1 (READY, Effort L, `BACKLOG.md`) -- build and unit-test `.buildMatingUnitForest()` (D1
+  mating-unit identification + D2 anchor selection) as a standalone, independently-testable
+  function, per the design doc's own §6 Migration Path step 1 and §9 dragon flag (validate the
+  anchor assignment as its own tested step before any positioning code). Read
+  `docs/planning/pedigree-diagram-option2-layout-design-plan.md` in full first, especially §3
+  D1/D2 and §8's test-fixture list. This is a code-shipping session -- follow TDD
+  RED->GREEN->REFACTOR, unlike this and the preceding 2 planning sessions. **(b)** NPRC outreach
+  plan review (DECISION NEEDED, owner-only, unchanged across S455/S456/S457/S458). **(c)** Open
+  methodology question from S445 (whether `/doctor`-style sessions are exempt from Phase 0/1B)
+  remains unresolved. **(d)** LabKey integration research recommendations (BLOCKED -- needs a live
+  LabKey server). **(e)** Issue #133 (data-model gated). **(f)** Issues #136/#137 (data-model
+  gated). **(g)** Issue #138 (deprioritized, but see gotcha below -- its node-count cap now has a
+  concrete re-derivation task attached once Slice 1's successors ship). **(h)** `BACKLOG.md`'s
+  "`inst/extdata/` reorganization -- Phase 4" bullet header still says `DECISION NEEDED` though the
+  body confirms all 4 phases DONE -- one-line tag fix whenever a session next touches that section.
+  **(i)** 8 open GitHub issues remain unmirrored into `BACKLOG.md` (#116, #37, #36, #28, legacy
+  #12/#11/#10/#5) -- informational only. **(j)** The 2 owner-supplied reference PDFs
+  (`inst/extdata/reference/5201430.pdf`, `bioinformatics_24_2_279.pdf`) remain on disk, untracked,
+  not committed (copyright reasons, see S457's plan doc §6) -- still unresolved; a future session
+  should confirm with the owner whether to delete them, leave them, or handle differently.
+- **Key files:** `docs/planning/pedigree-diagram-option2-layout-design-plan.md` (the full design --
+  read before any Slice 1 work, especially §3 D1/D2 and §9), `BACKLOG.md` (updated item: design
+  DONE + new Slice 1 implementation follow-up, "Pedigree diagram vs kinship2 audit follow-ups"
+  section), `R/makePedigreeDiagramData.R` (where the new `.buildMatingUnitForest()` and sibling
+  positioning function should likely live, additively -- existing function unchanged), `R/modPedigree.R:387-468`
+  (the render chain Slice 1 does NOT yet touch -- that is Migration Path step 3, a later slice),
+  `inst/extdata/examples/obfuscated_rhesus_mhc_ped.csv` (the real fixture with `8LKBV9`'s 3-mate
+  structure -- the concrete test fixture Slice 1's tests should extract from), `PROJECT_LEARNINGS.md`
+  Learnings 447-448.
+- **Gotchas:** all prior sessions' carried-forward gotchas still apply (2 iCloud-sync duplicate
+  files, `R/appServer 2.R`/`R/modMarkerGenetics 2.R`; 3 untracked `.DS_Store`; don't trust a
+  predecessor's `devtools::check()` claim or a backlog/issue's stated scope at face value --
+  Learnings 437/441). **New this session:** (1) do not `library()`-load a system-installed R
+  package into this project's `renv` session by manipulating `.libPaths()` -- an R-version-mismatched
+  compiled dependency can segfault the whole R process rather than error gracefully; download the
+  CRAN source tarball instead if you need to read (not run) a package's source (Learning 447).
+  (2) An MIT `License:` field on a candidate R package does not rule out a GPL dependency --
+  check its own `Imports`/`Depends` too (`ggraph` is MIT but hard-depends on GPL `igraph`,
+  Learning 448) -- relevant again if a future session ever reconsiders D3's positioning algorithm.
+  (3) The transformation in D1 nearly doubles node count on real data (375 -> 742 for the bundled
+  E2E fixture) -- issue #138's 1,500-node cap MUST be re-measured under the new model once Slice 1
+  and its successors ship; this is exactly the kind of thing that will not visibly break if
+  skipped (design doc §9 dragon).
+- **Self-assessment score:** 9/10 (breakdown above).
 
 ### What Session 457 Did
 **Deliverable:** A planning document (Architecture workstream) evaluating whether a

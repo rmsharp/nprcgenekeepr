@@ -43,6 +43,47 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-02 · [ad hoc] Pedigree Diagram Option 2 layout design -- crossing-minimization, multi-mate/half-sib representation, loop-safety, ratified as written (Session 458)
+- **Deliverable:** `docs/planning/pedigree-diagram-option2-layout-design-plan.md` (Architecture
+  workstream) -- the dedicated follow-up design session `docs/planning/
+  pedigree-diagram-mating-lines-plan.md` §3/§7 named as Option 2's required next step: design (a)
+  a crossing-minimization node-ordering algorithm, (b) multi-mate/half-sib fan-out representation,
+  and (c) a loop-safety re-verification approach.
+- **Key finding:** (b) and (c) are the same structural problem -- an individual belonging to more
+  than one mating unit. A real bundled fixture (`inst/extdata/examples/
+  obfuscated_rhesus_mhc_ped.csv`) confirmed this empirically: `8LKBV9`, issue #134's own
+  consanguineous-loop verification individual, is independently confirmed this session to also be
+  a 3-distinct-mate individual.
+- **Decision (D1-D6):** a CraneFoot-style mating-unit/individual-duplication transformation
+  (resolves crossing-minimization, multi-mate representation, and loop-safety via one mechanism),
+  a deterministic anchor-selection rule (explicitly not kinship2's uncapped factorial founder-order
+  search), a simplified Reingold-Tilford/Walker-style tree-positioning algorithm (not kinship2's
+  undocumented internals, not full Buchheim-Jünger-Leipert, not an off-the-shelf R package),
+  founder ordering by data row order, a partial-parentage fallback, and integration adaptations for
+  the 4 already-shipped Diagram-tab features.
+- **Research:** downloaded the real kinship2 1.9.6.2 source from CRAN (after a system-installed-
+  copy/renv R-version mismatch segfaulted `library(kinship2)`, new `PROJECT_LEARNINGS.md` Learning
+  447) and ran a 2-agent parallel `Workflow` at `effort: max` reading kinship2's actual
+  `align.pedigree`/`alignped1-4`/`besthint`/`autohint` source plus a general crossing-minimization
+  literature survey (Sugiyama/barycenter/median heuristics, Reingold-Tilford/Walker/
+  Buchheim-Jünger-Leipert, CraneFoot's duplicate transformation, re-reading the Mäkinen et al. 2005
+  PDF in full). A license-transitivity check (new Learning 448) found no off-the-shelf R
+  tree-layout package avoids a GPL dependency (`igraph`/`data.tree` are GPL; `ggraph` is MIT but
+  hard-`Imports` GPL `igraph`), consistent with this project's D2 MIT-only precedent.
+- **Impact:** the transformation nearly doubles node count on real data (375 individuals -> 742
+  total nodes for the bundled E2E fixture) -- issue #138's 1,500-node cap must be re-measured under
+  the new model, flagged as a "here be dragons" risk since nothing will visibly break if this is
+  skipped.
+- **Ratified** via `AskUserQuestion` -- owner selected "proceed as written" with one editorial
+  direction applied in the same turn: non-human-centric terminology throughout
+  (`sire`/`dam`/`mate`/`mating`, not `husband`/`wife`/`marriage`/`spouse`), applied via 5 targeted
+  edits (kinship2's own literal `spouselist` variable name preserved verbatim as a source
+  citation). `BACKLOG.md` updated: design item marked DONE, new READY Slice 1 implementation
+  follow-up filed (`.buildMatingUnitForest()`, D1+D2). Full regression suite run as a no-drift
+  sanity check (0 failed/0 error, 3509 passed, 183 skipped, 10 pre-existing warnings, exact
+  baseline match) even though no `R/`/`tests/` files were touched. Planning-only, TDD gates did not
+  apply.
+
 ### 2026-08-02 · [ad hoc] Pedigree Diagram mating-line/sibship-line feasibility plan, ratified Option 2 (Session 457)
 - **Deliverable:** `docs/planning/pedigree-diagram-mating-lines-plan.md` (Architecture workstream)
   answering the BACKLOG item S456 filed: is a kinship2-style mating-line/sibship-line convention
