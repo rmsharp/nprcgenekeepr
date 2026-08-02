@@ -6,6 +6,22 @@
 
 ## ACTIVE TASK
 
+### What Session 453 Did
+**Deliverable:** Verify inbreeding-loop/consanguinity rendering in the Pedigree Diagram tab
+(GitHub issue #134, `docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md` Finding #1/
+Recommendation #1, resolves plan Dragon P2 / `PROJECT_LEARNINGS.md` Learning 410). Owner-picked
+via the Phase 0 priorities `AskUserQuestion` from a 4-option list (this item, issue #139 doc gap,
+NPRC outreach plan review, LabKey integration research). Scope confirmed via a second
+`AskUserQuestion`: audit-only (construct a known-loop pedigree fixture, check
+`makePedigreeDiagramData()`'s output structurally, live-verify via shinytest2/chromote, write one
+audit finding, close #134 or file a follow-up) -- no production code or tracked test-suite files
+change this session, so the TDD RED/GREEN/REFACTOR gates do not apply.
+**Started:** 2026-08-02
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 452 Did
 **Deliverable:** Fix `devtools::check()`'s spelling NOTE by hand-adding the words missing from
 `inst/WORDLIST` (`BACKLOG.md` Housekeeping item, discovered S443/broadened S448, unchanged through
