@@ -16,11 +16,158 @@ NPRC outreach plan review, LabKey integration research). Scope confirmed via a s
 `makePedigreeDiagramData()`'s output structurally, live-verify via shinytest2/chromote, write one
 audit finding, close #134 or file a follow-up) -- no production code or tracked test-suite files
 change this session, so the TDD RED/GREEN/REFACTOR gates do not apply.
-**Started:** 2026-08-02
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Started/Completed:** 2026-08-02 / 2026-08-02
+**Status:** DONE. Audit-only, no `R/` or `tests/` code changed, so the TDD RED/GREEN/REFACTOR
+gates did not apply (per the S448/S451/S452 precedent for non-implementation sessions); no new
+displayed statistic, no new exported function, no new user-facing Shiny feature shipped, so none
+of the citation/tutorial-article/`NEWS.Rmd`/`a2interactive.Rmd` close-out checklists apply.
+
+**What happened, in order:** **(1)** Phase 0 orientation in full (`SESSION_RUNNER.md`,
+`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list` -- 16 open issues, `git status`/`log`/
+`diff --stat`, `methodology_dashboard.py` Health 98/100 medium risk, ledger reconcile --
+`CHANGELOG.md`/`HANDOFFS.md` frontiers both at `HEAD` `1809d471`, no ghost session, no
+undocumented commits). Reported the same pre-existing uncommitted drift S452 flagged (`renv.lock`,
+`.DS_Store` x3, the 2 iCloud-sync duplicate `R/* 2.R` files, the stray plan-render HTML) --
+left untouched throughout. Rendered the priorities list + `AskUserQuestion` picker (4 numbered
+items); owner picked issue #134. **(2)** A second `AskUserQuestion` resolved a genuine pre-RED
+scope ambiguity: issue #134's own text names a missing test-coverage gap
+(`tests/testthat/test_modPedigree.R` has no loop fixture), which could have meant "ship that test
+this session" (entering TDD PRE-RED) or "verify only, no tracked-file changes" (audit workstream,
+no TDD gates). Owner picked audit-only. **(3)** Phase 1B: claimed the session (`7390adda`) -- stub
++ `HANDOFFS.md` `status: pending` receipt, before any technical work. **(4)** Read the actual
+implementation before designing the fixture: `R/makePedigreeDiagramData.R` (one node per id, one
+edge per known sire/dam, zero special-casing for shared ancestors -- unlike kinship2's
+symbol-duplication mechanism), `R/findGeneration.R` (BFS-style topological generation numbering --
+confirmed it treats a converging DAG as a DAG, not a false-positive cycle), and
+`R/modPedigree.R`'s `renderVisNetwork()` block (`visHierarchicalLayout(direction = "UD",
+sortMethod = "directed")`). **(5)** Data layer: built a minimal synthetic 6-node half-sib-mating
+fixture, confirmed via `kinship()` it is a genuine loop (`kinship(A,B) = 0.125`), and ran it
+through `makePedigreeDiagramData()` directly -- 6 nodes (no duplication), 6 edges (no drops),
+levels matching `findGeneration()`. **(6)** Forked a background agent to research the project's
+established `shinytest2`/`chromote` live-verification pattern (helper functions, existing E2E test
+files) while doing the data-layer check in parallel -- avoided reinventing conventions the project
+already has (`tests/testthat/helper-shinytest2.R`'s `create_app_driver()`/`upload_and_wait()`/
+`navigate_to_tab()`, and `test-e2e-pedigree-module.R`'s live `vis.js` `DataSet` query technique).
+The fork also surfaced a real gotcha: the file-upload QC pipeline (`qcStudbook()`) requires a
+`birth` column and a parent-age floor (default 2 years), which a hand-built synthetic fixture for
+this tier would need to satisfy. **(7)** Rather than inventing a second, age-consistent synthetic
+fixture, queried `kinship()` over the project's own bundled `examplePedigree` AND the already-
+shipped E2E fixture (`inst/extdata/examples/obfuscated_rhesus_mhc_ped.csv`) and found a real
+father-daughter mating case (`GA204Z`, F = 0.25, sire `8LKBV9` also his maternal grandfather via
+daughter `FJIB3R`) already present and already vetted through the QC pipeline by the existing test
+suite -- see new `PROJECT_LEARNINGS.md` Learning 442. **(8)** Live verification: drove the shipped
+app end-to-end via `shinytest2`/`chromote` (`AppDriver` + the established helpers), uploaded the
+real fixture, opened the Diagram tab, and queried the live `vis.js` `Network` instance's own
+`DataSet`s directly (`w.network.body.data.nodes`/`.edges`) -- confirmed `8LKBV9` appears exactly
+once (no duplicate symbol), both loop edges present, `GA204Z` has exactly 2 incoming edges (no
+drop), and a full `app$get_logs()` level breakdown showed zero `error`/`throw`/`warning` entries
+(50 `info`, 5 `stderr`, 1 `stdout`). Self-corrected two script mistakes along the way (missing
+`NOT_CRAN=true` causing a bare "On CRAN" skip; wrong screenshot method name -- `app$get_screenshot()`
+not `app$screenshot()`) and one design mistake (the first screenshot, at the untrimmed 375-node
+scale, was an illegible hairball -- switched to the app's own focal-animal + trim-pedigree feature
+for a legible 13-node view, which visually confirmed the diamond/loop shape renders clearly, both
+edges into `GA204Z` distinguishable on inspection). **(9)** Posted the verification finding as a
+GitHub comment on issue #134 (structural + visual evidence, one minor non-blocking observation
+about edge proximity near `FJIB3R` in the un-zoomed default view) and closed the issue via
+`gh api` (per the established `gh issue`/`gh pr` projectCards-bug workaround). **(10)**
+`BACKLOG.md`: new resolved-item bullet for issue #134, matching the #131 entry's format.
+**(11)** New `PROJECT_LEARNINGS.md` Learning 442 (check bundled/example data for a real instance
+of a needed scenario before hand-building a fixture). **(12)** `CLAUDE.md`: updated the Learnings
+cross-reference count (441->442, Sessions 1-452+->1-453+). **(13)** `CHANGELOG.md`: new dated,
+`[issue #134]`-tagged entry recorded at close-out (this step).
+**Verified:** this session's own deliverable *is* the runtime verification -- the live
+`shinytest2`/`chromote` structural + visual check against the real shipped app satisfies Phase 3E
+directly, not as a separate afterthought check.
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**Session 452 Handoff Evaluation (by Session 453): 8/10.** Item (b) of "next steps" named exactly
+this session's task ("Issue #134 -- verify inbreeding-loop/consanguinity rendering in the Pedigree
+Diagram tab (READY, Effort S/M, NOT data-model gated -- could jump ahead of #133 per S436's order
+since #133 remains blocked)") -- directly load-bearing, and the Phase 0 priorities picker surfaced
+it as one of 4 clean options. The carried-forward uncommitted-drift list (2 iCloud-sync duplicate
+files, renv.lock, the 2 new `.DS_Store` files, the stray plan HTML) was independently re-confirmed
+accurate -- all still present, exactly as described. **What was missing:** nothing critical for
+task identification, though the handoff (like several recent predecessors') is largely a
+carried-forward boilerplate list rather than fresh-per-session content -- a natural consequence of
+the backlog now being small and stable, not really a fault. It also could not have anticipated
+issue #134's own text naming a missing-test-coverage gap that created a genuine pre-RED scope
+ambiguity this session had to resolve via its own `AskUserQuestion` -- that's issue-level detail
+below what a Phase 0 handoff is expected to carry. **What was wrong:** no inaccuracies found in
+S452's own claims (independently re-confirmed: `CHANGELOG.md`/`HANDOFFS.md` frontiers were exactly
+where S452 left them, at `HEAD`). **ROI:** positive -- correctly identified #134 as ready and
+correctly prioritized ahead of blocked #133, saving a priority-re-derivation step.
+
+**Self-assessment (Session 453): 8/10.** **Strengths:** (1) got explicit owner sign-off via
+`AskUserQuestion` on a genuine pre-RED scope ambiguity (audit-only vs. ship-the-missing-test)
+before starting, rather than guessing which the strict-TDD contract required; (2) read the actual
+implementation (`makePedigreeDiagramData.R`, `findGeneration.R`, `modPedigree.R`'s
+`visHierarchicalLayout()` call) before designing verification criteria, rather than assuming from
+the issue text alone; (3) used a background fork to research the project's established
+`shinytest2` pattern in parallel with independent data-layer work, avoiding both wasted
+reinvention and idle waiting; (4) found and reused a REAL consanguineous-mating case already
+present in the project's own bundled E2E fixture instead of hand-building a second synthetic one --
+stronger, production-representative evidence, and sidestepped a real QC-pipeline gotcha (parent-age
+floor) the fork's research flagged; recorded as new Learning 442; (5) verified both structurally
+(direct live `vis.js` `DataSet` JSON query) AND visually (a legible screenshot via the app's own
+trim feature), matching the plan's own Dragon P2 pass criteria exactly; (6) ran a full console-log
+level breakdown, not just the narrower "vis/network"-filtered check the precedent test uses, actively
+looking for anything a narrower filter might miss; (7) reported a minor, genuinely-observed visual
+nuance (edge proximity near `FJIB3R`) honestly in the closing comment instead of overstating a
+flawless result, matching `AUDIT_WORKSTREAM.md`'s severity-calibration principle; (8) stayed
+strictly audit-only as scoped -- no production code or tracked test file touched, verification
+script and screenshots kept in the scratchpad, not committed.
+**Weaknesses:** (1) two avoidable script fumbles before the live verification succeeded --
+forgetting `NOT_CRAN=true` (causing a bare "On CRAN" skip) and using the wrong AppDriver screenshot
+method name (`app$screenshot()` instead of `app$get_screenshot()`) -- both fixed quickly but could
+have been avoided by checking the method signature first; (2) the first screenshot attempt, at the
+untrimmed 375-node scale, was predictably illegible -- should have gone straight to the app's own
+focal-animal+trim feature rather than needing a failed zoom attempt first; (3) spawned one
+unnecessary "placeholder" fork agent while waiting for the research fork to return -- a pointless
+tool call, caught and disregarded, but shouldn't have been made.
+**Compared to previous sessions:** matches S433/S434/S437/S438/S440's discipline of live,
+evidence-based verification (real button clicks, real console-log checks, real rendered output)
+over "should work" reasoning -- extended one step further by cross-checking whether real bundled
+data already contained the needed scenario before building a synthetic one, a technique not seen
+in those prior sessions' close-out records.
+
+**Handoff to Session 454:**
+- **What's next:** **(a)** Issue #135 (hover tooltips + search/highlight to the Pedigree Diagram
+  tab, priority 5 in S436's owner-set order) is now the next item in the #131-#138 sequencing
+  chain -- #131/#132/#134 are done, #133 remains blocked (data-model gated), so #135 is the next
+  unblocked item in priority order. READY, Effort not yet estimated. **(b)** Issue #139 (document
+  the pedigree-diagram Diagram tab in the manual/tutorial -- currently zero coverage) unchanged
+  since S449, READY, Effort S/M. **(c)** NPRC outreach plan review (DECISION NEEDED, owner-only,
+  unchanged) -- plan complete at `docs/planning/nprc-outreach-announcement-plan.md`. **(d)** The
+  open methodology question from S445 (whether `/doctor`-style sessions are exempt from Phase
+  0/1B) remains unresolved. **(e)** LabKey integration research recommendations (BLOCKED -- needs
+  a live LabKey server). **(f)** Issue #133 (data-model gated, still blocked). **(g)** Issues #136
+  (name labels, data-model gated), #137 (twin/zygosity, data-model gated) remain further down
+  S436's priority order, both gated. **(h)** Issue #138 (full-colony rendering beyond the
+  1,500-node cap) -- explicitly deprioritized/delayed by the owner, `low priority` GitHub label.
+  **(i)** Data-hygiene aside (informational, unchanged): `BACKLOG.md`'s "`inst/extdata/`
+  reorganization -- Phase 4" bullet header still says `(DECISION NEEDED...)` even though the body
+  confirms Phases 1-4 are all DONE -- worth a one-line tag fix whenever a session next touches
+  that section.
+- **Key files:** `BACKLOG.md` (new issue #134 resolved-item bullet, after the #131 entry),
+  `CLAUDE.md:211` (Learnings cross-reference count updated), `PROJECT_LEARNINGS.md` (new Learning
+  442), `CHANGELOG.md` (this session's `[issue #134]` entry). No `R/` or `tests/` files changed --
+  the verification script and screenshots live only in this session's scratchpad, not the repo.
+- **Gotchas:** all of S442-S452's carried-forward gotchas still apply where relevant (2 iCloud-sync
+  duplicate files, `R/appServer 2.R`/`R/modMarkerGenetics 2.R`, still present, leave untouched; 3
+  untracked `.DS_Store` files, same benign class, leave untouched; don't trust a predecessor's
+  `devtools::check()` claim, OR a backlog/issue item's own stated scope, at face value -- Learnings
+  437/441). **New this session:** Learning 442 -- before hand-building a fixture for a live/E2E
+  verification, query the project's own bundled/example data with its own domain functions first;
+  a real instance already vetted through the existing pipeline is often faster to find AND stronger
+  evidence than a synthetic one, and avoids QC-pipeline gotchas (e.g. this project's file-upload
+  path requires a `birth` column and enforces a parent-age floor) a hand-built fixture would hit
+  blind. Also: `app$get_screenshot()` (not `app$screenshot()`) is the correct `shinytest2`
+  `AppDriver` method name, and it takes an optional `selector` argument to scope the screenshot to
+  one DOM element -- useful for isolating a widget from a busy page rather than fighting canvas
+  zoom/focus.
+- **Self-assessment score:** 8/10 (breakdown above).
+
+### What Session 452 Did
 
 ### What Session 452 Did
 **Deliverable:** Fix `devtools::check()`'s spelling NOTE by hand-adding the words missing from

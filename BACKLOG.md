@@ -442,6 +442,26 @@ visNetwork-vs-kinship2 technology decision (D2), which stands as ratified.*
       override (`PROJECT_LEARNINGS.md` Learning 419, since `get_download()`/
       `expect_download()` don't apply to a purely client-side JS download with no
       backing Shiny output). See `CHANGELOG.md`.)
+- [ ] (none remaining -- **issue #134** (verify inbreeding-loop/consanguinity
+      rendering, priority 4, resolves plan Dragon P2 / `PROJECT_LEARNINGS.md`
+      Learning 410) is RESOLVED: verified S453 (2026-08-02), audit-only, no
+      production code or tracked test-suite files changed. Data layer: a
+      synthetic 6-node half-sib-mating fixture confirmed `makePedigreeDiagramData()`
+      builds correct nodes/edges (no duplication, no drops) for a converging-DAG
+      loop, and `findGeneration()` correctly places it (not a cycle). Live layer:
+      found a real consanguineous-mating case already in the project's own bundled
+      E2E fixture (`inst/extdata/examples/obfuscated_rhesus_mhc_ped.csv` --
+      `GA204Z`, F=0.25, sire `8LKBV9` is also his maternal grandfather) rather than
+      inventing a second synthetic one; drove the shipped app end-to-end via
+      `shinytest2`/`chromote` (same `AppDriver` helpers `test-e2e-pedigree-module.R`
+      already uses) and queried the live `vis.js` `Network` instance's own
+      `DataSet`s directly -- confirmed no duplicate node, both loop edges present,
+      no dropped edge, zero console errors at any level, and (via the app's own
+      focal-animal+trim feature) a visually legible diamond-shaped render.
+      Conclusion: vis.js's hierarchical layout handles a real inbreeding loop
+      correctly per the plan's own P2 pass criteria. Closed via GitHub comment
+      (`https://github.com/rmsharp/nprcgenekeepr/issues/134#issuecomment-5155638782`).
+      See `CHANGELOG.md`.)
 
 ## Outreach
 - [ ] **NPRC outreach & announcement plan** (DECISION NEEDED -- owner review/edit of
