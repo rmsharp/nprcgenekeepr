@@ -7,17 +7,133 @@
 ## ACTIVE TASK
 
 ### What Session 452 Did
-**Deliverable:** Fix `devtools::check()`'s spelling NOTE by hand-adding the 12 words missing from
+**Deliverable:** Fix `devtools::check()`'s spelling NOTE by hand-adding the words missing from
 `inst/WORDLIST` (`BACKLOG.md` Housekeeping item, discovered S443/broadened S448, unchanged through
-S451's handoff): `Bhatia`, `Chesser`, `Cockerham`, `Fst`/`FST`, `Gst`, `Hedrick`, `Maddison`,
-`Meirmans`, `Sankararaman`, `Slatkin`, `monomorphic`. Owner-picked via the Phase 0 priorities
-`AskUserQuestion` from a 4-option list (this item, issue #139 doc gap, issue #134 verify
-inbreeding-loop rendering, NPRC outreach review).
-**Started:** 2026-08-02
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+S451's handoff). Owner-picked via the Phase 0 priorities `AskUserQuestion` from a 4-option list
+(this item, issue #139 doc gap, issue #134 verify inbreeding-loop rendering, NPRC outreach review).
+**Started/Completed:** 2026-08-02 / 2026-08-02
+**Status:** DONE. Data-file-only fix (`inst/WORDLIST`) -- no `R/` code changed, no new displayed
+statistic, no new exported function, no new user-facing Shiny feature, so none of the citation/
+tutorial-article/`NEWS.Rmd`/`a2interactive.Rmd` close-out checklists apply, and the TDD
+RED/GREEN/REFACTOR gates did not apply (per the S448/S451 precedent for doc/data-only sessions).
+
+**What happened, in order:** **(1)** Phase 0 orientation in full (`SESSION_RUNNER.md`,
+`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list` -- 16 open issues, `git status`/`log`/
+`diff --stat`, `methodology_dashboard.py` Health 98/100 medium risk, ledger reconcile --
+`CHANGELOG.md`/`HANDOFFS.md` frontiers both at `HEAD` `06a4a510`, no ghost session, no
+undocumented commits). Reported pre-existing uncommitted drift (`renv.lock`, `.DS_Store`, the 2
+iCloud-sync duplicate `R/* 2.R` files, a stray untracked plan-render HTML) per `SAFEGUARDS.md` --
+left untouched throughout; also flagged 2 new untracked `.DS_Store` files
+(`inst/.DS_Store`/`inst/extdata/.DS_Store`) not previously called out, same benign class as the
+already-tracked one. Rendered the priorities list + `AskUserQuestion` picker (4 numbered items);
+owner picked this item. **(2)** Phase 1B: claimed the session (`0627c4f1`) -- stub + `HANDOFFS.md`
+`status: pending` receipt, before any technical work. **(3)** Confirmed the bug empirically BEFORE
+fixing: ran `devtools::check()` fresh (not trusting the backlog item's own "12 words" framing) and
+found the single spelling NOTE actually covers **13** words, not 12 -- the 12 the item named plus
+the already-tracked `IACUC` (`_pedigree_browser.Rmd:55`, flagged since S443, never actually fixed by
+any of the 5+ intervening sessions that carried it forward as "pre-existing, unrelated"). **(4)**
+Checked `IACUC`'s history (`grep` across `inst/WORDLIST`/`CHANGELOG.md`/`PROJECT_LEARNINGS.md`)
+before deciding scope -- confirmed it was never added to `inst/WORDLIST`, and that fixing it is the
+identical one-line mechanical action as the other 12, so included it rather than leaving the check
+still reporting 1 NOTE afterward. **(5)** Computed each word's `LC_ALL=C` byte-order insertion
+position against the current file (verified via `sort -c`/`diff` against a full `LC_ALL=C sort`,
+confirming the file is >98% strict-byte-order compliant with only a handful of pre-existing local
+anomalies, left untouched/not "fixed" as out of scope). **(6)** Hand-added all 13 words at their
+computed positions (7 `Edit` calls, disjoint regions) -- confirmed via `grep`/`wc -l` (413->425
+lines, +13 clean insertions, no other diff noise). **(7)** Re-ran `devtools::check()` -- raw log
+`Status:` line (per Learning 382 discipline) went from `1 WARNING, 1 NOTE` to `1 WARNING` (the
+`spelling.Rout`/`spelling.Rout.save` diff is now `OK`); the remaining WARNING is the pre-existing,
+unrelated iCloud-sync duplicate-file artifact. **(8)** Ran the documented "Clean regression read"
+command: 0 failed/0 error, 3489 passed, 183 skipped, 10 warnings -- exact match to the known-good
+S450 baseline, confirming the WORDLIST-only change didn't affect test behavior. **(9)** New
+`PROJECT_LEARNINGS.md` Learning 441 records the "same-NOTE, mis-scoped-as-separate" discovery.
+**(10)** `CLAUDE.md`: updated the Learnings cross-reference count (440->441 learnings, Sessions
+1-450+->1-452+, Learning #7/#10 discipline) -- grepped the repo for other stale "440 learnings"/
+"12+ words" references first; found none needing a fix (the other "12 words" hits are historical
+claim text in `SESSION_NOTES.md`/`HANDOFFS.md` predecessor entries, left as dated snapshots, not
+live claims). **(11)** `BACKLOG.md` Housekeeping item marked resolved, matching the established
+"(none remaining -- ... RESOLVED ...)" convention. **(12)** `CHANGELOG.md`: new dated,
+`[BL-spellingNoteWordlist]`-tagged entry recorded at close-out (this step).
+**Verified:** direct before/after `devtools::check()` raw-log comparison (`1 WARNING, 1 NOTE` ->
+`1 WARNING`) plus an unchanged regression-suite baseline -- the strongest available evidence this
+specific fix actually cleared the NOTE, not just that the text changed. Phase 3E (runtime smoke
+test): **n/a -- data-file-only, no runtime behavior changed** (`inst/WORDLIST` is a spell-check
+input, not app code or config).
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**Session 451 Handoff Evaluation (by Session 452): 9/10.** Item (a) of "next steps" named exactly
+this session's task (the spelling-NOTE housekeeping item, "READY, Effort S -- 12 words missing from
+`inst/WORDLIST`") and pointed at `BACKLOG.md` Housekeeping for the exact list -- directly
+load-bearing, and the Phase 0 priorities picker surfaced it as one of 4 clean options. The
+carried-forward gotchas (raw `Status:` line discipline -- Learning 382; `inst/WORDLIST` byte-order
+convention -- Learning 428; the 2 iCloud-sync duplicate files, still present, leave untouched) were
+all directly useful. **What was missing:** the handoff's own "12 words" framing turned out to be
+incomplete -- it didn't flag that the already-tracked `IACUC` word was part of the SAME
+`devtools::check()` NOTE and would need fixing too to actually reach 0 notes. This wasn't really
+S451's fault (the framing originated at S443/S448, well before S451; S451 didn't touch this item),
+but it's worth noting the inherited backlog description undersold the item's true scope by one word.
+**What was wrong:** no other inaccuracies found in S451's own claims (independently re-confirmed:
+`CHANGELOG.md`/`HANDOFFS.md` frontiers were exactly where S451 left them, at `HEAD`). **ROI:** net
+positive -- the task identification and pointer to `BACKLOG.md`'s word list saved a rediscovery step,
+even though the list itself needed a re-verification pass before trusting it as exhaustive.
+
+**Self-assessment (Session 452): 9/10.** **Strengths:** (1) did not trust the backlog item's own
+"12 words" claim at face value -- re-ran `devtools::check()` fresh before editing anything, which is
+exactly what surfaced the 13th word (`IACUC`) and prevented shipping a fix that would have left the
+check still reporting 1 NOTE; (2) before deciding to fold `IACUC` into this session's scope, checked
+its actual history (`grep` across `CHANGELOG.md`/`PROJECT_LEARNINGS.md`/`inst/WORDLIST`) rather than
+assuming it was already resolved elsewhere or declining it as out-of-scope by reflex; (3) verified
+the file's insertion convention empirically (`sort -c` + `diff` against a full sort) rather than
+assuming a convention from memory of prior sessions' prose descriptions, and correctly left
+pre-existing local anomalies untouched as out of this session's scope; (4) direct before/after raw
+`Status:`-line comparison, matching Learning 382's discipline, plus an unchanged regression-suite
+baseline as corroborating evidence; (5) recorded a new `PROJECT_LEARNINGS.md` learning (441) capturing
+a genuinely new failure shape (a backlog item's own word count silently excluding a same-NOTE word)
+rather than treating this as just a routine execution with nothing new to note; (6) grepped for other
+stale cross-references (the "440 learnings" count, other "12+ words" mentions) before declaring the
+close-out documentation complete.
+**Weaknesses:** used two ad hoc background `devtools::check()` runs with output redirected to a
+scratchpad log file in addition to the tool's own tracked output file -- the first attempt's
+redirection meant the tool's own output file came back empty, requiring a fallback read of my own
+log; should have relied on the tool's built-in output tracking alone from the start rather than
+double-redirecting.
+**Compared to previous sessions:** matches S447-S451's discipline of verifying claims against
+live/real evidence rather than trusting a backlog description or a predecessor's framing at face
+value -- here applied one level deeper than usual: not just re-verifying MY OWN fix, but
+re-verifying whether the BACKLOG ITEM'S OWN SCOPE description was complete before starting, which
+caught a real gap (13 words, not 12) that every session since S443 had carried forward unquestioned.
+
+**Handoff to Session 453:**
+- **What's next:** remaining items from the priorities list, unchanged since S451 except as noted:
+  **(a)** Issue #139 (document the pedigree-diagram Diagram tab in the manual/tutorial -- currently
+  zero coverage) unchanged since S449, READY, Effort S/M. **(b)** Issue #134 (verify inbreeding-loop/
+  consanguinity rendering in the Pedigree Diagram tab) -- NOT data-model gated, could be picked up
+  ahead of #133 per S436's owner-set priority order since #133 remains blocked, READY, Effort S/M.
+  **(c)** NPRC outreach plan review (DECISION NEEDED, owner-only, unchanged) -- plan complete at
+  `docs/planning/nprc-outreach-announcement-plan.md`. **(d)** The open methodology question from S445
+  (whether `/doctor`-style sessions are exempt from Phase 0/1B) remains unresolved. **(e)** LabKey
+  integration research recommendations (BLOCKED -- needs a live LabKey server). **(f)** Issue #133
+  (data-model gated, still blocked). **(g)** Data-hygiene aside (informational): `BACKLOG.md`'s
+  "`inst/extdata/` reorganization -- Phase 4" bullet header still says `(DECISION NEEDED...)` even
+  though the body confirms Phases 1-4 are all DONE -- worth a one-line tag fix whenever a session
+  next touches that section.
+- **Key files:** `inst/WORDLIST` (13 new words at their `LC_ALL=C` byte-order positions -- see
+  `git diff` for exact line numbers), `BACKLOG.md` Housekeeping (item marked resolved), `CLAUDE.md:211`
+  (Learnings cross-reference count updated), `PROJECT_LEARNINGS.md` (new Learning 441),
+  `CHANGELOG.md` (this session's `[BL-spellingNoteWordlist]` entry).
+- **Gotchas:** all of S442-S451's carried-forward gotchas still apply where relevant (raw `Status:`
+  line discipline -- Learning 382; `inst/WORDLIST` is only ~98% strict `LC_ALL=C` byte-order --
+  a handful of pre-existing local anomalies exist, e.g. `Heijmans`/`HEVL`, `errorLst`/`errored`,
+  `CRAN's` -- don't assume perfect global sort when inserting new words, verify locally against
+  immediate neighbors; do NOT trust a predecessor's `devtools::check()` claim, OR a backlog item's
+  own stated scope, at face value -- Learnings 437/441; 2 iCloud-sync duplicate files, `R/appServer
+  2.R`/`R/modMarkerGenetics 2.R`, still present, leave untouched; 2 new untracked `.DS_Store` files
+  noted this session (`inst/.DS_Store`/`inst/extdata/.DS_Store`), same benign class, leave untouched).
+  **New this session:** Learning 441 -- when a spelling/lint-NOTE backlog item names N words but
+  frames one additional word as "already tracked separately," re-run the actual check before trusting
+  the item's word count as exhaustive; the carve-out may just be an old deferral, not a sign the word
+  has its own resolution path.
+- **Self-assessment score:** 9/10 (breakdown above).
 
 ### What Session 451 Did
 **Deliverable:** Fix `CLAUDE.md`'s "Fast single-file test" command so it sets `NOT_CRAN=true`

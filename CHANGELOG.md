@@ -43,6 +43,28 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-02 · [BL-spellingNoteWordlist] Add 13 missing words to inst/WORDLIST, clearing devtools::check()'s spelling NOTE (Session 452)
+- **Deliverable:** resolved the `BACKLOG.md` Housekeeping item ("`devtools::check()`'s spelling NOTE is
+  broader than previously tracked," discovered S443 as just `IACUC`, broadened S448) by hand-adding the
+  missing words to `inst/WORDLIST`.
+- **Discovery:** a fresh `devtools::check()` run before touching anything showed the single NOTE actually
+  covers 13 words, not the 12 the item named -- `Bhatia`, `Chesser`, `Cockerham`, `Fst`, `FST`, `Gst`,
+  `Hedrick`, `Maddison`, `Meirmans`, `Sankararaman`, `Slatkin`, `monomorphic` (all `markerFst.Rd` citation
+  terms, S447/issue #130 Slice 5) plus the already-tracked `IACUC` (`_pedigree_browser.Rmd:55`, flagged
+  since S443, never actually fixed by any intervening session). New `PROJECT_LEARNINGS.md` Learning 441
+  records why a "separately tracked" carve-out in a backlog item's word count doesn't mean that word has
+  its own resolution path.
+- **Fix:** all 13 words hand-added to `inst/WORDLIST` in `LC_ALL=C` byte-order position (not via
+  `spelling::update_wordlist()`, per S230 convention).
+- **Verified:** `devtools::check()` raw log before: `Status: 1 WARNING, 1 NOTE` (13-word spelling diff);
+  after: `Status: 1 WARNING` (spelling.Rout vs. spelling.Rout.save now `OK`) -- the remaining WARNING is
+  the pre-existing, unrelated iCloud-sync duplicate-file artifact (`R/appServer 2.R`/
+  `R/modMarkerGenetics 2.R`). Regression suite unchanged: 0 failed/0 error (3489 passed, 183 skipped, 10
+  pre-existing baseline warnings), exactly matching the known-good S450 baseline. Docs/data-only change
+  (`inst/WORDLIST` is not app runtime code) -- Phase 3E runtime smoke test n/a.
+- **Also:** updated `CLAUDE.md`'s `PROJECT_LEARNINGS.md` cross-reference count (440->441 learnings,
+  Sessions 1-450+ -> 1-452+, Learning #7/#10 cross-reference discipline).
+
 ### 2026-08-02 · [BL-notCranFastTest] Fix CLAUDE.md's "Fast single-file test" command to set NOT_CRAN=true (Session 451)
 - **Deliverable:** resolved the `BACKLOG.md` Housekeeping item (discovered S439, `PROJECT_LEARNINGS.md`
   Learning 417) noting that `CLAUDE.md`'s documented "Fast single-file test" one-liner doesn't set

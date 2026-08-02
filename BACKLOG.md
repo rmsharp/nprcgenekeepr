@@ -187,34 +187,27 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       440 for a stale-local-install trap hit and fixed along the way
       (`devtools::install()` needed first; the local install lagged 3
       slices behind source). See `CHANGELOG.md`.)
-- [ ] **`devtools::check()`'s spelling NOTE is broader than previously
-      tracked: 12+ words missing from `inst/WORDLIST`, including
-      Slice 5's own `markerFst.Rd` citation terms** (discovered S443
-      as just `IACUC`; broadened S448, 2026-08-01, READY, Effort S) --
-      S447's own handoff flagged this item as possibly already resolved
-      ("this session's `devtools::check()` runs both came back a clean
-      0/0/0 with no NOTE at all"); re-verified S448 while rendering
-      `NEWS.md` and found the OPPOSITE: `devtools::check()`'s "checking
-      tests" step (`tests/spelling.R` vs. its `Rout.save` comparison)
-      currently reports 1 NOTE, and a direct
-      `spelling::spell_check_package(vignettes = TRUE)` run confirms it --
-      not just `IACUC` (`_pedigree_browser.Rmd:55`), but also `Bhatia`,
-      `Chesser`, `Cockerham`, `Fst`/`FST`, `Gst`, `Hedrick`, `Maddison`,
-      `Meirmans`, `Sankararaman`, `Slatkin`, and `monomorphic` (all from
-      `markerFst.Rd`'s own citations, Session 447/issue #130 Slice 5) are
-      also missing. **Confirmed via a clean-worktree check at S447's own
-      final commit (`afb979bc`) that every one of these was ALREADY
-      missing before S448 touched anything** -- so this is not something
-      S448 introduced; S447's own "0/0/0" self-report for this check
-      dimension does not hold up under re-verification. (S448 fixed only
-      its own single new word, `homozygote`, introduced by this session's
-      `NEWS.Rmd` backfill -- see `inst/WORDLIST`.) A future session should
-      hand-add the remaining 12 words to `inst/WORDLIST` in radix-sort
-      position (not via `spelling::update_wordlist()`, per S230
-      convention) to reach a genuine 0-errors/0-warnings/0-notes
-      `devtools::check()`, and should also spot-check whether other
-      recent sessions' own spelling-fix claims hold up, given this one
-      didn't.
+- [ ] (none remaining -- the "`devtools::check()`'s spelling NOTE is
+      broader than previously tracked" item (discovered S443 as just
+      `IACUC`; broadened S448, 2026-08-01) is RESOLVED -- S452
+      (2026-08-02): re-ran `devtools::check()` fresh before touching
+      anything and found the single NOTE actually covered 13 words, not
+      12 -- the 12 the item named (`Bhatia`, `Chesser`, `Cockerham`,
+      `Fst`/`FST`, `Gst`, `Hedrick`, `Maddison`, `Meirmans`,
+      `Sankararaman`, `Slatkin`, `monomorphic`) plus the already-tracked
+      `IACUC` (`_pedigree_browser.Rmd:55`, flagged since S443, never
+      actually fixed by any session in between). All 13 hand-added to
+      `inst/WORDLIST` in `LC_ALL=C` byte-order position (not via
+      `spelling::update_wordlist()`, per S230 convention). Verified:
+      `devtools::check()` raw log now reads `Status: 1 WARNING` with no
+      NOTE (the `spelling.Rout`/`spelling.Rout.save` comparison is now
+      `OK`, vs. the prior 13-word diff block) -- the remaining WARNING is
+      the pre-existing, unrelated iCloud-sync duplicate-file artifact
+      (`R/appServer 2.R`/`R/modMarkerGenetics 2.R`); regression suite
+      unchanged at 0 failed/0 error (3489 passed, 183 skipped, 10
+      pre-existing baseline warnings), exactly matching the known-good
+      S450 baseline. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
+      Learning 441.)
 - [ ] (none remaining -- the "Pre-existing `shinyBS is not defined` JS console
       error on every page load" item (discovered S433, 2026-07-30) is
       RESOLVED: fixed S437 (2026-07-30). Root cause confirmed experimentally:
