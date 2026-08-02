@@ -70,6 +70,19 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-08-02--bl-spellingnotewordlist-add-13-missing-words-to-instwordlist-clearing-devtoolschecks-spelling-note-session-452">2026-08-02 · [BL-spellingNoteWordlist] Add 13 missing words to inst/WORDLIST, clearing devtools::check()’s spelling NOTE (Session 452)<a class="anchor" aria-label="anchor" href="#id_2026-08-02--bl-spellingnotewordlist-add-13-missing-words-to-instwordlist-clearing-devtoolschecks-spelling-note-session-452"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> resolved the <code>BACKLOG.md</code> Housekeeping item (“<code>devtools::check()</code>’s spelling NOTE is broader than previously tracked,” discovered S443 as just <code>IACUC</code>, broadened S448) by hand-adding the missing words to <code>inst/WORDLIST</code>.</li>
+<li>
+<strong>Discovery:</strong> a fresh <code>devtools::check()</code> run before touching anything showed the single NOTE actually covers 13 words, not the 12 the item named – <code>Bhatia</code>, <code>Chesser</code>, <code>Cockerham</code>, <code>Fst</code>, <code>FST</code>, <code>Gst</code>, <code>Hedrick</code>, <code>Maddison</code>, <code>Meirmans</code>, <code>Sankararaman</code>, <code>Slatkin</code>, <code>monomorphic</code> (all <code>markerFst.Rd</code> citation terms, S447/issue #130 Slice 5) plus the already-tracked <code>IACUC</code> (<code>_pedigree_browser.Rmd:55</code>, flagged since S443, never actually fixed by any intervening session). New <code>PROJECT_LEARNINGS.md</code> Learning 441 records why a “separately tracked” carve-out in a backlog item’s word count doesn’t mean that word has its own resolution path.</li>
+<li>
+<strong>Fix:</strong> all 13 words hand-added to <code>inst/WORDLIST</code> in <code>LC_ALL=C</code> byte-order position (not via <code><a href="https://docs.ropensci.org/spelling//reference/wordlist.html" class="external-link">spelling::update_wordlist()</a></code>, per S230 convention).</li>
+<li>
+<strong>Verified:</strong> <code>devtools::check()</code> raw log before: <code>Status: 1 WARNING, 1 NOTE</code> (13-word spelling diff); after: <code>Status: 1 WARNING</code> (spelling.Rout vs. spelling.Rout.save now <code>OK</code>) – the remaining WARNING is the pre-existing, unrelated iCloud-sync duplicate-file artifact (<code>R/appServer 2.R</code>/ <code>R/modMarkerGenetics 2.R</code>). Regression suite unchanged: 0 failed/0 error (3489 passed, 183 skipped, 10 pre-existing baseline warnings), exactly matching the known-good S450 baseline. Docs/data-only change (<code>inst/WORDLIST</code> is not app runtime code) – Phase 3E runtime smoke test n/a.</li>
+<li>
+<strong>Also:</strong> updated <code>CLAUDE.md</code>’s <code>PROJECT_LEARNINGS.md</code> cross-reference count (440-&gt;441 learnings, Sessions 1-450+ -&gt; 1-452+, Learning #7/#10 cross-reference discipline).</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-08-02--bl-notcranfasttest-fix-claudemds-fast-single-file-test-command-to-set-not_crantrue-session-451">2026-08-02 · [BL-notCranFastTest] Fix CLAUDE.md’s “Fast single-file test” command to set NOT_CRAN=true (Session 451)<a class="anchor" aria-label="anchor" href="#id_2026-08-02--bl-notcranfasttest-fix-claudemds-fast-single-file-test-command-to-set-not_crantrue-session-451"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> resolved the <code>BACKLOG.md</code> Housekeeping item (discovered S439, <code>PROJECT_LEARNINGS.md</code> Learning 417) noting that <code>CLAUDE.md</code>’s documented “Fast single-file test” one-liner doesn’t set <code>NOT_CRAN</code>, so a file with a top-level <code>skip_on_cran()</code> (e.g. <code>test-e2e-data-ready.R:10</code>) silently bare-skips (“On CRAN”) instead of reporting real results.</li>
