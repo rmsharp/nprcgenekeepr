@@ -47,6 +47,46 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-08-02 · \[issue \#134\] Verify inbreeding-loop/consanguinity rendering in the Pedigree Diagram tab – closed, no code change (Session 453)
+
+- **Deliverable:** resolved plan Dragon P2
+  (`docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md`
+  lines 581-589, silently untracked across Slices 1/2 per
+  `PROJECT_LEARNINGS.md` Learning 410) by constructing a known-loop
+  pedigree and running it through the shipped Diagram tab. Audit-only
+  session (owner-confirmed via `AskUserQuestion`) – no production code
+  or tracked test-suite files changed.
+- **Data layer:** a synthetic 6-node half-sib-mating fixture confirmed
+  via the package’s own
+  [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+  (`kinship(A,B) = 0.125`) to be a genuine loop;
+  [`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+  produced exactly 6 nodes (no duplication) and 6 edges (no drops), with
+  `level` values matching
+  [`findGeneration()`](https://github.com/rmsharp/nprcgenekeepr/reference/findGeneration.md)’s
+  output, which itself correctly treats the converging structure as a
+  DAG, not a cycle.
+- **Live layer:** rather than hand-building a second fixture, found a
+  real consanguineous-mating case already in the project’s own bundled
+  E2E fixture (`inst/extdata/examples/obfuscated_rhesus_mhc_ped.csv`) –
+  `GA204Z` (F = 0.25), whose sire `8LKBV9` is also his maternal
+  grandfather. Drove the shipped app end-to-end via
+  `shinytest2`/`chromote` (the same `AppDriver` helpers
+  `test-e2e-pedigree-module.R` uses) and queried the live `vis.js`
+  `Network` instance’s own `DataSet`s directly: no duplicate node, both
+  loop edges present, no dropped edge, zero console errors at any level
+  (50 `info`/5 `stderr`/1 `stdout`, 0 `error`/`throw`/`warning`), and a
+  visually legible diamond-shaped render via the app’s own
+  focal-animal+trim feature. New `PROJECT_LEARNINGS.md` Learning 442
+  records the “check bundled example data before hand-building a
+  fixture” technique.
+- **Verified:** direct live-browser structural + visual confirmation
+  (above) – this session’s own deliverable *is* the runtime
+  verification, satisfying Phase 3E.
+- **Closed:** issue \#134 via GitHub comment
+  (`https://github.com/rmsharp/nprcgenekeepr/issues/134#issuecomment-5155638782`),
+  no follow-up filed – the rendering is adequate.
+
 ### 2026-08-02 · \[BL-spellingNoteWordlist\] Add 13 missing words to inst/WORDLIST, clearing devtools::check()’s spelling NOTE (Session 452)
 
 - **Deliverable:** resolved the `BACKLOG.md` Housekeeping item

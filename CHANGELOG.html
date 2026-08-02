@@ -70,6 +70,19 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-08-02--issue-134-verify-inbreeding-loopconsanguinity-rendering-in-the-pedigree-diagram-tab--closed-no-code-change-session-453">2026-08-02 · [issue #134] Verify inbreeding-loop/consanguinity rendering in the Pedigree Diagram tab – closed, no code change (Session 453)<a class="anchor" aria-label="anchor" href="#id_2026-08-02--issue-134-verify-inbreeding-loopconsanguinity-rendering-in-the-pedigree-diagram-tab--closed-no-code-change-session-453"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> resolved plan Dragon P2 (<code>docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md</code> lines 581-589, silently untracked across Slices 1/2 per <code>PROJECT_LEARNINGS.md</code> Learning 410) by constructing a known-loop pedigree and running it through the shipped Diagram tab. Audit-only session (owner-confirmed via <code>AskUserQuestion</code>) – no production code or tracked test-suite files changed.</li>
+<li>
+<strong>Data layer:</strong> a synthetic 6-node half-sib-mating fixture confirmed via the package’s own <code><a href="reference/kinship.html">kinship()</a></code> (<code>kinship(A,B) = 0.125</code>) to be a genuine loop; <code><a href="reference/makePedigreeDiagramData.html">makePedigreeDiagramData()</a></code> produced exactly 6 nodes (no duplication) and 6 edges (no drops), with <code>level</code> values matching <code><a href="reference/findGeneration.html">findGeneration()</a></code>’s output, which itself correctly treats the converging structure as a DAG, not a cycle.</li>
+<li>
+<strong>Live layer:</strong> rather than hand-building a second fixture, found a real consanguineous-mating case already in the project’s own bundled E2E fixture (<code>inst/extdata/examples/obfuscated_rhesus_mhc_ped.csv</code>) – <code>GA204Z</code> (F = 0.25), whose sire <code>8LKBV9</code> is also his maternal grandfather. Drove the shipped app end-to-end via <code>shinytest2</code>/<code>chromote</code> (the same <code>AppDriver</code> helpers <code>test-e2e-pedigree-module.R</code> uses) and queried the live <code>vis.js</code> <code>Network</code> instance’s own <code>DataSet</code>s directly: no duplicate node, both loop edges present, no dropped edge, zero console errors at any level (50 <code>info</code>/5 <code>stderr</code>/1 <code>stdout</code>, 0 <code>error</code>/<code>throw</code>/<code>warning</code>), and a visually legible diamond-shaped render via the app’s own focal-animal+trim feature. New <code>PROJECT_LEARNINGS.md</code> Learning 442 records the “check bundled example data before hand-building a fixture” technique.</li>
+<li>
+<strong>Verified:</strong> direct live-browser structural + visual confirmation (above) – this session’s own deliverable <em>is</em> the runtime verification, satisfying Phase 3E.</li>
+<li>
+<strong>Closed:</strong> issue #134 via GitHub comment (<code>https://github.com/rmsharp/nprcgenekeepr/issues/134#issuecomment-5155638782</code>), no follow-up filed – the rendering is adequate.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-08-02--bl-spellingnotewordlist-add-13-missing-words-to-instwordlist-clearing-devtoolschecks-spelling-note-session-452">2026-08-02 · [BL-spellingNoteWordlist] Add 13 missing words to inst/WORDLIST, clearing devtools::check()’s spelling NOTE (Session 452)<a class="anchor" aria-label="anchor" href="#id_2026-08-02--bl-spellingnotewordlist-add-13-missing-words-to-instwordlist-clearing-devtoolschecks-spelling-note-session-452"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> resolved the <code>BACKLOG.md</code> Housekeeping item (“<code>devtools::check()</code>’s spelling NOTE is broader than previously tracked,” discovered S443 as just <code>IACUC</code>, broadened S448) by hand-adding the missing words to <code>inst/WORDLIST</code>.</li>
