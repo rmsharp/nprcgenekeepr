@@ -26,6 +26,15 @@
 ## `exclusionTable` reactive -- markerParentageExclusion() cross-referenced
 ## against the pedigree's recorded dam/sire, surfaced as a flagged-pairs
 ## table (module-contract canonical `flagged` vocabulary).
+##
+## RED (issue #130 Slice 5): the module gains a SECOND file input
+## (`genotypeFileB`, Center B's marker genotype file -- the existing
+## `genotypeFile` input stays Center A's, unrenamed, so Slices 1-3's
+## existing reactives/tests are untouched) and a "Cross-Center" tab backed
+## by a new `crossCenterTable` reactive -- markerFst() computing the
+## between-population differentiation statistic from both centers' pivoted
+## genotype matrices, surfaced as a locus/fst data frame with a trailing
+## "Pooled" summary row.
 
 library(testthat)
 
@@ -204,5 +213,73 @@ test_that("modMarkerGenetics's exclusion table is not ready before a pedigree is
       name = "markerGenotype.csv", datapath = genotypeFilePath
     ))
     expect_null(result$exclusionTable())
+  })
+})
+
+test_that("modMarkerGeneticsUI has a Cross-Center tab", {
+  ui <- modMarkerGeneticsUI("test")
+  ui_html <- as.character(ui)
+
+  expect_true(grepl("Cross-Center", ui_html))
+})
+
+## Two centers' long-format genotype files -- the same 2-locus, 4-vs-6
+## individual fixture hand-verified in test_markerFst.R (perLocus L1 =
+## 58/1001, L2 = 139/308, pooledFst = 614/2233).
+centerAGenotype <- data.frame(
+  id = c(rep("CA1", 2L), rep("CA2", 2L), rep("CA3", 2L), rep("CA4", 2L)),
+  locus = rep(c("L1", "L2"), 4L),
+  allele1 = c("A", "A", "A", "A", "A", "A", "B", "A"),
+  allele2 = c("A", "A", "A", "B", "B", "B", "B", "A"),
+  stringsAsFactors = FALSE
+)
+centerAGenotypeFilePath <- tempfile(fileext = ".csv")
+write.csv(centerAGenotype, centerAGenotypeFilePath, row.names = FALSE)
+
+centerBGenotype <- data.frame(
+  id = c(rep("CB1", 2L), rep("CB2", 2L), rep("CB3", 2L),
+         rep("CB4", 2L), rep("CB5", 2L), rep("CB6", 2L)),
+  locus = rep(c("L1", "L2"), 6L),
+  allele1 = c("A", "B", "B", "A", "A", "B", "B", "B", "A", "B", "B", "A"),
+  allele2 = c("B", "B", "B", "B", "B", "B", "B", "B", "A", "B", "B", "B"),
+  stringsAsFactors = FALSE
+)
+centerBGenotypeFilePath <- tempfile(fileext = ".csv")
+write.csv(centerBGenotype, centerBGenotypeFilePath, row.names = FALSE)
+
+test_that("modMarkerGenetics's cross-center table is not ready before both center files are uploaded", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "centerA.csv", datapath = centerAGenotypeFilePath
+    ))
+    expect_null(result$crossCenterTable())
+  })
+})
+
+test_that("modMarkerGenetics computes the cross-center Fst table from two uploaded center files", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "centerA.csv", datapath = centerAGenotypeFilePath
+    ))
+    session$setInputs(genotypeFileB = list(
+      name = "centerB.csv", datapath = centerBGenotypeFilePath
+    ))
+
+    tbl <- result$crossCenterTable()
+    expect_s3_class(tbl, "data.frame")
+    expect_identical(sort(names(tbl)), sort(c("locus", "fst")))
+    expect_identical(sort(tbl$locus), c("L1", "L2", "Pooled"))
+
+    expect_equal(tbl$fst[tbl$locus == "L1"], 58 / 1001, tolerance = 1e-6)
+    expect_equal(tbl$fst[tbl$locus == "L2"], 139 / 308, tolerance = 1e-6)
+    expect_equal(tbl$fst[tbl$locus == "Pooled"], 614 / 2233, tolerance = 1e-6)
   })
 })
