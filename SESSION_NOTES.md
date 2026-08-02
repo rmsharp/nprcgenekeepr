@@ -6,6 +6,17 @@
 
 ## ACTIVE TASK
 
+### What Session 449 Did
+**Deliverable:** Implement [issue #132](https://github.com/rmsharp/nprcgenekeepr/issues/132)
+(add an in-app shape-to-sex legend to the Pedigree Diagram tab). Owner-picked via the Phase 0
+priorities `AskUserQuestion` from a 4-option list (a2interactive.Rmd decision, issue #132, CLAUDE.md
+NOT_CRAN doc fix, spelling-NOTE housekeeping).
+**Started:** 2026-08-01
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 448 Did
 **Deliverable:** Resolve the `NEWS.Rmd` checklist decision (BACKLOG.md Housekeeping item,
 `PROJECT_LEARNINGS.md` Learning 433, filed S446). Owner-picked via the Phase 0 priorities
