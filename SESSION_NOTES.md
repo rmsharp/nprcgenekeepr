@@ -40,6 +40,28 @@ final, corrected deliverable. Treated as a continuation of Session 456 rather th
 session -- this was the owner reviewing and correcting work not yet fully accepted, within the
 same unbroken conversation, not a new/different deliverable (Failure Mode #2 "keep going" is
 about starting something NEW after finishing; this is finishing the SAME thing correctly).
+
+**Second follow-up (same session/conversation, planning-scope finding, not implemented):** while
+reviewing the rendered Diagram section, the owner separately noted the diagram itself doesn't
+show mating/couple relationships -- each parent's edge to a child is drawn independently with a
+slope that varies by node position, unlike the standard pedigree-chart convention (kinship2 and
+similar tools) of a horizontal line connecting two mates, dropping to a horizontal sibship line
+their children hang from. Owner cited two reference URLs (an epilepsygenetics.blog kinship2 post,
+an RPubs kinship2 demo) as current-best-practice examples and specifically flagged "the clarity
+provided by horizontal and vertical lines instead of lines with various slopes." This is a
+Diagram-tab rendering-architecture question, not a documentation gap -- it touches the ratified
+D2 (visNetwork) technology decision in
+`docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md` (read `§3 D2` and `§7`
+ratification record to confirm), so per `SESSION_RUNNER.md`'s planning-session rules ("the plan is
+the deliverable... do not start implementing") this was **not** investigated or implemented --
+checked only whether it was already covered by the existing kinship2-comparison audit
+(`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md` Finding #8, "Multiple
+mates/spouses") and found it was related but narrower (Finding #8 was scored
+"Equivalent-different-approach" specifically for childless/remarriage unions, not this broader
+visual-clarity question covering all mated pairs) and left un-actioned by that audit's own S436
+triage. Filed as a new `BACKLOG.md` item (under "Pedigree diagram vs kinship2 audit follow-ups")
+tagged `DECISION NEEDED` for a future dedicated planning session, per owner instruction ("save
+this as a planning session in a backlog item; prepare a close-out report and prepare to exit").
 **Status:** DONE. Documentation-only session -- no `R/` or `tests/` files changed, so the TDD
 RED/GREEN/REFACTOR gates did not apply (S448/S451/S452/S453/S455 precedent). No GitHub issue to
 close (free-text owner directive, not filed).
@@ -192,15 +214,27 @@ rather than a repeat application of the existing `shinytest2` pattern.
   pedigree-diagram family (#129/#131/#132/#135) as well as the marker-genetics family (#130,
   S450) -- a future session shipping a NEW exported, script-callable function should check
   whether it needs its own `a2interactive.Rmd` section, per that checklist's own prospective rule.
-- **Key files:** `vignettes/a2interactive.Rmd:345-403` (new "Pedigree Diagram" section --
-  `makePedigreeDiagramData()` demo + full `visNetwork` render/export/legend/search pipe chain),
-  `R/modPedigree.R:387-467` (the Shiny app's own pipe chain this section reproduces --
-  re-read this first if the Shiny app's diagram options ever change, so the vignette doesn't
-  drift out of sync), `inst/WORDLIST` (2 new words, `makePedigreeDiagramData`/`diagramData`, in
-  byte-collation position near lines 167/263), `PROJECT_LEARNINGS.md` Learning 445 (bare
-  `chromote::ChromoteSession` pattern for verifying non-Shiny interactive vignette content --
-  reusable any time a future session needs to verify an htmlwidget embedded in a rendered
-  document rather than a live Shiny app), `CHANGELOG.md` (new `[ad hoc]` entry, 2026-08-02).
+  **(j)** NEW this session: `BACKLOG.md` "Pedigree Diagram tab does not visually indicate
+  mating/couple relationships" (DECISION NEEDED -- needs a dedicated planning session, Effort M)
+  -- owner-observed rendering-clarity gap vs. kinship2-style mating-line/sibship-line convention;
+  touches the ratified D2 (visNetwork) decision, not implemented this session, read the plan doc's
+  `§3 D2`/`§7` first if picked up. This is arguably the most concrete, well-specified next item of
+  the whole list, though it starts with a planning session, not code.
+- **Key files:** `vignettes/a2interactive.Rmd:345-463` (the "Pedigree Diagram" section --
+  `makePedigreeDiagramData()` demo + full `visNetwork` render/export/legend/search pipe chain,
+  now on a synthesized demo pedigree), `R/modPedigree.R:387-467` (the Shiny app's own pipe chain
+  this section reproduces -- re-read this first if the Shiny app's diagram options ever change,
+  AND it's the file a future planning session on item (j) would start from), `inst/WORDLIST`
+  (2 new words, `makePedigreeDiagramData`/`diagramData`, in byte-collation position near lines
+  167/263), `PROJECT_LEARNINGS.md` Learning 445 (bare `chromote::ChromoteSession` pattern for
+  verifying non-Shiny interactive vignette content -- reusable any time a future session needs to
+  verify an htmlwidget embedded in a rendered document rather than a live Shiny app),
+  `BACKLOG.md` (new item (j) above, "Pedigree diagram vs kinship2 audit follow-ups" section),
+  `docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md:354-413` (D1-D4 ratified
+  decisions, `§3` -- read before any work on item (j)),
+  `docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md:67` (Finding #8, the related
+  -but-narrower prior finding item (j) distinguishes itself from), `CHANGELOG.md` (3 new
+  `[ad hoc]` entries, 2026-08-02).
 - **Gotchas:** all of S442-S455's carried-forward gotchas still apply where relevant (2
   iCloud-sync duplicate files, `R/appServer 2.R`/`R/modMarkerGenetics 2.R`, still present, leave
   untouched; 3 untracked `.DS_Store` files, same benign class, leave untouched; don't trust a
