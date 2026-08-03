@@ -72,7 +72,7 @@ key_files: BACKLOG.md (lint item split DONE (a) + open (b); #142 gate note), CHA
 gotchas: 6 lines across 3 files carry documented # nolint suppressions for genuine lintr false positives -- preserve if those files are edited again, the heuristic will refire otherwise. .lintr's new per-line exclusion (R/markerKinship.R line_length_linter line 17) must have its line number updated if that file's @details section shifts. devtools::install() in this renv setup needs upgrade=FALSE, not upgrade="never". shinytest2::AppDriver via system.file("shinytest", package="nprcgenekeepr") needs BOTH NPRC_RUN_E2E=true AND NOT_CRAN=true -- without NOT_CRAN it aborts with an opaque "Reason: On CRAN", undocumented until now. AppDriver's log method is get_logs() (plural); get_screenshot()'s screenshot_args must not be FALSE. All prior iCloud .Rd corruption gotchas still apply.
 runtime_smoke: Phase 3E run via shinytest2::AppDriver against the real installed app across all 4 touched-module tabs (Genetic Value Analysis, Marker Genetics, Breeding Groups, Pedigree Browser): 0 shiny-output-error DOM elements, 0 SEVERE console log entries (44 total), numericInput cutoff values and fileInput accept attribute confirmed byte-identical to pre-edit rendered output.
 changelog_ref: CHANGELOG.md 2026-08-03 [BL-lintCleanup] entry (Session 466)
-commit: pending
+commit: 211f3f4a
 ```
 
 ```handoff
