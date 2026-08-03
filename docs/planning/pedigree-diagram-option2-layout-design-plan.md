@@ -477,6 +477,19 @@ runtime impact, matching this project's "small, additive, per-session slice" pre
   quadratic-degradation case, [issue #141](https://github.com/rmsharp/nprcgenekeepr/issues/141)
   tracks upgrading to Buchheim-Jünger-Leipert's apportioning technique -- filed but deliberately
   not scheduled (`premature optimization` label) until that evidence exists.
+  **Resolved S460 (2026-08-02):** implemented as `.positionMatingUnitForest()`, edge-case-tested
+  (not just literature-cited) against 8 toy fixtures -- a simple trio, a multi-mate anchor with
+  uneven-depth subtrees, a D5-mixed subtree, the real `GA204Z`/`8LKBV9` loop, a half-sib convergent
+  loop, an isolated founder beside an unrelated family, an 8-mate wide fan-out, and a deeply
+  unbalanced 6-generation chain -- plus the full real 375-individual fixture, all clean (~26ms, no
+  quadratic-degradation signal at this scale). Found and resolved 2 gaps this section's own text did
+  not anticipate: contour occupancy must be indexed by each node's absolute real `gen`, not relative
+  recursive depth (D3 step 6 pins y to real `gen`, which diverges from recursive depth once a
+  duplicate/free-pass node is re-attached deep inside another individual's subtree -- impossible in
+  a genuine tree, possible here); and even gen-indexed contours leave a residual ancestor-vs-nested
+  -descendant exact-coincidence edge case (12/740 nodes, ~1.6%, on the real fixture), resolved with
+  a small deterministic post-placement nudge applied only to individual/union nodes. See
+  `PROJECT_LEARNINGS.md` Learnings 451-453.
 
 ---
 
