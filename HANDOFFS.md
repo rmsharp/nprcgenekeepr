@@ -72,7 +72,7 @@ key_files: docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md (n
 gotchas: D2's mate-line dogleg must use the ACTUAL rendered node's x for the non-anchor side -- if a duplicate node was placed at that unit (57/96 real cases), use the duplicate's own x, not the real individual's potentially-distant x. The rectilinear-mode node-count multiplier (3.67x, not the direct style's ~2x) means the existing 750-individual cap must not simply carry over -- re-measure and decide via AskUserQuestion. visOptions's highlightNearest (issue #135) has a genuinely new regression risk under this design (hidden waypoints becoming a real individual's nearest edge-graph neighbor) -- re-verify live, do not assume issue #135's prior verification covers it. There is no existing UI "home" for the new style toggle in R/modPedigree.R -- needs net-new layout inside the Diagram tab's own reactive uiOutput, not the shared cross-tab "Display Options" panel.
 runtime_smoke: n/a -- planning/design document only, no R/ or tests/ files changed, no runtime behavior affected.
 changelog_ref: CHANGELOG.md 2026-08-03 [issue #142] entry (Session 464)
-commit: pending
+commit: 0016d356
 ```
 
 ```handoff
