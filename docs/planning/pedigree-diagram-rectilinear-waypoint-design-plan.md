@@ -513,3 +513,59 @@ to use when the non-anchor side is a duplicate, affecting 57/96 cases), a previo
 unconsidered regression risk in issue #135's `highlightNearest` hover-highlighting, a false
 claim about which function `vignettes/a2interactive.Rmd` demos, an arithmetic rounding
 overstatement (~400 corrected to ~380), and 2 minor prose/count fixes.
+
+---
+
+## 11. Implementation addendum (Session 465, 2026-08-03): the `hidden = TRUE`
+## mechanism does not work as designed -- corrected before RED
+
+**§1.3/§9's "not yet confirmed to compose correctly" dragon fired for real.**
+Session 465's mandatory Pre-RED live-verification (a minimal `visNetwork` widget
+reproducing `R/modPedigree.R`'s exact render chain -- `visPhysics(enabled =
+FALSE)` / `visNodes(physics = FALSE)` / `visEdges(smooth = FALSE)`, fixed
+`x`/`y`, driven via `shinytest2`/`chromote`) found that **a node with
+`hidden = TRUE` causes vis.js to suppress every edge connected to it,
+regardless of the edge's own `hidden` setting.** Confirmed with 4 isolation
+tests (screenshots plus live `network.body.edges`/`network.redraw()`
+inspection): an `A -- W -- B` right-angle chain with `W.hidden = TRUE` rendered
+**zero edges** -- not just a hidden `W` node, the connecting edges themselves
+never drew, even though each edge's own `options.hidden` read `false`. This
+is undocumented on vis.js's own `hidden` option pages (both node and edge) but
+is real, reproducible, unaffected by a forced `network.redraw()`.
+
+**Working alternative, verified this session:** give each waypoint node
+`size = 0` and fully transparent `color.background`/`color.border`
+(`"rgba(0,0,0,0)"`) instead of `hidden = TRUE` -- vis.js still computes and
+draws edges connected to it (it is not flagged `hidden`), and a zero-size,
+fully-transparent node renders no visible mark. **A second, related gotcha
+found in the same investigation:** vis.js edges default to
+`color.inherit = "from"` (undocumented interaction, confirmed from the
+bundled docs' own text: "the edge will inherit the color from the border of
+the node on the 'from' side") -- so an edge whose `from` endpoint is the new
+transparent waypoint node silently inherits that transparent color and still
+renders invisible, **even with `hidden` no longer involved at all**. Isolated
+across 7 throwaway POC apps: the failure depended specifically on which side
+the transparent node occupied (`from` broke it, `to` did not), matching this
+inheritance rule exactly, not a size-related rendering degeneracy (a
+non-zero `size = 1` transparent-colored `from` node still failed; a fully
+opaque `size = 0` `from` node still succeeded) -- ruling out node size itself
+as the cause. **Fix:** give every new waypoint-touching edge (D1's
+`F -- D_F`, the bar chain, `B_i -- C_i`; D2's `thatNode -- P`, `P -- U`) an
+explicit `color` value (matching the existing default edge color,
+`"#2B7CE9"`, for visual consistency with the direct style's own
+inherited-from-node-border color) -- per the bundled docs, defining `color`
+at all disables inheritance automatically ("When color, highlight or hover
+are defined, inherit is set to false").
+
+**What changes in D1/D3, what does not:** D1's and D2's own *geometry*
+(node positions, which edges connect which points, the sort-and-chain
+mechanism, the projection-node rule) is **unaffected** -- this is a
+node/edge-*styling* correction only. D3's reserved-id-prefix validation,
+click-to-navigate exclusion, and search-dropdown exclusion are **unaffected**
+-- they operate on id string prefixes, not the `hidden` flag. The
+`highlightNearest` regression risk D3 already flagged is, if anything,
+**slightly more load-bearing** now: a `size = 0`/transparent node is not
+flagged `hidden` at all (unlike the originally-designed mechanism), so it is
+in every sense a normal graph node to vis.js's interaction layer, and D3's
+own live re-verification requirement (deferred to the UI-wiring session)
+still applies, unchanged in scope.
