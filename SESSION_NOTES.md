@@ -7,6 +7,239 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 466 Did
+
+**Deliverable:** Clean up the accumulated `lintr::lint_package()`
+warnings (`BACKLOG.md`, found S462) – picked by the owner via the S465
+close-out `AskUserQuestion` picker; also the owner-directed sequencing
+gate on issue \#142 completion (2026-08-03, reconciled into
+`HANDOFFS.md` this session’s Phase 0). **Started/Completed:** 2026-08-03
+/ 2026-08-03 **Status:** DONE – all 41 warnings across the 16 tracked
+files fixed; owner-directed gate on issue \#142 Slice 2 satisfied.
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Phase 0 found an undocumented
+out-of-band commit (`811bf945`, the owner’s lint-cleanup sequencing
+directive) with no `HANDOFFS.md` receipt – backfilled a
+`status: reconciled` block, committed separately (`2b6ebbe3`) before the
+orientation report, per the Phase 0 reconcile mechanics. **(2)** Owner
+picked “Lint cleanup” from the priorities-picker `AskUserQuestion`.
+Claimed the session (stub + `HANDOFFS.md` `status: pending` receipt,
+commit `09f98c19`). **(3)** Ran `lintr::lint_package()` fresh: confirmed
+the count (45) but found the untracked iCloud duplicate
+`R/modMarkerGenetics 2.R` contributes 4 of them (not part of the shipped
+package) – real tracked-file scope is 41 warnings/16 files, not 45/17 as
+`BACKLOG.md` stated. **(4)** Presented a pre-RED scope `AskUserQuestion`
+(full 41-warning sweep this session, in 4 checkpoint commits of \<=4
+files each, vs. a 2-file partial); owner picked the full sweep. **(5)**
+Presented a `TDD: PRE-RED->REFACTOR` phase-gate `AskUserQuestion` per
+the project’s own established `PROJECT_LEARNINGS.md` `[refactor-only]`
+reflex (style-only fixes, no new behavior – skip RED/GREEN, no synthetic
+red), with the per-linter-category behavior-inertness reasoning spelled
+out; owner approved. **(6)** REFACTOR, in 4 checkpoint commits: wrapped
+over-80-char lines; converted `paste(collapse=", ")` to
+[`toString()`](https://rdrr.io/r/base/toString.html) only where the
+separator exactly matched (spot- checked via
+[`identical()`](https://rdrr.io/r/base/identical.html)); added
+`fixed = TRUE` to `strsplit(x, "/")` calls (spot- checked); added
+`.0`/`L`-suffix to bare numeric literals; removed 1 file.path()-style
+`paste(..., sep="/")` (rewritten as
+[`paste0()`](https://rdrr.io/r/base/paste.html), since it wasn’t
+actually a file path – a genotype string – so
+[`file.path()`](https://rdrr.io/r/base/file.path.html) would have been
+the wrong fix); collapsed 2 single-element `c(".csv")` calls to plain
+strings. **Found and corrected a real error in my own earlier
+scope-decision framing**: I had told the owner the
+`nonportable_path_linter` hits were “a real, tracked-file
+[`paste()`](https://rdrr.io/r/base/paste.html)-built path” – on actually
+reading the flagged lines, both are false positives on a plain fallback
+LABEL string (`"Other / Unrecorded"`) that merely contains `/`, not a
+path at all; corrected transparently mid-session rather than silently.
+**Found a second false-positive class**: 4 `commented_code_linter` hits
+were live, issue-numbered design-rationale comments (issues
+\#125/#127/#132) that embed a real R expression in prose – deleting them
+would have destroyed real documentation; suppressed via documented
+`# nolint` blocks instead. **Found one deliberate-non-fix case**:
+`R/markerKinship.R:17`, the published KING-robust `\deqn{}` LaTeX
+formula (Manichaikul et al. 2010) – left untouched (reformatting risks
+corrupting a citation-critical formula for a cosmetic gain; a trailing
+nolint comment on the same roxygen line would leak literal text into
+rendered docs) and suppressed instead via a new `.lintr` per-line
+exclusion, the project’s own established mechanism for exactly this
+case. **(7)** Ran `devtools::document()` after batches 3 and 4; the 3
+known iCloud duplicate-file-corrupted `.Rd` files reverted each time
+(confirmed via diff: the stale duplicate’s content describes an
+out-of-date, pre-Slice-4 API); 4 legitimate `.Rd` regenerations kept
+(diffed, confirmed pure reflow, no content loss, the `\deqn{}` formula
+untouched). **(8)** Final verification: `lintr::lint_package()` 0
+warnings on all 16 tracked files; full regression suite 0 failed/0
+error, 10 pre-existing warnings (exact S465 baseline) after every single
+batch, not just at the end; `devtools::check()` exact baseline (1
+pre-existing WARNING, 2 pre-existing NOTEs, 0 new – confirmed the
+spelling-drift NOTE’s 6 words exactly match the already-filed
+`BACKLOG.md` item). **(9)** Phase 3E (mandatory – 4 touched files back
+live Shiny UI): installed the package locally, drove the real app via
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+across all 4 touched-module tabs (Genetic Value Analysis, Marker
+Genetics, Breeding Groups, Pedigree Browser) – 0 `shiny-output-error`
+DOM elements, 0 SEVERE console log entries (44 total), `numericInput`
+cutoff values and `fileInput` `accept` attribute confirmed
+byte-identical to pre-edit rendered output. **(10)** Close-out:
+`BACKLOG.md` lint item’s part (a) marked DONE, part (b) (CI/process fix)
+split into its own open item (not done this session, out of scope);
+issue \#142 Slice 2’s owner-directed gate marked satisfied;
+`CHANGELOG.md` entry; `PROJECT_LEARNINGS.md` Learning 461 (the two
+false-positive classes + the deliberate-non-fix case, generalized into a
+practical rule about not trusting a lint finding’s own message, or a
+prior session’s characterization of one, without reading the actual
+flagged code); `CLAUDE.md` learning-count cross-reference (460-\>461).
+
+**Session 465 Handoff Evaluation (by Session 466): 8/10.** **What
+helped:** S465’s “everything carried from S462-464” bucket correctly
+named the lint-cleanup item as READY/Effort M with an accurate
+warning-count breakdown by linter and file – that breakdown’s COUNTS
+were exactly right (verified independently via a fresh
+`lintr::lint_package()` run) and saved real discovery time. **What was
+missing:** the handoff (and the `BACKLOG.md` item it carried forward,
+originally written S462) did not flag that the item’s own claimed
+root-cause for the `nonportable_path_linter` hits (“both from the iCloud
+duplicate-file artifact”) had never actually been verified against the
+flagged lines – it was wrong, and only this session’s own direct
+inspection caught it. This isn’t really a defect IN S465’s handoff (S465
+didn’t originate that claim, S462 did, and re-verifying every
+carried-forward backlog item’s internal claims every session isn’t a
+reasonable bar) – noted here as context for why the score isn’t higher,
+not as a criticism of S465 specifically. **What was wrong:** nothing
+S465 itself claimed was inaccurate. **ROI:** solidly positive – the
+accurate count/file breakdown was real time saved, even though this
+session still had to independently verify every individual finding’s
+actual mechanism before fixing it.
+
+**Self-assessment (Session 466): 9/10.** **Strengths:** (1) followed
+strict TDD phase-gate discipline throughout (PRE-RED research -\> scope
+`AskUserQuestion` -\> `PRE-RED->REFACTOR` gate `AskUserQuestion`, citing
+the project’s own established `[refactor-only]` precedent -\> REFACTOR
+-\> verification), consistent with `CLAUDE.md`‘s Development Process
+Contract; (2) caught and transparently corrected a real error in my own
+earlier scope-decision claim rather than letting it stand once
+discovered; (3) treated `lintr`’s own finding messages as unverified
+claims rather than ground truth, catching 2 distinct false-positive
+classes (a heuristic misreading live design-rationale prose as dead
+code; a heuristic misreading a non-path string containing `/` as a file
+path) before “fixing” either by deleting real documentation or applying
+a semantically-wrong suggested rewrite; (4) recognized a case where the
+CORRECT action was neither “apply the suggested fix” nor a blanket
+nolint, but “leave a citation-critical formula untouched and suppress
+via the project’s own established `.lintr` per-line exclusion
+mechanism,” reasoned through why a same-line nolint comment specifically
+would have leaked into rendered documentation; (5) verified
+behavior-inertness concretely via
+[`identical()`](https://rdrr.io/r/base/identical.html) spot-checks for
+every semantically-nontrivial rewrite (`toString` equivalence,
+`strsplit fixed=TRUE` equivalence, `paste0` vs `paste(sep=)`
+equivalence, numeric literal suffix equivalence) rather than assuming
+lint-suggested rewrites are automatically safe; (6) ran the full
+regression suite + `devtools::check()`-equivalent lint/document checks
+after EVERY batch, not just at the end, catching and cleanly reverting
+the known iCloud `.Rd` corruption twice without ever committing it; (7)
+ran a real, not `n/a`, Phase 3E live runtime smoke test via
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+across all 4 touched-module tabs, despite the changes being provably
+low-risk – caught zero issues, but confirmed rather than assumed; (8)
+kept strict scope discipline – fixed only the owner-approved 41
+warnings, split the “wire lint into CI” process-fix ask into its own
+clearly-scoped follow-up item rather than scope-creeping into it, left
+the untracked duplicate file untouched (correctly out of scope, belongs
+to a different backlog item). **Weaknesses:** (1) the initial
+scope-decision `AskUserQuestion` presented to the owner contained an
+unverified, ultimately-wrong claim about the `nonportable_path_linter`
+hits’ mechanism (asserted without having read the actual flagged lines
+first) – caught and corrected before any edit was made, but the owner
+briefly received inaccurate information at the scope-decision stage; a
+“read the flagged line first, THEN describe it” order would have avoided
+this entirely; (2) two rounds of minor tool/API friction
+(`devtools::install(upgrade = "never")` is invalid, needed `FALSE`;
+`shinytest2`’s `AppDriver$get_log()` doesn’t exist, needed `get_logs()`;
+`NOT_CRAN=true` was required alongside `NPRC_RUN_E2E=true` to avoid an
+opaque “Reason: On CRAN” abort, undocumented anywhere in project memory
+until now) cost a small amount of extra time, though each was resolved
+on the first retry with no impact on final correctness. **Compared to
+previous sessions:** extends the S459-465 standard of “verify claims
+against real code/fixtures/ live app rather than trusting documentation
+at face value” to a new input class – lint- tool output itself, and a
+prior session’s own characterization of a lint finding – rather than
+mechanically applying suggested rewrites or deleting flagged content.
+Matches S465’s own discipline of catching and correcting an error in the
+working material (there, a design’s core mechanism; here, a backlog
+item’s root-cause claim) transparently rather than silently.
+
+**Handoff to Session 467:** - **What’s next:** **(a)** Issue \#142 Slice
+2 (`BACKLOG.md`’s item, now UNBLOCKED – the owner-directed lint-cleanup
+gate is satisfied) – READY, Effort M. S465’s own handoff already scoped
+this in full detail (wire `edgeStyle` into
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md);
+add the `R/modPedigree.R` UI toggle; extend
+click-to-navigate/search-dropdown id-prefix filters to the 3 new
+reserved prefixes, careful not to fold `__dup_` into the same exclusion;
+re-measure the node count against the actually-wired code path;
+live-re-verify inbreeding-loop rendering (#134) and `highlightNearest`
+hover-highlighting (#135) for the rectilinear style specifically) – see
+S465’s `HANDOFFS.md` receipt or the `BACKLOG.md` item itself for the
+full step-by-step, unchanged by this session. **(b)** NEW, split off
+this session: wire a process fix so `lintr` debt stops re-accumulating
+(READY, Effort S-M, `BACKLOG.md` Housekeeping) – a CI job and/or a Phase
+3F close-out check; the exact mechanism is undecided, left for whichever
+session picks it up. **(c)** Everything else carried from S462-465,
+unchanged: fix `test-e2e-pedigree-module.R:205,207`’s stale assertions
+(READY, Effort S); founder-positioning defect (DECISION NEEDED, Effort
+M); confirm whether the iCloud repo relocation has happened (still
+hadn’t as of this session); re-capture the stale
+`colony-manager-guide.qmd` Diagram screenshot (READY, Effort S); the
+6-word `devtools::check()` spelling-drift NOTE (READY, Effort S – NOT
+fixed this session, confirmed still present at Phase 3F verification,
+exactly the same 6 words as S465 found); NPRC outreach plan review
+(DECISION NEEDED, owner-only); LabKey recommendations (BLOCKED); S445’s
+methodology question unresolved; issues \#133/#136/#137 (data-model
+gated), \#141 (filed-not-scheduled); 2 owner-supplied reference PDFs
+untracked; unexplained `renv.lock` diff (carried forward 8 sessions
+now); 2 untracked rendered `.html` byproducts under `docs/planning/`
+(still not examined – worth a look at whether they should be
+`.gitignore`d). - **Key files:** `BACKLOG.md` (lint item split into DONE
+part (a) + new open part (b); issue \#142 Slice 2 gate note updated),
+`CHANGELOG.md` (S466 entry), `PROJECT_LEARNINGS.md` Learning 461 (new),
+`CLAUDE.md` (learning-count cross-reference 460-\>461), `.lintr` (new
+per-line exclusion: `R/markerKinship.R` line 17, `line_length_linter`),
+12 touched `R/*.R` source files across 4 commits (`9883494f`,
+`f0d0c75c`, `1957a65b`, `23688365`), 4 regenerated `man/*.Rd` files
+(`checkMarkerGenotypeFile.Rd`, `loadSiteConfig.Rd`,
+`markerExpectedHeterozygosity.Rd`, `markerKinship.Rd`). - **Gotchas:**
+(1) 6 lines across 3 files now carry documented `# nolint` suppressions
+for genuine `lintr` heuristic false positives (`R/reportGV.R:195` block,
+`R/makePedigreeDiagramData.R` 2 blocks, `R/modGeneticValue.R` 2 blocks)
+– if any of these are edited again, preserve the nolint markers around
+the flagged content, don’t drop them assuming the underlying lint issue
+is gone (it isn’t; the heuristic will refire). (2) `.lintr` now has one
+per-line exclusion
+(`"R/markerKinship.R" = list(line_length_linter = 17L)`) protecting the
+`\deqn{}` formula line – if that file’s `@details` section is edited
+such that the formula moves to a different line, update the exclusion’s
+line number or it will silently stop suppressing (and the NEXT line at
+that position will be silently excluded instead). (3)
+`devtools::install()` in this `renv` setup needs `upgrade = FALSE`, not
+`upgrade = "never"` (the latter errors: “must be a single TRUE, FALSE,
+or NA”). (4) A
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+launched via `system.file("shinytest", package = "nprcgenekeepr")`
+requires BOTH `NPRC_RUN_E2E=true` AND `NOT_CRAN=true` env vars – without
+`NOT_CRAN`, it aborts immediately with an opaque “Reason: On CRAN” and
+no further detail; not previously documented anywhere in this project’s
+memory until now. `AppDriver`’s console-log method is `get_logs()`
+(plural), not `get_log()`; `get_screenshot()`’s `screenshot_args` must
+not be `FALSE` (omit it or pass
+[`list()`](https://rdrr.io/r/base/list.html)). (5) All prior iCloud
+duplicate-file `.Rd` corruption gotchas still apply unchanged. -
+**Self-assessment score:** 9/10 (breakdown above).
+
 ### What Session 465 Did
 
 **Deliverable:** Implement issue \#142 (rectilinear

@@ -4,8 +4,8 @@ Validates the structure and legal domain of a long-format marker
 genotype table (one row per `id` x `locus`), the input format for the
 marker-based (KING-robust) kinship estimator
 ([`markerKinship`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)).
-This is a new, sibling schema to the single-locus `first_name`/
-`second_name` genotype format checked by
+This is a new, sibling schema to the single-locus
+`first_name`/`second_name` genotype format checked by
 [`checkGenotypeFile`](https://github.com/rmsharp/nprcgenekeepr/reference/checkGenotypeFile.md)
 – that function, and everything downstream of it
 ([`addGenotype`](https://github.com/rmsharp/nprcgenekeepr/reference/addGenotype.md),

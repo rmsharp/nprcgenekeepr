@@ -153,8 +153,7 @@ Funtions designed for interactive use
 - [`makeExamplePedigreeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeExamplePedigreeFile.md)
   : Write copy of nprcgenekeepr::examplePedigree into a file
 - [`markerExpectedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerExpectedHeterozygosity.md)
-  : Compute per-locus and population-wide expected heterozygosity from
-  marker genotypes
+  : Compute per-locus and population-wide expected heterozygosity
 - [`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)
   : Estimate pairwise kinship directly from marker genotypes
   (KING-robust)
@@ -468,8 +467,7 @@ Funtions designed for interactive use
 - [`mapIdsToObfuscated()`](https://github.com/rmsharp/nprcgenekeepr/reference/mapIdsToObfuscated.md)
   : Map IDs to Obfuscated IDs
 - [`markerExpectedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerExpectedHeterozygosity.md)
-  : Compute per-locus and population-wide expected heterozygosity from
-  marker genotypes
+  : Compute per-locus and population-wide expected heterozygosity
 - [`markerFst()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md)
   : Compute a between-center allele-frequency differentiation statistic
   (Fst)

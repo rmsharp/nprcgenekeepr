@@ -68,6 +68,46 @@ are legal at write time (the receipt ships in the very commit whose sha
 it would name); the next session reconciles them to real shas.
 
 ``` handoff
+session: S466
+date: 2026-08-03
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- all 41 pre-existing lintr::lint_package() warnings across the 16 tracked files fixed (REFACTOR-only, owner-approved TDD gate). Satisfies the owner-directed sequencing gate on issue #142 Slice 2 (now unblocked).
+what_was_done: lintr::lint_package() confirmed 41/16 (not 45/17 -- the untracked iCloud duplicate R/modMarkerGenetics 2.R contributes 4, correctly out of scope). Fixed in 4 checkpoint commits (<=4 files each): line wraps; paste(collapse=", ")->toString() where the separator matched (identical() spot-checked); strsplit(x,"/")->fixed=TRUE (spot-checked); bare numeric literals ->.0/L suffix; one paste(sep="/")->paste0() (not a file path, a genotype string -- file.path() would have been wrong). Found and corrected a real error in my own earlier scope framing: the nonportable_path_linter hits are false positives on a plain label string ("Other / Unrecorded") containing "/", not a path -- suppressed via nolint, not "fixed". Found 4 more false positives: commented_code_linter flagged live design-rationale comments (issues #125/#127/#132) embedding real R expressions in prose -- suppressed via nolint blocks, not deleted. Left R/markerKinship.R:17 (the published KING-robust \deqn{} formula, Manichaikul et al. 2010) untouched and suppressed via a new .lintr per-line exclusion instead of risking corrupting a citation-critical formula. devtools::document() run twice; 3 known iCloud-duplicate-corrupted .Rd files reverted each time; 4 legitimate .Rd regenerations kept. Commits: 9883494f, f0d0c75c, 1957a65b, 23688365.
+next_steps: (a) Issue #142 Slice 2, now UNBLOCKED (BACKLOG.md, READY, Effort M) -- S465's handoff already scoped this in full; unchanged. (b) NEW: wire a process fix so lintr debt stops re-accumulating (READY, Effort S-M, split off this session). (c) Everything else carried from S462-465 unchanged: test-e2e-pedigree-module.R fix, founder-positioning defect, iCloud relocation still pending, stale screenshot, the 6-word spelling-drift NOTE (NOT fixed this session), NPRC outreach, LabKey, S445 question, data-model-gated issues, untracked PDFs, renv.lock diff (8 sessions), 2 untracked .html byproducts under docs/planning/.
+key_files: BACKLOG.md (lint item split DONE (a) + open (b); #142 gate note), CHANGELOG.md, PROJECT_LEARNINGS.md Learning 461, CLAUDE.md (460->461), .lintr (new R/markerKinship.R:17 exclusion), 12 R/*.R files across 4 commits, 4 regenerated man/*.Rd files.
+gotchas: 6 lines across 3 files carry documented # nolint suppressions for genuine lintr false positives -- preserve if those files are edited again, the heuristic will refire otherwise. .lintr's new per-line exclusion (R/markerKinship.R line_length_linter line 17) must have its line number updated if that file's @details section shifts. devtools::install() in this renv setup needs upgrade=FALSE, not upgrade="never". shinytest2::AppDriver via system.file("shinytest", package="nprcgenekeepr") needs BOTH NPRC_RUN_E2E=true AND NOT_CRAN=true -- without NOT_CRAN it aborts with an opaque "Reason: On CRAN", undocumented until now. AppDriver's log method is get_logs() (plural); get_screenshot()'s screenshot_args must not be FALSE. All prior iCloud .Rd corruption gotchas still apply.
+runtime_smoke: Phase 3E run via shinytest2::AppDriver against the real installed app across all 4 touched-module tabs (Genetic Value Analysis, Marker Genetics, Breeding Groups, Pedigree Browser): 0 shiny-output-error DOM elements, 0 SEVERE console log entries (44 total), numericInput cutoff values and fileInput accept attribute confirmed byte-identical to pre-edit rendered output.
+changelog_ref: CHANGELOG.md 2026-08-03 [BL-lintCleanup] entry (Session 466)
+commit: 211f3f4a
+```
+
+``` handoff
+session: S465b (ad hoc, reconciled)
+date: 2026-08-03
+status: reconciled
+self_score: n/a -- reconstructed, not self-scored
+predecessor_score: n/a
+active_task: Owner-directed sequencing decision: gate issue #142 completion (the pedigree drawing feature) on the pre-existing "Accumulated lintr::lint_package() warnings, 45 total across 17 files" BACKLOG.md item (found S462) -- must be resolved before #142 is considered complete and pushed, not deferred until after. No code changed.
+what_was_done: BACKLOG.md updated: the lint-cleanup item annotated with the owner-directed gate; the issue #142 Slice 2 item annotated as gated on that lint-cleanup item. CHANGELOG.md given a same-day [ad hoc] entry recording the decision. Commit: 811bf945.
+next_steps: Pick up the lint-cleanup item (BACKLOG.md, found S462, Effort M, 45 warnings across 17 files) before or alongside issue #142 Slice 2 -- see that item's full breakdown by linter/file. Issue #142 Slice 2 itself remains READY in design terms (S465 left it fully scoped) but is now gated on the lint-cleanup item completing first.
+key_files: BACKLOG.md (2 items annotated), CHANGELOG.md (new entry).
+gotchas: This was a small out-of-band owner directive, not a full numbered session -- no SESSION_NOTES.md stub or Phase 1B claim was written for it, and no HANDOFFS.md receipt existed until this Phase 0 reconcile backfilled one. The CHANGELOG.md ledger was NOT behind (the commit added its own entry); only this HANDOFFS.md receipt was missing.
+runtime_smoke: n/a -- docs-only, no code changed.
+changelog_ref: CHANGELOG.md 2026-08-03 [ad hoc] "Owner-directed sequencing" entry
+commit: 811bf945
+```
+
+Block reconstructed by Session 466’s Phase 0 reconcile-on-read from
+`git log` alone (the commit’s own message and diff), per
+`SESSION_RUNNER.md` Phase 0 step 6 / the HANDOFFS.md reconcile
+mechanics. The commit was an out-of-band owner-directed docs edit
+(BACKLOG.md sequencing annotation + its own CHANGELOG.md entry), not a
+full session with a Phase 1B stub – so status is `reconciled`, not
+`complete`, and there is no self-score to report.
+
+``` handoff
 session: S465
 date: 2026-08-03
 status: complete

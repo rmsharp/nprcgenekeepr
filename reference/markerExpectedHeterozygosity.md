@@ -1,4 +1,4 @@
-# Compute per-locus and population-wide expected heterozygosity from marker genotypes
+# Compute per-locus and population-wide expected heterozygosity
 
 Computes Nei's gene diversity (the standard \\He = 1 - \sum p_i^2\\
 form, where \\p_i\\ is the population frequency of allele \\i\\ at a
