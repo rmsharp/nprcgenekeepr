@@ -43,6 +43,17 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-03 · [ad hoc] Phase 0 ledger reconcile: backfill S466's own HANDOFFS.md receipt commit sha self-correction (post-S466)
+- **Deliverable:** Phase 0 ledger reconcile (this session, S467) found one commit past
+  the `CHANGELOG.md` frontier with no ledger entry: `ec3bf90e` ("docs: S466 final
+  close-out -- handoff receipt commit sha"), landed after S466's own close-out commit
+  (`211f3f4a`) that recorded the entry below.
+- **Change:** `ec3bf90e` replaced the S466 `HANDOFFS.md` receipt's `commit: pending`
+  placeholder with the real commit sha (`211f3f4a`) -- a self-correction of the
+  just-written receipt, not new production work. Same class of action as the many
+  prior sessions' equivalent self-fixes recorded further down this ledger (e.g.
+  S331-S344's `commit: pending` backfills).
+
 ### 2026-08-03 · [BL-lintCleanup] Clean up the accumulated `lintr::lint_package()` warnings, satisfying the owner-directed issue #142 sequencing gate (Session 466)
 - **Deliverable:** all 41 pre-existing `lintr::lint_package()` warnings across the
   16 TRACKED files fixed (the other 4, of the original 45, were on the untracked
