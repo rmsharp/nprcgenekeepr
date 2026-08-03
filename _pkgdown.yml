@@ -300,6 +300,7 @@ reference:
   - '`makeGroupNum`'
   - '`makeGrpNum`'
   - '`makePedigreeDiagramData`'
+  - '`makePedigreeMatingLayout`'
   - '`makeRelationClassesTable`'
   - '`makeSimPed`'
   - '`mapIdsToObfuscated`'

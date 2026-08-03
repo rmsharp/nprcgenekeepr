@@ -14,7 +14,9 @@ produced by \code{\link{findGeneration}}).}
 }
 \value{
 A list with two data frames: \code{nodes} (\code{id}, \code{label},
-\code{shape}, \code{level}) and \code{edges} (\code{from}, \code{to}).
+\code{shape}, \code{level}, \code{title}) and \code{edges} (\code{from},
+\code{to}). \code{title} is an HTML hover-tooltip string (issue #135)
+giving ID, sex, generation, sire, and dam.
 }
 \description{
 Builds the node and edge tables consumed by \code{visNetwork::visNetwork()}

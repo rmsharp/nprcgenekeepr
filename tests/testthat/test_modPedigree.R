@@ -1362,3 +1362,229 @@ test_that(
     }
   )
 })
+
+## Pedigree Diagram Option 2 Slice 3 -- render-chain wiring
+## (docs/planning/pedigree-diagram-option2-layout-design-plan.md, Migration
+## Path step 3). The Diagram tab switches from makePedigreeDiagramData() +
+## visHierarchicalLayout() to makePedigreeMatingLayout() + a fixed-position
+## layout (visPhysics(enabled = FALSE)); the 1,500-node cap is re-derived to
+## 750 individuals (owner-directed, S461, to keep total rendered nodes near
+## the original ~1,500 ceiling under the new ~2x mating-unit/duplicate node
+## model); click-to-navigate and the search dropdown adapt to the new union/
+## duplicate node population (D6).
+
+test_that(
+  "modPedigreeServer's diagram widget disables physics/manual layout
+   instead of visHierarchicalLayout(), per Slice 3's fixed-position
+   geometry", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE
+      )
+      session$flushReact()
+
+      widgetJson <- output$pedigreeDiagram
+      expect_true(grepl('"physics":{"enabled":false', widgetJson,
+                         fixed = TRUE))
+      expect_false(grepl("hierarchical", widgetJson, ignore.case = TRUE))
+    }
+  )
+})
+
+test_that(
+  "modPedigreeServer renders the diagram widget at exactly 750 animals
+   (the re-derived Slice 3 cap)", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  n <- 750L
+  bigId <- sprintf("A%04d", seq_len(n))
+  test_studbook <- data.frame(
+    id = bigId,
+    sire = NA_character_,
+    dam = NA_character_,
+    sex = rep(c("M", "F"), length.out = n),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE
+      )
+      session$flushReact()
+
+      html <- output$pedigreeDiagramUI$html
+      expect_true(grepl("visNetwork", html))
+    }
+  )
+})
+
+test_that(
+  "modPedigreeServer shows an informative message just above the
+   re-derived 750-animal Slice 3 cap", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  n <- 751L
+  bigId <- sprintf("A%04d", seq_len(n))
+  test_studbook <- data.frame(
+    id = bigId,
+    sire = NA_character_,
+    dam = NA_character_,
+    sex = rep(c("M", "F"), length.out = n),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE
+      )
+      session$flushReact()
+
+      html <- output$pedigreeDiagramUI$html
+      expect_false(grepl("visNetwork", html))
+      expect_true(grepl("750", html, fixed = TRUE))
+    }
+  )
+})
+
+test_that(
+  "modPedigreeServer's click-to-navigate ignores a click on a union
+   (mating-unit) node -- D6, matches the design doc's own no-op
+   requirement", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "D", "C", "E"),
+    sire = c(NA, NA, NA, "A", "A"),
+    dam = c(NA, NA, NA, "B", "D"),
+    sex = c("M", "F", "F", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(cbind(test_studbook, gen = 0L))
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE,
+        pedigreeDiagram_click = "C"
+      )
+      session$flushReact()
+      result <- session$getReturned()
+      expect_equal(result$focalAnimals(), "C")
+
+      session$setInputs(pedigreeDiagram_click = forest$matingUnits$id[1L])
+      session$flushReact()
+      expect_equal(result$focalAnimals(), "C")
+    }
+  )
+})
+
+test_that(
+  "modPedigreeServer's click-to-navigate resolves a click on a duplicate
+   node to its real individual's id -- D6", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "D", "C", "E"),
+    sire = c(NA, NA, NA, "A", "A"),
+    dam = c(NA, NA, NA, "B", "D"),
+    sex = c("M", "F", "F", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(cbind(test_studbook, gen = 0L))
+  expect_equal(nrow(forest$duplicates), 1L)
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE,
+        pedigreeDiagram_click = forest$duplicates$id[1L]
+      )
+      session$flushReact()
+      result <- session$getReturned()
+      expect_equal(result$focalAnimals(), forest$duplicates$realId[1L])
+    }
+  )
+})
+
+test_that(
+  "modPedigreeServer's diagram search dropdown lists only real individual
+   ids, excluding mating-unit and duplicate node ids -- D6", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "D", "C", "E"),
+    sire = c(NA, NA, NA, "A", "A"),
+    dam = c(NA, NA, NA, "B", "D"),
+    sex = c("M", "F", "F", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE
+      )
+      session$flushReact()
+
+      widgetJson <- output$pedigreeDiagram
+      idSelectionJson <- regmatches(
+        widgetJson, regexpr('"idselection":\\{[^}]*\\}', widgetJson)
+      )
+      expect_true(nzchar(idSelectionJson))
+      expect_false(grepl("__union_", idSelectionJson, fixed = TRUE))
+      expect_false(grepl("__dup_", idSelectionJson, fixed = TRUE))
+      for (realId in test_studbook$id) {
+        expect_true(grepl(realId, idSelectionJson, fixed = TRUE))
+      }
+    }
+  )
+})

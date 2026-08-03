@@ -181,6 +181,13 @@ makePedigreeDiagramData <- function(ped) {
     mateCountTab <- table(c(unitSire, unitDam))
     isFounderOf <- function(x) {
       idx <- match(x, ids)
+      # A referenced parent with no own row in this (possibly
+      # focal-animal-trimmed, addBackParents = FALSE) view has no known
+      # -parent information here -- treat as a founder rather than
+      # letting NA propagate into a TRUE/FALSE comparison (found live,
+      # S461: R/modPedigree.R's own trim feature keeps a blood relative's
+      # row but not that relative's own mate's row).
+      if (is.na(idx)) return(TRUE)
       !hasSire[idx] & !hasDam[idx]
     }
 
@@ -203,31 +210,49 @@ makePedigreeDiagramData <- function(ped) {
     for (u in seq_len(nUnits)) {
       p1 <- unitSire[u]
       p2 <- unitDam[u]
-      p1Used <- used[[p1]]
-      p2Used <- used[[p2]]
-      # p1Used-xor-p2Used: the unused one wins by elimination. Otherwise
-      # (neither used -- the normal case -- or both already used
-      # elsewhere -- the rare collision D3 step 2 explicitly allows) the
-      # same D2 comparison decides, since preferAnchor() doesn't consult
-      # "used" status at all.
-      winner <- if (p1Used && !p2Used) {
-        p2
-      } else if (p2Used && !p1Used) {
-        p1
-      } else if (preferAnchor(p1, p2)) {
-        p1
+      p1Real <- p1 %in% ids
+      p2Real <- p2 %in% ids
+      # A dangling parent (no own row here) can never anchor -- there is
+      # no individual to recursively position for them (D3 only
+      # positions real ids). Their real mate wins outright, regardless of
+      # "used" status (found live, S461).
+      winner <- if (p1Real != p2Real) {
+        if (p1Real) p1 else p2
       } else {
-        p2
+        p1Used <- used[[p1]]
+        p2Used <- used[[p2]]
+        # p1Used-xor-p2Used: the unused one wins by elimination. Otherwise
+        # (neither used -- the normal case -- or both already used
+        # elsewhere -- the rare collision D3 step 2 explicitly allows) the
+        # same D2 comparison decides, since preferAnchor() doesn't consult
+        # "used" status at all.
+        if (p1Used && !p2Used) {
+          p2
+        } else if (p2Used && !p1Used) {
+          p1
+        } else if (preferAnchor(p1, p2)) {
+          p1
+        } else {
+          p2
+        }
       }
       used[[winner]] <- TRUE
       anchorOf[u] <- winner
       nonAnchorOf[u] <- if (identical(winner, p1)) p2 else p1
     }
 
+    # A dangling parent's own gen is unknown here -- fall back to
+    # whichever known parent's gen is available (na.rm = TRUE); if
+    # somehow both are dangling (not currently reachable, kept
+    # defensively), fall back to 0L rather than -Inf.
+    unitGen <- pmax(unname(genOf[unitSire]), unname(genOf[unitDam]),
+                     na.rm = TRUE)
+    unitGen[is.infinite(unitGen)] <- 0L
+
     matingUnits <- data.frame(
       id = unionIds, sire = unitSire, dam = unitDam,
       anchor = anchorOf, nonAnchor = nonAnchorOf,
-      gen = pmax(genOf[unitSire], genOf[unitDam]),
+      gen = unitGen,
       stringsAsFactors = FALSE
     )
 
@@ -360,6 +385,24 @@ makePedigreeDiagramData <- function(ped) {
   unitIds <- matingUnits$id
   realIds <- as.character(ped$id)
   genOf <- stats::setNames(ped$gen, realIds)
+
+  ## A sire/dam value with no own row in 'ped' (a dangling reference --
+  ## e.g. a focal-animal-trimmed pedigree, R/modPedigree.R's own
+  ## trimPedigree(..., addBackParents = FALSE), keeps a blood relative's
+  ## row but not that relative's own mate's row) has no gen of its own
+  ## here. Back-fill from the one mating unit .buildMatingUnitForest()
+  ## already knows them by (.buildMatingUnitForest() guarantees such an
+  ## individual is never an anchor, so they need only a free-pass/
+  ## duplicate leaf gen, never a recursively-positioned one). Found live,
+  ## S461.
+  danglingIds <- setdiff(c(matingUnits$sire, matingUnits$dam), realIds)
+  if (length(danglingIds) > 0L) {
+    fallbackGen <- vapply(danglingIds, function(x) {
+      matingUnits$gen[matingUnits$sire == x | matingUnits$dam == x][1L]
+    }, numeric(1L))
+    genOf <- c(genOf, stats::setNames(fallbackGen, danglingIds))
+  }
+
   unitGenOf <- stats::setNames(matingUnits$gen, unitIds)
   maxGen <- max(ped$gen, if (nrow(matingUnits) > 0L) {
     matingUnits$gen
@@ -524,7 +567,13 @@ makePedigreeDiagramData <- function(ped) {
       nonAnchorX <- if (length(dupRow) == 1L) {
         dupX[dupRow]
       } else {
-        realX[[matingUnits$nonAnchor[i]]]
+        # A free-pass non-anchor (real OR dangling, S461) was positioned
+        # via the SAME recursive walk as everything else, but -- unlike a
+        # duplicate -- has no forest$duplicates row and is not
+        # necessarily in realIds, so it must be read from the
+        # unrestricted absX environment, not the realIds-only realX
+        # vector.
+        absX[[matingUnits$nonAnchor[i]]]
       }
       finalUnitX[i] <- (anchorX + nonAnchorX) / 2L
     }
@@ -559,4 +608,181 @@ makePedigreeDiagramData <- function(ped) {
   }
 
   nodes
+}
+
+#' Combine the Option 2 mating-unit forest into visNetwork-ready diagram data
+#'
+#' The exported wrapper for the kinship2-parity pedigree layout (Pedigree
+#' Diagram Option 2,
+#' \code{docs/planning/pedigree-diagram-option2-layout-design-plan.md}).
+#' Combines \code{.buildMatingUnitForest()} (D1/D2) and
+#' \code{.positionMatingUnitForest()} (D3/D4/D5) into the same
+#' \code{list(nodes, edges)} shape \code{\link{makePedigreeDiagramData}}
+#' already returns, plus the \code{duplicateNodeId -> realId} lookup table
+#' D6 needs. \code{\link{makePedigreeDiagramData}} itself is unaffected --
+#' this is an additive sibling function (Migration Path step 2).
+#'
+#' Mating-unit nodes render as a small, unlabeled dot with an
+#' offspring-count tooltip -- visually distinct from the 5 sex-coded
+#' shapes without a dedicated legend entry (D6, verified via a live
+#' \code{chromote} render this session). Duplicate nodes keep their real
+#' individual's own shape/label/tooltip content (plus a duplicate-
+#' occurrence cue) so they read as that individual, connected to it by a
+#' dashed edge. Edges are direct parent -> mating-unit and mating-unit ->
+#' child segments (owner-directed, S461) -- not the fully rectilinear
+#' mate-line/sibship-bar waypoint style S457's original Case C2
+#' proof-of-concept used; that style is tracked as a deferred, additive
+#' follow-up (issue #142) rather than built speculatively here.
+#'
+#' @param ped data frame with \code{id}, \code{sire}, \code{dam},
+#'   \code{sex}, and \code{gen} columns, same contract as
+#'   \code{\link{makePedigreeDiagramData}}.
+#' @return A list with \code{nodes} (\code{id}, \code{label}, \code{shape},
+#'   \code{title}, \code{size}, \code{x}, \code{y}), \code{edges}
+#'   (\code{from}, \code{to}, \code{dashes}), and \code{duplicateToReal} (a
+#'   named character vector, duplicate node id -> real individual id).
+#'
+#' @examples
+#' library(nprcgenekeepr)
+#' layout <- makePedigreeMatingLayout(nprcgenekeepr::examplePedigree)
+#'
+#' @export
+makePedigreeMatingLayout <- function(ped) {
+  if (!is.data.frame(ped)) {
+    stop("makePedigreeMatingLayout() requires 'ped' to be a data frame.")
+  }
+  required <- c("id", "sire", "dam", "sex", "gen")
+  missingCols <- setdiff(required, names(ped))
+  if (length(missingCols) > 0L) {
+    stop("makePedigreeMatingLayout() requires 'ped' to have columns: ",
+         toString(required), ". Missing: ", toString(missingCols))
+  }
+
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForest(ped, forest)
+  matingUnits <- forest$matingUnits
+  duplicates <- forest$duplicates
+  childEdges <- forest$childEdges
+  unitIds <- matingUnits$id
+  dupIds <- duplicates$id
+  realIds <- as.character(ped$id)
+
+  ## Empirically chosen this session via a chromote render of the real
+  ## GA204Z/8LKBV9 loop fixture and a wide fan-out fixture -- matches
+  ## vis.js's own hierarchical-layout defaults (nodeSpacing ~100,
+  ## levelSeparation 150) closely enough to render legibly.
+  xScale <- 120L
+  yScale <- 150L
+
+  shapeMap <- c(F = "dot", M = "square", H = "star", U = "triangle")
+  sexLabelMap <- c(F = "Female", M = "Male", H = "Hermaphrodite",
+                    U = "Unknown")
+  sexOf <- stats::setNames(as.character(ped$sex), realIds)
+  sireOf <- stats::setNames(as.character(ped$sire), realIds)
+  damOf <- stats::setNames(as.character(ped$dam), realIds)
+  genOf <- stats::setNames(ped$gen, realIds)
+
+  .shapeForVec <- function(sexCodes) {
+    shapes <- unname(shapeMap[as.character(sexCodes)])
+    shapes[is.na(shapes)] <- "diamond"
+    shapes
+  }
+  .titleForIds <- function(ids) {
+    sexLabel <- unname(sexLabelMap[sexOf[ids]])
+    sexLabel[is.na(sexLabel)] <- "Other / Unrecorded"
+    sireLabel <- ifelse(is.na(sireOf[ids]), "Unknown", .escapeHtml(sireOf[ids]))
+    damLabel <- ifelse(is.na(damOf[ids]), "Unknown", .escapeHtml(damOf[ids]))
+    sprintf(
+      paste0("<b>ID:</b> %s<br><b>Sex:</b> %s<br><b>Generation:</b> %s",
+             "<br><b>Sire:</b> %s<br><b>Dam:</b> %s"),
+      .escapeHtml(ids), sexLabel, genOf[ids], sireLabel, damLabel
+    )
+  }
+
+  realNodes <- data.frame(
+    id = realIds, label = realIds,
+    shape = .shapeForVec(sexOf[realIds]),
+    title = .titleForIds(realIds),
+    size = 25L, stringsAsFactors = FALSE
+  )
+
+  dupNodes <- if (nrow(duplicates) > 0L) {
+    data.frame(
+      id = dupIds, label = duplicates$realId,
+      shape = .shapeForVec(sexOf[duplicates$realId]),
+      title = paste0(.titleForIds(duplicates$realId),
+                      "<br><i>(duplicate occurrence)</i>"),
+      size = 25L, stringsAsFactors = FALSE
+    )
+  } else {
+    data.frame(id = character(), label = character(), shape = character(),
+               title = character(), size = numeric(),
+               stringsAsFactors = FALSE)
+  }
+
+  unitNodes <- if (nrow(matingUnits) > 0L) {
+    offspringCount <- vapply(
+      unitIds, function(u) sum(childEdges$from == u), integer(1L)
+    )
+    data.frame(
+      id = unitIds, label = "", shape = "dot",
+      title = sprintf("%d offspring", offspringCount), size = 6L,
+      stringsAsFactors = FALSE
+    )
+  } else {
+    data.frame(id = character(), label = character(), shape = character(),
+               title = character(), size = numeric(),
+               stringsAsFactors = FALSE)
+  }
+
+  nodes <- rbind(realNodes, dupNodes, unitNodes)
+  posMatch <- match(nodes$id, pos$id)
+  nodes$x <- pos$x[posMatch] * xScale
+  nodes$y <- pos$gen[posMatch] * yScale
+
+  ## D6 direct-edge mate lines (owner-directed, S461; issue #142 tracks a
+  ## fuller rectilinear waypoint style as a deferred, additive follow-up):
+  ## a solid edge from each parent to their mating unit's node, using the
+  ## non-anchor parent's DUPLICATE id when one was placed at this unit (the
+  ## node actually positioned there) -- plus Slice 1's own child edges, and
+  ## a dashed connector from each duplicate to its real individual.
+  mateEdges <- if (nrow(matingUnits) > 0L) {
+    ## Vectorized lookup: find, for each unit's non-anchor parent, the
+    ## duplicate node placed at THIS unit, if any -- falling back to the
+    ## plain real id otherwise. No key separator is needed (unlike
+    ## .buildMatingUnitForest()'s own pairKey, which joins two ARBITRARY
+    ## real ids): matingUnitId always matches the reserved "__union_<n>"
+    ## pattern, which no real id may start with, so a plain concatenation
+    ## cannot collide across two different (realId, matingUnitId) pairs.
+    dupKey <- paste0(duplicates$realId, duplicates$matingUnitId)
+    nonAnchorKey <- paste0(matingUnits$nonAnchor, unitIds)
+    dupIdx <- match(nonAnchorKey, dupKey)
+    nonAnchorNodeIds <- ifelse(is.na(dupIdx), matingUnits$nonAnchor,
+                                duplicates$id[dupIdx])
+    data.frame(
+      from = c(matingUnits$anchor, nonAnchorNodeIds),
+      to = rep(unitIds, 2L),
+      dashes = FALSE,
+      stringsAsFactors = FALSE
+    )
+  } else {
+    data.frame(from = character(), to = character(), dashes = logical(),
+               stringsAsFactors = FALSE)
+  }
+
+  dupEdges <- if (nrow(duplicates) > 0L) {
+    data.frame(from = dupIds, to = duplicates$realId, dashes = TRUE,
+               stringsAsFactors = FALSE)
+  } else {
+    data.frame(from = character(), to = character(), dashes = logical(),
+               stringsAsFactors = FALSE)
+  }
+
+  childEdgesOut <- data.frame(childEdges, dashes = FALSE,
+                               stringsAsFactors = FALSE)
+  edges <- rbind(childEdgesOut, mateEdges, dupEdges)
+
+  duplicateToReal <- stats::setNames(duplicates$realId, duplicates$id)
+
+  list(nodes = nodes, edges = edges, duplicateToReal = duplicateToReal)
 }

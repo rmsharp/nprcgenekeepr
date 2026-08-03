@@ -297,3 +297,59 @@ test_that(".buildMatingUnitForest resolves the real anchor-collision case
   expect_equal(as.integer(anchorCounts[["KUENM8"]]), 2L)
   expect_equal(as.integer(anchorCounts[["IM1B5T"]]), 2L)
 })
+
+## ---- dangling parent references (Slice 3 live-verification finding,
+## S461): a sire/dam value with NO OWN ROW in 'ped' -- e.g. a
+## focal-animal-trimmed pedigree (R/modPedigree.R's own
+## trimPedigree(..., addBackParents = FALSE)) that keeps a blood
+## relative's row but not that relative's own mate's row. --------------
+
+test_that(".buildMatingUnitForest does not error when a mating unit's
+           non-anchor parent has no own row in 'ped' (a dangling
+           reference), and that parent is not chosen as anchor", {
+  ped <- data.frame(
+    id = c("GRANDSIRE", "SIRE", "CHILD"),
+    sire = c(NA, "GRANDSIRE", "SIRE"),
+    dam = c(NA, NA, "DANGLING_DAM"),
+    sex = c("M", "M", "F"),
+    gen = c(0L, 1L, 2L),
+    stringsAsFactors = FALSE
+  )
+  result <- expect_error(.buildMatingUnitForest(ped), NA)
+  expect_equal(nrow(result$matingUnits), 1L)
+  ## SIRE has known parents (non-founder) and a real row; DANGLING_DAM has
+  ## no row at all here -- SIRE must anchor, not the dangling reference.
+  expect_equal(result$matingUnits$anchor, "SIRE")
+  expect_equal(result$matingUnits$nonAnchor, "DANGLING_DAM")
+})
+
+test_that(".buildMatingUnitForest assigns a duplicate node (not a crash)
+           when a dangling parent reference appears at more than one
+           mating unit", {
+  ped <- data.frame(
+    id = c("SIRE1", "SIRE2", "CHILD1", "CHILD2"),
+    sire = c(NA, NA, "SIRE1", "SIRE2"),
+    dam = c(NA, NA, "DANGLING_DAM", "DANGLING_DAM"),
+    sex = c("M", "M", "F", "M"),
+    gen = c(0L, 0L, 1L, 1L),
+    stringsAsFactors = FALSE
+  )
+  result <- expect_error(.buildMatingUnitForest(ped), NA)
+  expect_equal(nrow(result$matingUnits), 2L)
+  expect_equal(nrow(result$duplicates), 1L)
+  expect_equal(result$duplicates$realId, "DANGLING_DAM")
+})
+
+test_that(".buildMatingUnitForest's dangling-reference handling does not
+           change anchor assignment for any fully self-contained pedigree
+           (every sire/dam also has its own row) -- confirmed against the
+           full real 375-individual fixture's already-verified figures", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  result <- .buildMatingUnitForest(ped)
+  expect_equal(nrow(result$matingUnits), 237L)
+  expect_equal(nrow(result$duplicates), 128L)
+})

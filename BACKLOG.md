@@ -386,6 +386,36 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       S412 (2026-07-28). Verified by running the fixed command verbatim: 0
       failed/0 error/0 warning, 3198 passed, 179 skipped, matching the known-good
       baseline. See `CHANGELOG.md`.)
+- [ ] **`vignettes/articles/colony-manager-guide.qmd`'s Diagram-tab screenshot
+      (`pb_diagram_legend.png`) is now visually stale** (found S461, Effort S)
+      -- its surrounding prose still says "one node per animal... directed
+      sire/dam edges," and the embedded PNG shows the pre-Option-2 render, but
+      the Diagram tab now renders the kinship2-style mating-unit/duplicate-node
+      convention (S461). The "1,500 animals" number in this same paragraph was
+      already fixed to 750 this session (a text-only change independent of the
+      screenshot). Deferred rather than fixed this session (re-capturing a live
+      screenshot -- upload the fixture, navigate tabs, screenshot, re-render the
+      `.qmd` -- was judged disproportionate to a same-session text fix; the
+      `vignettes/manual_components/_pedigree_browser.Rmd` component, which has
+      no screenshot, WAS fully updated this session, satisfying the tutorial/
+      article checklist's own "and/or" allowance). A future session should
+      re-capture `pb_diagram_legend.png` (and update the surrounding prose to
+      describe mate-lines/duplicate nodes) against the live app.
+- [ ] **iCloud "conflicted copy" duplicate `.R` files corrupt
+      `devtools::document()`/`R CMD check` output** (found S461, Effort S,
+      not a code defect) -- `R/appServer 2.R` and `R/modMarkerGenetics 2.R`
+      (carried forward many sessions as passive noise) are SOURCED by
+      `pkgload::load_all()`/`devtools::document()` like any other `.R` file,
+      silently merging their own stale roxygen comments into the SAME
+      generated `.Rd` page as the current source -- confirmed twice this
+      session (`man/appServer.Rd`, `man/modMarkerGeneticsServer.Rd`,
+      `man/modMarkerGeneticsUI.Rd`, each reverted via `git checkout --`
+      immediately). See `PROJECT_LEARNINGS.md` Learning 454. The owner is
+      relocating this repository outside iCloud's purview specifically
+      because of this and other iCloud-latency issues (same session,
+      out-of-band) -- once moved, this item should self-resolve; a future
+      session should confirm the 2 duplicate files no longer reappear and,
+      if so, close this item without further action.
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability-comparison audit (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`)
@@ -660,33 +690,39 @@ visNetwork-vs-kinship2 technology decision (D2), which stands as ratified.*
       450's own text -- the exact defect that learning describes, recursed
       into its own bug report. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
       Learnings 451-453.)
-- [ ] **Pedigree Diagram: Option 2 implementation, Slice 3 (render-chain
-      wiring)** (READY, Effort M, filed S460 2026-08-02) -- per
-      `docs/planning/pedigree-diagram-option2-layout-design-plan.md` §6
-      Migration Path steps 2-3: a new EXPORTED wrapper function (working
-      name `makePedigreeMatingLayout()` or similar) combining Slice 1's
-      `.buildMatingUnitForest()` and Slice 2's `.positionMatingUnitForest()`
-      into the same `list(nodes, edges)` shape `makePedigreeDiagramData()`
-      already returns, plus the `duplicateNodeId -> realId` lookup table D6
-      needs; then `R/modPedigree.R`'s render chain
-      (`R/modPedigree.R:387-468`) switches from `makePedigreeDiagramData()`
-      + `visHierarchicalLayout()` to the new function +
-      `visPhysics(enabled = FALSE)`/`visNodes(physics = FALSE)`/fixed
-      x/y/`smooth = FALSE` edges (S457's proven Case C2 geometry). D6's
-      integration adaptations (click-to-navigate id-prefix handling +
-      duplicate-to-real lookup; union/duplicate node shape-to-sex-legend
-      treatment; hover tooltip content for union/duplicate nodes; confirm
-      whether the search dropdown needs an explicit id filter to exclude
-      union/duplicate ids) all land in this slice too, per §3 D6. This is
-      the ONE step in the Migration Path with user-visible runtime impact --
-      Phase 3E runtime smoke test (`shinytest2`/`chromote`, matching issue
-      #134's own methodology) is NOT skippable here, unlike Slices 1/2.
-      Also: issue #138's 1,500-node cap MUST be re-derived against the new
-      ~2x node-counting model (§7) once this slice ships -- do not silently
-      keep "1,500" unchanged. Read the design doc in full first, especially
-      §3 D6, §6 Migration Path steps 2-3, §7 Impact Analysis, and §8
-      Verification Plan's live-`shinytest2` requirements. Follow TDD
-      RED->GREEN->REFACTOR.
+- [ ] (none remaining -- Pedigree Diagram: Option 2 implementation, Slice 3
+      (render-chain wiring) is DONE -- S461 (2026-08-02): see `CHANGELOG.md`.
+      New exported `makePedigreeMatingLayout()` combines Slices 1/2 into the
+      `list(nodes, edges, duplicateToReal)` shape; `R/modPedigree.R`'s render
+      chain switched from `makePedigreeDiagramData()` + `visHierarchicalLayout()`
+      to the new function + `visPhysics(enabled = FALSE)`/`visNodes(physics =
+      FALSE)`/`visEdges(smooth = FALSE)` with fixed x/y. D6 integration:
+      click-to-navigate resolves duplicate-node clicks to the real individual
+      and ignores union-node clicks; the search dropdown is filtered to real
+      ids only (`visOptions(nodesIdSelection = list(values = ...))`); union
+      nodes get a small unlabeled dot + offspring-count tooltip, no legend
+      entry; mate-line/child edges render as direct (non-waypoint) edges,
+      owner-directed, with the fuller rectilinear style filed as deferred
+      issue #142. Issue #138's node cap re-derived 1,500 -> 750 individuals
+      (owner-directed via `AskUserQuestion`), commented on issue #138.
+      **Live Phase 3E verification (mandatory, not skippable for this slice)
+      found and this session fixed a genuine crash**: `.buildMatingUnitForest()`
+      (Slice 1's own file) threw "missing value where TRUE/FALSE needed" on
+      any pedigree where a sire/dam value has no own row -- e.g. this page's
+      own pre-existing "Trim pedigree based on focal animals" feature, which
+      Slices 1/2 never exercised (both `@noRd`, tested only against
+      self-contained fixtures). Root-cause fixed in Slice 1's file (a dangling
+      reference is now treated as a founder and can never anchor; its gen
+      falls back to its mating unit's own gen), not worked around in Slice 3;
+      6 new unit tests; the exact live crash re-verified fixed via
+      `shinytest2`/`chromote`. Also found (documented, not fixed, inherited
+      from Slice 2): `.buildMatingUnitForest()`'s anchor tie-break is
+      row-order-sensitive, and the live app's `qcStudbook()` step reorders
+      rows relative to the raw upload -- the real fixture's own "740 total
+      nodes" figure (Slices 1/2's unit tests, raw CSV) becomes 739 through the
+      live pipeline; both are correct, self-consistent applications of the
+      same algorithm to different (valid) row orders. See `CHANGELOG.md`,
+      `PROJECT_LEARNINGS.md` Learning 457, design doc §9.)
 
 ## Outreach
 - [ ] **NPRC outreach & announcement plan** (DECISION NEEDED -- owner review/edit of

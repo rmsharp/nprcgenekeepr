@@ -360,10 +360,16 @@ modPedigreeServer <- function(id, studbook) {
 
     # Pedigree diagram (issue #129 Slice 1). Above this many nodes, show an
     # informative message instead of rendering the widget rather than an
-    # unbounded render -- the largest evidenced focal-trimmed working set is
-    # 962 (vignettes/articles/colony-manager-guide.qmd), while a full,
-    # untrimmed colony runs into the thousands.
-    pedigreeDiagramMaxNodes <- 1500L
+    # unbounded render. Re-derived for Option 2 Slice 3 (owner-directed,
+    # S461): the mating-unit/duplicate transformation renders ~2x total
+    # widget nodes per individual (740/375 = 1.973x, confirmed against the
+    # real bundled fixture, Slices 1/2) -- 750 individuals keeps the total
+    # rendered node count near the original ~1,500-node ceiling this cap was
+    # actually calibrated for. This is BELOW the 962-individual focal-trim
+    # example in vignettes/articles/colony-manager-guide.qmd -- accepted
+    # (owner-directed) since that example was only ever evidenced through
+    # the Table tab, never proven to render through the Diagram tab itself.
+    pedigreeDiagramMaxNodes <- 750L
 
     output$pedigreeDiagramUI <- renderUI({
       req(pedigreeData())
@@ -384,15 +390,26 @@ modPedigreeServer <- function(id, studbook) {
       }
     })
 
-    output$pedigreeDiagram <- visNetwork::renderVisNetwork({
+    # Shared between the render below and the click-to-navigate observer
+    # (Option 2 Slice 3, D6) so both see the same duplicateToReal lookup
+    # without recomputing the mating-unit forest twice.
+    diagramLayout <- reactive({
       req(pedigreeData())
       data <- pedigreeData()
       req(nrow(data) <= pedigreeDiagramMaxNodes)
-      diagramData <- makePedigreeDiagramData(data)
-      visNetwork::visNetwork(diagramData$nodes, diagramData$edges) |>
-        visNetwork::visHierarchicalLayout(
-          direction = "UD", sortMethod = "directed"
-        ) |>
+      makePedigreeMatingLayout(data)
+    })
+
+    output$pedigreeDiagram <- visNetwork::renderVisNetwork({
+      layout <- diagramLayout()
+      # Option 2 Slice 3: fixed x/y coordinates (S457's proven Case C2
+      # geometry) replace visHierarchicalLayout() entirely -- confirmed
+      # hands-on (Learning 446) that manual coordinates and hierarchical
+      # layout are mutually exclusive in vis.js.
+      visNetwork::visNetwork(layout$nodes, layout$edges) |>
+        visNetwork::visPhysics(enabled = FALSE) |>
+        visNetwork::visNodes(physics = FALSE) |>
+        visNetwork::visEdges(smooth = FALSE) |>
         # visNetwork does not auto-bind node clicks to a Shiny input -- wire
         # it explicitly (confirmed hands-on, issue #129 Slice 2 Pre-RED).
         visNetwork::visEvents(click = sprintf(
@@ -459,8 +476,18 @@ modPedigreeServer <- function(id, studbook) {
         # scored "optional, low-priority... UI polish" and would risk the
         # three already-shipped Diagram-tab features above (click-to-
         # navigate, export, legend).
+        #
+        # Option 2 Slice 3 (D6): nodesIdSelection's own "values" option
+        # (confirmed in visOptions()'s source) restricts the dropdown to an
+        # explicit id list -- filtered here to real individuals only, so a
+        # real individual appears once in the searchable list, not once per
+        # mating-unit/duplicate occurrence.
         visNetwork::visOptions(
-          nodesIdSelection = TRUE,
+          nodesIdSelection = list(
+            enabled = TRUE, values = layout$nodes$id[
+              !grepl("^__union_|^__dup_", layout$nodes$id)
+            ]
+          ),
           highlightNearest = list(
             enabled = TRUE, hover = TRUE, degree = 1L, algorithm = "all"
           )
@@ -472,10 +499,22 @@ modPedigreeServer <- function(id, studbook) {
     # focal-animal textarea already drives. A background (no-node) click
     # sends an empty nodes.nodes array -- guarded against here so it does not
     # clear the current selection.
+    #
+    # Option 2 Slice 3 (D6): a click on a mating-unit node is a no-op (it
+    # has no corresponding animal to navigate to); a click on a duplicate
+    # node resolves to its real individual via the layout's own
+    # duplicateToReal lookup, so clicking any occurrence of a duplicated
+    # individual navigates identically to clicking their anchor occurrence.
     observeEvent(input$pedigreeDiagram_click, {
       clickedNodes <- input$pedigreeDiagram_click
       req(length(clickedNodes) > 0L)
-      focalIds(as.character(clickedNodes))
+      ids <- as.character(clickedNodes)
+      ids <- ids[!startsWith(ids, "__union_")]
+      req(length(ids) > 0L)
+      duplicateToReal <- diagramLayout()$duplicateToReal
+      isDup <- ids %in% names(duplicateToReal)
+      ids[isDup] <- unname(duplicateToReal[ids[isDup]])
+      focalIds(unique(ids))
     })
 
     # Signal data-ready when pedigree is available (for E2E testing)

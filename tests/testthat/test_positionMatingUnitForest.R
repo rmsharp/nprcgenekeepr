@@ -263,3 +263,60 @@ test_that(".positionMatingUnitForest's gen column matches each node's
     forest$matingUnits$gen
   )
 })
+
+## ---- dangling parent references (Slice 3 live-verification finding,
+## S461): consumes .buildMatingUnitForest()'s own dangling-parent handling
+## -- a free-pass or duplicate node for an individual with no own row in
+## 'ped' needs a gen fallback, not a crash on an unresolvable lookup. ----
+
+test_that(".positionMatingUnitForest positions the mating unit whose
+           non-anchor parent is a dangling free-pass reference (no own
+           row in 'ped') without error -- the dangling parent gets no
+           node of its own (nothing real to render), but the unit's x is
+           still a valid, finite midpoint", {
+  ped <- data.frame(
+    id = c("GRANDSIRE", "SIRE", "CHILD"),
+    sire = c(NA, "GRANDSIRE", "SIRE"),
+    dam = c(NA, NA, "DANGLING_DAM"),
+    sex = c("M", "M", "F"),
+    gen = c(0L, 1L, 2L),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- expect_error(.positionMatingUnitForest(ped, forest), NA)
+
+  ## The dangling parent has no record to render as its own node --
+  ## confirmed absent, not merely unchecked.
+  expect_false("DANGLING_DAM" %in% pos$id)
+  expect_equal(nrow(pos), nrow(ped) + nrow(forest$matingUnits))
+
+  unitX <- pos$x[pos$id == forest$matingUnits$id]
+  expect_false(is.na(unitX))
+  expect_true(is.finite(unitX))
+  .expectNoOverlap(pos)
+})
+
+test_that(".positionMatingUnitForest positions a dangling parent's
+           duplicate node (appearing at more than one mating unit)
+           without error, using its mating unit's own gen as the
+           fallback -- the dangling parent's FREE (non-duplicate)
+           occurrence still gets no node of its own", {
+  ped <- data.frame(
+    id = c("SIRE1", "SIRE2", "CHILD1", "CHILD2"),
+    sire = c(NA, NA, "SIRE1", "SIRE2"),
+    dam = c(NA, NA, "DANGLING_DAM", "DANGLING_DAM"),
+    sex = c("M", "M", "F", "M"),
+    gen = c(0L, 0L, 1L, 1L),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  expect_equal(nrow(forest$duplicates), 1L)
+  pos <- expect_error(.positionMatingUnitForest(ped, forest), NA)
+
+  expect_false("DANGLING_DAM" %in% pos$id)
+  dupRow <- pos[pos$id == forest$duplicates$id, ]
+  expect_equal(nrow(dupRow), 1L)
+  expect_false(is.na(dupRow$gen))
+  expect_false(is.na(dupRow$x))
+  .expectNoOverlap(pos)
+})

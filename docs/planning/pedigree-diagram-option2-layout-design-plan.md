@@ -467,6 +467,65 @@ runtime impact, matching this project's "small, additive, per-session slice" pre
   change as the cause, unless an implementation session deliberately re-measures and documents the
   new ratio (measured this session at ~2x for one real fixture; the ratio is data-dependent, since
   it scales with how multi-mate the specific colony's breeding structure is, not a fixed constant).
+  **Resolved S461 (2026-08-02):** re-derived to **750 individuals** (owner-directed via
+  `AskUserQuestion`), keeping the total rendered node count near the original ~1,500 ceiling this
+  cap was actually calibrated for. This is BELOW the 962-individual focal-trim example in
+  `vignettes/articles/colony-manager-guide.qmd` -- accepted knowingly, since that example was only
+  ever evidenced through the Table tab, never proven to render through the Diagram tab itself.
+- **§1.1/§8's "right-angle mate-line/sibship-bar" language describes a technique D1-D6's own
+  decision text (§3) never specifies.** S457's original Case C2 proof-of-concept (cited in §1.1)
+  achieved true right angles using extra invisible waypoint nodes; D3's actual positioning
+  algorithm creates no such nodes. An implementation session should not assume citing §1.1/§8 is
+  equivalent to having a specified rendering technique -- this is a real gap, not an oversight to
+  silently paper over. **Resolved S461 (2026-08-02):** rendered as direct edges (parent -> mating
+  unit, mating unit -> child, no waypoint nodes) -- owner-directed via `AskUserQuestion` after a
+  live `chromote` POC against the real `GA204Z`/`8LKBV9` loop fixture and a wide fan-out fixture
+  confirmed this reads clearly as a family group without literal right angles. The fuller
+  rectilinear waypoint style is tracked as a deferred, additive follow-up,
+  [issue #142](https://github.com/rmsharp/nprcgenekeepr/issues/142), not built speculatively here.
+- **New dragon found S461, not previously flagged:** a "free-pass" individual (an individual whose
+  one non-anchor mating-unit occurrence needed no duplicate node, per S460's own resolution) can
+  render visually close to an unrelated same-generation node, since D3's contour-merge guarantees
+  only "no exact collision" (verified numerically), not a minimum visual spacing. Found via this
+  session's own live POC render of the real `GA204Z`/`8LKBV9` fixture (5A6DFT and G8EBU9 land only
+  0.25 layout units apart at gen 0, both free-pass-adjacent nodes nested at different recursion
+  depths). This is inherited from Slice 2's already-shipped, already-tested positioning algorithm --
+  Slice 3 (render-chain wiring) did not reopen or fix it, matching kinship2's own accepted "not
+  always successfully collapsed" trade-off for duplicate placement. A future session revisiting D3
+  would need a genuine minimum-separation guarantee (not just non-collision) to close this gap.
+- **New dragon found S461, live-verification-only (not reachable by any self-contained-fixture unit
+  test): `.buildMatingUnitForest()`'s D2 anchor tie-break is ROW-ORDER-sensitive, and
+  `qcStudbook()` (already-shipped, pre-dating Option 2 entirely) reorders rows relative to the raw
+  uploaded file.** Slices 1/2's own "740 total nodes for the real 375-individual fixture" figure is
+  specific to reading the raw CSV directly (`read.csv()`, the unit tests' own input path); the LIVE
+  APP feeds `.buildMatingUnitForest()` the QC-CLEANED, reordered pedigree instead, which resolves
+  one anchor tie-break differently (a rare "both parents equally eligible" case whose winner depends
+  on which one is processed first) -- yielding **739** total nodes for the identical underlying
+  data. Both counts are internally self-consistent, valid applications of the same deterministic
+  algorithm to two different (but equally correct) row orderings; neither is "wrong." A future
+  session writing a NEW unit test against "the real bundled fixture" should state explicitly whether
+  it means the raw CSV or the QC-cleaned pedigree, since the two now yield different (both correct)
+  figures -- confirmed via a direct comparison this session
+  (`runQcStudbook()` -> identical id/sire/dam content, `identical(ped$id, raw$id)` is FALSE).
+- **New defect found and fixed S461, live-verification-only: `.buildMatingUnitForest()` crashed
+  ("missing value where TRUE/FALSE needed") on any pedigree where a sire/dam value has no own row**
+  -- e.g. `R/modPedigree.R`'s own pre-existing "Trim pedigree based on focal animals" feature
+  (`trimPedigree(..., addBackParents = FALSE)`, unchanged, not introduced by Option 2), which keeps
+  a blood relative's row but not that relative's own mate's row. `isFounderOf()`'s `match(x, ids)`
+  returned `NA` for such a "dangling" reference, propagating into an `if (fa != fb)` comparison.
+  Slices 1/2 never exercised this path -- both were `@noRd`, tested only against self-contained
+  fixtures (every referenced parent also has its own row) -- so Slice 3 wiring the code into the
+  live render chain for the first time is what surfaced it, exactly the kind of gap Phase 3E's live
+  verification (not skippable for this slice) exists to catch. Root-cause fix landed in Slice 1's
+  own file (`.buildMatingUnitForest()`/`.positionMatingUnitForest()`), not worked around in Slice
+  3's wrapper: a dangling reference is now treated as a founder (no information says otherwise) and
+  can never become an anchor (there is no individual to recursively position for them -- their real
+  mate always wins outright); a dangling free-pass/duplicate node's gen falls back to its own
+  mating unit's gen. A dangling individual gets no rendered node of their own (nothing real to
+  show) -- only their mating unit's geometry uses their position as an input. 6 new unit tests
+  (`test_buildMatingUnitForest.R`, `test_positionMatingUnitForest.R`); the exact live crash (click
+  `8LKBV9` to trim, re-render the Diagram tab) re-verified fixed via `shinytest2`/`chromote` after
+  the fix. See `PROJECT_LEARNINGS.md` Learning 457.
 - **D3's simplified contour-merge is genuinely new code, not a port of a citable algorithm's
   reference implementation** -- unlike D1 (CraneFoot's published transformation, precisely
   specified) it is *inspired by* Reingold-Tilford/Walker/Buchheim-Jünger-Leipert rather than a
