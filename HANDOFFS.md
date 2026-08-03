@@ -62,17 +62,17 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S465
 date: 2026-08-03
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Implement issue #142 (rectilinear mate-line/sibship-bar waypoint style) per the ratified design (docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md). Session claimed. Work beginning.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 10
+active_task: DONE -- issue #142 Slice 1 (the internal .addRectilinearWaypoints() waypoint-construction helper) implemented per the ratified design. Slice 2 (edgeStyle wiring + R/modPedigree.R UI + live re-verification) scoped and READY in BACKLOG.md for a future session.
+what_was_done: Pre-RED live-verification (a visNetwork widget matching R/modPedigree.R's exact render chain, driven via shinytest2/chromote) found the ratified design's hidden=TRUE waypoint mechanism does not work -- vis.js suppresses every edge connected to a hidden node regardless of the edge's own setting; a second independent gotcha (vis.js edges default to inheriting color from their 'from' node's border) was also found via 8 throwaway POC apps. Both fixed (size=0 + transparent color on waypoint nodes; explicit non-inherited color on every new edge) and recorded as a numbered addendum (design doc S11), owner-approved via AskUserQuestion before RED. Implemented .addRectilinearWaypoints(nodes, edges, forest, pos) per D1 (sibship-bar chain, generalizing to D5 groups) and D2 (per-side mate-line dogleg, correctly handling the duplicate-non-anchor and anchor-off-row cases). Extended .buildMatingUnitForest()'s reserved-prefix guard to __drop_/__bar_/__proj_. 18 new tests (11 new + 3 reserved-prefix + 4 re-confirmed), full regression suite 0 failed/0 error (4477 passed, 171 skipped, 10 pre-existing unrelated warnings), devtools::check() 0 new warnings/notes (stash-verified). REFACTOR: renamed a loop variable (F -> fromId) to clear 7 new lint warnings, owner-approved. Caught and reverted the known iCloud duplicate-file .Rd corruption (3rd recurrence). Commit: b435a17b (implementation), f29b9b8f (design-doc addendum).
+next_steps: Implement issue #142 Slice 2 (BACKLOG.md's updated item, READY, Effort M): wire the edgeStyle parameter into makePedigreeMatingLayout(); add the R/modPedigree.R UI toggle (net-new layout, no existing "home") + extend click-to-navigate/search-dropdown id-prefix filters to the 3 new reserved prefixes (do not fold __dup_ into the same exclusion); re-measure node count against the actually-wired code path and bring the confirmed cap to the owner via AskUserQuestion; live-re-verify inbreeding-loop rendering (#134) and highlightNearest (#135) for the rectilinear style specifically. Everything else carried from S462-464 unchanged (E2E test fix, lint cleanup, founder-positioning defect, iCloud relocation still pending, stale screenshot, NPRC outreach, LabKey, S445 question, data-model-gated issues, untracked PDFs, renv.lock diff). NEW: a stale devtools::check() spelling NOTE (6 words) found incidentally, filed to BACKLOG.md, not fixed (Learning 382/407 precedent).
+key_files: R/makePedigreeDiagramData.R:791-968 (new .addRectilinearWaypoints()), R/makePedigreeDiagramData.R:144-149 (extended reserved-prefix regex), tests/testthat/test_addRectilinearWaypoints.R (new), tests/testthat/test_buildMatingUnitForest.R (3 new tests), docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md §11 (new addendum), BACKLOG.md, CHANGELOG.md, PROJECT_LEARNINGS.md Learning 460, CLAUDE.md.
+gotchas: hidden=TRUE is NOT used anywhere in the new mechanism -- waypoint invisibility is size=0 + transparent color; reintroducing hidden=TRUE while wiring the UI will silently break the edges again. .addRectilinearWaypoints()'s output nodes gains color.background/color.border columns and edges gains a color column (NA on unaffected rows) -- downstream code must account for these. Running devtools::document() will corrupt 3 man/*.Rd files via the iCloud duplicate .R files -- check git status man/ immediately after and revert via git checkout -- if so. The edgeStyle parameter is non-breaking (every existing caller invokes makePedigreeMatingLayout() positionally with only the pedigree arg).
+runtime_smoke: n/a -- the new function has no call site yet (Slice 1 is data-layer only); no R/modPedigree.R or runtime behavior changed this session.
+changelog_ref: CHANGELOG.md 2026-08-03 [issue #142] entry (Session 465)
+commit: b435a17b
 ```
 
 ```handoff

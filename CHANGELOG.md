@@ -43,6 +43,44 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-03 · [issue #142] Implement Slice 1: internal `.addRectilinearWaypoints()` helper (Session 465)
+- **Deliverable:** new internal `.addRectilinearWaypoints(nodes, edges, forest, pos)`
+  in `R/makePedigreeDiagramData.R`, implementing the ratified design's D1 (sibship-bar
+  waypoint chain, generalizing to D5 single-known-parent groups) and D2 (per-side
+  mate-line dogleg for mismatched-generation parents -- correctly resolves the
+  non-anchor side's duplicate node when one exists, and does not assume the anchor is
+  always the on-row parent). D5: a pure post-processing step -- no change to
+  `.buildMatingUnitForest()`/`.positionMatingUnitForest()`, and no call site yet
+  (`makePedigreeMatingLayout()`'s own default "direct" behavior is unaffected). Extends
+  `.buildMatingUnitForest()`'s reserved-id-prefix guard to `__drop_`/`__bar_`/`__proj_`
+  (D3).
+- **Pre-RED finding, corrected before RED:** live-verification (a minimal `visNetwork`
+  widget matching `R/modPedigree.R`'s exact render chain, driven via `shinytest2`/
+  `chromote`) found the ratified design's `hidden = TRUE` waypoint mechanism does not
+  work -- vis.js suppresses every edge connected to a hidden node regardless of the
+  edge's own setting. Corrected mechanism (waypoint nodes at `size = 0` + fully
+  transparent color; every new waypoint-touching edge given an explicit,
+  non-inherited color, since vis.js edges otherwise default to inheriting color from
+  their `from` node's border) verified via 8 throwaway POC apps and folded into the
+  design doc as a new §11 addendum, owner-approved via `AskUserQuestion` before RED.
+- **Verified:** 18 new tests (11 for `.addRectilinearWaypoints()`, 3 for the extended
+  reserved-prefix guard, plus 4 already-existing input-validation/style tests
+  re-confirmed passing) -- including a real 375-individual bundled-fixture node-count
+  re-measurement confirming the design's own analytical estimate exactly (740
+  direct-style + 488 D1 + 147 D2 = 1,375, no drift). Full regression suite 0 failed/0
+  error (4477 passed = baseline + 71 new, 171 skipped, 10 pre-existing
+  `test_modMarkerGenetics.R` warnings, unchanged); `devtools::check()` 0 new
+  warnings/notes (confirmed via a stash test that the 1 warning + 2 notes -- the
+  iCloud duplicate-file artifact, a pre-existing vignette-engine note, and a
+  pre-existing spelling gap from Session 461's own docstring text -- all predate this
+  session, unrelated to this diff). REFACTOR: renamed a loop variable (`F` ->
+  `fromId`) to clear 7 new `T_and_F_symbol_linter` lint warnings, owner-approved via
+  `AskUserQuestion`; no behavior change. Phase 3E: n/a -- no runtime behavior changed
+  (the function has no call site yet; UI wiring is Slice 2). See
+  `docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md` §11,
+  `BACKLOG.md`'s updated issue #142 item (Slice 1 DONE, Slice 2 scoped),
+  `PROJECT_LEARNINGS.md` Learning 460.
+
 ### 2026-08-03 · [issue #142] Design: full rectilinear mate-line/sibship-bar waypoint style, ratified (Session 464)
 - **Deliverable:** `docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md`
   -- an Architecture-workstream design for issue #142 (deferred at S461's Option 2

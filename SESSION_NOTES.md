@@ -8,13 +8,186 @@
 
 ### What Session 465 Did
 **Deliverable:** Implement issue #142 (rectilinear mate-line/sibship-bar waypoint style)
-per the ratified design (`docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md`)
--- picked by the owner via the S464 close-out `AskUserQuestion` picker. (IN PROGRESS)
-**Started:** 2026-08-03
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
-next session's reconcile.
+Slice 1 -- the internal `.addRectilinearWaypoints()` waypoint-construction helper, per
+the ratified design (`docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md`)
+-- picked by the owner via the S464 close-out `AskUserQuestion` picker; scoped to Slice 1
+only (not the full feature) via a separate pre-RED `AskUserQuestion`.
+**Started/Completed:** 2026-08-03 / 2026-08-03
+**Status:** DONE -- Slice 1 shipped; Slice 2 (edgeStyle wiring + UI + live re-verification)
+scoped and READY in `BACKLOG.md` for a future session.
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Claimed the session (stub + `HANDOFFS.md`
+`status: pending` receipt) immediately after the owner picked "#142 implementation"
+from the S464 close-out priorities picker. **(2)** Read the ratified design doc in full
+(`docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md`) and the actual
+current implementation (`R/makePedigreeDiagramData.R`'s `.buildMatingUnitForest()`/
+`.positionMatingUnitForest()`/`makePedigreeMatingLayout()`) and existing test conventions
+(`test_positionMatingUnitForest.R`, `test_buildMatingUnitForest.R`) before writing
+anything. **(3)** Presented a pre-RED scope decision via `AskUserQuestion` -- Slice 1
+(the internal helper only, no UI wiring) vs. attempting the full feature in one session
+-- owner picked Slice 1, mirroring the Option 2 precedent (Slices 1/2 built internal
+functions with no call site before Slice 3 wired them in). **(4)** Ran the design's own
+mandatory Pre-RED live-verification (§9's last dragon): built a minimal `visNetwork`
+widget matching `R/modPedigree.R`'s EXACT render chain
+(`visPhysics(enabled=FALSE)`/`visNodes(physics=FALSE)`/`visEdges(smooth=FALSE)`, fixed
+x/y), drove it via `shinytest2`/`chromote` (the S463-proven method -- raw `chromote`
+screenshots return blank for vis.js canvas in a static file). **Found the ratified
+design's core mechanism does not work**: a node with `hidden = TRUE` causes vis.js to
+suppress EVERY edge connected to it, regardless of the edge's own `hidden` setting --
+confirmed via 4 isolation tests (an `A -- W -- B` right-angle chain rendered ZERO edges
+with `W.hidden = TRUE`, unaffected by a forced `network.redraw()`). Found a working
+alternative (waypoint nodes at `size = 0` + fully transparent color, not
+`hidden = TRUE`) and, via 3 more isolation POCs, found a SECOND independent gotcha: vis.js
+edges default to `color.inherit = "from"`, so an edge whose `from` endpoint is the new
+transparent waypoint silently inherits that transparent color and stays invisible even
+with `hidden` no longer involved -- isolated by testing `size = 0` vs `size = 1` and
+swapping which side the transparent node occupied, confirming color inheritance (not
+geometry or size) was the sole variable. **(5)** Presented this finding to the owner via
+`AskUserQuestion` (not a silent reinterpretation of the ratified design); owner approved
+using the fix. Added a numbered `§11` addendum to the ratified design doc recording the
+correction, committed separately from the implementation. **(6)** RED: wrote 11 new
+tests for `.addRectilinearWaypoints()` (input validation; D1 1-child and 3-child
+sibship-bar chains; D1 generalizing to a D5 single-parent group; D2 same-gen no-op,
+non-anchor-off-row, and the harder anchor-off-row-with-duplicate-non-anchor case; a real
+375-individual fixture node-count re-measurement) plus 3 new reserved-prefix-rejection
+tests, confirmed failing for the right reason (function doesn't exist / regex not
+extended) -- caught and fixed 2 of the session's OWN test-fixture bugs along the way (a
+degenerate single-founder ped that triggered an unrelated pre-existing crash in
+`makePedigreeMatingLayout()`, reported not fixed, out of scope; a `gen`-value typo in the
+anchor-off-row fixture). **(7)** GREEN: extended `.buildMatingUnitForest()`'s reserved
+-prefix regex (D3) and implemented `.addRectilinearWaypoints()` per D1/D2/D5 using the
+corrected mechanism; fixed 2 more bugs found via test failures (a 0-row data-frame
+column-assignment quirk in base R; a test that wrongly assumed a global count of exactly
+1 projection node when a SECOND, independently-correct projection was also expected
+elsewhere in the fixture). All 18 new tests + full regression suite (0 failed/0 error,
+4477 passed, 171 skipped, 10 pre-existing unrelated warnings) + `devtools::check()` (0
+new warnings/notes, confirmed via a stash test that all 3 pre-existing issues predate
+this session) passed clean. **(8)** REFACTOR (owner-approved via `AskUserQuestion`):
+renamed a loop variable (`F` -> `fromId`) to clear 7 new lint warnings; re-verified
+green. **(9)** Ran `devtools::document()` to check for new `.Rd` needs (none, function is
+`@noRd`) and immediately hit, then reverted, the ALREADY-KNOWN iCloud duplicate-file
+`.Rd` corruption (`man/appServer.Rd`, `man/modMarkerGeneticsServer.Rd`,
+`man/modMarkerGeneticsUI.Rd`) -- 3rd recurrence this project has hit (S461, S462, now
+S465), repo relocation still not done. **(10)** Close-out: updated `BACKLOG.md`'s issue
+#142 item (Slice 1 DONE, Slice 2 scoped in detail), filed a new incidentally-found
+pre-existing spelling-gap item (6 words, `man/makePedigreeMatingLayout.Rd`/
+`vignettes/a2interactive.Rmd`, confirmed via a stash test to predate this session --
+reported, not fixed, per Learning 382/407 precedent), recorded `PROJECT_LEARNINGS.md`
+Learning 460, updated `CLAUDE.md`'s learning-count cross-reference (459->460).
+
+**Session 464 Handoff Evaluation (by Session 465): 10/10.** **What helped:** S464's
+"what's next" item (a) did not just say "implement the design" -- it named the EXACT
+mandatory first step ("Pre-RED must live-verify `hidden = TRUE` composes correctly with
+the existing fixed-position/`smooth = FALSE` chain (§9's last dragon) before writing the
+full mechanism against that assumption"), which turned out to precisely predict the
+single most consequential finding of this entire session: the ratified mechanism does
+not work at all. Following that instruction literally, before writing a single line of
+implementation code, caught a defect that would otherwise have been discovered only
+much later (at live Phase 3E verification of a fully-built feature, or worse, after
+shipping a visually broken toggle). This is as close to a perfect handoff instruction as
+this project's history has produced -- it named not just WHAT to do next but the EXACT
+risk to de-risk first, and that risk turned out to be real. **What was missing:**
+nothing load-bearing -- S464 could not have known the SPECIFIC nature of the defect
+(that's what Pre-RED verification is for), only that this exact assumption was
+unconfirmed and needed checking, which it correctly flagged. **What was wrong:** no
+inaccuracies found. **ROI:** exceptionally high -- a few hours of Pre-RED investigation,
+directly prompted by this handoff's specific instruction, prevented building the entire
+waypoint mechanism against a broken foundational assumption.
+
+**Self-assessment (Session 465): 9/10.** **Strengths:** (1) followed the Pre-RED
+live-verification instruction literally and rigorously, using the project's own
+proven `shinytest2`/`chromote` methodology (not raw `chromote` screenshots, a
+known S463 dead end for vis.js canvas); (2) did not stop at the first workaround that
+appeared to fix the hidden-node problem -- systematic isolation testing (8 throwaway POC
+apps, one variable changed at a time) caught a SECOND, independent gotcha (edge color
+inheritance) the first fix alone would have shipped with; (3) surfaced the found design
+defect to the owner via `AskUserQuestion` and recorded it as a numbered, dated addendum
+in the ratified design doc itself, rather than silently reinterpreting D1-D3 or noting it
+only in session-transient files; (4) maintained strict TDD phase-gate discipline
+throughout (PRE-RED research -> scope decision -> RED -> RED/GREEN gate -> GREEN ->
+GREEN/REFACTOR gate -> REFACTOR), each transition via `AskUserQuestion` per `CLAUDE.md`'s
+contract; (5) caught 2 of the session's own test-fixture bugs via careful debugging
+(a pre-existing unrelated crash surfaced by a degenerate fixture, correctly reported not
+fixed; a `gen`-value arithmetic typo) and 2 implementation-adjacent bugs (a 0-row
+data-frame quirk; a test's own incorrect global-count assumption) without ever masking a
+real failure by loosening an assertion incorrectly; (6) verified the real 375-individual
+bundled fixture's node count matches the design's own analytical prediction EXACTLY
+(1,375, no drift), the single most consequential number in the design doc, per its own
+§9; (7) caught and reverted the known iCloud duplicate-file `.Rd` corruption immediately,
+without needing a reminder; (8) kept strict scope discipline -- did not touch
+`R/modPedigree.R`, did not implement `edgeStyle`, left Slice 2 clearly scoped for a
+future session. **Weaknesses:** (1) the Pre-RED investigation took 8 throwaway POC
+rounds -- an earlier hypothesis check against vis.js's own `color.inherit` documentation
+(rather than first suspecting a size-related rendering degeneracy) might have reached the
+real root cause 2-3 rounds sooner; (2) one test-authoring mistake (assuming a global
+count of exactly 1 projection node in a fixture that, on full manual trace, legitimately
+produces 2) reached the GREEN run before being caught -- a more complete manual trace of
+BOTH mating units in that fixture before writing the assertion would have caught it at
+RED instead. **Compared to previous sessions:** matches S459-461's own standard of
+verifying claims against real code/fixtures rather than trusting prior documentation, and
+extends it one layer further -- catching a defect in a design that had ALREADY passed
+S464's own 3-lens adversarial review, because that review checked data-structure
+correctness, render-chain integration, and arithmetic, but did not (and structurally
+could not, being a design-session review) run the mechanism live. Recorded as
+`PROJECT_LEARNINGS.md` Learning 460 for future implementation sessions inheriting a
+ratified design's own dragon-flagged integration assumptions.
+
+**Handoff to Session 466:**
+- **What's next:** **(a)** Implement issue #142 Slice 2 (`BACKLOG.md`'s updated item) --
+  READY, Effort M. In order: wire `makePedigreeMatingLayout()`'s new `edgeStyle`
+  parameter (calling Slice 1's `.addRectilinearWaypoints()`); add the `R/modPedigree.R`
+  UI toggle (net-new layout inside the Diagram tab's own `uiOutput` -- no existing
+  "home" for it) + extend click-to-navigate/search-dropdown id-prefix filters to the 3
+  new reserved prefixes (careful: do NOT fold `__dup_` into the same exclusion regex --
+  duplicate nodes must stay clickable); re-measure the node count against the
+  ACTUALLY-WIRED rectilinear code path (Slice 1's unit test already confirms the
+  underlying math, but re-confirm post-wiring per the design's own "hard gate" -- §9)
+  and bring the confirmed number to the owner via `AskUserQuestion` to ratify the
+  rectilinear-mode individual cap (~380 suggested, not final); live-`shinytest2`/
+  `chromote`-re-verify inbreeding-loop rendering (#134) and `highlightNearest` hover
+  -highlighting (#135, a newly-found regression risk) for the rectilinear style
+  specifically. **(b)** Everything carried from S462-464, unchanged: fix
+  `test-e2e-pedigree-module.R:205,207`'s stale assertions (READY, Effort S); clean up the
+  45 accumulated `lintr::lint_package()` warnings (READY, Effort M); founder-positioning
+  defect (DECISION NEEDED, Effort M); confirm whether the repo relocation out of iCloud
+  has happened (still hadn't as of this session -- `devtools::document()` corrupted the
+  same 3 `.Rd` files a 3rd time, reverted); re-capture the stale `colony-manager-guide.qmd`
+  Diagram screenshot (READY, Effort S); NPRC outreach plan review (DECISION NEEDED,
+  owner-only); LabKey recommendations (BLOCKED); S445's methodology question unresolved;
+  issues #133/#136/#137 (data-model gated), #141 (filed-not-scheduled); 2 owner-supplied
+  reference PDFs untracked; unexplained `renv.lock` diff (carried forward 7 sessions
+  now). **(c)** NEW this session: a stale `devtools::check()` spelling NOTE (6 words,
+  `man/makePedigreeMatingLayout.Rd`/`vignettes/a2interactive.Rmd`, found incidentally,
+  confirmed pre-existing via a stash test -- READY, Effort S). **(d)** Also noticed,
+  not yet investigated: 2 untracked rendered `.html` byproducts under `docs/planning/`
+  (`issue125-ranking-priority-multi-candidate-plan.html`,
+  `pedigree-diagram-kinship2-reference-comparison.html`) -- worth a look at whether these
+  should be `.gitignore`d like other rendered byproducts in this repo, or are simply
+  local review copies the owner wants kept untracked; not examined this session.
+- **Key files:** `R/makePedigreeDiagramData.R:791-968` (new `.addRectilinearWaypoints()`),
+  `R/makePedigreeDiagramData.R:144-149` (extended reserved-prefix regex),
+  `tests/testthat/test_addRectilinearWaypoints.R` (new, 11 tests),
+  `tests/testthat/test_buildMatingUnitForest.R` (3 new reserved-prefix tests),
+  `docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md` §11 (new
+  addendum), `BACKLOG.md` (issue #142 item updated + new spelling-gap item),
+  `CHANGELOG.md` (S465 entry), `PROJECT_LEARNINGS.md` Learning 460 (new), `CLAUDE.md`
+  (learning-count cross-reference 459->460).
+- **Gotchas:** (1) The `edgeStyle` parameter wiring is non-breaking -- every existing
+  caller of `makePedigreeMatingLayout()` invokes it positionally with only the pedigree
+  argument (confirmed at design time, `docs/planning/...design-plan.md` D4). (2) If you
+  run `devtools::document()`, immediately check `git status man/` afterward -- the
+  iCloud duplicate `.R` files (`R/appServer 2.R`, `R/modMarkerGenetics 2.R`) WILL corrupt
+  3 `.Rd` files again; revert via `git checkout -- man/appServer.Rd
+  man/modMarkerGeneticsServer.Rd man/modMarkerGeneticsUI.Rd` immediately, do not commit.
+  (3) `.addRectilinearWaypoints()`'s output `nodes` gains `color.background`/
+  `color.border` columns (NA on unaffected rows) and `edges` gains a `color` column (NA
+  on unaffected rows) -- any code consuming this output's shape downstream (the future
+  `R/modPedigree.R` wiring) must account for these new columns. (4) `hidden = TRUE` is
+  NOT used anywhere in the new mechanism -- waypoint invisibility is `size = 0` +
+  transparent color; do not reintroduce `hidden = TRUE` while wiring the UI, it will
+  silently break the edges again (design doc §11).
+- **Self-assessment score:** 9/10 (breakdown above).
 
 ### What Session 464 Did
 **Deliverable:** A planning document (Architecture workstream) designing issue #142's
