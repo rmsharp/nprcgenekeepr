@@ -43,6 +43,15 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-03 · [ad hoc] Owner-directed sequencing: gate issue #142 completion on the accumulated lint cleanup (post-S465)
+- **Decision:** owner directed (in response to a `lintr::lint_package()` observation) that
+  the "Accumulated `lintr::lint_package()` warnings, 45 total across 17 files" `BACKLOG.md`
+  item (found S462) must be completed **before** the pedigree drawing feature (issue #142)
+  is considered complete and pushed -- not deferred until after. `BACKLOG.md` updated with
+  cross-referenced notes on both the lint-cleanup item and the issue #142 Slice 2 item.
+  No code changed; confirmed the current lint count (still 45, same breakdown as S462) and
+  that none of it originates from Session 465's own new code.
+
 ### 2026-08-03 · [issue #142] Implement Slice 1: internal `.addRectilinearWaypoints()` helper (Session 465)
 - **Deliverable:** new internal `.addRectilinearWaypoints(nodes, edges, forest, pos)`
   in `R/makePedigreeDiagramData.R`, implementing the ratified design's D1 (sibship-bar

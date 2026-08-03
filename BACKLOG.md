@@ -424,7 +424,11 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       resolves to the original iCloud-synced path) -- this item cannot be
       closed until the move actually completes.
 - [ ] **Accumulated `lintr::lint_package()` warnings, 45 total across 17
-      files** (found S462, Effort M) -- past sessions have only kept their
+      files** (found S462, Effort M -- **owner-directed sequencing gate,
+      2026-08-03: must be completed before the pedigree drawing feature
+      (issue #142) is considered complete and pushed** -- pick this up before
+      or alongside issue #142 Slice 2, not after) -- past sessions have only
+      kept their
       OWN new code lint-clean (e.g. S461's "9 new lint warnings... fixed"),
       not swept pre-existing debt, so it has accumulated silently (not
       visible in `devtools::check()`, which does not run `lintr`). Current
@@ -841,8 +845,11 @@ visNetwork-vs-kinship2 technology decision (D2), which stands as ratified.*
       Option 2 layout) but analytically separate (placement vs. edge style).
       See `CHANGELOG.md`.
 - [ ] **Issue #142 implementation: rectilinear mate-line/sibship-bar waypoint style
-      -- Slice 2 (edgeStyle wiring + UI + live re-verification)** (READY, Effort M) --
-      design ratified: `docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md`.
+      -- Slice 2 (edgeStyle wiring + UI + live re-verification)** (READY, Effort M --
+      **gated: the "Accumulated `lintr::lint_package()` warnings" item above must be
+      completed before this feature is considered complete and pushed, per
+      owner-directed sequencing, 2026-08-03**) -- design ratified:
+      `docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md`.
       **Slice 1 (the internal waypoint-construction helper) is DONE -- S465
       (2026-08-03):** Pre-RED live-verification (a minimal `visNetwork` widget
       matching `R/modPedigree.R`'s exact render chain, driven via `shinytest2`/
