@@ -20,10 +20,11 @@ valid. The returned dataframe has its column names forced to
 \description{
 Validates the structure and legal domain of a long-format marker
 genotype table (one row per \code{id} x \code{locus}), the input format
-for the marker-based (KING-robust) kinship estimator (\code{\link{markerKinship}}).
-This is a new, sibling schema to the single-locus \code{first_name}/
-\code{second_name} genotype format checked by \code{\link{checkGenotypeFile}} --
-that function, and everything downstream of it (\code{\link{addGenotype}},
+for the marker-based (KING-robust) kinship estimator
+(\code{\link{markerKinship}}). This is a new, sibling schema to the
+single-locus \code{first_name}/\code{second_name} genotype format checked
+by \code{\link{checkGenotypeFile}} -- that function, and everything
+downstream of it (\code{\link{addGenotype}},
 \code{\link{geneDrop}}), is untouched by this one.
 }
 \details{

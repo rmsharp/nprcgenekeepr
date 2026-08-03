@@ -2,7 +2,7 @@
 % Please edit documentation in R/markerHeterozygosity.R
 \name{markerExpectedHeterozygosity}
 \alias{markerExpectedHeterozygosity}
-\title{Compute per-locus and population-wide expected heterozygosity from marker genotypes}
+\title{Compute per-locus and population-wide expected heterozygosity}
 \usage{
 markerExpectedHeterozygosity(genotypeMatrix)
 }

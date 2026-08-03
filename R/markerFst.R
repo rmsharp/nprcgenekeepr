@@ -146,8 +146,8 @@ markerFst <- function(genotypeMatrixA, genotypeMatrixB) {
       next
     }
 
-    allelesA <- unlist(strsplit(callsA, "/"))
-    allelesB <- unlist(strsplit(callsB, "/"))
+    allelesA <- unlist(strsplit(callsA, "/", fixed = TRUE))
+    allelesB <- unlist(strsplit(callsB, "/", fixed = TRUE))
     refAllele <- sort(unique(c(allelesA, allelesB)))[1L]
 
     nA <- length(allelesA)
@@ -173,7 +173,7 @@ markerFst <- function(genotypeMatrixA, genotypeMatrixB) {
 
   if (length(insufficientLoci) > 0L) {
     warning("markerFst: locus/loci with zero genotyped individuals in one ",
-            "center excluded: ", paste(insufficientLoci, collapse = ", "),
+            "center excluded: ", toString(insufficientLoci),
             " (returning NA).")
   }
 

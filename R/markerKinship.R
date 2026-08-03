@@ -47,8 +47,8 @@
 #' genome-wide association studies. \emph{Bioinformatics}, 26(22), 2867-2873.
 #' \doi{10.1093/bioinformatics/btq559}
 #'
-#' @seealso \code{\link{checkMarkerGenotypeFile}}, \code{\link{buildMarkerGenotypeMatrix}},
-#' \code{\link{kinship}}
+#' @seealso \code{\link{checkMarkerGenotypeFile}},
+#' \code{\link{buildMarkerGenotypeMatrix}}, \code{\link{kinship}}
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
@@ -65,7 +65,7 @@ markerKinship <- function(genotypeMatrix) {
   ids <- rownames(genotypeMatrix)
   n <- length(ids)
 
-  alleles <- strsplit(genotypeMatrix, "/")
+  alleles <- strsplit(genotypeMatrix, "/", fixed = TRUE)
   het <- vapply(alleles, function(a) {
     if (length(a) != 2L) NA else a[1L] != a[2L]
   }, logical(1L))

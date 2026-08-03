@@ -68,6 +68,6 @@ genome-wide association studies. \emph{Bioinformatics}, 26(22), 2867-2873.
 \doi{10.1093/bioinformatics/btq559}
 }
 \seealso{
-\code{\link{checkMarkerGenotypeFile}}, \code{\link{buildMarkerGenotypeMatrix}},
-\code{\link{kinship}}
+\code{\link{checkMarkerGenotypeFile}},
+\code{\link{buildMarkerGenotypeMatrix}}, \code{\link{kinship}}
 }

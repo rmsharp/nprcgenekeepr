@@ -124,7 +124,7 @@ resolveCrossCenterIds <- function(pedA, pedB, mapping) {
   if (length(missingA) > 0L) {
     stop(
       "resolveCrossCenterIds(): mapping references idA value(s) not ",
-      "present in pedA$id: ", paste(missingA, collapse = ", "),
+      "present in pedA$id: ", toString(missingA),
       call. = FALSE
     )
   }
@@ -132,7 +132,7 @@ resolveCrossCenterIds <- function(pedA, pedB, mapping) {
   if (length(missingB) > 0L) {
     stop(
       "resolveCrossCenterIds(): mapping references idB value(s) not ",
-      "present in pedB$id: ", paste(missingB, collapse = ", "),
+      "present in pedB$id: ", toString(missingB),
       call. = FALSE
     )
   }
@@ -143,7 +143,7 @@ resolveCrossCenterIds <- function(pedA, pedB, mapping) {
   if (length(collision) > 0L) {
     stop(
       "resolveCrossCenterIds(): id(s) appear in both pedA and pedB but ",
-      "are not declared in 'mapping': ", paste(collision, collapse = ", "),
+      "are not declared in 'mapping': ", toString(collision),
       ". Add a mapping row linking them, or ensure ids are unique to each ",
       "center.",
       call. = FALSE

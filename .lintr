@@ -15,5 +15,6 @@ exclusions: list(
     "inst/application",
     "inst/extdata",
     "tests",
-    "vignettes"
+    "vignettes",
+    "R/markerKinship.R" = list(line_length_linter = 17L)
   )

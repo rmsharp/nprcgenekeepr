@@ -42,7 +42,7 @@ markerObservedHeterozygosity <- function(genotypeMatrix) {
   ids <- rownames(genotypeMatrix)
   nLoci <- ncol(genotypeMatrix)
 
-  alleles <- strsplit(genotypeMatrix, "/")
+  alleles <- strsplit(genotypeMatrix, "/", fixed = TRUE)
   het <- vapply(alleles, function(a) {
     if (length(a) != 2L) NA else a[1L] != a[2L]
   }, logical(1L))
@@ -58,7 +58,7 @@ markerObservedHeterozygosity <- function(genotypeMatrix) {
   })
 }
 
-#' Compute per-locus and population-wide expected heterozygosity from marker genotypes
+#' Compute per-locus and population-wide expected heterozygosity
 #'
 #' Computes Nei's gene diversity (the standard \eqn{He = 1 - \sum p_i^2}
 #' form, where \eqn{p_i} is the population frequency of allele \eqn{i} at a
@@ -101,9 +101,9 @@ markerExpectedHeterozygosity <- function(genotypeMatrix) {
   perLocus <- vapply(loci, function(locus) {
     col <- genotypeMatrix[, locus]
     col <- col[!is.na(col)]
-    alleleCalls <- unlist(strsplit(col, "/"))
+    alleleCalls <- unlist(strsplit(col, "/", fixed = TRUE))
     freqs <- table(alleleCalls) / length(alleleCalls)
-    1 - sum(freqs^2)
+    1.0 - sum(freqs^2.0)
   }, numeric(1L))
   names(perLocus) <- loci
 
