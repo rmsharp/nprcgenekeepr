@@ -107,7 +107,7 @@ markerParentageExclusion <- function(genotypeMatrix, pedigree,
   }
 
   isHet <- function(genoRow) {
-    vapply(strsplit(genoRow, "/"), function(a) {
+    vapply(strsplit(genoRow, "/", fixed = TRUE), function(a) {
       if (length(a) != 2L) NA else a[1L] != a[2L]
     }, logical(1L))
   }

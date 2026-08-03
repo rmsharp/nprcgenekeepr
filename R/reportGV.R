@@ -192,9 +192,11 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
       gestationDefault = gestationDefault
     )
   indivMeanKin <- mkCorrection$indivMeanKin
+  # nolint start: commented_code_linter.
   # Issue #127: probands %in% mkCorrection$flagged (not the reverse) keeps
   # flagged a plain logical vector in probands order, ready to cbind()
   # alongside indivMeanKin/zScores/gu/etc. with no name-alignment step.
+  # nolint end
   flagged <- probands %in% mkCorrection$flagged
 
   zScores <- scale(indivMeanKin)

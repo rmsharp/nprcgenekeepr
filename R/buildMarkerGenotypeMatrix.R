@@ -44,7 +44,8 @@ buildMarkerGenotypeMatrix <- function(genotype) {
 
   lo <- pmin(genotype$allele1, genotype$allele2)
   hi <- pmax(genotype$allele1, genotype$allele2)
-  genoStr <- paste(lo, hi, sep = "/")
+  # A "lo/hi" genotype string, not a file path -- file.path() doesn't apply.
+  genoStr <- paste0(lo, "/", hi) # nolint: paste_linter.
 
   mat[cbind(match(genotype$id, ids), match(genotype$locus, loci))] <- genoStr
   mat

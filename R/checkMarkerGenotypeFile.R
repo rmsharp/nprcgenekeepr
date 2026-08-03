@@ -5,10 +5,11 @@
 #'
 #' Validates the structure and legal domain of a long-format marker
 #' genotype table (one row per \code{id} x \code{locus}), the input format
-#' for the marker-based (KING-robust) kinship estimator (\code{\link{markerKinship}}).
-#' This is a new, sibling schema to the single-locus \code{first_name}/
-#' \code{second_name} genotype format checked by \code{\link{checkGenotypeFile}} --
-#' that function, and everything downstream of it (\code{\link{addGenotype}},
+#' for the marker-based (KING-robust) kinship estimator
+#' (\code{\link{markerKinship}}). This is a new, sibling schema to the
+#' single-locus \code{first_name}/\code{second_name} genotype format checked
+#' by \code{\link{checkGenotypeFile}} -- that function, and everything
+#' downstream of it (\code{\link{addGenotype}},
 #' \code{\link{geneDrop}}), is untouched by this one.
 #'
 #' @details
@@ -61,7 +62,7 @@ checkMarkerGenotypeFile <- function(genotype) {
     dupes <- unique(paste(genotype$id[isDupe], genotype$locus[isDupe],
                            sep = " x "))
     stop("Marker genotype file has duplicate id x locus row(s): ",
-         paste(dupes, collapse = ", "), ".")
+         toString(dupes), ".")
   }
 
   alleleCounts <- tapply(
@@ -73,7 +74,7 @@ checkMarkerGenotypeFile <- function(genotype) {
   if (length(offendingLoci) > 0L) {
     stop("Marker genotype file has one or more loci with more than two ",
          "distinct alleles (the KING-robust estimator requires biallelic ",
-         "markers): ", paste(offendingLoci, collapse = ", "), ".")
+         "markers): ", toString(offendingLoci), ".")
   }
 
   genotype
