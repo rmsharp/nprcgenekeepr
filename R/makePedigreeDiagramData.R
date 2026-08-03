@@ -141,11 +141,12 @@ makePedigreeDiagramData <- function(ped) {
   }
 
   ids <- as.character(ped$id)
-  reserved <- grepl("^__union_|^__dup_", ids)
+  reserved <- grepl("^__union_|^__dup_|^__drop_|^__bar_|^__proj_", ids)
   if (any(reserved)) {
-    stop(".buildMatingUnitForest() found real id(s) using the reserved ",
-         "'__union_'/'__dup_' prefix, which must be unique to ",
-         "package-generated nodes: ", toString(ids[reserved]))
+    stop(".buildMatingUnitForest() found real id(s) using a reserved ",
+         "'__union_'/'__dup_'/'__drop_'/'__bar_'/'__proj_' prefix, which ",
+         "must be unique to package-generated nodes: ",
+         toString(ids[reserved]))
   }
 
   sire <- as.character(ped$sire)
@@ -785,4 +786,194 @@ makePedigreeMatingLayout <- function(ped) {
   duplicateToReal <- stats::setNames(duplicates$realId, duplicates$id)
 
   list(nodes = nodes, edges = edges, duplicateToReal = duplicateToReal)
+}
+
+#' Insert rectilinear mate-line/sibship-bar waypoint nodes and edges
+#' (Pedigree Diagram Option 2, issue #142)
+#'
+#' Internal helper for the fuller kinship2-style rectilinear mate-line/
+#' sibship-bar edge routing
+#' (\code{docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md}
+#' D1/D2/D5). A pure post-processing step: consumes the already-final
+#' node/edge tables \code{\link{makePedigreeMatingLayout}} assembles (direct
+#' style) plus \code{\link{.buildMatingUnitForest}}'s structural output and
+#' \code{\link{.positionMatingUnitForest}}'s coordinates, and returns a new
+#' node/edge pair with invisible waypoint nodes inserted so every mate-line
+#' and sibship-bar edge routes as a strict right angle instead of a direct
+#' diagonal/straight segment. No change to \code{.buildMatingUnitForest()},
+#' \code{.positionMatingUnitForest()}, or \code{makePedigreeMatingLayout()}'s
+#' own default ("direct") behavior -- this function has no call site yet
+#' (Migration Path step 1; the \code{edgeStyle} parameter wiring and
+#' \code{R/modPedigree.R} UI control are a later implementation slice).
+#'
+#' A node with vis.js's own \code{hidden = TRUE} option suppresses every
+#' edge connected to it, regardless of the edge's own \code{hidden} setting
+#' (confirmed live this session against the actual bundled vis.js source --
+#' see the design doc's Session 465 implementation addendum). Waypoint
+#' nodes are therefore made invisible via \code{size = 0} plus fully
+#' transparent \code{color.background}/\code{color.border}, not
+#' \code{hidden = TRUE}. vis.js edges also default to inheriting their
+#' color from their own \code{from} node's border color -- every new
+#' waypoint-touching edge is given an explicit \code{color} so it does not
+#' silently inherit a transparent waypoint's own color.
+#'
+#' D1 (sibship-bar): for every distinct \code{childEdges$from} value
+#' (a mating-unit id, or a single real parent id under D5), adds one
+#' invisible "drop" node (at that parent/unit's own x, on the children's
+#' shared row) and one invisible "bar-point" node per child (at that
+#' child's own x, same row), then connects the sorted-by-x chain of
+#' drop/bar-point nodes plus each bar-point down to its child -- replacing
+#' the direct parent/unit -> child edge(s).
+#'
+#' D2 (mate-line dogleg): for each mating unit, checks the anchor side and
+#' the resolved non-anchor side (the non-anchor's duplicate node at this
+#' unit, if one exists, per the existing \code{mateEdges} resolution --
+#' never assumes the anchor is the on-row side) independently; a side
+#' already at the unit's own gen keeps its existing direct edge; a side at
+#' a different gen gets a new invisible projection node (at that side's own
+#' x, on the unit's row) and two edges (side -> projection, projection ->
+#' unit) replacing the single direct edge.
+#'
+#' @param nodes the \code{nodes} data frame from
+#'   \code{\link{makePedigreeMatingLayout}} (direct style).
+#' @param edges the \code{edges} data frame from
+#'   \code{\link{makePedigreeMatingLayout}} (direct style).
+#' @param forest the list returned by \code{\link{.buildMatingUnitForest}}
+#'   for this same pedigree.
+#' @param pos the data frame returned by
+#'   \code{\link{.positionMatingUnitForest}} for this same pedigree.
+#' @return A list with \code{nodes} and \code{edges}, in the same shape as
+#'   \code{\link{makePedigreeMatingLayout}}'s own return value, plus
+#'   \code{color.background}/\code{color.border} columns on \code{nodes}
+#'   and a \code{color} column on \code{edges} (\code{NA} on every
+#'   unaffected existing row).
+#' @noRd
+.addRectilinearWaypoints <- function(nodes, edges, forest, pos) {
+  if (!is.data.frame(nodes)) {
+    stop(".addRectilinearWaypoints() requires 'nodes' to be a data frame.")
+  }
+  if (!is.data.frame(edges)) {
+    stop(".addRectilinearWaypoints() requires 'edges' to be a data frame.")
+  }
+  if (!is.data.frame(pos)) {
+    stop(".addRectilinearWaypoints() requires 'pos' to be a data frame.")
+  }
+  requiredForest <- c("matingUnits", "duplicates", "childEdges")
+  missingForest <- setdiff(requiredForest, names(forest))
+  if (length(missingForest) > 0L) {
+    stop(".addRectilinearWaypoints() requires 'forest' to have components: ",
+         toString(requiredForest), ". Missing: ", toString(missingForest))
+  }
+
+  matingUnits <- forest$matingUnits
+  duplicates <- forest$duplicates
+  childEdges <- forest$childEdges
+
+  edgeColor <- "#2B7CE9"
+  xOf <- stats::setNames(nodes$x, nodes$id)
+  yOf <- stats::setNames(nodes$y, nodes$id)
+  genOf <- stats::setNames(pos$gen, pos$id)
+
+  newNodeList <- list()
+  newEdgeList <- list()
+  dropChildEdge <- rep(FALSE, nrow(edges))
+
+  ## D1: sibship-bar waypoint chain (generalizes to D5 groups, §2.1).
+  for (fromId in unique(childEdges$from)) {
+    kids <- childEdges$to[childEdges$from == fromId]
+    childY <- unname(yOf[[kids[1L]]])
+    dropId <- sprintf("__drop_%s", fromId)
+    barIds <- sprintf("__bar_%s", kids)
+
+    barPointIds <- c(dropId, barIds)
+    barPointX <- c(unname(xOf[[fromId]]), unname(xOf[kids]))
+    newNodeList[[length(newNodeList) + 1L]] <- data.frame(
+      id = barPointIds, x = barPointX, y = childY, stringsAsFactors = FALSE
+    )
+
+    vertEdges <- data.frame(from = c(fromId, barIds), to = c(dropId, kids),
+                             stringsAsFactors = FALSE)
+    ord <- order(barPointX)
+    orderedIds <- barPointIds[ord]
+    chainEdges <- if (length(orderedIds) > 1L) {
+      data.frame(from = orderedIds[-length(orderedIds)],
+                 to = orderedIds[-1L], stringsAsFactors = FALSE)
+    } else {
+      data.frame(from = character(), to = character(),
+                 stringsAsFactors = FALSE)
+    }
+    newEdgeList[[length(newEdgeList) + 1L]] <- rbind(vertEdges, chainEdges)
+
+    dropChildEdge <- dropChildEdge |
+      (edges$from == fromId & edges$to %in% kids)
+  }
+
+  ## D2: mate-line dogleg for parents at a different gen than their unit.
+  dropMateEdge <- rep(FALSE, nrow(edges))
+  if (nrow(matingUnits) > 0L) {
+    dupKey <- paste0(duplicates$realId, duplicates$matingUnitId)
+    for (i in seq_len(nrow(matingUnits))) {
+      U <- matingUnits$id[i]
+      A <- matingUnits$anchor[i]
+      Nreal <- matingUnits$nonAnchor[i]
+      dupIdx <- match(paste0(Nreal, U), dupKey)
+      Nnode <- if (is.na(dupIdx)) Nreal else duplicates$id[dupIdx]
+      Ugen <- matingUnits$gen[i]
+
+      sides <- list(list(nodeId = A, gen = unname(genOf[[A]])),
+                    list(nodeId = Nnode, gen = unname(genOf[[Nnode]])))
+      for (side in sides) {
+        if (identical(side$gen, Ugen)) next
+        projId <- sprintf("__proj_%s_%s", side$nodeId, U)
+        newNodeList[[length(newNodeList) + 1L]] <- data.frame(
+          id = projId, x = unname(xOf[[side$nodeId]]), y = unname(yOf[[U]]),
+          stringsAsFactors = FALSE
+        )
+        newEdgeList[[length(newEdgeList) + 1L]] <- data.frame(
+          from = c(side$nodeId, projId), to = c(projId, U),
+          stringsAsFactors = FALSE
+        )
+        dropMateEdge <- dropMateEdge |
+          (edges$from == side$nodeId & edges$to == U)
+      }
+    }
+  }
+
+  keptEdges <- edges[!(dropChildEdge | dropMateEdge), , drop = FALSE]
+  keptEdges$color <- rep(NA_character_, nrow(keptEdges))
+
+  newEdges <- if (length(newEdgeList) > 0L) {
+    ne <- do.call(rbind, newEdgeList)
+    ne$dashes <- rep(FALSE, nrow(ne))
+    ne$color <- rep(edgeColor, nrow(ne))
+    ne
+  } else {
+    data.frame(from = character(), to = character(), dashes = logical(),
+               color = character(), stringsAsFactors = FALSE)
+  }
+  finalEdges <- rbind(keptEdges, newEdges[, names(keptEdges)])
+
+  keptNodes <- nodes
+  keptNodes$color.background <- rep(NA_character_, nrow(keptNodes))
+  keptNodes$color.border <- rep(NA_character_, nrow(keptNodes))
+
+  newNodes <- if (length(newNodeList) > 0L) {
+    nn <- do.call(rbind, newNodeList)
+    nn$label <- rep("", nrow(nn))
+    nn$shape <- rep("dot", nrow(nn))
+    nn$title <- rep(NA_character_, nrow(nn))
+    nn$size <- rep(0L, nrow(nn))
+    nn$color.background <- rep("rgba(0,0,0,0)", nrow(nn))
+    nn$color.border <- rep("rgba(0,0,0,0)", nrow(nn))
+    nn
+  } else {
+    data.frame(id = character(), x = numeric(), y = numeric(),
+               label = character(), shape = character(),
+               title = character(), size = integer(),
+               color.background = character(), color.border = character(),
+               stringsAsFactors = FALSE)
+  }
+  finalNodes <- rbind(keptNodes, newNodes[, names(keptNodes)])
+
+  list(nodes = finalNodes, edges = finalEdges)
 }

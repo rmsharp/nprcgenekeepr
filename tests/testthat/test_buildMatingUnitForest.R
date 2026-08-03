@@ -44,6 +44,34 @@ test_that(".buildMatingUnitForest fails loudly on a real id colliding with
   expect_error(.buildMatingUnitForest(bad2), "__dup_")
 })
 
+test_that(".buildMatingUnitForest fails loudly on a real id colliding with
+           the 3 new '__drop_'/'__bar_'/'__proj_' reserved prefixes added
+           for the rectilinear waypoint style (issue #142)", {
+  badDrop <- data.frame(
+    id = c("__drop_1", "F1"),
+    sire = NA_character_, dam = NA_character_,
+    sex = c("F", "M"), gen = 0L,
+    stringsAsFactors = FALSE
+  )
+  expect_error(.buildMatingUnitForest(badDrop), "__drop_")
+
+  badBar <- data.frame(
+    id = c("__bar_C1", "F1"),
+    sire = NA_character_, dam = NA_character_,
+    sex = c("F", "M"), gen = 0L,
+    stringsAsFactors = FALSE
+  )
+  expect_error(.buildMatingUnitForest(badBar), "__bar_")
+
+  badProj <- data.frame(
+    id = c("__proj_X_1", "F1"),
+    sire = NA_character_, dam = NA_character_,
+    sex = c("F", "M"), gen = 0L,
+    stringsAsFactors = FALSE
+  )
+  expect_error(.buildMatingUnitForest(badProj), "__proj_")
+})
+
 ## ---- D5 partial-parentage fallback ------------------------------------
 
 test_that(".buildMatingUnitForest creates no mating unit for a 0-parent
