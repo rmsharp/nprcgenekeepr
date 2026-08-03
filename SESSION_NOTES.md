@@ -6,6 +6,16 @@
 
 ## ACTIVE TASK
 
+### What Session 465 Did
+**Deliverable:** Implement issue #142 (rectilinear mate-line/sibship-bar waypoint style)
+per the ratified design (`docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md`)
+-- picked by the owner via the S464 close-out `AskUserQuestion` picker. (IN PROGRESS)
+**Started:** 2026-08-03
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
 ### What Session 464 Did
 **Deliverable:** A planning document (Architecture workstream) designing issue #142's
 fuller rectilinear mate-line/sibship-bar waypoint style on top of the shipped Option 2
