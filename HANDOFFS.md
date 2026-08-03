@@ -68,6 +68,22 @@ are legal at write time (the receipt ships in the very commit whose sha
 it would name); the next session reconciles them to real shas.
 
 ``` handoff
+session: S464
+date: 2026-08-03
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md designs issue #142's fuller rectilinear mate-line/sibship-bar waypoint style on top of the shipped Option 2 mating-unit layout. Ratified by the owner (Proceed as written, D1-D5). Implementation is separate follow-up work, not done this session.
+what_was_done: Read both prior ratified design docs and the actual current implementation (R/makePedigreeDiagramData.R, R/modPedigree.R) in full. Verified vis.js's hidden node/edge option against the actual bundled visNetwork source. Designed D1 (generalized sibship-bar waypoint chain), D2 (per-side mate-line dogleg for mismatched-generation parents), D3 (new reserved id prefixes + D6 re-adaptation), D4 (opt-in toggle defaulting to today's Direct style), D5 (pure post-processing, no positioning-algorithm change). Caught and fixed a real bug in the session's own first draft via re-verification (falsely assumed the anchor parent always sits at the mating unit's own row) -- measured against the real 375-individual bundled fixture that 62% of mating units have mismatched-generation parents (majority case, not edge case), and total node count would roughly triple per individual (3.67x) under the new style. Ran a 3-lens adversarial Workflow review before presenting to the owner, which caught 4 more concrete defects (a duplicate-node x/gen ambiguity in D2, a new highlightNearest regression risk, a false vignette claim, an arithmetic rounding overstatement) -- all fixed. Presented via AskUserQuestion; owner ratified Proceed as written. Filed a BACKLOG.md implementation item, commented on GitHub issue #142 (left open), recorded PROJECT_LEARNINGS.md Learning 459. Commit: pending (this receipt commits with the close-out).
+next_steps: Implement issue #142 per the ratified design (BACKLOG.md's new item, READY, Effort M) -- start with the Migration Path's new internal waypoint-construction helper, unit-tested in isolation, BEFORE touching R/modPedigree.R's render chain; Pre-RED must live-verify hidden=TRUE composes correctly with the existing fixed-position render chain before writing the full mechanism against that assumption. Everything else carried unchanged from S462/S463 (E2E test fix, lint cleanup, founder-positioning defect, iCloud relocation check, stale screenshot, NPRC outreach, LabKey, S445 question, data-model-gated issues, untracked PDFs, renv.lock diff).
+key_files: docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md (new, full ratified design), BACKLOG.md (new issue #142 implementation item), CHANGELOG.md (S464 entry), PROJECT_LEARNINGS.md Learning 459 (new), CLAUDE.md (learning-count cross-reference 458->459). No R/ or tests/ files touched.
+gotchas: D2's mate-line dogleg must use the ACTUAL rendered node's x for the non-anchor side -- if a duplicate node was placed at that unit (57/96 real cases), use the duplicate's own x, not the real individual's potentially-distant x. The rectilinear-mode node-count multiplier (3.67x, not the direct style's ~2x) means the existing 750-individual cap must not simply carry over -- re-measure and decide via AskUserQuestion. visOptions's highlightNearest (issue #135) has a genuinely new regression risk under this design (hidden waypoints becoming a real individual's nearest edge-graph neighbor) -- re-verify live, do not assume issue #135's prior verification covers it. There is no existing UI "home" for the new style toggle in R/modPedigree.R -- needs net-new layout inside the Diagram tab's own reactive uiOutput, not the shared cross-tab "Display Options" panel.
+runtime_smoke: n/a -- planning/design document only, no R/ or tests/ files changed, no runtime behavior affected.
+changelog_ref: CHANGELOG.md 2026-08-03 [issue #142] entry (Session 464)
+commit: 0016d356
+```
+
+``` handoff
 session: S463
 date: 2026-08-03
 status: complete

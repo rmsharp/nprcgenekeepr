@@ -7,6 +7,163 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 464 Did
+
+**Deliverable:** A planning document (Architecture workstream) designing
+issue \#142’s fuller rectilinear mate-line/sibship-bar waypoint style on
+top of the shipped Option 2 mating-unit layout (Slices 1-3, S459-461) –
+picked by the owner via the S463-close-out `AskUserQuestion` picker
+(option 1 of 4: “#142: mate-line design”). **Started/Completed:**
+2026-08-03 / 2026-08-03 **Status:** DONE – design ratified. **Ledger:**
+recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Claimed the session (stub +
+`HANDOFFS.md` `status: pending` receipt) before any research, per Phase
+1B. **(2)** Read both prior ratified design docs in full
+(`pedigree-diagram-mating-lines-plan.md` S457’s feasibility research and
+Case C2 proof-of-concept;
+`pedigree-diagram-option2-layout-design-plan.md` S458’s D1-D6
+mating-unit-forest design) plus issue \#142’s exact filed text
+(additive, reuse already-computed x/y, likely a toggle). **(3)** Re-read
+the ACTUAL current implementation in full
+(`R/makePedigreeDiagramData.R`‘s `.buildMatingUnitForest()`,
+`.positionMatingUnitForest()`,
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md);
+`R/modPedigree.R`’s render chain and click/search handlers) rather than
+designing from the prior docs’ descriptions alone. **(4)** Verified
+against the actual installed `visNetwork` 2.1.4 bundled source (not
+assumed) that vis.js genuinely supports a `hidden` node/edge option –
+the mechanism the whole waypoint-invisibility design depends on. **(5)**
+While drafting D2 (the mate-line dogleg for parents at different
+generations), caught a real bug in the session’s OWN first draft via
+re-verification: incorrectly assumed the mating-unit forest’s “anchor”
+parent always sits at the unit’s own row; empirically measured against
+the real 375-individual bundled fixture
+(`inst/extdata/examples/obfuscated_rhesus_mhc_ped.csv`, running the
+actual shipped algorithm, not estimating) that this is FALSE in 51/237
+(22%) of real mating units, and that 147/237 (62%) have
+mismatched-generation parents overall – the majority case, not an edge
+case – fixed before the design left draft form. **(6)** Ran a 3-lens
+adversarial `Workflow` review (data-structure correctness,
+D6/render-chain integration, arithmetic reproduction – each
+independently re-deriving the design’s claims against the real source
+and real fixture, not just re-reading prose) BEFORE presenting to the
+owner. This caught 4 more concrete, previously-unnoticed defects: a real
+correctness gap in D2 (which node’s `x`/`gen` to use when the non-anchor
+side is a duplicate, 57/96 real cases affected), a genuinely new
+`highlightNearest` (#135) hover-highlight regression risk, a false claim
+about which function `vignettes/a2interactive.Rmd` demos, and an
+arithmetic rounding overstatement (~400 stated, ~380 actually computed
+by the design’s own formula). All fixed in the document before
+presentation. **(7)** Presented the finalized design via
+`AskUserQuestion` (Proceed / Modify / Hold / Decline); owner picked
+**Proceed as written (D1-D5)**. **(8)** Updated the doc’s status/§10
+ratification record, added a `BACKLOG.md` implementation item, commented
+on GitHub issue \#142 (left open – implementation is separate follow-up
+work, not done this session), recorded `PROJECT_LEARNINGS.md` Learning
+459 (the adversarial-review process pattern itself), and closed out.
+
+**Session 463 Handoff Evaluation (by Session 464): 8/10.** **What
+helped:** item (a) of S463’s “what’s next” list accurately scoped this
+exact work (“the big pending decision: whether/how to implement issue
+\#142’s fuller rectilinear… style… likely needs its own plan-mode design
+session given the real algorithmic complexity already documented in
+`pedigree-diagram-mating-lines-plan.md`”) and pointed directly at the
+correct prior document – went straight to the right context with zero
+wasted exploration. **What was missing:** nothing load-bearing; S463
+could not have anticipated the specific quantitative findings (62%
+mismatch rate) this session’s own empirical measurement surfaced. **What
+was wrong:** no inaccuracies found in the handoff itself. **ROI:**
+clearly positive – the S457/S458/S461 documentation trail S463 (and
+earlier sessions) left behind made this session’s design work fast and
+well-grounded rather than starting from scratch.
+
+**Self-assessment (Session 464): 9/10.** **Strengths:** (1) read the
+actual current implementation code in full before designing, not just
+the prior design docs’ prose descriptions of it; (2) verified the
+`hidden` vis.js option against the actual bundled library source rather
+than assuming a plausible-sounding capability exists; (3) empirically
+measured the node-count and generation-mismatch impact against the real
+bundled fixture, using the actual shipped algorithm, rather than leaving
+these as guesses – this measurement overturned an initial assumption
+(that mismatched-generation mates are rare) and became the design’s
+single most load-bearing finding; (4) caught one real design bug through
+the session’s own re-verification discipline, then went further and ran
+an independent adversarial multi-agent review before presenting to the
+owner, which caught 4 MORE concrete defects the self-review had missed –
+demonstrating that self-review catching one bug is not evidence a draft
+is otherwise clean; (5) maintained explicit scope discipline throughout,
+keeping the separate, unpicked founder-positioning-defect item cleanly
+out of scope while still surfacing the real evidentiary connection (the
+same 62%/majority-case finding) as useful signal for a future session,
+not a license to fix it now; (6) followed Phase 1B claim-before-work and
+the full Phase 3 close-out checklist. **Weaknesses:** (1) the session’s
+own first draft contained more concrete errors than ideal before the
+adversarial pass caught them – a stronger first-pass synthesis would
+have anticipated more of the D2 duplicate-node ambiguity and the
+`highlightNearest` risk without needing an external check; (2) this is a
+design document, not a working proof-of-concept – the `hidden = TRUE` +
+fixed-position composition claim (§9’s last dragon) is verified against
+vis.js’s documented options but not against an actual rendered widget,
+appropriately left as the implementation session’s Pre-RED step rather
+than over-scoping this session, but worth naming as an accepted boundary
+rather than a silent gap. **Compared to previous sessions:** matches
+S457/S458’s own standard of measuring real numbers against the real
+fixture before ratifying, and adds a new process element neither of
+those sessions had available/used – an explicit adversarial multi-agent
+review pass before presenting for ratification, recorded as
+`PROJECT_LEARNINGS.md` Learning 459 for future architecture-workstream
+sessions to reuse.
+
+**Handoff to Session 465:** - **What’s next:** **(a)** Implement issue
+\#142 per the now-ratified design
+(`docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md`,
+`BACKLOG.md`’s new item) – READY, Effort M. Start with the design’s own
+Migration Path §6: a new internal waypoint-construction helper,
+independently unit-tested, BEFORE touching `R/modPedigree.R`’s render
+chain. Pre-RED must live-verify `hidden = TRUE` composes correctly with
+the existing fixed-position/`smooth = FALSE` chain (§9’s last dragon)
+before writing the full mechanism against that assumption. **(b)**
+Everything carried from S462/ S463, unchanged: fix
+`test-e2e-pedigree-module.R:205,207`’s stale assertions (READY, Effort
+S); clean up the 45 accumulated `lintr::lint_package()` warnings (READY,
+Effort M); the founder-positioning defect (DECISION NEEDED, Effort M –
+this session’s own 62% measurement is useful evidence for its “not yet
+confirmed against a real fixture” open question, but the item itself
+remains unpicked and unstarted); confirm whether the repo relocation out
+of iCloud has happened (still hadn’t as of this session – did not check
+again this session since no file operations triggered the corruption);
+re-capture the stale `colony-manager-guide.qmd` Diagram screenshot
+(READY, Effort S); NPRC outreach plan review (DECISION NEEDED,
+owner-only); LabKey recommendations (BLOCKED); S445’s methodology
+question unresolved; issues \#133/#136/#137 (data-model gated), \#141
+(filed-not-scheduled); 2 owner-supplied reference PDFs untracked;
+unexplained `renv.lock` diff (carried forward 6 sessions now). - **Key
+files:**
+`docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md`
+(new, the full ratified design), `BACKLOG.md` (new issue \#142
+implementation item), `CHANGELOG.md` (S464 entry),
+`PROJECT_LEARNINGS.md` Learning 459 (new), `CLAUDE.md` (learning-count
+cross-reference updated 458-\>459). No `R/` or `tests/` files touched
+this session. - **Gotchas:** (1) The design’s own §9 “here be dragons”
+section is the single richest source of implementation traps – read it
+in full before starting, not just the D1-D5 decision text. (2) D2’s
+mate-line dogleg must use the ACTUAL rendered node’s `x` for the
+non-anchor side – if a duplicate node was placed at that unit (57/96
+real cases), use the duplicate’s own `x`, not the real individual’s
+(potentially distant) `x`. (3) The rectilinear-mode node-count
+multiplier (3.67x measured, not the direct style’s ~2x) means the
+existing 750-individual cap must NOT simply carry over to the new toggle
+mode – re-measure and decide via `AskUserQuestion`, do not silently
+reuse 750. (4) `visOptions`’s `highlightNearest` (issue \#135) is a
+genuinely new regression risk under this design (hidden waypoints
+becoming a real individual’s nearest edge-graph neighbor) – re-verify
+live, do not assume issue \#135’s prior verification covers it. (5)
+There is no existing UI “home” for the new style toggle in
+`R/modPedigree.R` – it needs net-new layout inside the Diagram tab’s own
+reactive `uiOutput`, not the shared cross-tab “Display Options” panel. -
+**Self-assessment score:** 9/10 (breakdown above).
+
 ### What Session 463 Did
 
 **Deliverable:** Research/comparison document (docs-only, no package
