@@ -512,12 +512,15 @@ iCloud-synced path) – this item cannot be closed until the move actually
 completes.
 
 **Accumulated `lintr::lint_package()` warnings, 45 total across 17
-files** (found S462, Effort M) – past sessions have only kept their OWN
-new code lint-clean (e.g. S461’s “9 new lint warnings… fixed”), not
-swept pre-existing debt, so it has accumulated silently (not visible in
-`devtools::check()`, which does not run `lintr`). Current breakdown by
-linter: `line_length_linter` (17), `paste_linter` (9),
-`fixed_regex_linter` (6), `commented_code_linter` (4),
+files** (found S462, Effort M – **owner-directed sequencing gate,
+2026-08-03: must be completed before the pedigree drawing feature (issue
+\#142) is considered complete and pushed** – pick this up before or
+alongside issue \#142 Slice 2, not after) – past sessions have only kept
+their OWN new code lint-clean (e.g. S461’s “9 new lint warnings…
+fixed”), not swept pre-existing debt, so it has accumulated silently
+(not visible in `devtools::check()`, which does not run `lintr`).
+Current breakdown by linter: `line_length_linter` (17), `paste_linter`
+(9), `fixed_regex_linter` (6), `commented_code_linter` (4),
 `implicit_integer_linter` (4), `unnecessary_concatenation_linter` (3),
 `nonportable_path_linter` (2, both from the iCloud duplicate-file
 artifact above – resolves itself with that item). Heaviest files:
@@ -956,8 +959,10 @@ its own GitHub issue or fold into \#142’s scope – they are related (both
 concern the Pedigree Diagram Option 2 layout) but analytically separate
 (placement vs. edge style). See `CHANGELOG.md`. - \[ \] **Issue \#142
 implementation: rectilinear mate-line/sibship-bar waypoint style – Slice
-2 (edgeStyle wiring + UI + live re-verification)** (READY, Effort M) –
-design ratified:
+2 (edgeStyle wiring + UI + live re-verification)** (READY, Effort M –
+**gated: the “Accumulated `lintr::lint_package()` warnings” item above
+must be completed before this feature is considered complete and pushed,
+per owner-directed sequencing, 2026-08-03**) – design ratified:
 `docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md`.
 **Slice 1 (the internal waypoint-construction helper) is DONE – S465
 (2026-08-03):** Pre-RED live-verification (a minimal `visNetwork` widget
