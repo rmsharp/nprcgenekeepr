@@ -200,12 +200,21 @@ test_that("E2E: Pedigree Browser Diagram tab shows a known trio's data", {
   expect_match(get_diagram_node("PH0IXL"), '"shape":"dot"',
                info = "Dam (sex F) should render as a dot node")
 
-  ## Directed sire/dam -> child edges for the known trio.
+  ## Directed sire/dam -> child edges for the known trio, routed through an
+  ## intermediate mating-unit node (D6 direct-edge mate lines, S461/Option 2
+  ## Slice 3): child <- __union_<n> <- {sire, dam}. The union id itself is a
+  ## volatile sequential index, not a stable identity, so it is captured via
+  ## pattern match rather than hardcoded.
   edgesToChild <- get_diagram_edges_to("EBG407")
-  expect_match(edgesToChild, '"from":"U5VLXP"',
-               info = "Sire -> child edge should exist")
-  expect_match(edgesToChild, '"from":"PH0IXL"',
-               info = "Dam -> child edge should exist")
+  expect_match(edgesToChild, '"from":"__union_[0-9]+"',
+               info = "Child's incoming edge should come from a mating-unit node")
+  unionId <- regmatches(edgesToChild,
+                         regexpr('__union_[0-9]+', edgesToChild))
+  edgesToUnion <- get_diagram_edges_to(unionId)
+  expect_match(edgesToUnion, '"from":"U5VLXP"',
+               info = "Sire -> mating-unit edge should exist")
+  expect_match(edgesToUnion, '"from":"PH0IXL"',
+               info = "Dam -> mating-unit edge should exist")
 })
 
 ## issue #129 Slice 2 -- click-to-navigate interactivity smoke test.
