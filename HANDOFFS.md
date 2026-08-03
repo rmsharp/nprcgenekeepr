@@ -72,7 +72,7 @@ key_files: R/makePedigreeDiagramData.R:791-968 (new .addRectilinearWaypoints()),
 gotchas: hidden=TRUE is NOT used anywhere in the new mechanism -- waypoint invisibility is size=0 + transparent color; reintroducing hidden=TRUE while wiring the UI will silently break the edges again. .addRectilinearWaypoints()'s output nodes gains color.background/color.border columns and edges gains a color column (NA on unaffected rows) -- downstream code must account for these. Running devtools::document() will corrupt 3 man/*.Rd files via the iCloud duplicate .R files -- check git status man/ immediately after and revert via git checkout -- if so. The edgeStyle parameter is non-breaking (every existing caller invokes makePedigreeMatingLayout() positionally with only the pedigree arg).
 runtime_smoke: n/a -- the new function has no call site yet (Slice 1 is data-layer only); no R/modPedigree.R or runtime behavior changed this session.
 changelog_ref: CHANGELOG.md 2026-08-03 [issue #142] entry (Session 465)
-commit: b435a17b
+commit: d0c615ea
 ```
 
 ```handoff
