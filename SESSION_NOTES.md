@@ -6,6 +6,21 @@
 
 ## ACTIVE TASK
 
+### What Session 462 Did
+**Deliverable:** Documentation fix (docs-only, Development workstream) -- update
+`vignettes/a2interactive.Rmd`'s "Pedigree Diagram" section to demonstrate
+`makePedigreeMatingLayout()` (matching `R/modPedigree.R`'s current fixed-position
+render chain) instead of the now-superseded `makePedigreeDiagramData()` +
+`visHierarchicalLayout()` combination it still calls, and correct the section's
+now-false "reproduces the Diagram tab's rendering exactly" claim. Owner-flagged:
+a screenshot of the tutorial's rendered diagram still showed the pre-Option-2
+crossing-line style. (IN PROGRESS)
+**Started:** 2026-08-03
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+
 ### What Session 461 Did
 **Deliverable:** Implementation (Development workstream) -- Pedigree Diagram Option 2 Slice 3:
 render-chain wiring (new exported `makePedigreeMatingLayout()` combining Slices 1+2,

@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S462
+date: 2026-08-03
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Documentation fix -- update vignettes/a2interactive.Rmd's "Pedigree Diagram" section to demonstrate makePedigreeMatingLayout() (matching R/modPedigree.R's current fixed-position render chain) instead of the superseded makePedigreeDiagramData() + visHierarchicalLayout() combination, and correct the section's now-false "reproduces the Diagram tab's rendering exactly" claim. Owner-flagged via a screenshot showing the stale pre-Option-2 render.
+what_was_done: pending
+next_steps: pending
+key_files: vignettes/a2interactive.Rmd (Pedigree Diagram section, ~lines 344-460)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S461
 date: 2026-08-02
 status: complete
