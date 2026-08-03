@@ -825,6 +825,31 @@ visNetwork-vs-kinship2 technology decision (D2), which stands as ratified.*
       into #142's scope -- they are related (both concern the Pedigree Diagram
       Option 2 layout) but analytically separate (placement vs. edge style).
       See `CHANGELOG.md`.
+- [ ] **Issue #142 implementation: rectilinear mate-line/sibship-bar waypoint style**
+      (READY, Effort M -- design ratified, root-cause math measured, adversarially
+      reviewed, found S461, designed S464) -- design ratified:
+      `docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md`. Adds an
+      opt-in "Rectilinear" diagram-style toggle (default stays "Direct," today's
+      shipped style, zero behavior change for existing users) that routes mate-line
+      and sibship-bar edges through new invisible waypoint nodes computed entirely
+      from already-final `x`/`gen` positions (no change to `.buildMatingUnitForest()`/
+      `.positionMatingUnitForest()`). Measured against the real 375-individual fixture,
+      not estimated: 62% of mating units need a mate-line dogleg (parents at different
+      generations is the MAJORITY case, not an edge case); total rendered nodes would
+      roughly triple per individual (3.67x) under the new style. **Implementation
+      session must, in order:** (a) Pre-RED live-verify `hidden = TRUE` composes
+      correctly with the existing fixed-position/`smooth = FALSE` render chain (§9
+      dragon); (b) build waypoint construction + the `edgeStyle` parameter (D1-D5);
+      (c) re-measure the actual generated node count against the real fixture and
+      bring the confirmed number (design's own math suggests ~380 individuals) to the
+      owner via `AskUserQuestion` to ratify the rectilinear-mode-specific individual
+      cap, replacing the direct-style-calibrated 750; (d) re-verify inbreeding-loop
+      rendering (#134) and `highlightNearest` hover-highlighting (#135, a newly-found
+      regression risk -- hidden waypoints becoming a real individual's nearest
+      edge-graph neighbor) for the new style specifically, neither inherited from
+      prior verification. Explicitly does NOT fix the separate founder-positioning
+      defect above (analytically distinct: edge routing vs. coordinate assignment).
+      See `CHANGELOG.md`.
 
 ## Outreach
 - [ ] **NPRC outreach & announcement plan** (DECISION NEEDED -- owner review/edit of

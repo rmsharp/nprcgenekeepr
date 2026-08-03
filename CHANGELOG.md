@@ -43,6 +43,40 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-03 · [issue #142] Design: full rectilinear mate-line/sibship-bar waypoint style, ratified (Session 464)
+- **Deliverable:** `docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md`
+  -- an Architecture-workstream design for issue #142 (deferred at S461's Option 2
+  Slice 3), picked up via the S463 close-out `AskUserQuestion` picker. Designs D1
+  (a generalized sibship-bar waypoint chain, sort-and-chain, generalizing to both
+  mating-unit and D5 single-known-parent origins), D2 (a per-side mate-line dogleg
+  for mismatched-generation parents -- measured 62% of real mating units need this,
+  the majority case, not an edge case), D3 (3 new reserved node-id prefixes, full D6
+  re-adaptation including a newly-found `highlightNearest` hover-highlight
+  regression risk), D4 (an opt-in "Rectilinear" toggle defaulting to today's shipped
+  "Direct" style), D5 (pure post-processing, no change to
+  `.buildMatingUnitForest()`/`.positionMatingUnitForest()`). All quantitative claims
+  measured directly against `inst/extdata/examples/obfuscated_rhesus_mhc_ped.csv`
+  via the real, already-shipped algorithm (not estimated): 237 mating units, 147
+  (62%) generation-mismatched, total rendered nodes would roughly triple per
+  individual (3.67x) under the new style -- flagged as the design's single most
+  consequential open number, with a suggested (not final) rectilinear-mode
+  individual cap of ~380, to be re-confirmed once implemented.
+- **Adversarial review (this session, before ratification):** a 3-lens Workflow
+  (data-structure correctness, D6/render-chain integration, arithmetic
+  reproduction) independently re-derived the design's claims against the real
+  source and real fixture, catching and fixing before presentation: a real
+  correctness gap in D2 (which node's `x`/`gen` to use when the non-anchor side is
+  a duplicate, affecting 57/96 real cases), the `highlightNearest` regression risk
+  above, a false claim about which function a vignette demos, an arithmetic
+  rounding overstatement (~400 corrected to ~380), and 2 minor prose/count fixes.
+  See `PROJECT_LEARNINGS.md` Learning 459.
+- **Ratified via `AskUserQuestion`** (Proceed as written, D1-D5) -- no D-decision
+  revisited. Implementation is separate follow-up work, not done this session;
+  filed to `BACKLOG.md` and commented on issue #142
+  (<https://github.com/rmsharp/nprcgenekeepr/issues/142#issuecomment-5169351526>).
+  No `R/` or `tests/` files touched -- docs-only, TDD RED/GREEN/REFACTOR gates did
+  not apply (S448/S451/S452/S453/S457/S458 precedent for planning/design sessions).
+
 ### 2026-08-03 · [issue #142] Research: reproduce kinship2's reference pedigree drawings with nprcgenekeepr's own rendering, for the pending #142 decision (Session 463)
 - **Deliverable:** `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`
   -- owner-directed, after seeing the live Diagram tab and comparing it against
