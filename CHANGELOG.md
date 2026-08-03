@@ -47,6 +47,58 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-08-03 · \[ad hoc\] Filled in this session’s own HANDOFFS.md receipt commit sha (Session 467)
+
+- **Deliverable:** Filled in this session’s own `HANDOFFS.md` receipt
+  `commit: pending` placeholder with the real close-out commit sha
+  (`7e2e4d94`) – the same self-correction many previous sessions (e.g.
+  S331-S344, S466) each needed, closed within the same session rather
+  than left for the next session’s Phase 0 reconcile to catch and
+  backfill.
+
+### 2026-08-03 · \[BL-e2eStaleAssertion\] Fix stale `test-e2e-pedigree-module.R` assertions for the known-trio Diagram edge routing (Session 467)
+
+- **Deliverable:** `tests/testthat/test-e2e-pedigree-module.R:203-208`’s
+  “known trio” edge assertions rewritten to match the live,
+  already-shipped `__union_<n>` mating-unit routing (S461/Option 2
+  Slice 3) instead of the stale pre-Option-2 direct sire/dam edge –
+  fixes the 2 stale-assertion failures found by the scheduled E2E CI run
+  (`run 30796362515`, found S462). REFACTOR-only per
+  `PROJECT_LEARNINGS.md`’s `[refactor-only]` reflex (a green-on-arrival
+  test correction, no production code changed), gated via
+  `AskUserQuestion` `PRE-RED->REFACTOR`.
+- **PRE-RED live verification (not guessed from the backlog’s prose
+  description):** a standalone driver script (scratchpad, not the test
+  file) drove the real app against the known-trio fixture and queried
+  the live vis.js network directly, confirming the edge into child
+  `EBG407` comes from `__union_29`, and that union node’s own incoming
+  edges come from `PH0IXL` and `U5VLXP` – plain real ids, not
+  duplicate-occurrence ids, for this specific trio. Since the union
+  node’s numeric suffix is a volatile sequential index (not a stable
+  identity), the new assertion captures it via `"from":"__union_[0-9]+"`
+  pattern match rather than hardcoding `__union_29`, then separately
+  asserts the sire/dam edges into the captured union id.
+- **Verification:** the file itself (29/29 assertions pass, live app);
+  full local regression suite (0 failed/0 error, 10 pre-existing
+  warnings, exact S465/S466 baseline); `devtools::check()` (1 WARNING/2
+  NOTEs, exact pre-existing baseline, 0 new); `lintr::lint()` on the
+  changed file (0 lints). See `BACKLOG.md`, `PROJECT_LEARNINGS.md`
+  Learning 462.
+
+### 2026-08-03 · \[ad hoc\] Phase 0 ledger reconcile: backfill S466’s own HANDOFFS.md receipt commit sha self-correction (post-S466)
+
+- **Deliverable:** Phase 0 ledger reconcile (this session, S467) found
+  one commit past the `CHANGELOG.md` frontier with no ledger entry:
+  `ec3bf90e` (“docs: S466 final close-out – handoff receipt commit
+  sha”), landed after S466’s own close-out commit (`211f3f4a`) that
+  recorded the entry below.
+- **Change:** `ec3bf90e` replaced the S466 `HANDOFFS.md` receipt’s
+  `commit: pending` placeholder with the real commit sha (`211f3f4a`) –
+  a self-correction of the just-written receipt, not new production
+  work. Same class of action as the many prior sessions’ equivalent
+  self-fixes recorded further down this ledger (e.g. S331-S344’s
+  `commit: pending` backfills).
+
 ### 2026-08-03 · \[BL-lintCleanup\] Clean up the accumulated `lintr::lint_package()` warnings, satisfying the owner-directed issue \#142 sequencing gate (Session 466)
 
 - **Deliverable:** all 41 pre-existing `lintr::lint_package()` warnings

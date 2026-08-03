@@ -7,6 +7,210 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 467 Did
+
+**Deliverable:** Fix the 2 stale-assertion `test-e2e-pedigree-module.R`
+failures (`BACKLOG.md`, found S462) – picked by the owner via the S467
+orientation-report `AskUserQuestion` picker. **Started/Completed:**
+2026-08-03 / 2026-08-03 **Status:** DONE – both stale assertions
+rewritten to match the live, already-shipped `__union_<n>` mating-unit
+edge routing; verified against the real running app. **Ledger:**
+recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Phase 0 orient: read
+`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list`,
+`git status`/`log`/`diff --stat`, `methodology_dashboard.py` (94/100
+health). Ledger reconcile found one undocumented commit past the
+`CHANGELOG.md` frontier – `ec3bf90e` (S466 filling in its own
+`HANDOFFS.md` `commit: pending` placeholder, the same recurring
+self-correction pattern seen S331-S344 and S466 itself) – backfilled a
+`[ad hoc]` entry and committed it separately (`33bc8e20`) before the
+orientation report, per Phase 0 step 6. `HANDOFFS.md`’s own frontier was
+current (no gap). Rendered the CLAUDE.md-mandated priorities list +
+`AskUserQuestion` picker; owner picked “Fix stale E2E assertions”
+(`BACKLOG.md`’s item, found S462, root cause fully diagnosed there:
+`test-e2e-pedigree-module.R:205,207` asserted the pre-Option-2 direct
+sire/dam edge, but S461’s Option 2 Slice 3 routes every parent-\>child
+edge through an intermediate `__union_<n>` mating-unit node instead).
+**(2)** **PROTOCOL MISS, acknowledged plainly (not silently):** did NOT
+write the mandatory Phase 1B claim stub (`SESSION_NOTES.md` stub +
+`HANDOFFS.md` `status: pending` receipt) before starting technical work
+– went directly into PRE-RED research. S465 and S466 both explicitly
+performed this step; this session did not. No crash occurred so no harm
+resulted, but this is a real, not hypothetical, deviation from the
+mandatory sequence – see self-assessment below. **(3)** PRE-RED
+research: read the flagged test
+(`tests/testthat/test-e2e-pedigree-module.R:150-209`) and the actual
+edge-construction code (`R/makePedigreeDiagramData.R:707-793`,
+confirming `__union_<n>`/`__dup_<realId>_<n>` id conventions). Rather
+than trust `BACKLOG.md`’s prose diagnosis (or guess the exact live edge
+shape), wrote a standalone driver script (scratchpad, not the test file)
+that loads the package, drives the real app via the same
+`shinytest2`/`chromote` helpers the test itself uses, uploads the real
+fixture, and queries the live vis.js network’s DataSets directly –
+confirmed empirically: child `EBG407`’s incoming edge is
+`{"from":"__union_29","to":"EBG407"}`, and `__union_29`’s own incoming
+edges are from `PH0IXL` and `U5VLXP` (plain real ids, not
+duplicate-occurrence ids, for this specific trio). **(4)** Classified
+this as a `[refactor-only]` (`PROJECT_LEARNINGS.md` line 28)
+green-on-arrival test correction – production code is already correct
+and shipped; only the assertion is stale – and presented a
+`TDD: PRE-RED->REFACTOR` `AskUserQuestion` naming the exact planned
+change (pattern-match the volatile `__union_<n>` id rather than
+hardcoding `__union_29`, then assert the sire/dam edges into the
+captured id) and the downstream verification plan; owner approved.
+**(5)** REFACTOR: rewrote `test-e2e-pedigree-module.R:203-208` per the
+plan (one file, one edit). **(6)** Verification: ran the file directly
+against the live app (`NPRC_RUN_E2E=true NOT_CRAN=true`) – 29/29
+assertions pass; full local regression suite
+([`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html) +
+`test_dir(reporter="silent")`) – 0 failed/0 error, 10 pre-existing
+warnings (exact S465/S466 baseline), 4477 passed; `lintr::lint()` on the
+changed file – 0 lints; `devtools::check()` – 1 WARNING/2 NOTEs, exact
+pre-existing baseline (iCloud duplicate-file nonportable-names warning,
+the vignette-engine note, the same 6-word spelling-drift note), 0 new.
+**(7)** No Phase 3E runtime smoke test in the traditional sense (no
+production/runtime code changed) – but the live app WAS directly
+exercised twice: once during PRE-RED verification (standalone driver
+script) and once via the corrected test file’s own
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+run, both confirming the fix matches real, not assumed, behavior.
+**(8)** Close-out: `BACKLOG.md` item marked `[x]` DONE with resolution
+detail (kept in place, not deleted, matching the S466 lint-item
+precedent for this section); `CHANGELOG.md` entry
+(`[BL-e2eStaleAssertion]`); `PROJECT_LEARNINGS.md` Learning 462
+(pattern-match volatile generated ids in E2E assertions, don’t hardcode
+the observed literal); `CLAUDE.md` learning-count cross-reference
+(461-\>462).
+
+**Session 466 Handoff Evaluation (by Session 467): 9/10.** **What
+helped:** the handoff’s “what’s next” item (c) named this exact item
+with an accurate root-cause summary (stale pre-Option-2 edge assertion,
+`__union_*` routing already shipped, lines 205/207) that matched this
+session’s own independent re-diagnosis exactly – saved real discovery
+time. The `BACKLOG.md` item itself (S462’s original diagnosis, carried
+forward unchanged by S463-466) was unusually thorough: it named the
+exact CI run, the exact failing lines, the exact root-cause commit
+(S461’s Option 2 Slice 3), and the exact fix direction (“assert the new
+two-hop relationship… the union node’s own incoming edges include the
+sire and dam or their duplicate-occurrence ids”) – all of which turned
+out accurate on independent live verification. **What was missing:**
+nothing structural; the one thing this session added beyond the existing
+diagnosis was the specific empirical shape for THIS trio (plain ids, not
+duplicate ids) and the pattern-vs-hardcode assertion design choice,
+neither of which the diagnosis needed to specify since they’re
+implementation details of the fix, not the diagnosis. **What was
+wrong:** nothing in S466’s own handoff was inaccurate. **ROI:** solidly
+positive – the accurate, specific root-cause diagnosis (inherited from
+S462, correctly preserved unmodified through S463-466) meant this
+session could go straight to PRE-RED live verification of the FIX rather
+than having to first re-diagnose the failure from scratch.
+
+**Self-assessment (Session 467): 7/10.** **Strengths:** (1) did not
+trust the backlog’s prose diagnosis of the exact live edge shape at face
+value – ran a real PRE-RED live-verification script against the actual
+app before writing any assertion, confirming the precise structure
+rather than guessing from the written description (consistent with the
+S459-466 “verify against real code/live app” standard, now Learning
+462’s own generalization of it to E2E assertions specifically); (2)
+chose a pattern-match assertion over hardcoding the literal `__union_29`
+observed during verification, explicitly reasoning through why the
+literal number is a volatile implementation artifact (construction-order
+index) rather than a stable identity worth asserting on – avoids
+reintroducing the same class of staleness this very fix is repairing;
+(3) correctly classified the change as `[refactor-only]`
+(green-on-arrival test correction, no production code changed) using the
+project’s own established PRE-RED-\>REFACTOR precedent rather than
+manufacturing a synthetic RED or skipping the phase-gate
+`AskUserQuestion` entirely; (4) ran the full verification stack (direct
+file run against the live app, full regression suite,
+`devtools::check()`, `lintr` on the changed file) and confirmed
+exact-baseline match on every axis, not just “the target test passes”;
+(5) properly executed Phase 0’s ledger-reconcile-before-report step,
+catching and backfilling S466’s own trailing self-correction commit
+before the orientation report rather than deferring it. **Weaknesses:**
+(1) **skipped the mandatory Phase 1B session-claim stub**
+(`SESSION_NOTES.md` stub + `HANDOFFS.md` `status: pending` receipt,
+committed BEFORE any technical work) – went straight from the owner’s
+task pick into PRE-RED research and, later, a real file edit, with no
+committed crash-breadcrumb in place the entire time. S465 and S466 both
+performed this step explicitly and it is `SESSION_RUNNER.md`‘s own named
+countermeasure to failure mode \#14 (ghost session); this session’s own
+work was not lost because no crash occurred, but that is luck, not
+compliance – a mid-session crash here would have left the exact “zero
+trace” failure the stub exists to prevent. Caught only at close-out,
+while assembling this section, not during the session itself. (2) Minor:
+the priorities-list `AskUserQuestion` picker in this session’s own Phase
+0 report used a “Fix stale E2E assertions” label without also surfacing
+that fixing it required a live-driven app session (non-trivial
+setup/runtime cost for an “Effort S” item) – didn’t affect the outcome,
+but the Effort estimate undersold the actual verification cost slightly.
+**Compared to previous sessions:** matches the S459-466 discipline of
+verifying claims (here, a backlog diagnosis and a generated id’s
+stability) against real code/live behavior rather than trusting
+documentation at face value, and extends it into a new, explicitly-named
+practical rule (Learning 462) about NOT hardcoding observed-but-unstable
+generated ids in E2E assertions. Falls short of S465/S466’s own standard
+on ONE concrete point: both of those sessions’ own write-ups explicitly
+confirm “claimed the session (stub + `HANDOFFS.md` status: pending
+receipt)” as their literal first action after the owner’s task pick;
+this session’s own equivalent first action was PRE-RED research, with
+the stub written only retroactively at close-out. Scored 7/10 rather
+than 8-9 specifically because of this gap, not because of anything about
+the technical work itself.
+
+**Handoff to Session 468:** - **What’s next:** everything carried
+forward from S462-466, minus this session’s item, unchanged: **(a)**
+Issue \#142 Slice 2 (`BACKLOG.md`, READY, Effort M – gate satisfied
+S466) – wire `edgeStyle` into
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md);
+add the `R/modPedigree.R` UI toggle; extend
+click-to-navigate/search-dropdown id-prefix filters to the 3 new
+reserved prefixes; re-measure the node count; live-re-verify
+inbreeding-loop rendering (#134) and `highlightNearest`
+hover-highlighting (#135) for the rectilinear style specifically – see
+S465’s `HANDOFFS.md` receipt or the `BACKLOG.md` item for the full
+step-by-step, unchanged. **(b)** Wire a process fix so `lintr` debt
+stops re-accumulating (READY, Effort S-M, split off S466) – mechanism
+(CI job vs. Phase 3F check vs. both) undecided. **(c)**
+Founder-positioning defect (DECISION NEEDED, Effort M, found S463) – a
+founder marrying into a later generation renders at the wrong row; root
+cause identified, fix not designed. **(d)** Everything else unchanged:
+recapture the stale `colony-manager-guide.qmd` Diagram screenshot
+(READY, Effort S); the 6-word `devtools::check()` spelling-drift NOTE
+(READY, Effort S – still NOT fixed, confirmed present again this
+session’s own `devtools::check()` run, same 6 words as S465/S466); NPRC
+outreach plan review (DECISION NEEDED, owner-only); LabKey
+recommendations (BLOCKED); S445’s methodology question unresolved;
+confirm whether the iCloud repo relocation has happened (still hadn’t as
+of this session – `pwd` still resolves to the iCloud-synced path);
+issues \#133/#136/#137 (data-model gated), \#141 (filed-not-scheduled);
+2 owner-supplied reference PDFs untracked; unexplained `renv.lock` diff
+(carried forward 9 sessions now); 2 untracked rendered `.html`
+byproducts under `docs/planning/` (still not examined). - **Key files:**
+`tests/testthat/test-e2e-pedigree-module.R:203-215` (the fix itself),
+`BACKLOG.md` (item marked `[x]` DONE), `CHANGELOG.md` (S467 entry + the
+Phase 0 ledger-reconcile backfill entry), `PROJECT_LEARNINGS.md`
+Learning 462 (new), `CLAUDE.md` (learning-count cross-reference
+461-\>462). - **Gotchas:** (1) **This session skipped the Phase 1B claim
+stub – do not repeat this.** Write the `SESSION_NOTES.md` stub +
+`HANDOFFS.md` `status: pending` receipt and commit them IMMEDIATELY
+after the owner picks a task, before any research or edits, no matter
+how small the task looks. (2) The `__union_<n>`/`__dup_<realId>_<n>`
+reserved-prefix id convention (`R/makePedigreeDiagramData.R:182,289`)
+generates ids whose NUMERIC suffix is a construction-order artifact, not
+a stable identity – any future E2E assertion against these ids should
+pattern-match (`"__union_[0-9]+"` etc.), never hardcode the specific
+number observed during one verification run (Learning 462). (3) All
+prior gotchas (S466’s `# nolint` suppressions, the `.lintr` per-line
+exclusion, `devtools::install(upgrade = FALSE)`,
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+needing BOTH `NPRC_RUN_E2E=true` AND `NOT_CRAN=true`, `get_logs()` not
+`get_log()`, all iCloud `.Rd` corruption gotchas) still apply unchanged
+– this session hit none of them fresh but relied on the
+`NPRC_RUN_E2E`/`NOT_CRAN` combination directly (confirmed still
+correct). - **Self-assessment score:** 7/10 (breakdown above).
+
 ### What Session 466 Did
 
 **Deliverable:** Clean up the accumulated `lintr::lint_package()`

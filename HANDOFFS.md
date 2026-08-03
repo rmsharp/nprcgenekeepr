@@ -68,6 +68,22 @@ are legal at write time (the receipt ships in the very commit whose sha
 it would name); the next session reconciles them to real shas.
 
 ``` handoff
+session: S467
+date: 2026-08-03
+status: complete
+self_score: 7
+predecessor_score: 9
+active_task: DONE -- test-e2e-pedigree-module.R:203-208's stale "known trio" edge assertions rewritten to match the live __union_<n> mating-unit routing (S461/Option 2 Slice 3) instead of the pre-Option-2 direct sire/dam edge. REFACTOR-only, owner-approved TDD gate.
+what_was_done: PRE-RED live verification (standalone driver script against the real running app, not a guess from BACKLOG.md's prose) confirmed the exact live edge structure: child EBG407's incoming edge is {"from":"__union_29","to":"EBG407"}, and __union_29's own incoming edges are from PH0IXL and U5VLXP (plain real ids, not duplicate-occurrence ids, for this trio). Rewrote the assertion to pattern-match "from":"__union_[0-9]+" (capturing the volatile union id) rather than hardcoding __union_29, then query edges into the captured id for the sire/dam assertions. Verified: the file itself (29/29 pass, live app); full regression suite (0 failed/0 error, 10 pre-existing warnings, exact baseline); devtools::check() (1 WARNING/2 NOTEs, exact pre-existing baseline, 0 new); lintr on the changed file (0 lints). PROTOCOL MISS (acknowledged, not silent): did not write the Phase 1B claim stub before starting technical work -- see gotchas.
+next_steps: (a) Issue #142 Slice 2 (BACKLOG.md, READY, Effort M, gate satisfied S466) -- unchanged, see S465's handoff for full step-by-step. (b) Lint CI process fix (READY, Effort S-M, split off S466) -- mechanism undecided. (c) Founder-positioning defect (DECISION NEEDED, Effort M, found S463) -- root cause identified, fix not designed. (d) Everything else unchanged from S462-466: stale colony-manager-guide.qmd screenshot (READY S), 6-word spelling-drift NOTE (READY S, still not fixed, reconfirmed this session), NPRC outreach (DECISION NEEDED, owner-only), LabKey (BLOCKED), S445 question, iCloud relocation still pending, data-model-gated issues #133/#136/#137, issue #141, untracked PDFs, renv.lock diff (9 sessions), 2 untracked docs/planning/*.html files.
+key_files: tests/testthat/test-e2e-pedigree-module.R:203-215 (the fix), BACKLOG.md (item marked [x] DONE), CHANGELOG.md (S467 entry + Phase 0 reconcile backfill entry), PROJECT_LEARNINGS.md Learning 462 (new), CLAUDE.md (461->462).
+gotchas: (1) This session skipped the mandatory Phase 1B claim stub (SESSION_NOTES.md stub + HANDOFFS.md status:pending, committed before any technical work) -- S465/S466 both did this explicitly, this session did not, caught only at close-out. Do not repeat. (2) __union_<n>/__dup_<realId>_<n> reserved-prefix ids (R/makePedigreeDiagramData.R:182,289) carry a construction-order-dependent numeric suffix, not a stable identity -- any future E2E assertion against these must pattern-match, never hardcode the observed literal (Learning 462). (3) All S466 gotchas (nolint suppressions, .lintr per-line exclusion, devtools::install(upgrade=FALSE), shinytest2::AppDriver needing BOTH NPRC_RUN_E2E=true AND NOT_CRAN=true, get_logs() not get_log(), iCloud .Rd corruption) still apply unchanged.
+runtime_smoke: No production/runtime code changed (test-only fix), so Phase 3E in the traditional sense does not apply -- but the live app was directly exercised twice: once via a standalone PRE-RED verification script (shinytest2::AppDriver against the real fixture) and once via the corrected test file's own AppDriver run (29/29 assertions pass), both confirming the fix matches real, not assumed, live behavior.
+changelog_ref: CHANGELOG.md 2026-08-03 [BL-e2eStaleAssertion] entry (Session 467)
+commit: 7e2e4d94
+```
+
+``` handoff
 session: S466
 date: 2026-08-03
 status: complete
