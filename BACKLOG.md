@@ -670,25 +670,62 @@ are GPL and `ggraph` transitively depends on GPL `igraph`, confirmed
 this session) computes final coordinates for the transformed forest.
 Owner ratified via `AskUserQuestion` with one editorial direction:
 non-human-centric terminology throughout (`sire`/`dam`/`mate`/`mating`,
-not `husband`/`wife`/`marriage`/`spouse`).) - \[ \] **Pedigree Diagram:
-Option 2 implementation, Slice 1 (mating-unit transformation)** (READY,
-Effort L, filed S458 2026-08-02) – the first implementation slice per
+not `husband`/`wife`/`marriage`/`spouse`).) - \[ \] (none remaining –
+**Pedigree Diagram: Option 2 implementation, Slice 1 (mating-unit
+transformation)** is RESOLVED: implemented S459 (2026-08-02). New
+internal `.buildMatingUnitForest()` in `R/makePedigreeDiagramData.R` (D1
+mating-unit identification + re-parenting + duplicate-node creation, D2
+deterministic anchor selection, D5 partial-parentage fallback – all
+three folded into this one function, since D5 governs whether a mating
+unit is even synthesized for a given child). Full TDD cycle
+(RED-\>GREEN, REFACTOR owner-confirmed skip – GREEN already matched the
+file’s established single-function style), all `AskUserQuestion`-gated.
+**Pre-RED found and corrected a real gap in the ratified design doc’s
+own §7/§9 figures** (a genuine algorithm-implementation finding, not an
+assumption): actually running D2’s anchor rule against the real
+375-individual fixture found it collides twice (`KUENM8`, `IM1B5T` each
+anchor 2 mating units – the exact “rare case” D3 step 2 already names),
+correcting §7’s published 130-duplicate/742-total estimate to the
+verified 128/740 – owner-directed via `AskUserQuestion` to fix the
+figures in place with an addendum, not leave the ratified doc stale. 15
+new unit tests (input validation + reserved-id-prefix collision; D5’s
+0-parent/1-parent fallbacks; a reconstructed real 8-node
+`GA204Z`/`8LKBV9` loop fixture, extracted directly from
+`inst/extdata/examples/obfuscated_rhesus_mhc_ped.csv` since the original
+6-node half-sib fixture cited in the design doc’s §8 was never committed
+to the test suite – S453 was audit-only; a reconstructed equivalent
+half-sib-mating convergent-loop fixture; the real anchor-collision case
+verified end-to-end against the full bundled fixture).
+Citation/tutorial/`NEWS.Rmd` checklists: N/A – an internal (`@noRd`),
+not-yet-wired-in function has no displayed statistic and no user-facing
+surface (Migration Path step 4’s own “owed once step 3 ships, not
+before”). Verified: regression suite 0 failed/0 error (3562 passed =
+3509 baseline + 53 new, 183 skipped, 10 pre-existing warnings, exact
+baseline match); `devtools::check()` 0 new warnings/notes (isolated via
+a clean-tree re-run: the pre-existing iCloud-duplicate-file warning and
+a `vignettes/a2interactive.Rmd` vignette-engine NOTE both confirmed to
+predate this session, unrelated to this diff). Phase 3E: n/a – no
+runtime behavior changed (the function has no call site yet; the
+render-chain switch is Slice 3). See `CHANGELOG.md`,
+`PROJECT_LEARNINGS.md` Learnings 449-450.) - \[ \] **Pedigree Diagram:
+Option 2 implementation, Slice 2 (D3 positioning algorithm)** (READY,
+Effort L, filed S459 2026-08-02) – per
 `docs/planning/pedigree-diagram-option2-layout-design-plan.md` §6
-Migration Path step 1: build and unit-test `.buildMatingUnitForest()`
-(D1: mating-unit identification + D2: deterministic anchor selection) as
-a standalone, independently-testable function before any rendering
-change – per the design doc’s own §9 “here be dragons” flag, the anchor
-assignment must be validated as a separate step (every individual anchor
-at exactly one mating unit) before any positioning code is written. Read
-the design doc in full first, especially §3 D1/D2 and §8’s test-fixture
-list (reuses the existing 6-node half-sib fixture from issue \#134 plus
-a new fixture extracted from `8LKBV9`’s real 3-mate structure in the
-bundled E2E pedigree). Follow TDD RED-\>GREEN-\>REFACTOR (this is a
-code-shipping session, unlike the preceding planning sessions).
-Subsequent slices (positioning algorithm, `R/modPedigree.R` render-chain
-switch, the 4 shipped-feature integrations) are separate follow-up
-sessions per the design doc’s own Migration Path and the vertical-slice
-gates in `SESSION_RUNNER.md`.
+Migration Path step 1’s remaining half: a new internal positioning
+function consuming Slice 1’s `.buildMatingUnitForest()` output and
+assigning final x/y coordinates via the simplified Reingold-Tilford/
+Walker-style contour-merge (D3), founder ordering by data row order
+(D4). Read the design doc in full first, especially §3 D3/D4 and §9’s
+dragon flag (D3 is “inspired by,” not a direct port of, the cited
+literature – expect real edge-case testing: deeply unbalanced trees, a
+founder with many mating units, wide sibships – not just citing the
+literature as verification). Also resolve the newly-flagged question
+from Slice 1’s own D6 impact-analysis row: whether `duplicates` returned
+by `.buildMatingUnitForest()` needs a `gen` column of its own or can
+look it up from the caller’s `ped` (deferred to this slice, not decided
+in Slice 1). Independently unit-testable against synthetic fixtures
+before any rendering change (`R/modPedigree.R`’s render chain is Slice
+3, a separate follow-up). Follow TDD RED-\>GREEN-\>REFACTOR.
 
 ## Outreach
 

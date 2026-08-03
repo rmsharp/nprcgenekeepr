@@ -47,6 +47,57 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-08-02 · \[BL-pedigreeOption2Slice1\] Pedigree Diagram Option 2 implementation Slice 1 – `.buildMatingUnitForest()` (D1 mating-unit transformation + D2 anchor selection + D5 partial-parentage fallback) (Session 459)
+
+- **Deliverable:** new internal `.buildMatingUnitForest()` in
+  `R/makePedigreeDiagramData.R`, the first implementation slice of
+  `docs/planning/pedigree-diagram-option2-layout-design-plan.md`’s §6
+  Migration Path step 1 – the CraneFoot-style
+  mating-unit/individual-duplication transformation (D1), deterministic
+  anchor selection (D2), and the D5 partial-parentage fallback (folded
+  into this one function, since D5 governs whether a mating unit is even
+  synthesized for a given child). Full TDD cycle (RED-\>GREEN, REFACTOR
+  owner-confirmed skip), all `AskUserQuestion`-gated.
+- **Pre-RED finding, corrected in the ratified design doc itself:**
+  actually implementing and running D2’s anchor rule against the real
+  375-individual bundled fixture
+  (`inst/extdata/examples/obfuscated_rhesus_mhc_ped.csv`) found it
+  collides twice – `KUENM8` and `IM1B5T` each anchor 2 mating units, the
+  exact “rare case” D3 step 2 already names as legitimate – which the
+  design doc’s own §7 combinatorial estimate (130 duplicates / 742 total
+  nodes, computed by reasoning about the algorithm rather than running
+  it) could not have anticipated. Corrected §7 and §9 in place,
+  owner-directed via `AskUserQuestion`, to the verified 128 duplicates /
+  740 total nodes. New `PROJECT_LEARNINGS.md` Learning 449.
+- **Tests:** 15 new `test_that()` blocks in
+  `tests/testthat/test_buildMatingUnitForest.R` – input validation and
+  reserved `__union_`/`__dup_` id-prefix collision; the D5
+  0-parent/1-parent fallbacks; D2’s founder/mate-count/id-sort
+  tie-breaks; a reconstructed real 8-node `GA204Z`/`8LKBV9` loop fixture
+  extracted directly from the bundled E2E CSV (the original 6-node
+  half-sib fixture cited in the design doc’s §8 was never committed to
+  the test suite – S453 was audit-only); a reconstructed equivalent
+  half-sib-mating convergent-loop fixture; and the real anchor-collision
+  case verified end-to-end against the full bundled fixture (237 mating
+  units, 128 duplicates, `KUENM8`/`IM1B5T` each anchoring exactly 2).
+- **Verified:** regression suite 0 failed/0 error (3562 passed = 3509
+  baseline + 53 new, 183 skipped, 10 pre-existing warnings, exact
+  baseline match); `devtools::check()` introduces 0 new warnings/notes –
+  isolated via a clean-tree re-run confirming the pre-existing
+  iCloud-duplicate- file warning and a `vignettes/a2interactive.Rmd`
+  vignette-engine NOTE both predate this session, unrelated to this
+  diff. Phase 3E: n/a – no runtime behavior changed (the function has no
+  call site yet; the render-chain switch is Slice 3).
+  Citation/tutorial/`NEWS.Rmd` checklists: n/a – an internal (`@noRd`),
+  not-yet-wired-in function has no displayed statistic and no
+  user-facing surface.
+- **Gotcha hit and recorded:** a large `Edit` call’s `new_string` landed
+  a literal control-character byte instead of the intended empty-string
+  separator, causing later exact-string `Edit` calls to silently fail
+  with “string not found” despite visually-identical text – diagnosed
+  via `cat -A`. New `PROJECT_LEARNINGS.md` Learning 450. See
+  `BACKLOG.md` (Slice 1 marked DONE; Slice 2 filed).
+
 ### 2026-08-02 · \[issue \#141\] File “upgrade D3 to Buchheim-Jünger-Leipert if profiling shows a need” as a deliberately-unscheduled issue (Session 458, same-conversation follow-up)
 
 - **Deliverable:** [issue
