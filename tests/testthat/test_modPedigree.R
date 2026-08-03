@@ -1588,3 +1588,258 @@ test_that(
     }
   )
 })
+
+## ---- edgeStyle wiring (issue #142 Slice 2) -------------------------------
+
+test_that(
+  "modPedigreeServer's diagram defaults to edgeStyle = \"direct\" -- no
+   __drop_/__bar_/__proj_ waypoint ids in the rendered widget when no
+   style input has been set, matching pre-issue-142 behavior", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE
+      )
+      session$flushReact()
+
+      widgetJson <- output$pedigreeDiagram
+      expect_false(grepl("__drop_|__bar_|__proj_", widgetJson))
+    }
+  )
+})
+
+test_that(
+  "modPedigreeServer's diagram inserts __drop_/__bar_ waypoint ids into
+   the rendered widget when pedigreeEdgeStyle is set to \"rectilinear\"", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE,
+        pedigreeEdgeStyle = "rectilinear"
+      )
+      session$flushReact()
+
+      widgetJson <- output$pedigreeDiagram
+      expect_true(grepl("__drop_|__bar_", widgetJson))
+    }
+  )
+})
+
+test_that(
+  "modPedigreeServer's click-to-navigate ignores a click on any of the 3
+   new __drop_/__bar_/__proj_ waypoint-node prefixes (issue #142 D3) --
+   the same no-op treatment the existing __union_ prefix already gets", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE,
+        pedigreeDiagram_click = "C"
+      )
+      session$flushReact()
+      result <- session$getReturned()
+      expect_equal(result$focalAnimals(), "C")
+
+      for (waypointId in c("__drop_x", "__bar_x", "__proj_x")) {
+        session$setInputs(pedigreeDiagram_click = waypointId)
+        session$flushReact()
+        expect_equal(result$focalAnimals(), "C", info = waypointId)
+      }
+    }
+  )
+})
+
+test_that(
+  "modPedigreeServer's diagram search dropdown excludes the 3 new
+   __drop_/__bar_/__proj_ waypoint-node prefixes under
+   edgeStyle = \"rectilinear\", alongside the existing __union_/__dup_
+   exclusions", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "D", "C", "E"),
+    sire = c(NA, NA, NA, "A", "A"),
+    dam = c(NA, NA, NA, "B", "D"),
+    sex = c("M", "F", "F", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE,
+        pedigreeEdgeStyle = "rectilinear"
+      )
+      session$flushReact()
+
+      widgetJson <- output$pedigreeDiagram
+      idSelectionJson <- regmatches(
+        widgetJson, regexpr('"idselection":\\{[^}]*\\}', widgetJson)
+      )
+      expect_true(nzchar(idSelectionJson))
+      expect_false(grepl("__union_", idSelectionJson, fixed = TRUE))
+      expect_false(grepl("__dup_", idSelectionJson, fixed = TRUE))
+      expect_false(grepl("__drop_", idSelectionJson, fixed = TRUE))
+      expect_false(grepl("__bar_", idSelectionJson, fixed = TRUE))
+      expect_false(grepl("__proj_", idSelectionJson, fixed = TRUE))
+      for (realId in test_studbook$id) {
+        expect_true(grepl(realId, idSelectionJson, fixed = TRUE))
+      }
+    }
+  )
+})
+
+test_that(
+  "modPedigreeServer's node cap is style-specific -- 400 individuals
+   renders under edgeStyle = \"rectilinear\", 401 does not, but the SAME
+   401-individual pedigree still renders fine under the default
+   \"direct\" style", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  makeStudbook <- function(n) {
+    bigId <- sprintf("A%04d", seq_len(n))
+    data.frame(
+      id = bigId, sire = NA_character_, dam = NA_character_,
+      sex = rep(c("M", "F"), length.out = n), stringsAsFactors = FALSE
+    )
+  }
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(studbook = shiny::reactive({ makeStudbook(400L) })),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE, trimPedigree = FALSE,
+        pedigreeEdgeStyle = "rectilinear"
+      )
+      session$flushReact()
+      html <- output$pedigreeDiagramUI$html
+      expect_true(grepl("visNetwork", html))
+    }
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(studbook = shiny::reactive({ makeStudbook(401L) })),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE, trimPedigree = FALSE,
+        pedigreeEdgeStyle = "rectilinear"
+      )
+      session$flushReact()
+      html <- output$pedigreeDiagramUI$html
+      expect_false(grepl("visNetwork", html))
+      expect_true(grepl("400", html, fixed = TRUE))
+    }
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(studbook = shiny::reactive({ makeStudbook(401L) })),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE, trimPedigree = FALSE,
+        pedigreeEdgeStyle = "direct"
+      )
+      session$flushReact()
+      html <- output$pedigreeDiagramUI$html
+      expect_true(grepl("visNetwork", html))
+    }
+  )
+})
+
+test_that(
+  "modPedigreeServer's diagram edge-style radio toggle appears in the
+   rendered UI only when a diagram is actually shown (D4) -- present
+   under the cap, absent over the direct-style 750 cap", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"), dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"), stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(studbook = shiny::reactive({ test_studbook })),
+    {
+      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
+      session$flushReact()
+      html <- output$pedigreeDiagramUI$html
+      expect_true(grepl("pedigreeEdgeStyle", html))
+    }
+  )
+
+  n <- 751L
+  bigId <- sprintf("A%04d", seq_len(n))
+  bigStudbook <- data.frame(
+    id = bigId, sire = NA_character_, dam = NA_character_,
+    sex = rep(c("M", "F"), length.out = n), stringsAsFactors = FALSE
+  )
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(studbook = shiny::reactive({ bigStudbook })),
+    {
+      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
+      session$flushReact()
+      html <- output$pedigreeDiagramUI$html
+      expect_false(grepl("pedigreeEdgeStyle", html))
+    }
+  )
+})

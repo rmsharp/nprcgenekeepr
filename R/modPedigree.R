@@ -192,7 +192,7 @@ modPedigreeUI <- function(id) {
 #'
 #' @importFrom shiny moduleServer reactive reactiveVal eventReactive observe
 #' @importFrom shiny renderUI req showNotification updateCheckboxInput
-#' @importFrom shiny fileInput updateTextAreaInput
+#' @importFrom shiny fileInput updateTextAreaInput radioButtons tagList
 #' @importFrom DT renderDT
 #' @importFrom utils read.csv write.csv
 #' @family Shiny modules
@@ -371,10 +371,43 @@ modPedigreeServer <- function(id, studbook) {
     # the Table tab, never proven to render through the Diagram tab itself.
     pedigreeDiagramMaxNodes <- 750L
 
+    # nolint start: commented_code_linter.
+    # Issue #142 Slice 2: the rectilinear edge style's waypoint nodes
+    # render ~3.667 total nodes per individual on the real 375-individual
+    # fixture (vs. ~1.973 for the direct style), so the direct-style cap
+    # above would let a rectilinear render grow ~1.86x larger for the same
+    # animal count. Owner-ratified via AskUserQuestion (S468): preserve the
+    # same ~1,480-node ceiling the direct cap targets (750 * 1.973), scaled
+    # down for the rectilinear ratio (1,480 / 3.667 ~= 404) and rounded to a
+    # clean number.
+    # nolint end: commented_code_linter.
+    pedigreeDiagramMaxNodesRectilinear <- 400L
+
+    # Issue #142 Slice 2: which edge style is currently selected, defaulting
+    # to "direct" before the style toggle below has ever rendered (so the
+    # very first render is byte-identical to pre-issue-142 behavior), and
+    # the node cap that applies to it.
+    .currentEdgeStyle <- function() {
+      if (is.null(input$pedigreeEdgeStyle)) {
+        "direct"
+      } else {
+        input$pedigreeEdgeStyle
+      }
+    }
+    .currentDiagramCap <- function() {
+      if (.currentEdgeStyle() == "rectilinear") {
+        pedigreeDiagramMaxNodesRectilinear
+      } else {
+        pedigreeDiagramMaxNodes
+      }
+    }
+
     output$pedigreeDiagramUI <- renderUI({
       req(pedigreeData())
       n <- nrow(pedigreeData())
-      if (n > pedigreeDiagramMaxNodes) {
+      style <- .currentEdgeStyle()
+      cap <- .currentDiagramCap()
+      if (n > cap) {
         div(
           class = "alert alert-warning",
           sprintf(
@@ -382,11 +415,24 @@ modPedigreeServer <- function(id, studbook) {
               "Diagram not shown: %d animals exceeds the %d-animal display",
               "limit. Narrow the focal-animal selection to view a diagram."
             ),
-            n, pedigreeDiagramMaxNodes
+            n, cap
           )
         )
       } else {
-        visNetwork::visNetworkOutput(session$ns("pedigreeDiagram"))
+        # D4: no existing "home" for this control -- net-new UI layout
+        # rendered alongside the widget, inside this same uiOutput, only
+        # when a diagram is actually shown.
+        tagList(
+          radioButtons(
+            session$ns("pedigreeEdgeStyle"),
+            label = "Diagram Edge Style",
+            choices = c(Direct = "direct",
+                        "Rectilinear (kinship2-style)" = "rectilinear"),
+            selected = style,
+            inline = TRUE
+          ),
+          visNetwork::visNetworkOutput(session$ns("pedigreeDiagram"))
+        )
       }
     })
 
@@ -396,8 +442,8 @@ modPedigreeServer <- function(id, studbook) {
     diagramLayout <- reactive({
       req(pedigreeData())
       data <- pedigreeData()
-      req(nrow(data) <= pedigreeDiagramMaxNodes)
-      makePedigreeMatingLayout(data)
+      req(nrow(data) <= .currentDiagramCap())
+      makePedigreeMatingLayout(data, edgeStyle = .currentEdgeStyle())
     })
 
     output$pedigreeDiagram <- visNetwork::renderVisNetwork({
@@ -485,7 +531,8 @@ modPedigreeServer <- function(id, studbook) {
         visNetwork::visOptions(
           nodesIdSelection = list(
             enabled = TRUE, values = layout$nodes$id[
-              !grepl("^__union_|^__dup_", layout$nodes$id)
+              !grepl("^__union_|^__dup_|^__drop_|^__bar_|^__proj_",
+                     layout$nodes$id)
             ]
           ),
           highlightNearest = list(
@@ -505,11 +552,15 @@ modPedigreeServer <- function(id, studbook) {
     # node resolves to its real individual via the layout's own
     # duplicateToReal lookup, so clicking any occurrence of a duplicated
     # individual navigates identically to clicking their anchor occurrence.
+    # Issue #142 D3: the 3 new rectilinear waypoint-node prefixes get the
+    # same no-op treatment as "__union_" -- they carry no clickable
+    # identity. This exclusion deliberately stays separate from "__dup_",
+    # which must remain clickable (see the paragraph above).
     observeEvent(input$pedigreeDiagram_click, {
       clickedNodes <- input$pedigreeDiagram_click
       req(length(clickedNodes) > 0L)
       ids <- as.character(clickedNodes)
-      ids <- ids[!startsWith(ids, "__union_")]
+      ids <- ids[!grepl("^__union_|^__drop_|^__bar_|^__proj_", ids)]
       req(length(ids) > 0L)
       duplicateToReal <- diagramLayout()$duplicateToReal
       isDup <- ids %in% names(duplicateToReal)
