@@ -6,6 +6,16 @@
 
 ## ACTIVE TASK
 
+### What Session 466 Did
+**Deliverable:** Clean up the accumulated `lintr::lint_package()` warnings (`BACKLOG.md`,
+found S462) -- picked by the owner via the S465 close-out `AskUserQuestion` picker; now
+also the owner-directed sequencing gate on issue #142 completion (2026-08-03, reconciled
+into `HANDOFFS.md` this session's Phase 0).
+**Started:** 2026-08-03
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### What Session 465 Did
 **Deliverable:** Implement issue #142 (rectilinear mate-line/sibship-bar waypoint style)
 Slice 1 -- the internal `.addRectilinearWaypoints()` waypoint-construction helper, per
