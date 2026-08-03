@@ -6,6 +6,18 @@
 
 ## ACTIVE TASK
 
+### What Session 460 Did
+**Deliverable:** Implementation (Development workstream) -- Pedigree Diagram Option 2 Slice 2:
+D3 positioning algorithm (simplified Reingold-Tilford/Walker-style contour-merge) + D4 founder
+ordering, consuming Slice 1's `.buildMatingUnitForest()` output, per
+`docs/planning/pedigree-diagram-option2-layout-design-plan.md` §6 Migration Path step 1's
+remaining half. (IN PROGRESS)
+**Started:** 2026-08-02
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 459 Did
 **Deliverable:** Implementation (Development workstream) -- Pedigree Diagram Option 2 Slice 1:
 new internal `.buildMatingUnitForest()` (D1 mating-unit identification + D2 deterministic anchor
