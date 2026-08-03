@@ -343,14 +343,23 @@ getPyramidPlot(ped = trimmedPed[is.na(trimmedPed$exit), ])
 
 ## Pedigree Diagram
 
-The Pedigree Browser's Diagram tab in the Shiny application renders a pedigree
-as a hierarchical family-tree diagram, with a button to export the current
-view as a PNG image. Both are built on two script-callable functions that
-work identically outside the Shiny application: __makePedigreeDiagramData__
-prepares a pedigree's node/edge data, and __visNetwork::visNetwork__ (from
-the __visNetwork__ package, a dependency of __nprcgenekeepr__) renders it.
-See the "Diagram view" part of the _colony-manager-guide_ article for the
-equivalent point-and-click workflow and screenshots.
+The Pedigree Browser's Diagram tab in the Shiny application renders a
+pedigree as a family-tree diagram. A mate's own mating(s) render as a small
+connector between the two parents, with a line down to their shared
+children, rather than two independent lines running straight from each
+parent -- the same convention traditional pedigree charts use. An animal
+that mates more than once, or whose lineage loops back on itself (e.g. a
+consanguineous mating), appears once per mating, with each occurrence after
+the first joined back to its main occurrence by a dashed line. Both are
+built on two script-callable functions that work identically outside the
+Shiny application: __makePedigreeMatingLayout__ prepares a pedigree's
+node/edge data in this convention, and __visNetwork::visNetwork__ (from the
+__visNetwork__ package, a dependency of __nprcgenekeepr__) renders it. (A
+simpler function, __makePedigreeDiagramData__, remains available for a plain
+one-node-per-animal diagram without this convention -- it is no longer what
+the Shiny app itself uses.) See the "Diagram view" part of the
+_colony-manager-guide_ article for the equivalent point-and-click workflow
+and screenshots.
 
 The _trimmedPed_ pedigree built earlier in this tutorial has
 `r nrow(trimmedPed)` animals -- realistic for the live Shiny application's
@@ -359,8 +368,9 @@ usefully show every feature at once. It is also limited to the _Female_,
 _Male_, and _Unknown_ sex codes that happen to occur in the bundled example
 data -- the _Hermaphrodite_ and unrecorded-sex shapes never appear in it. So
 instead we build a small, synthesized pedigree spanning a few generations,
-deliberately including all five sex codes __makePedigreeDiagramData__
-recognizes.[^4]
+deliberately including all five sex codes __makePedigreeMatingLayout__
+recognizes -- and, since two of its founders (_M1_ and _F2_) each mate more
+than once, the diagram's duplicate-node convention as well.[^4]
 
 [^4]: This pedigree is entirely synthetic -- constructed for this tutorial,
 not drawn from any real colony's records.
@@ -410,31 +420,42 @@ shapes to appear in the diagram below at least once, across
 `r length(unique(demoPed$gen))` generations and `r nrow(demoPed)` animals.
 
 ```{r pedigree-diagram-data}
-diagramData <- makePedigreeDiagramData(demoPed)
+diagramData <- makePedigreeMatingLayout(demoPed)
 names(diagramData)
 nrow(diagramData$nodes)
 nrow(diagramData$edges)
 ```
 
-__makePedigreeDiagramData__ returns a list of two data frames: _nodes_ (one
-row per animal, shaped by sex -- dot = Female, square = Male, star =
-Hermaphrodite, triangle = Unknown, diamond = Other/Unrecorded -- with an HTML
-hover-tooltip giving ID, sex, generation, sire, and dam) and _edges_ (one
-directed edge per known sire or dam, pointing from parent to child).
+__makePedigreeMatingLayout__ returns a list of three elements: _nodes_ (one
+row per real animal -- shaped by sex, dot = Female, square = Male, star =
+Hermaphrodite, triangle = Unknown, diamond = Other/Unrecorded, with an HTML
+hover-tooltip giving ID, sex, generation, sire, and dam -- plus one small,
+unlabeled dot per mating and one extra row per duplicate occurrence, each
+carrying its animal's own shape, label, and tooltip with a note that it is a
+duplicate occurrence), _edges_ (parent-to-mating and mating-to-child edges,
+plus a dashed edge from each duplicate occurrence back to the real animal),
+and _duplicateToReal_ (a named lookup from each duplicate occurrence's id
+back to the real animal it represents).
 
-Piping _diagramData_ into __visNetwork::visNetwork__ and the same layout,
-export, legend, and search options `R/modPedigree.R` uses reproduces the
-Diagram tab's rendering exactly, including a genuinely working __Export
-Diagram (PNG)__ button -- try it below.[^5]
+Each node already carries its own fixed __x__/__y__ position (computed by
+__makePedigreeMatingLayout__ itself), so rendering it turns vis.js's usual
+physics/hierarchical layout off rather than turning one on. Piping
+_diagramData_ into __visNetwork::visNetwork__ and the same layout, export,
+legend, and search options `R/modPedigree.R` uses reproduces the Diagram
+tab's rendering exactly, including a genuinely working __Export Diagram
+(PNG)__ button -- try it below.[^5]
 
 [^5]: The Diagram tab's click-to-navigate behavior (clicking a node narrows
-the focal-animal selection to it) is Shiny-specific -- it relies on a live
-Shiny session to receive the click event -- and is therefore not reproduced
-here.
+the focal-animal selection to it, resolving a duplicate-occurrence click to
+the real animal and ignoring mating-node clicks) is Shiny-specific -- it
+relies on a live Shiny session to receive the click event -- and is
+therefore not reproduced here.
 
 ```{r pedigree-diagram-render}
 visNetwork::visNetwork(diagramData$nodes, diagramData$edges) |>
-  visNetwork::visHierarchicalLayout(direction = "UD", sortMethod = "directed") |>
+  visNetwork::visPhysics(enabled = FALSE) |>
+  visNetwork::visNodes(physics = FALSE) |>
+  visNetwork::visEdges(smooth = FALSE) |>
   visNetwork::visExport(
     type = "png", name = "pedigree_diagram",
     label = "Export Diagram (PNG)"
@@ -451,13 +472,19 @@ visNetwork::visNetwork(diagramData$nodes, diagramData$edges) |>
     width = 0.28, stepY = 65L
   ) |>
   visNetwork::visOptions(
-    nodesIdSelection = TRUE,
+    nodesIdSelection = list(
+      enabled = TRUE,
+      values = diagramData$nodes$id[
+        !grepl("^__union_|^__dup_", diagramData$nodes$id)
+      ]
+    ),
     highlightNearest = list(enabled = TRUE, hover = TRUE, degree = 1L,
                              algorithm = "all")
   )
 ```
 
-The __Select by id__ dropdown above the diagram lets you jump straight to a
+The __Select by id__ dropdown above the diagram -- filtered to real animals,
+excluding mating and duplicate-occurrence nodes -- lets you jump straight to a
 specific animal and dims every node except it and its direct connections --
 useful for locating one animal in a diagram this size, and just as useful in
 a real diagram of `r nrow(trimmedPed)` animals like the one built earlier in

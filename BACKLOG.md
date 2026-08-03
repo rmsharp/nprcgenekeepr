@@ -416,6 +416,75 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       out-of-band) -- once moved, this item should self-resolve; a future
       session should confirm the 2 duplicate files no longer reappear and,
       if so, close this item without further action.
+      **Recurred again S462 (2026-08-03):** the owner rebuilt the package
+      locally (outside this session's own tool calls) while reviewing a
+      screenshot, which re-corrupted the same 3 `.Rd` files the same way;
+      reverted again via `git checkout --`. As of this session's Orient, the
+      planned repository relocation had NOT yet happened (`pwd` still
+      resolves to the original iCloud-synced path) -- this item cannot be
+      closed until the move actually completes.
+- [ ] **Accumulated `lintr::lint_package()` warnings, 45 total across 17
+      files** (found S462, Effort M) -- past sessions have only kept their
+      OWN new code lint-clean (e.g. S461's "9 new lint warnings... fixed"),
+      not swept pre-existing debt, so it has accumulated silently (not
+      visible in `devtools::check()`, which does not run `lintr`). Current
+      breakdown by linter: `line_length_linter` (17), `paste_linter` (9),
+      `fixed_regex_linter` (6), `commented_code_linter` (4),
+      `implicit_integer_linter` (4), `unnecessary_concatenation_linter` (3),
+      `nonportable_path_linter` (2, both from the iCloud duplicate-file
+      artifact above -- resolves itself with that item). Heaviest files:
+      `R/modMarkerGenetics.R` (6), `R/makePedigreeDiagramData.R` (5),
+      `R/markerHeterozygosity.R` (5), `R/checkMarkerGenotypeFile.R` (4),
+      `R/modGeneticValue.R` (4) -- concentrated in the issue #130
+      marker-genetics family (Sessions 442-447), suggesting that family's
+      own close-out lint pass was scoped to each slice's new code, not a
+      full-package sweep. Two distinct asks: **(a)** a session to clean up
+      the existing 45 (probably several sessions' worth if kept small per
+      `SAFEGUARDS.md`'s blast-radius limits); **(b)** a process fix so lint
+      debt stops accumulating going forward -- e.g. wiring `lintr::lint_package()`
+      into CI (this repo already runs a scheduled `shinytest2` GitHub Actions
+      workflow, so a lint-check job is a precedent-consistent addition) and/or
+      promoting `CLAUDE.md`'s existing "keep changed files lint-clean" guidance
+      from a per-session norm into an explicit Phase 3F close-out check. The
+      exact mechanism (CI gate vs. close-out checklist vs. both) is a decision
+      for whichever session picks this up, not decided here.
+- [ ] **Scheduled `shinytest2` E2E CI run failed -- 2 stale-assertion test
+      failures in `test-e2e-pedigree-module.R`** (found S462, Effort S,
+      root cause fully diagnosed) --
+      [run 30796362515](https://github.com/rmsharp/nprcgenekeepr/actions/runs/30796362515)
+      (2026-08-03, triggered by the repo's scheduled/nightly workflow, not a
+      push) failed 2 of 251 E2E assertions (249 passed):
+      `test-e2e-pedigree-module.R:205` and `:207`
+      ("E2E: Pedigree Browser Diagram tab shows a known trio's data"). Root
+      cause: this permanent, already-committed test asserts the
+      **pre-Option-2** edge convention -- a direct sire/dam -> child edge
+      (`expect_match(edgesToChild, '"from":"U5VLXP"'` / `'"from":"PH0IXL"'`)
+      -- but Session 461's Option 2 Slice 3 (`makePedigreeMatingLayout()`,
+      shipped 2026-08-02, the session immediately before this one) changed
+      the Diagram tab to route every parent -> child edge through an
+      intermediate mating-unit node instead (confirmed in the failure output:
+      the live edge is `{"from":"__union_29","to":"EBG407", ...}`, not
+      `{"from":"U5VLXP", ...}`). The sire/dam node-shape assertions in the
+      same test (checked just above the failing lines) still pass -- only the
+      edge-routing assertion is stale. **Why this wasn't caught before
+      shipping:** this specific "shinytest2 E2E tier" only runs on this
+      repo's scheduled GitHub Actions workflow (`Run shinytest2 E2E tier in
+      per-module fresh processes (opt-in)`), not in the fast local regression
+      suite or `devtools::check()`; Session 461's own Phase 3E verification
+      was ad hoc (`shinytest2`/`chromote` driven manually against a live
+      fixture), not a run of this specific permanently-committed test file,
+      so the stale assertion was never exercised until the next scheduled CI
+      run. **Fix (not done here, diagnosis only):** update
+      `test-e2e-pedigree-module.R:205-207` to assert the new two-hop
+      relationship instead -- the child's incoming edge comes from a
+      `__union_*` node, and that union node's own incoming edges include the
+      sire and dam (or their duplicate-occurrence ids, per
+      `makePedigreeMatingLayout()`'s own contract, see
+      `R/makePedigreeDiagramData.R`). This is the same gap Session 461's own
+      self-assessment flagged as a weakness (no new permanent E2E coverage
+      added for the Slice 3 render-chain change) -- this is that gap
+      surfacing as a real, scheduled-CI-caught regression, not a
+      hypothetical.
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability-comparison audit (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`)

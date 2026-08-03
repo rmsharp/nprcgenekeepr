@@ -7,19 +7,208 @@
 ## ACTIVE TASK
 
 ### What Session 462 Did
-**Deliverable:** Documentation fix (docs-only, Development workstream) -- update
-`vignettes/a2interactive.Rmd`'s "Pedigree Diagram" section to demonstrate
-`makePedigreeMatingLayout()` (matching `R/modPedigree.R`'s current fixed-position
-render chain) instead of the now-superseded `makePedigreeDiagramData()` +
-`visHierarchicalLayout()` combination it still calls, and correct the section's
-now-false "reproduces the Diagram tab's rendering exactly" claim. Owner-flagged:
-a screenshot of the tutorial's rendered diagram still showed the pre-Option-2
-crossing-line style. (IN PROGRESS)
-**Started:** 2026-08-03
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are
-recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
-breadcrumb for the next session's reconcile.
+**Deliverable:** Documentation fix (docs-only, no TDD gates -- issue #124/#139
+precedent) -- updated `vignettes/a2interactive.Rmd`'s "Pedigree Diagram" section
+to demonstrate `makePedigreeMatingLayout()` (matching `R/modPedigree.R`'s current
+fixed-position render chain) instead of the now-superseded
+`makePedigreeDiagramData()` + `visHierarchicalLayout()` combination it still
+called, and corrected the section's now-false "reproduces the Diagram tab's
+rendering exactly" claim. PLUS two owner-directed mid-session housekeeping
+investigations (no code changed, filed to `BACKLOG.md`): an `lintr::lint_package()`
+debt audit, and a root-cause diagnosis of a scheduled-CI E2E test failure.
+**Started/Completed:** 2026-08-03 / 2026-08-03
+**Status:** DONE.
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Phase 0 orientation in full
+(`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `SESSION_NOTES.md` ACTIVE TASK, `gh issue
+list` -- 15 open issues, `git status`/`log`/`diff --stat`,
+`methodology_dashboard.py` Health 94/100 medium risk (unchanged), ledger reconcile
+-- confirmed the one-commit `CHANGELOG.md` gap is the same recurring
+HANDOFFS.md-only-backfill no-op pattern S457-461 each found for their own
+predecessor, no backfill needed; `HANDOFFS.md` frontier exactly at `HEAD`; no
+ghost session). Rendered the priorities list + `AskUserQuestion` picker (4 items
+-- LabKey, NPRC outreach, stale screenshot, iCloud duplicate-file check); before
+the user answered, the **user interrupted with a direct observation**: a
+screenshot of `vignettes/a2interactive.Rmd`'s rendered Pedigree Diagram showed no
+sign of the Option 2 mating-unit/duplicate-node convention Sessions 459-461 had
+just shipped. **(2)** Investigated before assuming anything was wrong (per this
+project's own "observation vs. decision" convention): `git blame` confirmed the
+section was added S456 (2026-08-02, the same day, BEFORE the Option 2 work) and
+was accurate when written; `grep`/`git blame` on `R/modPedigree.R` confirmed the
+live render chain now calls `makePedigreeMatingLayout()` (S461), not
+`makePedigreeDiagramData()` + `visHierarchicalLayout()` (still exported and still
+what the vignette called). Confirmed the section's own prose claim ("reproduces
+the Diagram tab's rendering exactly") had gone false the moment S461 shipped.
+Presented the finding + 3 options via `AskUserQuestion`; owner picked "fix it
+now, this session." **(3)** Claimed the session (stub + `HANDOFFS.md`
+`status: pending` receipt) before any edits. **(4)** Read
+`R/modPedigree.R:370-495`'s actual current render chain (visPhysics/visNodes/
+visEdges, click-to-navigate, filtered search dropdown) and
+`makePedigreeMatingLayout()`'s full roxygen + implementation
+(`R/makePedigreeDiagramData.R:613-788`), the already-updated
+`_pedigree_browser.Rmd`/`colony-manager-guide.qmd` Diagram-section prose for
+terminology consistency (noted but did NOT touch `colony-manager-guide.qmd` --
+its own screenshot staleness is a separately-tracked Housekeeping item, out of
+this session's declared scope). **Mid-investigation, the user reported "I
+rebuilt the package"** -- this explained a corruption I found moments earlier:
+3 `man/*.Rd` files had become modified since Phase 0 (I had not run any R code
+that could cause this); confirmed via diff it was the known iCloud
+duplicate-`.R`-file `devtools::document()` corruption artifact (Learning 454),
+triggered by the owner's own local rebuild, not this session -- reverted via
+`git checkout --` before any commit. **(5)** Ran the ACTUAL demo pedigree
+through both the old and new functions via `Rscript` (not guessing at numbers):
+confirmed the existing demo's own multi-mate founders (`M1`/`F2`) already
+exercise the duplicate-node convention with zero fixture changes needed (48
+nodes = 33 real + 13 mating-unit + 2 duplicate; 53 edges, 2 dashed). Rewrote the
+section's intro prose, demo-pedigree explanation, data-generation call, the
+3-element return-contract description, and the render chunk (matching
+`R/modPedigree.R`'s exact current pipe, including the real-ids-only search
+filter). **(6)** Verified: `rmarkdown::render()` on the vignette succeeds with
+no errors; grepped the rendered HTML to confirm the live chunk output (`names`
+= nodes/edges/duplicateToReal, `nrow` = 48/53) and the widget JSON
+(`physics:false`, exactly 2 `dashes:true` edges, zero remaining
+`visHierarchicalLayout` references anywhere). Ran `devtools::check()`: 0 errors,
+1 pre-existing warning (iCloud duplicate-file artifact), 1 pre-existing note
+(this vignette's own missing `VignetteBuilder` engine, unrelated to this diff)
+-- exact baseline match, 0 new. `runtime_smoke: n/a -- docs-only` (no `R/` or
+`tests/` files changed). **(7) Mid-session, the user issued 2 more direct
+requests** (handled as small, explicitly-requested, non-code housekeeping
+additions, not scope creep on the code deliverable): **(a)** "add to backlog to
+clean up lints" -- ran `lintr::lint_package()` fresh (45 warnings, 17 files,
+heaviest in the issue #130 marker-genetics family) and filed a concrete
+`BACKLOG.md` Housekeeping item (not vague) naming the exact breakdown and 2
+distinct asks (cleanup pass; a process fix so debt stops accumulating). **(b)**
+"add to backlog to explain why test failures occurred at [CI run
+30796362515]" -- fetched the actual job log via `gh api
+.../actions/jobs/91630733214/logs` (the higher-level `gh run view --log-failed`
+returned empty output for unknown reasons; the direct API call worked) and
+fully root-caused it: `test-e2e-pedigree-module.R:205,207` asserts the
+pre-Option-2 direct sire/dam -> child edge convention, made stale by this same
+S461 Slice 3 change (live edges now route through an intermediate `__union_*`
+node, confirmed from the actual failure output). Filed to `BACKLOG.md` with the
+exact fix needed, not implemented (diagnosis only, per the request).
+**Self-caught a data-integrity mistake before it landed:** the first BACKLOG.md
+draft claimed "2 of 634 E2E assertions failed" without having actually summed
+the per-group counts; caught this was fabricated, recomputed the real total
+from the log (251, 249 passed), and corrected the entry before committing.
+**(8)** Added `PROJECT_LEARNINGS.md` Learning 458 (a documentation-checklist
+blind spot: a checklist naming specific files can't catch a DIFFERENT,
+pre-existing file's claim going stale from the same change). Updated
+`CLAUDE.md`'s learnings cross-reference count (457->458, Sessions 1-461+->
+1-462+). Updated the carried-forward iCloud duplicate-file `BACKLOG.md` item
+with the S462 recurrence and confirmed the planned repository relocation had
+NOT yet happened as of this session's Orient.
+
+**Session 461 Handoff Evaluation (by Session 462): 7/10.** **What helped:** the
+handoff's technical detail was excellent and directly load-bearing -- the exact
+render-chain change, the new 3-element return contract, the union/duplicate node
+styling rules, and the `duplicateToReal` lookup contract were all used directly
+from the handoff/design-doc text without needing to rediscover them from scratch.
+The gotchas list (dangling-parent handling, the `qcStudbook()` 740-vs-739 node
+count distinction, the iCloud duplicate-file corruption risk) was accurate and
+specific. **What was missing:** the handoff's own documentation-checklist
+execution updated `_pedigree_browser.Rmd` and `colony-manager-guide.qmd` (the two
+files the project's "Tutorial/article documentation checklist" names) but did
+not check whether any OTHER file in the repo made an equivalence claim about the
+Diagram tab's rendering that this session's own change would invalidate --
+`vignettes/a2interactive.Rmd`'s Pedigree Diagram section (added earlier the SAME
+day, S456) made exactly such a claim ("reproduces... exactly") and went stale the
+moment S461 shipped, undetected until the owner noticed via a screenshot. This is
+a real, avoidable gap: a repo-wide grep for the old function's name
+(`makePedigreeDiagramData`) or for "reproduces... exactly"/"identically" would
+have caught it in-session. **What was wrong:** no factual inaccuracies found in
+the handoff itself -- only this scope gap. **ROI:** still net positive (the
+detailed technical content saved real rediscovery time), but the missed
+cross-reference cost the owner a manual catch this session's own checklist
+should have made; scored 7/10 rather than the handoff's own self-assessed 9/10
+to reflect that gap concretely rather than deferring to the predecessor's own
+score.
+
+**Self-assessment (Session 462): 8/10.** **Strengths:** (1) investigated before
+agreeing anything was broken -- `git blame` + code-reading confirmed the
+vignette section was accurate when written and became stale from a LATER
+session's change, rather than assuming the owner's observation meant "you didn't
+do the work" (this project's own "observation vs. decision" convention, applied
+correctly under real user pressure); (2) verified every numeric claim
+empirically via `Rscript` (node/edge counts, duplicate count) rather than
+estimating from reading the algorithm; (3) rendered the vignette AND ran
+`devtools::check()` before considering the fix done, not just "the code looks
+right"; (4) correctly diagnosed a live, mid-session file-corruption event as the
+known iCloud artifact (triggered by the owner's own rebuild, not this session)
+rather than reflexively treating it as unexplained and either ignoring it or
+blindly reverting without explanation; (5) for both mid-session housekeeping
+requests, did the actual investigation (`lintr::lint_package()`, the real GitHub
+Actions job log) rather than writing vague placeholder backlog entries; (6)
+caught and fixed my OWN fabricated number ("634") before it reached a commit --
+self-correction, not required by any external check. **Weaknesses:** (1) that
+fabricated number should never have been written in the first place -- the
+draft was composed before the total was actually computed; the correct order is
+compute-then-write, not write-then-verify, even under an appearance of
+plausibility; (2) the 2 mid-session housekeeping investigations, while
+explicitly requested and code-free, mean this session's commit history holds 3
+distinct pieces of work rather than 1 -- defensible here since 2 of the 3 are
+investigation-only (no `R/`/`tests/` changes, no TDD phase, no risk of the FM #26
+"mega-session" pattern), but worth naming for whoever evaluates this handoff
+next. **Compared to previous sessions:** extends S461's "verify actually
+functional" standard to documentation claims specifically -- a vignette's own
+prose assertion of behavioral equivalence is exactly the kind of claim that
+looks correct by inspection (the code still runs, still exports the same
+symbols) but is factually false, and only an explicit cross-check against the
+CURRENT render chain (not the vignette's own historical accuracy) surfaces it.
+**Self-assessment score:** 8/10 (breakdown above).
+
+**Handoff to Session 463:**
+- **What's next:** **(a)** NPRC outreach plan review (DECISION NEEDED,
+  owner-only, unchanged across many sessions). **(b)** LabKey integration
+  recommendations (BLOCKED -- needs a live LabKey server). **(c)** Re-capture
+  the stale `colony-manager-guide.qmd` Diagram-tab screenshot (READY, Effort S,
+  unchanged from S461). **(d)** NEW: fix `test-e2e-pedigree-module.R:205,207`'s
+  stale edge-routing assertions (READY, Effort S, root cause fully diagnosed
+  this session -- see `BACKLOG.md` Housekeeping for the exact fix). **(e)**
+  NEW: clean up the 45 accumulated `lintr::lint_package()` warnings across 17
+  files, and/or wire a process fix so lint debt stops re-accumulating (READY,
+  Effort M -- see `BACKLOG.md` Housekeeping for the full breakdown). **(f)**
+  Confirm whether the owner's planned repository relocation (out of iCloud) has
+  happened yet -- as of this session it had NOT (`pwd` unchanged); the iCloud
+  duplicate-file corruption recurred a 4th time this session (triggered by the
+  owner's own local rebuild). **(g)** S445's open `/doctor`-style Phase 0/1B
+  exemption methodology question remains unresolved. **(h)** Issues
+  #133/#136/#137 (data-model gated), #141/#142 (explicitly filed-not-scheduled).
+  **(i)** The 2 owner-supplied reference PDFs remain untracked, unresolved.
+  **(j)** The unexplained `renv.lock` diff (Rcpp/Rlabkey bumps + new
+  `bit`/`bit64` deps) remains present, now carried forward 4 sessions
+  unresolved -- a future session should ask the owner whether to commit,
+  investigate, or revert it.
+- **Key files:** `vignettes/a2interactive.Rmd` (lines 344-491, the full
+  "Pedigree Diagram" section rewritten), `BACKLOG.md` (2 new Housekeeping items
+  -- lint debt, CI failure diagnosis -- plus an update to the existing iCloud
+  duplicate-file item), `PROJECT_LEARNINGS.md` Learning 458, `CLAUDE.md`
+  (learnings count), `CHANGELOG.md` (2 new entries).
+- **Gotchas:** all S461 gotchas still apply (iCloud duplicate files now
+  confirmed to recur even from a NON-Claude-Code local rebuild, not just this
+  harness's own `devtools::document()` calls; Learning 450's control-character
+  bug; the dangling-parent-reference invariants in
+  `.buildMatingUnitForest()`/`.positionMatingUnitForest()`). **New this
+  session:** (1) a vignette section can be 100% accurate when written and go
+  stale from a DIFFERENT, later session's change even when that later session's
+  own documentation checklist ran correctly -- the checklist's file list is not
+  automatically the complete set of files making a claim about the changed
+  behavior (Learning 458); when changing a Shiny module's render/data function,
+  grep the whole repo for the old function's name and for "reproduces...
+  exactly"/"identically" phrasing, not just the checklist-named files. (2) `gh
+  run view --log-failed`/`gh run view --log` returned empty output for this
+  run for unclear reasons; `gh api repos/<owner>/<repo>/actions/jobs/<job_id>/logs`
+  worked directly and is the reliable fallback. (3) this specific `shinytest2`
+  E2E tier only runs on the repo's SCHEDULED GitHub Actions workflow, not on
+  every push, not in the local fast regression suite, and not in
+  `devtools::check()` -- a session's own Phase 3E ad hoc live verification does
+  not exercise this permanently-committed test file, so a regression here can
+  ship silently until the next scheduled run.
+- **Self-assessment score:** 8/10 (breakdown above).
+
+### What Session 461 Did
+**Deliverable:** Implementation (Development workstream) -- Pedigree Diagram Option 2 Slice 3:
 
 ### What Session 461 Did
 **Deliverable:** Implementation (Development workstream) -- Pedigree Diagram Option 2 Slice 3:
