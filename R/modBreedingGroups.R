@@ -404,7 +404,9 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
               type = "error",
               duration = 10L
             )
-            list(candidates = list(list(group = list(character(0L)), score = 0L)))
+            list(candidates = list(
+              list(group = list(character(0L)), score = 0L)
+            ))
           })
         }
 
