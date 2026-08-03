@@ -72,7 +72,7 @@ key_files: docs/planning/pedigree-diagram-option2-layout-design-plan.md (updated
 gotchas: All prior sessions' carried-forward gotchas apply (2 iCloud-sync duplicate files, 3 untracked .DS_Store; don't trust a predecessor's devtools::check() claim or a backlog item's stated scope at face value -- Learnings 437/441; a ratified design doc's own estimate is a hypothesis until the algorithm is actually run -- Learning 449). New: (1) a hidden control-character byte can silently land in a large Edit call's new_string, making a later visually-identical Edit call fail with "string not found" -- diagnose with cat -A/xxd (Learning 450). (2) .buildMatingUnitForest()'s duplicate-node id convention is sprintf("__dup_%s_%d", realId, k), mating-unit ids are sprintf("__union_%d", i) -- Slice 2 and any D6 integration work must respect these exact prefixes. (3) the design doc's §7/§9 now read differently than at S458's own close-out -- don't cite the old 130/742 figures from memory.
 runtime_smoke: n/a -- the new function has no call site yet (the render-chain switch is Slice 3), so no runtime behavior changed.
 changelog_ref: CHANGELOG.md 2026-08-02 [BL-pedigreeOption2Slice1] entry (Session 459)
-commit: pending
+commit: a89058c1
 ```
 
 ```handoff
