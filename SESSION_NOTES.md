@@ -6,6 +6,17 @@
 
 ## ACTIVE TASK
 
+### What Session 464 Did
+**Deliverable:** A planning document (Architecture workstream) designing issue #142's
+fuller rectilinear mate-line/sibship-bar waypoint style on top of the shipped Option 2
+mating-unit layout (Slices 1-3, S459-461) -- picked by the owner via the S463-close-out
+`AskUserQuestion` picker (option 1 of 4: "#142: mate-line design").
+**Started:** 2026-08-03
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
 ### What Session 463 Did
 **Deliverable:** Research/comparison document (docs-only, no package code
 changed) -- `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`,

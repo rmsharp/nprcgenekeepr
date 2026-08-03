@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S464
+date: 2026-08-03
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: IN PROGRESS -- designing issue #142's fuller rectilinear mate-line/sibship-bar waypoint style on top of the shipped Option 2 mating-unit layout, per ARCHITECTURE_WORKSTREAM.md. Owner-picked via the S463 close-out AskUserQuestion picker.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S463
 date: 2026-08-03
 status: complete
