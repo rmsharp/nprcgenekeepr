@@ -23,8 +23,9 @@ makePedigreeDiagramData(ped)
 
 ## Value
 
-A list with two data frames: `nodes` (`id`, `label`, `shape`, `level`)
-and `edges` (`from`, `to`).
+A list with two data frames: `nodes` (`id`, `label`, `shape`, `level`,
+`title`) and `edges` (`from`, `to`). `title` is an HTML hover-tooltip
+string (issue \#135) giving ID, sex, generation, sire, and dam.
 
 ## Examples
 

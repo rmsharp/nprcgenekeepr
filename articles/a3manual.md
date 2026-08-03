@@ -302,20 +302,28 @@ The **Table** tab is an interactive data table. Features include:
 - Regex-enabled search across all columns
 - Sortable columns
 
-The **Diagram** tab renders the same pedigree as a hierarchical
-family-tree diagram (up to 1,500 animals – narrow the focal-animal
-selection above that). Each node is shaped by sex – dot = Female, square
-= Male, star = Hermaphrodite, triangle = Unknown, diamond =
-Other/Unrecorded – with a legend to the right of the diagram showing the
-same mapping. Clicking a node re-centers the population on that animal,
-the same as entering its ID in the focal-animals text area. An **Export
-Diagram (PNG)** button, shown in the diagram’s own corner, saves the
-current diagram view as a PNG image file – useful for husbandry reports,
-IACUC documents, or presentations. Hovering any node shows its ID, sex,
-generation, sire, and dam. A **Select by id** dropdown above the diagram
-lets you jump straight to a specific animal by ID, dimming every node
-except it and its direct connections – useful for locating one animal in
-a large, busy diagram without narrowing the focal-animal selection.
+The **Diagram** tab renders the same pedigree as a family-tree diagram
+(up to 750 animals – narrow the focal-animal selection above that). Each
+animal is shaped by sex – dot = Female, square = Male, star =
+Hermaphrodite, triangle = Unknown, diamond = Other/Unrecorded – with a
+legend to the right of the diagram showing the same mapping. A mate’s
+own mating(s) render as a small connector between the two parents, with
+a line down to their shared children, rather than two independent lines
+running straight from each parent – the same convention traditional
+pedigree charts use. An animal that mates more than once, or whose
+lineage loops back on itself (e.g. a consanguineous mating), appears
+once per mating, with each occurrence joined back to its main occurrence
+by a dashed line; hovering, clicking, or searching any occurrence
+behaves identically to the animal’s main occurrence. Clicking an animal
+re-centers the population on it, the same as entering its ID in the
+focal-animals text area. An **Export Diagram (PNG)** button, shown in
+the diagram’s own corner, saves the current diagram view as a PNG image
+file – useful for husbandry reports, IACUC documents, or presentations.
+Hovering any animal shows its ID, sex, generation, sire, and dam. A
+**Select by id** dropdown above the diagram lets you jump straight to a
+specific animal by ID, dimming every node except it and its direct
+connections – useful for locating one animal in a large, busy diagram
+without narrowing the focal-animal selection.
 
 ### Module Interface
 

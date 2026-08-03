@@ -47,6 +47,128 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-08-02 · \[issue \#142\] File “add a full rectilinear mate-line/sibship-bar waypoint style” as a deliberately-unscheduled, additive follow-up (Session 461, same-conversation follow-up)
+
+- **Deliverable:** [issue
+  \#142](https://github.com/rmsharp/nprcgenekeepr/issues/142),
+  owner-directed via `AskUserQuestion` after a clarifying exchange
+  (owner asked whether picking direct edges now would preclude adding
+  the fuller rectilinear style later – confirmed it would not, since a
+  waypoint-based upgrade reuses Slice 1/2’s already-computed positions
+  rather than requiring rework). Tracks building S457’s original Case C2
+  proof-of-concept’s true right-angle mate-line/sibship-bar convention
+  (extra invisible waypoint nodes) as an additive follow-up, most likely
+  behind a diagram-style toggle – not a bug, not scheduled, filed only
+  so the fuller style has a place to land if there’s real demand.
+  Cross-referenced back into the design doc §9.
+
+### 2026-08-02 · \[BL-pedigreeOption2Slice3\] Pedigree Diagram Option 2 implementation Slice 3 – render-chain wiring, `makePedigreeMatingLayout()` (D6), plus a live-verification-discovered dangling-parent-reference crash fix in Slice 1’s own code (Session 461)
+
+- **Deliverable:** new exported `makePedigreeMatingLayout(ped)` in
+  `R/makePedigreeDiagramData.R`, the third and final implementation
+  slice of
+  `docs/planning/pedigree-diagram-option2-layout-design-plan.md`’s §6
+  Migration Path – combines Slice 1’s `.buildMatingUnitForest()` and
+  Slice 2’s `.positionMatingUnitForest()` into the
+  `list(nodes, edges, duplicateToReal)` shape `R/modPedigree.R`’s
+  Diagram tab now renders. `R/modPedigree.R`’s render chain switched
+  from
+  [`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md) +
+  `visHierarchicalLayout()` to the new function +
+  `visPhysics(enabled = FALSE)` + `visNodes(physics = FALSE)` +
+  `visEdges(smooth = FALSE)` with fixed x/y (S457’s proven Case C2
+  geometry). Full TDD cycle (RED-\>GREEN, REFACTOR owner-confirmed
+  skip), all `AskUserQuestion`-gated.
+- **Pre-RED POC + 2 owner decisions:** a throwaway `chromote` POC
+  against the real `GA204Z`/`8LKBV9` loop fixture and a wide fan-out
+  fixture resolved (empirically, not by guessing) x/y scale constants,
+  union-node style (small unlabeled dot, no legend entry),
+  duplicate-node style (identical shape/label to the real individual,
+  dashed connector), and a gap the ratified D1-D6 text left unspecified:
+  whether to render §1.1’s “right-angle mate-line/sibship-bar” language
+  literally (new, unratified waypoint-node machinery) or as direct
+  parent-union-child edges. Surfaced via `AskUserQuestion`: (1) issue
+  \#138’s node-count cap re-derived to **750 individuals**
+  (owner-picked, matching the design doc’s own suggested resolution,
+  over the tension with the documented-but- never-diagram-rendered
+  962-individual `colony-manager-guide.qmd` example); (2) mate-line
+  edges render directly (no waypoints) with the fuller rectilinear style
+  filed as deferred issue \#142.
+- **D6 integration:** click-to-navigate resolves a duplicate-node click
+  to its real individual (via the new `duplicateToReal` lookup) and
+  treats a union-node click as a no-op; the search dropdown is filtered
+  to real individual ids only
+  (`visOptions(nodesIdSelection = list(values = ...))`, resolving a
+  question S458’s design doc left open); union nodes get a minimal
+  offspring-count tooltip and no legend entry; duplicate nodes repeat
+  their real individual’s tooltip content plus a duplicate-occurrence
+  cue.
+- **Live-verification-discovered defect, fixed at its root cause (not
+  worked around):** Phase 3E (mandatory, not skippable for this slice)
+  found `.buildMatingUnitForest()` crashed (“missing value where
+  TRUE/FALSE needed”) whenever a mating unit’s non-anchor parent had no
+  own row in the input – the ordinary case for `R/modPedigree.R`’s own
+  pre-existing “Trim pedigree based on focal animals” feature
+  (`trimPedigree(..., addBackParents = FALSE)`, unrelated to and
+  pre-dating Option 2), which keeps a blood relative’s row but not that
+  relative’s own mate’s row. Slices 1/2 never exercised this path (both
+  `@noRd`, tested only against self-contained fixtures); Slice 3 wiring
+  the code into the live render chain for the first time is what
+  surfaced it. Fixed in Slice 1’s own file: a dangling reference is now
+  treated as a founder and made structurally ineligible to become an
+  anchor (there is no individual to recursively position for them); a
+  dangling free-pass/duplicate node’s `gen` falls back to its own mating
+  unit’s already-computed `gen`; a dangling individual gets no rendered
+  node of their own. 6 new unit tests (`test_buildMatingUnitForest.R`,
+  `test_positionMatingUnitForest.R`) reproducing the exact crash; the
+  live crash scenario re-verified fixed via `shinytest2`/`chromote`
+  after the fix.
+- **Also found, documented (not fixed – inherited from Slice 2’s
+  already-shipped algorithm):** `.buildMatingUnitForest()`’s D2 anchor
+  tie-break is row-order-sensitive, and the live app’s
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  step (pre-existing, pre-dating Option 2) reorders rows relative to the
+  raw upload – so the real fixture’s own “740 total nodes” figure
+  (Slices 1/2’s own unit tests, raw CSV) becomes 739 through the live
+  pipeline. Both are correct, self-consistent applications of the same
+  deterministic algorithm to different, equally valid row orderings.
+- **Verified:** full regression suite 0 failed/0 error (4405 passed =
+  4382 baseline + 22 new + 1 fixed-by-lookup, 171 skipped, 10
+  pre-existing warnings, exact baseline match); `devtools::check()`
+  exact baseline match (1 pre-existing warning – iCloud duplicate-file
+  artifact; 1 pre-existing note – `a2interactive.Rmd` vignette-engine; 0
+  new); zero new lint warnings in changed code. Phase 3E (live
+  `shinytest2`/`chromote` against the real installed app + real
+  375-individual fixture, run twice): physics disabled, union/duplicate
+  styling, dashed connectors, filtered search dropdown,
+  click-to-navigate (both cases), zero console errors, legible
+  screenshotted renders for the `GA204Z`/`8LKBV9` loop, a trimmed
+  focal-animal view, and the full 375-individual colony scale.
+- **Incidentally found and reverted (not part of this slice’s own
+  deliverable):** `devtools::document()` picked up 2
+  long-carried-forward, untracked iCloud “conflicted copy” duplicate
+  `.R` files and corrupted 3 unrelated `.Rd` pages (`man/appServer.Rd`,
+  `man/modMarkerGeneticsServer.Rd`, `man/modMarkerGeneticsUI.Rd`) with
+  merged/stale content, twice (once per `devtools::document()` run this
+  session) – each caught via `git status`/`git diff` review and reverted
+  via `git checkout --` before it could reach a commit. New Housekeeping
+  items filed in `BACKLOG.md` for this and for the now-stale
+  `colony-manager-guide.qmd` screenshot.
+- **Documentation checklists:** `NEWS.Rmd`/`NEWS.md` new bullets (the
+  new export + the Diagram tab’s new mating-aware visual convention +
+  the 750 cap); `vignettes/manual_components/_pedigree_browser.Rmd`’s
+  Diagram paragraph rewritten for the new convention (tutorial/article
+  checklist); `vignettes/articles/colony-manager-guide.qmd`’s “1,500”
+  corrected to “750” (its screenshot itself deferred as a new
+  Housekeeping item, disproportionate to fix same-session).
+  `_pkgdown.yml` reference config updated for the new export.
+  `BACKLOG.md` Slice 3 marked DONE; `PROJECT_LEARNINGS.md` Learnings
+  454-457 (plus a Learning 450 third-recurrence addendum); `CLAUDE.md`
+  Learnings cross-reference count updated (453-\>457, Sessions
+  1-460+-\>1-461+). Commented on issue \#138 documenting the cap
+  re-derivation (not closed – \#138 is about supporting rendering
+  *beyond* the cap, a separate feature).
+
 ### 2026-08-02 · \[BL-pedigreeOption2Slice2\] Pedigree Diagram Option 2 implementation Slice 2 – `.positionMatingUnitForest()` (D3 contour-merge positioning + D4 founder ordering + D5 direct-child positioning) (Session 460)
 
 - **Deliverable:** new internal `.positionMatingUnitForest(ped, forest)`

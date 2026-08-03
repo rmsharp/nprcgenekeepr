@@ -353,7 +353,7 @@ diagram.](shiny_app_use/pb_diagram_legend.png)
 
 The Pedigree Browser Diagram tab with its shape-to-sex legend.
 
-Diagrams render up to **1,500 animals** – for larger populations, narrow
+Diagrams render up to **750 animals** – for larger populations, narrow
 the focal-animal selection first (see **Focal animals** above). Hovering
 any node shows its ID, sex, generation, sire, and dam without leaving
 the diagram. Clicking a node re-centers the population on that animal,

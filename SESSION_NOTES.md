@@ -7,6 +7,342 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 461 Did
+
+**Deliverable:** Implementation (Development workstream) – Pedigree
+Diagram Option 2 Slice 3: render-chain wiring (new exported
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+combining Slices 1+2, `R/modPedigree.R`’s render chain switched to
+fixed-position layout, D6 integration adaptations), PLUS a
+live-verification-discovered crash fix in Slice 1’s own
+`.buildMatingUnitForest()`/`.positionMatingUnitForest()`, per
+`docs/planning/pedigree-diagram-option2-layout-design-plan.md` §6
+Migration Path steps 2-3. **Started/Completed:** 2026-08-02 / 2026-08-02
+**Status:** DONE. Full TDD cycle (2 RED-\>GREEN sub-cycles: the main
+slice, then the live-verification bugfix), REFACTOR owner-confirmed
+skip, all `AskUserQuestion`-gated per this project’s Development Process
+Contract. Phase 3E (mandatory, not skippable) run and re-run.
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Phase 0 orientation in full
+(`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `SESSION_NOTES.md` ACTIVE TASK,
+`gh issue list` – 14 open issues incl. new \#141,
+`git status`/`log`/`diff --stat`, `methodology_dashboard.py` Health
+94/100 medium risk (unchanged), ledger reconcile – `CHANGELOG.md`
+frontier one commit behind `HEAD`, investigated and confirmed the same
+recurring no-op pattern S457-S460 each found for their own predecessor;
+`HANDOFFS.md` frontier exactly at `HEAD`; no ghost session). Confirmed
+the carried-forward untracked noise (2 iCloud-sync duplicate `.R` files,
+3 `.DS_Store`, 2 reference PDFs, the unexplained `renv.lock` diff)
+unchanged, still untouched per `SAFEGUARDS.md`. Rendered the priorities
+list + `AskUserQuestion` picker (3 items – Slice 3, NPRC outreach,
+LabKey); owner picked Slice 3. **(2)** Claimed the session (stub +
+`HANDOFFS.md` `status: pending` receipt) before any research. **(3)**
+Read `DEVELOPMENT_WORKSTREAM.md`, the full design doc, the actual
+`.buildMatingUnitForest()`/`.positionMatingUnitForest()`
+implementations + their test files, `R/modPedigree.R`’s render chain,
+ALL existing D6-related unit/E2E test conventions
+(`test_modPedigree.R`’s click-nav/export/legend/search tests,
+`test-e2e-pedigree-module.R`), and `visOptions()`’s own installed Rd
+source (not just existing call sites). **(4)** Pre-RED: built a
+throwaway (uncommitted) `chromote` POC rendering the real
+`GA204Z`/`8LKBV9` loop fixture and a wide-fan-out fixture through
+headless Chrome to resolve, empirically rather than by guessing: x/y
+scale constants (120/150, matching vis.js’s own hierarchical-layout
+defaults); union-node style (small unlabeled dot, no legend entry);
+duplicate-node style (identical shape/label to the real individual,
+dashed connector); and a genuine gap the ratified D1-D6 text left
+unspecified – whether to render the design’s own “right-angle
+mate-line/sibship-bar” language literally (needing new, unratified
+waypoint-node machinery) or as direct parent-union-child edges (simpler,
+reads clearly as a family group per the POC screenshots). Surfaced 2
+real decisions via `AskUserQuestion` before RED: (a) node-cap
+re-derivation for issue \#138 (owner picked “~750 individuals,” matching
+the design doc’s own suggested resolution, over the tension with the
+documented-but-never-diagram- rendered 962-individual tutorial example);
+(b) mate-line edge routing (owner picked direct edges now, rectilinear
+waypoints filed as deferred issue \#142, after a clarifying exchange
+confirming the choice doesn’t preclude adding the fuller style later).
+**(5)** RED: 16 new tests in
+`tests/testthat/test_makePedigreeMatingLayout.R` (validation, node/edge
+counts and ids, per-kind title/shape content, mate-line +
+duplicate-connector edges, x/y as a deterministic monotonic function of
+Slice 2’s own x/gen – not hardcoded scale constants, so a later visual
+tweak wouldn’t force a rewrite – `duplicateToReal` contract, full
+375-fixture scale check) + 6 new tests in `test_modPedigree.R` (physics
+disabled, 750-node boundary, union-click no-op, duplicate-click resolves
+to real id, filtered search dropdown). Confirmed RED (16 errors + 11
+failing expectations, 0 pre-existing regressions);
+`AskUserQuestion`-gated RED-\>GREEN. **(6)** GREEN: implemented
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+in `R/makePedigreeDiagramData.R` and wired `R/modPedigree.R`’s render
+chain. One test-filter bug found and fixed during GREEN verification (a
+duplicate id can legitimately be the “from” of BOTH a dashed connector
+AND a solid mate-line edge; the dup-connector test’s own filter needed
+to check `dashes` too). Found and fixed, via `devtools::document()`’s
+own diff review (not silently accepted), that `devtools::document()`
+picked up the 2 stale untracked iCloud duplicate `.R` files and
+corrupted 3 unrelated `.Rd` pages – reverted via `git checkout --`
+immediately, twice (once per `document()` run). Fixed 9 new lint
+warnings (2x [`toString()`](https://rdrr.io/r/base/toString.html) over
+`paste(collapse=)`, 4x implicit-integer literals, 1x `mapply` -\>
+vectorized composite-key [`match()`](https://rdrr.io/r/base/match.html),
+matching `.buildMatingUnitForest()`’s own established technique) and 1
+new `string_boundary_linter` (`grepl("^__union_", ...)` -\>
+[`startsWith()`](https://rdrr.io/r/base/startsWith.html)) before calling
+GREEN complete. Hit Learning 450’s control-character bug a THIRD time
+(mid-edit, writing a plain `sep = ""` argument) – fixed via `perl`, not
+another `Edit` call, per the learning’s own rule; added a further
+addendum. Also fixed a genuine Rd cross-reference WARNING
+(`R CMD check`):
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)’s
+own roxygen had copied `\link{.buildMatingUnitForest}}`-style references
+from `.positionMatingUnitForest()`’s `@noRd` block, which is never
+Rd-checked – an EXPORTED function’s own links ARE checked, so no target
+`.Rd` page exists for an internal `@noRd` sibling; fixed to plain
+`\code{}`. Verified: full regression suite 0 failed/0 error (4382
+passed, 171 skipped, 10 pre-existing warnings, exact baseline match);
+`devtools::check()` exact baseline match (1 pre-existing warning –
+iCloud duplicate-file artifact; 1 pre-existing note –
+`a2interactive.Rmd` vignette-engine; 0 new). `AskUserQuestion`-gated
+GREEN-\>REFACTOR; owner confirmed skip. **(7)** Phase 3E (mandatory, NOT
+skippable for this slice – the first with real runtime impact):
+installed the working tree (`R CMD INSTALL`), drove the real app
+end-to-end via `shinytest2`/`chromote` against the real 375-individual
+fixture. Confirmed: physics disabled/no hierarchical layout; union-node
+style and offspring-count tooltip; duplicate-connector dashed edges
+(127, matching the live pipeline’s own duplicate count – see finding
+below); search dropdown excludes union/duplicate ids; click-to- navigate
+resolves a duplicate click to the real individual and no-ops a union
+click; zero console errors; visually legible renders (screenshotted) for
+the `GA204Z`/`8LKBV9` loop fixture, a trimmed focal-animal view, and the
+full 375-individual colony scale. **Found and fixed a real crash during
+this live verification** (not a unit-test gap – the kind Phase 3E
+specifically exists to catch): clicking any diagram node to
+trim-and-focus (an already-shipped feature, issue \#129 Slice 2) crashed
+the ENTIRE Diagram tab with “missing value where TRUE/FALSE needed”
+whenever the trimmed subset included an individual whose own mate was
+not also a blood relative (the ordinary case for almost any real
+pedigree) – because `R/modPedigree.R`’s own pre-existing trim feature
+(`trimPedigree(..., addBackParents = FALSE)`) keeps a blood relative’s
+row but not that relative’s own mate’s row, and
+`.buildMatingUnitForest()`’s `isFounderOf()` had never been exercised
+against such a “dangling” reference (Slices 1/2 were `@noRd`, tested
+only against self-contained fixtures). Surfaced via `AskUserQuestion`
+(scope: fix now vs. file-and-defer); owner picked fix now. New
+RED-\>GREEN sub-cycle: 6 new unit tests (3 in
+`test_buildMatingUnitForest.R`, 3 in `test_positionMatingUnitForest.R`)
+reproducing the exact crash; root-cause fix landed in Slice 1’s own file
+(a dangling reference is now treated as a founder and made structurally
+ineligible to anchor; a dangling free-pass/duplicate node’s gen falls
+back to its own mating unit’s gen) – not worked around in Slice 3’s
+wrapper. Re-verified: full regression 0/0 (4405 passed, exact baseline);
+`devtools::check()` exact baseline match; the EXACT live crash scenario
+re-run via `shinytest2`/`chromote` after the fix – zero errors, legible
+render (screenshotted). **Also found (documented, not fixed – inherited
+from Slice 2’s own already-shipped algorithm) during live
+verification:** `.buildMatingUnitForest()`’s D2 anchor tie-break is
+row-order-sensitive, and the live app’s
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+step (pre-existing, pre-dating Option 2) reorders rows relative to the
+raw upload – so the real fixture’s own “740 total nodes” figure (Slices
+1/2’s own unit tests, raw CSV) becomes 739 through the live pipeline;
+both are correct, self-consistent applications of the same deterministic
+algorithm to different (equally valid) row orderings. **(8)** Filed
+[issue \#142](https://github.com/rmsharp/nprcgenekeepr/issues/142)
+(rectilinear waypoint style, deferred/additive). Commented on issue
+\#138 documenting the cap re-derivation (not closing it – \#138 is about
+supporting beyond-cap rendering, a separate feature). Added a “Resolved
+S461” note (3 new dragon-flag findings) to the design doc’s §9. Updated
+`BACKLOG.md` (Slice 3 DONE with full summary; 2 new Housekeeping items –
+the now-stale `colony-manager-guide.qmd` screenshot, and the iCloud
+duplicate-file `devtools::document()` corruption risk). New
+`PROJECT_LEARNINGS.md` Learnings 454-457 (plus a third-recurrence
+addendum to Learning 450). `NEWS.Rmd`/`NEWS.md` updated (new exported
+function + the Diagram tab’s new visual convention + the 750 cap),
+re-rendered. `vignettes/manual_components/_pedigree_browser.Rmd`’s
+Diagram section rewritten for the new convention (tutorial/article
+checklist); `vignettes/articles/colony-manager-guide.qmd`’s “1,500” -\>
+“750” fixed (its screenshot is now stale, tracked as a new Housekeeping
+item rather than fixed same-session – disproportionate live re-capture
+for a same-session text fix). `CLAUDE.md` Learnings cross-reference
+count updated (453-\>457, Sessions 1-460+-\>1-461+). **(9) Mid-session
+owner directive (out-of-band):** owner reported iCloud latency has
+caused repository problems twice in 2 days and is relocating it to
+`~/Development/` outside iCloud’s purview – checked and confirmed no
+tracked file/git-config hardcodes the current iCloud absolute path, so
+no repo changes were needed; flagged that this session’s own
+`devtools::document()` corruption finding (item above) directly supports
+and explains the decision, and that a NEW Claude Code session (not this
+one) will be needed post-move since this session’s own shell is tied to
+the current absolute path.
+
+**Session 460 Handoff Evaluation (by Session 461): 9/10.** This
+session’s actual task (item (a) from S460’s own “next steps” list) was
+picked directly off the handoff via the Phase 0 `AskUserQuestion`
+priorities picker. **What helped:** item (a)‘s description was precise
+and directly actionable – exact file/line references
+(`R/modPedigree.R:387-468`), the exact working name
+([`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)),
+every D6 integration point named individually (click-to-navigate,
+legend, tooltip, search-dropdown filter), and the explicit “Phase 3E is
+NOT skippable here” flag, which this session followed literally and
+which is precisely what surfaced the dangling-parent crash (a
+unit-test-only implementation would never have hit it). The gotchas list
+(id-prefix conventions, absolute-gen indexing, the nudge pass, the
+design doc’s evolving §9 text) were directly load-bearing and used
+correctly without re-derivation. **What was missing:** nothing the
+handoff could reasonably have included – both new findings this session
+made (the §1.1/D1-D6 mate-line rendering gap, and the
+dangling-parent-reference crash) are implementation-level discoveries
+that only surface once the code is actually built and run against a
+live, non-self-contained input, exactly the same “inherent
+design-time-estimate limitation” prior sessions have each noted about
+their own predecessors’ handoffs. **What was wrong:** no inaccuracies
+found. **ROI:** clearly positive – “Phase 3E is NOT skippable here” was
+the single most consequential sentence in the whole handoff; it directly
+caused this session to actually click a diagram node against the live
+app rather than treating unit-test-green as sufficient, which is
+precisely what caught a crash that would otherwise have shipped to real
+users the first time they clicked to focus on almost any real animal.
+
+**Self-assessment (Session 461): 9/10.** **Strengths:** (1) built and
+screenshotted a live `chromote` POC (not just unit-tested toy fixtures)
+BEFORE writing any RED test, resolving 2 genuine ambiguities the
+ratified design left open (mate-line edge routing, node-cap
+re-derivation) via `AskUserQuestion` rather than silently deciding; (2)
+treated Phase 3E as genuinely mandatory rather than a formality – ran it
+twice (once revealing a script bug in my OWN verification code, a POSIX-
+vs-PCRE regex quoting issue, correctly diagnosed and separated from the
+actual application behavior before drawing any conclusion; once
+revealing a REAL application crash), and fixed the real crash at its
+root cause (Slice 1’s own file) rather than working around it in Slice
+3’s wrapper; (3) caught, diagnosed, and reverted
+`devtools::document()`’s collateral corruption of 3 unrelated `.Rd`
+files (from the known iCloud-duplicate-file gotcha) on BOTH occasions it
+ran, rather than assuming a clean diff; (4) hit Learning 450’s
+control-character bug a third time and diagnosed it via the same
+byte-level tooling rather than re-attempting the same `Edit` call; (5)
+when my own live-verification script showed a suspicious result (739
+vs. Slice 1/2’s “740”), traced it to ground truth
+([`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+row reordering) via direct comparison rather than assuming either number
+was simply wrong; (6) followed every TDD phase gate faithfully across
+TWO RED-\>GREEN sub-cycles (the main slice, then the live-verification
+bugfix), each with its own `AskUserQuestion` gate. **Weaknesses:** (1)
+my first Phase 3E script had a real bug (the regex quoting issue) that
+produced a false-negative result before I caught it via manual isolation
+– a more careful first draft (testing the extraction regex in isolation
+before embedding it in the full verification script) would have avoided
+one full extra debugging round-trip; (2) the `colony-manager-guide.qmd`
+screenshot was left stale (deferred to a tracked Housekeeping item
+rather than fixed) – a defensible proportionality call, but a session
+with more remaining budget might have re-captured it rather than
+deferring; (3) did not add new permanent `test-e2e-pedigree-module.R`
+regression coverage for the new render chain, matching issues
+\#134/#135’s own “thorough one-off live verification, not necessarily a
+permanently-committed e2e test” precedent – defensible given this file’s
+own click-simulation fragility, but worth revisiting if a future
+regression in this area proves costly to re-diagnose live each time.
+**Compared to previous sessions:** extends S459/S460’s “verify actually
+functional, not just plausible” standard from unit-level
+structural/geometric correctness to LIVE, end-to-end application
+correctness – finding a defect that no amount of additional unit testing
+against synthetic or bundled fixtures could ever have surfaced, since
+the defect was in the SHAPE of a real feature’s real output, not in the
+algorithm’s own logic against any fixture anyone had thought to
+construct. **Self-assessment score:** 9/10 (breakdown above).
+
+**Handoff to Session 462:** - **What’s next:** **(a)** NPRC outreach
+plan review (DECISION NEEDED, owner-only, unchanged across many
+sessions). **(b)** Open methodology question from S445 (`/doctor`-style
+Phase 0/1B exemption) remains unresolved. **(c)** LabKey integration
+recommendations (BLOCKED – needs a live LabKey server). **(d)** Issue
+\#133 (data-model gated). **(e)** Issues \#136/#137 (data-model gated).
+**(f)** Issue \#141 (BJL positioning upgrade, explicitly
+filed-not-scheduled – premature optimization). **(g)** NEW: issue \#142
+(rectilinear mate-line/sibship-bar waypoint style, filed this session,
+explicitly filed-not-scheduled – deferred/additive, pick up only on real
+demand). **(h)** NEW, Housekeeping:
+`vignettes/articles/colony-manager-guide.qmd`‘s Diagram-tab screenshot
+is now visually stale (shows the pre-Option-2 render) – re-capture live
+once a session has budget for it; the “1,500”-\>“750” text fix already
+landed this session, independent of the screenshot. **(i)** NEW,
+Housekeeping: the iCloud duplicate-file `devtools::document()`
+corruption risk (2 untracked `" 2.R"` files) – likely self-resolves once
+the owner’s planned repository relocation (out-of-band this session,
+moving to `~/Development/` outside iCloud) completes; a future session
+should confirm the 2 files no longer reappear and close this item if so.
+**(j)** `BACKLOG.md`’s “`inst/extdata/` reorganization – Phase 4” bullet
+header tag-fix (unchanged, low priority, many sessions old). **(k)** 8
+open GitHub issues remain unmirrored into `BACKLOG.md` – informational
+only. **(l)** The 2 owner-supplied reference PDFs remain untracked,
+unresolved. **(m)** The unexplained, uncommitted `renv.lock` diff
+(Rcpp/Rlabkey bumps + new `bit`/`bit64` deps) flagged by S459 is STILL
+present, unchanged, still untouched per `SAFEGUARDS.md` – now carried
+forward 3 sessions unresolved; a future session should ask the owner
+whether to commit, investigate, or revert it. **(n)** NEW, important
+environment note: the owner is relocating this repository from its
+current iCloud-synced path to `~/Development/nprcgenekeepr` (out-of-band
+this session, not a BACKLOG item) – confirm on first Orient after the
+move that `pwd`, `SESSION_NOTES.md`, and `methodology_dashboard.py` all
+resolve correctly from the new location before proceeding; no repo
+content changes were needed (verified this session: no tracked file or
+git config hardcodes the old path). - **Key files:**
+`docs/planning/pedigree-diagram-option2-layout-design-plan.md` (3 new
+“Resolved S461”/“New dragon found S461” notes in §9 – read them, not the
+pre-S461 text from memory), `R/makePedigreeDiagramData.R` (new exported
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md);
+`.buildMatingUnitForest()` and `.positionMatingUnitForest()` both got a
+small, targeted dangling-parent-reference fix – existing
+self-contained-fixture behavior is byte-for-byte unchanged, verified via
+the full regression suite), `R/modPedigree.R` (render chain now uses the
+new function + fixed-position layout; click-to-navigate and the search
+dropdown adapted for D6),
+`tests/testthat/ test_makePedigreeMatingLayout.R` (new, 16 tests),
+`tests/testthat/test_buildMatingUnitForest.R` +
+`test_positionMatingUnitForest.R` (3 new tests each, the dangling-parent
+fix), `tests/testthat/ test_modPedigree.R` (6 new tests), `BACKLOG.md`
+(Slice 3 DONE, 2 new Housekeeping items), `PROJECT_LEARNINGS.md`
+Learnings 454-457 (plus a Learning 450 third-recurrence addendum),
+`NEWS.Rmd`/`NEWS.md`,
+`vignettes/manual_components/_pedigree_browser.Rmd`,
+`vignettes/articles/colony-manager-guide.qmd`, `_pkgdown.yml` (new
+export registered). - **Gotchas:** all prior sessions’ carried-forward
+gotchas apply (2 iCloud-sync duplicate files – now confirmed to ACTIVELY
+CORRUPT `devtools::document()` output, not just passive noise, see (i)
+above; 3 untracked `.DS_Store`; a ratified design doc’s own
+estimate/language is a hypothesis until the algorithm is actually built
+AND run live – Learnings 449/457; Learning 450’s control- character bug
+has now recurred 3 times – diagnose with `cat -A`/`xxd`, NEVER write a
+backslash-u- \####-style escape spelling literally inside an
+`Edit`/`Write` tool parameter, not even while drafting a plain
+empty-string argument). **New this session:** (1)
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)’s
+return contract is `list(nodes, edges, duplicateToReal)` – nodes carry
+`x`/`y` (not `level`; hierarchical layout is gone for this render path),
+`size`, and per-kind `title`/`shape`/`label`; edges carry a `dashes`
+column (`TRUE` only for duplicate connectors). (2) A dangling parent
+reference (a sire/dam value with no own row in `ped`) is now handled
+uniformly by both `.buildMatingUnitForest()` (treated as founder, can
+never anchor) and `.positionMatingUnitForest()` (`genOf` backfilled from
+its mating unit’s own gen immediately after construction) – if either
+function is touched again, preserve both invariants; a dangling
+individual still gets NO node of its own in the final output (never
+render a node for someone with no real record). (3)
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+reorders rows relative to the raw upload, and
+`.buildMatingUnitForest()`’s D2 anchor tie-break is row-order-sensitive
+– “the real fixture’s own node-count figure” now means two different
+(both correct) numbers, 740 (raw CSV) vs. 739 (live app pipeline); a
+future test/doc citing this figure should say which. (4)
+`devtools::document()` sources the 2 iCloud duplicate `.R` files like
+any other – always diff the FULL `man/`+`NAMESPACE` change set after
+running it, not just the file(s) you expected to change, and
+`git checkout --` any collateral `.Rd` whose “Please edit documentation
+in” comment lists more than one source file. - **Self-assessment
+score:** 9/10 (breakdown above).
+
 ### What Session 460 Did
 
 **Deliverable:** Implementation (Development workstream) – Pedigree
@@ -213,8 +549,9 @@ empirical validation rather than a static combinatorial check.
 **Handoff to Session 461:** - **What’s next:** **(a) NEW, most
 concrete:** Pedigree Diagram Option 2 implementation Slice 3 (READY,
 Effort M, `BACKLOG.md`) – render-chain wiring: a new EXPORTED wrapper
-function (working name `makePedigreeMatingLayout()`) combining Slices
-1+2 into the `list(nodes, edges)` shape
+function (working name
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md))
+combining Slices 1+2 into the `list(nodes, edges)` shape
 [`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
 already returns, plus the `duplicateNodeId -> realId` lookup table D6
 needs; then `R/modPedigree.R`‘s render chain (`R/modPedigree.R:387-468`)

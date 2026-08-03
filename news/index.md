@@ -72,7 +72,7 @@
   focal-animal-trimmed population as an interactive pedigree diagram –
   sex-shaped nodes (square/dot/star/triangle), directed sire/dam edges,
   and a generation-ordered top-down layout – via a new `visNetwork`
-  dependency. Diagrams above 1,500 animals show an informative message
+  dependency. Diagrams above 750 animals show an informative message
   instead of an unbounded render; narrow the focal-animal selection to
   view one. Clicking a node (issue
   [\#129](https://github.com/rmsharp/nprcgenekeepr/issues/129), Slice 2)
@@ -80,6 +80,24 @@
   focal-animal selection the Table tab and focal-animal text box already
   share – switch back to the Table tab (or enable “Trim pedigree based
   on focal animals”) to see the new selection reflected there.
+- The Diagram tab’s layout was rebuilt for a kinship2-style,
+  mating-aware convention (Pedigree Diagram Option 2): a mate’s own
+  mating(s) now render as small connector nodes with a mate-line to each
+  parent and a line down to their shared children, instead of two
+  independent sire/dam edges into each child. An individual who mates
+  more than once (or whose lineage loops back on itself, e.g. a
+  consanguineous mating) appears once per mating as a duplicate node,
+  connected back to their main occurrence by a dashed line – hovering,
+  clicking, or searching any occurrence behaves identically to the
+  individual’s main occurrence. The animal-count display limit above
+  dropped from 1,500 to 750 individuals as a result (a colony pedigree
+  typically renders roughly twice as many total diagram nodes as animals
+  under this convention). A new exported function,
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md),
+  computes this layout for scripted use; the existing
+  [`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+  is unchanged and still available for a simpler one-node-per-animal
+  diagram.
 - A new **Marker Genetics** tab, starting with a **Kinship Comparison**
   sub-tab, was added (issue
   [\#130](https://github.com/rmsharp/nprcgenekeepr/issues/130), Slice 1)

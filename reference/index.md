@@ -458,6 +458,9 @@ Funtions designed for interactive use
   : Deprecated alias for makeGroupNum
 - [`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
   : Convert a pedigree data frame into visNetwork-ready diagram data
+- [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+  : Combine the Option 2 mating-unit forest into visNetwork-ready
+  diagram data
 - [`makeRelationClassesTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeRelationClassesTable.md)
   : Make a relation classes table from kinship pairs
 - [`makeSimPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeSimPed.md)
