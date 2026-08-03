@@ -852,6 +852,31 @@ visNetwork-vs-kinship2 technology decision (D2), which stands as ratified.*
       live pipeline; both are correct, self-consistent applications of the
       same algorithm to different (valid) row orders. See `CHANGELOG.md`,
       `PROJECT_LEARNINGS.md` Learning 457, design doc §9.)
+- [ ] **Duplicate-node connector renders straight, not arched, unlike the
+      kinship2/standard-pedigree convention** (READY, Effort S, found S468
+      2026-08-03) -- owner observation comparing this app's diagram against
+      a reference pedigree image (rpubs.com/dliupress/pedigreedemo, Pedigree
+      1): the referenced convention draws the dashed line connecting a
+      duplicated individual's extra mating-position occurrence back to
+      their primary occurrence as a visibly **arched/curved** line. This
+      app's own duplicate-node mechanism (D6, issue #129 Slice 3, S461) is
+      otherwise already equivalent -- a real duplicate node IS created at
+      each extra mating position and IS connected back to the real
+      individual via a dashed edge (`R/makePedigreeDiagramData.R:778-784`,
+      `dupEdges`, `dashes = TRUE`) -- but `R/modPedigree.R:412`'s
+      `visNetwork::visEdges(smooth = FALSE)` applies globally to every
+      edge in the widget, including this one, so the dashed connector
+      renders as a straight line, not an arc. A fix would need a
+      per-edge `smooth` override (vis.js supports `edges[i].smooth` as a
+      per-edge object overriding the widget-level default) applied only to
+      `dupEdges`, not to mate-line/child/sibship-bar edges (which are
+      deliberately straight/orthogonal by design, both in the current
+      direct style and the in-progress issue #142 rectilinear style).
+      Analytically separate from issue #142's own mate-line/sibship-bar
+      edge-routing work (Slice 2, in progress this session) -- not folded
+      in, per this project's own scope-discipline precedent (see the
+      founder-positioning-defect item immediately below, and
+      `PROJECT_LEARNINGS.md` Learning 382).
 - [ ] **Founder-positioning defect: a founder who mates into a LATER
       generation renders at the wrong row, visually implying the wrong
       pairing** (DECISION NEEDED -- root cause identified, fix not designed,
