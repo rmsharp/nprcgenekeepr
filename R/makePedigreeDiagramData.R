@@ -640,17 +640,28 @@ makePedigreeDiagramData <- function(ped) {
 #' @param ped data frame with \code{id}, \code{sire}, \code{dam},
 #'   \code{sex}, and \code{gen} columns, same contract as
 #'   \code{\link{makePedigreeDiagramData}}.
+#' @param edgeStyle one of \code{"direct"} (default -- a straight edge from
+#'   each parent to their mating unit and from each mating unit to each
+#'   child, matching this function's own original, still-default behavior)
+#'   or \code{"rectilinear"} (issue #142 -- routes mate-line and sibship-bar
+#'   edges through invisible waypoint nodes via
+#'   \code{.addRectilinearWaypoints()} so they render as a strict right
+#'   angle, kinship2-style, instead of a direct diagonal/straight segment).
 #' @return A list with \code{nodes} (\code{id}, \code{label}, \code{shape},
 #'   \code{title}, \code{size}, \code{x}, \code{y}), \code{edges}
 #'   (\code{from}, \code{to}, \code{dashes}), and \code{duplicateToReal} (a
 #'   named character vector, duplicate node id -> real individual id).
+#'   Under \code{edgeStyle = "rectilinear"}, \code{nodes} gains
+#'   \code{color.background}/\code{color.border} and \code{edges} gains
+#'   \code{color} (see \code{.addRectilinearWaypoints()}).
 #'
 #' @examples
 #' library(nprcgenekeepr)
 #' layout <- makePedigreeMatingLayout(nprcgenekeepr::examplePedigree)
 #'
 #' @export
-makePedigreeMatingLayout <- function(ped) {
+makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
+                                                          "rectilinear")) {
   if (!is.data.frame(ped)) {
     stop("makePedigreeMatingLayout() requires 'ped' to be a data frame.")
   }
@@ -660,6 +671,7 @@ makePedigreeMatingLayout <- function(ped) {
     stop("makePedigreeMatingLayout() requires 'ped' to have columns: ",
          toString(required), ". Missing: ", toString(missingCols))
   }
+  edgeStyle <- match.arg(edgeStyle)
 
   forest <- .buildMatingUnitForest(ped)
   pos <- .positionMatingUnitForest(ped, forest)
@@ -788,6 +800,12 @@ makePedigreeMatingLayout <- function(ped) {
   edges <- rbind(childEdgesOut, mateEdges, dupEdges)
 
   duplicateToReal <- stats::setNames(duplicates$realId, duplicates$id)
+
+  if (edgeStyle == "rectilinear") {
+    waypoints <- .addRectilinearWaypoints(nodes, edges, forest, pos)
+    nodes <- waypoints$nodes
+    edges <- waypoints$edges
+  }
 
   list(nodes = nodes, edges = edges, duplicateToReal = duplicateToReal)
 }

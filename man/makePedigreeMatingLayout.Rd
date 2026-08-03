@@ -4,18 +4,29 @@
 \alias{makePedigreeMatingLayout}
 \title{Combine the Option 2 mating-unit forest into visNetwork-ready diagram data}
 \usage{
-makePedigreeMatingLayout(ped)
+makePedigreeMatingLayout(ped, edgeStyle = c("direct", "rectilinear"))
 }
 \arguments{
 \item{ped}{data frame with \code{id}, \code{sire}, \code{dam},
 \code{sex}, and \code{gen} columns, same contract as
 \code{\link{makePedigreeDiagramData}}.}
+
+\item{edgeStyle}{one of \code{"direct"} (default -- a straight edge from
+each parent to their mating unit and from each mating unit to each
+child, matching this function's own original, still-default behavior)
+or \code{"rectilinear"} (issue #142 -- routes mate-line and sibship-bar
+edges through invisible waypoint nodes via
+\code{.addRectilinearWaypoints()} so they render as a strict right
+angle, kinship2-style, instead of a direct diagonal/straight segment).}
 }
 \value{
 A list with \code{nodes} (\code{id}, \code{label}, \code{shape},
 \code{title}, \code{size}, \code{x}, \code{y}), \code{edges}
 (\code{from}, \code{to}, \code{dashes}), and \code{duplicateToReal} (a
 named character vector, duplicate node id -> real individual id).
+Under \code{edgeStyle = "rectilinear"}, \code{nodes} gains
+\code{color.background}/\code{color.border} and \code{edges} gains
+\code{color} (see \code{.addRectilinearWaypoints()}).
 }
 \description{
 The exported wrapper for the kinship2-parity pedigree layout (Pedigree

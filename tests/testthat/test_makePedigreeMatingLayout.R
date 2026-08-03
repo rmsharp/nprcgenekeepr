@@ -358,3 +358,78 @@ test_that(
   expect_equal(nrow(result$edges), expectedEdges)
   expect_length(result$duplicateToReal, nrow(forest$duplicates))
 })
+
+## ---- edgeStyle parameter (issue #142 Slice 2) ---------------------------
+
+test_that(
+  "makePedigreeMatingLayout defaults to edgeStyle = \"direct\" -- identical
+   to calling with edgeStyle explicitly \"direct\", no waypoint ids, no new
+   columns beyond the existing nodes/edges contract", {
+  ped <- data.frame(
+    id = c("R1", "R2", sprintf("D%d", 1:4)),
+    sire = c(NA, NA, "R1", "D1", "D2", "D3"),
+    dam = c(NA, NA, "R2", NA, NA, NA),
+    sex = c("M", "F", rep("M", 4L)),
+    gen = c(0L, 0L, 1:4),
+    stringsAsFactors = FALSE
+  )
+  default <- makePedigreeMatingLayout(ped)
+  explicit <- makePedigreeMatingLayout(ped, edgeStyle = "direct")
+  expect_equal(default, explicit)
+  expect_false(any(grepl("^__drop_|^__bar_|^__proj_", default$nodes$id)))
+  expect_setequal(names(default$nodes),
+                   c("id", "label", "shape", "title", "size", "x", "y"))
+  expect_setequal(names(default$edges), c("from", "to", "dashes"))
+})
+
+test_that(
+  "makePedigreeMatingLayout rejects an invalid edgeStyle value", {
+  trio <- data.frame(
+    id = c("P1", "P2", "C1"),
+    sire = c(NA, NA, "P1"), dam = c(NA, NA, "P2"),
+    sex = c("M", "F", "M"), gen = c(0L, 0L, 1L),
+    stringsAsFactors = FALSE
+  )
+  expect_error(makePedigreeMatingLayout(trio, edgeStyle = "curvy"),
+               "should be one of")
+})
+
+test_that(
+  "makePedigreeMatingLayout with edgeStyle = \"rectilinear\" produces
+   exactly the same result as calling .addRectilinearWaypoints() directly
+   on the direct-style output (confirms the wiring, not a reimplementation
+   of Slice 1's own already-tested waypoint geometry)", {
+  ped <- data.frame(
+    id = c("P1", "P2", "C1", "C2", "C3"),
+    sire = c(NA, NA, "P1", "P1", "P1"), dam = c(NA, NA, "P2", "P2", "P2"),
+    sex = c("M", "F", "M", "F", "M"), gen = c(0L, 0L, 1L, 1L, 1L),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForest(ped, forest)
+  direct <- makePedigreeMatingLayout(ped, edgeStyle = "direct")
+  expected <- .addRectilinearWaypoints(direct$nodes, direct$edges, forest,
+                                        pos)
+
+  result <- makePedigreeMatingLayout(ped, edgeStyle = "rectilinear")
+  expect_equal(result$nodes, expected$nodes)
+  expect_equal(result$edges, expected$edges)
+  expect_equal(result$duplicateToReal, direct$duplicateToReal)
+  expect_true(any(grepl("^__drop_|^__bar_", result$nodes$id)))
+})
+
+test_that(
+  "makePedigreeMatingLayout on the full real 375-individual bundled
+   fixture produces exactly 1,375 nodes under edgeStyle = \"rectilinear\"
+   (design doc's node-count re-measurement gate, re-confirmed through the
+   actual public entry point, not just Slice 1's internal helper)", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  result <- makePedigreeMatingLayout(ped, edgeStyle = "rectilinear")
+  expect_equal(nrow(result$nodes), 1375L)
+  expect_false(any(is.na(result$nodes$x)))
+  expect_false(any(is.na(result$nodes$y)))
+})
