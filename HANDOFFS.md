@@ -72,7 +72,7 @@ key_files: docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd (new
 gotchas: WebFetch on an RPubs URL returns only the page shell -- find the real content via the page's own <iframe src="//rstudio-pubs-static.s3.amazonaws.com/..."> and fetch that directly. Raw chromote::ChromoteSession + Page$captureScreenshot() reliably returns a BLANK image for vis.js canvas widgets in a static self-contained HTML file (tested extensively, 2 documents) -- only shinytest2::AppDriver$get_screenshot() against a LIVE Shiny app worked; try webshot2 (not installed) before more chromote attempts next time. .positionMatingUnitForest()'s founder-ordering does not reposition a marry-in founder near their actual mate's generation row -- if fixing, the likely direction is pulling the marry-in parent's own x/y to their mating unit's row.
 runtime_smoke: n/a -- research document, no R/ or tests/ files changed. Verified via quarto render (0 errors) and pixel-for-pixel visual comparison of the kinship2 reference plots against the source page's own images.
 changelog_ref: CHANGELOG.md 2026-08-03 [issue #142] entry (Session 463)
-commit: pending
+commit: 9439c4c7
 ```
 
 ```handoff
