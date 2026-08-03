@@ -72,7 +72,7 @@ key_files: vignettes/a2interactive.Rmd:344-491 (full "Pedigree Diagram" section 
 gotchas: A vignette section can be accurate when written and go stale from a DIFFERENT, later session's change even when that later session's own documentation checklist ran correctly -- the checklist's named files are not automatically the complete set of files making a claim about the changed behavior (Learning 458); when changing a Shiny module's render/data function, grep the whole repo for the old function's name and for "reproduces...exactly"/"identically" phrasing. gh run view --log-failed/--log returned empty output for this CI run for unclear reasons; gh api repos/<owner>/<repo>/actions/jobs/<job_id>/logs worked directly and is the reliable fallback. This project's shinytest2 E2E tier only runs on a SCHEDULED GitHub Actions workflow, not on push, not in the local regression suite, and not in devtools::check() -- a session's ad hoc Phase 3E verification does not exercise this permanently-committed test file, so a regression here can ship silently until the next scheduled run. All S461 gotchas still apply.
 runtime_smoke: n/a -- docs-only (no R/ or tests/ files changed). Verified via rmarkdown::render() (succeeds, correct chunk output) and devtools::check() (0 errors, 1 pre-existing warning, 1 pre-existing note, 0 new, exact baseline match).
 changelog_ref: CHANGELOG.md 2026-08-03 entries (Session 462, 2 entries: the a2interactive.Rmd fix, and the lint/CI housekeeping investigations)
-commit: pending
+commit: ddb2b1c1
 ```
 
 ```handoff
