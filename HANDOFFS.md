@@ -62,16 +62,16 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S466
 date: 2026-08-03
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Clean up the accumulated lintr::lint_package() warnings (BACKLOG.md, found S462) -- now the owner-directed sequencing gate on issue #142 completion.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- all 41 pre-existing lintr::lint_package() warnings across the 16 tracked files fixed (REFACTOR-only, owner-approved TDD gate). Satisfies the owner-directed sequencing gate on issue #142 Slice 2 (now unblocked).
+what_was_done: lintr::lint_package() confirmed 41/16 (not 45/17 -- the untracked iCloud duplicate R/modMarkerGenetics 2.R contributes 4, correctly out of scope). Fixed in 4 checkpoint commits (<=4 files each): line wraps; paste(collapse=", ")->toString() where the separator matched (identical() spot-checked); strsplit(x,"/")->fixed=TRUE (spot-checked); bare numeric literals ->.0/L suffix; one paste(sep="/")->paste0() (not a file path, a genotype string -- file.path() would have been wrong). Found and corrected a real error in my own earlier scope framing: the nonportable_path_linter hits are false positives on a plain label string ("Other / Unrecorded") containing "/", not a path -- suppressed via nolint, not "fixed". Found 4 more false positives: commented_code_linter flagged live design-rationale comments (issues #125/#127/#132) embedding real R expressions in prose -- suppressed via nolint blocks, not deleted. Left R/markerKinship.R:17 (the published KING-robust \deqn{} formula, Manichaikul et al. 2010) untouched and suppressed via a new .lintr per-line exclusion instead of risking corrupting a citation-critical formula. devtools::document() run twice; 3 known iCloud-duplicate-corrupted .Rd files reverted each time; 4 legitimate .Rd regenerations kept. Commits: 9883494f, f0d0c75c, 1957a65b, 23688365.
+next_steps: (a) Issue #142 Slice 2, now UNBLOCKED (BACKLOG.md, READY, Effort M) -- S465's handoff already scoped this in full; unchanged. (b) NEW: wire a process fix so lintr debt stops re-accumulating (READY, Effort S-M, split off this session). (c) Everything else carried from S462-465 unchanged: test-e2e-pedigree-module.R fix, founder-positioning defect, iCloud relocation still pending, stale screenshot, the 6-word spelling-drift NOTE (NOT fixed this session), NPRC outreach, LabKey, S445 question, data-model-gated issues, untracked PDFs, renv.lock diff (8 sessions), 2 untracked .html byproducts under docs/planning/.
+key_files: BACKLOG.md (lint item split DONE (a) + open (b); #142 gate note), CHANGELOG.md, PROJECT_LEARNINGS.md Learning 461, CLAUDE.md (460->461), .lintr (new R/markerKinship.R:17 exclusion), 12 R/*.R files across 4 commits, 4 regenerated man/*.Rd files.
+gotchas: 6 lines across 3 files carry documented # nolint suppressions for genuine lintr false positives -- preserve if those files are edited again, the heuristic will refire otherwise. .lintr's new per-line exclusion (R/markerKinship.R line_length_linter line 17) must have its line number updated if that file's @details section shifts. devtools::install() in this renv setup needs upgrade=FALSE, not upgrade="never". shinytest2::AppDriver via system.file("shinytest", package="nprcgenekeepr") needs BOTH NPRC_RUN_E2E=true AND NOT_CRAN=true -- without NOT_CRAN it aborts with an opaque "Reason: On CRAN", undocumented until now. AppDriver's log method is get_logs() (plural); get_screenshot()'s screenshot_args must not be FALSE. All prior iCloud .Rd corruption gotchas still apply.
+runtime_smoke: Phase 3E run via shinytest2::AppDriver against the real installed app across all 4 touched-module tabs (Genetic Value Analysis, Marker Genetics, Breeding Groups, Pedigree Browser): 0 shiny-output-error DOM elements, 0 SEVERE console log entries (44 total), numericInput cutoff values and fileInput accept attribute confirmed byte-identical to pre-edit rendered output.
+changelog_ref: CHANGELOG.md 2026-08-03 [BL-lintCleanup] entry (Session 466)
 commit: pending
 ```
 

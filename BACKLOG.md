@@ -423,35 +423,57 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       planned repository relocation had NOT yet happened (`pwd` still
       resolves to the original iCloud-synced path) -- this item cannot be
       closed until the move actually completes.
-- [ ] **Accumulated `lintr::lint_package()` warnings, 45 total across 17
-      files** (found S462, Effort M -- **owner-directed sequencing gate,
-      2026-08-03: must be completed before the pedigree drawing feature
-      (issue #142) is considered complete and pushed** -- pick this up before
-      or alongside issue #142 Slice 2, not after) -- past sessions have only
-      kept their
-      OWN new code lint-clean (e.g. S461's "9 new lint warnings... fixed"),
-      not swept pre-existing debt, so it has accumulated silently (not
-      visible in `devtools::check()`, which does not run `lintr`). Current
-      breakdown by linter: `line_length_linter` (17), `paste_linter` (9),
-      `fixed_regex_linter` (6), `commented_code_linter` (4),
-      `implicit_integer_linter` (4), `unnecessary_concatenation_linter` (3),
-      `nonportable_path_linter` (2, both from the iCloud duplicate-file
-      artifact above -- resolves itself with that item). Heaviest files:
-      `R/modMarkerGenetics.R` (6), `R/makePedigreeDiagramData.R` (5),
-      `R/markerHeterozygosity.R` (5), `R/checkMarkerGenotypeFile.R` (4),
-      `R/modGeneticValue.R` (4) -- concentrated in the issue #130
-      marker-genetics family (Sessions 442-447), suggesting that family's
-      own close-out lint pass was scoped to each slice's new code, not a
-      full-package sweep. Two distinct asks: **(a)** a session to clean up
-      the existing 45 (probably several sessions' worth if kept small per
-      `SAFEGUARDS.md`'s blast-radius limits); **(b)** a process fix so lint
-      debt stops accumulating going forward -- e.g. wiring `lintr::lint_package()`
-      into CI (this repo already runs a scheduled `shinytest2` GitHub Actions
-      workflow, so a lint-check job is a precedent-consistent addition) and/or
-      promoting `CLAUDE.md`'s existing "keep changed files lint-clean" guidance
-      from a per-session norm into an explicit Phase 3F close-out check. The
-      exact mechanism (CI gate vs. close-out checklist vs. both) is a decision
-      for whichever session picks this up, not decided here.
+- [x] **Accumulated `lintr::lint_package()` warnings, 45 total across 17
+      files** (found S462, Effort M) -- **part (a) DONE -- S466
+      (2026-08-03):** swept clean, satisfying the owner-directed sequencing
+      gate on issue #142 (2026-08-03: "must be completed before the pedigree
+      drawing feature is considered complete and pushed"). All 41 warnings
+      across the 16 TRACKED files fixed in 4 checkpoint commits (<=4 files
+      each), REFACTOR-only per `PROJECT_LEARNINGS.md`'s `[refactor-only]`
+      reflex (no RED/GREEN -- style-only, no new behavior). The other 4
+      warnings (of the original 45) were on the untracked iCloud-duplicate
+      `R/modMarkerGenetics 2.R` -- correctly out of scope (not part of the
+      shipped package; belongs to the iCloud-relocation item above, still
+      open). **Two lintr-heuristic false positives found and corrected in
+      the original count, not just fixed:** (1) the `nonportable_path_linter`
+      hits were NOT from the iCloud duplicate files (the S462 note above was
+      wrong on the mechanism) -- both were in the real, tracked
+      `R/makePedigreeDiagramData.R`, and on inspection were themselves also
+      false positives: the flagged string is a plain fallback LABEL
+      (`"Other / Unrecorded"`) that merely contains `/`, not a path at all.
+      (2) 4 `commented_code_linter` hits (`R/reportGV.R:195`,
+      `R/makePedigreeDiagramData.R:42`, `R/modGeneticValue.R:194,328`) were
+      live design-rationale comments (issues #125/#127/#132) that embed a
+      real R expression in prose, not dead code -- deleting them would have
+      destroyed real documentation. All 6 false positives were suppressed
+      via documented `# nolint` blocks (not deleted, not "fixed" with a
+      semantically-wrong function like `file.path()` on a non-path string).
+      One line -- `R/markerKinship.R:17`, the published KING-robust
+      estimator's `\deqn{}` LaTeX formula (Manichaikul et al. 2010) -- was
+      deliberately left over 80 chars rather than risk corrupting a
+      citation-critical formula for a stylistic gain; suppressed via a new
+      `.lintr` per-line exclusion (the project's own established mechanism)
+      instead. Full regression suite + `devtools::check()` + a live
+      `shinytest2` smoke test (4 touched-module tabs: Genetic Value
+      Analysis, Marker Genetics, Breeding Groups, Pedigree Browser; 0
+      `shiny-output-error` DOM elements, 0 SEVERE console entries) all
+      confirmed exact baseline match, 0 new warnings/notes. See
+      `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 461. **Part (b) (a
+      process fix so lint debt stops re-accumulating -- CI gate and/or a
+      Phase 3F close-out check) is NOT done and remains open** -- filed
+      below as its own item, since it's analytically separate from the
+      sweep and wasn't in this session's scope.
+- [ ] **Wire a process fix so `lintr` debt stops re-accumulating** (split
+      from the item above at its own S462 "(b)" ask, still undecided;
+      READY, Effort S-M) -- e.g. a `lintr::lint_package()` CI job (this repo
+      already runs a scheduled `shinytest2` GitHub Actions workflow, so a
+      lint-check job is a precedent-consistent addition) and/or promoting
+      `CLAUDE.md`'s existing "keep changed files lint-clean" guidance from a
+      per-session norm into an explicit Phase 3F close-out check. The exact
+      mechanism (CI gate vs. close-out checklist vs. both) is a decision for
+      whichever session picks this up, not decided here. Without this, the
+      package can silently reaccumulate lint debt the same way it did
+      between S461 and S462.
 - [ ] **Scheduled `shinytest2` E2E CI run failed -- 2 stale-assertion test
       failures in `test-e2e-pedigree-module.R`** (found S462, Effort S,
       root cause fully diagnosed) --
@@ -846,9 +868,10 @@ visNetwork-vs-kinship2 technology decision (D2), which stands as ratified.*
       See `CHANGELOG.md`.
 - [ ] **Issue #142 implementation: rectilinear mate-line/sibship-bar waypoint style
       -- Slice 2 (edgeStyle wiring + UI + live re-verification)** (READY, Effort M --
-      **gated: the "Accumulated `lintr::lint_package()` warnings" item above must be
-      completed before this feature is considered complete and pushed, per
-      owner-directed sequencing, 2026-08-03**) -- design ratified:
+      **gate satisfied S466 (2026-08-03): the owner-directed lint-cleanup
+      sequencing gate (part (a) of the "Accumulated `lintr::lint_package()`
+      warnings" item above) is now DONE; this item may proceed and be
+      pushed once complete**) -- design ratified:
       `docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md`.
       **Slice 1 (the internal waypoint-construction helper) is DONE -- S465
       (2026-08-03):** Pre-RED live-verification (a minimal `visNetwork` widget

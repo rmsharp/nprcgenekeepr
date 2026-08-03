@@ -43,6 +43,51 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-03 · [BL-lintCleanup] Clean up the accumulated `lintr::lint_package()` warnings, satisfying the owner-directed issue #142 sequencing gate (Session 466)
+- **Deliverable:** all 41 pre-existing `lintr::lint_package()` warnings across the
+  16 TRACKED files fixed (the other 4, of the original 45, were on the untracked
+  iCloud-duplicate `R/modMarkerGenetics 2.R`, correctly out of scope). REFACTOR-only
+  per `PROJECT_LEARNINGS.md`'s `[refactor-only]` reflex (style-only, no new behavior,
+  no RED/GREEN, no synthetic red) -- an owner-approved `PRE-RED->REFACTOR` TDD gate.
+  Fixed in 4 checkpoint commits (<=4 files each, `SAFEGUARDS.md` blast-radius limit):
+  `9883494f` (5 line-length-only files), `f0d0c75c` (4 files, paste/regex/wrap fixes),
+  `1957a65b` (4 marker-genetics files + a new `.lintr` per-line exclusion),
+  `23688365` (final 3 files).
+- **Two `lintr`-heuristic false-positive classes found and corrected, not just
+  fixed:** (1) `nonportable_path_linter` hits on `R/makePedigreeDiagramData.R:47,695`
+  were NOT from the iCloud duplicate files as `BACKLOG.md`'s S462 entry claimed
+  (never verified against the actual lines) -- both are in the real, tracked file,
+  and are themselves false positives on a plain fallback label string
+  (`"Other / Unrecorded"`) that merely contains `/`, not a path. (2) 4
+  `commented_code_linter` hits (`R/reportGV.R:195`, `R/makePedigreeDiagramData.R:42`,
+  `R/modGeneticValue.R:194,328`) were live design-rationale comments (issues
+  #125/#127/#132) that embed a real R expression in prose, not dead code -- would
+  have destroyed real documentation if deleted. All 6 suppressed via documented
+  `# nolint` blocks. One line (`R/markerKinship.R:17`, the published KING-robust
+  `\deqn{}` formula, Manichaikul et al. 2010) was deliberately left over 80 chars
+  rather than risk corrupting a citation-critical formula for a cosmetic gain --
+  suppressed via a new `.lintr` per-line exclusion instead.
+- **Verification:** `lintr::lint_package()` 0 warnings on all 16 tracked files
+  (after each batch and at the end); full regression suite 0 failed/0 error,
+  10 pre-existing unrelated warnings (exact S465 baseline match) after every batch;
+  `devtools::check()` exact baseline (1 pre-existing WARNING = iCloud duplicate
+  filenames, 2 pre-existing NOTEs = vignette-engine + the already-filed
+  spelling-drift item, 0 new). `devtools::document()` run after batches 3 and 4;
+  the 3 known iCloud-duplicate-corrupted `.Rd` files (`appServer.Rd`,
+  `modMarkerGeneticsServer.Rd`, `modMarkerGeneticsUI.Rd`) reverted each time
+  (Learning 454); 4 legitimate `.Rd` regenerations kept and diffed (pure reflow,
+  no content loss, the `\deqn{}` formula untouched). Live `shinytest2` smoke test
+  (Phase 3E, required -- 4 touched files back live Shiny UI): installed the package,
+  drove the real app across all 4 touched-module tabs (Genetic Value Analysis,
+  Marker Genetics, Breeding Groups, Pedigree Browser); 0 `shiny-output-error` DOM
+  elements, 0 SEVERE console log entries (44 total); confirmed the `numericInput`
+  cutoff values and the `fileInput` `accept` attribute render byte-identical to
+  pre-edit behavior.
+- **`BACKLOG.md`:** the lint-cleanup item's part (a) marked DONE; part (b) (a
+  process fix so lint debt stops re-accumulating -- CI gate and/or a close-out
+  check) split into its own open item, not done this session. Issue #142 Slice 2's
+  gate marked satisfied. See `PROJECT_LEARNINGS.md` Learning 461.
+
 ### 2026-08-03 · [ad hoc] Owner-directed sequencing: gate issue #142 completion on the accumulated lint cleanup (post-S465)
 - **Decision:** owner directed (in response to a `lintr::lint_package()` observation) that
   the "Accumulated `lintr::lint_package()` warnings, 45 total across 17 files" `BACKLOG.md`
