@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S463
+date: 2026-08-03
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Research/comparison document (docs-only) -- a Quarto document reproducing the 3 example pedigrees from https://rpubs.com/dliupress/pedigreedemo (kinship2 sample.ped families 1+2, plus a 16-person genotype-annotated pedigree) using nprcgenekeepr's own makePedigreeMatingLayout()/visNetwork rendering, alongside kinship2's own plot.pedigree() output, to support the owner's pending decision on whether to reopen issue #142 (rectilinear mate-line/sibship-bar style).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S462
 date: 2026-08-03
 status: complete

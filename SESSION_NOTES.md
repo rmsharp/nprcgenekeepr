@@ -6,6 +6,26 @@
 
 ## ACTIVE TASK
 
+### What Session 463 Did
+**Deliverable:** Research/comparison document (docs-only, no package code changed)
+-- a Quarto document reproducing the 3 example pedigrees from
+https://rpubs.com/dliupress/pedigreedemo (kinship2's own `sample.ped` family 1 +
+family 2, plus a 16-person genotype-annotated pedigree) using nprcgenekeepr's
+own current pedigree-diagram capability (`makePedigreeMatingLayout()` +
+visNetwork, matching `R/modPedigree.R`'s exact render chain), rendered
+alongside kinship2's own `plot.pedigree()` output of the identical data, to
+give the owner a direct visual basis for deciding whether to reopen issue #142
+(rectilinear mate-line/sibship-bar waypoint style). Owner-directed: "create a
+Quarto document that duplicates the drawings...using nprcgenekeepr's pedigree
+drawing capability. This will allow me to see what you saw in your
+comparisons" -- requested BEFORE deciding whether to proceed on #142. (IN
+PROGRESS)
+**Started:** 2026-08-03
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+
 ### What Session 462 Did
 **Deliverable:** Documentation fix (docs-only, no TDD gates -- issue #124/#139
 precedent) -- updated `vignettes/a2interactive.Rmd`'s "Pedigree Diagram" section
