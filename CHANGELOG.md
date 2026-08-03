@@ -43,6 +43,13 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-03 · [ad hoc] Filled in this session's own HANDOFFS.md receipt commit sha (Session 467)
+- **Deliverable:** Filled in this session's own `HANDOFFS.md` receipt
+  `commit: pending` placeholder with the real close-out commit sha
+  (`7e2e4d94`) -- the same self-correction many previous sessions (e.g.
+  S331-S344, S466) each needed, closed within the same session rather than
+  left for the next session's Phase 0 reconcile to catch and backfill.
+
 ### 2026-08-03 · [BL-e2eStaleAssertion] Fix stale `test-e2e-pedigree-module.R` assertions for the known-trio Diagram edge routing (Session 467)
 - **Deliverable:** `tests/testthat/test-e2e-pedigree-module.R:203-208`'s "known
   trio" edge assertions rewritten to match the live, already-shipped

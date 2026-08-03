@@ -72,7 +72,7 @@ key_files: tests/testthat/test-e2e-pedigree-module.R:203-215 (the fix), BACKLOG.
 gotchas: (1) This session skipped the mandatory Phase 1B claim stub (SESSION_NOTES.md stub + HANDOFFS.md status:pending, committed before any technical work) -- S465/S466 both did this explicitly, this session did not, caught only at close-out. Do not repeat. (2) __union_<n>/__dup_<realId>_<n> reserved-prefix ids (R/makePedigreeDiagramData.R:182,289) carry a construction-order-dependent numeric suffix, not a stable identity -- any future E2E assertion against these must pattern-match, never hardcode the observed literal (Learning 462). (3) All S466 gotchas (nolint suppressions, .lintr per-line exclusion, devtools::install(upgrade=FALSE), shinytest2::AppDriver needing BOTH NPRC_RUN_E2E=true AND NOT_CRAN=true, get_logs() not get_log(), iCloud .Rd corruption) still apply unchanged.
 runtime_smoke: No production/runtime code changed (test-only fix), so Phase 3E in the traditional sense does not apply -- but the live app was directly exercised twice: once via a standalone PRE-RED verification script (shinytest2::AppDriver against the real fixture) and once via the corrected test file's own AppDriver run (29/29 assertions pass), both confirming the fix matches real, not assumed, live behavior.
 changelog_ref: CHANGELOG.md 2026-08-03 [BL-e2eStaleAssertion] entry (Session 467)
-commit: pending
+commit: 7e2e4d94
 ```
 
 ```handoff
