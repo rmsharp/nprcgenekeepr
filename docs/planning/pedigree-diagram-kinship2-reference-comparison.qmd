@@ -1,0 +1,369 @@
+---
+title: "Pedigree Diagram: kinship2 Reference Comparison"
+subtitle: "Decision-support research for issue #142 (rectilinear mate-line/sibship-bar style) -- not a package vignette, not shipped"
+date: today
+format:
+  html:
+    embed-resources: true
+    toc: true
+    df-print: kable
+---
+
+## Purpose
+
+The owner asked, after seeing `nprcgenekeepr`'s live Pedigree Diagram tab
+render a real family, whether the drawing is right -- pointing at
+<https://rpubs.com/dliupress/pedigreedemo> as the reference for what a
+"correct" pedigree drawing looks like. That page uses the **kinship2** R
+package (a real, well-known pedigree-drawing package, not part of
+`nprcgenekeepr`'s own dependencies) to plot a small set of example pedigrees.
+
+This document reproduces those *exact same* example pedigrees -- same
+individuals, same parent/child/sex relationships -- using
+`nprcgenekeepr`'s own current pedigree-diagram capability
+(`makePedigreeMatingLayout()` + `visNetwork`, the identical render chain
+`R/modPedigree.R`'s Diagram tab uses today), placed directly next to
+kinship2's own rendering of the identical data. The goal is to give the owner
+a fair, apples-to-apples visual and factual basis for deciding whether (and
+how) to pursue [issue #142](https://github.com/rmsharp/nprcgenekeepr/issues/142)
+-- **no decision is made in this document, and no package code is changed.**
+
+`kinship2` is installed only into this project's local `renv` library for
+this one-off comparison (not added to `DESCRIPTION`, not snapshotted into
+`renv.lock`) -- it is reference material, not a dependency.
+
+## Setup
+
+```{r setup}
+#| message: false
+suppressWarnings(suppressMessages(library(kinship2)))
+library(nprcgenekeepr)
+library(visNetwork)
+```
+
+### Helper: convert a kinship2-style data frame to nprcgenekeepr's pedigree format
+
+kinship2's own examples use `id`/`father`/`mother`/`sex` with `0` meaning "no
+parent" and `sex` coded `1` = male, `2` = female. `nprcgenekeepr` uses
+`id`/`sire`/`dam`/`sex` (`"M"`/`"F"`/`"H"`/`"U"`, `NA` for no parent) plus a
+`gen` column from its own exported `findGeneration()`. `convertSexCodes()` --
+already exported by `nprcgenekeepr` -- converts kinship2's `1`/`2` codes
+directly.
+
+```{r helper-convert}
+to_nprc_ped <- function(id, father, mother, sex) {
+  ped <- data.frame(
+    id = as.character(id),
+    sire = ifelse(father == 0, NA_character_, as.character(father)),
+    dam = ifelse(mother == 0, NA_character_, as.character(mother)),
+    sex = as.character(convertSexCodes(sex)),
+    stringsAsFactors = FALSE
+  )
+  ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
+  ped
+}
+```
+
+### Helper: render via nprcgenekeepr, matching `R/modPedigree.R`'s exact current chain
+
+```{r helper-render}
+render_nprc_diagram <- function(ped) {
+  layout <- makePedigreeMatingLayout(ped)
+  visNetwork::visNetwork(layout$nodes, layout$edges) |>
+    visNetwork::visPhysics(enabled = FALSE) |>
+    visNetwork::visNodes(physics = FALSE) |>
+    visNetwork::visEdges(smooth = FALSE) |>
+    visNetwork::visLegend(
+      addNodes = data.frame(
+        label = c(
+          "Female", "Male", "Hermaphrodite", "Unknown", "Other / Unrecorded"
+        ),
+        shape = c("dot", "square", "star", "triangle", "diamond"),
+        stringsAsFactors = FALSE
+      ),
+      useGroups = FALSE, position = "right", main = "Sex",
+      width = 0.28, stepY = 65L
+    ) |>
+    visNetwork::visOptions(
+      nodesIdSelection = list(
+        enabled = TRUE,
+        values = layout$nodes$id[
+          !grepl("^__union_|^__dup_", layout$nodes$id)
+        ]
+      ),
+      highlightNearest = list(enabled = TRUE, hover = TRUE, degree = 1L,
+                               algorithm = "all")
+    )
+}
+```
+
+## How to read each example
+
+For each pedigree below:
+
+1. **kinship2's own rendering** (`plot.pedigree()`) -- the reference
+   convention: mates joined by a horizontal line at their own level; from its
+   midpoint, a vertical line drops to a horizontal sibship bar; each child
+   rises to meet that bar with its own vertical line. Strict right angles,
+   generations in clean rows.
+2. **nprcgenekeepr's current rendering** -- the exact code path
+   `R/modPedigree.R`'s Diagram tab runs today, fed the *identical* data.
+
+## Example 1: `sample.ped` family 2 (14 people, no multi-mate individuals)
+
+The cleanest comparison -- a single 3-generation family tree with no
+duplicated/multi-mate individuals, so the ONLY variable being compared is the
+mate-line/sibship-bar edge-routing convention itself.
+
+```{r fam2-data}
+data(sample.ped)
+fam2 <- sample.ped[sample.ped$ped == 2, ]
+nprcPed2 <- to_nprc_ped(fam2$id, fam2$father, fam2$mother, fam2$sex)
+nprcPed2
+```
+
+### kinship2
+
+```{r fam2-kinship2}
+#| fig-width: 9
+#| fig-height: 5
+ped2 <- kinship2::pedigree(
+  id = fam2$id, dadid = fam2$father, momid = fam2$mother, sex = fam2$sex
+)
+plot(ped2)
+title(main = "kinship2::plot.pedigree() -- sample.ped family 2")
+```
+
+### nprcgenekeepr
+
+```{r fam2-nprc}
+render_nprc_diagram(nprcPed2)
+```
+
+**Finding -- a founder-positioning defect (distinct from the edge-routing
+question below):** in this rendering, `203` (a founder with no recorded
+parents, who mates with `204`, a *daughter* of `201`x`202`, generation 1)
+visually reads as if `201` and `203` -- two males -- are the mated pair. This
+is confirmed in the actual layout data, not just an impression:
+
+```{r fam2-defect-evidence}
+layout2 <- makePedigreeMatingLayout(nprcPed2)
+n2 <- layout2$nodes[layout2$nodes$y == 0, c("id", "x", "y")]
+n2[order(n2$x), ]
+```
+
+At `y = 0` (the founders' own row), left to right: `202` (x = -360), `203`
+(x = -240), `__union_1` (x = -180, the true midpoint of `201`x`202`'s own
+mate-line), `201` (x = 0). `203` sits physically *inside* the visual span of
+`201`x`202`'s own mate connector, even though `203` has no relationship to
+either of them -- his real mate union (with `204`) is a full generation
+row below (`y = 150`), reached by one long edge that crosses back up through
+this row. Root cause and a second, independent confirmation (family 1, ids
+`116`/`117`) are discussed after Example 2 below.
+
+## Example 2: `sample.ped` family 1 (41 people, includes real multi-mate individuals)
+
+A larger, more complex family. kinship2's own layout duplicates 2 individuals
+here (ids `103` and `138`) purely for layout/crossing-minimization reasons --
+each has only ONE mate, but their own birth family is drawn far from their
+marital family in kinship2's linear ordering, so kinship2 draws them twice
+(dashed line connecting the two occurrences) to avoid a long crossing line.
+Individual `113` has no mate and no children, so kinship2's own plot silently
+omits it ("Did not plot the following people: 113").
+
+```{r fam1-data}
+fam1 <- sample.ped[sample.ped$ped == 1, ]
+nprcPed1 <- to_nprc_ped(fam1$id, fam1$father, fam1$mother, fam1$sex)
+nrow(nprcPed1)
+any(is.na(nprcPed1$gen))
+```
+
+### kinship2
+
+```{r fam1-kinship2}
+#| fig-width: 11
+#| fig-height: 7
+ped1 <- kinship2::pedigree(
+  id = fam1$id, dadid = fam1$father, momid = fam1$mother, sex = fam1$sex
+)
+plot(ped1)
+title(main = "kinship2::plot.pedigree() -- sample.ped family 1")
+```
+
+### nprcgenekeepr
+
+```{r fam1-nprc}
+layout1 <- makePedigreeMatingLayout(nprcPed1)
+cat(
+  "nodes:", nrow(layout1$nodes),
+  " edges:", nrow(layout1$edges),
+  " duplicate occurrences:", length(layout1$duplicateToReal), "\n"
+)
+render_nprc_diagram(nprcPed1)
+```
+
+**Observation:** `nprcgenekeepr`'s current duplicate mechanism is narrower in
+scope than kinship2's. `nprcgenekeepr` only duplicates an individual who has
+*multiple mating units of their own* (a real multi-mate case); it has no
+mechanism to duplicate a single-mate individual purely to shorten a long
+layout-crossing edge the way kinship2 does for `103`/`138` here. That is why
+`nprcgenekeepr` produces **zero** duplicate nodes for this family (confirmed
+above), even though kinship2 produces two. Individual `113` still gets its own
+node in `nprcgenekeepr`'s output (never silently dropped), unlike kinship2's
+own behavior.
+
+**The founder-positioning defect found in Example 1 recurs here too**,
+confirming it is a systematic pattern, not a one-off quirk of that synthetic
+example. `117` is a founder (no recorded parents) who mates with `116`
+(a *daughter* of `105`x`106`, generation 1) -- the identical shape as
+`203`/`204` above:
+
+```{r fam1-defect-evidence}
+e1 <- layout1$edges
+into_union <- e1[grepl("^__union_", e1$to), ]
+u <- into_union$to[into_union$from == "116"]
+n1 <- layout1$nodes[layout1$nodes$y == 0, c("id", "x", "y")]
+n1[n1$id %in% c("105", "106", "117", u), ][order(n1[n1$id %in% c("105", "106", "117", u), "x"]), ]
+```
+
+`117` (a founder, own generation 0) is placed at the SAME row as `105`/`106`,
+landing physically between `106` and `105`x`106`'s own mate connector --
+exactly the same illusion as `201`/`203` in Example 1, this time suggesting
+`105` and `117` (or `106` and `117`) are connected when neither is. `117`'s
+actual mate union (with `116`) sits a full row below, at `y = 150`.
+
+**Root cause (not fixed here -- flagged for a future session, not part of
+this document's scope):** `.positionMatingUnitForest()` places a mating
+unit's row at the generation of its *tree-native* parent (the one whose own
+subtree the recursion is already walking -- here, `204`/`116`, each a real
+child elsewhere in the tree) but does not correspondingly move the *other*,
+marry-in parent (`203`/`117`, a founder with no tree-native position of their
+own) down to that same row. The marry-in parent keeps their own, earlier
+generation row, where they can land inside an unrelated couple's mate-line
+span. **This is independent of the #142 edge-routing style question below --
+it is a defect in the underlying x/y coordinate ASSIGNMENT, not in how edges
+are drawn between already-placed nodes**, so it would remain a problem even
+under a fully rectilinear implementation of #142. A founder marrying into a
+family at a generation other than their own is an ordinary, common case in
+real breeding-colony pedigrees, not a synthetic-data curiosity -- this
+warrants its own investigation regardless of the #142 decision.
+
+**Separately, not a defect:** every node in every rendering above uses the
+same solid fill color, regardless of any affected-status value. This is not
+"everyone is marked affected" -- `nprcgenekeepr`'s diagram has no
+affected-status encoding at all today (tracked: issue #133); the uniform
+color is simply vis.js's own default node styling with nothing overriding it.
+kinship2's convention (unfilled = normal, filled = affected) has no analog
+here yet, so this document's kinship2 renderings using `affected =` (Example
+3 below) will show filled/unfilled contrast that the corresponding
+`nprcgenekeepr` rendering cannot -- by omission, not by error.
+
+## Example 3: 16-person genotype-annotated pedigree (a real multi-mate case)
+
+The rpubs page's third example (originally following a separate
+"Pedigree-drawing with R and graphviz" article) -- individual `2` has TWO
+mates (`3` and `10`), a genuine multi-mate case that exercises
+`nprcgenekeepr`'s own duplicate-node mechanism directly. This is the raw data
+table as printed on the reference page (transcribed verbatim, including its
+`aff`/genotype columns used only for the kinship2 reference plot below --
+`nprcgenekeepr`'s current Diagram tab has no analog for affected-status or
+genotype-label annotation; see issues
+[#133](https://github.com/rmsharp/nprcgenekeepr/issues/133) (affected/
+phenotype/genotype status) and the Marker Genetics tab (a separate, non-diagram
+feature) for genotype data specifically).
+
+```{r geno-data}
+geno <- data.frame(
+  id = 1:16,
+  fid = c(2, 0, 0, 2, 2, 2, 2, 0, 8, 0, 2, 2, 0, 13, 0, 15),
+  mid = c(3, 0, 0, 3, 3, 3, 3, 0, 4, 0, 10, 10, 0, 11, 0, 12),
+  sex = c(2, 1, 2, 2, 2, 1, 2, 1, 1, 2, 2, 2, 1, 1, 1, 2),
+  aff = c(2, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1),
+  GABRB1 = c(
+    "7/7", "-/-", "7/9", "7/9", "7/7", "7/7", "7/7", "-/-",
+    "7/9", "-/-", "7/7", "6/7", "-/-", "7/8", "-/-", "6/6"
+  ),
+  D4S1645 = c(
+    "7/10", "-/-", "3/10", "3/7", "7/10", "7/10", "7/10", "-/-",
+    "3/10", "-/-", "7/7", "7/7", "-/-", "7/8", "-/-", "7/7"
+  ),
+  stringsAsFactors = FALSE
+)
+geno
+nprcPed3 <- to_nprc_ped(geno$id, geno$fid, geno$mid, geno$sex)
+nprcPed3
+```
+
+### kinship2 (with its own affected-status + genotype-label annotation)
+
+```{r geno-kinship2}
+#| fig-width: 10
+#| fig-height: 6
+ped3 <- kinship2::pedigree(
+  id = geno$id, dadid = geno$fid, momid = geno$mid, sex = geno$sex,
+  affected = geno$aff
+)
+strid <- paste(geno$id, geno$GABRB1, geno$D4S1645, sep = "\n")
+par(xpd = TRUE)
+plot(ped3, id = strid)
+title(main = "kinship2::plot.pedigree() -- genotype-annotated pedigree")
+```
+
+### nprcgenekeepr
+
+```{r geno-nprc}
+layout3 <- makePedigreeMatingLayout(nprcPed3)
+cat(
+  "nodes:", nrow(layout3$nodes),
+  " edges:", nrow(layout3$edges),
+  " duplicate occurrences:", length(layout3$duplicateToReal), "\n"
+)
+layout3$duplicateToReal
+render_nprc_diagram(nprcPed3)
+```
+
+**Observation:** for this genuine multi-mate case (individual `2`, mates `3`
+and `10`), kinship2 draws `2` **once**, with two separate mate-lines (to `3`
+and to `10`) meeting at the same node. `nprcgenekeepr`'s current algorithm
+instead **duplicates** `2` (one occurrence anchoring the `2`x`3` mating unit,
+a second `__dup_2_1` occurrence anchoring the `2`x`10` mating unit, connected
+by a dashed line) -- this is `nprcgenekeepr`'s existing, already-shipped
+duplicate-node convention working as designed, just visibly different from
+kinship2's own single-node-two-mate-lines approach.
+
+## Summary of factual differences observed
+
+| Aspect | kinship2 (reference) | nprcgenekeepr (current, shipped) |
+|---|---|---|
+| Sex shapes | square = male, circle = female (this dataset only exercises 2 of kinship2's sex codes) | dot = Female, square = Male, star = Hermaphrodite, triangle = Unknown, diamond = Other/Unrecorded (5 shapes) |
+| Mate connection | horizontal line directly between the two mates, at their shared row | a small, separate "mating-unit" node (a dot), connected to each parent by its own edge |
+| Parent(s) -> children edge | vertical drop from the mate-line's midpoint to a horizontal sibship bar, then vertical drops to each child -- strict right angles throughout | straight (diagonal, unless coordinates happen to align) edges from each parent to the mating-unit node, and from the mating-unit node to each child |
+| Generations | strict horizontal rows | rows by generation number, but the diagonal edges make row alignment visually less obvious |
+| Individual with multiple mates | drawn once, with one mate-line per mate | duplicated once per mating unit beyond the first (anchor), connected by a dashed line |
+| Individual needed twice for layout/crossing reasons only (single mate, distant birth family) | duplicated, dashed line | not duplicated -- no mechanism for this case currently exists |
+| Isolated individual (no mate, no children) | silently omitted from the plot | still rendered as its own node |
+| Affected/phenotype status | filled shape | not supported on the diagram (tracked: issue #133) |
+| Twin/zygosity encoding | a relationship-code triangle connector | not supported on the diagram (tracked: issue #137) |
+| Genotype labels on nodes | supported via a custom `id=` label string | not supported on the diagram (a separate Marker Genetics tab covers genotype-based analysis, not diagram annotation) |
+| Founder who mates into a later generation (e.g. `203`x`204`, `117`x`116`) | positioned adjacent to their actual mate's row | positioned at their OWN generation row -- can land inside an unrelated couple's mate-line, visually implying the wrong pairing (**confirmed defect**, both example families above) |
+
+**Two different kinds of gap are visible here, and they should not be
+conflated:**
+
+1. **A styling/convention gap (issue #142's scope):** kinship2's strict
+   horizontal-then-vertical mate-line/sibship-bar routing versus
+   `nprcgenekeepr`'s current direct diagonal edges to/from a small connector
+   node. This is a "how do already-correctly-placed nodes get connected"
+   question.
+2. **A confirmed positioning defect (independent of #142, found while
+   preparing this document):** a founder who mates into a later generation
+   is placed at the wrong row entirely, which can make the diagram visually
+   imply an incorrect mating pair. This is a "where do nodes get placed in
+   the first place" question -- it exists regardless of how the edges
+   connecting them are eventually drawn, and reproduces in both of
+   kinship2's own reference families, not just a contrived case.
+
+The duplicate-individual differences (narrower trigger condition than
+kinship2's; no single-node-multiple-mate-line support) are a third, related
+but analytically separate question. No resolution is recommended for any of
+the three in this document -- it exists to inform that decision, not make it.

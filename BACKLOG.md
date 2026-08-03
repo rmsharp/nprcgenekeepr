@@ -792,6 +792,39 @@ visNetwork-vs-kinship2 technology decision (D2), which stands as ratified.*
       live pipeline; both are correct, self-consistent applications of the
       same algorithm to different (valid) row orders. See `CHANGELOG.md`,
       `PROJECT_LEARNINGS.md` Learning 457, design doc §9.)
+- [ ] **Founder-positioning defect: a founder who mates into a LATER
+      generation renders at the wrong row, visually implying the wrong
+      pairing** (DECISION NEEDED -- root cause identified, fix not designed,
+      Effort M, found S463) -- confirmed via
+      `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`,
+      prompted by an owner observation on that document's own Example 1
+      rendering ("it appears 2 males have mated"). `.positionMatingUnitForest()`
+      places a mating unit's row at its tree-native parent's generation, but
+      does not correspondingly move the OTHER, marry-in parent (a founder with
+      no tree-native position of their own) down to that row -- the marry-in
+      founder keeps their own, earlier generation row, where they can land
+      physically inside an unrelated couple's own mate-line span. Confirmed via
+      actual node/edge coordinates (not impression) in TWO independent cases:
+      kinship2's `sample.ped` family 2 (`203`x`204`) and family 1 (`117`x`116`).
+      This is a defect in x/y coordinate ASSIGNMENT, not in edge-drawing style
+      -- **independent of and would survive** a full issue #142 (rectilinear
+      mate-line/sibship-bar) implementation. A founder marrying into a family
+      at a generation other than their own is an ordinary, common case in real
+      breeding-colony pedigrees, not a synthetic-data curiosity, so this likely
+      also affects real live-app renderings, not just the comparison document's
+      synthetic examples -- not yet confirmed against a real bundled fixture.
+      Not fixed this session (root-cause diagnosis + a documented, reproducible
+      demonstration only, per the owner's own request scope). A future session
+      should: (a) confirm/characterize this against a real bundled fixture
+      (e.g. `obfuscated_rhesus_mhc_ped.csv`) to gauge how often it occurs in
+      practice; (b) design a fix (likely: pull the marry-in parent's own x/y to
+      their mating unit's row, mirroring how kinship2's own alignment algorithm
+      handles this) via a proper plan-mode session, since it touches the same
+      `.positionMatingUnitForest()` D3/D4/D5 logic Slices 1/2 already shipped
+      and tested; (c) decide whether to track as its own GitHub issue or fold
+      into #142's scope -- they are related (both concern the Pedigree Diagram
+      Option 2 layout) but analytically separate (placement vs. edge style).
+      See `CHANGELOG.md`.
 
 ## Outreach
 - [ ] **NPRC outreach & announcement plan** (DECISION NEEDED -- owner review/edit of

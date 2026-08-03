@@ -62,16 +62,16 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S463
 date: 2026-08-03
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Research/comparison document (docs-only) -- a Quarto document reproducing the 3 example pedigrees from https://rpubs.com/dliupress/pedigreedemo (kinship2 sample.ped families 1+2, plus a 16-person genotype-annotated pedigree) using nprcgenekeepr's own makePedigreeMatingLayout()/visNetwork rendering, alongside kinship2's own plot.pedigree() output, to support the owner's pending decision on whether to reopen issue #142 (rectilinear mate-line/sibship-bar style).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: DONE -- docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd reproduces kinship2's reference pedigrees (sample.ped families 1+2, a 16-person genotype pedigree) via nprcgenekeepr's own makePedigreeMatingLayout()/visNetwork rendering alongside kinship2::plot.pedigree(), for the pending #142 decision. PLUS a confirmed, independent positioning defect found via a live owner observation on the document's own output.
+what_was_done: Investigated the owner's rpubs-vs-live-app observation (from S462's tail end): WebFetch returned only the RPubs page shell, so found and curl'd the real S3-hosted content directly, extracted its embedded images, and got a live shinytest2 AppDriver screenshot of the real app for a fair comparison -- confirmed the style gap is the already-deferred issue #142. Owner then asked for a Quarto reproduction before deciding. Installed kinship2 via renv::install() (local library only, renv.lock unaffected) to get its exact sample.ped data rather than transcribing from pixels; built a convertSexCodes()-based converter to nprcgenekeepr's format and a render helper matching R/modPedigree.R's exact current visNetwork pipe. Built and rendered the .qmd via quarto render; caught and fixed a real transcription typo via an actual kinship2::pedigree() validation error; visually confirmed the corrected kinship2 plots match the reference images pixel-for-pixel. Owner then reported the family-2 rendering looked like "2 males mated" and all nodes looked "affected" -- investigated concretely (actual makePedigreeMatingLayout() node coordinates) rather than assuming misreading: confirmed a real, systematic positioning defect (a founder mating into a later generation is placed at their own generation row, landing inside an unrelated couple's mate-line) reproducing in BOTH example families (203/204 and 117/116); confirmed the "affected" impression is not a defect (no color/affected-status logic exists in the source at all). Updated the .qmd with prominent, coordinate-evidenced findings sections and an updated 3-way summary table; filed the positioning defect to BACKLOG.md (DECISION NEEDED, Effort M). Commit: pending (this receipt commits with the close-out).
+next_steps: (a) The pending #142 decision (whether/how to implement the rectilinear mate-line/sibship-bar style), now informed by this document plus 2 more findings. (b) NEW, DECISION NEEDED: the founder-positioning defect -- confirm against a real bundled fixture, design a fix (likely pulling the marry-in parent's x/y to their mating-unit row), decide whether to track as its own issue or fold into #142. (c) Everything carried from S462: fix test-e2e-pedigree-module.R:205,207 (READY), lint cleanup (READY), confirm repo relocation status, NPRC outreach (DECISION NEEDED), LabKey (BLOCKED), S445 methodology question, issues #133/#136/#137/#141, 2 untracked reference PDFs, renv.lock diff (5 sessions now).
+key_files: docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd (new), BACKLOG.md (new founder-positioning-defect item), CHANGELOG.md (S463 entry). No R/ or tests/ files touched.
+gotchas: WebFetch on an RPubs URL returns only the page shell -- find the real content via the page's own <iframe src="//rstudio-pubs-static.s3.amazonaws.com/..."> and fetch that directly. Raw chromote::ChromoteSession + Page$captureScreenshot() reliably returns a BLANK image for vis.js canvas widgets in a static self-contained HTML file (tested extensively, 2 documents) -- only shinytest2::AppDriver$get_screenshot() against a LIVE Shiny app worked; try webshot2 (not installed) before more chromote attempts next time. .positionMatingUnitForest()'s founder-ordering does not reposition a marry-in founder near their actual mate's generation row -- if fixing, the likely direction is pulling the marry-in parent's own x/y to their mating unit's row.
+runtime_smoke: n/a -- research document, no R/ or tests/ files changed. Verified via quarto render (0 errors) and pixel-for-pixel visual comparison of the kinship2 reference plots against the source page's own images.
+changelog_ref: CHANGELOG.md 2026-08-03 [issue #142] entry (Session 463)
 commit: pending
 ```
 

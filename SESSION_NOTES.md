@@ -7,24 +7,206 @@
 ## ACTIVE TASK
 
 ### What Session 463 Did
-**Deliverable:** Research/comparison document (docs-only, no package code changed)
--- a Quarto document reproducing the 3 example pedigrees from
+**Deliverable:** Research/comparison document (docs-only, no package code
+changed) -- `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`,
+reproducing the 3 example pedigrees from
 https://rpubs.com/dliupress/pedigreedemo (kinship2's own `sample.ped` family 1 +
 family 2, plus a 16-person genotype-annotated pedigree) using nprcgenekeepr's
 own current pedigree-diagram capability (`makePedigreeMatingLayout()` +
 visNetwork, matching `R/modPedigree.R`'s exact render chain), rendered
 alongside kinship2's own `plot.pedigree()` output of the identical data, to
 give the owner a direct visual basis for deciding whether to reopen issue #142
-(rectilinear mate-line/sibship-bar waypoint style). Owner-directed: "create a
-Quarto document that duplicates the drawings...using nprcgenekeepr's pedigree
-drawing capability. This will allow me to see what you saw in your
-comparisons" -- requested BEFORE deciding whether to proceed on #142. (IN
-PROGRESS)
-**Started:** 2026-08-03
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are
-recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
-breadcrumb for the next session's reconcile.
+(rectilinear mate-line/sibship-bar waypoint style). PLUS, mid-session, a
+**confirmed genuine positioning defect** found in direct response to an owner
+observation on the document's own output -- independent of the #142 question.
+**Started/Completed:** 2026-08-03 / 2026-08-03
+**Status:** DONE.
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Continuing directly from S462 in the same
+conversation, the owner (before answering S462's close-out `AskUserQuestion`
+picker) reported the live app's Diagram tab didn't match
+<https://rpubs.com/dliupress/pedigreedemo>. Investigated rather than assumed:
+`WebFetch` on the rpubs URL returned only the page shell (no real content --
+RPubs serves the actual document via an iframe to a separate S3-hosted static
+HTML host); found and fetched that underlying URL directly via `curl`,
+extracted its 4 embedded base64 PNG images, and viewed them -- confirming the
+reference's mate-line/sibship-bar right-angle convention. Got a LIVE
+screenshot of the actual current app (via `shinytest2::AppDriver`, uploading
+the real `obfuscated_rhesus_mhc_ped.csv` fixture, trimming to the `GA204Z`/
+`8LKBV9` loop, navigating to the Diagram tab) for a fair, real comparison --
+confirmed the owner's observation: current output uses diagonal edges to/from
+a small union-node, not kinship2's strict horizontal-mate-line +
+vertical-sibship-bar routing. Explained this is a known, deliberately deferred
+gap (issue #142) with real feasibility research already done
+(`docs/planning/pedigree-diagram-mating-lines-plan.md`: vis.js cannot draw a
+true right-angle edge without added invisible waypoint nodes). Presented an
+`AskUserQuestion` on how to proceed (design session / discuss scope / other);
+the owner instead asked for this comparison document BEFORE deciding. **(2)**
+Claimed the session (stub + `HANDOFFS.md` `status: pending` receipt). **(3)**
+Fetched the rpubs page's exact underlying R code and printed data tables
+(the raw HTML text, not just the images) to get authoritative, exact pedigree
+data rather than transcribing from pixels: kinship2's own `sample.ped` dataset
+(fetched by installing `kinship2` via `renv::install()` into this project's
+local renv library ONLY -- not added to `DESCRIPTION`, not snapshotted into
+`renv.lock`, confirmed `renv.lock` unchanged) for families 1 and 2, plus a
+16-person genotype-annotated pedigree hand-transcribed from the page's own
+printed `cat test.pre` table. **(4)** Built a `convertSexCodes()`-based
+converter from kinship2's `id`/`father`/`mother`/`sex` (1/2 numeric) format to
+nprcgenekeepr's own `id`/`sire`/`dam`/`sex` (M/F)/`gen` format
+(`findGeneration()`), and a render helper reproducing `R/modPedigree.R`'s
+EXACT current visNetwork pipe (`visPhysics`/`visNodes`/`visEdges`/`visExport`/
+`visLegend`/`visOptions`, including the real-ids-only search filter). **(5)**
+Built the `.qmd`, rendered via `quarto render` -- caught and fixed a REAL
+transcription typo (individual 11's sex code) via an actual
+`kinship2::pedigree()` validation error ("Id not female, but is a mother: 11"),
+not a silent wrong-render. Re-rendered clean; visually compared the embedded
+kinship2 plot images pixel-for-pixel against the reference page's own images
+-- exact match, confirming the transcribed data is now correct. **(6) The
+owner reviewed the rendered output and reported a NEW, distinct observation**:
+"In the 1st drawing it appears that 2 males (201 and 203) have mated... also,
+all individuals are filled indicating they are affected." Investigated rather
+than assumed user error: printed the actual `makePedigreeMatingLayout()` node
+x/y coordinates for family 2 and confirmed it -- `203` (a founder mating with
+`204`, a daughter of `201`x`202`, generation 1) is placed at the SAME row
+(`y=0`) as `201`/`202`, landing physically BETWEEN `202` and the
+`201`x`202` mate-connector node, exactly producing the visual illusion
+reported. Checked family 1 too (not just this one synthetic case): found the
+IDENTICAL pattern recurs for `117`x`116` (same shape: `117` a founder, `116`
+a daughter of `105`x`106`) -- confirming this is a systematic algorithmic
+defect (in `.positionMatingUnitForest()`'s x/y assignment, not just this
+example), independent of and would survive a full #142 implementation. Also
+confirmed the "all filled = affected" impression is not a defect: `grep -c
+"color" R/makePedigreeDiagramData.R` found zero matches -- nprcgenekeepr's
+diagram has no affected-status encoding at all (issue #133), so the uniform
+fill is just vis.js's own default styling. **(7)** Updated the `.qmd` with a
+prominent, evidence-based "Finding" callout at both example sections (with the
+actual coordinate tables as reproducible evidence) plus an updated summary
+table distinguishing THREE analytically separate questions (edge-routing
+style #142; the new founder-positioning defect; the duplicate-mechanism scope
+difference) so none get conflated. Re-rendered clean. **(8)** Filed the
+founder-positioning defect prominently to `BACKLOG.md` (DECISION NEEDED,
+Effort M, root cause identified but fix not designed) -- explicitly NOT fixed
+this session (root-cause diagnosis + a documented, reproducible demonstration
+only, matching the owner's own request scope of "let me see what you saw," not
+"fix it").
+
+**Session 462 Handoff Evaluation (by Session 463): 7/10.** **What helped:**
+S462's own investigation trail (the a2interactive.Rmd staleness finding) put
+this session in the exact right file/context to recognize the owner's rpubs
+observation as directly relevant to the SAME diagram feature, and S461/S462's
+combined design-doc trail
+(`pedigree-diagram-mating-lines-plan.md`/`pedigree-diagram-option2-layout-design-plan.md`)
+gave immediate, load-bearing context on WHY the current diagonal-edge style
+was chosen (vis.js's own inability to draw true right angles) rather than
+needing to re-derive that from scratch. **What was missing:** S462's own
+handoff, despite being deeply immersed in the exact Diagram-tab code and
+documentation that session, did not re-surface issue #142 (still open,
+directly adjacent to the vignette section it was fixing) as a live,
+still-relevant pointer in its own "what's next" list -- a minor but real gap,
+since the next thing that happened (this session) was exactly a #142-adjacent
+question. **What was wrong:** no inaccuracies found. **ROI:** clearly
+positive overall despite the gap -- the technical trail S459-462 left behind
+made this session's investigation fast and well-grounded rather than starting
+from zero.
+
+**Self-assessment (Session 463): 8/10.** **Strengths:** (1) did not
+immediately jump to conclusions when the owner's observation arrived --
+verified the discrepancy via a real live-app screenshot AND the actual
+current source code before agreeing anything was wrong, then explicitly
+presented findings + options and waited for direction rather than assuming
+"fix it now" (this project's own "observation vs. decision" convention,
+applied twice this session under real, live user-driven pressure); (2) for
+the Quarto-document request, went to real, authoritative source data
+(installing kinship2 itself to get its exact `sample.ped`, reading the
+reference page's own printed code/data tables) rather than eyeballing pixel
+positions from static images, and caught a real transcription error via an
+actual package validation error rather than silently shipping wrong data; (3)
+visually cross-verified the corrected render against the reference images
+pixel-for-pixel rather than trusting the code ran without erroring; (4) when
+the owner's SECOND observation arrived (201/203 "mated"), again investigated
+concretely (actual node coordinates) rather than dismissing it as a rendering
+quirk or the owner misreading an interactive diagram, and proactively checked
+whether the pattern recurred in the OTHER example family too -- confirming a
+systematic defect, not a one-off; (5) correctly scoped the response to the
+defect finding -- documented and filed it prominently, explicitly did NOT
+attempt an in-session fix to a real algorithm defect that would need its own
+design/RED-GREEN cycle, matching this project's plan-mode-for-refactoring
+discipline. **Weaknesses:** (1) spent substantial tool-call effort on a
+screenshot-tooling dead end -- raw `chromote::ChromoteSession` +
+`Page$captureScreenshot()` returned a blank white image for vis.js canvas
+widgets across MANY attempts (both on the freshly-rendered `a2interactive.html`
+and this new document), despite forcing `network.redraw()`/`network.fit()`,
+long waits, and viewport-size changes; only `shinytest2::AppDriver$get_screenshot()`
+against a LIVE running Shiny app worked reliably -- should have recognized
+the pattern and pivoted faster instead of retrying variations of the same
+failing approach; (2) did not obtain a direct screenshot of THIS document's
+OWN nprcgenekeepr widgets specifically (relied on printed coordinate/count
+data plus an earlier live-app screenshot as substitutes) -- sufficient for
+the coordinate-based defect-finding (which needed exact numbers, not a
+picture, anyway), but a future session automating this kind of comparison
+should first establish a reliable static-HTML widget screenshot method
+(`webshot2` is not installed; worth trying) rather than re-discovering the
+chromote limitation each time. **Compared to previous sessions:** extends
+S459-462's "verify actually functional, not just plausible" standard to
+RESEARCH/comparison claims specifically, and to a live, real-time user
+observation under active back-and-forth -- twice in one session, a
+plausible-looking claim (the drawing style; the "2 males mated" pattern) was
+run to ground with concrete evidence (real screenshots, real coordinates,
+real package errors) rather than accepted or dismissed on inspection alone.
+
+**Handoff to Session 464:**
+- **What's next:** **(a)** The big pending decision: whether/how to implement
+  issue #142's fuller rectilinear mate-line/sibship-bar style, now informed by
+  this session's comparison document AND its 2 additional findings (the
+  founder-positioning defect; the duplicate-mechanism scope difference vs.
+  kinship2). Likely needs its own plan-mode design session given the real
+  algorithmic complexity already documented in
+  `pedigree-diagram-mating-lines-plan.md` -- not a quick fix. **(b)** NEW,
+  DECISION NEEDED: the founder-positioning defect
+  (`.positionMatingUnitForest()` places a marry-in founder at their own,
+  wrong generation row) -- root cause identified, fix not designed; a future
+  session should first confirm/characterize it against a REAL bundled fixture
+  (not just the synthetic kinship2 examples) before designing a fix, and
+  decide whether to track as its own GitHub issue or fold into #142. **(c)**
+  Everything carried from S462: fix `test-e2e-pedigree-module.R:205,207`'s
+  stale assertions (READY, Effort S, root cause diagnosed); clean up the 45
+  accumulated `lintr::lint_package()` warnings (READY, Effort M); confirm
+  whether the owner's planned repo relocation (out of iCloud) has happened
+  (still hadn't, as of S462/S463 -- the iCloud duplicate-file corruption
+  recurred AGAIN this session, a 5th+ time, triggered by something outside
+  this harness's own tool calls). **(d)** Re-capture the stale
+  `colony-manager-guide.qmd` Diagram screenshot (READY, Effort S). **(e)**
+  NPRC outreach plan review (DECISION NEEDED, owner-only). **(f)** LabKey
+  recommendations (BLOCKED). **(g)** S445's methodology question unresolved.
+  **(h)** Issues #133/#136/#137 (data-model gated), #141 (filed-not-scheduled).
+  **(i)** 2 owner-supplied reference PDFs untracked. **(j)** Unexplained
+  `renv.lock` diff, carried forward 5 sessions now.
+- **Key files:**
+  `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd` (new, the
+  full comparison + both defect findings), `BACKLOG.md` (new
+  founder-positioning-defect item, DECISION NEEDED), `CHANGELOG.md` (S463
+  entry). No `R/` or `tests/` files touched this session.
+- **Gotchas:** all S462 gotchas apply (the a2interactive.Rmd
+  documentation-checklist blind spot; the `gh run view --log-failed` empty-output
+  issue, use `gh api .../logs` instead; the scheduled-only E2E tier). **New
+  this session:** (1) `WebFetch` on an RPubs URL returns only the page shell,
+  not the actual document content -- RPubs serves published documents via an
+  `<iframe src="//rstudio-pubs-static.s3.amazonaws.com/...">`; find and fetch
+  that URL directly (`grep -o '<iframe[^>]*>'` on the raw page HTML) for the
+  real content. (2) raw `chromote::ChromoteSession$new()` +
+  `Page$captureScreenshot()` reliably returns a BLANK image for vis.js canvas
+  widgets in a static, self-contained HTML file (tested on 2 different
+  documents, many variations of redraw/fit/wait) -- `shinytest2::AppDriver$get_screenshot()`
+  against a LIVE running Shiny app is the only method confirmed to work in
+  this environment; a future session needing a static-HTML widget screenshot
+  should try `webshot2` (not installed) rather than more chromote variations.
+  (3) `.positionMatingUnitForest()`'s founder-ordering does NOT reposition a
+  marry-in founder near their actual mate's generation row -- if this function
+  is touched again for the founder-positioning defect fix, the likely
+  direction (not yet designed/validated) is pulling the marry-in parent's own
+  x/y to their mating unit's row, mirroring kinship2's own alignment approach.
+- **Self-assessment score:** 8/10 (breakdown above).
 
 ### What Session 462 Did
 **Deliverable:** Documentation fix (docs-only, no TDD gates -- issue #124/#139

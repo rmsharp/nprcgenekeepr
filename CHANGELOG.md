@@ -43,6 +43,67 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-03 · [issue #142] Research: reproduce kinship2's reference pedigree drawings with nprcgenekeepr's own rendering, for the pending #142 decision (Session 463)
+- **Deliverable:** `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`
+  -- owner-directed, after seeing the live Diagram tab and comparing it against
+  <https://rpubs.com/dliupress/pedigreedemo>: "create a Quarto document that
+  duplicates the drawings...using nprcgenekeepr's pedigree drawing capability."
+  Reproduces the reference page's 3 example pedigrees (kinship2's own
+  `sample.ped` families 1 and 2, plus a 16-person genotype-annotated pedigree,
+  all fetched/transcribed from the reference page's own S3-hosted static HTML
+  and verified against its embedded plot images) using identical underlying
+  data, rendered via `kinship2::plot.pedigree()` (the reference) directly
+  alongside `nprcgenekeepr`'s own current `makePedigreeMatingLayout()` +
+  `visNetwork` (`R/modPedigree.R`'s exact current render chain). No package
+  code changed; no decision made on issue #142 -- this is decision-support
+  material only.
+- **Findings (factual, not prescriptive):** confirms the owner's observation --
+  kinship2 draws mates with a horizontal line at their shared row, then a
+  vertical drop from its midpoint to a horizontal sibship bar, then vertical
+  drops to each child (strict right angles); `nprcgenekeepr` currently draws
+  straight diagonal edges from each parent to a small mating-unit node, and
+  from that node to each child. Also surfaced two related, previously-unnoticed
+  differences in the duplicate-individual mechanism: (1) `nprcgenekeepr` only
+  duplicates an individual with multiple mating units of their own, while
+  kinship2 also duplicates for pure layout/crossing-minimization reasons (a
+  single-mate individual whose birth family is far from their marital family)
+  -- confirmed empirically: kinship2's own family-1 render duplicates 2
+  single-mate individuals (`103`, `138`) that `nprcgenekeepr`'s algorithm does
+  not duplicate at all (0 duplicates, verified via `makePedigreeMatingLayout()`
+  output); (2) for a genuine multi-mate individual, kinship2 draws them ONCE
+  with two mate-lines, while `nprcgenekeepr` duplicates them (one occurrence
+  per mating unit) -- confirmed on the 16-person genotype example (individual
+  `2`, mates `3` and `10`).
+- **Confirmed a genuine positioning defect, independent of the #142 styling
+  question, in response to a mid-session owner observation** ("it appears 2
+  males have mated") on the family-2 rendering: a founder (no recorded
+  parents) who mates with someone from a LATER generation is placed at their
+  OWN generation row by `.positionMatingUnitForest()`, not near their actual
+  mate -- and can land visually inside an unrelated couple's own mate-line,
+  making the diagram appear to show the wrong pairing. Confirmed via the
+  actual node/edge coordinates (not impression) in BOTH example families:
+  `203`x`204` (family 2) and `117`x`116` (family 1) each show the marry-in
+  founder positioned between an unrelated couple's parent node and their own
+  mate-connector node. This is a defect in x/y coordinate ASSIGNMENT, not in
+  edge-drawing style, so it would persist even under a full #142
+  implementation -- flagged prominently in the document as its own,
+  separate, not-yet-fixed finding, not folded into the #142 question. Also
+  clarified (not a defect): every node renders with the same default fill
+  color since `nprcgenekeepr`'s diagram has no affected-status encoding at
+  all (issue #133) -- confirmed via source (`grep -c "color" R/makePedigreeDiagramData.R`
+  found zero matches).
+- **`kinship2` installed via `renv::install()`** into this project's local renv
+  library only, for this one-off reference comparison -- NOT added to
+  `DESCRIPTION`, NOT snapshotted into `renv.lock` (confirmed `renv.lock`
+  unchanged by the install). Reference material, not a dependency.
+- **Verified:** `quarto render` succeeds with 0 errors; one transcription typo
+  in the 16-person genotype example (individual 11's sex code) caught via a
+  real `kinship2::pedigree()` validation error ("Id not female, but is a
+  mother: 11") and fixed before the final render; the corrected render's
+  kinship2 plots were visually compared pixel-for-pixel against the reference
+  page's own embedded images and match exactly. `runtime_smoke: n/a --
+  research document, no R/ or tests/ files changed`.
+
 ### 2026-08-03 · [ad hoc] Owner-directed housekeeping: audit accumulated lint debt and diagnose a scheduled-CI E2E test failure, both filed to BACKLOG.md (Session 462)
 - **Lint debt:** ran `lintr::lint_package()` -- 45 warnings across 17 files (heaviest:
   `R/modMarkerGenetics.R` 6, `R/makePedigreeDiagramData.R` 5, `R/markerHeterozygosity.R` 5),
