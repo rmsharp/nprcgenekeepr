@@ -6,6 +6,19 @@
 
 ## ACTIVE TASK
 
+### What Session 468 Did
+**Deliverable:** Implement Issue #142 Slice 2 (rectilinear mate-line/sibship-bar
+waypoint style) -- wire `edgeStyle` into `makePedigreeMatingLayout()`, add the
+`R/modPedigree.R` UI toggle, extend click-to-navigate/search-dropdown id-prefix
+filters to the 3 new reserved prefixes, re-measure the node count, re-verify
+inbreeding-loop rendering (#134) and `highlightNearest` hover-highlighting (#135)
+for the rectilinear style -- picked by the owner via the S467-orientation-report
+`AskUserQuestion` picker.
+**Started:** 2026-08-03
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### What Session 467 Did
 **Deliverable:** Fix the 2 stale-assertion `test-e2e-pedigree-module.R` failures
 (`BACKLOG.md`, found S462) -- picked by the owner via the S467 orientation-report
