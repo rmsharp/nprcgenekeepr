@@ -6,6 +6,17 @@
 
 ## ACTIVE TASK
 
+### What Session 461 Did
+**Deliverable:** Implementation (Development workstream) -- Pedigree Diagram Option 2 Slice 3:
+render-chain wiring (new exported wrapper function combining Slices 1+2, `R/modPedigree.R`'s
+render chain switched to fixed-position layout, D6 integration adaptations) per
+`docs/planning/pedigree-diagram-option2-layout-design-plan.md` §6 Migration Path steps 2-3.
+**Started:** 2026-08-02
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 460 Did
 **Deliverable:** Implementation (Development workstream) -- Pedigree Diagram Option 2 Slice 2:
 new internal `.positionMatingUnitForest()` (D3 contour-merge positioning + D4 founder ordering +
