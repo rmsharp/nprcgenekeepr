@@ -577,6 +577,22 @@ permanent E2E coverage added for the Slice 3 render-chain change) – this
 is that gap surfacing as a real, scheduled-CI-caught regression, not a
 hypothetical.
 
+**`devtools::check()`’s spelling NOTE has drifted again – 6 new words,
+not caught by any session since S461** (found S465, Effort S, incidental
+– confirmed pre-existing, not caused by this session’s own diff via a
+stash test) – `man/makePedigreeMatingLayout.Rd:40` (“sibship”,
+“waypoint”) and `vignettes/a2interactive.Rmd:355,371,429, 437,440,441`
+(“duplicateToReal”, “js’s”, “makePedigreeMatingLayout”, “vis”) are
+flagged in `devtools::check()`’s `spelling.R` test diff (comparing fresh
+`spelling.Rout` against the committed `spelling.Rout.save`) but are not
+yet in `inst/WORDLIST`. Mirrors the S443/S448/S452 spelling-gap pattern
+(Learning 426, `CLAUDE.md`’s own “Additional close-out checks”
+precedent) – a future session should hand-add these 6 words to
+`inst/WORDLIST` in `LC_ALL=C` byte-order position (not via
+[`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html),
+per S230 convention) and re-verify `devtools::check()` drops to the
+pre-existing iCloud duplicate-file warning + vignette-engine note only.
+
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 
 *S435’s capability-comparison audit
@@ -939,34 +955,57 @@ Slices 1/2 already shipped and tested; (c) decide whether to track as
 its own GitHub issue or fold into \#142’s scope – they are related (both
 concern the Pedigree Diagram Option 2 layout) but analytically separate
 (placement vs. edge style). See `CHANGELOG.md`. - \[ \] **Issue \#142
-implementation: rectilinear mate-line/sibship-bar waypoint style**
-(READY, Effort M – design ratified, root-cause math measured,
-adversarially reviewed, found S461, designed S464) – design ratified:
+implementation: rectilinear mate-line/sibship-bar waypoint style – Slice
+2 (edgeStyle wiring + UI + live re-verification)** (READY, Effort M) –
+design ratified:
 `docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md`.
-Adds an opt-in “Rectilinear” diagram-style toggle (default stays
-“Direct,” today’s shipped style, zero behavior change for existing
-users) that routes mate-line and sibship-bar edges through new invisible
-waypoint nodes computed entirely from already-final `x`/`gen` positions
-(no change to `.buildMatingUnitForest()`/
-`.positionMatingUnitForest()`). Measured against the real 375-individual
-fixture, not estimated: 62% of mating units need a mate-line dogleg
-(parents at different generations is the MAJORITY case, not an edge
-case); total rendered nodes would roughly triple per individual (3.67x)
-under the new style. **Implementation session must, in order:** (a)
-Pre-RED live-verify `hidden = TRUE` composes correctly with the existing
-fixed-position/`smooth = FALSE` render chain (§9 dragon); (b) build
-waypoint construction + the `edgeStyle` parameter (D1-D5); (c)
-re-measure the actual generated node count against the real fixture and
-bring the confirmed number (design’s own math suggests ~380 individuals)
-to the owner via `AskUserQuestion` to ratify the
-rectilinear-mode-specific individual cap, replacing the
-direct-style-calibrated 750; (d) re-verify inbreeding-loop rendering
-(#134) and `highlightNearest` hover-highlighting (#135, a newly-found
-regression risk – hidden waypoints becoming a real individual’s nearest
-edge-graph neighbor) for the new style specifically, neither inherited
-from prior verification. Explicitly does NOT fix the separate
-founder-positioning defect above (analytically distinct: edge routing
-vs. coordinate assignment). See `CHANGELOG.md`.
+**Slice 1 (the internal waypoint-construction helper) is DONE – S465
+(2026-08-03):** Pre-RED live-verification (a minimal `visNetwork` widget
+matching `R/modPedigree.R`’s exact render chain, driven via
+`shinytest2`/ `chromote`) found the design’s own `hidden = TRUE`
+mechanism does not work – vis.js suppresses every edge connected to a
+hidden node regardless of the edge’s own setting – corrected in-place
+via a design-doc addendum (§11): waypoint nodes get `size = 0` + fully
+transparent color instead, and every new waypoint-touching edge gets an
+explicit, non-inherited color (vis.js edges otherwise default to
+inheriting color from their `from` node’s border). New internal
+`.addRectilinearWaypoints(nodes, edges, forest, pos)` implements D1
+(sibship-bar chain, generalizing to D5 single-parent groups) and D2
+(per-side mate-line dogleg, correctly handling BOTH the common
+non-anchor-off-row case and the harder
+anchor-off-row/duplicate-non-anchor case – does not assume the anchor is
+always on-row). `.buildMatingUnitForest()`’s reserved-prefix guard
+extended to `__drop_`/`__bar_`/`__proj_` (D3). Verified against the real
+375-individual fixture: node count matches the design’s own analytical
+estimate exactly (740 direct-style + 488 D1 + 147 D2 = **1,375**,
+confirming the design doc’s §7 math, no drift). No call site yet – this
+function is not wired to
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+or `R/modPedigree.R`. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md`.
+**Slice 2 must, in order:** (a)
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+gains the `edgeStyle = c("direct", "rectilinear")` parameter (D4,
+default `"direct"`, byte-identical existing behavior) calling Slice 1’s
+helper; (b) `R/modPedigree.R` gains the new style-toggle UI control
+(net-new layout inside the Diagram tab’s own `uiOutput` – no existing
+“home” for it) + extends the click-to-navigate and search-dropdown
+id-prefix filters to the 3 new reserved prefixes (D3); (c) re-run the
+node-count measurement against the actually-wired
+`edgeStyle = "rectilinear"` code path (Slice 1 already confirms the
+underlying math is right, but re-confirm post-wiring per §9’s “hard
+gate, not nice-to-have”) and bring the confirmed number to the owner via
+`AskUserQuestion` to ratify the rectilinear-mode-specific individual
+cap, replacing the direct-style-calibrated 750 (design’s own math
+suggests ~380); (d) re-verify inbreeding-loop rendering (#134) and
+`highlightNearest` hover-highlighting (#135, a newly-found regression
+risk – hidden waypoints becoming a real individual’s nearest edge-graph
+neighbor) for the new style specifically, live via
+`shinytest2`/`chromote`, neither inherited from prior verification.
+Explicitly does NOT fix the separate founder-positioning defect above
+(analytically distinct: edge routing vs. coordinate assignment).
+Citation/ tutorial/`NEWS.Rmd` checklists: owed once Slice 2 ships the
+new UI control, not before (matching Slice 1/2’s own precedent in the
+Option 2 implementation).
 
 ## Outreach
 
