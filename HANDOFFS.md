@@ -72,7 +72,7 @@ key_files: docs/planning/pedigree-diagram-option2-layout-design-plan.md (updated
 gotchas: All prior sessions' carried-forward gotchas apply (2 iCloud-sync duplicate files, 3 untracked .DS_Store; don't trust a predecessor's devtools::check() claim or backlog scope at face value -- Learnings 437/441; a ratified design doc's own estimate is a hypothesis until run -- Learning 449; Learning 450 NOW ROOT-CAUSE-CORRECTED -- the trigger is a backslash-u-####-style escape spelling written inside a JSON-transported Edit/Write tool parameter, NOT edit size; never write that escape spelling literally inside a tool call again, spell it out in prose instead). New: (1) .positionMatingUnitForest()'s contract is id/x/gen, no kind column -- callers derive kind from id prefix. (2) contour-merge occupancy is indexed by absolute real gen, not recursive depth -- preserve this invariant if the function is ever touched again (Learning 452). (3) a small deterministic post-placement nudge resolves residual ancestor/descendant coincidences for individual/union nodes only, duplicates exempt by design (Learning 453). (4) the design doc's §9 D3 dragon-flag text now reads differently than at S459's close-out -- don't cite the pre-resolution text from memory.
 runtime_smoke: n/a -- the new function has no call site yet (the render-chain switch is Slice 3), so no runtime behavior changed.
 changelog_ref: CHANGELOG.md 2026-08-02 [BL-pedigreeOption2Slice2] entry (Session 460)
-commit: pending
+commit: b0461b33
 ```
 
 ```handoff
