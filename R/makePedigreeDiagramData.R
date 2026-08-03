@@ -30,14 +30,15 @@ makePedigreeDiagramData <- function(ped) {
   missingCols <- setdiff(required, names(ped))
   if (length(missingCols) > 0L) {
     stop("makePedigreeDiagramData() requires 'ped' to have columns: ",
-         paste(required, collapse = ", "), ". Missing: ",
-         paste(missingCols, collapse = ", "))
+         toString(required), ". Missing: ",
+         toString(missingCols))
   }
 
   shapeMap <- c(F = "dot", M = "square", H = "star", U = "triangle")
   shapes <- unname(shapeMap[as.character(ped$sex)])
   shapes[is.na(shapes)] <- "diamond"
 
+  # nolint start: commented_code_linter, nonportable_path_linter.
   # Same sex vocabulary as the Diagram tab's own shape-to-sex legend (issue
   # #132, R/modPedigree.R) -- an unmapped sex code falls back to its
   # "Other / Unrecorded" label, not just "diamond" shape.
@@ -45,6 +46,7 @@ makePedigreeDiagramData <- function(ped) {
                     U = "Unknown")
   sexLabels <- unname(sexLabelMap[as.character(ped$sex)])
   sexLabels[is.na(sexLabels)] <- "Other / Unrecorded"
+  # nolint end
 
   sireLabels <- ifelse(is.na(ped$sire), "Unknown", .escapeHtml(ped$sire))
   damLabels <- ifelse(is.na(ped$dam), "Unknown", .escapeHtml(ped$dam))
@@ -690,7 +692,9 @@ makePedigreeMatingLayout <- function(ped) {
   }
   .titleForIds <- function(ids) {
     sexLabel <- unname(sexLabelMap[sexOf[ids]])
+    # nolint start: nonportable_path_linter.
     sexLabel[is.na(sexLabel)] <- "Other / Unrecorded"
+    # nolint end
     sireLabel <- ifelse(is.na(sireOf[ids]), "Unknown", .escapeHtml(sireOf[ids]))
     damLabel <- ifelse(is.na(damOf[ids]), "Unknown", .escapeHtml(damOf[ids]))
     sprintf(

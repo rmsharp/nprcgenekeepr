@@ -55,7 +55,7 @@ modGeneticValueUI <- function(id) {
                                "Mean kinship first" = "mk"
                              ), selected = "gu"),
                  numericInput(ns("guCutoff"), "High-uniqueness cutoff:",
-                              value = 10, min = 0),
+                              value = 10.0, min = 0.0),
                  numericInput(ns("zScoreCutoff"),
                               "Low-kinship z-score cutoff:",
                               value = 0.25, step = 0.05)
@@ -191,8 +191,10 @@ modGeneticValueServer <- function(id, pedigree,
       if (is.null(thr)) 4L else as.integer(thr)
     })
 
+    # nolint start: commented_code_linter.
     # Issue #125 Slice 1: ranking-scheme selection + its cutoff/axis
     # sub-controls, mirroring the guThreshold NULL-safe reactive above.
+    # nolint end
     rankScheme <- reactive({
       rs <- input$rankScheme
       if (is.null(rs)) "combined" else rs
@@ -325,10 +327,12 @@ modGeneticValueServer <- function(id, pedigree,
           return(report)
         }
 
+        # nolint start: commented_code_linter.
         # Issue #125 Slice 1 (D1): "categorical" leaves reportGV()'s native
         # orderReport()/rankSubjects() tiered rank/value untouched -- it is
         # already correctly ordered and correctly NA-ranked (see #2B). Only
         # the default "combined" scheme recomputes the continuous score below.
+        # nolint end
         if (identical(rankScheme(), "categorical")) {
           return(report)
         }

@@ -31,20 +31,24 @@ modMarkerGeneticsUI <- function(id) {
              wellPanel(
                fileInput(ns("genotypeFile"),
                          "Select Marker Genotype File (CSV)",
-                         accept = c(".csv")),
+                         accept = ".csv"),
                fileInput(ns("genotypeFileB"),
                          paste("Select Center B Marker Genotype File",
                                "(CSV, for Cross-Center comparison)"),
-                         accept = c(".csv"))
+                         accept = ".csv")
              )
       ),
       column(8L,
              uiOutput(ns("guidance")),
              tabsetPanel(
-               tabPanel("Kinship Comparison", DT::DTOutput(ns("comparisonTable"))),
-               tabPanel("Heterozygosity", DT::DTOutput(ns("heterozygosityTable"))),
-               tabPanel("Parentage Exclusion", DT::DTOutput(ns("exclusionTable"))),
-               tabPanel("Cross-Center", DT::DTOutput(ns("crossCenterTable")))
+               tabPanel("Kinship Comparison",
+                        DT::DTOutput(ns("comparisonTable"))),
+               tabPanel("Heterozygosity",
+                        DT::DTOutput(ns("heterozygosityTable"))),
+               tabPanel("Parentage Exclusion",
+                        DT::DTOutput(ns("exclusionTable"))),
+               tabPanel("Cross-Center",
+                        DT::DTOutput(ns("crossCenterTable")))
              )
       )
     )
@@ -55,7 +59,8 @@ modMarkerGeneticsUI <- function(id) {
 #'
 #' Reads an uploaded long-format marker genotype file (D1 format: \code{id},
 #' \code{locus}, \code{allele1}, \code{allele2}), validates and pivots it
-#' (\code{\link{checkMarkerGenotypeFile}}, \code{\link{buildMarkerGenotypeMatrix}}),
+#' (\code{\link{checkMarkerGenotypeFile}},
+#' \code{\link{buildMarkerGenotypeMatrix}}),
 #' estimates marker-based kinship independent of pedigree
 #' (\code{\link{markerKinship}}), and surfaces a per-animal comparison of
 #' pedigree-based mean kinship (\code{indivMeanKin}, already computed
