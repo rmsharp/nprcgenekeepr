@@ -474,9 +474,28 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       whichever session picks this up, not decided here. Without this, the
       package can silently reaccumulate lint debt the same way it did
       between S461 and S462.
-- [ ] **Scheduled `shinytest2` E2E CI run failed -- 2 stale-assertion test
+- [x] **Scheduled `shinytest2` E2E CI run failed -- 2 stale-assertion test
       failures in `test-e2e-pedigree-module.R`** (found S462, Effort S,
-      root cause fully diagnosed) --
+      root cause fully diagnosed) -- **DONE -- S467 (2026-08-03):**
+      `test-e2e-pedigree-module.R:203-208`'s "known trio" assertions rewritten
+      to match the live, already-shipped `__union_<n>` mating-unit routing
+      instead of the stale pre-Option-2 direct sire/dam edge. PRE-RED live
+      verification against the real app (a standalone driver script, not the
+      test file itself) confirmed the exact live structure before writing the
+      fix: the edge into child `EBG407` comes from `__union_29`, and that
+      union node's own incoming edges come from `PH0IXL` and `U5VLXP` (plain
+      real ids, not duplicate-occurrence ids, for this specific trio). The
+      union node's numeric suffix is a volatile sequential index, so the new
+      assertion captures it via `"from":"__union_[0-9]+"` pattern match
+      rather than hardcoding `__union_29`, then separately asserts the sire/
+      dam edges into the captured union id. REFACTOR-only per
+      `PROJECT_LEARNINGS.md`'s `[refactor-only]` reflex (a green-on-arrival
+      test correction -- no production code changed). Verified: the file
+      itself (29/29 assertions pass), full regression suite (0 failed/0
+      error, 10 pre-existing warnings, exact baseline), `devtools::check()`
+      (1 WARNING/2 NOTEs, exact pre-existing baseline, 0 new), `lintr` on the
+      changed file (0 lints). See `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
+      Learning 462.
       [run 30796362515](https://github.com/rmsharp/nprcgenekeepr/actions/runs/30796362515)
       (2026-08-03, triggered by the repo's scheduled/nightly workflow, not a
       push) failed 2 of 251 E2E assertions (249 passed):
