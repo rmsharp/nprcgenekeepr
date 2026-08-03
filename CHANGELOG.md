@@ -47,6 +47,73 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-08-02 · \[BL-pedigreeOption2Slice2\] Pedigree Diagram Option 2 implementation Slice 2 – `.positionMatingUnitForest()` (D3 contour-merge positioning + D4 founder ordering + D5 direct-child positioning) (Session 460)
+
+- **Deliverable:** new internal `.positionMatingUnitForest(ped, forest)`
+  in `R/makePedigreeDiagramData.R`, the second implementation slice of
+  `docs/planning/pedigree-diagram-option2-layout-design-plan.md`’s §6
+  Migration Path step 1 – consumes Slice 1’s `.buildMatingUnitForest()`
+  output and assigns final `x`/`gen` coordinates via a simplified
+  Reingold-Tilford/Walker-style recursive contour-merge (D3), founder
+  ordering by input row order (D4), and D5’s one-known-parent fallback
+  attaching directly. Full TDD cycle (RED-\>GREEN, REFACTOR
+  owner-confirmed skip), all `AskUserQuestion`-gated. Resolved Slice 1’s
+  own deferred question: `duplicates` needs no `gen` column of its own –
+  the positioning function takes `ped` directly and looks up a
+  duplicate’s `gen` via its `realId`.
+- **Pre-RED POC finding, 3 gaps the ratified design’s own text did not
+  fully specify:** prototyped the algorithm in a throwaway script
+  against 8 toy fixtures plus the full real 375-individual bundled
+  fixture before writing any test (matching S457’s own Case-C2-POC
+  precedent, per §9’s dragon flag) and found (1) an individual whose one
+  non-anchor mating-unit occurrence is “free” (no duplicate node, per
+  `.buildMatingUnitForest()`’s own D2 rule) is not an independent forest
+  root – naive treatment created a phantom disconnected node; fixed by
+  folding them into their one unit’s children-merge as a genuine
+  width-reserving leaf; (2) contour occupancy must be indexed by each
+  node’s absolute real `gen`, not relative recursive depth, since D3
+  step 6 pins y to real `gen`, which diverges from recursive depth once
+  a duplicate/free-pass node is re-attached deep inside another
+  individual’s subtree (impossible in a genuine tree, possible here – a
+  first depth-indexed implementation let two unrelated founders
+  collide); (3) even gen-indexed contours leave a residual
+  ancestor-vs-nested-descendant exact-coincidence edge case (12/740
+  nodes, ~1.6%, on the real fixture), resolved with a small
+  deterministic post-placement nudge applied only to individual/union
+  nodes (duplicates keep the design’s own already-accepted “not
+  guaranteed collision-free” trade-off). All 3 findings owner-approved
+  via `AskUserQuestion` before RED. Added a “Resolved S460” note to the
+  design doc’s own §9 dragon flag. New `PROJECT_LEARNINGS.md` Learnings
+  451-453.
+- **Tests:** 12 new `test_that()` blocks in
+  `tests/testthat/test_positionMatingUnitForest.R` – input validation;
+  trio union-midpoint geometry; D5-mixed subtree; multi-mate
+  uneven-depth subtrees; the real `GA204Z`/`8LKBV9` loop fixture;
+  half-sib convergent loop; an isolated founder beside an unrelated
+  family; an 8-mate wide fan-out; a deeply unbalanced 6-generation
+  chain; the full real 375-individual fixture at its exact 740-node
+  count with zero overlap and no `NA` x/gen; `gen`-column semantics
+  cross-checked against each node’s source of truth.
+- **Verified:** regression suite 0 failed/0 error (3592 passed = 3562
+  baseline + 30 new, 183 skipped, 10 pre-existing warnings, exact
+  baseline match); `devtools::check()` introduces 0 new warnings/notes –
+  exact match to the known baseline (1 pre-existing
+  iCloud-duplicate-file warning, 1 pre-existing `a2interactive.Rmd`
+  vignette-engine NOTE); zero lint warnings in the new code. Phase 3E:
+  n/a – no runtime behavior changed (the function has no call site yet;
+  the render-chain switch is Slice 3). Citation/tutorial/`NEWS.Rmd`
+  checklists: n/a – an internal (`@noRd`), not-yet-wired-in function has
+  no displayed statistic and no user-facing surface.
+- **Incidental fix (not this slice’s own deliverable, a 1-byte
+  mechanical correction in a file already being edited this session):**
+  `PROJECT_LEARNINGS.md` Learning 450’s own text – which describes a
+  literal control-character byte silently corrupting an `Edit` call –
+  itself contained that exact literal byte, recursed into its own bug
+  report. Replaced with the literal text `\u0001` (the real source
+  separator it was always meant to describe), verified via
+  `grep -c $'\x01'` returning 0. See `BACKLOG.md` (Slice 2 marked DONE;
+  Slice 3 filed).
+
 ### 2026-08-02 · \[BL-pedigreeOption2Slice1\] Pedigree Diagram Option 2 implementation Slice 1 – `.buildMatingUnitForest()` (D1 mating-unit transformation + D2 anchor selection + D5 partial-parentage fallback) (Session 459)
 
 - **Deliverable:** new internal `.buildMatingUnitForest()` in

@@ -7,6 +7,286 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 460 Did
+
+**Deliverable:** Implementation (Development workstream) – Pedigree
+Diagram Option 2 Slice 2: new internal `.positionMatingUnitForest()` (D3
+contour-merge positioning + D4 founder ordering + D5 direct-child
+positioning) per
+`docs/planning/pedigree-diagram-option2-layout-design-plan.md` §6
+Migration Path step 1’s remaining half. **Started/Completed:**
+2026-08-02 / 2026-08-02 **Status:** DONE. Full TDD cycle (RED-\>GREEN,
+REFACTOR owner-confirmed skip), all `AskUserQuestion`-gated per this
+project’s Development Process Contract. **Ledger:** recorded in
+`CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Phase 0 orientation in full
+(`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `SESSION_NOTES.md` ACTIVE TASK,
+`gh issue list` – 14 open issues, `git status`/`log`/`diff --stat`,
+`methodology_dashboard.py` Health 94/100 medium risk (unchanged), ledger
+reconcile – `CHANGELOG.md` frontier one commit behind `HEAD`,
+investigated and confirmed a no-op (the gap commit only backfilled
+`HANDOFFS.md`‘s own `commit: pending` field with a SHA already logged in
+that commit’s own `CHANGELOG.md` entry – the identical pattern
+S457/S458/S459 found for their own predecessors); `HANDOFFS.md` frontier
+exactly at `HEAD`; no ghost session). Confirmed the unresolved,
+unexplained `renv.lock` diff (Rcpp/Rlabkey bumps + new `bit`/`bit64`
+deps) flagged by S459 is still present, unchanged – left untouched per
+`SAFEGUARDS.md`. Rendered the priorities list + `AskUserQuestion` picker
+(2 items – Slice 2 implementation, NPRC outreach review); owner picked
+Slice 2. **(2)** Claimed the session (stub + `HANDOFFS.md`
+`status: pending` receipt) before any research. **(3)** Read
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` and the full
+Option 2 design doc, especially §3 D3/D4/D5, §6 Migration Path, §9
+dragons – and read `.buildMatingUnitForest()`’s actual implementation +
+test file to confirm its exact output contract
+(`matingUnits`/`duplicates`/`childEdges`) before designing anything.
+**(4)** Before writing any RED tests, built a throwaway POC script (not
+committed) implementing D3’s contour-merge and validated it against 8
+toy fixtures (simple trio; a multi-mate anchor with 2 uneven-depth
+mating-unit subtrees; an individual with a mating-unit child AND a D5
+direct child; the real `GA204Z`/`8LKBV9` loop fixture; a half-sib
+convergent loop; an isolated founder beside an unrelated family; a
+founder with 8 mating units – wide fan-out; a deeply unbalanced
+6-generation chain vs. a 1-leaf sibling) plus the full real
+375-individual bundled fixture, matching S457’s own Case-C2-POC
+precedent and §9’s explicit “expect careful edge-case testing” dragon
+flag. This POC iteration surfaced and resolved 3 non-obvious gaps the
+ratified design’s own text did not fully specify (none were
+assumption-level guesses – each was found by an actual failing/colliding
+POC run, then fixed and re-verified): **(a)** an individual whose one
+non-anchor mating-unit occurrence is “free” (no duplicate node, per
+`.buildMatingUnitForest()`’s own D2 rule) is NOT an independent forest
+root – a first “founders = no incoming edge” root rule created a phantom
+disconnected node for such an individual; fixed by folding them into
+their one unit’s children-merge as a genuine width-reserving leaf, the
+same treatment a true duplicate gets. **(b)** contour occupancy must be
+indexed by each node’s ABSOLUTE real `gen`, not relative recursive depth
+– because D3 step 6 (ratified) pins y to real `gen`, which diverges from
+recursive depth once a duplicate/free-pass node is re-attached deep
+inside another individual’s own subtree (impossible in a genuine tree,
+since an ancestor and descendant are never at the same depth there – but
+this forest deliberately re-attaches nodes). A first depth-indexed
+implementation let two unrelated real gen-0 founders collide at an
+identical x; re-indexing every contour by absolute gen (0..maxGen) fixed
+it. **(c)** even gen-indexed contours leave a residual
+ancestor-vs-nested-descendant exact-coincidence edge case (the
+envelope/min-max contour merge only guarantees non-overlap between
+SIBLING subtrees, not between a node and an arbitrarily-deep re-attached
+descendant) – measured at 12/740 nodes (~1.6%) on the real fixture;
+resolved with a small, deterministic post-placement nudge pass, applied
+only to individual/union nodes (duplicates keep the design’s own
+already-accepted “not guaranteed collision-free” trade-off, matching
+kinship2’s own documented “not always successfully collapsed” duplicate
+placement). Also resolved Slice 1’s own deferred D6 impact-analysis
+question in the same pass: `duplicates` needs no `gen` column of its own
+– the positioning function takes `ped` directly (already needed for real
+individuals’ own `gen`) and looks up a duplicate’s `gen` via its
+`realId`, exactly parallel to how real individuals are looked up.
+Surfaced all 3 findings + the resolved contract via `AskUserQuestion`
+before declaring RED, per §9’s own “flag rather than assume”
+instruction; owner approved proceeding to RED with this contract and all
+3 resolutions. **(5)** RED: wrote 12 `test_that()` blocks in new
+`tests/testthat/test_positionMatingUnitForest.R`, directly adapting the
+8 validated POC fixtures plus input validation, a `gen`-column
+source-of-truth cross-check, and the full real-fixture scale check
+(exact 740-node count, zero overlap, no `NA`). Confirmed RED (12/12
+fail, “could not find function”); `AskUserQuestion`-gated the
+RED-\>GREEN transition. **(6)** GREEN: implemented
+`.positionMatingUnitForest()` in `R/makePedigreeDiagramData.R` using the
+validated POC algorithm (nested nested-closure recursion, matching
+`.buildMatingUnitForest()`’s own `isFounderOf`/`preferAnchor`
+inline-closure precedent). All 12 tests passed on the FIRST run (30/30
+expectations) – the POC validation work paid for itself directly, no
+GREEN-phase debugging needed. Fixed all 13 `implicit_integer_linter`
+lint warnings the new code introduced (bare `0`/`1`/`2` literals -\>
+explicit `0L`/`1L`/`2L`) before calling GREEN complete; re-verified zero
+lints in the new code region and all tests still passing after the fix.
+**(7)** Verification: 30/30 new expectations pass; full regression suite
+0 failed/0 error (3592 passed = 3562 baseline + 30 new, 183 skipped, 10
+pre-existing warnings, exact match); `devtools::check()` exact baseline
+match (1 pre-existing warning – iCloud duplicate-file artifact; 1
+pre-existing note – `a2interactive.Rmd` vignette-engine; 0 new).
+`AskUserQuestion` -gated GREEN-\>REFACTOR; owner confirmed skip (GREEN
+already matched the file’s established pattern). Phase 3E: n/a – the new
+function has no call site yet (the render-chain switch is Slice 3), so
+no runtime behavior changed, matching Slice 1’s own precedent exactly.
+**(8)** Added a “Resolved S460” note to the ratified design doc’s own §9
+dragon flag (D3’s contour-merge item), citing the 3 POC findings and the
+new learnings. Updated `BACKLOG.md` (Slice 2 marked DONE with a full
+summary; Slice 3 – the render-chain wiring, the FIRST slice with actual
+runtime impact – filed as the next READY item). New
+`PROJECT_LEARNINGS.md` Learnings 451-453. Updated `CLAUDE.md`’s
+Learnings cross-reference count (450-\>453, Sessions 1-459+-\>1-460+).
+**(9) Incidental finding, not part of this slice’s own deliverable:**
+while adding new prose to `PROJECT_LEARNINGS.md` (a file already being
+edited this session), found that Learning 450’s OWN text – which
+describes a literal control-character byte silently corrupting an `Edit`
+call – itself contained that exact literal byte, recursed into its own
+bug report. Fixed via `perl` byte substitution (not another `Edit` call,
+to avoid the same trap). **Then reproduced the identical bug a SECOND
+time**, in this session’s own new `CHANGELOG.md` entry, by writing the
+R-escape spelling of the same control character directly inside an
+`Edit` tool parameter – confirming the root cause is NOT “large
+multi-hundred-line edits” (Learning 450’s original framing) but that a
+tool-call parameter is JSON-transported, and JSON string literals
+natively decode a 4-hex-digit Unicode escape into the actual codepoint.
+Fixed the same way (`perl`, not `Edit`); added a root-cause-correcting
+addendum to Learning 450 itself, written carefully to avoid a third
+recursion (spelling the escape out in prose rather than using its
+literal form).
+
+**Session 459 Handoff Evaluation (by Session 460): 9/10.** This
+session’s actual task (item (a) from S459’s own “next steps” list) was
+picked directly off the handoff via the Phase 0 `AskUserQuestion`
+priorities picker. **What helped:** item (a)’s description was exactly
+right and directly actionable – “the D3 positioning algorithm… consuming
+Slice 1’s `.buildMatingUnitForest()` output… read the design doc in full
+first, especially §3 D3/D4 and §9’s dragon flag (D3 is ‘inspired by,’
+not a direct port of, the cited literature – build a real POC before
+trusting the geometry, matching S457’s own Case-C2 precedent)” was the
+correct first move end to end – the explicit instruction to prototype
+BEFORE trusting the geometry is precisely what surfaced all 3
+non-obvious findings this session made, before they could contaminate a
+committed RED test suite. The explicitly-flagged deferred question
+(“decide whether `duplicates` needs its own `gen` column”) was resolved
+naturally and cheaply once the positioning function’s own signature was
+designed, exactly as anticipated. The gotchas list (the exact
+`__dup_`/`__union_` id conventions; the corrected 128/740 figures) were
+directly load-bearing and used correctly without re-derivation. **What
+was missing:** nothing the handoff could reasonably have included – the
+3 POC findings are implementation-level discoveries that only surface
+once the algorithm is actually built and run against real edge cases,
+the same “inherent design-time-estimate limitation” S459 itself noted
+about its own predecessor’s §7 figures. **What was wrong:** no
+inaccuracies found in the handoff’s substantive content. **ROI:**
+clearly positive – the single most valuable sentence in the whole
+handoff was “build a real POC before trusting the geometry,” which this
+session followed literally and which paid for itself directly (GREEN
+passed 30/30 on the first real implementation attempt, because the
+algorithm had already been debugged during POC iteration).
+
+**Self-assessment (Session 460): 9/10.** **Strengths:** (1) built and
+validated an 8-fixture POC (including both edge cases §9’s own dragon
+flag explicitly named – a wide fan-out and a deeply unbalanced tree)
+BEFORE writing any RED test, catching 3 real algorithmic gaps the
+ratified design text did not fully specify; (2) surfaced all 3
+findings + the resolved data-contract question via `AskUserQuestion`
+rather than silently deciding and moving on, honoring §9’s “flag rather
+than assume” instruction and this project’s “observation vs. decision”
+convention; (3) diagnosed each POC failure by actually re-examining WHY
+a toy fixture collided (not just re-running with a tweak) – e.g. tracing
+8DKELJ/G8EBU9’s exact birth-chain by hand before concluding the fix
+needed absolute-gen indexing, not just a bigger offset constant; (4)
+caught a genuine root-cause correction to a PRIOR session’s own learning
+(Learning 450) by reproducing its exact described bug twice during this
+session’s own close-out, diagnosing the real mechanism (JSON `\u`-escape
+decoding, not edit size) rather than accepting the original framing at
+face value; (5) fixed every lint warning the new code introduced before
+calling GREEN complete; (6) all 12 new tests passed on the first GREEN
+attempt, a direct, measurable payoff of the POC-first discipline; (7)
+followed every TDD phase gate faithfully (PRE-RED `AskUserQuestion` for
+the contract/3-findings decision, RED-\>GREEN, GREEN-\>REFACTOR).
+**Weaknesses:** (1) the POC took 3 iterations to converge on a correct
+algorithm (relative-depth contours, then absolute-gen contours, then the
+nudge pass) – appropriate for genuinely novel code per §9’s own framing,
+but a more careful first-principles read of “D3 step 6 pins y to gen,
+not depth” before writing any code might have skipped the first failed
+iteration; (2) no live `chromote`/visNetwork rendering check was done (a
+base-R plot was used as a lightweight substitute) – correctly out of
+scope for this slice (no render chain exists yet, Phase 3E is n/a,
+matching Slice 1’s own precedent exactly), but Slice 3’s live
+verification should specifically watch whether the nudge pass’s small
+(~0.001-unit) positional adjustments look visually correct once actually
+rendered, not just numerically distinct; (3) the exact-coincidence nudge
+pass is a pragmatic post-hoc patch, not a first-principles algorithmic
+guarantee – documented transparently as such, matching the design’s own
+accepted “simplified, not BJL-grade” scope. **Compared to previous
+sessions:** extends S459’s “verify actually functional, not just
+plausible” standard from Slice 1’s discrete structural transformation
+(set membership, id counts) to Slice 2’s continuous/geometric
+positioning problem (numeric non-overlap, midpoint correctness) – a
+genuinely different verification challenge requiring toy-fixture-first
+empirical validation rather than a static combinatorial check.
+**Self-assessment score:** 9/10 (breakdown above).
+
+**Handoff to Session 461:** - **What’s next:** **(a) NEW, most
+concrete:** Pedigree Diagram Option 2 implementation Slice 3 (READY,
+Effort M, `BACKLOG.md`) – render-chain wiring: a new EXPORTED wrapper
+function (working name `makePedigreeMatingLayout()`) combining Slices
+1+2 into the `list(nodes, edges)` shape
+[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+already returns, plus the `duplicateNodeId -> realId` lookup table D6
+needs; then `R/modPedigree.R`‘s render chain (`R/modPedigree.R:387-468`)
+switches to it, replacing `visHierarchicalLayout()` with
+`visPhysics(enabled = FALSE)` + fixed x/y (S457’s proven Case C2
+geometry). D6’s integration adaptations (click-to-navigate id-prefix
+handling, shape-to-sex legend for union/duplicate nodes, hover tooltip
+content, search-dropdown id filtering) all land here too. **This is the
+FIRST slice with actual user-visible runtime impact – Phase 3E’s
+`shinytest2`/`chromote` live verification is NOT skippable here**,
+unlike Slices 1/2. Also: issue \#138’s 1,500-node cap MUST be re-derived
+against the new ~2x node-counting model once this ships (740/375 =
+1.973x, now empirically confirmed, not just estimated) – do not silently
+leave “1,500” unchanged. Read the design doc in full first, especially
+§3 D6, §6 Migration Path steps 2-3, §7, §8. Code-shipping session –
+follow TDD RED-\>GREEN-\>REFACTOR. **(b)** NPRC outreach plan review
+(DECISION NEEDED, owner-only, unchanged across many sessions). **(c)**
+Open methodology question from S445 (`/doctor`-style Phase 0/1B
+exemption) remains unresolved. **(d)** LabKey integration research
+recommendations (BLOCKED – needs a live LabKey server). **(e)** Issue
+\#133 (data-model gated). **(f)** Issues \#136/#137 (data-model gated).
+**(g)** Issue \#138 (deprioritized, but its node-count cap re-derivation
+is now both more urgent – Slice 3 will ship the render change – and more
+precise – 1.973x, not an estimate). **(h)** `BACKLOG.md`’s
+“`inst/extdata/` reorganization – Phase 4” bullet header still says
+`DECISION NEEDED` though the body confirms all 4 phases DONE – one-line
+tag fix whenever a session next touches that section (unchanged, low
+priority, many sessions old). **(i)** 8 open GitHub issues remain
+unmirrored into `BACKLOG.md` – informational only. **(j)** The 2
+owner-supplied reference PDFs remain on disk, untracked, not committed –
+still unresolved. **(k)** The unexplained, uncommitted `renv.lock` diff
+(Rcpp/Rlabkey bumps + new `bit`/`bit64` deps) flagged by S459 is STILL
+present, unchanged, still untouched per `SAFEGUARDS.md` – a future
+session should ask the owner whether to commit it, investigate its
+origin, or revert it; this has now carried forward 2 sessions
+unresolved. - **Key files:**
+`docs/planning/pedigree-diagram-option2-layout-design-plan.md` (updated
+§9 this session with a “Resolved S460” note – read it, not the original
+dragon-flag-only text), `R/makePedigreeDiagramData.R` (new
+`.positionMatingUnitForest()`, existing
+`.buildMatingUnitForest()`/[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+untouched), `tests/testthat/test_positionMatingUnitForest.R` (12 tests,
+including the full-fixture scale check), `BACKLOG.md` (Slice 2 DONE,
+Slice 3 filed), `PROJECT_LEARNINGS.md` Learnings 451-453 (plus a
+root-cause-correcting addendum to Learning 450). - **Gotchas:** all
+prior sessions’ carried-forward gotchas apply (2 iCloud-sync duplicate
+files, 3 untracked `.DS_Store`; don’t trust a predecessor’s
+`devtools::check()` claim or a backlog item’s stated scope at face value
+– Learnings 437/441; a ratified design doc’s own estimate is a
+hypothesis until the algorithm is actually run – Learning 449; a hidden
+control-character byte can silently land in an `Edit`/`Write` tool
+parameter – Learning 450, NOW ROOT-CAUSE-CORRECTED: the trigger is
+writing a backslash-u-####-style escape spelling inside the
+JSON-transported tool parameter, NOT edit size – diagnose with
+`cat -A`/`xxd`, and NEVER write that escape spelling literally inside an
+`Edit`/`Write` call again; spell it out in prose instead, or fix via a
+shell tool). **New this session:** (1) `.positionMatingUnitForest()`’s
+node-positioning contract is `id`/`x`/`gen` (one row per real
+individual + duplicate + mating unit) – no `kind` column; callers
+determine kind from id prefix (`__union_`/`__dup_`/else-real), matching
+D6’s own prefix-check convention. (2) contour-merge occupancy in this
+function is indexed by absolute real `gen`, not recursive depth – Slice
+3 and any future modification to this function must preserve that
+invariant if the algorithm is ever touched again (Learning 452). (3) a
+small, deterministic post-placement nudge (grouped by `gen`, `1e-3`
+increments) resolves residual ancestor/descendant exact-coincidences for
+individual/union nodes only – duplicates are exempt by design (Learning
+453). (4) the design doc’s §9 D3 dragon-flag text now reads differently
+than it did at S459’s own close-out (this session’s “Resolved S460”
+addition) – don’t cite the pre-resolution text from memory of an earlier
+read. - **Self-assessment score:** 9/10 (breakdown above).
+
 ### What Session 459 Did
 
 **Deliverable:** Implementation (Development workstream) – Pedigree

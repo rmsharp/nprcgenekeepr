@@ -519,7 +519,7 @@ technology decision (D2), which stands as ratified.* - \[ \] (none
 remaining – **issue \#131** (diagram image/print export, priority 1) is
 RESOLVED: fixed S440 (2026-07-30). Added
 `visNetwork::visExport(type = "png", name = "pedigree_diagram", label = "Export Diagram (PNG)")`
-to the existing pipe chain in `R/modPedigree.R`’s `renderVisNetwork()`
+to the existing pipe chain in `R/modPedigree.R`‘s `renderVisNetwork()`
 block – zero new package dependencies (`visExport()`’s JS libs –
 FileSaver/Blob/canvas-toBlob/ html2canvas/jsPDF – ship bundled inside
 `visNetwork` itself as htmlwidget deps, confirmed offline/no-CDN
@@ -707,25 +707,90 @@ a `vignettes/a2interactive.Rmd` vignette-engine NOTE both confirmed to
 predate this session, unrelated to this diff). Phase 3E: n/a – no
 runtime behavior changed (the function has no call site yet; the
 render-chain switch is Slice 3). See `CHANGELOG.md`,
-`PROJECT_LEARNINGS.md` Learnings 449-450.) - \[ \] **Pedigree Diagram:
-Option 2 implementation, Slice 2 (D3 positioning algorithm)** (READY,
-Effort L, filed S459 2026-08-02) – per
+`PROJECT_LEARNINGS.md` Learnings 449-450.) - \[ \] (none remaining –
+**Pedigree Diagram: Option 2 implementation, Slice 2 (D3 positioning
+algorithm)** is RESOLVED: implemented S460 (2026-08-02). New internal
+`.positionMatingUnitForest(ped, forest)` in
+`R/makePedigreeDiagramData.R`, consuming Slice 1’s
+`.buildMatingUnitForest()` output and assigning final `x`/`gen`
+coordinates via a simplified Reingold-Tilford/Walker-style recursive
+contour-merge (D3), founder ordering by input row order (D4), D5’s
+one-known-parent fallback attaching directly (no synthesized union).
+**Resolved the deferred Slice 1 question:** `duplicates` does not need
+its own `gen` column – the positioning function takes `ped` directly
+(already needed for real individuals’ own `gen`) and looks up a
+duplicate’s `gen` via its `realId`. Pre-RED prototyped the algorithm in
+a throwaway POC against 8 toy fixtures plus the full real 375-individual
+fixture (matching S457’s own Case-C2-POC precedent, per §9’s dragon
+flag) and found 3 non-obvious gaps the ratified design didn’t fully
+specify: (1) an individual whose one non-anchor mating -unit occurrence
+is “free” (no duplicate node, per `.buildMatingUnitForest()`’s own D2
+rule) is not an independent forest root – naively treating them as one
+creates a phantom disconnected node; fixed by folding them into their
+one unit’s children-merge as a genuine width-reserving leaf. (2) contour
+occupancy must be indexed by each node’s absolute real `gen`, not
+relative recursive depth – because D3 step 6 (ratified) pins y to real
+`gen`, which diverges from recursive depth once a duplicate/free-pass
+node is re-attached deep inside another individual’s subtree (impossible
+in a genuine tree, possible here). (3) even gen-indexed contours leave a
+residual ancestor-vs-nested-descendant exact-coincidence edge case
+(measured at 12/740 nodes, ~1.6%, on the real fixture); resolved with a
+small deterministic post-placement nudge pass, applied only to
+individual/union nodes (duplicates keep the design’s own already
+-accepted “not guaranteed collision-free” trade-off). All 3 findings
+owner-approved via `AskUserQuestion` before RED. Full TDD cycle
+(RED-\>GREEN, REFACTOR owner-confirmed skip – GREEN already matched the
+file’s established pattern, e.g. `.buildMatingUnitForest()`’s own
+nested-closure precedent). 12 new unit tests (input validation; trio
+union-midpoint geometry; D5-mixed subtree; multi-mate uneven-depth; the
+real `GA204Z`/`8LKBV9` loop fixture; half-sib convergent loop; an
+isolated founder beside an unrelated family; an 8-mate wide fan-out; a
+deeply unbalanced 6-generation chain; the full real 375-individual
+fixture at its exact 740-node count; `gen`-column semantics).
+Citation/tutorial/`NEWS.Rmd` checklists: N/A – an internal (`@noRd`),
+not-yet-wired-in function has no displayed statistic and no user-facing
+surface (Migration Path step 4’s own “owed once step 3 ships, not
+before”), matching Slice 1’s own precedent. Verified: regression suite 0
+failed/0 error (3592 passed = 3562 baseline + 30 new, 183 skipped, 10
+pre-existing warnings, exact baseline match); `devtools::check()` exact
+baseline match (1 pre-existing warning, 1 pre-existing note, 0 new);
+zero lint warnings in the new code. Phase 3E: n/a – no runtime behavior
+changed (the function has no call site yet; the render-chain switch is
+Slice 3). Incidentally found and fixed (not part of this slice’s own
+deliverable, a 1-byte mechanical correction in the file already being
+edited) a literal control -character byte that had leaked into
+`PROJECT_LEARNINGS.md` Learning 450’s own text – the exact defect that
+learning describes, recursed into its own bug report. See
+`CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learnings 451-453.) - \[ \]
+**Pedigree Diagram: Option 2 implementation, Slice 3 (render-chain
+wiring)** (READY, Effort M, filed S460 2026-08-02) – per
 `docs/planning/pedigree-diagram-option2-layout-design-plan.md` §6
-Migration Path step 1’s remaining half: a new internal positioning
-function consuming Slice 1’s `.buildMatingUnitForest()` output and
-assigning final x/y coordinates via the simplified Reingold-Tilford/
-Walker-style contour-merge (D3), founder ordering by data row order
-(D4). Read the design doc in full first, especially §3 D3/D4 and §9’s
-dragon flag (D3 is “inspired by,” not a direct port of, the cited
-literature – expect real edge-case testing: deeply unbalanced trees, a
-founder with many mating units, wide sibships – not just citing the
-literature as verification). Also resolve the newly-flagged question
-from Slice 1’s own D6 impact-analysis row: whether `duplicates` returned
-by `.buildMatingUnitForest()` needs a `gen` column of its own or can
-look it up from the caller’s `ped` (deferred to this slice, not decided
-in Slice 1). Independently unit-testable against synthetic fixtures
-before any rendering change (`R/modPedigree.R`’s render chain is Slice
-3, a separate follow-up). Follow TDD RED-\>GREEN-\>REFACTOR.
+Migration Path steps 2-3: a new EXPORTED wrapper function (working name
+`makePedigreeMatingLayout()` or similar) combining Slice 1’s
+`.buildMatingUnitForest()` and Slice 2’s `.positionMatingUnitForest()`
+into the same `list(nodes, edges)` shape
+[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+already returns, plus the `duplicateNodeId -> realId` lookup table D6
+needs; then `R/modPedigree.R`’s render chain (`R/modPedigree.R:387-468`)
+switches from
+[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md) +
+`visHierarchicalLayout()` to the new function +
+`visPhysics(enabled = FALSE)`/`visNodes(physics = FALSE)`/fixed
+x/y/`smooth = FALSE` edges (S457’s proven Case C2 geometry). D6’s
+integration adaptations (click-to-navigate id-prefix handling +
+duplicate-to-real lookup; union/duplicate node shape-to-sex-legend
+treatment; hover tooltip content for union/duplicate nodes; confirm
+whether the search dropdown needs an explicit id filter to exclude
+union/duplicate ids) all land in this slice too, per §3 D6. This is the
+ONE step in the Migration Path with user-visible runtime impact – Phase
+3E runtime smoke test (`shinytest2`/`chromote`, matching issue \#134’s
+own methodology) is NOT skippable here, unlike Slices 1/2. Also: issue
+\#138’s 1,500-node cap MUST be re-derived against the new ~2x
+node-counting model (§7) once this slice ships – do not silently keep
+“1,500” unchanged. Read the design doc in full first, especially §3 D6,
+§6 Migration Path steps 2-3, §7 Impact Analysis, and §8 Verification
+Plan’s live-`shinytest2` requirements. Follow TDD
+RED-\>GREEN-\>REFACTOR.
 
 ## Outreach
 
