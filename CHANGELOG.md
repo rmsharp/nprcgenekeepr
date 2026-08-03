@@ -47,6 +47,74 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-08-03 · \[ad hoc\] Owner-directed housekeeping: audit accumulated lint debt and diagnose a scheduled-CI E2E test failure, both filed to BACKLOG.md (Session 462)
+
+- **Lint debt:** ran `lintr::lint_package()` – 45 warnings across 17
+  files (heaviest: `R/modMarkerGenetics.R` 6,
+  `R/makePedigreeDiagramData.R` 5, `R/markerHeterozygosity.R` 5),
+  concentrated in the issue \#130 marker-genetics family (Sessions
+  442-447). Filed to `BACKLOG.md` Housekeeping as two distinct asks: a
+  cleanup pass, and a process fix (CI gate and/or close-out checklist)
+  so the debt stops re-accumulating. No code changed.
+- **CI failure:** investigated [run
+  30796362515](https://github.com/rmsharp/nprcgenekeepr/actions/runs/30796362515)
+  (scheduled `shinytest2` workflow, not a push) – 2 of 251 E2E
+  assertions failed in `test-e2e-pedigree-module.R:205,207`. Root cause
+  fully diagnosed: the test asserts the pre-Option-2 direct sire/dam -\>
+  child edge convention, made stale by Session 461’s Slice 3
+  edge-routing change (edges now route through an intermediate
+  `__union_*` node). Filed to `BACKLOG.md` Housekeeping with the exact
+  fix needed; not fixed this session (diagnosis only, per the owner’s
+  request).
+
+### 2026-08-03 · \[ad hoc\] Fix vignettes/a2interactive.Rmd’s stale “Pedigree Diagram” demo section to match the shipped Option 2 render chain (Session 462)
+
+- **Deliverable:** owner-flagged (via a screenshot of the tutorial’s
+  rendered diagram still showing the pre-Option-2 crossing-line style)
+  that `vignettes/a2interactive.Rmd`’s “Pedigree Diagram” section (added
+  Session 456, before the Option 2 work) still called the superseded
+  [`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md) +
+  [`visNetwork::visHierarchicalLayout()`](https://rdrr.io/pkg/visNetwork/man/visHierarchicalLayout.html)
+  combination, and its own prose claim (“reproduces the Diagram tab’s
+  rendering exactly”) had gone false the moment Session 461’s Slice 3
+  switched `R/modPedigree.R`’s render chain to
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md) +
+  fixed-position layout. Session 461’s own tutorial/article
+  documentation checklist pass updated `_pedigree_browser.Rmd` and
+  `colony-manager-guide.qmd` but missed this pre-existing
+  a2interactive.Rmd section.
+- **Fix:** rewrote the section’s intro prose, the demo-pedigree
+  explanatory text, the data-generation call
+  (`makePedigreeMatingLayout(demoPed)` in place of
+  `makePedigreeDiagramData(demoPed)`), the return-contract description
+  (3-element `list(nodes, edges, duplicateToReal)`, not 2), and the
+  render chunk
+  (`visPhysics(enabled = FALSE)`/`visNodes(physics = FALSE)`/`visEdges(smooth = FALSE)`
+  in place of `visHierarchicalLayout()`; `visOptions()`’s search
+  dropdown filtered to real-animal ids only, matching
+  `R/modPedigree.R`’s own current filter). Verified the actual node/edge
+  counts empirically (via `Rscript`) rather than guessing: the existing
+  demo pedigree’s own multi-mate founders (`M1`, `F2`) already exercise
+  the duplicate-node convention (48 nodes: 33 real + 13 mating-unit + 2
+  duplicate; 53 edges, 2 dashed), so no fixture change was needed.
+- **Verified:**
+  [`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)
+  on the vignette succeeds with no errors, produces the expected
+  `names(diagramData)`/[`nrow()`](https://rdrr.io/r/base/nrow.html)
+  output inline, and the rendered widget JSON confirms `physics:false`
+  and exactly 2 `dashes:true` edges. `devtools::check()` re-run: 0
+  errors, 1 pre-existing warning (iCloud duplicate-file artifact), 1
+  pre-existing note (this same vignette’s own missing `VignetteBuilder`
+  engine, unrelated to this diff) – exact baseline match, 0 new.
+  Docs-only (no `R/` or `tests/` files changed), so per the issue
+  \#124/#139 precedent the TDD RED/GREEN/REFACTOR gates did not apply;
+  `runtime_smoke: n/a — docs-only`.
+- **Incidental, reverted (not a deliverable):** found 3 `man/*.Rd` files
+  corrupted mid-session by the well-known iCloud duplicate-`.R`-file
+  `devtools::document()` artifact (Learning 454) – this time triggered
+  by the owner’s own local package rebuild, not this session’s tool
+  calls. Reverted via `git checkout --` before any commit.
+
 ### 2026-08-02 · \[issue \#142\] File “add a full rectilinear mate-line/sibship-bar waypoint style” as a deliberately-unscheduled, additive follow-up (Session 461, same-conversation follow-up)
 
 - **Deliverable:** [issue

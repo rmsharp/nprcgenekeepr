@@ -317,13 +317,22 @@ Plot.](a2interactive_files/figure-html/plot-focal-age-sex-pyramid-1.png)
 ## Pedigree Diagram
 
 The Pedigree Browser’s Diagram tab in the Shiny application renders a
-pedigree as a hierarchical family-tree diagram, with a button to export
-the current view as a PNG image. Both are built on two script-callable
-functions that work identically outside the Shiny application:
-**makePedigreeDiagramData** prepares a pedigree’s node/edge data, and
+pedigree as a family-tree diagram. A mate’s own mating(s) render as a
+small connector between the two parents, with a line down to their
+shared children, rather than two independent lines running straight from
+each parent – the same convention traditional pedigree charts use. An
+animal that mates more than once, or whose lineage loops back on itself
+(e.g. a consanguineous mating), appears once per mating, with each
+occurrence after the first joined back to its main occurrence by a
+dashed line. Both are built on two script-callable functions that work
+identically outside the Shiny application: **makePedigreeMatingLayout**
+prepares a pedigree’s node/edge data in this convention, and
 **visNetwork::visNetwork** (from the **visNetwork** package, a
-dependency of **nprcgenekeepr**) renders it. See the “Diagram view” part
-of the *colony-manager-guide* article for the equivalent point-and-click
+dependency of **nprcgenekeepr**) renders it. (A simpler function,
+**makePedigreeDiagramData**, remains available for a plain
+one-node-per-animal diagram without this convention – it is no longer
+what the Shiny app itself uses.) See the “Diagram view” part of the
+*colony-manager-guide* article for the equivalent point-and-click
 workflow and screenshots.
 
 The *trimmedPed* pedigree built earlier in this tutorial has 704 animals
@@ -334,7 +343,9 @@ feature at once. It is also limited to the *Female*, *Male*, and
 the *Hermaphrodite* and unrecorded-sex shapes never appear in it. So
 instead we build a small, synthesized pedigree spanning a few
 generations, deliberately including all five sex codes
-**makePedigreeDiagramData** recognizes.[^4]
+**makePedigreeMatingLayout** recognizes – and, since two of its founders
+(*M1* and *F2*) each mate more than once, the diagram’s duplicate-node
+convention as well.[^4]
 
 ``` r
 
@@ -393,42 +404,52 @@ across 4 generations and 33 animals.
 
 ``` r
 
-diagramData <- makePedigreeDiagramData(demoPed)
+diagramData <- makePedigreeMatingLayout(demoPed)
 names(diagramData)
 ```
 
-    ## [1] "nodes" "edges"
+    ## [1] "nodes"           "edges"           "duplicateToReal"
 
 ``` r
 
 nrow(diagramData$nodes)
 ```
 
-    ## [1] 33
+    ## [1] 48
 
 ``` r
 
 nrow(diagramData$edges)
 ```
 
-    ## [1] 50
+    ## [1] 53
 
-**makePedigreeDiagramData** returns a list of two data frames: *nodes*
-(one row per animal, shaped by sex – dot = Female, square = Male, star =
-Hermaphrodite, triangle = Unknown, diamond = Other/Unrecorded – with an
-HTML hover-tooltip giving ID, sex, generation, sire, and dam) and
-*edges* (one directed edge per known sire or dam, pointing from parent
-to child).
+**makePedigreeMatingLayout** returns a list of three elements: *nodes*
+(one row per real animal – shaped by sex, dot = Female, square = Male,
+star = Hermaphrodite, triangle = Unknown, diamond = Other/Unrecorded,
+with an HTML hover-tooltip giving ID, sex, generation, sire, and dam –
+plus one small, unlabeled dot per mating and one extra row per duplicate
+occurrence, each carrying its animal’s own shape, label, and tooltip
+with a note that it is a duplicate occurrence), *edges*
+(parent-to-mating and mating-to-child edges, plus a dashed edge from
+each duplicate occurrence back to the real animal), and
+*duplicateToReal* (a named lookup from each duplicate occurrence’s id
+back to the real animal it represents).
 
-Piping *diagramData* into **visNetwork::visNetwork** and the same
-layout, export, legend, and search options `R/modPedigree.R` uses
-reproduces the Diagram tab’s rendering exactly, including a genuinely
-working **Export Diagram (PNG)** button – try it below.[^5]
+Each node already carries its own fixed **x**/**y** position (computed
+by **makePedigreeMatingLayout** itself), so rendering it turns vis.js’s
+usual physics/hierarchical layout off rather than turning one on. Piping
+*diagramData* into **visNetwork::visNetwork** and the same layout,
+export, legend, and search options `R/modPedigree.R` uses reproduces the
+Diagram tab’s rendering exactly, including a genuinely working **Export
+Diagram (PNG)** button – try it below.[^5]
 
 ``` r
 
 visNetwork::visNetwork(diagramData$nodes, diagramData$edges) |>
-  visNetwork::visHierarchicalLayout(direction = "UD", sortMethod = "directed") |>
+  visNetwork::visPhysics(enabled = FALSE) |>
+  visNetwork::visNodes(physics = FALSE) |>
+  visNetwork::visEdges(smooth = FALSE) |>
   visNetwork::visExport(
     type = "png", name = "pedigree_diagram",
     label = "Export Diagram (PNG)"
@@ -445,17 +466,23 @@ visNetwork::visNetwork(diagramData$nodes, diagramData$edges) |>
     width = 0.28, stepY = 65L
   ) |>
   visNetwork::visOptions(
-    nodesIdSelection = TRUE,
+    nodesIdSelection = list(
+      enabled = TRUE,
+      values = diagramData$nodes$id[
+        !grepl("^__union_|^__dup_", diagramData$nodes$id)
+      ]
+    ),
     highlightNearest = list(enabled = TRUE, hover = TRUE, degree = 1L,
                              algorithm = "all")
   )
 ```
 
-The **Select by id** dropdown above the diagram lets you jump straight
-to a specific animal and dims every node except it and its direct
-connections – useful for locating one animal in a diagram this size, and
-just as useful in a real diagram of 704 animals like the one built
-earlier in this tutorial, where finding one animal by eye is much
+The **Select by id** dropdown above the diagram – filtered to real
+animals, excluding mating and duplicate-occurrence nodes – lets you jump
+straight to a specific animal and dims every node except it and its
+direct connections – useful for locating one animal in a diagram this
+size, and just as useful in a real diagram of 704 animals like the one
+built earlier in this tutorial, where finding one animal by eye is much
 harder.
 
 ## Genetic Value Analysis
@@ -1124,7 +1151,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpyM6N0k/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpTNaXmr/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -1555,8 +1582,8 @@ into one number for a quick between-center comparison.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-08-03 05:04:08.884712. The processing
-time for this document was 15 seconds..
+The current date and time is 2026-08-03 15:30:08.867575. The processing
+time for this document was 22 seconds..
 
 ``` r
 
@@ -1630,6 +1657,8 @@ sessionInfo()
     tutorial, not drawn from any real colony’s records.
 
 [^5]: The Diagram tab’s click-to-navigate behavior (clicking a node
-    narrows the focal-animal selection to it) is Shiny-specific – it
-    relies on a live Shiny session to receive the click event – and is
-    therefore not reproduced here.
+    narrows the focal-animal selection to it, resolving a
+    duplicate-occurrence click to the real animal and ignoring
+    mating-node clicks) is Shiny-specific – it relies on a live Shiny
+    session to receive the click event – and is therefore not reproduced
+    here.
