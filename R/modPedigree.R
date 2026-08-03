@@ -536,7 +536,19 @@ modPedigreeServer <- function(id, studbook) {
             ]
           ),
           highlightNearest = list(
-            enabled = TRUE, hover = TRUE, degree = 1L, algorithm = "all"
+            enabled = TRUE, hover = TRUE,
+            # Issue #142 D3 (live-confirmed regression, S468): under the
+            # rectilinear style, a plain individual's nearest edge-graph
+            # neighbor is often an invisible __bar_/__drop_/__proj_
+            # waypoint rather than a visible union dot, so degree = 1L
+            # (correct for the direct style, where degree 1 always
+            # reaches a visible node) can highlight nothing visible at
+            # all. Raising it is a bounded mitigation, not a full fix --
+            # very wide sibships (a long D1 bar chain) can still exceed
+            # it -- but it restores visible feedback for the common case
+            # confirmed live (measured hop distances up to 4).
+            degree = if (.currentEdgeStyle() == "rectilinear") 6L else 1L,
+            algorithm = "all"
           )
         )
     })

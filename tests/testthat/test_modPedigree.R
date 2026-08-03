@@ -1803,6 +1803,43 @@ test_that(
 })
 
 test_that(
+  "modPedigreeServer's highlightNearest degree is style-aware -- 1 under
+   \"direct\" (unchanged), raised under \"rectilinear\" so degree-1 hover
+   does not visibly light up nothing at all when the nearest edge-graph
+   neighbor is now an invisible waypoint node (live-confirmed regression,
+   S468: a plain child's hover on \"direct\" reaches a visible union dot
+   at 1 hop, but on \"rectilinear\" that same hop lands on an invisible
+   __bar_/__drop_/__proj_ node instead)", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
+      session$flushReact()
+      expect_true(grepl('"degree":1', output$pedigreeDiagram, fixed = TRUE))
+
+      session$setInputs(pedigreeEdgeStyle = "rectilinear")
+      session$flushReact()
+      expect_false(grepl('"degree":1', output$pedigreeDiagram, fixed = TRUE))
+      expect_true(grepl('"degree":6', output$pedigreeDiagram, fixed = TRUE))
+    }
+  )
+})
+
+test_that(
   "modPedigreeServer's diagram edge-style radio toggle appears in the
    rendered UI only when a diagram is actually shown (D4) -- present
    under the cap, absent over the direct-style 750 cap", {
