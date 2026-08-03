@@ -60,6 +60,24 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S465b (ad hoc, reconciled)
+date: 2026-08-03
+status: reconciled
+self_score: n/a -- reconstructed, not self-scored
+predecessor_score: n/a
+active_task: Owner-directed sequencing decision: gate issue #142 completion (the pedigree drawing feature) on the pre-existing "Accumulated lintr::lint_package() warnings, 45 total across 17 files" BACKLOG.md item (found S462) -- must be resolved before #142 is considered complete and pushed, not deferred until after. No code changed.
+what_was_done: BACKLOG.md updated: the lint-cleanup item annotated with the owner-directed gate; the issue #142 Slice 2 item annotated as gated on that lint-cleanup item. CHANGELOG.md given a same-day [ad hoc] entry recording the decision. Commit: 811bf945.
+next_steps: Pick up the lint-cleanup item (BACKLOG.md, found S462, Effort M, 45 warnings across 17 files) before or alongside issue #142 Slice 2 -- see that item's full breakdown by linter/file. Issue #142 Slice 2 itself remains READY in design terms (S465 left it fully scoped) but is now gated on the lint-cleanup item completing first.
+key_files: BACKLOG.md (2 items annotated), CHANGELOG.md (new entry).
+gotchas: This was a small out-of-band owner directive, not a full numbered session -- no SESSION_NOTES.md stub or Phase 1B claim was written for it, and no HANDOFFS.md receipt existed until this Phase 0 reconcile backfilled one. The CHANGELOG.md ledger was NOT behind (the commit added its own entry); only this HANDOFFS.md receipt was missing.
+runtime_smoke: n/a -- docs-only, no code changed.
+changelog_ref: CHANGELOG.md 2026-08-03 [ad hoc] "Owner-directed sequencing" entry
+commit: 811bf945
+```
+
+Block reconstructed by Session 466's Phase 0 reconcile-on-read from `git log` alone (the commit's own message and diff), per `SESSION_RUNNER.md` Phase 0 step 6 / the HANDOFFS.md reconcile mechanics. The commit was an out-of-band owner-directed docs edit (BACKLOG.md sequencing annotation + its own CHANGELOG.md entry), not a full session with a Phase 1B stub -- so status is `reconciled`, not `complete`, and there is no self-score to report.
+
+```handoff
 session: S465
 date: 2026-08-03
 status: complete
