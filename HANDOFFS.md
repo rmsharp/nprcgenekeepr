@@ -62,16 +62,16 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S475
 date: 2026-08-04
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Close GitHub issues #142, #143, #144 -- all three fully implemented and verified per CHANGELOG.md/BACKLOG.md, but still showing OPEN. Administrative housekeeping, no code or tests involved.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- closed GitHub issues #142, #143, #144, each fully implemented and verified per CHANGELOG.md/BACKLOG.md but still showing OPEN. Administrative housekeeping, no code or tests involved -- TDD gates did not apply.
+what_was_done: Phase 0 cross-check of `gh issue list` against BACKLOG.md's own DONE markers found a THIRD instance of the gap (issue #142, in addition to the #143/#144 pair S474's handoff already named) -- surfaced in the orientation report before the owner picked this task. Gathered verification evidence for each issue directly from CHANGELOG.md (Sessions 463-468 for #142, 471-472 for #143, 473-474 for #144). Closed all 3 via `gh issue close --reason completed --comment "..."`, each comment citing the specific shipped mechanism, real numeric verification results, and the CHANGELOG.md date/session tag -- matching the established #131/#134/#135/#139 "closed via GitHub comment" precedent. Verified all 3 now CLOSED. Checked BACKLOG.md for stale "still open" claims -- found none (all mentions are dated historical narrative, correctly left unedited). Elevated the 3-times-repeated gap into a permanent fix: new PROJECT_LEARNINGS.md Learning 475 + a new CLAUDE.md "GitHub issue close-out checklist" Additional-close-out-checks item (mirroring the citation/tutorial/NEWS.Rmd checklist family) so future sessions close an issue in the SAME session its BACKLOG.md item is marked DONE. Updated CLAUDE.md's learning-count cross-reference (474->475). Recorded 3 non-commit actions (the issue closes) in CHANGELOG.md per FM #27. Commit: pending.
+next_steps: (a) Root-cause and fix the renv.lock gap (READY-ish, Effort S-M) -- 10 dev-tool packages missing from renv.lock's Packages section in both HEAD and the long-standing uncommitted diff; see BACKLOG.md Housekeeping + Learning 473. (b) Lint debt process fix (READY, Effort S-M, carried since S462/S466). (c) LabKey integration remainder (BLOCKED). (d) NPRC outreach (DECISION NEEDED, owner-only). (e) Lower-priority items carried unchanged from S474's own handoff -- see SESSION_NOTES.md S475 entry for the full list. (f) Going forward: apply the new GitHub issue close-out checklist -- close an issue in the SAME session its BACKLOG.md item is marked DONE, don't defer it.
+key_files: CLAUDE.md (new "GitHub issue close-out checklist" item + learning-count bump); PROJECT_LEARNINGS.md (new Learning 475); CHANGELOG.md (3 new [issue #N] Closed the issue entries); HANDOFFS.md/SESSION_NOTES.md (this session's receipt/notes).
+gotchas: (1) When a BACKLOG.md item is marked DONE against a named GitHub issue, do not assume the issue was closed in the same session -- this session found 3 consecutive counterexamples (#142/#143/#144); always cross-check `gh issue list` against BACKLOG.md's DONE markers during Phase 0. (2) The pre-existing uncommitted renv.lock/.DS_Store diff and 5 untracked reference/planning files are unrelated to this session and were correctly left untouched. (3) All prior sessions' standing code-level gotchas still apply unchanged -- this session did not touch code, so none were directly exercised.
+runtime_smoke: n/a -- administrative/docs-only session (GitHub issue closes + CLAUDE.md/PROJECT_LEARNINGS.md/CHANGELOG.md updates), no R/ or tests/ files changed, no runtime behavior affected. Matches this project's established precedent for docs/administrative-only sessions (S448/S451/S452/S453/S455).
+changelog_ref: CHANGELOG.md 2026-08-04 [issue #142]/[issue #143]/[issue #144] "Closed the issue" entries (Session 475)
 commit: pending
 ```
 

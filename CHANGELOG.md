@@ -43,6 +43,31 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-04 · [issue #142] Closed the issue (Session 475)
+- **Action:** `gh issue close 142 --reason completed --comment "..."` -- the rectilinear
+  mate-line/sibship-bar waypoint style was fully implemented and verified across Sessions
+  463-468 (design, Slice 1, Slice 2) but the issue itself was never closed, discovered via
+  this session's Phase 0 cross-check of `gh issue list` against `BACKLOG.md`'s own DONE
+  markers. Closing comment cites the Session 463-468 `CHANGELOG.md` entries and their
+  verification evidence. See `PROJECT_LEARNINGS.md` Learning 475 (a new same-session
+  GitHub-issue-close-out checklist, `CLAUDE.md`, was ratified after finding this as the
+  third consecutive instance of the same gap).
+
+### 2026-08-04 · [issue #143] Closed the issue (Session 475)
+- **Action:** `gh issue close 143 --reason completed --comment "..."` -- the founder-
+  positioning defect fix was fully implemented and verified Session 472, first flagged as
+  still-open-despite-resolved by Session 473's own orientation report and again by Session
+  474's, but never closed until this session. Closing comment cites the Session 472
+  `CHANGELOG.md` entry and its verification evidence. See `PROJECT_LEARNINGS.md` Learning
+  475.
+
+### 2026-08-04 · [issue #144] Closed the issue (Session 475)
+- **Action:** `gh issue close 144 --reason completed --comment "..."` -- the anchor-side
+  row-mismatch fix was fully implemented and verified Session 474; flagged as a next-step
+  in that session's own handoff but not acted on until this session. Closing comment cites
+  the Session 473-474 `CHANGELOG.md` entries and their verification evidence. See
+  `PROJECT_LEARNINGS.md` Learning 475.
+
 ### 2026-08-04 · [issue #144] Implemented the anchor-side row-mismatch fix (Session 474)
 - **Deliverable:** `R/makePedigreeDiagramData.R` -- 3 synchronized edits per the ratified plan
   (`docs/planning/issue144-anchor-row-mismatch-fix-plan.md`), full Strict TDD RED/GREEN/REFACTOR

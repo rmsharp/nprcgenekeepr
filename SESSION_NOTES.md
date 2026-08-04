@@ -12,11 +12,119 @@ verified per `CHANGELOG.md`/`BACKLOG.md`, but still showing `OPEN`) -- picked by
 via the S475 orientation-report `AskUserQuestion` picker. Administrative housekeeping, no
 code or tests involved -- TDD RED/GREEN/REFACTOR gates do not apply (S448/S451/S452/S453/S455
 precedent for docs/administrative-only sessions).
-**Started:** 2026-08-04
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Started/Completed:** 2026-08-04 / 2026-08-04
+**Status:** DONE -- all 3 issues closed with evidence-citing comments; new permanent
+close-out checklist added to prevent recurrence.
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Phase 0 orient (full protocol, priorities-list
+`AskUserQuestion` picker). No undocumented commits found (the one commit since the
+`CHANGELOG.md` frontier was S474's own self-referential HANDOFFS.md-sha backfill, matching
+the established no-log-needed pattern). While cross-checking `gh issue list` against
+`BACKLOG.md`'s own DONE markers (going beyond what S474's handoff itself named), found a
+**third instance** of the "implementation done, issue never closed" gap: issue #142
+(rectilinear waypoint style, fully implemented S465/S468) was also still `OPEN`, alongside
+the #143/#144 pair S474's handoff had already flagged. Surfaced this in the orientation
+report; owner picked "Close issues #142/#143/#144" via `AskUserQuestion`. **(2)** Claimed
+the session (stub + `HANDOFFS.md` `status: pending` receipt, commit `4f372e70`). **(3)**
+Gathered verification evidence for each issue directly from `CHANGELOG.md` (not just
+`BACKLOG.md`'s own summary) -- read the actual Session 463-468 (#142), 471-472 (#143), and
+473-474 (#144) entries in full before writing anything. **(4)** Closed all 3 via
+`gh issue close --reason completed --comment "..."`, each comment citing the specific
+shipped mechanism, real numeric verification results (mismatch counts, test-suite pass
+counts, live `shinytest2` findings), and the exact `CHANGELOG.md` date/session tag --
+matching the established #131/#134/#135/#139 "closed via GitHub comment" precedent, not a
+bare "fixed." Verified all 3 now show `CLOSED` via `gh issue list --state closed`. Checked
+`BACKLOG.md` for any now-stale "still open" claims needing correction -- found none (all
+existing #142/#143/#144 mentions are dated historical narrative describing past sessions'
+own state-at-the-time, matching the project's own established "leave dated historical prose
+unedited" convention, S384/S418 precedent). **(5)** Recognized this as a recurring,
+now-3-instances-deep process gap rather than 3 independent one-offs -- added
+`PROJECT_LEARNINGS.md` Learning 475 documenting the pattern (#142 stayed open 7 sessions,
+#143 stayed open 3 sessions despite being flagged twice, #144 stayed open 1 session), and a
+new `CLAUDE.md` "GitHub issue close-out checklist" Additional-close-out-checks item mirroring
+the citation/tutorial/`NEWS.Rmd` checklist family already established for exactly this kind
+of recurring same-session-obligation gap. Updated `CLAUDE.md`'s learning-count
+cross-reference (474->475, Sessions 1-474+->1-475+). **(6)** Recorded 3 non-commit actions
+(the issue closes themselves) in `CHANGELOG.md` per FM #27, since an issue close leaves no
+git commit of its own.
+
+**Session 474 Handoff Evaluation (by Session 475): 9/10.** **What helped:** next-steps item
+(a) named exactly this task ("Consider closing GitHub issue #144 ... and #143 too") with
+enough specificity to go straight to verification rather than having to reconstruct why
+these issues should close. The priorities list (b)-(g) matched almost exactly what this
+session's own independent `BACKLOG.md` read found, so no time was lost re-deriving open
+work. **What was missing:** the handoff's item (a) named #143/#144 but not #142, even though
+#142 had been sitting open just as long -- longer, in fact (implemented S468, vs. #143's
+S472 and #144's S474). This means even a 10/10-scored predecessor (S473's evaluation of
+S472) and this handoff itself both missed a same-class instance of the exact pattern they
+were themselves flagging for #143/#144 -- the gap was only caught by this session's own
+systematic `gh issue list`-vs-`BACKLOG.md` cross-check, not inherited from any prior
+session's notes. **What was wrong:** nothing factually incorrect -- the #143/#144 status
+claims and every citation held up under this session's independent re-verification.
+**ROI:** strongly positive -- even with the #142 gap, the handoff's specificity meant zero
+time was spent reconstructing task scope, only on verification and the (correct) decision to
+broaden scope by one issue before acting.
+
+**Self-assessment (Session 475): 9/10.** **Strengths:** (1) correctly recognized this task
+has no TDD phase to declare (no code or tests involved) and matched the established
+docs/administrative-only precedent rather than forcing an inapplicable RED/GREEN/REFACTOR
+framing; (2) did not stop at the handoff's own named scope -- ran an independent
+`gh issue list`-vs-`BACKLOG.md` cross-check during Phase 0 and found a third, unflagged
+instance (#142) before presenting the priorities list, rather than closing only the two the
+predecessor named; (3) verified each issue's resolution evidence directly from `CHANGELOG.md`
+source before writing any closing comment, rather than trusting `BACKLOG.md`'s own summary
+prose secondhand; (4) elevated a 3-times-repeated incidental gap into a permanent structural
+fix (new `CLAUDE.md` checklist + `PROJECT_LEARNINGS.md` learning) in the same session it was
+fully confirmed, rather than filing it as yet another "future session should..." backlog item
+that could recur a 4th time; (5) followed ledger discipline for non-commit actions (issue
+closes) per FM #27, not just the commits. **Weaknesses:** (1) this is a very small,
+single-purpose deliverable -- correctly scoped per the owner's explicit `AskUserQuestion`
+pick and the "1 and done" rule, but worth naming plainly rather than padding the
+self-assessment to sound weightier than it is. **Compared to previous sessions:** matches
+the project's established "report and fix a recurring incidental gap with a structural
+checklist, not just a one-off patch" pattern (citation/tutorial/`NEWS.Rmd` checklists), now
+extended to a fourth checklist family (issue close-out) discovered the same way those were.
+
+**Handoff to Session 476:**
+- **What's next:** **(a)** Root-cause and fix the `renv.lock` gap (READY-ish, Effort S-M) --
+  10 dev-tool packages (`testthat`/`pkgload`/`devtools`/`roxygen2`/`shinytest2`/`chromote`/
+  `dplyr`/`mockery`/`quarto`/`shinyBS`) are missing from `renv.lock`'s `Packages` section in
+  BOTH the committed HEAD and the long-standing uncommitted diff; decide
+  `renv::snapshot(type = "all")` vs. hand-adding, then verify a fresh restore covers them.
+  See `BACKLOG.md` Housekeeping and `PROJECT_LEARNINGS.md` Learning 473. **(b)** Lint debt
+  process fix (READY, Effort S-M, unchanged, carried since S462/S466). **(c)** LabKey
+  integration remainder (BLOCKED, needs live LabKey server). **(d)** NPRC outreach (DECISION
+  NEEDED, owner-only). **(e)** Lower priority: `highlightNearest` degree=6 bounded mitigation
+  follow-up; kinship2-comparison-doc staleness (S); 3 dangling-parent/NA-gen crash reports;
+  6-word spelling-wordlist drift (`inst/WORDLIST`, found S465); `colony-manager-guide.qmd`
+  Diagram-tab screenshot staleness (S); live-vs-offline pedigree node-count discrepancy;
+  `data-raw/rhesusPedigree.R` docstring/fixture mismatch (S); iCloud duplicate-`.R`-file
+  artifact (self-resolves pending planned repo relocation, still not moved as of this
+  session); `freePassIds`-vs-D5 structural gap. **(f)** Informational: issues #133/#136/#137/
+  #138 (data-model gated), #141 (premature-optimization, deferred), #123/XARCH-5 (open by
+  design pending escalation triggers), #116 (deferred slice), #37/#36/#28/#12/#11/#10/#5
+  (long-standing feature asks) -- untouched, FYI only. **(g)** Going forward: apply the new
+  `CLAUDE.md` "GitHub issue close-out checklist" -- any session whose close-out marks a
+  `BACKLOG.md` item fully DONE against a named GitHub issue must close that issue in the SAME
+  session, not defer it.
+- **Key files:** `CLAUDE.md` (new "GitHub issue close-out checklist" Additional-close-out-
+  checks item + learning-count cross-reference bump); `PROJECT_LEARNINGS.md` (new Learning
+  475); `CHANGELOG.md` (3 new `[issue #N] Closed the issue` entries); `HANDOFFS.md`/
+  `SESSION_NOTES.md` (this session's receipt/notes).
+- **Gotchas:** (1) **When a `BACKLOG.md` item is marked DONE against a named GitHub issue,
+  do not assume the issue was closed in the same session** -- this session found 3
+  consecutive counterexamples (#142/#143/#144); always cross-check `gh issue list` against
+  `BACKLOG.md`'s DONE markers during Phase 0, not just trust the backlog text. (2) The
+  pre-existing uncommitted `renv.lock`/`.DS_Store` diff and the 5 untracked reference/planning
+  files are unrelated to this session and were correctly left untouched -- do not fold them
+  into an unrelated commit. (3) All prior sessions' standing gotchas (`# nolint` suppressions,
+  `devtools::install(upgrade = FALSE)`, `shinytest2::AppDriver` needing both `NPRC_RUN_E2E=true`
+  and `NOT_CRAN=true`, the reserved-prefix pattern-match-don't-hardcode convention,
+  `devtools::document()`'s iCloud duplicate-file contamination, live-vs-offline union-id
+  numbering not transferring) still apply unchanged -- this session did not touch code, so
+  none of these were directly exercised.
+- **Self-assessment score:** 9/10 (breakdown above).
 
 ### What Session 474 Did
 **Deliverable:** Implement the ratified issue #144 plan (`docs/planning/issue144-anchor-row-mismatch-fix-plan.md`)
