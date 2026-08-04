@@ -9,11 +9,200 @@
 ### What Session 469 Did
 **Deliverable:** Fix the duplicate-node connector rendering straight instead of arched
 (`BACKLOG.md`, found S468) -- picked by the owner via the S469 orientation-report
-`AskUserQuestion` picker. (IN PROGRESS)
-**Started:** 2026-08-03
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+`AskUserQuestion` picker.
+**Started/Completed:** 2026-08-03 / 2026-08-03
+**Status:** DONE -- duplicate-node connectors now render as a curved arc, matching
+the kinship2/reference-pedigree convention; full TDD cycle, live-verified against
+the real running app in both edge styles.
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Phase 0 orient (full protocol, including the
+priorities-list `AskUserQuestion` picker); owner picked "Duplicate-node arc fix."
+Claimed the session immediately (stub + `HANDOFFS.md` `status: pending` receipt,
+commit `76abc903`). **(2)** PRE-RED: read `makePedigreeMatingLayout()`'s edge
+construction (`dupEdges`/`mateEdges`/`childEdgesOut`) and `.addRectilinearWaypoints()`
+in full. Rather than assume the BACKLOG item's own "vis.js supports a per-edge
+`smooth` override" claim, read the actual bundled `vis-network.min.js` (the
+per-edge option-merge function `$h`, used identically for `smooth`/`dashes`/
+`color`) and `htmlwidgets/visNetwork.js` (`visNetworkdataframeToD3()`, which
+splits dotted column names like `smooth.enabled`/`smooth.type` into a nested
+per-edge JS object -- the same mechanism already backing this file's own
+`color.background`/`color.border` node columns) to confirm the mechanism is real,
+not a "looks right, silently ignored" trap like S465's `hidden = TRUE` finding.
+This research also surfaced a genuine second-function integration risk BEFORE any
+test was written: `.addRectilinearWaypoints()`'s own `newEdges[, names(keptEdges)]`
+rbind (line 990 at read time) would throw "undefined columns selected" once the
+passed-through direct-style `edges` carried the 3 new columns, unless that
+function's own fresh waypoint-edge construction (`ne`) gained matching NA-filled
+columns too. Brought the full plan (both functions, the exact new columns/values,
+the test plan) to the owner via `AskUserQuestion` before writing any test.
+**(3)** RED: 2 new tests (dup connectors carry `smooth.enabled = TRUE`/
+`smooth.type = "curvedCW"` under both `edgeStyle` values; other edges stay `NA`)
+plus 1 existing test's column-set assertion updated (the "no new columns beyond
+the existing contract" test -- that contract legitimately changes as part of this
+fix). **First RED-confirmation pass caught a real bug in the tests themselves**:
+2 of the 3 new/changed assertions passed vacuously, because `df$nonExistentColumn`
+returns `NULL` in R and `all(NULL)` is `TRUE` -- fixed by adding an explicit
+`"col" %in% names(df)` existence check before the value checks, re-ran, confirmed
+genuine failure this time (new Learning 466). Checkpoint-committed (`1f8b8cdd`).
+**(4)** GREEN: added the 3 `smooth.*` columns to `dupEdges` (real values) and to
+`mateEdges`/`childEdgesOut` (NA, both branches) in `makePedigreeMatingLayout()`,
+plus matching NA-filled columns to `.addRectilinearWaypoints()`'s own `ne`
+construction (both branches). Unit tests green; full regression suite 0 failed/0
+error (4524 passed = 4515 baseline + 9 new assertions, exact 10-warning baseline
+match); `devtools::check()` 0 new errors/warnings/notes (1 warning/1 note, both
+the pre-existing unrelated iCloud-duplicate-file/vignette-engine baseline);
+`lintr` 0 on both changed files. Checkpoint-committed (`432eedb4`).
+**(5)** Live verification (beyond what an Effort-S item strictly requires, but
+matching this project's own Learning-463 precedent of not stopping at "the config
+looks right"): drove the real running app via `shinytest2`/`chromote` against the
+bundled 375-individual fixture -- confirmed all 128 duplicate-connector edges
+carry the arc override, 0 diagram-related console errors. The full-fixture
+screenshot was too zoomed out to visually confirm the arc, so rendered a small
+isolated 8-node fixture (the same `GA204Z`/`8LKBV9` loop used in the unit tests)
+standalone via `chromote` and screenshotted it -- visually confirmed the
+duplicate connectors render curved, distinct from the straight mate-line/child
+edges. Separately re-verified live that toggling to `edgeStyle = "rectilinear"`
+still works with 0 errors and the arc survives (the specific integration risk
+found in step 2) -- hit and fixed a wrong-guessed Shiny input id along the way
+(`pedigree-edgeStyle` vs. the real `pedigree-pedigreeEdgeStyle`), the same class
+of mistake S468's own handoff explicitly warned about for a different widget id.
+**(6)** `TDD: GREEN->REFACTOR` `AskUserQuestion` -- owner picked skip (GREEN
+already matched the file's established `dashes`/`color` column-addition style, 0
+lints). **(7)** Close-out: `BACKLOG.md` item marked `[x]` DONE with full
+resolution detail; `_pedigree_browser.Rmd`'s "dashed line" wording updated to
+"curved, dashed line" for accuracy (re-rendered, confirmed present in output; not
+a NEWS.Rmd-worthy change per the shinyBS-popover-fix precedent, S437/438 -- a bug
+fix to existing behavior, not a new function/control); `CHANGELOG.md` entry;
+`PROJECT_LEARNINGS.md` Learnings 465 (the `visNetwork` dot-named-column per-edge
+override mechanism) and 466 (the `all(NULL) == TRUE` RED-test vacuous-pass trap);
+`CLAUDE.md` learning-count cross-reference (464->466, Sessions 1-468+->1-469+).
+
+**Session 468 Handoff Evaluation (by Session 469): 9/10.** **What helped:** the
+handoff's "what's next" item (b) named this exact item (the duplicate-node
+connector arc) with an accurate one-line diagnosis and a correct technical
+pointer ("a per-edge `smooth` override on `dupEdges` specifically (vis.js
+supports this)") -- the approach that shipped is exactly the one the handoff
+sketched, and PRE-RED research confirmed rather than overturned it. The listed
+gotcha about `app$get_logs()` (not `get_log()`) was used correctly on the first
+try, directly saving a wrong-first-try this session would otherwise have hit.
+**What was missing:** the handoff's own file:line pointer for `dupEdges`
+(`R/makePedigreeDiagramData.R:778-784`) had drifted to ~790 by the time this
+session read it, purely because S468's own Slice 2 edits shifted line numbers
+after the handoff was written -- inherent staleness, not an error, and trivial
+to relocate via grep. **What was wrong:** nothing substantively wrong -- the
+"vis.js supports this" claim was correct and independently re-verified against
+source. **ROI:** strongly positive -- went straight to a validated implementation
+approach rather than first discovering whether the fix was even feasible.
+
+**Self-assessment (Session 469): 8/10.** **Strengths:** (1) PRE-RED research went
+beyond confirming the obvious fix -- read the actual bundled vis.js/visNetwork JS
+source to verify the per-edge override mechanism is genuine (not assumed from the
+BACKLOG item's own claim), and found a real, non-obvious second-function
+integration risk (`.addRectilinearWaypoints()`'s rbind crash) before writing any
+test, then designed RED test #2 specifically to exercise that path; (2) caught a
+real bug in my own RED tests (2 assertions passing vacuously due to `all(NULL) ==
+TRUE`) by reading the test output critically rather than treating "tests ran, 1
+failed" as sufficient confirmation of RED -- a concrete, first-hand instance of
+the exact discipline TDD's "confirm RED fails for the right reason" step exists
+for; (3) did not stop at "the live DataSet JSON has the right keys" -- rendered
+an isolated small fixture specifically to get an unambiguous visual screenshot
+after the full-fixture one proved too zoomed out to read, and separately
+live-re-verified the `edgeStyle = "rectilinear"` path specifically because PRE-RED
+research had flagged it as the one place a crash could hide; (4) kept the
+pre-existing dirty working-tree state (iCloud duplicate-file contamination,
+`renv.lock`, untracked files) completely untouched across every commit this
+session, verified via `git status` before each stage; (5) found and fixed a real,
+now-stale piece of documentation (`_pedigree_browser.Rmd`'s "dashed line" wording)
+as part of closing the loop, verified via an actual re-render rather than a text
+edit taken on faith. **Weaknesses:** (1) guessed a Shiny input id wrong
+(`pedigree-edgeStyle`) before discovering the real one, the exact class of
+mistake S468's own handoff had just warned about for a different widget's id
+(the PNG export button) -- should have front-loaded the id-discovery JS query
+before the first `set_inputs()` attempt, not after it errored; a second
+consecutive session repeating a documented handoff gotcha in a new instance is
+worth watching for a pattern, not just a one-off; (2) botched the first
+`devtools::check()` background invocation by adding my own `&` inside the tool's
+own `run_in_background` flag, causing the process to detach with no captured
+output -- wasted one full check() cycle (~3.5 minutes) before diagnosing and
+re-running correctly; (3) did not attempt a REFACTOR pass (owner-confirmed skip,
+not a defect) -- the 3 new columns are now added in 5 separate places (3 edge
+-building branches in `makePedigreeMatingLayout()`, 2 branches in
+`.addRectilinearWaypoints()`); real but modest duplication a future session
+extending per-edge overrides further may want to factor into a small helper.
+**Compared to previous sessions:** matches and extends the S459-468 discipline of
+live-verifying claims against real running-app behavior rather than trusting a
+config/JSON check alone (Learning 463's own precedent) -- this session's own
+extension is applying that same "don't trust the surface signal" discipline
+reflexively to its OWN RED tests, catching a vacuous-pass bug in real time rather
+than only ever pointing the scrutiny at the codebase under test.
+
+**Handoff to Session 470:**
+- **What's next:** everything carried forward from S468's own handoff is
+  unchanged except item (b), now resolved:
+  **(a)** `highlightNearest` degree=6 mitigation for the rectilinear style is
+  bounded, not a full fix (`BACKLOG.md`, found S468, Effort M, low priority) --
+  measure the real fixture's own max sibship size first to gauge how often this
+  matters in practice before designing a full fix. **(b)** ~~Duplicate-node
+  connector renders straight~~ -- DONE this session. **(c)** Wire a process fix
+  so `lintr` debt stops re-accumulating (READY, Effort S-M, split off S466,
+  still untouched). **(d)** Founder-positioning defect (DECISION NEEDED, Effort
+  M, found S463) -- root cause identified, fix not designed, unchanged; the
+  handoff's own text suggests this likely needs its own plan-mode session given
+  it touches shared `.positionMatingUnitForest()` D3/D4/D5 logic. **(e)**
+  Everything else carried forward unchanged from S462-468: stale
+  `colony-manager-guide.qmd` Diagram screenshot (READY S); the 6-word
+  `devtools::check()` spelling-drift NOTE (READY S, still not fixed -- note this
+  session's own `devtools::check()` run showed only 1 NOTE, not the 2 some
+  earlier sessions reported; did not investigate further, out of this session's
+  scope, but a future session picking up the spelling item should re-check
+  whether it's still live before assuming the count is stale); NPRC outreach plan
+  (DECISION NEEDED, owner-only); LabKey (BLOCKED); S445's methodology question;
+  iCloud repo relocation still pending (the `man/*.Rd` contamination and
+  `R/appServer 2.R`/`R/modMarkerGenetics 2.R` untracked files were both present,
+  untouched, at both Orient and close-out this session -- unrelated to this
+  session's own diff); issues #133/#136/#137 (data-model gated), #141
+  (filed-not-scheduled); 2 untracked reference PDFs; unexplained `renv.lock` diff
+  (11 sessions now); 2 untracked rendered `.html` files under `docs/planning/`.
+- **Key files:** `R/makePedigreeDiagramData.R:766-812` (`mateEdges`/`dupEdges`/
+  `childEdgesOut` construction, now with `smooth.enabled`/`smooth.type`/
+  `smooth.roundness` columns), `:978-1007` (`.addRectilinearWaypoints()`'s
+  `newEdges`/`ne` construction, matching NA-filled columns);
+  `tests/testthat/test_makePedigreeMatingLayout.R` (2 new tests after the
+  existing dup-connector test; the "no new columns" test's assertion updated);
+  `vignettes/manual_components/_pedigree_browser.Rmd:70` (wording fix);
+  `BACKLOG.md` (item marked `[x]` DONE with full resolution detail).
+- **Gotchas:** (1) **The `pedigree-pedigreeEdgeStyle` radio input's actual name
+  is NOT `pedigree-edgeStyle`** (a reasonable-looking guess from the `edgeStyle`
+  parameter name is wrong) -- discover real Shiny input/output ids via
+  `app$get_js("Array.from(document.querySelectorAll(...)).map(...)")` or
+  `get_html_safe()` BEFORE the first `set_inputs()`/selector attempt, not after
+  it errors; this is now the second session in a row hitting this exact class of
+  mistake (S468 hit it for the PNG export button id). (2) **`all(NULL)` is
+  `TRUE` in R, and `df$missingColumn` returns `NULL`, not an error** -- a RED
+  test asserting `all(df$notYetAddedCol == x)` against a column that doesn't
+  exist yet passes vacuously instead of failing; always add an explicit
+  `"col" %in% names(df)` existence check as ITS OWN assertion before any
+  value-level check on a column RED is supposed to prove is missing (Learning
+  466). (3) **Never add your own `&` inside a `run_in_background` Bash call** --
+  the tool already backgrounds the whole command; double-backgrounding detaches
+  the actual process from the tool's own tracking, so the "completed" 
+  notification fires immediately (for the wrapper shell) while the real work
+  (e.g. `devtools::check()`) is still running unobserved in the background,
+  producing an empty output file. (4) **A per-row vis.js option override in
+  this codebase's `visNetwork` data frames uses dot-named columns**
+  (`smooth.enabled`, `smooth.type`, `color.background`, etc.), NA-valued on any
+  row that should inherit the widget-level default -- confirmed against the
+  actual bundled `visNetwork.js`/`vis-network.min.js` source, not assumed
+  (Learning 465); reuse this mechanism for any future per-edge/per-node visual
+  override rather than inventing a new one. (5) All S462-468 gotchas (`#
+  nolint` suppressions, `.lintr` per-line exclusion, `devtools::install(upgrade
+  = FALSE)`, `shinytest2::AppDriver` needing BOTH `NPRC_RUN_E2E=true` AND
+  `NOT_CRAN=true`, the `__union_`/`__dup_`/`__drop_`/`__bar_`/`__proj_`
+  reserved-prefix pattern-match-don't-hardcode convention, the
+  `devtools::document()` iCloud-duplicate-file contamination) still apply
+  unchanged.
+- **Self-assessment score:** 8/10 (breakdown above).
 
 ### What Session 468 Did
 **Deliverable:** Implement Issue #142 Slice 2 (rectilinear mate-line/sibship-bar

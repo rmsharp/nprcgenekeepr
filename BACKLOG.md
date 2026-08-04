@@ -852,31 +852,55 @@ visNetwork-vs-kinship2 technology decision (D2), which stands as ratified.*
       live pipeline; both are correct, self-consistent applications of the
       same algorithm to different (valid) row orders. See `CHANGELOG.md`,
       `PROJECT_LEARNINGS.md` Learning 457, design doc §9.)
-- [ ] **Duplicate-node connector renders straight, not arched, unlike the
-      kinship2/standard-pedigree convention** (READY, Effort S, found S468
-      2026-08-03) -- owner observation comparing this app's diagram against
-      a reference pedigree image (rpubs.com/dliupress/pedigreedemo, Pedigree
-      1): the referenced convention draws the dashed line connecting a
-      duplicated individual's extra mating-position occurrence back to
-      their primary occurrence as a visibly **arched/curved** line. This
-      app's own duplicate-node mechanism (D6, issue #129 Slice 3, S461) is
-      otherwise already equivalent -- a real duplicate node IS created at
-      each extra mating position and IS connected back to the real
-      individual via a dashed edge (`R/makePedigreeDiagramData.R:778-784`,
-      `dupEdges`, `dashes = TRUE`) -- but `R/modPedigree.R:412`'s
-      `visNetwork::visEdges(smooth = FALSE)` applies globally to every
-      edge in the widget, including this one, so the dashed connector
-      renders as a straight line, not an arc. A fix would need a
-      per-edge `smooth` override (vis.js supports `edges[i].smooth` as a
-      per-edge object overriding the widget-level default) applied only to
-      `dupEdges`, not to mate-line/child/sibship-bar edges (which are
-      deliberately straight/orthogonal by design, both in the current
-      direct style and the in-progress issue #142 rectilinear style).
-      Analytically separate from issue #142's own mate-line/sibship-bar
-      edge-routing work (Slice 2, in progress this session) -- not folded
+- [x] **Duplicate-node connector renders straight, not arched, unlike the
+      kinship2/standard-pedigree convention** (found S468 2026-08-03) --
+      **RESOLVED -- S469 (2026-08-03):** owner observation comparing this
+      app's diagram against a reference pedigree image
+      (rpubs.com/dliupress/pedigreedemo, Pedigree 1): the referenced
+      convention draws the dashed line connecting a duplicated individual's
+      extra mating-position occurrence back to their primary occurrence as
+      a visibly **arched/curved** line. `makePedigreeMatingLayout()`'s
+      `dupEdges` now carry a per-edge vis.js `smooth` override
+      (`smooth.enabled = TRUE`, `smooth.type = "curvedCW"`,
+      `smooth.roundness = 0.2`, via 3 new dot-named columns), overriding
+      `R/modPedigree.R`'s widget-level `visEdges(smooth = FALSE)`; every
+      other edge leaves `smooth.enabled` `NA`, inheriting that global
+      default unchanged. Pre-RED read the bundled `vis-network.min.js`/
+      `visNetwork.js` source directly (not assumed) and confirmed a
+      per-edge `smooth.*` dotted-column override is a genuine, already-used
+      mechanism (same one backing edges' `color`/nodes' `color.background`)
+      -- and found a real second-function integration risk before writing
+      any test: `.addRectilinearWaypoints()`'s own fresh waypoint edges
+      needed matching NA-filled `smooth.*` columns too, or its
+      `newEdges[, names(keptEdges)]` rbind would throw "undefined columns
+      selected" once the passed-through direct-style edges carried the new
+      columns -- fixed in the same commit; `dupEdges` are never touched by
+      that function's D1/D2 waypoint logic, so the arc survives unchanged
+      under `edgeStyle = "rectilinear"` too (live-verified). Full TDD cycle
+      (RED -- 3 tests, 2 new + the existing "no new columns beyond
+      contract" test updated for the now-intentionally-changed edge column
+      set; GREEN; REFACTOR owner-confirmed skip -- GREEN already matched
+      this file's established `dashes`/`color` column-addition style).
+      Verified: regression suite 0 failed/0 error (4524 passed = 4515 + 9
+      new assertions, exact baseline 10 pre-existing warnings);
+      `devtools::check()` 0 new errors/warnings/notes (1 warning/1 note,
+      both the pre-existing unrelated iCloud-duplicate-file and
+      vignette-engine baseline); `lintr` 0 on both changed files. Live
+      `shinytest2`/`chromote` verification against the real 375-individual
+      fixture: all 128 duplicate-connector edges carry the arc override (0
+      diagram-related console errors); a small isolated-fixture screenshot
+      visually confirms the connector renders curved, distinct from the
+      straight mate-line/child edges; the `edgeStyle = "rectilinear"` radio
+      toggle re-verified live with 0 errors, arc intact. `_pedigree_browser.Rmd`'s
+      "dashed line" wording updated to "curved, dashed line" for accuracy
+      (re-rendered, confirmed present in output); no `NEWS.Rmd` entry, per
+      the shinyBS-popover-fix precedent (S437/438) -- a bug fix to existing
+      behavior, not a new function/control, is outside that checklist's own
+      scope. Analytically separate from issue #142's own mate-line/
+      sibship-bar edge-routing work (Slice 2, shipped S468) -- not folded
       in, per this project's own scope-discipline precedent (see the
       founder-positioning-defect item immediately below, and
-      `PROJECT_LEARNINGS.md` Learning 382).
+      `PROJECT_LEARNINGS.md` Learning 382). See `CHANGELOG.md`.
 - [ ] **Founder-positioning defect: a founder who mates into a LATER
       generation renders at the wrong row, visually implying the wrong
       pairing** (DECISION NEEDED -- root cause identified, fix not designed,

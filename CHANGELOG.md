@@ -43,6 +43,29 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-03 · [BL-dupNodeArc] Duplicate-node connector renders as an arc, not straight (Session 469)
+- **Deliverable:** fixed the pedigree diagram's duplicate-node connector to render
+  as a curved/arched dashed line, matching the kinship2/reference-pedigree
+  convention (found S468). `makePedigreeMatingLayout()`'s `dupEdges` gain a
+  per-edge vis.js `smooth` override (`enabled = TRUE`, `type = "curvedCW"`,
+  `roundness = 0.2`), overriding `R/modPedigree.R`'s widget-level
+  `visEdges(smooth = FALSE)`; every other edge is unaffected. Pre-RED source
+  reading found and fixed a second integration site:
+  `.addRectilinearWaypoints()`'s own fresh waypoint edges needed matching
+  NA-filled `smooth.*` columns to avoid an "undefined columns selected" crash
+  once the passed-through direct-style edges carried the new columns; the arc
+  survives unchanged under `edgeStyle = "rectilinear"` too (live-verified).
+  Full TDD cycle (RED -- 2 new tests + 1 existing test's column-set assertion
+  updated for the intentionally-changed contract; GREEN; REFACTOR
+  owner-confirmed skip). Verified: regression suite 0 failed/0 error (4524
+  passed, exact baseline warnings); `devtools::check()` 0 new
+  errors/warnings/notes; `lintr` 0. Live `shinytest2`/`chromote` verification
+  against the real 375-individual fixture (both edge styles) plus a small
+  isolated-fixture screenshot visually confirming the arc. `_pedigree_browser.Rmd`
+  wording updated ("dashed line" -> "curved, dashed line"), re-rendered. No
+  `NEWS.Rmd` entry, per the shinyBS-popover-fix precedent (S437/438) -- a bug
+  fix to existing behavior is outside that checklist's scope. See `BACKLOG.md`.
+
 ### 2026-08-03 · [ad hoc] Filled in this session's own HANDOFFS.md receipt commit sha (Session 468)
 - **Deliverable:** Filled in this session's own `HANDOFFS.md` receipt
   `commit: pending` placeholder with the real close-out commit sha

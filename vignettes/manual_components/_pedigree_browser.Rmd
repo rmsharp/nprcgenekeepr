@@ -68,7 +68,7 @@ connectors as strict right angles instead, matching the more traditional
 pedigree-chart look. An animal that mates more
 than once, or whose lineage loops back on itself (e.g. a consanguineous
 mating), appears once per mating, with each occurrence joined back to its main
-occurrence by a dashed line; hovering, clicking, or searching any occurrence
+occurrence by a curved, dashed line; hovering, clicking, or searching any occurrence
 behaves identically to the animal's main occurrence. Clicking an animal
 re-centers the population on it, the same as entering its ID in the
 focal-animals text area. An **Export Diagram (PNG)** button,

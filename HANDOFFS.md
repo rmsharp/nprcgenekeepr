@@ -62,16 +62,16 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S469
 date: 2026-08-03
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Fix duplicate-node connector rendering straight instead of arched (BACKLOG.md, found S468).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- duplicate-node connector now renders as a curved arc (BACKLOG.md, found S468), matching the kinship2/reference-pedigree convention. Full TDD cycle, live-verified against the real running app in both direct and rectilinear edge styles.
+what_was_done: makePedigreeMatingLayout()'s dupEdges gain a per-edge vis.js smooth override (enabled=TRUE, type="curvedCW", roundness=0.2, via 3 new dot-named columns); every other edge leaves smooth.enabled NA, inheriting R/modPedigree.R's existing global visEdges(smooth = FALSE). PRE-RED found and fixed a second integration site: .addRectilinearWaypoints()'s own fresh waypoint edges needed matching NA-filled smooth.* columns or its rbind() throws "undefined columns selected" once the passed-through edges carry the new columns (commit 432eedb4). RED: 2 new tests + 1 existing test's column-set assertion updated (commit 1f8b8cdd) -- caught 2 assertions passing vacuously (all(NULL) == TRUE) before treating RED as confirmed, fixed with an explicit column-existence check. Verified: regression suite 0/0 (4524 passed, exact baseline warnings); devtools::check() 0 new issues; lintr 0. Live shinytest2/chromote verification: all 128 dup-connector edges on the real 375-individual fixture carry the arc (0 diagram console errors); a small isolated-fixture screenshot visually confirms the curved connector; edgeStyle="rectilinear" toggle re-verified live with 0 errors. _pedigree_browser.Rmd wording updated ("dashed line" -> "curved, dashed line"), re-rendered.
+next_steps: (a) highlightNearest degree=6 mitigation for rectilinear is bounded, not a full fix (BACKLOG.md, found S468, Effort M, low priority) -- measure real max sibship size first. (b) Lint debt process fix (READY, Effort S-M, split off S466, still untouched). (c) Founder-positioning defect (DECISION NEEDED, Effort M, found S463, unchanged) -- likely needs its own plan-mode session. (d) Everything else carried forward unchanged from S462-468 -- see SESSION_NOTES.md for the full list.
+key_files: R/makePedigreeDiagramData.R:766-812 (mateEdges/dupEdges/childEdgesOut construction with new smooth.* columns), :978-1007 (.addRectilinearWaypoints()'s newEdges/ne construction, matching NA-filled columns); tests/testthat/test_makePedigreeMatingLayout.R (2 new tests + 1 updated); vignettes/manual_components/_pedigree_browser.Rmd:70 (wording fix); BACKLOG.md (item marked [x] DONE).
+gotchas: (1) The pedigree-pedigreeEdgeStyle radio input's real name is NOT pedigree-edgeStyle (a reasonable guess from the parameter name is wrong) -- discover real Shiny input ids via app$get_js() BEFORE the first set_inputs() attempt, not after it errors; 2nd session in a row hitting this class of mistake (S468 hit it for the PNG export button id). (2) all(NULL) is TRUE in R and df$missingColumn returns NULL, not an error -- a RED test asserting all(df$notYetAddedCol == x) against a column that doesn't exist yet passes vacuously; always add an explicit "col" %in% names(df) existence check as its own assertion first (Learning 466). (3) Never add your own & inside a run_in_background Bash call -- double-backgrounding detaches the real process from the tool's tracking; the "completed" notification fires for the empty wrapper shell while the actual work (e.g. devtools::check()) is still running unobserved. (4) A per-row vis.js option override in this codebase's visNetwork data frames uses dot-named columns (smooth.enabled, color.background, etc.), NA-valued to inherit the widget default -- confirmed against the actual bundled JS source (Learning 465); reuse this mechanism for future per-edge/per-node visual overrides. (5) All S462-468 gotchas (nolint conventions, NPRC_RUN_E2E+NOT_CRAN both required, reserved-prefix pattern-match-don't-hardcode, devtools::document() iCloud contamination) still apply.
+runtime_smoke: Live shinytest2/chromote verification against the real running app (bundled 375-individual fixture): all 128 duplicate-connector edges carry the smooth arc override, 0 diagram-related console errors; a small isolated 8-node fixture rendered standalone via chromote and screenshotted, visually confirming the connector renders curved vs. the straight mate-line/child edges; edgeStyle="rectilinear" toggle separately re-verified live with 0 errors and the arc intact -- satisfies Phase 3E.
+changelog_ref: CHANGELOG.md 2026-08-03 [BL-dupNodeArc] entry (Session 469)
 commit: pending
 ```
 
