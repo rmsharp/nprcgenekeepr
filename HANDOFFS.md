@@ -72,7 +72,7 @@ key_files: DESCRIPTION (Suggests +devtools+quarto); renv.lock (157 packages, was
 gotchas: (1) Always pass dev=TRUE to renv::snapshot()/renv::status() in this project -- the bare form silently drops every Suggests-only package (Learning 476). (2) A Config/renv/profiles/<name>/dependencies or Config/Needs/* DESCRIPTION field is a promise, not a guarantee -- only read by the specific mechanism that recognizes it, never assume it's wired to renv without checking. (3) devtools::document() can reflow .Rd files even with NO iCloud duplicate .R files present (confirmed absent this session) -- a distinct roxygen2-version-drift cause from the previously-tracked contamination pattern; always git diff --stat after document()/check() and revert anything outside scope. (4) The pre-existing uncommitted .DS_Store diff and untracked planning/reference files are unrelated to this session, correctly left untouched. (5) All prior standing application-code gotchas unchanged, none directly exercised (infra/lockfile-only session).
 runtime_smoke: n/a -- infra/lockfile-only session (DESCRIPTION Suggests + renv.lock + CLAUDE.md/BACKLOG.md/PROJECT_LEARNINGS.md/CHANGELOG.md updates), no R/ or tests/ files changed, no runtime behavior affected. Matches this project's established precedent for docs/administrative-only sessions (S448/S451/S452/S453/S455/S475).
 changelog_ref: CHANGELOG.md 2026-08-04 [ad hoc] "Root-caused and fixed the renv.lock dependency-tracking gap" entry (Session 476)
-commit: pending
+commit: cd901e60
 ```
 
 ```handoff
