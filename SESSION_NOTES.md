@@ -7,6 +7,261 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 468 Did
+
+**Deliverable:** Implement Issue \#142 Slice 2 (rectilinear
+mate-line/sibship-bar waypoint style) – wire `edgeStyle` into
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md),
+add the `R/modPedigree.R` UI toggle, extend
+click-to-navigate/search-dropdown id-prefix filters to the 3 new
+reserved prefixes, re-measure the node count, re-verify inbreeding-loop
+rendering (#134) and `highlightNearest` hover-highlighting (#135) for
+the rectilinear style – picked by the owner via the
+S467-orientation-report `AskUserQuestion` picker. **Started/Completed:**
+2026-08-03 / 2026-08-03 **Status:** DONE – all four parts (a)-(d)
+shipped in 3 checkpoint commits; a real, live-confirmed regression in
+part (d) was found and fixed in a 4th checkpoint. **Ledger:** recorded
+in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Phase 0 orient (full protocol,
+including the priorities-list `AskUserQuestion` picker); owner picked
+“Issue \#142 Slice 2.” Claimed the session immediately (stub +
+`HANDOFFS.md` `status: pending` receipt, commit `dce78b9b`) – explicitly
+not repeating S467’s own skipped-stub gotcha. **(2)** Mid-session, the
+owner interjected with an observation (a reference pedigree image,
+rpubs.com/dliupress/pedigreedemo) noting that duplicated-mating
+individuals get a dashed connector back to their main occurrence in the
+reference convention. Confirmed this app’s own duplicate-node mechanism
+(D6, S461) already does exactly this, but renders the connector
+straight, not arched, because `visEdges(smooth = FALSE)` applies
+globally (`R/modPedigree.R:412`). Logged as a new, separate `BACKLOG.md`
+item rather than folding it into the in-progress Slice 2 work (own
+commit, `733dba9d`), matching this project’s own mode-switch/scope-creep
+discipline, then returned directly to Slice 2. **(3)** PRE-RED: read the
+ratified design doc in full, `.addRectilinearWaypoints()`‘s
+already-shipped Slice 1 implementation,
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md),
+`R/modPedigree.R`’s full render chain, and both existing test files’
+conventions. **(4)** Re-derived the design doc’s own suggested
+~380-individual rectilinear node cap and found the underlying formula
+algebraically wrong (it cancels out the rectilinear/direct ratio
+entirely, despite appearing to use it) – brought both the discrepancy
+and a dimensionally-correct re-derivation (~404) to the owner via
+`AskUserQuestion` before writing any test; owner ratified **400**.
+**(5)** Presented the full RED test plan for Layers 1+2 via a
+`TDD: PRE-RED->RED` `AskUserQuestion`; owner approved. **(6)** **Layer 1
+(data layer):** RED (4 failing tests in
+`test_makePedigreeMatingLayout.R`, confirmed) -\> GREEN
+(`edgeStyle = c("direct", "rectilinear")` on
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md),
+via [`match.arg()`](https://rdrr.io/r/base/match.arg.html), calling the
+already-shipped `.addRectilinearWaypoints()` only when `"rectilinear"`).
+Found and reverted a real `devtools::document()` contamination (picks up
+the untracked iCloud duplicate `R/appServer 2.R`/
+`R/modMarkerGenetics 2.R` as extra roxygen sources for 3 unrelated `.Rd`
+files – new Learning 464) before every commit. Checkpoint-committed
+(`2c4255e3`) after full regression suite (0/0, 4489 passed) +
+`devtools::check()` (1 WARNING/2 NOTEs, exact pre-existing baseline
+including the already-tracked 6-word spelling-drift item, 0 new) +
+`lintr` (0 lints). **(7)** **Layer 2 (UI layer):** RED (7
+failing/vacuous-pass tests in `test_modPedigree.R`, confirmed) -\> GREEN
+(`radioButtons()` style toggle rendered alongside the widget only when a
+diagram is shown – D4; style-aware node cap via `.currentEdgeStyle()`/
+`.currentDiagramCap()` closures; click-to-navigate and search-dropdown
+filters extended to the 3 new reserved prefixes, D3). Fixed 3 `lintr`
+findings on first pass (a `commented_code_linter` false positive on
+“D1/D2” reading as division, an 81-char line, an unnecessary quoted
+name). Checkpoint-committed (`47b7b445`) after full verification (0/0,
+4512 passed; check 1/2 baseline; lintr 0). **(8)** **Part (d), live
+re-verification:** wrote throwaway `shinytest2`/ `chromote` driver
+scripts (scratchpad) reusing the “known trio” test’s own
+`HTMLWidgets.find()`/DataSet-query technique. \#134 (`GA204Z`/`8LKBV9`
+loop) confirmed rendering correctly under the rectilinear style, 0
+diagram-related console errors. \#135’s search dropdown confirmed
+unit-test-covered. **Found a real, live-confirmed regression in \#135’s
+`highlightNearest` hover** – the exact risk the design doc’s own §3 D3
+flagged but left unresolved: triggering
+`network.body.emitter.emit('hoverNode', ...)` directly (vis.js’s own
+internal event bus) and inspecting the live DataSet’s dimmed/undimmed
+state found that an individual who is only a child (never a parent), or
+a parent whose own mate-line got rerouted through a D2 projection node,
+lights up **nothing visible at all** on hover – a BFS over the live edge
+graph confirmed the real hop distance from such an individual to their
+parents grew from 2 (direct style) to 4 (rectilinear style). Brought
+this to the owner via `AskUserQuestion` with 3 concrete options (quick
+mitigation / ship-as-is-and-file-issue / hold for a screenshot); owner
+picked the quick mitigation. **(9)** **Layer 3 (the fix):** RED (1
+failing test) -\> GREEN (`highlightNearest`’s `degree` becomes
+style-aware: 1 for direct, unchanged; 6 for rectilinear, covering the
+concretely measured hop distances). Live re-verified after the fix: the
+same previously-blank hover now lights up 2 real individual ids plus 3
+union dots. Checkpoint-committed (`0b90e65f`) after full verification
+(0/0, 4515 passed; check 1/2 baseline; lintr 0). **(10)** Live-confirmed
+the legend still renders as a separate widget instance and the PNG
+export button click succeeds with 0 related console errors (D3/§7’s own
+“confirm live” requirement) – legend’s exact shape-by-shape count was
+not independently re-audited (see self-assessment weaknesses). **(11)**
+`TDD: GREEN->REFACTOR` `AskUserQuestion` – owner picked skip (GREEN
+already matched established style, 0 lints throughout). **(12)**
+Close-out: `BACKLOG.md` Slice 2 item marked `[x]` DONE with full
+resolution detail + a new bounded-mitigation follow-up item filed;
+`NEWS.Rmd` new bullet + re-rendered `NEWS.md` (confined diff, no reflow
+churn); `vignettes/manual_components/_pedigree_browser.Rmd` Diagram
+paragraph extended (tutorial/article checklist, matching the S454
+precedent of updating this file rather than `colony-manager-guide.qmd`);
+`CHANGELOG.md` 2 entries (the Slice 2 deliverable + the ad hoc
+backlog-logging action); `PROJECT_LEARNINGS.md` Learnings 463
+(highlightNearest/invisible-waypoint interaction) and 464 (the
+`devtools::document()` duplicate-file contamination gotcha); `CLAUDE.md`
+learning-count cross-reference (462-\>464, Sessions 1-467+-\>1-468+).
+
+**Session 467 Handoff Evaluation (by Session 468): 9/10.** **What
+helped:** the handoff’s “what’s next” item (a) named this exact item
+(Issue \#142 Slice 2) with an accurate summary of the gate (satisfied
+S466) and pointed to S465’s own handoff for the full step-by-step –
+which itself matched `BACKLOG.md`’s own already-detailed (a)-(d)
+breakdown exactly, so no re-discovery was needed to scope the session.
+The handoff’s gotcha (2), about the `__union_`/`__dup_`/
+`__drop_`/`__bar_`/`__proj_` reserved-prefix pattern-match convention,
+was directly relevant to this session’s own filter-extension work (Layer
+2, item b) and saved a wrong-instinct hardcoding mistake before it could
+happen. **What was missing:** nothing structural – the handoff even
+explicitly flagged `highlightNearest` hover-highlighting as “a
+newly-found regression risk” needing live re-verification “neither
+inherited from prior verification,” which is exactly what this session
+found to be true, not a false alarm. **What was wrong:** nothing in
+S467’s own handoff was inaccurate. **ROI:** strongly positive –
+inheriting an already-fully-scoped Slice with an explicit, accurate risk
+flag meant this session could go straight to implementation and
+verification rather than first re-discovering scope or risk.
+
+**Self-assessment (Session 468): 8/10.** **Strengths:** (1) followed the
+pre-declared vertical-slice contract (Slice 2’s own (a)-(d) layer
+breakdown, enumerated in the ratified design doc and `BACKLOG.md`),
+checkpoint-committing at every layer boundary (4 commits, each well
+under the 5-file cap) with full verification (regression suite +
+`devtools::check()` + `lintr`) at every boundary, per gates (b)/(c); (2)
+did not skip the Phase 1B claim stub this session – claimed immediately
+after the owner’s task pick, before any technical work, directly
+addressing S467’s own named weakness; (3) caught and reverted a real
+`devtools::document()` contamination (picking up untracked iCloud
+duplicate files as extra roxygen sources) TWICE, before either commit
+that touched documentation, rather than accidentally shipping corrupted
+`.Rd` files – a new, concrete finding captured as Learning 464; (4)
+genuinely live-verified the design doc’s own explicitly-flagged,
+unresolved risk (`highlightNearest` under waypoint routing) via real
+`shinytest2`/`chromote` interaction triggering and DataSet inspection,
+rather than treating “0 console errors” as sufficient – found a real
+regression, brought it to the owner with concrete options via
+`AskUserQuestion` rather than silently shipping or silently fixing it,
+then fixed and re-verified live that the fix actually worked (not just
+re-checking config); (5) caught a real arithmetic error in the ratified,
+owner-approved design doc’s own cap-derivation formula rather than
+blindly implementing the stated ~380 number, and surfaced the
+discrepancy transparently rather than picking either number
+unilaterally; (6) handled a mid-session owner interjection (the
+duplicate-connector observation) correctly – did not treat it as an
+instruction to implement, confirmed what was already shipped
+vs. genuinely missing, logged it as a separate `BACKLOG.md` item without
+derailing the in-progress Slice 2 work, and returned directly to the
+approved plan; (7) declared TDD phase at every transition and used
+`AskUserQuestion` for every phase gate actually reached (PRE-RED-\>RED,
+GREEN-\>REFACTOR) plus 2 separate pre-RED scope decisions (the cap
+number, the regression-fix approach), correctly kept distinct from the
+phase gates themselves per `CLAUDE.md`’s own format rule.
+**Weaknesses:** (1) the session ran very long, with several
+live-verification driver scripts needing a second iteration to fix a
+wrong method name (`get_log()` vs. the correct `get_logs()`, a gotcha
+already named in S467’s own handoff – hit again despite having read it)
+or a guessed-wrong DOM selector (the search dropdown container, the PNG
+export button’s actual id) before succeeding – checking the widget’s own
+rendered HTML for exact ids first, rather than guessing from the
+`outputId` naming pattern, would have saved 1-2 iterations; (2) the
+legend’s exact shape-by-shape count under the rectilinear style was not
+independently re-audited this session – confirmed only that a second
+widget instance renders and 0 related console errors occur, which is
+real evidence but softer than the “confirm live, not assumed” standard
+the design doc itself calls for on this specific point (§3 D3); flagged
+transparently here rather than silently treated as fully verified.
+**Compared to previous sessions:** matches and extends the S459-467
+discipline of verifying claims against real code/live behavior rather
+than trusting documentation at face value – this session’s particular
+extension is catching an arithmetic error in a RATIFIED, owner-approved
+design document (not just an unverified backlog claim, the more common
+case in prior sessions) and confirming + fixing a regression the design
+document itself explicitly flagged as open and unresolved, rather than
+either silently ignoring the flag or over-engineering a full fix beyond
+this session’s own approved scope.
+
+**Handoff to Session 469:** - **What’s next:** **(a)**
+`highlightNearest` degree=6 mitigation for the rectilinear style is
+bounded, not a full fix (`BACKLOG.md`, found S468, Effort M, low
+priority) – a very wide sibship’s D1 bar chain can still exceed 6 hops;
+measure the real fixture’s own max sibship size first to gauge how often
+this matters in practice before designing a full fix (likely a custom JS
+`highlightNearest` reimplementation that skips through invisible
+waypoints regardless of hop count). **(b)** Duplicate-node connector
+renders straight, not arched (`BACKLOG.md`, found S468, Effort S) –
+`visEdges(smooth = FALSE)` applies globally; a per-edge `smooth`
+override on `dupEdges` specifically (vis.js supports this) would fix it
+without affecting the deliberately-orthogonal mate-line/sibship-bar
+edges. **(c)** Wire a process fix so `lintr` debt stops re-accumulating
+(READY, Effort S-M, split off S466, still untouched). **(d)**
+Founder-positioning defect (DECISION NEEDED, Effort M, found S463) –
+root cause identified, fix not designed, unchanged. **(e)** Everything
+else carried forward unchanged: stale `colony-manager-guide.qmd` Diagram
+screenshot (READY S); the 6-word `devtools::check()` spelling-drift NOTE
+(READY S, still not fixed – this session’s own roxygen edit added more
+occurrences of the same 6 words at new line numbers in
+`makePedigreeMatingLayout.Rd`, not a 7th word); NPRC outreach plan
+(DECISION NEEDED, owner-only); LabKey (BLOCKED); S445’s methodology
+question; iCloud repo relocation still pending; issues \#133/#136/#137
+(data-model gated), \#141 (filed-not-scheduled); 2 untracked reference
+PDFs; unexplained `renv.lock` diff (10 sessions now); 2 untracked
+rendered `.html` files under `docs/planning/`. **(f)**
+Optional/low-priority: the legend’s exact shape count under the
+rectilinear style was not independently re-audited this session (see
+self-assessment weakness 2) – a future session touching this area could
+close that gap if it becomes relevant. - **Key files:**
+`R/makePedigreeDiagramData.R:653-796` (`edgeStyle` param + wiring into
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md));
+`R/modPedigree.R:372-441` (cap constants +
+`.currentEdgeStyle()`/`.currentDiagramCap()` + the UI toggle), `:512`
+(click-to-navigate filter), `:534-536` (search-dropdown filter),
+`:538-550` (the `highlightNearest` degree fix);
+`tests/testthat/test_makePedigreeMatingLayout.R` (4 new tests, end of
+file); `tests/testthat/test_modPedigree.R` (8 new tests, end of file);
+`BACKLOG.md` (Slice 2 item `[x]` DONE + new bounded-mitigation item);
+`docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md`
+(now fully implemented – its own §3 D3 flagged risk is what this session
+confirmed and fixed). - **Gotchas:** (1) **`devtools::document()` in
+this environment picks up the untracked iCloud duplicate
+`R/appServer 2.R`/`R/modMarkerGenetics 2.R` as EXTRA roxygen sources**,
+corrupting `man/appServer.Rd`/
+`man/modMarkerGeneticsServer.Rd`/`man/modMarkerGeneticsUI.Rd` with
+doubled content – `git checkout --` these 3 files after every
+`document()` call unless your own session’s diff actually touches
+`R/appServer.R` or `R/modMarkerGenetics.R` (Learning 464). (2)
+`app$get_logs()`, not `get_log()` (already an S467 gotcha; hit again
+this session – read the handoff gotcha list AND still double-check the
+exact method name). (3) visNetwork-generated control ids are not always
+guessable from the `outputId` naming pattern – the PNG export button’s
+actual id is `downloadpedigree-pedigreeDiagram` (no separator); check
+the rendered HTML via `get_html_safe()` before guessing a selector. (4)
+**`highlightNearest`’s `degree` counts raw graph hops with zero
+awareness of node visibility** – any future change that inserts
+invisible/hidden nodes into this diagram’s graph will silently degrade
+hover-highlighting the same way; verify via triggering the real
+interaction (`network.body.emitter.emit('hoverNode', ...)` in headless
+testing) and inspecting live DataSet state, never just the config JSON
+(Learning 463). (5) All S465/S466/S467 gotchas (`# nolint` suppressions,
+`.lintr` per-line exclusion, `devtools::install(upgrade = FALSE)`,
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+needing BOTH `NPRC_RUN_E2E=true` AND `NOT_CRAN=true`, the
+`__union_`/`__dup_`/`__drop_`/`__bar_`/`__proj_` reserved-prefix
+pattern-match-don’t-hardcode convention) still apply unchanged. -
+**Self-assessment score:** 8/10 (breakdown above).
+
 ### What Session 467 Did
 
 **Deliverable:** Fix the 2 stale-assertion `test-e2e-pedigree-module.R`

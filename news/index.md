@@ -157,6 +157,21 @@
   ID, dimming everything except it and its direct connections.
   [`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)’s
   returned node data gains a `title` field for scripted use.
+- The Pedigree Browser’s Diagram tab gained a **Diagram Edge Style**
+  toggle (issue
+  [\#142](https://github.com/rmsharp/nprcgenekeepr/issues/142)): the
+  default “Direct” style is unchanged; a new “Rectilinear
+  (kinship2-style)” option routes mate-line and sibship-bar connections
+  as strict right angles instead of straight diagonal segments, matching
+  the classic pedigree-chart convention. Diagrams above 400 animals
+  under the rectilinear style show the same informative message the
+  existing 750-animal direct-style limit already shows (the rectilinear
+  style renders more total diagram nodes per animal, so its display
+  limit is lower).
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+  gained a matching `edgeStyle = c("direct", "rectilinear")` argument
+  for scripted use, defaulting to “direct” (unchanged existing behavior
+  for every current caller).
 
 ## nprcgenekeepr 2.0.0 (20260708)
 

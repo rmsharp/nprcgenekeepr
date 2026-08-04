@@ -68,6 +68,22 @@ are legal at write time (the receipt ships in the very commit whose sha
 it would name); the next session reconciles them to real shas.
 
 ``` handoff
+session: S468
+date: 2026-08-03
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- Issue #142 Slice 2 (rectilinear edgeStyle wiring + UI + live re-verification), all four parts (a)-(d) shipped in 4 checkpoint commits (3 planned layers + 1 fix for a live-confirmed regression found in part (d)).
+what_was_done: (a) edgeStyle = c("direct","rectilinear") on makePedigreeMatingLayout(), calling the already-shipped .addRectilinearWaypoints() only when "rectilinear" (commit 2c4255e3). (b) R/modPedigree.R radioButtons() style toggle (net-new UI, only when a diagram is shown, D4), style-aware node cap (400 for rectilinear, ratified via AskUserQuestion after finding the design doc's own ~380 suggestion was dimensionally wrong), click-to-navigate/search-dropdown filters extended to the 3 new reserved prefixes (commit 47b7b445). (c) Node count re-confirmed through the public entry point (1,375 on the real fixture). (d) Live shinytest2/chromote re-verification: #134 loop rendering confirmed correct; #135 search dropdown unit-test-covered; #135 highlightNearest hover CONFIRMED a real regression (degree-1 often reaches only an invisible waypoint under rectilinear -- measured concretely, hop distance grew from 2 to 4), fixed via a style-aware degree (1 direct, 6 rectilinear), live re-verified after the fix (commit 0b90e65f). Legend/export live-confirmed unaffected.
+next_steps: (a) highlightNearest degree=6 is a bounded mitigation, not a full fix (BACKLOG.md, found S468, Effort M) -- measure real max sibship size, design a full fix if warranted. (b) Duplicate-node connector renders straight not arched (BACKLOG.md, found S468, Effort S) -- per-edge smooth override on dupEdges. (c) Lint debt process fix (READY, Effort S-M, split off S466, still untouched). (d) Founder-positioning defect (DECISION NEEDED, Effort M, found S463, unchanged). (e) Everything else carried forward unchanged from S462-467 -- see SESSION_NOTES.md for the full list.
+key_files: R/makePedigreeDiagramData.R:653-796 (edgeStyle wiring); R/modPedigree.R:372-441 (cap + style resolution + UI toggle), :512 (click filter), :534-536 (search filter), :538-550 (highlightNearest fix); tests/testthat/test_makePedigreeMatingLayout.R (4 new tests); tests/testthat/test_modPedigree.R (8 new tests); BACKLOG.md (Slice 2 [x] DONE + new bounded-mitigation item); docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md (now fully implemented).
+gotchas: (1) devtools::document() in this environment picks up untracked iCloud duplicate R/appServer 2.R / R/modMarkerGenetics 2.R as EXTRA roxygen sources, corrupting 3 unrelated man/*.Rd files -- git checkout -- them after every document() call unless your own diff touches R/appServer.R or R/modMarkerGenetics.R (Learning 464). (2) app$get_logs() not get_log() (S467 gotcha, hit again). (3) visNetwork control ids aren't always guessable -- check rendered HTML via get_html_safe() before guessing a selector (PNG export button id is downloadpedigree-pedigreeDiagram, no separator). (4) highlightNearest's degree counts raw graph hops with zero node-visibility awareness -- any future invisible-node insertion will silently degrade it the same way; verify via triggering the real interaction (network.body.emitter.emit) and inspecting live DataSet state, not just config JSON (Learning 463). (5) All S465-467 gotchas (nolint conventions, NPRC_RUN_E2E+NOT_CRAN both required, reserved-prefix pattern-match-don't-hardcode) still apply.
+runtime_smoke: Extensive live shinytest2/chromote re-verification against the real running app throughout Part (d) -- both before (confirming the highlightNearest regression) and after (confirming the fix) the degree change; #134 loop, #135 dropdown, legend, and PNG export all live-confirmed; satisfies Phase 3E.
+changelog_ref: CHANGELOG.md 2026-08-03 [issue #142] entry (Session 468)
+commit: 5c19a163
+```
+
+``` handoff
 session: S467
 date: 2026-08-03
 status: complete

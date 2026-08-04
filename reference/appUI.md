@@ -28,7 +28,7 @@ appUI(siteInfo = NULL)
 ## Value
 
 A `shiny.tag.list` object (as produced by
-[`shiny::tagList()`](https://rstudio.github.io/htmltools/reference/tagList.html))
+[`shiny::tagList()`](https://rdrr.io/pkg/htmltools/man/tagList.html))
 describing the complete GeneKeepR user interface; pass it as the `ui`
 argument to
 [`shiny::shinyApp()`](https://rdrr.io/pkg/shiny/man/shinyApp.html) or

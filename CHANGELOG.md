@@ -47,6 +47,100 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-08-03 · \[ad hoc\] Filled in this session’s own HANDOFFS.md receipt commit sha (Session 468)
+
+- **Deliverable:** Filled in this session’s own `HANDOFFS.md` receipt
+  `commit: pending` placeholder with the real close-out commit sha
+  (`5c19a163`) – the same self-correction many previous sessions (e.g.
+  S331-S344, S466, S467) each needed, closed within the same session
+  rather than left for the next session’s Phase 0 reconcile to catch and
+  backfill.
+
+### 2026-08-03 · \[issue \#142\] Implement Slice 2: edgeStyle wiring, UI toggle, and live re-verification (Session 468)
+
+- **Deliverable:** completes issue \#142 (rectilinear
+  mate-line/sibship-bar waypoint style). **(a)**
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+  gains `edgeStyle = c("direct", "rectilinear")` (default `"direct"`,
+  byte-identical existing behavior); `"rectilinear"` calls Slice 1’s
+  `.addRectilinearWaypoints()`. **(b)** `R/modPedigree.R` gains a
+  `radioButtons()` style toggle – net-new UI layout rendered alongside
+  the widget inside the Diagram tab’s own `uiOutput`, only when a
+  diagram is actually shown (D4, no existing “home” for the control); a
+  style-aware node cap (`pedigreeDiagramMaxNodesRectilinear = 400L`,
+  resolved via `.currentEdgeStyle()`/`.currentDiagramCap()` closures
+  defaulting to “direct” before the toggle has ever rendered);
+  click-to-navigate and the search-dropdown id-prefix filters extended
+  to the 3 new `__drop_`/`__bar_`/`__proj_` reserved prefixes, keeping
+  `__dup_` clickable (D3).
+- **Cap ratification:** the design doc’s own suggested ~380-individual
+  rectilinear cap was re-derived and found dimensionally wrong – its
+  formula
+  (`directCap * (rectTotal/directTotal) / (rectTotal/individuals)`)
+  algebraically simplifies to `directCap * individuals / directTotal`,
+  which does not depend on the rectilinear/direct ratio at all despite
+  appearing to. The dimensionally-correct re-derivation (preserve the
+  ~1,480-node ceiling the 750 direct cap targets, divided by
+  rectilinear’s actual measured 3.667 nodes/individual) gives ~404.
+  Owner ratified **400** via `AskUserQuestion`.
+- **Live re-verification (part d) found and fixed a real regression:**
+  \#134’s `GA204Z`/`8LKBV9` loop renders correctly under the rectilinear
+  style (0 diagram-related console errors); \#135’s search dropdown is
+  unaffected (unit-test-covered). But `highlightNearest`
+  hover-highlighting – the exact risk the design doc’s Section 3 D3
+  flagged but left unresolved – was confirmed live to be a real, not
+  hypothetical, regression: degree-1 hover often reaches only an
+  invisible waypoint node under the rectilinear style. Measured
+  concretely on the real 375-individual fixture via
+  `shinytest2`/`chromote` (triggering vis.js’s internal `hoverNode`
+  event directly and inspecting the DataSet’s own dimmed/undimmed
+  state): hovering an individual who is only a child, or a parent whose
+  own mate-line was rerouted through a D2 projection node, lit up
+  **nothing visible at all** – worse than the direct style’s own
+  guaranteed-visible union-dot minimum. Owner chose a bounded mitigation
+  via `AskUserQuestion`: `highlightNearest`’s `degree` is now
+  style-aware (1 for direct, unchanged; 6 for rectilinear, covering the
+  concretely measured hop distances, up to 4 for a single-child union).
+  Live re-verified after the fix: the same previously-blank hover now
+  lights up 2 real individual ids plus 3 union dots. Documented as a
+  bounded mitigation, not a full fix (a very wide sibship’s D1 bar chain
+  can still exceed 6 hops) – new `BACKLOG.md` item filed. Legend and PNG
+  export also live-confirmed unaffected.
+- **Strict TDD**, 3 checkpoint commits: RED (4 tests) -\> GREEN for
+  Layer 1 (data layer); RED (7 tests) -\> GREEN for Layer 2 (UI layer);
+  RED (1 test) -\> GREEN for the `highlightNearest` degree fix found
+  during live verification. REFACTOR skipped (owner-confirmed via
+  `AskUserQuestion`, GREEN already matched established style).
+- **Verified at every checkpoint:** full regression suite 0 failed/0
+  error (10 pre-existing baseline warnings, unchanged; final count 4515
+  passed, +38 new tests over the S467 baseline); `devtools::check()` 1
+  WARNING/2 NOTEs, exact pre-existing baseline, 0 new, at every
+  checkpoint (including the already-tracked 6-word spelling-drift NOTE
+  from `BACKLOG.md`, found S465 – this session’s own roxygen edit added
+  more occurrences of the same already-flagged words, not a new distinct
+  one); `lintr` 0 lints on every changed file (3 lints found and fixed
+  on Layer 2’s first pass: a `commented_code_linter` false positive on
+  “D1/D2” reading as division, an 81-char line, an unnecessary quoted
+  name in `radioButtons()` choices). Live `shinytest2`/`chromote`
+  re-verification against the real app throughout Part (d), both before
+  (confirming the regression) and after (confirming the fix) the
+  `highlightNearest` change – satisfies Phase 3E. See
+  `docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md`,
+  `BACKLOG.md`’s now-DONE issue \#142 item, `PROJECT_LEARNINGS.md`
+  Learning 463.
+
+### 2026-08-03 · \[ad hoc\] Log a duplicate-node connector arc-rendering gap found via owner comparison against a reference pedigree image (Session 468)
+
+- **Deliverable:** an owner observation comparing this app’s Pedigree
+  Diagram against a reference image (rpubs.com/dliupress/pedigreedemo)
+  found that this app’s own duplicate-node mechanism (D6, issue \#129
+  Slice 3, S461) already creates a dashed connector back to the real
+  individual, matching the reference convention – but renders it
+  straight, not arched, because `R/modPedigree.R`’s
+  `visEdges(smooth = FALSE)` applies globally to every edge in the
+  widget. Logged as a new `BACKLOG.md` item (analytically separate from
+  the in-progress issue \#142 Slice 2 work), not fixed this session.
+
 ### 2026-08-03 · \[ad hoc\] Filled in this session’s own HANDOFFS.md receipt commit sha (Session 467)
 
 - **Deliverable:** Filled in this session’s own `HANDOFFS.md` receipt
@@ -1821,7 +1915,7 @@ here.
   in `R/appUI.R`, the same mechanism already used for `data-ready.js`. 2
   new tests in `tests/testthat/test_modSummaryStats_popovers.R`. Added
   `htmltools` to `Suggests` (test-only dependency for
-  [`htmltools::renderTags()`](https://rstudio.github.io/htmltools/reference/renderTags.html)).
+  [`htmltools::renderTags()`](https://rdrr.io/pkg/htmltools/man/renderTags.html)).
 - **In-flight test-design finding:** the RED-phase “appUI includes the
   shim” test initially asserted against `as.character(appUI())`, which
   passed for the WRONG reason (matched shinyBS’s own unrelated inline
@@ -1853,7 +1947,7 @@ here.
   resolution. `PROJECT_LEARNINGS.md` Learnings 415
   ([`as.character()`](https://rdrr.io/r/base/character.html) drops
   `tags$head()` content;
-  [`htmltools::renderTags()`](https://rstudio.github.io/htmltools/reference/renderTags.html)
+  [`htmltools::renderTags()`](https://rdrr.io/pkg/htmltools/man/renderTags.html)
   is the correct tool) and 416 (`shinytest2::AppDriver$get_logs()`, not
   `$get_log()` — the wrong name fails with an opaque
   `attempt to apply non-function`, not a clear “method not found”)

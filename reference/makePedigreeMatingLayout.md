@@ -16,7 +16,7 @@ Path step 2).
 ## Usage
 
 ``` r
-makePedigreeMatingLayout(ped)
+makePedigreeMatingLayout(ped, edgeStyle = c("direct", "rectilinear"))
 ```
 
 ## Arguments
@@ -27,11 +27,24 @@ makePedigreeMatingLayout(ped)
   contract as
   [`makePedigreeDiagramData`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md).
 
+- edgeStyle:
+
+  one of `"direct"` (default – a straight edge from each parent to their
+  mating unit and from each mating unit to each child, matching this
+  function's own original, still-default behavior) or `"rectilinear"`
+  (issue \#142 – routes mate-line and sibship-bar edges through
+  invisible waypoint nodes via `.addRectilinearWaypoints()` so they
+  render as a strict right angle, kinship2-style, instead of a direct
+  diagonal/straight segment).
+
 ## Value
 
 A list with `nodes` (`id`, `label`, `shape`, `title`, `size`, `x`, `y`),
 `edges` (`from`, `to`, `dashes`), and `duplicateToReal` (a named
-character vector, duplicate node id -\> real individual id).
+character vector, duplicate node id -\> real individual id). Under
+`edgeStyle = "rectilinear"`, `nodes` gains
+`color.background`/`color.border` and `edges` gains `color` (see
+`.addRectilinearWaypoints()`).
 
 ## Details
 

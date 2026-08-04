@@ -965,7 +965,31 @@ step reorders rows relative to the raw upload – the real fixture’s own
 through the live pipeline; both are correct, self-consistent
 applications of the same algorithm to different (valid) row orders. See
 `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 457, design doc §9.) -
-\[ \] **Founder-positioning defect: a founder who mates into a LATER
+\[ \] **Duplicate-node connector renders straight, not arched, unlike
+the kinship2/standard-pedigree convention** (READY, Effort S, found S468
+2026-08-03) – owner observation comparing this app’s diagram against a
+reference pedigree image (rpubs.com/dliupress/pedigreedemo, Pedigree 1):
+the referenced convention draws the dashed line connecting a duplicated
+individual’s extra mating-position occurrence back to their primary
+occurrence as a visibly **arched/curved** line. This app’s own
+duplicate-node mechanism (D6, issue \#129 Slice 3, S461) is otherwise
+already equivalent – a real duplicate node IS created at each extra
+mating position and IS connected back to the real individual via a
+dashed edge (`R/makePedigreeDiagramData.R:778-784`, `dupEdges`,
+`dashes = TRUE`) – but `R/modPedigree.R:412`’s
+`visNetwork::visEdges(smooth = FALSE)` applies globally to every edge in
+the widget, including this one, so the dashed connector renders as a
+straight line, not an arc. A fix would need a per-edge `smooth` override
+(vis.js supports `edges[i].smooth` as a per-edge object overriding the
+widget-level default) applied only to `dupEdges`, not to
+mate-line/child/sibship-bar edges (which are deliberately
+straight/orthogonal by design, both in the current direct style and the
+in-progress issue \#142 rectilinear style). Analytically separate from
+issue \#142’s own mate-line/sibship-bar edge-routing work (Slice 2, in
+progress this session) – not folded in, per this project’s own
+scope-discipline precedent (see the founder-positioning-defect item
+immediately below, and `PROJECT_LEARNINGS.md` Learning 382). - \[ \]
+**Founder-positioning defect: a founder who mates into a LATER
 generation renders at the wrong row, visually implying the wrong
 pairing** (DECISION NEEDED – root cause identified, fix not designed,
 Effort M, found S463) – confirmed via
@@ -998,7 +1022,7 @@ since it touches the same `.positionMatingUnitForest()` D3/D4/D5 logic
 Slices 1/2 already shipped and tested; (c) decide whether to track as
 its own GitHub issue or fold into \#142’s scope – they are related (both
 concern the Pedigree Diagram Option 2 layout) but analytically separate
-(placement vs. edge style). See `CHANGELOG.md`. - \[ \] **Issue \#142
+(placement vs. edge style). See `CHANGELOG.md`. - \[x\] **Issue \#142
 implementation: rectilinear mate-line/sibship-bar waypoint style – Slice
 2 (edgeStyle wiring + UI + live re-verification)** (READY, Effort M –
 **gate satisfied S466 (2026-08-03): the owner-directed lint-cleanup
@@ -1052,7 +1076,64 @@ Explicitly does NOT fix the separate founder-positioning defect above
 (analytically distinct: edge routing vs. coordinate assignment).
 Citation/ tutorial/`NEWS.Rmd` checklists: owed once Slice 2 ships the
 new UI control, not before (matching Slice 1/2’s own precedent in the
-Option 2 implementation).
+Option 2 implementation). **Slice 2 DONE – S468 (2026-08-03):** all four
+parts (a)-(d) shipped, in 3 checkpoint commits. **(a)**
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+gained `edgeStyle = c("direct", "rectilinear")` (default `"direct"`,
+byte-identical existing behavior); `"rectilinear"` calls Slice 1’s
+`.addRectilinearWaypoints()`. **(b)** `R/modPedigree.R` gained a
+`radioButtons()` style toggle (net-new layout inside the Diagram tab’s
+own `uiOutput`, alongside the widget, only when a diagram is actually
+shown – D4); click-to-navigate and the search-dropdown id-prefix filters
+extended to the 3 new reserved prefixes, keeping `__dup_` clickable
+(D3). **(c)** Node count re-confirmed through the actual public entry
+point (1,375 on the real 375-individual fixture, matching Slice 1’s own
+already-tested number). The rectilinear-mode individual cap was ratified
+at **400** via `AskUserQuestion` – re-deriving the design doc’s own
+suggested ~380 found it was dimensionally wrong (the formula
+algebraically cancels out the rectilinear/direct node-count ratio
+entirely); the dimensionally-correct re-derivation (preserve the same
+~1,480-node ceiling the 750 direct cap targets, divided by rectilinear’s
+actual measured 3.667 nodes/individual) gives ~404, rounded to 400.
+**(d)** Live `shinytest2`/`chromote` re-verification against the real
+fixture: \#134 (the `GA204Z`/`8LKBV9` loop) renders correctly under the
+rectilinear style, 0 diagram-related console errors. \#135’s search
+dropdown is unaffected (unit-test-covered). **A real, live-confirmed
+regression was found and fixed in \#135’s `highlightNearest`
+hover-highlighting** – the exact risk design doc Section 3 D3 flagged
+but did not resolve: degree-1 hover often reaches only an invisible
+`__drop_`/`__bar_`/`__proj_` waypoint under the rectilinear style
+(measured concretely: an individual who is only a child, or a parent
+whose own mate-line got rerouted through a D2 projection node, lit up
+NOTHING visible on hover, vs. the direct style’s own guaranteed visible
+union-dot minimum). Owner chose a bounded mitigation via
+`AskUserQuestion`: `highlightNearest`’s `degree` is now style-aware (1
+for direct, unchanged; 6 for rectilinear, covering the concretely
+measured hop distances up to 4). Live re-verified after the fix: the
+same previously-blank hover now lights up 2 real individual ids plus 3
+union dots. **Not a full fix** – a very wide sibship’s D1 bar chain can
+still exceed 6 hops; see the new Housekeeping item below. Legend and PNG
+export also live-confirmed unaffected (separate widget instance renders;
+export click succeeds; 0 related console errors). Verified at every
+checkpoint: full regression suite 0 failed/0 error (10 pre-existing
+baseline warnings, unchanged, final count 4515 passed);
+`devtools::check()` 1 WARNING/2 NOTEs, exact pre-existing baseline, 0
+new, at every checkpoint; `lintr` 0 lints on every changed file. See
+`CHANGELOG.md`, `PROJECT_LEARNINGS.md`. - \[ \] **`highlightNearest`
+degree=6 mitigation for the rectilinear style is bounded, not a full
+fix** (found S468, Effort M, low priority) – a very wide sibship’s D1
+sibship-bar chain can exceed 6 hops (chain length scales with the number
+of children in one mating unit), so a hover on an individual in a very
+large family could still light up nothing visible. A full fix would need
+either a custom JS `highlightNearest` reimplementation that specifically
+skips through invisible waypoint nodes regardless of hop count, or a
+data-layer change that keeps degree-1 semantics correct (e.g. tagging
+waypoint edges so a custom traversal treats them as zero-cost hops). Not
+designed this session – the degree=6 mitigation was explicitly scoped as
+a quick, bounded fix, owner-directed via `AskUserQuestion`. A future
+session should measure the real fixture’s own maximum sibship size to
+gauge how often 6 hops is actually insufficient in practice before
+deciding whether a full fix is warranted.
 
 ## Outreach
 
