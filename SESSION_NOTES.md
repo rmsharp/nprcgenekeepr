@@ -6,6 +6,16 @@
 
 ## ACTIVE TASK
 
+### What Session 473 Did
+**Deliverable:** Design a fix for issue #144 (Pedigree Diagram anchor-side row mismatches --
+51 of 237 real-fixture mating units, 22%) as one architecture/plan document in
+`docs/planning/`, following `ARCHITECTURE_WORKSTREAM.md` (IN PROGRESS).
+**Started:** 2026-08-04
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
 ### What Session 472 Did
 **Deliverable:** Implement the founder-positioning fix for issue #143 per the ratified plan
 (`docs/planning/issue143-founder-positioning-fix-plan.md`) -- picked by the owner via the

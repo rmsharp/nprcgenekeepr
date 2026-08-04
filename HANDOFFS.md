@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S473
+date: 2026-08-04
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Design a fix for issue #144 (Pedigree Diagram anchor-side row mismatches -- 51 of 237 real-fixture mating units, 22%) as one architecture/plan document in docs/planning/, following ARCHITECTURE_WORKSTREAM.md.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S472
 date: 2026-08-04
 status: complete
