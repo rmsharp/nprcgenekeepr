@@ -479,16 +479,18 @@ test_that(
 
 test_that(
   "makePedigreeMatingLayout on the full real 375-individual bundled
-   fixture produces exactly 1,375 nodes under edgeStyle = \"rectilinear\"
-   (design doc's node-count re-measurement gate, re-confirmed through the
-   actual public entry point, not just Slice 1's internal helper)", {
+   fixture produces exactly 1,279 nodes under edgeStyle = \"rectilinear\"
+   (issue #143's fix resolves all 96 non-anchor D2 mismatches, dropping
+   the D2 projection count from 147 to the 51 anchor-side ones issue #144
+   tracks -- CHANGED from 1375L; re-confirmed through the actual public
+   entry point, not just Slice 1's internal helper)", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
     stringsAsFactors = FALSE
   )
   result <- makePedigreeMatingLayout(ped, edgeStyle = "rectilinear")
-  expect_equal(nrow(result$nodes), 1375L)
+  expect_equal(nrow(result$nodes), 1279L)
   expect_false(any(is.na(result$nodes$x)))
   expect_false(any(is.na(result$nodes$y)))
 })

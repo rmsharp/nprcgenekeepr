@@ -112,8 +112,11 @@ test_that(".positionMatingUnitForest positions a multi-mate anchor's 2
 
 test_that(".positionMatingUnitForest positions the real GA204Z/8LKBV9 loop
            fixture (8LKBV9 anchors 1 of 3 mating units, duplicated at the
-           other 2) without overlap, with each duplicate's gen matching
-           8LKBV9's own real gen", {
+           other 2) without overlap, with each duplicate's gen matching ITS
+           OWN mating unit's gen (issue #143 fix -- not uniformly 8LKBV9's
+           own real gen, since the 2 units he's duplicated at have
+           different gens: max(8LKBV9=1, 8P17E3=0)=1 and
+           max(8LKBV9=1, FJIB3R=2)=2)", {
   ped <- data.frame(
     id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
            "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
@@ -129,9 +132,84 @@ test_that(".positionMatingUnitForest positions the real GA204Z/8LKBV9 loop
   kDup <- pos[pos$id %in% forest$duplicates$id[
     forest$duplicates$realId == "8LKBV9"], ]
   expect_equal(nrow(kDup), 2L)
-  expect_true(all(kDup$gen == 1L))  # 8LKBV9's own real gen
+
+  unit3 <- forest$matingUnits$id[forest$matingUnits$dam == "8P17E3"]
+  unit4 <- forest$matingUnits$id[forest$matingUnits$dam == "FJIB3R"]
+  dupAt3 <- forest$duplicates$id[forest$duplicates$matingUnitId == unit3]
+  dupAt4 <- forest$duplicates$id[forest$duplicates$matingUnitId == unit4]
+  expect_equal(pos$gen[pos$id == dupAt3], 1L)  # unit3's own gen
+  expect_equal(pos$gen[pos$id == dupAt4], 2L)  # unit4's own gen -- CHANGED
+                                                # from the pre-fix formula
+                                                # (8LKBV9's own gen, 1L)
 
   .expectNoOverlap(pos)
+})
+
+## ---- exact x/gen regression guard: catches an Edit-1/Edit-2 desync -----
+## (issue #143 fix -- if either of the plan's 2 synchronized edits ships
+## without the other, this fixture's own values diverge in 3 different,
+## independently distinguishable ways from the correct combined fix.
+## Verified empirically this session against 4 independently patched
+## variants of .positionMatingUnitForest() (baseline, Edit-1-only,
+## Edit-2-only, both): baseline leaves G8EBU9 at (x=0.25, gen=0); an
+## Edit-1-only fix shifts x (to ~0) but leaves gen wrong (still 0); an
+## Edit-2-only fix gets gen right (1) but leaves x at the stale 0.25. Only
+## both edits together produce (x=0, gen=1). A geometric minimum
+## -separation check (as originally contemplated in the plan's own §6) was
+## investigated and found NOT to discriminate these cases in this
+## algorithm -- unrelated same-row nodes are not guaranteed >= minSep apart
+## even under the fully-corrected fix (300+ such close-but-non-identical
+## pairs exist in the real 375-individual fixture under every one of the 4
+## variants, including the fully-fixed one) -- so this exact-value
+## assertion is used instead, as a strictly stronger guard.
+
+test_that(".positionMatingUnitForest's exact x/gen values for the real
+           GA204Z/8LKBV9 loop fixture catch a desynchronized (only one of
+           the two) issue #143 fix -- not just the corrected gen values
+           alone", {
+  ped <- data.frame(
+    id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
+           "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
+    sire = c(NA, NA, NA, NA, "5A6DFT", "8LKBV9", "8LKBV9", "8LKBV9"),
+    dam = c(NA, NA, NA, NA, "8DKELJ", "G8EBU9", "8P17E3", "FJIB3R"),
+    sex = c("M", "F", "F", "F", "M", "F", "F", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 2L, 2L, 3L),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForest(ped, forest)
+
+  expectPos <- function(id, x, gen) {
+    expect_equal(pos$x[pos$id == id], x, tolerance = 1e-6)
+    expect_equal(pos$gen[pos$id == id], gen)
+  }
+
+  expectPos("5A6DFT", 0.00, 0L)
+  expectPos("8DKELJ", -0.50, 0L)
+  expectPos("G8EBU9", 0.00, 1L)  # CHANGED from (0.25, 0L)
+  expectPos("8P17E3", 2.00, 0L)
+  expectPos("8LKBV9", 0.50, 1L)
+  expectPos("FJIB3R", 1.00, 2L)
+  expectPos("9VGCCV", 2.00, 2L)
+  expectPos("GA204Z", 1.00, 3L)
+
+  unit1 <- forest$matingUnits$id[forest$matingUnits$sire == "5A6DFT"]
+  unit2 <- forest$matingUnits$id[forest$matingUnits$dam == "G8EBU9"]
+  unit3 <- forest$matingUnits$id[forest$matingUnits$dam == "8P17E3"]
+  unit4 <- forest$matingUnits$id[forest$matingUnits$dam == "FJIB3R"]
+  expectPos(unit1, -0.25, 0L)
+  expectPos(unit2, 0.25, 1L)
+  expectPos(unit3, 2.20, 1L)
+  expectPos(unit4, 1.20, 2L)
+
+  dupAt3 <- forest$duplicates$id[forest$duplicates$matingUnitId == unit3]
+  dupAt4 <- forest$duplicates$id[forest$duplicates$matingUnitId == unit4]
+  ## Both duplicates' x shifts from baseline (2.65, 1.65) -- Edit 1's
+  ## contour move for G8EBU9 cascades through the whole tree's layout, not
+  ## just her own position -- but only dupAt4's gen visibly changes (1
+  ## -> 2); dupAt3's gen coincidentally matches its unit's gen either way.
+  expectPos(dupAt3, 2.40, 1L)  # x CHANGED from 2.65; gen unaffected
+  expectPos(dupAt4, 1.40, 2L)  # x CHANGED from 1.65; gen CHANGED from 1L
 })
 
 ## ---- half-sib-mating convergent loop -----------------------------------
@@ -233,10 +311,13 @@ test_that(".positionMatingUnitForest positions the full real
 
 ## ---- gen semantics: every node's gen matches its source-of-truth ------
 
-test_that(".positionMatingUnitForest's gen column matches each node's
-           source of truth: an individual's own ped$gen, a duplicate's
-           real individual's ped$gen, and a mating unit's already
-           -verified max(parent gens) from Slice 1", {
+test_that(".positionMatingUnitForest's gen column matches each occurrence's
+           CORRECTED source of truth (issue #143 fix): an ANCHOR's own
+           ped$gen, a FREE-PASS or DUPLICATE occurrence's own MATING UNIT's
+           gen (previously every occurrence used its own ped$gen
+           uniformly, which mis-positioned any non-anchor occurrence whose
+           personal gen differed from its mating unit's gen), and a mating
+           unit's already-verified max(parent gens) from Slice 1", {
   ped <- data.frame(
     id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
            "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
@@ -248,14 +329,36 @@ test_that(".positionMatingUnitForest's gen column matches each node's
   )
   forest <- .buildMatingUnitForest(ped)
   pos <- .positionMatingUnitForest(ped, forest)
-  genOf <- stats::setNames(ped$gen, ped$id)
 
-  realRows <- pos[pos$id %in% ped$id, ]
-  expect_equal(realRows$gen, unname(genOf[realRows$id]))
+  ## Anchors and non-parent leaves keep their own ped$gen, untouched by the
+  ## fix -- hand-verified against forest$matingUnits$anchor this session:
+  ## 5A6DFT/8P17E3/8LKBV9/FJIB3R each anchor the one unit they belong to;
+  ## 9VGCCV/GA204Z are non-parent children, never sire/dam of any unit.
+  expect_equal(pos$gen[pos$id == "5A6DFT"], 0L)
+  expect_equal(pos$gen[pos$id == "8P17E3"], 0L)
+  expect_equal(pos$gen[pos$id == "8LKBV9"], 1L)
+  expect_equal(pos$gen[pos$id == "FJIB3R"], 2L)
+  expect_equal(pos$gen[pos$id == "9VGCCV"], 2L)
+  expect_equal(pos$gen[pos$id == "GA204Z"], 3L)
 
-  dupRows <- pos[pos$id %in% forest$duplicates$id, ]
-  dupRealId <- forest$duplicates$realId[match(dupRows$id, forest$duplicates$id)]
-  expect_equal(dupRows$gen, unname(genOf[dupRealId]))
+  ## 8DKELJ is free-pass, but her one unit's gen (max(5A6DFT=0, 8DKELJ=0))
+  ## already equals her own gen -- no VISIBLE change, still 0.
+  expect_equal(pos$gen[pos$id == "8DKELJ"], 0L)
+
+  ## G8EBU9 is free-pass and mismatched: her own gen is 0, but her one
+  ## unit's gen (max(8LKBV9=1, G8EBU9=0)) is 1 -- CHANGES from the pre-fix
+  ## 0.
+  expect_equal(pos$gen[pos$id == "G8EBU9"], 1L)
+
+  ## Duplicates: each duplicate's gen is now its OWN mating unit's gen, not
+  ## 8LKBV9's personal gen (1) uniformly -- one coincidentally still 1
+  ## (its unit's gen matches 8LKBV9's own gen), the other CHANGES to 2.
+  unit3 <- forest$matingUnits$id[forest$matingUnits$dam == "8P17E3"]
+  unit4 <- forest$matingUnits$id[forest$matingUnits$dam == "FJIB3R"]
+  dupAt3 <- forest$duplicates$id[forest$duplicates$matingUnitId == unit3]
+  dupAt4 <- forest$duplicates$id[forest$duplicates$matingUnitId == unit4]
+  expect_equal(pos$gen[pos$id == dupAt3], 1L)
+  expect_equal(pos$gen[pos$id == dupAt4], 2L)  # CHANGED from 1L
 
   unitRows <- pos[pos$id %in% forest$matingUnits$id, ]
   expect_equal(
@@ -319,4 +422,53 @@ test_that(".positionMatingUnitForest positions a dangling parent's
   expect_false(is.na(dupRow$gen))
   expect_false(is.na(dupRow$x))
   .expectNoOverlap(pos)
+})
+
+## ---- issue #143 regression guard: real-fixture anchor/non-anchor
+## mismatch counts (re-derives docs/audits/
+## FOUNDER_POSITIONING_DEFECT_AUDIT_2026-08-03.md's own detection method,
+## corrected to separate anchor from non-anchor mismatches -- the audit's
+## own method could not distinguish them, both being plain real-id nodes
+## with no __dup_ prefix; see docs/planning/
+## issue143-founder-positioning-fix-plan.md §1.4. No such detection script
+## was ever committed before this session -- plan §4.3.) ------------------
+
+test_that(".positionMatingUnitForest resolves every NON-ANCHOR row
+           mismatch on the real 375-individual bundled fixture, leaving
+           exactly the 51 ANCHOR-side mismatches this fix does not address
+           (issue #143/#144) -- relies on this fixture having no dangling
+           sire/dam references (confirmed by
+           test_buildMatingUnitForest.R's own dangling-reference test)", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForest(ped, forest)
+  posGen <- stats::setNames(pos$gen, pos$id)
+  unitGen <- stats::setNames(forest$matingUnits$gen, forest$matingUnits$id)
+
+  ## For each mating unit's side (sire, dam), find the node id that
+  ## actually renders for THIS unit (the person's own real node, or their
+  ## duplicate node if this unit is where they occur as a duplicate), and
+  ## whether that side is the unit's anchor.
+  mismatchSide <- function(personId, unitId, isAnchor) {
+    dupId <- forest$duplicates$id[forest$duplicates$realId == personId &
+                                     forest$duplicates$matingUnitId == unitId]
+    nodeId <- if (length(dupId) == 1L) dupId else personId
+    mismatched <- !identical(unname(posGen[[nodeId]]), unname(unitGen[[unitId]]))
+    data.frame(isAnchor = isAnchor, mismatched = mismatched)
+  }
+
+  mu <- forest$matingUnits
+  sideRows <- do.call(rbind, lapply(seq_len(nrow(mu)), function(i) {
+    rbind(
+      mismatchSide(mu$sire[i], mu$id[i], identical(mu$anchor[i], mu$sire[i])),
+      mismatchSide(mu$dam[i], mu$id[i], identical(mu$anchor[i], mu$dam[i]))
+    )
+  }))
+
+  expect_equal(sum(sideRows$mismatched & !sideRows$isAnchor), 0L)
+  expect_equal(sum(sideRows$mismatched & sideRows$isAnchor), 51L)
 })

@@ -257,12 +257,25 @@ test_that(".addRectilinearWaypoints adds zero projection nodes for a
   expect_setequal(mateEdgesBefore$from, mateEdgesAfter$from)
 })
 
-## ---- D2: non-anchor parent off-row (the common 96/237 real case) -------
+## ---- D2: non-anchor parent off-row -- RESOLVED by issue #143's fix ------
+## Before issue #143's fix, this was "the common 96/237 real case": DAM (a
+## free-pass, non-anchor parent) rendered at her own gen (0) instead of her
+## mating unit's gen (1), triggering this dogleg. Issue #143's fix moves
+## DAM's displayed row to her mating unit's own gen, so she is now ON-ROW
+## for this exact fixture -- the dogleg no longer fires. Confirmed
+## empirically this session (docs/planning/
+## issue143-founder-positioning-fix-plan.md §4.3's own prediction). No
+## non-anchor-off-row scenario survives on any real fixture post-fix (the
+## dedicated regression test in test_positionMatingUnitForest.R asserts
+## zero remaining non-anchor mismatches) -- this test now documents the
+## "already on-row" no-op case instead, mirroring the "D2: both parents at
+## the same gen" test above.
 
-test_that(".addRectilinearWaypoints adds exactly one projection node on the
-           non-anchor side when the non-anchor parent (a real, non
-           -duplicate node) is at a different gen than the mating unit,
-           and leaves the anchor's own direct edge unchanged", {
+test_that(".addRectilinearWaypoints adds zero projection nodes for a
+           mating unit whose non-anchor parent USED TO be off-row before
+           issue #143's fix, and is now on-row (matching its mating
+           unit's own gen), leaving the anchor's own direct edge
+           unchanged", {
   ped <- data.frame(
     id = c("GRANDSIRE", "SIRE", "DAM", "CHILD"),
     sire = c(NA, "GRANDSIRE", NA, "SIRE"),
@@ -280,21 +293,14 @@ test_that(".addRectilinearWaypoints adds exactly one projection node on the
                                       inputs$forest, inputs$pos)
 
   projIds <- result$nodes$id[grepl("^__proj_", result$nodes$id)]
-  expect_equal(length(projIds), 1L)
-  projRow <- result$nodes[result$nodes$id == projIds, ]
-  damRow <- inputs$nodes[inputs$nodes$id == "DAM", ]
-  unitRow <- result$nodes[result$nodes$id == unitId, ]
-  expect_equal(projRow$x, damRow$x)   # DAM's own x, projected...
-  expect_equal(projRow$y, unitRow$y)  # ...onto the unit's row
+  expect_equal(length(projIds), 0L)
 
-  ## DAM -> proj (vertical) then proj -> unit (horizontal) replaces the
-  ## single direct DAM -> unit edge.
-  expect_true(any(result$edges$from == "DAM" & result$edges$to == projIds))
-  expect_true(any(result$edges$from == projIds & result$edges$to == unitId))
-  expect_false(any(result$edges$from == "DAM" & result$edges$to == unitId))
+  ## DAM's direct edge to the unit is untouched -- no dogleg needed, she
+  ## renders on-row (gen 1, her unit's own gen) post-fix.
+  expect_true(any(result$edges$from == "DAM" & result$edges$to == unitId))
+  expect_equal(inputs$pos$gen[inputs$pos$id == "DAM"], 1L)
 
-  ## The anchor's (SIRE's) own direct edge is untouched -- already
-  ## on-row, no projection needed for that side.
+  ## The anchor's (SIRE's) own direct edge remains untouched too.
   expect_true(any(result$edges$from == "SIRE" & result$edges$to == unitId))
 })
 
@@ -365,10 +371,12 @@ test_that(".addRectilinearWaypoints adds exactly one projection node on the
 ## 1,375 estimate.)
 
 test_that(".addRectilinearWaypoints applied to the full real
-           375-individual bundled fixture produces the node count the
-           design doc's own D1/D2 counting rules predicted (740 direct
-           -style nodes + 488 D1 waypoints + 147 D2 projections = 1,375),
-           or documents the actual count if it drifts", {
+           375-individual bundled fixture produces the node count issue
+           #143's fix predicts (740 direct-style nodes + 488 D1 waypoints +
+           51 D2 projections = 1,279 -- down from the pre-fix 1,375/147,
+           since the fix resolves all 96 non-anchor D2 mismatches, leaving
+           only the 51 anchor-side ones issue #144 tracks), or documents
+           the actual count if it drifts", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -379,7 +387,7 @@ test_that(".addRectilinearWaypoints applied to the full real
 
   result <- .addRectilinearWaypoints(inputs$nodes, inputs$edges,
                                       inputs$forest, inputs$pos)
-  expect_equal(nrow(result$nodes), 1375L)
+  expect_equal(nrow(result$nodes), 1279L)  # CHANGED from 1375L, issue #143
 
   ## No NA coordinates or duplicate (id, waypoint) collisions among the
   ## new waypoint nodes.

@@ -491,7 +491,7 @@ makePedigreeDiagramData <- function(ped) {
     subIds <- c(fpHere, kidIds)  # free-pass parent leftmost
     subResults <- lapply(subIds, function(sid) {
       if (!is.null(fpHere) && sid %in% fpHere) {
-        leafContour(genOf[[sid]])
+        leafContour(unitGenOf[[unitId]])
       } else {
         positionIndividual(sid)
       }
@@ -582,10 +582,27 @@ makePedigreeDiagramData <- function(ped) {
     }
   }
 
+  ## D3 step 6 correction (issue #143): every NON-ANCHOR occurrence -- a
+  ## free-pass real node or a genuine duplicate -- renders at its own
+  ## MATING UNIT's gen, not the underlying individual's global tree-native
+  ## gen (which can legitimately differ, e.g. a founder marrying into a
+  ## later generation). Anchor occurrences (genOf[realIds] for an anchor
+  ## id) are untouched -- that is the individual's true recursively
+  ## -positioned row. The intersect(freePassIds, realIds) guard is
+  ## required: freePassIds can contain dangling ids (no own row in 'ped',
+  ## S461) that are absent from realIds -- indexing dispGenOf by such an id
+  ## would silently APPEND rather than error, misaligning it with
+  ## realIds/nodes$id.
+  dispGenOf <- genOf[realIds]
+  realFreePassIds <- intersect(freePassIds, realIds)
+  if (length(realFreePassIds) > 0L) {
+    dispGenOf[realFreePassIds] <- unname(unitGenOf[freePassUnitOf[realFreePassIds]])
+  }
+
   nodes <- data.frame(
     id = c(realIds, duplicates$id, unitIds),
     x = c(unname(realX), dupX, finalUnitX),
-    gen = c(unname(genOf[realIds]), unname(genOf[duplicates$realId]),
+    gen = c(unname(dispGenOf), unname(unitGenOf[duplicates$matingUnitId]),
             matingUnits$gen),
     stringsAsFactors = FALSE
   )
