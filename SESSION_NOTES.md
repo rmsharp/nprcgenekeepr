@@ -6,6 +6,27 @@
 
 ## ACTIVE TASK
 
+### What Session 470 Did
+**Deliverable:** Characterize the founder-positioning defect (`BACKLOG.md`, found
+S463: a founder who mates into a later generation renders at the wrong row) against
+real bundled pedigree fixtures -- audit-style investigation, no code changes --
+following `docs/methodology/workstreams/AUDIT_WORKSTREAM.md`. Picked by the owner
+via the S470 orientation-report `AskUserQuestion` picker, with a follow-up
+`AskUserQuestion` on session scope (characterize-first vs. plan-design-now;
+owner picked characterize-first, the recommended option).
+**Started:** 2026-08-03
+**Status:** Session claimed. Work beginning. Mid-claim, the owner noted: "the
+approach taken for this is to have multiple copies of the same individual if there
+is a need to have the individual in multiple levels" -- i.e. this codebase's
+established convention for one individual needing multiple-level representation is
+the existing duplicate-node mechanism (D6, S461), not single-node repositioning.
+This reframes the audit's research angle: characterize whether the founder-
+positioning defect is a gap in where/whether the duplicate-node mechanism triggers,
+rather than treating it as a pure coordinate-assignment bug in isolation.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+
 ### What Session 469 Did
 **Deliverable:** Fix the duplicate-node connector rendering straight instead of arched
 (`BACKLOG.md`, found S468) -- picked by the owner via the S469 orientation-report
