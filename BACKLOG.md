@@ -1013,12 +1013,12 @@ that checklist’s own scope. Analytically separate from issue \#142’s own
 mate-line/ sibship-bar edge-routing work (Slice 2, shipped S468) – not
 folded in, per this project’s own scope-discipline precedent (see the
 founder-positioning-defect item immediately below, and
-`PROJECT_LEARNINGS.md` Learning 382). See `CHANGELOG.md`. - \[ \]
+`PROJECT_LEARNINGS.md` Learning 382). See `CHANGELOG.md`. - \[x\]
 **Founder-positioning defect: a non-anchor parent occurrence (founder or
 already-duplicated multi-mate individual) whose own generation differs
 from their mating unit’s generation renders at the wrong row, visually
-implying the wrong pairing** (READY to implement – design ratified S471,
-Effort M, found S463, characterized S470, designed S471) – confirmed via
+implying the wrong pairing** (DONE – fix implemented S472, Effort M,
+found S463, characterized S470, designed S471) – confirmed via
 `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`,
 prompted by an owner observation on that document’s own Example 1
 rendering (“it appears 2 males have mated”).
@@ -1057,25 +1057,38 @@ distinguish from free-pass ones (both lack a `__dup_` prefix) – this fix
 resolves 96 of 147 (65%), not all of it.** Owner reviewed this finding
 and directed shipping the non-anchor fix now, tracking the anchor-side
 gap as its own urgent follow-up (see the new item immediately below,
-[issue \#144](https://github.com/rmsharp/nprcgenekeepr/issues/144)). A
-future implementation session should follow the plan’s own
-RED/GREEN/REFACTOR-structured Verification Plan (§7) – exact expected
-regression numbers, including the real-fixture `edgeStyle="rectilinear"`
-node count change (1375 -\> 1279), are pre-derived in the plan itself.
-See `CHANGELOG.md`. - \[ \] **Pedigree Diagram: anchor-side row
-mismatches – 51 of 237 real-fixture mating units (22%), distinct from
-issue \#143’s non-anchor fix** (READY to plan, Effort unknown – likely
-comparable to or larger than \#143, since it requires restructuring
-anchor positioning rather than a point-patch; found S471, incidental to
-designing \#143’s fix) – an anchor’s own `gen` can legitimately differ
-from its mating unit’s `gen` since D2’s anchor-selection tie-break
-(`preferAnchor()`) never consults gen. Moving an anchor’s displayed row
-would require restructuring `.positionMatingUnitForest()`’s recursive
-positioning itself (the anchor’s row is the root every other node in its
-own subtree hangs off) – materially larger than issue \#143’s
-point-patch, which deliberately leaves anchor rows untouched. **Filed as
-[issue \#144](https://github.com/rmsharp/nprcgenekeepr/issues/144) –
-S471 (2026-08-03).** Owner-directed priority: near-term follow-up, not a
+[issue \#144](https://github.com/rmsharp/nprcgenekeepr/issues/144)).
+**Implemented – S472 (2026-08-04):** both synchronized edits shipped
+together in one commit (`R/makePedigreeDiagramData.R:494,585-600ish`),
+following the plan’s own RED/GREEN/REFACTOR Verification Plan (§7)
+exactly – pre-derived regression numbers confirmed to the exact integer
+(0 non-anchor + 51 anchor mismatches remaining;
+`edgeStyle="rectilinear"` real-fixture node count 1375 -\> 1279). The
+plan’s own §6 dragon-flagged minimum-separation test was investigated
+empirically before writing it and found NOT to discriminate a
+desynchronized fix in this algorithm (unrelated same-row nodes are not
+guaranteed \>= minSep apart even under the correct fix); substituted a
+stronger, empirically-verified exact x/gen value test instead (see
+`PROJECT_LEARNINGS.md` Learning 470). Full regression suite 0 failed/0
+error (4560 passed); `devtools::check()` 0 errors/0 warnings (1
+pre-existing, unrelated NOTE); live-verified in the running app via
+`shinytest2` – FD3BB6 (the audit’s own spot-checked example) plus 3 more
+previously-mismatched units now render on-row under both `edgeStyle`
+values, zero diagram-related console errors. See `CHANGELOG.md`. - \[ \]
+**Pedigree Diagram: anchor-side row mismatches – 51 of 237 real-fixture
+mating units (22%), distinct from issue \#143’s non-anchor fix** (READY
+to plan, Effort unknown – likely comparable to or larger than \#143,
+since it requires restructuring anchor positioning rather than a
+point-patch; found S471, incidental to designing \#143’s fix) – an
+anchor’s own `gen` can legitimately differ from its mating unit’s `gen`
+since D2’s anchor-selection tie-break (`preferAnchor()`) never consults
+gen. Moving an anchor’s displayed row would require restructuring
+`.positionMatingUnitForest()`’s recursive positioning itself (the
+anchor’s row is the root every other node in its own subtree hangs off)
+– materially larger than issue \#143’s point-patch, which deliberately
+leaves anchor rows untouched. **Filed as [issue
+\#144](https://github.com/rmsharp/nprcgenekeepr/issues/144) – S471
+(2026-08-03).** Owner-directed priority: near-term follow-up, not a
 low-priority residual, given the now-confirmed substantial (not
 theoretical) real-data prevalence – see
 `docs/planning/issue143-founder-positioning-fix-plan.md` §1.4/§4.4/§8
@@ -1097,6 +1110,26 @@ issue \#143 fix design’s own scope, per `PROJECT_LEARNINGS.md` Learning
 should determine whether this is reachable in practice (no real-fixture
 instance confirmed either way) and, if so, design a fix. See
 `docs/planning/issue143-founder-positioning-fix-plan.md` §8. - \[ \]
+**The live app’s uploaded/QC’d copy of `obfuscated_rhesus_mhc_ped.csv`
+produces one fewer node than reading the same bundled CSV directly**
+(found S472, incidental to issue \#143’s live verification, Effort
+unknown, low priority) – `direct`-style Diagram node count is 739 live
+vs. 740 via [`read.csv()`](https://rdrr.io/r/utils/read.table.html) +
+`.buildMatingUnitForest()`/ `.positionMatingUnitForest()` directly (a
+stable, already-tested figure, unaffected by this session’s fix); the
+live rectilinear -style projection-node count is correspondingly 50
+vs. an offline -computed 51. Not investigated further this session (out
+of the issue \#143 fix’s own scope, per `PROJECT_LEARNINGS.md` Learning
+382’s “report, don’t fix mid-session” precedent) – most likely explained
+by the upload/QC pipeline (`modInput.R`’s
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+or similar) dropping or merging exactly one row relative to a raw
+[`read.csv()`](https://rdrr.io/r/utils/read.table.html), but this was
+not confirmed. A future session should identify which individual differs
+and why, and decide whether the app’s own bundled -fixture test coverage
+(`test-e2e-pedigree-module.R`, etc.) should assert this QC’d count
+explicitly rather than relying on the raw-CSV-read count as a proxy for
+what the live app actually renders. - \[ \]
 **`data-raw/rhesusPedigree.R`’s docstring claims
 `rhesusPedigree_fromCenter.csv` is an independent raw/pre-obfuscation
 source for `obfuscated_rhesus_mhc_ped.csv`, but the two shipped fixtures

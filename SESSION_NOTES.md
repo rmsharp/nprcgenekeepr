@@ -7,6 +7,247 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 472 Did
+
+**Deliverable:** Implement the founder-positioning fix for issue \#143
+per the ratified plan
+(`docs/planning/issue143-founder-positioning-fix-plan.md`) – picked by
+the owner via the S472 orientation-report `AskUserQuestion` picker.
+Followed this project’s Strict TDD contract (RED/GREEN/REFACTOR,
+`AskUserQuestion`-gated at every transition). **Started/Completed:**
+2026-08-04 / 2026-08-04 **Status:** DONE – both synchronized edits
+shipped in one commit (`904d74b7`), full regression suite +
+`devtools::check()` + live `shinytest2` verification all clean.
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Phase 0 orient (full protocol,
+priorities-list `AskUserQuestion` picker); owner picked “Implement \#143
+fix.” Found 2 new untracked files (`R/appServer 2.R`,
+`R/modMarkerGenetics 2.R`) – confirmed via `diff` against the real
+tracked files that these were stale (Jul 30) iCloud sync-contamination
+duplicates, same pattern as Learning 464; owner approved removal via
+`AskUserQuestion` before claiming. Claimed the session (stub +
+`HANDOFFS.md` `status: pending` receipt, commit `111a4494`). **(2)**
+Read the ratified plan in full, then independently re-verified every
+cited line number and mechanism against live source
+(`.positionMatingUnitForest()` in full) before writing anything, per
+this project’s own “read implementations, not descriptions” norm – all
+citations held. **(3)** PRE-RED: hand-verified the exact duplicate-gen
+split the plan flagged as needing verification (8LKBV9’s 2 duplicate
+occurrences: one stays gen 1, the other changes to gen 2) by directly
+inspecting `forest$matingUnits`/`forest$duplicates` via `:::` access.
+**(4)** Investigated the plan’s own §6 “minimum separation”
+dragon-flagged test empirically before writing it: patched 4 independent
+variants of `.positionMatingUnitForest()` (baseline, Edit-1-only,
+Edit-2-only, both) via text-level source patching, ran each against the
+real 375-fixture and several hand-built synthetic fixtures. Found the
+proposed minSep check does NOT discriminate a desynchronized fix in this
+algorithm (unrelated same-row nodes aren’t guaranteed \>= minSep apart
+even under the correct fix – 300+ such pairs exist in the real fixture
+under every variant). Substituted a stronger, empirically-verified exact
+x/gen value test instead (confirmed via the same 4 variants to produce 3
+different wrong answers for the 3 broken variants and only the correct
+answer for both edits together). Surfaced this finding to the owner via
+the PRE-RED `AskUserQuestion` gate before writing any test – owner
+approved. **(5)** RED: wrote/updated tests in
+`test_positionMatingUnitForest.R` (rewrote the gen-semantics test and
+the GA204Z/8LKBV9 duplicate-gen assertion with hand-verified values;
+added the exact x/gen regression test; added a new committed
+real-fixture regression test re-deriving the audit’s own detection
+method, corrected to separate anchor from non-anchor mismatches),
+`test_addRectilinearWaypoints.R` (D2 non-anchor test now expects zero
+projections; node-count 1375L-\>1279L), and
+`test_makePedigreeMatingLayout.R` (node-count 1375L-\>1279L). Confirmed
+RED: exactly the 6 touched test blocks failed, 0 errors, everything else
+unaffected. **(6)** RED-\>GREEN gate approved; implemented both
+synchronized edits together (`R/makePedigreeDiagramData.R:494` and the
+`:585-591` node-construction block, with the
+`intersect(freePassIds, realIds)` guard). Confirmed GREEN: all 3 edited
+test files pass fully (223 tests, 0 failed/error). **(7)**
+GREEN-\>REFACTOR gate: no refactor needed (2 small, targeted edits, no
+duplication introduced) – owner confirmed. **(8)** Full verification:
+ran the complete regression suite (4560 passed, 0 failed, 0 error, 171
+skipped – baseline-consistent; 10 pre-existing, unrelated warnings in
+`test_modMarkerGenetics.R`, a module this session never touched). Ran
+`devtools::check()`: hit 2 ERRORs/1 WARNING from a pre-existing
+untracked file with an invalid filename
+(`inst/extdata/reference/Standardized Human Pedigree Nomenclature: ...html`,
+already flagged in `BACKLOG.md` as multi-session-old drift) –
+temporarily and reversibly moved the 3 untracked reference files aside,
+re-ran clean (0 errors/0 warnings/1 pre-existing unrelated NOTE), then
+restored them exactly. **(9)** Phase 3E live verification via
+`shinytest2` against the real running app: uploaded the real
+375-fixture, confirmed via live JS queries against the vis.js widget
+that FD3BB6 (the S470 audit’s own spot-checked example) plus 3 more
+previously-mismatched non-anchor units (1BYXWJ, BRI2MW, 677E7M) now
+render on-row under both `edgeStyle` values, with zero diagram-related
+(and zero SEVERE/ERROR-level) console entries. First attempt incorrectly
+assumed mating-unit node-id numbering would transfer between a direct
+[`read.csv()`](https://rdrr.io/r/utils/read.table.html) script and the
+live app’s processed data – it doesn’t (row-order -sensitive union
+numbering, a pre-existing, unrelated dragon) – corrected by discovering
+each person’s live union id via live edge queries instead of reusing
+offline-computed ids. Also found and correctly attributed (not fixed) a
+genuine, unrelated 1-node discrepancy between the live app’s node counts
+(739/50) and the raw-CSV-direct counts (740/51) to the upload/QC
+pipeline, not this fix. **(10)** Close-out: committed the atomic GREEN
+fix (code + all test changes, `904d74b7`); `BACKLOG.md` updated (item
+marked DONE; 1 new low-priority incidental item for the QC-count
+discrepancy); added `PROJECT_LEARNINGS.md` Learning 470 generalizing the
+minSep-dragon-investigation lesson; updated `CLAUDE.md`’s learning-count
+cross-reference (469-\>470, Sessions 1-471+-\>1-472+).
+
+**Session 471 Handoff Evaluation (by Session 472): 9/10.** **What
+helped:** item (a) of the handoff’s “what’s next” list named exactly
+this task (“Implement the founder-positioning fix…
+`docs/planning/issue143-founder-positioning -fix-plan.md` is a complete,
+ratified, RED/GREEN/REFACTOR-structured plan with pre-derived exact
+regression numbers; follow it directly”) – fully unambiguous, and every
+one of the plan’s own citations (line numbers, exact edit text, test
+file/line references) held up under this session’s independent
+re-verification against live source, with zero corrections needed.
+Gotcha (2) (the `intersect(freePassIds, realIds)` guard requirement) was
+essential and directly actionable – implemented exactly as specified.
+Gotcha (3) (the two `test_addRectilinearWaypoints.R` D2 sections having
+opposite fates) was exactly right and saved this session from mistakenly
+rewriting the anchor-side test. Gotcha (4) (the 1375-\>1279 node-count
+change) was exactly confirmed by this session’s own live and offline
+verification, to the exact integer. **What was missing:** the plan’s own
+§6 dragon note prescribed a specific test SHAPE (a minimum-separation
+check) for the Edit-1/Edit-2 desync risk, but that specific shape turned
+out not to discriminate the failure mode in this algorithm – this was
+not something the plan could have caught without the kind of
+implementation-session empirical prototyping (4 patched variants) this
+session did; the plan correctly identified the RISK, just not a working
+TEST for it, which is a reasonable division of labor between a planning
+and an implementation session. **What was wrong:** nothing – every
+claim, citation, and mechanism description in the handoff and the plan
+it summarized held up under independent re-verification. **ROI:**
+strongly positive – the plan’s precision (exact line numbers, exact code
+snippets, exact pre-derived regression numbers) meant this session spent
+zero time re-deriving scope or the defect mechanism, freeing its own
+effort entirely for RED-phase test construction and the minSep-dragon
+investigation.
+
+**Self-assessment (Session 472): 9/10.** **Strengths:** (1) followed the
+full Strict TDD gate sequence (PRE-RED, RED, GREEN, REFACTOR) via
+`AskUserQuestion` at every transition, per `CLAUDE.md`’s exact
+phase-gate format, with concrete verified actions spelled out at each
+gate rather than vague descriptions; (2) did not transcribe the plan’s
+own proposed minSep test uncritically – empirically investigated it
+first (4 patched variants against real + synthetic fixtures), found it
+doesn’t discriminate the failure mode in this architecture, and surfaced
+this finding to the owner before proceeding rather than silently
+deciding or silently shipping an untested-but-plausible check; (3)
+hand-verified every exact numeric value used in new/rewritten tests (gen
+splits, x/y coordinates, node counts) via direct empirical computation,
+not from memory or the plan’s prose alone; (4) confirmed RED failed for
+the right reason (exactly the touched tests, 0 errors elsewhere) before
+implementing, and GREEN passed cleanly immediately after, with no
+back-and-forth; (5) ran the complete regression suite AND
+`devtools::check()`, correctly isolating a pre-existing unrelated
+portability error via a reversible temporary file move rather than
+either ignoring it or fixing it mid-session; (6) performed genuine Phase
+3E live verification through the actual running app (not just unit
+tests), including catching and correcting its own mid-flight mistake
+(assuming stable union-id numbering across offline/live runs) and
+correctly attributing a genuine, separate 1-node count discrepancy to
+the unrelated QC pipeline rather than treating it as a defect in this
+fix; (7) kept the implementation + all test changes in ONE atomic
+commit, matching the plan’s own explicit rollback-strategy requirement.
+**Weaknesses:** (1) the minSep-dragon investigation consumed substantial
+effort (several rounds of synthetic-fixture construction) before
+reaching a firm conclusion – a more efficient path might have surfaced
+the empirical finding to the owner after 1-2 rounds rather than
+exhausting multiple hand-built fixtures first, though the
+investigation’s depth did produce genuinely load-bearing evidence (the
+algorithm’s real invariant boundaries) that materially strengthened the
+substitute test’s design; (2) the first live-verification attempt used a
+naive assumption (stable union-id numbering) that a closer read of the
+EXISTING e2e test file’s own comment (“the union id itself is a volatile
+sequential index… captured via pattern match rather than hardcoded”)
+would have prevented outright; (3) did not investigate the root cause of
+the live-vs-offline 739/50 count discrepancy (correctly out of scope per
+Learning 382’s precedent, but left for a future session rather than
+resolved this session). **Compared to previous sessions:** extends
+S471’s own “personally re-verify claims, don’t trust the write-up”
+discipline one level further – not just re-verifying a PRIOR session’s
+claims (S471’s own contribution over S470), but empirically re-verifying
+the CURRENT session’s OWN plan’s proposed VERIFICATION MECHANISM before
+trusting it, catching a gap in the plan’s own test-design prescription
+that no amount of re-reading the plan’s prose would have surfaced.
+
+**Handoff to Session 473:** - **What’s next:** **(a)** Design a fix for
+the anchor-side row-mismatch gap (issue \#144, READY to plan,
+owner-directed near-term priority, Effort likely \>= issue \#143’s own
+since it requires restructuring anchor positioning, not a point-patch) –
+`docs/planning/issue143-founder-positioning-fix-plan.md` §1.4/§4.4/§8 is
+the starting evidence; this session’s own live verification additionally
+confirms the anchor-side gap is unchanged and un-regressed by the \#143
+fix. **(b)** Lint debt process fix (READY, Effort S-M, split off S466) –
+unchanged, still untouched. **(c)** New this session: the
+live-vs-offline node-count discrepancy (739 vs 740 direct-style nodes;
+50 vs 51 rectilinear projections) on the real fixture – READY to
+investigate, Effort unknown, low priority; most likely a QC-pipeline row
+drop/merge, not confirmed. **(d)** Everything else carried forward
+unchanged from S462-471: stale `colony-manager-guide.qmd` Diagram
+screenshot (READY S); 6-word spelling-drift NOTE (READY S); NPRC
+outreach (DECISION NEEDED, owner-only); LabKey (BLOCKED); S445’s
+methodology question; iCloud repo relocation (owner-only decision,
+unchanged); `rhesusPedigree_fromCenter.csv` stale docstring (READY S,
+low priority); `freePassIds`-vs-D5-decision structural gap (found S471,
+low priority, effort unknown); `inst/extdata/` reorganization Phase 4
+(DECISION NEEDED, 2 open decisions); issues \#133/#136/#137/#138
+(data-model gated), \#141/#142 (deferred, low priority); \#123 (XARCH-5
+pipeline seam); \#116 (deferred slice); \#37/#36/#28/#12/#11/#10/#5
+(long-standing feature asks); 2 untracked reference PDFs plus 1
+untracked reference HTML file; unexplained `renv.lock` diff (14 sessions
+now); 2 untracked rendered `.html` files under `docs/planning/`. - **Key
+files:** `R/makePedigreeDiagramData.R:494,585-600ish` (the 2 implemented
+edits – READ what’s actually there now, this session’s own diff, not the
+plan’s proposed snippet, before touching this function again);
+`tests/testthat/test_positionMatingUnitForest.R` (rewritten
+gen-semantics test, new exact-value regression test, new real-fixture
+detection regression test – all 3 reusable patterns for verifying issue
+\#144’s future fix too);
+`tests/testthat/test_addRectilinearWaypoints.R`/`test_makePedigreeMatingLayout.R`
+(node-count assertions now 1279L, will need ANOTHER update once issue
+\#144 also ships, since that would drop the remaining 51 projections
+further); `BACKLOG.md` (founder-positioning item marked DONE, 1 new
+incidental item). - **Gotchas:** (1) **A minimum-separation geometric
+check is NOT a valid invariant of `.positionMatingUnitForest()`’s
+recursive contour-merge algorithm** – it only guarantees minSep between
+DIRECT siblings sharing one merge call, never globally; don’t reach for
+this check pattern for issue \#144’s own verification without
+re-deriving whether it actually discriminates first (see
+`PROJECT_LEARNINGS.md` Learning 470). (2) **Mating-unit node ids
+(`__union_N`) are a volatile, per-run sequential index** – they do NOT
+match between a direct
+[`read.csv()`](https://rdrr.io/r/utils/read.table.html) + internal
+-function-call script and the live app’s own processed data (confirmed
+this session: FD3BB6’s union was `__union_59` offline, `__union_96`
+live, for the SAME underlying pair) – never hardcode a union id across a
+live/offline boundary; discover it live via edge queries instead. (3)
+The live app’s node counts (739 direct-style, 50 rectilinear
+projections) differ from the raw-CSV-direct counts (740, 51) by exactly
+1 – this is NOT a defect in issue \#143’s fix (confirmed: both counts
+moved together, consistent with the QC pipeline dropping/merging exactly
+1 row) but is unconfirmed in root cause; don’t assume either count is
+“the” correct one without checking which pipeline a given test/assertion
+is meant to represent. (4) All S462-471 gotchas (`# nolint`
+suppressions, `.lintr` per-line exclusion,
+`devtools::install(upgrade = FALSE)`,
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+needing BOTH `NPRC_RUN_E2E=true` AND `NOT_CRAN=true`, the
+reserved-prefix pattern-match-don’t-hardcode convention,
+`devtools::document()`’s iCloud duplicate-file contamination,
+`app$get_logs()` not `get_log()`) still apply unchanged; this session
+also independently found 2 NEW iCloud-contamination duplicate files
+(`R/appServer 2.R`, `R/modMarkerGenetics 2.R`, distinct from S471’s 3
+`man/*.Rd` files) – removed with owner permission before claiming. This
+pattern recurs essentially every session; expect to find more. -
+**Self-assessment score:** 9/10 (breakdown above).
+
 ### What Session 471 Did
 
 **Deliverable:** Design the founder-positioning defect fix

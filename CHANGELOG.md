@@ -47,6 +47,40 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-08-04 · \[issue \#143\] Implemented the founder-positioning defect fix (Session 472)
+
+- **Deliverable:** implemented the ratified plan
+  (`docs/planning/issue143-founder-positioning-fix-plan.md`) via Strict
+  TDD (RED/GREEN/REFACTOR, owner-gated at each transition). Both
+  synchronized edits shipped together in one commit
+  (`R/makePedigreeDiagramData.R:494,585-600ish`): a free-pass leaf’s
+  contour reservation, and every non-anchor occurrence’s final displayed
+  row, now come from that occurrence’s own mating unit’s `gen`, not the
+  underlying individual’s global tree-native `gen`. Resolves 96 of the
+  S470 audit’s 147 real-fixture mismatches (all free-pass +
+  duplicate-node cases); the remaining 51 anchor-side mismatches are
+  unaddressed by design (issue \#144, owner-directed follow-up).
+  RED-phase tests: rewrote `test_positionMatingUnitForest.R`‘s
+  gen-semantics assertions with hand-verified values; added an exact
+  x/gen regression test empirically confirmed to discriminate a
+  desynchronized (only one of the two edits) fix – substituted for the
+  plan’s own proposed minimum-separation test, which this session found
+  does not discriminate defect from correct behavior in this algorithm
+  (see `PROJECT_LEARNINGS.md` Learning 470); added a committed
+  real-fixture regression test asserting 0 non-anchor + 51 anchor
+  mismatches; updated `test_addRectilinearWaypoints.R`’s D2 non-anchor
+  test and both files’ real-fixture node-count assertions (1375L -\>
+  1279L). Verified: full regression suite 0 failed/0 error (4560 passed,
+  171 skipped); `devtools::check()` 0 errors/0 warnings (1 pre-existing,
+  unrelated NOTE, confirmed by temporarily setting aside known untracked
+  debris and restoring it); live-verified in the running app via
+  `shinytest2` under both `edgeStyle` values – FD3BB6 (the audit’s own
+  spot-checked example) plus 3 more previously-mismatched units now
+  render on-row, zero diagram-related console errors. `BACKLOG.md`
+  updated (item marked DONE; 1 new low-priority incidental finding added
+  – a 1-node live-vs-offline count discrepancy, unrelated to this fix,
+  unconfirmed root cause).
+
 ### 2026-08-03 · \[issue \#144\] Filed the anchor-side row-mismatch gap as its own GitHub issue (Session 471)
 
 - **Deliverable:** opened [issue
