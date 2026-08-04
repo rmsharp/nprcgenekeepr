@@ -241,6 +241,61 @@ test_that(
 })
 
 test_that(
+  "makePedigreeMatingLayout's duplicate-node connector edges render as a
+   curved arc (smooth.enabled = TRUE, smooth.type = \"curvedCW\"), visually
+   distinct from the straight child/mate-line edges (smooth.enabled left NA,
+   inheriting the widget's global smooth = FALSE) -- matches the kinship2/
+   reference-pedigree convention of an arched dashed connector back to a
+   duplicated individual's primary occurrence (found S468, fixed S469)", {
+  loopPed <- data.frame(
+    id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
+           "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
+    sire = c(NA, NA, NA, NA, "5A6DFT", "8LKBV9", "8LKBV9", "8LKBV9"),
+    dam = c(NA, NA, NA, NA, "8DKELJ", "G8EBU9", "8P17E3", "FJIB3R"),
+    sex = c("M", "F", "F", "F", "M", "F", "F", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 2L, 2L, 3L),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(loopPed)
+  result <- makePedigreeMatingLayout(loopPed)
+  isDupConnector <- result$edges$from %in% forest$duplicates$id &
+    result$edges$dashes
+  dupConnectors <- result$edges[isDupConnector, ]
+  otherEdges <- result$edges[!isDupConnector, ]
+  expect_true(nrow(dupConnectors) > 0L)
+  expect_true(all(c("smooth.enabled", "smooth.type") %in% names(result$edges)))
+  expect_true(all(dupConnectors$smooth.enabled %in% TRUE))
+  expect_true(all(dupConnectors$smooth.type %in% "curvedCW"))
+  expect_true(all(is.na(otherEdges$smooth.enabled)))
+})
+
+test_that(
+  "makePedigreeMatingLayout's duplicate-node connector arc survives
+   edgeStyle = \"rectilinear\" -- .addRectilinearWaypoints() must not drop
+   or misalign the new smooth.* columns when it rbinds its own fresh
+   waypoint edges onto the passed-through direct-style edges (found S468,
+   fixed S469)", {
+  loopPed <- data.frame(
+    id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
+           "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
+    sire = c(NA, NA, NA, NA, "5A6DFT", "8LKBV9", "8LKBV9", "8LKBV9"),
+    dam = c(NA, NA, NA, NA, "8DKELJ", "G8EBU9", "8P17E3", "FJIB3R"),
+    sex = c("M", "F", "F", "F", "M", "F", "F", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 2L, 2L, 3L),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(loopPed)
+  result <- makePedigreeMatingLayout(loopPed, edgeStyle = "rectilinear")
+  isDupConnector <- result$edges$from %in% forest$duplicates$id &
+    result$edges$dashes
+  dupConnectors <- result$edges[isDupConnector, ]
+  expect_true(nrow(dupConnectors) > 0L)
+  expect_true(all(c("smooth.enabled", "smooth.type") %in% names(result$edges)))
+  expect_true(all(dupConnectors$smooth.enabled %in% TRUE))
+  expect_true(all(dupConnectors$smooth.type %in% "curvedCW"))
+})
+
+test_that(
   "makePedigreeMatingLayout's edges include a solid mate-line edge from
    each mating unit's anchor AND non-anchor parent to the union node --
    using the non-anchor's DUPLICATE id when one was placed at this unit,
@@ -363,8 +418,10 @@ test_that(
 
 test_that(
   "makePedigreeMatingLayout defaults to edgeStyle = \"direct\" -- identical
-   to calling with edgeStyle explicitly \"direct\", no waypoint ids, no new
-   columns beyond the existing nodes/edges contract", {
+   to calling with edgeStyle explicitly \"direct\", no waypoint ids, and no
+   edge columns beyond the existing contract plus the duplicate-connector
+   arc's smooth.* override columns (contract updated S469 for the
+   duplicate-node-arc fix, found S468)", {
   ped <- data.frame(
     id = c("R1", "R2", sprintf("D%d", 1:4)),
     sire = c(NA, NA, "R1", "D1", "D2", "D3"),
@@ -379,7 +436,9 @@ test_that(
   expect_false(any(grepl("^__drop_|^__bar_|^__proj_", default$nodes$id)))
   expect_setequal(names(default$nodes),
                    c("id", "label", "shape", "title", "size", "x", "y"))
-  expect_setequal(names(default$edges), c("from", "to", "dashes"))
+  expect_setequal(names(default$edges),
+                   c("from", "to", "dashes", "smooth.enabled", "smooth.type",
+                     "smooth.roundness"))
 })
 
 test_that(
