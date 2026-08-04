@@ -904,9 +904,8 @@ visNetwork-vs-kinship2 technology decision (D2), which stands as ratified.*
 - [ ] **Founder-positioning defect: a non-anchor parent occurrence (founder or
       already-duplicated multi-mate individual) whose own generation differs
       from their mating unit's generation renders at the wrong row, visually
-      implying the wrong pairing** (READY to plan -- root cause identified AND
-      real-fixture prevalence now confirmed, fix still not designed, Effort M,
-      found S463, characterized S470) -- confirmed via
+      implying the wrong pairing** (READY to implement -- design ratified S471,
+      Effort M, found S463, characterized S470, designed S471) -- confirmed via
       `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`,
       prompted by an owner observation on that document's own Example 1
       rendering ("it appears 2 males have mated"). `.positionMatingUnitForest()`
@@ -921,23 +920,69 @@ visNetwork-vs-kinship2 technology decision (D2), which stands as ratified.*
       confirmed this against real bundled fixtures, resolving the "how often in
       practice" question S463 left open:** on the real 375-individual rhesus
       fixture (`obfuscated_rhesus_mhc_ped.csv`), **147 of 237 mating units
-      (62%) have at least one mis-positioned parent** -- 57 of those 147 (39%)
-      on genuine duplicate nodes (multi-mate individuals), not just single-mate
-      founders, broadening the defect's scope beyond what S463's synthetic-only
-      characterization found. Independently re-derived via a blind Workflow
-      agent (same counts, plus a general rule: mismatch iff parent's own `gen`
-      != mating-unit `gen`, no exceptions). Real Japanese macaque colony data
-      (`deidentified_jmac_ped.csv`, 2,791 individuals) shows the same pattern on
-      its (small, data-sparse) applicable subset. Not fixed this session (S470
-      was audit/characterization only, per owner-directed scope, matching
-      `SAFEGUARDS.md`'s plan-mode gate on this shared logic). **Filed as
-      [issue #143](https://github.com/rmsharp/nprcgenekeepr/issues/143) --
-      S470 (2026-08-03), owner-confirmed before filing.** A future session
-      should design a fix via a proper plan-mode session -- the audit's
-      candidate direction: assign every non-anchor occurrence's row (free-pass
-      OR duplicate) from its own mating unit's `gen`, not the parent's global
-      `gen`, since a fix that only widens WHEN a duplicate gets created would
-      still leave the 39% duplicate-node instances broken. See `CHANGELOG.md`.
+      (62%) have at least one mis-positioned parent.** Independently re-derived
+      via a blind Workflow agent (same counts, plus a general rule: mismatch
+      iff parent's own `gen` != mating-unit `gen`, no exceptions). Real
+      Japanese macaque colony data (`deidentified_jmac_ped.csv`, 2,791
+      individuals) shows the same pattern on its (small, data-sparse)
+      applicable subset. **Filed as [issue #143](https://github.com/rmsharp/nprcgenekeepr/issues/143)
+      -- S470 (2026-08-03), owner-confirmed before filing.**
+      **Fix designed -- S471 (2026-08-03):**
+      `docs/planning/issue143-founder-positioning-fix-plan.md`, owner-ratified
+      via `AskUserQuestion`. Adopts the audit's own "point-patch" candidate
+      (two synchronized edits assigning every non-anchor occurrence's row from
+      its own mating unit's `gen`), with a dangling-free-pass-parent guard the
+      plan's own adversarial review found was needed (caught and fixed a real
+      crash before ratification, reproduced against the existing `DANGLING_DAM`
+      fixture). **Direct empirical verification during planning found the
+      S470 audit's own real-fixture numbers under-reported the picture: of the
+      147 mismatches, 51 (22% of all 237 units) are ANCHOR-side mismatches the
+      audit's detection script could not distinguish from free-pass ones (both
+      lack a `__dup_` prefix) -- this fix resolves 96 of 147 (65%), not all of
+      it.** Owner reviewed this finding and directed shipping the non-anchor
+      fix now, tracking the anchor-side gap as its own urgent follow-up (see
+      the new item immediately below, [issue #144](https://github.com/rmsharp/nprcgenekeepr/issues/144)).
+      A future implementation session should follow the plan's own
+      RED/GREEN/REFACTOR-structured Verification Plan (§7) -- exact expected
+      regression numbers, including the real-fixture `edgeStyle="rectilinear"`
+      node count change (1375 -> 1279), are pre-derived in the plan itself.
+      See `CHANGELOG.md`.
+- [ ] **Pedigree Diagram: anchor-side row mismatches -- 51 of 237 real-fixture
+      mating units (22%), distinct from issue #143's non-anchor fix** (READY
+      to plan, Effort unknown -- likely comparable to or larger than #143,
+      since it requires restructuring anchor positioning rather than a
+      point-patch; found S471, incidental to designing #143's fix) -- an
+      anchor's own `gen` can legitimately differ from its mating unit's `gen`
+      since D2's anchor-selection tie-break (`preferAnchor()`) never consults
+      gen. Moving an anchor's displayed row would require restructuring
+      `.positionMatingUnitForest()`'s recursive positioning itself (the
+      anchor's row is the root every other node in its own subtree hangs off)
+      -- materially larger than issue #143's point-patch, which deliberately
+      leaves anchor rows untouched. **Filed as
+      [issue #144](https://github.com/rmsharp/nprcgenekeepr/issues/144) --
+      S471 (2026-08-03).** Owner-directed priority: near-term follow-up, not a
+      low-priority residual, given the now-confirmed substantial (not
+      theoretical) real-data prevalence -- see
+      `docs/planning/issue143-founder-positioning-fix-plan.md` §1.4/§4.4/§8
+      for the full reconciliation against the S470 audit's own numbers and
+      starting evidence for a future design session.
+- [ ] **`.positionMatingUnitForest()`'s free-pass filter is stricter than
+      `.buildMatingUnitForest()`'s free-vs-duplicate decision** (found S471,
+      incidental to designing issue #143's fix, Effort unknown, low priority)
+      -- `freePassIds` requires `!hasOwnDirectChild(id)`
+      (`R/makePedigreeDiagramData.R:467-471`), but
+      `.buildMatingUnitForest()`'s own free-vs-duplicate decision only looks
+      at anchor status, not D5 direct-child ownership (`:262-297`). An
+      individual who never anchors, whose first occurrence was marked free by
+      `.buildMatingUnitForest()`, but who also owns a D5 direct child, would
+      be excluded from `freePassIds` and -- if not a root -- never positioned
+      at all by the recursive descent. Not analyzed further or fixed (out of
+      the issue #143 fix design's own scope, per
+      `PROJECT_LEARNINGS.md` Learning 382's "report, don't fix mid-session"
+      precedent). A future session should determine whether this is reachable
+      in practice (no real-fixture instance confirmed either way) and, if so,
+      design a fix. See `docs/planning/issue143-founder-positioning-fix-plan.md`
+      §8.
 - [ ] **`data-raw/rhesusPedigree.R`'s docstring claims
       `rhesusPedigree_fromCenter.csv` is an independent raw/pre-obfuscation
       source for `obfuscated_rhesus_mhc_ped.csv`, but the two shipped fixtures
