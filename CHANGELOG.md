@@ -43,6 +43,31 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-04 · [ad hoc] Wired the actual process fix for recurring `lintr` debt (Session 477)
+- **Deliverable:** `BACKLOG.md` Housekeeping item "wire a process fix so `lintr` debt stops
+  re-accumulating" (split from the S462 sweep) is resolved.
+- **Corrected the item's own stale framing:** `.github/workflows/lint.yaml` already existed
+  and already ran `lintr::lint_package()` on every push to `master` (and on PRs) with
+  `LINTR_ERROR_ON_LINT: true` -- there was no CI job to add. `gh run list --workflow=lint.yaml`
+  showed it had been red since S472's push and stayed red through S473-S476's, because
+  `master` carries no branch protection requiring the check to pass -- a failing run blocks
+  nothing and is easy to never look at.
+- **Fixed the 2 live violations** in `R/makePedigreeDiagramData.R` (REFACTOR-only, no
+  RED/GREEN -- style-only, no behavior change): a `commented_code_linter` false positive on a
+  design-rationale comment suppressed via a documented `# nolint start/end` block (S466
+  precedent, not deleted/reworded); an 84-char `line_length_linter` hit wrapped onto two lines
+  matching this file's own established `<-`-then-indented-RHS house style.
+- **Added the actual recurrence-prevention mechanism:** a new `CLAUDE.md` "Lint close-out
+  checklist" requiring sessions to lint touched files (package loaded) before closing out,
+  since the CI job's own existence had already been proven insufficient by 4 sessions
+  committing on top of a red run without noticing.
+- **Verified:** `lintr::lint_package()` (package loaded, matching CI's exact invocation) 0
+  lints package-wide (was 2); full regression suite 0 failed/0 error (4573 passed, 171
+  skipped, 10 pre-existing baseline warnings, unchanged from S476); `devtools::check()` 0
+  errors/0 warnings/2 pre-existing NOTEs (spelling-wordlist drift + `a2interactive.Rmd`
+  vignette-engine note, both unrelated, unchanged from S476 baseline).
+- See `BACKLOG.md`, `PROJECT_LEARNINGS.md` Learning 477.
+
 ### 2026-08-04 · [ad hoc] Root-caused and fixed the `renv.lock` dependency-tracking gap (Session 476)
 - **Deliverable:** the 10 dev-tool packages missing from `renv.lock` since ~S459 (flagged
   S474/S475) are now correctly captured, and the mechanism that dropped them is fixed so it

@@ -463,17 +463,45 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       Phase 3F close-out check) is NOT done and remains open** -- filed
       below as its own item, since it's analytically separate from the
       sweep and wasn't in this session's scope.
-- [ ] **Wire a process fix so `lintr` debt stops re-accumulating** (split
-      from the item above at its own S462 "(b)" ask, still undecided;
-      READY, Effort S-M) -- e.g. a `lintr::lint_package()` CI job (this repo
-      already runs a scheduled `shinytest2` GitHub Actions workflow, so a
-      lint-check job is a precedent-consistent addition) and/or promoting
-      `CLAUDE.md`'s existing "keep changed files lint-clean" guidance from a
-      per-session norm into an explicit Phase 3F close-out check. The exact
-      mechanism (CI gate vs. close-out checklist vs. both) is a decision for
-      whichever session picks this up, not decided here. Without this, the
-      package can silently reaccumulate lint debt the same way it did
-      between S461 and S462.
+- [x] **Wire a process fix so `lintr` debt stops re-accumulating** (split
+      from the item above at its own S462 "(b)" ask; READY, Effort S-M) --
+      **DONE -- S477 (2026-08-04):** pre-work investigation found this
+      item's own framing was stale, matching the S476 renv.lock precedent
+      of a backlog item's speculative framing turning out incomplete on
+      direct inspection: `.github/workflows/lint.yaml` already exists and
+      already runs `lintr::lint_package()` on every push to `master` (and
+      on PRs) with `LINTR_ERROR_ON_LINT: true` -- there was no CI job to
+      "add." The real gaps were (1) `master` carries no branch protection,
+      so a failing run blocks nothing and is trivially easy to never look
+      at, and (2) it WAS currently red -- 2 real violations
+      (`commented_code_linter`, `line_length_linter`) introduced in
+      `R/makePedigreeDiagramData.R` by S472's issue #143 fix, still unfixed
+      through S473-S476 (`gh run list --workflow=lint.yaml` showed
+      consecutive `failure` runs with nobody noticing or fixing them --
+      confirmed via `gh run view` annotations, not assumed). Surfaced this
+      corrected picture via `AskUserQuestion`; owner picked "fix the current
+      red + add a close-out check" over the narrower "just fix current red"
+      or the broader "also add branch protection" (flagged as likely
+      disproportionate given this project commits directly to `master` with
+      no PR gate). Fixed both violations (REFACTOR-only, no RED/GREEN --
+      style-only, no behavior change, matching the S238/S466 precedent): the
+      comment-block false positive suppressed via a documented `# nolint
+      start/end: commented_code_linter.` block (established project
+      convention, not deleted/reworded -- S466 precedent for live
+      design-rationale comments); the over-length line wrapped onto two
+      lines matching this file's own existing `<-`-then-indented-RHS house
+      style (confirmed via grep across `R/*.R`, not invented). Verified:
+      `lintr::lint_package()` (package loaded, matching CI's exact
+      invocation) 0 lints package-wide (was 2); full regression suite 0
+      failed/0 error (4573 passed, 171 skipped, 10 pre-existing baseline
+      warnings, unchanged from S476); `devtools::check()` unchanged from
+      baseline. Added a new "Lint close-out checklist" to `CLAUDE.md`'s
+      Additional close-out checks requiring sessions to lint touched files
+      (package loaded) before closing out, rather than relying on the
+      post-push CI run to catch it -- this is the actual recurrence-prevention
+      mechanism, since the CI job's own existence did not prevent 4
+      sessions from committing on top of a red run. See `CHANGELOG.md`,
+      `PROJECT_LEARNINGS.md` Learning 477.
 - [x] **Scheduled `shinytest2` E2E CI run failed -- 2 stale-assertion test
       failures in `test-e2e-pedigree-module.R`** (found S462, Effort S,
       root cause fully diagnosed) -- **DONE -- S467 (2026-08-03):**
