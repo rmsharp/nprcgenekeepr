@@ -6,6 +6,17 @@
 
 ## ACTIVE TASK
 
+### What Session 471 Did
+**Deliverable:** Design the founder-positioning defect fix (`BACKLOG.md`, issue #143,
+characterized S470) as an architecture plan document -- picked by the owner via the
+S471 orientation-report `AskUserQuestion` picker. Following
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`.
+**Started:** 2026-08-03
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded
+in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for
+the next session's reconcile.
+
 ### What Session 470 Did
 **Deliverable:** Characterize the founder-positioning defect (`BACKLOG.md`, found
 S463: a founder who mates into a later generation renders at the wrong row) against
