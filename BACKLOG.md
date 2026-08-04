@@ -901,39 +901,61 @@ visNetwork-vs-kinship2 technology decision (D2), which stands as ratified.*
       in, per this project's own scope-discipline precedent (see the
       founder-positioning-defect item immediately below, and
       `PROJECT_LEARNINGS.md` Learning 382). See `CHANGELOG.md`.
-- [ ] **Founder-positioning defect: a founder who mates into a LATER
-      generation renders at the wrong row, visually implying the wrong
-      pairing** (DECISION NEEDED -- root cause identified, fix not designed,
-      Effort M, found S463) -- confirmed via
+- [ ] **Founder-positioning defect: a non-anchor parent occurrence (founder or
+      already-duplicated multi-mate individual) whose own generation differs
+      from their mating unit's generation renders at the wrong row, visually
+      implying the wrong pairing** (READY to plan -- root cause identified AND
+      real-fixture prevalence now confirmed, fix still not designed, Effort M,
+      found S463, characterized S470) -- confirmed via
       `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`,
       prompted by an owner observation on that document's own Example 1
       rendering ("it appears 2 males have mated"). `.positionMatingUnitForest()`
-      places a mating unit's row at its tree-native parent's generation, but
-      does not correspondingly move the OTHER, marry-in parent (a founder with
-      no tree-native position of their own) down to that row -- the marry-in
-      founder keeps their own, earlier generation row, where they can land
-      physically inside an unrelated couple's own mate-line span. Confirmed via
-      actual node/edge coordinates (not impression) in TWO independent cases:
-      kinship2's `sample.ped` family 2 (`203`x`204`) and family 1 (`117`x`116`).
-      This is a defect in x/y coordinate ASSIGNMENT, not in edge-drawing style
-      -- **independent of and would survive** a full issue #142 (rectilinear
-      mate-line/sibship-bar) implementation. A founder marrying into a family
-      at a generation other than their own is an ordinary, common case in real
-      breeding-colony pedigrees, not a synthetic-data curiosity, so this likely
-      also affects real live-app renderings, not just the comparison document's
-      synthetic examples -- not yet confirmed against a real bundled fixture.
-      Not fixed this session (root-cause diagnosis + a documented, reproducible
-      demonstration only, per the owner's own request scope). A future session
-      should: (a) confirm/characterize this against a real bundled fixture
-      (e.g. `obfuscated_rhesus_mhc_ped.csv`) to gauge how often it occurs in
-      practice; (b) design a fix (likely: pull the marry-in parent's own x/y to
-      their mating unit's row, mirroring how kinship2's own alignment algorithm
-      handles this) via a proper plan-mode session, since it touches the same
-      `.positionMatingUnitForest()` D3/D4/D5 logic Slices 1/2 already shipped
-      and tested; (c) decide whether to track as its own GitHub issue or fold
-      into #142's scope -- they are related (both concern the Pedigree Diagram
-      Option 2 layout) but analytically separate (placement vs. edge style).
-      See `CHANGELOG.md`.
+      assigns EVERY non-anchor parent occurrence's row -- a free-pass real node
+      OR a genuine D6 duplicate node -- from that parent's own global `gen`,
+      never from the specific mating unit the occurrence belongs to
+      (`R/makePedigreeDiagramData.R:585-591`). This is a defect in x/y
+      coordinate ASSIGNMENT, not in edge-drawing style -- **independent of and
+      would survive** a full issue #142 (rectilinear mate-line/sibship-bar)
+      implementation (#142 Slices 1-2 are themselves now shipped/done).
+      **S470 audit (`docs/audits/FOUNDER_POSITIONING_DEFECT_AUDIT_2026-08-03.md`)
+      confirmed this against real bundled fixtures, resolving the "how often in
+      practice" question S463 left open:** on the real 375-individual rhesus
+      fixture (`obfuscated_rhesus_mhc_ped.csv`), **147 of 237 mating units
+      (62%) have at least one mis-positioned parent** -- 57 of those 147 (39%)
+      on genuine duplicate nodes (multi-mate individuals), not just single-mate
+      founders, broadening the defect's scope beyond what S463's synthetic-only
+      characterization found. Independently re-derived via a blind Workflow
+      agent (same counts, plus a general rule: mismatch iff parent's own `gen`
+      != mating-unit `gen`, no exceptions). Real Japanese macaque colony data
+      (`deidentified_jmac_ped.csv`, 2,791 individuals) shows the same pattern on
+      its (small, data-sparse) applicable subset. Not fixed this session (S470
+      was audit/characterization only, per owner-directed scope, matching
+      `SAFEGUARDS.md`'s plan-mode gate on this shared logic). A future session
+      should: (a) design a fix via a proper plan-mode session -- the audit's
+      candidate direction: assign every non-anchor occurrence's row (free-pass
+      OR duplicate) from its own mating unit's `gen`, not the parent's global
+      `gen`, since a fix that only widens WHEN a duplicate gets created would
+      still leave the 39% duplicate-node instances broken; (b) file as its own
+      new GitHub issue, not folded into #142 -- #142 is done/shipped and this is
+      analytically separate (confirmed independent of `edgeStyle`); owner
+      confirmation needed before filing (not done S470 -- an action visible to
+      others). See `CHANGELOG.md`.
+- [ ] **`data-raw/rhesusPedigree.R`'s docstring claims
+      `rhesusPedigree_fromCenter.csv` is an independent raw/pre-obfuscation
+      source for `obfuscated_rhesus_mhc_ped.csv`, but the two shipped fixtures
+      are byte-identical on every shared column** (found S470, incidental to
+      the founder-positioning audit above, Effort S, low priority) -- confirmed
+      via `identical()` on `id`/`sire`/`dam`/`sex`/`gen`/`birth`/`exit`/`age`
+      between the two files; `rhesusPedigree_fromCenter.csv` differs only by
+      one added `fromCenter` column (all `TRUE`). The documented `obfuscatePed()`
+      id/date-obfuscation transform was evidently never applied to produce this
+      particular fixture, or produced a no-op. Not fixed this session (reported
+      per `PROJECT_LEARNINGS.md` Learning 382's "report, don't fix mid-session"
+      precedent -- out of the founder-positioning audit's own scope). A future
+      session should reconcile the docstring against the shipped fixture (or
+      regenerate `rhesusPedigree_fromCenter.csv` to match the documented
+      provenance). See `docs/audits/FOUNDER_POSITIONING_DEFECT_AUDIT_2026-08-03.md`
+      Finding #4, `PROJECT_LEARNINGS.md` Learning 468.
 - [x] **Issue #142 implementation: rectilinear mate-line/sibship-bar waypoint style
       -- Slice 2 (edgeStyle wiring + UI + live re-verification)** (READY, Effort M --
       **gate satisfied S466 (2026-08-03): the owner-directed lint-cleanup
