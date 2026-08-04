@@ -72,7 +72,7 @@ key_files: CLAUDE.md (new "GitHub issue close-out checklist" item + learning-cou
 gotchas: (1) When a BACKLOG.md item is marked DONE against a named GitHub issue, do not assume the issue was closed in the same session -- this session found 3 consecutive counterexamples (#142/#143/#144); always cross-check `gh issue list` against BACKLOG.md's DONE markers during Phase 0. (2) The pre-existing uncommitted renv.lock/.DS_Store diff and 5 untracked reference/planning files are unrelated to this session and were correctly left untouched. (3) All prior sessions' standing code-level gotchas still apply unchanged -- this session did not touch code, so none were directly exercised.
 runtime_smoke: n/a -- administrative/docs-only session (GitHub issue closes + CLAUDE.md/PROJECT_LEARNINGS.md/CHANGELOG.md updates), no R/ or tests/ files changed, no runtime behavior affected. Matches this project's established precedent for docs/administrative-only sessions (S448/S451/S452/S453/S455).
 changelog_ref: CHANGELOG.md 2026-08-04 [issue #142]/[issue #143]/[issue #144] "Closed the issue" entries (Session 475)
-commit: pending
+commit: 8d93b043
 ```
 
 ```handoff
