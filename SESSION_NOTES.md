@@ -6,6 +6,17 @@
 
 ## ACTIVE TASK
 
+### What Session 474 Did
+**Deliverable:** Implement the ratified issue #144 plan (`docs/planning/issue144-anchor-row-mismatch-fix-plan.md`)
+-- anchor-side row-mismatch fix for the Pedigree Diagram -- picked by the owner via the S474
+orientation-report `AskUserQuestion` picker. Following this project's Strict TDD contract
+(RED/GREEN/REFACTOR, `AskUserQuestion`-gated at every transition).
+**Started:** 2026-08-04
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 473 Did
 **Deliverable:** Design a fix for issue #144 (Pedigree Diagram anchor-side row mismatches --
 51 of 237 real-fixture mating units, 22%) as one architecture/plan document in

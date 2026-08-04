@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S474
+date: 2026-08-04
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement the ratified issue #144 plan (docs/planning/issue144-anchor-row-mismatch-fix-plan.md) -- anchor-side row-mismatch fix for the Pedigree Diagram. Strict TDD (RED/GREEN/REFACTOR, AskUserQuestion-gated).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S473
 date: 2026-08-04
 status: complete
