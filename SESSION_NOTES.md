@@ -13,14 +13,167 @@
 __dup_|__drop_|__bar_|__proj_`) and its hardcoded `highlightNearest` degree to match
 `R/modPedigree.R`'s style-aware value (1 direct / 6 rectilinear) -- user-directed (not from
 `BACKLOG.md`), picked up as this project's own established deferred "a2interactive.Rmd
-script-callable-function checklist" (`CLAUDE.md`) obligation, now specifically triggered by the user
-noticing the vignette never got updated after issue #142 shipped (S465/S468). Scope confirmed via
-`AskUserQuestion` (IN PROGRESS): full demo + parity fix, not demo-only.
-**Started:** 2026-08-04
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+script-callable-function checklist" (`CLAUDE.md`) obligation. Scope (full demo + parity fix, not
+demo-only) confirmed via `AskUserQuestion`.
+**Started/Completed:** 2026-08-04 / 2026-08-04
+**Status:** DONE -- rectilinear demo added, parity fix applied, verified clean (render, check,
+full regression suite, spelling).
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Phase 0 orient (full protocol). No undocumented commits
+found (the 2 commits since the `CHANGELOG.md` frontier were S477's own self-referential
+session-notes/receipt-sha-backfill commits, matching the established S466-S477 no-log-needed
+pattern). Presented the priorities-list `AskUserQuestion`; the user declined it to ask a
+clarifying question instead -- correctly treated as "user wants to redirect," not a broken
+question. **(2)** User pasted a bare `renv::status()` showing ~61 "used: n" packages and asked
+why. Diagnosed and explained: this project's `renv/settings.json` (`snapshot.type: "explicit"`,
+`package.dependency.fields` excluding `Suggests`) makes the bare form blind to every
+`Suggests`-only package -- confirmed benign via `renv::status(dev = TRUE)` reading "No issues
+found," matching `CLAUDE.md`'s own already-documented guidance and S476's root-cause (Learning
+473/476). Flagged (not acted on, since not yet the session's task) that this same trap can bite a
+*human* running the bare command, not just an agent. **(3)** User then shared a screenshot: a
+`quarto preview` of `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd` failing
+with "there is no package called 'kinship2'." Traced: the `.qmd` itself documents `kinship2` as a
+deliberate one-off local install (S463, 2026-08-03) never added to `DESCRIPTION`/`renv.lock` --
+confirmed via both active `renv` library paths that it is in fact no longer installed. Explained
+the mechanism and offered to reinstall it, or asked whether this was the actual task -- user moved
+on without picking it up (informational only, not fixed this session). **(4)** User's real request
+arrived: "I thought we had an issue for [a rectilinear/direct edge-style toggle]... I am not
+seeing that issue. I would like to add that issue if it does not exist and plan its
+implementation." **Verified before acting** (matching the S476/S477-established "don't take the
+premise at face value" pattern): `gh issue list`'s open-only default was hiding it -- `gh issue
+view 142 --json state` found issue #142 existed, was CLOSED, and the feature was already fully
+shipped (`makePedigreeMatingLayout(edgeStyle = c("direct", "rectilinear"))`, `@export`ed, S465;
+wired into `R/modPedigree.R`'s live "Diagram Edge Style" `radioButtons()` toggle, S468). Reported
+this back instead of filing a duplicate issue or planning already-built work. **(5)** User's
+follow-up request: "I want the option in the interactive mode and its use demonstrated in
+`vignettes/a2interactive.Rmd`." Investigated: the function was already fully script-callable
+(NAMESPACE `export(makePedigreeMatingLayout)`, roxygen `@examples`) -- nothing to build -- but the
+vignette's existing "Pedigree Diagram" section (written before #142 shipped) only demonstrated the
+default `"direct"` style, and its render chunk's `nodesIdSelection` exclusion regex had drifted to
+only 2 of `R/modPedigree.R`'s actual 5 reserved node-id prefixes (harmless alone, a live bug once
+a rectilinear chunk sat next to it). Surfaced the scope choice (demo-only vs. demo + parity fix)
+via `AskUserQuestion`; user picked the full fix. **(6)** Claimed the session (stub + `HANDOFFS.md`
+`status: pending` receipt, commit `9e8f4a9a`). **(7)** Executed (docs-only, no R/ or tests/ files
+-- TDD gates N/A per S448/S451-455/S475-477 precedent): added a new sentence introducing the
+`edgeStyle` argument to the section's intro prose; added a "### Direct Edge Style" heading for
+symmetry around the pre-existing content; fixed the existing render chunk's exclusion regex to the
+full 5-prefix set with an explanatory comment; added a new "### Rectilinear Edge Style"
+subsection (data chunk, prose on the extra invisible waypoint nodes/edges and the
+`color.background`/`color.border`/`color` columns `visNetwork` consumes directly, and a render
+chunk matching the app's actual `degree = 6L` style-aware `highlightNearest`). **(8)** Verified:
+`rmarkdown::render()` end-to-end twice (142/142 chunks, no real errors -- the only "Error"-substring
+hits in rendered text were pre-existing unrelated content, a `qcStudbook()` error demo and a
+DataTables JS dependency's `clearError` function name); `devtools::check()` (stashing the 3
+known-problematic untracked `inst/extdata/reference/` files first, S472/S474 precedent) 0
+errors/0 warnings/1 NOTE, unchanged from baseline (the pre-existing `a2interactive.Rmd`
+vignette-engine NOTE); caught and reverted a collateral `devtools::document()`
+`man/modMarkerGeneticsServer.Rd` reflow (Learnings 476/477 pattern, 3rd consecutive session to hit
+it); full regression suite -- first run omitted `NOT_CRAN=true` and silently produced a wrong,
+lower baseline (3854 passed/183 skipped) via bare-skipped `skip_on_cran()` files (Learning 417's
+exact mechanism); caught the discrepancy, re-ran correctly (0 failed/0 error, 4573 passed, 171
+skipped, 10 pre-existing warnings -- exact match to the S477 baseline). `spelling::spell_check_package()`
+isolated exactly 4 genuinely new flagged words from this session's own prose (`edgeStyle`,
+`routings`, `highlightNearest`, `demoPed`) from several already-pre-existing ones this session
+merely added new line-references to (`makePedigreeMatingLayout`, `duplicateToReal`, `sibship`,
+`waypoint`, `vis`/`js`, all present since S465/S468 elsewhere in the repo) -- added only the 4 new
+words to `inst/WORDLIST` in correct alphabetical position, leaving the separately-tracked
+pre-existing 6-word drift untouched. **(9)** Restored the 3 stashed reference files exactly.
+Broadened `CLAUDE.md`'s `a2interactive.Rmd` checklist wording to cover a new parameter on an
+already-documented function, not just a brand-new function (the exact shape of gap this session
+found); added `PROJECT_LEARNINGS.md` Learning 478.
+
+**Session 477 Handoff Evaluation (by Session 478): 8/10.** **What helped:** S477's process
+gotchas transferred directly and saved real time -- "stash the 3 untracked `inst/extdata/reference/`
+files before `devtools::check()`" avoided a wasted first-run failure this session actually applied
+proactively (unlike S477 itself, which hit the failure once before applying its own predecessor's
+gotcha); "watch for collateral `man/modMarkerGeneticsServer.Rd` reflow" let this session recognize
+and revert the same pattern on sight, 3rd session running. The reported clean regression/check
+baseline (4573/171/0/0/10) was exactly reproduced, confirming it was accurate. **What was
+missing:** nothing inaccurate, but S477's "what's next" list had essentially zero predictive value
+for this session's actual deliverable -- the real task emerged mid-conversation from the user's
+own thread (a `renv::status()` question -> a `quarto preview` failure -> a memory of a filed issue
+-> a specific vignette request), not from anything in S477's handoff. Not a flaw in S477's
+handoff (it can't predict an unscheduled user request), just worth naming so a future evaluator
+doesn't expect "what's next" to always be the actual next session's task. **ROI:** strongly
+positive on the gotchas/verification-baseline axis, neutral (not negative) on the task-prediction
+axis.
+
+**Self-assessment (Session 478): 9/10.** **Strengths:** (1) did not take the user's own premise at
+face value twice in a row -- verified via `gh issue view --json state` that issue #142 already
+existed and was closed/shipped (avoiding a duplicate issue and re-planning already-built work),
+then verified the function was already fully exported/script-callable before assuming any code
+needed to change; (2) investigated the actual render chain (`R/modPedigree.R`), not just the
+exported function's roxygen, and found a real, non-obvious parity bug (the 2-vs-5-prefix
+exclusion regex) a shallower "just add a chunk" pass would have missed or, worse, propagated
+inconsistently into the new chunk; (3) surfaced the scope decision via `AskUserQuestion` before
+executing, per established convention; (4) verified thoroughly and correctly on all axes --
+full render, `devtools::check()` (twice), a *correct* regression-suite run (caught and fixed its
+own `NOT_CRAN=true` omission rather than reporting the wrong baseline), and a precise
+new-vs-pre-existing spelling-gap analysis rather than either ignoring spelling or wrongly folding
+the separately-tracked pre-existing drift into this session's own WORDLIST diff; (5) caught and
+reverted the collateral `.Rd` reflow without needing to be told; (6) correctly recognized and
+stated the TDD-gates-N/A and Phase-3E-N/A reasoning explicitly rather than silently skipping
+either; (7) captured the actual generalizable gap (checklist wording missing "new parameter on
+existing function") in both `CLAUDE.md` and `PROJECT_LEARNINGS.md`, not just the one-off fix.
+**Weaknesses:** (1) the first regression-suite run's `NOT_CRAN=true` omission was avoidable --
+Learning 417 was already available at Phase 0 and should have been applied proactively on the
+first run, not discovered via a suspiciously-different pass count; (2) this session deliberately
+stayed narrow (exactly the `edgeStyle` gap the user named), not a full sweep of every exported
+function added since the last `a2interactive.Rmd` pass -- correct "1 and done" scoping, but worth
+being explicit in this handoff that the broader audit CLAUDE.md's checklist still describes
+remains a distinct, still-open future task, not something this session completed as a side
+effect. **Compared to previous sessions:** matches the S476/S477-established
+"investigate-before-executing, surface via `AskUserQuestion`, verify beyond a tool's own success
+message" pattern, this time applied to a user-originated request rather than a `BACKLOG.md` item.
+
+**Handoff to Session 479:**
+- **What's next:** **(a)** LabKey integration remainder (BLOCKED, needs live LabKey server,
+  unchanged). **(b)** NPRC outreach (DECISION NEEDED, owner-only, unchanged). **(c)** New,
+  optional: reinstall `kinship2` locally (`renv::install("kinship2")` or `install.packages()`,
+  deliberately NOT added to `DESCRIPTION`/`renv.lock`, matching S463's original intent) so
+  `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd` previews again -- raised this
+  session, not fixed (informational, user didn't pick it up). **(d)** New, optional: a
+  human-facing note (e.g. `renv/settings.json` comment, or a `.Rprofile`/`renv::load()`-time
+  message) pointing at `dev = TRUE` for `renv::status()`, since `CLAUDE.md`'s existing guidance
+  only reaches agents, not a human running the bare command directly (this session's own
+  `renv::status()` exchange with the user). **(e)** Lower priority, unchanged from S477's own
+  list: `highlightNearest` degree=6 bounded mitigation follow-up; kinship2-comparison-doc
+  staleness (see (c) above -- now more specifically scoped); 3 dangling-parent/NA-gen crash
+  reports; 6-word spelling-wordlist drift (`inst/WORDLIST` -- still open, NOT touched by this
+  session's own 4-word addition, which was a distinct, newly-introduced set); `colony-manager-guide.qmd`
+  Diagram-tab screenshot staleness; live-vs-offline pedigree node-count discrepancy;
+  `data-raw/rhesusPedigree.R` docstring/fixture mismatch; iCloud duplicate-`.R`-file artifact
+  (not re-checked this session); `freePassIds`-vs-D5 structural gap; whether
+  `Config/Needs/website: quarto` is now redundant with the `Suggests` entry S476 added. **(f)**
+  New, worth a future session: the broader `a2interactive.Rmd` documentation-pass obligation
+  `CLAUDE.md`'s checklist describes (identify ALL exported, script-callable functions/parameters
+  added since the last full pass) remains open -- this session fixed exactly one named gap
+  (`edgeStyle`), not a comprehensive sweep. **(g)** Informational: issues
+  #141/#138/#137/#136/#133/#123/#116/#37/#36/#28/#12/#11/#10/#5 -- untouched, FYI only.
+- **Key files:** `vignettes/a2interactive.Rmd:344-604` (new "### Direct Edge Style"/"### Rectilinear
+  Edge Style" subsections, exclusion-regex parity fix); `inst/WORDLIST` (4 new words, alphabetical);
+  `CLAUDE.md` (broadened `a2interactive.Rmd` checklist wording, learning-count bump 477->478);
+  `PROJECT_LEARNINGS.md` (new Learning 478); `CHANGELOG.md` (new `[ad hoc]` entry).
+- **Gotchas:** (1) **`gh issue list` defaults to open-only** -- a closed, already-shipped issue is
+  exactly the case that default hides; use `gh issue view <N> --json state` (or `--state all`) when
+  checking "do we already have an issue for X" before filing a duplicate. (2) **`NOT_CRAN=true` is
+  required for an accurate regression-suite baseline comparison**, not just for the documented
+  single-file fast-test command -- a bare `testthat::test_dir()` run silently drops to a different,
+  lower pass/skip count via bare-skipped `skip_on_cran()` files (Learning 417); always set it before
+  comparing against a prior session's reported baseline. (3) Always stash the 3 untracked
+  `inst/extdata/reference/` files aside before `devtools::check()` (S472/S474 precedent, applied
+  proactively this session); restore exactly afterward. (4) `devtools::document()`/`check()` can
+  still collaterally reflow `man/modMarkerGeneticsServer.Rd` via roxygen2-version drift -- always
+  `git diff --stat` after and revert out-of-scope changes (3rd consecutive session to hit this
+  exact file). (5) `kinship2` is NOT installed in this machine's current `renv` library --
+  `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd` will fail to preview until
+  someone reinstalls it locally (deliberately, per its own documented design, never added to
+  `DESCRIPTION`/`renv.lock`). (6) All prior standing application-code gotchas (`# nolint`
+  suppression syntax, `devtools::install(upgrade = FALSE)`, `shinytest2::AppDriver` needing both
+  `NPRC_RUN_E2E=true` and `NOT_CRAN=true`, the reserved-prefix pattern-match-don't-hardcode
+  convention) still apply unchanged.
+- **Self-assessment score:** 9/10 (breakdown above).
 
 ### What Session 477 Did
 **Deliverable:** "Wire a process fix so `lintr` debt stops re-accumulating" (`BACKLOG.md`

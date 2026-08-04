@@ -43,6 +43,37 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-04 · [ad hoc] Documented issue #142's edgeStyle option in vignettes/a2interactive.Rmd (Session 478)
+- **Deliverable:** user-directed (not from `BACKLOG.md`) — add a demonstration of issue #142's
+  `edgeStyle` (direct vs. rectilinear) option to `vignettes/a2interactive.Rmd`'s existing
+  "Pedigree Diagram" section, prompted by the user recalling the request and being unable to find
+  its tracking issue (closed, so absent from the default open-only `gh issue list`).
+- **Confirmed nothing needed building:** `makePedigreeMatingLayout(edgeStyle = c("direct",
+  "rectilinear"))` was already `@export`ed and fully script-callable (issue #142, S465/S468); the
+  only gap was the vignette never demonstrating it.
+- **Added** a new "### Rectilinear Edge Style" subsection (data chunk, prose on the extra waypoint
+  nodes/edges and `color.background`/`color.border`/`color` columns, and a render chunk matching
+  `R/modPedigree.R`'s actual style-aware `highlightNearest(degree = 6L)`), plus a "### Direct Edge
+  Style" heading for symmetry around the pre-existing content. Scope (demo + parity fix) confirmed
+  via `AskUserQuestion`.
+- **Fixed a real parity drift:** the existing direct-style render chunk's `nodesIdSelection`
+  waypoint-exclusion regex had only 2 of `R/modPedigree.R`'s actual 5 reserved node-id prefixes —
+  harmless under direct style alone, but wrong once shown next to the new rectilinear chunk. Both
+  chunks now use the identical, correct 5-prefix pattern.
+- **Added 4 new words** (`edgeStyle`, `routings`, `highlightNearest`, `demoPed`) to `inst/WORDLIST`
+  — the genuinely new spelling flags this session's own prose introduced, isolated from the
+  separately-tracked pre-existing 6-word drift via `spelling::spell_check_package()`, left untouched.
+- **Verified:** `rmarkdown::render()` end-to-end (142/142 chunks, no errors); `devtools::check()`
+  0 errors/0 warnings/1 pre-existing NOTE (unchanged, the known `a2interactive.Rmd` vignette-engine
+  NOTE); full regression suite exact baseline match (0 failed/0 error, 4573 passed, 171 skipped, 10
+  pre-existing warnings, `NOT_CRAN=true`); reverted a collateral `devtools::document()`
+  `man/modMarkerGeneticsServer.Rd` reflow (Learnings 476/477 pattern, third consecutive hit).
+- **No R/ or tests/ files changed** — TDD RED/GREEN/REFACTOR gates N/A (S448/S451-455/S475-477
+  docs-only precedent). No `NEWS.Rmd` entry needed (issue #142 already documented there, S468).
+- Broadened `CLAUDE.md`'s `a2interactive.Rmd` checklist to also cover a new parameter added to an
+  already-documented exported function, not just a brand-new function — the shape of gap this
+  session found. See `PROJECT_LEARNINGS.md` Learning 478.
+
 ### 2026-08-04 · [ad hoc] Wired the actual process fix for recurring `lintr` debt (Session 477)
 - **Deliverable:** `BACKLOG.md` Housekeeping item "wire a process fix so `lintr` debt stops
   re-accumulating" (split from the S462 sweep) is resolved.

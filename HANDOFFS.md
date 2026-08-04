@@ -62,16 +62,16 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S478
 date: 2026-08-04
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Add issue #142's edgeStyle (direct vs. rectilinear) demonstration to vignettes/a2interactive.Rmd's Pedigree Diagram section, plus fix that section's stale 2-prefix nodesIdSelection exclusion (now 5 reserved prefixes in R/modPedigree.R) and hardcoded highlightNearest degree (now style-aware: 1 direct / 6 rectilinear). User-directed; scope confirmed via AskUserQuestion (full demo + parity fix).
-what_was_done: pending
-next_steps: pending
-key_files: vignettes/a2interactive.Rmd (Pedigree Diagram section, ~lines 344-491)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- added issue #142's edgeStyle (direct vs. rectilinear) demonstration to vignettes/a2interactive.Rmd's Pedigree Diagram section (new "Direct Edge Style"/"Rectilinear Edge Style" subsections), plus fixed that section's stale 2-prefix nodesIdSelection exclusion to the app's actual 5-prefix set and its hardcoded highlightNearest degree to match R/modPedigree.R's style-aware value. User-directed; scope confirmed via AskUserQuestion (full demo + parity fix, not demo-only).
+what_was_done: Verified before acting: user recalled requesting a rectilinear/direct edge-style toggle but couldn't find its issue -- gh issue list's open-only default was hiding it; gh issue view 142 --json state found it CLOSED and the feature already fully shipped (S465/S468). Confirmed makePedigreeMatingLayout(edgeStyle=...) was already exported/script-callable -- nothing to build, only the vignette needed updating. Added a new "Rectilinear Edge Style" subsection (data + render chunks matching R/modPedigree.R's actual degree=6L highlightNearest, plus prose on the extra waypoint nodes/color columns) and a "Direct Edge Style" heading for symmetry; fixed the pre-existing render chunk's stale 2-prefix nodesIdSelection regex to the correct 5-prefix set. Verified: rmarkdown::render() end-to-end twice (142/142 chunks, no real errors); devtools::check() 0 errors/0 warnings/1 pre-existing NOTE unchanged; reverted a collateral man/modMarkerGeneticsServer.Rd reflow (3rd consecutive session, Learnings 476/477 pattern); full regression suite -- caught own first-run NOT_CRAN=true omission, re-ran correctly to exact S477 baseline (0 failed/0 error, 4573 passed, 171 skipped, 10 warnings). spelling::spell_check_package() isolated 4 genuinely new words (edgeStyle, routings, highlightNearest, demoPed) from pre-existing ones; added only those 4 to inst/WORDLIST. Broadened CLAUDE.md's a2interactive.Rmd checklist to cover new-parameter-on-existing-function gaps; added PROJECT_LEARNINGS.md Learning 478.
+next_steps: (a) LabKey integration remainder (BLOCKED). (b) NPRC outreach (DECISION NEEDED, owner-only). (c) Optional: reinstall kinship2 locally so the kinship2-reference-comparison.qmd previews again (raised, not fixed, this session). (d) Optional: a human-facing renv::status()-needs-dev=TRUE note, since CLAUDE.md's existing guidance only reaches agents. (e) Lower-priority items carried unchanged from S477 (see SESSION_NOTES.md S478 entry). (f) The broader a2interactive.Rmd documentation-pass obligation (all exported functions/parameters since the last full pass) remains open -- this session fixed exactly the one named gap, not a comprehensive sweep. (g) Informational GitHub issues, unchanged.
+key_files: vignettes/a2interactive.Rmd:344-604 (new Direct/Rectilinear Edge Style subsections, exclusion-regex parity fix); inst/WORDLIST (4 new words); CLAUDE.md (broadened a2interactive.Rmd checklist, learning-count bump 477->478); PROJECT_LEARNINGS.md (new Learning 478); CHANGELOG.md (new [ad hoc] entry).
+gotchas: (1) gh issue list defaults to open-only -- use gh issue view <N> --json state (or --state all) before assuming an issue doesn't exist. (2) NOT_CRAN=true is required for an accurate regression-suite baseline comparison, not just the documented single-file fast-test command -- a bare run silently drops to a different, lower pass/skip count (Learning 417). (3) Always stash the 3 untracked inst/extdata/reference/ files before devtools::check() (S472/S474 precedent). (4) devtools::document()/check() can still collaterally reflow man/modMarkerGeneticsServer.Rd (3rd consecutive session to hit this). (5) kinship2 is NOT installed in this machine's current renv library -- the kinship2-reference-comparison.qmd will fail to preview until reinstalled locally (deliberately never added to DESCRIPTION/renv.lock). (6) All prior standing application-code gotchas unchanged.
+runtime_smoke: n/a -- stated, not skipped. No R/ or tests/ files changed at all this session (vignettes/a2interactive.Rmd + inst/WORDLIST only) -- no Shiny wiring, dispatch, or startup behavior touched. Full regression suite (4573 passed) and devtools::check() (0 errors/0 warnings) re-confirm the installed package itself is unchanged and healthy.
+changelog_ref: CHANGELOG.md 2026-08-04 "Documented issue #142's edgeStyle option in vignettes/a2interactive.Rmd" entry (Session 478)
 commit: pending
 ```
 

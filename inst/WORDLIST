@@ -162,6 +162,7 @@ datetime
 de
 deduplicated
 deidentified
+demoPed
 designators
 deterministically
 diag
@@ -171,6 +172,7 @@ dontrun
 donttest
 dropdown
 duplicateIds
+edgeStyle
 edu
 erroring
 errorLst
@@ -232,6 +234,7 @@ herm
 heterozygosity
 heterozygous
 hh
+highlightNearest
 homozygosity
 homozygote
 homozygotes
@@ -366,6 +369,7 @@ rhesusPedigree
 rlang
 rmsharp
 rmsutilityr
+routings
 roxygen
 rpt
 runGeneKeepr
