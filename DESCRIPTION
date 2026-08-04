@@ -58,6 +58,7 @@ Imports:
     visNetwork
 Suggests:
     covr,
+    devtools,
     dplyr,
     grid,
     shinytest2,
@@ -68,6 +69,7 @@ Suggests:
     mockery,
     pkgdown,
     png,
+    quarto,
     rmarkdown,
     roxygen2 (>= 8.0.0),
     shinyBS,

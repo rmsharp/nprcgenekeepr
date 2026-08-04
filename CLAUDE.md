@@ -118,6 +118,8 @@ The build-equivalent for this R package (relocated here from `SAFEGUARDS.md` dur
 
 **Clean regression read** (the `test-app-*`/`test-e2e-*` files are pre-existing baseline noise — see Learning #2/#4 below): `pkgload::load_all(".", quiet=TRUE); as.data.frame(testthat::test_dir("tests/testthat", reporter="silent", stop_on_failure=FALSE))`, then check `sum(failed)` **and** `sum(error)`, isolating true offenders with `!grepl("test-app-|test-e2e-", file)`. (`load_all()` must run first — without it this command produces mass-spurious failures unrelated to anything actually broken; see Learning 377.)
 
+**`renv::snapshot()` always needs `dev = TRUE` in this project.** `renv/settings.json` sets `snapshot.type: "explicit"`, under which a **plain** `renv::snapshot()` only scans `DESCRIPTION`'s `Imports`/`Depends`/`LinkingTo` — every `Suggests`-only package (`testthat`, `dplyr`, `mockery`, `roxygen2`, `shinytest2`, `shinyBS`, `devtools`, `quarto`, plus their transitive deps like `pkgload`/`chromote`) is silently dropped from `renv.lock` on an ordinary snapshot, only to resurface as a missing-package crash the next time someone hits `renv::restore()` (a fresh clone, an R-version bump). Always run `renv::snapshot(dev = TRUE)` (and `renv::status(dev = TRUE)` to check consistency) instead of the bare form. See `PROJECT_LEARNINGS.md` Learning 473/476 for the root-cause diagnosis.
+
 ---
 
 ## Project-Specific Methodology Adaptations
@@ -210,7 +212,7 @@ This project runs **Strict Test-Driven Development** (see the "Development Proce
 
 ### Project-specific Learnings
 
-Project institutional memory (Sessions 1–475+; 475 learnings, ~1.9 MB) lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md) — extracted from this file to keep `CLAUDE.md` within its size budget (Claude Code targets ~200 lines / ~25 KB). **Read it when you need prior-session context; append new learnings there, not here.** Base methodology-level learnings remain in `SESSION_RUNNER.md`.
+Project institutional memory (Sessions 1–476+; 476 learnings, ~1.9 MB) lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md) — extracted from this file to keep `CLAUDE.md` within its size budget (Claude Code targets ~200 lines / ~25 KB). **Read it when you need prior-session context; append new learnings there, not here.** Base methodology-level learnings remain in `SESSION_RUNNER.md`.
 
 ### Project-specific Failure Modes
 
