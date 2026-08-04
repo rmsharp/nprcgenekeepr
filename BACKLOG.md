@@ -901,11 +901,11 @@ visNetwork-vs-kinship2 technology decision (D2), which stands as ratified.*
       in, per this project's own scope-discipline precedent (see the
       founder-positioning-defect item immediately below, and
       `PROJECT_LEARNINGS.md` Learning 382). See `CHANGELOG.md`.
-- [ ] **Founder-positioning defect: a non-anchor parent occurrence (founder or
+- [x] **Founder-positioning defect: a non-anchor parent occurrence (founder or
       already-duplicated multi-mate individual) whose own generation differs
       from their mating unit's generation renders at the wrong row, visually
-      implying the wrong pairing** (READY to implement -- design ratified S471,
-      Effort M, found S463, characterized S470, designed S471) -- confirmed via
+      implying the wrong pairing** (DONE -- fix implemented S472, Effort M,
+      found S463, characterized S470, designed S471) -- confirmed via
       `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`,
       prompted by an owner observation on that document's own Example 1
       rendering ("it appears 2 males have mated"). `.positionMatingUnitForest()`
@@ -942,11 +942,24 @@ visNetwork-vs-kinship2 technology decision (D2), which stands as ratified.*
       it.** Owner reviewed this finding and directed shipping the non-anchor
       fix now, tracking the anchor-side gap as its own urgent follow-up (see
       the new item immediately below, [issue #144](https://github.com/rmsharp/nprcgenekeepr/issues/144)).
-      A future implementation session should follow the plan's own
-      RED/GREEN/REFACTOR-structured Verification Plan (§7) -- exact expected
-      regression numbers, including the real-fixture `edgeStyle="rectilinear"`
-      node count change (1375 -> 1279), are pre-derived in the plan itself.
-      See `CHANGELOG.md`.
+      **Implemented -- S472 (2026-08-04):** both synchronized edits shipped
+      together in one commit (`R/makePedigreeDiagramData.R:494,585-600ish`),
+      following the plan's own RED/GREEN/REFACTOR Verification Plan (§7)
+      exactly -- pre-derived regression numbers confirmed to the exact
+      integer (0 non-anchor + 51 anchor mismatches remaining;
+      `edgeStyle="rectilinear"` real-fixture node count 1375 -> 1279). The
+      plan's own §6 dragon-flagged minimum-separation test was investigated
+      empirically before writing it and found NOT to discriminate a
+      desynchronized fix in this algorithm (unrelated same-row nodes are not
+      guaranteed >= minSep apart even under the correct fix); substituted a
+      stronger, empirically-verified exact x/gen value test instead (see
+      `PROJECT_LEARNINGS.md` Learning 470). Full regression suite 0 failed/0
+      error (4560 passed); `devtools::check()` 0 errors/0 warnings (1
+      pre-existing, unrelated NOTE); live-verified in the running app via
+      `shinytest2` -- FD3BB6 (the audit's own spot-checked example) plus 3
+      more previously-mismatched units now render on-row under both
+      `edgeStyle` values, zero diagram-related console errors. See
+      `CHANGELOG.md`.
 - [ ] **Pedigree Diagram: anchor-side row mismatches -- 51 of 237 real-fixture
       mating units (22%), distinct from issue #143's non-anchor fix** (READY
       to plan, Effort unknown -- likely comparable to or larger than #143,
@@ -983,6 +996,24 @@ visNetwork-vs-kinship2 technology decision (D2), which stands as ratified.*
       in practice (no real-fixture instance confirmed either way) and, if so,
       design a fix. See `docs/planning/issue143-founder-positioning-fix-plan.md`
       §8.
+- [ ] **The live app's uploaded/QC'd copy of `obfuscated_rhesus_mhc_ped.csv`
+      produces one fewer node than reading the same bundled CSV directly**
+      (found S472, incidental to issue #143's live verification, Effort
+      unknown, low priority) -- `direct`-style Diagram node count is 739 live
+      vs. 740 via `read.csv()` + `.buildMatingUnitForest()`/
+      `.positionMatingUnitForest()` directly (a stable, already-tested
+      figure, unaffected by this session's fix); the live rectilinear
+      -style projection-node count is correspondingly 50 vs. an offline
+      -computed 51. Not investigated further this session (out of the
+      issue #143 fix's own scope, per `PROJECT_LEARNINGS.md` Learning 382's
+      "report, don't fix mid-session" precedent) -- most likely explained by
+      the upload/QC pipeline (`modInput.R`'s `qcStudbook()` or similar)
+      dropping or merging exactly one row relative to a raw `read.csv()`,
+      but this was not confirmed. A future session should identify which
+      individual differs and why, and decide whether the app's own bundled
+      -fixture test coverage (`test-e2e-pedigree-module.R`, etc.) should
+      assert this QC'd count explicitly rather than relying on the
+      raw-CSV-read count as a proxy for what the live app actually renders.
 - [ ] **`data-raw/rhesusPedigree.R`'s docstring claims
       `rhesusPedigree_fromCenter.csv` is an independent raw/pre-obfuscation
       source for `obfuscated_rhesus_mhc_ped.csv`, but the two shipped fixtures
