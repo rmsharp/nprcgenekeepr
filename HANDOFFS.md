@@ -72,7 +72,7 @@ key_files: R/makePedigreeDiagramData.R:494,585-600ish (the 2 implemented edits -
 gotchas: (1) A minimum-separation geometric check is NOT a valid invariant of .positionMatingUnitForest()'s algorithm -- only guarantees minSep between direct siblings in one merge call, never globally; re-derive whether it discriminates before reusing this pattern for issue #144 (PROJECT_LEARNINGS.md Learning 470). (2) Mating-unit node ids (__union_N) are a volatile per-run sequential index -- do NOT match between a direct read.csv()+internal-function script and the live app's processed data (confirmed: same pair was __union_59 offline, __union_96 live) -- discover live union ids via edge queries, never hardcode across that boundary. (3) Live app node counts (739 direct-style, 50 rectilinear projections) differ from raw-CSV-direct counts (740, 51) by exactly 1 -- not a defect in this fix, root cause unconfirmed (likely QC pipeline). (4) All S462-471 gotchas still apply; this session independently found 2 NEW iCloud-contamination duplicate files (R/appServer 2.R, R/modMarkerGenetics 2.R) -- expect more in future sessions.
 runtime_smoke: Live-verified via shinytest2 against the real running app (Phase 3E) -- uploaded the real 375-individual fixture, confirmed via live JS queries against the vis.js widget that 4 previously-mismatched non-anchor units now render on-row under both edgeStyle values, zero diagram-related console errors. See what_was_done for detail.
 changelog_ref: CHANGELOG.md 2026-08-04 [issue #143] entry (Session 472)
-commit: pending
+commit: 1adaf85a
 ```
 
 ```handoff
