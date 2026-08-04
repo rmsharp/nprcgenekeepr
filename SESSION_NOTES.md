@@ -6,6 +6,18 @@
 
 ## ACTIVE TASK
 
+### What Session 476 Did
+**Deliverable:** Root-cause and fix the `renv.lock` dependency-tracking gap (10 dev-tool
+packages missing, flagged S474/S475) -- picked by the owner via the S476 orientation-report
+`AskUserQuestion` picker. Infra/lockfile-only, no `R/`/`tests/` files expected to change --
+TDD RED/GREEN/REFACTOR gates do not apply (S448/S451/S452/S453/S455/S475 precedent for
+docs/administrative-only sessions), verification done via a real `renv::restore()`-equivalent
+check instead of a test suite.
+**Started:** 2026-08-04
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### What Session 475 Did
 **Deliverable:** Close GitHub issues #142, #143, #144 (all three fully implemented and
 verified per `CHANGELOG.md`/`BACKLOG.md`, but still showing `OPEN`) -- picked by the owner
