@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S478
+date: 2026-08-04
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Add issue #142's edgeStyle (direct vs. rectilinear) demonstration to vignettes/a2interactive.Rmd's Pedigree Diagram section, plus fix that section's stale 2-prefix nodesIdSelection exclusion (now 5 reserved prefixes in R/modPedigree.R) and hardcoded highlightNearest degree (now style-aware: 1 direct / 6 rectilinear). User-directed; scope confirmed via AskUserQuestion (full demo + parity fix).
+what_was_done: pending
+next_steps: pending
+key_files: vignettes/a2interactive.Rmd (Pedigree Diagram section, ~lines 344-491)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S477
 date: 2026-08-04
 status: complete

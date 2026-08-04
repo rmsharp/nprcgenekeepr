@@ -6,6 +6,22 @@
 
 ## ACTIVE TASK
 
+### What Session 478 Did
+**Deliverable:** Add issue #142's `edgeStyle` (direct vs. rectilinear) option demonstration to
+`vignettes/a2interactive.Rmd`'s existing "Pedigree Diagram" section, plus fix that section's stale
+2-prefix `nodesIdSelection` waypoint-exclusion pattern to the app's actual 5-prefix set (`__union_|
+__dup_|__drop_|__bar_|__proj_`) and its hardcoded `highlightNearest` degree to match
+`R/modPedigree.R`'s style-aware value (1 direct / 6 rectilinear) -- user-directed (not from
+`BACKLOG.md`), picked up as this project's own established deferred "a2interactive.Rmd
+script-callable-function checklist" (`CLAUDE.md`) obligation, now specifically triggered by the user
+noticing the vignette never got updated after issue #142 shipped (S465/S468). Scope confirmed via
+`AskUserQuestion` (IN PROGRESS): full demo + parity fix, not demo-only.
+**Started:** 2026-08-04
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 477 Did
 **Deliverable:** "Wire a process fix so `lintr` debt stops re-accumulating" (`BACKLOG.md`
 Housekeeping, split from the S462 sweep's own "(b)" ask) -- picked by the owner via the S477
