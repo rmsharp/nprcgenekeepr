@@ -17,11 +17,150 @@ currently red): (1) fix the 2 live CI lint violations in `R/makePedigreeDiagramD
 precedent), (2) add an explicit Phase 3F close-out step to `CLAUDE.md` requiring sessions to
 lint touched files before closing out, (3) correct `BACKLOG.md`'s stale "needs a CI job
 added" framing.
-**Started:** 2026-08-04
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Started/Completed:** 2026-08-04 / 2026-08-04
+**Status:** DONE -- both live CI violations fixed and verified; the actual
+recurrence-prevention mechanism (a session-local close-out check) documented; the backlog
+item's stale framing corrected so a future session doesn't re-propose "add a CI job."
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Phase 0 orient (full protocol, priorities-list
+`AskUserQuestion` picker). No undocumented commits found (the one commit since the
+`CHANGELOG.md` frontier was S476's own self-referential HANDOFFS.md-sha backfill, matching
+the established S466-S476 no-log-needed pattern). Owner picked "Lint debt process fix" from
+the priorities picker. **(2)** Investigated before scoping: `.github/workflows/lint.yaml`
+turned out to already exist and already run `lintr::lint_package()` on every push to
+`master`/on PRs with `LINTR_ERROR_ON_LINT: true` -- directly contradicting the backlog item's
+own "e.g. a `lintr::lint_package()` CI job... is a precedent-consistent addition" framing.
+`gh run list --workflow=lint.yaml` + `gh run view` annotations showed it red since S472's
+push, still red through S473-S476's pushes (2 real violations in
+`R/makePedigreeDiagramData.R`, confirmed by re-running `lintr::lint_package()` locally against
+current HEAD with the package loaded, matching CI's exact invocation -- not assumed from the
+CI log alone, since no lint.yaml run existed yet for S474-S476's own commits).
+`gh api repos/.../branches/master/protection` returned 404 "Branch not protected" -- the job's
+failures block nothing. **(3)** Surfaced this corrected picture via a second pre-RED
+`AskUserQuestion` (the CLAUDE.md-mandated scope-decision gate); owner picked "fix + close-out
+check" over a narrower "just fix current red" or a broader "also add branch protection"
+(flagged as likely disproportionate given this project's direct-to-master, no-PR workflow).
+**(4)** Claimed the session (stub + `HANDOFFS.md` `status: pending` receipt, commit
+`585f44bc`). **(5)** Executed: fixed both violations REFACTOR-only (`# nolint start/end:
+commented_code_linter.` block around the false-positive design-rationale comment, matching
+the S466 precedent verbatim rather than deleting/rewording it; a two-line wrap for the
+over-length assignment, matching this file's own established `<-`-then-indented-RHS house
+style confirmed via `grep '<-$' R/*.R`, not invented) -- commit `be866732`. Added the "Lint
+close-out checklist" to `CLAUDE.md`'s Additional close-out checks; corrected the `BACKLOG.md`
+item's framing to DONE with the full corrected picture; added `PROJECT_LEARNINGS.md` Learning
+477. **(6)** Verified: `lintr::lint_package()` (package loaded) 0 lints package-wide (was 2);
+full regression suite 0 failed/0 error (4573 passed, 171 skipped, 10 pre-existing baseline
+warnings, unchanged from S476); `devtools::check()` -- first run hit a pre-existing untracked
+file's non-portable filename (ERROR/WARNING), unrelated to this session's diff; stashed the 3
+untracked `inst/extdata/reference/` files aside per the S472/S474 precedent, re-ran clean: 0
+errors/0 warnings/2 pre-existing NOTEs (spelling-wordlist drift + `a2interactive.Rmd`
+vignette-engine note), exactly matching the S476 baseline; restored the 3 stashed files
+exactly afterward. Caught and reverted a collateral `devtools::document()` reflow of
+`man/modMarkerGeneticsServer.Rd` (same roxygen2-version-drift pattern as S476's Gotcha #3)
+before it could pollute the commit. Phase 3E: N/A, stated not skipped -- the diff is
+provably a no-op reformat (a comment-only suppression block plus a parser-invariant
+multi-line continuation of an existing assignment, not a semantic rewrite), the full
+regression suite (which includes extensive structural tests of this exact function's output)
+re-confirmed byte-identical pass counts, and no Shiny wiring/dispatch/render-call was touched
+-- matches `PROJECT_LEARNINGS.md` Learning 223's "Phase-3E N/A for a script-core slice with no
+Shiny wiring change" precedent, distinct from S466's live-smoke-test cases (which included
+semantic idiom swaps, e.g. `any(!x)` -> `!all(x)`, carrying residual equivalence doubt this
+diff does not).
+
+**Session 476 Handoff Evaluation (by Session 477): 8/10.** **What helped:** next-steps item
+(a) named exactly this task (READY, Effort S-M, carried since S462/S466, pointing at
+`BACKLOG.md` Housekeeping) -- went straight to investigation with zero time spent
+rediscovering the task existed. **What was missing:** as with S476's own evaluation of S475,
+the handoff's (and the underlying `BACKLOG.md` item's) framing was speculative ("e.g. a
+`lintr::lint_package()` CI job... is a precedent-consistent addition") and turned out to be
+factually wrong on the central premise -- a lint CI job already existed. This session had to
+independently discover that via `gh workflow list`/`gh run list` rather than being pointed at
+it. **What was wrong:** the "CI gate vs. close-out checklist vs. both, undecided" framing
+implicitly treated "add a CI gate" as one of the live options, when it wasn't an option at
+all (already existed). **ROI:** strongly positive on the WHAT (task existence, urgency,
+effort estimate all correct) but the HOW required a full independent re-investigation, mirroring
+S476's own predecessor-evaluation pattern almost exactly -- net positive since the WHAT still
+saved more time than the HOW cost, but this is now the SECOND consecutive session
+(S476 on renv.lock, S477 on lint) where a backlog item's own root-cause/mechanism framing
+was found stale on direct inspection. Worth a future session asking whether `BACKLOG.md`
+items should default to "confirmed" vs. "hypothesized" framing when a mechanism isn't
+directly verified before filing.
+
+**Self-assessment (Session 477): 9/10.** **Strengths:** (1) did not accept the backlog item's
+own framing at face value -- verified via `gh workflow list`/`gh run list`/`gh run view`
+annotations/`gh api ...branches/master/protection` that a CI job already existed, was
+currently red, and was unguarded, rather than proposing to "add a CI job" from a stale
+premise; (2) surfaced the corrected picture and 3 concrete scope options via `AskUserQuestion`
+before executing, per project convention, rather than unilaterally picking; (3) matched
+established house style precisely for both fixes (the `# nolint start/end` block placement
+and wording mirrors S466's own precedent verbatim; the line-wrap style was confirmed via grep
+against the file's own existing convention, not invented); (4) hit and correctly recovered
+from a real verification snag -- the first `devtools::check()` run failed on a pre-existing
+untracked file's non-portable filename, recognized this as the already-documented S472/S474
+stash-and-restore precedent (found via `PROJECT_LEARNINGS.md`/handoff cross-reference) rather
+than treating it as a defect in this session's own diff, applied it, and restored the stashed
+files exactly afterward; (5) caught and reverted the same collateral `devtools::document()`
+`.Rd` reflow pattern S476 flagged, without needing to be told twice; (6) gave an honest,
+justified Phase 3E N/A rather than either skipping the question or mechanically copying
+S466's live-smoke-test action onto a diff whose risk profile doesn't call for it.
+**Weaknesses:** (1) the first `devtools::check()` run was wasted (~3.5 min) because the
+untracked-file stash precedent wasn't applied proactively -- it was sitting in S476's own
+handoff gotchas (available at Phase 0) and should have been anticipated before the first run,
+not discovered by hitting the same error; (2) this session, like S476, needed real
+investigative depth (GitHub Actions API calls, branch-protection checks) for what the backlog
+item's own text framed as a simple "CI gate vs. checklist" binary -- now a 2-session pattern
+worth naming explicitly (see the predecessor-evaluation note above) rather than treating as
+incidental each time. **Compared to previous sessions:** matches the S476-established
+"investigate before executing, surface the approach decision via `AskUserQuestion`, verify
+beyond a tool's own success message" pattern, now applied a second consecutive time to a
+different backlog item -- suggesting this is becoming the project's actual norm rather than a
+one-off.
+
+**Handoff to Session 478:**
+- **What's next:** **(a)** LabKey integration remainder (BLOCKED, needs live LabKey server,
+  unchanged). **(b)** NPRC outreach (DECISION NEEDED, owner-only, unchanged). **(c)** Lower
+  priority, unchanged from S476's own list: `highlightNearest` degree=6 bounded mitigation
+  follow-up; kinship2-comparison-doc staleness; 3 dangling-parent/NA-gen crash reports;
+  6-word spelling-wordlist drift (`inst/WORDLIST`, reconfirmed present by this session's own
+  `devtools::check()`, still open); `colony-manager-guide.qmd` Diagram-tab screenshot
+  staleness; live-vs-offline pedigree node-count discrepancy; `data-raw/rhesusPedigree.R`
+  docstring/fixture mismatch; iCloud duplicate-`.R`-file artifact (not re-checked this
+  session -- infra/style-only, didn't touch application `.R` files beyond the one lint fix);
+  `freePassIds`-vs-D5 structural gap; whether `Config/Needs/website: quarto` is now redundant
+  with the `Suggests` entry S476 added (still not investigated). **(d)** New, worth a future
+  session's attention: whether `BACKLOG.md` items should be filed with explicitly-hedged
+  ("likely...", "e.g...") framing flagged as unverified, given 2 consecutive sessions
+  (S476/S477) found a backlog item's own root-cause/mechanism framing stale on direct
+  inspection -- not urgent, but a process observation worth a future retrospective. **(e)**
+  Informational: issues #141/#138/#137/#136/#133/#123/#116/#37/#36/#28/#12/#11/#10/#5 --
+  untouched, FYI only.
+- **Key files:** `R/makePedigreeDiagramData.R:599-613` (the 2 lint fixes -- `# nolint`
+  block + line wrap, no logic change); `CLAUDE.md` (new "Lint close-out checklist" in
+  Additional close-out checks + learning-count bump 476->477); `BACKLOG.md` (lint-debt item
+  marked DONE with corrected framing); `PROJECT_LEARNINGS.md` (new Learning 477);
+  `CHANGELOG.md` (new `[ad hoc]` entry).
+- **Gotchas:** (1) **A CI job's mere existence is not evidence it's doing anything** -- check
+  `gh run list --workflow=<name>.yaml` for actual recent conclusions AND
+  `gh api repos/<owner>/<repo>/branches/<branch>/protection` before assuming "there's a CI job
+  for X" means X is handled; this project's `master` has zero branch protection, so
+  `.github/workflows/lint.yaml`'s failures have never blocked anything. (2) **Always stash the
+  3 untracked `inst/extdata/reference/` files aside before `devtools::check()`** (one has a
+  non-portable filename containing `:` and spaces) -- S472/S474 precedent, re-confirmed this
+  session after an avoidable first-run failure; restore them exactly afterward, don't leave
+  them stashed. (3) `devtools::document()`/`check()` can still collaterally reflow
+  `man/modMarkerGeneticsServer.Rd` via roxygen2-version drift, unrelated to the iCloud
+  duplicate-file pattern -- always `git diff --stat` after and revert anything out of scope
+  (S476 Gotcha #3, re-hit and re-reverted this session). (4) The pre-existing uncommitted
+  `.DS_Store` diff and the untracked planning/reference files are unrelated to this session,
+  correctly left untouched. (5) All prior standing application-code gotchas
+  (`# nolint` suppression syntax -- this file uses the bare `# nolint end` form, not
+  `# nolint end: <linter>.` -- match the LOCAL file's own convention when both forms exist
+  elsewhere in the codebase; `devtools::install(upgrade = FALSE)`; `shinytest2::AppDriver`
+  needing both `NPRC_RUN_E2E=true` and `NOT_CRAN=true`; the reserved-prefix
+  pattern-match-don't-hardcode convention; live-vs-offline union-id numbering not
+  transferring) still apply unchanged.
+- **Self-assessment score:** 9/10 (breakdown above).
 
 ### What Session 476 Did
 **Deliverable:** Root-cause and fix the `renv.lock` dependency-tracking gap (10 dev-tool

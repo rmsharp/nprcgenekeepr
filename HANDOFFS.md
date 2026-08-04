@@ -62,16 +62,16 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S477
 date: 2026-08-04
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Wire a process fix so lintr debt stops re-accumulating -- fix the 2 live CI lint violations in R/makePedigreeDiagramData.R (REFACTOR-only) + add a Phase 3F close-out lint check to CLAUDE.md + correct BACKLOG.md's stale "needs a CI job" framing.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- wired the actual process fix for recurring lintr debt. Fixed the 2 live CI lint violations in R/makePedigreeDiagramData.R (REFACTOR-only, no RED/GREEN); added a Phase 3F close-out lint check to CLAUDE.md; corrected BACKLOG.md's stale "needs a CI job added" framing (a lint.yaml CI job already existed, unguarded by branch protection).
+what_was_done: Investigated before scoping: found .github/workflows/lint.yaml already exists and runs lintr::lint_package() on every push/PR with LINTR_ERROR_ON_LINT: true -- contradicting the backlog item's own framing. gh run list + gh run view showed it red since S472, unnoticed through S473-S476; gh api .../branches/master/protection confirmed zero branch protection, so failures block nothing. Surfaced this via AskUserQuestion; owner picked fix current red + add close-out check. Fixed both violations (commit be866732): commented_code_linter false positive suppressed via # nolint start/end block (S466 precedent); line_length_linter 84-char line wrapped onto two lines matching house style. Verified: lintr::lint_package() 0 lints package-wide (was 2); full regression suite 0 failed/0 error (4573 passed, 171 skipped, unchanged from S476); devtools::check() -- first run hit a pre-existing untracked file's non-portable filename, stashed the 3 untracked inst/extdata/reference/ files aside (S472/S474 precedent), re-ran clean: 0 errors/0 warnings/2 pre-existing NOTEs, matching S476 baseline exactly; restored stashed files. Reverted a collateral man/modMarkerGeneticsServer.Rd document() reflow (S476 Gotcha #3 pattern). Added CLAUDE.md "Lint close-out checklist"; BACKLOG.md item marked DONE; PROJECT_LEARNINGS.md Learning 477 added.
+next_steps: (a) LabKey integration remainder (BLOCKED). (b) NPRC outreach (DECISION NEEDED, owner-only). (c) Lower priority items carried unchanged from S476's own list (see SESSION_NOTES.md S477 entry for the full list). (d) New: consider whether BACKLOG.md items should flag unverified/hedged framing explicitly, given 2 consecutive sessions (S476 renv.lock, S477 lint) found a backlog item's own root-cause framing stale on direct inspection. (e) Informational GitHub issues, unchanged.
+key_files: R/makePedigreeDiagramData.R:599-613 (2 lint fixes, no logic change); CLAUDE.md (new Lint close-out checklist + learning-count bump 476->477); BACKLOG.md (lint-debt item marked DONE); PROJECT_LEARNINGS.md (new Learning 477); CHANGELOG.md (new [ad hoc] entry).
+gotchas: (1) A CI job's mere existence is not evidence it's doing anything -- check gh run list + gh api .../branches/<branch>/protection before assuming "there's a CI job for X" means X is handled; this project's master has zero branch protection. (2) Always stash the 3 untracked inst/extdata/reference/ files aside before devtools::check() (one has a non-portable filename) -- S472/S474 precedent; restore exactly afterward. (3) devtools::document()/check() can collaterally reflow man/modMarkerGeneticsServer.Rd via roxygen2-version drift (S476 Gotcha #3, re-hit this session) -- always git diff --stat after and revert out-of-scope changes. (4) Pre-existing uncommitted .DS_Store diff and untracked planning/reference files are unrelated, correctly left untouched. (5) This file's own # nolint end convention is the bare form (not "# nolint end: <linter>.") -- match the LOCAL file's existing convention when both forms coexist in the codebase. (6) All prior standing application-code gotchas unchanged.
+runtime_smoke: n/a -- stated, not skipped. The diff is a provable no-op reformat (a comment-only # nolint block plus a parser-invariant multi-line continuation of an existing assignment), the full regression suite (which includes extensive structural tests of this exact function's output) re-confirmed byte-identical pass counts, and no Shiny wiring/dispatch/render-call was touched. Matches PROJECT_LEARNINGS.md Learning 223's "Phase-3E N/A for a script-core slice with no Shiny wiring change" precedent.
+changelog_ref: CHANGELOG.md 2026-08-04 [ad hoc] "Wired the actual process fix for recurring lintr debt" entry (Session 477)
 commit: pending
 ```
 
