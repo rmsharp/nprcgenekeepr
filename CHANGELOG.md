@@ -43,6 +43,13 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-03 · [ad hoc] Filled in this session's own HANDOFFS.md receipt commit sha (Session 468)
+- **Deliverable:** Filled in this session's own `HANDOFFS.md` receipt
+  `commit: pending` placeholder with the real close-out commit sha
+  (`5c19a163`) -- the same self-correction many previous sessions (e.g.
+  S331-S344, S466, S467) each needed, closed within the same session rather
+  than left for the next session's Phase 0 reconcile to catch and backfill.
+
 ### 2026-08-03 · [issue #142] Implement Slice 2: edgeStyle wiring, UI toggle, and live re-verification (Session 468)
 - **Deliverable:** completes issue #142 (rectilinear mate-line/sibship-bar waypoint
   style). **(a)** `makePedigreeMatingLayout()` gains `edgeStyle = c("direct",
