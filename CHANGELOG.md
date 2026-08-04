@@ -47,6 +47,77 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-08-04 · \[issue \#144\] Designed the anchor-side row-mismatch fix (Session 473)
+
+- **Deliverable:**
+  `docs/planning/issue144-anchor-row-mismatch-fix-plan.md`,
+  owner-ratified via `AskUserQuestion`. Adopts “Candidate B –
+  effective-row threading”: extends issue \#143’s own
+  `dispGenOf`-override pattern to anchor occurrences via a new
+  per-individual `effGenOf`, ~11 non-comment lines across 3 synchronized
+  edits entirely inside `.positionMatingUnitForest()`;
+  `.buildMatingUnitForest()` (anchor selection) stays untouched. **This
+  session’s own empirical work disproved the standing assumption that
+  fixing this “would require restructuring
+  `.positionMatingUnitForest()`’s recursive positioning itself…
+  materially larger than issue \#143’s point-patch”** (`BACKLOG.md`,
+  issue \#144’s own filed body) – a node’s own row-reservation was
+  already fully decoupled from its `x`-computation and its recursion
+  into children (see `PROJECT_LEARNINGS.md` Learning 471). Produced via
+  a 7-agent characterize-then-design Workflow (4 parallel
+  characterization agents – mechanism verification, empirical
+  enumeration of all 51 real-fixture mismatches, grep-based
+  test/callsite inventory, prior-context/dragons read – followed by 3
+  independently-generated candidate designs, each empirically validated
+  in its own isolated git worktree against the real fixture and the full
+  test suite), then a 3-agent adversarial review (mechanism-fidelity,
+  empirical gap-check, workstream-checklist compliance) mirroring S471’s
+  own review pattern for the sibling \#143 plan. The review found and
+  this session incorporated: a factual miscount (3, not 4,
+  directly-affected test files), a correction to an over-broad “provable
+  no-op” claim about one guard, a widened disclosure of the fix’s one
+  honestly-bounded residual (reachable with a single mating unit plus a
+  D5 direct child, not only multi-unit anchors), and 2 newly-found
+  pre-existing/unrelated crash bugs plus one documentation-staleness gap
+  – none changed the adopted Decision or its core numeric claims, all
+  independently re-verified against live source. Two alternatives were
+  fully built and empirically validated but not adopted: Candidate A
+  (upstream D2 tie-break redesign) also fully works but forces a
+  mathematically-necessary duplicate-node/anchor redistribution
+  (128-\>103 duplicates, 2-\>21 multi-anchor individuals); Candidate C
+  (leave anchor rows alone, visually signpost the generation-span
+  instead) does not reduce the mismatch count and would need its own
+  fresh owner sign-off to redefine “fixed” – both preserved as live
+  future directions in the plan’s §5/§8. `BACKLOG.md` updated: the \#144
+  planning item marked DONE, a new READY implementation item added, and
+  4 new incidental-finding items filed (Candidate C’s connector idea as
+  a standalone enhancement; the pre-existing
+  `.addRectilinearWaypoints()` dangling-parent crash under
+  `edgeStyle="rectilinear"`; 2 more pre-existing dangling/NA-gen crashes
+  found during review; the
+  `pedigree-diagram-kinship2-reference-comparison.qmd`/`a2interactive.Rmd`
+  compounding-staleness housekeeping item – the last of which was itself
+  a gap left by S472’s close-out, since the \#143 plan’s own §8 had
+  directed filing it and no session ever did). No implementation code
+  changed this session – the plan is the deliverable; implementation is
+  a separate future session. `PROJECT_LEARNINGS.md` Learning 471/472
+  added; `CLAUDE.md`’s learning-count cross-reference updated
+  (470-\>472, Sessions 1-472+-\>1-473+).
+
+### 2026-08-04 · \[ad hoc\] Phase 0 ledger reconcile: backfill S472’s own HANDOFFS.md receipt commit sha self-correction (post-S472)
+
+- **Deliverable:** Phase 0 ledger reconcile (this session, S473) found
+  one commit past the `CHANGELOG.md` frontier with no ledger entry:
+  `d6ab24c4` (“docs: S472 – backfill own HANDOFFS.md receipt commit
+  sha”), landed after S472’s own close-out commit (`1adaf85a`) that
+  recorded the entry below.
+- **Change:** `d6ab24c4` replaced the S472 `HANDOFFS.md` receipt’s
+  `commit: pending` placeholder with the real commit sha (`1adaf85a`) –
+  a self-correction of the just-written receipt, not new production
+  work. Same class of action as the many prior sessions’ equivalent
+  self-fixes recorded further down this ledger (e.g. S466-S470’s
+  `commit: pending` backfills).
+
 ### 2026-08-04 · \[issue \#143\] Implemented the founder-positioning defect fix (Session 472)
 
 - **Deliverable:** implemented the ratified plan

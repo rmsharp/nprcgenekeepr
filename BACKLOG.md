@@ -1074,26 +1074,84 @@ error (4560 passed); `devtools::check()` 0 errors/0 warnings (1
 pre-existing, unrelated NOTE); live-verified in the running app via
 `shinytest2` – FD3BB6 (the audit’s own spot-checked example) plus 3 more
 previously-mismatched units now render on-row under both `edgeStyle`
-values, zero diagram-related console errors. See `CHANGELOG.md`. - \[ \]
+values, zero diagram-related console errors. See `CHANGELOG.md`. - \[x\]
 **Pedigree Diagram: anchor-side row mismatches – 51 of 237 real-fixture
-mating units (22%), distinct from issue \#143’s non-anchor fix** (READY
-to plan, Effort unknown – likely comparable to or larger than \#143,
-since it requires restructuring anchor positioning rather than a
-point-patch; found S471, incidental to designing \#143’s fix) – an
-anchor’s own `gen` can legitimately differ from its mating unit’s `gen`
-since D2’s anchor-selection tie-break (`preferAnchor()`) never consults
-gen. Moving an anchor’s displayed row would require restructuring
-`.positionMatingUnitForest()`’s recursive positioning itself (the
-anchor’s row is the root every other node in its own subtree hangs off)
-– materially larger than issue \#143’s point-patch, which deliberately
-leaves anchor rows untouched. **Filed as [issue
-\#144](https://github.com/rmsharp/nprcgenekeepr/issues/144) – S471
-(2026-08-03).** Owner-directed priority: near-term follow-up, not a
-low-priority residual, given the now-confirmed substantial (not
-theoretical) real-data prevalence – see
-`docs/planning/issue143-founder-positioning-fix-plan.md` §1.4/§4.4/§8
-for the full reconciliation against the S470 audit’s own numbers and
-starting evidence for a future design session. - \[ \]
+mating units (22%), distinct from issue \#143’s non-anchor fix** (found
+S471, incidental to designing \#143’s fix; filed as [issue
+\#144](https://github.com/rmsharp/nprcgenekeepr/issues/144)) –
+**planning DONE – S473 (2026-08-04):**
+`docs/planning/issue144-anchor-row-mismatch-fix-plan.md`, owner-ratified
+via `AskUserQuestion`. **The standing assumption above – that fixing
+this “would require restructuring `.positionMatingUnitForest()`’s
+recursive positioning itself… materially larger than issue \#143’s
+point-patch” – turned out to be FALSE**, disproven by this session’s own
+empirical work (see `PROJECT_LEARNINGS.md` Learning 471): a node’s own
+row-reservation is already fully decoupled from its `x`-computation and
+its recursion into children, so the anchor case can be corrected with
+the exact same narrow `dispGenOf`-override pattern \#143 itself used,
+~11 non-comment lines across 3 synchronized edits, entirely inside
+`.positionMatingUnitForest()` – `.buildMatingUnitForest()` (anchor
+selection) stays untouched. Adopted via a 7-agent
+characterize-then-design workflow (4 parallel characterization agents, 3
+independently-validated candidate designs in isolated worktrees) plus a
+3-agent adversarial review mirroring S471’s own review pattern for the
+sibling \#143 plan. - \[ \] **Implement the ratified issue \#144 plan**
+(READY, Effort similar to \#143’s own implementation session – code
+change is small, size is in verification breadth) –
+`docs/planning/issue144-anchor-row-mismatch-fix-plan.md` is a complete,
+ratified plan with pre-derived exact regression numbers (51 -\> 0 anchor
+mismatches; rectilinear node count 1279 -\> 1228; 6 `test_that` blocks
+across 3 files need rewriting, fully catalogued in the plan’s §4.3
+table) – follow it directly, starting at §7 (Verification Plan). - \[ \]
+**Candidate C’s connector/dogleg visual-signposting idea** (found S473,
+designing the issue \#144 plan; not adopted for \#144 itself, Effort
+unknown, low priority) – extends the existing D2 mate-line “dogleg”
+(issue \#142) to `edgeStyle="direct"` (which currently gets zero
+compensating treatment for any cross-generation connector) and adds
+dashed/colored/titled styling to both edge styles so a
+multi-generation-spanning mate-line reads as intentional rather than a
+positioning bug. Fully validated (including a real ~37%
+`edgeStyle="rectilinear"` performance regression found and fixed during
+design) but requires its own fresh, explicit owner product-level
+sign-off to pursue – independently valuable as a diagram-readability
+enhancement, decoupled from \#144’s own resolution (which does not need
+it). See `docs/planning/issue144-anchor-row-mismatch-fix-plan.md`
+§5/§8. - \[ \] **`.addRectilinearWaypoints()`’s D2 loop crashes
+(“subscript out of bounds”) when a mating unit’s non-anchor parent is a
+dangling, never-duplicated reference, under `edgeStyle="rectilinear"`**
+(found S473, incidental to designing the issue \#144 plan’s Candidate C;
+confirmed pre-existing on `master`, unrelated to any \#144 candidate,
+Effort unknown, low priority) – `genOf[[A]]`/`genOf[[Nnode]]`
+double-bracket indexing throws when the indexed id has no row in
+`genOf`. Not fixed, per Learning 382’s “report, don’t fix mid-session”
+precedent. See `docs/planning/issue144-anchor-row-mismatch-fix-plan.md`
+§8. - \[ \] **Two more pre-existing, unrelated crashes in
+dangling-parent edge cases**, same family as the item above (found S473,
+incidental to this plan’s own adversarial review; confirmed pre-existing
+on `master`, Effort unknown, low priority): (a) any individual with
+`ped$gen = NA` anywhere in the input crashes
+`maxGen <- max(ped$gen, ...)` (`R/makePedigreeDiagramData.R:410`) with
+`"invalid 'times' argument"`; (b) a mating unit whose sire AND dam are
+both dangling can have a dangling id selected as anchor and then crashes
+`mergeSubtrees(rootResults)` on an empty `rootIds` (`:527-533`) –
+separately, `matingUnits$gen` itself comes back `NA` (not the intended
+`0L` fallback) for such a unit, since `pmax(NA, NA, na.rm = TRUE)`
+returns `NA` rather than the `-Inf` the existing
+`unitGen[is.infinite(unitGen)] <- 0L` guard (`:253`) assumes will fire.
+Not fixed, per Learning 382’s “report, don’t fix mid-session” precedent.
+See `docs/planning/issue144-anchor-row-mismatch-fix-plan.md` §8. - \[ \]
+**`docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`’s
+worked examples are stale from issue \#143’s row-value changes, and will
+become further stale once issue \#144 ships too** (found S473 – checking
+whether the \#143 plan’s own §8 call to file this housekeeping item had
+actually been done found it had NOT: S472’s close-out never filed it,
+only the original DONE item that cites this `.qmd` as the discovery
+source exists in `BACKLOG.md`, Effort S, low priority) – covers both
+\#143’s and \#144’s compounding effect on this document in one item
+rather than two. `vignettes/a2interactive.Rmd`’s runnable example needs
+the same re-verification-not-rewrite check \#143’s own plan gave it
+(confirm it still executes; not a content rewrite). See
+`docs/planning/issue144-anchor-row-mismatch-fix-plan.md` §8. - \[ \]
 **`.positionMatingUnitForest()`’s free-pass filter is stricter than
 `.buildMatingUnitForest()`’s free-vs-duplicate decision** (found S471,
 incidental to designing issue \#143’s fix, Effort unknown, low priority)

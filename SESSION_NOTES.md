@@ -7,6 +7,209 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 473 Did
+
+**Deliverable:** Design a fix for issue \#144 (Pedigree Diagram
+anchor-side row mismatches – 51 of 237 real-fixture mating units, 22%)
+as one architecture/plan document in `docs/planning/`, following
+`ARCHITECTURE_WORKSTREAM.md`. **Started/Completed:** 2026-08-04 /
+2026-08-04 **Status:** DONE –
+`docs/planning/issue144-anchor-row-mismatch-fix-plan.md` written,
+adversarially reviewed (3 agents), revised, and owner-ratified via
+`AskUserQuestion`. **Ledger:** recorded in `CHANGELOG.md` at Phase 3F
+(this close-out).
+
+**What happened, in order:** **(1)** Phase 0 orient (full protocol).
+Found and backfilled one undocumented commit (S472’s own `d6ab24c4`
+HANDOFFS.md-receipt-sha self-correction) into `CHANGELOG.md`, matching
+the recurring S466-S470 pattern – committed separately (`879c961f`)
+before the report, per protocol. Also found, and flagged in the report
+without acting on it, that GitHub issue \#143 is still open despite
+being fully resolved by S472’s shipped fix (a likely-missed close-out
+action from S472; left for the owner, not closed unilaterally, since
+issue-closing needs the same “action visible to others” confirmation as
+any other such action). Presented the priorities list via
+`AskUserQuestion`; owner picked “issue \#144.” **(2)** Claimed the
+session (stub + `HANDOFFS.md` `status: pending` receipt, commit
+`d2b5d567`). Read `ARCHITECTURE_WORKSTREAM.md` in full; confirmed via
+the \#143 plan’s own header that this class of pedigree-positioning plan
+follows `ARCHITECTURE_WORKSTREAM.md`, not `DESIGN_WORKSTREAM.md`
+(established precedent, S432/S458/S471). **(3)** Read
+`.buildMatingUnitForest()`/ `.positionMatingUnitForest()` directly from
+source (not delegated) before dispatching any subagent – formed an
+independent, source-grounded mechanism hypothesis for the
+anchor-mismatch root cause. **(4)** Dispatched a 7-agent Workflow: 4
+parallel characterization agents (mechanism verification – which
+corrected my own hypothesis, finding the `used`/elimination branch
+bypasses `preferAnchor()` entirely for 9/51 mismatches; empirical
+enumeration of all 51 real mismatches; grep-based test/callsite
+inventory; full read of prior context/dragons), then 3 independently
+-generated candidate designs (A: gen-aware D2 tie-break; B: extend
+\#143’s `dispGenOf`-override pattern to anchors; C: leave rows alone,
+visually signpost the span), each empirically validated in its own
+isolated git worktree (patched, run against the real fixture, run
+against the full test suite). **(5)** Synthesized the findings myself
+and authored the plan, adopting Candidate B on this project’s own
+“minimal-blast-radius” principle (from \#143’s own Rationale) –
+Candidate B’s own empirical work directly disproved the standing
+“requires restructuring D3, materially larger than \#143” assumption
+that \#144 was originally split off on (see `PROJECT_LEARNINGS.md`
+Learning 471). **(6)** Dispatched a second, 3-agent Workflow for
+adversarial review (mechanism-fidelity, empirical gap-check,
+workstream-checklist compliance), mirroring S471’s own review pattern
+for the sibling \#143 plan. All 3 reviewers returned “needs-revision”
+(not “needs-major-rework”) – found and I incorporated: a factual
+miscount (3, not 4, directly-affected test files, in 2 places), a
+correction to an over-broad “provable no-op” claim about Edit 3’s guard,
+a widened §6 residual disclosure (a single mating unit plus a D5 direct
+child can also trigger the relocate-not-eliminate pattern, not only
+multi-unit anchors), 2 newly-found pre-existing/unrelated crash bugs (an
+NA-gen crash; a both-parents -dangling crash + a `matingUnits$gen` NA
+bug), and one documentation-staleness gap (the \#143 plan’s own
+§8-directed housekeeping item for
+`pedigree-diagram-kinship2-reference-comparison.qmd` was never actually
+filed by S472’s close-out). None of the review findings changed the
+adopted Decision or the plan’s core numeric claims. **(7)** Re-read the
+full revised plan end to end for internal consistency before presenting
+it; caught and fixed one leftover “4 files” reference the first pass of
+edits missed. **(8)** Presented the finished plan to the owner via
+`AskUserQuestion` – ratified as-is, no changes requested. **(9)**
+Close-out: filed 4 new `BACKLOG.md` items (a new READY implementation
+item for the ratified plan; Candidate C’s connector idea as a standalone
+enhancement; the pre-existing `.addRectilinearWaypoints()`
+dangling-parent crash; the 2 more dangling/NA-gen crashes found during
+review; the kinship2-comparison-doc staleness housekeeping item), added
+`PROJECT_LEARNINGS.md` Learnings 471/472, updated `CLAUDE.md`’s
+learning-count cross-reference (470-\>472, Sessions 1-472+-\>1-473+).
+
+**Session 472 Handoff Evaluation (by Session 473): 9/10.** **What
+helped:** item (a) of the handoff’s “what’s next” list named exactly
+this task (“Design a fix for the anchor-side row-mismatch gap (issue
+\#144, READY to plan…) –
+`docs/planning/issue143-founder-positioning -fix-plan.md` §1.4/§4.4/§8
+is the starting evidence”) – fully unambiguous, and the pointer to the
+\#143 plan’s own §1.4/§4.4/§8 saved real time: those sections’ exact
+numbers (51/237, the gap distribution’s existence, the audit-breakdown
+reconciliation) were reused directly rather than re-derived from
+scratch. Gotcha (1) (the minSep-check trap, Learning 470) was directly
+relevant and re-cited in this session’s own plan §6. **What was
+missing:** the handoff’s characterization of the defect (“moving an
+anchor’s row would require restructuring D3’s recursive positioning
+itself… materially larger than \#143’s point-patch”) turned out to be an
+untested a priori judgment, not a verified fact – this session’s own
+empirical work disproved it. This is not a fair criticism of S472’s
+handoff specifically (S472 was accurately relaying what S471’s plan
+said, and S471 never claimed to have tested the restructuring claim,
+only to have deferred investigating it) – but it’s worth naming plainly
+since it shaped this session’s central finding (Learning 471). **What
+was wrong:** nothing else – every other citation, number, and gotcha
+held up. **ROI:** strongly positive – the handoff’s starting-evidence
+pointer meant this session could go straight to independently
+re-verifying the mechanism against live source rather than first having
+to rediscover that the defect existed or where its evidence lived.
+
+**Self-assessment (Session 473): 9/10.** **Strengths:** (1) read the
+core algorithm directly from source myself before dispatching any
+subagent, and independently re-verified the winning candidate’s central
+mechanism claim against that same source before adopting it – did not
+delegate understanding of the crux finding; (2) ran a genuine,
+empirically-validated 3-candidate comparison (not just a prose
+alternatives table) in isolated worktrees, which is what actually
+surfaced Candidate A’s forced redistribution and Candidate C’s
+non-resolution as real, measured trade-offs rather than assumed ones;
+(3) ran a real adversarial review (mirroring S471’s own 3-agent pattern)
+and incorporated every finding before presenting for ratification,
+rather than treating my own first draft as final; (4) caught my own
+remaining error (a second “4 files” reference the first revision pass
+missed) via a full re-read before presenting, rather than trusting the
+reviewers’ fixes were complete; (5) surfaced the still-open GitHub issue
+\#143 finding plainly in the orientation report without unilaterally
+acting on it; (6) filed every incidentally -discovered item (3
+pre-existing bugs, 1 doc-staleness gap including the discovery that S472
+itself left a \#143-plan-directed filing undone) rather than fixing any
+of them mid-session, per Learning 382’s precedent. **Weaknesses:** (1)
+the initial plan draft contained 2 factual errors (the file-count
+miscount, the over-broad “provable no-op” claim) that only the
+adversarial review caught – a more careful self-check before dispatching
+the review might have caught the file-count arithmetic error at least,
+though the “provable no-op” claim genuinely required the adversarial
+reviewer’s own adversarial fixture-construction to surface, not just
+closer reading; (2) did not verify whether S472’s close-out had actually
+filed the \#143 plan’s own §8-directed housekeeping item until the
+checklist-compliance reviewer raised the question – could have checked
+this proactively during the plan’s own §8 authorship rather than only
+after review flagged it. **Compared to previous sessions:** matches
+S471’s own rigor (multi-candidate empirical validation, 3-agent
+adversarial review before ratification) and extends it one level – S471
+evaluated alternatives primarily through reasoning plus partial
+empirical spot-checks; this session built and empirically validated all
+3 candidates as complete, independently-tested worktree experiments
+before choosing among them, which is what surfaced Candidate A’s
+redistribution math and Candidate C’s non-resolution as measured facts
+rather than reasoned expectations.
+
+**Handoff to Session 474:** - **What’s next:** **(a)** Implement the
+ratified issue \#144 plan (READY, Effort similar to \#143’s own
+implementation session) –
+`docs/planning/issue144-anchor-row-mismatch-fix-plan.md` is complete and
+ratified; follow it directly, starting at §7 (Verification Plan).
+**(b)** Consider closing GitHub issue \#143 (found this session: fully
+resolved by S472’s shipped fix, but never closed – flagged in this
+session’s orientation report, not acted on). **(c)** Lint debt process
+fix (READY, Effort S-M, unchanged, carried since S462/S466). **(d)**
+LabKey integration remainder (BLOCKED, needs live LabKey server).
+**(e)** NPRC outreach (DECISION NEEDED, owner-only). **(f)** New this
+session: Candidate C’s connector/dogleg idea as a standalone enhancement
+(low priority, needs owner sign-off); the pre-existing
+`.addRectilinearWaypoints()` dangling-parent crash under
+`edgeStyle="rectilinear"` (low priority); 2 more dangling/NA-gen crashes
+found during review (low priority); the kinship2-comparison-doc
+compounding-staleness housekeeping item (S, low priority). **(g)**
+Everything else carried forward unchanged from S462-472 – see prior
+handoffs for the full list (stale `colony-manager-guide.qmd` screenshot;
+6-word spelling-drift NOTE; the live-vs-offline node-count discrepancy;
+`freePassIds`-vs-D5 structural gap; `inst/extdata/` reorg – actually
+fully executed, Phases 1-4 all DONE, `BACKLOG.md`‘s own header text for
+this item appears stale and should be corrected to “(none remaining)” by
+a future session; issues \#133/#136/#137/#138 (data-model gated), \#141
+(deferred); \#123 (XARCH-5); \#116 (deferred slice); \#37/#36/#28/#12/
+\#11/#10/#5 (long-standing feature asks); 2 untracked reference PDFs
+plus 1 untracked reference HTML file; unexplained `renv.lock` diff (now
+15+ sessions); 2 untracked rendered `.html` files under
+`docs/planning/`). - **Key files:**
+`docs/planning/issue144-anchor-row-mismatch-fix-plan.md` (the plan
+itself – READ IT, not this summary, before implementing);
+`R/makePedigreeDiagramData.R:480,505-522, 596-608` (the 3 places the
+plan’s Edits 1/2/3 will land – re-read what’s actually there before
+touching this function, not the plan’s proposed snippets);
+`tests/testthat/test_positionMatingUnitForest.R`,
+`test_addRectilinearWaypoints.R`, `test_makePedigreeMatingLayout.R` (the
+6 `test_that` blocks needing rewrite, fully catalogued in the plan’s
+§4.3 table); `BACKLOG.md` (5 items touched this session – \#144 planning
+marked DONE, 1 new implementation item, 4 new incidental-finding
+items). - **Gotchas:** (1) **The plan’s §6 already discloses a residual
+the fix does not close**: an anchor anchoring 2+ mating units at
+differing `unitGen`, OR (widened by this session’s own review) a single
+mating unit plus a D5 direct child at a shallower gen – neither
+reachable in either bundled real fixture, but the implementation
+session’s RED phase should add a regression test asserting
+deterministic, non-crashing behavior for this shape, not just leave it
+unexercised (plan §7 step 1). (2) **The rendered-diagram visual diff
+will be much larger than the 3-edit code diff** (87.6% of nodes shift
+`x`, precedented by \#143’s own 98.5% cascade on the same fixture) – do
+not treat a large before/after screenshot diff as evidence of a bug. (3)
+All prior sessions’ gotchas re: `# nolint` suppressions,
+`devtools::install(upgrade = FALSE)`,
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+needing both `NPRC_RUN_E2E=true` and `NOT_CRAN=true`, the
+reserved-prefix pattern-match-don’t-hardcode convention (now 5 reserved
+prefixes: `__union_`/`__dup_`/`__drop_`/`__bar_`/`__proj_`),
+`devtools::document()`’s iCloud duplicate-file contamination
+(`R/appServer 2.R`/`R/modMarkerGenetics 2.R`, still present – this
+session did not check for new ones, unlike S471/S472; a future session
+should) still apply unchanged. - **Self-assessment score:** 9/10
+(breakdown above).
+
 ### What Session 472 Did
 
 **Deliverable:** Implement the founder-positioning fix for issue \#143
