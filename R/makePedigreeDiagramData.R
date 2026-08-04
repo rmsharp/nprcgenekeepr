@@ -596,6 +596,7 @@ makePedigreeDiagramData <- function(ped) {
     }
   }
 
+  # nolint start: commented_code_linter.
   ## D3 step 6 correction (issue #143): every NON-ANCHOR occurrence -- a
   ## free-pass real node or a genuine duplicate -- renders at its own
   ## MATING UNIT's gen, not the underlying individual's global tree-native
@@ -605,10 +606,12 @@ makePedigreeDiagramData <- function(ped) {
   ## S461) that are absent from realIds -- indexing dispGenOf by such an id
   ## would silently APPEND rather than error, misaligning it with
   ## realIds/nodes$id.
+  # nolint end
   dispGenOf <- genOf[realIds]
   realFreePassIds <- intersect(freePassIds, realIds)
   if (length(realFreePassIds) > 0L) {
-    dispGenOf[realFreePassIds] <- unname(unitGenOf[freePassUnitOf[realFreePassIds]])
+    dispGenOf[realFreePassIds] <-
+      unname(unitGenOf[freePassUnitOf[realFreePassIds]])
   }
   ## D3 step 6 correction (issue #144): an ANCHOR occurrence renders at its
   ## own EFFECTIVE gen (effGenOf -- max of its raw gen and every unit it
