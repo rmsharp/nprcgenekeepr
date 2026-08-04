@@ -72,7 +72,7 @@ key_files: vignettes/a2interactive.Rmd:344-604 (new Direct/Rectilinear Edge Styl
 gotchas: (1) gh issue list defaults to open-only -- use gh issue view <N> --json state (or --state all) before assuming an issue doesn't exist. (2) NOT_CRAN=true is required for an accurate regression-suite baseline comparison, not just the documented single-file fast-test command -- a bare run silently drops to a different, lower pass/skip count (Learning 417). (3) Always stash the 3 untracked inst/extdata/reference/ files before devtools::check() (S472/S474 precedent). (4) devtools::document()/check() can still collaterally reflow man/modMarkerGeneticsServer.Rd (3rd consecutive session to hit this). (5) kinship2 is NOT installed in this machine's current renv library -- the kinship2-reference-comparison.qmd will fail to preview until reinstalled locally (deliberately never added to DESCRIPTION/renv.lock). (6) All prior standing application-code gotchas unchanged.
 runtime_smoke: n/a -- stated, not skipped. No R/ or tests/ files changed at all this session (vignettes/a2interactive.Rmd + inst/WORDLIST only) -- no Shiny wiring, dispatch, or startup behavior touched. Full regression suite (4573 passed) and devtools::check() (0 errors/0 warnings) re-confirm the installed package itself is unchanged and healthy.
 changelog_ref: CHANGELOG.md 2026-08-04 "Documented issue #142's edgeStyle option in vignettes/a2interactive.Rmd" entry (Session 478)
-commit: pending
+commit: f1d7dfc0
 ```
 
 ```handoff
