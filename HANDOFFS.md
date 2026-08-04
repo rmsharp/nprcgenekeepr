@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S477
+date: 2026-08-04
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Wire a process fix so lintr debt stops re-accumulating -- fix the 2 live CI lint violations in R/makePedigreeDiagramData.R (REFACTOR-only) + add a Phase 3F close-out lint check to CLAUDE.md + correct BACKLOG.md's stale "needs a CI job" framing.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S476
 date: 2026-08-04
 status: complete

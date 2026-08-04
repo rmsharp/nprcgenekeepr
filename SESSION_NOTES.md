@@ -6,6 +6,23 @@
 
 ## ACTIVE TASK
 
+### What Session 477 Did
+**Deliverable:** "Wire a process fix so `lintr` debt stops re-accumulating" (`BACKLOG.md`
+Housekeeping, split from the S462 sweep's own "(b)" ask) -- picked by the owner via the S477
+orientation-report `AskUserQuestion` picker. Scope corrected via a second pre-RED
+`AskUserQuestion` after investigation found the backlog item's framing was stale (a CI lint
+job already exists; the real gaps are that it's unguarded by branch protection and is
+currently red): (1) fix the 2 live CI lint violations in `R/makePedigreeDiagramData.R`
+(REFACTOR-only, no RED/GREEN -- style-only, no behavior change, matching the S238/S466
+precedent), (2) add an explicit Phase 3F close-out step to `CLAUDE.md` requiring sessions to
+lint touched files before closing out, (3) correct `BACKLOG.md`'s stale "needs a CI job
+added" framing.
+**Started:** 2026-08-04
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 476 Did
 **Deliverable:** Root-cause and fix the `renv.lock` dependency-tracking gap (10 dev-tool
 packages missing, flagged S474/S475) -- picked by the owner via the S476 orientation-report
