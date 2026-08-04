@@ -9,13 +9,166 @@
 ### What Session 474 Did
 **Deliverable:** Implement the ratified issue #144 plan (`docs/planning/issue144-anchor-row-mismatch-fix-plan.md`)
 -- anchor-side row-mismatch fix for the Pedigree Diagram -- picked by the owner via the S474
-orientation-report `AskUserQuestion` picker. Following this project's Strict TDD contract
+orientation-report `AskUserQuestion` picker. Followed this project's Strict TDD contract
 (RED/GREEN/REFACTOR, `AskUserQuestion`-gated at every transition).
-**Started:** 2026-08-04
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Started/Completed:** 2026-08-04 / 2026-08-04
+**Status:** DONE -- all 3 synchronized edits shipped in one commit, full regression suite +
+`devtools::check()` + live `shinytest2` verification all clean.
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Phase 0 orient (full protocol, priorities-list
+`AskUserQuestion` picker); owner picked "Implement issue #144 plan." No undocumented commits found
+(the one commit since the `CHANGELOG.md` frontier was S473's own self-referential HANDOFFS.md-sha
+backfill, matching the S466-S473 established no-log-needed pattern). Claimed the session (stub +
+`HANDOFFS.md` `status: pending` receipt, commit `8ab795fd`). **(2)** Read `DEVELOPMENT_WORKSTREAM.md`
+in full. Read the ratified plan in full, then independently re-verified every cited line number and
+mechanism against live source (`.buildMatingUnitForest()`/`.positionMatingUnitForest()` in full)
+before writing anything. **(3)** Hit a real environment blocker before any test could run:
+`pkgload::load_all()` failed ("no package called 'pkgload'"); `renv::status()` showed the ENTIRE
+project library uninstalled (a mid-project R 4.6.1 upgrade created a fresh, empty project-library
+hash). Fixed via `renv::restore()` (92 pkgs linked from cache) + `renv::install()` for 6 anticipated
+dev-tool packages, confirming `renv.lock`/`DESCRIPTION` diff unchanged throughout (Learning 299(b)
+discipline) -- see `PROJECT_LEARNINGS.md` Learning 473 for the full diagnosis and the newly-filed
+`BACKLOG.md` Housekeeping item (10 packages total were missing from `renv.lock`, discovered
+incrementally as more test files ran). **(4)** PRE-RED: empirically pre-verified every one of the
+plan's numeric claims by patching a scratch copy of `.positionMatingUnitForest()`/
+`.addRectilinearWaypoints()` with the plan's exact 3 edits and running it against both the small
+GA204Z/8LKBV9 fixture and the real 375-fixture (51->0 anchor mismatches, 1279->1228 rectilinear
+nodes, 87.6% x-shift cascade, all exact x/gen values) -- everything matched the plan exactly.
+Also built and verified 2 NEW synthetic fixtures for the plan's own §6 residual (neither reachable
+in either bundled real fixture) -- the double-anchor "relocate, not eliminate" case required 3
+construction attempts before landing on a working fixture (see Learning 474: the `used`/elimination
+branch's cross-unit, order-dependent interaction defeated 2 hand-reasoned attempts). Surfaced all of
+this via the PRE-RED `AskUserQuestion` gate; owner approved. **(5)** RED: rewrote/added 8 `test_that`
+blocks across the plan's 3 target files (6 from its own §4.3 table + the 2 new residual regression
+tests) with the empirically-verified exact values. Confirmed RED: exactly these 8 blocks failed, 0
+errors. **(6)** RED->GREEN gate approved; implemented the 3 synchronized edits together in
+`R/makePedigreeDiagramData.R` (`:480` `effGenOf` precompute, `:513`/`:518` thread `effGenOf` through
+`positionIndividual()`, `:596-610` extend the `dispGenOf` override for anchors). Confirmed GREEN: all
+3 edited test files pass fully, plus `test_buildMatingUnitForest.R` (explicitly untouched) still
+100% passing. **(7)** GREEN->REFACTOR gate: no refactor needed (small, co-located, 29+/5- diff,
+matching #143's own precedent) -- owner confirmed. **(8)** Full verification: complete regression
+suite (0 failed, 0 error, 4573 passed, 171 skipped, 10 pre-existing unrelated warnings in
+`test_modMarkerGenetics.R`) after fixing the remaining renv gap (4 more missing packages surfaced:
+dplyr/mockery/quarto/shinyBS). `devtools::check()`: hit the SAME pre-existing untracked-invalid-
+filename ERROR/WARNING S472 already handled -- followed the identical procedure (moved the 3
+untracked reference files aside, re-ran clean at 0 errors/0 warnings/2 pre-existing unrelated NOTEs
+[vignette-engine + a spelling-wordlist drift already tracked in `BACKLOG.md` since S465], restored
+the files exactly, confirmed via `git status`). **(9)** Phase 3E live verification via `shinytest2`
+against the real running app: uploaded the real 375-fixture, queried the live vis.js widget directly
+for 3 previously-mismatched anchor individuals spanning gap 1/3/4 (`8P17E3`/`KS2ZNP`/`B2U6J7`,
+discovered via live individual-id queries, not reused offline union numbers, per S472's own
+established gotcha) -- all 3 now render on-row (node y == their mating unit's y) under BOTH
+`edgeStyle` values, zero `__proj_` waypoint nodes for them under rectilinear (the dogleg no longer
+fires), issue #143's own already-fixed non-anchor unit (`FD3BB6`) still correctly on-row (no
+regression), zero diagram-related console errors under either style. **(10)** Close-out: committed
+the atomic GREEN fix; `BACKLOG.md` updated (#144 implementation item marked DONE, 1 new
+Housekeeping item for the renv/lockfile gap); added `PROJECT_LEARNINGS.md` Learnings 473/474;
+updated `CLAUDE.md`'s learning-count cross-reference (472->474, Sessions 1-473+->1-474+).
+
+**Session 473 Handoff Evaluation (by Session 474): 10/10.** **What helped:** item (a) of the
+handoff's "what's next" list named exactly this task and pointed directly at
+`docs/planning/issue144-anchor-row-mismatch-fix-plan.md`, "starting at §7 (Verification Plan)" --
+fully unambiguous. Every single citation in that plan (line numbers, mechanism descriptions, exact
+numeric claims -- 51/237, 1279/1228, the 87.6% cascade, all x/gen values in the §4.3 table) held up
+exactly under this session's independent empirical re-verification, with zero corrections needed --
+a first for this fix-pair (S472's evaluation of S471's #143 plan found one stale a priori claim;
+this session found the #144 plan itself needed none). Gotcha (2) (the large rendered-diagram visual
+diff is expected, not a bug) and the standing gotcha about live-vs-offline union-id numbering
+(inherited from S472's own handoff, re-confirmed relevant) both directly prevented wasted
+re-diagnosis time. The plan's own §6/§7 residual-test guidance (cover both the multi-unit-anchor
+shape AND the widened D5-child shape) was specific enough to implement directly, without needing to
+re-derive the residual's trigger conditions from scratch. **What was missing:** nothing test-plan-
+related -- the one real gap this session hit (the renv environment failure) was outside the plan's
+own scope (an infrastructure precondition, not a design/implementation question) and is exactly the
+kind of thing no design-session handoff would be expected to anticipate. **What was wrong:**
+nothing -- every citation, number, and gotcha held. **ROI:** strongly positive -- the handoff's
+precision meant this session could go straight into independent re-verification and PRE-RED
+prototyping rather than first having to reconstruct the plan's own reasoning or re-derive its
+numbers.
+
+**Self-assessment (Session 474): 9/10.** **Strengths:** (1) treated Strict TDD as a real, followed
+contract throughout -- declared phase at the top of every response, gated all 3 transitions via
+`AskUserQuestion` with the exact concrete next actions spelled out, never wrote implementation code
+during RED or new functionality during REFACTOR; (2) independently empirically re-verified every one
+of the plan's numeric claims via a patched-prototype approach BEFORE writing any RED test, rather
+than transcribing the plan's own numbers on faith -- this is what let the RED tests land correct on
+the first attempt (no post-RED correction cycle was needed, unlike S472's own minSep-check
+discovery); (3) diagnosed and fixed a genuine, severe environment failure (entire project library
+empty) systematically rather than working around it file-by-file, and explicitly verified
+`renv.lock`/`DESCRIPTION` stayed unchanged at every install step, matching this project's own
+established discipline (Learning 299(b)) rather than reaching for a shortcut; (4) built 2 new,
+non-trivial synthetic fixtures for the plan's own flagged residual and caught my own construction
+errors (2 failed attempts) via direct execution rather than shipping a plausible-looking but
+untested fixture into a committed regression test; (5) followed S472's own exact procedure for the
+pre-existing invalid-filename `devtools::check()` blocker (isolate, re-check, restore) rather than
+improvising a different workaround; (6) live-verified using individual ids discovered via live
+queries, not reused offline union numbers, avoiding the exact trap S472's own gotcha flagged.
+**Weaknesses:** (1) the renv diagnosis took 3 separate install rounds (initial pkgload/testthat/
+etc., then dplyr/mockery/quarto/shinyBS found only after a full-suite run) rather than anticipating
+the full dev-tool package list upfront -- a more thorough initial `DESCRIPTION`/`renv.lock` diff
+against the full test suite's own `library()`/`::` calls could have surfaced all 10 in one pass
+instead of two; (2) used `ScheduleWakeup` once while waiting on a backgrounded `devtools::check()`
+run -- that tool is scoped to `/loop` dynamic-mode sessions per its own description, not a plain
+session like this one; self-caught and cancelled it immediately (`stop: true`) before it could cause
+any confusion, and the Monitor tool + background-task auto-notification handled the actual wait
+correctly on their own, so this had no material effect on the session, but it was an avoidable tool
+misuse. **Compared to previous sessions:** matches S472's own implementation rigor (independent
+re-verification of every plan citation before touching a file, PRE-RED empirical prototyping of a
+plan-flagged risk before committing a test) and extends it in one respect S472 did not need to (a
+genuine environment-infrastructure failure, diagnosed and fixed in-session rather than deferred or
+worked around) while also encountering and correctly handling a repeat of S472's own devtools::check()
+untracked-file blocker using the identical established procedure.
+
+**Handoff to Session 475:**
+- **What's next:** **(a)** Consider closing GitHub issue #144 (this session's fix fully resolves it,
+  live-verified) -- and **#143 too** (still open despite being fully resolved by S472 since S473's
+  own orientation report flagged it, still not acted on after 2 sessions). **(b)** Root-cause and fix
+  the `renv.lock` gap found this session (READY-ish, Effort S-M) -- 10 dev-tool packages
+  (`testthat`/`pkgload`/`devtools`/`roxygen2`/`shinytest2`/`chromote`/`dplyr`/`mockery`/`quarto`/
+  `shinyBS`) are missing from `renv.lock`'s `Packages` section in BOTH the committed HEAD and the
+  long-standing uncommitted diff -- likely a `renv::snapshot()` type that excludes dev-only/Suggests
+  tooling; a fresh project-library reset (new R version, new machine, evicted cache) will hit this
+  exact failure again until the lockfile itself is corrected. See `BACKLOG.md` Housekeeping and
+  `PROJECT_LEARNINGS.md` Learning 473. **(c)** Lint debt process fix (READY, Effort S-M, unchanged,
+  carried since S462/S466). **(d)** LabKey integration remainder (BLOCKED, needs live LabKey
+  server). **(e)** NPRC outreach (DECISION NEEDED, owner-only). **(f)** Candidate C's connector idea
+  (low priority, needs owner sign-off, filed S473); the pre-existing `.addRectilinearWaypoints()`
+  dangling-parent crash (low priority, filed S473); 2 more dangling/NA-gen crashes (low priority,
+  filed S473); the kinship2-comparison-doc staleness item (S, low priority, filed S473); the
+  already-tracked spelling-wordlist drift (found S465, still open, 6 words, `BACKLOG.md`
+  Housekeeping). **(g)** Everything else carried forward unchanged from S462-473 -- see S473's own
+  handoff above for the full list (stale `colony-manager-guide.qmd` screenshot; the live-vs-offline
+  node-count discrepancy; `freePassIds`-vs-D5 structural gap; `inst/extdata/` reorg header text
+  staleness; issues #133/#136/#137/#138 [data-model gated], #141 [deferred], #123 [XARCH-5], #116
+  [deferred slice]; #37/#36/#28/#12/#11/#10/#5 [long-standing feature asks]; 2 untracked reference
+  PDFs plus 1 untracked reference HTML file; unexplained `renv.lock` diff [now explained in content,
+  see (b) above, but still not fixed -- 16+ sessions]; 2 untracked rendered `.html` files under
+  `docs/planning/`).
+- **Key files:** `R/makePedigreeDiagramData.R:480-491,524-538,606-624` (the 3 synchronized edits --
+  re-read what's actually there before touching this function again, not this summary);
+  `tests/testthat/test_positionMatingUnitForest.R` (5 rewritten/new blocks, including the 2 new
+  residual regression tests with the `HUB`/`MATE1`/`MATE2`/`ANCHOR`/`D5CHILD` synthetic fixtures --
+  see Learning 474 before attempting to build a similar fixture for this algorithm's D2 branches),
+  `test_addRectilinearWaypoints.R` (1 full-rewrite block + 1 node-count block),
+  `test_makePedigreeMatingLayout.R` (1 node-count block); `BACKLOG.md` (2 items touched -- #144
+  implementation marked DONE, 1 new renv Housekeeping item).
+- **Gotchas:** (1) **`renv::status()` reporting every package `installed: n` means a fresh, empty
+  project-library hash (an R version bump), not a corrupted environment** -- `renv::restore()` fixes
+  everything the lockfile tracks in under a second (links from the shared cache), but dev-only
+  packages never in `renv.lock` need a SEPARATE `renv::install()` pass; run the FULL test suite once
+  before trusting the environment is clean, since missing-package errors surface scattered across
+  whichever files happen to need each package (Learning 473). (2) **A synthetic fixture meant to
+  land in a specific branch of `.buildMatingUnitForest()`'s D2 `preferAnchor()`/`used`-elimination
+  logic cannot be reliably hand-reasoned** -- the branches interact across mating units in INPUT
+  ORDER, and a naive construction is likely wrong in a way only running `.buildMatingUnitForest()`
+  and inspecting `forest$matingUnits$anchor` directly will reveal (Learning 474). (3) All prior
+  sessions' standing gotchas (`# nolint` suppressions, `devtools::install(upgrade = FALSE)`,
+  `shinytest2::AppDriver` needing both `NPRC_RUN_E2E=true` and `NOT_CRAN=true`, the reserved-prefix
+  pattern-match-don't-hardcode convention, `devtools::document()`'s iCloud duplicate-file
+  contamination -- this session did not check for new ones, a future session should; live union-id
+  numbering does not transfer from an offline `read.csv()` script) still apply unchanged.
+- **Self-assessment score:** 9/10 (breakdown above).
 
 ### What Session 473 Did
 **Deliverable:** Design a fix for issue #144 (Pedigree Diagram anchor-side row mismatches --

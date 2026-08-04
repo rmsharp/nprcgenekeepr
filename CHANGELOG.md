@@ -43,6 +43,35 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-04 · [issue #144] Implemented the anchor-side row-mismatch fix (Session 474)
+- **Deliverable:** `R/makePedigreeDiagramData.R` -- 3 synchronized edits per the ratified plan
+  (`docs/planning/issue144-anchor-row-mismatch-fix-plan.md`), full Strict TDD RED/GREEN/REFACTOR
+  cycle (`AskUserQuestion`-gated at every transition). Adds a per-individual `effGenOf` (max of an
+  anchor's own gen and every mating unit it anchors), threads it through
+  `positionIndividual()`'s row-reservation call sites, and extends the `dispGenOf` override (issue
+  #143's own pattern) to anchor occurrences. Resolves all 51 real-fixture anchor-side mismatches
+  (51 -> 0), maintains issue #143's 0 non-anchor mismatches, `edgeStyle="rectilinear"` node count
+  1279 -> 1228 (the D2 dogleg no longer fires for any of the resolved units). One honestly-bounded
+  residual remains (an anchor anchoring 2+ mating units at genuinely differing gen, or a single-unit
+  anchor with a shallower D5 child) -- not reachable in either bundled real fixture; 2 new committed
+  regression tests assert deterministic, non-crashing, non-NA behavior for both shapes rather than
+  leaving them unexercised.
+- **Verification:** Full regression suite 0 failed/0 error (4573 passed, 171 skipped, 10
+  pre-existing unrelated warnings); `devtools::check() --as-cran` 0 errors/0 warnings/2 pre-existing
+  unrelated NOTEs (vignette-engine + a spelling-wordlist drift already tracked, `BACKLOG.md`
+  Housekeeping since S465); live `shinytest2`/`chromote` verification against the real running app
+  confirmed 3 previously-mismatched anchors (`8P17E3`/`KS2ZNP`/`B2U6J7`, gap 1/3/4) now render
+  on-row under both `edgeStyle` values with zero projection nodes and zero diagram-related console
+  errors, and issue #143's own already-fixed non-anchor unit (`FD3BB6`) is unaffected.
+- **Incidental:** found and fixed a severe `renv` environment failure (a mid-project R 4.6.1 upgrade
+  left the project library empty; 10 dev-tool packages -- `testthat`/`pkgload`/`devtools`/
+  `roxygen2`/`shinytest2`/`chromote`/`dplyr`/`mockery`/`quarto`/`shinyBS` -- turned out to be
+  missing from `renv.lock` itself, in both HEAD and the long-standing uncommitted diff) via
+  `renv::restore()` + `renv::install()`, confirming `renv.lock`/`DESCRIPTION` stayed unchanged
+  throughout. Root-causing and fixing the lockfile itself is filed as a new `BACKLOG.md`
+  Housekeeping item (not fixed here -- out of scope for this implementation session). See
+  `PROJECT_LEARNINGS.md` Learnings 473/474.
+
 ### 2026-08-04 · [issue #144] Designed the anchor-side row-mismatch fix (Session 473)
 - **Deliverable:** `docs/planning/issue144-anchor-row-mismatch-fix-plan.md`, owner-ratified via
   `AskUserQuestion`. Adopts "Candidate B -- effective-row threading": extends issue #143's own

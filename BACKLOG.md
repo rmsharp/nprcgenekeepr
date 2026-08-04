@@ -545,6 +545,35 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       position (not via `spelling::update_wordlist()`, per S230 convention)
       and re-verify `devtools::check()` drops to the pre-existing iCloud
       duplicate-file warning + vignette-engine note only.
+- [ ] **`renv.lock` -- concrete content found for the long-standing
+      "unexplained diff" (found S474, Effort S-M, incidental) -- the
+      committed `renv.lock` (both HEAD and the pre-existing uncommitted
+      135+/19- diff carried since ~S459) has never recorded top-level
+      `Packages` entries for `testthat`/`pkgload`/`devtools`/`roxygen2`/
+      `shinytest2`/`chromote`/`dplyr`/`mockery`/`quarto`/`shinyBS`, even
+      though the full test suite needs all of them. This session hit it
+      directly: R was upgraded to 4.6.1 mid-project, which created a fresh,
+      empty `renv` project-library hash
+      (`nprcgenekeepr-e7e04aee`) -- `renv::restore()` alone left the
+      library missing every one of those packages (confirmed present in
+      the shared renv CACHE the whole time, just never linked into a
+      project library because they were never in the lockfile to restore
+      from), causing `pkgload::load_all()` and 18 test files across the
+      full suite to error with "there is no package called '...'". Fixed
+      in-session via `renv::install(c(...))` (all linked from cache,
+      seconds each; confirmed `renv.lock`/`DESCRIPTION` diff unchanged
+      before and after, matching Learning 299(b)'s discipline) -- this is
+      a session-environment gap, not a lockfile fix, and will recur for
+      the next session/machine whose project library gets reset (a new R
+      version, a fresh clone, `renv`'s own cache eviction) until the
+      lockfile itself is corrected. **Not fixed here** (root-causing why
+      these packages were never captured -- likely a `renv::snapshot()`
+      run with a dependency-detection type that excludes dev-only/Suggests
+      tooling -- and deciding whether to run `renv::snapshot(type = "all")`
+      or hand-add them is a decision for a dedicated session, out of scope
+      for a TDD implementation session). A future session should
+      root-cause and fix the lockfile itself so this stops being a
+      recurring, silent per-session trap.
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability-comparison audit (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`)
@@ -981,14 +1010,11 @@ visNetwork-vs-kinship2 technology decision (D2), which stands as ratified.*
       3 independently-validated candidate designs in isolated worktrees) plus
       a 3-agent adversarial review mirroring S471's own review pattern for
       the sibling #143 plan.
-- [ ] **Implement the ratified issue #144 plan** (READY, Effort similar to
-      #143's own implementation session -- code change is small, size is in
-      verification breadth) -- `docs/planning/issue144-anchor-row-mismatch-fix-plan.md`
-      is a complete, ratified plan with pre-derived exact regression numbers
-      (51 -> 0 anchor mismatches; rectilinear node count 1279 -> 1228; 6
-      `test_that` blocks across 3 files need rewriting, fully catalogued in
-      the plan's §4.3 table) -- follow it directly, starting at §7
-      (Verification Plan).
+- [ ] (none remaining -- **Implement the ratified issue #144 plan** is
+      DONE -- S474 (2026-08-04): all 3 synchronized edits shipped in one
+      commit, full RED/GREEN/REFACTOR TDD cycle (`AskUserQuestion`-gated at
+      every transition), full regression suite + `devtools::check()` +
+      live `shinytest2` verification all clean. See `CHANGELOG.md`.)
 - [ ] **Candidate C's connector/dogleg visual-signposting idea** (found S473,
       designing the issue #144 plan; not adopted for #144 itself, Effort
       unknown, low priority) -- extends the existing D2 mate-line "dogleg"

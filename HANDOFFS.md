@@ -62,16 +62,16 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S474
 date: 2026-08-04
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Implement the ratified issue #144 plan (docs/planning/issue144-anchor-row-mismatch-fix-plan.md) -- anchor-side row-mismatch fix for the Pedigree Diagram. Strict TDD (RED/GREEN/REFACTOR, AskUserQuestion-gated).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 10
+active_task: DONE -- issue #144 anchor-row-mismatch fix implemented per the ratified plan, full Strict TDD RED/GREEN/REFACTOR cycle (AskUserQuestion-gated), full regression suite + devtools::check() + live shinytest2 verification all clean.
+what_was_done: Empirically pre-verified every plan claim via a patched prototype before writing tests. Fixed a severe renv environment failure (empty project library from an R 4.6.1 upgrade) via renv::restore()+renv::install() (10 dev-tool packages, renv.lock/DESCRIPTION diff confirmed unchanged). RED: rewrote/added 8 test_that blocks across 3 files (6 from plan §4.3 + 2 new synthetic regression tests for the plan's §6 residual). GREEN: implemented the 3 synchronized edits in R/makePedigreeDiagramData.R (effGenOf precompute + threading + dispGenOf anchor override). REFACTOR: none needed (owner-confirmed). Full regression: 0 failed/0 error, 4573 passed. devtools::check(): 0 errors/0 warnings/2 pre-existing NOTEs (reference files isolated+restored, matching S472's own procedure). Live shinytest2: 3 previously-mismatched anchors (8P17E3/KS2ZNP/B2U6J7, gap 1/3/4) now on-row under both edgeStyle values, zero projection nodes, #143's FD3BB6 unaffected, zero console errors. Close-out: BACKLOG.md updated (#144 DONE, 1 new renv Housekeeping item), PROJECT_LEARNINGS.md Learnings 473/474 added, CLAUDE.md learning-count updated. Commit: pending.
+next_steps: (a) Consider closing GitHub issues #144 (this fix) and #143 (S472's fix, still open 2 sessions later). (b) Root-cause and fix the renv.lock gap (10 dev-tool packages missing from Packages section in both HEAD and the long-standing uncommitted diff) -- see BACKLOG.md Housekeeping + Learning 473. (c) Lint debt process fix (READY, carried since S462/S466). (d) LabKey integration (BLOCKED). (e) NPRC outreach (DECISION NEEDED, owner-only). (f) Candidate C connector idea, 3 pre-existing crash bugs, kinship2-comparison-doc staleness, already-tracked spelling-wordlist drift (all low priority, filed S473/S465). (g) Everything else carried forward from S462-473 -- see SESSION_NOTES.md S474 entry for the full list.
+key_files: R/makePedigreeDiagramData.R:480-491,524-538,606-624 (the 3 synchronized edits); tests/testthat/test_positionMatingUnitForest.R (5 blocks incl. 2 new residual regression tests); test_addRectilinearWaypoints.R (1 rewrite + 1 node-count block); test_makePedigreeMatingLayout.R (1 node-count block); BACKLOG.md (2 items touched).
+gotchas: (1) renv::status() showing EVERY package installed:n signals a fresh empty project-library hash (R version bump), not corruption -- renv::restore() fixes tracked packages instantly, but dev-only packages never in renv.lock need a separate renv::install() pass; run the full suite once before trusting the environment (Learning 473). (2) A synthetic fixture targeting a specific branch of .buildMatingUnitForest()'s D2 preferAnchor()/used-elimination logic cannot be reliably hand-reasoned -- branches interact across mating units in INPUT ORDER; prototype and verify via forest$matingUnits$anchor directly before committing (Learning 474). (3) All prior standing gotchas (nolint suppressions, devtools::install(upgrade=FALSE), shinytest2 env vars, reserved-prefix convention, iCloud duplicate-file contamination, live-vs-offline union-id numbering) still apply unchanged.
+runtime_smoke: Live shinytest2/chromote verification against the real running app (Phase 3E) -- see what_was_done. Confirmed active, not silently overridden.
+changelog_ref: CHANGELOG.md 2026-08-04 [issue #144] entry (Session 474)
 commit: pending
 ```
 
