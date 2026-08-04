@@ -6,6 +6,18 @@
 
 ## ACTIVE TASK
 
+### What Session 475 Did
+**Deliverable:** Close GitHub issues #142, #143, #144 (all three fully implemented and
+verified per `CHANGELOG.md`/`BACKLOG.md`, but still showing `OPEN`) -- picked by the owner
+via the S475 orientation-report `AskUserQuestion` picker. Administrative housekeeping, no
+code or tests involved -- TDD RED/GREEN/REFACTOR gates do not apply (S448/S451/S452/S453/S455
+precedent for docs/administrative-only sessions).
+**Started:** 2026-08-04
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 474 Did
 **Deliverable:** Implement the ratified issue #144 plan (`docs/planning/issue144-anchor-row-mismatch-fix-plan.md`)
 -- anchor-side row-mismatch fix for the Pedigree Diagram -- picked by the owner via the S474
