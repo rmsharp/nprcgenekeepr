@@ -53,13 +53,19 @@ The **Table** tab is an interactive data table. Features include:
 - Sortable columns
 
 The **Diagram** tab renders the same pedigree as a family-tree diagram (up to
-750 animals -- narrow the focal-animal selection above that). Each animal is
+750 animals -- narrow the focal-animal selection above that; the limit drops
+to 400 animals when the Rectilinear edge style below is selected, since it
+renders more total diagram nodes per animal). Each animal is
 shaped by sex -- dot = Female, square = Male, star = Hermaphrodite,
 triangle = Unknown, diamond = Other/Unrecorded -- with a legend to the right of
 the diagram showing the same mapping. A mate's own mating(s) render as a small
 connector between the two parents, with a line down to their shared children,
 rather than two independent lines running straight from each parent -- the
-same convention traditional pedigree charts use. An animal that mates more
+same convention traditional pedigree charts use. A **Diagram Edge Style**
+toggle above the diagram switches between "Direct" (the default straight-line
+connector) and "Rectilinear (kinship2-style)," which routes the same
+connectors as strict right angles instead, matching the more traditional
+pedigree-chart look. An animal that mates more
 than once, or whose lineage loops back on itself (e.g. a consanguineous
 mating), appears once per mating, with each occurrence joined back to its main
 occurrence by a dashed line; hovering, clicking, or searching any occurrence
