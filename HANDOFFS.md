@@ -72,7 +72,7 @@ key_files: R/makePedigreeDiagramData.R:480-491,524-538,606-624 (the 3 synchroniz
 gotchas: (1) renv::status() showing EVERY package installed:n signals a fresh empty project-library hash (R version bump), not corruption -- renv::restore() fixes tracked packages instantly, but dev-only packages never in renv.lock need a separate renv::install() pass; run the full suite once before trusting the environment (Learning 473). (2) A synthetic fixture targeting a specific branch of .buildMatingUnitForest()'s D2 preferAnchor()/used-elimination logic cannot be reliably hand-reasoned -- branches interact across mating units in INPUT ORDER; prototype and verify via forest$matingUnits$anchor directly before committing (Learning 474). (3) All prior standing gotchas (nolint suppressions, devtools::install(upgrade=FALSE), shinytest2 env vars, reserved-prefix convention, iCloud duplicate-file contamination, live-vs-offline union-id numbering) still apply unchanged.
 runtime_smoke: Live shinytest2/chromote verification against the real running app (Phase 3E) -- see what_was_done. Confirmed active, not silently overridden.
 changelog_ref: CHANGELOG.md 2026-08-04 [issue #144] entry (Session 474)
-commit: pending
+commit: c22e03de
 ```
 
 ```handoff
