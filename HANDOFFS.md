@@ -72,7 +72,7 @@ key_files: R/makePedigreeDiagramData.R:599-613 (2 lint fixes, no logic change); 
 gotchas: (1) A CI job's mere existence is not evidence it's doing anything -- check gh run list + gh api .../branches/<branch>/protection before assuming "there's a CI job for X" means X is handled; this project's master has zero branch protection. (2) Always stash the 3 untracked inst/extdata/reference/ files aside before devtools::check() (one has a non-portable filename) -- S472/S474 precedent; restore exactly afterward. (3) devtools::document()/check() can collaterally reflow man/modMarkerGeneticsServer.Rd via roxygen2-version drift (S476 Gotcha #3, re-hit this session) -- always git diff --stat after and revert out-of-scope changes. (4) Pre-existing uncommitted .DS_Store diff and untracked planning/reference files are unrelated, correctly left untouched. (5) This file's own # nolint end convention is the bare form (not "# nolint end: <linter>.") -- match the LOCAL file's existing convention when both forms coexist in the codebase. (6) All prior standing application-code gotchas unchanged.
 runtime_smoke: n/a -- stated, not skipped. The diff is a provable no-op reformat (a comment-only # nolint block plus a parser-invariant multi-line continuation of an existing assignment), the full regression suite (which includes extensive structural tests of this exact function's output) re-confirmed byte-identical pass counts, and no Shiny wiring/dispatch/render-call was touched. Matches PROJECT_LEARNINGS.md Learning 223's "Phase-3E N/A for a script-core slice with no Shiny wiring change" precedent.
 changelog_ref: CHANGELOG.md 2026-08-04 [ad hoc] "Wired the actual process fix for recurring lintr debt" entry (Session 477)
-commit: pending
+commit: e747addf
 ```
 
 ```handoff
