@@ -43,6 +43,17 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-03 · [issue #143] Filed the founder-positioning defect as its own GitHub issue (Session 470)
+- **Deliverable:** opened
+  [issue #143](https://github.com/rmsharp/nprcgenekeepr/issues/143),
+  owner-confirmed before filing (per `SAFEGUARDS.md`'s "actions visible to
+  others" guidance -- deferred at initial close-out, then confirmed via a
+  follow-up `AskUserQuestion`). Summarizes the founder-positioning defect's
+  root cause, real-fixture evidence (62% of mating units affected), and the
+  `docs/audits/FOUNDER_POSITIONING_DEFECT_AUDIT_2026-08-03.md` audit link.
+  `BACKLOG.md`'s founder-positioning item and this session's `HANDOFFS.md`
+  receipt updated to reference the filed issue.
+
 ### 2026-08-03 · [ad hoc] Filled in this session's own HANDOFFS.md receipt commit sha (Session 470)
 - **Deliverable:** Filled in this session's own `HANDOFFS.md` receipt
   `commit: pending` placeholder with the real close-out commit sha

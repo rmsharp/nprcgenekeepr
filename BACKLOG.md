@@ -930,16 +930,14 @@ visNetwork-vs-kinship2 technology decision (D2), which stands as ratified.*
       (`deidentified_jmac_ped.csv`, 2,791 individuals) shows the same pattern on
       its (small, data-sparse) applicable subset. Not fixed this session (S470
       was audit/characterization only, per owner-directed scope, matching
-      `SAFEGUARDS.md`'s plan-mode gate on this shared logic). A future session
-      should: (a) design a fix via a proper plan-mode session -- the audit's
+      `SAFEGUARDS.md`'s plan-mode gate on this shared logic). **Filed as
+      [issue #143](https://github.com/rmsharp/nprcgenekeepr/issues/143) --
+      S470 (2026-08-03), owner-confirmed before filing.** A future session
+      should design a fix via a proper plan-mode session -- the audit's
       candidate direction: assign every non-anchor occurrence's row (free-pass
       OR duplicate) from its own mating unit's `gen`, not the parent's global
       `gen`, since a fix that only widens WHEN a duplicate gets created would
-      still leave the 39% duplicate-node instances broken; (b) file as its own
-      new GitHub issue, not folded into #142 -- #142 is done/shipped and this is
-      analytically separate (confirmed independent of `edgeStyle`); owner
-      confirmation needed before filing (not done S470 -- an action visible to
-      others). See `CHANGELOG.md`.
+      still leave the 39% duplicate-node instances broken. See `CHANGELOG.md`.
 - [ ] **`data-raw/rhesusPedigree.R`'s docstring claims
       `rhesusPedigree_fromCenter.csv` is an independent raw/pre-obfuscation
       source for `obfuscated_rhesus_mhc_ped.csv`, but the two shipped fixtures
