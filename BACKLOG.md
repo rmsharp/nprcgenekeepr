@@ -545,7 +545,7 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       position (not via `spelling::update_wordlist()`, per S230 convention)
       and re-verify `devtools::check()` drops to the pre-existing iCloud
       duplicate-file warning + vignette-engine note only.
-- [ ] **`renv.lock` -- concrete content found for the long-standing
+- [x] **`renv.lock` -- concrete content found for the long-standing
       "unexplained diff" (found S474, Effort S-M, incidental) -- the
       committed `renv.lock` (both HEAD and the pre-existing uncommitted
       135+/19- diff carried since ~S459) has never recorded top-level
@@ -574,6 +574,40 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       for a TDD implementation session). A future session should
       root-cause and fix the lockfile itself so this stops being a
       recurring, silent per-session trap.
+      **RESOLVED -- S476 (2026-08-04):** root cause precisely traced (not
+      just "likely," per Learning 476): `renv/settings.json`'s
+      `snapshot.type: "explicit"` makes a PLAIN `renv::snapshot()` scan
+      only `Imports`/`Depends`/`LinkingTo`, silently excluding every
+      `Suggests`-only package. `renv::snapshot(dev = TRUE)` (documented
+      renv argument) fixes 8 of the 10 automatically (the 6 already
+      declared in `Suggests` -- `testthat`/`dplyr`/`mockery`/`roxygen2`/
+      `shinytest2`/`shinyBS` -- plus their transitive deps `pkgload`/
+      `chromote` via `shinytest2`); `devtools`/`quarto` needed adding to
+      `DESCRIPTION`'s `Suggests` directly (their existing
+      `Config/renv/profiles/dev/dependencies` / `Config/Needs/website`
+      declarations are inert -- read only by an actively-enabled "dev"
+      renv profile / by `pak`, neither ever used in this project),
+      matching the existing precedent of `covr`/`pkgdown`/`spelling`
+      already living in `Suggests` unreferenced by package code. Also
+      installed 6 separately-discovered NOT-INSTALLED `Suggests` packages
+      (`covr`/`kableExtra`/`markdown`/`png`/`shinyWidgets`/`spelling`,
+      surfaced only because `dev=TRUE`'s dry run refused to snapshot
+      packages it couldn't find). Ran the real `renv::snapshot(dev =
+      TRUE)` -- 157 packages now recorded (up from 95), all 10 originally-
+      flagged packages present. Verified two ways: `renv::status(dev =
+      TRUE)` reports "No issues found"; a genuinely fresh
+      `renv::restore(library = <empty temp dir>)` installed all 16 target
+      packages from the fixed lockfile alone. Full regression suite
+      unchanged (0 failed/0 error, 3854 passed, 183 skipped, 10
+      pre-existing baseline warnings); `devtools::check()` 0 errors/0
+      warnings/2 NOTEs (both pre-existing and unrelated -- the
+      already-tracked 6-word spelling-wordlist drift below, plus a
+      vignette-engine NOTE on `a2interactive.Rmd`, confirmed via
+      `git diff --stat` that vignettes/ was untouched this session).
+      Documented `renv::snapshot(dev = TRUE)` as the required standing
+      invocation in `CLAUDE.md`'s Build/Test/Verify section so a future
+      plain `renv::snapshot()` doesn't silently strip the lockfile again.
+      See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 476.
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability-comparison audit (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`)

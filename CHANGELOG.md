@@ -43,6 +43,33 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-04 · [ad hoc] Root-caused and fixed the `renv.lock` dependency-tracking gap (Session 476)
+- **Deliverable:** the 10 dev-tool packages missing from `renv.lock` since ~S459 (flagged
+  S474/S475) are now correctly captured, and the mechanism that dropped them is fixed so it
+  cannot recur silently.
+- **Root cause:** `renv/settings.json`'s `snapshot.type: "explicit"` makes a plain
+  `renv::snapshot()` scan only `DESCRIPTION`'s `Imports`/`Depends`/`LinkingTo` fields,
+  silently excluding every `Suggests`-only package. Traced precisely (not speculatively)
+  against renv 1.2.3's own source.
+- **Fix:** added `devtools`+`quarto` to `DESCRIPTION`'s `Suggests` (their existing
+  `Config/renv/profiles/dev/dependencies`/`Config/Needs/website` declarations are inert --
+  read only by an actively-enabled "dev" renv profile / by `pak`, neither ever used here);
+  installed 6 separately-discovered not-installed `Suggests` packages (`covr`/`kableExtra`/
+  `markdown`/`png`/`shinyWidgets`/`spelling`); ran the real `renv::snapshot(dev = TRUE)`
+  (157 packages now recorded, up from 95); documented `dev = TRUE` as the required standing
+  invocation in `CLAUDE.md`'s Build/Test/Verify section.
+- **Verified:** `renv::status(dev = TRUE)` reports "No issues found"; a genuinely fresh
+  `renv::restore(library = <empty temp dir>)` installed all 16 target packages from the
+  fixed lockfile alone; full regression suite unchanged (0 failed/0 error, 3854 passed, 183
+  skipped, 10 pre-existing baseline warnings); `devtools::check()` 0 errors/0 warnings/2
+  NOTEs (both pre-existing/unrelated, confirmed via `git diff --stat` that `vignettes/` was
+  untouched this session). A collateral `devtools::document()` reflow of
+  `man/modMarkerGeneticsServer.Rd` (roxygen2-version line-wrap drift, not the previously-
+  tracked iCloud duplicate-file pattern) was reverted before committing.
+- Infra/lockfile-only session -- no `R/`/`tests/` files changed, TDD RED/GREEN/REFACTOR
+  gates did not apply (S448/S451/S452/S453/S455/S475 precedent). See `BACKLOG.md`
+  Housekeeping, `PROJECT_LEARNINGS.md` Learning 476.
+
 ### 2026-08-04 · [issue #142] Closed the issue (Session 475)
 - **Action:** `gh issue close 142 --reason completed --comment "..."` -- the rectilinear
   mate-line/sibship-bar waypoint style was fully implemented and verified across Sessions

@@ -9,14 +9,146 @@
 ### What Session 476 Did
 **Deliverable:** Root-cause and fix the `renv.lock` dependency-tracking gap (10 dev-tool
 packages missing, flagged S474/S475) -- picked by the owner via the S476 orientation-report
-`AskUserQuestion` picker. Infra/lockfile-only, no `R/`/`tests/` files expected to change --
-TDD RED/GREEN/REFACTOR gates do not apply (S448/S451/S452/S453/S455/S475 precedent for
-docs/administrative-only sessions), verification done via a real `renv::restore()`-equivalent
-check instead of a test suite.
-**Started:** 2026-08-04
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+`AskUserQuestion` picker. Infra/lockfile-only, no `R/`/`tests/` files changed -- TDD
+RED/GREEN/REFACTOR gates did not apply (S448/S451/S452/S453/S455/S475 precedent for
+docs/administrative-only sessions), verification done via a real `renv::restore()` into a
+fresh isolated library instead of a test suite.
+**Started/Completed:** 2026-08-04 / 2026-08-04
+**Status:** DONE -- root cause precisely traced (not the handoff's own speculative framing);
+fix applied, verified two independent ways, documented to prevent recurrence.
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Phase 0 orient (full protocol, priorities-list
+`AskUserQuestion` picker); owner picked "Fix renv.lock gap." No undocumented commits found
+(the one commit since the `CHANGELOG.md` frontier was S475's own self-referential
+HANDOFFS.md-sha backfill, matching the established S466-S475 no-log-needed pattern).
+**(2)** Investigated before deciding an approach: confirmed all 10 flagged packages truly
+missing from committed `renv.lock`; confirmed the standing uncommitted `renv.lock` diff
+(Rcpp/Rlabkey version bumps + `bit`/`bit64` additions) does NOT include any of the 10 either.
+Found `renv/settings.json`'s `snapshot.type: "explicit"` + `package.dependency.fields:
+["Imports","Depends","LinkingTo"]` (no `Suggests`) -- confirmed via `renv:::
+renv_dependencies_discover_description_fields` (renv 1.2.3 source, not assumed) that a plain
+`renv::snapshot()` therefore drops every `Suggests`-only package. A dry-run `renv::snapshot(
+lockfile = NULL, dev = TRUE)` (writes nothing) confirmed `dev = TRUE` recovers 8 of the 10
+(the 6 already in `Suggests` plus their transitive `pkgload`/`chromote`), leaving `devtools`/
+`quarto` still missing (declared only via an inert `Config/renv/profiles/dev/dependencies`
+field -- read only when a "dev" renv profile is actively enabled, never true here -- and the
+unrelated `Config/Needs/website` pkgdown/pak convention, which renv doesn't read at all).
+Also surfaced a related, previously-untracked gap: 6 already-declared `Suggests` packages
+(`covr`/`kableExtra`/`markdown`/`png`/`shinyWidgets`/`spelling`) not installed at all.
+**(3)** Surfaced this full research (more precise than the handoff's own "likely..." framing
+and the "type=all vs hand-add" binary it offered) via `AskUserQuestion`; owner picked the
+root-cause fix. **(4)** Claimed the session (stub + `HANDOFFS.md` `status: pending` receipt,
+commit `c986c32d`). **(5)** Executed: added `devtools`+`quarto` to `DESCRIPTION`'s `Suggests`
+(matching the project's own existing precedent of `covr`/`pkgdown`/`spelling` living there
+unreferenced by package code); `renv::install()`'d the 6 missing packages (9 incl. transitive
+deps, all linked from cache, `renv.lock`/`DESCRIPTION` diff confirmed unchanged by install
+itself); ran the real `renv::snapshot(dev = TRUE)` (157 packages recorded, up from 95, all
+10 originally-flagged packages present). **(6)** Verified two ways beyond `renv::status(dev =
+TRUE)` reading "No issues found": a genuinely fresh `renv::restore(library = <empty temp
+dir>)` installed all 16 target packages from the fixed lockfile alone (not relying on the
+pre-existing project library); full regression suite unchanged (0 failed/0 error, 3854
+passed, 183 skipped, 10 pre-existing baseline warnings); `devtools::check()` 0 errors/0
+warnings/2 NOTEs (both pre-existing/unrelated -- the already-tracked 6-word spelling-wordlist
+drift, plus a vignette-engine NOTE on `a2interactive.Rmd` -- confirmed via `git diff --stat`
+that `vignettes/` was untouched this session, so neither NOTE could be session-caused). Moved
+the 3 untracked invalid-filename reference files aside for `check()` (S472/S474 precedent),
+restored them exactly after. Caught and reverted a collateral `devtools::document()` reflow
+of `man/modMarkerGeneticsServer.Rd` (a roxygen2-version-driven line-wrap difference -- NOT the
+previously-tracked iCloud duplicate-`.R`-file pattern, confirmed those files don't currently
+exist) before it could pollute the commit. **(7)** Documented `renv::snapshot(dev = TRUE)` as
+the required standing invocation in `CLAUDE.md`'s Build/Test/Verify section, so a future plain
+`renv::snapshot()` doesn't silently strip the lockfile again. **(8)** Close-out: `BACKLOG.md`
+Housekeeping item marked DONE with the resolution appended; `PROJECT_LEARNINGS.md` Learning
+476 added (the full root-cause trace); `CLAUDE.md` learning-count cross-reference updated
+(475->476, Sessions 1-475+->1-476+).
+
+**Session 475 Handoff Evaluation (by Session 476): 8/10.** **What helped:** next-steps item
+(a) named exactly this task with real specificity (READY-ish, Effort S-M, the 10-package
+list, pointing at `BACKLOG.md` Housekeeping + Learning 473) -- went straight to investigation
+with zero time spent rediscovering that a problem existed or which packages were affected.
+**What was missing:** the handoff's (and the underlying `BACKLOG.md` item's) own root-cause
+framing was explicitly speculative ("likely a `renv::snapshot()` run with a dependency-
+detection type that excludes dev-only/Suggests tooling") and the "decide `renv::snapshot(
+type = "all")` vs hand-add" framing did not include the actually-correct fix (a documented
+`dev = TRUE` argument + a `DESCRIPTION` `Suggests` addition) -- this session had to do
+independent renv-internals research from scratch (tracing an unexported function via
+`asNamespace`) to find it, rather than choosing between the two options handed off. **What
+was wrong:** nothing factually incorrect, just incomplete on the mechanism -- a reasonable
+gap to leave for "a dedicated session," which is exactly what this one was. **ROI:** strongly
+positive on the WHAT (task existence, package list, urgency) but neutral-to-slightly-negative
+on the HOW (the offered options weren't the real fix, so they didn't save investigation time
+on the actual mechanism) -- net positive overall since the WHAT saved far more time than the
+HOW cost.
+
+**Self-assessment (Session 476): 9/10.** **Strengths:** (1) did not stop at the handoff's own
+offered options (`type="all"` vs hand-add) -- traced the actual renv mechanism from primary
+source (`renv:::renv_dependencies_discover_description_fields`, `renv::snapshot`'s `dev` arg
+docs) before proposing a fix, finding a materially better, durable root-cause option neither
+offered choice provided; (2) surfaced the full investigation and the approach decision via
+`AskUserQuestion` before executing, per project convention, rather than unilaterally picking;
+(3) discovered and fixed a related but previously-untracked blocking gap (6 not-installed
+`Suggests` packages) that would have prevented the `dev=TRUE` fix from running at all; (4)
+verified via a genuinely fresh, isolated `renv::restore()` into an empty temp library -- the
+strongest available evidence the fix actually works, not just "`renv::status()` prints no
+issues"; (5) caught an out-of-scope collateral edit (`man/modMarkerGeneticsServer.Rd`
+reflow) mid-session, correctly distinguished it from the previously-tracked iCloud-duplicate
+pattern rather than assuming it was the same known issue, and reverted it before committing;
+(6) fixed the mechanism, not just the current lockfile snapshot, and documented it in
+`CLAUDE.md` so recurrence is structurally prevented, not just deferred again. **Weaknesses:**
+(1) did not investigate or clean up the now-redundant `Config/Needs/website: quarto`
+`DESCRIPTION` field (harmless duplication now that `quarto` is also in `Suggests`, but an
+unresolved minor question left unaddressed rather than firmly closed); (2) this required
+unusually deep renv-internals archaeology (reading unexported functions) for what could look
+like a routine lockfile task -- necessary here since the backlog's own framing was
+speculative, but worth flagging as atypical depth. **Compared to previous sessions:** matches
+this project's established "investigate before executing, surface the approach decision via
+`AskUserQuestion`, verify beyond the tool's own success message" pattern (e.g. S473/S474's
+own empirical pre-verification discipline), applied here to infra/lockfile work rather than
+application code.
+
+**Handoff to Session 477:**
+- **What's next:** **(a)** Lint debt process fix (READY, Effort S-M, unchanged, carried since
+  S462/S466) -- wire a CI `lintr::lint_package()` job and/or promote `CLAUDE.md`'s existing
+  lint guidance into an explicit Phase 3F close-out check; exact mechanism undecided.
+  **(b)** LabKey integration remainder (BLOCKED, needs live LabKey server). **(c)** NPRC
+  outreach (DECISION NEEDED, owner-only). **(d)** Lower priority: `highlightNearest` degree=6
+  bounded mitigation follow-up; kinship2-comparison-doc staleness (S); 3 dangling-parent/NA-gen
+  crash reports; 6-word spelling-wordlist drift (`inst/WORDLIST`, found S465, still open --
+  this session's `devtools::check()` reconfirmed it as one of the 2 pre-existing NOTEs);
+  `colony-manager-guide.qmd` Diagram-tab screenshot staleness (S); live-vs-offline pedigree
+  node-count discrepancy; `data-raw/rhesusPedigree.R` docstring/fixture mismatch (S); iCloud
+  duplicate-`.R`-file artifact (still not moved as of this session -- re-confirmed absent this
+  session, unlike S461/S462's own encounters, so it may have already self-resolved; a future
+  session should verify and close if so); `freePassIds`-vs-D5 structural gap; the newly-noticed
+  minor question of whether `Config/Needs/website: quarto` is now redundant with the new
+  `Suggests` entry (harmless, not investigated). **(e)** Informational: issues #141/#138/#137/
+  #136/#133/#123/#116/#37/#36/#28/#12/#11/#10/#5 -- untouched, FYI only.
+- **Key files:** `DESCRIPTION` (added `devtools`+`quarto` to `Suggests`); `renv.lock` (157
+  packages recorded, up from 95, via `renv::snapshot(dev = TRUE)`); `CLAUDE.md` (new
+  `renv::snapshot(dev = TRUE)` standing-rule note in Build/Test/Verify + learning-count bump);
+  `BACKLOG.md` (renv.lock Housekeeping item marked DONE); `PROJECT_LEARNINGS.md` (new Learning
+  476, the full root-cause trace); `CHANGELOG.md` (new `[ad hoc]` entry).
+- **Gotchas:** (1) **Always pass `dev = TRUE` to `renv::snapshot()`/`renv::status()`** in this
+  project -- `renv/settings.json`'s `snapshot.type: "explicit"` makes the bare form silently
+  drop every `Suggests`-only package; see `CLAUDE.md`'s Build/Test/Verify section and Learning
+  476. (2) A `Config/renv/profiles/<name>/dependencies` or `Config/Needs/*` `DESCRIPTION`
+  field is a promise, not a guarantee -- it's only read by the specific mechanism that
+  recognizes it (an actively-enabled matching renv profile; `pak`), which this project has
+  never used; do not assume such a field is "wired to renv" without checking. (3)
+  `devtools::document()` can still reflow `.Rd` files even with NO iCloud duplicate `.R` files
+  present (confirmed absent this session) -- a roxygen2-version line-wrap difference is a
+  DISTINCT, narrower cause from the previously-tracked contamination pattern; always
+  `git diff --stat` after any `devtools::document()`/`check()` call and revert anything
+  outside the session's own intended scope, regardless of which specific cause is suspected.
+  (4) The pre-existing uncommitted `.DS_Store` diff and the untracked planning/reference files
+  are unrelated to this session and were correctly left untouched. (5) All prior sessions'
+  standing gotchas (`# nolint` suppressions, `devtools::install(upgrade = FALSE)`,
+  `shinytest2::AppDriver` needing both `NPRC_RUN_E2E=true` and `NOT_CRAN=true`, the
+  reserved-prefix pattern-match-don't-hardcode convention, live-vs-offline union-id numbering
+  not transferring) still apply unchanged -- this session touched infra/lockfile only, so none
+  of the application-code gotchas were directly exercised.
+- **Self-assessment score:** 9/10 (breakdown above).
 
 ### What Session 475 Did
 **Deliverable:** Close GitHub issues #142, #143, #144 (all three fully implemented and
