@@ -14,18 +14,182 @@ following `docs/methodology/workstreams/AUDIT_WORKSTREAM.md`. Picked by the owne
 via the S470 orientation-report `AskUserQuestion` picker, with a follow-up
 `AskUserQuestion` on session scope (characterize-first vs. plan-design-now;
 owner picked characterize-first, the recommended option).
-**Started:** 2026-08-03
-**Status:** Session claimed. Work beginning. Mid-claim, the owner noted: "the
-approach taken for this is to have multiple copies of the same individual if there
-is a need to have the individual in multiple levels" -- i.e. this codebase's
-established convention for one individual needing multiple-level representation is
-the existing duplicate-node mechanism (D6, S461), not single-node repositioning.
-This reframes the audit's research angle: characterize whether the founder-
-positioning defect is a gap in where/whether the duplicate-node mechanism triggers,
-rather than treating it as a pure coordinate-assignment bug in isolation.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are
-recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
-breadcrumb for the next session's reconcile.
+**Started/Completed:** 2026-08-03 / 2026-08-03
+**Status:** DONE -- audit report written
+(`docs/audits/FOUNDER_POSITIONING_DEFECT_AUDIT_2026-08-03.md`); the defect is
+confirmed high-prevalence on real data (62% of mating units in the real
+375-individual rhesus fixture) and broader in scope than previously characterized
+(also affects genuine multi-mate duplicate nodes, not just single-mate founders).
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Phase 0 orient (full protocol, including the
+priorities-list `AskUserQuestion` picker); owner picked "Founder-positioning
+defect." A follow-up `AskUserQuestion` on session scope (characterize-first,
+recommended, vs. plan-design-now) -- owner picked characterize-first, matching
+`BACKLOG.md`'s own (a)-before-(b) ordering and `SAFEGUARDS.md`'s plan-mode gate on
+touching shared `.positionMatingUnitForest()` logic. Claimed the session (stub +
+`HANDOFFS.md` `status: pending` receipt, commit `f83a0752`). **(2)** Mid-claim, the
+owner noted this codebase's established convention for "one individual needs
+multiple-level representation" is the existing duplicate-node mechanism (D6, S461),
+not single-node repositioning -- reframing the audit's research angle toward
+whether the defect is a gap in the duplicate mechanism itself.
+**(3)** Read `.buildMatingUnitForest()`/`.positionMatingUnitForest()`
+(`R/makePedigreeDiagramData.R:134-614`) in full before writing any detection code;
+found that duplicate-node rows (`nodes$gen = genOf[duplicates$realId]`, line 588)
+use the SAME "parent's own global gen" formula as free-pass real nodes, with no
+reference to which specific mating unit the duplicate represents -- suggesting the
+defect is not founder-specific. Re-read the prior synthetic findings in
+`docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd` (S463) to
+confirm the detection method targets the same defect. **(4)** Inventoried real
+bundled fixtures (`inst/extdata/examples/*.csv`); excluded `ExamplePedigree.csv`
+(documented synthetic). Wrote a detection script comparing each parent's rendered
+row against its own mating unit's rendered row, ran it against
+`obfuscated_rhesus_mhc_ped.csv` (375 real rhesus individuals),
+`rhesusPedigree_fromCenter.csv`, and `deidentified_jmac_ped.csv` (2,791 real
+Japanese macaque individuals). Manually spot-checked one finding (`FD3BB6` /
+`__union_59`) against the raw `ped` data before trusting the aggregate counts.
+**(5)** Given the surprising magnitude (62% of mating units affected), ran an
+independent verification via `Workflow` -- a fresh agent, blind to this session's
+script/numbers, re-derived the finding from scratch by reading only the mechanism,
+plus a second agent checking whether `rhesusPedigree_fromCenter.csv` is genuinely
+independent data from `obfuscated_rhesus_mhc_ped.csv`. Both confirmed: identical
+counts (237 units, 147 mismatches, 57 on duplicate nodes / 90 free-pass), a clean
+general rule (mismatch iff parent's own gen != mating-unit gen, zero exceptions),
+and that `rhesusPedigree_fromCenter.csv` is byte-identical to the other fixture on
+every shared column (not an independent raw source, despite `data-raw/
+rhesusPedigree.R`'s docstring claiming otherwise) -- an incidental, out-of-scope
+finding reported but not fixed. **(6)** Wrote the audit report per
+`AUDIT_WORKSTREAM.md`'s structure, with a Structural Observations section
+explicitly connecting the empirical finding back to the owner's own duplicate-node
+reframing. **(7)** Mid-session, the owner separately posted a new reference
+document (Standardized Human Pedigree Nomenclature, Bennett et al. 2008,
+`inst/extdata/reference/Standardized Human Pedigree Nomenclature...html`) for
+future nomenclature/legend work (issues #133/#137) -- acknowledged, left untouched
+and uncommitted, out of this session's scope. The owner also asked whether the
+repo could be moved out of iCloud's purview -- answered directly (verified no
+absolute-path dependencies in `.git/config`, `.Rprofile`/renv, or repo-local
+`.claude/settings.local.json`; flagged that Claude Code's own per-project memory is
+path-keyed and won't auto-migrate) without taking the action.
+
+**Session 469 Handoff Evaluation (by Session 470): 8/10.** **What helped:** item
+(c) of the handoff's own "what's next" list named this exact item ("Founder-
+positioning defect (DECISION NEEDED, Effort M, found S463, unchanged) -- likely
+needs its own plan-mode session") -- the framing directly shaped this session's own
+scope-decision `AskUserQuestion` (characterize first, defer design to a plan-mode
+session), and the resulting audit report's own Recommendation #1 confirms that
+framing was correct: this does need its own design session, not an ad hoc fix.
+**What was missing:** the handoff itself added modest value beyond what
+`BACKLOG.md`'s own item text already said -- the marginal informational content was
+mainly the accurate "likely needs plan-mode" framing repeated from the item text,
+not new detail. Neither the handoff nor `BACKLOG.md` mentioned the large real
+`deidentified_jmac_ped.csv` fixture as a second real-data source; this session
+found it independently during its own scope inventory. **What was wrong:** nothing
+inaccurate found. **ROI:** positive -- the handoff correctly and consistently
+pointed toward the same scope decision this session independently reached via its
+own `AskUserQuestion`, saving a second pass at reconstructing the item's own
+history (though most of that history lived in `BACKLOG.md` itself, not the
+handoff).
+
+**Self-assessment (Session 470): 9/10.** **Strengths:** (1) did not stop at
+re-confirming the two already-known synthetic cases -- read the actual node/edge
+construction code first, formed a specific, falsifiable hypothesis (duplicate nodes
+share the same row-assignment bug as free-pass founders) BEFORE running any
+detection script, then confirmed it empirically; this materially changed the
+audit's conclusion (Finding #2) versus what a narrower "just re-run the synthetic
+examples against real data" pass would have found; (2) given a surprising,
+high-impact result (62% prevalence) that would directly inform a future session's
+design priorities, did not simply trust its own script -- spawned an independent,
+blind Workflow re-derivation and a manual hand spot-check before writing the number
+into the audit report, catching nothing wrong but establishing real confidence
+rather than assumed confidence; (3) the independent verification incidentally
+surfaced a genuine, unrelated defect (Finding #4, `rhesusPedigree_fromCenter.csv`'s
+stale provenance docstring) -- reported it per this project's own "report, don't
+fix mid-session" precedent (Learning 382) rather than either silently fixing it or
+silently dropping it; (4) correctly declined to file a new GitHub issue
+unilaterally despite the audit's own Recommendation #2 concluding one is
+warranted -- treated it as an action visible to others requiring explicit
+confirmation, per `SAFEGUARDS.md`, rather than self-authorizing it as an implicit
+part of "characterize the defect"; (5) handled two unrelated mid-session owner
+messages (a new nomenclature reference document; a question about relocating the
+repo out of iCloud) without derailing the one-and-done deliverable -- answered the
+direct question with verified specifics rather than a guess, acknowledged and
+deferred the reference document without reading/acting on it. **Weaknesses:** (1)
+did not verify `rhesusPedigree_fromCenter.csv`'s independence from
+`obfuscated_rhesus_mhc_ped.csv` before initially treating it as a second real data
+point in the original detection script run -- the redundancy was only caught by
+the independent-verification workflow's second agent, not by this session's own
+initial fixture inventory; a closer look at `data-raw/rhesusPedigree.R`'s own
+docstring wording ("obfuscation is non-deterministic... exact obfuscated id and
+birth VALUES cannot be re-derived") should have prompted a same-session identity
+check before running the detection script twice; (2) did not attempt to measure
+prevalence on `ExamplePedigree.csv` (3,694 individuals) even as a supplementary,
+explicitly-labeled synthetic-data sanity check, despite its much larger N -- excluded
+it entirely rather than including it with a clear synthetic/real caveat, which
+would have added statistical power to the "how common is this" question at low
+cost. **Compared to previous sessions:** matches the S468-469 discipline of not
+trusting a config/script check alone (Learning 463's precedent extended here to
+audit-script results specifically, via independent workflow re-derivation rather
+than live-app verification); extends S469's own "catch a bug in my own RED tests"
+reflex to "catch a bug in my own audit script" via a genuinely independent,
+blind re-derivation rather than only re-reading my own code.
+
+**Handoff to Session 471:**
+- **What's next:** **(a)** Design the founder-positioning defect fix (DECISION
+  NEEDED -> now READY to plan, Effort M) via a dedicated plan-mode session --
+  `docs/audits/FOUNDER_POSITIONING_DEFECT_AUDIT_2026-08-03.md`'s Recommendation #1
+  gives a candidate direction (assign every non-anchor parent occurrence's row from
+  its own mating unit's `gen`, not the parent's global tree-native `gen`) but does
+  NOT design or implement it -- that is explicitly out of this audit's scope.
+  **(b)** File the founder-positioning defect as its own new GitHub issue
+  (Recommendation #2) -- NOT done this session (an action visible to others,
+  deferred for explicit owner confirmation rather than self-authorized). **(c)**
+  File `rhesusPedigree_fromCenter.csv`'s stale provenance docstring
+  (`data-raw/rhesusPedigree.R:7-15`) as its own new, separate, low-priority
+  `BACKLOG.md` housekeeping item (Recommendation #3) -- NOT done this session,
+  reported only. **(d)** highlightNearest degree=6 mitigation (BACKLOG.md, found
+  S468, Effort M, low priority) -- unchanged, still needs real max-sibship-size
+  measurement first. **(e)** Lint debt process fix (READY, Effort S-M, split off
+  S466) -- unchanged, still untouched. **(f)** Everything else carried forward
+  unchanged from S462-469: stale `colony-manager-guide.qmd` Diagram screenshot
+  (READY S); 6-word spelling-drift NOTE (READY S); NPRC outreach (DECISION NEEDED,
+  owner-only); LabKey (BLOCKED); S445's methodology question; iCloud repo
+  relocation -- the owner asked about this mid-session (answered, not
+  actioned; see below); issues #133/#136/#137 (data-model gated), #141
+  (filed-not-scheduled); 2 untracked reference PDFs plus 1 new untracked reference
+  HTML file (Standardized Human Pedigree Nomenclature, Bennett et al. 2008 --
+  relevant to a future #133/#137 nomenclature pass, not read/actioned this
+  session); unexplained `renv.lock` diff (12 sessions now); 2 untracked rendered
+  `.html` files under `docs/planning/`.
+- **Key files:**
+  `docs/audits/FOUNDER_POSITIONING_DEFECT_AUDIT_2026-08-03.md` (this session's
+  deliverable); `R/makePedigreeDiagramData.R:585-591` (the row-assignment bug
+  location, unchanged -- not fixed this session); `data-raw/rhesusPedigree.R:7-15`
+  (Finding #4's stale docstring, unchanged -- not fixed this session);
+  `BACKLOG.md` (founder-positioning item updated with this session's findings and
+  a link to the audit report; a new Finding #4 housekeeping item added).
+- **Gotchas:** (1) **`rhesusPedigree_fromCenter.csv` and
+  `obfuscated_rhesus_mhc_ped.csv` are the same dataset** (byte-identical on every
+  shared column) despite `data-raw/rhesusPedigree.R`'s docstring claiming the
+  former is an independent raw/pre-obfuscation source -- do not treat them as two
+  independent real-data samples in any future analysis; the docstring itself is
+  the thing that needs fixing (Finding #4), not the fixture. (2) **A duplicate
+  node's row (`gen`) and a free-pass individual's row use the exact same formula**
+  (`genOf[realId]`, the individual's own global tree-native generation) -- neither
+  ever references which specific mating unit the occurrence belongs to. A fix that
+  only widens WHEN a duplicate gets created (without also fixing this row formula)
+  will not resolve the 57 duplicate-node instances found in this audit. (3)
+  `nprcgenekeepr:::.buildMatingUnitForest()` and
+  `nprcgenekeepr:::.positionMatingUnitForest()` are internal (`@noRd`) but
+  reachable via `:::` for read-only investigation/debugging -- useful for any
+  future audit of this layout code without needing to export anything. (4) All
+  S462-469 gotchas (`# nolint` suppressions, `.lintr` per-line exclusion,
+  `devtools::install(upgrade = FALSE)`, `shinytest2::AppDriver` needing BOTH
+  `NPRC_RUN_E2E=true` AND `NOT_CRAN=true`, the reserved-prefix
+  pattern-match-don't-hardcode convention, `devtools::document()`'s iCloud
+  duplicate-file contamination, `app$get_logs()` not `get_log()`) still apply
+  unchanged, though none were directly exercised this session (no app code
+  touched).
+- **Self-assessment score:** 9/10 (breakdown above).
 
 ### What Session 469 Did
 **Deliverable:** Fix the duplicate-node connector rendering straight instead of arched

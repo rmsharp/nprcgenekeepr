@@ -43,6 +43,29 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-03 · [BL-founderPositioningAudit] Characterized the founder-positioning defect against real bundled pedigree fixtures (Session 470)
+- **Deliverable:** audit report
+  (`docs/audits/FOUNDER_POSITIONING_DEFECT_AUDIT_2026-08-03.md`), no code
+  changes -- resolves `BACKLOG.md`'s (found S463) open "how often does this
+  occur in practice" question. On the real 375-individual rhesus fixture
+  (`obfuscated_rhesus_mhc_ped.csv`), **147 of 237 mating units (62%)** have a
+  mis-positioned parent -- **57 of those 147 (39%) on genuine multi-mate
+  duplicate nodes**, not just single-mate founders, broadening the defect's
+  known scope beyond S463's synthetic-only characterization. Root cause:
+  `.positionMatingUnitForest()` assigns every non-anchor parent occurrence's
+  row from that parent's own global `gen`, never from the specific mating
+  unit the occurrence belongs to (`R/makePedigreeDiagramData.R:585-591`).
+  Independently re-derived via a blind `Workflow` agent (identical counts;
+  general rule: mismatch iff parent's own `gen` != mating-unit `gen`).
+  Incidentally found (reported, not fixed) that
+  `rhesusPedigree_fromCenter.csv` is byte-identical to
+  `obfuscated_rhesus_mhc_ped.csv` on every shared column, contradicting
+  `data-raw/rhesusPedigree.R`'s docstring claim that it is an independent
+  raw/pre-obfuscation source. `BACKLOG.md`'s founder-positioning item updated
+  with these findings (now READY to plan, not just DECISION NEEDED); a new
+  low-priority item added for the fixture-provenance docstring gap.
+  `PROJECT_LEARNINGS.md` Learnings 467-468. See `SESSION_NOTES.md` S470.
+
 ### 2026-08-03 · [ad hoc] Filled in this session's own HANDOFFS.md receipt commit sha (Session 469)
 - **Deliverable:** Filled in this session's own `HANDOFFS.md` receipt
   `commit: pending` placeholder with the real close-out commit sha
