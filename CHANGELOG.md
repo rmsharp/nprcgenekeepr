@@ -43,6 +43,13 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-03 · [ad hoc] Filled in this session's own HANDOFFS.md receipt commit sha (Session 470)
+- **Deliverable:** Filled in this session's own `HANDOFFS.md` receipt
+  `commit: pending` placeholder with the real close-out commit sha
+  (`0a36145c`) -- the same self-correction S331-S344/S466-S469 each needed,
+  closed within the same session. Also fixed a stray literal `<` left at
+  the start of the free-text prose block.
+
 ### 2026-08-03 · [BL-founderPositioningAudit] Characterized the founder-positioning defect against real bundled pedigree fixtures (Session 470)
 - **Deliverable:** audit report
   (`docs/audits/FOUNDER_POSITIONING_DEFECT_AUDIT_2026-08-03.md`), no code
