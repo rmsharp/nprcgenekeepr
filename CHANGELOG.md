@@ -47,6 +47,41 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-08-03 · \[issue \#144\] Filed the anchor-side row-mismatch gap as its own GitHub issue (Session 471)
+
+- **Deliverable:** opened [issue
+  \#144](https://github.com/rmsharp/nprcgenekeepr/issues/144),
+  owner-directed (the ratified
+  `docs/planning/issue143-founder-positioning-fix-plan.md` §8 explicitly
+  instructs filing this at close-out). Documents that 51 of 237
+  real-fixture mating units (22%) have an anchor-side row mismatch the
+  issue \#143 fix does not address – discovered via direct empirical
+  re-verification during the \#143 fix design, not previously known.
+  `BACKLOG.md` updated with a new item linking the issue.
+
+### 2026-08-03 · \[issue \#143\] Designed the founder-positioning defect fix (Session 471)
+
+- **Deliverable:**
+  `docs/planning/issue143-founder-positioning-fix-plan.md`,
+  owner-ratified via `AskUserQuestion`. Adopts the S470 audit’s own
+  “point-patch” candidate (two synchronized edits in
+  `.positionMatingUnitForest()`, plus a dangling-free-pass-parent guard
+  found necessary by this session’s own adversarial review of the draft,
+  which reproduced a real crash by applying the proposed patch to a
+  scratch copy and running it against existing tests). Direct empirical
+  verification of the corrected patch against the real fixture found the
+  S470 audit’s own `onFreePassLeaf=90` figure had silently combined 39
+  genuine free-pass mismatches with 51 anchor-side mismatches (the
+  audit’s detection script could not distinguish them); the fix resolves
+  96 of 147 (65%) of the audit’s originally-confirmed real-fixture
+  mismatches, with the anchor -side remainder tracked as issue \#144
+  (owner-directed, above). Incidentally found (reported, not fixed) a
+  separate, likely-rare structural inconsistency between
+  `.buildMatingUnitForest()`’s and `.positionMatingUnitForest()`’s own
+  free-pass criteria – new low-priority `BACKLOG.md` item added. No
+  implementation code changed this session – the plan is the
+  deliverable; implementation is a separate future session.
+
 ### 2026-08-03 · \[issue \#143\] Filed the founder-positioning defect as its own GitHub issue (Session 470)
 
 - **Deliverable:** opened [issue

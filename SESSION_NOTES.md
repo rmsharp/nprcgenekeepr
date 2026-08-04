@@ -7,6 +7,231 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 471 Did
+
+**Deliverable:** Design the founder-positioning defect fix
+(`BACKLOG.md`, issue \#143, characterized S470) as an architecture plan
+document – picked by the owner via the S471 orientation-report
+`AskUserQuestion` picker. Following
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`.
+**Started/Completed:** 2026-08-03 / 2026-08-03 **Status:** DONE – plan
+written and owner-ratified
+(`docs/planning/issue143-founder-positioning-fix-plan.md`); adopts the
+audit’s own “point-patch” candidate (two synchronized edits in
+`.positionMatingUnitForest()`), corrected twice during this session via
+adversarial review and direct empirical verification (see below). No
+implementation code changed – the plan is the deliverable, per this
+project’s own planning-session convention. **Ledger:** recorded in
+`CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Phase 0 orient (full protocol,
+priorities-list `AskUserQuestion` picker); owner picked
+“Founder-positioning defect design.” Before claiming, found and (with
+permission) reverted 3 `man/*.Rd` files corrupted by the known,
+already-tracked iCloud duplicate-file contamination (`BACKLOG.md`,
+Learning 464) – pre-existing environmental noise, not this session’s own
+work; left `renv.lock`/`.DS_Store`/untracked reference files untouched
+as already-known drift. Claimed the session (stub + `HANDOFFS.md`
+`status: pending` receipt, commit `e15cbb45`). **(2)** Launched a
+4-agent research `Workflow` (parallel): re-read
+`.buildMatingUnitForest()`/`.positionMatingUnitForest()` in full
+independently of the audit’s summary; grep-based caller/test inventory;
+full read of all 4 prior pedigree-diagram planning/audit documents for
+ratified-decision context; a 3-candidate algorithmic-alternatives
+survey. **(3)** Personally re-verified the two most load-bearing
+technical claims (the exact defect lines, one test assertion) against
+live source before writing anything, per this project’s own “read
+implementations, not descriptions” norm. **(4)** Wrote the first plan
+draft (`docs/planning/issue143-founder-positioning-fix-plan.md`), naming
+Candidate 1 (point-patch) as the decision, with 2 alternatives honestly
+evaluated and rejected on scope grounds. **(5)** Ran a 3-agent
+adversarial-review `Workflow` against the draft (mechanism-fidelity
+check, completeness/gap check, `ARCHITECTURE_WORKSTREAM.md` checklist
+compliance) – the gap-check agent applied the proposed patch to a
+scratch copy of the source and ran it against this codebase’s own
+existing tests, finding a **real, reproducible crash**: the proposed
+Edit 2 corrupts row alignment for any pedigree with a dangling free-pass
+parent (confirmed against the existing `DANGLING_DAM` fixture). Revised
+the plan with a guard (`intersect(freePassIds, realIds)`) and corrected
+several smaller citation inaccuracies the review also found. **(6)** Did
+not stop at incorporating the review’s fixes – personally re-verified
+the corrected patch by applying it to a fresh scratch package copy and
+running it against the real fixture and full test files, which surfaced
+a **second, larger issue the adversarial review itself had gotten
+wrong**: the review’s own claim that anchor-side mismatches were
+“theoretical/zero-prevalence” was false. Direct empirical reconciliation
+(writing and running the actual detection logic against the real
+375-individual fixture, not re-reading prose) found the true split: 57
+duplicate + 39 genuine free-pass + **51 anchor** mismatches (51+96=147
+exactly, zero overlap) – the S470 audit’s own `onFreePassLeaf=90` figure
+silently combined 39 real free-pass mismatches with 51 anchor
+mismatches, because its detection script could only classify node type
+by a syntactic signal (`__dup_` prefix or not), which cannot distinguish
+an anchor’s real-id node from a free-pass individual’s. This means the
+proposed fix resolves 96 of 147 (65%), not all of it. **(7)** Surfaced
+this finding to the owner directly via `AskUserQuestion` (not a
+self-authorized scope decision) – owner directed: ship the non-anchor
+fix as scoped, track the anchor gap as an urgent named follow-up.
+Revised the plan a second time throughout (§1.4 new reconciliation
+section, §3/§4/§6/§7/§8, including a real-fixture node-count correction
+the same empirical check caught: `edgeStyle="rectilinear"` total nodes
+change 1375-\>1279, not stable as the first draft assumed). **(8)**
+Presented the fully-corrected plan for ratification via
+`AskUserQuestion` – owner ratified as written. **(9)** Close-out: filed
+the owner-directed anchor-side follow-up as [issue
+\#144](https://github.com/rmsharp/nprcgenekeepr/issues/144); updated
+`BACKLOG.md` (founder-positioning item marked “fix designed,” 2 new
+items – issue \#144’s anchor gap and an incidentally-found, separate,
+low-priority `freePassIds`-vs-D5 structural inconsistency, per Learning
+382’s “report, don’t fix mid-session” precedent); added
+`PROJECT_LEARNINGS.md` Learning 469 generalizing the “verify a prior
+audit’s category breakdown directly, don’t trust its labels” lesson;
+updated `CLAUDE.md`’s learning-count cross-reference (468-\>469,
+Sessions 1-470+-\>1-471+).
+
+**Session 470 Handoff Evaluation (by Session 471): 8/10.** **What
+helped:** item (a) of the handoff’s “what’s next” list directly named
+this exact task (“design the founder-positioning defect fix… via a
+dedicated plan-mode session”), fully unambiguous and immediately
+actionable – no time spent reconstructing scope. Gotcha (2) (“a
+duplicate node’s row and a free-pass individual’s row use the exact same
+formula… neither ever references which specific mating unit the
+occurrence belongs to”) was accurate and directly useful, confirmed
+word-for-word against live source this session. Gotcha (3) (internal
+functions reachable via `:::` for read-only investigation) was used
+directly in this session’s own empirical verification scripts. The
+key-files citation (`R/makePedigreeDiagramData.R:585-591`) was exactly
+right, personally re-verified. **What was missing:** neither the handoff
+nor the underlying S470 audit it summarized could have flagged the
+anchor/free-pass conflation in the audit’s own `onFreePassLeaf=90`
+figure – that gap lived in the audit’s detection methodology itself, not
+in how S470 communicated its findings, and discovering it took this
+session’s own additional empirical-verification round rather than
+anything a better-written handoff could have surfaced in advance. **What
+was wrong:** nothing in the handoff’s own claims was inaccurate; every
+citation and mechanism description held up under this session’s
+independent re-verification. **ROI:** strongly positive – items (a) and
+gotcha (2) in particular saved real investigation time by pointing
+directly at the confirmed mechanism rather than requiring this session
+to rediscover it from scratch.
+
+**Self-assessment (Session 471): 9/10.** **Strengths:** (1) did not
+accept the S470 audit’s own numbers or candidate direction at face value
+– re-read the actual mechanism from source before writing any decision,
+matching this project’s “read implementations, not descriptions”
+standard; (2) ran a genuine adversarial review of this session’s OWN
+drafted plan (3 independent agents) before presenting it, which caught a
+real, reproducible crash bug in the originally-proposed fix – not a
+hypothetical concern, an agent literally applied the patch and ran it
+against existing tests; (3) went a step further than incorporating the
+review’s own findings – personally re-verified the corrected patch
+empirically, which caught the review’s own incomplete claim (anchor-side
+“theoretical/zero”) and traced a genuine, previously-unknown gap in the
+S470 audit’s own methodology to an exact-integer reconciliation
+(57+39+51=147, zero overlap) rather than settling for “there’s some
+discrepancy, worth a look”; (4) when the discovery had material scope
+implications (should the plan’s scope expand to cover anchor mismatches
+too?), stopped and surfaced it to the owner via `AskUserQuestion` rather
+than unilaterally deciding; (5) filed the owner-directed follow-up issue
+and BACKLOG items only after explicit ratification – the ratified plan
+text itself was the authorization, distinguishing this from S470’s more
+cautious non-filing (where no such explicit instruction existed yet);
+(6) proactively identified and (with permission) cleaned up known
+environmental contamination (iCloud duplicate-file corruption of 3
+`man/*.Rd` files) before starting technical work, keeping this session’s
+own diff clean; (7) recorded a properly-attributed
+`PROJECT_LEARNINGS.md` entry generalizing the discovery into a reusable
+practical rule extending Learning 468’s lineage, not just a one-off
+note. **Weaknesses:** (1) this session used substantially more compute
+than a typical planning session (2 Workflow runs, 7 total subagents,
+plus extensive personal empirical verification) – justified given the
+stakes (a shared, high-blast-radius rendering fix, plus Ultracode’s
+standing directive this session) but worth naming as a real cost, not a
+free action; (2) trusted some of the adversarial-review agents’
+secondary citations (e.g. the “`test_modPedigree.R` has no gen/x/y
+hardcoding” grep claim) without independently re-deriving them myself,
+unlike the highest-stakes claims (the defect’s exact mechanism, the
+crash reproduction, the anchor-mismatch count) which were personally
+re-verified; (3) could have more explicitly questioned whether Candidate
+1 remained the right RECOMMENDATION once the anchor-side gap’s true
+scale was known, rather than only quantifying the gap and asking –
+though presenting it as an explicit owner decision rather than
+self-resolving it is itself the correct call per this project’s own
+scope-authorization precedent. **Compared to previous sessions:**
+extends S470’s own “don’t trust your own script, get independent
+verification” discipline one level further – not just verifying this
+session’s own work, but verifying the PRIOR session’s own aggregate
+finding’s internal breakdown, catching a gap that had survived one
+audit, one independent blind re-derivation, AND one adversarial review
+before this session’s own empirical re-check finally surfaced it.
+
+**Handoff to Session 472:** - **What’s next:** **(a)** Implement the
+founder-positioning fix (READY, Effort M) –
+`docs/planning/issue143-founder-positioning-fix-plan.md` is a complete,
+ratified, RED/GREEN/REFACTOR-structured implementation plan with
+pre-derived exact regression numbers (zero non-anchor mismatches,
+exactly 51 anchor mismatches remaining, `edgeStyle="rectilinear"` node
+count 1375-\>1279) – a future session should follow it directly, not
+re-derive from scratch. **(b)** Design a fix for the anchor-side
+row-mismatch gap (issue \#144, READY to plan, Effort unknown – likely
+\>= issue \#143’s own effort since it requires restructuring anchor
+positioning, not a point-patch) – owner-directed near-term priority, not
+a low-priority residual;
+`docs/planning/issue143-founder-positioning-fix-plan.md` §1.4/§4.4/§8 is
+the starting evidence. **(c)** Lint debt process fix (READY, Effort S-M,
+split off S466) – unchanged, still untouched. **(d)** Everything else
+carried forward unchanged from S462-470: stale
+`colony-manager-guide.qmd` Diagram screenshot (READY S); 6-word
+spelling-drift NOTE (READY S); NPRC outreach (DECISION NEEDED,
+owner-only); LabKey (BLOCKED); S445’s methodology question; iCloud repo
+relocation (owner-only decision, unchanged);
+`rhesusPedigree_fromCenter.csv` stale docstring (READY S, low priority,
+found S470); the new `freePassIds`-vs-D5-decision structural gap (found
+S471, low priority, effort unknown); issues \#133/#136/#137 (data-model
+gated), \#141 (filed-not-scheduled), \#142 (low priority, deferred); 2
+untracked reference PDFs plus 1 untracked reference HTML file;
+unexplained `renv.lock` diff (13 sessions now); 2 untracked rendered
+`.html` files under `docs/planning/` (this session’s own deliverable is
+a plain `.md` file, so it adds no new untracked render to this count). -
+**Key files:** `docs/planning/issue143-founder-positioning-fix-plan.md`
+(this session’s deliverable – READ IT IN FULL before implementing,
+especially §2.1’s exact edits, §6’s dragons, and §7’s verification
+plan); `R/makePedigreeDiagramData.R:494,585-591` (the two edit sites,
+unchanged – not implemented this session);
+`tests/testthat/test_positionMatingUnitForest.R:87,132,236-265,272-297`
+and
+`tests/testthat/test_addRectilinearWaypoints.R:260-300,301-360,367-382`
+(tests needing rewriting/verification, exact line numbers and expected
+fates in the plan’s own §4.3/§7); `BACKLOG.md` (founder-positioning item
+updated, 2 new items added). - **Gotchas:** (1) **The plan’s own §1.4
+numbers (57/39/51/96/147) supersede the S470 audit’s own
+`onFreePassLeaf=90`/`onDuplicateNode=57` breakdown** – do not cite the
+audit’s original breakdown as the coverage claim for any future fix;
+cite the plan’s own reconciled numbers instead. (2) **Edit 2 (the
+`dispGenOf` override vector) needs the `intersect(freePassIds, realIds)`
+guard, not just the naive `dispGenOf[freePassIds] <- ...`** – omitting
+it crashes on any dangling free-pass parent (a real, tested scenario,
+`DANGLING_DAM`); this was caught by this session’s own adversarial
+review, not obvious from the audit’s one-sentence candidate description.
+(3) **The two `test_addRectilinearWaypoints.R` D2 test sections have
+OPPOSITE fates** – `:260-300` (non-anchor) needs rewriting/removal;
+`:301-360` (anchor) needs NO changes at all; do not treat them
+identically. (4) **The real -fixture `edgeStyle="rectilinear"` node
+count changes from 1375 to 1279** – update, don’t just re-run,
+`test_makePedigreeMatingLayout.R:494` and
+`test_addRectilinearWaypoints.R:382`. (5) All S462-470 gotchas
+(`# nolint` suppressions, `.lintr` per-line exclusion,
+`devtools::install(upgrade = FALSE)`,
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+needing BOTH `NPRC_RUN_E2E=true` AND `NOT_CRAN=true`, the
+reserved-prefix pattern-match-don’t-hardcode convention,
+`devtools::document()`’s iCloud duplicate-file contamination – reverted
+once already this session, may recur again, `git checkout --` the 3
+named `man/*.Rd` files if it does – `app$ get_logs()` not `get_log()`)
+still apply unchanged, though none were directly exercised this session
+(no app code touched, planning only). - **Self-assessment score:** 9/10
+(breakdown above).
+
 ### What Session 470 Did
 
 **Deliverable:** Characterize the founder-positioning defect
