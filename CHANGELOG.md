@@ -47,6 +47,42 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-08-03 · \[ad hoc\] Filled in this session’s own HANDOFFS.md receipt commit sha (Session 469)
+
+- **Deliverable:** Filled in this session’s own `HANDOFFS.md` receipt
+  `commit: pending` placeholder with the real close-out commit sha
+  (`83c4a911`) – the same self-correction many previous sessions (e.g.
+  S331-S344, S466, S467, S468) each needed, closed within the same
+  session rather than left for the next session’s Phase 0 reconcile to
+  catch and backfill.
+
+### 2026-08-03 · \[BL-dupNodeArc\] Duplicate-node connector renders as an arc, not straight (Session 469)
+
+- **Deliverable:** fixed the pedigree diagram’s duplicate-node connector
+  to render as a curved/arched dashed line, matching the
+  kinship2/reference-pedigree convention (found S468).
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)’s
+  `dupEdges` gain a per-edge vis.js `smooth` override (`enabled = TRUE`,
+  `type = "curvedCW"`, `roundness = 0.2`), overriding
+  `R/modPedigree.R`’s widget-level `visEdges(smooth = FALSE)`; every
+  other edge is unaffected. Pre-RED source reading found and fixed a
+  second integration site: `.addRectilinearWaypoints()`’s own fresh
+  waypoint edges needed matching NA-filled `smooth.*` columns to avoid
+  an “undefined columns selected” crash once the passed-through
+  direct-style edges carried the new columns; the arc survives unchanged
+  under `edgeStyle = "rectilinear"` too (live-verified). Full TDD cycle
+  (RED – 2 new tests + 1 existing test’s column-set assertion updated
+  for the intentionally-changed contract; GREEN; REFACTOR
+  owner-confirmed skip). Verified: regression suite 0 failed/0 error
+  (4524 passed, exact baseline warnings); `devtools::check()` 0 new
+  errors/warnings/notes; `lintr` 0. Live `shinytest2`/`chromote`
+  verification against the real 375-individual fixture (both edge
+  styles) plus a small isolated-fixture screenshot visually confirming
+  the arc. `_pedigree_browser.Rmd` wording updated (“dashed line” -\>
+  “curved, dashed line”), re-rendered. No `NEWS.Rmd` entry, per the
+  shinyBS-popover-fix precedent (S437/438) – a bug fix to existing
+  behavior is outside that checklist’s scope. See `BACKLOG.md`.
+
 ### 2026-08-03 · \[ad hoc\] Filled in this session’s own HANDOFFS.md receipt commit sha (Session 468)
 
 - **Deliverable:** Filled in this session’s own `HANDOFFS.md` receipt
@@ -1915,7 +1951,7 @@ here.
   in `R/appUI.R`, the same mechanism already used for `data-ready.js`. 2
   new tests in `tests/testthat/test_modSummaryStats_popovers.R`. Added
   `htmltools` to `Suggests` (test-only dependency for
-  [`htmltools::renderTags()`](https://rdrr.io/pkg/htmltools/man/renderTags.html)).
+  [`htmltools::renderTags()`](https://rstudio.github.io/htmltools/reference/renderTags.html)).
 - **In-flight test-design finding:** the RED-phase “appUI includes the
   shim” test initially asserted against `as.character(appUI())`, which
   passed for the WRONG reason (matched shinyBS’s own unrelated inline
@@ -1947,7 +1983,7 @@ here.
   resolution. `PROJECT_LEARNINGS.md` Learnings 415
   ([`as.character()`](https://rdrr.io/r/base/character.html) drops
   `tags$head()` content;
-  [`htmltools::renderTags()`](https://rdrr.io/pkg/htmltools/man/renderTags.html)
+  [`htmltools::renderTags()`](https://rstudio.github.io/htmltools/reference/renderTags.html)
   is the correct tool) and 416 (`shinytest2::AppDriver$get_logs()`, not
   `$get_log()` — the wrong name fails with an opaque
   `attempt to apply non-function`, not a clear “method not found”)
