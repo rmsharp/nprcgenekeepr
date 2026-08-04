@@ -72,7 +72,7 @@ key_files: docs/planning/issue144-anchor-row-mismatch-fix-plan.md (the plan itse
 gotchas: (1) The plan's §6 discloses one residual the fix does not close (multi-unit-anchor-at-differing-gen, OR a single unit plus a D5 direct child) -- not reachable in either bundled real fixture, but the implementation session's RED phase should add a regression test asserting deterministic non-crashing behavior, not leave it unexercised. (2) The rendered-diagram visual diff will be much larger than the 3-edit code diff (87.6% of nodes shift x, precedented by #143's own 98.5% cascade) -- a large before/after screenshot diff is not itself evidence of a bug. (3) All prior sessions' standing gotchas (nolint suppressions, devtools::install(upgrade=FALSE), shinytest2 env vars, the 5-reserved-prefix convention, devtools::document()'s iCloud duplicate-file contamination -- this session did not check for new duplicate files, a future session should) still apply unchanged.
 runtime_smoke: n/a -- docs-only planning session, no R/ or tests/ files changed, no runtime behavior affected. Matches this project's own established precedent for planning sessions (S423/S426/S428/S430/S432/S471).
 changelog_ref: CHANGELOG.md 2026-08-04 [issue #144] entry (Session 473)
-commit: pending
+commit: 5c9ee6cb
 ```
 
 ```handoff
