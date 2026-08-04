@@ -62,16 +62,16 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S473
 date: 2026-08-04
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Design a fix for issue #144 (Pedigree Diagram anchor-side row mismatches -- 51 of 237 real-fixture mating units, 22%) as one architecture/plan document in docs/planning/, following ARCHITECTURE_WORKSTREAM.md.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- docs/planning/issue144-anchor-row-mismatch-fix-plan.md written, adversarially reviewed (3 agents), revised, and owner-ratified via AskUserQuestion. Adopts Candidate B (effective-row threading), disproving the standing "requires restructuring D3" assumption issue #144 was split off on. Implementation is a separate future session.
+what_was_done: Read .buildMatingUnitForest()/.positionMatingUnitForest() directly from source before dispatching any subagent. Dispatched a 7-agent Workflow (4 parallel characterization agents, then 3 independently-validated candidate designs in isolated worktrees: A=gen-aware D2 tie-break, B=extend #143's dispGenOf pattern to anchors, C=connector/dogleg reframe). Synthesized findings and authored the plan myself, adopting B on minimal-blast-radius grounds. Dispatched a second 3-agent adversarial-review Workflow (mechanism-fidelity, empirical gap-check, checklist compliance) mirroring S471's own pattern; all 3 returned needs-revision (not needs-major-rework); incorporated all findings (a file-count miscount, an over-broad guard claim, a widened residual disclosure, 2 new incidental bugs, 1 doc-staleness gap). Re-read the full revised plan and caught one leftover error the fixes missed. Presented for ratification via AskUserQuestion -- ratified as-is. Close-out: filed 5 BACKLOG.md items (1 implementation-ready, 4 incidental findings), added PROJECT_LEARNINGS.md Learnings 471/472, updated CLAUDE.md's learning-count cross-reference. Also found and backfilled 1 undocumented commit during Phase 0 reconcile (S472's own HANDOFFS.md-receipt-sha self-correction), and flagged (without acting on) that GitHub issue #143 remains open despite being fully resolved. Commits: 879c961f (Phase 0 reconcile backfill), d2b5d567 (claim).
+next_steps: (a) Implement the ratified issue #144 plan (READY, Effort similar to #143's own implementation session) -- docs/planning/issue144-anchor-row-mismatch-fix-plan.md is complete; start at its §7 Verification Plan. (b) Consider closing GitHub issue #143 (fully resolved by S472, never closed). (c) Lint debt process fix (READY, Effort S-M, unchanged). (d) LabKey integration remainder (BLOCKED). (e) NPRC outreach (DECISION NEEDED, owner-only). (f) New this session: Candidate C's connector idea (low priority, needs owner sign-off); 3 pre-existing dangling/NA-gen crash bugs (low priority); the kinship2-comparison-doc staleness housekeeping item (S, low priority) -- itself a gap S472's close-out left. (g) Everything else carried forward from S462-472 -- see SESSION_NOTES.md for the full list, including that BACKLOG.md's inst/extdata reorg item header text is stale (says open, is actually fully DONE).
+key_files: docs/planning/issue144-anchor-row-mismatch-fix-plan.md (the plan itself -- read it, not this summary); R/makePedigreeDiagramData.R:480,505-522,596-608 (where the plan's 3 edits will land); tests/testthat/test_positionMatingUnitForest.R, test_addRectilinearWaypoints.R, test_makePedigreeMatingLayout.R (6 test_that blocks needing rewrite, catalogued in the plan's §4.3 table); BACKLOG.md (5 items touched).
+gotchas: (1) The plan's §6 discloses one residual the fix does not close (multi-unit-anchor-at-differing-gen, OR a single unit plus a D5 direct child) -- not reachable in either bundled real fixture, but the implementation session's RED phase should add a regression test asserting deterministic non-crashing behavior, not leave it unexercised. (2) The rendered-diagram visual diff will be much larger than the 3-edit code diff (87.6% of nodes shift x, precedented by #143's own 98.5% cascade) -- a large before/after screenshot diff is not itself evidence of a bug. (3) All prior sessions' standing gotchas (nolint suppressions, devtools::install(upgrade=FALSE), shinytest2 env vars, the 5-reserved-prefix convention, devtools::document()'s iCloud duplicate-file contamination -- this session did not check for new duplicate files, a future session should) still apply unchanged.
+runtime_smoke: n/a -- docs-only planning session, no R/ or tests/ files changed, no runtime behavior affected. Matches this project's own established precedent for planning sessions (S423/S426/S428/S430/S432/S471).
+changelog_ref: CHANGELOG.md 2026-08-04 [issue #144] entry (Session 473)
 commit: pending
 ```
 
