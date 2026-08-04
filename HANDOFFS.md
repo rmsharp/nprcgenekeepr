@@ -72,7 +72,7 @@ key_files: R/makePedigreeDiagramData.R:653-796 (edgeStyle wiring); R/modPedigree
 gotchas: (1) devtools::document() in this environment picks up untracked iCloud duplicate R/appServer 2.R / R/modMarkerGenetics 2.R as EXTRA roxygen sources, corrupting 3 unrelated man/*.Rd files -- git checkout -- them after every document() call unless your own diff touches R/appServer.R or R/modMarkerGenetics.R (Learning 464). (2) app$get_logs() not get_log() (S467 gotcha, hit again). (3) visNetwork control ids aren't always guessable -- check rendered HTML via get_html_safe() before guessing a selector (PNG export button id is downloadpedigree-pedigreeDiagram, no separator). (4) highlightNearest's degree counts raw graph hops with zero node-visibility awareness -- any future invisible-node insertion will silently degrade it the same way; verify via triggering the real interaction (network.body.emitter.emit) and inspecting live DataSet state, not just config JSON (Learning 463). (5) All S465-467 gotchas (nolint conventions, NPRC_RUN_E2E+NOT_CRAN both required, reserved-prefix pattern-match-don't-hardcode) still apply.
 runtime_smoke: Extensive live shinytest2/chromote re-verification against the real running app throughout Part (d) -- both before (confirming the highlightNearest regression) and after (confirming the fix) the degree change; #134 loop, #135 dropdown, legend, and PNG export all live-confirmed; satisfies Phase 3E.
 changelog_ref: CHANGELOG.md 2026-08-03 [issue #142] entry (Session 468)
-commit: pending
+commit: 5c19a163
 ```
 
 ```handoff
