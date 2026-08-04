@@ -6,6 +6,15 @@
 
 ## ACTIVE TASK
 
+### What Session 469 Did
+**Deliverable:** Fix the duplicate-node connector rendering straight instead of arched
+(`BACKLOG.md`, found S468) -- picked by the owner via the S469 orientation-report
+`AskUserQuestion` picker. (IN PROGRESS)
+**Started:** 2026-08-03
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### What Session 468 Did
 **Deliverable:** Implement Issue #142 Slice 2 (rectilinear mate-line/sibship-bar
 waypoint style) -- wire `edgeStyle` into `makePedigreeMatingLayout()`, add the
