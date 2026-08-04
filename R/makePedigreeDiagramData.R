@@ -479,6 +479,20 @@ makePedigreeDiagramData <- function(ped) {
   }
   freePassOfUnit <- split(names(freePassUnitOf), freePassUnitOf)
 
+  ## issue #144 fix: an anchor's EFFECTIVE gen (used for its own contour
+  ## row-reservation and, below, its displayed gen) is max(its own raw
+  ## ped$gen, the gen of every mating unit it anchors) -- not its raw
+  ## ped$gen alone, which mis-positions an anchor whose personal gen is
+  ## shallower than a unit it anchors (51/237 real-fixture mating units).
+  ## Degrades to genOf[[id]] unchanged for every individual who never
+  ## anchors anything (max() over an empty unitGenOf slice plus the scalar
+  ## returns the scalar).
+  anchorUnitsOf <- split(matingUnits$id, matingUnits$anchor)
+  effGenOf <- genOf
+  for (aid in names(anchorUnitsOf)) {
+    effGenOf[[aid]] <- max(genOf[[aid]], unitGenOf[anchorUnitsOf[[aid]]])
+  }
+
   ## Recursive descent (post-order): mating units recurse into their
   ## real children (plus any free-pass non-anchor parent, D3 step 5);
   ## individuals recurse into the mating units they anchor plus any D5
@@ -510,12 +524,12 @@ makePedigreeDiagramData <- function(ped) {
     if (length(subIds) == 0L) {
       relNode[[id]] <- list(childIds = character(0L),
                              childOffsets = numeric(0L))
-      return(leafContour(genOf[[id]]))
+      return(leafContour(effGenOf[[id]]))
     }
     subResults <- lapply(subIds, function(sid) {
       if (sid %in% unitIds) positionUnit(sid) else positionIndividual(sid)
     })
-    fin <- finalizeNode(mergeSubtrees(subResults), genOf[[id]])
+    fin <- finalizeNode(mergeSubtrees(subResults), effGenOf[[id]])
     relNode[[id]] <- list(childIds = subIds,
                            childOffsets = fin$childOffsets)
     list(x = fin$ownX, contour = fin$contour)
@@ -586,9 +600,7 @@ makePedigreeDiagramData <- function(ped) {
   ## free-pass real node or a genuine duplicate -- renders at its own
   ## MATING UNIT's gen, not the underlying individual's global tree-native
   ## gen (which can legitimately differ, e.g. a founder marrying into a
-  ## later generation). Anchor occurrences (genOf[realIds] for an anchor
-  ## id) are untouched -- that is the individual's true recursively
-  ## -positioned row. The intersect(freePassIds, realIds) guard is
+  ## later generation). The intersect(freePassIds, realIds) guard is
   ## required: freePassIds can contain dangling ids (no own row in 'ped',
   ## S461) that are absent from realIds -- indexing dispGenOf by such an id
   ## would silently APPEND rather than error, misaligning it with
@@ -597,6 +609,18 @@ makePedigreeDiagramData <- function(ped) {
   realFreePassIds <- intersect(freePassIds, realIds)
   if (length(realFreePassIds) > 0L) {
     dispGenOf[realFreePassIds] <- unname(unitGenOf[freePassUnitOf[realFreePassIds]])
+  }
+  ## D3 step 6 correction (issue #144): an ANCHOR occurrence renders at its
+  ## own EFFECTIVE gen (effGenOf -- max of its raw gen and every unit it
+  ## anchors), mirroring the free-pass override above. The
+  ## intersect(names(anchorUnitsOf), realIds) guard is defensive (an
+  ## anchor is never a dangling id in the current pipeline, by
+  ## .buildMatingUnitForest()'s own guard, so this is not currently a live
+  ## failure path) but harmless and symmetric with the free-pass guard
+  ## above.
+  realAnchorIds <- intersect(names(anchorUnitsOf), realIds)
+  if (length(realAnchorIds) > 0L) {
+    dispGenOf[realAnchorIds] <- unname(effGenOf[realAnchorIds])
   }
 
   nodes <- data.frame(

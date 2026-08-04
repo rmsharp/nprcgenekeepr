@@ -304,16 +304,28 @@ test_that(".addRectilinearWaypoints adds zero projection nodes for a
   expect_true(any(result$edges$from == "SIRE" & result$edges$to == unitId))
 })
 
-## ---- D2: anchor parent off-row, non-anchor represented by a duplicate --
-## (the harder combined case: exercises both the 22% anchor-off-row case
-## and the 57/96 non-anchor-is-a-duplicate case simultaneously) ------------
+## ---- D2: anchor parent off-row -- RESOLVED by issue #144's fix ---------
+## Before issue #144's fix, this was the anchor-side counterpart to the
+## "D2: non-anchor parent off-row" test above: SIRE (the anchor of unit1)
+## rendered at his own raw gen (1) instead of his mating unit's gen (2),
+## triggering an anchor-side dogleg. Issue #144's fix (docs/planning/
+## issue144-anchor-row-mismatch-fix-plan.md, Candidate B: effGenOf) moves
+## SIRE's displayed row to max(his own gen, every unit he anchors) = his
+## mating unit's own gen, so he is now ON-ROW for this exact fixture -- the
+## dogleg no longer fires. Confirmed empirically this session (0 anchor
+## mismatches on the real fixture, and directly on this fixture: SIRE's
+## post-fix gen is 2, matching unit1's gen). Full rewrite, not a value
+## tweak -- the original fixture's entire premise (this unit exhibits an
+## anchor mismatch) is obsolete under this fix (plan §4.3/§6). This test
+## now documents the "already on-row" no-op case for BOTH sides of unit1
+## at once (SIRE, the anchor; DAM's duplicate, already on-row since #143),
+## mirroring the "D2: both parents at the same gen" test above.
 
-test_that(".addRectilinearWaypoints adds exactly one projection node on the
-           ANCHOR side when the anchor (not the non-anchor) is at a
-           different gen than the mating unit -- does not assume the
-           anchor is always the on-row parent -- and correctly leaves the
-           non-anchor's duplicate-node edge unchanged when that side is
-           already on-row", {
+test_that(".addRectilinearWaypoints adds zero projection nodes for a
+           mating unit whose anchor parent USED TO be off-row before issue
+           #144's fix, and is now on-row (matching its mating unit's own
+           gen) -- leaves both the anchor's own direct edge and the
+           non-anchor's duplicate-node edge unchanged", {
   ped <- data.frame(
     id = c("SGF", "SGM", "SIRE", "DGP", "DAM", "OTHERMATE", "CHILD",
            "OTHERCHILD"),
@@ -338,28 +350,25 @@ test_that(".addRectilinearWaypoints adds exactly one projection node on the
   expect_equal(nrow(dupRow), 1L)
   nonAnchorNodeId <- dupRow$id
 
+  ## SIRE (anchor) now on-row: effGenOf(SIRE) = max(own gen=1, unit1's
+  ## gen=2) = 2, matching unit1's own gen. CHANGED from 1L pre-#144.
+  expect_equal(inputs$pos$gen[inputs$pos$id == "SIRE"], 2L)
+  ## DAM's duplicate is already on-row (gen 2 == unit1's gen 2), unaffected
+  ## by #144 -- unchanged from before.
+  expect_equal(inputs$pos$gen[inputs$pos$id == nonAnchorNodeId], 2L)
+
   result <- .addRectilinearWaypoints(inputs$nodes, inputs$edges,
                                       forest, inputs$pos)
 
-  ## OTHERMATE (unit2's non-anchor, a founder at gen 0, DAM's own unit2 is
-  ## at gen 2) is ALSO off-row -- a second, independent projection is
-  ## correctly expected there too. This test scopes its assertions to
-  ## unit1's anchor (SIRE) side specifically, not a global proj count.
-  projId <- sprintf("__proj_SIRE_%s", unit1)
-  expect_true(projId %in% result$nodes$id)
-  projRow <- result$nodes[result$nodes$id == projId, ]
-  sireRow <- inputs$nodes[inputs$nodes$id == "SIRE", ]
-  unitRow <- result$nodes[result$nodes$id == unit1, ]
-  expect_equal(projRow$x, sireRow$x)
-  expect_equal(projRow$y, unitRow$y)
+  ## This test scopes its assertions to unit1 specifically, not a global
+  ## proj count -- other units in this fixture are out of scope here.
+  projIds <- result$nodes$id[grepl(sprintf("^__proj_.*_%s$", unit1),
+                                    result$nodes$id)]
+  expect_equal(length(projIds), 0L)
 
-  expect_true(any(result$edges$from == "SIRE" & result$edges$to == projId))
-  expect_true(any(result$edges$from == projId & result$edges$to == unit1))
-  expect_false(any(result$edges$from == "SIRE" & result$edges$to == unit1))
-
-  ## DAM's duplicate is already on-row (gen 2 == unit1's gen 2) -- its
-  ## original mate-line edge is untouched, not routed through a
-  ## projection node.
+  ## Both original direct/duplicate edges into unit1 are untouched -- no
+  ## dogleg needed on either side.
+  expect_true(any(result$edges$from == "SIRE" & result$edges$to == unit1))
   expect_true(any(result$edges$from == nonAnchorNodeId &
                      result$edges$to == unit1))
 })
@@ -372,11 +381,11 @@ test_that(".addRectilinearWaypoints adds exactly one projection node on the
 
 test_that(".addRectilinearWaypoints applied to the full real
            375-individual bundled fixture produces the node count issue
-           #143's fix predicts (740 direct-style nodes + 488 D1 waypoints +
-           51 D2 projections = 1,279 -- down from the pre-fix 1,375/147,
-           since the fix resolves all 96 non-anchor D2 mismatches, leaving
-           only the 51 anchor-side ones issue #144 tracks), or documents
-           the actual count if it drifts", {
+           #144's fix predicts (740 direct-style nodes + 488 D1 waypoints +
+           0 D2 projections = 1,228 -- down from 1,279/1,375, since #143
+           resolved all 96 non-anchor D2 mismatches and #144 now resolves
+           the remaining 51 anchor-side ones), or documents the actual
+           count if it drifts", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -387,7 +396,7 @@ test_that(".addRectilinearWaypoints applied to the full real
 
   result <- .addRectilinearWaypoints(inputs$nodes, inputs$edges,
                                       inputs$forest, inputs$pos)
-  expect_equal(nrow(result$nodes), 1279L)  # CHANGED from 1375L, issue #143
+  expect_equal(nrow(result$nodes), 1228L)  # CHANGED from 1279L, issue #144
 
   ## No NA coordinates or duplicate (id, waypoint) collisions among the
   ## new waypoint nodes.

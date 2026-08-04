@@ -162,11 +162,23 @@ test_that(".positionMatingUnitForest positions the real GA204Z/8LKBV9 loop
 ## pairs exist in the real 375-individual fixture under every one of the 4
 ## variants, including the fully-fixed one) -- so this exact-value
 ## assertion is used instead, as a strictly stronger guard.
+##
+## issue #144 fix (this session): this SAME fixture also embeds one of the
+## 51 real-fixture anchor-side mismatches -- 8P17E3 anchors the unit3 union
+## (dam="8P17E3") at unitGen=1, but her own raw ped$gen is 0. The #144 fix
+## (docs/planning/issue144-anchor-row-mismatch-fix-plan.md, Candidate B:
+## effGenOf) moves her DISPLAYED gen to 1 (matching her unit), leaving her
+## x (2.00, computed purely from mergeSubtrees(), never from ownGen)
+## unchanged -- empirically confirmed this session against a patched
+## 3-edit prototype. Every other id/union/duplicate value below is
+## unaffected by #144 (none of them anchor a mismatched unit in this
+## fixture) -- re-confirmed unchanged against the same prototype.
 
 test_that(".positionMatingUnitForest's exact x/gen values for the real
            GA204Z/8LKBV9 loop fixture catch a desynchronized (only one of
-           the two) issue #143 fix -- not just the corrected gen values
-           alone", {
+           the two) issue #143 fix, and reflect issue #144's anchor-side
+           effGenOf correction for 8P17E3 -- not just the corrected gen
+           values alone", {
   ped <- data.frame(
     id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
            "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
@@ -186,8 +198,9 @@ test_that(".positionMatingUnitForest's exact x/gen values for the real
 
   expectPos("5A6DFT", 0.00, 0L)
   expectPos("8DKELJ", -0.50, 0L)
-  expectPos("G8EBU9", 0.00, 1L)  # CHANGED from (0.25, 0L)
-  expectPos("8P17E3", 2.00, 0L)
+  expectPos("G8EBU9", 0.00, 1L)  # CHANGED from (0.25, 0L), issue #143
+  expectPos("8P17E3", 2.00, 1L)  # gen CHANGED from 0L, issue #144 (she
+                                 # anchors unit3, unitGen=1); x unaffected
   expectPos("8LKBV9", 0.50, 1L)
   expectPos("FJIB3R", 1.00, 2L)
   expectPos("9VGCCV", 2.00, 2L)
@@ -312,11 +325,15 @@ test_that(".positionMatingUnitForest positions the full real
 ## ---- gen semantics: every node's gen matches its source-of-truth ------
 
 test_that(".positionMatingUnitForest's gen column matches each occurrence's
-           CORRECTED source of truth (issue #143 fix): an ANCHOR's own
-           ped$gen, a FREE-PASS or DUPLICATE occurrence's own MATING UNIT's
-           gen (previously every occurrence used its own ped$gen
-           uniformly, which mis-positioned any non-anchor occurrence whose
-           personal gen differed from its mating unit's gen), and a mating
+           CORRECTED source of truth (issues #143/#144): a FREE-PASS or
+           DUPLICATE occurrence's own MATING UNIT's gen (issue #143 --
+           previously every occurrence used its own ped$gen uniformly,
+           which mis-positioned any non-anchor occurrence whose personal
+           gen differed from its mating unit's gen), an ANCHOR's own
+           EFFECTIVE gen -- max(own ped$gen, every unit gen it anchors)
+           (issue #144 -- previously an anchor's raw ped$gen was used
+           unconditionally, which mis-positioned an anchor whose personal
+           gen was SHALLOWER than the unit(s) it anchors), and a mating
            unit's already-verified max(parent gens) from Slice 1", {
   ped <- data.frame(
     id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
@@ -330,12 +347,17 @@ test_that(".positionMatingUnitForest's gen column matches each occurrence's
   forest <- .buildMatingUnitForest(ped)
   pos <- .positionMatingUnitForest(ped, forest)
 
-  ## Anchors and non-parent leaves keep their own ped$gen, untouched by the
-  ## fix -- hand-verified against forest$matingUnits$anchor this session:
-  ## 5A6DFT/8P17E3/8LKBV9/FJIB3R each anchor the one unit they belong to;
+  ## Non-parent leaves keep their own ped$gen (never an anchor, never a
+  ## unit parent). Anchors' EFFECTIVE gen is max(own ped$gen, the gen of
+  ## every unit they anchor) (issue #144) -- hand-verified against
+  ## forest$matingUnits$anchor/gen this session: 5A6DFT/8P17E3/8LKBV9/
+  ## FJIB3R each anchor exactly the one unit they belong to;
   ## 9VGCCV/GA204Z are non-parent children, never sire/dam of any unit.
   expect_equal(pos$gen[pos$id == "5A6DFT"], 0L)
-  expect_equal(pos$gen[pos$id == "8P17E3"], 0L)
+  ## 8P17E3 anchors unit3 (dam="8P17E3"), unitGen=max(8LKBV9=1,8P17E3=0)=1
+  ## -- her own raw gen (0) is SHALLOWER, so her effective gen is 1L.
+  ## CHANGED from 0L, issue #144.
+  expect_equal(pos$gen[pos$id == "8P17E3"], 1L)
   expect_equal(pos$gen[pos$id == "8LKBV9"], 1L)
   expect_equal(pos$gen[pos$id == "FJIB3R"], 2L)
   expect_equal(pos$gen[pos$id == "9VGCCV"], 2L)
@@ -424,20 +446,24 @@ test_that(".positionMatingUnitForest positions a dangling parent's
   .expectNoOverlap(pos)
 })
 
-## ---- issue #143 regression guard: real-fixture anchor/non-anchor
+## ---- issue #143/#144 regression guard: real-fixture anchor/non-anchor
 ## mismatch counts (re-derives docs/audits/
 ## FOUNDER_POSITIONING_DEFECT_AUDIT_2026-08-03.md's own detection method,
 ## corrected to separate anchor from non-anchor mismatches -- the audit's
 ## own method could not distinguish them, both being plain real-id nodes
 ## with no __dup_ prefix; see docs/planning/
 ## issue143-founder-positioning-fix-plan.md §1.4. No such detection script
-## was ever committed before this session -- plan §4.3.) ------------------
+## was ever committed before this session -- plan §4.3.) issue #144's own
+## fix (docs/planning/issue144-anchor-row-mismatch-fix-plan.md) resolves
+## the 51 remaining anchor-side mismatches this guard used to accept as
+## expected residual -- empirically re-confirmed this session (0 anchor
+## mismatches) against a patched 3-edit prototype of
+## .positionMatingUnitForest(). ------------------------------------------
 
-test_that(".positionMatingUnitForest resolves every NON-ANCHOR row
-           mismatch on the real 375-individual bundled fixture, leaving
-           exactly the 51 ANCHOR-side mismatches this fix does not address
-           (issue #143/#144) -- relies on this fixture having no dangling
-           sire/dam references (confirmed by
+test_that(".positionMatingUnitForest resolves every NON-ANCHOR and every
+           ANCHOR row mismatch on the real 375-individual bundled fixture
+           (issue #143/#144 -- RESOLVED) -- relies on this fixture having
+           no dangling sire/dam references (confirmed by
            test_buildMatingUnitForest.R's own dangling-reference test)", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
@@ -470,5 +496,106 @@ test_that(".positionMatingUnitForest resolves every NON-ANCHOR row
   }))
 
   expect_equal(sum(sideRows$mismatched & !sideRows$isAnchor), 0L)
-  expect_equal(sum(sideRows$mismatched & sideRows$isAnchor), 51L)
+  ## CHANGED from 51L -- issue #144's effGenOf fix (Candidate B) resolves
+  ## every anchor-side mismatch on this fixture (no anchor here anchors
+  ## multiple units at differing unitGen -- the one residual shape #144
+  ## does not close; see the 2 new regression tests below).
+  expect_equal(sum(sideRows$mismatched & sideRows$isAnchor), 0L)
+})
+
+## ---- issue #144 §6 dragon: the one residual the fix does not close -----
+## (an anchor anchoring 2+ mating units at genuinely DIFFERENT unitGen
+## values, or a single-unit anchor with a D5 direct child shallower than
+## its own relocated effGen). Neither shape occurs in either bundled real
+## fixture (docs/planning/issue144-anchor-row-mismatch-fix-plan.md §6) --
+## these are new, purpose-built synthetic fixtures asserting deterministic,
+## non-crashing, non-NA behavior, not a fix for the residual itself (out of
+## scope by design, plan §8). Both fixtures independently constructed and
+## verified this session against a patched 3-edit prototype before being
+## committed here.
+
+test_that(".positionMatingUnitForest handles an anchor that anchors 2
+           mating units at differing unitGen without crashing or producing
+           NA -- effGenOf's max() rule resolves the DEEPER unit but
+           RELOCATES (does not eliminate) the mismatch to the SHALLOWER
+           one, net anchor-mismatch count unchanged (plan §6(a))", {
+  ped <- data.frame(
+    id   = c("GF1", "GF2", "HUB",
+             "SEEDP1", "MATE1", "MATE1SEED", "MATE1CHILD",
+             "SEEDP2", "MATE2", "MATE2SEED", "MATE2CHILD",
+             "SHALLOWCHILD", "DEEPCHILD"),
+    sire = c(NA, NA, "GF1",
+             NA, "SEEDP1", NA, "MATE1",
+             NA, "SEEDP2", NA, "MATE2",
+             "HUB", "HUB"),
+    dam  = c(NA, NA, "GF2",
+             NA, NA, NA, "MATE1SEED",
+             NA, NA, NA, "MATE2SEED",
+             "MATE1", "MATE2"),
+    sex  = c("M", "F", "M",
+             "M", "M", "F", "F",
+             "M", "M", "F", "F",
+             "F", "M"),
+    gen  = c(0L, 0L, 1L,
+             -1L, 0L, 0L, 1L,
+             4L, 5L, 5L, 6L,
+             2L, 6L),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+
+  ## Confirm this fixture's own premise before testing the residual: HUB
+  ## anchors BOTH units (via 2 pre-seeded elimination/preference wins), at
+  ## genuinely different unitGen (1 and 5).
+  unitShallow <- forest$matingUnits$id[forest$matingUnits$sire == "HUB" &
+                                          forest$matingUnits$dam == "MATE1"]
+  unitDeep <- forest$matingUnits$id[forest$matingUnits$sire == "HUB" &
+                                       forest$matingUnits$dam == "MATE2"]
+  expect_equal(forest$matingUnits$anchor[forest$matingUnits$id == unitShallow],
+               "HUB")
+  expect_equal(forest$matingUnits$anchor[forest$matingUnits$id == unitDeep],
+               "HUB")
+  expect_equal(forest$matingUnits$gen[forest$matingUnits$id == unitShallow], 1L)
+  expect_equal(forest$matingUnits$gen[forest$matingUnits$id == unitDeep], 5L)
+
+  pos <- .positionMatingUnitForest(ped, forest)
+  expect_false(any(is.na(pos$x)))
+  expect_false(any(is.na(pos$gen)))
+  .expectNoOverlap(pos)
+
+  ## HUB's effective gen is max(own gen=1, unitShallow=1, unitDeep=5) = 5
+  ## -- matches the deeper unit (resolved), mismatches the shallower one
+  ## (relocated, not eliminated).
+  expect_equal(pos$gen[pos$id == "HUB"], 5L)
+})
+
+test_that(".positionMatingUnitForest handles a single-unit anchor whose
+           relocated effGen is DEEPER than a D5 direct child's own gen
+           without crashing or producing NA -- the child renders 'above'
+           (shallower than) its own now-relocated parent, a valid but
+           visually-inverted layout the fix does not attempt to resolve
+           (plan §6, widened residual trigger)", {
+  ped <- data.frame(
+    id   = c("ANCHOR", "MATE", "MATECHILD", "D5CHILD"),
+    sire = c(NA, NA, "ANCHOR", "ANCHOR"),
+    dam  = c(NA, NA, "MATE", NA),
+    sex  = c("M", "F", "F", "M"),
+    gen  = c(1L, 4L, 5L, 2L),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  expect_equal(forest$matingUnits$anchor, "ANCHOR")
+  expect_equal(forest$matingUnits$gen, 4L)
+
+  pos <- .positionMatingUnitForest(ped, forest)
+  expect_false(any(is.na(pos$x)))
+  expect_false(any(is.na(pos$gen)))
+  .expectNoOverlap(pos)
+
+  ## ANCHOR's effective gen is max(own gen=1, unit gen=4) = 4 -- matches
+  ## its unit (resolved). D5CHILD keeps its own gen (2), unaffected by the
+  ## fix (D5 direct children are never in effGenOf's domain) -- shallower
+  ## than its now-relocated parent.
+  expect_equal(pos$gen[pos$id == "ANCHOR"], 4L)
+  expect_equal(pos$gen[pos$id == "D5CHILD"], 2L)
 })
