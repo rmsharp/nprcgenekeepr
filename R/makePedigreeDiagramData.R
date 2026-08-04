@@ -780,22 +780,36 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
       from = c(matingUnits$anchor, nonAnchorNodeIds),
       to = rep(unitIds, 2L),
       dashes = FALSE,
+      smooth.enabled = NA, smooth.type = NA_character_,
+      smooth.roundness = NA_real_,
       stringsAsFactors = FALSE
     )
   } else {
     data.frame(from = character(), to = character(), dashes = logical(),
-               stringsAsFactors = FALSE)
+               smooth.enabled = logical(), smooth.type = character(),
+               smooth.roundness = numeric(), stringsAsFactors = FALSE)
   }
 
+  ## Duplicate-node connectors render as a curved arc, not a straight line,
+  ## matching the kinship2/reference-pedigree convention (found S468, fixed
+  ## S469) -- a per-edge vis.js `smooth` override (verified against the
+  ## bundled vis-network.min.js source to genuinely take precedence over
+  ## the widget-level `visEdges(smooth = FALSE)` in R/modPedigree.R).
+  ## Every other edge leaves these columns NA, inheriting that global
+  ## smooth = FALSE default.
   dupEdges <- if (nrow(duplicates) > 0L) {
     data.frame(from = dupIds, to = duplicates$realId, dashes = TRUE,
-               stringsAsFactors = FALSE)
+               smooth.enabled = TRUE, smooth.type = "curvedCW",
+               smooth.roundness = 0.2, stringsAsFactors = FALSE)
   } else {
     data.frame(from = character(), to = character(), dashes = logical(),
-               stringsAsFactors = FALSE)
+               smooth.enabled = logical(), smooth.type = character(),
+               smooth.roundness = numeric(), stringsAsFactors = FALSE)
   }
 
   childEdgesOut <- data.frame(childEdges, dashes = FALSE,
+                               smooth.enabled = NA, smooth.type = NA_character_,
+                               smooth.roundness = NA_real_,
                                stringsAsFactors = FALSE)
   edges <- rbind(childEdgesOut, mateEdges, dupEdges)
 
@@ -964,14 +978,24 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
   keptEdges <- edges[!(dropChildEdge | dropMateEdge), , drop = FALSE]
   keptEdges$color <- rep(NA_character_, nrow(keptEdges))
 
+  ## New waypoint edges never carry the duplicate-node-connector arc (found
+  ## S468, fixed S469) -- these NA placeholders keep column alignment with
+  ## `keptEdges` (which passed the direct-style `edges`' smooth.* columns
+  ## through unchanged) so the rbind() below does not fail with "undefined
+  ## columns selected".
   newEdges <- if (length(newEdgeList) > 0L) {
     ne <- do.call(rbind, newEdgeList)
     ne$dashes <- rep(FALSE, nrow(ne))
     ne$color <- rep(edgeColor, nrow(ne))
+    ne$smooth.enabled <- NA
+    ne$smooth.type <- NA_character_
+    ne$smooth.roundness <- NA_real_
     ne
   } else {
     data.frame(from = character(), to = character(), dashes = logical(),
-               color = character(), stringsAsFactors = FALSE)
+               color = character(), smooth.enabled = logical(),
+               smooth.type = character(), smooth.roundness = numeric(),
+               stringsAsFactors = FALSE)
   }
   finalEdges <- rbind(keptEdges, newEdges[, names(keptEdges)])
 
