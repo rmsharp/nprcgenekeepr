@@ -43,6 +43,14 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-03 · [ad hoc] Filled in this session's own HANDOFFS.md receipt commit sha (Session 469)
+- **Deliverable:** Filled in this session's own `HANDOFFS.md` receipt
+  `commit: pending` placeholder with the real close-out commit sha
+  (`83c4a911`) -- the same self-correction many previous sessions (e.g.
+  S331-S344, S466, S467, S468) each needed, closed within the same session
+  rather than left for the next session's Phase 0 reconcile to catch and
+  backfill.
+
 ### 2026-08-03 · [BL-dupNodeArc] Duplicate-node connector renders as an arc, not straight (Session 469)
 - **Deliverable:** fixed the pedigree diagram's duplicate-node connector to render
   as a curved/arched dashed line, matching the kinship2/reference-pedigree
