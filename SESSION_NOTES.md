@@ -6,6 +6,17 @@
 
 ## ACTIVE TASK
 
+### What Session 472 Did
+**Deliverable:** Implement the founder-positioning fix for issue #143 per the ratified plan
+(`docs/planning/issue143-founder-positioning-fix-plan.md`) -- picked by the owner via the
+S472 orientation-report `AskUserQuestion` picker. Following this project's Strict TDD
+contract (RED/GREEN/REFACTOR, `AskUserQuestion`-gated transitions) within
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`.
+**Started:** 2026-08-03
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### What Session 471 Did
 **Deliverable:** Design the founder-positioning defect fix (`BACKLOG.md`, issue #143,
 characterized S470) as an architecture plan document -- picked by the owner via the

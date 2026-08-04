@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S472
+date: 2026-08-03
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement the founder-positioning fix for issue #143 per docs/planning/issue143-founder-positioning-fix-plan.md (RED/GREEN/REFACTOR, TDD-gated). Started, not yet complete.
+what_was_done: pending
+next_steps: pending
+key_files: R/makePedigreeDiagramData.R:494,585-591 (the two edit sites); tests/testthat/test_positionMatingUnitForest.R, test_addRectilinearWaypoints.R, test_makePedigreeMatingLayout.R (tests to update per the plan's own §4.3/§7).
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S471
 date: 2026-08-03
 status: complete
