@@ -43,6 +43,17 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-04 · [ad hoc] Phase 0 ledger reconcile: backfill S472's own HANDOFFS.md receipt commit sha self-correction (post-S472)
+- **Deliverable:** Phase 0 ledger reconcile (this session, S473) found one commit past
+  the `CHANGELOG.md` frontier with no ledger entry: `d6ab24c4` ("docs: S472 -- backfill
+  own HANDOFFS.md receipt commit sha"), landed after S472's own close-out commit
+  (`1adaf85a`) that recorded the entry below.
+- **Change:** `d6ab24c4` replaced the S472 `HANDOFFS.md` receipt's `commit: pending`
+  placeholder with the real commit sha (`1adaf85a`) -- a self-correction of the
+  just-written receipt, not new production work. Same class of action as the many
+  prior sessions' equivalent self-fixes recorded further down this ledger (e.g.
+  S466-S470's `commit: pending` backfills).
+
 ### 2026-08-04 · [issue #143] Implemented the founder-positioning defect fix (Session 472)
 - **Deliverable:** implemented the ratified plan
   (`docs/planning/issue143-founder-positioning-fix-plan.md`) via Strict TDD
