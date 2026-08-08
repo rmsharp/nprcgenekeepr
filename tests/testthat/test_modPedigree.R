@@ -1276,9 +1276,61 @@ test_that("modPedigreeServer's diagram widget offers a shape-to-sex legend", {
       # width/stepY tuned live (Pre-RED) so all 5 rows -- including the
       # longest label, "Other / Unrecorded" -- render without clipping
       # against the legend canvas's own overflow:hidden boundary or
-      # crowding the export button below it.
+      # crowding the export button below it. stepY retuned 65->54 by issue
+      # #133 Slice 2 (Dragon #4) to also fit a 6th "Affected" row's own
+      # label within the same boundary -- see the dedicated Slice 2 test
+      # below.
       expect_true(grepl('"width":0.28', widgetJson))
-      expect_true(grepl('"stepY":65', widgetJson))
+      expect_true(grepl('"stepY":54', widgetJson))
+    }
+  )
+})
+
+## Issue #133 Slice 2 -- "Affected" row added to the same shape-to-sex
+## legend (D6: one new row in the existing visLegend()/addNodes call, never
+## a second visLegend() call -- confirmed S485, visLegend() assigns a single
+## scalar slot). Reuses Slice 1's D8 color (#CC79A7).
+
+test_that(
+  "modPedigreeServer's diagram widget legend includes an Affected row", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE
+      )
+      session$flushReact()
+
+      # output$pedigreeDiagram is the widget's raw JSON payload (same
+      # technique as the #132 legend test above).
+      widgetJson <- output$pedigreeDiagram
+      expect_true(grepl('"Affected"', widgetJson))
+      expect_true(grepl('"hexagon"', widgetJson))
+      expect_true(grepl("#CC79A7", widgetJson, fixed = TRUE))
+
+      # The 5 existing sex-shape rows must still render, unperturbed by the
+      # new row/color column added to the same addNodes data frame
+      # (regression guard for the #132 legend).
+      expect_true(grepl('"Female"', widgetJson))
+      expect_true(grepl('"Male"', widgetJson))
+      expect_true(grepl('"Hermaphrodite"', widgetJson))
+      expect_true(grepl('"Unknown"', widgetJson))
+      expect_true(grepl("Other / Unrecorded", widgetJson))
     }
   )
 })

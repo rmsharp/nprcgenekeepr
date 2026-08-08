@@ -476,8 +476,21 @@ modPedigreeServer <- function(id, studbook) {
         visNetwork::visLegend(
           addNodes = data.frame(
             label = c("Female", "Male", "Hermaphrodite", "Unknown",
-                       "Other / Unrecorded"), # nolint: nonportable_path_linter
-            shape = c("dot", "square", "star", "triangle", "diamond"),
+                       "Other / Unrecorded", # nolint: nonportable_path_linter
+                       "Affected"),
+            shape = c("dot", "square", "star", "triangle", "diamond",
+                       "hexagon"),
+            # Issue #133 Slice 2 (D6): the "Affected" row shares this SAME
+            # addNodes data frame -- a second visLegend() call would
+            # overwrite, not stack (confirmed S485). The 5 sex-shape rows
+            # get NA here, preserving their existing unset-color rendering;
+            # only the new row carries a color, reusing Slice 1's D8 swatch.
+            # "hexagon" (not "box") -- confirmed hands-on this session that
+            # vis.js sizes "box" to its label text (renders as a filled
+            # pill/badge), breaking the fixed-size-icon-plus-separate-label
+            # style all 5 existing rows share; "hexagon" is a fixed-size icon
+            # like the other 5, none of which claim it.
+            color = c(NA, NA, NA, NA, NA, "#CC79A7"),
             stringsAsFactors = FALSE
           ),
           useGroups = FALSE,
@@ -492,8 +505,13 @@ modPedigreeServer <- function(id, studbook) {
           # which does not comfortably fit the widget's fixed 400px height
           # alongside the export button below it (confirmed hands-on,
           # Pre-RED) -- tightened so all 5 legend rows render without
-          # crowding the button.
-          stepY = 65L
+          # crowding the button. Issue #133 Slice 2 (Dragon #4): the 6th
+          # ("Affected") row's own label was confirmed hands-on to clip
+          # against this same 400px boundary at stepY=65L (the icon itself
+          # rendered, but "Affected" text below it did not) -- retuned to
+          # 54L so 6 rows fit within the same envelope 5 rows previously
+          # occupied.
+          stepY = 54L
         ) |>
         # Search + highlight (issue #135): nodesIdSelection adds a
         # "Select by id" dropdown; highlightNearest dims non-connected
