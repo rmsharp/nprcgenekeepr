@@ -6,6 +6,25 @@
 
 ## ACTIVE TASK
 
+### What Session 485 Did
+**Deliverable:** Design/architecture document for GitHub issue #133 (add affected/phenotype/genotype
+status encoding to the pedigree diagram) -- Tier 2 of the pedigree-diagram sequencing cluster
+(`docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`), first in the owner's
+standing order #133 > #136 > #137 > #138 (set S436). User-picked from the re-rendered priorities
+list. Scoped via `AskUserQuestion` as a design document only (no code this session) -- issue #133 is
+data-model-gated (confirmed: zero `affected`-concept hits anywhere in `R/`/`tests/`/fixtures) and no
+prior planning session has pre-declared a layer contract, so the Vertical Slice Session allowance
+does not apply. Following `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md` (data-model +
+rendering-architecture decision, not a UI-layout decision -- `DESIGN_WORKSTREAM.md` considered and
+rejected as the wrong fit). User directed that the design include a concrete simulated
+affected/unaffected test-fixture plan (echoing the audit's own note that no current fixture carries
+an affected-status column).
+**Started:** 2026-08-08.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 484 Did
 **Deliverable:** Tier 1 step (3) of `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`:
 refresh `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd` — incorporate S482's
