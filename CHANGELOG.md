@@ -43,6 +43,14 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-08 · [issue #154] Closed issue #154 (Session 481, post-close-out)
+- **Deliverable:** Closed [issue #154](https://github.com/rmsharp/nprcgenekeepr/issues/154) with a
+  comment citing the fix commits (`4a60db92`, `db46bde8`, `e58307a2`, `f3173ad4`) and verification
+  evidence, per the established GitHub issue close-out checklist (`CLAUDE.md`) — same-session close
+  for a `BACKLOG.md`-tracked item. Non-commit, outward-facing action on a public repo — recorded here
+  per the ledger's non-commit-action rule (failure mode #27) since it happened after this session's
+  own Phase 3F close-out commit (`f3173ad4`).
+
 ### 2026-08-08 · [issue #154] Fixed 3 dangling-parent crash bugs in the pedigree-diagram layout engine; closed the free-pass-filter reachability question (Session 481)
 - **Deliverable:** Picked up Tier 1 step (1) of `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`
   (S480). Filed [issue #154](https://github.com/rmsharp/nprcgenekeepr/issues/154) after empirically
