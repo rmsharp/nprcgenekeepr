@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S480
+date: 2026-08-08
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Audit pedigree-drawing-related BACKLOG.md items + GitHub issues #133/#136/#137/#138/#141/#145 against kinship2's documented drawing capabilities and the standardized human pedigree nomenclature reference; recommend an implementation order.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S479
 date: 2026-08-08
 status: complete

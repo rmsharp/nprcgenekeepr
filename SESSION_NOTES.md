@@ -6,6 +6,23 @@
 
 ## ACTIVE TASK
 
+### What Session 480 Did
+**Deliverable:** One audit document, `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`,
+examining the recently-added pedigree-drawing-related `BACKLOG.md` items and GitHub issues
+(#133/#136/#137/#138/#141/#145) against kinship2's documented drawing capabilities (building on
+`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md` and
+`docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`) and the standardized human
+pedigree nomenclature reference document (`inst/extdata/reference/Standardized Human Pedigree
+Nomenclature...html`, gitignored copyrighted material, read locally only), and recommending an
+implementation order. User-directed (not from `BACKLOG.md`'s own sequencing chain), following
+`AUDIT_WORKSTREAM.md`. (IN PROGRESS)
+**Started:** 2026-08-08
+**Status:** Session claimed. Research phase launched (background Workflow `wf_fb0de66b-0d0`
+extracting the nomenclature doc's conventions + a confirming `BACKLOG.md` grep sweep); synthesis
+not yet started.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### What Session 479 Did
 **Deliverable:** Reconcile undocumented "ghost" work discovered during Phase 0 orientation: two
 uncommitted `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_*.md` docs (dated 2026-08-05,
