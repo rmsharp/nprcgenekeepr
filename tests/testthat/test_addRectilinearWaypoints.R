@@ -405,3 +405,35 @@ test_that(".addRectilinearWaypoints applied to the full real
   expect_false(any(is.na(wpRows$y)))
   expect_false(any(duplicated(wpRows$id)))
 })
+
+## ---- issue #154: dangling, free-pass non-anchor parent crash (BACKLOG.md
+## former item B3) -- confirmed by direct reproduction against master
+## before this fix: the D2 mate-line-dogleg loop built genOf from
+## pos$id/pos$gen and looked up every unit's non-anchor side
+## unconditionally with genOf[[Nnode]]; a dangling, free-pass parent has no
+## row in 'pos' at all (by .positionMatingUnitForest()'s own contract,
+## already exercised in test_positionMatingUnitForest.R), so the lookup
+## threw "subscript out of bounds". This exact ped already renders fine
+## under the default edgeStyle = "direct". ------------------------------
+
+test_that(".addRectilinearWaypoints does not crash when a mating unit's
+           non-anchor parent is a dangling, free-pass (non-duplicated)
+           reference (issue #154) -- that side simply gets no dogleg
+           projection, since there is no rendered node to project", {
+  ped <- data.frame(
+    id = c("GRANDSIRE", "SIRE", "CHILD"),
+    sire = c(NA, "GRANDSIRE", "SIRE"),
+    dam = c(NA, NA, "DANGLING_DAM"),
+    sex = c("M", "M", "F"),
+    gen = c(0L, 1L, 2L),
+    stringsAsFactors = FALSE
+  )
+  inputs <- .buildLayoutAndForest(ped)
+  result <- expect_error(
+    .addRectilinearWaypoints(inputs$nodes, inputs$edges, inputs$forest,
+                              inputs$pos),
+    NA
+  )
+  expect_false("DANGLING_DAM" %in% result$nodes$id)
+  expect_false(any(is.na(result$nodes$x)))
+})

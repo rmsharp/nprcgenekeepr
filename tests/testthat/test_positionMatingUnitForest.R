@@ -446,6 +446,66 @@ test_that(".positionMatingUnitForest positions a dangling parent's
   .expectNoOverlap(pos)
 })
 
+## ---- issue #154: 2 dangling-parent crash bugs found incidental to issue
+## #144's own review (BACKLOG.md items B4a/B4b, unrelated to the free-pass
+## cases above) -- both confirmed by direct reproduction against master
+## before this fix: (a) any individual with 'gen = NA' crashed
+## rep(Inf, maxGen + 1L) with "invalid 'times' argument" (maxGen itself came
+## back NA, since max() has no na.rm); (b) a mating unit whose sire AND dam
+## are BOTH dangling crashed mergeSubtrees()'s subResults[[1L]] with
+## "subscript out of bounds" -- .buildMatingUnitForest() could pick one of
+## the two dangling ids as anchor (its "a dangling parent can never anchor"
+## guard only covers the single-dangling case), and a unit anchored by a
+## dangling id is never reached by the recursive descent, leaving rootIds
+## empty. --------------------------------------------------------------
+
+test_that(".positionMatingUnitForest treats a real individual's NA gen as
+           generation 0 instead of crashing on maxGen <- max(ped$gen, ...)
+           (issue #154)", {
+  ped <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    gen = c(0L, 0L, NA),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- expect_error(.positionMatingUnitForest(ped, forest), NA)
+
+  cRow <- pos[pos$id == "C", ]
+  expect_equal(nrow(cRow), 1L)
+  expect_equal(cRow$gen, 0L)
+  expect_true(is.finite(cRow$x))
+  .expectNoOverlap(pos)
+})
+
+test_that(".positionMatingUnitForest positions a mating unit whose sire AND
+           dam are BOTH dangling as an independent root instead of
+           crashing mergeSubtrees() on an empty rootIds (issue #154) -- the
+           unit's own gen falls back to 0L, not NA", {
+  ped <- data.frame(
+    id = "CHILD",
+    sire = "DANGLING_SIRE",
+    dam = "DANGLING_DAM",
+    sex = "F",
+    gen = 0L,
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- expect_error(.positionMatingUnitForest(ped, forest), NA)
+
+  expect_false("DANGLING_SIRE" %in% pos$id)
+  expect_false("DANGLING_DAM" %in% pos$id)
+  unitRow <- pos[pos$id == forest$matingUnits$id, ]
+  expect_equal(nrow(unitRow), 1L)
+  expect_equal(unitRow$gen, 0L)
+  expect_true(is.finite(unitRow$x))
+  childRow <- pos[pos$id == "CHILD", ]
+  expect_true(is.finite(childRow$x))
+  .expectNoOverlap(pos)
+})
+
 ## ---- issue #143/#144 regression guard: real-fixture anchor/non-anchor
 ## mismatch counts (re-derives docs/audits/
 ## FOUNDER_POSITIONING_DEFECT_AUDIT_2026-08-03.md's own detection method,

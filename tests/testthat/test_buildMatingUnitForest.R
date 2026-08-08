@@ -381,3 +381,27 @@ test_that(".buildMatingUnitForest's dangling-reference handling does not
   expect_equal(nrow(result$matingUnits), 237L)
   expect_equal(nrow(result$duplicates), 128L)
 })
+
+test_that(".buildMatingUnitForest does not select a dangling parent as
+           anchor when BOTH sire and dam are dangling (no own row in
+           'ped') -- issue #154: the existing single-dangling guard ('a
+           dangling parent can never anchor') only fires when exactly one
+           parent is dangling; when NEITHER is real there is no
+           positionable anchor at all, so anchor/nonAnchor come back NA
+           rather than an arbitrarily-picked dangling id", {
+  ped <- data.frame(
+    id = "CHILD",
+    sire = "DANGLING_SIRE",
+    dam = "DANGLING_DAM",
+    sex = "F",
+    gen = 0L,
+    stringsAsFactors = FALSE
+  )
+  result <- expect_error(.buildMatingUnitForest(ped), NA)
+  expect_equal(nrow(result$matingUnits), 1L)
+  expect_true(is.na(result$matingUnits$anchor))
+  expect_true(is.na(result$matingUnits$nonAnchor))
+  ## gen falls back to 0L, not NA -- pmax(NA, NA, na.rm = TRUE) returns NA,
+  ## not the -Inf the pre-existing is.infinite() guard assumed would fire.
+  expect_equal(result$matingUnits$gen, 0L)
+})
