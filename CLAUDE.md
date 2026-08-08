@@ -188,6 +188,23 @@ Phase 0 STOP-and-wait-for-the-user: the question itself **is** the wait.
   to pick up this session, not restate the tags (those live in each option's
   description).
 
+**Untracked-file ghost-session check (found S479, 2026-08-08):** Phase 0 step 6's ledger reconcile
+is keyed entirely on `git log` gaps, which is blind to a session that produces real work but makes
+zero commits — that work is visible only as untracked files in `git status`, with nothing
+distinguishing harmless local scratch from a completed deliverable nobody recorded. Found when 2
+well-formed `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_*.md` docs (dated 2026-08-05,
+2026-08-06) and 8 correspondent GitHub issues (#146-153) sat untracked/unmirrored for 1-4 days,
+invisible to the standard commit-gap check (only S478's own self-referential sha-backfill commit
+existed since the prior documented session). At Phase 0 step 7, alongside the standard `git
+status`, treat any untracked file whose modification time predates today by more than one session
+cycle, and whose content reads as a completed deliverable rather than scratch/config, as a
+secondary ghost-session signal — cross-check newly-filed GitHub issues against whether their
+content traces to such a file. Before bulk-acting on a batch of untracked files found this way,
+open and date-check each one individually: grouping by directory/extension alone can wrongly
+implicate unrelated old clutter (this session nearly did) or wrongly clear a copyright risk that
+only surfaces by actually reading the file (also this session — see PROJECT_LEARNINGS.md Learning
+479 for both near-misses). See `CHANGELOG.md` 2026-08-08.
+
 ### Additional task-to-workstream mappings
 
 (none — but see the Development Process Contract override below.)
@@ -214,7 +231,7 @@ This project runs **Strict Test-Driven Development** (see the "Development Proce
 
 ### Project-specific Learnings
 
-Project institutional memory (Sessions 1–478+; 478 learnings, ~1.9 MB) lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md) — extracted from this file to keep `CLAUDE.md` within its size budget (Claude Code targets ~200 lines / ~25 KB). **Read it when you need prior-session context; append new learnings there, not here.** Base methodology-level learnings remain in `SESSION_RUNNER.md`.
+Project institutional memory (Sessions 1–479+; 479 learnings, ~1.9 MB) lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md) — extracted from this file to keep `CLAUDE.md` within its size budget (Claude Code targets ~200 lines / ~25 KB). **Read it when you need prior-session context; append new learnings there, not here.** Base methodology-level learnings remain in `SESSION_RUNNER.md`.
 
 ### Project-specific Failure Modes
 

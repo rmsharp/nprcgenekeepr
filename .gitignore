@@ -44,3 +44,15 @@ dashboard_history.jsonl
 /Meta/
 revdep/
 .positai
+
+# Mac Finder metadata (not the pre-existing tracked root .DS_Store -- untouched here)
+.DS_Store
+
+# User's local-only copyrighted reference material (full-text journal articles/pages under
+# publisher copyright, no open-access marking) -- kept off this PUBLIC repo deliberately.
+# Session 479 (2026-08-08), see CHANGELOG.md and PROJECT_LEARNINGS.md Learning 479. This does
+# NOT cover inst/extdata/reference/Master_Genetic_metrics_2_14_15.pdf, an unpublished NPRC
+# working-group document already committed (S418) -- a different copyright situation.
+inst/extdata/reference/5201430.pdf
+inst/extdata/reference/bioinformatics_24_2_279.pdf
+inst/extdata/reference/Standardized Human Pedigree Nomenclature*.html

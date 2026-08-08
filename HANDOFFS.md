@@ -62,16 +62,16 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S479
 date: 2026-08-08
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Reconcile undocumented genetic-metrics-PDF audit ghost work (2 uncommitted docs dated 2026-08-05/2026-08-06) and its 8 correspondent GitHub issues (#146-153, plus separately-filed #145) -- discovered at Phase 0 orientation, produced by a prior session/run that left no commit and no session notes.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- committed the 2 undocumented genetic-metrics-PDF audit docs (2026-08-05, 2026-08-06) as a backfill; excluded 3 copyrighted reference files from git via .gitignore (public repo, no open-access marking); cleaned up 2 stale render byproducts + 2 stray .DS_Store files; left GitHub issues #145-153 GitHub-only (no BACKLOG.md change) per this project's established Issues-are-primary convention.
+what_was_done: Read every untracked file's actual content before acting, not just filename/extension. Found the 2 audit docs are real, well-formed work (format/rigor matches the properly-committed 2026-07-29 baseline) produced by a session/run that never entered the protocol -- 8 of the 9 new GitHub issues (#146-153) map almost verbatim to the 08-06 doc's own gap table, strong corroborating evidence. Separated 2 unrelated OLD render byproducts (predating the ghost-work window) from the actual incident before proposing any plan. Read each of 3 new inst/extdata/reference/ files' first page and found they are full-text COPYRIGHTED journal articles/pages (Nature 2005, OUP 2008, Wiley -- none open-access) on a PUBLIC repo (confirmed via gh repo view), categorically different from the one existing committed reference-dir precedent (an unpublished NPRC internal doc) -- did not default to committing them. User caught a convention mismatch in my first AskUserQuestion batch (proposing to duplicate issues into BACKLOG.md); re-examined my own orientation report, found the disproving evidence already in hand (14 pre-existing untouched issues carry no BACKLOG.md entry), corrected course without re-litigating. Committed: 2 audit docs + .gitignore (3 copyrighted-file exclusions + .DS_Store pattern) + CHANGELOG.md entry explicitly crediting the backfill (not this session's own analysis) to CHANGELOG.md; added PROJECT_LEARNINGS.md Learning 479 + a new CLAUDE.md Phase 0 "Untracked-file ghost-session check" addition. Commits: c5ed3a4c (claim), plus the work+close-out commit (sha filled in the next reconcile/backfill commit).
+next_steps: (a) LabKey integration remainder (BLOCKED, unchanged). (b) NPRC outreach (DECISION NEEDED, owner-only, unchanged). (c) Issues #145-153 remain open, GitHub-only by design -- a future session picking one up for planning/implementation adds its own BACKLOG.md entry then, not before. (d) Minor, noticed incidentally: BACKLOG.md's `inst/extdata/` reorg Phase 4 item still carries a stale "(DECISION NEEDED)" tag in its opening line despite its own body confirming all 4 phases DONE -- a one-line tag cleanup, not a real decision. (e) Lower-priority items carried unchanged from S477/S478 (see SESSION_NOTES.md S479 entry for the full list). (f) Informational GitHub issues, unchanged.
+key_files: docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-08-05.md, -2026-08-06.md (newly committed, backfilled -- not authored this session); .gitignore (new copyrighted-reference block + .DS_Store pattern); CHANGELOG.md (2026-08-08 entry); CLAUDE.md (new Phase 0 addition, learning-count bump 478->479); PROJECT_LEARNINGS.md (new Learning 479).
+gotchas: (1) plain `gh issue view <N>` throws a GraphQL "Projects (classic)" deprecation error on this repo -- always use `gh issue view <N> --json <fields>`. (2) This project's BACKLOG.md-vs-Issues convention: Issues are the default/primary tracker; a BACKLOG.md entry is added only once a session starts actively planning/implementing that item, never pre-emptively at filing -- don't propose backfilling BACKLOG.md from open issues. (3) Before treating a batch of untracked files as one incident, check each one's own mtime and content individually -- old unrelated clutter and copyright risk both hide behind "found in the same git status output." (4) inst/extdata/reference/ is now mixed-precedent -- one legitimately-committed internal doc does not license committing other, differently-sourced material placed there later. (5) All prior standing application-code gotchas (NOT_CRAN=true, stash reference files before check(), man/modMarkerGeneticsServer.Rd reflow watch, kinship2 not installed) carry forward unchanged, not exercised this session.
+runtime_smoke: n/a -- stated, not skipped. Zero R/ or tests/ files touched; every touched file (.gitignore, CLAUDE.md, PROJECT_LEARNINGS.md, CHANGELOG.md, SESSION_NOTES.md, HANDOFFS.md, docs/audits/*.md) confirmed via .Rbuildignore to already be excluded from the R package build -- zero runtime/build impact.
+changelog_ref: CHANGELOG.md 2026-08-08 "Reconciled undocumented genetic-metrics-PDF audit ghost work" entry (Session 479)
 commit: pending
 ```
 

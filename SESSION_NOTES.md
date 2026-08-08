@@ -12,12 +12,146 @@ uncommitted `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_*.md` docs (dated 
 2026-08-06) and their 8 correspondent GitHub issues (#146-153, plus a separately-filed #145),
 produced by a prior session/agent run that never entered the `SESSION_RUNNER.md` protocol (no
 Phase 1B claim stub, no commit at all -- invisible to the git-log-based ledger reconcile). Picked
-by the user from the Phase 0 priorities list (IN PROGRESS).
-**Started:** 2026-08-08
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+by the user from the Phase 0 priorities list.
+**Started/Completed:** 2026-08-08 / 2026-08-08
+**Status:** DONE -- both audit docs committed as a backfill; the 3 copyrighted reference files and
+2 stale render byproducts + 2 stray `.DS_Store` files resolved per user decision; issues #145-153
+left GitHub-only (no `BACKLOG.md` change) after the user correctly challenged an initial,
+convention-mismatched proposal to duplicate them there.
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Phase 0 orient (full protocol). Ledger reconcile clean (only
+S478's own self-referential sha-backfill commit since the `CHANGELOG.md`/`HANDOFFS.md` frontiers).
+`git status` showed 9 untracked files + 1 modified tracked file (root `.DS_Store`). Read every
+untracked file's actual content (not just filename/extension) before reporting: 2 audit docs read
+in full; both `docs/planning/*.html` files' mtimes checked (`ls -la`) against their already-
+committed `.md`/`.qmd` sources' commit dates; the 3 `inst/extdata/reference/` files opened via
+`Read` to identify their actual source and copyright status; `gh issue view <N> --json
+title,body,author,createdAt,labels` used for all 9 new issues (plain `gh issue view` throws a
+GraphQL "Projects (classic)" deprecation error on this repo -- discovered this session, added as a
+gotcha below) to confirm authorship/timing/content correlation with the 08-06 audit's own gap
+table. Rendered the priorities-list report + `AskUserQuestion` picker; user picked "Reconcile ghost
+audit work." **(2)** Investigated before proposing a plan (matching the S476-478-established
+pattern): confirmed the 2 `.html` files were OLD, UNRELATED clutter (one dated 2026-07-29 matching
+its own already-committed `.md` source's session; one dated 2026-08-04, before S478 even closed) --
+not part of the audit-ghost-work story, despite surfacing in the same `git status` output. Confirmed
+the 3 reference files are full-text COPYRIGHTED journal articles/pages (Mäkinen et al. 2005 ©Nature
+Publishing Group; Fuchsberger et al. 2008 © Oxford University Press; a saved Wiley page, "Copyright
+© 1999-2026 John Wiley & Sons... All rights reserved") on a PUBLIC repo (`gh repo view --json
+visibility` → `PUBLIC`) -- categorically different from the one existing committed
+`inst/extdata/reference/` precedent (`Master_Genetic_metrics_2_14_15.pdf`, confirmed via its own
+first page to be an unpublished NPRC internal working-group document, no journal copyright).
+**(3)** Presented 4 scoping questions via `AskUserQuestion`. The 2nd question (whether to add
+`BACKLOG.md` entries for issues #145-153) was rejected by the user with a genuine clarifying
+question, not an answer -- correctly treated as "user wants to understand my reasoning," not a
+redirect to ignore. Re-examined my own orientation report and found I already had the disproving
+evidence in hand: 14 pre-existing open issues (#141/#138/#137/#136/#133/#123/#116/#37/#36/#28/#12/
+#11/#10/#5) carry zero `BACKLOG.md` entries and are treated as normal "Informational, untouched"
+in this project's own established convention -- `SESSION_RUNNER.md` Phase 0 step 3 treats GitHub
+Issues as the primary tracker when a repo exists (`BACKLOG.md` is the *fallback* for no-repo
+projects), and this project's actual practice only adds a `BACKLOG.md` entry once a session starts
+actively planning/implementing an item (e.g. issue #142 only gained one at S465, not at filing).
+Acknowledged the mistake explicitly, dropped the question, and re-asked only the 2 remaining real
+decisions. **(4)** User answered both: do not commit the 3 copyrighted files (add `.gitignore`
+instead); clean up the 2 stale renders + 2 stray `.DS_Store` files. **(5)** Claimed the session
+(stub + `HANDOFFS.md` `status: pending` receipt, commit `c5ed3a4c`). **(6)** Executed (docs-only,
+no `R/`/`tests/` files -- TDD gates N/A per established precedent): added a new `.gitignore` block
+excluding the 3 copyrighted files by exact path plus a general `.DS_Store` pattern (with a comment
+distinguishing this from the legitimately-committed `Master_Genetic_metrics_2_14_15.pdf`); deleted
+the 2 stale `.html` renders and 2 stray `.DS_Store` files from disk (never committed, so no git
+history impact); committed the 2 audit docs as-is with a `CHANGELOG.md` entry that explicitly
+states this session did NOT author the audit analysis, only verified and committed it; added
+`PROJECT_LEARNINGS.md` Learning 479 (the commit-log ledger reconcile's blind spot for a zero-commit
+ghost session, plus both near-misses caught this session) and a new `CLAUDE.md` Phase 0 addition
+("Untracked-file ghost-session check") describing the same gap and mitigation for future sessions;
+bumped `CLAUDE.md`'s learning-count pointer (478→479). **(7)** Verified: confirmed via
+`.Rbuildignore` that every touched file (`docs$`, `CLAUDE.*\.md$`, `PROJECT_LEARNINGS.*\.md$`,
+`CHANGELOG.*\.md$`, `SESSION_NOTES.*\.md$`, `HANDOFFS.*\.md$`, `\.DS_Store$`) is already excluded
+from the R package build -- zero runtime/build impact, Phase 3E is genuinely n/a, not skipped.
+
+**Session 478 Handoff Evaluation (by Session 479): 8/10.** **What helped:** all 6 minimum
+requirements present and accurate; the "what's next" list's (a)/(b) items (LabKey BLOCKED, NPRC
+outreach DECISION NEEDED) were re-confirmed still current and unchanged during this session's own
+`BACKLOG.md` survey, saving re-verification effort. **What was missing:** nothing inaccurate, but --
+matching S478's own honest evaluation of S477's handoff -- the "what's next" list had zero
+predictive value for this session's actual deliverable, which emerged entirely from this session's
+own Phase 0 `git status`/orientation discovery, not from anything S478 could have anticipated (S478
+closed out clean itself and had no way to know a separate, undocumented run had left work behind).
+Not a flaw in S478's handoff. **ROI:** positive on the re-confirmed-still-current axis, neutral
+(not negative) on task-prediction, matching the established pattern.
+
+**Self-assessment (Session 479): 8/10.** **Strengths:** (1) did not treat "found together in `git
+status`" as "originated together" -- individually date-checked and content-checked every untracked
+file, correctly separating 2 unrelated old render byproducts from the actual 08-05/08-06 ghost-work
+story; (2) caught a real, non-obvious copyright/public-repo risk by actually reading each new
+reference file's first page/copyright footer rather than pattern-matching on directory location
+against the one dissimilar existing precedent file; (3) used `AskUserQuestion` for every genuine
+judgment call rather than unilaterally deciding, per `SAFEGUARDS.md`'s "report uncommitted changes,
+ask" directive; (4) explicitly did not claim credit for the audit analysis itself in any of
+`CHANGELOG.md`/`SESSION_NOTES.md`/`PROJECT_LEARNINGS.md` -- framed clearly as backfilling a prior
+run's work, matching the ledger-reconcile ethos; (5) captured the generalizable gap (a zero-commit
+ghost session is invisible to the commit-log-based reconcile) as both a `PROJECT_LEARNINGS.md` entry
+and a `CLAUDE.md` process addition, not just a one-off fix; (6) respected the established 3-commit
+checkpoint shape (claim / work+close-out / sha-backfill) matching S477/S478 precedent.
+**Weaknesses:** (1) the first `AskUserQuestion` batch included a convention-mismatched proposal
+(duplicate issues into `BACKLOG.md`) that the user had to correct -- the disproving evidence (14
+untouched issues already treated as "Informational" with no `BACKLOG.md` entry) was already in my
+own orientation report; this was avoidable rework costing the user an extra clarifying round-trip,
+not a genuinely new discovery; (2) did not spot-check any individual capability claim in the 2
+audit docs against current source -- reasoned that no commits landed in the intervening window so
+the docs can't have gone stale, but a more thorough pass might have sampled 1-2 claims directly;
+(3) did not do a broader sweep for other possible traces of the same ghost run (e.g., draft PRs,
+other repos) beyond what this session's own `git status`/`gh issue list` surfaced -- a reasonable
+"1 and done" scope boundary, not a hidden gap, but worth naming. **Compared to previous sessions:**
+matches the S476-478-established "investigate before executing, `AskUserQuestion` for real
+decisions" pattern, with a new wrinkle -- this session had to apply that same discipline to its OWN
+proposed plan after user pushback, not only to the user's or `BACKLOG.md`'s claims.
+
+**Handoff to Session 480:**
+- **What's next:** **(a)** LabKey integration remainder (BLOCKED, unchanged). **(b)** NPRC outreach
+  (DECISION NEEDED, owner-only, unchanged). **(c)** New: issues #145-153 remain open, GitHub-only,
+  deliberately NOT mirrored into `BACKLOG.md` (matches this project's established convention) --
+  available for any future session to pick up and plan/implement individually; that session should
+  add its own `BACKLOG.md` narrative entry at that point, not before. **(d)** New, minor, noticed
+  incidentally while surveying `BACKLOG.md` this session (not fixed, out of this session's own
+  narrow scope): the `inst/extdata/` reorganization Phase 4 item's own bullet-opening line still
+  reads "(DECISION NEEDED -- 2 open... decisions)" even though its own body text says "Phases 1-4
+  all DONE" and both decisions were resolved via `AskUserQuestion` back at S418 -- a stale tag/
+  checkbox needing a one-line cleanup, not a real open decision. **(e)** Lower priority, carried
+  unchanged from S477/S478's own list: `highlightNearest` degree=6 bounded mitigation follow-up;
+  `kinship2`-comparison-doc staleness (the `.qmd` still won't preview locally -- `kinship2` remains
+  uninstalled, deliberately never added to `DESCRIPTION`/`renv.lock`); 3 dangling-parent/NA-gen
+  crash reports; 6-word spelling-wordlist drift (`inst/WORDLIST`); `colony-manager-guide.qmd`
+  Diagram-tab screenshot staleness; live-vs-offline pedigree node-count discrepancy;
+  `data-raw/rhesusPedigree.R` docstring/fixture mismatch; `freePassIds`-vs-D5 structural gap;
+  whether `Config/Needs/website: quarto` is now redundant with the `Suggests` entry S476 added; the
+  broader `a2interactive.Rmd` documentation-pass obligation (all exported functions/parameters
+  since the last full pass) remains open. **(f)** Informational: issues
+  #141/#138/#137/#136/#133/#123/#116/#37/#36/#28/#12/#11/#10/#5 -- untouched, FYI only, unchanged.
+- **Key files:** `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-08-05.md`,
+  `-2026-08-06.md` (newly committed, backfilled content -- not authored this session);
+  `.gitignore` (new copyrighted-reference-material block + general `.DS_Store` pattern);
+  `CHANGELOG.md` (2026-08-08 entry); `CLAUDE.md` (new Phase 0 "Untracked-file ghost-session check"
+  addition, learning-count bump 478→479); `PROJECT_LEARNINGS.md` (new Learning 479).
+- **Gotchas:** (1) **`gh issue view <N>` (plain) throws a GraphQL "Projects (classic)" deprecation
+  error on this repo** -- always use `gh issue view <N> --json title,body,author,createdAt,labels`
+  (or other explicit `--json` fields) instead. (2) **This project's `BACKLOG.md`-vs-GitHub-Issues
+  convention:** Issues are the default/primary tracker (`SESSION_RUNNER.md` Phase 0 step 3 treats
+  `BACKLOG.md` as the no-repo fallback); a `BACKLOG.md` entry gets added only once a session
+  actively starts planning/implementing that specific item, never pre-emptively at filing time --
+  do not propose backfilling `BACKLOG.md` from a batch of open issues. (3) **Before treating a batch
+  of untracked files found via one `git status` as one incident, check each file's own mtime and
+  content individually** -- this session almost lumped 2 unrelated old render byproducts into the
+  ghost-work story, and separately almost defaulted into committing 3 copyrighted journal PDFs on
+  the strength of one categorically-different existing precedent file. (4) `inst/extdata/
+  reference/` is now a mixed-precedent directory: one file is legitimately committed (an unpublished
+  internal working-group doc); the 3 new ones are gitignored specifically because they are
+  copyrighted journal material on a PUBLIC repo -- don't treat the directory's existing content as
+  blanket license for what gets committed there next; re-derive each new file's own copyright
+  situation. (5) All prior standing application-code gotchas (`NOT_CRAN=true`, stash reference files
+  before `check()`, `man/modMarkerGeneticsServer.Rd` reflow watch, `kinship2` not installed) carry
+  forward unchanged, though not exercised this session (docs-only, zero `R/`/`tests/` files touched).
+- **Self-assessment score:** 8/10 (breakdown above).
 
 ### What Session 478 Did
 **Deliverable:** Add issue #142's `edgeStyle` (direct vs. rectilinear) option demonstration to

@@ -43,6 +43,36 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-08 · [ad hoc] Reconciled undocumented genetic-metrics-PDF audit ghost work (Session 479)
+- **Deliverable:** Phase 0 orientation found 2 uncommitted audit docs
+  (`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-08-05.md`,
+  `-2026-08-06.md`) and 9 correspondent GitHub issues (#145 user-filed; #146-153 mapping to the
+  08-06 doc's own "Priority gap analysis" table) — produced by a prior session/run that never
+  entered the `SESSION_RUNNER.md` protocol (no Phase 1B claim stub, no commit at all, so the
+  commit-log-based ledger reconcile in Phase 0 step 6 could not see it). This entry backfills the
+  record of that prior, unidentified work — **this session did not author the audit analysis
+  itself**, only verified it (read both docs in full; format/rigor matches the properly-committed
+  2026-07-29 baseline audit; no source changes landed between S478 and now to make it stale) and
+  committed it.
+- **What was committed:** both audit docs, as-is. Per user decision (`AskUserQuestion`), issues
+  #145-153 stay GitHub-only — this project's established convention is that `BACKLOG.md` is an
+  active work log, not an issue-tracker mirror (14 other pre-existing open issues already carry no
+  `BACKLOG.md` entry); an entry gets added only once a future session actually picks one up to
+  plan/implement, matching issue #142's own precedent.
+- **What was NOT committed, and why:** 3 reference files also found untracked in
+  `inst/extdata/reference/` (`5201430.pdf`, `bioinformatics_24_2_279.pdf`, a saved "Standardized
+  Human Pedigree Nomenclature" page) are full-text copyrighted journal articles/pages (Nature
+  Publishing Group 2005, Oxford University Press 2008, Wiley — none open-access-marked), unlike
+  the one already-committed `Master_Genetic_metrics_2_14_15.pdf` (an unpublished NPRC
+  working-group document, a different copyright situation). This repo is PUBLIC
+  (`gh repo view --json visibility` → `PUBLIC`); per user decision, these 3 files are excluded via
+  a new `.gitignore` block rather than committed. Also cleaned up, per user decision: 2 stale local
+  `docs/planning/*.html` render byproducts (dated 2026-07-29 and 2026-08-04, unrelated to this
+  ghost-work finding — their `.md`/`.qmd` sources are already safely committed) and 2 stray
+  `inst/**/.DS_Store` files.
+- See `PROJECT_LEARNINGS.md` Learning 479 (the commit-log ledger reconcile's blind spot for a
+  zero-commit ghost session) and `CLAUDE.md`'s new Phase 0 addition.
+
 ### 2026-08-04 · [ad hoc] Documented issue #142's edgeStyle option in vignettes/a2interactive.Rmd (Session 478)
 - **Deliverable:** user-directed (not from `BACKLOG.md`) — add a demonstration of issue #142's
   `edgeStyle` (direct vs. rectilinear) option to `vignettes/a2interactive.Rmd`'s existing
