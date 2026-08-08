@@ -663,6 +663,45 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       invocation in `CLAUDE.md`'s Build/Test/Verify section so a future
       plain `renv::snapshot()` doesn't silently strip the lockfile again.
       See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 476.
+- [ ] **The "10 pre-existing baseline warnings" carried in every full-regression
+      report since S448 have never been root-caused, and were introduced by a
+      test-fixture gap, not a real production-code issue** (found S487,
+      incidental to issue #133 Slice 2's own regression read; Effort S, low
+      priority) -- the owner asked directly ("we had zero at last release")
+      after seeing `warning: 10` in this session's clean regression read, which
+      no prior session had actually traced. Root cause: both
+      `tests/testthat/test_modMarkerGenetics.R` "cross-center" tests (added by
+      commit `a319e0c5`, S447, 2026-08-01, implementing issue #130 Slice 5)
+      upload a hand-derived 2-locus toy fixture (Center A n=4, Center B n=6)
+      chosen for exact-fraction Fst arithmetic, not for kinship completeness.
+      `modMarkerGeneticsServer`'s reactive graph incidentally also computes
+      marker-based kinship (the Slice 1 feature) on any uploaded Center-A file,
+      and in this fixture `'CA1'`/`'CA2'` share no heterozygous locus --
+      `markerKinship()` correctly warns and returns `NA` for that pair (working
+      as designed, not a bug), 5x per test x 2 tests = 10. **Confirmed CRAN
+      v2.0.0 (released 2026-07-26) predates S447 (2026-08-01) and genuinely
+      shipped with a clean, 0-warning suite** -- the owner's recollection was
+      correct. S447's own close-out reported "0 failed/0 error" but never
+      actually stated a warning count; S448 (the very next session)
+      independently found S447's self-reported `devtools::check()` "0/0/0"
+      also didn't hold up under re-verification (a missed spelling gap) --
+      the same kind of unverified self-report, in the same session, is the
+      most likely origin of this gap too, though this was never directly
+      confirmed against S447's own raw test output (not preserved). Every
+      session from S448 through S486 (~40 sessions) carried "10 pre-existing
+      ... warnings" forward as an accepted baseline without investigating what
+      it was. Not fixed this session (`PROJECT_LEARNINGS.md` Learning 382's
+      "report, don't fix mid-session" precedent -- out of scope for a Slice 2
+      legend/documentation TDD session; owner directed file-and-continue via
+      `AskUserQuestion`). A future session should either (a) wrap the
+      `session$setInputs(genotypeFile = ...)` calls in these 2 tests with
+      `suppressWarnings()` (matching the established `PROJECT_LEARNINGS.md`
+      Learning 273(d) precedent: "a degenerate out-of-contract input ... often
+      misbehaves further downstream -- suppress the incidental warning, not
+      the branch"), or (b) adjust the 2-locus fixture so `CA1`/`CA2` share a
+      heterozygous locus -- but only after re-verifying the exact-fraction Fst
+      values (`58/1001`, `139/308`, `614/2233`) still hold, since the fixture
+      was hand-derived specifically to produce those numbers.
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability-comparison audit (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`)
