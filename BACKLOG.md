@@ -1092,6 +1092,24 @@ that audit before picking up any item in this cluster.
 **Progress (S481, 2026-08-08):** Tier 1 step (1) is DONE -- the 2 dangling-parent crash bugs +
 the free-pass-filter reachability check (issue #154) are fixed/closed, see `CHANGELOG.md`. Step
 (2) -- issue #145's verification spike -- is next in this cluster; steps (3)-(5) remain untouched.
+
+**Progress (S482, 2026-08-08):** Tier 1 step (2) is DONE -- see
+`docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md`. Empirically confirmed
+(source read + 5 synthetic-pedigree tests against kinship2 v1.9.6.2 directly, not inferred from
+docs alone) that kinship2 implements **neither** a hard male-left invariant **nor** a
+sex-aware crossing-minimizing soft default: the single-mate case's apparent "sire-left" result is
+an indexing artifact, not a `ped$sex` check, and the moment an individual has multiple mates
+("crowding," exactly the scenario #145's own body raises), left/right is decided purely by
+pedigree-data discovery order -- confirmed by a direct counter-example (a dam with 2 sire mates,
+one sire ends up to her immediate right, the other to her immediate left). kinship2's own
+`?align.pedigree` help text frames sire/dam ordering as an overridable hint, not a rule; an
+explicit 2-row hint flips the simple-pair default with no special-casing. Also found issue #145's
+own inline citations ([2]-[7], already flagged unresolved by the S480 audit) describe
+crossing-minimization behavior that does not match kinship2's actual source -- a second,
+independent data point (beyond the S480-audited nomenclature reference) that those citations are
+unreliable. Step (3) -- refresh the stale `.qmd` comparison doc -- is next in this cluster; steps
+(4)-(5) remain untouched. See the research doc's own "Recommendation for a future #145 design
+session" section before starting any #145 design work.
 - [ ] **Candidate C's connector/dogleg visual-signposting idea** (found S473,
       designing the issue #144 plan; not adopted for #144 itself, Effort
       unknown, low priority) -- extends the existing D2 mate-line "dogleg"

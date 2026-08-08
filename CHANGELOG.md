@@ -43,6 +43,30 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-08 · [issue #145] Verification spike: kinship2 implements no male-left sire/dam rule (Session 482)
+- **Deliverable:** Tier 1 step (2) of `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`'s
+  Finding #1/#2 recommendation — before any design work on [issue #145](https://github.com/rmsharp/nprcgenekeepr/issues/145),
+  empirically determined kinship2's actual default (no-hints) sire/dam left-right placement behavior.
+  Read `align.pedigree()`/`alignped1()`/`autohint()` source directly (kinship2 v1.9.6.2, local-only
+  `renv` install) and built 5 synthetic pedigrees exercising the single-pair and multi-mate
+  ("crowding") cases issue #145's own body describes. Found kinship2 implements neither a hard
+  male-left invariant nor a sex-aware crossing-minimizing soft default: the ordinary direct-pedigree
+  spouse-pairing code path has zero `ped$sex` check (unlike two other branches that do), and a
+  role-reversed multi-mate test (1 dam, 2 sires) produced a direct counter-example — one sire
+  immediately left of the dam, one immediately right, disproving "sire always left of dam" from
+  kinship2's own default output. Also found issue #145's own inline citations describe
+  crossing-minimization behavior that does not match kinship2's actual source — a second,
+  independent citation-reliability flag beyond S480's nomenclature-document finding. Full method,
+  evidence, and recommendation:
+  `docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md`. `BACKLOG.md` progress
+  note added; findings posted as a
+  [GitHub comment](https://github.com/rmsharp/nprcgenekeepr/issues/145#issuecomment-5227592879) on
+  issue #145 (not closed — investigation only, no design/implementation decision made).
+  Investigation-only session: no `R/`/`tests/` files changed, TDD RED/GREEN/REFACTOR gates N/A,
+  Phase 3E runtime smoke test n/a (no package runtime behavior changed). `PROJECT_LEARNINGS.md`
+  Learning 482 added; `CLAUDE.md` learning-count pointer bumped (481→482). See `SESSION_NOTES.md`,
+  `HANDOFFS.md`.
+
 ### 2026-08-08 · [issue #154] Closed issue #154 (Session 481, post-close-out)
 - **Deliverable:** Closed [issue #154](https://github.com/rmsharp/nprcgenekeepr/issues/154) with a
   comment citing the fix commits (`4a60db92`, `db46bde8`, `e58307a2`, `f3173ad4`) and verification

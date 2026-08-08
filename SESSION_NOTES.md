@@ -7,18 +7,134 @@
 ## ACTIVE TASK
 
 ### What Session 482 Did
-**Deliverable:** Issue #145 verification spike (IN PROGRESS) -- Tier 1 step (2) of
+**Deliverable:** Issue #145 verification spike -- Tier 1 step (2) of
 `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`'s Finding #1/#2 recommendation:
-reinstall `kinship2` locally (per `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`'s
-Setup-chunk pattern) and empirically determine its actual *default* (no-hints) sire/dam left-right
-placement behavior -- hard invariant vs. soft default that yields to crossing-minimization -- before
-any #145 design work. User-picked from the Phase 0 priorities list (this session's own predecessor
-audit's Tier 1 step 2).
-**Started:** 2026-08-08.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+empirically determined kinship2's actual *default* (no-hints) sire/dam left-right placement
+behavior before any #145 design work. User-picked from the Phase 0 priorities list (this session's
+own predecessor audit's Tier 1 step 2).
+**Started/Completed:** 2026-08-08 / 2026-08-08.
+**Status:** DONE -- investigation-only session (no `R/`/`tests/` changes, TDD gates N/A). Findings
+written to `docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md`, a `BACKLOG.md`
+progress note, and a GitHub comment on issue #145 (not closed -- investigation only, no
+design/implementation decision made).
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Confirmed `kinship2` (v1.9.6.2) was already installed locally
+in `renv` (left over from S480's own local-install pattern, not literally needing reinstallation as
+the handoff's phrasing implied). **(2)** Read `align.pedigree()`'s/`alignped1()`'s/`autohint()`'s
+actual source directly (`deparse(get(fn, envir = asNamespace("kinship2")))`, not a secondary
+description) -- found the ordinary direct-pedigree spouse-pairing branch (the path every real
+sire/dam pair with no explicit hints takes) has **zero** `ped$sex` check, unlike two OTHER branches
+(hinted pairs, `relation` type-4 rows) that explicitly force male into column 1. **(3)** Turned that
+source-level argument into a demonstrated fact: built 5 synthetic pedigrees (simple pair; sire with
+2 dams "crowding"; dam with 2 sires "role-reversed crowding"; the project's own existing
+`sample.ped` family 2 fixture; an explicit-hint override test) and called `align.pedigree()`
+directly. The dam-with-2-sires case produced a direct, reproducible pairwise counter-example: one
+sire ends up to the dam's immediate LEFT, the other to her immediate RIGHT -- disproving "sire
+always left of dam" from kinship2's own default output on ordinary data. The explicit-hint test
+confirmed the single-pair default flips with a 2-row hint and no special-casing (a soft default, not
+a protected invariant). **(4)** Checked kinship2's own shipped `?align.pedigree` help text -- frames
+the `hints$spouse` mechanism purely positionally ("left spouse... right hand spouse... anchor:
+1=left, 2=right"), zero mention of sex, and offers "reverse the plot order of a husband/wife pair"
+as the canonical example of when a hint is needed. **(5)** Found a bonus finding: issue #145's own
+inline citations ("[2]", "[3]", etc.) describe multi-mate crossing-minimization behavior that does
+not match what kinship2's source actually does in that code path (no crossing-minimization
+computation exists there) -- a second, independent citation-reliability red flag beyond S480's
+finding that the cited nomenclature reference document doesn't textually support the rule either.
+**(6)** Wrote up the full method/evidence/conclusion/recommendation in a new research doc; added a
+`BACKLOG.md` progress note under the Sequencing note (discoverability, matching the S479/S480
+precedent); posted a summary comment on GitHub issue #145 (not closed). **(7)** Close-out: this
+entry, `HANDOFFS.md` receipt, `CHANGELOG.md` ledger entry, `PROJECT_LEARNINGS.md` Learning 482,
+`CLAUDE.md` learning-count bump (481→482).
+
+**Session 481 Handoff Evaluation (by Session 482): 9/10.** **What helped:** every one of the 6
+minimum requirements was present and directly actionable -- the exact next step (issue #145's
+verification spike), the exact method (reinstall kinship2 per the `.qmd` doc's Setup chunk, check
+its actual unhinted-default behavior), and the exact warning (do NOT cite the Bennett 2008
+nomenclature reference as textual authority for a male-left rule) all mapped directly onto this
+session's actual work with zero rediscovery needed. The `matingUnits$anchor`/`nonAnchor` NA-safety
+gotcha and the B1 spelling-drift refinement were accurate and didn't need re-verification this
+session (out of scope). **What was missing / slightly imprecise:** the handoff's "reinstall kinship2
+locally" phrasing implied it needed reinstalling; it was actually still present in the local `renv`
+library from S480's own prior work, so this step was a no-op check rather than a real reinstall --
+harmless (the instruction would have been exactly right if it truly were absent), caught in the
+first 2 minutes of work, cost nothing. **ROI:** strongly positive -- the handoff's method-level
+specificity (not just "verify #145," but the exact package, the exact doc pattern to reuse, and the
+exact citation NOT to trust) meant this session could start productive empirical work immediately
+rather than needing its own scoping pass.
+
+**Self-assessment (Session 482): 9/10.** **Strengths:** (1) followed the audit's own recommended
+method precisely -- checked kinship2's actual behavior via source read AND direct reproducible
+execution, not by reading documentation or trusting the issue's own citations, and explicitly
+distinguished "the source code suggests no rule" (an argument) from "a live counter-example proves
+it" (a demonstration), building the 5 test cases specifically to produce the latter; (2) found a
+genuinely new, decisive piece of evidence beyond what a purely-defensive "check before designing"
+pass might have stopped at -- the direct sire-immediately-left-of-dam-AND-another-sire-immediately-
+right-of-dam counter-example is concrete and reproducible, not an inference; (3) discovered and
+flagged a SECOND independent citation-reliability problem in issue #145's own body (the
+crossing-minimization claim doesn't match kinship2's actual source), extending S480's already-flagged
+citation concern rather than duplicating it; (4) stayed strictly in scope -- investigation only, did
+not proceed into #145's design or touch the `.qmd` refresh (explicitly the NEXT step per the
+sequencing note), despite having strong findings that could have tempted "while I'm at it" work; (5)
+recorded findings in 3 durable, cross-linked places (research doc, `BACKLOG.md` progress note,
+GitHub comment) rather than only the transient session notes, directly applying the S479/S480
+discoverability lesson to this session's own new artifact; (6) correctly declared "TDD phase: N/A"
+up front with a stated reason (no `R/`/`tests/` changes expected), avoiding the Development Process
+Contract's phase-declaration requirement being silently skipped. **Weaknesses:** (1) did not
+literally need to "reinstall" kinship2 (already present) -- a minor imprecision in restating the
+handoff's own framing back to the user at task-acceptance time, self-caught immediately, no real
+cost; (2) did not attempt to close the separate, already-flagged residual gap from S480 (the
+un-transcribed Figure 1/2 images in the nomenclature reference document that might directly answer
+the left-right question) -- correctly out of THIS session's specific scope (the audit's
+recommendation was about kinship2's own behavior, not the images), but worth naming as a still-open
+thread rather than silently letting it look resolved by this session's different, independent
+finding; (3) did not trace where issue #145's citations might have originated (e.g., a web search)
+to give the next session more concrete grounding on their reliability -- flagged the mismatch but
+didn't investigate its source, arguably appropriately out of a "short" spike's scope. **Compared to
+previous sessions:** extends the S476-481-established "verify the premise before accepting it"
+discipline to a fourth distinct surface across this session lineage -- not just a `BACKLOG.md` item's
+technical framing (S476-478), an external reference document's actual content (S480), or an existing
+code comment's own factual claim (S481), but a real third-party library's actual runtime behavior,
+verified by direct controlled execution rather than reading alone -- arguably the most rigorous
+verification method in this specific lineage so far, since it produced a live, reproducible
+counter-example rather than only a documentation/source-reading argument.
+
+**Handoff to Session 483:**
+- **What's next:** **(a)** Tier 1 step (3): refresh the stale
+  `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd` worked-example doc (`BACKLOG.md`
+  B5) -- now has real new content to incorporate: this session's kinship2-behavior findings, and per
+  this session's own research doc's recommendation, a new "multi-mate crowding" worked example
+  (none of the `.qmd`'s current 3 examples exercises this case). READY, Effort S. **(b)** Tier 2
+  (owner's existing order, unchanged): #133 > #136 > #137 > #138. **(c)** LabKey integration
+  remainder (BLOCKED, unchanged). **(d)** NPRC outreach (DECISION NEEDED, owner-only, unchanged).
+  **(e)** Issues #146-153 remain open, GitHub-only, unchanged (marker-genetics/breeding-
+  optimization/data-workflow features, not pedigree-drawing-related). **(f)** Lower priority, mostly
+  unchanged from S481: `inst/extdata/` reorg Phase 4's `BACKLOG.md:251` header tag is stale
+  (`DECISION NEEDED` but the item body shows it's fully DONE since S418) -- a one-line tag-only fix;
+  B1 (spelling/`WORDLIST` drift, 7 words per S481's refined count); B7
+  (`obfuscated_rhesus_mhc_ped.csv` node-count discrepancy); B8 (`rhesusPedigree.R` docstring/fixture
+  mismatch); B9 (`highlightNearest` degree=6 full-fix investigation); the broader `a2interactive.Rmd`
+  documentation-pass obligation. **(g)** Issue #145 itself remains open, unimplemented -- this
+  session only investigated; a future design session should read
+  `docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md`'s "Recommendation for a
+  future #145 design session" section before starting.
+- **Key files:** `docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md` (this
+  session's full method/evidence/conclusion, the primary artifact); `BACKLOG.md` ~line 1092-1108 (S482
+  progress note); `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd` (the doc Tier 1
+  step 3 will refresh, using this session's findings); issue #145's own comment thread
+  (`https://github.com/rmsharp/nprcgenekeepr/issues/145#issuecomment-5227592879`).
+- **Gotchas:** (1) `kinship2` is already installed locally in `renv` (not in `DESCRIPTION`/
+  `renv.lock`, deliberately local-only per the `.qmd` doc's own established pattern) -- no
+  reinstallation needed for a future session continuing this work, just `library(kinship2)`. (2)
+  When constructing a `kinship2::pedigree()` object directly (not via the `.qmd`'s existing helper),
+  `missid` has no default -- pass `missid = 0` explicitly or the constructor errors "dadid not found
+  in the id list." (3) kinship2's internal alignment functions are namespace-private
+  (`asNamespace("kinship2")`) -- use `get(fn, envir = asNamespace("kinship2"))` to access
+  `align.pedigree`/`alignped1`-`4`/`autohint`/`besthint` source directly if verifying further. (4)
+  All standing gotchas from S479-481 carry forward unchanged (`gh issue view <N>` needs `--json`
+  fields; Issues-vs-`BACKLOG.md` convention; `NOT_CRAN=true` for tests;
+  `matingUnits$anchor`/`nonAnchor` NA-safety from Learning 481).
+- **Self-assessment score:** 9/10 (breakdown above).
 
 ### What Session 481 Did
 **Deliverable:** Fixed the pedigree-diagram Tier 1 crash-bug cluster from

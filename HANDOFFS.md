@@ -62,16 +62,16 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S482
 date: 2026-08-08
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Issue #145 verification spike -- Tier 1 step (2) of docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md's Finding #1/#2 recommendation: determine kinship2's actual default (no-hints) sire/dam left-right placement behavior before any #145 design work.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- issue #145 verification spike (Tier 1 step 2): empirically determined kinship2's actual default (no-hints) sire/dam placement behavior. Found kinship2 implements neither a hard male-left invariant nor a sex-aware soft default -- the multi-mate case splits mates by pedigree-data discovery order, not sex, with a direct counter-example (a dam with 2 sire mates, one on each side). Issue #145 itself remains open/unimplemented -- investigation only, no design decision made.
+what_was_done: Confirmed kinship2 v1.9.6.2 already installed locally in renv (left from S480). Read align.pedigree()/alignped1()/autohint() source directly via asNamespace() -- found the ordinary direct-pedigree spouse-pairing branch has zero ped$sex check, unlike two other branches (hinted pairs, relation type-4 rows) that do. Built 5 synthetic pedigrees and ran align.pedigree() directly: single-pair case shows sire-left as an indexing artifact; multi-mate "crowding" case (1 sire, 2 dams) centers the sire with dams split by discovery order; role-reversed case (1 dam, 2 sires) is the decisive counter-example -- one sire immediately LEFT of the dam, one immediately RIGHT, disproving "sire always left of dam"; explicit-hint test confirmed the single-pair default is overridable, not a protected invariant. kinship2's own ?align.pedigree help text documents hints$spouse purely positionally, no mention of sex. Also found issue #145's own inline citations describe crossing-minimization behavior that doesn't match kinship2's actual source (2nd independent citation-reliability flag, after S480's nomenclature-document finding). Wrote docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md; added a BACKLOG.md progress note (~line 1092); posted findings as a GitHub comment on issue #145 (not closed). Added PROJECT_LEARNINGS.md Learning 482; bumped CLAUDE.md's learning-count pointer (481->482).
+next_steps: Tier 1 step (3): refresh docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd (BACKLOG.md B5) using this session's findings, including a new "multi-mate crowding" worked example (none of its current 3 examples exercises this case). Then Tier 2 (owner's existing order, unchanged): #133 > #136 > #137 > #138. LabKey remainder (BLOCKED) and NPRC outreach (DECISION NEEDED) unchanged. Issue #145 itself remains open for a future design session -- read the research doc's "Recommendation for a future #145 design session" section first.
+key_files: docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md (this session's full method/evidence/conclusion); BACKLOG.md:1092-1108 (S482 progress note); docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd (Tier 1 step 3's target); PROJECT_LEARNINGS.md Learning 482.
+gotchas: kinship2 already installed locally in renv (not in DESCRIPTION/renv.lock, deliberately local-only) -- no reinstall needed, just library(kinship2). kinship2::pedigree()'s missid arg has no default -- pass missid = 0 explicitly or it errors "dadid not found in the id list." kinship2's alignment functions (align.pedigree/alignped1-4/autohint/besthint) are namespace-private -- use get(fn, envir = asNamespace("kinship2")) to read their source. Standing gotchas from S479-481 unchanged (gh issue view needs --json; Issues-vs-BACKLOG.md convention; NOT_CRAN=true for tests; matingUnits$anchor/nonAnchor NA-safety, Learning 481).
+runtime_smoke: n/a -- investigation-only session, no R/tests files changed, no package runtime behavior affected.
+changelog_ref: CHANGELOG.md "2026-08-08 · [issue #145]" entry (this close-out)
 commit: pending
 ```
 
