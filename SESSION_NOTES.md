@@ -6,6 +6,18 @@
 
 ## ACTIVE TASK
 
+### What Session 484 Did
+**Deliverable:** Tier 1 step (3) of `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`:
+refresh `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd` — incorporate S482's
+kinship2-default sire/dam-placement findings, and add a new "multi-mate crowding" worked example
+(none of the doc's current 3 examples exercise that case). User-picked from S483's re-rendered
+priorities list.
+**Started:** 2026-08-08.
+**Status:** IN PROGRESS.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 483 Did
 **Deliverable:** Propose an evidence-based implementation order for GitHub issues #146-153 (the
 "Genetic Metrics PDF capability gap" cluster) and present them as pickable session topics —
