@@ -43,6 +43,17 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-08 · [ad hoc] Phase 0 ledger reconcile: backfill S482's own HANDOFFS.md receipt commit sha self-correction (post-S482)
+- **Deliverable:** Phase 0 ledger reconcile (this session, S483) found one commit past
+  the `CHANGELOG.md` frontier with no ledger entry: `3f8acc5c` ("docs: S482 -- backfill
+  own HANDOFFS.md receipt commit sha"), landed after S482's own close-out commit
+  (`b18228ff`) that recorded the entry below.
+- **Change:** `3f8acc5c` replaced the S482 `HANDOFFS.md` receipt's `commit: pending`
+  placeholder with the real commit sha (`b18228ff (claim stub: 3914d1db)`) -- a
+  self-correction of the just-written receipt, not new production work. Same class of
+  action as the many prior sessions' equivalent self-fixes recorded further down this
+  ledger (e.g. S466-S472's `commit: pending` backfills).
+
 ### 2026-08-08 · [issue #145] Verification spike: kinship2 implements no male-left sire/dam rule (Session 482)
 - **Deliverable:** Tier 1 step (2) of `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`'s
   Finding #1/#2 recommendation — before any design work on [issue #145](https://github.com/rmsharp/nprcgenekeepr/issues/145),
