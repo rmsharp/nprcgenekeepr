@@ -20,5 +20,5 @@
                "exit", "death", "age", "ancestry", "population", "origin",
                "status", "condition", "departure", "spf", "vasxOvx",
                "pedNum", "first", "second", "first_name", "second_name",
-               "recordStatus")
+               "recordStatus", "affected")
 )

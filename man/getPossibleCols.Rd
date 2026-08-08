@@ -48,6 +48,11 @@ status of an animal where \code{NA} indicates an intact animal and all other
 values indicate surgical alteration.}
 \item{pedNum}{ -- integer vector indicating generation numbers for each
 id, starting at 0 for individuals lacking IDs for both parents.}
+\item{affected}{ -- logical vector or \code{NA} (optional) indicating
+whether an individual is affected by a condition of interest, shaded on
+the Pedigree Diagram tab (issue #133). Matches kinship2's own
+\code{affected} argument naming/semantics; \code{NA} means unknown
+affected status, not "not affected".}
 }
 \description{
 Pedigree curation function
