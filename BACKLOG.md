@@ -1077,6 +1077,17 @@ visNetwork-vs-kinship2 technology decision (D2), which stands as ratified.*
       commit, full RED/GREEN/REFACTOR TDD cycle (`AskUserQuestion`-gated at
       every transition), full regression suite + `devtools::check()` +
       live `shinytest2` verification all clean. See `CHANGELOG.md`.)
+
+**Sequencing note (S480, 2026-08-08):** the items below through the `highlightNearest` degree=6
+item, plus GitHub issues #133/#136/#137/#138/#141/#145, were jointly examined for implementation
+order in `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md` (kinship2-capability-
+and nomenclature-reference-informed). Recommended order: (1) the two dangling-parent crash bugs
+below + the free-pass-filter reachability check, (2) issue #145 (sire/dam left-right placement --
+found to be a net-new layout rule request, not a fix to existing behavior, and not textually
+supported by this project's own copy of the cited nomenclature standard), (3) refresh the stale
+`.qmd` comparison doc below, (4) the owner's existing #133 > #136 > #137 > #138 order (unchanged,
+set at S436), (5) #141 and Candidate C stay deferred pending new evidence/owner sign-off. Consult
+that audit before picking up any item in this cluster.
 - [ ] **Candidate C's connector/dogleg visual-signposting idea** (found S473,
       designing the issue #144 plan; not adopted for #144 itself, Effort
       unknown, low priority) -- extends the existing D2 mate-line "dogleg"
