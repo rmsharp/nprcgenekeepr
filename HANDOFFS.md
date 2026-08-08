@@ -72,7 +72,7 @@ key_files: docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.
 gotchas: kinship2 already installed locally in renv (not in DESCRIPTION/renv.lock, deliberately local-only) -- no reinstall needed, just library(kinship2). kinship2::pedigree()'s missid arg has no default -- pass missid = 0 explicitly or it errors "dadid not found in the id list." kinship2's alignment functions (align.pedigree/alignped1-4/autohint/besthint) are namespace-private -- use get(fn, envir = asNamespace("kinship2")) to read their source. Standing gotchas from S479-481 unchanged (gh issue view needs --json; Issues-vs-BACKLOG.md convention; NOT_CRAN=true for tests; matingUnits$anchor/nonAnchor NA-safety, Learning 481).
 runtime_smoke: n/a -- investigation-only session, no R/tests files changed, no package runtime behavior affected.
 changelog_ref: CHANGELOG.md "2026-08-08 · [issue #145]" entry (this close-out)
-commit: pending
+commit: b18228ff (claim stub: 3914d1db)
 ```
 
 ```handoff
