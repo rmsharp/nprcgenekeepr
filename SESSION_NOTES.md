@@ -6,6 +6,19 @@
 
 ## ACTIVE TASK
 
+### What Session 487 Did
+**Deliverable:** Implement Slice 2 of the ratified issue #133 plan (`docs/planning/
+issue133-affected-status-pedigree-diagram-plan.md` §4) -- legend + documentation: one new
+`visLegend()` row for the "Affected" status (D6, reusing Slice 1's `#CC79A7` color), a widget-JSON
+test, the tutorial/article documentation update, then `gh issue close 133`. Vertical Slice Session
+(gate (a) re-verified at Orient: zero `R/`/`tests/`/`inst/extdata/`/`vignettes/`/`NEWS.Rmd` changes
+since S486's close-out at `dede1a60`).
+**Started:** 2026-08-08.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 486 Did
 **Deliverable:** Implement Slice 1 of the ratified issue #133 plan (`docs/planning/
 issue133-affected-status-pedigree-diagram-plan.md` §4) -- data model + core rendering: `affected`
