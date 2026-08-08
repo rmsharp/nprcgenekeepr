@@ -62,16 +62,16 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S480
 date: 2026-08-08
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Audit pedigree-drawing-related BACKLOG.md items + GitHub issues #133/#136/#137/#138/#141/#145 against kinship2's documented drawing capabilities and the standardized human pedigree nomenclature reference; recommend an implementation order.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- wrote docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md, examining GitHub issues #133/#136/#137/#138/#141/#145 plus 9 BACKLOG.md-only items (B1-B9) against kinship2's documented drawing capabilities and the standardized human pedigree nomenclature reference; recommended a 3-tier implementation order.
+what_was_done: Built on 2 existing artifacts (ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md, pedigree-diagram-kinship2-reference-comparison.qmd) rather than re-deriving kinship2's capabilities. Fetched full text for the 6 issues; found issue #133's body already records an owner-directed priority order (S436) that this audit preserves rather than overrides. Ran a 2-agent background Workflow (nomenclature-doc extraction + BACKLOG.md grep sweep), then spot-verified its key claims directly: grep-confirmed the nomenclature document's title/DOI/copyright footer (Bennett et al. 2008, Wiley all-rights-reserved -- no change to S479's gitignore disposition), and grep-confirmed R/makePedigreeDiagramData.R's positioning functions contain zero sex-based ordering logic today -- meaning issue #145 is a new-feature request, not a fix to broken existing behavior, despite its own "Correct the placement" title. Synthesized into a 3-tier recommended order: Tier 1 (2 dangling-parent crash bugs + a free-pass-filter reachability check + #145's verification-first design, all in the same .positionMatingUnitForest()/.buildMatingUnitForest() code region, then refresh the stale .qmd doc); Tier 2 (owner's existing #133>#136>#137 order preserved, plus a highlightNearest follow-up); Tier 3 (explicitly deferred: #138, #141, "Candidate C"). Added a BACKLOG.md "Sequencing note" pointer for discoverability. Filed no new GitHub issues (left to a future implementing session). Added PROJECT_LEARNINGS.md Learning 480 (verify a cited source's actual extractable content, and an issue's own bug-vs-feature self-classification, before accepting either at face value); bumped CLAUDE.md's learning-count pointer (479->480). Commits: fab99658 (claim), plus the work+close-out commit (sha filled in the next reconcile/backfill commit).
+next_steps: Pick up Tier 1 of the new audit first: the 2 dangling-parent crash bugs (BACKLOG.md ~lines 1093-1116) + free-pass-filter reachability check (~lines 1130-1146) in R/makePedigreeDiagramData.R's .buildMatingUnitForest()/.positionMatingUnitForest(); file GitHub issues for these before/while fixing (none exist yet). Then issue #145 (sire/dam left-right placement) with its own verification spike first -- do not cite this repo's Bennett-2008 reference document as authority for the male-left rule, it doesn't contain that rule in extractable text; check kinship2's actual unhinted default behavior instead. Read the full audit doc before starting either.
+key_files: docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md (new, full audit), BACKLOG.md (~line 1080-1081, new Sequencing note), PROJECT_LEARNINGS.md (new Learning 480), CLAUDE.md (learning-count bump), R/makePedigreeDiagramData.R:373 (.positionMatingUnitForest(), the crash-bug/#145 code region), :707 (makePedigreeMatingLayout(), exported entry point)
+gotchas: (1) The nomenclature reference HTML's actual symbol catalog lives in 4 un-transcribed figure images, not extractable text -- don't cite this doc's prose for symbol-specific claims without checking the images or the primary 1995 source first. (2) Issue #145's own numbered citations ([2]-[7]) were never resolved this session -- likely kinship2's own R docs (matching "hints"/"spouse matrix"/"anchor type" vocabulary) but unconfirmed. (3) B3/B4/B6/#145 all touch the same small code region -- sequence together, not scattered across sessions. (4) Standing S479 gotchas carry forward unchanged (gh issue view --json; Issues-vs-BACKLOG convention; NOT_CRAN=true; kinship2 not installed -- reinstall locally per the .qmd doc's Setup chunk if verifying kinship2's default behavior for #145).
+runtime_smoke: n/a -- docs-only (docs/audits/, BACKLOG.md, PROJECT_LEARNINGS.md, CLAUDE.md, SESSION_NOTES.md, HANDOFFS.md, CHANGELOG.md), zero R/ or tests/ files touched, all touched files confirmed .Rbuildignore-excluded -- genuinely n/a, not skipped.
+changelog_ref: CHANGELOG.md 2026-08-08 "Pedigree-drawing backlog sequencing audit (Session 480)"
 commit: pending
 ```
 

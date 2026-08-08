@@ -13,15 +13,138 @@ examining the recently-added pedigree-drawing-related `BACKLOG.md` items and Git
 `docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md` and
 `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`) and the standardized human
 pedigree nomenclature reference document (`inst/extdata/reference/Standardized Human Pedigree
-Nomenclature...html`, gitignored copyrighted material, read locally only), and recommending an
-implementation order. User-directed (not from `BACKLOG.md`'s own sequencing chain), following
-`AUDIT_WORKSTREAM.md`. (IN PROGRESS)
-**Started:** 2026-08-08
-**Status:** Session claimed. Research phase launched (background Workflow `wf_fb0de66b-0d0`
-extracting the nomenclature doc's conventions + a confirming `BACKLOG.md` grep sweep); synthesis
-not yet started.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+Nomenclature...html`, gitignored copyrighted material, read locally only), and recommending a
+3-tier implementation order. User-directed (not from `BACKLOG.md`'s own sequencing chain),
+following `AUDIT_WORKSTREAM.md`.
+**Started/Completed:** 2026-08-08 / 2026-08-08
+**Status:** DONE — audit doc written and committed; `BACKLOG.md` sequencing-note pointer added;
+`PROJECT_LEARNINGS.md` Learning 480 + `CLAUDE.md` learning-count bump (479→480) added.
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Read the two existing kinship2-comparison artifacts directly
+(`ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`'s 17-dimension table;
+`pedigree-diagram-kinship2-reference-comparison.qmd`'s 3 worked examples, which is where the
+now-fixed founder-positioning defect was originally found) rather than re-deriving kinship2's
+capabilities from scratch. **(2)** Fetched full body text for the 6 candidate issues (`gh issue
+view <N> --json title,body,labels,createdAt` for #133/136/137/138/141/145) — found issue #133's
+own body records an explicit owner-directed priority order (session 436) for #133/#136/#137/#138
+that a sequencing recommendation must compose with, not override. **(3)** Confirmed the nomenclature
+reference HTML is one of the 3 files S479 gitignored (copyrighted, public repo) — read locally for
+internal analysis only, consistent with that prior decision; did not revisit or challenge it.
+**(4)** Ran a 2-agent background `Workflow` (per this session's `ultracode` directive): one agent
+read the 3179-line nomenclature HTML in full and extracted its actual drawing-convention content;
+a second independently grep-swept `BACKLOG.md` end-to-end for every open pedigree-drawing item and
+cross-checked each against the 6 issues for duplication (found 9 unrepresented `BACKLOG.md`-only
+items, B1-B9). Claimed the session (stub + `HANDOFFS.md` `status: pending` receipt, commit
+`fab99658`) while the workflow ran. **(5)** Spot-verified the workflow's key claims directly rather
+than trusting them wholesale: `grep`-confirmed the nomenclature document's title/authors/DOI and its
+Wiley "all rights reserved" copyright footer (matches S479's prior finding, no change to that
+disposition); `grep`-confirmed `R/makePedigreeDiagramData.R`'s positioning functions
+(`.buildMatingUnitForest()`/`.positionMatingUnitForest()`) contain **zero** sex-based ordering logic
+today — meaning issue #145 ("Correct the placement of sire's relative to dam's") is a net-new
+layout-rule request, not a fix to existing broken behavior, despite its own title's framing.
+**(6)** Synthesized both research streams into the audit doc myself (not delegated — full context
+from steps 1-3/5 already lived in the main loop): a 2-tier evidence base, 4 findings, and a 3-tier
+recommended order (crash-bug fixes + #145's verification spike + doc refresh first; the owner's
+existing #133>#136>#137>#138 order preserved second; #138/#141/"Candidate C" explicitly deferred
+third). Added a `BACKLOG.md` "Sequencing note" pointer (before the "Candidate C" bullet, ~line
+1080) so the audit is discoverable at future Phase 0 orientations, matching the discoverability
+precedent set by the `ISSUE_129` audit's own `BACKLOG.md` section header — and directly avoiding the
+exact "undiscoverable completed work" risk S479 had just fixed for a different case. **(7)** Filed
+no new GitHub issues (left to whichever future session picks up Tier 1, per the established "audit
+recommends, a later session files" pattern from the `ISSUE_129` audit → S436's #131-139 filing
+pass). Verified: confirmed via `.Rbuildignore` that every touched file (`docs$`, `BACKLOG.*\.md$`,
+`CLAUDE.*\.md$`, `PROJECT_LEARNINGS.*\.md$`, `CHANGELOG.*\.md$`, `SESSION_NOTES.*\.md$`,
+`HANDOFFS.*\.md$`) is excluded from the R package build — zero `R/`/`tests/` files touched, TDD
+gates N/A, Phase 3E runtime smoke test genuinely n/a (not skipped).
+
+**Session 479 Handoff Evaluation (by Session 480): 8/10.** **What helped:** all 6 minimum
+requirements present and accurate; item (c) ("issues #145-153 remain open... available for any
+future session to pick up") correctly flagged #145 as live, unclaimed work, which the user's own
+prompt this session picked up directly; the `gh issue view <N>` (plain form throws a GraphQL error)
+gotcha saved a real failed-call cycle when fetching the 6 issue bodies this session; the
+Issues-vs-`BACKLOG.md` convention gotcha directly informed this session's own decision not to
+pre-emptively add `BACKLOG.md` entries for #133/#136/#137/#138/#141/#145. **What was missing:**
+nothing inaccurate — matching S479's own honest evaluation of S478's handoff, the "what's next"
+list had no way to predict this session's actual deliverable, which came from the user's own new,
+specific request rather than anything in the backlog at the time S479 closed. Not a flaw in S479's
+handoff. **ROI:** positive — the two carried-forward gotchas were directly, concretely useful this
+session, beyond the general baseline of "state re-confirmed unchanged."
+
+**Self-assessment (Session 480): 8/10.** **Strengths:** (1) did not accept issue #145's "Correct the
+placement" framing at face value — grepped the actual positioning source and found no sex-based
+rule exists to be broken, correctly reclassifying it as new-feature design rather than a bug fix;
+(2) did not accept the nomenclature reference document's apparent authority at face value either —
+read it in full and found its extractable text does not actually contain the specific convention
+issue #145 attributes to it, and reported that gap honestly instead of papering over it with general
+knowledge dressed as a citation; (3) built on 2 existing, substantial prior-session artifacts
+(the `ISSUE_129` kinship2 comparison and the `.qmd` worked-example doc) rather than re-deriving
+kinship2's capabilities from scratch, and explicitly preserved the owner's own already-stated
+priority order for #133/#136/#137/#138 rather than silently re-ranking it; (4) used the background
+`Workflow` tool for the two genuinely independent, delegatable research tasks (large-document
+extraction; a full-file grep sweep) while keeping the actual synthesis in the main loop, where full
+session context already lived — avoided both under-using and over-using delegation; (5) added a
+`BACKLOG.md` discoverability pointer unprompted, directly applying the lesson from S479's own
+Learning 479 (ghost/undiscoverable work) to this session's own new artifact; (6) respected the
+established copyright handling for the gitignored reference file (instructed the delegated agent to
+paraphrase, not reproduce verbatim). **Weaknesses:** (1) did not personally read the full raw
+nomenclature HTML — relied on a delegated agent's extraction, spot-verifying only 2 specific claims
+directly rather than a broader independent sample; (2) did not attempt to view or extract the actual
+Figure 1-4 images inside the HTML file, which might have directly answered the left-right-placement
+question the audit could only report as "not stated in text" — a genuine residual gap, named in the
+audit's own Finding #2 recommendation rather than closed; (3) did not attempt to resolve issue #145's
+own inline citations ([2]-[7]) to their actual sources (plausibly kinship2's own R documentation,
+given the "hints"/"spouse matrix"/"anchor type" vocabulary, but unconfirmed). **Compared to previous
+sessions:** extends the S476-479-established "verify the premise before accepting it" discipline to
+two new surfaces this session — an externally-cited reference document's actual content, and an
+issue's own bug-vs-feature self-classification — rather than only to `BACKLOG.md`'s own technical
+claims as in prior instances.
+
+**Handoff to Session 481:**
+- **What's next:** **(a)** New, highest signal from this session: pick up Tier 1 of
+  `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md` — the 2 dangling-parent
+  crash bugs (`BACKLOG.md` B3/B4, ~lines 1093-1116) plus the free-pass-filter reachability check
+  (B6, ~lines 1130-1146), all in `.buildMatingUnitForest()`/`.positionMatingUnitForest()`
+  (`R/makePedigreeDiagramData.R`); file GitHub issues for these first (none exist yet), matching the
+  audit's own Recommendation #1. Real crash risk on realistic dangling-parent data — READY, Effort
+  unknown/small per the original S473 finding. **(b)** Issue #145 (sire/dam left-right placement) —
+  READY but needs its own verification spike first per the audit's Finding #1/#2 (check kinship2's
+  actual unhinted default behavior directly; do not cite this repo's Bennett-2008 reference document
+  as textual authority for the male-left rule, since it doesn't contain that rule in extractable
+  text) — natural continuation of the same code area as (a), sequence immediately after. **(c)**
+  LabKey integration remainder (BLOCKED, unchanged). **(d)** NPRC outreach (DECISION NEEDED,
+  owner-only, unchanged). **(e)** Issues #146-153 remain open, GitHub-only, unchanged from S479's
+  handoff (not pedigree-drawing-related — see this session's own inventory, they're marker-genetics/
+  breeding-optimization/data-workflow features). **(f)** Unchanged minor item: `BACKLOG.md`'s
+  `inst/extdata/` reorganization Phase 4 tag still stale (says "DECISION NEEDED" though fully DONE
+  since S418) — one-line cleanup, still not done. **(g)** Lower priority, carried unchanged from
+  S477-479: `kinship2`-comparison-doc staleness is now folded into this session's own Tier 1 item
+  (a)/(b) sequencing rather than a standalone item; 3 dangling-parent/NA-gen crash reports are now
+  this session's own B3/B4 (see (a)); 6-word spelling-wordlist drift (B1); `obfuscated_rhesus_mhc_
+  ped.csv` node-count discrepancy (B7); `rhesusPedigree.R` docstring/fixture mismatch (B8); the
+  broader `a2interactive.Rmd` documentation-pass obligation remains open, untouched.
+- **Key files:** `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md` (new, the
+  full audit — read this before picking up any pedigree-drawing item); `BACKLOG.md` (~line
+  1080-1081, new "Sequencing note" pointer); `PROJECT_LEARNINGS.md` (new Learning 480);
+  `CLAUDE.md` (learning-count pointer bumped 479→480); `R/makePedigreeDiagramData.R:373`
+  (`.positionMatingUnitForest()`, start of the crash-bug/#145 code region), `:707`
+  (`makePedigreeMatingLayout()`, the exported entry point).
+- **Gotchas:** (1) **The nomenclature reference HTML's actual symbol/convention catalog lives in
+  4 un-transcribed figure images (Figures 1-4), not extractable text** — only the surrounding
+  usage/ethics/adoption-history prose is readable. Do not cite this document's text for symbol-
+  specific claims (deceased marking, twin lines, consanguinity double-line, left-right placement)
+  without first checking the images or the primary 1995 Bennett source (not part of this file).
+  (2) **Issue #145's own numbered citations ([2]-[7]) were never resolved this session** — likely
+  reference kinship2's own R documentation (the "hints"/"spouse matrix"/"anchor type" vocabulary
+  matches kinship2's real parameter names) but this is inferred, not confirmed. (3) **B3/B4/B6/#145
+  all touch the same small code region** (`.buildMatingUnitForest()`/`.positionMatingUnitForest()`)
+  — sequence them together in one session/cluster rather than scattering across sessions, per the
+  audit's own structural observation #1. (4) All standing gotchas from S479 carry forward unchanged
+  (`gh issue view <N>` needs `--json` fields; Issues-vs-`BACKLOG.md` convention; `NOT_CRAN=true` for
+  tests; `kinship2` not installed in `DESCRIPTION`/`renv.lock` — reinstall locally per the `.qmd`
+  doc's own Setup chunk if a future session needs to check kinship2's actual default behavior for
+  item (b) above).
+- **Self-assessment score:** 8/10 (breakdown above).
 
 ### What Session 479 Did
 **Deliverable:** Reconcile undocumented "ghost" work discovered during Phase 0 orientation: two

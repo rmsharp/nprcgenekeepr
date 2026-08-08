@@ -43,6 +43,43 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-08 · [ad hoc] Pedigree-drawing backlog sequencing audit (Session 480)
+- **Deliverable:** User-directed audit, `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`,
+  examining every open pedigree-drawing-related item — GitHub issues #133/#136/#137/#138/#141/#145
+  plus 9 `BACKLOG.md`-only items (B1-B9, no issue numbers) found via a full grep sweep — against
+  kinship2's documented drawing capabilities (built on the existing `ISSUE_129_KINSHIP2_FEATURE_
+  COMPARISON_2026-07-30.md` audit and `pedigree-diagram-kinship2-reference-comparison.qmd`) and the
+  standardized human pedigree nomenclature reference document
+  (`inst/extdata/reference/Standardized Human Pedigree Nomenclature...html`, gitignored copyrighted
+  material per S479, read locally only), and recommending a 3-tier implementation order.
+- **Key findings:** (1) the nomenclature document (Bennett et al. 2008, *J Genet Couns*) is a
+  commentary/adoption-survey article whose actual symbol/convention tables live in un-transcribed
+  figure images, not extractable text — it does **not** textually confirm the male-left/female-right
+  placement convention issue #145 cites as its rationale. (2) Direct inspection of
+  `R/makePedigreeDiagramData.R`'s positioning functions found zero sex-based ordering logic anywhere
+  today — issue #145 is a new-feature design request, not a fix to broken existing behavior, despite
+  its own "Correct the placement" framing. (3) Two real dangling-parent crash bugs (`BACKLOG.md`
+  items B3/B4, found S473, never fixed) sit in the same code region as #145 and were found to be
+  higher real-world risk than any pending feature — recommended first in the sequencing order. (4)
+  The owner's own existing priority order for #133/#136/#137/#138 (set in issue #133's body,
+  session 436) is preserved, not re-derived.
+- **Recommended order (full rationale in the audit):** Tier 1 — dangling-parent crash fixes (B3/B4),
+  free-pass-filter reachability check (B6), issue #145's verification-first design, then refresh the
+  stale `.qmd` comparison doc (B5); Tier 2 — #133 > #136 > #137 (owner's existing order) plus the
+  `highlightNearest` degree=6 follow-up (B9); Tier 3 — explicitly deferred: #138, #141, "Candidate C"
+  (B2), pending new evidence or owner sign-off.
+- **BACKLOG.md:** added a "Sequencing note" pointer paragraph (before the "Candidate C" item, ~line
+  1080) cross-referencing the new audit, matching the discoverability precedent set by the
+  `ISSUE_129_KINSHIP2_FEATURE_COMPARISON` audit's own `BACKLOG.md` section header. No new GitHub
+  issues filed this session (left to whichever future session picks up Tier 1, per the established
+  "audit recommends, a later session files" pattern). No `R/`/`tests/` files touched — TDD gates N/A.
+- **Verification:** direct `grep` spot-checks (not solely trusted from the delegated research
+  workflow) confirmed the nomenclature document's title/authors/DOI and its Wiley all-rights-reserved
+  copyright footer (no change to S479's gitignore disposition), and confirmed the absence of any
+  sex-based ordering code in `R/makePedigreeDiagramData.R`. `PROJECT_LEARNINGS.md` Learning 480
+  records the generalizable lesson (verify a cited source's actual extractable content, and an
+  issue's own bug-vs-feature self-classification, before accepting either at face value).
+
 ### 2026-08-08 · [ad hoc] Reconciled undocumented genetic-metrics-PDF audit ghost work (Session 479)
 - **Deliverable:** Phase 0 orientation found 2 uncommitted audit docs
   (`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-08-05.md`,
