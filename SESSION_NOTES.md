@@ -6,6 +6,18 @@
 
 ## ACTIVE TASK
 
+### What Session 483 Did
+**Deliverable:** Propose an evidence-based implementation order for GitHub issues #146-153 (the
+"Genetic Metrics PDF capability gap" cluster) and present them as pickable session topics —
+per explicit owner direction ("I asked you in a prior session to propose an order... present those
+as session topics to pick up here"), following the audit workstream, mirroring the
+`PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md` precedent (S480).
+**Started:** 2026-08-08.
+**Status:** IN PROGRESS.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 482 Did
 **Deliverable:** Issue #145 verification spike -- Tier 1 step (2) of
 `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`'s Finding #1/#2 recommendation:
