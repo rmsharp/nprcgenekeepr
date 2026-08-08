@@ -1251,6 +1251,30 @@ checklist confirmed NOT applicable (a raw display flag, not a new displayed stat
 matching the design doc's own Section 5 read). Issue #133 stays open (Slice 2 -- legend + docs --
 still pending); no `gh issue close` this session. Next session in this cluster implements Slice 2: see
 `docs/planning/issue133-affected-status-pedigree-diagram-plan.md` Section 4 Slice 2.
+
+**Progress (S487, 2026-08-08):** Tier 2 step 2 -- issue #133 Slice 2 (legend + documentation) -- is
+DONE, full TDD RED->GREEN cycle (`AskUserQuestion`-gated at every transition). Added one "Affected"
+row to the Diagram tab's existing shape-to-sex `visLegend()` (D6, reusing Slice 1's `#CC79A7`
+color) -- confirmed hands-on that the design doc's own Dragon #3/#4 concerns were both real: (1)
+`shape="box"` (a Pre-RED author's call, not dictated by the design doc) rendered as a label-sized
+filled pill inconsistent with the other 5 fixed-size-icon rows -- switched to `"hexagon"`; (2) the
+6th row's own label clipped against the legend's fixed 400px canvas height at the existing
+`stepY=65L` -- retuned to `stepY=54L`, live-reverified clipping-free. `visExport()` PNG capture of
+a `color.background`-only node (Dragon #3, deferred by S486) confirmed working via a real exported
+PNG (900+ matching pixels). Documentation checklists done in-session: `NEWS.Rmd`'s existing #133
+bullet updated (no second entry) to describe the legend rather than promise it "in a later
+release"; `_pedigree_browser.Rmd` and `colony-manager-guide.qmd` (owner's #133 comment requires
+both) updated and re-rendered clean. **Incidental fix:** re-rendering `NEWS.Rmd` found S486's own
+bullet had never actually been re-rendered/committed to `NEWS.md` (last touched S468) -- fixed as a
+byproduct of this session's own render, not a separate action. Citation checklist (#120)
+re-confirmed N/A. Verified: full clean regression read 0 failed/0 error (4640 passed, 10
+pre-existing warnings -- now root-caused, see the new Housekeeping item above); `lintr` 0 on
+touched files; `devtools::check()` exact pre-existing baseline (2 ERRORs/1 WARNING/2 NOTEs, all
+individually attributed, 0 new); live `shinytest2`/`chromote` smoke test confirmed all 6 legend
+rows + the main diagram's affected-node coloring + the PNG export, 0 console errors. **Both slices
+of issue #133 are now shipped; issue #133 itself is closed as part of this session's close-out.**
+Tier 2's remaining order (#136 > #137 > #138, each needing its own scoping session) is next in this
+cluster.
 - [ ] **Candidate C's connector/dogleg visual-signposting idea** (found S473,
       designing the issue #144 plan; not adopted for #144 itself, Effort
       unknown, low priority) -- extends the existing D2 mate-line "dogleg"
