@@ -6,6 +6,20 @@
 
 ## ACTIVE TASK
 
+### What Session 482 Did
+**Deliverable:** Issue #145 verification spike (IN PROGRESS) -- Tier 1 step (2) of
+`docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`'s Finding #1/#2 recommendation:
+reinstall `kinship2` locally (per `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`'s
+Setup-chunk pattern) and empirically determine its actual *default* (no-hints) sire/dam left-right
+placement behavior -- hard invariant vs. soft default that yields to crossing-minimization -- before
+any #145 design work. User-picked from the Phase 0 priorities list (this session's own predecessor
+audit's Tier 1 step 2).
+**Started:** 2026-08-08.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 481 Did
 **Deliverable:** Fixed the pedigree-diagram Tier 1 crash-bug cluster from
 `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md` — 3 dangling-parent crashes in
