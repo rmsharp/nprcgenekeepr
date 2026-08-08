@@ -7,18 +7,154 @@
 ## ACTIVE TASK
 
 ### What Session 481 Did
-**Deliverable:** Fix the pedigree-diagram Tier 1 crash-bug cluster from
+**Deliverable:** Fixed the pedigree-diagram Tier 1 crash-bug cluster from
 `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md` — 3 dangling-parent crashes in
 `.buildMatingUnitForest()`/`.positionMatingUnitForest()`/`.addRectilinearWaypoints()`
-(`R/makePedigreeDiagramData.R`), filed as issue #154, fixed via strict TDD — plus investigate and
-close the related free-pass-filter reachability question (`BACKLOG.md`, no issue). User-picked from
-the Phase 0 priorities list (this session's own audit's Tier 1 recommendation).
-**Started:** 2026-08-08 (IN PROGRESS)
-**Status:** Session claimed. Pre-RED investigation done (3 crashes empirically reproduced, B6
-investigated and not reproduced); issue #154 filed; `BACKLOG.md` updated. TDD implementation
-beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+(`R/makePedigreeDiagramData.R`), filed as issue #154 and fixed via strict TDD — plus investigated
+and closed the related free-pass-filter reachability question (`BACKLOG.md`, no issue). User-picked
+from the Phase 0 priorities list (this session's own predecessor audit's Tier 1 recommendation).
+**Started/Completed:** 2026-08-08 / 2026-08-08.
+**Status:** DONE — all 3 crashes fixed and verified (unit tests, full regression suite,
+`devtools::check()`, lint, and a live runtime smoke test); B6 closed with evidence; issue #154
+closed on GitHub; `BACKLOG.md`/`CHANGELOG.md`/`PROJECT_LEARNINGS.md`/`CLAUDE.md` updated.
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Investigated before designing: rather than trusting the
+predecessor audit's "well-diagnosed already, no new design decisions needed" characterization,
+empirically reproduced all 3 candidate crashes with minimal `Rscript` repros against the loaded
+package. This directly disproved that characterization for one of the three — the both-parents-
+dangling case needed a real design decision (an "orphan mating unit" positioned as its own root),
+not a one-line guard — and disproved an existing code COMMENT's own claim (`pmax(NA, NA, na.rm =
+TRUE)` returns `-Inf`; it actually returns `NA`). Also investigated the related free-pass-filter
+reachability question with 2 targeted fixtures; neither reproduced a bug, so closed it with evidence
+rather than "fixing" a non-issue. **(2)** Filed issue #154 covering all 3 confirmed crashes (per the
+audit's own "audit recommends, a later session files" pattern); closed the B3/B4/B6 `BACKLOG.md`
+items (superseded by the issue / closed with evidence). Claimed the session — late, after the issue
+filing and `BACKLOG.md` edit rather than before (a Phase 1B ordering slip, corrected in-session, see
+self-assessment). **(3)** PRE-RED→RED gate (`AskUserQuestion`): wrote 4 failing tests across
+`test_positionMatingUnitForest.R` (×2), `test_buildMatingUnitForest.R`, `test_addRectilinearWaypoints.R`,
+confirmed each failed against `master` with the exact predicted error, confirmed no pre-existing
+test regressed. **(4)** RED→GREEN gate: implemented the fix. Mid-GREEN, re-running the RED tests
+against the first-draft implementation surfaced a SECOND, more severe latent bug the PRE-RED design
+hadn't anticipated — an `NA`-unsafe `==` comparison (`matingUnits$id[matingUnits$anchor == id]`)
+against the now-sometimes-`NA` `anchor` column caused infinite recursion (`nodeStackOverflowError`)
+rather than the intended graceful fallback. Found and fixed via a second direct repro (`%in%`
+instead of `==`) within the same GREEN pass — see `PROJECT_LEARNINGS.md` Learning 481. **(5)**
+Verified GREEN: all 4 new tests pass; full regression suite clean under `test_dir()` (0 failed/0
+error) AND under a full `devtools::check()` run (`FAIL 0 | WARN 10 | SKIP 186 | PASS 4606`, the 10
+warnings pre-existing/traced to `test_modMarkerGenetics.R`); `devtools::check()` = 0 errors, 0
+warnings, 2 pre-existing/unrelated NOTEs — confirmed pre-existing (not this session's fault) by
+applying Learning 161's isolate-and-reverify protocol: temporarily moved the untracked, gitignored
+nomenclature reference HTML aside (its colon-containing filename trips a LOCAL-ONLY "non-portable
+file names" false positive that `R CMD build` produces from untracked files regardless of gitignore
+status), re-ran the check clean, restored the file. `lintr::lint_package()` 0 lints on the touched
+file. **(6)** GREEN→REFACTOR gate: reviewed the full diff, found it already minimal/well-commented/
+consistent with the file's own style — declared REFACTOR unneeded, re-ran the 3 touched test files
+once more as a no-op re-verification (0 failed/0 error, confirming REFACTOR made no behavior
+change). **(7)** Phase 3E runtime smoke test: built a minimal standalone Shiny app mirroring
+`R/modPedigree.R`'s exact `diagramLayout` → `renderVisNetwork` render chain, with a fixture
+combining all 3 crash shapes, driven live via `shinytest2`/`chromote` — 0 console errors, non-empty
+rendered widget HTML, for BOTH `edgeStyle` values ("direct" and "rectilinear"). **(8)** Closed
+issue #154 on GitHub citing the fix commits and verification evidence. **(9)** Close-out: this
+entry, `HANDOFFS.md` receipt, `CHANGELOG.md` ledger entry, `PROJECT_LEARNINGS.md` Learning 481,
+`CLAUDE.md` learning-count bump (480→481), `BACKLOG.md` progress note on the S480 sequencing
+pointer.
+
+**Session 480 Handoff Evaluation (by Session 481): 8/10.** **What helped:** items (a) and the
+gotchas were directly, concretely actionable — the handoff named the exact 3 crash bugs, the exact
+code region (`.buildMatingUnitForest()`/`.positionMatingUnitForest()`), and correctly predicted (per
+gotcha 3) that B3/B4/B6/#145 cluster together and should be sequenced as one unit — this session
+picked exactly that cluster and the "sequence together" framing directly shaped the scope
+`AskUserQuestion`. The standing gotchas (`gh issue view <N>` needing `--json`, `NOT_CRAN=true` for
+tests) remained accurate and saved real time. **What was missing / inaccurate:** the underlying
+audit's own characterization that B3+B4 were "well-diagnosed already, no new design decisions
+needed" (`docs/audits/...AUDIT_2026-08-08.md` Recommendation #1) turned out to be wrong for the
+both-parents-dangling case — it needed an actual design decision (the orphan-unit-as-root approach),
+not a one-line guard. This wasn't a flaw in the S480 handoff's OWN accuracy about "what to do next"
+(it correctly named the item and deferred implementation to a future session) — it's a limitation of
+the underlying audit's characterization depth, since S480 characterized the bugs by reading
+`BACKLOG.md` prose rather than empirically reproducing them. Worth naming as a pattern: a
+sequencing/triage audit's effort-and-complexity estimates for NOT-YET-REPRODUCED bugs should be
+treated as provisional until the implementing session actually reproduces them. **ROI:** positive —
+the specific code-region and clustering guidance was worth more than the setup cost of reading it,
+even with the one inaccurate complexity estimate.
+
+**Self-assessment (Session 481): 9/10.** **Strengths:** (1) empirically reproduced all 3 crashes
+with `Rscript` before designing any fix, rather than trusting the audit's prose characterization —
+this directly caught both the B4b design-complexity underestimate and a wrong factual claim in an
+EXISTING code comment (`pmax(NA, NA, na.rm = TRUE)` returns `NA`, not `-Inf`) before it could
+propagate into a wrong fix; (2) followed strict TDD with an `AskUserQuestion` gate at every phase
+transition (PRE-RED→RED, RED→GREEN, GREEN→REFACTOR), each with the exact planned actions spelled
+out per `CLAUDE.md`'s Phase-gate format; (3) caught a second, more severe latent bug (infinite
+recursion) mid-GREEN by re-running the RED tests against the first-draft implementation rather than
+assuming the diff was correct — directly applying Learning 481's own "RED tests are reusable
+regression coverage across GREEN drafts, not a one-shot gate" lesson (self-discovered this session);
+(4) did not stop at unit-test-green — ran a genuine live `shinytest2`/`chromote` runtime smoke test
+(Phase 3E) through the actual render chain (`R/modPedigree.R`'s `visNetwork` pipeline), matching this
+specific code area's own established verification precedent (S465/S466/S468); (5) correctly
+distinguished pre-existing `devtools::check()` noise (the non-portable-filename false positive, the
+vignette-engine NOTE, the spelling-drift NOTE) from real defects using Learning 161's own documented
+isolate-and-reverify protocol, rather than either wrongly treating them as this session's fault or
+wrongly ignoring them without verification; (6) closed the GitHub issue in the same session per the
+established checklist, and closed B6 with evidence rather than leaving it an open question or
+"fixing" something that wasn't broken. **Weaknesses:** (1) wrote the Phase 1B claim stub LATE —
+after already filing issue #154 and editing `BACKLOG.md`, rather than before any technical work as
+the protocol requires; corrected by writing the stub before any code/test changes, but the ordering
+itself was a process slip, acknowledged mid-session rather than avoided; (2) did not verify whether
+the `NEWS.Rmd` checklist applies before concluding it doesn't — confirmed via grep that similar past
+internal-function bug fixes (#142/#143/#144) got no `NEWS.md` entries, which is reasonable evidence
+but a more thorough check would have explicitly re-read the checklist's exact trigger wording before
+concluding (it does explicitly say "new exported function or new user-facing Shiny feature/control",
+which this session's fix is neither — so the conclusion holds, but the verification could have been
+tighter). **Compared to previous sessions:** extends the S476-480-established "verify the premise
+before accepting it" discipline to a NEW surface — an existing, already-shipped code comment's own
+factual claim about language semantics — rather than only to external documents/issues as in
+S479/S480.
+
+**Handoff to Session 482:**
+- **What's next:** **(a)** Tier 1 step (2) of the sequencing audit: issue #145's verification spike
+  — check kinship2's actual unhinted-default sire/dam placement behavior directly (reinstall
+  `kinship2` locally per `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`'s Setup
+  chunk) before any design work; do NOT cite this repo's Bennett 2008 nomenclature reference as
+  textual authority for a male-left rule (S480 Finding #2 — it isn't there). READY, Effort unknown,
+  natural continuation of the same code area. **(b)** Tier 1 step (3): refresh the stale
+  `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd` worked-example doc (BACKLOG.md
+  B5) — do this AFTER (a), since #145's resolution is exactly what the doc should demonstrate.
+  READY, Effort S. **(c)** Tier 2 (owner's existing order, unchanged): #133 > #136 > #137 > #138.
+  **(d)** LabKey integration remainder (BLOCKED, unchanged). **(e)** NPRC outreach (DECISION NEEDED,
+  owner-only, unchanged). **(f)** Issues #146-153 remain open, GitHub-only, unchanged (marker-
+  genetics/breeding-optimization/data-workflow features, not pedigree-drawing-related). **(g)** Lower
+  priority, mostly unchanged from S480: B1 (spelling/WORDLIST drift) — **refined this session**, see
+  gotcha below; B7 (`obfuscated_rhesus_mhc_ped.csv` node-count discrepancy); B8 (`rhesusPedigree.R`
+  docstring/fixture mismatch); `inst/extdata/` reorg Phase 4 stale-label one-line cleanup; the
+  broader `a2interactive.Rmd` documentation-pass obligation.
+- **Key files:** `R/makePedigreeDiagramData.R` (the 4 fixed functions, verified via grep after this
+  session's edits: `.buildMatingUnitForest()` line 143, `.positionMatingUnitForest()` line 397,
+  `makePedigreeMatingLayout()` line 765, `.addRectilinearWaypoints()` line 989 — line numbers
+  shifted from this session's new doc comments; re-grep before citing in a future session, since
+  they will shift again); `tests/testthat/test_positionMatingUnitForest.R` (2 new
+  tests, ~line 448-500), `test_buildMatingUnitForest.R` (1 new test, end of file),
+  `test_addRectilinearWaypoints.R` (1 new test, end of file) — all 4 are the issue #154 regression
+  guards; `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md` (still the
+  authoritative sequencing reference for items (a)-(c) above); `PROJECT_LEARNINGS.md` Learning 481
+  (the pmax(NA,NA) misconception + NA-unsafe-comparison discovery, useful background before touching
+  `matingUnits$anchor`/`nonAnchor` again — both columns can now legitimately be `NA`).
+- **Gotchas:** (1) **`matingUnits$anchor`/`nonAnchor` can now be `NA`** (orphan units, both parents
+  dangling) — any FUTURE code touching these columns must use `%in%`/`is.na()`, never bare `==`/`!=`
+  (Learning 481). (2) **B1's spelling-drift list is slightly larger than `BACKLOG.md` currently
+  documents**: this session's own `devtools::check()` run found 7 distinct flagged words, not 6 —
+  `duplicateToReal`, `js` (bare, in addition to the already-listed `js's`), `makePedigreeMatingLayout`,
+  `sibship` (now ALSO flagged at `NEWS.md:128`, not just the 2 locations `BACKLOG.md` names),
+  `vis`, `waypoint`. Not fixed this session (out of scope, Learning 382 precedent) — a future
+  session picking up B1 should re-run the check fresh rather than trusting the exact word/location
+  list currently in `BACKLOG.md:561-575`. (3) A full `devtools::check()` run in this environment
+  takes ~4 minutes end-to-end (vignette build + full 4600+-test suite + vignette re-render) — budget
+  accordingly, and use the `NOT_CRAN=true` fast single-file/`test_dir()` path for quick iteration,
+  reserving the full check for pre-close-out verification. (4) All standing gotchas from S479/S480
+  carry forward unchanged (`gh issue view <N>` needs `--json` fields; Issues-vs-`BACKLOG.md`
+  convention; `NOT_CRAN=true` for tests; `kinship2` not installed in `DESCRIPTION`/`renv.lock` —
+  reinstall locally per the `.qmd` doc's Setup chunk for item (a) above).
+- **Self-assessment score:** 9/10 (breakdown above).
 
 ### What Session 480 Did
 **Deliverable:** One audit document, `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`,

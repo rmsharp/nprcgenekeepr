@@ -1088,6 +1088,10 @@ supported by this project's own copy of the cited nomenclature standard), (3) re
 `.qmd` comparison doc below, (4) the owner's existing #133 > #136 > #137 > #138 order (unchanged,
 set at S436), (5) #141 and Candidate C stay deferred pending new evidence/owner sign-off. Consult
 that audit before picking up any item in this cluster.
+
+**Progress (S481, 2026-08-08):** Tier 1 step (1) is DONE -- the 2 dangling-parent crash bugs +
+the free-pass-filter reachability check (issue #154) are fixed/closed, see `CHANGELOG.md`. Step
+(2) -- issue #145's verification spike -- is next in this cluster; steps (3)-(5) remain untouched.
 - [ ] **Candidate C's connector/dogleg visual-signposting idea** (found S473,
       designing the issue #144 plan; not adopted for #144 itself, Effort
       unknown, low priority) -- extends the existing D2 mate-line "dogleg"

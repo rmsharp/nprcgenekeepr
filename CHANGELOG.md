@@ -43,6 +43,46 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-08 · [issue #154] Fixed 3 dangling-parent crash bugs in the pedigree-diagram layout engine; closed the free-pass-filter reachability question (Session 481)
+- **Deliverable:** Picked up Tier 1 step (1) of `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`
+  (S480). Filed [issue #154](https://github.com/rmsharp/nprcgenekeepr/issues/154) after empirically
+  reproducing all 3 candidate crashes (not just reading the code) — `.buildMatingUnitForest()`/
+  `.positionMatingUnitForest()`/`.addRectilinearWaypoints()` in `R/makePedigreeDiagramData.R` all
+  crashed on realistic dangling-parent input (a sire/dam id with no own row in the pedigree, an
+  ordinary occurrence for a focal-animal-trimmed pedigree). Fixed all 3 via strict TDD
+  (RED→GREEN→REFACTOR, `AskUserQuestion`-gated at every transition, per `CLAUDE.md`'s Development
+  Process Contract): (1) a real individual's `ped$gen = NA` now defaults to generation 0 instead of
+  crashing `maxGen`'s contour-array sizing; (2) a mating unit whose sire AND dam are both dangling
+  no longer forces a dangling id into `anchor` (the existing single-dangling guard only covered the
+  exactly-one-dangling case) — such an "orphan" unit is now positioned as its own independent
+  top-level root, and `unitGen`'s NA-vs-`-Inf` fallback bug (`pmax(NA, NA, na.rm = TRUE)` returns
+  `NA`, not `-Inf` as the prior comment assumed) is fixed alongside it; (3) `.addRectilinearWaypoints()`'s
+  D2 mate-line-dogleg loop now looks up a side's generation defensively, skipping the dogleg for a
+  side with no rendered node (a dangling, free-pass parent) instead of an unconditional lookup that
+  threw "subscript out of bounds". A second, more severe latent bug (infinite recursion / node-stack
+  overflow from an `NA`-unsafe `==` comparison against the now-sometimes-`NA` `anchor` column) was
+  caught mid-GREEN when the RED test was re-run against the first-draft fix — see
+  `PROJECT_LEARNINGS.md` Learning 481. Also investigated the related, previously-unconfirmed
+  free-pass-filter reachability question (`BACKLOG.md`, no issue number) with 2 targeted fixtures;
+  neither reproduced a missing/duplicate node, so it is **closed with evidence, not fixed** (see
+  issue #154's own closing comment).
+- **Verification:** 4 new regression tests (2× `test_positionMatingUnitForest.R`, 1×
+  `test_buildMatingUnitForest.R`, 1× `test_addRectilinearWaypoints.R`), all confirmed failing against
+  `master` before the fix and passing after; full regression suite clean under both
+  `pkgload::load_all()` + `test_dir()` and a full `devtools::check()` run (`FAIL 0 | WARN 10 | SKIP
+  186 | PASS 4606`, the 10 warnings pre-existing/unrelated, traced to `test_modMarkerGenetics.R`);
+  `devtools::check()` = 0 errors, 0 warnings, 2 pre-existing/unrelated NOTEs (confirmed via Learning
+  161's isolate-and-reverify protocol against the untracked, gitignored nomenclature reference file
+  that trips a local-only "non-portable file names" false positive); `lintr::lint_package()` 0 lints
+  on the touched file; a live `shinytest2`/`chromote` runtime smoke test (Phase 3E) rendering a
+  fixture combining all 3 crash shapes through a minimal app matching `R/modPedigree.R`'s exact
+  `makePedigreeMatingLayout()` render chain, for both `edgeStyle` values — 0 console errors, widget
+  rendered.
+- **Housekeeping:** `BACKLOG.md` — removed the B3/B4 items (superseded by issue #154) and closed the
+  B6 item with evidence; added a "Progress" note to the S480 sequencing-note pointer.
+- Commits: `4a60db92` (claim + file issue #154 + close BACKLOG B3/B4/B6), `db46bde8` (RED),
+  `e58307a2` (GREEN).
+
 ### 2026-08-08 · [issue #145] Posted a specification-bug comment on issue #145 (Session 480, post-close-out)
 - **Deliverable:** User pushed back on this session's own audit report, sharpening its framing:
   issue #145's unverified "standard genetic counseling conventions" premise (unresolved `[2]`-`[7]`

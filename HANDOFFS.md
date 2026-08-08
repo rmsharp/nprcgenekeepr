@@ -62,19 +62,36 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S481
 date: 2026-08-08
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Fix the pedigree-diagram Tier 1 dangling-parent crash cluster (issue #154: gen=NA crash, both-parents-dangling anchor-selection crash, .addRectilinearWaypoints() rectilinear-mode crash) via strict TDD; investigate and close the related free-pass-filter reachability question (no issue, BACKLOG.md item).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- fixed the pedigree-diagram Tier 1 dangling-parent crash cluster (issue #154: gen=NA crash, both-parents-dangling anchor-selection crash, .addRectilinearWaypoints() rectilinear-mode crash) via strict TDD; investigated and closed the related free-pass-filter reachability question (no issue, BACKLOG.md item, closed with evidence).
+what_was_done: Empirically reproduced all 3 crashes with Rscript before designing fixes -- disproved the predecessor audit's "no new design decisions needed" characterization for the both-dangling case, and disproved an existing code comment's own wrong claim about pmax(NA, NA, na.rm=TRUE) returning -Inf (it returns NA). Filed issue #154, closed BACKLOG.md B3/B4/B6 (commit 4a60db92). Full TDD cycle with AskUserQuestion gates at every transition: RED (4 new failing tests, commit db46bde8), GREEN (fix in R/makePedigreeDiagramData.R across .buildMatingUnitForest()/.positionMatingUnitForest()/.addRectilinearWaypoints() -- also caught and fixed a second latent infinite-recursion bug mid-GREEN via re-running RED against the first draft, commit e58307a2), REFACTOR (none needed, re-verified). Verified: 4/4 new tests pass; full regression suite 0 failed/0 error under both test_dir() and devtools::check() (FAIL 0 | WARN 10 pre-existing | SKIP 186 | PASS 4606); devtools::check() 0 errors/0 warnings/2 pre-existing NOTEs (isolate-and-reverify protocol applied per Learning 161 to rule out a local-only untracked-file false positive); lintr::lint_package() 0 lints; live shinytest2/chromote runtime smoke test (Phase 3E) through a minimal app matching R/modPedigree.R's exact render chain, both edgeStyle values, 0 console errors. Closed issue #154 on GitHub. Added PROJECT_LEARNINGS.md Learning 481; bumped CLAUDE.md's learning-count pointer (480->481); added a BACKLOG.md progress note.
+next_steps: Tier 1 step (2) of docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md -- issue #145's verification spike (check kinship2's actual unhinted-default sire/dam placement behavior directly; do not cite this repo's Bennett 2008 nomenclature reference as textual authority for a male-left rule). Then Tier 1 step (3), refresh the stale pedigree-diagram-kinship2-reference-comparison.qmd. Then Tier 2 (#133>#136>#137>#138, owner's existing order).
+key_files: R/makePedigreeDiagramData.R:143 (.buildMatingUnitForest()), :397 (.positionMatingUnitForest()), :765 (makePedigreeMatingLayout()), :989 (.addRectilinearWaypoints()); tests/testthat/test_positionMatingUnitForest.R, test_buildMatingUnitForest.R, test_addRectilinearWaypoints.R (4 new issue #154 regression tests); docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md; PROJECT_LEARNINGS.md Learning 481.
+gotchas: matingUnits$anchor/nonAnchor can now legitimately be NA (orphan units) -- any future code touching these columns must use %in%/is.na(), never bare ==/!=. B1's spelling-drift list (BACKLOG.md:561-575) is slightly stale -- this session's devtools::check() found 7 flagged words, not 6 (adds bare "js" and a new NEWS.md:128 "sibship" location) -- re-run fresh rather than trusting the documented list. A full devtools::check() run in this environment takes ~4 minutes end-to-end.
+runtime_smoke: PASS -- live shinytest2/chromote AppDriver against a minimal standalone app matching R/modPedigree.R's exact diagramLayout -> renderVisNetwork render chain, fixture combining all 3 crash shapes, both edgeStyle values ("direct"/"rectilinear"), 0 console errors, non-empty rendered widget HTML.
+changelog_ref: CHANGELOG.md "2026-08-08 · [issue #154] Fixed 3 dangling-parent crash bugs..." entry
+commit: e58307a2 (GREEN; see also 4a60db92 claim, db46bde8 RED, and this close-out's own commit)
 ```
-<in progress>
+<free-text: Fixed all 3 empirically-confirmed dangling-parent crash bugs in the pedigree-diagram
+mating-unit-forest layout engine (issue #154) via strict TDD with AskUserQuestion-gated phase
+transitions throughout. The standout moment was mid-GREEN: re-running the RED tests against the
+first-draft implementation (rather than assuming a clean diff was correct) caught a second, more
+severe latent bug -- an NA-unsafe `==` comparison that caused infinite recursion once `anchor` could
+legitimately be NA. Also investigated and closed (not fixed) a related reachability question with
+targeted empirical fixtures rather than accepting the audit's own "unconfirmed" framing as license to
+either skip it or assume it was real. Went beyond unit-test-green with a genuine live
+shinytest2/chromote runtime verification through the actual render chain, and correctly used
+Learning 161's isolate-and-reverify protocol to separate real defects from local-only check noise
+(an untracked, gitignored file's non-portable filename) rather than either ignoring or chasing it.
+One process slip: the Phase 1B claim stub was written late, after the issue-filing and BACKLOG.md
+edit rather than before -- acknowledged and corrected in-session, not repeated. +: empirical-repro-
+before-design discipline applied to BOTH the audit's estimate and an existing code comment;
+TDD phase-gate discipline maintained throughout; caught own mid-implementation regression via
+re-running tests, not just trusting the diff; genuine runtime (not just unit-test) verification;
+correct pre-existing-vs-introduced triage on devtools::check() noise. -: late Phase 1B claim.
+Self-score 9/10.>
 
 ```handoff
 session: S480
