@@ -62,18 +62,24 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S485
 date: 2026-08-08
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Design/architecture document for issue #133 (affected/phenotype/genotype status encoding on the pedigree diagram) -- Tier 2 of the pedigree-diagram sequencing cluster, first in owner's order #133>#136>#137>#138.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- ratified docs/planning/issue133-affected-status-pedigree-diagram-plan.md (issue #133, affected/phenotype/genotype status encoding on the pedigree diagram). Tier 2 of the pedigree-diagram sequencing cluster, first in owner's order #133>#136>#137>#138. Design/architecture session only -- no R/tests changes.
+what_was_done: Ran a 5-agent parallel Workflow (kinship2's affected semantics via direct deparse of the installed 1.9.6.2 package's compiled closures; visNetwork/vis.js rendering options; the R data/rendering pipeline threading pattern; a simulated-fixture design plan; this project's own prior-planning-doc house style). Independently verified the two most consequential subagent claims via direct grep before trusting them: R/modPedigree.R:446 (not makePedigreeDiagramData()) is what the live Diagram tab actually calls (makePedigreeMatingLayout()), and only one visLegend() call exists. Ran an independent follow-up beyond the 5 agents' literal "affected" grep: read the full roxygen docs for every existing .nprcColumnSchema$possible column, ruling out `condition` (restricted/research-protocol status, unrelated) and `status` (vital status, matches kinship2's own separate `status` argument) as accidental existing homes for this concept. Synthesized 8 ratified decisions (D1-D8, each with a declined alternative) and 2 pre-declared vertical slices (full RED/GREEN/DONE/Verify/session-boundary contracts) into docs/planning/issue133-affected-status-pedigree-diagram-plan.md (~600 lines, commit 477b89b9). Self-applied ARCHITECTURE_WORKSTREAM.md's Verification Checklist, found and closed one gap (defensive as.logical() coercion note). Ratified via AskUserQuestion, no changes requested.
+next_steps: Slice 1 (data model + core rendering in both makePedigreeDiagramData() and makePedigreeMatingLayout() + new sibling fixture obfuscated_rhesus_mhc_ped_affected.csv) is the next session-sized unit -- read docs/planning/issue133-affected-status-pedigree-diagram-plan.md Section 4 Slice 1 in full, re-verify the contract is unchanged since S485 (Vertical Slice Session gate (a)). This is a TDD-gated session (RED->GREEN, AskUserQuestion phase gates apply). Tier 2's remaining order (#136>#137>#138) and S483's #146-153 sequencing remain available unchanged. LabKey (BLOCKED) and NPRC outreach (DECISION NEEDED) unchanged.
+key_files: docs/planning/issue133-affected-status-pedigree-diagram-plan.md (full deliverable); R/makePedigreeDiagramData.R:25 (makePedigreeDiagramData()) and :765 (makePedigreeMatingLayout(), the one live-wired at R/modPedigree.R:446); R/columnSchema.R:15-24 (.nprcColumnSchema); tests/testthat/test_makePedigreeDiagramData.R:96-185 (issue #135 RED-phase pattern to reuse).
+gotchas: makePedigreeDiagramData()/makePedigreeMatingLayout() duplicate shape/title logic independently -- Slice 1 must touch BOTH (issue #135 precedent), do not de-duplicate mid-feature (Dragon #1). affected is not yet qcStudbook()-recognized -- coerce defensively via as.logical(). visLegend() assigns a single scalar slot -- a second call overwrites, not stacks (D6). Exact affected fill color is NOT decided (D8) -- Slice 1's own Pre-RED must pick one, avoiding the GVA heatmap's red/yellow/green convention and the existing #2B7CE9 waypoint-edge blue. Use a new sibling fixture, never an in-place edit to obfuscated_rhesus_mhc_ped.csv (D5) -- ~20 existing tests pin that file's structure. When extracting a completed Workflow's per-agent results from journal.jsonl, verify content by reading it, not by trusting a label-to-hash mapping built from started-event launch order (PROJECT_LEARNINGS.md Learning 485 point 2). Standing gotchas from S479-484 unchanged.
+runtime_smoke: n/a -- docs-only design/architecture session (no R/ or tests/ code changed); build-equivalent N/A, no code to check.
+changelog_ref: CHANGELOG.md "2026-08-08 · [issue #133] Ratified affected-status pedigree-diagram design" entry (this close-out)
+commit: 477b89b9
 ```
+
+Session 485 self-score breakdown: +independently verified subagent claims via grep rather than citing uncritically; +went beyond the 5 research agents' scope to close a real naming-collision risk (condition/status) via direct roxygen reads; +correctly bounded architecture-workstream scope vs. design-workstream scope (deferred exact color, D8); +used AskUserQuestion at every genuine scope/approach fork. -Did not set a deeper reasoning-effort mode explicitly (no in-session tool to do so). -Workflow journal label/result mapping needed manual content-based recovery, costing extra tool calls.
+
+```handoff
+session: S484
+date: 2026-08-08
 
 ```handoff
 session: S484

@@ -43,6 +43,25 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-08 · [issue #133] Ratified an architecture/design document for affected-status pedigree-diagram encoding (Session 485)
+- **Deliverable:** `docs/planning/issue133-affected-status-pedigree-diagram-plan.md`
+  (`ARCHITECTURE_WORKSTREAM.md`) — 8 ratified decisions (D1-D8, each with a declined
+  alternative) and 2 pre-declared vertical slices (full RED/GREEN/DONE/Verify/
+  session-boundary contracts) for Tier 2 of the pedigree-diagram sequencing cluster,
+  first in the owner's order #133 > #136 > #137 > #138. Grounded in 5 parallel
+  research agents (kinship2's `affected` semantics read directly from the installed
+  1.9.6.2 package's compiled source; visNetwork/vis.js rendering-option survey; the
+  R pipeline's actual threading pattern; a simulated-fixture design; this project's
+  own house style) plus this session's own independent verification: confirmed via
+  `grep` that `R/modPedigree.R:446` calls `makePedigreeMatingLayout()` (not
+  `makePedigreeDiagramData()`) for the live Diagram tab, and ruled out reusing the
+  existing `condition`/`status` schema columns (both mean something else, per a
+  direct roxygen read the 5 agents' literal `"affected"` grep did not surface — see
+  `PROJECT_LEARNINGS.md` Learning 485). Ratified via `AskUserQuestion`, no changes
+  requested. No `R/`/`tests/` changes — design/scoping only; a future session
+  implements Slice 1 against this contract. See `BACKLOG.md`'s pedigree-diagram
+  sequencing cluster (S485 progress note) and `SESSION_NOTES.md`.
+
 ### 2026-08-08 · [ad hoc] Filled in this session's own HANDOFFS.md receipt commit sha (Session 484)
 - **Deliverable:** Filled in this session's own `HANDOFFS.md` receipt
   `commit: pending` placeholder with the real close-out commit sha

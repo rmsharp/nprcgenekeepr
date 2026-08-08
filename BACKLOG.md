@@ -1129,6 +1129,21 @@ now-investigated item, and to close out the founder-positioning item as fixed. V
 verification, not committed, matching this project's established practice for `docs/planning/*.qmd`
 source-only docs. Tier 1 of the sequencing audit (crash bugs + #145 spike + this refresh) is now
 fully complete; Tier 2 (#133 > #136 > #137 > #138, owner's existing order) is next in this cluster.
+
+**Progress (S485, 2026-08-08):** Tier 2 step 1 -- issue #133's design/architecture document -- is
+DONE and RATIFIED: see `docs/planning/issue133-affected-status-pedigree-diagram-plan.md`. 8 ratified
+decisions (`affected` logical column, kinship2-name parity; single-trait v1 scope; `color.background`
++ tooltip rendering, no new dependency/custom JS; implement in BOTH `makePedigreeDiagramData()` and
+`makePedigreeMatingLayout()` -- confirmed via `grep` that the latter, not the former, is what
+`R/modPedigree.R:446` actually calls for the live Diagram tab; a new sibling test fixture rather than
+an in-place edit to the ~20-test-pinned base fixture; a one-row `visLegend()` extension; vital-status
+(`status`) kept explicitly out of scope; exact fill color deferred to the implementing session's own
+Pre-RED). Also ruled out reusing this project's existing `condition`/`status` schema columns (both
+mean something else, confirmed via direct roxygen read -- see `PROJECT_LEARNINGS.md` Learning 485).
+Scoped as 2 future vertical slices with full RED/GREEN/DONE/Verify contracts (Slice 1: data model +
+core rendering; Slice 2: legend + documentation) -- next session in this cluster implements Slice 1.
+Issue #133 itself intentionally left open (design ratified, not yet implemented); no `gh issue close`
+this session.
 - [ ] **Candidate C's connector/dogleg visual-signposting idea** (found S473,
       designing the issue #144 plan; not adopted for #144 itself, Effort
       unknown, low priority) -- extends the existing D2 mate-line "dogleg"

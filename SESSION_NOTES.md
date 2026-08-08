@@ -7,23 +7,152 @@
 ## ACTIVE TASK
 
 ### What Session 485 Did
-**Deliverable:** Design/architecture document for GitHub issue #133 (add affected/phenotype/genotype
-status encoding to the pedigree diagram) -- Tier 2 of the pedigree-diagram sequencing cluster
-(`docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`), first in the owner's
-standing order #133 > #136 > #137 > #138 (set S436). User-picked from the re-rendered priorities
-list. Scoped via `AskUserQuestion` as a design document only (no code this session) -- issue #133 is
-data-model-gated (confirmed: zero `affected`-concept hits anywhere in `R/`/`tests/`/fixtures) and no
-prior planning session has pre-declared a layer contract, so the Vertical Slice Session allowance
-does not apply. Following `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md` (data-model +
-rendering-architecture decision, not a UI-layout decision -- `DESIGN_WORKSTREAM.md` considered and
-rejected as the wrong fit). User directed that the design include a concrete simulated
-affected/unaffected test-fixture plan (echoing the audit's own note that no current fixture carries
-an affected-status column).
-**Started:** 2026-08-08.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Ratified design/architecture document for GitHub issue #133 (affected/phenotype/
+genotype status encoding on the pedigree diagram) -- Tier 2 of the pedigree-diagram sequencing
+cluster, first in the owner's standing order #133 > #136 > #137 > #138 (set S436). User-picked from
+the re-rendered priorities list. Scoped via `AskUserQuestion` as a design document only (no code this
+session) and delivered as `docs/planning/issue133-affected-status-pedigree-diagram-plan.md`, ratified
+via a second `AskUserQuestion` with no changes requested.
+**Started/Completed:** 2026-08-08 / 2026-08-08.
+**Status:** DONE -- docs-only design session (no `R/`/`tests/` changes, TDD phase N/A throughout --
+this session never entered RED; it is the Pre-RED layer-contract pre-declaration a future
+implementing session needs before it may claim Vertical Slice Session status). Verified via the
+`ARCHITECTURE_WORKSTREAM.md` Verification Checklist (self-applied) and re-confirmed the document's
+two most consequential source claims via direct `grep` before committing them (see below).
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Full Phase 0 orient (SAFEGUARDS.md, SESSION_NOTES.md, `gh issue
+list`, git status/log/diff, `methodology_dashboard.py`, ledger reconcile -- clean, both `CHANGELOG.md`
+and `HANDOFFS.md` frontiers already at `HEAD`, no undocumented commits). Rendered the priorities list
+(4 numbered items) via `AskUserQuestion`; user picked "#133 status encoding." **(2)** Read issue
+#133's full body/comments and the original comparison audit's Finding #2 before scoping; confirmed
+empirically (not assumed) that the codebase has zero `affected`-concept hits. Proposed a 3-way scope
+question via `AskUserQuestion` (design-doc-only / design-doc-plus-fixture-data / skip straight to RED)
+after the user's own mid-turn message directed that simulated affected/unaffected data be part of the
+design -- user picked "Design doc only." **(3)** Read both `DESIGN_WORKSTREAM.md` and
+`ARCHITECTURE_WORKSTREAM.md`'s "When to Use" sections before choosing between them (rather than
+defaulting to the more UI-sounding option) -- selected `ARCHITECTURE_WORKSTREAM.md` (data model +
+rendering-architecture decision) as the better fit; stated this back to the user before proceeding.
+**(4)** Phase 1B: claimed the session (`SESSION_NOTES.md` stub, `HANDOFFS.md` `status: pending`
+receipt), committed (`760ea62d`). **(5)** Ran a 5-agent parallel `Workflow` (kinship2's `affected`
+semantics via direct deparse of the installed 1.9.6.2 package's compiled closures, cross-validated
+against its own vignette prose and empirical test calls; visNetwork/vis.js rendering-option survey;
+the R data/rendering pipeline's actual threading pattern; a simulated-fixture design plan; and this
+project's own prior-planning-doc house style) rather than sequence the research from memory or
+description alone. Recovering each agent's result from `journal.jsonl` required identifying content
+by reading it, not trusting the label-to-hash mapping built from `started`-event order alone (see
+`PROJECT_LEARNINGS.md` Learning 485 point 2). **(6)** Independently verified the two most
+consequential subagent claims via direct `grep` before treating them as load-bearing facts in the
+design: that `R/modPedigree.R:446` (not `makePedigreeDiagramData()`) is what the live Diagram tab
+actually calls, and that only one `visLegend()` call exists in that file. Both confirmed. **(7)**
+Ran an independent follow-up the 5 research agents' literal `"affected"` grep couldn't have caught:
+read the full roxygen documentation for every existing `.nprcColumnSchema$possible` column, finding
+two adjacent-sounding existing columns (`condition` = restricted/research-protocol status;
+`status` = vital status, matching kinship2's own *separate* `status` argument) that had to be
+explicitly ruled out as the wrong fit before committing to a new `affected` column -- see
+`PROJECT_LEARNINGS.md` Learning 485 point 1, the session's own most novel methodological finding.
+**(8)** Synthesized all findings into `docs/planning/issue133-affected-status-pedigree-diagram-plan.md`
+(~600 lines, matching the project's own multi-slice house-style precedent): 8 ratified decisions
+(D1-D8, each with a documented declined alternative), 2 pre-declared vertical slices with full
+RED/GREEN/DONE/Verify/session-boundary contracts, an Impact Analysis table, a Verification Plan, and
+5 "here be dragons" callouts. Self-applied `ARCHITECTURE_WORKSTREAM.md`'s own Verification Checklist
+before presenting; added one gap it found (a defensive `as.logical()` coercion note for the
+Slice-1-touch-points list, since `affected` isn't yet a `qcStudbook()`-recognized column and a raw
+CSV import could hand it a non-logical value). **(9)** Presented the document summary and ratified
+it via `AskUserQuestion` (no changes requested); updated the doc's ratification blockquote/checkboxes
+and committed (`477b89b9`). **(10)** Close-out: this entry, `HANDOFFS.md` receipt, `CHANGELOG.md`
+ledger entry, `BACKLOG.md` progress note, `PROJECT_LEARNINGS.md` Learning 485, `CLAUDE.md`
+learning-count bump (484->485).
+
+**Session 484 Handoff Evaluation (by Session 485): 9/10.** **What helped:** the handoff's "what's
+next" section named Tier 2 (`#133 > #136 > #137 > #138`, "all data-model-gated, likely need their own
+design/scoping session") as the immediate next item and cited the exact audit doc to read first
+(`docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`) -- this is precisely what let
+the re-rendered priorities-list picker surface "#133 status encoding" as option 1, and the "likely
+need their own design/scoping session" framing is exactly the workstream this session ended up
+running, confirmed independently rather than taken on faith. **What was missing:** nothing that
+blocked this session -- S484's own task was the `.qmd` refresh, not #133's technical content, so it
+could not have been expected to pre-supply the kinship2-source/visNetwork-rendering/column-naming
+research this session had to do fresh. **What was wrong:** nothing found inaccurate. **ROI:** strongly
+positive -- the handoff's specific next-step pointer and audit citation meant zero time was spent
+rediscovering *where* to look before the session's own real investigative work (grounding the 8
+design decisions) could begin.
+
+**Self-assessment (Session 485): 9/10.** **Strengths:** (1) treated "which workstream document" as
+its own investigated decision rather than defaulting to the more UI-sounding `DESIGN_WORKSTREAM.md`
+-- read both workstreams' "When to Use" sections and picked `ARCHITECTURE_WORKSTREAM.md` on the
+merits (data model + rendering architecture, not layout); (2) did not accept the audit's
+"data-model-gated" framing at face value -- independently confirmed it via `grep`, and then went
+further than any of the 5 parallel research agents by checking whether an *existing* column under
+different terminology already covered the need (it didn't, but this required reading full column
+documentation, not just grepping the new term -- `PROJECT_LEARNINGS.md` Learning 485); (3)
+re-verified the two most load-bearing subagent claims (which function renders the live tab; how many
+`visLegend()` calls exist) directly via `grep` before committing them to the design doc as fact,
+rather than citing subagent output uncritically; (4) correctly identified a genuine boundary between
+this document's own scope (architecture: data model, rendering mechanism, dual-function
+implementation) and a different workstream's scope (exact fill color is a `DESIGN_WORKSTREAM.md`
+visual-design call) and deferred it explicitly (D8) rather than either inventing an unfounded color
+choice or silently omitting the question; (5) used `AskUserQuestion` at every genuine fork this
+session hit (session scope, which of 3 handling approaches, final ratification) rather than
+unilaterally deciding scope/approach calls that were the user's/owner's to make, per
+`SAFEGUARDS.md`'s Two-Mode Problem; (6) incorporated the user's mid-turn simulated-data directive as
+a concrete, evidenced decision (D5, with a specific column type/distribution/fixture-isolation
+rationale) rather than a vague acknowledgment. **Weaknesses:** (1) did not explicitly set a deeper
+reasoning-effort mode at session start as `ARCHITECTURE_WORKSTREAM.md`'s Planning Sessions guidance
+directs (no in-conversation tool to toggle this; noting the gap rather than silently omitting it, as
+the guidance itself asks); (2) the `Workflow` journal's `label`-to-result mapping did not reliably
+follow launch order, costing extra tool calls to recover correctly by reading content directly rather
+than trusting the initial extraction -- now recorded as `PROJECT_LEARNINGS.md` Learning 485 point 2
+for the next session that uses `Workflow`'s `parallel()` with a `journal.jsonl` extraction step; (3)
+this ~600-line document's `file:line` citations reflect the codebase as read this session (2026-08-08)
+-- the doc itself flags (Dragon #5) that the kinship2 citations are a deparsed reconstruction, but a
+future Slice 1 implementing session should treat every `R/` citation the same way and re-confirm at
+its own Pre-RED rather than trust line numbers that could drift before implementation starts.
+**Compared to previous sessions:** most directly parallels S483's background-`Workflow`-driven
+audit methodology (parallel agents + this session's own independent verification layer on top, not
+blind synthesis) and S436's original design-session precedent for #131-#138, but is this project's
+first `ARCHITECTURE_WORKSTREAM.md`-shaped (not `DESIGN_WORKSTREAM.md`-shaped) deliverable, and the
+column-naming-collision check (Learning 485) is a genuinely new methodological step not previously
+named in this project's design/audit vocabulary.
+
+**Handoff to Session 486:**
+- **What's next:** Issue #133's design is ratified and ready to implement. **Slice 1** (data model +
+  core rendering in both `makePedigreeDiagramData()` and `makePedigreeMatingLayout()` + the new
+  sibling fixture) is the next session-sized unit -- read
+  `docs/planning/issue133-affected-status-pedigree-diagram-plan.md` §4 Slice 1 in full before
+  starting, and re-verify the contract is unchanged since S485 (`SESSION_RUNNER.md`'s Vertical Slice
+  Session gate (a) requires this re-check at Orient). This is now a TDD-gated session (RED -> GREEN,
+  `AskUserQuestion` phase gates apply) -- unlike this design session, which stayed in Pre-RED/N/A
+  throughout. Separately, unchanged from S484's handoff: Tier 2's remaining order (#136 > #137 >
+  #138, all likely need their own scoping) and S483's #146-153 sequencing (Tier 1 #147 design
+  session, Tier 2 #149>#146>#151, Tier 3 #150 owner-decision, Deferred #152>#153>#148; 2 new tracking
+  issues still unfiled) remain available. LabKey (BLOCKED) and NPRC outreach (DECISION NEEDED)
+  unchanged.
+- **Key files:** `docs/planning/issue133-affected-status-pedigree-diagram-plan.md` (this session's
+  full deliverable -- §3 Decisions D1-D8, §4 the 2 slice contracts, §8 the 5 dragons); `R/
+  makePedigreeDiagramData.R:25` (`makePedigreeDiagramData()`) and `:765`
+  (`makePedigreeMatingLayout()`, the one actually live-wired at `R/modPedigree.R:446`); `R/
+  columnSchema.R:15-24` (`.nprcColumnSchema`, where `"affected"` joins `possible`); `tests/testthat/
+  test_makePedigreeDiagramData.R:96-185` (the issue #135 RED-phase pattern to reuse).
+- **Gotchas:** (1) `makePedigreeDiagramData()` and `makePedigreeMatingLayout()` duplicate their
+  shape/title logic independently -- Slice 1 must touch BOTH, matching the #135 precedent; do not
+  attempt to de-duplicate them mid-feature (a separate, `SAFEGUARDS.md`-gated refactor session, per
+  Dragon #1). (2) `affected` is not yet a `qcStudbook()`-recognized column -- coerce defensively via
+  `as.logical()` rather than assume a clean logical input (see the design doc's Slice 1 "Error
+  contract" note). (3) `visLegend()` assigns a single scalar slot -- a second call overwrites, not
+  stacks; any new legend row must go into the *same* `addNodes` call (D6). (4) The exact `affected`
+  fill color is NOT decided by the design doc (D8) -- Slice 1's own Pre-RED must pick one, avoiding
+  the GVA heatmap's red/yellow/green convention and the existing `#2B7CE9` waypoint-edge blue. (5)
+  Use a new sibling fixture (`obfuscated_rhesus_mhc_ped_affected.csv`), never an in-place edit to
+  `obfuscated_rhesus_mhc_ped.csv` (D5) -- roughly 20 existing tests pin that file's exact structure.
+  (6) When extracting a completed `Workflow`'s per-agent results from `journal.jsonl`, verify content
+  by reading it, not by trusting a `label`-to-hash mapping built from `started`-event launch order
+  (Learning 485 point 2). (7) All standing gotchas from S479-484 carry forward unchanged (`gh issue
+  view <N>` needs `--json` fields; Issues-vs-`BACKLOG.md` convention; `NOT_CRAN=true` for tests;
+  `docs/planning/*.qmd` render byproducts never committed).
+- **Self-assessment score:** 9/10 (breakdown above).
+
+### What Session 484 Did
 
 ### What Session 484 Did
 **Deliverable:** Tier 1 step (3) of `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`:
