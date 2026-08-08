@@ -10,14 +10,134 @@
 **Deliverable:** Implement Slice 2 of the ratified issue #133 plan (`docs/planning/
 issue133-affected-status-pedigree-diagram-plan.md` §4) -- legend + documentation: one new
 `visLegend()` row for the "Affected" status (D6, reusing Slice 1's `#CC79A7` color), a widget-JSON
-test, the tutorial/article documentation update, then `gh issue close 133`. Vertical Slice Session
-(gate (a) re-verified at Orient: zero `R/`/`tests/`/`inst/extdata/`/`vignettes/`/`NEWS.Rmd` changes
-since S486's close-out at `dede1a60`).
-**Started:** 2026-08-08.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+test, the tutorial/article documentation update, `gh issue close 133`. Vertical Slice Session (gate
+(a) re-verified at Orient: zero `R/`/`tests/`/`inst/extdata/`/`vignettes/`/`NEWS.Rmd` changes since
+S486's close-out at `dede1a60`).
+**Started/Completed:** 2026-08-08 / 2026-08-08.
+**Status:** DONE. Full strict-TDD RED->GREEN cycle, `AskUserQuestion`-gated at every transition
+(priorities-list pick; PRE-RED->RED; RED->GREEN). Both slices of issue #133 now shipped; issue
+closed. Verified: full clean regression read (0 failed/0 error, 4640 passed, 10 pre-existing
+warnings -- now root-caused this session, see below), `lintr::lint_package()` 0 issues on touched
+files, `devtools::check()` exact pre-existing baseline (2 ERRORs/1 WARNING/2 NOTEs, all individually
+attributed, 0 new), and live `shinytest2`/`chromote` verification on the real running app (Phase 3E).
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Full Phase 0 orient (SAFEGUARDS.md, SESSION_NOTES.md, `gh issue
+list`, git status/log/diff, `methodology_dashboard.py` -- health 98/100, dashboard itself stale
+v2.8.0 vs. canonical v2.13.0 -- ledger reconcile clean: the one commit ahead of `CHANGELOG.md`'s
+frontier was S486's own established self-referential `HANDOFFS.md`-sha-backfill pattern, not an
+unrecorded action). Rendered the priorities list (4 numbered items) via `AskUserQuestion`; user
+picked "#133 Slice 2." **(2)** Read the full ratified design doc §4 Slice 2; re-verified Vertical
+Slice Session gate (a) via `git diff --stat dede1a60..HEAD -- R/ tests/ inst/extdata/ vignettes/
+NEWS.Rmd` (empty). Re-read every cited source file fresh (`R/modPedigree.R:476-497`'s `visLegend()`
+call, the #132 legend test's exact pattern, Slice 1's `.affectedColor()`/`.affectedLabel()`
+helpers) rather than trust the design doc's own line-number citations. Identified one Pre-RED
+author's-call decision the design doc left open (D6 says "one new row," not what shape/color-column
+mechanics to use) and named it explicitly in the PRE-RED->RED gate rather than silently deciding
+solo. **(3)** Phase 1B: claimed the session, committed (`7812e059`). **(4)** Mid-session, after the
+first full regression read, the user directly asked "what are the warnings? we had zero at last
+release" (10 pre-existing `test_modMarkerGenetics.R` warnings that every session since S448 had
+carried forward as accepted baseline without investigating). Traced the root cause (S447's own
+Slice-5 fixture, `'CA1'`/`'CA2'` sharing no heterozygous locus -- `markerKinship()` correctly
+warning, not a bug) and confirmed CRAN v2.0.0 (2026-07-26) genuinely predates and excludes it,
+confirming the user's recollection. Filed as a new `BACKLOG.md` Housekeeping item (commit
+`ca8d1dc3`) rather than fixing mid-session, per owner direction via `AskUserQuestion` (file-and-
+continue vs. pause-and-fix). **(5)** RED: one new `test_that()` in `test_modPedigree.R` asserting
+the legend JSON contains "Affected"/color/shape; confirmed it failed for the right reason (3
+failures, exactly the new assertions; 0 pre-existing tests broken). **(6)** GREEN: added the 6th
+`addNodes` row to the existing `visLegend()` call. **Live verification (not just the JSON test)
+caught two real defects the JSON assertions alone could not see:** (a) the Pre-RED shape pick
+(`"box"`) rendered as a label-sized filled pill, visually inconsistent with the other 5 rows' fixed-
+size-icon style -- switched to `"hexagon"`; (b) the 6th row's own label clipped against the legend's
+fixed 400px canvas height at the existing `stepY=65L` -- retuned to `54L`. Both corrected in-place
+during GREEN once screenshots contradicted the approved plan, then re-verified live (screenshots +
+widget-JSON re-check) until clean. Also live-confirmed Dragon #3 (deferred by S486): `visExport()`
+PNG capture of a `color.background`-only affected node, using Slice 1's own fixture -- 900+ matching
+pixels in the real exported PNG, 0 diagram/legend console errors throughout. **(7)** Documentation
+checklists: `NEWS.Rmd`'s existing #133 bullet updated (not duplicated) to describe the legend rather
+than promise it "in a later release"; re-rendering to `NEWS.md` incidentally fixed a gap S486 itself
+left (the Slice 1 bullet was added to `NEWS.Rmd` but never actually re-rendered/committed to
+`NEWS.md`, last touched S468). `_pedigree_browser.Rmd` and `colony-manager-guide.qmd` both updated
+(owner's #133 comment requires both) and re-rendered clean (`quarto render` / `rmarkdown::render`).
+Citation checklist (#120) re-confirmed N/A. **(8)** Close-out: `BACKLOG.md` progress note + `#133`
+marked fully shipped, `PROJECT_LEARNINGS.md` Learning 487, `CLAUDE.md` learning-count bump
+(486->487), `gh issue close 133` with a summary comment citing both slices' commits, this entry,
+`HANDOFFS.md` receipt, `CHANGELOG.md` ledger entry.
+
+**Session 486 Handoff Evaluation (by Session 487): 9/10.** **What helped:** the handoff named Slice
+2's exact scope (legend row + docs), the precise files/line ranges to re-read (`R/modPedigree.R:
+476-497`, the #132 test pattern, the new `.affectedColor()`/`.affectedLabel()` helpers), and flagged
+both Dragons (#3 PNG export, #4 row-fit) as still-owed live checks for this session specifically --
+all of this let the session go straight to a well-scoped Pre-RED with zero rediscovery. The "NPRC_
+RUN_E2E=true needed for ad hoc scripts too" gotcha saved real time (first live script would have
+silently skip()'d otherwise). **What was missing:** the handoff could not have anticipated that the
+Dragon #4 "may not fit" hedge would turn out to be TWO separate defects (shape family AND row-fit),
+not one -- a minor gap, not a real omission, since the handoff explicitly flagged both as "verify
+live, don't assume" rather than asserting either was fine. **What was wrong:** nothing found
+inaccurate -- every file:line citation held, the gate-(a) diff came back empty as expected, the
+`#CC79A7` color and D1-D8 decisions were exactly as described. **ROI:** strongly positive.
+
+**Self-assessment (Session 487): 9/10.** **Strengths:** (1) took the user's mid-session warning
+question seriously as a real investigation, not a rhetorical aside -- traced it to an exact commit,
+an exact root cause, and an exact confirmation of the user's own recollection, rather than repeating
+the unexamined "10 pre-existing" framing every session since S448 had passed forward; (2) did not
+stop at "the widget-JSON test passed" -- took a real screenshot before calling GREEN done, which is
+what caught both the shape-family defect and the row-clipping defect; a session that trusted the
+`grepl()` assertions alone would have shipped a visually broken legend row with 100% green tests;
+(3) iterated live (fix -> re-screenshot -> confirm) rather than fixing once and assuming it worked;
+(4) caught and fixed S486's own stale-`NEWS.md` gap as a natural byproduct of doing the checklist
+correctly, rather than perpetuating it; (5) kept the warnings investigation properly scoped -- full
+root-cause and a filed, actionable BACKLOG item, but did not let it become a second deliverable,
+per the user's own explicit direction. **Weaknesses:** (1) the initial `"box"` shape and `stepY=65L`
+Pre-RED assumptions were both wrong, discovered only after RED->GREEN was already approved and
+implemented once -- a session with tighter Pre-RED research (e.g., checking vis.js's own shape-
+family documentation, or a throwaway prototype render, before naming "box" in the approved plan)
+might have caught the shape-family issue before writing any code, though the row-clipping issue
+(Dragon #4) was explicitly flagged as needing a LIVE check regardless of any amount of upfront
+research, so that one was always going to require empirical iteration; (2) did not re-litigate the
+`"box"`/`stepY=65L` choices as fresh `AskUserQuestion` gates before fixing them, treating the
+corrections as within GREEN's own already-approved scope (matching S486's own precedent for its
+inline lint-driven refactor) -- flagging this honestly per the TDD contract's error-handling rule,
+though the fixes were narrow, live-verified, and immediately re-tested, not silent. **Compared to
+previous sessions:** most directly parallels S486's own Learning 486 point 2 (a verification
+technique that looked complete but wasn't) -- this session's Learning 487 is the same lesson one
+layer up: a widget-JSON *content* assertion is not a widget *rendering* assertion, just as
+`outerHTML` was not a canvas-content assertion.
+
+**Handoff to Session 488:**
+- **What's next:** Tier 2's remaining order (#136 name labels > #137 twin/zygosity > #138 full-
+  colony cap, the owner's existing sequencing, unchanged since S436) -- each needs its own scoping/
+  design session first (none has a ratified design doc yet, unlike #133). Separately available:
+  the new Housekeeping item this session filed (the 10 `test_modMarkerGenetics.R` warnings --
+  Effort S, root-caused but not fixed, two concrete fix options given), the pre-existing non-
+  portable-filename `devtools::check()` ERROR item (S486, Effort S), the GENETIC_METRICS issues
+  sequencing (#147 Tier 1 design / #149 Tier 2 top pick), LabKey (BLOCKED), NPRC outreach (DECISION
+  NEEDED).
+- **Key files:** `R/modPedigree.R:476-509` (the retuned `visLegend()` call -- 6 rows, `stepY=54L`,
+  `hexagon` shape for "Affected"); `tests/testthat/test_modPedigree.R` (both the #132 test's updated
+  `stepY` assertion and the new Slice 2 legend test); `BACKLOG.md`'s new Housekeeping item (warnings
+  root cause + two fix options: `suppressWarnings()` around the 2 cross-center test's `setInputs()`
+  calls, or adjust the fixture -- but only after re-verifying the exact-fraction Fst values still
+  hold).
+- **Gotchas:** (1) A `visLegend()` `addNodes` row's `shape` must match the existing rows' shape
+  FAMILY (fixed-size icon vs. label-sized) or it renders inconsistently -- confirmed this session,
+  see `PROJECT_LEARNINGS.md` Learning 487. (2) A legend canvas has a genuinely fixed pixel height;
+  widget-JSON `grepl()` tests cannot see label clipping -- always screenshot a rendering-surface
+  change, don't trust content assertions alone (Learning 487). (3) `app$get_screenshot(path)`
+  writes into R's OWN `tempdir()`, which is deleted when that R process exits -- save to a stable
+  path (this session used the scratchpad dir) if you need to view it after the script returns. (4)
+  `shinytest2::AppDriver$get_download()` is for Shiny `downloadHandler`-bound outputs only; a client-
+  side Blob download (like `visNetwork::visExport()`'s FileSaver.js mechanism) needs
+  `app$get_chromote_session()$Browser$setDownloadBehavior(behavior="allow", downloadPath=<dir>)`
+  instead, confirmed working this session. (5) All standing gotchas from S479-486 carry forward
+  unchanged (`gh issue view <N>` needs `--json` fields; `NOT_CRAN=true` for tests; `NPRC_RUN_E2E=true`
+  needed for ANY live `shinytest2`/`chromote` script, not just committed test files; `docs/planning/
+  *.qmd` render byproducts never committed; re-render `NEWS.Rmd` -> `NEWS.md` and actually check the
+  diff, don't assume a prior session's `NEWS.Rmd`-only edit made it into `NEWS.md` -- this session
+  found S486 itself had NOT, confirmed via `git log -- NEWS.md`). (6) This session's own machine load
+  was normal (load average ~11, vs. S486's reported 200-280) -- if a future session sees extreme load
+  again, budget accordingly per S486's own note.
+- **Self-assessment score:** 9/10 (breakdown above).
 
 ### What Session 486 Did
 **Deliverable:** Implement Slice 1 of the ratified issue #133 plan (`docs/planning/

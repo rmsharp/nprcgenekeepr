@@ -43,6 +43,55 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-08 · [issue #133] Implemented Slice 2 (legend + documentation) of the affected-status pedigree-diagram design; issue #133 closed (Session 487)
+- **Deliverable:** the Diagram tab's shape-to-sex `visLegend()` gained a matching
+  "Affected" row (D6), reusing Slice 1's `#CC79A7` color — one new row in the
+  existing `addNodes` data frame, not a second `visLegend()` call. `NEWS.Rmd`'s
+  existing #133 bullet updated (not duplicated) to describe the legend rather
+  than promise it "in a later release"; `vignettes/manual_components/
+  _pedigree_browser.Rmd` and `vignettes/articles/colony-manager-guide.qmd` both
+  updated per the tutorial/article checklist. Full strict-TDD RED→GREEN cycle,
+  `AskUserQuestion`-gated at every transition. **Both slices of issue #133 are
+  now shipped; issue #133 closed** with a summary comment citing both slices'
+  commits.
+- **Live verification (screenshots, not just the widget-JSON test) caught two
+  real defects the JSON assertions alone could not see:** the Pre-RED shape
+  pick (`"box"`) rendered as a label-sized filled pill, visually inconsistent
+  with the other 5 rows' fixed-size-icon style — switched to `"hexagon"`; the
+  6th row's own label clipped against the legend's fixed 400px canvas height
+  at the existing `stepY=65L` — retuned to `54L`. Both corrected in-place
+  during GREEN, re-verified live until clean. See `PROJECT_LEARNINGS.md`
+  Learning 487.
+- **Also live-confirmed Dragon #3** (deferred by S486): `visExport()` PNG
+  capture of a `color.background`-only affected node, using Slice 1's own
+  fixture — 900+ matching `#CC79A7` pixels in the real exported PNG.
+- **Incidental fix:** re-rendering `NEWS.Rmd` → `NEWS.md` found S486's own
+  Slice 1 bullet had been added to `NEWS.Rmd` but never actually re-rendered/
+  committed to `NEWS.md` (last touched S468) — fixed as a byproduct of this
+  session's own render, not a separate action.
+- **Verified:** full clean regression read 0 failed/0 error (4640 passed, same
+  10 pre-existing `test_modMarkerGenetics.R` warnings — now root-caused, see
+  the `[ad hoc]` entry below); `lintr::lint_package()` 0 issues on touched
+  files; `devtools::check()` exact pre-existing baseline (2 ERRORs/1
+  WARNING/2 NOTEs, all individually attributed, 0 new); live `shinytest2`/
+  `chromote` smoke test on the real running app confirmed all 6 legend rows,
+  the main diagram's affected-node coloring unaffected by the legend change,
+  and the PNG export, 0 diagram/legend console errors.
+
+### 2026-08-08 · [ad hoc] Root-caused the "10 pre-existing test_modMarkerGenetics.R warnings" every session since S448 had carried forward unexamined (Session 487)
+- **Deliverable:** the owner asked directly ("what are the warnings? we had
+  zero at last release") after seeing `warning: 10` in this session's clean
+  regression read. Traced to commit `a319e0c5` (S447, 2026-08-01, issue #130
+  Slice 5): both `test_modMarkerGenetics.R` cross-center tests upload a
+  hand-derived 2-locus toy fixture where `'CA1'`/`'CA2'` happen to share no
+  heterozygous locus; `markerKinship()` correctly warns and returns `NA` for
+  that pair (working as designed, not a production bug) — 5× per test × 2
+  tests = 10. Confirmed CRAN v2.0.0 (released 2026-07-26) genuinely predates
+  S447 and shipped with a clean, 0-warning suite, matching the owner's
+  recollection. Filed as a new `BACKLOG.md` Housekeeping item with 2 concrete
+  fix options (owner directed file-and-continue over pause-and-fix, since it
+  is unrelated to the Slice 2 TDD work in progress).
+
 ### 2026-08-08 · [issue #133] Implemented Slice 1 (data model + core rendering) of the affected-status pedigree-diagram design (Session 486)
 - **Deliverable:** `affected` is now a recognized, optional logical column
   (`.nprcColumnSchema$possible` + `getPossibleCols()` roxygen); both
