@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S479
+date: 2026-08-08
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Reconcile undocumented genetic-metrics-PDF audit ghost work (2 uncommitted docs dated 2026-08-05/2026-08-06) and its 8 correspondent GitHub issues (#146-153, plus separately-filed #145) -- discovered at Phase 0 orientation, produced by a prior session/run that left no commit and no session notes.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S478
 date: 2026-08-04
 status: complete

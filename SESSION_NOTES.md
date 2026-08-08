@@ -6,6 +6,19 @@
 
 ## ACTIVE TASK
 
+### What Session 479 Did
+**Deliverable:** Reconcile undocumented "ghost" work discovered during Phase 0 orientation: two
+uncommitted `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_*.md` docs (dated 2026-08-05,
+2026-08-06) and their 8 correspondent GitHub issues (#146-153, plus a separately-filed #145),
+produced by a prior session/agent run that never entered the `SESSION_RUNNER.md` protocol (no
+Phase 1B claim stub, no commit at all -- invisible to the git-log-based ledger reconcile). Picked
+by the user from the Phase 0 priorities list (IN PROGRESS).
+**Started:** 2026-08-08
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 478 Did
 **Deliverable:** Add issue #142's `edgeStyle` (direct vs. rectilinear) option demonstration to
 `vignettes/a2interactive.Rmd`'s existing "Pedigree Diagram" section, plus fix that section's stale
