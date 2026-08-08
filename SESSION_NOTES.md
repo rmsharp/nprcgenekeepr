@@ -6,6 +6,24 @@
 
 ## ACTIVE TASK
 
+### What Session 486 Did
+**Deliverable:** Implement Slice 1 of the ratified issue #133 plan (`docs/planning/
+issue133-affected-status-pedigree-diagram-plan.md` §4) -- data model + core rendering: `affected`
+becomes a recognized, optional logical column; both `makePedigreeDiagramData()` and
+`makePedigreeMatingLayout()` render it (dominant `color.background` + tooltip line); new sibling
+fixture `obfuscated_rhesus_mhc_ped_affected.csv`. Vertical Slice Session (gate (a) re-verified at
+Orient: zero `R/`/`tests/`/`inst/extdata/` changes since the design was ratified at `477b89b9`).
+(IN PROGRESS)
+**Started:** 2026-08-08.
+**Status:** Session claimed. Pre-RED decisions resolved via `AskUserQuestion` before claiming: D8
+fill color = `#CC79A7` (Okabe-Ito reddish-purple, colorblind-safe, distinct from both the GVA
+heatmap's red/yellow/green and the existing `#2B7CE9` waypoint-edge blue); `include` question =
+"not yet" (display-only v1, matching the design doc's own recommendation). Work beginning: RED
+phase next.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 485 Did
 **Deliverable:** Ratified design/architecture document for GitHub issue #133 (affected/phenotype/
 genotype status encoding on the pedigree diagram) -- Tier 2 of the pedigree-diagram sequencing
