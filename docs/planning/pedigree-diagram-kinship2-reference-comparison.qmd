@@ -1,6 +1,6 @@
 ---
 title: "Pedigree Diagram: kinship2 Reference Comparison"
-subtitle: "Decision-support research for issue #142 (rectilinear mate-line/sibship-bar style) -- not a package vignette, not shipped"
+subtitle: "Decision-support research for issues #142 (rectilinear mate-line/sibship-bar style, shipped), #143/#144 (founder-positioning fixes, shipped), and #145 (sire/dam left-right ordering, open) -- not a package vignette, not shipped"
 date: today
 format:
   html:
@@ -25,8 +25,19 @@ individuals, same parent/child/sex relationships -- using
 `R/modPedigree.R`'s Diagram tab uses today), placed directly next to
 kinship2's own rendering of the identical data. The goal is to give the owner
 a fair, apples-to-apples visual and factual basis for deciding whether (and
-how) to pursue [issue #142](https://github.com/rmsharp/nprcgenekeepr/issues/142)
--- **no decision is made in this document, and no package code is changed.**
+how) to pursue diagram-layout changes -- **no decision is made in this
+document, and no package code is changed here.**
+
+Originally written for [issue #142](https://github.com/rmsharp/nprcgenekeepr/issues/142)
+(shipped since), this comparison also caught a real founder-positioning
+defect along the way -- independent of #142, fixed via issues
+[#143](https://github.com/rmsharp/nprcgenekeepr/issues/143)/[#144](https://github.com/rmsharp/nprcgenekeepr/issues/144)
+(see Examples 1-2) -- and now includes a fourth worked example investigating
+[issue #145](https://github.com/rmsharp/nprcgenekeepr/issues/145)'s sire/dam
+left-right ordering question directly against kinship2's own default
+behavior (Example 4), refreshed per
+`docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`'s Tier
+1 step 3 recommendation.
 
 `kinship2` is installed only into this project's local `renv` library for
 this one-off comparison (not added to `DESCRIPTION`, not snapshotted into
@@ -140,26 +151,33 @@ title(main = "kinship2::plot.pedigree() -- sample.ped family 2")
 render_nprc_diagram(nprcPed2)
 ```
 
-**Finding -- a founder-positioning defect (distinct from the edge-routing
-question below):** in this rendering, `203` (a founder with no recorded
-parents, who mates with `204`, a *daughter* of `201`x`202`, generation 1)
-visually reads as if `201` and `203` -- two males -- are the mated pair. This
-is confirmed in the actual layout data, not just an impression:
+**Founder positioning (fixed since this document was first written -- see
+below):** in this rendering, `203` (a founder with no recorded parents, who
+mates with `204`, a *daughter* of `201`x`202`, generation 1) now positions
+correctly, adjacent to his own mate's row, not inside `201`x`202`'s mate-line
+span. This document originally caught a real defect here -- `203` used to
+land in the founders' own row (`y = 0`), visually reading as if `201` and
+`203`, two males, were the mated pair -- confirmed and fixed via issues
+[#143](https://github.com/rmsharp/nprcgenekeepr/issues/143) and
+[#144](https://github.com/rmsharp/nprcgenekeepr/issues/144) (S472/S474,
+2026-08-04). Current, correct layout data:
 
 ```{r fam2-defect-evidence}
 layout2 <- makePedigreeMatingLayout(nprcPed2)
-n2 <- layout2$nodes[layout2$nodes$y == 0, c("id", "x", "y")]
-n2[order(n2$x), ]
+n2 <- layout2$nodes[layout2$nodes$id %in% c("201", "202", "203", "204"),
+                     c("id", "x", "y")]
+n2[order(n2$y, n2$x), ]
 ```
 
-At `y = 0` (the founders' own row), left to right: `202` (x = -360), `203`
-(x = -240), `__union_1` (x = -180, the true midpoint of `201`x`202`'s own
-mate-line), `201` (x = 0). `203` sits physically *inside* the visual span of
-`201`x`202`'s own mate connector, even though `203` has no relationship to
-either of them -- his real mate union (with `204`) is a full generation
-row below (`y = 150`), reached by one long edge that crosses back up through
-this row. Root cause and a second, independent confirmation (family 1, ids
-`116`/`117`) are discussed after Example 2 below.
+`203` is now at `y = 150`, next to `__union_2` and `204` -- his own actual
+mate union -- not in the founders' `y = 0` row at all. The founders' row now
+holds only `202`, `__union_1` (the true midpoint of `201`x`202`'s own
+mate-line), and `201`. This matches kinship2's own convention exactly (a
+founder who marries into a later generation is positioned adjacent to their
+actual mate's row, not at their own generation), closing the gap this
+document's Summary table originally flagged. Root cause and a second,
+independent confirmation (family 1, ids `116`/`117`) are discussed after
+Example 2 below.
 
 ## Example 2: `sample.ped` family 1 (41 people, includes real multi-mate individuals)
 
@@ -212,41 +230,50 @@ above), even though kinship2 produces two. Individual `113` still gets its own
 node in `nprcgenekeepr`'s output (never silently dropped), unlike kinship2's
 own behavior.
 
-**The founder-positioning defect found in Example 1 recurs here too**,
-confirming it is a systematic pattern, not a one-off quirk of that synthetic
-example. `117` is a founder (no recorded parents) who mates with `116`
-(a *daughter* of `105`x`106`, generation 1) -- the identical shape as
-`203`/`204` above:
+**The founder-positioning defect found in Example 1 recurred here too when
+this document was first written, confirming it was a systematic pattern, not
+a one-off quirk of that synthetic example -- both are now fixed.** `117` is a
+founder (no recorded parents) who mates with `116` (a *daughter* of
+`105`x`106`, generation 1) -- the identical shape as `203`/`204` above:
 
 ```{r fam1-defect-evidence}
 e1 <- layout1$edges
 into_union <- e1[grepl("^__union_", e1$to), ]
 u <- into_union$to[into_union$from == "116"]
-n1 <- layout1$nodes[layout1$nodes$y == 0, c("id", "x", "y")]
-n1[n1$id %in% c("105", "106", "117", u), ][order(n1[n1$id %in% c("105", "106", "117", u), "x"]), ]
+n1 <- layout1$nodes[layout1$nodes$id %in% c("105", "106", "117", "116", u),
+                     c("id", "x", "y")]
+n1[order(n1$y, n1$x), ]
 ```
 
-`117` (a founder, own generation 0) is placed at the SAME row as `105`/`106`,
-landing physically between `106` and `105`x`106`'s own mate connector --
-exactly the same illusion as `201`/`203` in Example 1, this time suggesting
-`105` and `117` (or `106` and `117`) are connected when neither is. `117`'s
-actual mate union (with `116`) sits a full row below, at `y = 150`.
+`117` now sits at `y = 150`, alongside `__union_9` and `116` -- his own
+actual mate union -- not at `y = 0` with `105`/`106` at all. Originally,
+`117` (a founder, own generation 0) landed at the SAME row as `105`/`106`,
+physically between `106` and `105`x`106`'s own mate connector -- the same
+illusion as `201`/`203` in Example 1, suggesting `105` and `117` (or `106`
+and `117`) were connected when neither was.
 
-**Root cause (not fixed here -- flagged for a future session, not part of
-this document's scope):** `.positionMatingUnitForest()` places a mating
+**Root cause and fix:** `.positionMatingUnitForest()` places a mating
 unit's row at the generation of its *tree-native* parent (the one whose own
 subtree the recursion is already walking -- here, `204`/`116`, each a real
-child elsewhere in the tree) but does not correspondingly move the *other*,
-marry-in parent (`203`/`117`, a founder with no tree-native position of their
-own) down to that same row. The marry-in parent keeps their own, earlier
-generation row, where they can land inside an unrelated couple's mate-line
-span. **This is independent of the #142 edge-routing style question below --
-it is a defect in the underlying x/y coordinate ASSIGNMENT, not in how edges
-are drawn between already-placed nodes**, so it would remain a problem even
-under a fully rectilinear implementation of #142. A founder marrying into a
-family at a generation other than their own is an ordinary, common case in
-real breeding-colony pedigrees, not a synthetic-data curiosity -- this
-warrants its own investigation regardless of the #142 decision.
+child elsewhere in the tree). It previously did not correspondingly move the
+*other*, marry-in parent (`203`/`117`, a founder with no tree-native
+position of their own) down to that same row -- the marry-in parent kept
+their own, earlier generation row, where they could land inside an unrelated
+couple's mate-line span. This was independent of the #142 edge-routing style
+question below -- a defect in the underlying x/y coordinate ASSIGNMENT, not
+in how edges are drawn between already-placed nodes -- so it remained a
+problem even for a fully rectilinear implementation of #142 until fixed
+directly. **Fixed via two issues, split by anchor role:**
+[#143](https://github.com/rmsharp/nprcgenekeepr/issues/143) (S472,
+2026-08-04) covers a marry-in parent who is NOT their mating unit's anchor
+(the `203`/`117` shape above); [#144](https://github.com/rmsharp/nprcgenekeepr/issues/144)
+(S474, 2026-08-04) covers the anchor-side case the #143 fix did not reach. A
+founder marrying into a family at a generation other than their own is an
+ordinary, common case in real breeding-colony pedigrees, not a
+synthetic-data curiosity -- both fixes were verified against realistic
+dangling-parent and multi-generation data, not just this document's two
+synthetic families (see `docs/planning/issue143-founder-positioning-fix-plan.md`
+and `docs/planning/issue144-anchor-row-mismatch-fix-plan.md`).
 
 **Separately, not a defect:** every node in every rendering above uses the
 same solid fill color, regardless of any affected-status value. This is not
@@ -331,6 +358,93 @@ by a dashed line) -- this is `nprcgenekeepr`'s existing, already-shipped
 duplicate-node convention working as designed, just visibly different from
 kinship2's own single-node-two-mate-lines approach.
 
+## Example 4: multi-mate "crowding" -- does kinship2 place sires left of dams?
+
+[Issue #145](https://github.com/rmsharp/nprcgenekeepr/issues/145) asks
+whether the Pedigree Diagram should place a sire to the left of a dam,
+citing "standard genetic counseling conventions." A dedicated verification
+spike (S482, 2026-08-08 --
+`docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md`)
+read kinship2's own alignment source directly and found **no such rule
+anywhere in the package**: the ordinary direct-pedigree spouse-pairing code
+path has zero `sex` check (unlike two other, narrower branches that do), and
+the apparent "sire-left" result for a simple single-mate pair (Examples 1-3
+above all happen to show this) is an indexing artifact, not a rule -- one
+that stops holding the moment an individual has more than one mate. This
+example reproduces that spike's decisive counter-example directly, side by
+side with `nprcgenekeepr`'s own handling of the same data: a dam mated to
+two sires (deliberately the mirror image of Example 3's mother-and-daughter
+mate-count asymmetry above, this time crowding the FEMALE parent).
+
+```{r crowd-data}
+crowd <- data.frame(
+  id   = c("S1", "D1", "S2", "K1", "K2"),
+  sire = c(NA,   NA,   NA,   "S1", "S2"),
+  dam  = c(NA,   NA,   NA,   "D1", "D1"),
+  sex  = c("M",  "F",  "M",  "M",  "F"),
+  stringsAsFactors = FALSE
+)
+crowd$gen <- findGeneration(crowd$id, crowd$sire, crowd$dam)
+crowd
+```
+
+### kinship2
+
+```{r crowd-kinship2}
+#| fig-width: 6
+#| fig-height: 4
+pedCrowd <- kinship2::pedigree(
+  id = crowd$id,
+  dadid = ifelse(is.na(crowd$sire), "0", crowd$sire),
+  momid = ifelse(is.na(crowd$dam), "0", crowd$dam),
+  sex = ifelse(crowd$sex == "M", 1, 2),
+  missid = "0"
+)
+plot(pedCrowd)
+title(main = "kinship2::plot.pedigree() -- 1 dam, 2 sires (role-reversed crowding)")
+```
+
+```{r crowd-kinship2-order}
+al <- kinship2::align.pedigree(pedCrowd)
+pedCrowd$id[al$nid[1L, al$nid[1L, ] > 0]]
+```
+
+kinship2's own default (no `hints` supplied) places the founders' row, left
+to right, as **`S1`, `D1`, `S2`** -- the dam **centered**, with her two sires
+flanking her on either side, split by the order their mating pairs were
+discovered while scanning the pedigree (`S1`x`D1` before `S2`x`D1`), not by
+sex. Nothing about this placement is sex-driven: swapping which sire mated
+first in the input data swaps which side each sire lands on, with no code
+path anywhere in kinship2 inspecting `sex` to decide the split (see the
+research doc's Method/Finding sections for the source-level argument this
+example only demonstrates empirically).
+
+### nprcgenekeepr
+
+```{r crowd-nprc}
+layoutCrowd <- makePedigreeMatingLayout(crowd)
+cat(
+  "nodes:", nrow(layoutCrowd$nodes),
+  " edges:", nrow(layoutCrowd$edges),
+  " duplicate occurrences:", length(layoutCrowd$duplicateToReal), "\n"
+)
+layoutCrowd$duplicateToReal
+render_nprc_diagram(crowd)
+```
+
+**Observation:** `nprcgenekeepr` takes a structurally different approach to
+this same "one parent, two mates" shape than kinship2's centered-single-node
+split. Rather than keeping `D1` as one node with two mate-lines,
+`nprcgenekeepr` **duplicates** her (`__dup_D1_1`) -- the same
+already-shipped convention Example 3 demonstrated for a multi-mate father,
+now confirmed to apply identically regardless of which parent's sex has the
+extra mate. Neither `nprcgenekeepr`'s existing duplicate-node placement nor
+kinship2's centered/discovery-order split makes any sex-based left-right
+decision for this case -- consistent with the research doc's conclusion that
+issue #145's premise (kinship2 enforces sire-left placement) does not hold
+once an individual has more than one mate, the exact scenario this example
+constructs.
+
 ## Summary of factual differences observed
 
 | Aspect | kinship2 (reference) | nprcgenekeepr (current, shipped) |
@@ -345,25 +459,43 @@ kinship2's own single-node-two-mate-lines approach.
 | Affected/phenotype status | filled shape | not supported on the diagram (tracked: issue #133) |
 | Twin/zygosity encoding | a relationship-code triangle connector | not supported on the diagram (tracked: issue #137) |
 | Genotype labels on nodes | supported via a custom `id=` label string | not supported on the diagram (a separate Marker Genetics tab covers genotype-based analysis, not diagram annotation) |
-| Founder who mates into a later generation (e.g. `203`x`204`, `117`x`116`) | positioned adjacent to their actual mate's row | positioned at their OWN generation row -- can land inside an unrelated couple's mate-line, visually implying the wrong pairing (**confirmed defect**, both example families above) |
+| Founder who mates into a later generation (e.g. `203`x`204`, `117`x`116`) | positioned adjacent to their actual mate's row | positioned adjacent to their actual mate's row -- **matches kinship2, fixed via issues #143/#144** (originally a confirmed defect in both example families above; see Examples 1-2) |
+| Sire/dam left-right ordering for a single-mate pair | sire tends to render left of dam -- an indexing artifact of `dad`/`mom` slot order, not a sex-based rule (no `hints` case) | sire tends to render left of dam -- same underlying discovery-order mechanism, coincidentally similar-looking result (neither package has a sex-based rule; see Example 4 / issue #145) |
+| Sire/dam left-right ordering once an individual has multiple mates ("crowding") | the multi-mated parent is centered, mates split by pedigree data-row discovery order -- **not sex** (Example 4's decisive counter-example: `S1, D1, S2`) | the multi-mated parent is duplicated (existing convention, Example 3/4) rather than centered with a split -- also not sex-based |
 
-**Two different kinds of gap are visible here, and they should not be
-conflated:**
+**Several different kinds of gap/question are visible here, and they should
+not be conflated:**
 
-1. **A styling/convention gap (issue #142's scope):** kinship2's strict
-   horizontal-then-vertical mate-line/sibship-bar routing versus
-   `nprcgenekeepr`'s current direct diagonal edges to/from a small connector
-   node. This is a "how do already-correctly-placed nodes get connected"
-   question.
-2. **A confirmed positioning defect (independent of #142, found while
-   preparing this document):** a founder who mates into a later generation
-   is placed at the wrong row entirely, which can make the diagram visually
-   imply an incorrect mating pair. This is a "where do nodes get placed in
-   the first place" question -- it exists regardless of how the edges
-   connecting them are eventually drawn, and reproduces in both of
-   kinship2's own reference families, not just a contrived case.
+1. **A styling/convention gap (issue #142's scope, now shipped):** kinship2's
+   strict horizontal-then-vertical mate-line/sibship-bar routing versus
+   `nprcgenekeepr`'s direct diagonal edges to/from a small connector node.
+   This was a "how do already-correctly-placed nodes get connected"
+   question -- resolved by issue #142's `edgeStyle = "rectilinear"` option,
+   which reproduces kinship2's own right-angle convention as an alternative
+   to the (still-default) direct style shown in Examples 1-4 above.
+2. **A positioning defect, found while preparing this document and now
+   fixed (issues #143/#144):** a founder who mated into a later generation
+   used to be placed at the wrong row entirely, which could make the diagram
+   visually imply an incorrect mating pair. This was a "where do nodes get
+   placed in the first place" question -- independent of #142's edge-routing
+   question, and it reproduced in both of kinship2's own reference families,
+   not just a contrived case. See Examples 1-2 above for the current,
+   corrected behavior.
+3. **A sire/dam left-right ordering question (issue #145's premise,
+   investigated and found unsupported -- S482/Example 4 above):** issue #145
+   asks `nprcgenekeepr` to enforce sire-left-of-dam placement, citing
+   "standard genetic counseling conventions." Neither package actually
+   implements a sex-based left-right rule -- both packages' apparent
+   "sire-left" result for a simple single-mate pair is an artifact of
+   internal parent-slot/discovery order, not a rule, and Example 4's dam-
+   with-two-sires counter-example shows kinship2 abandoning even that
+   appearance the moment an individual has more than one mate. Any future
+   #145 design work should treat "male typically left" as a default worth
+   choosing for the simple case, not as behavior either package already
+   enforces and `nprcgenekeepr` merely needs to "correct."
+4. **The duplicate-individual differences** (narrower trigger condition than
+   kinship2's; no single-node-multiple-mate-line support) are a fourth,
+   related but analytically separate question -- see Examples 2-4.
 
-The duplicate-individual differences (narrower trigger condition than
-kinship2's; no single-node-multiple-mate-line support) are a third, related
-but analytically separate question. No resolution is recommended for any of
-the three in this document -- it exists to inform that decision, not make it.
+No resolution is recommended for any of these in this document -- it exists
+to inform decisions on each, not make them.

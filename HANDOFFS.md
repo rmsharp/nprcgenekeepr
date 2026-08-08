@@ -62,16 +62,16 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S484
 date: 2026-08-08
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS -- Tier 1 step (3): refresh docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd with S482's kinship2-default findings and a new "multi-mate crowding" worked example.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- Tier 1 step (3): refreshed docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd. Tier 1 of the pedigree-diagram sequencing cluster (crash bugs S481, #145 spike S482, this refresh) is now fully complete.
+what_was_done: Read the target doc in full and found its scope was broader than initially framed -- a BACKLOG.md item (found S473, never filed) flagged Examples 1-2's "founder-positioning defect" findings as stale from issues #143/#144 (both since fixed, S472/S474). Re-ran both example families' own R chunks against current master before editing prose: confirmed 203/117 now correctly position adjacent to their own mate's row. Rewrote Examples 1-2's founder-positioning prose from "confirmed defect, not fixed here" to reflect the fix (citing #143/#144) with current output. Built and verified a new Example 4 (a dam mated to 2 sires, "role-reversed crowding") reproducing S482's own decisive kinship2 counter-example directly and re-executably (real align.pedigree() output: S1, D1, S2, dam centered, split by discovery order not sex) alongside nprcgenekeepr's own duplicate-node handling of the same data. Updated the Summary table and closing "kinds of gap" list; updated Purpose/subtitle for the doc's broadened scope. Re-verified vignettes/a2interactive.Rmd's runnable pedigree-diagram example still executes (33 animals, 48/53 direct nodes/edges, 86/91 rectilinear) -- re-verification only, no rewrite needed. Verified the full doc via quarto render end to end (37 chunks, 0 errors); deleted the rendered HTML after verification, matching this project's established practice. Updated BACKLOG.md: marked the .qmd-staleness item [x] DONE, added an S484 progress note noting Tier 1 is fully complete and Tier 2 (#133>#136>#137>#138) is next. Added PROJECT_LEARNINGS.md Learning 484 (a reference doc's embedded empirical claims go stale like a code comment's claims -- re-run its own code before editing prose, and reproduce a research finding's counter-example re-executably rather than citing it); bumped CLAUDE.md's learning-count pointer (483->484).
+next_steps: Tier 2 of the pedigree-diagram cluster: #133 > #136 > #137 > #138 (owner's existing order) -- all data-model-gated, likely need their own design/scoping session; read docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md first. Separately, S483's #146-153 sequencing remains available (docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md): Tier 1 (#147 design session), Tier 2 (#149>#146>#151), Tier 3 (#150, owner decision needed), Deferred (#152>#153>#148); 2 new tracking issues (longitudinal genetic-health monitoring; ancestry guardrails) remain unfiled per that audit's Finding #1. LabKey (BLOCKED) and NPRC outreach (DECISION NEEDED) unchanged.
+key_files: docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd (this session's refresh -- Examples 1-2 rewritten, Example 4 new, Summary table/closing list updated); BACKLOG.md pedigree-diagram sequencing cluster (S484 progress note, .qmd item marked DONE); PROJECT_LEARNINGS.md Learning 484.
+gotchas: docs/planning/*.qmd render byproducts (.html) are never committed in this project -- render locally to verify, then delete. kinship2::pedigree()'s dadid/momid args take actual id VALUES (with a missid sentinel), not integer indices -- passing indices errors "Value of 'dadid' not found in the id list". data(sample.ped) in this .qmd loads kinship2's OWN bundled dataset (via library(kinship2)), not anything from nprcgenekeepr -- a scratch script reproducing this doc's chunks outside Quarto must load kinship2 first. Standing gotchas from S479-483 unchanged (gh issue view needs --json; Issues-vs-BACKLOG.md convention; NOT_CRAN=true for tests; matingUnits$anchor/nonAnchor NA-safety, Learning 481).
+runtime_smoke: n/a -- docs-only session (a Quarto research/planning doc, not R/tests package code); build-equivalent verified instead via a full quarto render (37 chunks, 0 errors).
+changelog_ref: CHANGELOG.md "2026-08-08 · [BL-*] Refreshed pedigree-diagram-kinship2-reference-comparison.qmd" entry (this close-out)
 commit: pending
 ```
 

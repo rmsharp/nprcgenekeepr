@@ -12,11 +12,116 @@ refresh `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd` — i
 kinship2-default sire/dam-placement findings, and add a new "multi-mate crowding" worked example
 (none of the doc's current 3 examples exercise that case). User-picked from S483's re-rendered
 priorities list.
-**Started:** 2026-08-08.
-**Status:** IN PROGRESS.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Started/Completed:** 2026-08-08 / 2026-08-08.
+**Status:** DONE — Tier 1 of the pedigree-diagram sequencing audit (crash bugs S481, #145 spike
+S482, this refresh) is now fully complete. Docs-only session (no `R/`/`tests/` changes, TDD gates
+N/A). Verified via a full `quarto render` (all 37 chunks, no errors); rendered HTML deleted after
+verification, not committed.
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Skipped re-running the full Phase 0 read-fest (this session
+began immediately after S483's own close-out, same conversation, `git status` re-confirmed
+unchanged) — claimed the session directly. **(2)** Read the target `.qmd` doc in full and found its
+own scope was broader than the task's initial framing: a `BACKLOG.md` item (found S473, never
+actually filed until this session closes it) flagged the doc's Examples 1-2 "founder-positioning
+defect" findings as stale from issues #143/#144 (both since fixed, S472/S474) — a materially larger
+refresh than "just add S482's findings," discovered by reading the doc rather than assuming the
+task was only what S482's own handoff literally said. **(3)** Verified before editing: re-ran both
+example families' own `R` code chunks against current `master` (not from memory) — confirmed `203`
+and `117` now correctly position adjacent to their own mate's row, matching kinship2's convention,
+via the exact same `layout$nodes` subsetting the original document used. **(4)** Rewrote Examples
+1-2's founder-positioning prose from "confirmed defect, not fixed here" to reflect the actual fix
+(citing #143/#144), with current, re-verified output. **(5)** Built and empirically verified a new
+Example 4 (a dam mated to 2 sires, "role-reversed crowding") reproducing S482's own decisive
+kinship2 counter-example directly and re-executably in this document — real `align.pedigree()`
+output (`S1, D1, S2`, dam centered, split by discovery order not sex) alongside `nprcgenekeepr`'s
+own duplicate-node handling of the identical data, rather than just citing S482's research doc.
+**(6)** Updated the Summary table and closing "kinds of gap" list to add the sire/dam-ordering
+question (issue #145) as its own item and close out the founder-positioning item as fixed; updated
+the doc's Purpose/subtitle to reflect its broadened scope (now informs #142/shipped, #143-144/
+shipped, #145/open). **(7)** Re-verified `vignettes/a2interactive.Rmd`'s runnable pedigree-diagram
+example still executes cleanly against current `master` (33 animals, 48/53 direct-style nodes/
+edges, 86/91 rectilinear) — re-verification only per the folded-in housekeeping ask, no content
+rewrite needed. **(8)** Verified the full refreshed document via `quarto render` end to end (all 37
+chunks executed, 0 R errors); deleted the rendered HTML after verification, matching this project's
+established practice of never committing `docs/planning/*.qmd` render byproducts. **(9)** Updated
+`BACKLOG.md`: marked the `.qmd`-staleness item `[x]` DONE, added an S484 progress note under the
+pedigree-diagram sequencing cluster noting Tier 1 is now fully complete and Tier 2 (#133 > #136 >
+#137 > #138) is next. **(10)** Close-out: this entry, `HANDOFFS.md` receipt, `CHANGELOG.md` ledger
+entry, `PROJECT_LEARNINGS.md` Learning 484, `CLAUDE.md` learning-count bump (483→484).
+
+**Session 483 Handoff Evaluation (by Session 484): 9/10.** **What helped:** the handoff's "what's
+next" section named this exact task (Tier 1 step 3, the `.qmd` refresh) as the smallest, most-ready
+carryover item, and its key-files/gotchas sections pointed straight at the right artifacts (the
+research doc, the sequencing audit). This is what let the re-rendered priorities-list picker surface
+it as option 1, and what let the user pick it with zero back-and-forth. **What was missing:** the
+handoff (reasonably, since it wasn't S483's job to re-investigate S482's own carryover item) did not
+flag that this doc's true scope was larger than "add S482's findings" — the #143/#144 staleness was
+findable only by reading the target doc itself, which this session did as its own first step, not
+something a documentation-focused handoff line could have been expected to surface without
+re-deriving it. **ROI:** strongly positive — going from "user picks an option" to "session claimed
+and researching the real doc" took minutes, with no rediscovery of WHERE to work, only (correctly)
+additional investigation of HOW MUCH work was actually needed once there.
+
+**Self-assessment (Session 484): 9/10.** **Strengths:** (1) did not treat the task's own framing
+("add S482's findings + a multi-mate example") as the complete scope — read the target document
+first and found a materially larger, already-flagged staleness gap (#143/#144) that a narrower
+reading would have missed entirely, folding it into one coherent refresh rather than requiring a
+future session to rediscover the same gap a third time (it was already missed once, per the
+BACKLOG item's own "S472's close-out never filed it" note); (2) verified every empirical claim by
+re-running real code against current `master` before writing prose, both for the fix confirmation
+(Examples 1-2) and the new example (Example 4) — matching this project's own S476-482-established
+"verify the premise, don't trust the description" discipline, now applied to a reference document's
+own prior content rather than an external source; (3) reproduced S482's research finding as new,
+real, executable content in the persistent doc rather than a citation — a stronger, more durable
+artifact for future readers; (4) ran the actual build-equivalent (`quarto render`) end to end rather
+than treating "the R code chunks look right" as sufficient, and correctly deleted the render
+artifact afterward rather than leaving an uncommitted byproduct or accidentally committing one; (5)
+also satisfied the doc's own folded-in `a2interactive.Rmd` re-verification ask in the same pass
+rather than treating it as a separate future task. **Weaknesses:** (1) did not re-run the full Phase
+0 orientation checklist verbatim before starting this task — justified as genuinely low-value given
+zero elapsed time/state change since S483's own close-out in the same conversation, but is a
+deviation from the letter of the protocol worth naming explicitly rather than silently doing; (2)
+did not use `AskUserQuestion` to confirm the expanded scope (the #143/#144 staleness fix folded in
+alongside the originally-scoped kinship2-findings refresh) before proceeding — reasoned it was
+squarely inside the same already-established `BACKLOG.md` item (one housekeeping item explicitly
+covering both #143's and #144's compounding effect, not a new decision this session invented), so
+proceeding without an extra gate was consistent with existing scope rather than an expansion of it,
+but this judgment call is worth flagging rather than assuming self-evidently correct. **Compared to
+previous sessions:** directly extends the S480-482 pedigree-diagram-cluster lineage to its Tier 1
+close-out, and the "verify a reference doc's own content against live re-execution" discipline is a
+natural, not-yet-explicitly-named extension of Learning 481's "don't trust a comment's claim,
+re-run it" lesson — S484's specific contribution (Learning 484) is naming that documents carry the
+same staleness risk code comments do, and are subject to the same fix.
+
+**Handoff to Session 485:**
+- **What's next:** Tier 1 of the pedigree-diagram sequencing cluster is now fully complete
+  (crash bugs S481, #145 spike S482, `.qmd` refresh S484). **Tier 2** (owner's existing order,
+  unchanged since S436): #133 > #136 > #137 > #138 — all 4 are data-model-gated or otherwise likely
+  need their own design/scoping session before implementation; read
+  `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md` and `BACKLOG.md`'s
+  "Pedigree diagram vs kinship2 audit follow-ups" section before starting #133. Separately, the
+  **#146-153 sequencing** from S483 remains available: `docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md`'s
+  Tier 1 (#147 design session), Tier 2 (#149 > #146 > #151), Tier 3 (#150, needs owner decision),
+  Deferred (#152 > #153 > #148) — and 2 new tracking issues (longitudinal genetic-health
+  monitoring; ancestry guardrails) remain unfiled, per that audit's Finding #1. LabKey (BLOCKED)
+  and NPRC outreach (DECISION NEEDED) unchanged.
+- **Key files:** `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd` (this session's
+  refresh — Examples 1-2 rewritten, Example 4 new, Summary table and closing list updated);
+  `BACKLOG.md`'s pedigree-diagram sequencing cluster (S484 progress note, `.qmd` item marked
+  DONE); `PROJECT_LEARNINGS.md` Learning 484.
+- **Gotchas:** (1) `docs/planning/*.qmd` render byproducts (`.html`) are never committed in this
+  project — render locally to verify (the doc's own build-equivalent), then delete; don't leave the
+  artifact uncommitted in `git status` or accidentally `git add` it. (2) `kinship2::pedigree()`'s
+  `dadid`/`momid` arguments take actual id VALUES (matching the `id=` vector, with a `missid`
+  sentinel — `"0"` in this doc's convention) — NOT integer row indices; passing indices produces a
+  confusing "Value of 'dadid' not found in the id list" error. (3) `data(sample.ped)` in this `.qmd`
+  loads kinship2's OWN bundled dataset (via `library(kinship2)` in the Setup chunk), not anything
+  from `nprcgenekeepr` — a scratch script reproducing this doc's chunks outside Quarto must load
+  `kinship2` first or `sample.ped` won't be found. (4) All standing gotchas from S479-483 carry
+  forward unchanged (`gh issue view <N>` needs `--json` fields; Issues-vs-`BACKLOG.md` convention;
+  `NOT_CRAN=true` for tests; `matingUnits$anchor`/`nonAnchor` NA-safety from Learning 481).
+- **Self-assessment score:** 9/10 (breakdown above).
 
 ### What Session 483 Did
 **Deliverable:** Propose an evidence-based implementation order for GitHub issues #146-153 (the

@@ -43,6 +43,37 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-08 · [BL-qmdComparisonRefresh] Refreshed pedigree-diagram-kinship2-reference-comparison.qmd (Session 484)
+- **Deliverable:** Tier 1 step (3) of `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`
+  — refreshed `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`, completing Tier 1
+  of the pedigree-diagram sequencing cluster (crash bugs S481, issue #145 verification spike S482,
+  this refresh). Found the doc's actual scope was broader than "add S482's findings": a `BACKLOG.md`
+  item (found S473, never filed) flagged Examples 1-2's "founder-positioning defect" findings as
+  stale from issues #143/#144 (both since fixed, S472/S474) — this session's close-out never filed
+  it either, only this session finally closed it. Re-ran both example families' own `R` chunks
+  against current `master` before editing prose (not from memory): confirmed `203`/`117` now
+  correctly position adjacent to their own mate's row, matching kinship2's convention. Rewrote
+  Examples 1-2's founder-positioning prose from "confirmed defect, not fixed here" to reflect the
+  actual fix, citing #143/#144, with current re-verified output. Built and verified a new Example 4
+  (a dam mated to 2 sires, "role-reversed crowding") reproducing S482's own decisive kinship2
+  counter-example directly and re-executably in the document — real `align.pedigree()` output
+  (`S1, D1, S2`, dam centered, split by pedigree discovery order not sex) alongside `nprcgenekeepr`'s
+  own duplicate-node handling of the identical data, rather than only citing S482's research doc.
+  Updated the Summary table and closing "kinds of gap" list to add the sire/dam-ordering question
+  (issue #145) as its own item and close the founder-positioning item as fixed; updated the
+  Purpose/subtitle for the doc's broadened scope (#142 shipped, #143/#144 shipped, #145 open).
+  Re-verified `vignettes/a2interactive.Rmd`'s runnable pedigree-diagram example still executes
+  cleanly against current `master` (33 animals, 48/53 direct-style nodes/edges, 86/91 rectilinear) —
+  re-verification only, no content rewrite, per the folded-in housekeeping ask. Verified the full
+  refreshed document via `quarto render` end to end (37 chunks, 0 R errors); deleted the rendered
+  HTML after verification, matching this project's established practice of not committing
+  `docs/planning/*.qmd` render byproducts. Docs-only session: no `R/`/`tests/` files changed, TDD
+  RED/GREEN/REFACTOR gates N/A. `PROJECT_LEARNINGS.md` Learning 484 added (a reference doc's
+  embedded empirical claims go stale exactly like a code comment's claims — re-run its own code
+  before editing prose, and reproduce a research finding's counter-example re-executably rather than
+  citing it); `CLAUDE.md` learning-count pointer bumped (483→484). `BACKLOG.md`'s `.qmd`-staleness
+  item marked `[x]` DONE with an S484 progress note. See `SESSION_NOTES.md`, `HANDOFFS.md`.
+
 ### 2026-08-08 · [ad hoc] Filled in this session's own HANDOFFS.md receipt commit sha (Session 483)
 - **Deliverable:** Filled in this session's own `HANDOFFS.md` receipt
   `commit: pending` placeholder with the real close-out commit sha

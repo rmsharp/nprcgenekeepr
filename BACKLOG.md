@@ -1110,6 +1110,25 @@ independent data point (beyond the S480-audited nomenclature reference) that tho
 unreliable. Step (3) -- refresh the stale `.qmd` comparison doc -- is next in this cluster; steps
 (4)-(5) remain untouched. See the research doc's own "Recommendation for a future #145 design
 session" section before starting any #145 design work.
+
+**Progress (S484, 2026-08-08):** Tier 1 step (3) is DONE -- see
+`docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`. Refreshed the doc's stale
+founder-positioning "confirmed defect" language in Examples 1-2 (re-ran both example families
+against current `master`: `203`/`117` now correctly position adjacent to their own mate's row,
+matching kinship2's convention, verified via real layout output not just the "should be fixed"
+claim) -- updated to reflect the fix, citing issues #143/#144. Re-verified `vignettes/
+a2interactive.Rmd`'s runnable pedigree-diagram example still executes cleanly against current
+`master` (33 animals, 48/53 direct-style nodes/edges, 86/91 rectilinear -- re-verification only, no
+content rewrite needed). Added a new Example 4 (a dam with 2 sires, "role-reversed crowding")
+reproducing S482's own decisive kinship2 counter-example directly in this document, with real
+`align.pedigree()` output (`S1, D1, S2` -- dam centered, sires split by discovery order, not sex)
+alongside `nprcgenekeepr`'s own duplicate-node handling of the same data; updated the Summary table
+and closing "kinds of gap" list to add the sire/dam-ordering question (issue #145) as its own,
+now-investigated item, and to close out the founder-positioning item as fixed. Verified via a full
+`quarto render` (all 37 chunks executed cleanly, no R errors) -- rendered HTML deleted after
+verification, not committed, matching this project's established practice for `docs/planning/*.qmd`
+source-only docs. Tier 1 of the sequencing audit (crash bugs + #145 spike + this refresh) is now
+fully complete; Tier 2 (#133 > #136 > #137 > #138, owner's existing order) is next in this cluster.
 - [ ] **Candidate C's connector/dogleg visual-signposting idea** (found S473,
       designing the issue #144 plan; not adopted for #144 itself, Effort
       unknown, low priority) -- extends the existing D2 mate-line "dogleg"
@@ -1129,18 +1148,16 @@ session" section before starting any #145 design work.
       both-parents-dangling mating unit's anchor-selection crash) are now
       filed as **issue #154** (2026-08-08, S481) -- see `CHANGELOG.md` for
       fix status.)
-- [ ] **`docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`'s
+- [x] **`docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`'s
       worked examples are stale from issue #143's row-value changes, and will
-      become further stale once issue #144 ships too** (found S473 --
-      checking whether the #143 plan's own §8 call to file this housekeeping
-      item had actually been done found it had NOT: S472's close-out never
-      filed it, only the original DONE item that cites this `.qmd` as the
-      discovery source exists in `BACKLOG.md`, Effort S, low priority) --
-      covers both #143's and #144's compounding effect on this document in
-      one item rather than two.
-      `vignettes/a2interactive.Rmd`'s runnable example needs the same
-      re-verification-not-rewrite check #143's own plan gave it (confirm it
-      still executes; not a content rewrite). See
+      become further stale once issue #144 ships too** (found S473 -- DONE
+      S484, 2026-08-08, see the S484 progress note above) -- covered both
+      #143's and #144's compounding effect on this document in one item
+      rather than two, plus S482's kinship2-sire/dam-ordering findings and a
+      new multi-mate-crowding worked example (folded in from the same
+      sequencing cluster). `vignettes/a2interactive.Rmd`'s runnable example
+      re-verified per #143's own plan (confirmed it still executes; not a
+      content rewrite). See
       `docs/planning/issue144-anchor-row-mismatch-fix-plan.md` §8.
 - [ ] (none remaining -- **the `.positionMatingUnitForest()` free-pass-filter
       reachability question is CLOSED, not fixed** -- S481 (2026-08-08):
