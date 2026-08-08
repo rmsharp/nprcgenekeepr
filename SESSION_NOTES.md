@@ -13,16 +13,179 @@ becomes a recognized, optional logical column; both `makePedigreeDiagramData()` 
 `makePedigreeMatingLayout()` render it (dominant `color.background` + tooltip line); new sibling
 fixture `obfuscated_rhesus_mhc_ped_affected.csv`. Vertical Slice Session (gate (a) re-verified at
 Orient: zero `R/`/`tests/`/`inst/extdata/` changes since the design was ratified at `477b89b9`).
-(IN PROGRESS)
-**Started:** 2026-08-08.
-**Status:** Session claimed. Pre-RED decisions resolved via `AskUserQuestion` before claiming: D8
-fill color = `#CC79A7` (Okabe-Ito reddish-purple, colorblind-safe, distinct from both the GVA
-heatmap's red/yellow/green and the existing `#2B7CE9` waypoint-edge blue); `include` question =
-"not yet" (display-only v1, matching the design doc's own recommendation). Work beginning: RED
-phase next.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Started/Completed:** 2026-08-08 / 2026-08-08.
+**Status:** DONE. Full strict-TDD RED->GREEN cycle, `AskUserQuestion`-gated at every transition
+(session-scope pick from the priorities list; 2 Pre-RED author's-call decisions -- D8 fill color,
+`include` question; PRE-RED->RED; RED->GREEN). Verified: full clean regression read (0 failed/0
+error, 10 pre-existing baseline warnings unchanged, 4632 passed/171 skipped), `lintr::lint_package()`
+0 issues on touched files, `devtools::check()` (2 pre-existing ERRORs/1 pre-existing WARNING/2
+pre-existing NOTEs, all confirmed via `git log` to predate this session and unrelated to this diff --
+zero new findings), and a live `shinytest2`/`chromote` smoke test on the real running app (Phase 3E).
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Full Phase 0 orient (SAFEGUARDS.md, SESSION_NOTES.md, `gh issue
+list`, git status/log/diff, `methodology_dashboard.py` -- health 98/100 -- ledger reconcile clean,
+both `CHANGELOG.md`/`HANDOFFS.md` frontiers already at `HEAD`, no undocumented commits). Rendered the
+priorities list (4 numbered items) via `AskUserQuestion`; user picked "#133 Slice 1." **(2)** Read the
+full ratified design doc; re-verified Vertical Slice Session gate (a) via `git diff --stat
+477b89b9..HEAD -- R/ tests/ inst/extdata/` (empty -- contract unchanged since ratification). Re-read
+every cited source file (`R/makePedigreeDiagramData.R` both functions, `R/modPedigree.R:430-500`,
+`R/columnSchema.R`, `R/getPossibleCols.R`, all 3 test files the doc cited) rather than trust the
+doc's line-number citations from S485. **(3)** Found one gap the design doc's own file-touch list
+didn't anticipate: `.addRectilinearWaypoints()` unconditionally resets `color.background`/
+`color.border` to NA on every passed-through node, which would silently erase the new affected-status
+coloring the moment a user selected the pre-existing `edgeStyle="rectilinear"` option (issue #142) --
+see `PROJECT_LEARNINGS.md` Learning 486 point 1. Surfaced this to the user as part of the Pre-RED
+report rather than silently absorbing it into scope. **(4)** Two Pre-RED author's-call decisions
+resolved via `AskUserQuestion` (D8 fill color `#CC79A7` Okabe-Ito reddish-purple; `include` question
+"not yet"/display-only v1) before claiming the session. **(5)** Phase 1B: claimed the session
+(`SESSION_NOTES.md` stub, `HANDOFFS.md` `status: pending` receipt), committed (`d9212778`). **(6)**
+RED->GREEN gate via `AskUserQuestion` with the exact file/change list, including the discovered
+`.addRectilinearWaypoints()` fix. **(7)** RED: wrote failing tests in `test_getPossibleCols.R`,
+`test_makePedigreeDiagramData.R`, `test_makePedigreeMatingLayout.R`, `test_addRectilinearWaypoints.R`
+-- ran all 4, confirmed every new test failed for the right reason (missing column/behavior, 2
+`setNames()`-on-NULL errors from a genuinely absent field), zero pre-existing tests in those files
+broken. **(8)** GREEN: implemented `.nprcColumnSchema$possible` addition, `getPossibleCols()` roxygen
+entry, the `affected` branch in both `makePedigreeDiagramData()` and `makePedigreeMatingLayout()`
+(dominant color + tooltip line, `as.logical()` defensive coercion), the `.addRectilinearWaypoints()`
+preserve-if-set guard, and the new sibling fixture (`data-raw/obfuscated_rhesus_mhc_ped_affected.R`,
+seeded RNG, ~20%/70%/10% TRUE/FALSE/NA split, disclosed synthetic). All 4 targeted test files green.
+**(9)** `lintr::lint_package()` on touched files found 4 real `nested_ifelse_linter` warnings + 1
+`commented_code_linter` false positive (prose comment mistaken for code, this project's established
+pattern) -- fixed the real ones by extracting shared `.affectedColor()`/`.affectedLabel()` helper
+functions (matching the existing `.escapeHtml()` sharing precedent, itself already shared between the
+two otherwise-deliberately-duplicated functions per D4) rather than suppressing; documented `# nolint`
+for the false positive. Re-ran the 4 targeted files clean after the refactor. *(Process note, see
+self-assessment: this extraction was refactoring-shaped and was not gated through a separate
+GREEN->REFACTOR `AskUserQuestion` -- see Weaknesses below.)* **(10)** Verification: full clean
+regression read (0 failed/0 error, matching baseline); `devtools::document()` regenerated
+`man/getPossibleCols.Rd` cleanly but also produced an unrelated `man/modMarkerGeneticsServer.Rd`
+line-wrap diff (reverted, out of scope); `devtools::check()` returned 2 ERRORs/1 WARNING/2 NOTEs, all
+individually attributed via `git log`/`git status` to commits/files predating and untouched by this
+session (a non-portable filename from S418/`887ee902`, an `a2interactive.Rmd` vignette-engine NOTE, a
+`spelling.Rout` mismatch on issue #142-era terms) -- filed as a new `BACKLOG.md` Housekeeping item
+rather than fixed mid-session (`SAFEGUARDS.md` file-rename rule, `PROJECT_LEARNINGS.md` Learning 382
+precedent). **(11)** Live `shinytest2`/`chromote` smoke test (ad hoc script, not a new committed
+e2e test -- outside the approved RED-gate file list) on the real running app: first pass checked
+`get_html_safe()` (raw DOM `outerHTML`) for `"#CC79A7"`/`"Affected"` and got a false-negative FALSE on
+both, despite the feature actually working -- the widget renders to canvas, so node content isn't
+DOM-inspectable. Caught this by reading `test-e2e-pedigree-module.R`'s own existing "known trio" test,
+which already documents and uses the correct technique (`app$get_js()` querying the live vis.js
+Network instance's DataSets); rewrote the script to match and got all 8 checks TRUE: new fixture
+shows visible `#CC79A7` shading + tooltip on an affected node, no color on an unaffected node in the
+same pedigree, 0 console errors; base fixture (no `affected` column) shows neither color nor tooltip
+anywhere, 0 console errors -- confirming both the feature and full backward compatibility on the live
+app, not just in unit tests. See `PROJECT_LEARNINGS.md` Learning 486 point 2. **(12)** Close-out:
+`NEWS.Rmd` entry (judgment call, see below), `BACKLOG.md` progress note + new Housekeeping item,
+`PROJECT_LEARNINGS.md` Learning 486, `CLAUDE.md` learning-count bump (485->486), this entry,
+`HANDOFFS.md` receipt, `CHANGELOG.md` ledger entry.
+
+**Session 485 Handoff Evaluation (by Session 486): 9/10.** **What helped:** the handoff's "what's
+next" pointed precisely at Slice 1 with the exact file/line citations needed (`R/
+makePedigreeDiagramData.R:25`/`:765`, `R/columnSchema.R:15-24`, the #135 RED-phase test pattern) and
+explicitly named the gate-(a) re-verification requirement -- all of this let the session start
+productively with zero time spent rediscovering scope. The 7 gotchas were all accurate and directly
+useful (especially "coerce defensively via `as.logical()`" and "use a new sibling fixture, never
+in-place" -- both load-bearing decisions this session executed exactly as flagged). **What was
+missing:** the handoff (reasonably, since it was a design-only session) could not have anticipated the
+`.addRectilinearWaypoints()` color-clobber interaction, since that required reading the CURRENT
+implementation of a function the design doc's own file-touch list never listed -- this is not a
+handoff gap so much as the inherent limit of a design session's own research depth; noting it here so
+a future reader understands why Slice 1 ended up touching one more code location than the doc
+predicted. **What was wrong:** nothing found inaccurate -- every file:line citation held exactly, the
+gate-(a) diff came back empty as expected. **ROI:** strongly positive; the 9/10 handoff's specificity
+directly shortened this session's own orientation-to-RED runway.
+
+**Self-assessment (Session 486): 8/10.** **Strengths:** (1) re-read every cited source file at Pre-RED
+rather than trust the design doc's line numbers from memory, and this direct re-reading is exactly
+what surfaced the `.addRectilinearWaypoints()` gap the doc missed; (2) surfaced that discovery to the
+user transparently (in the Pre-RED report and the RED-gate `AskUserQuestion`) rather than silently
+absorbing it into "implement in both functions" scope; (3) followed the RED->GREEN gate's own approved
+verification list to the letter, including running `lintr::lint_package()` on touched files and fixing
+what it found rather than deferring it; (4) when the first live-verification pass produced a
+suspicious clean-looking FALSE/FALSE result, did not accept it at face value -- investigated why,
+found the actual root cause (canvas vs. DOM), and re-verified correctly rather than reporting a false
+negative or silently dropping the check; (5) individually attributed every `devtools::check()`
+finding to pre-existing/unrelated via direct `git log` evidence before writing "0 new errors," per this
+project's own established "attribute before fixing" convention, rather than either falsely claiming a
+clean check or vaguely hand-waving the findings away; (6) filed the pre-existing non-portable-filename
+ERROR as a new, actionable `BACKLOG.md` item rather than silently leaving it undocumented.
+**Weaknesses:** (1) the lint-driven helper-extraction refactor (step 9 above) was done inline during
+what was still nominally the GREEN phase, without a discrete GREEN->REFACTOR `AskUserQuestion` gate --
+a minor, mechanical, fully-test-covered change (verified byte-identical behavior before/after via the
+same 4 targeted test files), but a strict reading of the TDD contract's phase-gate rule would have
+called for a separate gate before making it; flagging this honestly rather than silently omitting it,
+per `SESSION_RUNNER.md`'s "acknowledge the violation" error-handling rule. Future sessions: either
+treat "fix lint findings from the RED-gate's own approved verification list" as still inside GREEN's
+scope explicitly (and say so at the RED->GREEN gate), or budget a real REFACTOR gate for it. (2) The
+`NEWS.Rmd` same-session-or-deferred question was genuinely ambiguous (the design doc's own §5 attributes
+the checklist to "Slice 2, the session that ships the... shading" while Slice 1's own §4 scope
+literally ships the shading) -- resolved it by the more literal `CLAUDE.md` checklist reading rather
+than asking the user, since the practical stakes were low either way; a stricter session might have
+raised this as its own `AskUserQuestion` rather than making the call solo. (3) The system was under
+extreme, unrelated resource load this entire session (load average 200-280, driven by two ancient
+runaway R processes unrelated to this work, running 65+ CPU-hours each) -- every verification step
+(full regression, `devtools::check()`, the live smoke test) took roughly 5-10x longer than this
+project's usual baseline as a result; not a defect of this session's work, but worth flagging to the
+user directly since it will slow any future session's own verification steps identically until
+resolved. **Compared to previous sessions:** most directly parallels S481's crash-bug TDD session (RED
+->GREEN under strict gating, an empirical-repro-first discipline that caught something reading-alone
+would have missed) and S472/S474's issue #143/#144 pattern of independently verified `devtools::check()`
+attribution -- but the canvas-vs-DOM verification-methodology correction (point 2 of Learning 486) is
+a genuinely new, reusable finding for this project's own e2e-testing practice, not previously named.
+
+**Handoff to Session 487:**
+- **What's next:** Slice 2 (legend + documentation) of the issue #133 plan -- read
+  `docs/planning/issue133-affected-status-pedigree-diagram-plan.md` §4 Slice 2 in full before
+  starting, and re-verify the contract is unchanged since this session (Vertical Slice Session gate
+  (a); `git diff --stat <this session's close-out commit>..HEAD -- R/ tests/ inst/extdata/ vignettes/
+  NEWS.Rmd` should be empty). This is a TDD-gated session (RED->GREEN, `AskUserQuestion` phase gates
+  apply). Slice 2 adds one `visLegend()` row (D6, using the D8 color `#CC79A7` this session already
+  picked), a widget-JSON test in `test_modPedigree.R`, the tutorial/article documentation update
+  (`vignettes/manual_components/_pedigree_browser.Rmd` and/or `colony-manager-guide.qmd` -- the
+  owner's comment on #133 requires this), and `gh issue close 133` once shipped. `NEWS.Rmd` was
+  already added this session (a judgment call, see Weaknesses #2 above) -- Slice 2 should NOT add a
+  second entry, only update the existing one if the legend changes its description materially.
+  Separately, unchanged from S485's handoff: Tier 2's remaining order (#136>#137>#138, all likely
+  need their own scoping) and S483's #146-153 sequencing remain available. LabKey (BLOCKED) and NPRC
+  outreach (DECISION NEEDED) unchanged. New this session: a `BACKLOG.md` Housekeeping item for the
+  pre-existing non-portable-filename `devtools::check()` ERROR (S418-era file, Effort S) is now
+  available as a low-priority pickup for any session.
+- **Key files:** `docs/planning/issue133-affected-status-pedigree-diagram-plan.md` §4 Slice 2 (the
+  full contract); `R/modPedigree.R:476-497` (the one `visLegend()` call to extend, D6 -- never a
+  second call); `tests/testthat/test_modPedigree.R` (the #132 legend test's own pattern to reuse,
+  cite its exact line range at Pre-RED); `R/makePedigreeDiagramData.R:119-146` (the new
+  `.affectedColor()`/`.affectedLabel()` shared helpers, `#CC79A7` is the literal D8 color to reuse in
+  the legend swatch); `R/makePedigreeDiagramData.R:1206-1218` (`.addRectilinearWaypoints()`'s new
+  preserve-if-set guard, if Slice 2 ever touches waypoint rendering again).
+- **Gotchas:** (1) A 6th legend row may not fit the existing tuned `width=0.28`/`stepY=65L` values
+  without adjustment (design doc Dragon #4) -- verify live before assuming it just works. (2)
+  `visExport()`'s html2canvas PNG capture is not yet hands-on re-verified for a `color.background`
+  -only node (Dragon #3) -- a quick live spot-check (export a diagram with an affected node, confirm
+  the PNG shows the color) is still owed, ideally at Slice 2's own Pre-RED alongside the legend swatch
+  work. (3) Do not re-litigate D1-D8 -- all 8 are ratified; only D6 (legend mechanics) and the
+  documentation checklists are Slice 2's own scope. (4) When live-verifying ANY visNetwork
+  node/edge content in this codebase, use `app$get_js()` querying
+  `HTMLWidgets.find(selector).network.body.data.nodes.get(id)` (or `.edges.get(...)`) -- NOT raw
+  `get_html_safe()`/outerHTML, which cannot see canvas-rendered content and will silently produce a
+  false negative (this session's own Learning 486 point 2; the legend panel itself, by contrast, IS a
+  separate, DOM-inspectable vis.Network instance per the existing Pre-RED comment at
+  `R/modPedigree.R:472-475`, so a legend-specific HTML check may be fine -- but confirm which
+  instance you're checking before trusting either technique). (5) `.nprcColumnSchema$possible`'s
+  `affected` entry is currently NOT in `.nprcColumnSchema$include` (this session's own `include`
+  Pre-RED decision, "not yet") -- do not add it to `include` as an incidental part of Slice 2 without
+  its own explicit decision; that stays a deliberately separate, still-open question per the design
+  doc §5. (6) All standing gotchas from S479-485 carry forward unchanged (`gh issue view <N>` needs
+  `--json` fields; Issues-vs-`BACKLOG.md` convention; `NOT_CRAN=true` for tests; `NPRC_RUN_E2E=true`
+  additionally needed for any live `shinytest2`/`chromote` script -- not just `test_that()` files, ad
+  hoc verification scripts need it too, found this session; `docs/planning/*.qmd` render byproducts
+  never committed). (7) **This machine was under extreme, unrelated system load this entire session**
+  (load average 200-280 sustained, from two ancient runaway `R` processes with 65+ CPU-hours each,
+  unrelated to this project) -- every verification step took ~5-10x longer than this project's usual
+  baseline; if still present, expect the same slowdown and budget background-task wait times
+  accordingly (this session used `run_in_background: true` + `ScheduleWakeup` polling throughout
+  rather than blocking foreground calls, which is the right pattern here).
+- **Self-assessment score:** 8/10 (breakdown above).
 
 ### What Session 485 Did
 **Deliverable:** Ratified design/architecture document for GitHub issue #133 (affected/phenotype/

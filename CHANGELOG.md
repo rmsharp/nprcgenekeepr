@@ -43,6 +43,45 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-08 · [issue #133] Implemented Slice 1 (data model + core rendering) of the affected-status pedigree-diagram design (Session 486)
+- **Deliverable:** `affected` is now a recognized, optional logical column
+  (`.nprcColumnSchema$possible` + `getPossibleCols()` roxygen); both
+  `makePedigreeDiagramData()` and `makePedigreeMatingLayout()` render it
+  (dominant `color.background` #CC79A7 Okabe-Ito reddish-purple for
+  `affected == TRUE`, an "Affected: Yes/No/Unknown" tooltip line, `as.logical()`
+  defensive coercion) — backward-compatible: absent column produces byte-identical
+  output to before, confirmed by dedicated regression tests. New sibling fixture
+  `inst/extdata/examples/obfuscated_rhesus_mhc_ped_affected.csv`
+  (`data-raw/obfuscated_rhesus_mhc_ped_affected.R`, seeded RNG, ~20%/70%/10%
+  TRUE/FALSE/NA, disclosed synthetic). Full strict-TDD RED→GREEN cycle,
+  `AskUserQuestion`-gated at every transition (2 Pre-RED decisions: D8 fill
+  color, the `include` question resolved "not yet").
+- **Found and fixed a gap the design doc's own file-touch list did not
+  anticipate:** `.addRectilinearWaypoints()` was unconditionally resetting
+  every node's `color.background`/`color.border` to `NA`, which would have
+  silently erased the new coloring the moment a user selected the
+  pre-existing `edgeStyle = "rectilinear"` option (issue #142) — fixed with
+  a preserve-if-already-set guard, covered by a new regression test in
+  `test_addRectilinearWaypoints.R`. See `PROJECT_LEARNINGS.md` Learning 486.
+- **Verified:** full clean regression read 0 failed/0 error (10 pre-existing
+  baseline warnings unchanged, 4632 passed/171 skipped); `lintr::lint_package()`
+  0 issues on touched files (2 real `nested_ifelse_linter` warnings fixed via
+  shared `.affectedColor()`/`.affectedLabel()` helpers, not suppressed);
+  `devtools::check()` 2 ERRORs/1 WARNING/2 NOTEs, all individually attributed
+  via `git log`/`git status` to pre-existing causes unrelated to this
+  session's diff (a non-portable filename from commit `887ee902`/S418, an
+  `a2interactive.Rmd` vignette-engine NOTE, a `spelling.Rout` mismatch on
+  issue #142-era terms — filed as a new `BACKLOG.md` Housekeeping item, not
+  fixed mid-session). Live `shinytest2`/`chromote` smoke test on the real
+  running app (Phase 3E) confirmed via the live vis.js Network instance's
+  own DataSets — a first pass using raw DOM `outerHTML` produced a false
+  negative (canvas-rendered content isn't DOM-inspectable), corrected to
+  match `test-e2e-pedigree-module.R`'s own established querying technique;
+  see `PROJECT_LEARNINGS.md` Learning 486.
+- `NEWS.Rmd` entry added this session. `BACKLOG.md`'s pedigree-diagram
+  sequencing cluster updated (S486 progress note); issue #133 stays open
+  (Slice 2 — legend + documentation — still pending). See `SESSION_NOTES.md`.
+
 ### 2026-08-08 · [issue #133] Ratified an architecture/design document for affected-status pedigree-diagram encoding (Session 485)
 - **Deliverable:** `docs/planning/issue133-affected-status-pedigree-diagram-plan.md`
   (`ARCHITECTURE_WORKSTREAM.md`) — 8 ratified decisions (D1-D8, each with a declined

@@ -145,6 +145,33 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       that version number.
 
 ## Housekeeping
+- [ ] **`devtools::check()` returns a non-portable-filename ERROR/WARNING for
+      `inst/extdata/reference/Standardized Human Pedigree Nomenclature:
+      Update and Assessment of the Recommendations of the Nation.html`**
+      (found S486, 2026-08-08, incidental to issue #133 Slice 1's own
+      `devtools::check()` verification pass; Effort S, low priority) --
+      confirmed pre-existing and unrelated to that session's diff via
+      `git log` (the file dates to commit `887ee902`, session S418). The
+      filename both contains a `:` (illegal on some platforms) and exceeds
+      the 100-byte final-path-component tarball limit R CMD check enforces
+      under `--as-cran`, producing 2 ERRORs (portable-file-names checks at
+      both build and check stages) + 1 WARNING in the full `check()` run.
+      Not fixed this session (`PROJECT_LEARNINGS.md` Learning 382's "report,
+      don't fix mid-session" precedent -- out of scope for a feature
+      session, and `SAFEGUARDS.md` treats file renames as never a "quick
+      fix"). A future session should rename the file to something short and
+      portable (e.g. `standardized-human-pedigree-nomenclature-2008.html`)
+      and update the one known reference to it (`docs/audits/
+      PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md` per
+      `PROJECT_LEARNINGS.md` Learning 480 -- grep for other references
+      first). Two smaller, likely-related pre-existing `check()` findings
+      surfaced in the same run, already within this project's established
+      "attribute before fixing" convention (`PROJECT_LEARNINGS.md` line 279
+      Learning) and not newly discovered here: a `vignettes/a2interactive.Rmd`
+      "no recognized vignette engine" NOTE, and a `spelling.Rout` mismatch on
+      terms from the issue #142 rectilinear-waypoint work (`duplicateToReal`,
+      `sibship`, `waypoint`, etc.) not yet in `inst/WORDLIST` -- both
+      unrelated to issue #133 and not investigated further.
 - [ ] (none remaining -- the "`NEWS.Rmd` has no checklist analogous to the
       citation/tutorial checklists" item (discovered S446, 2026-08-01) is
       RESOLVED: owner ratified a broad checklist via `AskUserQuestion` --
@@ -1144,6 +1171,47 @@ Scoped as 2 future vertical slices with full RED/GREEN/DONE/Verify contracts (Sl
 core rendering; Slice 2: legend + documentation) -- next session in this cluster implements Slice 1.
 Issue #133 itself intentionally left open (design ratified, not yet implemented); no `gh issue close`
 this session.
+
+**Progress (S486, 2026-08-08):** Tier 2 step 2 -- issue #133 Slice 1 (data model + core rendering) --
+is DONE, full TDD RED->GREEN cycle (`AskUserQuestion`-gated at every transition, including 2 Pre-RED
+author's-call decisions: D8 fill color `#CC79A7` Okabe-Ito reddish-purple, and the `include`
+question resolved "not yet"/display-only v1). `affected` is now a recognized optional logical column
+(`.nprcColumnSchema$possible`); both `makePedigreeDiagramData()` and `makePedigreeMatingLayout()`
+render it (dominant `color.background` + "Affected: Yes/No/Unknown" tooltip line), backward
+-compatible (absent column => zero output change, confirmed by dedicated regression tests). New
+sibling fixture `inst/extdata/examples/obfuscated_rhesus_mhc_ped_affected.csv` (`data-raw/
+obfuscated_rhesus_mhc_ped_affected.R`, seeded RNG, ~20% TRUE/70% FALSE/10% NA, disclosed synthetic).
+**Found and fixed one gap the design doc didn't anticipate:** `.addRectilinearWaypoints()` was
+unconditionally resetting every node's `color.background`/`color.border` to NA, which would have
+silently erased the new affected-status coloring the moment a user selected the rectilinear edge
+style (issue #142) -- fixed with a preserve-if-already-set guard, covered by a new regression test in
+`test_addRectilinearWaypoints.R`. Verified: full clean regression read 0 failed/0 error (10
+pre-existing baseline warnings unchanged, 4632 passed); `lintr::lint_package()` 0 issues on touched
+files (2 nested-`ifelse()` warnings resolved by extracting shared `.affectedColor()`/`.affectedLabel()`
+helpers rather than suppressed); `devtools::check()` returns 2 ERRORs/1 WARNING/2 NOTEs, **all
+pre-existing and unrelated to this session's diff** (confirmed via `git log`: the non-portable
+`inst/extdata/reference/...` filename dates to commit `887ee902`/S418; the `a2interactive.Rmd`
+vignette-engine NOTE and the `spelling.Rout` mismatch on issue #142-era terms are likewise untouched
+by this session) -- zero new errors/warnings/notes introduced. Live `shinytest2`/`chromote` smoke test
+(ad hoc, per Phase 3E, not committed as a new e2e test -- outside the approved Slice 1 file-touch
+list) confirmed on the real running app: the new sibling fixture visibly shades an `affected=TRUE`
+node `#CC79A7` with the tooltip line present, an `affected=FALSE` node in the same pedigree has no
+color override, 0 console errors; the base fixture (no `affected` column) shows neither the color nor
+the tooltip text anywhere and 0 console errors -- confirmed via the live vis.js Network instance's own
+DataSets (`HTMLWidgets.find(...).network.body.data.nodes.get(id)`), matching this file's own
+established "known trio" technique, not raw DOM HTML (which does not carry canvas-rendered node data
+-- an initial verification pass using `get_html_safe()` alone produced a false negative before this
+was caught and corrected). `NEWS.Rmd` entry added this session (judgment call: the design doc's own
+Section 5 attributes the NEWS/tutorial checklists to "Slice 2, the session that ships the user-visible
+legend/shading," but Slice 1 itself already ships the shading/tooltip rendering per its own Section 4
+scope -- read literally, `CLAUDE.md`'s NEWS.Rmd checklist trigger ("ships a new user-facing Shiny
+feature") is satisfied now, so the entry was added at Slice 1's close rather than deferred; the
+tutorial/article walkthrough update stays correctly deferred to Slice 2 per the design doc, since a
+walkthrough is more coherent once the discoverability legend also exists). Issue #120's citation
+checklist confirmed NOT applicable (a raw display flag, not a new displayed statistic/estimator,
+matching the design doc's own Section 5 read). Issue #133 stays open (Slice 2 -- legend + docs --
+still pending); no `gh issue close` this session. Next session in this cluster implements Slice 2: see
+`docs/planning/issue133-affected-status-pedigree-diagram-plan.md` Section 4 Slice 2.
 - [ ] **Candidate C's connector/dogleg visual-signposting idea** (found S473,
       designing the issue #144 plan; not adopted for #144 itself, Effort
       unknown, low priority) -- extends the existing D2 mate-line "dogleg"
