@@ -57,6 +57,21 @@ makePedigreeDiagramData <- function(ped) {
     .escapeHtml(ped$id), sexLabels, ped$gen, sireLabels, damLabels
   )
 
+  # Issue #133 (D1-D8): affected is an OPTIONAL logical column (kinship2
+  # naming parity). Absent column => zero change to output below (D1/§4
+  # backward-compat contract). Coerce defensively via as.logical() rather
+  # than assume a clean logical input -- affected is not yet a
+  # qcStudbook()-recognized column, so a raw CSV import could hand it a
+  # character/other value; anything that doesn't parse becomes NA, matching
+  # kinship2's own NA-tolerant contract rather than erroring.
+  hasAffected <- "affected" %in% names(ped)
+  if (hasAffected) {
+    affected <- as.logical(ped$affected)
+    titles <- paste0(titles,
+                      sprintf("<br><b>Affected:</b> %s",
+                              .affectedLabel(affected)))
+  }
+
   nodes <- data.frame(
     id = ped$id,
     label = ped$id,
@@ -65,6 +80,14 @@ makePedigreeDiagramData <- function(ped) {
     title = titles,
     stringsAsFactors = FALSE
   )
+  if (hasAffected) {
+    # D3 Option 1: single dominant-trait color, only affected == TRUE gets
+    # a fill (D8 color, Okabe-Ito reddish-purple -- colorblind-safe,
+    # distinct from both the GVA heatmap's red/yellow/green risk convention
+    # and the existing #2B7CE9 waypoint-edge blue). FALSE/NA leave
+    # color.background NA, i.e. vis.js's own default.
+    nodes$color.background <- .affectedColor(affected)
+  }
 
   hasSire <- !is.na(ped$sire)
   hasDam <- !is.na(ped$dam)
@@ -91,6 +114,35 @@ makePedigreeDiagramData <- function(ped) {
   x <- gsub("<", "&lt;", x, fixed = TRUE)
   x <- gsub(">", "&gt;", x, fixed = TRUE)
   x
+}
+
+#' Map an affected-status vector to a vis.js node fill color (issue #133 D8)
+#'
+#' \code{TRUE} gets the D8 accent color; \code{FALSE}/\code{NA} leave no
+#' override (vis.js's own default). Shared by both
+#' \code{\link{makePedigreeDiagramData}} and
+#' \code{\link{makePedigreeMatingLayout}} (a small pure leaf utility, unlike
+#' the two functions' own deliberately-duplicated node-building logic --
+#' same sharing precedent as \code{.escapeHtml()} above).
+#'
+#' @param affected logical vector, \code{NA} allowed.
+#' @return character vector, \code{NA_character_} where no color override
+#'   applies.
+#' @noRd
+.affectedColor <- function(affected) {
+  ifelse(!is.na(affected) & affected, "#CC79A7", NA_character_)
+}
+
+#' Map an affected-status vector to a human-readable Yes/No/Unknown label
+#' (issue #133 D3 Option 0)
+#'
+#' @param affected logical vector, \code{NA} allowed.
+#' @return character vector: \code{"Yes"}, \code{"No"}, or \code{"Unknown"}.
+#' @noRd
+.affectedLabel <- function(affected) {
+  label <- c("No", "Yes")[as.integer(affected) + 1L]
+  label[is.na(affected)] <- "Unknown"
+  label
 }
 
 #' Transform a pedigree into a mating-unit forest (Option 2 layout, D1/D2)
@@ -799,6 +851,21 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
   damOf <- stats::setNames(as.character(ped$dam), realIds)
   genOf <- stats::setNames(ped$gen, realIds)
 
+  # Issue #133 (D1-D8), independent implementation of the same optional
+  # affected contract makePedigreeDiagramData() gets -- this function, not
+  # that one, is what the live Diagram tab actually renders
+  # (R/modPedigree.R). Coerce defensively via as.logical() (see that
+  # function's own comment for why).
+  hasAffected <- "affected" %in% names(ped)
+  affectedOf <- if (hasAffected) {
+    stats::setNames(as.logical(ped$affected), realIds)
+  } else {
+    NULL
+  }
+  .affectedColorForVec <- function(ids) {
+    .affectedColor(affectedOf[ids])
+  }
+
   .shapeForVec <- function(sexCodes) {
     shapes <- unname(shapeMap[as.character(sexCodes)])
     shapes[is.na(shapes)] <- "diamond"
@@ -811,11 +878,17 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
     # nolint end
     sireLabel <- ifelse(is.na(sireOf[ids]), "Unknown", .escapeHtml(sireOf[ids]))
     damLabel <- ifelse(is.na(damOf[ids]), "Unknown", .escapeHtml(damOf[ids]))
-    sprintf(
+    title <- sprintf(
       paste0("<b>ID:</b> %s<br><b>Sex:</b> %s<br><b>Generation:</b> %s",
              "<br><b>Sire:</b> %s<br><b>Dam:</b> %s"),
       .escapeHtml(ids), sexLabel, genOf[ids], sireLabel, damLabel
     )
+    if (hasAffected) {
+      title <- paste0(title,
+                       sprintf("<br><b>Affected:</b> %s",
+                               .affectedLabel(affectedOf[ids])))
+    }
+    title
   }
 
   realNodes <- data.frame(
@@ -824,34 +897,50 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
     title = .titleForIds(realIds),
     size = 25L, stringsAsFactors = FALSE
   )
+  if (hasAffected) {
+    realNodes$color.background <- .affectedColorForVec(realIds)
+  }
 
   dupNodes <- if (nrow(duplicates) > 0L) {
-    data.frame(
+    df <- data.frame(
       id = dupIds, label = duplicates$realId,
       shape = .shapeForVec(sexOf[duplicates$realId]),
       title = paste0(.titleForIds(duplicates$realId),
                       "<br><i>(duplicate occurrence)</i>"),
       size = 25L, stringsAsFactors = FALSE
     )
+    if (hasAffected) {
+      df$color.background <- .affectedColorForVec(duplicates$realId)
+    }
+    df
   } else {
-    data.frame(id = character(), label = character(), shape = character(),
-               title = character(), size = numeric(),
-               stringsAsFactors = FALSE)
+    df <- data.frame(id = character(), label = character(),
+                      shape = character(), title = character(),
+                      size = numeric(), stringsAsFactors = FALSE)
+    if (hasAffected) df$color.background <- character()
+    df
   }
 
   unitNodes <- if (nrow(matingUnits) > 0L) {
     offspringCount <- vapply(
       unitIds, function(u) sum(childEdges$from == u), integer(1L)
     )
-    data.frame(
+    df <- data.frame(
       id = unitIds, label = "", shape = "dot",
       title = sprintf("%d offspring", offspringCount), size = 6L,
       stringsAsFactors = FALSE
     )
+    # A mating union is not an individual -- it never gets affected-status
+    # coloring (D4), but the column must still exist here for rbind() to
+    # align with realNodes/dupNodes when hasAffected.
+    if (hasAffected) df$color.background <- NA_character_
+    df
   } else {
-    data.frame(id = character(), label = character(), shape = character(),
-               title = character(), size = numeric(),
-               stringsAsFactors = FALSE)
+    df <- data.frame(id = character(), label = character(),
+                      shape = character(), title = character(),
+                      size = numeric(), stringsAsFactors = FALSE)
+    if (hasAffected) df$color.background <- character()
+    df
   }
 
   nodes <- rbind(realNodes, dupNodes, unitNodes)
@@ -1115,8 +1204,19 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
   finalEdges <- rbind(keptEdges, newEdges[, names(keptEdges)])
 
   keptNodes <- nodes
-  keptNodes$color.background <- rep(NA_character_, nrow(keptNodes))
-  keptNodes$color.border <- rep(NA_character_, nrow(keptNodes))
+  # nolint start: commented_code_linter.
+  # Issue #133: preserve a color.background/color.border already set on the
+  # incoming nodes (e.g. Slice 1's own affected-status coloring) instead of
+  # blanket-resetting every node to NA -- only add the column fresh when it
+  # doesn't already exist, matching this function's pre-#133 behavior
+  # exactly for every caller that doesn't pass pre-colored nodes.
+  # nolint end
+  if (!"color.background" %in% names(keptNodes)) {
+    keptNodes$color.background <- rep(NA_character_, nrow(keptNodes))
+  }
+  if (!"color.border" %in% names(keptNodes)) {
+    keptNodes$color.border <- rep(NA_character_, nrow(keptNodes))
+  }
 
   newNodes <- if (length(newNodeList) > 0L) {
     nn <- do.call(rbind, newNodeList)

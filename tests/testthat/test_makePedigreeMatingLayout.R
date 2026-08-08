@@ -495,3 +495,139 @@ test_that(
   expect_false(any(is.na(result$nodes$x)))
   expect_false(any(is.na(result$nodes$y)))
 })
+
+## ---- Issue #133 -- affected/phenotype/genotype status encoding (D1-D8,
+## docs/planning/issue133-affected-status-pedigree-diagram-plan.md) --------
+## Independent implementation of the same optional-column contract
+## makePedigreeDiagramData() gets (D4 -- this function, not that one, is
+## what the live Diagram tab actually renders, R/modPedigree.R:446).
+## Duplicate nodes inherit their real individual's color (matching how
+## they already inherit shape/title); mating-unit nodes get no coloring
+## (a union is not an individual).
+
+test_that(
+  "makePedigreeMatingLayout sets color.background for affected == TRUE real
+   individuals, propagates the same color to their duplicate nodes, and
+   leaves mating-unit nodes uncolored (D4)", {
+  loopPed <- data.frame(
+    id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
+           "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
+    sire = c(NA, NA, NA, NA, "5A6DFT", "8LKBV9", "8LKBV9", "8LKBV9"),
+    dam = c(NA, NA, NA, NA, "8DKELJ", "G8EBU9", "8P17E3", "FJIB3R"),
+    sex = c("M", "F", "F", "F", "M", "F", "F", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 2L, 2L, 3L),
+    affected = c(TRUE, FALSE, NA, FALSE, TRUE, FALSE, FALSE, FALSE),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(loopPed)
+  result <- makePedigreeMatingLayout(loopPed)
+  expect_true("color.background" %in% names(result$nodes))
+
+  realColor <- result$nodes$color.background[result$nodes$id == "8LKBV9"]
+  expect_equal(realColor, "#CC79A7")
+
+  dupIds <- forest$duplicates$id[forest$duplicates$realId == "8LKBV9"]
+  dupColors <- result$nodes$color.background[result$nodes$id %in% dupIds]
+  expect_true(length(dupColors) > 0L)
+  expect_true(all(dupColors == "#CC79A7"))
+
+  unitColor <- result$nodes$color.background[
+    result$nodes$id %in% forest$matingUnits$id
+  ]
+  expect_true(length(unitColor) > 0L)
+  expect_true(all(is.na(unitColor)))
+})
+
+test_that(
+  "makePedigreeMatingLayout's title for a real individual and every one of
+   its duplicate nodes both gain the Affected: Yes/No/Unknown line", {
+  loopPed <- data.frame(
+    id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
+           "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
+    sire = c(NA, NA, NA, NA, "5A6DFT", "8LKBV9", "8LKBV9", "8LKBV9"),
+    dam = c(NA, NA, NA, NA, "8DKELJ", "G8EBU9", "8P17E3", "FJIB3R"),
+    sex = c("M", "F", "F", "F", "M", "F", "F", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 2L, 2L, 3L),
+    affected = c(TRUE, FALSE, NA, FALSE, TRUE, FALSE, FALSE, FALSE),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(loopPed)
+  result <- makePedigreeMatingLayout(loopPed)
+  realTitle <- result$nodes$title[result$nodes$id == "8LKBV9"]
+  expect_true(grepl("Affected:</b> Yes", realTitle, fixed = TRUE))
+
+  dupIds <- forest$duplicates$id[forest$duplicates$realId == "8LKBV9"]
+  for (dupId in dupIds) {
+    dupTitle <- result$nodes$title[result$nodes$id == dupId]
+    expect_true(grepl("Affected:</b> Yes", dupTitle, fixed = TRUE))
+  }
+
+  unaffectedTitle <- result$nodes$title[result$nodes$id == "8DKELJ"]
+  expect_true(grepl("Affected:</b> No", unaffectedTitle, fixed = TRUE))
+  unknownTitle <- result$nodes$title[result$nodes$id == "G8EBU9"]
+  expect_true(grepl("Affected:</b> Unknown", unknownTitle, fixed = TRUE))
+})
+
+test_that(
+  "makePedigreeMatingLayout coerces a non-logical affected column via
+   as.logical() rather than erroring", {
+  trio <- data.frame(
+    id = c("P1", "P2", "C1"),
+    sire = c(NA, NA, "P1"), dam = c(NA, NA, "P2"),
+    sex = c("M", "F", "M"), gen = c(0L, 0L, 1L),
+    affected = c("TRUE", "FALSE", "nonsense"),
+    stringsAsFactors = FALSE
+  )
+  result <- makePedigreeMatingLayout(trio)
+  realRows <- result$nodes[result$nodes$id %in% trio$id, ]
+  colors <- setNames(realRows$color.background, realRows$id)
+  expect_equal(colors[["P1"]], "#CC79A7")
+  expect_true(is.na(colors[["P2"]]))
+  expect_true(is.na(colors[["C1"]]))
+})
+
+test_that(
+  "makePedigreeMatingLayout produces no color.background column and no
+   Affected tooltip line for a ped with no affected column at all --
+   backward compatible with every pre-#133 fixture/test", {
+  trio <- data.frame(
+    id = c("P1", "P2", "C1"),
+    sire = c(NA, NA, "P1"), dam = c(NA, NA, "P2"),
+    sex = c("M", "F", "M"), gen = c(0L, 0L, 1L),
+    stringsAsFactors = FALSE
+  )
+  result <- makePedigreeMatingLayout(trio)
+  expect_false("color.background" %in% names(result$nodes))
+  expect_false(any(grepl("Affected", result$nodes$title, fixed = TRUE)))
+})
+
+test_that(
+  "makePedigreeMatingLayout's affected-status color.background survives
+   edgeStyle = \"rectilinear\" -- .addRectilinearWaypoints() must preserve
+   pre-existing node coloring rather than reset it to NA (found this
+   session reading R/makePedigreeDiagramData.R:1117-1119 -- a blanket
+   overwrite that would otherwise silently erase Slice 1's own coloring
+   the moment the Diagram tab is switched to rectilinear mode)", {
+  loopPed <- data.frame(
+    id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
+           "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
+    sire = c(NA, NA, NA, NA, "5A6DFT", "8LKBV9", "8LKBV9", "8LKBV9"),
+    dam = c(NA, NA, NA, NA, "8DKELJ", "G8EBU9", "8P17E3", "FJIB3R"),
+    sex = c("M", "F", "F", "F", "M", "F", "F", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 2L, 2L, 3L),
+    affected = c(TRUE, FALSE, NA, FALSE, TRUE, FALSE, FALSE, FALSE),
+    stringsAsFactors = FALSE
+  )
+  result <- makePedigreeMatingLayout(loopPed, edgeStyle = "rectilinear")
+  expect_true("color.background" %in% names(result$nodes))
+
+  realColor <- result$nodes$color.background[result$nodes$id == "8LKBV9"]
+  expect_equal(realColor, "#CC79A7")
+
+  ## Waypoint nodes keep their own, unrelated fully-transparent contract
+  ## (issue #142) -- unaffected by #133's coloring.
+  waypointRows <- result$nodes[grepl("^__drop_|^__bar_|^__proj_",
+                                      result$nodes$id), ]
+  expect_true(nrow(waypointRows) > 0L)
+  expect_true(all(waypointRows$color.background == "rgba(0,0,0,0)"))
+})

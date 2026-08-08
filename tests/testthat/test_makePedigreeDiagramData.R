@@ -183,3 +183,84 @@ test_that(
   expect_true(grepl("A&amp;B&lt;C&gt;", parentTitle, fixed = TRUE))
   expect_true(grepl("Sire:</b> A&amp;B&lt;C&gt;", childTitle, fixed = TRUE))
 })
+
+## Issue #133 -- affected/phenotype/genotype status encoding (D1-D8,
+## docs/planning/issue133-affected-status-pedigree-diagram-plan.md).
+## affected is an OPTIONAL logical column (TRUE/FALSE/NA). When present, an
+## affected == TRUE node gets a dominant `color.background` (D3 Option 1,
+## D8 color #CC79A7) and every node's tooltip gains an "Affected: Yes/No/
+## Unknown" line (D3 Option 0). Absent column => zero change to today's
+## output (backward compatible with every pre-#133 fixture/test).
+
+test_that(
+  "makePedigreeDiagramData sets color.background only for affected == TRUE
+   rows when the affected column is present", {
+  ped <- data.frame(
+    id = c("A1", "A2", "A3"),
+    sire = NA_character_, dam = NA_character_,
+    sex = factor(c("F", "M", "F"), levels = c("F", "M", "H", "U")),
+    gen = 0L,
+    affected = c(TRUE, FALSE, NA),
+    stringsAsFactors = FALSE
+  )
+  result <- makePedigreeDiagramData(ped)
+  expect_true("color.background" %in% names(result$nodes))
+  colors <- setNames(result$nodes$color.background, result$nodes$id)
+  expect_equal(colors[["A1"]], "#CC79A7")
+  expect_true(is.na(colors[["A2"]]))
+  expect_true(is.na(colors[["A3"]]))
+})
+
+test_that(
+  "makePedigreeDiagramData's title gains an Affected: Yes/No/Unknown line
+   matching each row's TRUE/FALSE/NA affected value", {
+  ped <- data.frame(
+    id = c("A1", "A2", "A3"),
+    sire = NA_character_, dam = NA_character_,
+    sex = factor(c("F", "M", "F"), levels = c("F", "M", "H", "U")),
+    gen = 0L,
+    affected = c(TRUE, FALSE, NA),
+    stringsAsFactors = FALSE
+  )
+  result <- makePedigreeDiagramData(ped)
+  titles <- setNames(result$nodes$title, result$nodes$id)
+  expect_true(grepl("Affected:</b> Yes", titles[["A1"]], fixed = TRUE))
+  expect_true(grepl("Affected:</b> No", titles[["A2"]], fixed = TRUE))
+  expect_true(grepl("Affected:</b> Unknown", titles[["A3"]], fixed = TRUE))
+})
+
+test_that(
+  "makePedigreeDiagramData coerces a non-logical affected column via
+   as.logical() (a raw CSV import may hand it character values) rather
+   than erroring, matching kinship2's own NA-tolerant contract", {
+  ped <- data.frame(
+    id = c("A1", "A2", "A3"),
+    sire = NA_character_, dam = NA_character_,
+    sex = factor(c("F", "M", "F"), levels = c("F", "M", "H", "U")),
+    gen = 0L,
+    affected = c("TRUE", "FALSE", "not-a-value"),
+    stringsAsFactors = FALSE
+  )
+  result <- makePedigreeDiagramData(ped)
+  colors <- setNames(result$nodes$color.background, result$nodes$id)
+  expect_equal(colors[["A1"]], "#CC79A7")
+  expect_true(is.na(colors[["A2"]]))
+  expect_true(is.na(colors[["A3"]]))
+})
+
+test_that(
+  "makePedigreeDiagramData produces byte-identical output for a ped with
+   no affected column at all -- backward compatible with every pre-#133
+   fixture/test", {
+  trio <- data.frame(
+    id = c("P1", "P2", "C1"),
+    sire = c(NA, NA, "P1"),
+    dam = c(NA, NA, "P2"),
+    sex = factor(c("M", "F", "M"), levels = c("F", "M", "H", "U")),
+    gen = c(0L, 0L, 1L),
+    stringsAsFactors = FALSE
+  )
+  result <- makePedigreeDiagramData(trio)
+  expect_false("color.background" %in% names(result$nodes))
+  expect_false(any(grepl("Affected", result$nodes$title, fixed = TRUE)))
+})

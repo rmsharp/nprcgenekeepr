@@ -437,3 +437,40 @@ test_that(".addRectilinearWaypoints does not crash when a mating unit's
   expect_false("DANGLING_DAM" %in% result$nodes$id)
   expect_false(any(is.na(result$nodes$x)))
 })
+
+## ---- Issue #133: preserve pre-existing node coloring (not yet wired to
+## an edgeStyle at the time of the D1/D2 design; #133's affected-status
+## coloring is the first real caller that passes in nodes already carrying
+## a color.background/color.border value) ------------------------------
+
+test_that(
+  ".addRectilinearWaypoints preserves a pre-existing color.background/
+   color.border on passed-in nodes (e.g. issue #133's affected-status
+   coloring) rather than resetting every node to NA, while new waypoint
+   nodes still get their own fully-transparent override", {
+  ped <- data.frame(
+    id = c("P1", "P2", "C1"),
+    sire = c(NA, NA, "P1"), dam = c(NA, NA, "P2"),
+    sex = c("M", "F", "M"), gen = c(0L, 0L, 1L),
+    stringsAsFactors = FALSE
+  )
+  inputs <- .buildLayoutAndForest(ped)
+  coloredNodes <- inputs$nodes
+  coloredNodes$color.background <- ifelse(coloredNodes$id == "P1",
+                                           "#CC79A7", NA_character_)
+  coloredNodes$color.border <- NA_character_
+
+  result <- .addRectilinearWaypoints(coloredNodes, inputs$edges,
+                                      inputs$forest, inputs$pos)
+
+  origRows <- result$nodes[result$nodes$id %in% ped$id, ]
+  expect_equal(origRows$color.background[origRows$id == "P1"], "#CC79A7")
+  expect_true(is.na(origRows$color.background[origRows$id == "P2"]))
+  expect_true(is.na(origRows$color.background[origRows$id == "C1"]))
+
+  wpIds <- result$nodes$id[.isWaypoint(result$nodes$id)]
+  wpRows <- result$nodes[result$nodes$id %in% wpIds, ]
+  expect_true(nrow(wpRows) > 0L)
+  expect_true(all(wpRows$color.background == "rgba(0,0,0,0)"))
+  expect_true(all(wpRows$color.border == "rgba(0,0,0,0)"))
+})
