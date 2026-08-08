@@ -146,6 +146,14 @@ claims as in prior instances.
   item (b) above).
 - **Self-assessment score:** 8/10 (breakdown above).
 
+**Post-close-out addendum:** the user pushed back on this session's own framing, sharper than the
+audit doc's language — issue #145's unverified premise isn't just an implementation caveat, it's a
+**specification bug** in the issue itself. Asked (`AskUserQuestion`) where to record that; user
+picked "comment on issue #145." Posted
+[a comment](https://github.com/rmsharp/nprcgenekeepr/issues/145#issuecomment-5227234223) restating
+Findings #1/#2 in those terms. Logged in `CHANGELOG.md` as a non-commit action (failure mode #27)
+since it happened after this session's own Phase 3 close-out.
+
 ### What Session 479 Did
 **Deliverable:** Reconcile undocumented "ghost" work discovered during Phase 0 orientation: two
 uncommitted `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_*.md` docs (dated 2026-08-05,

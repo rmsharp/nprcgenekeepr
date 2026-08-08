@@ -43,6 +43,20 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-08 · [issue #145] Posted a specification-bug comment on issue #145 (Session 480, post-close-out)
+- **Deliverable:** User pushed back on this session's own audit report, sharpening its framing:
+  issue #145's unverified "standard genetic counseling conventions" premise (unresolved `[2]`-`[7]`
+  citations; not confirmed by this repo's own nomenclature reference; no existing rule in
+  `R/makePedigreeDiagramData.R` to "correct" in the first place) is a **specification bug** in the
+  issue itself, not merely an implementation caveat as this session's audit doc had softer-worded it.
+  Per explicit user direction (`AskUserQuestion`: comment on the issue vs. strengthen the audit doc
+  vs. both — user picked "comment on issue #145"), posted a comment on
+  [issue #145](https://github.com/rmsharp/nprcgenekeepr/issues/145#issuecomment-5227234223) restating
+  the audit's Findings #1/#2 in specification-bug terms and recommending the citations be resolved
+  (or dropped in favor of kinship2's own verified default behavior) before implementation proceeds.
+  Non-commit, outward-facing action on a public repo — recorded here per the ledger's non-commit-
+  action rule (failure mode #27) since it happened after this session's own Phase 3 close-out.
+
 ### 2026-08-08 · [ad hoc] Pedigree-drawing backlog sequencing audit (Session 480)
 - **Deliverable:** User-directed audit, `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`,
   examining every open pedigree-drawing-related item — GitHub issues #133/#136/#137/#138/#141/#145
