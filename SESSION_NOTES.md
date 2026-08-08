@@ -6,6 +6,20 @@
 
 ## ACTIVE TASK
 
+### What Session 481 Did
+**Deliverable:** Fix the pedigree-diagram Tier 1 crash-bug cluster from
+`docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md` — 3 dangling-parent crashes in
+`.buildMatingUnitForest()`/`.positionMatingUnitForest()`/`.addRectilinearWaypoints()`
+(`R/makePedigreeDiagramData.R`), filed as issue #154, fixed via strict TDD — plus investigate and
+close the related free-pass-filter reachability question (`BACKLOG.md`, no issue). User-picked from
+the Phase 0 priorities list (this session's own audit's Tier 1 recommendation).
+**Started:** 2026-08-08 (IN PROGRESS)
+**Status:** Session claimed. Pre-RED investigation done (3 crashes empirically reproduced, B6
+investigated and not reproduced); issue #154 filed; `BACKLOG.md` updated. TDD implementation
+beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### What Session 480 Did
 **Deliverable:** One audit document, `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`,
 examining the recently-added pedigree-drawing-related `BACKLOG.md` items and GitHub issues

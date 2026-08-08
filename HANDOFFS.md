@@ -60,6 +60,23 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S481
+date: 2026-08-08
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix the pedigree-diagram Tier 1 dangling-parent crash cluster (issue #154: gen=NA crash, both-parents-dangling anchor-selection crash, .addRectilinearWaypoints() rectilinear-mode crash) via strict TDD; investigate and close the related free-pass-filter reachability question (no issue, BACKLOG.md item).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<in progress>
+
+```handoff
 session: S480
 date: 2026-08-08
 status: complete

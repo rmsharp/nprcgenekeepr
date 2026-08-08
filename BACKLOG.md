@@ -1101,30 +1101,12 @@ that audit before picking up any item in this cluster.
       sign-off to pursue -- independently valuable as a diagram-readability
       enhancement, decoupled from #144's own resolution (which does not need
       it). See `docs/planning/issue144-anchor-row-mismatch-fix-plan.md` §5/§8.
-- [ ] **`.addRectilinearWaypoints()`'s D2 loop crashes ("subscript out of
-      bounds") when a mating unit's non-anchor parent is a dangling,
-      never-duplicated reference, under `edgeStyle="rectilinear"`** (found
-      S473, incidental to designing the issue #144 plan's Candidate C;
-      confirmed pre-existing on `master`, unrelated to any #144 candidate,
-      Effort unknown, low priority) -- `genOf[[A]]`/`genOf[[Nnode]]`
-      double-bracket indexing throws when the indexed id has no row in
-      `genOf`. Not fixed, per Learning 382's "report, don't fix mid-session"
-      precedent. See `docs/planning/issue144-anchor-row-mismatch-fix-plan.md` §8.
-- [ ] **Two more pre-existing, unrelated crashes in dangling-parent edge
-      cases**, same family as the item above (found S473, incidental to this
-      plan's own adversarial review; confirmed pre-existing on `master`,
-      Effort unknown, low priority): (a) any individual with `ped$gen = NA`
-      anywhere in the input crashes `maxGen <- max(ped$gen, ...)`
-      (`R/makePedigreeDiagramData.R:410`) with `"invalid 'times' argument"`;
-      (b) a mating unit whose sire AND dam are both dangling can have a
-      dangling id selected as anchor and then crashes
-      `mergeSubtrees(rootResults)` on an empty `rootIds` (`:527-533`) --
-      separately, `matingUnits$gen` itself comes back `NA` (not the intended
-      `0L` fallback) for such a unit, since `pmax(NA, NA, na.rm = TRUE)`
-      returns `NA` rather than the `-Inf` the existing
-      `unitGen[is.infinite(unitGen)] <- 0L` guard (`:253`) assumes will
-      fire. Not fixed, per Learning 382's "report, don't fix mid-session"
-      precedent. See `docs/planning/issue144-anchor-row-mismatch-fix-plan.md` §8.
+- [ ] (none remaining -- the 3 dangling-parent crash bugs formerly tracked
+      here unnumbered (`.addRectilinearWaypoints()`'s D2 loop "subscript out
+      of bounds"; `gen = NA` -> `maxGen` "invalid 'times' argument"; a
+      both-parents-dangling mating unit's anchor-selection crash) are now
+      filed as **issue #154** (2026-08-08, S481) -- see `CHANGELOG.md` for
+      fix status.)
 - [ ] **`docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`'s
       worked examples are stale from issue #143's row-value changes, and will
       become further stale once issue #144 ships too** (found S473 --
@@ -1138,23 +1120,17 @@ that audit before picking up any item in this cluster.
       re-verification-not-rewrite check #143's own plan gave it (confirm it
       still executes; not a content rewrite). See
       `docs/planning/issue144-anchor-row-mismatch-fix-plan.md` §8.
-- [ ] **`.positionMatingUnitForest()`'s free-pass filter is stricter than
-      `.buildMatingUnitForest()`'s free-vs-duplicate decision** (found S471,
-      incidental to designing issue #143's fix, Effort unknown, low priority)
-      -- `freePassIds` requires `!hasOwnDirectChild(id)`
-      (`R/makePedigreeDiagramData.R:467-471`), but
-      `.buildMatingUnitForest()`'s own free-vs-duplicate decision only looks
-      at anchor status, not D5 direct-child ownership (`:262-297`). An
-      individual who never anchors, whose first occurrence was marked free by
-      `.buildMatingUnitForest()`, but who also owns a D5 direct child, would
-      be excluded from `freePassIds` and -- if not a root -- never positioned
-      at all by the recursive descent. Not analyzed further or fixed (out of
-      the issue #143 fix design's own scope, per
-      `PROJECT_LEARNINGS.md` Learning 382's "report, don't fix mid-session"
-      precedent). A future session should determine whether this is reachable
-      in practice (no real-fixture instance confirmed either way) and, if so,
-      design a fix. See `docs/planning/issue143-founder-positioning-fix-plan.md`
-      §8.
+- [ ] (none remaining -- **the `.positionMatingUnitForest()` free-pass-filter
+      reachability question is CLOSED, not fixed** -- S481 (2026-08-08):
+      investigated with 2 targeted fixtures (a never-anchoring founder with a
+      D5 direct child; a never-anchoring NON-founder with a D5 direct child,
+      the specific "if not a root" case this item worried about) and neither
+      reproduced a missing/duplicate node. Structurally, a real individual
+      excluded from `freePassIds` is either a founder (exclusion just keeps
+      them in `rootIds`, since `rootIds <- setdiff(founderIds, freePassIds)`)
+      or a non-founder (always visited via their own real parent's normal
+      recursion regardless of free-pass status) -- no path found where they
+      are lost. See `CHANGELOG.md` and issue #154's own closing note.)
 - [ ] **The live app's uploaded/QC'd copy of `obfuscated_rhesus_mhc_ped.csv`
       produces one fewer node than reading the same bundled CSV directly**
       (found S472, incidental to issue #143's live verification, Effort
