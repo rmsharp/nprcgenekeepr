@@ -43,6 +43,37 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-08 · [ad hoc] Proposed an implementation order for GitHub issues #146-153 (Session 483)
+- **Deliverable:** Per explicit owner direction ("propose an order to address the Issues... present
+  them as session topics to pick up"), produced an evidence-based, codebase-grounded implementation
+  order for GitHub issues #146-153 (the "Genetic Metrics PDF capability gap" cluster) — the only
+  open-issue cluster with no established sequencing across 4 consecutive session handoffs
+  (S479-S482). Found the 8 filed issues cite the older
+  `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-08-05.md` as their source, while a newer,
+  revised `..._2026-08-06.md` (one day later) replaced its flat gap list with a formal High/Medium/
+  Deferred priority table that was never used to re-triage the issues; used the 08-06 table as
+  authoritative. Ran a 3-phase background `Workflow` — 8 parallel per-issue agents (each required to
+  `Grep`/`Read` the actual current `R/` source, not estimate from issue text alone) assessing effort,
+  codebase readiness, and cross-issue dependencies; one synthesis agent producing a tiered
+  recommendation; one adversarial-verify agent that found the tier ordering itself sound (no missing/
+  duplicated issue, no violated dependency) but required one correction and two softenings, all
+  applied in the final write-up. Wrote
+  `docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md`: **Tier 1** (design launch) #147
+  (sole High-priority item, XL effort); **Tier 2** (ready-to-build Medium) #149 > #146 > #151; **Tier
+  3** (policy-gated quick win) #150 — highest codebase readiness in the batch but deliberately
+  excluded from the audit's own priority table, needs an explicit owner sign-off; **Deferred**
+  (design-only) #152 > #153 > #148, with #148 flagged as filed broader than the audit recommends. Key
+  finding: 2 audit High-priority gaps ("Longitudinal genetic-health monitoring," "Ancestry guardrails
+  in breeding decisions") have **no corresponding filed GitHub issue** anywhere in #146-153 — flagged
+  for a future triage session to file, not implemented speculatively. Added a `BACKLOG.md` progress
+  note under the existing "Genetic-metrics PDF audit follow-ups" section. Docs-only session: no
+  `R/`/`tests/` files changed, TDD RED/GREEN/REFACTOR gates N/A, Phase 3E runtime smoke test n/a.
+  `PROJECT_LEARNINGS.md` Learning 483 added (audit-priority-vs-filed-issue divergence runs both
+  directions; multi-agent convergence on shared-context facts is not independent corroboration);
+  `CLAUDE.md` learning-count pointer bumped (482→483). Re-rendered the priorities list with this new
+  sequencing and presented it via `AskUserQuestion`, fulfilling the owner's "present as session
+  topics" request. See `SESSION_NOTES.md`, `HANDOFFS.md`.
+
 ### 2026-08-08 · [ad hoc] Phase 0 ledger reconcile: backfill S482's own HANDOFFS.md receipt commit sha self-correction (post-S482)
 - **Deliverable:** Phase 0 ledger reconcile (this session, S483) found one commit past
   the `CHANGELOG.md` frontier with no ledger entry: `3f8acc5c` ("docs: S482 -- backfill

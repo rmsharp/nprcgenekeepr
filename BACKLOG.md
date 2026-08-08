@@ -1497,3 +1497,35 @@ requiring tracking. See `CHANGELOG.md`.*
       the hand-verified fixture) with no console errors. **Issue #130 is
       now fully implemented across all 5 slices; no open item remains in
       this sequencing chain.** See `CHANGELOG.md`.
+
+**Second-generation re-audit and issue-sequencing (S479-S483, 2026-08-05 to 2026-08-08):** a ghost
+session (reconciled S479, see `PROJECT_LEARNINGS.md` Learning 479) produced 2 further capability
+audits -- `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-08-05.md` and a revised
+`..._2026-08-06.md` -- and filed 8 new GitHub issues against the 08-05 audit's findings: **#146**
+(configurable/exhaustive breeding-group candidate retention), **#147** (likelihood-based
+candidate-parent assignment after marker parentage exclusion), **#148** (MHC haplotype-specific
+frequency/rare-haplotype reporting), **#149** (reviewed cross-center identity-mapping workflow with
+provenance export), **#150** (de-identified pedigree export workflow for approved data sharing),
+**#151** (individual mate-pair analysis alongside breeding-group optimization), **#152**
+(whole-genome/whole-exome sequence input + sequence-based metrics), **#153** (linkage-aware/
+haplotype-block metrics for marker data). These sat unsequenced across S479-S482 (each handoff
+noting "remain open, GitHub-only, unchanged"). **Sequencing proposed S483 (2026-08-08), owner-
+directed:** `docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` -- an 8-agent
+codebase-grounded assess + synthesize + adversarial-verify workflow recommends: **Tier 1** (design
+launch) #147, the batch's sole High-priority item (XL effort, no existing likelihood/LOD parentage
+method or pedigree-mutation pattern to build on); **Tier 2** (ready-to-build Medium) #149 > #146 >
+#151, ordered by effort/readiness and shared-file coordination (#146/#151 both touch
+`modBreedingGroups.R`); **Tier 3** (policy-gated quick win) #150 -- highest codebase readiness in the
+batch (the obfuscation primitives are already built/tested) but deliberately excluded from the audit's
+own priority table ("Policy/external"), needs an explicit owner sign-off on what "curator-controlled"
+means before it is scheduled on technical merits alone; **Deferred** (design-only) #152 > #153 > #148,
+matching the 08-06 audit's own "Deferred/scientific... advance only through separately scoped
+research/design work" guidance -- #148 flagged as filed broader than the audit recommends (a full
+feature request, not the design-only ask #152/#153 were filed as) and needing its own scope-narrowing
+conversation first. **Also found:** 2 of the audit's own High-priority rows -- "Longitudinal
+genetic-health monitoring" and "Ancestry guardrails in breeding decisions" -- have **no corresponding
+filed issue** anywhere in #146-153, despite ranking above every Medium/Deferred item in this batch; a
+future triage session should file both (as full-feature requests gated on a Pre-RED design session,
+matching #147's own shape, per the audit's Finding #1/Recommendation 2). No issues implemented or
+closed this session -- sequencing/proposal only, per the established "audit recommends, a later
+session files/implements" precedent.

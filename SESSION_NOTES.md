@@ -12,11 +12,141 @@
 per explicit owner direction ("I asked you in a prior session to propose an order... present those
 as session topics to pick up here"), following the audit workstream, mirroring the
 `PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md` precedent (S480).
-**Started:** 2026-08-08.
-**Status:** IN PROGRESS.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Started/Completed:** 2026-08-08 / 2026-08-08.
+**Status:** DONE — docs-only audit session (no `R/`/`tests/` changes, TDD gates N/A). New audit
+`docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md`; `BACKLOG.md` progress note
+added; priorities list re-rendered and presented via `AskUserQuestion`, per the owner's own request.
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**Also completed at Phase 0 reconcile (before this deliverable):** found 1 undocumented commit past
+the `CHANGELOG.md` frontier (`3f8acc5c`, S482's own `HANDOFFS.md` receipt commit-sha self-correction
+— a routine, recurring pattern) and backfilled it as an `[ad hoc]` entry, commit `48519cb9`.
+
+**What happened, in order:** **(1)** Full Phase 0 orient. Ledger reconcile found and backfilled the
+one undocumented S482 self-correction commit (above). Rendered the standard priorities-list report +
+`AskUserQuestion`; the user's answer was not a pick from the options but a correction: "I asked you
+in a prior session to propose an order to address the Issues... present those as session topics."
+No prior session recorded this ask anywhere searchable (`SESSION_NOTES.md`, `HANDOFFS.md`,
+`CHANGELOG.md`, `PROJECT_LEARNINGS.md` all grepped, no hits) — treated as newly assigned this
+session per the user's own framing, scoped to GitHub issues #146-153 (the only open-issue cluster
+with no established order across 4 consecutive handoffs; every other cluster — pedigree-diagram,
+LabKey, NPRC outreach — already has one). Stated this scoping assumption explicitly in the audit
+doc itself rather than silently guessing. **(2)** Investigated before designing: read both
+`GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-08-05.md` and its revised `..._2026-08-06.md` in full;
+found the 8 filed issues cite the OLDER 08-05 audit's flat, unordered gap list, while a NEWER,
+revised 08-06 audit (one day later) replaced it with a formal High/Medium/Deferred priority table
+that was never used to re-triage the issues — used the 08-06 table as the authoritative priority
+source. Fetched full title+body for all 8 issues (`gh issue view <N> --json title,body`) and
+surveyed the actual `R/` codebase surface (`groupAddAssign()`, `markerParentageExclusion()`,
+`resolveCrossCenterIds()`, `obfuscate*()` helpers, `modMarkerGenetics.R`, etc.) before delegating
+further, so the downstream agent prompts were grounded in real file/function names, not guesses.
+**(3)** Ran a 3-phase background `Workflow` (8 parallel per-issue assess agents, each required to
+`Grep`/`Read` the actual current source before estimating effort — not just read the issue text; one
+synthesis agent; one adversarial-verify agent) rather than sequence from memory or issue-filing
+order. The verify agent found the tier *ordering* itself sound (no missing/duplicated issue, no
+violated dependency, every tier claim faithful to its source assessment) but required one correction
+(the `unfiledGapsNote`'s recommendation for the 2 unfiled High-priority gaps was internally
+inconsistent with how the batch's own High-priority sibling, #147, was itself filed) and flagged 2
+overstated claims to soften — all applied directly in the final write-up, not left as caveats.
+**(4)** Wrote `docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` (Method / Inventory
+/ Evidence base / 4 Findings / tiered Recommended order / Structural observations / Recommendations,
+mirroring the S480 precedent's house style) and a `BACKLOG.md` progress note under the existing
+"Genetic-metrics PDF audit follow-ups" section (the same lineage as issues #125-#130) for
+discoverability, matching the S479-S482 convention. **(5)** Close-out: this entry, `HANDOFFS.md`
+receipt, `CHANGELOG.md` ledger entry, `PROJECT_LEARNINGS.md` Learning 483, `CLAUDE.md`
+learning-count bump (482→483), then re-rendered the priorities list with the new sequencing and
+presented it via `AskUserQuestion` — fulfilling the user's own explicit "present them as session
+topics" request as the closing act of this deliverable, not a second deliverable.
+
+**Session 482 Handoff Evaluation (by Session 483): 9/10.** **What helped:** S482's handoff was
+accurate and complete on its own terms — the kinship2 "no reinstall needed" gotcha, the exact
+research-doc path, and the Tier-1-step-3 recommendation were all correct and would have been
+directly actionable had the user picked that option. Phase 0's priorities-list rendering (built
+faithfully from S482's own "what's next" list) is what let the user immediately recognize their
+outstanding ask wasn't represented in it — the accurate report is what surfaced the gap. **What was
+missing:** nothing S482 itself could have supplied — the "propose an order for #146-153" ask was
+never recorded in any session's notes, so no predecessor handoff could have carried it forward; this
+is a gap in an EARLIER, unrecorded interaction, not a defect in S482's own handoff. **ROI:** neutral
+on this session's actual work (the handoff's own recommendations weren't what got picked up), but
+strongly positive on Phase 0 mechanics — an accurate orientation report is precisely what let the
+user immediately spot that their real ask was still outstanding, rather than silently deferred
+again for a 5th consecutive session.
+
+**Self-assessment (Session 483): 9/10.** **Strengths:** (1) did not guess or fabricate a "prior
+session" record when the user referenced one — grepped every plausible location
+(`SESSION_NOTES.md`, `HANDOFFS.md`, `CHANGELOG.md`, `PROJECT_LEARNINGS.md`) for the ask before
+concluding it was genuinely unrecorded, and said so explicitly in the audit doc's own framing rather
+than silently proceeding as if it had always been known; (2) treated "propose an order" as a real
+audit deliverable requiring codebase-grounded evidence, not a five-minute reshuffle of issue numbers
+— read both generations of the source capability audit (08-05 cited by the issues themselves vs.
+08-06, the newer revision that was never used to re-triage them) and caught that divergence before
+building on the wrong one; (3) used a genuinely adversarial verify pass (a separate agent tasked to
+find errors, not rubber-stamp) and it earned its keep — it caught a real internal inconsistency (the
+unfiled-gaps recommendation contradicted how the batch's own #147 was filed) and two overstated
+claims, all corrected in the final write-up rather than shipped uncritically; (4) surfaced, rather
+than absorbed or silently dropped, an unplanned finding of real consequence — 2 High-priority audit
+gaps with no filed issue at all — via the established "audit recommends, a later session files"
+pattern, instead of filing them ad hoc mid-audit or letting the finding evaporate into a footnote;
+(5) closed out the *sequencing* deliverable fully (docs, ledger, learnings, handoff) before
+rendering the picker, rather than treating "present as session topics" as license to skip formal
+close-out on the audit itself. **Weaknesses:** (1) did not use `AskUserQuestion` to confirm the
+"#146-153, not all 23 open issues" scoping assumption before committing ~13 minutes of background
+`Workflow` agent time to it — reasoned it from strong contextual evidence (this is the only
+unordered cluster; every other cluster already has an established order) rather than asking, which
+was the right call under "pick the obvious option and proceed" guidance but carried real cost if
+wrong; stated the assumption explicitly in the audit doc as a mitigation, but did not verify it
+before spending the compute; (2) the background workflow ran for roughly 13 minutes (8 parallel
+assess agents doing real `Grep`/`Read` work, then synthesis, then verify) — proportionate to the
+task's actual evidentiary demands (8 issues, no existing sequencing, genuine codebase-grounding
+need) but heavier than a lighter-touch pass might have used; not clearly excessive given Ultracode
+guidance to optimize for exhaustive correctness over speed, but worth naming as a real cost;
+(3) did not independently re-verify the workflow's own factual claims (e.g., the specific line
+numbers and function names cited in each assessment) before writing them into the final audit
+doc — trusted the agents' `Grep`/`Read`-grounded output plus the adversarial-verify pass's own
+spot-checks, rather than re-deriving a sample myself; consistent with how S480's own workflow output
+was treated (spot-verify key claims, not every claim), but worth flagging as inherited risk rather
+than eliminated risk. **Compared to previous sessions:** this session's core technique — a
+multi-agent assess/synthesize/verify workflow producing a tiered sequencing audit — directly extends
+the S480 precedent (`PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`) to a structurally
+different batch (no hard dependencies vs. S480's shared-code-region Tier 1), and Learning 483 (the
+audit-priority-vs-filed-issue divergence, and the "shared context ≠ independent corroboration"
+caution) is a genuinely new methodological finding this specific technique surfaced, not a repeat of
+S476-482's "verify the premise" lineage even though it rhymes with it.
+
+**Handoff to Session 484:**
+- **What's next:** Whatever the user selects from the re-rendered priorities-list picker below,
+  which now includes this session's #146-153 sequencing alongside the still-unchanged items from
+  S482's own handoff (Tier 1 step 3 `.qmd` refresh, LabKey, NPRC outreach). **If the user picks a
+  #146-153 item:** read `docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` in full
+  first — every item in this cluster needs its own Pre-RED design/scoping session before
+  implementation (none is a same-session "vertical slice" candidate; see the audit's own Structural
+  Observations). **If #147** (Tier 1, the sole High-priority item): start with a design session on
+  the likelihood/LOD parentage-scoring method and the report-only-vs-write-back architecture
+  question — do not start RED tests before that's resolved. **Two new tracking issues remain
+  unfiled** (Finding #1 of this session's audit): "Longitudinal genetic-health monitoring" and
+  "Ancestry guardrails in breeding decisions," both rated High priority in the 08-06 audit but never
+  ticketed — a future triage session should file both (as full-feature requests gated on a Pre-RED
+  design session, matching #147's own shape), not implement them speculatively from this note alone.
+- **Key files:** `docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` (this session's
+  full method/evidence/findings/recommended order, the primary artifact);
+  `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-08-06.md` (the authoritative priority
+  source — NOT the 08-05 audit the issues themselves cite); `BACKLOG.md` end of the "Genetic-metrics
+  PDF audit follow-ups" section (new S483 progress note); `PROJECT_LEARNINGS.md` Learning 483.
+- **Gotchas:** (1) The 8 filed issues (#146-153) each cite `GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-08-05.md`
+  as their "Source," but a NEWER `..._2026-08-06.md` revision exists with a materially different,
+  more decision-useful priority tiering (High/Medium/Deferred) that supersedes it — always check for
+  a later-dated audit revision before trusting an issue's own cited source as current. (2) None of
+  #146-153 has a hard sequencing dependency on another item in the same set (every `dependencies`
+  field came back empty or explicitly non-blocking) — the recommended order is a priority/effort/
+  readiness call an owner could reasonably reorder within Tier 2, not a topological constraint like
+  the pedigree-diagram cluster's Tier 1. (3) #150 (de-identified pedigree export) has the most
+  complete existing codebase foundation of any item in the batch (the obfuscation primitives are
+  already built/tested) but is deliberately excluded from the audit's own priority table — do not
+  let its high technical readiness alone justify prioritizing it without the explicit owner
+  sign-off this session's Finding #3 asks for. (4) All standing gotchas from S479-482 carry forward
+  unchanged (`gh issue view <N>` needs `--json` fields; Issues-vs-`BACKLOG.md` convention;
+  `NOT_CRAN=true` for tests; `matingUnits$anchor`/`nonAnchor` NA-safety from Learning 481).
+- **Self-assessment score:** 9/10 (breakdown above).
 
 ### What Session 482 Did
 **Deliverable:** Issue #145 verification spike -- Tier 1 step (2) of
