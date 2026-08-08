@@ -43,6 +43,12 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-08 · [ad hoc] Filled in this session's own HANDOFFS.md receipt commit sha (Session 483)
+- **Deliverable:** Filled in this session's own `HANDOFFS.md` receipt
+  `commit: pending` placeholder with the real close-out commit sha
+  (`638db84e`) -- the same self-correction S331-S344/S466-S470/S472/S482
+  each needed, closed within the same session.
+
 ### 2026-08-08 · [ad hoc] Proposed an implementation order for GitHub issues #146-153 (Session 483)
 - **Deliverable:** Per explicit owner direction ("propose an order to address the Issues... present
   them as session topics to pick up"), produced an evidence-based, codebase-grounded implementation

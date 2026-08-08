@@ -72,7 +72,7 @@ key_files: docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md (th
 gotchas: The 8 filed issues cite the OLDER 08-05 audit as their Source field, but a newer 08-06 revision with a materially different priority tiering supersedes it -- always check for a later-dated audit revision before trusting an issue's own cited source. None of #146-153 has a hard dependency on another item in the set -- the recommended order is a priority/effort/readiness call, not a topological constraint (unlike the pedigree-diagram cluster's Tier 1). #150 has the most complete existing codebase foundation in the batch but is deliberately excluded from the audit's own priority table -- do not let technical readiness alone justify prioritizing it without the explicit owner sign-off Finding #3 asks for. Standing gotchas from S479-482 unchanged (gh issue view needs --json; Issues-vs-BACKLOG.md convention; NOT_CRAN=true for tests; matingUnits$anchor/nonAnchor NA-safety, Learning 481).
 runtime_smoke: n/a -- docs-only audit session, no R/tests files changed, no package runtime behavior affected.
 changelog_ref: CHANGELOG.md "2026-08-08 · [ad hoc] Proposed an implementation order for GitHub issues #146-153" entry (this close-out)
-commit: pending
+commit: 638db84e
 ```
 
 ```handoff
