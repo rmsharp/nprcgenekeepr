@@ -72,7 +72,7 @@ key_files: docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-08-05.md, -2026
 gotchas: (1) plain `gh issue view <N>` throws a GraphQL "Projects (classic)" deprecation error on this repo -- always use `gh issue view <N> --json <fields>`. (2) This project's BACKLOG.md-vs-Issues convention: Issues are the default/primary tracker; a BACKLOG.md entry is added only once a session starts actively planning/implementing that item, never pre-emptively at filing -- don't propose backfilling BACKLOG.md from open issues. (3) Before treating a batch of untracked files as one incident, check each one's own mtime and content individually -- old unrelated clutter and copyright risk both hide behind "found in the same git status output." (4) inst/extdata/reference/ is now mixed-precedent -- one legitimately-committed internal doc does not license committing other, differently-sourced material placed there later. (5) All prior standing application-code gotchas (NOT_CRAN=true, stash reference files before check(), man/modMarkerGeneticsServer.Rd reflow watch, kinship2 not installed) carry forward unchanged, not exercised this session.
 runtime_smoke: n/a -- stated, not skipped. Zero R/ or tests/ files touched; every touched file (.gitignore, CLAUDE.md, PROJECT_LEARNINGS.md, CHANGELOG.md, SESSION_NOTES.md, HANDOFFS.md, docs/audits/*.md) confirmed via .Rbuildignore to already be excluded from the R package build -- zero runtime/build impact.
 changelog_ref: CHANGELOG.md 2026-08-08 "Reconciled undocumented genetic-metrics-PDF audit ghost work" entry (Session 479)
-commit: pending
+commit: 9afd4707
 ```
 
 ```handoff
