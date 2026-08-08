@@ -71,8 +71,8 @@ next_steps: Tier 2 of the pedigree-diagram cluster: #133 > #136 > #137 > #138 (o
 key_files: docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd (this session's refresh -- Examples 1-2 rewritten, Example 4 new, Summary table/closing list updated); BACKLOG.md pedigree-diagram sequencing cluster (S484 progress note, .qmd item marked DONE); PROJECT_LEARNINGS.md Learning 484.
 gotchas: docs/planning/*.qmd render byproducts (.html) are never committed in this project -- render locally to verify, then delete. kinship2::pedigree()'s dadid/momid args take actual id VALUES (with a missid sentinel), not integer indices -- passing indices errors "Value of 'dadid' not found in the id list". data(sample.ped) in this .qmd loads kinship2's OWN bundled dataset (via library(kinship2)), not anything from nprcgenekeepr -- a scratch script reproducing this doc's chunks outside Quarto must load kinship2 first. Standing gotchas from S479-483 unchanged (gh issue view needs --json; Issues-vs-BACKLOG.md convention; NOT_CRAN=true for tests; matingUnits$anchor/nonAnchor NA-safety, Learning 481).
 runtime_smoke: n/a -- docs-only session (a Quarto research/planning doc, not R/tests package code); build-equivalent verified instead via a full quarto render (37 chunks, 0 errors).
-changelog_ref: CHANGELOG.md "2026-08-08 · [BL-*] Refreshed pedigree-diagram-kinship2-reference-comparison.qmd" entry (this close-out)
-commit: pending
+changelog_ref: CHANGELOG.md "2026-08-08 · [BL-qmdComparisonRefresh] Refreshed pedigree-diagram-kinship2-reference-comparison.qmd" entry (this close-out)
+commit: dcc53b34
 ```
 
 ```handoff

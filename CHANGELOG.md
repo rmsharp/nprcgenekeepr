@@ -43,6 +43,12 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-08 · [ad hoc] Filled in this session's own HANDOFFS.md receipt commit sha (Session 484)
+- **Deliverable:** Filled in this session's own `HANDOFFS.md` receipt
+  `commit: pending` placeholder with the real close-out commit sha
+  (`dcc53b34`) -- the same self-correction S331-S344/S466-S470/S472/S482-S483
+  each needed, closed within the same session.
+
 ### 2026-08-08 · [BL-qmdComparisonRefresh] Refreshed pedigree-diagram-kinship2-reference-comparison.qmd (Session 484)
 - **Deliverable:** Tier 1 step (3) of `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`
   — refreshed `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`, completing Tier 1
