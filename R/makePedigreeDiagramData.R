@@ -115,6 +115,13 @@ makePedigreeDiagramData <- function(ped) {
 #' case (verified against the real, bundled 375-individual fixture at
 #' design time -- see the design doc's Session 459 corrections to its
 #' own \sQuote{Impact Analysis} and \sQuote{Here be dragons} sections).
+#' When NEITHER parent of a mating unit has its own row in \code{ped}
+#' (both dangling, issue #154), there is no individual to recursively
+#' position as anchor -- \code{anchor}/\code{nonAnchor} are \code{NA}
+#' rather than an arbitrarily-picked dangling id, and
+#' \code{\link{.positionMatingUnitForest}} treats such a unit as its own
+#' independent root instead of trying to reach it via a (nonexistent)
+#' anchor individual.
 #'
 #' This function computes structure only -- it assigns no x/y
 #' coordinates. It is consumed by a future positioning function (D3, a
@@ -125,7 +132,9 @@ makePedigreeDiagramData <- function(ped) {
 #'   \code{\link{makePedigreeDiagramData}}. No real \code{id} may start
 #'   with the reserved \code{"__union_"} or \code{"__dup_"} prefixes.
 #' @return A list with three data frames: \code{matingUnits} (\code{id},
-#'   \code{sire}, \code{dam}, \code{anchor}, \code{nonAnchor}, \code{gen});
+#'   \code{sire}, \code{dam}, \code{anchor}, \code{nonAnchor} --
+#'   \code{anchor}/\code{nonAnchor} both \code{NA} when neither parent has
+#'   its own row in \code{ped} --, \code{gen});
 #'   \code{duplicates} (\code{id}, \code{realId}, \code{matingUnitId});
 #'   \code{childEdges} (\code{from}, \code{to} -- \code{from} is a
 #'   mating-unit id, or a single known parent's real id under the D5
@@ -218,8 +227,14 @@ makePedigreeDiagramData <- function(ped) {
       # A dangling parent (no own row here) can never anchor -- there is
       # no individual to recursively position for them (D3 only
       # positions real ids). Their real mate wins outright, regardless of
-      # "used" status (found live, S461).
-      winner <- if (p1Real != p2Real) {
+      # "used" status (found live, S461). When NEITHER parent is real
+      # (issue #154), there is no positionable anchor at all -- anchor/
+      # nonAnchor are left NA rather than arbitrarily forcing a dangling
+      # id into anchor (which .positionMatingUnitForest()'s recursive
+      # descent could then never reach).
+      winner <- if (!p1Real && !p2Real) {
+        NA_character_
+      } else if (p1Real != p2Real) {
         if (p1Real) p1 else p2
       } else {
         p1Used <- used[[p1]]
@@ -239,18 +254,27 @@ makePedigreeDiagramData <- function(ped) {
           p2
         }
       }
-      used[[winner]] <- TRUE
+      if (!is.na(winner)) {
+        used[[winner]] <- TRUE
+      }
       anchorOf[u] <- winner
-      nonAnchorOf[u] <- if (identical(winner, p1)) p2 else p1
+      nonAnchorOf[u] <- if (is.na(winner)) {
+        NA_character_
+      } else if (identical(winner, p1)) {
+        p2
+      } else {
+        p1
+      }
     }
 
     # A dangling parent's own gen is unknown here -- fall back to
-    # whichever known parent's gen is available (na.rm = TRUE); if
-    # somehow both are dangling (not currently reachable, kept
-    # defensively), fall back to 0L rather than -Inf.
+    # whichever known parent's gen is available (na.rm = TRUE). If BOTH
+    # are dangling (issue #154), pmax(NA, NA, na.rm = TRUE) returns NA,
+    # not -Inf, so both are covered explicitly rather than relying on
+    # is.infinite() alone.
     unitGen <- pmax(unname(genOf[unitSire]), unname(genOf[unitDam]),
                      na.rm = TRUE)
-    unitGen[is.infinite(unitGen)] <- 0L
+    unitGen[is.na(unitGen) | is.infinite(unitGen)] <- 0L
 
     matingUnits <- data.frame(
       id = unionIds, sire = unitSire, dam = unitDam,
@@ -382,6 +406,12 @@ makePedigreeDiagramData <- function(ped) {
          toString(required), ". Missing: ", toString(missingCols))
   }
 
+  ## A real individual with NA gen (issue #154 -- defensive; not currently
+  ## reachable via findGeneration()'s own contract) is treated as
+  ## generation 0 rather than propagating NA into maxGen/contour indexing
+  ## below.
+  ped$gen[is.na(ped$gen)] <- 0L
+
   matingUnits <- forest$matingUnits
   duplicates <- forest$duplicates
   childEdges <- forest$childEdges
@@ -411,7 +441,8 @@ makePedigreeDiagramData <- function(ped) {
     matingUnits$gen
   } else {
     0L
-  })
+  }, na.rm = TRUE)
+  if (!is.finite(maxGen)) maxGen <- 0L
   minSep <- 1L
 
   ## D3 contour-merge machinery: occupancy tracked per absolute gen
@@ -461,8 +492,14 @@ makePedigreeDiagramData <- function(ped) {
   ## duplicate node): never anchor anywhere, no D5 direct child of
   ## their own. They fold into their one unit's children-merge as an
   ## extra width-reserving leaf instead of being an independent root.
-  everAnchor <- unique(matingUnits$anchor)
-  nonAnchorSides <- c(matingUnits$sire, matingUnits$dam)
+  ## Orphan units (issue #154 -- both sire and dam dangling, anchor = NA)
+  ## are excluded from the sire/dam pool feeding this: there is no real
+  ## anchor to contrast a "non-anchor side" against, and both of an
+  ## orphan unit's (dangling) parents are handled instead by that unit's
+  ## own root-level positioning below, not as a free-pass leaf of it.
+  anchoredUnits <- matingUnits[!is.na(matingUnits$anchor), , drop = FALSE]
+  everAnchor <- unique(anchoredUnits$anchor)
+  nonAnchorSides <- c(anchoredUnits$sire, anchoredUnits$dam)
   neverAnchorIds <- setdiff(unique(nonAnchorSides), everAnchor)
   hasOwnDirectChild <- function(id) {
     any(childEdges$from == id & !(childEdges$from %in% unitIds))
@@ -517,7 +554,12 @@ makePedigreeDiagramData <- function(ped) {
   }
 
   positionIndividual <- function(id) {
-    unitSub <- matingUnits$id[matingUnits$anchor == id]
+    ## %in%, not == : matingUnits$anchor can be NA for an orphan unit
+    ## (issue #154, both parents dangling) -- NA == id is NA, which would
+    ## select an NA element from matingUnits$id and recurse into it
+    ## indefinitely; id is always a real, non-NA individual here, and
+    ## %in% treats an NA anchor as simply "not a match".
+    unitSub <- matingUnits$id[matingUnits$anchor %in% id]
     directSub <- childEdges$to[childEdges$from == id &
                                   !(childEdges$from %in% unitIds)]
     subIds <- c(unitSub, directSub)
@@ -543,7 +585,16 @@ makePedigreeDiagramData <- function(ped) {
   rootIds <- setdiff(founderIds, freePassIds)
   rootIds <- rootIds[order(match(rootIds, realIds))]
 
-  rootResults <- lapply(rootIds, positionIndividual)
+  ## Orphan units (issue #154 -- both sire and dam dangling, anchor = NA)
+  ## have no real anchor individual to be reached through, so they are
+  ## positioned as additional top-level roots in their own right, exactly
+  ## like a founder individual, via positionUnit() instead of
+  ## positionIndividual().
+  orphanUnitIds <- matingUnits$id[is.na(matingUnits$anchor)]
+
+  rootResults <- c(lapply(rootIds, positionIndividual),
+                    lapply(orphanUnitIds, positionUnit))
+  allRootIds <- c(rootIds, orphanUnitIds)
   rootMerge <- mergeSubtrees(rootResults)
 
   ## Top-down pass: accumulate absolute x from the relative offsets
@@ -558,8 +609,8 @@ makePedigreeDiagramData <- function(ped) {
       }
     }
   }
-  for (i in seq_along(rootIds)) {
-    assignAbs(rootIds[i], rootMerge$xs[i])
+  for (i in seq_along(allRootIds)) {
+    assignAbs(allRootIds[i], rootMerge$xs[i])
   }
 
   realX <- vapply(realIds, function(i) absX[[i]], numeric(1L))
@@ -579,6 +630,13 @@ makePedigreeDiagramData <- function(ped) {
   finalUnitX <- numeric(nrow(matingUnits))
   if (nrow(matingUnits) > 0L) {
     for (i in seq_len(nrow(matingUnits))) {
+      if (is.na(matingUnits$anchor[i])) {
+        # Orphan unit (issue #154 -- both parents dangling): no real
+        # anchor/non-anchor to average -- its own root-level position
+        # (already assigned above via positionUnit()) IS its final x.
+        finalUnitX[i] <- unitProvX[[matingUnits$id[i]]]
+        next
+      }
       anchorX <- realX[[matingUnits$anchor[i]]]
       dupRow <- which(duplicates$matingUnitId == matingUnits$id[i])
       nonAnchorX <- if (length(dupRow) == 1L) {
@@ -989,20 +1047,33 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
   }
 
   ## D2: mate-line dogleg for parents at a different gen than their unit.
+  ## sideGen() looks up a side's gen defensively rather than via bare
+  ## genOf[[id]] -- a dangling, free-pass (non-duplicated) parent has no
+  ## row in 'pos' at all, by .positionMatingUnitForest()'s own contract,
+  ## so it has no entry in genOf either (issue #154). NA_real_ signals
+  ## "no rendered node for this side" to the loop below, which then skips
+  ## the dogleg for it (nothing to project).
+  sideGen <- function(id) {
+    if (id %in% names(genOf)) unname(genOf[[id]]) else NA_real_
+  }
   dropMateEdge <- rep(FALSE, nrow(edges))
   if (nrow(matingUnits) > 0L) {
     dupKey <- paste0(duplicates$realId, duplicates$matingUnitId)
     for (i in seq_len(nrow(matingUnits))) {
       U <- matingUnits$id[i]
       A <- matingUnits$anchor[i]
+      ## Orphan unit (issue #154 -- both parents dangling, anchor = NA):
+      ## no real anchor/non-anchor side exists to dogleg at all.
+      if (is.na(A)) next
       Nreal <- matingUnits$nonAnchor[i]
       dupIdx <- match(paste0(Nreal, U), dupKey)
       Nnode <- if (is.na(dupIdx)) Nreal else duplicates$id[dupIdx]
       Ugen <- matingUnits$gen[i]
 
-      sides <- list(list(nodeId = A, gen = unname(genOf[[A]])),
-                    list(nodeId = Nnode, gen = unname(genOf[[Nnode]])))
+      sides <- list(list(nodeId = A, gen = sideGen(A)),
+                    list(nodeId = Nnode, gen = sideGen(Nnode)))
       for (side in sides) {
+        if (is.na(side$gen)) next
         if (identical(side$gen, Ugen)) next
         projId <- sprintf("__proj_%s_%s", side$nodeId, U)
         newNodeList[[length(newNodeList) + 1L]] <- data.frame(
