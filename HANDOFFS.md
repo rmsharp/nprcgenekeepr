@@ -72,7 +72,7 @@ key_files: docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md (
 gotchas: (1) The nomenclature reference HTML's actual symbol catalog lives in 4 un-transcribed figure images, not extractable text -- don't cite this doc's prose for symbol-specific claims without checking the images or the primary 1995 source first. (2) Issue #145's own numbered citations ([2]-[7]) were never resolved this session -- likely kinship2's own R docs (matching "hints"/"spouse matrix"/"anchor type" vocabulary) but unconfirmed. (3) B3/B4/B6/#145 all touch the same small code region -- sequence together, not scattered across sessions. (4) Standing S479 gotchas carry forward unchanged (gh issue view --json; Issues-vs-BACKLOG convention; NOT_CRAN=true; kinship2 not installed -- reinstall locally per the .qmd doc's Setup chunk if verifying kinship2's default behavior for #145).
 runtime_smoke: n/a -- docs-only (docs/audits/, BACKLOG.md, PROJECT_LEARNINGS.md, CLAUDE.md, SESSION_NOTES.md, HANDOFFS.md, CHANGELOG.md), zero R/ or tests/ files touched, all touched files confirmed .Rbuildignore-excluded -- genuinely n/a, not skipped.
 changelog_ref: CHANGELOG.md 2026-08-08 "Pedigree-drawing backlog sequencing audit (Session 480)"
-commit: pending
+commit: 353c8325
 ```
 
 ```handoff
