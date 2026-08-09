@@ -107,6 +107,18 @@ here.
   left **open** — design ratified, not yet implemented; no
   `gh issue close` this session.
 - See `PROJECT_LEARNINGS.md` Learning 488.
+- **Non-commit actions this session (FM \#27), both owner-directed after
+  close-out:**
+  1.  pushed the accumulated 65 local commits to `origin/master`
+      (`c195d9cd..320eb016`) — the first push since S46x-era work, so
+      `master` on GitHub had been ~65 commits stale; (2) posted a
+      summary comment on issue \#136 recording the ratified design, the
+      three corrected premises, and the
+      [`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+      finding
+      (<https://github.com/rmsharp/nprcgenekeepr/issues/136#issuecomment-5229361701>).
+      Issue \#136 remains **open** — design ratified, implementation
+      pending.
 
 ### 2026-08-08 · \[issue \#133\] Implemented Slice 2 (legend + documentation) of the affected-status pedigree-diagram design; issue \#133 closed (Session 487)
 
