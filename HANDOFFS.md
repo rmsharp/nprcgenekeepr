@@ -72,7 +72,7 @@ key_files: docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md §4 Sli
 gotchas: A standalone shinyApp() driven via shinytest2::AppDriver runs in a NEW R subprocess that does NOT inherit the calling session's renv project library -- inject .libPaths() explicitly at the top of any standalone app.R before library() calls (PROJECT_LEARNINGS.md Learning 493). AppDriver's screenshot method is get_screenshot(), not screenshot(); pass wait_=FALSE to set_inputs() when the new value might equal the input's current value. A RED test's own edge filter (from/to %in% <ids>) can incidentally match pre-existing edges sharing an id with a twin pair -- filter on is.na(label)/!is.na(label) instead. R/makePedigreeDiagramData.R's two rbind traps are confirmed unchanged at :1301/:1334 this session -- re-confirm live before citing in a new PR, they drift.
 runtime_smoke: DONE -- live shinytest2/chromote against a hand-built standalone harness (both edgeStyle settings), 0 console errors, connector styling visually confirmed distinct for all 3 codes; see SESSION_NOTES.md "What happened" step 7 for full method.
 changelog_ref: CHANGELOG.md 2026-08-09 entry for S493 (issue #137 Slice 2)
-commit: pending
+commit: f6bf1b5d
 ```
 
 ```handoff
