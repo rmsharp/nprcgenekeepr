@@ -1275,6 +1275,25 @@ rows + the main diagram's affected-node coloring + the PNG export, 0 console err
 of issue #133 are now shipped; issue #133 itself is closed as part of this session's close-out.**
 Tier 2's remaining order (#136 > #137 > #138, each needing its own scoping session) is next in this
 cluster.
+
+**Progress (S488, 2026-08-08):** Tier 2 step 3 -- issue #136's design/architecture document -- is
+DONE and RATIFIED: see `docs/planning/issue136-name-labels-pedigree-diagram-plan.md` (READY for
+implementation, Slice 1 Effort S-M, Slice 2 Effort M). Owner ratified in two `AskUserQuestion`
+rounds: the framing (names exist at **some centers, inconsistently**; an optional `name` column +
+off-by-default toggle, over tooltip-only / decline / configurable label-source) and the 4
+judgment-call decisions (D3 augment `id`+name not name-only; D6 pin `useLabels = FALSE`; D10
+truncate displayed + full name in tooltip; D8 `obfuscatePed()` drops `name` to `NA`). D1/D4/D5/D7/
+D11/D12 are forced by structural traps, not voted. **The design corrects three premises in the issue
+itself:** `label` is already independent of `id` and `label != id` already ships (dup nodes `:906`,
+union nodes `:929`), so #136 is "choose the string" not "build the mechanism"; the schema's
+`first_name`/`second_name` are ALLELE names (the Learning 485 trap re-encountered); and the real
+constraint is **geometry, not the data model** -- 25.6% of adjacent label-bearing node pairs sit 48
+layout units apart with ~50-unit nodes, every id is exactly 6 chars, and nothing in the
+fixed-coordinate layout measures text. **Also found a disclosure defect** no prior session had reason
+to look for: `obfuscatePed()` scrubs only `id`/`sire`/`dam` + Date columns, so a `name` column would
+survive de-identification intact -- now a mandatory same-slice requirement (D8). Scoped as 2 slices;
+**next session in this cluster implements Slice 1** (data model + de-identification; no visible app
+change). Issue #136 intentionally left open. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 488.
 - [ ] **Candidate C's connector/dogleg visual-signposting idea** (found S473,
       designing the issue #144 plan; not adopted for #144 itself, Effort
       unknown, low priority) -- extends the existing D2 mate-line "dogleg"
