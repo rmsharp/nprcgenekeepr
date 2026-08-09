@@ -182,6 +182,18 @@ R. Mark Sharp, Ph.D.
   pedigree loaded without any twin data renders exactly as before. Both
   `makePedigreeDiagramData()` and `makePedigreeMatingLayout()` gained an
   optional `twinRelations` argument for scripted use.
+- New script-callable `markerParentageLikelihood()` (issue \#147,
+  Slice 1) ranks candidate replacement parents for a recorded parent
+  `markerParentageExclusion()` has flagged as Mendelian-inconsistent,
+  using a CERVUS-style multilocus likelihood-ratio (LOD) score (Meagher
+  & Thompson 1986; Marshall, Slate, Kruuk & Pemberton 1998).
+  Report-only: it never writes to a pedigree's `sire`/`dam` columns, and
+  `markerParentageExclusion()` itself is unchanged and remains the
+  independent Mendelian-exclusion check. Reports raw `LOD`, `delta` (the
+  gap to the next-ranked candidate), `nLociUsed`, `excluded`, and
+  `lowPower` per candidate, deliberately without a simulation-calibrated
+  percentage confidence (see the function's own documentation for why).
+  No Shiny UI yet -- that is Slice 2's scope.
 
 # nprcgenekeepr 2.0.0 (20260708)
 

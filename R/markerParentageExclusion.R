@@ -106,12 +106,6 @@ markerParentageExclusion <- function(genotypeMatrix, pedigree,
                stringsAsFactors = FALSE)
   }
 
-  isHet <- function(genoRow) {
-    vapply(strsplit(genoRow, "/", fixed = TRUE), function(a) {
-      if (length(a) != 2L) NA else a[1L] != a[2L]
-    }, logical(1L))
-  }
-
   rows <- list()
   for (i in seq_len(nrow(pedigree))) {
     id <- pedigree$id[i]
@@ -119,7 +113,6 @@ markerParentageExclusion <- function(genotypeMatrix, pedigree,
       next
     }
     genoOffspring <- genotypeMatrix[id, ]
-    hetOffspring <- isHet(genoOffspring)
 
     for (role in c("dam", "sire")) {
       parent <- pedigree[[role]][i]
@@ -128,20 +121,16 @@ markerParentageExclusion <- function(genotypeMatrix, pedigree,
       }
 
       genoParent <- genotypeMatrix[parent, ]
-      hetParent <- isHet(genoParent)
-
-      shared <- !is.na(genoOffspring) & !is.na(genoParent)
-      nLoci <- sum(shared)
+      counts <- .markerOppositeHomozygoteCount(genoOffspring, genoParent)
+      exclusionCount <- counts$exclusionCount
+      nLoci <- counts$nLoci
 
       if (nLoci == 0L) {
         warning("markerParentageExclusion: '", id, "' and '", parent,
                 "' (", role, ") share no shared genotyped loci; exclusion ",
                 "count is undefined for this pair (returning NA).")
-        exclusionCount <- NA_integer_
         flagged <- NA
       } else {
-        exclusionCount <- sum(!hetOffspring[shared] & !hetParent[shared] &
-                                 genoOffspring[shared] != genoParent[shared])
         flagged <- exclusionCount > maxExclusions
       }
 
@@ -157,4 +146,42 @@ markerParentageExclusion <- function(genotypeMatrix, pedigree,
     return(emptyResult())
   }
   do.call(rbind, rows)
+}
+
+#' Count opposite-homozygote (Mendelian-conflict) loci between two genotype rows
+#'
+#' Internal helper extracted from \code{\link{markerParentageExclusion}} (issue
+#' #147 Slice 1, D7) so \code{\link{markerParentageLikelihood}} can reuse the
+#' identical "informative conflict" comparison against an arbitrary candidate
+#' parent, rather than forking a second, independently-written comparison
+#' routine. Behavior-preserving: \code{markerParentageExclusion()}'s own
+#' exported signature, behavior, and test suite are unaffected by this
+#' extraction (see the golden-master regression test in
+#' \code{test_markerParentageExclusion.R}).
+#'
+#' @param genoA,genoB two genotype-string vectors, same shape (and same locus
+#' order) as a single row of a \code{\link{buildMarkerGenotypeMatrix}} result.
+#' @return A list with \code{exclusionCount} (integer; \code{NA_integer_} if
+#' \code{nLoci} is 0) and \code{nLoci} (integer, the number of jointly
+#' non-missing loci compared).
+#' @keywords internal
+.markerOppositeHomozygoteCount <- function(genoA, genoB) {
+  isHet <- function(genoRow) {
+    vapply(strsplit(genoRow, "/", fixed = TRUE), function(a) {
+      if (length(a) != 2L) NA else a[1L] != a[2L]
+    }, logical(1L))
+  }
+
+  hetA <- isHet(genoA)
+  hetB <- isHet(genoB)
+  shared <- !is.na(genoA) & !is.na(genoB)
+  nLoci <- sum(shared)
+
+  exclusionCount <- if (nLoci == 0L) {
+    NA_integer_
+  } else {
+    sum(!hetA[shared] & !hetB[shared] & genoA[shared] != genoB[shared])
+  }
+
+  list(exclusionCount = exclusionCount, nLoci = nLoci)
 }
