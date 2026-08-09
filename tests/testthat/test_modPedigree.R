@@ -2053,3 +2053,19 @@ test_that(
     }
   )
 })
+
+## NOTE: a defect was found live (Phase 3E, real AppDriver) where the
+## show-names toggle's checked state was silently discarded the next time
+## pedigreeDiagramUI's renderUI() re-executed for an unrelated reason (e.g.
+## switching edgeStyle) -- because the checkboxInput() call hardcoded
+## value = FALSE instead of reading .currentShowNames() self-referentially,
+## the way the pre-existing edgeStyle radioButtons already do via
+## selected = style. A shiny::testServer() unit test CANNOT pin this
+## regression: testServer sets input$x values directly server-side and
+## never simulates the real client round-trip (a freshly re-sent
+## checkboxInput HTML element reporting its own hardcoded default back to
+## the server) that is the actual failure mechanism -- confirmed by writing
+## exactly such a test and observing it pass identically against both the
+## buggy and the fixed code. The permanent regression coverage for this
+## defect is therefore a live AppDriver test, added to
+## test-e2e-pedigree-module.R instead (issue #136 Slice 2 section there).

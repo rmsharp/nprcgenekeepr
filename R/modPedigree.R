@@ -448,10 +448,20 @@ modPedigreeServer <- function(id, studbook) {
           # for this control either -- same D4 net-new-UI precedent as the
           # edge style toggle above. Off by default; has no visible effect
           # on a pedigree with no name column.
+          #
+          # value = .currentShowNames() (NOT a hardcoded FALSE) -- found
+          # live (Phase 3E) that this renderUI() block re-executes on ANY
+          # of its dependencies changing (e.g. switching edgeStyle, which
+          # this control has nothing to do with), rebuilding the checkbox
+          # from scratch each time. A hardcoded value = FALSE silently
+          # discarded an already-on toggle the next time anything else
+          # re-rendered this UI. Self-referential value, mirroring the
+          # pre-existing edgeStyle radioButtons' own selected = style
+          # pattern immediately above, fixes it.
           checkboxInput(
             session$ns("pedigreeShowNames"),
             label = "Show Names on Diagram",
-            value = FALSE
+            value = .currentShowNames()
           ),
           visNetwork::visNetworkOutput(session$ns("pedigreeDiagram"))
         )

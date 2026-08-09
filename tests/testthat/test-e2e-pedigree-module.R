@@ -363,3 +363,131 @@ test_that("E2E: Pedigree Browser Diagram tab shows a shape-to-sex legend", {
   expect_equal(nrow(diagramErrors), 0L,
                info = "No visNetwork/legend-related console error")
 })
+
+## issue #136 Slice 2 -- "Show Names on Diagram" toggle.
+
+test_that(
+  "E2E: Pedigree Browser Diagram tab's show-names toggle augments a real
+   individual's label with its name, off by default", {
+  skip_if_not_installed("shinytest2")
+  skip_if_not_installed("chromote")
+  skip_if_not_installed("visNetwork")
+  skip_on_cran()
+
+  app_dir <- create_test_app()
+  app <- create_app_driver(app_dir, "e2e_pedigree_diagram_names")
+  on.exit(app$stop(), add = TRUE)
+
+  fixture <- system.file("extdata", "examples",
+                         "obfuscated_rhesus_mhc_ped_name.csv",
+                         package = "nprcgenekeepr")
+  loaded <- upload_and_wait(app, fixture)
+  if (!loaded) skip("Upload/QC did not complete")
+
+  success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
+  if (!success) skip("Could not navigate to Pedigree tab")
+
+  clicked <- click_element_safe(app, 'a[data-value="Diagram"]')
+  if (!clicked) skip("Could not switch to the Diagram tab")
+
+  get_diagram_node <- function(id) {
+    app$get_js(sprintf(paste0(
+      "(() => { const w = HTMLWidgets.find('#pedigree-pedigreeDiagram'); ",
+      "if (!w) return 'null'; ",
+      "return JSON.stringify(w.network.body.data.nodes.get('%s')); })()"
+    ), id))
+  }
+
+  ## BRI2MW is the fixture's row-1 individual, deliberately given a name
+  ## long enough to exercise D10's truncation (D9's geometry stress case).
+  before <- get_diagram_node("BRI2MW")
+  if (identical(before, "null")) skip("visNetwork widget instance not found")
+  expect_match(before, '"label":"BRI2MW"',
+               info = "Off by default -- id-only label with a name column present")
+
+  app$set_inputs(`pedigree-pedigreeShowNames` = TRUE)
+  app$wait_for_idle(timeout = E2E_TIMEOUT)
+
+  after <- get_diagram_node("BRI2MW")
+  expect_match(after, "BRI2MW", fixed = TRUE,
+               info = "Toggled on -- label still carries the id")
+  expect_match(after, "Grand-Champion-\\.\\.\\.",
+               info = "Toggled on -- augmented, truncated label (D3/D10)")
+  expect_match(after, "Name:</b> Grand-Champion-Xerxes-Constantinopolous",
+               info = "Tooltip carries the full, un-truncated name (D10)")
+
+  logs <- app$get_logs()
+  diagramErrors <- logs[logs$level == "throw" &
+                          grepl("vis|network|pedigreeDiagram", logs$message,
+                                ignore.case = TRUE), ]
+  expect_equal(nrow(diagramErrors), 0L,
+               info = "No visNetwork/diagram-related console error")
+})
+
+test_that(
+  "E2E: Pedigree Browser Diagram tab's show-names toggle SURVIVES a later,
+   unrelated pedigreeDiagramUI re-render (switching edgeStyle) -- a real
+   defect found via live verification this session: renderUI() rebuilds
+   the checkboxInput from scratch on every re-render (any dependency
+   change, not just its own), so a hardcoded default would silently
+   discard an already-on toggle; the fix mirrors the pre-existing
+   edgeStyle radioButtons' own self-referential 'selected = style'
+   pattern. A shiny::testServer() unit test cannot pin this regression --
+   it never simulates the real client round-trip that is the actual
+   failure mechanism -- so this live AppDriver test is the permanent
+   coverage for it (see test_modPedigree.R's NOTE alongside the
+   useLabels-pin test for the full explanation).", {
+  skip_if_not_installed("shinytest2")
+  skip_if_not_installed("chromote")
+  skip_if_not_installed("visNetwork")
+  skip_on_cran()
+
+  app_dir <- create_test_app()
+  app <- create_app_driver(app_dir, "e2e_pedigree_diagram_names_survive")
+  on.exit(app$stop(), add = TRUE)
+
+  fixture <- system.file("extdata", "examples",
+                         "obfuscated_rhesus_mhc_ped_name.csv",
+                         package = "nprcgenekeepr")
+  loaded <- upload_and_wait(app, fixture)
+  if (!loaded) skip("Upload/QC did not complete")
+
+  success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
+  if (!success) skip("Could not navigate to Pedigree tab")
+
+  clicked <- click_element_safe(app, 'a[data-value="Diagram"]')
+  if (!clicked) skip("Could not switch to the Diagram tab")
+
+  get_diagram_node <- function(id) {
+    app$get_js(sprintf(paste0(
+      "(() => { const w = HTMLWidgets.find('#pedigree-pedigreeDiagram'); ",
+      "if (!w) return 'null'; ",
+      "return JSON.stringify(w.network.body.data.nodes.get('%s')); })()"
+    ), id))
+  }
+
+  app$set_inputs(`pedigree-pedigreeShowNames` = TRUE)
+  app$wait_for_idle(timeout = E2E_TIMEOUT)
+  onDirect <- get_diagram_node("BRI2MW")
+  if (identical(onDirect, "null")) skip("visNetwork widget instance not found")
+  expect_match(onDirect, "Grand-Champion",
+               info = "Name shown once toggled on (direct style)")
+
+  ## The regression: switching edgeStyle re-triggers pedigreeDiagramUI's
+  ## renderUI(), which must NOT silently reset the toggle.
+  app$set_inputs(`pedigree-pedigreeEdgeStyle` = "rectilinear")
+  app$wait_for_idle(timeout = E2E_TIMEOUT)
+  onRectilinear <- get_diagram_node("BRI2MW")
+  expect_match(onRectilinear, "Grand-Champion",
+               info = paste(
+                 "Name must still show after switching edgeStyle -- this is",
+                 "the exact defect found live: the toggle silently reset"
+               ))
+
+  logs <- app$get_logs()
+  diagramErrors <- logs[logs$level == "throw" &
+                          grepl("vis|network|pedigreeDiagram", logs$message,
+                                ignore.case = TRUE), ]
+  expect_equal(nrow(diagramErrors), 0L,
+               info = "No visNetwork/diagram-related console error")
+})
