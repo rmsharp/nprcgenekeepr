@@ -9,12 +9,163 @@
 ### What Session 490 Did
 **Deliverable:** Implement Slice 2 of the ratified issue #136 plan (`docs/planning/
 issue136-name-labels-pedigree-diagram-plan.md` §4) -- label rendering + toggle + documentation.
-(IN PROGRESS)
-**Started:** 2026-08-09
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Started/Completed:** 2026-08-09 / 2026-08-09.
+**Status:** DONE. Full strict-TDD PRE-RED->RED->GREEN cycle, `AskUserQuestion`-gated at every
+transition (next-task pick; PRE-RED->RED; RED->GREEN; GREEN->REFACTOR, owner-confirmed skip). A
+real defect was found and fixed live during Phase 3E verification (see below). Verified: full clean
+regression read (0 failed/0 error, 10 pre-existing baseline warnings unchanged, 4677 passed, 173
+skipped), `lintr` 0 issues on all 6 touched files, `devtools::check()` 1 ERROR/1 WARNING/1 NOTE (all
+pre-existing/individually attributed, 0 new), a full live `test-e2e-pedigree-module.R` run (all
+passing, including 2 new tests). **Both slices of issue #136 are now shipped; issue #136 is closed.**
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Full Phase 0 orient (SAFEGUARDS.md, SESSION_NOTES.md, `gh issue
+list`, git status/log/diff, `methodology_dashboard.py` -- health 98/100; ledger + `HANDOFFS.md`
+reconcile both clean, no ghost session; the one commit since the `CHANGELOG.md` frontier was S489's
+own self-referential `HANDOFFS.md` commit-sha backfill, matching established precedent). Rendered
+the priorities list (4 numbered options: #136 Slice 2, design #145, design #147, NPRC outreach) and
+posed it via `AskUserQuestion`; owner picked implementing #136 Slice 2. **(2)** Phase 1B claim
+committed (`892772f7`). **(3)** Re-verified the Vertical Slice gate (a) contract: `git log
+3121bb71..HEAD -- <every Slice 2 touch point>` returned empty -- zero drift since the plan's own
+ratification commit, confirmed before touching anything. **(4)** Pre-RED: wrote a standalone
+`chromote` spike (matching `R/modPedigree.R`'s exact render chain) and screenshotted it to resolve
+Dragon 1 (multi-line `"\n"` rendering -- confirmed working) and calibrate D10's truncation budget (15
+characters, chosen against 5 candidate budgets rendered at the real fixture's measured tightest
+spacing). Surfaced both findings plus a Pre-RED author's-call design decision (the show-names toggle
+lives entirely in `modPedigree.R` by conditionally stripping the `name` column before calling the
+builder, rather than as a new builder parameter -- mirrors the `affected` precedent exactly) at the
+PRE-RED->RED gate. **(5)** RED: 16 new `test_that()` blocks across the 3 touched test files; 11
+failed for the stated reasons, 5 passed already (disclosed as documentation/coverage per Learning
+489's established discipline, not RED-driving). Committed (`a286d7d9`). **(6)** GREEN: the two new
+shared helpers + both builders' `hasName` branches + the toggle UI/wiring; caught and fixed one own
+mistake (a wrong grepl backslash-escape count in a JSON-pattern test assertion, verified empirically
+via `jsonlite::toJSON()` rather than guessed) before it could ship silently wrong. Committed
+(`9bd3b79c`). **(7)** GREEN->REFACTOR gate: proposed skip (every new piece mirrors an existing
+precedent exactly); owner confirmed. **(8)** Phase 3E live verification: reinstalled the package
+(`devtools::install()`, needed for `shinytest2::AppDriver` against the real installed app) and drove
+it with the real fixture. **Found a real, live-only defect**: the toggle's checked state was silently
+discarded the next time `pedigreeDiagramUI`'s `renderUI()` re-rendered for an unrelated reason (e.g.
+switching `edgeStyle`), because the new `checkboxInput()` hardcoded `value = FALSE` instead of
+reading `.currentShowNames()` back self-referentially, the way the pre-existing `edgeStyle` radio
+buttons already do. Wrote a `shiny::testServer()` regression test for the exact sequence FIRST,
+confirmed it passed identically whether or not the bug was present (proving unit-level `testServer()`
+structurally cannot catch this class of defect), deleted that misleading test, fixed the actual bug
+in place (one line), and added 2 new PERMANENT live `shinytest2`/`chromote` regression tests in
+`test-e2e-pedigree-module.R` instead -- the only test type that can actually pin it. Committed
+(`68255450`). **(9)** Documentation checklists: `NEWS.Rmd` (re-rendered), `_pedigree_browser.Rmd` +
+`colony-manager-guide.qmd` (both re-rendered clean via `rmarkdown::render()`/`quarto render`,
+byproducts deleted per convention), `input_format.html` (new `name` row, scoped to just that row, not
+a pass fixing every other pre-existing undocumented optional column). Committed (`66039106`, one
+commit-message amend needed -- see Weaknesses). **(10)** Final verification: killed and re-ran a
+`devtools::check()` that had started before the bugfix/docs commits landed (would have checked a
+stale tree) to get an accurate final baseline; confirmed the fresh spelling-diff's 3 extra words all
+predate this session via `git blame`. **(11)** Closed GitHub issue #136 (both slices now shipped),
+updated the `BACKLOG.md` Housekeeping spelling item with the expanded 9-word count. **(12)** Close-out:
+this evaluation + self-assessment, Learning 490, `BACKLOG.md`/`CLAUDE.md` updates, `CHANGELOG.md`
+entry, this handoff.
+
+**Session 489 Handoff Evaluation (by Session 490): 9/10.** **What helped:** the handoff's "what's
+next" named the exact next deliverable (Slice 2) and gave a complete, accurate touch-point list with
+line numbers -- every citation (`R/makePedigreeDiagramData.R:77,894-899,904-911,924-932`,
+`R/modPedigree.R:446,549-555`) resolved exactly as described when checked. Gotcha (1) (the
+rectilinear-breaks-on-new-column trap) and gotcha (6) (the `devtools::check(cran=FALSE)` vs. plain
+baseline mismatch) were both directly relevant and saved real time. Most valuable: the handoff
+explicitly flagged Dragon 1 as *unverified* and told this session to confirm it hands-on at Pre-RED
+before committing to D3's two-line form -- exactly the discipline this session then followed, and
+which paid off immediately (Dragon 1 held; had it not, the handoff's own named fallback was ready to
+use). **What was missing:** nothing that cost real time -- the toggle-to-builder wiring decision (Pre-
+RED author's call, not spelled out in the plan or the handoff) needed a fresh judgment call this
+session, but that is a legitimate Pre-RED decision, not a handoff gap. **What was wrong:** nothing.
+**ROI:** strongly positive; zero time was spent re-deriving facts S489/S488 had already verified.
+
+**Self-assessment (Session 490): 9/10.** **Strengths:** (1) Ran a real, evidence-based Pre-RED spike
+(a live `chromote` screenshot render) to resolve Dragon 1 and calibrate D10's truncation budget,
+rather than guessing or deferring the geometry question -- and iterated the spike script twice
+(fixing a viewport-clipping issue, then a labeling-legibility issue) until the evidence was actually
+readable, rather than accepting an inconclusive first result. (2) Caught my own mistake in a RED
+test's `grepl()` backslash-escape count by empirically verifying the exact JSON serialization via a
+throwaway `jsonlite::toJSON()` script rather than trusting my first guess -- this happened twice
+(once for a direct string-equality pattern, once for the live widget's actual column-oriented JSON
+shape, which differed from my first assumption) and both were caught before committing, not after.
+(3) Found a genuine, live-only interaction-order defect (the toggle-reset-on-unrelated-rerender bug)
+that no unit test had caught, root-caused it precisely (traced to the exact line, the exact mechanism,
+and the exact working precedent 8 lines above it that should have been copied), and did NOT stop at
+"write a test that would have caught it" -- proved that the obvious unit-test fix (a `testServer()`
+regression test) *could not actually catch this defect class at all* by writing one and watching it
+pass against buggy code, then deleted it rather than shipping a test that looked protective but
+wasn't, and wrote the correct live-test coverage instead. This is the same rigor family as Learning
+487 (JSON assertions can't prove rendering) taken one level further (a full reactive-server
+simulation still can't prove client-round-trip persistence). (4) Verified every claim before writing
+it down: re-ran `devtools::check()` from scratch after realizing the first run's tarball predated the
+bugfix/docs commits (a stale-baseline risk caught and corrected, not assumed away), and confirmed via
+`git blame`/`git log -S` -- not memory or assumption -- that every one of the fresh run's flagged
+spelling words predates this session. (5) Kept documentation scope disciplined: added exactly the
+`name` row `input_format.html` needed for this feature, explicitly declined to also backfill every
+OTHER already-missing optional column that file has never documented (a pre-existing, out-of-scope
+gap, not this session's to fix). **Weaknesses:** (1) One commit message (`a41ffd49`, later amended to
+`66039106`) shipped with backtick-quoted `` `name` `` inside a `git commit -m` argument, which the
+shell interpreted as command substitution and silently corrupted one line of the message -- caught by
+re-reading the landed commit message immediately after (not assumed clean), fixed via `git commit
+--amend -F <file>`, but the safer default (heredoc/`-F` from the start whenever a commit message
+contains backticks) should have been the first move, not the recovery. (2) Two research/verification
+side-tracks (delegating a background agent to research prior live-verification scripting patterns,
+which finished usefully but after I had already independently written and run my own working
+`chromote` spike) show a small amount of duplicated effort -- not wasted exactly (the agent's findings
+corroborated my own approach and added the `AppDriver$new(shinyApp(...))` alternative I hadn't
+considered), but the agent's dispatch and my own direct work overlapped instead of being sequenced.
+**Compared to previous sessions:** this is the same lesson family as S486-S489 one step further --
+S486 found a downstream code path could silently undo new logic; S487 found JSON assertions can't
+prove rendering; S488 found an issue's own framing can be wrong; S489 found a design doc's suggested
+test can already pass; S490's version is that a *unit-level reactive-server simulation* can be
+structurally blind to an entire class of real, user-facing defect, and the fix is not "write more
+tests" but "write the RIGHT KIND of test" -- see `PROJECT_LEARNINGS.md` Learning 490.
+
+**Handoff to Session 491:**
+- **What's next:** the owner's standing #133 > #136 > #137 > #138 sequencing (set S436) has both
+  #133 and #136 now fully shipped. Issue #137 (twin/zygosity encoding, data-model gated) or #138
+  (full-colony rendering beyond the 1,500-node cap, deliberate scope limit) are next in that cluster,
+  each needing its own scoping/design session first (matching #133's and #136's own two-phase
+  design-then-implement pattern) -- **not** a same-session jump straight to implementation. Also
+  still available: design session for issue #145 (sire/dam placement, investigation done -- see
+  `docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md`); design session for issue
+  #147 (Tier 1 of the #146-153 sequencing, XL effort, sole High-priority item); NPRC outreach
+  (DECISION NEEDED, owner-executed); the expanded 9-word spelling-WORDLIST gap (Effort S, see
+  `BACKLOG.md` Housekeeping); the non-portable-filename `devtools::check()` ERROR/WARNING rename
+  (Effort S, dates to S418).
+- **Key files:** `docs/planning/issue136-name-labels-pedigree-diagram-plan.md` (fully executed, both
+  slices); `R/makePedigreeDiagramData.R` (`.nameLabel()`/`.nameTooltipLine()` helpers, right after
+  `.affectedLabel()`; both builder functions' `hasName` branches); `R/modPedigree.R:418-475` (the
+  `pedigreeDiagramUI` renderUI block -- READ THIS before adding any future control here, see gotcha
+  1); `tests/testthat/test-e2e-pedigree-module.R` (the 2 new live tests, the only regression coverage
+  for the toggle-persistence defect class).
+- **Gotchas:** (1) **Any new Shiny input control added inside `R/modPedigree.R`'s
+  `pedigreeDiagramUI` `renderUI()` block (or any `renderUI()`/`uiOutput()` block with other reactive
+  dependencies) MUST set its `value`/`selected` argument self-referentially** (read the control's own
+  current `input$x` back, matching how the pre-existing `edgeStyle` radio buttons and the new
+  show-names checkbox both now do it) -- a literal/hardcoded default is a correctness bug, not a
+  style choice, the moment the block has more than one reason to re-render. See `PROJECT_LEARNINGS.md`
+  Learning 490. (2) **`shiny::testServer()` cannot catch a "does this rebuilt control's value survive
+  its container's re-render" defect** -- it sets `input$x` directly server-side and never simulates
+  the real client round-trip. If you write a `testServer()` test for an interaction-ORDER defect and
+  it passes identically whether or not the bug is present, that is a sign the test is checking the
+  wrong layer -- use a live `shinytest2::AppDriver` test instead. (3) Do not add a new column to the
+  nodes data frame -- `R/makePedigreeDiagramData.R:1237` throws under `edgeStyle="rectilinear"`
+  (same trap S486 hit for #133); change the `label` VALUE only, as this session's `.nameLabel()` does.
+  (4) Any live/e2e verification of rendered labels MUST use screenshots or the live widget's own JS
+  DataSet (`HTMLWidgets.find(...).network.body.data.nodes.get(id)`), never `outerHTML`/DOM-text
+  (Learning 486/487 -- vis.js renders to canvas). (5) `devtools::check()`'s tarball snapshot happens
+  early in the run -- if you make further code changes WHILE a `devtools::check()` background job is
+  still running, kill and restart it before trusting its result as the final baseline (this session's
+  own near-miss, self-caught before reporting). (6) Quoting a commit message with backticks via
+  `git commit -m "..."` risks shell command-substitution corruption -- use `git commit -F <file>`
+  whenever the message contains backtick-quoted code identifiers (this session's own mistake,
+  self-caught and amended). (7) All standing gotchas from S479-489 carry forward unchanged (`gh issue
+  view <N>` needs `--json`; `NOT_CRAN=true` for tests; `NPRC_RUN_E2E=true` for ANY live
+  `shinytest2`/`chromote` script; `docs/planning/*.qmd`/`vignettes/articles/*.qmd` render byproducts
+  never committed; re-render `NEWS.Rmd` -> `NEWS.md` and check the diff; `devtools::install()` needed
+  before driving the installed app via `shinytest2::AppDriver`, since it uses the installed copy, not
+  the working tree).
+- **Self-assessment score:** 9/10 (breakdown above).
 
 ### What Session 489 Did
 **Deliverable:** Implement Slice 1 of the ratified issue #136 plan (`docs/planning/
