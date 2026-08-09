@@ -6,6 +6,18 @@
 
 ## ACTIVE TASK
 
+### What Session 489 Did
+**Deliverable:** Implement Slice 1 of the ratified issue #136 plan (`docs/planning/
+issue136-name-labels-pedigree-diagram-plan.md` §4) -- data model + de-identification: `name` into
+`.nprcColumnSchema$possible`, roxygen + `.Rd`, the `obfuscatePed()` scrub (D8), a new sibling
+fixture + `data-raw/` generator (D9), and `tests/testthat/test_name_first_class.R` modelled on
+`test_species_first_class.R`. No visible app change in this slice (rendering + toggle are Slice 2).
+**Started:** 2026-08-08.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 488 Did
 **Deliverable:** Design/architecture document for GitHub issue #136 ("Show names (not just ID) as
 Pedigree Diagram node labels (data-model gated)") -- Tier 2 step 3 in the owner's standing

@@ -60,6 +60,23 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S489
+date: 2026-08-08
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement Slice 1 of the ratified issue #136 plan (docs/planning/issue136-name-labels-pedigree-diagram-plan.md §4) -- data model + de-identification for pedigree name labels. No visible app change this slice.
+what_was_done: pending
+next_steps: pending
+key_files: R/columnSchema.R, R/getPossibleCols.R, man/getPossibleCols.Rd, R/obfuscatePed.R, inst/extdata/examples/ (new fixture), data-raw/ (new generator), tests/testthat/test_name_first_class.R (new), tests/testthat/test_obfuscatePed.R
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+pending
+
+```handoff
 session: S488
 date: 2026-08-08
 status: complete
