@@ -6,6 +6,23 @@
 
 ## ACTIVE TASK
 
+### What Session 494 Did
+**Deliverable:** Implement Slice 3 (UI wiring, legend, documentation) of the ratified issue #137
+plan (`docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md` §4) -- Shiny-level wiring so
+a user can supply a `twinRelations` sidecar CSV via a new `fileInput` in `modPedigreeUI()`'s static
+UI (mirroring `modGeneticValue.R`'s `kinshipOverrideFile` precedent), a "Show Twin Connectors"
+toggle in the existing dynamic diagram `tagList(...)` (self-referential-value pattern per Learning
+490), a Diagram-tab legend entry via the existing `visLegend()` call's `addEdges` parameter, plus
+`NEWS.Rmd`/tutorial-article documentation. Following `docs/methodology/workstreams/
+DEVELOPMENT_WORKSTREAM.md` under this project's strict TDD contract (PRE-RED->RED->GREEN->REFACTOR,
+`AskUserQuestion`-gated at each transition).
+**Started:** 2026-08-09.
+**Status:** Session claimed. Work beginning. Pre-RED reading complete (see commit for detail);
+PRE-RED->RED gate approved by owner.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 493 Did
 **Deliverable:** Implement Slice 2 (core rendering) of the ratified issue #137 plan
 (`docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md` §4) -- `makePedigreeDiagramData()`
