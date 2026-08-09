@@ -72,7 +72,7 @@ key_files: docs/planning/issue147-likelihood-parentage-assignment-plan.md §3 (D
 gotchas: The genotyping-error-tolerant LOD formula (Kalinowski et al. 2007 eqns 1-2) is explicitly NOT independently verified by this session's research (a spotted Appendix inconsistency; the 2010 corrigendum was Cloudflare-blocked on every route) -- Slice 1 implements ONLY the no-error-model formula, do not "complete" it without a fresh primary-source re-verification pass. getPotentialParents() applies ZERO relatedness filtering -- Slice 1's RED tests MUST include a related-candidate fixture (Dragon 3) or the session's own highest-value stress-test finding never gets exercised. The excluded/lowPower output columns must NEVER be named flagged or merged -- markerParentageExclusion() already owns that word for a different concept (this project's twin-zygosity naming-collision precedent). The D7 extraction needs a regression test proving markerParentageExclusion()'s own existing output is byte-identical before/after. All standing gotchas from S479-494 carry forward unchanged.
 runtime_smoke: N/A -- docs-only session (one new planning document plus PROJECT_LEARNINGS.md/CLAUDE.md/BACKLOG.md prose updates). No R/, tests/, or man/ content changed.
 changelog_ref: CHANGELOG.md 2026-08-09 entry for S495 (issue #147 design session, RATIFIED)
-commit: pending
+commit: ed0e5332
 ```
 
 ```handoff
