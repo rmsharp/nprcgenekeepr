@@ -77,6 +77,7 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/checkParentAge.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/checkRequiredCols.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/chooseAlleles.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/chooseDate.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/convertAncestry.html</loc></url>
@@ -216,6 +217,7 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateDate.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateTwinRelations.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/offspringCounts.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/ped1Alleles.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/pedDuplicateIds.html</loc></url>

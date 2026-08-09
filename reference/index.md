@@ -263,6 +263,8 @@ Funtions designed for interactive use
   : Check parent ages against a minimum age
 - [`checkRequiredCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkRequiredCols.md)
   : Check column names for required columns
+- [`checkTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.md)
+  : Validate a twin/zygosity relations table
 - [`chooseAlleles()`](https://github.com/rmsharp/nprcgenekeepr/reference/chooseAlleles.md)
   : Combine two allele vectors by Mendelian sampling
 - [`chooseDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/chooseDate.md)
@@ -531,6 +533,8 @@ Funtions designed for interactive use
   : Create ID aliases of a specified length
 - [`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
   : Obfuscate a pedigree by aliasing IDs and shifting dates
+- [`obfuscateTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateTwinRelations.md)
+  : De-identify a twin/zygosity relations table
 - [`offspringCounts()`](https://github.com/rmsharp/nprcgenekeepr/reference/offspringCounts.md)
   : Tabulate offspring counts, optionally by population
 - [`processQcStudbookResult()`](https://github.com/rmsharp/nprcgenekeepr/reference/processQcStudbookResult.md)

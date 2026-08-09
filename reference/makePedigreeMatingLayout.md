@@ -16,7 +16,11 @@ Path step 2).
 ## Usage
 
 ``` r
-makePedigreeMatingLayout(ped, edgeStyle = c("direct", "rectilinear"))
+makePedigreeMatingLayout(
+  ped,
+  edgeStyle = c("direct", "rectilinear"),
+  twinRelations = NULL
+)
 ```
 
 ## Arguments
@@ -37,14 +41,25 @@ makePedigreeMatingLayout(ped, edgeStyle = c("direct", "rectilinear"))
   render as a strict right angle, kinship2-style, instead of a direct
   diagonal/straight segment).
 
+- twinRelations:
+
+  optional data.frame with columns `id1`, `id2`, `code` (see
+  [`checkTwinRelations`](https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.md))
+  – issue \#137 D1/D6/D7. Not validated here; validate with
+  [`checkTwinRelations`](https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.md)
+  first. `NULL` (default) adds no connector edges and leaves `edges`
+  unchanged from the pre-#137 contract. A connector always targets the
+  two individuals' REAL node ids (D7) and always renders as a direct
+  edge regardless of `edgeStyle` (D9).
+
 ## Value
 
 A list with `nodes` (`id`, `label`, `shape`, `title`, `size`, `x`, `y`),
-`edges` (`from`, `to`, `dashes`), and `duplicateToReal` (a named
-character vector, duplicate node id -\> real individual id). Under
-`edgeStyle = "rectilinear"`, `nodes` gains
-`color.background`/`color.border` and `edges` gains `color` (see
-`.addRectilinearWaypoints()`).
+`edges` (`from`, `to`, `dashes`, plus `label` when `twinRelations` is
+supplied), and `duplicateToReal` (a named character vector, duplicate
+node id -\> real individual id). Under `edgeStyle = "rectilinear"`,
+`nodes` gains `color.background`/`color.border` and `edges` gains
+`color` (see `.addRectilinearWaypoints()`).
 
 ## Details
 

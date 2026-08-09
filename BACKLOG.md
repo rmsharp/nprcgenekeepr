@@ -1623,7 +1623,131 @@ live `test-e2e-pedigree-module.R` run clean. REFACTOR: owner-confirmed
 skip. **Both slices of issue \#136 are now shipped; issue \#136 itself
 is closed as part of this session’s close-out.** Tier 2’s remaining
 order (#137 \> \#138, each needing its own scoping session) is next in
-this cluster. See `CHANGELOG.md`. - \[ \] **Candidate C’s
+this cluster. See `CHANGELOG.md`.
+
+**Progress (S491, 2026-08-09):** Tier 2 step 4 – issue \#137’s
+design/architecture document – is DONE and RATIFIED: see
+`docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md`. A
+4-agent research + draft + 3-lens adversarial-verify workflow,
+cross-checked against this session’s own substantial independent
+first-hand verification (kinship2 v1.9.6.2’s `relation` mechanism
+deparsed and empirically tested directly, not just read from Rd text;
+the codebase’s rendering/obfuscation/ schema code read directly).
+Central finding: twin-ness is **pairwise** (unlike \#133’s `affected` or
+\#136’s `name`, both single-individual attributes), so
+`.nprcColumnSchema`‘s single-per-individual-row model structurally
+cannot hold it – resolved via a new sidecar `twinRelations` table
+`(id1, id2, code)`, mirroring kinship2’s own `relation` convention and
+this project’s existing
+[`applyKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md)
+precedent, needing **zero** change to
+`columnSchema.R`/[`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md)/
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)/[`checkRequiredCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkRequiredCols.md)/[`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)/[`removeDuplicates()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeDuplicates.md).
+Confirmed kinship2’s `relation` codes are 1=MZ/2=DZ/3=UZ **twin** plus a
+4th, non-twin `4=Spouse` code the issue’s own text omitted; confirmed
+via direct source read that kinship2 renders DZ with position-clustering
+only, no distinct mark, unlike MZ (extra crossbar) and UZ (“?” glyph) –
+informing this design’s own simpler direct-edge-with-label rendering
+choice (no attempt to reproduce kinship2’s wedge geometry, ruled out of
+scope by the same Deletion-Test refactor heuristic \#133 D4 cited). Also
+found and resolved, in the same slice as the data model (not deferred):
+[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+cannot reach a second sidecar object, so a new
+[`obfuscateTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateTwinRelations.md)
+companion consuming `obfuscatePed(..., map = TRUE)`’s existing `map`
+output is a required Slice 1 deliverable, closing the same class of PII
+gap \#136 D8 closed for `name`. 4 genuine judgment calls (data-model
+shape D1, rendering mechanism D6, duplicate-node connector-targeting D7,
+UI-wiring slice boundary D11) ratified via a single `AskUserQuestion`
+round; owner selected this document’s own recommended option in all four
+cases, no changes requested. A tooling discovery made and recorded
+in-session (`PROJECT_LEARNINGS.md` Learning 491): the workflow’s own
+huge (~56K-character) drafted document was silently truncated to its
+last ~18.6K characters before reaching both the persisted journal and
+the downstream adversarial-verify agents, causing 2 of 3 verify lenses’
+“blocking” findings to be false positives (content the truncated copy
+never showed them, not a real gap) – caught only by recovering the
+drafting agent’s raw transcript directly and cross-checking against this
+session’s own independent verification. 3 genuinely new verify findings
+did survive reconciliation and are incorporated into the ratified
+document (a missing `CHANGELOG.md` ledger-format close-out item; a “twin
+zygosity,” never bare “zygosity,” prose-disambiguation requirement
+against the Marker Genetics module’s existing “Heterozygosity” tab; and
+two rendering mechanics notes – a `dashes` list-column technique and
+`visLegend()`’s single-call `addEdges` parameter). No
+`R/`/`tests/`/`man/` content changed this session (design-only). Issue
+\#137 stays open, ready for Slice 1 implementation in a future session.
+See `CHANGELOG.md`.
+
+**Progress (S492, 2026-08-09):** issue \#137 Slice 1 (data model +
+de-identification) is DONE – `R/checkTwinRelations.R` (validates a
+twin/zygosity sidecar `(id1, id2, code)` against kinship2’s own five
+relation rules) and `R/obfuscateTwinRelations.R` (de-identification
+companion consuming `obfuscatePed(..., map = TRUE)`’s alias vector),
+both `@export`. Full strict-TDD PRE-RED-\>RED-\>GREEN cycle; a real
+RED-phase rigor gap found and fixed live (bare `expect_error()`
+trivially satisfied by “could not find function,” not the intended
+domain rule – `PROJECT_LEARNINGS.md` Learning 492). Fixture pair added
+(`obfuscated_rhesus_mhc_ped_twins.csv` + `..._twin_relations.csv`),
+built from REAL full-sibling structure already present in the base
+pedigree (not fabricated), including a twin who is independently a
+multi-mate parent (design doc sec 6 Dragon 3’s exact scenario).
+Verified: full clean regression read 0 failed/0 error, 4694 passed;
+`lintr` 0 issues;
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 1
+ERROR/1 WARNING/1 NOTE, all pre-existing/individually attributed, 0 new
+(2 new spelling-check words this session’s own diff introduced –
+“zygosity”, an ordinal-digit “th” tokenization artifact – were found and
+fixed in-session, not left as a new gap). REFACTOR: owner-confirmed
+skip. **Issue \#137 stays open** – Slice 2 (core rendering: connector
+edges in both diagram functions, rectilinear trap fix) is next in this
+cluster, followed by Slice 3 (UI wiring, legend, documentation). See
+`CHANGELOG.md`.
+
+**Progress (S493, 2026-08-09):** issue \#137 Slice 2 (core rendering) is
+DONE – both
+[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+and
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+gain an optional `twinRelations` parameter (D1/D6/D7) rendering a
+distinctly-styled connector edge per twin pair via a new shared
+`.buildTwinConnectorEdges()` helper: MZ solid+“MZ”, DZ short-dash
+`c(4L,4L)`+“DZ”, UZ long-dash `c(14L,8L)`+“?” (D10 colors/dash patterns
+decided this session – `#009E73` Okabe-Ito bluish-green, confirmed via
+grep against every hex color already in `R/` to avoid collision).
+`dashes` is an `I(list(...))` list-column, re-confirmed hands-on (a
+second, independent verification of the design doc’s own Dragon \#4) via
+a live [`rbind()`](https://rdrr.io/r/base/cbind.html)/`jsonlite` test
+that a plain logical value and a numeric-vector dash pattern coerce and
+serialize correctly in the same column. `.addRectilinearWaypoints()`’s
+`newEdges` construction now unconditionally stamps a `label` column (D9)
+– verified as genuinely load-bearing, not just plausible, by temporarily
+reverting the fix, re-observing the exact predicted “undefined columns
+selected” crash, then restoring it. Full strict-TDD
+PRE-RED-\>RED-\>GREEN-\>REFACTOR cycle (`AskUserQuestion`-gated at every
+transition; REFACTOR fixed one small doc-drift item, a stale
+non-`L`-suffixed dash value in `.buildTwinConnectorEdges()`’s own
+roxygen prose after a lint fix changed the code to integer literals).
+Phase 3E: a live `shinytest2`/`chromote` smoke test against a
+hand-built, zoomed focus-subset of the Slice 1 fixture (the 3 twin
+pairs + immediate family, including the D7 multi-mate-duplicate
+scenario) VISUALLY confirmed all 3 connector styles distinctly, under
+both `edgeStyle` settings, 0 console errors – closing the design doc’s
+own Dragon \#5 gap (“never visually rendered, not even once”); confirmed
+the MZ connector targets HV7LZ3’s REAL node specifically, not either of
+her 2 `__dup_` occurrences (D7); confirmed the twin connectors stay
+direct/unrouted under `edgeStyle = "rectilinear"` while mate-lines route
+through right-angle waypoints around them (D9), exactly as designed.
+Verified: both targeted test files green (76+128 expectations); full
+clean regression read 0 failed/0 error, 4733 passed, 173 skipped, 10
+pre-existing baseline warnings (unchanged);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 2
+ERRORs/1 WARNING/2 NOTEs, all independently traced to already-tracked
+`BACKLOG.md` pre-existing items (non-portable filename S418;
+vignette-engine NOTE + the exact same 9-word spelling gap tracked since
+S465/S490), 0 new; `lintr::lint_package()` 0 lints on touched files.
+**Issue \#137 stays open** – Slice 3 (UI wiring, legend, documentation)
+is next in this cluster. See `CHANGELOG.md`. - \[ \] **Candidate C’s
 connector/dogleg visual-signposting idea** (found S473, designing the
 issue \#144 plan; not adopted for \#144 itself, Effort unknown, low
 priority) – extends the existing D2 mate-line “dogleg” (issue \#142) to

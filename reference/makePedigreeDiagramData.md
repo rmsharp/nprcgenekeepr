@@ -9,7 +9,7 @@ one per known dam, pointing from parent to child.
 ## Usage
 
 ``` r
-makePedigreeDiagramData(ped)
+makePedigreeDiagramData(ped, twinRelations = NULL)
 ```
 
 ## Arguments
@@ -21,11 +21,21 @@ makePedigreeDiagramData(ped)
   number, 0 for founders, as produced by
   [`findGeneration`](https://github.com/rmsharp/nprcgenekeepr/reference/findGeneration.md)).
 
+- twinRelations:
+
+  optional data.frame with columns `id1`, `id2`, `code` (see
+  [`checkTwinRelations`](https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.md))
+  – issue \#137 D1/D6. Not validated here; validate with
+  [`checkTwinRelations`](https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.md)
+  first. `NULL` (default) adds no connector edges and leaves `edges`
+  unchanged from the pre-#137 contract (`from`, `to` only).
+
 ## Value
 
 A list with two data frames: `nodes` (`id`, `label`, `shape`, `level`,
-`title`) and `edges` (`from`, `to`). `title` is an HTML hover-tooltip
-string (issue \#135) giving ID, sex, generation, sire, and dam.
+`title`) and `edges` (`from`, `to`, plus `dashes`/`label` when
+`twinRelations` is supplied). `title` is an HTML hover-tooltip string
+(issue \#135) giving ID, sex, generation, sire, and dam.
 
 ## Examples
 

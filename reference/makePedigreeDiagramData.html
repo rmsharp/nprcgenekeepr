@@ -62,7 +62,7 @@ per known dam, pointing from parent to child.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">makePedigreeDiagramData</span><span class="op">(</span><span class="va">ped</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">makePedigreeDiagramData</span><span class="op">(</span><span class="va">ped</span>, twinRelations <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -75,12 +75,22 @@ and <code>gen</code> columns (<code>sire</code>/<code>dam</code> <code>NA</code>
 parents; <code>gen</code> an integer generation number, 0 for founders, as
 produced by <code><a href="findGeneration.html">findGeneration</a></code>).</p></dd>
 
+
+<dt id="arg-twinrelations">twinRelations<a class="anchor" aria-label="anchor" href="#arg-twinrelations"></a></dt>
+<dd><p>optional data.frame with columns <code>id1</code>,
+<code>id2</code>, <code>code</code> (see <code><a href="checkTwinRelations.html">checkTwinRelations</a></code>) –
+issue #137 D1/D6. Not validated here; validate with
+<code><a href="checkTwinRelations.html">checkTwinRelations</a></code> first. <code>NULL</code> (default) adds no
+connector edges and leaves <code>edges</code> unchanged from the pre-#137
+contract (<code>from</code>, <code>to</code> only).</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list with two data frames: <code>nodes</code> (<code>id</code>, <code>label</code>,
 <code>shape</code>, <code>level</code>, <code>title</code>) and <code>edges</code> (<code>from</code>,
-<code>to</code>). <code>title</code> is an HTML hover-tooltip string (issue #135)
+<code>to</code>, plus <code>dashes</code>/<code>label</code> when <code>twinRelations</code> is
+supplied). <code>title</code> is an HTML hover-tooltip string (issue #135)
 giving ID, sex, generation, sire, and dam.</p>
     </div>
 

@@ -47,6 +47,195 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-08-09 · \[issue \#137\] Implemented Slice 2 (core rendering) of the twin/zygosity plan (Session 493)
+
+- **Deliverable:**
+  [`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)/[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+  (`R/makePedigreeDiagramData.R`) gain an optional `twinRelations`
+  parameter rendering a distinctly-styled connector edge per twin pair
+  via a new shared `.buildTwinConnectorEdges()` helper: MZ solid +
+  `"MZ"` label, DZ short-dash `c(4L, 4L)` + `"DZ"` label, UZ long-dash
+  `c(14L, 8L)` + `"?"` label (D10 colors/dash patterns decided this
+  session — `#009E73` Okabe-Ito bluish-green, grep-confirmed
+  collision-free against every hex color already in `R/`). `dashes` is
+  an `I(list(...))` list-column, re-confirmed hands-on via a live
+  [`rbind()`](https://rdrr.io/r/base/cbind.html)/`jsonlite` test.
+  `twinRelations` is NOT validated internally — validation stays a
+  caller-side concern
+  ([`checkTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.md)),
+  matching the
+  [`applyKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md)/[`checkKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkKinshipOverrides.md)
+  precedent. A connector always targets the two individuals’ REAL node
+  ids (D7) — no duplicate-node lookup needed, since
+  `twinRelations$id1`/`id2` are already real ids.
+  `.addRectilinearWaypoints()`’s `newEdges` construction now
+  unconditionally stamps a `label` column (D9), fixing the “undefined
+  columns selected” crash the design doc predicted — verified genuinely
+  load-bearing by temporarily reverting the fix, re-observing the exact
+  predicted crash, then restoring it. Plan:
+  `docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md` §4
+  Slice 2.
+- **Full strict-TDD PRE-RED→RED→GREEN→REFACTOR cycle**,
+  `AskUserQuestion`-gated at every transition. REFACTOR fixed one
+  doc-drift item (stale non-`L`-suffixed dash values in roxygen prose
+  after a lint fix changed the code to integer literals).
+- **Phase 3E live verification**: since Slice 3’s UI wiring doesn’t
+  exist yet, built a standalone `shinyApp()` mirroring
+  `R/modPedigree.R`’s own render chain (matching the established S465
+  precedent), driven via `shinytest2`/`chromote` against a hand-picked
+  focused subset of the Slice 1 fixture (the 3 twin pairs + immediate
+  family, including HV7LZ3’s 3-mate/2-duplicate structure). Visually
+  confirmed all 3 connector styles distinct, the MZ connector targeting
+  HV7LZ3’s REAL node specifically (not either of her 2 `__dup_`
+  occurrences — D7 confirmed empirically), and twin connectors staying
+  direct/unrouted under `edgeStyle = "rectilinear"` while mate-lines
+  route through right-angle waypoints around them (D9) — 0 console
+  errors under either edge style. Closes the design doc’s own Dragon \#5
+  gap (“never visually rendered, not even once”). Hit and fixed 3
+  environmental gotchas along the way (renv library-path injection for a
+  standalone subprocess;
+  [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+  method-name/argument corrections) — see `PROJECT_LEARNINGS.md`
+  Learning 493.
+- **Verified:** both targeted test files green (76+128 expectations);
+  full clean regression read 0 failed/0 error, 4733 passed, 173 skipped,
+  10 pre-existing baseline warnings (unchanged);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  2 ERRORs/1 WARNING/2 NOTEs, all independently traced to
+  already-tracked `BACKLOG.md` pre-existing items (non-portable filename
+  dating to S418; vignette-engine NOTE + the same 9-word spelling gap
+  tracked since S465/S490), 0 new; `lintr::lint_package()` 0 lints on
+  touched files. **Issue \#137 stays open** — Slice 3 (UI wiring,
+  legend, documentation) is next. See `PROJECT_LEARNINGS.md` Learning
+  493, `BACKLOG.md`.
+
+### 2026-08-09 · \[issue \#137\] Implemented Slice 1 (data model + de-identification) of the twin/zygosity plan (Session 492)
+
+- **Deliverable:** `R/checkTwinRelations.R` (new, `@export`) validates a
+  twin/zygosity sidecar table `(id1, id2, code)` against kinship2’s own
+  five relation rules (design doc §2.1/D4): required columns,
+  `id1`/`id2` coerced to character, off-diagonal, both ids exist in
+  `ped`, `code` in `{"MZ twin", "DZ twin", "UZ twin"}` (the 4th non-twin
+  `"spouse"` code out of scope for \#137), MZ/DZ share both `sire` and
+  `dam`, MZ additionally requires matching `sex`, UZ has no such
+  precondition. `R/obfuscateTwinRelations.R` (new, `@export`, family
+  obfuscation) de-identifies the table by remapping `id1`/`id2` through
+  the `map` alias vector `obfuscatePed(..., map = TRUE)` already returns
+  — a required Slice 1 deliverable (D5), not deferred, since
+  [`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+  cannot itself reach a second sidecar object. No visible app change
+  (rendering + UI are Slices 2-3, separate future sessions). Plan:
+  `docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md` §4
+  Slice 1.
+- **Full strict-TDD PRE-RED→RED→GREEN cycle**, `AskUserQuestion`-gated
+  at every transition (priorities-list pick; PRE-RED→RED; RED→GREEN;
+  GREEN→REFACTOR, owner-confirmed skip). A real RED-phase rigor gap was
+  found and fixed live during the RED step: 6 of 10
+  `test_checkTwinRelations.R` “stops on X” assertions used a bare
+  `expect_error()` with no message pattern, trivially satisfied by
+  “could not find function” rather than the intended domain rule — added
+  `regexp` arguments to all 6, re-verified all 11+4 expectations (across
+  both new test files) genuinely fail pre-implementation and re-validate
+  the correct rule post-implementation. See `PROJECT_LEARNINGS.md`
+  Learning 492.
+- **Fixture pair added** (`data-raw/generate_twin_fixtures.R`,
+  `inst/extdata/examples/ obfuscated_rhesus_mhc_ped_twins.csv` +
+  `..._twin_relations.csv`, committed separately as a `data:` commit per
+  the S486/S489 precedent): built from REAL full-sibling structure
+  already present in the base 375-individual pedigree (not fabricated) —
+  MZ pair `E06FRB`/`HV7LZ3` (verified full sibs, both sex F; `HV7LZ3` is
+  independently a dam with 3 distinct mates elsewhere in the pedigree,
+  the design doc’s own §6 Dragon 3 scenario, confirmed present not
+  contrived), DZ pair `8GSXTQ`/`P844CW`, UZ pair `BRI2MW`/`677E7M` (two
+  founders, demonstrating UZ’s confirmed lack of any shared-parent
+  precondition). Validated against
+  [`checkTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.md)
+  at generation time.
+- **Verified:** both new test files green (11+4 expectations); full
+  clean regression read 0 failed/0 error, 4694 passed, 173 skipped, 0
+  offenders; `lintr::lint_package()` 0 issues on all touched `R/` files
+  (1 `nonportable_path_linter` false positive suppressed per the
+  established `# nolint` precedent, Learnings 224/461);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  1 ERROR/1 WARNING/1 NOTE, all pre-existing and individually attributed
+  (non-portable reference filename, `a2interactive.Rmd` vignette-engine
+  NOTE), 0 new — including 2 new spelling-check words this session’s own
+  prose introduced (“zygosity”, an ordinal-digit “th” tokenization
+  artifact from “kinship2’s own 4th”), both found and fixed in-session
+  (reworded “4th”→“fourth”; hand-added “zygosity” to `inst/WORDLIST`)
+  rather than left as a new gap, confirmed via a direct
+  [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+  before/after diff. A pre-existing `test_pkgdown_reference_config.R`
+  guard caught the two new exports missing from `_pkgdown.yml`’s
+  reference groups live — fixed same-session. Phase 3E: n/a —
+  script-callable only, no runtime/UI change this slice.
+- Issue \#137 stays open (Slices 2-3 pending); no `gh issue close` this
+  session. Next session in this cluster implements Slice 2 (core
+  rendering).
+
+### 2026-08-09 · \[issue \#137\] Ratified an architecture/design plan for twin/zygosity encoding on the Pedigree Diagram (Session 491)
+
+- **Deliverable:**
+  `docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md` — Tier
+  2 step 4 in the owner’s `#133 > #136 > #137 > #138` sequencing (set
+  S436). Design/scoping only — no `R/`/`tests/`/`man/` content changed
+  this session; implementation begins with Slice 1 in a future session
+  (FM \#18: the plan is the deliverable, not its code).
+- **Central architectural question:** twin-ness is a *pairwise* fact
+  (unlike \#133’s `affected` or \#136’s `name`, both single-individual
+  attributes), so `.nprcColumnSchema`’s single-per-individual -row model
+  structurally cannot represent it. Resolved as a new sidecar
+  `twinRelations` table `(id1, id2, code)`, mirroring kinship2’s own
+  `relation` convention (per the owner’s S436 naming-overlay directive)
+  and this project’s existing
+  [`applyKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md)
+  precedent — needing zero change to
+  `columnSchema.R`/[`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md)/[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)/[`checkRequiredCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkRequiredCols.md)/
+  [`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)/[`removeDuplicates()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeDuplicates.md).
+- **kinship2 mechanism, empirically verified** (deparsed the installed
+  namespace source, not just read Rd text; independently re-confirmed
+  twice with identical results): `relation`’s numeric codes are
+  1=MZ/2=DZ/3=UZ twin plus a 4th, non-twin `4=Spouse` code the issue’s
+  own text omitted (scoped out of \#137 as a separate future extension);
+  DZ twins get positional clustering only in kinship2’s own rendering,
+  with no distinct visual mark, unlike MZ (an added crossbar) and UZ (a
+  “?” glyph) — informing this design’s own simpler
+  direct-edge-with-`label` rendering choice rather than reproducing
+  kinship2’s wedge geometry (ruled out of scope via the same
+  Deletion-Test refactor heuristic \#133 D4 cited).
+- **A required (not deferred) Slice 1 deliverable:**
+  [`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+  cannot reach a second sidecar object, so a new
+  [`obfuscateTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateTwinRelations.md)
+  companion, consuming `obfuscatePed(..., map = TRUE)`’s existing `map`
+  output, closes the same class of PII gap \#136 D8 closed for the
+  `name` column — in the same slice as the data model, not a later
+  session.
+- **Ratification:** 4 genuine judgment calls (data-model shape D1,
+  rendering mechanism D6, duplicate-node connector-targeting D7,
+  UI-wiring slice boundary D11) posed in a single `AskUserQuestion`
+  round; owner selected this document’s own recommended option in all
+  four cases, no changes requested. All forced decisions (D2-D5, D8, D9,
+  D12) plus all four judgment calls are now RATIFIED.
+- **Tooling discovery, recorded as `PROJECT_LEARNINGS.md` Learning
+  491:** the research workflow’s own huge (~56K-character) drafted
+  document was silently truncated to its last ~18.6K characters before
+  reaching both the persisted journal and the downstream
+  adversarial-verify agents, causing 2 of 3 verify lenses’ “blocking”
+  findings to be false positives (content the truncated copy never
+  showed them, not a real gap in the actual document) — caught by
+  recovering the drafting agent’s raw transcript directly and
+  cross-checking against this session’s own independent first-hand
+  verification. 3 genuinely new verify findings survived reconciliation
+  and are incorporated into the ratified document (a missing
+  `CHANGELOG.md` ledger-format close-out item; a “twin zygosity,” never
+  bare “zygosity,” prose-disambiguation requirement against the Marker
+  Genetics module’s existing “Heterozygosity” tab; and two
+  rendering-mechanics notes — a `dashes` list-column technique and
+  `visLegend()`’s single-call `addEdges` parameter).
+- **Issue \#137 stays open**, ready for Slice 1 implementation in a
+  future session.
+
 ### 2026-08-09 · \[issue \#136\] Implemented Slice 2 (label rendering + toggle + documentation) of the name-node-label plan, closing the issue (Session 490)
 
 - **Deliverable:** the Pedigree Diagram tab can now show animal names
