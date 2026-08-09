@@ -109,6 +109,15 @@ The possible columns are as follows:
   naming/semantics; `NA` means unknown affected status, not "not
   affected".
 
+- name:
+
+  – character vector or `NA` (optional) giving a human-readable animal
+  name/nickname, shown alongside `id` on the Pedigree Diagram tab when
+  enabled (issue \#136). `NA` or an empty string falls back to `id`; not
+  all centers record this field, so its presence and completeness both
+  vary by animal. Scrubbed to `NA` by
+  [`obfuscatePed`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md).
+
 ## Examples
 
 ``` r
@@ -119,4 +128,5 @@ getPossibleCols()
 #> [11] "ancestry"     "population"   "origin"       "status"       "condition"   
 #> [16] "departure"    "spf"          "vasxOvx"      "pedNum"       "first"       
 #> [21] "second"       "first_name"   "second_name"  "recordStatus" "affected"    
+#> [26] "name"        
 ```

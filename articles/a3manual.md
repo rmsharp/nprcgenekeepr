@@ -312,12 +312,20 @@ legend to the right of the diagram showing the same mapping. If the
 pedigree data includes an optional `affected` column, individuals marked
 affected are additionally shaded a distinct color on the diagram, with a
 matching “Affected” entry in the same legend; pedigrees without an
-`affected` column render unshaded, as before. A mate’s own mating(s)
-render as a small connector between the two parents, with a line down to
-their shared children, rather than two independent lines running
-straight from each parent – the same convention traditional pedigree
-charts use. A **Diagram Edge Style** toggle above the diagram switches
-between “Direct” (the default straight-line connector) and “Rectilinear
+`affected` column render unshaded, as before. If the pedigree data
+includes an optional `name` column, a **Show Names on Diagram** toggle
+(off by default) switches each node’s label from id-only to id plus name
+on a second line; a name longer than 15 characters is truncated with an
+ellipsis on the diagram, with the full name always available in the
+hover tooltip. Not every animal needs a name – one with no name (or a
+pedigree with no `name` column at all) always renders with just its id,
+and the “Select by id” search dropdown below always lists ids, never
+names, regardless of the toggle. A mate’s own mating(s) render as a
+small connector between the two parents, with a line down to their
+shared children, rather than two independent lines running straight from
+each parent – the same convention traditional pedigree charts use. A
+**Diagram Edge Style** toggle above the diagram switches between
+“Direct” (the default straight-line connector) and “Rectilinear
 (kinship2-style),” which routes the same connectors as strict right
 angles instead, matching the more traditional pedigree-chart look. An
 animal that mates more than once, or whose lineage loops back on itself

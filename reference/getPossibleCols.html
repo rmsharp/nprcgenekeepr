@@ -140,6 +140,14 @@ the Pedigree Diagram tab (issue #133). Matches kinship2's own
 <code>affected</code> argument naming/semantics; <code>NA</code> means unknown
 affected status, not "not affected".</p></dd>
 
+<dt>name</dt>
+<dd><p>– character vector or <code>NA</code> (optional) giving a
+human-readable animal name/nickname, shown alongside <code>id</code> on the
+Pedigree Diagram tab when enabled (issue #136). <code>NA</code> or an empty
+string falls back to <code>id</code>; not all centers record this field, so
+its presence and completeness both vary by animal. Scrubbed to
+<code>NA</code> by <code><a href="obfuscatePed.html">obfuscatePed</a></code>.</p></dd>
+
 </dl></div>
 
     <div class="section level2">
@@ -151,6 +159,7 @@ affected status, not "not affected".</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [11] "ancestry"     "population"   "origin"       "status"       "condition"   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [16] "departure"    "spf"          "vasxOvx"      "pedNum"       "first"       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [21] "second"       "first_name"   "second_name"  "recordStatus" "affected"    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [26] "name"        </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

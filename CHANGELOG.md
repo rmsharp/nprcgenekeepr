@@ -47,6 +47,137 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-08-09 · \[issue \#136\] Implemented Slice 2 (label rendering + toggle + documentation) of the name-node-label plan, closing the issue (Session 490)
+
+- **Deliverable:** the Pedigree Diagram tab can now show animal names
+  alongside id. Plan:
+  `docs/planning/issue136-name-labels-pedigree-diagram-plan.md` §4
+  Slice 2. Full TDD PRE-RED→RED→GREEN cycle, `AskUserQuestion`-gated at
+  every transition (priorities-list pick; PRE-RED→RED; RED→GREEN;
+  GREEN→REFACTOR, owner-confirmed skip).
+- **Pre-RED (Dragon 1 + D10):** a live `chromote` render against a
+  minimal widget matching `R/modPedigree.R`’s exact render chain
+  confirmed the bundled vis.js renders an embedded `"\n"` as two lines —
+  Dragon 1 resolved, no fallback needed. D10’s truncation budget (15
+  characters + `"..."`) was empirically calibrated against the real
+  fixture’s tightest measured node spacing (48 world-units, §2.3) —
+  covers the bundled fixture’s entire realistic name pool unspoiled (max
+  8 characters) while bounding a pathological outlier’s overlap
+  footprint.
+- **GREEN:** two new shared helpers in `R/makePedigreeDiagramData.R`,
+  `.nameLabel()` (D3 augment / D4 fallback / D10 truncate) and
+  `.nameTooltipLine()` (D10 full name, HTML-escaped), wired into both
+  [`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+  and
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+  (D7) — the latter also applies to duplicate-occurrence nodes via their
+  real individual’s own name (D7 label parity). `R/modPedigree.R` gained
+  an off-by-default **Show Names on Diagram** `checkboxInput` (D3/D4/D6)
+  alongside the existing edge-style toggle; the `diagramLayout` reactive
+  strips the `name` column before calling the builder when the toggle is
+  off (both builders stay unconditionally name-column-aware, mirroring
+  the `affected` precedent — no new function parameter).
+  `nodesIdSelection` gained `useLabels = FALSE` (D6), unconditional on
+  toggle state.
+- **A real defect was found via live Phase 3E verification** (a real
+  [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html),
+  not
+  [`shiny::testServer()`](https://rdrr.io/pkg/shiny/man/testServer.html)):
+  `pedigreeDiagramUI`’s `renderUI()` rebuilds the show-names checkbox
+  from scratch on ANY of its reactive dependencies changing
+  (e.g. switching the unrelated `edgeStyle` radio buttons), and the
+  checkbox hardcoded `value = FALSE` instead of reading
+  `.currentShowNames()` self-referentially the way the pre-existing
+  `edgeStyle` radio buttons already do (`selected = style`) — toggling
+  names on, then touching anything else that re-renders that UI,
+  silently reset the toggle. Fixed with a one-line self-referential
+  `value = .currentShowNames()`. A
+  [`shiny::testServer()`](https://rdrr.io/pkg/shiny/man/testServer.html)
+  unit test cannot pin this regression (proven by writing one and
+  observing it pass identically against buggy and fixed code —
+  `testServer()` never simulates the real client round-trip that is the
+  actual failure mechanism); permanent coverage is instead two new live
+  `shinytest2`/`chromote` tests in `test-e2e-pedigree-module.R`. See
+  `PROJECT_LEARNINGS.md` Learning 490.
+- **Documentation checklists:** `NEWS.Rmd` (re-rendered to `NEWS.md`);
+  `vignettes/manual_components/_pedigree_browser.Rmd` **and**
+  `vignettes/articles/colony-manager-guide.qmd` (owner’s \#136 comment
+  requires both, re-rendered clean);
+  `inst/extdata/ui_guidance/input_format.html` gained an optional `name`
+  row. Citation checklist (#120): N/A per the plan’s own §5 — a display
+  label is not a statistic. `a2interactive.Rmd` coverage deliberately
+  deferred per `CLAUDE.md`’s own documented policy.
+- **Verified:** full clean regression read 0 failed/0 error (10
+  pre-existing baseline warnings unchanged, 4677 passed, 173 skipped);
+  `lintr` 0 issues on all 6 touched `.R` files (2
+  `commented_code_linter` false positives found and reworded away, not
+  suppressed — a `D3/D4/D6` slash-separated list parses as valid R
+  division syntax, a
+  `useLabels = FALSE`/[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+  phrase resembles code);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  1 ERROR/1 WARNING/1 NOTE, all pre-existing and individually attributed
+  (non-portable filename from S418; `a2interactive.Rmd` vignette-engine
+  NOTE), 0 new — the fresh run’s spelling diff (9 words, not the 6
+  already tracked in `BACKLOG.md`’s S465 item) was confirmed via
+  `git blame` to trace entirely to S487’s commit, not this session’s
+  diff; full live `test-e2e-pedigree-module.R` run clean (all passing)
+  including the 2 new tests. **Both slices of issue \#136 are now
+  shipped; issue \#136 itself is closed as part of this session’s
+  close-out.**
+
+### 2026-08-09 · \[issue \#136\] Implemented Slice 1 (data model + de-identification) of the name-node-label plan (Session 489)
+
+- **Deliverable:** `name` is now a recognized, optional, character
+  pedigree column, correctly scrubbed by de-identification. No visible
+  app change (rendering + toggle are Slice 2, a separate future
+  session). Plan:
+  `docs/planning/ issue136-name-labels-pedigree-diagram-plan.md` §4
+  Slice 1.
+- **Full TDD RED→GREEN cycle**, `AskUserQuestion`-gated at every
+  transition (priorities-list pick; PRE-RED→RED; RED→GREEN;
+  GREEN→REFACTOR, owner-confirmed skip). `R/columnSchema.R`: `name`
+  appended to `.nprcColumnSchema$possible`.
+  `R/getPossibleCols.R`/`man/getPossibleCols.Rd`: new `@return` bullet
+  (`affected` precedent style). `R/qcStudbook.R`: `name` coerced to
+  character when present (mirrors the existing `species` block exactly —
+  needed to pass a factor-input test). `R/obfuscatePed.R`: `name`
+  scrubbed to `NA` (D8) — closes the disclosure defect S488 found (an
+  obfuscated pedigree would otherwise carry scrubbed ids beside intact
+  real names). New sibling fixture
+  `inst/extdata/examples/ obfuscated_rhesus_mhc_ped_name.csv`
+  (`data-raw/obfuscated_rhesus_mhc_ped_name.R`, seeded RNG) with the
+  plan’s 3 required cases: named/empty/`NA` mix (D4’s “inconsistent”
+  case) and one deliberately long name pre-staged for Slice 2’s geometry
+  mitigation (D10).
+- **Pre-RED verification found 2 of the plan’s suggested RED tests (trap
+  3
+  [`removeDuplicates()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeDuplicates.md),
+  trap 4
+  [`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md))
+  already pass with zero code change** — both are schema-agnostic
+  existing behavior that already correctly extends to the new column.
+  Disclosed to the owner via the PRE-RED→RED gate and included as
+  labelled documentation/coverage rather than presented as RED-driving.
+  See `PROJECT_LEARNINGS.md` Learning 489.
+- **Verified:** full clean regression read 0 failed/0 error (10
+  pre-existing baseline warnings unchanged, 4650 passed); `lintr` 0
+  issues on all 8 touched files (project’s own `.lintr` config);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  1 ERROR/1 WARNING/1 NOTE, all pre-existing and individually attributed
+  (non-portable `inst/extdata/reference/...` filename from S418;
+  `a2interactive.Rmd` vignette-engine NOTE), 0 new; end-to-end pipeline
+  check against the new fixture confirmed `name` survives
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  and is correctly scrubbed by
+  [`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md).
+  Phase 3E: n/a — no runtime behaviour change this slice. Citation
+  (#120), `NEWS.Rmd`, and tutorial/article checklists: N/A per the
+  plan’s own §5 (owed at Slice 2, which ships the user-visible
+  rendering).
+- Issue \#136 stays open (Slice 2 pending); no `gh issue close` this
+  session. Next session in this cluster implements Slice 2.
+
 ### 2026-08-09 · \[ad hoc\] Untracked the two committed `.DS_Store` files so they stop reappearing in `git status` (Session 488)
 
 - **Owner-directed** (“gitignore the .DS_Store”). Pre-work inspection

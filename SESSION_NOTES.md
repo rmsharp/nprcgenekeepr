@@ -7,6 +7,491 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 490 Did
+
+**Deliverable:** Implement Slice 2 of the ratified issue \#136 plan
+(`docs/planning/ issue136-name-labels-pedigree-diagram-plan.md` §4) –
+label rendering + toggle + documentation. **Started/Completed:**
+2026-08-09 / 2026-08-09. **Status:** DONE. Full strict-TDD
+PRE-RED-\>RED-\>GREEN cycle, `AskUserQuestion`-gated at every transition
+(next-task pick; PRE-RED-\>RED; RED-\>GREEN; GREEN-\>REFACTOR,
+owner-confirmed skip). A real defect was found and fixed live during
+Phase 3E verification (see below). Verified: full clean regression read
+(0 failed/0 error, 10 pre-existing baseline warnings unchanged, 4677
+passed, 173 skipped), `lintr` 0 issues on all 6 touched files,
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 1
+ERROR/1 WARNING/1 NOTE (all pre-existing/individually attributed, 0
+new), a full live `test-e2e-pedigree-module.R` run (all passing,
+including 2 new tests). **Both slices of issue \#136 are now shipped;
+issue \#136 is closed.** **Ledger:** recorded in `CHANGELOG.md` at Phase
+3F (this close-out).
+
+**What happened, in order:** **(1)** Full Phase 0 orient (SAFEGUARDS.md,
+SESSION_NOTES.md, `gh issue list`, git status/log/diff,
+`methodology_dashboard.py` – health 98/100; ledger + `HANDOFFS.md`
+reconcile both clean, no ghost session; the one commit since the
+`CHANGELOG.md` frontier was S489’s own self-referential `HANDOFFS.md`
+commit-sha backfill, matching established precedent). Rendered the
+priorities list (4 numbered options: \#136 Slice 2, design \#145, design
+\#147, NPRC outreach) and posed it via `AskUserQuestion`; owner picked
+implementing \#136 Slice 2. **(2)** Phase 1B claim committed
+(`892772f7`). **(3)** Re-verified the Vertical Slice gate (a) contract:
+`git log 3121bb71..HEAD -- <every Slice 2 touch point>` returned empty –
+zero drift since the plan’s own ratification commit, confirmed before
+touching anything. **(4)** Pre-RED: wrote a standalone `chromote` spike
+(matching `R/modPedigree.R`‘s exact render chain) and screenshotted it
+to resolve Dragon 1 (multi-line `"\n"` rendering – confirmed working)
+and calibrate D10’s truncation budget (15 characters, chosen against 5
+candidate budgets rendered at the real fixture’s measured tightest
+spacing). Surfaced both findings plus a Pre-RED author’s-call design
+decision (the show-names toggle lives entirely in `modPedigree.R` by
+conditionally stripping the `name` column before calling the builder,
+rather than as a new builder parameter – mirrors the `affected`
+precedent exactly) at the PRE-RED-\>RED gate. **(5)** RED: 16 new
+`test_that()` blocks across the 3 touched test files; 11 failed for the
+stated reasons, 5 passed already (disclosed as documentation/coverage
+per Learning 489’s established discipline, not RED-driving). Committed
+(`a286d7d9`). **(6)** GREEN: the two new shared helpers + both builders’
+`hasName` branches + the toggle UI/wiring; caught and fixed one own
+mistake (a wrong grepl backslash-escape count in a JSON-pattern test
+assertion, verified empirically via
+[`jsonlite::toJSON()`](https://jeroen.r-universe.dev/jsonlite/reference/fromJSON.html)
+rather than guessed) before it could ship silently wrong. Committed
+(`9bd3b79c`). **(7)** GREEN-\>REFACTOR gate: proposed skip (every new
+piece mirrors an existing precedent exactly); owner confirmed. **(8)**
+Phase 3E live verification: reinstalled the package
+([`devtools::install()`](https://devtools.r-lib.org/reference/install.html),
+needed for
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+against the real installed app) and drove it with the real fixture.
+**Found a real, live-only defect**: the toggle’s checked state was
+silently discarded the next time `pedigreeDiagramUI`’s `renderUI()`
+re-rendered for an unrelated reason (e.g. switching `edgeStyle`),
+because the new `checkboxInput()` hardcoded `value = FALSE` instead of
+reading `.currentShowNames()` back self-referentially, the way the
+pre-existing `edgeStyle` radio buttons already do. Wrote a
+[`shiny::testServer()`](https://rdrr.io/pkg/shiny/man/testServer.html)
+regression test for the exact sequence FIRST, confirmed it passed
+identically whether or not the bug was present (proving unit-level
+`testServer()` structurally cannot catch this class of defect), deleted
+that misleading test, fixed the actual bug in place (one line), and
+added 2 new PERMANENT live `shinytest2`/`chromote` regression tests in
+`test-e2e-pedigree-module.R` instead – the only test type that can
+actually pin it. Committed (`68255450`). **(9)** Documentation
+checklists: `NEWS.Rmd` (re-rendered), `_pedigree_browser.Rmd` +
+`colony-manager-guide.qmd` (both re-rendered clean via
+[`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)/`quarto render`,
+byproducts deleted per convention), `input_format.html` (new `name` row,
+scoped to just that row, not a pass fixing every other pre-existing
+undocumented optional column). Committed (`66039106`, one commit-message
+amend needed – see Weaknesses). **(10)** Final verification: killed and
+re-ran a
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+that had started before the bugfix/docs commits landed (would have
+checked a stale tree) to get an accurate final baseline; confirmed the
+fresh spelling-diff’s 3 extra words all predate this session via
+`git blame`. **(11)** Closed GitHub issue \#136 (both slices now
+shipped), updated the `BACKLOG.md` Housekeeping spelling item with the
+expanded 9-word count. **(12)** Close-out: this evaluation +
+self-assessment, Learning 490, `BACKLOG.md`/`CLAUDE.md` updates,
+`CHANGELOG.md` entry, this handoff.
+
+**Session 489 Handoff Evaluation (by Session 490): 9/10.** **What
+helped:** the handoff’s “what’s next” named the exact next deliverable
+(Slice 2) and gave a complete, accurate touch-point list with line
+numbers – every citation
+(`R/makePedigreeDiagramData.R:77,894-899,904-911,924-932`,
+`R/modPedigree.R:446,549-555`) resolved exactly as described when
+checked. Gotcha (1) (the rectilinear-breaks-on-new-column trap) and
+gotcha (6) (the `devtools::check(cran=FALSE)` vs. plain baseline
+mismatch) were both directly relevant and saved real time. Most
+valuable: the handoff explicitly flagged Dragon 1 as *unverified* and
+told this session to confirm it hands-on at Pre-RED before committing to
+D3’s two-line form – exactly the discipline this session then followed,
+and which paid off immediately (Dragon 1 held; had it not, the handoff’s
+own named fallback was ready to use). **What was missing:** nothing that
+cost real time – the toggle-to-builder wiring decision (Pre- RED
+author’s call, not spelled out in the plan or the handoff) needed a
+fresh judgment call this session, but that is a legitimate Pre-RED
+decision, not a handoff gap. **What was wrong:** nothing. **ROI:**
+strongly positive; zero time was spent re-deriving facts S489/S488 had
+already verified.
+
+**Self-assessment (Session 490): 9/10.** **Strengths:** (1) Ran a real,
+evidence-based Pre-RED spike (a live `chromote` screenshot render) to
+resolve Dragon 1 and calibrate D10’s truncation budget, rather than
+guessing or deferring the geometry question – and iterated the spike
+script twice (fixing a viewport-clipping issue, then a
+labeling-legibility issue) until the evidence was actually readable,
+rather than accepting an inconclusive first result. (2) Caught my own
+mistake in a RED test’s [`grepl()`](https://rdrr.io/r/base/grep.html)
+backslash-escape count by empirically verifying the exact JSON
+serialization via a throwaway
+[`jsonlite::toJSON()`](https://jeroen.r-universe.dev/jsonlite/reference/fromJSON.html)
+script rather than trusting my first guess – this happened twice (once
+for a direct string-equality pattern, once for the live widget’s actual
+column-oriented JSON shape, which differed from my first assumption) and
+both were caught before committing, not after. (3) Found a genuine,
+live-only interaction-order defect (the
+toggle-reset-on-unrelated-rerender bug) that no unit test had caught,
+root-caused it precisely (traced to the exact line, the exact mechanism,
+and the exact working precedent 8 lines above it that should have been
+copied), and did NOT stop at “write a test that would have caught it” –
+proved that the obvious unit-test fix (a `testServer()` regression test)
+*could not actually catch this defect class at all* by writing one and
+watching it pass against buggy code, then deleted it rather than
+shipping a test that looked protective but wasn’t, and wrote the correct
+live-test coverage instead. This is the same rigor family as Learning
+487 (JSON assertions can’t prove rendering) taken one level further (a
+full reactive-server simulation still can’t prove client-round-trip
+persistence). (4) Verified every claim before writing it down: re-ran
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+from scratch after realizing the first run’s tarball predated the
+bugfix/docs commits (a stale-baseline risk caught and corrected, not
+assumed away), and confirmed via `git blame`/`git log -S` – not memory
+or assumption – that every one of the fresh run’s flagged spelling words
+predates this session. (5) Kept documentation scope disciplined: added
+exactly the `name` row `input_format.html` needed for this feature,
+explicitly declined to also backfill every OTHER already-missing
+optional column that file has never documented (a pre-existing,
+out-of-scope gap, not this session’s to fix). **Weaknesses:** (1) One
+commit message (`a41ffd49`, later amended to `66039106`) shipped with
+backtick-quoted `` `name` `` inside a `git commit -m` argument, which
+the shell interpreted as command substitution and silently corrupted one
+line of the message – caught by re-reading the landed commit message
+immediately after (not assumed clean), fixed via
+`git commit --amend -F <file>`, but the safer default (heredoc/`-F` from
+the start whenever a commit message contains backticks) should have been
+the first move, not the recovery. (2) Two research/verification
+side-tracks (delegating a background agent to research prior
+live-verification scripting patterns, which finished usefully but after
+I had already independently written and run my own working `chromote`
+spike) show a small amount of duplicated effort – not wasted exactly
+(the agent’s findings corroborated my own approach and added the
+`AppDriver$new(shinyApp(...))` alternative I hadn’t considered), but the
+agent’s dispatch and my own direct work overlapped instead of being
+sequenced. **Compared to previous sessions:** this is the same lesson
+family as S486-S489 one step further – S486 found a downstream code path
+could silently undo new logic; S487 found JSON assertions can’t prove
+rendering; S488 found an issue’s own framing can be wrong; S489 found a
+design doc’s suggested test can already pass; S490’s version is that a
+*unit-level reactive-server simulation* can be structurally blind to an
+entire class of real, user-facing defect, and the fix is not “write more
+tests” but “write the RIGHT KIND of test” – see `PROJECT_LEARNINGS.md`
+Learning 490.
+
+**Handoff to Session 491:** - **What’s next:** the owner’s standing
+\#133 \> \#136 \> \#137 \> \#138 sequencing (set S436) has both \#133
+and \#136 now fully shipped. Issue \#137 (twin/zygosity encoding,
+data-model gated) or \#138 (full-colony rendering beyond the 1,500-node
+cap, deliberate scope limit) are next in that cluster, each needing its
+own scoping/design session first (matching \#133’s and \#136’s own
+two-phase design-then-implement pattern) – **not** a same-session jump
+straight to implementation. Also still available: design session for
+issue \#145 (sire/dam placement, investigation done – see
+`docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md`);
+design session for issue \#147 (Tier 1 of the \#146-153 sequencing, XL
+effort, sole High-priority item); NPRC outreach (DECISION NEEDED,
+owner-executed); the expanded 9-word spelling-WORDLIST gap (Effort S,
+see `BACKLOG.md` Housekeeping); the non-portable-filename
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+ERROR/WARNING rename (Effort S, dates to S418). - **Key files:**
+`docs/planning/issue136-name-labels-pedigree-diagram-plan.md` (fully
+executed, both slices); `R/makePedigreeDiagramData.R`
+(`.nameLabel()`/`.nameTooltipLine()` helpers, right after
+`.affectedLabel()`; both builder functions’ `hasName` branches);
+`R/modPedigree.R:418-475` (the `pedigreeDiagramUI` renderUI block – READ
+THIS before adding any future control here, see gotcha 1);
+`tests/testthat/test-e2e-pedigree-module.R` (the 2 new live tests, the
+only regression coverage for the toggle-persistence defect class). -
+**Gotchas:** (1) **Any new Shiny input control added inside
+`R/modPedigree.R`’s `pedigreeDiagramUI` `renderUI()` block (or any
+`renderUI()`/`uiOutput()` block with other reactive dependencies) MUST
+set its `value`/`selected` argument self-referentially** (read the
+control’s own current `input$x` back, matching how the pre-existing
+`edgeStyle` radio buttons and the new show-names checkbox both now do
+it) – a literal/hardcoded default is a correctness bug, not a style
+choice, the moment the block has more than one reason to re-render. See
+`PROJECT_LEARNINGS.md` Learning 490. (2)
+**[`shiny::testServer()`](https://rdrr.io/pkg/shiny/man/testServer.html)
+cannot catch a “does this rebuilt control’s value survive its
+container’s re-render” defect** – it sets `input$x` directly server-side
+and never simulates the real client round-trip. If you write a
+`testServer()` test for an interaction-ORDER defect and it passes
+identically whether or not the bug is present, that is a sign the test
+is checking the wrong layer – use a live
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+test instead. (3) Do not add a new column to the nodes data frame –
+`R/makePedigreeDiagramData.R:1237` throws under
+`edgeStyle="rectilinear"` (same trap S486 hit for \#133); change the
+`label` VALUE only, as this session’s `.nameLabel()` does. (4) Any
+live/e2e verification of rendered labels MUST use screenshots or the
+live widget’s own JS DataSet
+(`HTMLWidgets.find(...).network.body.data.nodes.get(id)`), never
+`outerHTML`/DOM-text (Learning 486/487 – vis.js renders to canvas). (5)
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)’s
+tarball snapshot happens early in the run – if you make further code
+changes WHILE a
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+background job is still running, kill and restart it before trusting its
+result as the final baseline (this session’s own near-miss, self-caught
+before reporting). (6) Quoting a commit message with backticks via
+`git commit -m "..."` risks shell command-substitution corruption – use
+`git commit -F <file>` whenever the message contains backtick-quoted
+code identifiers (this session’s own mistake, self-caught and amended).
+(7) All standing gotchas from S479-489 carry forward unchanged
+(`gh issue view <N>` needs `--json`; `NOT_CRAN=true` for tests;
+`NPRC_RUN_E2E=true` for ANY live `shinytest2`/`chromote` script;
+`docs/planning/*.qmd`/`vignettes/articles/*.qmd` render byproducts never
+committed; re-render `NEWS.Rmd` -\> `NEWS.md` and check the diff;
+[`devtools::install()`](https://devtools.r-lib.org/reference/install.html)
+needed before driving the installed app via
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html),
+since it uses the installed copy, not the working tree). -
+**Self-assessment score:** 9/10 (breakdown above).
+
+### What Session 489 Did
+
+**Deliverable:** Implement Slice 1 of the ratified issue \#136 plan
+(`docs/planning/ issue136-name-labels-pedigree-diagram-plan.md` §4) –
+data model + de-identification: `name` into
+`.nprcColumnSchema$possible`, roxygen + `.Rd`, the
+[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+scrub (D8), a new sibling fixture + `data-raw/` generator (D9), and
+`tests/testthat/test_name_first_class.R` modelled on
+`test_species_first_class.R`. No visible app change in this slice
+(rendering + toggle are Slice 2). **Started/Completed:** 2026-08-08 /
+2026-08-09. **Status:** DONE. Full strict-TDD RED-\>GREEN cycle,
+`AskUserQuestion`-gated at every transition (next-task pick;
+PRE-RED-\>RED; RED-\>GREEN; GREEN-\>REFACTOR, owner-confirmed skip).
+Verified: full clean regression read (0 failed/0 error, 10 pre-existing
+baseline warnings unchanged, 4650 passed), `lintr` 0 issues on all 8
+touched files (project’s own `.lintr` config),
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 1
+ERROR/1 WARNING/1 NOTE (all pre-existing, individually attributed, 0
+new), and an end-to-end pipeline check against the new fixture. Issue
+\#136 stays open (Slice 2 pending). **Ledger:** recorded in
+`CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Full Phase 0 orient (SAFEGUARDS.md,
+SESSION_NOTES.md, `gh issue list`, git status/log/diff,
+`methodology_dashboard.py` – health 98/100; ledger + `HANDOFFS.md`
+reconcile both clean, no ghost session). Rendered the priorities list (4
+numbered options: \#136 Slice 1, design \#145, design \#147, NPRC
+outreach) and posed it via `AskUserQuestion`; owner picked implementing
+\#136 Slice 1. **(2)** Phase 1B claim committed (`039d5d98`). **(3)**
+Re-read every file the plan cites as a touch point before writing
+anything (Vertical Slice gate (a) re-verification – confirmed via
+`git log` that none of `R/columnSchema.R`, `R/getPossibleCols.R`,
+`man/getPossibleCols.Rd`, `R/obfuscatePed.R`, `R/removeDuplicates.R`,
+`test_species_first_class.R`/`test_obfuscatePed.R`/`test_makePedigreeMatingLayout.R`,
+or the S486 fixture-generator precedent had changed since the plan’s own
+commit `3121bb71`). **(4)** Designed the RED test set from
+`test_species_first_class.R`’s template, then – rather than trusting the
+plan’s own “write a RED test pinning trap 3/4” framing – ran each
+candidate assertion against current `master` first. Found 2 of 5
+candidate tests (trap 3
+[`removeDuplicates()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeDuplicates.md),
+trap 4
+[`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md))
+already pass with zero implementation change (both are schema-agnostic
+existing mechanisms that already correctly extend to a hand-added `name`
+column). Disclosed this finding at the PRE-RED-\>RED `AskUserQuestion`
+gate rather than silently including or silently dropping them; owner
+chose to proceed with all 5 (3 genuinely RED + 2 labelled
+documentation/coverage). **(5)** RED confirmed by actually running both
+test files: 4 failures for the stated reasons (schema exclusion;
+novel-column-ordering; factor-not-coerced; obfuscatePed pass-through), 2
+passes as predicted. Committed (`2c9869ca`). **(6)** GREEN: the 4
+minimal fixes (schema append; roxygen bullet +
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+regen;
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+factor-coercion block mirroring the existing `species` precedent
+exactly;
+[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+D8 scrub) plus the pre-declared D9 fixture generator. Caught and
+reverted one unrelated collateral edit
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+produced in `man/ modMarkerGeneticsServer.Rd` (a pure roxygen2 line-wrap
+reflow, not an iCloud-duplicate-file corruption – verified no such
+duplicate file exists on disk this session). **(7)** Full verification
+suite run via `TaskOutput`-blocked background tasks (the regression
+suite and two
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+runs each exceeded the 120s foreground timeout): 0 failed/0 error,
+`lintr` clean,
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+1/1/1 all pre-existing (confirmed by direct inspection that neither the
+non-portable-filename issue nor the vignette-engine NOTE relates to this
+session’s diff), plus a direct pipeline check loading the new fixture
+through
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)/[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md).
+**(8)** GREEN-\>REFACTOR gate: proposed skipping since every change
+mirrors an existing precedent exactly; owner confirmed skip. **(9)**
+Close-out: this evaluation + self-assessment, Learning 489, BACKLOG.md
+progress note, CHANGELOG.md entry, CLAUDE.md learning-count bump, this
+handoff.
+
+**What the design correctly anticipated vs. what needed adjustment:**
+the plan’s own “Touches” list for Slice 1 omitted `R/qcStudbook.R` – but
+its own DONE criterion (“the column survives
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+as character”) required it once a factor-input test was written, since
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+is where `species` gets its own analogous coercion. Extending the
+touched-file list by one file, justified by the plan’s own DONE
+criterion and an exact existing precedent, is not scope creep.
+Separately, the plan’s suggested trap-3/trap-4 RED tests turned out to
+already be green (Learning 489) – a legitimate Pre-RED correction, not a
+plan defect, since neither trap depends on anything Slice 1 changes;
+both mechanisms
+([`removeDuplicates()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeDuplicates.md),
+[`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md))
+are schema-agnostic.
+
+**Session 488 Handoff Evaluation (by Session 489): 9/10.** **What
+helped:** the handoff’s “what’s next” named the exact next deliverable
+(Slice 1) and gave a complete, accurate touch-point list with line
+numbers – every citation (`R/columnSchema.R:15-24`,
+`R/obfuscatePed.R:29-49`, `R/makePedigreeDiagramData.R:1237`) resolved
+exactly as described when checked. Gotcha (1) (rectilinear column-add
+trap) and gotcha (2) (the allele-name collision) were both directly
+relevant and saved real time – gotcha (2) in particular meant no time
+was wasted even glancing at `first_name`/`second_name` as a candidate
+spelling. Gotcha (5) (schema registration isn’t required for
+passthrough) correctly set expectations for why
+`.nprcColumnSchema$possible` registration is about
+ordering/documentation, not survival. **What was missing:** the
+touched-file list for Slice 1 didn’t anticipate `R/qcStudbook.R` needing
+a coercion line (see above) – a minor, easily-absorbed gap, not a real
+cost, since the plan’s own DONE criterion pointed straight at it. **What
+was wrong:** nothing – the one piece of forward-looking uncertainty the
+handoff flagged (Dragon 1, multi-line label rendering) was correctly
+scoped as a Slice-2-only concern and did not surface in Slice 1 at all.
+**ROI:** strongly positive; the plan’s §2 evidence base meant zero time
+was spent re-deriving facts S488 had already verified first-hand.
+
+**Self-assessment (Session 489): 9/10.** **Strengths:** (1) Did not
+accept the plan’s “write a RED test for trap 3/4” instruction at face
+value – ran each candidate assertion against current `master` before
+writing it into a test file, found 2 of 5 were already-passing, and
+disclosed this explicitly at the PRE-RED-\>RED gate rather than silently
+padding the RED batch with tests that were never going to fail (a real,
+if minor, TDD-discipline point – see Learning 489). (2) Caught and
+reverted an unrelated
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+collateral edit (`man/modMarkerGeneticsServer.Rd`) rather than letting
+it ride into the commit, and correctly diagnosed it as a benign reflow
+rather than assuming it was the known iCloud-duplicate-file trap
+(verified no duplicate file exists on disk this session, rather than
+pattern-matching to the wrong root cause). (3) Justified the one
+departure from the plan’s literal touched-file list (`R/qcStudbook.R`)
+by tracing it to the plan’s own DONE criterion and an exact existing
+precedent, rather than either silently expanding scope or silently
+shipping a test that couldn’t pass. (4) Verified every RED/GREEN claim
+by actually running the code – both the RED failures and the GREEN
+passes were confirmed via direct `Rscript` execution, not inferred from
+reading the diff. (5) Ran a real end-to-end pipeline check (the new
+fixture through
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md) +
+[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md))
+even though Phase 3E was N/A, going slightly beyond the plan’s own
+minimum verification bar for a data-model-only slice. **Weaknesses:**
+(1) First attempt at the full regression suite and the first
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+call used ad hoc shell backgrounding (`&` + manual `kill`) before
+switching to the proper `run_in_background`/`TaskOutput` pattern –
+wasted one command cycle before self-correcting. (2) The first
+`devtools::check(cran = FALSE)` call didn’t match prior sessions’
+baseline command exactly, producing a fewer-NOTEs result that needed a
+second, apples-to-apples run to reconcile against the documented history
+– should have used the established default-settings command from the
+start. **Compared to previous sessions:** this is the same lesson family
+as S486/S487/S488 one step further into the TDD mechanics itself – S486
+learned an agent’s citation isn’t source, S487 that widget-JSON isn’t
+rendering, S488 that an agent’s citation isn’t source (again, at a
+different altitude); S489’s version is that a design doc’s OWN suggested
+test isn’t necessarily a test that will fail, and must be run, not
+trusted, before being labelled RED.
+
+**Handoff to Session 490:** - **What’s next:** implement **Slice 2** of
+this plan
+(`docs/planning/ issue136-name-labels-pedigree-diagram-plan.md` §4) –
+label rendering + toggle + documentation. Touches:
+`R/makePedigreeDiagramData.R` (label construction in both
+[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+and
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md),
+D7; tooltip line, D10), `R/modPedigree.R` (toggle control +
+`useLabels = FALSE`, D6),
+`test_makePedigreeDiagramData.R`/`test_makePedigreeMatingLayout.R`/
+`test_modPedigree.R`, `NEWS.Rmd` (re-render to `NEWS.md`),
+`vignettes/manual_components/ _pedigree_browser.Rmd` **and**
+`vignettes/articles/colony-manager-guide.qmd` (owner’s \#136 comment
+requires the documentation phase),
+`inst/extdata/ui_guidance/input_format.html`. **Dragon 1 (multi-line
+`\n` label rendering) is still unverified** – confirm hands-on at
+Pre-RED before committing to D3’s two-line `"id\nname"` form; fall back
+to `"id (name)"` if it fails (this project has twice had a design’s
+rendering assumption fail exactly this way – S465, S487). Also still
+available: 10 pre-existing test-suite warnings root-cause+fix (Effort S,
+already root-caused by S487); non-portable-filename
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+ERROR (Effort S, dates to S418); design issue \#145 (sire/dam placement,
+investigation done, needs a design session); design issue \#147 (Tier 1
+of the \#146-153 sequencing, XL effort); NPRC outreach (DECISION NEEDED,
+owner-executed). - **Key files:**
+`docs/planning/issue136-name-labels-pedigree-diagram-plan.md` §4 Slice 2
+and §6 “Here be dragons” (Dragon 1/2/3 are all Slice-2-specific);
+`R/makePedigreeDiagramData.R:77` (label site 1,
+[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)),
+`:894-899`/`:904-911`/`:924-932` (label sites 2-4,
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+– real/duplicate/union node label assignment); `R/modPedigree.R:446`
+(confirms
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md),
+not the other builder, is what the live Diagram tab renders);
+`R/modPedigree.R:549-555` (the search dropdown – D6’s
+`useLabels = FALSE` goes here);
+`inst/extdata/examples/obfuscated_rhesus_mhc_ped_name.csv` (this
+session’s new fixture, ready for Slice 2’s live/e2e verification –
+already contains the named/empty/`NA` mix and one deliberately long name
+for the geometry stress case). - **Gotchas:** (1) **Do not add a new
+column to the nodes data frame** – `R/ makePedigreeDiagramData.R:1237`
+throws “undefined columns selected” under `edgeStyle="rectilinear"`
+(same trap S486 hit for \#133; change the `label` VALUE only). (2)
+**`useLabels` defaults `TRUE`** in visNetwork and the bundled widget JS
+honours it – without D6’s explicit `useLabels = FALSE`, the “Select by
+id” dropdown silently starts listing names the moment any real
+individual’s `label` becomes a name. (3) Any live/e2e verification of
+the rendered labels MUST use screenshots, not widget-JSON
+[`grepl()`](https://rdrr.io/r/base/grep.html) assertions alone (Learning
+487 – JSON proves data presence, never clipping/overlap, and overlap is
+§2.3’s expected failure mode here). (4) The
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+regen step can produce an unrelated collateral diff in
+`man/ modMarkerGeneticsServer.Rd` (a benign roxygen2 reflow, confirmed
+NOT the iCloud-duplicate-file trap this session) – check `git diff`
+after documenting and revert anything outside your own touched files.
+(5) The full regression suite and
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+both exceed the 120s foreground Bash timeout in this environment – start
+them via the normal `Bash` call (which auto-backgrounds on timeout),
+then `TaskOutput` with `block=true` rather than polling the output file
+manually. (6) `devtools::check(cran = FALSE)` reports fewer NOTEs than
+the plain
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+prior sessions’ baselines describe (1 NOTE vs. a historical “2 NOTEs”) –
+use the same default-settings command prior sessions used for an
+apples-to-apples baseline comparison, not a CRAN-relaxed variant. (7)
+All standing gotchas from S479-488 carry forward unchanged
+(`gh issue view <N>` needs `--json`; `NOT_CRAN=true` for tests;
+`NPRC_RUN_E2E=true` for ANY live `shinytest2`/`chromote` script;
+`docs/planning/*.qmd` render byproducts never committed; re-render
+`NEWS.Rmd` -\> `NEWS.md` and check the diff). - **Self-assessment
+score:** 9/10 (breakdown above).
+
 ### What Session 488 Did
 
 **Deliverable:** Design/architecture document for GitHub issue \#136

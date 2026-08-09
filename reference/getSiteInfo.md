@@ -113,6 +113,7 @@ suppressWarnings(getSiteInfo())
 #> [11] "ancestry"     "population"   "origin"       "status"       "condition"   
 #> [16] "departure"    "spf"          "vasxOvx"      "pedNum"       "first"       
 #> [21] "second"       "first_name"   "second_name"  "recordStatus" "affected"    
+#> [26] "name"        
 #> 
 #> $includeColumns
 #>  [1] "id"          "sex"         "age"         "birth"       "exit"       
@@ -180,6 +181,7 @@ getSiteInfo(expectConfigFile = FALSE)
 #> [11] "ancestry"     "population"   "origin"       "status"       "condition"   
 #> [16] "departure"    "spf"          "vasxOvx"      "pedNum"       "first"       
 #> [21] "second"       "first_name"   "second_name"  "recordStatus" "affected"    
+#> [26] "name"        
 #> 
 #> $includeColumns
 #>  [1] "id"          "sex"         "age"         "birth"       "exit"       

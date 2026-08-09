@@ -424,29 +424,38 @@ same mapping. If the pedigree data includes an optional
 <code>affected</code> column, individuals marked affected are
 additionally shaded a distinct color on the diagram, with a matching
 “Affected” entry in the same legend; pedigrees without an
-<code>affected</code> column render unshaded, as before. A mate’s own
-mating(s) render as a small connector between the two parents, with a
-line down to their shared children, rather than two independent lines
-running straight from each parent – the same convention traditional
-pedigree charts use. A <strong>Diagram Edge Style</strong> toggle above
-the diagram switches between “Direct” (the default straight-line
-connector) and “Rectilinear (kinship2-style),” which routes the same
-connectors as strict right angles instead, matching the more traditional
-pedigree-chart look. An animal that mates more than once, or whose
-lineage loops back on itself (e.g. a consanguineous mating), appears
-once per mating, with each occurrence joined back to its main occurrence
-by a curved, dashed line; hovering, clicking, or searching any
-occurrence behaves identically to the animal’s main occurrence. Clicking
-an animal re-centers the population on it, the same as entering its ID
-in the focal-animals text area. An <strong>Export Diagram (PNG)</strong>
-button, shown in the diagram’s own corner, saves the current diagram
-view as a PNG image file – useful for husbandry reports, IACUC
-documents, or presentations. Hovering any animal shows its ID, sex,
-generation, sire, dam, and (when the pedigree data includes it) affected
-status. A <strong>Select by id</strong> dropdown above the diagram lets
-you jump straight to a specific animal by ID, dimming every node except
-it and its direct connections – useful for locating one animal in a
-large, busy diagram without narrowing the focal-animal selection.</p>
+<code>affected</code> column render unshaded, as before. If the pedigree
+data includes an optional <code>name</code> column, a <strong>Show Names
+on Diagram</strong> toggle (off by default) switches each node’s label
+from id-only to id plus name on a second line; a name longer than 15
+characters is truncated with an ellipsis on the diagram, with the full
+name always available in the hover tooltip. Not every animal needs a
+name – one with no name (or a pedigree with no <code>name</code> column
+at all) always renders with just its id, and the “Select by id” search
+dropdown below always lists ids, never names, regardless of the toggle.
+A mate’s own mating(s) render as a small connector between the two
+parents, with a line down to their shared children, rather than two
+independent lines running straight from each parent – the same
+convention traditional pedigree charts use. A <strong>Diagram Edge
+Style</strong> toggle above the diagram switches between “Direct” (the
+default straight-line connector) and “Rectilinear (kinship2-style),”
+which routes the same connectors as strict right angles instead,
+matching the more traditional pedigree-chart look. An animal that mates
+more than once, or whose lineage loops back on itself (e.g. a
+consanguineous mating), appears once per mating, with each occurrence
+joined back to its main occurrence by a curved, dashed line; hovering,
+clicking, or searching any occurrence behaves identically to the
+animal’s main occurrence. Clicking an animal re-centers the population
+on it, the same as entering its ID in the focal-animals text area. An
+<strong>Export Diagram (PNG)</strong> button, shown in the diagram’s own
+corner, saves the current diagram view as a PNG image file – useful for
+husbandry reports, IACUC documents, or presentations. Hovering any
+animal shows its ID, sex, generation, sire, dam, and (when the pedigree
+data includes it) affected status. A <strong>Select by id</strong>
+dropdown above the diagram lets you jump straight to a specific animal
+by ID, dimming every node except it and its direct connections – useful
+for locating one animal in a large, busy diagram without narrowing the
+focal-animal selection.</p>
 </div>
 <div class="section level3">
 <h3 id="module-interface-1">Module Interface<a class="anchor" aria-label="anchor" href="#module-interface-1"></a>

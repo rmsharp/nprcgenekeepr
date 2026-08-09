@@ -716,7 +716,19 @@ byte-order position (not via
 per S230 convention) and re-verify
 [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
 drops to the pre-existing iCloud duplicate-file warning +
-vignette-engine note only.
+vignette-engine note only. **Count grown to 9 words as of S490
+(2026-08-09), still not fixed** – incidental to issue \#136 Slice 2’s
+own
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+verification pass. The original 6
+(`sibship`/`waypoint`/`duplicateToReal`/`js's`/
+`makePedigreeMatingLayout`/`vis`) are joined by 3 more: `discoverable`
+(`NEWS.md:140`), a bare `js` (`a2interactive.Rmd:533`, distinct token
+from `js's`), and `unshaded` (`_pedigree_browser.Rmd:55`) – all 3
+confirmed via `git blame`/`git log -S` to trace to commit `100741ae`
+(S487, 2026-08-08, issue \#133 Slice 2’s own NEWS/tutorial/article
+commit), not this session’s diff. A future session fixing this item
+should hand-add all 9 words, not just the original 6.
 
 **`renv.lock` – concrete content found for the long-standing
 “unexplained diff” (found S474, Effort S-M, incidental) – the committed
@@ -1521,7 +1533,97 @@ survive de-identification intact – now a mandatory same-slice
 requirement (D8). Scoped as 2 slices; **next session in this cluster
 implements Slice 1** (data model + de-identification; no visible app
 change). Issue \#136 intentionally left open. See `CHANGELOG.md`,
-`PROJECT_LEARNINGS.md` Learning 488. - \[ \] **Candidate C’s
+`PROJECT_LEARNINGS.md` Learning 488.
+
+**Progress (S489, 2026-08-08):** Tier 2 step 3, Slice 1 – issue \#136’s
+data model + de-identification – is DONE, full TDD RED-\>GREEN cycle
+(`AskUserQuestion`-gated at every transition). `name` is now a
+recognized, optional, character pedigree column:
+`.nprcColumnSchema$possible` gained `name` (appended after `affected`);
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+keeps it first-class (character-typed, ordered ahead of any genuine
+novel column) and coerces a factor-supplied `name` to character
+(mirroring the existing `species` precedent);
+[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+now scrubs `name` to `NA` (D8), closing the disclosure defect S488
+found. New sibling fixture
+`inst/extdata/examples/obfuscated_rhesus_mhc_ped_name.csv`
+(`data-raw/ obfuscated_rhesus_mhc_ped_name.R`, seeded RNG, ~70%
+named/~15% empty/~15% `NA` per D4’s “inconsistent” case, 1 deliberately
+long name pre-staged for Slice 2’s geometry mitigation). **Pre-RED found
+2 of the plan’s suggested RED tests (trap 3
+[`removeDuplicates()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeDuplicates.md),
+trap 4
+[`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md))
+already pass with zero code change** – both are schema-agnostic existing
+behavior correctly extending to the new column – disclosed to the owner
+and included as labelled documentation/coverage rather than presented as
+RED-driving (see `PROJECT_LEARNINGS.md` Learning 489). No visible app
+change (Slice 1 scope); issue \#136 stays open. Verified: full clean
+regression read 0 failed/0 error (10 pre-existing baseline warnings
+unchanged, 4650 passed); `lintr` 0 issues on all 8 touched files (using
+the project’s own `.lintr` config, not the default linter set);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 1
+ERROR/1 WARNING/1 NOTE, all pre-existing (non-portable
+`inst/extdata/reference/...` filename from S418; `a2interactive.Rmd`
+vignette-engine NOTE), 0 new; end-to-end pipeline check against the new
+fixture confirmed `name` survives
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+and is correctly scrubbed by
+[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md).
+Citation (#120), `NEWS.Rmd`, and tutorial/article checklists are N/A per
+the plan’s own Section 5 (owed at Slice 2, which ships the user-visible
+rendering). REFACTOR: owner-confirmed skip (each change mirrors an
+existing precedent exactly – `species`’s coercion block, `affected`’s
+roxygen bullet, D8’s scrub). **Next session in this cluster implements
+Slice 2** (label rendering + toggle + documentation): see
+`docs/planning/ issue136-name-labels-pedigree-diagram-plan.md` §4 Slice
+2. Phase 3E: n/a, no runtime behavior change this slice. See
+`CHANGELOG.md`.
+
+**Progress (S490, 2026-08-09):** Tier 2 step 3, Slice 2 – issue \#136’s
+label rendering + toggle + documentation – is DONE, full TDD
+PRE-RED-\>RED-\>GREEN cycle (`AskUserQuestion`-gated at every
+transition). Pre-RED resolved both open dragons hands-on via a live
+`chromote` render: Dragon 1 (multi-line `"\n"` rendering) confirmed
+working, no fallback needed; D10’s truncation budget empirically
+calibrated at 15 characters + `"..."` against the real fixture’s
+tightest measured spacing. Two new shared helpers (`.nameLabel()`,
+`.nameTooltipLine()`) wired into both
+[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+and
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+(D7, including duplicate-node label parity); `R/modPedigree.R` gained an
+off-by-default “Show Names on Diagram” toggle (D3/D4/D6), the
+`diagramLayout` reactive strips `name` when the toggle is off,
+`useLabels = FALSE` pinned on the search dropdown (D6). **A real defect
+was found via live Phase 3E verification** (not caught by any unit
+test): `pedigreeDiagramUI`‘s `renderUI()` rebuilds the toggle checkbox
+from scratch on ANY re-render (e.g. switching `edgeStyle`), and a
+hardcoded `value = FALSE` silently discarded an already-on toggle –
+fixed with a self-referential `value = .currentShowNames()`, matching
+the pre-existing `edgeStyle` radio buttons’ own pattern. Proven that a
+[`shiny::testServer()`](https://rdrr.io/pkg/shiny/man/testServer.html)
+test cannot pin this class of regression at all (it never simulates the
+real client round-trip that is the actual failure mechanism); permanent
+coverage is instead 2 new live `shinytest2`/`chromote` tests in
+`test-e2e-pedigree-module.R`. See `PROJECT_LEARNINGS.md` Learning 490.
+Documentation checklists done in-session: `NEWS.Rmd`/`NEWS.md`,
+`_pedigree_browser.Rmd` **and** `colony-manager-guide.qmd` (owner’s
+\#136 comment requires both, both re-rendered clean),
+`input_format.html` (new `name` row). Verified: full clean regression
+read 0 failed/0 error (10 pre-existing baseline warnings unchanged, 4677
+passed, 173 skipped); `lintr` 0 issues on all 6 touched files (2
+`commented_code_linter` false positives reworded away, not suppressed);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 1
+ERROR/1 WARNING/1 NOTE, all pre-existing and individually attributed, 0
+new (the fresh spelling diff’s extra 3 words confirmed via `git blame`
+to predate this session – see the updated Housekeeping item above); full
+live `test-e2e-pedigree-module.R` run clean. REFACTOR: owner-confirmed
+skip. **Both slices of issue \#136 are now shipped; issue \#136 itself
+is closed as part of this session’s close-out.** Tier 2’s remaining
+order (#137 \> \#138, each needing its own scoping session) is next in
+this cluster. See `CHANGELOG.md`. - \[ \] **Candidate C’s
 connector/dogleg visual-signposting idea** (found S473, designing the
 issue \#144 plan; not adopted for \#144 itself, Effort unknown, low
 priority) – extends the existing D2 mate-line “dogleg” (issue \#142) to
