@@ -168,33 +168,45 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `addEdges` entry in `R/modPedigree.R`) or, if a plain-color connector
       is judged unnecessary now that dash pattern + label already
       distinguish the three codes, close this item as decline-with-reason.
-- [ ] **`devtools::check()` returns a non-portable-filename ERROR/WARNING for
-      `inst/extdata/reference/Standardized Human Pedigree Nomenclature:
-      Update and Assessment of the Recommendations of the Nation.html`**
-      (found S486, 2026-08-08, incidental to issue #133 Slice 1's own
-      `devtools::check()` verification pass; Effort S, low priority) --
-      confirmed pre-existing and unrelated to that session's diff via
-      `git log` (the file dates to commit `887ee902`, session S418). The
-      filename both contains a `:` (illegal on some platforms) and exceeds
-      the 100-byte final-path-component tarball limit R CMD check enforces
-      under `--as-cran`, producing 2 ERRORs (portable-file-names checks at
-      both build and check stages) + 1 WARNING in the full `check()` run.
-      Not fixed this session (`PROJECT_LEARNINGS.md` Learning 382's "report,
-      don't fix mid-session" precedent -- out of scope for a feature
-      session, and `SAFEGUARDS.md` treats file renames as never a "quick
-      fix"). A future session should rename the file to something short and
-      portable (e.g. `standardized-human-pedigree-nomenclature-2008.html`)
-      and update the one known reference to it (`docs/audits/
-      PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md` per
-      `PROJECT_LEARNINGS.md` Learning 480 -- grep for other references
-      first). Two smaller, likely-related pre-existing `check()` findings
-      surfaced in the same run, already within this project's established
-      "attribute before fixing" convention (`PROJECT_LEARNINGS.md` line 279
-      Learning) and not newly discovered here: a `vignettes/a2interactive.Rmd`
-      "no recognized vignette engine" NOTE, and a `spelling.Rout` mismatch on
-      terms from the issue #142 rectilinear-waypoint work (`duplicateToReal`,
-      `sibship`, `waypoint`, etc.) not yet in `inst/WORDLIST` -- both
-      unrelated to issue #133 and not investigated further.
+- [ ] (none remaining -- the "`devtools::check()` returns a non-portable-filename
+      ERROR/WARNING for `inst/extdata/reference/Standardized Human Pedigree
+      Nomenclature: Update and Assessment of the Recommendations of the
+      Nation.html`" item (found S486, 2026-08-08) is RESOLVED -- S497
+      (2026-08-09): owner renamed the file directly (outside a session tool
+      call) to `inst/extdata/reference/pedigree_nomenclature.html`, a short,
+      portable name. **`devtools::check()` went from 1 error/1 warning/1 note
+      to 0/0/0** -- the vignette-engine NOTE this item's own S486 text already
+      flagged as "likely-related" was confirmed as exactly that: fixing only
+      the filename also cleared the `vignettes/a2interactive.Rmd` "no
+      recognized vignette engine" NOTE, even though a direct investigation
+      (`tools::pkgVignettes(check = TRUE)` against both the raw source tree
+      and a freshly-built tarball) found the vignette's own `VignetteEngine`
+      tag valid and correctly recognized throughout -- the NOTE was
+      apparently a downstream symptom of the non-portable-filename ERROR
+      derailing the check pipeline, not an independent defect. **A second,
+      incidental gap found and fixed in the same session:** the rename broke
+      a `.gitignore` pattern (`Standardized Human Pedigree Nomenclature*.html`,
+      S479) that had deliberately kept this copyrighted, local-only reference
+      file out of the public git repo -- `.gitignore` updated to the new
+      exact filename (owner's own fix). Separately, `.Rbuildignore` had
+      **never** excluded this file (or the two other S479-gitignored
+      copyrighted files, `5201430.pdf`/`bioinformatics_24_2_279.pdf`) from
+      the built package tarball at all -- `.gitignore` has no effect on
+      `R CMD build`, which reads the filesystem directly, so all three files
+      had been shipping inside every built/distributed tarball despite being
+      deliberately kept out of git. Fixed by adding `.Rbuildignore` entries
+      for all three (owner confirmed via `AskUserQuestion`); verified via a
+      fresh `pkgbuild::build()` that none of the three ship in the tarball
+      and the legitimately-shipped `Master_Genetic_metrics_2_14_15.pdf`
+      (S418, a different copyright situation) still does. The one known
+      prose reference to the old filename (`docs/audits/
+      PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`, per
+      `PROJECT_LEARNINGS.md` Learning 480) updated to the new path; historical
+      references in `SESSION_NOTES.md`/`CHANGELOG.md`/`PROJECT_LEARNINGS.md`
+      correctly left as dated narrative describing repo state as it existed
+      when written, not retroactively rewritten. **The separately-tracked
+      `spelling.Rout` WORDLIST gap (9 pre-existing words) is unrelated and
+      still open** -- see the item below.)
 - [ ] (none remaining -- the "`NEWS.Rmd` has no checklist analogous to the
       citation/tutorial checklists" item (discovered S446, 2026-08-01) is
       RESOLVED: owner ratified a broad checklist via `AskUserQuestion` --

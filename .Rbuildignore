@@ -95,3 +95,17 @@ README\.*\.png$
 \.DS_Store$
 \.Rapp\.history$
 ^inst/_pkgdown\.yml$
+
+# User's local-only copyrighted reference material -- full-text journal articles/pages under
+# publisher copyright, no open-access marking. Mirrors .gitignore's own S479 exclusion of
+# these same 3 files, kept off the PUBLIC git repo deliberately, extended here because
+# .gitignore has no effect on R CMD build's tarball contents: R CMD build reads the actual
+# filesystem, not git's index, so these files were still being bundled into every built/
+# distributed package tarball despite being deliberately kept out of the repo. Found S497,
+# 2026-08-09, prompted by the owner renaming the third file for its own non-portable-filename
+# fix -- see CHANGELOG.md. Does NOT cover
+# inst/extdata/reference/Master_Genetic_metrics_2_14_15.pdf, an unpublished NPRC working-group
+# document already committed and shipped S418 -- a different copyright situation.
+^inst/extdata/reference/pedigree_nomenclature\.html$
+^inst/extdata/reference/5201430\.pdf$
+^inst/extdata/reference/bioinformatics_24_2_279\.pdf$

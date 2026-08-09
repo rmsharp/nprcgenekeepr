@@ -6,6 +6,80 @@
 
 ## ACTIVE TASK
 
+### What Session 497 Did
+**Deliverable:** A small, owner-initiated follow-up fix (same conversation, immediately after S496's
+own close-out) triggered by the owner directly renaming `inst/extdata/reference/Standardized Human
+Pedigree Nomenclature: Update and Assessment of the Recommendations of the Nation.html` (the
+non-portable filename tracked since S486) to `inst/extdata/reference/pedigree_nomenclature.html`.
+No `AskUserQuestion`-gated TDD cycle -- no `R/`, `tests/`, or `man/` content changed, so no behavior
+exists to write a RED test against; this is pure repo-hygiene/build-config work.
+**Started/Completed:** 2026-08-09 (same day as S496, later).
+**Status:** DONE. `devtools::check()` confirmed 0 errors ✔ | 0 warnings ✔ | 0 notes ✔ (was 1/1/1),
+via 2 independent fresh runs after the fix.
+
+**What happened, in order:** **(1)** User asked "check on devtools::check() results" (a follow-up
+to S496's own close-out report, which had already summarized the pre-existing 1-error/1-warning/
+1-note baseline). Ran it fresh to confirm rather than relaying cached output. **(2)** User reported
+renaming the file directly. Checked `git status`/`git ls-files` and found the OLD file was never
+git-tracked at all -- it was deliberately `.gitignore`-excluded (S479) as copyrighted, local-only
+reference material. The rename broke that exclusion (the old pattern no longer matched the new
+name), leaving the renamed file untracked-but-visible rather than silently ignored. Surfaced this to
+the user before taking any git action, per SAFEGUARDS' "look at the target before proceeding."
+**(3)** User's answer confirmed they'd already fixed `.gitignore` themselves, and separately noted
+`vignettes/a2interactive.Rmd` "has VignetteBuilder" -- prompting a direct investigation of the
+long-tracked "no recognized vignette engine" NOTE. Confirmed `DESCRIPTION` has `VignetteBuilder:
+knitr` and the .Rmd's own `%\VignetteEngine{knitr::rmarkdown_notangle}` tag is valid; used
+`tools::pkgVignettes(check = TRUE)` (the actual internal that emits this exact NOTE) directly against
+both the raw source tree and a freshly-built tarball -- found zero issue either time, disproving the
+NOTE's own stated cause. **(4)** Ran `devtools::check()` fresh post-rename: **0 errors ✔ | 0 warnings
+✔ | 0 notes ✔** -- the vignette NOTE had disappeared too, confirming BACKLOG.md's own S486 text
+("two smaller, likely-related pre-existing findings") was right: the NOTE was a downstream symptom
+of the filename ERROR derailing the check pipeline, not an independent defect. **(5)** Investigating
+the rename surfaced a second, more significant gap: `.Rbuildignore` had never excluded this file (or
+2 sibling S479-gitignored copyrighted files) from the built package tarball -- `.gitignore` has no
+effect on `R CMD build`. Confirmed via `tar tzf` on a real built tarball that all 3 files were
+present. Flagged this to the user rather than silently fixing or silently ignoring it (real copyright
+-redistribution stakes). **(6)** User confirmed via `AskUserQuestion`: add `.Rbuildignore` entries
+for all 3 files (not just the renamed one). Added them -- **first attempt broke `R CMD build`
+outright** (an unbalanced parenthesis split across multiple comment lines; `.Rbuildignore` requires
+each line's own parens to balance, per the file's own existing header warning, which I had read but
+not applied carefully enough to my own new comment). Caught immediately by re-running the build, not
+assumed correct from re-reading the source. Fixed, rebuilt, confirmed via `tar tzf` that none of the
+3 copyrighted files ship and the legitimately-shipped `Master_Genetic_metrics_2_14_15.pdf` (S418,
+different copyright situation) still does. **(7)** Updated the one live prose reference to the old
+filename (`docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`, per
+`PROJECT_LEARNINGS.md` Learning 480 -- the BACKLOG.md item's own text had already flagged this as
+the one reference needing an update). Left historical references in `SESSION_NOTES.md`/
+`CHANGELOG.md`/`PROJECT_LEARNINGS.md` untouched (dated narrative, correctly describing repo state as
+it existed when written). **(8)** Close-out: `BACKLOG.md`'s S486-tracked item marked resolved,
+`CHANGELOG.md` entry, this handoff.
+
+**Self-assessment (Session 497): 9/10.** **Strengths:** (1) Did not silently proceed to "fix
+references and commit" on the rename report -- investigated `git status`/`.gitignore` FIRST and
+surfaced a real, non-obvious copyright-exposure risk (the broken gitignore pattern) before taking any
+action, exactly matching the "look at the target -- if what you find contradicts how it was
+described, surface that instead of proceeding" discipline. (2) Found and flagged a SECOND, larger,
+previously-unknown gap (the `.Rbuildignore` copyright/redistribution hole, affecting 2 files beyond
+the one being discussed) rather than narrowly fixing only what was asked -- and explicitly asked
+before expanding scope to the other 2 files, rather than silently deciding either way. (3) Did not
+accept the vignette-engine NOTE's own stated cause at face value -- traced it to the actual internal
+R function (`tools::pkgVignettes`) and directly reproduced/disproved its own suggested diagnosis
+before accepting the (correct, if less definitively explained) empirical finding that fixing the
+filename fixed both. (4) Caught my own `.Rbuildignore` authoring mistake (the unbalanced-paren build
+break) via immediate re-verification, not by trusting a re-read of my own comment text -- the exact
+discipline PROJECT_LEARNINGS.md Learning 495 (this same day, S496) generalizes for `roxygen2`/
+`NAMESPACE`: verify the actual tool's behavior, not the source text's apparent correctness.
+**Weaknesses:** (1) Did not fully root-cause WHY fixing the filename cleared the vignette NOTE --
+left as an empirically-confirmed but mechanistically-unexplained link, appropriately scoped given
+this is a small follow-up fix, not a deep-dive session, but a more thorough investigation might have
+traced the exact R CMD check internal step where the two interact. (2) This session ran informally
+(no Phase 0 orientation re-read, no Phase 1B claim stub before starting) since it continued directly
+from S496's own already-oriented context in the same conversation -- a defensible judgment call given
+full context was already loaded and Phase 0's value is establishing shared understanding at a fresh
+start, not re-deriving what's already known, but it is a deviation from the literal protocol worth
+naming rather than silently normalizing.
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session).
+
 ### What Session 496 Did
 **Deliverable:** Implement Slice 1 (core statistical function) of the ratified issue #147 plan
 (`docs/planning/issue147-likelihood-parentage-assignment-plan.md` §5) -- `markerParentageLikelihood()`,

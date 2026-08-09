@@ -43,6 +43,44 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-09 · [ad hoc] devtools::check() reaches 0/0/0 — non-portable filename + Rbuildignore copyright gap fixed (Session 497)
+- **Deliverable:** A follow-up, owner-initiated fix session (post S496 close-out, same conversation)
+  triggered by the owner directly renaming `inst/extdata/reference/Standardized Human Pedigree
+  Nomenclature: Update and Assessment of the Recommendations of the Nation.html` (found S486,
+  tracked in `BACKLOG.md`) to `inst/extdata/reference/pedigree_nomenclature.html`. Confirmed via
+  `devtools::check()`: the non-portable-filename ERROR/WARNING is gone, **and** the long-tracked
+  `vignettes/a2interactive.Rmd` "no recognized vignette engine" NOTE (BACKLOG.md's own S486 text
+  already speculated these were "likely-related") went with it — `devtools::check()` moved from
+  1 error/1 warning/1 note to **0 errors ✔ | 0 warnings ✔ | 0 notes ✔**, confirmed via 2 independent
+  fresh runs. Directly investigated the vignette NOTE's own claimed cause ("Is a VignetteBuilder
+  field missing?") via `tools::pkgVignettes(check = TRUE)` against both the raw source tree and a
+  freshly-built tarball — found the engine tag valid and correctly recognized every time, so the
+  NOTE was a downstream symptom of the filename ERROR derailing the check pipeline, not an
+  independent defect.
+  Incidental discovery while verifying the rename: the old filename's `.gitignore` exclusion
+  (`Standardized Human Pedigree Nomenclature*.html`, S479 — deliberately keeping this copyrighted,
+  local-only journal article out of the public git repo) no longer matched the new filename, so the
+  renamed file briefly risked accidental commit. The owner fixed `.gitignore` directly. Separately,
+  and more significantly: `.Rbuildignore` had **never** excluded this file (or the two other
+  S479-gitignored copyrighted files, `5201430.pdf`/`bioinformatics_24_2_279.pdf`) — `.gitignore` has
+  no effect on `R CMD build`, which reads the filesystem directly, so all three files had been
+  shipping inside every built/distributed package tarball this whole time despite being deliberately
+  kept out of git. Added `.Rbuildignore` entries for all three (owner-confirmed scope via
+  `AskUserQuestion`, all 3 vs. just the renamed one); verified via `pkgbuild::build()` that none of
+  the three ship in a fresh tarball, and that the legitimately-shipped `Master_Genetic_metrics_2_14_15.pdf`
+  (S418, a different copyright situation) still does. One caught-and-fixed authoring mistake: the
+  first `.Rbuildignore` comment attempt broke `R CMD build` outright (an unbalanced parenthesis
+  split across multiple comment lines — `.Rbuildignore` requires every line's parens to balance
+  within that single line, per the file's own existing header warning) — caught by immediately
+  re-running the build, not assumed correct from a source read.
+  Updated the one known prose reference to the old filename (`docs/audits/
+  PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`, per `PROJECT_LEARNINGS.md` Learning 480)
+  to the new path. Historical references in `SESSION_NOTES.md`/`CHANGELOG.md`/`PROJECT_LEARNINGS.md`
+  correctly left untouched (dated narrative describing repo state as it existed when written).
+  `BACKLOG.md`'s S486-tracked item marked resolved. No `R/`, `tests/`, or `man/` content changed —
+  `.gitignore`/`.Rbuildignore`/`BACKLOG.md`/one audit doc only; no TDD gates apply (no behavior
+  change to test).
+
 ### 2026-08-09 · [issue #147] Slice 1 implemented — markerParentageLikelihood() (Session 496)
 - **Deliverable:** Slice 1 (core statistical function) of the ratified issue #147 plan
   (`docs/planning/issue147-likelihood-parentage-assignment-plan.md` §5) — new exported

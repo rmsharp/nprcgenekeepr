@@ -90,7 +90,9 @@ feature's own core differentiator (already delivered, issue #129).
 ### The standardized nomenclature reference document — what it actually contains
 
 **Important finding, not assumed going in:** the local file
-(`inst/extdata/reference/Standardized Human Pedigree Nomenclature...html`) is Bennett, French, Resta
+(`inst/extdata/reference/pedigree_nomenclature.html`, renamed S497 from the original
+non-portable `Standardized Human Pedigree Nomenclature...html` -- same file, same content) is
+Bennett, French, Resta
 & Doyle, *"Standardized Human Pedigree Nomenclature: Update and Assessment of the Recommendations of
 the National Society of Genetic Counselors,"* *Journal of Genetic Counseling* 17(5):424-433 (2008),
 DOI 10.1007/s10897-008-9169-9 — a **commentary/adoption-survey article about a 1995 standard**
