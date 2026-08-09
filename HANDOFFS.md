@@ -72,7 +72,7 @@ key_files: R/markerParentageLikelihood.R (new, exported + 2 hoisted internal hel
 gotchas: markerParentageLikelihood()'s LOD can be -Inf even when excluded=FALSE (a single Mendelian-incompatible locus is a true probability-zero event under the no-error-model formula) -- a Slice 2 UI must not assume excluded=FALSE implies a finite LOD. Never insert a new roxygen-documented function between an existing docstring and the function it documents (roxygen2 doc-block-shift risk, PROJECT_LEARNINGS.md Learning 495) -- diff the actual generated NAMESPACE/man/*.Rd after devtools::document(), don't trust a re-read of the source. inst/WORDLIST's real convention is case-insensitive alphabetical, not literal LC_ALL=C byte-order (Learning 496). A new exported function needs a _pkgdown.yml reference: group entry same-session (new CLAUDE.md checklist) or the full regression read fails. tests/spelling.Rout.save is absent from the repo -- devtools::check() currently reports no spelling NOTE regardless of WORDLIST drift. All standing gotchas from S479-495 carry forward unchanged.
 runtime_smoke: n/a -- markerParentageLikelihood() is script-callable only this slice, no Shiny UI wiring (Slice 2's own scope)
 changelog_ref: CHANGELOG.md 2026-08-09 "Slice 1 implemented -- markerParentageLikelihood() (Session 496)"
-commit: pending
+commit: f2c714d4
 ```
 
 ```handoff
