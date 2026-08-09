@@ -72,7 +72,7 @@ key_files: docs/planning/issue136-name-labels-pedigree-diagram-plan.md §4 Slice
 gotchas: (1) Do not add a new nodes-data-frame column -- R/makePedigreeDiagramData.R:1237 throws under edgeStyle="rectilinear"; change the label VALUE only. (2) useLabels defaults TRUE in visNetwork -- without D6's explicit useLabels = FALSE the "Select by id" dropdown silently starts listing names. (3) Any live/e2e verification of rendered labels MUST use screenshots, not widget-JSON grepl() alone (Learning 487 -- JSON proves data presence, never clipping/overlap). (4) devtools::document() can produce an unrelated collateral diff in man/modMarkerGeneticsServer.Rd (benign reflow, not the iCloud-duplicate trap) -- check git diff after documenting and revert anything outside your touched files. (5) The full regression suite and devtools::check() both exceed the 120s foreground Bash timeout here -- let Bash auto-background, then TaskOutput with block=true rather than polling manually. (6) devtools::check(cran = FALSE) reports fewer NOTEs than the plain devtools::check() prior sessions' baselines describe -- use the same default-settings command for an apples-to-apples comparison.
 runtime_smoke: n/a -- docs-only impact assessment confirms no runtime/UI change this slice (rendering is Slice 2); additionally ran a direct end-to-end pipeline check (new fixture through qcStudbook() + obfuscatePed()) confirming correct behavior beyond the plan's own minimum bar.
 changelog_ref: CHANGELOG.md 2026-08-09 "Implemented Slice 1 (data model + de-identification) of the name-node-label plan (Session 489)"
-commit: pending
+commit: a84335a3
 ```
 pending
 
