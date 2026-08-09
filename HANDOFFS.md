@@ -72,9 +72,8 @@ key_files: docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md sec4 Sl
 gotchas: (1) A bare testthat::expect_error(fn(...)) with no regexp is satisfied by ANY error, including "could not find function" for a not-yet-implemented function -- always pass a regexp tied to the specific condition under test in a RED-phase "stops on X" assertion; after writing a batch, run the file once and confirm the reported failure count matches the number of assertions expected to fail. See PROJECT_LEARNINGS.md Learning 492. (2) Bash calls with run_in_background:true should NOT also append a manual shell & -- doing both starved an R process as an orphaned job-control background job in this session. (3) Run git status/git diff --cached --stat immediately before every commit to confirm exactly what's staged -- this session accidentally swept 3 fixture files into a feat: commit, caught only post-commit. (4) R/makePedigreeDiagramData.R's two rbind-with-fixed-column-set traps drift in line number release over release -- always re-grep before citing. (5) Standing gotchas from S479-491 carry forward unchanged (gh issue view <N> needs --json; NOT_CRAN=true for tests; NPRC_RUN_E2E=true for live shinytest2/chromote scripts; devtools::install() needed before driving the installed app via AppDriver; git commit -F <file> for backtick-quoted commit messages; the zygosity/"twin zygosity" identifier-and-prose disambiguation rule).
 runtime_smoke: n/a -- Slice 1 is script-callable only, no R/appServer.R/R/modPedigree.R/R/modInput.R changes, no rendering/UI wiring to verify (matches the #133/#136 Slice 1 precedent).
 changelog_ref: CHANGELOG.md 2026-08-09 "Implemented Slice 1 (data model + de-identification) of the twin/zygosity plan (Session 492)"
-commit: pending
+commit: 3f5197e6
 ```
-<filled at Phase 3D close-out; commit sha backfilled after the close-out commit lands>
 
 ```handoff
 session: S491
