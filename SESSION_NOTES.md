@@ -8,15 +8,169 @@
 
 ### What Session 491 Did
 **Deliverable:** Write a design/architecture document for GitHub issue #137 (twin/zygosity
-encoding for the Pedigree Diagram, data-model gated) -- Tier 2, third in the owner's standing
+encoding for the Pedigree Diagram, data-model gated) -- Tier 2, fourth step in the owner's standing
 `#133 > #136 > #137 > #138` sequencing (set S436). Following
 `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md` (matching the #133/#136 precedent: a
-data-model + rendering-contract change, not a UI layout/zone design). (IN PROGRESS)
-**Started:** 2026-08-09
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+data-model + rendering-contract change, not a UI layout/zone design).
+**Started/Completed:** 2026-08-09 / 2026-08-09.
+**Status:** DONE. `docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md` written, verified,
+RATIFIED via `AskUserQuestion` (all 4 judgment calls, owner picked this document's own recommendation
+in every case, no changes requested). No `R/`/`tests/`/`man/` content changed -- design-only, per the
+plan-is-the-deliverable rule (FM #18). Issue #137 stays open, ready for Slice 1 implementation in a
+future session.
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Full Phase 0 orient (SAFEGUARDS.md, SESSION_NOTES.md, `gh issue
+list`, git status/log/diff, `methodology_dashboard.py` -- health 98/100; ledger + `HANDOFFS.md`
+reconcile both clean, no ghost session -- the one commit since the `CHANGELOG.md` frontier was S490's
+own self-referential `HANDOFFS.md` commit-sha backfill, matching established precedent). Rendered the
+priorities list (4 numbered options: #137 design, #138 design, #145 design, #147 design; NPRC outreach
+omitted from the picker per the 4-option cap, noted in prose) and posed it via `AskUserQuestion`; owner
+picked #137. **(2)** Stated understanding (workstream = `ARCHITECTURE_WORKSTREAM.md`, matching the
+#136 precedent's own reasoning) and completed Phase 1B claim (commit `1fb24305`). **(3)** Read
+`ARCHITECTURE_WORKSTREAM.md` in full and fetched issue #137's real body/comments via
+`gh issue view 137 --json`. **(4)** Dispatched a 4-phase research Workflow (issue/audit/checklist
+context; an empirical kinship2 `relation`/twin-zygosity investigation -- deparsed the installed
+namespace source, read Rd help via `Rd_db()`, ran standalone `Rscript` construction/validation/
+rendering tests; a codebase inventory of the data model, rendering pipeline, obfuscation logic, and
+fixtures; a structural/prose template read of the #133/#136 plan docs) followed by a Draft phase and a
+3-lens adversarial-Verify phase (kinship2 claims, feasibility claims, completeness against
+`CLAUDE.md`'s checklists). **In parallel**, independently re-ran the highest-load-bearing checks
+myself, first-hand: deparsed `kinship2::pedigree()`'s own source directly (confirming the `relation`
+argument's 4-code domain, including the 4th, non-twin `4=Spouse` code the issue's own text omits);
+traced `align.pedigree()`/`plot.pedigree()`'s actual twin-rendering logic (confirming MZ gets an extra
+crossbar, UZ gets a "?" glyph, DZ gets neither -- only positional clustering); read
+`R/obfuscatePed.R`/`R/columnSchema.R`/`R/modPedigree.R` and re-located the `edgeStyle="rectilinear"`
+rbind traps directly (now at lines 1301/1334, drifted from the `~1237` citation carried since #136).
+Both investigative passes reached identical conclusions -- a strong cross-check. **(5)** The workflow
+completed (8 agents, ~693K tokens, ~152 tool calls, ~25 min). Its returned "draft" field, in the task
+notification AND in `journal.jsonl`, turned out to be silently truncated to its last ~18.6K characters
+(of an actual ~56K-character document) -- caught only because 2 of 3 verify-phase findings ("the draft
+never mentions kinship2's 4th code"; "the draft never resolves `obfuscatePed()`'s limitation") directly
+contradicted this session's own independent first-hand verification, prompting recovery of the
+drafting agent's raw transcript (`agent-<id>.jsonl`, not the summarized journal) to reconstruct the
+true full text. Recorded as `PROJECT_LEARNINGS.md` Learning 491 -- a genuine tooling discovery, not a
+mistake in this session's own reasoning, but one that could have silently corrupted the plan with false
+"gaps" had it gone unchecked. **(6)** Reconciled the verify findings against the recovered full draft:
+2 of 3 "blocking" findings were false positives (already correctly addressed in the untruncated
+document); 3 genuinely new, real findings survived (a missing `CHANGELOG.md` ledger-format close-out
+item; a "twin zygosity"-not-bare-"zygosity" prose-disambiguation requirement against the Marker
+Genetics module's existing "Heterozygosity" tab; two rendering-mechanics notes -- a `dashes`
+list-column technique, confirmed feasible via a live test, and `visNetwork::visLegend()`'s single-call
+`addEdges` parameter, confirmed present in its formals). **(7)** Wrote the final document
+(`docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md`), replacing the recovered draft's
+placeholder §1.1 (which admitted it lacked the raw issue text) with the actual verbatim issue
+body/comment this session had fetched directly, and folding in all 3 surviving verify findings.
+**(8)** Ran the 4-question ratification round (Q1/D1 data model shape, Q2/D6 rendering mechanism,
+Q3/D7 duplicate-node targeting, Q4/D11 UI-wiring slice boundary) in a single `AskUserQuestion` call;
+owner selected this document's own recommended option in all four cases, no changes requested. Updated
+the document's Status line to RATIFIED and recorded the outcome in §10. **(9)** Close-out: this
+evaluation + self-assessment, Learning 491, `CLAUDE.md`/`BACKLOG.md` updates, `CHANGELOG.md` entry,
+this handoff.
+
+**Session 490 Handoff Evaluation (by Session 491): 9/10.** **What helped:** the handoff's "what's
+next" named #137 explicitly with the correct framing ("twin/zygosity encoding, data-model gated,"
+needing its own scoping/design session, matching #133/#136's own two-phase pattern) and correctly
+declined to pre-decide the workstream-doc choice, leaving that as this session's own Phase 1 judgment
+-- exactly as it should, since that choice depends on re-reading the issue's actual shape, not
+something a predecessor implementing an unrelated slice could responsibly pre-commit. The "key files"
+list correctly pointed at the #133/#136 plan docs as structural precedent, which the workflow's
+template-precedent research agent then used directly. **What was missing:** nothing that cost real
+time -- S490 was an implementation session for a different, already-shipped feature (#136 Slice 2), so
+none of its gotchas were architecture-session-relevant, which is expected and not a gap. **What was
+wrong:** nothing. **ROI:** strongly positive; the priorities list let this session start productively
+within the first exchange rather than re-deriving the current cluster state from scratch.
+
+**Self-assessment (Session 491): 9/10.** **Strengths:** (1) Ran genuine, independent, twice-repeated
+first-hand empirical verification of the single most load-bearing external fact (kinship2's `relation`
+mechanism) -- once via the dispatched workflow, once directly by this session in parallel -- and both
+converged on identical conclusions, including a real correction to the issue's own text (the 4th,
+non-twin `4=Spouse` code) that neither the original audit nor the issue body had surfaced. (2) Caught
+a genuine, non-obvious tooling defect (the Workflow harness's silent truncation of a huge non-schema
+`agent()` return value) specifically BECAUSE this session had done independent verification in
+parallel and noticed a contradiction, rather than accepting adversarial-verify findings at face value
+-- recovered the true document from raw transcripts rather than either trusting the truncated copy or
+discarding the workflow's real, valuable research. (3) Applied genuine judgment reconciling the verify
+findings rather than either accepting or rejecting them wholesale: discarded 2 false-positive
+"blocking" findings with evidence (the untruncated document already addressed both), while
+incorporating 3 real, independently-confirmed improvements (CHANGELOG checklist gap, zygosity
+prose-disambiguation, two rendering-mechanics notes) that made the final document measurably better
+than the raw draft. (4) Matched the established rigor bar of #133 (S485)/#136 (S488): an
+evidence-based inventory with file:line citations throughout, an honest "Dragons" section that does
+not paper over unverified claims (explicitly flagging that no twin configuration has ever been
+visually rendered against real vis.js output), and alternatives tables with honest pros/cons rather
+than straw-man comparisons. (5) Resolved this document's own "honesty gap" (the recovered draft
+admitted it worked from a research summary, not the raw issue text) directly, since this session
+already had the real issue body fetched -- rather than leaving it as an open flag for a future session
+to redo. **Weaknesses:** (1) Did not explicitly invoke a "deepest available reasoning mode" setting at
+session start, as the Planning Sessions checklist recommends (`SESSION_RUNNER.md` -- "e.g. `/effort
+max` where supported") -- no tool exists in this harness for the agent to adjust its own reasoning
+effort mid-session, so this was a structural limitation, not an oversight, but it should be named
+honestly rather than silently treated as satisfied. (2) The Workflow truncation issue cost real
+recovery time (locating and parsing raw `agent-<id>.jsonl` transcripts) that a smaller/differently-
+structured workflow (e.g. having the drafting agent write directly to a scratch file instead of
+returning a 56K-character string) could have avoided entirely -- captured as Learning 491's own
+practical-rule #3 for future sessions. (3) Some early R/Bash invocations for the kinship2 source
+investigation needed iteration to work around shell quoting/escaping issues (backslash-bracket
+regexes inside `Rscript -e`) -- resolved by switching to script files, but cost a few retries.
+**Compared to previous sessions:** this is a new lesson in the S486-S490 family (each found a distinct
+class of "trust but verify" failure) -- S486 found a downstream code path could silently undo new
+logic; S487 found JSON assertions can't prove rendering; S488 found an issue's own framing can be
+wrong; S489 found a design doc's suggested test can already pass; S490 found a unit-level reactive-
+server simulation can be structurally blind to a real defect class. S491's version is one level up
+from all of these: **the orchestration tooling itself** can silently misrepresent a multi-agent
+research pass's own output to its own downstream consumers, and the fix is the same "verify, don't
+inherit" discipline applied reflexively, to the workflow's own internal data-passing rather than only
+to claims about the outside world -- see `PROJECT_LEARNINGS.md` Learning 491.
+
+**Handoff to Session 492:**
+- **What's next:** Issue #137's plan is RATIFIED and ready for **Slice 1** implementation
+  (`docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md` §4 -- `checkTwinRelations()`,
+  `obfuscateTwinRelations()`, two new fixtures; Effort S-M; script-callable only, no rendering/UI
+  change). This is the natural next pick in the #133>#136>#137 chain, matching the established
+  ratify-then-implement two-phase pattern. Also still available: design session for issue #138 (full-
+  colony rendering beyond the node cap -- last item in the Tier 2 cluster, needs its own scoping
+  session); design session for issue #145 (sire/dam placement -- investigation done, see
+  `docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md`); design session for issue
+  #147 (Tier 1 of the #146-153 sequencing, XL effort, sole High-priority item); NPRC outreach
+  (DECISION NEEDED, owner-executed); the expanded 9-word spelling-WORDLIST gap (Effort S, see
+  `BACKLOG.md` Housekeeping); the non-portable-filename `devtools::check()` ERROR/WARNING rename
+  (Effort S, dates to S418).
+- **Key files:** `docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md` (fully ratified,
+  ready for Slice 1 -- §4 has the exact files-to-touch list and DONE/verify criteria); `R/columnSchema.R
+  :15-24` (`.nprcColumnSchema`, confirmed to have no pairwise/id2-shaped role, forcing the sidecar-table
+  design); `R/obfuscatePed.R` (56 lines, full read this session -- Slice 1 needs a new
+  `obfuscateTwinRelations()` companion consuming its `map = TRUE` output); `R/applyKinshipOverrides.R`
+  (the load-bearing in-repo precedent for the `(id1, id2, ...)` sidecar shape Slice 1 should mirror);
+  `R/makePedigreeDiagramData.R:1301` (`finalEdges` rbind trap) and `:1334` (`finalNodes` rbind trap) --
+  Slice 2's territory, not Slice 1's, but re-confirm the line numbers again before touching them, since
+  they have already drifted once (`~1237` as of #136-era) and will drift again as the file grows.
+- **Gotchas:** (1) **`R/makePedigreeDiagramData.R`'s two `rbind`-with-fixed-column-set traps drift in
+  line number release over release** -- always re-`grep`/re-read the live file before citing a line
+  number in a new plan or PR; do not trust a prior session's citation without confirming it live. (2)
+  **The Workflow tool can silently truncate a very large (tens-of-thousands-of-characters) non-schema
+  `agent()` plain-text return to its TAIL before the calling script's variable, the persisted journal,
+  and any downstream agent that consumes that variable ever see it** -- if a verify/adversarial-review
+  finding seems to contradict content you have independent reason to believe is present, recover the
+  producing agent's raw `agent-<agentId>.jsonl` transcript (its `assistant` messages' text content) from
+  the workflow's transcript directory, not the summarized `journal.jsonl` or the top-level task-
+  notification result, both of which can carry the same truncation. See `PROJECT_LEARNINGS.md` Learning
+  491. (3) Issue #137's Slice 3 (not Slice 1) has the plan's single largest open question (Dragon 1):
+  how a user supplies a second, sidecar CSV to the live app is unverified -- `R/modInput.R`/
+  `R/appServer.R` need direct reading before that slice's own Pre-RED commits to a mechanism; this does
+  NOT block Slice 1, which is script-callable only. (4) The `zygosity` identifier is already reserved,
+  project-wide, for the genotype/heterozygosity sense (`R/markerHeterozygosity.R`,
+  `R/modMarkerGenetics.R`'s "Heterozygosity" tab) -- issue #137's implementation must use
+  `twinRelations`/`id1`/`id2`/`code` as identifiers, never bare `zygosity`/`relation`, and any
+  user-facing prose must say "twin zygosity," never bare "zygosity" (§2.4/§4 of the new plan). (5) All
+  standing gotchas from S479-490 carry forward unchanged (`gh issue view <N>` needs `--json`;
+  `NOT_CRAN=true` for tests; `NPRC_RUN_E2E=true` for ANY live `shinytest2`/`chromote` script;
+  `devtools::install()` needed before driving the installed app via `shinytest2::AppDriver`;
+  `git commit -F <file>` for any commit message containing backtick-quoted identifiers).
+- **Runtime smoke test:** N/A -- design/planning session only, no `R/`/`tests/`/`man/` content changed,
+  no runtime behavior to verify (per Phase 3E's own "state this explicitly" requirement when
+  verification is not applicable).
+- **Self-assessment score:** 9/10 (breakdown above).
 
 ### What Session 490 Did
 **Deliverable:** Implement Slice 2 of the ratified issue #136 plan (`docs/planning/

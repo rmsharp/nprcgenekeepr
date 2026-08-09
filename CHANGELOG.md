@@ -43,6 +43,48 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-09 · [issue #137] Ratified an architecture/design plan for twin/zygosity encoding on the Pedigree Diagram (Session 491)
+- **Deliverable:** `docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md` — Tier 2 step 4
+  in the owner's `#133 > #136 > #137 > #138` sequencing (set S436). Design/scoping only — no
+  `R/`/`tests/`/`man/` content changed this session; implementation begins with Slice 1 in a future
+  session (FM #18: the plan is the deliverable, not its code).
+- **Central architectural question:** twin-ness is a *pairwise* fact (unlike #133's `affected` or
+  #136's `name`, both single-individual attributes), so `.nprcColumnSchema`'s single-per-individual
+  -row model structurally cannot represent it. Resolved as a new sidecar `twinRelations` table
+  `(id1, id2, code)`, mirroring kinship2's own `relation` convention (per the owner's S436
+  naming-overlay directive) and this project's existing `applyKinshipOverrides()` precedent —
+  needing zero change to `columnSchema.R`/`getPossibleCols()`/`qcStudbook()`/`checkRequiredCols()`/
+  `fixColumnNames()`/`removeDuplicates()`.
+- **kinship2 mechanism, empirically verified** (deparsed the installed namespace source, not just
+  read Rd text; independently re-confirmed twice with identical results): `relation`'s numeric codes
+  are 1=MZ/2=DZ/3=UZ twin plus a 4th, non-twin `4=Spouse` code the issue's own text omitted (scoped
+  out of #137 as a separate future extension); DZ twins get positional clustering only in kinship2's
+  own rendering, with no distinct visual mark, unlike MZ (an added crossbar) and UZ (a "?" glyph) —
+  informing this design's own simpler direct-edge-with-`label` rendering choice rather than
+  reproducing kinship2's wedge geometry (ruled out of scope via the same Deletion-Test refactor
+  heuristic #133 D4 cited).
+- **A required (not deferred) Slice 1 deliverable:** `obfuscatePed()` cannot reach a second sidecar
+  object, so a new `obfuscateTwinRelations()` companion, consuming `obfuscatePed(..., map = TRUE)`'s
+  existing `map` output, closes the same class of PII gap #136 D8 closed for the `name` column — in
+  the same slice as the data model, not a later session.
+- **Ratification:** 4 genuine judgment calls (data-model shape D1, rendering mechanism D6,
+  duplicate-node connector-targeting D7, UI-wiring slice boundary D11) posed in a single
+  `AskUserQuestion` round; owner selected this document's own recommended option in all four cases,
+  no changes requested. All forced decisions (D2-D5, D8, D9, D12) plus all four judgment calls are
+  now RATIFIED.
+- **Tooling discovery, recorded as `PROJECT_LEARNINGS.md` Learning 491:** the research workflow's own
+  huge (~56K-character) drafted document was silently truncated to its last ~18.6K characters before
+  reaching both the persisted journal and the downstream adversarial-verify agents, causing 2 of 3
+  verify lenses' "blocking" findings to be false positives (content the truncated copy never showed
+  them, not a real gap in the actual document) — caught by recovering the drafting agent's raw
+  transcript directly and cross-checking against this session's own independent first-hand
+  verification. 3 genuinely new verify findings survived reconciliation and are incorporated into
+  the ratified document (a missing `CHANGELOG.md` ledger-format close-out item; a "twin zygosity,"
+  never bare "zygosity," prose-disambiguation requirement against the Marker Genetics module's
+  existing "Heterozygosity" tab; and two rendering-mechanics notes — a `dashes` list-column
+  technique and `visLegend()`'s single-call `addEdges` parameter).
+- **Issue #137 stays open**, ready for Slice 1 implementation in a future session.
+
 ### 2026-08-09 · [issue #136] Implemented Slice 2 (label rendering + toggle + documentation) of the name-node-label plan, closing the issue (Session 490)
 - **Deliverable:** the Pedigree Diagram tab can now show animal names alongside id.
   Plan: `docs/planning/issue136-name-labels-pedigree-diagram-plan.md` §4 Slice 2.

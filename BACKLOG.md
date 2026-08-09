@@ -1358,6 +1358,41 @@ pre-existing and individually attributed, 0 new (the fresh spelling diff's extra
 `test-e2e-pedigree-module.R` run clean. REFACTOR: owner-confirmed skip. **Both slices of issue #136
 are now shipped; issue #136 itself is closed as part of this session's close-out.** Tier 2's remaining
 order (#137 > #138, each needing its own scoping session) is next in this cluster. See `CHANGELOG.md`.
+
+**Progress (S491, 2026-08-09):** Tier 2 step 4 -- issue #137's design/architecture document -- is
+DONE and RATIFIED: see `docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md`. A 4-agent
+research + draft + 3-lens adversarial-verify workflow, cross-checked against this session's own
+substantial independent first-hand verification (kinship2 v1.9.6.2's `relation` mechanism deparsed
+and empirically tested directly, not just read from Rd text; the codebase's rendering/obfuscation/
+schema code read directly). Central finding: twin-ness is **pairwise** (unlike #133's `affected` or
+#136's `name`, both single-individual attributes), so `.nprcColumnSchema`'s single-per-individual-row
+model structurally cannot hold it -- resolved via a new sidecar `twinRelations` table
+`(id1, id2, code)`, mirroring kinship2's own `relation` convention and this project's existing
+`applyKinshipOverrides()` precedent, needing **zero** change to `columnSchema.R`/`getPossibleCols()`/
+`qcStudbook()`/`checkRequiredCols()`/`fixColumnNames()`/`removeDuplicates()`. Confirmed kinship2's
+`relation` codes are 1=MZ/2=DZ/3=UZ **twin** plus a 4th, non-twin `4=Spouse` code the issue's own text
+omitted; confirmed via direct source read that kinship2 renders DZ with position-clustering only, no
+distinct mark, unlike MZ (extra crossbar) and UZ ("?" glyph) -- informing this design's own simpler
+direct-edge-with-label rendering choice (no attempt to reproduce kinship2's wedge geometry, ruled out
+of scope by the same Deletion-Test refactor heuristic #133 D4 cited). Also found and resolved, in the
+same slice as the data model (not deferred): `obfuscatePed()` cannot reach a second sidecar object,
+so a new `obfuscateTwinRelations()` companion consuming `obfuscatePed(..., map = TRUE)`'s existing
+`map` output is a required Slice 1 deliverable, closing the same class of PII gap #136 D8 closed for
+`name`. 4 genuine judgment calls (data-model shape D1, rendering mechanism D6, duplicate-node
+connector-targeting D7, UI-wiring slice boundary D11) ratified via a single `AskUserQuestion` round;
+owner selected this document's own recommended option in all four cases, no changes requested. A
+tooling discovery made and recorded in-session (`PROJECT_LEARNINGS.md` Learning 491): the workflow's
+own huge (~56K-character) drafted document was silently truncated to its last ~18.6K characters
+before reaching both the persisted journal and the downstream adversarial-verify agents, causing 2 of
+3 verify lenses' "blocking" findings to be false positives (content the truncated copy never showed
+them, not a real gap) -- caught only by recovering the drafting agent's raw transcript directly and
+cross-checking against this session's own independent verification. 3 genuinely new verify findings
+did survive reconciliation and are incorporated into the ratified document (a missing `CHANGELOG.md`
+ledger-format close-out item; a "twin zygosity," never bare "zygosity," prose-disambiguation
+requirement against the Marker Genetics module's existing "Heterozygosity" tab; and two rendering
+mechanics notes -- a `dashes` list-column technique and `visLegend()`'s single-call `addEdges`
+parameter). No `R/`/`tests/`/`man/` content changed this session (design-only). Issue #137 stays
+open, ready for Slice 1 implementation in a future session. See `CHANGELOG.md`.
 - [ ] **Candidate C's connector/dogleg visual-signposting idea** (found S473,
       designing the issue #144 plan; not adopted for #144 itself, Effort
       unknown, low priority) -- extends the existing D2 mate-line "dogleg"
