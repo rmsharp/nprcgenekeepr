@@ -631,3 +631,106 @@ test_that(
   expect_true(nrow(waypointRows) > 0L)
   expect_true(all(waypointRows$color.background == "rgba(0,0,0,0)"))
 })
+
+## Issue #136 -- name (non-ID) node labels, Slice 2 (D3/D4/D5/D7/D10,
+## docs/planning/issue136-name-labels-pedigree-diagram-plan.md). Mirrors
+## makePedigreeDiagramData()'s own contract (D7: implement in both), but
+## also covers the duplicate-node label-parity DONE criterion this function
+## alone is responsible for (a real individual's duplicate occurrences must
+## read as that individual, name included, not just their bare id -- :906's
+## existing precedent for the id-only case).
+
+test_that(
+  "makePedigreeMatingLayout augments a real individual's label with its
+   name, two-line 'id\\nname' form (D3), when a name column is present", {
+  trio <- data.frame(
+    id = c("P1", "P2", "C1"),
+    sire = c(NA, NA, "P1"), dam = c(NA, NA, "P2"),
+    sex = c("M", "F", "M"), gen = c(0L, 0L, 1L),
+    name = c("Apollo", "Willow", NA_character_),
+    stringsAsFactors = FALSE
+  )
+  result <- makePedigreeMatingLayout(trio)
+  labels <- setNames(result$nodes$label, result$nodes$id)
+  expect_equal(labels[["P1"]], "P1\nApollo")
+  expect_equal(labels[["P2"]], "P2\nWillow")
+  expect_equal(labels[["C1"]], "C1")  ## D4 fallback -- NA name
+})
+
+test_that(
+  "makePedigreeMatingLayout gives a duplicate-occurrence node the SAME
+   augmented label as its real individual (D7 parity) -- a duplicate must
+   read as that individual, name included, not just its bare id", {
+  loopPed <- data.frame(
+    id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
+           "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
+    sire = c(NA, NA, NA, NA, "5A6DFT", "8LKBV9", "8LKBV9", "8LKBV9"),
+    dam = c(NA, NA, NA, NA, "8DKELJ", "G8EBU9", "8P17E3", "FJIB3R"),
+    sex = c("M", "F", "F", "F", "M", "F", "F", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 2L, 2L, 3L),
+    name = c(NA, NA, NA, NA, "Kepler", NA, NA, NA),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(loopPed)
+  result <- makePedigreeMatingLayout(loopPed)
+  dupIds <- forest$duplicates$id[forest$duplicates$realId == "8LKBV9"]
+  expect_equal(length(dupIds), 2L)
+
+  realLabel <- result$nodes$label[result$nodes$id == "8LKBV9"]
+  dupLabels <- result$nodes$label[result$nodes$id %in% dupIds]
+  expect_equal(realLabel, "8LKBV9\nKepler")
+  expect_true(all(dupLabels == "8LKBV9\nKepler"))
+})
+
+test_that(
+  "makePedigreeMatingLayout leaves a mating-union node's label empty (D11)
+   regardless of whether a name column is present -- a union is not an
+   individual", {
+  trio <- data.frame(
+    id = c("P1", "P2", "C1"),
+    sire = c(NA, NA, "P1"), dam = c(NA, NA, "P2"),
+    sex = c("M", "F", "M"), gen = c(0L, 0L, 1L),
+    name = c("Apollo", "Willow", "Comet"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(trio)
+  result <- makePedigreeMatingLayout(trio)
+  unionRow <- result$nodes[result$nodes$id == forest$matingUnits$id, ]
+  expect_equal(unionRow$label, "")
+})
+
+test_that(
+  "makePedigreeMatingLayout truncates a name longer than the 15-character
+   budget with an ellipsis (D10), and carries the FULL, un-truncated,
+   HTML-escaped name in the tooltip", {
+  longName <- "Grand-Champion-Xerxes-Constantinopolous-The-Magnificent-III"
+  trio <- data.frame(
+    id = c("P1", "P2", "C1"),
+    sire = c(NA, NA, "P1"), dam = c(NA, NA, "P2"),
+    sex = c("M", "F", "M"), gen = c(0L, 0L, 1L),
+    name = c(longName, NA_character_, NA_character_),
+    stringsAsFactors = FALSE
+  )
+  result <- makePedigreeMatingLayout(trio)
+  label <- result$nodes$label[result$nodes$id == "P1"]
+  title <- result$nodes$title[result$nodes$id == "P1"]
+  expect_equal(label, paste0("P1\n", substr(longName, 1L, 15L), "..."))
+  expect_true(grepl(paste0("Name:</b> ", longName), title, fixed = TRUE))
+})
+
+test_that(
+  "makePedigreeMatingLayout produces byte-identical labels/titles for a ped
+   with no name column at all -- backward compatible with every pre-#136
+   fixture/test (the existing pins at :112,115,132,437-438 all still
+   hold)", {
+  trio <- data.frame(
+    id = c("P1", "P2", "C1"),
+    sire = c(NA, NA, "P1"), dam = c(NA, NA, "P2"),
+    sex = c("M", "F", "M"), gen = c(0L, 0L, 1L),
+    stringsAsFactors = FALSE
+  )
+  result <- makePedigreeMatingLayout(trio)
+  realRows <- result$nodes[result$nodes$id %in% trio$id, ]
+  expect_equal(realRows$label, realRows$id)
+  expect_false(any(grepl("Name:", result$nodes$title, fixed = TRUE)))
+})

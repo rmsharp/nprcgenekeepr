@@ -1932,3 +1932,121 @@ test_that(
     }
   )
 })
+
+## Issue #136 Slice 2 -- "Show Names on Diagram" toggle (D3/D4/D6/D10,
+## docs/planning/issue136-name-labels-pedigree-diagram-plan.md). Off by
+## default (owner-ratified framing); when on and the studbook has a `name`
+## column, the diagram's real/duplicate node labels augment id with name.
+## The search dropdown's useLabels = FALSE pin (D6) holds regardless of
+## toggle state -- it is never toggle-dependent.
+
+test_that(
+  "modPedigreeServer's diagram widget offers a 'Show Names on Diagram'
+   toggle, unchecked (off) by default", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"), dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"), name = c("Apollo", "Willow", "Comet"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(studbook = shiny::reactive({ test_studbook })),
+    {
+      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
+      session$flushReact()
+      html <- output$pedigreeDiagramUI$html
+      expect_true(grepl("pedigreeShowNames", html))
+    }
+  )
+})
+
+test_that(
+  "modPedigreeServer's diagram shows id-only labels when the show-names
+   toggle is off, even though the studbook has a name column (D4/off-by-
+   default -- a name-column-bearing pedigree renders exactly as a name-less
+   one until the toggle is switched on)", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"), dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"), name = c("Apollo", "Willow", "Comet"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(studbook = shiny::reactive({ test_studbook })),
+    {
+      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE,
+                         pedigreeShowNames = FALSE)
+      session$flushReact()
+      widgetJson <- output$pedigreeDiagram
+      expect_false(grepl("Apollo", widgetJson, fixed = TRUE))
+    }
+  )
+})
+
+test_that(
+  "modPedigreeServer's diagram shows augmented id+name labels once the
+   show-names toggle is switched on and the studbook has a name column", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"), dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"), name = c("Apollo", "Willow", "Comet"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(studbook = shiny::reactive({ test_studbook })),
+    {
+      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE,
+                         pedigreeShowNames = TRUE)
+      session$flushReact()
+      widgetJson <- output$pedigreeDiagram
+      expect_true(grepl('"label":"A\\nApollo"', widgetJson, fixed = TRUE))
+    }
+  )
+})
+
+test_that(
+  "modPedigreeServer's diagram search dropdown pins useLabels = FALSE (D6)
+   regardless of the show-names toggle state -- 'Select by id' must never
+   silently start listing names", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"), dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"), name = c("Apollo", "Willow", "Comet"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(studbook = shiny::reactive({ test_studbook })),
+    {
+      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE,
+                         pedigreeShowNames = FALSE)
+      session$flushReact()
+      expect_true(grepl('"useLabels":false', output$pedigreeDiagram,
+                         fixed = TRUE))
+
+      session$setInputs(pedigreeShowNames = TRUE)
+      session$flushReact()
+      expect_true(grepl('"useLabels":false', output$pedigreeDiagram,
+                         fixed = TRUE))
+    }
+  )
+})
