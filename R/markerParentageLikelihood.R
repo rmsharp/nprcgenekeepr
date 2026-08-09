@@ -215,22 +215,6 @@ markerParentageLikelihood <- function(genotypeMatrix, pedigree, id = NULL,
       }
     }
 
-    tOf <- function(genoStr, refAllele) {
-      alleles <- strsplit(genoStr, "/", fixed = TRUE)[[1L]]
-      mean(alleles == refAllele)
-    }
-    pTwoGeno <- function(t1, t2, genoStr, refAllele) {
-      alleles <- strsplit(genoStr, "/", fixed = TRUE)[[1L]]
-      nRef <- sum(alleles == refAllele)
-      if (nRef == 2L) {
-        t1 * t2
-      } else if (nRef == 1L) {
-        t1 * (1.0 - t2) + (1.0 - t1) * t2
-      } else {
-        (1.0 - t1) * (1.0 - t2)
-      }
-    }
-
     rows <- vector("list", length(candidateIds))
     for (j in seq_along(candidateIds)) {
       candId <- candidateIds[j]
@@ -252,14 +236,18 @@ markerParentageLikelihood <- function(genotypeMatrix, pedigree, id = NULL,
           freqTable <- .markerAlleleFrequencyTable(genotypeMatrix, loc)
           refAllele <- sort(names(freqTable))[1L]
           p <- unname(freqTable[[refAllele]])
-          t1 <- tOf(genoCandidate[[loc]], refAllele)
+          t1 <- .markerTransmissionProbability(genoCandidate[[loc]], refAllele)
           t2 <- if (trioEligible && !is.na(genoOther[[loc]])) {
-            tOf(genoOther[[loc]], refAllele)
+            .markerTransmissionProbability(genoOther[[loc]], refAllele)
           } else {
             p
           }
-          h1 <- pTwoGeno(t1, t2, genoOffspring[[loc]], refAllele)
-          h2 <- pTwoGeno(p, t2, genoOffspring[[loc]], refAllele)
+          h1 <- .markerTwoSourceGenotypeProbability(
+            t1, t2, genoOffspring[[loc]], refAllele
+          )
+          h2 <- .markerTwoSourceGenotypeProbability(
+            p, t2, genoOffspring[[loc]], refAllele
+          )
           log(h1) - log(h2)
         }, numeric(1L))
         LOD <- sum(logterms)
@@ -317,4 +305,54 @@ markerParentageLikelihood <- function(genotypeMatrix, pedigree, id = NULL,
   }
   rownames(result) <- NULL
   result
+}
+
+#' Probability a parent transmits the reference allele
+#'
+#' Internal helper for \code{\link{markerParentageLikelihood}} (issue #147
+#' Slice 1, D2). For a biallelic locus with reference allele
+#' \code{refAllele}: a parent homozygous for \code{refAllele} transmits it
+#' with probability 1; a heterozygous parent, 0.5; a parent homozygous for
+#' the other allele, 0.
+#'
+#' @param genoStr a single genotype string (\code{"lo/hi"} format, as in one
+#' cell of a \code{\link{buildMarkerGenotypeMatrix}} result).
+#' @param refAllele the reference allele at this locus.
+#' @return A numeric scalar in \code{\{0, 0.5, 1\}}.
+#' @keywords internal
+.markerTransmissionProbability <- function(genoStr, refAllele) {
+  alleles <- strsplit(genoStr, "/", fixed = TRUE)[[1L]]
+  mean(alleles == refAllele)
+}
+
+#' Offspring genotype probability given two allele-transmission sources
+#'
+#' Internal helper for \code{\link{markerParentageLikelihood}} (issue #147
+#' Slice 1, D2). Computes the probability of an offspring's genotype given
+#' two independent sources of one transmitted allele each -- either could be
+#' a real parent's own \code{\link{.markerTransmissionProbability}}, or the
+#' population reference-allele frequency standing in for an unrelated/unknown
+#' source (H2, or an untyped second parent under dyad conditioning). This one
+#' function covers all four H1/dyad, H1/trio, H2/dyad, and H2/trio cases
+#' simply by which \code{t1}/\code{t2} values are passed in -- verified at
+#' this session's Pre-RED to reduce exactly to Hardy-Weinberg genotype
+#' frequencies when both \code{t1} and \code{t2} equal the population
+#' frequency.
+#'
+#' @param t1,t2 each a probability (in \code{[0, 1]}) that the corresponding
+#' source transmits \code{refAllele}.
+#' @param genoStr the offspring's genotype string at this locus.
+#' @param refAllele the reference allele at this locus.
+#' @return A numeric scalar probability in \code{[0, 1]}.
+#' @keywords internal
+.markerTwoSourceGenotypeProbability <- function(t1, t2, genoStr, refAllele) {
+  alleles <- strsplit(genoStr, "/", fixed = TRUE)[[1L]]
+  nRef <- sum(alleles == refAllele)
+  if (nRef == 2L) {
+    t1 * t2
+  } else if (nRef == 1L) {
+    t1 * (1.0 - t2) + (1.0 - t1) * t2
+  } else {
+    (1.0 - t1) * (1.0 - t2)
+  }
 }

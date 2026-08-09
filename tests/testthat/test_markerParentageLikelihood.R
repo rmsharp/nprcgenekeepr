@@ -162,6 +162,39 @@ test_that(".markerOppositeHomozygoteCount returns NA exclusionCount when zero lo
   expect_identical(r$nLoci, 0L)
 })
 
+## REFACTOR (GREEN->REFACTOR, owner-approved): .markerTransmissionProbability()
+## and .markerTwoSourceGenotypeProbability() were hoisted out of
+## markerParentageLikelihood()'s own internal scoreOnePair() closure into
+## named, directly-testable helpers -- these tests pin the Mendelian
+## transmission-probability formula itself (D2), independent of the
+## end-to-end hand-verified LOD sums already asserted above/below, an extra
+## verification layer for exactly the kind of formula this project has
+## previously shipped wrong under a mis-attributed citation (markerFst()'s
+## own Pre-RED history).
+test_that(".markerTransmissionProbability computes t(genotype) correctly", {
+  expect_equal(.markerTransmissionProbability("A/A", "A"), 1.0)
+  expect_equal(.markerTransmissionProbability("A/B", "A"), 0.5)
+  expect_equal(.markerTransmissionProbability("B/B", "A"), 0.0)
+})
+
+test_that(".markerTwoSourceGenotypeProbability computes P(offspring geno; t1, t2) correctly", {
+  ## Homozygous-reference offspring genotype: t1*t2.
+  expect_equal(.markerTwoSourceGenotypeProbability(0.8, 0.3, "A/A", "A"), 0.8 * 0.3)
+  ## Heterozygous offspring genotype: t1*(1-t2) + (1-t1)*t2.
+  expect_equal(.markerTwoSourceGenotypeProbability(0.8, 0.3, "A/B", "A"),
+               0.8 * (1 - 0.3) + (1 - 0.8) * 0.3)
+  ## Homozygous-other offspring genotype: (1-t1)*(1-t2).
+  expect_equal(.markerTwoSourceGenotypeProbability(0.8, 0.3, "B/B", "A"),
+               (1 - 0.8) * (1 - 0.3))
+})
+
+test_that(".markerTwoSourceGenotypeProbability reduces to Hardy-Weinberg when t1 == t2 == p (H2, dyad)", {
+  p <- 0.35
+  expect_equal(.markerTwoSourceGenotypeProbability(p, p, "A/A", "A"), p^2)
+  expect_equal(.markerTwoSourceGenotypeProbability(p, p, "A/B", "A"), 2 * p * (1 - p))
+  expect_equal(.markerTwoSourceGenotypeProbability(p, p, "B/B", "A"), (1 - p)^2)
+})
+
 test_that("markerParentageLikelihood ranks candidates by hand-verified LOD under TRIO conditioning", {
   result <- markerParentageLikelihood(
     genotypeMatrix, pedigree, id = "O1", role = "sire",
