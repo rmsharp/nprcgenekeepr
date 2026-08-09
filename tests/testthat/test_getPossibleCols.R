@@ -12,7 +12,7 @@ cols <- c(
   "age", "ancestry", "population", "origin", "status", "condition",
   "departure", "spf", "vasxOvx", "pedNum", "first", "second",
   "first_name",
-  "second_name", "recordStatus", "affected"
+  "second_name", "recordStatus", "affected", "name"
 )
 test_that("getPossibleCols returns the right columns", {
   expect_identical(getPossibleCols(), cols)

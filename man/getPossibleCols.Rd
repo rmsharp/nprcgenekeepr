@@ -53,6 +53,12 @@ whether an individual is affected by a condition of interest, shaded on
 the Pedigree Diagram tab (issue #133). Matches kinship2's own
 \code{affected} argument naming/semantics; \code{NA} means unknown
 affected status, not "not affected".}
+\item{name}{ -- character vector or \code{NA} (optional) giving a
+human-readable animal name/nickname, shown alongside \code{id} on the
+Pedigree Diagram tab when enabled (issue #136). \code{NA} or an empty
+string falls back to \code{id}; not all centers record this field, so
+its presence and completeness both vary by animal. Scrubbed to
+\code{NA} by \code{\link{obfuscatePed}}.}
 }
 \description{
 Pedigree curation function
