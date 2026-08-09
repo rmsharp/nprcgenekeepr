@@ -734,3 +734,121 @@ test_that(
   expect_equal(realRows$label, realRows$id)
   expect_false(any(grepl("Name:", result$nodes$title, fixed = TRUE)))
 })
+
+## Issue #137 -- twin/zygosity connector edges, Slice 2 (D6/D7/D9,
+## docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md). Mirrors
+## makePedigreeDiagramData()'s own D6 styling contract, plus this function's
+## own two extra obligations: D7 (a twin connector always targets the two
+## individuals' REAL node ids, never a __dup_ occurrence, even when one twin
+## is also a duplicated multi-mate parent elsewhere in the diagram) and D9
+## (.addRectilinearWaypoints()'s newEdges construction must not crash with
+## "undefined columns selected" when twin data adds a new `label` edge
+## column). twinRelations is NOT validated internally (checkTwinRelations()
+## is a caller-side concern, same precedent cited in
+## test_makePedigreeDiagramData.R). The default-vs-explicit exact-edge-
+## -column-names backward-compat guard already at :419-442 above continues
+## to hold unmodified -- twinRelations absent adds no new columns.
+
+test_that(
+  "makePedigreeMatingLayout adds a distinctly-styled MZ/DZ/UZ connector edge
+   per twin pair on the real Slice 1 fixture pair, using kinship2's own
+   'MZ'/'DZ'/'?' labels (D6)", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped_twins.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  twinRelations <- read.csv(
+    system.file("extdata", "examples",
+                "obfuscated_rhesus_mhc_twin_relations.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  result <- makePedigreeMatingLayout(ped, twinRelations = twinRelations)
+  connectors <- result$edges[result$edges$from %in% twinRelations$id1, ]
+  expect_equal(nrow(connectors), 3L)
+
+  mz <- connectors[connectors$from == "E06FRB", ]
+  expect_equal(mz$to, "HV7LZ3")
+  expect_equal(mz$label, "MZ")
+  expect_identical(mz$dashes[[1L]], FALSE)
+
+  dz <- connectors[connectors$from == "8GSXTQ", ]
+  expect_equal(dz$to, "P844CW")
+  expect_equal(dz$label, "DZ")
+  expect_identical(dz$dashes[[1L]], c(4, 4))
+
+  uz <- connectors[connectors$from == "BRI2MW", ]
+  expect_equal(uz$to, "677E7M")
+  expect_equal(uz$label, "?")
+  expect_identical(uz$dashes[[1L]], c(14, 8))
+})
+
+test_that(
+  "makePedigreeMatingLayout's twin connector targets the two individuals'
+   REAL node ids, never a __dup_ occurrence id, even when one twin is also
+   a duplicated multi-mate parent elsewhere in the diagram (D7, Dragon 3)", {
+  ## TW1 mates with both M1 and M2 (2 distinct mating units) -- Slice 1's
+  ## own .buildMatingUnitForest() anchors M1/M2 (fewer total mating units)
+  ## and gives TW1 a real "free" occurrence at one unit plus a __dup_TW1_1
+  ## node at the other. TW2 is TW1's MZ twin, unrelated to any mating unit.
+  ## This ped deliberately does NOT satisfy checkTwinRelations()'s own
+  ## shared-parents/matching-sex domain rules -- the render function does
+  ## not validate twinRelations (see file-header comment above), so this
+  ## test exercises rendering mechanics only, not domain validity.
+  d7Ped <- data.frame(
+    id = c("TW1", "TW2", "M1", "M2", "C1", "C2"),
+    sire = c(NA, NA, NA, NA, "M1", "M2"),
+    dam  = c(NA, NA, NA, NA, "TW1", "TW1"),
+    sex = c("F", "F", "M", "M", "F", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 1L),
+    stringsAsFactors = FALSE
+  )
+  twinRelations <- data.frame(
+    id1 = "TW1", id2 = "TW2", code = "MZ twin", stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(d7Ped)
+  expect_true(any(forest$duplicates$realId == "TW1"))  ## sanity: Dragon 3
+                                                          ## scenario is real
+
+  result <- makePedigreeMatingLayout(d7Ped, twinRelations = twinRelations)
+  connector <- result$edges[result$edges$label %in% "MZ", ]
+  expect_equal(nrow(connector), 1L)
+  expect_equal(connector$from, "TW1")
+  expect_equal(connector$to, "TW2")
+  expect_false(grepl("^__dup_", connector$from))
+  expect_false(grepl("^__dup_", connector$to))
+
+  ## Pre-existing child/mate edges gain label = NA alongside the connector.
+  nonConnector <- result$edges[!result$edges$label %in% "MZ", ]
+  expect_true(all(is.na(nonConnector$label)))
+})
+
+test_that(
+  "makePedigreeMatingLayout's edgeStyle = \"rectilinear\" does not crash
+   with 'undefined columns selected' when twinRelations is present (D9) --
+   the connector edge passes through unchanged, since it is not part of
+   .buildMatingUnitForest()'s childEdges/matingUnits structure the waypoint
+   routing logic rewrites", {
+  d7Ped <- data.frame(
+    id = c("TW1", "TW2", "M1", "M2", "C1", "C2"),
+    sire = c(NA, NA, NA, NA, "M1", "M2"),
+    dam  = c(NA, NA, NA, NA, "TW1", "TW1"),
+    sex = c("F", "F", "M", "M", "F", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 1L),
+    stringsAsFactors = FALSE
+  )
+  twinRelations <- data.frame(
+    id1 = "TW1", id2 = "TW2", code = "MZ twin", stringsAsFactors = FALSE
+  )
+  result <- expect_error(
+    makePedigreeMatingLayout(d7Ped, edgeStyle = "rectilinear",
+                              twinRelations = twinRelations),
+    NA
+  )
+  connector <- result$edges[result$edges$label %in% "MZ", ]
+  expect_equal(nrow(connector), 1L)
+  expect_equal(connector$from, "TW1")
+  expect_equal(connector$to, "TW2")
+  expect_identical(connector$dashes[[1L]], FALSE)
+})

@@ -373,3 +373,93 @@ test_that(
   expect_equal(result$nodes$label, trio$id)
   expect_false(any(grepl("Name:", result$nodes$title, fixed = TRUE)))
 })
+
+## Issue #137 -- twin/zygosity connector edges, Slice 2 (D6/D7,
+## docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md).
+## twinRelations is an OPTIONAL data.frame(id1, id2, code) sidecar (D1);
+## NOT validated internally here -- checkTwinRelations() is a caller-side
+## concern, matching the applyKinshipOverrides()/checkKinshipOverrides()
+## precedent (checkKinshipOverrides() is called by prepareKinshipOverrides()/
+## modGeneticValue.R, never inside applyKinshipOverrides() itself). Absent
+## (default NULL) => zero change to today's output (backward-compat
+## contract, same shape as #133/#136).
+
+test_that(
+  "makePedigreeDiagramData produces byte-identical edges for a ped with no
+   twinRelations at all -- backward compatible with every pre-#137
+   fixture/test", {
+  trio <- data.frame(
+    id = c("P1", "P2", "C1"),
+    sire = c(NA, NA, "P1"),
+    dam = c(NA, NA, "P2"),
+    sex = factor(c("M", "F", "M"), levels = c("F", "M", "H", "U")),
+    gen = c(0L, 0L, 1L),
+    stringsAsFactors = FALSE
+  )
+  result <- makePedigreeDiagramData(trio)
+  expect_setequal(names(result$edges), c("from", "to"))
+  expect_equal(nrow(result$edges), 2L)
+})
+
+test_that(
+  "makePedigreeDiagramData adds a distinctly-styled MZ/DZ/UZ connector edge
+   per twin pair when twinRelations is supplied (D6) -- solid for MZ,
+   short-dash for DZ, long/sparse-dash for UZ, using kinship2's own 'MZ'/
+   'DZ'/'?' labels", {
+  twinPed <- data.frame(
+    id = c("T1", "T2", "T3", "T4", "T5", "T6"),
+    sire = NA_character_, dam = NA_character_,
+    sex = c("F", "F", "M", "F", "F", "M"),
+    gen = 0L,
+    stringsAsFactors = FALSE
+  )
+  twinRelations <- data.frame(
+    id1 = c("T1", "T3", "T5"), id2 = c("T2", "T4", "T6"),
+    code = c("MZ twin", "DZ twin", "UZ twin"),
+    stringsAsFactors = FALSE
+  )
+  result <- makePedigreeDiagramData(twinPed, twinRelations = twinRelations)
+  connectors <- result$edges[result$edges$from %in% twinRelations$id1, ]
+  expect_equal(nrow(connectors), 3L)
+
+  mz <- connectors[connectors$from == "T1", ]
+  expect_equal(mz$to, "T2")
+  expect_equal(mz$label, "MZ")
+  expect_identical(mz$dashes[[1L]], FALSE)
+
+  dz <- connectors[connectors$from == "T3", ]
+  expect_equal(dz$to, "T4")
+  expect_equal(dz$label, "DZ")
+  expect_identical(dz$dashes[[1L]], c(4, 4))
+
+  uz <- connectors[connectors$from == "T5", ]
+  expect_equal(uz$to, "T6")
+  expect_equal(uz$label, "?")
+  expect_identical(uz$dashes[[1L]], c(14, 8))
+})
+
+test_that(
+  "makePedigreeDiagramData's pre-existing sire/dam edges gain
+   dashes = FALSE and label = NA when twinRelations is supplied, so the new
+   connector edges can rbind onto them without an 'undefined columns
+   selected' error", {
+  ped <- data.frame(
+    id = c("P1", "P2", "C1", "C2"),
+    sire = c(NA, NA, "P1", "P1"), dam = c(NA, NA, "P2", "P2"),
+    sex = c("M", "F", "F", "F"), gen = c(0L, 0L, 1L, 1L),
+    stringsAsFactors = FALSE
+  )
+  twinRelations <- data.frame(
+    id1 = "C1", id2 = "C2", code = "MZ twin", stringsAsFactors = FALSE
+  )
+  result <- makePedigreeDiagramData(ped, twinRelations = twinRelations)
+  parentEdges <- result$edges[result$edges$to %in% c("C1", "C2"), ]
+  expect_equal(nrow(parentEdges), 4L)
+  expect_true(all(vapply(parentEdges$dashes, identical, logical(1L), FALSE)))
+  expect_true(all(is.na(parentEdges$label)))
+
+  connector <- result$edges[result$edges$from == "C1" &
+                               result$edges$to == "C2", ]
+  expect_equal(nrow(connector), 1L)
+  expect_equal(connector$label, "MZ")
+})
