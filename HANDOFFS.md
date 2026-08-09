@@ -62,16 +62,16 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S495
 date: 2026-08-09
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Design session for GitHub issue #147 (likelihood-based candidate-parent assignment after marker parentage exclusion) -- one architecture document at docs/planning/issue147-likelihood-parentage-assignment-plan.md, following ARCHITECTURE_WORKSTREAM.md.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE and RATIFIED -- design session for GitHub issue #147 (likelihood-based candidate-parent assignment after marker parentage exclusion). One architecture document at docs/planning/issue147-likelihood-parentage-assignment-plan.md, following ARCHITECTURE_WORKSTREAM.md. Not implemented -- Slice 1 (core statistical function) is the next session for this issue.
+what_was_done: Ran a 4-agent research Workflow (3 independent literature angles -- CERVUS/LOD-score methods, COLONY/sibship-reconstruction methods, captive-primate-colony precedent -- plus an adversarial synthesis pass explicitly stress-tested against this package's own realistic marker-panel size) concurrently with a codebase-inventory Explore agent (9 items). Spot-checked 6 of the Explore agent's most load-bearing file:line citations directly against source before use -- all matched. Wrote a full architecture document: 9 evidence-based-inventory items, 10 design decisions (D1-D10), an interface catalog, a 2-slice vertical implementation plan with per-slice DONE criteria, an impact analysis, 13 dragons, an alternatives table, a close-out checklist mapping, and provenance. Posed a 4-question AskUserQuestion ratification round (LOD-formula scope; minimum-loci-gate mechanism; report-only-vs-write-back architecture; UI integration shape) -- owner ratified all 4 recommended options with no changes: no-error-model LOD formula now (error-tolerant extension deferred); fixed literature-informed minLoci default; report-only architecture (zero pedigree-mutation code path -- this package has none today, confirmed by a full grep sweep); a 5th read-only tab in modMarkerGenetics.R. Found and fixed a D9/D10 numbering inconsistency in the first draft before committing (added a missing D10 for UI integration, then verified every internal cross-reference resolves via grep). Added PROJECT_LEARNINGS.md Learning 494 (adversarial-synthesis stress-testing against the calling project's own specific constraints, not just cross-checking reports against each other, surfaces findings no individual report produces alone). Commits: 9d32ccd0 (claim), plus this close-out's commit.
+next_steps: Slice 1 of the issue #147 plan (docs/planning/issue147-likelihood-parentage-assignment-plan.md §5) -- R/markerParentageLikelihood.R, R/markerAlleleFrequency.R, the D7 extraction from R/markerParentageExclusion.R + its behavior-preservation regression test, a new fixture with a related-candidate scenario (Dragon 3), no-error-model LOD formula only (Dragon 7), a fixed minLoci default, the report-only contract test (Dragon 12). Strict-TDD PRE-RED->RED->GREEN->REFACTOR, AskUserQuestion-gated. Also still available: design #145 (READY, Effort M), design #138 (READY, Effort M, low priority).
+key_files: docs/planning/issue147-likelihood-parentage-assignment-plan.md §3 (D1-D10), §5 (Slice 1 DONE criteria/files-to-touch), §7 (13 dragons, esp. #1-3/7/12); R/markerParentageExclusion.R:100-160 (D7 extraction target); R/getPotentialParents.R:64-199 (unmodified candidate source); R/markerHeterozygosity.R:98-108 (allele-frequency shape D9's new helper mirrors).
+gotchas: The genotyping-error-tolerant LOD formula (Kalinowski et al. 2007 eqns 1-2) is explicitly NOT independently verified by this session's research (a spotted Appendix inconsistency; the 2010 corrigendum was Cloudflare-blocked on every route) -- Slice 1 implements ONLY the no-error-model formula, do not "complete" it without a fresh primary-source re-verification pass. getPotentialParents() applies ZERO relatedness filtering -- Slice 1's RED tests MUST include a related-candidate fixture (Dragon 3) or the session's own highest-value stress-test finding never gets exercised. The excluded/lowPower output columns must NEVER be named flagged or merged -- markerParentageExclusion() already owns that word for a different concept (this project's twin-zygosity naming-collision precedent). The D7 extraction needs a regression test proving markerParentageExclusion()'s own existing output is byte-identical before/after. All standing gotchas from S479-494 carry forward unchanged.
+runtime_smoke: N/A -- docs-only session (one new planning document plus PROJECT_LEARNINGS.md/CLAUDE.md/BACKLOG.md prose updates). No R/, tests/, or man/ content changed.
+changelog_ref: CHANGELOG.md 2026-08-09 entry for S495 (issue #147 design session, RATIFIED)
 commit: pending
 ```
 

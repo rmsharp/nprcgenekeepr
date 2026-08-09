@@ -43,6 +43,34 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-09 · [issue #147] Pre-RED design/scoping session — RATIFIED architecture plan (Session 495)
+- **Deliverable:** `docs/planning/issue147-likelihood-parentage-assignment-plan.md` — the statistical
+  method, reference-population, and report-vs-write-back architecture decisions issue #147 itself
+  requires be designed before implementation. Ran a 4-agent research `Workflow` (3 independent
+  literature angles — CERVUS/LOD-score methods, Marshall et al. 1998/Kalinowski et al. 2007;
+  COLONY/sibship-reconstruction methods, Wang 2004/Jones & Wang 2010/FRANz; captive-primate-colony
+  precedent, directly checking what de Groot et al. 2025 — already cited in this package — actually
+  uses — plus an adversarial synthesis pass explicitly stress-tested against this package's own
+  realistic 2-10-locus marker-panel size) alongside a separate codebase-inventory `Explore` agent (9
+  items); 6 of the agent's most load-bearing file:line citations independently spot-checked directly
+  against source before use, all matched exactly. Recommends a CERVUS-style multilocus likelihood-ratio
+  (LOD) score (Meagher & Thompson 1986; operationalized by Marshall, Slate, Kruuk & Pemberton 1998),
+  independently validated as the captive-primate-colony domain's de facto standard by de Groot et al.
+  (2025); rules out full-pedigree/sibship reconstruction (COLONY/FRANz) as solving a different, harder
+  problem at disproportionate cost. Ten design decisions (D1-D10); four genuine judgment calls ratified
+  via a single `AskUserQuestion` round, owner selected this document's own recommended option in all
+  four cases with no changes: no-error-model LOD formula now (genotyping-error-tolerant extension
+  deferred, pending independent re-verification of an unretrievable 2010 corrigendum); a fixed,
+  literature-informed `minLoci` gate default; **report-only architecture** — zero code path writes
+  `pedigree$sire`/`pedigree$dam` (this package has no existing pedigree-mutation precedent of any kind,
+  confirmed by a full grep sweep); a 5th read-only "Candidate Parent Assignment" tab in
+  `modMarkerGenetics.R`, matching the existing 4-tab pattern. A 2-slice vertical implementation plan
+  (core statistical function; UI + documentation) with per-slice DONE criteria, files-to-touch, and
+  verification commands. No `R/`, `tests/`, or `man/` content changed — design/planning only, matching
+  the #133/#136/#137 precedent. See `PROJECT_LEARNINGS.md` Learning 494 (an adversarial-synthesis agent
+  explicitly stress-tested against the calling project's own specific constraints surfaces findings no
+  individual research report produces alone).
+
 ### 2026-08-09 · [issue #137] Implemented Slice 3 (UI wiring, legend, documentation) — closes issue #137 (Session 494)
 - **Deliverable:** Shiny-level wiring so a user can supply a `twinRelations` sidecar CSV/Excel file
   on the Pedigree Browser's Diagram tab, gated by a new **Show Twin Connectors** toggle, with a

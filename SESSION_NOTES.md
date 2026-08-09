@@ -15,11 +15,169 @@ statistical-method/data-model decision, not a `DESIGN_WORKSTREAM.md` visual-desi
 from this session's own Phase 0 priorities list (owner choice via `AskUserQuestion`, out of #147/#145/
 #138). No implementation code this session -- the issue itself asks for the method to be designed
 before implementation, and existing behavior (`markerParentageExclusion()`) is retained independently.
-**Started:** 2026-08-09.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Started/Completed:** 2026-08-09 / 2026-08-09.
+**Status:** DONE and RATIFIED. All ten design decisions (D1-D10) resolved; four genuine judgment calls
+(LOD-formula scope, minimum-loci-gate mechanism, report-only-vs-write-back architecture, UI integration
+shape) ratified via a single `AskUserQuestion` round -- owner selected this document's own recommended
+option in all four cases, no changes requested. Verified: 6 of the codebase-inventory agent's most
+load-bearing file:line citations independently spot-checked directly against source, all matched
+exactly; every internal `§N` cross-reference in the final document checked resolvable after a
+mid-session section-renumbering pass. See `docs/planning/issue147-likelihood-parentage-assignment-plan.md`.
+
+**What happened, in order:** **(1)** Full Phase 0 orient (SAFEGUARDS.md, SESSION_NOTES.md, `gh issue
+list`, git status/log/diff, `methodology_dashboard.py` -- health 98/100; ledger + `HANDOFFS.md`
+reconcile both clean, no ghost session -- the two commits since the `CHANGELOG.md` frontier were
+S494's own close-out documentation commits, already accounted for). Rendered the priorities list (3
+options: design #147, design #145, design #138) via `AskUserQuestion`; owner picked #147. **(2)**
+Phase 1B claim stub committed (`9d32ccd0`). **(3)** Research phase: ran a 4-agent research `Workflow`
+in the background (3 independent literature angles -- CERVUS/LOD-score methods, Marshall et al. 1998/
+Kalinowski et al. 2007; COLONY/sibship-reconstruction methods, Wang 2004/Jones & Wang 2010/FRANz; and
+captive-primate-colony-specific precedent, directly checking what de Groot et al. 2025 -- already cited
+in this package -- actually uses -- plus a 4th adversarial-synthesis agent cross-checking all three for
+contradictions AND explicitly stress-testing the leading candidate method against this package's own
+realistic 2-10-locus marker-panel size, per Learning 494 below), run concurrently with a separate
+codebase-inventory `Explore` agent (9 numbered items: `getPotentialParents()`, allele-frequency
+internals, the genotype-matrix contract, the exclusion-comparison logic, every `pedigree$sire`/`$dam`
+write site in the package, the `flagged` vocabulary, biallelic-loci enforcement, `modMarkerGenetics.R`'s
+tab structure + `modBreedingGroups.R`'s scored-candidate UI precedent, and the citation style). **(4)**
+Independently spot-checked 6 of the Explore agent's most load-bearing file:line citations directly
+against source before trusting them (`getPotentialParents()`'s signature, `markerHeterozygosity.R`'s
+allele-frequency computation, `buildMarkerGenotypeMatrix()`'s cell format, `modMarkerGenetics.R`'s tab
+structure, the `pedigree$sire`/`$dam` write-grep zero-result, `checkMarkerGenotypeFile()`'s biallelic
+enforcement) -- all six matched exactly. **(5)** Wrote the full architecture document (10 evidence-based
+inventory items, 10 design decisions D1-D10, an interface catalog, a 2-slice vertical implementation
+plan with per-slice DONE criteria/RED-GREEN/session-boundary per `SESSION_RUNNER.md`'s Planning Session
+requirement, an impact analysis, 13 "here be dragons," an alternatives-considered table, a close-out
+checklist mapping, and a provenance section). **(6)** Posed the 4-question ratification round via
+`AskUserQuestion`; owner ratified all 4 recommended options with no changes. **(7)** Mid-session found
+and fixed an internal inconsistency in the draft's own numbering (a UI-integration decision had been
+referenced as "D9" -- the allele-frequency-helper decision's own number -- with no actual D9 UI
+decision existing): added an explicit D10 for UI integration, then did a full section-renumbering pass
+(inserting a proper "Implementation plan -- vertical slices" section, which the first draft had only
+sketched informally in a paragraph rather than given per-slice DONE-criteria treatment) and verified
+every internal `§N`/`§N.M`/`Dragon N` cross-reference resolved correctly via targeted grep before
+committing. **(8)** Close-out: this evaluation + self-assessment, `PROJECT_LEARNINGS.md` Learning 494,
+`CLAUDE.md` learning-count update, `BACKLOG.md` progress narrative, `CHANGELOG.md` entry, this handoff.
+
+**Session 494 Handoff Evaluation (by Session 495): 9/10.** **What helped:** the handoff's "what's next"
+named all 3 still-open design-session options from S494's own priorities list (accurately preserved
+from that session's own Phase 0 render) with correct tags (READY/Effort/priority-color), letting this
+session's own Phase 0 priorities list be reconstructed and re-verified quickly rather than rebuilt from
+scratch. The "key files" pointer ("start fresh with that issue's own `gh issue view <N> --json
+title,body,comments` and ... `ARCHITECTURE_WORKSTREAM.md`/`DESIGN_WORKSTREAM.md`, matching the #133/
+#136/#137 precedent of a dedicated planning session before any implementation slice") was exactly
+right and directly actionable -- this session followed it verbatim and it correctly predicted
+`ARCHITECTURE_WORKSTREAM.md` (not `DESIGN_WORKSTREAM.md`) was the right workstream once the issue's
+own content (a statistical method, not a UI layout) was read. **What was missing:** nothing this
+session had to discover the hard way -- issue #147's own scope was novel enough (a design session with
+essentially zero prior in-repo pattern to build on, unlike #145/#138 which both had a prior
+investigation to inherit) that no handoff could have pre-loaded much of the actual content; the
+handoff correctly limited itself to "here's where to start," not "here's what you'll find," which was
+the right level of detail for an unstarted design topic. **What was wrong:** nothing -- all claims in
+the S494 handoff (issue #137 fully closed, 3 remaining design options, their tags) were independently
+re-verified via this session's own Phase 0 `gh issue list`/`BACKLOG.md` cross-check and matched exactly.
+**ROI:** strongly positive -- the "which workstream" pointer alone saved a real decision that could
+otherwise have gone the wrong way (this project has two adjacent workstream docs, and the wrong one
+would have produced a differently-shaped, less rigorous document).
+
+**Self-assessment (Session 495): 9/10.** **Strengths:** (1) Used the `Workflow` tool for genuinely
+substantive, high-stakes parallel research (3 independent literature angles + an adversarial synthesis,
+run alongside a separate codebase-inventory agent) rather than researching serially or from memory --
+appropriate given ultracode is on and this is exactly the "research with real stakes" case the tool
+description calls out. (2) The synthesis agent was explicitly instructed to stress-test the leading
+method against THIS PACKAGE's own specific marker-panel-size constraint, not just cross-check the 3
+reports against each other -- this surfaced a genuinely new, load-bearing, quantified risk finding
+(small-panel underpowering; sibling-outranking risk) that none of the 3 individual reports produced on
+its own, now documented as a named pattern (`PROJECT_LEARNINGS.md` Learning 494) for future
+research-workflow design. (3) Did not trust the codebase-inventory agent's citations at face value --
+independently spot-checked 6 of its most load-bearing file:line claims directly against source before
+using them in the design document, catching zero errors but confirming the practice rather than
+skipping it because "the agent is usually right." (4) Caught and fixed a real internal-consistency bug
+in my own first draft (a UI decision cited as "D9" when D9 was actually a different, unrelated
+decision) before committing, rather than after -- added a proper D10, then verified every cross-
+reference resolved via targeted grep rather than eyeballing the renumbered document. (5) Added the
+missing formal "Implementation plan -- vertical slices" section (per-slice DONE criteria, RED/GREEN,
+verify commands, session boundary) that the first draft had only sketched in a paragraph -- this is a
+`SESSION_RUNNER.md` Planning Session requirement ("Every phase in a multi-phase plan must state what
+DONE looks like... verification commands... session boundary"), caught by re-reading that requirement
+against my own draft rather than assuming the ratification-outcome paragraph was sufficient.
+**Weaknesses:** (1) Did not explicitly invoke a "deepest available reasoning mode" setting at session
+start (no `/effort max`-equivalent tool was available to call directly), matching every recent
+session's own disclosed limitation in this family -- mitigated somewhat by delegating the highest-
+stakes reasoning (method selection, adversarial stress-testing) to `Workflow` agents run at `effort:
+"high"`, but the main session's own synthesis/drafting work ran at whatever the inherited session
+effort was, not a session-start-declared maximum. (2) The first draft shipped with the D9/D10 numbering
+bug (caught before committing, but a more careful first pass -- e.g., listing all D-numbers and their
+one-line topics before writing full prose for each -- might have avoided it entirely rather than
+requiring a full-document renumbering pass to fix). (3) This session did not itself independently
+re-derive or hand-verify the Mendelian transmission-probability combinatorics underlying the LOD
+formula (the per-genotype-combination Punnett-square truth table) -- it is explicitly left as a Dragon
+for the implementing session's own Pre-RED, matching this document's own stated confidence-preservation
+discipline, but a maximally thorough design session might have hand-derived at least one worked example
+the way `markerFst()`'s own Pre-RED history did for its formula. **Compared to previous sessions:** this
+session's most distinctive contribution is applying the "verify, don't inherit" family of learnings
+(481/484-486/488/489/491) one level further upstream than most prior design sessions in this project --
+not just spot-checking a subagent's codebase claims, but explicitly directing an adversarial-synthesis
+agent to check whether a literature-validated method still holds up against THIS project's own specific
+numeric constraints, which is a genuinely new pattern for a Pre-RED design session in this repo (prior
+design docs like #137's own did extensive hands-on verification of the CODEBASE and of an installed
+package's SOURCE, but none previously ran a multi-angle literature-research `Workflow` with an
+explicitly-scoped stress-test synthesis stage for a METHOD-CHOICE decision).
+
+**Handoff to Session 496:**
+- **What's next:** Issue #147's design is RATIFIED but NOT implemented -- Slice 1 (core statistical
+  function: `R/markerParentageLikelihood.R`, `R/markerAlleleFrequency.R`, the D7 extraction from
+  `R/markerParentageExclusion.R` + its behavior-preservation regression test, a new fixture with a
+  related-candidate scenario) is the natural next pickup for this specific issue, following this
+  project's strict-TDD PRE-RED->RED->GREEN->REFACTOR cycle, `AskUserQuestion`-gated at each transition.
+  Read `docs/planning/issue147-likelihood-parentage-assignment-plan.md` §5 (Implementation plan) in
+  full before starting -- it has explicit DONE criteria and a files-to-touch list already worked out.
+  Also still available from this session's own Phase 0 priorities list, unchanged: **design session for
+  #145** (READY, Effort M -- sire/dam placement, investigation already done by a prior session);
+  **design session for #138** (READY, Effort M, low priority -- full-colony rendering beyond the node
+  cap). Lower priority, unchanged from S494's own list: the `.buildTwinConnectorEdges()` missing-
+  `#009E73`-color item (Effort S); non-portable-filename `devtools::check()` rename (Effort S);
+  spelling-WORDLIST gap (9 words, Effort S); `highlightNearest` degree=6 mitigation (Effort M);
+  live-app node-count discrepancy; `data-raw/rhesusPedigree.R` docstring mismatch; iCloud
+  duplicate-file cleanup (still blocked on repo relocation). Also newly visible from this session's own
+  research (not yet filed): the sequencing audit's own "2 High-priority audit rows with no filed
+  issue" gap (Longitudinal genetic-health monitoring; Ancestry guardrails in breeding decisions) --
+  flagged S483, still not filed as of this session, unrelated to this session's own work.
+- **Key files:** `docs/planning/issue147-likelihood-parentage-assignment-plan.md` §3 (D1-D10, esp. D2/
+  D8's exact LOD formula and function signature), §5 (Slice 1's own DONE criteria/files-to-touch),
+  §7 (13 dragons -- #1-3/7 are the highest-stakes for Slice 1's own RED tests); `R/markerParentageExclusion.R:100-160`
+  (the D7 extraction target); `R/getPotentialParents.R:64-199` (the unmodified candidate-source
+  dependency); `R/markerHeterozygosity.R:98-108` (the allele-frequency computation shape D9's new
+  helper mirrors, without touching this file).
+- **Gotchas:** (1) **The genotyping-error-tolerant LOD formula (Kalinowski et al. 2007, eqns 1-2) is
+  explicitly NOT verified by this session's research** -- a spotted internal inconsistency in the 2007
+  paper's own Appendix, and the 2010 corrigendum that would resolve it was Cloudflare-blocked on every
+  retrieval route tried. Slice 1 implements ONLY the no-error-model formula (ratified, §11 Q1 Option A)
+  -- do not be tempted to "complete" it with the error-tolerant extension without a fresh, independent
+  primary-source re-verification pass first; this is a hard requirement, not a style preference (see
+  Dragon 7, and `markerFst()`'s own Pre-RED history of a previously-shipped ~40%-off formula under a
+  mis-attributed citation). (2) `getPotentialParents()` applies ZERO relatedness filtering -- Slice 1's
+  own RED tests MUST include a fixture where a demographically-eligible relative of the true parent is
+  also a genotyped candidate (Dragon 3), or the single highest-value stress-test finding from this
+  session's own research will never actually be exercised by a test. (3) The `excluded`/`lowPower`
+  output columns must NEVER be named `flagged` (or unified into one column) -- `markerParentageExclusion()`
+  already owns that word for a different (recorded-parent-only) concept, and this package has hit this
+  exact naming-collision trap before (twin-zygosity, `docs/planning/issue137-...-plan.md` §2.4). (4)
+  The D7 extraction (`.markerOppositeHomozygoteCount()`) must ship with a regression test proving
+  `markerParentageExclusion()`'s OWN existing test suite output is byte-identical before/after -- this
+  is the mechanism that makes "retain the existing exclusion check independently" (the issue's own
+  literal words) actually true, not just asserted. (5) All standing gotchas from S479-494 carry forward
+  unchanged (`gh issue view <N>` needs `--json`; `NOT_CRAN=true` for tests incl. `shinytest2::AppDriver`
+  scripts; `devtools::install()` needed before driving the installed app; `git commit -F <file>` for
+  backtick-quoted commit messages; a piped `| head -N` on a long-running Rscript command can hang the
+  underlying process -- redirect to a file instead; `run_in_background: true` alone, never a manual
+  shell `&` too).
+- **Runtime smoke test:** N/A -- docs-only session (one new planning document, `PROJECT_LEARNINGS.md`/
+  `CLAUDE.md`/`BACKLOG.md` prose updates). No `R/`, `tests/`, or `man/` content changed; nothing to
+  runtime-verify. Phase 3E's "launch the application" requirement applies only to sessions that change
+  runtime behavior, per its own text.
+- **Self-assessment score:** 9/10 (breakdown above).
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
 
 ### What Session 494 Did
 **Deliverable:** Implement Slice 3 (UI wiring, legend, documentation) of the ratified issue #137

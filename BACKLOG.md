@@ -1921,3 +1921,29 @@ future triage session should file both (as full-feature requests gated on a Pre-
 matching #147's own shape, per the audit's Finding #1/Recommendation 2). No issues implemented or
 closed this session -- sequencing/proposal only, per the established "audit recommends, a later
 session files/implements" precedent.
+
+**Progress (S495, 2026-08-09):** Tier 1's own Pre-RED design/scoping session for issue #147
+(likelihood-based candidate-parent assignment after marker parentage exclusion) is DONE and RATIFIED:
+see `docs/planning/issue147-likelihood-parentage-assignment-plan.md`. A 4-agent research `Workflow`
+(3 independent literature angles -- CERVUS/LOD-score methods, COLONY/sibship-reconstruction methods,
+captive-primate-colony-specific precedent -- plus an adversarial synthesis pass) run alongside a
+separate codebase-inventory `Explore` agent, both spot-checked against source before use (`PROJECT_
+LEARNINGS.md` Learning 494). Central finding: CERVUS-style multilocus likelihood-ratio (LOD) scoring
+(Meagher & Thompson 1986; Marshall, Slate, Kruuk & Pemberton 1998) is the field's own answer to this
+exact problem shape, independently validated as the captive-primate-colony domain's de facto standard
+by de Groot et al. (2025) -- already cited in this package's `markerParentageExclusion()`; full-pedigree
+reconstruction (COLONY/FRANz) was found to solve a different, harder problem and was ruled out. The
+adversarial synthesis pass, explicitly stress-tested against this package's own realistic 2-10-locus
+panel sizes, found this range sits inside the literature's own documented underpowered zone and that a
+full/half sibling of the true parent can plausibly outrank it at small panel sizes -- both load-bearing
+findings drove the plan's no-percentage-confidence (raw LOD+delta+coverage only) and minimum-loci-gate
+design decisions. Ten design decisions (D1-D10); four genuine judgment calls (LOD-formula scope,
+minimum-loci-gate mechanism, report-only-vs-write-back architecture, UI integration shape) all ratified
+via a single `AskUserQuestion` round -- owner selected this document's own recommended option in all
+four cases: no-error-model formula now (error-tolerant extension deferred, pending an unretrievable
+2010 corrigendum); a fixed, literature-informed `minLoci` default; **report-only** (this package has
+zero existing pedigree-mutation precedent, confirmed by a full grep sweep -- any future write-back is
+its own separately-gated issue); and a 5th read-only "Candidate Parent Assignment" tab in
+`modMarkerGenetics.R`, matching the existing 4-tab pattern. Implementation plan is 2 vertical slices
+(core statistical function; UI + documentation), each its own future session. No code changed this
+session -- design/planning only, matching the #133/#136/#137 precedent. See `CHANGELOG.md`.
