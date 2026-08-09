@@ -32,6 +32,13 @@ obfuscatePed <- function(ped, size = 6L, maxDelta = 30L,
   ped$sire <- alias[ped$sire]
   ped$dam <- alias[ped$dam]
   ped$id <- alias
+  if ("name" %in% names(ped)) {
+    ## issue #136 D8: a name is the only genuinely PII-shaped field this
+    ## package has ever contemplated -- drop it rather than alias it, so an
+    ## obfuscated pedigree never carries scrubbed ids alongside intact real
+    ## names.
+    ped$name <- NA_character_
+  }
   for (col in names(ped)) {
     if (any(inherits(ped[[col]], "Date"))) {
       ped[[col]] <- obfuscateDate(ped[[col]], maxDelta = maxDelta)
