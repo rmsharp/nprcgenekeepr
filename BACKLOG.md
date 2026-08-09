@@ -1294,6 +1294,32 @@ to look for: `obfuscatePed()` scrubs only `id`/`sire`/`dam` + Date columns, so a
 survive de-identification intact -- now a mandatory same-slice requirement (D8). Scoped as 2 slices;
 **next session in this cluster implements Slice 1** (data model + de-identification; no visible app
 change). Issue #136 intentionally left open. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 488.
+
+**Progress (S489, 2026-08-08):** Tier 2 step 3, Slice 1 -- issue #136's data model + de-identification
+-- is DONE, full TDD RED->GREEN cycle (`AskUserQuestion`-gated at every transition). `name` is now a
+recognized, optional, character pedigree column: `.nprcColumnSchema$possible` gained `name` (appended
+after `affected`); `qcStudbook()` keeps it first-class (character-typed, ordered ahead of any genuine
+novel column) and coerces a factor-supplied `name` to character (mirroring the existing `species`
+precedent); `obfuscatePed()` now scrubs `name` to `NA` (D8), closing the disclosure defect S488 found.
+New sibling fixture `inst/extdata/examples/obfuscated_rhesus_mhc_ped_name.csv` (`data-raw/
+obfuscated_rhesus_mhc_ped_name.R`, seeded RNG, ~70% named/~15% empty/~15% `NA` per D4's "inconsistent"
+case, 1 deliberately long name pre-staged for Slice 2's geometry mitigation). **Pre-RED found 2 of the
+plan's suggested RED tests (trap 3 `removeDuplicates()`, trap 4 `fixColumnNames()`) already pass with
+zero code change** -- both are schema-agnostic existing behavior correctly extending to the new column
+-- disclosed to the owner and included as labelled documentation/coverage rather than presented as
+RED-driving (see `PROJECT_LEARNINGS.md` Learning 489). No visible app change (Slice 1 scope); issue
+#136 stays open. Verified: full clean regression read 0 failed/0 error (10 pre-existing baseline
+warnings unchanged, 4650 passed); `lintr` 0 issues on all 8 touched files (using the project's own
+`.lintr` config, not the default linter set); `devtools::check()` 1 ERROR/1 WARNING/1 NOTE, all
+pre-existing (non-portable `inst/extdata/reference/...` filename from S418; `a2interactive.Rmd`
+vignette-engine NOTE), 0 new; end-to-end pipeline check against the new fixture confirmed `name`
+survives `qcStudbook()` and is correctly scrubbed by `obfuscatePed()`. Citation (#120), `NEWS.Rmd`, and
+tutorial/article checklists are N/A per the plan's own Section 5 (owed at Slice 2, which ships the
+user-visible rendering). REFACTOR: owner-confirmed skip (each change mirrors an existing precedent
+exactly -- `species`'s coercion block, `affected`'s roxygen bullet, D8's scrub). **Next session in this
+cluster implements Slice 2** (label rendering + toggle + documentation): see `docs/planning/
+issue136-name-labels-pedigree-diagram-plan.md` §4 Slice 2. Phase 3E: n/a, no runtime behavior change
+this slice. See `CHANGELOG.md`.
 - [ ] **Candidate C's connector/dogleg visual-signposting idea** (found S473,
       designing the issue #144 plan; not adopted for #144 itself, Effort
       unknown, low priority) -- extends the existing D2 mate-line "dogleg"

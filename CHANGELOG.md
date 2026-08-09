@@ -43,6 +43,43 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-09 · [issue #136] Implemented Slice 1 (data model + de-identification) of the name-node-label plan (Session 489)
+- **Deliverable:** `name` is now a recognized, optional, character pedigree column,
+  correctly scrubbed by de-identification. No visible app change (rendering + toggle
+  are Slice 2, a separate future session). Plan: `docs/planning/
+  issue136-name-labels-pedigree-diagram-plan.md` §4 Slice 1.
+- **Full TDD RED→GREEN cycle**, `AskUserQuestion`-gated at every transition
+  (priorities-list pick; PRE-RED→RED; RED→GREEN; GREEN→REFACTOR, owner-confirmed
+  skip). `R/columnSchema.R`: `name` appended to `.nprcColumnSchema$possible`.
+  `R/getPossibleCols.R`/`man/getPossibleCols.Rd`: new `@return` bullet (`affected`
+  precedent style). `R/qcStudbook.R`: `name` coerced to character when present
+  (mirrors the existing `species` block exactly — needed to pass a factor-input
+  test). `R/obfuscatePed.R`: `name` scrubbed to `NA` (D8) — closes the disclosure
+  defect S488 found (an obfuscated pedigree would otherwise carry scrubbed ids
+  beside intact real names). New sibling fixture `inst/extdata/examples/
+  obfuscated_rhesus_mhc_ped_name.csv` (`data-raw/obfuscated_rhesus_mhc_ped_name.R`,
+  seeded RNG) with the plan's 3 required cases: named/empty/`NA` mix (D4's
+  "inconsistent" case) and one deliberately long name pre-staged for Slice 2's
+  geometry mitigation (D10).
+- **Pre-RED verification found 2 of the plan's suggested RED tests (trap 3
+  `removeDuplicates()`, trap 4 `fixColumnNames()`) already pass with zero code
+  change** — both are schema-agnostic existing behavior that already correctly
+  extends to the new column. Disclosed to the owner via the PRE-RED→RED gate and
+  included as labelled documentation/coverage rather than presented as
+  RED-driving. See `PROJECT_LEARNINGS.md` Learning 489.
+- **Verified:** full clean regression read 0 failed/0 error (10 pre-existing
+  baseline warnings unchanged, 4650 passed); `lintr` 0 issues on all 8 touched
+  files (project's own `.lintr` config); `devtools::check()` 1 ERROR/1 WARNING/1
+  NOTE, all pre-existing and individually attributed (non-portable
+  `inst/extdata/reference/...` filename from S418; `a2interactive.Rmd`
+  vignette-engine NOTE), 0 new; end-to-end pipeline check against the new fixture
+  confirmed `name` survives `qcStudbook()` and is correctly scrubbed by
+  `obfuscatePed()`. Phase 3E: n/a — no runtime behaviour change this slice.
+  Citation (#120), `NEWS.Rmd`, and tutorial/article checklists: N/A per the
+  plan's own §5 (owed at Slice 2, which ships the user-visible rendering).
+- Issue #136 stays open (Slice 2 pending); no `gh issue close` this session.
+  Next session in this cluster implements Slice 2.
+
 ### 2026-08-09 · [ad hoc] Untracked the two committed `.DS_Store` files so they stop reappearing in `git status` (Session 488)
 - **Owner-directed** ("gitignore the .DS_Store"). Pre-work inspection found the
   request's premise was already half-satisfied and the actual gap was elsewhere:

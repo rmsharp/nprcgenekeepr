@@ -61,17 +61,17 @@ would name); the next session reconciles them to real shas.
 
 ```handoff
 session: S489
-date: 2026-08-08
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Implement Slice 1 of the ratified issue #136 plan (docs/planning/issue136-name-labels-pedigree-diagram-plan.md §4) -- data model + de-identification for pedigree name labels. No visible app change this slice.
-what_was_done: pending
-next_steps: pending
-key_files: R/columnSchema.R, R/getPossibleCols.R, man/getPossibleCols.Rd, R/obfuscatePed.R, inst/extdata/examples/ (new fixture), data-raw/ (new generator), tests/testthat/test_name_first_class.R (new), tests/testthat/test_obfuscatePed.R
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+date: 2026-08-09
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- Slice 1 (data model + de-identification) of the ratified issue #136 plan. `name` is now a recognized, optional, character pedigree column, correctly scrubbed by obfuscatePed() (D8). No visible app change (rendering + toggle are Slice 2, a separate future session). Issue #136 stays open.
+what_was_done: Full strict-TDD RED->GREEN cycle, AskUserQuestion-gated at every transition. R/columnSchema.R: appended "name" to .nprcColumnSchema$possible. R/getPossibleCols.R + man/getPossibleCols.Rd (devtools::document() regen): new @return bullet, affected-entry style. R/qcStudbook.R: name coerced to character when present, mirroring the existing species block exactly (needed to pass a factor-input test the plan's own DONE criterion implied but its touched-file list omitted). R/obfuscatePed.R: name scrubbed to NA (D8), closing the disclosure defect S488 found. Updated the existing tests/testthat/test_getPossibleCols.R pinned vector (necessary collateral). New tests/testthat/test_name_first_class.R (5 blocks, modelled on test_species_first_class.R) + 1 new block in test_obfuscatePed.R. Pre-RED verification found 2 of the plan's suggested RED tests (trap 3 removeDuplicates(), trap 4 fixColumnNames()) already pass with zero code change -- disclosed at the PRE-RED->RED gate, included as labelled documentation/coverage, not RED-driving (PROJECT_LEARNINGS.md Learning 489). New sibling fixture inst/extdata/examples/obfuscated_rhesus_mhc_ped_name.csv (data-raw/obfuscated_rhesus_mhc_ped_name.R, seeded RNG, D9's 3 required cases). Caught and reverted one unrelated devtools::document() collateral edit (man/modMarkerGeneticsServer.Rd, a benign roxygen2 reflow, confirmed not the iCloud-duplicate-file trap). Commits: 039d5d98 (claim), 2c9869ca (RED), and the GREEN/close-out commits recorded in CHANGELOG.md.
+next_steps: Implement Slice 2 of docs/planning/issue136-name-labels-pedigree-diagram-plan.md §4 -- label rendering + toggle + documentation. Touches R/makePedigreeDiagramData.R (label construction in both builders, D7; tooltip, D10), R/modPedigree.R (toggle control + useLabels = FALSE, D6), 3 test files, NEWS.Rmd, both tutorial/article files (owner's #136 comment requires this), inst/extdata/ui_guidance/input_format.html. Dragon 1 (multi-line "\n" label rendering) is still unverified -- confirm hands-on at Pre-RED before committing to D3's two-line form; fall back to "id (name)" if it fails.
+key_files: docs/planning/issue136-name-labels-pedigree-diagram-plan.md §4 Slice 2 + §6 dragons; R/makePedigreeDiagramData.R:77,894-899,904-911,924-932 (the 4 label-assignment sites); R/modPedigree.R:446 (confirms which builder renders live), :549-555 (search dropdown, D6 goes here); inst/extdata/examples/obfuscated_rhesus_mhc_ped_name.csv (this session's fixture, ready for Slice 2's live verification).
+gotchas: (1) Do not add a new nodes-data-frame column -- R/makePedigreeDiagramData.R:1237 throws under edgeStyle="rectilinear"; change the label VALUE only. (2) useLabels defaults TRUE in visNetwork -- without D6's explicit useLabels = FALSE the "Select by id" dropdown silently starts listing names. (3) Any live/e2e verification of rendered labels MUST use screenshots, not widget-JSON grepl() alone (Learning 487 -- JSON proves data presence, never clipping/overlap). (4) devtools::document() can produce an unrelated collateral diff in man/modMarkerGeneticsServer.Rd (benign reflow, not the iCloud-duplicate trap) -- check git diff after documenting and revert anything outside your touched files. (5) The full regression suite and devtools::check() both exceed the 120s foreground Bash timeout here -- let Bash auto-background, then TaskOutput with block=true rather than polling manually. (6) devtools::check(cran = FALSE) reports fewer NOTEs than the plain devtools::check() prior sessions' baselines describe -- use the same default-settings command for an apples-to-apples comparison.
+runtime_smoke: n/a -- docs-only impact assessment confirms no runtime/UI change this slice (rendering is Slice 2); additionally ran a direct end-to-end pipeline check (new fixture through qcStudbook() + obfuscatePed()) confirming correct behavior beyond the plan's own minimum bar.
+changelog_ref: CHANGELOG.md 2026-08-09 "Implemented Slice 1 (data model + de-identification) of the name-node-label plan (Session 489)"
 commit: pending
 ```
 pending

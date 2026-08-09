@@ -12,11 +12,148 @@ issue136-name-labels-pedigree-diagram-plan.md` §4) -- data model + de-identific
 `.nprcColumnSchema$possible`, roxygen + `.Rd`, the `obfuscatePed()` scrub (D8), a new sibling
 fixture + `data-raw/` generator (D9), and `tests/testthat/test_name_first_class.R` modelled on
 `test_species_first_class.R`. No visible app change in this slice (rendering + toggle are Slice 2).
-**Started:** 2026-08-08.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Started/Completed:** 2026-08-08 / 2026-08-09.
+**Status:** DONE. Full strict-TDD RED->GREEN cycle, `AskUserQuestion`-gated at every transition
+(next-task pick; PRE-RED->RED; RED->GREEN; GREEN->REFACTOR, owner-confirmed skip). Verified: full
+clean regression read (0 failed/0 error, 10 pre-existing baseline warnings unchanged, 4650 passed),
+`lintr` 0 issues on all 8 touched files (project's own `.lintr` config), `devtools::check()` 1
+ERROR/1 WARNING/1 NOTE (all pre-existing, individually attributed, 0 new), and an end-to-end
+pipeline check against the new fixture. Issue #136 stays open (Slice 2 pending).
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Full Phase 0 orient (SAFEGUARDS.md, SESSION_NOTES.md, `gh issue
+list`, git status/log/diff, `methodology_dashboard.py` -- health 98/100; ledger + `HANDOFFS.md`
+reconcile both clean, no ghost session). Rendered the priorities list (4 numbered options: #136
+Slice 1, design #145, design #147, NPRC outreach) and posed it via `AskUserQuestion`; owner picked
+implementing #136 Slice 1. **(2)** Phase 1B claim committed (`039d5d98`). **(3)** Re-read every file
+the plan cites as a touch point before writing anything (Vertical Slice gate (a) re-verification --
+confirmed via `git log` that none of `R/columnSchema.R`, `R/getPossibleCols.R`,
+`man/getPossibleCols.Rd`, `R/obfuscatePed.R`, `R/removeDuplicates.R`,
+`test_species_first_class.R`/`test_obfuscatePed.R`/`test_makePedigreeMatingLayout.R`, or the S486
+fixture-generator precedent had changed since the plan's own commit `3121bb71`). **(4)** Designed the
+RED test set from `test_species_first_class.R`'s template, then -- rather than trusting the plan's
+own "write a RED test pinning trap 3/4" framing -- ran each candidate assertion against current
+`master` first. Found 2 of 5 candidate tests (trap 3 `removeDuplicates()`, trap 4
+`fixColumnNames()`) already pass with zero implementation change (both are schema-agnostic existing
+mechanisms that already correctly extend to a hand-added `name` column). Disclosed this finding at
+the PRE-RED->RED `AskUserQuestion` gate rather than silently including or silently dropping them;
+owner chose to proceed with all 5 (3 genuinely RED + 2 labelled documentation/coverage). **(5)** RED
+confirmed by actually running both test files: 4 failures for the stated reasons (schema exclusion;
+novel-column-ordering; factor-not-coerced; obfuscatePed pass-through), 2 passes as predicted.
+Committed (`2c9869ca`). **(6)** GREEN: the 4 minimal fixes (schema append; roxygen bullet +
+`devtools::document()` regen; `qcStudbook()` factor-coercion block mirroring the existing `species`
+precedent exactly; `obfuscatePed()` D8 scrub) plus the pre-declared D9 fixture generator. Caught and
+reverted one unrelated collateral edit `devtools::document()` produced in `man/
+modMarkerGeneticsServer.Rd` (a pure roxygen2 line-wrap reflow, not an iCloud-duplicate-file
+corruption -- verified no such duplicate file exists on disk this session). **(7)** Full verification
+suite run via `TaskOutput`-blocked background tasks (the regression suite and two `devtools::check()`
+runs each exceeded the 120s foreground timeout): 0 failed/0 error, `lintr` clean, `devtools::check()`
+1/1/1 all pre-existing (confirmed by direct inspection that neither the non-portable-filename issue
+nor the vignette-engine NOTE relates to this session's diff), plus a direct pipeline check loading
+the new fixture through `qcStudbook()`/`obfuscatePed()`. **(8)** GREEN->REFACTOR gate: proposed
+skipping since every change mirrors an existing precedent exactly; owner confirmed skip. **(9)**
+Close-out: this evaluation + self-assessment, Learning 489, BACKLOG.md progress note, CHANGELOG.md
+entry, CLAUDE.md learning-count bump, this handoff.
+
+**What the design correctly anticipated vs. what needed adjustment:** the plan's own "Touches" list
+for Slice 1 omitted `R/qcStudbook.R` -- but its own DONE criterion ("the column survives
+`qcStudbook()` as character") required it once a factor-input test was written, since `qcStudbook()`
+is where `species` gets its own analogous coercion. Extending the touched-file list by one file,
+justified by the plan's own DONE criterion and an exact existing precedent, is not scope creep.
+Separately, the plan's suggested trap-3/trap-4 RED tests turned out to already be green (Learning
+489) -- a legitimate Pre-RED correction, not a plan defect, since neither trap depends on anything
+Slice 1 changes; both mechanisms (`removeDuplicates()`, `fixColumnNames()`) are schema-agnostic.
+
+**Session 488 Handoff Evaluation (by Session 489): 9/10.** **What helped:** the handoff's "what's
+next" named the exact next deliverable (Slice 1) and gave a complete, accurate touch-point list with
+line numbers -- every citation (`R/columnSchema.R:15-24`, `R/obfuscatePed.R:29-49`,
+`R/makePedigreeDiagramData.R:1237`) resolved exactly as described when checked. Gotcha (1)
+(rectilinear column-add trap) and gotcha (2) (the allele-name collision) were both directly relevant
+and saved real time -- gotcha (2) in particular meant no time was wasted even glancing at
+`first_name`/`second_name` as a candidate spelling. Gotcha (5) (schema registration isn't required
+for passthrough) correctly set expectations for why `.nprcColumnSchema$possible` registration is
+about ordering/documentation, not survival. **What was missing:** the touched-file list for Slice 1
+didn't anticipate `R/qcStudbook.R` needing a coercion line (see above) -- a minor, easily-absorbed
+gap, not a real cost, since the plan's own DONE criterion pointed straight at it. **What was wrong:**
+nothing -- the one piece of forward-looking uncertainty the handoff flagged (Dragon 1, multi-line
+label rendering) was correctly scoped as a Slice-2-only concern and did not surface in Slice 1 at
+all. **ROI:** strongly positive; the plan's §2 evidence base meant zero time was spent re-deriving
+facts S488 had already verified first-hand.
+
+**Self-assessment (Session 489): 9/10.** **Strengths:** (1) Did not accept the plan's "write a RED
+test for trap 3/4" instruction at face value -- ran each candidate assertion against current
+`master` before writing it into a test file, found 2 of 5 were already-passing, and disclosed this
+explicitly at the PRE-RED->RED gate rather than silently padding the RED batch with tests that were
+never going to fail (a real, if minor, TDD-discipline point -- see Learning 489). (2) Caught and
+reverted an unrelated `devtools::document()` collateral edit (`man/modMarkerGeneticsServer.Rd`)
+rather than letting it ride into the commit, and correctly diagnosed it as a benign reflow rather
+than assuming it was the known iCloud-duplicate-file trap (verified no duplicate file exists on disk
+this session, rather than pattern-matching to the wrong root cause). (3) Justified the one departure
+from the plan's literal touched-file list (`R/qcStudbook.R`) by tracing it to the plan's own DONE
+criterion and an exact existing precedent, rather than either silently expanding scope or silently
+shipping a test that couldn't pass. (4) Verified every RED/GREEN claim by actually running the code
+-- both the RED failures and the GREEN passes were confirmed via direct `Rscript` execution, not
+inferred from reading the diff. (5) Ran a real end-to-end pipeline check (the new fixture through
+`qcStudbook()` + `obfuscatePed()`) even though Phase 3E was N/A, going slightly beyond the plan's own
+minimum verification bar for a data-model-only slice. **Weaknesses:** (1) First attempt at the full
+regression suite and the first `devtools::check()` call used ad hoc shell backgrounding (`&` +
+manual `kill`) before switching to the proper `run_in_background`/`TaskOutput` pattern -- wasted one
+command cycle before self-correcting. (2) The first `devtools::check(cran = FALSE)` call didn't
+match prior sessions' baseline command exactly, producing a fewer-NOTEs result that needed a second,
+apples-to-apples run to reconcile against the documented history -- should have used the established
+default-settings command from the start. **Compared to previous sessions:** this is the same lesson
+family as S486/S487/S488 one step further into the TDD mechanics itself -- S486 learned an agent's
+citation isn't source, S487 that widget-JSON isn't rendering, S488 that an agent's citation isn't
+source (again, at a different altitude); S489's version is that a design doc's OWN suggested test
+isn't necessarily a test that will fail, and must be run, not trusted, before being labelled RED.
+
+**Handoff to Session 490:**
+- **What's next:** implement **Slice 2** of this plan (`docs/planning/
+  issue136-name-labels-pedigree-diagram-plan.md` §4) -- label rendering + toggle + documentation.
+  Touches: `R/makePedigreeDiagramData.R` (label construction in both `makePedigreeDiagramData()` and
+  `makePedigreeMatingLayout()`, D7; tooltip line, D10), `R/modPedigree.R` (toggle control +
+  `useLabels = FALSE`, D6), `test_makePedigreeDiagramData.R`/`test_makePedigreeMatingLayout.R`/
+  `test_modPedigree.R`, `NEWS.Rmd` (re-render to `NEWS.md`), `vignettes/manual_components/
+  _pedigree_browser.Rmd` **and** `vignettes/articles/colony-manager-guide.qmd` (owner's #136
+  comment requires the documentation phase), `inst/extdata/ui_guidance/input_format.html`. **Dragon
+  1 (multi-line `\n` label rendering) is still unverified** -- confirm hands-on at Pre-RED before
+  committing to D3's two-line `"id\nname"` form; fall back to `"id (name)"` if it fails (this project
+  has twice had a design's rendering assumption fail exactly this way -- S465, S487). Also still
+  available: 10 pre-existing test-suite warnings root-cause+fix (Effort S, already root-caused by
+  S487); non-portable-filename `devtools::check()` ERROR (Effort S, dates to S418); design issue #145
+  (sire/dam placement, investigation done, needs a design session); design issue #147 (Tier 1 of the
+  #146-153 sequencing, XL effort); NPRC outreach (DECISION NEEDED, owner-executed).
+- **Key files:** `docs/planning/issue136-name-labels-pedigree-diagram-plan.md` §4 Slice 2 and §6
+  "Here be dragons" (Dragon 1/2/3 are all Slice-2-specific); `R/makePedigreeDiagramData.R:77`
+  (label site 1, `makePedigreeDiagramData()`), `:894-899`/`:904-911`/`:924-932` (label sites 2-4,
+  `makePedigreeMatingLayout()` -- real/duplicate/union node label assignment); `R/modPedigree.R:446`
+  (confirms `makePedigreeMatingLayout()`, not the other builder, is what the live Diagram tab
+  renders); `R/modPedigree.R:549-555` (the search dropdown -- D6's `useLabels = FALSE` goes here);
+  `inst/extdata/examples/obfuscated_rhesus_mhc_ped_name.csv` (this session's new fixture, ready for
+  Slice 2's live/e2e verification -- already contains the named/empty/`NA` mix and one deliberately
+  long name for the geometry stress case).
+- **Gotchas:** (1) **Do not add a new column to the nodes data frame** -- `R/
+  makePedigreeDiagramData.R:1237` throws "undefined columns selected" under
+  `edgeStyle="rectilinear"` (same trap S486 hit for #133; change the `label` VALUE only). (2)
+  **`useLabels` defaults `TRUE`** in visNetwork and the bundled widget JS honours it -- without D6's
+  explicit `useLabels = FALSE`, the "Select by id" dropdown silently starts listing names the moment
+  any real individual's `label` becomes a name. (3) Any live/e2e verification of the rendered labels
+  MUST use screenshots, not widget-JSON `grepl()` assertions alone (Learning 487 -- JSON proves data
+  presence, never clipping/overlap, and overlap is §2.3's expected failure mode here). (4) The
+  `devtools::document()` regen step can produce an unrelated collateral diff in `man/
+  modMarkerGeneticsServer.Rd` (a benign roxygen2 reflow, confirmed NOT the iCloud-duplicate-file
+  trap this session) -- check `git diff` after documenting and revert anything outside your own
+  touched files. (5) The full regression suite and `devtools::check()` both exceed the 120s
+  foreground Bash timeout in this environment -- start them via the normal `Bash` call (which
+  auto-backgrounds on timeout), then `TaskOutput` with `block=true` rather than polling the output
+  file manually. (6) `devtools::check(cran = FALSE)` reports fewer NOTEs than the plain
+  `devtools::check()` prior sessions' baselines describe (1 NOTE vs. a historical "2 NOTEs") --
+  use the same default-settings command prior sessions used for an apples-to-apples baseline
+  comparison, not a CRAN-relaxed variant. (7) All standing gotchas from S479-488 carry forward
+  unchanged (`gh issue view <N>` needs `--json`; `NOT_CRAN=true` for tests; `NPRC_RUN_E2E=true` for
+  ANY live `shinytest2`/`chromote` script; `docs/planning/*.qmd` render byproducts never committed;
+  re-render `NEWS.Rmd` -> `NEWS.md` and check the diff).
+- **Self-assessment score:** 9/10 (breakdown above).
 
 ### What Session 488 Did
 **Deliverable:** Design/architecture document for GitHub issue #136 ("Show names (not just ID) as
