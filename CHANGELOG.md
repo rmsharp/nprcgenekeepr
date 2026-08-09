@@ -47,6 +47,28 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-08-09 · \[ad hoc\] Untracked the two committed `.DS_Store` files so they stop reappearing in `git status` (Session 488)
+
+- **Owner-directed** (“gitignore the .DS_Store”). Pre-work inspection
+  found the request’s premise was already half-satisfied and the actual
+  gap was elsewhere: `.gitignore:49` **already** carried a `.DS_Store`
+  rule (added by an earlier session, whose own comment recorded that it
+  deliberately left “the pre-existing tracked root .DS_Store –
+  untouched”). A `.gitignore` rule has no effect on already-tracked
+  files, which is precisely why `.DS_Store` kept showing as modified in
+  every session’s Phase 0 `git status`.
+- **Fix:** `git rm --cached .DS_Store man/.DS_Store` (2 files were
+  tracked; both remain on disk, only the index entries were removed),
+  plus a corrected `.gitignore` comment explaining the
+  tracked-vs-ignored distinction so the next reader is not misled the
+  same way.
+- **No build impact, verified:** `.Rbuildignore:95` already excluded
+  `\.DS_Store$` end-anchored (deliberately un-anchored at the front so
+  it also catches subdirectory copies such as `man/.DS_Store`), so the
+  package tarball never shipped them.
+- A third copy, `docs/.DS_Store`, exists on disk but was never tracked
+  and is covered by the existing ignore rule — left alone.
+
 ### 2026-08-08 · \[issue \#136\] Designed and ratified the name-node-label plan for the pedigree diagram (Session 488)
 
 - **Deliverable:**

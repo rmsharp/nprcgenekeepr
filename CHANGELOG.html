@@ -70,6 +70,16 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-08-09--ad-hoc-untracked-the-two-committed-ds_store-files-so-they-stop-reappearing-in-git-status-session-488">2026-08-09 · [ad hoc] Untracked the two committed <code>.DS_Store</code> files so they stop reappearing in <code>git status</code> (Session 488)<a class="anchor" aria-label="anchor" href="#id_2026-08-09--ad-hoc-untracked-the-two-committed-ds_store-files-so-they-stop-reappearing-in-git-status-session-488"></a></h3>
+<ul><li>
+<strong>Owner-directed</strong> (“gitignore the .DS_Store”). Pre-work inspection found the request’s premise was already half-satisfied and the actual gap was elsewhere: <code>.gitignore:49</code> <strong>already</strong> carried a <code>.DS_Store</code> rule (added by an earlier session, whose own comment recorded that it deliberately left “the pre-existing tracked root .DS_Store – untouched”). A <code>.gitignore</code> rule has no effect on already-tracked files, which is precisely why <code>.DS_Store</code> kept showing as modified in every session’s Phase 0 <code>git status</code>.</li>
+<li>
+<strong>Fix:</strong> <code>git rm --cached .DS_Store man/.DS_Store</code> (2 files were tracked; both remain on disk, only the index entries were removed), plus a corrected <code>.gitignore</code> comment explaining the tracked-vs-ignored distinction so the next reader is not misled the same way.</li>
+<li>
+<strong>No build impact, verified:</strong> <code>.Rbuildignore:95</code> already excluded <code>\.DS_Store$</code> end-anchored (deliberately un-anchored at the front so it also catches subdirectory copies such as <code>man/.DS_Store</code>), so the package tarball never shipped them.</li>
+<li>A third copy, <code>docs/.DS_Store</code>, exists on disk but was never tracked and is covered by the existing ignore rule — left alone.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-08-08--issue-136-designed-and-ratified-the-name-node-label-plan-for-the-pedigree-diagram-session-488">2026-08-08 · [issue #136] Designed and ratified the name-node-label plan for the pedigree diagram (Session 488)<a class="anchor" aria-label="anchor" href="#id_2026-08-08--issue-136-designed-and-ratified-the-name-node-label-plan-for-the-pedigree-diagram-session-488"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> <code>docs/planning/issue136-name-labels-pedigree-diagram-plan.md</code> (commit <code>3121bb71</code>), an architecture design/scoping document for GitHub issue #136 (“Show names (not just ID) as Pedigree Diagram node labels”). Tier 2 step 3 in the owner’s standing #133 &gt; #136 &gt; #137 &gt; #138 order (set S436). Planning session only — no <code>R/</code>/<code>tests/</code>/<code>man/</code> content changed (FM #18).</li>
