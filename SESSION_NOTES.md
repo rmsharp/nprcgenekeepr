@@ -6,6 +6,20 @@
 
 ## ACTIVE TASK
 
+### What Session 488 Did
+**Deliverable:** Design/architecture document for GitHub issue #136 ("Show names (not just ID) as
+Pedigree Diagram node labels (data-model gated)") -- Tier 2 step 3 in the owner's standing
+#133 > #136 > #137 > #138 sequencing (set S436). Planning session: the plan IS the deliverable;
+implementation is a separate future session (`SESSION_RUNNER.md` FM #18).
+**Started:** 2026-08-08.
+**Status:** Session claimed. Work beginning. Workstream: `docs/methodology/workstreams/
+ARCHITECTURE_WORKSTREAM.md` (owner-picked via `AskUserQuestion` over the literal
+`DESIGN_WORKSTREAM.md` mapping -- #136 is a data-model + rendering-contract change, not a UI
+layout/zone design, and structurally matches issue #133's own plan shape).
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 487 Did
 **Deliverable:** Implement Slice 2 of the ratified issue #133 plan (`docs/planning/
 issue133-affected-status-pedigree-diagram-plan.md` §4) -- legend + documentation: one new
