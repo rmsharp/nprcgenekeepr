@@ -88,7 +88,7 @@ key_files: .gitignore (owner's own fix, line ~60), .Rbuildignore (3 new entries 
 gotchas: .Rbuildignore requires each line's own parentheses to balance WITHIN that single line (a comment spanning multiple lines with a paren opened on one line and closed on another breaks R CMD build outright, not just a lint warning) -- the file's own existing header comment already warned about this; verify any new .Rbuildignore comment by actually rebuilding, not by re-reading the source. A .gitignore exclusion has ZERO effect on R CMD build's tarball contents -- only .Rbuildignore does; the two must be kept in sync by hand for any locally-excluded-but-still-on-disk file. All gotchas from S496's own handoff (and S479-495 before it) carry forward unchanged.
 runtime_smoke: n/a -- no R/, tests/, or man/ content changed; pure repo-hygiene/build-config
 changelog_ref: CHANGELOG.md 2026-08-09 "devtools::check() reaches 0/0/0 -- non-portable filename + Rbuildignore copyright gap fixed (Session 497)"
-commit: pending
+commit: 900afc3f
 ```
 
 ```handoff
