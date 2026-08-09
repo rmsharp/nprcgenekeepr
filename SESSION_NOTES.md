@@ -17,11 +17,179 @@ extended per D9 so rectilinear mode does not crash when twin data is present. Fo
 (PRE-RED->RED->GREEN->REFACTOR, `AskUserQuestion`-gated at each transition), treated as a
 pre-declared vertical slice (gate (a) satisfied by the S491 plan-mode contract's own §4 Slice 2
 session-boundary declaration).
-**Started:** 2026-08-09.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Started/Completed:** 2026-08-09 / 2026-08-09.
+**Status:** DONE. Full strict-TDD PRE-RED->RED->GREEN->REFACTOR cycle, `AskUserQuestion`-gated at
+every transition (priorities-list pick; PRE-RED->RED; RED->GREEN; GREEN->REFACTOR, one small
+doc-drift fix). Phase 3E live smoke test done and genuinely informative (see below), not skipped.
+Verified: both targeted test files green (76+128 expectations); full clean regression read 0
+failed/0 error, 4733 passed, 173 skipped, 10 pre-existing baseline warnings (unchanged);
+`devtools::check()` 2 ERRORs/1 WARNING/2 NOTEs, all independently traced to already-tracked
+`BACKLOG.md` pre-existing items, 0 new; `lintr::lint_package()` 0 lints on touched files. Issue #137
+stays open for Slice 3 (UI wiring, legend, documentation).
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Full Phase 0 orient (SAFEGUARDS.md, SESSION_NOTES.md, `gh
+issue list`, git status/log/diff, `methodology_dashboard.py` -- health 98/100; ledger + `HANDOFFS.md`
+reconcile both clean, no ghost session -- the one commit since the `CHANGELOG.md` frontier was
+S492's own self-referential `HANDOFFS.md` commit-sha backfill, expected pattern). Rendered the
+priorities list (4 options: #137 Slice 2, design #147, design #145, design #138) via
+`AskUserQuestion`; owner picked #137 Slice 2. **(2)** Phase 1B claim (commit `be521e5a`). **(3)**
+Pre-RED: re-read `R/makePedigreeDiagramData.R` live in full around `makePedigreeMatingLayout()`/
+`.addRectilinearWaypoints()`, re-confirming the rbind-trap line numbers (1301/1334) unchanged since
+S491's own citation -- no drift this time. Re-verified Dragon #4 (the `dashes` list-column mechanism)
+hands-on via a live `rbind()`/`jsonlite` test -- confirmed a plain logical value and mixed MZ/DZ/UZ
+numeric-vector dash patterns coerce and serialize correctly in one column. Confirmed via
+`R/modPedigree.R:486` that only `makePedigreeMatingLayout()` is live-wired to the app. Confirmed the
+codebase's validate-at-the-caller precedent (`checkKinshipOverrides()` called by
+`prepareKinshipOverrides()`/`modGeneticValue.R`, never inside `applyKinshipOverrides()` itself) --
+decided the render functions would NOT call `checkTwinRelations()` internally, matching it. Picked
+D10's deferred color/dash-pattern values: `#009E73` (Okabe-Ito bluish-green, grep-confirmed
+collision-free against every hex color already in `R/`), MZ solid/DZ `c(4,4)`/UZ `c(14,8)` dash
+patterns, "MZ"/"DZ"/"?" labels. **(4)** PRE-RED->RED gate: wrote 3 new `test_that` blocks in each of
+`test_makePedigreeDiagramData.R`/`test_makePedigreeMatingLayout.R` (backward-compat, per-code
+styling, D7/D9 regression guards) against the not-yet-existing `twinRelations` parameter; ran both
+files, confirmed all new failures were genuinely "unused argument" errors (Learning 492's discipline
+applied), not setup/typo errors. Committed RED (`9cc32795`). **(5)** RED->GREEN gate: implemented a
+new shared `.buildTwinConnectorEdges()` helper plus the `twinRelations` parameter on both render
+functions and the D9 `.addRectilinearWaypoints()` fix. Two real bugs surfaced and fixed live during
+GREEN: a 0-row-data-frame `$<-` assignment error (fixed via `rep(x, nrow(df))`, not a bare scalar)
+and two RED tests whose own filter conditions were too loose (matched pre-existing edges incidentally
+sharing a twin id as `from`/`to`, not just the new connector row) -- fixed by filtering on
+`is.na(label)`/`!is.na(label)` instead. **Deliberately verified the D9 fix was genuinely load-bearing,
+not just plausible**, by temporarily reverting it (`cp`+`python3` string-replace, diffed back to
+identical after) and re-running the D9 test -- confirmed it fails with the EXACT predicted "undefined
+columns selected" crash at the exact `finalEdges` rbind line, then restored the fix and re-confirmed
+green. Committed GREEN (`1fcb9dd3`). **(6)** GREEN->REFACTOR gate: found and fixed one genuine small
+issue (the `.buildTwinConnectorEdges()` roxygen prose still said `c(4, 4)`/`c(14, 8)` after a lint
+fix changed the code to `c(4L, 4L)`/`c(14L, 8L)`) -- doc-only, confirmed zero `.Rd` drift since it's a
+`@noRd` internal. Committed REFACTOR (`66aadc9f`). **(7)** Phase 3E: since Slice 3's UI wiring
+doesn't exist yet, built a minimal standalone `shinyApp()` mirroring `R/modPedigree.R`'s own render
+chain (S465 precedent) to drive via `shinytest2`/`chromote`. Hit and fixed 3 real environmental
+gotchas (renv library-path injection needed for the standalone subprocess; `get_screenshot()` not
+`screenshot()`; `wait_ = FALSE` needed when re-setting an input to its own current value) --
+`PROJECT_LEARNINGS.md` Learning 493. First ran against the full 375-individual fixture (0 console
+errors, but visually illegible at that density); built a small, hand-picked focused subset (the 3
+twin pairs + immediate family, including HV7LZ3's 3-mate/2-duplicate structure) and got a genuinely
+informative screenshot: all 3 connector styles visually distinct (MZ solid, DZ/UZ dashed, each with
+its own legible label), the MZ connector visually confirmed targeting HV7LZ3's REAL node specifically
+(not either of her 2 `__dup_` occurrences) -- D7 confirmed empirically, not just by unit test -- and
+under `edgeStyle = "rectilinear"` the twin connectors stayed direct/unrouted while mate-lines routed
+through right-angle waypoints around them, exactly as D9 predicts. Closes the design doc's own
+Dragon #5 gap ("never visually rendered, not even once"). 0 console errors under either edge style.
+**(8)** Close-out: this evaluation + self-assessment, Learning 493, `BACKLOG.md` update,
+`CHANGELOG.md` entry, this handoff.
+
+**Session 492 Handoff Evaluation (by Session 493): 9/10.** **What helped:** the handoff's "what's
+next" named Slice 2 explicitly with the exact deliverable shape (both functions gain `twinRelations`,
+D6/D7 styling, D9 rectilinear-no-crash as "the single highest-value regression test in Slice 2"),
+matching reality precisely -- the D9 crash prediction was real and this session verified it exactly
+as described, down to confirming it live rather than trusting the prior session's source-reading
+prediction at face value. The gotchas list (bare `expect_error()` needing a `regexp`; no manual `&`
+inside `run_in_background`; check staging before every commit; the rbind-trap line-drift warning)
+were all directly useful -- gotcha #1 was reapplied verbatim when writing this session's own RED
+tests, and gotcha #4 (line-number drift) was checked and found NOT to have drifted this time, saving
+a possible mis-citation. The "key files" list correctly named the two new fixtures'
+(`obfuscated_rhesus_mhc_ped_twins.csv`/`_twin_relations.csv`) real MZ/DZ/UZ pair ids in advance,
+which this session used directly in tests with zero re-derivation. **What was missing:** nothing that
+cost real time -- the two things this session had to discover independently (the exact
+`shinytest2::AppDriver` method names/argument quirks, and the renv-library-path subprocess gap) were
+both consequences of THIS session's own choice to build a standalone smoke-test harness, a category
+of work S492's own Slice 1 (script-callable only, no rendering) never needed. **What was wrong:**
+nothing -- every file:line citation and every fixture id checked out exactly as described. **ROI:**
+strongly positive; the plan's own §4 Slice 2 section (files-to-touch, exact DONE/verify criteria
+including the live-smoke-test requirement) needed almost no re-derivation.
+
+**Self-assessment (Session 493): 9/10.** **Strengths:** (1) Re-verified Dragon #4 (the `dashes`
+list-column mechanism) hands-on at THIS session's own Pre-RED, rather than trusting the design
+document's already-cited verification from a prior session -- a second, independent confirmation
+before relying on it in production code. (2) Deliberately proved the D9 fix was load-bearing by
+temporarily reverting it and re-observing the exact predicted crash, rather than assuming a fix that
+"looks right" and passes tests is actually doing the work claimed -- caught nothing wrong this time,
+but the verification itself is the discipline (mirrors S492's own "verify, don't assume" family one
+level further, applied to a fix's own necessity rather than a claim's truth). (3) Caught two genuine
+bugs live during GREEN (the 0-row `$<-` assignment error; two RED tests whose own filters were too
+loose to isolate the new connector row from pre-existing edges) via actually running the tests and
+reading the failure diffs carefully, not assuming the first green run meant correct. (4) Built a
+REAL, informative Phase 3E live verification rather than a token one -- recognized the full
+375-individual fixture screenshot was too dense to be evidence of anything, and built a small,
+deliberately-chosen focused subset (reusing the design doc's own D7 Dragon-3 scenario) that actually
+let a human (or this agent) SEE the three connector styles, the D7 real-node targeting, and the D9
+direct-vs-rectilinear behavior with real eyes on a real render -- closing a gap the design doc's own
+Dragon #5 explicitly flagged as never having been done. (5) Recorded the renv-library-path standalone
+-subprocess gotcha as a new Learning rather than silently working around it, since it will recur for
+any future session building a similar pre-Slice-3 verification harness. **Weaknesses:** (1) The
+initial `devtools::check()` background run was launched via a manual `nohup ... &` rather than the
+harness's native `run_in_background`, repeating a version of S492's own documented gotcha #2 (though
+caught and corrected before it wasted meaningful time, unlike S492's own multi-cycle version). (2)
+The first two RED test designs (the "existing sire/dam edges gain dashes/label" test and the
+per-code-styling test on the real fixture) both had filter conditions too loose to isolate the new
+connector row cleanly on the first attempt -- a more careful read of what `from %in% twinIds`/
+`to %in% c(...)` would ALSO match against pre-existing mate-line/child edges, before writing the
+assertion, would have caught this during RED instead of GREEN. (3) Did not explicitly invoke a
+"deepest available reasoning mode" setting at session start, matching every recent session's own
+disclosed limitation. **Compared to previous sessions:** this session's most distinctive contribution
+is the D9-fix-load-bearing-verification technique (deliberately regress a fix to confirm it was
+actually preventing something, not merely present) -- a variant of the established "verify, don't
+assume" family (S481/484-489/491/492) applied to a FIX's own necessity rather than to an inherited
+claim, plus a genuinely substantive Phase 3E live verification (S490's own precedent for "a live test
+can catch what a unit test structurally cannot," applied here to make an explicitly-flagged design-doc
+gap -- "never visually rendered" -- actually closed with real evidence, not just re-asserted as still
+open.
+
+**Handoff to Session 494:**
+- **What's next:** **Slice 3** of the ratified issue #137 plan (`docs/planning/
+  issue137-twin-zygosity-pedigree-diagram-plan.md` §4, "UI wiring, legend, documentation") -- Shiny
+  -level wiring for supplying `twinRelations` to the app (mechanism TBD, resolve by reading
+  `R/modInput.R`/`R/appServer.R` directly at Pre-RED per the plan's own Dragon 1 -- no confirmed
+  existing "upload a second CSV" precedent in this app); a "Show Twin Connectors" toggle in
+  `R/modPedigree.R`'s existing `tagList(...)` following the self-referential-current-value pattern
+  (Learning 490 -- a HARD requirement, not optional, given S490's own live-confirmed regression when
+  a new toggle didn't follow this pattern); a Diagram-tab legend entry added via the EXISTING
+  `visLegend()` call's `addEdges` parameter, never a second `visLegend()` call (S485's own comment at
+  `R/modPedigree.R:524` already documents why); `NEWS.Rmd`/tutorial-article documentation (both owed
+  THIS slice, per the plan's own §8 disposition, not deferred). This is the natural next pick,
+  closing out the issue #137 3-slice chain. Also still available: design sessions for #147 (Tier 1,
+  sole High-priority item in the #146-153 sequencing), #145 (sire/dam placement, investigation
+  already done), #138 (full-colony rendering beyond the node cap); NPRC outreach (DECISION NEEDED,
+  owner-executed); the spelling-WORDLIST gap (Effort S, still 9 pre-existing words, confirmed
+  unrelated to this session's own 0-new contribution); the non-portable-filename `devtools::check()`
+  ERROR/WARNING rename (Effort S, dates to S418).
+- **Key files:** `docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md` §4 Slice 3 (exact
+  files-to-touch list, DONE/verify criteria) and §8 (close-out checklist mapping -- confirms NEWS.Rmd
+  + tutorial/article are THIS slice's obligation, `a2interactive.Rmd` is deferred, citation checklist
+  needs an explicit N/A confirmation in Slice 3's own close-out); `R/makePedigreeDiagramData.R`
+  (`.buildTwinConnectorEdges()`, the new shared helper both render functions now call; the
+  `twinRelations` parameter on both `makePedigreeDiagramData()`/`makePedigreeMatingLayout()`);
+  `R/modPedigree.R:438-467` (the existing `tagList(...)` the new toggle joins) and `:516-534`
+  (the existing single `visLegend()` call the new legend entry must extend via `addEdges`, not a
+  second call); `R/appServer.R:344-363,409` (`gvResults$kinshipOverrides`'s own wiring -- the closest
+  available precedent Slice 3's Pre-RED should read before designing the new reactive).
+- **Gotchas:** (1) **A standalone `shinyApp()` driven via `shinytest2::AppDriver` runs in a NEW R
+  subprocess that does NOT inherit the calling session's `renv` project library** -- inject
+  `.libPaths(c(<renv project lib>, <renv sandbox path>, .libPaths()))` at the top of any standalone
+  `app.R` before `library()` calls, or `library(nprcgenekeepr)` fails with "there is no package
+  called..." even though the package IS installed. Also: `AppDriver`'s screenshot method is
+  `get_screenshot()`, not `screenshot()`; pass `wait_ = FALSE` to `set_inputs()` when the new value
+  might equal the input's current value (e.g. re-setting a `selectInput`'s own default on first
+  load), or it times out waiting for an output-update event that never fires. See
+  `PROJECT_LEARNINGS.md` Learning 493. (2) **A RED test's own filter condition can be too loose** --
+  filtering `edges` by `from %in% <twin ids>` or `to %in% c(<child ids>)` can incidentally match
+  pre-existing mate-line/child edges that share an id with a twin pair, not just the new connector
+  row; filter on `is.na(label)`/`!is.na(label)` instead, since only the connector row ever sets
+  `label`. (3) `R/makePedigreeDiagramData.R`'s two `rbind`-with-fixed-column-set traps are now at
+  `:1301`/`:1334` still (confirmed unchanged this session) -- always re-`grep`/re-read live before
+  citing in a new plan or PR; they have drifted before and will again. (4) All standing gotchas from
+  S479-492 carry forward unchanged (`gh issue view <N>` needs `--json`; `NOT_CRAN=true` for tests --
+  including for `shinytest2::AppDriver` scripts, confirmed hit again this session;
+  `devtools::install()` needed before driving the installed app via `shinytest2::AppDriver`;
+  `git commit -F <file>` for any commit message containing backtick-quoted identifiers; the
+  `zygosity`/"twin zygosity" identifier-and-prose disambiguation rule; `run_in_background: true`
+  alone, never a manual shell `&` too).
+- **Runtime smoke test:** DONE (Phase 3E, this session) -- live `shinytest2`/`chromote` against a
+  hand-built standalone harness (Slice 3's UI doesn't exist yet to test via the real app), both
+  `edgeStyle` settings, 0 console errors, connector styling visually confirmed distinct. See the
+  "What happened" narrative above for the full method and findings.
+- **Self-assessment score:** 9/10 (breakdown above).
 
 ### What Session 492 Did
 **Deliverable:** Implement Slice 1 (data model) of the ratified issue #137 plan

@@ -1410,6 +1410,35 @@ were found and fixed in-session, not left as a new gap). REFACTOR: owner-confirm
 #137 stays open** -- Slice 2 (core rendering: connector edges in both diagram functions, rectilinear
 trap fix) is next in this cluster, followed by Slice 3 (UI wiring, legend, documentation). See
 `CHANGELOG.md`.
+
+**Progress (S493, 2026-08-09):** issue #137 Slice 2 (core rendering) is DONE -- both
+`makePedigreeDiagramData()` and `makePedigreeMatingLayout()` gain an optional `twinRelations`
+parameter (D1/D6/D7) rendering a distinctly-styled connector edge per twin pair via a new shared
+`.buildTwinConnectorEdges()` helper: MZ solid+"MZ", DZ short-dash `c(4L,4L)`+"DZ", UZ long-dash
+`c(14L,8L)`+"?" (D10 colors/dash patterns decided this session -- `#009E73` Okabe-Ito bluish-green,
+confirmed via grep against every hex color already in `R/` to avoid collision). `dashes` is an
+`I(list(...))` list-column, re-confirmed hands-on (a second, independent verification of the design
+doc's own Dragon #4) via a live `rbind()`/`jsonlite` test that a plain logical value and a
+numeric-vector dash pattern coerce and serialize correctly in the same column.
+`.addRectilinearWaypoints()`'s `newEdges` construction now unconditionally stamps a `label` column
+(D9) -- verified as genuinely load-bearing, not just plausible, by temporarily reverting the fix,
+re-observing the exact predicted "undefined columns selected" crash, then restoring it. Full
+strict-TDD PRE-RED->RED->GREEN->REFACTOR cycle (`AskUserQuestion`-gated at every transition; REFACTOR
+fixed one small doc-drift item, a stale non-`L`-suffixed dash value in `.buildTwinConnectorEdges()`'s
+own roxygen prose after a lint fix changed the code to integer literals). Phase 3E: a live
+`shinytest2`/`chromote` smoke test against a hand-built, zoomed focus-subset of the Slice 1 fixture
+(the 3 twin pairs + immediate family, including the D7 multi-mate-duplicate scenario) VISUALLY
+confirmed all 3 connector styles distinctly, under both `edgeStyle` settings, 0 console errors --
+closing the design doc's own Dragon #5 gap ("never visually rendered, not even once"); confirmed the
+MZ connector targets HV7LZ3's REAL node specifically, not either of her 2 `__dup_` occurrences (D7);
+confirmed the twin connectors stay direct/unrouted under `edgeStyle = "rectilinear"` while mate-lines
+route through right-angle waypoints around them (D9), exactly as designed. Verified: both targeted
+test files green (76+128 expectations); full clean regression read 0 failed/0 error, 4733 passed,
+173 skipped, 10 pre-existing baseline warnings (unchanged); `devtools::check()` 2 ERRORs/1 WARNING/2
+NOTEs, all independently traced to already-tracked `BACKLOG.md` pre-existing items (non-portable
+filename S418; vignette-engine NOTE + the exact same 9-word spelling gap tracked since S465/S490), 0
+new; `lintr::lint_package()` 0 lints on touched files. **Issue #137 stays open** -- Slice 3 (UI
+wiring, legend, documentation) is next in this cluster. See `CHANGELOG.md`.
 - [ ] **Candidate C's connector/dogleg visual-signposting idea** (found S473,
       designing the issue #144 plan; not adopted for #144 itself, Effort
       unknown, low priority) -- extends the existing D2 mate-line "dogleg"

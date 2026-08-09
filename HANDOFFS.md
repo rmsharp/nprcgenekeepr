@@ -62,19 +62,18 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S493
 date: 2026-08-09
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Implement Slice 2 (core rendering) of the ratified issue #137 plan -- makePedigreeDiagramData()/makePedigreeMatingLayout() gain a twinRelations parameter, connector edges (D6/D7), .addRectilinearWaypoints() newEdges fix (D9).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- Slice 2 (core rendering) of the ratified issue #137 plan. makePedigreeDiagramData()/makePedigreeMatingLayout() gain a twinRelations parameter rendering distinctly-styled MZ/DZ/UZ connector edges (D6/D7); .addRectilinearWaypoints() newEdges fix (D9). Issue #137 stays open for Slice 3 (UI wiring, legend, documentation).
+what_was_done: Full strict-TDD PRE-RED->RED->GREEN->REFACTOR cycle, AskUserQuestion-gated at every transition. New shared .buildTwinConnectorEdges() helper (R/makePedigreeDiagramData.R): MZ solid+"MZ", DZ short-dash c(4L,4L)+"DZ", UZ long-dash c(14L,8L)+"?" (D10 colors/dash patterns decided this session -- #009E73 Okabe-Ito bluish-green, grep-confirmed collision-free). dashes is an I(list(...)) list-column, re-confirmed hands-on via a live rbind()/jsonlite test. twinRelations NOT validated internally -- checkTwinRelations() stays caller-side, matching the applyKinshipOverrides()/checkKinshipOverrides() precedent. A connector always targets the two individuals' REAL node ids (D7) -- no duplicate-node lookup needed. .addRectilinearWaypoints()'s newEdges construction now unconditionally stamps a label column (D9) -- verified genuinely load-bearing by temporarily reverting the fix, re-observing the exact predicted "undefined columns selected" crash, then restoring it. REFACTOR fixed one doc-drift item (stale non-L-suffixed dash values in roxygen prose after a lint fix). Phase 3E: built a standalone shinyApp() (Slice 3's UI doesn't exist yet) mirroring R/modPedigree.R's render chain, drove via shinytest2/chromote against a hand-picked focused subset of the Slice 1 fixture (3 twin pairs + immediate family, incl. HV7LZ3's 3-mate/2-duplicate D7 scenario) -- VISUALLY confirmed all 3 connector styles distinct, MZ connector targeting HV7LZ3's REAL node specifically (not either __dup_ occurrence), and twin connectors staying direct/unrouted under edgeStyle="rectilinear" while mate-lines route through waypoints around them, 0 console errors either style -- closing the design doc's own Dragon #5 gap ("never visually rendered"). Commits: be521e5a (claim), 9cc32795 (RED), 1fcb9dd3 (GREEN), 66aadc9f (REFACTOR), plus this close-out's commit.
+next_steps: Slice 3 of the issue #137 plan (docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md §4, "UI wiring, legend, documentation") -- Shiny-side twinRelations wiring (mechanism TBD, resolve via R/modInput.R/R/appServer.R reads at Pre-RED, plan's own Dragon 1), a "Show Twin Connectors" toggle in R/modPedigree.R following the self-referential-current-value pattern (Learning 490, hard requirement), a legend entry via the EXISTING visLegend() call's addEdges parameter (never a second call), NEWS.Rmd + tutorial/article documentation (owed this slice per the plan's own §8).
+key_files: docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md §4 Slice 3 + §8; R/makePedigreeDiagramData.R (.buildTwinConnectorEdges(), the twinRelations parameter on both render functions); R/modPedigree.R:438-467 (existing tagList the toggle joins) and :516-534 (existing visLegend() call, addEdges extension point); R/appServer.R:344-363,409 (gvResults$kinshipOverrides wiring precedent for the new reactive).
+gotchas: A standalone shinyApp() driven via shinytest2::AppDriver runs in a NEW R subprocess that does NOT inherit the calling session's renv project library -- inject .libPaths() explicitly at the top of any standalone app.R before library() calls (PROJECT_LEARNINGS.md Learning 493). AppDriver's screenshot method is get_screenshot(), not screenshot(); pass wait_=FALSE to set_inputs() when the new value might equal the input's current value. A RED test's own edge filter (from/to %in% <ids>) can incidentally match pre-existing edges sharing an id with a twin pair -- filter on is.na(label)/!is.na(label) instead. R/makePedigreeDiagramData.R's two rbind traps are confirmed unchanged at :1301/:1334 this session -- re-confirm live before citing in a new PR, they drift.
+runtime_smoke: DONE -- live shinytest2/chromote against a hand-built standalone harness (both edgeStyle settings), 0 console errors, connector styling visually confirmed distinct for all 3 codes; see SESSION_NOTES.md "What happened" step 7 for full method.
+changelog_ref: CHANGELOG.md 2026-08-09 entry for S493 (issue #137 Slice 2)
 commit: pending
 ```
-(stub — filled at Phase 3D close-out)
 
 ```handoff
 session: S492

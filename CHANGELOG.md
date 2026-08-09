@@ -43,6 +43,44 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-09 · [issue #137] Implemented Slice 2 (core rendering) of the twin/zygosity plan (Session 493)
+- **Deliverable:** `makePedigreeDiagramData()`/`makePedigreeMatingLayout()` (`R/makePedigreeDiagramData.R`)
+  gain an optional `twinRelations` parameter rendering a distinctly-styled connector edge per twin
+  pair via a new shared `.buildTwinConnectorEdges()` helper: MZ solid + `"MZ"` label, DZ short-dash
+  `c(4L, 4L)` + `"DZ"` label, UZ long-dash `c(14L, 8L)` + `"?"` label (D10 colors/dash patterns
+  decided this session — `#009E73` Okabe-Ito bluish-green, grep-confirmed collision-free against
+  every hex color already in `R/`). `dashes` is an `I(list(...))` list-column, re-confirmed hands-on
+  via a live `rbind()`/`jsonlite` test. `twinRelations` is NOT validated internally — validation
+  stays a caller-side concern (`checkTwinRelations()`), matching the
+  `applyKinshipOverrides()`/`checkKinshipOverrides()` precedent. A connector always targets the two
+  individuals' REAL node ids (D7) — no duplicate-node lookup needed, since `twinRelations$id1`/`id2`
+  are already real ids. `.addRectilinearWaypoints()`'s `newEdges` construction now unconditionally
+  stamps a `label` column (D9), fixing the "undefined columns selected" crash the design doc
+  predicted — verified genuinely load-bearing by temporarily reverting the fix, re-observing the
+  exact predicted crash, then restoring it. Plan:
+  `docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md` §4 Slice 2.
+- **Full strict-TDD PRE-RED→RED→GREEN→REFACTOR cycle**, `AskUserQuestion`-gated at every transition.
+  REFACTOR fixed one doc-drift item (stale non-`L`-suffixed dash values in roxygen prose after a
+  lint fix changed the code to integer literals).
+- **Phase 3E live verification**: since Slice 3's UI wiring doesn't exist yet, built a standalone
+  `shinyApp()` mirroring `R/modPedigree.R`'s own render chain (matching the established S465
+  precedent), driven via `shinytest2`/`chromote` against a hand-picked focused subset of the Slice 1
+  fixture (the 3 twin pairs + immediate family, including HV7LZ3's 3-mate/2-duplicate structure).
+  Visually confirmed all 3 connector styles distinct, the MZ connector targeting HV7LZ3's REAL node
+  specifically (not either of her 2 `__dup_` occurrences — D7 confirmed empirically), and twin
+  connectors staying direct/unrouted under `edgeStyle = "rectilinear"` while mate-lines route
+  through right-angle waypoints around them (D9) — 0 console errors under either edge style. Closes
+  the design doc's own Dragon #5 gap ("never visually rendered, not even once"). Hit and fixed 3
+  environmental gotchas along the way (renv library-path injection for a standalone subprocess;
+  `shinytest2::AppDriver` method-name/argument corrections) — see `PROJECT_LEARNINGS.md` Learning 493.
+- **Verified:** both targeted test files green (76+128 expectations); full clean regression read 0
+  failed/0 error, 4733 passed, 173 skipped, 10 pre-existing baseline warnings (unchanged);
+  `devtools::check()` 2 ERRORs/1 WARNING/2 NOTEs, all independently traced to already-tracked
+  `BACKLOG.md` pre-existing items (non-portable filename dating to S418; vignette-engine NOTE + the
+  same 9-word spelling gap tracked since S465/S490), 0 new; `lintr::lint_package()` 0 lints on
+  touched files. **Issue #137 stays open** — Slice 3 (UI wiring, legend, documentation) is next.
+  See `PROJECT_LEARNINGS.md` Learning 493, `BACKLOG.md`.
+
 ### 2026-08-09 · [issue #137] Implemented Slice 1 (data model + de-identification) of the twin/zygosity plan (Session 492)
 - **Deliverable:** `R/checkTwinRelations.R` (new, `@export`) validates a twin/zygosity sidecar table
   `(id1, id2, code)` against kinship2's own five relation rules (design doc §2.1/D4): required
