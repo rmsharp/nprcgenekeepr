@@ -309,7 +309,15 @@ generation. A legend to the right of the diagram shows what each shape means.
 If the pedigree data includes an optional `affected` column, individuals
 marked affected are additionally shaded a distinct color, with a matching
 "Affected" entry in the same legend -- pedigrees without an `affected`
-column render unshaded, as before.
+column render unshaded, as before. If the pedigree data includes an
+optional `name` column, a **Show Names on Diagram** toggle above the
+diagram (off by default) switches each node's label from id-only to id
+plus name on a second line -- a name longer than 15 characters is
+truncated with an ellipsis on the diagram itself, with the full name
+always available in the hover tooltip. Not every animal needs a name;
+one with no name, or a pedigree with no `name` column at all, always
+renders with just its id, and the "Select by id" search dropdown below
+always lists ids, never names, regardless of the toggle.
 
 ![The Pedigree Browser Diagram tab with its shape-to-sex legend.](shiny_app_use/pb_diagram_legend.png){fig-alt="Pedigree Browser Diagram tab showing an interactive pedigree diagram with sex-shaped nodes and a shape-to-sex legend panel (dot=Female, square=Male, star=Hermaphrodite, triangle=Unknown, diamond=Other/Unrecorded) to the right of the diagram."}
 

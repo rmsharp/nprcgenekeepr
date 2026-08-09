@@ -148,6 +148,21 @@ R. Mark Sharp, Ph.D.
   this optional-column support. The Diagram tab's shape-to-sex legend
   gained a matching "Affected" swatch so the new shading is discoverable
   without hovering over a node.
+- The Pedigree Browser's Diagram tab can now show **animal names**
+  alongside id (issue \#136): an optional new `name` character column
+  marks an animal's human-readable name/nickname; a new, off-by-default
+  **Show Names on Diagram** toggle switches each real (and
+  duplicate-occurrence) node's label from id-only to a two-line "id" +
+  name form, with a name longer than 15 characters truncated with an
+  ellipsis on the canvas label (the full name is always shown in the
+  hover tooltip). Not every center records a name, and not every animal
+  has one -- an animal with no name, or a pedigree with no `name` column
+  at all, renders exactly as before. The diagram's "Select by id" search
+  dropdown always lists ids, never names, regardless of the toggle.
+  `getPossibleCols()` gained `name` alongside the existing `affected`;
+  `obfuscatePed()` scrubs `name` to `NA`, so a de-identified pedigree
+  never leaks an animal's real name. Both `makePedigreeDiagramData()`
+  and `makePedigreeMatingLayout()` gained this optional-column support.
 
 # nprcgenekeepr 2.0.0 (20260708)
 
