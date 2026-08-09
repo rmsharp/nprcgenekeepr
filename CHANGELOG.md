@@ -43,6 +43,49 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-09 · [issue #137] Implemented Slice 1 (data model + de-identification) of the twin/zygosity plan (Session 492)
+- **Deliverable:** `R/checkTwinRelations.R` (new, `@export`) validates a twin/zygosity sidecar table
+  `(id1, id2, code)` against kinship2's own five relation rules (design doc §2.1/D4): required
+  columns, `id1`/`id2` coerced to character, off-diagonal, both ids exist in `ped`, `code` in
+  `{"MZ twin", "DZ twin", "UZ twin"}` (the 4th non-twin `"spouse"` code out of scope for #137),
+  MZ/DZ share both `sire` and `dam`, MZ additionally requires matching `sex`, UZ has no such
+  precondition. `R/obfuscateTwinRelations.R` (new, `@export`, family obfuscation) de-identifies the
+  table by remapping `id1`/`id2` through the `map` alias vector `obfuscatePed(..., map = TRUE)`
+  already returns — a required Slice 1 deliverable (D5), not deferred, since `obfuscatePed()`
+  cannot itself reach a second sidecar object. No visible app change (rendering + UI are Slices 2-3,
+  separate future sessions). Plan: `docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md`
+  §4 Slice 1.
+- **Full strict-TDD PRE-RED→RED→GREEN cycle**, `AskUserQuestion`-gated at every transition
+  (priorities-list pick; PRE-RED→RED; RED→GREEN; GREEN→REFACTOR, owner-confirmed skip). A real
+  RED-phase rigor gap was found and fixed live during the RED step: 6 of 10 `test_checkTwinRelations.R`
+  "stops on X" assertions used a bare `expect_error()` with no message pattern, trivially satisfied
+  by "could not find function" rather than the intended domain rule — added `regexp` arguments to
+  all 6, re-verified all 11+4 expectations (across both new test files) genuinely fail
+  pre-implementation and re-validate the correct rule post-implementation. See
+  `PROJECT_LEARNINGS.md` Learning 492.
+- **Fixture pair added** (`data-raw/generate_twin_fixtures.R`, `inst/extdata/examples/
+  obfuscated_rhesus_mhc_ped_twins.csv` + `..._twin_relations.csv`, committed separately as a `data:`
+  commit per the S486/S489 precedent): built from REAL full-sibling structure already present in
+  the base 375-individual pedigree (not fabricated) — MZ pair `E06FRB`/`HV7LZ3` (verified full
+  sibs, both sex F; `HV7LZ3` is independently a dam with 3 distinct mates elsewhere in the
+  pedigree, the design doc's own §6 Dragon 3 scenario, confirmed present not contrived), DZ pair
+  `8GSXTQ`/`P844CW`, UZ pair `BRI2MW`/`677E7M` (two founders, demonstrating UZ's confirmed lack of
+  any shared-parent precondition). Validated against `checkTwinRelations()` at generation time.
+- **Verified:** both new test files green (11+4 expectations); full clean regression read 0
+  failed/0 error, 4694 passed, 173 skipped, 0 offenders; `lintr::lint_package()` 0 issues on all
+  touched `R/` files (1 `nonportable_path_linter` false positive suppressed per the established
+  `# nolint` precedent, Learnings 224/461); `devtools::check()` 1 ERROR/1 WARNING/1 NOTE, all
+  pre-existing and individually attributed (non-portable reference filename, `a2interactive.Rmd`
+  vignette-engine NOTE), 0 new — including 2 new spelling-check words this session's own prose
+  introduced ("zygosity", an ordinal-digit "th" tokenization artifact from "kinship2's own 4th"),
+  both found and fixed in-session (reworded "4th"→"fourth"; hand-added "zygosity" to
+  `inst/WORDLIST`) rather than left as a new gap, confirmed via a direct `spelling::spell_check_package()`
+  before/after diff. A pre-existing `test_pkgdown_reference_config.R` guard caught the two new
+  exports missing from `_pkgdown.yml`'s reference groups live — fixed same-session. Phase 3E: n/a —
+  script-callable only, no runtime/UI change this slice.
+- Issue #137 stays open (Slices 2-3 pending); no `gh issue close` this session. Next session in this
+  cluster implements Slice 2 (core rendering).
+
 ### 2026-08-09 · [issue #137] Ratified an architecture/design plan for twin/zygosity encoding on the Pedigree Diagram (Session 491)
 - **Deliverable:** `docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md` — Tier 2 step 4
   in the owner's `#133 > #136 > #137 > #138` sequencing (set S436). Design/scoping only — no

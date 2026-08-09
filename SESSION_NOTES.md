@@ -14,11 +14,192 @@ validator, `obfuscateTwinRelations()` de-identification companion, two new sibli
 generator script. Script-callable only, no rendering/UI change. Following
 `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` under this project's strict TDD contract
 (PRE-RED->RED->GREEN->REFACTOR, `AskUserQuestion`-gated at each transition).
-**Started:** 2026-08-09.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Started/Completed:** 2026-08-09 / 2026-08-09.
+**Status:** DONE. Full strict-TDD PRE-RED->RED->GREEN cycle, `AskUserQuestion`-gated at every
+transition (PRE-RED->RED; RED->GREEN; GREEN->REFACTOR, owner-confirmed skip). A real RED-phase
+rigor gap was found and fixed live during the RED step itself (see Learning 492 below). Verified:
+both new test files green (11+4 expectations); full clean regression read 0 failed/0 error, 4694
+passed, 173 skipped, 0 offenders; `lintr::lint_package()` 0 issues on all touched files;
+`devtools::check()` 1 ERROR/1 WARNING/1 NOTE, all pre-existing/individually attributed, 0 new
+(matching every prior slice in this pedigree-diagram family, S485-S491). Slice 1 of issue #137 is
+now shipped; issue #137 stays open for Slices 2-3 (per the plan's own vertical-slice/session-
+boundary rule).
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Full Phase 0 orient (SAFEGUARDS.md, SESSION_NOTES.md, `gh
+issue list`, git status/log/diff, `methodology_dashboard.py` -- health 98/100; ledger + `HANDOFFS.md`
+reconcile both clean, no ghost session -- the one commit since the `CHANGELOG.md` frontier was
+S491's own self-referential `HANDOFFS.md` commit-sha backfill, matching established precedent).
+Rendered the priorities list (4 numbered options: #137 Slice 1, #138 design, #145 design, #147
+design) and posed it via `AskUserQuestion`; owner picked #137 Slice 1. **(2)** Stated understanding
+(workstream = `DEVELOPMENT_WORKSTREAM.md`) and completed Phase 1B claim (commit `9d7c813d`). **(3)**
+Pre-RED reading: `R/checkKinshipOverrides.R`/`R/applyKinshipOverrides.R` (the load-bearing
+`(id1,id2,...)` sidecar precedent D3/D5 cite), `R/obfuscatePed.R` (the `map=TRUE` alias vector
+`obfuscateTwinRelations()` consumes), the `_name`/`_affected` fixture-generator precedent, and this
+repo's own RED/GREEN/data commit-sequencing precedent from S486/S489 (separate `test:`/`feat:`/
+`data:` commits, fixtures added after GREEN, not during RED). **(4)** PRE-RED->RED gate
+(`AskUserQuestion`): wrote `tests/testthat/test_checkTwinRelations.R` (10 test_that blocks, 11
+expectations) and `tests/testthat/test_obfuscateTwinRelations.R` (2 blocks, 4 expectations) against
+the not-yet-existing functions. First run showed only 4/10 blocks in the check-file were genuinely
+RED -- the 6 "stops on X" blocks used bare `expect_error()` with no message pattern, trivially
+satisfied by "could not find function" (Learning 492). Added `regexp` arguments to all 6, re-ran,
+confirmed all 11+4 expectations now fail for the right reason. Committed RED (`b9bf2c45`). **(5)**
+RED->GREEN gate: implemented `R/checkTwinRelations.R` (5 rules: required cols, off-diagonal,
+existence, code domain, MZ/DZ-shared-parents, MZ-matching-sex) and `R/obfuscateTwinRelations.R`
+(id1/id2 remap through `map`, fail-loud on an unmapped id), both `@export` with full roxygen.
+`devtools::document()` regen surfaced a real pre-existing guard catching my own diff live:
+`test_pkgdown_reference_config.R` failed because the two new exports weren't in `_pkgdown.yml`'s
+reference groups -- fixed. `lintr` flagged one `nonportable_path_linter` false positive (a `/` in an
+error-message string) -- suppressed per the established `# nolint` precedent (Learnings 224/461).
+Full clean regression read: 0 failed/0 error, 4693 passed initially (before the fix below), then
+4694 after. A first `devtools::check()` run surfaced 2 new spelling-check words from my own prose
+("zygosity", and a "th" tokenization artifact from "kinship2's own 4th") -- reworded "4th" ->
+"fourth" and hand-added "zygosity" to `inst/WORDLIST` (also rewrote one genuinely-ambiguous bare
+"zygosity" occurrence to "twin zygosity", applying the plan's own §2.4 Slice-3 prose-
+disambiguation intent proactively to Slice 1's docs too). Confirmed via a direct
+`spelling::spell_check_package()` before/after diff, then via a second full `devtools::check()` run
+showing only the 9 pre-existing baseline words, 0 new. Committed GREEN (`2cb5d5c0`) -- caught and
+fixed a staging mistake first (the fixture files were accidentally swept into this commit's `git
+add`; soft-reset and re-split into the correct `feat:`/`data:` pair before finalizing). **(6)** Built
+the two Slice 1 fixtures (`data-raw/generate_twin_fixtures.R`): explored the base 375-individual
+pedigree for REAL full-sibling structure (13 full-sib groups; 6 same-sex MZ candidates; 9 DZ
+candidates) rather than fabricating twin pairs, and specifically found HV7LZ3 (an MZ-pair member)
+is independently a dam with 3 distinct mates elsewhere in the pedigree -- the design doc's own
+Dragon 3 scenario (a twin who is ALSO a multi-mate parent), confirmed present rather than
+contrived. Validated the generated `twinRelations` fixture against `checkTwinRelations()` at
+generation time (fails loudly if ever inconsistent). Committed as a separate `data:` commit
+(`17f98279`), matching the S486/S489 precedent. **(7)** GREEN->REFACTOR gate: owner-confirmed skip
+(no genuine structural improvement identified; the implementation already mirrors this codebase's
+established validator/de-identification idioms exactly). **(8)** An environmental blocker surfaced
+mid-verification: two long-running, unrelated zombie R processes (PIDs 24907/13788, 4880+ and
+5003+ CPU-minutes, running since Wed/Thu) were starving this session's own regression/check runs
+at ~100% CPU each. Surfaced to the owner via `AskUserQuestion` rather than killed unilaterally
+(SAFEGUARDS.md's "never touch what you didn't create" spirit, applied to processes) -- owner
+authorized; killed; verification proceeded at normal speed afterward. **(9)** Close-out: this
+evaluation + self-assessment, Learning 492, `CLAUDE.md`/`BACKLOG.md` updates, `CHANGELOG.md`
+entry, this handoff.
+
+**Session 491 Handoff Evaluation (by Session 492): 9/10.** **What helped:** the handoff's "what's
+next" named Slice 1 explicitly as the natural next pick, with the exact deliverable shape
+(`checkTwinRelations()`, `obfuscateTwinRelations()`, two new fixtures, Effort S-M, "script-callable
+only, no rendering/UI change") -- this matched reality precisely, start to finish, with no
+re-scoping needed. The "key files" list correctly pointed at `R/applyKinshipOverrides.R` as the
+load-bearing `(id1,id2,...)` sidecar precedent, which this session mirrored directly for both new
+functions' structure and naming. Gotcha #4 (the `zygosity`/"twin zygosity" identifier-and-prose
+disambiguation requirement) was directly load-bearing: it caught this session's own initial bare
+"zygosity" prose usage mid-implementation, prompting a proactive fix. Gotcha #1 (the
+`makePedigreeDiagramData.R` rbind-trap line-number drift) and gotcha #3 (Slice 3's unresolved
+upload mechanism) were both correctly flagged as NOT Slice 1's concern -- accurate scoping that
+prevented any wasted investigation into out-of-scope territory. **What was missing:** nothing that
+cost real time -- the two things this session had to discover independently (the `_pkgdown.yml`
+reference-config guard, and the "th" ordinal-digit spelling tokenization quirk) were both
+consequences of THIS session's own specific prose/export choices, not gaps a predecessor could
+have anticipated. **What was wrong:** nothing -- every file:line citation checked out exactly as
+described. **ROI:** strongly positive; the plan document's own §4 Slice 1 section (files-to-touch,
+DONE criteria, verify commands) was comprehensive enough that this session needed almost no
+re-derivation, going from claim to RED to GREEN inside one focused session.
+
+**Self-assessment (Session 492): 9/10.** **Strengths:** (1) Caught a genuine strict-TDD rigor gap
+in this session's OWN RED-phase tests (bare `expect_error()` trivially satisfied by "could not
+find function," meaning 6 of 10 "stops on X" tests were never actually RED) by running the suite
+once with a granular reporter and noticing the failure count didn't match expectations, rather than
+accepting "the file reports failures" as sufficient -- recorded as Learning 492, a genuinely new
+methodological finding not covered by any of the 8 prior "verify, don't inherit" learnings this
+project has accumulated (481/484-489/491), since it's about a test passing for a reason unrelated
+to the behavior it claims to check, not about inheriting a false claim from elsewhere. (2) Built the
+Slice 1 fixture pair from REAL, verified structural candidates in the existing base pedigree
+(full-sibling pairs, a genuine multi-mate-parent-who-is-also-a-twin case for Dragon 3) rather than
+fabricating synthetic twin relationships, and validated the fixture programmatically at generation
+time. (3) Caught two real regressions this session's own diff introduced -- the `_pkgdown.yml`
+reference-coverage gap (via the full clean regression read, not assumed away) and 2 new
+spelling-check words (via a live `devtools::check()` diff, not silently left for a future session
+to discover) -- fixing both in-session rather than deferring, keeping the session's own contribution
+to the pre-existing baseline gaps at exactly zero. (4) Applied the design plan's Slice-3-scoped
+prose-disambiguation intent proactively to Slice 1's own docs, even though not strictly required
+this slice, because the underlying confusion risk (bare "zygosity" colliding with the Marker
+Genetics Heterozygosity tab) applies equally to roxygen documentation any package user might read.
+(5) Caught and corrected an own staging mistake (fixture files swept into the GREEN commit) via a
+post-commit `git log`/`git status` check rather than trusting the commit had gone as intended, and
+fixed it cleanly (soft-reset, re-split) rather than leaving an inaccurate commit message in
+history. (6) Surfaced a genuine environmental blocker (unrelated zombie processes starving
+verification) transparently rather than either silently absorbing a large slowdown or unilaterally
+killing processes this session didn't create, and got explicit authorization before acting.
+**Weaknesses:** (1) The fixture-files-in-GREEN-commit staging mistake (strength 5 above) shouldn't
+have happened at all -- `git status`/`git diff --cached --stat` immediately before every commit,
+not just after, would have prevented it outright rather than requiring a fix. (2) Two early attempts
+to background the full regression suite used a manual shell `&` INSIDE a `run_in_background: true`
+Bash call, which caused the process to run as a starved, orphaned job-control background job
+(~10s of CPU progress over ~150s of wall time) -- wasted several wakeup cycles before switching to
+the harness-native backgrounding approach (no manual `&`), which then ran at normal speed. (3) Did
+not explicitly invoke a "deepest available reasoning mode" setting at session start, as the
+Planning Sessions checklist recommends -- not directly applicable to an implementation session's own
+checklist, but named for honesty rather than silently treated as N/A, mirroring S491's own
+disclosure of the same structural limitation. **Compared to previous sessions:** this session's most
+distinctive catch (Learning 492, the bare-`expect_error()` RED-rigor gap) is a new class within the
+S486-S491 family's shared "trust but verify" theme, but pointed reflexively at this session's OWN
+work-in-progress rather than at an external claim, tool, or prior document -- S486 found a
+downstream code path could silently undo new logic; S487 found JSON assertions can't prove
+rendering; S488 found an issue's own framing can be wrong; S489 found a design doc's suggested test
+can already pass; S490 found a unit-level reactive-server simulation can be structurally blind to a
+real defect class; S491 found the orchestration tooling itself can misrepresent research output.
+S492's version applies that same discipline one level further in, to the TDD process's own RED-
+phase test-writing act, plus two smaller instances of the identical discipline applied to session
+mechanics themselves (commit staging, background-process technique) rather than to R code or design
+claims.
+
+**Handoff to Session 493:**
+- **What's next:** **Slice 2** of the ratified issue #137 plan (`docs/planning/
+  issue137-twin-zygosity-pedigree-diagram-plan.md` §4, "Core rendering") -- both
+  `makePedigreeDiagramData()` and `makePedigreeMatingLayout()` gain a `twinRelations` parameter and
+  render connector edges per D6 (styling, including the `I(list(...))` list-column `dashes`
+  technique per §2.8 trap #9)/D7 (duplicate-node resolution, real nodes only); `.addRectilinearWaypoints()`'s
+  `newEdges` construction is extended per D9 so rectilinear mode does not crash when twin data is
+  present (this is the single highest-value regression test in Slice 2 -- a crash this document
+  predicts from source reading alone, never yet run). This is the natural next pick in the
+  Slice-1->Slice-2->Slice-3 chain; Slice 2's own Pre-RED should re-confirm the `R/makePedigreeDiagramData.R:1301`/
+  `:1334` rbind-trap line numbers live before touching them (they have already drifted once since
+  #136-era and will drift again). Also still available: design session for issue #138 (full-colony
+  rendering beyond the node cap, needs its own scoping session); design session for issue #145
+  (sire/dam placement, investigation already done); design session for issue #147 (Tier 1 of the
+  #146-153 sequencing, XL effort, sole High-priority item); NPRC outreach (DECISION NEEDED,
+  owner-executed); the spelling-WORDLIST gap (Effort S, still 9 pre-existing words, unrelated to
+  this session's own 0-new contribution); the non-portable-filename `devtools::check()` ERROR/WARNING
+  rename (Effort S, dates to S418).
+- **Key files:** `docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md` §4 Slice 2 (exact
+  files-to-touch list, DONE/verify criteria, including the live `shinytest2`/`chromote` smoke-test
+  requirement); `R/checkTwinRelations.R` / `R/obfuscateTwinRelations.R` (this session's new
+  functions, both `@export`, both directly consumable by Slice 2's rendering code); `inst/extdata/
+  examples/obfuscated_rhesus_mhc_ped_twins.csv` + `obfuscated_rhesus_mhc_twin_relations.csv` (the
+  realistic-scale fixture pair Slice 2's live rendering verification should use -- MZ pair
+  `E06FRB`/`HV7LZ3` deliberately includes a multi-mate-parent twin for D7 coverage, DZ pair
+  `8GSXTQ`/`P844CW`, UZ pair `BRI2MW`/`677E7M`); `R/makePedigreeDiagramData.R:1301` (`finalEdges`
+  rbind trap) and `:1334` (`finalNodes` rbind trap) -- re-confirm live before citing in a new
+  commit, per the standing drift gotcha.
+- **Gotchas:** (1) **A bare `testthat::expect_error(fn(...))` with no `regexp` is satisfied by ANY
+  error, including "could not find function" for a not-yet-implemented function** -- always pass a
+  `regexp` tied to the specific condition under test in a RED-phase "stops on X" assertion, and
+  after writing a batch of such tests, run the file once and confirm the reported failure count
+  matches the number of assertions expected to fail, not just that the file as a whole shows
+  failures. See `PROJECT_LEARNINGS.md` Learning 492. (2) **`Bash` calls with `run_in_background:
+  true` should NOT also append a manual shell `&`** -- doing both caused an R process to run as a
+  starved, orphaned job-control background job in this session (observed: ~10s CPU progress over
+  ~150s wall time); use `run_in_background: true` alone and let the harness manage backgrounding.
+  (3) **Before every commit, run `git status`/`git diff --cached --stat` to confirm exactly what's
+  staged** -- this session accidentally swept 3 fixture files into what was meant to be a pure
+  `feat:` GREEN commit (caught only via a post-commit `git log` check, fixed with a soft-reset and
+  re-split). (4) `R/makePedigreeDiagramData.R`'s two `rbind`-with-fixed-column-set traps drift in
+  line number release over release -- always re-`grep`/re-read the live file before citing a line
+  number in a new plan or PR. (5) All standing gotchas from S479-491 carry forward unchanged (`gh
+  issue view <N>` needs `--json`; `NOT_CRAN=true` for tests; `NPRC_RUN_E2E=true` for ANY live
+  `shinytest2`/`chromote` script; `devtools::install()` needed before driving the installed app via
+  `shinytest2::AppDriver`; `git commit -F <file>` for any commit message containing backtick-quoted
+  identifiers; the `zygosity`/"twin zygosity" identifier-and-prose disambiguation rule, §2.4/§4 of
+  the issue #137 plan).
+- **Runtime smoke test:** N/A -- Slice 1 is script-callable only, no `R/appServer.R`/`R/modPedigree.R`/
+  `R/modInput.R` changes, no rendering/UI wiring to verify (per Phase 3E's own "state this
+  explicitly" requirement when verification is not applicable; matches the #133/#136 Slice 1
+  precedent).
+- **Self-assessment score:** 9/10 (breakdown above).
 
 ### What Session 491 Did
 **Deliverable:** Write a design/architecture document for GitHub issue #137 (twin/zygosity

@@ -1393,6 +1393,23 @@ requirement against the Marker Genetics module's existing "Heterozygosity" tab; 
 mechanics notes -- a `dashes` list-column technique and `visLegend()`'s single-call `addEdges`
 parameter). No `R/`/`tests/`/`man/` content changed this session (design-only). Issue #137 stays
 open, ready for Slice 1 implementation in a future session. See `CHANGELOG.md`.
+
+**Progress (S492, 2026-08-09):** issue #137 Slice 1 (data model + de-identification) is DONE --
+`R/checkTwinRelations.R` (validates a twin/zygosity sidecar `(id1, id2, code)` against kinship2's
+own five relation rules) and `R/obfuscateTwinRelations.R` (de-identification companion consuming
+`obfuscatePed(..., map = TRUE)`'s alias vector), both `@export`. Full strict-TDD PRE-RED->RED->GREEN
+cycle; a real RED-phase rigor gap found and fixed live (bare `expect_error()` trivially satisfied by
+"could not find function," not the intended domain rule -- `PROJECT_LEARNINGS.md` Learning 492).
+Fixture pair added (`obfuscated_rhesus_mhc_ped_twins.csv` + `..._twin_relations.csv`), built from
+REAL full-sibling structure already present in the base pedigree (not fabricated), including a twin
+who is independently a multi-mate parent (design doc sec 6 Dragon 3's exact scenario). Verified:
+full clean regression read 0 failed/0 error, 4694 passed; `lintr` 0 issues; `devtools::check()` 1
+ERROR/1 WARNING/1 NOTE, all pre-existing/individually attributed, 0 new (2 new spelling-check words
+this session's own diff introduced -- "zygosity", an ordinal-digit "th" tokenization artifact --
+were found and fixed in-session, not left as a new gap). REFACTOR: owner-confirmed skip. **Issue
+#137 stays open** -- Slice 2 (core rendering: connector edges in both diagram functions, rectilinear
+trap fix) is next in this cluster, followed by Slice 3 (UI wiring, legend, documentation). See
+`CHANGELOG.md`.
 - [ ] **Candidate C's connector/dogleg visual-signposting idea** (found S473,
       designing the issue #144 plan; not adopted for #144 itself, Effort
       unknown, low priority) -- extends the existing D2 mate-line "dogleg"
