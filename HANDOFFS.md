@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S490
+date: 2026-08-09
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement Slice 2 of the ratified issue #136 plan (docs/planning/issue136-name-labels-pedigree-diagram-plan.md §4) -- label rendering + toggle + documentation for the pedigree diagram.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S489
 date: 2026-08-09
 status: complete

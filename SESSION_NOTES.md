@@ -6,6 +6,16 @@
 
 ## ACTIVE TASK
 
+### What Session 490 Did
+**Deliverable:** Implement Slice 2 of the ratified issue #136 plan (`docs/planning/
+issue136-name-labels-pedigree-diagram-plan.md` §4) -- label rendering + toggle + documentation.
+(IN PROGRESS)
+**Started:** 2026-08-09
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 489 Did
 **Deliverable:** Implement Slice 1 of the ratified issue #136 plan (`docs/planning/
 issue136-name-labels-pedigree-diagram-plan.md` §4) -- data model + de-identification: `name` into
