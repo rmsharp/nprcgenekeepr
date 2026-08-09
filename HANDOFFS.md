@@ -72,7 +72,7 @@ key_files: docs/planning/issue136-name-labels-pedigree-diagram-plan.md (sections
 gotchas: DO NOT add a new column to the nodes data frame -- R/makePedigreeDiagramData.R:1237 does newNodes[, names(keptNodes)] and throws "undefined columns selected" under edgeStyle="rectilinear"; change the `label` VALUE instead (same class of gap S486 hit for #133). first_name/second_name are ALLELE columns, not names, and fixColumnNames() will silently rewrite a user's "First Name" header into the allele column -- only the bare spelling `name` round-trips (animal_name -> animalname, callName -> callname, anything containing "ego" -> id via R/fixColumnNames.R:45). obfuscatePed() will leak a name column unless D8 ships in the SAME slice that introduces it. DRAGON 1: multi-line \n label rendering is UNVERIFIED -- confirm hands-on at Pre-RED before committing to D3's two-line form, falling back to single-line "id (name)"; this project has twice had a design's rendering assumption fail exactly this way (S465 hidden=TRUE, S487 shape family). Registering in $possible is NOT required for the column to arrive -- qcStudbook.R:317-319 appends unrecognized columns as novelCols. Standing gotchas from S479-487 carry forward unchanged (gh issue view <N> needs --json; NOT_CRAN=true for tests; NPRC_RUN_E2E=true for ANY live shinytest2/chromote script; docs/planning/*.qmd render byproducts never committed; re-render NEWS.Rmd -> NEWS.md and check the diff).
 runtime_smoke: n/a -- docs-only planning session; no R/, tests/, or man/ content changed, so no runtime behavior exists to smoke-test (Phase 3E). Verified instead by a full cross-reference pass over every file:line citation in the plan (Learning #7), which found and fixed one off-by-one.
 changelog_ref: CHANGELOG.md "2026-08-08 · [issue #136] Designed and ratified the name-node-label plan for the pedigree diagram (Session 488)" entry (this close-out)
-commit: pending
+commit: 26c92b74
 ```
 
 ```handoff
@@ -790,7 +790,7 @@ key_files: vignettes/a2interactive.Rmd (new Marker Genetics section, inserted be
 gotchas: All of S442-S449's carried-forward gotchas still apply (raw Status: line discipline -- Learning 382, reconfirmed live this session when the colored check() summary object again diverged from the raw log; inst/WORDLIST radix convention -- Learning 428; do not trust a predecessor's devtools::check() claim at face value -- Learning 437; 2 iCloud-sync duplicate files still present, leave untouched). New this session: (1) the locally installed package copy can lag several sessions behind source even when pkgload::load_all() is current -- before rendering any library(nprcgenekeepr)-calling .Rmd/.qmd, diff the installed NAMESPACE against source or unconditionally devtools::install() first -- Learning 440; (2) devtools::install()'s upgrade argument must be a logical, not the string "never" used at S417 -- errors on the current devtools version; (3) rmarkdown::render() can leave a stray <name>.knit.md next to the source .Rmd even with output_dir set elsewhere -- clean it up before an ad hoc full-package spelling::spell_check_package() scan, or its gibberish rendered-data tokens drown the real signal; (4) devtools::check()'s actual spelling gate only flags a DIFF from spelling.Rout.save, not an absolute zero bar -- a raw full-package spell_check_package() scan is a poor proxy for "did my session introduce a new flag," always check the real check() diff.
 runtime_smoke: n/a -- documentation-only change (a vignette + CLAUDE.md policy text), no Shiny/runtime behavior affected. Build-equivalent instead: full rmarkdown::render() of vignettes/a2interactive.Rmd (132 chunks, 0 errors), clean regression read (0 failed/0 error, 3489 passed, 183 skipped, 10 pre-existing baseline warnings unchanged), devtools::check() raw Status: line (1 warning/1 note, both pre-existing and unrelated, confirmed via spelling.Rout diff that zero new words from this session remain flagged).
 changelog_ref: CHANGELOG.md [BL-a2interactiveChecklist] "Ratify a deferred a2interactive.Rmd checklist + backfill issue #130's marker-genetics functions" entry, this close-out commit
-commit: pending
+commit: 26c92b74
 ```
 Full narrative in SESSION_NOTES.md "What Session 450 Did." Self-score 9/10: reused already-verified
 test fixtures for narrative and correctness-by-construction, verified every demo chunk against the
@@ -816,7 +816,7 @@ key_files: R/modPedigree.R:392-431 (visLegend() call), tests/testthat/test_modPe
 gotchas: All of S442-S448's carried-forward gotchas apply where relevant (raw Status: line discipline -- Learning 382; inst/WORDLIST convention -- Learning 428; do not trust a predecessor's devtools::check() claim at face value -- Learning 437; 2 iCloud-sync duplicate files may recur, leave untouched). New this session: (1) E2E tests need BOTH NOT_CRAN=true AND NPRC_RUN_E2E=true set via direct Rscript, or they silently skip with reason "opt-in"; (2) do not assert canvas-rendered widget content via static HTML/DOM-text matching in an E2E test -- query the live vis.Network DataSet via app$get_js() instead; (3) a source->rendered-artifact re-render claim is only as fresh as the LAST render taken after the LAST source edit -- Learning 438; (4) verify a third-party htmlwidget's undocumented event-isolation behavior by reading its own client-side JS source for the actual binding site, then confirm live -- Learning 439; (5) AppDriver$get_screenshot()'s selector param scopes to one DOM element; re-running against an existing path errors EEXIST unless removed first.
 runtime_smoke: Live shinytest2/chromote smoke test of the running app: uploaded the real fixture CSV, navigated to the Diagram tab, confirmed the legend's live vis.Network DataSet contains exactly the 5 expected label/shape pairs, captured a screenshot (vignettes/articles/shiny_app_use/pb_diagram_legend.png), emitted a real click on the live legend network and confirmed the Table tab's row count was unchanged before/after (click-safety), zero console errors -- run twice, before and after the stepY/width layout fix.
 changelog_ref: CHANGELOG.md [issue #132] "Add an in-app shape-to-sex legend to the Pedigree Diagram tab" entry, this close-out commit
-commit: pending
+commit: 26c92b74
 ```
 Full narrative in SESSION_NOTES.md "What Session 449 Did." Self-score 9/10: source-verified the
 implementation-choice question before asking it (visNetwork.js binding site), caught and fixed
@@ -857,7 +857,7 @@ key_files: CLAUDE.md (new NEWS.Rmd checklist paragraph, "Additional close-out ch
 gotchas: All of S442-S447's carried-forward gotchas apply where relevant (raw Status: line discipline -- Learning 382, doubly relevant this session; inst/WORDLIST byte-order/radix convention -- Learning 428). New this session: (1) do NOT trust a predecessor's self-reported devtools::check() result at face value if your own session incidentally re-exercises the same check surface (e.g. re-rendering NEWS.Rmd triggers the same tests/spelling.R gate R CMD check runs) -- verify independently, using a clean git worktree at their exact commit to isolate whether a gap is pre-existing (Learning 437); (2) Bash tool run_in_background:true already backgrounds the whole command -- do not also append a trailing & inside the command string, or the log truncates prematurely after the build step; (3) ScheduleWakeup is for /loop dynamic-mode pacing, not a general "wait for my own background task" mechanism -- a run_in_background Bash task's own completion notification is already sufficient; (4) 2 iCloud-sync duplicate files (R/appServer 2.R, R/modMarkerGenetics 2.R) may still be present/recurring -- owner-confirmed sync-lag artifacts, not in-progress work, leave untouched unless directed otherwise.
 runtime_smoke: n/a -- documentation/policy-only change (CLAUDE.md, NEWS.Rmd/NEWS.md, BACKLOG.md, inst/WORDLIST, PROJECT_LEARNINGS.md, CHANGELOG.md); no R/ source, Shiny UI, or runtime behavior changed this session.
 changelog_ref: CHANGELOG.md [BL-NewsRmdChecklist] "Ratify a NEWS.Rmd entry checklist + backfill issue #130 Slices 1-5" entry, this close-out commit
-commit: pending
+commit: 26c92b74
 ```
 
 ```handoff
@@ -889,7 +889,7 @@ key_files: No #130-relevant files changed this session. Touched only CLAUDE.md (
 gotchas: All of S444's carried-forward gotchas still apply unchanged (raw Status: line discipline, inst/WORDLIST byte-order convention, literal-NA pedigree fixtures, direct-Rscript AppDriver invocation, testServer non-bare-callable reactives, no new Bioconductor dependency). New this session: never attempt interactive sudo from inside a Claude Code tool call, not even via the ! prefix -- no controlling TTY either way (Learning 431); hand the command to the user's own terminal and verify the outcome independently.
 runtime_smoke: n/a -- no R-package/Shiny runtime behavior was changed (Claude Code tooling config + a CLAUDE.md documentation trim only).
 changelog_ref: CHANGELOG.md [ad hoc] "Claude Code Doctor cleanup + CLAUDE.md derivable-content trim" entry, this close-out commit
-commit: pending
+commit: 26c92b74
 ```
 
 ```handoff
@@ -905,7 +905,7 @@ key_files: R/markerParentageExclusion.R (the new function, roxygen-documented wi
 gotchas: devtools::check()'s colored bottom-line summary can still say "0 notes" while the raw 00check.log's Status: line disagrees (Learning 382/426) -- ALWAYS read the raw line. Any new roxygen citation block needs inst/WORDLIST updated in the SAME session using the byte-order/radix convention (Learning 428), not eyeball case-insensitive placement -- verify via sort(c(readLines("inst/WORDLIST"), newWord), method="radix") and insert at a named anchor, never a blind resort. Any hand-authored pedigree CSV for a live/E2E smoke test MUST use literal NA text for missing sire/dam, never a blank field (Learning 425 -- this session re-hit this exact trap once before fixing it). Any ad-hoc shinytest2::AppDriver Phase 3E script must be invoked as "[NOT_CRAN=true] Rscript script.R" directly, never "Rscript -e \"source('script.R')\"" (Learning 429); its log/screenshot methods are $get_logs()/$get_screenshot(), not $get_log()/$screenshot(). shiny::testServer()'s returned reactives are NOT bare-callable -- use result <- session$getReturned() then result$name() (Learning 424). DESCRIPTION still has zero Bioconductor dependencies -- do not add one (D2/Dragon P5, binding for Slice 5). Do not call ScheduleWakeup to "wait" on a background Workflow/Agent task-notification (Learning 421).
 runtime_smoke: DONE -- live shinytest2/chromote smoke test: uploaded a hand-verified P/C/U pedigree CSV + marker genotype CSV, confirmed the Parentage Exclusion tab renders exclusionCount/flagged matching the hand-verified fixture exactly (dam P: 0/false; sire U: 3/true), zero console errors, screenshot captured and committed for the guide article.
 changelog_ref: CHANGELOG.md [issue #130] "Implement Slice 3" entry, this close-out commit
-commit: pending
+commit: 26c92b74
 ```
 
 ```handoff
@@ -921,7 +921,7 @@ key_files: R/markerHeterozygosity.R (the 2 new functions, roxygen-documented wit
 gotchas: devtools::check()'s colored bottom-line summary can say "0 notes" while the raw 00check.log's Status: line says otherwise (Learning 382, recurred and fixed this session as Learning 426) -- ALWAYS read the raw Status: line, and spell-check/fix inst/WORDLIST in the same session any new roxygen citation block ships in, don't defer. spelling::spell_check_package() and tests/spelling.R's actual spell_check_test() scan different scopes (Learning 427) -- diagnose against the real check-relevant scope, not a direct spell_check_package() call, or you will over-scope the fix chasing pkgdown-article words the check doesn't even see. shiny::testServer()'s returned reactives are NOT bare-callable -- use result <- session$getReturned() then result$name() (Learning 424, re-confirmed this session). DESCRIPTION still has zero Bioconductor dependencies -- do not add one (D2/Dragon P5). Do not call ScheduleWakeup to "wait" on a background Workflow/Agent task-notification (Learning 421) -- and once that async work has actually completed and synchronous work has resumed, stop scheduling further fallback wakeups, to avoid a stale wakeup racing an in-flight AskUserQuestion (this session hit exactly this: a delayed ScheduleWakeup fallback prompt arrived out of order and appeared to interrupt a phase-gate question mid-flow; handled by pausing and asking the user to clarify rather than guessing).
 runtime_smoke: DONE -- live shinytest2/chromote smoke test: uploaded a real X/Y/Z marker genotype CSV, confirmed the Heterozygosity tab renders ho/he matching the hand-verified fixture exactly (ho 0.75/0.3333/0.25, he 0.3993 repeated on every row), zero heterozygosity-related console errors, screenshot captured for the guide article.
 changelog_ref: CHANGELOG.md [issue #130] "Implement Slice 2" entry, this close-out commit
-commit: pending
+commit: 26c92b74
 ```
 
 ```handoff
@@ -937,7 +937,7 @@ key_files: R/checkMarkerGenotypeFile.R, R/buildMarkerGenotypeMatrix.R, R/markerK
 gotchas: shiny::testServer()'s returned reactives are NOT bare-callable in the test block -- must use `result <- session$getReturned()` then `result$name()` (Learning 424); a bare-name RED failure looks identical to the correct "function doesn't exist" RED failure, so this bug survives the RED gate undetected. This project's pedigree CSV "no parent" convention is literal `NA` text, not a blank field -- confirmed against inst/extdata/examples/ExamplePedigree.csv (Learning 425). checkMarkerGenotypeFile()/buildMarkerGenotypeMatrix()/markerKinship() require BIALLELIC markers only -- rhesusGenotypes (MHC-haplotype) is correctly NOT valid input to these new functions; do not try to reuse it for Slices 2/3/5's own fixtures either without re-checking biallelic-ness. DESCRIPTION still has zero Bioconductor dependencies -- do not add one (D2/Dragon P5, still binding for every remaining slice). SAFEGUARDS.md's 5-file-per-commit cap was applied by splitting each layer's source change from its devtools::document()-generated NAMESPACE/man/*.Rd output into a separate commit -- a judgment call (generated artifacts as their own checkpoint, not exempted from the count, not bundled with source) worth the owner's explicit confirmation or challenge, not silently treated as settled convention. PROCESS SLIP (own this honestly): this session skipped Phase 1B's SESSION_NOTES.md stub AND the HANDOFFS.md `status: pending` claim receipt entirely -- went straight from the Phase 0 AskUserQuestion pick into Pre-RED research with no crash breadcrumb written first; caught only now, at Phase 3D, writing this receipt directly as `status: complete` with no pending stub to overwrite. No actual crash occurred so no harm resulted, but the safety margin that stub exists for was absent for this entire session.
 runtime_smoke: DONE -- live shinytest2/chromote smoke test: uploaded a real marker genotype CSV, confirmed the comparison table renders indivMeanKin/markerMeanKin with values matching the hand-verified fixture exactly (markerMeanKin 0.2333/0.1333/0.0667 for P/C/U), zero marker-genetics-related console errors, screenshot captured for the guide article.
 changelog_ref: CHANGELOG.md [issue #130] "Implement Slice 1" entry, this close-out commit
-commit: pending
+commit: 26c92b74
 ```
 
 ```handoff
@@ -953,7 +953,7 @@ key_files: docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md (w
 gotchas: rhesusGenotypes (bundled example data) is single-locus/MHC-only, not usable as-is for multi-locus testing (Dragon P3). DESCRIPTION has zero Bioconductor dependencies today -- do not add one for kinship estimation, that reopens D2/Dragon P5. checkGenotypeFile()/addGenotype()/hasGenotype()/getGVGenotype()/geneDrop() (existing single-locus gene-drop path) must not be modified by any #130 slice -- new, sibling functions only. KING-robust's exact formula was deliberately not written into the plan -- source it at Pre-RED, do not reconstruct from memory (Dragon P2). ScheduleWakeup is /loop-only -- do not call it to wait on a background Workflow/Agent task-notification (Learning 421).
 runtime_smoke: n/a -- planning/docs-only session, no runtime behavior changed (no R/ or tests/ content touched).
 changelog_ref: CHANGELOG.md [issue #130] entry, this close-out commit
-commit: pending
+commit: 26c92b74
 ```
 
 ```handoff
@@ -969,7 +969,7 @@ key_files: R/modPedigree.R:387-409 (diagram render block incl. the new visExport
 gotchas: visNetwork::visExport() supports exactly ONE export format per widget -- calling it twice does not add a second button. output$<id> inside shiny::testServer() for an htmlwidget output is the raw JSON payload (a "json"-classed string), directly grepl()-able. NOT_CRAN must be set for ANY bare Rscript script reaching a skip_on_cran() call anywhere in its dependency chain, not only a direct testthat::test_file() call (Learning 417/419). get_download()/expect_download() only work for real Shiny downloadHandler outputs -- a client-side JS download needs app$get_chromote_session()$Browser$setDownloadBehavior(...) instead. .DS_Store/docs/planning/issue125-*.html remain harmless, unchanged since S425.
 runtime_smoke: DONE -- live shinytest2/chromote smoke test confirming the export button renders, is clickable with zero console errors, AND produces a real pedigree_diagram.png file (17,374 bytes) with a valid PNG magic-number signature, captured via the chromote session's own download-behavior override.
 changelog_ref: CHANGELOG.md [issue #131] entry, this close-out commit
-commit: pending
+commit: 26c92b74
 ```
 
 ```handoff
@@ -985,7 +985,7 @@ key_files: tests/testthat/test-e2e-data-ready.R:91-108 (the fixed test); R/appUI
 gotchas: skip_on_cran() at file top level silently skips the ENTIRE file (not just a context) when run via standalone testthat::test_file() without NOT_CRAN set -- devtools::test()/test_dir()/R CMD check set it automatically. as.character() on a raw shiny.tag/tagList still drops ALL tags$head() content (Learning 415, reconfirmed). .DS_Store/docs/planning/issue125-*.html remain harmless, unchanged since S425.
 runtime_smoke: n/a -- test-only change, no runtime behavior affected (R/appUI.R confirmed unchanged from HEAD).
 changelog_ref: CHANGELOG.md [BL-test-e2e-data-ready] entry, this close-out commit
-commit: pending
+commit: 26c92b74
 ```
 
 ```handoff
@@ -1001,7 +1001,7 @@ key_files: inst/www/js/shinyBS-popover-fix.js (new, the JS shim fix); R/appUI.R 
 gotchas: as.character() on a raw Shiny tagList/shiny.tag silently drops ALL tags$head() content -- use htmltools::renderTags(ui)$head to test head-injected asset inclusion, never as.character()/grepl(). shinytest2::AppDriver's log accessor is $get_logs() (plural) -- $get_log() doesn't exist and fails with the opaque "Error: attempt to apply non-function", not a clear method-not-found error. This session's fix is genuinely functional (verified live), unlike S437's fix which only removed the console error without restoring the feature -- don't conflate the two in CHANGELOG.md history. .DS_Store files and docs/planning/issue125-*.html remain harmless, unfixed, out-of-scope artifacts, unchanged since S425.
 runtime_smoke: DONE -- live shinytest2/chromote app launch confirming both zero console errors AND real bs.popover plugin-instance attachment (direct DOM/jQuery-data inspection) at all 4 relevant targets: 1 popify()-wrapped button + all 3 addPopover() targets (mkBox/zscoreBox/guBox).
 changelog_ref: CHANGELOG.md [issue #140] entry, this close-out commit
-commit: pending
+commit: 26c92b74
 ```
 
 ```handoff
@@ -1017,7 +1017,7 @@ key_files: R/zzz.R (new, 6-line .onLoad fix); tests/testthat/test_modSummaryStat
 gotchas: .onLoad/.onAttach are NOT visible unqualified in testthat even under load_all()'s export_all=TRUE -- access via pkgname:::.onLoad and copy to a local binding before mockery::stub()-ing it. shinytest2::AppDriver$new() outside testthat needs Sys.setenv(NOT_CRAN="true") first. Issue #140 is a real, currently-unfixed functional gap -- this session's fix did not restore working popovers/tooltips, only removed one of two blocking errors. .DS_Store/docs/planning/issue125-*.html remain harmless pre-existing artifacts, unchanged since S425.
 runtime_smoke: DONE -- live shinytest2/chromote app launch, twice: once confirming the ReferenceError is gone, once confirming (via DOM/jQuery-data inspection) that popovers still don't functionally attach, which led to filing issue #140.
 changelog_ref: CHANGELOG.md [BL-shinyBS-console-error] entry, this close-out commit
-commit: pending
+commit: 26c92b74
 ```
 
 ```handoff
@@ -1084,7 +1084,7 @@ key_files: docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md se
 gotchas: (1) inside modPedigreeServer, always use session$ns(...) for a new namespaced id, never bare ns(...) -- the bare binding only exists in the sibling UI function (Learning 405); (2) visNetwork renders to canvas -- any E2E assertion about widget content needs app$get_js() + HTMLWidgets.find(id) + w.network.body.data.nodes/edges, not get_html()/grepl() (Learning 406); Slice 2's click-event mechanism is Dragon P4, not yet hands-on-confirmed; (3) a pre-existing, unrelated shinyBS is not defined console error fires on every page load (BACKLOG.md) -- don't mistake it for a Slice-2 regression; (4) Learning 407 flags an unconfirmed process deviation (fixing incidentally-discovered pre-existing issues inline vs. deferring to BACKLOG.md per Learning 382) -- read it before repeating the pattern; (5) the inst/extdata/ reorg BACKLOG entry's stale "DECISION NEEDED" header (body proves it's done) is still unfixed, flagged again this session.
 runtime_smoke: DONE, live. shinytest2/chromote E2E tests against a real running app instance (bundled obfuscated_rhesus_mhc_ped.csv fixture) confirm the Diagram tab renders, binds, throws no diagram-related console error, and shows correct node/edge/shape data for a known trio.
 changelog_ref: CHANGELOG.md 2026-07-30 issue #129 entry (Session 433)
-commit: pending
+commit: 26c92b74
 ```
 <free-text prose>
 
@@ -1391,7 +1391,7 @@ key_files: docs/planning/extdata-reorganization-plan.md (Phase 2 Sec6, open deci
 gotchas: Phase 2 needs both open decisions resolved before any call-site edits. The spelling-NOTE fix is a small inst/WORDLIST hand-edit (CRAN's, resubmission) -- do NOT run spelling::update_wordlist() wholesale, it deletes curation (S230 convention). .DS_Store + new untracked inst/.DS_Store remain harmless, unfixed (out of scope). .claude/settings.local.json has one stale path reference to the moved software_design_doc.qmd -- harmless local cache, left untouched.
 runtime_smoke: n/a -- file relocation + .Rbuildignore/.gitignore cleanup only; zero system.file() call sites changed, no R/ runtime dispatch touched. Build-equivalent (devtools::check() + R CMD build tarball inspection) run instead, per SAFEGUARDS.md's build-equivalent table for this project type.
 changelog_ref: CHANGELOG.md 2026-07-28 "inst/extdata/ reorganization Phase 1: relocate dev-scratch + orphaned content (Session 415)"
-commit: pending
+commit: 26c92b74
 ```
 
 ```handoff
@@ -1407,7 +1407,7 @@ key_files: docs/planning/extdata-reorganization-plan.md (the plan -- 4 phases, e
 gotchas: Phase 1 of the reorg plan is self-contained and zero-system.file()-risk -- does NOT need Sec 10's open decisions resolved first. This session's own grep sweep of Sec 8's inventory was thorough but Phase 2's own verification commands still mandate a FRESH exhaustive grep immediately before touching any file (Dragon 1) -- don't skip it. .DS_Store continues to show modified -- long-standing, pre-existing, untouched again. vignettes/a2interactive.R's generation status (hand-written vs. knitr::purl() output) is unconfirmed -- resolve before Phase 2 touches it.
 runtime_smoke: n/a -- docs-only planning deliverable plus one data-file commit, no R/ package runtime behavior changed.
 changelog_ref: CHANGELOG.md 2026-07-28 "inst/extdata reorganization plan + PDF tracking (Session 414)"
-commit: pending
+commit: 26c92b74
 ```
 
 ```handoff
@@ -1423,7 +1423,7 @@ key_files: docs/planning/nprc-outreach-announcement-plan.md (the plan, 529 lines
 gotchas: The roster names real people's direct emails/phones -- re-verify currency before reuse (4 of 7 centers renamed within the last year, correlating with several director changes). Jon Hennebold's email has two conflicting spellings on record, unresolved -- do not pick one without asking. The WG's current chair is genuinely unconfirmed, not just unresearched -- the source itself names no one; the plan's own recommendation is to ask support@nhprc.org directly rather than keep searching. .DS_Store still shows modified -- pre-existing, untouched.
 runtime_smoke: n/a -- docs-only planning deliverable, no R/ package runtime behavior changed.
 changelog_ref: CHANGELOG.md 2026-07-28 "NPRC outreach and announcement plan (Session 413)"
-commit: pending
+commit: 26c92b74
 ```
 
 ```handoff
@@ -2567,7 +2567,7 @@ gotchas: Don't re-run the S392-394 sweeps without new information -- three round
 runtime_smoke: n/a -- investigation and documentation only, no R/ production runtime
   behavior, tests, or vignettes changed this session.
 changelog_ref: CHANGELOG.md 2026-07-16 "Close out the CRAN checktime effort: real progress, practical floor reached (Session 394)"
-commit: pending
+commit: 26c92b74
 ```
 
 ```handoff
