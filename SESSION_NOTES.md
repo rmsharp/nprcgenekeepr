@@ -6,6 +6,22 @@
 
 ## ACTIVE TASK
 
+### What Session 498 Did
+**Deliverable:** Implement issue #147 Slice 2 (UI + documentation) per
+`docs/planning/issue147-likelihood-parentage-assignment-plan.md` §5 -- a 5th read-only
+"Candidate Parent Assignment" tab in `R/modMarkerGenetics.R` calling `markerParentageLikelihood()`
+(Slice 1, shipped S496) against the module's already-wired `genotypeMatrix`/`pedigree` reactives,
+plus citation (`population_genetics_terms.html`), `NEWS.Rmd`, and tutorial/article
+(`colony-manager-guide.qmd`) documentation, closing issue #147. Picked from this session's own
+Phase 0 priorities list (owner choice via `AskUserQuestion`, out of #147 Slice 2/#145 design/#138
+design/extdata reorg Phase 4). Following `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`
+under this project's strict TDD contract (PRE-RED->RED->GREEN->REFACTOR, `AskUserQuestion`-gated at
+each transition).
+**Started:** 2026-08-09.
+**Status:** Session claimed. Work beginning (PRE-RED).
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### What Session 497 Did
 **Deliverable:** A small, owner-initiated follow-up fix (same conversation, immediately after S496's
 own close-out) triggered by the owner directly renaming `inst/extdata/reference/Standardized Human
