@@ -900,9 +900,14 @@ test_that("modPedigreeUI delegates the focal file input to a dynamic uiOutput", 
 
   ui_html <- as.character(modPedigreeUI("test"))
 
-  # The file input is rendered server-side (via renderUI) so it can be reset
-  # without a client-side dependency; it is no longer a static widget.
-  expect_false(grepl("type=\"file\"", ui_html, fixed = TRUE))
+  # The focal-animal file input is rendered server-side (via renderUI) so
+  # it can be reset without a client-side dependency; it is no longer a
+  # static widget. Checked by its own namespaced id (not a bare
+  # type="file" match) since issue #137 Slice 3 deliberately added a
+  # SECOND, genuinely-static file input (twinRelationsFile) to this same
+  # UI -- a bare type="file" match would incorrectly flag that unrelated,
+  # intentional addition as a regression.
+  expect_false(grepl('id="test-focalAnimalFile"', ui_html, fixed = TRUE))
   # A uiOutput placeholder for the dynamic file input is present.
   expect_true(grepl("focalAnimalFileUI", ui_html))
 })

@@ -137,6 +137,33 @@ modPedigreeUI <- function(id) {
             "Genetic Value Analysis.",
             style = "color: darkblue; font-weight: bold;"
           )
+        ),
+        # Issue #137 Slice 3: the twin-relations sidecar upload lives in
+        # this STATIC UI, never inside the dynamically re-rendered
+        # pedigreeDiagramUI block below -- a fileInput has no value=
+        # argument a fresh render could read back self-referentially the
+        # way checkboxInput/radioButtons do (Learning 490's file-input
+        # corollary), so keeping it outside any block that ever
+        # re-executes is the only way to avoid silently discarding an
+        # already-uploaded file. Mirrors R/modGeneticValue.R's
+        # kinshipOverrideFile wellPanel (the closest existing precedent
+        # for an optional, validated pairwise-data upload).
+        wellPanel(
+          h4("Twin/Zygosity Relations (optional)"),
+          helpText(
+            paste0(
+              "Upload a twin zygosity sidecar file (CSV or Excel) with ",
+              "columns id1, id2, code (MZ twin, DZ twin, or UZ twin) to ",
+              "mark twin pairs with a connector on the Diagram tab. ",
+              "Leave empty for no twin connectors."
+            ),
+            style = "color: darkblue; font-weight: bold;"
+          ),
+          fileInput(
+            ns("twinRelationsFile"),
+            label = NULL,
+            accept = c(".csv", ".txt", ".xlsx", ".xls")
+          )
         )
       )
     ),
@@ -415,6 +442,51 @@ modPedigreeServer <- function(id, studbook) {
       }
     }
 
+    # Issue #137 Slice 3: whether the diagram shows twin/zygosity
+    # connectors. Off by default (D11/backward-compat framing, matching
+    # .currentShowNames()'s own precedent) -- has no visible effect unless
+    # a valid twinRelationsFile has also been uploaded (see
+    # twinRelationsData() below).
+    .currentShowTwinConnectors <- function() {
+      if (is.null(input$pedigreeShowTwinConnectors)) {
+        FALSE
+      } else {
+        input$pedigreeShowTwinConnectors
+      }
+    }
+
+    # Issue #137 Slice 3 (D5/D11): read + validate an uploaded twin
+    # -relations sidecar file. Soft/non-fatal (mirrors
+    # R/modGeneticValue.R's kinshipOverrideData precedent): a bad file
+    # notifies and is ignored -- the diagram is never aborted. Returns NULL
+    # when no file is uploaded or the file fails validation. Unlike
+    # kinshipOverrideData, there is no warning-handling branch:
+    # checkTwinRelations() only ever stop()s, it never warn()s (confirmed,
+    # R/checkTwinRelations.R), so a warning handler here would be dead
+    # code. Validated against pedigreeData() -- the same, possibly-trimmed
+    # pedigree diagramLayout() itself renders -- so a twin pair with one
+    # member trimmed out of view is correctly treated as unknown/ignored,
+    # not as a hidden-but-still-tracked relationship.
+    twinRelationsData <- reactive({
+      if (is.null(input$twinRelationsFile)) {
+        return(NULL)
+      }
+      req(pedigreeData())
+      tryCatch(
+        checkTwinRelations(
+          pedigreeData(),
+          readTwinRelations(input$twinRelationsFile$datapath)
+        ),
+        error = function(e) {
+          showNotification(
+            paste("Could not read twin relations:", conditionMessage(e)),
+            type = "error", duration = 10L
+          )
+          NULL
+        }
+      )
+    })
+
     output$pedigreeDiagramUI <- renderUI({
       req(pedigreeData())
       n <- nrow(pedigreeData())
@@ -463,6 +535,15 @@ modPedigreeServer <- function(id, studbook) {
             label = "Show Names on Diagram",
             value = .currentShowNames()
           ),
+          # Issue #137 Slice 3: same net-new-UI / self-referential-value
+          # precedent as the two controls above (Learning 490) -- off by
+          # default; has no visible effect unless a twinRelationsFile has
+          # also been uploaded (twinRelationsData() above).
+          checkboxInput(
+            session$ns("pedigreeShowTwinConnectors"),
+            label = "Show Twin Connectors",
+            value = .currentShowTwinConnectors()
+          ),
           visNetwork::visNetworkOutput(session$ns("pedigreeDiagram"))
         )
       }
@@ -483,11 +564,31 @@ modPedigreeServer <- function(id, studbook) {
       if (!.currentShowNames()) {
         data$name <- NULL
       }
-      makePedigreeMatingLayout(data, edgeStyle = .currentEdgeStyle())
+      # Issue #137 Slice 3 (D11): the toggle gates whether the validated
+      # twinRelations data even reaches the builder -- same pattern as the
+      # name-column gate immediately above -- rather than a post-hoc filter
+      # on the builder's own output.
+      twinRelations <- if (.currentShowTwinConnectors()) {
+        twinRelationsData()
+      } else {
+        NULL
+      }
+      makePedigreeMatingLayout(data, edgeStyle = .currentEdgeStyle(),
+                               twinRelations = twinRelations)
     })
 
     output$pedigreeDiagram <- visNetwork::renderVisNetwork({
       layout <- diagramLayout()
+      # Issue #137 Slice 3: the twin-connector legend rows (label + dashes
+      # list-column), built the same way .buildTwinConnectorEdges() builds
+      # the real connector edges' own dashes column -- static, unrelated to
+      # whether any twin data is actually loaded (like the sex-shape/
+      # Affected addNodes rows above it).
+      twinLegendEdges <- data.frame(
+        label = c("MZ", "DZ", "?"),
+        stringsAsFactors = FALSE
+      )
+      twinLegendEdges$dashes <- I(list(FALSE, c(4L, 4L), c(14L, 8L)))
       # Option 2 Slice 3: fixed x/y coordinates (S457's proven Case C2
       # geometry) replace visHierarchicalLayout() entirely -- confirmed
       # hands-on (Learning 446) that manual coordinates and hierarchical
@@ -533,6 +634,19 @@ modPedigreeServer <- function(id, studbook) {
             color = c(NA, NA, NA, NA, NA, "#CC79A7"),
             stringsAsFactors = FALSE
           ),
+          # Issue #137 Slice 3 (D6/§2.8 trap #10): the twin-connector
+          # legend rows, added via THIS SAME visLegend() call's addEdges
+          # parameter -- confirmed by reading visLegend()'s own source
+          # (Pre-RED) that addEdges passes straight through to
+          # x$legend$edges with no validation, exactly like addNodes above,
+          # so a second visLegend() call is not needed and would only
+          # overwrite this one (same single-scalar-slot constraint the
+          # #133 Affected-row comment above already established). Values
+          # match .buildTwinConnectorEdges() (R/makePedigreeDiagramData.R)
+          # exactly -- label + dashes only, no color (D10's color pick was
+          # never wired into that function; tracked in BACKLOG.md, not
+          # fixed here -- out of this slice's own file scope).
+          addEdges = twinLegendEdges,
           useGroups = FALSE,
           position = "right",
           main = "Sex",
