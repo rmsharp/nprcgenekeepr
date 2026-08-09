@@ -6,6 +6,18 @@
 
 ## ACTIVE TASK
 
+### What Session 491 Did
+**Deliverable:** Write a design/architecture document for GitHub issue #137 (twin/zygosity
+encoding for the Pedigree Diagram, data-model gated) -- Tier 2, third in the owner's standing
+`#133 > #136 > #137 > #138` sequencing (set S436). Following
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md` (matching the #133/#136 precedent: a
+data-model + rendering-contract change, not a UI layout/zone design). (IN PROGRESS)
+**Started:** 2026-08-09
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 490 Did
 **Deliverable:** Implement Slice 2 of the ratified issue #136 plan (`docs/planning/
 issue136-name-labels-pedigree-diagram-plan.md` §4) -- label rendering + toggle + documentation.
