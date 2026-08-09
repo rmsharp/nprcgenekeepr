@@ -170,3 +170,30 @@ test_that("markerParentageExclusion returns a zero-row data.frame with the right
                     sort(c("id", "parentId", "role", "exclusionCount",
                             "nLoci", "flagged")))
 })
+
+test_that("markerParentageExclusion's output is byte-identical after the D7 extract-method refactor (issue #147 Slice 1)", {
+  ## Golden-master snapshot: captured via dput() from the real, CURRENT (still
+  ## unrefactored) markerParentageExclusion() on this file's own fixture, before
+  ## any code changed this session (2026-08-09). markerParentageLikelihood()'s
+  ## own Pre-RED (issue #147 Slice 1, D7) extracts this function's per-pair
+  ## opposite-homozygote comparison into a shared internal helper,
+  ## .markerOppositeHomozygoteCount() -- this test proves that extraction is
+  ## byte-identical, not just "the existing test_that blocks above still pass"
+  ## (which is a second, complementary layer of the same protection, per Dragon
+  ## 10). If this test ever needs updating to pass, the D7 extraction changed
+  ## real behavior and the refactor is NOT behavior-preserving -- stop and
+  ## investigate rather than "fixing" this expected value.
+  golden <- structure(
+    list(
+      id = c("O1", "O1", "O2", "O3", "O4", "O5"),
+      parentId = c("D1", "S1", "D2", "S3", "S1", "S1"),
+      role = c("dam", "sire", "dam", "sire", "sire", "sire"),
+      exclusionCount = c(0L, 0L, 2L, 3L, 0L, 0L),
+      nLoci = c(5L, 5L, 5L, 5L, 5L, 5L),
+      flagged = c(FALSE, FALSE, FALSE, TRUE, FALSE, FALSE)
+    ),
+    row.names = c(NA, -6L), class = "data.frame"
+  )
+  actual <- markerParentageExclusion(genotypeMatrix, pedigree, maxExclusions = 2L)
+  expect_identical(actual, golden)
+})
