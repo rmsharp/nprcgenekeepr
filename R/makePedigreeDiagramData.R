@@ -250,8 +250,8 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #' Styling (D6, D10 -- exact colors/dash-pixel patterns decided at this
 #' slice's own Pre-RED, deferred by the design doc): \code{"MZ twin"} is
 #' solid (\code{dashes = FALSE}, label \code{"MZ"}); \code{"DZ twin"} is a
-#' short dash (\code{c(4, 4)}, label \code{"DZ"}); \code{"UZ twin"} is a
-#' long/sparse dash (\code{c(14, 8)}, label \code{"?"} -- a deliberate
+#' short dash (\code{c(4L, 4L)}, label \code{"DZ"}); \code{"UZ twin"} is a
+#' long/sparse dash (\code{c(14L, 8L)}, label \code{"?"} -- a deliberate
 #' callback to kinship2's own UZ glyph, \code{docs/planning/
 #' issue137-twin-zygosity-pedigree-diagram-plan.md} sec 2.1). The
 #' \code{dashes} column is a list-column (\code{I(list(...))}) since a
