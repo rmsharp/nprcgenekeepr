@@ -39,7 +39,8 @@ are uploaded); and \code{isReady}, \code{TRUE} once
 \description{
 Reads an uploaded long-format marker genotype file (D1 format: \code{id},
 \code{locus}, \code{allele1}, \code{allele2}), validates and pivots it
-(\code{\link{checkMarkerGenotypeFile}}, \code{\link{buildMarkerGenotypeMatrix}}),
+(\code{\link{checkMarkerGenotypeFile}},
+\code{\link{buildMarkerGenotypeMatrix}}),
 estimates marker-based kinship independent of pedigree
 (\code{\link{markerKinship}}), and surfaces a per-animal comparison of
 pedigree-based mean kinship (\code{indivMeanKin}, already computed

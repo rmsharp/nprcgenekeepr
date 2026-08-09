@@ -30,6 +30,7 @@ mapIdsToObfuscated(someIds, obfuscated$map)
 Other obfuscation:
 \code{\link[=obfuscateDate]{obfuscateDate()}},
 \code{\link[=obfuscateId]{obfuscateId()}},
-\code{\link[=obfuscatePed]{obfuscatePed()}}
+\code{\link[=obfuscatePed]{obfuscatePed()}},
+\code{\link[=obfuscateTwinRelations]{obfuscateTwinRelations()}}
 }
 \concept{obfuscation}

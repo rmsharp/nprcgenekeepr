@@ -36,6 +36,7 @@ obfuscateId(characterIds, size = 4L)
 Other obfuscation:
 \code{\link[=mapIdsToObfuscated]{mapIdsToObfuscated()}},
 \code{\link[=obfuscateDate]{obfuscateDate()}},
-\code{\link[=obfuscatePed]{obfuscatePed()}}
+\code{\link[=obfuscatePed]{obfuscatePed()}},
+\code{\link[=obfuscateTwinRelations]{obfuscateTwinRelations()}}
 }
 \concept{obfuscation}

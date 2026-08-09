@@ -45,6 +45,7 @@ obfuscatedPed
 Other obfuscation:
 \code{\link[=mapIdsToObfuscated]{mapIdsToObfuscated()}},
 \code{\link[=obfuscateDate]{obfuscateDate()}},
-\code{\link[=obfuscateId]{obfuscateId()}}
+\code{\link[=obfuscateId]{obfuscateId()}},
+\code{\link[=obfuscateTwinRelations]{obfuscateTwinRelations()}}
 }
 \concept{obfuscation}
