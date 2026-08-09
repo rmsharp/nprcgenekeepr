@@ -402,6 +402,19 @@ modPedigreeServer <- function(id, studbook) {
       }
     }
 
+    # Issue #136 Slice 2: whether the diagram shows names alongside id.
+    # Off by default (owner-ratified "some centers, inconsistently"
+    # framing) -- defaulting to FALSE before the toggle below has ever
+    # rendered means the very first render is byte-identical to
+    # pre-issue-136 behavior, same pattern as .currentEdgeStyle() above.
+    .currentShowNames <- function() {
+      if (is.null(input$pedigreeShowNames)) {
+        FALSE
+      } else {
+        input$pedigreeShowNames
+      }
+    }
+
     output$pedigreeDiagramUI <- renderUI({
       req(pedigreeData())
       n <- nrow(pedigreeData())
@@ -431,6 +444,15 @@ modPedigreeServer <- function(id, studbook) {
             selected = style,
             inline = TRUE
           ),
+          # Issue #136 Slice 2, decisions D3, D4, D6 -- no existing home
+          # for this control either -- same D4 net-new-UI precedent as the
+          # edge style toggle above. Off by default; has no visible effect
+          # on a pedigree with no name column.
+          checkboxInput(
+            session$ns("pedigreeShowNames"),
+            label = "Show Names on Diagram",
+            value = FALSE
+          ),
           visNetwork::visNetworkOutput(session$ns("pedigreeDiagram"))
         )
       }
@@ -443,6 +465,14 @@ modPedigreeServer <- function(id, studbook) {
       req(pedigreeData())
       data <- pedigreeData()
       req(nrow(data) <= .currentDiagramCap())
+      # Issue #136 Slice 2: the mating-layout builder is unconditionally
+      # name-column-aware (same optional-column contract as affected) --
+      # the toggle lives entirely at this layer by controlling whether the
+      # name column even reaches the builder, rather than adding a new
+      # builder parameter.
+      if (!.currentShowNames()) {
+        data$name <- NULL
+      }
       makePedigreeMatingLayout(data, edgeStyle = .currentEdgeStyle())
     })
 
@@ -546,9 +576,17 @@ modPedigreeServer <- function(id, studbook) {
         # explicit id list -- filtered here to real individuals only, so a
         # real individual appears once in the searchable list, not once per
         # mating-unit/duplicate occurrence.
+        #
+        # Issue #136 Slice 2 (D6): the useLabels dropdown option is pinned
+        # to FALSE UNCONDITIONALLY (not toggle-dependent) -- without it,
+        # the moment a real individual's label becomes a name (show-names
+        # toggle on), visNetwork's own useLabels-defaults-TRUE behavior
+        # (unset before this session) would silently switch the dropdown
+        # to listing names while its caption still reads "Select by id"
+        # (confirmed hands-on Pre-RED, design doc sec 2.5).
         visNetwork::visOptions(
           nodesIdSelection = list(
-            enabled = TRUE, values = layout$nodes$id[
+            enabled = TRUE, useLabels = FALSE, values = layout$nodes$id[
               !grepl("^__union_|^__dup_|^__drop_|^__bar_|^__proj_",
                      layout$nodes$id)
             ]

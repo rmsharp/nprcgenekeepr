@@ -2014,7 +2014,10 @@ test_that(
                          pedigreeShowNames = TRUE)
       session$flushReact()
       widgetJson <- output$pedigreeDiagram
-      expect_true(grepl('"label":"A\\nApollo"', widgetJson, fixed = TRUE))
+      ## The widget's node data serializes column-oriented ("label":[...]),
+      ## not row-oriented -- confirmed empirically against the real output,
+      ## not assumed (Learning 489's discipline).
+      expect_true(grepl('"label":["A\\nApollo"', widgetJson, fixed = TRUE))
     }
   )
 })

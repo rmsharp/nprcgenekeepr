@@ -72,9 +72,23 @@ makePedigreeDiagramData <- function(ped) {
                               .affectedLabel(affected)))
   }
 
+  # Issue #136 (D1-D5, D10): name is an OPTIONAL character column. Absent
+  # column => zero change to output below (backward-compat contract,
+  # same as affected above). Coerce defensively via as.character() (the
+  # affected precedent) -- name is not a qcStudbook()-recognized-required
+  # column, so a raw CSV import or a direct API caller could hand it a
+  # factor.
+  hasName <- "name" %in% names(ped)
+  label <- ped$id
+  if (hasName) {
+    name <- as.character(ped$name)
+    label <- .nameLabel(ped$id, name)
+    titles <- paste0(titles, .nameTooltipLine(name))
+  }
+
   nodes <- data.frame(
     id = ped$id,
-    label = ped$id,
+    label = label,
     shape = shapes,
     level = ped$gen,
     title = titles,
@@ -143,6 +157,64 @@ makePedigreeDiagramData <- function(ped) {
   label <- c("No", "Yes")[as.integer(affected) + 1L]
   label[is.na(affected)] <- "Unknown"
   label
+}
+
+#' Character budget for a displayed name before it is truncated (issue
+#' #136 D10) -- empirically calibrated (Slice 2 Pre-RED, a live chromote
+#' render against the real fixture's tightest measured node spacing, see
+#' \code{docs/planning/issue136-name-labels-pedigree-diagram-plan.md} sec
+#' 2.3/D10). 15 characters shows every name in the bundled example fixture
+#' unspoiled (max 8 characters) while bounding a pathological outlier to
+#' roughly the same overlap footprint the existing id-only label already
+#' has at the fixture's 25th-percentile adjacent-node gap.
+#' @noRd
+.nameLabelCharBudget <- 15L
+
+#' Build a real individual's diagram label from id and an optional name
+#' (issue #136 D3/D4/D5/D10)
+#'
+#' Augments \code{id} with \code{name} on a second line
+#' (\code{"id\\nname"}, D3 -- confirmed hands-on this session that the
+#' bundled vis.js renders an embedded newline as two lines). Falls back to
+#' the bare \code{id} when \code{name} is \code{NA} or empty (D4 -- not
+#' every center records a name, and synthesized rows, e.g. \code{U####}
+#' placeholders, never have one). A name longer than
+#' \code{\link{.nameLabelCharBudget}} is truncated with a trailing
+#' \code{"..."} (D10); the full name is never dropped, only shortened on
+#' the canvas label -- \code{\link{.nameTooltipLine}} carries it in full.
+#' Shared by both \code{\link{makePedigreeDiagramData}} and
+#' \code{\link{makePedigreeMatingLayout}} (same sharing precedent as
+#' \code{.affectedColor()}/\code{.affectedLabel()} above); the latter also
+#' applies this to duplicate-occurrence nodes using their real
+#' individual's own id/name (D7 label parity).
+#'
+#' @param id character vector.
+#' @param name character vector, same length as \code{id}; \code{NA}
+#'   allowed.
+#' @param budget integer scalar, the truncation budget (D10).
+#' @return character vector, same length as \code{id}.
+#' @noRd
+.nameLabel <- function(id, name, budget = .nameLabelCharBudget) {
+  hasName <- !is.na(name) & nzchar(name)
+  truncated <- ifelse(nchar(name) > budget,
+                       paste0(substr(name, 1L, budget), "..."), name)
+  ifelse(hasName, paste0(id, "\n", truncated), id)
+}
+
+#' Build the hover-tooltip Name line for an optional name column (issue
+#' #136 D10)
+#'
+#' Empty string when \code{name} is \code{NA} or empty (no line added --
+#' matches \code{.nameLabel()}'s own D4 fallback condition). Always
+#' carries the FULL, HTML-escaped name, never truncated -- truncation
+#' (D10) applies to the on-canvas label only.
+#'
+#' @param name character vector, \code{NA} allowed.
+#' @return character vector, same length as \code{name}.
+#' @noRd
+.nameTooltipLine <- function(name) {
+  hasName <- !is.na(name) & nzchar(name)
+  ifelse(hasName, sprintf("<br><b>Name:</b> %s", .escapeHtml(name)), "")
 }
 
 #' Transform a pedigree into a mating-unit forest (Option 2 layout, D1/D2)
@@ -866,6 +938,22 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
     .affectedColor(affectedOf[ids])
   }
 
+  # Issue #136 (D1-D5, D7, D10), independent implementation of the same
+  # optional name contract makePedigreeDiagramData() gets. Applied to BOTH
+  # real individuals and their duplicate-occurrence nodes (looked up by
+  # the DUPLICATE's own real individual id, D7 label parity) -- a
+  # duplicate must read as its real individual, name included, exactly
+  # like it already does for id alone (:906's pre-existing precedent).
+  hasName <- "name" %in% names(ped)
+  nameOf <- if (hasName) {
+    stats::setNames(as.character(ped$name), realIds)
+  } else {
+    NULL
+  }
+  .nameLabelForVec <- function(ids) {
+    .nameLabel(ids, nameOf[ids])
+  }
+
   .shapeForVec <- function(sexCodes) {
     shapes <- unname(shapeMap[as.character(sexCodes)])
     shapes[is.na(shapes)] <- "diamond"
@@ -888,11 +976,15 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
                        sprintf("<br><b>Affected:</b> %s",
                                .affectedLabel(affectedOf[ids])))
     }
+    if (hasName) {
+      title <- paste0(title, .nameTooltipLine(nameOf[ids]))
+    }
     title
   }
 
   realNodes <- data.frame(
-    id = realIds, label = realIds,
+    id = realIds,
+    label = if (hasName) .nameLabelForVec(realIds) else realIds,
     shape = .shapeForVec(sexOf[realIds]),
     title = .titleForIds(realIds),
     size = 25L, stringsAsFactors = FALSE
@@ -903,7 +995,12 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
 
   dupNodes <- if (nrow(duplicates) > 0L) {
     df <- data.frame(
-      id = dupIds, label = duplicates$realId,
+      id = dupIds,
+      label = if (hasName) {
+        .nameLabelForVec(duplicates$realId)
+      } else {
+        duplicates$realId
+      },
       shape = .shapeForVec(sexOf[duplicates$realId]),
       title = paste0(.titleForIds(duplicates$realId),
                       "<br><i>(duplicate occurrence)</i>"),
