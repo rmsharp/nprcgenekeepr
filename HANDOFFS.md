@@ -72,7 +72,7 @@ key_files: none specific to a next task -- issue #137 is closed. For a design se
 gotchas: A fileInput has NO value= argument a fresh renderUI() re-render could read back self-referentially (unlike checkboxInput/radioButtons, Learning 490) -- the only safe placement for a NEW file upload inside a Shiny module is a STATIC UI location that never re-renders; check this before adding any new file upload to a dynamically-rendered block. devtools::install() in this R/devtools version rejects upgrade = "never" -- use upgrade = FALSE. A piped `| head -N` on a long-running Rscript command can hang the underlying process rather than cleanly terminating it on SIGPIPE -- redirect to a file and read it separately instead. All standing gotchas from S479-493 carry forward unchanged (gh issue view needs --json; NOT_CRAN=true for tests incl. shinytest2::AppDriver scripts; devtools::install() needed before driving the installed app via shinytest2::AppDriver -- confirmed hit again, avoided proactively this time; git commit -F <file> for backtick-quoted commit messages; the zygosity/"twin zygosity" disambiguation rule; run_in_background: true alone, never a manual shell & too).
 runtime_smoke: DONE -- the full, real, permanently-committed test-e2e-pedigree-module.R suite (13 tests, 2 new) run live against a freshly devtools::install()ed package: all 13 passed, 0 console errors, genuine upload + toggle + render verification against the actual app.
 changelog_ref: CHANGELOG.md 2026-08-09 entry for S494 (issue #137 Slice 3, closes issue #137)
-commit: pending
+commit: 471d427a
 ```
 
 ```handoff
