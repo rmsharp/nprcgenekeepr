@@ -6,6 +6,19 @@
 
 ## ACTIVE TASK
 
+### What Session 496 Did
+**Deliverable:** Implement Slice 1 (core statistical function) of the ratified issue #147 plan
+(`docs/planning/issue147-likelihood-parentage-assignment-plan.md` §5) -- `markerParentageLikelihood()`,
+an allele-frequency helper, and the D7 extraction from `R/markerParentageExclusion.R` (with a
+byte-identical regression proof). Following `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`
+under this project's strict TDD contract (PRE-RED->RED->GREEN->REFACTOR, `AskUserQuestion`-gated at
+each transition). Picked from this session's own Phase 0 priorities list (owner choice via
+`AskUserQuestion`, out of #147 Slice 1/#145 design/#138 design).
+**Started:** 2026-08-09 15:29 CDT.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in `CHANGELOG.md`
+at Phase 3F. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### What Session 495 Did
 **Deliverable:** Design session for GitHub issue #147 (likelihood-based candidate-parent assignment
 after marker parentage exclusion) -- one architecture document at

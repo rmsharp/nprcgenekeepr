@@ -60,6 +60,23 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S496
+date: 2026-08-09
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement Slice 1 (core statistical function) of the ratified issue #147 plan -- markerParentageLikelihood(), an allele-frequency helper, and the D7 extraction from markerParentageExclusion.R. Following DEVELOPMENT_WORKSTREAM.md, strict TDD PRE-RED->RED->GREEN->REFACTOR, AskUserQuestion-gated.
+what_was_done: pending
+next_steps: pending
+key_files: docs/planning/issue147-likelihood-parentage-assignment-plan.md §5 (Slice 1 DONE criteria), R/markerParentageExclusion.R (D7 extraction target), R/getPotentialParents.R (candidate source)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<in progress -- claim stub only, full receipt written at Phase 3D close-out>
+
+```handoff
 session: S495
 date: 2026-08-09
 status: complete
