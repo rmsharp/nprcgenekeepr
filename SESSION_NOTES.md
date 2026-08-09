@@ -6,6 +6,23 @@
 
 ## ACTIVE TASK
 
+### What Session 493 Did
+**Deliverable:** Implement Slice 2 (core rendering) of the ratified issue #137 plan
+(`docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md` §4) -- `makePedigreeDiagramData()`
+and `makePedigreeMatingLayout()` gain a `twinRelations` parameter and render connector edges per D6
+(styling, incl. the `I(list(...))` list-column `dashes` technique per §2.8 trap #9)/D7
+(duplicate-node resolution, real nodes only); `.addRectilinearWaypoints()`'s `newEdges` construction
+extended per D9 so rectilinear mode does not crash when twin data is present. Following
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` under this project's strict TDD contract
+(PRE-RED->RED->GREEN->REFACTOR, `AskUserQuestion`-gated at each transition), treated as a
+pre-declared vertical slice (gate (a) satisfied by the S491 plan-mode contract's own §4 Slice 2
+session-boundary declaration).
+**Started:** 2026-08-09.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 492 Did
 **Deliverable:** Implement Slice 1 (data model) of the ratified issue #137 plan
 (`docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md` §4) -- `checkTwinRelations()`
