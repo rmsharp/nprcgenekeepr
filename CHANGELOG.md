@@ -43,6 +43,41 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-09 · [issue #147] Slice 1 implemented — markerParentageLikelihood() (Session 496)
+- **Deliverable:** Slice 1 (core statistical function) of the ratified issue #147 plan
+  (`docs/planning/issue147-likelihood-parentage-assignment-plan.md` §5) — new exported
+  `markerParentageLikelihood()` (`R/markerParentageLikelihood.R`), ranking candidate replacement
+  parents for a Mendelian-inconsistent recorded parent via a CERVUS-style multilocus likelihood-ratio
+  (LOD) score (Meagher & Thompson 1986; Marshall, Slate, Kruuk & Pemberton 1998). Report-only —
+  never writes `pedigree$sire`/`$dam`. New internal `.markerAlleleFrequencyTable()`
+  (`R/markerAlleleFrequency.R`, D9). D7: `markerParentageExclusion()`'s opposite-homozygote
+  comparison extracted into a shared internal `.markerOppositeHomozygoteCount()`, zero behavior
+  change (a `dput()`-captured golden-master regression test proves it byte-identical). Full strict
+  TDD PRE-RED→RED→GREEN→REFACTOR cycle, `AskUserQuestion`-gated at every transition. Pre-RED
+  independently re-derived the LOD formula from first principles (not trusted from memory) and
+  hand-verified it via a standalone scratch reference implementation before writing any RED test —
+  mirroring `markerFst()`'s own Pre-RED precedent. REFACTOR hoisted the transmission-probability
+  math into two more named internal helpers (`.markerTransmissionProbability()`,
+  `.markerTwoSourceGenotypeProbability()`), with 4 new direct unit tests pinning the formula itself.
+  Verified: 20 new/changed test_that blocks (16 in the new `test_markerParentageLikelihood.R`, 1
+  golden-master regression + existing unchanged in `test_markerParentageExclusion.R`) all pass; full
+  clean regression read 0 failed/0 error, 4841 passed, 175 skipped, 10 pre-existing baseline warnings
+  unchanged; `devtools::check()` 2 ERRORs/1 WARNING/1 NOTE, confirmed an exact match to the
+  established, pre-existing, unrelated baseline (non-portable-filename issue tracked since S486;
+  vignette-engine note), 0 new; `lintr::lint_package()` 0 lints package-wide. `NEWS.Rmd`/`NEWS.md`
+  updated (new exported function). No Shiny UI yet — Slice 2's scope, a separate future session.
+  Incidental, unrelated findings surfaced and fixed as an unavoidable side effect of this session's
+  own required `devtools::document()`/full-regression steps (not part of this session's own
+  deliverable, reported not attributed): `readTwinRelations()` (shipped S494, issue #137 Slice 3)
+  had never actually been exported (`@export` in its roxygen, but no `NAMESPACE` entry or man page
+  existed until this session's `devtools::document()` run) — fixed as a mechanically-unavoidable
+  side effect of NAMESPACE regeneration being atomic across the whole package; and the resulting
+  `_pkgdown.yml` reference-coverage gap for both that function and this session's own new
+  `markerParentageLikelihood()` (a pre-existing package-wide guard test, `test_pkgdown_reference_config.R`,
+  cannot be satisfied for only one missing entry) — both added to `_pkgdown.yml`'s "All exposed
+  functions" group. See `PROJECT_LEARNINGS.md` Learnings 495–496, `CLAUDE.md`'s new
+  `_pkgdown.yml` reference-coverage checklist.
+
 ### 2026-08-09 · [issue #147] Pre-RED design/scoping session — RATIFIED architecture plan (Session 495)
 - **Deliverable:** `docs/planning/issue147-likelihood-parentage-assignment-plan.md` — the statistical
   method, reference-population, and report-vs-write-back architecture decisions issue #147 itself

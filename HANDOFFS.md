@@ -62,19 +62,18 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S496
 date: 2026-08-09
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Implement Slice 1 (core statistical function) of the ratified issue #147 plan -- markerParentageLikelihood(), an allele-frequency helper, and the D7 extraction from markerParentageExclusion.R. Following DEVELOPMENT_WORKSTREAM.md, strict TDD PRE-RED->RED->GREEN->REFACTOR, AskUserQuestion-gated.
-what_was_done: pending
-next_steps: pending
-key_files: docs/planning/issue147-likelihood-parentage-assignment-plan.md §5 (Slice 1 DONE criteria), R/markerParentageExclusion.R (D7 extraction target), R/getPotentialParents.R (candidate source)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Issue #147 Slice 1 (core statistical function) is DONE. Slice 2 (UI + documentation, a 5th read-only tab in modMarkerGenetics.R) is the natural next pickup, a separate future session.
+what_was_done: New exported markerParentageLikelihood() (R/markerParentageLikelihood.R) ranking candidate replacement parents via a CERVUS-style multilocus LOD score, report-only (never mutates pedigree). New internal .markerAlleleFrequencyTable() (R/markerAlleleFrequency.R, D9). D7: markerParentageExclusion()'s opposite-homozygote comparison extracted into a shared .markerOppositeHomozygoteCount(), zero behavior change (dput()-captured golden-master regression test proves byte-identical). Full strict TDD PRE-RED->RED->GREEN->REFACTOR, AskUserQuestion-gated at every transition. Pre-RED independently re-derived the LOD formula from first principles (standalone scratch script, Hardy-Weinberg sanity check) before any RED test. REFACTOR hoisted the transmission-probability math into 2 more named internal helpers with 4 new direct unit tests; self-caught and fixed a real roxygen2 doc-block-shift bug (git diff NAMESPACE before committing) and a genuinely in-scope _pkgdown.yml reference-coverage regression the session's own devtools::document() surfaced. 16 new test_that blocks + 1 golden-master regression test, all passing. Commits: de74570f (claim), 3590157a (RED), b983747a (GREEN), 67ee1d9a (REFACTOR), plus this close-out's commit.
+next_steps: Slice 2 (UI + documentation) per docs/planning/issue147-likelihood-parentage-assignment-plan.md §5 -- a 5th read-only "Candidate Parent Assignment" tab in R/modMarkerGenetics.R (D10), citation checklist (population_genetics_terms.html), NEWS.Rmd, tutorial/article documentation, gh issue close 147 at that slice's own close-out. Also still available: design session for #145 (READY, Effort M) and #138 (READY, Effort M, low priority). See SESSION_NOTES.md for the full priorities list.
+key_files: R/markerParentageLikelihood.R (new, exported + 2 hoisted internal helpers), R/markerAlleleFrequency.R (new), R/markerParentageExclusion.R:161-193 (D7 extraction), tests/testthat/test_markerParentageLikelihood.R (fixture + hand-verified LOD/delta numbers a Slice 2 smoke test should match), docs/planning/issue147-likelihood-parentage-assignment-plan.md §5 Slice 2
+gotchas: markerParentageLikelihood()'s LOD can be -Inf even when excluded=FALSE (a single Mendelian-incompatible locus is a true probability-zero event under the no-error-model formula) -- a Slice 2 UI must not assume excluded=FALSE implies a finite LOD. Never insert a new roxygen-documented function between an existing docstring and the function it documents (roxygen2 doc-block-shift risk, PROJECT_LEARNINGS.md Learning 495) -- diff the actual generated NAMESPACE/man/*.Rd after devtools::document(), don't trust a re-read of the source. inst/WORDLIST's real convention is case-insensitive alphabetical, not literal LC_ALL=C byte-order (Learning 496). A new exported function needs a _pkgdown.yml reference: group entry same-session (new CLAUDE.md checklist) or the full regression read fails. tests/spelling.Rout.save is absent from the repo -- devtools::check() currently reports no spelling NOTE regardless of WORDLIST drift. All standing gotchas from S479-495 carry forward unchanged.
+runtime_smoke: n/a -- markerParentageLikelihood() is script-callable only this slice, no Shiny UI wiring (Slice 2's own scope)
+changelog_ref: CHANGELOG.md 2026-08-09 "Slice 1 implemented -- markerParentageLikelihood() (Session 496)"
 commit: pending
 ```
-<in progress -- claim stub only, full receipt written at Phase 3D close-out>
 
 ```handoff
 session: S495

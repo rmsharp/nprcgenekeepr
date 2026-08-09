@@ -1947,3 +1947,17 @@ its own separately-gated issue); and a 5th read-only "Candidate Parent Assignmen
 `modMarkerGenetics.R`, matching the existing 4-tab pattern. Implementation plan is 2 vertical slices
 (core statistical function; UI + documentation), each its own future session. No code changed this
 session -- design/planning only, matching the #133/#136/#137 precedent. See `CHANGELOG.md`.
+
+**Progress (S496, 2026-08-09):** Slice 1 (core statistical function) is now DONE: new exported
+`markerParentageLikelihood()` (`R/markerParentageLikelihood.R`), ranking candidate replacement
+parents via the ratified CERVUS-style LOD score; `.markerAlleleFrequencyTable()` (D9); the D7
+extraction of `markerParentageExclusion()`'s opposite-homozygote comparison into a shared
+`.markerOppositeHomozygoteCount()` helper, byte-identical-behavior proven via a golden-master
+regression test. Full strict TDD PRE-RED->RED->GREEN->REFACTOR cycle, `AskUserQuestion`-gated at
+every transition; Pre-RED independently re-derived and hand-verified the LOD formula from first
+principles before any RED test was written. Verified: all new/changed tests pass; full clean
+regression read 0 failed/0 error (4841 passed, 175 skipped, 10 pre-existing baseline warnings
+unchanged); `devtools::check()` 2 ERRORs/1 WARNING/1 NOTE, exact pre-existing baseline match, 0 new;
+`lintr::lint_package()` 0 lints. **Slice 2 (UI + documentation) is the natural next pickup for this
+issue** -- a separate future session, per the plan's own session-boundary requirement. See
+`CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learnings 495-496.

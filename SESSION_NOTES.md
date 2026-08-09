@@ -14,10 +14,175 @@ byte-identical regression proof). Following `docs/methodology/workstreams/DEVELO
 under this project's strict TDD contract (PRE-RED->RED->GREEN->REFACTOR, `AskUserQuestion`-gated at
 each transition). Picked from this session's own Phase 0 priorities list (owner choice via
 `AskUserQuestion`, out of #147 Slice 1/#145 design/#138 design).
-**Started:** 2026-08-09 15:29 CDT.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in `CHANGELOG.md`
-at Phase 3F. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Started/Completed:** 2026-08-09 15:29 CDT / 2026-08-09.
+**Status:** DONE. Full strict-TDD PRE-RED->RED->GREEN->REFACTOR cycle, `AskUserQuestion`-gated at
+every transition (PRE-RED->RED after independent formula re-derivation + hand-verified fixtures;
+RED->GREEN; GREEN->REFACTOR, owner picked "yes, light refactor"). Verified: 16 new test_that blocks
+in `tests/testthat/test_markerParentageLikelihood.R` + 1 new golden-master regression test in
+`tests/testthat/test_markerParentageExclusion.R` all pass; full clean regression read 0 failed/0
+error, 4841 passed, 175 skipped, 10 pre-existing baseline warnings (unchanged); `devtools::check()`
+2 ERRORs/1 WARNING/1 NOTE, confirmed an exact match to the established, pre-existing, unrelated
+baseline (non-portable-filename issue tracked since S486; vignette-engine note), 0 new, via two
+independent runs; `lintr::lint_package()` 0 lints package-wide. See `docs/planning/issue147-...-plan.md`,
+`R/markerParentageLikelihood.R`, `R/markerAlleleFrequency.R`, `R/markerParentageExclusion.R`.
+
+**What happened, in order:** **(1)** Phase 0 orient (SAFEGUARDS.md, SESSION_NOTES.md, `gh issue
+list`, git status/log, `methodology_dashboard.py` -- health 98/100; ledger reconcile clean, the one
+commit since the `CHANGELOG.md` frontier was S495's own self-referential sha-backfill, already
+accounted for by precedent). Rendered the priorities list via `AskUserQuestion`; owner picked #147
+Slice 1. **(2)** Phase 1B claim stub committed (`de74570f`). **(3)** Pre-RED: read
+`DEVELOPMENT_WORKSTREAM.md` and every source file in the plan's own inventory
+(`markerParentageExclusion.R`, `getPotentialParents.R`, `markerHeterozygosity.R`, `markerFst.R`,
+`buildMarkerGenotypeMatrix.R`, `checkMarkerGenotypeFile.R`, existing marker test files). Independently
+re-derived the LOD formula from first principles (not trusted from memory, matching this project's
+own `markerFst()` Pre-RED precedent) via a standalone scratch script (`/private/tmp/.../scratchpad/
+lod_scratch2.R`), including a sanity check that the dyad-H2 formula reduces exactly to Hardy-Weinberg.
+Hand-built a fully cross-validated fixture (TRIO via a known dam; DYAD via an unrecorded dam; a
+related-but-not-true-parent candidate per Dragon 3; a low-coverage candidate for `lowPower`; a
+zero-shared-loci candidate; wrong recorded parents for the auto-detect test), verifying exclusion
+counts against the REAL, current `markerParentageExclusion()` before trusting them. Surfaced 2 real
+findings the ratified plan didn't spell out (any single Mendelian-incompatible locus drives LOD to
+exactly `-Inf` even when `excluded=FALSE`; an exact `-Inf`/`-Inf` tie needs `delta=0`, not the literal
+`NaN` R arithmetic gives) and 1 factual correction to the plan's own text (every existing
+`test_marker*.R` file uses inline fixtures, not a new `inst/extdata/examples/` file). Captured a
+`dput()` golden-master snapshot of `markerParentageExclusion()`'s CURRENT (pre-refactor) output for
+the D7 regression test. Posed the PRE-RED->RED gate via `AskUserQuestion` with the exact planned test
+list; owner approved. **(4)** RED: wrote 12 test_that blocks (later 16 after REFACTOR added 4 more)
+in the new `tests/testthat/test_markerParentageLikelihood.R` + 1 golden-master regression test in
+`tests/testthat/test_markerParentageExclusion.R`; confirmed all 12 new tests failed with "could not
+find function" (genuine RED, not a fixture bug -- caught and fixed one fixture bug of my own before
+this confirmation run) and the golden-master + all existing `markerParentageExclusion` tests passed
+(37/37, proving the snapshot accurate pre-refactor). Committed RED (`3590157a`). Posed the RED->GREEN
+gate; owner approved. **(5)** GREEN: implemented `.markerOppositeHomozygoteCount()` (D7 extraction,
+confirmed byte-identical via the golden master), `.markerAlleleFrequencyTable()` (D9), and
+`markerParentageLikelihood()` -- all 12 RED tests passed on the first implementation attempt. Fixed
+9 real `lintr` findings (4 line-length, 5 implicit-integer) in the new file; ran `devtools::document()`,
+which surfaced an unrelated pre-existing gap (`readTwinRelations()`, shipped S494, never actually
+exported). Full clean regression read 0/0 (4832 passed); `devtools::check()` confirmed twice
+(with and without explicit `NOT_CRAN`) as an exact match to the pre-existing baseline. Committed GREEN
+(`b983747a`). Posed the GREEN->REFACTOR gate; owner picked "yes, light refactor." **(6)** REFACTOR:
+hoisted the transmission-probability math into 2 more named internal helpers
+(`.markerTransmissionProbability()`, `.markerTwoSourceGenotypeProbability()`), added 4 direct unit
+tests pinning the formula itself. **Self-caught a real roxygen2 doc-block-shift bug** in the first
+refactor attempt (inserting the new documented functions between `markerParentageLikelihood()`'s own
+docstring and its function definition, with no blank-line boundary, merged all 3 roxygen blocks into
+one, which `roxygen2` then attached to the WRONG functions -- `markerParentageLikelihood()` silently
+lost its `@export`, `.markerTransmissionProbability()` silently gained one) -- caught via `git diff
+NAMESPACE` before committing, fixed by relocating both helpers to the end of the file (confirmed
+byte-identical `man/markerParentageLikelihood.Rd` after the fix). Full regression read then surfaced
+a second, genuinely in-scope failure this session's own `devtools::document()` run caused:
+`test_pkgdown_reference_config.R`'s reference-coverage guard, missing entries for both
+`markerParentageLikelihood()` (mine) and `readTwinRelations()` (the incidental S494 gap, now surfaced
+by NAMESPACE) -- fixed by adding both to `_pkgdown.yml`. Committed REFACTOR (`67ee1d9a`). Final
+verification: full clean regression read 0/0 (4841 passed); `devtools::check()` re-confirmed
+identical to baseline a third time; `lintr` 0 lints. **(7)** Close-out: this evaluation +
+self-assessment, `PROJECT_LEARNINGS.md` Learnings 495-496, `CLAUDE.md` learning-count update + new
+`_pkgdown.yml` reference-coverage checklist, `BACKLOG.md` progress narrative, `CHANGELOG.md` entry,
+this handoff.
+
+**Session 495 Handoff Evaluation (by Session 496): 9/10.** **What helped:** the "Key files" pointer
+(`docs/planning/issue147-...-plan.md` §3/§5/§7, `R/markerParentageExclusion.R:100-160`,
+`R/getPotentialParents.R:64-199`, `R/markerHeterozygosity.R:98-108`) was exactly right and directly
+actionable -- every one of those ranges was read and used exactly as described, with zero wasted
+searching. All 4 Gotchas were directly load-bearing: Gotcha 1 (do not implement the error-tolerant
+formula without independent re-verification) was followed to the letter; Gotcha 2 (RED tests MUST
+include a related-candidate fixture or the session's own highest-value stress-test finding never gets
+exercised) directly shaped this session's `Ssib` fixture and its documentation comment; Gotcha 3
+(`excluded`/`lowPower` must never collide with `flagged`) was followed exactly in the return-shape
+design; Gotcha 4 (the D7 regression test must prove byte-identical behavior) directly produced this
+session's `dput()`-golden-master approach. **What was missing:** nothing the handoff could reasonably
+have provided -- S495's own self-assessment explicitly and correctly scoped the from-scratch formula
+re-derivation as belonging to the implementing session's own Pre-RED (a sensible division of labor,
+not a gap), and this session's own subsequent discoveries (the `readTwinRelations()` NAMESPACE gap,
+the WORDLIST convention correction, the roxygen2 doc-block-shift bug) were all things S495 had no way
+to anticipate. **What was wrong:** nothing -- every claim in the S495 handoff was verified correct
+through direct use. **ROI:** strongly positive, on par with S495's own 9/10 evaluation of S494's
+handoff.
+
+**Self-assessment (Session 496): 8/10.** **Strengths:** (1) Did not trust the design doc's own LOD
+formula description at face value -- independently re-derived it from first principles via a
+standalone scratch script and verified a Hardy-Weinberg sanity check before writing a single RED test
+assertion, extending `markerFst()`'s own "catch a wrong formula before it ships" precedent to a
+brand-new formula rather than a mis-cited existing one. (2) Caught and self-corrected 3 distinct
+errors before they reached a commit: an unintentional Mendelian impossibility in the first fixture
+draft (found by running the numbers, not eyeballing them), a wrong WORDLIST sort-convention assumption
+(found by directly inspecting the actual file rather than trusting inherited BACKLOG.md prose), and a
+real roxygen2 doc-block-shift bug during REFACTOR (found via `git diff NAMESPACE`, not a re-read of
+the source). (3) Found and transparently reported an incidental, pre-existing, unrelated defect
+(`readTwinRelations()` never exported since S494) rather than silently absorbing it into this
+session's own attribution, in both commit messages and this handoff. (4) Ran the FULL clean
+regression read (not just the new test file) after REFACTOR and caught a second, genuinely in-scope
+regression (`_pkgdown.yml` reference-coverage) that a narrower verification pass would have missed
+entirely. (5) Followed the TDD phase-gate contract exactly, with the exact-planned-actions format at
+every `AskUserQuestion` transition. **Weaknesses:** (1) The first REFACTOR attempt introduced a real
+bug (the roxygen2 shift) -- caught and fixed before committing, but a more careful initial placement
+(helpers at the end of the file from the start, matching the eventual fix) would have avoided it
+rather than requiring a fix-after-the-fact. (2) The first WORDLIST insertion attempt used the wrong
+convention -- a closer initial read of the file's own actual content (which was already available)
+would have caught this without a revert-and-redo cycle. (3) Did not invoke a "deepest available
+reasoning mode" setting at session start (same disclosed limitation as S495 and the broader session
+family -- no `/effort max`-equivalent tool directly available). (4) Did not root-cause WHY
+`tests/spelling.Rout.save` is currently absent (never committed vs. deleted later) -- correctly
+scoped out of this session per its own Slice 1 boundary, but left as an open question rather than a
+closed one. **Compared to previous sessions:** this session's most distinctive contribution is doing
+the full from-scratch mathematical derivation AND independent numerical verification of a brand-new
+statistical formula before any RED test existed, going one step further than `markerFst()`'s own
+precedent (which caught a wrong CITATION/formula identity) by also catching subtler errors in this
+session's OWN fixture construction (an accidental Mendelian impossibility a hand-derivation alone
+would not have surfaced without actually running the numbers).
+
+**Handoff to Session 497:**
+- **What's next:** Issue #147 Slice 1 is DONE. **Slice 2 (UI + documentation)** is the natural next
+  pickup for this specific issue -- a 5th read-only "Candidate Parent Assignment" tab in
+  `R/modMarkerGenetics.R` (D10), plus citation (`population_genetics_terms.html`), `NEWS.Rmd`, and
+  tutorial/article documentation, matching Slice 2's own DONE criteria
+  (`docs/planning/issue147-likelihood-parentage-assignment-plan.md` §5). Also still available from
+  S495's own Phase 0 priorities list, unchanged: **design session for #145** (READY, Effort M --
+  sire/dam placement, investigation already done by a prior session); **design session for #138**
+  (READY, Effort M, low priority -- full-colony rendering beyond the node cap). Lower priority,
+  unchanged from S495's own list: `.buildTwinConnectorEdges()` missing-`#009E73`-color item (Effort
+  S); non-portable-filename `devtools::check()` rename (Effort S); spelling-WORDLIST gap (now 9
+  pre-existing words, unrelated to this session's own 16 additions, still Effort S);
+  `highlightNearest` degree=6 mitigation (Effort M); live-app node-count discrepancy; `data-raw/
+  rhesusPedigree.R` docstring mismatch; iCloud duplicate-file cleanup (still blocked on repo
+  relocation); the sequencing audit's own "2 High-priority audit rows with no filed issue" gap
+  (Longitudinal genetic-health monitoring; Ancestry guardrails), still not filed as of this session.
+  **Newly found this session, not yet fixed:** `tests/spelling.Rout.save` is absent from the repo, so
+  `devtools::check()` currently reports NO spelling NOTE regardless of how large the `inst/WORDLIST`
+  gap grows -- a future session wanting that guard active again should commit a fresh
+  `.Rout.save` from a currently-clean state.
+- **Key files:** `R/markerParentageLikelihood.R` (the new exported function + its 2 hoisted internal
+  helpers, all 3 with full roxygen); `R/markerAlleleFrequency.R` (D9 helper);
+  `R/markerParentageExclusion.R:161-193` (the D7-extracted `.markerOppositeHomozygoteCount()`);
+  `tests/testthat/test_markerParentageLikelihood.R` (the combined fixture + all 16 test_that blocks,
+  including the exact hand-verified LOD/delta numbers a Slice 2 UI smoke test should match);
+  `docs/planning/issue147-likelihood-parentage-assignment-plan.md` §5 Slice 2 (DONE criteria,
+  files-to-touch).
+- **Gotchas:** (1) **`markerParentageLikelihood()`'s LOD can be `-Inf` even when `excluded=FALSE`** --
+  a single Mendelian-incompatible locus is a true probability-zero event under the no-error-model
+  formula, independent of the `maxExclusions` tolerance threshold; a Slice 2 UI must not assume
+  `excluded=FALSE` implies a "reasonable-looking" finite LOD. (2) **When adding a new roxygen
+  -documented function anywhere in an existing file, either place it before the file's first existing
+  block or after the last function's closing brace -- never between an existing docstring and the
+  function it documents**, even with a blank-line separator (a doc-block-shift bug is possible either
+  way; the only real defense is diffing the actual generated `NAMESPACE`/`man/*.Rd` after
+  `devtools::document()`, not re-reading the source). See `PROJECT_LEARNINGS.md` Learning 495. (3)
+  **`inst/WORDLIST`'s real convention is case-insensitive alphabetical, not literal `LC_ALL=C`
+  byte-order** despite BACKLOG.md's own prior-session phrasing -- verify neighbors by direct
+  inspection, not by trusting that phrase literally. See Learning 496. (4) A new exported function
+  needs a `_pkgdown.yml` reference: group entry in the SAME session (new `CLAUDE.md` checklist,
+  ratified this session after this exact gap hit twice) -- `test_pkgdown_reference_config.R` will
+  fail the full regression read otherwise, and it cannot be satisfied for only one missing entry if
+  more than one exists. (5) All standing gotchas from S479-495 carry forward unchanged (`gh issue
+  view <N>` needs `--json`; `NOT_CRAN=true` for tests; `devtools::install()` before driving the
+  installed app; `git commit -F <file>` for backtick-quoted messages; a piped `| head -N` on a
+  long-running Rscript command can hang the process -- redirect to a file instead;
+  `run_in_background: true` alone, never a manual shell `&` too).
+- **Runtime smoke test:** N/A -- `markerParentageLikelihood()` is script-callable only this slice, no
+  Shiny UI wiring (that is Slice 2's own scope). Phase 3E's "launch the application" requirement
+  applies only to sessions that change runtime behavior, per its own text.
+- **Self-assessment score:** 8/10 (breakdown above).
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
 
 ### What Session 495 Did
 **Deliverable:** Design session for GitHub issue #147 (likelihood-based candidate-parent assignment
