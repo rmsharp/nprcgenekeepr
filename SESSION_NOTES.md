@@ -11,14 +11,124 @@
 Pedigree Diagram node labels (data-model gated)") -- Tier 2 step 3 in the owner's standing
 #133 > #136 > #137 > #138 sequencing (set S436). Planning session: the plan IS the deliverable;
 implementation is a separate future session (`SESSION_RUNNER.md` FM #18).
-**Started:** 2026-08-08.
-**Status:** Session claimed. Work beginning. Workstream: `docs/methodology/workstreams/
-ARCHITECTURE_WORKSTREAM.md` (owner-picked via `AskUserQuestion` over the literal
+**Started/Completed:** 2026-08-08 / 2026-08-08.
+**Status:** DONE. `docs/planning/issue136-name-labels-pedigree-diagram-plan.md` (581 lines, commit
+`3121bb71`), owner-ratified in two `AskUserQuestion` rounds. Workstream: `docs/methodology/
+workstreams/ARCHITECTURE_WORKSTREAM.md` (owner-picked via `AskUserQuestion` over the literal
 `DESIGN_WORKSTREAM.md` mapping -- #136 is a data-model + rendering-contract change, not a UI
-layout/zone design, and structurally matches issue #133's own plan shape).
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+layout/zone design, and structurally matches issue #133's own plan shape). Planning session: the
+plan IS the deliverable; no `R/`/`tests/` content changed (FM #18).
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Full Phase 0 orient. Ledger + `HANDOFFS.md` reconcile came back
+clean (the one commit ahead of the `CHANGELOG.md` frontier, `a5b13c45`, was S487's own established
+self-referential sha-backfill, verified by reading its diff -- not an unrecorded action). Dashboard
+98/100. **Process slip, owned:** I fired the priorities-list `AskUserQuestion` *before* rendering the
+prose orientation report, inverting `CLAUDE.md`'s own ordering (the picker is supposed to *follow*
+the rendered list). Caught it myself immediately after and rendered the full report before doing any
+work, but the gate fired out of order. **(2)** Raised a workstream-mismatch question before starting:
+the literal `SESSION_RUNNER.md` mapping sends "Design the X" to `DESIGN_WORKSTREAM.md`, whose actual
+content (star component, panel zones, thematic column grouping) does not describe this kind of
+change; owner picked `ARCHITECTURE_WORKSTREAM.md`. **(3)** Phase 1B claim committed (`23e48448`).
+**(4)** Launched a 5-lens read-only research `Workflow` (data model / render chain / layout geometry
+/ kinship2+domain fit / prior decisions) with per-finding adversarial verification -- then, rather
+than wait on it, independently re-derived every load-bearing fact myself. That parallel track is what
+this session's quality rests on: **7 of the 8 facts the design turns on I verified first-hand before
+any agent reported.** **(5)** Posed the framing question to the owner mid-research (names exist? which
+framing?) so the ~15-minute research tail was not idle time. **(6)** Wrote §1-§2 (context + evidence)
+from my own verified findings, then folded in the research's genuinely new material -- most
+importantly the `obfuscatePed()` disclosure defect, which I then confirmed myself at
+`R/obfuscatePed.R:31-43`. **(7)** Ratified the four judgment-call decisions via a second
+`AskUserQuestion`. **(8)** Ran the cross-reference verification pass (Learning #7) over every citation
+in the doc -- found and fixed one off-by-one (`finalNodes` is `:1237`, not `:1238`). **(9)** Read the
+adversarial verdicts and applied all three material corrections to the doc (see self-assessment).
+**(10)** Stopped the workflow once its value was extracted rather than leaving it running.
+
+**What the design concluded:** the issue's framing is wrong in three ways, all verified. (a) `label`
+is **already** an independent channel and `label != id` **already ships** -- duplicate nodes carry
+`id = __dup_X_n` with `label = <realId>` (`:906`), union nodes carry `label = ""` (`:929`). #136 is
+not "build a label mechanism"; it is "choose the string." (b) The schema *does* contain
+`first_name`/`second_name` -- but they are **allele** names (`R/headerDisplayNames.R:52-53`), the
+exact Learning 485 trap, re-encountered. (c) The real binding constraint is **geometry, not the data
+model**: measured on the real 375-individual fixture, 25.6% of adjacent label-bearing node pairs sit
+48 layout units apart while nodes are ~50 units across, every id is exactly 6 characters, and nothing
+in the fixed-coordinate layout measures text -- unlike kinship2, which sizes its layout with
+`strwidth`/`strheight`. The audit gated #136 on the cheap half and missed the expensive half.
+
+**Session 487 Handoff Evaluation (by Session 488): 9/10.** **What helped:** the "what's next" section
+named #136 as the next Tier 2 item *and* flagged the thing that mattered most -- "each needs its own
+scoping/design session first (none has a ratified design doc yet, unlike #133)" -- which correctly
+set this session's shape as a planning session before I read anything else. Gotcha (2) ("widget-JSON
+`grepl()` tests cannot see label clipping -- always screenshot a rendering-surface change") and
+gotcha (1) (shape-family) both turned out to be *directly* load-bearing for #136 rather than merely
+adjacent: they are why §2.3's geometry analysis exists at all and why Slice 2's verification contract
+mandates screenshots. The standing-gotcha roll-up (5) saved real time. **What was missing:** nothing
+#136-specific that S487 could reasonably have known. One structural gap, not S487's fault: no handoff
+in this cluster has ever mentioned that `obfuscatePed()` scrubs only `id`/`sire`/`dam`/Dates -- the
+single strongest constraint on #136 -- because no prior session had reason to look. **What was
+wrong:** nothing. Every file:line in the handoff resolved; `R/modPedigree.R:476-509`, `stepY=54L`,
+and the hexagon shape were all exactly as described. **ROI:** strongly positive.
+
+**Self-assessment (Session 488): 8/10.** **Strengths:** (1) Did not let a multi-agent fan-out
+substitute for my own verification -- I re-derived the schema, the `label != id` precedent, the
+`novelCols` passthrough, the geometry distribution, `useLabels`, kinship2's contract, and
+`obfuscatePed()` myself, and I caught the workflow's own citation drift rather than publishing it.
+Learning 485 warned specifically about trusting agent output here, and that warning was earned.
+(2) Treated the audit's "no action" disposition as a live option rather than a formality -- the
+framing question offered decline and tooltip-only with honest cases, so the chosen framing is a real
+decision, not a default. (3) Found the `obfuscatePed()` disclosure defect and made it a mandatory,
+same-slice requirement (D8) instead of a footnote -- a name is the first genuinely PII-shaped field
+this package has contemplated, and shipping it without that fix would have produced scrubbed IDs
+beside intact real names. (4) Measured rather than asserted the geometry, which converted a vague
+"labels might be long" worry into a quantified constraint that drove D3/D10. (5) Applied the
+adversarial verdicts *against my own draft* -- three corrections landed, including softening a
+kinship2 claim I had already written. **Weaknesses:** (1) The Phase 0 ordering slip above -- I fired
+the picker before the report. Minor in effect, but it is exactly the "shave one step" pattern FM #17
+describes, and I should have caught it before firing, not after. (2) I let the research workflow run
+~15 minutes past the point where I had independently established most of its findings; a tighter
+session would have scoped the fan-out to only the lenses I could not cover myself (prior decisions
+and domain fit), rather than duplicating the data-model and render-chain work I was doing anyway.
+(3) Dragon 1 (multi-line `\n` label rendering) is unresolved -- I could not confirm it from the
+minified bundle and chose to flag it rather than spin up a browser check; defensible for a design
+session, but it does leave D3's exact form resting on an unverified assumption. **Compared to
+previous sessions:** this is the same lesson as S486/S487 one layer further out -- S486 learned that
+`outerHTML` is not canvas content, S487 that widget-JSON is not rendering; S488's version is that
+*an agent's citation is not source*. Same failure shape, three different altitudes.
+
+**Handoff to Session 489:**
+- **What's next:** implement **Slice 1** of this plan (`docs/planning/
+  issue136-name-labels-pedigree-diagram-plan.md` §4) -- data model + de-identification: `name` into
+  `.nprcColumnSchema$possible`, roxygen + `.Rd`, the `obfuscatePed()` scrub (D8), a new sibling
+  fixture + `data-raw/` generator (D9), and `tests/testthat/test_name_first_class.R` modelled on the
+  existing `test_species_first_class.R`. **No visible app change in Slice 1** -- the label rendering
+  and the toggle are Slice 2. Also still available: the 10 `test_modMarkerGenetics.R` warnings
+  (Effort S, root-caused by S487); the non-portable-filename `check()` ERROR (Effort S); #147 Tier 1
+  design / #149 Tier 2 (GENETIC_METRICS); LabKey (BLOCKED); NPRC outreach (DECISION NEEDED).
+- **Key files:** `docs/planning/issue136-name-labels-pedigree-diagram-plan.md` (§2.7 traps and §4
+  slice contracts are the operative parts); `R/columnSchema.R:15-24` (the one-word schema add);
+  `R/obfuscatePed.R:29-49` (D8 -- currently scrubs only id/sire/dam + Date columns);
+  `R/makePedigreeDiagramData.R:77` and `:895`/`:906` (label sites, Slice 2);
+  `R/makePedigreeDiagramData.R:1237` (`finalNodes <- rbind(keptNodes, newNodes[, names(keptNodes)])`
+  -- the trap that forbids adding a node column); `tests/testthat/test_species_first_class.R` (the
+  RED template); `tests/testthat/test_makePedigreeMatingLayout.R:112,115,132,437-438` (the four
+  existing pins -- all survive an optional-column design).
+- **Gotchas:** (1) **Do not add a new column to the nodes data frame** -- `:1237` does
+  `newNodes[, names(keptNodes)]` and throws "undefined columns selected" under
+  `edgeStyle="rectilinear"`. Change the `label` *value*. This is the same class of gap S486 hit for
+  #133. (2) **`first_name`/`second_name` are ALLELE columns**, not names -- and `fixColumnNames()`
+  will silently rewrite a user's "First Name" header into the allele column. Only the bare spelling
+  `name` round-trips; `animal_name` -> `animalname`, `callName` -> `callname`, and anything
+  containing "ego" -> `id` (`R/fixColumnNames.R:45`). (3) `obfuscatePed()` will leak a `name` column
+  unless D8 ships **in the same slice** that introduces it. (4) Dragon 1: multi-line `\n` label
+  rendering is **unverified** -- confirm hands-on at Pre-RED before committing to D3's two-line form;
+  fall back to single-line `"id (name)"` if it fails. This project has twice had a design's rendering
+  assumption fail exactly this way (S465 `hidden=TRUE`, S487 shape family). (5) Registering in
+  `$possible` is *not* required for the column to arrive -- `qcStudbook.R:317-319` appends
+  unrecognized columns as `novelCols`. (6) All standing gotchas from S479-487 carry forward unchanged
+  (`gh issue view <N>` needs `--json`; `NOT_CRAN=true` for tests; `NPRC_RUN_E2E=true` for ANY live
+  `shinytest2`/`chromote` script; `docs/planning/*.qmd` render byproducts never committed; re-render
+  `NEWS.Rmd` -> `NEWS.md` and check the diff).
+- **Self-assessment score:** 8/10 (breakdown above).
 
 ### What Session 487 Did
 **Deliverable:** Implement Slice 2 of the ratified issue #133 plan (`docs/planning/

@@ -43,6 +43,54 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-08 · [issue #136] Designed and ratified the name-node-label plan for the pedigree diagram (Session 488)
+- **Deliverable:** `docs/planning/issue136-name-labels-pedigree-diagram-plan.md`
+  (commit `3121bb71`), an architecture design/scoping document for GitHub issue
+  #136 ("Show names (not just ID) as Pedigree Diagram node labels"). Tier 2 step 3
+  in the owner's standing #133 > #136 > #137 > #138 order (set S436). Planning
+  session only — no `R/`/`tests/`/`man/` content changed (FM #18).
+- **Workstream:** `ARCHITECTURE_WORKSTREAM.md`, owner-picked via `AskUserQuestion`
+  over the literal `DESIGN_WORKSTREAM.md` task mapping (whose content — star
+  component, panel zones, thematic grouping — does not describe a data-model plus
+  rendering-contract change).
+- **Ratified via `AskUserQuestion` in two rounds:** (1) framing, posed *before* the
+  decisions section was drafted since the source audit's own disposition was "no
+  action" — owner answered that names exist at **some centers, inconsistently**
+  (making a per-node fallback a hard requirement, not a nicety) and chose an
+  **optional `name` column + off-by-default display toggle** over tooltip-only,
+  decline, and a configurable label-source column; (2) the four judgment-call
+  decisions — **D3** augment (`id` + name, not name-only), **D6** pin
+  `useLabels = FALSE` on the search dropdown, **D10** truncate the displayed name
+  with the full name in the tooltip, **D8** `obfuscatePed()` drops `name` to `NA`.
+  All four ratified as recommended.
+- **Corrects three premises in the issue itself**, each verified first-hand:
+  (a) `label` is already an independent channel and `label != id` **already ships**
+  (duplicate nodes `R/makePedigreeDiagramData.R:906`, union nodes `:929`) — #136 is
+  "choose the string", not "build the mechanism"; (b) the schema's
+  `first_name`/`second_name` are **allele** names (`R/headerDisplayNames.R:52-53`),
+  the Learning 485 trap re-encountered, though the "no *animal*-name column"
+  conclusion holds; (c) the binding constraint is **geometry, not the data model** —
+  measured on the real 375-individual fixture, every id is exactly 6 characters and
+  25.6% of adjacent label-bearing node pairs sit 48 layout units apart with ~50-unit
+  nodes, and nothing in the fixed-coordinate layout measures text (unlike kinship2,
+  which sizes its layout via `strwidth`/`strheight`).
+- **Found a disclosure defect no prior session had reason to look for:**
+  `obfuscatePed()` (`R/obfuscatePed.R:31-43`) scrubs only `id`/`sire`/`dam` and
+  Date-classed columns, so a `name` column would survive de-identification intact —
+  scrubbed IDs beside real names. Made a mandatory same-slice requirement (D8).
+- **Method:** a 5-lens read-only research `Workflow` with per-finding adversarial
+  verification, run *alongside* independent first-hand verification of every
+  load-bearing fact. Three agent claims were corrected before publication (an
+  over-stated MIT-license constraint, an over-stated kinship2 "only a length check",
+  and an incomplete column-vocabulary enumeration) and one citation drift fixed
+  (`finalNodes` is `:1237`, not `:1238`), per Learning 485's rule on consuming
+  multi-agent research.
+- **Scoped as 2 vertical slices** with full DONE/verification contracts (Slice 1:
+  data model + de-identification, no visible change; Slice 2: label rendering +
+  toggle + documentation). Issue #136 intentionally left **open** — design ratified,
+  not yet implemented; no `gh issue close` this session.
+- See `PROJECT_LEARNINGS.md` Learning 488.
+
 ### 2026-08-08 · [issue #133] Implemented Slice 2 (legend + documentation) of the affected-status pedigree-diagram design; issue #133 closed (Session 487)
 - **Deliverable:** the Diagram tab's shape-to-sex `visLegend()` gained a matching
   "Affected" row (D6), reusing Slice 1's `#CC79A7` color — one new row in the
