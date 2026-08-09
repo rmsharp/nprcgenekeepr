@@ -45,7 +45,9 @@ dashboard_history.jsonl
 revdep/
 .positai
 
-# Mac Finder metadata (not the pre-existing tracked root .DS_Store -- untouched here)
+# Mac Finder metadata. The formerly-tracked .DS_Store and man/.DS_Store were
+# untracked via `git rm --cached` (S488) -- a .gitignore rule alone has no effect
+# on already-tracked files, which is why they kept reappearing in `git status`.
 .DS_Store
 
 # User's local-only copyrighted reference material (full-text journal articles/pages under
