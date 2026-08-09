@@ -16,12 +16,169 @@ toggle in the existing dynamic diagram `tagList(...)` (self-referential-value pa
 `NEWS.Rmd`/tutorial-article documentation. Following `docs/methodology/workstreams/
 DEVELOPMENT_WORKSTREAM.md` under this project's strict TDD contract (PRE-RED->RED->GREEN->REFACTOR,
 `AskUserQuestion`-gated at each transition).
-**Started:** 2026-08-09.
-**Status:** Session claimed. Work beginning. Pre-RED reading complete (see commit for detail);
-PRE-RED->RED gate approved by owner.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Started/Completed:** 2026-08-09 / 2026-08-09.
+**Status:** DONE. Full strict-TDD PRE-RED->RED->GREEN cycle, `AskUserQuestion`-gated at every
+transition (a dedicated pre-RED scope decision on the Slice-2 color gap; PRE-RED->RED; RED->GREEN;
+GREEN->REFACTOR, owner-confirmed skip). Verified: all 4 new/changed test files green; full clean
+regression read 0 failed/0 error, 4758 passed, 175 skipped, 10 pre-existing baseline warnings
+(unchanged); `devtools::check()` 2 ERRORs/1 WARNING/2 NOTEs, an exact match to S493's own baseline,
+0 new; `lintr::lint_package()` 0 lints (6 false positives suppressed via the established `# nolint`
+convention). Phase 3E: the full, real `test-e2e-pedigree-module.R` suite (13 tests, 2 new) run live
+against a freshly `devtools::install()`ed package -- all 13 passed, 0 console errors. `NEWS.Rmd`/
+`NEWS.md` and `vignettes/manual_components/_pedigree_browser.Rmd` updated. Citation checklist
+(#120): N/A, confirmed explicitly. **Issue #137 is now fully implemented across all 3 slices --
+closed this session** (`gh issue close 137 --reason completed`).
+**Ledger:** recorded in `CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Full Phase 0 orient (SAFEGUARDS.md, SESSION_NOTES.md, `gh
+issue list`, git status/log/diff, `methodology_dashboard.py` -- health 98/100; ledger + `HANDOFFS.md`
+reconcile both clean, no ghost session -- the one commit since the `CHANGELOG.md` frontier was
+S493's own self-referential `HANDOFFS.md` commit-sha backfill, expected pattern). Rendered the
+priorities list (4 options: #137 Slice 3, design #147, design #145, design #138) via
+`AskUserQuestion`; owner picked #137 Slice 3. **(2)** Pre-RED: re-read `R/modPedigree.R` in full,
+`R/modGeneticValue.R`'s `kinshipOverrideFile`/`kinshipOverrideData` (the load-bearing upload
+precedent, found via a dedicated `Agent` search alongside my own direct reads), `R/checkTwinRelations.R`,
+`.buildTwinConnectorEdges()`, `visLegend()`'s own source (confirmed `addEdges` passes through
+untouched to `x$legend$edges`), and `R/appServer.R`'s `modPedigreeServer` call site. Found two
+scope-revising facts before writing any code: (a) neither `R/appServer.R` nor `R/modInput.R` needed
+a change -- `twinRelations`, unlike `kinshipOverrides`, is consumed only inside `modPedigree`'s own
+render chain, confirmed by direct reads, not assumed from the plan's own "Touches" list; (b) a
+`fileInput` has no `value=` argument a fresh `renderUI()` could read back self-referentially the way
+`checkboxInput`/`radioButtons` do (Learning 490's own mechanism, extended to a new corollary) -- so
+the new upload control was placed in the STATIC UI, never the dynamically re-rendered
+`pedigreeDiagramUI` block, sidestepping the re-render-wipe risk entirely rather than fighting it.
+Also found, via direct grep, that Slice 2's own `.buildTwinConnectorEdges()` never actually wired
+the `#009E73` color S493's own handoff narrative said was picked -- surfaced via a dedicated
+`AskUserQuestion` scope decision (owner picked: legend describes only what's actually rendered;
+file the gap, don't fix it here) before the phase-gate question. **(3)** PRE-RED->RED gate
+(`AskUserQuestion`): new `tests/testthat/test_readTwinRelations.R` (11 expectations),
+`tests/testthat/test_modPedigree_twinRelations.R` (a dedicated file, mirroring
+`test_modGeneticValue_kinshipOverrides.R`'s own precedent -- upload+toggle-on renders connectors;
+upload+toggle-off doesn't; no-upload doesn't; malformed-upload is non-fatal), 3 new blocks in
+`test_modPedigree.R` (legend MZ/DZ/UZ rows; static fileInput presence; toggle presence/default), and
+2 new live tests in `test-e2e-pedigree-module.R`. Confirmed all new failures were genuinely
+"could not find function"/"expected TRUE got FALSE" (not setup/typo errors); full regression read
+confirmed nothing else broke (failed:8/error:3, exactly the 11 new RED assertions). Committed RED
+(`f79c4d95`). **(4)** RED->GREEN gate: implemented `R/readTwinRelations.R`,
+`R/modPedigree.R`'s new static wellPanel + `fileInput`, `twinRelationsData()` reactive (mirrors
+`kinshipOverrideData` minus its dead warning-handling branch -- `checkTwinRelations()` never
+`warn()`s), `.currentShowTwinConnectors()` closure + checkbox, `diagramLayout()`'s toggle-gated
+`twinRelations` pass-through, and the `visLegend()` `addEdges` extension. Committed GREEN
+(`a2ae98f0`). Fixing lintr's 6 false positives (5 `commented_code_linter` on prose comments, 1
+`nonportable_path_linter` on a plain label string containing `/`) needed one follow-up commit
+(`65629c39`) -- suppressed via the established `# nolint`/`# nolint start...end` convention, not
+deleted or reworded. Also fixed one pre-existing test (`test_modPedigree.R`'s "delegates the focal
+file input to a dynamic uiOutput" test) whose `expect_false(grepl('type="file"', ...))` assertion
+was legitimately too broad once a second, deliberately-static file input existed -- tightened to
+check the focal-animal input's own namespaced id specifically, preserving the test's real intent.
+**(5)** GREEN->REFACTOR gate: declined -- the diff was already minimal and precedent-mirroring; the
+one real dedup opportunity found (`.currentShowTwinConnectors()`/`.currentShowNames()`/
+`.currentEdgeStyle()` are near-identical closures) would require touching the other two toggles'
+pre-existing code, outside this slice's own declared scope. **(6)** Phase 3E: `devtools::install()`
+run proactively (Learning 440's stale-install trap avoided, not rediscovered) before driving the
+REAL app -- the full, permanently-committed `test-e2e-pedigree-module.R` suite (13 tests) run live,
+all passing, including the 2 new twin-connector tests (MZ/DZ/UZ label/dash assertions against the
+live vis.js widget; the toggle-survives-`edgeStyle`-switch regression test, mirroring Learning 490's
+own showNames pattern applied to a second toggle). **(7)** Close-out: this evaluation + self
+-assessment, `NEWS.Rmd`/`NEWS.md` + `_pedigree_browser.Rmd` documentation, citation-checklist N/A
+confirmation, new `BACKLOG.md` Housekeeping item for the Slice 2 color gap, `BACKLOG.md` progress
+narrative + `CHANGELOG.md` entries, `gh issue close 137`, this handoff.
+
+**Session 493 Handoff Evaluation (by Session 494): 9/10.** **What helped:** the handoff's "what's
+next" named exactly the right Pre-RED reading list (`R/modInput.R`/`R/appServer.R` to resolve
+Dragon 1) and it led directly to the correct answer -- `R/modGeneticValue.R`'s `kinshipOverrideFile`
+precedent, not `modInput.R` at all. The Learning 490 "hard requirement" framing for the toggle's
+self-referential value was reapplied verbatim and correctly. The `visLegend()`
+single-call/`addEdges` citation was exactly right and directly actionable -- confirmed via source
+read, not just trusted. The gotchas list (renv-library-path subprocess injection, `get_screenshot()`
+not `screenshot()`, `wait_=FALSE`, the rbind-trap line numbers) all carried forward correctly,
+though most weren't needed this session since Slice 3 drove the REAL installed app, not a standalone
+harness. **What was missing:** the handoff (inheriting from the S491 plan document's own "Touches"
+list, not S493's own invention) did not flag that `R/appServer.R`/`R/modInput.R` might turn out
+unnecessary -- this cost no real time since Pre-RED reading is mandatory regardless, but a plan
+whose own scope list is pre-verified against the actual codebase (the way this document's own §2
+inventory tries to be) is stronger than one that has to be re-verified downstream. **What was
+wrong:** nothing in S493's own claims -- the one inaccuracy found (the `#009E73` color never being
+wired into code) is a gap BETWEEN the handoff's stated decision and the actual shipped diff, not a
+false claim the handoff itself makes (the handoff accurately describes what was *decided*, not what
+was *implemented*, and this session's own close-out is careful to preserve that same distinction).
+**ROI:** strongly positive -- the plan's own §4 Slice 3 section and S493's own key-files/gotchas
+list needed almost no re-derivation.
+
+**Self-assessment (Session 494): 9/10.** **Strengths:** (1) Found and corrected two scope
+overstatements inherited from the ratified plan document itself (`R/appServer.R`/`R/modInput.R`)
+via direct reads before writing any code, rather than trusting either the plan or the immediately
+-prior session's handoff -- a further application of this project's "verify, don't assume" family
+(S481/484-493) to the SLICE'S OWN PLAN ARTIFACT, not just to claims about the codebase. (2) Derived
+a genuinely new piece of reasoning (the file-input corollary to Learning 490 -- no `value=`
+self-referential escape hatch exists for `fileInput` at all) rather than just reapplying the
+existing checkbox-specific lesson, and used it to make a real design decision (static vs. dynamic
+UI placement) before any bug could occur, not after one was found live. (3) Found, verified via
+direct grep (not assumed from prose), and properly filed -- rather than silently fixing out-of
+-slice-scope or silently ignoring -- a real gap between S493's own handoff narrative and the
+actually-shipped code (the missing `#009E73` color). (4) Recognized a pre-existing test's assertion
+had gone stale as a DIRECT, foreseeable consequence of this session's own deliberate design choice
+(a second static file input), and fixed it narrowly to preserve the test's real intent rather than
+weakening or deleting it. (5) Did real, not token, Phase 3E verification: proactively avoided the
+documented Learning 440 stale-install trap, then ran the full, permanently-committed E2E suite live
+against the real app (not a standalone harness, since Slice 3's UI now genuinely exists) -- all 13
+tests passing is real evidence, not just "no console errors" on an ad hoc render. **Weaknesses:**
+(1) Did not explicitly invoke a "deepest available reasoning mode" setting at session start, matching
+every recent session's own disclosed limitation. (2) The first `devtools::install()` call used an
+invalid `upgrade = "never"` argument (a `pak`-style value, not valid for `devtools::install()`),
+costing one avoidable extra round-trip before the live e2e run. (3) `devtools::check()` and the full
+regression suite were run in immediate sequence rather than launched together from the earliest
+possible point, costing some wall-clock time this session's own background-task pattern could have
+saved. **Compared to previous sessions:** this session's most distinctive contribution is applying
+the established "verify, don't assume" discipline one level further upstream than prior sessions in
+this family did -- not just verifying claims ABOUT the codebase, but verifying the RATIFIED PLAN
+DOCUMENT's own scope list against the codebase before trusting it, finding it was wrong in two
+independent, non-trivial ways (files that didn't need touching; a design constraint the plan didn't
+anticipate) before any code was written.
+
+**Handoff to Session 495:**
+- **What's next:** Issue #137 is fully closed -- no further slices remain in that chain. The
+  priorities list rendered at this session's own Phase 0 (owner picked #137 Slice 3 from it) named
+  3 other still-open options, unchanged by this session's work: **design session for #147**
+  (READY, Effort L -- design only; Tier 1, the sole High-priority item in the #146-153 sequencing
+  audit; likelihood-based candidate-parent assignment after marker parentage exclusion -- no
+  existing likelihood/LOD parentage method or pedigree-mutation pattern to build on); **design
+  session for #145** (READY, Effort M; correct sire's-vs-dam's placement in the pedigree drawing --
+  investigation already done by a prior session); **design session for #138** (READY, Effort M, low
+  priority; full-colony pedigree rendering beyond the 1,500-node cap, a deliberate scope limit
+  today). Also still available, lower priority: the spelling-WORDLIST gap (9 pre-existing words,
+  Effort S, confirmed unrelated to this session's own 0-new contribution); the non-portable
+  -filename `devtools::check()` ERROR/WARNING rename (Effort S, dates to S418); the newly-filed
+  `.buildTwinConnectorEdges()` missing-`#009E73`-color item (Effort S, this session); the
+  `highlightNearest` degree=6 rectilinear mitigation full-fix (Effort M, low priority); the
+  live-app QC'd node-count discrepancy (Effort unknown, low priority); the
+  `data-raw/rhesusPedigree.R` docstring/fixture mismatch (Effort S, low priority); the iCloud
+  duplicate-file cleanup (blocked on repo relocation, still not done as of this session's Orient).
+- **Key files:** none specific to a next task -- issue #137 is closed. If picking a design session
+  (#147/#145/#138), start fresh with that issue's own `gh issue view <N> --json title,body,comments`
+  and this project's `ARCHITECTURE_WORKSTREAM.md`/`DESIGN_WORKSTREAM.md`, matching the #133/#136/#137
+  precedent of a dedicated planning session before any implementation slice.
+- **Gotchas:** (1) **A `fileInput` has NO `value=` argument a fresh `renderUI()` re-render could
+  read back self-referentially** -- unlike `checkboxInput`/`radioButtons` (Learning 490), a file
+  input inside a block that ever re-executes for an unrelated reason will silently lose its
+  uploaded-file state; the only safe placement is a STATIC UI location that never re-renders. Any
+  future session adding a NEW file upload to a dynamically-rendered Shiny block should check this
+  first. (2) `devtools::install()` in this R/devtools version rejects `upgrade = "never"` --
+  use `upgrade = FALSE` (a `pak`-only argument value doesn't apply here). (3) All standing gotchas
+  from S479-493 carry forward unchanged (`gh issue view <N>` needs `--json`; `NOT_CRAN=true` for
+  tests including `shinytest2::AppDriver` scripts; `devtools::install()` needed before driving the
+  installed app via `shinytest2::AppDriver` -- confirmed hit again this session, avoided proactively
+  this time; `git commit -F <file>` for any commit message containing backtick-quoted identifiers;
+  the `zygosity`/"twin zygosity" identifier-and-prose disambiguation rule, applied again in this
+  session's own new documentation; `run_in_background: true` alone, never a manual shell `&` too;
+  a piped `| head -N` on a long-running Rscript command can hang the underlying process rather than
+  cleanly terminating it on SIGPIPE -- redirect to a file and read it separately instead, found this
+  session when a `head -60`-piped test run hung and had to be `pkill -9`'d).
+- **Runtime smoke test:** DONE (Phase 3E, this session) -- the full, real, permanently-committed
+  `test-e2e-pedigree-module.R` suite (13 tests, including 2 new for this slice) run live against a
+  freshly `devtools::install()`ed package: all 13 passed, 0 console errors, genuine upload + toggle
+  + render verification against the actual app (not a standalone harness).
+- **Self-assessment score:** 9/10 (breakdown above).
 
 ### What Session 493 Did
 **Deliverable:** Implement Slice 2 (core rendering) of the ratified issue #137 plan
