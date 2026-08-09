@@ -430,12 +430,12 @@ test_that(
   dz <- connectors[connectors$from == "T3", ]
   expect_equal(dz$to, "T4")
   expect_equal(dz$label, "DZ")
-  expect_identical(dz$dashes[[1L]], c(4, 4))
+  expect_identical(dz$dashes[[1L]], c(4L, 4L))
 
   uz <- connectors[connectors$from == "T5", ]
   expect_equal(uz$to, "T6")
   expect_equal(uz$label, "?")
-  expect_identical(uz$dashes[[1L]], c(14, 8))
+  expect_identical(uz$dashes[[1L]], c(14L, 8L))
 })
 
 test_that(
@@ -453,7 +453,7 @@ test_that(
     id1 = "C1", id2 = "C2", code = "MZ twin", stringsAsFactors = FALSE
   )
   result <- makePedigreeDiagramData(ped, twinRelations = twinRelations)
-  parentEdges <- result$edges[result$edges$to %in% c("C1", "C2"), ]
+  parentEdges <- result$edges[is.na(result$edges$label), ]
   expect_equal(nrow(parentEdges), 4L)
   expect_true(all(vapply(parentEdges$dashes, identical, logical(1L), FALSE)))
   expect_true(all(is.na(parentEdges$label)))

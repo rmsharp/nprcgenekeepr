@@ -765,7 +765,7 @@ test_that(
     stringsAsFactors = FALSE
   )
   result <- makePedigreeMatingLayout(ped, twinRelations = twinRelations)
-  connectors <- result$edges[result$edges$from %in% twinRelations$id1, ]
+  connectors <- result$edges[!is.na(result$edges$label), ]
   expect_equal(nrow(connectors), 3L)
 
   mz <- connectors[connectors$from == "E06FRB", ]
@@ -776,12 +776,12 @@ test_that(
   dz <- connectors[connectors$from == "8GSXTQ", ]
   expect_equal(dz$to, "P844CW")
   expect_equal(dz$label, "DZ")
-  expect_identical(dz$dashes[[1L]], c(4, 4))
+  expect_identical(dz$dashes[[1L]], c(4L, 4L))
 
   uz <- connectors[connectors$from == "BRI2MW", ]
   expect_equal(uz$to, "677E7M")
   expect_equal(uz$label, "?")
-  expect_identical(uz$dashes[[1L]], c(14, 8))
+  expect_identical(uz$dashes[[1L]], c(14L, 8L))
 })
 
 test_that(

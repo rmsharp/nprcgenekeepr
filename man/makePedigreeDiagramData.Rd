@@ -4,18 +4,26 @@
 \alias{makePedigreeDiagramData}
 \title{Convert a pedigree data frame into visNetwork-ready diagram data}
 \usage{
-makePedigreeDiagramData(ped)
+makePedigreeDiagramData(ped, twinRelations = NULL)
 }
 \arguments{
 \item{ped}{data frame with \code{id}, \code{sire}, \code{dam}, \code{sex},
 and \code{gen} columns (\code{sire}/\code{dam} \code{NA} for unknown
 parents; \code{gen} an integer generation number, 0 for founders, as
 produced by \code{\link{findGeneration}}).}
+
+\item{twinRelations}{optional data.frame with columns \code{id1},
+\code{id2}, \code{code} (see \code{\link{checkTwinRelations}}) --
+issue #137 D1/D6. Not validated here; validate with
+\code{\link{checkTwinRelations}} first. \code{NULL} (default) adds no
+connector edges and leaves \code{edges} unchanged from the pre-#137
+contract (\code{from}, \code{to} only).}
 }
 \value{
 A list with two data frames: \code{nodes} (\code{id}, \code{label},
 \code{shape}, \code{level}, \code{title}) and \code{edges} (\code{from},
-\code{to}). \code{title} is an HTML hover-tooltip string (issue #135)
+\code{to}, plus \code{dashes}/\code{label} when \code{twinRelations} is
+supplied). \code{title} is an HTML hover-tooltip string (issue #135)
 giving ID, sex, generation, sire, and dam.
 }
 \description{

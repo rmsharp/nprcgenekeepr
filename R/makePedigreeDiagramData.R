@@ -12,9 +12,16 @@
 #'   and \code{gen} columns (\code{sire}/\code{dam} \code{NA} for unknown
 #'   parents; \code{gen} an integer generation number, 0 for founders, as
 #'   produced by \code{\link{findGeneration}}).
+#' @param twinRelations optional data.frame with columns \code{id1},
+#'   \code{id2}, \code{code} (see \code{\link{checkTwinRelations}}) --
+#'   issue #137 D1/D6. Not validated here; validate with
+#'   \code{\link{checkTwinRelations}} first. \code{NULL} (default) adds no
+#'   connector edges and leaves \code{edges} unchanged from the pre-#137
+#'   contract (\code{from}, \code{to} only).
 #' @return A list with two data frames: \code{nodes} (\code{id}, \code{label},
 #'   \code{shape}, \code{level}, \code{title}) and \code{edges} (\code{from},
-#'   \code{to}). \code{title} is an HTML hover-tooltip string (issue #135)
+#'   \code{to}, plus \code{dashes}/\code{label} when \code{twinRelations} is
+#'   supplied). \code{title} is an HTML hover-tooltip string (issue #135)
 #'   giving ID, sex, generation, sire, and dam.
 #'
 #' @examples
@@ -22,7 +29,7 @@
 #' diagramData <- makePedigreeDiagramData(nprcgenekeepr::examplePedigree)
 #'
 #' @export
-makePedigreeDiagramData <- function(ped) {
+makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   if (!is.data.frame(ped)) {
     stop("makePedigreeDiagramData() requires 'ped' to be a data frame.")
   }
@@ -110,6 +117,15 @@ makePedigreeDiagramData <- function(ped) {
     to = c(ped$id[hasSire], ped$id[hasDam]),
     stringsAsFactors = FALSE
   )
+
+  # Issue #137 (D1, D6, D7): twinRelations is an OPTIONAL sidecar data.frame
+  # -- absent (NULL, default) => zero change to edges above (backward-compat
+  # contract, same as #133/#136's own optional-column precedents).
+  if (!is.null(twinRelations)) {
+    edges$dashes <- rep(FALSE, nrow(edges))
+    edges$label <- rep(NA_character_, nrow(edges))
+    edges <- rbind(edges, .buildTwinConnectorEdges(twinRelations))
+  }
 
   list(nodes = nodes, edges = edges)
 }
@@ -215,6 +231,54 @@ makePedigreeDiagramData <- function(ped) {
 .nameTooltipLine <- function(name) {
   hasName <- !is.na(name) & nzchar(name)
   ifelse(hasName, sprintf("<br><b>Name:</b> %s", .escapeHtml(name)), "")
+}
+
+#' Build twin/zygosity connector edges from a twinRelations table (issue
+#' #137 D6/D7, \code{docs/planning/
+#' issue137-twin-zygosity-pedigree-diagram-plan.md})
+#'
+#' \code{from}/\code{to} are \code{twinRelations$id1}/\code{id2} literally
+#' -- both already validated (by the caller-side
+#' \code{\link{checkTwinRelations}}, not called here, matching the
+#' \code{applyKinshipOverrides()}/\code{checkKinshipOverrides()} precedent)
+#' to be real individual ids, so no duplicate-node lookup is needed (D7):
+#' a real individual's own node id is always the same string regardless of
+#' how many \code{__dup_}-prefixed occurrence nodes
+#' \code{\link{makePedigreeMatingLayout}} additionally creates for them
+#' elsewhere in the diagram.
+#'
+#' Styling (D6, D10 -- exact colors/dash-pixel patterns decided at this
+#' slice's own Pre-RED, deferred by the design doc): \code{"MZ twin"} is
+#' solid (\code{dashes = FALSE}, label \code{"MZ"}); \code{"DZ twin"} is a
+#' short dash (\code{c(4, 4)}, label \code{"DZ"}); \code{"UZ twin"} is a
+#' long/sparse dash (\code{c(14, 8)}, label \code{"?"} -- a deliberate
+#' callback to kinship2's own UZ glyph, \code{docs/planning/
+#' issue137-twin-zygosity-pedigree-diagram-plan.md} sec 2.1). The
+#' \code{dashes} column is a list-column (\code{I(list(...))}) since a
+#' single boolean cannot represent 2 distinct non-boolean dash patterns --
+#' confirmed via a live \code{rbind()}/\code{jsonlite} test this slice's own
+#' Pre-RED that a plain logical \code{dashes} value and a numeric-vector
+#' dash pattern coerce and serialize correctly in the same column.
+#'
+#' @param twinRelations data.frame with columns \code{id1}, \code{id2},
+#'   \code{code} (see \code{\link{checkTwinRelations}}). Not validated here.
+#' @return data.frame with columns \code{from}, \code{to}, \code{label},
+#'   \code{dashes} (a list-column).
+#' @noRd
+.buildTwinConnectorEdges <- function(twinRelations) {
+  dashPattern <- list(`MZ twin` = FALSE, `DZ twin` = c(4L, 4L),
+                       `UZ twin` = c(14L, 8L))
+  labelFor <- c(`MZ twin` = "MZ", `DZ twin` = "DZ", `UZ twin` = "?")
+  df <- data.frame(
+    from = twinRelations$id1,
+    to = twinRelations$id2,
+    label = unname(labelFor[twinRelations$code]),
+    stringsAsFactors = FALSE
+  )
+  df$dashes <- I(lapply(twinRelations$code, function(code) {
+    dashPattern[[code]]
+  }))
+  df
 }
 
 #' Transform a pedigree into a mating-unit forest (Option 2 layout, D1/D2)
@@ -873,9 +937,18 @@ makePedigreeDiagramData <- function(ped) {
 #'   edges through invisible waypoint nodes via
 #'   \code{.addRectilinearWaypoints()} so they render as a strict right
 #'   angle, kinship2-style, instead of a direct diagonal/straight segment).
+#' @param twinRelations optional data.frame with columns \code{id1},
+#'   \code{id2}, \code{code} (see \code{\link{checkTwinRelations}}) --
+#'   issue #137 D1/D6/D7. Not validated here; validate with
+#'   \code{\link{checkTwinRelations}} first. \code{NULL} (default) adds no
+#'   connector edges and leaves \code{edges} unchanged from the pre-#137
+#'   contract. A connector always targets the two individuals' REAL node
+#'   ids (D7) and always renders as a direct edge regardless of
+#'   \code{edgeStyle} (D9).
 #' @return A list with \code{nodes} (\code{id}, \code{label}, \code{shape},
 #'   \code{title}, \code{size}, \code{x}, \code{y}), \code{edges}
-#'   (\code{from}, \code{to}, \code{dashes}), and \code{duplicateToReal} (a
+#'   (\code{from}, \code{to}, \code{dashes}, plus \code{label} when
+#'   \code{twinRelations} is supplied), and \code{duplicateToReal} (a
 #'   named character vector, duplicate node id -> real individual id).
 #'   Under \code{edgeStyle = "rectilinear"}, \code{nodes} gains
 #'   \code{color.background}/\code{color.border} and \code{edges} gains
@@ -887,7 +960,8 @@ makePedigreeDiagramData <- function(ped) {
 #'
 #' @export
 makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
-                                                          "rectilinear")) {
+                                                          "rectilinear"),
+                                      twinRelations = NULL) {
   if (!is.data.frame(ped)) {
     stop("makePedigreeMatingLayout() requires 'ped' to be a data frame.")
   }
@@ -1099,7 +1173,26 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
                                smooth.enabled = NA, smooth.type = NA_character_,
                                smooth.roundness = NA_real_,
                                stringsAsFactors = FALSE)
-  edges <- rbind(childEdgesOut, mateEdges, dupEdges)
+
+  # Issue #137 (D1, D6, D7, D9): twinRelations is an OPTIONAL sidecar
+  # data.frame -- absent (NULL, default) => zero change to edges below
+  # (backward-compat contract, same as #133/#136's own optional-column
+  # precedents). A connector's from/to are twinRelations$id1/id2 literally
+  # (D7) -- both already-real individual ids, needing no duplicate-node
+  # lookup (see .buildTwinConnectorEdges()'s own roxygen for why).
+  hasTwinRelations <- !is.null(twinRelations)
+  if (hasTwinRelations) {
+    childEdgesOut$label <- rep(NA_character_, nrow(childEdgesOut))
+    mateEdges$label <- rep(NA_character_, nrow(mateEdges))
+    dupEdges$label <- rep(NA_character_, nrow(dupEdges))
+    twinEdges <- .buildTwinConnectorEdges(twinRelations)
+    twinEdges$smooth.enabled <- rep(NA, nrow(twinEdges))
+    twinEdges$smooth.type <- rep(NA_character_, nrow(twinEdges))
+    twinEdges$smooth.roundness <- rep(NA_real_, nrow(twinEdges))
+    edges <- rbind(childEdgesOut, mateEdges, dupEdges, twinEdges)
+  } else {
+    edges <- rbind(childEdgesOut, mateEdges, dupEdges)
+  }
 
   duplicateToReal <- stats::setNames(duplicates$realId, duplicates$id)
 
@@ -1283,7 +1376,13 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
   ## S468, fixed S469) -- these NA placeholders keep column alignment with
   ## `keptEdges` (which passed the direct-style `edges`' smooth.* columns
   ## through unchanged) so the rbind() below does not fail with "undefined
-  ## columns selected".
+  ## columns selected". Issue #137 (D9): `label` is stamped unconditionally
+  ## here too, for the same reason -- when twinRelations is present upstream,
+  ## `edges`/`keptEdges` gain a `label` column (the twin connector's own),
+  ## and `newEdges[, names(keptEdges)]` below would otherwise fail the same
+  ## "undefined columns selected" way the moment any waypoint node exists.
+  ## Harmless when twinRelations is absent: `names(keptEdges)` then has no
+  ## `label` to select, so this extra column is simply never picked up.
   newEdges <- if (length(newEdgeList) > 0L) {
     ne <- do.call(rbind, newEdgeList)
     ne$dashes <- rep(FALSE, nrow(ne))
@@ -1291,12 +1390,13 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
     ne$smooth.enabled <- NA
     ne$smooth.type <- NA_character_
     ne$smooth.roundness <- NA_real_
+    ne$label <- NA_character_
     ne
   } else {
     data.frame(from = character(), to = character(), dashes = logical(),
                color = character(), smooth.enabled = logical(),
                smooth.type = character(), smooth.roundness = numeric(),
-               stringsAsFactors = FALSE)
+               label = character(), stringsAsFactors = FALSE)
   }
   finalEdges <- rbind(keptEdges, newEdges[, names(keptEdges)])
 

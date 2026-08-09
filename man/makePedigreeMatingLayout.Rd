@@ -4,7 +4,11 @@
 \alias{makePedigreeMatingLayout}
 \title{Combine the Option 2 mating-unit forest into visNetwork-ready diagram data}
 \usage{
-makePedigreeMatingLayout(ped, edgeStyle = c("direct", "rectilinear"))
+makePedigreeMatingLayout(
+  ped,
+  edgeStyle = c("direct", "rectilinear"),
+  twinRelations = NULL
+)
 }
 \arguments{
 \item{ped}{data frame with \code{id}, \code{sire}, \code{dam},
@@ -18,11 +22,21 @@ or \code{"rectilinear"} (issue #142 -- routes mate-line and sibship-bar
 edges through invisible waypoint nodes via
 \code{.addRectilinearWaypoints()} so they render as a strict right
 angle, kinship2-style, instead of a direct diagonal/straight segment).}
+
+\item{twinRelations}{optional data.frame with columns \code{id1},
+\code{id2}, \code{code} (see \code{\link{checkTwinRelations}}) --
+issue #137 D1/D6/D7. Not validated here; validate with
+\code{\link{checkTwinRelations}} first. \code{NULL} (default) adds no
+connector edges and leaves \code{edges} unchanged from the pre-#137
+contract. A connector always targets the two individuals' REAL node
+ids (D7) and always renders as a direct edge regardless of
+\code{edgeStyle} (D9).}
 }
 \value{
 A list with \code{nodes} (\code{id}, \code{label}, \code{shape},
 \code{title}, \code{size}, \code{x}, \code{y}), \code{edges}
-(\code{from}, \code{to}, \code{dashes}), and \code{duplicateToReal} (a
+(\code{from}, \code{to}, \code{dashes}, plus \code{label} when
+\code{twinRelations} is supplied), and \code{duplicateToReal} (a
 named character vector, duplicate node id -> real individual id).
 Under \code{edgeStyle = "rectilinear"}, \code{nodes} gains
 \code{color.background}/\code{color.border} and \code{edges} gains
