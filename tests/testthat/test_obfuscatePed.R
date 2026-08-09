@@ -23,3 +23,14 @@ test_that("obfuscatePed creates ID map on request", {
   expect_named(ped$map, pedSix$id)
   expect_identical(as.character(ped$map), ped$ped$id)
 })
+test_that("obfuscatePed drops name values to NA (issue #136 D8)", {
+  # A name is the only genuinely PII-shaped field this package has ever
+  # contemplated (docs/planning/issue136-name-labels-pedigree-diagram-
+  # plan.md sec 2.6): obfuscatePed() must scrub it in the same slice that
+  # introduces the column, or a "de-identified" export would carry scrubbed
+  # ids alongside intact real names.
+  pedSix <- qcStudbook(nprcgenekeepr::pedSix)
+  pedSix$name <- paste0("Name", seq_len(nrow(pedSix)))
+  ped <- obfuscatePed(pedSix, size = 3L, maxDelta = 20L)
+  expect_true(all(is.na(ped$name)))
+})
