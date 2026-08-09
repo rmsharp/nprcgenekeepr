@@ -491,3 +491,150 @@ test_that(
   expect_equal(nrow(diagramErrors), 0L,
                info = "No visNetwork/diagram-related console error")
 })
+
+## Issue #137 Slice 3 -- twin/zygosity connectors, uploaded via the
+## twinRelationsFile sidecar (modPedigreeUI's static UI) and gated by the
+## "Show Twin Connectors" toggle.
+
+test_that(
+  "E2E: Pedigree Browser Diagram tab renders twin connector edges once a
+   twinRelations sidecar file is uploaded and the toggle is switched on", {
+  skip_if_not_installed("shinytest2")
+  skip_if_not_installed("chromote")
+  skip_if_not_installed("visNetwork")
+  skip_on_cran()
+
+  app_dir <- create_test_app()
+  app <- create_app_driver(app_dir, "e2e_pedigree_diagram_twins")
+  on.exit(app$stop(), add = TRUE)
+
+  fixture <- system.file("extdata", "examples",
+                         "obfuscated_rhesus_mhc_ped_twins.csv",
+                         package = "nprcgenekeepr")
+  loaded <- upload_and_wait(app, fixture)
+  if (!loaded) skip("Upload/QC did not complete")
+
+  success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
+  if (!success) skip("Could not navigate to Pedigree tab")
+
+  clicked <- click_element_safe(app, 'a[data-value="Diagram"]')
+  if (!clicked) skip("Could not switch to the Diagram tab")
+
+  ## twinRelationsFile lives in modPedigreeUI's STATIC UI (never inside the
+  ## Diagram tab's dynamic renderUI block -- Learning 490's file-input
+  ## corollary: a fileInput has no value= a fresh render could read back),
+  ## so it can be uploaded before or after switching to the Diagram tab.
+  twinRelationsFixture <- system.file(
+    "extdata", "examples", "obfuscated_rhesus_mhc_twin_relations.csv",
+    package = "nprcgenekeepr"
+  )
+  app$upload_file(`pedigree-twinRelationsFile` = twinRelationsFixture)
+  app$set_inputs(`pedigree-pedigreeShowTwinConnectors` = TRUE)
+  app$wait_for_idle(timeout = E2E_TIMEOUT)
+
+  get_diagram_edges_touching <- function(id) {
+    app$get_js(sprintf(paste0(
+      "(() => { const w = HTMLWidgets.find('#pedigree-pedigreeDiagram'); ",
+      "if (!w) return 'null'; ",
+      "return JSON.stringify(w.network.body.data.edges.get(",
+      "{filter: e => e.from === '%s' || e.to === '%s'})); })()"
+    ), id, id))
+  }
+
+  ## E06FRB/HV7LZ3, 8GSXTQ/P844CW, BRI2MW/677E7M are the sidecar fixture's
+  ## MZ/DZ/UZ pairs (obfuscated_rhesus_mhc_twin_relations.csv). A connector
+  ## always targets the two individuals' REAL nodes (D7) -- confirmed here
+  ## against the live widget, not just unit-asserted.
+  mzEdges <- get_diagram_edges_touching("E06FRB")
+  if (identical(mzEdges, "null")) skip("visNetwork widget instance not found")
+  expect_match(mzEdges, '"label":"MZ"',
+               info = "MZ twin connector should carry the 'MZ' label")
+  expect_match(mzEdges, '"to":"HV7LZ3"', fixed = TRUE,
+               info = "MZ connector should target the co-twin's real node")
+
+  dzEdges <- get_diagram_edges_touching("8GSXTQ")
+  expect_match(dzEdges, '"label":"DZ"',
+               info = "DZ twin connector should carry the 'DZ' label")
+
+  uzEdges <- get_diagram_edges_touching("BRI2MW")
+  expect_match(uzEdges, '"label":"?"', fixed = TRUE,
+               info = "UZ twin connector should carry the '?' label")
+
+  logs <- app$get_logs()
+  diagramErrors <- logs[logs$level == "throw" &
+                          grepl("vis|network|pedigreeDiagram", logs$message,
+                                ignore.case = TRUE), ]
+  expect_equal(nrow(diagramErrors), 0L,
+               info = "No visNetwork/diagram-related console error")
+})
+
+test_that(
+  "E2E: Pedigree Browser Diagram tab's twin-connector toggle SURVIVES a
+   later, unrelated pedigreeDiagramUI re-render (switching edgeStyle) --
+   same defect class Learning 490 found for pedigreeShowNames; the fix is
+   the same self-referential-value pattern, applied to
+   pedigreeShowTwinConnectors. A shiny::testServer() unit test cannot pin
+   this regression for the same reason Learning 490 documents (it never
+   simulates the real client round-trip that is the actual failure
+   mechanism) -- this live AppDriver test is the permanent coverage.", {
+  skip_if_not_installed("shinytest2")
+  skip_if_not_installed("chromote")
+  skip_if_not_installed("visNetwork")
+  skip_on_cran()
+
+  app_dir <- create_test_app()
+  app <- create_app_driver(app_dir, "e2e_pedigree_diagram_twins_survive")
+  on.exit(app$stop(), add = TRUE)
+
+  fixture <- system.file("extdata", "examples",
+                         "obfuscated_rhesus_mhc_ped_twins.csv",
+                         package = "nprcgenekeepr")
+  loaded <- upload_and_wait(app, fixture)
+  if (!loaded) skip("Upload/QC did not complete")
+
+  success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
+  if (!success) skip("Could not navigate to Pedigree tab")
+
+  clicked <- click_element_safe(app, 'a[data-value="Diagram"]')
+  if (!clicked) skip("Could not switch to the Diagram tab")
+
+  twinRelationsFixture <- system.file(
+    "extdata", "examples", "obfuscated_rhesus_mhc_twin_relations.csv",
+    package = "nprcgenekeepr"
+  )
+  app$upload_file(`pedigree-twinRelationsFile` = twinRelationsFixture)
+  app$set_inputs(`pedigree-pedigreeShowTwinConnectors` = TRUE)
+  app$wait_for_idle(timeout = E2E_TIMEOUT)
+
+  get_diagram_edges_touching <- function(id) {
+    app$get_js(sprintf(paste0(
+      "(() => { const w = HTMLWidgets.find('#pedigree-pedigreeDiagram'); ",
+      "if (!w) return 'null'; ",
+      "return JSON.stringify(w.network.body.data.edges.get(",
+      "{filter: e => e.from === '%s' || e.to === '%s'})); })()"
+    ), id, id))
+  }
+
+  onDirect <- get_diagram_edges_touching("E06FRB")
+  if (identical(onDirect, "null")) skip("visNetwork widget instance not found")
+  expect_match(onDirect, '"label":"MZ"',
+               info = "MZ connector visible once toggled on (direct style)")
+
+  ## The regression: switching edgeStyle re-triggers pedigreeDiagramUI's
+  ## renderUI(), which must NOT silently reset the toggle.
+  app$set_inputs(`pedigree-pedigreeEdgeStyle` = "rectilinear")
+  app$wait_for_idle(timeout = E2E_TIMEOUT)
+  onRectilinear <- get_diagram_edges_touching("E06FRB")
+  expect_match(onRectilinear, '"label":"MZ"',
+               info = paste(
+                 "MZ connector must still show after switching edgeStyle --",
+                 "same defect class as Learning 490's pedigreeShowNames case"
+               ))
+
+  logs <- app$get_logs()
+  diagramErrors <- logs[logs$level == "throw" &
+                          grepl("vis|network|pedigreeDiagram", logs$message,
+                                ignore.case = TRUE), ]
+  expect_equal(nrow(diagramErrors), 0L,
+               info = "No visNetwork/diagram-related console error")
+})

@@ -1335,6 +1335,55 @@ test_that(
   )
 })
 
+## Issue #137 Slice 3 -- twin/zygosity connector legend, added via the SAME
+## visLegend() call's addEdges parameter (never a second call -- same
+## single-scalar-slot constraint the #133 Affected-row test above already
+## established for addNodes). Describes exactly what .buildTwinConnectorEdges()
+## (Slice 2) actually renders -- label + dashes only, no color (D10's color
+## pick was never wired into that function; tracked separately in BACKLOG.md,
+## not fixed here -- out of this slice's own file scope).
+
+test_that(
+  "modPedigreeServer's diagram widget legend includes MZ/DZ/UZ twin-connector
+   rows, unconditionally present regardless of whether any twin data is
+   uploaded (a static legend, like the existing sex/Affected rows)", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE
+      )
+      session$flushReact()
+
+      widgetJson <- output$pedigreeDiagram
+      expect_true(grepl('"MZ"', widgetJson))
+      expect_true(grepl('"DZ"', widgetJson))
+      expect_true(grepl('"?"', widgetJson, fixed = TRUE))
+
+      # The pre-existing sex/Affected addNodes rows must still render,
+      # unperturbed by the new addEdges argument on the same visLegend()
+      # call (regression guard, mirroring the #133 Affected-row test above).
+      expect_true(grepl('"Female"', widgetJson))
+      expect_true(grepl('"Affected"', widgetJson))
+    }
+  )
+})
+
 ## Issue #135 -- ID-select search dropdown + hover-highlight on the Diagram
 ## tab. hoverNearest (not the visNetwork default click-based highlight) is
 ## used deliberately so the highlight effect does not overlap the existing
@@ -2069,3 +2118,48 @@ test_that(
 ## buggy and the fixed code. The permanent regression coverage for this
 ## defect is therefore a live AppDriver test, added to
 ## test-e2e-pedigree-module.R instead (issue #136 Slice 2 section there).
+
+## Issue #137 Slice 3 -- UI wiring for twin/zygosity connectors. The file
+## input lives in modPedigreeUI()'s STATIC UI (never inside the dynamically
+## re-rendered pedigreeDiagramUI block) -- a fileInput has no value=
+## argument a fresh render could read self-referentially the way
+## checkboxInput/radioButtons do (Learning 490), so the only safe place for
+## it is outside any block that ever re-executes. The "Show Twin
+## Connectors" toggle lives in the SAME dynamic tagList() as edgeStyle/
+## showNames and follows their self-referential-value pattern (business
+## -logic/upload tests live in the dedicated
+## test_modPedigree_twinRelations.R, mirroring test_modGeneticValue_
+## kinshipOverrides.R's own dedicated-file precedent for the sibling
+## kinship-overrides upload feature).
+
+test_that(
+  "modPedigreeUI offers a twin-relations file input in its static UI", {
+  ui <- modPedigreeUI("test")
+  ui_html <- as.character(ui)
+  expect_true(grepl("twinRelationsFile", ui_html))
+})
+
+test_that(
+  "modPedigreeServer's diagram widget offers a 'Show Twin Connectors'
+   toggle, unchecked (off) by default", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"), dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(studbook = shiny::reactive({ test_studbook })),
+    {
+      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
+      session$flushReact()
+      html <- output$pedigreeDiagramUI$html
+      expect_true(grepl("pedigreeShowTwinConnectors", html))
+    }
+  )
+})
