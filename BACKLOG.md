@@ -600,6 +600,16 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       position (not via `spelling::update_wordlist()`, per S230 convention)
       and re-verify `devtools::check()` drops to the pre-existing iCloud
       duplicate-file warning + vignette-engine note only.
+      **Count grown to 9 words as of S490 (2026-08-09), still not fixed** --
+      incidental to issue #136 Slice 2's own `devtools::check()` verification
+      pass. The original 6 (`sibship`/`waypoint`/`duplicateToReal`/`js's`/
+      `makePedigreeMatingLayout`/`vis`) are joined by 3 more: `discoverable`
+      (`NEWS.md:140`), a bare `js` (`a2interactive.Rmd:533`, distinct token
+      from `js's`), and `unshaded` (`_pedigree_browser.Rmd:55`) -- all 3
+      confirmed via `git blame`/`git log -S` to trace to commit `100741ae`
+      (S487, 2026-08-08, issue #133 Slice 2's own NEWS/tutorial/article
+      commit), not this session's diff. A future session fixing this item
+      should hand-add all 9 words, not just the original 6.
 - [x] **`renv.lock` -- concrete content found for the long-standing
       "unexplained diff" (found S474, Effort S-M, incidental) -- the
       committed `renv.lock` (both HEAD and the pre-existing uncommitted
@@ -1320,6 +1330,34 @@ exactly -- `species`'s coercion block, `affected`'s roxygen bullet, D8's scrub).
 cluster implements Slice 2** (label rendering + toggle + documentation): see `docs/planning/
 issue136-name-labels-pedigree-diagram-plan.md` §4 Slice 2. Phase 3E: n/a, no runtime behavior change
 this slice. See `CHANGELOG.md`.
+
+**Progress (S490, 2026-08-09):** Tier 2 step 3, Slice 2 -- issue #136's label rendering + toggle +
+documentation -- is DONE, full TDD PRE-RED->RED->GREEN cycle (`AskUserQuestion`-gated at every
+transition). Pre-RED resolved both open dragons hands-on via a live `chromote` render: Dragon 1
+(multi-line `"\n"` rendering) confirmed working, no fallback needed; D10's truncation budget
+empirically calibrated at 15 characters + `"..."` against the real fixture's tightest measured
+spacing. Two new shared helpers (`.nameLabel()`, `.nameTooltipLine()`) wired into both
+`makePedigreeDiagramData()` and `makePedigreeMatingLayout()` (D7, including duplicate-node label
+parity); `R/modPedigree.R` gained an off-by-default "Show Names on Diagram" toggle (D3/D4/D6), the
+`diagramLayout` reactive strips `name` when the toggle is off, `useLabels = FALSE` pinned on the
+search dropdown (D6). **A real defect was found via live Phase 3E verification** (not caught by any
+unit test): `pedigreeDiagramUI`'s `renderUI()` rebuilds the toggle checkbox from scratch on ANY
+re-render (e.g. switching `edgeStyle`), and a hardcoded `value = FALSE` silently discarded an
+already-on toggle -- fixed with a self-referential `value = .currentShowNames()`, matching the
+pre-existing `edgeStyle` radio buttons' own pattern. Proven that a `shiny::testServer()` test cannot
+pin this class of regression at all (it never simulates the real client round-trip that is the actual
+failure mechanism); permanent coverage is instead 2 new live `shinytest2`/`chromote` tests in
+`test-e2e-pedigree-module.R`. See `PROJECT_LEARNINGS.md` Learning 490. Documentation checklists done
+in-session: `NEWS.Rmd`/`NEWS.md`, `_pedigree_browser.Rmd` **and** `colony-manager-guide.qmd` (owner's
+#136 comment requires both, both re-rendered clean), `input_format.html` (new `name` row). Verified:
+full clean regression read 0 failed/0 error (10 pre-existing baseline warnings unchanged, 4677
+passed, 173 skipped); `lintr` 0 issues on all 6 touched files (2 `commented_code_linter` false
+positives reworded away, not suppressed); `devtools::check()` 1 ERROR/1 WARNING/1 NOTE, all
+pre-existing and individually attributed, 0 new (the fresh spelling diff's extra 3 words confirmed via
+`git blame` to predate this session -- see the updated Housekeeping item above); full live
+`test-e2e-pedigree-module.R` run clean. REFACTOR: owner-confirmed skip. **Both slices of issue #136
+are now shipped; issue #136 itself is closed as part of this session's close-out.** Tier 2's remaining
+order (#137 > #138, each needing its own scoping session) is next in this cluster. See `CHANGELOG.md`.
 - [ ] **Candidate C's connector/dogleg visual-signposting idea** (found S473,
       designing the issue #144 plan; not adopted for #144 itself, Effort
       unknown, low priority) -- extends the existing D2 mate-line "dogleg"
