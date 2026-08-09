@@ -74,11 +74,11 @@ Learning N is where it entered the campaign.*
   phantom failures in files you never touched — see \[stale-namespace\])
   AND `NOT_CRAN=true` (the `skip_on_cran`/CI condition; a bare
   `test_dir` clean read is necessary but NOT sufficient —
-  `devtools::test`/CI can ERROR). Sum `failed` AND `error`, and watch
-  the `warning` column, not just `failed`/`error` (a green suite can
-  ACQUIRE a warning from a change to a different file). The
-  `test-app-*`/`test-e2e-*` files are baseline noise — `test_dir` SKIPS
-  them (≈156–159),
+  [`devtools::test`](https://devtools.r-lib.org/reference/test.html)/CI
+  can ERROR). Sum `failed` AND `error`, and watch the `warning` column,
+  not just `failed`/`error` (a green suite can ACQUIRE a warning from a
+  change to a different file). The `test-app-*`/`test-e2e-*` files are
+  baseline noise — `test_dir` SKIPS them (≈156–159),
   [`testthat::test_local()`](https://testthat.r-lib.org/reference/test_package.html)
   ERRORS them (≈154, all call the once-undefined `create_test_app`);
   isolate true offenders with `!grepl("test-app-|test-e2e-", file)`.
@@ -407,8 +407,9 @@ Learning N is where it entered the campaign.*
   [`makeExamplePedigreeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeExamplePedigreeFile.md) +
   the real `examplePedigree` data) through the full build-equivalent
   BEFORE declaring a REFACTOR’s identical-proof complete — the full
-  `devtools::check()` test suite caught this; a narrower synthetic proof
-  drafted at gate-approval time did not.
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  test suite caught this; a narrower synthetic proof drafted at
+  gate-approval time did not.
 - **\[chunk-scoped-checker\]** (discovered \#364) — A grep/line-scan
   vignette-source guard checking for a deprecated identifier’s LIVE use
   (`param = value`) must scope its scan to lines strictly INSIDE an
@@ -881,12 +882,12 @@ apps, the highest-risk audit item, sequenced LAST). Right deliverable =
 159 browser tests”; surface this fork as a pre-RED author
 `AskUserQuestion`. **(b)** `skip_on_cran()` keys on `NOT_CRAN`, so a
 suite can look CLEAN under bare `test_dir` yet ERROR under
-`devtools::test`/CI — the CAUSE behind \#2/#4’s symptom; verify under
-`NOT_CRAN=true` (a 0/0 under bare `test_dir` is necessary but NOT
-sufficient). **(c)** TDD the gate helper browser-free (home =
-`helper-shinytest2.R`, auto-sourced) — RED→GREEN is real (function
-missing → “could not find function”): skip unless
-`Sys.getenv("NPRC_RUN_E2E")=="true"`, else return
+[`devtools::test`](https://devtools.r-lib.org/reference/test.html)/CI —
+the CAUSE behind \#2/#4’s symptom; verify under `NOT_CRAN=true` (a 0/0
+under bare `test_dir` is necessary but NOT sufficient). **(c)** TDD the
+gate helper browser-free (home = `helper-shinytest2.R`, auto-sourced) —
+RED→GREEN is real (function missing → “could not find function”): skip
+unless `Sys.getenv("NPRC_RUN_E2E")=="true"`, else return
 `system.file("shinytest", …)` (assert it’s a dir with `app.R`); assert
 the gate by catching the `skip` condition
 (`tryCatch(…, condition=function(c)c)` → `expect_s3_class(cnd,"skip")`,
@@ -1712,8 +1713,9 @@ forces verbosity; `system.file("application", package=…)==""` is a clean
 RUNTIME RED for “monolith no longer ships” (split into its own
 `test_monolith_removed.R` and PAIRED into the deletion commit so every
 commit stays green). 3 commits: reversible code → standalone deletion →
-docs (§15 single-revert). **(d) The full `devtools::check()` is a
-STRICTLY STRONGER gate than the \[regression-read\]** — it caught a
+docs (§15 single-revert). **(d) The full
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+is a STRICTLY STRONGER gate than the \[regression-read\]** — it caught a
 PRE-EXISTING, unrelated defect prior sessions’ regression-read never
 surfaced: `a2interactive.Rmd`’s error-list table hardcoded 9
 descriptions while
@@ -2804,7 +2806,8 @@ comments and signature defaults. **(f) The new helper’s
 `object_usage_linter` “no visible global function definition for
 ‘gatedSeed’” is a `[stale-namespace]` transient** — single-file `lint()`
 (and the INSTALLED namespace, which lacks the just-added helper) can’t
-resolve a cross-file package-internal function; `devtools::check()`
+resolve a cross-file package-internal function;
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
 (builds from source, full namespace) emitted NO such NOTE, confirming it
 (per the `[stale-namespace]` rule: “a new cross-file helper’s
 `object_usage_linter` … is a stale-namespace transient”). **(g)**
@@ -3500,8 +3503,8 @@ the owner had to point it out; the better call was to fix it proactively
 (behavior-none, independent of the deferred code).** **(e)
 \[orchestrate-then-verify-globally\]** 7 verifiers ran in parallel (~95
 s); the AUTHORITATIVE gate (`lint_package()`=0, full suite 2140/0/0/159,
-`devtools::check()` 0 errors) was run by the parent, not trusted from
-agents. **Reflexes:**
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors) was run by the parent, not trusted from agents. **Reflexes:**
 \[verify-first\]\[adversarial-overturns-plan\]\[strict-TDD\]\[author-decision\]\[lint-net-zero\]\[orchestrate-fanout-verify-globally\].
 **Apply:** before classifying a
 `*apply`/`%in%`/[`match()`](https://rdrr.io/r/base/match.html) swap on
@@ -3593,21 +3596,22 @@ the real `lint_package()`.” A close is a public, hard-to-walk-back act;
 pay the few seconds to confirm its load-bearing premise. **(b)
 \[macos-dupe → portable-names WARNING, not the top-level NOTE\] The
 recurring macOS sync duplicate `SESSION_NOTES 2.md` causes the lone
-`devtools::check()` WARNING specifically via the “non-portable file
-names” check — because of the SPACE in the filename — which is a
-DIFFERENT check from the “non-standard files/directories found at top
-level” NOTE that the no-space methodology/audit files
-(`RECOMMENDED_SKILLS.md`, `methodology_dashboard.py`,
-`PED_GV_AUDIT_2026-05-30.{html,md}`, `TECH_DEBT_AUDIT_2026-05-30.md`,
-`dashboard.html`, `nprcgenekeepr_notes.txt`,
-`20250504_cran-comments.md`) trigger.** Root cause of why the dupe
-reaches the build at all: `.Rbuildignore`’s `^SESSION_NOTES\.md$` is an
-EXACT-match regex that does not cover the space-name, so the dupe lands
-in the build tarball while the real file is ignored. `rm` clears the
-WARNING (verified firsthand: post-removal `devtools::check()` = **0
-errors / 0 warnings / 3 pre-existing NOTEs** — clock-skew, spelling, and
-the top-level-files NOTE which no longer lists the dupe). The NOTE is
-pre-existing/accepted and is NOT cleared by removing the dupe.
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+WARNING specifically via the “non-portable file names” check — because
+of the SPACE in the filename — which is a DIFFERENT check from the
+“non-standard files/directories found at top level” NOTE that the
+no-space methodology/audit files (`RECOMMENDED_SKILLS.md`,
+`methodology_dashboard.py`, `PED_GV_AUDIT_2026-05-30.{html,md}`,
+`TECH_DEBT_AUDIT_2026-05-30.md`, `dashboard.html`,
+`nprcgenekeepr_notes.txt`, `20250504_cran-comments.md`) trigger.** Root
+cause of why the dupe reaches the build at all: `.Rbuildignore`’s
+`^SESSION_NOTES\.md$` is an EXACT-match regex that does not cover the
+space-name, so the dupe lands in the build tarball while the real file
+is ignored. `rm` clears the WARNING (verified firsthand: post-removal
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) =
+**0 errors / 0 warnings / 3 pre-existing NOTEs** — clock-skew, spelling,
+and the top-level-files NOTE which no longer lists the dupe). The NOTE
+is pre-existing/accepted and is NOT cleared by removing the dupe.
 **Permanent fix (DEFERRED — owner’s call, out of this session’s
 scope):** broaden the pattern to `^SESSION_NOTES.*\.md$` (or
 `^SESSION_NOTES.*`) so any future macOS dupe is build-ignored and never
@@ -3643,9 +3647,10 @@ had already patched this exact class narrowly ONCE (`.Rbuildignore:30`
 which is the TELL that the narrow form keeps coming back; the `.*`
 generalization is the durable fix. **(b) \[build-not-check\] Verify a
 `.Rbuildignore` change at the BUILD level, not via
-`devtools::check()`.** The “non-portable file names” WARNING is a pure
-function of the built tarball’s CONTENTS, so the authoritative, targeted
-gate is: stage a real dummy (`touch "SESSION_NOTES 2.md"`) →
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html).**
+The “non-portable file names” WARNING is a pure function of the built
+tarball’s CONTENTS, so the authoritative, targeted gate is: stage a real
+dummy (`touch "SESSION_NOTES 2.md"`) →
 `R CMD build --no-build-vignettes --no-manual .` →
 `tar tzf <tarball> | grep -i SESSION_NOTES` (expect NONE) → remove the
 dummy + tarball. This proved exclusion (0 SESSION_NOTES entries / 693
@@ -3677,7 +3682,9 @@ shell-escaping AND `.Rprofile` prints the renv out-of-sync banner;
 **Apply:** when a recurring macOS-dupe (or any sync-dupe) keeps
 re-raising a check WARNING, broaden the `.Rbuildignore` exact-match to
 `.*` and prove it by building with a staged dummy and inspecting the
-tarball — not by `devtools::check()`, and not by eye.
+tarball — not by
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html),
+and not by eye.
 
 #### Learning 59 — Generalize the dupe-guard to the whole methodology `.md` cluster — and the trap that surfaced: EVERY `.Rbuildignore` line is a perl regex, so a “comment” with an unbalanced paren ABORTS the build (S59, repo hygiene / `.Rbuildignore`)
 
@@ -3756,21 +3763,22 @@ reality. **(b) \[the NOTE is a pure function of tarball top-level
 contents\] “Non-standard files/directories found at top level” is
 computed by R CMD check from the unpacked tarball’s top-level entries
 minus a fixed standard set, so building + listing top-level entries is
-the AUTHORITATIVE gate** — a full `devtools::check()` is not needed
-(same build-not-check logic as Learning 58b, here applied to a NOTE
-rather than a WARNING). Excluding all 8 left exactly the 5 standard
-files (685 files vs the 693 baseline = the 8 removed) → NOTE eliminated,
-verified directly. **(c) \[consolidate-to-prevent-recurrence\] The root
-cause of `20250504_cran-comments.md` shipping was 7 sibling exact-match
-lines + a missed 8th.** Replaced all 7 dated
-`^YYYYMMDD_cran-comments\.md$` with one `^[0-9]+_cran-comments\.md$` — a
-NEW dated cran-comments file is now auto-ignored, killing the “someone
-adds a dated file and forgets the ignore line” class. When you find N
-exact-match lines for a dated/numbered family, a single regex is the
-durable fix. **(d) \[dupe-guard only where dupes happen\] Used
-`<NAME>.*` (dupe-guarded) for the macOS-synced methodology/audit docs
-(`RECOMMENDED_SKILLS`, `PED_GV_AUDIT`, `TECH_DEBT_AUDIT`) but tight
-`^X\.ext$` for
+the AUTHORITATIVE gate** — a full
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+is not needed (same build-not-check logic as Learning 58b, here applied
+to a NOTE rather than a WARNING). Excluding all 8 left exactly the 5
+standard files (685 files vs the 693 baseline = the 8 removed) → NOTE
+eliminated, verified directly. **(c)
+\[consolidate-to-prevent-recurrence\] The root cause of
+`20250504_cran-comments.md` shipping was 7 sibling exact-match lines + a
+missed 8th.** Replaced all 7 dated `^YYYYMMDD_cran-comments\.md$` with
+one `^[0-9]+_cran-comments\.md$` — a NEW dated cran-comments file is now
+auto-ignored, killing the “someone adds a dated file and forgets the
+ignore line” class. When you find N exact-match lines for a
+dated/numbered family, a single regex is the durable fix. **(d)
+\[dupe-guard only where dupes happen\] Used `<NAME>.*` (dupe-guarded)
+for the macOS-synced methodology/audit docs (`RECOMMENDED_SKILLS`,
+`PED_GV_AUDIT`, `TECH_DEBT_AUDIT`) but tight `^X\.ext$` for
 `methodology_dashboard.py`/`dashboard.html`/`nprcgenekeepr_notes.txt`
 and the cran-comments regex — those aren’t sync-prone, so the broad form
 would only add over-match risk for no benefit.** Match the guard to the
@@ -4921,14 +4929,16 @@ existing tabs survive, and the module’s outputs appear only as clean
 `shiny:value potentialParents-*` log entries. **Three gotchas:** (1)
 under `Rscript` AppDriver aborts with “Reason: On CRAN” unless
 `NOT_CRAN=true` is set (non-interactive ⇒ treated as CRAN); (2) the E2E
-app drives the **installed** package — `devtools::install()` your dev
-code first or the smoke tests stale bits; (3) `shinyBS is not defined`
-JS console errors are **pre-existing app-wide noise** (shinyBS popovers
-used elsewhere) — to separate a regression from baseline noise, grep the
-captured logs for *your module’s namespace*, not the bare word “error”.
-The e2e suite is opt-in (`NPRC_RUN_E2E=true`) and skips by default in
-`test()`/`check()`, so it is NOT a substitute for actively running the
-smoke during the session. **Reflexes:**
+app drives the **installed** package —
+[`devtools::install()`](https://devtools.r-lib.org/reference/install.html)
+your dev code first or the smoke tests stale bits; (3)
+`shinyBS is not defined` JS console errors are **pre-existing app-wide
+noise** (shinyBS popovers used elsewhere) — to separate a regression
+from baseline noise, grep the captured logs for *your module’s
+namespace*, not the bare word “error”. The e2e suite is opt-in
+(`NPRC_RUN_E2E=true`) and skips by default in `test()`/`check()`, so it
+is NOT a substitute for actively running the smoke during the session.
+**Reflexes:**
 \[extract-the-pure-helper-from-the-module\]\[test-pure-logic-exhaustively-reactive-glue-thinly\]\[one-helper-feeds-table-and-CSV\]\[testServer-runs-the-real-reactive-graph\]\[honor-the-ratified-UI-scope-no-extra-inputs\]\[phase3E-for-a-mount-is-a-headless-AppDriver-boot\]\[NOT_CRAN=true-for-AppDriver-under-Rscript\]\[install-dev-code-before-e2e\]\[distinguish-preexisting-log-noise-by-namespace\]\[declare-TDD-phase-every-response\]\[gate-every-transition-via-AskUserQuestion\]\[news-AND-changelog-for-a-user-facing-feature\]\[macos-dupe-scan\].
 **Apply:** when implementing a build-from-scratch Shiny wire-in under
 strict TDD — extract the data transformation into a pure Shiny-free
@@ -5107,30 +5117,31 @@ source TEXT contains the call — near-tautological; it cannot catch a
 wrong reactive or a runtime mount failure.** The teeth for the server
 wiring are the mandatory Phase-3E — a headless `AppDriver` boot of the
 INSTALLED app (Learning 78’s recipe: `NOT_CRAN=true` +
-`devtools::install()` first) that proves the tab is REACHABLE (navigate
-via `app$set_inputs(mainNavbar="ORIP Reporting")`, assert the active
-pane shows the module’s content) and its namespaced outputs register
-with **0 module-namespaced JS errors** (grep the logs for YOUR
-namespace, separating the pre-existing app-wide `shinyBS` noise). Carry
-this script gotcha: `app$get_html(".tab-pane.active")` returns MULTIPLE
-nodes (every nested module tabset has its own active pane), so collapse
-with `paste(collapse=" ")` or assert on
-`app$get_value(input="mainNavbar")` instead of `&&`-ing a length-N
-vector (a length-5 vector into `isTRUE`/`&&` halts the run). **Lesson:**
-mirror the codebase’s deparse-grep wiring idiom for the RED net, but
-treat it as a smoke-alarm wire, not proof — the AppDriver Phase-3E is
-what actually verifies a module mount (FM \#24 answered head-on). **(c)
-\[a mid-session owner QUESTION that reveals new scope → answer
-firsthand, then file an issue; don’t bleed it into the deliverable (FM
-\#23 + 1-and-done)\] Mid-close-out the owner asked whether the tab’s
-visibility is config/ONPRC-dependent.** I answered FIRSTHAND from the
-code (no — it’s a static `tabPanel`, always mounted; only the displayed
-center label reflects config, defaulting to “ONPRC” via
-`getSiteInfo.R:66` when absent) and changed nothing. The owner then
-clarified the tab SHOULD be ONPRC-gated but “that is too much for this
-session — put it as an issue.” Correct handling: answer the question,
-recognize the clarification as a REAL new requirement, and capture it as
-a tracked issue (**\#49**, with evidence-based design options — dynamic
+[`devtools::install()`](https://devtools.r-lib.org/reference/install.html)
+first) that proves the tab is REACHABLE (navigate via
+`app$set_inputs(mainNavbar="ORIP Reporting")`, assert the active pane
+shows the module’s content) and its namespaced outputs register with **0
+module-namespaced JS errors** (grep the logs for YOUR namespace,
+separating the pre-existing app-wide `shinyBS` noise). Carry this script
+gotcha: `app$get_html(".tab-pane.active")` returns MULTIPLE nodes (every
+nested module tabset has its own active pane), so collapse with
+`paste(collapse=" ")` or assert on `app$get_value(input="mainNavbar")`
+instead of `&&`-ing a length-N vector (a length-5 vector into
+`isTRUE`/`&&` halts the run). **Lesson:** mirror the codebase’s
+deparse-grep wiring idiom for the RED net, but treat it as a smoke-alarm
+wire, not proof — the AppDriver Phase-3E is what actually verifies a
+module mount (FM \#24 answered head-on). **(c) \[a mid-session owner
+QUESTION that reveals new scope → answer firsthand, then file an issue;
+don’t bleed it into the deliverable (FM \#23 + 1-and-done)\]
+Mid-close-out the owner asked whether the tab’s visibility is
+config/ONPRC-dependent.** I answered FIRSTHAND from the code (no — it’s
+a static `tabPanel`, always mounted; only the displayed center label
+reflects config, defaulting to “ONPRC” via `getSiteInfo.R:66` when
+absent) and changed nothing. The owner then clarified the tab SHOULD be
+ONPRC-gated but “that is too much for this session — put it as an
+issue.” Correct handling: answer the question, recognize the
+clarification as a REAL new requirement, and capture it as a tracked
+issue (**\#49**, with evidence-based design options — dynamic
 `insertTab`/`removeTab` mirroring the Error List pattern at
 `appServer.R:163-242`, and the genuine “show or hide when no config file
 → default ONPRC” product fork flagged) rather than expanding the current
@@ -5209,13 +5220,15 @@ deterministic unit tests so the build-equivalent (full suite + lint)
 stays quick; reserve the browser for Phase-3E. (Watch the lint false
 positive: `object_usage_linter` flags a BRAND-NEW package function as
 “no visible global function” until the package is re-installed — confirm
-by re-linting after `devtools::install()`, like its already-installed
-siblings.) **(c) \[Phase-3E must drive the REAL config path across ALL
-gated scenarios — and that is exactly where a pre-existing latent bug
-surfaces: flag-and-file, don’t fix; and classify logs by LEVEL not
-namespace-mention\] The unit tests inject `siteInfo`, but Phase-3E must
-prove the gate works through the REAL `getSiteInfo`→config-file path.**
-Bulletproof recipe: generate a temp app dir whose `app.R` does
+by re-linting after
+[`devtools::install()`](https://devtools.r-lib.org/reference/install.html),
+like its already-installed siblings.) **(c) \[Phase-3E must drive the
+REAL config path across ALL gated scenarios — and that is exactly where
+a pre-existing latent bug surfaces: flag-and-file, don’t fix; and
+classify logs by LEVEL not namespace-mention\] The unit tests inject
+`siteInfo`, but Phase-3E must prove the gate works through the REAL
+`getSiteInfo`→config-file path.** Bulletproof recipe: generate a temp
+app dir whose `app.R` does
 `Sys.setenv(HOME=<temp dir containing .nprcgenekeepr_config>)` BEFORE
 `shinyApp(appUI(), appServer)`, so the child process’s
 `getConfigFileName` reads the controlled config regardless of env
@@ -5555,7 +5568,8 @@ real “does it run?” check is the build-equivalent below.
 **(c) \[the docs build-equivalent is RUNNING the corrected examples;
 `document()` must be scope-checked; coverage tests of correct functions
 are an honest degenerate cycle; and a user-facing help defect is
-NEWS-worthy\] After the GREEN roxygen edits + `devtools::document()`,
+NEWS-worthy\] After the GREEN roxygen edits +
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html),
 the SAFEGUARDS “build-equivalent” for documentation is to actually
 execute each fixed example**
 ([`tools::Rd2ex`](https://rdrr.io/r/tools/Rd2HTML.html)→`source(out, local=new.env())`,
@@ -8688,9 +8702,10 @@ install Chrome (chromote fetches it lazily, and the e2e tests
 and ran with no forcing flag, the condition CRAN itself checks under.
 Pre-gate hygiene that the single `R CMD check` subsumes anyway is still
 worth running explicitly for the captured evidence: `roxygenise()` (zero
-diff → docs in sync), `urlchecker::url_check()` (17/17 correct),
-`spell_check_package()` (the WORDLIST reconcile). WORDLIST is
-*gate-invariant* (consumed only by the `skip_on_cran`
+diff → docs in sync),
+[`urlchecker::url_check()`](https://urlchecker.r-lib.org/reference/url_check.html)
+(17/17 correct), `spell_check_package()` (the WORDLIST reconcile).
+WORDLIST is *gate-invariant* (consumed only by the `skip_on_cran`
 `tests/spelling.R`), so changing it cannot alter the check result —
 confirmed by a second rebuild+recheck (identical `2 NOTEs`).
 
@@ -9322,10 +9337,12 @@ consistent with the 26.6 evidence) is a defensible POLICY bump above the
 (`Changes in 3.2.0`, “only supported for LabKey Server v24.1 or later”)
 and that installed 3.4.6 ≥ 3.2.0 (claim never precedes evidence —
 Learning 137). Verified as a CONFIG change (owner pick “Config change, R
-CMD check”): `devtools::check()` Status OK 0/0/0 — a satisfied floor
-bump is runtime-inert, so no RED→GREEN→REFACTOR (no behavioral logic to
-test; the build equivalent IS the verification, and a guard test
-asserting the floor’s mere presence would be near-tautological).
+CMD check”):
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+Status OK 0/0/0 — a satisfied floor bump is runtime-inert, so no
+RED→GREEN→REFACTOR (no behavioral logic to test; the build equivalent IS
+the verification, and a guard test asserting the floor’s mere presence
+would be near-tautological).
 
 **Reflexes:** \[pin/bump a dependency floor against the dependency’s OWN
 NEWS/changelog, matched to the EXACT call you make — check EVERY
@@ -9347,14 +9364,15 @@ mark the residual unobserved\]\[confirm a specific version is a REAL
 release (changelog header) AND that the installed copy satisfies it
 BEFORE writing it into DESCRIPTION\]\[a DESCRIPTION version-floor change
 has no behavioral logic to unit-test — verify it as a CONFIG change via
-`R CMD check`/`devtools::check()` (the build equivalent); a satisfied
-floor bump is runtime-inert, so no RED→GREEN→REFACTOR and a
-presence-asserting guard test is near-tautological\]. **Apply:** any
-time you pin or bump a dependency version constraint, any “what version
-is the server/site on” question (mine the vendor repos), and any future
-`Rlabkey`/LabKey floor revisit on nprcgenekeepr (start from
-`DESCRIPTION` + `docs/research/labkey-integration-options-2026-06-19.md`
-§3.4 / §7 Rec 1 / §8.1).
+`R CMD check`/[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+(the build equivalent); a satisfied floor bump is runtime-inert, so no
+RED→GREEN→REFACTOR and a presence-asserting guard test is
+near-tautological\]. **Apply:** any time you pin or bump a dependency
+version constraint, any “what version is the server/site on” question
+(mine the vendor repos), and any future `Rlabkey`/LabKey floor revisit
+on nprcgenekeepr (start from `DESCRIPTION` +
+`docs/research/labkey-integration-options-2026-06-19.md` §3.4 / §7 Rec 1
+/ §8.1).
 
 #### Learning 139 — Re-rendering a `github_document` Rmd (e.g. `NEWS.Rmd`) drops a `<name>.html` PREVIEW byproduct (`github_document`’s `html_preview: true` default) at the top level, which `R CMD check` then flags as a “Non-standard file/directory found at top level” NOTE — so after rendering NEWS, delete the stray `NEWS.html` (and any `*_files/` dir) BEFORE checking/committing. (S147, LabKey research Rec \#2)
 
@@ -9362,16 +9380,19 @@ is the server/site on” question (mine the vendor repos), and any future
 `rmarkdown::render("NEWS.Rmd")`. The Rmd’s
 `output: github_document: default` carries `html_preview = TRUE`, so the
 render ALSO wrote a `NEWS.html` preview (untracked, not git-ignored).
-The first `devtools::check()` came back **0 errors / 0 warnings / 1
-NOTE** — the NOTE being exactly “Non-standard file/directory found at
-top level: ‘NEWS.html’”, which would have broken the project’s standing
-0/0/0 bar. `rm -f NEWS.html` (it was untracked, never part of the
-intended change set) and a re-run of `devtools::check()` → **0/0/0**.
-(S144 also re-rendered NEWS but its handoff never flagged this — either
-it cleaned the artifact silently or the artifact predated its check
-baseline; recording it now so the next NEWS-rendering session expects
-it.) Permanent fixes exist but were left as candidates to avoid scope
-creep: set `html_preview: false` in the NEWS.Rmd YAML, or add
+The first
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+came back **0 errors / 0 warnings / 1 NOTE** — the NOTE being exactly
+“Non-standard file/directory found at top level: ‘NEWS.html’”, which
+would have broken the project’s standing 0/0/0 bar. `rm -f NEWS.html`
+(it was untracked, never part of the intended change set) and a re-run
+of
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) →
+**0/0/0**. (S144 also re-rendered NEWS but its handoff never flagged
+this — either it cleaned the artifact silently or the artifact predated
+its check baseline; recording it now so the next NEWS-rendering session
+expects it.) Permanent fixes exist but were left as candidates to avoid
+scope creep: set `html_preview: false` in the NEWS.Rmd YAML, or add
 `NEWS.html` to `.Rbuildignore` (the NOTE is about presence in the build,
 so `.Rbuildignore` is the real fix) and `.gitignore`.
 
@@ -9380,12 +9401,13 @@ so `.Rbuildignore` is the real fix) and `.gitignore`.
 of a `github_document` Rmd, expect a `<name>.html` preview byproduct
 (`html_preview` defaults TRUE) + possibly a `<name>_files/` dir — delete
 them before `R CMD check`/commit, or they surface as a top-level NOTE
-and flip OK→1-NOTE\]\[always re-run `devtools::check()` after removing
-any stray artifact before claiming 0/0/0\]\[permanent fixes (candidates,
-not done S147): `html_preview: false` in the Rmd YAML, or
-`.Rbuildignore` + `.gitignore` entries for `NEWS.html`\]. **Apply:** any
-session that re-renders `NEWS.Rmd` (or any `github_document`) and then
-runs `R CMD check`.
+and flip OK→1-NOTE\]\[always re-run
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+after removing any stray artifact before claiming 0/0/0\]\[permanent
+fixes (candidates, not done S147): `html_preview: false` in the Rmd
+YAML, or `.Rbuildignore` + `.gitignore` entries for `NEWS.html`\].
+**Apply:** any session that re-renders `NEWS.Rmd` (or any
+`github_document`) and then runs `R CMD check`.
 
 #### Learning 140 — A research/recommendation doc can be internally inconsistent — its Recommendation prose can contradict its OWN ground-truth sections and the live codebase — so before implementing a recommendation, ground it firsthand against (a) the doc’s evidence sections and (b) the actual code; here BOTH of Rec \#2’s literal sub-instructions were unsafe for this repo. (S147, LabKey research Rec \#2)
 
@@ -9524,12 +9546,13 @@ renames 7 positional columns — preserved by `getPedDirectRelatives`’s
 `ped[ped$id %in% ids, ]` return), and every other reference mocks
 `getLkDirectRelatives` wholesale (walk-agnostic), so no other test
 moved. Verified end-to-end: suite 0/0 (1960 passed), lint 0,
-`devtools::check()` 0/0/0, and a Phase-3E smoke of the REAL
-`getLkDirectRelatives` (full component incl. O2, fail-soft NULL path
-intact, body delegates). NEWS render trap recurred: `--` in the Rmd
-smart-rendered to an en-dash in NEWS.md (Learning 132) — reworded the
-source to drop `--` (the rest of NEWS avoids it) and re-verified NEWS.md
-is pure ASCII; deleted the `NEWS.html` byproduct (Learning 139).
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+0/0/0, and a Phase-3E smoke of the REAL `getLkDirectRelatives` (full
+component incl. O2, fail-soft NULL path intact, body delegates). NEWS
+render trap recurred: `--` in the Rmd smart-rendered to an en-dash in
+NEWS.md (Learning 132) — reworded the source to drop `--` (the rest of
+NEWS avoids it) and re-verified NEWS.md is pure ASCII; deleted the
+`NEWS.html` byproduct (Learning 139).
 
 **Reflexes:** \[when you execute a behavior change a prior session
 deferred-and-guarded with a characterization test, the RED step is to
@@ -9595,12 +9618,13 @@ params (backward-compatible), REFACTOR extracted the duplicated
 id/sire/dam check into a local helper preserving both exact messages.
 Proactively whitelisted the words my rendered docs introduced
 (`pluggable`, plus S149’s never-listed `collaterals`) in `inst/WORDLIST`
-**before** `devtools::check()`, so the build came back 0/0/0 in a single
-pass (no spelling-NOTE iteration). Verified: suite 0/0 (1979 passed),
-lint 0, check 0/0/0, Phase-3E smoke of the real un-mocked `"file"`
-branch. The provider is a new internal capability on the seam, not yet
-wired to a production caller — an honest tracer-bullet (end-to-end
-working + tested, but
+**before**
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html),
+so the build came back 0/0/0 in a single pass (no spelling-NOTE
+iteration). Verified: suite 0/0 (1979 passed), lint 0, check 0/0/0,
+Phase-3E smoke of the real un-mocked `"file"` branch. The provider is a
+new internal capability on the seam, not yet wired to a production
+caller — an honest tracer-bullet (end-to-end working + tested, but
 [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
 still hardcodes `"labkey"`).
 
@@ -9624,12 +9648,13 @@ re-architecture, not a drop-in\]\[adding defaulted params
 (`fileName = NULL`, `sep = ","`) to an internal adapter is
 backward-compatible — existing callers are unaffected\]\[when your
 rendered NEWS/Rd introduces a domain word, add it to `inst/WORDLIST` in
-the SAME pass so `devtools::check()` is 0/0/0 on the first run — no
-spelling-NOTE iteration\]. **Apply:** any owner “A or B” scope fork; any
-new provider on an existing adapter/strategy seam; any “optimize the
-fetch/push it server-side” proposal that interacts with downstream
-client-side traversal; any NEWS/Rd change that introduces new
-vocabulary.
+the SAME pass so
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+is 0/0/0 on the first run — no spelling-NOTE iteration\]. **Apply:** any
+owner “A or B” scope fork; any new provider on an existing
+adapter/strategy seam; any “optimize the fetch/push it server-side”
+proposal that interacts with downstream client-side traversal; any
+NEWS/Rd change that introduces new vocabulary.
 
 #### Learning 144 — To WIRE a new provider/capability to a caller, prefer adding a clean SYMMETRIC SIBLING over parameterizing a domain-named function: a new wrapper costs one export but has zero blast radius on existing signatures and avoids a naming smell (a LabKey-named function that also reads files); the “but a user can already compose it” critique is answered by PARITY — the sibling gives the new source the same first-class entry point the old source already has (the existing function is itself just a thin fetch→delegate wrapper). And a wrapper inherits its source’s contract, so do NOT copy a guard that can’t fire (no NULL guard on a loud-erroring source = no untested dead code). (S151, owner “publish + delete + wire the file provider”)
 
@@ -9679,7 +9704,8 @@ wrapper (no NULL guard); `roxygenise` added
 `export(getFileDirectRelatives)` + the man page (an EXPORT, unlike
 S148-S150’s `@noRd` work, so NAMESPACE/man DID change — expected).
 REFACTOR needed no structural code change (the wrapper is already
-minimal). Verified: new file 7/7, suite 0/0, lint 0, `devtools::check()`
+minimal). Verified: new file 7/7, suite 0/0, lint 0,
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
 0/0/0, Phase-3E smoke of the real un-mocked function. Honest scope note:
 this is capability/plumbing parity (a first-class file entry point), not
 the higher-value app-pipeline wiring (C, deferred) that would let the
@@ -9763,8 +9789,10 @@ both test files + the 168-test modInput suite re-verified green); moving
 the `@importFrom readxl excel_format`/`utils read.csv` tags to the
 extracted helper kept NAMESPACE stable (verified the imports survived).
 Verified: new file 7/7, `getFocalAnimalPed` 62, `modInput` 168, full
-suite 0/0, lint 0, `devtools::check()` 0/0/0, Phase-3E smoke of the real
-un-mocked function + the rendered UI input.
+suite 0/0, lint 0,
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+0/0/0, Phase-3E smoke of the real un-mocked function + the rendered UI
+input.
 
 **Reflexes:** \[when wiring a capability THROUGH a pipeline, let
 GROUNDING (not abstract design taste) pick the shape — look specifically
@@ -9790,7 +9818,8 @@ function’s body), the real fn runs, and it surfaces as an ERROR not a
 FAIL; re-point such tests to the new owner (`stub(where = helper, ...)`,
 or test the helper directly) AND re-verify the **ERROR** column, not
 just FAIL/SKIP (testthat counts a thrown error separately — a re-verify
-that prints only PASS/FAIL/SKIP will miss it; `devtools::check()`
+that prints only PASS/FAIL/SKIP will miss it;
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
 won’t)\]\[when moving `@importFrom` tags to an extracted helper, confirm
 `roxygenise` keeps NAMESPACE imports intact (the symbols just need ONE
 declarer in the package)\]\[R-package test files gated by top-level
@@ -9887,8 +9916,10 @@ positives — masking that the real count is tiny; running BARE
 constructor’s `structure(list(...), class = ...)` tripped the project’s
 `undesirable_function_linter` → switched to the package’s
 `class(x) <- ...` idiom. Verified: focal 27, modInput 173, full suite
-0/0 via check, lint 0, `devtools::check()` 0/0/0, Phase-3E smoke of all
-7 real paths + a `testServer` Details check.
+0/0 via check, lint 0,
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+0/0/0, Phase-3E smoke of all 7 real paths + a `testServer` Details
+check.
 
 **Reflexes:** \[enriching a fail-soft boundary = return a DEDICATED
 classed error object carrying the reason; do NOT overload a shared/QC
@@ -11559,4 +11590,36 @@ precedent).
 
 #### Learning 471 – **A prior planning session’s own stated architectural constraint (“fixing X would require restructuring Y itself”) is a claim about the code, made under time/scope pressure without attempting the restructuring – it deserves the same “verify directly, don’t inherit as fact” discipline this project already applies to audit breakdowns (Learning 469) and dragon-flagged test shapes (Learning 470), one level further upstream: applied to the constraint that DEFINES a new design’s solution space, not just a test or a category label within an already-chosen solution.** (S473, designing the fix for issue \#144, the anchor-side sibling of issue \#143’s founder-positioning defect.) The \#143 plan (S471) stated, as a scope boundary rather than an empirically-tested finding, that “moving an anchor’s displayed row would require restructuring D3’s recursive positioning itself… materially larger than issue \#143’s point-patch” – a reasonable *a priori* judgment (an anchor “has a subtree,” so relocating it seems entangled with that subtree) made while \#143’s own point-patch was already fully scoped and the anchor case was being deliberately deferred, not while anyone had actually attempted the restructuring. Issue \#144 was filed carrying this claim forward as fact, and `BACKLOG.md` repeated it verbatim across 2 further sessions. This session, before accepting the claim, read `.positionMatingUnitForest()` directly and traced `finalizeNode()`/`mergeSubtrees()` to confirm or refute it mechanically – finding that the argument controlling a node’s own row-reservation (`ownGen`) is already fully decoupled from both the node’s own `x`-computation and its recursion into children (neither depends on `ownGen` at all). This meant an anchor’s row COULD be corrected via the exact same narrow `dispGenOf`-override pattern \#143 itself used for non-anchor occurrences, contradicting the inherited claim outright – confirmed by actually building and empirically validating the ~11-line patch (51-\>0 mismatches, zero change to anchor/duplicate selection, a narrow 3-file test-blast-radius) rather than trusting either the \#143 plan’s prose or a fresh, plausible-sounding restructuring proposal. Two competing candidate designs were built in parallel specifically to pressure-test this: one that took the “requires D2 upstream redesign” framing at face value (fully working, but forcing a mathematically-necessary duplicate/anchor redistribution the simpler fix does not need) and one that took the “requires a full connector-visual reframe” framing at face value (working, but not actually resolving the filed defect’s own success criterion) – both real, useful data points confirming the ORIGINAL point-patch pattern was sufficient all along, not a strawman comparison invented to make the simplest option look best. **Practical rule:** when a new design session inherits a prior plan’s own stated reason for deferring or excluding a scope boundary (“X would require Y,” “this needs a bigger redesign”), do not treat that reasoning as settled fact merely because it reads as considered and was written by a careful prior session – it is frequently an untested judgment call made under that session’s own time/scope pressure. Re-derive it directly against current source before it becomes the premise a new design’s entire solution space is built on; when in doubt, empirically validate at least one candidate that takes the inherited constraint at face value AND one that attempts to disprove it, since which one turns out true materially changes which fix is actually minimal.
 
+#### Learning 473 – **`renv::status()` reporting EVERY package “not installed” (not just one or two) signals a fresh, empty project-library HASH DIRECTORY, not a corrupted lockfile – `renv::restore()` fixes the tracked packages instantly (link-from-cache, no download), but any dev-only tooling never captured in `renv.lock`’s `Packages` section (here: `testthat`/`pkgload`/`devtools`/`roxygen2`/`shinytest2`/`chromote`/`dplyr`/`mockery`/`quarto`/`shinyBS`) stays missing and needs a separate `renv::install()` pass, confirmed harmless by an unchanged `renv.lock`/`DESCRIPTION` diff.** (S474, implementing issue \#144’s anchor-row-mismatch fix.) Orientation’s first `pkgload::load_all()` call failed with “there is no package called ‘pkgload’” – but `renv::status()` showed `installed = n` for ALL ~95 lockfile packages, not just one, and the project library directory (`~/Library/Caches/.../renv/library/nprcgenekeepr-e7e04aee/...`) contained nothing but `renv` itself, timestamped today. R had been upgraded to 4.6.1 mid-project (a new `R-4.6/aarch64-apple-darwin23` ABI triple), which made renv compute a NEW project-library hash with nothing linked into it yet – the OLD hash’s library (also nearly empty, on inspection) was never the real source of truth either; the actual installed package bytes were sitting untouched in the SHARED renv cache the whole time (`~/Library/Caches/.../renv/cache/v5/macos/R-4.6/aarch64-apple-darwin23/`, 168 packages), just not linked into whichever project-library hash happened to be active. `renv::restore(prompt = FALSE)` linked 92 packages from cache in under a second and cleared `renv::status()` to “No issues found” – but `pkgload::load_all()` still failed, and a full `test_dir()` run surfaced 101 errors and 1 failure across 18 unrelated test files, ALL “there is no package called ‘…’” for packages `restore()` does not touch because they were never recorded in `renv.lock`’s `Packages` section at all (verified via `jsonlite::fromJSON(renv.lock)$Packages`, checked against both the working copy AND `git show HEAD:renv.lock` – absent in both, not an artifact of the project’s own long-standing uncommitted diff). This is Learning 298/299’s “devtools wrapper hits a missing transitive Suggests” pattern recurring at full-project scale rather than one or two packages: `renv::install(c(...))` for all 10 missing packages (again all linked from cache, ~50ms) cleared every one of the 101 errors with zero change to `renv.lock`/`DESCRIPTION` (confirmed via `git diff --stat` before and after each install step). **Practical rule:** when `pkgload::load_all()`/`testthat::test_file()` fails with a missing-package error, run `renv::status()` FIRST – if it shows every tracked package as `installed: n` (not a handful), suspect a fresh/empty project-library hash (an R upgrade, a new machine, a wiped cache-adjacent library dir) rather than a corrupted environment, and `renv::restore()` first (cheap, link-only, fixes everything the lockfile tracks). Then run the FULL test suite once (not just the files you intend to touch) before concluding the environment is healthy – `restore()` cannot surface dev-only packages the lockfile itself never recorded, and those show up only as scattered “no package called” errors across whichever test files happen to `library()`/`::` them, which reads exactly like unrelated pre-existing breakage until you check whether `renv.lock` ever had that package at all. See `BACKLOG.md`’s new Housekeeping item for the follow-on: WHY these packages were never captured in the lockfile remains unfixed and will recur for the next project-library reset.
+
+#### Learning 474 – **Constructing a synthetic fixture to exercise a specific branch of a multi-stage tie-break/elimination algorithm (here: `.buildMatingUnitForest()`‘s D2 `preferAnchor()` + `used`-status elimination) by REASONING about the rules in isolation is unreliable when the branches interact sequentially across mating units processed in input order – prototype and empirically verify the fixture BEFORE writing it into a committed test, the same discipline Learning 470 established for a test’s assertion shape, now applied to a test’s own INPUT construction.\*\* (S474, adding a regression test for issue \#144’s plan §6 “an anchor anchors 2+ mating units at differing `unitGen`” residual, a shape neither bundled real fixture reaches.) Two independent hand-reasoned attempts to construct a “one individual anchors 2 units at different gens” fixture failed when actually run: attempt 1 assumed a founder who wins her first union by elimination would also win a second union against a fresh opponent, but the `used`/elimination branch (`R/makePedigreeDiagramData.R:222-241`) only lets an UNUSED individual beat an ALREADY-USED one – once she’s used from union 1, she LOSES union 2 to elimination outright (the opposite of the intended double-anchor); attempt 2 tried to pre-seed her second opponent as “already used” via its own prior union, but that seed union’s own tie-break (both participants founders, so mate-count decides) picked the WRONG participant as winner because giving the target individual a second mate for the main scenario silently inflated her global mate-count, flipping an unrelated tie-break elsewhere in the same fixture – confirmed only by running `.buildMatingUnitForest()` against each attempt and inspecting `forest$matingUnits$anchor` directly, not by re-reading the elimination-branch code more carefully (both attempts’ authors had already read it correctly; the interaction across units, not the rule itself, was the blind spot). The working construction (3 attempts in) seeds each of the double-anchor’s two rivals through their OWN prior “founder beats non-founder” union first (no elimination/mate-count ambiguity possible, since founder-status alone decides), guaranteeing both rivals are `used` by the time the double-anchor’s own two unions are processed, at which point she wins the first by elimination (unused beats used) and the second via `preferAnchor()`’s non-founder-beats-founder rule (both already used, so elimination is skipped and the tie-break fires) – verified empirically against a patched prototype before being committed into `test_positionMatingUnitForest.R`.** Practical rule:\*\* when a test fixture must land in a SPECIFIC branch of an algorithm whose outcome depends on processing ORDER and ACCUMULATED STATE across multiple input rows (an elimination/`used`-status pattern, a running tally, a first-wins/last-wins rule) – not just on the values of one isolated comparison – treat the fixture’s own construction as needing the same empirical verification as the assertion values it will check (Learning 470): patch-and-run it against the real function before writing it into a test file, and expect the first 1-2 hand-reasoned attempts to be subtly wrong in a way that only running the code reveals.
+
 #### Learning 472 – **When redesigning a decision function (a tie-break, a selection rule) to add a new criterion, tracing only the NAMED function is not enough – a separate fallback/short-circuit code path elsewhere that can produce the SAME outcome without ever calling the named function will silently continue producing the OLD behavior, defeating the redesign for exactly the cases that path handles.** (S473, evaluating a candidate fix for issue \#144 that would have added a gen-aware criterion to `preferAnchor()`, the D2 anchor-selection tie-break in `R/makePedigreeDiagramData.R`.) The anchor-assignment loop’s `used`/elimination branch (`p1Used && !p2Used` / `p2Used && !p1Used`) sits structurally BEFORE `preferAnchor()` is ever consulted: whenever exactly one of a mating unit’s two parent candidates was already claimed as anchor by an earlier-processed unit, “the unused one wins by elimination,” full stop, regardless of what `preferAnchor()`’s own logic would have decided. A design that adds gen-awareness only inside `preferAnchor()` therefore leaves every case routed through this elimination branch completely unaffected – confirmed concretely: `__union_68` (`8LKBV9` x `8P17E3`) is exactly this case (a founder wins by elimination over a non-founder `preferAnchor()` alone would have preferred), and it is one of the 51 real-fixture mismatches this project is trying to fix. A `preferAnchor()`-only redesign was proven incomplete by a direct code-structure argument (the elimination branch literally never calls `preferAnchor()` when it fires) before ever being run, then confirmed empirically once the complete version (gen-awareness threaded into the elimination branch too, ahead of the `used`-status check) was built and tested. **Practical rule:** before redesigning a named decision/tie-break function’s criteria, grep and read every OTHER call site and every OTHER code path that can produce the same kind of outcome (a fallback, a short-circuit, a special-cased elimination branch) – a redesign confined to the named function is only complete if that function is the SOLE path to the outcome; when it is one of several, identify every path first and decide whether the new criterion needs to apply to all of them before claiming the redesign is complete, not after a test failure reveals the gap.
+
+#### Learning 475 – **A session that fully resolves a tracked GitHub issue in `CHANGELOG.md`/`BACKLOG.md` does not thereby close the issue itself – issue-closing is a separate, un-automated action that a shipping session’s own close-out can silently skip, and nothing catches the gap until a LATER session’s orientation report happens to cross-check `gh issue list` against `BACKLOG.md`‘s own DONE markers.\*\* (S475, closing GitHub issues \#142/#143/#144.) This is the THIRD consecutive instance of the identical gap, each caught by a different later session, never by the shipping session itself: issue \#142 (rectilinear waypoint style) was fully implemented and verified S468 but stayed open until S475 (7 sessions, first flagged by nobody until this session’s cross-check); issue \#143 (founder-positioning fix) was fully implemented S472 but stayed open until S475 (flagged-but-not-acted-on by S473’s own orientation report, then again by S474’s, then finally acted on by S475 – 3 sessions saw the gap before one closed it); issue \#144 (anchor-row-mismatch fix) was fully implemented S474 but stayed open only 1 session before S475 closed it. All three were closed together this session via `gh issue close --reason completed --comment "..."`, each comment citing the specific `CHANGELOG.md` entry and verification evidence rather than a bare “fixed.” The pattern’s root cause: this project’s Phase 3F close-out checklist (`SESSION_RUNNER.md`) enumerates the authoritative-ledger write (`CHANGELOG.md`) as the action a shipping session owes, but has no equivalent explicit prompt for “if this session’s diff was the LAST thing a tracked GitHub issue needed, close the issue in the same session” – so a session that correctly records its own action in the ledger can still leave the issue itself dangling, and the next several sessions’ orientation reports treat “should I close this” as optional commentary rather than a same-session obligation.** Practical rule:\*\* when a session’s own close-out marks a `BACKLOG.md` item fully DONE and that item names a GitHub issue number, close the issue in the SAME session (a `gh issue close --reason completed --comment` citing the `CHANGELOG.md` entry, matching the established \#131/#134/#135/#139 precedent) rather than deferring it to “a future session should consider closing this” – deferred issue-closing has now demonstrably taken 1, 3, and 7 sessions respectively to actually happen. Filed as a new `CLAUDE.md` “Additional close-out checks” item (GitHub issue close-out checklist) mirroring the citation/tutorial/`NEWS.Rmd` checklist family, so this becomes a same-session obligation going forward rather than a recurring incidental finding.
+
+#### Learning 476 – **`renv/settings.json`’s `snapshot.type: "explicit"` makes a PLAIN `renv::snapshot()` scan only `DESCRIPTION`’s `Imports`/`Depends`/`LinkingTo` fields – every `Suggests`-only package (and its own transitive dependencies) is silently excluded from `renv.lock`, surviving as a working environment only until the next full library reset (an R-version bump, a fresh clone), at which point `renv::restore()` cannot bring it back because it was never recorded.** (S476, root-causing the 10-missing-package gap flagged by S474/S475’s own speculative “likely a dependency-detection type that excludes dev-only/Suggests tooling.”) Traced precisely via `renv:::renv_dependencies_discover_description_fields` (confirmed live against the installed renv 1.2.3’s own source, not assumed from memory): for the project’s OWN root `DESCRIPTION`, the scanned field set is `settings$package.dependency.fields()` (here: `Imports`/`Depends`/`LinkingTo` only) **plus** `Suggests` unconditionally **plus** `Config/renv/profiles/<active-profile>/dependencies` – but that last field name is literally interpolated from whichever renv profile is CURRENTLY ACTIVE (`renv_profile_get()`), so a DESCRIPTION field named `Config/renv/profiles/dev/dependencies` (this project already had one, listing `devtools`/`roxygen2`/etc.) is only ever read when the “dev” profile is actually activated – never true here (`renv/profiles/` doesn’t exist; confirmed via `find`). Separately, `renv::snapshot()`’s own `dev` argument (documented, not internal) toggles whether the `Suggests`-inclusive field set is used at all: a dry-run `renv::snapshot(lockfile = NULL, dev = TRUE)` (writes nothing – returns the lockfile as an R object per its own documented `lockfile = NULL` behavior) confirmed this precisely, capturing 8 of the 10 flagged packages (the ones already in `Suggests`, plus their transitive deps `pkgload`/`chromote` via `shinytest2`) while leaving `devtools`/`quarto` (declared only via the inert dev-profile field and the unrelated `Config/Needs/website` pkgdown/pak convention, which renv’s dependency scan does not read at all) still missing. Fix: added `devtools`+`quarto` directly to `DESCRIPTION`’s `Suggests` (consistent with this project’s OWN existing precedent of listing pure dev/CI tooling there – `covr`/`pkgdown`/`spelling` are already Suggests entries never referenced by package/test/vignette code), installed 6 separately-discovered NOT-INSTALLED `Suggests` packages (`covr`/`kableExtra`/`markdown`/`png`/`shinyWidgets`/`spelling` – surfaced only because `dev=TRUE`’s dry run refused to snapshot packages it couldn’t find installed), then ran the real `renv::snapshot(dev = TRUE)` (157 packages recorded, up from 95). Verified two ways beyond `renv::status(dev = TRUE)` reading “No issues found”: (1) a genuinely fresh `renv::restore(library = <empty temp dir>)` actually installed all 16 target packages from the fixed lockfile alone, not relying on the pre-existing project library; (2) `devtools::document()` (run as part of `devtools::check()` prep) collaterally reflowed `man/modMarkerGeneticsServer.Rd` via a roxygen2-version-driven line-wrap difference (NOT the previously-tracked iCloud duplicate-`.R`-file contamination pattern – confirmed those files don’t currently exist – a distinct, narrower version-drift cause), reverted via `git checkout --` as out-of-scope collateral before committing. **Practical rule:** when a project’s `renv/settings.json` uses `snapshot.type: "explicit"`, NEVER call bare `renv::snapshot()`/`renv::status()` to manage or diagnose dev/test tooling – always pass `dev = TRUE`, and treat a DESCRIPTION `Config/renv/profiles/<name>/dependencies` or `Config/Needs/*` field as a promise that is INERT unless the exact mechanism reading it (a matching active renv profile; a separate tool like `pak`) is actually in use – read the field-name-generation logic (here, `renv_profile_get()` interpolated into the field name) directly from source rather than assuming a plausible-looking DESCRIPTION field is wired to anything. See `CLAUDE.md`’s Build/Test/Verify section for the now-documented standing rule, and Learning 473 for the original symptom this root-causes.
+
+#### Learning 477 – **A CI job that runs `lintr::lint_package()` on every push is not, by itself, a process fix that prevents lint debt from re-accumulating – without branch protection requiring it to pass, a failing run blocks nothing, and a repo that commits directly to `master` (no PR review surfacing the red X) can silently accumulate several sessions’ worth of commits on top of a red CI run before anyone notices.** (S477, “wire a process fix so `lintr` debt stops re-accumulating” – `BACKLOG.md` Housekeeping, split from the S462 sweep.) The backlog item’s own framing assumed a CI lint job needed to be ADDED (citing the precedent of the repo’s scheduled `shinytest2` workflow) – but `.github/workflows/lint.yaml` already existed, already ran `lintr::lint_package()` with `LINTR_ERROR_ON_LINT: true` on every push to `master` and on PRs, and had done so since before this backlog item was even filed (confirmed via `gh workflow list` + `gh run list --workflow=lint.yaml`, not assumed from the item’s own text – the identical “backlog item’s speculative framing turns out incomplete on direct inspection” pattern as Learning 476’s renv.lock root-cause). The actual gap was structural: `gh api repos/.../branches/master/protection` returned 404 “Branch not protected,” so the job’s `failure` conclusion is purely informational – nothing stops a push, nothing blocks a merge (there is no PR to show a red check on, since recent sessions commit straight to `master`). `gh run list` showed the job WAS red for S472’s push and stayed red through S473-S476’s pushes (2 real violations S472’s issue \#143 fix introduced in `R/makePedigreeDiagramData.R` – a `commented_code_linter` false-positive on a design-rationale comment that happens to contain `/`+`$` (`## realIds/nodes$id.`), and a `line_length_linter` 84-vs-80 hit on a long double-index assignment) – 4 consecutive close-outs ran their own `devtools::check()`/regression-suite verification without ever glancing at `gh run list` or the Actions tab, because nothing in their own workflow surfaced it. **Practical rule:** a CI gate’s mere existence is not evidence it is doing anything – check `gh run list --workflow=<name>.yaml` for its actual recent conclusions AND whether branch protection (`gh api repos/<owner>/<repo>/branches/<branch>/protection`) requires it, before treating “there’s a CI job for X” as “X is handled.” The durable fix for a push-gated-but-unprotected job is the same shape as the ledger co-staging pattern (`SAFEGUARDS.md`): a session-local check (lint touched files, package loaded, before closing out) that catches the problem BEFORE the commit that would trip CI, not a downstream gate nobody is positioned to see fail. Fixed both violations REFACTOR-only (no RED/GREEN – style-only, no behavior change; the false-positive comment suppressed via a documented `# nolint start/end: commented_code_linter.` block per the established S466 precedent for live design-rationale comments, not deleted or reworded; the long line wrapped onto two lines matching this file’s own existing `<-`-then-indented-RHS house style, confirmed via `grep '<-$' R/*.R` rather than invented) – verified via `lintr::lint_package()` (package loaded, matching CI’s exact invocation) reading 0 lints package-wide, full regression suite unchanged (0 failed/0 error, 4573 passed, 171 skipped, 10 pre-existing baseline warnings), `devtools::check()` unchanged from the S476 baseline. Added a new `CLAUDE.md` “Lint close-out checklist” (Additional close-out checks) requiring exactly this session-local check going forward, since the CI job’s own existence had already been proven insufficient by 4 sessions’ worth of red-and-ignored runs.
+
+#### Learning 478 – **The `a2interactive.Rmd` script-callable-function checklist’s original “new exported function” wording had a gap: a NEW PARAMETER added to an ALREADY-documented exported function is invisible to that trigger condition, so the vignette section documenting that function can silently go stale – including its own render code, which had implicitly promised to “reproduce the Diagram tab’s rendering exactly” and then quietly stopped doing so.** (S478, user-directed: “I want the \[rectilinear edge style\] option in the interactive mode and its use demonstrated in `vignettes/a2interactive.Rmd`.”) Two distinct discoveries chained together this session. First: the user recalled asking for a rectilinear-vs-direct edge-style option but couldn’t find a tracking issue via casual lookup – `gh issue list`’s open-only default silently hides exactly the class of issue most likely to be “already handled” (a CLOSED, fully-shipped one): issue \#142 existed, was closed S468, and the feature (`makePedigreeMatingLayout(edgeStyle = c("direct", "rectilinear"))`, already `@export`ed, plus a live `R/modPedigree.R` “Diagram Edge Style” `radioButtons()` toggle) was already fully live in the app – a `gh issue view <N> --json state` check (not the default `gh issue list`) was needed to surface this and avoid re-planning already-shipped work. Second, once past that: `vignettes/a2interactive.Rmd`’s existing “Pedigree Diagram” section (written before issue \#142 shipped) still only demonstrated the default `"direct"` style, and its render chunk’s own `nodesIdSelection` waypoint-exclusion regex (`^__union_|^__dup_`, 2 prefixes) had drifted out of sync with `R/modPedigree.R`’s actual 5-prefix set (`__union_|__dup_|__drop_|__bar_|__proj_`, the extra 3 added by \#142’s rectilinear waypoints) – harmless under the still-default direct style shown, but a live parity bug waiting to surface the moment a rectilinear demo was added next to it. Root cause: the `a2interactive.Rmd` checklist (`CLAUDE.md`, Session 450) is worded around “new exported function,” so a new parameter on an existing, already-documented function trips no obligation at all – unlike the `NEWS.Rmd` checklist (which fired correctly for issue \#142 at S468 shipping time) or the citation checklist (statistic-specific), nothing in the existing checklist family watches for “an already-documented function’s signature changed.” Fixed: added the `edgeStyle = "rectilinear"` demonstration (new “### Rectilinear Edge Style” subsection: data chunk, prose on the extra waypoint nodes/edges and the `color.background`/`color.border`/`color` columns `visNetwork` consumes directly, and a render chunk matching the app’s actual `degree = 6L` style-aware `highlightNearest` value) alongside a “### Direct Edge Style” heading added for symmetry around the pre-existing content, plus the exclusion-regex parity fix in the existing direct-style chunk (both chunks now use the identical 5-prefix pattern, matching `R/modPedigree.R`’s own) – full scope (demo + parity fix, not demo-only) confirmed via `AskUserQuestion` before executing. Verified: `rmarkdown::render()` end-to-end (142/142 chunks, all new chunks included, no errors – the only “Error”-substring hits in the rendered text were pre-existing, unrelated content: an intentional `qcStudbook()` error-demonstration in the “Pedigree Errors” section and a DataTables JS dependency’s own `clearError` function name); `devtools::check()` 0 errors/0 warnings/1 NOTE (the same pre-existing `a2interactive.Rmd` vignette-engine NOTE, unchanged); full regression suite exact baseline match (0 failed/0 error, 4573 passed, 171 skipped, 10 pre-existing warnings, `NOT_CRAN=true` required to reproduce this exact count – a bare run without it silently drops to 3854 passed/183 skipped via bare-skipped `skip_on_cran()` files, Learning 417’s mechanism re-confirmed); `spelling::spell_check_package()` isolated exactly 4 genuinely NEW flagged words from this session’s own prose (`edgeStyle`, `routings`, `highlightNearest`, `demoPed` – the last because the pre-existing `demoPed` code identifier had never before been used as an italicized prose word, which is what the spell-checker actually scans) versus several already-pre-existing flagged words this session merely added new line-references to (`makePedigreeMatingLayout`, `duplicateToReal`, `sibship`, `waypoint`, `vis`/`js` – all already present in `makePedigreeMatingLayout.Rd`/`NEWS.Rmd`/the vignette’s own pre-existing prose since S465/S468) – added only the 4 genuinely-new words to `inst/WORDLIST` in correct alphabetical position, leaving the pre-existing drift (the separately-tracked `BACKLOG.md` “6-word spelling-wordlist drift” item) untouched as out of scope. Caught and reverted the same collateral `devtools::document()` `man/modMarkerGeneticsServer.Rd` roxygen2-version-drift reflow flagged by Learnings 476/477 (third consecutive session to hit it). **Practical rule:** (1) when checking “do we already have an issue for X,” use `gh issue view <N>` or `gh issue list --state all` for a specific/suspected match, not the default open-only `gh issue list` – a closed, already-shipped issue is exactly the case that default hides. (2) Broaden any “new function needs a demo” documentation checklist to also cover “existing documented function gained a new parameter” – the two are the same shape of gap (a script-callable capability with no `a2interactive.Rmd` coverage) but only one trips the original wording. (3) A vignette chunk that claims to “reproduce X exactly” is a citation to X, in Learning \#7’s sense – when X’s own source changes (here, `R/modPedigree.R`’s reserved-prefix set growing from 2 to 5), the vignette’s mirroring code needs the same re-verification a citation destination does, or it silently drifts into a parity bug. `CLAUDE.md`’s `a2interactive.Rmd` checklist wording broadened accordingly this session.
+
+#### Learning 479 – **`SESSION_RUNNER.md` Phase 0 step 6’s ledger reconcile is keyed entirely on `git log` gaps, which is structurally blind to a session that produces real work but makes ZERO commits – that work is visible only as untracked files in `git status`, with nothing distinguishing “harmless local scratch” from “a completed deliverable nobody ever recorded.”** (S479, 2026-08-08, Phase 0 orientation.) Found 2 well-formed `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_*.md` docs (dated 2026-08-05, 2026-08-06 – 1-4 days before this session, and after S478’s 2026-08-04 close-out) sitting untracked, with zero `SESSION_NOTES.md` entry, zero `HANDOFFS.md` receipt, zero `CHANGELOG.md` entry, and zero `BACKLOG.md` mention – yet the standard commit-gap check (`git log --no-merges <CHANGELOG.md frontier>..HEAD`) found nothing wrong, because the only commit since S478 was S478’s own self-referential sha-backfill. The corroborating signal came from GitHub, not git: 8 issues (#146-153), filed under the repo owner’s account on the exact same 2 dates, map almost verbatim to the 08-06 doc’s own “Priority gap analysis” table – strong evidence a real agent session ran the audit and filed the issues, then simply never entered the protocol (no Phase 1B claim stub -\> no commit -\> invisible to the git-log check). Two adjacent, unrelated pieces of clutter were nearly folded into the same “ghost session” story before their timestamps were actually checked: 2 untracked `docs/planning/*.html` render byproducts turned out to predate the audit gap entirely (one dated 2026-07-29, matching its own already-committed `.md` source’s session; one dated 2026-08-04, before S478 even closed) – old forgotten cleanup, not new ghost work. A second near-miss: 3 untracked `inst/extdata/reference/` files (2 PDFs + 1 HTML) turned out to be full-text COPYRIGHTED journal articles/pages (Nature Publishing Group 2005, Oxford University Press 2008, Wiley – confirmed by reading each file’s actual first page/copyright footer, not assumed from the filename) on a PUBLIC repo (confirmed via `gh repo view --json visibility`) – committing them by default, on the strength of the one existing (but categorically different: an unpublished NPRC internal working-group document, no journal copyright) `inst/extdata/reference/` precedent, would have published copyrighted material. Both distinctions only surfaced by actually opening the files (`ls -la` timestamps; `Read` each PDF/HTML’s first page) rather than pattern-matching on directory location or file extension. **Practical rule:** (1) Phase 0 orientation should treat “untracked files in `git status` whose mtime predates today by more than one session cycle” as a secondary ghost-session signal independent of the commit-log check, especially when their content reads as a completed deliverable (a report, a doc, an artifact) rather than scratch/config – cross-check any suspiciously-timed new GitHub issues against whether their content traces to such a file. (2) Before bulk-committing a batch of untracked files discovered this way, open and date-check each one individually – “found together in `git status`” does not mean “originated together,” and grouping by directory/extension alone can wrongly implicate old clutter or wrongly clear a copyright risk that a real precedent-file comparison would have caught. (3) A directory holding one legitimately-committed reference file is not blanket precedent for committing everything later added there – re-derive each new file’s own copyright situation, don’t inherit the prior file’s. See `CLAUDE.md`’s new Phase 0 addition (untracked-file ghost-session check) and `CHANGELOG.md` 2026-08-08.
+
+#### Learning 480 – **A cited reference document’s title and apparent scope can overstate what it actually says in extractable text – an HTML capture of a journal article can carry its entire substantive symbol/convention catalog inside un-transcribed figure images, invisible to any text-based read or grep, while its surrounding prose (which IS extractable) discusses something narrower (usage/ethics/adoption history, not the catalog itself) – and a GitHub issue’s own “correct this” framing can be wrong about whether a codebase behavior even exists to correct, rather than requesting genuinely new behavior.** (S480, 2026-08-08, auditing pedigree-drawing `BACKLOG.md`/issue items for an implementation order informed by kinship2 and `inst/extdata/reference/Standardized Human Pedigree Nomenclature...html`.) Two separate instances of “verify the premise before citing/accepting it” in one session. First: the nomenclature file, read in full by a delegated agent and spot-verified in-session (`grep` for title/DOI/copyright footer), turned out to be Bennett et al. 2008’s *Journal of Genetic Counseling* commentary/adoption-survey article about a DIFFERENT 1995 primary standard – its four figures (the actual symbol/line/ART/genetic-testing tables) are embedded as raster images with only a generic `alt="Details are in the caption following the image"` placeholder, so the left-right partner-placement convention issue \#145 cites as justification (“standard genetic counseling conventions… male on left”) is **not present anywhere in this document’s extractable text**, confirmed by direct read of every substantive section, not assumed from the title. Second: issue \#145’s own framing (“Correct the placement of sire’s relative to dam’s”) presupposes an existing left-right ordering rule is broken; a direct grep of `R/makePedigreeDiagramData.R`’s positioning functions (`.buildMatingUnitForest()`, `.positionMatingUnitForest()`) found **zero references to `sex`** anywhere in the x-coordinate assignment logic – current left-right order is an artifact of discovery/tree-structure order, not a sex-based rule gone wrong. The issue is properly a new-feature design request, not a bug fix, despite its own title’s framing. **Practical rule:** (1) when a session is asked to use a cited reference document as evidence for a specific claim, verify what the document’s *extractable* content actually contains before treating it as textual authority – a scholarly-looking HTML capture can be substantively hollow on exactly the point being cited, especially when the real content lives in embedded images; report the gap explicitly rather than silently filling it from general knowledge and passing it off as sourced. (2) An issue/backlog item titled “fix”/“correct” an existing behavior is a claim to verify against the actual source, not accept at face value – grep the relevant implementation for the rule the issue assumes exists; if it doesn’t, the item is scoped as new-feature design (needing a scoping/verification step first), not a direct bug-fix session, and that distinction changes which `SESSION_RUNNER.md` workstream and TDD-gate shape applies. This is the same “don’t take the premise at face value” discipline established by S476-478 (Learnings 476-478), applied here to a cited external document and an issue’s own bug-vs-feature self-classification rather than to a `BACKLOG.md` item’s technical framing. See `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md` Findings \#1-#2.
+
+#### Learning 481 – **An existing code comment’s own factual claim about R semantics (“`pmax(NA, NA, na.rm = TRUE)` returns `-Inf`”) was wrong, and the fix for one bug (an NA propagating into a data column) introduced a second, more severe latent bug (an infinite-recursion stack overflow) that only surfaced once the RED test for the FIRST bug was run against the GREEN implementation – empirically running each fix, not just reading the diff, caught both.** (S481, 2026-08-08, fixing issue \#154’s 3 dangling-parent crash bugs in `R/makePedigreeDiagramData.R` via strict TDD.) Before writing any fix, empirically reproduced (not just read) all 3 crashes with minimal `Rscript` repros against the loaded package – this directly caught that `.buildMatingUnitForest()`’s existing comment (“if somehow both are dangling… fall back to 0L rather than `-Inf`”) rested on a wrong assumption: `pmax(NA, NA, na.rm = TRUE)` returns `NA`, not `-Inf` (confirmed with a 3-line `Rscript` test before touching any production code), so the pre-existing `unitGen[is.infinite(unitGen)] <- 0L` guard could never fire for the both-dangling case it claimed to defend against. Separately, once the GREEN fix let a mating unit’s `anchor` be `NA` (for the both-parents-dangling case), `positionIndividual()`’s pre-existing `matingUnits$id[matingUnits$anchor == id]` lookup broke in a way invisible from reading the diff alone: `NA == "CHILD"` evaluates to `NA`, and subsetting a vector with a logical `NA` returns an `NA` element rather than dropping the position, so the lookup returned `NA_character_` instead of `character(0)`, which then recursed into `positionIndividual(NA_character_)` – and `NA == NA_character_` is `NA` too, so this repeated forever until R’s node-stack overflow guard tripped. This was NOT anticipated in the PRE-RED design – it was caught only because the B4b RED test was re-run against the first-draft GREEN implementation and errored with `nodeStackOverflowError` instead of passing, prompting a second empirical repro (calling the two functions directly, not just re-reading the code) that isolated the exact line. The fix (`%in%` instead of `==`, since `%in%` treats a `NA` needle/haystack element as simply “not a match” rather than propagating `NA`) is one word different from the bug. **Practical rule:** (1) When a code comment states a specific claim about language/library semantics as the *justification* for existing defensive logic (not just describing intent), verify that claim with a 2-3 line interpreter repro before trusting it as true, especially when about to build a related fix on top of it – a comment can be wrong for years without being tested because the branch it defends is never exercised by any test (that was exactly `matingUnits$gen`’s prior “kept defensively, not currently reachable” status here). (2) Introducing `NA` into a column that previously never held it (here, `matingUnits$anchor`) is a schema-shape change, not just a value change – grep every existing comparison against that column for bare `==`/`!=` (NA-unsafe) versus `%in%`/`is.na()` (NA-safe) before considering the fix complete; a green diff of the INTENDED change site says nothing about a different, unrelated comparison elsewhere in the same function silently going from “never sees NA” to “sees NA and mishandles it.” (3) Re-running the RED test against each GREEN draft (not just once at the end) is what caught this – treat a RED-phase test suite as reusable regression coverage across GREEN iterations, not a one-shot gate that’s “spent” the first time it goes green. See `R/makePedigreeDiagramData.R`’s `.buildMatingUnitForest()`/`.positionMatingUnitForest()`, commit `e58307a2`.
+
+#### Learning 482 – **A “hard rule vs. soft default” question about a third-party library’s actual behavior is answered decisively only by running it against controlled test cases, not by reading its documentation or trusting an issue’s own citations – a library’s help text can be silent on a claimed rule (evidence of absence, not proof) while its source code settles the question outright, and a single well-chosen multi-mate synthetic pedigree produced a direct, reproducible counter-example that neither a documentation read nor a source-code read alone would have made as concrete.** (S482, 2026-08-08, issue \#145’s kinship2 sire/dam-placement verification spike, `docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md`.) The audit that recommended this spike (S480, Learning 480) had already found the *nprcgenekeepr* codebase and the cited nomenclature reference both lacked a male-left rule – this session added a third, independent check: does kinship2 itself, the reference implementation issue \#145 invokes, actually implement one? Reading `align.pedigree()`’s source (via `deparse(get(fn, envir = asNamespace("kinship2")))`, not a secondary description) showed the ordinary direct-pedigree spouse-pairing branch has no `ped$sex` check at all – unlike two OTHER branches (hinted pairs, `relation` type-4 rows) that explicitly swap columns to force male first. That alone strongly suggested “no rule,” but reading code is an argument, not a demonstration. Building 5 small synthetic pedigrees and calling `align.pedigree()` directly turned the argument into a fact: a dam mated to 2 sires produced `sire1, dam, sire2` – one sire literally to her immediate LEFT, the other to her immediate RIGHT, a direct pairwise counter-example to “sire always left of dam” from kinship2’s own default output on ordinary data, no synthetic trickery. A follow-up explicit-hint test (2-row hint reversing a single pair) confirmed the single-mate case’s apparent “sire-left” default flips with no special-casing, showing it is a hint-overridable convention, not a protected invariant anywhere in the code. Separately, kinship2’s own `?align.pedigree` help text frames the entire hints mechanism in purely positional terms (“left spouse… right hand spouse… anchor: 1=left, 2=right”) with zero mention of sex – corroborating, but on its own would only have been “it isn’t documented,” not “it doesn’t happen.” A bonus finding fell out of the same investigation: the GitHub issue’s own inline citations describe multi-mate crossing-minimization behavior that does not match what the source actually does in that code path (no crossing-minimization computation exists there) – a second, independent data point (beyond S480’s finding that the cited nomenclature document doesn’t textually support the rule either) that an issue’s own citations should not be trusted as verified technical sources without independently re-deriving the specific claim. **Practical rule:** (1) For a “does external tool X actually do Y” question, prefer building a small number of controlled, targeted test cases that isolate the exact scenario in question (here: the multi-mate “crowding” case the issue’s own body flagged as the interesting edge case) over reading documentation or source alone – a negative finding (“no sex check in this code path”) is more convincing paired with a positive counter-example (“and here is output where sex-based placement visibly fails”) than either alone. (2) Absence of a claim in official documentation is corroborating evidence, not proof, that a behavior doesn’t exist – undocumented behavior is common; only source code or empirical reproduction settles it. (3) When an issue or backlog item cites external sources (“\[2\]”, “\[3\]”, etc.) to justify a technical claim, treat those citations as something to independently re-derive against the actual behavior being cited, not as pre-verified – this is now the SECOND time in this same issue’s citation set that independent verification found a mismatch (S480: the nomenclature document; S482: kinship2’s own crossing-minimization claim), which should raise, not lower, the bar for trusting the remaining unverified citations if \#145 is ever implemented. See `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md` Finding \#1/#2, `BACKLOG.md`’s S482 progress note.
+
+#### Learning 483 – **A codebase-grounded, multi-agent assess-synthesize-verify sequencing audit surfaced two structural findings a documentation-only re-read would have missed: an audit’s own priority ranking and whether a matching GitHub issue was ever filed are two independently-erring facts that can diverge in EITHER direction on the same batch, and 8 agents “independently” converging on the same finding is not independent corroboration when they were all handed the same shared source context.** (S483, 2026-08-08, sequencing GitHub issues \#146-153 – the “Genetic Metrics PDF capability gap” cluster – per explicit owner direction to propose and present an implementation order.) Ran a 3-phase background `Workflow` (8 parallel per-issue agents, each required to `Grep`/`Read` the actual current `R/` source rather than estimate effort from the issue text alone; one synthesis agent; one adversarial-verify agent) rather than sequence from issue-filing order or audit-table order alone. Two things fell out that a lighter pass would have missed. **First:** cross-referencing the authoritative `GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-08-06.md` priority table against a live `gh issue list` found the divergence runs both ways in the same 8-issue batch – issue \#150 (de-identified pedigree export) has a filed issue but ranks in NEITHER the audit’s High/Medium/Deferred tiers (explicitly excluded as “Policy/external”), while two audit rows rated High priority (“Longitudinal genetic-health monitoring,” “Ancestry guardrails in breeding decisions”) have NO filed issue anywhere in the batch at all. A sequencing session that only reads `gh issue list` (or only the audit table) in isolation sees just one half of this; reading both together and reconciling them is what surfaces the asymmetry. **Second:** all 8 per-issue assessment agents independently flagged the same “2 unfiled High-priority gaps” finding, which read at first as strong corroboration – but the adversarial-verify agent caught that this wasn’t independent evidence: every agent was handed the identical audit-priority-table text as shared context (`auditTier` fields literally quote it), so 8-way agreement on a fact sitting in everyone’s shared input is consistent reading, not independent re-derivation. The verify agent required this framing be softened in the write-up even though the underlying gap itself remained real and independently reconfirmed by that verify agent’s own separate `gh issue list` check. **Practical rule:** (1) When sequencing a cluster of issues against a capability audit, cross-reference the audit’s priority table AND the live issue tracker in both directions – “issue exists, no priority rank” and “priority rank exists, no issue” are different failure modes with different fixes (surface the ranked-but-unfiled gap to a future triage session per the established “audit recommends, a later session files” precedent; don’t let the filed-but-unranked item’s technical readiness manufacture a priority the audit withheld). (2) When multiple parallel agents are given the same shared source document as context and several converge on an identical observation, that convergence is evidence the observation is *readable in the source*, not evidence it was *independently re-derived* – only trust it as corroboration if at least one agent verified the claim against a source the others didn’t also receive (here, the verify agent’s own fresh `gh issue list` pull, run independently of the shared audit-table context, is what actually corroborates the gap). Distinguish “multiple readers agree” from “multiple independent methods agree” before citing agreement as a strength in a write-up. See `docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` Findings \#1/#3, its embedded adversarial-verify report.
+
+#### Learning 484 – **A persistent worked-example reference doc’s own embedded empirical findings go stale exactly like a code comment can (Learning 481’s lesson, applied to documentation) – and the fix is the same discipline: re-run the doc’s own code against current `master` before editing its prose, and reproduce a research spike’s decisive counter-example directly and re-executably inside the reference doc, not just cite the spike as a summary.** (S484, 2026-08-08, refreshing `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd` per S482’s Tier 1 step 3 recommendation.) This document’s Examples 1-2 contained a “confirmed defect” finding (a founder positioned at the wrong generation row) that was accurate when written but had since been fixed by two later, independent sessions (issues \#143/#144, S472/S474) – the prose still said “not fixed here, flagged for a future session” and “Root cause (not fixed here)” weeks after it was, in fact, fixed. Before touching any prose, re-ran the document’s own two example-family `R` chunks against current `master` (not read-and-assume): both founders (`203`, `117`) now correctly land adjacent to their actual mate’s row, confirmed via the exact same `layout$nodes` subsetting the original document used, not a new ad hoc check. Separately, S482’s own research doc (`docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md`) had already built and run a decisive counter-example (a dam mated to two sires, producing kinship2’s own non-sex-based `S1, D1, S2` centered-and-split placement) — rather than adding a sentence citing that finding, this session reproduced the identical scenario as a new, real, executable Example 4 directly in the reference doc (verified via a full `quarto render`, not just written and assumed to run), so a future reader gets kinship2’s actual live output next to `nprcgenekeepr`’s own handling of the same data, not a second-hand summary of a different document’s results. **Practical rule:** (1) A “worked example” or “reference comparison” document is not inert once written — its embedded empirical claims (defect findings, “X currently does Y” statements) are load-bearing exactly like a code comment’s claim about language semantics, and go stale the same way once the code they describe changes; before editing such a document, re-run its own code chunks against current `master`, don’t edit the prose from memory of what it used to say. (2) When a separate research artifact (a spike, an audit) produces a finding that should inform a persistent reference document, prefer reproducing the actual scenario as new, real, executable content in that document over writing a citation/summary of the other artifact — a re-executable example is falsifiable by any future reader who re-renders the document; a citation is not. See `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd` Examples 1, 2, 4.
+
+#### Learning 485 – **A multi-agent research fan-out that greps for a new feature’s proposed literal term (here: `"affected"`) can correctly find zero hits and still miss that the concept it’s naming already exists in the codebase under different terminology – closing that gap needs a dedicated “does an existing column/field already cover this need, under any name” check, not just a keyword search for the name being proposed.** (S485, 2026-08-08, architecture design for issue \#133, affected/phenotype/genotype status encoding on the pedigree diagram.) Five parallel research agents (kinship2’s `affected` semantics, visNetwork rendering options, the R data-pipeline threading pattern, a fixture-design plan, and this project’s own prior-doc house style) all correctly confirmed via `grep -rn "affected" R/ tests/ inst/extdata/examples/` that no fixture or code carried an affected-status field – consistent with the original audit’s own framing. None of them, however, was asked to check whether nprcgenekeepr’s *existing* schema already had a column meaning the same thing under a different name, because the search term they were all given was the literal word the new feature would be called, not “what does this project already track that’s adjacent.” A follow-up check this session – reading `R/getPossibleCols.R`’s and `R/qcStudbook.R`’s own roxygen documentation for every entry in `.nprcColumnSchema$possible`, not just grepping for the target word – found two near-miss names worth explicitly ruling out: `condition` (already schema-recognized, already has a UI display name, but documented as “the restricted status of an animal… assumed to be naive” – a research-protocol/SPF-study concept, unrelated to disease/genotype status) and `status` (already a factor with `ALIVE`/`DECEASED`/`SHIPPED`/`UNKNOWN` levels, which turns out to map cleanly onto kinship2’s own *separate* `status` argument – confirmed by the kinship2-semantics research agent – rather than onto kinship2’s `affected` argument at all). Neither was a fit, so the audit’s original “no existing field” conclusion held up – but it held up *verified*, not merely *inherited*, and the check surfaced a real collision risk (a future session skimming `getPossibleCols()` might reasonably guess `condition` was already the right field) that no literal-keyword grep across 5 independent agents happened to catch. **Practical rule:** (1) When a design session’s research phase includes “confirm no existing data-model field already covers this need,” don’t satisfy that step with a grep for the *new* feature’s proposed name alone – read the full existing schema/column documentation (roxygen `@return`/`\item{}` entries, not just column names) and explicitly rule out every plausibly-adjacent existing name, since the collision risk is exactly in the cases where an existing field’s *name* doesn’t obviously match but its *meaning* might. (2) Separately: this session’s `Workflow` parallel-agent journal (`journal.jsonl`) recorded `started`/`result` events keyed by an opaque hash, not by the caller’s `label`; zipping `started`-event order against the array order the agents were launched in was the only way to recover which result belonged to which research prompt, and on this run that zip did NOT match actual completion/launch correspondence cleanly on the first attempt (content had to be identified by reading it, not trusted from the label alone) – when extracting individual results from a completed workflow’s `journal.jsonl`, verify each file’s content against its expected subject matter before citing it in downstream work, rather than trusting a `label`-to-hash mapping built from event order alone. See `docs/planning/issue133-affected-status-pedigree-diagram-plan.md` §2.5, §2.1.
+
+#### Learning 486 – **A pre-declared design doc’s file-touch list can miss a downstream code path that will silently undo the new feature under a specific, pre-existing user-selectable mode, and this class of gap is only caught by reading the CURRENT implementation of every function the new code’s output flows through – not by re-reading the design doc’s own file list, which only anticipated where NEW logic goes, not where OLD logic already unconditionally overwrites what the new logic produces.** Separately: **live-verifying a canvas-rendered visNetwork widget’s per-node content by reading `outerHTML` produces a false negative – the widget renders to an HTML5 canvas, so node/edge JSON data is never present as static DOM text, and this project’s own existing e2e test file already established the correct technique (querying the live vis.js Network instance’s DataSets via `app$get_js()`) that a first verification pass overlooked.** (S486, 2026-08-08, implementing Slice 1 of the ratified issue \#133 plan – affected-status pedigree-diagram encoding, `R/makePedigreeDiagramData.R`.) At Pre-RED, reading `.addRectilinearWaypoints()`’s actual current source (not the design doc’s own description of it) found `keptNodes$color.background <- rep(NA_character_, nrow(keptNodes))` runs unconditionally on every node passed through it – meaning the moment a user selected the pre-existing `edgeStyle = "rectilinear"` option (issue \#142), any `affected`-status coloring Slice 1 set upstream in `makePedigreeMatingLayout()` would be silently reset to no-color, with no error, no test failure signal, and no hint in the design doc (which never anticipated this specific interaction because its own Slice 1 “files to touch” list enumerated where the NEW `affected` logic would live, not every EXISTING function downstream of the node data it produces). The fix – guard each column assignment with `if (!"color.background" %in% names(keptNodes))` – was one line per column, but finding it required tracing the actual data flow (`makePedigreeMatingLayout()` builds `nodes` -\> conditionally calls `.addRectilinearWaypoints(nodes, ...)` -\> reassigns `nodes <- waypoints$nodes`) rather than trusting that “implement in both functions per D4” fully described the touch surface. Separately, this session’s own ad hoc Phase 3E live-verification script first checked `get_html_safe(app, "#pedigree-pedigreeDiagram")` for `"#CC79A7"`/`"Affected"` substrings and got a clean-looking but WRONG negative result (both `FALSE`) even though the feature was actually working correctly – `test-e2e-pedigree-module.R`’s own “known trio” test (`get_diagram_node()`, querying `HTMLWidgets.find(...).network.body.data.nodes.get(id)` via `app$get_js()`) had already documented, in an inline comment, exactly why outerHTML doesn’t work for this widget (“renders to an HTML5 canvas, so node/edge content is not otherwise DOM-inspectable”) – rewriting the verification script to use that established technique flipped both checks to the correct `TRUE`. **Practical rule:** (1) When a new feature’s output data flows through an existing pipeline stage (a post-processing function, a second rendering path, an alternate UI mode), grep/read every such downstream consumer’s CURRENT source for unconditional column/field overwrites before treating a design doc’s file-touch list as complete – the list names where new logic is added, not every place existing logic might blindly clobber it; a specific, concrete risk pattern is `existingVar$col <- rep(<value>, nrow(existingVar))` with no presence check, run on data a new code path now populates for the first time. (2) Before writing ANY new browser-based/e2e verification for a canvas-rendered JS widget in this codebase, grep the existing `test-e2e-*.R` files for how prior sessions verified the same widget’s content – an outerHTML/DOM-text check is the wrong tool for anything vis.js draws to canvas (nodes, edges, their colors/titles), and this project already has the correct pattern (`app$get_js()` querying the live widget instance’s DataSets) committed and commented with the exact reason why. See `R/makePedigreeDiagramData.R:1206-1218` (`.addRectilinearWaypoints()`’s preserve-if-set guard), `tests/testthat/test_addRectilinearWaypoints.R` (the new regression test), `tests/testthat/test-e2e-pedigree-module.R:171-180` (the pre-existing `get_diagram_node()` pattern this session’s live verification ended up matching).
+
+#### Learning 487 – **A `visNetwork::visLegend()` `addNodes` row’s `shape` choice is not interchangeable within vis.js’s own shape taxonomy: “label-sized” shapes (`box`/`ellipse`/`circle`/`database`/`text`) render the shape scaled to fit its label text INSIDE it, while “fixed-size icon” shapes (`dot`/`square`/`star`/`triangle`/`diamond`/`hexagon`/…) render a constant-size glyph with the label drawn separately below it – mixing the two families in one legend produces a visually inconsistent row that looks like a different kind of UI element, not a new row in the same list. Separately: a `visLegend()` canvas has a genuinely fixed pixel height (matching the main widget’s own configured `height`, 400px unconfigured/default in this app) that existing `width`/`stepY` tuning for N rows does not automatically extend to N+1 – adding a row can render the new icon while silently clipping its own label with zero error/warning, only visible by actually looking at a screenshot.** (S487, 2026-08-08, implementing Slice 2 of the ratified issue \#133 plan – adding an “Affected” row to the Diagram tab’s existing shape-to-sex legend, `R/modPedigree.R`.) The Pre-RED author’s-call shape pick (`"box"`, chosen because it seemed like a natural “color chip” for a color-coded trait, distinct from the sex encoding) rendered correctly in the sense that widget-JSON `grepl()` assertions (`"box"`, `"#CC79A7"`) all passed — but a live screenshot showed it as a solid pink pill with “Affected” TEXT rendered inside the shape itself, structurally different from the other 5 rows’ small icon-then-label-below layout. Separately, and independently, adding the 6th row at the existing `stepY = 65L` reproduced Dragon \#4 exactly as the design doc anticipated: the hexagon icon (after the shape fix) rendered fine, but a screenshot of the SAME state showed no “Affected” text below it at all — cropped out by the legend canvas’s own fixed height, invisible to any JSON-content assertion (`grepl('"Affected"', widgetJson)` still passed, since the label exists in the underlying DataSet; only the RENDERED PIXELS are clipped). Both defects were found only by rendering and looking at a real screenshot, not by the widget-JSON `grepl()` tests that had already gone green — confirming those tests (a legitimate, necessary regression guard for label/shape/color PRESENCE) cannot substitute for visual verification of LAYOUT/RENDERING correctness. Fixed by switching to `shape = "hexagon"` (a fixed-size icon shape none of the other 5 rows claim) and retuning `stepY` 65-\>54 (empirically re-screenshotted after the change, confirming the label now renders in full, un-clipped, without crowding the `Export Diagram (PNG)` button beneath it) — both corrected in-place during GREEN once live evidence contradicted the Pre-RED-approved plan, not deferred or silently shipped broken. **Practical rule:** (1) When adding a node to any `visNetwork` legend/diagram with a `shape` parameter, first classify whether existing rows use label-sized or fixed-size-icon shapes (vis.js network node shape docs list both families explicitly) and match that family — do not pick a shape by name/vibe alone. (2) A widget-JSON content assertion (`grepl()` on the serialized DataSet) proves DATA presence, never RENDERED-PIXEL correctness (clipping, overlap, wrong visual family) — any change to a fixed-height/fixed-size rendering surface (a legend canvas, a fixed-pixel panel) needs an actual screenshot taken and looked at, in addition to the JSON assertion, before calling the change done. See `R/modPedigree.R:476-509` (the retuned `visLegend()` call), `tests/testthat/test_modPedigree.R` (the issue \#133 Slice 2 legend test).
+
+#### Learning 488 – **An issue filed from a capability-comparison audit can be wrong about which layer the gap is in, and the error survives because every later reader inherits the issue’s own framing: \#136 was filed as “data-model gated” when the data model was the cheap half and the fixed-coordinate layout’s text-unawareness was the expensive half.** (S488, 2026-08-08, architecture design for issue \#136, name node labels on the pedigree diagram.) Issue \#136 (from `docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md` Finding \#8) asserted three things, all of which shaped how two later audits and the owner’s own sequencing treated it: that the diagram “always shows exactly `ped$id` as both node id and label”, that the pedigree data model “has no ‘name’ column at all”, and that the blocker was therefore the data model, “not a diagram-rendering limitation”. Direct verification found each needed correction. **(a)** `label` is already a fully independent channel and `label != id` **already ships in production** – duplicate-occurrence nodes carry `id = "__dup_<realId>_<n>"` with `label = <realId>` (`R/makePedigreeDiagramData.R:906`) and mating-union nodes carry `label = ""` (`:929`). The mechanism the issue implies must be built has existed since S459-S461 and is exercised on two node classes; the actual question is only which string to place in it. **(b)** The schema contains `first_name`/`second_name`, which a reader grepping for “name” hits first – and they are **allele/haplotype names** (`R/headerDisplayNames.R:52-53` maps them to “First Allele”/“Second Allele”), the exact Learning 485 trap re-encountered one issue later, with the added hazard that `fixColumnNames()` silently rewrites a user’s `First Name` header into the allele column (`R/fixColumnNames.R:33-38`). The issue’s substantive conclusion (no *animal*-name column) held, but only under verification. **(c)** The real constraint is geometric and the audit never mentions it: since S459-S461 the diagram uses hand-computed fixed coordinates with `visPhysics(enabled = FALSE)`, so **nothing measures label text** – measured on the real 375-individual fixture, every id is exactly 6 characters, and 25.6% of adjacent label-bearing node pairs sit 48 layout units apart while nodes are ~50 units across (`xScale <- 120L`, `size = 25L`). There is effectively zero horizontal headroom. The disanalogy with the very package the audit compared against is the point: kinship2 *can* accept arbitrary display strings partly because `plot.pedigree()` sizes its layout with `strwidth()`/`strheight()` on the label text; this package’s layout does not, so “kinship2 does X” does not imply “X is cheap here.” A fourth, wholly unflagged constraint surfaced only from reading adjacent code: `obfuscatePed()` scrubs **only** `id`/`sire`/`dam` and Date-classed columns (`R/obfuscatePed.R:31-43`), so a `name` column would pass through de-identification completely intact – shipping one without a matching scrub would export obfuscated IDs beside real animal names, which is worse than no obfuscation because the scrubbed IDs imply the file is safe. **Practical rule:** (1) When a design session picks up an issue that a *capability-comparison* audit generated, re-derive the issue’s own layer diagnosis before accepting its scoping – comparison audits are written by looking at what a peer tool does and what this tool displays, which is precisely the vantage point from which an internal architectural constraint (a fixed-coordinate layout, a scrub set, an already-decoupled field) is invisible. The audit’s confidence about *which layer* is gated deserves no more trust than its <file:line> citations, which in this case were 25 sessions stale. (2) When the new field is a *display* field, enumerate its egress paths explicitly – here the label reaches the search dropdown (whose text comes from `label`, not `id`, because visNetwork’s `useLabels` defaults `TRUE` and this app never overrides it), the PNG export (a raster with no tooltip fallback), the DT table, and the CSV export. Three of those four were absent from the issue. (3) A PII-shaped column obliges a de-identification review in the *same* slice that introduces it, not a later one. See `docs/planning/issue136-name-labels-pedigree-diagram-plan.md` §1.3, §2.3, §2.6, §2.7.

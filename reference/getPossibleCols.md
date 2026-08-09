@@ -101,6 +101,14 @@ The possible columns are as follows:
   – integer vector indicating generation numbers for each id, starting
   at 0 for individuals lacking IDs for both parents.
 
+- affected:
+
+  – logical vector or `NA` (optional) indicating whether an individual
+  is affected by a condition of interest, shaded on the Pedigree Diagram
+  tab (issue \#133). Matches kinship2's own `affected` argument
+  naming/semantics; `NA` means unknown affected status, not "not
+  affected".
+
 ## Examples
 
 ``` r
@@ -110,5 +118,5 @@ getPossibleCols()
 #>  [6] "gen"          "birth"        "exit"         "death"        "age"         
 #> [11] "ancestry"     "population"   "origin"       "status"       "condition"   
 #> [16] "departure"    "spf"          "vasxOvx"      "pedNum"       "first"       
-#> [21] "second"       "first_name"   "second_name"  "recordStatus"
+#> [21] "second"       "first_name"   "second_name"  "recordStatus" "affected"    
 ```

@@ -335,6 +335,19 @@ what the Shiny app itself uses.) See the “Diagram view” part of the
 *colony-manager-guide* article for the equivalent point-and-click
 workflow and screenshots.
 
+That parent-to-mating-to-child connector has two available routings,
+selected by **makePedigreeMatingLayout**’s *edgeStyle* argument:
+`"direct"` (the default – a single straight or lightly sloped line all
+the way from parent to mating dot to child) and `"rectilinear"` (strict
+horizontal/vertical right angles throughout – a horizontal segment
+between the two parents, a vertical drop to the mating dot, a horizontal
+sibship bar across the children, and a vertical drop into each one,
+matching the convention the **kinship2** R package uses). The Shiny
+app’s Diagram tab exposes the same choice live as a “Diagram Edge Style”
+toggle above the diagram; in a script it is just this one argument. Both
+are demonstrated below – *direct* first (matching the tab’s own
+default), *rectilinear* afterward.
+
 The *trimmedPed* pedigree built earlier in this tutorial has 704 animals
 – realistic for the live Shiny application’s pan-and-zoom canvas, but
 too dense for a single static demonstration to usefully show every
@@ -402,6 +415,8 @@ ordinary **F**/ **M** codes that make up the rest – enough for every one
 of the five node shapes to appear in the diagram below at least once,
 across 4 generations and 33 animals.
 
+### Direct Edge Style
+
 ``` r
 
 diagramData <- makePedigreeMatingLayout(demoPed)
@@ -468,8 +483,15 @@ visNetwork::visNetwork(diagramData$nodes, diagramData$edges) |>
   visNetwork::visOptions(
     nodesIdSelection = list(
       enabled = TRUE,
+      # Excludes all 5 of makePedigreeMatingLayout()'s reserved node-id
+      # prefixes -- __union_/__dup_ can appear under either edge style;
+      # __drop_/__bar_/__proj_ only appear under "rectilinear" (see below).
+      # Harmless no-op here since demoPed's diagramData was built with the
+      # default "direct" style, but keeps this pattern identical to the
+      # rectilinear chunk below and to R/modPedigree.R's own.
       values = diagramData$nodes$id[
-        !grepl("^__union_|^__dup_", diagramData$nodes$id)
+        !grepl("^__union_|^__dup_|^__drop_|^__bar_|^__proj_",
+               diagramData$nodes$id)
       ]
     ),
     highlightNearest = list(enabled = TRUE, hover = TRUE, degree = 1L,
@@ -484,6 +506,105 @@ direct connections – useful for locating one animal in a diagram this
 size, and just as useful in a real diagram of 704 animals like the one
 built earlier in this tutorial, where finding one animal by eye is much
 harder.
+
+### Rectilinear Edge Style
+
+The diagram above uses **makePedigreeMatingLayout**’s default *direct*
+edge style. Passing `edgeStyle = "rectilinear"` instead draws the same
+relationships – same *demoPed*, same animals, same parent/child/mating
+structure – with strict right angles: a horizontal line directly between
+mates, a vertical drop to their shared mating dot, a horizontal bar
+across their children, and a vertical drop into each child, matching the
+convention the **kinship2** R package uses.
+
+``` r
+
+diagramDataRectilinear <- makePedigreeMatingLayout(demoPed,
+                                                     edgeStyle = "rectilinear")
+names(diagramDataRectilinear)
+```
+
+    ## [1] "nodes"           "edges"           "duplicateToReal"
+
+``` r
+
+nrow(diagramDataRectilinear$nodes)
+```
+
+    ## [1] 86
+
+``` r
+
+nrow(diagramDataRectilinear$edges)
+```
+
+    ## [1] 91
+
+86 nodes and 91 edges here, versus 48 and 53 for the same 33-animal
+*demoPed* under the *direct* style above – the difference is entirely
+extra invisible “waypoint” nodes/edges that carry out the right-angle
+routing (zero size, transparent color, excluded from the **Select by
+id** dropdown below just like the mating dots above), not any change to
+which animals or relationships are shown.[^6] *nodes* and *edges* also
+gain extra `color.background`/`color.border` (nodes) and `color` (edges)
+columns under *rectilinear* – **visNetwork::visNetwork()** reads these
+directly, so no extra rendering code is needed; they exist because
+vis.js otherwise defaults every waypoint-touching edge to inheriting its
+parent node’s border color, which would route the new right angles in
+the wrong color.
+
+Rendering it uses the identical chain as the *direct* style above, with
+one difference: **highlightNearest**’s hover-highlight *degree* is
+raised from `1` to `6`. Under *rectilinear*, a plain individual’s
+nearest graph neighbor is often one of the invisible waypoint nodes
+above rather than a visible mating dot, so `degree = 1` (correct for
+*direct*) can highlight nothing visible at all on hover; `6` restores
+visible feedback for the common case. The live Shiny app’s Diagram tab
+applies this same style-aware degree automatically when you switch the
+“Diagram Edge Style” toggle.
+
+``` r
+
+visNetwork::visNetwork(diagramDataRectilinear$nodes,
+                        diagramDataRectilinear$edges) |>
+  visNetwork::visPhysics(enabled = FALSE) |>
+  visNetwork::visNodes(physics = FALSE) |>
+  visNetwork::visEdges(smooth = FALSE) |>
+  visNetwork::visExport(
+    type = "png", name = "pedigree_diagram_rectilinear",
+    label = "Export Diagram (PNG)"
+  ) |>
+  visNetwork::visLegend(
+    addNodes = data.frame(
+      label = c(
+        "Female", "Male", "Hermaphrodite", "Unknown", "Other / Unrecorded"
+      ),
+      shape = c("dot", "square", "star", "triangle", "diamond"),
+      stringsAsFactors = FALSE
+    ),
+    useGroups = FALSE, position = "right", main = "Sex",
+    width = 0.28, stepY = 65L
+  ) |>
+  visNetwork::visOptions(
+    nodesIdSelection = list(
+      enabled = TRUE,
+      values = diagramDataRectilinear$nodes$id[
+        !grepl("^__union_|^__dup_|^__drop_|^__bar_|^__proj_",
+               diagramDataRectilinear$nodes$id)
+      ]
+    ),
+    highlightNearest = list(enabled = TRUE, hover = TRUE, degree = 6L,
+                             algorithm = "all")
+  )
+```
+
+The live Shiny app also caps how large a pedigree it will render as a
+diagram, and the cap itself is style-aware: 750 animals under *direct*,
+400 under *rectilinear* – because the rectilinear style’s extra waypoint
+nodes make an equivalent-size diagram roughly 1.9x heavier to render.
+Both caps are internal to the Shiny app (`R/modPedigree.R`); the
+script-callable functions demonstrated here have no such limit of their
+own.
 
 ## Genetic Value Analysis
 
@@ -1151,7 +1272,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/Rtmpi4pTCt/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpzwepwP/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -1582,8 +1703,8 @@ into one number for a quick between-center comparison.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-08-04 15:46:02.183389. The processing
-time for this document was 17 seconds..
+The current date and time is 2026-08-09 02:30:13.925862. The processing
+time for this document was 21 seconds..
 
 ``` r
 
@@ -1617,7 +1738,7 @@ sessionInfo()
     ## 
     ## other attached packages:
     ## [1] nprcgenekeepr_2.0.0.9000 knitr_1.51               ggplot2_4.0.3           
-    ## [4] stringi_1.8.7           
+    ## [4] stringi_1.8.9           
     ## 
     ## loaded via a namespace (and not attached):
     ##  [1] gtable_0.3.6         anytime_0.3.13       xfun_0.60            bslib_0.12.0        
@@ -1629,7 +1750,7 @@ sessionInfo()
     ## [25] Rlabkey_3.5.0        httpuv_1.6.17        htmltools_0.5.9      sass_0.4.10         
     ## [29] yaml_2.3.12          htmlTable_2.5.0      later_1.4.8          pillar_1.11.1       
     ## [33] pkgdown_2.2.1        jquerylib_0.1.4      DT_0.34.0            cachem_1.1.0        
-    ## [37] sessioninfo_1.2.4    mime_0.13            tidyselect_1.2.1     zip_3.0.1           
+    ## [37] sessioninfo_1.2.4    mime_0.13            tidyselect_1.2.1     zip_3.0.2           
     ## [41] digest_0.6.39        dplyr_1.2.1          labeling_0.4.3       fastmap_1.2.0       
     ## [45] grid_4.6.1           cli_3.6.6            magrittr_2.0.5       withr_3.0.3         
     ## [49] shinyBS_0.65.0       scales_1.4.0         promises_1.5.0       backports_1.5.1     
@@ -1662,3 +1783,6 @@ sessionInfo()
     mating-node clicks) is Shiny-specific – it relies on a live Shiny
     session to receive the click event – and is therefore not reproduced
     here.
+
+[^6]: These waypoint nodes are internal plumbing needed for the
+    right-angle routing itself, not new diagram content.

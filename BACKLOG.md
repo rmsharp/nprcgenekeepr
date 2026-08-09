@@ -193,6 +193,35 @@ and only submission that will ever carry that version number.
 
 ## Housekeeping
 
+**[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+returns a non-portable-filename ERROR/WARNING for
+`inst/extdata/reference/Standardized Human Pedigree Nomenclature: Update and Assessment of the Recommendations of the Nation.html`**
+(found S486, 2026-08-08, incidental to issue \#133 Slice 1’s own
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+verification pass; Effort S, low priority) – confirmed pre-existing and
+unrelated to that session’s diff via `git log` (the file dates to commit
+`887ee902`, session S418). The filename both contains a `:` (illegal on
+some platforms) and exceeds the 100-byte final-path-component tarball
+limit R CMD check enforces under `--as-cran`, producing 2 ERRORs
+(portable-file-names checks at both build and check stages) + 1 WARNING
+in the full `check()` run. Not fixed this session
+(`PROJECT_LEARNINGS.md` Learning 382’s “report, don’t fix mid-session”
+precedent – out of scope for a feature session, and `SAFEGUARDS.md`
+treats file renames as never a “quick fix”). A future session should
+rename the file to something short and portable
+(e.g. `standardized-human-pedigree-nomenclature-2008.html`) and update
+the one known reference to it
+(`docs/audits/ PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`
+per `PROJECT_LEARNINGS.md` Learning 480 – grep for other references
+first). Two smaller, likely-related pre-existing `check()` findings
+surfaced in the same run, already within this project’s established
+“attribute before fixing” convention (`PROJECT_LEARNINGS.md` line 279
+Learning) and not newly discovered here: a `vignettes/a2interactive.Rmd`
+“no recognized vignette engine” NOTE, and a `spelling.Rout` mismatch on
+terms from the issue \#142 rectilinear-waypoint work (`duplicateToReal`,
+`sibship`, `waypoint`, etc.) not yet in `inst/WORDLIST` – both unrelated
+to issue \#133 and not investigated further.
+
 (none remaining – the “`NEWS.Rmd` has no checklist analogous to the
 citation/tutorial checklists” item (discovered S446, 2026-08-01) is
 RESOLVED: owner ratified a broad checklist via `AskUserQuestion` – any
@@ -233,22 +262,27 @@ tutorial’s printed numbers match the article’s tables. Every demo chunk
 verified against the real installed package (not hand-derived) before
 and after embedding – see `PROJECT_LEARNINGS.md` Learning 440 for a
 stale-local-install trap hit and fixed along the way
-(`devtools::install()` needed first; the local install lagged 3 slices
-behind source). See `CHANGELOG.md`.)
+([`devtools::install()`](https://devtools.r-lib.org/reference/install.html)
+needed first; the local install lagged 3 slices behind source). See
+`CHANGELOG.md`.)
 
-(none remaining – the “`devtools::check()`’s spelling NOTE is broader
-than previously tracked” item (discovered S443 as just `IACUC`;
-broadened S448, 2026-08-01) is RESOLVED – S452 (2026-08-02): re-ran
-`devtools::check()` fresh before touching anything and found the single
-NOTE actually covered 13 words, not 12 – the 12 the item named
-(`Bhatia`, `Chesser`, `Cockerham`, `Fst`/`FST`, `Gst`, `Hedrick`,
-`Maddison`, `Meirmans`, `Sankararaman`, `Slatkin`, `monomorphic`) plus
-the already-tracked `IACUC` (`_pedigree_browser.Rmd:55`, flagged since
-S443, never actually fixed by any session in between). All 13 hand-added
-to `inst/WORDLIST` in `LC_ALL=C` byte-order position (not via
+(none remaining – the
+“[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)’s
+spelling NOTE is broader than previously tracked” item (discovered S443
+as just `IACUC`; broadened S448, 2026-08-01) is RESOLVED – S452
+(2026-08-02): re-ran
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+fresh before touching anything and found the single NOTE actually
+covered 13 words, not 12 – the 12 the item named (`Bhatia`, `Chesser`,
+`Cockerham`, `Fst`/`FST`, `Gst`, `Hedrick`, `Maddison`, `Meirmans`,
+`Sankararaman`, `Slatkin`, `monomorphic`) plus the already-tracked
+`IACUC` (`_pedigree_browser.Rmd:55`, flagged since S443, never actually
+fixed by any session in between). All 13 hand-added to `inst/WORDLIST`
+in `LC_ALL=C` byte-order position (not via
 [`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html),
-per S230 convention). Verified: `devtools::check()` raw log now reads
-`Status: 1 WARNING` with no NOTE (the
+per S230 convention). Verified:
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+raw log now reads `Status: 1 WARNING` with no NOTE (the
 `spelling.Rout`/`spelling.Rout.save` comparison is now `OK`, vs. the
 prior 13-word diff block) – the remaining WARNING is the pre-existing,
 unrelated iCloud-sync duplicate-file artifact
@@ -314,19 +348,20 @@ undercounted this as “11 + 9”; `PROJECT_LEARNINGS.md` Learning 381) into
 `dev_scripts/`, `uat/`) + the now-empty `code_under_development/`, and
 deleted 11 now-obsolete `.Rbuildignore` lines (the 10 the plan named
 plus one it missed, Learning 381) + 10 dead `.gitignore` lines.
-Verified: `devtools::check()` 0 errors/0 warnings (see the new
-spelling-NOTE item below re: the 1 NOTE found, unrelated to this reorg –
-Learning 382); `R CMD build` tarball no longer contains
-`create_nprcgenekeepr_hexbadge.R` or any other dev-scratch item;
-regression suite unchanged at 0 failed/0 error/0 warning, 3198 passed,
-179 skipped (S412 baseline). See `CHANGELOG.md`. **Phase 2 DONE – S416
-(2026-07-28):** both blocking open decisions resolved first – subfolder
-name **`examples/`** (owner-picked via `AskUserQuestion`), and
-`vignettes/a2interactive.R`’s generation status (owner-directed: `.Rmd`
-files are the source; `.R`/`.md`/`.html` are generated derivatives –
-confirmed also gitignored/untracked, `.gitignore:18,20,22`, so the
-tracked-source fix is the `.Rmd` edit alone; the local `.R` copy was
-regenerated via
+Verified:
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings (see the new spelling-NOTE item below re: the 1 NOTE
+found, unrelated to this reorg – Learning 382); `R CMD build` tarball no
+longer contains `create_nprcgenekeepr_hexbadge.R` or any other
+dev-scratch item; regression suite unchanged at 0 failed/0 error/0
+warning, 3198 passed, 179 skipped (S412 baseline). See `CHANGELOG.md`.
+**Phase 2 DONE – S416 (2026-07-28):** both blocking open decisions
+resolved first – subfolder name **`examples/`** (owner-picked via
+`AskUserQuestion`), and `vignettes/a2interactive.R`’s generation status
+(owner-directed: `.Rmd` files are the source; `.R`/`.md`/`.html` are
+generated derivatives – confirmed also gitignored/untracked,
+`.gitignore:18,20,22`, so the tracked-source fix is the `.Rmd` edit
+alone; the local `.R` copy was regenerated via
 [`knitr::purl()`](https://rdrr.io/pkg/knitr/man/knit.html) as a
 courtesy, not committed). `git mv`’d all 10 load-bearing files into
 `inst/extdata/examples/`; updated the central `get_test_data_path()`
@@ -343,10 +378,11 @@ filenames with no path prefix, confirmed unaffected). Verified: fresh
 regression suite exactly matches baseline (0 failed/0 error/0 warning,
 3198 passed, 179 skipped); `R CMD build` tarball confirmed shipping all
 10 files under `examples/` and nothing at the old flat path;
-`devtools::check()` 0 errors/0 warnings, 1 NOTE (the same pre-existing,
-unrelated spelling gap from S415, confirmed untouched by this session’s
-diff); grep sweep confirmed the only 3 remaining un-migrated references
-are exactly the ones the plan defers to Phase 3
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings, 1 NOTE (the same pre-existing, unrelated spelling gap
+from S415, confirmed untouched by this session’s diff); grep sweep
+confirmed the only 3 remaining un-migrated references are exactly the
+ones the plan defers to Phase 3
 (`vignettes/manual_components/_summary_of_major_functions.Rmd`’s GitHub
 blob URL source, plus its 2 gitignored rendered byproducts). See
 `CHANGELOG.md`. **Phase 3 DONE – S417 (2026-07-28):** re-ran the plan’s
@@ -363,7 +399,9 @@ re-render target. Also fixed the stale GitHub blob URL in
 Re-rendered all 3 targets (`a3manual.Rmd` with `keep_md = TRUE` to also
 refresh the gitignored `.md` byproduct; `a2interactive.Rmd`; the `.qmd`
 pkgdown article via `quarto render`, which required a throwaway local
-package install – `devtools::install()` – since the article’s
+package install –
+[`devtools::install()`](https://devtools.r-lib.org/reference/install.html)
+– since the article’s
 [`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/)
 call needs a real install, not just
 [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)).
@@ -375,29 +413,30 @@ check of `vignettes/articles/*.html` both return zero stale-path hits;
 `gh api` confirmed the GitHub blob URL target actually exists on
 `origin/master` (Dragon 2’s “manual link click” requirement); regression
 suite exact baseline match (0/0/0, 3198 passed, 179 skipped);
-`devtools::check()` 0 errors/0 warnings, 1 NOTE (same pre-existing
-spelling gap below, confirmed untouched – read from the raw check log’s
-`Status:` line per Learning 382, not the colored summary, which again
-showed 0 notes). See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning
-384. **Phase 4 DONE – S418 (2026-07-28):** both open decisions resolved
-via `AskUserQuestion`: PDF placement -\> `inst/extdata/reference/`
-(end-user-facing reference material, plan’s own default); orphaned-files
-archive-vs-delete -\> keep archived at `dev/extdata-scratch/`, no change
-from Phase 1. `git mv`’d the PDF; ran the plan’s final repo-wide sweep
-grep, which found `README.md` stale relative to its already-fixed source
-(`README.Rmd` `child=`-includes `_summary_of_major_functions.Rmd`, fixed
-by S417, but never re-rendered) – re-rendered `README.Rmd` to pick up
-the fix; see `PROJECT_LEARNINGS.md` Learning 385. All other sweep hits
-triaged as false positives: dated historical prose in
-`NEWS.Rmd`/`NEWS.md` and `docs/planning/`/`docs/research/` documents
-describing repo state as it existed when written, correctly left
-unedited. Verified: `R CMD build` tarball ships the PDF at
-`inst/extdata/reference/` and nothing at the old flat path; regression
-suite exact baseline (0/0/0, 3198 passed, 179 skipped);
-`devtools::check()` 0 errors/0 warnings, 1 NOTE (same pre-existing
-spelling gap below, confirmed untouched). **The `inst/extdata/`
-reorganization plan is now fully executed (Phases 1-4 all DONE).** See
-`CHANGELOG.md`.
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings, 1 NOTE (same pre-existing spelling gap below,
+confirmed untouched – read from the raw check log’s `Status:` line per
+Learning 382, not the colored summary, which again showed 0 notes). See
+`CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 384. **Phase 4 DONE –
+S418 (2026-07-28):** both open decisions resolved via `AskUserQuestion`:
+PDF placement -\> `inst/extdata/reference/` (end-user-facing reference
+material, plan’s own default); orphaned-files archive-vs-delete -\> keep
+archived at `dev/extdata-scratch/`, no change from Phase 1. `git mv`’d
+the PDF; ran the plan’s final repo-wide sweep grep, which found
+`README.md` stale relative to its already-fixed source (`README.Rmd`
+`child=`-includes `_summary_of_major_functions.Rmd`, fixed by S417, but
+never re-rendered) – re-rendered `README.Rmd` to pick up the fix; see
+`PROJECT_LEARNINGS.md` Learning 385. All other sweep hits triaged as
+false positives: dated historical prose in `NEWS.Rmd`/`NEWS.md` and
+`docs/planning/`/`docs/research/` documents describing repo state as it
+existed when written, correctly left unedited. Verified: `R CMD build`
+tarball ships the PDF at `inst/extdata/reference/` and nothing at the
+old flat path; regression suite exact baseline (0/0/0, 3198 passed, 179
+skipped);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings, 1 NOTE (same pre-existing spelling gap below,
+confirmed untouched). **The `inst/extdata/` reorganization plan is now
+fully executed (Phases 1-4 all DONE).** See `CHANGELOG.md`.
 
 (none remaining – the “`ROADMAP.md`’s doc-engine-policy line is now
 stale” item (flagged S418) is RESOLVED: owner resolved the editorial
@@ -414,7 +453,8 @@ actually live since the extdata reorg’s Phase 1 (S415) – S420
 S415, 2026-07-28) is RESOLVED: both words hand-added to `inst/WORDLIST`
 in their case-insensitive-collation position (not via
 [`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html),
-per S230 convention) – S421 (2026-07-29). Verified: `devtools::check()`
+per S230 convention) – S421 (2026-07-29). Verified:
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
 raw log `Status: OK`, 0 notes. See `CHANGELOG.md`.)
 
 (none remaining – the “`test-e2e-data-ready.R`‘s ’appUI includes
@@ -433,11 +473,11 @@ fails for the expected reason (both
 reverting – `git diff --stat R/appUI.R` confirmed byte-identical to HEAD
 after revert, so no production code changed this session. GREEN:
 regression suite 0 failed/0 error/0 warning (4006 passed, 170 skipped);
-`devtools::check()` 0 errors/0 warnings/0 notes. REFACTOR: owner
--confirmed skip (single `test_that()` block, already matches the
-established pattern verbatim). Phase 3E: n/a – test-only change, no
-runtime behavior affected. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
-Learning 417.)
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings/0 notes. REFACTOR: owner -confirmed skip (single
+`test_that()` block, already matches the established pattern verbatim).
+Phase 3E: n/a – test-only change, no runtime behavior affected. See
+`CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 417.)
 
 (none remaining – the “`CLAUDE.md`‘s ’Fast single-file test’ command
 silently skips the entire file for any test file that calls
@@ -489,10 +529,11 @@ re-capture `pb_diagram_legend.png` (and update the surrounding prose to
 describe mate-lines/duplicate nodes) against the live app.
 
 **iCloud “conflicted copy” duplicate `.R` files corrupt
-`devtools::document()`/`R CMD check` output** (found S461, Effort S, not
-a code defect) – `R/appServer 2.R` and `R/modMarkerGenetics 2.R`
-(carried forward many sessions as passive noise) are SOURCED by
-[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)/`devtools::document()`
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)/`R CMD check`
+output** (found S461, Effort S, not a code defect) – `R/appServer 2.R`
+and `R/modMarkerGenetics 2.R` (carried forward many sessions as passive
+noise) are SOURCED by
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)/[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
 like any other `.R` file, silently merging their own stale roxygen
 comments into the SAME generated `.Rd` page as the current source –
 confirmed twice this session (`man/appServer.Rd`,
@@ -542,9 +583,10 @@ estimator’s `\deqn{}` LaTeX formula (Manichaikul et al. 2010) – was
 deliberately left over 80 chars rather than risk corrupting a
 citation-critical formula for a stylistic gain; suppressed via a new
 `.lintr` per-line exclusion (the project’s own established mechanism)
-instead. Full regression suite + `devtools::check()` + a live
-`shinytest2` smoke test (4 touched-module tabs: Genetic Value Analysis,
-Marker Genetics, Breeding Groups, Pedigree Browser; 0
+instead. Full regression suite +
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) +
+a live `shinytest2` smoke test (4 touched-module tabs: Genetic Value
+Analysis, Marker Genetics, Breeding Groups, Pedigree Browser; 0
 `shiny-output-error` DOM elements, 0 SEVERE console entries) all
 confirmed exact baseline match, 0 new warnings/notes. See
 `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 461. **Part (b) (a
@@ -554,15 +596,45 @@ own item, since it’s analytically separate from the sweep and wasn’t in
 this session’s scope.
 
 **Wire a process fix so `lintr` debt stops re-accumulating** (split from
-the item above at its own S462 “(b)” ask, still undecided; READY, Effort
-S-M) – e.g. a `lintr::lint_package()` CI job (this repo already runs a
-scheduled `shinytest2` GitHub Actions workflow, so a lint-check job is a
-precedent-consistent addition) and/or promoting `CLAUDE.md`’s existing
-“keep changed files lint-clean” guidance from a per-session norm into an
-explicit Phase 3F close-out check. The exact mechanism (CI gate
-vs. close-out checklist vs. both) is a decision for whichever session
-picks this up, not decided here. Without this, the package can silently
-reaccumulate lint debt the same way it did between S461 and S462.
+the item above at its own S462 “(b)” ask; READY, Effort S-M) – **DONE –
+S477 (2026-08-04):** pre-work investigation found this item’s own
+framing was stale, matching the S476 renv.lock precedent of a backlog
+item’s speculative framing turning out incomplete on direct inspection:
+`.github/workflows/lint.yaml` already exists and already runs
+`lintr::lint_package()` on every push to `master` (and on PRs) with
+`LINTR_ERROR_ON_LINT: true` – there was no CI job to “add.” The real
+gaps were (1) `master` carries no branch protection, so a failing run
+blocks nothing and is trivially easy to never look at, and (2) it WAS
+currently red – 2 real violations (`commented_code_linter`,
+`line_length_linter`) introduced in `R/makePedigreeDiagramData.R` by
+S472’s issue \#143 fix, still unfixed through S473-S476
+(`gh run list --workflow=lint.yaml` showed consecutive `failure` runs
+with nobody noticing or fixing them – confirmed via `gh run view`
+annotations, not assumed). Surfaced this corrected picture via
+`AskUserQuestion`; owner picked “fix the current red + add a close-out
+check” over the narrower “just fix current red” or the broader “also add
+branch protection” (flagged as likely disproportionate given this
+project commits directly to `master` with no PR gate). Fixed both
+violations (REFACTOR-only, no RED/GREEN – style-only, no behavior
+change, matching the S238/S466 precedent): the comment-block false
+positive suppressed via a documented
+`# nolint start/end: commented_code_linter.` block (established project
+convention, not deleted/reworded – S466 precedent for live
+design-rationale comments); the over-length line wrapped onto two lines
+matching this file’s own existing `<-`-then-indented-RHS house style
+(confirmed via grep across `R/*.R`, not invented). Verified:
+`lintr::lint_package()` (package loaded, matching CI’s exact invocation)
+0 lints package-wide (was 2); full regression suite 0 failed/0 error
+(4573 passed, 171 skipped, 10 pre-existing baseline warnings, unchanged
+from S476);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+unchanged from baseline. Added a new “Lint close-out checklist” to
+`CLAUDE.md`’s Additional close-out checks requiring sessions to lint
+touched files (package loaded) before closing out, rather than relying
+on the post-push CI run to catch it – this is the actual
+recurrence-prevention mechanism, since the CI job’s own existence did
+not prevent 4 sessions from committing on top of a red run. See
+`CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 477.
 
 **Scheduled `shinytest2` E2E CI run failed – 2 stale-assertion test
 failures in `test-e2e-pedigree-module.R`** (found S462, Effort S, root
@@ -582,9 +654,11 @@ edges into the captured union id. REFACTOR-only per
 `PROJECT_LEARNINGS.md`’s `[refactor-only]` reflex (a green-on-arrival
 test correction – no production code changed). Verified: the file itself
 (29/29 assertions pass), full regression suite (0 failed/0 error, 10
-pre-existing warnings, exact baseline), `devtools::check()` (1 WARNING/2
-NOTEs, exact pre-existing baseline, 0 new), `lintr` on the changed file
-(0 lints). See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 462. [run
+pre-existing warnings, exact baseline),
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+(1 WARNING/2 NOTEs, exact pre-existing baseline, 0 new), `lintr` on the
+changed file (0 lints). See `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
+Learning 462. [run
 30796362515](https://github.com/rmsharp/nprcgenekeepr/actions/runs/30796362515)
 (2026-08-03, triggered by the repo’s scheduled/nightly workflow, not a
 push) failed 2 of 251 E2E assertions (249 passed):
@@ -605,15 +679,17 @@ edge-routing assertion is stale. **Why this wasn’t caught before
 shipping:** this specific “shinytest2 E2E tier” only runs on this repo’s
 scheduled GitHub Actions workflow
 (`Run shinytest2 E2E tier in per-module fresh processes (opt-in)`), not
-in the fast local regression suite or `devtools::check()`; Session 461’s
-own Phase 3E verification was ad hoc (`shinytest2`/`chromote` driven
-manually against a live fixture), not a run of this specific
-permanently-committed test file, so the stale assertion was never
-exercised until the next scheduled CI run. **Fix (not done here,
-diagnosis only):** update `test-e2e-pedigree-module.R:205-207` to assert
-the new two-hop relationship instead – the child’s incoming edge comes
-from a `__union_*` node, and that union node’s own incoming edges
-include the sire and dam (or their duplicate-occurrence ids, per
+in the fast local regression suite or
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html);
+Session 461’s own Phase 3E verification was ad hoc
+(`shinytest2`/`chromote` driven manually against a live fixture), not a
+run of this specific permanently-committed test file, so the stale
+assertion was never exercised until the next scheduled CI run. **Fix
+(not done here, diagnosis only):** update
+`test-e2e-pedigree-module.R:205-207` to assert the new two-hop
+relationship instead – the child’s incoming edge comes from a
+`__union_*` node, and that union node’s own incoming edges include the
+sire and dam (or their duplicate-occurrence ids, per
 [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)’s
 own contract, see `R/makePedigreeDiagramData.R`). This is the same gap
 Session 461’s own self-assessment flagged as a weakness (no new
@@ -621,21 +697,137 @@ permanent E2E coverage added for the Slice 3 render-chain change) – this
 is that gap surfacing as a real, scheduled-CI-caught regression, not a
 hypothetical.
 
-**`devtools::check()`’s spelling NOTE has drifted again – 6 new words,
-not caught by any session since S461** (found S465, Effort S, incidental
-– confirmed pre-existing, not caused by this session’s own diff via a
-stash test) – `man/makePedigreeMatingLayout.Rd:40` (“sibship”,
-“waypoint”) and `vignettes/a2interactive.Rmd:355,371,429, 437,440,441`
+**[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)’s
+spelling NOTE has drifted again – 6 new words, not caught by any session
+since S461** (found S465, Effort S, incidental – confirmed pre-existing,
+not caused by this session’s own diff via a stash test) –
+`man/makePedigreeMatingLayout.Rd:40` (“sibship”, “waypoint”) and
+`vignettes/a2interactive.Rmd:355,371,429, 437,440,441`
 (“duplicateToReal”, “js’s”, “makePedigreeMatingLayout”, “vis”) are
-flagged in `devtools::check()`’s `spelling.R` test diff (comparing fresh
-`spelling.Rout` against the committed `spelling.Rout.save`) but are not
-yet in `inst/WORDLIST`. Mirrors the S443/S448/S452 spelling-gap pattern
-(Learning 426, `CLAUDE.md`’s own “Additional close-out checks”
-precedent) – a future session should hand-add these 6 words to
-`inst/WORDLIST` in `LC_ALL=C` byte-order position (not via
+flagged in
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)’s
+`spelling.R` test diff (comparing fresh `spelling.Rout` against the
+committed `spelling.Rout.save`) but are not yet in `inst/WORDLIST`.
+Mirrors the S443/S448/S452 spelling-gap pattern (Learning 426,
+`CLAUDE.md`’s own “Additional close-out checks” precedent) – a future
+session should hand-add these 6 words to `inst/WORDLIST` in `LC_ALL=C`
+byte-order position (not via
 [`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html),
-per S230 convention) and re-verify `devtools::check()` drops to the
-pre-existing iCloud duplicate-file warning + vignette-engine note only.
+per S230 convention) and re-verify
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+drops to the pre-existing iCloud duplicate-file warning +
+vignette-engine note only.
+
+**`renv.lock` – concrete content found for the long-standing
+“unexplained diff” (found S474, Effort S-M, incidental) – the committed
+`renv.lock` (both HEAD and the pre-existing uncommitted 135+/19- diff
+carried since ~S459) has never recorded top-level `Packages` entries for
+`testthat`/`pkgload`/`devtools`/`roxygen2`/
+`shinytest2`/`chromote`/`dplyr`/`mockery`/`quarto`/`shinyBS`, even
+though the full test suite needs all of them. This session hit it
+directly: R was upgraded to 4.6.1 mid-project, which created a fresh,
+empty `renv` project-library hash (`nprcgenekeepr-e7e04aee`) –
+[`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html)
+alone left the library missing every one of those packages (confirmed
+present in the shared renv CACHE the whole time, just never linked into
+a project library because they were never in the lockfile to restore
+from), causing
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+and 18 test files across the full suite to error with “there is no
+package called ‘…’”. Fixed in-session via `renv::install(c(...))` (all
+linked from cache, seconds each; confirmed `renv.lock`/`DESCRIPTION`
+diff unchanged before and after, matching Learning 299(b)’s discipline)
+– this is a session-environment gap, not a lockfile fix, and will recur
+for the next session/machine whose project library gets reset (a new R
+version, a fresh clone, `renv`’s own cache eviction) until the lockfile
+itself is corrected.** Not fixed here\*\* (root-causing why these
+packages were never captured – likely a
+[`renv::snapshot()`](https://rstudio.github.io/renv/reference/snapshot.html)
+run with a dependency-detection type that excludes dev-only/Suggests
+tooling – and deciding whether to run `renv::snapshot(type = "all")` or
+hand-add them is a decision for a dedicated session, out of scope for a
+TDD implementation session). A future session should root-cause and fix
+the lockfile itself so this stops being a recurring, silent per-session
+trap. **RESOLVED – S476 (2026-08-04):** root cause precisely traced (not
+just “likely,” per Learning 476): `renv/settings.json`’s
+`snapshot.type: "explicit"` makes a PLAIN
+[`renv::snapshot()`](https://rstudio.github.io/renv/reference/snapshot.html)
+scan only `Imports`/`Depends`/`LinkingTo`, silently excluding every
+`Suggests`-only package. `renv::snapshot(dev = TRUE)` (documented renv
+argument) fixes 8 of the 10 automatically (the 6 already declared in
+`Suggests` – `testthat`/`dplyr`/`mockery`/`roxygen2`/
+`shinytest2`/`shinyBS` – plus their transitive deps `pkgload`/
+`chromote` via `shinytest2`); `devtools`/`quarto` needed adding to
+`DESCRIPTION`’s `Suggests` directly (their existing
+`Config/renv/profiles/dev/dependencies` / `Config/Needs/website`
+declarations are inert – read only by an actively-enabled “dev” renv
+profile / by `pak`, neither ever used in this project), matching the
+existing precedent of `covr`/`pkgdown`/`spelling` already living in
+`Suggests` unreferenced by package code. Also installed 6
+separately-discovered NOT-INSTALLED `Suggests` packages
+(`covr`/`kableExtra`/`markdown`/`png`/`shinyWidgets`/`spelling`,
+surfaced only because `dev=TRUE`’s dry run refused to snapshot packages
+it couldn’t find). Ran the real `renv::snapshot(dev = TRUE)` – 157
+packages now recorded (up from 95), all 10 originally- flagged packages
+present. Verified two ways: `renv::status(dev = TRUE)` reports “No
+issues found”; a genuinely fresh
+`renv::restore(library = <empty temp dir>)` installed all 16 target
+packages from the fixed lockfile alone. Full regression suite unchanged
+(0 failed/0 error, 3854 passed, 183 skipped, 10 pre-existing baseline
+warnings);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings/2 NOTEs (both pre-existing and unrelated – the
+already-tracked 6-word spelling-wordlist drift below, plus a
+vignette-engine NOTE on `a2interactive.Rmd`, confirmed via
+`git diff --stat` that vignettes/ was untouched this session).
+Documented `renv::snapshot(dev = TRUE)` as the required standing
+invocation in `CLAUDE.md`’s Build/Test/Verify section so a future plain
+[`renv::snapshot()`](https://rstudio.github.io/renv/reference/snapshot.html)
+doesn’t silently strip the lockfile again. See `CHANGELOG.md`,
+`PROJECT_LEARNINGS.md` Learning 476.
+
+**The “10 pre-existing baseline warnings” carried in every
+full-regression report since S448 have never been root-caused, and were
+introduced by a test-fixture gap, not a real production-code issue**
+(found S487, incidental to issue \#133 Slice 2’s own regression read;
+Effort S, low priority) – the owner asked directly (“we had zero at last
+release”) after seeing `warning: 10` in this session’s clean regression
+read, which no prior session had actually traced. Root cause: both
+`tests/testthat/test_modMarkerGenetics.R` “cross-center” tests (added by
+commit `a319e0c5`, S447, 2026-08-01, implementing issue \#130 Slice 5)
+upload a hand-derived 2-locus toy fixture (Center A n=4, Center B n=6)
+chosen for exact-fraction Fst arithmetic, not for kinship completeness.
+`modMarkerGeneticsServer`’s reactive graph incidentally also computes
+marker-based kinship (the Slice 1 feature) on any uploaded Center-A
+file, and in this fixture `'CA1'`/`'CA2'` share no heterozygous locus –
+[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)
+correctly warns and returns `NA` for that pair (working as designed, not
+a bug), 5x per test x 2 tests = 10. **Confirmed CRAN v2.0.0 (released
+2026-07-26) predates S447 (2026-08-01) and genuinely shipped with a
+clean, 0-warning suite** – the owner’s recollection was correct. S447’s
+own close-out reported “0 failed/0 error” but never actually stated a
+warning count; S448 (the very next session) independently found S447’s
+self-reported
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+“0/0/0” also didn’t hold up under re-verification (a missed spelling
+gap) – the same kind of unverified self-report, in the same session, is
+the most likely origin of this gap too, though this was never directly
+confirmed against S447’s own raw test output (not preserved). Every
+session from S448 through S486 (~40 sessions) carried “10 pre-existing …
+warnings” forward as an accepted baseline without investigating what it
+was. Not fixed this session (`PROJECT_LEARNINGS.md` Learning 382’s
+“report, don’t fix mid-session” precedent – out of scope for a Slice 2
+legend/documentation TDD session; owner directed file-and-continue via
+`AskUserQuestion`). A future session should either (a) wrap the
+`session$setInputs(genotypeFile = ...)` calls in these 2 tests with
+[`suppressWarnings()`](https://rdrr.io/r/base/warning.html) (matching
+the established `PROJECT_LEARNINGS.md` Learning 273(d) precedent: “a
+degenerate out-of-contract input … often misbehaves further downstream –
+suppress the incidental warning, not the branch”), or (b) adjust the
+2-locus fixture so `CA1`/`CA2` share a heterozygous locus – but only
+after re-verifying the exact-fraction Fst values (`58/1001`, `139/308`,
+`614/2233`) still hold, since the fixture was hand-derived specifically
+to produce those numbers.
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 
@@ -699,19 +891,21 @@ Diagram” section to `vignettes/manual_components/_pedigree_browser.Rmd`
 describing the Diagram tab and its new export button (scoped to this
 session’s feature only – full Diagram-tab tutorial coverage remains
 issue \#139’s separate scope). Verified: regression suite 0/0/0 (3290
-passed, 182 skipped); `devtools::check()` 0 errors/0 warnings/0 notes;
-live `shinytest2`/`chromote` runtime smoke test confirmed the button is
-genuinely functional, not just error-free – clicking it produced a real
-`pedigree_diagram.png` file (17,374 bytes) with a valid PNG magic-number
-signature, captured via the chromote session’s own download-behavior
-override (`PROJECT_LEARNINGS.md` Learning 419, since `get_download()`/
-`expect_download()` don’t apply to a purely client-side JS download with
-no backing Shiny output). See `CHANGELOG.md`.) - \[ \] (none remaining –
-**issue \#134** (verify inbreeding-loop/consanguinity rendering,
-priority 4, resolves plan Dragon P2 / `PROJECT_LEARNINGS.md` Learning
-410) is RESOLVED: verified S453 (2026-08-02), audit-only, no production
-code or tracked test-suite files changed. Data layer: a synthetic 6-node
-half-sib-mating fixture confirmed
+passed, 182 skipped);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings/0 notes; live `shinytest2`/`chromote` runtime smoke
+test confirmed the button is genuinely functional, not just error-free –
+clicking it produced a real `pedigree_diagram.png` file (17,374 bytes)
+with a valid PNG magic-number signature, captured via the chromote
+session’s own download-behavior override (`PROJECT_LEARNINGS.md`
+Learning 419, since `get_download()`/ `expect_download()` don’t apply to
+a purely client-side JS download with no backing Shiny output). See
+`CHANGELOG.md`.) - \[ \] (none remaining – **issue \#134** (verify
+inbreeding-loop/consanguinity rendering, priority 4, resolves plan
+Dragon P2 / `PROJECT_LEARNINGS.md` Learning 410) is RESOLVED: verified
+S453 (2026-08-02), audit-only, no production code or tracked test-suite
+files changed. Data layer: a synthetic 6-node half-sib-mating fixture
+confirmed
 [`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
 builds correct nodes/edges (no duplication, no drops) for a
 converging-DAG loop, and
@@ -745,15 +939,16 @@ already matched the file’s established style): 10 new unit tests (8 on
 [`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md),
 2 on the widget’s JSON config, matching the \#131/#132 pattern);
 regression suite 0 failed/0 error (3509 passed, unchanged 10 baseline
-warnings); `devtools::check()` 0 errors/1 warning (pre-existing iCloud
-duplicate-file artifact)/0 notes. Live `shinytest2`/`chromote`
-verification against the real app (same known trio as
-`test-e2e-pedigree-module.R`): live node `title` matches exactly; the
-real DOM search dropdown is populated with all 375 IDs; a real `change`
-event genuinely dims an unrelated node while leaving a connected one
-normal (confirmed the highlight logic executes, not just that config is
-present); click-to-navigate unaffected. One accepted trade-off
-documented in code and `PROJECT_LEARNINGS.md` Learning 443:
+warnings);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/1 warning (pre-existing iCloud duplicate-file artifact)/0 notes.
+Live `shinytest2`/`chromote` verification against the real app (same
+known trio as `test-e2e-pedigree-module.R`): live node `title` matches
+exactly; the real DOM search dropdown is populated with all 375 IDs; a
+real `change` event genuinely dims an unrelated node while leaving a
+connected one normal (confirmed the highlight logic executes, not just
+that config is present); click-to-navigate unaffected. One accepted
+trade-off documented in code and `PROJECT_LEARNINGS.md` Learning 443:
 `nodesIdSelection` can log one transient, benign
 `[shiny] Duplicate input IDs were found` console warning from the second
 reactive re-render onward (no permanent DOM duplication, no functional
@@ -867,16 +1062,17 @@ not-yet-wired-in function has no displayed statistic and no user-facing
 surface (Migration Path step 4’s own “owed once step 3 ships, not
 before”). Verified: regression suite 0 failed/0 error (3562 passed =
 3509 baseline + 53 new, 183 skipped, 10 pre-existing warnings, exact
-baseline match); `devtools::check()` 0 new warnings/notes (isolated via
-a clean-tree re-run: the pre-existing iCloud-duplicate-file warning and
-a `vignettes/a2interactive.Rmd` vignette-engine NOTE both confirmed to
-predate this session, unrelated to this diff). Phase 3E: n/a – no
-runtime behavior changed (the function has no call site yet; the
-render-chain switch is Slice 3). See `CHANGELOG.md`,
-`PROJECT_LEARNINGS.md` Learnings 449-450.) - \[ \] (none remaining –
-**Pedigree Diagram: Option 2 implementation, Slice 2 (D3 positioning
-algorithm)** is RESOLVED: implemented S460 (2026-08-02). New internal
-`.positionMatingUnitForest(ped, forest)` in
+baseline match);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+new warnings/notes (isolated via a clean-tree re-run: the pre-existing
+iCloud-duplicate-file warning and a `vignettes/a2interactive.Rmd`
+vignette-engine NOTE both confirmed to predate this session, unrelated
+to this diff). Phase 3E: n/a – no runtime behavior changed (the function
+has no call site yet; the render-chain switch is Slice 3). See
+`CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learnings 449-450.) - \[ \] (none
+remaining – **Pedigree Diagram: Option 2 implementation, Slice 2 (D3
+positioning algorithm)** is RESOLVED: implemented S460 (2026-08-02). New
+internal `.positionMatingUnitForest(ped, forest)` in
 `R/makePedigreeDiagramData.R`, consuming Slice 1’s
 `.buildMatingUnitForest()` output and assigning final `x`/`gen`
 coordinates via a simplified Reingold-Tilford/Walker-style recursive
@@ -918,15 +1114,16 @@ not-yet-wired-in function has no displayed statistic and no user-facing
 surface (Migration Path step 4’s own “owed once step 3 ships, not
 before”), matching Slice 1’s own precedent. Verified: regression suite 0
 failed/0 error (3592 passed = 3562 baseline + 30 new, 183 skipped, 10
-pre-existing warnings, exact baseline match); `devtools::check()` exact
-baseline match (1 pre-existing warning, 1 pre-existing note, 0 new);
-zero lint warnings in the new code. Phase 3E: n/a – no runtime behavior
-changed (the function has no call site yet; the render-chain switch is
-Slice 3). Incidentally found and fixed (not part of this slice’s own
-deliverable, a 1-byte mechanical correction in the file already being
-edited) a literal control -character byte that had leaked into
-`PROJECT_LEARNINGS.md` Learning 450’s own text – the exact defect that
-learning describes, recursed into its own bug report. See
+pre-existing warnings, exact baseline match);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+exact baseline match (1 pre-existing warning, 1 pre-existing note, 0
+new); zero lint warnings in the new code. Phase 3E: n/a – no runtime
+behavior changed (the function has no call site yet; the render-chain
+switch is Slice 3). Incidentally found and fixed (not part of this
+slice’s own deliverable, a 1-byte mechanical correction in the file
+already being edited) a literal control -character byte that had leaked
+into `PROJECT_LEARNINGS.md` Learning 450’s own text – the exact defect
+that learning describes, recursed into its own bug report. See
 `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learnings 451-453.) - \[ \] (none
 remaining – Pedigree Diagram: Option 2 implementation, Slice 3
 (render-chain wiring) is DONE – S461 (2026-08-02): see `CHANGELOG.md`.
@@ -996,23 +1193,24 @@ now-intentionally-changed edge column set; GREEN; REFACTOR
 owner-confirmed skip – GREEN already matched this file’s established
 `dashes`/`color` column-addition style). Verified: regression suite 0
 failed/0 error (4524 passed = 4515 + 9 new assertions, exact baseline 10
-pre-existing warnings); `devtools::check()` 0 new errors/warnings/notes
-(1 warning/1 note, both the pre-existing unrelated iCloud-duplicate-file
-and vignette-engine baseline); `lintr` 0 on both changed files. Live
-`shinytest2`/`chromote` verification against the real 375-individual
-fixture: all 128 duplicate-connector edges carry the arc override (0
-diagram-related console errors); a small isolated-fixture screenshot
-visually confirms the connector renders curved, distinct from the
-straight mate-line/child edges; the `edgeStyle = "rectilinear"` radio
-toggle re-verified live with 0 errors, arc intact.
-`_pedigree_browser.Rmd`’s “dashed line” wording updated to “curved,
-dashed line” for accuracy (re-rendered, confirmed present in output); no
-`NEWS.Rmd` entry, per the shinyBS-popover-fix precedent (S437/438) – a
-bug fix to existing behavior, not a new function/control, is outside
-that checklist’s own scope. Analytically separate from issue \#142’s own
-mate-line/ sibship-bar edge-routing work (Slice 2, shipped S468) – not
-folded in, per this project’s own scope-discipline precedent (see the
-founder-positioning-defect item immediately below, and
+pre-existing warnings);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+new errors/warnings/notes (1 warning/1 note, both the pre-existing
+unrelated iCloud-duplicate-file and vignette-engine baseline); `lintr` 0
+on both changed files. Live `shinytest2`/`chromote` verification against
+the real 375-individual fixture: all 128 duplicate-connector edges carry
+the arc override (0 diagram-related console errors); a small
+isolated-fixture screenshot visually confirms the connector renders
+curved, distinct from the straight mate-line/child edges; the
+`edgeStyle = "rectilinear"` radio toggle re-verified live with 0 errors,
+arc intact. `_pedigree_browser.Rmd`’s “dashed line” wording updated to
+“curved, dashed line” for accuracy (re-rendered, confirmed present in
+output); no `NEWS.Rmd` entry, per the shinyBS-popover-fix precedent
+(S437/438) – a bug fix to existing behavior, not a new function/control,
+is outside that checklist’s own scope. Analytically separate from issue
+\#142’s own mate-line/ sibship-bar edge-routing work (Slice 2, shipped
+S468) – not folded in, per this project’s own scope-discipline precedent
+(see the founder-positioning-defect item immediately below, and
 `PROJECT_LEARNINGS.md` Learning 382). See `CHANGELOG.md`. - \[x\]
 **Founder-positioning defect: a non-anchor parent occurrence (founder or
 already-duplicated multi-mate individual) whose own generation differs
@@ -1070,15 +1268,16 @@ desynchronized fix in this algorithm (unrelated same-row nodes are not
 guaranteed \>= minSep apart even under the correct fix); substituted a
 stronger, empirically-verified exact x/gen value test instead (see
 `PROJECT_LEARNINGS.md` Learning 470). Full regression suite 0 failed/0
-error (4560 passed); `devtools::check()` 0 errors/0 warnings (1
-pre-existing, unrelated NOTE); live-verified in the running app via
-`shinytest2` – FD3BB6 (the audit’s own spot-checked example) plus 3 more
-previously-mismatched units now render on-row under both `edgeStyle`
-values, zero diagram-related console errors. See `CHANGELOG.md`. - \[x\]
-**Pedigree Diagram: anchor-side row mismatches – 51 of 237 real-fixture
-mating units (22%), distinct from issue \#143’s non-anchor fix** (found
-S471, incidental to designing \#143’s fix; filed as [issue
-\#144](https://github.com/rmsharp/nprcgenekeepr/issues/144)) –
+error (4560 passed);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings (1 pre-existing, unrelated NOTE); live-verified in the
+running app via `shinytest2` – FD3BB6 (the audit’s own spot-checked
+example) plus 3 more previously-mismatched units now render on-row under
+both `edgeStyle` values, zero diagram-related console errors. See
+`CHANGELOG.md`. - \[x\] **Pedigree Diagram: anchor-side row mismatches –
+51 of 237 real-fixture mating units (22%), distinct from issue \#143’s
+non-anchor fix** (found S471, incidental to designing \#143’s fix; filed
+as [issue \#144](https://github.com/rmsharp/nprcgenekeepr/issues/144)) –
 **planning DONE – S473 (2026-08-04):**
 `docs/planning/issue144-anchor-row-mismatch-fix-plan.md`, owner-ratified
 via `AskUserQuestion`. **The standing assumption above – that fixing
@@ -1095,79 +1294,275 @@ selection) stays untouched. Adopted via a 7-agent
 characterize-then-design workflow (4 parallel characterization agents, 3
 independently-validated candidate designs in isolated worktrees) plus a
 3-agent adversarial review mirroring S471’s own review pattern for the
-sibling \#143 plan. - \[ \] **Implement the ratified issue \#144 plan**
-(READY, Effort similar to \#143’s own implementation session – code
-change is small, size is in verification breadth) –
-`docs/planning/issue144-anchor-row-mismatch-fix-plan.md` is a complete,
-ratified plan with pre-derived exact regression numbers (51 -\> 0 anchor
-mismatches; rectilinear node count 1279 -\> 1228; 6 `test_that` blocks
-across 3 files need rewriting, fully catalogued in the plan’s §4.3
-table) – follow it directly, starting at §7 (Verification Plan). - \[ \]
-**Candidate C’s connector/dogleg visual-signposting idea** (found S473,
-designing the issue \#144 plan; not adopted for \#144 itself, Effort
-unknown, low priority) – extends the existing D2 mate-line “dogleg”
-(issue \#142) to `edgeStyle="direct"` (which currently gets zero
-compensating treatment for any cross-generation connector) and adds
-dashed/colored/titled styling to both edge styles so a
-multi-generation-spanning mate-line reads as intentional rather than a
-positioning bug. Fully validated (including a real ~37%
-`edgeStyle="rectilinear"` performance regression found and fixed during
-design) but requires its own fresh, explicit owner product-level
-sign-off to pursue – independently valuable as a diagram-readability
-enhancement, decoupled from \#144’s own resolution (which does not need
-it). See `docs/planning/issue144-anchor-row-mismatch-fix-plan.md`
-§5/§8. - \[ \] **`.addRectilinearWaypoints()`’s D2 loop crashes
-(“subscript out of bounds”) when a mating unit’s non-anchor parent is a
-dangling, never-duplicated reference, under `edgeStyle="rectilinear"`**
-(found S473, incidental to designing the issue \#144 plan’s Candidate C;
-confirmed pre-existing on `master`, unrelated to any \#144 candidate,
-Effort unknown, low priority) – `genOf[[A]]`/`genOf[[Nnode]]`
-double-bracket indexing throws when the indexed id has no row in
-`genOf`. Not fixed, per Learning 382’s “report, don’t fix mid-session”
-precedent. See `docs/planning/issue144-anchor-row-mismatch-fix-plan.md`
-§8. - \[ \] **Two more pre-existing, unrelated crashes in
-dangling-parent edge cases**, same family as the item above (found S473,
-incidental to this plan’s own adversarial review; confirmed pre-existing
-on `master`, Effort unknown, low priority): (a) any individual with
-`ped$gen = NA` anywhere in the input crashes
-`maxGen <- max(ped$gen, ...)` (`R/makePedigreeDiagramData.R:410`) with
-`"invalid 'times' argument"`; (b) a mating unit whose sire AND dam are
-both dangling can have a dangling id selected as anchor and then crashes
-`mergeSubtrees(rootResults)` on an empty `rootIds` (`:527-533`) –
-separately, `matingUnits$gen` itself comes back `NA` (not the intended
-`0L` fallback) for such a unit, since `pmax(NA, NA, na.rm = TRUE)`
-returns `NA` rather than the `-Inf` the existing
-`unitGen[is.infinite(unitGen)] <- 0L` guard (`:253`) assumes will fire.
-Not fixed, per Learning 382’s “report, don’t fix mid-session” precedent.
-See `docs/planning/issue144-anchor-row-mismatch-fix-plan.md` §8. - \[ \]
+sibling \#143 plan. - \[ \] (none remaining – **Implement the ratified
+issue \#144 plan** is DONE – S474 (2026-08-04): all 3 synchronized edits
+shipped in one commit, full RED/GREEN/REFACTOR TDD cycle
+(`AskUserQuestion`-gated at every transition), full regression suite +
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) +
+live `shinytest2` verification all clean. See `CHANGELOG.md`.)
+
+**Sequencing note (S480, 2026-08-08):** the items below through the
+`highlightNearest` degree=6 item, plus GitHub issues
+\#133/#136/#137/#138/#141/#145, were jointly examined for implementation
+order in
+`docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`
+(kinship2-capability- and nomenclature-reference-informed). Recommended
+order: (1) the two dangling-parent crash bugs below + the
+free-pass-filter reachability check, (2) issue \#145 (sire/dam
+left-right placement – found to be a net-new layout rule request, not a
+fix to existing behavior, and not textually supported by this project’s
+own copy of the cited nomenclature standard), (3) refresh the stale
+`.qmd` comparison doc below, (4) the owner’s existing \#133 \> \#136 \>
+\#137 \> \#138 order (unchanged, set at S436), (5) \#141 and Candidate C
+stay deferred pending new evidence/owner sign-off. Consult that audit
+before picking up any item in this cluster.
+
+**Progress (S481, 2026-08-08):** Tier 1 step (1) is DONE – the 2
+dangling-parent crash bugs + the free-pass-filter reachability check
+(issue \#154) are fixed/closed, see `CHANGELOG.md`. Step (2) – issue
+\#145’s verification spike – is next in this cluster; steps (3)-(5)
+remain untouched.
+
+**Progress (S482, 2026-08-08):** Tier 1 step (2) is DONE – see
+`docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md`.
+Empirically confirmed (source read + 5 synthetic-pedigree tests against
+kinship2 v1.9.6.2 directly, not inferred from docs alone) that kinship2
+implements **neither** a hard male-left invariant **nor** a sex-aware
+crossing-minimizing soft default: the single-mate case’s apparent
+“sire-left” result is an indexing artifact, not a `ped$sex` check, and
+the moment an individual has multiple mates (“crowding,” exactly the
+scenario \#145’s own body raises), left/right is decided purely by
+pedigree-data discovery order – confirmed by a direct counter-example (a
+dam with 2 sire mates, one sire ends up to her immediate right, the
+other to her immediate left). kinship2’s own `?align.pedigree` help text
+frames sire/dam ordering as an overridable hint, not a rule; an explicit
+2-row hint flips the simple-pair default with no special-casing. Also
+found issue \#145’s own inline citations (\[2\]-\[7\], already flagged
+unresolved by the S480 audit) describe crossing-minimization behavior
+that does not match kinship2’s actual source – a second, independent
+data point (beyond the S480-audited nomenclature reference) that those
+citations are unreliable. Step (3) – refresh the stale `.qmd` comparison
+doc – is next in this cluster; steps (4)-(5) remain untouched. See the
+research doc’s own “Recommendation for a future \#145 design session”
+section before starting any \#145 design work.
+
+**Progress (S484, 2026-08-08):** Tier 1 step (3) is DONE – see
+`docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`.
+Refreshed the doc’s stale founder-positioning “confirmed defect”
+language in Examples 1-2 (re-ran both example families against current
+`master`: `203`/`117` now correctly position adjacent to their own
+mate’s row, matching kinship2’s convention, verified via real layout
+output not just the “should be fixed” claim) – updated to reflect the
+fix, citing issues \#143/#144. Re-verified
+`vignettes/ a2interactive.Rmd`’s runnable pedigree-diagram example still
+executes cleanly against current `master` (33 animals, 48/53
+direct-style nodes/edges, 86/91 rectilinear – re-verification only, no
+content rewrite needed). Added a new Example 4 (a dam with 2 sires,
+“role-reversed crowding”) reproducing S482’s own decisive kinship2
+counter-example directly in this document, with real `align.pedigree()`
+output (`S1, D1, S2` – dam centered, sires split by discovery order, not
+sex) alongside `nprcgenekeepr`’s own duplicate-node handling of the same
+data; updated the Summary table and closing “kinds of gap” list to add
+the sire/dam-ordering question (issue \#145) as its own,
+now-investigated item, and to close out the founder-positioning item as
+fixed. Verified via a full `quarto render` (all 37 chunks executed
+cleanly, no R errors) – rendered HTML deleted after verification, not
+committed, matching this project’s established practice for
+`docs/planning/*.qmd` source-only docs. Tier 1 of the sequencing audit
+(crash bugs + \#145 spike + this refresh) is now fully complete; Tier 2
+(#133 \> \#136 \> \#137 \> \#138, owner’s existing order) is next in
+this cluster.
+
+**Progress (S485, 2026-08-08):** Tier 2 step 1 – issue \#133’s
+design/architecture document – is DONE and RATIFIED: see
+`docs/planning/issue133-affected-status-pedigree-diagram-plan.md`. 8
+ratified decisions (`affected` logical column, kinship2-name parity;
+single-trait v1 scope; `color.background` + tooltip rendering, no new
+dependency/custom JS; implement in BOTH
+[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+and
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+– confirmed via `grep` that the latter, not the former, is what
+`R/modPedigree.R:446` actually calls for the live Diagram tab; a new
+sibling test fixture rather than an in-place edit to the ~20-test-pinned
+base fixture; a one-row `visLegend()` extension; vital-status (`status`)
+kept explicitly out of scope; exact fill color deferred to the
+implementing session’s own Pre-RED). Also ruled out reusing this
+project’s existing `condition`/`status` schema columns (both mean
+something else, confirmed via direct roxygen read – see
+`PROJECT_LEARNINGS.md` Learning 485). Scoped as 2 future vertical slices
+with full RED/GREEN/DONE/Verify contracts (Slice 1: data model + core
+rendering; Slice 2: legend + documentation) – next session in this
+cluster implements Slice 1. Issue \#133 itself intentionally left open
+(design ratified, not yet implemented); no `gh issue close` this
+session.
+
+**Progress (S486, 2026-08-08):** Tier 2 step 2 – issue \#133 Slice 1
+(data model + core rendering) – is DONE, full TDD RED-\>GREEN cycle
+(`AskUserQuestion`-gated at every transition, including 2 Pre-RED
+author’s-call decisions: D8 fill color `#CC79A7` Okabe-Ito
+reddish-purple, and the `include` question resolved “not
+yet”/display-only v1). `affected` is now a recognized optional logical
+column (`.nprcColumnSchema$possible`); both
+[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+and
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+render it (dominant `color.background` + “Affected: Yes/No/Unknown”
+tooltip line), backward -compatible (absent column =\> zero output
+change, confirmed by dedicated regression tests). New sibling fixture
+`inst/extdata/examples/obfuscated_rhesus_mhc_ped_affected.csv`
+(`data-raw/ obfuscated_rhesus_mhc_ped_affected.R`, seeded RNG, ~20%
+TRUE/70% FALSE/10% NA, disclosed synthetic). **Found and fixed one gap
+the design doc didn’t anticipate:** `.addRectilinearWaypoints()` was
+unconditionally resetting every node’s `color.background`/`color.border`
+to NA, which would have silently erased the new affected-status coloring
+the moment a user selected the rectilinear edge style (issue \#142) –
+fixed with a preserve-if-already-set guard, covered by a new regression
+test in `test_addRectilinearWaypoints.R`. Verified: full clean
+regression read 0 failed/0 error (10 pre-existing baseline warnings
+unchanged, 4632 passed); `lintr::lint_package()` 0 issues on touched
+files (2 nested-[`ifelse()`](https://rdrr.io/r/base/ifelse.html)
+warnings resolved by extracting shared
+`.affectedColor()`/`.affectedLabel()` helpers rather than suppressed);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+returns 2 ERRORs/1 WARNING/2 NOTEs, **all pre-existing and unrelated to
+this session’s diff** (confirmed via `git log`: the non-portable
+`inst/extdata/reference/...` filename dates to commit `887ee902`/S418;
+the `a2interactive.Rmd` vignette-engine NOTE and the `spelling.Rout`
+mismatch on issue \#142-era terms are likewise untouched by this
+session) – zero new errors/warnings/notes introduced. Live
+`shinytest2`/`chromote` smoke test (ad hoc, per Phase 3E, not committed
+as a new e2e test – outside the approved Slice 1 file-touch list)
+confirmed on the real running app: the new sibling fixture visibly
+shades an `affected=TRUE` node `#CC79A7` with the tooltip line present,
+an `affected=FALSE` node in the same pedigree has no color override, 0
+console errors; the base fixture (no `affected` column) shows neither
+the color nor the tooltip text anywhere and 0 console errors – confirmed
+via the live vis.js Network instance’s own DataSets
+(`HTMLWidgets.find(...).network.body.data.nodes.get(id)`), matching this
+file’s own established “known trio” technique, not raw DOM HTML (which
+does not carry canvas-rendered node data – an initial verification pass
+using `get_html_safe()` alone produced a false negative before this was
+caught and corrected). `NEWS.Rmd` entry added this session (judgment
+call: the design doc’s own Section 5 attributes the NEWS/tutorial
+checklists to “Slice 2, the session that ships the user-visible
+legend/shading,” but Slice 1 itself already ships the shading/tooltip
+rendering per its own Section 4 scope – read literally, `CLAUDE.md`’s
+NEWS.Rmd checklist trigger (“ships a new user-facing Shiny feature”) is
+satisfied now, so the entry was added at Slice 1’s close rather than
+deferred; the tutorial/article walkthrough update stays correctly
+deferred to Slice 2 per the design doc, since a walkthrough is more
+coherent once the discoverability legend also exists). Issue \#120’s
+citation checklist confirmed NOT applicable (a raw display flag, not a
+new displayed statistic/estimator, matching the design doc’s own Section
+5 read). Issue \#133 stays open (Slice 2 – legend + docs – still
+pending); no `gh issue close` this session. Next session in this cluster
+implements Slice 2: see
+`docs/planning/issue133-affected-status-pedigree-diagram-plan.md`
+Section 4 Slice 2.
+
+**Progress (S487, 2026-08-08):** Tier 2 step 2 – issue \#133 Slice 2
+(legend + documentation) – is DONE, full TDD RED-\>GREEN cycle
+(`AskUserQuestion`-gated at every transition). Added one “Affected” row
+to the Diagram tab’s existing shape-to-sex `visLegend()` (D6, reusing
+Slice 1’s `#CC79A7` color) – confirmed hands-on that the design doc’s
+own Dragon \#3/#4 concerns were both real: (1) `shape="box"` (a Pre-RED
+author’s call, not dictated by the design doc) rendered as a label-sized
+filled pill inconsistent with the other 5 fixed-size-icon rows –
+switched to `"hexagon"`; (2) the 6th row’s own label clipped against the
+legend’s fixed 400px canvas height at the existing `stepY=65L` – retuned
+to `stepY=54L`, live-reverified clipping-free. `visExport()` PNG capture
+of a `color.background`-only node (Dragon \#3, deferred by S486)
+confirmed working via a real exported PNG (900+ matching pixels).
+Documentation checklists done in-session: `NEWS.Rmd`’s existing \#133
+bullet updated (no second entry) to describe the legend rather than
+promise it “in a later release”; `_pedigree_browser.Rmd` and
+`colony-manager-guide.qmd` (owner’s \#133 comment requires both) updated
+and re-rendered clean. **Incidental fix:** re-rendering `NEWS.Rmd` found
+S486’s own bullet had never actually been re-rendered/committed to
+`NEWS.md` (last touched S468) – fixed as a byproduct of this session’s
+own render, not a separate action. Citation checklist (#120)
+re-confirmed N/A. Verified: full clean regression read 0 failed/0 error
+(4640 passed, 10 pre-existing warnings – now root-caused, see the new
+Housekeeping item above); `lintr` 0 on touched files;
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+exact pre-existing baseline (2 ERRORs/1 WARNING/2 NOTEs, all
+individually attributed, 0 new); live `shinytest2`/`chromote` smoke test
+confirmed all 6 legend rows + the main diagram’s affected-node
+coloring + the PNG export, 0 console errors. **Both slices of issue
+\#133 are now shipped; issue \#133 itself is closed as part of this
+session’s close-out.** Tier 2’s remaining order (#136 \> \#137 \> \#138,
+each needing its own scoping session) is next in this cluster.
+
+**Progress (S488, 2026-08-08):** Tier 2 step 3 – issue \#136’s
+design/architecture document – is DONE and RATIFIED: see
+`docs/planning/issue136-name-labels-pedigree-diagram-plan.md` (READY for
+implementation, Slice 1 Effort S-M, Slice 2 Effort M). Owner ratified in
+two `AskUserQuestion` rounds: the framing (names exist at **some
+centers, inconsistently**; an optional `name` column + off-by-default
+toggle, over tooltip-only / decline / configurable label-source) and the
+4 judgment-call decisions (D3 augment `id`+name not name-only; D6 pin
+`useLabels = FALSE`; D10 truncate displayed + full name in tooltip; D8
+[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+drops `name` to `NA`). D1/D4/D5/D7/ D11/D12 are forced by structural
+traps, not voted. **The design corrects three premises in the issue
+itself:** `label` is already independent of `id` and `label != id`
+already ships (dup nodes `:906`, union nodes `:929`), so \#136 is
+“choose the string” not “build the mechanism”; the schema’s
+`first_name`/`second_name` are ALLELE names (the Learning 485 trap
+re-encountered); and the real constraint is **geometry, not the data
+model** – 25.6% of adjacent label-bearing node pairs sit 48 layout units
+apart with ~50-unit nodes, every id is exactly 6 chars, and nothing in
+the fixed-coordinate layout measures text. **Also found a disclosure
+defect** no prior session had reason to look for:
+[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+scrubs only `id`/`sire`/`dam` + Date columns, so a `name` column would
+survive de-identification intact – now a mandatory same-slice
+requirement (D8). Scoped as 2 slices; **next session in this cluster
+implements Slice 1** (data model + de-identification; no visible app
+change). Issue \#136 intentionally left open. See `CHANGELOG.md`,
+`PROJECT_LEARNINGS.md` Learning 488. - \[ \] **Candidate C’s
+connector/dogleg visual-signposting idea** (found S473, designing the
+issue \#144 plan; not adopted for \#144 itself, Effort unknown, low
+priority) – extends the existing D2 mate-line “dogleg” (issue \#142) to
+`edgeStyle="direct"` (which currently gets zero compensating treatment
+for any cross-generation connector) and adds dashed/colored/titled
+styling to both edge styles so a multi-generation-spanning mate-line
+reads as intentional rather than a positioning bug. Fully validated
+(including a real ~37% `edgeStyle="rectilinear"` performance regression
+found and fixed during design) but requires its own fresh, explicit
+owner product-level sign-off to pursue – independently valuable as a
+diagram-readability enhancement, decoupled from \#144’s own resolution
+(which does not need it). See
+`docs/planning/issue144-anchor-row-mismatch-fix-plan.md` §5/§8. - \[ \]
+(none remaining – the 3 dangling-parent crash bugs formerly tracked here
+unnumbered (`.addRectilinearWaypoints()`’s D2 loop “subscript out of
+bounds”; `gen = NA` -\> `maxGen` “invalid ‘times’ argument”; a
+both-parents-dangling mating unit’s anchor-selection crash) are now
+filed as **issue \#154** (2026-08-08, S481) – see `CHANGELOG.md` for fix
+status.) - \[x\]
 **`docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`’s
 worked examples are stale from issue \#143’s row-value changes, and will
-become further stale once issue \#144 ships too** (found S473 – checking
-whether the \#143 plan’s own §8 call to file this housekeeping item had
-actually been done found it had NOT: S472’s close-out never filed it,
-only the original DONE item that cites this `.qmd` as the discovery
-source exists in `BACKLOG.md`, Effort S, low priority) – covers both
+become further stale once issue \#144 ships too** (found S473 – DONE
+S484, 2026-08-08, see the S484 progress note above) – covered both
 \#143’s and \#144’s compounding effect on this document in one item
-rather than two. `vignettes/a2interactive.Rmd`’s runnable example needs
-the same re-verification-not-rewrite check \#143’s own plan gave it
-(confirm it still executes; not a content rewrite). See
+rather than two, plus S482’s kinship2-sire/dam-ordering findings and a
+new multi-mate-crowding worked example (folded in from the same
+sequencing cluster). `vignettes/a2interactive.Rmd`’s runnable example
+re-verified per \#143’s own plan (confirmed it still executes; not a
+content rewrite). See
 `docs/planning/issue144-anchor-row-mismatch-fix-plan.md` §8. - \[ \]
-**`.positionMatingUnitForest()`’s free-pass filter is stricter than
-`.buildMatingUnitForest()`’s free-vs-duplicate decision** (found S471,
-incidental to designing issue \#143’s fix, Effort unknown, low priority)
-– `freePassIds` requires `!hasOwnDirectChild(id)`
-(`R/makePedigreeDiagramData.R:467-471`), but
-`.buildMatingUnitForest()`’s own free-vs-duplicate decision only looks
-at anchor status, not D5 direct-child ownership (`:262-297`). An
-individual who never anchors, whose first occurrence was marked free by
-`.buildMatingUnitForest()`, but who also owns a D5 direct child, would
-be excluded from `freePassIds` and – if not a root – never positioned at
-all by the recursive descent. Not analyzed further or fixed (out of the
-issue \#143 fix design’s own scope, per `PROJECT_LEARNINGS.md` Learning
-382’s “report, don’t fix mid-session” precedent). A future session
-should determine whether this is reachable in practice (no real-fixture
-instance confirmed either way) and, if so, design a fix. See
-`docs/planning/issue143-founder-positioning-fix-plan.md` §8. - \[ \]
+(none remaining – **the `.positionMatingUnitForest()` free-pass-filter
+reachability question is CLOSED, not fixed** – S481 (2026-08-08):
+investigated with 2 targeted fixtures (a never-anchoring founder with a
+D5 direct child; a never-anchoring NON-founder with a D5 direct child,
+the specific “if not a root” case this item worried about) and neither
+reproduced a missing/duplicate node. Structurally, a real individual
+excluded from `freePassIds` is either a founder (exclusion just keeps
+them in `rootIds`, since `rootIds <- setdiff(founderIds, freePassIds)`)
+or a non-founder (always visited via their own real parent’s normal
+recursion regardless of free-pass status) – no path found where they are
+lost. See `CHANGELOG.md` and issue \#154’s own closing note.) - \[ \]
 **The live app’s uploaded/QC’d copy of `obfuscated_rhesus_mhc_ped.csv`
 produces one fewer node than reading the same bundled CSV directly**
 (found S472, incidental to issue \#143’s live verification, Effort
@@ -1301,23 +1696,24 @@ export also live-confirmed unaffected (separate widget instance renders;
 export click succeeds; 0 related console errors). Verified at every
 checkpoint: full regression suite 0 failed/0 error (10 pre-existing
 baseline warnings, unchanged, final count 4515 passed);
-`devtools::check()` 1 WARNING/2 NOTEs, exact pre-existing baseline, 0
-new, at every checkpoint; `lintr` 0 lints on every changed file. See
-`CHANGELOG.md`, `PROJECT_LEARNINGS.md`. - \[ \] **`highlightNearest`
-degree=6 mitigation for the rectilinear style is bounded, not a full
-fix** (found S468, Effort M, low priority) – a very wide sibship’s D1
-sibship-bar chain can exceed 6 hops (chain length scales with the number
-of children in one mating unit), so a hover on an individual in a very
-large family could still light up nothing visible. A full fix would need
-either a custom JS `highlightNearest` reimplementation that specifically
-skips through invisible waypoint nodes regardless of hop count, or a
-data-layer change that keeps degree-1 semantics correct (e.g. tagging
-waypoint edges so a custom traversal treats them as zero-cost hops). Not
-designed this session – the degree=6 mitigation was explicitly scoped as
-a quick, bounded fix, owner-directed via `AskUserQuestion`. A future
-session should measure the real fixture’s own maximum sibship size to
-gauge how often 6 hops is actually insufficient in practice before
-deciding whether a full fix is warranted.
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 1
+WARNING/2 NOTEs, exact pre-existing baseline, 0 new, at every
+checkpoint; `lintr` 0 lints on every changed file. See `CHANGELOG.md`,
+`PROJECT_LEARNINGS.md`. - \[ \] **`highlightNearest` degree=6 mitigation
+for the rectilinear style is bounded, not a full fix** (found S468,
+Effort M, low priority) – a very wide sibship’s D1 sibship-bar chain can
+exceed 6 hops (chain length scales with the number of children in one
+mating unit), so a hover on an individual in a very large family could
+still light up nothing visible. A full fix would need either a custom JS
+`highlightNearest` reimplementation that specifically skips through
+invisible waypoint nodes regardless of hop count, or a data-layer change
+that keeps degree-1 semantics correct (e.g. tagging waypoint edges so a
+custom traversal treats them as zero-cost hops). Not designed this
+session – the degree=6 mitigation was explicitly scoped as a quick,
+bounded fix, owner-directed via `AskUserQuestion`. A future session
+should measure the real fixture’s own maximum sibship size to gauge how
+often 6 hops is actually insufficient in practice before deciding
+whether a full fix is warranted.
 
 ## Outreach
 
@@ -1463,11 +1859,12 @@ citation checklist (`population_genetics_terms.html` + roxygen
 `@references`) and tutorial checklist (`colony-manager-guide.qmd`
 “Marker Genetics” section + live screenshot) both done in-session.
 Verified: regression suite 0/0/0 (4067 passed, 170 skipped);
-`devtools::check()` 0 errors/0 warnings/0 notes; live
-`shinytest2`/`chromote` smoke test confirmed a real, correctly -computed
-comparison table with no console errors. See `CHANGELOG.md`,
-`PROJECT_LEARNINGS.md` Learnings 422-425. **Implementing Slice 2
-(heterozygosity diagnostic) is now DONE – S443 (2026-07-31):** new
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings/0 notes; live `shinytest2`/`chromote` smoke test
+confirmed a real, correctly -computed comparison table with no console
+errors. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learnings 422-425.
+**Implementing Slice 2 (heterozygosity diagnostic) is now DONE – S443
+(2026-07-31):** new
 [`markerObservedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerObservedHeterozygosity.md)/
 [`markerExpectedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerExpectedHeterozygosity.md)
 (Nei 1973 gene diversity, cross-verified and citation-corrected at
@@ -1476,11 +1873,12 @@ plus a new Heterozygosity tab in `modMarkerGenetics` (per-animal `ho`
 vs. population `he`). Full TDD cycle (PRE-RED-\>RED-\>GREEN-\>REFACTOR,
 all `AskUserQuestion`-gated); citation and tutorial checklists both done
 in-session. Verified: regression suite 0/0/0 (4096 passed, 170 skipped);
-`devtools::check()` down to the single pre-existing, unrelated `IACUC`
-spelling NOTE below (fixed the marker-genetics -family spelling gap S442
-left unresolved along the way – see `PROJECT_LEARNINGS.md` Learning
-426); live `shinytest2`/`chromote` smoke test confirmed real,
-correctly-computed values with no console errors. See `CHANGELOG.md`,
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+down to the single pre-existing, unrelated `IACUC` spelling NOTE below
+(fixed the marker-genetics -family spelling gap S442 left unresolved
+along the way – see `PROJECT_LEARNINGS.md` Learning 426); live
+`shinytest2`/`chromote` smoke test confirmed real, correctly-computed
+values with no console errors. See `CHANGELOG.md`,
 `PROJECT_LEARNINGS.md` Learnings 426-427. **Implementing Slice 3
 (Mendelian-exclusion parentage verification) is now DONE – S444
 (2026-08-01):** new
@@ -1498,19 +1896,19 @@ microsatellite convention, owner-approved via `AskUserQuestion`. Full
 TDD cycle (PRE-RED-\>RED-\>GREEN-\>REFACTOR, all
 `AskUserQuestion`-gated); citation and tutorial checklists both done
 in-session. Verified: regression suite 0/0/0 (3425 passed, 182 skipped);
-`devtools::check()` down to the single pre-existing, unrelated `IACUC`
-spelling NOTE (own new citation words fixed in `inst/WORDLIST`
-same-session, see `PROJECT_LEARNINGS.md` Learning 428); live
-`shinytest2`/`chromote` smoke test confirmed real, correctly-computed
-exclusion counts/flags (0/false for a true dam, 3/true for a
-falsely-recorded sire) with no console errors. See `CHANGELOG.md`,
-`PROJECT_LEARNINGS.md` Learnings 428-430. **Implementing Slice 4
-(cross-center identity linking) is now DONE – S446 (2026-08-01):** new
-`resolveCrossCenterIds(pedA, pedB, mapping)` (base R, no new dependency)
-collapsing a curator-confirmed cross-center identity link so a
-transferred animal becomes one node with its real parents intact,
-instead of the artificial founder issue \#130 names as its literal
-failure mode. Dragon P6 (Shiny-wiring scope) resolved via
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+down to the single pre-existing, unrelated `IACUC` spelling NOTE (own
+new citation words fixed in `inst/WORDLIST` same-session, see
+`PROJECT_LEARNINGS.md` Learning 428); live `shinytest2`/`chromote` smoke
+test confirmed real, correctly-computed exclusion counts/flags (0/false
+for a true dam, 3/true for a falsely-recorded sire) with no console
+errors. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learnings 428-430.
+**Implementing Slice 4 (cross-center identity linking) is now DONE –
+S446 (2026-08-01):** new `resolveCrossCenterIds(pedA, pedB, mapping)`
+(base R, no new dependency) collapsing a curator-confirmed cross-center
+identity link so a transferred animal becomes one node with its real
+parents intact, instead of the artificial founder issue \#130 names as
+its literal failure mode. Dragon P6 (Shiny-wiring scope) resolved via
 `AskUserQuestion`: script-callable function only this session, no
 `modInput.R` UI change, matching the plan’s own cited
 [`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md)
@@ -1524,8 +1922,9 @@ before any assertion was written, proving both the bug
 – see `PROJECT_LEARNINGS.md` Learning 432. Citation and tutorial/article
 checklists are N/A this slice (no new displayed statistic, no new UI
 shipped). Verified: targeted test file 18/18 expectations; regression
-suite 0/0/0 (3443 passed, 182 skipped); `devtools::check()` 0 errors/0
-warnings/0 notes; `_pkgdown.yml` reference-coverage entry added
+suite 0/0/0 (3443 passed, 182 skipped);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings/0 notes; `_pkgdown.yml` reference-coverage entry added
 same-session (the gap class Slice 1 hit and had to fix retroactively).
 See `CHANGELOG.md`. **Implementing Slice 5 (cross-center differentiation
 statistic) is now DONE – S447 (2026-08-01), closing out issue \#130’s
@@ -1544,9 +1943,56 @@ population pairwise comparisons – see `PROJECT_LEARNINGS.md` Learning
 Full TDD cycle (PRE-RED-\>RED-\>GREEN, REFACTOR owner-confirmed skip,
 all `AskUserQuestion`-gated); citation and tutorial/article checklists
 both done in-session. Verified: full regression suite 0/0 (3476 passed,
-182 skipped); `devtools::check()` 0 errors/0 warnings/0 notes; live
-`shinytest2`/`chromote` smoke test confirmed real, correctly-computed
-Fst values (byte-exact match to the hand-verified fixture) with no
-console errors. **Issue \#130 is now fully implemented across all 5
-slices; no open item remains in this sequencing chain.** See
-`CHANGELOG.md`.
+182 skipped);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings/0 notes; live `shinytest2`/`chromote` smoke test
+confirmed real, correctly-computed Fst values (byte-exact match to the
+hand-verified fixture) with no console errors. **Issue \#130 is now
+fully implemented across all 5 slices; no open item remains in this
+sequencing chain.** See `CHANGELOG.md`.
+
+**Second-generation re-audit and issue-sequencing (S479-S483, 2026-08-05
+to 2026-08-08):** a ghost session (reconciled S479, see
+`PROJECT_LEARNINGS.md` Learning 479) produced 2 further capability
+audits –
+`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-08-05.md` and a
+revised `..._2026-08-06.md` – and filed 8 new GitHub issues against the
+08-05 audit’s findings: **\#146** (configurable/exhaustive
+breeding-group candidate retention), **\#147** (likelihood-based
+candidate-parent assignment after marker parentage exclusion), **\#148**
+(MHC haplotype-specific frequency/rare-haplotype reporting), **\#149**
+(reviewed cross-center identity-mapping workflow with provenance
+export), **\#150** (de-identified pedigree export workflow for approved
+data sharing), **\#151** (individual mate-pair analysis alongside
+breeding-group optimization), **\#152** (whole-genome/whole-exome
+sequence input + sequence-based metrics), **\#153** (linkage-aware/
+haplotype-block metrics for marker data). These sat unsequenced across
+S479-S482 (each handoff noting “remain open, GitHub-only, unchanged”).
+**Sequencing proposed S483 (2026-08-08), owner- directed:**
+`docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` – an
+8-agent codebase-grounded assess + synthesize + adversarial-verify
+workflow recommends: **Tier 1** (design launch) \#147, the batch’s sole
+High-priority item (XL effort, no existing likelihood/LOD parentage
+method or pedigree-mutation pattern to build on); **Tier 2**
+(ready-to-build Medium) \#149 \> \#146 \> \#151, ordered by
+effort/readiness and shared-file coordination (#146/#151 both touch
+`modBreedingGroups.R`); **Tier 3** (policy-gated quick win) \#150 –
+highest codebase readiness in the batch (the obfuscation primitives are
+already built/tested) but deliberately excluded from the audit’s own
+priority table (“Policy/external”), needs an explicit owner sign-off on
+what “curator-controlled” means before it is scheduled on technical
+merits alone; **Deferred** (design-only) \#152 \> \#153 \> \#148,
+matching the 08-06 audit’s own “Deferred/scientific… advance only
+through separately scoped research/design work” guidance – \#148 flagged
+as filed broader than the audit recommends (a full feature request, not
+the design-only ask \#152/#153 were filed as) and needing its own
+scope-narrowing conversation first. **Also found:** 2 of the audit’s own
+High-priority rows – “Longitudinal genetic-health monitoring” and
+“Ancestry guardrails in breeding decisions” – have **no corresponding
+filed issue** anywhere in \#146-153, despite ranking above every
+Medium/Deferred item in this batch; a future triage session should file
+both (as full-feature requests gated on a Pre-RED design session,
+matching \#147’s own shape, per the audit’s Finding \#1/Recommendation
+2). No issues implemented or closed this session – sequencing/proposal
+only, per the established “audit recommends, a later session
+files/implements” precedent.

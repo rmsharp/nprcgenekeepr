@@ -157,8 +157,8 @@ The build-equivalent for this R package (relocated here from
 
 | Purpose | Command | Pass criteria |
 |----|----|----|
-| Full package check | `devtools::check()` or `R CMD check` | No errors, no warnings, no notes (ideally) |
-| Test suite | `devtools::test()` or [`testthat::test_local()`](https://testthat.r-lib.org/reference/test_package.html) | All tests pass |
+| Full package check | [`devtools::check()`](https://devtools.r-lib.org/reference/check.html) or `R CMD check` | No errors, no warnings, no notes (ideally) |
+| Test suite | [`devtools::test()`](https://devtools.r-lib.org/reference/test.html) or [`testthat::test_local()`](https://testthat.r-lib.org/reference/test_package.html) | All tests pass |
 
 **Fast single-file test:**
 `Rscript -e 'Sys.setenv(NOT_CRAN = "true"); suppressMessages(pkgload::load_all(".", quiet=TRUE)); testthat::test_file("tests/testthat/test_X.R", reporter="summary")'`
@@ -173,6 +173,22 @@ then check `sum(failed)` **and** `sum(error)`, isolating true offenders
 with `!grepl("test-app-|test-e2e-", file)`. (`load_all()` must run first
 — without it this command produces mass-spurious failures unrelated to
 anything actually broken; see Learning 377.)
+
+**[`renv::snapshot()`](https://rstudio.github.io/renv/reference/snapshot.html)
+always needs `dev = TRUE` in this project.** `renv/settings.json` sets
+`snapshot.type: "explicit"`, under which a **plain**
+[`renv::snapshot()`](https://rstudio.github.io/renv/reference/snapshot.html)
+only scans `DESCRIPTION`’s `Imports`/`Depends`/`LinkingTo` — every
+`Suggests`-only package (`testthat`, `dplyr`, `mockery`, `roxygen2`,
+`shinytest2`, `shinyBS`, `devtools`, `quarto`, plus their transitive
+deps like `pkgload`/`chromote`) is silently dropped from `renv.lock` on
+an ordinary snapshot, only to resurface as a missing-package crash the
+next time someone hits
+[`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html)
+(a fresh clone, an R-version bump). Always run
+`renv::snapshot(dev = TRUE)` (and `renv::status(dev = TRUE)` to check
+consistency) instead of the bare form. See `PROJECT_LEARNINGS.md`
+Learning 473/476 for the root-cause diagnosis.
 
 ------------------------------------------------------------------------
 
@@ -250,6 +266,29 @@ STOP-and-wait-for-the-user: the question itself **is** the wait.
   which item to pick up this session, not restate the tags (those live
   in each option’s description).
 
+**Untracked-file ghost-session check (found S479, 2026-08-08):** Phase 0
+step 6’s ledger reconcile is keyed entirely on `git log` gaps, which is
+blind to a session that produces real work but makes zero commits — that
+work is visible only as untracked files in `git status`, with nothing
+distinguishing harmless local scratch from a completed deliverable
+nobody recorded. Found when 2 well-formed
+`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_*.md` docs (dated
+2026-08-05, 2026-08-06) and 8 correspondent GitHub issues (#146-153) sat
+untracked/unmirrored for 1-4 days, invisible to the standard commit-gap
+check (only S478’s own self-referential sha-backfill commit existed
+since the prior documented session). At Phase 0 step 7, alongside the
+standard `git status`, treat any untracked file whose modification time
+predates today by more than one session cycle, and whose content reads
+as a completed deliverable rather than scratch/config, as a secondary
+ghost-session signal — cross-check newly-filed GitHub issues against
+whether their content traces to such a file. Before bulk-acting on a
+batch of untracked files found this way, open and date-check each one
+individually: grouping by directory/extension alone can wrongly
+implicate unrelated old clutter (this session nearly did) or wrongly
+clear a copyright risk that only surfaces by actually reading the file
+(also this session — see PROJECT_LEARNINGS.md Learning 479 for both
+near-misses). See `CHANGELOG.md` 2026-08-08.
+
 ### Additional task-to-workstream mappings
 
 (none — but see the Development Process Contract override below.)
@@ -308,19 +347,22 @@ shipped capability; the checklist applies prospectively, same-session,
 from here on.
 
 **`a2interactive.Rmd` script-callable-function checklist
-(owner-directed, 2026-08-02, Session 450):** any new exported,
-script-callable function should eventually get a demonstration section
-in `vignettes/a2interactive.Rmd` (the scriptable/interactive-R tutorial)
-— but unlike the citation, tutorial/article, and `NEWS.Rmd` checklists
-above, this coverage is **deferred, not same-session**: it happens in a
-dedicated documentation pass after the feature has been fully reviewed
-and has stabilized, not in the shipping session itself, to avoid
-documenting something that may still change. A future session picking up
-this work should identify any exported, script-callable functions (not
-Shiny-UI-only features, which the tutorial/article checklist already
-covers) added since the last `a2interactive.Rmd` documentation pass and
-add matching demonstration sections. Ratified after issue \#130’s entire
-marker-genetics function family
+(owner-directed, 2026-08-02, Session 450; scope broadened S478,
+2026-08-04):** any new exported, script-callable function **or new
+parameter/argument added to an already-documented exported function**
+should eventually get a demonstration section (or a demonstration
+update) in `vignettes/a2interactive.Rmd` (the scriptable/interactive-R
+tutorial) — but unlike the citation, tutorial/article, and `NEWS.Rmd`
+checklists above, this coverage is **deferred, not same-session**: it
+happens in a dedicated documentation pass after the feature has been
+fully reviewed and has stabilized, not in the shipping session itself,
+to avoid documenting something that may still change. A future session
+picking up this work should identify any exported, script-callable
+functions (not Shiny-UI-only features, which the tutorial/article
+checklist already covers) — or existing documented functions that gained
+new parameters — added/changed since the last `a2interactive.Rmd`
+documentation pass and add matching demonstration sections. Ratified
+after issue \#130’s entire marker-genetics function family
 ([`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md),
 [`markerObservedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerObservedHeterozygosity.md)/[`markerExpectedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerExpectedHeterozygosity.md),
 [`markerParentageExclusion()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md),
@@ -331,7 +373,50 @@ discovered S447 (`BACKLOG.md` Housekeeping, `PROJECT_LEARNINGS.md`
 Learning 435) and backfilled this session as a one-time exception,
 matching the `NEWS.Rmd` checklist’s own backfill precedent; the
 checklist itself applies prospectively, as a deferred obligation, from
-here on.
+here on. Scope broadened S478 after finding the checklist’s original
+“new function” wording missed exactly this shape of gap: issue \#142
+added an `edgeStyle` parameter to the *already-documented*
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+(S465/S468), and the existing `a2interactive.Rmd` “Pedigree Diagram”
+section silently went stale (including its own render code drifting out
+of sync with the app’s actual reserved-node-id-prefix set) until the
+user directly asked for it — see `PROJECT_LEARNINGS.md` Learning 478.
+
+**GitHub issue close-out checklist (found S475, 2026-08-04):** any
+session whose close-out marks a `BACKLOG.md` item fully DONE, where that
+item names a GitHub issue number, must close the issue in the *same*
+session — a `gh issue close --reason completed --comment "..."` citing
+the `CHANGELOG.md` entry and verification evidence, matching the
+established \#131/#134/#135/#139 precedent — rather than deferring to “a
+future session should consider closing this.” Ratified after finding 3
+consecutive instances of this exact gap: issue \#142 (implemented S468)
+stayed open 7 sessions before S475 closed it; issue \#143 (implemented
+S472) stayed open 3 sessions, flagged-but-not-acted-on by 2 intervening
+orientation reports; issue \#144 (implemented S474) stayed open 1
+session. Each was caught only by a *later* session’s Phase 0 orientation
+cross-checking `gh issue list` against `BACKLOG.md`’s own DONE markers,
+never by the shipping session’s own close-out. See
+`PROJECT_LEARNINGS.md` Learning 475.
+
+**Lint close-out checklist (found S477, 2026-08-04):** any session that
+adds or modifies a tracked `.R` file must run `lintr::lint_package()` —
+package loaded first via
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html),
+per `PROJECT_LEARNINGS.md` Learning 224’s ground-truth methodology (an
+unloaded lint run produces spurious `object_usage_linter` noise CI never
+sees) — on touched files before closing out, and fix or
+`# nolint`-suppress (with a documented rationale, matching the
+established false-positive precedent, `PROJECT_LEARNINGS.md` Learnings
+224/461) anything it flags there, rather than relying on
+`.github/workflows/lint.yaml`’s post-push CI run to catch it. Ratified
+after finding that CI job — which already exists and runs
+`lintr::lint_package()` on every push with `LINTR_ERROR_ON_LINT: true` —
+went red for 2 real violations S472 introduced in
+`R/makePedigreeDiagramData.R`, with S473-S476 all committing on top of
+the red run without noticing or fixing it: `master` carries no branch
+protection requiring the check to pass, so a failing run blocks nothing
+and is easy to never look at. Fixed S477; see `PROJECT_LEARNINGS.md`
+Learning 477.
 
 **CHANGELOG.md ledger-format resolution (2026-07-08, Session 325 —
 “freeze legacy, go forward”):** canonical v3.1+ defines `CHANGELOG.md`
@@ -361,7 +446,7 @@ workstream **and** the RED→GREEN→REFACTOR gates.
 
 ### Project-specific Learnings
 
-Project institutional memory (Sessions 1–473+; 472 learnings, ~1.9 MB)
+Project institutional memory (Sessions 1–488+; 488 learnings, ~2.0 MB)
 lives in
 [`PROJECT_LEARNINGS.md`](https://github.com/rmsharp/nprcgenekeepr/PROJECT_LEARNINGS.md)
 — extracted from this file to keep `CLAUDE.md` within its size budget

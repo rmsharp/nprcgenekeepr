@@ -343,7 +343,11 @@ the shipped `examplePedigree`’s own downstream numbers below.
 **Diagram** tab renders the same population as an interactive pedigree
 diagram: one node per animal, shaped by sex, with directed sire/dam
 edges laid out top-down by generation. A legend to the right of the
-diagram shows what each shape means.
+diagram shows what each shape means. If the pedigree data includes an
+optional `affected` column, individuals marked affected are additionally
+shaded a distinct color, with a matching “Affected” entry in the same
+legend – pedigrees without an `affected` column render unshaded, as
+before.
 
 ![Pedigree Browser Diagram tab showing an interactive pedigree diagram
 with sex-shaped nodes and a shape-to-sex legend panel (dot=Female,
@@ -355,16 +359,16 @@ The Pedigree Browser Diagram tab with its shape-to-sex legend.
 
 Diagrams render up to **750 animals** – for larger populations, narrow
 the focal-animal selection first (see **Focal animals** above). Hovering
-any node shows its ID, sex, generation, sire, and dam without leaving
-the diagram. Clicking a node re-centers the population on that animal,
-the same as typing its ID into the focal-animals text area above – a
-quick way to explore a different branch of the pedigree. A **Select by
-id** dropdown above the diagram lets you jump straight to one animal by
-ID, dimming every other node except it and its direct connections –
-useful for finding one animal in a large, busy diagram. An **Export
-Diagram (PNG)** button in the diagram’s own corner saves the current
-view as an image file, useful for husbandry reports, IACUC documents, or
-presentations.
+any node shows its ID, sex, generation, sire, dam, and (when present)
+affected status without leaving the diagram. Clicking a node re-centers
+the population on that animal, the same as typing its ID into the
+focal-animals text area above – a quick way to explore a different
+branch of the pedigree. A **Select by id** dropdown above the diagram
+lets you jump straight to one animal by ID, dimming every other node
+except it and its direct connections – useful for finding one animal in
+a large, busy diagram. An **Export Diagram (PNG)** button in the
+diagram’s own corner saves the current view as an image file, useful for
+husbandry reports, IACUC documents, or presentations.
 
 ### Age-Sex Pyramid
 

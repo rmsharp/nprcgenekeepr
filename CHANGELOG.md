@@ -47,6 +47,744 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-08-08 · \[issue \#136\] Designed and ratified the name-node-label plan for the pedigree diagram (Session 488)
+
+- **Deliverable:**
+  `docs/planning/issue136-name-labels-pedigree-diagram-plan.md` (commit
+  `3121bb71`), an architecture design/scoping document for GitHub issue
+  \#136 (“Show names (not just ID) as Pedigree Diagram node labels”).
+  Tier 2 step 3 in the owner’s standing \#133 \> \#136 \> \#137 \> \#138
+  order (set S436). Planning session only — no `R/`/`tests/`/`man/`
+  content changed (FM \#18).
+- **Workstream:** `ARCHITECTURE_WORKSTREAM.md`, owner-picked via
+  `AskUserQuestion` over the literal `DESIGN_WORKSTREAM.md` task mapping
+  (whose content — star component, panel zones, thematic grouping — does
+  not describe a data-model plus rendering-contract change).
+- **Ratified via `AskUserQuestion` in two rounds:** (1) framing, posed
+  *before* the decisions section was drafted since the source audit’s
+  own disposition was “no action” — owner answered that names exist at
+  **some centers, inconsistently** (making a per-node fallback a hard
+  requirement, not a nicety) and chose an **optional `name` column +
+  off-by-default display toggle** over tooltip-only, decline, and a
+  configurable label-source column; (2) the four judgment-call decisions
+  — **D3** augment (`id` + name, not name-only), **D6** pin
+  `useLabels = FALSE` on the search dropdown, **D10** truncate the
+  displayed name with the full name in the tooltip, **D8**
+  [`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+  drops `name` to `NA`. All four ratified as recommended.
+- **Corrects three premises in the issue itself**, each verified
+  first-hand:
+  1.  `label` is already an independent channel and `label != id`
+      **already ships** (duplicate nodes
+      `R/makePedigreeDiagramData.R:906`, union nodes `:929`) — \#136 is
+      “choose the string”, not “build the mechanism”; (b) the schema’s
+      `first_name`/`second_name` are **allele** names
+      (`R/headerDisplayNames.R:52-53`), the Learning 485 trap
+      re-encountered, though the “no *animal*-name column” conclusion
+      holds; (c) the binding constraint is **geometry, not the data
+      model** — measured on the real 375-individual fixture, every id is
+      exactly 6 characters and 25.6% of adjacent label-bearing node
+      pairs sit 48 layout units apart with ~50-unit nodes, and nothing
+      in the fixed-coordinate layout measures text (unlike kinship2,
+      which sizes its layout via `strwidth`/`strheight`).
+- **Found a disclosure defect no prior session had reason to look for:**
+  [`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+  (`R/obfuscatePed.R:31-43`) scrubs only `id`/`sire`/`dam` and
+  Date-classed columns, so a `name` column would survive
+  de-identification intact — scrubbed IDs beside real names. Made a
+  mandatory same-slice requirement (D8).
+- **Method:** a 5-lens read-only research `Workflow` with per-finding
+  adversarial verification, run *alongside* independent first-hand
+  verification of every load-bearing fact. Three agent claims were
+  corrected before publication (an over-stated MIT-license constraint,
+  an over-stated kinship2 “only a length check”, and an incomplete
+  column-vocabulary enumeration) and one citation drift fixed
+  (`finalNodes` is `:1237`, not `:1238`), per Learning 485’s rule on
+  consuming multi-agent research.
+- **Scoped as 2 vertical slices** with full DONE/verification contracts
+  (Slice 1: data model + de-identification, no visible change; Slice 2:
+  label rendering + toggle + documentation). Issue \#136 intentionally
+  left **open** — design ratified, not yet implemented; no
+  `gh issue close` this session.
+- See `PROJECT_LEARNINGS.md` Learning 488.
+
+### 2026-08-08 · \[issue \#133\] Implemented Slice 2 (legend + documentation) of the affected-status pedigree-diagram design; issue \#133 closed (Session 487)
+
+- **Deliverable:** the Diagram tab’s shape-to-sex `visLegend()` gained a
+  matching “Affected” row (D6), reusing Slice 1’s `#CC79A7` color — one
+  new row in the existing `addNodes` data frame, not a second
+  `visLegend()` call. `NEWS.Rmd`‘s existing \#133 bullet updated (not
+  duplicated) to describe the legend rather than promise it “in a later
+  release”; `vignettes/manual_components/ _pedigree_browser.Rmd` and
+  `vignettes/articles/colony-manager-guide.qmd` both updated per the
+  tutorial/article checklist. Full strict-TDD RED→GREEN cycle,
+  `AskUserQuestion`-gated at every transition. **Both slices of issue
+  \#133 are now shipped; issue \#133 closed** with a summary comment
+  citing both slices’ commits.
+- **Live verification (screenshots, not just the widget-JSON test)
+  caught two real defects the JSON assertions alone could not see:** the
+  Pre-RED shape pick (`"box"`) rendered as a label-sized filled pill,
+  visually inconsistent with the other 5 rows’ fixed-size-icon style —
+  switched to `"hexagon"`; the 6th row’s own label clipped against the
+  legend’s fixed 400px canvas height at the existing `stepY=65L` —
+  retuned to `54L`. Both corrected in-place during GREEN, re-verified
+  live until clean. See `PROJECT_LEARNINGS.md` Learning 487.
+- **Also live-confirmed Dragon \#3** (deferred by S486): `visExport()`
+  PNG capture of a `color.background`-only affected node, using Slice
+  1’s own fixture — 900+ matching `#CC79A7` pixels in the real exported
+  PNG.
+- **Incidental fix:** re-rendering `NEWS.Rmd` → `NEWS.md` found S486’s
+  own Slice 1 bullet had been added to `NEWS.Rmd` but never actually
+  re-rendered/ committed to `NEWS.md` (last touched S468) — fixed as a
+  byproduct of this session’s own render, not a separate action.
+- **Verified:** full clean regression read 0 failed/0 error (4640
+  passed, same 10 pre-existing `test_modMarkerGenetics.R` warnings — now
+  root-caused, see the `[ad hoc]` entry below); `lintr::lint_package()`
+  0 issues on touched files;
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  exact pre-existing baseline (2 ERRORs/1 WARNING/2 NOTEs, all
+  individually attributed, 0 new); live `shinytest2`/ `chromote` smoke
+  test on the real running app confirmed all 6 legend rows, the main
+  diagram’s affected-node coloring unaffected by the legend change, and
+  the PNG export, 0 diagram/legend console errors.
+
+### 2026-08-08 · \[ad hoc\] Root-caused the “10 pre-existing test_modMarkerGenetics.R warnings” every session since S448 had carried forward unexamined (Session 487)
+
+- **Deliverable:** the owner asked directly (“what are the warnings? we
+  had zero at last release”) after seeing `warning: 10` in this
+  session’s clean regression read. Traced to commit `a319e0c5` (S447,
+  2026-08-01, issue \#130 Slice 5): both `test_modMarkerGenetics.R`
+  cross-center tests upload a hand-derived 2-locus toy fixture where
+  `'CA1'`/`'CA2'` happen to share no heterozygous locus;
+  [`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)
+  correctly warns and returns `NA` for that pair (working as designed,
+  not a production bug) — 5× per test × 2 tests = 10. Confirmed CRAN
+  v2.0.0 (released 2026-07-26) genuinely predates S447 and shipped with
+  a clean, 0-warning suite, matching the owner’s recollection. Filed as
+  a new `BACKLOG.md` Housekeeping item with 2 concrete fix options
+  (owner directed file-and-continue over pause-and-fix, since it is
+  unrelated to the Slice 2 TDD work in progress).
+
+### 2026-08-08 · \[issue \#133\] Implemented Slice 1 (data model + core rendering) of the affected-status pedigree-diagram design (Session 486)
+
+- **Deliverable:** `affected` is now a recognized, optional logical
+  column (`.nprcColumnSchema$possible` +
+  [`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md)
+  roxygen); both
+  [`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+  and
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+  render it (dominant `color.background` \#CC79A7 Okabe-Ito
+  reddish-purple for `affected == TRUE`, an “Affected: Yes/No/Unknown”
+  tooltip line, [`as.logical()`](https://rdrr.io/r/base/logical.html)
+  defensive coercion) — backward-compatible: absent column produces
+  byte-identical output to before, confirmed by dedicated regression
+  tests. New sibling fixture
+  `inst/extdata/examples/obfuscated_rhesus_mhc_ped_affected.csv`
+  (`data-raw/obfuscated_rhesus_mhc_ped_affected.R`, seeded RNG,
+  ~20%/70%/10% TRUE/FALSE/NA, disclosed synthetic). Full strict-TDD
+  RED→GREEN cycle, `AskUserQuestion`-gated at every transition (2
+  Pre-RED decisions: D8 fill color, the `include` question resolved “not
+  yet”).
+- **Found and fixed a gap the design doc’s own file-touch list did not
+  anticipate:** `.addRectilinearWaypoints()` was unconditionally
+  resetting every node’s `color.background`/`color.border` to `NA`,
+  which would have silently erased the new coloring the moment a user
+  selected the pre-existing `edgeStyle = "rectilinear"` option (issue
+  \#142) — fixed with a preserve-if-already-set guard, covered by a new
+  regression test in `test_addRectilinearWaypoints.R`. See
+  `PROJECT_LEARNINGS.md` Learning 486.
+- **Verified:** full clean regression read 0 failed/0 error (10
+  pre-existing baseline warnings unchanged, 4632 passed/171 skipped);
+  `lintr::lint_package()` 0 issues on touched files (2 real
+  `nested_ifelse_linter` warnings fixed via shared
+  `.affectedColor()`/`.affectedLabel()` helpers, not suppressed);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  2 ERRORs/1 WARNING/2 NOTEs, all individually attributed via
+  `git log`/`git status` to pre-existing causes unrelated to this
+  session’s diff (a non-portable filename from commit `887ee902`/S418,
+  an `a2interactive.Rmd` vignette-engine NOTE, a `spelling.Rout`
+  mismatch on issue \#142-era terms — filed as a new `BACKLOG.md`
+  Housekeeping item, not fixed mid-session). Live
+  `shinytest2`/`chromote` smoke test on the real running app (Phase 3E)
+  confirmed via the live vis.js Network instance’s own DataSets — a
+  first pass using raw DOM `outerHTML` produced a false negative
+  (canvas-rendered content isn’t DOM-inspectable), corrected to match
+  `test-e2e-pedigree-module.R`’s own established querying technique; see
+  `PROJECT_LEARNINGS.md` Learning 486.
+- `NEWS.Rmd` entry added this session. `BACKLOG.md`’s pedigree-diagram
+  sequencing cluster updated (S486 progress note); issue \#133 stays
+  open (Slice 2 — legend + documentation — still pending). See
+  `SESSION_NOTES.md`.
+
+### 2026-08-08 · \[issue \#133\] Ratified an architecture/design document for affected-status pedigree-diagram encoding (Session 485)
+
+- **Deliverable:**
+  `docs/planning/issue133-affected-status-pedigree-diagram-plan.md`
+  (`ARCHITECTURE_WORKSTREAM.md`) — 8 ratified decisions (D1-D8, each
+  with a declined alternative) and 2 pre-declared vertical slices (full
+  RED/GREEN/DONE/Verify/ session-boundary contracts) for Tier 2 of the
+  pedigree-diagram sequencing cluster, first in the owner’s order \#133
+  \> \#136 \> \#137 \> \#138. Grounded in 5 parallel research agents
+  (kinship2’s `affected` semantics read directly from the installed
+  1.9.6.2 package’s compiled source; visNetwork/vis.js rendering-option
+  survey; the R pipeline’s actual threading pattern; a simulated-fixture
+  design; this project’s own house style) plus this session’s own
+  independent verification: confirmed via `grep` that
+  `R/modPedigree.R:446` calls
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+  (not
+  [`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md))
+  for the live Diagram tab, and ruled out reusing the existing
+  `condition`/`status` schema columns (both mean something else, per a
+  direct roxygen read the 5 agents’ literal `"affected"` grep did not
+  surface — see `PROJECT_LEARNINGS.md` Learning 485). Ratified via
+  `AskUserQuestion`, no changes requested. No `R/`/`tests/` changes —
+  design/scoping only; a future session implements Slice 1 against this
+  contract. See `BACKLOG.md`’s pedigree-diagram sequencing cluster (S485
+  progress note) and `SESSION_NOTES.md`.
+
+### 2026-08-08 · \[ad hoc\] Filled in this session’s own HANDOFFS.md receipt commit sha (Session 484)
+
+- **Deliverable:** Filled in this session’s own `HANDOFFS.md` receipt
+  `commit: pending` placeholder with the real close-out commit sha
+  (`dcc53b34`) – the same self-correction
+  S331-S344/S466-S470/S472/S482-S483 each needed, closed within the same
+  session.
+
+### 2026-08-08 · \[BL-qmdComparisonRefresh\] Refreshed pedigree-diagram-kinship2-reference-comparison.qmd (Session 484)
+
+- **Deliverable:** Tier 1 step (3) of
+  `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`
+  — refreshed
+  `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`,
+  completing Tier 1 of the pedigree-diagram sequencing cluster (crash
+  bugs S481, issue \#145 verification spike S482, this refresh). Found
+  the doc’s actual scope was broader than “add S482’s findings”: a
+  `BACKLOG.md` item (found S473, never filed) flagged Examples 1-2’s
+  “founder-positioning defect” findings as stale from issues \#143/#144
+  (both since fixed, S472/S474) — this session’s close-out never filed
+  it either, only this session finally closed it. Re-ran both example
+  families’ own `R` chunks against current `master` before editing prose
+  (not from memory): confirmed `203`/`117` now correctly position
+  adjacent to their own mate’s row, matching kinship2’s convention.
+  Rewrote Examples 1-2’s founder-positioning prose from “confirmed
+  defect, not fixed here” to reflect the actual fix, citing \#143/#144,
+  with current re-verified output. Built and verified a new Example 4 (a
+  dam mated to 2 sires, “role-reversed crowding”) reproducing S482’s own
+  decisive kinship2 counter-example directly and re-executably in the
+  document — real `align.pedigree()` output (`S1, D1, S2`, dam centered,
+  split by pedigree discovery order not sex) alongside `nprcgenekeepr`’s
+  own duplicate-node handling of the identical data, rather than only
+  citing S482’s research doc. Updated the Summary table and closing
+  “kinds of gap” list to add the sire/dam-ordering question (issue
+  \#145) as its own item and close the founder-positioning item as
+  fixed; updated the Purpose/subtitle for the doc’s broadened scope
+  (#142 shipped, \#143/#144 shipped, \#145 open). Re-verified
+  `vignettes/a2interactive.Rmd`’s runnable pedigree-diagram example
+  still executes cleanly against current `master` (33 animals, 48/53
+  direct-style nodes/edges, 86/91 rectilinear) — re-verification only,
+  no content rewrite, per the folded-in housekeeping ask. Verified the
+  full refreshed document via `quarto render` end to end (37 chunks, 0 R
+  errors); deleted the rendered HTML after verification, matching this
+  project’s established practice of not committing `docs/planning/*.qmd`
+  render byproducts. Docs-only session: no `R/`/`tests/` files changed,
+  TDD RED/GREEN/REFACTOR gates N/A. `PROJECT_LEARNINGS.md` Learning 484
+  added (a reference doc’s embedded empirical claims go stale exactly
+  like a code comment’s claims — re-run its own code before editing
+  prose, and reproduce a research finding’s counter-example
+  re-executably rather than citing it); `CLAUDE.md` learning-count
+  pointer bumped (483→484). `BACKLOG.md`’s `.qmd`-staleness item marked
+  `[x]` DONE with an S484 progress note. See `SESSION_NOTES.md`,
+  `HANDOFFS.md`.
+
+### 2026-08-08 · \[ad hoc\] Filled in this session’s own HANDOFFS.md receipt commit sha (Session 483)
+
+- **Deliverable:** Filled in this session’s own `HANDOFFS.md` receipt
+  `commit: pending` placeholder with the real close-out commit sha
+  (`638db84e`) – the same self-correction S331-S344/S466-S470/S472/S482
+  each needed, closed within the same session.
+
+### 2026-08-08 · \[ad hoc\] Proposed an implementation order for GitHub issues \#146-153 (Session 483)
+
+- **Deliverable:** Per explicit owner direction (“propose an order to
+  address the Issues… present them as session topics to pick up”),
+  produced an evidence-based, codebase-grounded implementation order for
+  GitHub issues \#146-153 (the “Genetic Metrics PDF capability gap”
+  cluster) — the only open-issue cluster with no established sequencing
+  across 4 consecutive session handoffs (S479-S482). Found the 8 filed
+  issues cite the older
+  `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-08-05.md` as
+  their source, while a newer, revised `..._2026-08-06.md` (one day
+  later) replaced its flat gap list with a formal High/Medium/ Deferred
+  priority table that was never used to re-triage the issues; used the
+  08-06 table as authoritative. Ran a 3-phase background `Workflow` — 8
+  parallel per-issue agents (each required to `Grep`/`Read` the actual
+  current `R/` source, not estimate from issue text alone) assessing
+  effort, codebase readiness, and cross-issue dependencies; one
+  synthesis agent producing a tiered recommendation; one
+  adversarial-verify agent that found the tier ordering itself sound (no
+  missing/ duplicated issue, no violated dependency) but required one
+  correction and two softenings, all applied in the final write-up.
+  Wrote
+  `docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md`:
+  **Tier 1** (design launch) \#147 (sole High-priority item, XL effort);
+  **Tier 2** (ready-to-build Medium) \#149 \> \#146 \> \#151; **Tier 3**
+  (policy-gated quick win) \#150 — highest codebase readiness in the
+  batch but deliberately excluded from the audit’s own priority table,
+  needs an explicit owner sign-off; **Deferred** (design-only) \#152 \>
+  \#153 \> \#148, with \#148 flagged as filed broader than the audit
+  recommends. Key finding: 2 audit High-priority gaps (“Longitudinal
+  genetic-health monitoring,” “Ancestry guardrails in breeding
+  decisions”) have **no corresponding filed GitHub issue** anywhere in
+  \#146-153 — flagged for a future triage session to file, not
+  implemented speculatively. Added a `BACKLOG.md` progress note under
+  the existing “Genetic-metrics PDF audit follow-ups” section. Docs-only
+  session: no `R/`/`tests/` files changed, TDD RED/GREEN/REFACTOR gates
+  N/A, Phase 3E runtime smoke test n/a. `PROJECT_LEARNINGS.md` Learning
+  483 added (audit-priority-vs-filed-issue divergence runs both
+  directions; multi-agent convergence on shared-context facts is not
+  independent corroboration); `CLAUDE.md` learning-count pointer bumped
+  (482→483). Re-rendered the priorities list with this new sequencing
+  and presented it via `AskUserQuestion`, fulfilling the owner’s
+  “present as session topics” request. See `SESSION_NOTES.md`,
+  `HANDOFFS.md`.
+
+### 2026-08-08 · \[ad hoc\] Phase 0 ledger reconcile: backfill S482’s own HANDOFFS.md receipt commit sha self-correction (post-S482)
+
+- **Deliverable:** Phase 0 ledger reconcile (this session, S483) found
+  one commit past the `CHANGELOG.md` frontier with no ledger entry:
+  `3f8acc5c` (“docs: S482 – backfill own HANDOFFS.md receipt commit
+  sha”), landed after S482’s own close-out commit (`b18228ff`) that
+  recorded the entry below.
+- **Change:** `3f8acc5c` replaced the S482 `HANDOFFS.md` receipt’s
+  `commit: pending` placeholder with the real commit sha
+  (`b18228ff (claim stub: 3914d1db)`) – a self-correction of the
+  just-written receipt, not new production work. Same class of action as
+  the many prior sessions’ equivalent self-fixes recorded further down
+  this ledger (e.g. S466-S472’s `commit: pending` backfills).
+
+### 2026-08-08 · \[issue \#145\] Verification spike: kinship2 implements no male-left sire/dam rule (Session 482)
+
+- **Deliverable:** Tier 1 step (2) of
+  `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`’s
+  Finding \#1/#2 recommendation — before any design work on [issue
+  \#145](https://github.com/rmsharp/nprcgenekeepr/issues/145),
+  empirically determined kinship2’s actual default (no-hints) sire/dam
+  left-right placement behavior. Read
+  `align.pedigree()`/`alignped1()`/`autohint()` source directly
+  (kinship2 v1.9.6.2, local-only `renv` install) and built 5 synthetic
+  pedigrees exercising the single-pair and multi-mate (“crowding”) cases
+  issue \#145’s own body describes. Found kinship2 implements neither a
+  hard male-left invariant nor a sex-aware crossing-minimizing soft
+  default: the ordinary direct-pedigree spouse-pairing code path has
+  zero `ped$sex` check (unlike two other branches that do), and a
+  role-reversed multi-mate test (1 dam, 2 sires) produced a direct
+  counter-example — one sire immediately left of the dam, one
+  immediately right, disproving “sire always left of dam” from
+  kinship2’s own default output. Also found issue \#145’s own inline
+  citations describe crossing-minimization behavior that does not match
+  kinship2’s actual source — a second, independent citation-reliability
+  flag beyond S480’s nomenclature-document finding. Full method,
+  evidence, and recommendation:
+  `docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md`.
+  `BACKLOG.md` progress note added; findings posted as a [GitHub
+  comment](https://github.com/rmsharp/nprcgenekeepr/issues/145#issuecomment-5227592879)
+  on issue \#145 (not closed — investigation only, no
+  design/implementation decision made). Investigation-only session: no
+  `R/`/`tests/` files changed, TDD RED/GREEN/REFACTOR gates N/A, Phase
+  3E runtime smoke test n/a (no package runtime behavior changed).
+  `PROJECT_LEARNINGS.md` Learning 482 added; `CLAUDE.md` learning-count
+  pointer bumped (481→482). See `SESSION_NOTES.md`, `HANDOFFS.md`.
+
+### 2026-08-08 · \[issue \#154\] Closed issue \#154 (Session 481, post-close-out)
+
+- **Deliverable:** Closed [issue
+  \#154](https://github.com/rmsharp/nprcgenekeepr/issues/154) with a
+  comment citing the fix commits (`4a60db92`, `db46bde8`, `e58307a2`,
+  `f3173ad4`) and verification evidence, per the established GitHub
+  issue close-out checklist (`CLAUDE.md`) — same-session close for a
+  `BACKLOG.md`-tracked item. Non-commit, outward-facing action on a
+  public repo — recorded here per the ledger’s non-commit-action rule
+  (failure mode \#27) since it happened after this session’s own Phase
+  3F close-out commit (`f3173ad4`).
+
+### 2026-08-08 · \[issue \#154\] Fixed 3 dangling-parent crash bugs in the pedigree-diagram layout engine; closed the free-pass-filter reachability question (Session 481)
+
+- **Deliverable:** Picked up Tier 1 step (1) of
+  `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`
+  (S480). Filed [issue
+  \#154](https://github.com/rmsharp/nprcgenekeepr/issues/154) after
+  empirically reproducing all 3 candidate crashes (not just reading the
+  code) — `.buildMatingUnitForest()`/
+  `.positionMatingUnitForest()`/`.addRectilinearWaypoints()` in
+  `R/makePedigreeDiagramData.R` all crashed on realistic dangling-parent
+  input (a sire/dam id with no own row in the pedigree, an ordinary
+  occurrence for a focal-animal-trimmed pedigree). Fixed all 3 via
+  strict TDD (RED→GREEN→REFACTOR, `AskUserQuestion`-gated at every
+  transition, per `CLAUDE.md`’s Development Process Contract): (1) a
+  real individual’s `ped$gen = NA` now defaults to generation 0 instead
+  of crashing `maxGen`’s contour-array sizing; (2) a mating unit whose
+  sire AND dam are both dangling no longer forces a dangling id into
+  `anchor` (the existing single-dangling guard only covered the
+  exactly-one-dangling case) — such an “orphan” unit is now positioned
+  as its own independent top-level root, and `unitGen`’s NA-vs-`-Inf`
+  fallback bug (`pmax(NA, NA, na.rm = TRUE)` returns `NA`, not `-Inf` as
+  the prior comment assumed) is fixed alongside it; (3)
+  `.addRectilinearWaypoints()`’s D2 mate-line-dogleg loop now looks up a
+  side’s generation defensively, skipping the dogleg for a side with no
+  rendered node (a dangling, free-pass parent) instead of an
+  unconditional lookup that threw “subscript out of bounds”. A second,
+  more severe latent bug (infinite recursion / node-stack overflow from
+  an `NA`-unsafe `==` comparison against the now-sometimes-`NA` `anchor`
+  column) was caught mid-GREEN when the RED test was re-run against the
+  first-draft fix — see `PROJECT_LEARNINGS.md` Learning 481. Also
+  investigated the related, previously-unconfirmed free-pass-filter
+  reachability question (`BACKLOG.md`, no issue number) with 2 targeted
+  fixtures; neither reproduced a missing/duplicate node, so it is
+  **closed with evidence, not fixed** (see issue \#154’s own closing
+  comment).
+- **Verification:** 4 new regression tests (2×
+  `test_positionMatingUnitForest.R`, 1× `test_buildMatingUnitForest.R`,
+  1× `test_addRectilinearWaypoints.R`), all confirmed failing against
+  `master` before the fix and passing after; full regression suite clean
+  under both
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html) +
+  `test_dir()` and a full
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  run (`FAIL 0 | WARN 10 | SKIP 186 | PASS 4606`, the 10 warnings
+  pre-existing/unrelated, traced to `test_modMarkerGenetics.R`);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  = 0 errors, 0 warnings, 2 pre-existing/unrelated NOTEs (confirmed via
+  Learning 161’s isolate-and-reverify protocol against the untracked,
+  gitignored nomenclature reference file that trips a local-only
+  “non-portable file names” false positive); `lintr::lint_package()` 0
+  lints on the touched file; a live `shinytest2`/`chromote` runtime
+  smoke test (Phase 3E) rendering a fixture combining all 3 crash shapes
+  through a minimal app matching `R/modPedigree.R`’s exact
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+  render chain, for both `edgeStyle` values — 0 console errors, widget
+  rendered.
+- **Housekeeping:** `BACKLOG.md` — removed the B3/B4 items (superseded
+  by issue \#154) and closed the B6 item with evidence; added a
+  “Progress” note to the S480 sequencing-note pointer.
+- Commits: `4a60db92` (claim + file issue \#154 + close BACKLOG
+  B3/B4/B6), `db46bde8` (RED), `e58307a2` (GREEN).
+
+### 2026-08-08 · \[issue \#145\] Posted a specification-bug comment on issue \#145 (Session 480, post-close-out)
+
+- **Deliverable:** User pushed back on this session’s own audit report,
+  sharpening its framing: issue \#145’s unverified “standard genetic
+  counseling conventions” premise (unresolved `[2]`-`[7]` citations; not
+  confirmed by this repo’s own nomenclature reference; no existing rule
+  in `R/makePedigreeDiagramData.R` to “correct” in the first place) is a
+  **specification bug** in the issue itself, not merely an
+  implementation caveat as this session’s audit doc had softer-worded
+  it. Per explicit user direction (`AskUserQuestion`: comment on the
+  issue vs. strengthen the audit doc vs. both — user picked “comment on
+  issue \#145”), posted a comment on [issue
+  \#145](https://github.com/rmsharp/nprcgenekeepr/issues/145#issuecomment-5227234223)
+  restating the audit’s Findings \#1/#2 in specification-bug terms and
+  recommending the citations be resolved (or dropped in favor of
+  kinship2’s own verified default behavior) before implementation
+  proceeds. Non-commit, outward-facing action on a public repo —
+  recorded here per the ledger’s non-commit- action rule (failure mode
+  \#27) since it happened after this session’s own Phase 3 close-out.
+
+### 2026-08-08 · \[ad hoc\] Pedigree-drawing backlog sequencing audit (Session 480)
+
+- **Deliverable:** User-directed audit,
+  `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`,
+  examining every open pedigree-drawing-related item — GitHub issues
+  \#133/#136/#137/#138/#141/#145 plus 9 `BACKLOG.md`-only items (B1-B9,
+  no issue numbers) found via a full grep sweep — against kinship2’s
+  documented drawing capabilities (built on the existing
+  `ISSUE_129_KINSHIP2_FEATURE_ COMPARISON_2026-07-30.md` audit and
+  `pedigree-diagram-kinship2-reference-comparison.qmd`) and the
+  standardized human pedigree nomenclature reference document
+  (`inst/extdata/reference/Standardized Human Pedigree Nomenclature...html`,
+  gitignored copyrighted material per S479, read locally only), and
+  recommending a 3-tier implementation order.
+- **Key findings:** (1) the nomenclature document (Bennett et al. 2008,
+  *J Genet Couns*) is a commentary/adoption-survey article whose actual
+  symbol/convention tables live in un-transcribed figure images, not
+  extractable text — it does **not** textually confirm the
+  male-left/female-right placement convention issue \#145 cites as its
+  rationale. (2) Direct inspection of `R/makePedigreeDiagramData.R`’s
+  positioning functions found zero sex-based ordering logic anywhere
+  today — issue \#145 is a new-feature design request, not a fix to
+  broken existing behavior, despite its own “Correct the placement”
+  framing. (3) Two real dangling-parent crash bugs (`BACKLOG.md` items
+  B3/B4, found S473, never fixed) sit in the same code region as \#145
+  and were found to be higher real-world risk than any pending feature —
+  recommended first in the sequencing order. (4) The owner’s own
+  existing priority order for \#133/#136/#137/#138 (set in issue \#133’s
+  body, session 436) is preserved, not re-derived.
+- **Recommended order (full rationale in the audit):** Tier 1 —
+  dangling-parent crash fixes (B3/B4), free-pass-filter reachability
+  check (B6), issue \#145’s verification-first design, then refresh the
+  stale `.qmd` comparison doc (B5); Tier 2 — \#133 \> \#136 \> \#137
+  (owner’s existing order) plus the `highlightNearest` degree=6
+  follow-up (B9); Tier 3 — explicitly deferred: \#138, \#141, “Candidate
+  C” (B2), pending new evidence or owner sign-off.
+- **BACKLOG.md:** added a “Sequencing note” pointer paragraph (before
+  the “Candidate C” item, ~line
+  1080. cross-referencing the new audit, matching the discoverability
+        precedent set by the `ISSUE_129_KINSHIP2_FEATURE_COMPARISON`
+        audit’s own `BACKLOG.md` section header. No new GitHub issues
+        filed this session (left to whichever future session picks up
+        Tier 1, per the established “audit recommends, a later session
+        files” pattern). No `R/`/`tests/` files touched — TDD gates N/A.
+- **Verification:** direct `grep` spot-checks (not solely trusted from
+  the delegated research workflow) confirmed the nomenclature document’s
+  title/authors/DOI and its Wiley all-rights-reserved copyright footer
+  (no change to S479’s gitignore disposition), and confirmed the absence
+  of any sex-based ordering code in `R/makePedigreeDiagramData.R`.
+  `PROJECT_LEARNINGS.md` Learning 480 records the generalizable lesson
+  (verify a cited source’s actual extractable content, and an issue’s
+  own bug-vs-feature self-classification, before accepting either at
+  face value).
+
+### 2026-08-08 · \[ad hoc\] Reconciled undocumented genetic-metrics-PDF audit ghost work (Session 479)
+
+- **Deliverable:** Phase 0 orientation found 2 uncommitted audit docs
+  (`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-08-05.md`,
+  `-2026-08-06.md`) and 9 correspondent GitHub issues (#145 user-filed;
+  \#146-153 mapping to the 08-06 doc’s own “Priority gap analysis”
+  table) — produced by a prior session/run that never entered the
+  `SESSION_RUNNER.md` protocol (no Phase 1B claim stub, no commit at
+  all, so the commit-log-based ledger reconcile in Phase 0 step 6 could
+  not see it). This entry backfills the record of that prior,
+  unidentified work — **this session did not author the audit analysis
+  itself**, only verified it (read both docs in full; format/rigor
+  matches the properly-committed 2026-07-29 baseline audit; no source
+  changes landed between S478 and now to make it stale) and committed
+  it.
+- **What was committed:** both audit docs, as-is. Per user decision
+  (`AskUserQuestion`), issues \#145-153 stay GitHub-only — this
+  project’s established convention is that `BACKLOG.md` is an active
+  work log, not an issue-tracker mirror (14 other pre-existing open
+  issues already carry no `BACKLOG.md` entry); an entry gets added only
+  once a future session actually picks one up to plan/implement,
+  matching issue \#142’s own precedent.
+- **What was NOT committed, and why:** 3 reference files also found
+  untracked in `inst/extdata/reference/` (`5201430.pdf`,
+  `bioinformatics_24_2_279.pdf`, a saved “Standardized Human Pedigree
+  Nomenclature” page) are full-text copyrighted journal articles/pages
+  (Nature Publishing Group 2005, Oxford University Press 2008, Wiley —
+  none open-access-marked), unlike the one already-committed
+  `Master_Genetic_metrics_2_14_15.pdf` (an unpublished NPRC
+  working-group document, a different copyright situation). This repo is
+  PUBLIC (`gh repo view --json visibility` → `PUBLIC`); per user
+  decision, these 3 files are excluded via a new `.gitignore` block
+  rather than committed. Also cleaned up, per user decision: 2 stale
+  local `docs/planning/*.html` render byproducts (dated 2026-07-29 and
+  2026-08-04, unrelated to this ghost-work finding — their `.md`/`.qmd`
+  sources are already safely committed) and 2 stray `inst/**/.DS_Store`
+  files.
+- See `PROJECT_LEARNINGS.md` Learning 479 (the commit-log ledger
+  reconcile’s blind spot for a zero-commit ghost session) and
+  `CLAUDE.md`’s new Phase 0 addition.
+
+### 2026-08-04 · \[ad hoc\] Documented issue \#142’s edgeStyle option in vignettes/a2interactive.Rmd (Session 478)
+
+- **Deliverable:** user-directed (not from `BACKLOG.md`) — add a
+  demonstration of issue \#142’s `edgeStyle` (direct vs. rectilinear)
+  option to `vignettes/a2interactive.Rmd`’s existing “Pedigree Diagram”
+  section, prompted by the user recalling the request and being unable
+  to find its tracking issue (closed, so absent from the default
+  open-only `gh issue list`).
+- **Confirmed nothing needed building:**
+  `makePedigreeMatingLayout(edgeStyle = c("direct", "rectilinear"))` was
+  already `@export`ed and fully script-callable (issue \#142,
+  S465/S468); the only gap was the vignette never demonstrating it.
+- **Added** a new “### Rectilinear Edge Style” subsection (data chunk,
+  prose on the extra waypoint nodes/edges and
+  `color.background`/`color.border`/`color` columns, and a render chunk
+  matching `R/modPedigree.R`’s actual style-aware
+  `highlightNearest(degree = 6L)`), plus a “### Direct Edge Style”
+  heading for symmetry around the pre-existing content. Scope (demo +
+  parity fix) confirmed via `AskUserQuestion`.
+- **Fixed a real parity drift:** the existing direct-style render
+  chunk’s `nodesIdSelection` waypoint-exclusion regex had only 2 of
+  `R/modPedigree.R`’s actual 5 reserved node-id prefixes — harmless
+  under direct style alone, but wrong once shown next to the new
+  rectilinear chunk. Both chunks now use the identical, correct 5-prefix
+  pattern.
+- **Added 4 new words** (`edgeStyle`, `routings`, `highlightNearest`,
+  `demoPed`) to `inst/WORDLIST` — the genuinely new spelling flags this
+  session’s own prose introduced, isolated from the separately-tracked
+  pre-existing 6-word drift via
+  [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html),
+  left untouched.
+- **Verified:**
+  [`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)
+  end-to-end (142/142 chunks, no errors);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/1 pre-existing NOTE (unchanged, the known
+  `a2interactive.Rmd` vignette-engine NOTE); full regression suite exact
+  baseline match (0 failed/0 error, 4573 passed, 171 skipped, 10
+  pre-existing warnings, `NOT_CRAN=true`); reverted a collateral
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  `man/modMarkerGeneticsServer.Rd` reflow (Learnings 476/477 pattern,
+  third consecutive hit).
+- **No R/ or tests/ files changed** — TDD RED/GREEN/REFACTOR gates N/A
+  (S448/S451-455/S475-477 docs-only precedent). No `NEWS.Rmd` entry
+  needed (issue \#142 already documented there, S468).
+- Broadened `CLAUDE.md`’s `a2interactive.Rmd` checklist to also cover a
+  new parameter added to an already-documented exported function, not
+  just a brand-new function — the shape of gap this session found. See
+  `PROJECT_LEARNINGS.md` Learning 478.
+
+### 2026-08-04 · \[ad hoc\] Wired the actual process fix for recurring `lintr` debt (Session 477)
+
+- **Deliverable:** `BACKLOG.md` Housekeeping item “wire a process fix so
+  `lintr` debt stops re-accumulating” (split from the S462 sweep) is
+  resolved.
+- **Corrected the item’s own stale framing:**
+  `.github/workflows/lint.yaml` already existed and already ran
+  `lintr::lint_package()` on every push to `master` (and on PRs) with
+  `LINTR_ERROR_ON_LINT: true` – there was no CI job to add.
+  `gh run list --workflow=lint.yaml` showed it had been red since S472’s
+  push and stayed red through S473-S476’s, because `master` carries no
+  branch protection requiring the check to pass – a failing run blocks
+  nothing and is easy to never look at.
+- **Fixed the 2 live violations** in `R/makePedigreeDiagramData.R`
+  (REFACTOR-only, no RED/GREEN – style-only, no behavior change): a
+  `commented_code_linter` false positive on a design-rationale comment
+  suppressed via a documented `# nolint start/end` block (S466
+  precedent, not deleted/reworded); an 84-char `line_length_linter` hit
+  wrapped onto two lines matching this file’s own established
+  `<-`-then-indented-RHS house style.
+- **Added the actual recurrence-prevention mechanism:** a new
+  `CLAUDE.md` “Lint close-out checklist” requiring sessions to lint
+  touched files (package loaded) before closing out, since the CI job’s
+  own existence had already been proven insufficient by 4 sessions
+  committing on top of a red run without noticing.
+- **Verified:** `lintr::lint_package()` (package loaded, matching CI’s
+  exact invocation) 0 lints package-wide (was 2); full regression suite
+  0 failed/0 error (4573 passed, 171 skipped, 10 pre-existing baseline
+  warnings, unchanged from S476);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/2 pre-existing NOTEs (spelling-wordlist drift +
+  `a2interactive.Rmd` vignette-engine note, both unrelated, unchanged
+  from S476 baseline).
+- See `BACKLOG.md`, `PROJECT_LEARNINGS.md` Learning 477.
+
+### 2026-08-04 · \[ad hoc\] Root-caused and fixed the `renv.lock` dependency-tracking gap (Session 476)
+
+- **Deliverable:** the 10 dev-tool packages missing from `renv.lock`
+  since ~S459 (flagged S474/S475) are now correctly captured, and the
+  mechanism that dropped them is fixed so it cannot recur silently.
+- **Root cause:** `renv/settings.json`’s `snapshot.type: "explicit"`
+  makes a plain
+  [`renv::snapshot()`](https://rstudio.github.io/renv/reference/snapshot.html)
+  scan only `DESCRIPTION`’s `Imports`/`Depends`/`LinkingTo` fields,
+  silently excluding every `Suggests`-only package. Traced precisely
+  (not speculatively) against renv 1.2.3’s own source.
+- **Fix:** added `devtools`+`quarto` to `DESCRIPTION`’s `Suggests`
+  (their existing
+  `Config/renv/profiles/dev/dependencies`/`Config/Needs/website`
+  declarations are inert – read only by an actively-enabled “dev” renv
+  profile / by `pak`, neither ever used here); installed 6
+  separately-discovered not-installed `Suggests` packages
+  (`covr`/`kableExtra`/ `markdown`/`png`/`shinyWidgets`/`spelling`); ran
+  the real `renv::snapshot(dev = TRUE)` (157 packages now recorded, up
+  from 95); documented `dev = TRUE` as the required standing invocation
+  in `CLAUDE.md`’s Build/Test/Verify section.
+- **Verified:** `renv::status(dev = TRUE)` reports “No issues found”; a
+  genuinely fresh `renv::restore(library = <empty temp dir>)` installed
+  all 16 target packages from the fixed lockfile alone; full regression
+  suite unchanged (0 failed/0 error, 3854 passed, 183 skipped, 10
+  pre-existing baseline warnings);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/2 NOTEs (both pre-existing/unrelated, confirmed
+  via `git diff --stat` that `vignettes/` was untouched this session). A
+  collateral
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  reflow of `man/modMarkerGeneticsServer.Rd` (roxygen2-version line-wrap
+  drift, not the previously- tracked iCloud duplicate-file pattern) was
+  reverted before committing.
+- Infra/lockfile-only session – no `R/`/`tests/` files changed, TDD
+  RED/GREEN/REFACTOR gates did not apply (S448/S451/S452/S453/S455/S475
+  precedent). See `BACKLOG.md` Housekeeping, `PROJECT_LEARNINGS.md`
+  Learning 476.
+
+### 2026-08-04 · \[issue \#142\] Closed the issue (Session 475)
+
+- **Action:** `gh issue close 142 --reason completed --comment "..."` –
+  the rectilinear mate-line/sibship-bar waypoint style was fully
+  implemented and verified across Sessions 463-468 (design, Slice 1,
+  Slice 2) but the issue itself was never closed, discovered via this
+  session’s Phase 0 cross-check of `gh issue list` against
+  `BACKLOG.md`’s own DONE markers. Closing comment cites the Session
+  463-468 `CHANGELOG.md` entries and their verification evidence. See
+  `PROJECT_LEARNINGS.md` Learning 475 (a new same-session
+  GitHub-issue-close-out checklist, `CLAUDE.md`, was ratified after
+  finding this as the third consecutive instance of the same gap).
+
+### 2026-08-04 · \[issue \#143\] Closed the issue (Session 475)
+
+- **Action:** `gh issue close 143 --reason completed --comment "..."` –
+  the founder- positioning defect fix was fully implemented and verified
+  Session 472, first flagged as still-open-despite-resolved by Session
+  473’s own orientation report and again by Session 474’s, but never
+  closed until this session. Closing comment cites the Session 472
+  `CHANGELOG.md` entry and its verification evidence. See
+  `PROJECT_LEARNINGS.md` Learning
+  475. 
+
+### 2026-08-04 · \[issue \#144\] Closed the issue (Session 475)
+
+- **Action:** `gh issue close 144 --reason completed --comment "..."` –
+  the anchor-side row-mismatch fix was fully implemented and verified
+  Session 474; flagged as a next-step in that session’s own handoff but
+  not acted on until this session. Closing comment cites the Session
+  473-474 `CHANGELOG.md` entries and their verification evidence. See
+  `PROJECT_LEARNINGS.md` Learning 475.
+
+### 2026-08-04 · \[issue \#144\] Implemented the anchor-side row-mismatch fix (Session 474)
+
+- **Deliverable:** `R/makePedigreeDiagramData.R` – 3 synchronized edits
+  per the ratified plan
+  (`docs/planning/issue144-anchor-row-mismatch-fix-plan.md`), full
+  Strict TDD RED/GREEN/REFACTOR cycle (`AskUserQuestion`-gated at every
+  transition). Adds a per-individual `effGenOf` (max of an anchor’s own
+  gen and every mating unit it anchors), threads it through
+  `positionIndividual()`’s row-reservation call sites, and extends the
+  `dispGenOf` override (issue \#143’s own pattern) to anchor
+  occurrences. Resolves all 51 real-fixture anchor-side mismatches (51
+  -\> 0), maintains issue \#143’s 0 non-anchor mismatches,
+  `edgeStyle="rectilinear"` node count 1279 -\> 1228 (the D2 dogleg no
+  longer fires for any of the resolved units). One honestly-bounded
+  residual remains (an anchor anchoring 2+ mating units at genuinely
+  differing gen, or a single-unit anchor with a shallower D5 child) –
+  not reachable in either bundled real fixture; 2 new committed
+  regression tests assert deterministic, non-crashing, non-NA behavior
+  for both shapes rather than leaving them unexercised.
+- **Verification:** Full regression suite 0 failed/0 error (4573 passed,
+  171 skipped, 10 pre-existing unrelated warnings);
+  `devtools::check() --as-cran` 0 errors/0 warnings/2 pre-existing
+  unrelated NOTEs (vignette-engine + a spelling-wordlist drift already
+  tracked, `BACKLOG.md` Housekeeping since S465); live
+  `shinytest2`/`chromote` verification against the real running app
+  confirmed 3 previously-mismatched anchors (`8P17E3`/`KS2ZNP`/`B2U6J7`,
+  gap 1/3/4) now render on-row under both `edgeStyle` values with zero
+  projection nodes and zero diagram-related console errors, and issue
+  \#143’s own already-fixed non-anchor unit (`FD3BB6`) is unaffected.
+- **Incidental:** found and fixed a severe `renv` environment failure (a
+  mid-project R 4.6.1 upgrade left the project library empty; 10
+  dev-tool packages – `testthat`/`pkgload`/`devtools`/
+  `roxygen2`/`shinytest2`/`chromote`/`dplyr`/`mockery`/`quarto`/`shinyBS`
+  – turned out to be missing from `renv.lock` itself, in both HEAD and
+  the long-standing uncommitted diff) via
+  [`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html) +
+  [`renv::install()`](https://rstudio.github.io/renv/reference/install.html),
+  confirming `renv.lock`/`DESCRIPTION` stayed unchanged throughout.
+  Root-causing and fixing the lockfile itself is filed as a new
+  `BACKLOG.md` Housekeeping item (not fixed here – out of scope for this
+  implementation session). See `PROJECT_LEARNINGS.md` Learnings 473/474.
+
 ### 2026-08-04 · \[issue \#144\] Designed the anchor-side row-mismatch fix (Session 473)
 
 - **Deliverable:**
@@ -142,15 +880,17 @@ here.
   mismatches; updated `test_addRectilinearWaypoints.R`’s D2 non-anchor
   test and both files’ real-fixture node-count assertions (1375L -\>
   1279L). Verified: full regression suite 0 failed/0 error (4560 passed,
-  171 skipped); `devtools::check()` 0 errors/0 warnings (1 pre-existing,
-  unrelated NOTE, confirmed by temporarily setting aside known untracked
-  debris and restoring it); live-verified in the running app via
-  `shinytest2` under both `edgeStyle` values – FD3BB6 (the audit’s own
-  spot-checked example) plus 3 more previously-mismatched units now
-  render on-row, zero diagram-related console errors. `BACKLOG.md`
-  updated (item marked DONE; 1 new low-priority incidental finding added
-  – a 1-node live-vs-offline count discrepancy, unrelated to this fix,
-  unconfirmed root cause).
+  171 skipped);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings (1 pre-existing, unrelated NOTE, confirmed by
+  temporarily setting aside known untracked debris and restoring it);
+  live-verified in the running app via `shinytest2` under both
+  `edgeStyle` values – FD3BB6 (the audit’s own spot-checked example)
+  plus 3 more previously-mismatched units now render on-row, zero
+  diagram-related console errors. `BACKLOG.md` updated (item marked
+  DONE; 1 new low-priority incidental finding added – a 1-node
+  live-vs-offline count discrepancy, unrelated to this fix, unconfirmed
+  root cause).
 
 ### 2026-08-03 · \[issue \#144\] Filed the anchor-side row-mismatch gap as its own GitHub issue (Session 471)
 
@@ -261,8 +1001,9 @@ here.
   (RED – 2 new tests + 1 existing test’s column-set assertion updated
   for the intentionally-changed contract; GREEN; REFACTOR
   owner-confirmed skip). Verified: regression suite 0 failed/0 error
-  (4524 passed, exact baseline warnings); `devtools::check()` 0 new
-  errors/warnings/notes; `lintr` 0. Live `shinytest2`/`chromote`
+  (4524 passed, exact baseline warnings);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 new errors/warnings/notes; `lintr` 0. Live `shinytest2`/`chromote`
   verification against the real 375-individual fixture (both edge
   styles) plus a small isolated-fixture screenshot visually confirming
   the arc. `_pedigree_browser.Rmd` wording updated (“dashed line” -\>
@@ -336,8 +1077,9 @@ here.
   `AskUserQuestion`, GREEN already matched established style).
 - **Verified at every checkpoint:** full regression suite 0 failed/0
   error (10 pre-existing baseline warnings, unchanged; final count 4515
-  passed, +38 new tests over the S467 baseline); `devtools::check()` 1
-  WARNING/2 NOTEs, exact pre-existing baseline, 0 new, at every
+  passed, +38 new tests over the S467 baseline);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  1 WARNING/2 NOTEs, exact pre-existing baseline, 0 new, at every
   checkpoint (including the already-tracked 6-word spelling-drift NOTE
   from `BACKLOG.md`, found S465 – this session’s own roxygen edit added
   more occurrences of the same already-flagged words, not a new distinct
@@ -397,10 +1139,11 @@ here.
   asserts the sire/dam edges into the captured union id.
 - **Verification:** the file itself (29/29 assertions pass, live app);
   full local regression suite (0 failed/0 error, 10 pre-existing
-  warnings, exact S465/S466 baseline); `devtools::check()` (1 WARNING/2
-  NOTEs, exact pre-existing baseline, 0 new); `lintr::lint()` on the
-  changed file (0 lints). See `BACKLOG.md`, `PROJECT_LEARNINGS.md`
-  Learning 462.
+  warnings, exact S465/S466 baseline);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  (1 WARNING/2 NOTEs, exact pre-existing baseline, 0 new);
+  `lintr::lint()` on the changed file (0 lints). See `BACKLOG.md`,
+  `PROJECT_LEARNINGS.md` Learning 462.
 
 ### 2026-08-03 · \[ad hoc\] Phase 0 ledger reconcile: backfill S466’s own HANDOFFS.md receipt commit sha self-correction (post-S466)
 
@@ -449,21 +1192,24 @@ here.
 - **Verification:** `lintr::lint_package()` 0 warnings on all 16 tracked
   files (after each batch and at the end); full regression suite 0
   failed/0 error, 10 pre-existing unrelated warnings (exact S465
-  baseline match) after every batch; `devtools::check()` exact baseline
-  (1 pre-existing WARNING = iCloud duplicate filenames, 2 pre-existing
-  NOTEs = vignette-engine + the already-filed spelling-drift item, 0
-  new). `devtools::document()` run after batches 3 and 4; the 3 known
-  iCloud-duplicate-corrupted `.Rd` files (`appServer.Rd`,
-  `modMarkerGeneticsServer.Rd`, `modMarkerGeneticsUI.Rd`) reverted each
-  time (Learning 454); 4 legitimate `.Rd` regenerations kept and diffed
-  (pure reflow, no content loss, the `\deqn{}` formula untouched). Live
-  `shinytest2` smoke test (Phase 3E, required – 4 touched files back
-  live Shiny UI): installed the package, drove the real app across all 4
-  touched-module tabs (Genetic Value Analysis, Marker Genetics, Breeding
-  Groups, Pedigree Browser); 0 `shiny-output-error` DOM elements, 0
-  SEVERE console log entries (44 total); confirmed the `numericInput`
-  cutoff values and the `fileInput` `accept` attribute render
-  byte-identical to pre-edit behavior.
+  baseline match) after every batch;
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  exact baseline (1 pre-existing WARNING = iCloud duplicate filenames, 2
+  pre-existing NOTEs = vignette-engine + the already-filed
+  spelling-drift item, 0 new).
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  run after batches 3 and 4; the 3 known iCloud-duplicate-corrupted
+  `.Rd` files (`appServer.Rd`, `modMarkerGeneticsServer.Rd`,
+  `modMarkerGeneticsUI.Rd`) reverted each time (Learning 454); 4
+  legitimate `.Rd` regenerations kept and diffed (pure reflow, no
+  content loss, the `\deqn{}` formula untouched). Live `shinytest2`
+  smoke test (Phase 3E, required – 4 touched files back live Shiny UI):
+  installed the package, drove the real app across all 4 touched-module
+  tabs (Genetic Value Analysis, Marker Genetics, Breeding Groups,
+  Pedigree Browser); 0 `shiny-output-error` DOM elements, 0 SEVERE
+  console log entries (44 total); confirmed the `numericInput` cutoff
+  values and the `fileInput` `accept` attribute render byte-identical to
+  pre-edit behavior.
 - **`BACKLOG.md`:** the lint-cleanup item’s part (a) marked DONE;
   part (b) (a process fix so lint debt stops re-accumulating – CI gate
   and/or a close-out check) split into its own open item, not done this
@@ -516,9 +1262,10 @@ here.
   the design’s own analytical estimate exactly (740 direct-style + 488
   D1 + 147 D2 = 1,375, no drift). Full regression suite 0 failed/0 error
   (4477 passed = baseline + 71 new, 171 skipped, 10 pre-existing
-  `test_modMarkerGenetics.R` warnings, unchanged); `devtools::check()` 0
-  new warnings/notes (confirmed via a stash test that the 1 warning + 2
-  notes – the iCloud duplicate-file artifact, a pre-existing
+  `test_modMarkerGenetics.R` warnings, unchanged);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 new warnings/notes (confirmed via a stash test that the 1 warning +
+  2 notes – the iCloud duplicate-file artifact, a pre-existing
   vignette-engine note, and a pre-existing spelling gap from Session
   461’s own docstring text – all predate this session, unrelated to this
   diff). REFACTOR: renamed a loop variable (`F` -\> `fromId`) to clear 7
@@ -699,18 +1446,20 @@ here.
   on the vignette succeeds with no errors, produces the expected
   `names(diagramData)`/[`nrow()`](https://rdrr.io/r/base/nrow.html)
   output inline, and the rendered widget JSON confirms `physics:false`
-  and exactly 2 `dashes:true` edges. `devtools::check()` re-run: 0
-  errors, 1 pre-existing warning (iCloud duplicate-file artifact), 1
-  pre-existing note (this same vignette’s own missing `VignetteBuilder`
-  engine, unrelated to this diff) – exact baseline match, 0 new.
-  Docs-only (no `R/` or `tests/` files changed), so per the issue
-  \#124/#139 precedent the TDD RED/GREEN/REFACTOR gates did not apply;
-  `runtime_smoke: n/a — docs-only`.
+  and exactly 2 `dashes:true` edges.
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  re-run: 0 errors, 1 pre-existing warning (iCloud duplicate-file
+  artifact), 1 pre-existing note (this same vignette’s own missing
+  `VignetteBuilder` engine, unrelated to this diff) – exact baseline
+  match, 0 new. Docs-only (no `R/` or `tests/` files changed), so per
+  the issue \#124/#139 precedent the TDD RED/GREEN/REFACTOR gates did
+  not apply; `runtime_smoke: n/a — docs-only`.
 - **Incidental, reverted (not a deliverable):** found 3 `man/*.Rd` files
   corrupted mid-session by the well-known iCloud duplicate-`.R`-file
-  `devtools::document()` artifact (Learning 454) – this time triggered
-  by the owner’s own local package rebuild, not this session’s tool
-  calls. Reverted via `git checkout --` before any commit.
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  artifact (Learning 454) – this time triggered by the owner’s own local
+  package rebuild, not this session’s tool calls. Reverted via
+  `git checkout --` before any commit.
 
 ### 2026-08-02 · \[issue \#142\] File “add a full rectilinear mate-line/sibship-bar waypoint style” as a deliberately-unscheduled, additive follow-up (Session 461, same-conversation follow-up)
 
@@ -799,7 +1548,8 @@ here.
   deterministic algorithm to different, equally valid row orderings.
 - **Verified:** full regression suite 0 failed/0 error (4405 passed =
   4382 baseline + 22 new + 1 fixed-by-lookup, 171 skipped, 10
-  pre-existing warnings, exact baseline match); `devtools::check()`
+  pre-existing warnings, exact baseline match);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
   exact baseline match (1 pre-existing warning – iCloud duplicate-file
   artifact; 1 pre-existing note – `a2interactive.Rmd` vignette-engine; 0
   new); zero new lint warnings in changed code. Phase 3E (live
@@ -810,15 +1560,18 @@ here.
   screenshotted renders for the `GA204Z`/`8LKBV9` loop, a trimmed
   focal-animal view, and the full 375-individual colony scale.
 - **Incidentally found and reverted (not part of this slice’s own
-  deliverable):** `devtools::document()` picked up 2
-  long-carried-forward, untracked iCloud “conflicted copy” duplicate
-  `.R` files and corrupted 3 unrelated `.Rd` pages (`man/appServer.Rd`,
-  `man/modMarkerGeneticsServer.Rd`, `man/modMarkerGeneticsUI.Rd`) with
-  merged/stale content, twice (once per `devtools::document()` run this
-  session) – each caught via `git status`/`git diff` review and reverted
-  via `git checkout --` before it could reach a commit. New Housekeeping
-  items filed in `BACKLOG.md` for this and for the now-stale
-  `colony-manager-guide.qmd` screenshot.
+  deliverable):**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  picked up 2 long-carried-forward, untracked iCloud “conflicted copy”
+  duplicate `.R` files and corrupted 3 unrelated `.Rd` pages
+  (`man/appServer.Rd`, `man/modMarkerGeneticsServer.Rd`,
+  `man/modMarkerGeneticsUI.Rd`) with merged/stale content, twice (once
+  per
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  run this session) – each caught via `git status`/`git diff` review and
+  reverted via `git checkout --` before it could reach a commit. New
+  Housekeeping items filed in `BACKLOG.md` for this and for the
+  now-stale `colony-manager-guide.qmd` screenshot.
 - **Documentation checklists:** `NEWS.Rmd`/`NEWS.md` new bullets (the
   new export + the Diagram tab’s new mating-aware visual convention +
   the 750 cap); `vignettes/manual_components/_pedigree_browser.Rmd`’s
@@ -883,14 +1636,16 @@ here.
   cross-checked against each node’s source of truth.
 - **Verified:** regression suite 0 failed/0 error (3592 passed = 3562
   baseline + 30 new, 183 skipped, 10 pre-existing warnings, exact
-  baseline match); `devtools::check()` introduces 0 new warnings/notes –
-  exact match to the known baseline (1 pre-existing
-  iCloud-duplicate-file warning, 1 pre-existing `a2interactive.Rmd`
-  vignette-engine NOTE); zero lint warnings in the new code. Phase 3E:
-  n/a – no runtime behavior changed (the function has no call site yet;
-  the render-chain switch is Slice 3). Citation/tutorial/`NEWS.Rmd`
-  checklists: n/a – an internal (`@noRd`), not-yet-wired-in function has
-  no displayed statistic and no user-facing surface.
+  baseline match);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  introduces 0 new warnings/notes – exact match to the known baseline (1
+  pre-existing iCloud-duplicate-file warning, 1 pre-existing
+  `a2interactive.Rmd` vignette-engine NOTE); zero lint warnings in the
+  new code. Phase 3E: n/a – no runtime behavior changed (the function
+  has no call site yet; the render-chain switch is Slice 3).
+  Citation/tutorial/`NEWS.Rmd` checklists: n/a – an internal (`@noRd`),
+  not-yet-wired-in function has no displayed statistic and no
+  user-facing surface.
 - **Incidental fix (not this slice’s own deliverable, a 1-byte
   mechanical correction in a file already being edited this session):**
   `PROJECT_LEARNINGS.md` Learning 450’s own text – which describes a
@@ -936,14 +1691,15 @@ here.
   units, 128 duplicates, `KUENM8`/`IM1B5T` each anchoring exactly 2).
 - **Verified:** regression suite 0 failed/0 error (3562 passed = 3509
   baseline + 53 new, 183 skipped, 10 pre-existing warnings, exact
-  baseline match); `devtools::check()` introduces 0 new warnings/notes –
-  isolated via a clean-tree re-run confirming the pre-existing
-  iCloud-duplicate- file warning and a `vignettes/a2interactive.Rmd`
-  vignette-engine NOTE both predate this session, unrelated to this
-  diff. Phase 3E: n/a – no runtime behavior changed (the function has no
-  call site yet; the render-chain switch is Slice 3).
-  Citation/tutorial/`NEWS.Rmd` checklists: n/a – an internal (`@noRd`),
-  not-yet-wired-in function has no displayed statistic and no
+  baseline match);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  introduces 0 new warnings/notes – isolated via a clean-tree re-run
+  confirming the pre-existing iCloud-duplicate- file warning and a
+  `vignettes/a2interactive.Rmd` vignette-engine NOTE both predate this
+  session, unrelated to this diff. Phase 3E: n/a – no runtime behavior
+  changed (the function has no call site yet; the render-chain switch is
+  Slice 3). Citation/tutorial/`NEWS.Rmd` checklists: n/a – an internal
+  (`@noRd`), not-yet-wired-in function has no displayed statistic and no
   user-facing surface.
 - **Gotcha hit and recorded:** a large `Edit` call’s `new_string` landed
   a literal control-character byte instead of the intended empty-string
@@ -1230,9 +1986,10 @@ here.
   existing click-to-navigate handler (issue \#129 Slice 2). 2 new tests
   asserting the widget JSON config, matching the \#131/#132 pattern.
 - **Verified:** full regression suite 0 failed/0 error (3509 passed, 10
-  pre-existing baseline warnings, unchanged); `devtools::check()` 0
-  errors/1 warning (pre-existing iCloud duplicate-file artifact)/0 notes
-  (a new WORDLIST entry, “dropdown”, was needed after adding
+  pre-existing baseline warnings, unchanged);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/1 warning (pre-existing iCloud duplicate-file artifact)/0
+  notes (a new WORDLIST entry, “dropdown”, was needed after adding
   NEWS/tutorial prose). Live `shinytest2`/`chromote` verification
   against the real app and the same known trio
   `test-e2e-pedigree-module.R` uses (`obfuscated_rhesus_mhc_ped.csv`):
@@ -1305,28 +2062,31 @@ here.
 ### 2026-08-02 · \[BL-spellingNoteWordlist\] Add 13 missing words to inst/WORDLIST, clearing devtools::check()’s spelling NOTE (Session 452)
 
 - **Deliverable:** resolved the `BACKLOG.md` Housekeeping item
-  (“`devtools::check()`’s spelling NOTE is broader than previously
-  tracked,” discovered S443 as just `IACUC`, broadened S448) by
-  hand-adding the missing words to `inst/WORDLIST`.
-- **Discovery:** a fresh `devtools::check()` run before touching
-  anything showed the single NOTE actually covers 13 words, not the 12
-  the item named – `Bhatia`, `Chesser`, `Cockerham`, `Fst`, `FST`,
-  `Gst`, `Hedrick`, `Maddison`, `Meirmans`, `Sankararaman`, `Slatkin`,
-  `monomorphic` (all `markerFst.Rd` citation terms, S447/issue \#130
-  Slice 5) plus the already-tracked `IACUC` (`_pedigree_browser.Rmd:55`,
-  flagged since S443, never actually fixed by any intervening session).
-  New `PROJECT_LEARNINGS.md` Learning 441 records why a “separately
-  tracked” carve-out in a backlog item’s word count doesn’t mean that
-  word has its own resolution path.
+  (“[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)’s
+  spelling NOTE is broader than previously tracked,” discovered S443 as
+  just `IACUC`, broadened S448) by hand-adding the missing words to
+  `inst/WORDLIST`.
+- **Discovery:** a fresh
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  run before touching anything showed the single NOTE actually covers 13
+  words, not the 12 the item named – `Bhatia`, `Chesser`, `Cockerham`,
+  `Fst`, `FST`, `Gst`, `Hedrick`, `Maddison`, `Meirmans`,
+  `Sankararaman`, `Slatkin`, `monomorphic` (all `markerFst.Rd` citation
+  terms, S447/issue \#130 Slice 5) plus the already-tracked `IACUC`
+  (`_pedigree_browser.Rmd:55`, flagged since S443, never actually fixed
+  by any intervening session). New `PROJECT_LEARNINGS.md` Learning 441
+  records why a “separately tracked” carve-out in a backlog item’s word
+  count doesn’t mean that word has its own resolution path.
 - **Fix:** all 13 words hand-added to `inst/WORDLIST` in `LC_ALL=C`
   byte-order position (not via
   [`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html),
   per S230 convention).
-- **Verified:** `devtools::check()` raw log before:
-  `Status: 1 WARNING, 1 NOTE` (13-word spelling diff); after:
-  `Status: 1 WARNING` (spelling.Rout vs. spelling.Rout.save now `OK`) –
-  the remaining WARNING is the pre-existing, unrelated iCloud-sync
-  duplicate-file artifact (`R/appServer 2.R`/
+- **Verified:**
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  raw log before: `Status: 1 WARNING, 1 NOTE` (13-word spelling diff);
+  after: `Status: 1 WARNING` (spelling.Rout vs. spelling.Rout.save now
+  `OK`) – the remaining WARNING is the pre-existing, unrelated
+  iCloud-sync duplicate-file artifact (`R/appServer 2.R`/
   `R/modMarkerGenetics 2.R`). Regression suite unchanged: 0 failed/0
   error (3489 passed, 183 skipped, 10 pre-existing baseline warnings),
   exactly matching the known-good S450 baseline. Docs/data-only change
@@ -1404,15 +2164,17 @@ here.
   installed package copy (`find.package("nprcgenekeepr")`, distinct from
   [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html))
   had lagged 3 slices behind source (S444/S446/S447 never triggered a
-  `devtools::install()` refresh). Fixed via
+  [`devtools::install()`](https://devtools.r-lib.org/reference/install.html)
+  refresh). Fixed via
   `devtools::install(quiet = TRUE, upgrade = FALSE, dependencies = FALSE)`
   (the `upgrade = "never"` form used at S417 now errors on the current
   `devtools` version) before re-rendering – not caused by this session’s
   own diff (no `R/` source changed).
 - **Spelling gate:** this session’s own new content (function names in
   prose, plus “STR”/ “misrecorded”) introduced 14 new
-  `devtools::check()` spelling flags. Hand-added all 14 to
-  `inst/WORDLIST` in case-insensitive radix-sort position (not via
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  spelling flags. Hand-added all 14 to `inst/WORDLIST` in
+  case-insensitive radix-sort position (not via
   [`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html),
   per S230 convention), following the file’s established two-block
   (uppercase-initial then lowercase-initial) sort structure. Left the
@@ -1436,10 +2198,11 @@ here.
   (132 chunks, no errors); clean regression read 0 failed/0 error (3489
   passed, 183 skipped, 10 pre-existing baseline warnings from
   `test_modMarkerGenetics.R` fixture data, unchanged and unrelated);
-  `devtools::check()` raw `Status:` line (per Learning 382): 1 warning
-  (pre-existing iCloud-sync duplicate-file artifact, unrelated), 1 note
-  (the pre-existing, separately-tracked 12-word spelling gap, unrelated)
-  – confirmed via the raw `spelling.Rout`/`spelling.Rout.save` diff that
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  raw `Status:` line (per Learning 382): 1 warning (pre-existing
+  iCloud-sync duplicate-file artifact, unrelated), 1 note (the
+  pre-existing, separately-tracked 12-word spelling gap, unrelated) –
+  confirmed via the raw `spelling.Rout`/`spelling.Rout.save` diff that
   zero new words from this session’s own content remain flagged.
 - **Phase 3E:** n/a – documentation-only change (a vignette +
   `CLAUDE.md` policy text), no Shiny/runtime behavior affected.
@@ -1482,8 +2245,10 @@ here.
   and corrected). RED confirmed clean on both (11 failed unit
   expectations / 5 failed e2e expectations, isolated to the new tests
   only); GREEN confirmed clean (0 failed/0 error on both, full
-  regression suite 0/0/0 non-baseline, `devtools::check()` 0 errors – 1
-  warning/1 note both pre-existing and unrelated, S448 baseline).
+  regression suite 0/0/0 non-baseline,
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors – 1 warning/1 note both pre-existing and unrelated, S448
+  baseline).
 - **Documentation checklists (same session, per `CLAUDE.md`):**
   `NEWS.Rmd`/`NEWS.md` gained a new bullet (2.0.0.9000 section);
   incidentally re-rendering also fixed a stale S448 NEWS.Rmd→NEWS.md
@@ -1542,27 +2307,29 @@ here.
   carrying `commit: pending` – backfilled to the real `afb979bc`, the
   same reconcile pattern S447 itself applied to S446’s receipt.
 - **Incidental discovery (BACKLOG.md item broadened, not fixed
-  mid-session):** `devtools::check()` surfaced 1 WARNING (untracked
-  iCloud-sync duplicate files in `R/`, owner-confirmed sync-lag
-  artifacts, unrelated) and 1 NOTE (a spelling gap). A clean
-  `git worktree` at S447’s own final commit (`afb979bc`) confirmed 12
-  words – `Bhatia`, `Chesser`, `Cockerham`, `Fst`/`FST`, `Gst`,
-  `Hedrick`, `Maddison`, `Meirmans`, `Sankararaman`, `Slatkin`,
+  mid-session):**
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  surfaced 1 WARNING (untracked iCloud-sync duplicate files in `R/`,
+  owner-confirmed sync-lag artifacts, unrelated) and 1 NOTE (a spelling
+  gap). A clean `git worktree` at S447’s own final commit (`afb979bc`)
+  confirmed 12 words – `Bhatia`, `Chesser`, `Cockerham`, `Fst`/`FST`,
+  `Gst`, `Hedrick`, `Maddison`, `Meirmans`, `Sankararaman`, `Slatkin`,
   `monomorphic` (S447’s own `markerFst.Rd` citations) plus the
   already-tracked `IACUC` – were ALREADY missing from `inst/WORDLIST`
   before this session touched anything, meaning S447’s own self-reported
-  “`devtools::check()` 0/0/0” does not hold up under re-verification.
-  Fixed only this session’s own new word (`homozygote`, added to
-  `inst/WORDLIST`); broadened the existing `BACKLOG.md` spelling-NOTE
-  item with the fuller scope for a future session. New
-  `PROJECT_LEARNINGS.md` Learning 437 (a predecessor’s self-reported
-  verification claim needs the same trust-but-verify treatment as any
-  other claim).
+  “[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0/0/0” does not hold up under re-verification. Fixed only this
+  session’s own new word (`homozygote`, added to `inst/WORDLIST`);
+  broadened the existing `BACKLOG.md` spelling-NOTE item with the fuller
+  scope for a future session. New `PROJECT_LEARNINGS.md` Learning 437 (a
+  predecessor’s self-reported verification claim needs the same
+  trust-but-verify treatment as any other claim).
 - **Verified:** `NEWS.Rmd`/`NEWS.md` render clean, diff scoped to
-  exactly the 5 new bullets; `devtools::check()` raw `Status:` line (per
-  Learning 382): 0 errors, 1 warning, 1 note (both
-  pre-existing/environmental, detailed above, neither introduced by this
-  session).
+  exactly the 5 new bullets;
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  raw `Status:` line (per Learning 382): 0 errors, 1 warning, 1 note
+  (both pre-existing/environmental, detailed above, neither introduced
+  by this session).
 - **Phase 3E:** n/a – documentation/policy-only change, no runtime
   behavior affected.
 
@@ -1624,12 +2391,14 @@ here.
   failed/0 error (3476 passed, 182 skipped) – caught and fixed 2 real
   GREEN-phase gaps (`test_moduleContract.R`’s registered reactive-name
   list; `_pkgdown.yml`’s reference-coverage list) that the targeted test
-  run alone would have missed; `devtools::check()` 0 errors/0 warnings/0
-  notes (run twice, before and after a doc-regeneration fix caught
-  mid-session); a live `shinytest2`/`chromote` smoke test of the running
-  app uploaded two real CSV files through the browser and confirmed the
-  rendered Cross-Center table’s values matched the hand-verified fixture
-  exactly, with no console errors. Citation checklist (issue \#120) and
+  run alone would have missed;
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/0 notes (run twice, before and after a
+  doc-regeneration fix caught mid-session); a live
+  `shinytest2`/`chromote` smoke test of the running app uploaded two
+  real CSV files through the browser and confirmed the rendered
+  Cross-Center table’s values matched the hand-verified fixture exactly,
+  with no console errors. Citation checklist (issue \#120) and
   tutorial/article checklist (S436) both completed same-session. Issue
   \#130 is now fully implemented across all 5 slices – closed with a
   summary comment
@@ -1675,12 +2444,13 @@ here.
   See `PROJECT_LEARNINGS.md` Learning 432.
 - **Verified:** targeted test file 18/18 expectations; full clean
   regression suite 0 failed/0 error/0 warning (3443 passed, 182
-  skipped); `devtools::check()` 0 errors/0 warnings/0 notes (fixed one
-  Rd cross-reference warning to a `@noRd` function along the way);
-  `_pkgdown.yml` reference-coverage entry added same-session (the gap
-  class Slice 1 hit and fixed retroactively). No live
-  runtime/`shinytest2` smoke test – n/a, no Shiny UI shipped this
-  session (Dragon P6 decision).
+  skipped);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/0 notes (fixed one Rd cross-reference warning to a
+  `@noRd` function along the way); `_pkgdown.yml` reference-coverage
+  entry added same-session (the gap class Slice 1 hit and fixed
+  retroactively). No live runtime/`shinytest2` smoke test – n/a, no
+  Shiny UI shipped this session (Dragon P6 decision).
 - **Citation checklist (issue \#120) / Tutorial checklist (S436):** both
   N/A this slice – no new displayed statistic and no new UI shipped.
 - **Discovery, not fixed this session:** issue \#130’s Slices 1-4
@@ -1764,12 +2534,13 @@ here.
 - **Verified:** full clean regression suite 0 failed/0 error/0 warning
   (3425 passed, 182 skipped), confirmed via a controlled
   `git stash`/restore before/after comparison against the pre-Slice-3
-  baseline; `devtools::check()` down to the single pre-existing,
-  unrelated `IACUC` spelling NOTE (`BACKLOG.md`, out of scope); live
-  `shinytest2`/`chromote` smoke test confirmed real, correctly-computed
-  exclusion counts/flags (0/false for a true dam, 3/true for a
-  falsely-recorded sire) with zero console errors, screenshot captured
-  for the guide article.
+  baseline;
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  down to the single pre-existing, unrelated `IACUC` spelling NOTE
+  (`BACKLOG.md`, out of scope); live `shinytest2`/`chromote` smoke test
+  confirmed real, correctly-computed exclusion counts/flags (0/false for
+  a true dam, 3/true for a falsely-recorded sire) with zero console
+  errors, screenshot captured for the guide article.
 - **Citation checklist (issue \#120):** new “Mendelian-Exclusion
   Parentage Verification” entry in
   `inst/extdata/ui_guidance/population_genetics_terms.html`.
@@ -1824,9 +2595,10 @@ here.
   instead of 4 — fixed during the RED-confirm step, before the RED
   commit.
 - **A real, previously-undetected defect fixed along the way:** S442’s
-  own `HANDOFFS.md` receipt claimed `devtools::check()` “0 errors/0
-  warnings/0 notes,” but the raw check log’s `Status:` line actually
-  said `1 NOTE` for spelling the whole time
+  own `HANDOFFS.md` receipt claimed
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  “0 errors/0 warnings/0 notes,” but the raw check log’s `Status:` line
+  actually said `1 NOTE` for spelling the whole time
   (`Manichaikul`/`Mychaleckyj`/`Daly`/
   `Bioinformatics`/`PLINK`/`biallelic`/`uninterpretable`, introduced by
   Slice 1, were never added to `inst/WORDLIST`) — the exact discrepancy
@@ -1852,8 +2624,9 @@ here.
   real screenshot captured for the guide article.
 - **Verified throughout:** full clean regression 0/0/0 (4096 passed, up
   from S442’s 4067 baseline; 170 skipped, unchanged);
-  `devtools::check()` down to the single pre-existing, unrelated `IACUC`
-  spelling NOTE (see above).
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  down to the single pre-existing, unrelated `IACUC` spelling NOTE (see
+  above).
 - **`BACKLOG.md`:** \#130 sequencing item updated (Slice 2 DONE; Slices
   3/4/5 next); new Housekeeping item for the `IACUC` spelling gap.
 - **Learnings:** `PROJECT_LEARNINGS.md` Learnings 426-427 added (the
@@ -1937,8 +2710,9 @@ here.
   passed! 4 records processed” run and screenshot. See
   `PROJECT_LEARNINGS.md` Learning 425.
 - **Verified:** full clean regression read 0 failed/0 error/0 warning
-  (4067 passed, 170 skipped); `devtools::check()` 0 errors/0 warnings/0
-  notes.
+  (4067 passed, 170 skipped);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/0 notes.
 - **BACKLOG.md** issue \#130 sequencing item updated (Slice 1 DONE;
   Slices 2/3/4/5 next, any order per the plan’s dependency graph).
   `PROJECT_LEARNINGS.md` Learnings 422-425 added; `CLAUDE.md`’s
@@ -2036,20 +2810,22 @@ here.
   of `a3manual.Rmd`, confirming the new text appears in the rendered
   output.
 - **Verification:** regression suite 0 failed/0 error/0 warning (3290
-  passed, 182 skipped); `devtools::check()` 0 errors/0 warnings/0 notes.
-  Phase 3E runtime smoke test: live `shinytest2`/ `chromote` session
-  confirmed the button is genuinely functional, not just error-free —
-  clicking it produced a real `pedigree_diagram.png` file (17,374 bytes)
-  with a valid PNG magic-number signature, captured by overriding the
-  chromote session’s download behavior to a temp directory
-  (`get_download()`/ `expect_download()` don’t apply, since this is a
-  purely client-side JS download with no backing Shiny output).
-  `PROJECT_LEARNINGS.md` Learnings 418/419 added. `BACKLOG.md`’s
-  pedigree-diagram-audit follow-ups section updated (issue \#131 item
-  resolved). `CLAUDE.md`’s learnings-count cross-reference updated
-  (417→419, Sessions 1-439+→1-440+). **Issue \#131 closed via `gh api`**
-  (per the established `gh-pr-edit-projectcards-workaround`), with a
-  closing comment summarizing the fix and verification.
+  passed, 182 skipped);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/0 notes. Phase 3E runtime smoke test: live
+  `shinytest2`/ `chromote` session confirmed the button is genuinely
+  functional, not just error-free — clicking it produced a real
+  `pedigree_diagram.png` file (17,374 bytes) with a valid PNG
+  magic-number signature, captured by overriding the chromote session’s
+  download behavior to a temp directory (`get_download()`/
+  `expect_download()` don’t apply, since this is a purely client-side JS
+  download with no backing Shiny output). `PROJECT_LEARNINGS.md`
+  Learnings 418/419 added. `BACKLOG.md`’s pedigree-diagram-audit
+  follow-ups section updated (issue \#131 item resolved). `CLAUDE.md`’s
+  learnings-count cross-reference updated (417→419, Sessions
+  1-439+→1-440+). **Issue \#131 closed via `gh api`** (per the
+  established `gh-pr-edit-projectcards-workaround`), with a closing
+  comment summarizing the fix and verification.
 
 ### 2026-07-30 · \[BL-test-e2e-data-ready\] Fix `test-e2e-data-ready.R`’s hollow “appUI includes data-ready.js” test (Session 439)
 
@@ -2082,10 +2858,11 @@ here.
   to `HEAD` after revert, so this session shipped a test-only diff.
 - **Verification:** regression suite 0 failed/0 error/0 warning (4006
   passed, 170 skipped, with `NOT_CRAN=true` set — see Learning 417
-  below); `devtools::check()` 0 errors/0 warnings/0 notes. Phase 3E
-  runtime smoke test: n/a — test-only change, no runtime behavior
-  affected (stated explicitly per `SESSION_RUNNER.md` §3E, not silently
-  skipped).
+  below);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/0 notes. Phase 3E runtime smoke test: n/a —
+  test-only change, no runtime behavior affected (stated explicitly per
+  `SESSION_RUNNER.md` §3E, not silently skipped).
 - **Incidental discovery:** `CLAUDE.md`’s documented “Fast single-file
   test” one-liner doesn’t set `NOT_CRAN`, so running it against any file
   with a top-level `skip_on_cran()` (as in `test-e2e-data-ready.R:10`)
@@ -2152,12 +2929,14 @@ here.
   `BACKLOG.md` rather than fixed here (unrelated file, out of scope).
 - **Verification:** 2 new unit tests pass; full regression suite
   exact-clean (0 failed/0 error/0 warning, 3287 passed — up from 3282 —
-  182 skipped); `devtools::check()` 0 errors/0 warnings/0 notes (after
-  adding `htmltools` to `Suggests`, which fixed one transient WARNING).
-  **Phase 3E live `shinytest2`/`chromote` smoke test** (mandatory —
-  changes JS/dependency-loading behavior): zero console errors of any
-  kind on the Summary Statistics tab, AND direct DOM inspection confirms
-  a real `bs.popover` instance now attaches to both a `popify()`-wrapped
+  182 skipped);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/0 notes (after adding `htmltools` to `Suggests`,
+  which fixed one transient WARNING). **Phase 3E live
+  `shinytest2`/`chromote` smoke test** (mandatory — changes
+  JS/dependency-loading behavior): zero console errors of any kind on
+  the Summary Statistics tab, AND direct DOM inspection confirms a real
+  `bs.popover` instance now attaches to both a `popify()`-wrapped
   download button and all 3 `addPopover()` targets
   (`mkBox`/`zscoreBox`/`guBox`) — popovers/tooltips are now actually
   functional, not just error-free, per Learning 414’s precedent (verify
@@ -2217,11 +2996,12 @@ here.
   [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)’s
   `export_all` default).
 - **Verification:** regression suite exact-clean (0 failed/0 error/0
-  warning, 3282 passed, 182 skipped); `devtools::check()` 0 errors/0
-  warnings/0 notes. **Phase 3E runtime smoke test (mandatory — this
-  changes dependency-loading behavior):** live `shinytest2`/`chromote`
-  app launch confirmed the `ReferenceError: shinyBS is not defined` no
-  longer occurs.
+  warning, 3282 passed, 182 skipped);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/0 notes. **Phase 3E runtime smoke test (mandatory
+  — this changes dependency-loading behavior):** live
+  `shinytest2`/`chromote` app launch confirmed the
+  `ReferenceError: shinyBS is not defined` no longer occurs.
 - **Discovery mid-verification:** the live smoke test surfaced a second,
   previously-hidden, *unrelated* defect — shinyBS 0.65.0’s JS is
   incompatible with this app’s bundled Bootstrap 4.6.0 popover plugin
@@ -2378,11 +3158,13 @@ here.
   click recomputes the trim via `pedigree()`, a background click is a
   no-op), confirmed failing for the right reason before GREEN. Verify:
   full clean regression read (0 failed/0 error/0 warning, 3280 passed,
-  up from 3275; 182 skipped, up from 181); `devtools::check()` raw log
-  `Status: OK` (0 errors/0 warnings/0 notes). Live E2E click-through
-  smoke test (Phase 3E, `tests/testthat/test-e2e-pedigree-module.R`)
-  confirmed the Table tab visibly updates after a Diagram-tab node click
-  — but only after discovering and working around a second real finding:
+  up from 3275; 182 skipped, up from 181);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  raw log `Status: OK` (0 errors/0 warnings/0 notes). Live E2E
+  click-through smoke test (Phase 3E,
+  `tests/testthat/test-e2e-pedigree-module.R`) confirmed the Table tab
+  visibly updates after a Diagram-tab node click — but only after
+  discovering and working around a second real finding:
   [`DT::renderDT`](https://rdrr.io/pkg/DT/man/dataTableOutput.html)’s
   output is suspended while its `tabPanel` is not the active tab
   (Shiny’s `outputOptions(suspendWhenHidden = TRUE)` default), so the
@@ -2421,21 +3203,23 @@ here.
   confirmed against live `visNetwork` docs and real `sex` factor level
   counts). NEWS.Rmd gained a Slice-1-scoped bullet (rendered to
   NEWS.md). Incidentally discovered (via this session’s own
-  `devtools::check()` verification, not this session’s diff) two
-  pre-existing, unrelated spelling-NOTE words from issue \#125’s
-  S423-era work (`deduplicated`, `selectable`) undetected since S421 —
-  fixed inline alongside this session’s own `visNetwork` WORDLIST
-  addition rather than deferred to `BACKLOG.md`, a deliberate deviation
-  from `PROJECT_LEARNINGS.md` Learning 382’s precedent, recorded as
-  Learning 407 for owner review. Also discovered a pre-existing,
-  unrelated `shinyBS is not defined` JS console error (not fixed — filed
-  to `BACKLOG.md` per Learning 382, contrast case for Learning 407).
-  `_pkgdown.yml` reference index updated for the new exported function.
-  `PROJECT_LEARNINGS.md` gained Learnings 405–407.
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  verification, not this session’s diff) two pre-existing, unrelated
+  spelling-NOTE words from issue \#125’s S423-era work (`deduplicated`,
+  `selectable`) undetected since S421 — fixed inline alongside this
+  session’s own `visNetwork` WORDLIST addition rather than deferred to
+  `BACKLOG.md`, a deliberate deviation from `PROJECT_LEARNINGS.md`
+  Learning 382’s precedent, recorded as Learning 407 for owner review.
+  Also discovered a pre-existing, unrelated `shinyBS is not defined` JS
+  console error (not fixed — filed to `BACKLOG.md` per Learning 382,
+  contrast case for Learning 407). `_pkgdown.yml` reference index
+  updated for the new exported function. `PROJECT_LEARNINGS.md` gained
+  Learnings 405–407.
 - **Verify:** RED confirmed 13 new/extended assertions failed for the
   correct reason (function/UI/output didn’t exist) before GREEN. Full
   clean regression read: 0 failed/0 error/0 warning, 3275 passed, 181
-  skipped (up from the 3198/179 S412-era baseline). `devtools::check()`:
+  skipped (up from the 3198/179 S412-era baseline).
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html):
   raw log `Status: OK`, 0 errors/0 warnings/0 notes (read from the raw
   `Status:` line per Learning 382, not the colored summary alone). Live
   `shinytest2`/`chromote` E2E smoke test against the bundled
@@ -2525,7 +3309,8 @@ here.
     `PROJECT_LEARNINGS.md` Learnings 402–403.
 - **Docs:** `man/reportGV.Rd` (new `flagged` `@return` clause),
   `man/qcPedGvReport.Rd`/`man/pedWithGenotypeReport.Rd` (incidental,
-  unrelated pre-existing staleness fixed as a `devtools::document()`
+  unrelated pre-existing staleness fixed as a
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
   byproduct — top-level list length `11` → `14`, already true before
   this session’s regen). `NEWS.Rmd`/`NEWS.md` updated. Citation
   checklist: checked
@@ -2607,8 +3392,9 @@ here.
   warning, 3246 passed (this environment’s true pre-session baseline on
   the unchanged prior commit is 3210, not the 3928 previously recorded
   in S427/S428’s `HANDOFFS.md` – confirmed via `git stash`, not caused
-  by this session; flagged, not chased further). `devtools::check()`: 0
-  errors/0 warnings, 1 NOTE (the same pre-existing
+  by this session; flagged, not chased further).
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html):
+  0 errors/0 warnings, 1 NOTE (the same pre-existing
   `deduplicated`/`selectable` spelling gap tracked since S415, unrelated
   to this session). `inst/WORDLIST` updated (`skewness`, `kurtosis`,
   `Pearson`, `Joanes`, `reactives`, hand-added). `_pkgdown.yml`’s “All
@@ -2680,11 +3466,12 @@ here.
   `NEWS.Rmd`/`NEWS.md` (`bfe36cd8`). **Closes issue \#128.**
 - **Verification:** targeted test file green; clean regression read 0
   failed/0 error/0 warning, 3928 passed (up from 3907);
-  `devtools::check()` 0 errors/0 warnings/0 notes; Phase 3E runtime
-  smoke test against the live app (small synthetic pedigree, Learning
-  395 precedent) confirmed Top-N-ranked unchanged (bounded to
-  `nTopAnimals`) and the genetic-value floor bypassing that bound for
-  all 3 `animalSource` choices, zero crashes.
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/0 notes; Phase 3E runtime smoke test against the
+  live app (small synthetic pedigree, Learning 395 precedent) confirmed
+  Top-N-ranked unchanged (bounded to `nTopAnimals`) and the
+  genetic-value floor bypassing that bound for all 3 `animalSource`
+  choices, zero crashes.
 - **Learnings:** `PROJECT_LEARNINGS.md` 397 (a standalone
   [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
   script needs `NOT_CRAN=true` set itself, or `AppDriver$new()`’s
@@ -2781,11 +3568,12 @@ here.
   `selectedCandidate()` reactive to remove 4 repeated
   `groupResults()$candidates[[idx]]` lookups.
 - **Verification:** full regression suite 0 failed/0 error/0 warning
-  (3923 passed, up from 3907), `devtools::check()` 0 errors/0 warnings/0
-  notes, and a full Phase 3E runtime smoke test via
-  `shinytest2`/chromote driving the real app (a small synthetic 40-row
-  pedigree – the bundled 3,694-row example was impractically slow for a
-  live MIS search, Learning 395): confirmed 5 real, distinct,
+  (3923 passed, up from 3907),
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/0 notes, and a full Phase 3E runtime smoke test
+  via `shinytest2`/chromote driving the real app (a small synthetic
+  40-row pedigree – the bundled 3,694-row example was impractically slow
+  for a live MIS search, Learning 395): confirmed 5 real, distinct,
   independently-selectable candidates via selectize’s own JS API (the
   native `<select>`’s DOM `<option>` list is not a reliable proxy for a
   selectize widget’s real choices, Learning 393), switching candidates
@@ -2824,11 +3612,12 @@ here.
   [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
   script call demonstrates.
 - **Verification:** full regression suite 0 failed/0 error/0 warning
-  (3907 passed, up from 3198), `devtools::check()` 0 errors/0 warnings/0
-  notes, and a full Phase 3E runtime smoke test via
-  `shinytest2`/chromote driving the real app (real 3,694-row pedigree
-  upload through the actual Input tab, QC confirmed, GVA run under 4
-  rankScheme/axisPriority/cutoff configurations, full-CSV-export
+  (3907 passed, up from 3198),
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/0 notes, and a full Phase 3E runtime smoke test
+  via `shinytest2`/chromote driving the real app (real 3,694-row
+  pedigree upload through the actual Input tab, QC confirmed, GVA run
+  under 4 rankScheme/axisPriority/cutoff configurations, full-CSV-export
   comparison confirmed genuine differentiation – 15-316 animals changed
   value/rank per comparison).
 - **Result:** Slice 1 shipped (commits `9d627dca` RED, `fdab2eb5`
@@ -2907,23 +3696,24 @@ here.
 
 - **Deliverable:** Owner-picked from S420’s priorities list, per
   `BACKLOG.md`’s Housekeeping item flagged S415/discovered via
-  `devtools::check()`. `NEWS.md:8`’s S410 edit (“CRAN’s 2.0.0
-  submission… any future CRAN resubmission ships as 2.0.1”) introduced
-  `CRAN's` and `resubmission` without adding them to `inst/WORDLIST`,
-  producing a real `Status: 1 NOTE` in the raw `R CMD check` log
-  (`PROJECT_LEARNINGS.md` Learning 382). TDD Phase: N/A –
-  `inst/WORDLIST` is a curated spelling-check word list, not production
-  `R/`/`tests/` code.
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html).
+  `NEWS.md:8`’s S410 edit (“CRAN’s 2.0.0 submission… any future CRAN
+  resubmission ships as 2.0.1”) introduced `CRAN's` and `resubmission`
+  without adding them to `inst/WORDLIST`, producing a real
+  `Status: 1 NOTE` in the raw `R CMD check` log (`PROJECT_LEARNINGS.md`
+  Learning 382). TDD Phase: N/A – `inst/WORDLIST` is a curated
+  spelling-check word list, not production `R/`/`tests/` code.
 - **Result:** hand-added `CRAN's` (between
   `ColonyManagerTutorial`/`Curation`) and `resubmission` (between
   `resetPopulation`/`retentions`) to `inst/WORDLIST`, matching the
   file’s existing case-insensitive collation order – did not run
   [`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html)
   wholesale, per the project’s “avoid reconcile tools on curated files”
-  convention (S230). Verified: `devtools::check()` raw log `Status: OK`,
-  0 errors/0 warnings/0 notes (the spelling NOTE is gone); regression
-  suite exact baseline match (0 failed/0 error/0 warning, 3198 passed,
-  179 skipped).
+  convention (S230). Verified:
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  raw log `Status: OK`, 0 errors/0 warnings/0 notes (the spelling NOTE
+  is gone); regression suite exact baseline match (0 failed/0 error/0
+  warning, 3198 passed, 179 skipped).
 
 ### 2026-07-29 · \[BL-RoadmapDocEnginePath\] Fix `ROADMAP.md`’s stale doc-engine-policy line (Session 420)
 
@@ -3014,9 +3804,11 @@ here.
 - **Verify:** `R CMD build` tarball ships the PDF at
   `inst/extdata/reference/` and nothing at the old flat path (confirmed
   via `tar tzf`); regression suite exact baseline (0/0/0, 3198 passed,
-  179 skipped); `devtools::check()` 0 errors/0 warnings, 1 NOTE (same
-  pre-existing `NEWS.md:8` spelling gap, confirmed untouched – read from
-  the raw check log’s `Status:` line per Learning 382).
+  179 skipped);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings, 1 NOTE (same pre-existing `NEWS.md:8` spelling
+  gap, confirmed untouched – read from the raw check log’s `Status:`
+  line per Learning 382).
 - **`inst/extdata/` reorganization plan is now fully executed (Phases
   1-4 all DONE)** – `docs/planning/extdata-reorganization-plan.md`, S414
   (plan) through S418 (this session).
@@ -3071,11 +3863,11 @@ here.
   on `origin/master` – Dragon 2’s “manual link click” requirement, done
   via API rather than a browser; regression suite exact baseline match
   (0 failed/0 error/0 warning, 3198 passed, 179 skipped);
-  `devtools::check()` 0 errors/0 warnings, 1 NOTE – the same
-  pre-existing, unrelated `NEWS.md:8` spelling gap from S415/S416,
-  confirmed untouched by this session’s diff, read from the raw check
-  log’s `Status:` line per Learning 382 (the colored summary again
-  showed 0 notes).
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings, 1 NOTE – the same pre-existing, unrelated
+  `NEWS.md:8` spelling gap from S415/S416, confirmed untouched by this
+  session’s diff, read from the raw check log’s `Status:` line per
+  Learning 382 (the colored summary again showed 0 notes).
 - Updated `BACKLOG.md` (Phase 3 marked DONE, Phase 4’s 2 open decisions
   restated), `PROJECT_LEARNINGS.md` (Learning 384), `CLAUDE.md`’s
   learning-count cross-reference (383 -\> 384).
@@ -3123,14 +3915,16 @@ here.
   untouched since they’re plain filenames with no path prefix, still
   accurate post-move; the one hardcoded path in
   `vignettes/a2interactive.Rmd:90`. Regenerated `man/loadSiteConfig.Rd`
-  via `devtools::document()` – the only one of the plan’s 5 named `.Rd`
-  files that actually needed it, confirming the `R/data.R` scoping call
-  was correct.
+  via
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  – the only one of the plan’s 5 named `.Rd` files that actually needed
+  it, confirming the `R/data.R` scoping call was correct.
 - **Verification:** Fresh regression suite exactly matches the pre-move
   baseline (0 failed/0 error/0 warning, 3198 passed, 179 skipped, S412);
   `R CMD build` tarball confirmed all 10 files ship under `examples/`
-  and nothing remains at the old flat path; `devtools::check()` 0
-  errors/0 warnings, 1 NOTE (the same pre-existing, unrelated spelling
+  and nothing remains at the old flat path;
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings, 1 NOTE (the same pre-existing, unrelated spelling
   gap S415 found – confirmed untouched by this session’s diff via
   `git log` on `NEWS.md`/`inst/WORDLIST`/`tests/spelling.R`); grep sweep
   confirmed the only 3 remaining un-migrated references are exactly what
@@ -3174,15 +3968,16 @@ here.
   `create_nprcgenekeepr_hexbadge.R` (the file that previously shipped
   unintentionally) and the rest of the dev-scratch/orphaned cluster are
   gone; only the 10 load-bearing files + the new PDF + `ui_guidance/`
-  remain in the shipped `inst/extdata/`. `devtools::check()`: 0 errors/0
-  warnings, but the raw log’s own `Status: 1 NOTE` directly contradicted
-  devtools’ colored “0 notes ✔” summary line – traced to a pre-existing,
-  unrelated `NEWS.md:8` spelling-check gap (`CRAN's`/ `resubmission`
-  missing from `inst/WORDLIST`, introduced by S410, five sessions before
-  this one; confirmed untouched by this session’s diff) rather than
-  anything this session’s changes caused. Reported rather than silently
-  fixed (scope discipline, `SAFEGUARDS.md`) – see the new `BACKLOG.md`
-  Housekeeping item. `PROJECT_LEARNINGS.md` Learning 382.
+  remain in the shipped `inst/extdata/`.
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html):
+  0 errors/0 warnings, but the raw log’s own `Status: 1 NOTE` directly
+  contradicted devtools’ colored “0 notes ✔” summary line – traced to a
+  pre-existing, unrelated `NEWS.md:8` spelling-check gap (`CRAN's`/
+  `resubmission` missing from `inst/WORDLIST`, introduced by S410, five
+  sessions before this one; confirmed untouched by this session’s diff)
+  rather than anything this session’s changes caused. Reported rather
+  than silently fixed (scope discipline, `SAFEGUARDS.md`) – see the new
+  `BACKLOG.md` Housekeeping item. `PROJECT_LEARNINGS.md` Learning 382.
 - **Also:** Updated the `BACKLOG.md` reorg item to Phase 1 DONE / Phases
   2-4 status; added a new Housekeeping item for the spelling NOTE; added
   `PROJECT_LEARNINGS.md` Learnings 381-382; updated `CLAUDE.md`’s
@@ -3367,7 +4162,8 @@ here.
   this session recognize instantly that today’s new information resolved
   it, though the handoff had no direct content overlap with today’s
   externally triggered task). Self-assessed 8/10 (docked for not
-  surfacing the `gh release create` vs. `usethis::use_github_release()`
+  surfacing the `gh release create`
+  vs. [`usethis::use_github_release()`](https://usethis.r-lib.org/reference/use_github_release.html)
   deviation as its own decision point, and for only partially verifying
   binary-flavor publication 2 days post-accept). Added
   `PROJECT_LEARNINGS.md` Learning 376 (installed-vs-source package
@@ -3952,10 +4748,11 @@ here.
 ### 2026-07-18 · \[BL-CRAN200\] Process CRAN’s real incoming-pretest auto-check result for the 2.0.0 submission (Session 399)
 
 - **Deliverable:** owner pasted CRAN’s auto-processed email for the real
-  2026-07-17 `devtools::submit_cran()` submission – verify the actual
-  `00check.log` files (not just the email summary) and update
-  `BACKLOG.md`/`HANDOFFS.md` accordingly. No `R/`/`tests/` code touched;
-  TDD phase N/A.
+  2026-07-17
+  [`devtools::submit_cran()`](https://devtools.r-lib.org/reference/submit_cran.html)
+  submission – verify the actual `00check.log` files (not just the email
+  summary) and update `BACKLOG.md`/`HANDOFFS.md` accordingly. No
+  `R/`/`tests/` code touched; TDD phase N/A.
 - **Result:** fetched both `00check.log`s directly
   (win-builder.r-project.org incoming-pretest logs). Windows r-devel and
   Debian both returned `Status: 1 NOTE` – the standard
@@ -4085,13 +4882,14 @@ here.
 
 ### 2026-07-17 · \[ad hoc\] Submit v2.0.0 to CRAN, maintainer confirmation clicked (Session 397 addendum, owner action)
 
-- **Action:** owner ran `devtools::submit_cran()` (per the resubmit
-  decision recorded above) – package uploaded successfully to the CRAN
-  submission team – and clicked the maintainer-email confirmation link
-  the same day. v2.0.0 is now fully in CRAN’s review queue. Awaiting
-  CRAN’s actual review outcome; asynchronous and owner-only.
-  `BACKLOG.md`’s CRAN item updated to reflect the confirmed-submitted
-  status.
+- **Action:** owner ran
+  [`devtools::submit_cran()`](https://devtools.r-lib.org/reference/submit_cran.html)
+  (per the resubmit decision recorded above) – package uploaded
+  successfully to the CRAN submission team – and clicked the
+  maintainer-email confirmation link the same day. v2.0.0 is now fully
+  in CRAN’s review queue. Awaiting CRAN’s actual review outcome;
+  asynchronous and owner-only. `BACKLOG.md`’s CRAN item updated to
+  reflect the confirmed-submitted status.
 - **Submitted commit:** `CRAN-SUBMISSION` records
   `Date: 2026-07-17 14:51:08 UTC`,
   `SHA: db54d3257a1655a5582c3b201136f0ec868575bb` (the wording-fixes
@@ -4119,11 +4917,11 @@ here.
 ### 2026-07-17 · \[ad hoc\] Process win-builder Windows-devel result for CRAN 2.0.0 checktime fix – confirms fix, owner decides to resubmit (Session 397)
 
 - **Deliverable:** processed S396’s dispatched
-  `devtools::check_win_devel()` result (owner pasted the arrived
-  `00check.log` and email text) – confirm whether the S392-395 checktime
-  fixes clear CRAN’s 10-minute mark, update
-  `cran-comments.md`/`BACKLOG.md`, present the resubmit/wait/hold
-  decision.
+  [`devtools::check_win_devel()`](https://devtools.r-lib.org/reference/check_win.html)
+  result (owner pasted the arrived `00check.log` and email text) –
+  confirm whether the S392-395 checktime fixes clear CRAN’s 10-minute
+  mark, update `cran-comments.md`/`BACKLOG.md`, present the
+  resubmit/wait/hold decision.
 - **Result:** `checking tests` `245s -> 200s` (-45s); `examples` 80s and
   `re-building of vignette outputs` 65s essentially unchanged (no
   further safe lever, per S395). Win-builder’s own reported totals
@@ -4148,8 +4946,9 @@ here.
   and `BACKLOG.md`’s CRAN item.
 - **Owner decision (via `AskUserQuestion`, owner-only per SAFEGUARDS/the
   runbook HARD STOP): resubmit now.** Next action is the owner running
-  `devtools::submit_cran()` themselves; no further engineering action
-  this cycle unless CRAN rejects it again.
+  [`devtools::submit_cran()`](https://devtools.r-lib.org/reference/submit_cran.html)
+  themselves; no further engineering action this cycle unless CRAN
+  rejects it again.
 
 ### 2026-07-16 · \[ad hoc\] Dispatch win-builder Windows-devel re-check for CRAN 2.0.0 gate (Session 396)
 
@@ -4162,9 +4961,10 @@ here.
   rather than expanding it.
 - **Preflight:** confirmed a clean, in-sync `git status` (`master` ==
   `origin/master`) before dispatch. Unlike R-hub (which tests GitHub’s
-  copy and needed a push in S390), `devtools::check_win_devel()` builds
-  and uploads a tarball from the LOCAL working tree, so no push was a
-  precondition here.
+  copy and needed a push in S390),
+  [`devtools::check_win_devel()`](https://devtools.r-lib.org/reference/check_win.html)
+  builds and uploads a tarball from the LOCAL working tree, so no push
+  was a precondition here.
 - **Dispatched:** `devtools::check_win_devel(quiet = FALSE)` from the
   project root. Build succeeded cleanly (`nprcgenekeepr_2.0.0.tar.gz`,
   vignettes rebuilt OK, routine empty-directory pruning under
@@ -4174,10 +4974,11 @@ here.
   clean after the build (temp build artifacts never touched the tracked
   tree).
 - **Verification:** dispatch confirmed via the
-  `devtools::check_win_devel()` console output naming the results ETA;
-  actual pass/fail results are not yet available this session
-  (asynchronous, mirroring the S361-\>S362 and S390-\>S391 split –
-  processing them is the next session’s work).
+  [`devtools::check_win_devel()`](https://devtools.r-lib.org/reference/check_win.html)
+  console output naming the results ETA; actual pass/fail results are
+  not yet available this session (asynchronous, mirroring the
+  S361-\>S362 and S390-\>S391 split – processing them is the next
+  session’s work).
 - TDD Phase: N/A (release-mechanics/verification action; no
   `R/`/`tests/` code changed this session, matching S391’s precedent
   classification).
@@ -4392,22 +5193,23 @@ here.
 - **Verification:** full regression 0 failed/0 error/0 warning (CRAN
   mode, 3197 passed/179 skipped, unchanged from S392’s post-fix
   baseline).
-- **Next:** dispatched `devtools::check_win_devel()` again to measure
-  the real impact of this additional trim.
+- **Next:** dispatched
+  [`devtools::check_win_devel()`](https://devtools.r-lib.org/reference/check_win.html)
+  again to measure the real impact of this additional trim.
 - TDD Phase: REFACTOR (vignette content/parameter reduction only; no
   production behavior change).
 
 ### 2026-07-16 · \[ad hoc\] Fix real CRAN incoming-check rejection: Windows “Overall checktime” \> 10 min (Session 392)
 
 - **Deliverable:** A real 2.0.0 submission (owner ran
-  `devtools::submit_cran()` out-of-session; evidenced by the uncommitted
-  `CRAN-SUBMISSION` dated 2026-07-16 06:17 UTC, SHA matching the S391
-  close-out commit `03736837`) was **rejected** by CRAN’s actual
-  incoming automatic check – distinct from the win-builder pretests this
-  project’s own sessions have been running, which do not exercise this
-  gate. Windows r-devel flagged “Overall checktime 12 min \> 10 min” –
-  the same failure class (“Tested elapsed times”) that archived this
-  package in 2025.
+  [`devtools::submit_cran()`](https://devtools.r-lib.org/reference/submit_cran.html)
+  out-of-session; evidenced by the uncommitted `CRAN-SUBMISSION` dated
+  2026-07-16 06:17 UTC, SHA matching the S391 close-out commit
+  `03736837`) was **rejected** by CRAN’s actual incoming automatic check
+  – distinct from the win-builder pretests this project’s own sessions
+  have been running, which do not exercise this gate. Windows r-devel
+  flagged “Overall checktime 12 min \> 10 min” – the same failure class
+  (“Tested elapsed times”) that archived this package in 2025.
 - **Diagnosis:** Fetched verbatim `00check.log` for both flavors (not
   the email summary): the “Overall checktime” note is NOT in the check
   log itself – it’s a separate wall-clock summary CRAN’s incoming
@@ -4469,10 +5271,11 @@ here.
   clean”) and this fix.
 - **Dispatched (owner-approved via `AskUserQuestion`, mirroring the
   S361/S390 precedent that pretest triggers are session-doable):**
-  `devtools::check_win_devel()` – results due by email ~11:59 AM
-  2026-07-16. Processing them is the next session’s work (mirroring the
-  S390-\>S391 split). `devtools::submit_cran()` itself remains
-  owner-only per SAFEGUARDS.
+  [`devtools::check_win_devel()`](https://devtools.r-lib.org/reference/check_win.html)
+  – results due by email ~11:59 AM 2026-07-16. Processing them is the
+  next session’s work (mirroring the S390-\>S391 split).
+  [`devtools::submit_cran()`](https://devtools.r-lib.org/reference/submit_cran.html)
+  itself remains owner-only per SAFEGUARDS.
 - TDD Phase: REFACTOR (test/example/vignette runtime reduction; no
   production behavior change; full regression suite green throughout).
 
@@ -4503,7 +5306,8 @@ here.
   environment run this cycle** (local macOS, win-builder x3, R-hub x3).
   Folded into `cran-comments.md` §Test environments and
   `docs/planning/cran-2.0.0-phase5-runbook.md`. Next: owner-only
-  `devtools::submit_cran()` + maintainer-email confirmation click.
+  [`devtools::submit_cran()`](https://devtools.r-lib.org/reference/submit_cran.html) +
+  maintainer-email confirmation click.
 - TDD Phase: N/A (build/verify/release-mechanics action; no
   `R/`/`tests/` code changed this session).
 
@@ -4525,10 +5329,11 @@ here.
   to origin first (plain fast-forward, 5 commits, no force), confirmed
   via `AskUserQuestion` since pushing is a shared-state action beyond
   the original trigger scope.
-- **Dispatched:** `devtools::check_win_devel()` / `check_win_release()`
-  / `check_win_oldrelease()` — all three dispatched OK, results by email
-  to `rmsharp@me.com` in ~15-30 min. `rhub::rhub_doctor()` confirmed
-  clean setup;
+- **Dispatched:**
+  [`devtools::check_win_devel()`](https://devtools.r-lib.org/reference/check_win.html)
+  / `check_win_release()` / `check_win_oldrelease()` — all three
+  dispatched OK, results by email to `rmsharp@me.com` in ~15-30 min.
+  `rhub::rhub_doctor()` confirmed clean setup;
   `rhub::rhub_check(platforms=c("linux","windows","macos"))` dispatched
   as run “hillocked-veery” (confirmed via `gh run list`), superseding
   the owner’s own pre-fix “cyclopean-iguanodon” R-hub run (2026-07-16
@@ -4545,8 +5350,9 @@ here.
 
 ### 2026-07-16 · \[ad hoc\] Fix deprecated `.Names=` usage flagged by win-builder (Session 389)
 
-- **Deliverable:** Owner ran `devtools::check_win_devel()` after S388’s
-  close-out and it returned a NOTE not previously on file:
+- **Deliverable:** Owner ran
+  [`devtools::check_win_devel()`](https://devtools.r-lib.org/reference/check_win.html)
+  after S388’s close-out and it returned a NOTE not previously on file:
   `checking R code for possible problems` flagged
   `structure(..., .Names = ...)` in
   `tests/testthat/test_getParamDef.R:27` as a deprecated special-name
@@ -4571,12 +5377,14 @@ here.
 
 - **Deliverable:** Re-ran `R CMD build .` +
   `R CMD check --as-cran --timings` on current `master` (`79380fba`)
-  before the owner-only `devtools::submit_cran()` step, since 25 commits
-  touched `R/`/`tests/`/`DESCRIPTION`/`NAMESPACE` since the last
-  confirmed run (S359, `19ae5657`) — more than double the 9-commit
-  threshold that triggered a mandatory re-run at S359 itself. Owner
-  scoped this session to local re-verify only, via `AskUserQuestion`;
-  win-builder/R-hub re-triggering deferred to the owner.
+  before the owner-only
+  [`devtools::submit_cran()`](https://devtools.r-lib.org/reference/submit_cran.html)
+  step, since 25 commits touched `R/`/`tests/`/`DESCRIPTION`/`NAMESPACE`
+  since the last confirmed run (S359, `19ae5657`) — more than double the
+  9-commit threshold that triggered a mandatory re-run at S359 itself.
+  Owner scoped this session to local re-verify only, via
+  `AskUserQuestion`; win-builder/R-hub re-triggering deferred to the
+  owner.
 - **Result:** `0 errors | 0 warnings | 1 note` (expected
   incoming-feasibility note only). Timings unchanged within noise:
   examples 23s (slowest `groupAddAssign` 1.486s), tests 87s, vignette
@@ -4669,7 +5477,8 @@ here.
   See `PROJECT_LEARNINGS.md` Learning 357.
 - **Verification:** full regression suite 0 failed/0 error/0 warning,
   169 skipped baseline (unchanged, matches pre-session exactly); 0 new
-  lints on all 13 changed/new files (`lintr`); `devtools::check()`
+  lints on all 13 changed/new files (`lintr`);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
   Status: OK (0 errors, 0 warnings, only the pre-existing installed-size
   INFO); live scripted Phase 3E smoke test (not only `testthat`)
   confirmed the fixed
@@ -4892,14 +5701,15 @@ here.
   declared unneeded). RED confirmed 1 new failing test per target file
   against unmodified source. GREEN: both target files pass; full
   regression suite 0 failed/0 error/0 warning (169 skipped baseline,
-  unchanged); `devtools::check()` 0 errors/0 warnings/0 notes; `lintr` 0
-  lints on all 4 changed files. Phase 3E performed with real
-  (non-mocked) evidence: built an actual malformed config file (missing
-  `center`, reusing `test_appUI_siteinfo.R`’s established fixture) and
-  called both real functions directly – both returned `NULL` cleanly
-  with no uncaught error; also re-confirmed the missing-config
-  warn-and-continue path still propagates and completes correctly,
-  unbroken by the new guard.
+  unchanged);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/0 notes; `lintr` 0 lints on all 4 changed files.
+  Phase 3E performed with real (non-mocked) evidence: built an actual
+  malformed config file (missing `center`, reusing
+  `test_appUI_siteinfo.R`’s established fixture) and called both real
+  functions directly – both returned `NULL` cleanly with no uncaught
+  error; also re-confirmed the missing-config warn-and-continue path
+  still propagates and completes correctly, unbroken by the new guard.
 - **See:** `PROJECT_LEARNINGS.md` Learning 353.
 
 ### 2026-07-14 · \[ad hoc\] Fix the stale-library gap blocking full `shinytest2::AppDriver` checks (Session 381)
@@ -4987,8 +5797,9 @@ here.
   file-internal test execution order.
 - **Verification:** target files: `test_modORIPReporting_server.R` 14/14
   passed; `test_appServer_logging.R` 4/4 passed. Full suite 3225
-  passed/169 skipped/0 failed/0 error/0 warning. `devtools::check()` 0
-  errors/0 warnings/0 notes. lintr 0 lints on all 4 changed files.
+  passed/169 skipped/0 failed/0 error/0 warning.
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/0 notes. lintr 0 lints on all 4 changed files.
   `grep -rn "getSiteInfo(" R/` confirmed the 4 LabKey-fetch sites remain
   untouched, exactly as scoped. Phase 3E: the two `modORIPReporting.R`
   sites are dead code in the live app (no live path can reach them), so
@@ -5039,9 +5850,10 @@ here.
   in `tests/testthat/test_appUI_siteinfo.R`.
 - **Verification:** target test file 2/2 passed; `test_appUI_version.R`
   (regression) 3/3 passed; full suite 3217 passed/169 skipped/0 failed/0
-  error/0 warning; `devtools::check()` (both plain and `--no-manual`
-  variants) 0 errors/0 warnings/0 notes; lintr 0 lints on both changed
-  files. Phase 3E: live
+  error/0 warning;
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  (both plain and `--no-manual` variants) 0 errors/0 warnings/0 notes;
+  lintr 0 lints on both changed files. Phase 3E: live
   [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
   boot performed (not declared N/A) –
   `shinyApp(ui = appUI(), server = appServer)` construction against a
@@ -5102,9 +5914,10 @@ here.
   sweep). The `appServer.R` code comment was corrected to not overclaim
   “app boot” broadly.
 - **Verification:** target test file 27/27 passed; full suite 3215
-  passed/169 skipped/0 failed/0 error/0 warning; `devtools::check()` 0
-  errors/0 warnings/0 notes; lintr 0 lints on both changed files. Phase
-  3E: live `AppDriver` boot performed (not declared N/A) – see
+  passed/169 skipped/0 failed/0 error/0 warning;
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/0 notes; lintr 0 lints on both changed files.
+  Phase 3E: live `AppDriver` boot performed (not declared N/A) – see
   `PROJECT_LEARNINGS.md` Learning 349 for the full detail including a
   second, inconclusive live check (unrelated pre-existing
   e2e-subprocess-staleness artifact).
@@ -5145,25 +5958,26 @@ here.
   with an explicit negative control (3 deliberately broken module
   stand-ins, each caught). Added a roxygen `@note` to `modInputServer`
   citing the contract doc and marking it the reference implementation;
-  `devtools::document()` run standalone (regenerated only
-  `man/modInputServer.Rd`, `NAMESPACE` unchanged). **Finding: `modInput`
-  was already fully contract-compliant** – S376’s Phase 4 work (dead
-  `config` param removal, completing its `@return` docs) had already, as
-  a side effect, cleared Phase 5’s stated “bring modInput up to the
-  contract” prerequisite; the plan’s own §4.4 blockquote and S376’s
-  handoff gotcha both still described it as non-compliant, stale
-  relative to S376’s own commits. Also fixed a `.gitignore` gap
-  discovered while committing: `docs/*` was blanket-ignored with a
-  per-subdirectory allowlist that did not yet include
-  `docs/architecture/`, which would have silently dropped the new
-  contract doc from every commit. Verified: full suite 3870 passed/0
-  failed/0 error/0 warning/167 skipped (3802 baseline + 68 new
-  guard-test expectations); `devtools::check()` 0 errors/0 warnings/0
-  notes; lintr 0 lints on both changed files. Phase 3E: N/A, declared
-  explicitly – no runtime behavior changed (docs + a new test file
-  only). **Issue \#122 (XARCH-2) is now fully resolved** – all 5 plan
-  phases DONE across S373-S377; `BACKLOG.md`’s “Architecture (issue
-  \#122)” section pruned to a resolved pointer. See
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  run standalone (regenerated only `man/modInputServer.Rd`, `NAMESPACE`
+  unchanged). **Finding: `modInput` was already fully
+  contract-compliant** – S376’s Phase 4 work (dead `config` param
+  removal, completing its `@return` docs) had already, as a side effect,
+  cleared Phase 5’s stated “bring modInput up to the contract”
+  prerequisite; the plan’s own §4.4 blockquote and S376’s handoff gotcha
+  both still described it as non-compliant, stale relative to S376’s own
+  commits. Also fixed a `.gitignore` gap discovered while committing:
+  `docs/*` was blanket-ignored with a per-subdirectory allowlist that
+  did not yet include `docs/architecture/`, which would have silently
+  dropped the new contract doc from every commit. Verified: full suite
+  3870 passed/0 failed/0 error/0 warning/167 skipped (3802 baseline + 68
+  new guard-test expectations);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/0 notes; lintr 0 lints on both changed files.
+  Phase 3E: N/A, declared explicitly – no runtime behavior changed
+  (docs + a new test file only). **Issue \#122 (XARCH-2) is now fully
+  resolved** – all 5 plan phases DONE across S373-S377; `BACKLOG.md`’s
+  “Architecture (issue \#122)” section pruned to a resolved pointer. See
   `PROJECT_LEARNINGS.md` Learning 348, `BACKLOG.md`.
 
 ### 2026-07-13 · \[issue \#122\] Phase 4: prune the dead surface (Session 376)
@@ -5202,9 +6016,12 @@ here.
   [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
   call at the ORIP-tab gate (new `BACKLOG.md` item). Verified: full
   suite 3802 passed/0 failed/0 error/0 warning/167 skipped (baseline
-  unchanged); `devtools::check()` 0 errors/0 warnings/0 notes; lintr 0
-  lints across all 14 changed files; `devtools::document()` run
-  standalone, touching only the 2 expected `.Rd` files (`NAMESPACE`
+  unchanged);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/0 notes; lintr 0 lints across all 14 changed
+  files;
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  run standalone, touching only the 2 expected `.Rd` files (`NAMESPACE`
   unchanged); Phase 3E live smoke test via the repo’s existing e2e suite
   – `test-e2e-input-detailed.R` (6/6),
   `test-e2e-input-incomplete-final-line.R` (2/2),
@@ -5256,18 +6073,19 @@ here.
   other 7 test files’ fixtures/assertions were flipped to canonical
   vocabulary as RED, confirmed failing for the predicted reason against
   unmigrated source, then GREEN. Full suite 0 failed/0 error/0
-  warning/167 skipped (baseline unchanged); `devtools::check()` 0
-  errors/0 warnings/0 notes (both before and after a standalone
-  `devtools::document()` that regenerated only
-  `man/modSummaryStatsServer.Rd`, `NAMESPACE` unchanged). End-to-end
-  verification against the real 280-animal `qcPed` fixture:
-  `geneticValues()` confirmed identical to `gvResults()`;
-  `modSummaryStats`/ `modORIPReporting` confirmed to render the exact
-  same independently-computed mean values – satisfying the plan’s
-  “byte-identical… must be re-proved, not assumed” DONE criterion by
-  execution. Phase 3E (mandatory – runtime read paths in three
-  live-wired modules changed): the repo’s existing `NPRC_RUN_E2E=true`
-  browser e2e suite across all 5 relevant files –
+  warning/167 skipped (baseline unchanged);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/0 notes (both before and after a standalone
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  that regenerated only `man/modSummaryStatsServer.Rd`, `NAMESPACE`
+  unchanged). End-to-end verification against the real 280-animal
+  `qcPed` fixture: `geneticValues()` confirmed identical to
+  `gvResults()`; `modSummaryStats`/ `modORIPReporting` confirmed to
+  render the exact same independently-computed mean values – satisfying
+  the plan’s “byte-identical… must be re-proved, not assumed” DONE
+  criterion by execution. Phase 3E (mandatory – runtime read paths in
+  three live-wired modules changed): the repo’s existing
+  `NPRC_RUN_E2E=true` browser e2e suite across all 5 relevant files –
   `test-e2e-genetic-value-module.R` (7/7),
   `test-e2e-genetic-value-detailed.R` (7/7),
   `test-e2e-genetic-value-tutorial.R` (8/8),
@@ -5329,17 +6147,21 @@ here.
   [`identical()`](https://rdrr.io/r/base/identical.html) object identity
   between what both consumers receive), each confirmed failing for the
   predicted reason before any implementation. GREEN: full suite 0
-  failed/0 error/0 warning (167 skipped); `devtools::check()` 0 errors/0
-  notes/1 expected codoc WARNING (the new `kinshipMatrix` param
-  undocumented). REFACTOR: added `@param kinshipMatrix`, corrected the
-  now-stale `@param geneticValues`/`@param kinshipOverrides` prose
-  describing the deleted branch; `devtools::document()` standalone
-  regenerated only `man/modBreedingGroupsServer.Rd`, `NAMESPACE`
-  unchanged. Re-ran `devtools::check()`: 0 errors/0 warnings/0 notes.
-  Phase 3E (mandatory – this phase changes runtime wiring): the repo’s
-  existing browser e2e suite, gated behind `NPRC_RUN_E2E=true` (a second
-  opt-in beyond `NOT_CRAN`/`skip_on_cran()` this session discovered
-  rather than writing a bespoke
+  failed/0 error/0 warning (167 skipped);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 notes/1 expected codoc WARNING (the new `kinshipMatrix`
+  param undocumented). REFACTOR: added `@param kinshipMatrix`, corrected
+  the now-stale `@param geneticValues`/`@param kinshipOverrides` prose
+  describing the deleted branch;
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  standalone regenerated only `man/modBreedingGroupsServer.Rd`,
+  `NAMESPACE` unchanged. Re-ran
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html):
+  0 errors/0 warnings/0 notes. Phase 3E (mandatory – this phase changes
+  runtime wiring): the repo’s existing browser e2e suite, gated behind
+  `NPRC_RUN_E2E=true` (a second opt-in beyond
+  `NOT_CRAN`/`skip_on_cran()` this session discovered rather than
+  writing a bespoke
   [`callr::r_bg()`](https://callr.r-lib.org/reference/r_bg.html)
   script), `test-e2e-breeding-groups-module.R` (7/7) and
   `test-e2e-summary-statistics-module.R` (8/8) both pass against the
@@ -5385,7 +6207,8 @@ here.
   [`identical()`](https://rdrr.io/r/base/identical.html) regression
   test). Verified: RED tests failed for the predicted reason before the
   fix; full suite 0 failed/0 error/0 warning (169 skip, baseline
-  unchanged) after; `lintr::lint_package()` 0 lints; `devtools::check()`
+  unchanged) after; `lintr::lint_package()` 0 lints;
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
   0 errors/0 warnings/0 notes; end-to-end against `qcPed` confirms
   `makeGeneticSummaryTable(reportGV(qcPed)$report)` now populates
   correctly (was all-`NA`). `BACKLOG.md` updated (commit `cc6f6e8a`):
@@ -5514,9 +6337,10 @@ here.
   default-arg change. Pure generated-doc regen – `R/filterPairs.R`
   untouched, no behavior change (`sexCodes[["female"]]` resolves to
   `"F"`, identical to before).
-- **Verification:** `devtools::document()` run standalone (no other
-  pending roxygen edit) touched only `man/filterPairs.Rd`; confirmed via
-  `git status`/`git diff`.
+- **Verification:**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  run standalone (no other pending roxygen edit) touched only
+  `man/filterPairs.Rd`; confirmed via `git status`/`git diff`.
   `identical(formals(filterPairs)$ignore, quote(list(c(sexCodes[["female"]], sexCodes[["female"]]))))`
   == `TRUE`. Full regression: 0 failed/0 error/0 warning (169 skipped,
   baseline unchanged). TDD N/A (docs-only, no `R/`/`tests/` source
@@ -5634,12 +6458,13 @@ here.
   tests that exercise the exact changed reactive code through real CSV
   uploads. Excluded an unrelated stale-doc regeneration
   (`man/filterPairs.Rd`, a leftover from S367’s XARCH-4 GREEN phase
-  never running `devtools::document()`) from this commit — reverted via
-  `git checkout -- man/filterPairs.Rd`, flagged in `SESSION_NOTES.md`
-  gotchas rather than silently absorbed. Removed the XARCH-6 bullet from
-  `BACKLOG.md`’s Architecture follow-ups section and updated its intro
-  paragraph. Added `PROJECT_LEARNINGS.md` Learning 339, bumped
-  `CLAUDE.md`’s pointer (338→339, 367→368).
+  never running
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html))
+  from this commit — reverted via `git checkout -- man/filterPairs.Rd`,
+  flagged in `SESSION_NOTES.md` gotchas rather than silently absorbed.
+  Removed the XARCH-6 bullet from `BACKLOG.md`’s Architecture follow-ups
+  section and updated its intro paragraph. Added `PROJECT_LEARNINGS.md`
+  Learning 339, bumped `CLAUDE.md`’s pointer (338→339, 367→368).
 
 ### 2026-07-12 · \[ad hoc\] Session 368 claim (XARCH-6 qcStudbook call-count redundancy)
 
@@ -5816,9 +6641,10 @@ here.
   test-infrastructure-only change (no `R/`/app runtime code touched); no
   separate
   [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
-  smoke test applicable — `devtools::check()`’s own `testthat.R` run is
-  the change’s actual runtime surface. No NEWS entry (no user-facing
-  package behavior changed). Commit `87c521d8`.
+  smoke test applicable —
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)’s
+  own `testthat.R` run is the change’s actual runtime surface. No NEWS
+  entry (no user-facing package behavior changed). Commit `87c521d8`.
 
 ### 2026-07-11 · \[ad hoc\] Claimed session to fix `minParentAge` vignette-checker false positive (Session 364)
 
@@ -5869,12 +6695,13 @@ here.
   `skip_if_not_installed("WriteXLS")` to `"openxlsx"` (its real
   dependency now). A first-pass synthetic identical-proof
   (character/numeric columns only) passed cleanly, but the full
-  `devtools::check()` surfaced 2 real failures in
-  `test_modInput_excelSireDam.R` (untouched by this session): `openxlsx`
-  writes `Date` columns as native date-formatted numeric cells, but this
-  package’s own `readxl::read_excel(col_types = "text")` read path
-  returns such a cell’s raw serial number as text, not its rendered date
-  string — silently corrupting `birth`/`exit` on read and collapsing
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  surfaced 2 real failures in `test_modInput_excelSireDam.R` (untouched
+  by this session): `openxlsx` writes `Date` columns as native
+  date-formatted numeric cells, but this package’s own
+  `readxl::read_excel(col_types = "text")` read path returns such a
+  cell’s raw serial number as text, not its rendered date string —
+  silently corrupting `birth`/`exit` on read and collapsing
   [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)’s
   output to `NULL`. Fixed by explicitly coercing `Date`/`POSIXct`
   columns to `character` before writing, matching `WriteXLS`’s apparent
@@ -5897,7 +6724,8 @@ here.
   `e624fc07`), documented as a new `BACKLOG.md` item per the mode-switch
   rule, not fixed. Removed the resolved `BACKLOG.md` item; updated the
   CRAN-resubmission item’s stale cross-reference to point at this fix.
-  Phase 3E: the full `testthat.R` run inside `devtools::check()`
+  Phase 3E: the full `testthat.R` run inside
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
   includes live
   [`shiny::testServer()`](https://rdrr.io/pkg/shiny/man/testServer.html)
   exercises of the affected Excel-upload path
@@ -5949,16 +6777,17 @@ here.
   downgraded from “blocks CRAN resubmission” to a CI-hygiene item (still
   open, still worth fixing); the CRAN item updated to record the clean
   results — the only remaining step is now exactly
-  `devtools::submit_cran()` + the maintainer- email confirmation click,
-  both still owner-only. Added `PROJECT_LEARNINGS.md` Learning 333
-  (verify a probability-hedged prediction against the actual result once
-  it lands; two “Windows CI” surfaces are not the same environment).
-  Bumped `CLAUDE.md`’s learnings/session-count pointer (332→333,
-  361→362). Self-caught and fixed two mistakes before commit: a
-  fabricated R-devel version number, and a duplicated
-  `## Downstream dependencies` header from an imprecise edit. Phase 3E:
-  N/A, justified — no `R/`/`tests/`/`DESCRIPTION`/`NAMESPACE` touched;
-  no `submit_cran()` or other outward-facing action taken.
+  [`devtools::submit_cran()`](https://devtools.r-lib.org/reference/submit_cran.html) +
+  the maintainer- email confirmation click, both still owner-only. Added
+  `PROJECT_LEARNINGS.md` Learning 333 (verify a probability-hedged
+  prediction against the actual result once it lands; two “Windows CI”
+  surfaces are not the same environment). Bumped `CLAUDE.md`’s
+  learnings/session-count pointer (332→333, 361→362). Self-caught and
+  fixed two mistakes before commit: a fabricated R-devel version number,
+  and a duplicated `## Downstream dependencies` header from an imprecise
+  edit. Phase 3E: N/A, justified — no
+  `R/`/`tests/`/`DESCRIPTION`/`NAMESPACE` touched; no `submit_cran()` or
+  other outward-facing action taken.
 
 ### 2026-07-11 · \[ad hoc\] Claimed session to process win-builder/R-hub results (Session 362)
 
@@ -5980,13 +6809,16 @@ here.
 ### 2026-07-11 · \[ad hoc\] Triggered CRAN 2.0.0 win-builder x3 + R-hub v2; found an undocumented Windows-only CI regression (Session 361)
 
 - **Deliverable:** Owner picked “I trigger win-builder + R-hub” via
-  `AskUserQuestion` (explicitly excluding `devtools::submit_cran()`,
+  `AskUserQuestion` (explicitly excluding
+  [`devtools::submit_cran()`](https://devtools.r-lib.org/reference/submit_cran.html),
   which stays owner-only). Verified zero drift since S359’s local gate
-  first. Ran `devtools::build()`, then dispatched
-  `devtools::check_win_devel()` / `check_win_release()` /
-  `check_win_oldrelease()` (all three uploaded cleanly; results by email
-  to `rmsharp@me.com` ~2026-07-11 18:30). Ran `rhub::rhub_doctor()` (all
-  green) then
+  first. Ran
+  [`devtools::build()`](https://devtools.r-lib.org/reference/build.html),
+  then dispatched
+  [`devtools::check_win_devel()`](https://devtools.r-lib.org/reference/check_win.html)
+  / `check_win_release()` / `check_win_oldrelease()` (all three uploaded
+  cleanly; results by email to `rmsharp@me.com` ~2026-07-11 18:30). Ran
+  `rhub::rhub_doctor()` (all green) then
   `rhub::rhub_check(platforms = c("linux", "windows", "macos"))`;
   confirmed via `gh run list` the dispatch actually started (run
   29171440079, `occupational-burro`), not just that the R console
@@ -6167,9 +6999,10 @@ here.
   unmodified sections’ render output. Re-ran the isolated
   data-generation block twice, byte-identical output both times. No `R/`
   or `tests/` files changed – package build-equivalent
-  (`devtools::check()`/`test()`) not re-run, correctly out of scope.
-  `PROJECT_LEARNINGS.md` Learning 329 added; `CLAUDE.md` learnings count
-  bumped 328-\>329; `BACKLOG.md` item removed.
+  ([`devtools::check()`](https://devtools.r-lib.org/reference/check.html)/`test()`)
+  not re-run, correctly out of scope. `PROJECT_LEARNINGS.md` Learning
+  329 added; `CLAUDE.md` learnings count bumped 328-\>329; `BACKLOG.md`
+  item removed.
 
 ### 2026-07-11 · \[ad hoc\] S356 close-out commit (session notes, handoff receipt, learnings)
 
@@ -6314,9 +7147,11 @@ here.
   tree (both config files are `.Rbuildignore`’d). Confirmed genuine RED
   against unfixed code (3 failures + 1 skip, all for the right reason)
   before committing; all 4 GREEN after the fix.
-- **Verification:** `devtools::document()` clean 0-file delta (expected,
-  no roxygen touched). `lintr::lint()`: 0 on the new test file.
-  Full-suite regression read: 1 failed (pre-existing, unrelated,
+- **Verification:**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  clean 0-file delta (expected, no roxygen touched). `lintr::lint()`: 0
+  on the new test file. Full-suite regression read: 1 failed
+  (pre-existing, unrelated,
   `test_vignettes_no_deprecated_minParentAge.R`, same as S349–S353) / 0
   error / 0 warning. Build-equivalent check (no Shiny/R runtime behavior
   changed, so no live-browser Phase 3E smoke test applies): a local
@@ -6390,8 +7225,10 @@ here.
   unrelated, `test_vignettes_no_deprecated_minParentAge.R`, same as
   S349–S352) / 0 error / 0 warning; all 9 directly-related test files
   individually clean; `lintr::lint()` 0 on all 4 changed/new files after
-  1 self-caught fix; `devtools::document()` clean 1-file delta
-  (`man/examplePedigree.Rd`, 12→13 columns), 0 NAMESPACE delta.
+  1 self-caught fix;
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  clean 1-file delta (`man/examplePedigree.Rd`, 12→13 columns), 0
+  NAMESPACE delta.
 - Removed the resolved `BACKLOG.md` item and updated the Document 2
   Phase D note (all three Phase-C-discovered findings now fixed, not
   just two); added a `NEWS.Rmd` bullet under the still-unpublished 2.0.0
@@ -6450,7 +7287,8 @@ here.
   unrelated, `test_vignettes_no_deprecated_minParentAge.R`, same as
   S349–S351) / 0 error / 0 warning; all directly-related test files
   individually clean; `lintr::lint()` 0 on both changed files;
-  `devtools::document()` 0 delta.
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  0 delta.
 - Removed the resolved `BACKLOG.md` item; added a `NEWS.Rmd` bullet
   under the still-unpublished 2.0.0 entry and rendered `NEWS.md`. No new
   `PROJECT_LEARNINGS.md` entry: this fix directly executes the
@@ -6502,7 +7340,9 @@ here.
 - **Verified:** full-suite regression read 1 failed (pre-existing,
   unrelated, `test_vignettes_no_deprecated_minParentAge.R`, same as
   S349/S350) / 0 error / 0 warning; `lintr::lint()` 0 on both changed
-  files; `devtools::document()` 0 delta; live-browser Phase 3E
+  files;
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  0 delta; live-browser Phase 3E
   ([`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html))
   confirmed the control renders/hides correctly and forms groups with a
   real Custom ratio value end to end. Also discovered and documented
@@ -6574,9 +7414,9 @@ here.
   `test_vignettes_no_deprecated_minParentAge.R`, is the same
   pre-existing, unrelated failure S349 already confirmed via
   `git stash`). `lintr::lint()` on both changed files = **0**;
-  `devtools::document()` **zero man/NAMESPACE delta** (internal
-  function, no roxygen change). **Phase 3E runtime smoke test (live
-  browser,
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  **zero man/NAMESPACE delta** (internal function, no roxygen change).
+  **Phase 3E runtime smoke test (live browser,
   [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
   against the real modular app):** uploaded the real Excel round-trip
   file through the actual file input, clicked “Get Data,” then
@@ -6647,12 +7487,13 @@ here.
   (the 1 failure, `test_vignettes_no_deprecated_minParentAge.R`,
   confirmed pre-existing and unrelated via `git stash` against
   unmodified `master`); `lintr::lint()` on both changed files = **0**;
-  `devtools::document()` **zero man/NAMESPACE delta** (all
-  `futile.logger` calls stay `::`-qualified). **Decisive end-to-end
-  check:** recorded `~/nprcgenekeepr.log`’s mtime before and after a
-  full-suite run against the real, unmodified `$HOME` — **identical**,
-  proving the suite no longer writes there at all. **Phase 3E runtime
-  smoke test (live browser,
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  **zero man/NAMESPACE delta** (all `futile.logger` calls stay
+  `::`-qualified). **Decisive end-to-end check:** recorded
+  `~/nprcgenekeepr.log`’s mtime before and after a full-suite run
+  against the real, unmodified `$HOME` — **identical**, proving the
+  suite no longer writes there at all. **Phase 3E runtime smoke test
+  (live browser,
   [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
   against the real modular app, HOME redirected to an isolated tmp
   dir):** no log file at boot; checking “Debug on” plus a real user
@@ -7812,18 +8653,21 @@ here.
   `R/`/`tests/` touched; `CRAN-SUBMISSION` was auto-written by
   `devtools`, not hand-edited. 0 `AskUserQuestion` gates. 0 stakeholder
   corrections.
-- **Change:** The owner ran `devtools::submit_cran()`; the upload
-  succeeded. Verified firsthand via `git diff CRAN-SUBMISSION` (not just
-  the owner’s report alone): `Version: 1.0.8` / `2025-07-26` →
-  `Version: 2.0.0` / `2026-07-09 17:57:22 UTC` /
+- **Change:** The owner ran
+  [`devtools::submit_cran()`](https://devtools.r-lib.org/reference/submit_cran.html);
+  the upload succeeded. Verified firsthand via
+  `git diff CRAN-SUBMISSION` (not just the owner’s report alone):
+  `Version: 1.0.8` / `2025-07-26` → `Version: 2.0.0` /
+  `2026-07-09 17:57:22 UTC` /
   `SHA: 8ca8bb24551a6a95dc4468d8ef5218bd3d3c91e0` — the exact commit
   submitted, matching `origin/master`’s HEAD at submission time.
   Committed the updated `CRAN-SUBMISSION` (a legitimate artifact
-  `usethis::use_github_release()` will later consume and delete in Phase
-  6). Updated `docs/planning/cran-2.0.0-submission-plan.md`’s Phase 5
-  status block (new “SUBMITTED” note with the version/date/SHA evidence)
-  and the §9 table’s Phase 5b row (marked partial-complete — submitted,
-  CRAN’s review outcome still pending).
+  [`usethis::use_github_release()`](https://usethis.r-lib.org/reference/use_github_release.html)
+  will later consume and delete in Phase 6). Updated
+  `docs/planning/cran-2.0.0-submission-plan.md`’s Phase 5 status block
+  (new “SUBMITTED” note with the version/date/SHA evidence) and the §9
+  table’s Phase 5b row (marked partial-complete — submitted, CRAN’s
+  review outcome still pending).
 - **Also:** Added `PROJECT_LEARNINGS.md` Learning 304 — four consecutive
   sessions (S326–S329) each discovered a file needing attention only
   after starting the Phase 1B claim, not before; write the claim stub
@@ -8072,17 +8916,20 @@ here.
   [`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html)
   — no-op (library already synchronized);
   [`roxygen2::roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html)
-  — zero diff; `devtools::spell_check()` — one new legitimate word
-  (`erroring`, from Phase 3b’s merged NEWS content) added to
-  `inst/WORDLIST` surgically; `urlchecker::url_check()` — 17/18 URLs OK,
-  one new 403 (`README.md:170`, `thoughtco.com`) confirmed bot-blocking
-  via `curl` with a browser User-Agent + an independent `WebFetch`
-  attempt (both blocked) — same false-positive class as the existing
-  PMC4671785 note, flagged for the Phase 5 `cran-comments.md`
-  pre-explained-NOTEs list; `devtools::run_examples()` — clean; vignette
-  build needed `bit`/`bit64` installed into the renv library first
-  (Learning 92/298(e) recurrence — the same gap S321 hit for
-  `build_readme()` also blocks `build_vignettes()`;
+  — zero diff;
+  [`devtools::spell_check()`](https://devtools.r-lib.org/reference/spell_check.html)
+  — one new legitimate word (`erroring`, from Phase 3b’s merged NEWS
+  content) added to `inst/WORDLIST` surgically;
+  [`urlchecker::url_check()`](https://urlchecker.r-lib.org/reference/url_check.html)
+  — 17/18 URLs OK, one new 403 (`README.md:170`, `thoughtco.com`)
+  confirmed bot-blocking via `curl` with a browser User-Agent + an
+  independent `WebFetch` attempt (both blocked) — same false-positive
+  class as the existing PMC4671785 note, flagged for the Phase 5
+  `cran-comments.md` pre-explained-NOTEs list;
+  [`devtools::run_examples()`](https://devtools.r-lib.org/reference/run_examples.html)
+  — clean; vignette build needed `bit`/`bit64` installed into the renv
+  library first (Learning 92/298(e) recurrence — the same gap S321 hit
+  for `build_readme()` also blocks `build_vignettes()`;
   `renv.lock`/`DESCRIPTION` diff confirmed empty).
 - **Full clean-regression read:** 0 failed / 0 error / 0 warning, 169
   skipped (baseline), 3261 total tests. `test_getVersion.R` (7/7) and
@@ -8166,15 +9013,16 @@ here.
   merged release). 0 stakeholder corrections.
 - **Research (via a background fork over an 11,000-line
   `SESSION_NOTES.md`):** confirmed
-  win-builder/R-hub/`devtools::submit_cran()` have never actually run
-  for 2.0.0 — the plan’s Phase 5b has sat as owner-run “HARD STOP”
-  boilerplate, unchanged, since roughly S136 (~180 sessions). Meanwhile
-  `NEWS.Rmd`’s `# nprcgenekeepr (development version)` section had grown
-  to 350 lines (larger than the 2.0.0 entry itself) covering issues
-  \#110, \#118, \#119, \#121, \#13, \#95, \#73, \#114 and a dozen+ new
-  exported functions, none of it folded into a version bump.
-  `git diff --stat` against the last real gate commit (S242, `83233265`)
-  showed 124 commits / 235 R+test files changed since, including
+  win-builder/R-hub/[`devtools::submit_cran()`](https://devtools.r-lib.org/reference/submit_cran.html)
+  have never actually run for 2.0.0 — the plan’s Phase 5b has sat as
+  owner-run “HARD STOP” boilerplate, unchanged, since roughly S136 (~180
+  sessions). Meanwhile `NEWS.Rmd`’s
+  `# nprcgenekeepr (development version)` section had grown to 350 lines
+  (larger than the 2.0.0 entry itself) covering issues \#110, \#118,
+  \#119, \#121, \#13, \#95, \#73, \#114 and a dozen+ new exported
+  functions, none of it folded into a version bump. `git diff --stat`
+  against the last real gate commit (S242, `83233265`) showed 124
+  commits / 235 R+test files changed since, including
   `vignettes/simulatedKValues.Rmd` — the plan’s own original
   archival-timing “prime suspect.”
 - **Owner decisions:** (1) roll all accumulated work into one release
@@ -8236,12 +9084,13 @@ here.
   matched by normalized old-title text, replace, skip+report on
   non-match) — all 44 matched uniquely on the first pass, 0 skips.
 - **Verify:** re-census post-apply — 72 blocks total, **0/44 title
-  mismatches** against target; `devtools::document()` — **`man/` diff
-  EMPTY** (all 44 are non-rendering `@noRd`); `lintr` found 3 new
-  \>80-char lines from wordier rewrites (`addKinshipValueCount.R`,
-  `getGenoDefinedParentGenotypes.R`, `str_detect_fixed_all.R`) — wrapped
-  across 2 physical `#'` lines each (roxygen2 still joins to one logical
-  title tag), re-lint 0;
+  mismatches** against target;
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  — **`man/` diff EMPTY** (all 44 are non-rendering `@noRd`); `lintr`
+  found 3 new \>80-char lines from wordier rewrites
+  (`addKinshipValueCount.R`, `getGenoDefinedParentGenotypes.R`,
+  `str_detect_fixed_all.R`) — wrapped across 2 physical `#'` lines each
+  (roxygen2 still joins to one logical title tag), re-lint 0;
   [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
   — 0 hits touching changed files; **`devtools::check(cran=TRUE)` — 0
   errors / 0 warnings / 0 notes**; fast regression read — 0 failed / 0
@@ -8303,9 +9152,10 @@ here.
   this (not exempt it like the Shiny `mod*` carve-out) — it needs its
   own dedicated session, comparable in size/judgment to Stage 8a’s
   original 100-file exported sweep.
-- **Verify:** `devtools::document()` — NAMESPACE + `man/` diff both
-  empty (the fixed tag is on an `@noRd` function);
-  `lintr::lint("R/set_seed.R")` = 0;
+- **Verify:**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  — NAMESPACE + `man/` diff both empty (the fixed tag is on an `@noRd`
+  function); `lintr::lint("R/set_seed.R")` = 0;
   [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
   clean; **`devtools::check(cran=TRUE)` — `Status: OK`, 0 errors / 0
   warnings / 0 notes**; fast regression read — 0 failed / 0 error / 0
@@ -8384,7 +9234,9 @@ here.
   inline citations for Sex-Ratio Ne and GD (F1, F2); `kinship.R`’s
   self-flagged-stale Mayo Clinic URL was dropped, keeping the durable
   `kinship2` CRAN pointer (F11).
-- **Verification:** `devtools::document()` (NAMESPACE diff empty) →
+- **Verification:**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  (NAMESPACE diff empty) →
   [`tools::checkRd()`](https://rdrr.io/r/tools/checkRd.html) on all 13
   regenerated `.Rd` files (0 warnings) →
   [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
@@ -8477,8 +9329,9 @@ here.
   on no-age-column and all-NA-age input (4 failures under the old
   source).
 - **Verification:** full suite `FAIL 0 · ERROR 0 · WARN 0` (3740 passed,
-  167 skipped); `devtools::check()` 0/0/0; lint 0 on `R/getPedMaxAge.R`;
-  Phase-3E runtime probe rendered
+  167 skipped);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0/0/0; lint 0 on `R/getPedMaxAge.R`; Phase-3E runtime probe rendered
   [`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md)
   on all-NA / no-age / real-age pedigrees with 0 warnings.
 - **Files:** `R/getPedMaxAge.R`, `man/getPedMaxAge.Rd`,
@@ -8532,9 +9385,10 @@ here.
 - **Verification:** new guard **23 pass / 0 fail**; full suite **3735
   pass / 0 fail / 0 error / 167 skip** (0 true offenders excl. app/e2e
   noise); spelling clean (no WORDLIST change needed — “coancestry” lives
-  only in the non-scanned HTML); `devtools::check()` **0/0/0** (builds
-  the vignettes). Phase 3E: rendered both module UIs and confirmed the
-  guidance HTML is embedded at runtime
+  only in the non-scanned HTML);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  **0/0/0** (builds the vignettes). Phase 3E: rendered both module UIs
+  and confirmed the guidance HTML is embedded at runtime
   (`includeHTML(system.file(...))`), so the running app serves the new
   text.
 - **Also (close-out, owner-directed):** filed issue **\#121** — the
@@ -8591,13 +9445,14 @@ here.
 - **Verification:** full suite **3712 pass / 0 fail / 0 error** (touched
   files 0 skipped under `NOT_CRAN=true`); lint **0** on all 4 changed R
   files; spelling clean (`Kimura` hand-added to `inst/WORDLIST` sorted —
-  `update_wordlist` NOT run); `devtools::check()` **0/0/0**;
-  `man/calcNeVariance.Rd` + `NAMESPACE` `export(calcNeVariance)`
-  regenerated. Phase 3E on real `qcPed`: 18 living breeders →
-  `neVariance = 26.41` rendered live beside `neSexRatio = 17.78` in the
-  Effective Population Size block. (Note: on qcPed Ne_v 26.41 \> E2
-  17.78 \> census 18 — families are more even than Poisson, so the
-  variance Ne legitimately exceeds the census.)
+  `update_wordlist` NOT run);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  **0/0/0**; `man/calcNeVariance.Rd` + `NAMESPACE`
+  `export(calcNeVariance)` regenerated. Phase 3E on real `qcPed`: 18
+  living breeders → `neVariance = 26.41` rendered live beside
+  `neSexRatio = 17.78` in the Effective Population Size block. (Note: on
+  qcPed Ne_v 26.41 \> E2 17.78 \> census 18 — families are more even
+  than Poisson, so the variance Ne legitimately exceeds the census.)
 - **Also (unrelated, owner-requested):** filed issue **\#120** — an
   AUDIT_WORKSTREAM task for a future session: “are there reference
   citations for each calculation in the package?”
@@ -8632,9 +9487,9 @@ here.
 - **Verification:** full suite pass / 0 fail / 0 error (touched files 0
   skipped under `NOT_CRAN=true`); `fe`/`fg`/`fgSE`/`neGD`/founder-count
   golden-master unchanged; lint 0 on changed files; spelling clean;
-  `devtools::check()` 0/0/0. Phase 3E on real `qcPed` data: 18 living
-  breeders (Nm=8, Nf=10) → `neSexRatio = 17.78`, rendered in both live
-  surfaces.
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0/0/0. Phase 3E on real `qcPed` data: 18 living breeders (Nm=8, Nf=10)
+  → `neSexRatio = 17.78`, rendered in both live surfaces.
 
 ### 2026-07-08 — Implement issue \#118 Slice 1 — E1 gene diversity (`calcGeneDiversity`) (Session 310)
 
@@ -8694,9 +9549,10 @@ here.
   changed R files;
   [`spelling::spell_check_package`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
   **clean** (`heterozygosity` hand-added to `inst/WORDLIST` in sorted
-  position — `update_wordlist` NOT run); `devtools::check()` **0 ERROR /
-  0 WARNING / 0 NOTE**; `man/calcGeneDiversity.Rd` + `NAMESPACE`
-  `export(calcGeneDiversity)` regenerated.
+  position — `update_wordlist` NOT run);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  **0 ERROR / 0 WARNING / 0 NOTE**; `man/calcGeneDiversity.Rd` +
+  `NAMESPACE` `export(calcGeneDiversity)` regenerated.
 - **Phase 3E (runtime behavior changed — display):** drove the real
   end-to-end render on **real qcPed data** — `reportGV(qcPed)` →
   `neGD=0.990528` → threaded through `founderStats` →
@@ -9265,8 +10121,9 @@ here.
 ### 2026-07-06 — NAMESPACE cleanup — drop the two redundant `lubridate` day/month imports (Session 298)
 
 - **Deliverable (owner picked cleanup \#1 from S297’s SUGGESTED NEXT):**
-  regenerate `NAMESPACE` via `devtools::document()` to drop the two
-  redundant lines `importFrom(lubridate, day)` and
+  regenerate `NAMESPACE` via
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  to drop the two redundant lines `importFrom(lubridate, day)` and
   `importFrom(lubridate, month)`. **REFACTOR-only (generated-file
   regeneration, no behavior change); one `AskUserQuestion`
   PRE-RED→REFACTOR gate, one landing gate; 0 stakeholder corrections.**
@@ -9278,10 +10135,12 @@ here.
   (`getPyramidPlot.R:99,101`) — grep confirms no bare `month()`/`day()`
   call exists in `R/` — so the two imports were dead weight
   (behavior-inert to remove).
-- **Change:** `devtools::document()` produced exactly the two deletions
-  with **zero `man/` delta**. A second `document()` run left `NAMESPACE`
-  byte-identical, so **`document()` is now idempotent for `NAMESPACE`**
-  — resolving the standing non-idempotency gotcha carried since S295.
+- **Change:**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  produced exactly the two deletions with **zero `man/` delta**. A
+  second `document()` run left `NAMESPACE` byte-identical, so
+  **`document()` is now idempotent for `NAMESPACE`** — resolving the
+  standing non-idempotency gotcha carried since S295.
 - **Verify (firsthand):** NAMESPACE diff = exactly the 2 deletions;
   `man/` zero delta; full-suite regression read (`NOT_CRAN=true`) **0
   failed / 0 error** (7 baseline warnings —
@@ -9334,11 +10193,12 @@ here.
   regression read (`NOT_CRAN=true`) **244 files, 0 failed / 0 error** (7
   baseline warnings — `test_gvaConvergence_kinshipOverrides` +
   `test_modPyramid`, none new); `lintr::lint()` on both changed files =
-  **0**; `spell_check_package` clean; `devtools::document()` **zero
-  `man/` delta** (the fix is inside the function body, roxygen-inert) —
-  reverted the known pre-existing `lubridate` day/month NAMESPACE drift
-  `document()` re-surfaced; `R CMD check --as-cran` (repo root, WITH
-  vignettes) **Status: OK — 0/0/0**.
+  **0**; `spell_check_package` clean;
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  **zero `man/` delta** (the fix is inside the function body,
+  roxygen-inert) — reverted the known pre-existing `lubridate` day/month
+  NAMESPACE drift `document()` re-surfaced; `R CMD check --as-cran`
+  (repo root, WITH vignettes) **Status: OK — 0/0/0**.
 - **Phase-3E (integration):**
   [`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)’s
   only production caller is
@@ -9379,7 +10239,8 @@ here.
   / 0 error / 0 true offenders** (7 baseline warnings, none new); `covr`
   (`NOT_CRAN=true`) confirms `dataframe2string.R` **100%** and **overall
   package coverage 99.99% → 100.00%**; `lintr::lint()` = **0**;
-  `devtools::document()` produced **zero `man/` delta** (roxygen-inert);
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  produced **zero `man/` delta** (roxygen-inert);
   `R CMD check --as-cran` (repo root, WITH vignettes) **Status: OK —
   0/0/0**. Phase-3E N/A — pure exported function, no runtime wiring (the
   only caller is `test_dataframe2string.R`). Landed as `dfedaa90` on
@@ -9513,9 +10374,10 @@ here.
   and overall 99.83%; full-suite regression read 0 failed / 0 error / 0
   true offenders (7 baseline warnings, none from the changed files);
   `lintr::lint()` on all six changed files = 0; `R CMD check --as-cran`
-  (repo root, WITH vignettes, via `devtools::check`) Status: OK — 0
-  errors / 0 warnings / 0 notes. Phase-3E N/A (test-only, no runtime
-  surface).
+  (repo root, WITH vignettes, via
+  [`devtools::check`](https://devtools.r-lib.org/reference/check.html))
+  Status: OK — 0 errors / 0 warnings / 0 notes. Phase-3E N/A (test-only,
+  no runtime surface).
 - **Campaign status:** \#111 stays OPEN. Slices done: S1–S8 (helper
   tier + all seven Shiny modules), **S9 six single-file helpers (this
   session)**. Remaining: `modPedigree` and `modBreedingGroups`
@@ -9568,8 +10430,10 @@ here.
   suite (`NOT_CRAN=true`, package loaded) 0 failed / 0 error / 0 true
   offenders (7 baseline warnings, none from this file); `lintr::lint()`
   on the new file = 0; `R CMD check --as-cran` (repo root, WITH
-  vignettes, via `devtools::check`) Status: OK — 0 errors / 0 warnings /
-  0 notes. Phase-3E N/A (test-only, no runtime surface).
+  vignettes, via
+  [`devtools::check`](https://devtools.r-lib.org/reference/check.html))
+  Status: OK — 0 errors / 0 warnings / 0 notes. Phase-3E N/A (test-only,
+  no runtime surface).
 - **Campaign status:** \#111 stays OPEN. Slices done: S1 helper tier
   (S285), S2 `modORIPReporting` (S286), S3 `appServer` (S287), S4
   `modInput` (S288), S5 `modPyramid` (S289), S6 `modSummaryStats`
@@ -9617,9 +10481,10 @@ here.
   package loaded) 0 failed / 0 error / 0 true offenders (7 baseline
   warnings, none from this file); `lintr::lint()` on the new file = 0;
   `R CMD check --as-cran` (repo root, WITH vignettes, via
-  `devtools::check`) Status: OK — 0 errors / 0 warnings / 0 notes (its
-  `spelling.Rout` comparison passed → spell clean). Phase-3E N/A
-  (test-only, no runtime surface).
+  [`devtools::check`](https://devtools.r-lib.org/reference/check.html))
+  Status: OK — 0 errors / 0 warnings / 0 notes (its `spelling.Rout`
+  comparison passed → spell clean). Phase-3E N/A (test-only, no runtime
+  surface).
 - **Campaign status:** \#111 stays OPEN. Slices done: S1 helper tier
   (S285), S2 `modORIPReporting` (S286), S3 `appServer` (S287), S4
   `modInput` (S288), S5 `modPyramid` (S289), S6 `modSummaryStats`
@@ -9693,8 +10558,10 @@ here.
   (`NOT_CRAN=true`) **1466 tests, 0 failed / 0 error, 0 true offenders**
   (7 baseline warnings unchanged); `lintr::lint` on the new file = 0;
   `spell_check_package` clean; **`R CMD check --as-cran` (repo root,
-  WITH vignettes, via `devtools::check`) Status: OK — 0 errors / 0
-  warnings / 0 notes**. Phase-3E N/A (test-only; no runtime surface).
+  WITH vignettes, via
+  [`devtools::check`](https://devtools.r-lib.org/reference/check.html))
+  Status: OK — 0 errors / 0 warnings / 0 notes**. Phase-3E N/A
+  (test-only; no runtime surface).
 - **Campaign status:** \#111 stays OPEN. Slices done: S1 helper tier
   (S285), S2 `modORIPReporting` (S286), S3 `appServer` (S287), S4
   `modInput` (S288), **S5 `modPyramid` (this session)**. Remaining
@@ -9782,9 +10649,10 @@ here.
   warnings; full suite (`NOT_CRAN=true`) **1455 tests, 0 failed / 0
   error, 0 true offenders**; `lintr::lint()` on the new file = 0;
   `spell_check_package` clean; **`R CMD check --as-cran` (repo root,
-  WITH vignettes, via `devtools::check`) Status: OK — 0/0/0**.
-  **Phase-3E N/A** — test-only, no `R/` source or runtime change (no
-  smoke-test target; FM \#24 has no target).
+  WITH vignettes, via
+  [`devtools::check`](https://devtools.r-lib.org/reference/check.html))
+  Status: OK — 0/0/0**. **Phase-3E N/A** — test-only, no `R/` source or
+  runtime change (no smoke-test target; FM \#24 has no target).
 - **Files:** new `tests/testthat/test_appServer_server.R`;
   `CHANGELOG.md`, `PROJECT_LEARNINGS.md` (Learning 266),
   `SESSION_NOTES.md`. Issue **\#111 stays OPEN** (multi-session
@@ -9836,7 +10704,8 @@ here.
   **clean**; **`R CMD check --as-cran` (repo root, WITH vignettes)
   Status: OK — 0 errors / 0 warnings / 0 notes** (cleaner than the
   documented 0/0/2 baseline; the CRAN-incoming “archived/New
-  submission” + HTML-Tidy NOTEs do not fire under `devtools::check`).
+  submission” + HTML-Tidy NOTEs do not fire under
+  [`devtools::check`](https://devtools.r-lib.org/reference/check.html)).
   **Phase-3E N/A:** test-only, no `R/` source changed, no runtime
   behavior — no runtime surface to smoke-test (not a skipped check).
 - **Campaign status:** \#111 stays OPEN. Slices done: S1 helper tier
@@ -10376,14 +11245,15 @@ here.
   (`$alleles`/`$counter`) as “data.frame `id, parent, V1 ... Vn`” —
   wrong at a deeper level than column order, so half-fixing the order
   alone would still mislead; deserves its own doc-correctness pass.
-- **Verify (firsthand):** `devtools::document()` touched only the 4
-  intended `R/`+`man/` pairs; **NAMESPACE diff EMPTY**; `lintr` **0** on
-  all 4 changed R files; `spell_check_package` **clean** (no WORDLIST
-  churn); **`R CMD check --as-cran` (clean tree) GREEN — 0 errors / 0
-  warnings / 2 NOTEs** (standing benign pair: archived-maintainer CRAN
-  false positive + environmental HTML-Tidy) with
-  `code/documentation mismatches … OK`, `Rd cross-references … OK` (the
-  reworded `\link{calcFG}`/`\link{calcGU}` lines still resolve),
+- **Verify (firsthand):**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  touched only the 4 intended `R/`+`man/` pairs; **NAMESPACE diff
+  EMPTY**; `lintr` **0** on all 4 changed R files; `spell_check_package`
+  **clean** (no WORDLIST churn); **`R CMD check --as-cran` (clean tree)
+  GREEN — 0 errors / 0 warnings / 2 NOTEs** (standing benign pair:
+  archived-maintainer CRAN false positive + environmental HTML-Tidy)
+  with `code/documentation mismatches … OK`, `Rd cross-references … OK`
+  (the reworded `\link{calcFG}`/`\link{calcGU}` lines still resolve),
   `Rd line widths … OK`, examples \[21s\] / `testthat.R [68s] OK` /
   vignettes rebuilt.
 - **Phase-3E (runtime smoke): N/A (stated, not skipped)** — doc-only
@@ -10493,9 +11363,10 @@ here.
   deprecation; `@importFrom shiny` moved here; roxygen rewritten as the
   production entry point); `R/runModularApp.R` now
   `deprecate_soft(when="2.0.0", what="runModularApp()", with="runGeneKeepR()")`
-  then `runGeneKeepR(...)`. `devtools::document()` regenerated both
-  `.Rd`; **NAMESPACE diff EMPTY** (both stay `export()`ed). All 6 tests
-  pass.
+  then `runGeneKeepR(...)`.
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  regenerated both `.Rd`; **NAMESPACE diff EMPTY** (both stay
+  `export()`ed). All 6 tests pass.
 - **REFACTOR (doc consistency, no behavior change):** flipped the shared
   `_running_shiny_application.Rmd` (child chunk of README + 2 vignettes)
   to recommend
@@ -10562,17 +11433,18 @@ here.
   audit findings without touching the \#110 design question — the
   defer-reason (“ideal *replacement* is uncertain”) did not block the
   *minimal correct* fix (“state today’s reality”).
-- **Verify (firsthand):** `devtools::document()` touched only the two
-  intended files; **NAMESPACE diff empty**; the `.Rd` diff is exactly
-  the one-line change; `lintr` 0 on the changed file (new line 75 chars
-  ≤80); `spell_check_package` clean (no WORDLIST churn);
-  **`R CMD check --as-cran` GREEN — 0 errors / 0 warnings / 2 NOTEs**
-  with `code/documentation mismatches … OK`, `Rd cross-references … OK`
-  (`\link{runGeneKeepR}` still resolves), `Rd line widths … OK`,
-  examples (21s) / `testthat.R [67s/67s] OK` / vignettes all OK. The 2
-  NOTEs are the standing benign pair (archived-maintainer CRAN false
-  positive + environmental HTML-Tidy/V8 note) — absent on CI, impossible
-  for a doc edit to cause.
+- **Verify (firsthand):**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  touched only the two intended files; **NAMESPACE diff empty**; the
+  `.Rd` diff is exactly the one-line change; `lintr` 0 on the changed
+  file (new line 75 chars ≤80); `spell_check_package` clean (no WORDLIST
+  churn); **`R CMD check --as-cran` GREEN — 0 errors / 0 warnings / 2
+  NOTEs** with `code/documentation mismatches … OK`,
+  `Rd cross-references … OK` (`\link{runGeneKeepR}` still resolves),
+  `Rd line widths … OK`, examples (21s) / `testthat.R [67s/67s] OK` /
+  vignettes all OK. The 2 NOTEs are the standing benign pair
+  (archived-maintainer CRAN false positive + environmental HTML-Tidy/V8
+  note) — absent on CI, impossible for a doc edit to cause.
 - **Phase-3E (runtime smoke): N/A (stated, not skipped)** — doc-only
   REFACTOR; the `runModularApp` function body is unchanged (only its
   `@details` comment changed); empty NAMESPACE diff proven; no
@@ -10630,11 +11502,12 @@ here.
   body); (b) a strict exact-match apply script (each anchor must match
   exactly once, else abort) landed 36 edits (35 specs + the
   `removePotentialSires` completion) with zero mismatches; (c)
-  `devtools::document()` = **0 warnings, empty NAMESPACE diff**; (d) a
-  37-agent adversarial verification Workflow read every regenerated
-  `.Rd` against the code → **37/37 CONFIRMED_FIXED, 0 problems**, and
-  correctly left pre-existing \#103-class typos (`kinshipMatricies`,
-  `columms`, “length on”) untouched.
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  = **0 warnings, empty NAMESPACE diff**; (d) a 37-agent adversarial
+  verification Workflow read every regenerated `.Rd` against the code →
+  **37/37 CONFIRMED_FIXED, 0 problems**, and correctly left pre-existing
+  \#103-class typos (`kinshipMatricies`, `columms`, “length on”)
+  untouched.
 - **Spelling handled without WORDLIST churn:** `spell_check_package()`
   flagged only `ignoreHerm` and `proc` (identifiers I placed in prose);
   wrapped them in `\code{}` (proper style — `spelling` skips `\code{}`),
@@ -10742,15 +11615,16 @@ here.
   (the code, not its markup). The `@description`’s inline
   `\code{}`/`\strong{}` uses render correctly and were left untouched
   (raw-Rd-vs-markdown style, not rendering errors — scope discipline).
-- **Verify (firsthand):** `devtools::document()` touched **only** the
-  two intended files; **NAMESPACE diff empty**; the `.Rd` diff is
-  exactly the one-line de-wrapping; the \#109 detector re-run reports
-  **0** occurrences across all 203 man pages; new source line 59 chars
-  (≤80), `lintr` = 0 on the changed file; `spell_check_package` — the
-  changed file’s flagged words (`groupAddAssign`, `kinships`) are
-  already in `inst/WORDLIST`, so no new spelling;
-  **`R CMD check --as-cran` GREEN 0 errors / 0 warnings / 2 NOTEs** with
-  `Rd files … OK`, `Rd cross-references … OK`,
+- **Verify (firsthand):**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  touched **only** the two intended files; **NAMESPACE diff empty**; the
+  `.Rd` diff is exactly the one-line de-wrapping; the \#109 detector
+  re-run reports **0** occurrences across all 203 man pages; new source
+  line 59 chars (≤80), `lintr` = 0 on the changed file;
+  `spell_check_package` — the changed file’s flagged words
+  (`groupAddAssign`, `kinships`) are already in `inst/WORDLIST`, so no
+  new spelling; **`R CMD check --as-cran` GREEN 0 errors / 0 warnings /
+  2 NOTEs** with `Rd files … OK`, `Rd cross-references … OK`,
   `code/documentation mismatches … OK`, examples (21s)/tests
   (`testthat.R [68s/68s] OK`)/Rd/vignettes/PDF all OK. The 2 NOTEs are
   the same benign pair as S264–S270 (archived-maintainer false
@@ -10890,10 +11764,11 @@ here.
   returns `ped[ped$id %in% ids, ]`), so `unrelatedParents = TRUE`
   currently has no effect on output — a latent *behavior* bug, out of
   scope for a grammar fix; flagged, not touched.
-- **Verify (firsthand):** `devtools::document()` clean, no collateral
-  roxygen drift (only `getPedDirectRelatives.Rd` regenerated);
-  **NAMESPACE diff empty** (sha `2560cecd…` identical before/after);
-  `man/getPedDirectRelatives.Rd` diff changes **only**
+- **Verify (firsthand):**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  clean, no collateral roxygen drift (only `getPedDirectRelatives.Rd`
+  regenerated); **NAMESPACE diff empty** (sha `2560cecd…` identical
+  before/after); `man/getPedDirectRelatives.Rd` diff changes **only**
   `\item{unrelatedParents}`; all new source lines ≤80 chars, `lintr` = 0
   on the changed file; `spell_check_package` clean;
   **`R CMD check --as-cran` GREEN 0 errors / 0 warnings / 2 NOTEs** with
@@ -10921,7 +11796,8 @@ here.
   corrections / 0 overrides** (2 owner gates: approach = delete +
   re-document; landing = direct-merge).
 - **The change (1 `R/` deletion + 1 regenerated `.Rd`, direct-merge to
-  `master`):** `git rm R/getSimSires.R`, then `devtools::document()`.
+  `master`):** `git rm R/getSimSires.R`, then
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html).
   Because roxygen2 had silently **merged** the two same-topic `@export`
   blocks, `man/getPotentialSires.Rd` was **doubled** — its `\usage`,
   `\value`, `\description`, and `\examples` each rendered twice and line
@@ -10943,15 +11819,16 @@ here.
   breeding-sim); (e) the file was committed/tracked with no
   [`source()`](https://rdrr.io/r/base/source.html)/`Collate` path
   reference.
-- **Verify (firsthand):** `devtools::document()` clean; **NAMESPACE diff
-  empty** (sha `2560cecd…` identical before/after — roxygen dedupes the
-  two `@export`s to one `export()` line); **only `getPotentialSires.Rd`
-  changed** (no downstream `@inheritParams getPotentialSires` churn);
-  `lintr` = 0 on the surviving file; `spell_check_package` clean; **full
-  test suite 0 failed / 0 errors** (1334 contexts;
-  `test_groupAddAssign` + `test_makeGroupMembers` are the
-  getPotentialSires regression gate); **`R CMD check --as-cran` GREEN 0
-  errors / 0 warnings / 2 NOTEs** with
+- **Verify (firsthand):**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  clean; **NAMESPACE diff empty** (sha `2560cecd…` identical
+  before/after — roxygen dedupes the two `@export`s to one `export()`
+  line); **only `getPotentialSires.Rd` changed** (no downstream
+  `@inheritParams getPotentialSires` churn); `lintr` = 0 on the
+  surviving file; `spell_check_package` clean; **full test suite 0
+  failed / 0 errors** (1334 contexts; `test_groupAddAssign` +
+  `test_makeGroupMembers` are the getPotentialSires regression gate);
+  **`R CMD check --as-cran` GREEN 0 errors / 0 warnings / 2 NOTEs** with
   `code/documentation mismatches … OK`, examples (21s)/tests (testthat
   67s)/Rd/vignettes/PDF all OK; **Phase-3E installed-namespace smoke**
   (against the `.Rcheck` build, imports enforced) — `getPotentialSires`
@@ -11000,9 +11877,10 @@ here.
   “all of the offspring IDs”), so “ancestors and descendants” is
   accurate and “ancestors” alone understated it — matching the function
   name and its `@family direct relatives`.
-- **Verify (firsthand):** `devtools::document()` clean, no collateral
-  roxygen drift (only `getPedDirectRelatives.Rd` regenerated);
-  **NAMESPACE diff empty** (sha `2560cecd…` identical);
+- **Verify (firsthand):**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  clean, no collateral roxygen drift (only `getPedDirectRelatives.Rd`
+  regenerated); **NAMESPACE diff empty** (sha `2560cecd…` identical);
   `man/getPedDirectRelatives.Rd` diff changes **only** `\value` and
   `\description`; new source lines 72/51/72/68 chars (all ≤80), `lintr`
   = 0 on the changed file; `spell_check_package` clean;
@@ -11048,16 +11926,17 @@ here.
   a group-formation function (grep: 0 `candidates` occurrences in
   `filterPairs.R`). The sole caller `getAnimalsWithHighKinship` passes a
   `ped` that carries `sex`, consistent with the corrected requirement.
-- **Verify (firsthand):** `devtools::document()` clean, no collateral
-  roxygen drift (only `filterPairs.Rd` regenerated); **NAMESPACE diff
-  empty** (sha `3ba035c3…` identical); `man/filterPairs.Rd` diff changes
-  **only** `\item{ped}`; new source lines 68/72/48 chars, `lintr` = 0 on
-  the changed file; `spell_check_package` clean;
-  **`R CMD check --as-cran` GREEN 0 errors / 0 warnings / 2 NOTEs** with
-  `code/documentation mismatches … OK`, examples (21s)/tests (testthat
-  66s)/Rd/vignettes all OK. The 2 NOTEs are both benign
-  (archived-maintainer false positive + environmental HTML-Tidy/V8 note
-  — not caused by the edit, absent on CI).
+- **Verify (firsthand):**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  clean, no collateral roxygen drift (only `filterPairs.Rd`
+  regenerated); **NAMESPACE diff empty** (sha `3ba035c3…` identical);
+  `man/filterPairs.Rd` diff changes **only** `\item{ped}`; new source
+  lines 68/72/48 chars, `lintr` = 0 on the changed file;
+  `spell_check_package` clean; **`R CMD check --as-cran` GREEN 0 errors
+  / 0 warnings / 2 NOTEs** with `code/documentation mismatches … OK`,
+  examples (21s)/tests (testthat 66s)/Rd/vignettes all OK. The 2 NOTEs
+  are both benign (archived-maintainer false positive + environmental
+  HTML-Tidy/V8 note — not caused by the edit, absent on CI).
 - **Remaining \#103 surfaced defects (each its own small session):**
   `getPedDirectRelatives.R` description + `@return` still say “labkey
   `study` schema/`demographics`” (wrong for the source-agnostic fn);
@@ -11091,16 +11970,17 @@ here.
   `reportErrors = TRUE` branch additionally reads `ped$recordStatus`
   (line 35), and the `@example` prepends `recordStatus` before calling.
   The old `@param` naming only `id` was a genuine understatement.
-- **Verify (firsthand):** `devtools::document()` clean, no collateral
-  roxygen drift (only `removeDuplicates.Rd` regenerated); **NAMESPACE
-  diff empty** (sha `3ba035c3…` identical); `man/removeDuplicates.Rd`
-  diff changes **only** `\item{ped}`; `lintr` = 0 on the changed file
-  (new line 75 chars); `spell_check_package` clean;
-  **`R CMD check --as-cran` GREEN 0 errors / 0 warnings / 2 NOTEs** with
-  `code/documentation mismatches … OK`, examples (21s)/tests (testthat
-  66s)/Rd/vignettes all OK. The 2 NOTEs are both benign
-  (archived-maintainer false positive + environmental HTML-Tidy/V8 note
-  — not caused by the edit, absent on CI).
+- **Verify (firsthand):**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  clean, no collateral roxygen drift (only `removeDuplicates.Rd`
+  regenerated); **NAMESPACE diff empty** (sha `3ba035c3…` identical);
+  `man/removeDuplicates.Rd` diff changes **only** `\item{ped}`; `lintr`
+  = 0 on the changed file (new line 75 chars); `spell_check_package`
+  clean; **`R CMD check --as-cran` GREEN 0 errors / 0 warnings / 2
+  NOTEs** with `code/documentation mismatches … OK`, examples
+  (21s)/tests (testthat 66s)/Rd/vignettes all OK. The 2 NOTEs are both
+  benign (archived-maintainer false positive + environmental
+  HTML-Tidy/V8 note — not caused by the edit, absent on CI).
 - **Remaining \#103 surfaced defects (each its own small session):**
   `filterPairs.R` `@param ped` falsely claims an “IDs listed in
   `candidates`” linkage it has no formal for; `getPedDirectRelatives.R`
@@ -11137,11 +12017,12 @@ here.
   (has an `.Rd`), accurate, and that `createPedTree` has no `probands`
   formal (so `@inheritParams` supplies only `ped`, no collision / no
   over-inheritance).
-- **Verify (firsthand):** `devtools::document()` clean (donor resolved,
-  no warning); **NAMESPACE diff empty** (sha identical);
-  `man/createPedTree.Rd` diff changes **only** `\item{ped}` (no
-  `\item{probands}` leaked → over-inheritance ruled out); `lintr` = 0 on
-  the changed file; `spell_check_package` clean;
+- **Verify (firsthand):**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  clean (donor resolved, no warning); **NAMESPACE diff empty** (sha
+  identical); `man/createPedTree.Rd` diff changes **only** `\item{ped}`
+  (no `\item{probands}` leaked → over-inheritance ruled out); `lintr` =
+  0 on the changed file; `spell_check_package` clean;
   **`R CMD check --as-cran` GREEN 0 errors / 0 warnings / 2 NOTEs** with
   `code/documentation mismatches … OK`, examples/tests (testthat
   70s)/Rd/vignettes all OK. The 2 NOTEs are both benign: the
@@ -11191,12 +12072,13 @@ here.
   replacement. Verified the donor is exported and that `meanKinship`
   documents no `ped`, so `convertRelationships`’s second
   `@inheritParams` supplies `ped` with no first-match collision.
-- **Verify (firsthand):** `devtools::document()` clean; **NAMESPACE diff
-  empty**; each of the 3 `.Rd` changes **only** `\item{ped}`
-  (`\item{kmat}`/`\item{ids}` intact and in order → over-inheritance
-  ruled out); source re-census `@param ped` 35 → 32 (exactly 3 removed);
-  `lintr` = 0 on all 3 files; `spell_check_package` clean;
-  **`R CMD check --as-cran` GREEN `Status: 1 NOTE`**
+- **Verify (firsthand):**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  clean; **NAMESPACE diff empty**; each of the 3 `.Rd` changes **only**
+  `\item{ped}` (`\item{kmat}`/`\item{ids}` intact and in order →
+  over-inheritance ruled out); source re-census `@param ped` 35 → 32
+  (exactly 3 removed); `lintr` = 0 on all 3 files; `spell_check_package`
+  clean; **`R CMD check --as-cran` GREEN `Status: 1 NOTE`**
   (archived-maintainer false positive) with
   `code/documentation mismatches … OK`, examples/tests (testthat
   66s)/Rd/vignettes all OK, 0 warnings / 0 errors.
@@ -11233,9 +12115,11 @@ here.
   Reading the files before editing caught it; a blind collapse would
   have ERASED both caveats. Corrected extractor + direct reads → those
   two correctly EXCLUDED (they stay bespoke).
-- **Verify (firsthand):** `devtools::document()` clean (donors resolved,
-  no warning, incl. `@inheritParams`-into-`@noRd`); **NAMESPACE + `man/`
-  diff EMPTY** (byte-identical collapses render identically; inherited
+- **Verify (firsthand):**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  clean (donors resolved, no warning,
+  incl. `@inheritParams`-into-`@noRd`); **NAMESPACE + `man/` diff
+  EMPTY** (byte-identical collapses render identically; inherited
   `\item{ped}` confirmed present in the 3 rendering inheritors; no
   orphan `.Rd` for the 2 `@noRd`); source re-census `@param ped` 40 →
   35; `lintr` = 0 on all 5 files; `spell_check_package` CLEAN;
@@ -11314,12 +12198,13 @@ here.
   `@inheritParams` line (collision-proof — local params always win; the
   3 files that also `@inheritParams getParents` keep `ids` from
   `getParents` by order).
-- **Verify (firsthand):** `devtools::document()` clean (every donor
-  resolved); **NAMESPACE diff empty**; each changed `.Rd` changes
-  **only** `\item{ped}` (verified `\item{ids}` unchanged in the 3
-  collision files); re-census proved collapse (`@param ped` 67→40
-  occurrences / 46→33 distinct, exactly 27 removed); `lintr` = 0 across
-  all 27 changed files; `spell_check_package` clean;
+- **Verify (firsthand):**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  clean (every donor resolved); **NAMESPACE diff empty**; each changed
+  `.Rd` changes **only** `\item{ped}` (verified `\item{ids}` unchanged
+  in the 3 collision files); re-census proved collapse (`@param ped`
+  67→40 occurrences / 46→33 distinct, exactly 27 removed); `lintr` = 0
+  across all 27 changed files; `spell_check_package` clean;
   **`R CMD check --as-cran` `Status: 1 NOTE`** (archived-maintainer “New
   submission” false positive) with
   `code/documentation mismatches ... OK`, examples/tests/Rd/vignettes
@@ -11371,18 +12256,20 @@ here.
   param (roxygen skips locally-documented params) — so donor choice
   carries **zero collision risk** regardless of the donor’s other
   formals.
-- **Verify (firsthand):** `devtools::document()` clean — every donor
-  resolved (an unresolved `@inheritParams` would warn); **NAMESPACE diff
-  empty** (predicted — no `@export`/import change); rendered `.Rd`
-  confirmed (inherited donor text + `\seealso{Other …}` family lists);
-  the duplicate `getPotentialSires`/`getSimSires` pair converted
-  identically so `man/getPotentialSires.Rd` stays deterministic; `lintr`
-  = **0** across all 38 changed files (pkg loaded);
-  `spell_check_package` = **CLEAN**; **`R CMD check --as-cran` GREEN
-  `Status: 1 NOTE`** (the documented archived-maintainer “New
-  submission” false-positive) with `checking examples ... OK`,
-  `checking tests ... OK`, `code/documentation mismatches ... OK`, all
-  Rd checks OK, and `re-building of vignette outputs ... OK`.
+- **Verify (firsthand):**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  clean — every donor resolved (an unresolved `@inheritParams` would
+  warn); **NAMESPACE diff empty** (predicted — no `@export`/import
+  change); rendered `.Rd` confirmed (inherited donor text +
+  `\seealso{Other …}` family lists); the duplicate
+  `getPotentialSires`/`getSimSires` pair converted identically so
+  `man/getPotentialSires.Rd` stays deterministic; `lintr` = **0** across
+  all 38 changed files (pkg loaded); `spell_check_package` = **CLEAN**;
+  **`R CMD check --as-cran` GREEN `Status: 1 NOTE`** (the documented
+  archived-maintainer “New submission” false-positive) with
+  `checking examples ... OK`, `checking tests ... OK`,
+  `code/documentation mismatches ... OK`, all Rd checks OK, and
+  `re-building of vignette outputs ... OK`.
 - **Phase-3E (runtime smoke): N/A (stated).** REFACTOR-class doc-only —
   no R-logic / runtime / Shiny / NAMESPACE change (empty diff proven).
   FM \#24 does not apply.
@@ -11485,12 +12372,13 @@ here.
   internal-`@noRd` titles.
 - **Verify (firsthand):** every title re-extracted and matched to the
   approved target (0 mismatches), all title lines ≤80 chars;
-  `devtools::document()` → **NAMESPACE diff empty** (predicted —
-  title-only), 99 `.Rd` regenerated; the 2 braced reverts render with no
-  literal braces and no lost text (moved to `\details`); `lintr` = **0**
-  across all 100 changed files (pkg loaded); `spell_check_package` =
-  **CLEAN**; **`R CMD check --as-cran --run-donttest` GREEN
-  `Status: 2 NOTEs` = 0/0/2** (the 2 documented false-positives) with
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  → **NAMESPACE diff empty** (predicted — title-only), 99 `.Rd`
+  regenerated; the 2 braced reverts render with no literal braces and no
+  lost text (moved to `\details`); `lintr` = **0** across all 100
+  changed files (pkg loaded); `spell_check_package` = **CLEAN**;
+  **`R CMD check --as-cran --run-donttest` GREEN `Status: 2 NOTEs` =
+  0/0/2** (the 2 documented false-positives) with
   `checking examples ... OK` and all Rd checks
   (files/metadata/line-widths/cross-references) OK.
 - **Phase-3E (runtime smoke): N/A (stated).** Doc-only — no R-logic /
@@ -11544,12 +12432,14 @@ here.
   `makeGrpNum`.
 - **Verified (empirical + build-equivalent):** every runnable example (9
   new + 5 newly-un-guarded) empirically run clean via `load_all` BEFORE
-  placement; `devtools::document()` → **NAMESPACE diff empty**
-  (predicted — no `@export`/`@importFrom` change); `lintr` = 0 across
-  all 20 changed files; `spell_check_package` clean;
-  **`R CMD check --as-cran --run-donttest` = `Status: 2 NOTEs` (0/0/2)**
-  with **`checking examples ... OK`** + all Rd checks /
-  code-documentation mismatches / S3 method consistency / tests all OK.
+  placement;
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  → **NAMESPACE diff empty** (predicted — no `@export`/`@importFrom`
+  change); `lintr` = 0 across all 20 changed files;
+  `spell_check_package` clean; **`R CMD check --as-cran --run-donttest`
+  = `Status: 2 NOTEs` (0/0/2)** with **`checking examples ... OK`** +
+  all Rd checks / code-documentation mismatches / S3 method consistency
+  / tests all OK.
 - **Keyword-safe** PR body (“Part of \#103. Stage 7 of 8 — does **not**
   close the tracking issue”). Learning 242 added to
   `PROJECT_LEARNINGS.md`. **Stages 1–7 of \#103 are now all on
@@ -11575,8 +12465,8 @@ here.
   it survives markdown mode and renders ‘and’/‘or’/‘and’ in both HTML
   and PDF.
 - **Verify (deterministic + build-equivalent, firsthand):**
-  `devtools::document()` → only `man/get_and_or_list.Rd` drifted
-  (NAMESPACE diff empty);
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  → only `man/get_and_or_list.Rd` drifted (NAMESPACE diff empty);
   [`tools::Rd2txt`](https://rdrr.io/r/tools/Rd2HTML.html) renders ‘and’
   or ‘or’ with ‘and’ (was garbled `\verb{...}`);
   `lintr::lint("R/get_and_or_list.R")` (pkg loaded) = 0;
@@ -11625,7 +12515,9 @@ here.
   issue \#103 Stage 6 … into master”, `--no-ff`).
 - **Zero-impact, proven:** `@keywords` on an `@noRd` block is inert
   (roxygen generates no `.Rd` for it; the tag never reaches NAMESPACE),
-  so `devtools::document()` left `man/` and `NAMESPACE` untouched and
+  so
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  left `man/` and `NAMESPACE` untouched and
   `git diff fc0b2b72..318ed491 -- NAMESPACE man/` is empty.
 - **Scope corrected from the live tree (Learning 231):** the audit’s
   Finding 5 “4 files” included `nprcgenekeeper.R` (the duplicate legacy
@@ -11801,13 +12693,14 @@ here.
   preserved in source order via equal sort keys — the one file that
   drifted on the first pass, fixed before commit.
 - **Verified (deterministic + adversarial):** zero `man/` drift after
-  `devtools::document()` (rendered docs byte-identical); zero
-  code/plain-comment change (projection diff); `lintr::lint_package()` =
-  0; `spell_check_package` clean; re-characterization shows 0 residual
-  block-order deviations; **`R CMD check --as-cran` = `Status: 2 NOTEs`
-  (0/0/2)** with Rd files / cross-references / code-documentation
-  mismatches / Rd all OK; a 9-agent adversarial review of the 45 changed
-  `@noRd` diffs (no `.Rd` to verify) found 0 defects.
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  (rendered docs byte-identical); zero code/plain-comment change
+  (projection diff); `lintr::lint_package()` = 0; `spell_check_package`
+  clean; re-characterization shows 0 residual block-order deviations;
+  **`R CMD check --as-cran` = `Status: 2 NOTEs` (0/0/2)** with Rd files
+  / cross-references / code-documentation mismatches / Rd all OK; a
+  9-agent adversarial review of the 45 changed `@noRd` diffs (no `.Rd`
+  to verify) found 0 defects.
 - **Keyword-safe** (“Part of \#103. Stage 3 of 8”) so the landing did
   not auto-close the multi-stage tracker. Stage 3 transform `fb9a92ab`;
   landing method owner-gated (`AskUserQuestion`) -\> owner chose
@@ -11860,9 +12753,10 @@ here.
   banner; `flagOverriddenRelationships.R` gains the previously-missing
   separator blank. All 225 R files now place the copyright above the
   block.
-- **Verified (deterministic, whole-corpus):** `devtools::document()` →
-  **ZERO `man/` drift** (rendered docs byte-identical — roxygen ignores
-  `##`); **zero R-code-line changes** across all 204 files
+- **Verified (deterministic, whole-corpus):**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  → **ZERO `man/` drift** (rendered docs byte-identical — roxygen
+  ignores `##`); **zero R-code-line changes** across all 204 files
   (comment-stripped projection diff); `lintr::lint_package()` = **0**;
   `spell_check_package` **clean**; `R CMD check --as-cran` = **0 errors
   / 0 warnings / 2 documented-false-positive NOTEs**;
@@ -11985,12 +12879,13 @@ here.
   with the corrected spelling and dropped `portential` (never
   `update_wordlist` — \[\[avoid-reconcile-tools-on-curated-files\]\]).
   `spell_check_package` now **CLEAN**.
-- **Verification:** `devtools::document()` ran without warnings;
-  NAMESPACE unchanged; firsthand-confirmed every fix against the
-  regenerated `.Rd` (the rendered output is the proof); **`--as-cran`
-  gate GREEN `Status: 2 NOTEs` = 0/0/2** (the two documented
-  false-positives — incoming-feasibility “New submission”, local
-  HTML-Tidy), with
+- **Verification:**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  ran without warnings; NAMESPACE unchanged; firsthand-confirmed every
+  fix against the regenerated `.Rd` (the rendered output is the proof);
+  **`--as-cran` gate GREEN `Status: 2 NOTEs` = 0/0/2** (the two
+  documented false-positives — incoming-feasibility “New submission”,
+  local HTML-Tidy), with
   `Rd files OK / Rd cross-references OK / code-documentation mismatches OK / Rd \usage OK`.
   Scope: 23 `R/` (one deleted) + 21 `man/` (one deleted,
   `nprcgenekeepr.Rd`) + `inst/WORDLIST`. **`R/`+`man/` ship → any later
@@ -12075,8 +12970,9 @@ here.
   `Status: 2 NOTEs` = 0/0/2** (the two documented false-positives;
   `00check.log` “code/documentation mismatches … OK”). **Independent
   blind adversarial audit = PASS on all checks A–I**, decisively
-  confirmed by re-running `devtools::document()` → empty
-  `git status man/` (zero drift).
+  confirmed by re-running
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  → empty `git status man/` (zero drift).
 - **CRAN Phase 5b deferred** to a follow-up session on this corrected,
   re-gated tree. Prereqs verified this session:
   `master==origin/master`@2.0.0; `devtools`/`rhub`/`gitcreds` present;
@@ -12136,9 +13032,10 @@ here.
   (`grand-total/kableExtra` → `grand-total/nprcgenekeepr`); `:19`
   malformed markdown (stray leading `[`) removed; `:20` bogus
   prefix-only DOI (`doi-10.32614` / `doi.org/10.32614`) → the canonical
-  CRAN package DOI. Then `devtools::build_readme()` to regenerate
-  `README.md`. **Docs-only REFACTOR-class — no behavior change; TDD
-  RED/GREEN N/A. 0 corrections / 0 overrides.**
+  CRAN package DOI. Then
+  [`devtools::build_readme()`](https://devtools.r-lib.org/reference/build_readme.html)
+  to regenerate `README.md`. **Docs-only REFACTOR-class — no behavior
+  change; TDD RED/GREEN N/A. 0 corrections / 0 overrides.**
 - **DOI = owner decision.** The DOI target was the one genuine fork
   (CRAN-package-DOI / cited-paper-DOI / drop-the-badge), posed as an
   `AskUserQuestion` (\[\[observation-vs-decision\]\]); owner chose the
@@ -14762,8 +15659,9 @@ here.
   skip content [`identical()`](https://rdrr.io/r/base/identical.html) to
   the cleared values (a newly chosen file gets a new temp path → still
   loads). `@importFrom shiny uiOutput updateTextAreaInput`;
-  `devtools::document()` updated `NAMESPACE` only (no `.Rd` change). All
-  33 `test_modPedigree.R` tests pass (78 assertions).
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  updated `NAMESPACE` only (no `.Rd` change). All 33
+  `test_modPedigree.R` tests pass (78 assertions).
 - **REFACTOR:** skipped (owner-gated) — `lintr` clean on both changed
   files, no duplication, no behavior-neutral improvement identified.
 - **E2E (owner-requested, real Chrome):** added “E2E: Clear Focal
@@ -16105,13 +17003,14 @@ here.
   deprecated wrapper (`.Deprecated("makeGroupNum")` then
   `makeGroupNum(numGp)`, own roxygen with `@seealso`, still `@export`).
   Switched the 3 in-package callers to the new name.
-  `devtools::document()` regenerated `NAMESPACE` (now exports BOTH) +
-  the three man pages (`man/makeGroupNum.Rd` new, `man/makeGrpNum.Rd`
-  now the deprecation note, `man/fillGroupMembersWithSexRatio.Rd`
-  example updated). `inst/_pkgdown.yml` reference index lists both
-  names. `inst/WORDLIST` += `makeGroupNum` (the function name appears as
-  bare prose in the alias page `\title{}`; same lever as the
-  already-present `grpNum`, Learning 159).
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  regenerated `NAMESPACE` (now exports BOTH) + the three man pages
+  (`man/makeGroupNum.Rd` new, `man/makeGrpNum.Rd` now the deprecation
+  note, `man/fillGroupMembersWithSexRatio.Rd` example updated).
+  `inst/_pkgdown.yml` reference index lists both names. `inst/WORDLIST`
+  += `makeGroupNum` (the function name appears as bare prose in the
+  alias page `\title{}`; same lever as the already-present `grpNum`,
+  Learning 159).
 
 - **Tests (RED -\> GREEN, new `tests/testthat/test_makeGroupNum.R`, 2
   blocks / 4 expectations):** `makeGroupNum(3L) == list(1L,2L,3L)` and
@@ -16846,12 +17745,13 @@ here.
   GREEN: all 13 file tests pass, and the pre-existing test 8’s
   leaked-warning count dropped 1 → 0.
 - **Verification:** lint 0; full suite 1120 tests, 0 failed / 0 error;
-  `devtools::check()` **0/0/0**; Phase-3E cold-call smoke (installed
-  package) — a missing focal-id file is **silent** and returns
-  `nprcgenekeeprFileErr`, happy path unchanged. Incidental: the standard
-  `document()` step re-synced a stale `man/getFocalAnimalPedFromFile.Rd`
-  (an S155-era `@return` reword never re-documented; pure text reflow,
-  no semantic change). → Learning 151.
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  **0/0/0**; Phase-3E cold-call smoke (installed package) — a missing
+  focal-id file is **silent** and returns `nprcgenekeeprFileErr`, happy
+  path unchanged. Incidental: the standard `document()` step re-synced a
+  stale `man/getFocalAnimalPedFromFile.Rd` (an S155-era `@return` reword
+  never re-documented; pure text reflow, no semantic change). → Learning
+  151.
 
 ### 2026-06-21 — Consolidated the two codecov configs into one so the 1% threshold applies (issue \#65, Session 158)
 
@@ -17006,13 +17906,15 @@ here.
   `test_getFocalAnimalPedFromFile.R` **27 passed**, `test_modInput.R`
   **173 passed**; the regression guard (4 unchanged function tests + 167
   other modInput tests) stayed green. `lint_package()` **0** (project
-  `.lintr`); **`devtools::check()` Status OK (0/0/0)** (full testthat +
-  spelling + examples incl. `--run-donttest` + vignette rebuild).
-  **Phase-3E** smoke exercised the real un-mocked function across all
-  seven paths (happy + six classed errors with the exact messages) and a
-  `testServer` check confirmed the specific `Details` reaches the app.
-  NEWS.Rmd entry updated in place + NEWS.md re-rendered (pure ASCII;
-  NEWS.html byproduct removed). → Learning 147.
+  `.lintr`);
+  **[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  Status OK (0/0/0)** (full testthat + spelling + examples
+  incl. `--run-donttest` + vignette rebuild). **Phase-3E** smoke
+  exercised the real un-mocked function across all seven paths (happy +
+  six classed errors with the exact messages) and a `testServer` check
+  confirmed the specific `Details` reaches the app. NEWS.Rmd entry
+  updated in place + NEWS.md re-rendered (pure ASCII; NEWS.html
+  byproduct removed). → Learning 147.
 
 ### 2026-06-21 — Deleted the two merged file-pedigree-source carrier branches (Session 154)
 
@@ -17159,12 +18061,13 @@ here.
 - **Verification:** new function file 7/7 (15 expectations);
   `test_getFocalAnimalPed.R` 62, `test_modInput.R` 168 (incl. the 2
   new); full testthat suite **0 failed / 0 error**; `lint_package()`
-  **0**; **`devtools::check()` OK (0/0/0)**; Phase-3E runtime smoke
-  exercised the real (un-mocked) `getFocalAnimalPedFromFile` (focal-id
-  file + `ExamplePedigree` → connected component; fail-soft `NULL` paths
-  fire) and confirmed the optional pedigree-file input renders in
-  `modInput`. Committed on `wire-focal-file-source` (unpushed —
-  publishing is the owner’s call).
+  **0**;
+  **[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  OK (0/0/0)**; Phase-3E runtime smoke exercised the real (un-mocked)
+  `getFocalAnimalPedFromFile` (focal-id file + `ExamplePedigree` →
+  connected component; fail-soft `NULL` paths fire) and confirmed the
+  optional pedigree-file input renders in `modInput`. Committed on
+  `wire-focal-file-source` (unpushed — publishing is the owner’s call).
 
 ### 2026-06-20 — Published S150 (PR \#61) + deleted merged `walk-unification` + wired the `"file"` provider to a first-class caller `getFileDirectRelatives()` (Session 151)
 
@@ -17231,10 +18134,11 @@ here.
   re-rendered NEWS.md.
 - **Verification:** new test file 7/7 (17 expectations); full testthat
   suite **0 failed / 0 error**; `lint_package()` **0**;
-  **`devtools::check()` OK (0/0/0)**; Phase-3E runtime smoke exercised
-  the real (un-mocked) `getFileDirectRelatives` (reads a CSV → full
-  connected component; all three loud-error paths fire). Committed on
-  `wire-file-pedsource` (unpushed — publishing is the owner’s call).
+  **[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  OK (0/0/0)**; Phase-3E runtime smoke exercised the real (un-mocked)
+  `getFileDirectRelatives` (reads a CSV → full connected component; all
+  three loud-error paths fire). Committed on `wire-file-pedsource`
+  (unpushed — publishing is the owner’s call).
 
 ### 2026-06-20 — Published S149 (PR \#60) + deleted merged `labkey-pedsource-adapter` + `getPedigreeSource()` gains a `"file"` source (LabKey research Rec \#4/#5) (Session 150)
 
@@ -17292,8 +18196,9 @@ here.
   `inst/WORDLIST`.
 - **Verification:** full testthat suite **0 failed / 0 error** (1979
   passed); `lint_package()` **0**; `roxygenise` made **no**
-  `NAMESPACE`/`man` change (`@noRd`); **`devtools::check()` OK
-  (0/0/0)**; Phase-3E runtime smoke exercised the real (un-mocked)
+  `NAMESPACE`/`man` change (`@noRd`);
+  **[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  OK (0/0/0)**; Phase-3E runtime smoke exercised the real (un-mocked)
   `"file"` branch (reads a CSV → returns id/sire/dam; both error paths
   fire; existing `dataframe`/`bogus` branches intact). The `"file"`
   provider is a new internal capability on the seam (not yet wired to a
@@ -17366,11 +18271,12 @@ here.
 - **Verification:** full testthat suite **0 failed / 0 error** (1960
   passed / 167 skipped); `lint_package()` **0**; `roxygenise` changed
   only `man/getLkDirectRelatives.Rd` (no `NAMESPACE` change);
-  **`devtools::check()` OK (0/0/0)**; Phase-3E runtime smoke exercised
-  the real `getLkDirectRelatives` (full-component result
-  incl. collateral O2, 7-column positional contract preserved, fail-soft
-  NULL path intact, body delegates). Committed on `walk-unification`
-  (unpushed — publishing is the owner’s call).
+  **[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  OK (0/0/0)**; Phase-3E runtime smoke exercised the real
+  `getLkDirectRelatives` (full-component result incl. collateral O2,
+  7-column positional contract preserved, fail-soft NULL path intact,
+  body delegates). Committed on `walk-unification` (unpushed —
+  publishing is the owner’s call).
 
 ### 2026-06-20 — Published S147 (PR \#58) + data-source adapter on the `getPedDirectRelatives` fetch boundary (LabKey research Rec \#4/#5) (Session 148)
 
@@ -17425,11 +18331,13 @@ here.
   passed / 167 skipped); `lint_package()` **0**; `roxygenise` made
   **no** `NAMESPACE`/`man` change (`@noRd`; verified after also removing
   the now-unused `@import`/`@importFrom` tags from
-  `getLkDirectRelatives`); **`devtools::check()` OK (0/0/0)**; Phase-3E
-  runtime smoke exercised the real `getPedigreeSource` (dataframe
-  passthrough; the three error branches; the `getLkDirectRelatives`
-  rewiring). The Rec \#4 work is committed on `labkey-pedsource-adapter`
-  (unpushed — publishing is the owner’s call).
+  `getLkDirectRelatives`);
+  **[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  OK (0/0/0)**; Phase-3E runtime smoke exercised the real
+  `getPedigreeSource` (dataframe passthrough; the three error branches;
+  the `getLkDirectRelatives` rewiring). The Rec \#4 work is committed on
+  `labkey-pedsource-adapter` (unpushed — publishing is the owner’s
+  call).
 
 ### 2026-06-20 — Published S146 (PR \#57) + config-ized the ONPRC defaults (LabKey research Rec \#2) (Session 147)
 
@@ -17479,7 +18387,8 @@ here.
   lone `object_usage_linter` flag on `defaultSiteParams` was the
   stale-install artifact — clean once loaded; Learning 137);
   `roxygenise` made **no** `NAMESPACE`/`man` change (`@noRd`);
-  **`devtools::check()` OK (0/0/0)**; runtime smoke confirmed
+  **[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  OK (0/0/0)**; runtime smoke confirmed
   `getSiteInfo(expectConfigFile = FALSE)` returns values identical to
   the pre-change literals. (Caught + removed a stray `NEWS.html` render
   artifact that R CMD check flagged as a top-level NOTE —
@@ -17517,15 +18426,16 @@ here.
   the newest `*-26.000-26.001.sql` dbscripts), adversarially verified
   per repo. **Caveat:** module-target ≠ deployed production version (a
   center can run older) — Open Q §8.1 remains strictly unobserved.
-- **Verification:** `devtools::check()` **Status OK (0/0/0)** — full
-  testthat suite + spelling + examples + `--run-donttest` + vignette
-  rebuild all passed; installed `Rlabkey` 3.4.6 satisfies the floor. A
-  `>=` floor removes the unversioned-dependency CRAN concern +
-  guarantees the client API the code calls is present; it cannot
-  constrain a too-new client against an old server (deployment matter;
-  CRAN discourages upper bounds). → Learning 138. The floor change is
-  committed on `rlabkey-version-floor` (unpushed — publishing is the
-  owner’s call).
+- **Verification:**
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  **Status OK (0/0/0)** — full testthat suite + spelling + examples +
+  `--run-donttest` + vignette rebuild all passed; installed `Rlabkey`
+  3.4.6 satisfies the floor. A `>=` floor removes the
+  unversioned-dependency CRAN concern + guarantees the client API the
+  code calls is present; it cannot constrain a too-new client against an
+  old server (deployment matter; CRAN discourages upper bounds). →
+  Learning 138. The floor change is committed on `rlabkey-version-floor`
+  (unpushed — publishing is the owner’s call).
 
 ### 2026-06-20 — Published S143 + S144 to `master` via PR \#56 (LabKey API-key auth now green across 5 platforms) (Session 145)
 
@@ -17791,10 +18701,11 @@ here.
   `a3manual.Rmd` + `ColonyManagerTutorial.Rmd`) and once from
   README.Rmd’s own hardcoded block. Removed **only README.Rmd’s block**
   (README-only blast radius; the manual/tutorial vignettes untouched)
-  and re-rendered via `devtools::build_readme()`. Citation now appears
-  once (Introduction); diff = removed block + an incidental, correct
-  version-date refresh (`2026-06-17` → `2026-06-19`). Carried S132→S138
-  as FM \#8.
+  and re-rendered via
+  [`devtools::build_readme()`](https://devtools.r-lib.org/reference/build_readme.html).
+  Citation now appears once (Introduction); diff = removed block + an
+  incidental, correct version-date refresh (`2026-06-17` →
+  `2026-06-19`). Carried S132→S138 as FM \#8.
 - **CRAN plan §9 Phase-3 reconcile:** marked
   `docs/planning/cran-2.0.0-submission-plan.md` §9 row 3 ✅ and added a
   Phase-3 STATUS block — verified firsthand that DESCRIPTION / README.md
@@ -17833,12 +18744,13 @@ here.
   `R/createPedOne.R:17` (`` `si re` `` → `sire.id`). 18/18 assertions
   green.
 - **REFACTOR:** `si.re` → `sire.id` in the 5 `R/data.R` roxygen blocks →
-  `devtools::document()` regenerated exactly the 5 `man/*.Rd` (NAMESPACE
-  untouched); removed the `si` line from `inst/WORDLIST` (no longer
-  needed — `si.re` is gone from the docs); updated the website-only
-  vignette prose (`vignettes/articles/studbook-quality-control.qmd`);
-  its executed change-log output regenerates at site build (the quarto
-  freeze cache is git-ignored, `.gitignore:40`).
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  regenerated exactly the 5 `man/*.Rd` (NAMESPACE untouched); removed
+  the `si` line from `inst/WORDLIST` (no longer needed — `si.re` is gone
+  from the docs); updated the website-only vignette prose
+  (`vignettes/articles/studbook-quality-control.qmd`); its executed
+  change-log output regenerates at site build (the quarto freeze cache
+  is git-ignored, `.gitignore:40`).
 - **Necessitated test update:** `test_summary.nprcgenekeeprErr.R`
   asserted the summary change-log has 9 newlines; `sire.id` adds the
   `sireIdToSire` line, so it is now 10 (`9L` → `10L`, with a clarifying
@@ -18075,10 +18987,11 @@ here.
 - **Pre-gate hygiene (captured evidence):**
   [`roxygen2::roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html)
   → **zero diff** (`man/`+`NAMESPACE` already in sync);
-  `urlchecker::url_check()` → **all 17 URLs correct**; full
-  clean-regression read **0 failed / 0 error** (863 result rows; 167
-  skipped = e2e/app via `skip_on_cran`+opt-in gate; 5 benign warnings,
-  all in one passing test `test_modPyramid.R`, pre-existing baseline).
+  [`urlchecker::url_check()`](https://urlchecker.r-lib.org/reference/url_check.html)
+  → **all 17 URLs correct**; full clean-regression read **0 failed / 0
+  error** (863 result rows; 167 skipped = e2e/app via
+  `skip_on_cran`+opt-in gate; 5 benign warnings, all in one passing test
+  `test_modPyramid.R`, pre-existing baseline).
 - **`inst/WORDLIST` reconciled (+35 terms, 310→345 lines, owner-approved
   “reconcile now”):** the plan expected “only EHR/Raboin/kinships
   remain,” but
@@ -18382,10 +19295,11 @@ here.
   to Phase 3b).
 - **Flagged for Phase 3b (next session):** bump `DESCRIPTION:4`
   1.1.0.9000 → 2.0.0; regenerate `README.md` (rmarkdown::render;
-  `devtools::build_readme` absent); set `CITATION.cff` version
-  (currently **stale at 1.0.7**) → 2.0.0 (hand-edit; cffr absent); run
-  `test_getVersion.R` + `test_appUI_version.R` (both dynamic → green).
-  Maintainer judgment for the owner: whether to promote the
+  [`devtools::build_readme`](https://devtools.r-lib.org/reference/build_readme.html)
+  absent); set `CITATION.cff` version (currently **stale at 1.0.7**) →
+  2.0.0 (hand-edit; cffr absent); run `test_getVersion.R` +
+  `test_appUI_version.R` (both dynamic → green). Maintainer judgment for
+  the owner: whether to promote the
   [`summarizeKinshipValues()`](https://github.com/rmsharp/nprcgenekeepr/reference/summarizeKinshipValues.md)
   `secondQuartile` change and/or the rhesus data-type change from Minor
   to Major. \[\[news-vs-changelog\]\]
@@ -20089,10 +21003,11 @@ here.
   `"integer"`, `expect_length == length(lowerAges)` — verifies the docs
   match real behavior and guards future drift.
 - **Verification:** `test_fillBins.R` 11/11 green;
-  `devtools::document()` produced **no** NAMESPACE/`man/`/DESCRIPTION
-  change (confirms the `@noRd` path); `lintr` 0 on `R/fillBins.R` and
-  the test file; full clean-regression read **0 failed / 0 error** (5
-  warnings = the designed `loadSiteConfig` safety-net logs; 169 skips).
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  produced **no** NAMESPACE/`man/`/DESCRIPTION change (confirms the
+  `@noRd` path); `lintr` 0 on `R/fillBins.R` and the test file; full
+  clean-regression read **0 failed / 0 error** (5 warnings = the
+  designed `loadSiteConfig` safety-net logs; 169 skips).
   **\[news-vs-changelog\]:** `@noRd` internal docs never render to a
   user-facing man page → **CHANGELOG only**, no `NEWS`. Phase-3E
   (runtime smoke test) **N/A** — a roxygen comment on a `@noRd` internal
@@ -20196,8 +21111,9 @@ here.
   clean-regression read **0 failed / 0 error** (192 files, 1046 tests,
   167 skips; the 5 warnings are S85’s designed `loadSiteConfig`
   safety-net logs); `lintr` **0 lints** on all 5 changed `R/` files.
-  **Phase-3E = PERFORMED, PASS:** `devtools::install()` then exercised
-  the exported readers in the **installed** package —
+  **Phase-3E = PERFORMED, PASS:**
+  [`devtools::install()`](https://devtools.r-lib.org/reference/install.html)
+  then exercised the exported readers in the **installed** package —
   `getPedigree`/`getGenotypes` on no-newline files emit no warning and
   preserve all rows; `getFocalAnimalPed` no longer emits the
   incomplete-final-line warning **but its unrelated config-missing
@@ -20248,7 +21164,9 @@ here.
 - **Verification:** new test 3/3 green; full clean-regression read **0
   failed / 0 error** (5 warnings = the designed `loadSiteConfig`
   safety-net logs from S85); `lintr` **0 lints** on `R/appUI.R`.
-  **Phase-3E = PERFORMED, PASS:** `devtools::install()` + a
+  **Phase-3E = PERFORMED, PASS:**
+  [`devtools::install()`](https://devtools.r-lib.org/reference/install.html) +
+  a
   [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
   boot of the **installed** stock app confirmed the live About panel
   renders `<p>Version 1.1.0.9000</p>` with the stale `1.0.8` absent.
@@ -20433,7 +21351,8 @@ here.
 - **Verification:** new tests 8/8 green; full clean-regression read **0
   failed / 0 error**; `lintr` **0 lints** on all 3 changed files (the
   transient `object_usage` warning for the brand-new function cleared
-  after `devtools::install()`).
+  after
+  [`devtools::install()`](https://devtools.r-lib.org/reference/install.html)).
 - **Phase-3E (runtime smoke): PERFORMED — PASS.** `AppDriver` boot of
   the installed app with the **real documented
   `example_nprcgenekeepr_config` (SNPRC) present**
@@ -20542,7 +21461,9 @@ here.
   to it (active pane shows “Export ORIP Report”); 4 sibling tabs intact;
   **0 `oripReporting`-namespaced JS errors** (the 12 `shinyBS` errors
   are pre-existing app-wide noise, separated by namespace grep). Reused
-  Learning 78’s recipe (`NOT_CRAN=true` + `devtools::install()` first).
+  Learning 78’s recipe (`NOT_CRAN=true` +
+  [`devtools::install()`](https://devtools.r-lib.org/reference/install.html)
+  first).
 - **Owner-clarified follow-up → \#49 filed:** the tab ships
   **always-visible** this session; the owner clarified ORIP reporting is
   **ONPRC-specific** and the tab should be **gated on an Oregon-specific
@@ -20665,11 +21586,12 @@ here.
   `minParentAge` reuses the QC 2-year default as a server param (owner
   ratified only the gestation UI input, so no second UI input added —
   scope held); empty results → empty-state message.
-- **Verification:** `devtools::check()` clean (0 errors / 0 warnings / 0
-  notes); full clean-regression read 0 real failed/error; `lintr` clean
-  on the new module + test files; docs regenerated
-  (`modPotentialParents*` exported, `flattenPotentialParents` kept
-  internal via `@noRd`).
+- **Verification:**
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  clean (0 errors / 0 warnings / 0 notes); full clean-regression read 0
+  real failed/error; `lintr` clean on the new module + test files; docs
+  regenerated (`modPotentialParents*` exported,
+  `flattenPotentialParents` kept internal via `@noRd`).
 - **Phase-3E runtime smoke test (mandatory, performed):** booted the
   assembled app headlessly via
   [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
@@ -20995,7 +21917,8 @@ here.
   driven by the **existing** `maxGestationalPeriod` parameter — the dam
   side now gets the gestation treatment the sire side already had.
   Resolves the near-term, low-lift sub-task of umbrella **\#45**.
-  `devtools::check()` clean (0/0/0); full suite 0 failed / 0 error.
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  clean (0/0/0); full suite 0 failed / 0 error.
 - **TDD phase = RED→GREEN→REFACTOR(skipped)** — a real TDD code session
   (first since S71). All three transition gates + a separate pre-RED
   scope decision posed via `AskUserQuestion`; phase declared atop every
@@ -21080,8 +22003,9 @@ here.
   **each** of \#44’s 8 acceptance criteria — exports in `NAMESPACE`, the
   predicate routing all 7 detection sites + 2 generators, the round-trip
   tests, the docstring/tooltip updates — and that the full suite +
-  `devtools::check()` passed on exactly that state. Mapped criteria →
-  code in the close comment.
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  passed on exactly that state. Mapped criteria → code in the close
+  comment.
 - **Close comments** (with `14c8e84d` pointer): \#44 carries the
   criterion-by-criterion map + the documented known limitation
   (prefix-only detection still over-matches real prefix-IDs — the
@@ -21146,11 +22070,12 @@ here.
   `# nolint: undesirable_function_linter` per the project’s
   `getPyramidPlot.R` precedent — a public permanent setter, not a scoped
   change).
-- **Docs/exports:** `devtools::document()` → `man/getAutoIdFormat.Rd` +
-  `man/setAutoIdFormat.Rd` + NAMESPACE exports;
-  `man/addUIds.Rd`/`man/removeAutoGenIds.Rd` regenerated. **NEWS.md**
-  NEW-48 (user-facing). `modPedigree.R:112` tooltip notes the format is
-  configurable.
+- **Docs/exports:**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  → `man/getAutoIdFormat.Rd` + `man/setAutoIdFormat.Rd` + NAMESPACE
+  exports; `man/addUIds.Rd`/`man/removeAutoGenIds.Rd` regenerated.
+  **NEWS.md** NEW-48 (user-facing). `modPedigree.R:112` tooltip notes
+  the format is configurable.
 
 ### 2026-06-13 — Consolidate the ID cluster into umbrella \#44 (Session 70)
 
@@ -21247,8 +22172,9 @@ here.
   `test_modPedigree.R` updated to the new contract — surfaced by the
   full-suite clean-regression read (Learning 68). **Full suite: 972
   tests, 0 failed, 0 error, 159 skip.**
-- **Docs/exports:** `devtools::document()` →
-  `man/getDescendantPedigree.Rd` + NAMESPACE export;
+- **Docs/exports:**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  → `man/getDescendantPedigree.Rd` + NAMESPACE export;
   `man/modPedigreeServer.Rd` regenerated. **NEWS.md** NEW-47 entry
   (user-facing). Lint clean (lone `object_usage_linter` warning proven
   an install-staleness artifact). Phase 3E:
@@ -21595,11 +22521,13 @@ here.
   none of the 3 staged dupes (685 files, down from the 693-file baseline
   = the 8 removed). The “non-standard top-level files” NOTE is a pure
   function of the tarball’s top-level entries, so this directly confirms
-  the NOTE is gone (full `devtools::check()` not re-run — nothing
-  affecting tests/examples/metadata changed; consistent with S58/S59).
-  The complete 8-file set was enumerated by building the baseline
-  tarball first (S59’s candidate list named only 4 of the 8). Temp
-  dupes + tarballs removed via `trap cleanup`; tree clean.
+  the NOTE is gone (full
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  not re-run — nothing affecting tests/examples/metadata changed;
+  consistent with S58/S59). The complete 8-file set was enumerated by
+  building the baseline tarball first (S59’s candidate list named only 4
+  of the 8). Temp dupes + tarballs removed via `trap cleanup`; tree
+  clean.
 
 ### 2026-06-12 — `.Rbuildignore` macOS-dupe guard generalized to the whole methodology `.md` cluster (Session 59)
 
@@ -21660,8 +22588,9 @@ here.
   `R CMD build` (RC=0); the resulting tarball contained **zero**
   SESSION_NOTES entries → the dupe is excluded and the WARNING cannot
   fire. Temp file + tarball removed; tree clean. (Full
-  `devtools::check()` intentionally skipped — the WARNING is a pure
-  function of tarball contents, verified directly.)
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  intentionally skipped — the WARNING is a pure function of tarball
+  contents, verified directly.)
 
 ### 2026-06-12 — Close issue \#30 + repo hygiene (Session 57)
 
@@ -21679,19 +22608,22 @@ here.
 - **Repo hygiene:** removed the untracked macOS-duplicate
   `SESSION_NOTES 2.md` (563 KB, never committed, content fully contained
   in `SESSION_NOTES.md`). Its space-in-filename was the sole cause of
-  the `devtools::check()` “portable file names” **WARNING**
-  (`.Rbuildignore`’s `^SESSION_NOTES\.md$` exact-match does not cover
-  the space-name, so the dupe entered the build tarball). **Verified
-  firsthand:** post-removal `devtools::check()` = **0 errors / 0
-  warnings / 3 NOTEs** (was 1 WARNING at S56) → the WARNING is cleared.
-  The 3 residual NOTEs are all pre-existing/environmental (clock-skew
-  future-timestamps, spelling, and “non-standard top-level files” — the
-  latter now lists only no-space methodology/audit files:
-  `20250504_cran-comments.md`, `PED_GV_AUDIT_2026-05-30.{html,md}`,
-  `RECOMMENDED_SKILLS.md`, `TECH_DEBT_AUDIT_2026-05-30.md`,
-  `dashboard.html`, `methodology_dashboard.py`,
-  `nprcgenekeepr_notes.txt`; the build-ignored `..Rcheck/` does not
-  appear).
+  the
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  “portable file names” **WARNING** (`.Rbuildignore`’s
+  `^SESSION_NOTES\.md$` exact-match does not cover the space-name, so
+  the dupe entered the build tarball). **Verified firsthand:**
+  post-removal
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  = **0 errors / 0 warnings / 3 NOTEs** (was 1 WARNING at S56) → the
+  WARNING is cleared. The 3 residual NOTEs are all
+  pre-existing/environmental (clock-skew future-timestamps, spelling,
+  and “non-standard top-level files” — the latter now lists only
+  no-space methodology/audit files: `20250504_cran-comments.md`,
+  `PED_GV_AUDIT_2026-05-30.{html,md}`, `RECOMMENDED_SKILLS.md`,
+  `TECH_DEBT_AUDIT_2026-05-30.md`, `dashboard.html`,
+  `methodology_dashboard.py`, `nprcgenekeepr_notes.txt`; the
+  build-ignored `..Rcheck/` does not appear).
 
 ### 2026-06-12 — Issue \#30 Phase 4: behavior-sensitive lint refactors + de-exclude (Session 56)
 
@@ -21737,13 +22669,14 @@ here.
   (`parse_settings=FALSE`); full suite **0 fail / 0 err / 159 skip**
   (S49 baseline + 5 new passing expectations from the
   contract/characterization tests → zero regression);
-  `devtools::check()` **0 errors** (1 pre-existing-environmental
-  WARNING + 2 NOTEs from stray top-level files incl. the macOS
-  `SESSION_NOTES 2.md` dupe — not from this change); adversarial
-  behavior-verification workflow `wf_168f8dcf-1e5` (6 skeptics, each
-  told to refute). Phase-3E: `addSexAndAgeToGroup`’s runtime integration
-  is covered by `test_modBreedingGroups.R:1015-1122` (the
-  breeding-groups member view), green in the full suite.
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  **0 errors** (1 pre-existing-environmental WARNING + 2 NOTEs from
+  stray top-level files incl. the macOS `SESSION_NOTES 2.md` dupe — not
+  from this change); adversarial behavior-verification workflow
+  `wf_168f8dcf-1e5` (6 skeptics, each told to refute). Phase-3E:
+  `addSexAndAgeToGroup`’s runtime integration is covered by
+  `test_modBreedingGroups.R:1015-1122` (the breeding-groups member
+  view), green in the full suite.
 
 ### 2026-06-11 — Issue \#30 Phase 3: behavior-none lint refactors + `.lintr` casing fix (Session 55)
 
@@ -21776,8 +22709,9 @@ here.
   left as-is (casing now correct).
 - **Verification:** `lint_package()` = 0; the 6 files lint-clean
   (`parse_settings=FALSE`); full suite **2140 pass / 0 fail / 0 err /
-  159 skip** (= S49 baseline → zero regression); `devtools::check()` **0
-  errors** (1 pre-existing-environmental WARNING + NOTE from stray
+  159 skip** (= S49 baseline → zero regression);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  **0 errors** (1 pre-existing-environmental WARNING + NOTE from stray
   top-level files incl. a macOS `SESSION_NOTES 2.md` dupe — not from
   this change); `man/` untouched.
 
@@ -22221,13 +23155,14 @@ here.
   / 0 error / 156 skip / 5 pre-existing `modPyramid` warnings / 0
   non-e2e offenders** (= the 2166 baseline + 14 new expectations;
   default analytical path unchanged — every existing test passes with
-  the gate unset). **`devtools::check()` = 0 errors / 0 warnings / 3
-  NOTEs** (all pre-existing or environmental: the stale
-  `spelling.Rout.save` baseline, “future file timestamps”, non-standard
-  top-level dev files — the S35 baseline; no new `gatedSeed` “no visible
-  global” NOTE, confirming the lintr single-file flag is a
-  stale-namespace artifact resolved by full-package analysis). Phase-3E
-  runtime smoke:
+  the gate unset).
+  **[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  = 0 errors / 0 warnings / 3 NOTEs** (all pre-existing or
+  environmental: the stale `spelling.Rout.save` baseline, “future file
+  timestamps”, non-standard top-level dev files — the S35 baseline; no
+  new `gatedSeed` “no visible global” NOTE, confirming the lintr
+  single-file flag is a stale-namespace artifact resolved by
+  full-package analysis). Phase-3E runtime smoke:
   [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
   (working-tree source via `load_all`, so the hook is active) serves
   **HTTP 200** on the default gate-unset path. Lint net-zero on the
@@ -22889,10 +23824,12 @@ here.
 - **Verification:** non-e2e regression **2135 passed / 0 failed / 0
   error** (5 pre-existing modPyramid warnings); runtime smoke
   [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
-  → modular app **HTTP 200**; **`devtools::check()` = 0 errors / 0
-  warnings**, `creating vignettes ... OK` (pre-existing NOTEs only:
-  non-standard top-level dev files; a stale `spelling.Rout.save`
-  baseline); grep confirms no `system.file("application")`.
+  → modular app **HTTP 200**;
+  **[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  = 0 errors / 0 warnings**, `creating vignettes ... OK` (pre-existing
+  NOTEs only: non-standard top-level dev files; a stale
+  `spelling.Rout.save` baseline); grep confirms no
+  `system.file("application")`.
 - **Pre-existing fix (separate `fix:` commit, owner-approved):**
   `a2interactive.Rmd` error-list table was missing the `invalidIdChars`
   description (NEW-45 drift:
@@ -23418,8 +24355,8 @@ here.
   [`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html) +
   `NOT_CRAN=true` = 0 failed / 0 error, 0 non-e2e offenders, 2085
   passed, e2e skipped (156); lint net-zero on `R/modInput.R` (41 = 41);
-  `devtools::document()` no man/NAMESPACE delta; **Phase 3E runtime
-  smoke**
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  no man/NAMESPACE delta; **Phase 3E runtime smoke**
   [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
   binds + HTTP 200 (modInput mounts with the `genotypeFile` input). No
   NEWS bullet (modular app not yet canonical; no analytical-pipeline
@@ -23567,8 +24504,8 @@ here.
   [`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html) +
   `NOT_CRAN=true` = 0 failed / 0 error, 2071 passed (+22), e2e skipped;
   lint net-zero (modSummaryStats 60=60, appServer 18=18);
-  `devtools::document()` (only `man/modSummaryStatsServer.Rd`); runtime
-  smoke —
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  (only `man/modSummaryStatsServer.Rd`); runtime smoke —
   [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
   binds + HTTP 200. NEWS deferred to the Phase 9 canonical switch
   (modular app not yet canonical).
@@ -23645,8 +24582,8 @@ here.
   `create_test_app()` at **154 sites**, but the helper was never defined
   (it never existed in git history; the e2e scaffolding landed in
   `7da01afe` without it). Result: **154 suite ERRORS** under
-  `devtools::test()`/CI (`NOT_CRAN=true`), masked only by
-  `skip_on_cran()` under a bare
+  [`devtools::test()`](https://devtools.r-lib.org/reference/test.html)/CI
+  (`NOT_CRAN=true`), masked only by `skip_on_cran()` under a bare
   [`testthat::test_dir()`](https://testthat.r-lib.org/reference/test_dir.html)
   — a suite that was clean or broken depending on the runner.
 - **Fix (strict TDD, RED→GREEN; no REFACTOR needed):** define

@@ -112,7 +112,7 @@ suppressWarnings(getSiteInfo())
 #>  [6] "gen"          "birth"        "exit"         "death"        "age"         
 #> [11] "ancestry"     "population"   "origin"       "status"       "condition"   
 #> [16] "departure"    "spf"          "vasxOvx"      "pedNum"       "first"       
-#> [21] "second"       "first_name"   "second_name"  "recordStatus"
+#> [21] "second"       "first_name"   "second_name"  "recordStatus" "affected"    
 #> 
 #> $includeColumns
 #>  [1] "id"          "sex"         "age"         "birth"       "exit"       
@@ -179,7 +179,7 @@ getSiteInfo(expectConfigFile = FALSE)
 #>  [6] "gen"          "birth"        "exit"         "death"        "age"         
 #> [11] "ancestry"     "population"   "origin"       "status"       "condition"   
 #> [16] "departure"    "spf"          "vasxOvx"      "pedNum"       "first"       
-#> [21] "second"       "first_name"   "second_name"  "recordStatus"
+#> [21] "second"       "first_name"   "second_name"  "recordStatus" "affected"    
 #> 
 #> $includeColumns
 #>  [1] "id"          "sex"         "age"         "birth"       "exit"       

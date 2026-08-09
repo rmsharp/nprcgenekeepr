@@ -172,6 +172,21 @@
   gained a matching `edgeStyle = c("direct", "rectilinear")` argument
   for scripted use, defaulting to “direct” (unchanged existing behavior
   for every current caller).
+- The Pedigree Browser’s Diagram tab can now shade **affected-status**
+  individuals (issue
+  [\#133](https://github.com/rmsharp/nprcgenekeepr/issues/133)): an
+  optional new `affected` logical column (matching kinship2’s own
+  `affected` argument naming) marks an animal as affected by a condition
+  of interest; when present, affected individuals are shaded on the
+  diagram and every node’s hover tooltip gains an “Affected:
+  Yes/No/Unknown” line. Pedigrees without an `affected` column render
+  exactly as before. Both
+  [`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+  and
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+  gained this optional-column support. The Diagram tab’s shape-to-sex
+  legend gained a matching “Affected” swatch so the new shading is
+  discoverable without hovering over a node.
 
 ## nprcgenekeepr 2.0.0 (20260708)
 

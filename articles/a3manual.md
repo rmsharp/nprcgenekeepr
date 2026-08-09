@@ -308,28 +308,33 @@ limit drops to 400 animals when the Rectilinear edge style below is
 selected, since it renders more total diagram nodes per animal). Each
 animal is shaped by sex – dot = Female, square = Male, star =
 Hermaphrodite, triangle = Unknown, diamond = Other/Unrecorded – with a
-legend to the right of the diagram showing the same mapping. A mate’s
-own mating(s) render as a small connector between the two parents, with
-a line down to their shared children, rather than two independent lines
-running straight from each parent – the same convention traditional
-pedigree charts use. A **Diagram Edge Style** toggle above the diagram
-switches between “Direct” (the default straight-line connector) and
-“Rectilinear (kinship2-style),” which routes the same connectors as
-strict right angles instead, matching the more traditional
-pedigree-chart look. An animal that mates more than once, or whose
-lineage loops back on itself (e.g. a consanguineous mating), appears
-once per mating, with each occurrence joined back to its main occurrence
-by a curved, dashed line; hovering, clicking, or searching any
-occurrence behaves identically to the animal’s main occurrence. Clicking
-an animal re-centers the population on it, the same as entering its ID
-in the focal-animals text area. An **Export Diagram (PNG)** button,
-shown in the diagram’s own corner, saves the current diagram view as a
-PNG image file – useful for husbandry reports, IACUC documents, or
-presentations. Hovering any animal shows its ID, sex, generation, sire,
-and dam. A **Select by id** dropdown above the diagram lets you jump
-straight to a specific animal by ID, dimming every node except it and
-its direct connections – useful for locating one animal in a large, busy
-diagram without narrowing the focal-animal selection.
+legend to the right of the diagram showing the same mapping. If the
+pedigree data includes an optional `affected` column, individuals marked
+affected are additionally shaded a distinct color on the diagram, with a
+matching “Affected” entry in the same legend; pedigrees without an
+`affected` column render unshaded, as before. A mate’s own mating(s)
+render as a small connector between the two parents, with a line down to
+their shared children, rather than two independent lines running
+straight from each parent – the same convention traditional pedigree
+charts use. A **Diagram Edge Style** toggle above the diagram switches
+between “Direct” (the default straight-line connector) and “Rectilinear
+(kinship2-style),” which routes the same connectors as strict right
+angles instead, matching the more traditional pedigree-chart look. An
+animal that mates more than once, or whose lineage loops back on itself
+(e.g. a consanguineous mating), appears once per mating, with each
+occurrence joined back to its main occurrence by a curved, dashed line;
+hovering, clicking, or searching any occurrence behaves identically to
+the animal’s main occurrence. Clicking an animal re-centers the
+population on it, the same as entering its ID in the focal-animals text
+area. An **Export Diagram (PNG)** button, shown in the diagram’s own
+corner, saves the current diagram view as a PNG image file – useful for
+husbandry reports, IACUC documents, or presentations. Hovering any
+animal shows its ID, sex, generation, sire, dam, and (when the pedigree
+data includes it) affected status. A **Select by id** dropdown above the
+diagram lets you jump straight to a specific animal by ID, dimming every
+node except it and its direct connections – useful for locating one
+animal in a large, busy diagram without narrowing the focal-animal
+selection.
 
 ### Module Interface
 
