@@ -163,6 +163,25 @@ R. Mark Sharp, Ph.D.
   `obfuscatePed()` scrubs `name` to `NA`, so a de-identified pedigree
   never leaks an animal's real name. Both `makePedigreeDiagramData()`
   and `makePedigreeMatingLayout()` gained this optional-column support.
+- The Pedigree Browser's Diagram tab can now show **twin/zygosity
+  connectors** (issue \#137), adopting kinship2's own MZ/DZ/UZ twin-code
+  convention: an optional twin-relations sidecar file (`id1`, `id2`,
+  `code` columns, `code` one of `"MZ twin"`/`"DZ twin"`/`"UZ twin"`) can
+  be uploaded alongside the pedigree, and a new, off-by-default **Show
+  Twin Connectors** toggle draws a distinctly-styled connector line
+  between each declared twin pair's own diagram nodes -- solid for MZ,
+  short-dashed for DZ, long-dashed with a "?" label for UZ (a callback
+  to kinship2's own UZ glyph) -- with a matching legend entry. Twin
+  declarations are validated against the pedigree (both ids must exist
+  and differ; an MZ/DZ pair must already share both `sire` and `dam`; MZ
+  additionally requires matching `sex`; UZ has no such precondition) via
+  the new exported `checkTwinRelations()`; a companion
+  `obfuscateTwinRelations()` scrubs a twin-relations table's ids through
+  the same alias map `obfuscatePed(..., map = TRUE)` produces, so a
+  de-identified export never leaks real ids through this sidecar. A
+  pedigree loaded without any twin data renders exactly as before. Both
+  `makePedigreeDiagramData()` and `makePedigreeMatingLayout()` gained an
+  optional `twinRelations` argument for scripted use.
 
 # nprcgenekeepr 2.0.0 (20260708)
 

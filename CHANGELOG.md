@@ -43,6 +43,36 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-09 · [issue #137] Implemented Slice 3 (UI wiring, legend, documentation) — closes issue #137 (Session 494)
+- **Deliverable:** Shiny-level wiring so a user can supply a `twinRelations` sidecar CSV/Excel file
+  on the Pedigree Browser's Diagram tab, gated by a new **Show Twin Connectors** toggle, with a
+  matching Diagram-tab legend entry and user-facing documentation — closing the 3-slice issue #137
+  chain. New `fileInput(ns("twinRelationsFile"), ...)` lives in `modPedigreeUI()`'s static UI
+  (`R/modPedigree.R`), not the dynamically re-rendered `pedigreeDiagramUI` block, since a `fileInput`
+  has no `value=` a fresh render could read back self-referentially (Learning 490's file-input
+  corollary). New `twinRelationsData()` reactive validates the upload via `checkTwinRelations()`,
+  non-fatal on error (mirrors `R/modGeneticValue.R`'s `kinshipOverrideData` precedent). New
+  off-by-default **Show Twin Connectors** `checkboxInput` follows the established self-referential
+  -value pattern (Learning 490) alongside `pedigreeEdgeStyle`/`pedigreeShowNames`; `diagramLayout()`
+  gates whether the validated data reaches `makePedigreeMatingLayout()` on the toggle. The existing
+  single `visLegend()` call gains an `addEdges` MZ/DZ/UZ legend (never a second call). New exported
+  `R/readTwinRelations.R` mirrors `readKinshipOverrides()`. Pre-RED found the ratified plan's own
+  "Touches" list overstated scope — neither `R/appServer.R` nor `R/modInput.R` needed a change,
+  since `twinRelations` (unlike `kinshipOverrides`) is consumed only inside `modPedigree`'s own
+  render chain. Found and filed (not fixed, out of this slice's file scope): Slice 2's own
+  `.buildTwinConnectorEdges()` never actually wired the `#009E73` color its own S493 handoff said
+  was picked (confirmed via grep, zero hits) — new `BACKLOG.md` Housekeeping item. Full strict-TDD
+  PRE-RED→RED→GREEN cycle, `AskUserQuestion`-gated at every transition (REFACTOR owner-confirmed
+  skip). Verified: full clean regression read 0 failed/0 error, 4758 passed, 175 skipped, 10
+  pre-existing baseline warnings (unchanged); `devtools::check()` 2 ERRORs/1 WARNING/2 NOTEs, an
+  exact match to S493's own baseline, 0 new; `lintr::lint_package()` 0 lints (6 false positives
+  suppressed via the established `# nolint` convention). Phase 3E: the full, real
+  `test-e2e-pedigree-module.R` suite (13 tests, 2 new for this slice) run live against a freshly
+  `devtools::install()`ed package — all 13 passed, 0 console errors. `NEWS.Rmd` and
+  `vignettes/manual_components/_pedigree_browser.Rmd` updated. Citation checklist (#120): N/A,
+  confirmed explicitly. `a2interactive.Rmd` coverage deferred per its own standing rule. See
+  `BACKLOG.md`, `PROJECT_LEARNINGS.md`.
+
 ### 2026-08-09 · [issue #137] Implemented Slice 2 (core rendering) of the twin/zygosity plan (Session 493)
 - **Deliverable:** `makePedigreeDiagramData()`/`makePedigreeMatingLayout()` (`R/makePedigreeDiagramData.R`)
   gain an optional `twinRelations` parameter rendering a distinctly-styled connector edge per twin

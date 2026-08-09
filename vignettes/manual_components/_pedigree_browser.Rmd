@@ -92,6 +92,24 @@ animal by ID, dimming every node except it and its direct connections --
 useful for locating one animal in a large, busy diagram without narrowing the
 focal-animal selection.
 
+If a colony records twin births, an optional **Twin/Zygosity Relations**
+file can be uploaded from the panel to the right of the focal-animal
+controls -- a CSV or Excel file with `id1`, `id2`, and `code` columns
+(`code` one of `"MZ twin"`, `"DZ twin"`, or `"UZ twin"`), following
+kinship2's own twin-code convention. Once uploaded, a **Show Twin
+Connectors** toggle above the diagram (off by default) draws a
+distinctly-styled connector line directly between each declared pair's own
+diagram nodes: solid for a monozygotic (MZ) pair, short-dashed for a
+dizygotic (DZ) pair, and long-dashed with a "?" label for a pair of unknown
+twin zygosity (UZ) -- a callback to kinship2's own "?" glyph -- with a
+matching legend entry so the styling is discoverable without hovering over
+a connector. A malformed or inconsistent twin-relations file (an id not in
+the pedigree, or a declared MZ/DZ pair that does not already share both
+sire and dam) is rejected with an on-screen notification rather than
+breaking the diagram; the pedigree renders exactly as it would with no
+twin data at all until a valid file is supplied. A pedigree with no twin
+data uploaded is unaffected by this feature entirely.
+
 ### Module Interface
 
 The `modPedigree` module accepts input from `modInput` and returns reactive values

@@ -145,6 +145,29 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       that version number.
 
 ## Housekeeping
+- [ ] **`.buildTwinConnectorEdges()` (`R/makePedigreeDiagramData.R`, issue
+      #137 Slice 2) never wired the Okabe-Ito green (`#009E73`) color its
+      own implementing session's handoff narrative said it picked** (found
+      S494, 2026-08-09, incidental to issue #137 Slice 3's own Pre-RED
+      read; Effort S, low priority) -- S493's `HANDOFFS.md`/`SESSION_NOTES.md`
+      entries state D10's color/dash-pattern decision was "`#009E73`
+      Okabe-Ito bluish-green... MZ solid/DZ c(4,4)/UZ c(14,8) dash
+      patterns," but a direct read of the shipped
+      `.buildTwinConnectorEdges()` (confirmed via `grep -n "009E73"
+      R/makePedigreeDiagramData.R`, zero hits) shows it sets only `from`,
+      `to`, `label`, and the `dashes` list-column -- no `color` column
+      exists anywhere in the twin-connector edge path. The dash patterns
+      and labels the narrative describes ARE correctly implemented; only
+      the color never made it from decision to code. Not fixed in Slice 3
+      (out of that slice's own pre-declared file scope --
+      `R/makePedigreeDiagramData.R` is a Slice 2 file; Slice 3's own
+      legend addition instead describes exactly what renders today: label
+      + dash pattern only, no color). A future session should either wire
+      `color = "#009E73"` into `.buildTwinConnectorEdges()`'s output data
+      frame (and add a matching `color` swatch to the Diagram-tab legend's
+      `addEdges` entry in `R/modPedigree.R`) or, if a plain-color connector
+      is judged unnecessary now that dash pattern + label already
+      distinguish the three codes, close this item as decline-with-reason.
 - [ ] **`devtools::check()` returns a non-portable-filename ERROR/WARNING for
       `inst/extdata/reference/Standardized Human Pedigree Nomenclature:
       Update and Assessment of the Recommendations of the Nation.html`**
@@ -1439,6 +1462,48 @@ NOTEs, all independently traced to already-tracked `BACKLOG.md` pre-existing ite
 filename S418; vignette-engine NOTE + the exact same 9-word spelling gap tracked since S465/S490), 0
 new; `lintr::lint_package()` 0 lints on touched files. **Issue #137 stays open** -- Slice 3 (UI
 wiring, legend, documentation) is next in this cluster. See `CHANGELOG.md`.
+
+**Progress (S494, 2026-08-09):** issue #137 Slice 3 (UI wiring, legend, documentation) is DONE,
+closing the 3-slice chain. Pre-RED found the plan's own "Touches" list overstated scope: neither
+`R/appServer.R` nor `R/modInput.R` needed a change (unlike `kinshipOverrides`, `twinRelations` is
+consumed only inside `modPedigree`'s own render chain, no cross-module threading needed) --
+confirmed by direct reads before writing any code, not assumed. New `fileInput(ns("twinRelationsFile"),
+...)` lives in `modPedigreeUI()`'s STATIC UI (never the dynamically re-rendered `pedigreeDiagramUI`
+block) -- a `fileInput` has no `value=` a fresh render could read back self-referentially the way
+`checkboxInput`/`radioButtons` do, so keeping it outside any re-executing block is the only way to
+avoid silently discarding an upload (Learning 490's file-input corollary, found this session, not
+merely inherited). New `twinRelationsData()` reactive (mirrors `modGeneticValue.R`'s
+`kinshipOverrideData` precedent exactly, minus its dead warning-handling branch --
+`checkTwinRelations()` only ever `stop()`s, never `warn()`s) validates the upload against
+`pedigreeData()`, non-fatal on error. New off-by-default **Show Twin Connectors** toggle follows the
+established self-referential-value pattern (Learning 490) alongside the existing `edgeStyle`/
+`pedigreeShowNames` controls; `diagramLayout()` gates whether the validated data reaches
+`makePedigreeMatingLayout()` on the toggle, mirroring the existing `showNames`-gates-the-`name`-column
+precedent. Legend gained MZ/DZ/UZ rows via the SAME `visLegend()` call's `addEdges` parameter
+(confirmed via source read that it passes straight through with no validation, so a second call was
+never needed) -- describing exactly what Slice 2 actually renders (label + dash pattern only). New
+exported `R/readTwinRelations.R` mirrors `readKinshipOverrides()` verbatim. **Found and filed, not
+fixed:** Slice 2's own `.buildTwinConnectorEdges()` never actually wired the `#009E73` color its own
+S493 handoff narrative said was picked -- confirmed via direct grep (zero `009E73` hits in
+`R/makePedigreeDiagramData.R`) -- filed as its own Housekeeping item above rather than fixed here
+(outside Slice 3's own pre-declared file scope). Full strict-TDD PRE-RED->RED->GREEN cycle
+(`AskUserQuestion`-gated at every transition, including a dedicated pre-RED scope decision on the
+color gap; REFACTOR owner-confirmed skip -- the GREEN diff was already minimal and precedent-mirroring).
+Phase 3E: the full, real `test-e2e-pedigree-module.R` suite (13 tests, including 2 new ones for this
+slice) run live against a freshly `devtools::install()`ed package (the Learning 440 stale-install trap
+avoided proactively, not rediscovered) -- all 13 passed, including the new MZ/DZ/UZ connector-render
+test and the toggle-survives-`edgeStyle`-switch regression test (Learning 490's own pattern, applied
+to a second toggle), 0 console errors. Verified: full clean regression read 0 failed/0 error, 4758
+passed, 175 skipped, 10 pre-existing baseline warnings (unchanged); `devtools::check()` 2 ERRORs/1
+WARNING/2 NOTEs, an EXACT match to S493's own baseline, 0 new; `lintr::lint_package()` 0 lints (6
+false positives on new comments/a label string, suppressed via the established `# nolint` convention,
+not deleted or reworded). `NEWS.Rmd` and `vignettes/manual_components/_pedigree_browser.Rmd` both
+updated this session. Citation checklist (#120): N/A, confirmed explicitly -- a twin/zygosity
+connector is a relationship marker/rendering convention, not a new displayed statistic or estimator,
+matching the precedent already set for #133's `affected` flag and #136's `name` label.
+`a2interactive.Rmd` coverage remains DEFERRED per its own standing rule (a future documentation pass,
+not this slice). **Issue #137 is now fully implemented across all 3 slices; closed as part of this
+session's close-out.** See `CHANGELOG.md`.
 - [ ] **Candidate C's connector/dogleg visual-signposting idea** (found S473,
       designing the issue #144 plan; not adopted for #144 itself, Effort
       unknown, low priority) -- extends the existing D2 mate-line "dogleg"
