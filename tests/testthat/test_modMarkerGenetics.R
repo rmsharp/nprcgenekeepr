@@ -35,6 +35,15 @@
 ## between-population differentiation statistic from both centers' pivoted
 ## genotype matrices, surfaced as a locus/fst data frame with a trailing
 ## "Pooled" summary row.
+##
+## RED (issue #147 Slice 2): the module gains a 5th, read-only "Candidate
+## Parent Assignment" tab backed by a new `candidateAssignmentTable`
+## reactive -- markerParentageLikelihood() (Slice 1) called against the
+## module's already-wired `genotypeMatrixR()`/`pedigree` reactives (no new
+## file input needed, matching D10), auto-detecting every Mendelian
+## -flagged (offspring, role) pair and ranking candidate replacement
+## parents by LOD. Report-only, matching the Parentage Exclusion tab's own
+## precedent -- the returned table never mutates `pedigree`.
 
 library(testthat)
 
@@ -281,5 +290,112 @@ test_that("modMarkerGenetics computes the cross-center Fst table from two upload
     expect_equal(tbl$fst[tbl$locus == "L1"], 58 / 1001, tolerance = 1e-6)
     expect_equal(tbl$fst[tbl$locus == "L2"], 139 / 308, tolerance = 1e-6)
     expect_equal(tbl$fst[tbl$locus == "Pooled"], 614 / 2233, tolerance = 1e-6)
+  })
+})
+
+test_that("modMarkerGeneticsUI has a Candidate Parent Assignment tab", {
+  ui <- modMarkerGeneticsUI("test")
+  ui_html <- as.character(ui)
+
+  expect_true(grepl("Candidate Parent Assignment", ui_html))
+})
+
+test_that("modMarkerGenetics's candidate-parent-assignment table is not ready before a pedigree is supplied", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "markerGenotype.csv", datapath = genotypeFilePath
+    ))
+    expect_null(result$candidateAssignmentTable())
+  })
+})
+
+test_that("modMarkerGenetics computes a candidate-parent-assignment table for a flagged pair", {
+  skip_if_not_installed("shiny")
+  ## Same P/C/U fixture as the Parentage Exclusion tests above: C's recorded
+  ## sire is falsely set to the unrelated founder U (3 exclusion loci vs C,
+  ## exceeding the default maxExclusions = 2 -> flagged); C's recorded dam P
+  ## is the true parent (0 exclusions -> not flagged, so trio conditioning
+  ## applies). Only (C, "sire") is auto-detected. getPotentialParents() is
+  ## mocked (matching test_markerParentageLikelihood.R's own established
+  ## convention) to supply a single fixed sire candidate ("U") for C, since
+  ## this minimal fixture's pedigree has none of getPotentialParents()'s own
+  ## required demographic columns (birth/fromCenter/sex) -- this reactive
+  ## test verifies WIRING (the tab calls markerParentageLikelihood() against
+  ## the module's real genotypeMatrix/pedigree reactives and renders its
+  ## real output), not a re-derivation of the LOD formula itself (already
+  ## exhaustively hand-verified in test_markerParentageLikelihood.R). U's
+  ## LOD == -Inf here is empirically confirmed (this session's Pre-RED, a
+  ## standalone script calling the real, current markerParentageLikelihood()
+  ## against this exact fixture) rather than assumed: ANY Mendelian
+  ## -incompatible (opposite-homozygote) locus forces LOD to exactly -Inf
+  ## under the no-error-model formula regardless of trio conditioning
+  ## (test_markerParentageLikelihood.R's own finding (a), confirmed to
+  ## generalize to the trio case there too), and the Parentage Exclusion tab
+  ## test above already confirms U has 3 such loci against C.
+  pedigree <- data.frame(id = c("P", "C", "U"), sire = c(NA, "U", NA),
+                          dam = c(NA, "P", NA), stringsAsFactors = FALSE)
+  testthat::local_mocked_bindings(
+    getPotentialParents = function(ped, ...) {
+      list(list(id = "C", sires = "U", dams = character(0L)))
+    },
+    .package = "nprcgenekeepr"
+  )
+
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(pedigree)), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "markerGenotype.csv", datapath = genotypeFilePath
+    ))
+
+    tbl <- result$candidateAssignmentTable()
+    expect_s3_class(tbl, "data.frame")
+    expect_identical(sort(names(tbl)),
+                      sort(c("id", "role", "candidateId", "LOD", "delta",
+                              "nLociUsed", "excluded", "lowPower")))
+    expect_identical(nrow(tbl), 1L)
+    expect_identical(tbl$id, "C")
+    expect_identical(tbl$role, "sire")
+    expect_identical(tbl$candidateId, "U")
+    expect_identical(tbl$LOD, -Inf)
+    expect_identical(tbl$nLociUsed, 10L)
+    expect_true(tbl$excluded)
+    expect_false(tbl$lowPower)
+    expect_true(is.na(tbl$delta)) # sole candidate: no next-ranked row below it
+  })
+})
+
+test_that("modMarkerGenetics's candidate-parent-assignment table is an empty-but-valid data frame when nothing is flagged", {
+  skip_if_not_installed("shiny")
+  ## Both recorded parents Mendelian-consistent (C has no recorded sire at
+  ## all; its recorded dam P has 0 exclusions) -- no pair is flagged, so
+  ## markerParentageLikelihood() returns its zero-row emptyResult() WITHOUT
+  ## calling getPotentialParents() (confirmed by reading
+  ## markerParentageLikelihood()'s own auto-detect branch: the
+  ## nrow(flags) == 0L guard returns before that call, and empirically
+  ## confirmed this session's Pre-RED against this exact fixture) -- unlike
+  ## the flagged-pair test above, no mock is needed here.
+  pedigree <- data.frame(id = c("P", "C", "U"), sire = c(NA, NA, NA),
+                          dam = c(NA, "P", NA), stringsAsFactors = FALSE)
+
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(pedigree)), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "markerGenotype.csv", datapath = genotypeFilePath
+    ))
+
+    tbl <- result$candidateAssignmentTable()
+    expect_s3_class(tbl, "data.frame")
+    expect_identical(nrow(tbl), 0L)
+    expect_identical(sort(names(tbl)),
+                      sort(c("id", "role", "candidateId", "LOD", "delta",
+                              "nLociUsed", "excluded", "lowPower")))
   })
 })

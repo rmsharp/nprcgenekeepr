@@ -80,7 +80,7 @@ moduleContractServers <- list(
                 pedigree = shiny::reactive(NULL)),
     names = c("markerGenotype", "markerKinshipMatrix", "comparisonTable",
               "heterozygosityTable", "exclusionTable", "crossCenterGenotypeB",
-              "crossCenterTable", "isReady")
+              "crossCenterTable", "candidateAssignmentTable", "isReady")
   )
 )
 
