@@ -149,7 +149,7 @@ modPedigreeUI <- function(id) {
         # kinshipOverrideFile wellPanel (the closest existing precedent
         # for an optional, validated pairwise-data upload).
         wellPanel(
-          h4("Twin/Zygosity Relations (optional)"),
+          h4("Twin/Zygosity Relations (optional)"), # nolint: nonportable_path_linter
           helpText(
             paste0(
               "Upload a twin zygosity sidecar file (CSV or Excel) with ",
@@ -442,11 +442,13 @@ modPedigreeServer <- function(id, studbook) {
       }
     }
 
+    # nolint start: commented_code_linter.
     # Issue #137 Slice 3: whether the diagram shows twin/zygosity
     # connectors. Off by default (D11/backward-compat framing, matching
     # .currentShowNames()'s own precedent) -- has no visible effect unless
     # a valid twinRelationsFile has also been uploaded (see
     # twinRelationsData() below).
+    # nolint end
     .currentShowTwinConnectors <- function() {
       if (is.null(input$pedigreeShowTwinConnectors)) {
         FALSE
@@ -455,6 +457,7 @@ modPedigreeServer <- function(id, studbook) {
       }
     }
 
+    # nolint start: commented_code_linter.
     # Issue #137 Slice 3 (D5/D11): read + validate an uploaded twin
     # -relations sidecar file. Soft/non-fatal (mirrors
     # R/modGeneticValue.R's kinshipOverrideData precedent): a bad file
@@ -467,6 +470,7 @@ modPedigreeServer <- function(id, studbook) {
     # pedigree diagramLayout() itself renders -- so a twin pair with one
     # member trimmed out of view is correctly treated as unknown/ignored,
     # not as a hidden-but-still-tracked relationship.
+    # nolint end
     twinRelationsData <- reactive({
       if (is.null(input$twinRelationsFile)) {
         return(NULL)
@@ -535,10 +539,12 @@ modPedigreeServer <- function(id, studbook) {
             label = "Show Names on Diagram",
             value = .currentShowNames()
           ),
+          # nolint start: commented_code_linter.
           # Issue #137 Slice 3: same net-new-UI / self-referential-value
           # precedent as the two controls above (Learning 490) -- off by
           # default; has no visible effect unless a twinRelationsFile has
           # also been uploaded (twinRelationsData() above).
+          # nolint end
           checkboxInput(
             session$ns("pedigreeShowTwinConnectors"),
             label = "Show Twin Connectors",
@@ -579,11 +585,13 @@ modPedigreeServer <- function(id, studbook) {
 
     output$pedigreeDiagram <- visNetwork::renderVisNetwork({
       layout <- diagramLayout()
+      # nolint start: commented_code_linter.
       # Issue #137 Slice 3: the twin-connector legend rows (label + dashes
       # list-column), built the same way .buildTwinConnectorEdges() builds
       # the real connector edges' own dashes column -- static, unrelated to
       # whether any twin data is actually loaded (like the sex-shape/
       # Affected addNodes rows above it).
+      # nolint end
       twinLegendEdges <- data.frame(
         label = c("MZ", "DZ", "?"),
         stringsAsFactors = FALSE
@@ -634,6 +642,7 @@ modPedigreeServer <- function(id, studbook) {
             color = c(NA, NA, NA, NA, NA, "#CC79A7"),
             stringsAsFactors = FALSE
           ),
+          # nolint start: commented_code_linter.
           # Issue #137 Slice 3 (D6/§2.8 trap #10): the twin-connector
           # legend rows, added via THIS SAME visLegend() call's addEdges
           # parameter -- confirmed by reading visLegend()'s own source
@@ -646,6 +655,7 @@ modPedigreeServer <- function(id, studbook) {
           # exactly -- label + dashes only, no color (D10's color pick was
           # never wired into that function; tracked in BACKLOG.md, not
           # fixed here -- out of this slice's own file scope).
+          # nolint end
           addEdges = twinLegendEdges,
           useGroups = FALSE,
           position = "right",
