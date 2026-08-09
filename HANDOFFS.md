@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S495
+date: 2026-08-09
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Design session for GitHub issue #147 (likelihood-based candidate-parent assignment after marker parentage exclusion) -- one architecture document at docs/planning/issue147-likelihood-parentage-assignment-plan.md, following ARCHITECTURE_WORKSTREAM.md.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S494
 date: 2026-08-09
 status: complete

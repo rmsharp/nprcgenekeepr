@@ -6,6 +6,21 @@
 
 ## ACTIVE TASK
 
+### What Session 495 Did
+**Deliverable:** Design session for GitHub issue #147 (likelihood-based candidate-parent assignment
+after marker parentage exclusion) -- one architecture document at
+`docs/planning/issue147-likelihood-parentage-assignment-plan.md`, following
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md` (matching the #136/#137 precedent: a
+statistical-method/data-model decision, not a `DESIGN_WORKSTREAM.md` visual-design question). Picked
+from this session's own Phase 0 priorities list (owner choice via `AskUserQuestion`, out of #147/#145/
+#138). No implementation code this session -- the issue itself asks for the method to be designed
+before implementation, and existing behavior (`markerParentageExclusion()`) is retained independently.
+**Started:** 2026-08-09.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 494 Did
 **Deliverable:** Implement Slice 3 (UI wiring, legend, documentation) of the ratified issue #137
 plan (`docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md` §4) -- Shiny-level wiring so
