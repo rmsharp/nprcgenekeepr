@@ -60,6 +60,25 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S492
+date: 2026-08-09
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement Slice 1 (data model) of the ratified issue #137 plan -- checkTwinRelations(),
+  obfuscateTwinRelations(), two new sibling fixtures + generator script. Script-callable only, no
+  rendering/UI change.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<claim stub -- filled at Phase 3D close-out>
+
+```handoff
 session: S491
 date: 2026-08-09
 status: complete

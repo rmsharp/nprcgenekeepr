@@ -6,6 +6,20 @@
 
 ## ACTIVE TASK
 
+### What Session 492 Did
+**Deliverable:** Implement Slice 1 (data model) of the ratified issue #137 plan
+(`docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md` §4) -- `checkTwinRelations()`
+validator, `obfuscateTwinRelations()` de-identification companion, two new sibling fixtures
+(`obfuscated_rhesus_mhc_ped_twins.csv` + `obfuscated_rhesus_mhc_twin_relations.csv`) and their
+generator script. Script-callable only, no rendering/UI change. Following
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` under this project's strict TDD contract
+(PRE-RED->RED->GREEN->REFACTOR, `AskUserQuestion`-gated at each transition).
+**Started:** 2026-08-09.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 491 Did
 **Deliverable:** Write a design/architecture document for GitHub issue #137 (twin/zygosity
 encoding for the Pedigree Diagram, data-model gated) -- Tier 2, fourth step in the owner's standing
