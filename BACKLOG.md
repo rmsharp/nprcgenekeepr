@@ -170,6 +170,31 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       design pass), and `vignettes/articles/colony-manager-guide.qmd`'s
       "Candidate Parent Assignment" section for the user-facing caveat
       added this session.
+      **Design ratified -- S501 (2026-08-10):**
+      `docs/planning/issue155-parentage-likelihood-candidate-lookup-plan.md` --
+      a "shadow pedigree" fix (a local copy of `pedigree` with only the
+      flagged animal's own recorded slot blanked, passed only to the internal
+      `getPotentialParents()` call) that requires **zero changes** to
+      `getPotentialParents()` itself, empirically verified equivalent to the
+      rejected alternative (a new `forceIncludeIds` parameter on
+      `getPotentialParents()`). Scope covers BOTH `markerParentageLikelihood()`
+      call sites (auto-detect AND the explicit `id`/`role`/`candidates = NULL`
+      branch, the latter sharing the identical, previously-untested bug). Two
+      judgment calls ratified via `AskUserQuestion`, owner selected this
+      document's own recommended option in both: the shadow-pedigree
+      mechanism over the `forceIncludeIds` alternative; leaving the flagged/
+      wrong recorded parent visible in the ranked output (its `LOD = -Inf`/
+      `excluded = TRUE` doubles as a free confirmation signal) rather than
+      filtering it out. Adversarially reviewed by 2 independent agents before
+      ratification -- found and fixed a real, previously-unaddressed gap (a
+      duplicated `pedigree$id` needs the same defensive guard
+      `scoreOnePair()` already has, `PROJECT_LEARNINGS.md` Learning 500) plus
+      several citation-accuracy and house-style completeness corrections; no
+      defect found in the recommended mechanism itself. **Issue #155 stays
+      open, design/planning only** -- implementation (one vertical slice,
+      `R/markerParentageLikelihood.R` only, no UI change needed) is the next
+      pickup in this cluster. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
+      Learning 500.
 - [ ] **`.buildTwinConnectorEdges()` (`R/makePedigreeDiagramData.R`, issue
       #137 Slice 2) never wired the Okabe-Ito green (`#009E73`) color its
       own implementing session's handoff narrative said it picked** (found

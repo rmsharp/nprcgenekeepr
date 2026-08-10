@@ -43,6 +43,44 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-10 · [issue #155] Design/architecture document ratified — fix markerParentageLikelihood()'s auto-detect candidate lookup for a recorded-but-wrong parent (Session 501)
+- **Deliverable:** `docs/planning/issue155-parentage-likelihood-candidate-lookup-plan.md`, following
+  `ARCHITECTURE_WORKSTREAM.md` (owner-picked via `AskUserQuestion` over the literal
+  `DESIGN_WORKSTREAM.md` mapping, matching the #136/#142/#145 precedent). Design/planning only — no
+  `R/`, `tests/`, or `man/` content changed.
+- **Root cause confirmed live** (not just read from the issue): `getPotentialParents()` only
+  searches for candidates for an animal with an actually-missing (`NA`) parent slot;
+  `markerParentageExclusion()` flags an animal whose recorded parent is present-but-wrong, both
+  slots non-`NA` by definition — so the exact case issue #147 exists to address never appears in
+  `getPotentialParents()`'s own `pUnknown` set, and both `markerParentageLikelihood()` call sites
+  (auto-detect AND the explicit `id`/`role`/`candidates = NULL` branch, the latter untested until
+  this session) silently return zero candidates.
+- **Recommended and ratified mechanism ("shadow pedigree"):** a new internal
+  `.markerFlaggedSlotPedigree()` helper builds a local copy of `pedigree` with only the flagged
+  animal's own recorded slot blanked, passed only to the internal `getPotentialParents()` call —
+  **zero changes to `getPotentialParents()` itself**, full reuse of its existing, already-tested
+  demographic-eligibility engine. Live-verified twice against two independent prototypes (this
+  approach and a rejected alternative adding a new `forceIncludeIds` parameter to
+  `getPotentialParents()`), confirmed `identical()` output between them on a 6-individual scratch
+  fixture reconstructing the issue's own repro shape.
+- **Two judgment calls ratified via a single `AskUserQuestion` round** — owner selected this
+  document's own recommended option in both, no changes requested: the shadow-pedigree mechanism
+  over the `forceIncludeIds` alternative; leaving the flagged/wrong recorded parent visible in the
+  ranked candidate output (its already-tested `LOD = -Inf`/`excluded = TRUE` behavior doubles as a
+  free confirmation signal) rather than filtering it out.
+- **Adversarially reviewed** by 2 independent `general-purpose` agents in parallel (correctness-vs
+  -source; completeness/house-style) before ratification — found and fixed a real,
+  previously-unaddressed gap (a duplicated `pedigree$id` needs the same defensive guard
+  `scoreOnePair()` already has a few lines away in the same file, now incorporated into D1's
+  implementation and its own test list) plus 3 citation-accuracy corrections and several
+  house-style/close-out-checklist completeness gaps (missing header/metadata block, 2 missing
+  alternatives, missing GitHub-issue-close/`CHANGELOG`/`_pkgdown.yml` checklist dispositions) —
+  all incorporated into the ratified revision. Neither review found a defect in the recommended
+  mechanism itself. See `PROJECT_LEARNINGS.md` Learning 500.
+- **Issue #155 stays open** — design/planning only, matching the #133/#136/#137/#145/#147
+  precedent; a single vertical-slice implementation (`R/markerParentageLikelihood.R` only, no UI
+  change needed) is the next pickup in this cluster.
+
 ### 2026-08-10 · [issue #145] Slice 1 implemented — male-left/female-right default in .positionMatingUnitForest(), closes issue #145 (Session 500)
 - **Deliverable:** full strict-TDD PRE-RED→RED→GREEN cycle (REFACTOR skipped, owner-confirmed —
   the GREEN diff was already minimal, single ~30-line additive block reusing an existing closure),

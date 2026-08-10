@@ -6,19 +6,104 @@
 
 ## ACTIVE TASK
 
+### Session 500 Handoff Evaluation (by Session 501)
+**Score: 8/10.**
+**What helped:** `next_steps` named "issue #155 (markerParentageLikelihood() auto-detect
+candidate-lookup bug, needs its own Pre-RED design/scoping pass, Effort M)" as one of two named
+untouched pickups -- exactly matching what this session picked from the Phase 0 priorities list and
+exactly the right scope characterization ("needs its own... design/scoping pass," not a quick fix,
+matching what this session's own research independently confirmed). This saved real time framing
+the priorities-list write-up and the initial workstream-choice question.
+**What was missing:** Nothing about issue #155's own technical diagnosis carried forward in the
+handoff (understandably -- S500's own deliverable was issue #145, not #155) -- this session had to
+independently re-read the full GitHub issue #155 body and the `BACKLOG.md` Housekeeping item text
+from scratch to reconstruct the actual root-cause diagnosis before design work could start. Not a
+defect in the handoff (a #155-specific deep-dive was never S500's job), but worth naming for a
+complete evaluation.
+**What was wrong:** Nothing found inaccurate -- every claim in the handoff held up (issue #145's
+Slice 1 fully shipped and closed exactly as described; the two named untouched pickups, #155 and the
+BACKLOG Tier 2/3/Deferred sequencing, were both genuinely still open).
+**ROI:** Positive -- the accurate, precisely-scoped naming of issue #155 as a pickup saved real
+Phase 0 discovery time, even though the handoff (correctly) carried no #155-specific technical
+detail beyond that.
+
 ### What Session 501 Did
 **Deliverable:** A ratified design/architecture document for issue #155
-(`markerParentageLikelihood()`'s auto-detect candidate lookup never finds a candidate when a flagged
-animal's recorded parent is present-but-wrong) -- following `docs/methodology/workstreams/
-ARCHITECTURE_WORKSTREAM.md`, owner-picked via `AskUserQuestion` over the literal
-`DESIGN_WORKSTREAM.md` mapping, matching the #136/#142/#145 precedent for a shared-function-contract
-decision. Picked from this session's own Phase 0 priorities list (owner choice via
-`AskUserQuestion`, out of #155/#149/#146/#151). (IN PROGRESS)
-**Started:** 2026-08-10.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+(`docs/planning/issue155-parentage-likelihood-candidate-lookup-plan.md`) -- fixing
+`markerParentageLikelihood()`'s auto-detect (and explicit `id`/`role`/`candidates = NULL`) candidate
+lookup, which returns zero candidates whenever a flagged animal's recorded parent is
+present-but-wrong. Followed `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md` (owner-picked
+via `AskUserQuestion` over the literal `DESIGN_WORKSTREAM.md` mapping, matching the #136/#142/#145
+precedent for a shared-function-contract decision). Design/planning only -- no `R/`, `tests/`, or
+`man/` content changed. Picked from this session's own Phase 0 priorities list (owner choice via
+`AskUserQuestion`, out of #155/#149/#146/#151).
+**Started/Completed:** 2026-08-10.
+**Status:** DONE. RATIFIED via `AskUserQuestion` (both genuine judgment calls -- Q1 fix mechanism,
+Q2 whether the flagged/wrong recorded parent stays in the output -- owner selected this document's
+own recommended option in both, no changes requested). Issue #155 commented (not closed -- design
+only, matching the #133/#136/#137/#145/#147 precedent), a single vertical-slice implementation is
+the next pickup.
+
+**What happened, in order:** **(1)** Phase 0 orient (SAFEGUARDS.md, SESSION_NOTES.md, `gh issue
+list`, git status/log, `methodology_dashboard.py` -- health 98/100; ledger reconcile clean, the 2
+commits since the `CHANGELOG.md` frontier were S500's own close-out mechanics already covered by its
+own entry). Built the priorities list from `BACKLOG.md` + open GitHub issues (#155, #149, #146,
+#151, #150 as the top 5 numbered write-ups); owner picked "#155 auto-detect bug" via
+`AskUserQuestion`. **(2)** A second `AskUserQuestion` picked the workstream:
+`ARCHITECTURE_WORKSTREAM.md` over the literal `DESIGN_WORKSTREAM.md` mapping, matching the
+#136/#142/#145 precedent (a shared-function-contract decision on `getPotentialParents()`, used
+elsewhere by the unrelated "Potential Parents" tab). **(3)** Phase 1B claim stub committed
+(`68a8a859`). **(4)** Read `ARCHITECTURE_WORKSTREAM.md`, issue #155's full body, `R/getPotentialParents.R`
+and `R/markerParentageLikelihood.R` in full, `docs/planning/issue147-likelihood-parentage-assignment-plan.md`
+(D8), and every test file exercising either function -- confirmed EXACTLY two `getPotentialParents()`
+call sites inside `markerParentageLikelihood()` (both in scope) plus a third, unrelated one in
+`modPotentialParents.R` (out of scope), and that the explicit `id`/`role`/`candidates = NULL` branch
+shares the identical, previously-untested bug. Live-verified the bug and TWO independent candidate
+fixes (a `forceIncludeIds` parameter on `getPotentialParents()`, and the recommended "shadow
+pedigree" approach) against a 6-individual scratch fixture, confirming `identical()` output between
+both prototypes and zero regression to an unrelated control animal. **(5)** Drafted the design
+document (Context/evidence inventory/design decisions/alternatives/impact analysis/ratification/
+implementation plan/dragons). **(6)** Ran 2 independent adversarial-review agents in parallel
+(correctness-vs-source; completeness/house-style, both against live source and the #145/#147
+precedent documents) -- found and fixed a real, previously-unaddressed defensive-coding gap (a
+duplicated `pedigree$id` needs the same guard `scoreOnePair()` already has), 3 citation-accuracy
+corrections (a 2-line-off citation, a wrong test-assertion count, a self-contradictory "exactly two"
+call-site summary), and several house-style/completeness gaps (missing header/metadata block, 2
+missing alternatives in the Alternatives table, missing GitHub-issue-close/`CHANGELOG`/`_pkgdown.yml`
+checklist dispositions, a missing D3(a) regression test, no performance statement) -- all
+incorporated into the revision; re-verified the final proposed helper code (including the new
+duplicate-id guard) live via a standalone R script before treating it as final. **(7)** Ratified via
+a single `AskUserQuestion` round; owner picked this document's own recommended option in both
+judgment calls. **(8)** Close-out: `PROJECT_LEARNINGS.md` Learning 500, `CLAUDE.md` learning-count
+cross-reference (499->500, Sessions 1-500+ -> 1-501+), `BACKLOG.md` Housekeeping-item progress note,
+`CHANGELOG.md` entry, a summary comment posted to GitHub issue #155 (not closed), this handoff.
+
+**Self-assessment (Session 501): 8/10.** **Strengths:** (1) Did not accept the literal
+`DESIGN_WORKSTREAM.md` task mapping at face value -- explicitly checked and matched the established
+#136/#142/#145 precedent for this exact class of decision (a shared-function-contract change) before
+starting research. (2) Live-verified the bug AND two independent candidate fixes empirically before
+drafting, rather than reasoning from source alone -- caught, with `identical()`, that both approaches
+produce byte-identical output, which directly grounded the Alternatives table's "no behavioral
+benefit over D1" claim in evidence rather than assertion. (3) Ran a genuine 2-lens adversarial review
+(via the `Agent` tool directly, since `Workflow`-tool multi-agent orchestration was not opted into
+this session) rather than treating the empirically-verified draft as already sufficient -- this
+caught a real correctness-adjacent gap (the duplicate-`pedigree$id` guard) that both live
+verifications had missed, because both hand-built fixtures used clean, non-duplicated ids by
+construction (directly generalizing S499/S500's own "verify, don't assume; adversarial review finds
+what clean verification can't" discipline to design-review, not just implementation). (4)
+Re-verified the FINAL proposed code (after incorporating the review's fixes) live, not just the
+earlier prototype -- confirmed the duplicate-id guard, the both-slots-flagged case, the empty-input
+no-op, and the never-mutates contract all hold for the actual code going into the document, not an
+earlier draft of it. (5) Fully worked through the close-out-checklist disposition table (§5.1) the
+completeness review flagged as missing, rather than leaving individual N/A calls implicit.
+**Weaknesses:** (1) The two adversarial-review agents took noticeably long (5-8 minutes each,
+running in parallel) -- this session's own `ScheduleWakeup` polling cadence during that wait was
+inefficient (several redundant `ListAgents` checks before settling into a longer wait), though it
+did not affect the deliverable's quality. (2) One `Edit` tool call used a malformed parameter name
+(`replace_name` instead of `replace_all`) that happened to succeed anyway -- caught by immediately
+re-reading the edited section to confirm, but should have used the correct parameter name from the
+start.
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session).
 
 ## ACTIVE TASK (prior sessions)
 
