@@ -6,19 +6,111 @@
 
 ## ACTIVE TASK
 
+### Session 498 Handoff Evaluation (by Session 499)
+**Score: 7/10.**
+**What helped:** The `next_steps` field named the exact right next pickups (a #145 design session,
+#138, #155's own Pre-RED scoping) and the `gotchas` field (the "U"-prefix auto-gen-id trap, the
+auto-detect no-op case) were accurate and directly useful groundwork for understanding this
+project's marker-genetics/pedigree code, even though this session's own deliverable didn't touch
+that code. `key_files` correctly pointed at `docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md`
+as the starting point for a #145 design session -- this session read it first and it was the right
+starting point.
+**What was missing:** Nothing critical -- the handoff was thorough for a session of that size.
+**What was wrong:** `next_steps` named "`inst/extdata` reorg Phase 4 (DECISION NEEDED, Effort M)" as
+an available pickup alongside #145/#138. Direct re-reading of that `BACKLOG.md` item's own body
+text this session found all 4 phases were already marked DONE back in S415-418 ("The
+`inst/extdata/` reorganization plan is now fully executed") -- the item's own checkbox/tag was
+simply never flipped from a stale, pre-Phase-2 "DECISION NEEDED" state. This wasn't a fabrication
+(S498 likely inherited the stale framing from an even earlier session without re-verifying it
+either), but it meant one of three named options in the handoff's own priorities list was not
+actually available, and this session had to catch that via its own Phase 0 orientation before
+presenting an accurate picker to the owner.
+**ROI:** Positive -- the accurate 2 of 3 named options (plus the correctly-pointed-to research doc)
+saved real time; the one stale option cost a few minutes of BACKLOG cross-checking to catch, well
+within the positive side of the ledger.
+
 ### What Session 499 Did
-**Deliverable:** Design/architecture document for issue #145 (correct the placement of sire's
-relative to dam's in the pedigree drawing) (IN PROGRESS).
-**Started:** 2026-08-09.
-**Status:** Session claimed. Work beginning. Workstream:
+**Deliverable:** A ratified design/architecture document for issue #145 (correct the placement of
+sire's relative to dam's in the pedigree drawing) --
+`docs/planning/issue145-sire-dam-left-right-placement-plan.md`. Design/planning only; no `R/`,
+`tests/`, or `man/` content changed. Followed
 `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md` (owner-picked via `AskUserQuestion`,
-matching the #136/#142 precedent, over the literal `DESIGN_WORKSTREAM.md` task mapping -- this is a
-positioning/rendering-contract decision in `.positionMatingUnitForest()`/`.buildMatingUnitForest()`,
-not a UI zone-layout design). Picked from this session's own Phase 0 priorities list (owner choice
-via `AskUserQuestion`, out of #145 design session/#138/#155 Pre-RED scoping/LabKey remainder).
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+matching the #136/#142 precedent, over the literal `DESIGN_WORKSTREAM.md` task mapping). Picked from
+this session's own Phase 0 priorities list (owner choice via `AskUserQuestion`, out of #145 design
+session/#138/#155 Pre-RED scoping/LabKey remainder).
+**Started/Completed:** 2026-08-09.
+**Status:** DONE. RATIFIED via `AskUserQuestion` (D3 direction, D8 toggle shape, D9 follow-up-issue
+decision -- the three genuine judgment calls; D1/D2/D4-D7 forced by the evidence gathered, not
+voted). Issue #145 commented (not closed -- design only), Slice 1 (core positioning behavior) is
+the next pickup.
+
+**What happened, in order:** **(1)** Phase 0 orient (SAFEGUARDS.md, SESSION_NOTES.md, `gh issue
+list`, git status/log, `methodology_dashboard.py` -- health 98/100; ledger reconcile clean, the one
+commit since the `CHANGELOG.md` frontier was S498's own self-referential sha-backfill, already
+accounted for). Built the priorities list from `BACKLOG.md` + open GitHub issues; found and flagged
+the stale "`inst/extdata` reorg Phase 4" tag (see the S498 evaluation above) and excluded it from the
+picker. Owner picked "#145 design session" via `AskUserQuestion`. **(2)** A second `AskUserQuestion`
+picked the workstream: `ARCHITECTURE_WORKSTREAM.md` over the literal `DESIGN_WORKSTREAM.md` mapping,
+matching the #136/#142 precedent for the same reason (a positioning/rendering-contract decision, not
+a UI layout design). **(3)** Phase 1B claim stub committed (`293eeb88`). **(4)** Fetched issue
+#145's full body + both existing owner comments (`gh issue view 145 --json`). Ran a 3-agent parallel
+`Workflow` research pass (current-code mechanics in `.buildMatingUnitForest()`/
+`.positionMatingUnitForest()`; house-style precedent from the #136/#142 design documents;
+cross-reference constraints against the S480 audit, the kinship2-comparison-doc's Example 4, and
+#143/#144), then personally re-verified the most load-bearing claims directly against the live
+source (not trusted from the agents' report alone) -- confirming, in the project's own canonical
+GA204Z/8LKBV9 fixture, that the DAM sits left of the SIRE today (the opposite of "coincidentally
+male-left," contradicting the S482 spike's own cross-project assumption). **(5)** Drafted the design
+document. **(6)** Ran a second, 3-agent adversarial-review `Workflow` against the draft
+(correctness-vs-source, contract-vs-#142/#143/#144/`SESSION_RUNNER.md` Vertical-Slice gates,
+house-style completeness). This found real, substantive problems, not cosmetic ones: a constructed
+counter-example (a qualifying unit with an asymmetric wide multi-child fanout) that broke the
+draft's first D2 mechanism (reflecting a subtree about its own center) via an exact-position
+collision with an unrelated sibling; an overstated "#143/#144 never touch x" claim refuted by those
+issues' own shipped test diffs; two under-classified judgment calls (D3, D9) presented as
+already-forced; several line-citation and checklist-coverage gaps. **(7)** Rather than reflexively
+narrow D1's scope around the counter-example, re-derived the actual invariants that make the
+one-child case safe (the free-pass parent is always the group's true global-leftmost point; the
+anchor's own `x` is always the mean of the first and last `subIds` elements, hence always inside the
+same bounding footprint; the mating-unit's own displayed `x` is symmetric in its two arguments) and
+confirmed they generalize to any child count -- producing a revised D2 (swap only the two real
+parents' own `x` values, touch nothing else) that resolves the counter-example by construction, not
+by narrowing scope. Revised the document throughout to incorporate every review finding. **(8)**
+Ratified D3/D8/D9 via a single `AskUserQuestion` round; owner picked this document's own recommended
+option in all three (male-left/female-right; a new `orderBySex` parameter, no UI yet; no follow-up
+issue for the multi-mate case). Finalized §9 with the ratification record. **(9)** Close-out:
+`PROJECT_LEARNINGS.md` Learning 498 (the counter-example-response methodology finding), `CLAUDE.md`
+learning-count cross-reference (497->498, Sessions 1-498+ -> 1-499+), `BACKLOG.md` Progress note,
+`CHANGELOG.md` entry, a summary comment posted to GitHub issue #145 (not closed), this handoff.
+
+**Self-assessment (Session 499): 8/10.** **Strengths:** (1) Did not accept the literal
+`DESIGN_WORKSTREAM.md` task mapping at face value -- explicitly checked and matched the established
+#136/#142 precedent for this exact class of decision before starting research. (2) Ran real research
+before drafting and personally re-verified the most load-bearing claims against live source rather
+than trusting subagent reports -- caught that `nprcgenekeepr` has zero kinship2 dependency, and that
+the canonical fixture's own default is dam-left, not the assumed coincidental male-left. (3) The
+adversarial review was genuinely adversarial, not pro forma -- it was explicitly instructed to
+construct counter-examples, not just restate hedges, and it found a real one. (4) Responded to that
+counter-example by re-deriving a provably-more-general mechanism rather than patching around the
+specific case found, which is a materially better outcome than the reflexive "just narrow the scope"
+fix would have produced. (5) Corrected a stale claim in a THIRD prior document
+(`pedigree-diagram-kinship2-reference-comparison.qmd`) found only as a byproduct of the adversarial
+review, and reported it without fixing it, matching this project's own "report an incidentally
+-discovered, unrelated pre-existing gap, don't fix it mid-session" precedent (`PROJECT_LEARNINGS.md`
+Learning 382). **Weaknesses:** (1) The FIRST draft (before adversarial review) contained a
+substantively wrong D2 mechanism and an overstated #143/#144 characterization that my own
+hand-verification did not catch, because I only checked the one fixture where both claims happened
+to hold -- a broader self-check before commissioning the review might have caught at least the
+#143/#144 overstatement myself. (2) This session used substantial multi-agent compute (2 workflows,
+6 subagents, ~845K combined subagent tokens) for a design document -- proportionate given this
+project's own established precedent of heavy multi-agent workflows for architecture decisions of
+this shape (#143/#144/#147 Pre-RED), but a real cost worth naming, not free. (3) No live R code was
+run by me personally this session (the correctness-review subagent ran live R itself; I relied on
+its output plus my own static-source reads) -- appropriate for a Pre-RED design session per the
+Planning Sessions rule ("the plan is the deliverable... implementation happens in a future
+session"), and the document itself flags this explicitly (§6 Dragon 1, §8 Known gap) rather than
+implying more certainty than exists, but worth naming plainly rather than only implicitly.
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session).
 
 ### Session 497 Handoff Evaluation (by Session 498)
 **Score: 8/10.**

@@ -62,17 +62,17 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S499
 date: 2026-08-09
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Design/architecture document for issue #145 (correct the placement of sire's relative to dam's in the pedigree drawing), following ARCHITECTURE_WORKSTREAM.md.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: Issue #145's design/architecture document is DONE and RATIFIED (docs/planning/issue145-sire-dam-left-right-placement-plan.md). Design/planning only -- no R/tests/man content changed. Issue #145 stays open (commented, not closed). Slice 1 (core positioning behavior) is the next pickup, gated on its own Pre-RED empirically verifying the new D2 mechanism live.
+what_was_done: Ran a 3-agent Workflow research pass against current source + prior design docs, then personally re-verified load-bearing claims live-source-first. Found nprcgenekeepr has zero kinship2 dependency, and its own canonical GA204Z/8LKBV9 fixture places the dam left of the sire today (opposite of the S482 spike's assumed "coincidentally male-left"). Drafted the design; ran a 3-agent adversarial-review Workflow against the draft, which constructed a real counter-example breaking the first D2 mechanism (subtree reflection) and refuted an overstated "#143/#144 never touch x" claim via their own shipped test diffs. Re-derived a provably-more-general D2 (swap the two real parents' own x values) rather than narrowing scope around the counter-example. Ratified D3 (male-left/female-right)/D8 (new orderBySex parameter, no UI)/D9 (no follow-up issue) via one AskUserQuestion round, owner picked all 3 recommended options. Commits: 293eeb88 (claim), plus this close-out's commit (design doc + BACKLOG.md/CHANGELOG.md/PROJECT_LEARNINGS.md Learning 498/CLAUDE.md/SESSION_NOTES.md). GitHub issue #145 commented, not closed.
+next_steps: Implement Slice 1 of the ratified issue145 plan (core positioning behavior in .positionMatingUnitForest()) -- a future session's Pre-RED must FIRST empirically verify D2's swap mechanism live (build a minimal repro, re-test the adversarial review's own wide-fanout counter-example fixture through the swap, not the rejected reflection) before writing any RED test; the plan's own SESSION_RUNNER.md Vertical-Slice gate (a) is only conditionally satisfied until that verification lands. Separately, GitHub issue #155 (auto-detect candidate-lookup gap, filed S498) and issue #138 (full-colony pedigree rendering beyond the node cap) remain available, untouched pickups from this session's own priorities list.
+key_files: docs/planning/issue145-sire-dam-left-right-placement-plan.md (the ratified design, esp. §3 D2 and §6 dragons), R/makePedigreeDiagramData.R:396-404 (preferAnchor), :730 (free-pass-leftmost), :668-677 (finalizeNode/ownX), :817-838 (finalUnitX), tests/testthat/test_positionMatingUnitForest.R:120-134,199-200 (the GA204Z/8LKBV9 fixture needing an expected-x update), docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd (Example 4 summary now stale, not fixed -- flagged in the plan's §6 dragon 2)
+gotchas: D2's swap mechanism is a paper argument, not yet run against live R -- do not skip Slice 1's own Pre-RED live verification. The GA204Z/8LKBV9 fixture's 5A6DFT/8DKELJ expected x values WILL need updating (this is required, not optional). docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd's Example 4 summary line ("sire tends to render left of dam... coincidentally similar-looking result") is now factually wrong and unfixed -- a future session should correct it. All standing gotchas from S479-498 carry forward unchanged.
+runtime_smoke: n/a -- docs-only design/planning session, no R/tests/man content changed. Per SESSION_RUNNER.md's Planning Sessions guidance, the plan is the deliverable; live verification is explicitly deferred to the future Slice 1 implementing session (flagged in the plan's own §6 Dragon 1/§8 Known gap, not silently treated as unnecessary).
+changelog_ref: CHANGELOG.md 2026-08-09 "[issue #145] Design/architecture document ratified -- sire/dam left-right pedigree placement default (Session 499)"
+commit: c3f5dec2
 ```
 
 ```handoff
