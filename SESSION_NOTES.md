@@ -6,16 +6,131 @@
 
 ## ACTIVE TASK
 
+### Session 504 Handoff Evaluation (by Session 505)
+**Score: 10/10.**
+**What helped:** Nearly every field was directly load-bearing. `next_steps` named the exact
+Dragons Slice 2 had to resolve ("Dragons #6/#7 on `modalDialog()` under this app's bslib theme
+and DT NA-rendering both still open") -- this session's live `shinytest2` smoke test targeted
+exactly those two and confirmed both. `key_files` pointed straight at the plan's own §5 Slice 2
+DONE criteria and the two Slice 1 source/test files this slice builds on -- all confirmed
+accurate on re-read, zero drift. `gotchas` flagged that D10 is an additive *behavior change*, not
+cosmetic ("Slice 2's UI/export copy should not imply this is purely cosmetic") -- this directly
+shaped this session's `NEWS.Rmd` wording. The roxygen-adjacency and `git stash -u` gotchas didn't
+recur this session (different code shape), but were exactly the right class of warning to carry
+forward.
+**What was missing:** Nothing that mattered. The handoff also named 3 untouched Phase 0
+priorities (twin-connector color, the 10->15 warnings drift, the spelling NOTE) as still open --
+accurate, but the owner picked Slice 2 instead, so none of those were this session's job either.
+**What was wrong:** Nothing found inaccurate. The "9 words" spelling-drift figure was S504's own
+accurate count at the time; it had grown to 13 by this session's own `devtools::check()` run --
+ordinary continued drift on an already-tracked item, not an error in S504's handoff.
+**ROI:** Extremely high -- this may be the single most directly-used handoff this session has
+seen: the next_steps/key_files/gotchas fields were not just accurate but specifically anticipated
+the two hardest verification risks (Dragons #6/#7) this session actually had to clear.
+
 ### What Session 505 Did
-**Deliverable:** Issue #149 Slice 2 (full module: UI, confirm gate, exports, documentation) per
-`docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md` §5 Slice 2. (IN PROGRESS)
-**Started:** 2026-08-10.
-**Status:** Session claimed. Phase 0 orient done (health 98/100; ledger reconcile found 1
-undocumented commit -- S504's own HANDOFFS.md receipt-sha backfill `fd0c0312` -- backfilled and
-committed `e1c61673` before the report). Owner picked "Issue #149 Slice 2" via `AskUserQuestion`
-from this session's own Phase 0 priorities list. Design doc re-read in full (PRE-RED underway).
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+**Deliverable:** Issue #149 Slice 2 -- the full `modCrossCenterIdentity` Shiny module (UI, confirm
+gate, exports, documentation) per
+`docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md` §5 Slice 2. New
+**Cross-Center Identity** tab: 3 file uploads (Center A/B pedigrees + identity mapping), a
+"Validate Mapping" action button gating a `checkCrossCenterMapping()`-backed Validation tab
+(every issue shown at once, including a structural-upload-error fallback folded into the same row
+shape), a Preview tab computing `resolveCrossCenterIds()`'s proposed merge with a per-pair
+lineage-change table (2 new internal helpers, `.buildCrossCenterLineagePreview()`/
+`.buildCrossCenterMergeProvenance()`, reusing Slice 1's own `.rewriteCrossCenterIds()`/
+`.pickCrossCenterParent()` directly per D6), a `shiny::modalDialog()` confirmation gate (D7, this
+app's first-ever use of the function), and 5 downloadable export artifacts (D8: Merged Pedigree,
+Mapping, Validation Results, Merge Summary, Provenance). Wired additively into `R/appUI.R` (new
+tabPanel) and `R/appServer.R` (self-contained, no `shared$...` args per D3). Followed
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` under this project's Strict TDD contract
+(PRE-RED->RED->GREEN, `AskUserQuestion`-gated at every transition; REFACTOR owner-confirmed skip).
+Picked from this session's own Phase 0 priorities list (owner choice via `AskUserQuestion`, over
+the twin-connector-color fix/decline, the now-15 baseline-warnings root-cause fix, and the
+BLOCKED LabKey item).
+**Started/Completed:** 2026-08-10.
+**Status:** DONE. **Issue #149 closed** -- both slices of the ratified design are now shipped.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh
+issue list`, git status/log, `methodology_dashboard.py` -- health 98/100). Ledger reconcile found
+1 undocumented commit past the `CHANGELOG.md` frontier (`fd0c0312`, S504's own self-referential
+`HANDOFFS.md` receipt-sha backfill) -- backfilled and committed (`e1c61673`) before the report,
+matching the established S501/S503 precedent for this exact pattern. Built the priorities list;
+owner picked "Issue #149 Slice 2" via `AskUserQuestion`. **(2)** Phase 1B claim stub committed
+(`dcb0cde9`). **(3)** PRE-RED: re-read the full ratified plan (§1-§11) and Slice 1's shipped code
+(`R/checkCrossCenterMapping.R`, `R/resolveCrossCenterIds.R`) plus the conventions this slice had
+to match (`R/modInput.R`'s upload/action-button/download pattern, `docs/architecture/
+module-contract.md`, `tests/testthat/test_moduleContract.R`'s registration pattern,
+`R/appUI.R`/`R/appServer.R`'s additive-tab wiring, `R/getVersion.R`). Proposed a concrete
+implementation plan (exact UI structure, server reactive graph, 2 new internal helpers, test
+list) via `AskUserQuestion`; owner approved proceeding to RED. **(4)** RED: wrote 17 new
+`test_that()` blocks in new `tests/testthat/test_modCrossCenterIdentity.R` (5 UI-shape, 4
+validation, 3 confirm-gate, 3 export, 2 internal-helper) and registered `modCrossCenterIdentity`
+in `test_moduleContract.R`; confirmed genuinely RED against unmodified `HEAD` (every new
+assertion failed with "could not find function" / "object not found"). Committed (`6c9d790d`).
+`AskUserQuestion` gate: RED->GREEN approved. **(5)** GREEN: implemented `R/modCrossCenterIdentity.R`
+and wired it into `appUI.R`/`appServer.R`; all 17 new tests + the 10-module contract file passed
+on first implementation pass. `devtools::document()` ran clean (no doc/function-adjacency mishap
+this time, unlike S504's own Learning 503). Full clean regression suite via a `git stash -u`
+comparison against unmodified `HEAD` confirmed 0 regressions (4151->4236 passed, an exact delta
+matching only the new tests). Found and fixed the one real `_pkgdown.yml` reference-coverage
+failure (Session 496 checklist). `lintr::lint_package()` found 2 `brace_linter` hits, fixed.
+`devtools::check()` found ONE new spelling-drift word from this session's own roxygen prose
+("merge's" in `modCrossCenterIdentityUI.Rd`) layered on the pre-existing, separately-tracked
+drift -- fixed by rewording (not `inst/WORDLIST`-adding), verified clean via `tests/spelling.R`
+both before and after the later documentation pass. `AskUserQuestion` gate: GREEN->REFACTOR --
+owner confirmed skip (implementation already matches the ratified design's own decomposition).
+**(6)** Phase 3E: a standalone `shinytest2::AppDriver` smoke-test script (not a permanent test
+file) against the real running app -- uploaded a multi-issue mapping (Validation tab correctly
+shows both an existence and a uniqueness problem at once), then a clean mapping (Preview tab
+resolves `sire`/`dam` to source "A", matching the fixture's own real-transferred-animal shape),
+directly confirmed **Dragon #6** (`modalDialog()` renders correctly under this app's
+never-before-exercised bslib theme, with correct summary-count text) and **Dragon #7** (the
+Preview table's `NA` `pedB_sire`/`pedB_dam` cells render as blank text, read via `app$get_js()`
+cell traversal per Learning 501, not assumed), then confirmed the merge and verified the Export
+tab unlocked -- zero `SEVERE` console entries throughout. 3 mechanical `shinytest2` API pitfalls
+hit and fixed along the way (`NOT_CRAN=true` needed outside `testthat`; `do.call()` needed for
+`upload_file()`/`set_inputs()`; a DT table needs an explicit tab-switch + settle wait before its
+cells are readable) -- see `PROJECT_LEARNINGS.md` Learning 504. **(7)** Documentation: `NEWS.Rmd`/
+`NEWS.md` (re-rendered clean, diff shows only the new bullet), `_pkgdown.yml` reference-coverage
+entry, and a new "Cross-Center Identity" subsection in `vignettes/articles/
+colony-manager-guide.qmd` (text-only, no new screenshot -- matching the S465 "and/or allowance
+satisfied" precedent -- re-rendered via `quarto render`, clean). `a2interactive.Rmd` coverage
+explicitly deferred per its own standing rule (Session 450/478). **(8)** Close-out:
+`gh issue close 149` with a verification-evidence comment; `CHANGELOG.md` Slice 2 ledger entry;
+`BACKLOG.md` progress note (both slices now DONE); `PROJECT_LEARNINGS.md` Learning 504. 8
+checkpoint commits total across the session, each within the 5-file blast-radius cap except one
+explicitly-labeled mechanical `@family` cross-reference regen (20+2 files, matching the S442
+precedent `0031cd84` for this exact roxygen byproduct).
+
+**Self-assessment (Session 505): 9/10.** **Strengths:** (1) The PRE-RED research phase read every
+convention Slice 2 needed to match (upload pattern, module contract, wiring precedent) before
+writing a single test, so RED's 17 tests and GREEN's implementation needed zero structural
+rework -- first implementation pass turned every new test green. (2) Live-verified both named
+Dragons (#6 modal-under-bslib-theme, #7 DT NA-cell rendering) against the REAL running app, not
+just `testServer()` -- directly satisfying the plan's own "not just testServer()" Verification
+requirement, and reusing Learning 501's established cell-text-read technique rather than
+re-deriving a possibly-fooled `grepl()` approach. (3) Caught and fixed the session's own new
+spelling-drift word by investigating a raw `devtools::check()` `Status:` line (not the colored
+summary, per Learning 382) rather than assuming "1 pre-existing note" was still accurate --
+correctly distinguished it from the pre-existing, separately-tracked drift and fixed only the
+session-caused word (matching Learning 501's own precedent for this exact judgment call). (4)
+Used a `git stash -u` (not a bare `git stash`) for the before/after regression comparison,
+avoiding S504's own documented Learning 503 pitfall. (5) Committed in clearly-labeled checkpoints
+matching the blast-radius discipline, including correctly identifying the mass `@family`
+man-page regen as a mechanical byproduct deserving its own separately-labeled commit (S442
+precedent) rather than folding it into the hand-written implementation commit. **Weaknesses:**
+(1) Missed 2 of the 22 mechanically-regenerated `man/*.Rd` files
+(`modSummaryStatsServer.Rd`/`modSummaryStatsUI.Rd`) when constructing the checkpoint-3 `git add`
+command -- caught immediately via `git status` after the commit, fixed with one small follow-up
+commit, but a more careful `git add man/*.Rd` (with an explicit exclude for the 2 new files,
+already committed separately) would have avoided the extra commit. (2) The live smoke-test script
+needed 3 rounds of fixing (missing `NOT_CRAN=true`, wrong `upload_file()` calling convention, a
+DT-table timing race) before it ran clean -- each was a harness/API-usage mistake, not an
+application defect, but a more careful first read of `tests/testthat/helper-shinytest2.R`'s own
+existing patterns before writing the driver script from scratch would have avoided at least the
+first two. Both are captured as `PROJECT_LEARNINGS.md` Learning 504 so a future session doesn't
+repeat either.
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session).
 
 ### Session 503 Handoff Evaluation (by Session 504)
 **Score: 10/10.**

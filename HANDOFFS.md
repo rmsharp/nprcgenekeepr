@@ -62,18 +62,50 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S505
 date: 2026-08-10
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Issue #149 Slice 2 (full module: UI, confirm gate, exports, documentation) per
-docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md §5 Slice 2.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 10
+active_task: Issue #149 Slice 2 (full module: UI, confirm gate, exports, documentation) is DONE.
+Issue #149 closed -- both slices of the ratified design are now shipped. No further #149 work
+remains.
+what_was_done: New R/modCrossCenterIdentity.R (modCrossCenterIdentityUI/Server): 3 file uploads,
+a checkCrossCenterMapping()-backed Validation tab (every issue at once), a Preview tab computing
+resolveCrossCenterIds() with a per-pair lineage-change table (2 new internal helpers,
+.buildCrossCenterLineagePreview()/.buildCrossCenterMergeProvenance()), a shiny::modalDialog()
+confirm gate (this app's first), and 5 downloadable export artifacts. Wired into
+appUI.R/appServer.R (self-contained, no shared$... args). Full strict TDD PRE-RED->RED->GREEN
+cycle, AskUserQuestion-gated; REFACTOR owner-confirmed skip. 17 new test blocks, 0 regressions
+(git stash -u confirmed). lintr 0 lints. devtools::check() 0 errors/0 warnings/pre-existing notes
+only (1 new session-caused spelling word found and fixed by rewording). Live shinytest2 smoke
+test against the real app confirmed both Dragons #6 (modalDialog under bslib) and #7 (DT NA-cell
+rendering), zero console errors. NEWS.Rmd/_pkgdown.yml/colony-manager-guide.qmd documentation
+done same-session; a2interactive.Rmd deferred per its own standing rule. gh issue close 149.
+Commits: dcb0cde9 (claim), 6c9d790d (RED), a4d5742b/095a46f4/f22438e9/fe033200/a8a0016e (GREEN +
+docs checkpoints 1-4 + 1 follow-up), b8022a4a (this close-out).
+next_steps: Issue #149 is fully closed -- no follow-on work owed. Pick the next item from
+BACKLOG.md's priorities list: the twin-connector-color fix-or-decline (Housekeeping, Effort S,
+found S494), the 15 pre-existing baseline warnings root-cause fix (Effort S, already fully
+diagnosed -- see BACKLOG.md Housekeeping item, just needs suppressWarnings()/fixture-tweak
+applied to 3 test blocks), or the BLOCKED LabKey remaining recommendations (Effort M, needs a
+live LabKey server). None more urgent than another.
+key_files: R/modCrossCenterIdentity.R (the new module -- read its own "Shared validation
+helpers" cross-reference comments before touching it again), tests/testthat/
+test_modCrossCenterIdentity.R (17 tests), docs/planning/issue149-cross-center-identity-mapping-
+workflow-plan.md §5 Slice 2 (the DONE criteria this session verified against), PROJECT_LEARNINGS.md
+Learning 504 (the 3 shinytest2/AppDriver harness pitfalls).
+gotchas: shinytest2::AppDriver$new() run via plain Rscript (outside testthat) needs
+Sys.setenv(NOT_CRAN = "true") set first, or an internal skip_on_cran() throws instead of
+skipping. app$upload_file()/app$set_inputs() need do.call(app$X, setNames(list(...), name)), not
+a positional list argument. A DT::renderDT() table inside a not-yet-active tabPanel renders empty
+until the tab is explicitly switched to (app$set_inputs(<ns>-mainTabs = "<tab>")) plus a short
+settle wait -- wait_for_idle() alone does not cover DT's client-side JS init. See Learning 504 for
+the full detail.
+runtime_smoke: PASS -- live shinytest2 AppDriver smoke test against the real running app (upload
+-> validate (dirty, then clean) -> preview -> confirm -> export sequence), both named Dragons
+(#6 modalDialog/bslib, #7 DT NA-cell rendering) directly verified, zero SEVERE console entries.
+changelog_ref: CHANGELOG.md 2026-08-10 "Slice 2 implemented -- full modCrossCenterIdentity Shiny
+module: UI, confirm gate, exports, documentation, closes issue #149 (Session 505)"
+commit: b8022a4a
 ```
 
 ```handoff
