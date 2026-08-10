@@ -6,6 +6,19 @@
 
 ## ACTIVE TASK
 
+### What Session 509 Did
+**Deliverable:** Lossless trim of `CHANGELOG.md` and `HANDOFFS.md` via `methodology_trim.py`
+(IN PROGRESS) -- dashboard-flagged HIGH risk: both files past the 2,000-line agent-`Read`
+truncation cap (`CHANGELOG.md` 10,503 lines / 1,532,752 B; `HANDOFFS.md` 4,877 lines / 832,338 B),
+plus MEDIUM byte-budget-archive-trigger flags (23.3x / 12.7x over the 65,536 B budget, no prior
+archive of either). Picked via `AskUserQuestion` "Other" over this session's own 4 rendered
+BACKLOG priority options (issue #146 Slice 2, issue #150 policy decision, LabKey, NPRC outreach).
+**Started:** 2026-08-10.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 507 Handoff Evaluation (by Session 508)
 **Score: 9/10.**
 **What helped:** `next_steps` was exact and directly actionable ("parameterize

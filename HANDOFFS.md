@@ -117,6 +117,24 @@ What is specific to *this* file, and gets receipts wrong if assumed:
   session. Nothing else in a shard is rewritten.
 
 ```handoff
+session: S509
+date: 2026-08-10
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Lossless trim of CHANGELOG.md and HANDOFFS.md via methodology_trim.py (dashboard-
+flagged HIGH risk: both files past the 2,000-line agent-Read truncation cap).
+what_was_done: pending
+next_steps: pending
+key_files: methodology_trim.py, CHANGELOG.md, HANDOFFS.md, docs/archive/
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+Session claimed. Work beginning.
+
+```handoff
 session: S508
 date: 2026-08-10
 status: complete
