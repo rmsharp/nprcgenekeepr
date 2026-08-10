@@ -6,16 +6,118 @@
 
 ## ACTIVE TASK
 
+### Session 505 Handoff Evaluation (by Session 506)
+**Score: 9/10.**
+**What helped:** `next_steps` named 3 concrete candidate items (twin-connector-color,
+15-pre-existing-baseline-warnings, BLOCKED LabKey) -- built this session's Phase 0 priorities list
+directly from it, and the owner picked the first exactly as offered. `gotchas` (the 3 `shinytest2`
+harness pitfalls: `NOT_CRAN=true` needed outside `testthat`, `do.call()` for `upload_file()`/
+`set_inputs()`, a DT tab-switch + settle wait) were directly reused in this session's own
+standalone smoke-test script -- avoided all 3 mistakes S505 had to discover the hard way, on the
+first attempt.
+**What was missing:** `key_files` pointed at S505's own #149 deliverable
+(`R/modCrossCenterIdentity.R` etc.), not applicable to whichever BACKLOG item got picked next --
+an inherent limit of a predecessor not knowing in advance which of 3 named candidates would be
+chosen, not a flaw in the handoff itself.
+**What was wrong:** Nothing found inaccurate.
+**ROI:** High -- the `next_steps` priorities list and the `shinytest2` gotchas were both directly,
+concretely reused; only `key_files` didn't transfer, for a structural reason outside the
+handoff's control.
+
 ### What Session 506 Did
-**Deliverable:** Wire the twin-connector edge color (`#009E73`, Okabe-Ito bluish-green) into
-`.buildTwinConnectorEdges()` (`R/makePedigreeDiagramData.R`, issue #137 Slice 2 -- found S494,
-BACKLOG.md Housekeeping) -- both `edgeStyle` values (`"direct"`/`"rectilinear"`), plus the
-Diagram-tab legend swatch in `R/modPedigree.R`. (IN PROGRESS)
-**Started:** 2026-08-10.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Wired the twin-connector edge color (`#009E73`, Okabe-Ito bluish-green,
+colorblind-safe) into `.buildTwinConnectorEdges()` (`R/makePedigreeDiagramData.R`, issue #137
+D10, BACKLOG.md Housekeeping -- found S494) for both `edgeStyle` values (`"direct"`/
+`"rectilinear"`), plus the Diagram-tab legend swatch in `R/modPedigree.R`. Followed
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` under this project's Strict TDD
+contract (PRE-RED->RED->GREEN, `AskUserQuestion`-gated at every transition; REFACTOR
+owner-confirmed skip). Picked from this session's own Phase 0 priorities list (owner choice via
+`AskUserQuestion`, over the 15-pre-existing-baseline-warnings fix and the BLOCKED LabKey item).
+**Started/Completed:** 2026-08-10.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh
+issue list`, git status/log, `methodology_dashboard.py` -- health 98/100). Ledger reconcile found
+1 undocumented commit past the `CHANGELOG.md` frontier (`68008f8d`, S505's own self-referential
+close-out commit finalizing `SESSION_NOTES.md`/`HANDOFFS.md`) -- backfilled and committed
+(`3a26c0a0`) before the report, matching the established S501/S503/S505 precedent for this exact
+pattern. Built the priorities list; owner picked "Twin-connector color" via `AskUserQuestion`.
+**(2)** A pre-RED scope decision (wire the color vs. decline-and-close) was posed as a separate
+`AskUserQuestion` per `CLAUDE.md`'s phase-gate format, surfacing 2 findings from reading the code
+first: D6's design doc explicitly lists `color` as a twin-connector styling channel (D10 deferred
+the exact hex to Pre-RED), and a second, previously undiscovered dragon --
+`.addRectilinearWaypoints():1435` unconditionally reset every kept edge's `color` to `NA`, so
+wiring the color alone would not have survived `edgeStyle = "rectilinear"`. Owner chose to wire
+the color in (not decline), full scope (both `edgeStyle` values), not the narrower direct-only
+alternative offered at the next gate. **(3)** Phase 1B claim stub committed (`df13dacd`). **(4)**
+PRE-RED: read `.buildTwinConnectorEdges()`, `makePedigreeDiagramData()`, `makePedigreeMatingLayout()`,
+`.addRectilinearWaypoints()`, the ratified design doc's D6/D10, and every existing test file
+touching this code, before proposing the exact file/test list via `AskUserQuestion`; owner
+approved proceeding to RED. **(5)** RED: 11 new/extended `test_that()` assertions across 4 files
+(`test_makePedigreeDiagramData.R`, `test_makePedigreeMatingLayout.R`,
+`test_addRectilinearWaypoints.R`, `test_modPedigree.R`) -- confirmed genuinely RED against
+unmodified `HEAD` (4 direct-style assertions failed `NULL`/missing-column; the rectilinear D9
+assertion failed `NA`-vs-expected, a qualitatively different failure proving the dragon
+independently of the direct-style fix). Committed (`17cd2f9b`). `AskUserQuestion` gate:
+RED->GREEN approved. **(6)** GREEN: 2-file implementation (`R/makePedigreeDiagramData.R`,
+`R/modPedigree.R`) exactly matching the RED-gate plan; all 4 touched test files passed on first
+implementation pass. Full clean regression suite via a `git stash -u` before/after comparison:
+baseline (fix absent) `failed: 11, passed: 5031`; GREEN `failed: 0, passed: 5042` -- an exact
++11/-11 delta, 0 change to the 15 pre-existing baseline warnings. `lintr::lint_package()`: 0
+lints. `devtools::check()`: 0 errors/0 warnings, pre-existing notes only (vignette-engine NOTE,
+spelling-drift diff) -- found and fixed ONE new session-caused spelling word ("unwired," from this
+session's own roxygen prose) by rewording to "never wired" rather than adding to
+`inst/WORDLIST`, matching the S501/S505 precedent; re-verified clean after the reword.
+`AskUserQuestion` gate: GREEN->REFACTOR -- owner confirmed skip (implementation mirrors 2
+established patterns exactly: the existing dashes/label column-priming idiom, and the issue #133
+node-color-preservation precedent). **(7)** Phase 3E: a standalone `shinytest2::AppDriver`
+smoke-test script (not a permanent test file) against the real running app, reusing every
+`helper-shinytest2.R`/Learning 504 convention -- uploaded the twin pedigree + twin-relations
+fixtures, confirmed `color:"#009E73"` on the LIVE-rendered MZ/DZ connector edges (queried via
+`w.network.body.data.edges.get()`, the same live-DataSet technique the existing
+`test-e2e-pedigree-module.R` E2E tests use) AND the legend's 3 rows, under BOTH `edgeStyle`
+values -- directly proving the rectilinear dragon-fix works live, not just in the isolated unit
+test -- zero throw-level/SEVERE console entries. **(8)** Documentation: `NEWS.Rmd`/`NEWS.md` (the
+existing twin-connector bullet gained a color clause) and `vignettes/manual_components/
+_pedigree_browser.Rmd` (same gap, same fix) per the NEWS.Rmd-entry (S448) and tutorial/article
+(S436) checklists -- this is a visible rendering change to an already-shipped, already-documented
+feature, not a new tab/control. `colony-manager-guide.qmd` has no twin-connector mention at all
+(a separate, pre-existing gap, issue #139's own scope -- reported, not fixed, per Learning
+382/407). Citation checklist (#120) and `_pkgdown.yml` reference-coverage checklist (S496):
+N/A, no new statistic or exported function.
+
+**Self-assessment (Session 506): 9/10.** **Strengths:** (1) The PRE-RED code read caught the
+`.addRectilinearWaypoints()` dragon BEFORE writing any test or implementation code, surfaced it
+explicitly to the owner via `AskUserQuestion` with the exact fix plan, rather than discovering it
+only when the rectilinear-style RED assertion unexpectedly failed differently from the others.
+(2) The RED test for the dragon specifically was designed to distinguish "column absent" (`NULL`)
+from "column present but clobbered" (`NA`) -- confirmed both failure shapes actually occurred
+exactly as predicted, proving the RED tests were diagnostic, not just red/green. (3) Live-verified
+the fix against the REAL running app under BOTH `edgeStyle` values (not just `testServer()` or
+unit tests), directly exercising the exact code path (`.addRectilinearWaypoints()`) the dragon
+lived in, reusing the project's own established `w.network.body.data.edges.get()` live-DataSet
+query technique from `test-e2e-pedigree-module.R` rather than re-deriving verification from
+scratch. (4) Caught and fixed the session's own new spelling-drift word ("unwired") by directly
+re-running `spelling::spell_check_files()` against the regenerated `.Rd` with the project's own
+`WORDLIST` applied, rather than assuming a small roxygen wording addition was spelling-safe; fixed
+by rewording (matching the established precedent) rather than defaulting to a `WORDLIST` addition.
+(5) Reused every one of S505's own hard-won `shinytest2` harness gotchas (Learning 504) in the
+smoke-test script on the first attempt -- zero repeated harness-API mistakes this session,
+unlike the 3 rounds S505 needed. **Weaknesses:** (1) A first attempt to run `devtools::document()`
+concurrently (as a parallel background task) with a `git stash`-based baseline regression
+comparison raced against the stash, running `document()` against the STASHED (pre-fix) source and
+producing a silent no-op instead of the intended doc regeneration -- caught only by checking
+`git status` afterward showed no `man/` diff where one was expected, then re-run serially after
+the stash was confirmed popped. No incorrect artifact was committed (the no-op run produced
+nothing to commit), but the mistake cost one extra round-trip. A stricter rule -- never run a
+git-stash-based comparison concurrently with any other command that reads/writes tracked files --
+would have avoided it. (2) The roxygen accuracy pass (updating 2 `@return` docs to mention the new
+`color` column, plus the one `@noRd` doc) was done in a separate follow-up round after the initial
+GREEN commit, rather than folded into the original GREEN implementation pass -- functionally
+harmless (caught before the close-out commit, verified clean), but a more complete first GREEN
+pass would have included the doc accuracy check up front. Both are captured here so a future
+session doesn't repeat either.
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session).
 
 ### Session 504 Handoff Evaluation (by Session 505)
 **Score: 10/10.**

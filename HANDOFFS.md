@@ -62,20 +62,54 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S506
 date: 2026-08-10
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Wire the twin-connector color (#009E73) into .buildTwinConnectorEdges()
-(R/makePedigreeDiagramData.R, issue #137 Slice 2 -- found S494) for both edgeStyle values, plus
-fix .addRectilinearWaypoints():1435's blanket edge-color reset, plus the Diagram-tab legend
-swatch (R/modPedigree.R).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: BACKLOG.md's twin-connector-color Housekeeping item (issue #137 D10) is DONE and
+resolved. No further work owed on it.
+what_was_done: Wired color = "#009E73" (Okabe-Ito bluish-green) into .buildTwinConnectorEdges()
+(R/makePedigreeDiagramData.R) for both edgeStyle values, plus the Diagram-tab legend swatch
+(R/modPedigree.R). Found and fixed a second, previously undiscovered dragon:
+.addRectilinearWaypoints() unconditionally reset every kept edge's color to NA under
+edgeStyle = "rectilinear" -- the same anti-pattern issue #133 already fixed on the node side of
+this same function, now fixed the same way (preserve-if-absent). Full strict-TDD
+PRE-RED->RED->GREEN cycle, AskUserQuestion-gated at every transition (including a dedicated
+pre-RED wire-vs-decline scope decision); REFACTOR owner-confirmed skip. 11 new/extended test
+assertions across 4 files, 0 regressions (git stash -u: baseline failed 11/passed 5031 vs. GREEN
+failed 0/passed 5042, exact delta). lintr 0 lints. devtools::check() 0 errors/0 warnings,
+pre-existing notes only (1 new session-caused spelling word, "unwired," found and fixed by
+rewording). Live shinytest2 smoke test confirmed the color on the real running app under BOTH
+edgeStyle values. NEWS.Rmd/_pedigree_browser.Rmd documentation updated same-session.
+Commits: df13dacd (claim), 17cd2f9b (RED), fb2e16f2 (GREEN), b72dbf68 (NEWS/tutorial docs),
+c07de6ef (this close-out: CHANGELOG/BACKLOG/Learning 505).
+next_steps: Pick the next item from BACKLOG.md's priorities list: the 15-pre-existing-baseline-
+warnings root-cause fix (Housekeeping, Effort S, already fully diagnosed -- 3
+test_modMarkerGenetics.R blocks need suppressWarnings() or a fixture tweak, verify exact-fraction
+Fst values still hold if fixture-tweaking), the devtools::check() spelling-NOTE WORDLIST drift
+(Housekeeping, Effort S, grown to 13-14 words as of this session's own check runs -- hand-add to
+inst/WORDLIST in LC_ALL=C byte order), or the BLOCKED LabKey remaining recommendations (Effort M,
+needs a live LabKey server). None more urgent than another.
+key_files: R/makePedigreeDiagramData.R:268-286 (.buildTwinConnectorEdges(), the color source),
+:1442-1457 (.addRectilinearWaypoints()'s preserve-if-absent fix, mirroring the color.background/
+color.border node precedent ~40 lines below it), R/modPedigree.R:595-599,646-660 (the legend
+swatch), tests/testthat/test_addRectilinearWaypoints.R (the new dedicated edge-color-preservation
+test), PROJECT_LEARNINGS.md Learning 505 (the dragon's full mechanism).
+gotchas: Any FUTURE code that adds edges to a direct-style makePedigreeMatingLayout() layout and
+wants a pre-set color to survive edgeStyle = "rectilinear" now works correctly (the preserve-fix
+covers it generically, not just the twin connector) -- but a NEW edge-level column added the same
+way (mirroring dashes/label/color) would need the SAME 3-site priming pattern (childEdgesOut/
+mateEdges/dupEdges) to avoid an "undefined columns selected" rbind failure; grep for how color was
+added as the template. Running a git-stash-based baseline comparison concurrently with any other
+command that reads/writes tracked files (e.g. devtools::document()) races against the stash --
+this session hit it once (an accidental no-op document() run against stashed source); always run
+git-stash comparisons serially, not backgrounded alongside other file-touching commands.
+runtime_smoke: PASS -- live shinytest2 AppDriver smoke test against the real running app (twin
+pedigree + twin-relations fixture upload, direct style then rectilinear style), color:"#009E73"
+confirmed on both the live-rendered connector edges and the legend's 3 rows under both edgeStyle
+values, zero throw-level/SEVERE console entries.
+changelog_ref: CHANGELOG.md 2026-08-10 "[BL-twinConnectorColor] Twin-connector color wired --
+issue #137 D10, #009E73 on both edgeStyle values (Session 506)"
+commit: c07de6ef
 ```
 
 ```handoff
