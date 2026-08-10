@@ -282,7 +282,9 @@ markerParentageLikelihood <- function(genotypeMatrix, pedigree, id = NULL,
     if (nrow(flags) == 0L) {
       return(emptyResult())
     }
-    ppList <- getPotentialParents(pedigree)
+    ppList <- getPotentialParents(
+      .markerFlaggedSlotPedigree(pedigree, flags$id, flags$role)
+    )
     rows <- vector("list", nrow(flags))
     for (i in seq_len(nrow(flags))) {
       fid <- flags$id[i]
@@ -295,7 +297,10 @@ markerParentageLikelihood <- function(genotypeMatrix, pedigree, id = NULL,
     candidateIds <- if (!is.null(candidates)) {
       candidates
     } else {
-      lookupCandidates(getPotentialParents(pedigree), id, role)
+      lookupCandidates(
+        getPotentialParents(.markerFlaggedSlotPedigree(pedigree, id, role)),
+        id, role
+      )
     }
     result <- scoreOnePair(id, role, candidateIds)
   }
@@ -305,6 +310,49 @@ markerParentageLikelihood <- function(genotypeMatrix, pedigree, id = NULL,
   }
   rownames(result) <- NULL
   result
+}
+
+#' Build a local pedigree copy with each flagged (id, role) slot blanked
+#'
+#' Internal helper for \code{\link{markerParentageLikelihood}} (issue #155,
+#' \code{docs/planning/issue155-parentage-likelihood-candidate-lookup-plan.md}
+#' D1). \code{\link{getPotentialParents}} only ever builds a candidate list
+#' for an animal with at least one missing (\code{NA}) parent slot; a flagged
+#' animal whose recorded parent is present but Mendelian-inconsistent has
+#' both slots non-\code{NA} by definition, so it never appears in
+#' \code{\link{getPotentialParents}}'s own candidate search. This helper
+#' returns a local, unmutated-in-place copy of \code{pedigree} with exactly
+#' the named (id, role) slot(s) set to \code{NA}, so \code{pedigree} merely
+#' *looks like* a genuinely-missing-parent case to
+#' \code{\link{getPotentialParents}} -- which is called completely
+#' unmodified against it, reusing its full
+#' demographic-eligibility engine (breeding-age floor, gestation window,
+#' proven-breeder preference) at 100\% fidelity. \code{pedigree} itself is
+#' never changed -- the copy is scoped only to the caller's own
+#' \code{\link{getPotentialParents}} call argument.
+#'
+#' @param pedigree a data frame with (at least) columns \code{id},
+#' \code{sire}, and \code{dam}.
+#' @param ids character vector of flagged ids, one entry per (id, role) pair.
+#' @param roles character vector of flagged roles (\code{"sire"}/\code{"dam"}),
+#' the same length as \code{ids}, paired positionally.
+#' @return A copy of \code{pedigree}, un-mutated except for the named slot(s).
+#' A duplicated \code{pedigree$id} is left un-blanked -- which row is "the"
+#' flagged animal is undefined for an ambiguous id, so this falls through to
+#' the same fail-soft, zero-candidates posture as an id genuinely absent from
+#' \code{pedigree}, rather than silently blanking every matching row (mirrors
+#' \code{scoreOnePair()}'s own defensive \code{nrow(pedRow) == 1L} pattern a
+#' few lines above in this file).
+#' @keywords internal
+.markerFlaggedSlotPedigree <- function(pedigree, ids, roles) {
+  unambiguous <- names(which(table(pedigree$id) == 1L))
+  sireIds <- unique(ids[roles == "sire"])
+  sireIds <- sireIds[sireIds %in% unambiguous]
+  damIds <- unique(ids[roles == "dam"])
+  damIds <- damIds[damIds %in% unambiguous]
+  if (length(sireIds) > 0L) pedigree$sire[pedigree$id %in% sireIds] <- NA
+  if (length(damIds) > 0L) pedigree$dam[pedigree$id %in% damIds] <- NA
+  pedigree
 }
 
 #' Probability a parent transmits the reference allele

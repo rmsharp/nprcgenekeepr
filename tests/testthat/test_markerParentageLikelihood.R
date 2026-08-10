@@ -383,3 +383,153 @@ test_that("markerParentageLikelihood returns a zero-row result with the full col
                     sort(c("id", "role", "candidateId", "LOD", "delta",
                             "nLociUsed", "excluded", "lowPower")))
 })
+
+## RED (issue #155): markerParentageLikelihood()'s auto-detect (and explicit
+## id/role/candidates = NULL) candidate lookup returns zero candidates whenever
+## a flagged animal's recorded parent is present-but-wrong (both pedigree slots
+## non-NA) -- getPotentialParents() only ever searches for animals with at
+## least one MISSING (NA) parent slot (R/getPotentialParents.R:111-113's
+## pUnknown filter). Fix (docs/planning/
+## issue155-parentage-likelihood-candidate-lookup-plan.md D1, ratified S501): a
+## new internal .markerFlaggedSlotPedigree() helper builds a local "shadow"
+## copy of pedigree with only the flagged (id, role) slot(s) blanked, passed
+## only to the internal getPotentialParents() call -- getPotentialParents()
+## itself is never modified.
+##
+## Fixture note: individuals below are deliberately named to avoid the
+## package's default auto-generated-unknown-id prefix ("U",
+## getAutoIdFormat() -> "U%04d") -- an id starting with "U" (e.g. the existing
+## P/C/U fixture used elsewhere in this package's marker-genetics tests) is
+## silently stripped/nulled by removeAutoGenIds(), which getPotentialParents()
+## calls internally, and would silently mis-test this fix. Found at this
+## session's Pre-RED, not assumed.
+##
+## Fixture: C's recorded sire (SireWrong) is Mendelian-excluded (3
+## opposite-homozygote loci out of 4, exceeding the default maxExclusions=2);
+## its recorded dam (Dam) is NOT excluded (0 conflicts, identical genotype to
+## C at every locus) -- trio conditioning applies. SireTrue is a genotyped,
+## demographically-eligible alternative candidate with 0 conflicts against C.
+## Expected LOD values (SireTrue ~= 0.8630462173553427, SireWrong = -Inf) were
+## hand-derived by calling the real (unmodified) LOD-scoring code with
+## EXPLICIT candidates (which bypasses getPotentialParents() entirely and so
+## is unaffected by the bug being fixed here) at this session's Pre-RED.
+
+pedigreeFlaggedSlot <- data.frame(
+  id    = c("SireTrue", "SireWrong", "Dam", "C"),
+  sire  = c(NA, NA, NA, "SireWrong"),
+  dam   = c(NA, NA, NA, "Dam"),
+  sex   = c("M", "M", "F", "M"),
+  birth = as.Date(c("1990-01-01", "1990-01-01", "1990-01-01", "2005-01-01")),
+  exit  = as.Date(rep(NA, 4L)),
+  fromCenter = rep(TRUE, 4L),
+  stringsAsFactors = FALSE
+)
+genotypeMatrixFlaggedSlot <- matrix(
+  c(
+    "A/A", "B/B", "A/A", "A/B", # C
+    "A/A", "B/B", "A/A", "A/A", # SireTrue
+    "A/A", "B/B", "A/A", "A/B", # Dam
+    "B/B", "A/A", "B/B", "B/B"  # SireWrong
+  ),
+  nrow = 4L, byrow = TRUE,
+  dimnames = list(c("C", "SireTrue", "Dam", "SireWrong"), paste0("L", 1L:4L))
+)
+
+test_that(".markerFlaggedSlotPedigree blanks exactly the named (id, role) slot", {
+  s <- .markerFlaggedSlotPedigree(pedigreeFlaggedSlot, "C", "sire")
+  expect_true(is.na(s$sire[s$id == "C"]))
+  expect_identical(s$dam[s$id == "C"], "Dam") # C's dam slot untouched
+
+  others <- s$id != "C"
+  expect_identical(s$sire[others], pedigreeFlaggedSlot$sire[others])
+  expect_identical(s$dam, pedigreeFlaggedSlot$dam)
+
+  ## Does not mutate the caller's pedigree (copy-on-modify).
+  expect_identical(pedigreeFlaggedSlot$sire[pedigreeFlaggedSlot$id == "C"], "SireWrong")
+})
+
+test_that(".markerFlaggedSlotPedigree blanks BOTH slots when both are flagged for the same id", {
+  s <- .markerFlaggedSlotPedigree(pedigreeFlaggedSlot, c("C", "C"), c("sire", "dam"))
+  expect_true(is.na(s$sire[s$id == "C"]))
+  expect_true(is.na(s$dam[s$id == "C"]))
+})
+
+test_that(".markerFlaggedSlotPedigree blanks each flagged id's own slot independently in one batch call, without cross-contamination", {
+  s <- .markerFlaggedSlotPedigree(pedigreeFlaggedSlot, c("C", "Dam"), c("sire", "dam"))
+  expect_true(is.na(s$sire[s$id == "C"]))
+  expect_true(is.na(s$dam[s$id == "Dam"]))
+  ## C's own dam slot, and Dam's own sire slot, stay untouched.
+  expect_identical(s$dam[s$id == "C"], "Dam")
+  expect_true(is.na(s$sire[s$id == "Dam"])) # was already NA (Dam is a founder)
+})
+
+test_that(".markerFlaggedSlotPedigree leaves a duplicated pedigree$id un-blanked (fail-soft)", {
+  dupPedigree <- rbind(
+    pedigreeFlaggedSlot,
+    data.frame(id = "C", sire = "SireWrong", dam = "Dam", sex = "M",
+               birth = as.Date("2005-01-01"), exit = as.Date(NA),
+               fromCenter = TRUE, stringsAsFactors = FALSE)
+  )
+  s <- .markerFlaggedSlotPedigree(dupPedigree, "C", "sire")
+  ## Both rows sharing id "C" keep their recorded sire -- ambiguous which row
+  ## is "the" flagged animal, so neither is blanked (mirrors scoreOnePair()'s
+  ## own defensive nrow(pedRow) == 1L pattern).
+  expect_true(all(s$sire[s$id == "C"] == "SireWrong"))
+})
+
+test_that(".markerFlaggedSlotPedigree is a no-op on empty ids/roles", {
+  s <- .markerFlaggedSlotPedigree(pedigreeFlaggedSlot, character(0L), character(0L))
+  expect_identical(s, pedigreeFlaggedSlot)
+})
+
+test_that("markerParentageLikelihood auto-detect finds candidates for a recorded-but-wrong parent (issue #155, real getPotentialParents)", {
+  result <- markerParentageLikelihood(genotypeMatrixFlaggedSlot, pedigreeFlaggedSlot)
+
+  expect_identical(nrow(result), 2L) # both SireTrue and SireWrong scored
+  expect_true(all(result$id == "C"))
+  expect_true(all(result$role == "sire")) # only (C, "sire") is flagged; (C, "dam") is not
+
+  byCand <- function(cid) result[result$candidateId == cid, ]
+  strue <- byCand("SireTrue")
+  expect_equal(strue$LOD, 0.8630462173553427, tolerance = 1e-6)
+  expect_identical(strue$nLociUsed, 4L)
+  expect_false(strue$excluded)
+  expect_false(strue$lowPower)
+
+  ## D3(a): the flagged/wrong recorded parent stays in the ranked output, not
+  ## filtered out -- its LOD = -Inf / excluded = TRUE doubles as a free
+  ## confirmation signal for the curator.
+  swrong <- byCand("SireWrong")
+  expect_identical(swrong$LOD, -Inf)
+  expect_identical(swrong$nLociUsed, 4L)
+  expect_true(swrong$excluded)
+
+  expect_identical(result$candidateId, c("SireTrue", "SireWrong")) # ranked by LOD desc
+})
+
+test_that("markerParentageLikelihood's explicit id/role/candidates=NULL branch finds candidates for a recorded-but-wrong parent (issue #155, real getPotentialParents)", {
+  result <- markerParentageLikelihood(genotypeMatrixFlaggedSlot, pedigreeFlaggedSlot,
+                                       id = "C", role = "sire", candidates = NULL)
+
+  expect_identical(nrow(result), 2L)
+  expect_identical(sort(result$candidateId), c("SireTrue", "SireWrong"))
+  expect_equal(result$LOD[result$candidateId == "SireTrue"], 0.8630462173553427,
+               tolerance = 1e-6)
+  expect_identical(result$LOD[result$candidateId == "SireWrong"], -Inf)
+})
+
+test_that("markerParentageLikelihood's auto-detect calls getPotentialParents with the flagged slot blanked, not the real recorded parent", {
+  capturedPed <- NULL
+  testthat::local_mocked_bindings(
+    getPotentialParents = function(ped, ...) {
+      capturedPed <<- ped
+      list(list(id = "C", sires = c("SireTrue", "SireWrong"), dams = character(0L)))
+    },
+    .package = "nprcgenekeepr"
+  )
+  invisible(markerParentageLikelihood(genotypeMatrixFlaggedSlot, pedigreeFlaggedSlot))
+
+  expect_false(is.null(capturedPed))
+  expect_true(is.na(capturedPed$sire[capturedPed$id == "C"])) # blanked, not "SireWrong"
+  expect_identical(capturedPed$dam[capturedPed$id == "C"], "Dam") # dam left untouched
+})

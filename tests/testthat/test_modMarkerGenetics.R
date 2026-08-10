@@ -370,6 +370,69 @@ test_that("modMarkerGenetics computes a candidate-parent-assignment table for a 
   })
 })
 
+## RED (issue #155): the Candidate Parent Assignment tab must surface a
+## NON-empty table when a flagged animal's recorded parent is present but
+## wrong -- found live (S498's own Phase 3E smoke test) rendering an empty
+## table against exactly this scenario. Unlike the "flagged pair" test above,
+## getPotentialParents() is NOT mocked here -- this is the live-wiring
+## regression the bug escaped every existing (mocked) test to reach.
+## Individuals are deliberately NOT named "U" (the P/C/U fixture's founder id
+## elsewhere in this file) -- an id starting with "U" is the package's
+## default auto-generated-unknown-id prefix (getAutoIdFormat() -> "U%04d")
+## and is silently stripped/nulled by getPotentialParents()'s own internal
+## removeAutoGenIds() call, found at this session's Pre-RED. Same
+## SireTrue/SireWrong/Dam/C fixture as test_markerParentageLikelihood.R's own
+## issue #155 tests -- same hand-verified LOD values apply.
+markerGenotypeFlaggedSlot <- data.frame(
+  id = c(rep("C", 4L), rep("SireTrue", 4L), rep("Dam", 4L), rep("SireWrong", 4L)),
+  locus = rep(paste0("L", 1L:4L), 4L),
+  allele1 = c("A", "B", "A", "A", "A", "B", "A", "A",
+              "A", "B", "A", "A", "B", "A", "B", "B"),
+  allele2 = c("A", "B", "A", "B", "A", "B", "A", "A",
+              "A", "B", "A", "B", "B", "A", "B", "B"),
+  stringsAsFactors = FALSE
+)
+genotypeFilePathFlaggedSlot <- tempfile(fileext = ".csv")
+write.csv(markerGenotypeFlaggedSlot, genotypeFilePathFlaggedSlot, row.names = FALSE)
+
+pedigreeFlaggedSlot <- data.frame(
+  id    = c("SireTrue", "SireWrong", "Dam", "C"),
+  sire  = c(NA, NA, NA, "SireWrong"),
+  dam   = c(NA, NA, NA, "Dam"),
+  sex   = c("M", "M", "F", "M"),
+  birth = as.Date(c("1990-01-01", "1990-01-01", "1990-01-01", "2005-01-01")),
+  exit  = as.Date(rep(NA, 4L)),
+  fromCenter = rep(TRUE, 4L),
+  stringsAsFactors = FALSE
+)
+
+test_that("modMarkerGenetics's candidate-parent-assignment table is non-empty for a real (non-mocked) recorded-but-wrong-parent fixture (issue #155)", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(pedigreeFlaggedSlot)), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "markerGenotypeFlaggedSlot.csv", datapath = genotypeFilePathFlaggedSlot
+    ))
+
+    tbl <- result$candidateAssignmentTable()
+    expect_s3_class(tbl, "data.frame")
+    expect_identical(nrow(tbl), 2L) # previously 0 rows -- the bug being fixed
+    expect_identical(sort(tbl$candidateId), c("SireTrue", "SireWrong"))
+
+    strue <- tbl[tbl$candidateId == "SireTrue", ]
+    expect_equal(strue$LOD, 0.8630462173553427, tolerance = 1e-6)
+    expect_false(strue$excluded)
+
+    ## D3(a): the flagged/wrong recorded parent (SireWrong) stays visible.
+    swrong <- tbl[tbl$candidateId == "SireWrong", ]
+    expect_identical(swrong$LOD, -Inf)
+    expect_true(swrong$excluded)
+  })
+})
+
 test_that("modMarkerGenetics's candidate-parent-assignment table is an empty-but-valid data frame when nothing is flagged", {
   skip_if_not_installed("shiny")
   ## Both recorded parents Mendelian-consistent (C has no recorded sire at
