@@ -72,7 +72,7 @@ key_files: docs/planning/issue145-sire-dam-left-right-placement-plan.md (the rat
 gotchas: D2's swap mechanism is a paper argument, not yet run against live R -- do not skip Slice 1's own Pre-RED live verification. The GA204Z/8LKBV9 fixture's 5A6DFT/8DKELJ expected x values WILL need updating (this is required, not optional). docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd's Example 4 summary line ("sire tends to render left of dam... coincidentally similar-looking result") is now factually wrong and unfixed -- a future session should correct it. All standing gotchas from S479-498 carry forward unchanged.
 runtime_smoke: n/a -- docs-only design/planning session, no R/tests/man content changed. Per SESSION_RUNNER.md's Planning Sessions guidance, the plan is the deliverable; live verification is explicitly deferred to the future Slice 1 implementing session (flagged in the plan's own §6 Dragon 1/§8 Known gap, not silently treated as unnecessary).
 changelog_ref: CHANGELOG.md 2026-08-09 "[issue #145] Design/architecture document ratified -- sire/dam left-right pedigree placement default (Session 499)"
-commit: c3f5dec2
+commit: bd9bb338
 ```
 
 ```handoff
