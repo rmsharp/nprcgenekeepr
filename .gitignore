@@ -36,6 +36,8 @@ docs/*
 !docs/conventions/**
 !docs/architecture/
 !docs/architecture/**
+!docs/archive/
+!docs/archive/**
 pkgdown_site/
 .quarto/
 dashboard.html
