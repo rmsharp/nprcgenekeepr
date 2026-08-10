@@ -6,17 +6,112 @@
 
 ## ACTIVE TASK
 
+### Session 499 Handoff Evaluation (by Session 500)
+**Score: 9/10.**
+**What helped:** `next_steps` named the exact right next action in full mechanical detail --
+"Implement Slice 1... a future session's Pre-RED must FIRST empirically verify D2's swap mechanism
+live (build a minimal repro, re-test the adversarial review's own wide-fanout counter-example
+fixture through the swap, not the rejected reflection) before writing any RED test" -- and this
+session followed that literally, in that order, with no deviation. `key_files` pointed at exact,
+correct line ranges (`preferAnchor()` 396-404, free-pass-leftmost 730, `finalizeNode`/ownX 668-677,
+`finalUnitX` 817-838, the GA204Z/8LKBV9 fixture lines needing an update) -- all used directly, none
+found stale. `gotchas` ("D2's swap mechanism is a paper argument... do not skip Slice 1's own Pre-RED
+live verification"; "The GA204Z/8LKBV9 fixture's 5A6DFT/8DKELJ expected x values WILL need updating
+(required, not optional)") were both exactly right and both directly actioned.
+**What was missing:** The handoff referenced "the adversarial review's own wide-fanout counter
+-example fixture" without restating its exact shape (a 3-child unit, middle child with 5
+grandchildren) inline -- discoverable via `key_files`' own pointer to `PROJECT_LEARNINGS.md`
+Learning 498, but not copy-pasteable from the handoff text itself, costing a few minutes of
+cross-referencing before the live repro could be built precisely.
+**What was wrong:** Nothing found inaccurate -- every claim in the handoff held up against live
+verification this session (D2's mechanism generalized correctly; the GA204Z/8LKBV9 values did need
+exactly the update flagged).
+**ROI:** Strongly positive -- the handoff's own next-step precision meant this session started
+Pre-RED work immediately with zero discovery time on "what does D2 actually require verifying."
+
 ### What Session 500 Did
-**Deliverable:** Implement Slice 1 of the ratified issue #145 plan
+**Deliverable:** Implemented Slice 1 of the ratified issue #145 plan
 (`docs/planning/issue145-sire-dam-left-right-placement-plan.md`) -- male-left/female-right default
-positioning in `.positionMatingUnitForest()`, plus a new `orderBySex` parameter on
-`makePedigreeMatingLayout()` (D8). (IN PROGRESS)
-**Started:** 2026-08-09.
-**Status:** Session claimed. Work beginning. Per the plan's own §6 Dragon 1, PRE-RED must first
-build a live repro and empirically verify D2's swap mechanism -- including re-running the
-adversarial review's own wide-fanout counter-example fixture -- before any RED test is written.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+positioning in `.positionMatingUnitForest()` (new `orderBySex = TRUE` parameter, an additive
+post-hoc value-swap scoped to D1-qualifying simple pairs), plus a matching `orderBySex` parameter
+threaded through `makePedigreeMatingLayout()` (D8 option (b), no UI wiring -- Slice 2 not created).
+Followed `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` under this project's strict TDD
+contract (PRE-RED->RED->GREEN, REFACTOR owner-confirmed skip, `AskUserQuestion`-gated at every
+transition). Picked from this session's own Phase 0 priorities list (owner choice via
+`AskUserQuestion`, out of #145 Slice 1/#155 Pre-RED design pass).
+**Started/Completed:** 2026-08-09/2026-08-10.
+**Status:** DONE. **Issue #145 closed** as part of this session's close-out.
+
+**What happened, in order:** **(1)** Phase 0 orient (SAFEGUARDS.md, SESSION_NOTES.md, `gh issue
+list`, git status/log, `methodology_dashboard.py` -- health 98/100; ledger reconcile clean, the 2
+commits since the `CHANGELOG.md` frontier were S499's own close-out mechanics already covered by its
+own entry). Built the priorities list; owner picked "#145 Slice 1" via `AskUserQuestion` over "#155
+Pre-RED design pass." **(2)** Phase 1B claim stub committed. Read
+`docs/planning/issue145-sire-dam-left-right-placement-plan.md` in full and
+`DEVELOPMENT_WORKSTREAM.md`. **(3) PRE-RED:** built a live scratchpad repro (not committed) against
+the loaded package -- verified D2's swap mechanism on (a) the real GA204Z/8LKBV9 fixture and (b) a
+reconstructed version of the adversarial review's own wide-fanout counter-example (3-child unit,
+middle child with 5 grandchildren, plus an unrelated sibling). The first counter-example attempt
+showed the male landing as non-anchor already-left by accident of the id tie-break (no real swap
+fired) -- renamed ids to force the male into the anchor role and re-ran: the swap fires, the union's
+own `x` is invariant (mean is symmetric), all 9 descendant nodes unmoved, no new overlap. Re-audited
+the test suite per the plan's own required step: confirmed only the GA204Z/8LKBV9 exact-x regression
+test has a hard-coded `x` assertion for a D1-qualifying pair. `AskUserQuestion`-gated PRE-RED->RED.
+**(4) RED:** updated the GA204Z/8LKBV9 test's expected values; 4 new `test_that` blocks in
+`test_positionMatingUnitForest.R` and 2 in `test_makePedigreeMatingLayout.R`, all structured as
+`orderBySex = TRUE` vs `FALSE` comparisons (rather than single hard-coded assertions) so every test
+-- including the `"H"`/`"U"`/NA guard and the true-no-op case -- genuinely fails pre-implementation
+(an "unused argument" error), not just the swap-needing cases. Confirmed all 8 failing for the right
+reason via an actual test run. `AskUserQuestion`-gated RED->GREEN. **(5) GREEN:** implemented the
+`orderBySex` parameter and the swap logic in `R/makePedigreeDiagramData.R`, reusing the already
+-in-scope `hasOwnDirectChild()` closure; threaded the parameter through `makePedigreeMatingLayout()`.
+One test fix was needed after the first live run: the wide-fanout fixture's own `C2`/`GCMate` pair
+turned out to be a SECOND, independently D1-qualifying pair, correctly swapped by the (intentionally
+per-unit-scoped) implementation -- widened the test's own assertion to match the correct behavior
+rather than narrowing the implementation (`PROJECT_LEARNINGS.md` Learning 499). All 8 tests passed
+after that fix. Ran the full verification matrix: clean regression (0 failed/0 error, 4881 passed);
+`lintr::lint_package()` (1 false-positive `commented_code_linter` hit, suppressed matching
+precedent, then 0); `devtools::check()` -- the FIRST run caught a real codoc-mismatch WARNING
+(forgot `devtools::document()`), fixed via `devtools::document()`, which also atomically corrected a
+second, already-stale `.Rd` file from S498's own unregenerated roxygen source
+(`modMarkerGeneticsServer.Rd`); the second run came back 0 errors/0 warnings/1 note (baseline
+unchanged). **(6) Phase 3E:** an improvised first `AppDriver` script used the wrong upload input id,
+wrong screenshot selector, and missed the "Update Focal Animals" button click the raw
+`tags$textarea` focal-animal field needs -- switched to the established
+`tests/testthat/test-e2e-pedigree-module.R` helper pattern (`create_app_driver`/`upload_and_wait`/
+`navigate_to_tab`/`click_element_safe`, `#pedigree-pedigreeDiagram` selector), which worked
+immediately. Live screenshot of the real `5GQC24`(M) x `BJ4J7G`(F) 2-child family in the bundled
+375-individual fixture visually confirms male-left/female-right rendering, 0 diagram-related console
+errors -- satisfies the plan's own §6 dragon 3. `AskUserQuestion`-gated GREEN->REFACTOR (skipped, owner
+-confirmed). **(7)** Documentation: `NEWS.Rmd` entry added, `NEWS.md` re-rendered; citation/
+`_pkgdown.yml`/tutorial-article checklists confirmed N/A this slice (D7); `a2interactive.Rmd`
+deferred per its own standing rule. **(8)** Close-out: `PROJECT_LEARNINGS.md` Learning 499,
+`CLAUDE.md` learning-count cross-reference (498->499, Sessions 1-499+ -> 1-500+), `BACKLOG.md`
+Progress note, `CHANGELOG.md` entry, `gh issue close 145`, this handoff.
+
+**Self-assessment (Session 500): 8/10.** **Strengths:** (1) Followed the Pre-RED gate strictly --
+built and ran a live repro BEFORE writing any RED test, and when the first counter-example attempt
+didn't actually exercise a real swap, diagnosed why (id tie-break landed the male as free-pass, not
+anchor) and fixed the fixture rather than declaring the mechanism "verified" on a non-representative
+case. (2) Designed every RED test as an `orderBySex` TRUE-vs-FALSE comparison specifically so guard/
+exclusion cases would be genuinely RED too, not just the swap-needing ones -- a general pattern for
+additive/toggle features, not specific to this feature. (3) When GREEN surfaced a second,
+unanticipated qualifying pair inside my own test fixture, correctly diagnosed it as CORRECT
+implementation behavior against an under-specified test assumption, and fixed the test rather than
+narrowing the implementation -- directly applying S499's own Learning 498 discipline at the
+test-design layer. (4) Ran the full verification matrix the plan required, including catching and
+fixing a real `devtools::document()` gap before it could ship as a code/docs mismatch. (5) Live
+-verified against a real multi-child family in the actual bundled fixture, not just unit-test
+assertions, satisfying the plan's own explicitly-named dragon. **Weaknesses:** (1) The first live
+-smoke-test attempt improvised an `AppDriver` flow instead of searching for the project's own
+established E2E helper pattern first -- cost two failed attempts (wrong upload/selector, then a
+missing button click) before switching to `test-e2e-pedigree-module.R`'s already-correct pattern.
+(2) Forgot `devtools::document()` after adding the new parameter, independently re-discovering a
+gap class `CLAUDE.md` already names (Learning 495) rather than avoiding it by habit. (3) Did not add
+live coverage for the D5-direct-child exclusion path -- matches the plan's own explicit deferral (no
+existing test coverage, a future session's decision to relax it), not a gap introduced this session,
+but worth naming plainly.
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session).
 
 ## ACTIVE TASK
 
