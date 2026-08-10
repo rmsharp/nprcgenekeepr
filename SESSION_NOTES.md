@@ -6,6 +6,26 @@
 
 ## ACTIVE TASK
 
+### What Session 504 Did
+**Deliverable:** Implement Slice 1 of the ratified issue #149 design
+(`docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md` §5 Slice 1) --
+validation core, R-function level only, no UI: extract `resolveCrossCenterIds()`'s four checks
+(existence/uniqueness/collision/conflict) into shared, non-`stop()`ing internal helpers (D2,
+including the load-bearing `pedB` id-rewrite step, Dragon #2), add a new exported
+`checkCrossCenterMapping()` that calls the same helpers and collects every domain problem
+found, and fix `resolveCrossCenterIds()`'s D10 data-loss defect (its merge step silently drops
+every non-`id`/`sire`/`dam` column for merged individuals). Following
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` under this project's Strict TDD
+contract (PRE-RED->RED->GREEN->REFACTOR, `AskUserQuestion`-gated at every transition). Picked
+from this session's own Phase 0 priorities list (owner choice via `AskUserQuestion`, over the
+twin-connector-color fix-or-decline, the 10-pre-existing-warnings root-cause fix, and the
+spelling-drift NOTE).
+**Started:** 2026-08-10.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 502 Handoff Evaluation (by Session 503)
 **Score: 8/10.**
 **What helped:** `next_steps` named "issue #149 design/architecture pass (Tier 2 sequencing,
