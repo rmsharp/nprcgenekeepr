@@ -60,6 +60,22 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S500
+date: 2026-08-09
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implementing Slice 1 of the ratified issue #145 plan (docs/planning/issue145-sire-dam-left-right-placement-plan.md) -- male-left/female-right default positioning in .positionMatingUnitForest(), plus a new orderBySex parameter on makePedigreeMatingLayout() (D8). PRE-RED live-verification of D2's swap mechanism not yet started.
+what_was_done: pending
+next_steps: pending
+key_files: docs/planning/issue145-sire-dam-left-right-placement-plan.md (the ratified design), R/makePedigreeDiagramData.R (.positionMatingUnitForest(), makePedigreeMatingLayout()), tests/testthat/test_positionMatingUnitForest.R, tests/testthat/test_makePedigreeMatingLayout.R
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S499
 date: 2026-08-09
 status: complete

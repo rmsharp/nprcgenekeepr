@@ -6,6 +6,20 @@
 
 ## ACTIVE TASK
 
+### What Session 500 Did
+**Deliverable:** Implement Slice 1 of the ratified issue #145 plan
+(`docs/planning/issue145-sire-dam-left-right-placement-plan.md`) -- male-left/female-right default
+positioning in `.positionMatingUnitForest()`, plus a new `orderBySex` parameter on
+`makePedigreeMatingLayout()` (D8). (IN PROGRESS)
+**Started:** 2026-08-09.
+**Status:** Session claimed. Work beginning. Per the plan's own §6 Dragon 1, PRE-RED must first
+build a live repro and empirically verify D2's swap mechanism -- including re-running the
+adversarial review's own wide-fanout counter-example fixture -- before any RED test is written.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
+## ACTIVE TASK
+
 ### Session 498 Handoff Evaluation (by Session 499)
 **Score: 7/10.**
 **What helped:** The `next_steps` field named the exact right next pickups (a #145 design session,
