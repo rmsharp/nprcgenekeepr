@@ -6,6 +6,19 @@
 
 ## ACTIVE TASK
 
+### What Session 507 Did
+**Deliverable:** One design/architecture document for issue #146 (Make breeding-group candidate
+retention configurable and support exhaustive enumeration for tractable cases) -- Tier 2's next
+item in the ratified `docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` order
+(#147 and #149 both done/closed). Following `ARCHITECTURE_WORKSTREAM.md` (over the literal
+`DESIGN_WORKSTREAM.md` task-mapping), matching the #133/#136/#137/#145/#147/#149 precedent. (IN
+PROGRESS)
+**Started:** 2026-08-10.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 505 Handoff Evaluation (by Session 506)
 **Score: 9/10.**
 **What helped:** `next_steps` named 3 concrete candidate items (twin-connector-color,
