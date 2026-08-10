@@ -52,6 +52,21 @@
 #' @param maxCandidates Integer value indicating the maximum number of
 #' distinct candidate solutions to retain during the simulation (issue #146
 #' Slice 1). Default is 5.
+#' @param exhaustive Logical. When \code{TRUE}, enumerate every maximal
+#' independent set of the conflict graph instead of random sampling (issue
+#' #146 Slice 2), subject to \code{maxExhaustiveCandidates}/
+#' \code{exhaustiveTimeLimit}. Only supported for \code{numGp = 1},
+#' \code{harem = FALSE}, \code{sexRatio = 0} -- any other combination
+#' \code{stop()}s with a message naming the specific unsupported condition,
+#' rather than silently falling back to sampling. Default is \code{FALSE}
+#' (the existing sampling behavior, unchanged).
+#' @param maxExhaustiveCandidates Integer. Pre-flight feasibility ceiling
+#' for \code{exhaustive = TRUE}: a candidate pool larger than this
+#' \code{stop()}s before any enumeration runs. Default is 20.
+#' @param exhaustiveTimeLimit Numeric. Wall-clock seconds allowed for
+#' \code{exhaustive = TRUE}'s search before it truncates gracefully
+#' (\code{exhaustive = FALSE} in the return value, not an error). Default
+#' is 10.
 #' @param updateProgress Function or NULL. If this function is defined, it
 #' will be called during each iteration to update a
 #' \code{shiny::Progress} object.
@@ -73,6 +88,13 @@
 #' The list item \code{groupKin} contains the subset of the kinship matrix
 #' that is specific for each group formed in the best candidate (an alias for
 #' \code{candidates[[1]]$groupKin}).
+#' When \code{exhaustive = TRUE} was requested (issue #146 Slice 2), three
+#' additional top-level items are present -- absent entirely, not merely
+#' \code{NULL}, when \code{exhaustive = FALSE} (the default): \code{exhaustive}
+#' (logical, whether the search completed before its wall-clock deadline),
+#' \code{examined} (integer, the total number of distinct maximal
+#' independent sets found), and \code{retentionRule} (character, describing
+#' the top-\code{maxCandidates} cutoff actually applied to \code{candidates}).
 #'
 #' @references Vinson, A. and Raboin, M.J. (2015) "A Practical Approach for
 #' Designing Breeding Groups to Maximize Genetic Diversity in a Large Colony
@@ -140,6 +162,9 @@ groupAddAssign <- function(candidates,
                            numGp = 1L, harem = FALSE,
                            sexRatio = 0.0, withKin = FALSE,
                            maxCandidates = 5L,
+                           exhaustive = FALSE,
+                           maxExhaustiveCandidates = 20L,
+                           exhaustiveTimeLimit = 10.0,
                            updateProgress = NULL) {
   if (length(currentGroups) > numGp) {
     stop(
@@ -162,6 +187,18 @@ groupAddAssign <- function(candidates,
 
 
   kin <- addAnimalsWithNoRelative(kin, candidates)
+
+  # Exhaustive mode (issue #146 Slice 2) is a parallel search strategy that
+  # bypasses the random-sampling loop below entirely -- scope (D2) and
+  # feasibility (D5) are checked, then enumeration replaces sampling.
+  if (exhaustive) {
+    return(.groupAddAssignExhaustive(
+      candidates, kin, currentGroups, ped, minAge, numGp, harem, sexRatio,
+      withKin, kmat, maxCandidates, maxExhaustiveCandidates,
+      exhaustiveTimeLimit
+    ))
+  }
+
   if (harem &&
       length(getPotentialSires(candidates, ped, minAge)) < numGp) {
     stop(
@@ -257,4 +294,112 @@ canonicalizePartition <- function(groupMembers) {
     character(1L)
   )
   paste(sort(groupSignatures), collapse = ";")
+}
+
+#' Exhaustive-mode branch of groupAddAssign (issue #146 Slice 2)
+#'
+#' Enumerates every maximal independent set of the (already conflict-
+#' filtered) candidate pool via \code{\link{.enumerateMaximalIndependentSets}},
+#' subject to D2's scope restriction and D5's two-layer feasibility guard,
+#' then routes the results through the SAME \code{addGroupOfUnusedAnimals()}/
+#' \code{groupMembersReturn()} pipeline the sampling path uses (plan Sec
+#' 2.5/2.6) so the return shape is identical between the two modes apart from
+#' the three new top-level fields (D7).
+#'
+#' @param candidates Character vector, already conflict-filtered against
+#' \code{currentGroups} by the caller.
+#' @param kin The conflict adjacency list, already including an \code{NA}
+#' entry for every candidate with no conflicts.
+#' @inheritParams groupAddAssign
+#' @return See \code{\link{groupMembersReturn}}.
+#' @noRd
+.groupAddAssignExhaustive <- function(candidates, kin, currentGroups, ped,
+                                      minAge, numGp, harem, sexRatio,
+                                      withKin, kmat, maxCandidates,
+                                      maxExhaustiveCandidates,
+                                      exhaustiveTimeLimit) {
+  # D2/D9: eligibility scope, checked before D5's ceiling and before any
+  # enumeration runs. Each stop() names the specific violated condition
+  # rather than silently falling back to sampling (Dragon-precedent: matches
+  # the existing harem-infeasibility stop() below in groupAddAssign()).
+  if (numGp != 1L) {
+    stop(
+      "Exhaustive mode is only supported for numGp = 1 (got numGp = ",
+      numGp, ")."
+    )
+  }
+  if (harem) {
+    stop("Exhaustive mode does not support harem group formation.")
+  }
+  if (sexRatio != 0.0) {
+    stop(
+      "Exhaustive mode does not support a non-zero sexRatio (got sexRatio = ",
+      sexRatio, ")."
+    )
+  }
+  if (length(candidates) > maxExhaustiveCandidates) {
+    stop(
+      "Exhaustive mode candidate pool (", length(candidates),
+      ") exceeds maxExhaustiveCandidates (", maxExhaustiveCandidates, ")."
+    )
+  }
+
+  enumResult <- .enumerateMaximalIndependentSets(
+    candidates = candidates, kin = kin, cap = maxExhaustiveCandidates,
+    deadline = Sys.time() + exhaustiveTimeLimit
+  )
+
+  # The seed simply unions onto every enumerated set (plan Sec 2.4): every
+  # candidate is already guaranteed compatible with the seed by the earlier
+  # conflict-filtering step in groupAddAssign(), and seed IDs are never part
+  # of `candidates`, so no dedup is needed.
+  seed <- if (length(currentGroups) >= 1L) {
+    currentGroups[[1L]]
+  } else {
+    character(0L)
+  }
+
+  retained <- lapply(enumResult$sets, function(set) {
+    groupMembers <- list(c(seed, set))
+    list(
+      groupMembers = groupMembers,
+      score = min(lengths(groupMembers)),
+      signature = canonicalizePartition(groupMembers)
+    )
+  })
+
+  # A deadline elapsed before even the first maximal independent set was
+  # found leaves `retained` empty -- fall back to a single seed-only
+  # candidate so the pipeline below never receives zero candidates (which
+  # groupMembersReturn() cannot represent). This still correctly reports
+  # exhaustive = FALSE via `enumResult$truncated` below.
+  if (length(retained) == 0L) {
+    groupMembers <- list(seed)
+    retained <- list(list(
+      groupMembers = groupMembers,
+      score = length(seed),
+      signature = canonicalizePartition(groupMembers)
+    ))
+  }
+
+  retainedScores <- vapply(retained, function(r) r$score, numeric(1L))
+  retained <- retained[order(-retainedScores, seq_along(retained))]
+  retained <- utils::head(retained, maxCandidates)
+
+  retained <- lapply(retained, function(r) {
+    r$groupMembers <- addGroupOfUnusedAnimals(
+      r$groupMembers, candidates, ped, minAge, harem
+    )
+    r
+  })
+
+  groupMembersReturn(
+    retained, withKin, kmat,
+    exhaustive = !enumResult$truncated,
+    examined = enumResult$examined,
+    retentionRule = paste0(
+      "top-", maxCandidates, " by score (min group size), N = ",
+      length(retained)
+    )
+  )
 }

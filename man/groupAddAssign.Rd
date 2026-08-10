@@ -18,6 +18,9 @@ groupAddAssign(
   sexRatio = 0,
   withKin = FALSE,
   maxCandidates = 5L,
+  exhaustive = FALSE,
+  maxExhaustiveCandidates = 20L,
+  exhaustiveTimeLimit = 10,
   updateProgress = NULL
 )
 }
@@ -71,6 +74,24 @@ earlier versions.}
 distinct candidate solutions to retain during the simulation (issue #146
 Slice 1). Default is 5.}
 
+\item{exhaustive}{Logical. When \code{TRUE}, enumerate every maximal
+independent set of the conflict graph instead of random sampling (issue
+#146 Slice 2), subject to \code{maxExhaustiveCandidates}/
+\code{exhaustiveTimeLimit}. Only supported for \code{numGp = 1},
+\code{harem = FALSE}, \code{sexRatio = 0} -- any other combination
+\code{stop()}s with a message naming the specific unsupported condition,
+rather than silently falling back to sampling. Default is \code{FALSE}
+(the existing sampling behavior, unchanged).}
+
+\item{maxExhaustiveCandidates}{Integer. Pre-flight feasibility ceiling
+for \code{exhaustive = TRUE}: a candidate pool larger than this
+\code{stop()}s before any enumeration runs. Default is 20.}
+
+\item{exhaustiveTimeLimit}{Numeric. Wall-clock seconds allowed for
+\code{exhaustive = TRUE}'s search before it truncates gracefully
+(\code{exhaustive = FALSE} in the return value, not an error). Default
+is 10.}
+
 \item{updateProgress}{Function or NULL. If this function is defined, it
 will be called during each iteration to update a
 \code{shiny::Progress} object.}
@@ -93,6 +114,13 @@ distinct candidates; two trials with identical membership count once.
 The list item \code{groupKin} contains the subset of the kinship matrix
 that is specific for each group formed in the best candidate (an alias for
 \code{candidates[[1]]$groupKin}).
+When \code{exhaustive = TRUE} was requested (issue #146 Slice 2), three
+additional top-level items are present -- absent entirely, not merely
+\code{NULL}, when \code{exhaustive = FALSE} (the default): \code{exhaustive}
+(logical, whether the search completed before its wall-clock deadline),
+\code{examined} (integer, the total number of distinct maximal
+independent sets found), and \code{retentionRule} (character, describing
+the top-\code{maxCandidates} cutoff actually applied to \code{candidates}).
 }
 \description{
 Part of Group Formation

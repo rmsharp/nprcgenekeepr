@@ -87,6 +87,21 @@ modBreedingGroupsUI <- function(id) {
                numericInput(ns("maxCandidates"),
                             "Candidates to retain:",
                             value = 5L, min = 1L, max = 50L),
+               conditionalPanel(
+                 # Exhaustive mode is only supported for numGp = 1, no
+                 # harem, no custom sex ratio (issue #146 Slice 2, D2) -- the
+                 # sexRatio radio's "none" choice already excludes both harem
+                 # and custom, so gating on it plus nGroups == 1 exactly
+                 # matches D2's eligibility scope (Dragon 4: hides the toggle
+                 # outside its supported scope rather than letting the user
+                 # discover the restriction only via a stop() error).
+                 condition = "input.nGroups == 1 && input.sexRatio == 'none'",
+                 ns = ns,
+                 checkboxInput(ns("exhaustive"),
+                               "Exhaustive enumeration mode",
+                               value = FALSE),
+                 uiOutput(ns("exhaustiveStatus"))
+               ),
                checkboxInput(ns("withKinship"),
                              "Include kinship in display of groups",
                              value = FALSE),
@@ -338,6 +353,16 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
         } else {
           5L
         }
+        # Issue #146 Slice 2: exhaustive mode, its UI toggle only visible
+        # when D2-eligible, but the input value may still be leftover-TRUE
+        # from a prior eligible run even if the UI has since hidden it --
+        # groupAddAssign() itself is the authoritative D2 scope gate
+        # (stop()s if ineligible), so no client-side re-check is needed here.
+        exhaustive <- if (!is.null(input$exhaustive)) {
+          input$exhaustive
+        } else {
+          FALSE
+        }
 
         # Seed groups ("current groups") parity (monolith server.r:1019-1056):
         # build a length-numGp list of seed-animal IDs from the per-group
@@ -403,6 +428,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
               sexRatio = sexRatio,
               withKin = withKin,
               maxCandidates = maxCandidates,
+              exhaustive = exhaustive,
               updateProgress = updateProgress
             )
           }, error = function(e) {
@@ -444,7 +470,16 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
           )
         })
 
-        groupResults(list(candidates = candidateViews, kmat = kmat))
+        # result$exhaustive/examined/retentionRule are absent (NULL) unless
+        # this run used exhaustive = TRUE (D7's byte-identical-by-default
+        # return shape) -- carried through so output$exhaustiveStatus below
+        # can render the search outcome for the run that actually produced
+        # the currently-displayed candidates.
+        groupResults(list(
+          candidates = candidateViews, kmat = kmat,
+          exhaustive = result$exhaustive, examined = result$examined,
+          retentionRule = result$retentionRule
+        ))
 
         incProgress(0.5, detail = "Complete")
 
@@ -515,6 +550,31 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
                         function(cand) length(cand$validGroups), integer(1L)),
         stringsAsFactors = FALSE
       )
+    })
+
+    # Issue #146 Slice 2 (D8): reports the exhaustive-mode search outcome for
+    # the run that produced the currently-displayed candidates. NULL (no
+    # output) when that run did not use exhaustive = TRUE.
+    output$exhaustiveStatus <- renderUI({
+      res <- groupResults()
+      req(!is.null(res))
+      if (is.null(res$exhaustive)) {
+        return(NULL)
+      }
+      if (isTRUE(res$exhaustive)) {
+        shiny::p(
+          sprintf("Exhaustive: examined %d partition(s). %s",
+                  res$examined, res$retentionRule),
+          style = "color: green;"
+        )
+      } else {
+        shiny::p(
+          sprintf(paste("Exhaustive search truncated after examining %d",
+                        "partition(s) before the time limit. %s"),
+                  res$examined, res$retentionRule),
+          style = "color: darkorange;"
+        )
+      }
     })
 
     # Seed-group textareas: one per requested group, shown only when seeding is
