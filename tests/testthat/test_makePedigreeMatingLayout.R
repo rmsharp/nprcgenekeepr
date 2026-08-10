@@ -496,6 +496,60 @@ test_that(
   expect_false(any(is.na(result$nodes$y)))
 })
 
+## ---- orderBySex parameter (issue #145 Slice 1, D8 option (b)) ----------
+## docs/planning/issue145-sire-dam-left-right-placement-plan.md. Threads
+## through to .positionMatingUnitForest()'s own new orderBySex argument
+## (tests/testthat/test_positionMatingUnitForest.R carries the actual
+## positioning-mechanism coverage) -- this section confirms the WIRING at
+## the exported entry point only, mirroring the edgeStyle precedent above.
+
+test_that(
+  "makePedigreeMatingLayout defaults to orderBySex = TRUE -- identical to
+   calling with orderBySex explicitly TRUE, and produces a different
+   result than orderBySex = FALSE for a pair that needs the swap", {
+  ## AM (sire, 'M') < ZF (dam, 'F') lexically -> AM anchors -> pre-#145,
+  ## AM ends up right of ZF -- the swap-needing case (matches
+  ## test_positionMatingUnitForest.R's own AM/ZF fixture).
+  ped <- data.frame(
+    id = c("AM", "ZF", "K"),
+    sire = c(NA, NA, "AM"), dam = c(NA, NA, "ZF"),
+    sex = c("M", "F", "F"), gen = c(0L, 0L, 1L),
+    stringsAsFactors = FALSE
+  )
+  default <- makePedigreeMatingLayout(ped)
+  explicit <- makePedigreeMatingLayout(ped, orderBySex = TRUE)
+  legacy <- makePedigreeMatingLayout(ped, orderBySex = FALSE)
+  expect_equal(default, explicit)
+  expect_false(isTRUE(all.equal(default$nodes$x, legacy$nodes$x)))
+
+  amX <- default$nodes$x[default$nodes$id == "AM"]
+  zfX <- default$nodes$x[default$nodes$id == "ZF"]
+  expect_true(amX < zfX)
+})
+
+test_that(
+  "makePedigreeMatingLayout with orderBySex = FALSE produces exactly the
+   same nodes as calling .positionMatingUnitForest() directly with
+   orderBySex = FALSE (confirms the wiring, not a reimplementation of
+   Slice 1's own already-tested positioning mechanism)", {
+  ped <- data.frame(
+    id = c("AM", "ZF", "K"),
+    sire = c(NA, NA, "AM"), dam = c(NA, NA, "ZF"),
+    sex = c("M", "F", "F"), gen = c(0L, 0L, 1L),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForest(ped, forest, orderBySex = FALSE)
+  result <- makePedigreeMatingLayout(ped, orderBySex = FALSE)
+
+  ## makePedigreeMatingLayout() scales .positionMatingUnitForest()'s raw x
+  ## by its own xScale (120L, R/makePedigreeDiagramData.R:1049) for
+  ## rendering -- compare post-scale, not raw.
+  xScale <- 120L
+  expect_equal(sort(result$nodes$x[result$nodes$id %in% pos$id]),
+               sort(pos$x * xScale), tolerance = 1e-6)
+})
+
 ## ---- Issue #133 -- affected/phenotype/genotype status encoding (D1-D8,
 ## docs/planning/issue133-affected-status-pedigree-diagram-plan.md) --------
 ## Independent implementation of the same optional-column contract

@@ -178,7 +178,18 @@ test_that(".positionMatingUnitForest's exact x/gen values for the real
            GA204Z/8LKBV9 loop fixture catch a desynchronized (only one of
            the two) issue #143 fix, and reflect issue #144's anchor-side
            effGenOf correction for 8P17E3 -- not just the corrected gen
-           values alone", {
+           values alone. 5A6DFT/8DKELJ's own x values are UPDATED for issue
+           #145 (male-left/female-right default, D2/D3): this pair is the
+           forest's only D1-qualifying (mate-count-1, unambiguous-M/F, no
+           D5 child) unit, so 5A6DFT (sire, sex 'M') and 8DKELJ (dam, sex
+           'F') swap places -- (-0.50, 0.00) instead of the pre-#145
+           (0.00, -0.50) -- while every other value below (all inside
+           8LKBV9's own 3-mate subtree, D1-excluded by mate-count) is
+           UNCHANGED, confirming the swap is scoped exactly to the one
+           qualifying pair and does not cascade downstream (empirically
+           re-verified live against this exact fixture, issue #145 Slice 1
+           Pre-RED, docs/planning/issue145-sire-dam-left-right-placement-
+           plan.md §6 dragon 1).", {
   ped <- data.frame(
     id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
            "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
@@ -196,8 +207,8 @@ test_that(".positionMatingUnitForest's exact x/gen values for the real
     expect_equal(pos$gen[pos$id == id], gen)
   }
 
-  expectPos("5A6DFT", 0.00, 0L)
-  expectPos("8DKELJ", -0.50, 0L)
+  expectPos("5A6DFT", -0.50, 0L)  # issue #145: swapped from 0.00 (male left)
+  expectPos("8DKELJ", 0.00, 0L)   # issue #145: swapped from -0.50 (female right)
   expectPos("G8EBU9", 0.00, 1L)  # CHANGED from (0.25, 0L), issue #143
   expectPos("8P17E3", 2.00, 1L)  # gen CHANGED from 0L, issue #144 (she
                                  # anchors unit3, unitGen=1); x unaffected
@@ -223,6 +234,147 @@ test_that(".positionMatingUnitForest's exact x/gen values for the real
   ## -> 2); dupAt3's gen coincidentally matches its unit's gen either way.
   expectPos(dupAt3, 2.40, 1L)  # x CHANGED from 2.65; gen unaffected
   expectPos(dupAt4, 1.40, 2L)  # x CHANGED from 1.65; gen CHANGED from 1L
+})
+
+## ---- issue #145 Slice 1: male-left/female-right default (D1-D4) -------
+## docs/planning/issue145-sire-dam-left-right-placement-plan.md. The new
+## 'orderBySex' parameter (default TRUE) is additive: orderBySex = FALSE
+## must reproduce today's pre-#145 (sex-agnostic) output byte-for-byte, so
+## every test below asserts against that baseline directly rather than
+## hard-coding a second set of magic numbers -- the baseline call IS the
+## regression guard for "nothing outside the swap changed."
+
+test_that(".positionMatingUnitForest (orderBySex = TRUE, the default) swaps
+           a D1-qualifying pair whose male parent would otherwise anchor
+           (and so land right of the female parent); orderBySex = FALSE
+           reproduces today's pre-#145 order unchanged", {
+  ## AM (sire, 'M') < ZF (dam, 'F') lexically -> AM wins .buildMatingUnitForest()'s
+  ## preferAnchor() id tie-break -> AM anchors, ZF is the free-pass parent
+  ## (always leftmost, R/makePedigreeDiagramData.R:730) -> pre-#145, AM
+  ## (male) ends up RIGHT of ZF (female) -- the case D2's swap exists for.
+  ped <- data.frame(
+    id = c("AM", "ZF", "K"),
+    sire = c(NA, NA, "AM"), dam = c(NA, NA, "ZF"),
+    sex = c("M", "F", "F"), gen = c(0L, 0L, 1L),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  legacy <- .positionMatingUnitForest(ped, forest, orderBySex = FALSE)
+  ordered <- .positionMatingUnitForest(ped, forest, orderBySex = TRUE)
+
+  amLegacy <- legacy$x[legacy$id == "AM"]
+  zfLegacy <- legacy$x[legacy$id == "ZF"]
+  expect_true(amLegacy > zfLegacy)  # confirms this fixture DOES need a swap
+
+  amOrdered <- ordered$x[ordered$id == "AM"]
+  zfOrdered <- ordered$x[ordered$id == "ZF"]
+  expect_true(amOrdered < zfOrdered)  # male now left, per D3
+  expect_equal(amOrdered, zfLegacy, tolerance = 1e-6)  # D2: pure value swap
+  expect_equal(zfOrdered, amLegacy, tolerance = 1e-6)
+
+  ## Nothing else moves (D2's own safety argument): every id besides the
+  ## swapped pair, plus the mating unit's own x (mean is swap-invariant).
+  otherIds <- setdiff(ordered$id, c("AM", "ZF"))
+  expect_equal(ordered$x[ordered$id %in% otherIds],
+               legacy$x[legacy$id %in% otherIds], tolerance = 1e-6)
+  .expectNoOverlap(ordered)
+})
+
+test_that(".positionMatingUnitForest (orderBySex = TRUE) leaves a
+           D1-qualifying pair unchanged when the male parent already ends
+           up left under today's default (a true no-op, not just 'no
+           assertion failure')", {
+  ## ZM (sire, 'M') > AF (dam, 'F') lexically -> AF wins the anchor
+  ## tie-break -> ZM (male) is the free-pass parent -> already leftmost,
+  ## pre-#145 -- D3's direction already holds by coincidence of id order,
+  ## so orderBySex = TRUE must produce byte-identical output to FALSE.
+  ped <- data.frame(
+    id = c("ZM", "AF", "K"),
+    sire = c(NA, NA, "ZM"), dam = c(NA, NA, "AF"),
+    sex = c("M", "F", "F"), gen = c(0L, 0L, 1L),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  legacy <- .positionMatingUnitForest(ped, forest, orderBySex = FALSE)
+  ordered <- .positionMatingUnitForest(ped, forest, orderBySex = TRUE)
+
+  expect_true(legacy$x[legacy$id == "ZM"] < legacy$x[legacy$id == "AF"])
+  expect_equal(ordered$x, legacy$x, tolerance = 1e-6)  # true no-op
+  .expectNoOverlap(ordered)
+})
+
+test_that(".positionMatingUnitForest (orderBySex = TRUE) never swaps a
+           D1-excluded pair with an 'H'/'U'/NA sex code on either parent
+           (D4) -- even when the id tie-break would otherwise force the
+           male parent into the anchor role that needs a swap", {
+  ambiguousCodes <- c("H", "U", NA_character_)
+  for (code in ambiguousCodes) {
+    ped <- data.frame(
+      id = c("AM", "ZF", "K"),
+      sire = c(NA, NA, "AM"), dam = c(NA, NA, "ZF"),
+      sex = c(code, "F", "F"), gen = c(0L, 0L, 1L),
+      stringsAsFactors = FALSE
+    )
+    forest <- .buildMatingUnitForest(ped)
+    legacy <- .positionMatingUnitForest(ped, forest, orderBySex = FALSE)
+    ordered <- .positionMatingUnitForest(ped, forest, orderBySex = TRUE)
+    expect_equal(ordered$x, legacy$x, tolerance = 1e-6,
+                 info = paste("sex code:", code))
+  }
+})
+
+test_that(".positionMatingUnitForest (orderBySex = TRUE) swaps only the 2
+           real parents' own x on a D1-qualifying pair with a wide,
+           asymmetric multi-child fanout -- the exact shape issue #145's
+           own adversarial review used to break the FIRST-draft 'reflect
+           the subtree' mechanism (refuted, see the design doc's §3 D2/§7);
+           re-verified live this session (Pre-RED) that the ratified
+           value-swap mechanism does not reproduce that collision: every
+           child, grandchild, and unrelated sibling is untouched", {
+  ## AM/ZF as above (AM forced into anchor by the id tie-break, so a swap
+  ## fires); 3 children C1/C2/C3 off the AM x ZF union, C2 (a middle
+  ## child) carries 5 of her own children (GC1-5) with GCMate -- an
+  ## asymmetric, wide fanout. S1 is an unrelated founder elsewhere in the
+  ## tree (the reflection mechanism's own collision target).
+  ped <- data.frame(
+    id = c("AM", "ZF", "S1", "C1", "C2", "C3",
+           "GCMate", "GC1", "GC2", "GC3", "GC4", "GC5"),
+    sire = c(NA, NA, NA, "AM", "AM", "AM",
+             NA, "C2", "C2", "C2", "C2", "C2"),
+    dam = c(NA, NA, NA, "ZF", "ZF", "ZF",
+            NA, "GCMate", "GCMate", "GCMate", "GCMate", "GCMate"),
+    sex = c("M", "F", "F", "F", "M", "F",
+            "F", "M", "F", "M", "F", "M"),
+    gen = c(0L, 0L, 0L, 1L, 1L, 1L,
+            1L, 2L, 2L, 2L, 2L, 2L),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  legacy <- .positionMatingUnitForest(ped, forest, orderBySex = FALSE)
+  ordered <- .positionMatingUnitForest(ped, forest, orderBySex = TRUE)
+
+  expect_true(legacy$x[legacy$id == "AM"] > legacy$x[legacy$id == "ZF"])
+  expect_true(ordered$x[ordered$id == "AM"] <
+                ordered$x[ordered$id == "ZF"])
+
+  ## C2 x GCMate (the fanout's own mates) is ALSO, independently, a
+  ## D1-qualifying pair (mate-count 1 each, no D5 child, unambiguous sex)
+  ## -- found live running this test (GREEN): the implementation correctly
+  ## swaps it too, not just the outer AM/ZF pair. This is the intended
+  ## behavior (D1 scopes per-unit, not "outermost unit only"), so this
+  ## test asserts BOTH swaps rather than narrowing the fixture to avoid
+  ## the second one.
+  expect_true(legacy$x[legacy$id == "C2"] > legacy$x[legacy$id == "GCMate"])
+  expect_true(ordered$x[ordered$id == "C2"] <
+                ordered$x[ordered$id == "GCMate"])
+
+  ## Only S1 (unrelated), C1/C3 (siblings), and GC1-5 (grandchildren) are
+  ## truly untouched -- neither swapped pair's own children/other-parent.
+  otherIds <- setdiff(ordered$id, c("AM", "ZF", "C2", "GCMate"))
+  expect_equal(ordered$x[ordered$id %in% otherIds],
+               legacy$x[legacy$id %in% otherIds], tolerance = 1e-6)
+  .expectNoOverlap(ordered)
+  .expectNoOverlap(legacy)
 })
 
 ## ---- half-sib-mating convergent loop -----------------------------------
