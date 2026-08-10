@@ -6,6 +6,24 @@
 
 ## ACTIVE TASK
 
+### What Session 503 Did
+**Deliverable:** A ratified design/architecture document for issue #149 ("Add a reviewed
+cross-center identity-mapping workflow with provenance export") -- a Shiny wrapper around the
+existing script-callable `resolveCrossCenterIds()`, adding validation (ID existence/uniqueness/
+collisions/parent conflicts), a preview of proposed collapses/lineage changes, an explicit
+confirmation step, and export of the mapping/validation results/merge summary/provenance.
+Following `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md` (owner-picked via
+`AskUserQuestion` over the literal `DESIGN_WORKSTREAM.md` mapping, matching the
+#133/#136/#137/#145/#147 precedent for this shape of decision). Design/planning only -- no `R/`,
+`tests/`, or `man/` content changed. Picked from this session's own Phase 0 priorities list
+(owner choice via `AskUserQuestion`, out of #149/twin-connector-color/10-warnings-root-cause/
+spelling-drift).
+**Started:** 2026-08-10.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 501 Handoff Evaluation (by Session 502)
 **Score: 9/10.**
 **What helped:** `next_steps` named the exact next action in full mechanical detail --

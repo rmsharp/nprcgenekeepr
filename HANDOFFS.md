@@ -60,6 +60,25 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S503
+date: 2026-08-10
+status: pending
+self_score: pending
+predecessor_score: 9
+active_task: Design/architecture pass for issue #149 (reviewed cross-center identity-mapping
+workflow with provenance export) -- a Shiny wrapper around the existing script-callable
+resolveCrossCenterIds(), following ARCHITECTURE_WORKSTREAM.md. Research phase starting.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<in progress>
+
+```handoff
 session: S502
 date: 2026-08-10
 status: complete
