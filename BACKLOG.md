@@ -2118,7 +2118,30 @@ site in the live Shiny app yet (Slice 2 wires them in); script-callable only, ma
 scope):** the "10 pre-existing baseline warnings" Housekeeping item below has silently drifted to 15
 (a 3rd `test_modMarkerGenetics.R` cross-center-shaped test block now also triggers the same
 `markerKinship()` NA-warning pattern) -- confirmed pre-existing via a `git stash` comparison against
-unmodified `HEAD`, unrelated to this session's diff; that item's own count corrected below. **Slice 2
-(full UI, confirm gate, exports, documentation) is the natural next pickup for issue #149** -- a
-separate future session, per the plan's own session-boundary requirement. See `CHANGELOG.md`,
-`PROJECT_LEARNINGS.md` Learning 503.
+unmodified `HEAD`, unrelated to this session's diff; that item's own count corrected below. See
+`CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 503.
+
+**Progress (S505, 2026-08-10):** Slice 2 (full UI, confirm gate, exports, documentation) is now
+DONE, closing issue #149: new `R/modCrossCenterIdentity.R`
+(`modCrossCenterIdentityUI`/`modCrossCenterIdentityServer`) -- 3 file uploads, a
+`checkCrossCenterMapping()`-backed Validation tab showing every issue at once, a Preview tab
+computing `resolveCrossCenterIds()`'s proposed merge with a per-pair lineage-change table (2 new
+internal helpers, `.buildCrossCenterLineagePreview()`/`.buildCrossCenterMergeProvenance()`), a
+`shiny::modalDialog()` confirmation gate (this app's first-ever use of the function), and 5
+downloadable export artifacts. Wired additively into `appUI.R`/`appServer.R` (self-contained, no
+`shared$...` dependency, per D3). Full strict TDD PRE-RED->RED->GREEN cycle
+(`AskUserQuestion`-gated at every transition; REFACTOR owner-confirmed skip -- implementation
+already matches the ratified design's own decomposition). 17 new test blocks, 0 regressions;
+full clean regression suite 0 failed/0 error (5026 passed, 175 skipped, 15 pre-existing warnings
+unchanged); `lintr::lint_package()` 0 lints; `devtools::check()` 0 errors/0 warnings/pre-existing
+notes only (a new spelling-drift word from this session's own roxygen was caught and fixed by
+rewording, not left for `inst/WORDLIST`). **Live `shinytest2` smoke test** against the real running
+app directly confirmed both of the plan's named highest-risk Dragons: #6 (`modalDialog()` renders
+correctly under this app's previously-untested bslib theme) and #7 (the Preview table's `NA` cells
+render as blank text, read via `app$get_js()` cell traversal, not assumed) -- zero `SEVERE` console
+entries throughout the full upload -> validate -> preview -> confirm -> export sequence.
+Documentation: `NEWS.Rmd`/`NEWS.md`, `_pkgdown.yml` reference-coverage, and a new "Cross-Center
+Identity" subsection in `colony-manager-guide.qmd` (text-only, re-rendered clean via `quarto
+render`) all done same-session; `a2interactive.Rmd` coverage explicitly deferred per its own
+standing rule. **Both slices of issue #149 are now shipped; issue #149 itself is closed as part of
+this session's close-out.** See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 504.

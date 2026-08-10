@@ -43,6 +43,59 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-10 · [issue #149] Slice 2 implemented — full modCrossCenterIdentity Shiny module: UI, confirm gate, exports, documentation, closes issue #149 (Session 505)
+- **Deliverable:** the full end-to-end workflow the ratified design promised
+  (`docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md` §5 Slice 2). New
+  `R/modCrossCenterIdentity.R`: `modCrossCenterIdentityUI`/`modCrossCenterIdentityServer` — 3
+  file uploads (Center A/B pedigrees + identity mapping), a "Validate Mapping" action button
+  gating a `checkCrossCenterMapping()`-backed Validation tab (every issue shown at once,
+  including a structural-upload-error fallback folded into the same row shape), a Preview tab
+  computing `resolveCrossCenterIds()` plus 2 new internal helpers
+  (`.buildCrossCenterLineagePreview()`/`.buildCrossCenterMergeProvenance()`, reusing Slice 1's
+  own `.rewriteCrossCenterIds()`/`.pickCrossCenterParent()` directly per D6), a
+  `shiny::modalDialog()` confirmation gate (D7, this app's first-ever use of the function), and
+  5 downloadable export artifacts (D8: Merged Pedigree, Mapping, Validation Results, Merge
+  Summary, Provenance). Wired additively into `R/appUI.R` (new "Cross-Center Identity" tab) and
+  `R/appServer.R` (self-contained, no `shared$...` args per D3). Followed
+  `DEVELOPMENT_WORKSTREAM.md` under this project's Strict TDD contract (PRE-RED→RED→GREEN,
+  `AskUserQuestion`-gated at every transition; REFACTOR owner-confirmed skip — implementation
+  already matches the ratified design's own decomposition).
+- **Verification:** 17 new test blocks in new `tests/testthat/test_modCrossCenterIdentity.R`
+  (5 UI-shape, 4 validation, 3 confirm-gate, 3 export, 2 internal-helper) plus a new
+  `modCrossCenterIdentity` registration in `tests/testthat/test_moduleContract.R` (D9's
+  `list(mergedPedigree, issues, confirmed)` contract), 0 regressions. Full clean regression
+  suite 0 failed/0 error (5026 passed, 175 skipped, 15 pre-existing warnings — confirmed
+  unrelated via a `git stash -u` comparison). `lintr::lint_package()` 0 lints on touched files
+  (2 `brace_linter` hits fixed). `devtools::check()` 0 errors/0 warnings/pre-existing notes
+  only — a new spelling-drift word from this session's own roxygen prose ("merge's") was caught
+  and fixed by rewording (not `inst/WORDLIST`-added), confirmed via re-running `tests/spelling.R`
+  clean both before the documentation pass and after. `_pkgdown.yml` reference-coverage entry
+  added for `modCrossCenterIdentityServer`/`modCrossCenterIdentityUI`. **Live `shinytest2`
+  smoke test** (standalone driver script, not a permanent test file) against the real running
+  app: uploaded a multi-issue mapping (Validation tab correctly surfaces both an existence and a
+  uniqueness problem at once, Dragon #8), then a clean mapping (Preview tab's lineage-change
+  table correctly resolves `sire`/`dam` to source "A" — Center B's own record of the transferred
+  animal has no known parents, exactly the failure mode this feature exists to fix), confirmed
+  **Dragon #6** (`modalDialog()` actually renders correctly under this app's untested bslib
+  theme, with the right summary-count text) and **Dragon #7** (the Preview table's `NA`
+  `pedB_sire`/`pedB_dam` cells render as blank text, read directly via `app$get_js()` cell
+  traversal per `PROJECT_LEARNINGS.md` Learning 501 — not assumed), then confirmed the merge and
+  verified the Export tab unlocked. Zero `SEVERE` console entries throughout.
+- **Documentation (same session, per the plan's own §9 checklist mapping):** `NEWS.Rmd`/`NEWS.md`
+  (new tab entry, re-rendered clean — diff shows only the new bullet); new "Cross-Center
+  Identity" subsection in `vignettes/articles/colony-manager-guide.qmd` (tutorial/article
+  checklist, Session 436), text-only, matching the established "no screenshot, and/or allowance
+  satisfied" precedent (S465) — re-rendered via `quarto render`, clean; `a2interactive.Rmd`
+  coverage explicitly deferred per the plan's own standing rule (Session 450/478), not
+  same-session. Citation checklist (#120) N/A, already dispositioned in the plan's own §9.
+- **Issue #149 closed** — both slices of the ratified design are now shipped.
+- See `PROJECT_LEARNINGS.md` Learning 504 (a `shinytest2::AppDriver$new()` outside `testthat`
+  needs `NOT_CRAN=true` set explicitly, or an internal `skip_on_cran()` throws instead of
+  skipping; `upload_file()`/`set_inputs()` need `do.call()` with a named list, not a positional
+  list argument; a DT-rendered table's rows are empty until the client-side widget actually
+  initializes on tab switch — `wait_for_idle()` alone is not sufficient, a short explicit wait
+  after switching tabs is needed too).
+
 ### 2026-08-10 · [ad hoc] Phase 0 ledger reconcile: backfill S504's own HANDOFFS.md receipt commit sha (post-S504)
 - **Deliverable:** Phase 0 ledger reconcile (this session, S505) found one commit past the
   `CHANGELOG.md` frontier with no ledger entry: `fd0c0312` ("docs: S504 -- backfill own
