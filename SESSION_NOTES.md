@@ -6,16 +6,109 @@
 
 ## ACTIVE TASK
 
+### Session 507 Handoff Evaluation (by Session 508)
+**Score: 9/10.**
+**What helped:** `next_steps` was exact and directly actionable ("parameterize
+`groupAddAssign()`'s hardcoded 5L candidate-retention cap into a `maxCandidates` argument... plus
+one new numericInput in modBreedingGroupsUI") -- this session executed precisely that. `key_files`
+(`R/groupAddAssign.R:130-235`, `tests/testthat/test_groupAddAssign.R:181-224`) were accurate and
+directly load-bearing -- the `5L` literal really was at exactly one site (line 200), matching the
+handoff's own claim. `gotchas`' Dragon 1 (keep the exact-default test, parameterize rather than
+relax) was directly followed and is exactly what this session's own 2 new `groupAddAssign` tests
+do (one lowered, one raised, alongside the untouched pre-existing default-5 test).
+**What was missing:** No mention of the sibling UI/server-wiring test files
+(`test_modBreedingGroups.R`'s UI-presence-test convention, `test_modBreedingGroups_groupAddAssign.R`'s
+mocked-binding convention) -- this session had to discover those itself via exploration. A minor,
+expected gap: S507 correctly scoped `key_files` to the most load-bearing touch point
+(`groupAddAssign.R` itself), and finding sibling test-file conventions is ordinary PRE-RED research,
+not a handoff failure.
+**What was wrong:** Nothing found inaccurate.
+**ROI:** High -- `next_steps`, `key_files`, and the Dragon 1 gotcha were all directly, concretely
+reused with zero rework.
+
 ### What Session 508 Did
 **Deliverable:** Issue #146 Slice 1 -- mechanical `maxCandidates` parameterization of
 `groupAddAssign()`'s hardcoded top-5 candidate-retention cap, per the ratified
 `docs/planning/issue146-configurable-exhaustive-breeding-group-retention-plan.md` §5 Slice 1.
-(IN PROGRESS)
-**Started:** 2026-08-10.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+Followed `DEVELOPMENT_WORKSTREAM.md` under this project's Strict TDD contract
+(PRE-RED->RED->GREEN, `AskUserQuestion`-gated at every transition; REFACTOR owner-confirmed skip).
+Picked from this session's own Phase 0 priorities list (owner choice via `AskUserQuestion`, over
+issue #150's Tier-3 policy decision and the BLOCKED LabKey item).
+**Started/Completed:** 2026-08-10.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh
+issue list`, git status/log, `methodology_dashboard.py` -- health 98/100). Ledger reconcile found
+both `CHANGELOG.md` and `HANDOFFS.md` frontiers already at `HEAD` -- no undocumented commits, no
+backfill needed (a clean read, unlike the S501/S503/S505/S506/S507 precedent of finding one
+undocumented self-referential close-out commit each time). Priorities list rendered per the
+Learning-506-fixed `CLAUDE.md` convention -- issue #146 Slice 1 correctly surfaced as a first-class
+option this time (the exact gap S507 had to catch and fix). Owner picked "Issue #146 Slice 1" via
+`AskUserQuestion`. **(2)** Phase 1B claim stub committed (`8d4f5caa`). **(3)** PRE-RED research:
+full reads of `R/groupAddAssign.R` (confirmed the `5L` cap is a single literal site, line 200),
+`R/modBreedingGroups.R` (UI + `runFormation()` server sections), `tests/testthat/test_groupAddAssign.R`,
+`tests/testthat/test_modBreedingGroups.R` (found the established UI-control-presence-test
+convention, lines ~1393-1410), `tests/testthat/test_modBreedingGroups_groupAddAssign.R` (found the
+established `local_mocked_bindings()`+recorder-env convention for proving server-to-`groupAddAssign()`
+argument threading, via the existing `sexRatio` precedent test). **(4)** RED: 5 new tests written --
+2 direct `groupAddAssign()` tests (lowered to `maxCandidates=3L`, raised to `maxCandidates=8L`,
+both on the real `qcBreeders` fixture), 1 UI-control-presence test, 2 `testServer` mocked-binding
+tests (default-unset and explicit-8). Ran each file to confirm every new test failed for the
+expected reason. **Caught a genuine RED-discipline violation before treating RED as satisfied:**
+the first version of the "default maxCandidates" `testServer` test passed vacuously with zero
+server change, because the mock's own default argument value (`5L`) happened to equal the expected
+default -- the test wasn't actually exercising server behavior. Fixed by giving the mock a sentinel
+default (`"MOCK_SENTINEL_UNSET"`) instead, re-verified genuinely RED, then proceeded. **(5)** GREEN:
+added `maxCandidates = 5L` to `groupAddAssign()`'s signature (after `withKin`, before
+`updateProgress`), replaced the line-200 literal, updated roxygen; added the `numericInput` to
+`modBreedingGroupsUI` (after `nIterations`) and the defensive-default + call-site wiring to
+`runFormation()`; `devtools::document()` regenerated `man/groupAddAssign.Rd` only (no collateral
+drift). All 5 new tests GREEN; full clean regression 0 failed/0 error (5050 passed, 175 skipped, 15
+pre-existing baseline warnings unchanged, exact match to the S504/S505 baseline). REFACTOR:
+owner-confirmed skip (implementation already minimal/mechanical). **(6)** Verification:
+`lintr::lint_package()` 0 lints; `devtools::check()` 0 errors/0 warnings/1 pre-existing note
+(vignette-engine, unchanged) -- run twice independently (a first accidental double-backgrounding
+tooling mistake orphaned one run; the corrected re-run and a redundant duplicate both confirmed the
+same result). **(7)** Live `shinytest2` Phase 3E smoke test: confirmed the new control renders with
+the correct default (5) on a fresh app load, 0 console errors; a `maxCandidates=1` live run
+consistently and correctly capped the rendered candidate dropdown to exactly 1 option (3/3 runs
+across different `numGp`/threshold combinations). The "raise above 5" half of the live differential
+proof was inconclusive after 3 live attempts with different scenarios (`numGp=1` strict threshold,
+`numGp=2` default threshold) -- the bundled `obfuscated_rhesus_mhc_ped.csv` fixture converges to a
+single dominant maximal-set partition live regardless of `maxCandidates`, even though a direct
+(non-live) `groupAddAssign()` call using the identical nominal parameters against the same fixture
+(read via `qcStudbook()`/`kinship()` outside the app) reliably produces 8 distinct partitions in
+100 iterations. Diagnosed but not root-caused (out of this slice's scope, matching the
+already-tracked "live app's QC'd copy produces one fewer node than a direct CSV read" BACKLOG item
+-- plausibly the same live-vs-direct pedigree-construction discrepancy, not confirmed) -- reported
+honestly rather than treated as a defect in this slice's own correctness, which is independently
+proven by the 2 direct-function tests and the 2 real-server-code `testServer` tests (neither
+depends on this fixture's live diversity). **(8)** Docs: `NEWS.Rmd`/`NEWS.md` entry added and
+re-rendered clean (5-line diff only); citation/tutorial-article/`_pkgdown.yml` checklists
+dispositioned N/A per the ratified plan's own §6/§9; `a2interactive.Rmd` deferred per its own
+standing rule. `BACKLOG.md` S508 progress note added (full detail, including the live-diversity
+finding). `CHANGELOG.md` ledger entry added. **Issue #146 stays open** -- Slice 2 (exhaustive
+enumeration + UI) is the natural next pickup, its own future session.
+
+**Self-assessment (Session 508): 8/10.** **Strengths:** (1) Caught its own RED-discipline
+violation (the vacuously-passing default-case mock test) before moving on, rather than after the
+fact or via owner correction -- fixed with a sentinel-default technique that made the test
+genuinely discriminating. (2) Used `testServer` integration tests that exercise the REAL (unmocked)
+`modBreedingGroupsServer` reactive code, only mocking the terminal `groupAddAssign()` call --
+stronger evidence than a fully-mocked module-level test, and this distinction was made explicit in
+the close-out rather than left implicit. (3) When the live-diversity smoke test proved inconclusive
+after retries, diagnosed the root cause with a fast, cheap direct-R reproduction rather than
+continuing to burn live-browser cycles, then reported the finding honestly (including the parameter
+scope it does and doesn't cover) instead of either fabricating a pass or omitting the gap.
+**Weaknesses:** (1) The live-verification phase took 6 live-browser round trips (3 full workflow
+runs plus diagnostics) before recognizing the diversity question was a fixture/scenario property,
+not a code defect -- running the cheap direct-R reproduction FIRST (before the first live attempt)
+would have caught this in one step instead of three. (2) Two small tooling mistakes cost real time:
+an accidental double-backgrounding (`&` inside an already-`run_in_background` Bash call) orphaned
+one `devtools::check()` run silently rather than erroring, and `devtools::install(upgrade = "never")`
+used the wrong type for that argument (needed `FALSE`). Neither affected correctness, but both were
+avoidable process friction.
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session).
 
 ### Session 506 Handoff Evaluation (by Session 507)
 **Score: 6/10.**

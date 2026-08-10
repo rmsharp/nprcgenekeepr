@@ -62,22 +62,65 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S508
 date: 2026-08-10
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Issue #146 Slice 1 -- mechanical maxCandidates parameterization of
-groupAddAssign()'s hardcoded top-5 candidate-retention cap, per
-docs/planning/issue146-configurable-exhaustive-breeding-group-retention-plan.md §5 Slice 1. Work
-beginning.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Issue #146 Slice 1 (mechanical maxCandidates parameterization) is DONE. Issue #146
+stays open -- Slice 2 (exhaustive enumeration + UI) is the natural next pickup, its own future
+session per the ratified plan's §5 session-boundary requirement.
+what_was_done: groupAddAssign()'s hardcoded 5L candidate-retention cap (R/groupAddAssign.R:200, the
+only literal site) is now a maxCandidates=5L argument; R/modBreedingGroups.R gained a matching
+"Candidates to retain" numericInput (default 5, 1-50) wired through runFormation()'s defensive-
+default pattern. Full strict TDD PRE-RED->RED->GREEN cycle (AskUserQuestion-gated; REFACTOR
+owner-confirmed skip). 5 new tests (2 direct groupAddAssign() tests real-fixture lowered/raised, 1
+UI-presence test, 2 testServer mocked-binding tests on the real unmocked server code). Caught and
+fixed a vacuously-passing RED test (mock default masked real behavior) before proceeding. Full
+regression 0/0 (5050 passed); lintr 0 lints; devtools::check() 0/0/1 pre-existing note. Live
+shinytest2 smoke test confirmed the control active (correct default, 0 console errors,
+maxCandidates=1 live-caps to exactly 1 option, 3/3 runs); the "raise above 5" live-diversity half
+was inconclusive for this specific bundled fixture (diagnosed as a live-vs-direct pedigree-
+construction discrepancy, not a code defect -- see BACKLOG.md's S508 note for full detail).
+Commits: 8d4f5caa (claim), aa4849fb (RED), plus this close-out commit (GREEN code +
+NEWS/BACKLOG/CHANGELOG/SESSION_NOTES).
+next_steps: Implement Slice 2 of the ratified issue #146 plan -- the exhaustive-enumeration mode
+(.enumerateMaximalIndependentSets(), D2/D5/D9's scope+feasibility guard, the exhaustive/
+maxExhaustiveCandidates/exhaustiveTimeLimit parameters) plus the UI toggle+status callout, per the
+plan's own §5 Slice 2. Effort M-L, genuinely new combinatorial-search algorithm work with zero
+existing precedent in this codebase -- read §3 D4/D5/D9 and §7 (5 named dragons) before starting.
+Other still-open priorities from the last corrected list: issue #150 (Tier 3 policy decision --
+needs an owner sign-off on what "curator-controlled" means before scheduling), the BLOCKED LabKey
+remainder.
+key_files: docs/planning/issue146-configurable-exhaustive-breeding-group-retention-plan.md §5 Slice
+2 (the touched-files list + DONE criteria), §3 D4/D5/D9 (algorithm/feasibility-guard/error-semantics
+decisions, already ratified -- do not re-litigate), §7 (5 named dragons, especially #2's
+no-async-infrastructure shared-blocking risk and #5's "silently incomplete enumeration" failure
+mode), R/groupAddAssign.R:130-235 (Slice 1's shipped code -- exhaustive mode extends this same
+function), tests/testthat/test_groupAddAssign.R (Slice 1's 2 new maxCandidates tests, lines ~225-280,
+as the house-style template for Slice 2's own new tests).
+gotchas: Exhaustive mode is scoped to numGp==1/no harem/no custom sex ratio ONLY (D2, already
+ratified) -- do not attempt broader scope, the design doc's own §2.8 evidence shows it's already
+intractable at realistic scale beyond that. This app has NO async/background-job infrastructure
+(Dragon 2) -- a multi-second exhaustive request blocks the whole single-process Shiny app for every
+concurrent user; the ratified deadline default (exhaustiveTimeLimit=10s) was chosen with this in
+mind, don't loosen it casually. .enumerateMaximalIndependentSets()'s correctness is not obvious from
+casual reading (Dragon 5) -- an off-by-one produces a plausible-looking but silently INCOMPLETE
+enumeration, not a crash; the test file must include at least one small, fully hand-enumerated
+fixture asserting exact membership, not just a count. Separately: this session found live
+shinytest2 diversity testing against the bundled obfuscated_rhesus_mhc_ped.csv fixture with
+numGp=1 unreliable (converges to a single dominant partition live regardless of parameters) --
+Slice 2's own live verification of exhaustive-mode correctness should NOT assume this fixture
+will show multiple maximal sets without first checking empirically (a direct, non-live
+groupAddAssign()/exhaustive-mode call against the fixture, cheap and fast, before any live
+shinytest2 cycles).
+runtime_smoke: Live shinytest2/chromote smoke test against the real running app (inst/shinytest/app.R,
+package reinstalled via devtools::install() first). Confirmed: control renders with correct default
+(5), 0 console errors on Breeding Groups tab load; maxCandidates=1 live-caps the rendered candidate
+dropdown to exactly 1 option (3/3 runs, different numGp/threshold combos). maxCandidates=8 did not
+show >1 option live (inconclusive, not a failure -- see what_was_done/BACKLOG.md detail).
+changelog_ref: CHANGELOG.md "2026-08-10 · [issue #146] Slice 1 shipped — mechanical maxCandidates
+parameterization (Session 508)" entry (this session's close-out commit).
 commit: pending
 ```
-<claim stub -- filled at close-out>
 
 ```handoff
 session: S507

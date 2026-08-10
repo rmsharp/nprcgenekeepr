@@ -43,6 +43,39 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-10 · [issue #146] Slice 1 shipped — mechanical `maxCandidates` parameterization (Session 508)
+- **Deliverable:** `groupAddAssign()`'s previously-hardcoded `5L` candidate-retention cap
+  (`R/groupAddAssign.R:200`, the only literal site) is now a `maxCandidates = 5L` argument;
+  `R/modBreedingGroups.R` gained a matching **Candidates to retain** numeric input (default 5,
+  range 1-50 per the ratified plan's D6) threaded through `runFormation()`'s existing
+  defensive-default pattern. Per Slice 1 of the ratified
+  `docs/planning/issue146-configurable-exhaustive-breeding-group-retention-plan.md` §5. Picked from
+  this session's own Phase 0 priorities list.
+- **TDD:** full strict PRE-RED→RED→GREEN cycle, `AskUserQuestion`-gated at every transition;
+  REFACTOR owner-confirmed skip (implementation already minimal/mechanical). 5 new tests: 2 direct
+  `groupAddAssign()` tests (real `qcBreeders` fixture, lowered to 3 and raised to 8, proving the old
+  hardcode is gone in both directions), 1 UI-control-presence test, 2 `testServer` tests against the
+  real (unmocked) `modBreedingGroupsServer` reactive code — only the terminal `groupAddAssign()` call
+  itself mocked — proving `input$maxCandidates` reaches the real argument at both the unset-default
+  and an explicit value. The first attempt at the default-case test passed vacuously before any
+  server change (the mock's own default happened to also be 5L); caught and fixed with a sentinel
+  default before treating RED as satisfied.
+- **Verification:** full clean regression suite 0 failed/0 error (5050 passed, 175 skipped, 15
+  pre-existing baseline warnings unchanged); `lintr::lint_package()` 0 lints; `devtools::check()` 0
+  errors/0 warnings/1 pre-existing note (vignette-engine, unchanged). Live `shinytest2` smoke test:
+  the new control renders with the correct default (5) on a fresh app load, 0 console errors; a live
+  run with `maxCandidates=1` consistently and correctly caps the rendered candidate dropdown to
+  exactly 1 option (3/3 runs). The "raise above 5" half of the live differential proof was
+  inconclusive (the bundled fixture converges to a single dominant partition live across every
+  parameter combination tried, unlike a direct non-live `groupAddAssign()` call against the same
+  fixture) — an incidental, out-of-scope finding, not investigated further; the parameter's
+  correctness is independently proven by the direct-function and `testServer` tests above. See
+  `BACKLOG.md`'s S508 progress note for full detail.
+- **Docs:** `NEWS.Rmd`/`NEWS.md` updated. Citation/tutorial-article/`_pkgdown.yml` checklists N/A per
+  the ratified plan's own §6/§9. `a2interactive.Rmd` coverage deferred per its own standing rule.
+- **Issue #146 stays open** — Slice 2 (exhaustive enumeration + UI) is the natural next pickup, its
+  own future session.
+
 ### 2026-08-10 · [issue #146] Design/architecture document ratified — configurable/exhaustive breeding-group candidate retention (Session 507)
 - **Deliverable:** `docs/planning/issue146-configurable-exhaustive-breeding-group-retention-plan.md`,
   following `ARCHITECTURE_WORKSTREAM.md` (owner-picked via the established #133/#136/#137/#145/#147/

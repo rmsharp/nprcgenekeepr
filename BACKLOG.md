@@ -2166,3 +2166,38 @@ decision. No code changed this session -- design/planning only, matching the #13
 `maxCandidates` parameterization); Slice 2 (exhaustive enumeration + UI) is its own separate
 session per §5's session-boundary requirement. Issue #146 intentionally left open. See
 `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 506.
+
+**Progress (S508, 2026-08-10):** Slice 1 (mechanical `maxCandidates` parameterization) is now DONE:
+`groupAddAssign()`'s previously-hardcoded `5L` candidate-retention cap (`R/groupAddAssign.R:200`,
+the only literal site) is now a `maxCandidates = 5L` argument; `R/modBreedingGroups.R` gained a
+matching **Candidates to retain** numeric input (default 5, 1-50 per D6) threaded through
+`runFormation()`'s existing defensive-default pattern. Full strict TDD PRE-RED->RED->GREEN cycle
+(`AskUserQuestion`-gated at every transition; REFACTOR owner-confirmed skip -- implementation
+already minimal/mechanical). 5 new tests: 2 direct `groupAddAssign()` tests (real `qcBreeders`
+fixture, lowered to 3 and raised to 8, proving the old hardcode is gone in both directions), 1
+UI-control-presence test, and 2 `testServer` tests against the real (unmocked) `modBreedingGroupsServer`
+reactive code -- only the terminal `groupAddAssign()` call itself mocked -- proving `input$maxCandidates`
+reaches the real argument at both the unset-default and an explicit value. (The first attempt at the
+default-case test passed vacuously before any server change, since the mock's own default happened to
+also be 5L; caught and fixed with a sentinel default before treating RED as satisfied.) Verified: full
+clean regression suite 0 failed/0 error (5050 passed, 175 skipped, 15 pre-existing baseline warnings
+unchanged); `lintr::lint_package()` 0 lints; `devtools::check()` 0 errors/0 warnings/1 pre-existing
+note (vignette-engine, unchanged). **Live `shinytest2` smoke test:** the new control renders with the
+correct default (5) on a fresh app load with 0 console errors; a live run with `maxCandidates=1`
+consistently and correctly caps the rendered candidate dropdown to exactly 1 option (3/3 runs).
+**Incidental, out-of-scope finding, not investigated further:** attempts to also prove the "raise
+above 5" half of the live differential live (via `maxCandidates=8`) were inconclusive -- the bundled
+`obfuscated_rhesus_mhc_ped.csv` fixture converges to a single dominant maximal-set partition in the
+live app across every combination tried (`numGp=1`/`numGp=2`, loose/strict kinship threshold,
+`iter=100`), even though a direct (non-live) `groupAddAssign()` call using the same nominal parameters
+against the same fixture (read via `qcStudbook()`/`kinship()` outside the app) reliably produces 8
+distinct partitions. Not root-caused this session (matches the already-tracked, separately-filed "live
+app's QC'd copy produces one fewer node than a direct CSV read" gap above -- plausibly the same
+live-vs-direct pedigree-construction discrepancy, not confirmed). The parameter's correctness itself is
+not in doubt -- proven independently by the 2 direct-function tests and the 2 real-server-code
+`testServer` integration tests above, neither of which depends on this fixture's live diversity.
+`NEWS.Rmd`/`NEWS.md` updated. Citation/tutorial-article/`_pkgdown.yml` checklists N/A per the ratified
+plan's own §6/§9 (no new statistic, no new interaction pattern, `groupAddAssign` already listed).
+`a2interactive.Rmd` coverage deferred per its own standing rule (new parameter on an already-documented
+function). **Issue #146 stays open** -- Slice 2 (exhaustive enumeration + UI) is the natural next
+pickup, its own future session per §5's session-boundary requirement. See `CHANGELOG.md`.
