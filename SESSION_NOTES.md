@@ -6,18 +6,100 @@
 
 ## ACTIVE TASK
 
+### Session 508 Handoff Evaluation (by Session 509)
+**Score: 9/10** (on its own formal merits). **ROI for this session specifically: low** -- the
+owner picked a different, dashboard-driven task ("Other" in this session's Phase 0
+`AskUserQuestion`) rather than S508's own `next_steps` (issue #146 Slice 2), so none of
+`next_steps`/`key_files`/`gotchas` were directly consumed. This is not a knock against S508: the
+pivot came from the orientation report's own dashboard risk-flag section (HIGH: `SESSION_NOTES.md`/
+`CHANGELOG.md`/`HANDOFFS.md` past the 2,000-line `Read` cap), not from any gap in the handoff.
+**What helped:** the `HANDOFFS.md` S508 receipt's `active_task`/`what_was_done` fields were
+detailed, accurate, and directly matched what `BACKLOG.md`/`CHANGELOG.md` independently recorded
+(cross-checked during this session's own Phase 0 orient) -- no discrepancies found. `next_steps`
+named exact functions/files/design-doc sections (`.enumerateMaximalIndependentSets()`, plan §3
+D4/D5/D9, §7's 5 named dragons) that would have been immediately actionable had #146 Slice 2 been
+picked. **What was missing:** nothing within S508's own scope -- the dashboard risk flags this
+session acted on aren't something a prior session's handoff would be expected to surface; that's
+Phase 0's own job, done fresh each session. **What was wrong:** nothing found inaccurate.
+
 ### What Session 509 Did
-**Deliverable:** Lossless trim of `CHANGELOG.md` and `HANDOFFS.md` via `methodology_trim.py`
-(IN PROGRESS) -- dashboard-flagged HIGH risk: both files past the 2,000-line agent-`Read`
-truncation cap (`CHANGELOG.md` 10,503 lines / 1,532,752 B; `HANDOFFS.md` 4,877 lines / 832,338 B),
-plus MEDIUM byte-budget-archive-trigger flags (23.3x / 12.7x over the 65,536 B budget, no prior
-archive of either). Picked via `AskUserQuestion` "Other" over this session's own 4 rendered
-BACKLOG priority options (issue #146 Slice 2, issue #150 policy decision, LabKey, NPRC outreach).
-**Started:** 2026-08-10.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Losslessly trimmed `CHANGELOG.md` and `HANDOFFS.md` via the existing
+`methodology_trim.py` tool -- the dashboard's own HIGH risk flag (both files past the 2,000-line
+agent-`Read` truncation cap) and MEDIUM byte-budget-archive-trigger flags (23.3x/12.7x over the
+65,536 B budget, no prior archive of either). Picked via `AskUserQuestion` "Other" over this
+session's own 4 rendered BACKLOG priority options (issue #146 Slice 2, issue #150 policy decision,
+LabKey, NPRC outreach). No workstream doc mapped to this task type; executed directly per
+`SESSION_RUNNER.md` Phase 2.
+**Started/Completed:** 2026-08-10.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh
+issue list`, git status/log, `methodology_dashboard.py` -- health 96/100, 1 HIGH risk: the 3
+oversized ledger files). Ledger reconcile found `CHANGELOG.md`'s frontier at `HEAD` (no gap);
+`HANDOFFS.md`'s frontier 1 commit behind (`3ff03967`, one of 3 disclosed ad hoc out-of-band
+commits from the sibling `../methodology` repo, each self-documented as intentionally not a
+claimed session, consistent with its 2 predecessors) -- read as a transparent exception, not a
+silent ghost session; no backfill action taken. Delegated a background `Explore` agent to compile
+`BACKLOG.md`'s (1982-line) genuinely-open-item inventory plus both ratified sequencing audits
+(genetic-metrics #146-153, pedigree-diagram #133/136/137/138/141), since reading the whole file
+directly would have been costly. Rendered the 6-part priorities list per `CLAUDE.md`'s convention;
+owner chose "Other" -- the ledger trim -- over the 4 offered options. **(2)** Phase 1B claim stub
+committed (`7a423398`). **(3)** Read `methodology_trim.py` in full (1831 lines) before running
+anything destructive; ran `--check` then a plain dry run on both files to see the actual plan
+before `--write`. **(4)** `--write` on `HANDOFFS.md` first hit `P1_UNDOCUMENTED` -- the tool
+refuses to write while any commit sits undocumented past `CHANGELOG.md`'s frontier (it would hide
+that commit PERMANENTLY once the trim advances the frontier). Added a `CHANGELOG.md` entry for the
+S509 claim commit (`9113dd48`) to satisfy P1, re-ran: `HANDOFFS.md` trimmed clean -- 832,849 B/
+4,877 lines -> 28,806 B/409 lines, 181 of 187 records archived to
+`docs/archive/HANDOFFS-through-2026-08-10.md`, `L1_OK`/`L2_OK`/`L3_OK` at write time AND the
+independently-regenerated `verify.sh` (exit 0). Found and fixed a real gap while staging:
+`.gitignore`'s blanket `docs/*` rule had no `!docs/archive/` exception, so the shard would have
+been silently untrackable -- added it, matching the 7 other `docs/` subdirectory exceptions
+already there. Committed (`d07814a7`). **(5)** `CHANGELOG.md --write`: archived 288 of 289
+records to `docs/archive/CHANGELOG-through-2026-08-10.md` (1,534,418 B/10,523 lines ->
+945,639 B/3,723 lines). Write-time `L1_OK`/`L2_OK`/`L3_OK` passed, but the independently-
+regenerated `verify.sh` reported `FAIL: L2 FRONT MATTER leaked 2 line(s)`. Investigated rather
+than dismissing or blindly trusting the internal check: confirmed `verify.sh`'s own `L1`
+(records-zone concatenation) and `L3` (record partition) -- the byte-exact checks that would
+actually catch real loss/duplication -- both passed; only the supplementary raw-line-membership
+"leaked" heuristic fired, and direct `grep` proved it a false positive (2 archived records happen
+to quote the front-matter heading `` `## Size, and when to archive` `` verbatim in backticks while
+narrating an already-committed, unrelated prior action; the real heading still exists exactly once,
+unchanged, in the live front matter). Committed (`0929172a`) with the investigation documented in
+the commit message. `CHANGELOG.md`'s byte/line triggers still fire post-trim (945,639 B/3,723
+lines) -- expected, not a defect: the file's frozen "## Legacy history (Sessions 1-324)" section
+(935,287 B/3,568 lines, the Session 325 "freeze legacy, go forward" decision) sits in the pinned
+FOOTER zone the tool is designed to never touch. **(6)** Re-ran `--check` on both: `HANDOFFS.md`
+"trigger does not fire" (fully resolved); `CHANGELOG.md` still fires (expected). Refreshed the
+dashboard: `HANDOFFS.md` is now completely off the risk-flag list; `CHANGELOG.md` remains flagged
+(HIGH: 3,723 lines; MEDIUM: 945,639 B), both improved (-65%/-38%) but not fully resolved, for the
+documented reason above. **(7)** Recorded `PROJECT_LEARNINGS.md` Learning 507 (the `.gitignore`
+gap and the `verify.sh` L2 heuristic false-positive, both worth remembering for any future trim of
+these files or a sibling project's first-ever run of this tool).
+
+**Self-assessment (Session 509): 9/10.** **Strengths:** (1) Did not treat the `verify.sh` L2 FAIL
+as either an automatic blocker or something to wave away -- ran the exact kind of independent,
+evidence-based investigation (`grep -c` against front matter, `grep -n` the flagged shard lines,
+`grep -c` against the pre-trim committed HEAD) the tool's whole L1/L2/L3 design philosophy calls
+for, and reached a confident, falsifiable conclusion before committing. (2) Read the P1 refusal
+correctly and fixed it at the right layer (log the claim commit in `CHANGELOG.md`, not force past
+the check or route around it). (3) Caught the `.gitignore` gap via `git status` (files silently not
+untracked-listed) rather than assuming `git add docs/archive/` had worked, and fixed it as
+directly-necessary infrastructure rather than treating it as out-of-scope. (4) Was explicit and
+upfront that `CHANGELOG.md` would NOT reach full budget compliance before running the trim (traced
+the math from the Legacy History footer's own byte/line size), so the residual over-budget state
+in the close-out is a predicted, explained outcome, not a surprise finding. **Weaknesses:** (1) Ran
+the full dry-run/`--check` exploration before writing the mandatory Phase 1B claim stub -- those
+specific commands were read-only (no `--write`), so no actual harm, but the ordering should have
+been claim-stub-first, investigation-second, matching the protocol's own stated sequence more
+strictly. (2) Did not attempt to also add the `HANDOFFS.md` "This file currently holds **N**
+receipts" front-matter count field the tool's `FRONTMATTER_FIELD_ABSENT` finding flagged as
+missing (a soft warning, not a blocker) -- left as a minor, undone nicety rather than fixed or
+explicitly declined.
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session) -- note `CHANGELOG.md`'s own
+live head now only shows this session's OWN 2 trim-action entries (the Claim entry and the
+HANDOFFS-trim entry were both archived to the shard by the CHANGELOG.md trim itself, retrievable
+at `docs/archive/CHANGELOG-through-2026-08-10.md`).
 
 ### Session 507 Handoff Evaluation (by Session 508)
 **Score: 9/10.**

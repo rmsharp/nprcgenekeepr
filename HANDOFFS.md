@@ -123,20 +123,76 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S509
 date: 2026-08-10
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Lossless trim of CHANGELOG.md and HANDOFFS.md via methodology_trim.py (dashboard-
-flagged HIGH risk: both files past the 2,000-line agent-Read truncation cap).
-what_was_done: pending
-next_steps: pending
-key_files: methodology_trim.py, CHANGELOG.md, HANDOFFS.md, docs/archive/
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Lossless trim of CHANGELOG.md and HANDOFFS.md via methodology_trim.py is DONE.
+HANDOFFS.md fully resolved (trigger no longer fires). CHANGELOG.md improved substantially
+(-38% bytes, -65% lines) but its byte/line triggers still fire -- expected, tied to the frozen
+"## Legacy history (Sessions 1-324)" footer this tool is designed to never touch (a prior,
+separate, already-ratified Session 325 decision, not something this session's scope covers).
+what_was_done: Ran methodology_trim.py --write against both files (their first-ever archive).
+HANDOFFS.md: 832,849 B/4,877 lines -> 28,806 B/409 lines, 181 of 187 records archived to
+docs/archive/HANDOFFS-through-2026-08-10.md; trigger now "does not fire". CHANGELOG.md: 1,534,418 B/
+10,523 lines -> 945,639 B/3,723 lines, 288 of 289 records archived to
+docs/archive/CHANGELOG-through-2026-08-10.md; trigger still FIRES (expected, see active_task).
+Both trims' write-time L1/L2/L3 assertions passed; independently-regenerated verify.sh scripts
+also passed for HANDOFFS.md (exit 0) and, for CHANGELOG.md, passed L1/L3 with one L2 heuristic
+false positive investigated and confirmed harmless (2 archived records quote a front-matter
+heading verbatim in backticks while narrating an unrelated prior action -- see
+PROJECT_LEARNINGS.md Learning 507 for the full grep-based proof). Fixed a real infrastructure gap
+found along the way: .gitignore's blanket docs/* rule had no !docs/archive/ exception, so the
+tool's own required output directory was silently untrackable -- added it, matching the project's
+7 other docs/ subdirectory exceptions. Commits: 7a423398 (claim), 9113dd48 (CHANGELOG entry for
+the claim commit, needed to satisfy the trim tool's own P1 pre-check), d07814a7 (HANDOFFS.md trim
++ gitignore fix), 0929172a (CHANGELOG.md trim), plus this close-out commit (SESSION_NOTES.md/
+HANDOFFS.md/PROJECT_LEARNINGS.md/CHANGELOG.md).
+next_steps: No further action needed on HANDOFFS.md. CHANGELOG.md's residual over-budget state is
+NOT a task to pick up casually -- shrinking it further requires a deliberate, separately-scoped
+migration of the ~3,568-line/935,287 B frozen Legacy History section into the dated-record format
+this tool can parse (or an equivalent dedicated archival approach), which the Session 325 "freeze
+legacy, go forward" decision explicitly declined to do as a multi-session campaign; only pick this
+up if the owner explicitly wants to revisit that decision. Otherwise: this session's own rendered
+BACKLOG priorities remain open -- issue #146 Slice 2 (READY, ratified design doc, Effort M) is the
+sequencing-audit's own next pickup; issue #150 (Tier 3 policy decision on "curator-controlled"
+export access) and the BLOCKED LabKey remainder are also still live.
+key_files: methodology_trim.py (read in full before running; the P1 pre-check, the L1/L2/L3
+assertions, and the VERIFY_TEMPLATE's L2 "leaked" heuristic at line ~1235 are the load-bearing
+parts), .gitignore (the !docs/archive/ fix), docs/archive/HANDOFFS-through-2026-08-10.md +
+docs/archive/CHANGELOG-through-2026-08-10.md (the 2 new shards, each with its own .verify.sh),
+PROJECT_LEARNINGS.md Learning 507 (both findings, with the exact grep commands used to confirm the
+verify.sh false positive).
+gotchas: Never run methodology_trim.py --write without first running a plain dry run (no --check,
+no --write) to see the actual retain/archive plan -- --check alone only reports whether the
+trigger fires, not how much would be archived. If P1_UNDOCUMENTED fires, the fix is a CHANGELOG.md
+entry for the undocumented commit(s), not --force (that flag is for a different check, SRF_RED,
+and is unrelated here). A verify.sh FAIL is not automatically real data loss NOR automatically
+dismissible -- check whether L1/L3 (the byte-exact checks) also failed first; if only the L2
+"leaked" heuristic fired, grep-verify per Learning 507's method before concluding either way. Do
+not edit methodology_trim.py itself to fix the heuristic -- it is a synced file; report gaps
+upstream instead.
+runtime_smoke: n/a -- docs/ledger-only change (CHANGELOG.md, HANDOFFS.md, .gitignore,
+docs/archive/*, SESSION_NOTES.md, PROJECT_LEARNINGS.md). No R code, no Shiny app files touched;
+no runtime behavior affected.
+changelog_ref: CHANGELOG.md "Trim CHANGELOG.md/HANDOFFS.md" close-out entry (this session's
+close-out commit) -- note the 2 in-session trim-action entries this tool itself wrote
+(the HANDOFFS.md-trim entry and the S509-claim entry) were themselves archived into
+docs/archive/CHANGELOG-through-2026-08-10.md by the CHANGELOG.md trim that ran after them; still
+fully readable there, not lost.
 commit: pending
 ```
-Session claimed. Work beginning.
+Session claimed. Work beginning; overwritten above at close-out with the full receipt.
+
+**Self-score breakdown (9/10):** +Investigated rather than trusted or dismissed the verify.sh L2
+FAIL, reaching a falsifiable, grep-proven conclusion. +Correctly diagnosed and fixed the P1
+pre-check refusal at the right layer (log the commit, don't route around the check). +Found and
+fixed the docs/archive/ .gitignore gap as necessary infrastructure, not scope creep. +Set accurate
+expectations about CHANGELOG.md's residual over-budget state BEFORE running the trim, so the
+close-out result matches what was predicted. −Ran read-only dry-run exploration before writing the
+Phase 1B claim stub (no actual harm, since nothing was written, but the ordering should have been
+stricter). −Left the optional HANDOFFS.md "This file currently holds **N** receipts" front-matter
+count field unadded (a soft FRONTMATTER_FIELD_ABSENT warning, not a blocker) rather than fixed or
+explicitly declined.
 
 ```handoff
 session: S508

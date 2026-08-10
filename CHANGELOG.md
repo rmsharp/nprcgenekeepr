@@ -131,6 +131,37 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-10 · [ad hoc] Trim CHANGELOG.md/HANDOFFS.md via methodology_trim.py -- HANDOFFS.md fully resolved (Session 509)
+- **Deliverable:** losslessly trimmed `CHANGELOG.md` and `HANDOFFS.md` (both files' first-ever
+  archive), addressing the dashboard's HIGH risk flag (both past the 2,000-line agent-`Read`
+  truncation cap) and MEDIUM byte-budget flags. `HANDOFFS.md`: 832,849 B/4,877 lines →
+  28,806 B/409 lines, 181 of 187 records archived to
+  [`docs/archive/HANDOFFS-through-2026-08-10.md`](docs/archive/HANDOFFS-through-2026-08-10.md) --
+  trigger now **does not fire**, fully resolved. `CHANGELOG.md`: 1,534,418 B/10,523 lines →
+  945,639 B/3,723 lines, 288 of 289 records archived (entry immediately below) -- trigger **still
+  fires** post-trim, expected and not a defect: the frozen `## Legacy history (pre-ledger format,
+  Sessions 1-324)` footer (935,287 B/3,568 lines, the Session 325 "freeze legacy, go forward"
+  decision) is pinned to the live file by design and this tool has no grammar to parse or migrate
+  it; only a separate, deliberately-scoped future migration campaign could shrink it further, and
+  none is planned. Picked via `AskUserQuestion` "Other" over this session's own 4 rendered BACKLOG
+  priority options (issue #146 Slice 2, issue #150, LabKey, NPRC outreach).
+- **Verification:** both trims' write-time `L1_OK`/`L2_OK`/`L3_OK` assertions passed. The
+  independently-regenerated `verify.sh` for `HANDOFFS.md` also passed clean (exit 0). For
+  `CHANGELOG.md`, `verify.sh`'s `L1`/`L3` (the byte-exact checks) passed; its separate `L2`
+  "front matter leaked into shard" heuristic reported a false positive, investigated and confirmed
+  harmless via direct `grep` (2 archived records quote the front-matter heading `## Size, and when
+  to archive` verbatim in backticks while narrating an unrelated, already-committed prior action;
+  the real heading is unchanged, exactly once, in the live front matter) -- see
+  `PROJECT_LEARNINGS.md` Learning 507 for the full proof and a general rule for future trims.
+- **Incidental fix:** `.gitignore`'s blanket `docs/*` rule had no `!docs/archive/` exception, so
+  this tool's own required output directory was silently untrackable on this project's first-ever
+  run -- added, matching the 7 other `docs/` subdirectory exceptions already present.
+- Commits: `7a423398` (claim), `9113dd48` (CHANGELOG.md entry for the claim commit, satisfying the
+  trim tool's own P1 pre-check), `d07814a7` (HANDOFFS.md trim + gitignore fix), `0929172a`
+  (CHANGELOG.md trim), plus this close-out commit (`SESSION_NOTES.md`/`HANDOFFS.md`/
+  `PROJECT_LEARNINGS.md`). See `SESSION_NOTES.md` "What Session 509 Did" and `HANDOFFS.md`'s S509
+  receipt for full narrative detail.
+
 **Archived 288 record(s), 2026-07-08 → 2026-08-10** into [`docs/archive/CHANGELOG-through-2026-08-10.md`](docs/archive/CHANGELOG-through-2026-08-10.md) — same format, same order, frozen.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-08-10.md.verify.sh`](docs/archive/CHANGELOG-through-2026-08-10.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
