@@ -72,7 +72,7 @@ key_files: R/makePedigreeDiagramData.R (.positionMatingUnitForest()'s new orderB
 gotchas: A D1-qualifying pair can occur NESTED inside another (e.g. a wide-fanout child's own mate) -- D1 scopes per-mating-unit, not "outermost pair only," so any future test fixture with multiple real mating units should expect ALL D1-qualifying ones to swap, not just the one under direct test. devtools::document() is required immediately after any exported-function parameter change, before devtools::check() -- confirmed the hard way this session (Learning 495's gap class, independently re-hit). For live Shiny smoke tests of R/modPedigree.R's Diagram tab, use tests/testthat/test-e2e-pedigree-module.R's own helper pattern (create_app_driver/upload_and_wait/navigate_to_tab/click_element_safe, #pedigree-pedigreeDiagram selector) -- the raw tags$textarea focalAnimalIds field needs an explicit click on updateFocalAnimals before trimPedigree takes effect. All standing gotchas from S479-499 carry forward unchanged.
 runtime_smoke: Live shinytest2/chromote AppDriver run against the real modular app (inst/shinytest/app.R) with the bundled obfuscated_rhesus_mhc_ped.csv fixture, trimmed to the real 5GQC24 x BJ4J7G 2-child family: visNetwork widget renders and is bound, screenshot visually confirms male-left/female-right (square/male left of circle/female at the founder-pair generation), 0 diagram-related console errors. Satisfies the plan's own §6 dragon 3 requirement for a real multi-child family screenshot.
 changelog_ref: CHANGELOG.md 2026-08-10 "[issue #145] Slice 1 implemented -- male-left/female-right default in .positionMatingUnitForest(), closes issue #145 (Session 500)"
-commit: pending
+commit: 0b0e82aa
 ```
 
 ```handoff
