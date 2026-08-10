@@ -72,7 +72,7 @@ key_files: R/modMarkerGenetics.R (new tab/reactive/output, lines added near the 
 gotchas: A candidate/test-fixture id starting with "U" silently vanishes from any pedigree that passes through qcStudbook()/removeAutoGenIds() -- inline unit-test fixtures using "U" are safe only because they never reach that code path; any LIVE/app-level fixture must avoid it. markerParentageLikelihood()'s auto-detect default is a no-op whenever a flagged animal has BOTH parent slots recorded (the common case) -- only the explicit id/role/candidates override, or an animal with a genuinely missing OTHER parent slot, produces real candidates; see issue #155 before touching this code path. devtools::check()'s vignette-engine NOTE for a2interactive.Rmd is back despite S497's own "0/0/0" claim -- confirmed via a stash test to be unrelated to this session's diff, not investigated further. All standing gotchas from S479-497 carry forward unchanged.
 runtime_smoke: Live shinytest2/chromote smoke test against the real app: real, correctly-computed candidate-assignment data rendered (LOD=-Inf/excluded=TRUE/nLociUsed=10 for a hand-verified Mendelian-excluded candidate), 0 SEVERE console entries across 64 log rows, confirmed via app$get_logs() after an initial method-name mistake (get_log(), corrected).
 changelog_ref: CHANGELOG.md 2026-08-09 "Implement Slice 2 -- Candidate Parent Assignment UI + documentation, closes issue #147 (Session 498)"
-commit: 83e486c7
+commit: b13e6958
 ```
 
 ```handoff
