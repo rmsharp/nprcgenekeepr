@@ -405,7 +405,8 @@ test_that(
   "makePedigreeDiagramData adds a distinctly-styled MZ/DZ/UZ connector edge
    per twin pair when twinRelations is supplied (D6) -- solid for MZ,
    short-dash for DZ, long/sparse-dash for UZ, using kinship2's own 'MZ'/
-   'DZ'/'?' labels", {
+   'DZ'/'?' labels, all sharing the same Okabe-Ito #009E73 color (D10,
+   found unwired S494, fixed S506)", {
   twinPed <- data.frame(
     id = c("T1", "T2", "T3", "T4", "T5", "T6"),
     sire = NA_character_, dam = NA_character_,
@@ -426,23 +427,26 @@ test_that(
   expect_equal(mz$to, "T2")
   expect_equal(mz$label, "MZ")
   expect_identical(mz$dashes[[1L]], FALSE)
+  expect_equal(mz$color, "#009E73")
 
   dz <- connectors[connectors$from == "T3", ]
   expect_equal(dz$to, "T4")
   expect_equal(dz$label, "DZ")
   expect_identical(dz$dashes[[1L]], c(4L, 4L))
+  expect_equal(dz$color, "#009E73")
 
   uz <- connectors[connectors$from == "T5", ]
   expect_equal(uz$to, "T6")
   expect_equal(uz$label, "?")
   expect_identical(uz$dashes[[1L]], c(14L, 8L))
+  expect_equal(uz$color, "#009E73")
 })
 
 test_that(
   "makePedigreeDiagramData's pre-existing sire/dam edges gain
-   dashes = FALSE and label = NA when twinRelations is supplied, so the new
-   connector edges can rbind onto them without an 'undefined columns
-   selected' error", {
+   dashes = FALSE, label = NA, and color = NA when twinRelations is
+   supplied, so the new connector edges can rbind onto them without an
+   'undefined columns selected' error", {
   ped <- data.frame(
     id = c("P1", "P2", "C1", "C2"),
     sire = c(NA, NA, "P1", "P1"), dam = c(NA, NA, "P2", "P2"),
@@ -457,9 +461,11 @@ test_that(
   expect_equal(nrow(parentEdges), 4L)
   expect_true(all(vapply(parentEdges$dashes, identical, logical(1L), FALSE)))
   expect_true(all(is.na(parentEdges$label)))
+  expect_true(all(is.na(parentEdges$color)))
 
   connector <- result$edges[result$edges$from == "C1" &
                                result$edges$to == "C2", ]
   expect_equal(nrow(connector), 1L)
   expect_equal(connector$label, "MZ")
+  expect_equal(connector$color, "#009E73")
 })

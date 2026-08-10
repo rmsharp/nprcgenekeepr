@@ -806,7 +806,8 @@ test_that(
 test_that(
   "makePedigreeMatingLayout adds a distinctly-styled MZ/DZ/UZ connector edge
    per twin pair on the real Slice 1 fixture pair, using kinship2's own
-   'MZ'/'DZ'/'?' labels (D6)", {
+   'MZ'/'DZ'/'?' labels, all sharing the same Okabe-Ito #009E73 color (D6,
+   D10, found unwired S494, fixed S506)", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped_twins.csv",
                 package = "nprcgenekeepr"),
@@ -826,16 +827,19 @@ test_that(
   expect_equal(mz$to, "HV7LZ3")
   expect_equal(mz$label, "MZ")
   expect_identical(mz$dashes[[1L]], FALSE)
+  expect_equal(mz$color, "#009E73")
 
   dz <- connectors[connectors$from == "8GSXTQ", ]
   expect_equal(dz$to, "P844CW")
   expect_equal(dz$label, "DZ")
   expect_identical(dz$dashes[[1L]], c(4L, 4L))
+  expect_equal(dz$color, "#009E73")
 
   uz <- connectors[connectors$from == "BRI2MW", ]
   expect_equal(uz$to, "677E7M")
   expect_equal(uz$label, "?")
   expect_identical(uz$dashes[[1L]], c(14L, 8L))
+  expect_equal(uz$color, "#009E73")
 })
 
 test_that(
@@ -872,10 +876,13 @@ test_that(
   expect_equal(connector$to, "TW2")
   expect_false(grepl("^__dup_", connector$from))
   expect_false(grepl("^__dup_", connector$to))
+  expect_equal(connector$color, "#009E73")
 
-  ## Pre-existing child/mate edges gain label = NA alongside the connector.
+  ## Pre-existing child/mate edges gain label = NA and color = NA alongside
+  ## the connector.
   nonConnector <- result$edges[!result$edges$label %in% "MZ", ]
   expect_true(all(is.na(nonConnector$label)))
+  expect_true(all(is.na(nonConnector$color)))
 })
 
 test_that(
@@ -883,7 +890,9 @@ test_that(
    with 'undefined columns selected' when twinRelations is present (D9) --
    the connector edge passes through unchanged, since it is not part of
    .buildMatingUnitForest()'s childEdges/matingUnits structure the waypoint
-   routing logic rewrites", {
+   routing logic rewrites, and keeps its #009E73 color -- Dragon: found
+   S506, .addRectilinearWaypoints() blanket-reset every kept edge's color
+   to NA before this fix", {
   d7Ped <- data.frame(
     id = c("TW1", "TW2", "M1", "M2", "C1", "C2"),
     sire = c(NA, NA, NA, NA, "M1", "M2"),
@@ -905,4 +914,5 @@ test_that(
   expect_equal(connector$from, "TW1")
   expect_equal(connector$to, "TW2")
   expect_identical(connector$dashes[[1L]], FALSE)
+  expect_identical(connector$color, "#009E73")
 })

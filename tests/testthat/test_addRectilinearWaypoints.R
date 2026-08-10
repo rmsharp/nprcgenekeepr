@@ -474,3 +474,43 @@ test_that(
   expect_true(all(wpRows$color.background == "rgba(0,0,0,0)"))
   expect_true(all(wpRows$color.border == "rgba(0,0,0,0)"))
 })
+
+## ---- Issue #137: preserve pre-existing edge coloring (found S506 -- the
+## twin-connector color, D10, was wired into .buildTwinConnectorEdges() but
+## silently clobbered here; keptEdges$color was unconditionally reset to NA
+## for every kept edge, mirroring the #133 node-color bug this file's own
+## test above already guards against, but on the edge side) -----------------
+
+test_that(
+  ".addRectilinearWaypoints preserves a pre-existing color on passed-in
+   edges (e.g. issue #137's twin-connector coloring) rather than resetting
+   every kept edge to NA, while new waypoint edges still get their own
+   distinct, non-inherited #2B7CE9", {
+  ped <- data.frame(
+    id = c("P1", "P2", "C1"),
+    sire = c(NA, NA, "P1"), dam = c(NA, NA, "P2"),
+    sex = c("M", "F", "M"), gen = c(0L, 0L, 1L),
+    stringsAsFactors = FALSE
+  )
+  inputs <- .buildLayoutAndForest(ped)
+  ## P1's own mate-line edge (P1 -> the mating unit) survives
+  ## .addRectilinearWaypoints() as a kept edge, since both parents share the
+  ## unit's own generation here (no D2 dogleg reroute) -- unlike the direct
+  ## union -> C1 child edge, which D1's sibship-bar chain always drops.
+  coloredEdges <- inputs$edges
+  coloredEdges$color <- NA_character_
+  coloredEdges$color[coloredEdges$from == "P1"] <- "#009E73"
+
+  result <- .addRectilinearWaypoints(inputs$nodes, coloredEdges,
+                                      inputs$forest, inputs$pos)
+
+  origRows <- result$edges[!.isWaypoint(result$edges$from) &
+                              !.isWaypoint(result$edges$to), ]
+  expect_true(any(origRows$color == "#009E73", na.rm = TRUE))
+  expect_true(any(is.na(origRows$color)))
+
+  newEdges <- result$edges[.isWaypoint(result$edges$from) |
+                              .isWaypoint(result$edges$to), ]
+  expect_true(nrow(newEdges) > 0L)
+  expect_true(all(newEdges$color == "#2B7CE9"))
+})

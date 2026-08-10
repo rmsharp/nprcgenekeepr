@@ -1344,14 +1344,14 @@ test_that(
 ## visLegend() call's addEdges parameter (never a second call -- same
 ## single-scalar-slot constraint the #133 Affected-row test above already
 ## established for addNodes). Describes exactly what .buildTwinConnectorEdges()
-## (Slice 2) actually renders -- label + dashes only, no color (D10's color
-## pick was never wired into that function; tracked separately in BACKLOG.md,
-## not fixed here -- out of this slice's own file scope).
+## (Slice 2) actually renders -- label + dashes + color (D10's color pick,
+## #009E73, was left unwired at Slice 2/3 ship time; fixed S506).
 
 test_that(
   "modPedigreeServer's diagram widget legend includes MZ/DZ/UZ twin-connector
-   rows, unconditionally present regardless of whether any twin data is
-   uploaded (a static legend, like the existing sex/Affected rows)", {
+   rows in the Okabe-Ito #009E73 color, unconditionally present regardless
+   of whether any twin data is uploaded (a static legend, like the existing
+   sex/Affected rows)", {
   skip_if_not_installed("shiny")
   skip_if_not_installed("visNetwork")
 
@@ -1379,6 +1379,7 @@ test_that(
       expect_true(grepl('"MZ"', widgetJson))
       expect_true(grepl('"DZ"', widgetJson))
       expect_true(grepl('"?"', widgetJson, fixed = TRUE))
+      expect_true(grepl("#009E73", widgetJson, fixed = TRUE))
 
       # The pre-existing sex/Affected addNodes rows must still render,
       # unperturbed by the new addEdges argument on the same visLegend()
