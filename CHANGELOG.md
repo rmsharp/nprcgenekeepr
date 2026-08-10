@@ -43,6 +43,18 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-10 · [ad hoc] Phase 0 ledger reconcile: backfill S504's own HANDOFFS.md receipt commit sha (post-S504)
+- **Deliverable:** Phase 0 ledger reconcile (this session, S505) found one commit past the
+  `CHANGELOG.md` frontier with no ledger entry: `fd0c0312` ("docs: S504 -- backfill own
+  HANDOFFS.md receipt commit sha"), landed after S504's own close-out commit (`6f58d9ad`) that
+  recorded the entry below.
+- **Change:** `fd0c0312` replaced the S504 `HANDOFFS.md` receipt's `changelog_ref: this
+  session's close-out commit (see below).` / `commit: pending` placeholders with the actual
+  commit sha (`6f58d9ad`) once known — writing up the just-finished session's own handoff, not
+  new production work. Same class of self-referential fix as S503's `797c16f6` backfill
+  immediately below, and the many prior sessions' equivalents further down this ledger
+  (S466-S501).
+
 ### 2026-08-10 · [issue #149] Slice 1 implemented — cross-center identity-mapping validation core + `resolveCrossCenterIds()` D10 data-loss fix (Session 504)
 - **Deliverable:** new exported `checkCrossCenterMapping(pedA, pedB, mapping)`
   (`R/checkCrossCenterMapping.R`), the ratified plan's D2 two-tier collect-all validator, sharing
