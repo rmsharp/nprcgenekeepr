@@ -476,6 +476,98 @@ test_that(paste("modBreedingGroupsServer threads a non-default maxCandidates",
 })
 
 # =============================================================================
+# Tests: exhaustive Parameter (issue #146 Slice 2)
+# =============================================================================
+
+test_that(paste("modBreedingGroupsServer passes the default exhaustive",
+                 "(FALSE) to groupAddAssign when the input is unset"), {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeBreedingGroupTestPed(nFounders = 10, nOffspring = 30)
+  recorder <- new.env(parent = emptyenv())
+  recorder$exhaustive <- "UNSET"
+
+  # The mock's OWN default is deliberately NOT FALSE: if the server never
+  # passes an exhaustive argument at all (today's behavior), recorder$exhaustive
+  # captures this sentinel, not FALSE -- so this test genuinely fails until
+  # the server explicitly computes and passes its own default of FALSE,
+  # rather than passing vacuously because the mock's default happened to
+  # also be FALSE.
+  local_mocked_bindings(
+    groupAddAssign = function(..., exhaustive = "MOCK_SENTINEL_UNSET") {
+      recorder$exhaustive <- exhaustive
+      list(
+        group = list(character(0L)), score = 0L,
+        candidates = list(list(group = list(character(0L)), score = 0L))
+      )
+    }
+  )
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped }),
+      geneticValues = NULL
+    ),
+    {
+      # exhaustive deliberately NOT set -- exercises the server's own
+      # default fallback, not the UI widget's default (shiny::testServer()
+      # does not auto-seed inputs from the UI's checkboxInput value).
+      session$setInputs(
+        animalSource = "all",
+        nGroups = 3,
+        maxKinship = 0.25,
+        sexRatio = "none"
+      )
+      session$setInputs(formGroups = 1)
+      session$getReturned()$groups()
+    }
+  )
+
+  expect_equal(recorder$exhaustive, FALSE)
+})
+
+test_that(paste("modBreedingGroupsServer threads exhaustive = TRUE into",
+                 "groupAddAssign"), {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeBreedingGroupTestPed(nFounders = 10, nOffspring = 30)
+  recorder <- new.env(parent = emptyenv())
+  recorder$exhaustive <- "UNSET"
+
+  local_mocked_bindings(
+    groupAddAssign = function(..., exhaustive = FALSE) {
+      recorder$exhaustive <- exhaustive
+      list(
+        group = list(character(0L)), score = 0L,
+        candidates = list(list(group = list(character(0L)), score = 0L))
+      )
+    }
+  )
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped }),
+      geneticValues = NULL
+    ),
+    {
+      session$setInputs(
+        animalSource = "all",
+        nGroups = 1,
+        maxKinship = 0.25,
+        sexRatio = "none",
+        exhaustive = TRUE
+      )
+      session$setInputs(formGroups = 1)
+      session$getReturned()$groups()
+    }
+  )
+
+  expect_equal(recorder$exhaustive, TRUE)
+})
+
+# =============================================================================
 # Tests: Unassigned Animals
 # =============================================================================
 

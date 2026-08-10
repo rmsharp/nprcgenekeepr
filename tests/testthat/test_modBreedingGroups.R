@@ -1418,6 +1418,13 @@ test_that("modBreedingGroupsUI exposes a maxCandidates control, default 5 (issue
   expect_true(grepl('value="5"', ui_html, fixed = TRUE))
 })
 
+test_that(paste("modBreedingGroupsUI exposes an exhaustive-mode toggle",
+                 "(issue #146 Slice 2, D8)"), {
+  ui_html <- as.character(modBreedingGroupsUI("bg"))
+
+  expect_true(grepl("bg-exhaustive", ui_html, fixed = TRUE))
+})
+
 test_that("seed-group widget seeds the specified animals into their group", {
   skip_if_not_installed("shiny")
 
