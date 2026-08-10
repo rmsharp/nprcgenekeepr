@@ -223,6 +223,55 @@ test_that("groupAddAssign retains at most 5 distinct candidates", {
   expect_gt(length(groupAssignTest$candidates), 1L)
 })
 set_seed(10L)
+test_that("groupAddAssign retains at most maxCandidates when lowered (issue #146 Slice 1)", {
+  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
+  # Same fixture/parameters as the default-5 test above, with maxCandidates
+  # explicitly lowered to 3 -- proves the retention cap is a real parameter,
+  # not a hardcoded 5L (issue #146 Slice 1, plan Dragon 1).
+  groupAssignTest <- groupAddAssign(
+    candidates = qcBreeders,
+    kmat = pedWithGenotypeReport$kinship,
+    ped = pedWithGenotype,
+    currentGroups = character(0L),
+    ignore = NULL,
+    minAge = 1L,
+    numGp = 2L,
+    harem = FALSE,
+    sexRatio = 0.0,
+    withKin = FALSE,
+    maxCandidates = 3L
+  )
+  expect_lte(length(groupAssignTest$candidates), 3L)
+  expect_gt(length(groupAssignTest$candidates), 1L)
+})
+set_seed(10L)
+test_that(paste0(
+  "groupAddAssign retains more than 5 candidates when maxCandidates is ",
+  "raised (issue #146 Slice 1)"
+), {
+  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
+  # Same fixture/parameters, maxCandidates raised to 8. qcBreeders/numGp=2
+  # empirically produces 1000 distinct partitions across 1000 trials (see
+  # the default-5 test above), so raising the cap should retain more than
+  # the old hardcoded 5 -- proves the default-5 test's own passing isn't
+  # just a coincidence of a still-hardcoded 5L.
+  groupAssignTest <- groupAddAssign(
+    candidates = qcBreeders,
+    kmat = pedWithGenotypeReport$kinship,
+    ped = pedWithGenotype,
+    currentGroups = character(0L),
+    ignore = NULL,
+    minAge = 1L,
+    numGp = 2L,
+    harem = FALSE,
+    sexRatio = 0.0,
+    withKin = FALSE,
+    maxCandidates = 8L
+  )
+  expect_lte(length(groupAssignTest$candidates), 8L)
+  expect_gt(length(groupAssignTest$candidates), 5L)
+})
+set_seed(10L)
 test_that("groupAddAssign's top-level group/score alias the best (first) candidate", {
   skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   currentGroups <- list(1L)

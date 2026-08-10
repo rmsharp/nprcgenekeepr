@@ -385,6 +385,97 @@ test_that(paste("modBreedingGroupsServer threads the custom numeric sex",
 })
 
 # =============================================================================
+# Tests: maxCandidates Parameter (issue #146 Slice 1)
+# =============================================================================
+
+test_that(paste("modBreedingGroupsServer passes the default maxCandidates",
+                 "(5) to groupAddAssign when the input is unset"), {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeBreedingGroupTestPed(nFounders = 10, nOffspring = 30)
+  recorder <- new.env(parent = emptyenv())
+  recorder$maxCandidates <- "UNSET"
+
+  # The mock's OWN default is deliberately NOT 5L: if the server never passes
+  # a maxCandidates argument at all (today's behavior), recorder$maxCandidates
+  # captures this sentinel, not 5L -- so this test genuinely fails until the
+  # server explicitly computes and passes its own default of 5L, rather than
+  # passing vacuously because the mock's default happened to also be 5L.
+  local_mocked_bindings(
+    groupAddAssign = function(..., maxCandidates = "MOCK_SENTINEL_UNSET") {
+      recorder$maxCandidates <- maxCandidates
+      list(
+        group = list(character(0L)), score = 0L,
+        candidates = list(list(group = list(character(0L)), score = 0L))
+      )
+    }
+  )
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped }),
+      geneticValues = NULL
+    ),
+    {
+      # maxCandidates deliberately NOT set -- exercises the server's own
+      # default fallback, not the UI widget's default (shiny::testServer()
+      # does not auto-seed inputs from the UI's numericInput value).
+      session$setInputs(
+        animalSource = "all",
+        nGroups = 3,
+        maxKinship = 0.25,
+        sexRatio = "none"
+      )
+      session$setInputs(formGroups = 1)
+      session$getReturned()$groups()
+    }
+  )
+
+  expect_equal(recorder$maxCandidates, 5L)
+})
+
+test_that(paste("modBreedingGroupsServer threads a non-default maxCandidates",
+                 "into groupAddAssign"), {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeBreedingGroupTestPed(nFounders = 10, nOffspring = 30)
+  recorder <- new.env(parent = emptyenv())
+  recorder$maxCandidates <- "UNSET"
+
+  local_mocked_bindings(
+    groupAddAssign = function(..., maxCandidates = 5L) {
+      recorder$maxCandidates <- maxCandidates
+      list(
+        group = list(character(0L)), score = 0L,
+        candidates = list(list(group = list(character(0L)), score = 0L))
+      )
+    }
+  )
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped }),
+      geneticValues = NULL
+    ),
+    {
+      session$setInputs(
+        animalSource = "all",
+        nGroups = 3,
+        maxKinship = 0.25,
+        sexRatio = "none",
+        maxCandidates = 8
+      )
+      session$setInputs(formGroups = 1)
+      session$getReturned()$groups()
+    }
+  )
+
+  expect_equal(recorder$maxCandidates, 8L)
+})
+
+# =============================================================================
 # Tests: Unassigned Animals
 # =============================================================================
 

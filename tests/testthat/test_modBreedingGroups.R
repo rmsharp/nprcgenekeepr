@@ -1409,6 +1409,15 @@ test_that("modBreedingGroupsUI nIterations default renders value 10, not 1000", 
   expect_false(grepl('value="1000"', ui_html, fixed = TRUE))
 })
 
+test_that("modBreedingGroupsUI exposes a maxCandidates control, default 5 (issue #146 Slice 1)", {
+  ui_html <- as.character(modBreedingGroupsUI("bg"))
+
+  expect_true(grepl("bg-maxCandidates", ui_html, fixed = TRUE))
+  # Exact rendered token, not a bare-number substring match (Learning #24b) --
+  # min="5" (nTopAnimals) does not contain value="5".
+  expect_true(grepl('value="5"', ui_html, fixed = TRUE))
+})
+
 test_that("seed-group widget seeds the specified animals into their group", {
   skip_if_not_installed("shiny")
 
