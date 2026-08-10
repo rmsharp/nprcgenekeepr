@@ -43,6 +43,63 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-09 · [issue #147] Implement Slice 2 — Candidate Parent Assignment UI + documentation, closes issue #147 (Session 498)
+- **Deliverable:** full strict-TDD PRE-RED→RED→GREEN cycle (REFACTOR skipped, owner-confirmed —
+  the GREEN diff was already minimal and precedent-mirroring), `AskUserQuestion`-gated at every
+  transition, implementing Slice 2 of `docs/planning/issue147-likelihood-parentage-assignment-plan.md`
+  §5: a 5th, read-only "Candidate Parent Assignment" tab in `R/modMarkerGenetics.R` calling
+  `markerParentageLikelihood()` (Slice 1, S496) against the module's already-wired
+  `genotypeMatrix`/`pedigree` reactives — no new file input needed (D10). Picked from this
+  session's own Phase 0 priorities list (owner choice via `AskUserQuestion`, out of #147 Slice 2/
+  #145 design/#138 design/extdata reorg Phase 4).
+- **Pre-RED** found the ratified plan's own "Files to touch" list understated scope:
+  `tests/testthat/test_moduleContract.R`'s exhaustive per-module reactive-name contract test needed
+  its own update (adding `"candidateAssignmentTable"`), confirmed to fail first (a genuine RED),
+  not just `test_modMarkerGenetics.R`'s new tests.
+- **RED:** 4 new `test_that` blocks (UI tab presence; not-ready-without-pedigree; a hand-verified
+  flagged-pair case — `LOD == -Inf`/`excluded == TRUE`/`nLociUsed == 10L`, empirically confirmed
+  against the real `markerParentageLikelihood()` via a standalone script before being asserted, not
+  assumed — reusing the file's existing P/C/U fixture; an empty-but-valid zero-row case when
+  nothing is flagged) plus the `test_moduleContract.R` update. All 5 confirmed failing for the
+  right reason.
+- **GREEN:** new `candidateAssignment` reactive + `DT::renderDT` output + UI tab + updated
+  server roxygen, mirroring the module's existing 4-tab pattern exactly. All 5 RED tests pass;
+  full clean regression read 0 failed/0 error (4858 passed, 10 pre-existing baseline warnings
+  unchanged); `lintr::lint_package()` 0 lints on touched files; `devtools::check()` 0 errors/
+  0 warnings/1 note.
+- **Phase 3E live `shinytest2`/`chromote` smoke test found a genuine, previously-undiscovered gap
+  in Slice 1's already-shipped auto-detect candidate lookup**, not caused by this session's diff:
+  `markerParentageLikelihood()`'s default candidate source (`getPotentialParents()`) only ever
+  proposes candidates for an animal with an *unrecorded* parent slot, never one whose recorded
+  parent is present-but-wrong — the exact case `markerParentageExclusion()` flags. Confirmed
+  directly (not mocked, unlike every existing test of this interaction, including this slice's
+  own RED tests): a realistic live fixture with one correct + one wrong recorded parent returns
+  zero candidates via the real, non-mocked `getPotentialParents()`; the identical fixture with the
+  correct parent also left unrecorded correctly surfaces the true candidate. Also found and fixed
+  in the same investigation: a candidate id starting with `"U"` silently vanishes from a real
+  pedigree (`removeAutoGenIds()`'s own auto-generated-placeholder-id convention), unrelated to the
+  deeper gap. Owner confirmed via `AskUserQuestion`: proceed with Slice 2 as scoped, using a
+  realistic fixture for the live screenshot, filing the gap rather than fixing it mid-slice — filed
+  as GitHub issue [#155](https://github.com/rmsharp/nprcgenekeepr/issues/155) and a new
+  `BACKLOG.md` Housekeeping item (needs its own Pre-RED design pass). The tutorial gained an
+  explicit callout documenting the limitation for users. `PROJECT_LEARNINGS.md` Learning 497.
+- **Documentation (all in this session, per the plan's own §9 checklist mapping):** citation entry
+  added to `inst/extdata/ui_guidance/population_genetics_terms.html`; `NEWS.Rmd`'s Slice-1 bullet
+  updated to describe the new tab (its own "No Shiny UI yet" note removed), `NEWS.md` re-rendered;
+  `vignettes/articles/colony-manager-guide.qmd` gained a new tutorial section + live-captured
+  screenshot (`vignettes/articles/shiny_app_use/marker_genetics_candidate_assignment.png`) +
+  the limitation callout above; `.qmd` re-verified via a full `quarto render` (clean, all chunks
+  executed). `a2interactive.Rmd` checklist deferred per its own standing rule.
+- **Issue #147 is now fully implemented across both slices; closed as part of this session's
+  close-out**, citing this entry.
+- **Incidental finding, not caused by this session's diff (reported, not fixed):** S497's own
+  claimed clean `devtools::check()` 0 errors/0 warnings/0 notes no longer holds — the "no
+  recognized vignette engine" NOTE for `vignettes/a2interactive.Rmd` reproduces on a clean, stashed
+  tree with none of this session's changes present (confirmed via a stash test), contradicting
+  S497's "2 independent fresh runs" claim. Not investigated further or fixed (unrelated to issue
+  #147) — noted here for the record; a future session should reconcile this against S497's own
+  `HANDOFFS.md` receipt.
+
 ### 2026-08-09 · [ad hoc] devtools::check() reaches 0/0/0 — non-portable filename + Rbuildignore copyright gap fixed (Session 497)
 - **Deliverable:** A follow-up, owner-initiated fix session (post S496 close-out, same conversation)
   triggered by the owner directly renaming `inst/extdata/reference/Standardized Human Pedigree

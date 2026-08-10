@@ -6,21 +6,122 @@
 
 ## ACTIVE TASK
 
+### Session 497 Handoff Evaluation (by Session 498)
+**Score: 8/10.**
+**What helped:** S497's `next_steps` cleanly pointed to S496's own more detailed handoff ("Slice 2
+(UI + documentation) of issue #147 is the natural next pickup") rather than duplicating it --
+correct, since S497 itself did no new engineering work on #147. `key_files`/`gotchas`
+(`.Rbuildignore` paren-balance rule, `.gitignore` vs `.Rbuildignore` distinction) were accurate and
+appropriately scoped to S497's own small fix, even though neither was directly relevant to this
+session's own Slice 2 work.
+**What was missing:** Nothing critical for a session this size -- the handoff was appropriately
+thin for a small, owner-initiated follow-up fix.
+**What was wrong:** S497's own headline claim -- `devtools::check()` reaches a clean 0 errors/
+0 warnings/0 notes, "confirmed via 2 independent fresh runs" -- did **not** hold when re-verified
+at this session's own GREEN checkpoint: the "no recognized vignette engine" NOTE for
+`vignettes/a2interactive.Rmd` was back, and a stash test confirmed it reproduces on a clean tree
+with none of this session's changes present. Not necessarily a false claim AT THE TIME (S497 may
+genuinely have observed 0/0/0, and this may be a flaky/non-deterministic check rather than a
+regression) -- but the discrepancy is real, unexplained, and worth a lower score on "what was
+wrong" even without assigning blame. Reported in `CHANGELOG.md`, not investigated further (out of
+this session's own #147 scope).
+**ROI:** Positive -- saved real discovery time (no need to re-derive "what's next" from
+`BACKLOG.md` alone).
+
 ### What Session 498 Did
-**Deliverable:** Implement issue #147 Slice 2 (UI + documentation) per
-`docs/planning/issue147-likelihood-parentage-assignment-plan.md` §5 -- a 5th read-only
-"Candidate Parent Assignment" tab in `R/modMarkerGenetics.R` calling `markerParentageLikelihood()`
-(Slice 1, shipped S496) against the module's already-wired `genotypeMatrix`/`pedigree` reactives,
-plus citation (`population_genetics_terms.html`), `NEWS.Rmd`, and tutorial/article
-(`colony-manager-guide.qmd`) documentation, closing issue #147. Picked from this session's own
-Phase 0 priorities list (owner choice via `AskUserQuestion`, out of #147 Slice 2/#145 design/#138
-design/extdata reorg Phase 4). Following `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`
-under this project's strict TDD contract (PRE-RED->RED->GREEN->REFACTOR, `AskUserQuestion`-gated at
-each transition).
-**Started:** 2026-08-09.
-**Status:** Session claimed. Work beginning (PRE-RED).
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+**Deliverable:** Implemented issue #147 Slice 2 (UI + documentation) per
+`docs/planning/issue147-likelihood-parentage-assignment-plan.md` §5 -- a 5th read-only "Candidate
+Parent Assignment" tab in `R/modMarkerGenetics.R` calling `markerParentageLikelihood()` (Slice 1,
+shipped S496) against the module's already-wired `genotypeMatrix`/`pedigree` reactives, plus
+citation (`population_genetics_terms.html`), `NEWS.Rmd`, and tutorial/article
+(`colony-manager-guide.qmd`) documentation. **Issue #147 is now closed.** Picked from this
+session's own Phase 0 priorities list (owner choice via `AskUserQuestion`, out of #147 Slice 2/
+#145 design/#138 design/extdata reorg Phase 4). Followed
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` under this project's strict TDD contract
+(PRE-RED->RED->GREEN, REFACTOR skipped -- owner-confirmed, all `AskUserQuestion`-gated).
+**Started/Completed:** 2026-08-09.
+**Status:** DONE. All 5 RED tests pass; full clean regression read 0 failed/0 error (4858 passed,
+175 skipped, 10 pre-existing baseline warnings unchanged); `lintr::lint_package()` 0 lints on
+touched files; `devtools::check()` 0 errors/0 warnings/1 note (confirmed via a stash test to be a
+pre-existing, unrelated NOTE reproducing with none of this session's changes present -- see the
+S497 evaluation above and the incidental finding below). Live `shinytest2`/`chromote` smoke test:
+real, correctly-computed data rendered (hand-verified LOD=-Inf/excluded=TRUE/nLociUsed=10 case),
+0 SEVERE console entries across 64 log rows.
+
+**What happened, in order:** **(1)** Phase 0 orient (SAFEGUARDS.md, SESSION_NOTES.md, `gh issue
+list`, git status/log, `methodology_dashboard.py` -- health 98/100; ledger reconcile clean, the one
+commit since the `CHANGELOG.md` frontier was S497's own self-referential sha-backfill, already
+accounted for by precedent). Rendered the priorities list via `AskUserQuestion`; owner picked #147
+Slice 2. **(2)** Phase 1B claim stub committed (`4a009dd1`). **(3)** Pre-RED: read
+`DEVELOPMENT_WORKSTREAM.md`, the ratified plan's §5 Slice 2 scope, the current
+`R/modMarkerGenetics.R`/its 4-tab test file, `markerParentageLikelihood()`'s Slice 1 implementation
+and hand-verified test fixtures, `tests/testthat/test_moduleContract.R`, and the existing
+citation/tutorial documentation style for the other 4 tabs. Found the plan's own "Files to touch"
+list understated scope: `test_moduleContract.R`'s exhaustive reactive-name contract test needed its
+own update too. Confirmed empirically (isTruthy(), a zero-row-but-full-column data frame) that
+`req(tbl)` would correctly render an empty-but-valid table rather than blocking. Posed the
+PRE-RED->RED gate via `AskUserQuestion` with the exact planned test list; owner approved.
+**(4)** RED: 4 new `test_that` blocks in `test_modMarkerGenetics.R` + the `test_moduleContract.R`
+update; hand-verified the flagged-pair case's expected `LOD`/`nLociUsed`/`excluded`/`delta` values
+via a standalone script calling the real, current `markerParentageLikelihood()` BEFORE writing any
+assertion (matching this project's own established discipline). Confirmed all 5 fail for the right
+reason (`attempt to apply non-function` / `expect_named` absent-name failure), not a fixture bug.
+Committed RED (`e96ede42`). Posed the RED->GREEN gate; owner approved. **(5)** GREEN: implemented
+the new tab/reactive/output/return-list entry/roxygen, mirroring the module's existing 4-tab
+pattern exactly. All 5 RED tests passed on the first implementation attempt; full clean regression
+read, `lintr`, and `devtools::check()` all confirmed clean (modulo the incidental finding below).
+Posed the GREEN->REFACTOR gate; owner picked "skip REFACTOR" (the diff was already minimal and
+precedent-mirroring). **(6)** Documentation + Phase 3E: drafted the citation/NEWS/tutorial updates,
+then built a live `shinytest2` screenshot-capture script. **Found and root-caused two real,
+previously-unknown gaps** during this live verification (see `PROJECT_LEARNINGS.md` Learning 497
+for the full account): (a) a candidate id starting with `"U"` silently vanishes from a real
+pedigree via `removeAutoGenIds()`'s own auto-generated-id convention -- a pure fixture-naming trap,
+fixed by renaming; (b) a genuine, previously-undiscovered functional gap in Slice 1's already
+-shipped auto-detect candidate lookup: `getPotentialParents()` only ever proposes candidates for an
+animal with an UNRECORDED parent slot, never one whose recorded parent is present-but-wrong --
+meaning the tab's auto-detect default is empty for the common real-world case (one correct parent,
+one wrong), and every existing test of this interaction (Slice 1's own, and this slice's own RED
+tests) mocks `getPotentialParents()`, so this was never exercised for real until this live smoke
+test. Surfaced this clearly to the owner via `AskUserQuestion` rather than silently fixing or
+silently shipping misleading documentation; owner confirmed: proceed with Slice 2 as scoped, use a
+realistic fixture for the screenshot, file the gap. Filed GitHub issue #155 + a `BACKLOG.md`
+Housekeeping item; added an honest tutorial callout. Re-captured the screenshot with the corrected
+fixture -- real, correctly-computed data rendered, 0 console errors (`app$get_logs()`, after first
+mistakenly calling the nonexistent `app$get_log()`). Verified `colony-manager-guide.qmd` renders
+cleanly via a full `quarto render` (rendered `.html`/`.knit.md` are gitignored, matching
+established practice). Re-rendered `NEWS.md`. Committed GREEN + documentation together (`83e486c7`),
+matching S496's own precedent of bundling doc updates into the GREEN commit. **(7)** Also
+found, incidental to this session's own `devtools::check()` runs (reported, not fixed): S497's own
+"0 errors/0 warnings/0 notes, confirmed via 2 independent fresh runs" claim no longer holds -- the
+vignette-engine NOTE reproduces on a clean, stashed tree with none of this session's changes
+present. Noted in `CHANGELOG.md` and the S497 evaluation above. **(8)** Close-out: `gh issue close
+147`, `CHANGELOG.md` entry, `PROJECT_LEARNINGS.md` Learning 497, `CLAUDE.md` learning-count
+cross-reference updated (496->497, Sessions 1-496+ -> 1-498+), this handoff.
+
+**Self-assessment (Session 498): 9/10.** **Strengths:** (1) Rigorous Pre-RED investigation caught
+a real gap in the ratified plan's own file-scope list (`test_moduleContract.R`) before writing any
+RED test, avoiding a mid-GREEN surprise. (2) Empirically hand-verified every numeric test
+expectation via a standalone script against the real, current implementation BEFORE writing the
+corresponding `expect_*()` assertion -- no assertion was ever written from memory or assumption.
+(3) Did not silently work around, silently fix, or silently ship misleading documentation for the
+auto-detect candidate-lookup gap found during Phase 3E -- investigated it to a confirmed root
+cause (not a guess), surfaced it transparently via `AskUserQuestion` with a clear recommendation,
+and on approval filed a complete, well-evidenced GitHub issue + `BACKLOG.md` item so a future
+session starts from a diagnosis, not a rediscovery. (4) Treated "the screenshot script ran
+successfully" as insufficient evidence of correctness -- visually inspected the actual rendered
+PNG both times, caught the first "No data available in table" result rather than assuming success,
+and traced it to root cause via direct function-level debugging (`qcStudbook()` ->
+`removeAutoGenIds()` -> `getPotentialParents()`, each isolated and verified independently) instead
+of guessing at fixes. (5) Confirmed 0 SEVERE console entries via the correct `shinytest2` API after
+initially calling a nonexistent method (`get_log()` vs. the real `get_logs()`) -- caught and fixed
+immediately, not left unverified. **Weaknesses:** (1) Minor process inefficiency early on: manually
+backgrounded a `devtools::check()` run with a raw shell `&` before switching to the harness's own
+`run_in_background`, requiring a `pkill` cleanup -- no functional harm, but avoidable overhead.
+(2) Did not attempt to trace WHY S497's own "0/0/0 confirmed via 2 independent runs" claim doesn't
+currently hold (flaky check vs. environmental difference vs. inaccurate self-report) -- correctly
+out of this session's own scope, but left as an open question for whoever investigates issue #155's
+neighborhood next, rather than a closed one.
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session).
 
 ### What Session 497 Did
 **Deliverable:** A small, owner-initiated follow-up fix (same conversation, immediately after S496's
