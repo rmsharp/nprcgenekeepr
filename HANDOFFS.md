@@ -123,18 +123,76 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S510
 date: 2026-08-10
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Issue #146 Slice 2 -- exhaustive enumeration mode + UI toggle for breeding-group
-candidate retention, per the ratified
-docs/planning/issue146-configurable-exhaustive-breeding-group-retention-plan.md §5 Slice 2.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: Issue #146 Slice 2 (exhaustive enumeration mode + UI toggle) is DONE. Issue #146
+is now fully implemented across both slices and closed. No open item remains in this
+sequencing-chain pickup.
+what_was_done: Full strict TDD PRE-RED->RED->GREEN cycle (AskUserQuestion-gated; REFACTOR
+owner-confirmed skip) implementing docs/planning/issue146-configurable-exhaustive-breeding-group-retention-plan.md
+§5 Slice 2. New R/enumerateMaximalIndependentSets.R (.enumerateMaximalIndependentSets(), a
+hand-rolled Bron-Kerbosch-style maximal-independent-set search on the existing kin conflict
+adjacency list, D4, cites Bron & Kerbosch 1973 / Tomita-Tanaka-Takahashi 2006). groupAddAssign()
+gained exhaustive/maxExhaustiveCandidates(20L)/exhaustiveTimeLimit(10) arguments, scoped to
+numGp=1/no harem/no custom sexRatio (D2) with named-reason stop()s (D9) and a two-layer
+feasibility guard (D5, pre-flight ceiling + wall-clock deadline degrading to a truncated result).
+groupMembersReturn() gained optional exhaustive/examined/retentionRule fields, byte-identical-
+by-default (D7). modBreedingGroups.R gained an Exhaustive enumeration mode checkbox (gated by a
+conditionalPanel matching D2's scope exactly) and a status callout (D8). 11 new/extended test
+blocks across 4 files (1 new file: test_enumerateMaximalIndependentSets.R). Full clean regression
+suite 0 failed/0 error (5081 passed, up from 5050; 175 skipped; 15 pre-existing warnings
+unchanged); lintr::lint_package() 0 lints (4 found+fixed on touched files); devtools::check() 0
+errors/0 warnings/2 pre-existing notes (confirmed unrelated, predate this session's claim commit).
+Live shinytest2/chromote smoke test against the real running app: toggle visible-when-eligible /
+HIDDEN-when-ineligible (verified via computed style, not just visual), input$exhaustive confirmed
+TRUE in the live server, a genuine live exhaustive run (real browser click, real ~375-animal
+fixture with most seeded into group 1 via the UI's own seed-groups textarea to bring the
+remaining pool under the 20-ceiling) produced the correct live status text ("Exhaustive: examined
+1 partition(s). top-5 by score (min group size), N = 1"), 0 SEVERE console entries. Live
+truncated-search case not reproduced (deadline not UI-configurable; already unit-tested) -- an
+explicit judgment call the plan's own §5 grants. NEWS.Rmd/NEWS.md, and
+vignettes/manual_components/_breeding_group_formation.Rmd (text-only, "and/or" allowance)
+updated; citation/_pkgdown.yml checklists stated N/A explicitly; a2interactive.Rmd deferred per
+its own standing rule. CHANGELOG.md entry + BACKLOG.md progress note + gh issue close 146.
+Commits: 2f822a89 (claim), plus this close-out commit (all code/test/doc changes + close-out).
+next_steps: BACKLOG's rendered priorities (this session's own Phase 0) remain open for a future
+session to pick from: trim SESSION_NOTES.md (READY, Effort S-M -- NEW dashboard HIGH risk flag,
+39,294 lines, past the 2,000-line read cap; the existing methodology_trim.py may or may not
+directly support this file's handoff-narrative format the way it supports CHANGELOG.md/
+HANDOFFS.md's dated-record format -- would need checking first, not assumed); issue #150 policy
+decision (DECISION NEEDED -- owner sign-off on what "curator-controlled" export access means for
+the de-identified pedigree export workflow, Tier 3 quick win otherwise); issue #151 design (Tier
+2, next after #146 in the ratified sequencing audit -- no design doc yet, so this would open as a
+planning session, not straight implementation).
+key_files: docs/planning/issue146-configurable-exhaustive-breeding-group-retention-plan.md (the
+full ratified design, all judgment calls D1-D9 already decided -- read this first for any
+follow-up on issue #146's own family); R/groupAddAssign.R:194-198 (the exhaustive-branch
+dispatch) and :316-405 (the new .groupAddAssignExhaustive() helper);
+R/enumerateMaximalIndependentSets.R (the new algorithm, @noRd); R/modBreedingGroups.R (the new
+conditionalPanel-gated checkbox + exhaustiveStatus renderUI); tests/testthat/test_enumerateMaximalIndependentSets.R
+(the hand-verified 5-cycle fixture, reusable for any future maximal-independent-set correctness
+work).
+gotchas: (1) Any new synthetic `ped` test fixture for groupAddAssign()/getAnimalsWithHighKinship()
+that needs REAL kinship conflicts (not a zero-kinship dedup-only fixture) MUST include an `age`
+column -- omitting it does not error, filterAge() silently drops every kinship pair instead (a
+base R df[i,"missingCol"] quirk, see PROJECT_LEARNINGS.md Learning 509). (2) A RED-phase
+expect_error(regexp=...) test that deliberately passes the SAME parameter name(s) the regexp
+searches for is at risk of accidentally passing before any implementation exists, since R's own
+"unused arguments (name = value)" error echoes the name back -- verify every new RED test's
+individual failure output, not just the aggregate pass/fail count (Learning 508). (3) Never pass
+an explicit output_format override to rmarkdown::render() on a file with its own output:
+frontmatter (NEWS.Rmd is github_document) -- it silently produces a hugely disproportionate
+reflow diff; always git diff --stat immediately after any render, before staging (Learning 510).
+(4) SESSION_NOTES.md is now the largest of the three ledger files (39,294 lines) and was NOT
+addressed this session -- it will keep growing every session until a future session either trims
+it (if methodology_trim.py's format assumptions fit) or a different remediation is chosen.
+runtime_smoke: Live shinytest2/chromote smoke test performed against the real running app (not
+testServer() alone) -- see what_was_done for the full result. All R/ changes this session touch
+runtime Shiny behavior (new UI control, new server reactive wiring), so this was a hard gate, not
+skipped.
+changelog_ref: CHANGELOG.md 2026-08-10 "[issue #146] Slice 2 -- exhaustive enumeration mode + UI
+toggle..., closes #146 (Session 510)" entry (this session's close-out commit).
 commit: pending
 ```
 

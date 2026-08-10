@@ -1980,3 +1980,22 @@ plan's own §6/§9 (no new statistic, no new interaction pattern, `groupAddAssig
 `a2interactive.Rmd` coverage deferred per its own standing rule (new parameter on an already-documented
 function). **Issue #146 stays open** -- Slice 2 (exhaustive enumeration + UI) is the natural next
 pickup, its own future session per §5's session-boundary requirement. See `CHANGELOG.md`.
+
+**Progress (S510, 2026-08-10):** Slice 2 (exhaustive enumeration mode + UI toggle) is now DONE:
+`groupAddAssign()` gained `exhaustive`/`maxExhaustiveCandidates`/`exhaustiveTimeLimit` arguments; a
+new `.enumerateMaximalIndependentSets()` helper implements the ratified hand-rolled Bron-Kerbosch
+design (D4), scoped to `numGp=1`/no harem/no custom `sexRatio` (D2) with a two-layer feasibility
+guard (D5) and named-reason `stop()`s (D9); `groupMembersReturn()` gained the D7 `exhaustive`/
+`examined`/`retentionRule` fields, byte-identical-by-default for ordinary sampling calls. The
+Breeding Group Formation tab gained the D8-ratified **Exhaustive enumeration mode** checkbox
+(visible only when D2-eligible) and a status callout. Full strict TDD PRE-RED->RED->GREEN cycle. 11
+new/extended test blocks across 4 files; full clean regression suite 0 failed/0 error (5081 passed,
+175 skipped, 15 pre-existing baseline warnings unchanged); `lintr::lint_package()` 0 lints;
+`devtools::check()` 0 errors/0 warnings/2 pre-existing notes (unrelated to this session). Live
+`shinytest2`/`chromote` smoke test against the real running app confirmed the completed and hidden
+(D2-ineligible) cases with real, correctly-computed status text; the truncated case was not
+reproduced live (deadline not user-UI-configurable; already unit-tested), an explicit judgment call
+the ratified plan itself grants. `NEWS.Rmd`/`NEWS.md` updated;
+`vignettes/manual_components/_breeding_group_formation.Rmd` gained new coverage (text-only,
+satisfying the tutorial/article checklist's "and/or" allowance). **Issue #146 is now fully
+implemented across both slices; closed as part of this session's close-out.** See `CHANGELOG.md`.

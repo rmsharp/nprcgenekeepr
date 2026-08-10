@@ -131,6 +131,78 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-10 · [issue #146] Slice 2 -- exhaustive enumeration mode + UI toggle for breeding-group candidate retention, closes #146 (Session 510)
+- **Deliverable:** `groupAddAssign()` gained `exhaustive`/`maxExhaustiveCandidates`/
+  `exhaustiveTimeLimit` arguments (default `FALSE`/20L/10s) per the ratified
+  `docs/planning/issue146-configurable-exhaustive-breeding-group-retention-plan.md` §5
+  Slice 2. New `.enumerateMaximalIndependentSets()` helper (`R/enumerateMaximalIndependentSets.R`,
+  `@noRd`) implements a hand-rolled Bron-Kerbosch-style maximal-independent-set search
+  directly on the existing `kin` conflict-adjacency list (D4, no new `igraph` dependency,
+  no complement graph materialized), citing Bron & Kerbosch (1973) / Tomita, Tanaka &
+  Takahashi (2006). Scoped to `numGp = 1`/no harem/no custom `sexRatio` (D2); an
+  out-of-scope or over-ceiling request `stop()`s with a message naming the specific reason
+  (D9) rather than silently falling back to sampling; a wall-clock deadline elapsed
+  mid-search degrades gracefully to a truncated, non-exhaustive result (D5) instead of
+  erroring. `groupMembersReturn()` gained `exhaustive`/`examined`/`retentionRule` optional
+  parameters, adding those 3 top-level fields only when supplied -- ordinary sampling
+  calls are byte-identical to before (D7). The Breeding Group Formation tab
+  (`R/modBreedingGroups.R`) gained a matching **Exhaustive enumeration mode** checkbox
+  (visible only when the current configuration is D2-eligible) and a status callout
+  reporting the search outcome after each run (D8, shipped same-session as the algorithm,
+  per the ratified §11 Q4 decision).
+- **Process:** followed `DEVELOPMENT_WORKSTREAM.md` under this project's Strict TDD
+  contract (PRE-RED→RED→GREEN, `AskUserQuestion`-gated at every transition; REFACTOR
+  owner-confirmed skip -- implementation already matches the ratified design). RED caught
+  and fixed a genuine false-green risk before GREEN began: the D5 ceiling test's regexp
+  (`"maxExhaustiveCandidates|20"`) accidentally matched R's own auto-generated "unused
+  arguments" error, so it would have passed before any implementation existed; tightened to
+  a phrase (`"exceeds"`) only the real implementation could produce. GREEN caught and fixed
+  a real test-fixture defect (not a package defect): a synthetic `ped` fixture lacking an
+  `age` column silently made `filterAge()` drop every kinship pair, due to a base R
+  indexing quirk (`df[i, "missingCol"]` returns `NULL` for a row-index vector `i`, unlike
+  `df[, "missingCol"]`, which errors) -- fixed by adding `age` to the fixture, not by
+  touching `filterAge()` itself.
+- **Verification:** 11 new/extended test blocks across 4 files (`test_enumerateMaximalIndependentSets.R`
+  new; `test_groupAddAssign.R`, `test_modBreedingGroups.R`, `test_modBreedingGroups_groupAddAssign.R`
+  extended) -- a hand-verified 5-cycle conflict-graph fixture (exact 5-maximal-independent-set
+  membership match), a deadline-truncation case, a brute-force-cross-checked sparse-vs-dense
+  density-robustness case (the plan's own §2.10 counter-intuitive finding: sparser graphs have
+  MORE maximal independent sets, asserted structurally), 3 D2 scope-refusal `stop()` cases, 1 D5
+  ceiling-refusal `stop()` case, 1 deadline-truncation integration case, a UI-presence test, and 2
+  `testServer` mocked-binding tests (default-FALSE and explicit-TRUE threading). Full clean
+  regression suite 0 failed/0 error (5081 passed, up from 5050; 175 skipped; 15 pre-existing
+  baseline warnings unchanged); `lintr::lint_package()` 0 lints (4 found and fixed on touched
+  files: 3 line-length, 1 `implicit_integer_linter`); `devtools::check()` 0 errors/0 warnings/2
+  notes, both pre-existing and unrelated to this session's diff (vignette-engine NOTE, and a
+  top-level-files NOTE for `FRAMEWORK_LEARNINGS.md`/`methodology_trim.py` dating to an earlier
+  methodology-sync commit). **Live `shinytest2`/`chromote` smoke test** against the real running
+  app: toggle renders and is readable/settable when D2-eligible; a genuine exhaustive run (real
+  candidate pool, real browser click) produced the correct live status text ("Exhaustive: examined
+  1 partition(s). top-5 by score (min group size), N = 1", green/completed styling); toggle
+  confirmed `HIDDEN` (not just visually styled) via computed-style JS check when `numGp = 2`
+  (D2-ineligible); 0 `SEVERE` console entries throughout. The live truncated-search case was not
+  reproduced (the deadline isn't user-configurable in the UI; already covered by unit tests) --
+  an explicit judgment call the ratified plan itself grants ("implementing session's own
+  judgment, not gated here").
+- **Documentation:** `NEWS.Rmd`/`NEWS.md` (re-rendered via the frontmatter's own `github_document`
+  format -- a first attempt with an explicit `output_format` override produced a 943/878-line
+  reflow diff from format mismatch, caught before committing and redone correctly);
+  `vignettes/manual_components/_breeding_group_formation.Rmd` gained new **Candidates to
+  retain**/**Exhaustive enumeration mode** coverage (text-only, satisfying the tutorial/article
+  checklist's established "and/or" allowance -- no screenshot re-capture in
+  `colony-manager-guide.qmd`, matching the `_pedigree_browser.Rmd` precedent). Citation checklist
+  (#120) N/A (stated explicitly, not silently omitted): `.enumerateMaximalIndependentSets()`'s
+  `@references` is a documentation-quality matter, not the issue-120 UI-guidance-page trigger,
+  since the function is `@noRd`/never user-facing. `_pkgdown.yml` N/A (`groupAddAssign` already
+  listed; the new helper is `@noRd`). `a2interactive.Rmd` coverage deferred per its own standing
+  rule (new parameters on an already-documented, script-callable function).
+- **Files:** new `R/enumerateMaximalIndependentSets.R`, `tests/testthat/test_enumerateMaximalIndependentSets.R`;
+  edited `R/groupAddAssign.R`, `R/groupMembersReturn.R`, `R/modBreedingGroups.R`,
+  `tests/testthat/test_groupAddAssign.R`, `tests/testthat/test_modBreedingGroups.R`,
+  `tests/testthat/test_modBreedingGroups_groupAddAssign.R`, `man/groupAddAssign.Rd` (regenerated),
+  `NEWS.Rmd`/`NEWS.md`, `vignettes/manual_components/_breeding_group_formation.Rmd`. **Issue #146
+  is now fully implemented across both slices; closed as part of this session's close-out.**
+
 ### 2026-08-10 · [ad hoc] Trim CHANGELOG.md/HANDOFFS.md via methodology_trim.py -- HANDOFFS.md fully resolved (Session 509)
 - **Deliverable:** losslessly trimmed `CHANGELOG.md` and `HANDOFFS.md` (both files' first-ever
   archive), addressing the dashboard's HIGH risk flag (both past the 2,000-line agent-`Read`

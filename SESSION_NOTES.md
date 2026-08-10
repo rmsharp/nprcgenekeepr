@@ -6,19 +6,132 @@
 
 ## ACTIVE TASK
 
+### Session 509 Handoff Evaluation (by Session 510)
+**Score: 8/10.** **What helped:** the `HANDOFFS.md` S509 receipt's `next_steps` field correctly
+named "issue #146 Slice 2 (READY, ratified design doc, Effort M)" as the sequencing-audit's own
+next pickup -- exactly what this session's own independently-rendered Phase 0 priorities list also
+surfaced (cross-checked, not just trusted), and exactly what the owner picked. **What was
+missing/not applicable:** S509's own `key_files`/`gotchas` (about `methodology_trim.py`, the
+`.gitignore` fix, the `verify.sh` L2 heuristic) had zero direct bearing on this session's actual
+work -- expected and not a knock against S509, since its own deliverable (a ledger trim) was
+unrelated to issue #146's implementation; a handoff correctly scopes detail to what it worked on,
+not to every possible next pickup. **What was wrong:** nothing found inaccurate. **ROI:** Moderate
+-- the `next_steps` pointer saved a small amount of re-derivation but this session's own Phase 0
+independently re-verified the priorities list from `BACKLOG.md`/`gh issue list` rather than trusting
+the claim alone (per protocol), so the marginal time saved was real but not large.
+
 ### What Session 510 Did
-**Deliverable:** Issue #146 Slice 2 -- exhaustive enumeration mode + UI toggle for
-breeding-group candidate retention, per the ratified
+**Deliverable:** Issue #146 Slice 2 -- exhaustive enumeration mode + UI toggle for breeding-group
+candidate retention, per the ratified
 `docs/planning/issue146-configurable-exhaustive-breeding-group-retention-plan.md` §5 Slice 2.
-Following `DEVELOPMENT_WORKSTREAM.md` under this project's Strict TDD contract
-(PRE-RED->RED->GREEN, `AskUserQuestion`-gated at every transition). Picked from this session's
-own Phase 0 priorities list (owner choice via `AskUserQuestion`, over trimming
-`SESSION_NOTES.md`, issue #150's Tier-3 policy decision, and issue #151 design).
-**Started:** 2026-08-10.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+Followed `DEVELOPMENT_WORKSTREAM.md` under this project's Strict TDD contract
+(PRE-RED->RED->GREEN, `AskUserQuestion`-gated at every transition; REFACTOR owner-confirmed skip).
+Picked from this session's own Phase 0 priorities list (owner choice via `AskUserQuestion`, over
+trimming `SESSION_NOTES.md`, issue #150's Tier-3 policy decision, and issue #151 design).
+**Started/Completed:** 2026-08-10.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh
+issue list`, git status/log, `methodology_dashboard.py` -- health 96/100). Ledger reconcile found
+both `CHANGELOG.md` and `HANDOFFS.md` frontiers already at `HEAD` -- no undocumented commits, clean.
+Noted a NEW dashboard HIGH risk flag not present at S509's own orient: `SESSION_NOTES.md` itself had
+grown to 39,294 lines (past the 2,000-line read cap) -- surfaced as one of 4 rendered priorities but
+not picked. **(2)** Read the ratified plan in full (296 lines) plus `DEVELOPMENT_WORKSTREAM.md`.
+Phase 1B claim stub committed (`2f822a89`). **(3)** PRE-RED research: re-read
+`R/groupAddAssign.R` (confirmed Slice 1's `maxCandidates` is the only change since the plan was
+written), `R/getAnimalsWithHighKinship.R`, `R/addAnimalsWithNoRelative.R`, `R/groupMembersReturn.R`,
+`R/addGroupOfUnusedAnimals.R`, `R/makeGroupMembers.R`, `R/fillGroupMembers.R`, `R/modBreedingGroups.R`
+(full UI+server), `tests/testthat/test_groupAddAssign.R`,
+`tests/testthat/test_modBreedingGroups_groupAddAssign.R`'s established mocked-binding convention,
+`DESCRIPTION` (confirmed no `promises`/`future` dependency added -- Dragon 2 still applies). **(4)**
+RED: wrote `tests/testthat/test_enumerateMaximalIndependentSets.R` (new -- a hand-verified 5-cycle
+conflict-graph fixture asserting exact 5-maximal-independent-set membership, a deadline-truncation
+case, a brute-force-cross-checked sparse-vs-dense density-robustness case) plus extensions to
+`test_groupAddAssign.R` (6 new blocks: exhaustive-completion, 3 D2 scope-refusal `stop()`s, 1 D5
+ceiling-refusal `stop()`, 1 deadline-truncation integration case), `test_modBreedingGroups.R` (1
+UI-presence test), `test_modBreedingGroups_groupAddAssign.R` (2 mocked-binding tests). **Caught and
+fixed a genuine RED-phase false-green risk before GREEN began:** the D5 ceiling test's regexp
+(`"maxExhaustiveCandidates|20"`) accidentally matched R's own auto-generated "unused arguments"
+error (since that test deliberately passes `maxExhaustiveCandidates` as an argument), so it would
+have PASSED before any implementation existed -- caught via the mandatory `devtools::test_file()`
+RED-verification run, tightened to `"exceeds"` (a phrase only the real implementation could
+produce), same fix applied preemptively to the numGp test's over-broad `"numGp|group"` regexp. All
+4 files independently verified failing for the right reason before GREEN. **(5)** GREEN: new
+`R/enumerateMaximalIndependentSets.R` (`.enumerateMaximalIndependentSets()`, hand-rolled
+Bron-Kerbosch-style search on the existing `kin` adjacency list per D4, `@references` Bron & Kerbosch
+1973/Tomita-Tanaka-Takahashi 2006); extended `R/groupMembersReturn.R` (new optional
+`exhaustive`/`examined`/`retentionRule` parameters, byte-identical-by-default per D7); extended
+`R/groupAddAssign.R` (new `exhaustive`/`maxExhaustiveCandidates`/`exhaustiveTimeLimit` params, new
+`.groupAddAssignExhaustive()` helper implementing D2/D5/D9's scope+ceiling checks and wiring the
+enumerator through the existing `addGroupOfUnusedAnimals()`/`groupMembersReturn()` pipeline
+unmodified); extended `R/modBreedingGroups.R` (new **Exhaustive enumeration mode** checkbox gated by
+a `conditionalPanel` matching D2's exact eligibility scope, `input$exhaustive` threaded to
+`groupAddAssign()`, a new `output$exhaustiveStatus` status callout). **Caught and fixed a real
+test-fixture defect during GREEN verification (not a package defect):** the exhaustive-completion
+RED test's synthetic `ped` fixture lacked an `age` column, and `filterAge()` (pre-existing,
+untouched code) indexes `ped[i, "age"]` with an explicit row-index vector `i` -- a base R quirk
+where `df[i, "missingCol"]` silently returns `NULL` rather than erroring (unlike `df[, "missingCol"]`,
+which does error) -- so the missing column silently dropped every kinship pair instead of erroring,
+making all 5 candidates appear mutually compatible (one giant set, not the intended 5-cycle).
+Diagnosed via direct interactive reproduction (not guessed), fixed by adding `age = 10` to the test
+fixture, not by touching `filterAge()` itself (out of scope, and not actually broken -- its own
+existing callers all pass a `ped` with a real `age` column). All 4 files GREEN after that fix. **(6)**
+GREEN→REFACTOR gate: owner chose skip (the one identified duplication -- sort/top-N/
+`addGroupOfUnusedAnimals()` between the sampling loop and the new exhaustive helper -- judged too
+small/differently-shaped to extract cleanly). **(7)** Full verification: clean regression suite 0
+failed/0 error (5081 passed, up from 5050 baseline; 175 skipped; 15 pre-existing warnings
+unchanged); `lintr::lint_package()` found and fixed 4 lints on touched files (3 line-length, 1
+`implicit_integer_linter`) -- 0 lints package-wide after; `devtools::check()` 0 errors/0 warnings/2
+notes, both confirmed pre-existing (traced to a commit before this session's claim) and unrelated.
+**Live `shinytest2`/`chromote` smoke test** against the real running app (not `testServer()` alone):
+confirmed the toggle renders when D2-eligible and is `HIDDEN` (verified via computed-style JS, not
+just visual inspection) when `numGp=2`; confirmed `input$exhaustive` genuinely reads `TRUE` in the
+live server after a real click; a genuine live exhaustive run (seeded most of a real ~375-animal
+fixture into group 1 via the UI's own seed-groups textarea to bring the remaining candidate pool
+under the 20-candidate ceiling -- a real UI-driven way to reach an eligible-and-under-ceiling live
+request without a separate small fixture) produced the correct live status text ("Exhaustive:
+examined 1 partition(s). top-5 by score (min group size), N = 1", green/completed styling); 0
+`SEVERE` console entries throughout both cases. The live truncated-search case was not reproduced
+(the 10s deadline isn't user-configurable in the UI; already covered by 2 unit tests) -- an explicit
+judgment call the ratified plan's own §5 grants ("implementing session's own judgment, not gated
+here"). **(8)** Documentation: `NEWS.Rmd` new bullet, `NEWS.md` re-rendered -- **caught and fixed a
+render-format mistake before committing:** a first attempt passed an explicit `output_format =
+"md_document"` override that ignored the file's own `github_document` frontmatter, producing a
+943-insertion/878-deletion reflow diff; redone via the frontmatter's own default format, producing
+the expected clean 17-line addition (matches the established "diff the render before trusting it"
+discipline, `PROJECT_LEARNINGS.md` Learnings 437/438). `vignettes/manual_components/_breeding_group_formation.Rmd`
+gained new **Candidates to retain**/**Exhaustive enumeration mode** coverage (text-only, satisfying
+the tutorial/article checklist's established "and/or" allowance -- confirmed `a3manual.md`/`.html`
+derivatives are gitignored, so no further re-render needed). Citation/`_pkgdown.yml` checklists
+stated N/A explicitly (not silently omitted), matching the plan's own §9 mapping.
+`a2interactive.Rmd` deferred per its own standing rule. **(9)** `CHANGELOG.md` entry prepended;
+`BACKLOG.md` progress note appended (issue #146's running narrative, matching the #147/#149/S508
+precedent of continuing the same bullet rather than deleting it); `gh issue close 146 --reason
+completed` with a comment citing the CHANGELOG entry and verification evidence.
+
+**Self-assessment (Session 510): 9/10.** **Strengths:** (1) Did not skip the mandatory RED
+verification step even though the ceiling test "looked" correct on first write -- running
+`devtools::test_file()` on RED and actually reading the failure output (not just checking exit
+status) caught a real false-green risk (the regexp accidentally matching R's own error message) that
+would otherwise have silently defeated that test's entire purpose. (2) When GREEN produced a
+wrong-but-not-crashing result (examined=1 instead of 5), investigated with direct interactive
+reproduction rather than guessing or immediately suspecting the new algorithm -- traced the actual
+root cause (a base R `[i, "col"]` indexing quirk in pre-existing code) before touching anything, and
+fixed it at the correct layer (the test fixture, not the untouched production function). (3) Caught
+the `NEWS.md` render-format mistake by diffing before committing, exactly the discipline
+`PROJECT_LEARNINGS.md` Learnings 437/438 recommend, rather than trusting a "render succeeded, no
+errors" result. (4) Ran a genuine live-browser round-trip for the exhaustive toggle (not just
+`testServer()`), including engineering a real under-ceiling candidate pool via the UI's own
+seed-groups feature rather than settling for a smaller/less-realistic synthetic fixture. **Weaknesses:**
+(1) The first live-smoke attempt used `wait_=FALSE` on `set_inputs()`, causing a race where the
+"Form Groups" click fired before Shiny processed the exhaustive checkbox -- cost one extra
+round-trip to diagnose and fix (added an explicit `app$get_value()` check before proceeding). (2)
+Did not reproduce the live truncated-search case (explicitly judgment-called as out of scope per the
+plan's own allowance, but a more determined attempt -- e.g., a much larger seeded-under-ceiling
+pool at a low kinship threshold to maximize search cost -- was not tried before deciding to skip).
+
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session), `[issue #146]` tag, includes
+the `gh issue close` action.
 
 ### Session 508 Handoff Evaluation (by Session 509)
 **Score: 9/10** (on its own formal merits). **ROI for this session specifically: low** -- the
