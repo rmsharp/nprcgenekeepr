@@ -19,7 +19,8 @@ Path step 2).
 makePedigreeMatingLayout(
   ped,
   edgeStyle = c("direct", "rectilinear"),
-  twinRelations = NULL
+  twinRelations = NULL,
+  orderBySex = TRUE
 )
 ```
 
@@ -52,14 +53,28 @@ makePedigreeMatingLayout(
   two individuals' REAL node ids (D7) and always renders as a direct
   edge regardless of `edgeStyle` (D9).
 
+- orderBySex:
+
+  issue \#145 Slice 1 (D8 option (b)):
+  `docs/planning/issue145-sire-dam-left-right-placement-plan.md`. When
+  `TRUE` (the default), every simple two-real-parent mating unit
+  (mate-count exactly 1 each, unambiguous `"M"`/`"F"` sex codes, neither
+  parent with a D5 direct child of their own) is rendered with the male
+  parent to the left and the female parent to the right, matching common
+  pedigree-drawing convention – an additive, new default, not a bug fix
+  (multi-mate/"crowded" families are unaffected, out of scope). `FALSE`
+  reproduces the pre-#145, sex-agnostic default unchanged.
+
 ## Value
 
 A list with `nodes` (`id`, `label`, `shape`, `title`, `size`, `x`, `y`),
-`edges` (`from`, `to`, `dashes`, plus `label` when `twinRelations` is
-supplied), and `duplicateToReal` (a named character vector, duplicate
-node id -\> real individual id). Under `edgeStyle = "rectilinear"`,
-`nodes` gains `color.background`/`color.border` and `edges` gains
-`color` (see `.addRectilinearWaypoints()`).
+`edges` (`from`, `to`, `dashes`, plus `label`/`color` when
+`twinRelations` is supplied – D10, found never wired at S494, fixed
+S506), and `duplicateToReal` (a named character vector, duplicate node
+id -\> real individual id). Under `edgeStyle = "rectilinear"`, `nodes`
+gains `color.background`/`color.border` and `edges` unconditionally
+gains `color` (see `.addRectilinearWaypoints()`) – an already-set edge
+`color` (e.g. the twin connector's) is preserved, not reset.
 
 ## Details
 

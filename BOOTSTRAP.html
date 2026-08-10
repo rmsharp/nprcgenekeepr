@@ -61,6 +61,7 @@
 ├── project-a/                        &lt;-- each project gets methodology files:
 │   ├── CLAUDE.md (or equivalent)     ← Your agent instructions (see CLAUDE_TEMPLATE.md)
 │   ├── SESSION_RUNNER.md             ← Cockpit checklist (synced from methodology)
+│   ├── FRAMEWORK_LEARNINGS.md        ← The framework's learnings (synced, read on demand)
 │   ├── SAFEGUARDS.md                 ← Safety rails (synced from methodology)
 │   ├── SESSION_NOTES.md              ← Session continuity (copied from starter kit)
 │   ├── BACKLOG.md                    ← Open work items only (you create this)
@@ -68,6 +69,7 @@
 │   ├── HANDOFFS.md                   ← Durable close-out receipts (copied from starter kit)
 │   ├── ROADMAP.md                    ← Feature inventory &amp; future plans (copied from starter kit)
 │   ├── methodology_dashboard.py      ← Health scanner (synced from methodology)
+│   ├── methodology_trim.py           ← Ledger trimmer (synced from methodology)
 │   │
 │   └── docs/methodology/             ← The framework (copied from parent dir)
 │       ├── ITERATIVE_METHODOLOGY.md
@@ -107,7 +109,7 @@
 <span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a></span>
 <span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co"># Pull from GitHub if you don't have a sibling methodology checkout (requires gh CLI)</span></span>
 <span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="ex">../methodology/bin/sync</span> your-project/ <span class="at">--source</span><span class="op">=</span>github</span></code></pre></div>
-<p><code>bin/sync</code> copies the full methodology corpus into the target: the operating files (<code>SESSION_RUNNER.md</code>, <code>SAFEGUARDS.md</code>, <code>RECOMMENDED_SKILLS.md</code>, <code>CONTEXT_TEMPLATE.md</code>, <code>CLAUDE_TEMPLATE.md</code>, <code>BOOTSTRAP.md</code>, <code>methodology_dashboard.py</code>) at the project root and the framework (<code>ITERATIVE_METHODOLOGY.md</code>, <code>HOW_TO_USE.md</code>, <code>workstreams/</code>) under <code>docs/methodology/</code>, creating subdirectories as needed. <code>SESSION_NOTES.md</code>, <code>CHANGELOG.md</code>, <code>HANDOFFS.md</code>, and <code>ROADMAP.md</code> are <em>seeded</em> at the root only when absent and are never overwritten afterward — once created they are yours to edit. The complete mapping is defined once in <code>bin/_manifest.py</code>. In <code>--mode=ignore</code> it also adds <code>.gitignore</code> entries for the tracked files (not the seeded ones, which you commit) and warns (non-destructively) if any tracked file is currently tracked by git.</p>
+<p><code>bin/sync</code> copies the full methodology corpus into the target: the operating files (<code>SESSION_RUNNER.md</code>, <code>FRAMEWORK_LEARNINGS.md</code>, <code>SAFEGUARDS.md</code>, <code>RECOMMENDED_SKILLS.md</code>, <code>CONTEXT_TEMPLATE.md</code>, <code>CLAUDE_TEMPLATE.md</code>, <code>BOOTSTRAP.md</code>, <code>methodology_dashboard.py</code>, <code>methodology_trim.py</code>) at the project root and the framework (<code>ITERATIVE_METHODOLOGY.md</code>, <code>HOW_TO_USE.md</code>, <code>workstreams/</code>) under <code>docs/methodology/</code>, creating subdirectories as needed. <code>SESSION_NOTES.md</code>, <code>CHANGELOG.md</code>, <code>HANDOFFS.md</code>, and <code>ROADMAP.md</code> are <em>seeded</em> at the root only when absent and are never overwritten afterward — once created they are yours to edit. The complete mapping is defined once in <code>bin/_manifest.py</code>. In <code>--mode=ignore</code> it also adds <code>.gitignore</code> entries for the tracked files (not the seeded ones, which you commit) and warns (non-destructively) if any tracked file is currently tracked by git.</p>
 <p><strong>Drift safety:</strong> <code>bin/sync</code> refuses to overwrite a file that has local modifications not matching canonical or any historical version. The recommended pattern is to move per-project customizations into your CLAUDE.md’s “Project-Specific Methodology Adaptations” section (see Step 5), then run sync. If you really need to discard local edits, pass <code>--force</code>.</p>
 <p>Check status with <code>bin/status</code>:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="ex">../methodology/bin/status</span> your-project/</span>
@@ -129,6 +131,8 @@
 <th>Purpose</th>
 </tr></thead><tbody><tr><td><code>SESSION_RUNNER.md</code></td>
 <td>The operating procedure — every session follows this</td>
+</tr><tr><td><code>FRAMEWORK_LEARNINGS.md</code></td>
+<td>The framework’s own learnings — reference the runner links to, read on demand</td>
 </tr><tr><td><code>SAFEGUARDS.md</code></td>
 <td>Safety rails — commit discipline, blast radius limits, mode switching</td>
 </tr><tr><td><code>SESSION_NOTES.md</code></td>
@@ -141,6 +145,8 @@
 <td>Feature inventory and future plans — what’s built, what’s next</td>
 </tr><tr><td><code>methodology_dashboard.py</code></td>
 <td>Health scanner — scores project health and methodology compliance</td>
+</tr><tr><td><code>methodology_trim.py</code></td>
+<td>Ledger trimmer — archives the oldest records out of <code>CHANGELOG.md</code> / <code>HANDOFFS.md</code> once they outgrow what an agent can read, and refuses unless the move is provably lossless. Dry-run by default; <code>--check</code> reports without writing</td>
 </tr></tbody></table><p>This table is the minimum manual set. The <strong>authoritative, complete distribution list</strong> — which also includes <code>RECOMMENDED_SKILLS.md</code> and the <code>CONTEXT_TEMPLATE.md</code>/<code>CLAUDE_TEMPLATE.md</code> templates at the project root, plus the framework under <code>docs/methodology/</code> — is defined once in <code>bin/_manifest.py</code> and applied by <code>bin/sync</code>. Copy those too for the full set; the templates are renamed to <code>CONTEXT.md</code>/<code>CLAUDE.md</code> (see Step 5).</p>
 <p>Run the dashboard once to generate your first report:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="ex">python3</span> methodology_dashboard.py</span></code></pre></div>
@@ -202,13 +208,13 @@
 <hr></div>
 <div class="section level2">
 <h2 id="step-5-customizations-go-in-claudemd-not-in-synced-files">Step 5: Customizations Go in CLAUDE.md, Not in Synced Files<a class="anchor" aria-label="anchor" href="#step-5-customizations-go-in-claudemd-not-in-synced-files"></a></h2>
-<p>When a project needs to extend the base methodology — add a custom task mapping, an extra Phase 0 step, a project-specific Learning — those additions go in your <strong>CLAUDE.md “Project-Specific Methodology Adaptations” section</strong>, not in edits to <code>SESSION_RUNNER.md</code>.</p>
+<p>When a project needs to extend the base methodology — add a custom task mapping, an extra Phase 0 step, a project-specific Learning — those additions go in your <strong>CLAUDE.md “Project-Specific Methodology Adaptations” section</strong>, not in edits to <code>SESSION_RUNNER.md</code> or <code>FRAMEWORK_LEARNINGS.md</code>.</p>
 <p>Why: edits to synced files become drift. When the methodology updates, you either merge conflicts, miss the update, or lose your customization. Keeping synced files byte-identical to canonical means updates are friction-free, and your project’s additions remain visible where agents already read them (CLAUDE.md is loaded every session).</p>
 <p><strong>Keep CLAUDE.md lean — extract Learnings before they crowd the budget.</strong> That every-session load has a flip side: CLAUDE.md competes for context with the work itself, so it has a practical size budget (Claude Code targets roughly 200 lines, and an oversized memory file measurably degrades how reliably the agent follows it). The Adaptations subsections — Learnings most of all — grow with every session and have no natural cap. When CLAUDE.md starts to feel heavy (check with <code>/context</code>), move the largest growing subsection to a committed <code>PROJECT_LEARNINGS.md</code> at your project root and leave a one-line pointer that tells the agent <em>when</em> to open it, since a referenced file is read on demand, not loaded automatically — write that pointer as a plain Markdown link, not an <code>@</code>-import, which Claude Code expands into context every session and would defeat the point:</p>
 <blockquote>
 <p><em>Project Learnings live in <a href="PROJECT_LEARNINGS.html"><code>PROJECT_LEARNINGS.md</code></a> — read it when a task resembles earlier work (a workstream or problem you’ve hit before).</em></p>
 </blockquote>
-<p>This is the same discipline as the three-file <code>BACKLOG</code>/<code>CHANGELOG</code>/<code>ROADMAP</code> split above: the always-read file stays scannable; the accumulated record moves to a sibling read only when relevant. <code>PROJECT_LEARNINGS.md</code> is project-owned (committed, never synced), so it needs no tooling changes. Most projects never need this — extract only when the file actually approaches its budget.</p>
+<p>This is the same discipline as the three-file <code>BACKLOG</code>/<code>CHANGELOG</code>/<code>ROADMAP</code> split above — and as <code>SESSION_RUNNER.md</code> → <code>FRAMEWORK_LEARNINGS.md</code>, where the framework applies it to itself: the always-read file stays scannable; the accumulated record moves to a sibling read only when relevant. <code>PROJECT_LEARNINGS.md</code> is project-owned (committed, never synced), so it needs no tooling changes. Most projects never need this — extract only when the file actually approaches its budget.</p>
 <p>Template section (from <code>CLAUDE_TEMPLATE.md</code>):</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">## Project-Specific Methodology Adaptations</span></span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a></span>
@@ -265,12 +271,17 @@
 <hr></div>
 <div class="section level2">
 <h2 id="step-9-set-up-the-methodology-dashboard-recommended">Step 9: Set Up the Methodology Dashboard (Recommended)<a class="anchor" aria-label="anchor" href="#step-9-set-up-the-methodology-dashboard-recommended"></a></h2>
-<p>The methodology includes a health scanner that scores projects on 5 dimensions (activity, testing, documentation, CI/CD, methodology compliance) and generates an HTML dashboard that auto-refreshes every 60 seconds.</p>
+<p>The methodology includes a health scanner that scores projects on 5 dimensions (activity, testing, documentation, CI/CD, methodology) and generates an HTML dashboard that auto-refreshes every 60 seconds. Two of those five adapt to the kind of repo being scored, so the rubric doesn’t penalize a project for something it has no reason to have: <strong>testing</strong> becomes a render/verification score for a document-only repo (nothing to unit-test), and <strong>methodology</strong> becomes a framework-integrity score for a repo that <em>publishes</em> the methodology rather than adopting it. Most projects are neither and see the plain five.</p>
 <p>The dashboard auto-detects its context: - <strong>Inside a git repo</strong> → single-project mode (also scans git submodules as separate entries) - <strong>Above git repos</strong> → portfolio mode (scans all sibling repos)</p>
+<p>It also infers the two repo classes above structurally, and the inference now survives installation <em>through your source count</em>: the scanner excludes its own installed copies — both <code>methodology_dashboard.py</code> and, since dashboard 2.13.0, <code>methodology_trim.py</code> — from that count, so a document-only project still reads as <code>doc-only</code> after <code>bin/sync</code> rather than being scored on tests it has no reason to have. (It did not always — before <code>methodology_dashboard.py</code> 2.10.1 the ~3,000-line file it copies to your root counted as <em>your</em> code and pushed you past the doc-only source cap. If your dashboard predates that version, either update it or declare the class explicitly.) The exclusion runs <strong>both ways</strong> — the markdown <code>bin/sync</code> installs is discounted too when the scanner asks whether yours is a <em>document</em> project, so installing the framework cannot flip a code repo into <code>doc-only</code>. <strong>One gap remains:</strong> four of the discounted names are <em>seeds</em> (<code>CHANGELOG.md</code>, <code>SESSION_NOTES.md</code>, <code>HANDOFFS.md</code>, <code>ROADMAP.md</code>) that <code>bin/sync</code> leaves alone when you already have your own, and the scanner cannot yet tell your file from a seed it wrote — so a document project whose corpus lives mostly in those filenames can still read as <code>code</code> after installation. Declaring the class fixes it. <strong>Declaring is still worth doing for a document-only project</strong> — a declaration is exact where a heuristic is a guess, and it is the supported escape hatch whenever the structural inference disagrees with you.</p>
+<p>Declare the class by creating a <strong><code>.methodology-profile</code></strong> file at the repo root. Its <strong>first line that is neither blank nor a comment</strong> is the declaration; that line holds whitespace-separated tokens — <code>doc-only</code> or <code>code</code> for the corpus axis, <code>framework</code> or <code>adopter</code> for the role axis (set either, or both, in any order). A declaration overrides the structural guess; two conflicting tokens on one axis cancel, and the structural guess stands.</p>
+<p><strong>Comment your explanation.</strong> The declaration line is read as <em>tokens</em>, not prose — every word on it counts — and a leading <code>#</code> comment does not consume the declaration slot, so an explanation is safe above or below as long as it is commented. An <em>uncommented</em> sentence placed first does declare: a file starting <code>We follow the framework conventions for this paper.</code> is graded <strong>framework</strong>, and a <code>doc-only</code> on the next line is ignored.</p>
+<pre><code><span><span class="va">doc</span><span class="op">-</span><span class="va">only</span>                      <span class="co"># ← the declaration: first non-blank, non-comment line</span></span>
+<span><span class="co"># No code here — this is a Quarto book. Scored on render/verification, not tests.</span></span></code></pre>
 <div class="section level3">
 <h3 id="per-project-setup">Per-Project Setup<a class="anchor" aria-label="anchor" href="#per-project-setup"></a></h3>
 <p><code>methodology_dashboard.py</code> is already at your project root (from Step 2 or <code>bin/sync</code>). Run:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="ex">python3</span> methodology_dashboard.py</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="ex">python3</span> methodology_dashboard.py</span></code></pre></div>
 <p>Add <code>dashboard.html</code> to your <code>.gitignore</code> (it’s a generated artifact).</p>
 </div>
 <div class="section level3">
@@ -286,7 +297,7 @@
 <div class="section level2">
 <h2 id="step-10-set-up-git-hooks-optional">Step 10: Set Up Git Hooks (Optional)<a class="anchor" aria-label="anchor" href="#step-10-set-up-git-hooks-optional"></a></h2>
 <p>The methodology works without hooks, but a <code>core.hooksPath</code> configuration can enforce commit discipline:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">git</span> config core.hooksPath .githooks</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">git</span> config core.hooksPath .githooks</span></code></pre></div>
 <p><strong>Pre-commit hooks (recommended).</strong> A pre-commit hook that runs the project’s formatter, linter, type-checker, and fast tests on staged changes catches the same defects CI catches, but at commit time instead of after the fact — shifting failures left and reducing the ratio of red CI runs to green ones. The dashboard scores CI/CD presence (workflow files exist on the remote side); pre-commit is the complementary local-side lever the dashboard does not measure. Pick a hook runner that fits your stack — <code>pre-commit</code> (Python, polyglot), Husky + lint-staged (Node), <code>lefthook</code> (Go), <code>cargo-husky</code> (Rust), Maven Spotless plugin or Gradle git-hooks plugins (JVM), or a hand-written shell script in <code>.githooks/pre-commit</code> for projects that want zero new dependencies. The methodology is intentionally tool-agnostic here; what matters is that <em>some</em> check runs before the commit, not which one. Pocock’s <code>/setup-pre-commit</code> is one option for Node/Husky projects — see <a href="RECOMMENDED_SKILLS.html"><code>RECOMMENDED_SKILLS.md</code></a>.</p>
 <p><strong>Ledger co-staging hook (recommended).</strong> The one hook the methodology <em>does</em> ship is narrow and single-purpose: <a href="https://github.com/KJ5HST/methodology/blob/main/.githooks/pre-commit" class="external-link"><code>.githooks/pre-commit</code></a> refuses a commit that changes tracked content unless <code>CHANGELOG.md</code> is co-staged — the mechanical form of the Phase 3F close-out gate (failure mode #27, “unrecorded action”). Enable it with the <code>core.hooksPath</code> line above after copying it into your <code>.githooks/</code>; bypass a single commit with <code>git commit --no-verify</code> (Phase 0 reconcile-on-read backfills anything bypassed, so the ledger stays true on the next Orient); opt out permanently by deleting <code>CHANGELOG.md</code> and recording that in <code>CLAUDE.md</code>. It never blocks a repo that has no ledger yet, and it skips merges/rebases. Details in <a href="SAFEGUARDS.html"><code>SAFEGUARDS.md</code></a> → Commit Discipline → “Ledger Co-Staging Hook.”</p>
 <p><strong>Close-out completeness hook (optional, agent-specific).</strong> The ledger hook guards the <em>action ledger</em>; the harder-to-see gap is a skipped <em>handoff report</em>. The durable fix ships in <code>SESSION_RUNNER.md</code> (the Phase 3D <code>HANDOFFS.md</code> receipt + Phase 0 reconcile). For an in-session catch — before the agent falls silent — an adopter may wire their agent harness’s session-end / “stop” hook to grep <code>HANDOFFS.md</code> for a trailing <code>status: pending</code> (or run the canonical-only <code>bin/check-handoff</code>, copied in) and re-prompt to finish close-out. This is a <em>recommendation</em>, not a shipped hook: it is agent-specific harness config, soft-remind not hard-block. Details in <a href="SAFEGUARDS.html"><code>SAFEGUARDS.md</code></a> → Commit Discipline → “Close-Out Completeness Hook.”</p>
@@ -297,14 +308,36 @@
 <div class="section level3">
 <h3 id="with-binsync">With <code>bin/sync</code>
 <a class="anchor" aria-label="anchor" href="#with-binsync"></a></h3>
-<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="ex">../methodology/bin/status</span> your-project/    <span class="co"># see what's drifted</span></span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="ex">../methodology/bin/sync</span>   your-project/    <span class="co"># apply updates</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="ex">../methodology/bin/status</span> your-project/    <span class="co"># see what's drifted</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="ex">../methodology/bin/sync</span>   your-project/    <span class="co"># apply updates</span></span></code></pre></div>
 <p>If <code>status</code> shows <code>locally modified</code>, sync will refuse to overwrite. Extract those customizations to CLAUDE.md’s Adaptations section first, then re-run sync (or pass <code>--force</code> to discard local edits).</p>
 </div>
 <div class="section level3">
 <h3 id="without-binsync">Without <code>bin/sync</code>
 <a class="anchor" aria-label="anchor" href="#without-binsync"></a></h3>
-<p>Tell your agent: <em>“Update methodology using <a href="https://github.com/KJ5HST/methodology" class="external-link uri">https://github.com/KJ5HST/methodology</a>”</em>. It will fetch the latest starter-kit files and overlay them.</p>
+<p>Tell your agent: <em>“Update methodology using <a href="https://github.com/KJ5HST/methodology" class="external-link uri">https://github.com/KJ5HST/methodology</a>”</em>.</p>
+<p><strong>Give it these three rules with the instruction. The first one protects your history.</strong></p>
+<p><strong>1. Overlay the tracked files; never overwrite the adopter-owned ones.</strong> The distribution splits in two, and the split is not cosmetic:</p>
+<table class="table"><colgroup><col width="33%"><col width="33%"><col width="33%"></colgroup><thead><tr><th>Class</th>
+<th>Files</th>
+<th>On update</th>
+</tr></thead><tbody><tr><td>
+<strong>Tracked</strong> (canonical owns them)</td>
+<td>
+<code>SESSION_RUNNER.md</code>, <code>FRAMEWORK_LEARNINGS.md</code>, <code>SAFEGUARDS.md</code>, <code>RECOMMENDED_SKILLS.md</code>, <code>BOOTSTRAP.md</code>, the <code>*_TEMPLATE.md</code> files, <code>methodology_dashboard.py</code>, <code>methodology_trim.py</code>, and everything under <code>docs/methodology/</code>
+</td>
+<td>
+<strong>overlay</strong> — replace with the latest</td>
+</tr><tr><td><strong>Adopter-owned</strong></td>
+<td>
+<code>CHANGELOG.md</code>, <code>HANDOFFS.md</code>, <code>SESSION_NOTES.md</code>, <code>ROADMAP.md</code>
+</td>
+<td>
+<strong>never overwrite</strong> — these hold <em>your</em> history</td>
+</tr></tbody></table><p>Overlaying the second row replaces your action ledger and your close-out receipts with empty templates. <code>bin/sync</code> refuses to do it by construction; an agent working from prose has only this sentence to stop it. Say it explicitly.</p>
+<p><strong>2. Reconcile the adopter-owned files by hand, because nothing else will.</strong> Since they are never overwritten, a project moving up from an earlier methodology keeps its ledgers <em>in their old format</em> — gaining the new behaviour while silently missing the new structure. Diff your <code>CHANGELOG.md</code> and <code>HANDOFFS.md</code> front matter against the current seeds in <code>starter-kit/</code> and bring across whatever is missing above your first record. Nothing below your first record is touched: this is a front-matter merge, never a rewrite of history. As of the ledger-doctrine release that means the <strong><code>## Size, and when to archive</code></strong> section in both files — the size norm, the archive trigger and the shard convention.</p>
+<p><strong>3. Verify afterwards, don’t assume.</strong> From a full methodology checkout, <code>../methodology/bin/status your-project/</code> lists every file as <code>current</code>, <code>N versions behind</code>, <code>locally modified</code>, <code>missing</code>, or — for a ledger whose <em>format</em> predates the current methodology — <code>present (stale format)</code>, with a migration note beneath the table. A seed still reading <code>present (stale format)</code> after an update means rule 2 has not been done yet.</p>
+<p><strong>A note on <code>--source=github</code>.</strong> <code>bin/sync --source=github</code> reads the distribution straight from the upstream repository, which is the closest mechanical equivalent of the instruction above. It reads every file before writing anything, so if that repository is behind this manifest it will name the missing files and stop rather than install a partial tree — sync from a full local checkout in that case.</p>
 <hr></div>
 </div>
 <div class="section level2">

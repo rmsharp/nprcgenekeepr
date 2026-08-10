@@ -66,6 +66,7 @@
 <span>  harem <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  sexRatio <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  withKin <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  maxCandidates <span class="op">=</span> <span class="fl">5L</span>,</span>
 <span>  updateProgress <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -143,6 +144,12 @@ Defaults to not return the kinship matrix. This maintains compatibility with
 earlier versions.</p></dd>
 
 
+<dt id="arg-maxcandidates">maxCandidates<a class="anchor" aria-label="anchor" href="#arg-maxcandidates"></a></dt>
+<dd><p>Integer value indicating the maximum number of
+distinct candidate solutions to retain during the simulation (issue #146
+Slice 1). Default is 5.</p></dd>
+
+
 <dt id="arg-updateprogress">updateProgress<a class="anchor" aria-label="anchor" href="#arg-updateprogress"></a></dt>
 <dd><p>Function or NULL. If this function is defined, it
 will be called during each iteration to update a
@@ -158,8 +165,9 @@ during the simulation (an alias for <code>candidates[[1]]$group</code>, kept for
 backward compatibility).
 The list item <code>score</code> provides the score associated with the group(s)
 (an alias for <code>candidates[[1]]$score</code>).
-The list item <code>candidates</code> is a list of up to 5 distinct candidate
-solutions (issue #125), each a list with its own <code>group</code>, <code>score</code>
+The list item <code>candidates</code> is a list of up to <code>maxCandidates</code>
+distinct candidate solutions (default 5; issue #125, configurable per
+issue #146 Slice 1), each a list with its own <code>group</code>, <code>score</code>
 and, when <code>withKin = TRUE</code>, <code>groupKin</code>, ordered best-scoring
 first. Candidates are deduplicated by partition content, not by score –
 two trials with the same score but different membership both count as

@@ -18,6 +18,7 @@ groupAddAssign(
   harem = FALSE,
   sexRatio = 0,
   withKin = FALSE,
+  maxCandidates = 5L,
   updateProgress = NULL
 )
 ```
@@ -91,6 +92,12 @@ groupAddAssign(
   is returned along with the group and score. Defaults to not return the
   kinship matrix. This maintains compatibility with earlier versions.
 
+- maxCandidates:
+
+  Integer value indicating the maximum number of distinct candidate
+  solutions to retain during the simulation (issue \#146 Slice 1).
+  Default is 5.
+
 - updateProgress:
 
   Function or NULL. If this function is defined, it will be called
@@ -106,14 +113,15 @@ produced during the simulation (an alias for `candidates[[1]]$group`,
 kept for backward compatibility). The list item `score` provides the
 score associated with the group(s) (an alias for
 `candidates[[1]]$score`). The list item `candidates` is a list of up to
-5 distinct candidate solutions (issue \#125), each a list with its own
-`group`, `score` and, when `withKin = TRUE`, `groupKin`, ordered
-best-scoring first. Candidates are deduplicated by partition content,
-not by score – two trials with the same score but different membership
-both count as distinct candidates; two trials with identical membership
-count once. The list item `groupKin` contains the subset of the kinship
-matrix that is specific for each group formed in the best candidate (an
-alias for `candidates[[1]]$groupKin`).
+`maxCandidates` distinct candidate solutions (default 5; issue \#125,
+configurable per issue \#146 Slice 1), each a list with its own `group`,
+`score` and, when `withKin = TRUE`, `groupKin`, ordered best-scoring
+first. Candidates are deduplicated by partition content, not by score –
+two trials with the same score but different membership both count as
+distinct candidates; two trials with identical membership count once.
+The list item `groupKin` contains the subset of the kinship matrix that
+is specific for each group formed in the best candidate (an alias for
+`candidates[[1]]$groupKin`).
 
 ## Details
 

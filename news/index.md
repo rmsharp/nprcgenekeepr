@@ -209,6 +209,117 @@
   and
   [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
   gained this optional-column support.
+- The Pedigree Browser’s Diagram tab can now show **twin/zygosity
+  connectors** (issue
+  [\#137](https://github.com/rmsharp/nprcgenekeepr/issues/137)),
+  adopting kinship2’s own MZ/DZ/UZ twin-code convention: an optional
+  twin-relations sidecar file (`id1`, `id2`, `code` columns, `code` one
+  of `"MZ twin"`/`"DZ twin"`/`"UZ twin"`) can be uploaded alongside the
+  pedigree, and a new, off-by-default **Show Twin Connectors** toggle
+  draws a distinctly-styled connector line between each declared twin
+  pair’s own diagram nodes – solid for MZ, short-dashed for DZ,
+  long-dashed with a “?” label for UZ (a callback to kinship2’s own UZ
+  glyph), all three drawn in a colorblind-safe Okabe-Ito bluish-green
+  (`#009E73`) – with a matching legend entry. Twin declarations are
+  validated against the pedigree (both ids must exist and differ; an
+  MZ/DZ pair must already share both `sire` and `dam`; MZ additionally
+  requires matching `sex`; UZ has no such precondition) via the new
+  exported
+  [`checkTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.md);
+  a companion
+  [`obfuscateTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateTwinRelations.md)
+  scrubs a twin-relations table’s ids through the same alias map
+  `obfuscatePed(..., map = TRUE)` produces, so a de-identified export
+  never leaks real ids through this sidecar. A pedigree loaded without
+  any twin data renders exactly as before. Both
+  [`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+  and
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+  gained an optional `twinRelations` argument for scripted use.
+- New script-callable
+  [`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
+  (issue [\#147](https://github.com/rmsharp/nprcgenekeepr/issues/147))
+  ranks candidate replacement parents for a recorded parent
+  [`markerParentageExclusion()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md)
+  has flagged as Mendelian-inconsistent, using a CERVUS-style multilocus
+  likelihood-ratio (LOD) score (Meagher & Thompson 1986; Marshall,
+  Slate, Kruuk & Pemberton 1998). Report-only: it never writes to a
+  pedigree’s `sire`/`dam` columns, and
+  [`markerParentageExclusion()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md)
+  itself is unchanged and remains the independent Mendelian-exclusion
+  check. Reports raw `LOD`, `delta` (the gap to the next-ranked
+  candidate), `nLociUsed`, `excluded`, and `lowPower` per candidate,
+  deliberately without a simulation-calibrated percentage confidence
+  (see the function’s own documentation for why). The Marker Genetics
+  tab gained a matching **Candidate Parent Assignment** sub-tab
+  surfacing this ranking for every flagged pair in the uploaded genotype
+  file and current pedigree, with no new file input needed.
+- Fixed (issue
+  [\#155](https://github.com/rmsharp/nprcgenekeepr/issues/155)): the
+  Candidate Parent Assignment sub-tab’s auto-detect default previously
+  showed no candidates at all for the common real-world case of a
+  flagged animal whose recorded parent is present but wrong (only a
+  genuinely *missing* recorded parent worked before). Both the
+  auto-detect default and
+  [`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)’s
+  explicit `id`/`role`/`candidates = NULL` script-callable form are
+  fixed; no change to either function’s exported signature or return
+  shape.
+- The Pedigree Browser’s Diagram tab now defaults to placing the male
+  parent to the left in a simple two-parent mating pair, matching common
+  pedigree-drawing convention (issue
+  [\#145](https://github.com/rmsharp/nprcgenekeepr/issues/145)) – a new,
+  additive default, not a bug fix: the diagram never had sex-based
+  left-right positioning before. Applies only to a mating pair whose two
+  real parents each have an unambiguous male/female sex code and no
+  other mate or partial -parentage relationship; multi-mate/“crowded”
+  families keep today’s layout, unaffected.
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+  gained a matching `orderBySex` argument (default `TRUE`) for scripted
+  use; setting it to `FALSE` reproduces the prior, sex-agnostic default
+  exactly.
+- New exported function `checkCrossCenterMapping(pedA, pedB, mapping)`
+  (issue [\#149](https://github.com/rmsharp/nprcgenekeepr/issues/149),
+  Slice 1): the “show every problem at once” companion to
+  [`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md),
+  sharing its id-existence, mapping-uniqueness, id-collision, and
+  parent-conflict checks but never stopping on a domain problem – every
+  one found is returned as a row instead, so all of them can be reviewed
+  together rather than one at a time. Script-callable only; no Shiny UI
+  change this slice. Also fixes a data-loss defect in
+  [`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)
+  itself: a merged individual’s shared, agreeing columns beyond
+  `id`/`sire`/`dam` (e.g. `sex`) were previously silently dropped; they
+  are now carried through under the same
+  prefer-non-`NA`/error-on-conflict rule already used for `sire`/`dam`.
+  This is an additive behavior change – a merged pair whose two centers
+  disagree on such a column, which previously merged silently, now
+  raises the same kind of conflict error `sire`/`dam` disagreement
+  always has.
+- New **Cross-Center Identity** tab (issue
+  [\#149](https://github.com/rmsharp/nprcgenekeepr/issues/149), Slice
+  2): a Shiny workflow around
+  [`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)/[`checkCrossCenterMapping()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkCrossCenterMapping.md).
+  Upload two centers’ pedigrees plus a curator-reviewed identity
+  mapping; every validation issue is shown at once (no fixing one
+  problem at a time); once clean, a Preview tab shows the proposed
+  merge’s lineage changes (which side each resolved `sire`/`dam` value
+  came from); an explicit confirmation dialog gates access to 5
+  downloadable artifacts (Merged Pedigree, Mapping, Validation Results,
+  Merge Summary, Provenance). Retains the
+  no-automatic-identity-inference policy – identity is established only
+  by the uploaded mapping file, never guessed from matching id strings.
+  A standalone review/export tool this slice: the merged pedigree is a
+  downloadable CSV, not fed into any other tab’s analysis; re-upload it
+  through the Input tab’s existing pedigree-file path to use it
+  downstream.
+- [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+  gained a `maxCandidates` argument (issue
+  [\#146](https://github.com/rmsharp/nprcgenekeepr/issues/146), Slice 1)
+  replacing the previously-hardcoded cap of 5 distinct retained
+  candidate solutions; the default remains 5, unchanged. The Breeding
+  Group Formation tab gained a matching **Candidates to retain** control
+  (default 5, 1-50) next to the existing simulation-count input.
 
 ## nprcgenekeepr 2.0.0 (20260708)
 

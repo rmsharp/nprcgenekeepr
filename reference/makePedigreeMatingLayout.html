@@ -80,7 +80,8 @@ this is an additive sibling function (Migration Path step 2).</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">makePedigreeMatingLayout</span><span class="op">(</span></span>
 <span>  <span class="va">ped</span>,</span>
 <span>  edgeStyle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"direct"</span>, <span class="st">"rectilinear"</span><span class="op">)</span>,</span>
-<span>  twinRelations <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  twinRelations <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  orderBySex <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -114,17 +115,33 @@ contract. A connector always targets the two individuals' REAL node
 ids (D7) and always renders as a direct edge regardless of
 <code>edgeStyle</code> (D9).</p></dd>
 
+
+<dt id="arg-orderbysex">orderBySex<a class="anchor" aria-label="anchor" href="#arg-orderbysex"></a></dt>
+<dd><p>issue #145 Slice 1 (D8 option (b)):
+<code>docs/planning/issue145-sire-dam-left-right-placement-plan.md</code>.
+When <code>TRUE</code> (the default), every simple two-real-parent mating
+unit (mate-count exactly 1 each, unambiguous <code>"M"</code>/<code>"F"</code>
+sex codes, neither parent with a D5 direct child of their own) is
+rendered with the male parent to the left and the female parent to
+the right, matching common pedigree-drawing convention – an
+additive, new default, not a bug fix (multi-mate/"crowded" families
+are unaffected, out of scope). <code>FALSE</code> reproduces the pre-#145,
+sex-agnostic default unchanged.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list with <code>nodes</code> (<code>id</code>, <code>label</code>, <code>shape</code>,
 <code>title</code>, <code>size</code>, <code>x</code>, <code>y</code>), <code>edges</code>
-(<code>from</code>, <code>to</code>, <code>dashes</code>, plus <code>label</code> when
-<code>twinRelations</code> is supplied), and <code>duplicateToReal</code> (a
-named character vector, duplicate node id -&gt; real individual id).
-Under <code>edgeStyle = "rectilinear"</code>, <code>nodes</code> gains
-<code>color.background</code>/<code>color.border</code> and <code>edges</code> gains
-<code>color</code> (see <code>.addRectilinearWaypoints()</code>).</p>
+(<code>from</code>, <code>to</code>, <code>dashes</code>, plus <code>label</code>/<code>color</code>
+when <code>twinRelations</code> is supplied – D10, found never wired at
+S494, fixed S506), and <code>duplicateToReal</code> (a named character vector,
+duplicate node id -&gt; real individual id). Under
+<code>edgeStyle = "rectilinear"</code>, <code>nodes</code> gains
+<code>color.background</code>/<code>color.border</code> and <code>edges</code>
+unconditionally gains <code>color</code> (see
+<code>.addRectilinearWaypoints()</code>) – an already-set edge <code>color</code>
+(e.g. the twin connector's) is preserved, not reset.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

@@ -226,6 +226,18 @@ open GitHub issues/PRs not yet mirrored into `BACKLOG.md`). Format
   one-line context, not just the tag.
 - Effort is a rough S/M/L, not a time estimate – lets the user pick by
   capacity as well as priority.
+- **A flat `BACKLOG.md` tag grep is not sufficient on its own (found
+  S507, 2026-08-10):** also check `docs/audits/*SEQUENCING_AUDIT*.md`
+  (or any doc whose own text establishes a ratified next-pickup order
+  for a cluster of still-open GitHub issues) and surface that cluster’s
+  own next item as a first-class numbered option – never folded into the
+  flat “Informational: open GitHub issues” bucket just because no inline
+  `BACKLOG.md` tag exists for it. A ratified sequencing audit’s order
+  lives in prose, not a per-item tag, so the tag-only grep misses it
+  entirely; this exact gap independently hit both S506’s own handoff
+  `next_steps` field and S507’s own initial Phase 0 rendering before the
+  owner caught it. See `PROJECT_LEARNINGS.md` Learning
+  506. 
 - This formats the *existing* Phase 0 step 7 report; it adds no new
   `SESSION_RUNNER.md` step and does not change the mandatory
   STOP-and-wait-for-the-user after the report.
@@ -418,6 +430,31 @@ protection requiring the check to pass, so a failing run blocks nothing
 and is easy to never look at. Fixed S477; see `PROJECT_LEARNINGS.md`
 Learning 477.
 
+**`_pkgdown.yml` reference-coverage checklist (found S496,
+2026-08-09):** any session that adds a new exported function must add it
+to a `_pkgdown.yml` reference: group (any existing group satisfies
+`test_pkgdown_reference_config.R`’s coverage guard — the “All exposed
+functions” catch-all in alphabetical position is the simplest choice
+absent a more specific curated group) in the same session it ships,
+rather than relying on that guard’s own full clean regression read to
+catch the gap later. Ratified after finding this exact gap hit twice:
+issue \#130 Slice 1’s own
+[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)
+(“the gap class Slice 1 hit and had to fix retroactively,”
+`BACKLOG.md`), and issue \#147 Slice 1’s
+[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
+(S496) — the latter caught only because a
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+run for an unrelated reason also surfaced a second, pre-existing
+instance
+([`readTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/readTwinRelations.md),
+shipped S494 with no NAMESPACE export or `_pkgdown.yml` entry either)
+failing the SAME guard, which cannot be fixed for only one entry since
+the test evaluates coverage collectively. See `PROJECT_LEARNINGS.md`
+Learning 495 for the adjacent
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+verification discipline this same session established.
+
 **CHANGELOG.md ledger-format resolution (2026-07-08, Session 325 —
 “freeze legacy, go forward”):** canonical v3.1+ defines `CHANGELOG.md`
 as an “Authoritative Action Ledger” — dated
@@ -446,7 +483,7 @@ workstream **and** the RED→GREEN→REFACTOR gates.
 
 ### Project-specific Learnings
 
-Project institutional memory (Sessions 1–492+; 492 learnings, ~2.1 MB)
+Project institutional memory (Sessions 1–504+; 503 learnings, ~2.1 MB)
 lives in
 [`PROJECT_LEARNINGS.md`](https://github.com/rmsharp/nprcgenekeepr/PROJECT_LEARNINGS.md)
 — extracted from this file to keep `CLAUDE.md` within its size budget

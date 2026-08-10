@@ -33,7 +33,7 @@ makePedigreeDiagramData(ped, twinRelations = NULL)
 ## Value
 
 A list with two data frames: `nodes` (`id`, `label`, `shape`, `level`,
-`title`) and `edges` (`from`, `to`, plus `dashes`/`label` when
+`title`) and `edges` (`from`, `to`, plus `dashes`/`label`/`color` when
 `twinRelations` is supplied). `title` is an HTML hover-tooltip string
 (issue \#135) giving ID, sex, generation, sire, and dam.
 

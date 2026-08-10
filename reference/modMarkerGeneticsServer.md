@@ -27,7 +27,16 @@ independently uploaded Center B genotype file – a population-level,
 two-dataset comparison, unrelated to the per-animal cross-center
 identity linking of
 [`resolveCrossCenterIds`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)
-(Slice 4).
+(Slice 4). A fifth tab, "Candidate Parent Assignment" (issue \#147 Slice
+2), surfaces
+[`markerParentageLikelihood`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md):
+for every (offspring, role) pair the Parentage Exclusion tab's own
+diagnostic flags as Mendelian -inconsistent, it ranks candidate
+replacement parents by a CERVUS-style multilocus likelihood (LOD) score.
+This tab needs no new file input – it reads the same uploaded genotype
+file and `pedigree` already wired to the other tabs – and is
+report-only, matching the Parentage Exclusion tab's own precedent: it
+never writes to `pedigree`.
 
 ## Usage
 
@@ -55,7 +64,7 @@ modMarkerGeneticsServer(id, kinshipMatrix, pedigree)
 
 ## Value
 
-A list with eight reactive elements: `markerGenotype`, the raw uploaded
+A list with nine reactive elements: `markerGenotype`, the raw uploaded
 genotype data frame (or `NULL` before upload); `markerKinshipMatrix`,
 the marker-based `id` x `id` kinship matrix (or `NULL`);
 `comparisonTable`, the per-animal `indivMeanKin`/`markerMeanKin`
@@ -70,8 +79,12 @@ Center B genotype data frame (or `NULL` before upload);
 `crossCenterTable`, the
 [`markerFst`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md)
 `locus`/`fst` data frame with a trailing `"Pooled"` row (or `NULL`
-before both center files are uploaded); and `isReady`, `TRUE` once
-`comparisonTable` has a value.
+before both center files are uploaded); `candidateAssignmentTable`, the
+[`markerParentageLikelihood`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
+ranked-candidate data frame (a zero-row, full-column-shape data frame
+when no pair is flagged; or `NULL` before a genotype file and a pedigree
+are both available); and `isReady`, `TRUE` once `comparisonTable` has a
+value.
 
 ## Details
 
@@ -87,6 +100,8 @@ sibling concern.
 Other Shiny modules:
 [`modBreedingGroupsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsServer.md),
 [`modBreedingGroupsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsUI.md),
+[`modCrossCenterIdentityServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modCrossCenterIdentityServer.md),
+[`modCrossCenterIdentityUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modCrossCenterIdentityUI.md),
 [`modGeneticDiversityServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modGeneticDiversityServer.md),
 [`modGeneticDiversityUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modGeneticDiversityUI.md),
 [`modGeneticValueServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modGeneticValueServer.md),

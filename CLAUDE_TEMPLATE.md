@@ -53,9 +53,9 @@ deliverable is `<what>`.
 ## Project-Specific Methodology Adaptations
 
 *Additions and overrides to the base methodology at `SESSION_RUNNER.md`
-and `SAFEGUARDS.md` (synced from the methodology repo, not
-project-owned). The base files govern unless explicitly overridden
-here.*
+and `SAFEGUARDS.md` (synced from the methodology repo, not project-owned
+— as is the reference table in `FRAMEWORK_LEARNINGS.md`). The base files
+govern unless explicitly overridden here.*
 
 *Populate these subsections only where real customizations exist — empty
 subsections can be deleted. Do not edit the synced files themselves.*

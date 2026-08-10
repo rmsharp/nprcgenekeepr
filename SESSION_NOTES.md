@@ -7,6 +7,2834 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### Session 508 Handoff Evaluation (by Session 509)
+
+**Score: 9/10** (on its own formal merits). **ROI for this session
+specifically: low** – the owner picked a different, dashboard-driven
+task (“Other” in this session’s Phase 0 `AskUserQuestion`) rather than
+S508’s own `next_steps` (issue \#146 Slice 2), so none of
+`next_steps`/`key_files`/`gotchas` were directly consumed. This is not a
+knock against S508: the pivot came from the orientation report’s own
+dashboard risk-flag section (HIGH: `SESSION_NOTES.md`/
+`CHANGELOG.md`/`HANDOFFS.md` past the 2,000-line `Read` cap), not from
+any gap in the handoff. **What helped:** the `HANDOFFS.md` S508
+receipt’s `active_task`/`what_was_done` fields were detailed, accurate,
+and directly matched what `BACKLOG.md`/`CHANGELOG.md` independently
+recorded (cross-checked during this session’s own Phase 0 orient) – no
+discrepancies found. `next_steps` named exact functions/files/design-doc
+sections (`.enumerateMaximalIndependentSets()`, plan §3 D4/D5/D9, §7’s 5
+named dragons) that would have been immediately actionable had \#146
+Slice 2 been picked. **What was missing:** nothing within S508’s own
+scope – the dashboard risk flags this session acted on aren’t something
+a prior session’s handoff would be expected to surface; that’s Phase 0’s
+own job, done fresh each session. **What was wrong:** nothing found
+inaccurate.
+
+### What Session 509 Did
+
+**Deliverable:** Losslessly trimmed `CHANGELOG.md` and `HANDOFFS.md` via
+the existing `methodology_trim.py` tool – the dashboard’s own HIGH risk
+flag (both files past the 2,000-line agent-`Read` truncation cap) and
+MEDIUM byte-budget-archive-trigger flags (23.3x/12.7x over the 65,536 B
+budget, no prior archive of either). Picked via `AskUserQuestion`
+“Other” over this session’s own 4 rendered BACKLOG priority options
+(issue \#146 Slice 2, issue \#150 policy decision, LabKey, NPRC
+outreach). No workstream doc mapped to this task type; executed directly
+per `SESSION_RUNNER.md` Phase 2. **Started/Completed:** 2026-08-10.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 96/100, 1 HIGH risk: the 3 oversized
+ledger files). Ledger reconcile found `CHANGELOG.md`’s frontier at
+`HEAD` (no gap); `HANDOFFS.md`’s frontier 1 commit behind (`3ff03967`,
+one of 3 disclosed ad hoc out-of-band commits from the sibling
+`../methodology` repo, each self-documented as intentionally not a
+claimed session, consistent with its 2 predecessors) – read as a
+transparent exception, not a silent ghost session; no backfill action
+taken. Delegated a background `Explore` agent to compile `BACKLOG.md`’s
+(1982-line) genuinely-open-item inventory plus both ratified sequencing
+audits (genetic-metrics \#146-153, pedigree-diagram
+\#133/136/137/138/141), since reading the whole file directly would have
+been costly. Rendered the 6-part priorities list per `CLAUDE.md`’s
+convention; owner chose “Other” – the ledger trim – over the 4 offered
+options. **(2)** Phase 1B claim stub committed (`7a423398`). **(3)**
+Read `methodology_trim.py` in full (1831 lines) before running anything
+destructive; ran `--check` then a plain dry run on both files to see the
+actual plan before `--write`. **(4)** `--write` on `HANDOFFS.md` first
+hit `P1_UNDOCUMENTED` – the tool refuses to write while any commit sits
+undocumented past `CHANGELOG.md`’s frontier (it would hide that commit
+PERMANENTLY once the trim advances the frontier). Added a `CHANGELOG.md`
+entry for the S509 claim commit (`9113dd48`) to satisfy P1, re-ran:
+`HANDOFFS.md` trimmed clean – 832,849 B/ 4,877 lines -\> 28,806 B/409
+lines, 181 of 187 records archived to
+`docs/archive/HANDOFFS-through-2026-08-10.md`, `L1_OK`/`L2_OK`/`L3_OK`
+at write time AND the independently-regenerated `verify.sh` (exit 0).
+Found and fixed a real gap while staging: `.gitignore`’s blanket
+`docs/*` rule had no `!docs/archive/` exception, so the shard would have
+been silently untrackable – added it, matching the 7 other `docs/`
+subdirectory exceptions already there. Committed (`d07814a7`). **(5)**
+`CHANGELOG.md --write`: archived 288 of 289 records to
+`docs/archive/CHANGELOG-through-2026-08-10.md` (1,534,418 B/10,523 lines
+-\> 945,639 B/3,723 lines). Write-time `L1_OK`/`L2_OK`/`L3_OK` passed,
+but the independently- regenerated `verify.sh` reported
+`FAIL: L2 FRONT MATTER leaked 2 line(s)`. Investigated rather than
+dismissing or blindly trusting the internal check: confirmed
+`verify.sh`’s own `L1` (records-zone concatenation) and `L3` (record
+partition) – the byte-exact checks that would actually catch real
+loss/duplication – both passed; only the supplementary
+raw-line-membership “leaked” heuristic fired, and direct `grep` proved
+it a false positive (2 archived records happen to quote the front-matter
+heading `` `## Size, and when to archive` `` verbatim in backticks while
+narrating an already-committed, unrelated prior action; the real heading
+still exists exactly once, unchanged, in the live front matter).
+Committed (`0929172a`) with the investigation documented in the commit
+message. `CHANGELOG.md`’s byte/line triggers still fire post-trim
+(945,639 B/3,723 lines) – expected, not a defect: the file’s frozen “##
+Legacy history (Sessions 1-324)” section (935,287 B/3,568 lines, the
+Session 325 “freeze legacy, go forward” decision) sits in the pinned
+FOOTER zone the tool is designed to never touch. **(6)** Re-ran
+`--check` on both: `HANDOFFS.md` “trigger does not fire” (fully
+resolved); `CHANGELOG.md` still fires (expected). Refreshed the
+dashboard: `HANDOFFS.md` is now completely off the risk-flag list;
+`CHANGELOG.md` remains flagged (HIGH: 3,723 lines; MEDIUM: 945,639 B),
+both improved (-65%/-38%) but not fully resolved, for the documented
+reason above. **(7)** Recorded `PROJECT_LEARNINGS.md` Learning 507 (the
+`.gitignore` gap and the `verify.sh` L2 heuristic false-positive, both
+worth remembering for any future trim of these files or a sibling
+project’s first-ever run of this tool).
+
+**Self-assessment (Session 509): 9/10.** **Strengths:** (1) Did not
+treat the `verify.sh` L2 FAIL as either an automatic blocker or
+something to wave away – ran the exact kind of independent,
+evidence-based investigation (`grep -c` against front matter, `grep -n`
+the flagged shard lines, `grep -c` against the pre-trim committed HEAD)
+the tool’s whole L1/L2/L3 design philosophy calls for, and reached a
+confident, falsifiable conclusion before committing. (2) Read the P1
+refusal correctly and fixed it at the right layer (log the claim commit
+in `CHANGELOG.md`, not force past the check or route around it). (3)
+Caught the `.gitignore` gap via `git status` (files silently not
+untracked-listed) rather than assuming `git add docs/archive/` had
+worked, and fixed it as directly-necessary infrastructure rather than
+treating it as out-of-scope. (4) Was explicit and upfront that
+`CHANGELOG.md` would NOT reach full budget compliance before running the
+trim (traced the math from the Legacy History footer’s own byte/line
+size), so the residual over-budget state in the close-out is a
+predicted, explained outcome, not a surprise finding. **Weaknesses:**
+(1) Ran the full dry-run/`--check` exploration before writing the
+mandatory Phase 1B claim stub – those specific commands were read-only
+(no `--write`), so no actual harm, but the ordering should have been
+claim-stub-first, investigation-second, matching the protocol’s own
+stated sequence more strictly. (2) Did not attempt to also add the
+`HANDOFFS.md` “This file currently holds **N** receipts” front-matter
+count field the tool’s `FRONTMATTER_FIELD_ABSENT` finding flagged as
+missing (a soft warning, not a blocker) – left as a minor, undone nicety
+rather than fixed or explicitly declined. **Ledger:** recorded in
+`CHANGELOG.md` at close-out (this session) – note `CHANGELOG.md`’s own
+live head now only shows this session’s OWN 2 trim-action entries (the
+Claim entry and the HANDOFFS-trim entry were both archived to the shard
+by the CHANGELOG.md trim itself, retrievable at
+`docs/archive/CHANGELOG-through-2026-08-10.md`).
+
+### Session 507 Handoff Evaluation (by Session 508)
+
+**Score: 9/10.** **What helped:** `next_steps` was exact and directly
+actionable (“parameterize
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)‘s
+hardcoded 5L candidate-retention cap into a `maxCandidates` argument…
+plus one new numericInput in modBreedingGroupsUI”) – this session
+executed precisely that. `key_files` (`R/groupAddAssign.R:130-235`,
+`tests/testthat/test_groupAddAssign.R:181-224`) were accurate and
+directly load-bearing – the `5L` literal really was at exactly one site
+(line 200), matching the handoff’s own claim. `gotchas`’ Dragon 1 (keep
+the exact-default test, parameterize rather than relax) was directly
+followed and is exactly what this session’s own 2 new `groupAddAssign`
+tests do (one lowered, one raised, alongside the untouched pre-existing
+default-5 test). **What was missing:** No mention of the sibling
+UI/server-wiring test files (`test_modBreedingGroups.R`’s
+UI-presence-test convention, `test_modBreedingGroups_groupAddAssign.R`’s
+mocked-binding convention) – this session had to discover those itself
+via exploration. A minor, expected gap: S507 correctly scoped
+`key_files` to the most load-bearing touch point (`groupAddAssign.R`
+itself), and finding sibling test-file conventions is ordinary PRE-RED
+research, not a handoff failure. **What was wrong:** Nothing found
+inaccurate. **ROI:** High – `next_steps`, `key_files`, and the Dragon 1
+gotcha were all directly, concretely reused with zero rework.
+
+### What Session 508 Did
+
+**Deliverable:** Issue \#146 Slice 1 – mechanical `maxCandidates`
+parameterization of
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)’s
+hardcoded top-5 candidate-retention cap, per the ratified
+`docs/planning/issue146-configurable-exhaustive-breeding-group-retention-plan.md`
+§5 Slice 1. Followed `DEVELOPMENT_WORKSTREAM.md` under this project’s
+Strict TDD contract (PRE-RED-\>RED-\>GREEN, `AskUserQuestion`-gated at
+every transition; REFACTOR owner-confirmed skip). Picked from this
+session’s own Phase 0 priorities list (owner choice via
+`AskUserQuestion`, over issue \#150’s Tier-3 policy decision and the
+BLOCKED LabKey item). **Started/Completed:** 2026-08-10. **Status:**
+DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 98/100). Ledger reconcile found both
+`CHANGELOG.md` and `HANDOFFS.md` frontiers already at `HEAD` – no
+undocumented commits, no backfill needed (a clean read, unlike the
+S501/S503/S505/S506/S507 precedent of finding one undocumented
+self-referential close-out commit each time). Priorities list rendered
+per the Learning-506-fixed `CLAUDE.md` convention – issue \#146 Slice 1
+correctly surfaced as a first-class option this time (the exact gap S507
+had to catch and fix). Owner picked “Issue \#146 Slice 1” via
+`AskUserQuestion`. **(2)** Phase 1B claim stub committed (`8d4f5caa`).
+**(3)** PRE-RED research: full reads of `R/groupAddAssign.R` (confirmed
+the `5L` cap is a single literal site, line 200),
+`R/modBreedingGroups.R` (UI + `runFormation()` server sections),
+`tests/testthat/test_groupAddAssign.R`,
+`tests/testthat/test_modBreedingGroups.R` (found the established
+UI-control-presence-test convention, lines ~1393-1410),
+`tests/testthat/test_modBreedingGroups_groupAddAssign.R` (found the
+established `local_mocked_bindings()`+recorder-env convention for
+proving
+server-to-[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+argument threading, via the existing `sexRatio` precedent test). **(4)**
+RED: 5 new tests written – 2 direct
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+tests (lowered to `maxCandidates=3L`, raised to `maxCandidates=8L`, both
+on the real `qcBreeders` fixture), 1 UI-control-presence test, 2
+`testServer` mocked-binding tests (default-unset and explicit-8). Ran
+each file to confirm every new test failed for the expected reason.
+**Caught a genuine RED-discipline violation before treating RED as
+satisfied:** the first version of the “default maxCandidates”
+`testServer` test passed vacuously with zero server change, because the
+mock’s own default argument value (`5L`) happened to equal the expected
+default – the test wasn’t actually exercising server behavior. Fixed by
+giving the mock a sentinel default (`"MOCK_SENTINEL_UNSET"`) instead,
+re-verified genuinely RED, then proceeded. **(5)** GREEN: added
+`maxCandidates = 5L` to
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)’s
+signature (after `withKin`, before `updateProgress`), replaced the
+line-200 literal, updated roxygen; added the `numericInput` to
+`modBreedingGroupsUI` (after `nIterations`) and the defensive-default +
+call-site wiring to `runFormation()`;
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+regenerated `man/groupAddAssign.Rd` only (no collateral drift). All 5
+new tests GREEN; full clean regression 0 failed/0 error (5050 passed,
+175 skipped, 15 pre-existing baseline warnings unchanged, exact match to
+the S504/S505 baseline). REFACTOR: owner-confirmed skip (implementation
+already minimal/mechanical). **(6)** Verification:
+`lintr::lint_package()` 0 lints;
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings/1 pre-existing note (vignette-engine, unchanged) – run
+twice independently (a first accidental double-backgrounding tooling
+mistake orphaned one run; the corrected re-run and a redundant duplicate
+both confirmed the same result). **(7)** Live `shinytest2` Phase 3E
+smoke test: confirmed the new control renders with the correct default
+(5) on a fresh app load, 0 console errors; a `maxCandidates=1` live run
+consistently and correctly capped the rendered candidate dropdown to
+exactly 1 option (3/3 runs across different `numGp`/threshold
+combinations). The “raise above 5” half of the live differential proof
+was inconclusive after 3 live attempts with different scenarios
+(`numGp=1` strict threshold, `numGp=2` default threshold) – the bundled
+`obfuscated_rhesus_mhc_ped.csv` fixture converges to a single dominant
+maximal-set partition live regardless of `maxCandidates`, even though a
+direct (non-live)
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+call using the identical nominal parameters against the same fixture
+(read via
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)/[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+outside the app) reliably produces 8 distinct partitions in 100
+iterations. Diagnosed but not root-caused (out of this slice’s scope,
+matching the already-tracked “live app’s QC’d copy produces one fewer
+node than a direct CSV read” BACKLOG item – plausibly the same
+live-vs-direct pedigree-construction discrepancy, not confirmed) –
+reported honestly rather than treated as a defect in this slice’s own
+correctness, which is independently proven by the 2 direct-function
+tests and the 2 real-server-code `testServer` tests (neither depends on
+this fixture’s live diversity). **(8)** Docs: `NEWS.Rmd`/`NEWS.md` entry
+added and re-rendered clean (5-line diff only);
+citation/tutorial-article/`_pkgdown.yml` checklists dispositioned N/A
+per the ratified plan’s own §6/§9; `a2interactive.Rmd` deferred per its
+own standing rule. `BACKLOG.md` S508 progress note added (full detail,
+including the live-diversity finding). `CHANGELOG.md` ledger entry
+added. **Issue \#146 stays open** – Slice 2 (exhaustive enumeration +
+UI) is the natural next pickup, its own future session.
+
+**Self-assessment (Session 508): 8/10.** **Strengths:** (1) Caught its
+own RED-discipline violation (the vacuously-passing default-case mock
+test) before moving on, rather than after the fact or via owner
+correction – fixed with a sentinel-default technique that made the test
+genuinely discriminating. (2) Used `testServer` integration tests that
+exercise the REAL (unmocked) `modBreedingGroupsServer` reactive code,
+only mocking the terminal
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+call – stronger evidence than a fully-mocked module-level test, and this
+distinction was made explicit in the close-out rather than left
+implicit. (3) When the live-diversity smoke test proved inconclusive
+after retries, diagnosed the root cause with a fast, cheap direct-R
+reproduction rather than continuing to burn live-browser cycles, then
+reported the finding honestly (including the parameter scope it does and
+doesn’t cover) instead of either fabricating a pass or omitting the gap.
+**Weaknesses:** (1) The live-verification phase took 6 live-browser
+round trips (3 full workflow runs plus diagnostics) before recognizing
+the diversity question was a fixture/scenario property, not a code
+defect – running the cheap direct-R reproduction FIRST (before the first
+live attempt) would have caught this in one step instead of three. (2)
+Two small tooling mistakes cost real time: an accidental
+double-backgrounding (`&` inside an already-`run_in_background` Bash
+call) orphaned one
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+run silently rather than erroring, and
+`devtools::install(upgrade = "never")` used the wrong type for that
+argument (needed `FALSE`). Neither affected correctness, but both were
+avoidable process friction. **Ledger:** recorded in `CHANGELOG.md` at
+close-out (this session).
+
+### Session 506 Handoff Evaluation (by Session 507)
+
+**Score: 6/10.** **What helped:** The full narrative of what S506 did
+(twin-connector color, the rectilinear dragon fix) was accurate and
+well-documented, but was not directly load-bearing for this session’s
+own work (a different area entirely). `HANDOFFS.md`’s
+`key_files`/`gotchas` fields were similarly accurate but not applicable
+here – an inherent limit given S506 couldn’t know in advance which
+BACKLOG item the next session would pick, same as S505’s own handoff
+evaluation of S506 noted for the reverse case. **What was missing:**
+`next_steps` named 3 candidate items (15-pre-existing-baseline-warnings,
+spelling-NOTE WORDLIST drift, BLOCKED LabKey) but **omitted the entire
+genetic-metrics-audit cluster (#146-153) and its own ratified Tier 2
+pickup order** – exactly the item this session ended up picking, and
+exactly the gap the owner had to point out directly (“You have already
+developed a recommended implementation order for the issues driven by
+the GENETIC_METRICS_PDF\_ CAPABILITY_AUDITs. Why are those not listed?”)
+after this session’s own first-pass priorities list made the identical
+omission. This is not solely S506’s fault – it is a structural gap in
+the Phase 0 priorities-list rendering convention itself (a flat
+`BACKLOG.md` tag grep doesn’t surface a ratified order that lives in a
+linked sequencing-audit document’s prose) – but it did mean `next_steps`
+pointed at 3 less-ready items while missing the single most
+concretely-ready pickup in the whole list. Recorded as
+`PROJECT_LEARNINGS.md` Learning 506 and fixed at the convention level in
+`CLAUDE.md`’s Phase 0 priorities-list customization, not just noted
+here. **What was wrong:** Nothing found inaccurate in what S506 actually
+reported doing. **ROI:** Low for this specific session (none of
+`next_steps`/`key_files`/`gotchas` were directly used, since the actual
+pickup came from a source `next_steps` didn’t name), but the gap it
+exposed has ROI beyond this one session – it fixed a convention-level
+blind spot that would otherwise have kept recurring for every future
+session touching this cluster.
+
+### What Session 507 Did
+
+**Deliverable:** One ratified design/architecture document for issue
+\#146 (configurable/exhaustive breeding-group candidate retention) –
+`docs/planning/issue146-configurable-exhaustive-breeding-group-retention-plan.md`.
+Tier 2’s next item in the ratified
+`docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md`
+order (#147 and \#149 both done/closed). Followed
+`ARCHITECTURE_WORKSTREAM.md` (over the literal `DESIGN_WORKSTREAM.md`
+task-mapping), matching the \#133/#136/#137/#145/#147/#149 precedent.
+Design/planning only – no `R/`/`tests/`/`man/` content changed.
+**Started/Completed:** 2026-08-10. **Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 98/100). Ledger reconcile found 1
+undocumented commit past the `CHANGELOG.md` frontier (`45d62e87`, S506’s
+own self-referential close-out commit) – backfilled and committed
+(`3991c44b`), matching the established S501/S503/S505/S506 precedent for
+this exact pattern. Built the initial priorities list and posed it via
+`AskUserQuestion` – the owner did not answer directly, instead asking
+why the genetic-metrics-audit-driven issues (#146-153) weren’t listed as
+options. **(2)** Investigated: found
+`docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md`
+(S483) already ratifies a Tier 1/2/3/Deferred order for \#146-153 that
+this session’s first-pass rendering had missed entirely (bucketed as
+flat “Informational” GitHub issues instead) – corrected the priorities
+list to surface \#146 (Tier 2, next after \#147/#149, both done) as a
+first-class option alongside \#150 (Tier 3, policy-gated),
+`inst/extdata/` Phase 4, and LabKey. Owner picked “Issue \#146
+design/scoping” via the corrected `AskUserQuestion`. **(3)** Phase 1B
+claim stub committed (`7888d433`). **(4)** Research: full reads of
+`R/groupAddAssign.R`, `R/fillGroupMembers.R`,
+`R/fillGroupMembersWithSexRatio.R`, `R/getAnimalsWithHighKinship.R`,
+`R/addAnimalsWithNoRelative.R`, `R/makeGroupMembers.R`,
+`R/addGroupOfUnusedAnimals.R`, `R/groupMembersReturn.R`,
+`R/modBreedingGroups.R` (UI + server),
+`tests/testthat/ test_groupAddAssign.R`, `DESCRIPTION` (confirming zero
+existing graph-theory dependency). Ran an original empirical benchmark
+(not derived from any prior document): a throwaway, un-pivoted
+Bron-Kerbosch-style maximal-independent-set enumerator timed against
+synthetic conflict graphs of varying size/density, plus a direct
+measurement of the real `qcBreeders` fixture’s own conflict density via
+the production code path. **Headline finding:** lower-kinship (more
+diverse) candidate pools are the SLOWER case for exhaustive enumeration,
+not the faster one – n=20 at 5% density took 5.5s (unoptimized
+baseline); n=25 at 5% density exceeded 60s. Also confirmed `qcBreeders`
+(29 candidates, `numGp=2`) already produces 1000 distinct partitions
+across 1000 random trials – direct in-repo evidence exhaustive
+enumeration is intractable beyond `numGp=1` at realistic scale. **(5)**
+Wrote the design document: 9 decisions (D1-D9), 4 genuine judgment calls
+(D2/D9 combined – exhaustive-mode scope + error semantics; D4 –
+algorithm/dependency choice; D5 – feasibility-guard default numbers; D8
+– UI-in-Slice-2-vs-deferred), 5 forced decisions. Recommends splitting
+implementation into 2 vertical slices (Slice 1: mechanical
+`maxCandidates` parameterization; Slice 2: the exhaustive-enumeration
+algorithm + UI), matching the sequencing audit’s own recommendation.
+**(6)** Ratified all 4 judgment calls in a single `AskUserQuestion`
+round – owner selected this document’s own recommended option in all 4
+cases, with no changes requested (scope: `numGp==1`/no harem/no custom
+sex ratio only, [`stop()`](https://rdrr.io/r/base/stop.html) on
+violation; algorithm: hand-rolled Bron-Kerbosch, no new `igraph`
+dependency; feasibility guard:
+`maxExhaustiveCandidates=20L`/`exhaustiveTimeLimit=10` seconds; UI:
+ships in Slice 2, not deferred). Recorded the ratification outcome in
+the document’s own §11, updated its Status header, and resolved its own
+`<TBD>` interface-catalog placeholders to the ratified concrete numbers
+(an improvement over the \#147 precedent, which left its own `<TBD>`
+placeholder unresolved after ratification). **(7)** `BACKLOG.md`
+progress note added (matching the \#147/#149 S495/S503 precedent);
+`PROJECT_LEARNINGS.md` Learning 506 recorded (the priorities-list
+convention gap found at step 2); `CLAUDE.md`’s Phase 0 priorities-list
+customization amended to name the sequencing-audit source explicitly,
+closing that gap at the convention level, not just noting it. Citation
+checklist (#120), NEWS.Rmd, tutorial/article, `a2interactive.Rmd`, and
+`_pkgdown.yml` checklists all explicitly dispositioned in the document’s
+own §9/§6 (mostly N/A or deferred to the implementing slices, per the
+established design-session precedent of not writing user-facing docs for
+unshipped code).
+
+**Self-assessment (Session 507): 8/10.** **Strengths:** (1) When
+corrected by the owner, did not just patch the immediate answer – traced
+the gap to its root cause (a convention-level blind spot in the Phase 0
+priorities-list rendering) and fixed it at that level (`CLAUDE.md`
+amendment + `PROJECT_LEARNINGS.md` Learning 506), so the same correction
+should not be needed again for the next sequencing-audit-driven cluster.
+(2) Grounded the design’s central feasibility-guard numbers in an
+original empirical benchmark run this session, rather than picking round
+numbers by intuition – and the benchmark surfaced a genuinely
+counter-intuitive, load-bearing finding (sparser candidate pools are
+slower to enumerate exhaustively, not faster) that a guess-based design
+would likely have gotten backwards. (3) Used the real, already-tested
+`qcBreeders` fixture’s own empirical behavior (1000/1000 distinct
+partitions at `numGp=2`) as direct in-repo evidence for scoping
+exhaustive mode to `numGp=1` only, rather than asserting the scope
+boundary from first-principles complexity theory alone. (4) Matched the
+established design-doc house style (#147/#149) closely enough that the
+ratification round, close-out-checklist mapping, and
+dragons/alternatives sections required no format improvisation.
+**Weaknesses:** (1) The initial Phase 0 priorities list rendering itself
+missed the genetic-metrics cluster – the owner had to ask directly
+rather than this session catching the gap unprompted; this is the single
+biggest process miss of the session, now converted into a durable fix
+(Learning 506 + the `CLAUDE.md` amendment) but only after being caught
+externally, not internally. (2) Did not set the harness’s own
+deepest-reasoning-mode control at session start, as
+`SESSION_RUNNER.md`’s Planning Sessions guidance recommends (“Set your
+agent’s deepest available reasoning mode at session start”) – no such
+control was exposed as an invokable tool in this session’s environment,
+so this is stated here as an honest gap rather than a fabricated
+compliance claim, not silently omitted. **Ledger:** recorded in
+`CHANGELOG.md` at close-out (this session).
+
+### Session 505 Handoff Evaluation (by Session 506)
+
+**Score: 9/10.** **What helped:** `next_steps` named 3 concrete
+candidate items (twin-connector-color,
+15-pre-existing-baseline-warnings, BLOCKED LabKey) – built this
+session’s Phase 0 priorities list directly from it, and the owner picked
+the first exactly as offered. `gotchas` (the 3 `shinytest2` harness
+pitfalls: `NOT_CRAN=true` needed outside `testthat`,
+[`do.call()`](https://rdrr.io/r/base/do.call.html) for `upload_file()`/
+`set_inputs()`, a DT tab-switch + settle wait) were directly reused in
+this session’s own standalone smoke-test script – avoided all 3 mistakes
+S505 had to discover the hard way, on the first attempt. **What was
+missing:** `key_files` pointed at S505’s own \#149 deliverable
+(`R/modCrossCenterIdentity.R` etc.), not applicable to whichever BACKLOG
+item got picked next – an inherent limit of a predecessor not knowing in
+advance which of 3 named candidates would be chosen, not a flaw in the
+handoff itself. **What was wrong:** Nothing found inaccurate. **ROI:**
+High – the `next_steps` priorities list and the `shinytest2` gotchas
+were both directly, concretely reused; only `key_files` didn’t transfer,
+for a structural reason outside the handoff’s control.
+
+### What Session 506 Did
+
+**Deliverable:** Wired the twin-connector edge color (`#009E73`,
+Okabe-Ito bluish-green, colorblind-safe) into
+`.buildTwinConnectorEdges()` (`R/makePedigreeDiagramData.R`, issue \#137
+D10, BACKLOG.md Housekeeping – found S494) for both `edgeStyle` values
+(`"direct"`/ `"rectilinear"`), plus the Diagram-tab legend swatch in
+`R/modPedigree.R`. Followed
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` under this
+project’s Strict TDD contract (PRE-RED-\>RED-\>GREEN,
+`AskUserQuestion`-gated at every transition; REFACTOR owner-confirmed
+skip). Picked from this session’s own Phase 0 priorities list (owner
+choice via `AskUserQuestion`, over the 15-pre-existing-baseline-warnings
+fix and the BLOCKED LabKey item). **Started/Completed:** 2026-08-10.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 98/100). Ledger reconcile found 1
+undocumented commit past the `CHANGELOG.md` frontier (`68008f8d`, S505’s
+own self-referential close-out commit finalizing
+`SESSION_NOTES.md`/`HANDOFFS.md`) – backfilled and committed
+(`3a26c0a0`) before the report, matching the established S501/S503/S505
+precedent for this exact pattern. Built the priorities list; owner
+picked “Twin-connector color” via `AskUserQuestion`. **(2)** A pre-RED
+scope decision (wire the color vs. decline-and-close) was posed as a
+separate `AskUserQuestion` per `CLAUDE.md`’s phase-gate format,
+surfacing 2 findings from reading the code first: D6’s design doc
+explicitly lists `color` as a twin-connector styling channel (D10
+deferred the exact hex to Pre-RED), and a second, previously
+undiscovered dragon – `.addRectilinearWaypoints():1435` unconditionally
+reset every kept edge’s `color` to `NA`, so wiring the color alone would
+not have survived `edgeStyle = "rectilinear"`. Owner chose to wire the
+color in (not decline), full scope (both `edgeStyle` values), not the
+narrower direct-only alternative offered at the next gate. **(3)** Phase
+1B claim stub committed (`df13dacd`). **(4)** PRE-RED: read
+`.buildTwinConnectorEdges()`,
+[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md),
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md),
+`.addRectilinearWaypoints()`, the ratified design doc’s D6/D10, and
+every existing test file touching this code, before proposing the exact
+file/test list via `AskUserQuestion`; owner approved proceeding to RED.
+**(5)** RED: 11 new/extended `test_that()` assertions across 4 files
+(`test_makePedigreeDiagramData.R`, `test_makePedigreeMatingLayout.R`,
+`test_addRectilinearWaypoints.R`, `test_modPedigree.R`) – confirmed
+genuinely RED against unmodified `HEAD` (4 direct-style assertions
+failed `NULL`/missing-column; the rectilinear D9 assertion failed
+`NA`-vs-expected, a qualitatively different failure proving the dragon
+independently of the direct-style fix). Committed (`17cd2f9b`).
+`AskUserQuestion` gate: RED-\>GREEN approved. **(6)** GREEN: 2-file
+implementation (`R/makePedigreeDiagramData.R`, `R/modPedigree.R`)
+exactly matching the RED-gate plan; all 4 touched test files passed on
+first implementation pass. Full clean regression suite via a
+`git stash -u` before/after comparison: baseline (fix absent)
+`failed: 11, passed: 5031`; GREEN `failed: 0, passed: 5042` – an exact
++11/-11 delta, 0 change to the 15 pre-existing baseline warnings.
+`lintr::lint_package()`: 0 lints.
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html):
+0 errors/0 warnings, pre-existing notes only (vignette-engine NOTE,
+spelling-drift diff) – found and fixed ONE new session-caused spelling
+word (“unwired,” from this session’s own roxygen prose) by rewording to
+“never wired” rather than adding to `inst/WORDLIST`, matching the
+S501/S505 precedent; re-verified clean after the reword.
+`AskUserQuestion` gate: GREEN-\>REFACTOR – owner confirmed skip
+(implementation mirrors 2 established patterns exactly: the existing
+dashes/label column-priming idiom, and the issue \#133
+node-color-preservation precedent). **(7)** Phase 3E: a standalone
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+smoke-test script (not a permanent test file) against the real running
+app, reusing every `helper-shinytest2.R`/Learning 504 convention –
+uploaded the twin pedigree + twin-relations fixtures, confirmed
+`color:"#009E73"` on the LIVE-rendered MZ/DZ connector edges (queried
+via `w.network.body.data.edges.get()`, the same live-DataSet technique
+the existing `test-e2e-pedigree-module.R` E2E tests use) AND the
+legend’s 3 rows, under BOTH `edgeStyle` values – directly proving the
+rectilinear dragon-fix works live, not just in the isolated unit test –
+zero throw-level/SEVERE console entries. **(8)** Documentation:
+`NEWS.Rmd`/`NEWS.md` (the existing twin-connector bullet gained a color
+clause) and `vignettes/manual_components/ _pedigree_browser.Rmd` (same
+gap, same fix) per the NEWS.Rmd-entry (S448) and tutorial/article (S436)
+checklists – this is a visible rendering change to an already-shipped,
+already-documented feature, not a new tab/control.
+`colony-manager-guide.qmd` has no twin-connector mention at all (a
+separate, pre-existing gap, issue \#139’s own scope – reported, not
+fixed, per Learning 382/407). Citation checklist (#120) and
+`_pkgdown.yml` reference-coverage checklist (S496): N/A, no new
+statistic or exported function.
+
+**Self-assessment (Session 506): 9/10.** **Strengths:** (1) The PRE-RED
+code read caught the `.addRectilinearWaypoints()` dragon BEFORE writing
+any test or implementation code, surfaced it explicitly to the owner via
+`AskUserQuestion` with the exact fix plan, rather than discovering it
+only when the rectilinear-style RED assertion unexpectedly failed
+differently from the others. (2) The RED test for the dragon
+specifically was designed to distinguish “column absent” (`NULL`) from
+“column present but clobbered” (`NA`) – confirmed both failure shapes
+actually occurred exactly as predicted, proving the RED tests were
+diagnostic, not just red/green. (3) Live-verified the fix against the
+REAL running app under BOTH `edgeStyle` values (not just `testServer()`
+or unit tests), directly exercising the exact code path
+(`.addRectilinearWaypoints()`) the dragon lived in, reusing the
+project’s own established `w.network.body.data.edges.get()` live-DataSet
+query technique from `test-e2e-pedigree-module.R` rather than
+re-deriving verification from scratch. (4) Caught and fixed the
+session’s own new spelling-drift word (“unwired”) by directly re-running
+[`spelling::spell_check_files()`](https://docs.ropensci.org/spelling//reference/spell_check_files.html)
+against the regenerated `.Rd` with the project’s own `WORDLIST` applied,
+rather than assuming a small roxygen wording addition was spelling-safe;
+fixed by rewording (matching the established precedent) rather than
+defaulting to a `WORDLIST` addition. (5) Reused every one of S505’s own
+hard-won `shinytest2` harness gotchas (Learning 504) in the smoke-test
+script on the first attempt – zero repeated harness-API mistakes this
+session, unlike the 3 rounds S505 needed. **Weaknesses:** (1) A first
+attempt to run
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+concurrently (as a parallel background task) with a `git stash`-based
+baseline regression comparison raced against the stash, running
+`document()` against the STASHED (pre-fix) source and producing a silent
+no-op instead of the intended doc regeneration – caught only by checking
+`git status` afterward showed no `man/` diff where one was expected,
+then re-run serially after the stash was confirmed popped. No incorrect
+artifact was committed (the no-op run produced nothing to commit), but
+the mistake cost one extra round-trip. A stricter rule – never run a
+git-stash-based comparison concurrently with any other command that
+reads/writes tracked files – would have avoided it. (2) The roxygen
+accuracy pass (updating 2 `@return` docs to mention the new `color`
+column, plus the one `@noRd` doc) was done in a separate follow-up round
+after the initial GREEN commit, rather than folded into the original
+GREEN implementation pass – functionally harmless (caught before the
+close-out commit, verified clean), but a more complete first GREEN pass
+would have included the doc accuracy check up front. Both are captured
+here so a future session doesn’t repeat either. **Ledger:** recorded in
+`CHANGELOG.md` at close-out (this session).
+
+### Session 504 Handoff Evaluation (by Session 505)
+
+**Score: 10/10.** **What helped:** Nearly every field was directly
+load-bearing. `next_steps` named the exact Dragons Slice 2 had to
+resolve (“Dragons \#6/#7 on `modalDialog()` under this app’s bslib theme
+and DT NA-rendering both still open”) – this session’s live `shinytest2`
+smoke test targeted exactly those two and confirmed both. `key_files`
+pointed straight at the plan’s own §5 Slice 2 DONE criteria and the two
+Slice 1 source/test files this slice builds on – all confirmed accurate
+on re-read, zero drift. `gotchas` flagged that D10 is an additive
+*behavior change*, not cosmetic (“Slice 2’s UI/export copy should not
+imply this is purely cosmetic”) – this directly shaped this session’s
+`NEWS.Rmd` wording. The roxygen-adjacency and `git stash -u` gotchas
+didn’t recur this session (different code shape), but were exactly the
+right class of warning to carry forward. **What was missing:** Nothing
+that mattered. The handoff also named 3 untouched Phase 0 priorities
+(twin-connector color, the 10-\>15 warnings drift, the spelling NOTE) as
+still open – accurate, but the owner picked Slice 2 instead, so none of
+those were this session’s job either. **What was wrong:** Nothing found
+inaccurate. The “9 words” spelling-drift figure was S504’s own accurate
+count at the time; it had grown to 13 by this session’s own
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+run – ordinary continued drift on an already-tracked item, not an error
+in S504’s handoff. **ROI:** Extremely high – this may be the single most
+directly-used handoff this session has seen: the
+next_steps/key_files/gotchas fields were not just accurate but
+specifically anticipated the two hardest verification risks (Dragons
+\#6/#7) this session actually had to clear.
+
+### What Session 505 Did
+
+**Deliverable:** Issue \#149 Slice 2 – the full `modCrossCenterIdentity`
+Shiny module (UI, confirm gate, exports, documentation) per
+`docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md`
+§5 Slice 2. New **Cross-Center Identity** tab: 3 file uploads (Center
+A/B pedigrees + identity mapping), a “Validate Mapping” action button
+gating a
+[`checkCrossCenterMapping()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkCrossCenterMapping.md)-backed
+Validation tab (every issue shown at once, including a
+structural-upload-error fallback folded into the same row shape), a
+Preview tab computing
+[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)’s
+proposed merge with a per-pair lineage-change table (2 new internal
+helpers, `.buildCrossCenterLineagePreview()`/
+`.buildCrossCenterMergeProvenance()`, reusing Slice 1’s own
+`.rewriteCrossCenterIds()`/ `.pickCrossCenterParent()` directly per D6),
+a
+[`shiny::modalDialog()`](https://rdrr.io/pkg/shiny/man/modalDialog.html)
+confirmation gate (D7, this app’s first-ever use of the function), and 5
+downloadable export artifacts (D8: Merged Pedigree, Mapping, Validation
+Results, Merge Summary, Provenance). Wired additively into `R/appUI.R`
+(new tabPanel) and `R/appServer.R` (self-contained, no `shared$...` args
+per D3). Followed
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` under this
+project’s Strict TDD contract (PRE-RED-\>RED-\>GREEN,
+`AskUserQuestion`-gated at every transition; REFACTOR owner-confirmed
+skip). Picked from this session’s own Phase 0 priorities list (owner
+choice via `AskUserQuestion`, over the twin-connector-color fix/decline,
+the now-15 baseline-warnings root-cause fix, and the BLOCKED LabKey
+item). **Started/Completed:** 2026-08-10. **Status:** DONE. **Issue
+\#149 closed** – both slices of the ratified design are now shipped.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 98/100). Ledger reconcile found 1
+undocumented commit past the `CHANGELOG.md` frontier (`fd0c0312`, S504’s
+own self-referential `HANDOFFS.md` receipt-sha backfill) – backfilled
+and committed (`e1c61673`) before the report, matching the established
+S501/S503 precedent for this exact pattern. Built the priorities list;
+owner picked “Issue \#149 Slice 2” via `AskUserQuestion`. **(2)** Phase
+1B claim stub committed (`dcb0cde9`). **(3)** PRE-RED: re-read the full
+ratified plan (§1-§11) and Slice 1’s shipped code
+(`R/checkCrossCenterMapping.R`, `R/resolveCrossCenterIds.R`) plus the
+conventions this slice had to match (`R/modInput.R`’s
+upload/action-button/download pattern,
+`docs/architecture/ module-contract.md`,
+`tests/testthat/test_moduleContract.R`’s registration pattern,
+`R/appUI.R`/`R/appServer.R`’s additive-tab wiring, `R/getVersion.R`).
+Proposed a concrete implementation plan (exact UI structure, server
+reactive graph, 2 new internal helpers, test list) via
+`AskUserQuestion`; owner approved proceeding to RED. **(4)** RED: wrote
+17 new `test_that()` blocks in new
+`tests/testthat/test_modCrossCenterIdentity.R` (5 UI-shape, 4
+validation, 3 confirm-gate, 3 export, 2 internal-helper) and registered
+`modCrossCenterIdentity` in `test_moduleContract.R`; confirmed genuinely
+RED against unmodified `HEAD` (every new assertion failed with “could
+not find function” / “object not found”). Committed (`6c9d790d`).
+`AskUserQuestion` gate: RED-\>GREEN approved. **(5)** GREEN: implemented
+`R/modCrossCenterIdentity.R` and wired it into `appUI.R`/`appServer.R`;
+all 17 new tests + the 10-module contract file passed on first
+implementation pass.
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+ran clean (no doc/function-adjacency mishap this time, unlike S504’s own
+Learning 503). Full clean regression suite via a `git stash -u`
+comparison against unmodified `HEAD` confirmed 0 regressions
+(4151-\>4236 passed, an exact delta matching only the new tests). Found
+and fixed the one real `_pkgdown.yml` reference-coverage failure
+(Session 496 checklist). `lintr::lint_package()` found 2 `brace_linter`
+hits, fixed.
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+found ONE new spelling-drift word from this session’s own roxygen prose
+(“merge’s” in `modCrossCenterIdentityUI.Rd`) layered on the
+pre-existing, separately-tracked drift – fixed by rewording (not
+`inst/WORDLIST`-adding), verified clean via `tests/spelling.R` both
+before and after the later documentation pass. `AskUserQuestion` gate:
+GREEN-\>REFACTOR – owner confirmed skip (implementation already matches
+the ratified design’s own decomposition). **(6)** Phase 3E: a standalone
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+smoke-test script (not a permanent test file) against the real running
+app – uploaded a multi-issue mapping (Validation tab correctly shows
+both an existence and a uniqueness problem at once), then a clean
+mapping (Preview tab resolves `sire`/`dam` to source “A”, matching the
+fixture’s own real-transferred-animal shape), directly confirmed
+**Dragon \#6** (`modalDialog()` renders correctly under this app’s
+never-before-exercised bslib theme, with correct summary-count text) and
+**Dragon \#7** (the Preview table’s `NA` `pedB_sire`/`pedB_dam` cells
+render as blank text, read via `app$get_js()` cell traversal per
+Learning 501, not assumed), then confirmed the merge and verified the
+Export tab unlocked – zero `SEVERE` console entries throughout. 3
+mechanical `shinytest2` API pitfalls hit and fixed along the way
+(`NOT_CRAN=true` needed outside `testthat`;
+[`do.call()`](https://rdrr.io/r/base/do.call.html) needed for
+`upload_file()`/`set_inputs()`; a DT table needs an explicit
+tab-switch + settle wait before its cells are readable) – see
+`PROJECT_LEARNINGS.md` Learning 504. **(7)** Documentation: `NEWS.Rmd`/
+`NEWS.md` (re-rendered clean, diff shows only the new bullet),
+`_pkgdown.yml` reference-coverage entry, and a new “Cross-Center
+Identity” subsection in `vignettes/articles/ colony-manager-guide.qmd`
+(text-only, no new screenshot – matching the S465 “and/or allowance
+satisfied” precedent – re-rendered via `quarto render`, clean).
+`a2interactive.Rmd` coverage explicitly deferred per its own standing
+rule (Session 450/478). **(8)** Close-out: `gh issue close 149` with a
+verification-evidence comment; `CHANGELOG.md` Slice 2 ledger entry;
+`BACKLOG.md` progress note (both slices now DONE);
+`PROJECT_LEARNINGS.md` Learning 504. 8 checkpoint commits total across
+the session, each within the 5-file blast-radius cap except one
+explicitly-labeled mechanical `@family` cross-reference regen (20+2
+files, matching the S442 precedent `0031cd84` for this exact roxygen
+byproduct).
+
+**Self-assessment (Session 505): 9/10.** **Strengths:** (1) The PRE-RED
+research phase read every convention Slice 2 needed to match (upload
+pattern, module contract, wiring precedent) before writing a single
+test, so RED’s 17 tests and GREEN’s implementation needed zero
+structural rework – first implementation pass turned every new test
+green. (2) Live-verified both named Dragons (#6 modal-under-bslib-theme,
+\#7 DT NA-cell rendering) against the REAL running app, not just
+`testServer()` – directly satisfying the plan’s own “not just
+testServer()” Verification requirement, and reusing Learning 501’s
+established cell-text-read technique rather than re-deriving a
+possibly-fooled [`grepl()`](https://rdrr.io/r/base/grep.html) approach.
+(3) Caught and fixed the session’s own new spelling-drift word by
+investigating a raw
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+`Status:` line (not the colored summary, per Learning 382) rather than
+assuming “1 pre-existing note” was still accurate – correctly
+distinguished it from the pre-existing, separately-tracked drift and
+fixed only the session-caused word (matching Learning 501’s own
+precedent for this exact judgment call). (4) Used a `git stash -u` (not
+a bare `git stash`) for the before/after regression comparison, avoiding
+S504’s own documented Learning 503 pitfall. (5) Committed in
+clearly-labeled checkpoints matching the blast-radius discipline,
+including correctly identifying the mass `@family` man-page regen as a
+mechanical byproduct deserving its own separately-labeled commit (S442
+precedent) rather than folding it into the hand-written implementation
+commit. **Weaknesses:** (1) Missed 2 of the 22 mechanically-regenerated
+`man/*.Rd` files (`modSummaryStatsServer.Rd`/`modSummaryStatsUI.Rd`)
+when constructing the checkpoint-3 `git add` command – caught
+immediately via `git status` after the commit, fixed with one small
+follow-up commit, but a more careful `git add man/*.Rd` (with an
+explicit exclude for the 2 new files, already committed separately)
+would have avoided the extra commit. (2) The live smoke-test script
+needed 3 rounds of fixing (missing `NOT_CRAN=true`, wrong
+`upload_file()` calling convention, a DT-table timing race) before it
+ran clean – each was a harness/API-usage mistake, not an application
+defect, but a more careful first read of
+`tests/testthat/helper-shinytest2.R`’s own existing patterns before
+writing the driver script from scratch would have avoided at least the
+first two. Both are captured as `PROJECT_LEARNINGS.md` Learning 504 so a
+future session doesn’t repeat either. **Ledger:** recorded in
+`CHANGELOG.md` at close-out (this session).
+
+### Session 503 Handoff Evaluation (by Session 504)
+
+**Score: 10/10.** **What helped:** `next_steps` named the exact next
+action in full mechanical detail – “Slice 1 (validation core) is the
+natural next pickup for issue \#149: extract
+[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)’s
+4 checks into shared helpers per D2 (including the load-bearing `pedB`
+id-rewrite step, Dragon \#2), add the new exported
+[`checkCrossCenterMapping()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkCrossCenterMapping.md)
+per the Interface Catalog (plan §4), and fix the D10 column-loss defect
+in the same slice” – this session followed that literally. `key_files`
+pointed at exact, correct locations (`R/resolveCrossCenterIds.R:92-193`
+for the function, `:182-185` specifically for the D10 fix, the
+7-test-block test file) – all confirmed byte-for-byte accurate on direct
+re-read, zero drift from plan to live source. `gotchas` (Dragon \#2:
+looking up a merged pair’s row by canonical `idA` BEFORE `pedB`’s ids
+are rewritten silently returns an all-`NA` row, not an error –
+[`checkCrossCenterMapping()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkCrossCenterMapping.md)
+MUST perform the same rewrite first or it will silently under-report
+conflicts) was independently re-confirmed via live execution during this
+session’s own Pre-RED pass, and directly drove a dedicated regression
+test proving the conflict check actually fires post-rewrite. **What was
+missing:** Nothing that a design-only predecessor session could
+reasonably have anticipated – two process pitfalls this session hit (a
+roxygen doc-block/function adjacency requirement silently un-exporting a
+function during
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html);
+a `git stash` comparison contaminated by untracked new files) are
+implementation-mechanics discoveries no design document would surface.
+**What was wrong:** Nothing found inaccurate – every design claim, line
+number, and the Dragon \#2 mechanism held up under this session’s own
+from-scratch live re-verification and full TDD implementation. **ROI:**
+Extremely high – the plan’s D2/D9/D10 decisions and Interface Catalog
+were essentially copy-ready; this session’s own Pre-RED round mainly
+reconfirmed the design rather than discovering new gaps, and the one
+genuinely new judgment call (whether D10 generalizes
+conflict-*detection*, not just column population, to every shared
+column) was flagged explicitly at the PRE-RED-\>RED gate rather than
+silently assumed.
+
+### What Session 504 Did
+
+**Deliverable:** Implemented Slice 1 of the ratified issue \#149 design
+(`docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md`
+§5 Slice 1) – the validation core, R-function level only, no UI. New
+exported `checkCrossCenterMapping(pedA, pedB, mapping)`
+(`R/checkCrossCenterMapping.R`), D2’s two-tier collect-all validator,
+sharing
+[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)’s
+four checks (existence/uniqueness/collision/conflict) via 8 new shared,
+non-[`stop()`](https://rdrr.io/r/base/stop.html)ing internal helpers
+extracted from it.
+[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)
+itself calls these helpers in its original exact order and keeps its own
+historical [`stop()`](https://rdrr.io/r/base/stop.html) message text
+byte-for-byte (all 7 pre-existing test blocks pass unmodified; a new
+golden-master test pins the exact merge output). Also shipped the D10
+data-loss fix: a merged pair’s other shared, agreeing columns
+(e.g. `sex`) now survive the merge under the same prefer-non-`NA`/
+error-on-conflict rule already used for `sire`/`dam`, instead of being
+silently dropped – an explicit, `NEWS.Rmd`-documented additive behavior
+change. Followed
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` under this
+project’s Strict TDD contract (PRE-RED-\>RED-\>GREEN cycle,
+`AskUserQuestion`-gated at every transition; REFACTOR owner-confirmed
+skip). Picked from this session’s own Phase 0 priorities list (owner
+choice via `AskUserQuestion`, over the twin-connector-color
+fix-or-decline, the 10-pre-existing-warnings root-cause fix, and the
+spelling-drift NOTE). **Started/Completed:** 2026-08-10. **Status:**
+DONE. Issue \#149 stays open (Slice 2 – full UI, confirm gate, exports,
+documentation – is the natural next pickup, a separate future session).
+
+**What happened, in order:** **(1)** Phase 0 orient (SAFEGUARDS.md,
+SESSION_NOTES.md, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 98/100, ledger reconcile found zero
+gap, both `CHANGELOG.md`/`HANDOFFS.md` frontiers already at `HEAD`).
+Built the priorities list; owner picked “issue \#149 Slice 1” via
+`AskUserQuestion`. **(2)** Phase 1B claim stub committed (`2cab97a2`).
+**(3)** PRE-RED: re-read `R/resolveCrossCenterIds.R` and its 7-block
+test file in full (confirmed zero drift from the plan’s own line-number
+citations), then live-executed both named dragons directly against
+unmodified source – confirmed D10’s column-loss (a merged pair agreeing
+on `sex = "M"` produces `merged$sex == NA`) and Dragon \#2’s pre-rewrite
+lookup (silently returns a 1-row all-`NA` data.frame, not an error, not
+zero rows, using the plan’s own exact `[1L, ]` indexing). Captured the
+exact pre-refactor merge output via
+[`dput()`](https://rdrr.io/r/base/dput.html) for a hardcoded
+golden-master test. Drafted the concrete implementation plan (8 shared
+helpers, exact function signatures, test plan) and flagged one
+interpretive decision explicitly before writing tests: D10’s text
+(“generalizes… prefer non-`NA`, error on differing non-`NA` values… to
+every column”) reads as extending `.pickCrossCenterParent()`’s
+error-on-conflict behavior to every shared column, not just column
+population – a real, new error condition beyond what the plan’s prose
+example covers. `AskUserQuestion` gate: PRE-RED-\>RED approved (as
+proposed, including the generalized -conflict-erroring interpretation).
+**(4)** RED: added 9 new tests in new
+`tests/testthat/test_checkCrossCenterMapping.R` (clean-mapping
+zero-rows; 2 structural stop() tests; tier-A-gating proof with a real
+collision injected but suppressed; tier-B collision; Dragon \#2’s core
+proof – a real conflict actually reported; multi-conflict collection
+proof; 2 mechanism-verification tests for
+`.rewriteCrossCenterIds()`/`.pickCrossCenterParent()`) and 3 new blocks
+appended to `test_resolveCrossCenterIds.R` (golden-master
+[`identical()`](https://rdrr.io/r/base/identical.html) test; D10
+column-population test; D10 conflict-on-non-sire/dam-column test). Ran
+against unmodified `HEAD` and confirmed genuinely RED: all 9 new
+`checkCrossCenterMapping` blocks failed with “could not find function”;
+the golden-master block and all 7 pre-existing `resolveCrossCenterIds`
+blocks passed unchanged (0 regressions); the 2 new D10 blocks failed
+exactly as expected (`NA` instead of `"M"`; no error thrown yet).
+`AskUserQuestion` gate: RED-\>GREEN approved. **(5)** GREEN: extracted
+the 8 shared helpers into `R/resolveCrossCenterIds.R`
+(`.requireCrossCenterPedColumns`/`.requireCrossCenterMappingColumns`/
+`.checkCrossCenterUniqueness`/`.checkCrossCenterExistenceA`/`.checkCrossCenterExistenceB`/
+`.checkCrossCenterCollision`/`.checkCrossCenterConflict`/`.rewriteCrossCenterIds`/
+`.pickCrossCenterParent`), rewrote
+[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)
+to call them in original order with hardcoded historical
+[`stop()`](https://rdrr.io/r/base/stop.html) text (reconstructed from
+each helper’s own computed `ids` string, not its generic `message`, to
+guarantee byte-identical text with zero risk), and added the D10
+generalized-column merge loop. Added new `R/checkCrossCenterMapping.R`
+(exported, full roxygen). **First
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+run silently deleted `man/resolveCrossCenterIds.Rd` and dropped its
+`NAMESPACE` export** – caught immediately via `git status` (not an error
+message): the new helper functions, inserted between the function’s
+roxygen block and its definition, broke roxygen2’s doc-to-function
+adjacency requirement. Fixed by relocating the doc block to sit
+immediately above the (now-relocated) function definition. Re-ran
+`document()`: `NAMESPACE`/`man/` diffs now correct (1 new export, 1
+modified `.Rd`, 1 new `.Rd`). All 19 new test assertions passed; 0
+regressions. **(6)** Full verification: clean regression suite 0
+failed/0 error (4951 passed, 175 skipped; 15 pre-existing warnings,
+confirmed identical on unmodified `HEAD` via a `git stash` comparison –
+**first attempt at this comparison was itself contaminated** by
+`git stash` not including untracked files, so the still-present new
+`R/checkCrossCenterMapping.R` called helpers `git stash` had just
+reverted, fabricating 2 “no visible global function definition” errors;
+caught by investigating an implausible result and re-run correctly);
+`lintr::lint_package()` 0 lints on touched files;
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings/1 pre-existing note (vignette-engine, confirmed
+unrelated); `_pkgdown.yml` reference-coverage entry added for
+`checkCrossCenterMapping` (caught a real gap live –
+`test_pkgdown_reference_config.R` failed until fixed); `NEWS.Rmd` entry
+added and re-rendered clean (`NEWS.md` diff shows only the new bullet).
+`AskUserQuestion` gate: GREEN-\>REFACTOR – owner confirmed skip
+(implementation already matches the ratified design’s own
+decomposition). **(7)** Phase 3E: `runtime_smoke: n/a` – confirmed via
+`grep` that neither
+[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)
+nor
+[`checkCrossCenterMapping()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkCrossCenterMapping.md)
+has any call site anywhere in the live Shiny app (only roxygen
+`\code{\link{}}` cross-references), matching the established
+“script-callable only” precedent
+([`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)’s
+own original Slice 4 shipped the same way). **(8)** Close-out: found and
+reported, without fixing (out of scope), an incidental drift in the
+separately-tracked “10 pre-existing baseline warnings” Housekeeping item
+– now 15, traced to a 3rd `test_modMarkerGenetics.R` block (S502’s own
+issue \#155 live regression test) triggering the same
+[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)
+NA-warning pattern.
+
+**Self-assessment (Session 504): 9/10.** **Strengths:** (1)
+Live-verified both named dragons (D10 column-loss, Dragon \#2
+pre-rewrite lookup) by actually executing unmodified source before
+writing any test, using the plan’s own exact code paths, not just
+re-reading them. (2) Captured an exact
+[`dput()`](https://rdrr.io/r/base/dput.html)-literal golden master
+BEFORE touching any code, giving the byte-identical requirement
+zero-risk verification rather than trusting a refactor “looks
+equivalent.” (3) Preserved
+[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)’s
+historical [`stop()`](https://rdrr.io/r/base/stop.html) text by reusing
+each helper’s own computed `ids` string rather than reconstructing
+message text from scratch or trusting a shared generic message –
+eliminates an entire class of subtle byte-mismatch risk. (4) Flagged the
+D10 generalized-conflict-erroring interpretation explicitly at the
+PRE-RED-\>RED gate as a real behavior-change decision rather than
+silently baking in an assumption. (5) Ran the FULL regression suite, not
+just the two new test files – caught the `_pkgdown.yml`
+reference-coverage gap neither isolated file run would have surfaced.
+(6) Correctly diagnosed an incidental, pre-existing warning-count drift
+(10-\>15) via direct investigation (git stash comparison) rather than
+assuming a documented baseline was still accurate, and reported without
+fixing, matching established scope discipline. **Weaknesses:** (1) The
+roxygen doc-block/function-adjacency mistake was avoidable with more
+upfront awareness of how roxygen2 associates comment blocks – caught
+immediately via disciplined `git status` checking, but cost a rework
+round-trip. (2) The first `git stash`-based “is this pre-existing”
+comparison was itself methodologically contaminated (stash without `-u`
+left untracked new files behind) and produced 2 fabricated errors before
+being caught and redone correctly – a moment’s thought about “will
+untracked files survive this stash” would have avoided the false start.
+Both mistakes are captured as `PROJECT_LEARNINGS.md` Learning 503 so a
+future session doesn’t repeat either. **Ledger:** recorded in
+`CHANGELOG.md` at close-out (this session).
+
+### Session 502 Handoff Evaluation (by Session 503)
+
+**Score: 8/10.** **What helped:** `next_steps` named “issue \#149
+design/architecture pass (Tier 2 sequencing, first/smallest-scope item,
+READY, Effort M – no design doc exists yet)” as one of two named
+untouched pickups – exactly the scope characterization this session’s
+own research confirmed (a genuine architecture-workstream decision, not
+a quick implementation). This saved real time framing the
+priorities-list write-up and the initial workstream-choice question,
+mirroring the S500-\>S501 handoff’s own analogous strength. **What was
+missing:** Nothing \#149-specific carried forward in the handoff
+(understandably – S502’s own deliverable was issue \#155, not \#149) –
+this session had to independently build the full evidence-based
+inventory
+([`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md),
+`modInput.R`, `module-contract.md`, the export/download-button
+convention, the qcStudbook/checkKinshipOverrides validation precedents)
+from scratch. Not a defect in the handoff (a \#149-specific deep-dive
+was never S502’s job), but worth naming for a complete evaluation,
+matching the identical pattern S501’s own evaluation of S500 named.
+**What was wrong:** Nothing found inaccurate – issue \#155 was genuinely
+DONE and CLOSED exactly as described, and the `gotchas` (DT
+`-Inf`-renders-blank; the `"U"`-auto-id-prefix fixture landmine) were
+accurate, if not directly relevant to this session’s own design-only
+deliverable. **ROI:** Positive – the accurate, precisely-scoped naming
+of issue \#149 as the next pickup saved real Phase 0 discovery time,
+even though the handoff (correctly) carried no \#149-specific technical
+detail beyond that.
+
+### What Session 503 Did
+
+**Deliverable:** A ratified design/architecture document for issue \#149
+(`docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md`)
+– “Add a reviewed cross-center identity-mapping workflow with provenance
+export”: a new, self-contained `modCrossCenterIdentity` Shiny module
+wrapping the existing, already-shipped, script-callable
+[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)
+(issue \#130 Slice 4) with a non-fail-fast validator
+([`checkCrossCenterMapping()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkCrossCenterMapping.md),
+new exported function), a merge preview with lineage-change detail, the
+app’s first
+[`shiny::modalDialog()`](https://rdrr.io/pkg/shiny/man/modalDialog.html)
+confirmation gate, and 5 downloadable export artifacts. Followed
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md` (owner-picked
+via `AskUserQuestion` over the literal `DESIGN_WORKSTREAM.md` mapping,
+matching the \#133/#136/#137/#145/#147 precedent for this shape of
+decision). Design/planning only – no `R/`, `tests/`, or `man/` content
+changed. Picked from this session’s own Phase 0 priorities list (owner
+choice via `AskUserQuestion`, out of \#149 design / the
+twin-connector-color fix / root-causing the 10 pre-existing regression
+warnings / the spelling-drift NOTE). **Started/Completed:** 2026-08-10.
+**Status:** DONE. RATIFIED via `AskUserQuestion` (all four genuine
+judgment calls – Q1 validation -extraction mechanism, Q2 scope boundary,
+Q3 export-artifact set, Q4 whether to fix a newly-found data-loss defect
+now – owner selected this document’s own recommended option in all four,
+no changes requested). Issue \#149 commented (not closed – design only,
+matching the \#133/#136/#137/#145/#147 precedent), a 2-slice
+implementation is the next pickup.
+
+**What happened, in order:** **(1)** Phase 0 orient (SAFEGUARDS.md,
+SESSION_NOTES.md, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 98/100). Ledger reconcile found 1
+undocumented commit past the `CHANGELOG.md` frontier (`797c16f6`, S502’s
+own self-referential `HANDOFFS.md` receipt-completion commit) –
+backfilled and committed (`eff8833d`) before the report, matching the
+established S466-S501 precedent for this exact self-referential pattern.
+Built the priorities list from `BACKLOG.md` + open GitHub issues; owner
+picked “#149 design pass” via `AskUserQuestion`. **(2)** A second
+`AskUserQuestion` picked the workstream: `ARCHITECTURE_WORKSTREAM.md`
+over the literal `DESIGN_WORKSTREAM.md` mapping, matching the
+\#133/#136/#137/#145/#147 precedent (a new module boundary, a
+validation-surface architecture decision, and the app’s first
+confirm-gate UI pattern – not a pure visual-layout question). **(3)**
+Phase 1B claim stub committed (`00afc950`), including a full evaluation
+of S502’s own handoff (8/10 – accurate, precisely-scoped pickup naming;
+no \#149-specific detail, understandably, since \#149 wasn’t S502’s
+job). **(4)** Research: read issue \#149’s full body (zero comments),
+the `GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` and
+`GENETIC_METRICS_PDF_CAPABILITY_AUDIT_ 2026-08-06.md` audit docs (both
+already anticipated “the app’s first `showModal()`/`modalDialog()`
+confirmation gate” and a “confirm + export with provenance” UI pattern
+shared with issue \#150), and direct full reads of
+`R/resolveCrossCenterIds.R` (and its 7-test-block test file),
+`R/modInput.R`, `R/modMarkerGenetics.R`‘s Cross-Center tab,
+`R/checkKinshipOverrides.R`/`R/checkTwinRelations.R`,
+`R/qcStudbook.R`/`R/checkRequiredCols.R`,
+`docs/architecture/module-contract.md` + `test_moduleContract.R`,
+`R/appUI.R`/`R/appServer.R`’s `modMarkerGenetics` wiring, and
+`R/getVersion.R` – confirmed
+[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)’s
+4 existing internal checks map 1:1 onto the issue’s 4 named validation
+bullets, and confirmed zero `modalDialog()`/`showModal()` precedent
+exists anywhere in `R/`. **(5)** Drafted the design document
+(Context/evidence-based inventory/design decisions/implementation
+plan/impact analysis/dragons/alternatives/close-out
+checklist/provenance/ratification), 9 design decisions. **(6)** Ran 2
+independent adversarial-review agents in parallel
+(correctness-vs-source, re-deriving every claim directly against live
+source including actually EXECUTING
+[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md);
+completeness/house-style against the \#147/#137 precedent docs and
+`CLAUDE.md`’s close-out rules) – found and fixed **a real,
+previously-unknown technical defect** in the already-shipped
+[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)
+(its merge step silently drops every non-`id`/`sire`/`dam` column for
+merged individuals, about to become curator-visible for the first time
+via this design’s own new export – incorporated as a new D10 judgment
+call), **a design-consistency gap** (the planned conflict-check
+extraction silently depended on a `pedB` id-rewrite step the first draft
+never made explicit, which would have caused the new collect-all
+validator to under-report real conflicts – fixed directly in D2 with a
+new Dragon), a factual test-count overcount (“6 tests” -\> the accurate
+7-block/8-`expect_error()`-call breakdown), a mischaracterization of
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)’s
+actual validation mechanism, 3 close-out -checklist accuracy errors (the
+`a2interactive.Rmd` disposition and the NEWS.Rmd/`_pkgdown.yml`
+checklists’ Slice-1 applicability), a missing Interface Catalog section
+(added as new §4, which also resolved a set of forward-referencing `§11`
+citations written assuming that section’s presence), and 2 missing
+Dragons (motivated directly by `PROJECT_LEARNINGS.md` Learning 501’s
+DT-rendering finding from the immediately preceding session). All
+incorporated into a full revision, not left as caveats. **(7)** Ratified
+via a single `AskUserQuestion` round; owner picked this document’s own
+recommended option in all four cases (Q1-Q4). **(8)** Close-out:
+`PROJECT_LEARNINGS.md` Learning 502, `CLAUDE.md` learning-count
+cross-reference (501-\>502, Sessions 1-502+ -\> 1-503+), `BACKLOG.md`
+Genetic-metrics-audit-cluster progress note, `CHANGELOG.md` entry, a
+summary comment posted to GitHub issue \#149 (not closed), this handoff.
+
+**Self-assessment (Session 503): 9/10.** **Strengths:** (1) Did not
+accept the literal `DESIGN_WORKSTREAM.md` task mapping at face value –
+explicitly checked and matched the established \#133/#136/#137/#145/#147
+precedent for this exact class of decision before starting research. (2)
+Ran a genuinely adversarial 2-agent review pass even though this design
+needed no external literature (unlike \#137/#147) – and it still found a
+real, previously-unknown technical defect in an already-shipped function
+by actually EXECUTING it, not just re-reading its source, plus a design
+-internal-consistency gap (D2’s promised return shape couldn’t actually
+supply what D6/D8 claimed to consume from it) that a citation-accuracy
+check alone would never catch. (3) Incorporated every adversarial
+finding directly into the ratified document (a new D10 judgment call, a
+corrected D2 mechanism, 2 new Dragons, a new Interface Catalog section,
+3 checklist corrections) rather than noting them as caveats or deferring
+them – and verified the resulting cross-references were internally
+consistent (a full `grep` sweep of every `§N` citation in the final
+document, catching and fixing 3 real ones: `§7/§11` -\> `§8/§11`,
+`see §7` -\> `see §8`, and an imprecise “§1’s Origin line” reference)
+rather than trusting the rewrite was clean by construction. (4) Surfaced
+the new D10 finding as a genuine, honestly-framed judgment call (fix now
+vs. ship with a documented caveat) rather than either silently folding
+it into “no behavior change” or unilaterally deciding to fix it without
+ratification. **Weaknesses:** (1) The original single-pass draft
+undercounted
+[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)’s
+own test file (stated “6 tests” from a quick read rather than an exact
+recount) – a more careful first-pass inventory would have caught this
+without needing the adversarial review to find it. (2) The original
+draft’s `§11`-referencing cross-references were written assuming a
+section (Interface Catalog) that didn’t yet exist in the document –
+copying the \#147 precedent’s citation style without first confirming
+this document’s own section count matched. **Ledger:** recorded in
+`CHANGELOG.md` at close-out (this session).
+
+## ACTIVE TASK (prior sessions)
+
+### Session 501 Handoff Evaluation (by Session 502)
+
+**Score: 9/10.** **What helped:** `next_steps` named the exact next
+action in full mechanical detail – “add
+[`.markerFlaggedSlotPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/dot-markerFlaggedSlotPedigree.md)
+to `R/markerParentageLikelihood.R` (with the duplicate-id guard already
+specified in §3 D1’s code block), wire it into both existing
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+call sites (:285 auto-detect, :298 explicit branch), add the 6 tests
+listed in §7… run the Phase 3E live shinytest2 smoke test… then follow
+§7’s DONE criteria exactly” – this session followed that literally.
+`key_files` pointed at exact, correct locations (the plan’s own §3 D1
+code block, the two call-site line numbers,
+`R/getPotentialParents.R:111-113`’s unmodified filter). `gotchas` (the
+duplicate-`pedigree$id` guard is REQUIRED per the FINAL §3 D1 code, not
+an earlier draft; the shadow copy must stay scoped to the
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+call argument only, never assigned back to the `pedigree` binding;
+auto-detect must build the shadow copy once outside the per-flag loop)
+were all directly actioned during this session’s own Pre-RED live
+re-verification, and all held up. **What was missing:** Nothing in scope
+for a design-only handoff – but this session’s own Pre-RED independently
+discovered a real landmine the plan’s fixture design couldn’t have
+anticipated: the package’s default auto-generated-unknown-id prefix is
+`"U"`
+([`getAutoIdFormat()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAutoIdFormat.md)
+-\> `"U%04d"`), so
+[`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md)
+silently strips any real individual id starting with `"U"` and nulls any
+sire/dam reference to it – a live (non-mocked)
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+test reusing the existing P/C/**U** fixture
+(`test_modMarkerGenetics.R`’s established founder-id convention) would
+have silently mis-tested the fix. Caught only by live execution, not by
+reading the plan. **What was wrong:** Nothing found inaccurate – every
+design claim in the plan held up against this session’s own from-scratch
+live re-verification (the shadow-pedigree mechanism, D3(a)’s leave-in
+behavior, and all 3 named dragons – both-slots-flagged, batch
+no-cross-contamination, duplicate-id guard – all reproduced
+identically). **ROI:** Strongly positive – the plan’s §3 D1 code block
+was copy-ready; this session’s own live-verification round mainly
+reconfirmed it rather than discovering new design gaps.
+
+### What Session 502 Did
+
+**Deliverable:** Implemented the ratified issue \#155 design
+(`docs/planning/issue155-parentage-likelihood-candidate-lookup-plan.md`
+§7) – the “shadow pedigree” fix for
+[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)’s
+auto-detect (and explicit `id`/`role`/`candidates = NULL`) candidate
+lookup, which previously returned zero candidates whenever a flagged
+animal’s recorded parent was present-but-wrong. Followed
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` under this
+project’s strict TDD contract (PRE-RED-\>RED-\>GREEN,
+`AskUserQuestion`-gated at every transition; REFACTOR owner-confirmed
+skip). Picked from S501’s own priorities list (owner choice via
+`AskUserQuestion`, over “#149 design” and “.buildTwinConnectorEdges()
+color fix”). **Started/Completed:** 2026-08-10. **Status:** DONE.
+**Issue \#155 closed** as part of this session’s close-out.
+
+**What happened, in order:** **(1)** Phase 0 orient (SAFEGUARDS.md,
+SESSION_NOTES.md, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 98/100). Ledger reconcile found 1
+undocumented commit past the `CHANGELOG.md` frontier (`627d9d49`, S501’s
+own self-referential `HANDOFFS.md` commit-sha backfill) – backfilled and
+committed (`55870d7a`) before the report, per the established
+S482/S472/S466 precedent for this exact self-referential pattern. Built
+the priorities list; owner picked “implement issue \#155” via
+`AskUserQuestion`; user also asked whether issues \#145/#147 needed
+closing – confirmed via `gh issue view` both were already closed
+correctly by their own shipping sessions (S500, S498). **(2)** Phase 1B
+claim stub committed (`b3a7db97`), including a full evaluation of S501’s
+own handoff (9/10 – every `next_steps`/`key_files`/`gotchas` claim held
+up under live re-verification). **(3)** Re-read
+`R/markerParentageLikelihood.R` and `R/getPotentialParents.R` in full
+(confirmed zero drift from the ratified plan’s own line-number
+citations) and `DEVELOPMENT_WORKSTREAM.md`. **(4)** PRE-RED:
+live-verified the bug reproduction, the exact
+[`.markerFlaggedSlotPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/dot-markerFlaggedSlotPedigree.md)
+helper from the plan’s own §3 D1 code block, and all 3 named dragons
+(both-slots-flagged, batch no-cross-contamination,
+duplicate-`pedigree$id` fail-soft) against real, unmodified source – and
+independently discovered (before consulting `PROJECT_LEARNINGS.md`) that
+the package’s default auto-generated-id prefix (`"U"`) would silently
+corrupt a live fixture reusing the existing `test_modMarkerGenetics.R`
+P/C/U founder-id convention, confirming Learning 497’s own finding from
+a fresh angle. Hand-derived exact LOD values for a new 4-locus
+SireTrue/SireWrong/Dam/C fixture via explicit-candidates calls
+(unaffected by the bug). `AskUserQuestion` gate: PRE-RED-\>RED approved.
+**(5)** RED: added 9 new tests across `test_markerParentageLikelihood.R`
+(5
+[`.markerFlaggedSlotPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/dot-markerFlaggedSlotPedigree.md)
+unit tests; 2 non-mocked real
+-[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+regressions, one per call site; 1 mechanism-verification mock) and
+`test_modMarkerGenetics.R` (1 live, non-mocked Candidate Parent
+Assignment tab regression). Ran against unmodified `HEAD` and confirmed
+genuinely RED: exactly the 9 new blocks failed (5 “could not find
+function”, 3 assertion failures matching the bug’s exact zero-candidate
+symptom), 0 regressions to the 147 pre-existing assertions.
+`AskUserQuestion` gate: RED-\>GREEN approved. **(6)** GREEN: added
+[`.markerFlaggedSlotPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/dot-markerFlaggedSlotPedigree.md)
+(matching the ratified design verbatim) and wired both call sites in
+`R/markerParentageLikelihood.R`. All 9 new tests passed; 0 regressions
+to the full 4236-assertion clean-regression suite;
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+(new `man/dot-markerFlaggedSlotPedigree.Rd`); `lintr::lint_package()`
+found and fixed 1 line-length lint. `AskUserQuestion` gate:
+GREEN-\>REFACTOR – owner confirmed skip (implementation already minimal,
+matches the ratified design verbatim). **(7)** Full verification:
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings/2 pre-existing notes (vignette -engine + a 13-word
+spelling drift, both confirmed byte-identical before/after via a second
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+run); fixed 2 NEW spelling-drift words this session’s own roxygen
+introduced (“positionally”/“unmutated”) via `inst/WORDLIST`, explicitly
+leaving the pre-existing 13 untouched. **(8)** Phase 3E: a real
+`shinytest2`/`chromote` `AppDriver` run against the actual installed app
+– uploaded a real pedigree CSV (with `fromCenter`) through the Input
+tab’s QC pipeline and a matching genotype CSV through the Marker
+Genetics tab; the Candidate Parent Assignment tab, previously empty for
+this exact scenario, rendered 2 correctly-ranked rows with zero console
+errors (screenshot captured). First verification attempt
+([`grepl()`](https://rdrr.io/r/base/grep.html) on rendered HTML for
+“-Inf”) gave a false negative – `DT` serializes `-Inf` to JSON `null`,
+rendering as a blank cell; rewrote the check to read actual cell text
+via `app$get_js()`, which confirmed the value directly. **(9)**
+Close-out: `PROJECT_LEARNINGS.md` Learning 501 (the DT/-Inf rendering
+quirk + the own-diff-vs-pre-existing spelling-drift distinction),
+`CLAUDE.md` learning-count cross-reference (500-\>501, Sessions 1-501+
+-\> 1-502+), `BACKLOG.md` Housekeeping item marked resolved,
+`NEWS.Rmd`/`NEWS.md` entry (caught and fixed one markdown line-wrap
+artifact – an orphaned hyphen – by diffing the actual rendered `NEWS.md`
+before committing, not trusting the source `.Rmd` alone), `CHANGELOG.md`
+entry, `gh issue close 155` citing the `CHANGELOG.md` entry, this
+handoff.
+
+**Self-assessment (Session 502): 9/10.** **Strengths:** (1) Followed the
+full strict-TDD contract with a genuine `AskUserQuestion` gate at every
+transition, including PRE-RED research that was substantive (live bug
+reproduction + full mechanism/dragon re-verification), not a formality.
+(2) Independently re-discovered the “`U`”-prefix fixture landmine
+(Learning 497) through live execution BEFORE reading
+`PROJECT_LEARNINGS.md` for it – validated the prior finding from a fresh
+angle rather than just trusting it, and designed the new fixture to
+avoid it from the start. (3) Verified genuine RED with EXACT failure
+counts/reasons (not just “the file reports failures”) – confirmed
+exactly the 9 new blocks failed and the pre-existing 147 assertions were
+untouched, both before and after GREEN. (4) Did a REAL live Phase 3E
+smoke test through the actual running app (upload through the Input
+tab’s real QC pipeline, not a synthetic pre-QC’d data frame) rather than
+treating the already-passing `testServer()` tests as sufficient – and
+when the first verification technique gave a misleading false negative
+(`-Inf` rendering blank in `DT`), diagnosed the actual cause rather than
+assuming the fix was broken, and fixed the VERIFICATION method, not the
+(correct) code. (5) Correctly distinguished this session’s own 2 new
+spelling-drift words from the pre-existing, already-tracked 13-word
+drift – fixed only the former, verified the distinction empirically (a
+before/after
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+diff) rather than either silently absorbing the drift or ignoring the 2
+new words as “not my problem.” **Weaknesses:** (1) Building the live e2e
+fixture (CSV format, `fromCenter` column, QC round-trip) took several
+exploratory iterations before landing on a working shape – could have
+grepped
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)’s
+roxygen for the recognized-columns list before the first attempt rather
+than after. (2) A small markdown line-wrap mistake in the first
+`NEWS.Rmd` draft (auto-detect split across lines, orphaning a hyphen)
+reached a `git diff` review before being caught – caught in time, but a
+more careful first pass would have avoided the extra
+render/fix/re-render cycle. **Ledger:** recorded in `CHANGELOG.md` at
+close-out (this session).
+
+### Session 500 Handoff Evaluation (by Session 501)
+
+**Score: 8/10.** **What helped:** `next_steps` named “issue \#155
+(markerParentageLikelihood() auto-detect candidate-lookup bug, needs its
+own Pre-RED design/scoping pass, Effort M)” as one of two named
+untouched pickups – exactly matching what this session picked from the
+Phase 0 priorities list and exactly the right scope characterization
+(“needs its own… design/scoping pass,” not a quick fix, matching what
+this session’s own research independently confirmed). This saved real
+time framing the priorities-list write-up and the initial
+workstream-choice question. **What was missing:** Nothing about issue
+\#155’s own technical diagnosis carried forward in the handoff
+(understandably – S500’s own deliverable was issue \#145, not \#155) –
+this session had to independently re-read the full GitHub issue \#155
+body and the `BACKLOG.md` Housekeeping item text from scratch to
+reconstruct the actual root-cause diagnosis before design work could
+start. Not a defect in the handoff (a \#155-specific deep-dive was never
+S500’s job), but worth naming for a complete evaluation. **What was
+wrong:** Nothing found inaccurate – every claim in the handoff held up
+(issue \#145’s Slice 1 fully shipped and closed exactly as described;
+the two named untouched pickups, \#155 and the BACKLOG Tier 2/3/Deferred
+sequencing, were both genuinely still open). **ROI:** Positive – the
+accurate, precisely-scoped naming of issue \#155 as a pickup saved real
+Phase 0 discovery time, even though the handoff (correctly) carried no
+\#155-specific technical detail beyond that.
+
+### What Session 501 Did
+
+**Deliverable:** A ratified design/architecture document for issue \#155
+(`docs/planning/issue155-parentage-likelihood-candidate-lookup-plan.md`)
+– fixing
+[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)’s
+auto-detect (and explicit `id`/`role`/`candidates = NULL`) candidate
+lookup, which returns zero candidates whenever a flagged animal’s
+recorded parent is present-but-wrong. Followed
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md` (owner-picked
+via `AskUserQuestion` over the literal `DESIGN_WORKSTREAM.md` mapping,
+matching the \#136/#142/#145 precedent for a shared-function-contract
+decision). Design/planning only – no `R/`, `tests/`, or `man/` content
+changed. Picked from this session’s own Phase 0 priorities list (owner
+choice via `AskUserQuestion`, out of \#155/#149/#146/#151).
+**Started/Completed:** 2026-08-10. **Status:** DONE. RATIFIED via
+`AskUserQuestion` (both genuine judgment calls – Q1 fix mechanism, Q2
+whether the flagged/wrong recorded parent stays in the output – owner
+selected this document’s own recommended option in both, no changes
+requested). Issue \#155 commented (not closed – design only, matching
+the \#133/#136/#137/#145/#147 precedent), a single vertical-slice
+implementation is the next pickup.
+
+**What happened, in order:** **(1)** Phase 0 orient (SAFEGUARDS.md,
+SESSION_NOTES.md, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 98/100; ledger reconcile clean, the
+2 commits since the `CHANGELOG.md` frontier were S500’s own close-out
+mechanics already covered by its own entry). Built the priorities list
+from `BACKLOG.md` + open GitHub issues (#155, \#149, \#146, \#151, \#150
+as the top 5 numbered write-ups); owner picked “#155 auto-detect bug”
+via `AskUserQuestion`. **(2)** A second `AskUserQuestion` picked the
+workstream: `ARCHITECTURE_WORKSTREAM.md` over the literal
+`DESIGN_WORKSTREAM.md` mapping, matching the \#136/#142/#145 precedent
+(a shared-function-contract decision on
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md),
+used elsewhere by the unrelated “Potential Parents” tab). **(3)** Phase
+1B claim stub committed (`68a8a859`). **(4)** Read
+`ARCHITECTURE_WORKSTREAM.md`, issue \#155’s full body,
+`R/getPotentialParents.R` and `R/markerParentageLikelihood.R` in full,
+`docs/planning/issue147-likelihood-parentage-assignment-plan.md` (D8),
+and every test file exercising either function – confirmed EXACTLY two
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+call sites inside
+[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
+(both in scope) plus a third, unrelated one in `modPotentialParents.R`
+(out of scope), and that the explicit `id`/`role`/`candidates = NULL`
+branch shares the identical, previously-untested bug. Live-verified the
+bug and TWO independent candidate fixes (a `forceIncludeIds` parameter
+on
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md),
+and the recommended “shadow pedigree” approach) against a 6-individual
+scratch fixture, confirming
+[`identical()`](https://rdrr.io/r/base/identical.html) output between
+both prototypes and zero regression to an unrelated control animal.
+**(5)** Drafted the design document (Context/evidence inventory/design
+decisions/alternatives/impact analysis/ratification/ implementation
+plan/dragons). **(6)** Ran 2 independent adversarial-review agents in
+parallel (correctness-vs-source; completeness/house-style, both against
+live source and the \#145/#147 precedent documents) – found and fixed a
+real, previously-unaddressed defensive-coding gap (a duplicated
+`pedigree$id` needs the same guard `scoreOnePair()` already has), 3
+citation-accuracy corrections (a 2-line-off citation, a wrong
+test-assertion count, a self-contradictory “exactly two” call-site
+summary), and several house-style/completeness gaps (missing
+header/metadata block, 2 missing alternatives in the Alternatives table,
+missing GitHub-issue-close/`CHANGELOG`/`_pkgdown.yml` checklist
+dispositions, a missing D3(a) regression test, no performance statement)
+– all incorporated into the revision; re-verified the final proposed
+helper code (including the new duplicate-id guard) live via a standalone
+R script before treating it as final. **(7)** Ratified via a single
+`AskUserQuestion` round; owner picked this document’s own recommended
+option in both judgment calls. **(8)** Close-out: `PROJECT_LEARNINGS.md`
+Learning 500, `CLAUDE.md` learning-count cross-reference (499-\>500,
+Sessions 1-500+ -\> 1-501+), `BACKLOG.md` Housekeeping-item progress
+note, `CHANGELOG.md` entry, a summary comment posted to GitHub issue
+\#155 (not closed), this handoff.
+
+**Self-assessment (Session 501): 8/10.** **Strengths:** (1) Did not
+accept the literal `DESIGN_WORKSTREAM.md` task mapping at face value –
+explicitly checked and matched the established \#136/#142/#145 precedent
+for this exact class of decision (a shared-function-contract change)
+before starting research. (2) Live-verified the bug AND two independent
+candidate fixes empirically before drafting, rather than reasoning from
+source alone – caught, with
+[`identical()`](https://rdrr.io/r/base/identical.html), that both
+approaches produce byte-identical output, which directly grounded the
+Alternatives table’s “no behavioral benefit over D1” claim in evidence
+rather than assertion. (3) Ran a genuine 2-lens adversarial review (via
+the `Agent` tool directly, since `Workflow`-tool multi-agent
+orchestration was not opted into this session) rather than treating the
+empirically-verified draft as already sufficient – this caught a real
+correctness-adjacent gap (the duplicate-`pedigree$id` guard) that both
+live verifications had missed, because both hand-built fixtures used
+clean, non-duplicated ids by construction (directly generalizing
+S499/S500’s own “verify, don’t assume; adversarial review finds what
+clean verification can’t” discipline to design-review, not just
+implementation). (4) Re-verified the FINAL proposed code (after
+incorporating the review’s fixes) live, not just the earlier prototype –
+confirmed the duplicate-id guard, the both-slots-flagged case, the
+empty-input no-op, and the never-mutates contract all hold for the
+actual code going into the document, not an earlier draft of it. (5)
+Fully worked through the close-out-checklist disposition table (§5.1)
+the completeness review flagged as missing, rather than leaving
+individual N/A calls implicit. **Weaknesses:** (1) The two
+adversarial-review agents took noticeably long (5-8 minutes each,
+running in parallel) – this session’s own `ScheduleWakeup` polling
+cadence during that wait was inefficient (several redundant `ListAgents`
+checks before settling into a longer wait), though it did not affect the
+deliverable’s quality. (2) One `Edit` tool call used a malformed
+parameter name (`replace_name` instead of `replace_all`) that happened
+to succeed anyway – caught by immediately re-reading the edited section
+to confirm, but should have used the correct parameter name from the
+start. **Ledger:** recorded in `CHANGELOG.md` at close-out (this
+session).
+
+## ACTIVE TASK (prior sessions)
+
+### Session 499 Handoff Evaluation (by Session 500)
+
+**Score: 9/10.** **What helped:** `next_steps` named the exact right
+next action in full mechanical detail – “Implement Slice 1… a future
+session’s Pre-RED must FIRST empirically verify D2’s swap mechanism live
+(build a minimal repro, re-test the adversarial review’s own wide-fanout
+counter-example fixture through the swap, not the rejected reflection)
+before writing any RED test” – and this session followed that literally,
+in that order, with no deviation. `key_files` pointed at exact, correct
+line ranges (`preferAnchor()` 396-404, free-pass-leftmost 730,
+`finalizeNode`/ownX 668-677, `finalUnitX` 817-838, the GA204Z/8LKBV9
+fixture lines needing an update) – all used directly, none found stale.
+`gotchas` (“D2’s swap mechanism is a paper argument… do not skip Slice
+1’s own Pre-RED live verification”; “The GA204Z/8LKBV9 fixture’s
+5A6DFT/8DKELJ expected x values WILL need updating (required, not
+optional)”) were both exactly right and both directly actioned. **What
+was missing:** The handoff referenced “the adversarial review’s own
+wide-fanout counter -example fixture” without restating its exact shape
+(a 3-child unit, middle child with 5 grandchildren) inline –
+discoverable via `key_files`’ own pointer to `PROJECT_LEARNINGS.md`
+Learning 498, but not copy-pasteable from the handoff text itself,
+costing a few minutes of cross-referencing before the live repro could
+be built precisely. **What was wrong:** Nothing found inaccurate – every
+claim in the handoff held up against live verification this session
+(D2’s mechanism generalized correctly; the GA204Z/8LKBV9 values did need
+exactly the update flagged). **ROI:** Strongly positive – the handoff’s
+own next-step precision meant this session started Pre-RED work
+immediately with zero discovery time on “what does D2 actually require
+verifying.”
+
+### What Session 500 Did
+
+**Deliverable:** Implemented Slice 1 of the ratified issue \#145 plan
+(`docs/planning/issue145-sire-dam-left-right-placement-plan.md`) –
+male-left/female-right default positioning in
+`.positionMatingUnitForest()` (new `orderBySex = TRUE` parameter, an
+additive post-hoc value-swap scoped to D1-qualifying simple pairs), plus
+a matching `orderBySex` parameter threaded through
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+(D8 option (b), no UI wiring – Slice 2 not created). Followed
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` under this
+project’s strict TDD contract (PRE-RED-\>RED-\>GREEN, REFACTOR
+owner-confirmed skip, `AskUserQuestion`-gated at every transition).
+Picked from this session’s own Phase 0 priorities list (owner choice via
+`AskUserQuestion`, out of \#145 Slice 1/#155 Pre-RED design pass).
+**Started/Completed:** 2026-08-09/2026-08-10. **Status:** DONE. **Issue
+\#145 closed** as part of this session’s close-out.
+
+**What happened, in order:** **(1)** Phase 0 orient (SAFEGUARDS.md,
+SESSION_NOTES.md, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 98/100; ledger reconcile clean, the
+2 commits since the `CHANGELOG.md` frontier were S499’s own close-out
+mechanics already covered by its own entry). Built the priorities list;
+owner picked “#145 Slice 1” via `AskUserQuestion` over “#155 Pre-RED
+design pass.” **(2)** Phase 1B claim stub committed. Read
+`docs/planning/issue145-sire-dam-left-right-placement-plan.md` in full
+and `DEVELOPMENT_WORKSTREAM.md`. **(3) PRE-RED:** built a live
+scratchpad repro (not committed) against the loaded package – verified
+D2’s swap mechanism on (a) the real GA204Z/8LKBV9 fixture and (b) a
+reconstructed version of the adversarial review’s own wide-fanout
+counter-example (3-child unit, middle child with 5 grandchildren, plus
+an unrelated sibling). The first counter-example attempt showed the male
+landing as non-anchor already-left by accident of the id tie-break (no
+real swap fired) – renamed ids to force the male into the anchor role
+and re-ran: the swap fires, the union’s own `x` is invariant (mean is
+symmetric), all 9 descendant nodes unmoved, no new overlap. Re-audited
+the test suite per the plan’s own required step: confirmed only the
+GA204Z/8LKBV9 exact-x regression test has a hard-coded `x` assertion for
+a D1-qualifying pair. `AskUserQuestion`-gated PRE-RED-\>RED. **(4)
+RED:** updated the GA204Z/8LKBV9 test’s expected values; 4 new
+`test_that` blocks in `test_positionMatingUnitForest.R` and 2 in
+`test_makePedigreeMatingLayout.R`, all structured as `orderBySex = TRUE`
+vs `FALSE` comparisons (rather than single hard-coded assertions) so
+every test – including the `"H"`/`"U"`/NA guard and the true-no-op case
+– genuinely fails pre-implementation (an “unused argument” error), not
+just the swap-needing cases. Confirmed all 8 failing for the right
+reason via an actual test run. `AskUserQuestion`-gated RED-\>GREEN.
+**(5) GREEN:** implemented the `orderBySex` parameter and the swap logic
+in `R/makePedigreeDiagramData.R`, reusing the already -in-scope
+`hasOwnDirectChild()` closure; threaded the parameter through
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md).
+One test fix was needed after the first live run: the wide-fanout
+fixture’s own `C2`/`GCMate` pair turned out to be a SECOND,
+independently D1-qualifying pair, correctly swapped by the
+(intentionally per-unit-scoped) implementation – widened the test’s own
+assertion to match the correct behavior rather than narrowing the
+implementation (`PROJECT_LEARNINGS.md` Learning 499). All 8 tests passed
+after that fix. Ran the full verification matrix: clean regression (0
+failed/0 error, 4881 passed); `lintr::lint_package()` (1 false-positive
+`commented_code_linter` hit, suppressed matching precedent, then 0);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) –
+the FIRST run caught a real codoc-mismatch WARNING (forgot
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)),
+fixed via
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html),
+which also atomically corrected a second, already-stale `.Rd` file from
+S498’s own unregenerated roxygen source (`modMarkerGeneticsServer.Rd`);
+the second run came back 0 errors/0 warnings/1 note (baseline
+unchanged). **(6) Phase 3E:** an improvised first `AppDriver` script
+used the wrong upload input id, wrong screenshot selector, and missed
+the “Update Focal Animals” button click the raw `tags$textarea`
+focal-animal field needs – switched to the established
+`tests/testthat/test-e2e-pedigree-module.R` helper pattern
+(`create_app_driver`/`upload_and_wait`/
+`navigate_to_tab`/`click_element_safe`, `#pedigree-pedigreeDiagram`
+selector), which worked immediately. Live screenshot of the real
+`5GQC24`(M) x `BJ4J7G`(F) 2-child family in the bundled 375-individual
+fixture visually confirms male-left/female-right rendering, 0
+diagram-related console errors – satisfies the plan’s own §6 dragon 3.
+`AskUserQuestion`-gated GREEN-\>REFACTOR (skipped, owner -confirmed).
+**(7)** Documentation: `NEWS.Rmd` entry added, `NEWS.md` re-rendered;
+citation/ `_pkgdown.yml`/tutorial-article checklists confirmed N/A this
+slice (D7); `a2interactive.Rmd` deferred per its own standing rule.
+**(8)** Close-out: `PROJECT_LEARNINGS.md` Learning 499, `CLAUDE.md`
+learning-count cross-reference (498-\>499, Sessions 1-499+ -\> 1-500+),
+`BACKLOG.md` Progress note, `CHANGELOG.md` entry, `gh issue close 145`,
+this handoff.
+
+**Self-assessment (Session 500): 8/10.** **Strengths:** (1) Followed the
+Pre-RED gate strictly – built and ran a live repro BEFORE writing any
+RED test, and when the first counter-example attempt didn’t actually
+exercise a real swap, diagnosed why (id tie-break landed the male as
+free-pass, not anchor) and fixed the fixture rather than declaring the
+mechanism “verified” on a non-representative case. (2) Designed every
+RED test as an `orderBySex` TRUE-vs-FALSE comparison specifically so
+guard/ exclusion cases would be genuinely RED too, not just the
+swap-needing ones – a general pattern for additive/toggle features, not
+specific to this feature. (3) When GREEN surfaced a second,
+unanticipated qualifying pair inside my own test fixture, correctly
+diagnosed it as CORRECT implementation behavior against an
+under-specified test assumption, and fixed the test rather than
+narrowing the implementation – directly applying S499’s own Learning 498
+discipline at the test-design layer. (4) Ran the full verification
+matrix the plan required, including catching and fixing a real
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+gap before it could ship as a code/docs mismatch. (5) Live -verified
+against a real multi-child family in the actual bundled fixture, not
+just unit-test assertions, satisfying the plan’s own explicitly-named
+dragon. **Weaknesses:** (1) The first live -smoke-test attempt
+improvised an `AppDriver` flow instead of searching for the project’s
+own established E2E helper pattern first – cost two failed attempts
+(wrong upload/selector, then a missing button click) before switching to
+`test-e2e-pedigree-module.R`’s already-correct pattern. (2) Forgot
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+after adding the new parameter, independently re-discovering a gap class
+`CLAUDE.md` already names (Learning 495) rather than avoiding it by
+habit. (3) Did not add live coverage for the D5-direct-child exclusion
+path – matches the plan’s own explicit deferral (no existing test
+coverage, a future session’s decision to relax it), not a gap introduced
+this session, but worth naming plainly. **Ledger:** recorded in
+`CHANGELOG.md` at close-out (this session).
+
+## ACTIVE TASK
+
+### Session 498 Handoff Evaluation (by Session 499)
+
+**Score: 7/10.** **What helped:** The `next_steps` field named the exact
+right next pickups (a \#145 design session, \#138, \#155’s own Pre-RED
+scoping) and the `gotchas` field (the “U”-prefix auto-gen-id trap, the
+auto-detect no-op case) were accurate and directly useful groundwork for
+understanding this project’s marker-genetics/pedigree code, even though
+this session’s own deliverable didn’t touch that code. `key_files`
+correctly pointed at
+`docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md`
+as the starting point for a \#145 design session – this session read it
+first and it was the right starting point. **What was missing:** Nothing
+critical – the handoff was thorough for a session of that size. **What
+was wrong:** `next_steps` named “`inst/extdata` reorg Phase 4 (DECISION
+NEEDED, Effort M)” as an available pickup alongside \#145/#138. Direct
+re-reading of that `BACKLOG.md` item’s own body text this session found
+all 4 phases were already marked DONE back in S415-418 (“The
+`inst/extdata/` reorganization plan is now fully executed”) – the item’s
+own checkbox/tag was simply never flipped from a stale, pre-Phase-2
+“DECISION NEEDED” state. This wasn’t a fabrication (S498 likely
+inherited the stale framing from an even earlier session without
+re-verifying it either), but it meant one of three named options in the
+handoff’s own priorities list was not actually available, and this
+session had to catch that via its own Phase 0 orientation before
+presenting an accurate picker to the owner. **ROI:** Positive – the
+accurate 2 of 3 named options (plus the correctly-pointed-to research
+doc) saved real time; the one stale option cost a few minutes of BACKLOG
+cross-checking to catch, well within the positive side of the ledger.
+
+### What Session 499 Did
+
+**Deliverable:** A ratified design/architecture document for issue \#145
+(correct the placement of sire’s relative to dam’s in the pedigree
+drawing) –
+`docs/planning/issue145-sire-dam-left-right-placement-plan.md`.
+Design/planning only; no `R/`, `tests/`, or `man/` content changed.
+Followed `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`
+(owner-picked via `AskUserQuestion`, matching the \#136/#142 precedent,
+over the literal `DESIGN_WORKSTREAM.md` task mapping). Picked from this
+session’s own Phase 0 priorities list (owner choice via
+`AskUserQuestion`, out of \#145 design session/#138/#155 Pre-RED
+scoping/LabKey remainder). **Started/Completed:** 2026-08-09.
+**Status:** DONE. RATIFIED via `AskUserQuestion` (D3 direction, D8
+toggle shape, D9 follow-up-issue decision – the three genuine judgment
+calls; D1/D2/D4-D7 forced by the evidence gathered, not voted). Issue
+\#145 commented (not closed – design only), Slice 1 (core positioning
+behavior) is the next pickup.
+
+**What happened, in order:** **(1)** Phase 0 orient (SAFEGUARDS.md,
+SESSION_NOTES.md, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 98/100; ledger reconcile clean, the
+one commit since the `CHANGELOG.md` frontier was S498’s own
+self-referential sha-backfill, already accounted for). Built the
+priorities list from `BACKLOG.md` + open GitHub issues; found and
+flagged the stale “`inst/extdata` reorg Phase 4” tag (see the S498
+evaluation above) and excluded it from the picker. Owner picked “#145
+design session” via `AskUserQuestion`. **(2)** A second
+`AskUserQuestion` picked the workstream: `ARCHITECTURE_WORKSTREAM.md`
+over the literal `DESIGN_WORKSTREAM.md` mapping, matching the \#136/#142
+precedent for the same reason (a positioning/rendering-contract
+decision, not a UI layout design). **(3)** Phase 1B claim stub committed
+(`293eeb88`). **(4)** Fetched issue \#145’s full body + both existing
+owner comments (`gh issue view 145 --json`). Ran a 3-agent parallel
+`Workflow` research pass (current-code mechanics in
+`.buildMatingUnitForest()`/ `.positionMatingUnitForest()`; house-style
+precedent from the \#136/#142 design documents; cross-reference
+constraints against the S480 audit, the kinship2-comparison-doc’s
+Example 4, and \#143/#144), then personally re-verified the most
+load-bearing claims directly against the live source (not trusted from
+the agents’ report alone) – confirming, in the project’s own canonical
+GA204Z/8LKBV9 fixture, that the DAM sits left of the SIRE today (the
+opposite of “coincidentally male-left,” contradicting the S482 spike’s
+own cross-project assumption). **(5)** Drafted the design document.
+**(6)** Ran a second, 3-agent adversarial-review `Workflow` against the
+draft (correctness-vs-source,
+contract-vs-#142/#143/#144/`SESSION_RUNNER.md` Vertical-Slice gates,
+house-style completeness). This found real, substantive problems, not
+cosmetic ones: a constructed counter-example (a qualifying unit with an
+asymmetric wide multi-child fanout) that broke the draft’s first D2
+mechanism (reflecting a subtree about its own center) via an
+exact-position collision with an unrelated sibling; an overstated
+“#143/#144 never touch x” claim refuted by those issues’ own shipped
+test diffs; two under-classified judgment calls (D3, D9) presented as
+already-forced; several line-citation and checklist-coverage gaps.
+**(7)** Rather than reflexively narrow D1’s scope around the
+counter-example, re-derived the actual invariants that make the
+one-child case safe (the free-pass parent is always the group’s true
+global-leftmost point; the anchor’s own `x` is always the mean of the
+first and last `subIds` elements, hence always inside the same bounding
+footprint; the mating-unit’s own displayed `x` is symmetric in its two
+arguments) and confirmed they generalize to any child count – producing
+a revised D2 (swap only the two real parents’ own `x` values, touch
+nothing else) that resolves the counter-example by construction, not by
+narrowing scope. Revised the document throughout to incorporate every
+review finding. **(8)** Ratified D3/D8/D9 via a single `AskUserQuestion`
+round; owner picked this document’s own recommended option in all three
+(male-left/female-right; a new `orderBySex` parameter, no UI yet; no
+follow-up issue for the multi-mate case). Finalized §9 with the
+ratification record. **(9)** Close-out: `PROJECT_LEARNINGS.md` Learning
+498 (the counter-example-response methodology finding), `CLAUDE.md`
+learning-count cross-reference (497-\>498, Sessions 1-498+ -\> 1-499+),
+`BACKLOG.md` Progress note, `CHANGELOG.md` entry, a summary comment
+posted to GitHub issue \#145 (not closed), this handoff.
+
+**Self-assessment (Session 499): 8/10.** **Strengths:** (1) Did not
+accept the literal `DESIGN_WORKSTREAM.md` task mapping at face value –
+explicitly checked and matched the established \#136/#142 precedent for
+this exact class of decision before starting research. (2) Ran real
+research before drafting and personally re-verified the most
+load-bearing claims against live source rather than trusting subagent
+reports – caught that `nprcgenekeepr` has zero kinship2 dependency, and
+that the canonical fixture’s own default is dam-left, not the assumed
+coincidental male-left. (3) The adversarial review was genuinely
+adversarial, not pro forma – it was explicitly instructed to construct
+counter-examples, not just restate hedges, and it found a real one. (4)
+Responded to that counter-example by re-deriving a provably-more-general
+mechanism rather than patching around the specific case found, which is
+a materially better outcome than the reflexive “just narrow the scope”
+fix would have produced. (5) Corrected a stale claim in a THIRD prior
+document (`pedigree-diagram-kinship2-reference-comparison.qmd`) found
+only as a byproduct of the adversarial review, and reported it without
+fixing it, matching this project’s own “report an incidentally
+-discovered, unrelated pre-existing gap, don’t fix it mid-session”
+precedent (`PROJECT_LEARNINGS.md` Learning 382). **Weaknesses:** (1) The
+FIRST draft (before adversarial review) contained a substantively wrong
+D2 mechanism and an overstated \#143/#144 characterization that my own
+hand-verification did not catch, because I only checked the one fixture
+where both claims happened to hold – a broader self-check before
+commissioning the review might have caught at least the \#143/#144
+overstatement myself. (2) This session used substantial multi-agent
+compute (2 workflows, 6 subagents, ~845K combined subagent tokens) for a
+design document – proportionate given this project’s own established
+precedent of heavy multi-agent workflows for architecture decisions of
+this shape (#143/#144/#147 Pre-RED), but a real cost worth naming, not
+free. (3) No live R code was run by me personally this session (the
+correctness-review subagent ran live R itself; I relied on its output
+plus my own static-source reads) – appropriate for a Pre-RED design
+session per the Planning Sessions rule (“the plan is the deliverable…
+implementation happens in a future session”), and the document itself
+flags this explicitly (§6 Dragon 1, §8 Known gap) rather than implying
+more certainty than exists, but worth naming plainly rather than only
+implicitly. **Ledger:** recorded in `CHANGELOG.md` at close-out (this
+session).
+
+### Session 497 Handoff Evaluation (by Session 498)
+
+**Score: 8/10.** **What helped:** S497’s `next_steps` cleanly pointed to
+S496’s own more detailed handoff (“Slice 2 (UI + documentation) of issue
+\#147 is the natural next pickup”) rather than duplicating it – correct,
+since S497 itself did no new engineering work on \#147.
+`key_files`/`gotchas` (`.Rbuildignore` paren-balance rule, `.gitignore`
+vs `.Rbuildignore` distinction) were accurate and appropriately scoped
+to S497’s own small fix, even though neither was directly relevant to
+this session’s own Slice 2 work. **What was missing:** Nothing critical
+for a session this size – the handoff was appropriately thin for a
+small, owner-initiated follow-up fix. **What was wrong:** S497’s own
+headline claim –
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+reaches a clean 0 errors/ 0 warnings/0 notes, “confirmed via 2
+independent fresh runs” – did **not** hold when re-verified at this
+session’s own GREEN checkpoint: the “no recognized vignette engine” NOTE
+for `vignettes/a2interactive.Rmd` was back, and a stash test confirmed
+it reproduces on a clean tree with none of this session’s changes
+present. Not necessarily a false claim AT THE TIME (S497 may genuinely
+have observed 0/0/0, and this may be a flaky/non-deterministic check
+rather than a regression) – but the discrepancy is real, unexplained,
+and worth a lower score on “what was wrong” even without assigning
+blame. Reported in `CHANGELOG.md`, not investigated further (out of this
+session’s own \#147 scope). **ROI:** Positive – saved real discovery
+time (no need to re-derive “what’s next” from `BACKLOG.md` alone).
+
+### What Session 498 Did
+
+**Deliverable:** Implemented issue \#147 Slice 2 (UI + documentation)
+per `docs/planning/issue147-likelihood-parentage-assignment-plan.md` §5
+– a 5th read-only “Candidate Parent Assignment” tab in
+`R/modMarkerGenetics.R` calling
+[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
+(Slice 1, shipped S496) against the module’s already-wired
+`genotypeMatrix`/`pedigree` reactives, plus citation
+(`population_genetics_terms.html`), `NEWS.Rmd`, and tutorial/article
+(`colony-manager-guide.qmd`) documentation. **Issue \#147 is now
+closed.** Picked from this session’s own Phase 0 priorities list (owner
+choice via `AskUserQuestion`, out of \#147 Slice 2/ \#145 design/#138
+design/extdata reorg Phase 4). Followed
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` under this
+project’s strict TDD contract (PRE-RED-\>RED-\>GREEN, REFACTOR skipped –
+owner-confirmed, all `AskUserQuestion`-gated). **Started/Completed:**
+2026-08-09. **Status:** DONE. All 5 RED tests pass; full clean
+regression read 0 failed/0 error (4858 passed, 175 skipped, 10
+pre-existing baseline warnings unchanged); `lintr::lint_package()` 0
+lints on touched files;
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings/1 note (confirmed via a stash test to be a
+pre-existing, unrelated NOTE reproducing with none of this session’s
+changes present – see the S497 evaluation above and the incidental
+finding below). Live `shinytest2`/`chromote` smoke test: real,
+correctly-computed data rendered (hand-verified
+LOD=-Inf/excluded=TRUE/nLociUsed=10 case), 0 SEVERE console entries
+across 64 log rows.
+
+**What happened, in order:** **(1)** Phase 0 orient (SAFEGUARDS.md,
+SESSION_NOTES.md, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 98/100; ledger reconcile clean, the
+one commit since the `CHANGELOG.md` frontier was S497’s own
+self-referential sha-backfill, already accounted for by precedent).
+Rendered the priorities list via `AskUserQuestion`; owner picked \#147
+Slice 2. **(2)** Phase 1B claim stub committed (`4a009dd1`). **(3)**
+Pre-RED: read `DEVELOPMENT_WORKSTREAM.md`, the ratified plan’s §5 Slice
+2 scope, the current `R/modMarkerGenetics.R`/its 4-tab test file,
+[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)’s
+Slice 1 implementation and hand-verified test fixtures,
+`tests/testthat/test_moduleContract.R`, and the existing
+citation/tutorial documentation style for the other 4 tabs. Found the
+plan’s own “Files to touch” list understated scope:
+`test_moduleContract.R`’s exhaustive reactive-name contract test needed
+its own update too. Confirmed empirically (isTruthy(), a
+zero-row-but-full-column data frame) that `req(tbl)` would correctly
+render an empty-but-valid table rather than blocking. Posed the
+PRE-RED-\>RED gate via `AskUserQuestion` with the exact planned test
+list; owner approved. **(4)** RED: 4 new `test_that` blocks in
+`test_modMarkerGenetics.R` + the `test_moduleContract.R` update;
+hand-verified the flagged-pair case’s expected
+`LOD`/`nLociUsed`/`excluded`/`delta` values via a standalone script
+calling the real, current
+[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
+BEFORE writing any assertion (matching this project’s own established
+discipline). Confirmed all 5 fail for the right reason
+(`attempt to apply non-function` / `expect_named` absent-name failure),
+not a fixture bug. Committed RED (`e96ede42`). Posed the RED-\>GREEN
+gate; owner approved. **(5)** GREEN: implemented the new
+tab/reactive/output/return-list entry/roxygen, mirroring the module’s
+existing 4-tab pattern exactly. All 5 RED tests passed on the first
+implementation attempt; full clean regression read, `lintr`, and
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+all confirmed clean (modulo the incidental finding below). Posed the
+GREEN-\>REFACTOR gate; owner picked “skip REFACTOR” (the diff was
+already minimal and precedent-mirroring). **(6)** Documentation + Phase
+3E: drafted the citation/NEWS/tutorial updates, then built a live
+`shinytest2` screenshot-capture script. **Found and root-caused two
+real, previously-unknown gaps** during this live verification (see
+`PROJECT_LEARNINGS.md` Learning 497 for the full account): (a) a
+candidate id starting with `"U"` silently vanishes from a real pedigree
+via
+[`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md)’s
+own auto-generated-id convention – a pure fixture-naming trap, fixed by
+renaming; (b) a genuine, previously-undiscovered functional gap in Slice
+1’s already -shipped auto-detect candidate lookup:
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+only ever proposes candidates for an animal with an UNRECORDED parent
+slot, never one whose recorded parent is present-but-wrong – meaning the
+tab’s auto-detect default is empty for the common real-world case (one
+correct parent, one wrong), and every existing test of this interaction
+(Slice 1’s own, and this slice’s own RED tests) mocks
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md),
+so this was never exercised for real until this live smoke test.
+Surfaced this clearly to the owner via `AskUserQuestion` rather than
+silently fixing or silently shipping misleading documentation; owner
+confirmed: proceed with Slice 2 as scoped, use a realistic fixture for
+the screenshot, file the gap. Filed GitHub issue \#155 + a `BACKLOG.md`
+Housekeeping item; added an honest tutorial callout. Re-captured the
+screenshot with the corrected fixture – real, correctly-computed data
+rendered, 0 console errors (`app$get_logs()`, after first mistakenly
+calling the nonexistent `app$get_log()`). Verified
+`colony-manager-guide.qmd` renders cleanly via a full `quarto render`
+(rendered `.html`/`.knit.md` are gitignored, matching established
+practice). Re-rendered `NEWS.md`. Committed GREEN + documentation
+together (`83e486c7`), matching S496’s own precedent of bundling doc
+updates into the GREEN commit. **(7)** Also found, incidental to this
+session’s own
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+runs (reported, not fixed): S497’s own “0 errors/0 warnings/0 notes,
+confirmed via 2 independent fresh runs” claim no longer holds – the
+vignette-engine NOTE reproduces on a clean, stashed tree with none of
+this session’s changes present. Noted in `CHANGELOG.md` and the S497
+evaluation above. **(8)** Close-out: `gh issue close 147`,
+`CHANGELOG.md` entry, `PROJECT_LEARNINGS.md` Learning 497, `CLAUDE.md`
+learning-count cross-reference updated (496-\>497, Sessions 1-496+ -\>
+1-498+), this handoff.
+
+**Self-assessment (Session 498): 9/10.** **Strengths:** (1) Rigorous
+Pre-RED investigation caught a real gap in the ratified plan’s own
+file-scope list (`test_moduleContract.R`) before writing any RED test,
+avoiding a mid-GREEN surprise. (2) Empirically hand-verified every
+numeric test expectation via a standalone script against the real,
+current implementation BEFORE writing the corresponding `expect_*()`
+assertion – no assertion was ever written from memory or assumption. (3)
+Did not silently work around, silently fix, or silently ship misleading
+documentation for the auto-detect candidate-lookup gap found during
+Phase 3E – investigated it to a confirmed root cause (not a guess),
+surfaced it transparently via `AskUserQuestion` with a clear
+recommendation, and on approval filed a complete, well-evidenced GitHub
+issue + `BACKLOG.md` item so a future session starts from a diagnosis,
+not a rediscovery. (4) Treated “the screenshot script ran successfully”
+as insufficient evidence of correctness – visually inspected the actual
+rendered PNG both times, caught the first “No data available in table”
+result rather than assuming success, and traced it to root cause via
+direct function-level debugging
+([`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+-\>
+[`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md)
+-\>
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md),
+each isolated and verified independently) instead of guessing at fixes.
+(5) Confirmed 0 SEVERE console entries via the correct `shinytest2` API
+after initially calling a nonexistent method (`get_log()` vs. the real
+`get_logs()`) – caught and fixed immediately, not left unverified.
+**Weaknesses:** (1) Minor process inefficiency early on: manually
+backgrounded a
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+run with a raw shell `&` before switching to the harness’s own
+`run_in_background`, requiring a `pkill` cleanup – no functional harm,
+but avoidable overhead. (2) Did not attempt to trace WHY S497’s own
+“0/0/0 confirmed via 2 independent runs” claim doesn’t currently hold
+(flaky check vs. environmental difference vs. inaccurate self-report) –
+correctly out of this session’s own scope, but left as an open question
+for whoever investigates issue \#155’s neighborhood next, rather than a
+closed one. **Ledger:** recorded in `CHANGELOG.md` at close-out (this
+session).
+
+### What Session 497 Did
+
+**Deliverable:** A small, owner-initiated follow-up fix (same
+conversation, immediately after S496’s own close-out) triggered by the
+owner directly renaming
+`inst/extdata/reference/Standardized Human Pedigree Nomenclature: Update and Assessment of the Recommendations of the Nation.html`
+(the non-portable filename tracked since S486) to
+`inst/extdata/reference/pedigree_nomenclature.html`. No
+`AskUserQuestion`-gated TDD cycle – no `R/`, `tests/`, or `man/` content
+changed, so no behavior exists to write a RED test against; this is pure
+repo-hygiene/build-config work. **Started/Completed:** 2026-08-09 (same
+day as S496, later). **Status:** DONE.
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+confirmed 0 errors ✔ \| 0 warnings ✔ \| 0 notes ✔ (was 1/1/1), via 2
+independent fresh runs after the fix.
+
+**What happened, in order:** **(1)** User asked “check on
+devtools::check() results” (a follow-up to S496’s own close-out report,
+which had already summarized the pre-existing 1-error/1-warning/ 1-note
+baseline). Ran it fresh to confirm rather than relaying cached output.
+**(2)** User reported renaming the file directly. Checked
+`git status`/`git ls-files` and found the OLD file was never git-tracked
+at all – it was deliberately `.gitignore`-excluded (S479) as
+copyrighted, local-only reference material. The rename broke that
+exclusion (the old pattern no longer matched the new name), leaving the
+renamed file untracked-but-visible rather than silently ignored.
+Surfaced this to the user before taking any git action, per SAFEGUARDS’
+“look at the target before proceeding.” **(3)** User’s answer confirmed
+they’d already fixed `.gitignore` themselves, and separately noted
+`vignettes/a2interactive.Rmd` “has VignetteBuilder” – prompting a direct
+investigation of the long-tracked “no recognized vignette engine” NOTE.
+Confirmed `DESCRIPTION` has `VignetteBuilder: knitr` and the .Rmd’s own
+`%\VignetteEngine{knitr::rmarkdown_notangle}` tag is valid; used
+`tools::pkgVignettes(check = TRUE)` (the actual internal that emits this
+exact NOTE) directly against both the raw source tree and a
+freshly-built tarball – found zero issue either time, disproving the
+NOTE’s own stated cause. **(4)** Ran
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+fresh post-rename: **0 errors ✔ \| 0 warnings ✔ \| 0 notes ✔** – the
+vignette NOTE had disappeared too, confirming BACKLOG.md’s own S486 text
+(“two smaller, likely-related pre-existing findings”) was right: the
+NOTE was a downstream symptom of the filename ERROR derailing the check
+pipeline, not an independent defect. **(5)** Investigating the rename
+surfaced a second, more significant gap: `.Rbuildignore` had never
+excluded this file (or 2 sibling S479-gitignored copyrighted files) from
+the built package tarball – `.gitignore` has no effect on `R CMD build`.
+Confirmed via `tar tzf` on a real built tarball that all 3 files were
+present. Flagged this to the user rather than silently fixing or
+silently ignoring it (real copyright -redistribution stakes). **(6)**
+User confirmed via `AskUserQuestion`: add `.Rbuildignore` entries for
+all 3 files (not just the renamed one). Added them – **first attempt
+broke `R CMD build` outright** (an unbalanced parenthesis split across
+multiple comment lines; `.Rbuildignore` requires each line’s own parens
+to balance, per the file’s own existing header warning, which I had read
+but not applied carefully enough to my own new comment). Caught
+immediately by re-running the build, not assumed correct from re-reading
+the source. Fixed, rebuilt, confirmed via `tar tzf` that none of the 3
+copyrighted files ship and the legitimately-shipped
+`Master_Genetic_metrics_2_14_15.pdf` (S418, different copyright
+situation) still does. **(7)** Updated the one live prose reference to
+the old filename
+(`docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`,
+per `PROJECT_LEARNINGS.md` Learning 480 – the BACKLOG.md item’s own text
+had already flagged this as the one reference needing an update). Left
+historical references in `SESSION_NOTES.md`/
+`CHANGELOG.md`/`PROJECT_LEARNINGS.md` untouched (dated narrative,
+correctly describing repo state as it existed when written). **(8)**
+Close-out: `BACKLOG.md`’s S486-tracked item marked resolved,
+`CHANGELOG.md` entry, this handoff.
+
+**Self-assessment (Session 497): 9/10.** **Strengths:** (1) Did not
+silently proceed to “fix references and commit” on the rename report –
+investigated `git status`/`.gitignore` FIRST and surfaced a real,
+non-obvious copyright-exposure risk (the broken gitignore pattern)
+before taking any action, exactly matching the “look at the target – if
+what you find contradicts how it was described, surface that instead of
+proceeding” discipline. (2) Found and flagged a SECOND, larger,
+previously-unknown gap (the `.Rbuildignore` copyright/redistribution
+hole, affecting 2 files beyond the one being discussed) rather than
+narrowly fixing only what was asked – and explicitly asked before
+expanding scope to the other 2 files, rather than silently deciding
+either way. (3) Did not accept the vignette-engine NOTE’s own stated
+cause at face value – traced it to the actual internal R function
+([`tools::pkgVignettes`](https://rdrr.io/r/tools/buildVignettes.html))
+and directly reproduced/disproved its own suggested diagnosis before
+accepting the (correct, if less definitively explained) empirical
+finding that fixing the filename fixed both. (4) Caught my own
+`.Rbuildignore` authoring mistake (the unbalanced-paren build break) via
+immediate re-verification, not by trusting a re-read of my own comment
+text – the exact discipline PROJECT_LEARNINGS.md Learning 495 (this same
+day, S496) generalizes for `roxygen2`/ `NAMESPACE`: verify the actual
+tool’s behavior, not the source text’s apparent correctness.
+**Weaknesses:** (1) Did not fully root-cause WHY fixing the filename
+cleared the vignette NOTE – left as an empirically-confirmed but
+mechanistically-unexplained link, appropriately scoped given this is a
+small follow-up fix, not a deep-dive session, but a more thorough
+investigation might have traced the exact R CMD check internal step
+where the two interact. (2) This session ran informally (no Phase 0
+orientation re-read, no Phase 1B claim stub before starting) since it
+continued directly from S496’s own already-oriented context in the same
+conversation – a defensible judgment call given full context was already
+loaded and Phase 0’s value is establishing shared understanding at a
+fresh start, not re-deriving what’s already known, but it is a deviation
+from the literal protocol worth naming rather than silently normalizing.
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session).
+
+### What Session 496 Did
+
+**Deliverable:** Implement Slice 1 (core statistical function) of the
+ratified issue \#147 plan
+(`docs/planning/issue147-likelihood-parentage-assignment-plan.md` §5) –
+[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md),
+an allele-frequency helper, and the D7 extraction from
+`R/markerParentageExclusion.R` (with a byte-identical regression proof).
+Following `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` under
+this project’s strict TDD contract (PRE-RED-\>RED-\>GREEN-\>REFACTOR,
+`AskUserQuestion`-gated at each transition). Picked from this session’s
+own Phase 0 priorities list (owner choice via `AskUserQuestion`, out of
+\#147 Slice 1/#145 design/#138 design). **Started/Completed:**
+2026-08-09 15:29 CDT / 2026-08-09. **Status:** DONE. Full strict-TDD
+PRE-RED-\>RED-\>GREEN-\>REFACTOR cycle, `AskUserQuestion`-gated at every
+transition (PRE-RED-\>RED after independent formula re-derivation +
+hand-verified fixtures; RED-\>GREEN; GREEN-\>REFACTOR, owner picked
+“yes, light refactor”). Verified: 16 new test_that blocks in
+`tests/testthat/test_markerParentageLikelihood.R` + 1 new golden-master
+regression test in `tests/testthat/test_markerParentageExclusion.R` all
+pass; full clean regression read 0 failed/0 error, 4841 passed, 175
+skipped, 10 pre-existing baseline warnings (unchanged);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 2
+ERRORs/1 WARNING/1 NOTE, confirmed an exact match to the established,
+pre-existing, unrelated baseline (non-portable-filename issue tracked
+since S486; vignette-engine note), 0 new, via two independent runs;
+`lintr::lint_package()` 0 lints package-wide. See
+`docs/planning/issue147-...-plan.md`, `R/markerParentageLikelihood.R`,
+`R/markerAlleleFrequency.R`, `R/markerParentageExclusion.R`.
+
+**What happened, in order:** **(1)** Phase 0 orient (SAFEGUARDS.md,
+SESSION_NOTES.md, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 98/100; ledger reconcile clean, the
+one commit since the `CHANGELOG.md` frontier was S495’s own
+self-referential sha-backfill, already accounted for by precedent).
+Rendered the priorities list via `AskUserQuestion`; owner picked \#147
+Slice 1. **(2)** Phase 1B claim stub committed (`de74570f`). **(3)**
+Pre-RED: read `DEVELOPMENT_WORKSTREAM.md` and every source file in the
+plan’s own inventory (`markerParentageExclusion.R`,
+`getPotentialParents.R`, `markerHeterozygosity.R`, `markerFst.R`,
+`buildMarkerGenotypeMatrix.R`, `checkMarkerGenotypeFile.R`, existing
+marker test files). Independently re-derived the LOD formula from first
+principles (not trusted from memory, matching this project’s own
+[`markerFst()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md)
+Pre-RED precedent) via a standalone scratch script
+(`/private/tmp/.../scratchpad/ lod_scratch2.R`), including a sanity
+check that the dyad-H2 formula reduces exactly to Hardy-Weinberg.
+Hand-built a fully cross-validated fixture (TRIO via a known dam; DYAD
+via an unrecorded dam; a related-but-not-true-parent candidate per
+Dragon 3; a low-coverage candidate for `lowPower`; a zero-shared-loci
+candidate; wrong recorded parents for the auto-detect test), verifying
+exclusion counts against the REAL, current
+[`markerParentageExclusion()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md)
+before trusting them. Surfaced 2 real findings the ratified plan didn’t
+spell out (any single Mendelian-incompatible locus drives LOD to exactly
+`-Inf` even when `excluded=FALSE`; an exact `-Inf`/`-Inf` tie needs
+`delta=0`, not the literal `NaN` R arithmetic gives) and 1 factual
+correction to the plan’s own text (every existing `test_marker*.R` file
+uses inline fixtures, not a new `inst/extdata/examples/` file). Captured
+a [`dput()`](https://rdrr.io/r/base/dput.html) golden-master snapshot of
+[`markerParentageExclusion()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md)’s
+CURRENT (pre-refactor) output for the D7 regression test. Posed the
+PRE-RED-\>RED gate via `AskUserQuestion` with the exact planned test
+list; owner approved. **(4)** RED: wrote 12 test_that blocks (later 16
+after REFACTOR added 4 more) in the new
+`tests/testthat/test_markerParentageLikelihood.R` + 1 golden-master
+regression test in `tests/testthat/test_markerParentageExclusion.R`;
+confirmed all 12 new tests failed with “could not find function”
+(genuine RED, not a fixture bug – caught and fixed one fixture bug of my
+own before this confirmation run) and the golden-master + all existing
+`markerParentageExclusion` tests passed (37/37, proving the snapshot
+accurate pre-refactor). Committed RED (`3590157a`). Posed the
+RED-\>GREEN gate; owner approved. **(5)** GREEN: implemented
+[`.markerOppositeHomozygoteCount()`](https://github.com/rmsharp/nprcgenekeepr/reference/dot-markerOppositeHomozygoteCount.md)
+(D7 extraction, confirmed byte-identical via the golden master),
+[`.markerAlleleFrequencyTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/dot-markerAlleleFrequencyTable.md)
+(D9), and
+[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
+– all 12 RED tests passed on the first implementation attempt. Fixed 9
+real `lintr` findings (4 line-length, 5 implicit-integer) in the new
+file; ran
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html),
+which surfaced an unrelated pre-existing gap
+([`readTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/readTwinRelations.md),
+shipped S494, never actually exported). Full clean regression read 0/0
+(4832 passed);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+confirmed twice (with and without explicit `NOT_CRAN`) as an exact match
+to the pre-existing baseline. Committed GREEN (`b983747a`). Posed the
+GREEN-\>REFACTOR gate; owner picked “yes, light refactor.” **(6)**
+REFACTOR: hoisted the transmission-probability math into 2 more named
+internal helpers
+([`.markerTransmissionProbability()`](https://github.com/rmsharp/nprcgenekeepr/reference/dot-markerTransmissionProbability.md),
+[`.markerTwoSourceGenotypeProbability()`](https://github.com/rmsharp/nprcgenekeepr/reference/dot-markerTwoSourceGenotypeProbability.md)),
+added 4 direct unit tests pinning the formula itself. **Self-caught a
+real roxygen2 doc-block-shift bug** in the first refactor attempt
+(inserting the new documented functions between
+[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)’s
+own docstring and its function definition, with no blank-line boundary,
+merged all 3 roxygen blocks into one, which `roxygen2` then attached to
+the WRONG functions –
+[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
+silently lost its `@export`,
+[`.markerTransmissionProbability()`](https://github.com/rmsharp/nprcgenekeepr/reference/dot-markerTransmissionProbability.md)
+silently gained one) – caught via `git diff NAMESPACE` before
+committing, fixed by relocating both helpers to the end of the file
+(confirmed byte-identical `man/markerParentageLikelihood.Rd` after the
+fix). Full regression read then surfaced a second, genuinely in-scope
+failure this session’s own
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+run caused: `test_pkgdown_reference_config.R`’s reference-coverage
+guard, missing entries for both
+[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
+(mine) and
+[`readTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/readTwinRelations.md)
+(the incidental S494 gap, now surfaced by NAMESPACE) – fixed by adding
+both to `_pkgdown.yml`. Committed REFACTOR (`67ee1d9a`). Final
+verification: full clean regression read 0/0 (4841 passed);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+re-confirmed identical to baseline a third time; `lintr` 0 lints.
+**(7)** Close-out: this evaluation + self-assessment,
+`PROJECT_LEARNINGS.md` Learnings 495-496, `CLAUDE.md` learning-count
+update + new `_pkgdown.yml` reference-coverage checklist, `BACKLOG.md`
+progress narrative, `CHANGELOG.md` entry, this handoff.
+
+**Session 495 Handoff Evaluation (by Session 496): 9/10.** **What
+helped:** the “Key files” pointer (`docs/planning/issue147-...-plan.md`
+§3/§5/§7, `R/markerParentageExclusion.R:100-160`,
+`R/getPotentialParents.R:64-199`, `R/markerHeterozygosity.R:98-108`) was
+exactly right and directly actionable – every one of those ranges was
+read and used exactly as described, with zero wasted searching. All 4
+Gotchas were directly load-bearing: Gotcha 1 (do not implement the
+error-tolerant formula without independent re-verification) was followed
+to the letter; Gotcha 2 (RED tests MUST include a related-candidate
+fixture or the session’s own highest-value stress-test finding never
+gets exercised) directly shaped this session’s `Ssib` fixture and its
+documentation comment; Gotcha 3 (`excluded`/`lowPower` must never
+collide with `flagged`) was followed exactly in the return-shape design;
+Gotcha 4 (the D7 regression test must prove byte-identical behavior)
+directly produced this session’s
+[`dput()`](https://rdrr.io/r/base/dput.html)-golden-master approach.
+**What was missing:** nothing the handoff could reasonably have provided
+– S495’s own self-assessment explicitly and correctly scoped the
+from-scratch formula re-derivation as belonging to the implementing
+session’s own Pre-RED (a sensible division of labor, not a gap), and
+this session’s own subsequent discoveries (the
+[`readTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/readTwinRelations.md)
+NAMESPACE gap, the WORDLIST convention correction, the roxygen2
+doc-block-shift bug) were all things S495 had no way to anticipate.
+**What was wrong:** nothing – every claim in the S495 handoff was
+verified correct through direct use. **ROI:** strongly positive, on par
+with S495’s own 9/10 evaluation of S494’s handoff.
+
+**Self-assessment (Session 496): 8/10.** **Strengths:** (1) Did not
+trust the design doc’s own LOD formula description at face value –
+independently re-derived it from first principles via a standalone
+scratch script and verified a Hardy-Weinberg sanity check before writing
+a single RED test assertion, extending
+[`markerFst()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md)’s
+own “catch a wrong formula before it ships” precedent to a brand-new
+formula rather than a mis-cited existing one. (2) Caught and
+self-corrected 3 distinct errors before they reached a commit: an
+unintentional Mendelian impossibility in the first fixture draft (found
+by running the numbers, not eyeballing them), a wrong WORDLIST
+sort-convention assumption (found by directly inspecting the actual file
+rather than trusting inherited BACKLOG.md prose), and a real roxygen2
+doc-block-shift bug during REFACTOR (found via `git diff NAMESPACE`, not
+a re-read of the source). (3) Found and transparently reported an
+incidental, pre-existing, unrelated defect
+([`readTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/readTwinRelations.md)
+never exported since S494) rather than silently absorbing it into this
+session’s own attribution, in both commit messages and this handoff. (4)
+Ran the FULL clean regression read (not just the new test file) after
+REFACTOR and caught a second, genuinely in-scope regression
+(`_pkgdown.yml` reference-coverage) that a narrower verification pass
+would have missed entirely. (5) Followed the TDD phase-gate contract
+exactly, with the exact-planned-actions format at every
+`AskUserQuestion` transition. **Weaknesses:** (1) The first REFACTOR
+attempt introduced a real bug (the roxygen2 shift) – caught and fixed
+before committing, but a more careful initial placement (helpers at the
+end of the file from the start, matching the eventual fix) would have
+avoided it rather than requiring a fix-after-the-fact. (2) The first
+WORDLIST insertion attempt used the wrong convention – a closer initial
+read of the file’s own actual content (which was already available)
+would have caught this without a revert-and-redo cycle. (3) Did not
+invoke a “deepest available reasoning mode” setting at session start
+(same disclosed limitation as S495 and the broader session family – no
+`/effort max`-equivalent tool directly available). (4) Did not
+root-cause WHY `tests/spelling.Rout.save` is currently absent (never
+committed vs. deleted later) – correctly scoped out of this session per
+its own Slice 1 boundary, but left as an open question rather than a
+closed one. **Compared to previous sessions:** this session’s most
+distinctive contribution is doing the full from-scratch mathematical
+derivation AND independent numerical verification of a brand-new
+statistical formula before any RED test existed, going one step further
+than
+[`markerFst()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md)’s
+own precedent (which caught a wrong CITATION/formula identity) by also
+catching subtler errors in this session’s OWN fixture construction (an
+accidental Mendelian impossibility a hand-derivation alone would not
+have surfaced without actually running the numbers).
+
+**Handoff to Session 497:** - **What’s next:** Issue \#147 Slice 1 is
+DONE. **Slice 2 (UI + documentation)** is the natural next pickup for
+this specific issue – a 5th read-only “Candidate Parent Assignment” tab
+in `R/modMarkerGenetics.R` (D10), plus citation
+(`population_genetics_terms.html`), `NEWS.Rmd`, and tutorial/article
+documentation, matching Slice 2’s own DONE criteria
+(`docs/planning/issue147-likelihood-parentage-assignment-plan.md` §5).
+Also still available from S495’s own Phase 0 priorities list, unchanged:
+**design session for \#145** (READY, Effort M – sire/dam placement,
+investigation already done by a prior session); **design session for
+\#138** (READY, Effort M, low priority – full-colony rendering beyond
+the node cap). Lower priority, unchanged from S495’s own list:
+`.buildTwinConnectorEdges()` missing-`#009E73`-color item (Effort S);
+non-portable-filename
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+rename (Effort S); spelling-WORDLIST gap (now 9 pre-existing words,
+unrelated to this session’s own 16 additions, still Effort S);
+`highlightNearest` degree=6 mitigation (Effort M); live-app node-count
+discrepancy; `data-raw/ rhesusPedigree.R` docstring mismatch; iCloud
+duplicate-file cleanup (still blocked on repo relocation); the
+sequencing audit’s own “2 High-priority audit rows with no filed issue”
+gap (Longitudinal genetic-health monitoring; Ancestry guardrails), still
+not filed as of this session. **Newly found this session, not yet
+fixed:** `tests/spelling.Rout.save` is absent from the repo, so
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+currently reports NO spelling NOTE regardless of how large the
+`inst/WORDLIST` gap grows – a future session wanting that guard active
+again should commit a fresh `.Rout.save` from a currently-clean state. -
+**Key files:** `R/markerParentageLikelihood.R` (the new exported
+function + its 2 hoisted internal helpers, all 3 with full roxygen);
+`R/markerAlleleFrequency.R` (D9 helper);
+`R/markerParentageExclusion.R:161-193` (the D7-extracted
+[`.markerOppositeHomozygoteCount()`](https://github.com/rmsharp/nprcgenekeepr/reference/dot-markerOppositeHomozygoteCount.md));
+`tests/testthat/test_markerParentageLikelihood.R` (the combined
+fixture + all 16 test_that blocks, including the exact hand-verified
+LOD/delta numbers a Slice 2 UI smoke test should match);
+`docs/planning/issue147-likelihood-parentage-assignment-plan.md` §5
+Slice 2 (DONE criteria, files-to-touch). - **Gotchas:** (1)
+**[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)’s
+LOD can be `-Inf` even when `excluded=FALSE`** – a single
+Mendelian-incompatible locus is a true probability-zero event under the
+no-error-model formula, independent of the `maxExclusions` tolerance
+threshold; a Slice 2 UI must not assume `excluded=FALSE` implies a
+“reasonable-looking” finite LOD. (2) **When adding a new roxygen
+-documented function anywhere in an existing file, either place it
+before the file’s first existing block or after the last function’s
+closing brace – never between an existing docstring and the function it
+documents**, even with a blank-line separator (a doc-block-shift bug is
+possible either way; the only real defense is diffing the actual
+generated `NAMESPACE`/`man/*.Rd` after
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html),
+not re-reading the source). See `PROJECT_LEARNINGS.md` Learning 495. (3)
+**`inst/WORDLIST`’s real convention is case-insensitive alphabetical,
+not literal `LC_ALL=C` byte-order** despite BACKLOG.md’s own
+prior-session phrasing – verify neighbors by direct inspection, not by
+trusting that phrase literally. See Learning 496. (4) A new exported
+function needs a `_pkgdown.yml` reference: group entry in the SAME
+session (new `CLAUDE.md` checklist, ratified this session after this
+exact gap hit twice) – `test_pkgdown_reference_config.R` will fail the
+full regression read otherwise, and it cannot be satisfied for only one
+missing entry if more than one exists. (5) All standing gotchas from
+S479-495 carry forward unchanged (`gh issue view <N>` needs `--json`;
+`NOT_CRAN=true` for tests;
+[`devtools::install()`](https://devtools.r-lib.org/reference/install.html)
+before driving the installed app; `git commit -F <file>` for
+backtick-quoted messages; a piped `| head -N` on a long-running Rscript
+command can hang the process – redirect to a file instead;
+`run_in_background: true` alone, never a manual shell `&` too). -
+**Runtime smoke test:** N/A –
+[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
+is script-callable only this slice, no Shiny UI wiring (that is Slice
+2’s own scope). Phase 3E’s “launch the application” requirement applies
+only to sessions that change runtime behavior, per its own text. -
+**Self-assessment score:** 8/10 (breakdown above). **Ledger:** recorded
+in `CHANGELOG.md` at Phase 3F (this close-out).
+
+### What Session 495 Did
+
+**Deliverable:** Design session for GitHub issue \#147 (likelihood-based
+candidate-parent assignment after marker parentage exclusion) – one
+architecture document at
+`docs/planning/issue147-likelihood-parentage-assignment-plan.md`,
+following `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`
+(matching the \#136/#137 precedent: a statistical-method/data-model
+decision, not a `DESIGN_WORKSTREAM.md` visual-design question). Picked
+from this session’s own Phase 0 priorities list (owner choice via
+`AskUserQuestion`, out of \#147/#145/ \#138). No implementation code
+this session – the issue itself asks for the method to be designed
+before implementation, and existing behavior
+([`markerParentageExclusion()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md))
+is retained independently. **Started/Completed:** 2026-08-09 /
+2026-08-09. **Status:** DONE and RATIFIED. All ten design decisions
+(D1-D10) resolved; four genuine judgment calls (LOD-formula scope,
+minimum-loci-gate mechanism, report-only-vs-write-back architecture, UI
+integration shape) ratified via a single `AskUserQuestion` round – owner
+selected this document’s own recommended option in all four cases, no
+changes requested. Verified: 6 of the codebase-inventory agent’s most
+load-bearing <file:line> citations independently spot-checked directly
+against source, all matched exactly; every internal `§N` cross-reference
+in the final document checked resolvable after a mid-session
+section-renumbering pass. See
+`docs/planning/issue147-likelihood-parentage-assignment-plan.md`.
+
+**What happened, in order:** **(1)** Full Phase 0 orient (SAFEGUARDS.md,
+SESSION_NOTES.md, `gh issue list`, git status/log/diff,
+`methodology_dashboard.py` – health 98/100; ledger + `HANDOFFS.md`
+reconcile both clean, no ghost session – the two commits since the
+`CHANGELOG.md` frontier were S494’s own close-out documentation commits,
+already accounted for). Rendered the priorities list (3 options: design
+\#147, design \#145, design \#138) via `AskUserQuestion`; owner picked
+\#147. **(2)** Phase 1B claim stub committed (`9d32ccd0`). **(3)**
+Research phase: ran a 4-agent research `Workflow` in the background (3
+independent literature angles – CERVUS/LOD-score methods, Marshall et
+al. 1998/ Kalinowski et al. 2007; COLONY/sibship-reconstruction methods,
+Wang 2004/Jones & Wang 2010/FRANz; and captive-primate-colony-specific
+precedent, directly checking what de Groot et al. 2025 – already cited
+in this package – actually uses – plus a 4th adversarial-synthesis agent
+cross-checking all three for contradictions AND explicitly
+stress-testing the leading candidate method against this package’s own
+realistic 2-10-locus marker-panel size, per Learning 494 below), run
+concurrently with a separate codebase-inventory `Explore` agent (9
+numbered items:
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md),
+allele-frequency internals, the genotype-matrix contract, the
+exclusion-comparison logic, every `pedigree$sire`/`$dam` write site in
+the package, the `flagged` vocabulary, biallelic-loci enforcement,
+`modMarkerGenetics.R`’s tab structure + `modBreedingGroups.R`’s
+scored-candidate UI precedent, and the citation style). **(4)**
+Independently spot-checked 6 of the Explore agent’s most load-bearing
+<file:line> citations directly against source before trusting them
+([`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)’s
+signature, `markerHeterozygosity.R`’s allele-frequency computation,
+[`buildMarkerGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/buildMarkerGenotypeMatrix.md)’s
+cell format, `modMarkerGenetics.R`’s tab structure, the
+`pedigree$sire`/`$dam` write-grep zero-result,
+[`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)’s
+biallelic enforcement) – all six matched exactly. **(5)** Wrote the full
+architecture document (10 evidence-based inventory items, 10 design
+decisions D1-D10, an interface catalog, a 2-slice vertical
+implementation plan with per-slice DONE
+criteria/RED-GREEN/session-boundary per `SESSION_RUNNER.md`’s Planning
+Session requirement, an impact analysis, 13 “here be dragons,” an
+alternatives-considered table, a close-out checklist mapping, and a
+provenance section). **(6)** Posed the 4-question ratification round via
+`AskUserQuestion`; owner ratified all 4 recommended options with no
+changes. **(7)** Mid-session found and fixed an internal inconsistency
+in the draft’s own numbering (a UI-integration decision had been
+referenced as “D9” – the allele-frequency-helper decision’s own number –
+with no actual D9 UI decision existing): added an explicit D10 for UI
+integration, then did a full section-renumbering pass (inserting a
+proper “Implementation plan – vertical slices” section, which the first
+draft had only sketched informally in a paragraph rather than given
+per-slice DONE-criteria treatment) and verified every internal
+`§N`/`§N.M`/`Dragon N` cross-reference resolved correctly via targeted
+grep before committing. **(8)** Close-out: this evaluation +
+self-assessment, `PROJECT_LEARNINGS.md` Learning 494, `CLAUDE.md`
+learning-count update, `BACKLOG.md` progress narrative, `CHANGELOG.md`
+entry, this handoff.
+
+**Session 494 Handoff Evaluation (by Session 495): 9/10.** **What
+helped:** the handoff’s “what’s next” named all 3 still-open
+design-session options from S494’s own priorities list (accurately
+preserved from that session’s own Phase 0 render) with correct tags
+(READY/Effort/priority-color), letting this session’s own Phase 0
+priorities list be reconstructed and re-verified quickly rather than
+rebuilt from scratch. The “key files” pointer (“start fresh with that
+issue’s own `gh issue view <N> --json title,body,comments` and …
+`ARCHITECTURE_WORKSTREAM.md`/`DESIGN_WORKSTREAM.md`, matching the \#133/
+\#136/#137 precedent of a dedicated planning session before any
+implementation slice”) was exactly right and directly actionable – this
+session followed it verbatim and it correctly predicted
+`ARCHITECTURE_WORKSTREAM.md` (not `DESIGN_WORKSTREAM.md`) was the right
+workstream once the issue’s own content (a statistical method, not a UI
+layout) was read. **What was missing:** nothing this session had to
+discover the hard way – issue \#147’s own scope was novel enough (a
+design session with essentially zero prior in-repo pattern to build on,
+unlike \#145/#138 which both had a prior investigation to inherit) that
+no handoff could have pre-loaded much of the actual content; the handoff
+correctly limited itself to “here’s where to start,” not “here’s what
+you’ll find,” which was the right level of detail for an unstarted
+design topic. **What was wrong:** nothing – all claims in the S494
+handoff (issue \#137 fully closed, 3 remaining design options, their
+tags) were independently re-verified via this session’s own Phase 0
+`gh issue list`/`BACKLOG.md` cross-check and matched exactly. **ROI:**
+strongly positive – the “which workstream” pointer alone saved a real
+decision that could otherwise have gone the wrong way (this project has
+two adjacent workstream docs, and the wrong one would have produced a
+differently-shaped, less rigorous document).
+
+**Self-assessment (Session 495): 9/10.** **Strengths:** (1) Used the
+`Workflow` tool for genuinely substantive, high-stakes parallel research
+(3 independent literature angles + an adversarial synthesis, run
+alongside a separate codebase-inventory agent) rather than researching
+serially or from memory – appropriate given ultracode is on and this is
+exactly the “research with real stakes” case the tool description calls
+out. (2) The synthesis agent was explicitly instructed to stress-test
+the leading method against THIS PACKAGE’s own specific marker-panel-size
+constraint, not just cross-check the 3 reports against each other – this
+surfaced a genuinely new, load-bearing, quantified risk finding
+(small-panel underpowering; sibling-outranking risk) that none of the 3
+individual reports produced on its own, now documented as a named
+pattern (`PROJECT_LEARNINGS.md` Learning 494) for future
+research-workflow design. (3) Did not trust the codebase-inventory
+agent’s citations at face value – independently spot-checked 6 of its
+most load-bearing <file:line> claims directly against source before
+using them in the design document, catching zero errors but confirming
+the practice rather than skipping it because “the agent is usually
+right.” (4) Caught and fixed a real internal-consistency bug in my own
+first draft (a UI decision cited as “D9” when D9 was actually a
+different, unrelated decision) before committing, rather than after –
+added a proper D10, then verified every cross- reference resolved via
+targeted grep rather than eyeballing the renumbered document. (5) Added
+the missing formal “Implementation plan – vertical slices” section
+(per-slice DONE criteria, RED/GREEN, verify commands, session boundary)
+that the first draft had only sketched in a paragraph – this is a
+`SESSION_RUNNER.md` Planning Session requirement (“Every phase in a
+multi-phase plan must state what DONE looks like… verification commands…
+session boundary”), caught by re-reading that requirement against my own
+draft rather than assuming the ratification-outcome paragraph was
+sufficient. **Weaknesses:** (1) Did not explicitly invoke a “deepest
+available reasoning mode” setting at session start (no
+`/effort max`-equivalent tool was available to call directly), matching
+every recent session’s own disclosed limitation in this family –
+mitigated somewhat by delegating the highest- stakes reasoning (method
+selection, adversarial stress-testing) to `Workflow` agents run at
+`effort: "high"`, but the main session’s own synthesis/drafting work ran
+at whatever the inherited session effort was, not a
+session-start-declared maximum. (2) The first draft shipped with the
+D9/D10 numbering bug (caught before committing, but a more careful first
+pass – e.g., listing all D-numbers and their one-line topics before
+writing full prose for each – might have avoided it entirely rather than
+requiring a full-document renumbering pass to fix). (3) This session did
+not itself independently re-derive or hand-verify the Mendelian
+transmission-probability combinatorics underlying the LOD formula (the
+per-genotype-combination Punnett-square truth table) – it is explicitly
+left as a Dragon for the implementing session’s own Pre-RED, matching
+this document’s own stated confidence-preservation discipline, but a
+maximally thorough design session might have hand-derived at least one
+worked example the way
+[`markerFst()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md)’s
+own Pre-RED history did for its formula. **Compared to previous
+sessions:** this session’s most distinctive contribution is applying the
+“verify, don’t inherit” family of learnings (481/484-486/488/489/491)
+one level further upstream than most prior design sessions in this
+project – not just spot-checking a subagent’s codebase claims, but
+explicitly directing an adversarial-synthesis agent to check whether a
+literature-validated method still holds up against THIS project’s own
+specific numeric constraints, which is a genuinely new pattern for a
+Pre-RED design session in this repo (prior design docs like \#137’s own
+did extensive hands-on verification of the CODEBASE and of an installed
+package’s SOURCE, but none previously ran a multi-angle
+literature-research `Workflow` with an explicitly-scoped stress-test
+synthesis stage for a METHOD-CHOICE decision).
+
+**Handoff to Session 496:** - **What’s next:** Issue \#147’s design is
+RATIFIED but NOT implemented – Slice 1 (core statistical function:
+`R/markerParentageLikelihood.R`, `R/markerAlleleFrequency.R`, the D7
+extraction from `R/markerParentageExclusion.R` + its
+behavior-preservation regression test, a new fixture with a
+related-candidate scenario) is the natural next pickup for this specific
+issue, following this project’s strict-TDD
+PRE-RED-\>RED-\>GREEN-\>REFACTOR cycle, `AskUserQuestion`-gated at each
+transition. Read
+`docs/planning/issue147-likelihood-parentage-assignment-plan.md` §5
+(Implementation plan) in full before starting – it has explicit DONE
+criteria and a files-to-touch list already worked out. Also still
+available from this session’s own Phase 0 priorities list, unchanged:
+**design session for \#145** (READY, Effort M – sire/dam placement,
+investigation already done by a prior session); **design session for
+\#138** (READY, Effort M, low priority – full-colony rendering beyond
+the node cap). Lower priority, unchanged from S494’s own list: the
+`.buildTwinConnectorEdges()` missing- `#009E73`-color item (Effort S);
+non-portable-filename
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+rename (Effort S); spelling-WORDLIST gap (9 words, Effort S);
+`highlightNearest` degree=6 mitigation (Effort M); live-app node-count
+discrepancy; `data-raw/rhesusPedigree.R` docstring mismatch; iCloud
+duplicate-file cleanup (still blocked on repo relocation). Also newly
+visible from this session’s own research (not yet filed): the sequencing
+audit’s own “2 High-priority audit rows with no filed issue” gap
+(Longitudinal genetic-health monitoring; Ancestry guardrails in breeding
+decisions) – flagged S483, still not filed as of this session, unrelated
+to this session’s own work. - **Key files:**
+`docs/planning/issue147-likelihood-parentage-assignment-plan.md` §3
+(D1-D10, esp. D2/ D8’s exact LOD formula and function signature), §5
+(Slice 1’s own DONE criteria/files-to-touch), §7 (13 dragons – \#1-3/7
+are the highest-stakes for Slice 1’s own RED tests);
+`R/markerParentageExclusion.R:100-160` (the D7 extraction target);
+`R/getPotentialParents.R:64-199` (the unmodified candidate-source
+dependency); `R/markerHeterozygosity.R:98-108` (the allele-frequency
+computation shape D9’s new helper mirrors, without touching this
+file). - **Gotchas:** (1) **The genotyping-error-tolerant LOD formula
+(Kalinowski et al. 2007, eqns 1-2) is explicitly NOT verified by this
+session’s research** – a spotted internal inconsistency in the 2007
+paper’s own Appendix, and the 2010 corrigendum that would resolve it was
+Cloudflare-blocked on every retrieval route tried. Slice 1 implements
+ONLY the no-error-model formula (ratified, §11 Q1 Option A) – do not be
+tempted to “complete” it with the error-tolerant extension without a
+fresh, independent primary-source re-verification pass first; this is a
+hard requirement, not a style preference (see Dragon 7, and
+[`markerFst()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md)’s
+own Pre-RED history of a previously-shipped ~40%-off formula under a
+mis-attributed citation). (2)
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+applies ZERO relatedness filtering – Slice 1’s own RED tests MUST
+include a fixture where a demographically-eligible relative of the true
+parent is also a genotyped candidate (Dragon 3), or the single
+highest-value stress-test finding from this session’s own research will
+never actually be exercised by a test. (3) The `excluded`/`lowPower`
+output columns must NEVER be named `flagged` (or unified into one
+column) –
+[`markerParentageExclusion()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md)
+already owns that word for a different (recorded-parent-only) concept,
+and this package has hit this exact naming-collision trap before
+(twin-zygosity, `docs/planning/issue137-...-plan.md` §2.4). (4) The D7
+extraction
+([`.markerOppositeHomozygoteCount()`](https://github.com/rmsharp/nprcgenekeepr/reference/dot-markerOppositeHomozygoteCount.md))
+must ship with a regression test proving
+[`markerParentageExclusion()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md)’s
+OWN existing test suite output is byte-identical before/after – this is
+the mechanism that makes “retain the existing exclusion check
+independently” (the issue’s own literal words) actually true, not just
+asserted. (5) All standing gotchas from S479-494 carry forward unchanged
+(`gh issue view <N>` needs `--json`; `NOT_CRAN=true` for tests
+incl. [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+scripts;
+[`devtools::install()`](https://devtools.r-lib.org/reference/install.html)
+needed before driving the installed app; `git commit -F <file>` for
+backtick-quoted commit messages; a piped `| head -N` on a long-running
+Rscript command can hang the underlying process – redirect to a file
+instead; `run_in_background: true` alone, never a manual shell `&`
+too). - **Runtime smoke test:** N/A – docs-only session (one new
+planning document, `PROJECT_LEARNINGS.md`/ `CLAUDE.md`/`BACKLOG.md`
+prose updates). No `R/`, `tests/`, or `man/` content changed; nothing to
+runtime-verify. Phase 3E’s “launch the application” requirement applies
+only to sessions that change runtime behavior, per its own text. -
+**Self-assessment score:** 9/10 (breakdown above). **Ledger:** recorded
+in `CHANGELOG.md` at Phase 3F (this close-out).
+
+### What Session 494 Did
+
+**Deliverable:** Implement Slice 3 (UI wiring, legend, documentation) of
+the ratified issue \#137 plan
+(`docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md` §4) –
+Shiny-level wiring so a user can supply a `twinRelations` sidecar CSV
+via a new `fileInput` in
+[`modPedigreeUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPedigreeUI.md)’s
+static UI (mirroring `modGeneticValue.R`’s `kinshipOverrideFile`
+precedent), a “Show Twin Connectors” toggle in the existing dynamic
+diagram `tagList(...)` (self-referential-value pattern per Learning
+490), a Diagram-tab legend entry via the existing `visLegend()` call’s
+`addEdges` parameter, plus `NEWS.Rmd`/tutorial-article documentation.
+Following `docs/methodology/workstreams/ DEVELOPMENT_WORKSTREAM.md`
+under this project’s strict TDD contract
+(PRE-RED-\>RED-\>GREEN-\>REFACTOR, `AskUserQuestion`-gated at each
+transition). **Started/Completed:** 2026-08-09 / 2026-08-09. **Status:**
+DONE. Full strict-TDD PRE-RED-\>RED-\>GREEN cycle,
+`AskUserQuestion`-gated at every transition (a dedicated pre-RED scope
+decision on the Slice-2 color gap; PRE-RED-\>RED; RED-\>GREEN;
+GREEN-\>REFACTOR, owner-confirmed skip). Verified: all 4 new/changed
+test files green; full clean regression read 0 failed/0 error, 4758
+passed, 175 skipped, 10 pre-existing baseline warnings (unchanged);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 2
+ERRORs/1 WARNING/2 NOTEs, an exact match to S493’s own baseline, 0 new;
+`lintr::lint_package()` 0 lints (6 false positives suppressed via the
+established `# nolint` convention). Phase 3E: the full, real
+`test-e2e-pedigree-module.R` suite (13 tests, 2 new) run live against a
+freshly
+[`devtools::install()`](https://devtools.r-lib.org/reference/install.html)ed
+package – all 13 passed, 0 console errors. `NEWS.Rmd`/ `NEWS.md` and
+`vignettes/manual_components/_pedigree_browser.Rmd` updated. Citation
+checklist (#120): N/A, confirmed explicitly. **Issue \#137 is now fully
+implemented across all 3 slices – closed this session**
+(`gh issue close 137 --reason completed`). **Ledger:** recorded in
+`CHANGELOG.md` at Phase 3F (this close-out).
+
+**What happened, in order:** **(1)** Full Phase 0 orient (SAFEGUARDS.md,
+SESSION_NOTES.md, `gh issue list`, git status/log/diff,
+`methodology_dashboard.py` – health 98/100; ledger + `HANDOFFS.md`
+reconcile both clean, no ghost session – the one commit since the
+`CHANGELOG.md` frontier was S493’s own self-referential `HANDOFFS.md`
+commit-sha backfill, expected pattern). Rendered the priorities list (4
+options: \#137 Slice 3, design \#147, design \#145, design \#138) via
+`AskUserQuestion`; owner picked \#137 Slice 3. **(2)** Pre-RED: re-read
+`R/modPedigree.R` in full, `R/modGeneticValue.R`‘s
+`kinshipOverrideFile`/`kinshipOverrideData` (the load-bearing upload
+precedent, found via a dedicated `Agent` search alongside my own direct
+reads), `R/checkTwinRelations.R`, `.buildTwinConnectorEdges()`,
+`visLegend()`’s own source (confirmed `addEdges` passes through
+untouched to `x$legend$edges`), and `R/appServer.R`’s
+`modPedigreeServer` call site. Found two scope-revising facts before
+writing any code: (a) neither `R/appServer.R` nor `R/modInput.R` needed
+a change – `twinRelations`, unlike `kinshipOverrides`, is consumed only
+inside `modPedigree`’s own render chain, confirmed by direct reads, not
+assumed from the plan’s own “Touches” list; (b) a `fileInput` has no
+`value=` argument a fresh `renderUI()` could read back
+self-referentially the way `checkboxInput`/`radioButtons` do (Learning
+490’s own mechanism, extended to a new corollary) – so the new upload
+control was placed in the STATIC UI, never the dynamically re-rendered
+`pedigreeDiagramUI` block, sidestepping the re-render-wipe risk entirely
+rather than fighting it. Also found, via direct grep, that Slice 2’s own
+`.buildTwinConnectorEdges()` never actually wired the `#009E73` color
+S493’s own handoff narrative said was picked – surfaced via a dedicated
+`AskUserQuestion` scope decision (owner picked: legend describes only
+what’s actually rendered; file the gap, don’t fix it here) before the
+phase-gate question. **(3)** PRE-RED-\>RED gate (`AskUserQuestion`): new
+`tests/testthat/test_readTwinRelations.R` (11 expectations),
+`tests/testthat/test_modPedigree_twinRelations.R` (a dedicated file,
+mirroring `test_modGeneticValue_kinshipOverrides.R`’s own precedent –
+upload+toggle-on renders connectors; upload+toggle-off doesn’t;
+no-upload doesn’t; malformed-upload is non-fatal), 3 new blocks in
+`test_modPedigree.R` (legend MZ/DZ/UZ rows; static fileInput presence;
+toggle presence/default), and 2 new live tests in
+`test-e2e-pedigree-module.R`. Confirmed all new failures were genuinely
+“could not find function”/“expected TRUE got FALSE” (not setup/typo
+errors); full regression read confirmed nothing else broke
+(failed:8/error:3, exactly the 11 new RED assertions). Committed RED
+(`f79c4d95`). **(4)** RED-\>GREEN gate: implemented
+`R/readTwinRelations.R`, `R/modPedigree.R`’s new static wellPanel +
+`fileInput`, `twinRelationsData()` reactive (mirrors
+`kinshipOverrideData` minus its dead warning-handling branch –
+[`checkTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.md)
+never `warn()`s), `.currentShowTwinConnectors()` closure + checkbox,
+`diagramLayout()`’s toggle-gated `twinRelations` pass-through, and the
+`visLegend()` `addEdges` extension. Committed GREEN (`a2ae98f0`). Fixing
+lintr’s 6 false positives (5 `commented_code_linter` on prose comments,
+1 `nonportable_path_linter` on a plain label string containing `/`)
+needed one follow-up commit (`65629c39`) – suppressed via the
+established `# nolint`/`# nolint start...end` convention, not deleted or
+reworded. Also fixed one pre-existing test (`test_modPedigree.R`’s
+“delegates the focal file input to a dynamic uiOutput” test) whose
+`expect_false(grepl('type="file"', ...))` assertion was legitimately too
+broad once a second, deliberately-static file input existed – tightened
+to check the focal-animal input’s own namespaced id specifically,
+preserving the test’s real intent. **(5)** GREEN-\>REFACTOR gate:
+declined – the diff was already minimal and precedent-mirroring; the one
+real dedup opportunity found
+(`.currentShowTwinConnectors()`/`.currentShowNames()`/
+`.currentEdgeStyle()` are near-identical closures) would require
+touching the other two toggles’ pre-existing code, outside this slice’s
+own declared scope. **(6)** Phase 3E:
+[`devtools::install()`](https://devtools.r-lib.org/reference/install.html)
+run proactively (Learning 440’s stale-install trap avoided, not
+rediscovered) before driving the REAL app – the full,
+permanently-committed `test-e2e-pedigree-module.R` suite (13 tests) run
+live, all passing, including the 2 new twin-connector tests (MZ/DZ/UZ
+label/dash assertions against the live vis.js widget; the
+toggle-survives-`edgeStyle`-switch regression test, mirroring Learning
+490’s own showNames pattern applied to a second toggle). **(7)**
+Close-out: this evaluation + self -assessment, `NEWS.Rmd`/`NEWS.md` +
+`_pedigree_browser.Rmd` documentation, citation-checklist N/A
+confirmation, new `BACKLOG.md` Housekeeping item for the Slice 2 color
+gap, `BACKLOG.md` progress narrative + `CHANGELOG.md` entries,
+`gh issue close 137`, this handoff.
+
+**Session 493 Handoff Evaluation (by Session 494): 9/10.** **What
+helped:** the handoff’s “what’s next” named exactly the right Pre-RED
+reading list (`R/modInput.R`/`R/appServer.R` to resolve Dragon 1) and it
+led directly to the correct answer – `R/modGeneticValue.R`’s
+`kinshipOverrideFile` precedent, not `modInput.R` at all. The Learning
+490 “hard requirement” framing for the toggle’s self-referential value
+was reapplied verbatim and correctly. The `visLegend()`
+single-call/`addEdges` citation was exactly right and directly
+actionable – confirmed via source read, not just trusted. The gotchas
+list (renv-library-path subprocess injection, `get_screenshot()` not
+`screenshot()`, `wait_=FALSE`, the rbind-trap line numbers) all carried
+forward correctly, though most weren’t needed this session since Slice 3
+drove the REAL installed app, not a standalone harness. **What was
+missing:** the handoff (inheriting from the S491 plan document’s own
+“Touches” list, not S493’s own invention) did not flag that
+`R/appServer.R`/`R/modInput.R` might turn out unnecessary – this cost no
+real time since Pre-RED reading is mandatory regardless, but a plan
+whose own scope list is pre-verified against the actual codebase (the
+way this document’s own §2 inventory tries to be) is stronger than one
+that has to be re-verified downstream. **What was wrong:** nothing in
+S493’s own claims – the one inaccuracy found (the `#009E73` color never
+being wired into code) is a gap BETWEEN the handoff’s stated decision
+and the actual shipped diff, not a false claim the handoff itself makes
+(the handoff accurately describes what was *decided*, not what was
+*implemented*, and this session’s own close-out is careful to preserve
+that same distinction). **ROI:** strongly positive – the plan’s own §4
+Slice 3 section and S493’s own key-files/gotchas list needed almost no
+re-derivation.
+
+**Self-assessment (Session 494): 9/10.** **Strengths:** (1) Found and
+corrected two scope overstatements inherited from the ratified plan
+document itself (`R/appServer.R`/`R/modInput.R`) via direct reads before
+writing any code, rather than trusting either the plan or the
+immediately -prior session’s handoff – a further application of this
+project’s “verify, don’t assume” family (S481/484-493) to the SLICE’S
+OWN PLAN ARTIFACT, not just to claims about the codebase. (2) Derived a
+genuinely new piece of reasoning (the file-input corollary to Learning
+490 – no `value=` self-referential escape hatch exists for `fileInput`
+at all) rather than just reapplying the existing checkbox-specific
+lesson, and used it to make a real design decision (static vs. dynamic
+UI placement) before any bug could occur, not after one was found live.
+(3) Found, verified via direct grep (not assumed from prose), and
+properly filed – rather than silently fixing out-of -slice-scope or
+silently ignoring – a real gap between S493’s own handoff narrative and
+the actually-shipped code (the missing `#009E73` color). (4) Recognized
+a pre-existing test’s assertion had gone stale as a DIRECT, foreseeable
+consequence of this session’s own deliberate design choice (a second
+static file input), and fixed it narrowly to preserve the test’s real
+intent rather than weakening or deleting it. (5) Did real, not token,
+Phase 3E verification: proactively avoided the documented Learning 440
+stale-install trap, then ran the full, permanently-committed E2E suite
+live against the real app (not a standalone harness, since Slice 3’s UI
+now genuinely exists) – all 13 tests passing is real evidence, not just
+“no console errors” on an ad hoc render. **Weaknesses:** (1) Did not
+explicitly invoke a “deepest available reasoning mode” setting at
+session start, matching every recent session’s own disclosed limitation.
+(2) The first
+[`devtools::install()`](https://devtools.r-lib.org/reference/install.html)
+call used an invalid `upgrade = "never"` argument (a `pak`-style value,
+not valid for
+[`devtools::install()`](https://devtools.r-lib.org/reference/install.html)),
+costing one avoidable extra round-trip before the live e2e run. (3)
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+and the full regression suite were run in immediate sequence rather than
+launched together from the earliest possible point, costing some
+wall-clock time this session’s own background-task pattern could have
+saved. **Compared to previous sessions:** this session’s most
+distinctive contribution is applying the established “verify, don’t
+assume” discipline one level further upstream than prior sessions in
+this family did – not just verifying claims ABOUT the codebase, but
+verifying the RATIFIED PLAN DOCUMENT’s own scope list against the
+codebase before trusting it, finding it was wrong in two independent,
+non-trivial ways (files that didn’t need touching; a design constraint
+the plan didn’t anticipate) before any code was written.
+
+**Handoff to Session 495:** - **What’s next:** Issue \#137 is fully
+closed – no further slices remain in that chain. The priorities list
+rendered at this session’s own Phase 0 (owner picked \#137 Slice 3 from
+it) named 3 other still-open options, unchanged by this session’s work:
+**design session for \#147** (READY, Effort L – design only; Tier 1, the
+sole High-priority item in the \#146-153 sequencing audit;
+likelihood-based candidate-parent assignment after marker parentage
+exclusion – no existing likelihood/LOD parentage method or
+pedigree-mutation pattern to build on); **design session for \#145**
+(READY, Effort M; correct sire’s-vs-dam’s placement in the pedigree
+drawing – investigation already done by a prior session); **design
+session for \#138** (READY, Effort M, low priority; full-colony pedigree
+rendering beyond the 1,500-node cap, a deliberate scope limit today).
+Also still available, lower priority: the spelling-WORDLIST gap (9
+pre-existing words, Effort S, confirmed unrelated to this session’s own
+0-new contribution); the non-portable -filename
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+ERROR/WARNING rename (Effort S, dates to S418); the newly-filed
+`.buildTwinConnectorEdges()` missing-`#009E73`-color item (Effort S,
+this session); the `highlightNearest` degree=6 rectilinear mitigation
+full-fix (Effort M, low priority); the live-app QC’d node-count
+discrepancy (Effort unknown, low priority); the
+`data-raw/rhesusPedigree.R` docstring/fixture mismatch (Effort S, low
+priority); the iCloud duplicate-file cleanup (blocked on repo
+relocation, still not done as of this session’s Orient). - **Key
+files:** none specific to a next task – issue \#137 is closed. If
+picking a design session (#147/#145/#138), start fresh with that issue’s
+own `gh issue view <N> --json title,body,comments` and this project’s
+`ARCHITECTURE_WORKSTREAM.md`/`DESIGN_WORKSTREAM.md`, matching the
+\#133/#136/#137 precedent of a dedicated planning session before any
+implementation slice. - **Gotchas:** (1) **A `fileInput` has NO `value=`
+argument a fresh `renderUI()` re-render could read back
+self-referentially** – unlike `checkboxInput`/`radioButtons` (Learning
+490), a file input inside a block that ever re-executes for an unrelated
+reason will silently lose its uploaded-file state; the only safe
+placement is a STATIC UI location that never re-renders. Any future
+session adding a NEW file upload to a dynamically-rendered Shiny block
+should check this first. (2)
+[`devtools::install()`](https://devtools.r-lib.org/reference/install.html)
+in this R/devtools version rejects `upgrade = "never"` – use
+`upgrade = FALSE` (a `pak`-only argument value doesn’t apply here). (3)
+All standing gotchas from S479-493 carry forward unchanged
+(`gh issue view <N>` needs `--json`; `NOT_CRAN=true` for tests including
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+scripts;
+[`devtools::install()`](https://devtools.r-lib.org/reference/install.html)
+needed before driving the installed app via
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+– confirmed hit again this session, avoided proactively this time;
+`git commit -F <file>` for any commit message containing backtick-quoted
+identifiers; the `zygosity`/“twin zygosity” identifier-and-prose
+disambiguation rule, applied again in this session’s own new
+documentation; `run_in_background: true` alone, never a manual shell `&`
+too; a piped `| head -N` on a long-running Rscript command can hang the
+underlying process rather than cleanly terminating it on SIGPIPE –
+redirect to a file and read it separately instead, found this session
+when a `head -60`-piped test run hung and had to be `pkill -9`’d). -
+**Runtime smoke test:** DONE (Phase 3E, this session) – the full, real,
+permanently-committed `test-e2e-pedigree-module.R` suite (13 tests,
+including 2 new for this slice) run live against a freshly
+[`devtools::install()`](https://devtools.r-lib.org/reference/install.html)ed
+package: all 13 passed, 0 console errors, genuine upload + toggle +
+render verification against the actual app (not a standalone harness). -
+**Self-assessment score:** 9/10 (breakdown above).
+
 ### What Session 493 Did
 
 **Deliverable:** Implement Slice 2 (core rendering) of the ratified

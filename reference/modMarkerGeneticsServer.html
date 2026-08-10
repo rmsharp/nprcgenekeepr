@@ -22,7 +22,15 @@ Center&quot;, surfaces a between-population differentiation statistic
 &quot;Center A&quot;) and a second, independently uploaded Center B genotype file
 – a population-level, two-dataset comparison, unrelated to the
 per-animal cross-center identity linking of
-resolveCrossCenterIds (Slice 4)."><meta property="og:description" content="Reads an uploaded long-format marker genotype file (D1 format: id,
+resolveCrossCenterIds (Slice 4). A fifth tab, &quot;Candidate
+Parent Assignment&quot; (issue #147 Slice 2), surfaces
+markerParentageLikelihood: for every (offspring, role) pair
+the Parentage Exclusion tab's own diagnostic flags as Mendelian
+-inconsistent, it ranks candidate replacement parents by a CERVUS-style
+multilocus likelihood (LOD) score. This tab needs no new file input –
+it reads the same uploaded genotype file and pedigree already
+wired to the other tabs – and is report-only, matching the Parentage
+Exclusion tab's own precedent: it never writes to pedigree."><meta property="og:description" content="Reads an uploaded long-format marker genotype file (D1 format: id,
 locus, allele1, allele2), validates and pivots it
 (checkMarkerGenotypeFile,
 buildMarkerGenotypeMatrix),
@@ -45,7 +53,15 @@ Center&quot;, surfaces a between-population differentiation statistic
 &quot;Center A&quot;) and a second, independently uploaded Center B genotype file
 – a population-level, two-dataset comparison, unrelated to the
 per-animal cross-center identity linking of
-resolveCrossCenterIds (Slice 4)."><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
+resolveCrossCenterIds (Slice 4). A fifth tab, &quot;Candidate
+Parent Assignment&quot; (issue #147 Slice 2), surfaces
+markerParentageLikelihood: for every (offspring, role) pair
+the Parentage Exclusion tab's own diagnostic flags as Mendelian
+-inconsistent, it ranks candidate replacement parents by a CERVUS-style
+multilocus likelihood (LOD) score. This tab needs no new file input –
+it reads the same uploaded genotype file and pedigree already
+wired to the other tabs – and is report-only, matching the Parentage
+Exclusion tab's own precedent: it never writes to pedigree."><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -117,7 +133,15 @@ Center", surfaces a between-population differentiation statistic
 "Center A") and a second, independently uploaded Center B genotype file
 – a population-level, two-dataset comparison, unrelated to the
 per-animal cross-center identity linking of
-<code><a href="resolveCrossCenterIds.html">resolveCrossCenterIds</a></code> (Slice 4).</p>
+<code><a href="resolveCrossCenterIds.html">resolveCrossCenterIds</a></code> (Slice 4). A fifth tab, "Candidate
+Parent Assignment" (issue #147 Slice 2), surfaces
+<code><a href="markerParentageLikelihood.html">markerParentageLikelihood</a></code>: for every (offspring, role) pair
+the Parentage Exclusion tab's own diagnostic flags as Mendelian
+-inconsistent, it ranks candidate replacement parents by a CERVUS-style
+multilocus likelihood (LOD) score. This tab needs no new file input –
+it reads the same uploaded genotype file and <code>pedigree</code> already
+wired to the other tabs – and is report-only, matching the Parentage
+Exclusion tab's own precedent: it never writes to <code>pedigree</code>.</p>
     </div>
 
     <div class="section level2">
@@ -147,7 +171,7 @@ upstream analysis has not yet been run.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list with eight reactive elements: <code>markerGenotype</code>, the
+    <p>A list with nine reactive elements: <code>markerGenotype</code>, the
 raw uploaded genotype data frame (or <code>NULL</code> before upload);
 <code>markerKinshipMatrix</code>, the marker-based <code>id</code> x <code>id</code>
 kinship matrix (or <code>NULL</code>); <code>comparisonTable</code>, the per-animal
@@ -162,8 +186,12 @@ population-wide mean expected heterozygosity, repeated per row) (or
 frame (or <code>NULL</code> before upload); <code>crossCenterTable</code>, the
 <code><a href="markerFst.html">markerFst</a></code> <code>locus</code>/<code>fst</code> data frame with a
 trailing <code>"Pooled"</code> row (or <code>NULL</code> before both center files
-are uploaded); and <code>isReady</code>, <code>TRUE</code> once
-<code>comparisonTable</code> has a value.</p>
+are uploaded); <code>candidateAssignmentTable</code>, the
+<code><a href="markerParentageLikelihood.html">markerParentageLikelihood</a></code> ranked-candidate data frame (a
+zero-row, full-column-shape data frame when no pair is flagged; or
+<code>NULL</code> before a genotype file and a pedigree are both available);
+and <code>isReady</code>, <code>TRUE</code> once <code>comparisonTable</code> has a
+value.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -178,6 +206,8 @@ new, sibling concern.</p>
 <p>Other Shiny modules:
 <code><a href="modBreedingGroupsServer.html">modBreedingGroupsServer()</a></code>,
 <code><a href="modBreedingGroupsUI.html">modBreedingGroupsUI()</a></code>,
+<code><a href="modCrossCenterIdentityServer.html">modCrossCenterIdentityServer()</a></code>,
+<code><a href="modCrossCenterIdentityUI.html">modCrossCenterIdentityUI()</a></code>,
 <code><a href="modGeneticDiversityServer.html">modGeneticDiversityServer()</a></code>,
 <code><a href="modGeneticDiversityUI.html">modGeneticDiversityUI()</a></code>,
 <code><a href="modGeneticValueServer.html">modGeneticValueServer()</a></code>,

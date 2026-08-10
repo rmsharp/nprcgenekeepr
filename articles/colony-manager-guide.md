@@ -750,6 +750,104 @@ The Cross-Center tab comparing two example centers at 2 marker loci:
 per-locus Fst (L1, L2) alongside the pooled summary value across both
 loci.
 
+A fifth **Candidate Parent Assignment** tab (issue
+[\#147](https://github.com/rmsharp/nprcgenekeepr/issues/147)) picks up
+directly where the Parentage Exclusion tab leaves off: for every
+recorded dam or sire that tab flags as Mendelian-inconsistent, this tab
+ranks candidate replacement parents using a **CERVUS-style multilocus
+likelihood-ratio (LOD) score** – the same field-standard method already
+cited by the Parentage Exclusion tab’s own diagnostic. No new file
+upload is needed; the tab reads the same genotype file and pedigree
+already loaded for the rest of the module.
+
+For each flagged animal, every demographically-eligible candidate parent
+is scored and ranked by `LOD` (higher is more consistent with the
+observed genotypes), alongside `delta` (the gap down to the next-best
+candidate), `nLociUsed` (how many loci the comparison actually rests
+on), `excluded` (whether this specific candidate is itself
+Mendelian-inconsistent), and `lowPower` (whether too few loci were
+shared to trust the ranking). The tab deliberately does **not** report a
+simulation-calibrated percentage confidence – this package’s realistic
+marker-panel sizes sit inside the range the underlying literature
+documents as underpowered for that kind of claim, so an uncalibrated raw
+score is the honest signal to show a curator. Like the Parentage
+Exclusion tab, this is a diagnostic only: it never rewrites the
+pedigree’s recorded dam or sire, and any change to the colony’s records
+remains a curator decision made outside the tool.
+
+> **Note**
+>
+> **Current limitation.** Candidate lists come from the same demographic
+> screening the Potential Parents tab uses (age, sex, presence date,
+> gestation window), which only proposes candidates for an animal with
+> an *unrecorded* parent slot. An animal whose recorded parent is
+> present but wrong – the case this tab exists for – will show no
+> candidates unless its *other* parent slot is also unrecorded, or
+> unless a curator explicitly supplies a candidate list (a
+> script-callable option not yet exposed in this tab). This is being
+> tracked as a follow-on improvement.
+
+![Marker Genetics Candidate Parent Assignment tab showing a table with
+one row: offspring C, role sire, candidate Q, LOD blank (negative
+infinity), nLociUsed 10, excluded true, lowPower
+false.](shiny_app_use/marker_genetics_candidate_assignment.png)
+
+The Candidate Parent Assignment tab for a small example trio: C’s
+falsely-recorded sire (Q) is Mendelian-excluded across all 10 shared
+loci, so its LOD score is negative infinity – a true genetic
+impossibility, not merely “unlikely” (blank cells in the LOD/delta
+columns above render that infinite value).
+
+### Cross-Center Identity
+
+The **Cross-Center Identity** tab (issue
+[\#149](https://github.com/rmsharp/nprcgenekeepr/issues/149)) addresses
+a different problem than any other tab: a colony animal transferred
+between centers is often recorded twice, once under each center’s own id
+namespace, so the transferred animal shows up at the receiving center as
+an artificial founder – its real parents, known at the origin center,
+are lost from every downstream analysis. This tab operationalizes a
+*reviewed* fix: a curator uploads both centers’ pedigrees plus their own
+explicit id-mapping table (which id at Center A is the same physical
+animal as which id at Center B), and the tool safely merges the two
+records, restoring the real lineage. Like every other identity-sensitive
+feature in `nprcgenekeepr`, this tool never guesses identity from
+matching id strings or genetic data – only the mapping a curator
+explicitly supplies is ever merged.
+
+The workflow has three steps, each its own tab:
+
+1.  **Validation.** Upload Center A’s pedigree, Center B’s pedigree, and
+    the mapping file (columns `idA`/`idB`), then click **Validate
+    Mapping**. Every problem is surfaced at once – not just the first
+    one found – so a mapping file with several unrelated mistakes (a
+    duplicate mapping row, an id that doesn’t exist in either pedigree,
+    an id present at both centers but never declared in the mapping, or
+    two centers recording different parents for the same mapped animal)
+    can be fixed in one pass instead of being rejected and resubmitted
+    repeatedly.
+2.  **Preview.** Once the mapping validates clean, this tab computes the
+    actual proposed merge and shows a lineage-change table: for each
+    mapped pair, both centers’ originally-recorded sire/dam alongside
+    the resolved sire/dam and which center’s record it came from.
+    Clicking **Confirm Merge** opens a confirmation dialog summarizing
+    the mapped-pair and final-merged-row counts before anything is
+    unlocked for export.
+3.  **Export.** Once confirmed, five artifacts become downloadable: the
+    Merged Pedigree itself, an echo of the confirmed Mapping, the
+    Validation Results (useful as an audit artifact even when clean –
+    proof no problems were found), the Merge Summary (the same
+    lineage-change table from the Preview tab), and a Provenance record
+    (timestamp, the three uploaded file names, package version, and
+    per-merged-animal source counts).
+
+This is a standalone review/export tool: the merged pedigree is a
+downloadable CSV, not automatically fed into the rest of the
+application. A curator who wants the merged result to drive genetic
+value, breeding-group, or diversity analysis re-uploads the exported
+“Merged Pedigree” file through the Input tab’s existing pedigree-file
+path.
+
 ### Potential Parents
 
 The **Potential Parents** tab (issue

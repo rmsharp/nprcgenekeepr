@@ -458,6 +458,9 @@ Funtions designed for interactive use
   : Calculate the sex ratio of a set of animals
 - [`checkChangedColsLst()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkChangedColsLst.md)
   : Check a changed-columns list for non-empty fields
+- [`checkCrossCenterMapping()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkCrossCenterMapping.md)
+  : Collect every cross-center identity-mapping problem, without
+  stopping
 - [`checkErrorLst()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkErrorLst.md)
   : Check an error list for non-empty fields
 - [`checkGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkGenotypeFile.md)
@@ -687,12 +690,19 @@ Funtions designed for interactive use
   : Compute per-animal observed heterozygosity from marker genotypes
 - [`markerParentageExclusion()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md)
   : Flag Mendelian-inconsistent recorded parents from marker genotypes
+- [`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
+  : Rank candidate replacement parents by a multilocus likelihood (LOD)
+  score
 - [`meanKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/meanKinship.md)
   : Calculate mean kinship for each animal in a kinship matrix
 - [`modBreedingGroupsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsServer.md)
   : Breeding Groups Module - Server Function
 - [`modBreedingGroupsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsUI.md)
   : Breeding Groups Module - UI Function
+- [`modCrossCenterIdentityServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modCrossCenterIdentityServer.md)
+  : Cross-Center Identity Mapping Module - Server Function
+- [`modCrossCenterIdentityUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modCrossCenterIdentityUI.md)
+  : Cross-Center Identity Mapping Module - UI Function
 - [`modGeneticDiversityServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modGeneticDiversityServer.md)
   : Genetic Diversity Module - Server Function
 - [`modGeneticDiversityUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modGeneticDiversityUI.md)
@@ -752,6 +762,8 @@ Funtions designed for interactive use
   : Rank animals by genetic value
 - [`readKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/readKinshipOverrides.md)
   : Read a kinship overrides table from a file
+- [`readTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/readTwinRelations.md)
+  : Read a twin/zygosity relations table from a file
 - [`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md)
   : Remove automatically generated IDs from pedigree
 - [`removeDuplicates()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeDuplicates.md)

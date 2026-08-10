@@ -456,6 +456,26 @@ dropdown above the diagram lets you jump straight to a specific animal
 by ID, dimming every node except it and its direct connections – useful
 for locating one animal in a large, busy diagram without narrowing the
 focal-animal selection.</p>
+<p>If a colony records twin births, an optional <strong>Twin/Zygosity
+Relations</strong> file can be uploaded from the panel to the right of
+the focal-animal controls – a CSV or Excel file with <code>id1</code>,
+<code>id2</code>, and <code>code</code> columns (<code>code</code> one
+of <code>"MZ twin"</code>, <code>"DZ twin"</code>, or
+<code>"UZ twin"</code>), following kinship2’s own twin-code convention.
+Once uploaded, a <strong>Show Twin Connectors</strong> toggle above the
+diagram (off by default) draws a distinctly-styled connector line
+directly between each declared pair’s own diagram nodes, drawn in a
+colorblind-safe bluish-green: solid for a monozygotic (MZ) pair,
+short-dashed for a dizygotic (DZ) pair, and long-dashed with a “?” label
+for a pair of unknown twin zygosity (UZ) – a callback to kinship2’s own
+“?” glyph – with a matching legend entry so the styling is discoverable
+without hovering over a connector. A malformed or inconsistent
+twin-relations file (an id not in the pedigree, or a declared MZ/DZ pair
+that does not already share both sire and dam) is rejected with an
+on-screen notification rather than breaking the diagram; the pedigree
+renders exactly as it would with no twin data at all until a valid file
+is supplied. A pedigree with no twin data uploaded is unaffected by this
+feature entirely.</p>
 </div>
 <div class="section level3">
 <h3 id="module-interface-1">Module Interface<a class="anchor" aria-label="anchor" href="#module-interface-1"></a>
