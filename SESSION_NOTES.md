@@ -6,6 +6,48 @@
 
 ## ACTIVE TASK
 
+### Session 501 Handoff Evaluation (by Session 502)
+**Score: 9/10.**
+**What helped:** `next_steps` named the exact next action in full mechanical detail --
+"add `.markerFlaggedSlotPedigree()` to `R/markerParentageLikelihood.R` (with the duplicate-id guard
+already specified in §3 D1's code block), wire it into both existing `getPotentialParents()` call
+sites (:285 auto-detect, :298 explicit branch), add the 6 tests listed in §7... run the Phase 3E live
+shinytest2 smoke test... then follow §7's DONE criteria exactly" -- this session followed that
+literally. `key_files` pointed at exact, correct locations (the plan's own §3 D1 code block, the two
+call-site line numbers, `R/getPotentialParents.R:111-113`'s unmodified filter). `gotchas` (the
+duplicate-`pedigree$id` guard is REQUIRED per the FINAL §3 D1 code, not an earlier draft; the shadow
+copy must stay scoped to the `getPotentialParents()` call argument only, never assigned back to the
+`pedigree` binding; auto-detect must build the shadow copy once outside the per-flag loop) were all
+directly actioned during this session's own Pre-RED live re-verification, and all held up.
+**What was missing:** Nothing in scope for a design-only handoff -- but this session's own Pre-RED
+independently discovered a real landmine the plan's fixture design couldn't have anticipated: the
+package's default auto-generated-unknown-id prefix is `"U"` (`getAutoIdFormat()` -> `"U%04d"`), so
+`removeAutoGenIds()` silently strips any real individual id starting with `"U"` and nulls any
+sire/dam reference to it -- a live (non-mocked) `getPotentialParents()` test reusing the existing
+P/C/**U** fixture (`test_modMarkerGenetics.R`'s established founder-id convention) would have
+silently mis-tested the fix. Caught only by live execution, not by reading the plan.
+**What was wrong:** Nothing found inaccurate -- every design claim in the plan held up against this
+session's own from-scratch live re-verification (the shadow-pedigree mechanism, D3(a)'s leave-in
+behavior, and all 3 named dragons -- both-slots-flagged, batch no-cross-contamination, duplicate-id
+guard -- all reproduced identically).
+**ROI:** Strongly positive -- the plan's §3 D1 code block was copy-ready; this session's own
+live-verification round mainly reconfirmed it rather than discovering new design gaps.
+
+### What Session 502 Did
+**Deliverable:** Implement the ratified issue #155 design
+(`docs/planning/issue155-parentage-likelihood-candidate-lookup-plan.md` §7) -- the "shadow pedigree"
+fix for `markerParentageLikelihood()`'s auto-detect (and explicit `id`/`role`/`candidates = NULL`)
+candidate lookup. (IN PROGRESS)
+**Started:** 2026-08-10.
+**Status:** Session claimed. Pre-RED live verification complete (re-confirmed the shadow-pedigree
+mechanism, D3(a) leave-in behavior, and all 3 named dragons against real source); RED-phase test
+writing beginning next.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
+## ACTIVE TASK (prior sessions)
+
 ### Session 500 Handoff Evaluation (by Session 501)
 **Score: 8/10.**
 **What helped:** `next_steps` named "issue #155 (markerParentageLikelihood() auto-detect

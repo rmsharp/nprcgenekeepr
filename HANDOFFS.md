@@ -60,6 +60,26 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S502
+date: 2026-08-10
+status: pending
+self_score: pending
+predecessor_score: 9
+active_task: Implement the ratified issue #155 design
+(docs/planning/issue155-parentage-likelihood-candidate-lookup-plan.md §7) -- the "shadow pedigree"
+fix for markerParentageLikelihood()'s auto-detect (and explicit id/role/candidates=NULL) candidate
+lookup. Pre-RED live verification complete; RED-phase tests next.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<in progress>
+
+```handoff
 session: S501
 date: 2026-08-10
 status: complete
