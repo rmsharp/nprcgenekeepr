@@ -6,6 +6,19 @@
 
 ## ACTIVE TASK
 
+### What Session 512 Did
+**Deliverable:** Issue #151 Slice 1 -- the core `reportMatePairs()` function, following
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` and the ratified plan's own §5 Slice 1
+spec (`docs/planning/issue151-individual-mate-pair-analysis-plan.md:155-173`), inside this
+project's Strict TDD contract (RED -> GREEN -> REFACTOR, each transition gated). Picked from this
+session's own Phase 0 priorities list (owner choice via `AskUserQuestion`, over a routine
+CHANGELOG.md/HANDOFFS.md ledger trim and scoping a SESSION_NOTES.md trim-tool config).
+**Started:** 2026-08-10.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 510 Handoff Evaluation (by Session 511)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S510 receipt's `next_steps` field named
 "issue #151 design (Tier 2, next after #146 in the ratified sequencing audit -- no design doc yet,
