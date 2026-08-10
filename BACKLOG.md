@@ -145,6 +145,31 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       that version number.
 
 ## Housekeeping
+- [ ] **`markerParentageLikelihood()`'s auto-detect candidate lookup never
+      finds a candidate when both of a flagged animal's parent slots are
+      recorded** (found S498, 2026-08-09, issue #147 Slice 2's own Phase 3E
+      live smoke test; Effort M -- needs its own Pre-RED design pass, not a
+      quick fix) -- `getPotentialParents()` only generates a candidate list
+      for an animal with at least one MISSING (`NA`) parent slot
+      (`pUnknown`); `markerParentageExclusion()` flags an animal whose
+      recorded parent is present-but-wrong, which by definition has BOTH
+      slots non-`NA`. Confirmed directly (not mocked, unlike every existing
+      test of this interaction): a fixture with one correct + one wrong
+      recorded parent returns zero candidates via the real, non-mocked
+      `getPotentialParents()`; the same fixture with the correct parent
+      also left unrecorded correctly surfaces the true candidate. In
+      practice this means the Candidate Parent Assignment tab's auto
+      -detect default will be empty for the common real-world case (one
+      right parent, one wrong), not just an edge case -- the explicit
+      `id`/`role`/`candidates` override is the only current workaround, and
+      isn't exposed in the Shiny UI. Not fixed in Slice 2 (out of that
+      slice's own pre-declared scope -- `R/modMarkerGenetics.R`'s UI, not
+      `getPotentialParents()`'s own candidate-source contract). See GitHub
+      issue [#155](https://github.com/rmsharp/nprcgenekeepr/issues/155) for
+      the full diagnosis and suggested directions (each needing its own
+      design pass), and `vignettes/articles/colony-manager-guide.qmd`'s
+      "Candidate Parent Assignment" section for the user-facing caveat
+      added this session.
 - [ ] **`.buildTwinConnectorEdges()` (`R/makePedigreeDiagramData.R`, issue
       #137 Slice 2) never wired the Okabe-Ito green (`#009E73`) color its
       own implementing session's handoff narrative said it picked** (found

@@ -599,6 +599,43 @@ statistic.
 
 ![The Cross-Center tab comparing two example centers at 2 marker loci: per-locus Fst (L1, L2) alongside the pooled summary value across both loci.](shiny_app_use/marker_genetics_cross_center.png){fig-alt="Marker Genetics Cross-Center tab showing a table with three rows -- L1, L2, and Pooled -- and one fst column with a distinct numeric differentiation value in each row."}
 
+A fifth **Candidate Parent Assignment** tab (issue
+[#147](https://github.com/rmsharp/nprcgenekeepr/issues/147)) picks up directly
+where the Parentage Exclusion tab leaves off: for every recorded dam or sire
+that tab flags as Mendelian-inconsistent, this tab ranks candidate
+replacement parents using a **CERVUS-style multilocus likelihood-ratio (LOD)
+score** -- the same field-standard method already cited by the Parentage
+Exclusion tab's own diagnostic. No new file upload is needed; the tab reads
+the same genotype file and pedigree already loaded for the rest of the
+module.
+
+For each flagged animal, every demographically-eligible candidate parent is
+scored and ranked by `LOD` (higher is more consistent with the observed
+genotypes), alongside `delta` (the gap down to the next-best candidate),
+`nLociUsed` (how many loci the comparison actually rests on), `excluded`
+(whether this specific candidate is itself Mendelian-inconsistent), and
+`lowPower` (whether too few loci were shared to trust the ranking). The tab
+deliberately does **not** report a simulation-calibrated percentage
+confidence -- this package's realistic marker-panel sizes sit inside the
+range the underlying literature documents as underpowered for that kind of
+claim, so an uncalibrated raw score is the honest signal to show a curator.
+Like the Parentage Exclusion tab, this is a diagnostic only: it never
+rewrites the pedigree's recorded dam or sire, and any change to the colony's
+records remains a curator decision made outside the tool.
+
+::: {.callout-note}
+**Current limitation.** Candidate lists come from the same demographic
+screening the Potential Parents tab uses (age, sex, presence date,
+gestation window), which only proposes candidates for an animal with an
+*unrecorded* parent slot. An animal whose recorded parent is present but
+wrong -- the case this tab exists for -- will show no candidates unless its
+*other* parent slot is also unrecorded, or unless a curator explicitly
+supplies a candidate list (a script-callable option not yet exposed in this
+tab). This is being tracked as a follow-on improvement.
+:::
+
+![The Candidate Parent Assignment tab for a small example trio: C's falsely-recorded sire (Q) is Mendelian-excluded across all 10 shared loci, so its LOD score is negative infinity -- a true genetic impossibility, not merely "unlikely" (blank cells in the LOD/delta columns above render that infinite value).](shiny_app_use/marker_genetics_candidate_assignment.png){fig-alt="Marker Genetics Candidate Parent Assignment tab showing a table with one row: offspring C, role sire, candidate Q, LOD blank (negative infinity), nLociUsed 10, excluded true, lowPower false."}
+
 ### Potential Parents
 
 The **Potential Parents** tab (issue

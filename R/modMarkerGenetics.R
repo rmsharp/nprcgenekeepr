@@ -48,7 +48,9 @@ modMarkerGeneticsUI <- function(id) {
                tabPanel("Parentage Exclusion",
                         DT::DTOutput(ns("exclusionTable"))),
                tabPanel("Cross-Center",
-                        DT::DTOutput(ns("crossCenterTable")))
+                        DT::DTOutput(ns("crossCenterTable"))),
+               tabPanel("Candidate Parent Assignment",
+                        DT::DTOutput(ns("candidateAssignmentTable")))
              )
       )
     )
@@ -80,7 +82,15 @@ modMarkerGeneticsUI <- function(id) {
 #' "Center A") and a second, independently uploaded Center B genotype file
 #' -- a population-level, two-dataset comparison, unrelated to the
 #' per-animal cross-center identity linking of
-#' \code{\link{resolveCrossCenterIds}} (Slice 4).
+#' \code{\link{resolveCrossCenterIds}} (Slice 4). A fifth tab, "Candidate
+#' Parent Assignment" (issue #147 Slice 2), surfaces
+#' \code{\link{markerParentageLikelihood}}: for every (offspring, role) pair
+#' the Parentage Exclusion tab's own diagnostic flags as Mendelian
+#' -inconsistent, it ranks candidate replacement parents by a CERVUS-style
+#' multilocus likelihood (LOD) score. This tab needs no new file input --
+#' it reads the same uploaded genotype file and \code{pedigree} already
+#' wired to the other tabs -- and is report-only, matching the Parentage
+#' Exclusion tab's own precedent: it never writes to \code{pedigree}.
 #'
 #' This module never touches the existing single-locus genotype path
 #' (\code{checkGenotypeFile}/\code{addGenotype}/\code{hasGenotype}/
@@ -95,7 +105,7 @@ modMarkerGeneticsUI <- function(id) {
 #'   (columns \code{id}, \code{sire}, \code{dam}), or \code{NULL} while
 #'   upstream analysis has not yet been run.
 #'
-#' @return A list with eight reactive elements: \code{markerGenotype}, the
+#' @return A list with nine reactive elements: \code{markerGenotype}, the
 #'   raw uploaded genotype data frame (or \code{NULL} before upload);
 #'   \code{markerKinshipMatrix}, the marker-based \code{id} x \code{id}
 #'   kinship matrix (or \code{NULL}); \code{comparisonTable}, the per-animal
@@ -110,8 +120,12 @@ modMarkerGeneticsUI <- function(id) {
 #'   frame (or \code{NULL} before upload); \code{crossCenterTable}, the
 #'   \code{\link{markerFst}} \code{locus}/\code{fst} data frame with a
 #'   trailing \code{"Pooled"} row (or \code{NULL} before both center files
-#'   are uploaded); and \code{isReady}, \code{TRUE} once
-#'   \code{comparisonTable} has a value.
+#'   are uploaded); \code{candidateAssignmentTable}, the
+#'   \code{\link{markerParentageLikelihood}} ranked-candidate data frame (a
+#'   zero-row, full-column-shape data frame when no pair is flagged; or
+#'   \code{NULL} before a genotype file and a pedigree are both available);
+#'   and \code{isReady}, \code{TRUE} once \code{comparisonTable} has a
+#'   value.
 #'
 #' @seealso \code{\link{modMarkerGeneticsUI}}
 #' @importFrom shiny moduleServer reactive renderUI observe req div
@@ -237,6 +251,18 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
       )
     })
 
+    candidateAssignment <- reactive({
+      gmat <- genotypeMatrixR()
+      if (is.null(gmat)) {
+        return(NULL)
+      }
+      ped <- safeRead(pedigree)
+      if (is.null(ped)) {
+        return(NULL)
+      }
+      markerParentageLikelihood(gmat, ped)
+    })
+
     output$comparisonTable <- DT::renderDT({
       tbl <- comparison()
       req(tbl)
@@ -257,6 +283,12 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
 
     output$crossCenterTable <- DT::renderDT({
       tbl <- crossCenter()
+      req(tbl)
+      tbl
+    })
+
+    output$candidateAssignmentTable <- DT::renderDT({
+      tbl <- candidateAssignment()
       req(tbl)
       tbl
     })
@@ -291,6 +323,7 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
       exclusionTable = reactive(exclusion()),
       crossCenterGenotypeB = reactive(rawGenotypeB()),
       crossCenterTable = reactive(crossCenter()),
+      candidateAssignmentTable = reactive(candidateAssignment()),
       isReady = reactive(!is.null(comparison()))
     )
   })
