@@ -58,6 +58,27 @@ The left panel provides controls for group formation:
   - *Harem (1M:NF)*: One male per group with multiple females
   - *Custom*: Specify a custom ratio
 
+- **Candidates to retain**: How many distinct candidate group solutions to
+  keep for comparison (default: 5, range: 1-50). Each retained solution has
+  its own score and membership, browsable via the "Candidate grouping"
+  selector above the results.
+
+- **Exhaustive enumeration mode**: An alternative to the default random-
+  sampling search -- when checked, every possible way of forming the single
+  group is examined (rather than a sample of `Number of simulations`
+  attempts), so the retained candidates are guaranteed to include the best
+  possible groupings, not merely the best the sample happened to find. Only
+  available when forming exactly one group with no harem or custom sex
+  ratio, since checking every combination becomes computationally
+  intractable for more than a couple dozen candidates once multiple groups
+  or those constraints are involved -- the checkbox itself is hidden
+  whenever the current configuration falls outside that scope. A status
+  message beneath the checkbox reports the outcome after each run: how many
+  distinct groupings were found, whether the search completed exhaustively
+  or was cut short by its internal time limit (shown in orange when
+  truncated, since the search may not have found every possibility), and
+  which "Candidates to retain" cutoff was applied.
+
 ### Results Display
 
 After clicking "Form Groups", results appear in two tabs:

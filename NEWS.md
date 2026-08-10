@@ -251,6 +251,23 @@ R. Mark Sharp, Ph.D.
   candidate solutions; the default remains 5, unchanged. The Breeding
   Group Formation tab gained a matching **Candidates to retain** control
   (default 5, 1-50) next to the existing simulation-count input.
+- `groupAddAssign()` gained an `exhaustive` argument (issue \#146, Slice
+  2, closes \#146): when `TRUE`, every possible single-group partition
+  is enumerated instead of randomly sampled, guaranteeing the retained
+  candidates include the true best groupings rather than the best a
+  sample happened to find. Supported only for `numGp = 1` with no harem
+  or custom `sexRatio`; an out-of-scope request, or one whose candidate
+  pool exceeds the new `maxExhaustiveCandidates` argument (default 20),
+  stops with a message naming the reason rather than silently falling
+  back to sampling. A new `exhaustiveTimeLimit` argument (default 10
+  seconds) bounds search time, degrading gracefully to a truncated
+  (non-exhaustive) result rather than blocking indefinitely. The return
+  value gains `exhaustive`, `examined`, and `retentionRule` fields when
+  this mode is used; ordinary (sampling) calls are unaffected. The
+  Breeding Group Formation tab gained a matching **Exhaustive
+  enumeration mode** checkbox (visible only when the current
+  configuration is eligible) and a status message reporting the search
+  outcome after each run.
 
 # nprcgenekeepr 2.0.0 (20260708)
 
