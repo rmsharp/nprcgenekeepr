@@ -121,7 +121,7 @@ the real Phase 3E smoke test (§7).
 changelog_ref: CHANGELOG.md 2026-08-10 "[issue #155] Design/architecture document ratified — fix
 markerParentageLikelihood()'s auto-detect candidate lookup for a recorded-but-wrong parent
 (Session 501)"
-commit: pending
+commit: d9203515
 ```
 
 ```handoff
