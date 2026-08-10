@@ -81,6 +81,11 @@ moduleContractServers <- list(
     names = c("markerGenotype", "markerKinshipMatrix", "comparisonTable",
               "heterozygosityTable", "exclusionTable", "crossCenterGenotypeB",
               "crossCenterTable", "candidateAssignmentTable", "isReady")
+  ),
+  modCrossCenterIdentity = list(
+    server = modCrossCenterIdentityServer,
+    args = list(),
+    names = c("mergedPedigree", "issues", "confirmed")
   )
 )
 
