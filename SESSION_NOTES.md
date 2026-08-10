@@ -6,6 +6,20 @@
 
 ## ACTIVE TASK
 
+### What Session 499 Did
+**Deliverable:** Design/architecture document for issue #145 (correct the placement of sire's
+relative to dam's in the pedigree drawing) (IN PROGRESS).
+**Started:** 2026-08-09.
+**Status:** Session claimed. Work beginning. Workstream:
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md` (owner-picked via `AskUserQuestion`,
+matching the #136/#142 precedent, over the literal `DESIGN_WORKSTREAM.md` task mapping -- this is a
+positioning/rendering-contract decision in `.positionMatingUnitForest()`/`.buildMatingUnitForest()`,
+not a UI zone-layout design). Picked from this session's own Phase 0 priorities list (owner choice
+via `AskUserQuestion`, out of #145 design session/#138/#155 Pre-RED scoping/LabKey remainder).
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 497 Handoff Evaluation (by Session 498)
 **Score: 8/10.**
 **What helped:** S497's `next_steps` cleanly pointed to S496's own more detailed handoff ("Slice 2
