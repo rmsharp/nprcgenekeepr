@@ -1565,6 +1565,30 @@ design/planning only, matching the #133/#136/#137/#147 precedent; Slice 1 (core 
 behavior) is the natural next pickup, with its own Pre-RED required to empirically verify D2's
 mechanism live before RED (not yet proven beyond a paper argument -- see the plan's own §6 Dragon 1).
 See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 498.
+
+**Progress (S500, 2026-08-10):** Issue #145 Slice 1 (core positioning behavior) is DONE, implementing
+the ratified design's D1-D8: `.positionMatingUnitForest()` gained a new `orderBySex = TRUE`
+parameter (an additive post-hoc value-swap for every D1-qualifying simple pair);
+`makePedigreeMatingLayout()` threads a matching parameter through, default on. Full strict-TDD
+PRE-RED->RED->GREEN cycle (`AskUserQuestion`-gated at every transition, REFACTOR owner-confirmed
+skip). Pre-RED empirically verified D2's swap mechanism live (not just on paper) against the real
+GA204Z/8LKBV9 fixture and a reconstructed version of the adversarial review's own wide-fanout
+counter-example, re-derived to actually force the swap to fire. GREEN's own live run surfaced a
+second, independently D1-qualifying pair nested inside the wide-fanout test fixture (`C2`/`GCMate`),
+correctly swapped by the (intentionally per-unit-scoped) implementation -- the test's own assertion
+was widened to match, not the implementation narrowed (`PROJECT_LEARNINGS.md` Learning 499). Verified:
+all 8 new/modified tests pass; full clean regression read 0 failed/0 error (4881 passed, up from
+4858, same 10 pre-existing baseline warnings); `lintr::lint_package()` 0 lints on touched files;
+`devtools::check()` 0 errors/0 warnings/1 note (pre-existing `a2interactive.Rmd` baseline, unchanged
+-- the first check run caught a real codoc-mismatch WARNING from a forgotten `devtools::document()`,
+fixed, which also atomically corrected a second, already-stale `.Rd` file from S498's own
+unregenerated roxygen source); live `shinytest2` smoke test (visNetwork bound, 0 diagram-related
+console errors) with a screenshot of a real 2-child qualifying family in the bundled fixture visually
+confirming male-left/female-right rendering -- satisfies the plan's own §6 dragon 3. `NEWS.Rmd`/
+`NEWS.md` updated; citation/`_pkgdown.yml`/tutorial-article checklists all N/A this slice (D7);
+`a2interactive.Rmd` deferred per its own standing rule. **Issue #145 is now fully implemented for
+the ratified simple-pair scope; closed as part of this session's close-out.** See `CHANGELOG.md`,
+`PROJECT_LEARNINGS.md` Learning 499.
 - [ ] **Candidate C's connector/dogleg visual-signposting idea** (found S473,
       designing the issue #144 plan; not adopted for #144 itself, Effort
       unknown, low priority) -- extends the existing D2 mate-line "dogleg"

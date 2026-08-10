@@ -43,6 +43,62 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-10 · [issue #145] Slice 1 implemented — male-left/female-right default in .positionMatingUnitForest(), closes issue #145 (Session 500)
+- **Deliverable:** full strict-TDD PRE-RED→RED→GREEN cycle (REFACTOR skipped, owner-confirmed —
+  the GREEN diff was already minimal, single ~30-line additive block reusing an existing closure),
+  `AskUserQuestion`-gated at every transition, implementing Slice 1 of
+  `docs/planning/issue145-sire-dam-left-right-placement-plan.md` §4: `.positionMatingUnitForest()`
+  gains a new `orderBySex = TRUE` parameter (an additive post-hoc value-swap for every D1-qualifying
+  simple pair — both parents real, unambiguous `"M"`/`"F"` sex codes, mate-count exactly 1 each,
+  neither with a D5 direct child); `makePedigreeMatingLayout()` threads a matching `orderBySex`
+  parameter through, default on.
+- **Pre-RED** built a live repro (not committed) and empirically verified D2's swap mechanism
+  against (1) the real GA204Z/8LKBV9 fixture and (2) a reconstructed version of the adversarial
+  review's own wide-fanout counter-example (a 3-child unit where a middle child carries 5
+  grandchildren) — the first attempt showed the male landing as non-anchor already-left by accident
+  of the id tie-break, so ids were adjusted to force the male into the anchor role and re-tested:
+  the swap fires, the union's own `x` is invariant, all 9 descendant nodes unmoved, no new overlap.
+  Also re-audited the test suite per the plan's own required step: confirmed only one existing
+  fixture (the GA204Z/8LKBV9 exact-x regression test) has a hard-coded `x` assertion for a
+  D1-qualifying pair, matching the plan's own citation.
+- **RED:** updated the GA204Z/8LKBV9 exact-x regression test's `5A6DFT`/`8DKELJ` expected values;
+  4 new `test_that` blocks in `test_positionMatingUnitForest.R` (swap case; true no-op case;
+  `"H"`/`"U"`/NA sex-code exclusion, D4; the wide-fanout multi-child case) plus 2 new blocks in
+  `test_makePedigreeMatingLayout.R` (default/wiring; `orderBySex = FALSE` matches the internal
+  helper directly) — all structured as `orderBySex = TRUE` vs `FALSE` comparisons so every test,
+  including guard/exclusion cases, genuinely fails pre-implementation (an "unused argument" error),
+  not just the swap-needing cases. All 8 confirmed failing for the right reason.
+- **GREEN:** implementation matched the design's own safety argument on the first attempt for the
+  positioning mechanism itself; one test fix was needed after a live run — the wide-fanout fixture's
+  own `C2`/`GCMate` pair turned out to be a SECOND, independently D1-qualifying pair, correctly
+  swapped by the (intentionally per-unit-scoped) implementation, which the test's own "only 2 ids
+  move" assertion had wrongly assumed away — widened the assertion to match the correct behavior
+  rather than narrowing the implementation (`PROJECT_LEARNINGS.md` Learning 499). All 8 tests pass;
+  full clean regression read 0 failed/0 error (4881 passed, up from 4858, same 10 pre-existing
+  baseline warnings); `lintr::lint_package()` 0 lints on touched files (one `commented_code_linter`
+  false positive suppressed, matching the established precedent); `devtools::check()` 0 errors/
+  0 warnings/1 note (the pre-existing `a2interactive.Rmd` vignette-engine baseline, unchanged) — the
+  first check run caught a real codoc-mismatch WARNING (forgot `devtools::document()` after adding
+  the parameter), fixed; regenerating also atomically fixed a second, already-stale `.Rd` file from
+  a prior session (`modMarkerGeneticsServer.Rd`, issue #147 Slice 2, S498's own roxygen source never
+  regenerated) — included since the regen cannot be selectively reverted per-file.
+- **Phase 3E live `shinytest2`/`chromote` smoke test** (mirroring the established
+  `tests/testthat/test-e2e-pedigree-module.R` navigation/upload/click pattern, after an improvised
+  first attempt used the wrong selectors/missed the "Update Focal Animals" click): visNetwork widget
+  renders and is bound, 0 diagram-related console errors; screenshot of the real `5GQC24`(M) x
+  `BJ4J7G`(F) 2-child family in the bundled 375-individual `obfuscated_rhesus_mhc_ped.csv` fixture
+  visually confirms male-left/female-right rendering — satisfies the plan's own §6 dragon 3
+  ("a live screenshot of at least one real multi-child qualifying family is still owed").
+- **Documentation:** `NEWS.Rmd` gained a new entry (D7 framing — additive default, not a bug fix)
+  and `NEWS.md` re-rendered. Citation checklist (#120): N/A (a rendering/layout default is not a
+  statistic/estimator). `_pkgdown.yml` reference-coverage: N/A (`makePedigreeMatingLayout()` already
+  listed, only a parameter added). Tutorial/article checklist: N/A this slice (no UI change ships —
+  Slice 2, UI toggle wiring, was NOT created, D8 ratified option (b)). `a2interactive.Rmd` checklist:
+  deferred per its own standing rule (D7).
+- **Issue #145 is now fully implemented for the ratified simple-pair scope; closed as part of this
+  session's close-out**, citing this entry. See `PROJECT_LEARNINGS.md` Learning 499,
+  `BACKLOG.md` (pedigree-diagram cluster, Progress S500).
+
 ### 2026-08-09 · [issue #145] Design/architecture document ratified — sire/dam left-right pedigree placement default (Session 499)
 - **Deliverable:** `docs/planning/issue145-sire-dam-left-right-placement-plan.md`, RATIFIED via
   `AskUserQuestion` (D3/D8/D9, the three genuine judgment calls; D1/D2/D4-D7 forced by evidence).
