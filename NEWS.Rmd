@@ -226,6 +226,19 @@ knitr::opts_chunk$set(echo = TRUE)
   is an additive behavior change -- a merged pair whose two centers disagree
   on such a column, which previously merged silently, now raises the same
   kind of conflict error `sire`/`dam` disagreement always has.
+- New **Cross-Center Identity** tab (issue #149, Slice 2): a Shiny workflow
+  around `resolveCrossCenterIds()`/`checkCrossCenterMapping()`. Upload two
+  centers' pedigrees plus a curator-reviewed identity mapping; every
+  validation issue is shown at once (no fixing one problem at a time);
+  once clean, a Preview tab shows the proposed merge's lineage changes
+  (which side each resolved `sire`/`dam` value came from); an explicit
+  confirmation dialog gates access to 5 downloadable artifacts (Merged
+  Pedigree, Mapping, Validation Results, Merge Summary, Provenance). Retains
+  the no-automatic-identity-inference policy -- identity is established only
+  by the uploaded mapping file, never guessed from matching id strings. A
+  standalone review/export tool this slice: the merged pedigree is a
+  downloadable CSV, not fed into any other tab's analysis; re-upload it
+  through the Input tab's existing pedigree-file path to use it downstream.
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes

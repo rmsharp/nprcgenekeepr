@@ -315,6 +315,8 @@ reference:
   - '`meanKinship`'
   - '`modBreedingGroupsServer`'
   - '`modBreedingGroupsUI`'
+  - '`modCrossCenterIdentityServer`'
+  - '`modCrossCenterIdentityUI`'
   - '`modGeneticDiversityServer`'
   - '`modGeneticDiversityUI`'
   - '`modGeneticValueServer`'
