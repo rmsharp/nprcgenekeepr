@@ -107,8 +107,8 @@ imply this is purely cosmetic.
 runtime_smoke: n/a -- confirmed via grep that neither resolveCrossCenterIds() nor
 checkCrossCenterMapping() has any call site in the live Shiny app (Slice 2 wires them in);
 script-callable only, matching the resolveCrossCenterIds() Slice 4 precedent.
-changelog_ref: this session's close-out commit (see below).
-commit: pending
+changelog_ref: 6f58d9ad
+commit: 6f58d9ad
 ```
 
 ```handoff
