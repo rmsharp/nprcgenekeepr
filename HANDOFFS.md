@@ -59,6 +59,63 @@ when it reconstructs a receipt a crashed session never completed — you never w
 `what_was_done: pending` are legal at write time (the receipt ships in the very commit whose sha it
 would name); the next session reconciles them to real shas.
 
+## Size, and when to archive
+
+This file gains a receipt every session and Phase 0 reads it every session, so it carries the same
+size discipline as `CHANGELOG.md`: **two caps, two distinct failure modes, fire if either fires,
+stop only when both stop conditions hold.**
+
+| Cap | Protects against | Form | Fire when | Cut until |
+|---|---|---|---|---|
+| **Lines** — ~2,000, the agent `Read` truncation cap | **silent truncation**: a read past the cap returns no error and no marker | a **rate** | headroom < **15** receipts | headroom > **30** |
+| **Bytes** — a per-file budget, default **65,536 B** (64 KB) | **context tax**: every session pays for the whole file, every time | a **level with hysteresis** | `size > budget` | `size ≤ ½ × budget` |
+
+**Run this rather than estimating it:**
+
+```sh
+python3 methodology_trim.py --file HANDOFFS.md --check
+```
+
+`--check` evaluates both conditions and never writes. `--write` performs the trim, refuses unless it
+can prove the split lossless, and **neither commits nor stages** — it leaves this file modified and
+the new shard *untracked*, and leaves the commit to you (`git add HANDOFFS.md docs/archive/`).
+
+An archive is a **shard**: a new frozen file, same format, same newest-on-top order.
+
+- **Path: `docs/archive/HANDOFFS-through-<CUT-KEY>.md`.** Both halves are load-bearing — the
+  directory keeps the shard from shadowing this file, and the `HANDOFFS-` prefix is what the
+  trigger's own glob looks for. A shard named otherwise is silently invisible to it.
+- **This file keeps one short pointer** naming each shard, the span it covers and how many receipts
+  it holds — with the command that recomputes those counts, never a hand-maintained number.
+- **The shard back-links here and states only facts about itself.** It must not restate a
+  forward-looking rule: a shard is frozen, so a rule copied into one cannot be corrected when the
+  live rule moves.
+- **After a split, anything that enumerates receipts must span both** — `HANDOFFS.md
+  docs/archive/HANDOFFS-*.md` — or it silently counts a shrunken population.
+
+If a `CHANGELOG.md` sits beside this file, its own **Size, and when to archive** section carries the
+reasoning both files share: why the line cap must be a rate, why the byte cap cannot be one, and how
+to choose the budget. Everything needed to *act* is here.
+
+What is specific to *this* file, and gets receipts wrong if assumed:
+
+- **A record is a `handoff` block *plus the prose beneath it*, not the fence alone.** The self-score
+  and predecessor-score paragraphs sit outside the fence and belong to the receipt above them. A
+  fence-only cut severs every receipt from its own scoring.
+- **Archive oldest-first by position, never by sorting on `session:`.** Two independent `S<N>`
+  sequences can share one ledger — a fork and its upstream each running their own counter — and
+  their numbers collide. The record's identity is **session + date**.
+- **A trim leaves the newest-receipt check alone and moves what the older-receipt checks see.**
+  Phase 0 reconcile is frontier-based and a structural checker applies the full schema to the newest
+  receipt only, so neither is disturbed. Its other passes are not so confined — an answer-slot rule
+  reads every receipt below the newest, and a locator-form rule reads every receipt in the file. So
+  after a trim, **run the checker against each shard as well**, and recompute any "all N older
+  receipts" count from the files rather than carrying it forward.
+- **Never trim to zero receipts.** An empty receipt ledger is indistinguishable from a broken one.
+- **A shard freezes, with one exception this file needs:** a `commit:` answer slot may still be
+  reconciled inside an archived receipt, because that field was always going to be filled by a later
+  session. Nothing else in a shard is rewritten.
+
 ```handoff
 session: S508
 date: 2026-08-10

@@ -41,7 +41,137 @@ are expected and encouraged:
 
 When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
+## Size, and when to archive
+
+Sectioning organises this file; it does not shrink it. The file grows without bound and Phase 0
+reads it every session, so it also has a size discipline. **Two caps, because there are two
+distinct failure modes and neither subsumes the other. Fire if either fires; stop only when both
+stop conditions hold.**
+
+| Cap | Protects against | Form | Fire when | Cut until |
+|---|---|---|---|---|
+| **Lines** — ~2,000, the agent `Read` truncation cap | **silent truncation**: a read past the cap returns no error and no marker, so the oldest entries simply stop existing for the reader | a **rate** | headroom < **15** entries | headroom > **30** |
+| **Bytes** — a per-file budget, default **65,536 B** (64 KB) | **context tax**: every session pays for the whole file, every time | a **level with hysteresis** | `size > budget` | `size ≤ ½ × budget` |
+
+**Run this. Do not eyeball it, and do not trust a size written here or anywhere else** — a number
+in prose is stale the next time anyone prepends:
+
+```sh
+python3 methodology_trim.py --file CHANGELOG.md --check
+```
+
+`--check` evaluates both conditions, reports whether the trigger fires, and never writes. `--write`
+performs the trim; a dry run is the default, and it refuses to write unless it can prove the split
+lossless. **It neither commits nor stages** — it leaves the live file modified and the new shard
+*untracked*, prints the rollback, and leaves the commit to you. Stage both yourself:
+`git add CHANGELOG.md docs/archive/` — committing with `-a` alone would land the shortened ledger
+while the shard, being untracked, never enters history at all.
+
+**Why the line cap is a rate.** Headroom is `(2000 − lines) × entries-added ÷ lines-added` since the
+last split, so it re-derives itself from the file on every read. A hand-written level cannot: it is
+a derived value frozen at the moment someone typed it. This framework's own receipt ledger is the
+worked example — it states its trigger as a level, *"approaches ~1,200 lines,"* and **that level has
+never once fired.** The single archive that file has ever had was taken on judgment at 997 lines,
+*before* the level was written; since then the file has grown several times past its byte budget
+while still reading "under 1,200 lines." A level in the wrong unit says *fine* indefinitely. Where
+there is no slope yet — before the first split, or immediately after one — the rate **abstains out
+loud** rather than print a number it cannot support.
+
+**Why the byte cap is not.** *"Cut until headroom is back above 30"* is unreachable on bytes at any
+budget: a tool applying it would trim the file to a single record and still report the trigger
+unsatisfied. A level with hysteresis terminates, and the ½ factor is what keeps the next entry from
+re-firing the trigger immediately.
+
+**The budget is judgment, and it is yours to set.** It does not follow from the line cap — at real
+ledger densities, 2,000 lines is a different byte count for every file. Calibrate it the way this
+default was: take the sizes your repo has actually operated at comfortably after previous archives,
+and set the budget just above them. `--budget-bytes <N>` overrides it for a single run.
+
+**Archiving again is not always the answer.** If the file has already given back everything the
+last archive removed, another archive resets the *level* and not the *rate* — the tool measures
+exactly that and **refuses to fire**; `--force` is how you overrule it deliberately. Before a file's
+first archive there is no baseline to measure against, so it abstains rather than compute a zero.
+
+### The shard convention
+
+An archive is a **shard** — a new frozen file, same format, same newest-on-top order. **Note for
+this file specifically:** the `## Legacy history (pre-ledger format, Sessions 1-324)` boundary below
+is a one-time, in-file format-transition marker from before this size policy existed, not a shard —
+a future archive still creates a separate file under `docs/archive/`, on top of that boundary, not a
+replacement for it.
+
+- **Path: `docs/archive/<LIVE-BASENAME>-through-<CUT-KEY>.md`.** Both halves are load-bearing. The
+  directory keeps a shard from shadowing the live file by sort order, and the `CHANGELOG-` prefix is
+  what the trigger's own glob looks for when it hunts its baseline — a shard named otherwise is
+  silently invisible to it, and the trigger then measures against the wrong boundary.
+- **The live file keeps one short pointer** naming each shard and the span it covers. Every count
+  stated in that pointer carries the command that recomputes it, because a hand-maintained count
+  drifts on the next prepend.
+- **The shard back-links to the live file and states only facts about itself** — its own span, its
+  own count. It must **not** restate a forward-looking rule. A shard is frozen, so a rule copied
+  into one is wrong the moment the live rule moves, and correcting it means editing a frozen
+  record. Cite the live file; do not copy it.
+- **After a split the authority is the live file *and* its shards.** Any command that enumerates
+  this ledger must span both by glob — `CHANGELOG.md docs/archive/CHANGELOG-*.md` — or the split
+  silently shrinks the population the audit was counting.
+- **Prefer a release frontier as the cut key**, because a shipped release is a boundary nothing can
+  ever be written back into. A calendar date works too, but it is frozen only by convention; if you
+  cut at one, say in the shard's own front matter that you departed and why.
+
+**A trim is an action, not a side effect.** It earns its own commit and its own `[ad hoc]` entry
+here — one ledger, one shard, one commit, one revert. It does **not** belong in Phase 0, which is
+read-only apart from the reconcile backfill.
+
+**Not everything that grows can be archived this way.** Archiving moves *history*. A file that grows
+because someone keeps adding *procedure* has no past to move — extract a section to a sibling file
+and leave a pointer instead. A backlog of open items is live state rather than history: that is a
+grooming problem, and its completed items belong here, in this ledger, not in a frozen shard.
+
 ## [Unreleased]
+
+### 2026-08-10 · [ad hoc] Reconcile HANDOFFS.md's preamble to the v3.1+ seed format (ad hoc — not a claimed session)
+- **Deliverable:** inserted a `## Size, and when to archive` section into `HANDOFFS.md`, copied from
+  the current `starter-kit/HANDOFFS.md` seed (methodology v3.6-255-gc43e7ee), between the end of
+  the `## Format` section and the first real receipt (`S508`). Front-matter merge only — none of
+  the file's existing receipts were touched. The file's own pre-existing `## Three files, three
+  questions, one shared key` section (already present, mid-file at its original session's
+  position) was left as-is, not duplicated.
+- **Verification:** single-hunk diff, 57 insertions / 0 deletions; byte-exact `diff` confirmed
+  everything from the `S508` receipt onward is unchanged; `bin/status ../nprcgenekeepr` flipped
+  `HANDOFFS.md` from `present (stale format)` to `present`.
+- **Not fixed here, disclosed:** `python3 methodology_trim.py --file HANDOFFS.md --check` now
+  fires — 832,338 B against the 65,536 B budget (12.7×), no prior archive. A real, much larger
+  archive job for its own future session (FM #17) — this session only made the size policy
+  visible, it didn't act on it.
+
+### 2026-08-10 · [ad hoc] Reconcile CHANGELOG.md's preamble to the v3.1+ seed format (ad hoc — not a claimed session)
+- **Deliverable:** inserted a `## Size, and when to archive` section into `CHANGELOG.md`, copied
+  from the current `starter-kit/CHANGELOG.md` seed (methodology v3.6-255-gc43e7ee), between the
+  end of `## How to add an entry` and `## [Unreleased]`. Front-matter merge only — none of the
+  existing dated entries or the `## Legacy history (pre-ledger format, Sessions 1-324)` section
+  were touched. Added one project-specific note under `### The shard convention` clarifying that
+  the existing `Legacy history` boundary is a one-time in-file format transition, not a shard —
+  a future archive still creates a separate `docs/archive/` file on top of it.
+- **Verification:** single-hunk diff, 86 insertions / 0 deletions; byte-exact `diff` confirmed
+  everything from `## [Unreleased]` onward is unchanged; `bin/status ../nprcgenekeepr` flipped
+  `CHANGELOG.md` from `present (stale format)` to `present`.
+- **Not fixed here, disclosed:** `python3 methodology_trim.py --file CHANGELOG.md --check` now
+  fires — 1,527,578 B against the 65,536 B budget (23.3×), no prior archive. Same disclosure as
+  above — visible now, not acted on.
+
+### 2026-08-10 · [ad hoc] Sync methodology-framework tracked files from canonical (ad hoc — not a claimed session)
+- **Deliverable:** `SESSION_RUNNER.md`, `BOOTSTRAP.md`, `methodology_dashboard.py`,
+  `RECOMMENDED_SKILLS.md`, `CLAUDE_TEMPLATE.md`, `docs/methodology/ITERATIVE_METHODOLOGY.md`,
+  `docs/methodology/HOW_TO_USE.md`, `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`, and
+  `docs/methodology/workstreams/AUDIT_WORKSTREAM.md` updated to canonical (methodology
+  v3.6-255-gc43e7ee) via `bin/sync`; `FRAMEWORK_LEARNINGS.md` and `methodology_trim.py` created
+  fresh (were missing entirely). Adopter-owned seeds (`CHANGELOG.md`, `HANDOFFS.md`,
+  `SESSION_NOTES.md`, `ROADMAP.md`) untouched by design.
+- **Commit:** `18d8e3c7`, committed locally only (not pushed to `origin/master`).
+- **Verification:** `bin/status ../nprcgenekeepr` re-run post-sync shows all tracked files
+  `current`.
+- **Note:** performed via a Claude Code session in the sibling `../methodology` repo, not a
+  claimed nprcgenekeepr session — backfilled here because it was never logged when made (FM #27).
 
 ### 2026-08-10 · [issue #146] Slice 1 shipped — mechanical `maxCandidates` parameterization (Session 508)
 - **Deliverable:** `groupAddAssign()`'s previously-hardcoded `5L` candidate-retention cap
