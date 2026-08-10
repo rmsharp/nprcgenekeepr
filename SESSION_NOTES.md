@@ -6,6 +6,20 @@
 
 ## ACTIVE TASK
 
+### What Session 510 Did
+**Deliverable:** Issue #146 Slice 2 -- exhaustive enumeration mode + UI toggle for
+breeding-group candidate retention, per the ratified
+`docs/planning/issue146-configurable-exhaustive-breeding-group-retention-plan.md` §5 Slice 2.
+Following `DEVELOPMENT_WORKSTREAM.md` under this project's Strict TDD contract
+(PRE-RED->RED->GREEN, `AskUserQuestion`-gated at every transition). Picked from this session's
+own Phase 0 priorities list (owner choice via `AskUserQuestion`, over trimming
+`SESSION_NOTES.md`, issue #150's Tier-3 policy decision, and issue #151 design).
+**Started:** 2026-08-10.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 508 Handoff Evaluation (by Session 509)
 **Score: 9/10** (on its own formal merits). **ROI for this session specifically: low** -- the
 owner picked a different, dashboard-driven task ("Other" in this session's Phase 0

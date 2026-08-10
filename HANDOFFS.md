@@ -121,6 +121,24 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-10.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S510
+date: 2026-08-10
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Issue #146 Slice 2 -- exhaustive enumeration mode + UI toggle for breeding-group
+candidate retention, per the ratified
+docs/planning/issue146-configurable-exhaustive-breeding-group-retention-plan.md §5 Slice 2.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S509
 date: 2026-08-10
 status: complete
