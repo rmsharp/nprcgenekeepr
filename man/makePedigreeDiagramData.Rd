@@ -22,9 +22,9 @@ contract (\code{from}, \code{to} only).}
 \value{
 A list with two data frames: \code{nodes} (\code{id}, \code{label},
 \code{shape}, \code{level}, \code{title}) and \code{edges} (\code{from},
-\code{to}, plus \code{dashes}/\code{label} when \code{twinRelations} is
-supplied). \code{title} is an HTML hover-tooltip string (issue #135)
-giving ID, sex, generation, sire, and dam.
+\code{to}, plus \code{dashes}/\code{label}/\code{color} when
+\code{twinRelations} is supplied). \code{title} is an HTML hover-tooltip
+string (issue #135) giving ID, sex, generation, sire, and dam.
 }
 \description{
 Builds the node and edge tables consumed by \code{visNetwork::visNetwork()}

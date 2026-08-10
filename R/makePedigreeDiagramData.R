@@ -20,9 +20,9 @@
 #'   contract (\code{from}, \code{to} only).
 #' @return A list with two data frames: \code{nodes} (\code{id}, \code{label},
 #'   \code{shape}, \code{level}, \code{title}) and \code{edges} (\code{from},
-#'   \code{to}, plus \code{dashes}/\code{label} when \code{twinRelations} is
-#'   supplied). \code{title} is an HTML hover-tooltip string (issue #135)
-#'   giving ID, sex, generation, sire, and dam.
+#'   \code{to}, plus \code{dashes}/\code{label}/\code{color} when
+#'   \code{twinRelations} is supplied). \code{title} is an HTML hover-tooltip
+#'   string (issue #135) giving ID, sex, generation, sire, and dam.
 #'
 #' @examples
 #' library(nprcgenekeepr)
@@ -124,6 +124,7 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   if (!is.null(twinRelations)) {
     edges$dashes <- rep(FALSE, nrow(edges))
     edges$label <- rep(NA_character_, nrow(edges))
+    edges$color <- rep(NA_character_, nrow(edges))
     edges <- rbind(edges, .buildTwinConnectorEdges(twinRelations))
   }
 
@@ -263,7 +264,7 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #' @param twinRelations data.frame with columns \code{id1}, \code{id2},
 #'   \code{code} (see \code{\link{checkTwinRelations}}). Not validated here.
 #' @return data.frame with columns \code{from}, \code{to}, \code{label},
-#'   \code{dashes} (a list-column).
+#'   \code{dashes} (a list-column), \code{color}.
 #' @noRd
 .buildTwinConnectorEdges <- function(twinRelations) {
   dashPattern <- list(`MZ twin` = FALSE, `DZ twin` = c(4L, 4L),
@@ -273,6 +274,11 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     from = twinRelations$id1,
     to = twinRelations$id2,
     label = unname(labelFor[twinRelations$code]),
+    # D10: all 3 codes share one Okabe-Ito colorblind-safe color
+    # (bluish-green) -- only the dash pattern + label distinguish MZ/DZ/UZ,
+    # matching D6's own decision structure (found never wired, S494; fixed
+    # S506).
+    color = "#009E73",
     stringsAsFactors = FALSE
   )
   df$dashes <- I(lapply(twinRelations$code, function(code) {
@@ -1008,12 +1014,15 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #'   sex-agnostic default unchanged.
 #' @return A list with \code{nodes} (\code{id}, \code{label}, \code{shape},
 #'   \code{title}, \code{size}, \code{x}, \code{y}), \code{edges}
-#'   (\code{from}, \code{to}, \code{dashes}, plus \code{label} when
-#'   \code{twinRelations} is supplied), and \code{duplicateToReal} (a
-#'   named character vector, duplicate node id -> real individual id).
-#'   Under \code{edgeStyle = "rectilinear"}, \code{nodes} gains
-#'   \code{color.background}/\code{color.border} and \code{edges} gains
-#'   \code{color} (see \code{.addRectilinearWaypoints()}).
+#'   (\code{from}, \code{to}, \code{dashes}, plus \code{label}/\code{color}
+#'   when \code{twinRelations} is supplied -- D10, found never wired at
+#'   S494, fixed S506), and \code{duplicateToReal} (a named character vector,
+#'   duplicate node id -> real individual id). Under
+#'   \code{edgeStyle = "rectilinear"}, \code{nodes} gains
+#'   \code{color.background}/\code{color.border} and \code{edges}
+#'   unconditionally gains \code{color} (see
+#'   \code{.addRectilinearWaypoints()}) -- an already-set edge \code{color}
+#'   (e.g. the twin connector's) is preserved, not reset.
 #'
 #' @examples
 #' library(nprcgenekeepr)
@@ -1245,8 +1254,11 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
   hasTwinRelations <- !is.null(twinRelations)
   if (hasTwinRelations) {
     childEdgesOut$label <- rep(NA_character_, nrow(childEdgesOut))
+    childEdgesOut$color <- rep(NA_character_, nrow(childEdgesOut))
     mateEdges$label <- rep(NA_character_, nrow(mateEdges))
+    mateEdges$color <- rep(NA_character_, nrow(mateEdges))
     dupEdges$label <- rep(NA_character_, nrow(dupEdges))
+    dupEdges$color <- rep(NA_character_, nrow(dupEdges))
     twinEdges <- .buildTwinConnectorEdges(twinRelations)
     twinEdges$smooth.enabled <- rep(NA, nrow(twinEdges))
     twinEdges$smooth.type <- rep(NA_character_, nrow(twinEdges))
@@ -1324,8 +1336,10 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
 #' @return A list with \code{nodes} and \code{edges}, in the same shape as
 #'   \code{\link{makePedigreeMatingLayout}}'s own return value, plus
 #'   \code{color.background}/\code{color.border} columns on \code{nodes}
-#'   and a \code{color} column on \code{edges} (\code{NA} on every
-#'   unaffected existing row).
+#'   and a \code{color} column on \code{edges}. An existing edge's own
+#'   \code{color} (e.g. issue #137's twin connector) is preserved, not
+#'   reset -- only added fresh, as \code{NA}, when absent (D10, found
+#'   never wired at S494, fixed S506).
 #' @noRd
 .addRectilinearWaypoints <- function(nodes, edges, forest, pos) {
   if (!is.data.frame(nodes)) {
@@ -1432,7 +1446,15 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
   }
 
   keptEdges <- edges[!(dropChildEdge | dropMateEdge), , drop = FALSE]
-  keptEdges$color <- rep(NA_character_, nrow(keptEdges))
+  ## Issue #137 (D10, found never wired at S494, fixed S506): preserve a
+  ## color already set on the incoming edges (e.g. the twin-connector's own
+  ## #009E73) instead of blanket-resetting every kept edge to NA -- only add
+  ## the column fresh when it doesn't already exist, mirroring the
+  ## color.background/color.border node-preservation precedent (issue #133)
+  ## a few lines below.
+  if (!"color" %in% names(keptEdges)) {
+    keptEdges$color <- rep(NA_character_, nrow(keptEdges))
+  }
 
   ## New waypoint edges never carry the duplicate-node-connector arc (found
   ## S468, fixed S469) -- these NA placeholders keep column alignment with

@@ -587,13 +587,14 @@ modPedigreeServer <- function(id, studbook) {
       layout <- diagramLayout()
       # nolint start: commented_code_linter.
       # Issue #137 Slice 3: the twin-connector legend rows (label + dashes
-      # list-column), built the same way .buildTwinConnectorEdges() builds
-      # the real connector edges' own dashes column -- static, unrelated to
+      # list-column + color), built the same way .buildTwinConnectorEdges()
+      # builds the real connector edges' own columns -- static, unrelated to
       # whether any twin data is actually loaded (like the sex-shape/
       # Affected addNodes rows above it).
       # nolint end
       twinLegendEdges <- data.frame(
         label = c("MZ", "DZ", "?"),
+        color = rep("#009E73", 3L),
         stringsAsFactors = FALSE
       )
       twinLegendEdges$dashes <- I(list(FALSE, c(4L, 4L), c(14L, 8L)))
@@ -652,9 +653,8 @@ modPedigreeServer <- function(id, studbook) {
           # overwrite this one (same single-scalar-slot constraint the
           # #133 Affected-row comment above already established). Values
           # match .buildTwinConnectorEdges() (R/makePedigreeDiagramData.R)
-          # exactly -- label + dashes only, no color (D10's color pick was
-          # never wired into that function; tracked in BACKLOG.md, not
-          # fixed here -- out of this slice's own file scope).
+          # exactly -- label + dashes + color (D10's #009E73 color pick,
+          # found never wired at S494, fixed S506).
           # nolint end
           addEdges = twinLegendEdges,
           useGroups = FALSE,

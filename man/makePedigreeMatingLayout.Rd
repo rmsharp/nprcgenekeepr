@@ -47,12 +47,15 @@ sex-agnostic default unchanged.}
 \value{
 A list with \code{nodes} (\code{id}, \code{label}, \code{shape},
 \code{title}, \code{size}, \code{x}, \code{y}), \code{edges}
-(\code{from}, \code{to}, \code{dashes}, plus \code{label} when
-\code{twinRelations} is supplied), and \code{duplicateToReal} (a
-named character vector, duplicate node id -> real individual id).
-Under \code{edgeStyle = "rectilinear"}, \code{nodes} gains
-\code{color.background}/\code{color.border} and \code{edges} gains
-\code{color} (see \code{.addRectilinearWaypoints()}).
+(\code{from}, \code{to}, \code{dashes}, plus \code{label}/\code{color}
+when \code{twinRelations} is supplied -- D10, found never wired at
+S494, fixed S506), and \code{duplicateToReal} (a named character vector,
+duplicate node id -> real individual id). Under
+\code{edgeStyle = "rectilinear"}, \code{nodes} gains
+\code{color.background}/\code{color.border} and \code{edges}
+unconditionally gains \code{color} (see
+\code{.addRectilinearWaypoints()}) -- an already-set edge \code{color}
+(e.g. the twin connector's) is preserved, not reset.
 }
 \description{
 The exported wrapper for the kinship2-parity pedigree layout (Pedigree
