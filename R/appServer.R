@@ -438,6 +438,12 @@ appServer <- function(input, output, session) {
     pedigree = reactive(shared$currentPedigree)
   )
 
+  # Cross-Center Identity Module (issue #149 Slice 2) -- a standalone
+  # review/export tool (D3): its own 3 fileInputs, no shared$... wiring.
+  # The confirmed merge is a downloadable artifact only; using it elsewhere
+  # means re-uploading through modInputServer's existing pedigree-file path.
+  modCrossCenterIdentityServer("crossCenterIdentity")
+
   # Potential Parents Module -- follow the Input-tab sire/dam age floors
   # (issue #119 Slice 4) so candidate screening honors the same minimums as QC;
   # blank fields resolve to NULL -> the species+sex breeding-age table default.

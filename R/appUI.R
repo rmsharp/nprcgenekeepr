@@ -248,6 +248,15 @@ appUI <- function(siteInfo = NULL) {
     ),
 
     # ====================
+    # Cross-Center Identity Tab (issue #149 Slice 2)
+    # ====================
+    tabPanel(
+      "Cross-Center Identity",
+      icon = icon("link"),
+      modCrossCenterIdentityUI("crossCenterIdentity")
+    ),
+
+    # ====================
     # Potential Parents Tab
     # ====================
     tabPanel(
