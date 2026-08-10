@@ -62,21 +62,65 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S503
 date: 2026-08-10
-status: pending
-self_score: pending
-predecessor_score: 9
-active_task: Design/architecture pass for issue #149 (reviewed cross-center identity-mapping
-workflow with provenance export) -- a Shiny wrapper around the existing script-callable
-resolveCrossCenterIds(), following ARCHITECTURE_WORKSTREAM.md. Research phase starting.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: A ratified design/architecture document for issue #149 (reviewed cross-center
+identity-mapping workflow with provenance export) is DONE. Issue #149 stays open (design only,
+matching the #133/#136/#137/#145/#147 precedent) -- a 2-slice implementation (Slice 1: validation
+core + a newly-found data-loss fix, R-only; Slice 2: full UI, confirm gate, exports, documentation)
+is the next pickup, each its own future session.
+what_was_done: Followed ARCHITECTURE_WORKSTREAM.md (owner-picked via AskUserQuestion over the
+literal DESIGN_WORKSTREAM.md mapping). Read issue #149, both relevant audit docs, and directly
+verified R/resolveCrossCenterIds.R (+ its 7-test-block test file), R/modInput.R,
+R/modMarkerGenetics.R's Cross-Center tab, R/checkKinshipOverrides.R/R/checkTwinRelations.R,
+R/qcStudbook.R/R/checkRequiredCols.R, docs/architecture/module-contract.md, and R/appUI.R/appServer.R
+wiring. Drafted docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md (9 design
+decisions). Ran 2 parallel adversarial-review agents (correctness-vs-source, actually EXECUTING
+resolveCrossCenterIds() to verify claims; completeness/house-style vs the #147/#137 precedents) --
+found and fixed a real, previously-unknown defect in the already-shipped resolveCrossCenterIds()
+(silently drops every non-id/sire/dam column for merged individuals) and a design-consistency gap
+(the planned conflict-check extraction silently depended on an unstated pedB id-rewrite step).
+Incorporated both into a full revision (10 decisions), fixed several house-style/citation-accuracy
+issues found by review, then ratified all 4 genuine judgment calls via one AskUserQuestion round --
+owner picked this document's own recommendation in all four. Commits: eff8833d (Phase 0 ledger
+backfill), 00afc950 (claim stub), and this session's close-out commit.
+next_steps: Slice 1 (validation core) is the natural next pickup for issue #149: extract
+resolveCrossCenterIds()'s 4 checks into shared helpers per D2 (including the load-bearing pedB
+id-rewrite step, Dragon #2), add the new exported checkCrossCenterMapping() per the Interface
+Catalog (plan §4), and fix the D10 column-loss defect in the same slice (a separately-tested
+additive change, not folded into D2's byte-identical golden-master claim). See plan §5 Slice 1's
+own DONE criteria and verification list. Separately, untouched Phase 0 priorities from this
+session's own list remain: the .buildTwinConnectorEdges() Okabe-Ito color fix-or-decline
+(Housekeeping, Effort S), root-causing the "10 pre-existing baseline warnings" (BACKLOG.md, Effort
+S, already root-caused -- just needs the fix applied), and the devtools::check() spelling-drift
+NOTE (9 words, Effort S).
+key_files: docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md (the ratified
+plan -- §3 D1-D10, §4 Interface Catalog, §5 Slice 1/Slice 2 DONE criteria, §7 Dragons, §11
+Ratification outcome), R/resolveCrossCenterIds.R:92-193 (the function Slice 1 refactors, and
+:182-185 specifically for the D10 column-loss fix), tests/testthat/test_resolveCrossCenterIds.R
+(7 existing test blocks that must survive Slice 1 unmodified), docs/architecture/module-contract.md
+(the new module's contract), PROJECT_LEARNINGS.md Learning 502 (the adversarial-review findings and
+the general lesson about reviewing internal-codebase-only designs).
+gotchas: Looking up a merged pair's row by canonical idA BEFORE pedB's ids have been rewritten
+silently returns an all-NA row, not an error -- Slice 1's checkCrossCenterMapping() MUST perform the
+same pedB id-rewrite resolveCrossCenterIds() already does (extracted as its own pure,
+already-stop()-free helper) before running the conflict check, or it will silently report zero
+conflicts even when real ones exist (plan §3 D2, §7 Dragon #2) -- write a test that INJECTS a real
+conflict and confirms it's actually reported, not just that no error is thrown. The D10 fix is
+explicitly NOT folded into D2's "zero behavior change" golden-master claim -- it needs its own new,
+explicitly-labeled test asserting the richer output. shiny::modalDialog() (D7) is this app's
+first-ever use of the function -- Slice 2 must hands-on-verify it renders correctly under this app's
+real bslib/Bootstrap theme (plan §7 Dragon #6), not just that the reactive gate logic passes
+testServer(). Any DT::renderDT() table in Slice 2 (Validation/Preview) will contain NA sire/dam
+values -- verify how NA actually renders via app$get_js() cell-text reads, not grepl() on raw HTML,
+per PROJECT_LEARNINGS.md Learning 501's DT/-Inf-renders-blank finding from the immediately preceding
+session (plan §7 Dragon #7).
+runtime_smoke: n/a -- design-only, no R/tests/man content changed, no runtime behavior affected.
+changelog_ref: CHANGELOG.md "2026-08-10 · [issue #149] Design/architecture document ratified"
+entry (this session's close-out commit).
 commit: pending
 ```
-<in progress>
 
 ```handoff
 session: S502

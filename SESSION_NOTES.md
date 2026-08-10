@@ -6,23 +6,120 @@
 
 ## ACTIVE TASK
 
+### Session 502 Handoff Evaluation (by Session 503)
+**Score: 8/10.**
+**What helped:** `next_steps` named "issue #149 design/architecture pass (Tier 2 sequencing,
+first/smallest-scope item, READY, Effort M -- no design doc exists yet)" as one of two named
+untouched pickups -- exactly the scope characterization this session's own research confirmed
+(a genuine architecture-workstream decision, not a quick implementation). This saved real time
+framing the priorities-list write-up and the initial workstream-choice question, mirroring the
+S500->S501 handoff's own analogous strength.
+**What was missing:** Nothing #149-specific carried forward in the handoff (understandably -- S502's
+own deliverable was issue #155, not #149) -- this session had to independently build the full
+evidence-based inventory (`resolveCrossCenterIds()`, `modInput.R`, `module-contract.md`, the
+export/download-button convention, the qcStudbook/checkKinshipOverrides validation precedents) from
+scratch. Not a defect in the handoff (a #149-specific deep-dive was never S502's job), but worth
+naming for a complete evaluation, matching the identical pattern S501's own evaluation of S500 named.
+**What was wrong:** Nothing found inaccurate -- issue #155 was genuinely DONE and CLOSED exactly as
+described, and the `gotchas` (DT `-Inf`-renders-blank; the `"U"`-auto-id-prefix fixture landmine)
+were accurate, if not directly relevant to this session's own design-only deliverable.
+**ROI:** Positive -- the accurate, precisely-scoped naming of issue #149 as the next pickup saved
+real Phase 0 discovery time, even though the handoff (correctly) carried no #149-specific technical
+detail beyond that.
+
 ### What Session 503 Did
-**Deliverable:** A ratified design/architecture document for issue #149 ("Add a reviewed
-cross-center identity-mapping workflow with provenance export") -- a Shiny wrapper around the
-existing script-callable `resolveCrossCenterIds()`, adding validation (ID existence/uniqueness/
-collisions/parent conflicts), a preview of proposed collapses/lineage changes, an explicit
-confirmation step, and export of the mapping/validation results/merge summary/provenance.
-Following `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md` (owner-picked via
+**Deliverable:** A ratified design/architecture document for issue #149
+(`docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md`) -- "Add a reviewed
+cross-center identity-mapping workflow with provenance export": a new, self-contained
+`modCrossCenterIdentity` Shiny module wrapping the existing, already-shipped, script-callable
+`resolveCrossCenterIds()` (issue #130 Slice 4) with a non-fail-fast validator
+(`checkCrossCenterMapping()`, new exported function), a merge preview with lineage-change detail,
+the app's first `shiny::modalDialog()` confirmation gate, and 5 downloadable export artifacts.
+Followed `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md` (owner-picked via
 `AskUserQuestion` over the literal `DESIGN_WORKSTREAM.md` mapping, matching the
 #133/#136/#137/#145/#147 precedent for this shape of decision). Design/planning only -- no `R/`,
-`tests/`, or `man/` content changed. Picked from this session's own Phase 0 priorities list
-(owner choice via `AskUserQuestion`, out of #149/twin-connector-color/10-warnings-root-cause/
-spelling-drift).
-**Started:** 2026-08-10.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+`tests/`, or `man/` content changed. Picked from this session's own Phase 0 priorities list (owner
+choice via `AskUserQuestion`, out of #149 design / the twin-connector-color fix / root-causing the
+10 pre-existing regression warnings / the spelling-drift NOTE).
+**Started/Completed:** 2026-08-10.
+**Status:** DONE. RATIFIED via `AskUserQuestion` (all four genuine judgment calls -- Q1 validation
+-extraction mechanism, Q2 scope boundary, Q3 export-artifact set, Q4 whether to fix a newly-found
+data-loss defect now -- owner selected this document's own recommended option in all four, no
+changes requested). Issue #149 commented (not closed -- design only, matching the
+#133/#136/#137/#145/#147 precedent), a 2-slice implementation is the next pickup.
+
+**What happened, in order:** **(1)** Phase 0 orient (SAFEGUARDS.md, SESSION_NOTES.md, `gh issue
+list`, git status/log, `methodology_dashboard.py` -- health 98/100). Ledger reconcile found 1
+undocumented commit past the `CHANGELOG.md` frontier (`797c16f6`, S502's own self-referential
+`HANDOFFS.md` receipt-completion commit) -- backfilled and committed (`eff8833d`) before the report,
+matching the established S466-S501 precedent for this exact self-referential pattern. Built the
+priorities list from `BACKLOG.md` + open GitHub issues; owner picked "#149 design pass" via
+`AskUserQuestion`. **(2)** A second `AskUserQuestion` picked the workstream:
+`ARCHITECTURE_WORKSTREAM.md` over the literal `DESIGN_WORKSTREAM.md` mapping, matching the
+#133/#136/#137/#145/#147 precedent (a new module boundary, a validation-surface architecture
+decision, and the app's first confirm-gate UI pattern -- not a pure visual-layout question).
+**(3)** Phase 1B claim stub committed (`00afc950`), including a full evaluation of S502's own
+handoff (8/10 -- accurate, precisely-scoped pickup naming; no #149-specific detail, understandably,
+since #149 wasn't S502's job). **(4)** Research: read issue #149's full body (zero comments), the
+`GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` and `GENETIC_METRICS_PDF_CAPABILITY_AUDIT_
+2026-08-06.md` audit docs (both already anticipated "the app's first `showModal()`/`modalDialog()`
+confirmation gate" and a "confirm + export with provenance" UI pattern shared with issue #150), and
+direct full reads of `R/resolveCrossCenterIds.R` (and its 7-test-block test file), `R/modInput.R`,
+`R/modMarkerGenetics.R`'s Cross-Center tab, `R/checkKinshipOverrides.R`/`R/checkTwinRelations.R`,
+`R/qcStudbook.R`/`R/checkRequiredCols.R`, `docs/architecture/module-contract.md` +
+`test_moduleContract.R`, `R/appUI.R`/`R/appServer.R`'s `modMarkerGenetics` wiring, and
+`R/getVersion.R` -- confirmed `resolveCrossCenterIds()`'s 4 existing internal checks map 1:1 onto
+the issue's 4 named validation bullets, and confirmed zero `modalDialog()`/`showModal()` precedent
+exists anywhere in `R/`. **(5)** Drafted the design document (Context/evidence-based
+inventory/design decisions/implementation plan/impact analysis/dragons/alternatives/close-out
+checklist/provenance/ratification), 9 design decisions. **(6)** Ran 2 independent adversarial-review
+agents in parallel (correctness-vs-source, re-deriving every claim directly against live source
+including actually EXECUTING `resolveCrossCenterIds()`; completeness/house-style against the
+#147/#137 precedent docs and `CLAUDE.md`'s close-out rules) -- found and fixed **a real,
+previously-unknown technical defect** in the already-shipped `resolveCrossCenterIds()` (its merge
+step silently drops every non-`id`/`sire`/`dam` column for merged individuals, about to become
+curator-visible for the first time via this design's own new export -- incorporated as a new D10
+judgment call), **a design-consistency gap** (the planned conflict-check extraction silently
+depended on a `pedB` id-rewrite step the first draft never made explicit, which would have caused
+the new collect-all validator to under-report real conflicts -- fixed directly in D2 with a new
+Dragon), a factual test-count overcount ("6 tests" -> the accurate 7-block/8-`expect_error()`-call
+breakdown), a mischaracterization of `qcStudbook()`'s actual validation mechanism, 3 close-out
+-checklist accuracy errors (the `a2interactive.Rmd` disposition and the NEWS.Rmd/`_pkgdown.yml`
+checklists' Slice-1 applicability), a missing Interface Catalog section (added as new §4, which
+also resolved a set of forward-referencing `§11` citations written assuming that section's
+presence), and 2 missing Dragons (motivated directly by `PROJECT_LEARNINGS.md` Learning 501's
+DT-rendering finding from the immediately preceding session). All incorporated into a full revision,
+not left as caveats. **(7)** Ratified via a single `AskUserQuestion` round; owner picked this
+document's own recommended option in all four cases (Q1-Q4). **(8)** Close-out:
+`PROJECT_LEARNINGS.md` Learning 502, `CLAUDE.md` learning-count cross-reference (501->502, Sessions
+1-502+ -> 1-503+), `BACKLOG.md` Genetic-metrics-audit-cluster progress note, `CHANGELOG.md` entry, a
+summary comment posted to GitHub issue #149 (not closed), this handoff.
+
+**Self-assessment (Session 503): 9/10.** **Strengths:** (1) Did not accept the literal
+`DESIGN_WORKSTREAM.md` task mapping at face value -- explicitly checked and matched the established
+#133/#136/#137/#145/#147 precedent for this exact class of decision before starting research. (2)
+Ran a genuinely adversarial 2-agent review pass even though this design needed no external
+literature (unlike #137/#147) -- and it still found a real, previously-unknown technical defect in
+an already-shipped function by actually EXECUTING it, not just re-reading its source, plus a design
+-internal-consistency gap (D2's promised return shape couldn't actually supply what D6/D8 claimed to
+consume from it) that a citation-accuracy check alone would never catch. (3) Incorporated every
+adversarial finding directly into the ratified document (a new D10 judgment call, a corrected D2
+mechanism, 2 new Dragons, a new Interface Catalog section, 3 checklist corrections) rather than
+noting them as caveats or deferring them -- and verified the resulting cross-references were
+internally consistent (a full `grep` sweep of every `§N` citation in the final document, catching
+and fixing 3 real ones: `§7/§11` -> `§8/§11`, `see §7` -> `see §8`, and an imprecise "§1's Origin
+line" reference) rather than trusting the rewrite was clean by construction. (4) Surfaced the new
+D10 finding as a genuine, honestly-framed judgment call (fix now vs. ship with a documented caveat)
+rather than either silently folding it into "no behavior change" or unilaterally deciding to fix it
+without ratification. **Weaknesses:** (1) The original single-pass draft undercounted
+`resolveCrossCenterIds()`'s own test file (stated "6 tests" from a quick read rather than an exact
+recount) -- a more careful first-pass inventory would have caught this without needing the
+adversarial review to find it. (2) The original draft's `§11`-referencing cross-references were
+written assuming a section (Interface Catalog) that didn't yet exist in the document -- copying the
+#147 precedent's citation style without first confirming this document's own section count matched.
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session).
+
+## ACTIVE TASK (prior sessions)
 
 ### Session 501 Handoff Evaluation (by Session 502)
 **Score: 9/10.**
@@ -135,8 +232,6 @@ took several exploratory iterations before landing on a working shape -- could h
 orphaning a hyphen) reached a `git diff` review before being caught -- caught in time, but a more
 careful first pass would have avoided the extra render/fix/re-render cycle.
 **Ledger:** recorded in `CHANGELOG.md` at close-out (this session).
-
-## ACTIVE TASK (prior sessions)
 
 ### Session 500 Handoff Evaluation (by Session 501)
 **Score: 8/10.**

@@ -2056,3 +2056,23 @@ unchanged); `devtools::check()` 2 ERRORs/1 WARNING/1 NOTE, exact pre-existing ba
 `lintr::lint_package()` 0 lints. **Slice 2 (UI + documentation) is the natural next pickup for this
 issue** -- a separate future session, per the plan's own session-boundary requirement. See
 `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learnings 495-496.
+(Issue #147's Slice 2 was completed and the issue closed -- S498, 2026-08-09; see `CHANGELOG.md`.)
+
+**Progress (S503, 2026-08-10):** Tier 2 step 1 -- issue #149's own design/architecture document
+(reviewed cross-center identity-mapping workflow with provenance export, a Shiny wrapper around the
+existing `resolveCrossCenterIds()`) -- is DONE and RATIFIED: see
+`docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md`. Ten design decisions
+(D1-D10); a same-session, 2-agent adversarial review (correctness-vs-source; completeness/house-style
+against the #147/#137 precedent) found and fixed one significant, previously-unaddressed technical
+defect (`resolveCrossCenterIds()`'s merge step silently drops every non-`id`/`sire`/`dam` column for
+merged individuals, about to become curator-visible for the first time via the new CSV export -- now
+D10) and one design-consistency gap (the extracted conflict-check helper's row lookup silently
+depends on a `pedB` id-rewrite step the first draft never made explicit -- now fixed in D2, with a
+new Dragon). Four genuine judgment calls (D2 validation-extraction mechanism, D3 scope boundary, D8
+export-artifact set, D10 whether to fix the newly-found data-loss now) ratified via a single
+`AskUserQuestion` round -- owner selected this document's own recommended option in all four cases,
+no changes requested. **Issue #149 stays open** -- design/planning only, matching the
+#133/#136/#137/#145/#147 precedent; a 2-slice implementation (Slice 1: validation core + the D10 data
+-loss fix, R-function level only; Slice 2: full UI, confirm gate, exports, documentation) is the
+natural next pickup, each its own future session. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
+Learning 502.

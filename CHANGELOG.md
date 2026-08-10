@@ -43,6 +43,36 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-10 · [issue #149] Design/architecture document ratified — reviewed cross-center identity-mapping workflow with provenance export (Session 503)
+- **Deliverable:** `docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md`, following
+  `ARCHITECTURE_WORKSTREAM.md` (owner-picked via `AskUserQuestion` over the literal
+  `DESIGN_WORKSTREAM.md` mapping, matching the #133/#136/#137/#145/#147 precedent). Design/planning
+  only — no `R/`, `tests/`, or `man/` content changed. Picked from this session's own Phase 0
+  priorities list (owner choice via `AskUserQuestion`, out of #149 design / twin-connector-color fix
+  / root-causing the 10 pre-existing regression warnings / the spelling-drift NOTE).
+- **Design:** a new, self-contained `modCrossCenterIdentity` Shiny module wraps the existing,
+  already-shipped `resolveCrossCenterIds()` (issue #130 Slice 4) with a non-fail-fast validator
+  (`checkCrossCenterMapping()`, new exported, showing every mapping problem at once instead of
+  stopping at the first), a merge preview with lineage-change detail, the app's first
+  `shiny::modalDialog()` confirmation gate, and 5 downloadable export artifacts (Merged Pedigree,
+  Mapping, Validation Results, Merge Summary, Provenance). Ten design decisions (D1-D10); four
+  genuine judgment calls (D2 validation-extraction mechanism, D3 scope boundary, D8 export-artifact
+  set, D10 whether to fix a newly-found data-loss defect now) ratified via a single `AskUserQuestion`
+  round — owner selected this document's own recommended option in all four cases, no changes
+  requested.
+- **Adversarial review found and fixed 2 real gaps before ratification:** (1) a previously-unknown
+  technical defect in the already-shipped `resolveCrossCenterIds()` — its merge step silently drops
+  every non-`id`/`sire`/`dam` column for merged individuals, even when both centers agree on the
+  value, about to become curator-visible for the first time via the new export (now D10, fixed in
+  Slice 1 as an explicit, separately-tested additive change); (2) a design-consistency gap where the
+  planned extraction of the per-pair conflict check silently depended on a `pedB` id-rewrite step the
+  first draft never made explicit, which would have caused the new collect-all validator to
+  under-report real conflicts (now fixed in D2, with a new Dragon documenting the requirement).
+- **Issue #149 stays open** — design/planning only, matching the #133/#136/#137/#145/#147 precedent; a
+  summary comment posted to the issue. A 2-slice implementation (Slice 1: validation core + the D10
+  data-loss fix; Slice 2: full UI, confirm gate, exports, documentation) is the next pickup, each its
+  own future session. See `PROJECT_LEARNINGS.md` Learning 502.
+
 ### 2026-08-10 · [ad hoc] Phase 0 ledger reconcile: backfill S502's own HANDOFFS.md receipt commit (post-S502)
 - **Deliverable:** Phase 0 ledger reconcile (this session, S503) found one commit past
   the `CHANGELOG.md` frontier with no ledger entry: `797c16f6` ("docs: S502 -- handoff
