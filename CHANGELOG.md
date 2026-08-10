@@ -129,6 +129,16 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## [Unreleased]
 
+### 2026-08-10 · [ad hoc] Claim Session 509 — lossless trim of CHANGELOG.md/HANDOFFS.md (Session 509)
+- **Deliverable (in progress):** losslessly trim `CHANGELOG.md` and `HANDOFFS.md` via the existing
+  `methodology_trim.py` tool, addressing the dashboard's HIGH risk flag (both files past the
+  2,000-line agent-`Read` truncation cap: `CHANGELOG.md` 10,503 lines/1,532,752 B, `HANDOFFS.md`
+  4,877 lines/832,338 B) and MEDIUM byte-budget-archive-trigger flags (23.3x/12.7x over the
+  65,536 B budget, no prior archive of either). Picked via `AskUserQuestion` "Other" over this
+  session's own 4 rendered BACKLOG priority options. Logged here ahead of the trim itself because
+  `methodology_trim.py`'s own P1 pre-check refuses to write while any commit sits undocumented past
+  this ledger's frontier. Commit: `7a423398` (Phase 1B claim stub + pending `HANDOFFS.md` receipt).
+
 ### 2026-08-10 · [ad hoc] Remove 4 of 9 checked-but-unmigrated BACKLOG.md items (ad hoc — not a claimed session)
 - **Deliverable:** deleted 4 `- [x]` checked items already fully described here (S467, S476, S484,
   S468/S465), confirmed by session-number grep before removal. 5 of the original 9 were
