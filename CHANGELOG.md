@@ -43,6 +43,17 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-10 · [ad hoc] Phase 0 ledger reconcile: backfill S501's own HANDOFFS.md receipt commit sha self-correction (post-S501)
+- **Deliverable:** Phase 0 ledger reconcile (this session, S502) found one commit past
+  the `CHANGELOG.md` frontier with no ledger entry: `627d9d49` ("docs: S501 -- backfill
+  own HANDOFFS.md receipt commit sha"), landed after S501's own close-out commit
+  (`d9203515`) that recorded the entry below.
+- **Change:** `627d9d49` replaced the S501 `HANDOFFS.md` receipt's `commit: pending`
+  placeholder with the real commit sha (`d9203515`) -- a self-correction of the
+  just-written receipt, not new production work. Same class of action as the many
+  prior sessions' equivalent self-fixes recorded further down this ledger (e.g.
+  S466-S482's `commit: pending` backfills).
+
 ### 2026-08-10 · [issue #155] Design/architecture document ratified — fix markerParentageLikelihood()'s auto-detect candidate lookup for a recorded-but-wrong parent (Session 501)
 - **Deliverable:** `docs/planning/issue155-parentage-likelihood-candidate-lookup-plan.md`, following
   `ARCHITECTURE_WORKSTREAM.md` (owner-picked via `AskUserQuestion` over the literal
