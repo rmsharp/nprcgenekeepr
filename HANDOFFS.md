@@ -62,22 +62,88 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S502
 date: 2026-08-10
-status: pending
-self_score: pending
+status: complete
+self_score: 9
 predecessor_score: 9
-active_task: Implement the ratified issue #155 design
-(docs/planning/issue155-parentage-likelihood-candidate-lookup-plan.md §7) -- the "shadow pedigree"
-fix for markerParentageLikelihood()'s auto-detect (and explicit id/role/candidates=NULL) candidate
-lookup. Pre-RED live verification complete; RED-phase tests next.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+active_task: Issue #155 is DONE and CLOSED. The ratified "shadow pedigree" fix for
+markerParentageLikelihood()'s auto-detect (and explicit id/role/candidates=NULL) candidate lookup is
+implemented, tested, verified, and shipped. No further work remains on issue #155 itself.
+what_was_done: Full strict-TDD PRE-RED->RED->GREEN cycle (REFACTOR owner-confirmed skip),
+AskUserQuestion-gated at every transition. PRE-RED live-verified the shadow-pedigree mechanism and
+all 3 named dragons against real source; independently rediscovered the "U"-auto-id-prefix fixture
+landmine (Learning 497) before reading about it. RED: 9 new tests (5 .markerFlaggedSlotPedigree()
+unit tests, 2 non-mocked real-getPotentialParents() regressions, 1 mechanism mock, 1 live Shiny-module
+regression), confirmed genuinely RED (0 regressions to 147 pre-existing assertions). GREEN: added
+.markerFlaggedSlotPedigree() to R/markerParentageLikelihood.R (matching the ratified design verbatim)
+and wired both call sites; 0 regressions to the full 4236-assertion suite; devtools::document();
+lintr::lint_package() 0 lints (after 1 fix); devtools::check() 0 errors/0 warnings/2 pre-existing
+notes (confirmed unchanged by this diff via a before/after check() run); fixed 2 new WORDLIST gaps
+this session's own roxygen introduced. Phase 3E: real shinytest2/chromote AppDriver run against the
+actual app -- uploaded a real pedigree+genotype file through the real Input/Marker-Genetics tabs; the
+previously-empty Candidate Parent Assignment table now renders 2 correctly-ranked rows, 0 console
+errors (screenshot captured). Caught and fixed a false-negative verification technique (DT serializes
+-Inf to JSON null, renders blank -- rewrote to read cell text via app$get_js()). Close-out:
+PROJECT_LEARNINGS.md Learning 501, CLAUDE.md learning-count cross-reference, BACKLOG.md Housekeeping
+item resolved, NEWS.Rmd/NEWS.md entry, CHANGELOG.md entry, gh issue close 155, this handoff.
+Commits: b3a7db97 (claim), 160438f3 (GREEN implementation), 6815676d (close-out docs).
+next_steps: No open work remains in the issue #155 cluster. Untouched Phase 0 priorities from this
+session's own list: issue #149 design/architecture pass (Tier 2 sequencing, first/smallest-scope
+item, READY, Effort M -- no design doc exists yet) and .buildTwinConnectorEdges() never wiring its
+own decided Okabe-Ito green color (Housekeeping, Effort S, fix-or-decline). Broader BACKLOG.md Tier
+2/3/Deferred sequencing (#146/#151/#150/#152/#153/#148) from the S483 audit remains fully untouched
+since S483 -- a future session should re-run the Phase 0 priorities-list build against current `gh
+issue list` state rather than assume this list is exhaustive.
+key_files: R/markerParentageLikelihood.R (the new .markerFlaggedSlotPedigree() helper + both wired
+call sites, :285 auto-detect/:298 explicit branch), tests/testthat/test_markerParentageLikelihood.R
+(9 new tests, the SireTrue/SireWrong/Dam/C fixture), tests/testthat/test_modMarkerGenetics.R (the new
+live non-mocked regression test), docs/planning/issue155-parentage-likelihood-candidate-lookup-plan.md
+(the implemented design, now fully shipped), PROJECT_LEARNINGS.md Learning 501 (the DT/-Inf rendering
+quirk + own-diff-vs-pre-existing spelling-drift distinction)
+gotchas: Any future live-verification script for a DT-rendered table containing Inf/-Inf/NaN/NA
+values must NOT grepl() the rendered HTML/JSON for the literal token -- DT serializes -Inf to JSON
+null, which renders as a BLANK cell client-side; read actual cell text via app$get_js() DOM traversal
+instead (or trust the real shiny::testServer() numeric assertion). Any new individual id used in a
+live (non-mocked) getPotentialParents() test/fixture must NOT start with "U" -- the package's default
+auto-generated-unknown-id prefix (getAutoIdFormat() -> "U%04d") silently strips it via
+removeAutoGenIds(), with zero error (Learning 497, independently reconfirmed this session). When a
+session's own new roxygen text triggers a NEW devtools::check() spelling-drift word, fix only that
+session's own new words via inst/WORDLIST (verify via diffing the full before/after word list) --
+leave any pre-existing drift (this project currently carries an untouched, separately-tracked 13-word
+gap, Housekeeping S465/S496) alone.
+runtime_smoke: Live shinytest2/chromote AppDriver run against the real modular app
+(inst/shinytest/app.R): uploaded a real 4-individual pedigree CSV (SireTrue/SireWrong/Dam/C, with a
+fromCenter column) through the Input tab's actual QC pipeline (qcStudbook()), then a matching 4-locus
+genotype CSV through the Marker Genetics tab's own file input. Navigated to the Candidate Parent
+Assignment nested tab: confirmed via both app$get_js() cell-text reads and a screenshot that the
+table now renders 2 rows (SireTrue LOD ~0.863 not excluded; SireWrong excluded=TRUE, LOD=-Inf
+rendering blank) where it previously rendered empty for this exact scenario. Zero console errors.
+changelog_ref: CHANGELOG.md 2026-08-10 "[issue #155] Implemented the ratified design --
+markerParentageLikelihood() now finds candidates for a recorded-but-wrong parent, closes issue #155
+(Session 502)"
+commit: 6815676d
 ```
-<in progress>
+Implemented, tested, and shipped the ratified issue #155 design end-to-end in one session --
+full strict-TDD cycle, live Phase 3E verification through the real running app, and a same-session
+GitHub issue close matching this project's own checklist.
+
+**+/- self-score breakdown (9/10):** +1 for a complete, gate-observed strict-TDD cycle with genuine
+(not rubber-stamped) PRE-RED research; +1 for independently reconfirming a documented landmine
+(Learning 497) through fresh live execution before consulting the docs; +1 for exact-count RED/GREEN
+verification (not just "tests pass/fail" at the file level); +1 for a real Phase 3E smoke test
+through the actual app's real upload/QC pipeline, not a shortcut; +1 for correctly diagnosing a
+misleading verification false-negative (DT's -Inf-to-null serialization) as a verification-method
+problem rather than doubting the (correct) fix; +1 for the disciplined own-diff-vs-pre-existing
+spelling-drift distinction (WORDLIST fix scoped exactly to this session's 2 new words, verified via
+diff, not absorbed or ignored); +1 for following every established project checklist in the same
+session (GitHub issue close-out, NEWS.Rmd entry, lint, `_pkgdown.yml` N/A correctly disposed since no
+new exported symbol); +1 for catching and fixing a NEWS.md markdown-rendering artifact by diffing the
+actual generated output before committing, not trusting the source `.Rmd` alone; +1 for a complete,
+evidence-based close-out (this receipt, Learning 501, BACKLOG/CHANGELOG/NEWS entries) with no
+deferred verification. -1 for avoidable rework: the live e2e fixture (CSV column shape, `fromCenter`
+inclusion, QC round-trip) took a few exploratory iterations before landing correctly, and the NEWS.Rmd
+line-wrap mistake required one extra render/fix/re-render cycle -- both caught before commit, but a
+more careful first pass (reading `qcStudbook()`'s roxygen fully before the first fixture attempt)
+would have avoided the detour.
 
 ```handoff
 session: S501

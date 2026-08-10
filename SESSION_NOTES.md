@@ -34,17 +34,89 @@ guard -- all reproduced identically).
 live-verification round mainly reconfirmed it rather than discovering new design gaps.
 
 ### What Session 502 Did
-**Deliverable:** Implement the ratified issue #155 design
+**Deliverable:** Implemented the ratified issue #155 design
 (`docs/planning/issue155-parentage-likelihood-candidate-lookup-plan.md` §7) -- the "shadow pedigree"
 fix for `markerParentageLikelihood()`'s auto-detect (and explicit `id`/`role`/`candidates = NULL`)
-candidate lookup. (IN PROGRESS)
-**Started:** 2026-08-10.
-**Status:** Session claimed. Pre-RED live verification complete (re-confirmed the shadow-pedigree
-mechanism, D3(a) leave-in behavior, and all 3 named dragons against real source); RED-phase test
-writing beginning next.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+candidate lookup, which previously returned zero candidates whenever a flagged animal's recorded
+parent was present-but-wrong. Followed `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`
+under this project's strict TDD contract (PRE-RED->RED->GREEN, `AskUserQuestion`-gated at every
+transition; REFACTOR owner-confirmed skip). Picked from S501's own priorities list (owner choice via
+`AskUserQuestion`, over "#149 design" and ".buildTwinConnectorEdges() color fix").
+**Started/Completed:** 2026-08-10.
+**Status:** DONE. **Issue #155 closed** as part of this session's close-out.
+
+**What happened, in order:** **(1)** Phase 0 orient (SAFEGUARDS.md, SESSION_NOTES.md, `gh issue
+list`, git status/log, `methodology_dashboard.py` -- health 98/100). Ledger reconcile found 1
+undocumented commit past the `CHANGELOG.md` frontier (`627d9d49`, S501's own self-referential
+`HANDOFFS.md` commit-sha backfill) -- backfilled and committed (`55870d7a`) before the report, per
+the established S482/S472/S466 precedent for this exact self-referential pattern. Built the
+priorities list; owner picked "implement issue #155" via `AskUserQuestion`; user also asked whether
+issues #145/#147 needed closing -- confirmed via `gh issue view` both were already closed correctly
+by their own shipping sessions (S500, S498). **(2)** Phase 1B claim stub committed (`b3a7db97`),
+including a full evaluation of S501's own handoff (9/10 -- every `next_steps`/`key_files`/`gotchas`
+claim held up under live re-verification). **(3)** Re-read `R/markerParentageLikelihood.R` and
+`R/getPotentialParents.R` in full (confirmed zero drift from the ratified plan's own line-number
+citations) and `DEVELOPMENT_WORKSTREAM.md`. **(4)** PRE-RED: live-verified the bug reproduction, the
+exact `.markerFlaggedSlotPedigree()` helper from the plan's own §3 D1 code block, and all 3 named
+dragons (both-slots-flagged, batch no-cross-contamination, duplicate-`pedigree$id` fail-soft)
+against real, unmodified source -- and independently discovered (before consulting
+`PROJECT_LEARNINGS.md`) that the package's default auto-generated-id prefix (`"U"`) would silently
+corrupt a live fixture reusing the existing `test_modMarkerGenetics.R` P/C/U founder-id convention,
+confirming Learning 497's own finding from a fresh angle. Hand-derived exact LOD values for a new
+4-locus SireTrue/SireWrong/Dam/C fixture via explicit-candidates calls (unaffected by the bug).
+`AskUserQuestion` gate: PRE-RED->RED approved. **(5)** RED: added 9 new tests across
+`test_markerParentageLikelihood.R` (5 `.markerFlaggedSlotPedigree()` unit tests; 2 non-mocked real
+-`getPotentialParents()` regressions, one per call site; 1 mechanism-verification mock) and
+`test_modMarkerGenetics.R` (1 live, non-mocked Candidate Parent Assignment tab regression). Ran
+against unmodified `HEAD` and confirmed genuinely RED: exactly the 9 new blocks failed (5 "could not
+find function", 3 assertion failures matching the bug's exact zero-candidate symptom), 0 regressions
+to the 147 pre-existing assertions. `AskUserQuestion` gate: RED->GREEN approved. **(6)** GREEN: added
+`.markerFlaggedSlotPedigree()` (matching the ratified design verbatim) and wired both call sites in
+`R/markerParentageLikelihood.R`. All 9 new tests passed; 0 regressions to the full 4236-assertion
+clean-regression suite; `devtools::document()` (new `man/dot-markerFlaggedSlotPedigree.Rd`);
+`lintr::lint_package()` found and fixed 1 line-length lint. `AskUserQuestion` gate: GREEN->REFACTOR
+-- owner confirmed skip (implementation already minimal, matches the ratified design verbatim).
+**(7)** Full verification: `devtools::check()` 0 errors/0 warnings/2 pre-existing notes (vignette
+-engine + a 13-word spelling drift, both confirmed byte-identical before/after via a second
+`devtools::check()` run); fixed 2 NEW spelling-drift words this session's own roxygen introduced
+("positionally"/"unmutated") via `inst/WORDLIST`, explicitly leaving the pre-existing 13 untouched.
+**(8)** Phase 3E: a real `shinytest2`/`chromote` `AppDriver` run against the actual installed app --
+uploaded a real pedigree CSV (with `fromCenter`) through the Input tab's QC pipeline and a matching
+genotype CSV through the Marker Genetics tab; the Candidate Parent Assignment tab, previously empty
+for this exact scenario, rendered 2 correctly-ranked rows with zero console errors (screenshot
+captured). First verification attempt (`grepl()` on rendered HTML for "-Inf") gave a false negative
+-- `DT` serializes `-Inf` to JSON `null`, rendering as a blank cell; rewrote the check to read actual
+cell text via `app$get_js()`, which confirmed the value directly. **(9)** Close-out:
+`PROJECT_LEARNINGS.md` Learning 501 (the DT/-Inf rendering quirk + the own-diff-vs-pre-existing
+spelling-drift distinction), `CLAUDE.md` learning-count cross-reference (500->501, Sessions
+1-501+ -> 1-502+), `BACKLOG.md` Housekeeping item marked resolved, `NEWS.Rmd`/`NEWS.md` entry (caught
+and fixed one markdown line-wrap artifact -- an orphaned hyphen -- by diffing the actual rendered
+`NEWS.md` before committing, not trusting the source `.Rmd` alone), `CHANGELOG.md` entry, `gh issue
+close 155` citing the `CHANGELOG.md` entry, this handoff.
+
+**Self-assessment (Session 502): 9/10.** **Strengths:** (1) Followed the full strict-TDD contract
+with a genuine `AskUserQuestion` gate at every transition, including PRE-RED research that was
+substantive (live bug reproduction + full mechanism/dragon re-verification), not a formality. (2)
+Independently re-discovered the "`U`"-prefix fixture landmine (Learning 497) through live execution
+BEFORE reading `PROJECT_LEARNINGS.md` for it -- validated the prior finding from a fresh angle rather
+than just trusting it, and designed the new fixture to avoid it from the start. (3) Verified genuine
+RED with EXACT failure counts/reasons (not just "the file reports failures") -- confirmed exactly the
+9 new blocks failed and the pre-existing 147 assertions were untouched, both before and after GREEN.
+(4) Did a REAL live Phase 3E smoke test through the actual running app (upload through the Input
+tab's real QC pipeline, not a synthetic pre-QC'd data frame) rather than treating the already-passing
+`testServer()` tests as sufficient -- and when the first verification technique gave a misleading
+false negative (`-Inf` rendering blank in `DT`), diagnosed the actual cause rather than assuming the
+fix was broken, and fixed the VERIFICATION method, not the (correct) code. (5) Correctly distinguished
+this session's own 2 new spelling-drift words from the pre-existing, already-tracked 13-word drift --
+fixed only the former, verified the distinction empirically (a before/after `devtools::check()` diff)
+rather than either silently absorbing the drift or ignoring the 2 new words as "not my problem."
+**Weaknesses:** (1) Building the live e2e fixture (CSV format, `fromCenter` column, QC round-trip)
+took several exploratory iterations before landing on a working shape -- could have grepped
+`qcStudbook()`'s roxygen for the recognized-columns list before the first attempt rather than after.
+(2) A small markdown line-wrap mistake in the first `NEWS.Rmd` draft (auto-detect split across lines,
+orphaning a hyphen) reached a `git diff` review before being caught -- caught in time, but a more
+careful first pass would have avoided the extra render/fix/re-render cycle.
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session).
 
 ## ACTIVE TASK (prior sessions)
 
