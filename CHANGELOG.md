@@ -96,6 +96,19 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
   initializes on tab switch — `wait_for_idle()` alone is not sufficient, a short explicit wait
   after switching tabs is needed too).
 
+### 2026-08-10 · [ad hoc] Phase 0 ledger reconcile: backfill S505's own SESSION_NOTES.md/HANDOFFS.md close-out commit (post-S505)
+- **Deliverable:** Phase 0 ledger reconcile (this session, S506) found one commit past the
+  `CHANGELOG.md` frontier with no ledger entry: `68008f8d` ("docs: S505 close-out — issue #149
+  fully shipped, handoff evaluation, self-assessment"), landed after S505's own CHANGELOG/BACKLOG/
+  Learning commit (`b8022a4a`) that recorded the entry above.
+- **Change:** `68008f8d` filled in S505's `SESSION_NOTES.md` (Session 504 handoff evaluation,
+  the "What Session 505 Did" writeup, and the self-assessment) and finalized the S505
+  `HANDOFFS.md` receipt from its Phase 1B `status: pending`/`pending`-field stub to
+  `status: complete` with all six Minimum Handoff Requirements filled — writing up the
+  just-finished session's own handoff, not new production work. Same class of self-referential
+  fix as S505's own `e1c61673` backfill of S504's equivalent commit (`fd0c0312`), and the many
+  prior sessions' equivalents further down this ledger (S466-S504).
+
 ### 2026-08-10 · [ad hoc] Phase 0 ledger reconcile: backfill S504's own HANDOFFS.md receipt commit sha (post-S504)
 - **Deliverable:** Phase 0 ledger reconcile (this session, S505) found one commit past the
   `CHANGELOG.md` frontier with no ledger entry: `fd0c0312` ("docs: S504 -- backfill own
