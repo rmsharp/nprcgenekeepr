@@ -18,7 +18,7 @@ upstream analysis has not yet been run.}
 upstream analysis has not yet been run.}
 }
 \value{
-A list with eight reactive elements: \code{markerGenotype}, the
+A list with nine reactive elements: \code{markerGenotype}, the
 raw uploaded genotype data frame (or \code{NULL} before upload);
 \code{markerKinshipMatrix}, the marker-based \code{id} x \code{id}
 kinship matrix (or \code{NULL}); \code{comparisonTable}, the per-animal
@@ -33,8 +33,12 @@ population-wide mean expected heterozygosity, repeated per row) (or
 frame (or \code{NULL} before upload); \code{crossCenterTable}, the
 \code{\link{markerFst}} \code{locus}/\code{fst} data frame with a
 trailing \code{"Pooled"} row (or \code{NULL} before both center files
-are uploaded); and \code{isReady}, \code{TRUE} once
-\code{comparisonTable} has a value.
+are uploaded); \code{candidateAssignmentTable}, the
+\code{\link{markerParentageLikelihood}} ranked-candidate data frame (a
+zero-row, full-column-shape data frame when no pair is flagged; or
+\code{NULL} before a genotype file and a pedigree are both available);
+and \code{isReady}, \code{TRUE} once \code{comparisonTable} has a
+value.
 }
 \description{
 Reads an uploaded long-format marker genotype file (D1 format: \code{id},
@@ -60,7 +64,15 @@ Center", surfaces a between-population differentiation statistic
 "Center A") and a second, independently uploaded Center B genotype file
 -- a population-level, two-dataset comparison, unrelated to the
 per-animal cross-center identity linking of
-\code{\link{resolveCrossCenterIds}} (Slice 4).
+\code{\link{resolveCrossCenterIds}} (Slice 4). A fifth tab, "Candidate
+Parent Assignment" (issue #147 Slice 2), surfaces
+\code{\link{markerParentageLikelihood}}: for every (offspring, role) pair
+the Parentage Exclusion tab's own diagnostic flags as Mendelian
+-inconsistent, it ranks candidate replacement parents by a CERVUS-style
+multilocus likelihood (LOD) score. This tab needs no new file input --
+it reads the same uploaded genotype file and \code{pedigree} already
+wired to the other tabs -- and is report-only, matching the Parentage
+Exclusion tab's own precedent: it never writes to \code{pedigree}.
 }
 \details{
 This module never touches the existing single-locus genotype path

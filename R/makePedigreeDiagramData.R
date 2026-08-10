@@ -577,12 +577,21 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #'   \code{\link{makePedigreeDiagramData}}.
 #' @param forest the list returned by \code{\link{.buildMatingUnitForest}}
 #'   for this same \code{ped}.
+#' @param orderBySex issue #145 (D1-D4, D8):
+#'   \code{docs/planning/issue145-sire-dam-left-right-placement-plan.md}.
+#'   When \code{TRUE} (the default), an additive post-hoc step swaps the
+#'   two real parents' own \code{x} values (nothing else) for every
+#'   D1-qualifying mating unit -- both parents real, unambiguous
+#'   \code{"M"}/\code{"F"} sex codes, mate-count exactly 1 each, neither
+#'   with a D5 direct child of their own -- so the male parent ends up
+#'   left of the female parent (D3). \code{FALSE} reproduces the
+#'   pre-#145, sex-agnostic default unchanged.
 #' @return A data frame with one row per node (\code{id}, \code{x},
 #'   \code{gen}): every real individual in \code{ped}, every duplicate
 #'   node in \code{forest$duplicates}, and every mating-unit node in
 #'   \code{forest$matingUnits}.
 #' @noRd
-.positionMatingUnitForest <- function(ped, forest) {
+.positionMatingUnitForest <- function(ped, forest, orderBySex = TRUE) {
   if (!is.data.frame(ped)) {
     stop(".positionMatingUnitForest() requires 'ped' to be a data ",
          "frame.")
@@ -900,6 +909,48 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     seenAtGen[[genKey]] <- c(used, x)
   }
 
+  # nolint start: commented_code_linter.
+  ## issue #145 D1-D4/D2 (male-left/female-right default,
+  ## docs/planning/issue145-sire-dam-left-right-placement-plan.md): an
+  ## additive post-hoc value-swap, scoped to exactly the D1-qualifying
+  ## simple pair -- both parents real, mate-count exactly 1 each, neither
+  ## with a D5 direct child of their own (hasOwnDirectChild(), already
+  ## defined above), unambiguous "M"/"F" sex codes (D4 excludes "H"/"U"/
+  ## NA). Swapping only the two real parents' own x (nothing else) is
+  ## safe regardless of child count/fanout width (D2's own safety
+  ## argument, empirically re-verified live at this Slice's own Pre-RED):
+  ## the free-pass parent is always the unit's global leftmost point and
+  ## the anchor's own x always lies within the same bounding footprint,
+  ## so both swapped values already occupy positions inside the
+  ## pre-existing footprint before AND after -- no child, duplicate, or
+  ## ancestor moves.
+  # nolint end
+  if (isTRUE(orderBySex)) {
+    sexOf <- stats::setNames(as.character(ped$sex), realIds)
+    mateCount <- table(c(matingUnits$sire, matingUnits$dam))
+    for (u in seq_len(nrow(matingUnits))) {
+      sireId <- matingUnits$sire[u]
+      damId <- matingUnits$dam[u]
+      if (!(sireId %in% realIds) || !(damId %in% realIds)) next
+      if (mateCount[[sireId]] != 1L || mateCount[[damId]] != 1L) next
+      if (hasOwnDirectChild(sireId) || hasOwnDirectChild(damId)) next
+      sireSex <- sexOf[[sireId]]
+      damSex <- sexOf[[damId]]
+      isQualifying <- (identical(sireSex, "M") && identical(damSex, "F")) ||
+        (identical(sireSex, "F") && identical(damSex, "M"))
+      if (!isQualifying) next
+      maleId <- if (identical(sireSex, "M")) sireId else damId
+      femaleId <- if (identical(sireSex, "F")) sireId else damId
+      mIdx <- which(nodes$id == maleId)
+      fIdx <- which(nodes$id == femaleId)
+      if (nodes$x[mIdx] > nodes$x[fIdx]) {
+        tmp <- nodes$x[mIdx]
+        nodes$x[mIdx] <- nodes$x[fIdx]
+        nodes$x[fIdx] <- tmp
+      }
+    }
+  }
+
   nodes
 }
 
@@ -945,6 +996,16 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #'   contract. A connector always targets the two individuals' REAL node
 #'   ids (D7) and always renders as a direct edge regardless of
 #'   \code{edgeStyle} (D9).
+#' @param orderBySex issue #145 Slice 1 (D8 option (b)):
+#'   \code{docs/planning/issue145-sire-dam-left-right-placement-plan.md}.
+#'   When \code{TRUE} (the default), every simple two-real-parent mating
+#'   unit (mate-count exactly 1 each, unambiguous \code{"M"}/\code{"F"}
+#'   sex codes, neither parent with a D5 direct child of their own) is
+#'   rendered with the male parent to the left and the female parent to
+#'   the right, matching common pedigree-drawing convention -- an
+#'   additive, new default, not a bug fix (multi-mate/"crowded" families
+#'   are unaffected, out of scope). \code{FALSE} reproduces the pre-#145,
+#'   sex-agnostic default unchanged.
 #' @return A list with \code{nodes} (\code{id}, \code{label}, \code{shape},
 #'   \code{title}, \code{size}, \code{x}, \code{y}), \code{edges}
 #'   (\code{from}, \code{to}, \code{dashes}, plus \code{label} when
@@ -961,7 +1022,8 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #' @export
 makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
                                                           "rectilinear"),
-                                      twinRelations = NULL) {
+                                      twinRelations = NULL,
+                                      orderBySex = TRUE) {
   if (!is.data.frame(ped)) {
     stop("makePedigreeMatingLayout() requires 'ped' to be a data frame.")
   }
@@ -974,7 +1036,7 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
   edgeStyle <- match.arg(edgeStyle)
 
   forest <- .buildMatingUnitForest(ped)
-  pos <- .positionMatingUnitForest(ped, forest)
+  pos <- .positionMatingUnitForest(ped, forest, orderBySex = orderBySex)
   matingUnits <- forest$matingUnits
   duplicates <- forest$duplicates
   childEdges <- forest$childEdges

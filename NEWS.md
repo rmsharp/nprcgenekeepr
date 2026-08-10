@@ -197,6 +197,16 @@ R. Mark Sharp, Ph.D.
   Assignment** sub-tab surfacing this ranking for every flagged pair in
   the uploaded genotype file and current pedigree, with no new file
   input needed.
+- The Pedigree Browser's Diagram tab now defaults to placing the male
+  parent to the left in a simple two-parent mating pair, matching common
+  pedigree-drawing convention (issue \#145) -- a new, additive default,
+  not a bug fix: the diagram never had sex-based left-right positioning
+  before. Applies only to a mating pair whose two real parents each have
+  an unambiguous male/female sex code and no other mate or partial
+  -parentage relationship; multi-mate/"crowded" families keep today's
+  layout, unaffected. `makePedigreeMatingLayout()` gained a matching
+  `orderBySex` argument (default `TRUE`) for scripted use; setting it to
+  `FALSE` reproduces the prior, sex-agnostic default exactly.
 
 # nprcgenekeepr 2.0.0 (20260708)
 

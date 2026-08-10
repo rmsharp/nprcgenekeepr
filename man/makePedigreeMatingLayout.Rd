@@ -7,7 +7,8 @@
 makePedigreeMatingLayout(
   ped,
   edgeStyle = c("direct", "rectilinear"),
-  twinRelations = NULL
+  twinRelations = NULL,
+  orderBySex = TRUE
 )
 }
 \arguments{
@@ -31,6 +32,17 @@ connector edges and leaves \code{edges} unchanged from the pre-#137
 contract. A connector always targets the two individuals' REAL node
 ids (D7) and always renders as a direct edge regardless of
 \code{edgeStyle} (D9).}
+
+\item{orderBySex}{issue #145 Slice 1 (D8 option (b)):
+\code{docs/planning/issue145-sire-dam-left-right-placement-plan.md}.
+When \code{TRUE} (the default), every simple two-real-parent mating
+unit (mate-count exactly 1 each, unambiguous \code{"M"}/\code{"F"}
+sex codes, neither parent with a D5 direct child of their own) is
+rendered with the male parent to the left and the female parent to
+the right, matching common pedigree-drawing convention -- an
+additive, new default, not a bug fix (multi-mate/"crowded" families
+are unaffected, out of scope). \code{FALSE} reproduces the pre-#145,
+sex-agnostic default unchanged.}
 }
 \value{
 A list with \code{nodes} (\code{id}, \code{label}, \code{shape},
