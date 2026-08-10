@@ -60,6 +60,27 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S501
+date: 2026-08-10
+status: pending
+self_score: pending
+predecessor_score: 8
+active_task: Design/architecture document for issue #155 (markerParentageLikelihood() auto-detect
+candidate lookup never finds a candidate when a flagged animal's recorded parent is present-but-wrong).
+Following ARCHITECTURE_WORKSTREAM.md. No R/, tests/, or man/ content changed yet -- design/planning
+only.
+what_was_done: pending
+next_steps: pending
+key_files: R/getPotentialParents.R (pUnknown definition), R/markerParentageLikelihood.R (auto-detect
+candidate lookup, D8), docs/planning/issue147-likelihood-parentage-assignment-plan.md D8/section 2.1
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+Claim stub -- work beginning.
+
+```handoff
 session: S500
 date: 2026-08-10
 status: complete

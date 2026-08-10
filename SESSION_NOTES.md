@@ -6,6 +6,22 @@
 
 ## ACTIVE TASK
 
+### What Session 501 Did
+**Deliverable:** A ratified design/architecture document for issue #155
+(`markerParentageLikelihood()`'s auto-detect candidate lookup never finds a candidate when a flagged
+animal's recorded parent is present-but-wrong) -- following `docs/methodology/workstreams/
+ARCHITECTURE_WORKSTREAM.md`, owner-picked via `AskUserQuestion` over the literal
+`DESIGN_WORKSTREAM.md` mapping, matching the #136/#142/#145 precedent for a shared-function-contract
+decision. Picked from this session's own Phase 0 priorities list (owner choice via
+`AskUserQuestion`, out of #155/#149/#146/#151). (IN PROGRESS)
+**Started:** 2026-08-10.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
+## ACTIVE TASK (prior sessions)
+
 ### Session 499 Handoff Evaluation (by Session 500)
 **Score: 9/10.**
 **What helped:** `next_steps` named the exact right next action in full mechanical detail --
