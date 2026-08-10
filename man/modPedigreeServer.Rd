@@ -52,6 +52,8 @@ animals via \code{trimPedigree()} and \code{getDescendantPedigree()}
 Other Shiny modules:
 \code{\link[=modBreedingGroupsServer]{modBreedingGroupsServer()}},
 \code{\link[=modBreedingGroupsUI]{modBreedingGroupsUI()}},
+\code{\link[=modCrossCenterIdentityServer]{modCrossCenterIdentityServer()}},
+\code{\link[=modCrossCenterIdentityUI]{modCrossCenterIdentityUI()}},
 \code{\link[=modGeneticDiversityServer]{modGeneticDiversityServer()}},
 \code{\link[=modGeneticDiversityUI]{modGeneticDiversityUI()}},
 \code{\link[=modGeneticValueServer]{modGeneticValueServer()}},

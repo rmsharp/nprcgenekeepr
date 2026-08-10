@@ -37,6 +37,8 @@ Lacy, R.C. (1989) \emph{Zoo Biology}, \strong{8}, 111-123.
 Other Shiny modules:
 \code{\link[=modBreedingGroupsServer]{modBreedingGroupsServer()}},
 \code{\link[=modBreedingGroupsUI]{modBreedingGroupsUI()}},
+\code{\link[=modCrossCenterIdentityServer]{modCrossCenterIdentityServer()}},
+\code{\link[=modCrossCenterIdentityUI]{modCrossCenterIdentityUI()}},
 \code{\link[=modGeneticDiversityServer]{modGeneticDiversityServer()}},
 \code{\link[=modGeneticDiversityUI]{modGeneticDiversityUI()}},
 \code{\link[=modGeneticValueUI]{modGeneticValueUI()}},
