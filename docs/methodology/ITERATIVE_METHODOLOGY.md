@@ -324,7 +324,7 @@ Follow all 6 phases. The deliverable is working code, a design document, or an a
 ### Review/Audit Sessions
 The deliverable is an analysis document — a code review, audit report, or plan. These sessions follow Phases 1-4 (Pre-Flight, Research, Create the analysis, Present) and skip Phase 5 (Implement). Phase 6 still fires in full — including its handoff receipt (`HANDOFFS.md`) and its step-8 ledger entry: a review or audit that commits its report has taken an action, so `CHANGELOG.md` records it like any other session (failure mode #27).
 
-A review or audit whose subject adds, renames, or removes a concept, artifact, file, step, or numbered-set member owes a whole-corpus completeness sweep in addition to the diff review — not only what changed, but what the change made stale elsewhere (`starter-kit/SESSION_RUNNER.md` Learning #10; `workstreams/AUDIT_WORKSTREAM.md`'s Verification Checklist is the operative step).
+A review or audit whose subject adds, renames, or removes a concept, artifact, file, step, or numbered-set member owes a whole-corpus completeness sweep in addition to the diff review — not only what changed, but what the change made stale elsewhere (`FRAMEWORK_LEARNINGS.md` Learning #10; `workstreams/AUDIT_WORKSTREAM.md`'s Verification Checklist is the operative step).
 
 **Code review is a distinct deliverable, not overhead.** Reviews that produce actionable plans (exact code snippets, line numbers, implementation order) have higher ROI than vague feedback. A review session's output should be detailed enough that a subsequent implementation session can execute it mechanically.
 
@@ -394,7 +394,7 @@ Inline pointers in this document and in the workstream files reference skills by
 
 Cheap, reversible, mechanical work — a one-line fix, a rename the compiler catches, a reversible config tweak — does not need it; a lighter setting is the honest default there. The axis runs both ways.
 
-Methodology owns *when and why* to raise the tier (this rule); your agent owns *how* (the specific effort or model mechanism — see [`RECOMMENDED_SKILLS.md`](../../RECOMMENDED_SKILLS.md) for concrete example settings). And a higher tier is not a license: like a skill, a deeper-reasoning mode sharpens a phase — it never authorizes skipping orientation, the stub, close-out, or any hard gate, nor widening a session beyond its one declared deliverable (failure mode #17, `SESSION_RUNNER.md` Protocol erosion). Reason harder; stop at the same gates.
+Methodology owns *when and why* to raise the tier (this rule); your agent owns *how* (the specific effort or model mechanism — see [`RECOMMENDED_SKILLS.md`](../../RECOMMENDED_SKILLS.md) for concrete example settings). Within a pre-declared vertical slice, that mechanism can vary *by layer* too — see `SESSION_RUNNER.md` §Vertical Slice Sessions, capability-tiered review, for the elective pattern and its guardrails. And a higher tier is not a license: like a skill, a deeper-reasoning mode sharpens a phase — it never authorizes skipping orientation, the stub, close-out, or any hard gate, nor widening a session beyond its one declared deliverable (failure mode #17, `SESSION_RUNNER.md` Protocol erosion). Reason harder; stop at the same gates.
 
 ---
 
