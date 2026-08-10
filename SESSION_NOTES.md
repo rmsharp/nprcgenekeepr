@@ -6,6 +6,17 @@
 
 ## ACTIVE TASK
 
+### What Session 505 Did
+**Deliverable:** Issue #149 Slice 2 (full module: UI, confirm gate, exports, documentation) per
+`docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md` §5 Slice 2. (IN PROGRESS)
+**Started:** 2026-08-10.
+**Status:** Session claimed. Phase 0 orient done (health 98/100; ledger reconcile found 1
+undocumented commit -- S504's own HANDOFFS.md receipt-sha backfill `fd0c0312` -- backfilled and
+committed `e1c61673` before the report). Owner picked "Issue #149 Slice 2" via `AskUserQuestion`
+from this session's own Phase 0 priorities list. Design doc re-read in full (PRE-RED underway).
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### Session 503 Handoff Evaluation (by Session 504)
 **Score: 10/10.**
 **What helped:** `next_steps` named the exact next action in full mechanical detail --
