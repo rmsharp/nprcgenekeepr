@@ -43,6 +43,19 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-10 · [ad hoc] Phase 0 ledger reconcile: backfill S506's own SESSION_NOTES.md/HANDOFFS.md close-out commit (post-S506)
+- **Deliverable:** Phase 0 ledger reconcile (this session, S507) found one commit past the
+  `CHANGELOG.md` frontier with no ledger entry: `45d62e87` ("docs: S506 close-out — twin-connector
+  color fully shipped, handoff evaluation, self-assessment"), landed after S506's own CHANGELOG/
+  BACKLOG/Learning commit (`c07de6ef`) that recorded the entry below.
+- **Change:** `45d62e87` filled in S506's `SESSION_NOTES.md` (Session 505 handoff evaluation, the
+  "What Session 506 Did" writeup, and the self-assessment) and finalized the S506 `HANDOFFS.md`
+  receipt from its Phase 1B `status: pending`/`pending`-field stub to `status: complete` with all
+  six Minimum Handoff Requirements filled — writing up the just-finished session's own handoff, not
+  new production work. Same class of self-referential fix as S506's own backfill of S505's
+  equivalent commit (`68008f8d`), and the many prior sessions' equivalents further down this
+  ledger (S466-S505).
+
 ### 2026-08-10 · [BL-twinConnectorColor] Twin-connector color wired — issue #137 D10, `#009E73` on both `edgeStyle` values (Session 506)
 - **Deliverable:** `.buildTwinConnectorEdges()` (`R/makePedigreeDiagramData.R`) now sets
   `color = "#009E73"` (Okabe-Ito bluish-green) on every MZ/DZ/UZ twin connector edge — D10's own
