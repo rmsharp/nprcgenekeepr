@@ -60,6 +60,25 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S506
+date: 2026-08-10
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Wire the twin-connector color (#009E73) into .buildTwinConnectorEdges()
+(R/makePedigreeDiagramData.R, issue #137 Slice 2 -- found S494) for both edgeStyle values, plus
+fix .addRectilinearWaypoints():1435's blanket edge-color reset, plus the Diagram-tab legend
+swatch (R/modPedigree.R).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S505
 date: 2026-08-10
 status: complete

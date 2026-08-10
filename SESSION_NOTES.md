@@ -6,6 +6,17 @@
 
 ## ACTIVE TASK
 
+### What Session 506 Did
+**Deliverable:** Wire the twin-connector edge color (`#009E73`, Okabe-Ito bluish-green) into
+`.buildTwinConnectorEdges()` (`R/makePedigreeDiagramData.R`, issue #137 Slice 2 -- found S494,
+BACKLOG.md Housekeeping) -- both `edgeStyle` values (`"direct"`/`"rectilinear"`), plus the
+Diagram-tab legend swatch in `R/modPedigree.R`. (IN PROGRESS)
+**Started:** 2026-08-10.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 504 Handoff Evaluation (by Session 505)
 **Score: 10/10.**
 **What helped:** Nearly every field was directly load-bearing. `next_steps` named the exact
