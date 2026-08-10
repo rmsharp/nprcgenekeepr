@@ -6,6 +6,20 @@
 
 ## ACTIVE TASK
 
+### What Session 511 Did
+**Deliverable:** Issue #151 (individual mate-pair analysis alongside breeding-group optimization) --
+one design/architecture document, following `ARCHITECTURE_WORKSTREAM.md`, per the ratified
+`docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` Tier 2 item 3 (the natural next
+pickup now that #146/#147/#149 are all shipped and closed). Picked from this session's own Phase 0
+priorities list (owner choice via `AskUserQuestion`, over trimming the oversized ledger files, filing
+2 new tracking issues for unfiled High-priority audit gaps, and surfacing issue #150's policy
+decision).
+**Started:** 2026-08-10.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 509 Handoff Evaluation (by Session 510)
 **Score: 8/10.** **What helped:** the `HANDOFFS.md` S509 receipt's `next_steps` field correctly
 named "issue #146 Slice 2 (READY, ratified design doc, Effort M)" as the sequencing-audit's own
