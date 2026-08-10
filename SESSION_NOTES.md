@@ -6,18 +6,113 @@
 
 ## ACTIVE TASK
 
+### Session 506 Handoff Evaluation (by Session 507)
+**Score: 6/10.**
+**What helped:** The full narrative of what S506 did (twin-connector color, the rectilinear dragon
+fix) was accurate and well-documented, but was not directly load-bearing for this session's own
+work (a different area entirely). `HANDOFFS.md`'s `key_files`/`gotchas` fields were similarly
+accurate but not applicable here -- an inherent limit given S506 couldn't know in advance which
+BACKLOG item the next session would pick, same as S505's own handoff evaluation of S506 noted for
+the reverse case.
+**What was missing:** `next_steps` named 3 candidate items (15-pre-existing-baseline-warnings,
+spelling-NOTE WORDLIST drift, BLOCKED LabKey) but **omitted the entire genetic-metrics-audit
+cluster (#146-153) and its own ratified Tier 2 pickup order** -- exactly the item this session
+ended up picking, and exactly the gap the owner had to point out directly ("You have already
+developed a recommended implementation order for the issues driven by the GENETIC_METRICS_PDF_
+CAPABILITY_AUDITs. Why are those not listed?") after this session's own first-pass priorities list
+made the identical omission. This is not solely S506's fault -- it is a structural gap in the
+Phase 0 priorities-list rendering convention itself (a flat `BACKLOG.md` tag grep doesn't surface
+a ratified order that lives in a linked sequencing-audit document's prose) -- but it did mean
+`next_steps` pointed at 3 less-ready items while missing the single most concretely-ready pickup
+in the whole list. Recorded as `PROJECT_LEARNINGS.md` Learning 506 and fixed at the convention
+level in `CLAUDE.md`'s Phase 0 priorities-list customization, not just noted here.
+**What was wrong:** Nothing found inaccurate in what S506 actually reported doing.
+**ROI:** Low for this specific session (none of `next_steps`/`key_files`/`gotchas` were directly
+used, since the actual pickup came from a source `next_steps` didn't name), but the gap it exposed
+has ROI beyond this one session -- it fixed a convention-level blind spot that would otherwise have
+kept recurring for every future session touching this cluster.
+
 ### What Session 507 Did
-**Deliverable:** One design/architecture document for issue #146 (Make breeding-group candidate
-retention configurable and support exhaustive enumeration for tractable cases) -- Tier 2's next
+**Deliverable:** One ratified design/architecture document for issue #146 (configurable/exhaustive
+breeding-group candidate retention) --
+`docs/planning/issue146-configurable-exhaustive-breeding-group-retention-plan.md`. Tier 2's next
 item in the ratified `docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` order
-(#147 and #149 both done/closed). Following `ARCHITECTURE_WORKSTREAM.md` (over the literal
-`DESIGN_WORKSTREAM.md` task-mapping), matching the #133/#136/#137/#145/#147/#149 precedent. (IN
-PROGRESS)
-**Started:** 2026-08-10.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+(#147 and #149 both done/closed). Followed `ARCHITECTURE_WORKSTREAM.md` (over the literal
+`DESIGN_WORKSTREAM.md` task-mapping), matching the #133/#136/#137/#145/#147/#149 precedent.
+Design/planning only -- no `R/`/`tests/`/`man/` content changed.
+**Started/Completed:** 2026-08-10.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh
+issue list`, git status/log, `methodology_dashboard.py` -- health 98/100). Ledger reconcile found 1
+undocumented commit past the `CHANGELOG.md` frontier (`45d62e87`, S506's own self-referential
+close-out commit) -- backfilled and committed (`3991c44b`), matching the established
+S501/S503/S505/S506 precedent for this exact pattern. Built the initial priorities list and posed
+it via `AskUserQuestion` -- the owner did not answer directly, instead asking why the
+genetic-metrics-audit-driven issues (#146-153) weren't listed as options. **(2)** Investigated: found
+`docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` (S483) already ratifies a
+Tier 1/2/3/Deferred order for #146-153 that this session's first-pass rendering had missed
+entirely (bucketed as flat "Informational" GitHub issues instead) -- corrected the priorities list
+to surface #146 (Tier 2, next after #147/#149, both done) as a first-class option alongside #150
+(Tier 3, policy-gated), `inst/extdata/` Phase 4, and LabKey. Owner picked "Issue #146
+design/scoping" via the corrected `AskUserQuestion`. **(3)** Phase 1B claim stub committed
+(`7888d433`). **(4)** Research: full reads of `R/groupAddAssign.R`, `R/fillGroupMembers.R`,
+`R/fillGroupMembersWithSexRatio.R`, `R/getAnimalsWithHighKinship.R`,
+`R/addAnimalsWithNoRelative.R`, `R/makeGroupMembers.R`, `R/addGroupOfUnusedAnimals.R`,
+`R/groupMembersReturn.R`, `R/modBreedingGroups.R` (UI + server), `tests/testthat/
+test_groupAddAssign.R`, `DESCRIPTION` (confirming zero existing graph-theory dependency). Ran an
+original empirical benchmark (not derived from any prior document): a throwaway, un-pivoted
+Bron-Kerbosch-style maximal-independent-set enumerator timed against synthetic conflict graphs of
+varying size/density, plus a direct measurement of the real `qcBreeders` fixture's own conflict
+density via the production code path. **Headline finding:** lower-kinship (more diverse) candidate
+pools are the SLOWER case for exhaustive enumeration, not the faster one -- n=20 at 5% density took
+5.5s (unoptimized baseline); n=25 at 5% density exceeded 60s. Also confirmed `qcBreeders` (29
+candidates, `numGp=2`) already produces 1000 distinct partitions across 1000 random trials --
+direct in-repo evidence exhaustive enumeration is intractable beyond `numGp=1` at realistic scale.
+**(5)** Wrote the design document: 9 decisions (D1-D9), 4 genuine judgment calls (D2/D9 combined --
+exhaustive-mode scope + error semantics; D4 -- algorithm/dependency choice; D5 -- feasibility-guard
+default numbers; D8 -- UI-in-Slice-2-vs-deferred), 5 forced decisions. Recommends splitting
+implementation into 2 vertical slices (Slice 1: mechanical `maxCandidates` parameterization; Slice
+2: the exhaustive-enumeration algorithm + UI), matching the sequencing audit's own recommendation.
+**(6)** Ratified all 4 judgment calls in a single `AskUserQuestion` round -- owner selected this
+document's own recommended option in all 4 cases, with no changes requested (scope: `numGp==1`/no
+harem/no custom sex ratio only, `stop()` on violation; algorithm: hand-rolled Bron-Kerbosch, no new
+`igraph` dependency; feasibility guard: `maxExhaustiveCandidates=20L`/`exhaustiveTimeLimit=10`
+seconds; UI: ships in Slice 2, not deferred). Recorded the ratification outcome in the document's
+own §11, updated its Status header, and resolved its own `<TBD>` interface-catalog placeholders to
+the ratified concrete numbers (an improvement over the #147 precedent, which left its own `<TBD>`
+placeholder unresolved after ratification). **(7)** `BACKLOG.md` progress note added (matching the
+#147/#149 S495/S503 precedent); `PROJECT_LEARNINGS.md` Learning 506 recorded (the priorities-list
+convention gap found at step 2); `CLAUDE.md`'s Phase 0 priorities-list customization amended to
+name the sequencing-audit source explicitly, closing that gap at the convention level, not just
+noting it. Citation checklist (#120), NEWS.Rmd, tutorial/article, `a2interactive.Rmd`, and
+`_pkgdown.yml` checklists all explicitly dispositioned in the document's own §9/§6 (mostly N/A or
+deferred to the implementing slices, per the established design-session precedent of not writing
+user-facing docs for unshipped code).
+
+**Self-assessment (Session 507): 8/10.** **Strengths:** (1) When corrected by the owner, did not
+just patch the immediate answer -- traced the gap to its root cause (a convention-level blind spot
+in the Phase 0 priorities-list rendering) and fixed it at that level (`CLAUDE.md` amendment +
+`PROJECT_LEARNINGS.md` Learning 506), so the same correction should not be needed again for the
+next sequencing-audit-driven cluster. (2) Grounded the design's central feasibility-guard numbers
+in an original empirical benchmark run this session, rather than picking round numbers by
+intuition -- and the benchmark surfaced a genuinely counter-intuitive, load-bearing finding
+(sparser candidate pools are slower to enumerate exhaustively, not faster) that a guess-based
+design would likely have gotten backwards. (3) Used the real, already-tested `qcBreeders` fixture's
+own empirical behavior (1000/1000 distinct partitions at `numGp=2`) as direct in-repo evidence for
+scoping exhaustive mode to `numGp=1` only, rather than asserting the scope boundary from
+first-principles complexity theory alone. (4) Matched the established design-doc house style
+(#147/#149) closely enough that the ratification round, close-out-checklist mapping, and
+dragons/alternatives sections required no format improvisation. **Weaknesses:** (1) The initial
+Phase 0 priorities list rendering itself missed the genetic-metrics cluster -- the owner had to
+ask directly rather than this session catching the gap unprompted; this is the single biggest
+process miss of the session, now converted into a durable fix (Learning 506 + the `CLAUDE.md`
+amendment) but only after being caught externally, not internally. (2) Did not set the harness's
+own deepest-reasoning-mode control at session start, as `SESSION_RUNNER.md`'s Planning Sessions
+guidance recommends ("Set your agent's deepest available reasoning mode at session start") -- no
+such control was exposed as an invokable tool in this session's environment, so this is stated
+here as an honest gap rather than a fabricated compliance claim, not silently omitted.
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session).
 
 ### Session 505 Handoff Evaluation (by Session 506)
 **Score: 9/10.**

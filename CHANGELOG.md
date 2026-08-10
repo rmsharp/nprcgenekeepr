@@ -43,6 +43,45 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-10 · [issue #146] Design/architecture document ratified — configurable/exhaustive breeding-group candidate retention (Session 507)
+- **Deliverable:** `docs/planning/issue146-configurable-exhaustive-breeding-group-retention-plan.md`,
+  following `ARCHITECTURE_WORKSTREAM.md` (owner-picked via the established #133/#136/#137/#145/#147/
+  #149 precedent of using the architecture workstream over the literal `DESIGN_WORKSTREAM.md`
+  task-mapping). Design/planning only — no `R/`, `tests/`, or `man/` content changed. Picked from
+  this session's own (corrected) Phase 0 priorities list — the owner flagged that the ratified
+  `GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` order for issues #146-153 was missing from
+  the initial rendering; corrected before the pick was made (see the Learning 506 entry below).
+- **Design:** splits issue #146 into 2 vertical slices, matching the sequencing audit's own
+  recommendation. **Slice 1** parameterizes `groupAddAssign()`'s hardcoded top-5 candidate-retention
+  cap into a `maxCandidates` argument (mechanical, byte-identical default). **Slice 2** adds a
+  bounded exhaustive-enumeration mode: a new internal `.enumerateMaximalIndependentSets()` helper
+  (hand-rolled Bron-Kerbosch-style maximal-independent-set search directly on the existing `kin`
+  conflict-adjacency list, citing Bron & Kerbosch 1973 / Tomita, Tanaka & Takahashi 2006), scoped to
+  `numGp==1`/no harem/no custom sex ratio, gated by a two-layer feasibility guard
+  (`maxExhaustiveCandidates`, a hard pre-flight ceiling; `exhaustiveTimeLimit`, a wall-clock runtime
+  deadline), reporting new `exhaustive`/`examined`/`retentionRule` fields. Nine design decisions
+  (D1-D9); four genuine judgment calls ratified via a single `AskUserQuestion` round — owner selected
+  this document's own recommended option in all four cases: exhaustive-mode scope + `stop()`-on-
+  violation error semantics (D2/D9); hand-rolled algorithm over a new `igraph` dependency (D4);
+  feasibility-guard defaults `maxExhaustiveCandidates = 20L`/`exhaustiveTimeLimit = 10` seconds (D5),
+  empirically grounded in this session's own original benchmark; and shipping the UI toggle in
+  Slice 2 itself rather than deferring it (D8).
+- **Empirical grounding:** an original, this-session-only benchmark (a throwaway, un-pivoted
+  Bron-Kerbosch enumerator timed against synthetic conflict graphs) found a counter-intuitive,
+  load-bearing result — lower-kinship (more diverse) candidate pools are *slower* to exhaustively
+  enumerate, not faster (n=20 at 5% density: 5.5s; n=25 at 5% density: >60s, both unoptimized). Also
+  confirmed the real `qcBreeders` fixture (29 candidates, `numGp=2`) already produces 1000 distinct
+  partitions across 1000 random trials — direct in-repo evidence that exhaustive enumeration is
+  intractable beyond `numGp=1` at realistic scale, the basis for D2's scope boundary.
+- **Process fix, same session:** `PROJECT_LEARNINGS.md` Learning 506 and a `CLAUDE.md` amendment to
+  the Phase 0 priorities-list customization — a flat `BACKLOG.md` tag grep alone misses a ratified
+  sequencing-audit's own prose-only pickup order; this exact gap independently hit both S506's own
+  handoff `next_steps` field and this session's own initial Phase 0 rendering before the owner caught
+  it directly.
+- No code changed — design/planning only, matching the #133/#136/#137/#147/#149 precedent. Issue
+  #146 intentionally left open; next session in this cluster implements Slice 1.
+- See `BACKLOG.md`'s genetic-metrics-audit progress note, `PROJECT_LEARNINGS.md` Learning 506.
+
 ### 2026-08-10 · [ad hoc] Phase 0 ledger reconcile: backfill S506's own SESSION_NOTES.md/HANDOFFS.md close-out commit (post-S506)
 - **Deliverable:** Phase 0 ledger reconcile (this session, S507) found one commit past the
   `CHANGELOG.md` frontier with no ledger entry: `45d62e87` ("docs: S506 close-out — twin-connector

@@ -62,17 +62,51 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S507
 date: 2026-08-10
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Writing one design/architecture document for issue #146 (breeding-group candidate
-retention configurability + exhaustive enumeration), following ARCHITECTURE_WORKSTREAM.md.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 6
+active_task: Issue #146's design/architecture document is DONE and RATIFIED (all 4 judgment calls
+answered, owner's recommended option in all 4 cases). No further design work owed. Next: Slice 1
+implementation (mechanical maxCandidates parameterization) in a future session.
+what_was_done: Wrote and ratified docs/planning/issue146-configurable-exhaustive-breeding-group-
+retention-plan.md (9 design decisions, 4 ratified via one AskUserQuestion round). Grounded the
+feasibility-guard numbers in an original empirical benchmark (Bron-Kerbosch maximal-independent-set
+enumeration timed against synthetic conflict graphs) rather than guessing — found a counter-
+intuitive result (sparser candidate pools are slower to exhaustively enumerate, not faster).
+Corrected an initial Phase 0 priorities-list gap (missed the ratified genetic-metrics-audit
+sequencing order for #146-153) after the owner flagged it, then fixed the gap at the convention
+level: PROJECT_LEARNINGS.md Learning 506 + a CLAUDE.md amendment to the priorities-list
+customization. BACKLOG.md progress note added. Commits: 3991c44b (CHANGELOG backfill for S506's
+own close-out commit), 7888d433 (claim), and this close-out commit (docs/BACKLOG/CHANGELOG/
+PROJECT_LEARNINGS/CLAUDE.md).
+next_steps: Implement Slice 1 of the ratified issue #146 plan — parameterize groupAddAssign()'s
+hardcoded 5L candidate-retention cap into a maxCandidates argument (default 5L, byte-identical),
+plus one new numericInput in modBreedingGroupsUI. Small, mechanical, Effort S — see the plan's own
+§5 Slice 1 for exact touched files and DONE criteria. Slice 2 (exhaustive enumeration + UI) is a
+separate, later session per the plan's own session-boundary rule. Other still-open priorities from
+this session's own corrected list: issue #150 (Tier 3 policy decision — de-identified pedigree
+export, needs an owner sign-off on what "curator-controlled" means before scheduling), the
+inst/extdata/ reorg Phase 4 (2 open decisions), and the BLOCKED LabKey remainder.
+key_files: docs/planning/issue146-configurable-exhaustive-breeding-group-retention-plan.md (the
+ratified plan — §5 for the Slice 1 implementation plan, §2.1/§2.7 for the exact groupAddAssign.R/
+modBreedingGroups.R touch points), docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md
+(the ratified Tier 1/2/3/Deferred order this cluster follows), R/groupAddAssign.R:130-235 (the
+function Slice 1 modifies), tests/testthat/test_groupAddAssign.R:181-224 (the 2 existing
+5L-hardcoded tests Slice 1 must parameterize, not silently relax).
+gotchas: The 2 existing groupAddAssign tests hardcoded to 5L (test_groupAddAssign.R:181-224) must
+keep asserting the exact DEFAULT behavior — parameterize them to accept maxCandidates, don't just
+relax the assertion to expect_lte(..., N) for an arbitrary N (Dragon 1 in the plan). This app has
+no async/background-job infrastructure (promises/future absent from DESCRIPTION) — Slice 2's
+exhaustive mode, when it lands, will block the whole single-process Shiny app for every concurrent
+user during a slow request, not just the requester (Dragon 2) — keep this in mind when Slice 2's
+own feasibility-guard numbers are implemented, don't loosen them casually. Phase 0's priorities-list
+rendering has a structural blind spot for ratified sequencing-audit orders that live in prose, not
+inline BACKLOG.md tags — Learning 506/the CLAUDE.md amendment fixes this going forward, but a
+future session touching the sibling PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md cluster
+should confirm the fix actually surfaces that cluster's own next item (#138) correctly too.
+runtime_smoke: n/a — docs-only session, no R/ code or runtime behavior changed.
+changelog_ref: CHANGELOG.md "2026-08-10 · [issue #146] Design/architecture document ratified"
+entry (this session's close-out commit).
 commit: pending
 ```
 <filled in at close-out>

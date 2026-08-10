@@ -2139,3 +2139,30 @@ Identity" subsection in `colony-manager-guide.qmd` (text-only, re-rendered clean
 render`) all done same-session; `a2interactive.Rmd` coverage explicitly deferred per its own
 standing rule. **Both slices of issue #149 are now shipped; issue #149 itself is closed as part of
 this session's close-out.** See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 504.
+
+**Progress (S507, 2026-08-10):** Tier 2 step 2 -- issue #146's design/architecture document -- is
+DONE and RATIFIED: see
+`docs/planning/issue146-configurable-exhaustive-breeding-group-retention-plan.md`. Splits the
+issue into 2 slices matching the sequencing audit's own recommendation: **Slice 1** (parameterize
+`groupAddAssign()`'s hardcoded top-5 candidate-retention cap into a `maxCandidates` argument --
+mechanical, Effort S) and **Slice 2** (a new bounded exhaustive-enumeration mode -- genuinely new
+combinatorial-search algorithm work, Effort M-L). Owner ratified 4 judgment-call decisions in a
+single `AskUserQuestion` round, selecting this document's own recommended option in all 4 cases:
+exhaustive mode scoped to `numGp==1`/no harem/no custom sex ratio only, `stop()` (not silent
+fallback) outside that scope or over the feasibility ceiling; a hand-rolled Bron-Kerbosch-style
+maximal-independent-set enumerator (no new `igraph` dependency), citing Bron & Kerbosch (1973) /
+Tomita, Tanaka & Takahashi (2006); feasibility-guard defaults `maxExhaustiveCandidates = 20L` /
+`exhaustiveTimeLimit = 10` seconds; and the UI toggle ships in Slice 2 itself, not deferred to a
+Slice 3. The design decisions are grounded in an original empirical benchmark run this session (not
+derived from any prior document): a throwaway, un-pivoted Bron-Kerbosch enumerator timed against
+synthetic conflict graphs found a counter-intuitive result -- **lower-kinship (more diverse)
+candidate pools are the slower case for exhaustive enumeration, not the faster one** -- n=20 at 5%
+density took 5.5s; n=25 at 5% density exceeded 60s, both in an unoptimized baseline implementation.
+Also confirmed the real `qcBreeders` test fixture (29 candidates, `numGp=2`) already produces 1000
+distinct partitions across 1000 random trials -- direct in-repo evidence that exhaustive
+enumeration is intractable beyond `numGp=1` at realistic scale, forcing the single-group scope
+decision. No code changed this session -- design/planning only, matching the #133/#136/#137/#147/
+#149 precedent. **Next session in this cluster implements Slice 1** (the mechanical
+`maxCandidates` parameterization); Slice 2 (exhaustive enumeration + UI) is its own separate
+session per §5's session-boundary requirement. Issue #146 intentionally left open. See
+`CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 506.

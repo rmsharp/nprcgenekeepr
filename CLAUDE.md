@@ -152,6 +152,16 @@ Current priorities (from BACKLOG, in the order Session N left them):
   the tag.
 - Effort is a rough S/M/L, not a time estimate -- lets the user pick by capacity as
   well as priority.
+- **A flat `BACKLOG.md` tag grep is not sufficient on its own (found S507,
+  2026-08-10):** also check `docs/audits/*SEQUENCING_AUDIT*.md` (or any doc whose own
+  text establishes a ratified next-pickup order for a cluster of still-open GitHub
+  issues) and surface that cluster's own next item as a first-class numbered option --
+  never folded into the flat "Informational: open GitHub issues" bucket just because
+  no inline `BACKLOG.md` tag exists for it. A ratified sequencing audit's order lives
+  in prose, not a per-item tag, so the tag-only grep misses it entirely; this exact gap
+  independently hit both S506's own handoff `next_steps` field and S507's own initial
+  Phase 0 rendering before the owner caught it. See `PROJECT_LEARNINGS.md` Learning
+  506.
 - This formats the *existing* Phase 0 step 7 report; it adds no new
   `SESSION_RUNNER.md` step and does not change the mandatory STOP-and-wait-for-the-user
   after the report.
