@@ -6,6 +6,17 @@
 
 ## ACTIVE TASK
 
+### What Session 508 Did
+**Deliverable:** Issue #146 Slice 1 -- mechanical `maxCandidates` parameterization of
+`groupAddAssign()`'s hardcoded top-5 candidate-retention cap, per the ratified
+`docs/planning/issue146-configurable-exhaustive-breeding-group-retention-plan.md` §5 Slice 1.
+(IN PROGRESS)
+**Started:** 2026-08-10.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 506 Handoff Evaluation (by Session 507)
 **Score: 6/10.**
 **What helped:** The full narrative of what S506 did (twin-connector color, the rectilinear dragon

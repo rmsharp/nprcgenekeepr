@@ -60,6 +60,26 @@ when it reconstructs a receipt a crashed session never completed — you never w
 would name); the next session reconciles them to real shas.
 
 ```handoff
+session: S508
+date: 2026-08-10
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Issue #146 Slice 1 -- mechanical maxCandidates parameterization of
+groupAddAssign()'s hardcoded top-5 candidate-retention cap, per
+docs/planning/issue146-configurable-exhaustive-breeding-group-retention-plan.md §5 Slice 1. Work
+beginning.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<claim stub -- filled at close-out>
+
+```handoff
 session: S507
 date: 2026-08-10
 status: complete
