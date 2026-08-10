@@ -171,11 +171,12 @@ R. Mark Sharp, Ph.D.
   Twin Connectors** toggle draws a distinctly-styled connector line
   between each declared twin pair's own diagram nodes -- solid for MZ,
   short-dashed for DZ, long-dashed with a "?" label for UZ (a callback
-  to kinship2's own UZ glyph) -- with a matching legend entry. Twin
-  declarations are validated against the pedigree (both ids must exist
-  and differ; an MZ/DZ pair must already share both `sire` and `dam`; MZ
-  additionally requires matching `sex`; UZ has no such precondition) via
-  the new exported `checkTwinRelations()`; a companion
+  to kinship2's own UZ glyph), all three drawn in a colorblind-safe
+  Okabe-Ito bluish-green (`#009E73`) -- with a matching legend entry.
+  Twin declarations are validated against the pedigree (both ids must
+  exist and differ; an MZ/DZ pair must already share both `sire` and
+  `dam`; MZ additionally requires matching `sex`; UZ has no such
+  precondition) via the new exported `checkTwinRelations()`; a companion
   `obfuscateTwinRelations()` scrubs a twin-relations table's ids through
   the same alias map `obfuscatePed(..., map = TRUE)` produces, so a
   de-identified export never leaks real ids through this sidecar. A
