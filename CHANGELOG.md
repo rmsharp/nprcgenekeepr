@@ -43,6 +43,18 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-10 · [ad hoc] Phase 0 ledger reconcile: backfill S502's own HANDOFFS.md receipt commit (post-S502)
+- **Deliverable:** Phase 0 ledger reconcile (this session, S503) found one commit past
+  the `CHANGELOG.md` frontier with no ledger entry: `797c16f6` ("docs: S502 -- handoff
+  notes, HANDOFFS.md receipt complete"), landed after S502's own close-out commit
+  (`6815676d`) that recorded the entry below.
+- **Change:** `797c16f6` replaced the S502 `HANDOFFS.md` receipt's `status: pending`/
+  `self_score: pending`/etc. placeholders with the completed handoff fields, and
+  updated `SESSION_NOTES.md` with the corresponding close-out narrative -- writing up
+  the just-finished session's own handoff, not new production work. Same class of
+  action as the many prior sessions' equivalent self-fixes recorded further down this
+  ledger (e.g. S466-S482, S501's own `627d9d49`/`55870d7a` pair immediately below).
+
 ### 2026-08-10 · [issue #155] Implemented the ratified design -- markerParentageLikelihood() now finds candidates for a recorded-but-wrong parent, closes issue #155 (Session 502)
 - **Deliverable:** Implemented `docs/planning/issue155-parentage-likelihood-candidate-lookup-plan.md`
   §7 -- new internal `.markerFlaggedSlotPedigree()` helper in `R/markerParentageLikelihood.R`
