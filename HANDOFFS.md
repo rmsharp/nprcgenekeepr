@@ -123,20 +123,76 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S511
 date: 2026-08-10
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Issue #151 (individual mate-pair analysis) -- pre-RED design/architecture document,
-per GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md Tier 2 item 3. Work beginning.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Issue #151's design/architecture document is DONE and RATIFIED
+(docs/planning/issue151-individual-mate-pair-analysis-plan.md). All of Tier 1/Tier 2's
+ready-to-build items (#147/#149/#146/#151) now have ratified designs; #151's is the only one not
+yet implemented. Issue #151 intentionally left open -- design/planning only.
+what_was_done: Wrote and ratified docs/planning/issue151-individual-mate-pair-analysis-plan.md
+(11 sections, ARCHITECTURE_WORKSTREAM.md structure) for issue #151 (individual mate-pair
+analysis), per GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md Tier 2 item 3. Read 6 files
+in full (filterPairs.R, filterAge.R, kinMatrix2LongForm.R, filterThreshold.R,
+getAnimalsWithHighKinship.R, markerKinship.R) plus relevant sections of reportGV.R/orderReport.R,
+modMarkerGenetics.R, modBreedingGroups.R, appServer.R, appUI.R, module-contract.md. Found the
+reusable pair-eligibility pipeline lives entirely outside modBreedingGroups.R (correcting the
+sequencing audit's own "shared-file risk" flag) and that modMarkerGeneticsServer() already
+computes+returns a markerKinshipMatrix reactive that appServer.R's own call site silently
+discards (R/appServer.R:435-439) -- both confirmed by direct code read, not assumed. Ran an
+original empirical benchmark against the bundled examplePedigree fixture: an unscoped pair-reshape
+produced 1,744,722 rows in 54.0s; filterAge()'s NA-passes-the-filter semantics (81% of "alive"
+fixture individuals have no recorded age) means the age control alone cannot bound table size --
+directly grounding the design's population-scope requirement (D4). Confirmed via a full read of
+orderReport.R that no composite-score ranking precedent exists in the package, grounding the
+"raw sortable columns" recommendation (D3). Presented 3 genuine judgment calls (D3 ranking, D4
+population-scope, D5 exclusion transparency) via a single AskUserQuestion round; owner selected
+the recommended option in all 3 cases. Updated the plan's Status to RATIFIED, recorded the outcome
+in §11. Also reconciled a legal-but-stale `commit: pending` placeholder in S510's own HANDOFFS.md
+receipt to the real sha (abca9edc). CHANGELOG.md [issue #151] entry + BACKLOG.md progress note
+(continuing the S483-S510 narrative) + 2 new PROJECT_LEARNINGS.md entries (511-512).
+Commits: 43dc264a (claim), plus this close-out commit (plan doc + all close-out writes).
+next_steps: Slice 1 of docs/planning/issue151-individual-mate-pair-analysis-plan.md -- the core
+`reportMatePairs()` function (§5 Slice 1), script-callable only, no UI. Start with §4's interface
+catalog (exact input/output/error contract already specified) and §5's own file/test list. Slice 2
+(new R/modMatePair.R UI, the D6 appServer.R marker-kinship capture, appUI.R tab mount,
+documentation) is a separate future session per the plan's own session-boundary requirement --
+do not bundle the two slices. Outside this cluster, the priorities list this session's own Phase 0
+rendered but the owner did not pick remain open: trimming the 3 now-oversized ledger files
+(SESSION_NOTES.md/CHANGELOG.md/BACKLOG.md, all past the 2,000-line read cap -- BACKLOG.md is a
+NEW addition to this risk since S510's own orient); filing 2 new GitHub tracking issues for the
+sequencing audit's own unfiled High-priority gaps ("Longitudinal genetic-health monitoring",
+"Ancestry guardrails in breeding decisions"); surfacing issue #150's policy decision to the owner.
+key_files: docs/planning/issue151-individual-mate-pair-analysis-plan.md (the full ratified design,
+all decisions D1-D8 resolved -- read this first for Slice 1); R/appServer.R:430-439 (the
+modMarkerGeneticsServer call site Slice 2 must edit for D6); R/modMarkerGenetics.R:320 (the
+already-existing markerKinshipMatrix reactive Slice 2 threads through); R/getAnimalsWithHighKinship.R:41-59
+(the exact eligibility-pipeline composition Slice 1 reuses); R/orderReport.R (the "no composite
+score" precedent grounding D3, useful if that decision is ever revisited).
+gotchas: (1) filterAge()'s NA-passes-the-filter semantics (R/filterAge.R:26) means minAge alone
+will NOT bound Slice 1's output size on real data with incomplete age records -- the D4 population-
+scope parameter is load-bearing, not optional; a RED test should exercise a case where most
+candidates have NA age to prove the scope control (not the age filter) is what bounds the result
+(see PROJECT_LEARNINGS.md Learning 509 for a related, earlier-discovered instance of this same
+filterAge() NA-handling class -- that one via a missing column entirely, not missing values within
+a present column, so the two are related but distinct traps). (2) markerKinship() can return
+negative values (a valid, meaningful "more divergent than reference" signal, not an error) and can
+return NA per-pair with its own warning() when neither individual has a shared heterozygous locus
+(R/markerKinship.R:96-100) -- both must render sensibly in Slice 2's table, not as if they were 0
+or a blank. (3) DT::renderDT(server = TRUE) (recommended given the real row-count findings) means
+sort/filter happens server-side -- the CSV export must export the FILTERED result set, not the
+full unfiltered table, matching every other export in this app. (4) SESSION_NOTES.md/CHANGELOG.md/
+BACKLOG.md are now ALL past the 2,000-line read cap (BACKLOG.md newly so -- 2,001 lines before
+this session's own append, 2,030 after) -- flagged again, still unaddressed for a third consecutive
+session; a near-future session should treat this as increasingly urgent, not routine.
+runtime_smoke: n/a -- docs-only session (one new file under docs/planning/, edits to
+SESSION_NOTES.md/HANDOFFS.md/CHANGELOG.md/BACKLOG.md/PROJECT_LEARNINGS.md only). Zero R/, tests/,
+or man/ content changed; no runtime behavior exists to verify.
+changelog_ref: CHANGELOG.md 2026-08-10 "[issue #151] Pre-RED design/architecture document --
+individual mate-pair analysis (Session 511)" entry (this session's close-out commit).
+commit: pending -- reconciled by the next session's Phase 0, per this receipt's own documented
+write-time constraint (it ships in the very commit whose sha it would name).
 ```
-(stub written at Phase 1B claim; overwritten at Phase 3D close-out)
 
 ```handoff
 session: S510
@@ -211,7 +267,8 @@ runtime Shiny behavior (new UI control, new server reactive wiring), so this was
 skipped.
 changelog_ref: CHANGELOG.md 2026-08-10 "[issue #146] Slice 2 -- exhaustive enumeration mode + UI
 toggle..., closes #146 (Session 510)" entry (this session's close-out commit).
-commit: pending
+commit: abca9edc (reconciled S511 -- the receipt shipped in this same close-out commit, so its
+own sha could not be known at write time; confirmed via `git log -1 --format=%H -- HANDOFFS.md`)
 ```
 
 ```handoff

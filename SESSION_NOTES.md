@@ -6,19 +6,138 @@
 
 ## ACTIVE TASK
 
+### Session 510 Handoff Evaluation (by Session 511)
+**Score: 9/10.** **What helped:** the `HANDOFFS.md` S510 receipt's `next_steps` field named
+"issue #151 design (Tier 2, next after #146 in the ratified sequencing audit -- no design doc yet,
+so this would open as a planning session, not straight implementation)" -- exactly what this
+session's own independently-re-derived Phase 0 priorities list also surfaced (cross-checked against
+`GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` and `gh issue list` directly, not just
+trusted), and exactly what the owner picked, and exactly the right shape (design, not
+implementation -- S510 correctly anticipated no ratified plan existed yet). **What was
+missing/not applicable:** S510's `key_files`/`gotchas` were scoped to issue #146's own family
+(`groupAddAssign()`/`enumerateMaximalIndependentSets()`/`modBreedingGroups.R`) and had no direct
+bearing on #151's actual research this session (`filterPairs()`/`filterAge()`/`markerKinship()`/
+`modMarkerGenetics.R`/`appServer.R`'s marker-kinship wiring gap) -- expected and not a knock
+against S510, since a handoff correctly scopes detail to what it worked on, and #151's specific
+findings (the discarded `markerKinshipMatrix` reactive, the population-scoping benchmark) were
+genuinely new research this session's own job to do, not something S510 could have anticipated.
+Gotcha (4) (`SESSION_NOTES.md` still growing, not addressed) remains accurate and still open --
+this file is now even larger after this session's own additions, unaddressed again (see
+Self-assessment below). **What was wrong:** nothing found inaccurate; the `commit: pending`
+placeholder in S510's own `HANDOFFS.md` receipt was a documented, legal write-time placeholder
+(the receipt ships in the very commit whose sha it would name), not an error -- reconciled to
+`abca9edc` this session per the format doc's own described mechanism. **ROI:** High -- the
+`next_steps` pointer directly matched this session's own independently-derived pick, and the
+"design session, not implementation" framing was exactly correct.
+
 ### What Session 511 Did
 **Deliverable:** Issue #151 (individual mate-pair analysis alongside breeding-group optimization) --
-one design/architecture document, following `ARCHITECTURE_WORKSTREAM.md`, per the ratified
+one RATIFIED design/architecture document
+(`docs/planning/issue151-individual-mate-pair-analysis-plan.md`), following
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`, per the ratified
 `docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` Tier 2 item 3 (the natural next
-pickup now that #146/#147/#149 are all shipped and closed). Picked from this session's own Phase 0
-priorities list (owner choice via `AskUserQuestion`, over trimming the oversized ledger files, filing
-2 new tracking issues for unfiled High-priority audit gaps, and surfacing issue #150's policy
-decision).
-**Started:** 2026-08-10.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+pickup now that #146/#147/#149 are all shipped and closed). Followed this project's Strict TDD
+contract's PRE-RED framing (a planning session writes no test/implementation code; its own
+judgment-call decisions are `AskUserQuestion`-gated). Picked from this session's own Phase 0
+priorities list (owner choice via `AskUserQuestion`, over trimming the oversized ledger files,
+filing 2 new tracking issues for unfiled High-priority audit gaps, and surfacing issue #150's
+policy decision).
+**Started/Completed:** 2026-08-10.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh
+issue list`, git status/log, `methodology_dashboard.py` -- health 96/100, 1 HIGH risk: 3 ledger
+files now past the 2,000-line read cap). Ledger reconcile found both `CHANGELOG.md` and
+`HANDOFFS.md` frontiers already at `HEAD` -- no undocumented commits, clean. Rendered the
+CLAUDE.md-mandated priorities list from `BACKLOG.md` tags + both ratified sequencing audits
+(`GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md`,
+`PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`) cross-checked against live `gh issue
+view` state for every cited issue number (not trusted from the audit text alone) -- found several
+`BACKLOG.md` tags (`DECISION NEEDED`, `READY`) were stale (their own body text showed the work
+already DONE), a minor doc-hygiene gap noted but not fixed (out of Phase 0's read-only scope).
+Presented via `AskUserQuestion`; owner picked "#151 mate-pair design session." **(2)** Phase 1B
+claim stub committed (`43dc264a`) to both `SESSION_NOTES.md` and `HANDOFFS.md` (a `status: pending`
+receipt). **(3)** Research: read `ARCHITECTURE_WORKSTREAM.md` in full; fetched issue #151's
+verbatim text via `gh issue view`; read six files in full
+(`R/filterPairs.R`, `R/filterAge.R`, `R/kinMatrix2LongForm.R`, `R/filterThreshold.R`,
+`R/getAnimalsWithHighKinship.R`, `R/markerKinship.R`) plus relevant sections of `R/reportGV.R`/
+`R/orderReport.R`, `R/modMarkerGenetics.R`, `R/modBreedingGroups.R`, `R/appServer.R`, `R/appUI.R`,
+`docs/architecture/module-contract.md`. **Found two genuinely new architectural facts, not
+anticipated by the source sequencing audit:** (a) the audit's own "shared-file risk" flag (#146/
+#151 both touch `modBreedingGroups.R`) does not hold for #151 as designed -- the reusable
+pair-eligibility pipeline (`kinMatrix2LongForm()`/`filterPairs()`/`filterAge()`/
+`filterThreshold()`) lives entirely in standalone files, none defined inside `modBreedingGroups.R`;
+(b) `modMarkerGeneticsServer()` already computes and returns a `markerKinshipMatrix` reactive
+(`R/modMarkerGenetics.R:320`) that `R/appServer.R`'s own call site (`:435-439`) silently discards
+-- confirmed by direct read, not assumed -- meaning "marker kinship where available" is a one-line
+capture at an existing call site, not new computation. **Ran an original empirical benchmark**
+(not derived from any prior document) against the bundled `examplePedigree` fixture via
+`pkgload::load_all()` + real function calls: an unscoped full-pedigree pair-reshape (opposite-sex
+pairs, `minAge=1`) produced 1,744,722 rows in 54.0s; scoping to the 1,704 "alive" (no-exit-date)
+individuals via `filterKinMatrix()` before the reshape cut this to 315,023 rows in 8.6s -- still
+large, traced to a genuine, non-obvious finding: `filterAge()` treats a missing age as "pass, not
+exclude" (`R/filterAge.R:26`), and 81% of the "alive" fixture individuals (1,372/1,704) have no
+recorded age at all, so the age control alone cannot bound table size on real, imperfectly-curated
+data. Also confirmed (direct full read of `R/orderReport.R`) that no continuous composite-score
+ranking precedent exists anywhere in the package -- `reportGV()`'s own ranking is a rule-based tier
+classification, never a weighted formula. **(4)** Wrote the design document (11 sections, matching
+the #133/#136/#137/#145/#147/#149/#146 house structure exactly): Context, an evidence-based
+inventory (8 numbered findings, each with file:line citations verified against the actual Read
+output, not paraphrased from memory), Design decisions (D1-D8, 5 forced by evidence/precedent, 3
+genuine judgment calls), an Interface catalog, a 2-slice implementation plan with explicit DONE
+criteria and session boundaries, an Impact analysis, 6 "Here be dragons," an honest Alternatives
+table, a Close-out checklist mapping (citation checklist explicitly N/A -- no new statistic
+introduced), and Provenance. **(5)** Presented the 3 genuine judgment calls (D3 ranking, D4
+population-scope control, D5 exclusion transparency) via a single `AskUserQuestion` round, each
+with this document's own recommended option first. Owner selected the recommended option in all 3
+cases, no changes requested. Updated the document's `Status:` to RATIFIED and appended the
+recorded outcome to §11; fixed several D-tag inconsistencies (`D-Q1`/`D-population-scope`/
+`D-exclusions` placeholder labels used mid-draft, normalized to the doc's own `D3`/`D4`/`D5`
+numbering) found on a self-review pass before treating the document as final. **(6)** Noticed and
+reconciled a legal-but-stale `commit: pending` placeholder in S510's own `HANDOFFS.md` receipt (the
+receipt shipped in the very commit whose sha it would name, per the format doc's own described
+write-time constraint) to the real sha (`abca9edc`, confirmed via `git log -1 --format=%H --
+HANDOFFS.md`) -- a small, evidence-based correction of already-known fact, not scope creep. **(7)**
+Close-out: this evaluation, self-assessment below, `CHANGELOG.md` `[issue #151]` entry, `BACKLOG.md`
+progress note continuing the established S483-S510 narrative, `HANDOFFS.md` receipt completed.
+
+**Self-assessment (Session 511): 9/10.** **Strengths:** (1) Followed the Architecture Workstream's
+own "verify assumptions... by testing or reading benchmarks, not guess" step for real -- ran an
+original benchmark rather than estimating candidate-pair-table scale, and it directly overturned a
+naive first assumption (a simple M x F count wildly undercounted the real risk once the full
+unscoped pedigree and `filterAge()`'s actual NA-passing semantics were accounted for), producing a
+concrete, load-bearing design requirement (D4) grounded in measured numbers, not intuition. (2)
+Found a genuine, previously-invisible architectural gap by reading `appServer.R`'s actual wiring
+code rather than trusting the module's own documented intent -- `modMarkerGeneticsServer()`'s
+`markerKinshipMatrix` reactive is computed and returned but never captured by its only caller,
+confirmed by direct read of the call site, not inferred. (3) Corrected the source sequencing
+audit's own "shared-file risk" claim with direct evidence (all four pipeline functions live in
+their own standalone files) rather than repeating an audit's own framing uncritically -- matching
+the established "audits are not infallible, verify before repeating a claim" precedent (#136's plan
+corrected 3 premises in its own source issue). (4) Grounded the "no invented composite score"
+recommendation in a direct, full read of `R/orderReport.R` (confirming zero weighted-formula
+precedent anywhere in the package) rather than a general aesthetic preference, directly avoiding the
+risk class `markerFst()`'s own wrong-formula incident represents. (5) Caught and fixed the
+`D-Q1`/`D-population-scope`/`D-exclusions` labeling inconsistency via a genuine self-review pass
+before presenting the document as final, rather than letting a cosmetic-but-real internal
+cross-reference defect ship. **Weaknesses:** (1) Did not use a multi-agent research `Workflow` (as
+S495 did for #147's own design) -- this session's research was done serially via direct
+`Read`/`Grep`/`Bash` rather than parallel sub-agents; correct given no `Workflow`-opt-in signal was
+present this session, but means the research depth-per-wall-clock-minute ratio was lower than
+S495's own precedent, worth naming rather than silently omitting. (2) The empirical benchmark (§2.6
+of the plan) used only the one bundled `examplePedigree` fixture -- a second, differently-shaped
+fixture (e.g. the smaller `obfuscated_rhesus_mhc_ped.csv` prior sessions used for live smoke tests)
+was not cross-checked, so the "81% missing age" finding's generality beyond this one fixture is
+not independently confirmed; stated as an honest limitation in the plan's own §1.3, not hidden. (3)
+`SESSION_NOTES.md` continues to grow (now larger again after this session's own additions) --
+S510's gotcha (4) flagged this and it remains unaddressed for a second consecutive session; this
+session did not pick that item from its own priorities list (the owner picked #151 instead), which
+is correct protocol (one deliverable, owner's choice), but the risk itself keeps compounding and
+should weigh more heavily in a near-future session's own priorities list.
+
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session), `[issue #151]` tag. No GitHub
+issue closed this session (issue #151 intentionally stays open -- design/planning only, matching
+every prior planning-session precedent in this cluster).
 
 ### Session 509 Handoff Evaluation (by Session 510)
 **Score: 8/10.** **What helped:** the `HANDOFFS.md` S509 receipt's `next_steps` field correctly

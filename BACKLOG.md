@@ -1999,3 +1999,32 @@ the ratified plan itself grants. `NEWS.Rmd`/`NEWS.md` updated;
 `vignettes/manual_components/_breeding_group_formation.Rmd` gained new coverage (text-only,
 satisfying the tutorial/article checklist's "and/or" allowance). **Issue #146 is now fully
 implemented across both slices; closed as part of this session's close-out.** See `CHANGELOG.md`.
+
+**Progress (S511, 2026-08-10):** Tier 2 step 3 -- issue #151's design/architecture document
+(individual mate-pair analysis alongside breeding-group optimization) is DONE and RATIFIED: see
+`docs/planning/issue151-individual-mate-pair-analysis-plan.md`. **All of Tier 1/Tier 2's
+ready-to-build items (#147/#149/#146/#151) now have ratified designs** -- #151's is the only one
+not yet implemented. Direct reads of every function in the relevant call graph (not summarized
+from memory) found the reusable pair-eligibility pipeline (`kinMatrix2LongForm()`/`filterPairs()`/
+`filterAge()`/`filterThreshold()`) already lives entirely outside `R/modBreedingGroups.R` --
+correcting the sequencing audit's own "shared-file risk" flag for this item -- and that
+`modMarkerGeneticsServer()` already computes and returns a `markerKinshipMatrix` reactive that
+`R/appServer.R` currently discards, so "marker kinship where available" is a one-line capture, not
+new computation. An original empirical benchmark against the bundled `examplePedigree` (not
+derived from any prior document) found an unscoped candidate-pair reshape produces 1,744,722 rows
+in 54.0s, and that `filterAge()`'s NA-passes-the-filter semantics (81% of "alive" fixture
+individuals have no recorded age) means the age control alone cannot bound table size -- directly
+grounding the design's population-scope requirement. Also confirmed no continuous composite-score
+ranking precedent exists anywhere in the package (`reportGV()`'s own `orderReport()` is a
+rule-based tier classification, never a weighted formula), grounding the "raw sortable columns,
+not an invented score" recommendation. Owner ratified 3 judgment-call decisions (ranking,
+population-scope control, exclusion transparency) in a single `AskUserQuestion` round, selecting
+this document's own recommended option in all 3 cases: raw sortable/filterable columns (no
+composite score); a required population-scope radio control (mirroring Breeding Groups' own
+`animalSource` convention) applied before the pair-reshape, plus server-side `DT` paging; and a
+separate "Excluded" table with a `reason` column plus a user exclude-list textarea (mirroring
+Breeding Groups' own "seed groups" convention). No code changed this session -- design/planning
+only, matching the #133/#136/#137/#145/#147/#149/#146 precedent. **Next session in this cluster
+implements Slice 1** (the core `reportMatePairs()` function, script-callable only); Slice 2 (UI +
+`appServer.R` marker-kinship wiring + documentation) is its own separate session per §5's
+session-boundary requirement. Issue #151 intentionally left open. See `CHANGELOG.md`.
