@@ -1541,6 +1541,30 @@ matching the precedent already set for #133's `affected` flag and #136's `name` 
 `a2interactive.Rmd` coverage remains DEFERRED per its own standing rule (a future documentation pass,
 not this slice). **Issue #137 is now fully implemented across all 3 slices; closed as part of this
 session's close-out.** See `CHANGELOG.md`.
+
+**Progress (S499, 2026-08-09):** Issue #145's own design/architecture document -- deferred since
+S482's verification spike per that spike's own "Recommendation for a future #145 design session" --
+is DONE and RATIFIED: see `docs/planning/issue145-sire-dam-left-right-placement-plan.md`. Direct
+source verification found two things the spike's own cross-project recommendation got wrong once
+re-derived against `nprcgenekeepr`'s OWN algorithm (which does not call kinship2 at all, confirmed
+this session): (a) today's simple-pair default is NOT "coincidentally male-left" the way kinship2's
+is -- the project's own canonical GA204Z/8LKBV9 fixture places the DAM left of the SIRE today, the
+opposite of the spike's assumption; (b) the multi-mate "crowding" case has no existing
+"anchor-centered, mates flank" mechanism to extend, contrary to the spike's claim that one already
+exists for unrelated reasons. A 3-agent adversarial review of the resulting draft (before
+ratification) found a real, constructed counter-example breaking the draft's first proposed
+mechanism (a subtree reflection) and refuted an overstated "gen and x are orthogonal" claim about
+issues #143/#144 using their own shipped test diffs -- both incorporated into a revised, more
+conservative mechanism (swap only the two real parents' own `x` values) before ratification, not
+patched around superficially. Three genuine judgment calls (direction, toggle shape, whether to file
+a follow-up issue for the harder multi-mate case) ratified via a single `AskUserQuestion` round,
+owner selected this document's own recommended option in all three: male-left/female-right; a new
+`orderBySex = TRUE` parameter on `makePedigreeMatingLayout()` with no UI wiring yet (Slice 2 not
+created); no follow-up issue filed for the multi-mate case. **Issue #145 stays open** -- this is
+design/planning only, matching the #133/#136/#137/#147 precedent; Slice 1 (core positioning
+behavior) is the natural next pickup, with its own Pre-RED required to empirically verify D2's
+mechanism live before RED (not yet proven beyond a paper argument -- see the plan's own §6 Dragon 1).
+See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 498.
 - [ ] **Candidate C's connector/dogleg visual-signposting idea** (found S473,
       designing the issue #144 plan; not adopted for #144 itself, Effort
       unknown, low priority) -- extends the existing D2 mate-line "dogleg"

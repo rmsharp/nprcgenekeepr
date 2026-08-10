@@ -43,6 +43,25 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-09 · [issue #145] Design/architecture document ratified — sire/dam left-right pedigree placement default (Session 499)
+- **Deliverable:** `docs/planning/issue145-sire-dam-left-right-placement-plan.md`, RATIFIED via
+  `AskUserQuestion` (D3/D8/D9, the three genuine judgment calls; D1/D2/D4-D7 forced by evidence).
+  Design/planning only — no `R/`/`tests/`/`man/` content changed. Corrected two claims inherited
+  from the S482 verification spike once re-derived directly against `nprcgenekeepr`'s own algorithm
+  (confirmed to have zero kinship2 dependency): (1) the project's own canonical GA204Z/8LKBV9
+  fixture places the dam left of the sire today, not "coincidentally male-left"; (2) the multi-mate
+  "crowding" case has no existing "anchor-centered, mates flank" mechanism to extend. A 3-agent
+  adversarial review of the draft (before ratification) constructed a counter-example refuting the
+  first-draft D2 mechanism (a subtree reflection) and an overstated "#143/#144 never touch x" claim
+  (refuted by those issues' own shipped test diffs); both incorporated into a revised, more
+  conservative mechanism (swap the two real parents' own `x` values) before ratification. Ratified
+  design: male-left/female-right default, scoped to the simple 2-real-parent/single-mate/
+  unambiguous-M-F case; a new `orderBySex = TRUE` parameter on `makePedigreeMatingLayout()`, no UI
+  wiring (Slice 2 not created); no follow-up issue filed for the multi-mate case. Issue #145 stays
+  open (commented, not closed — design only); Slice 1 (core positioning behavior) is the next
+  pickup, gated on its own Pre-RED empirically verifying the swap mechanism live. See
+  `PROJECT_LEARNINGS.md` Learning 498, `BACKLOG.md` (pedigree-diagram cluster, Progress S499).
+
 ### 2026-08-09 · [issue #147] Implement Slice 2 — Candidate Parent Assignment UI + documentation, closes issue #147 (Session 498)
 - **Deliverable:** full strict-TDD PRE-RED→RED→GREEN cycle (REFACTOR skipped, owner-confirmed —
   the GREEN diff was already minimal and precedent-mirroring), `AskUserQuestion`-gated at every
