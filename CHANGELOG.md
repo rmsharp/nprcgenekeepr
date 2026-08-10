@@ -129,6 +129,24 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## [Unreleased]
 
+### 2026-08-10 · [ad hoc] Remove 4 of 9 checked-but-unmigrated BACKLOG.md items (ad hoc — not a claimed session)
+- **Deliverable:** deleted 4 `- [x]` checked items already fully described here (S467, S476, S484,
+  S468/S465), confirmed by session-number grep before removal. 5 of the original 9 were
+  deliberately kept: `517`/`557` (a mutually-referencing pair — 557 reads "from the item above",
+  517 reads "filed below as its own item"; 517 is also referenced by name from a third, still-open
+  location) and `1098`/`1147`/`1206` (a three-item chain, each saying "the ... item immediately
+  below," plus an incoming reference to `1147` from the same third location) — removing any one of
+  either cluster would have orphaned a live "item above/below" pointer. Found by grepping the whole
+  file for `item above|item below|immediately` before deleting anything, the same discipline used
+  for wsfct's analogous `BACKLOG.md` cleanup.
+- **Verification:** `_scan_backlog_done()` (this methodology's own detector) read `{done: 9}` before,
+  confirmed by direct `grep -c` after the edit; diff showed exactly 221 removed lines across exactly
+  the 4 intended `- [x]` blocks (56 + 63 + 11 + 91), nothing else touched.
+- **Not done here, disclosed:** the remaining 5 checked items are legitimately done (each has a
+  matching entry below) but not migrated, because their own text is load-bearing for a sibling
+  item's cross-reference. Rewriting those references so the items *could* be safely removed is a
+  separate, judgment-heavier task, deliberately not attempted in this pass (FM #17).
+
 ### 2026-08-10 · [ad hoc] Reconcile HANDOFFS.md's preamble to the v3.1+ seed format (ad hoc — not a claimed session)
 - **Deliverable:** inserted a `## Size, and when to archive` section into `HANDOFFS.md`, copied from
   the current `starter-kit/HANDOFFS.md` seed (methodology v3.6-255-gc43e7ee), between the end of
