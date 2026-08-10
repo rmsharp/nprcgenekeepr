@@ -145,56 +145,41 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       that version number.
 
 ## Housekeeping
-- [ ] **`markerParentageLikelihood()`'s auto-detect candidate lookup never
-      finds a candidate when both of a flagged animal's parent slots are
-      recorded** (found S498, 2026-08-09, issue #147 Slice 2's own Phase 3E
-      live smoke test; Effort M -- needs its own Pre-RED design pass, not a
-      quick fix) -- `getPotentialParents()` only generates a candidate list
-      for an animal with at least one MISSING (`NA`) parent slot
-      (`pUnknown`); `markerParentageExclusion()` flags an animal whose
-      recorded parent is present-but-wrong, which by definition has BOTH
-      slots non-`NA`. Confirmed directly (not mocked, unlike every existing
-      test of this interaction): a fixture with one correct + one wrong
-      recorded parent returns zero candidates via the real, non-mocked
-      `getPotentialParents()`; the same fixture with the correct parent
-      also left unrecorded correctly surfaces the true candidate. In
-      practice this means the Candidate Parent Assignment tab's auto
-      -detect default will be empty for the common real-world case (one
-      right parent, one wrong), not just an edge case -- the explicit
-      `id`/`role`/`candidates` override is the only current workaround, and
-      isn't exposed in the Shiny UI. Not fixed in Slice 2 (out of that
-      slice's own pre-declared scope -- `R/modMarkerGenetics.R`'s UI, not
-      `getPotentialParents()`'s own candidate-source contract). See GitHub
-      issue [#155](https://github.com/rmsharp/nprcgenekeepr/issues/155) for
-      the full diagnosis and suggested directions (each needing its own
-      design pass), and `vignettes/articles/colony-manager-guide.qmd`'s
-      "Candidate Parent Assignment" section for the user-facing caveat
-      added this session.
-      **Design ratified -- S501 (2026-08-10):**
-      `docs/planning/issue155-parentage-likelihood-candidate-lookup-plan.md` --
-      a "shadow pedigree" fix (a local copy of `pedigree` with only the
-      flagged animal's own recorded slot blanked, passed only to the internal
-      `getPotentialParents()` call) that requires **zero changes** to
-      `getPotentialParents()` itself, empirically verified equivalent to the
-      rejected alternative (a new `forceIncludeIds` parameter on
-      `getPotentialParents()`). Scope covers BOTH `markerParentageLikelihood()`
-      call sites (auto-detect AND the explicit `id`/`role`/`candidates = NULL`
-      branch, the latter sharing the identical, previously-untested bug). Two
-      judgment calls ratified via `AskUserQuestion`, owner selected this
-      document's own recommended option in both: the shadow-pedigree
-      mechanism over the `forceIncludeIds` alternative; leaving the flagged/
-      wrong recorded parent visible in the ranked output (its `LOD = -Inf`/
-      `excluded = TRUE` doubles as a free confirmation signal) rather than
-      filtering it out. Adversarially reviewed by 2 independent agents before
-      ratification -- found and fixed a real, previously-unaddressed gap (a
-      duplicated `pedigree$id` needs the same defensive guard
-      `scoreOnePair()` already has, `PROJECT_LEARNINGS.md` Learning 500) plus
-      several citation-accuracy and house-style completeness corrections; no
-      defect found in the recommended mechanism itself. **Issue #155 stays
-      open, design/planning only** -- implementation (one vertical slice,
-      `R/markerParentageLikelihood.R` only, no UI change needed) is the next
-      pickup in this cluster. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
-      Learning 500.
+- [ ] (none remaining -- the "`markerParentageLikelihood()`'s auto-detect
+      candidate lookup never finds a candidate when both of a flagged
+      animal's parent slots are recorded" item (found S498, 2026-08-09,
+      design ratified S501) is RESOLVED -- **implemented S502 (2026-08-10):**
+      the ratified "shadow pedigree" fix
+      (`docs/planning/issue155-parentage-likelihood-candidate-lookup-plan.md`
+      §7) -- new internal `.markerFlaggedSlotPedigree()` helper in
+      `R/markerParentageLikelihood.R`, wired into both `getPotentialParents()`
+      call sites (auto-detect and the explicit `id`/`role`/
+      `candidates = NULL` branch). **Zero changes to `getPotentialParents()`
+      itself.** Full strict-TDD PRE-RED->RED->GREEN cycle
+      (`AskUserQuestion`-gated at every transition; REFACTOR owner-confirmed
+      skip -- implementation already minimal, matching the ratified design's
+      own code block verbatim). 9 new tests (5 `.markerFlaggedSlotPedigree()`
+      unit tests incl. the duplicate-`pedigree$id` guard and both-slots
+      -flagged dragon; 2 non-mocked real-`getPotentialParents()` regressions,
+      one per call site; 1 mechanism-verification mock; 1 live Shiny-module
+      regression) all confirmed genuinely RED first, then GREEN with zero
+      regressions to the 147 pre-existing assertions they sit beside. Full
+      clean regression: 0 failed/0 error (4236 passed, 201 skipped, 15
+      pre-existing-class warnings). `lintr::lint_package()`: 0 lints.
+      `devtools::check()`: 0 errors/0 warnings/2 pre-existing notes (vignette
+      -engine NOTE and a 13-word spelling-drift NOTE, both confirmed
+      unchanged by this diff -- this session's own 2 new WORDLIST gaps from
+      its new roxygen text, "positionally"/"unmutated", fixed in the same
+      commit). **Live Phase 3E `shinytest2` smoke test** against a real
+      running app (real pedigree + genotype file upload through the actual
+      Input and Marker Genetics tabs, not just `testServer()`) confirmed the
+      previously-empty Candidate Parent Assignment table now renders 2 rows
+      for a recorded-but-wrong-parent fixture (the true parent ranked first,
+      the wrong recorded parent visible with `LOD = -Inf`/`excluded = TRUE`
+      per the ratified D3(a) decision), zero console errors -- closing the
+      loop on the exact defect S498 originally found live. **Issue #155
+      closed** as part of this session's close-out. See `CHANGELOG.md`,
+      `PROJECT_LEARNINGS.md` Learning 501.)
 - [ ] **`.buildTwinConnectorEdges()` (`R/makePedigreeDiagramData.R`, issue
       #137 Slice 2) never wired the Okabe-Ito green (`#009E73`) color its
       own implementing session's handoff narrative said it picked** (found

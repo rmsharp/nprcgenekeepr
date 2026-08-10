@@ -197,6 +197,14 @@ R. Mark Sharp, Ph.D.
   Assignment** sub-tab surfacing this ranking for every flagged pair in
   the uploaded genotype file and current pedigree, with no new file
   input needed.
+- Fixed (issue \#155): the Candidate Parent Assignment sub-tab's
+  auto-detect default previously showed no candidates at all for the
+  common real-world case of a flagged animal whose recorded parent is
+  present but wrong (only a genuinely *missing* recorded parent worked
+  before). Both the auto-detect default and
+  `markerParentageLikelihood()`'s explicit
+  `id`/`role`/`candidates = NULL` script-callable form are fixed; no
+  change to either function's exported signature or return shape.
 - The Pedigree Browser's Diagram tab now defaults to placing the male
   parent to the left in a simple two-parent mating pair, matching common
   pedigree-drawing convention (issue \#145) -- a new, additive default,

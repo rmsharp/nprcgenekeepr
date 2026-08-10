@@ -43,6 +43,54 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-10 · [issue #155] Implemented the ratified design -- markerParentageLikelihood() now finds candidates for a recorded-but-wrong parent, closes issue #155 (Session 502)
+- **Deliverable:** Implemented `docs/planning/issue155-parentage-likelihood-candidate-lookup-plan.md`
+  §7 -- new internal `.markerFlaggedSlotPedigree()` helper in `R/markerParentageLikelihood.R`
+  (a local "shadow" copy of `pedigree` with only the flagged (id, role) slot(s) blanked, including
+  the ratified duplicate-`pedigree$id` defensive guard), wired into both `getPotentialParents()`
+  call sites (`:285` auto-detect, `:298` explicit `id`/`role`/`candidates = NULL` branch).
+  **`R/getPotentialParents.R` itself: zero lines changed** -- its full demographic-eligibility
+  engine (breeding-age floor, gestation window, proven-breeder preference) is reused unmodified.
+  The flagged/wrong recorded parent stays visible in the ranked output (D3(a)) -- its already
+  -tested `LOD = -Inf`/`excluded = TRUE` doubles as a free confirmation signal for the curator.
+- **Strict TDD** (`DEVELOPMENT_WORKSTREAM.md`, PRE-RED->RED->GREEN, `AskUserQuestion`-gated at
+  every transition; REFACTOR owner-confirmed skip -- the implementation already matches the
+  ratified design's own code block verbatim, 0 lints, no duplication found). PRE-RED live
+  -verified the fix mechanism and all 3 named dragons (both-slots-flagged; batch
+  no-cross-contamination; duplicate-id fail-soft) against real source before writing any test, and
+  independently found a fixture landmine: the package's default auto-generated-id prefix is `"U"`
+  (`getAutoIdFormat()` -> `"U%04d"`), so a non-mocked test cannot reuse the existing `"U"`-founder
+  fixture from `test_modMarkerGenetics.R` without it being silently stripped by
+  `removeAutoGenIds()` -- confirms Learning 497's own finding from a different angle. RED added 9
+  new tests (5 `.markerFlaggedSlotPedigree()` unit tests; 2 non-mocked real-`getPotentialParents()`
+  regressions, one per call site, reproducing issue #155's own repro shape; 1 mechanism-verification
+  mock confirming `getPotentialParents()` is called with the shadow copy, not the real recorded
+  parent; 1 live `shiny::testServer()` regression on the Candidate Parent Assignment tab, no mock),
+  confirmed genuinely RED (0 regressions to the 147 pre-existing assertions they sit beside) before
+  any implementation code. GREEN made all pass with 0 regressions to the full 4236-assertion
+  clean-regression baseline (0 failed/0 error, 201 skipped, 15 pre-existing-class warnings).
+- **Verification:** `lintr::lint_package()` 0 lints on the touched file; `devtools::check()` 0
+  errors/0 warnings/2 pre-existing notes (the a2interactive.Rmd vignette-engine NOTE and a 13-word
+  spelling-drift NOTE, both confirmed byte-identical before/after this diff via a second full
+  `devtools::check()` run -- neither is caused by this session). This session's own new roxygen
+  text (`.markerFlaggedSlotPedigree()`'s `man/` page) introduced 2 new spelling-drift words
+  ("positionally", "unmutated"), fixed in the same commit via `inst/WORDLIST` (case-appropriate
+  alphabetical position, per Learning 496's correction) -- the pre-existing 13-word drift
+  (Housekeeping, S465/S496) is untouched, left for its own separately-tracked session.
+- **Phase 3E (live runtime smoke test):** a real `shinytest2`/`chromote` `AppDriver` run against
+  the actual installed app (`inst/shinytest/app.R`) -- uploaded a real pedigree CSV (with
+  `fromCenter`) through the Input tab's own QC pipeline and a matching genotype CSV through the
+  Marker Genetics tab, for a fixture reconstructing issue #155's own repro shape (recorded-but
+  -wrong sire). The Candidate Parent Assignment tab, previously empty for this exact case (S498's
+  original discovery), now renders 2 rows: the true sire ranked first (`LOD ~= 0.863`, not
+  excluded) and the wrong recorded sire visible below it (`excluded = TRUE`, `LOD = -Inf` --
+  renders as a blank cell, a pre-existing `DT`/JSON `-Inf`-to-`null` serialization quirk unrelated
+  to this fix, confirmed by reading the real cell values via `app$get_js()` rather than trusting an
+  HTML-substring `grepl()`, which produced a false negative on the first attempt). Zero console
+  errors. Screenshot captured. Closes the loop on the defect exactly as S498 originally observed it.
+- **Issue #155 closed** (`gh issue close 155 --reason completed`) citing this entry. See
+  `PROJECT_LEARNINGS.md` Learning 501, `BACKLOG.md` Housekeeping.
+
 ### 2026-08-10 · [ad hoc] Phase 0 ledger reconcile: backfill S501's own HANDOFFS.md receipt commit sha self-correction (post-S501)
 - **Deliverable:** Phase 0 ledger reconcile (this session, S502) found one commit past
   the `CHANGELOG.md` frontier with no ledger entry: `627d9d49` ("docs: S501 -- backfill
