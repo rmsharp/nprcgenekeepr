@@ -49,7 +49,10 @@ silently pick a side on, so it errors instead. Animals not named in
 \code{pedA} and \code{pedB} that is \emph{not} declared in \code{mapping}
 is also an error -- per D5, identity is established only by the explicit
 mapping table, never assumed from a coincidentally matching id string
-across the two centers' independent namespaces.
+across the two centers' independent namespaces. As of issue #149 Slice 1
+(D10), a merged pair's other shared columns (beyond \code{id}/
+\code{sire}/\code{dam}) follow the identical non-\code{NA}-preferred/
+error-on-conflict rule -- previously they were silently dropped.
 }
 \examples{
 library(nprcgenekeepr)
@@ -67,5 +70,6 @@ mapping <- data.frame(idA = "T1", idB = "X9", stringsAsFactors = FALSE)
 resolveCrossCenterIds(pedA, pedB, mapping)
 }
 \seealso{
-\code{\link{getFileDirectRelatives}}
+\code{\link{getFileDirectRelatives}},
+\code{\link{checkCrossCenterMapping}}
 }

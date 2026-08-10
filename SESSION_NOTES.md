@@ -6,25 +6,142 @@
 
 ## ACTIVE TASK
 
+### Session 503 Handoff Evaluation (by Session 504)
+**Score: 10/10.**
+**What helped:** `next_steps` named the exact next action in full mechanical detail --
+"Slice 1 (validation core) is the natural next pickup for issue #149: extract
+`resolveCrossCenterIds()`'s 4 checks into shared helpers per D2 (including the load-bearing
+`pedB` id-rewrite step, Dragon #2), add the new exported `checkCrossCenterMapping()` per the
+Interface Catalog (plan §4), and fix the D10 column-loss defect in the same slice" -- this
+session followed that literally. `key_files` pointed at exact, correct locations
+(`R/resolveCrossCenterIds.R:92-193` for the function, `:182-185` specifically for the D10 fix,
+the 7-test-block test file) -- all confirmed byte-for-byte accurate on direct re-read, zero
+drift from plan to live source. `gotchas` (Dragon #2: looking up a merged pair's row by
+canonical `idA` BEFORE `pedB`'s ids are rewritten silently returns an all-`NA` row, not an
+error -- `checkCrossCenterMapping()` MUST perform the same rewrite first or it will silently
+under-report conflicts) was independently re-confirmed via live execution during this session's
+own Pre-RED pass, and directly drove a dedicated regression test proving the conflict check
+actually fires post-rewrite.
+**What was missing:** Nothing that a design-only predecessor session could reasonably have
+anticipated -- two process pitfalls this session hit (a roxygen doc-block/function adjacency
+requirement silently un-exporting a function during `devtools::document()`; a `git stash`
+comparison contaminated by untracked new files) are implementation-mechanics discoveries no
+design document would surface.
+**What was wrong:** Nothing found inaccurate -- every design claim, line number, and the
+Dragon #2 mechanism held up under this session's own from-scratch live re-verification and
+full TDD implementation.
+**ROI:** Extremely high -- the plan's D2/D9/D10 decisions and Interface Catalog were essentially
+copy-ready; this session's own Pre-RED round mainly reconfirmed the design rather than
+discovering new gaps, and the one genuinely new judgment call (whether D10 generalizes
+conflict-*detection*, not just column population, to every shared column) was flagged
+explicitly at the PRE-RED->RED gate rather than silently assumed.
+
 ### What Session 504 Did
-**Deliverable:** Implement Slice 1 of the ratified issue #149 design
-(`docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md` §5 Slice 1) --
-validation core, R-function level only, no UI: extract `resolveCrossCenterIds()`'s four checks
-(existence/uniqueness/collision/conflict) into shared, non-`stop()`ing internal helpers (D2,
-including the load-bearing `pedB` id-rewrite step, Dragon #2), add a new exported
-`checkCrossCenterMapping()` that calls the same helpers and collects every domain problem
-found, and fix `resolveCrossCenterIds()`'s D10 data-loss defect (its merge step silently drops
-every non-`id`/`sire`/`dam` column for merged individuals). Following
+**Deliverable:** Implemented Slice 1 of the ratified issue #149 design
+(`docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md` §5 Slice 1) -- the
+validation core, R-function level only, no UI. New exported `checkCrossCenterMapping(pedA,
+pedB, mapping)` (`R/checkCrossCenterMapping.R`), D2's two-tier collect-all validator, sharing
+`resolveCrossCenterIds()`'s four checks (existence/uniqueness/collision/conflict) via 8 new
+shared, non-`stop()`ing internal helpers extracted from it. `resolveCrossCenterIds()` itself
+calls these helpers in its original exact order and keeps its own historical `stop()` message
+text byte-for-byte (all 7 pre-existing test blocks pass unmodified; a new golden-master test
+pins the exact merge output). Also shipped the D10 data-loss fix: a merged pair's other shared,
+agreeing columns (e.g. `sex`) now survive the merge under the same prefer-non-`NA`/
+error-on-conflict rule already used for `sire`/`dam`, instead of being silently dropped -- an
+explicit, `NEWS.Rmd`-documented additive behavior change. Followed
 `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` under this project's Strict TDD
-contract (PRE-RED->RED->GREEN->REFACTOR, `AskUserQuestion`-gated at every transition). Picked
-from this session's own Phase 0 priorities list (owner choice via `AskUserQuestion`, over the
-twin-connector-color fix-or-decline, the 10-pre-existing-warnings root-cause fix, and the
-spelling-drift NOTE).
-**Started:** 2026-08-10.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+contract (PRE-RED->RED->GREEN cycle, `AskUserQuestion`-gated at every transition; REFACTOR
+owner-confirmed skip). Picked from this session's own Phase 0 priorities list (owner choice via
+`AskUserQuestion`, over the twin-connector-color fix-or-decline, the 10-pre-existing-warnings
+root-cause fix, and the spelling-drift NOTE).
+**Started/Completed:** 2026-08-10.
+**Status:** DONE. Issue #149 stays open (Slice 2 -- full UI, confirm gate, exports,
+documentation -- is the natural next pickup, a separate future session).
+
+**What happened, in order:** **(1)** Phase 0 orient (SAFEGUARDS.md, SESSION_NOTES.md, `gh issue
+list`, git status/log, `methodology_dashboard.py` -- health 98/100, ledger reconcile found zero
+gap, both `CHANGELOG.md`/`HANDOFFS.md` frontiers already at `HEAD`). Built the priorities list;
+owner picked "issue #149 Slice 1" via `AskUserQuestion`. **(2)** Phase 1B claim stub committed
+(`2cab97a2`). **(3)** PRE-RED: re-read `R/resolveCrossCenterIds.R` and its 7-block test file in
+full (confirmed zero drift from the plan's own line-number citations), then live-executed both
+named dragons directly against unmodified source -- confirmed D10's column-loss (a merged pair
+agreeing on `sex = "M"` produces `merged$sex == NA`) and Dragon #2's pre-rewrite lookup (silently
+returns a 1-row all-`NA` data.frame, not an error, not zero rows, using the plan's own exact
+`[1L, ]` indexing). Captured the exact pre-refactor merge output via `dput()` for a hardcoded
+golden-master test. Drafted the concrete implementation plan (8 shared helpers, exact function
+signatures, test plan) and flagged one interpretive decision explicitly before writing tests: D10's
+text ("generalizes... prefer non-`NA`, error on differing non-`NA` values... to every column")
+reads as extending `.pickCrossCenterParent()`'s error-on-conflict behavior to every shared column,
+not just column population -- a real, new error condition beyond what the plan's prose example
+covers. `AskUserQuestion` gate: PRE-RED->RED approved (as proposed, including the generalized
+-conflict-erroring interpretation). **(4)** RED: added 9 new tests in new
+`tests/testthat/test_checkCrossCenterMapping.R` (clean-mapping zero-rows; 2 structural stop()
+tests; tier-A-gating proof with a real collision injected but suppressed; tier-B collision;
+Dragon #2's core proof -- a real conflict actually reported; multi-conflict collection proof;
+2 mechanism-verification tests for `.rewriteCrossCenterIds()`/`.pickCrossCenterParent()`) and 3
+new blocks appended to `test_resolveCrossCenterIds.R` (golden-master `identical()` test; D10
+column-population test; D10 conflict-on-non-sire/dam-column test). Ran against unmodified `HEAD`
+and confirmed genuinely RED: all 9 new `checkCrossCenterMapping` blocks failed with "could not
+find function"; the golden-master block and all 7 pre-existing `resolveCrossCenterIds` blocks
+passed unchanged (0 regressions); the 2 new D10 blocks failed exactly as expected (`NA` instead
+of `"M"`; no error thrown yet). `AskUserQuestion` gate: RED->GREEN approved. **(5)** GREEN:
+extracted the 8 shared helpers into `R/resolveCrossCenterIds.R`
+(`.requireCrossCenterPedColumns`/`.requireCrossCenterMappingColumns`/
+`.checkCrossCenterUniqueness`/`.checkCrossCenterExistenceA`/`.checkCrossCenterExistenceB`/
+`.checkCrossCenterCollision`/`.checkCrossCenterConflict`/`.rewriteCrossCenterIds`/
+`.pickCrossCenterParent`), rewrote `resolveCrossCenterIds()` to call them in original order with
+hardcoded historical `stop()` text (reconstructed from each helper's own computed `ids` string,
+not its generic `message`, to guarantee byte-identical text with zero risk), and added the D10
+generalized-column merge loop. Added new `R/checkCrossCenterMapping.R` (exported, full roxygen).
+**First `devtools::document()` run silently deleted `man/resolveCrossCenterIds.Rd` and dropped
+its `NAMESPACE` export** -- caught immediately via `git status` (not an error message): the new
+helper functions, inserted between the function's roxygen block and its definition, broke
+roxygen2's doc-to-function adjacency requirement. Fixed by relocating the doc block to sit
+immediately above the (now-relocated) function definition. Re-ran `document()`: `NAMESPACE`/`man/`
+diffs now correct (1 new export, 1 modified `.Rd`, 1 new `.Rd`). All 19 new test assertions
+passed; 0 regressions. **(6)** Full verification: clean regression suite 0 failed/0 error (4951
+passed, 175 skipped; 15 pre-existing warnings, confirmed identical on unmodified `HEAD` via a
+`git stash` comparison -- **first attempt at this comparison was itself contaminated** by
+`git stash` not including untracked files, so the still-present new `R/checkCrossCenterMapping.R`
+called helpers `git stash` had just reverted, fabricating 2 "no visible global function
+definition" errors; caught by investigating an implausible result and re-run correctly);
+`lintr::lint_package()` 0 lints on touched files; `devtools::check()` 0 errors/0 warnings/1
+pre-existing note (vignette-engine, confirmed unrelated); `_pkgdown.yml` reference-coverage entry
+added for `checkCrossCenterMapping` (caught a real gap live -- `test_pkgdown_reference_config.R`
+failed until fixed); `NEWS.Rmd` entry added and re-rendered clean (`NEWS.md` diff shows only the
+new bullet). `AskUserQuestion` gate: GREEN->REFACTOR -- owner confirmed skip (implementation
+already matches the ratified design's own decomposition). **(7)** Phase 3E: `runtime_smoke: n/a`
+-- confirmed via `grep` that neither `resolveCrossCenterIds()` nor `checkCrossCenterMapping()` has
+any call site anywhere in the live Shiny app (only roxygen `\code{\link{}}` cross-references),
+matching the established "script-callable only" precedent (`resolveCrossCenterIds()`'s own
+original Slice 4 shipped the same way). **(8)** Close-out: found and reported, without fixing
+(out of scope), an incidental drift in the separately-tracked "10 pre-existing baseline warnings"
+Housekeeping item -- now 15, traced to a 3rd `test_modMarkerGenetics.R` block (S502's own issue
+#155 live regression test) triggering the same `markerKinship()` NA-warning pattern.
+
+**Self-assessment (Session 504): 9/10.** **Strengths:** (1) Live-verified both named dragons
+(D10 column-loss, Dragon #2 pre-rewrite lookup) by actually executing unmodified source before
+writing any test, using the plan's own exact code paths, not just re-reading them. (2) Captured
+an exact `dput()`-literal golden master BEFORE touching any code, giving the byte-identical
+requirement zero-risk verification rather than trusting a refactor "looks equivalent." (3)
+Preserved `resolveCrossCenterIds()`'s historical `stop()` text by reusing each helper's own
+computed `ids` string rather than reconstructing message text from scratch or trusting a shared
+generic message -- eliminates an entire class of subtle byte-mismatch risk. (4) Flagged the D10
+generalized-conflict-erroring interpretation explicitly at the PRE-RED->RED gate as a real
+behavior-change decision rather than silently baking in an assumption. (5) Ran the FULL
+regression suite, not just the two new test files -- caught the `_pkgdown.yml` reference-coverage
+gap neither isolated file run would have surfaced. (6) Correctly diagnosed an incidental,
+pre-existing warning-count drift (10->15) via direct investigation (git stash comparison) rather
+than assuming a documented baseline was still accurate, and reported without fixing, matching
+established scope discipline. **Weaknesses:** (1) The roxygen doc-block/function-adjacency
+mistake was avoidable with more upfront awareness of how roxygen2 associates comment blocks --
+caught immediately via disciplined `git status` checking, but cost a rework round-trip. (2) The
+first `git stash`-based "is this pre-existing" comparison was itself methodologically contaminated
+(stash without `-u` left untracked new files behind) and produced 2 fabricated errors before being
+caught and redone correctly -- a moment's thought about "will untracked files survive this stash"
+would have avoided the false start. Both mistakes are captured as `PROJECT_LEARNINGS.md` Learning
+503 so a future session doesn't repeat either.
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session).
 
 ### Session 502 Handoff Evaluation (by Session 503)
 **Score: 8/10.**

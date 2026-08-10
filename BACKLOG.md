@@ -782,6 +782,18 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       heterozygous locus -- but only after re-verifying the exact-fraction Fst
       values (`58/1001`, `139/308`, `614/2233`) still hold, since the fixture
       was hand-derived specifically to produce those numbers.
+      **Count grown from 10 to 15, found incidentally S504 (2026-08-10), still
+      not fixed** -- a full clean regression read during issue #149 Slice 1
+      showed `warning: 15`, confirmed via a `git stash` comparison to be
+      pre-existing (identical on unmodified `HEAD`), unrelated to that
+      session's own diff. The 3rd 5-warning source is
+      `test_modMarkerGenetics.R`'s "candidate-parent-assignment table is
+      non-empty for a real (non-mocked) recorded-but-wrong-parent fixture
+      (issue #155)" block, added S502 (2026-08-10) -- a live, non-mocked
+      genotype-file upload that incidentally triggers the same
+      `markerKinship()` NA-warning path as the 2 original cross-center tests.
+      A future session fixing this item should address all 3 test blocks, not
+      just the original 2.
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability-comparison audit (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`)
@@ -2076,3 +2088,37 @@ no changes requested. **Issue #149 stays open** -- design/planning only, matchin
 -loss fix, R-function level only; Slice 2: full UI, confirm gate, exports, documentation) is the
 natural next pickup, each its own future session. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
 Learning 502.
+
+**Progress (S504, 2026-08-10):** Slice 1 (validation core, R-function level only, no UI) is now DONE:
+new exported `checkCrossCenterMapping(pedA, pedB, mapping)` (`R/checkCrossCenterMapping.R`), the D2
+two-tier collect-all validator sharing `resolveCrossCenterIds()`'s four checks via 8 new shared
+internal helpers extracted from it (`.requireCrossCenterPedColumns`/`.requireCrossCenterMappingColumns`/
+`.checkCrossCenterUniqueness`/`.checkCrossCenterExistenceA`/`.checkCrossCenterExistenceB`/
+`.checkCrossCenterCollision`/`.checkCrossCenterConflict`/`.rewriteCrossCenterIds`/
+`.pickCrossCenterParent`). `resolveCrossCenterIds()` itself calls these in its original exact order,
+keeping its own historical `stop()` message text byte-for-byte (proven via a new golden-master test);
+all 7 pre-existing test blocks pass unmodified. The D10 data-loss fix also shipped in this slice:
+a merged pair's other shared, agreeing columns (e.g. `sex`) now survive the merge under the same
+prefer-non-`NA`/error-on-conflict rule already used for `sire`/`dam`, instead of being silently
+dropped -- an explicit, `NEWS.Rmd`-documented additive behavior change (a merge that previously
+succeeded silently on a disagreeing non-`sire`/`dam` column now raises a conflict error). Full strict
+TDD PRE-RED->RED->GREEN cycle (`AskUserQuestion`-gated at every transition; REFACTOR owner-confirmed
+skip -- implementation already matches the ratified design's own decomposition). Dragon #2 (the `pedB`
+id-rewrite must run before the conflict check's row lookup, or it silently reports zero conflicts) has
+its own dedicated regression test injecting a real conflict and confirming it is actually reported.
+10 new test blocks (9 in new `tests/testthat/test_checkCrossCenterMapping.R`, 3 appended to
+`tests/testthat/test_resolveCrossCenterIds.R`), 0 regressions. Verified: full clean regression suite 0
+failed/0 error (4951 passed, 175 skipped); `lintr::lint_package()` 0 lints on touched files;
+`devtools::check()` 0 errors/0 warnings/1 pre-existing note (vignette-engine, unchanged);
+`_pkgdown.yml` reference-coverage entry added for `checkCrossCenterMapping` (this actually caught the
+gap live -- `test_pkgdown_reference_config.R` failed until fixed); `NEWS.Rmd` entry added and
+re-rendered clean. `runtime_smoke: n/a` -- confirmed via `grep` that neither function has any call
+site in the live Shiny app yet (Slice 2 wires them in); script-callable only, matching the
+`resolveCrossCenterIds()` Slice 4 precedent. **Incidental finding, not fixed (out of this slice's
+scope):** the "10 pre-existing baseline warnings" Housekeeping item below has silently drifted to 15
+(a 3rd `test_modMarkerGenetics.R` cross-center-shaped test block now also triggers the same
+`markerKinship()` NA-warning pattern) -- confirmed pre-existing via a `git stash` comparison against
+unmodified `HEAD`, unrelated to this session's diff; that item's own count corrected below. **Slice 2
+(full UI, confirm gate, exports, documentation) is the natural next pickup for issue #149** -- a
+separate future session, per the plan's own session-boundary requirement. See `CHANGELOG.md`,
+`PROJECT_LEARNINGS.md` Learning 503.

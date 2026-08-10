@@ -43,6 +43,29 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-10 · [issue #149] Slice 1 implemented — cross-center identity-mapping validation core + `resolveCrossCenterIds()` D10 data-loss fix (Session 504)
+- **Deliverable:** new exported `checkCrossCenterMapping(pedA, pedB, mapping)`
+  (`R/checkCrossCenterMapping.R`), the ratified plan's D2 two-tier collect-all validator, sharing
+  `resolveCrossCenterIds()`'s four checks (existence/uniqueness/collision/conflict) via 8 new
+  shared, non-`stop()`ing internal helpers extracted from it. `resolveCrossCenterIds()` itself
+  keeps its exact historical `stop()` message text and all 7 pre-existing tests pass unmodified
+  (proven via a new golden-master test). Also fixes D10: a merged pair's other shared, agreeing
+  columns (e.g. `sex`) now survive the merge instead of being silently dropped — an explicit,
+  `NEWS.Rmd`-documented additive behavior change. R-function level only, no UI (Slice 2 is next).
+  Followed `DEVELOPMENT_WORKSTREAM.md` under this project's Strict TDD contract
+  (PRE-RED→RED→GREEN, `AskUserQuestion`-gated; REFACTOR owner-confirmed skip).
+- **Verification:** 10 new test blocks (9 new `tests/testthat/test_checkCrossCenterMapping.R`, 3
+  appended to `test_resolveCrossCenterIds.R`), 0 regressions. Full clean regression suite 0
+  failed/0 error (4951 passed, 175 skipped, 15 pre-existing warnings — confirmed unrelated to this
+  diff). `lintr::lint_package()` 0 lints. `devtools::check()` 0 errors/0 warnings/1 pre-existing
+  note. `_pkgdown.yml` reference-coverage entry added (caught a real gap live).
+  `runtime_smoke: n/a` — neither function has a live-app call site yet (Slice 2 wires them in).
+- **Incidental finding, reported not fixed:** the "10 pre-existing baseline warnings" Housekeeping
+  item has drifted to 15 (a 3rd `test_modMarkerGenetics.R` block, added S502, triggers the same
+  warning pattern) — noted in `BACKLOG.md`, out of this slice's scope.
+- See `PROJECT_LEARNINGS.md` Learning 503 (a roxygen doc-block/function-adjacency pitfall in
+  `devtools::document()`, and a `git stash`-without-`-u` comparison-contamination pitfall).
+
 ### 2026-08-10 · [issue #149] Design/architecture document ratified — reviewed cross-center identity-mapping workflow with provenance export (Session 503)
 - **Deliverable:** `docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md`, following
   `ARCHITECTURE_WORKSTREAM.md` (owner-picked via `AskUserQuestion` over the literal

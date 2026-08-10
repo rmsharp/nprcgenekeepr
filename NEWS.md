@@ -215,6 +215,21 @@ R. Mark Sharp, Ph.D.
   layout, unaffected. `makePedigreeMatingLayout()` gained a matching
   `orderBySex` argument (default `TRUE`) for scripted use; setting it to
   `FALSE` reproduces the prior, sex-agnostic default exactly.
+- New exported function `checkCrossCenterMapping(pedA, pedB, mapping)`
+  (issue \#149, Slice 1): the "show every problem at once" companion to
+  `resolveCrossCenterIds()`, sharing its id-existence,
+  mapping-uniqueness, id-collision, and parent-conflict checks but never
+  stopping on a domain problem -- every one found is returned as a row
+  instead, so all of them can be reviewed together rather than one at a
+  time. Script-callable only; no Shiny UI change this slice. Also fixes
+  a data-loss defect in `resolveCrossCenterIds()` itself: a merged
+  individual's shared, agreeing columns beyond `id`/`sire`/`dam` (e.g.
+  `sex`) were previously silently dropped; they are now carried through
+  under the same prefer-non-`NA`/error-on-conflict rule already used for
+  `sire`/`dam`. This is an additive behavior change -- a merged pair
+  whose two centers disagree on such a column, which previously merged
+  silently, now raises the same kind of conflict error `sire`/`dam`
+  disagreement always has.
 
 # nprcgenekeepr 2.0.0 (20260708)
 

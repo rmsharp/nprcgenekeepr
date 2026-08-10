@@ -198,6 +198,7 @@ reference:
   - '`calcSkewness`'
   - '`calculateSexRatio`'
   - '`checkChangedColsLst`'
+  - '`checkCrossCenterMapping`'
   - '`checkErrorLst`'
   - '`checkGenotypeFile`'
   - '`checkKinshipOverrides`'

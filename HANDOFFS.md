@@ -62,21 +62,54 @@ would name); the next session reconciles them to real shas.
 ```handoff
 session: S504
 date: 2026-08-10
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Implement Slice 1 of the ratified issue #149 design (validation core:
-checkCrossCenterMapping() + the D10 merge-column-loss fix, R-function level only, no UI).
-Following DEVELOPMENT_WORKSTREAM.md under this project's Strict TDD contract. Work starting.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 10
+active_task: Slice 1 of the ratified issue #149 design (validation core: checkCrossCenterMapping()
++ the D10 merge-column-loss fix, R-function level only, no UI) is DONE. Issue #149 stays open --
+Slice 2 (full UI, confirm gate, exports, documentation) is the next pickup, a separate session.
+what_was_done: Followed DEVELOPMENT_WORKSTREAM.md under this project's Strict TDD contract
+(PRE-RED->RED->GREEN, AskUserQuestion-gated; REFACTOR owner-confirmed skip). Live-verified D10's
+column-loss and Dragon #2's pre-rewrite-lookup bug directly against unmodified source before
+writing tests; captured an exact dput() golden master. Extracted 8 shared, non-stop()ing helpers
+from resolveCrossCenterIds() into R/resolveCrossCenterIds.R; added new exported
+checkCrossCenterMapping() (R/checkCrossCenterMapping.R); resolveCrossCenterIds() keeps its exact
+historical stop() text and all 7 pre-existing tests pass unmodified. D10 fix ships as an explicit,
+NEWS.Rmd-documented additive behavior change. 10 new test blocks (9 new + 3 appended), 0
+regressions. Fixed a live _pkgdown.yml reference-coverage gap the full suite caught. Commits:
+2cab97a2 (claim stub) and this session's close-out commit.
+next_steps: Slice 2 (full UI, confirm gate, exports, documentation) is the natural next pickup for
+issue #149 -- see the plan's own §5 Slice 2 DONE criteria and verification list (live shinytest2
+smoke test required; Dragons #6/#7 on modalDialog() under this app's bslib theme and DT NA
+-rendering both still open). Separately, 3 untouched Phase 0 priorities remain: the
+twin-connector-color fix-or-decline (Housekeeping, Effort S), the now-diagnosed-but-unfixed
+10->15 pre-existing baseline warnings (Effort S, 3 test blocks now involved, see BACKLOG.md), and
+the devtools::check() spelling-drift NOTE (9 words, Effort S, inst/WORDLIST).
+key_files: docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md (the ratified
+plan, §5 Slice 2's own DONE criteria and Dragons #6-8), R/resolveCrossCenterIds.R (the 8 new
+shared helpers + the relocated roxygen block -- read this file's own new "Shared validation
+helpers" comment block before touching it again), R/checkCrossCenterMapping.R (the new exported
+function Slice 2's UI will call), tests/testthat/test_checkCrossCenterMapping.R (9 tests
+including the Dragon #2 regression proof), PROJECT_LEARNINGS.md Learning 503 (the roxygen
+-adjacency and git-stash-contamination pitfalls).
+gotchas: Any new function inserted into R/resolveCrossCenterIds.R BEFORE an existing exported
+function silently detaches that function's roxygen doc block (devtools::document() re-associates
+the block with the next function it precedes) -- always check `git status` for an unexpected
+.Rd DELETION right after document(), and keep new helpers' own doc blocks physically adjacent to
+their own functions, with the ORIGINAL function's doc block moved to stay immediately above its
+(possibly relocated) definition. A `git stash` comparison used to prove "this warning/note
+pre-exists on HEAD" is invalid if untracked new files exist and depend on the stashed-away tracked
+code -- use `git stash -u` or verify a different way, and treat an implausible result (new
+problems appearing, or a count LOWER than history) as a signal to check the comparison itself, not
+the code. Slice 2 must also remember: D10 is an additive BEHAVIOR CHANGE (a previously-silent
+merge on a disagreeing non-sire/dam column now errors) -- Slice 2's UI/export copy should not
+imply this is purely cosmetic.
+runtime_smoke: n/a -- confirmed via grep that neither resolveCrossCenterIds() nor
+checkCrossCenterMapping() has any call site in the live Shiny app (Slice 2 wires them in);
+script-callable only, matching the resolveCrossCenterIds() Slice 4 precedent.
+changelog_ref: this session's close-out commit (see below).
 commit: pending
 ```
-<in progress>
 
 ```handoff
 session: S503

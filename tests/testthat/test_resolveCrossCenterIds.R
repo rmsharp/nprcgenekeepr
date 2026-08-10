@@ -125,3 +125,74 @@ test_that("resolveCrossCenterIds requires id/sire/dam columns on both pedigrees 
     "idB"
   )
 })
+
+## Golden master (issue #149 Slice 1, D2): resolveCrossCenterIds()'s exact
+## merge output on this file's own fixture, captured BEFORE the D2 validation
+## -extraction refactor. Any drift here means the refactor changed observable
+## behavior, not just internal structure -- this is a stronger, whole-object
+## check than the two positive-assertion blocks above, which only inspect
+## specific rows/columns.
+test_that("resolveCrossCenterIds's merge output is unchanged by the D2 validation refactor (golden master)", {
+  merged <- resolveCrossCenterIds(pedA, pedB, mapping)
+
+  expected <- structure(
+    list(
+      id   = c("P1", "P2", "S1", "T1", "Q1", "O1"),
+      sire = c(NA, NA, "P1", "P1", NA, "T1"),
+      dam  = c(NA, NA, "P2", "P2", NA, "Q1")
+    ),
+    row.names = c(NA, -6L), class = "data.frame"
+  )
+  expect_identical(merged, expected)
+})
+
+## D10 (issue #149 Slice 1): resolveCrossCenterIds()'s merge step previously
+## dropped every non-id/sire/dam column for merged individuals, even when
+## both sides agreed on a value (plan section 2.12). These two tests use
+## their own dedicated fixtures (not the shared pedA/pedB/mapping above) so
+## they stay clearly separate from the D2 golden-master claim, per the
+## plan's own instruction (section 3 D10).
+test_that("resolveCrossCenterIds (D10) carries through an agreeing shared column for merged individuals", {
+  pedA10 <- data.frame(
+    id   = c("P1", "P2", "T1"),
+    sire = c(NA_character_, NA_character_, "P1"),
+    dam  = c(NA_character_, NA_character_, "P2"),
+    sex  = c("M", "F", "M"),
+    stringsAsFactors = FALSE
+  )
+  pedB10 <- data.frame(
+    id   = c("X9", "O1"),
+    sire = c(NA_character_, "X9"),
+    dam  = c(NA_character_, NA_character_),
+    sex  = c("M", "F"),
+    stringsAsFactors = FALSE
+  )
+  mapping10 <- data.frame(idA = "T1", idB = "X9", stringsAsFactors = FALSE)
+
+  merged <- resolveCrossCenterIds(pedA10, pedB10, mapping10)
+
+  expect_identical(merged$sex[merged$id == "T1"], "M")
+})
+
+test_that("resolveCrossCenterIds (D10) errors on a conflicting shared column beyond sire/dam", {
+  pedA10c <- data.frame(
+    id   = c("P1", "P2", "T1"),
+    sire = c(NA_character_, NA_character_, "P1"),
+    dam  = c(NA_character_, NA_character_, "P2"),
+    sex  = c("M", "F", "M"),
+    stringsAsFactors = FALSE
+  )
+  pedB10c <- data.frame(
+    id   = c("X9", "O1"),
+    sire = c(NA_character_, "X9"),
+    dam  = c(NA_character_, NA_character_),
+    sex  = c("F", "F"),
+    stringsAsFactors = FALSE
+  )
+  mapping10c <- data.frame(idA = "T1", idB = "X9", stringsAsFactors = FALSE)
+
+  expect_error(
+    resolveCrossCenterIds(pedA10c, pedB10c, mapping10c),
+    "conflicting sex"
+  )
+})
