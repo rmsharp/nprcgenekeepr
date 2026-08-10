@@ -17,6 +17,7 @@ groupAddAssign(
   harem = FALSE,
   sexRatio = 0,
   withKin = FALSE,
+  maxCandidates = 5L,
   updateProgress = NULL
 )
 }
@@ -66,6 +67,10 @@ matrix for the group is returned along with the group and score.
 Defaults to not return the kinship matrix. This maintains compatibility with
 earlier versions.}
 
+\item{maxCandidates}{Integer value indicating the maximum number of
+distinct candidate solutions to retain during the simulation (issue #146
+Slice 1). Default is 5.}
+
 \item{updateProgress}{Function or NULL. If this function is defined, it
 will be called during each iteration to update a
 \code{shiny::Progress} object.}
@@ -78,8 +83,9 @@ during the simulation (an alias for \code{candidates[[1]]$group}, kept for
 backward compatibility).
 The list item \code{score} provides the score associated with the group(s)
 (an alias for \code{candidates[[1]]$score}).
-The list item \code{candidates} is a list of up to 5 distinct candidate
-solutions (issue #125), each a list with its own \code{group}, \code{score}
+The list item \code{candidates} is a list of up to \code{maxCandidates}
+distinct candidate solutions (default 5; issue #125, configurable per
+issue #146 Slice 1), each a list with its own \code{group}, \code{score}
 and, when \code{withKin = TRUE}, \code{groupKin}, ordered best-scoring
 first. Candidates are deduplicated by partition content, not by score --
 two trials with the same score but different membership both count as

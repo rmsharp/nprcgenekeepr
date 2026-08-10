@@ -49,6 +49,9 @@
 #' matrix for the group is returned along with the group and score.
 #' Defaults to not return the kinship matrix. This maintains compatibility with
 #' earlier versions.
+#' @param maxCandidates Integer value indicating the maximum number of
+#' distinct candidate solutions to retain during the simulation (issue #146
+#' Slice 1). Default is 5.
 #' @param updateProgress Function or NULL. If this function is defined, it
 #' will be called during each iteration to update a
 #' \code{shiny::Progress} object.
@@ -60,8 +63,9 @@
 #' backward compatibility).
 #' The list item \code{score} provides the score associated with the group(s)
 #' (an alias for \code{candidates[[1]]$score}).
-#' The list item \code{candidates} is a list of up to 5 distinct candidate
-#' solutions (issue #125), each a list with its own \code{group}, \code{score}
+#' The list item \code{candidates} is a list of up to \code{maxCandidates}
+#' distinct candidate solutions (default 5; issue #125, configurable per
+#' issue #146 Slice 1), each a list with its own \code{group}, \code{score}
 #' and, when \code{withKin = TRUE}, \code{groupKin}, ordered best-scoring
 #' first. Candidates are deduplicated by partition content, not by score --
 #' two trials with the same score but different membership both count as
@@ -135,6 +139,7 @@ groupAddAssign <- function(candidates,
                            minAge = 1.0, iter = 1000L,
                            numGp = 1L, harem = FALSE,
                            sexRatio = 0.0, withKin = FALSE,
+                           maxCandidates = 5L,
                            updateProgress = NULL) {
   if (length(currentGroups) > numGp) {
     stop(
@@ -170,16 +175,17 @@ groupAddAssign <- function(candidates,
     )
   }
 
-  # Starting the group assignment simulation. Up to 5 distinct candidate
-  # solutions are retained (issue #125), deduplicated by canonicalized
-  # partition content -- not merely by score, since two trials with the same
-  # score but different membership both count (see canonicalizePartition()
-  # below, Dragon R4). Each new trial is compared only against the current
-  # up-to-5 retained candidates, not the full trial history so far
-  # (O(iter x 5), not O(iter^2)): safe because a partition's score is a pure
-  # function of its own membership, so a partition once evicted for scoring
-  # no better than the retained set can never later re-qualify at that same
-  # score.
+  # Starting the group assignment simulation. Up to maxCandidates distinct
+  # candidate solutions are retained (default 5; issue #125, configurable per
+  # issue #146 Slice 1), deduplicated by canonicalized partition content --
+  # not merely by score, since two trials with the same score but different
+  # membership both count (see canonicalizePartition() below, Dragon R4).
+  # Each new trial is compared only against the current up-to-maxCandidates
+  # retained candidates, not the full trial history so far
+  # (O(iter x maxCandidates), not O(iter^2)): safe because a partition's
+  # score is a pure function of its own membership, so a partition once
+  # evicted for scoring no better than the retained set can never later
+  # re-qualify at that same score.
   retained <- list()
 
   for (k in 1L:iter) {
@@ -197,7 +203,7 @@ groupAddAssign <- function(candidates,
     ))
 
     if (!alreadyRetained) {
-      if (length(retained) < 5L) {
+      if (length(retained) < maxCandidates) {
         retained[[length(retained) + 1L]] <- list(
           groupMembers = groupMembers, score = score, signature = signature
         )

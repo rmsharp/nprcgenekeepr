@@ -246,6 +246,11 @@ R. Mark Sharp, Ph.D.
   downloadable CSV, not fed into any other tab's analysis; re-upload it
   through the Input tab's existing pedigree-file path to use it
   downstream.
+- `groupAddAssign()` gained a `maxCandidates` argument (issue \#146,
+  Slice 1) replacing the previously-hardcoded cap of 5 distinct retained
+  candidate solutions; the default remains 5, unchanged. The Breeding
+  Group Formation tab gained a matching **Candidates to retain** control
+  (default 5, 1-50) next to the existing simulation-count input.
 
 # nprcgenekeepr 2.0.0 (20260708)
 

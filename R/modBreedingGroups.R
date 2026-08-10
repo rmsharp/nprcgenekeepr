@@ -84,6 +84,9 @@ modBreedingGroupsUI <- function(id) {
                numericInput(ns("nIterations"),
                             "Number of simulations:",
                             value = 10L, min = 1L, max = 1000000L),
+               numericInput(ns("maxCandidates"),
+                            "Candidates to retain:",
+                            value = 5L, min = 1L, max = 50L),
                checkboxInput(ns("withKinship"),
                              "Include kinship in display of groups",
                              value = FALSE),
@@ -330,6 +333,11 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
           10L
         }
         withKin <- if (!is.null(input$withKinship)) input$withKinship else FALSE
+        maxCandidates <- if (!is.null(input$maxCandidates)) {
+          as.integer(input$maxCandidates)
+        } else {
+          5L
+        }
 
         # Seed groups ("current groups") parity (monolith server.r:1019-1056):
         # build a length-numGp list of seed-animal IDs from the per-group
@@ -394,6 +402,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
               harem = harem,
               sexRatio = sexRatio,
               withKin = withKin,
+              maxCandidates = maxCandidates,
               updateProgress = updateProgress
             )
           }, error = function(e) {
