@@ -180,29 +180,23 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       loop on the exact defect S498 originally found live. **Issue #155
       closed** as part of this session's close-out. See `CHANGELOG.md`,
       `PROJECT_LEARNINGS.md` Learning 501.)
-- [ ] **`.buildTwinConnectorEdges()` (`R/makePedigreeDiagramData.R`, issue
-      #137 Slice 2) never wired the Okabe-Ito green (`#009E73`) color its
-      own implementing session's handoff narrative said it picked** (found
-      S494, 2026-08-09, incidental to issue #137 Slice 3's own Pre-RED
-      read; Effort S, low priority) -- S493's `HANDOFFS.md`/`SESSION_NOTES.md`
-      entries state D10's color/dash-pattern decision was "`#009E73`
-      Okabe-Ito bluish-green... MZ solid/DZ c(4,4)/UZ c(14,8) dash
-      patterns," but a direct read of the shipped
-      `.buildTwinConnectorEdges()` (confirmed via `grep -n "009E73"
-      R/makePedigreeDiagramData.R`, zero hits) shows it sets only `from`,
-      `to`, `label`, and the `dashes` list-column -- no `color` column
-      exists anywhere in the twin-connector edge path. The dash patterns
-      and labels the narrative describes ARE correctly implemented; only
-      the color never made it from decision to code. Not fixed in Slice 3
-      (out of that slice's own pre-declared file scope --
-      `R/makePedigreeDiagramData.R` is a Slice 2 file; Slice 3's own
-      legend addition instead describes exactly what renders today: label
-      + dash pattern only, no color). A future session should either wire
-      `color = "#009E73"` into `.buildTwinConnectorEdges()`'s output data
-      frame (and add a matching `color` swatch to the Diagram-tab legend's
-      `addEdges` entry in `R/modPedigree.R`) or, if a plain-color connector
-      is judged unnecessary now that dash pattern + label already
-      distinguish the three codes, close this item as decline-with-reason.
+- [ ] (none remaining -- the "`.buildTwinConnectorEdges()` (`R/makePedigreeDiagramData.R`, issue
+      #137 Slice 2) never wired the Okabe-Ito green (`#009E73`) color its own implementing
+      session's handoff narrative said it picked" item (found S494, 2026-08-09) is RESOLVED --
+      **wired S506 (2026-08-10):** owner chose "wire it in" over decline-and-close via
+      `AskUserQuestion`. `color = "#009E73"` added to `.buildTwinConnectorEdges()`'s output for
+      both `edgeStyle` values, plus a matching legend swatch in `R/modPedigree.R`. A second,
+      previously undiscovered dragon found and fixed in the same session:
+      `.addRectilinearWaypoints()` unconditionally reset every kept edge's `color` to `NA` under
+      `edgeStyle = "rectilinear"` -- the same anti-pattern issue #133 already named/fixed on the
+      node side of this same function, now fixed the same way (preserve-if-absent). Full
+      strict-TDD PRE-RED->RED->GREEN cycle; 11 new/extended test assertions across 4 files; full
+      regression suite 0 failed/0 error (exact +11/-11 delta vs. unmodified `HEAD` via
+      `git stash -u`, 0 change to the 15 pre-existing baseline warnings); `lintr` 0 lints;
+      `devtools::check()` 0 errors/0 warnings, pre-existing notes only. Live `shinytest2` smoke
+      test confirmed the color renders on the real running app under BOTH `edgeStyle` values,
+      directly proving the rectilinear dragon-fix live. See `CHANGELOG.md`,
+      `PROJECT_LEARNINGS.md` Learning 505.)
 - [ ] (none remaining -- the "`devtools::check()` returns a non-portable-filename
       ERROR/WARNING for `inst/extdata/reference/Standardized Human Pedigree
       Nomenclature: Update and Assessment of the Recommendations of the

@@ -43,6 +43,46 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-08-10 · [BL-twinConnectorColor] Twin-connector color wired — issue #137 D10, `#009E73` on both `edgeStyle` values (Session 506)
+- **Deliverable:** `.buildTwinConnectorEdges()` (`R/makePedigreeDiagramData.R`) now sets
+  `color = "#009E73"` (Okabe-Ito bluish-green) on every MZ/DZ/UZ twin connector edge — D10's own
+  color pick, ratified at issue #137 Slice 2's own Pre-RED (2026-08-03) but never actually wired
+  into the function (found S494, `BACKLOG.md` Housekeeping). All 3 codes share one color; only
+  the dash pattern + label distinguish them (matching D6's own decision structure). Both
+  `edgeStyle` values now carry it through: `makePedigreeDiagramData()`/
+  `makePedigreeMatingLayout()`'s direct-style edges prime `color = NA` alongside their existing
+  `label` priming so the rbind onto the twin connector's own color-bearing row doesn't fail; a
+  **second, previously undiscovered dragon** in `.addRectilinearWaypoints()` — an unconditional
+  `keptEdges$color <- rep(NA_character_, ...)` that silently clobbered ANY incoming edge color
+  under `edgeStyle = "rectilinear"`, the exact same anti-pattern issue #133 already named and
+  fixed on the NODE side of this same function — is now a preserve-if-absent conditional
+  mirroring that precedent. `R/modPedigree.R`'s Diagram-tab legend (`twinLegendEdges`) gains the
+  matching color swatch on all 3 rows.
+- **Verification:** 11 new/extended `test_that()` assertions across 4 files
+  (`test_makePedigreeDiagramData.R`, `test_makePedigreeMatingLayout.R`,
+  `test_addRectilinearWaypoints.R`, `test_modPedigree.R`), confirmed genuinely RED against
+  unmodified `HEAD` (`git stash -u` comparison: baseline `failed: 11, passed: 5031`; GREEN
+  `failed: 0, passed: 5042` — an exact +11/-11 delta, 0 change to the 15 pre-existing baseline
+  warnings). `lintr::lint_package()`: 0 lints. `devtools::check()`: 0 errors/0 warnings,
+  pre-existing notes only (vignette-engine NOTE, spelling-drift diff) — one new session-caused
+  spelling word ("unwired") found and fixed by rewording to "never wired," not added to
+  `inst/WORDLIST` (Learning 495/501 precedent). **Live `shinytest2` smoke test** against the real
+  running app (twin pedigree + twin-relations fixture upload): confirmed
+  `color:"#009E73"` on the live-rendered MZ/DZ connector edges (via
+  `w.network.body.data.edges.get()`, the same live-DataSet technique
+  `test-e2e-pedigree-module.R` already uses) AND the legend's 3 rows, under BOTH `edgeStyle`
+  values — directly proving the rectilinear dragon-fix works live — zero throw-level/SEVERE
+  console entries.
+- **Documentation:** `NEWS.Rmd`/`NEWS.md` (existing twin-connector bullet gained a color clause)
+  and `vignettes/manual_components/_pedigree_browser.Rmd` (same gap, same fix) — a visible
+  rendering change to an already-shipped, already-documented feature, not a new tab/control.
+  `colony-manager-guide.qmd` has no twin-connector mention at all — a separate, pre-existing gap
+  (issue #139's own scope), reported not fixed.
+- See `PROJECT_LEARNINGS.md` Learning 505 (the second dragon: a deferred design decision, once
+  finally wired, was the first real value to ever flow through
+  `.addRectilinearWaypoints()`'s edge-color-reset path, exposing a 3-session-dormant defect
+  structurally identical to an already-fixed, already-named precedent on the node side).
+
 ### 2026-08-10 · [issue #149] Slice 2 implemented — full modCrossCenterIdentity Shiny module: UI, confirm gate, exports, documentation, closes issue #149 (Session 505)
 - **Deliverable:** the full end-to-end workflow the ratified design promised
   (`docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md` §5 Slice 2). New
