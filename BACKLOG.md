@@ -2115,3 +2115,37 @@ note (confirmed unrelated via a `git stash -u` baseline check); `lintr::lint_pac
 touched files. `NEWS.Rmd`/`NEWS.md` entry done. **Slice 2 (full UI module, confirm gate, exports,
 documentation) is the natural next pickup for this issue** -- a separate future session, per the
 plan's own session-boundary requirement. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 516.
+
+**Progress (S516, 2026-08-10) -- Issue #150 fully shipped, closed:** Slice 2 (full UI module, confirm
+gate, exports, documentation) is now DONE, closing out the plan in full. New **De-Identified Export**
+Shiny module (`R/modDeidentifiedExport.R`): `modDeidentifiedExportUI`/`modDeidentifiedExportServer`
+(D1: reads `shared$currentPedigree`, no fresh upload) -- Configure & Preview tab (config controls,
+live preview, static D6 warning text) plus an Export tab gated by a `modalDialog()` confirm (mirrors
+`modCrossCenterIdentityServer`'s own shape) with 3 downloads (de-identified pedigree, D4 manifest, D5
+"DO NOT SHARE" re-identification key). Two forced correctness requirements found at Pre-RED (same
+category as the plan's own D1/D2/D4/D5/D7/D9, not owner judgment calls): the manifest snapshots the
+exact params used at Generate-Preview time rather than re-reading live input state (prevents a
+curator's post-preview slider tweak from producing a manifest that describes different params than
+what was actually exported); regenerating the preview resets `confirmed` to `FALSE` (mirrors #149's
+own D5 stale-confirmation-reset pattern). Downloads are not hard-gated on `confirmed`, matching Cross-
+Center Identity's own precedent exactly (this issue's own ratified framing: a confirmation dialog and
+warning text, not real access control). Wired into `appUI.R`/`appServer.R` (D10 tab placement after
+Cross-Center Identity). Full strict TDD PRE-RED->RED->GREEN->REFACTOR cycle, each transition
+`AskUserQuestion`-gated; REFACTOR: no candidate identified. 16 new test blocks, 0 regressions. Full
+clean regression 0 failed/0 error (5233 passed, was 5186, 15 pre-existing warnings unchanged);
+`devtools::check()` 0 errors/0 warnings/1 pre-existing NOTE (confirmed byte-identical to unmodified
+`HEAD` via `git stash -u` before/after -- including the raw-log spelling-diff NOTE, a pre-existing
+environment quirk); `lintr::lint_package()` 0 lints on touched files (fixed 3 style lints);
+`_pkgdown.yml` reference-coverage gap caught live by its own guard test, fixed. **Live smoke test**
+(ad hoc script, no permanent E2E file added, matching the #149 precedent) drove the real running app
+end to end -- Input -> De-Identified Export -> Generate Preview -> Confirm Export modal -> Export tab
+-- 0 console errors; a first unscoped `a[data-value='Export']` click selector warned of multiple
+matches (Cross-Center Identity also has an "Export" tab) and was fixed to a module-scoped selector
+before trusting the result. `NEWS.Rmd`/`NEWS.md` and a new "De-Identified Export" `colony-manager-
+guide.qmd` subsection (text-only, matching Cross-Center Identity's own no-screenshot convention) done
+same-session, re-rendered clean. `a2interactive.Rmd` deferred per its own standing rule. **Both slices
+of issue #150 are now shipped; issue #150 closed** as part of this session's close-out. See
+`CHANGELOG.md`.
+
+**This cluster (issue #150, all slices) is now fully complete.** No further items remain in this
+narrative.

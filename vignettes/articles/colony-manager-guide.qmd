@@ -736,6 +736,52 @@ curator who wants the merged result to drive genetic value, breeding-group,
 or diversity analysis re-uploads the exported "Merged Pedigree" file through
 the Input tab's existing pedigree-file path.
 
+### De-Identified Export
+
+The **De-Identified Export** tab (issue
+[#150](https://github.com/rmsharp/nprcgenekeepr/issues/150)) supports
+approved external data sharing: producing a relationship-preserving,
+de-identified copy of the pedigree already loaded in the current session,
+without a separate upload. It reuses the package's existing, already-tested
+de-identification primitives (`obfuscateId()`, `obfuscateDate()`,
+`obfuscatePed()`) rather than any new anonymization logic.
+
+The workflow has two steps:
+
+1. **Configure & Preview.** Set the alias-id length, the maximum date shift
+   (in days), and whether each individual's dates should shift together
+   (**linked**, the recommended default) or independently. Linked shifting
+   preserves an individual's exact inter-date gaps (e.g. birth-to-exit) --
+   independent shifting can, on a short-lived individual, invert that order
+   and produce a negative recomputed age; this is why linked shifting is the
+   default, not merely an option. Clicking **Generate Preview** shows the
+   full de-identified output before anything is exported, so a curator sees
+   exactly what would leave the building. Displayed ages are recomputed
+   from the shifted dates, not the original recorded values.
+2. **Export.** Clicking **Confirm Export** opens a dialog carrying an
+   explicit institutional-responsibility disclaimer -- this app's first --
+   making clear that de-identification is not authorization: confirming
+   your institution's data-sharing policies permit the export and its
+   intended recipient(s) remains the curator's own responsibility, not the
+   tool's. Once confirmed, three artifacts become downloadable: the
+   de-identified pedigree itself, a transformation manifest (the parameters
+   used, row count, and timestamp -- never the id map or any raw
+   pre-obfuscation value, so it is safe to attach as evidence of *how* an
+   export was produced without revealing *what* it replaced), and a
+   distinctly labeled **re-identification key** ("DO NOT SHARE") mapping
+   each alias back to its original id. The key downloads as its own,
+   separately labeled file so it is never mistaken for a shareable
+   artifact.
+
+Fields outside id, dam, sire, dates, and name (e.g. `origin`, `status`)
+pass through unchanged -- disclosed in both the warning text and the
+manifest, not silently scrubbed, since scrubbing them was never part of
+this tool's scope. As with Cross-Center Identity above, "curator-controlled"
+here means a confirmation dialog and warning text, not real access control:
+this package has no user-identity or role infrastructure to enforce
+authorization against, and inventing one was explicitly out of scope for
+this feature.
+
 ### Potential Parents
 
 The **Potential Parents** tab (issue

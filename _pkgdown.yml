@@ -317,6 +317,8 @@ reference:
   - '`modBreedingGroupsUI`'
   - '`modCrossCenterIdentityServer`'
   - '`modCrossCenterIdentityUI`'
+  - '`modDeidentifiedExportServer`'
+  - '`modDeidentifiedExportUI`'
   - '`modGeneticDiversityServer`'
   - '`modGeneticDiversityUI`'
   - '`modGeneticValueServer`'

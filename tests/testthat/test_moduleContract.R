@@ -94,6 +94,11 @@ moduleContractServers <- list(
                 markerKinshipMatrix = shiny::reactive(NULL),
                 geneticValues = shiny::reactive(NULL)),
     names = c("pairs", "excluded", "isReady")
+  ),
+  modDeidentifiedExport = list(
+    server = modDeidentifiedExportServer,
+    args = list(pedigree = shiny::reactive(NULL)),
+    names = c("exportedPedigree", "map", "manifest", "confirmed")
   )
 )
 

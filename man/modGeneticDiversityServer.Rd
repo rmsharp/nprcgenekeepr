@@ -53,6 +53,8 @@ Other Shiny modules:
 \code{\link[=modBreedingGroupsUI]{modBreedingGroupsUI()}},
 \code{\link[=modCrossCenterIdentityServer]{modCrossCenterIdentityServer()}},
 \code{\link[=modCrossCenterIdentityUI]{modCrossCenterIdentityUI()}},
+\code{\link[=modDeidentifiedExportServer]{modDeidentifiedExportServer()}},
+\code{\link[=modDeidentifiedExportUI]{modDeidentifiedExportUI()}},
 \code{\link[=modGeneticDiversityUI]{modGeneticDiversityUI()}},
 \code{\link[=modGeneticValueServer]{modGeneticValueServer()}},
 \code{\link[=modGeneticValueUI]{modGeneticValueUI()}},

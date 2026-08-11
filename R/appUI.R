@@ -266,6 +266,15 @@ appUI <- function(siteInfo = NULL) {
     ),
 
     # ====================
+    # De-Identified Export Tab (issue #150 Slice 2, D10)
+    # ====================
+    tabPanel(
+      "De-Identified Export",
+      icon = icon("user-secret"),
+      modDeidentifiedExportUI("deidentifiedExport")
+    ),
+
+    # ====================
     # Potential Parents Tab
     # ====================
     tabPanel(

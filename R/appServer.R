@@ -460,6 +460,15 @@ appServer <- function(input, output, session) {
   # means re-uploading through modInputServer's existing pedigree-file path.
   modCrossCenterIdentityServer("crossCenterIdentity")
 
+  # De-Identified Export Module (issue #150 Slice 2, D1) -- unlike Cross-
+  # Center Identity above, this module reads the pedigree the curator is
+  # ALREADY working with (shared$currentPedigree), not a fresh upload: it
+  # exports the one pedigree already loaded, not a pair to compare.
+  modDeidentifiedExportServer(
+    "deidentifiedExport",
+    pedigree = reactive(shared$currentPedigree)
+  )
+
   # Potential Parents Module -- follow the Input-tab sire/dam age floors
   # (issue #119 Slice 4) so candidate screening honors the same minimums as QC;
   # blank fields resolve to NULL -> the species+sex breeding-age table default.

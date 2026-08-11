@@ -6,13 +6,137 @@
 
 ## ACTIVE TASK
 
+### Session 515 Handoff Evaluation (by Session 516)
+**Score: 10/10.** **What helped:** the `HANDOFFS.md` S515 receipt's `next_steps` field named this
+session's entire Slice 2 scope item-for-item -- exact function names
+(`modDeidentifiedExportUI`/`modDeidentifiedExportServer`), the exact file to add them to
+(`R/modDeidentifiedExport.R`, append below the existing Slice 1 helper, do not create a second
+file), the exact `appUI.R` tab placement (immediately after "Cross-Center Identity", D10), the
+exact `appServer.R` wiring (`pedigree = reactive(shared$currentPedigree)`, explicitly NOT a fresh
+upload like `modCrossCenterIdentity`'s exception shape), the exact test file to extend (not
+create), the `test_moduleContract.R`/`_pkgdown.yml`/`NEWS.Rmd`/tutorial-article/live-smoke-test/
+`gh issue close 150` checklist in full, and the precedent to mirror
+(`R/modCrossCenterIdentity.R`'s Confirm->Export modal-gate shape, explicitly excluding its
+Upload->Validate stage, which does not apply here). All three `gotchas` were exactly correct and
+directly useful: (1) always use this package's own `set_seed()`, never base `set.seed()`, in any
+new RNG-seeded test (Learning 516) -- followed from the first RED-test draft, having read
+`test_obfuscatePed.R` directly during PRE-RED; (2) `git stash` alone does not stash untracked new
+files, use `git stash -u` for a `devtools::check()` before/after baseline -- followed exactly,
+caught the identical pre-existing 2-NOTE baseline (not 1) both times; (3) D5 ("keep the id map
+local") is satisfied by construction (Shiny's `downloadHandler()` delivery mechanics) -- needs
+distinct labeling and a separate confirmation click, not new infrastructure, "do not over-build
+this" -- followed exactly: 3 separate `downloadButton`s, no new access-control machinery invented.
+**What was missing:** nothing the predecessor could reasonably have anticipated -- this session's
+own two forced correctness findings (the manifest-params-snapshot-at-preview-time requirement
+preventing a post-preview input-tweak from producing a manifest that describes different params
+than what was actually exported; the confirm-reset-on-re-preview requirement mirroring #149's own
+D5 pattern) and two documentation/testing gotchas (Learning 517's `rmarkdown::render()` YAML-
+override trap; Learning 518's ambiguous same-titled-nested-tab selector collision between
+`modCrossCenterIdentity` and this session's own new module) were genuinely new discoveries specific
+to this session's own execution, not omissions from the plan or the handoff. **What was wrong:**
+nothing found -- every specific claim in `active_task`/`what_was_done`/`next_steps`/`key_files`/
+`gotchas` checked out against source exactly as stated. The `commit: pending` field is unreconciled
+to a real sha, matching the same standing, accepted convention already noted (not a defect) in
+S512/S513's own receipts. **ROI:** Maximal -- the `next_steps`/`key_files`/`gotchas` fields mapped
+essentially 1:1 onto this session's actual implementation from the first RED test through
+close-out, at zero cost to verify and zero rework.
+
 ### What Session 516 Did
-**Deliverable:** Issue #150 Slice 2 -- full De-Identified Export UI module (IN PROGRESS)
-**Started:** 2026-08-10
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Issue #150 Slice 2 -- `modDeidentifiedExportUI`/`modDeidentifiedExportServer` (full
+De-Identified Export Shiny module), `appUI.R`/`appServer.R` wiring, tests, live smoke test, and
+documentation, per `docs/planning/issue150-deidentified-pedigree-export-plan.md` §5 Slice 2 --
+**closes issue #150**. Following `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`, inside
+this project's Strict TDD contract (PRE-RED->RED->GREEN->REFACTOR, each transition
+`AskUserQuestion`-gated). Picked from this session's own Phase 0 priorities list (owner choice via
+`AskUserQuestion`) as the sole READY item -- the natural, explicitly-named continuation of S515's
+own Slice 1.
+**Started/Completed:** 2026-08-10.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue
+list`, git status/log, `methodology_dashboard.py` -- health 96/100, 1 HIGH risk category: the
+3-file ledger-size condition (`SESSION_NOTES.md`/`CHANGELOG.md`/`BACKLOG.md` all past the 2,000-line
+read cap), now flagged 8 consecutive sessions, still unaddressed by owner choice). Ledger reconcile
+clean (`CHANGELOG.md`/`HANDOFFS.md` frontiers already at `HEAD`, no undocumented commits, no pending
+receipts). Rendered the priorities list via `AskUserQuestion` (4 options: #150 Slice 2 READY;
+LabKey remainder BLOCKED; NPRC outreach plan DECISION NEEDED; #152 deferred-cluster design); owner
+picked #150 Slice 2. **(2)** Phase 1B claim stub committed (`62e78ea2`). **(3)** PRE-RED research:
+direct reads of `R/modCrossCenterIdentity.R` (closest UI/confirm-gate precedent, in full),
+`R/modMatePair.R` (closest `shared$currentPedigree`-wiring precedent, in full),
+`docs/architecture/module-contract.md`, `tests/testthat/test_moduleContract.R`, `R/obfuscatePed.R`
+(Slice 1's `linkedDateShift`), `R/modDeidentifiedExport.R` (Slice 1's
+`.buildDeidentificationManifest()`), `R/appUI.R`/`R/appServer.R` wiring points,
+`tests/testthat/test_modCrossCenterIdentity.R`/`test_obfuscatePed.R`. Found and surfaced 2 forced
+(not owner-votable) correctness requirements: manifest-params-snapshot-at-preview-time (prevents a
+post-preview input tweak from producing a manifest describing different params than what was
+exported) and confirm-reset-on-re-preview (mirrors #149's own D5 stale-confirmation pattern).
+**(4)** PRE-RED->RED gate (`AskUserQuestion`): approved. Added 16 `test_that` blocks -- 14 to
+`tests/testthat/test_modDeidentifiedExport.R` (UI shape; no-pedigree `req()` gate; module-level
+non-negative-age proof reusing the `pedGood`/`exit=birth+10`/`set_seed(3L)` fixture from
+`test_obfuscatePed.R`; manifest-params-drift regression; confirm-gate start/flip/reset; 3
+download-content round-trips), 1 module-contract registration test. Confirmed genuine RED
+(could-not-find-function/object-not-found errors) in both files. **(5)** RED->GREEN gate
+(`AskUserQuestion`): approved. Implemented `modDeidentifiedExportUI`/`modDeidentifiedExportServer`
+in `R/modDeidentifiedExport.R` (Configure & Preview tab + modal-gated Export tab, 3 download
+artifacts, `data-ready` wiring); wired `R/appUI.R` (new tab after Cross-Center Identity, D10) and
+`R/appServer.R` (`pedigree = reactive(shared$currentPedigree)`, D1). Targeted tests passed
+immediately. Full clean regression: 0 failed/0 error (5233 passed, up from 5186 baseline, 15
+pre-existing warnings unchanged -- stray traceback noise confirmed byte-identical to unmodified
+`HEAD` via `git stash -u`). `devtools::check()`: 0 errors/0 warnings/1 pre-existing NOTE, confirmed
+byte-identical to unmodified `HEAD` via `git stash -u` before/after (including the raw-log
+spelling-diff detail, a pre-existing environment quirk). `lintr::lint_package()`: 3 style lints
+found and fixed (an 80-char line, two `brace_linter` multi-line function-body wraps), 0 remaining
+on all 5 touched files. `devtools::document()`: clean, 2 new `.Rd` pages, `NAMESPACE` +2 exports,
+only expected `@family` cross-reference churn. `_pkgdown.yml` reference-coverage gap caught live by
+its own guard test (matching this project's own established checklist), fixed. **(6)** GREEN->
+REFACTOR gate (`AskUserQuestion`): owner confirmed no refactor candidate identified -- proceeded to
+close-out. **(7)** Phase 3E live smoke test (mandatory this slice): an ad hoc script (not committed,
+matching the #149 no-permanent-E2E-file precedent), using this project's own
+`tests/testthat/helper-shinytest2.R` conventions, drove the real running app end to end -- loaded
+the bundled example pedigree via Input, navigated to De-Identified Export, confirmed config inputs +
+D6 warning text render, generated a preview (de-identified rows confirmed, no leaked original ids),
+confirmed the modal shows the warning text, confirmed the module's own Export sub-tab (via a
+scoped selector, after a first unscoped `a[data-value='Export']` attempt warned of multiple matches
+-- Cross-Center Identity also has a tab named "Export" -- Learning 518) shows all 3 download
+buttons with the map correctly labeled "DO NOT SHARE." 0 console errors throughout. **(8)**
+Documentation: `NEWS.Rmd`/`NEWS.md` (re-rendered via `rmarkdown::render("NEWS.Rmd", quiet = TRUE)`
+with no format override, after an initial override attempt silently dropped the file's own YAML
+`output: github_document` config and produced a near-total-diff bad render, caught by inspecting
+the diff -- Learning 517); a new "De-Identified Export" `colony-manager-guide.qmd` subsection
+(text-only, matching Cross-Center Identity's own no-screenshot convention for this governance-tool
+category), re-rendered clean via `quarto render`. `a2interactive.Rmd` deferred per its own standing
+rule; citation checklist N/A (no new displayed statistic). **(9)** `gh issue close 150` with a
+summary comment covering both slices. **(10)** This evaluation, self-assessment below,
+`PROJECT_LEARNINGS.md` Learnings 517-518, `BACKLOG.md` S516 progress note (issue #150 cluster marked
+fully complete), `CHANGELOG.md` `[issue #150]` entry, `HANDOFFS.md` receipt completed.
+
+**Self-assessment (Session 516): 9/10.** **Strengths:** (1) Followed the S515 handoff's `next_steps`/
+`key_files`/`gotchas` with zero deviation and zero rework -- every named file, function, and
+convention matched exactly. (2) Found and fixed 2 genuine correctness requirements at Pre-RED
+(manifest-params-snapshot; confirm-reset-on-re-preview) before they could reach RED, by direct
+comparison against the #149 precedent rather than assuming the naive implementation was sufficient.
+(3) Did not trust the first `rmarkdown::render()` result -- inspected the diff, caught a
+near-total-rewrite render before it could have been committed as a false "insertion-only" NEWS.md
+change (Learning 517). (4) Did not trust the first live-smoke-test PASS at face value -- noticed a
+real warning (`click_element_safe`'s "multiple elements found"), diagnosed the actual cause (a
+same-titled nested tab collision with `modCrossCenterIdentity`), and re-ran with a properly scoped
+selector before reporting a clean result (Learning 518). (5) Verified `devtools::check()`'s
+pre-existing-NOTE baseline via `git stash -u` before/after TWICE (once mid-session, once again after
+the lint fixes + `devtools::document()` regen), rather than trusting the first comparison to still
+hold after further edits. **Weaknesses:** (1) The first `NEWS.Rmd` render call explicitly overrode
+`output_format`/`output_file`, discarding the source's own YAML configuration -- a closer read of
+the file's own front matter (5 lines, right at the top) before the first render attempt would have
+caught this before it produced a large diff to inspect and discard. (2) The first live-smoke-test
+click at the Export tab used an unscoped selector despite already knowing (from reading
+`R/modCrossCenterIdentity.R` in full at PRE-RED) that it also has an "Export" tab -- the collision
+was foreseeable from research already done, not a novel discovery. (3) `SESSION_NOTES.md`/
+`BACKLOG.md`/`CHANGELOG.md` size crisis (flagged S509-S515, now a 9th consecutive session) remains
+unaddressed -- correct protocol (owner picked #150 Slice 2 over it via the priorities list), but
+this session's own additions grow all three files further still.
+
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session), `[issue #150]` tag. Issue #150
+**closed** (both slices shipped) -- `gh issue close 150` completed this session with a summary
+comment.
 
 ### Session 514 Handoff Evaluation (by Session 515)
 **Score: 8/10.** **What helped:** the `HANDOFFS.md` S514 receipt's `next_steps` field named the

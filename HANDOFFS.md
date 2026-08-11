@@ -123,19 +123,69 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S516
 date: 2026-08-10
-status: pending
-self_score: pending
-predecessor_score: 9
-active_task: Issue #150 Slice 2 -- full De-Identified Export UI module
-(modDeidentifiedExportUI/Server, appUI.R tab, appServer.R wiring, tests, docs, live smoke test,
-closes #150). In progress.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 10
+active_task: Issue #150 Slice 2 (full De-Identified Export UI module) is DONE. Both slices of issue
+#150 are now shipped; issue #150 is CLOSED (gh issue close 150, comment posted). This cluster has no
+further items.
+what_was_done: New modDeidentifiedExportUI/modDeidentifiedExportServer (R/modDeidentifiedExport.R):
+Configure & Preview tab (size/maxDelta/linkedDateShift controls, live preview, static D6 warning
+text) + a modalDialog()-confirm-gated Export tab (3 downloads: de-identified pedigree, D4
+transformation manifest, D5 "DO NOT SHARE" re-identification key). Two forced correctness fixes
+found at Pre-RED: manifest snapshots exact preview-time params (prevents post-preview input-tweak
+drift); confirmed resets to FALSE on re-preview (mirrors #149 D5). Wired into appUI.R (new tab after
+Cross-Center Identity, D10) / appServer.R (pedigree = reactive(shared$currentPedigree), D1). Full
+strict TDD PRE-RED->RED->GREEN->REFACTOR, AskUserQuestion-gated. 16 new test blocks, 0 regressions.
+Verified: full clean regression 0 failed/0 error (5233 passed, was 5186); devtools::check() 0
+errors/0 warnings/1 pre-existing NOTE (git stash -u confirmed byte-identical to unmodified HEAD,
+twice); lintr::lint_package() 0 lints on touched files (fixed 3); devtools::document() clean;
+_pkgdown.yml reference-coverage gap fixed. Live smoke test (ad hoc, no permanent E2E file, matching
+#149 precedent): full configure->preview->confirm->export sequence against the real running app, 0
+console errors -- caught and fixed an ambiguous tab-selector collision with modCrossCenterIdentity's
+own "Export" tab along the way (Learning 518). NEWS.Rmd/NEWS.md, new colony-manager-guide.qmd
+subsection (both re-rendered clean) -- caught and fixed an rmarkdown::render() YAML-override trap
+along the way (Learning 517). Commits: 62e78ea2 (claim), plus this close-out commit.
+next_steps: No READY item remains in the genetic-metrics-issues sequencing-audit cluster (#146/#147/
+#149/#150/#151 are ALL now fully shipped and closed). The next priorities, per this session's own
+Phase 0 rendering of BACKLOG.md/gh issue list, are: (1) the Deferred design-only tier's own next
+item, #152 (whole-genome/whole-exome sequence input + sequence-based metrics) -- needs its own
+Pre-RED scoping/design session before any technical work, ordered ahead of #153 (linkage-aware/
+haplotype-block metrics) and #148 (MHC haplotype frequency -- also needs a scope-narrowing
+conversation first per the 08-08 sequencing audit) per that same audit's Deferred-tier ordering; (2)
+LabKey integration remainder (BLOCKED -- needs a live LabKey server to test/observe, unchanged for
+many sessions); (3) NPRC outreach & announcement plan (DECISION NEEDED -- owner review/edit of
+drafts + send timing, not an engineering task). Also still open, unaddressed for 9 consecutive
+sessions: the SESSION_NOTES.md/CHANGELOG.md/BACKLOG.md 3-file ledger-size HIGH risk (all 3 past the
+2,000-line agent read cap; methodology_trim.py has no config for SESSION_NOTES.md/BACKLOG.md at
+all) -- a future session may want to raise trimming this as its own pickup rather than continuing to
+let the owner pick around it.
+key_files: docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md (the Deferred-tier
+ordering #152>#153>#148, and each item's own scoping-conversation-first framing); BACKLOG.md's
+"Genetic-metrics PDF audit follow-ups" section (the full #146-153 cluster narrative, now entirely
+complete for #146/#147/#149/#150/#151); R/modDeidentifiedExport.R (this session's complete Slice
+1+2 file, the reference shape for any future no-upload/shared-pedigree-reading module); methodology_
+dashboard.py's own risk-flag output (the 3-file ledger-size detail, re-run each session).
+gotchas: (1) rmarkdown::render() with an explicit output_format/output_file override SILENTLY
+ignores a .Rmd's own YAML output: config -- always call render() with no override on NEWS.Rmd (its
+YAML is output: github_document, md_extensions: "-smart") or any other project .Rmd with its own
+configured output format; inspect the diff before trusting "insertion-only" (Learning 517). (2) A
+live/E2E click on a[data-value='<tab-title>'] is ambiguous whenever two mounted Shiny modules happen
+to choose the same nested-tab title (e.g. "Export") -- always scope the selector to the module's own
+container id first, and separately assert the module's own active pane via a scoped JS query rather
+than trusting the click alone (Learning 518). (3) Any new RNG-seeded test in this suite must use
+this package's own set_seed() (R/set_seed.R), never base set.seed() (Learning 516, still current).
+(4) git stash alone does not stash untracked new files -- use git stash -u for any devtools::check()
+before/after baseline comparison.
+runtime_smoke: Live smoke test PASS -- ad hoc script (not committed) drove the real running app via
+tests/testthat/helper-shinytest2.R conventions: Input tab pedigree load -> De-Identified Export tab
+-> config inputs/D6 warning confirmed -> Generate Preview (de-identified rows, no leaked original
+ids) -> Confirm Export modal (warning text confirmed) -> modal confirm click -> Export tab (all 3
+download buttons confirmed, map labeled DO NOT SHARE via a module-scoped selector) -> 0 console
+errors (SEVERE/throw/error) throughout.
+changelog_ref: CHANGELOG.md 2026-08-10 "[issue #150] Slice 2" entry (Session 516).
+commit: pending -- reconciled by the next session's Phase 0, per this receipt's own documented
+write-time constraint (the receipt ships in the very commit whose sha it would name).
 ```
 <in progress -- this stub is the Phase 1B crash breadcrumb, overwritten at Phase 3D close-out>
 

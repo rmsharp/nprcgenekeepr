@@ -302,6 +302,23 @@ knitr::opts_chunk$set(echo = TRUE)
   behavior is still available via `linkedDateShift = FALSE` for any caller
   that needs it. Ships ahead of a future de-identified pedigree export
   workflow (Slice 2) that depends on this fix.
+- New **De-Identified Export** tab (issue #150, Slice 2, closes #150): a
+  curator-facing workflow around the existing `obfuscatePed()` (Slice 1)
+  and a new transformation-manifest helper. Exports the pedigree already
+  loaded in the current session -- no separate upload -- with configurable
+  alias-id length, maximum date shift, and the `linkedDateShift` toggle
+  (Slice 1's fix, on by default). A live preview shows the de-identified
+  output before anything is exported; an explicit confirmation dialog,
+  carrying an institutional-responsibility disclaimer (this app's first),
+  gates 3 downloadable artifacts: the de-identified pedigree, a
+  transformation manifest (parameters used, row count, timestamp -- never
+  the id map or any raw pre-obfuscation value), and a distinctly labeled
+  re-identification key ("DO NOT SHARE"). Fields other than id, dam,
+  sire, dates, and name (e.g. `origin`, `status`) pass through unchanged
+  -- disclosed in the warning text and manifest, not silently scrubbed.
+  Matches this app's established curator-controlled pattern (a
+  confirmation dialog and warning text, not real access control) rather
+  than building new auth infrastructure.
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes
