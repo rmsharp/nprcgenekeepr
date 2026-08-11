@@ -6,6 +6,23 @@
 
 ## ACTIVE TASK
 
+### What Session 518 Did
+**Deliverable:** 3-file ledger-size housekeeping (dashboard HIGH risk, unaddressed 8-9 consecutive
+sessions) -- scoped to SESSION_NOTES.md (add a `methodology_trim.py` `LEDGERS` config entry + run its
+first-ever archive) and CHANGELOG.md (archive; already configured canonically, trigger already
+fires). BACKLOG.md's remediation is explicitly OUT of this session's scope: investigated and found to
+be a structural mismatch, not a config gap -- its 10 `##` sections are large standing topical
+categories (Housekeeping, Up Next, Outreach, ...) that accumulate narrative indefinitely, not
+chronological newest-on-top records, so the tool's always-retain-a-prefix/archive-the-suffix cut
+model would archive whatever section happens to sort last, not the oldest/safest content. Deferred to
+a future session as an editorial-compression task (per BACKLOG.md's own "open work only, completed
+history -> CHANGELOG.md" header). (IN PROGRESS)
+**Started:** 2026-08-11.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next session's
+reconcile.
+
 ### Session 516 Handoff Evaluation (by Session 517)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S516 receipt's `next_steps` field named this
 session's exact deliverable -- "the Deferred design-only tier's own next item, #152 ... needs its

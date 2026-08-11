@@ -121,6 +121,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-10.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S518
+date: 2026-08-11
+status: pending
+active_task: 3-file ledger-size housekeeping, scoped to SESSION_NOTES.md (methodology_trim.py config
++ first archive) and CHANGELOG.md (archive). BACKLOG.md's remediation deferred -- structural mismatch
+with the tool's model, not a config gap.
+```
+
+```handoff
 session: S517
 date: 2026-08-11
 status: complete
