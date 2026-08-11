@@ -6,6 +6,17 @@
 
 ## ACTIVE TASK
 
+### What Session 515 Did
+**Deliverable:** Issue #150 Slice 1 -- `obfuscatePed()` `linkedDateShift` parameter (fixes the
+independent-per-column date-shift defect found S514) + new `.buildDeidentificationManifest()`
+helper, per `docs/planning/issue150-deidentified-pedigree-export-plan.md` Section 5 Slice 1. (IN
+PROGRESS)
+**Started:** 2026-08-10.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 513 Handoff Evaluation (by Session 514)
 **Score: 8/10.** **What helped:** the `HANDOFFS.md` S513 receipt's `next_steps` field named the 3
 lower-priority items its own Phase 0 priorities list rendered but the owner didn't pick, one of
