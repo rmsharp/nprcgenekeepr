@@ -2074,3 +2074,44 @@ renders correctly post-change. `NEWS.Rmd`/`NEWS.md`, a new "Mate Pair Analysis" 
 
 **This cluster (issue #151, all slices) is now fully complete.** No further items remain in this
 narrative.
+
+**Progress (S514, 2026-08-10):** Tier 3 (policy-gated quick win) -- issue #150's own owner policy
+decision and design/architecture document (de-identified pedigree export workflow for approved data
+sharing) -- is DONE and RATIFIED: see
+`docs/planning/issue150-deidentified-pedigree-export-plan.md`. Put the sequencing audit's own
+Finding #3 policy question to the owner via `AskUserQuestion` before any technical research (its own
+recommendation, verbatim); owner answered yes, formalize it. Found and empirically verified (seeded
+`Rscript` against the bundled `pedGood` fixture, 25% hit rate) a real, previously-unflagged defect:
+`obfuscatePed()` shifts each Date column independently, which can invert an individual's birth/exit
+order and produce a negative recomputed age. Ten design decisions (D1-D10); four genuine judgment
+calls (fix the date defect now via a new `linkedDateShift` parameter defaulting `TRUE`; explicit
+institutional-responsibility warning text; disclose rather than scrub non-id/date fields; tab
+placement after Cross-Center Identity) ratified via a single `AskUserQuestion` round -- owner
+selected the recommended option in all four. Implementation plan is 2 vertical slices (core function
+work; full UI module + documentation), each its own future session. No code changed this session --
+design/planning only, matching the #133/#136/#137/#145/#146/#147/#149/#151 precedent. Issue #150
+stays intentionally open. See `CHANGELOG.md`. *(Note: this progress note was written retroactively by
+S515, reconstructed from `CHANGELOG.md`/`HANDOFFS.md` -- S514's own close-out did not append one here,
+unlike every other design-session precedent in this cluster, S495/S503/S511. Flagged, not silently
+skipped; see `PROJECT_LEARNINGS.md` Learning 516.)*
+
+**Progress (S515, 2026-08-10):** Slice 1 (core function work, R-function level only, no UI) is now
+DONE: `obfuscatePed()` gained a `linkedDateShift` parameter (default `TRUE`, D3) that draws exactly
+one random offset per individual and applies it to every Date column for that row, closing the S514
+negative-age defect while preserving each individual's exact inter-date gaps (proven by an invariance
+assertion, not just a bounds check); `linkedDateShift = FALSE` reproduces the old independent-per-
+column behavior for any caller that needs it. New internal `.buildDeidentificationManifest()` helper
+(`R/modDeidentifiedExport.R`, D4) mirrors `.buildCrossCenterMergeProvenance()`'s shape. Full strict
+TDD PRE-RED->RED->GREEN->REFACTOR cycle (REFACTOR: owner-confirmed no candidate identified), each
+transition `AskUserQuestion`-gated. Along the way, found and fixed a genuine order-dependence defect
+in this session's own RED tests: a bare `set.seed()` call is silently order-dependent in this test
+suite because this package's own `set_seed()` helper (used throughout for cross-R-version RNG
+parity) permanently changes `RNGkind(sample.kind = "Rounding")` for the rest of the testthat
+session -- switched to `set_seed()`, matching every other test file's convention, and re-derived a
+seed that reproduces the defect deterministically under that RNGkind regardless of run order
+(verified via a perturb-then-rerun check, not assumed). Full clean regression 0 failed/0 error (5186
+passed, 15 pre-existing warnings unchanged); `devtools::check()` 0 errors/0 warnings/1 pre-existing
+note (confirmed unrelated via a `git stash -u` baseline check); `lintr::lint_package()` 0 lints on
+touched files. `NEWS.Rmd`/`NEWS.md` entry done. **Slice 2 (full UI module, confirm gate, exports,
+documentation) is the natural next pickup for this issue** -- a separate future session, per the
+plan's own session-boundary requirement. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 516.

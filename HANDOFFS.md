@@ -123,19 +123,66 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S515
 date: 2026-08-10
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Issue #150 Slice 1 (obfuscatePed() linkedDateShift fix + .buildDeidentificationManifest()
-helper), per docs/planning/issue150-deidentified-pedigree-export-plan.md Section 5 Slice 1. Session
-claimed, work beginning.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: Issue #150 Slice 1 (obfuscatePed() linkedDateShift + .buildDeidentificationManifest())
+is DONE. Issue #150 stays open -- Slice 2 (full UI module, confirm gate, exports, documentation) is
+the next pickup, a separate future session.
+what_was_done: obfuscatePed() gained linkedDateShift = TRUE (default): draws one runif() offset per
+row, applies it via ddays() to every Date column for that row, closing the S514 negative-age defect
+by construction (invariant gaps, proven by an invariance test, not a bounds test).
+linkedDateShift = FALSE preserves the exact old per-column behavior. New R/modDeidentifiedExport.R:
+.buildDeidentificationManifest(pedRows, size, maxDelta, linkedDateShift, warningText), mirroring
+.buildCrossCenterMergeProvenance()'s shape. Full strict TDD PRE-RED->RED->GREEN->REFACTOR cycle,
+each transition AskUserQuestion-gated (REFACTOR: no candidate, owner-confirmed). Found and fixed a
+genuine order-dependence bug in this session's own RED tests (base set.seed() vs. this package's
+set_seed() RNGkind mutation, Learning 516) via direct experiment, not guesswork. Verified: full
+clean regression 0 failed/0 error (5186 passed, 15 pre-existing warnings unchanged);
+devtools::check() 0 errors/0 warnings/1 pre-existing NOTE (confirmed via git stash -u
+before/after); lintr::lint_package() 0 lints. NEWS.Rmd/NEWS.md entry done (diff-clean,
+insertion-only). BACKLOG.md: reconstructed S514's own missing Progress note (flagged as a
+reconstruction) plus this session's own S515 note. Commits: b9147d30 (claim), plus this close-out
+commit.
+next_steps: Slice 2 of docs/planning/issue150-deidentified-pedigree-export-plan.md -- full UI
+module. New R/modDeidentifiedExport.R gains modDeidentifiedExportUI/modDeidentifiedExportServer
+(the file already holds .buildDeidentificationManifest() from this session); R/appUI.R gets a new
+"De-Identified Export" tab mounted immediately after "Cross-Center Identity" (D10); R/appServer.R
+gets modDeidentifiedExportServer("deidentifiedExport", pedigree = reactive(shared$currentPedigree))
+(D1 -- NOT a fresh upload, unlike modCrossCenterIdentity's exception shape); new
+tests/testthat/test_modDeidentifiedExport.R module tests (this session's file already holds the 2
+helper tests -- add to it, do not create a second file); add to test_moduleContract.R;
+_pkgdown.yml reference coverage for the 2 new exported UI/Server functions; NEWS.Rmd; a new section
+in vignettes/articles/colony-manager-guide.qmd (Session 436 tutorial checklist -- new Shiny tab);
+live shinytest2/chromote smoke test (Phase 3E, mandatory this time -- Slice 1 had none since it
+shipped no UI); gh issue close 150 at this slice's own close-out. Start from the plan's own §4
+interface catalog and §5 Slice 2 files-to-touch/DONE criteria. R/modCrossCenterIdentity.R is the
+UI shape to mirror (Confirm->Export modal-gate pattern) -- but its Upload->Validate stage does NOT
+apply (#150 has no upload, sec 2.2/2.5).
+key_files: docs/planning/issue150-deidentified-pedigree-export-plan.md (sec 4 interface catalog,
+sec 5 Slice 2 file list/DONE criteria, sec 7 Dragon 4 -- Preview tab must disclose recomputed ages
+are not the original recorded values); R/modDeidentifiedExport.R (Slice 2's edit target -- append
+UI/Server functions below the existing .buildDeidentificationManifest() helper, do not create a
+second file); R/modCrossCenterIdentity.R (the Confirm->Export modal-gate UI shape to mirror,
+excluding its Upload->Validate stage); R/appServer.R:307 (shared$currentPedigree population point
+-- confirms D1's data source), R/appUI.R (tab-mount convention, sec 2.8).
+gotchas: (1) Any new RNG-seeded test in this suite MUST use this package's own set_seed() (R/set_seed.R),
+never base set.seed() -- set_seed() permanently mutates RNGkind(sample.kind = "Rounding") for the
+rest of the testthat session, so a bare set.seed() silently inherits whatever RNGkind an
+earlier-run test file left behind and can pass in isolation while failing (or worse, silently
+asserting the wrong thing) inside the full test_dir() run, depending on file execution order
+(Learning 516). (2) git stash alone does NOT stash untracked new files -- a before/after
+devtools::check() baseline comparison needs git stash -u, or leftover new files (like this
+session's own R/modDeidentifiedExport.R) contaminate the "baseline" run and produce a false
+error/note delta. (3) D5 ("keep the id map local") is satisfied by construction (Shiny's
+downloadHandler() delivery mechanics) -- Slice 2 needs distinct labeling
+(reidentification_key_DO_NOT_SHARE_<date>.csv) and a separate confirmation click, not new
+infrastructure. Do not over-build this.
+runtime_smoke: n/a -- docs-only-adjacent (script-callable function level only, no Shiny UI/runtime
+wiring changed this slice; the module ships in Slice 2, where a live smoke test is mandatory).
+changelog_ref: [issue #150] entry, this session's close-out commit.
+commit: pending -- reconciled by the next session's Phase 0, per this receipt's own documented
+write-time constraint (the receipt ships in the very commit whose sha it would name).
 ```
 
 ```handoff

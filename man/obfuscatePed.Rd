@@ -9,7 +9,8 @@ obfuscatePed(
   size = 6L,
   maxDelta = 30L,
   existingIds = character(0L),
-  map = FALSE
+  map = FALSE,
+  linkedDateShift = TRUE
 )
 }
 \arguments{
@@ -25,6 +26,17 @@ the birthdate can be shifted}
 \item{map}{logical if \code{TRUE} a list object is returned with the new
 pedigree and a named character vector with the names being the original IDs
 and the values being the new alias values. Defaults to \code{FALSE}.}
+
+\item{linkedDateShift}{logical, defaults to \code{TRUE}. When \code{TRUE},
+every Date column of one individual is shifted by the same, single random
+offset (drawn once per individual), so the gaps between an individual's
+own dates (e.g. \code{birth}, \code{exit}, \code{death}) are preserved
+exactly -- avoiding a defect where independently-shifted date columns can
+invert an individual's recorded date order (e.g. an obfuscated \code{exit}
+preceding an obfuscated \code{birth}), producing a negative recomputed
+\code{age} (issue #150 D3). When \code{FALSE}, each Date column is shifted
+independently via \code{\link{obfuscateDate}} (the original, pre-#150
+behavior).}
 }
 \value{
 An obfuscated pedigree

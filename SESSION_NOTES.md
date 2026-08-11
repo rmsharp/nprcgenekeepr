@@ -6,16 +6,113 @@
 
 ## ACTIVE TASK
 
+### Session 514 Handoff Evaluation (by Session 515)
+**Score: 8/10.** **What helped:** the `HANDOFFS.md` S514 receipt's `next_steps` field named the
+exact Slice 1 work item-for-item -- `R/obfuscatePed.R` gains `linkedDateShift` (default `TRUE`,
+D3), a new `.buildDeidentificationManifest()` helper in a new `R/modDeidentifiedExport.R` (D4),
+full strict-TDD cycle, starting from the plan's own §4/§5 -- all of which this session did, in
+that order. `key_files` pointed directly at `R/obfuscatePed.R` (with an explicit warning not to
+change its existing id/name-scrub behavior, correctly heeded) and `R/calcAge.R` (the downstream
+function that turns a birth>exit inversion into a negative age, read alongside the fix as
+instructed). Gotcha (1) -- "a naive per-column `obfuscateDate()` call even with a fixed seed does
+NOT fix the defect... the fix must draw exactly ONE random value per individual... write the RED
+test as an invariance assertion, not a bounds assertion" -- was exactly correct and directly shaped
+both this session's implementation (one `runif()` draw per row, not per column) and its RED tests
+(gap-invariance, not just `age >= 0`). **What was missing:** the receipt could not have anticipated
+this session's own genuine new finding -- a bare `set.seed()` in a new test is silently
+order-dependent in this suite because this package's own `set_seed()` helper permanently mutates
+`RNGkind()` for the rest of the `testthat` session (Learning 516) -- since that risk is inherent to
+authoring any new RNG-seeded test in isolation, not something visible from reading the plan alone;
+not counted against the predecessor. **What was wrong:** not in the receipt's own fields, but in
+the underlying close-out action -- S514's session did not append a `BACKLOG.md` "Progress" note for
+its design/ratification work, unlike every other design-session precedent in this exact cluster
+(S495/S503/S511, `BACKLOG.md:1805,1836,2003`). Flagged and reconstructed retroactively by this
+session (`BACKLOG.md`, marked as a reconstruction, not silently backfilled as if S514 wrote it) --
+not fixed as a correction, since S514 already closed out; see `PROJECT_LEARNINGS.md` Learning 516's
+sibling note in `BACKLOG.md`. **ROI:** High -- the accurate `next_steps`/`key_files`/`gotchas`
+mapped almost 1:1 onto this session's actual implementation, at zero cost to verify.
+
 ### What Session 515 Did
-**Deliverable:** Issue #150 Slice 1 -- `obfuscatePed()` `linkedDateShift` parameter (fixes the
-independent-per-column date-shift defect found S514) + new `.buildDeidentificationManifest()`
-helper, per `docs/planning/issue150-deidentified-pedigree-export-plan.md` Section 5 Slice 1. (IN
-PROGRESS)
-**Started:** 2026-08-10.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Issue #150 Slice 1 -- `obfuscatePed()` gained a `linkedDateShift` parameter
+(default `TRUE`, closing the S514-found independent-per-column date-shift defect) + a new internal
+`.buildDeidentificationManifest()` helper, per
+`docs/planning/issue150-deidentified-pedigree-export-plan.md` §5 Slice 1, following
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`, inside this project's Strict TDD contract
+(RED->GREEN->REFACTOR, each transition `AskUserQuestion`-gated). Picked from this session's own
+Phase 0 priorities list (owner choice via `AskUserQuestion`, over a `SESSION_NOTES.md`/`BACKLOG.md`
+ledger-size scoping session).
+**Started/Completed:** 2026-08-10.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue
+list`, git status/log, `methodology_dashboard.py` -- health 96/100, 1 HIGH risk: ledger-size, now
+flagged 6 consecutive sessions). Ledger reconcile clean (`CHANGELOG.md`/`HANDOFFS.md` frontiers
+already at `HEAD`). Rendered the priorities list via `AskUserQuestion`; owner picked issue #150
+Slice 1. **(2)** Phase 1B claim stub committed (`b9147d30`). **(3)** PRE-RED research: re-read
+`R/obfuscatePed.R`, `R/obfuscateDate.R`, `R/calcAge.R`, `tests/testthat/test_obfuscatePed.R` against
+current source (no drift from the plan), confirmed 4 Date columns exist in the `pedSix` fixture
+(genuinely N-column, not just birth/exit), reproduced the exact S514 negative-age defect live
+(`set.seed(42)`, `pedGood`, ids `FBCVBJ`/`E7I3LU`), read `.buildCrossCenterMergeProvenance()`
+(`R/modCrossCenterIdentity.R:67-86`) as the manifest-helper shape to mirror, and read
+`DEVELOPMENT_WORKSTREAM.md`. **(4)** PRE-RED->RED gate (`AskUserQuestion`): approved. Added 3
+`test_that` blocks to `test_obfuscatePed.R` (linkedDateShift=TRUE explicit; the ratified TRUE
+default, omitted; linkedDateShift=FALSE still reproduces the old bug) and a new
+`tests/testthat/test_modDeidentifiedExport.R` (2 blocks) for
+`.buildDeidentificationManifest(pedRows, size, maxDelta, linkedDateShift, warningText)`. Confirmed
+genuine RED (unused-argument / could-not-find-function errors, not setup typos). **(5)** RED->GREEN
+gate (`AskUserQuestion`): approved. `R/obfuscatePed.R`: `linkedDateShift = TRUE` draws one
+`runif()` offset per row and adds it via `ddays()` to every Date column for that row (preserves
+gaps by construction; the floor is trivially satisfied since the offset is within
+`[-maxDelta,+maxDelta]`); `FALSE` keeps the exact old per-column loop. New
+`R/modDeidentifiedExport.R`: `.buildDeidentificationManifest()`, mirroring
+`.buildCrossCenterMergeProvenance()`'s shape exactly. Targeted tests passed immediately, but the
+full clean regression read surfaced a genuine order-dependence bug in this session's OWN new tests
+(not the production code): a bare `set.seed(42)` inherited a `RNGkind()` mutation left behind by an
+earlier-run test file (`test_obfuscateId.R` calling this package's own `set_seed()`, which
+permanently sets `sample.kind = "Rounding"` for the rest of the session) -- diagnosed by direct
+experiment (not assumed), fixed by switching to `set_seed(3L)` (this project's own R-version-
+agnostic RNG helper, matching every other test file's convention) and re-deriving a seed that
+reproduces the defect deterministically under that `RNGkind`, verified order-independent via a
+deliberate RNG-perturb-then-rerun check. Full clean regression re-run: 0 failed/0 error, 15
+pre-existing warnings unchanged, 5186 passed (was 5172 baseline). `devtools::check()`: 0 errors/0
+warnings/1 pre-existing NOTE (`a2interactive.Rmd` vignette-engine NOTE, confirmed unrelated via a
+`git stash -u` -- not a bare `git stash`, which does not stash untracked new files and gave a false
+1-error baseline on the first attempt -- before/after comparison). `lintr::lint_package()`: 0 lints
+package-wide. `devtools::document()`: only `man/obfuscatePed.Rd` changed (no NAMESPACE change --
+`ddays`/`runif` already imported elsewhere). **(6)** GREEN->REFACTOR gate (`AskUserQuestion`):
+owner confirmed no refactor candidate identified (code already minimal, mirrors precedent exactly)
+-- proceeded straight to close-out. **(7)** `NEWS.Rmd` entry added and rendered to `NEWS.md`
+(diff-confirmed clean, insertion-only). No `_pkgdown.yml` change needed (`.buildDeidentificationManifest`
+is `@noRd`; `obfuscatePed` already listed). Phase 3E runtime smoke test: **n/a** -- Slice 1 is
+script-callable-function-level only, no Shiny UI/runtime wiring touched (the module ships in Slice
+2); stated explicitly, not silently skipped. **(8)** This evaluation, self-assessment below,
+`PROJECT_LEARNINGS.md` Learning 516, a reconstructed S514 `BACKLOG.md` progress note (flagged as
+reconstructed, not fabricated-as-original) plus this session's own S515 progress note,
+`CHANGELOG.md` `[issue #150]` entry, `HANDOFFS.md` receipt completed.
+
+**Self-assessment (Session 515): 9/10.** **Strengths:** (1) Diagnosed a genuine, previously-unseen
+order-dependence bug in my own new tests via direct experiment (isolating the RNG state, testing
+under both `RNGkind`s, confirming order-independence after the fix with a deliberate perturbation)
+rather than just re-picking a different seed and hoping -- root-caused to this project's own
+`set_seed()` convention, not patched around blindly. (2) Caught a false "1 error" baseline during
+the `devtools::check()` before/after comparison caused by `git stash` (no `-u`) leaving my new
+untracked files in place against reverted tracked files -- diagnosed and corrected to `git stash
+-u` before trusting the baseline, rather than reporting a spurious pre-existing error. (3) Wrote the
+RED tests as invariance assertions (`exit - birth` gap unchanged), not just bounds assertions (`age
+>= 0`), per the plan's own Dragon 2 guidance -- the stronger, correct claim. (4) Found and flagged
+(without silently fixing or silently ignoring) S514's own missing `BACKLOG.md` progress note,
+reconstructing it clearly labeled as a reconstruction rather than passing it off as original.
+**Weaknesses:** (1) The first RED-test draft used base `set.seed()` instead of this project's own
+`set_seed()` convention, despite `set_seed()` being visibly used throughout the very test files
+adjacent to the one being edited (`test_obfuscateId.R` is 2 files away alphabetically) -- a closer
+read of neighboring test-file conventions during PRE-RED could have caught this before it reached
+GREEN instead of during the full-regression check. (2) `SESSION_NOTES.md`/`BACKLOG.md` size crisis
+(flagged S509-S514, now a 7th consecutive session) remains unaddressed -- correct protocol (owner
+picked issue #150 Slice 1 over it), but this session's own additions grow both files further still.
+
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session), `[issue #150]` tag. Issue #150
+stays open (Slice 2 -- full UI module, confirm gate, exports, documentation -- is a separate future
+session) -- no `gh issue close` this session.
 
 ### Session 513 Handoff Evaluation (by Session 514)
 **Score: 8/10.** **What helped:** the `HANDOFFS.md` S513 receipt's `next_steps` field named the 3

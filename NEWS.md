@@ -299,6 +299,17 @@ R. Mark Sharp, Ph.D.
   `modMarkerGeneticsServer()`'s own `markerKinshipMatrix` value was
   computed but never read by any caller until now (a one-line, additive
   capture at its existing call site).
+- `obfuscatePed()` gained a **linkedDateShift** argument (issue \#150,
+  Slice 1), defaulting to `TRUE`: every Date column of one individual
+  (e.g. `birth`/`exit`/`death`) is now shifted by the same, single
+  random offset, preserving that individual's inter-date gaps exactly.
+  The previous behavior -- each Date column shifted independently --
+  could invert an individual's recorded date order (e.g. an obfuscated
+  `exit` preceding an obfuscated `birth`), producing a negative
+  recomputed `age`; the old behavior is still available via
+  `linkedDateShift = FALSE` for any caller that needs it. Ships ahead of
+  a future de-identified pedigree export workflow (Slice 2) that depends
+  on this fix.
 
 # nprcgenekeepr 2.0.0 (20260708)
 
