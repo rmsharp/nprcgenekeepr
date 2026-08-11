@@ -121,6 +121,37 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-10.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S521b (ad hoc, reconciled)
+date: 2026-08-11
+status: reconciled
+self_score: n/a -- reconstructed, not self-scored
+predecessor_score: n/a
+active_task: Out-of-band manual fix: corrected .Rbuildignore and vignette engine in a2interactive.Rmd. No code changed.
+what_was_done: .Rbuildignore given 3 new ignore patterns (FRAMEWORK_LEARNINGS.md, methodolog_trim.py
+-- note: missing the "y", likely does not match the real methodology_trim.py filename --,
+__pycache__). vignettes/a2interactive.Rmd's vignette: YAML engine directive changed from
+knitr::rmarkdown_notangle to knitr::knitr and reformatted to a block scalar. Commit: 79f37e18.
+next_steps: n/a -- this was a standalone out-of-band fix, not a session with planned follow-on work.
+A future session should confirm whether the "methodolog_trim.py" .Rbuildignore pattern was intended
+to match methodology_trim.py (missing "y") and fix the typo if so.
+key_files: .Rbuildignore (+3 lines), vignettes/a2interactive.Rmd (vignette: YAML block, 6 lines
+changed).
+gotchas: This was a small out-of-band manual commit, not a full numbered session -- no
+SESSION_NOTES.md stub or Phase 1B claim was written for it, and no HANDOFFS.md receipt existed until
+this Phase 0 reconcile backfilled one. The CHANGELOG.md ledger WAS behind (this reconcile also
+backfilled a same-day [ad hoc] entry there). The .Rbuildignore typo (methodolog_trim.py) noted above
+is unverified -- worth a quick check, not yet confirmed broken.
+runtime_smoke: n/a -- docs/build-config only, no runtime behavior changed.
+changelog_ref: CHANGELOG.md 2026-08-11 [ad hoc] "Backfilled (reconcile-on-read): undocumented commit
+79f37e18" entry (Session 522 reconcile)
+commit: 79f37e18
+```
+Block reconstructed by Session 522's Phase 0 reconcile-on-read from `git log` alone (the commit's own
+message and diff), per `SESSION_RUNNER.md` Phase 0 step 6 / the HANDOFFS.md reconcile mechanics. The
+commit was an out-of-band manual docs/build-config edit, not a full session with a Phase 1B stub --
+so status is `reconciled`, not `complete`, and there is no self-score to report.
+
+```handoff
 session: S521
 date: 2026-08-11
 status: complete

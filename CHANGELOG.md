@@ -135,6 +135,18 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-08-11.md.verify.sh`](docs/archive/CHANGELOG-through-2026-08-11.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-08-11 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit 79f37e18 — corrected .Rbuildignore and vignette engine in a2interactive.Rmd
+- **Provenance:** out-of-band commit `79f37e18` (2026-08-11 17:37:14, author R. Mark Sharp), landed 7
+  minutes after S521's own close-out commit `7ab01312` (17:30:38) with no Phase 1B claim stub, no
+  `SESSION_NOTES.md` entry, and no `HANDOFFS.md` receipt — found by Session 522's Phase 0 reconcile
+  (`CHANGELOG.md`/`HANDOFFS.md` frontiers both at `7ab01312`, one-commit gap to `HEAD`).
+- **What it did:** `.Rbuildignore` — added 3 new ignore patterns (`FRAMEWORK_LEARNINGS.md`,
+  `methodolog_trim.py` — note: missing the "y" in "methodology", likely a typo that will not match
+  the real `methodology_trim.py` filename — and `__pycache__`). `vignettes/a2interactive.Rmd` —
+  changed the `vignette:` YAML engine directive from `knitr::rmarkdown_notangle` to `knitr::knitr`
+  and reformatted it from a single escaped-newline string to a block scalar (`>`).
+- **Ledger:** this backfill entry only; no other action recorded for this commit.
+
 ### 2026-08-11 · [issue #153] S521 close-out: Slice 2 (multiallelic-tolerant ingestion validator) shipped (Session 521)
 - **Deliverable:** Issue #153 Slice 2, per `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md`
   §5 Slice 2 — new script-callable `checkLinkageMarkerGenotypeFile()`, a sibling to
