@@ -618,6 +618,73 @@ A **Statistics** sub-tab summarizes all formed groups at once. Groups
 and their kinship matrices can each be exported individually to a file
 and location you choose.
 
+### Mate Pair Analysis
+
+The **Mate Pair Analysis** tab (issue
+[\#151](https://github.com/rmsharp/nprcgenekeepr/issues/151)) is new
+since the original tutorial-era documentation. It answers a different
+question than the Breeding Groups tab: not “what multi-animal groups
+should be formed,” but “for a given, deliberately scoped population,
+which individual male/female pairs are even eligible to consider, and
+what do we know about each pair” – a curator-facing worksheet, kept
+structurally and file-wise separate from group formation.
+
+**Choosing a candidate population.** Unlike group formation, this tab
+requires an explicit population scope before it will compute anything –
+**All alive** (every animal with no recorded exit date), **Top ranked by
+genetic value** (the highest-ranked animals from a completed Genetic
+Value Analysis run), or a **Custom list** of pasted IDs. This is a
+deliberate, evidence-based design choice, not an arbitrary restriction:
+minimum age alone does not bound the candidate table on real colony
+data, because a missing recorded age *passes* the age screen rather than
+being excluded by it, and a large fraction of animals in a typical
+studbook have no recorded age at all. Scoping the population first keeps
+the resulting table both meaningful and responsive.
+
+Set the **Minimum breeding age** floor and, optionally, check **Exclude
+specific animals** to open a text area for animals that should never
+appear in a pair regardless of any other eligibility screen. Click
+**Find Eligible Pairs** to compute the result.
+
+![Mate Pair Analysis tab showing the configuration panel (candidate
+population, minimum age, exclude list, Find Eligible Pairs button)
+alongside a sortable Eligible Pairs table with columns for sire ID, dam
+ID, pedigree kinship, marker kinship, and per-parent genetic-value
+columns.](shiny_app_use/mate_pair_analysis_eligible_pairs.png)
+
+Mate Pair Analysis configuration panel and the Eligible Pairs table for
+a small example pedigree scoped to all alive animals.
+
+The **Eligible Pairs** table reports, for every opposite-sex pair
+surviving the population, age, and exclude-list screens: pedigree
+kinship, and – when a genotype file has already been uploaded on the
+Marker Genetics tab – marker-based kinship for that same pair, alongside
+each parent’s pedigree-based mean kinship and genome uniqueness (the
+same `indivMeanKin`/`gu` values shown on the Genetic Value Analysis
+tab). No single blended “compatibility score” is computed; sort or
+filter the raw columns directly, the same way every other ranked table
+in this application works. The table is sortable and filterable
+server-side, and its CSV export downloads exactly the rows currently
+visible after any filter – not the full, unfiltered table.
+
+A separate **Excluded** tab shows every pair the age or exclude-list
+screen dropped, together with its reason, so a curator can see *why* a
+pair is missing instead of it silently disappearing.
+
+![Mate Pair Analysis Excluded tab showing a table with sire ID, dam ID,
+and a reason column reading either 'under minimum age' or
+'user-excluded'.](shiny_app_use/mate_pair_analysis_excluded.png)
+
+The Excluded tab, showing pairs dropped for being under the minimum age
+or explicitly excluded.
+
+A demographically-eligible pair with very high kinship (e.g. full
+siblings) is not specially flagged or hidden by this tab – it appears in
+the Eligible Pairs table exactly like any other pair, with a high
+`kinship` value. That value *is* the signal a curator uses to avoid such
+a pairing; this tab surfaces the information rather than making the
+decision for them.
+
 ### Genetic Diversity
 
 The **Genetic Diversity** tab (issue
@@ -847,6 +914,56 @@ application. A curator who wants the merged result to drive genetic
 value, breeding-group, or diversity analysis re-uploads the exported
 “Merged Pedigree” file through the Input tab’s existing pedigree-file
 path.
+
+### De-Identified Export
+
+The **De-Identified Export** tab (issue
+[\#150](https://github.com/rmsharp/nprcgenekeepr/issues/150)) supports
+approved external data sharing: producing a relationship-preserving,
+de-identified copy of the pedigree already loaded in the current
+session, without a separate upload. It reuses the package’s existing,
+already-tested de-identification primitives
+([`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md),
+[`obfuscateDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateDate.md),
+[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md))
+rather than any new anonymization logic.
+
+The workflow has two steps:
+
+1.  **Configure & Preview.** Set the alias-id length, the maximum date
+    shift (in days), and whether each individual’s dates should shift
+    together (**linked**, the recommended default) or independently.
+    Linked shifting preserves an individual’s exact inter-date gaps
+    (e.g. birth-to-exit) – independent shifting can, on a short-lived
+    individual, invert that order and produce a negative recomputed age;
+    this is why linked shifting is the default, not merely an option.
+    Clicking **Generate Preview** shows the full de-identified output
+    before anything is exported, so a curator sees exactly what would
+    leave the building. Displayed ages are recomputed from the shifted
+    dates, not the original recorded values.
+2.  **Export.** Clicking **Confirm Export** opens a dialog carrying an
+    explicit institutional-responsibility disclaimer – this app’s first
+    – making clear that de-identification is not authorization:
+    confirming your institution’s data-sharing policies permit the
+    export and its intended recipient(s) remains the curator’s own
+    responsibility, not the tool’s. Once confirmed, three artifacts
+    become downloadable: the de-identified pedigree itself, a
+    transformation manifest (the parameters used, row count, and
+    timestamp – never the id map or any raw pre-obfuscation value, so it
+    is safe to attach as evidence of *how* an export was produced
+    without revealing *what* it replaced), and a distinctly labeled
+    **re-identification key** (“DO NOT SHARE”) mapping each alias back
+    to its original id. The key downloads as its own, separately labeled
+    file so it is never mistaken for a shareable artifact.
+
+Fields outside id, dam, sire, dates, and name (e.g. `origin`, `status`)
+pass through unchanged – disclosed in both the warning text and the
+manifest, not silently scrubbed, since scrubbing them was never part of
+this tool’s scope. As with Cross-Center Identity above,
+“curator-controlled” here means a confirmation dialog and warning text,
+not real access control: this package has no user-identity or role
+infrastructure to enforce authorization against, and inventing one was
+explicitly out of scope for this feature.
 
 ### Potential Parents
 

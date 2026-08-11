@@ -67,6 +67,9 @@
 <span>  sexRatio <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  withKin <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  maxCandidates <span class="op">=</span> <span class="fl">5L</span>,</span>
+<span>  exhaustive <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  maxExhaustiveCandidates <span class="op">=</span> <span class="fl">20L</span>,</span>
+<span>  exhaustiveTimeLimit <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  updateProgress <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -150,6 +153,30 @@ distinct candidate solutions to retain during the simulation (issue #146
 Slice 1). Default is 5.</p></dd>
 
 
+<dt id="arg-exhaustive">exhaustive<a class="anchor" aria-label="anchor" href="#arg-exhaustive"></a></dt>
+<dd><p>Logical. When <code>TRUE</code>, enumerate every maximal
+independent set of the conflict graph instead of random sampling (issue
+#146 Slice 2), subject to <code>maxExhaustiveCandidates</code>/
+<code>exhaustiveTimeLimit</code>. Only supported for <code>numGp = 1</code>,
+<code>harem = FALSE</code>, <code>sexRatio = 0</code> – any other combination
+<code><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop()</a></code>s with a message naming the specific unsupported condition,
+rather than silently falling back to sampling. Default is <code>FALSE</code>
+(the existing sampling behavior, unchanged).</p></dd>
+
+
+<dt id="arg-maxexhaustivecandidates">maxExhaustiveCandidates<a class="anchor" aria-label="anchor" href="#arg-maxexhaustivecandidates"></a></dt>
+<dd><p>Integer. Pre-flight feasibility ceiling
+for <code>exhaustive = TRUE</code>: a candidate pool larger than this
+<code><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop()</a></code>s before any enumeration runs. Default is 20.</p></dd>
+
+
+<dt id="arg-exhaustivetimelimit">exhaustiveTimeLimit<a class="anchor" aria-label="anchor" href="#arg-exhaustivetimelimit"></a></dt>
+<dd><p>Numeric. Wall-clock seconds allowed for
+<code>exhaustive = TRUE</code>'s search before it truncates gracefully
+(<code>exhaustive = FALSE</code> in the return value, not an error). Default
+is 10.</p></dd>
+
+
 <dt id="arg-updateprogress">updateProgress<a class="anchor" aria-label="anchor" href="#arg-updateprogress"></a></dt>
 <dd><p>Function or NULL. If this function is defined, it
 will be called during each iteration to update a
@@ -174,7 +201,14 @@ two trials with the same score but different membership both count as
 distinct candidates; two trials with identical membership count once.
 The list item <code>groupKin</code> contains the subset of the kinship matrix
 that is specific for each group formed in the best candidate (an alias for
-<code>candidates[[1]]$groupKin</code>).</p>
+<code>candidates[[1]]$groupKin</code>).
+When <code>exhaustive = TRUE</code> was requested (issue #146 Slice 2), three
+additional top-level items are present – absent entirely, not merely
+<code>NULL</code>, when <code>exhaustive = FALSE</code> (the default): <code>exhaustive</code>
+(logical, whether the search completed before its wall-clock deadline),
+<code>examined</code> (integer, the total number of distinct maximal
+independent sets found), and <code>retentionRule</code> (character, describing
+the top-<code>maxCandidates</code> cutoff actually applied to <code>candidates</code>).</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

@@ -806,6 +806,73 @@ NA-warning path as the 2 original cross-center tests. A future session
 fixing this item should address all 3 test blocks, not just the original
 2.
 
+**Fix the `methodology_trim.py` fence-scanner defect blocking
+`SESSION_NOTES.md`’s first archive** (found S518, 2026-08-11, READY,
+Effort S) – `SESSION_NOTES.md` now has a verified `LEDGERS` config entry
+(all 577 record-start headings checked for shape variance, zero found)
+but its archive was NOT run: a 4-backtick-delimited *inline code span*
+at `SESSION_NOTES.md:23229` (````` ```` ```{r}/```{R}```` `````
+\``-- a legitimate way to show literal triple-backtick text) starts a physical line, and the tool's simplified fence-scanner reads it as an unclosed *block*-fence opener, putting the remaining 17,040 of 40,269 lines (42%) into a false "inside a fence" state and hiding 349 of 513 real session-record headings from the partition. Confirmed via direct`fence_scan()`testing, not assumed. Two possible fixes: (a) rewrap the one offending paragraph so the 4-backtick sequence no longer opens a physical line (smaller, local, but edits frozen historical`SESSION_NOTES.md`content); (b) patch`methodology_trim.py`'s fence-scanning regex to distinguish an inline code span from a block fence opener (correct upstream fix, but a deeper edit to a canonical-overlay file than the config addition this session already made, and arguably belongs reported to the canonical methodology repo rather than patched locally). Re-run`python3
+methodology_trim.py –file
+SESSION_NOTES.md`after either fix and confirm the record count returns to ~513 (not 164) before trusting`–write`. See`CLAUDE.md\`
+Additional close-out checks.
+
+**`BACKLOG.md`’s own ledger-size housekeeping – editorial compression,
+not a `methodology_trim.py` config** (found S518, 2026-08-11, READY,
+Effort L) – `BACKLOG.md` itself is one of the dashboard’s 3-file
+HIGH-risk ledger-size items (2,181 lines, past the 2,000-line read cap)
+but does not fit `methodology_trim.py`’s chronological-record model: it
+has only 10 `##` sections (Active, Architecture follow-ups, Up Next,
+Housekeeping, Outreach, …), each a large *standing topical category*
+that accumulates resolved-item narrative indefinitely, not dated
+newest-on-top records – the tool’s always-retain-a-prefix/
+archive-the-suffix cut model would archive whichever section happens to
+sort last, not the oldest/safest content. The file’s own header already
+states the right remedy: “Open, actionable work only… for history see
+`CHANGELOG.md`” – a future session should review each section for
+fully-RESOLVED items whose long narrative write-up (some run 50+ lines,
+e.g. the LabKey integration item) can be compressed to a short pointer
+with full detail preserved in its existing `CHANGELOG.md` entry, rather
+than left in place verbatim. This is an editorial/judgment task (which
+items are truly safe to compress without losing something load-bearing),
+not a mechanical trim – budget it as its own session, not a quick pass.
+
+**`inst/WORDLIST` has a large, long-standing gap –
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)‘s
+spelling-check step fires a NOTE on every run\*\* (found S521,
+2026-08-11, READY, Effort M) – confirmed via direct verification, not
+assumed: temporarily removing this session’s own new files from the tree
+and re-running `spelling::spell_check_package(".", vignettes = TRUE)`
+still flagged **69 words** not in `inst/WORDLIST`, spanning many past
+sessions’ files (`NEWS.md`, `a2interactive.Rmd`,
+`_pedigree_browser.Rmd`, `_breeding_group_formation.Rmd`,
+`makePedigreeMatingLayout.Rd`, `checkLocusMetadata.Rd`, and more) –
+proper nouns/citation authors (Bakker, Ferreira, Maller, Neale, Okabe,
+Sklar), genetics vocabulary (chrom, cM, pos, dizygotic, monozygotic,
+sibship, zygosity-adjacent terms), and methodology/UI prose (handoff,
+walkthrough, onboarding, CLI, shas, subplan, browsable, discoverable,
+unshaded, waypoint, js, vis, and others). This session hand-added only
+the 2 words its own new `checkLinkageMarkerGenotypeFile.Rd` is
+responsible for (`validator`, `multiallelic`) – fixing the other 69 is a
+distinct, larger editorial task (verify each is a genuine false positive
+vs. an actual typo, per the S230/S421 hand-add convention, not
+[`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html))
+out of scope for a single implementation slice.
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+currently reports** 0 errors / 0 warnings / 3 NOTEs\*\* (this spelling
+NOTE plus the 2 already-known pre-existing NOTEs: top-level files,
+vignette-engine) – but S520’s own close-out reported only “1
+pre-existing note.” Confirmed via `git log` that S520 never touched any
+of the 69 flagged-word files, so the gap is not new since S520 – the
+likelier explanation, worth recording as its own finding:
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)’s
+abbreviated results table only lists a `❯` bullet for some
+NOTE-producing steps, and the “checking tests … NOTE” step (spelling.R’s
+diff-based check) does NOT get one – only the raw `Status: N NOTEs` line
+(above the table) counts it. A session that trusts only the `❯`-bullet
+table, as this session nearly did, silently undercounts. See
+`CHANGELOG.md` 2026-08-11.
+
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 
 *S435’s capability-comparison audit
@@ -2497,3 +2564,409 @@ per its own standing rule (new parameter on an already-documented
 function). **Issue \#146 stays open** – Slice 2 (exhaustive
 enumeration + UI) is the natural next pickup, its own future session per
 §5’s session-boundary requirement. See `CHANGELOG.md`.
+
+**Progress (S510, 2026-08-10):** Slice 2 (exhaustive enumeration mode +
+UI toggle) is now DONE:
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+gained `exhaustive`/`maxExhaustiveCandidates`/`exhaustiveTimeLimit`
+arguments; a new `.enumerateMaximalIndependentSets()` helper implements
+the ratified hand-rolled Bron-Kerbosch design (D4), scoped to
+`numGp=1`/no harem/no custom `sexRatio` (D2) with a two-layer
+feasibility guard (D5) and named-reason
+[`stop()`](https://rdrr.io/r/base/stop.html)s (D9);
+`groupMembersReturn()` gained the D7 `exhaustive`/
+`examined`/`retentionRule` fields, byte-identical-by-default for
+ordinary sampling calls. The Breeding Group Formation tab gained the
+D8-ratified **Exhaustive enumeration mode** checkbox (visible only when
+D2-eligible) and a status callout. Full strict TDD PRE-RED-\>RED-\>GREEN
+cycle. 11 new/extended test blocks across 4 files; full clean regression
+suite 0 failed/0 error (5081 passed, 175 skipped, 15 pre-existing
+baseline warnings unchanged); `lintr::lint_package()` 0 lints;
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings/2 pre-existing notes (unrelated to this session). Live
+`shinytest2`/`chromote` smoke test against the real running app
+confirmed the completed and hidden (D2-ineligible) cases with real,
+correctly-computed status text; the truncated case was not reproduced
+live (deadline not user-UI-configurable; already unit-tested), an
+explicit judgment call the ratified plan itself grants.
+`NEWS.Rmd`/`NEWS.md` updated;
+`vignettes/manual_components/_breeding_group_formation.Rmd` gained new
+coverage (text-only, satisfying the tutorial/article checklist’s
+“and/or” allowance). **Issue \#146 is now fully implemented across both
+slices; closed as part of this session’s close-out.** See
+`CHANGELOG.md`.
+
+**Progress (S511, 2026-08-10):** Tier 2 step 3 – issue \#151’s
+design/architecture document (individual mate-pair analysis alongside
+breeding-group optimization) is DONE and RATIFIED: see
+`docs/planning/issue151-individual-mate-pair-analysis-plan.md`. **All of
+Tier 1/Tier 2’s ready-to-build items (#147/#149/#146/#151) now have
+ratified designs** – \#151’s is the only one not yet implemented. Direct
+reads of every function in the relevant call graph (not summarized from
+memory) found the reusable pair-eligibility pipeline
+([`kinMatrix2LongForm()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinMatrix2LongForm.md)/[`filterPairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/filterPairs.md)/
+`filterAge()`/[`filterThreshold()`](https://github.com/rmsharp/nprcgenekeepr/reference/filterThreshold.md))
+already lives entirely outside `R/modBreedingGroups.R` – correcting the
+sequencing audit’s own “shared-file risk” flag for this item – and that
+[`modMarkerGeneticsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modMarkerGeneticsServer.md)
+already computes and returns a `markerKinshipMatrix` reactive that
+`R/appServer.R` currently discards, so “marker kinship where available”
+is a one-line capture, not new computation. An original empirical
+benchmark against the bundled `examplePedigree` (not derived from any
+prior document) found an unscoped candidate-pair reshape produces
+1,744,722 rows in 54.0s, and that `filterAge()`‘s NA-passes-the-filter
+semantics (81% of “alive” fixture individuals have no recorded age)
+means the age control alone cannot bound table size – directly grounding
+the design’s population-scope requirement. Also confirmed no continuous
+composite-score ranking precedent exists anywhere in the package
+([`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)’s
+own `orderReport()` is a rule-based tier classification, never a
+weighted formula), grounding the “raw sortable columns, not an invented
+score” recommendation. Owner ratified 3 judgment-call decisions
+(ranking, population-scope control, exclusion transparency) in a single
+`AskUserQuestion` round, selecting this document’s own recommended
+option in all 3 cases: raw sortable/filterable columns (no composite
+score); a required population-scope radio control (mirroring Breeding
+Groups’ own `animalSource` convention) applied before the pair-reshape,
+plus server-side `DT` paging; and a separate “Excluded” table with a
+`reason` column plus a user exclude-list textarea (mirroring Breeding
+Groups’ own “seed groups” convention). No code changed this session –
+design/planning only, matching the \#133/#136/#137/#145/#147/#149/#146
+precedent. **Next session in this cluster implements Slice 1** (the core
+[`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
+function, script-callable only); Slice 2 (UI + `appServer.R`
+marker-kinship wiring + documentation) is its own separate session per
+§5’s session-boundary requirement. Issue \#151 intentionally left open.
+See `CHANGELOG.md`.
+
+**Progress (S512, 2026-08-10):** Issue \#151 Slice 1 – the core
+[`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
+function (new, exported, script-callable only, no UI) – is DONE, per
+`docs/planning/issue151-individual-mate-pair-analysis-plan.md` §5
+Slice 1. Full strict TDD PRE-RED-\>RED-\>GREEN-\>REFACTOR cycle, each
+transition `AskUserQuestion`-gated. Composes the existing, unmodified
+pair-eligibility pipeline
+([`kinMatrix2LongForm()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinMatrix2LongForm.md)/[`filterPairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/filterPairs.md)/
+`filterAge()`/[`filterKinMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/filterKinMatrix.md))
+into opposite-sex, minimum-age-eligible mate pairs, each row carrying
+pedigree kinship plus `NA`-safe marker-kinship and per-parent
+genetic-value context; a closed-vocabulary `excluded` frame reports why
+a pair was dropped (“under minimum age” or “user-excluded”). 8 new
+`test_that` blocks / 37 expectations in
+`tests/testthat/test_reportMatePairs.R`, including a regression test
+directly reproducing the ratified plan’s own Dragon \#1 (`filterAge()`’s
+NA-passes semantics means `minAge` alone cannot bound table size; the
+`populationIds` D4 control is what actually does). Full clean regression
+suite 0 failed/0 error (5118 passed, 15 pre-existing baseline warnings
+confirmed unchanged via `git stash -u` before/after);
+`lintr::lint_package()` 0 lints;
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings/1 pre-existing note (unrelated). Fixed 2 real gaps
+found during verification: the `_pkgdown.yml` reference-coverage guard,
+and a
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+Rd cross-reference warning (a `\link{}` to `filterAge()`, a `@noRd`
+internal function with no `.Rd` page). `NEWS.Rmd`/`NEWS.md` updated (new
+exported function checklist). **Issue \#151 stays open – Slice 2**
+(`R/modMatePair.R` UI, the D6 `appServer.R` marker-kinship capture,
+`appUI.R` tab mount, tutorial/article documentation, live `shinytest2`
+smoke test, `gh issue close 151`) **is the next and final planned
+slice**, a separate future session per the plan’s own session-boundary
+requirement. See `CHANGELOG.md`.
+
+**Progress (S513, 2026-08-10) – Issue \#151 fully shipped, closed:**
+Slice 2 – the new “Mate Pair Analysis” tab (`R/modMatePair.R`), the D6
+`appServer.R` marker-kinship capture
+([`modMarkerGeneticsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modMarkerGeneticsServer.md)’s
+previously-discarded `markerKinshipMatrix` return now reaches the new
+module), `appUI.R` tab mount, and documentation – is DONE, per
+`docs/planning/issue151-individual-mate-pair-analysis-plan.md` §5 Slice
+2, closing out the plan in full. Full strict TDD
+PRE-RED-\>RED-\>GREEN-\>REFACTOR cycle, each transition
+`AskUserQuestion`-gated. Along the way, found and fixed a genuine
+pre-existing bug in Slice 1’s own `R/reportMatePairs.R` (bare scalar
+column assignment crashed when the age filter alone reduced the
+candidate table to exactly 0 rows – fixed with its own regression test,
+surfaced to the owner first since it was outside the approved GREEN
+scope) and 2 guard-test regressions only a full regression read surfaces
+(`_pkgdown.yml` reference coverage; `shinytest2.yaml` E2E group-regex
+coverage). Full clean regression 0 failed/0 error (5172 passed, 15
+pre-existing warnings unchanged);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings/1 pre-existing note; `lintr` 0 lints on touched files.
+A **live E2E smoke test** (new, opt-in
+`tests/testthat/test-e2e-mate-pair-analysis-module.R`) ran against the
+real app: 8/8 assertions passed, including live proof of the D6 wiring
+(a real, non-`NA` marker-kinship value reaching the new tab) and
+confirmation Marker Genetics itself still renders correctly post-change.
+`NEWS.Rmd`/`NEWS.md`, a new “Mate Pair Analysis” section in
+`vignettes/articles/colony-manager-guide.qmd` with 2 new live-captured
+screenshots, and `_pkgdown.yml` reference coverage all done
+same-session. **Issue \#151 closed.** See `CHANGELOG.md`,
+`PROJECT_LEARNINGS.md` Learnings 513-514.
+
+**This cluster (issue \#151, all slices) is now fully complete.** No
+further items remain in this narrative.
+
+**Progress (S514, 2026-08-10):** Tier 3 (policy-gated quick win) – issue
+\#150’s own owner policy decision and design/architecture document
+(de-identified pedigree export workflow for approved data sharing) – is
+DONE and RATIFIED: see
+`docs/planning/issue150-deidentified-pedigree-export-plan.md`. Put the
+sequencing audit’s own Finding \#3 policy question to the owner via
+`AskUserQuestion` before any technical research (its own recommendation,
+verbatim); owner answered yes, formalize it. Found and empirically
+verified (seeded `Rscript` against the bundled `pedGood` fixture, 25%
+hit rate) a real, previously-unflagged defect:
+[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+shifts each Date column independently, which can invert an individual’s
+birth/exit order and produce a negative recomputed age. Ten design
+decisions (D1-D10); four genuine judgment calls (fix the date defect now
+via a new `linkedDateShift` parameter defaulting `TRUE`; explicit
+institutional-responsibility warning text; disclose rather than scrub
+non-id/date fields; tab placement after Cross-Center Identity) ratified
+via a single `AskUserQuestion` round – owner selected the recommended
+option in all four. Implementation plan is 2 vertical slices (core
+function work; full UI module + documentation), each its own future
+session. No code changed this session – design/planning only, matching
+the \#133/#136/#137/#145/#146/#147/#149/#151 precedent. Issue \#150
+stays intentionally open. See `CHANGELOG.md`. *(Note: this progress note
+was written retroactively by S515, reconstructed from
+`CHANGELOG.md`/`HANDOFFS.md` – S514’s own close-out did not append one
+here, unlike every other design-session precedent in this cluster,
+S495/S503/S511. Flagged, not silently skipped; see
+`PROJECT_LEARNINGS.md` Learning 516.)*
+
+**Progress (S515, 2026-08-10):** Slice 1 (core function work, R-function
+level only, no UI) is now DONE:
+[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+gained a `linkedDateShift` parameter (default `TRUE`, D3) that draws
+exactly one random offset per individual and applies it to every Date
+column for that row, closing the S514 negative-age defect while
+preserving each individual’s exact inter-date gaps (proven by an
+invariance assertion, not just a bounds check);
+`linkedDateShift = FALSE` reproduces the old independent-per- column
+behavior for any caller that needs it. New internal
+`.buildDeidentificationManifest()` helper (`R/modDeidentifiedExport.R`,
+D4) mirrors `.buildCrossCenterMergeProvenance()`’s shape. Full strict
+TDD PRE-RED-\>RED-\>GREEN-\>REFACTOR cycle (REFACTOR: owner-confirmed no
+candidate identified), each transition `AskUserQuestion`-gated. Along
+the way, found and fixed a genuine order-dependence defect in this
+session’s own RED tests: a bare
+[`set.seed()`](https://rdrr.io/r/base/Random.html) call is silently
+order-dependent in this test suite because this package’s own
+[`set_seed()`](https://github.com/rmsharp/nprcgenekeepr/reference/set_seed.md)
+helper (used throughout for cross-R-version RNG parity) permanently
+changes `RNGkind(sample.kind = "Rounding")` for the rest of the testthat
+session – switched to
+[`set_seed()`](https://github.com/rmsharp/nprcgenekeepr/reference/set_seed.md),
+matching every other test file’s convention, and re-derived a seed that
+reproduces the defect deterministically under that RNGkind regardless of
+run order (verified via a perturb-then-rerun check, not assumed). Full
+clean regression 0 failed/0 error (5186 passed, 15 pre-existing warnings
+unchanged);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings/1 pre-existing note (confirmed unrelated via a
+`git stash -u` baseline check); `lintr::lint_package()` 0 lints on
+touched files. `NEWS.Rmd`/`NEWS.md` entry done. **Slice 2 (full UI
+module, confirm gate, exports, documentation) is the natural next pickup
+for this issue** – a separate future session, per the plan’s own
+session-boundary requirement. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
+Learning 516.
+
+**Progress (S516, 2026-08-10) – Issue \#150 fully shipped, closed:**
+Slice 2 (full UI module, confirm gate, exports, documentation) is now
+DONE, closing out the plan in full. New **De-Identified Export** Shiny
+module (`R/modDeidentifiedExport.R`):
+`modDeidentifiedExportUI`/`modDeidentifiedExportServer` (D1: reads
+`shared$currentPedigree`, no fresh upload) – Configure & Preview tab
+(config controls, live preview, static D6 warning text) plus an Export
+tab gated by a `modalDialog()` confirm (mirrors
+`modCrossCenterIdentityServer`’s own shape) with 3 downloads
+(de-identified pedigree, D4 manifest, D5 “DO NOT SHARE”
+re-identification key). Two forced correctness requirements found at
+Pre-RED (same category as the plan’s own D1/D2/D4/D5/D7/D9, not owner
+judgment calls): the manifest snapshots the exact params used at
+Generate-Preview time rather than re-reading live input state (prevents
+a curator’s post-preview slider tweak from producing a manifest that
+describes different params than what was actually exported);
+regenerating the preview resets `confirmed` to `FALSE` (mirrors \#149’s
+own D5 stale-confirmation-reset pattern). Downloads are not hard-gated
+on `confirmed`, matching Cross- Center Identity’s own precedent exactly
+(this issue’s own ratified framing: a confirmation dialog and warning
+text, not real access control). Wired into `appUI.R`/`appServer.R` (D10
+tab placement after Cross-Center Identity). Full strict TDD
+PRE-RED-\>RED-\>GREEN-\>REFACTOR cycle, each transition
+`AskUserQuestion`-gated; REFACTOR: no candidate identified. 16 new test
+blocks, 0 regressions. Full clean regression 0 failed/0 error (5233
+passed, was 5186, 15 pre-existing warnings unchanged);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings/1 pre-existing NOTE (confirmed byte-identical to
+unmodified `HEAD` via `git stash -u` before/after – including the
+raw-log spelling-diff NOTE, a pre-existing environment quirk);
+`lintr::lint_package()` 0 lints on touched files (fixed 3 style lints);
+`_pkgdown.yml` reference-coverage gap caught live by its own guard test,
+fixed. **Live smoke test** (ad hoc script, no permanent E2E file added,
+matching the \#149 precedent) drove the real running app end to end –
+Input -\> De-Identified Export -\> Generate Preview -\> Confirm Export
+modal -\> Export tab – 0 console errors; a first unscoped
+`a[data-value='Export']` click selector warned of multiple matches
+(Cross-Center Identity also has an “Export” tab) and was fixed to a
+module-scoped selector before trusting the result. `NEWS.Rmd`/`NEWS.md`
+and a new “De-Identified Export” `colony-manager- guide.qmd` subsection
+(text-only, matching Cross-Center Identity’s own no-screenshot
+convention) done same-session, re-rendered clean. `a2interactive.Rmd`
+deferred per its own standing rule. **Both slices of issue \#150 are now
+shipped; issue \#150 closed** as part of this session’s close-out. See
+`CHANGELOG.md`.
+
+**This cluster (issue \#150, all slices) is now fully complete.** No
+further items remain in this narrative.
+
+**Progress (S519, 2026-08-11):** the Deferred/scientific tier’s second
+item – issue \#153’s own design/architecture document (linkage-aware and
+haplotype-block metrics for marker data) – is DONE and RATIFIED: see
+`docs/planning/issue153-linkage-haplotype-block-metrics-plan.md`. Two
+parallel background research agents (codebase inventory: confirmed no
+marker function treats loci as ordered/positioned, and confirmed
+[`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)
+hard-rejects multiallelic loci; domain research: locus-order metadata
+realism, rhesus genetic-map resources, classical LD/ haplotype-block
+methods, CRAN package survey, recombination-aware kinship literature,
+coverage-reporting precedent, privacy implications) plus direct
+re-verification of the two most load-bearing findings
+(`R/checkMarkerGenotypeFile.R:68-78`‘s biallelic-only rejection; \#152’s
+D3/D4 decisions verbatim). Central findings: a directly-sourced real
+captive-macaque-colony STR panel (de Groot et al. 2025, 23
+microsatellite markers) has essentially no cM genetic-map data and is
+multiallelic – both facts collide with this package’s current
+assumptions (loci currently unordered/unpositioned everywhere; ingestion
+hard-rejects \>2-allele loci); every classical LD/ haplotype-block
+method assumes an unrelated/randomly-mating sample, which a pedigreed
+colony violates (Excoffier & Slatkin 1998), while the one genuinely
+pedigree-native method (Lander-Green multipoint IBD / MERLIN) isn’t
+CRAN-available; haplotype/block-level exports are MORE re-identifying
+than single-locus data, not less (Lin, Owen & Altman 2004; Erlich &
+Narayanan 2014). Nine design decisions (D1-D9); four genuine judgment
+calls (D3 metric choice, D4 multiallelic ingestion, D5 module boundary,
+D8 CRAN-vs-hand-roll) ratified via a single `AskUserQuestion` round –
+owner selected this document’s own recommended option in all four: build
+both a pedigree-valid primary metric (Hill & Weir 2011-style
+realized-relatedness variance) and a caveated descriptive secondary
+metric (pairwise D’/r², same-chromosome pairs only); add a new
+multiallelic-tolerant sibling ingestion validator rather than reuse the
+existing biallelic-only path; a new tab inside the existing
+`modMarkerGenetics.R`, not a dedicated new module; hand-roll the D’/r²
+computation in base R rather than add a CRAN dependency. Scoped as 5
+future vertical slices (locus-metadata ingestion + STR fixture;
+multiallelic-tolerant ingestion path; the realized-relatedness-variance
+metric, requiring its own literature deep-dive first; the descriptive LD
+statistic + de-identification primitive; full module tab +
+documentation), each its own future session. No code changed this
+session – design/planning only, matching the
+\#133/#136/#137/#145/#146/#147/#149/#150/#151/#152 precedent. Issue
+\#153 intentionally left open. **Next in the ratified Deferred-tier
+order: \#148 (MHC haplotype-specific frequency reporting) still needs
+its own scope-narrowing conversation first, per the sequencing audit’s
+Finding \#4, before a design document analogous to this one and \#152’s
+can be written for it.** See `CHANGELOG.md`.
+
+**Progress (S517, 2026-08-11):** the Deferred/scientific tier’s first
+item – issue \#152’s own design/architecture document
+(whole-genome/whole-exome sequence input + sequence-based genetic
+metrics) – is DONE and RATIFIED: see
+`docs/planning/issue152-sequence-input-genetic-metrics-plan.md`. Two
+parallel background research agents (a codebase-inventory `Explore`
+agent; a domain-research `general-purpose` agent) plus direct
+verification of the single most load-bearing prior decision (issue \#130
+plan’s D2, the ratified Bioconductor-Imports decline) grounded the
+design. Central findings:
+[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)’s
+O(n²·L) nested-pair loop and
+[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)’s
+O(F·C·L·n) redundant per-candidate allele-frequency rescan are the real
+scale bottlenecks (independent of the biallelic-only question); a
+directly-applicable captive-pedigreed-macaque-colony precedent (Bimber
+et al. 2016, ~22,455-marker GBS panel + pedigree-aware imputation)
+grounds a realistic scope-tier ceiling; raw VCF ingestion is infeasible
+on pure file-size grounds (144 GB-900 TiB class); summary statistics
+computed from genotype data are not an automatic privacy safe-harbor
+(Homer et al. 2008), so any sequence-derived export (raw or derived)
+must route through the same curator-controlled gate issue \#150 already
+shipped. Ten design decisions (D1-D10); four genuine judgment calls (D1
+scope tier, D3 `locusMetadata` sidecar timing, D6 initial metric set, D8
+module boundary) ratified via a single `AskUserQuestion` round – owner
+selected this document’s own recommended option in all four:
+sparse/GBS-scale tier (~50,000-locus ceiling, declining to reopen the
+Bioconductor decline); build the `locusMetadata`
+(`locus, chrom, pos[, cM]`) sidecar now, as shared vocabulary for
+sibling issue \#153; genome-wide F_ROH (new, Ceballos et al. 2018) plus
+genome-scale reruns of the existing kinship/heterozygosity/Fst
+functions, explicitly ceding effective-population-size-from-LD to \#153;
+a new tab inside the existing `modMarkerGenetics.R`, not a dedicated new
+module. Scoped as 5 future vertical slices (ingestion+fixture; a
+required
+[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)/[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
+performance rewrite; the new F_ROH metric; a new de-identification
+primitive; the full module tab + documentation), each its own future
+session. No code changed this session – design/planning only, matching
+the \#133/#136/#137/#145/#146/#147/#149/#150/#151 precedent. Issue \#152
+intentionally left open. **Next in the ratified Deferred-tier order:
+\#153 (linkage-aware/haplotype-block metrics), which can now reuse this
+session’s own `locusMetadata` vocabulary; \#148 (MHC) still needs its
+own scope-narrowing conversation first, per the sequencing audit’s
+Finding \#4.** See `CHANGELOG.md`.
+
+**Progress (S520, 2026-08-11):** Issue \#153 Slice 1 – locus-metadata
+ingestion + coverage validator + a new multiallelic STR fixture – is now
+DONE, per
+`docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` sec 5
+Slice 1. Full strict TDD PRE-RED-\>RED-\>GREEN-\>REFACTOR cycle, each
+transition `AskUserQuestion`-gated (REFACTOR: owner-confirmed no
+candidate identified, matching the S515 precedent). New
+[`checkLocusMetadata()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md)
+(D7, this session authored the canonical validator since \#152’s own
+Slice 1 has not shipped yet – sec 7 Dragon 1’s own predicted ordering
+risk) validates a `locus, chrom, pos[, cM]` sidecar table and classifies
+each locus into D2’s literal three-tier coverage definition (“full” =
+chrom AND pos present, cM optional; “partial” = exactly one of
+chrom/pos; “none” = neither), via a lookup-table implementation (not
+nested [`ifelse()`](https://rdrr.io/r/base/ifelse.html),
+`nested_ifelse_linter` clean). New `data-raw/generate_str_fixtures.R`
+(mirrors `generate_twin_fixtures.R`’s fail-loudly-at-generation- time
+discipline, `set_seed(153L)`) generates a
+12-locus/8-chromosome/10-individual multiallelic STR panel shaped on de
+Groot et al. 2025’s real panel (not its literal data – fully fabricated,
+sec 7 Dragon 2), 8 full/2 partial/2 none coverage loci, 2 genuinely
+multiallelic (3+ allele) loci – committed as
+`inst/extdata/examples/example_locus_metadata.csv` /
+`example_str_marker_genotypes.csv`, the package’s first bundled
+long-format multiallelic marker fixture at any scale (sec 2.8’s
+confirmed gap). 10 new `test_that` blocks / 16 expectations in
+`tests/testthat/test_checkLocusMetadata.R`, including a fixture-scale
+proof that the existing, UNMODIFIED
+[`buildMarkerGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/buildMarkerGenotypeMatrix.md)
+pivots multiallelic genotypes without error (D4’s structural claim,
+empirically confirmed – the biallelic restriction lives entirely in
+[`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md),
+deliberately not called on this fixture, matching Slice 2’s own future
+scope). Full clean regression suite 0 failed/0 error (5249 passed, 15
+pre-existing warnings unchanged);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings/1 pre-existing note (unrelated, matching baseline);
+`lintr::lint_package()` 0 lints on touched files (fixed 1 real
+`nested_ifelse_linter` + several
+`implicit_integer_linter`/`line_length_linter` findings in
+`data-raw/ generate_str_fixtures.R`, matching this project’s own house
+style). Fixed the `_pkgdown.yml` reference-coverage guard (new exported
+function added to the “All exposed functions” catch-all group).
+`NEWS.Rmd`/`NEWS.md` updated (new exported function checklist). Citation
+checklist (issue \#120) and tutorial/article checklist (Session 436) do
+NOT yet apply – no UI/displayed statistic this slice, matching the
+\#146/#149/#150/#151 Slice-1-only precedent (verified via `git log` on
+`population_genetics_terms.html`, last touched only by UI-shipping
+slices). **Issue \#153 stays open – Slice 2 (the multiallelic-tolerant
+[`checkLinkageMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLinkageMarkerGenotypeFile.md)
+ingestion path, D4) is the next planned slice**, a separate future
+session per the plan’s own session-boundary requirement. See
+`CHANGELOG.md`.

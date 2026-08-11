@@ -46,9 +46,9 @@ library(nprcgenekeepr)
 integerIds <- 1L:10L
 obfuscateId(integerIds, size = 4L)
 #>      1      2      3      4      5      6      7      8      9     10 
-#> "T9SY" "WIJ0" "QG1D" "5WUL" "QSGT" "CJHJ" "6Q25" "PCL0" "LX44" "NN6X" 
+#> "QX9S" "RG1Q" "SHIV" "VCBX" "7VUT" "9SYW" "IJ0Q" "G1D5" "WULQ" "SGTC" 
 characterIds <- paste0(paste0(sample(LETTERS, 1L, replace = FALSE)), 1L:10L)
 obfuscateId(characterIds, size = 4L)
-#>     T1     T2     T3     T4     T5     T6     T7     T8     T9    T10 
-#> "W6KG" "6S5G" "108U" "ZND7" "JVD4" "L2JH" "TJGT" "8D18" "3KX8" "8LJF" 
+#>     H1     H2     H3     H4     H5     H6     H7     H8     H9    H10 
+#> "HJ6Q" "25PC" "L0LX" "44NN" "6X0W" "6KG6" "S5G1" "08UZ" "ND7J" "VD4L" 
 ```

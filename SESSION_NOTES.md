@@ -7,6 +7,2070 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### Session 520 Handoff Evaluation (by Session 521)
+
+**Score: 8/10.** **What helped:** the `HANDOFFS.md` S520 receipt’s
+`next_steps` field named “Issue \#153 Slice 2
+([`checkLinkageMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLinkageMarkerGenotypeFile.md),
+the multiallelic-tolerant sibling ingestion validator, D4) is the next
+planned slice” as directly pickable – exactly what this session picked
+and executed. Its `key_files` (`R/checkLocusMetadata.R`, the design
+doc’s own §5 Slice 2 text) were both used directly:
+`checkLocusMetadata.R`’s structure was the template this session’s own
+[`checkLinkageMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLinkageMarkerGenotypeFile.md)
+copied (column-count check, `id`-first-column check, forced column
+names, duplicate-row check), and the design doc’s interface catalog (§4)
+and D4 rationale (§3) supplied the exact scope (retain 3 checks, omit
+the allele-count rejection) with zero re-derivation needed. Gotcha \#3
+([`checkLocusMetadata()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md)’s
+output shape – data frame, not a list – should be followed for
+consistency) was directly actionable and followed. **What was missing:**
+nothing S520 could reasonably have supplied for this session’s own
+scope. **What was wrong:** S520’s own close-out reported “0 errors/0
+warnings/1 pre-existing note,” but this session’s own GREEN verification
+found
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+actually reports **3** NOTEs (`Status: 3 NOTEs`) – a spelling-check NOTE
+from `tests/spelling.R` was already firing at S520’s own check, just
+invisible in
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)’s
+abbreviated `❯`-bullet results table, which does not list a bullet for
+that particular step (see `PROJECT_LEARNINGS.md` Learning 520). Not a
+fabrication – a shared, easy-to- make undercounting mistake this session
+nearly repeated too, caught only by grepping the full log rather than
+trusting the summary table. **ROI:** Strong – both the receipt and the
+design doc it pointed to were maximally reusable; the only correction
+needed was independently discovered, not inherited as a wrong
+instruction.
+
+### What Session 521 Did
+
+**Deliverable:** Issue \#153 Slice 2 –
+[`checkLinkageMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLinkageMarkerGenotypeFile.md),
+the multiallelic-tolerant sibling ingestion validator (design D4), per
+`docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` §5
+Slice 2. Full strict TDD PRE-RED-\>RED-\>GREEN-\>REFACTOR cycle, each
+transition `AskUserQuestion`-gated, following
+`DEVELOPMENT_WORKSTREAM.md`. Picked from this session’s own Phase 0
+priorities list (owner choice via `AskUserQuestion`) as the first of
+four directly-pickable options. **Started/Completed:** 2026-08-11.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 96/100, 1 HIGH risk: the 3-file
+ledger-size condition, still unaddressed). Ledger reconcile:
+`CHANGELOG.md`/`HANDOFFS.md` frontiers already at `HEAD`, no
+undocumented commits, but the S520 `HANDOFFS.md` receipt’s `commit:`
+field was still legally `pending` (write-time constraint) – reconciled
+to `3292786c` and committed alone (`85d07d14`), per the documented “next
+session reconciles them to real shas” rule. Rendered the priorities list
+via `AskUserQuestion` (4 options capped from 5 real candidates: issue
+\#153 Slice 2, issue \#152 Slice 1, fix the `methodology_trim.py`
+fence-scanner defect, archive `HANDOFFS.md`; +1 more named below the
+picker per the cap rule); owner picked issue \#153 Slice 2. **(2)**
+Stated scope back, Phase 1B claim stub + `HANDOFFS.md status: pending`
+receipt + `CHANGELOG.md` claim entry committed (`797d2abd`). **(3)**
+PRE-RED: re-read the design doc’s §4 interface catalog and §3 D4
+rationale, `R/checkMarkerGenotypeFile.R` (confirmed the exact 3 retained
+checks + the 1 omitted allele-count block), its test file,
+`R/checkLocusMetadata.R` (Slice 1 style precedent), and the committed
+STR fixture; confirmed via direct `grep` that
+[`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)
+is called only from `R/modMarkerGenetics.R`’s Shiny upload handlers –
+[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)/
+[`buildMarkerGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/buildMarkerGenotypeMatrix.md)
+have no internal dependency on it, so a new sibling function requires
+zero edits to any existing file (Impact Analysis §6 confirmed
+empirically, not just asserted). Presented the RED-phase test plan (7
+`test_that` blocks) via `AskUserQuestion`; owner approved. **(4)** RED:
+wrote `tests/testthat/test_checkLinkageMarkerGenotypeFile.R`; ran and
+confirmed all 7 blocks fail genuinely (`could not find function`), no
+`skip_if()` masking. Presented the GREEN plan; owner approved. **(5)**
+GREEN: wrote `R/checkLinkageMarkerGenotypeFile.R` (copies
+[`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)’s
+3 retained checks verbatim, omits the allele-count rejection).
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html);
+RED test file 12/12 pass. Full clean regression 0 failed/0 error (5261
+passed = 5249 baseline + 12 new, 15 pre-existing warnings unchanged).
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+first run surfaced a real bug this session introduced: the new
+function’s own `@examples` block reused two IDs across the same locus,
+tripping the very duplicate-`id x locus` check it was demonstrating –
+`R CMD check`’s example-execution step (not the test suite) caught it;
+fixed by using 4 distinct IDs. Fixed the `_pkgdown.yml`
+reference-coverage guard (new export not yet listed).
+`lintr::lint_package()` 0 lints. **(6)** Investigated a
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+NOTE-count discrepancy (`Status: 3 NOTEs` vs. 2 `❯` bullets) rather than
+accepting the abbreviated summary at face value: confirmed via directly
+moving this session’s 3 new files out of the tree and re-running
+[`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+that a **69-word**, long-standing `inst/WORDLIST` gap already existed
+before this session touched anything (spans `NEWS.md`,
+`a2interactive.Rmd`, `_pedigree_browser.Rmd`, `checkLocusMetadata.Rd`,
+and more). Hand-added the 2 words this session’s own new file is
+responsible for (`validator`, `multiallelic`) to `inst/WORDLIST` in
+collation order (S230 convention); filed the remaining 69-word gap as a
+new `BACKLOG.md` Housekeeping item (out of scope for a single slice) and
+as `PROJECT_LEARNINGS.md` Learning 520 (the NOTE-undercounting mechanism
+itself). Final
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html):
+0 errors/0 warnings/3 NOTEs, all confirmed pre-existing. Final full
+regression + `lintr::lint_package()` re-run after all file moves: 0
+failed/0 error, 5261 passed, 0 lints – unchanged. **(7)** REFACTOR gate:
+presented the duplicated-logic-vs-shared-helper tradeoff (named at the
+RED-\>GREEN gate too); owner declined, matching this codebase’s existing
+sibling-validator precedent
+([`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)/
+[`checkGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkGenotypeFile.md)
+are also independent, non-shared implementations). **(8)** Close-out:
+this evaluation, self-assessment below, `NEWS.Rmd`/`NEWS.md` entry (new
+exported-function checklist; caught and fixed a line-wrap rendering
+artifact in the first render), `BACKLOG.md` Housekeeping item,
+`PROJECT_LEARNINGS.md` Learning 520, 2 `CHANGELOG.md` entries (claim +
+close-out), `HANDOFFS.md` receipt completed. Citation checklist (issue
+\#120) and tutorial/article checklist (Session 436) confirmed
+not-yet-applicable (no UI/displayed statistic this slice, script-only,
+matching Slice 1’s own precedent). No `gh issue close` – Slice 2 of 5,
+issue \#153 stays open.
+
+**Self-assessment (Session 521): 9/10.** **Strengths:** (1) Caught a
+real bug in my own GREEN work before it reached verification proper: the
+`@examples` block’s duplicate-`id x locus` mistake was found by
+`R CMD check`’s example-execution step, not assumed correct just because
+the RED tests passed – a reminder that roxygen examples are executable
+code with their own failure modes. (2) Did not accept
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)’s
+abbreviated `❯`-bullet summary at face value when it disagreed with the
+raw `Status: N NOTEs` count – investigated the discrepancy to its root
+cause (a real, long-standing `inst/WORDLIST` gap, not a fluke of this
+session’s diff) rather than either silently under-reporting like the
+apparent precedent, or overreacting and trying to fix all 69 words
+mid-slice. (3) Verified the “zero edits to existing files”
+impact-analysis claim empirically (direct `grep` of every
+[`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)
+call site) before relying on it, rather than trusting the design doc’s
+own assertion. (4) Properly scoped the WORDLIST fix to exactly the 2
+words this session’s own new file is responsible for, filing the rest as
+a distinct backlog item rather than either ignoring it or scope-creeping
+into a 69-word cleanup. (5) Ran the full regression/lint verification
+suite a second time after the file-shuffling caused by the spelling
+investigation, rather than assuming nothing could have been disturbed.
+**Weaknesses:** (1) A `git stash push -- <pathspec>` call included 3
+untracked new files in its pathspec list, which `git stash` silently
+cannot match (untracked files need `-u`/`--include-untracked`) – the
+resulting partial stash + pop produced a spurious `.DS_Store` merge
+conflict (pre-existing, unrelated macOS artifact) that cost real time to
+diagnose and resolve safely; a plain `mv`-based holdout (used
+successfully on the second attempt) would have been simpler and should
+have been the first approach given this project has no established
+git-stash-based fixture-isolation convention to follow. (2) The
+background-command double-backgrounding pattern
+(`run_in_background: true` combined with a trailing shell `&`) produced
+several premature “completed” notifications during verification,
+requiring extra Monitor-based waits to catch the real completion –
+should default to one backgrounding mechanism, not both, in future
+long-running-command sessions.
+
+**Ledger:** recorded in `CHANGELOG.md` across 2 entries this session
+(S521 claim entry, and this close-out’s final entry) – both
+`[issue #153]`.
+
+### Session 519 Handoff Evaluation (by Session 520)
+
+**Score: 9/10.** **What helped:** the `HANDOFFS.md` S519 receipt’s
+`next_steps` field explicitly named “#153’s own Slice 1 (locus-metadata
+ingestion + a new multiallelic STR fixture) is genuinely novel work
+since no bundled long-format marker fixture exists at any scale today”
+as a directly pickable session – this was exactly what this session
+picked, with zero re-derivation needed. The receipt’s `gotchas` \#1/#2
+(the Hill & Weir formula not yet derived, real risk for a future Slice
+3; the `locusMetadata` schema unimplemented in both \#152/#153 plans,
+whichever ships Slice 1 first authors the canonical validator) were both
+directly load-bearing: gotcha \#2 predicted exactly the situation this
+session found (#152 Slice 1 still unshipped) and this session’s own
+design-doc citation of the identical risk (§7 Dragon 1) meant zero
+surprise – the validator was authored here, matching the design’s own
+documented contingency. The design document itself
+(`docs/planning/issue153-linkage-haplotype-block-metrics-plan.md`,
+S519’s actual work product) was thoroughly load-bearing across this
+entire session’s PRE-RED research: the interface catalog (§4), D2’s
+literal three-tier coverage wording, D4’s
+[`buildMarkerGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/buildMarkerGenotypeMatrix.md)
+evidence, and the de Groot et al. 2025 panel-shape citation (§2.10) were
+all used directly and held up under this session’s own independent
+re-verification (re-read `R/buildMarkerGenotypeMatrix.R` directly,
+confirmed no allele-count logic exists, exactly as the design doc
+claimed). **What was missing:** the exact output *shape* of
+[`checkLocusMetadata()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md)
+(a single data frame with an added `coverage` column vs. a list of two
+objects) was left unspecified by the interface catalog – reasonable,
+since this is an implementation-level judgment call a Pre-RED design
+document wouldn’t be expected to pre-decide, and this session surfaced
+it via its own PRE-RED-\>RED `AskUserQuestion` gate rather than treating
+it as a handoff gap. **What was wrong:** nothing found – every citation,
+file path, and evidentiary claim this session relied on from S519’s work
+checked out under direct verification. **ROI:** Excellent – both the
+`HANDOFFS.md` receipt and the design document it pointed to were
+maximally reusable; this session needed no rework or correction of
+anything S519 produced.
+
+### What Session 520 Did
+
+**Deliverable:** Issue \#153 Slice 1 – locus-metadata ingestion +
+coverage validator + a new multiallelic STR fixture, per
+`docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` §5
+Slice 1. Full strict TDD PRE-RED-\>RED-\>GREEN-\>REFACTOR cycle, each
+transition `AskUserQuestion`-gated, following
+`DEVELOPMENT_WORKSTREAM.md`. Picked from this session’s own Phase 0
+priorities list (owner choice via `AskUserQuestion`) as the first of two
+directly-pickable implementation options named in S519’s own
+`HANDOFFS.md` `next_steps` (#153 Slice 1 or \#152 Slice 1 – both designs
+ratified). **Started/Completed:** 2026-08-11. **Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 96/100, 1 HIGH risk: the 3-file
+ledger-size condition, still unaddressed; `HANDOFFS.md`’s own MEDIUM
+risk now firing). Ledger reconcile clean (`CHANGELOG.md`/`HANDOFFS.md`
+frontiers already at `HEAD`, no undocumented commits, no pending
+receipts, no untracked ghost-session files). Rendered the priorities
+list via `AskUserQuestion` (4 options: issue \#153 Slice 1 READY; issue
+\#152 Slice 1 READY; archive `HANDOFFS.md` READY; fix the
+`methodology_trim.py` fence-scanner defect READY); owner picked issue
+\#153 Slice 1. **(2)** Stated scope back to the owner (locus-metadata
+ingestion + coverage validator + STR fixture,
+`DEVELOPMENT_WORKSTREAM.md`, strict TDD). **(3)** Phase 1B claim stub +
+`HANDOFFS.md` `status: pending` receipt committed (`619480fa`). **(4)**
+PRE-RED: re-read the design doc’s interface catalog (§4), D2/D4/D7
+decisions, §2.2 (`checkMarkerGenotypeFile.R:68-78`’s multiallelic
+rejection; `buildMarkerGenotypeMatrix.R`’s lack of allele-count logic,
+directly re-verified), §2.3/§2.8 (schema reuse, no existing multiallelic
+fixture), §7 Dragons 1-2; read
+[`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)/`test_checkMarkerGenotypeFile.R`
+and `generate_twin_fixtures.R`/`test_checkTwinRelations.R` as style
+precedent; confirmed \#152’s `locusMetadata` schema
+(`locus, chrom, pos[, cM]`) verbatim from its own plan doc. Presented
+the concrete RED-phase test plan via `AskUserQuestion` (PRE-RED-\>RED
+gate); owner approved the recommended single-test-file plan. **(5)**
+RED: wrote `tests/testthat/test_checkLocusMetadata.R` (10 `test_that`
+blocks, 16 expectations) – inline mixed-coverage classification tests
+plus a fixture-scale round-trip test against files that don’t exist yet;
+ran and confirmed all 10 blocks fail (function missing / files missing),
+a genuine RED, not a `skip_if()`-masked no-op (caught and fixed this
+mistake in my own first draft before running it). Presented the GREEN
+plan via `AskUserQuestion`; owner approved. **(6)** GREEN: wrote
+`R/checkLocusMetadata.R` (new exported function, lookup-table coverage
+classification, not nested
+[`ifelse()`](https://rdrr.io/r/base/ifelse.html)) and
+`data-raw/generate_str_fixtures.R` (`set_seed(153L)`,
+12-locus/8-chrom/10-individual multiallelic STR panel shaped on de Groot
+et al. 2025, fabricated not copied); ran the generator, producing
+`inst/extdata/examples/example_locus_metadata.csv` /
+`example_str_marker_genotypes.csv`; re-ran the RED test file – all 16
+expectations pass.
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+regenerated `NAMESPACE`/`man/checkLocusMetadata.Rd`. **(7)**
+Verification: full clean regression suite 0 failed/0 error (5249 passed,
+15 pre-existing warnings unchanged, via `NOT_CRAN=true`);
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings/1 pre-existing note (3m01s); found and fixed 1
+`_pkgdown.yml` reference-coverage guard failure (added
+`checkLocusMetadata` to the “All exposed functions” catch-all);
+`lintr::lint_package()` found and fixed 1 real `nested_ifelse_linter`
+(refactored to a lookup-table index) plus several
+`implicit_integer_linter`/`line_length_linter` findings in the new
+`data-raw/` script – 0 lints after. **(8)** REFACTOR gate: owner
+confirmed no candidate identified (matching S515 precedent). **(9)**
+Close-out: this evaluation, self-assessment below, `NEWS.Rmd`/`NEWS.md`
+entry (new exported-function checklist), `BACKLOG.md` progress note, 2
+`CHANGELOG.md` entries (claim + close-out), `HANDOFFS.md` receipt
+completed. Citation checklist (issue \#120) and tutorial/article
+checklist (Session 436) confirmed not-yet-applicable (no UI/displayed
+statistic this slice, verified via `git log` on
+`population_genetics_terms.html` showing it’s only touched by
+UI-shipping slices). No `gh issue close` – Slice 1 of 5, issue \#153
+stays open, matching every precedent in this cluster.
+
+**Self-assessment (Session 520): 9/10.** **Strengths:** (1) Caught my
+own RED-phase mistake before it became a real gap: the first draft of
+the two fixture-scale tests used `skip_if()` guards that would have made
+them *skip* rather than *fail* while the fixture didn’t exist yet – a
+genuine strict-TDD violation (“tests must fail” at RED) – caught by
+actually running the RED suite and reading the output carefully rather
+than assuming the plan was correctly executed. (2) Found and fixed a
+real, non-obvious bug during GREEN verification:
+`identical(unname(table(x)[...]), c(8L,2L,2L))` failed not because the
+classification logic was wrong (it wasn’t) but because
+[`table()`](https://rdrr.io/r/base/table.html) retains its `"table"` S3
+class through [`unname()`](https://rdrr.io/r/base/unname.html), which
+[`identical()`](https://rdrr.io/r/base/identical.html) compares – traced
+to the actual root cause via direct debugging rather than guessing,
+fixed consistently in both the generator and the test file. (3) Verified
+D4’s central empirical claim
+([`buildMarkerGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/buildMarkerGenotypeMatrix.md)
+has no allele-count logic) by direct code read before relying on it, not
+by trusting the design doc’s own citation, and built a dedicated
+fixture-scale regression test proving it, not just accepting it as
+background research. (4) Ran the full regression/check/lint verification
+suite exhaustively (not just the new test file) and fixed both real gaps
+it surfaced (`_pkgdown.yml` guard, `nested_ifelse_linter`) rather than
+treating “my new file’s tests pass” as sufficient. (5) Correctly
+identified and declined to apply two close-out checklists (citation,
+tutorial/article) that don’t yet apply to a script-only Slice 1,
+verifying via `git log` rather than assuming, avoiding both a
+missed-checklist error and a premature/wrong application of one.
+**Weaknesses:** (1) Lost real time to a background-process management
+stumble: an initial `git stash -u` baseline comparison timed out
+mid-command, which briefly left the working tree stashed (caught
+immediately via `git status`/`git stash list`, correctly popped back
+with zero data loss, but the baseline comparison itself was abandoned in
+favor of trusting the already-clean 0-failed/ 0-error single run instead
+of a proper stash-diff – a slightly weaker verification than this
+project’s own established stash-diff convention for regression
+baselines). (2) The individual/locus naming scheme for the STR fixture
+(`A01`-`A10`, `STR01`-`STR12`) was decided unilaterally during GREEN
+rather than surfaced as an explicit option in the PRE-RED-\>RED
+`AskUserQuestion` gate, which named the fixture’s *shape* (12 loci, 8
+chromosomes, coverage mix) but not its literal naming – a minor scope
+gap, not a defect, since the names carry no semantic weight, but a
+stricter reading of the phase-gate discipline would have surfaced it.
+(3) Did not explicitly verify whether `inst/extdata/examples/`’s
+existing naming convention (`obfuscated_rhesus_mhc_*` vs. `Example*`)
+had a documented rule anywhere before choosing `example_*` – inferred
+from directory-listing pattern-matching rather than finding an explicit
+style statement, a reasonable but not fully verified inference.
+
+**Ledger:** recorded in `CHANGELOG.md` across 2 entries this session
+(S520 claim entry, and this close-out’s final entry) – both
+`[issue #153]`.
+
+### Session 518 Handoff Evaluation (by Session 519)
+
+**Score: 8/10.** **What helped:** the `HANDOFFS.md` S518 receipt’s
+`active_task`/dashboard framing of the 3-file ledger-size condition as
+the sole standing HIGH risk (and its `next_steps` naming the
+newly-firing `HANDOFFS.md` byte trigger specifically) directly
+cross-validated this session’s own independent Phase 0 dashboard read –
+same HIGH risk, same newly-firing MEDIUM risk, found independently
+rather than copied, which is exactly the kind of cross-check a good
+handoff enables. The receipt’s `gotchas` (the P1 frontier-check
+constraint requiring a `CHANGELOG.md` entry before any mid-session
+`--write`; a passing dry-run not proving semantic correctness) were
+correctly still current but not exercised this session (design-only, no
+`methodology_trim.py` work) – appropriately unactionable rather than
+wrong. **What was missing:** nothing S518 could reasonably have supplied
+– this session’s actual deliverable (issue \#153’s design) came from a
+different workstream (the genetic-metrics sequencing cluster) that
+S518’s own scope never touched; S518’s `next_steps` items (fence-scanner
+fix, `BACKLOG.md` compression, `HANDOFFS.md` archive) were all real,
+correctly still open, and correctly not picked this session – the
+picking session (this one) chose \#153 from the same Phase 0 priorities
+list instead, via `AskUserQuestion`, matching S517’s own handoff (a
+different, still-open thread) rather than S518’s. **What was wrong:**
+nothing found. **ROI:** Moderate-to-good – real orientation
+cross-validation value (confirmed this session wasn’t missing a
+newly-emerged risk), but low direct-reuse value for this session’s
+specific deliverable, through no fault of the handoff itself: S518 and
+S519 simply worked different, both-legitimate threads from the same
+priorities list.
+
+### What Session 519 Did
+
+**Deliverable:** Issue \#153 (linkage-aware and haplotype-block metrics
+for marker data) – Pre-RED design/architecture document, following
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`, matching the
+\#133/#136/#137/#145/#146/#147/#149/#150/#151/#152 precedent –
+design-only session, zero `R/`/`tests/`/`man/` changes. Picked from this
+session’s own Phase 0 priorities list (owner choice via
+`AskUserQuestion`) as the next item in the ratified Deferred-tier
+sequencing order (#152 done -\> \#153 -\> \#148), per S517’s own handoff
+`next_steps` and the sequencing audit’s own stated ordering.
+**Started/Completed:** 2026-08-11. **Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 96/100, 1 HIGH risk: the 3-file
+ledger-size condition, still unaddressed; a newly-firing `HANDOFFS.md`
+MEDIUM risk found this session, not present in S518’s own report).
+Ledger reconcile clean (`CHANGELOG.md`/`HANDOFFS.md` frontiers already
+at `HEAD`, no undocumented commits, no pending receipts, no untracked
+ghost-session files). Rendered the priorities list via `AskUserQuestion`
+(4 options: \#153 design session READY; fix the `methodology_trim.py`
+fence-scanner defect READY; archive `HANDOFFS.md` READY; implement issue
+\#152 Slice 1 READY – 2 more, `inst/extdata/` Phase 4 and NPRC outreach,
+both DECISION NEEDED, noted below the picker’s 4-option cap); owner
+picked \#153 design. **(2)** Stated scope back to the owner (one Pre-RED
+design document, `ARCHITECTURE_WORKSTREAM.md`, design-only); owner
+confirmed via a second, lighter-weight exchange. **(3)** Phase 1B claim
+stub + `HANDOFFS.md` `status: pending` receipt committed (`a11b489f`).
+**(4)** PRE-RED research: two parallel background agents – a
+codebase-inventory `Explore` agent (direct reads of
+`R/modMarkerGenetics.R`, the full marker function family with
+independent-locus/biallelic-only confirmation,
+`docs/planning/ issue152-sequence-input-genetic-metrics-plan.md` in full
+for the `locusMetadata` schema to reuse, issue \#130’s Bioconductor
+decline, `DESCRIPTION`, both relevant audits, existing fixtures –
+confirming zero bundled long-format marker fixtures exist at any scale
+–, the module contract, and five sibling design documents’ structural
+templates) and a `general-purpose` domain-research agent (locus-order
+metadata realism for real colony STR panels, rhesus genetic-map
+resources, classical LD/haplotype-block methods and their
+population-sample-assumption violation in a pedigreed colony, a
+CRAN-only package survey, recombination-aware kinship literature,
+coverage/assumptions-reporting precedent from PLINK/Haploview, and
+privacy implications of haplotype-level data) – plus this session’s own
+direct re-verification of the single most load-bearing finding
+(`R/checkMarkerGenotypeFile.R:68-78`‘s hard multiallelic rejection) and
+a direct re-read of \#152’s D3/D4 decisions verbatim. Found: a
+directly-sourced real captive-macaque-colony STR panel (de Groot et
+al. 2025, 23 microsatellite markers) has essentially no cM data and is
+multiallelic – colliding with this package’s current
+unordered-loci/biallelic-only assumptions; every classical LD/
+haplotype-block method assumes an unrelated/randomly-mating sample,
+violated by a pedigreed colony (Excoffier & Slatkin 1998), while the one
+genuinely pedigree-native method (Lander-Green multipoint IBD/MERLIN)
+isn’t CRAN-available; Hill & Weir (2011)’s realized-relatedness-variance
+framework IS valid for a pedigreed sample and extends the existing
+pedigree kinship directly; haplotype/ block-level data is MORE
+re-identifying than single-locus data (Lin, Owen & Altman 2004; Erlich &
+Narayanan 2014). **(5)** Wrote
+`docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` (11
+sections, mirroring the \#152 plan’s own template). **(6)** Ratified 4
+genuine judgment calls (D3 metric choice, D4 multiallelic ingestion, D5
+module boundary, D8 CRAN-vs-hand-roll) via a single `AskUserQuestion`
+round; owner selected this document’s own recommended option in all
+four: build both a pedigree-valid primary metric (Hill & Weir-style) and
+a caveated descriptive secondary metric (pairwise D’/r2); add a
+multiallelic-tolerant sibling ingestion validator; a new tab inside the
+existing `modMarkerGenetics.R`; hand-roll the D’/r2 computation, no new
+CRAN dependency. Recorded the outcome in the document’s own SS11.
+**(7)** Cross-reference verification: all 27 cited file paths confirmed
+to exist via direct `test -f` checks, plus a spot-check of the
+module-wiring line-number citations (`R/modMarkerGenetics.R` tab list,
+`R/appServer.R:438`, `R/appUI.R` tab structure) before close-out.
+**(8)** This evaluation, self-assessment below, `BACKLOG.md` progress
+note, `CHANGELOG.md` `[issue #153]` entry, `HANDOFFS.md` receipt
+completed. No `gh issue close` – design ratified, not implemented,
+matching every precedent in this cluster.
+
+**Self-assessment (Session 519): 8/10.** **Strengths:** (1) Directly
+verified the single most load-bearing codebase finding
+([`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)‘s
+hard multiallelic rejection) by reading the actual file rather than
+trusting the research agent’s own quote of it – confirmed correct, and
+this became the load-bearing evidence for D4, the session’s
+highest-leverage new-code decision. (2) Did not let the domain-research
+agent’s literature survey settle for “classical LD/block methods exist,
+use one” – pushed to find and cite the specific, named source (Excoffier
+& Slatkin 1998) establishing that those methods are statistically biased
+for a *related* sample, which directly justified building a second,
+genuinely pedigree-valid metric (Hill & Weir 2011) rather than shipping
+only the classical-but-biased one. (3) Found and used a
+directly-on-point, current (2025) real captive-macaque-colony STR-panel
+source (de Groot et al.) rather than settling for generic
+population-genetics literature – this single source drove two separate,
+consequential design decisions (D2’s metadata-sparsity assumption and
+D4’s multiallelic-ingestion decision), grounding both in what a real
+colony genetics program’s data actually looks like rather than an
+assumed ideal. (4) Explicitly flagged what this session’s research did
+NOT fully resolve (Hill & Weir’s exact closed-form formula,
+PLINK/LDheatmap’s precise archival-reason causality, `gap`’s
+relatedness- handling in its LD-specific functions) as named uncertainty
+flags rather than silently smoothing them into confident-sounding prose
+– carried into SS7 “Here be dragons” as real, actionable research risk
+for the implementing session, not omitted. (5) Verified every one of the
+27 cited file paths exists before close-out, not just the handful
+directly read in this session. **Weaknesses:** (1) The 5-slice
+implementation plan’s function names
+([`checkLinkageMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLinkageMarkerGenotypeFile.md),
+`markerRealizedRelatedness Variance()`, `markerLdBlock()`,
+`obfuscateLdBlocks()`) are explicitly marked provisional and were not
+cross-checked against this package’s existing naming conventions as
+rigorously as the \#152 plan’s own interface catalog was (that plan’s
+own PRE-RED explicitly verified naming precedent; this session named
+functions by analogy without a dedicated naming-convention grep pass).
+(2) D3’s “build both metrics” recommendation, while well-grounded in the
+literature split (one method valid, one biased), was not weighed against
+a session-boundary/scope-creep risk explicitly – two genuinely new
+statistical methods in one future implementation slice-set is more
+ambitious than \#152’s single-new- statistic (F_ROH) scope, and a future
+Slice 3/4 split session should watch for this. (3) Did not independently
+verify the rhesus-macaque genetic-map papers’ (Rogers 2006, Xue 2020,
+Versoza 2023) own methodology beyond what the domain-research agent’s
+summary reported – reasonable for a Pre-RED design pass grounding a
+scope decision, but a future implementing session citing these in
+roxygen `@references` should read the primary sources directly, not this
+document’s secondhand summary.
+
+**Ledger:** recorded in `CHANGELOG.md` across 2 entries this session
+(S519 claim entry, and this close-out’s final entry) – both
+`[issue #153]`, closing out the design deliverable this session’s own
+scope produced (issue \#153 itself stays open, per precedent – design
+ratified, not implemented).
+
+### Session 517 Handoff Evaluation (by Session 518)
+
+**Score: 7/10.** **What helped:** the `next_steps` field’s mention of
+the ledger-size HIGH risk as “also still open, unaddressed for 8-9
+consecutive sessions” (alongside \#152 Slice 1/#153/#148 as alternative
+next items) matched and cross-validated my own independent
+BACKLOG.md/dashboard-based priorities list, rather than needing to be
+re-derived from scratch – I picked this item, not \#152 Slice 1, from
+that same list. **What was missing:** nothing S517 could reasonably have
+supplied – the specific technical findings that shaped this session’s
+actual work (methodology_trim.py’s `LEDGERS` config-table mechanics, the
+canonical-overlay sync-ownership conflict, BACKLOG.md’s structural
+mismatch with the tool’s chronological-record model, the
+SESSION_NOTES.md fence-scanner defect, CHANGELOG.md’s
+pinned-legacy-footer floor) are exactly what a session picking up this
+specific item exists to discover fresh; S517 was a design-only session
+for a different issue with no reason to have pre-investigated trim-tool
+mechanics. **What was wrong:** nothing found in the claims relevant to
+my own work; gotcha \#4’s own flagged discrepancy (S516’s HANDOFFS.md
+receipt says “9 consecutive sessions unaddressed” vs. S516’s own
+SESSION_NOTES.md entry says “8”) remains unreconciled – not something
+this session’s scope required resolving, and I did not attempt to.
+**ROI:** Good – correctly kept a real, standing item visible and
+prevented it from being silently dropped from consideration, at low
+verification cost (a one-line cross-check against my own independently-
+built priorities list).
+
+### What Session 518 Did
+
+**Deliverable:** 3-file ledger-size housekeeping (dashboard HIGH risk,
+unaddressed 8-9 consecutive sessions) – delivered as: (1) a verified
+`methodology_trim.py` `LEDGERS` config entry for `SESSION_NOTES.md`; (2)
+an 11-record archive of `CHANGELOG.md` (already canonically configured);
+(3) BACKLOG.md’s remediation explicitly deferred (structural mismatch
+with the tool’s model, not a config gap); (4) SESSION_NOTES.md’s own
+archive explicitly NOT run, blocked by a genuine fence-scanner defect
+discovered mid-session. Following no single workstream doc
+(housekeeping/ methodology-tooling task, not R package code – TDD phase
+N/A throughout, no `R/`/`tests/`/`man/` files touched).
+**Started/Completed:** 2026-08-11. **Status:** DONE (scope narrowed
+twice mid-session via `AskUserQuestion`, each time by a genuine new
+finding, not preference).
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 96/100, 1 HIGH risk category: the
+3-file ledger-size condition. Ledger reconcile clean. Rendered the
+priorities list via `AskUserQuestion` (4 options: \#152 Slice 1 READY;
+\#153 design READY; ledger-size trim READY; NPRC outreach DECISION
+NEEDED); owner picked ledger-size trim. **(2)** A second
+`AskUserQuestion` scoped exactly what “trim” meant (config+archive
+vs. CHANGELOG-only vs. config-only) – owner picked “Full: config +
+archive.” **(3)** Phase 1B claim stub committed (`2a7f9a0e`). **(4)**
+PRE-RED investigation of `methodology_trim.py` (full 1,831-line read)
+found its `LEDGERS` config table only has canonical entries for
+`CHANGELOG.md`/`HANDOFFS.md`, confirmed byte-identical to the canonical
+`starter-kit/methodology_trim.py` (a 1.1.2-vs-1.1.3 version-bump diff
+only, unrelated). Cross-checked `BOOTSTRAP.md`’s sync table:
+`methodology_trim.py` is classified “Tracked (canonical owns them) …
+overlay – replace with the latest,” the same bucket as
+`SESSION_RUNNER.md`/`SAFEGUARDS.md,` with no documented mechanism for a
+local `LEDGERS` addition to survive that overlay – confirmed no project
+in the portfolio (`mts-system`, `wsfct`, `vscode_quarto_ext`) has ever
+added one either. Surfaced this conflict via a third `AskUserQuestion`
+(add locally + flag the risk / CHANGELOG-only / stop-and-report); owner
+picked “add locally + flag the risk.” **(5)** Structural investigation
+of `SESSION_NOTES.md` (all 577
+`### Session N Handoff Evaluation (by Session N+1)` /
+`### What Session N Did` headings checked via grep for shape variance –
+zero found; confirmed `footer_mode="none"` by direct inspection; sampled
+the date-label convention, 243/577 records directly labelled) and of
+`BACKLOG.md` (only 10 `##` sections across 2,181 lines, each a large
+standing topical category accumulating narrative indefinitely –
+confirmed this doesn’t fit the tool’s newest-on-top chronological-record
+model at all, verified against the ledger-trimmer design doc and checked
+for portfolio precedent, found none). Surfaced both findings via a
+fourth `AskUserQuestion`; owner picked “SESSION_NOTES.md +
+CHANGELOG.md,” deferring BACKLOG.md. **(6)** Wrote the
+`SESSION_NOTES.md` `LedgerSpec` + `_session_notes_date` helper in
+`methodology_trim.py`, with an in-file “LOCAL ADDITION” comment block
+documenting the sync-survival risk; `--check` confirmed it parses and
+the byte trigger fires (6,159,800 B vs. 65,536 B budget). Committed
+(`c75bb9da`), alongside a `CHANGELOG.md` entry documenting the claim so
+far – required to satisfy the tool’s own P1 frontier check before any
+`--write` would proceed. **(7)** A dry-run preview
+(`would archive 161 of 164 record(s)`) looked plausible but I did not
+trust it at face value – directly tested the tool’s own `fence_scan()`
+function against the real file and found 42% of it (17,040/40,269 lines)
+misclassified as “inside a fence,” traced to a 4-backtick inline code
+span at `SESSION_NOTES.md:23229` that starts a physical line and is
+misread as an unclosed block-fence opener, hiding 349 of 513 real record
+headings. **Did not run `--write` on `SESSION_NOTES.md`** – documented
+the defect and two possible fixes (neither in this session’s scope) in
+`CLAUDE.md` and `BACKLOG.md` instead. **(8)** Confirmed `CHANGELOG.md`
+has no analogous fence issue (0 unclosed spans), ran its dry-run (would
+archive 11 of 12 records), archived (`--write`), independently
+re-verified losslessness via the tool’s own generated
+`docs/archive/CHANGELOG-through-2026-08-11.md.verify.sh` (not just its
+inline `[L1_OK]`/ `[L2_OK]`/`[L3_OK]` printout), committed (`50b65d10`).
+Post-archive `--check` showed the byte trigger still fires (946,570 B) –
+investigated why and found the Session-325-frozen legacy-history block
+is a permanently-pinned 935,292 B / 3,570-line footer, 14x the budget on
+its own, meaning this tool can never bring `CHANGELOG.md` under budget
+through record-archiving alone. Documented as a known, already-ratified
+trade-off (not re-litigated) rather than an actionable gap. **(9)**
+Added 2 `BACKLOG.md` items (the fence-scanner defect blocking
+`SESSION_NOTES.md`’s archive; `BACKLOG.md`’s own editorial-compression
+task) and 3 `CLAUDE.md` “Additional close-out checks” notes (the
+`methodology_trim.py` local-customization survive-the-sync checklist;
+the `SESSION_NOTES.md` fence-defect finding; the `CHANGELOG.md`
+footer-pinning consequence of the S325 decision). **(10)** This
+evaluation, self-assessment below, `HANDOFFS.md` receipt, final
+`CHANGELOG.md` entry, commit.
+
+**Self-assessment (Session 518): 8/10.** **Strengths:** (1) Did not
+force a mechanical config onto `BACKLOG.md` once its structural mismatch
+was confirmed by direct inspection (10 large standing sections, not
+chronological records) – surfaced the finding via `AskUserQuestion`
+rather than either silently forcing a wrong config or silently dropping
+the file from scope. (2) Investigated `methodology_trim.py`’s actual
+sync/ownership model (`BOOTSTRAP.md`’s tracked-file table, a diff
+against the canonical `starter-kit` copy, a portfolio-wide precedent
+check across 3 sibling projects) *before* editing a canonical-owned
+file, rather than assuming local edits were free of consequence. (3)
+Verified the `SESSION_NOTES.md` record-boundary regex against the ENTIRE
+file (577 headings, every one grep-checked for shape variance) before
+writing the config, not just the first few visible records. (4) Caught
+the fence-scanner defect BEFORE running `--write` on `SESSION_NOTES.md`,
+by directly testing the tool’s own `fence_scan()` function against the
+real file rather than trusting a dry-run’s internally-consistent
+`[L1_OK]`/`[L2_OK]`/`[L3_OK]` printout at face value – a passing dry-run
+proves the COMPUTED partition is lossless, not that the partition itself
+is semantically correct; matches this project’s own “faithful
+verification” discipline (`SESSION_RUNNER.md` Vertical Slice gate d).
+(5) Independently re-ran the tool’s own generated `verify.sh` after the
+`CHANGELOG.md` write rather than trusting the inline assertion printout
+alone. (6) Discovered and clearly documented the `CHANGELOG.md`
+footer-pinning finding (935KB permanently unarchivable) as a known
+trade-off, correctly declining to re-litigate the already-ratified S325
+“freeze legacy” decision. **Weaknesses:** (1) Scope narrowed 3 times
+mid-session via `AskUserQuestion` pivots – each driven by a genuine new
+finding, not preference, but a more front-loaded PRE-RED investigation
+(reading `methodology_trim.py` in full and checking `BOOTSTRAP.md`’s
+sync table before the FIRST scope question, rather than after the
+SECOND) could plausibly have collapsed the first two pivots into one;
+the third (the fence-scanner defect) could only have been found after
+writing and testing the actual config, so that one genuinely could not
+have been front-loaded. (2) Did not archive `HANDOFFS.md` despite its
+trigger also firing and being fully canonically pre-configured
+(low-effort, same mechanism as `CHANGELOG.md`) – correctly deferred as
+out of the explicitly confirmed scope, but not proactively flagged as an
+easy next pickup until this note. (3) The `_session_notes_date` helper
+function’s fallback path (bare first-`YYYY-MM-DD`-substring match,
+exercised for ~334 of 577 records lacking a directly-labelled date) was
+never exercised against a real archive this session (since
+`SESSION_NOTES.md` was never actually trimmed) – low-risk since it only
+affects cosmetic span labelling, not losslessness, but genuinely
+untested against edge cases like a record containing multiple dates.
+
+**Ledger:** recorded in `CHANGELOG.md` across 3 entries this session
+(S518 claim+config entry, `methodology_trim.py`’s own auto-generated
+CHANGELOG.md-archive entry, and this close-out’s final entry) – all
+`[ad hoc]`, no GitHub issue or `BACKLOG.md` item originated this
+session’s own scope (the 2 new `BACKLOG.md` items are follow-ups this
+session ADDED, not ones it closed).
+
+### Session 516 Handoff Evaluation (by Session 517)
+
+**Score: 9/10.** **What helped:** the `HANDOFFS.md` S516 receipt’s
+`next_steps` field named this session’s exact deliverable – “the
+Deferred design-only tier’s own next item, \#152 … needs its own Pre-RED
+scoping/design session before any technical work, ordered ahead of \#153
+… and \#148” – with the correct citation
+(`docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md`)
+and the correct ordering rationale, both verified directly against that
+audit at PRE-RED rather than trusted. `key_files`’ pointer to
+`R/modDeidentifiedExport.R` as “the reference shape for any future …
+module” was directly useful, though not in the way the receipt implied:
+this session did not build a new no-upload module (that shape didn’t fit
+issue \#152’s needs), but D7’s de-identification decision reused
+`modDeidentifiedExport.R`’s confirm-gate/manifest/re-identification-key
+export pattern and
+[`obfuscateTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateTwinRelations.md)’s
+sidecar-scrub convention directly – the file was the right one to have
+read, for a different specific reason than stated. The `gotchas`
+(set_seed(), `git stash -u`, ambiguous tab-selector scoping) were all
+correctly still-current but none were exercised this session
+(design-only, no test/UI code written) – appropriately unactionable
+rather than wrong. **What was missing:** nothing the predecessor could
+reasonably have anticipated – the specific research findings that shaped
+today’s actual design decisions (the Bimber et al. 2016
+captive-macaque-GBS-scale precedent;
+[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)’s
+O(n²·L) nested-loop bottleneck; the VCF file-size scale reality) are
+exactly what a Pre-RED design session exists to discover, not something
+a predecessor’s handoff could have pre-supplied. **What was wrong:** one
+small, internal inconsistency in S516’s own close-out artifacts, not
+something that affected this session’s work: the `HANDOFFS.md` receipt
+states the ledger-size risk is “unadressed for 9 consecutive sessions”
+while S516’s own `SESSION_NOTES.md` entry (below) states “flagged 8
+consecutive sessions” – the two numbers disagree by one within the same
+session’s own close-out. Flagged, not corrected (S516 already closed
+out); this session used the `SESSION_NOTES.md` figure (8) in its own
+Phase 0 report. Separately – not a defect in the receipt, but worth
+naming here since this session’s own orientation report described the
+`methodology_trim.py` archive tool as “new this session’s orientation”:
+a closer read of S514’s own `SESSION_NOTES.md` entry (available at the
+time, not re-checked before writing that sentence) shows the tool and
+its first archive round (`0929172a`/`d07814a7`) actually predate S514’s
+own Phase 0, not just S516’s – the tool was not new to the project, only
+newly surfaced *in this session’s own report*. A minor overstatement in
+this session’s own reporting, corrected here rather than left standing.
+**ROI:** High – the `next_steps` field’s deliverable identification was
+exactly right and saved a full priorities-list re-derivation; the
+`key_files` pointer, while off on the specific mechanism, was still the
+single most useful file to have read for this session’s D7 decision.
+
+### What Session 517 Did
+
+**Deliverable:** Issue \#152 (whole-genome/whole-exome sequence input +
+sequence-based genetic metrics) – Pre-RED design/architecture document,
+following `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md` –
+design-only session, matching the
+\#133/#136/#137/#145/#146/#147/#149/#150/#151 precedent, zero
+`R/`/`tests/`/`man/` changes. Picked from this session’s own Phase 0
+priorities list (owner choice via `AskUserQuestion`) as the sole
+Deferred-tier READY item, per the S516 handoff’s own `next_steps` and
+the ratified sequencing audit’s own ordering (#152 \> \#153 \> \#148).
+**Started/Completed:** 2026-08-11. **Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 96/100, 1 HIGH risk: the 3-file
+ledger-size condition, still unaddressed. Ledger reconcile clean
+(`CHANGELOG.md`/`HANDOFFS.md` frontiers already at `HEAD`, no
+undocumented commits, no pending receipts, no untracked ghost-session
+files). Cross-checked both standing sequencing audits (genetic-metrics
+and pedigree-diagram clusters) against current
+`gh issue list`/`BACKLOG.md` state and confirmed all of each cluster’s
+Tier 1/Tier 2/Tier 3 ready-to-build items
+(#133/#136/#137/#145/#146/#147/#149/#150/ \#151) are now fully shipped
+and closed. Rendered the priorities list via `AskUserQuestion` (4
+options: \#152 design session READY; file 2 new tracking issues READY;
+ledger-size trim READY; NPRC outreach DECISION NEEDED); owner picked
+\#152. **(2)** Phase 1B claim stub committed (`9ff9d74a`). **(3)**
+PRE-RED research: two parallel background agents – a codebase-inventory
+`Explore` agent (direct reads of both existing genotype-input pathways,
+the full marker function family with complexity/scale analysis,
+`modMarkerGenetics.R`’s module shape and `appServer.R` wiring, the
+de-identification pattern, `DESCRIPTION` dependencies,
+`module-contract.md`, and the fixture gap – all with <file:line>
+citations) and a domain-research `general-purpose` agent (VCF format
+reality, rhesus-macaque WGS/WES scale figures, sequence-based metrics
+literature, storage/privacy findings, precedent-software survey) – plus
+this session’s own direct verification of the single most load-bearing
+prior decision (issue \#130 plan’s D2, the ratified Bioconductor-Imports
+decline). Found:
+[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)’s
+O(n²·L) nested-pair loop and
+[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)’s
+O(F·C·L·n) redundant per-candidate allele-frequency rescan are the real
+scale bottlenecks, independent of the biallelic question; a
+directly-applicable captive-pedigreed-macaque-colony precedent (Bimber
+et al. 2016, ~22,455-marker GBS panel + imputation) answers “how much
+sequence data is realistic”; raw VCF ingestion is infeasible on pure
+file-size grounds (144 GB-900 TiB class); summary statistics from
+genotype data are not an automatic privacy safe-harbor (Homer et
+al. 2008). **(4)** Wrote
+`docs/planning/issue152-sequence-input-genetic-metrics-plan.md` (11
+sections, mirroring the \#150 plan’s own template: Context,
+Evidence-based inventory, 10 Design decisions D1-D10 tagged
+forced/judgment-call, Interface catalog, 5-slice Implementation plan,
+Impact analysis, Here be dragons, Alternatives considered, Close-out
+checklist mapping, Provenance, Ratification status). **(5)** Ratified 4
+genuine judgment calls (D1 scope tier, D3 locusMetadata sidecar timing,
+D6 initial metric set, D8 module boundary) via a single
+`AskUserQuestion` round; owner selected this document’s own recommended
+option in all four: sparse/GBS-scale tier (~50,000-locus ceiling, no
+Bioconductor dependency reopened); build the `locusMetadata` sidecar now
+(shared vocabulary for future issue \#153); F_ROH (new, Ceballos et
+al. 2018) + genome-scale reruns of existing kinship/heterozygosity/Fst
+(Ne-from-LD explicitly ceded to \#153); a new tab inside
+`modMarkerGenetics.R`, not a dedicated new module. Recorded the outcome
+in the document’s own §11. **(6)** Cross-reference verification: all 16
+cited file paths (7 `docs/`, 9 `R/`) confirmed to exist via direct
+`test -f` checks before close-out. **(7)** This evaluation,
+self-assessment below, `BACKLOG.md` progress note, `CHANGELOG.md`
+`[issue #152]` entry, `HANDOFFS.md` receipt completed. No
+`gh issue close` – design ratified, not implemented, matching every
+precedent in this cluster.
+
+**Self-assessment (Session 517): 8/10.** **Strengths:** (1) Verified the
+single most load-bearing prior decision (issue \#130 D2’s Bioconductor
+decline) via a direct source re-read rather than trusting the research
+agent’s own summary of it – caught nothing wrong, but the check was
+real, not performative. (2) Grounded every literature claim in the
+domain-research agent’s report with a named paper/tool/year, and used
+the one directly-applicable captive-pedigreed-macaque precedent (Bimber
+et al. 2016) as the actual basis for the D1 scope-tier number, rather
+than picking an arbitrary round number. (3) Explicitly separated
+“forced” from “judgment call” decisions and, within the judgment calls,
+recognized that D5 (the performance-rewrite prerequisite) was not a
+genuinely live choice (its only alternative was already shown
+unacceptable by its own rationale) and excluded it from the vote rather
+than padding the `AskUserQuestion` round to look more thorough –
+matching this project’s own “don’t manufacture false choices”
+discipline. (4) Explicitly defined new vocabulary (`locus`, `variant`,
+`locusMetadata`) to avoid colliding with \#148’s “haplotype” and \#153’s
+future “block” usage, catching a naming-collision risk before it could
+recur, not after. **Weaknesses:** (1) This session’s own Phase 0
+orientation report described the `methodology_trim.py` tool as “new this
+session’s orientation” without first checking whether an earlier session
+had already found and used it – it had (S514), which this session’s own
+Phase 3A re-read caught and corrected, but the original report should
+have been accurate the first time. (2) No independent verification pass
+(e.g. a second agent tasked specifically with trying to refute the D1
+scale-ceiling number or the D5 complexity-class claims) was run against
+either research agent’s own findings before they became load-bearing
+design decisions – for a design session whose central claims (O(n²·L),
+the 50,000-locus ceiling, the VCF size figures) will govern several
+future implementing sessions’ own scope, a one-pass “trust the agent,
+spot-check the single most load-bearing citation” approach is lighter
+verification than the \#137 design session’s own precedent (which ran a
+3-agent adversarial review of a drafted document before ratification,
+catching a real counter-example). This is the fair comparison point for
+a design-only session’s rigor bar, and this session did not meet it.
+
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session),
+`[issue #152]` tag. Issue \#152 stays **open** (design ratified, not
+implemented) – no `gh issue close` this session, matching every
+precedent design session in this cluster.
+
+### Session 515 Handoff Evaluation (by Session 516)
+
+**Score: 10/10.** **What helped:** the `HANDOFFS.md` S515 receipt’s
+`next_steps` field named this session’s entire Slice 2 scope
+item-for-item – exact function names
+(`modDeidentifiedExportUI`/`modDeidentifiedExportServer`), the exact
+file to add them to (`R/modDeidentifiedExport.R`, append below the
+existing Slice 1 helper, do not create a second file), the exact
+`appUI.R` tab placement (immediately after “Cross-Center Identity”,
+D10), the exact `appServer.R` wiring
+(`pedigree = reactive(shared$currentPedigree)`, explicitly NOT a fresh
+upload like `modCrossCenterIdentity`’s exception shape), the exact test
+file to extend (not create), the
+`test_moduleContract.R`/`_pkgdown.yml`/`NEWS.Rmd`/tutorial-article/live-smoke-test/
+`gh issue close 150` checklist in full, and the precedent to mirror
+(`R/modCrossCenterIdentity.R`’s Confirm-\>Export modal-gate shape,
+explicitly excluding its Upload-\>Validate stage, which does not apply
+here). All three `gotchas` were exactly correct and directly useful: (1)
+always use this package’s own
+[`set_seed()`](https://github.com/rmsharp/nprcgenekeepr/reference/set_seed.md),
+never base [`set.seed()`](https://rdrr.io/r/base/Random.html), in any
+new RNG-seeded test (Learning 516) – followed from the first RED-test
+draft, having read `test_obfuscatePed.R` directly during PRE-RED; (2)
+`git stash` alone does not stash untracked new files, use `git stash -u`
+for a
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+before/after baseline – followed exactly, caught the identical
+pre-existing 2-NOTE baseline (not 1) both times; (3) D5 (“keep the id
+map local”) is satisfied by construction (Shiny’s `downloadHandler()`
+delivery mechanics) – needs distinct labeling and a separate
+confirmation click, not new infrastructure, “do not over-build this” –
+followed exactly: 3 separate `downloadButton`s, no new access-control
+machinery invented. **What was missing:** nothing the predecessor could
+reasonably have anticipated – this session’s own two forced correctness
+findings (the manifest-params-snapshot-at-preview-time requirement
+preventing a post-preview input-tweak from producing a manifest that
+describes different params than what was actually exported; the
+confirm-reset-on-re-preview requirement mirroring \#149’s own D5
+pattern) and two documentation/testing gotchas (Learning 517’s
+[`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)
+YAML- override trap; Learning 518’s ambiguous same-titled-nested-tab
+selector collision between `modCrossCenterIdentity` and this session’s
+own new module) were genuinely new discoveries specific to this
+session’s own execution, not omissions from the plan or the handoff.
+**What was wrong:** nothing found – every specific claim in
+`active_task`/`what_was_done`/`next_steps`/`key_files`/ `gotchas`
+checked out against source exactly as stated. The `commit: pending`
+field is unreconciled to a real sha, matching the same standing,
+accepted convention already noted (not a defect) in S512/S513’s own
+receipts. **ROI:** Maximal – the `next_steps`/`key_files`/`gotchas`
+fields mapped essentially 1:1 onto this session’s actual implementation
+from the first RED test through close-out, at zero cost to verify and
+zero rework.
+
+### What Session 516 Did
+
+**Deliverable:** Issue \#150 Slice 2 –
+`modDeidentifiedExportUI`/`modDeidentifiedExportServer` (full
+De-Identified Export Shiny module), `appUI.R`/`appServer.R` wiring,
+tests, live smoke test, and documentation, per
+`docs/planning/issue150-deidentified-pedigree-export-plan.md` §5 Slice 2
+– **closes issue \#150**. Following
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`, inside this
+project’s Strict TDD contract (PRE-RED-\>RED-\>GREEN-\>REFACTOR, each
+transition `AskUserQuestion`-gated). Picked from this session’s own
+Phase 0 priorities list (owner choice via `AskUserQuestion`) as the sole
+READY item – the natural, explicitly-named continuation of S515’s own
+Slice 1. **Started/Completed:** 2026-08-10. **Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 96/100, 1 HIGH risk category: the
+3-file ledger-size condition
+(`SESSION_NOTES.md`/`CHANGELOG.md`/`BACKLOG.md` all past the 2,000-line
+read cap), now flagged 8 consecutive sessions, still unaddressed by
+owner choice). Ledger reconcile clean (`CHANGELOG.md`/`HANDOFFS.md`
+frontiers already at `HEAD`, no undocumented commits, no pending
+receipts). Rendered the priorities list via `AskUserQuestion` (4
+options: \#150 Slice 2 READY; LabKey remainder BLOCKED; NPRC outreach
+plan DECISION NEEDED; \#152 deferred-cluster design); owner picked \#150
+Slice 2. **(2)** Phase 1B claim stub committed (`62e78ea2`). **(3)**
+PRE-RED research: direct reads of `R/modCrossCenterIdentity.R` (closest
+UI/confirm-gate precedent, in full), `R/modMatePair.R` (closest
+`shared$currentPedigree`-wiring precedent, in full),
+`docs/architecture/module-contract.md`,
+`tests/testthat/test_moduleContract.R`, `R/obfuscatePed.R` (Slice 1’s
+`linkedDateShift`), `R/modDeidentifiedExport.R` (Slice 1’s
+`.buildDeidentificationManifest()`), `R/appUI.R`/`R/appServer.R` wiring
+points,
+`tests/testthat/test_modCrossCenterIdentity.R`/`test_obfuscatePed.R`.
+Found and surfaced 2 forced (not owner-votable) correctness
+requirements: manifest-params-snapshot-at-preview-time (prevents a
+post-preview input tweak from producing a manifest describing different
+params than what was exported) and confirm-reset-on-re-preview (mirrors
+\#149’s own D5 stale-confirmation pattern). **(4)** PRE-RED-\>RED gate
+(`AskUserQuestion`): approved. Added 16 `test_that` blocks – 14 to
+`tests/testthat/test_modDeidentifiedExport.R` (UI shape; no-pedigree
+`req()` gate; module-level non-negative-age proof reusing the
+`pedGood`/`exit=birth+10`/`set_seed(3L)` fixture from
+`test_obfuscatePed.R`; manifest-params-drift regression; confirm-gate
+start/flip/reset; 3 download-content round-trips), 1 module-contract
+registration test. Confirmed genuine RED
+(could-not-find-function/object-not-found errors) in both files. **(5)**
+RED-\>GREEN gate (`AskUserQuestion`): approved. Implemented
+`modDeidentifiedExportUI`/`modDeidentifiedExportServer` in
+`R/modDeidentifiedExport.R` (Configure & Preview tab + modal-gated
+Export tab, 3 download artifacts, `data-ready` wiring); wired
+`R/appUI.R` (new tab after Cross-Center Identity, D10) and
+`R/appServer.R` (`pedigree = reactive(shared$currentPedigree)`, D1).
+Targeted tests passed immediately. Full clean regression: 0 failed/0
+error (5233 passed, up from 5186 baseline, 15 pre-existing warnings
+unchanged – stray traceback noise confirmed byte-identical to unmodified
+`HEAD` via `git stash -u`).
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html):
+0 errors/0 warnings/1 pre-existing NOTE, confirmed byte-identical to
+unmodified `HEAD` via `git stash -u` before/after (including the raw-log
+spelling-diff detail, a pre-existing environment quirk).
+`lintr::lint_package()`: 3 style lints found and fixed (an 80-char line,
+two `brace_linter` multi-line function-body wraps), 0 remaining on all 5
+touched files.
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html):
+clean, 2 new `.Rd` pages, `NAMESPACE` +2 exports, only expected
+`@family` cross-reference churn. `_pkgdown.yml` reference-coverage gap
+caught live by its own guard test (matching this project’s own
+established checklist), fixed. **(6)** GREEN-\> REFACTOR gate
+(`AskUserQuestion`): owner confirmed no refactor candidate identified –
+proceeded to close-out. **(7)** Phase 3E live smoke test (mandatory this
+slice): an ad hoc script (not committed, matching the \#149
+no-permanent-E2E-file precedent), using this project’s own
+`tests/testthat/helper-shinytest2.R` conventions, drove the real running
+app end to end – loaded the bundled example pedigree via Input,
+navigated to De-Identified Export, confirmed config inputs + D6 warning
+text render, generated a preview (de-identified rows confirmed, no
+leaked original ids), confirmed the modal shows the warning text,
+confirmed the module’s own Export sub-tab (via a scoped selector, after
+a first unscoped `a[data-value='Export']` attempt warned of multiple
+matches – Cross-Center Identity also has a tab named “Export” – Learning
+518) shows all 3 download buttons with the map correctly labeled “DO NOT
+SHARE.” 0 console errors throughout. **(8)** Documentation:
+`NEWS.Rmd`/`NEWS.md` (re-rendered via
+`rmarkdown::render("NEWS.Rmd", quiet = TRUE)` with no format override,
+after an initial override attempt silently dropped the file’s own YAML
+`output: github_document` config and produced a near-total-diff bad
+render, caught by inspecting the diff – Learning 517); a new
+“De-Identified Export” `colony-manager-guide.qmd` subsection (text-only,
+matching Cross-Center Identity’s own no-screenshot convention for this
+governance-tool category), re-rendered clean via `quarto render`.
+`a2interactive.Rmd` deferred per its own standing rule; citation
+checklist N/A (no new displayed statistic). **(9)** `gh issue close 150`
+with a summary comment covering both slices. **(10)** This evaluation,
+self-assessment below, `PROJECT_LEARNINGS.md` Learnings 517-518,
+`BACKLOG.md` S516 progress note (issue \#150 cluster marked fully
+complete), `CHANGELOG.md` `[issue #150]` entry, `HANDOFFS.md` receipt
+completed.
+
+**Self-assessment (Session 516): 9/10.** **Strengths:** (1) Followed the
+S515 handoff’s `next_steps`/ `key_files`/`gotchas` with zero deviation
+and zero rework – every named file, function, and convention matched
+exactly. (2) Found and fixed 2 genuine correctness requirements at
+Pre-RED (manifest-params-snapshot; confirm-reset-on-re-preview) before
+they could reach RED, by direct comparison against the \#149 precedent
+rather than assuming the naive implementation was sufficient. (3) Did
+not trust the first
+[`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)
+result – inspected the diff, caught a near-total-rewrite render before
+it could have been committed as a false “insertion-only” NEWS.md change
+(Learning 517). (4) Did not trust the first live-smoke-test PASS at face
+value – noticed a real warning (`click_element_safe`’s “multiple
+elements found”), diagnosed the actual cause (a same-titled nested tab
+collision with `modCrossCenterIdentity`), and re-ran with a properly
+scoped selector before reporting a clean result (Learning 518). (5)
+Verified
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)’s
+pre-existing-NOTE baseline via `git stash -u` before/after TWICE (once
+mid-session, once again after the lint fixes +
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+regen), rather than trusting the first comparison to still hold after
+further edits. **Weaknesses:** (1) The first `NEWS.Rmd` render call
+explicitly overrode `output_format`/`output_file`, discarding the
+source’s own YAML configuration – a closer read of the file’s own front
+matter (5 lines, right at the top) before the first render attempt would
+have caught this before it produced a large diff to inspect and discard.
+(2) The first live-smoke-test click at the Export tab used an unscoped
+selector despite already knowing (from reading
+`R/modCrossCenterIdentity.R` in full at PRE-RED) that it also has an
+“Export” tab – the collision was foreseeable from research already done,
+not a novel discovery. (3) `SESSION_NOTES.md`/
+`BACKLOG.md`/`CHANGELOG.md` size crisis (flagged S509-S515, now a 9th
+consecutive session) remains unaddressed – correct protocol (owner
+picked \#150 Slice 2 over it via the priorities list), but this
+session’s own additions grow all three files further still.
+
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session),
+`[issue #150]` tag. Issue \#150 **closed** (both slices shipped) –
+`gh issue close 150` completed this session with a summary comment.
+
+### Session 514 Handoff Evaluation (by Session 515)
+
+**Score: 8/10.** **What helped:** the `HANDOFFS.md` S514 receipt’s
+`next_steps` field named the exact Slice 1 work item-for-item –
+`R/obfuscatePed.R` gains `linkedDateShift` (default `TRUE`, D3), a new
+`.buildDeidentificationManifest()` helper in a new
+`R/modDeidentifiedExport.R` (D4), full strict-TDD cycle, starting from
+the plan’s own §4/§5 – all of which this session did, in that order.
+`key_files` pointed directly at `R/obfuscatePed.R` (with an explicit
+warning not to change its existing id/name-scrub behavior, correctly
+heeded) and `R/calcAge.R` (the downstream function that turns a
+birth\>exit inversion into a negative age, read alongside the fix as
+instructed). Gotcha (1) – “a naive per-column
+[`obfuscateDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateDate.md)
+call even with a fixed seed does NOT fix the defect… the fix must draw
+exactly ONE random value per individual… write the RED test as an
+invariance assertion, not a bounds assertion” – was exactly correct and
+directly shaped both this session’s implementation (one
+[`runif()`](https://rdrr.io/r/stats/Uniform.html) draw per row, not per
+column) and its RED tests (gap-invariance, not just `age >= 0`). **What
+was missing:** the receipt could not have anticipated this session’s own
+genuine new finding – a bare
+[`set.seed()`](https://rdrr.io/r/base/Random.html) in a new test is
+silently order-dependent in this suite because this package’s own
+[`set_seed()`](https://github.com/rmsharp/nprcgenekeepr/reference/set_seed.md)
+helper permanently mutates
+[`RNGkind()`](https://rdrr.io/r/base/Random.html) for the rest of the
+`testthat` session (Learning 516) – since that risk is inherent to
+authoring any new RNG-seeded test in isolation, not something visible
+from reading the plan alone; not counted against the predecessor. **What
+was wrong:** not in the receipt’s own fields, but in the underlying
+close-out action – S514’s session did not append a `BACKLOG.md`
+“Progress” note for its design/ratification work, unlike every other
+design-session precedent in this exact cluster (S495/S503/S511,
+`BACKLOG.md:1805,1836,2003`). Flagged and reconstructed retroactively by
+this session (`BACKLOG.md`, marked as a reconstruction, not silently
+backfilled as if S514 wrote it) – not fixed as a correction, since S514
+already closed out; see `PROJECT_LEARNINGS.md` Learning 516’s sibling
+note in `BACKLOG.md`. **ROI:** High – the accurate
+`next_steps`/`key_files`/`gotchas` mapped almost 1:1 onto this session’s
+actual implementation, at zero cost to verify.
+
+### What Session 515 Did
+
+**Deliverable:** Issue \#150 Slice 1 –
+[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+gained a `linkedDateShift` parameter (default `TRUE`, closing the
+S514-found independent-per-column date-shift defect) + a new internal
+`.buildDeidentificationManifest()` helper, per
+`docs/planning/issue150-deidentified-pedigree-export-plan.md` §5 Slice
+1, following `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`,
+inside this project’s Strict TDD contract (RED-\>GREEN-\>REFACTOR, each
+transition `AskUserQuestion`-gated). Picked from this session’s own
+Phase 0 priorities list (owner choice via `AskUserQuestion`, over a
+`SESSION_NOTES.md`/`BACKLOG.md` ledger-size scoping session).
+**Started/Completed:** 2026-08-10. **Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 96/100, 1 HIGH risk: ledger-size,
+now flagged 6 consecutive sessions). Ledger reconcile clean
+(`CHANGELOG.md`/`HANDOFFS.md` frontiers already at `HEAD`). Rendered the
+priorities list via `AskUserQuestion`; owner picked issue \#150 Slice 1.
+**(2)** Phase 1B claim stub committed (`b9147d30`). **(3)** PRE-RED
+research: re-read `R/obfuscatePed.R`, `R/obfuscateDate.R`,
+`R/calcAge.R`, `tests/testthat/test_obfuscatePed.R` against current
+source (no drift from the plan), confirmed 4 Date columns exist in the
+`pedSix` fixture (genuinely N-column, not just birth/exit), reproduced
+the exact S514 negative-age defect live (`set.seed(42)`, `pedGood`, ids
+`FBCVBJ`/`E7I3LU`), read `.buildCrossCenterMergeProvenance()`
+(`R/modCrossCenterIdentity.R:67-86`) as the manifest-helper shape to
+mirror, and read `DEVELOPMENT_WORKSTREAM.md`. **(4)** PRE-RED-\>RED gate
+(`AskUserQuestion`): approved. Added 3 `test_that` blocks to
+`test_obfuscatePed.R` (linkedDateShift=TRUE explicit; the ratified TRUE
+default, omitted; linkedDateShift=FALSE still reproduces the old bug)
+and a new `tests/testthat/test_modDeidentifiedExport.R` (2 blocks) for
+`.buildDeidentificationManifest(pedRows, size, maxDelta, linkedDateShift, warningText)`.
+Confirmed genuine RED (unused-argument / could-not-find-function errors,
+not setup typos). **(5)** RED-\>GREEN gate (`AskUserQuestion`):
+approved. `R/obfuscatePed.R`: `linkedDateShift = TRUE` draws one
+[`runif()`](https://rdrr.io/r/stats/Uniform.html) offset per row and
+adds it via `ddays()` to every Date column for that row (preserves gaps
+by construction; the floor is trivially satisfied since the offset is
+within `[-maxDelta,+maxDelta]`); `FALSE` keeps the exact old per-column
+loop. New `R/modDeidentifiedExport.R`:
+`.buildDeidentificationManifest()`, mirroring
+`.buildCrossCenterMergeProvenance()`’s shape exactly. Targeted tests
+passed immediately, but the full clean regression read surfaced a
+genuine order-dependence bug in this session’s OWN new tests (not the
+production code): a bare `set.seed(42)` inherited a
+[`RNGkind()`](https://rdrr.io/r/base/Random.html) mutation left behind
+by an earlier-run test file (`test_obfuscateId.R` calling this package’s
+own
+[`set_seed()`](https://github.com/rmsharp/nprcgenekeepr/reference/set_seed.md),
+which permanently sets `sample.kind = "Rounding"` for the rest of the
+session) – diagnosed by direct experiment (not assumed), fixed by
+switching to `set_seed(3L)` (this project’s own R-version- agnostic RNG
+helper, matching every other test file’s convention) and re-deriving a
+seed that reproduces the defect deterministically under that `RNGkind`,
+verified order-independent via a deliberate RNG-perturb-then-rerun
+check. Full clean regression re-run: 0 failed/0 error, 15 pre-existing
+warnings unchanged, 5186 passed (was 5172 baseline).
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html):
+0 errors/0 warnings/1 pre-existing NOTE (`a2interactive.Rmd`
+vignette-engine NOTE, confirmed unrelated via a `git stash -u` – not a
+bare `git stash`, which does not stash untracked new files and gave a
+false 1-error baseline on the first attempt – before/after comparison).
+`lintr::lint_package()`: 0 lints package-wide.
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html):
+only `man/obfuscatePed.Rd` changed (no NAMESPACE change –
+`ddays`/`runif` already imported elsewhere). **(6)** GREEN-\>REFACTOR
+gate (`AskUserQuestion`): owner confirmed no refactor candidate
+identified (code already minimal, mirrors precedent exactly) – proceeded
+straight to close-out. **(7)** `NEWS.Rmd` entry added and rendered to
+`NEWS.md` (diff-confirmed clean, insertion-only). No `_pkgdown.yml`
+change needed (`.buildDeidentificationManifest` is `@noRd`;
+`obfuscatePed` already listed). Phase 3E runtime smoke test: **n/a** –
+Slice 1 is script-callable-function-level only, no Shiny UI/runtime
+wiring touched (the module ships in Slice 2); stated explicitly, not
+silently skipped. **(8)** This evaluation, self-assessment below,
+`PROJECT_LEARNINGS.md` Learning 516, a reconstructed S514 `BACKLOG.md`
+progress note (flagged as reconstructed, not fabricated-as-original)
+plus this session’s own S515 progress note, `CHANGELOG.md`
+`[issue #150]` entry, `HANDOFFS.md` receipt completed.
+
+**Self-assessment (Session 515): 9/10.** **Strengths:** (1) Diagnosed a
+genuine, previously-unseen order-dependence bug in my own new tests via
+direct experiment (isolating the RNG state, testing under both
+`RNGkind`s, confirming order-independence after the fix with a
+deliberate perturbation) rather than just re-picking a different seed
+and hoping – root-caused to this project’s own
+[`set_seed()`](https://github.com/rmsharp/nprcgenekeepr/reference/set_seed.md)
+convention, not patched around blindly. (2) Caught a false “1 error”
+baseline during the
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+before/after comparison caused by `git stash` (no `-u`) leaving my new
+untracked files in place against reverted tracked files – diagnosed and
+corrected to `git stash -u` before trusting the baseline, rather than
+reporting a spurious pre-existing error. (3) Wrote the RED tests as
+invariance assertions (`exit - birth` gap unchanged), not just bounds
+assertions (`age >= 0`), per the plan’s own Dragon 2 guidance – the
+stronger, correct claim. (4) Found and flagged (without silently fixing
+or silently ignoring) S514’s own missing `BACKLOG.md` progress note,
+reconstructing it clearly labeled as a reconstruction rather than
+passing it off as original. **Weaknesses:** (1) The first RED-test draft
+used base [`set.seed()`](https://rdrr.io/r/base/Random.html) instead of
+this project’s own
+[`set_seed()`](https://github.com/rmsharp/nprcgenekeepr/reference/set_seed.md)
+convention, despite
+[`set_seed()`](https://github.com/rmsharp/nprcgenekeepr/reference/set_seed.md)
+being visibly used throughout the very test files adjacent to the one
+being edited (`test_obfuscateId.R` is 2 files away alphabetically) – a
+closer read of neighboring test-file conventions during PRE-RED could
+have caught this before it reached GREEN instead of during the
+full-regression check. (2) `SESSION_NOTES.md`/`BACKLOG.md` size crisis
+(flagged S509-S514, now a 7th consecutive session) remains unaddressed –
+correct protocol (owner picked issue \#150 Slice 1 over it), but this
+session’s own additions grow both files further still.
+
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session),
+`[issue #150]` tag. Issue \#150 stays open (Slice 2 – full UI module,
+confirm gate, exports, documentation – is a separate future session) –
+no `gh issue close` this session.
+
+### Session 513 Handoff Evaluation (by Session 514)
+
+**Score: 8/10.** **What helped:** the `HANDOFFS.md` S513 receipt’s
+`next_steps` field named the 3 lower-priority items its own Phase 0
+priorities list rendered but the owner didn’t pick, one of which –
+“issue \#150’s policy decision (owner review needed, not an engineering
+task)” – is exactly what this session’s own owner-picked priorities list
+surfaced and what got picked. The “not an engineering task” framing
+correctly primed this session to lead with an `AskUserQuestion` policy
+decision before any research, matching the sequencing audit’s own
+Finding \#3 recommendation almost verbatim. Gotcha (2)
+(`lintr::lint_package()`, never `linters_with_defaults()`) remains
+accurate, though not exercised this session (zero code touched –
+design-only). **What was missing:** nothing that blocked this session –
+the handoff correctly scoped items outside its own issue \#151 cluster
+as pointer-only (no file/line detail), which is appropriate since S513
+had not researched \#150 itself; this session’s own PRE-RED research (§2
+of the new design doc) had to be done from scratch, as expected for a
+new workstream. **What was wrong:** nothing found – the
+`commit: pending` field remains unreconciled to a real sha, matching the
+same pattern already noted (not fixed) in S512’s own receipt; this
+appears to be a standing, accepted convention per `HANDOFFS.md`’s own
+documented write-time constraint, not a defect specific to S513.
+**ROI:** High – the accurate `next_steps` pointer to issue \#150 (and
+its correct “policy, not engineering” framing) shaped how this session
+opened, at zero cost to verify.
+
+### What Session 514 Did
+
+**Deliverable:** Issue \#150 (de-identified pedigree export workflow) –
+resolved the owner policy decision
+`GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` Finding \#3
+flagged, and produced a ratified architecture/design document, following
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`. Design-only
+session, matching the \#133/#136/#137/#145/#146/#147/#149/#151 precedent
+– zero `R/`/`tests/`/`man/` changes. **Started/Completed:** 2026-08-10.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 96/100, 1 HIGH risk: ledger-size
+confirmed via `methodology_trim.py --check` on all 4 ledger files:
+`SESSION_NOTES.md`/`BACKLOG.md` have no trim config at all;
+`CHANGELOG.md`/`HANDOFFS.md` both have configs and both triggers
+currently fire). Ledger reconcile clean (`CHANGELOG.md`/`HANDOFFS.md`
+frontiers already at `HEAD`). Cross-checked both standing sequencing
+audits (genetic-metrics and pedigree-diagram clusters) against current
+`gh issue list`/`BACKLOG.md` state and confirmed all of each cluster’s
+Tier 1/Tier 2 ready-to-build items are now fully shipped and closed –
+what remains in each is exactly what the priorities list below reflects.
+Rendered the priorities list via `AskUserQuestion`; owner picked issue
+\#150’s policy decision. **(2)** Phase 1B claim stub committed
+(`f6248e40`). **(3)** Put the sequencing audit’s own Finding \#3 policy
+question to the owner directly via `AskUserQuestion` before any
+technical research, per the audit’s own recommendation: owner chose
+“yes, formalize it.” **(4)** PRE-RED research
+(`ARCHITECTURE_WORKSTREAM.md` Phase 2): direct reads of
+`R/obfuscateId.R`/`R/obfuscateDate.R`/`R/obfuscatePed.R`/`R/mapIdsToObfuscated.R`/`R/calcAge.R`/
+`R/columnSchema.R`, the closest UI precedent
+`R/modCrossCenterIdentity.R` in full, `R/appServer.R`/ `R/appUI.R`
+wiring conventions, `docs/architecture/module-contract.md`, and
+`tests/testthat/test_obfuscatePed.R`. Found `shared$currentPedigree`
+(not a fresh upload) is the correct data source, contra a naive read of
+\#149’s own upload-based precedent. **Found and empirically verified a
+real, previously-unflagged defect** (not assumed from reading the code
+alone):
+[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+shifts each Date column independently, which can invert an individual’s
+`birth`/`exit` order and produce a negative recomputed age – reproduced
+via a seeded `Rscript` against the bundled `pedGood` fixture (25% of a
+small realistic-gap test case). **(5)** Wrote
+`docs/planning/issue150-deidentified-pedigree-export-plan.md` (11
+sections, matching the established template: context, evidence-based
+inventory, design decisions, interface catalog, 2-slice implementation
+plan, impact analysis, 4 dragons, alternatives considered, close-out
+checklist mapping, provenance, ratification status). **(6)** Ratified 4
+genuine judgment calls via one `AskUserQuestion` round (D3 fix the date
+defect now in Slice 1, default `linkedDateShift = TRUE`; D6 explicit
+institutional-responsibility warning text, this app’s first; D8 disclose
+rather than scrub non-id/date fields; D10 tab placement after
+Cross-Center Identity) – owner selected this document’s own recommended
+option in all four, no changes requested. **(7)** Posted a
+ratified-design summary comment on GitHub issue \#150
+(<https://github.com/rmsharp/nprcgenekeepr/issues/150#issuecomment-5248437483>),
+matching the \#149/#151 precedent; issue \#150 stays intentionally open
+(design ratified, not yet implemented). **(8)** Housekeeping: a stray
+`__pycache__/` byproduct from this session’s own
+`methodology_dashboard.py`/`methodology_trim.py` runs added to
+`.gitignore` and removed (was never gitignored before; confirmed via
+`git log` this directory has no prior tracked history). **(9)** This
+evaluation, self-assessment below, `PROJECT_LEARNINGS.md` Learning 515,
+`CHANGELOG.md` `[issue #150]` entry, `HANDOFFS.md` receipt completed.
+
+**Self-assessment (Session 514): 9/10.** **Strengths:** (1) Followed the
+sequencing audit’s own Finding \#3 recommendation literally – put the
+exact policy question to the owner, in the owner’s own words, before
+starting any technical design work, rather than assuming approval or
+silently designing around the open question. (2) Found and empirically
+verified (not assumed) a genuine, previously-shipped,
+previously-untested defect in
+[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)’s
+date handling directly relevant to this feature’s own core correctness
+promise (“relationship-preserving”), via a reproducible, seeded
+`Rscript` test against real bundled fixture data – not a hypothetical
+concern. (3) Correctly identified that issue \#150’s data-source shape
+differs from the nearest precedent (#149’s upload-based module) by
+reading `R/appServer.R`’s actual wiring for every other module, rather
+than pattern-matching \#149’s shape onto \#150 by surface similarity.
+(4) Kept the judgment-call count to exactly 4 genuine decisions
+(matching the \#146/#147/#149 precedent) by correctly classifying
+D1/D2/D4/D5/D7/D9 as forced/mechanical rather than padding the
+`AskUserQuestion` round with decisions that were not really the owner’s
+to make. (5) Posted the GitHub issue comment matching established
+precedent, and correctly left the issue open (design-only, not
+implemented). **Weaknesses:** (1) Did not use a multi-agent research
+`Workflow` for the PRE-RED reading (direct `Read`/`Grep`/`Bash`,
+matching the majority of recent design sessions in this cluster) – no
+`Workflow`-opt-in signal present, and the codebase surface here was
+narrow enough (4 existing functions, 1 precedent module) for direct
+reading to be efficient. (2) `SESSION_NOTES.md`/`BACKLOG.md` size crisis
+(flagged S509-S513, now a 6th consecutive session) remains unaddressed –
+correct protocol (owner picked \#150 over it), but this session’s own
+additions grow `SESSION_NOTES.md` further still, same as every session
+before it.
+
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session),
+`[issue #150]` tag. Issue \#150 stays open (design ratified, not
+implemented) – no `gh issue close` this session.
+
+### Session 512 Handoff Evaluation (by Session 513)
+
+**Score: 8/10.** **What helped:** the `HANDOFFS.md` S512 receipt’s
+`next_steps` field named exactly this session’s work item-for-item –
+`R/modMatePair.R` (new `modMatePairUI`/`modMatePairServer`), the D6
+`appServer.R` marker-kinship capture, `appUI.R` tab mount (§2.8
+convention), tutorial/article documentation, a live smoke test, and
+`gh issue close 151` at this slice’s own close-out – all of which this
+session did, in that order. `key_files` pointed directly at
+`R/appServer.R:430-439` (the exact call site edited for D6) and the
+plan’s own §4/§5, both used as-cited with zero re-derivation needed.
+Gotcha (2) (`filterAge()`’s NA-passes semantics means the UI must make
+population-scope mandatory-feeling) was followed exactly – the
+population-scope radio has no “off”/“skip” option, matching D4’s own
+ratified requirement. **What was missing:** nothing structural; Gotcha
+(1) (no RED test for a negative `markerKinship` passthrough in Slice 1’s
+own suite) remains open and out of this slice’s scope (a Slice-1
+unit-test gap, not a Slice-2 module concern) – named again here rather
+than silently dropped. **What was wrong:** the `next_steps` field’s own
+parenthetical “a live shinytest2/chromote smoke test (Dragons \#6/#7 on
+modalDialog()/DT NA-rendering)” does not match the actual ratified plan
+– `grep` for “modalDialog” and “Dragon 7”/“Dragon \#7” across
+`docs/planning/issue151-individual-mate-pair-analysis-plan.md` returns
+zero matches; the plan’s own §7 has exactly 6 dragons, and Dragon 6 is a
+zero-eligible- population empty state, not a modal dialog. Cost nothing
+this session (the smoke test was planned independently from the plan
+document itself, not from this citation), but it is a real inaccuracy in
+an otherwise-accurate handoff – see `PROJECT_LEARNINGS.md` Learning 514.
+**ROI:** High overall – the accurate 95% of the `next_steps`/`key_files`
+content saved substantial research time; the one inaccurate citation
+cost nothing only because it was independently verified rather than
+trusted.
+
+### What Session 513 Did
+
+**Deliverable:** Issue \#151 Slice 2 – UI, `appServer.R` wiring, and
+documentation for individual mate-pair analysis (DONE – the final
+planned slice; issue \#151 closed), following
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` and the
+ratified plan’s own §5 Slice 2 spec
+(`docs/planning/issue151-individual-mate-pair-analysis-plan.md:181-198`),
+inside this project’s Strict TDD contract (RED -\> GREEN -\> REFACTOR,
+each transition gated via `AskUserQuestion`). Picked from this session’s
+own Phase 0 priorities list (owner choice via `AskUserQuestion`, over
+scoping a trim-tool config for `SESSION_NOTES.md`/`BACKLOG.md`, a
+routine `CHANGELOG.md`/`HANDOFFS.md` trim, and issue \#150’s policy
+decision). **Started/Completed:** 2026-08-10. **Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 96/100, 1 HIGH risk: ledger-size).
+Ledger reconcile clean (`CHANGELOG.md`/`HANDOFFS.md` frontiers already
+at `HEAD`). Rendered the priorities list via `AskUserQuestion`; owner
+picked Issue \#151 Slice 2. **(2)** Phase 1B claim stub committed
+(`22669101`). **(3)** PRE-RED research: read
+`DEVELOPMENT_WORKSTREAM.md`, `module-contract.md`,
+`R/reportMatePairs.R` + its test fixture, `R/modBreedingGroups.R` and
+`R/modMarkerGenetics.R` (UI/server precedent),
+`R/appServer.R`/`R/appUI.R` (wiring/mount convention), and the plan’s
+full §1-11 (confirming §11’s ratified D3/D4/D5). Found the
+`geneticValues` shape mismatch directly by reading
+`R/modGeneticValue.R`’s own `gvResults()` eventReactive body:
+`shared$geneticValues` is the flat `reportGV()$report` data.frame
+(matching `modBreedingGroupsServer`’s own `geneticValues()$id` usage),
+not the `list(report = ...)` shape
+[`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
+expects – the module must wrap it. **(4)** PRE-RED-\>RED gate
+(`AskUserQuestion`, naming this finding plus two implementation-level
+calls – “Upload list” relabeled as a paste-IDs textarea, no CSV export
+for the Excluded table): approved. Wrote
+`tests/testthat/test_modMatePair.R` (15 `test_that` blocks covering
+module rendering, all 3 population-scope sources, the age/exclude- list
+screens, marker-kinship NULL/populated wiring, the D7 `geneticValues`
+wrap (a fixture specifically designed so an unwrapped pass-through would
+silently regress to all-`NA` instead of erroring), filtered-vs-full CSV
+export, and a zero-eligible-population empty state) and added the
+`modMatePair` entry to `tests/testthat/test_moduleContract.R`. Confirmed
+RED cleanly: both files failed on “could not find function/module,” not
+setup typos. **(5)** RED-\>GREEN gate (`AskUserQuestion`): approved.
+Wrote `R/modMatePair.R` (new, exported `modMatePairUI`/
+`modMatePairServer`), edited `R/appServer.R` (captured
+`markerResults <- modMarkerGeneticsServer(...)`, D6; mounted the new
+module) and `R/appUI.R` (new “Mate Pair Analysis” tab after Breeding
+Groups). Targeted tests found a genuine, previously-undiscovered bug in
+Slice 1’s own `R/reportMatePairs.R`: `kin$col <- NA_real_` (a bare
+scalar) throws `"replacement has 1 row, data has 0"` on this R version
+when the age filter alone reduces `kin` to exactly 0 rows – a case Slice
+1’s own test suite never exercised. Surfaced to the owner via
+`AskUserQuestion` (a file outside GREEN’s approved scope); approved “fix
+now.” Added a RED regression test to `test_reportMatePairs.R`, confirmed
+it failed genuinely, then fixed all 5 scalar assignments
+(`rep(NA_real_, nrow(kin))`) – root-cause, minimal, contained to the one
+function. Full clean regression: 0 failed/0 error, 15 pre-existing
+warnings unchanged, 5172 passed.
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html):
+0 errors/0 warnings/1 pre-existing note (matched the established
+baseline – a separate, PRE-EXISTING `spelling.Rout`/`.Rout.save`
+mismatch was confirmed unrelated to this session via a `git stash`
+baseline check before deciding not to fix it; only the session’s own new
+“textarea” WORDLIST gap was fixed, matching the S502 precedent). `lintr`
+on touched files: 0 lints (first pass used a bare
+`linters_with_defaults()`, which ignores this project’s own `.lintr`
+config and produced hundreds of false positives across the whole package
+– corrected to `lint_package()`). Two additional guard-test failures
+surfaced only on a full, untargeted regression read:
+`test_pkgdown_reference_config.R` (new exported functions not yet in
+`_pkgdown.yml`) and `test_shinytest2_workflow_coverage.R` (the new E2E
+test file not yet in any `.github/workflows/shinytest2.yaml` group
+regex) – both fixed. **(6)** Live Phase 3E smoke test: wrote
+`tests/testthat/test-e2e-mate-pair-analysis-module.R` (opt-in,
+`NPRC_RUN_E2E=true`) driving the real app – upload the example pedigree,
+upload a small genotype file for 2 real breeding-age ids on Marker
+Genetics (proving Marker Genetics itself still renders post-D6),
+configure and run Mate Pair Analysis with a 6-id custom population and
+one excluded id, and assert the genotyped pair’s ids appear, the
+excluded id is absent from Eligible Pairs and present in Excluded with
+`"user-excluded"`, and zero related console errors. Ran it live: 8/8
+assertions passed. **(7)** GREEN-\>REFACTOR gate (`AskUserQuestion`):
+approved, for one specific candidate – `geneticValues()` was read twice
+in the same observer; consolidated to one read. Re-verified: targeted
+tests, full regression, lintr all clean. **(8)** Documentation:
+`NEWS.Rmd` entry (rendered to `NEWS.md`, diff confirmed clean after
+fixing a source line-wrap that had produced a stray “sortable/
+filterable” space); a new “### Mate Pair Analysis” section in
+`vignettes/articles/colony-manager-guide.qmd` (mirroring the Marker
+Genetics section’s structure); extended
+`vignettes/articles/colony-manager-guide-screenshots.R` with a new
+capture block (the first in that script to upload a genotype file) and
+regenerated all 81 article screenshots (all previously- existing
+captures re-touched in place, matching this script’s own established
+“regenerate as-is” convention – confirmed the 2 new screenshots
+visually: row 1 of Eligible Pairs shows a real, non-`NA` `markerKinship`
+value, directly proving the D6 wiring live; the Excluded tab shows all 3
+dropped pairs with `"user-excluded"`). `a2interactive.Rmd` deferred per
+its own standing rule (this is a Shiny-UI-only feature). **(9)** This
+evaluation, self-assessment below, `PROJECT_LEARNINGS.md` Learnings
+513/514, `CHANGELOG.md` `[issue #151]` entry, `BACKLOG.md` progress
+note, `gh issue close 151`, `HANDOFFS.md` receipt completed.
+
+**Self-assessment (Session 513): 9/10.** **Strengths:** (1) Found the
+`geneticValues` shape mismatch (flat data.frame vs. `list(report=...)`)
+by reading the actual reactive body in `R/modGeneticValue.R`, not
+assumed from the interface catalog’s prose – and wrote a RED test
+fixture specifically designed to catch a regression to the unwrapped
+form (values would silently go `NA`, not error). (2) Found a genuine,
+previously-shipped bug in `R/reportMatePairs.R` via new test coverage,
+reproduced it standalone before touching any code, surfaced it to the
+owner since it was outside GREEN’s approved file scope rather than
+silently fixing it, and fixed it with a minimal, root-cause change plus
+its own dedicated regression test. (3) Ran a REAL live E2E smoke test
+against the running app (not just `testServer()` mocks) with a fixture
+specifically constructed so a real, non-`NA` marker-kinship value would
+appear – directly, visually proving the D6 wiring live in the captured
+screenshot, not merely asserted in a unit test. (4) Caught two
+guard-test regressions (`_pkgdown.yml` coverage, `shinytest2.yaml`
+group-regex coverage) that only a full, untargeted regression read
+surfaces – exactly the failure mode `PROJECT_LEARNINGS.md` Learning 312
+already named for the second of the two. (5) Caught and corrected its
+own lintr invocation mistake (`linters_with_defaults()` bypassing the
+project’s `.lintr` config) before treating the resulting noise as real.
+(6) Verified a specific handoff citation against its source document at
+Phase 3A rather than repeating it, finding a real inaccuracy (Learning
+514). **Weaknesses:** (1) The initial `lintr::linters_with_defaults()`
+mistake cost one wasted tool call and a moment of false alarm before
+being caught – a `lint_package()`-first instinct would have avoided it.
+(2) Did not use a multi-agent research `Workflow` for the PRE-RED
+reading (direct `Read`/`Grep`/`Bash`, matching S511/S512’s own
+precedent) – no `Workflow`-opt-in signal present, and the plan’s own
+interface catalog kept the research surface manageable. (3)
+`SESSION_NOTES.md`/`CHANGELOG.md`/`BACKLOG.md` size crisis (flagged
+S509-S512) remains unaddressed for a fifth consecutive session – correct
+protocol (owner picked Slice 2), but the risk keeps compounding; this
+session’s own additions grow `SESSION_NOTES.md` further still.
+
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session),
+`[issue #151]` tag. **GitHub issue \#151 closed** this session – the
+final planned slice.
+
+### Session 511 Handoff Evaluation (by Session 512)
+
+**Score: 9/10.** **What helped:** the `HANDOFFS.md` S511 receipt’s
+`next_steps` field named exactly this session’s pickup (“Slice 1 of
+`docs/planning/issue151-individual-mate-pair-analysis-plan.md` – the
+core
+[`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
+function (§5 Slice 1), script-callable only, no UI. Start with §4’s
+interface catalog… and §5’s own file/test list”), which is precisely
+what this session did – the plan’s own §4 interface catalog (exact
+column names `sireId`/`damId`/`kinship`/
+`markerKinship`/`sireIndivMeanKin`/`sireGu`/`damIndivMeanKin`/`damGu`)
+removed essentially all design ambiguity from RED, letting the test file
+be written directly from the spec rather than re-deriving it. Gotcha (1)
+(`filterAge()`‘s NA-passes semantics means `minAge` alone can’t bound
+output; a RED test should exercise a mostly-NA-age case) was followed
+exactly – Test 2’s fixture (S3/D3 with `NA` age) was built specifically
+to reproduce this gotcha as a regression case, and it directly caught
+nothing wrong (the design was already correct) but confirmed the fixture
+design was on-target. Gotcha (4) (the 3 ledger files past the 2,000-line
+cap, “increasingly urgent, not routine”) remains accurate and
+unaddressed for a fourth consecutive session – this session again did
+not pick it (the owner chose Slice 1 instead), correct per
+one-deliverable-per-session, but it should weigh even more heavily on a
+near-future session’s own priorities list. **What was missing/not
+applicable:** `key_files`’ pointer to
+`R/getAnimalsWithHighKinship.R:41-59` (“the exact eligibility-pipeline
+composition Slice 1 reuses”) was not actually consulted this session –
+the plan’s own §4/§5 fully specified the composition
+(`kinMatrix2LongForm`+`filterPairs`+`filterAge`+ `filterKinMatrix`)
+without needing that file as a second reference; not a defect in the
+handoff (a reasonable pointer to offer), just unused. Gotcha (2)
+([`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)’s
+negative/NA values must render sensibly) is Slice-2-UI-scoped in the
+handoff’s own framing, but is also a live concern for Slice 1’s
+`markerKinship` column – this session’s implementation passes
+marker-kinship values through unclipped (so a negative value is
+preserved correctly), but no RED test explicitly asserts this, an honest
+gap named in this session’s own self-assessment below. **What was
+wrong:** nothing found inaccurate. **ROI:** High – the `next_steps` and
+`key_files` pointer to the plan document meant this session could write
+RED directly from a fully-specified interface catalog with zero design
+back-and-forth.
+
+### What Session 512 Did
+
+**Deliverable:** Issue \#151 Slice 1 – the core
+[`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
+function (new, exported), following
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` and the
+ratified plan’s own §5 Slice 1 spec
+(`docs/planning/issue151-individual-mate-pair-analysis-plan.md:155-173`),
+inside this project’s Strict TDD contract (RED -\> GREEN -\> REFACTOR,
+each transition gated via `AskUserQuestion`). Picked from this session’s
+own Phase 0 priorities list (owner choice via `AskUserQuestion`, over a
+routine `CHANGELOG.md`/`HANDOFFS.md` ledger trim and scoping a
+`SESSION_NOTES.md` trim-tool config). **Started/Completed:** 2026-08-10.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 96/100, 1 HIGH risk: 3 ledger files
+past the 2,000-line read cap, `SESSION_NOTES.md` now 39,554 lines).
+Ledger reconcile found both `CHANGELOG.md` and `HANDOFFS.md` frontiers
+already at `HEAD` – no undocumented commits, clean. Rendered the
+priorities list (issue \#151 Slice 1 / a routine ledger trim / scoping a
+`SESSION_NOTES.md` trim config) via `AskUserQuestion`; owner picked
+Slice 1. **(2)** Phase 1B claim stub committed (`e9a56150`) to both
+`SESSION_NOTES.md` and `HANDOFFS.md`. **(3)** PRE-RED-\>RED gate
+(`AskUserQuestion`): approved. Read `R/filterPairs.R`, `R/filterAge.R`,
+`R/kinMatrix2LongForm.R`, `R/filterThreshold.R`, `R/filterKinMatrix.R`,
+`R/markerKinship.R`, `R/sexCodes.R`, relevant sections of
+`R/reportGV.R`/`R/orderReport.R`/`R/columnSchema.R`/`R/assertRequiredColsPresent.R`,
+and existing test files (`test_filterPairs.R`, `test_filterAge.R`) for
+fixture/idiom conventions. Wrote
+`tests/testthat/test_reportMatePairs.R`: an 11-individual hand-built
+pedigree fixture deliberately shaped to reproduce the plan’s own Dragon
+\#1 (two founders with `NA` age, unbounded by `minAge` alone, only
+excluded by the D4 `populationIds` scope) as a small deterministic
+regression case, plus 8 `test_that` blocks covering every Slice 1 DONE
+criterion from the plan’s §5 test list. Confirmed RED cleanly: 0/8
+blocks passed, every failure traced to “could not find function
+reportMatePairs” or (for the malformed-input test, tightened with a
+regexp pattern after noticing a bare `expect_error()` would spuriously
+pass even with the function missing) a correct regexp mismatch against
+that same error – not a setup/typo mistake. **(4)** RED-\>GREEN gate
+(`AskUserQuestion`): approved. Wrote `R/reportMatePairs.R` (new,
+exported) composing the existing, unmodified pipeline
+(`kinMatrix2LongForm(removeDups=TRUE)` -\>
+[`filterPairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/filterPairs.md)
+(opposite-sex only) -\> per-row `sireId`/`damId` resolution from
+`ped$sex`, independent of matrix row/col order -\> age screen -\>
+user-`exclude` screen -\> marker-kinship merge (`NA`-safe) -\>
+genetic-value merge (`NA`-safe)), with loud
+[`stop()`](https://rdrr.io/r/base/stop.html) validation on a malformed
+`ped`/`kmat` shape via `assertRequiredColsPresent()`. `git stash -u`
+before/after comparison confirmed the session’s diff changed 0 of the 15
+pre-existing baseline warnings (a real regression check, not assumed).
+Full clean regression: 0 failed/0 error after fixing one real,
+anticipated gap (the `_pkgdown.yml` reference-coverage guard,
+`test_pkgdown_reference_config.R`, fixed by adding `reportMatePairs` to
+the “All exposed functions” group).
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html):
+first pass found one genuine new WARNING (an Rd cross-reference to
+`filterAge`, a `@noRd` internal function with no `.Rd` page to link to)
+– fixed by dropping the `\link{}` in favor of plain
+`\code{filterAge()}`; second pass 0 errors/0 warnings/1 pre-existing
+note (the `a2interactive.Rmd` vignette-engine note, unrelated).
+`lintr::lint_package()` on `R/reportMatePairs.R`: 2 line-length lints
+found and fixed. **(5)** GREEN-\>REFACTOR gate (`AskUserQuestion`):
+approved, for one specific, self-reviewed candidate – removed two
+redundant `&& nrow(kin) > 0L` guards in the marker-kinship/genetic-value
+merge blocks (R’s vectorized
+[`match()`](https://rdrr.io/r/base/match.html)/`%in%`/[`any()`](https://rdrr.io/r/base/any.html)
+are already 0-row-safe; the guards added noise with no behavior
+difference). Re-verified: targeted test 8/8 pass, full regression 0
+failed/0 error (15 pre-existing warnings unchanged),
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings/1 pre-existing note, `lintr` 0 lints. **(6)**
+Close-out checklist mapping (plan §9): citation checklist N/A (no new
+displayed statistic –
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)/[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)/[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)’s
+columns are consumed as-is, already cited); tutorial/article checklist
+N/A this slice (applies at Slice 2, new Shiny tab); `NEWS.Rmd` entry
+added (new exported function, matching the
+[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
+Slice-1-only precedent style) and rendered to `NEWS.md` via
+`rmarkdown::render(output_format="github_document")` – diff confirmed
+exactly the new bullet, no reflow churn; `a2interactive.Rmd` deferred
+per its own standing rule; `_pkgdown.yml` reference-coverage DONE
+(above); GitHub issue close-out N/A this slice (issue \#151 stays open –
+Slice 2 remains); lint DONE (above). Phase 3E runtime smoke: n/a –
+confirmed via `grep` that `reportMatePairs` has no call site in
+`R/appServer.R`/`R/appUI.R`/any `R/mod*.R` (script-callable only,
+matching the plan’s own Slice 1 scope and the
+[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)
+Slice 1 precedent). **(7)** This evaluation, self-assessment below,
+`CHANGELOG.md` `[issue #151]` entry, `BACKLOG.md` progress note,
+`HANDOFFS.md` receipt completed.
+
+**Self-assessment (Session 512): 9/10.** **Strengths:** (1) The plan’s
+own §4 interface catalog (exact column names, error contract,
+`NULL`-safety rules) let RED be written directly from spec with zero
+design ambiguity – a direct payoff of S511’s design-session discipline.
+(2) Caught a genuine test-design bug during GREEN’s own verification
+(not glossed over): a bare `all(cExcluded$reason == "user-excluded")`
+assertion was wrong because a pair can be legitimately excluded by age
+independent of a shared individual’s separate user-exclusion (`Y x C`, Y
+underage regardless of C’s exclude-list membership) – fixed the test to
+[`any()`](https://rdrr.io/r/base/any.html), matching the actual per-pair
+(not per-individual) semantics of “reason”, and documented why inline
+rather than silently loosening the assertion. (3) Ran a real
+`git stash -u` before/after regression comparison (matching this
+project’s own established due-diligence method, `PROJECT_LEARNINGS.md`
+Learning 503’s own stash-contamination caveat correctly avoided by
+including untracked new files via `-u`) to prove the 15 pre-existing
+baseline warnings were genuinely unchanged, rather than assuming it from
+the BACKLOG.md note alone. (4) Found and fixed a real
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+WARNING (`\link{filterAge}` to a non-exported, undocumented function)
+that a less careful pass could have missed since the targeted test suite
+and full regression were already both green at that point –
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+is a genuinely different, necessary verification surface. (5) The
+REFACTOR gate produced one real, justified, narrowly-scoped
+simplification (not a rubber-stamp “nothing to refactor”) found via
+actual self-review, not just proposed reflexively. **Weaknesses:** (1)
+No explicit RED test proves a negative `markerKinship` value (a valid,
+documented
+[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)
+output, per the plan’s own Dragon \#3) passes through this function
+unclipped – the implementation is a direct, untransformed passthrough so
+it is correct by construction, but this specific case is untested,
+unlike the NA-passthrough case which IS tested. Named here rather than
+silently left for Slice 2 to discover. (2) Did not use a multi-agent
+research `Workflow` for the RED-phase file reading (direct
+`Read`/`Grep`/`Bash`, matching S511’s own precedent and reasoning – no
+`Workflow`-opt-in signal present, and the plan’s own interface catalog
+already made the research surface small). (3)
+`SESSION_NOTES.md`/`CHANGELOG.md`/`BACKLOG.md` size crisis (flagged
+S509/S510/S511) remains unaddressed for a fourth consecutive session –
+correct protocol (owner picked Slice 1), but the risk itself keeps
+compounding.
+
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session),
+`[issue #151]` tag. No GitHub issue closed this session (issue \#151
+stays open – Slice 2, a separate future session, is the final planned
+slice before closing it).
+
+### Session 510 Handoff Evaluation (by Session 511)
+
+**Score: 9/10.** **What helped:** the `HANDOFFS.md` S510 receipt’s
+`next_steps` field named “issue \#151 design (Tier 2, next after \#146
+in the ratified sequencing audit – no design doc yet, so this would open
+as a planning session, not straight implementation)” – exactly what this
+session’s own independently-re-derived Phase 0 priorities list also
+surfaced (cross-checked against
+`GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` and
+`gh issue list` directly, not just trusted), and exactly what the owner
+picked, and exactly the right shape (design, not implementation – S510
+correctly anticipated no ratified plan existed yet). **What was
+missing/not applicable:** S510’s `key_files`/`gotchas` were scoped to
+issue \#146’s own family
+([`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)/`enumerateMaximalIndependentSets()`/`modBreedingGroups.R`)
+and had no direct bearing on \#151’s actual research this session
+([`filterPairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/filterPairs.md)/`filterAge()`/[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)/
+`modMarkerGenetics.R`/`appServer.R`’s marker-kinship wiring gap) –
+expected and not a knock against S510, since a handoff correctly scopes
+detail to what it worked on, and \#151’s specific findings (the
+discarded `markerKinshipMatrix` reactive, the population-scoping
+benchmark) were genuinely new research this session’s own job to do, not
+something S510 could have anticipated. Gotcha (4) (`SESSION_NOTES.md`
+still growing, not addressed) remains accurate and still open – this
+file is now even larger after this session’s own additions, unaddressed
+again (see Self-assessment below). **What was wrong:** nothing found
+inaccurate; the `commit: pending` placeholder in S510’s own
+`HANDOFFS.md` receipt was a documented, legal write-time placeholder
+(the receipt ships in the very commit whose sha it would name), not an
+error – reconciled to `abca9edc` this session per the format doc’s own
+described mechanism. **ROI:** High – the `next_steps` pointer directly
+matched this session’s own independently-derived pick, and the “design
+session, not implementation” framing was exactly correct.
+
+### What Session 511 Did
+
+**Deliverable:** Issue \#151 (individual mate-pair analysis alongside
+breeding-group optimization) – one RATIFIED design/architecture document
+(`docs/planning/issue151-individual-mate-pair-analysis-plan.md`),
+following `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`, per
+the ratified
+`docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` Tier
+2 item 3 (the natural next pickup now that \#146/#147/#149 are all
+shipped and closed). Followed this project’s Strict TDD contract’s
+PRE-RED framing (a planning session writes no test/implementation code;
+its own judgment-call decisions are `AskUserQuestion`-gated). Picked
+from this session’s own Phase 0 priorities list (owner choice via
+`AskUserQuestion`, over trimming the oversized ledger files, filing 2
+new tracking issues for unfiled High-priority audit gaps, and surfacing
+issue \#150’s policy decision). **Started/Completed:** 2026-08-10.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 96/100, 1 HIGH risk: 3 ledger files
+now past the 2,000-line read cap). Ledger reconcile found both
+`CHANGELOG.md` and `HANDOFFS.md` frontiers already at `HEAD` – no
+undocumented commits, clean. Rendered the CLAUDE.md-mandated priorities
+list from `BACKLOG.md` tags + both ratified sequencing audits
+(`GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md`,
+`PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`) cross-checked
+against live `gh issue view` state for every cited issue number (not
+trusted from the audit text alone) – found several `BACKLOG.md` tags
+(`DECISION NEEDED`, `READY`) were stale (their own body text showed the
+work already DONE), a minor doc-hygiene gap noted but not fixed (out of
+Phase 0’s read-only scope). Presented via `AskUserQuestion`; owner
+picked “#151 mate-pair design session.” **(2)** Phase 1B claim stub
+committed (`43dc264a`) to both `SESSION_NOTES.md` and `HANDOFFS.md` (a
+`status: pending` receipt). **(3)** Research: read
+`ARCHITECTURE_WORKSTREAM.md` in full; fetched issue \#151’s verbatim
+text via `gh issue view`; read six files in full (`R/filterPairs.R`,
+`R/filterAge.R`, `R/kinMatrix2LongForm.R`, `R/filterThreshold.R`,
+`R/getAnimalsWithHighKinship.R`, `R/markerKinship.R`) plus relevant
+sections of `R/reportGV.R`/ `R/orderReport.R`, `R/modMarkerGenetics.R`,
+`R/modBreedingGroups.R`, `R/appServer.R`, `R/appUI.R`,
+`docs/architecture/module-contract.md`. **Found two genuinely new
+architectural facts, not anticipated by the source sequencing audit:**
+(a) the audit’s own “shared-file risk” flag (#146/ \#151 both touch
+`modBreedingGroups.R`) does not hold for \#151 as designed – the
+reusable pair-eligibility pipeline
+([`kinMatrix2LongForm()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinMatrix2LongForm.md)/[`filterPairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/filterPairs.md)/`filterAge()`/
+[`filterThreshold()`](https://github.com/rmsharp/nprcgenekeepr/reference/filterThreshold.md))
+lives entirely in standalone files, none defined inside
+`modBreedingGroups.R`; (b)
+[`modMarkerGeneticsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modMarkerGeneticsServer.md)
+already computes and returns a `markerKinshipMatrix` reactive
+(`R/modMarkerGenetics.R:320`) that `R/appServer.R`’s own call site
+(`:435-439`) silently discards – confirmed by direct read, not assumed –
+meaning “marker kinship where available” is a one-line capture at an
+existing call site, not new computation. **Ran an original empirical
+benchmark** (not derived from any prior document) against the bundled
+`examplePedigree` fixture via
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html) +
+real function calls: an unscoped full-pedigree pair-reshape
+(opposite-sex pairs, `minAge=1`) produced 1,744,722 rows in 54.0s;
+scoping to the 1,704 “alive” (no-exit-date) individuals via
+[`filterKinMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/filterKinMatrix.md)
+before the reshape cut this to 315,023 rows in 8.6s – still large,
+traced to a genuine, non-obvious finding: `filterAge()` treats a missing
+age as “pass, not exclude” (`R/filterAge.R:26`), and 81% of the “alive”
+fixture individuals (1,372/1,704) have no recorded age at all, so the
+age control alone cannot bound table size on real, imperfectly-curated
+data. Also confirmed (direct full read of `R/orderReport.R`) that no
+continuous composite-score ranking precedent exists anywhere in the
+package –
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)’s
+own ranking is a rule-based tier classification, never a weighted
+formula. **(4)** Wrote the design document (11 sections, matching the
+\#133/#136/#137/#145/#147/#149/#146 house structure exactly): Context,
+an evidence-based inventory (8 numbered findings, each with <file:line>
+citations verified against the actual Read output, not paraphrased from
+memory), Design decisions (D1-D8, 5 forced by evidence/precedent, 3
+genuine judgment calls), an Interface catalog, a 2-slice implementation
+plan with explicit DONE criteria and session boundaries, an Impact
+analysis, 6 “Here be dragons,” an honest Alternatives table, a Close-out
+checklist mapping (citation checklist explicitly N/A – no new statistic
+introduced), and Provenance. **(5)** Presented the 3 genuine judgment
+calls (D3 ranking, D4 population-scope control, D5 exclusion
+transparency) via a single `AskUserQuestion` round, each with this
+document’s own recommended option first. Owner selected the recommended
+option in all 3 cases, no changes requested. Updated the document’s
+`Status:` to RATIFIED and appended the recorded outcome to §11; fixed
+several D-tag inconsistencies (`D-Q1`/`D-population-scope`/
+`D-exclusions` placeholder labels used mid-draft, normalized to the
+doc’s own `D3`/`D4`/`D5` numbering) found on a self-review pass before
+treating the document as final. **(6)** Noticed and reconciled a
+legal-but-stale `commit: pending` placeholder in S510’s own
+`HANDOFFS.md` receipt (the receipt shipped in the very commit whose sha
+it would name, per the format doc’s own described write-time constraint)
+to the real sha (`abca9edc`, confirmed via
+`git log -1 --format=%H -- HANDOFFS.md`) – a small, evidence-based
+correction of already-known fact, not scope creep. **(7)** Close-out:
+this evaluation, self-assessment below, `CHANGELOG.md` `[issue #151]`
+entry, `BACKLOG.md` progress note continuing the established S483-S510
+narrative, `HANDOFFS.md` receipt completed.
+
+**Self-assessment (Session 511): 9/10.** **Strengths:** (1) Followed the
+Architecture Workstream’s own “verify assumptions… by testing or reading
+benchmarks, not guess” step for real – ran an original benchmark rather
+than estimating candidate-pair-table scale, and it directly overturned a
+naive first assumption (a simple M x F count wildly undercounted the
+real risk once the full unscoped pedigree and `filterAge()`’s actual
+NA-passing semantics were accounted for), producing a concrete,
+load-bearing design requirement (D4) grounded in measured numbers, not
+intuition. (2) Found a genuine, previously-invisible architectural gap
+by reading `appServer.R`’s actual wiring code rather than trusting the
+module’s own documented intent –
+[`modMarkerGeneticsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modMarkerGeneticsServer.md)’s
+`markerKinshipMatrix` reactive is computed and returned but never
+captured by its only caller, confirmed by direct read of the call site,
+not inferred. (3) Corrected the source sequencing audit’s own
+“shared-file risk” claim with direct evidence (all four pipeline
+functions live in their own standalone files) rather than repeating an
+audit’s own framing uncritically – matching the established “audits are
+not infallible, verify before repeating a claim” precedent (#136’s plan
+corrected 3 premises in its own source issue). (4) Grounded the “no
+invented composite score” recommendation in a direct, full read of
+`R/orderReport.R` (confirming zero weighted-formula precedent anywhere
+in the package) rather than a general aesthetic preference, directly
+avoiding the risk class
+[`markerFst()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md)’s
+own wrong-formula incident represents. (5) Caught and fixed the
+`D-Q1`/`D-population-scope`/`D-exclusions` labeling inconsistency via a
+genuine self-review pass before presenting the document as final, rather
+than letting a cosmetic-but-real internal cross-reference defect ship.
+**Weaknesses:** (1) Did not use a multi-agent research `Workflow` (as
+S495 did for \#147’s own design) – this session’s research was done
+serially via direct `Read`/`Grep`/`Bash` rather than parallel
+sub-agents; correct given no `Workflow`-opt-in signal was present this
+session, but means the research depth-per-wall-clock-minute ratio was
+lower than S495’s own precedent, worth naming rather than silently
+omitting. (2) The empirical benchmark (§2.6 of the plan) used only the
+one bundled `examplePedigree` fixture – a second, differently-shaped
+fixture (e.g. the smaller `obfuscated_rhesus_mhc_ped.csv` prior sessions
+used for live smoke tests) was not cross-checked, so the “81% missing
+age” finding’s generality beyond this one fixture is not independently
+confirmed; stated as an honest limitation in the plan’s own §1.3, not
+hidden. (3) `SESSION_NOTES.md` continues to grow (now larger again after
+this session’s own additions) – S510’s gotcha (4) flagged this and it
+remains unaddressed for a second consecutive session; this session did
+not pick that item from its own priorities list (the owner picked \#151
+instead), which is correct protocol (one deliverable, owner’s choice),
+but the risk itself keeps compounding and should weigh more heavily in a
+near-future session’s own priorities list.
+
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session),
+`[issue #151]` tag. No GitHub issue closed this session (issue \#151
+intentionally stays open – design/planning only, matching every prior
+planning-session precedent in this cluster).
+
+### Session 509 Handoff Evaluation (by Session 510)
+
+**Score: 8/10.** **What helped:** the `HANDOFFS.md` S509 receipt’s
+`next_steps` field correctly named “issue \#146 Slice 2 (READY, ratified
+design doc, Effort M)” as the sequencing-audit’s own next pickup –
+exactly what this session’s own independently-rendered Phase 0
+priorities list also surfaced (cross-checked, not just trusted), and
+exactly what the owner picked. **What was missing/not applicable:**
+S509’s own `key_files`/`gotchas` (about `methodology_trim.py`, the
+`.gitignore` fix, the `verify.sh` L2 heuristic) had zero direct bearing
+on this session’s actual work – expected and not a knock against S509,
+since its own deliverable (a ledger trim) was unrelated to issue \#146’s
+implementation; a handoff correctly scopes detail to what it worked on,
+not to every possible next pickup. **What was wrong:** nothing found
+inaccurate. **ROI:** Moderate – the `next_steps` pointer saved a small
+amount of re-derivation but this session’s own Phase 0 independently
+re-verified the priorities list from `BACKLOG.md`/`gh issue list` rather
+than trusting the claim alone (per protocol), so the marginal time saved
+was real but not large.
+
+### What Session 510 Did
+
+**Deliverable:** Issue \#146 Slice 2 – exhaustive enumeration mode + UI
+toggle for breeding-group candidate retention, per the ratified
+`docs/planning/issue146-configurable-exhaustive-breeding-group-retention-plan.md`
+§5 Slice 2. Followed `DEVELOPMENT_WORKSTREAM.md` under this project’s
+Strict TDD contract (PRE-RED-\>RED-\>GREEN, `AskUserQuestion`-gated at
+every transition; REFACTOR owner-confirmed skip). Picked from this
+session’s own Phase 0 priorities list (owner choice via
+`AskUserQuestion`, over trimming `SESSION_NOTES.md`, issue \#150’s
+Tier-3 policy decision, and issue \#151 design). **Started/Completed:**
+2026-08-10. **Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, git status/log,
+`methodology_dashboard.py` – health 96/100). Ledger reconcile found both
+`CHANGELOG.md` and `HANDOFFS.md` frontiers already at `HEAD` – no
+undocumented commits, clean. Noted a NEW dashboard HIGH risk flag not
+present at S509’s own orient: `SESSION_NOTES.md` itself had grown to
+39,294 lines (past the 2,000-line read cap) – surfaced as one of 4
+rendered priorities but not picked. **(2)** Read the ratified plan in
+full (296 lines) plus `DEVELOPMENT_WORKSTREAM.md`. Phase 1B claim stub
+committed (`2f822a89`). **(3)** PRE-RED research: re-read
+`R/groupAddAssign.R` (confirmed Slice 1’s `maxCandidates` is the only
+change since the plan was written), `R/getAnimalsWithHighKinship.R`,
+`R/addAnimalsWithNoRelative.R`, `R/groupMembersReturn.R`,
+`R/addGroupOfUnusedAnimals.R`, `R/makeGroupMembers.R`,
+`R/fillGroupMembers.R`, `R/modBreedingGroups.R` (full UI+server),
+`tests/testthat/test_groupAddAssign.R`,
+`tests/testthat/test_modBreedingGroups_groupAddAssign.R`’s established
+mocked-binding convention, `DESCRIPTION` (confirmed no
+`promises`/`future` dependency added – Dragon 2 still applies). **(4)**
+RED: wrote `tests/testthat/test_enumerateMaximalIndependentSets.R` (new
+– a hand-verified 5-cycle conflict-graph fixture asserting exact
+5-maximal-independent-set membership, a deadline-truncation case, a
+brute-force-cross-checked sparse-vs-dense density-robustness case) plus
+extensions to `test_groupAddAssign.R` (6 new blocks:
+exhaustive-completion, 3 D2 scope-refusal
+[`stop()`](https://rdrr.io/r/base/stop.html)s, 1 D5 ceiling-refusal
+[`stop()`](https://rdrr.io/r/base/stop.html), 1 deadline-truncation
+integration case), `test_modBreedingGroups.R` (1 UI-presence test),
+`test_modBreedingGroups_groupAddAssign.R` (2 mocked-binding tests).
+**Caught and fixed a genuine RED-phase false-green risk before GREEN
+began:** the D5 ceiling test’s regexp (`"maxExhaustiveCandidates|20"`)
+accidentally matched R’s own auto-generated “unused arguments” error
+(since that test deliberately passes `maxExhaustiveCandidates` as an
+argument), so it would have PASSED before any implementation existed –
+caught via the mandatory
+[`devtools::test_file()`](https://devtools.r-lib.org/reference/devtools-defunct.html)
+RED-verification run, tightened to `"exceeds"` (a phrase only the real
+implementation could produce), same fix applied preemptively to the
+numGp test’s over-broad `"numGp|group"` regexp. All 4 files
+independently verified failing for the right reason before GREEN.
+**(5)** GREEN: new `R/enumerateMaximalIndependentSets.R`
+(`.enumerateMaximalIndependentSets()`, hand-rolled Bron-Kerbosch-style
+search on the existing `kin` adjacency list per D4, `@references` Bron &
+Kerbosch 1973/Tomita-Tanaka-Takahashi 2006); extended
+`R/groupMembersReturn.R` (new optional
+`exhaustive`/`examined`/`retentionRule` parameters,
+byte-identical-by-default per D7); extended `R/groupAddAssign.R` (new
+`exhaustive`/`maxExhaustiveCandidates`/`exhaustiveTimeLimit` params, new
+`.groupAddAssignExhaustive()` helper implementing D2/D5/D9’s
+scope+ceiling checks and wiring the enumerator through the existing
+`addGroupOfUnusedAnimals()`/`groupMembersReturn()` pipeline unmodified);
+extended `R/modBreedingGroups.R` (new **Exhaustive enumeration mode**
+checkbox gated by a `conditionalPanel` matching D2’s exact eligibility
+scope, `input$exhaustive` threaded to
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md),
+a new `output$exhaustiveStatus` status callout). **Caught and fixed a
+real test-fixture defect during GREEN verification (not a package
+defect):** the exhaustive-completion RED test’s synthetic `ped` fixture
+lacked an `age` column, and `filterAge()` (pre-existing, untouched code)
+indexes `ped[i, "age"]` with an explicit row-index vector `i` – a base R
+quirk where `df[i, "missingCol"]` silently returns `NULL` rather than
+erroring (unlike `df[, "missingCol"]`, which does error) – so the
+missing column silently dropped every kinship pair instead of erroring,
+making all 5 candidates appear mutually compatible (one giant set, not
+the intended 5-cycle). Diagnosed via direct interactive reproduction
+(not guessed), fixed by adding `age = 10` to the test fixture, not by
+touching `filterAge()` itself (out of scope, and not actually broken –
+its own existing callers all pass a `ped` with a real `age` column). All
+4 files GREEN after that fix. **(6)** GREEN→REFACTOR gate: owner chose
+skip (the one identified duplication – sort/top-N/
+`addGroupOfUnusedAnimals()` between the sampling loop and the new
+exhaustive helper – judged too small/differently-shaped to extract
+cleanly). **(7)** Full verification: clean regression suite 0 failed/0
+error (5081 passed, up from 5050 baseline; 175 skipped; 15 pre-existing
+warnings unchanged); `lintr::lint_package()` found and fixed 4 lints on
+touched files (3 line-length, 1 `implicit_integer_linter`) – 0 lints
+package-wide after;
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors/0 warnings/2 notes, both confirmed pre-existing (traced to a
+commit before this session’s claim) and unrelated. **Live
+`shinytest2`/`chromote` smoke test** against the real running app (not
+`testServer()` alone): confirmed the toggle renders when D2-eligible and
+is `HIDDEN` (verified via computed-style JS, not just visual inspection)
+when `numGp=2`; confirmed `input$exhaustive` genuinely reads `TRUE` in
+the live server after a real click; a genuine live exhaustive run
+(seeded most of a real ~375-animal fixture into group 1 via the UI’s own
+seed-groups textarea to bring the remaining candidate pool under the
+20-candidate ceiling – a real UI-driven way to reach an
+eligible-and-under-ceiling live request without a separate small
+fixture) produced the correct live status text (“Exhaustive: examined 1
+partition(s). top-5 by score (min group size), N = 1”, green/completed
+styling); 0 `SEVERE` console entries throughout both cases. The live
+truncated-search case was not reproduced (the 10s deadline isn’t
+user-configurable in the UI; already covered by 2 unit tests) – an
+explicit judgment call the ratified plan’s own §5 grants (“implementing
+session’s own judgment, not gated here”). **(8)** Documentation:
+`NEWS.Rmd` new bullet, `NEWS.md` re-rendered – **caught and fixed a
+render-format mistake before committing:** a first attempt passed an
+explicit `output_format = "md_document"` override that ignored the
+file’s own `github_document` frontmatter, producing a
+943-insertion/878-deletion reflow diff; redone via the frontmatter’s own
+default format, producing the expected clean 17-line addition (matches
+the established “diff the render before trusting it” discipline,
+`PROJECT_LEARNINGS.md` Learnings 437/438).
+`vignettes/manual_components/_breeding_group_formation.Rmd` gained new
+**Candidates to retain**/**Exhaustive enumeration mode** coverage
+(text-only, satisfying the tutorial/article checklist’s established
+“and/or” allowance – confirmed `a3manual.md`/`.html` derivatives are
+gitignored, so no further re-render needed). Citation/`_pkgdown.yml`
+checklists stated N/A explicitly (not silently omitted), matching the
+plan’s own §9 mapping. `a2interactive.Rmd` deferred per its own standing
+rule. **(9)** `CHANGELOG.md` entry prepended; `BACKLOG.md` progress note
+appended (issue \#146’s running narrative, matching the \#147/#149/S508
+precedent of continuing the same bullet rather than deleting it);
+`gh issue close 146 --reason completed` with a comment citing the
+CHANGELOG entry and verification evidence.
+
+**Self-assessment (Session 510): 9/10.** **Strengths:** (1) Did not skip
+the mandatory RED verification step even though the ceiling test
+“looked” correct on first write – running
+[`devtools::test_file()`](https://devtools.r-lib.org/reference/devtools-defunct.html)
+on RED and actually reading the failure output (not just checking exit
+status) caught a real false-green risk (the regexp accidentally matching
+R’s own error message) that would otherwise have silently defeated that
+test’s entire purpose. (2) When GREEN produced a wrong-but-not-crashing
+result (examined=1 instead of 5), investigated with direct interactive
+reproduction rather than guessing or immediately suspecting the new
+algorithm – traced the actual root cause (a base R `[i, "col"]` indexing
+quirk in pre-existing code) before touching anything, and fixed it at
+the correct layer (the test fixture, not the untouched production
+function). (3) Caught the `NEWS.md` render-format mistake by diffing
+before committing, exactly the discipline `PROJECT_LEARNINGS.md`
+Learnings 437/438 recommend, rather than trusting a “render succeeded,
+no errors” result. (4) Ran a genuine live-browser round-trip for the
+exhaustive toggle (not just `testServer()`), including engineering a
+real under-ceiling candidate pool via the UI’s own seed-groups feature
+rather than settling for a smaller/less-realistic synthetic fixture.
+**Weaknesses:** (1) The first live-smoke attempt used `wait_=FALSE` on
+`set_inputs()`, causing a race where the “Form Groups” click fired
+before Shiny processed the exhaustive checkbox – cost one extra
+round-trip to diagnose and fix (added an explicit `app$get_value()`
+check before proceeding). (2) Did not reproduce the live
+truncated-search case (explicitly judgment-called as out of scope per
+the plan’s own allowance, but a more determined attempt – e.g., a much
+larger seeded-under-ceiling pool at a low kinship threshold to maximize
+search cost – was not tried before deciding to skip).
+
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session),
+`[issue #146]` tag, includes the `gh issue close` action.
+
 ### Session 508 Handoff Evaluation (by Session 509)
 
 **Score: 9/10** (on its own formal merits). **ROI for this session

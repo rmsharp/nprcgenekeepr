@@ -467,7 +467,44 @@ multi-session migration campaign to re-tag 303 already-closed entries.
 `## Legacy history (pre-ledger format, Sessions 1-324)` marker:
 everything below it is untouched original-format history; everything
 above it (from Session 325 forward) uses the canonical `[SOURCE]`-tagged
-format. New entries always go above the marker, never inside it.
+format. New entries always go above the marker, never inside it. **A
+direct consequence for `methodology_trim.py` (found S518, 2026-08-11):
+the frozen legacy block is a permanently-pinned FOOTER (935,292 B /
+3,570 lines as of S518), which the trim tool structurally cannot archive
+— `CHANGELOG.md`’s byte trigger will fire indefinitely regardless of how
+aggressively the ~S325-onward tagged records are trimmed, since the
+footer alone already exceeds the 65,536 B budget 14×. Routine trims of
+the tagged-record portion are still worth doing (real, if small,
+reduction) but do not by themselves resolve the file’s read-truncation
+risk; only re-opening the S325 decision (a migration campaign) would.**
+
+**`methodology_trim.py` local-customization checklist (found S518,
+2026-08-11):** `methodology_trim.py` is a canonical-**overlay** file per
+`BOOTSTRAP.md`’s sync table (“Tracked (canonical owns them) … overlay —
+replace with the latest”), but its `LEDGERS` config table is the tool’s
+own documented per-adopter extension point (a file with no entry exits
+`NO_CONFIG` by design — “a generic rule is what would mis-zone a
+differently-shaped ledger”). This project has added a **local,
+uncanonical** `SESSION_NOTES.md` entry (verified against all 577
+record-start headings in the file, zero shape variance) that the design
+doc names no mechanism for surviving a sync overlay. **Any session that
+runs `chore(methodology): sync framework update from canonical` on this
+file must re-diff it against the pre-sync copy first and re-add this
+project’s `SESSION_NOTES.md` `LedgerSpec` entry (and its
+`_session_notes_date` helper) if the sync dropped it** — check
+`git log -p --follow -- methodology_trim.py` for the S518 commit
+(`feat(methodology): add local SESSION_NOTES.md ledger config`) if it’s
+unclear what was lost. A `NO_CONFIG` result on
+`python3 methodology_trim.py --file SESSION_NOTES.md --check` after a
+sync is the signal this happened.
+
+**`SESSION_NOTES.md` archive blocked by a fence-scanner defect (found
+S518, 2026-08-11):** the `SESSION_NOTES.md` `LedgerSpec` config above is
+verified structurally correct, but its first archive was **not run**:
+`methodology_trim.py`’s simplified fence-scanner
+(`_FENCE = re.compile(r"^(\`{3,}\|~{3,})(.\*)\$“)`, matched against fenced fenced *block* delimiters) misreads`SESSION_NOTES.md:23229````` 's 4-backtick-delimited *inline code span* (`` ```` ```{r}/```{R}```` `` `` — a legitimate way to show literal triple-backtick text inline) as an unclosed block-fence opener, because it starts a physical line. This puts the entire remainder of the file (17,040 of 40,269 lines, 42%) into a false "inside a fence" state, hiding 349 of 513 real session-record headings from the partition — provably lossless if trimmed as-is (L1/L2/L3 still hold), but structurally wrong (real per-session record boundaries collapse into one oversized chunk). Not fixed S518: fixing it means either editing `````SESSION_NOTES.md`'s own historical content (altering a frozen record, out of scope for a housekeeping session) or patching the canonical tool's fence-scanning logic (a deeper canonical-file edit than the config addition above, and this project's problem to raise upstream, not silently patch locally). **A future session should pick one of those two fixes — probably rewrapping the one offending paragraph so the 4-backtick sequence doesn't open a physical line, the smaller and more local change — then re-run`python3
+methodology_trim.py –file
+SESSION_NOTES.md`and confirm the record count returns to something near 513 (not 164) before trusting`–write\`.\*\*
 
 ### Development Process Contract override
 

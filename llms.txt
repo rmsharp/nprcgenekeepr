@@ -467,6 +467,11 @@ Funtions designed for interactive use
   : Check genotype file
 - [`checkKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkKinshipOverrides.md)
   : Validate a kinship overrides table
+- [`checkLinkageMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLinkageMarkerGenotypeFile.md)
+  : Check a long-format multi-locus marker genotype file,
+  multiallelic-tolerant
+- [`checkLocusMetadata()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md)
+  : Check a locus-metadata sidecar table and classify per-locus coverage
 - [`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)
   : Check a long-format multi-locus marker genotype file
 - [`checkParentAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkParentAge.md)
@@ -703,6 +708,10 @@ Funtions designed for interactive use
   : Cross-Center Identity Mapping Module - Server Function
 - [`modCrossCenterIdentityUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modCrossCenterIdentityUI.md)
   : Cross-Center Identity Mapping Module - UI Function
+- [`modDeidentifiedExportServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modDeidentifiedExportServer.md)
+  : De-Identified Export Module - Server Function
+- [`modDeidentifiedExportUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modDeidentifiedExportUI.md)
+  : De-Identified Export Module - UI Function
 - [`modGeneticDiversityServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modGeneticDiversityServer.md)
   : Genetic Diversity Module - Server Function
 - [`modGeneticDiversityUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modGeneticDiversityUI.md)
@@ -724,6 +733,10 @@ Funtions designed for interactive use
   : Marker Genetics Module - Server Function
 - [`modMarkerGeneticsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modMarkerGeneticsUI.md)
   : Marker Genetics Module - UI Function
+- [`modMatePairServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modMatePairServer.md)
+  : Mate Pair Analysis Module - Server Function
+- [`modMatePairUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modMatePairUI.md)
+  : Mate Pair Analysis Module - UI Function
 - [`modORIPReportingServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modORIPReportingServer.md)
   : ORIP Reporting Module - Server Function
 - [`modORIPReportingUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modORIPReportingUI.md)
@@ -778,6 +791,9 @@ Funtions designed for interactive use
   : Remove placeholder animals added for unknown parents
 - [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
   : Generate a genetic value report for a pedigree
+- [`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
+  : Report eligible individual mate pairs with kinship and genetic-value
+  context
 - [`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)
   : Merge two centers' pedigrees via a curator-confirmed identity link
 - [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)

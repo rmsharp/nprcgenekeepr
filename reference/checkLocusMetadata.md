@@ -1,0 +1,67 @@
+# Check a locus-metadata sidecar table and classify per-locus coverage
+
+Validates the structure of a locus-metadata sidecar table (`locus`,
+`chrom`, `pos`, and optionally `cM`) – the schema introduced by issue
+\#152's own design decision and reused verbatim by issue \#153 – and
+classifies each locus into one of three coverage tiers, following a
+PLINK-style three-state coverage model: `"full"` (both `chrom` and `pos`
+present; `cM` is optional even within `"full"`), `"partial"` (exactly
+one of `chrom`/`pos` present), or `"none"` (neither present).
+
+## Usage
+
+``` r
+checkLocusMetadata(locusMetadata)
+```
+
+## Arguments
+
+- locusMetadata:
+
+  dataframe with locus metadata: three or four columns, `locus`,
+  `chrom`, `pos`, and optionally `cM` (one row per locus).
+
+## Value
+
+The locus-metadata dataframe, checked to ensure the column count,
+first-column identity, and row uniqueness are all valid, with a new
+`coverage` column appended (`"full"`/`"partial"`/ `"none"`). The
+returned dataframe has `locus` and `chrom` coerced to character.
+
+## Details
+
+A locus-metadata table has one row per locus (not per individual x
+locus, unlike
+[`checkMarkerGenotypeFile`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)'s
+genotype table). Real curated marker panels typically supply little to
+no locus-order metadata – this function reports coverage explicitly per
+locus rather than requiring complete metadata before any downstream use.
+
+## References
+
+Purcell, S., Neale, B., Todd-Brown, K., Thomas, L., Ferreira, M. A. R.,
+Bender, D., Maller, J., Sklar, P., de Bakker, P. I. W., Daly, M. J., &
+Sham, P. C. (2007). PLINK: a tool set for whole-genome association and
+population-based linkage analyses. *American Journal of Human Genetics*,
+81(3), 559-575. [doi:10.1086/519795](https://doi.org/10.1086/519795)
+
+## See also
+
+[`checkMarkerGenotypeFile`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)
+
+## Examples
+
+``` r
+library(nprcgenekeepr)
+locusMetadata <- data.frame(
+  locus = c("L1", "L2", "L3"),
+  chrom = c("1", "1", NA),
+  pos = c(1000000, NA, NA),
+  stringsAsFactors = FALSE
+)
+checkLocusMetadata(locusMetadata)
+#>   locus chrom   pos coverage
+#> 1    L1     1 1e+06     full
+#> 2    L2     1    NA  partial
+#> 3    L3  <NA>    NA     none
+```

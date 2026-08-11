@@ -160,84 +160,276 @@ here, in this ledger, not in a frozen shard.
 
 ## 2026-08
 
-### 2026-08-10 · \[ad hoc\] Trim CHANGELOG.md/HANDOFFS.md via methodology_trim.py – HANDOFFS.md fully resolved (Session 509)
-
-- **Deliverable:** losslessly trimmed `CHANGELOG.md` and `HANDOFFS.md`
-  (both files’ first-ever archive), addressing the dashboard’s HIGH risk
-  flag (both past the 2,000-line agent-`Read` truncation cap) and MEDIUM
-  byte-budget flags. `HANDOFFS.md`: 832,849 B/4,877 lines → 28,806 B/409
-  lines, 181 of 187 records archived to
-  [`docs/archive/HANDOFFS-through-2026-08-10.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/HANDOFFS-through-2026-08-10.md)
-  – trigger now **does not fire**, fully resolved. `CHANGELOG.md`:
-  1,534,418 B/10,523 lines → 945,639 B/3,723 lines, 288 of 289 records
-  archived (entry immediately below) – trigger **still fires**
-  post-trim, expected and not a defect: the frozen
-  `## Legacy history (pre-ledger format, Sessions 1-324)` footer
-  (935,287 B/3,568 lines, the Session 325 “freeze legacy, go forward”
-  decision) is pinned to the live file by design and this tool has no
-  grammar to parse or migrate it; only a separate, deliberately-scoped
-  future migration campaign could shrink it further, and none is
-  planned. Picked via `AskUserQuestion` “Other” over this session’s own
-  4 rendered BACKLOG priority options (issue \#146 Slice 2, issue \#150,
-  LabKey, NPRC outreach).
-- **Verification:** both trims’ write-time `L1_OK`/`L2_OK`/`L3_OK`
-  assertions passed. The independently-regenerated `verify.sh` for
-  `HANDOFFS.md` also passed clean (exit 0). For `CHANGELOG.md`,
-  `verify.sh`’s `L1`/`L3` (the byte-exact checks) passed; its separate
-  `L2` “front matter leaked into shard” heuristic reported a false
-  positive, investigated and confirmed harmless via direct `grep` (2
-  archived records quote the front-matter heading
-  `## Size, and when to archive` verbatim in backticks while narrating
-  an unrelated, already-committed prior action; the real heading is
-  unchanged, exactly once, in the live front matter) – see
-  `PROJECT_LEARNINGS.md` Learning 507 for the full proof and a general
-  rule for future trims.
-- **Incidental fix:** `.gitignore`’s blanket `docs/*` rule had no
-  `!docs/archive/` exception, so this tool’s own required output
-  directory was silently untrackable on this project’s first-ever run –
-  added, matching the 7 other `docs/` subdirectory exceptions already
-  present.
-- Commits: `7a423398` (claim), `9113dd48` (CHANGELOG.md entry for the
-  claim commit, satisfying the trim tool’s own P1 pre-check), `d07814a7`
-  (HANDOFFS.md trim + gitignore fix), `0929172a` (CHANGELOG.md trim),
-  plus this close-out commit (`SESSION_NOTES.md`/`HANDOFFS.md`/
-  `PROJECT_LEARNINGS.md`). See `SESSION_NOTES.md` “What Session 509 Did”
-  and `HANDOFFS.md`’s S509 receipt for full narrative detail.
-
-**Archived 288 record(s), 2026-07-08 → 2026-08-10** into
-[`docs/archive/CHANGELOG-through-2026-08-10.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-through-2026-08-10.md)
+**Archived 11 record(s), 2026-08-10 → 2026-08-11** into
+[`docs/archive/CHANGELOG-through-2026-08-11.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-through-2026-08-11.md)
 — same format, same order, frozen. Losslessness is proved by
-[`docs/archive/CHANGELOG-through-2026-08-10.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-through-2026-08-10.md.verify.sh),
+[`docs/archive/CHANGELOG-through-2026-08-11.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-through-2026-08-11.md.verify.sh),
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.1.2.
 
-### 2026-08-10 · \[ad hoc\] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-08-10.md` (288 record(s), 1,534,418 B → 945,639 B)
+### 2026-08-11 · \[issue \#153\] S521 close-out: Slice 2 (multiallelic-tolerant ingestion validator) shipped (Session 521)
+
+- **Deliverable:** Issue \#153 Slice 2, per
+  `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` §5
+  Slice 2 — new script-callable
+  [`checkLinkageMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLinkageMarkerGenotypeFile.md),
+  a sibling to
+  [`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md):
+  retains its column-count, `id`-first-column, and duplicate-row checks
+  verbatim, deliberately omits the `>2`-distinct-alleles-per-locus
+  rejection so real multiallelic colony marker panels (STR panels) can
+  be ingested. Zero edits to any existing file — confirmed via `grep`
+  that
+  [`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)
+  is called only from `R/modMarkerGenetics.R`’s Shiny upload handlers,
+  not from
+  [`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)/
+  [`buildMarkerGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/buildMarkerGenotypeMatrix.md)
+  or any other marker function, so the existing biallelic contract is
+  untouched by construction.
+- **Process:** Full strict TDD PRE-RED→RED→GREEN→REFACTOR cycle, each
+  transition `AskUserQuestion`-gated (REFACTOR: owner declined the
+  extract-shared-helper option, matching the existing
+  [`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)/[`checkGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkGenotypeFile.md)
+  sibling-validator precedent).
+- **Verification:** 7 new `test_that` blocks / 12 expectations in
+  `tests/testthat/test_checkLinkageMarkerGenotypeFile.R`, including a
+  fixture-scale proof that the committed STR fixture is accepted by the
+  new validator and still rejected by the old one. Full clean regression
+  suite 0 failed/0 error (5261 passed = 5249 baseline + 12 new, 15
+  pre-existing warnings unchanged);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/3 NOTEs, all confirmed pre-existing via direct
+  verification (moved this session’s new files out of the tree entirely
+  and re-ran
+  [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html):
+  a 69–71-word `inst/WORDLIST` gap already existed before this session
+  touched anything). `lintr::lint_package()` 0 lints. Fixed the
+  `_pkgdown.yml` reference-coverage guard. Found and fixed a real bug in
+  this session’s own `@examples` block (duplicate `id x locus`, caught
+  by `R CMD check`’s example-execution step, not the test suite).
+- **Housekeeping:** hand-added 2 words (`validator`, `multiallelic`) to
+  `inst/WORDLIST` in collation order (S230 convention) — the 2 this
+  session’s own new file is responsible for; filed the remaining 69-word
+  pre-existing gap as a new `BACKLOG.md` Housekeeping item rather than
+  fixing it mid-slice. `PROJECT_LEARNINGS.md` Learning 520 added:
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)’s
+  abbreviated `❯`-bullet results table omits a bullet for the
+  spelling-check NOTE step, so S520’s own “1 pre-existing note”
+  close-out claim was an undercount (confirmed via `git log` that S520
+  never touched any of the 69 flagged-word files) — a shared,
+  easy-to-make mistake, not a fabrication. `NEWS.Rmd`/`NEWS.md` updated
+  (caught and fixed a line-wrap rendering artifact in the first render).
+  Citation checklist (issue \#120) and tutorial/article checklist
+  (Session 436) do not yet apply — no UI/displayed statistic this slice.
+  Issue \#153 stays open — Slice 3
+  (`markerRealizedRelatednessVariance()`, D3a) needs its own Hill &
+  Weir (2011) formula derivation first (§7 Dragon 4) before RED can
+  begin.
+- **Ledger:** this entry plus the S521 claim entry below.
+
+### 2026-08-11 · \[issue \#153\] S521 claim: issue \#153 Slice 2 (multiallelic-tolerant ingestion validator) (Session 521)
+
+- **Deliverable:** Session claimed.
+  [`checkLinkageMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLinkageMarkerGenotypeFile.md)
+  (design D4), per
+  `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` §5
+  Slice 2 — proven against Slice 1’s committed STR fixture, plus a
+  regression proof that
+  [`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)/
+  [`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)’s
+  existing biallelic contract stays untouched. Full strict TDD cycle to
+  follow.
+- **Ledger:** this entry; close-out entry to follow at Phase 3F.
+
+### 2026-08-11 · \[issue \#153\] S520 close-out: Slice 1 (locus-metadata ingestion + coverage validator + STR fixture) shipped (Session 520)
+
+- **Deliverable:** Issue \#153 Slice 1, per
+  `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` §5
+  Slice 1 — new script-callable
+  [`checkLocusMetadata()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md)
+  (validates a `locus, chrom, pos[, cM]` sidecar table, classifying each
+  locus into D2’s three-tier coverage definition: “full” chrom+pos
+  present, cM optional; “partial” exactly one of chrom/pos; “none”
+  neither) plus a new committed multiallelic STR fixture pair
+  (`inst/extdata/examples/example_locus_metadata.csv` /
+  `example_str_marker_genotypes.csv`, generated by
+  `data-raw/generate_str_fixtures.R`) — the package’s first bundled
+  long-format multiallelic marker fixture at any scale.
+- **Process:** Full strict TDD PRE-RED→RED→GREEN→REFACTOR cycle, each
+  transition `AskUserQuestion`-gated (REFACTOR: owner-confirmed no
+  candidate identified, matching the S515 precedent). This session
+  authored the canonical `locusMetadata` validator since \#152’s own
+  Slice 1 has not shipped yet (design doc §7 Dragon 1’s own predicted
+  ordering risk).
+- **Verification:** 10 new `test_that` blocks / 16 expectations in
+  `tests/testthat/test_checkLocusMetadata.R`, including a fixture-scale
+  proof that the existing, unmodified
+  [`buildMarkerGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/buildMarkerGenotypeMatrix.md)
+  pivots multiallelic genotypes without error (D4’s structural claim,
+  empirically confirmed). Full clean regression suite 0 failed/0 error
+  (5249 passed, 15 pre-existing warnings unchanged);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/1 pre-existing note; `lintr::lint_package()` 0
+  lints on touched files. Fixed the `_pkgdown.yml` reference-coverage
+  guard. `NEWS.Rmd`/`NEWS.md` updated. Citation checklist (issue \#120)
+  and tutorial/article checklist (Session 436) do not yet apply — no
+  UI/displayed statistic this slice, matching the \#146/#149/#150/#151
+  Slice-1-only precedent. Issue \#153 stays open — Slice 2 (the
+  multiallelic-tolerant
+  [`checkLinkageMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLinkageMarkerGenotypeFile.md)
+  ingestion path) is next.
+
+### 2026-08-11 · \[issue \#153\] S520 claim: issue \#153 Slice 1 (locus-metadata ingestion + coverage validator + STR fixture) (Session 520)
+
+- **Deliverable:** Session claimed via Phase 1B stub
+  (`SESSION_NOTES.md`) and `HANDOFFS.md` `status: pending` receipt,
+  commit `619480fa`. Picked from this session’s own Phase 0 priorities
+  list (owner choice via `AskUserQuestion`) as the first of two
+  directly-pickable implementation options named in S519’s own
+  `HANDOFFS.md` `next_steps` (#153 Slice 1 or \#152 Slice 1 — both
+  designs ratified).
+
+### 2026-08-11 · \[issue \#153\] S519 close-out: linkage-aware/haplotype-block metrics design ratified (Session 519)
+
+- **Deliverable:** Pre-RED design/architecture document for issue \#153
+  (linkage-aware and haplotype-block metrics for marker data) —
+  `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md`.
+  Design-only, zero `R/`/`tests/`/`man/` changes, matching the
+  \#133/#136/#137/#145/#146/#147/#149/ \#150/#151/#152 precedent. Picked
+  from this session’s own Phase 0 priorities list as the next
+  Deferred-tier item in the ratified genetic-metrics sequencing order
+  (#152 done → \#153 → \#148).
+- **Research:** two parallel background agents (codebase inventory:
+  confirmed no marker function treats loci as ordered/positioned
+  anywhere in `R/`; confirmed `R/checkMarkerGenotypeFile.R:68-78`
+  hard-rejects multiallelic loci; read \#152’s plan in full for its
+  `locusMetadata` schema to reuse; domain research: locus-order metadata
+  realism for real colony STR panels — de Groot et al. 2025’s
+  23-microsatellite colony panel has essentially no cM data and is
+  multiallelic; classical LD/ haplotype-block methods assume an
+  unrelated/randomly-mating sample, violated by a pedigreed colony per
+  Excoffier & Slatkin 1998, while the one genuinely pedigree-native
+  method — Lander-Green multipoint IBD/MERLIN — isn’t CRAN-available;
+  Hill & Weir 2011’s realized-relatedness-variance framework IS valid
+  for a pedigreed sample; haplotype/block-level data is more
+  re-identifying than single-locus data per Lin, Owen & Altman 2004 and
+  Erlich & Narayanan 2014), plus direct re-verification of the two most
+  load-bearing findings this session.
+- **9 design decisions (D1-D9)**; 4 genuine judgment calls (D3 metric
+  choice, D4 multiallelic ingestion, D5 module boundary, D8
+  CRAN-vs-hand-roll) ratified via a single `AskUserQuestion` round —
+  owner selected the document’s own recommended option in all four:
+  build both a pedigree-valid primary metric (Hill & Weir-style) and a
+  caveated descriptive secondary metric (pairwise D′/r²); add a new
+  multiallelic-tolerant sibling ingestion validator; a new tab inside
+  the existing `modMarkerGenetics.R`; hand-roll the D′/r² computation,
+  no new CRAN dependency. Scoped as 5 future implementation slices, each
+  its own future session.
+- **Issue \#153 intentionally left open** — design ratified, not
+  implemented, matching every precedent in this cluster. Next in the
+  ratified order: \#148 (MHC), which needs its own scope-narrowing
+  conversation first per the sequencing audit’s Finding \#4.
+- Cross-reference verification: all 27 cited file paths confirmed to
+  exist via direct checks before close-out.
+- Model: Claude Sonnet 5.
+
+### 2026-08-11 · \[issue \#153\] Claimed S519 (issue \#153 Pre-RED design/architecture document) (Session 519)
+
+- Claimed the session (commit `a11b489f`) for the next Deferred-tier
+  item in the ratified genetic-metrics sequencing order, per S517’s own
+  handoff `next_steps` and the sequencing audit’s own stated ordering
+  (#152 done → \#153 → \#148). Wrote the Phase 1B `SESSION_NOTES.md`
+  stub and opened the `HANDOFFS.md` `status: pending` receipt.
+- Model: Claude Sonnet 5.
+
+### 2026-08-11 · \[ad hoc\] S518 close-out: SESSION_NOTES.md archive blocked (fence-scanner defect found), 2 BACKLOG.md follow-ups filed, 3 CLAUDE.md checklist notes added (Session 518)
+
+- **SESSION_NOTES.md’s own archive was investigated in full but NOT
+  run**: independently tested `methodology_trim.py`’s `fence_scan()`
+  against the real file (after the config from the prior entry checked
+  out structurally) and found a legitimate 4-backtick inline code span
+  at `SESSION_NOTES.md:23229` is misread as an unclosed block-fence
+  opener, putting 42% of the file (17,040/40,269 lines) into a false
+  “inside a fence” state and hiding 349 of 513 real record headings –
+  provably lossless if trimmed as-is (L1/L2/L3 still hold on whatever
+  partition is computed) but structurally wrong (real per-session
+  boundaries collapse into one oversized chunk). Not fixed this session:
+  the fix is either editing frozen historical `SESSION_NOTES.md` content
+  or patching the canonical tool’s fence-scanning regex, both out of a
+  housekeeping session’s scope. Filed as a `BACKLOG.md` item (READY,
+  Effort S) with both candidate fixes named.
+- **`CHANGELOG.md`’s own archive (previous entry) does not resolve its
+  read-truncation risk**: post-archive `--check` still fires (946,570 B
+  vs. 65,536 B budget) because the Session-325-frozen legacy-history
+  block is a permanently-pinned 935,292 B / 3,570-line footer this tool
+  structurally cannot archive – 14x the budget on its own. Documented in
+  `CLAUDE.md` as a known consequence of the already-ratified S325
+  “freeze legacy, go forward” decision, not re-litigated or re-opened.
+- **`BACKLOG.md`’s own remediation deferred**: confirmed via direct
+  structural inspection (only 10 `##` sections across 2,181 lines, each
+  a large standing topical category accumulating narrative indefinitely,
+  not chronological newest-on-top records) that it does not fit
+  `methodology_trim.py`’s cut model at all. Filed as its own
+  `BACKLOG.md` item (READY, Effort L) recommending editorial compression
+  of fully-resolved narrative into `CHANGELOG.md` pointers, per the
+  file’s own “open work only” header.
+- **`CLAUDE.md` gained 3 new “Additional close-out checks” notes**: the
+  `methodology_trim.py` local-customization survive-the-sync checklist
+  (for any future
+  `chore(methodology): sync framework update from canonical` session),
+  the `SESSION_NOTES.md` fence-defect finding, and the `CHANGELOG.md`
+  footer-pinning consequence.
+- **Net result this session**: `CHANGELOG.md` archived (11 records,
+  981,739 B -\> 946,570 B, verified via independently re-run
+  `verify.sh`); `SESSION_NOTES.md` config added and verified but archive
+  blocked (documented, not forced); `BACKLOG.md` remediation correctly
+  identified as out-of-model and deferred with a concrete follow-up
+  plan, not silently dropped.
+- Model: Claude Sonnet 5.
+
+### 2026-08-11 · \[ad hoc\] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-08-11.md` (11 record(s), 981,739 B → 946,570 B)
 
 **Written by:** `methodology_trim.py` v1.1.2 — a tool action, not a
-session’s judgment. Moved the oldest **288** record(s) (2026-07-08 →
-2026-08-10) out of
+session’s judgment. Moved the oldest **11** record(s) (2026-08-10 →
+2026-08-11) out of
 [`CHANGELOG.md`](https://github.com/rmsharp/nprcgenekeepr/CHANGELOG.md)
 into
-[`docs/archive/CHANGELOG-through-2026-08-10.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-through-2026-08-10.md).
+[`docs/archive/CHANGELOG-through-2026-08-11.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-through-2026-08-11.md).
 Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
 pinning) and L3 (record partition), and is **re-derivable** — run
-[`docs/archive/CHANGELOG-through-2026-08-10.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-through-2026-08-10.md.verify.sh)
-rather than trusting a digest printed here. Live file 1,534,418 B →
-945,639 B (−38.4%).
+[`docs/archive/CHANGELOG-through-2026-08-11.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-through-2026-08-11.md.verify.sh)
+rather than trusting a digest printed here. Live file 981,739 B →
+946,570 B (−3.6%).
 
-### 2026-08-10 · \[ad hoc\] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-08-10.md` (181 record(s), 832,849 B → 28,806 B)
+### 2026-08-11 · \[ad hoc\] Claimed S518 (3-file ledger-size housekeeping); added SESSION_NOTES.md config to methodology_trim.py (Session 518)
 
-**Written by:** `methodology_trim.py` v1.1.2 — a tool action, not a
-session’s judgment. Moved the oldest **181** record(s) (2026-07-08 →
-2026-08-10) out of
-[`HANDOFFS.md`](https://github.com/rmsharp/nprcgenekeepr/HANDOFFS.md)
-into
-[`docs/archive/HANDOFFS-through-2026-08-10.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/HANDOFFS-through-2026-08-10.md).
-Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
-pinning) and L3 (record partition), and is **re-derivable** — run
-[`docs/archive/HANDOFFS-through-2026-08-10.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/HANDOFFS-through-2026-08-10.md.verify.sh)
-rather than trusting a digest printed here. Live file 832,849 B → 28,806
-B (−96.5%).
+- **Deliverable so far:** claimed the session (commit `2a7f9a0e`) for
+  the dashboard’s standing HIGH risk
+  (SESSION_NOTES.md/CHANGELOG.md/BACKLOG.md all past the 2,000-line read
+  cap, flagged unaddressed 8-9 consecutive sessions), scoped to
+  SESSION_NOTES.md (config + first archive) and CHANGELOG.md (archive)
+  after finding BACKLOG.md’s 10 standing topical sections don’t fit this
+  tool’s chronological-record model (deferred to a future
+  editorial-compression session).
+- **Config added:** a `SESSION_NOTES.md` `LedgerSpec` entry in
+  `methodology_trim.py` (record_start matches
+  `### Session N Handoff Evaluation (by Session N+1)` or
+  `### What Session N Did`, verified against all 577 matching headings
+  in the file with zero shape variance; `footer_mode="none"`, confirmed
+  by direct inspection). **Local addition, not yet upstreamed**:
+  `methodology_trim.py` is a canonical-overlay file (`BOOTSTRAP.md`’s
+  sync table) with no documented mechanism for a local `LEDGERS` entry
+  to survive the next
+  `chore(methodology): sync framework update from canonical` – flagged
+  in-file and in `CLAUDE.md` for that future session to re-add.
+- **Why this entry exists mid-session, not only at close-out:**
+  `methodology_trim.py`’s own P1 frontier check refuses to trim any file
+  while `CHANGELOG.md`’s own commit frontier has an undocumented gap
+  (this session’s own claim commit) – this entry closes that gap so the
+  planned SESSION_NOTES.md/CHANGELOG.md archives can run. The session’s
+  remaining actions (the archives themselves) get their own entries as
+  they land.
 
 ------------------------------------------------------------------------
 

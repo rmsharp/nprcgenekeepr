@@ -64,7 +64,8 @@ birthdate can be shifted (<code>maxDelta</code>).</p>
 <span>  size <span class="op">=</span> <span class="fl">6L</span>,</span>
 <span>  maxDelta <span class="op">=</span> <span class="fl">30L</span>,</span>
 <span>  existingIds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0L</span><span class="op">)</span>,</span>
-<span>  map <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  map <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  linkedDateShift <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -93,6 +94,19 @@ the birthdate can be shifted</p></dd>
 <dd><p>logical if <code>TRUE</code> a list object is returned with the new
 pedigree and a named character vector with the names being the original IDs
 and the values being the new alias values. Defaults to <code>FALSE</code>.</p></dd>
+
+
+<dt id="arg-linkeddateshift">linkedDateShift<a class="anchor" aria-label="anchor" href="#arg-linkeddateshift"></a></dt>
+<dd><p>logical, defaults to <code>TRUE</code>. When <code>TRUE</code>,
+every Date column of one individual is shifted by the same, single random
+offset (drawn once per individual), so the gaps between an individual's
+own dates (e.g. <code>birth</code>, <code>exit</code>, <code>death</code>) are preserved
+exactly – avoiding a defect where independently-shifted date columns can
+invert an individual's recorded date order (e.g. an obfuscated <code>exit</code>
+preceding an obfuscated <code>birth</code>), producing a negative recomputed
+<code>age</code> (issue #150 D3). When <code>FALSE</code>, each Date column is shifted
+independently via <code><a href="obfuscateDate.html">obfuscateDate</a></code> (the original, pre-#150
+behavior).</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -125,14 +139,14 @@ and the values being the new alias values. Defaults to <code>FALSE</code>.</p></
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8 o4   s2   d2   M   1 2008-04-13 &lt;NA&gt; 18.3     original</span>
 <span class="r-in"><span><span class="va">obfuscatedPed</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       id   sire    dam sex gen      birth exit  age recordStatus</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 LS7SJB   &lt;NA&gt;   &lt;NA&gt;   F   0 2003-03-17 &lt;NA&gt; 23.4     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 P4MENX   &lt;NA&gt;   &lt;NA&gt;   F   0 2002-05-29 &lt;NA&gt; 24.2     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 NZZUQQ   &lt;NA&gt;   &lt;NA&gt;   M   0 2000-07-10 &lt;NA&gt; 26.1     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 KV6EPH   &lt;NA&gt;   &lt;NA&gt;   M   0 2005-05-30 &lt;NA&gt; 21.2     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 QER817 NZZUQQ LS7SJB   F   1 2015-01-22 &lt;NA&gt; 11.5     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 RWRDIS NZZUQQ P4MENX   F   1 2009-02-26 &lt;NA&gt; 17.5     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7 N7TLJ2 KV6EPH P4MENX   F   1 2012-03-27 &lt;NA&gt; 14.4     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8 ZFC1WF KV6EPH P4MENX   M   1 2008-03-24 &lt;NA&gt; 18.4     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 2JHTJG   &lt;NA&gt;   &lt;NA&gt;   F   0 2003-03-21 &lt;NA&gt; 23.4     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 TUEI08   &lt;NA&gt;   &lt;NA&gt;   F   0 2002-06-19 &lt;NA&gt; 24.1     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 D183KX   &lt;NA&gt;   &lt;NA&gt;   M   0 2000-08-13 &lt;NA&gt; 26.0     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 88LJFL   &lt;NA&gt;   &lt;NA&gt;   M   0 2005-07-04 &lt;NA&gt; 21.1     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 S7SJBP D183KX 2JHTJG   F   1 2015-03-01 &lt;NA&gt; 11.4     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 4MENXN D183KX TUEI08   F   1 2009-03-15 &lt;NA&gt; 17.4     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7 ZZUQQK 88LJFL TUEI08   F   1 2012-04-17 &lt;NA&gt; 14.3     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8 V6EPHQ 88LJFL TUEI08   M   1 2008-04-12 &lt;NA&gt; 18.3     original</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

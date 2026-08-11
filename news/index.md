@@ -5,6 +5,41 @@
 - CRAN’s 2.0.0 submission (2026-07-17, tagged `v2.0.0`) was accepted and
   published 2026-07-26. Development continues here on top of it; any
   future CRAN resubmission ships as 2.0.1, not a second 2.0.0 attempt.
+- New script-callable
+  [`checkLocusMetadata()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md)
+  (issue [\#153](https://github.com/rmsharp/nprcgenekeepr/issues/153),
+  Slice 1) validates a `locus, chrom, pos[, cM]` locus-metadata sidecar
+  table – the schema shared with sibling issue
+  [\#152](https://github.com/rmsharp/nprcgenekeepr/issues/152)’s own
+  sequence-genetics work – and reports each locus’s coverage as one of
+  three explicit tiers: `"full"` (chrom and pos both known; cM is
+  optional even within `"full"`), `"partial"` (exactly one of chrom/pos
+  known), or `"none"` (neither known), following a PLINK-style
+  three-state coverage model rather than requiring complete metadata
+  before any downstream use. A new bundled example fixture pair
+  (`example_locus_metadata.csv` / `example_str_marker_genotypes.csv`)
+  adds the package’s first multiallelic, panel-scale marker-genotype
+  example, proving the existing
+  [`buildMarkerGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/buildMarkerGenotypeMatrix.md)
+  already handles multiallelic data unchanged – the biallelic
+  restriction lives entirely in
+  [`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md),
+  deliberately not used for this fixture. No Shiny UI yet –
+  linkage-aware/haplotype-block metrics and a matching tab are separate,
+  future slices.
+- New script-callable
+  [`checkLinkageMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLinkageMarkerGenotypeFile.md)
+  (issue [\#153](https://github.com/rmsharp/nprcgenekeepr/issues/153),
+  Slice 2) is a sibling to
+  [`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md):
+  it validates the same long-format `id`/`locus`/`allele1`/`allele2`
+  genotype table and retains the same column-count, `id`-first-column,
+  and duplicate-row checks, but deliberately omits the
+  more-than-two-distinct-alleles-per- locus rejection – so real,
+  multiallelic colony marker panels (e.g. microsatellite/STR panels) can
+  be ingested.
+  [`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)/[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)’s
+  existing biallelic contract is completely untouched. No Shiny UI yet.
 - The Genetic Value Analysis tab gained a configurable **Ranking
   Scheme** control (issue
   [\#125](https://github.com/rmsharp/nprcgenekeepr/issues/125)): the
@@ -320,6 +355,99 @@
   candidate solutions; the default remains 5, unchanged. The Breeding
   Group Formation tab gained a matching **Candidates to retain** control
   (default 5, 1-50) next to the existing simulation-count input.
+- [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+  gained an `exhaustive` argument (issue
+  [\#146](https://github.com/rmsharp/nprcgenekeepr/issues/146), Slice 2,
+  closes [\#146](https://github.com/rmsharp/nprcgenekeepr/issues/146)):
+  when `TRUE`, every possible single-group partition is enumerated
+  instead of randomly sampled, guaranteeing the retained candidates
+  include the true best groupings rather than the best a sample happened
+  to find. Supported only for `numGp = 1` with no harem or custom
+  `sexRatio`; an out-of-scope request, or one whose candidate pool
+  exceeds the new `maxExhaustiveCandidates` argument (default 20), stops
+  with a message naming the reason rather than silently falling back to
+  sampling. A new `exhaustiveTimeLimit` argument (default 10 seconds)
+  bounds search time, degrading gracefully to a truncated
+  (non-exhaustive) result rather than blocking indefinitely. The return
+  value gains `exhaustive`, `examined`, and `retentionRule` fields when
+  this mode is used; ordinary (sampling) calls are unaffected. The
+  Breeding Group Formation tab gained a matching **Exhaustive
+  enumeration mode** checkbox (visible only when the current
+  configuration is eligible) and a status message reporting the search
+  outcome after each run.
+- New script-callable
+  [`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
+  (issue [\#151](https://github.com/rmsharp/nprcgenekeepr/issues/151),
+  Slice 1) reports eligible individual mate-pair candidates –
+  opposite-sex, minimum-age pairs surviving the same eligibility screens
+  Breeding Group Formation already uses
+  ([`filterPairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/filterPairs.md)/`filterAge()`),
+  each row carrying pedigree kinship and, when available, marker-based
+  kinship
+  ([`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)’s
+  KING-robust estimator) and per-parent genetic-value context
+  ([`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)’s
+  `indivMeanKin`/`gu`). No blended/composite ranking score is computed;
+  callers sort or filter the raw columns themselves. A `populationIds`
+  argument scopes the candidate pool before computation (age alone does
+  not bound table size when many individuals have no recorded age); an
+  `exclude` argument drops specific ids entirely. Dropped pairs are
+  reported separately with a reason (“under minimum age” or
+  “user-excluded”), never silently discarded. Report-only, no Shiny UI
+  yet – a Mate Pair Analysis tab is a separate, future slice.
+- A new **Mate Pair Analysis** tab was added (issue
+  [\#151](https://github.com/rmsharp/nprcgenekeepr/issues/151), Slice
+  2), a curator-facing view over
+  [`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
+  (Slice 1), kept structurally and file-wise separate from Breeding
+  Group Formation. A candidate population must be chosen explicitly –
+  “All alive” (no recorded exit date), “Top ranked by genetic value”, or
+  a pasted custom id list – since the age floor alone does not bound the
+  candidate table on real, imperfectly-curated colony data. A separate
+  “Excluded” table shows every dropped pair with its reason (never
+  silently discarded), alongside an optional exclude-list textarea. The
+  “Eligible Pairs” table is sortable/filterable and its CSV export
+  downloads exactly the currently filtered/sorted rows, not the full
+  unfiltered table. Marker-based kinship, where available, now reaches
+  this tab and the existing Marker Genetics tab unchanged:
+  [`modMarkerGeneticsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modMarkerGeneticsServer.md)’s
+  own `markerKinshipMatrix` value was computed but never read by any
+  caller until now (a one-line, additive capture at its existing call
+  site).
+- [`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+  gained a **linkedDateShift** argument (issue
+  [\#150](https://github.com/rmsharp/nprcgenekeepr/issues/150), Slice
+  1), defaulting to `TRUE`: every Date column of one individual
+  (e.g. `birth`/`exit`/`death`) is now shifted by the same, single
+  random offset, preserving that individual’s inter-date gaps exactly.
+  The previous behavior – each Date column shifted independently – could
+  invert an individual’s recorded date order (e.g. an obfuscated `exit`
+  preceding an obfuscated `birth`), producing a negative recomputed
+  `age`; the old behavior is still available via
+  `linkedDateShift = FALSE` for any caller that needs it. Ships ahead of
+  a future de-identified pedigree export workflow (Slice 2) that depends
+  on this fix.
+- New **De-Identified Export** tab (issue
+  [\#150](https://github.com/rmsharp/nprcgenekeepr/issues/150), Slice 2,
+  closes [\#150](https://github.com/rmsharp/nprcgenekeepr/issues/150)):
+  a curator-facing workflow around the existing
+  [`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+  (Slice 1) and a new transformation-manifest helper. Exports the
+  pedigree already loaded in the current session – no separate upload –
+  with configurable alias-id length, maximum date shift, and the
+  `linkedDateShift` toggle (Slice 1’s fix, on by default). A live
+  preview shows the de-identified output before anything is exported; an
+  explicit confirmation dialog, carrying an institutional-responsibility
+  disclaimer (this app’s first), gates 3 downloadable artifacts: the
+  de-identified pedigree, a transformation manifest (parameters used,
+  row count, timestamp – never the id map or any raw pre-obfuscation
+  value), and a distinctly labeled re-identification key (“DO NOT
+  SHARE”). Fields other than id, dam, sire, dates, and name (e.g.
+  `origin`, `status`) pass through unchanged – disclosed in the warning
+  text and manifest, not silently scrubbed. Matches this app’s
+  established curator-controlled pattern (a confirmation dialog and
+  warning text, not real access control) rather than building new auth
+  infrastructure.
 
 ## nprcgenekeepr 2.0.0 (20260708)
 

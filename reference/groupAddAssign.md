@@ -19,6 +19,9 @@ groupAddAssign(
   sexRatio = 0,
   withKin = FALSE,
   maxCandidates = 5L,
+  exhaustive = FALSE,
+  maxExhaustiveCandidates = 20L,
+  exhaustiveTimeLimit = 10,
   updateProgress = NULL
 )
 ```
@@ -98,6 +101,30 @@ groupAddAssign(
   solutions to retain during the simulation (issue \#146 Slice 1).
   Default is 5.
 
+- exhaustive:
+
+  Logical. When `TRUE`, enumerate every maximal independent set of the
+  conflict graph instead of random sampling (issue \#146 Slice 2),
+  subject to `maxExhaustiveCandidates`/ `exhaustiveTimeLimit`. Only
+  supported for `numGp = 1`, `harem = FALSE`, `sexRatio = 0` – any other
+  combination [`stop()`](https://rdrr.io/r/base/stop.html)s with a
+  message naming the specific unsupported condition, rather than
+  silently falling back to sampling. Default is `FALSE` (the existing
+  sampling behavior, unchanged).
+
+- maxExhaustiveCandidates:
+
+  Integer. Pre-flight feasibility ceiling for `exhaustive = TRUE`: a
+  candidate pool larger than this
+  [`stop()`](https://rdrr.io/r/base/stop.html)s before any enumeration
+  runs. Default is 20.
+
+- exhaustiveTimeLimit:
+
+  Numeric. Wall-clock seconds allowed for `exhaustive = TRUE`'s search
+  before it truncates gracefully (`exhaustive = FALSE` in the return
+  value, not an error). Default is 10.
+
 - updateProgress:
 
   Function or NULL. If this function is defined, it will be called
@@ -121,7 +148,14 @@ two trials with the same score but different membership both count as
 distinct candidates; two trials with identical membership count once.
 The list item `groupKin` contains the subset of the kinship matrix that
 is specific for each group formed in the best candidate (an alias for
-`candidates[[1]]$groupKin`).
+`candidates[[1]]$groupKin`). When `exhaustive = TRUE` was requested
+(issue \#146 Slice 2), three additional top-level items are present –
+absent entirely, not merely `NULL`, when `exhaustive = FALSE` (the
+default): `exhaustive` (logical, whether the search completed before its
+wall-clock deadline), `examined` (integer, the total number of distinct
+maximal independent sets found), and `retentionRule` (character,
+describing the top-`maxCandidates` cutoff actually applied to
+`candidates`).
 
 ## Details
 
