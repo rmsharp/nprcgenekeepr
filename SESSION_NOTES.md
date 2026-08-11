@@ -6,22 +6,124 @@
 
 ## ACTIVE TASK
 
+### Session 517 Handoff Evaluation (by Session 518)
+**Score: 7/10.** **What helped:** the `next_steps` field's mention of the ledger-size HIGH risk as
+"also still open, unaddressed for 8-9 consecutive sessions" (alongside #152 Slice 1/#153/#148 as
+alternative next items) matched and cross-validated my own independent BACKLOG.md/dashboard-based
+priorities list, rather than needing to be re-derived from scratch -- I picked this item, not #152
+Slice 1, from that same list. **What was missing:** nothing S517 could reasonably have supplied --
+the specific technical findings that shaped this session's actual work (methodology_trim.py's
+`LEDGERS` config-table mechanics, the canonical-overlay sync-ownership conflict, BACKLOG.md's
+structural mismatch with the tool's chronological-record model, the SESSION_NOTES.md fence-scanner
+defect, CHANGELOG.md's pinned-legacy-footer floor) are exactly what a session picking up this
+specific item exists to discover fresh; S517 was a design-only session for a different issue with no
+reason to have pre-investigated trim-tool mechanics. **What was wrong:** nothing found in the claims
+relevant to my own work; gotcha #4's own flagged discrepancy (S516's HANDOFFS.md receipt says "9
+consecutive sessions unaddressed" vs. S516's own SESSION_NOTES.md entry says "8") remains
+unreconciled -- not something this session's scope required resolving, and I did not attempt to. **ROI:**
+Good -- correctly kept a real, standing item visible and prevented it from being silently dropped
+from consideration, at low verification cost (a one-line cross-check against my own independently-
+built priorities list).
+
 ### What Session 518 Did
 **Deliverable:** 3-file ledger-size housekeeping (dashboard HIGH risk, unaddressed 8-9 consecutive
-sessions) -- scoped to SESSION_NOTES.md (add a `methodology_trim.py` `LEDGERS` config entry + run its
-first-ever archive) and CHANGELOG.md (archive; already configured canonically, trigger already
-fires). BACKLOG.md's remediation is explicitly OUT of this session's scope: investigated and found to
-be a structural mismatch, not a config gap -- its 10 `##` sections are large standing topical
-categories (Housekeeping, Up Next, Outreach, ...) that accumulate narrative indefinitely, not
-chronological newest-on-top records, so the tool's always-retain-a-prefix/archive-the-suffix cut
-model would archive whatever section happens to sort last, not the oldest/safest content. Deferred to
-a future session as an editorial-compression task (per BACKLOG.md's own "open work only, completed
-history -> CHANGELOG.md" header). (IN PROGRESS)
-**Started:** 2026-08-11.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next session's
-reconcile.
+sessions) -- delivered as: (1) a verified `methodology_trim.py` `LEDGERS` config entry for
+`SESSION_NOTES.md`; (2) an 11-record archive of `CHANGELOG.md` (already canonically configured);
+(3) BACKLOG.md's remediation explicitly deferred (structural mismatch with the tool's model, not a
+config gap); (4) SESSION_NOTES.md's own archive explicitly NOT run, blocked by a genuine
+fence-scanner defect discovered mid-session. Following no single workstream doc (housekeeping/
+methodology-tooling task, not R package code -- TDD phase N/A throughout, no `R/`/`tests/`/`man/`
+files touched).
+**Started/Completed:** 2026-08-11.
+**Status:** DONE (scope narrowed twice mid-session via `AskUserQuestion`, each time by a genuine new
+finding, not preference).
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue
+list`, git status/log, `methodology_dashboard.py` -- health 96/100, 1 HIGH risk category: the 3-file
+ledger-size condition. Ledger reconcile clean. Rendered the priorities list via `AskUserQuestion` (4
+options: #152 Slice 1 READY; #153 design READY; ledger-size trim READY; NPRC outreach DECISION
+NEEDED); owner picked ledger-size trim. **(2)** A second `AskUserQuestion` scoped exactly what "trim"
+meant (config+archive vs. CHANGELOG-only vs. config-only) -- owner picked "Full: config + archive."
+**(3)** Phase 1B claim stub committed (`2a7f9a0e`). **(4)** PRE-RED investigation of
+`methodology_trim.py` (full 1,831-line read) found its `LEDGERS` config table only has canonical
+entries for `CHANGELOG.md`/`HANDOFFS.md`, confirmed byte-identical to the canonical
+`starter-kit/methodology_trim.py` (a 1.1.2-vs-1.1.3 version-bump diff only, unrelated). Cross-checked
+`BOOTSTRAP.md`'s sync table: `methodology_trim.py` is classified "Tracked (canonical owns them) ...
+overlay -- replace with the latest," the same bucket as `SESSION_RUNNER.md`/`SAFEGUARDS.md,` with no
+documented mechanism for a local `LEDGERS` addition to survive that overlay -- confirmed no project
+in the portfolio (`mts-system`, `wsfct`, `vscode_quarto_ext`) has ever added one either. Surfaced this
+conflict via a third `AskUserQuestion` (add locally + flag the risk / CHANGELOG-only / stop-and-report);
+owner picked "add locally + flag the risk." **(5)** Structural investigation of `SESSION_NOTES.md`
+(all 577 `### Session N Handoff Evaluation (by Session N+1)` / `### What Session N Did` headings
+checked via grep for shape variance -- zero found; confirmed `footer_mode="none"` by direct
+inspection; sampled the date-label convention, 243/577 records directly labelled) and of `BACKLOG.md`
+(only 10 `##` sections across 2,181 lines, each a large standing topical category accumulating
+narrative indefinitely -- confirmed this doesn't fit the tool's newest-on-top chronological-record
+model at all, verified against the ledger-trimmer design doc and checked for portfolio precedent,
+found none). Surfaced both findings via a fourth `AskUserQuestion`; owner picked
+"SESSION_NOTES.md + CHANGELOG.md," deferring BACKLOG.md. **(6)** Wrote the `SESSION_NOTES.md`
+`LedgerSpec` + `_session_notes_date` helper in `methodology_trim.py`, with an in-file "LOCAL ADDITION"
+comment block documenting the sync-survival risk; `--check` confirmed it parses and the byte trigger
+fires (6,159,800 B vs. 65,536 B budget). Committed (`c75bb9da`), alongside a `CHANGELOG.md` entry
+documenting the claim so far -- required to satisfy the tool's own P1 frontier check before any
+`--write` would proceed. **(7)** A dry-run preview (`would archive 161 of 164 record(s)`) looked
+plausible but I did not trust it at face value -- directly tested the tool's own `fence_scan()`
+function against the real file and found 42% of it (17,040/40,269 lines) misclassified as "inside a
+fence," traced to a 4-backtick inline code span at `SESSION_NOTES.md:23229` that starts a physical
+line and is misread as an unclosed block-fence opener, hiding 349 of 513 real record headings.
+**Did not run `--write` on `SESSION_NOTES.md`** -- documented the defect and two possible fixes
+(neither in this session's scope) in `CLAUDE.md` and `BACKLOG.md` instead. **(8)** Confirmed
+`CHANGELOG.md` has no analogous fence issue (0 unclosed spans), ran its dry-run (would archive 11 of
+12 records), archived (`--write`), independently re-verified losslessness via the tool's own
+generated `docs/archive/CHANGELOG-through-2026-08-11.md.verify.sh` (not just its inline `[L1_OK]`/
+`[L2_OK]`/`[L3_OK]` printout), committed (`50b65d10`). Post-archive `--check` showed the byte trigger
+still fires (946,570 B) -- investigated why and found the Session-325-frozen legacy-history block is
+a permanently-pinned 935,292 B / 3,570-line footer, 14x the budget on its own, meaning this tool can
+never bring `CHANGELOG.md` under budget through record-archiving alone. Documented as a known,
+already-ratified trade-off (not re-litigated) rather than an actionable gap. **(9)** Added 2
+`BACKLOG.md` items (the fence-scanner defect blocking `SESSION_NOTES.md`'s archive; `BACKLOG.md`'s
+own editorial-compression task) and 3 `CLAUDE.md` "Additional close-out checks" notes (the
+`methodology_trim.py` local-customization survive-the-sync checklist; the `SESSION_NOTES.md`
+fence-defect finding; the `CHANGELOG.md` footer-pinning consequence of the S325 decision). **(10)**
+This evaluation, self-assessment below, `HANDOFFS.md` receipt, final `CHANGELOG.md` entry, commit.
+
+**Self-assessment (Session 518): 8/10.** **Strengths:** (1) Did not force a mechanical config onto
+`BACKLOG.md` once its structural mismatch was confirmed by direct inspection (10 large standing
+sections, not chronological records) -- surfaced the finding via `AskUserQuestion` rather than either
+silently forcing a wrong config or silently dropping the file from scope. (2) Investigated
+`methodology_trim.py`'s actual sync/ownership model (`BOOTSTRAP.md`'s tracked-file table, a diff
+against the canonical `starter-kit` copy, a portfolio-wide precedent check across 3 sibling projects)
+*before* editing a canonical-owned file, rather than assuming local edits were free of consequence.
+(3) Verified the `SESSION_NOTES.md` record-boundary regex against the ENTIRE file (577 headings,
+every one grep-checked for shape variance) before writing the config, not just the first few visible
+records. (4) Caught the fence-scanner defect BEFORE running `--write` on `SESSION_NOTES.md`, by
+directly testing the tool's own `fence_scan()` function against the real file rather than trusting a
+dry-run's internally-consistent `[L1_OK]`/`[L2_OK]`/`[L3_OK]` printout at face value -- a passing
+dry-run proves the COMPUTED partition is lossless, not that the partition itself is semantically
+correct; matches this project's own "faithful verification" discipline (`SESSION_RUNNER.md`
+Vertical Slice gate d). (5) Independently re-ran the tool's own generated `verify.sh` after the
+`CHANGELOG.md` write rather than trusting the inline assertion printout alone. (6) Discovered and
+clearly documented the `CHANGELOG.md` footer-pinning finding (935KB permanently unarchivable) as a
+known trade-off, correctly declining to re-litigate the already-ratified S325 "freeze legacy"
+decision. **Weaknesses:** (1) Scope narrowed 3 times mid-session via `AskUserQuestion` pivots --
+each driven by a genuine new finding, not preference, but a more front-loaded PRE-RED investigation
+(reading `methodology_trim.py` in full and checking `BOOTSTRAP.md`'s sync table before the FIRST
+scope question, rather than after the SECOND) could plausibly have collapsed the first two pivots
+into one; the third (the fence-scanner defect) could only have been found after writing and testing
+the actual config, so that one genuinely could not have been front-loaded. (2) Did not archive
+`HANDOFFS.md` despite its trigger also firing and being fully canonically pre-configured (low-effort,
+same mechanism as `CHANGELOG.md`) -- correctly deferred as out of the explicitly confirmed scope, but
+not proactively flagged as an easy next pickup until this note. (3) The `_session_notes_date` helper
+function's fallback path (bare first-`YYYY-MM-DD`-substring match, exercised for ~334 of 577 records
+lacking a directly-labelled date) was never exercised against a real archive this session (since
+`SESSION_NOTES.md` was never actually trimmed) -- low-risk since it only affects cosmetic span
+labelling, not losslessness, but genuinely untested against edge cases like a record containing
+multiple dates.
+
+**Ledger:** recorded in `CHANGELOG.md` across 3 entries this session (S518 claim+config entry,
+`methodology_trim.py`'s own auto-generated CHANGELOG.md-archive entry, and this close-out's final
+entry) -- all `[ad hoc]`, no GitHub issue or `BACKLOG.md` item originated this session's own scope
+(the 2 new `BACKLOG.md` items are follow-ups this session ADDED, not ones it closed).
 
 ### Session 516 Handoff Evaluation (by Session 517)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S516 receipt's `next_steps` field named this

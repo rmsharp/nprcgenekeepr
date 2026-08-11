@@ -670,6 +670,39 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       A future session fixing this item should address all 3 test blocks, not
       just the original 2.
 
+- [ ] **Fix the `methodology_trim.py` fence-scanner defect blocking `SESSION_NOTES.md`'s first
+      archive** (found S518, 2026-08-11, READY, Effort S) -- `SESSION_NOTES.md` now has a verified
+      `LEDGERS` config entry (all 577 record-start headings checked for shape variance, zero found)
+      but its archive was NOT run: a 4-backtick-delimited *inline code span* at
+      `SESSION_NOTES.md:23229` (`` ```` ```{r}/```{R}```` `` `` -- a legitimate way to show literal
+      triple-backtick text) starts a physical line, and the tool's simplified fence-scanner reads
+      it as an unclosed *block*-fence opener, putting the remaining 17,040 of 40,269 lines (42%)
+      into a false "inside a fence" state and hiding 349 of 513 real session-record headings from
+      the partition. Confirmed via direct `fence_scan()` testing, not assumed. Two possible fixes:
+      (a) rewrap the one offending paragraph so the 4-backtick sequence no longer opens a physical
+      line (smaller, local, but edits frozen historical `SESSION_NOTES.md` content); (b) patch
+      `methodology_trim.py`'s fence-scanning regex to distinguish an inline code span from a block
+      fence opener (correct upstream fix, but a deeper edit to a canonical-overlay file than the
+      config addition this session already made, and arguably belongs reported to the canonical
+      methodology repo rather than patched locally). Re-run `python3 methodology_trim.py --file
+      SESSION_NOTES.md` after either fix and confirm the record count returns to ~513 (not 164)
+      before trusting `--write`. See `CLAUDE.md` Additional close-out checks.
+- [ ] **`BACKLOG.md`'s own ledger-size housekeeping -- editorial compression, not a
+      `methodology_trim.py` config** (found S518, 2026-08-11, READY, Effort L) -- `BACKLOG.md`
+      itself is one of the dashboard's 3-file HIGH-risk ledger-size items (2,181 lines, past the
+      2,000-line read cap) but does not fit `methodology_trim.py`'s chronological-record model: it
+      has only 10 `##` sections (Active, Architecture follow-ups, Up Next, Housekeeping, Outreach,
+      ...), each a large *standing topical category* that accumulates resolved-item narrative
+      indefinitely, not dated newest-on-top records -- the tool's always-retain-a-prefix/
+      archive-the-suffix cut model would archive whichever section happens to sort last, not the
+      oldest/safest content. The file's own header already states the right remedy: "Open,
+      actionable work only... for history see `CHANGELOG.md`" -- a future session should review
+      each section for fully-RESOLVED items whose long narrative write-up (some run 50+ lines, e.g.
+      the LabKey integration item) can be compressed to a short pointer with full detail preserved
+      in its existing `CHANGELOG.md` entry, rather than left in place verbatim. This is an
+      editorial/judgment task (which items are truly safe to compress without losing something
+      load-bearing), not a mechanical trim -- budget it as its own session, not a quick pass.
+
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability-comparison audit (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`)
 compared the just-shipped issue #129 pedigree-diagram feature against kinship2's pedigree-drawing
