@@ -6,6 +6,16 @@
 
 ## ACTIVE TASK
 
+### What Session 514 Did
+**Deliverable:** Issue #150 (de-identified pedigree export workflow) -- resolve the owner policy
+decision the `GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` Finding #3 flagged, and if
+approved, produce a ratified architecture/design document, following
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`. (IN PROGRESS)
+**Started:** 2026-08-10.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### Session 512 Handoff Evaluation (by Session 513)
 **Score: 8/10.** **What helped:** the `HANDOFFS.md` S512 receipt's `next_steps` field named exactly
 this session's work item-for-item -- `R/modMatePair.R` (new `modMatePairUI`/`modMatePairServer`),
