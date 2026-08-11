@@ -702,6 +702,29 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       in its existing `CHANGELOG.md` entry, rather than left in place verbatim. This is an
       editorial/judgment task (which items are truly safe to compress without losing something
       load-bearing), not a mechanical trim -- budget it as its own session, not a quick pass.
+- [ ] **`inst/WORDLIST` has a large, long-standing gap -- `devtools::check()`'s spelling-check step
+      fires a NOTE on every run** (found S521, 2026-08-11, READY, Effort M) -- confirmed via direct
+      verification, not assumed: temporarily removing this session's own new files from the tree and
+      re-running `spelling::spell_check_package(".", vignettes = TRUE)` still flagged **69 words**
+      not in `inst/WORDLIST`, spanning many past sessions' files (`NEWS.md`, `a2interactive.Rmd`,
+      `_pedigree_browser.Rmd`, `_breeding_group_formation.Rmd`, `makePedigreeMatingLayout.Rd`,
+      `checkLocusMetadata.Rd`, and more) -- proper nouns/citation authors (Bakker, Ferreira, Maller,
+      Neale, Okabe, Sklar), genetics vocabulary (chrom, cM, pos, dizygotic, monozygotic, sibship,
+      zygosity-adjacent terms), and methodology/UI prose (handoff, walkthrough, onboarding, CLI,
+      shas, subplan, browsable, discoverable, unshaded, waypoint, js, vis, and others). This session
+      hand-added only the 2 words its own new `checkLinkageMarkerGenotypeFile.Rd` is responsible for
+      (`validator`, `multiallelic`) -- fixing the other 69 is a distinct, larger editorial task (verify
+      each is a genuine false positive vs. an actual typo, per the S230/S421 hand-add convention, not
+      `spelling::update_wordlist()`) out of scope for a single implementation slice. `devtools::check()`
+      currently reports **0 errors / 0 warnings / 3 NOTEs** (this spelling NOTE plus the 2
+      already-known pre-existing NOTEs: top-level files, vignette-engine) -- but S520's own close-out
+      reported only "1 pre-existing note." Confirmed via `git log` that S520 never touched any of the
+      69 flagged-word files, so the gap is not new since S520 -- the likelier explanation, worth
+      recording as its own finding: `devtools::check()`'s abbreviated results table only lists a `❯`
+      bullet for some NOTE-producing steps, and the "checking tests ... NOTE" step (spelling.R's
+      diff-based check) does NOT get one -- only the raw `Status: N NOTEs` line (above the table)
+      counts it. A session that trusts only the `❯`-bullet table, as this session nearly did, silently
+      undercounts. See `CHANGELOG.md` 2026-08-11.
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability-comparison audit (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`)

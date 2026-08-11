@@ -123,20 +123,84 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S521
 date: 2026-08-11
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Issue #153 Slice 2 -- checkLinkageMarkerGenotypeFile(), the multiallelic-tolerant
-sibling ingestion validator (design D4). Session claimed, work beginning.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: Issue #153 Slice 2 (checkLinkageMarkerGenotypeFile(), the multiallelic-tolerant sibling
+ingestion validator, D4) is DONE. Full strict TDD PRE-RED->RED->GREEN->REFACTOR cycle, each
+transition AskUserQuestion-gated (REFACTOR: owner declined the extract-shared-helper option).
+Issue #153 stays open -- Slice 3 (the realized-relatedness-variance metric, D3a, needs its own
+Hill & Weir 2011 literature derivation first per Dragon 4) is next.
+what_was_done: New R/checkLinkageMarkerGenotypeFile.R (exported): same 4-column long-format
+id/locus/allele1/allele2 schema as checkMarkerGenotypeFile(), retains its column-count/
+id-first-column/duplicate-row checks verbatim, deliberately omits the >2-allele-per-locus
+rejection so real multiallelic colony STR panels can be ingested. Zero edits to any existing file
+(checkMarkerGenotypeFile()/markerKinship() untouched by construction -- confirmed via grep that
+checkMarkerGenotypeFile() is called only from modMarkerGenetics.R's Shiny handlers, not from any
+marker function). 7 new test_that blocks / 12 expectations in
+tests/testthat/test_checkLinkageMarkerGenotypeFile.R, including a fixture-scale dual-validator
+proof (the committed STR fixture is accepted by the new function and still rejected by the old
+one). Full clean regression 0 failed/0 error (5261 passed = 5249 baseline + 12 new, 15 pre-existing
+warnings unchanged); devtools::check() 0 errors/0 warnings/3 NOTEs, all confirmed pre-existing
+(direct verification, not assumed -- see gotchas); lintr::lint_package() 0 lints. Fixed the
+_pkgdown.yml reference-coverage guard. Found and fixed a real bug in my own @examples block
+(duplicate id x locus, caught by R CMD check's example-execution step). Hand-added 2 words
+(validator, multiallelic) to inst/WORDLIST; filed the remaining 69-word pre-existing gap as a new
+BACKLOG.md Housekeeping item. NEWS.Rmd/NEWS.md updated (caught and fixed a line-wrap rendering
+artifact). PROJECT_LEARNINGS.md Learning 520 added (devtools::check() NOTE-undercounting
+mechanism). Commits: 797d2abd (claim), plus this close-out commit.
+next_steps: (1) Issue #153 Slice 3 (markerRealizedRelatednessVariance(), D3a) is next per the design
+doc §5 -- its own PRE-RED must derive/verify the Hill & Weir (2011) closed-form variance formula
+first (§7 Dragon 4), not assume it's straightforward; this is real research risk carried forward
+across 2 sessions now. (2) Issue #152 Slice 1 is still open and directly pickable -- can now reuse
+both checkLocusMetadata() and this session's checkLinkageMarkerGenotypeFile() precedent. (3) The
+3-file ledger-size HIGH risk is still unaddressed (SESSION_NOTES.md's fence-scanner defect,
+BACKLOG.md's own compression pass, HANDOFFS.md's own archive) -- all three were visible in this
+session's own Phase 0 priorities list but not picked. (4) NEW this session: the 69-word
+inst/WORDLIST gap (BACKLOG.md Housekeeping, found S521) is a real, medium-effort editorial task
+worth picking up before it grows further un-noticed (see gotcha 2).
+key_files: R/checkLinkageMarkerGenotypeFile.R (new function); tests/testthat/
+test_checkLinkageMarkerGenotypeFile.R (7 test_that blocks); inst/WORDLIST (2 new entries,
+collation-ordered); _pkgdown.yml:207 (new reference entry); BACKLOG.md Housekeeping (new
+inst/WORDLIST item); PROJECT_LEARNINGS.md Learning 520; docs/planning/
+issue153-linkage-haplotype-block-metrics-plan.md §5 Slice 3 (the next slice's own scope, plus §7
+Dragon 4's unresolved formula-derivation risk).
+gotchas: (1) devtools::check()'s abbreviated `❯`-bullet results table does NOT list a bullet for
+every NOTE-producing step -- the "checking tests ... NOTE" step (spelling.R) never gets one, so
+trust the raw `Status: N NOTEs` line, not the bullet count, or you will under-report (this is
+exactly what happened at S520's own close-out -- see PROJECT_LEARNINGS.md Learning 520). (2) The
+inst/WORDLIST gap is large (69 words after this session's 2 fixes) and spans many past sessions'
+files -- a future session picking up the new BACKLOG.md Housekeeping item should verify each
+flagged word is a genuine false positive (proper noun, technical term) vs. an actual typo before
+hand-adding it, per the established S230/S421 convention (never spelling::update_wordlist()
+wholesale). (3) git stash push -- <pathspec> silently drops untracked files from its pathspec
+match (no error beyond stderr noise) -- use -u/--include-untracked, or better, a plain mv-based
+holdout directory for file-isolation testing; this session's stash attempt produced a spurious
+.DS_Store merge conflict that cost real time to diagnose. (4) Combining Bash run_in_background:
+true with a trailing shell `&` double-backgrounds a command and produces premature "completed"
+notifications before the real work finishes -- use exactly one backgrounding mechanism.
+runtime_smoke: n/a -- Slice 2 scope, no runtime/UI behavior changed (new R function only; no Shiny
+module, app wiring, or existing function touched).
+changelog_ref: CHANGELOG.md 2026-08-11, two [issue #153] entries (Session 521): claim entry and
+this close-out entry.
+commit: pending -- reconciled by the next session's Phase 0, per this receipt's own documented
+write-time constraint (the receipt ships in the very commit whose sha it would name).
 ```
-<pending -- filled at close-out>
+<Session 521 self-assessment: 9/10. Strengths: (1) caught a real bug in my own GREEN work via R CMD
+check's example-execution step (a duplicate id x locus mistake in my own @examples block), not
+assumed correct just because RED tests passed; (2) did not accept devtools::check()'s abbreviated
+bullet-table summary at face value when it disagreed with the raw NOTE count -- investigated to root
+cause (a real, pre-existing 69-word WORDLIST gap) rather than under-reporting or over-fixing; (3)
+verified the design doc's "zero edits to existing files" impact-analysis claim empirically via grep
+before relying on it; (4) scoped the WORDLIST fix to exactly the 2 words this session's own file
+introduced, filing the rest as a distinct backlog item; (5) re-ran the full regression/lint suite a
+second time after file-shuffling, rather than assuming nothing could have been disturbed. Weaknesses:
+(1) a git stash push -- <pathspec> call silently excluded 3 untracked new files from its pathspec
+match, producing a spurious .DS_Store merge conflict that cost real diagnostic time; a plain
+mv-based holdout (used successfully on the retry) should have been the first approach; (2) the
+run_in_background: true + trailing `&` double-backgrounding pattern produced several premature
+"completed" notifications during verification, requiring extra Monitor-based waits to catch real
+completion.>
 
 ```handoff
 session: S520

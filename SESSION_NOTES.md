@@ -6,6 +6,28 @@
 
 ## ACTIVE TASK
 
+### Session 520 Handoff Evaluation (by Session 521)
+**Score: 8/10.** **What helped:** the `HANDOFFS.md` S520 receipt's `next_steps` field named "Issue
+#153 Slice 2 (`checkLinkageMarkerGenotypeFile()`, the multiallelic-tolerant sibling ingestion
+validator, D4) is the next planned slice" as directly pickable -- exactly what this session picked
+and executed. Its `key_files` (`R/checkLocusMetadata.R`, the design doc's own §5 Slice 2 text) were
+both used directly: `checkLocusMetadata.R`'s structure was the template this session's own
+`checkLinkageMarkerGenotypeFile()` copied (column-count check, `id`-first-column check, forced
+column names, duplicate-row check), and the design doc's interface catalog (§4) and D4 rationale
+(§3) supplied the exact scope (retain 3 checks, omit the allele-count rejection) with zero
+re-derivation needed. Gotcha #3 (`checkLocusMetadata()`'s output shape -- data frame, not a list --
+should be followed for consistency) was directly actionable and followed. **What was missing:**
+nothing S520 could reasonably have supplied for this session's own scope. **What was wrong:** S520's
+own close-out reported "0 errors/0 warnings/1 pre-existing note," but this session's own GREEN
+verification found `devtools::check()` actually reports **3** NOTEs (`Status: 3 NOTEs`) -- a
+spelling-check NOTE from `tests/spelling.R` was already firing at S520's own check, just invisible
+in `devtools::check()`'s abbreviated `❯`-bullet results table, which does not list a bullet for that
+particular step (see `PROJECT_LEARNINGS.md` Learning 520). Not a fabrication -- a shared, easy-to-
+make undercounting mistake this session nearly repeated too, caught only by grepping the full log
+rather than trusting the summary table. **ROI:** Strong -- both the receipt and the design doc it
+pointed to were maximally reusable; the only correction needed was independently discovered, not
+inherited as a wrong instruction.
+
 ### What Session 521 Did
 **Deliverable:** Issue #153 Slice 2 -- `checkLinkageMarkerGenotypeFile()`, the multiallelic-tolerant
 sibling ingestion validator (design D4), per
@@ -13,11 +35,87 @@ sibling ingestion validator (design D4), per
 PRE-RED->RED->GREEN->REFACTOR cycle, each transition `AskUserQuestion`-gated, following
 `DEVELOPMENT_WORKSTREAM.md`. Picked from this session's own Phase 0 priorities list (owner choice
 via `AskUserQuestion`) as the first of four directly-pickable options.
-**Started:** 2026-08-11.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Started/Completed:** 2026-08-11.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue
+list`, git status/log, `methodology_dashboard.py` -- health 96/100, 1 HIGH risk: the 3-file
+ledger-size condition, still unaddressed). Ledger reconcile: `CHANGELOG.md`/`HANDOFFS.md` frontiers
+already at `HEAD`, no undocumented commits, but the S520 `HANDOFFS.md` receipt's `commit:` field was
+still legally `pending` (write-time constraint) -- reconciled to `3292786c` and committed alone
+(`85d07d14`), per the documented "next session reconciles them to real shas" rule. Rendered the
+priorities list via `AskUserQuestion` (4 options capped from 5 real candidates: issue #153 Slice 2,
+issue #152 Slice 1, fix the `methodology_trim.py` fence-scanner defect, archive `HANDOFFS.md`; +1
+more named below the picker per the cap rule); owner picked issue #153 Slice 2. **(2)** Stated scope
+back, Phase 1B claim stub + `HANDOFFS.md status: pending` receipt + `CHANGELOG.md` claim entry
+committed (`797d2abd`). **(3)** PRE-RED: re-read the design doc's §4 interface catalog and §3 D4
+rationale, `R/checkMarkerGenotypeFile.R` (confirmed the exact 3 retained checks + the 1 omitted
+allele-count block), its test file, `R/checkLocusMetadata.R` (Slice 1 style precedent), and the
+committed STR fixture; confirmed via direct `grep` that `checkMarkerGenotypeFile()` is called only
+from `R/modMarkerGenetics.R`'s Shiny upload handlers -- `markerKinship()`/
+`buildMarkerGenotypeMatrix()` have no internal dependency on it, so a new sibling function requires
+zero edits to any existing file (Impact Analysis §6 confirmed empirically, not just asserted).
+Presented the RED-phase test plan (7 `test_that` blocks) via `AskUserQuestion`; owner approved.
+**(4)** RED: wrote `tests/testthat/test_checkLinkageMarkerGenotypeFile.R`; ran and confirmed all 7
+blocks fail genuinely (`could not find function`), no `skip_if()` masking. Presented the GREEN plan;
+owner approved. **(5)** GREEN: wrote `R/checkLinkageMarkerGenotypeFile.R` (copies
+`checkMarkerGenotypeFile()`'s 3 retained checks verbatim, omits the allele-count rejection).
+`devtools::document()`; RED test file 12/12 pass. Full clean regression 0 failed/0 error (5261
+passed = 5249 baseline + 12 new, 15 pre-existing warnings unchanged). `devtools::check()` first run
+surfaced a real bug this session introduced: the new function's own `@examples` block reused two IDs
+across the same locus, tripping the very duplicate-`id x locus` check it was demonstrating --
+`R CMD check`'s example-execution step (not the test suite) caught it; fixed by using 4 distinct
+IDs. Fixed the `_pkgdown.yml` reference-coverage guard (new export not yet listed).
+`lintr::lint_package()` 0 lints. **(6)** Investigated a `devtools::check()` NOTE-count discrepancy
+(`Status: 3 NOTEs` vs. 2 `❯` bullets) rather than accepting the abbreviated summary at face value:
+confirmed via directly moving this session's 3 new files out of the tree and re-running
+`spelling::spell_check_package()` that a **69-word**, long-standing `inst/WORDLIST` gap already
+existed before this session touched anything (spans `NEWS.md`, `a2interactive.Rmd`,
+`_pedigree_browser.Rmd`, `checkLocusMetadata.Rd`, and more). Hand-added the 2 words this session's
+own new file is responsible for (`validator`, `multiallelic`) to `inst/WORDLIST` in collation order
+(S230 convention); filed the remaining 69-word gap as a new `BACKLOG.md` Housekeeping item (out of
+scope for a single slice) and as `PROJECT_LEARNINGS.md` Learning 520 (the NOTE-undercounting
+mechanism itself). Final `devtools::check()`: 0 errors/0 warnings/3 NOTEs, all confirmed
+pre-existing. Final full regression + `lintr::lint_package()` re-run after all file moves: 0
+failed/0 error, 5261 passed, 0 lints -- unchanged. **(7)** REFACTOR gate: presented the
+duplicated-logic-vs-shared-helper tradeoff (named at the RED->GREEN gate too); owner declined,
+matching this codebase's existing sibling-validator precedent (`checkMarkerGenotypeFile()`/
+`checkGenotypeFile()` are also independent, non-shared implementations). **(8)** Close-out: this
+evaluation, self-assessment below, `NEWS.Rmd`/`NEWS.md` entry (new exported-function checklist;
+caught and fixed a line-wrap rendering artifact in the first render), `BACKLOG.md` Housekeeping
+item, `PROJECT_LEARNINGS.md` Learning 520, 2 `CHANGELOG.md` entries (claim + close-out), `HANDOFFS.md`
+receipt completed. Citation checklist (issue #120) and tutorial/article checklist (Session 436)
+confirmed not-yet-applicable (no UI/displayed statistic this slice, script-only, matching Slice 1's
+own precedent). No `gh issue close` -- Slice 2 of 5, issue #153 stays open.
+
+**Self-assessment (Session 521): 9/10.** **Strengths:** (1) Caught a real bug in my own GREEN work
+before it reached verification proper: the `@examples` block's duplicate-`id x locus` mistake was
+found by `R CMD check`'s example-execution step, not assumed correct just because the RED tests
+passed -- a reminder that roxygen examples are executable code with their own failure modes. (2) Did
+not accept `devtools::check()`'s abbreviated `❯`-bullet summary at face value when it disagreed with
+the raw `Status: N NOTEs` count -- investigated the discrepancy to its root cause (a real,
+long-standing `inst/WORDLIST` gap, not a fluke of this session's diff) rather than either silently
+under-reporting like the apparent precedent, or overreacting and trying to fix all 69 words mid-slice.
+(3) Verified the "zero edits to existing files" impact-analysis claim empirically (direct `grep` of
+every `checkMarkerGenotypeFile()` call site) before relying on it, rather than trusting the design
+doc's own assertion. (4) Properly scoped the WORDLIST fix to exactly the 2 words this session's own
+new file is responsible for, filing the rest as a distinct backlog item rather than either ignoring
+it or scope-creeping into a 69-word cleanup. (5) Ran the full regression/lint verification suite a
+second time after the file-shuffling caused by the spelling investigation, rather than assuming
+nothing could have been disturbed. **Weaknesses:** (1) A `git stash push -- <pathspec>` call
+included 3 untracked new files in its pathspec list, which `git stash` silently cannot match
+(untracked files need `-u`/`--include-untracked`) -- the resulting partial stash + pop produced a
+spurious `.DS_Store` merge conflict (pre-existing, unrelated macOS artifact) that cost real time to
+diagnose and resolve safely; a plain `mv`-based holdout (used successfully on the second attempt)
+would have been simpler and should have been the first approach given this project has no
+established git-stash-based fixture-isolation convention to follow. (2) The background-command
+double-backgrounding pattern (`run_in_background: true` combined with a trailing shell `&`) produced
+several premature "completed" notifications during verification, requiring extra Monitor-based
+waits to catch the real completion -- should default to one backgrounding mechanism, not both,
+in future long-running-command sessions.
+
+**Ledger:** recorded in `CHANGELOG.md` across 2 entries this session (S521 claim entry, and this
+close-out's final entry) -- both `[issue #153]`.
 
 ### Session 519 Handoff Evaluation (by Session 520)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S519 receipt's `next_steps` field explicitly

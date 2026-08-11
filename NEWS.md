@@ -24,6 +24,15 @@ R. Mark Sharp, Ph.D.
   `checkMarkerGenotypeFile()`, deliberately not used for this fixture.
   No Shiny UI yet -- linkage-aware/haplotype-block metrics and a
   matching tab are separate, future slices.
+- New script-callable `checkLinkageMarkerGenotypeFile()` (issue \#153,
+  Slice 2) is a sibling to `checkMarkerGenotypeFile()`: it validates the
+  same long-format `id`/`locus`/`allele1`/`allele2` genotype table and
+  retains the same column-count, `id`-first-column, and duplicate-row
+  checks, but deliberately omits the more-than-two-distinct-alleles-per-
+  locus rejection -- so real, multiallelic colony marker panels (e.g.
+  microsatellite/STR panels) can be ingested.
+  `checkMarkerGenotypeFile()`/`markerKinship()`'s existing biallelic
+  contract is completely untouched. No Shiny UI yet.
 - The Genetic Value Analysis tab gained a configurable **Ranking
   Scheme** control (issue \#125): the existing combined
   kinship/uniqueness score stays the default, unchanged; a new

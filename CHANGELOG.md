@@ -135,6 +135,43 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-08-11.md.verify.sh`](docs/archive/CHANGELOG-through-2026-08-11.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-08-11 · [issue #153] S521 close-out: Slice 2 (multiallelic-tolerant ingestion validator) shipped (Session 521)
+- **Deliverable:** Issue #153 Slice 2, per `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md`
+  §5 Slice 2 — new script-callable `checkLinkageMarkerGenotypeFile()`, a sibling to
+  `checkMarkerGenotypeFile()`: retains its column-count, `id`-first-column, and duplicate-row
+  checks verbatim, deliberately omits the `>2`-distinct-alleles-per-locus rejection so real
+  multiallelic colony marker panels (STR panels) can be ingested. Zero edits to any existing
+  file — confirmed via `grep` that `checkMarkerGenotypeFile()` is called only from
+  `R/modMarkerGenetics.R`'s Shiny upload handlers, not from `markerKinship()`/
+  `buildMarkerGenotypeMatrix()` or any other marker function, so the existing biallelic contract
+  is untouched by construction.
+- **Process:** Full strict TDD PRE-RED→RED→GREEN→REFACTOR cycle, each transition
+  `AskUserQuestion`-gated (REFACTOR: owner declined the extract-shared-helper option, matching
+  the existing `checkMarkerGenotypeFile()`/`checkGenotypeFile()` sibling-validator precedent).
+- **Verification:** 7 new `test_that` blocks / 12 expectations in
+  `tests/testthat/test_checkLinkageMarkerGenotypeFile.R`, including a fixture-scale proof that the
+  committed STR fixture is accepted by the new validator and still rejected by the old one. Full
+  clean regression suite 0 failed/0 error (5261 passed = 5249 baseline + 12 new, 15 pre-existing
+  warnings unchanged); `devtools::check()` 0 errors/0 warnings/3 NOTEs, all confirmed pre-existing
+  via direct verification (moved this session's new files out of the tree entirely and re-ran
+  `spelling::spell_check_package()`: a 69–71-word `inst/WORDLIST` gap already existed before this
+  session touched anything). `lintr::lint_package()` 0 lints. Fixed the `_pkgdown.yml`
+  reference-coverage guard. Found and fixed a real bug in this session's own `@examples` block
+  (duplicate `id x locus`, caught by `R CMD check`'s example-execution step, not the test suite).
+- **Housekeeping:** hand-added 2 words (`validator`, `multiallelic`) to `inst/WORDLIST` in
+  collation order (S230 convention) — the 2 this session's own new file is responsible for; filed
+  the remaining 69-word pre-existing gap as a new `BACKLOG.md` Housekeeping item rather than
+  fixing it mid-slice. `PROJECT_LEARNINGS.md` Learning 520 added: `devtools::check()`'s abbreviated
+  `❯`-bullet results table omits a bullet for the spelling-check NOTE step, so S520's own
+  "1 pre-existing note" close-out claim was an undercount (confirmed via `git log` that S520 never
+  touched any of the 69 flagged-word files) — a shared, easy-to-make mistake, not a fabrication.
+  `NEWS.Rmd`/`NEWS.md` updated (caught and fixed a line-wrap rendering artifact in the first
+  render). Citation checklist (issue #120) and tutorial/article checklist (Session 436) do not yet
+  apply — no UI/displayed statistic this slice. Issue #153 stays open — Slice 3
+  (`markerRealizedRelatednessVariance()`, D3a) needs its own Hill & Weir (2011) formula derivation
+  first (§7 Dragon 4) before RED can begin.
+- **Ledger:** this entry plus the S521 claim entry below.
+
 ### 2026-08-11 · [issue #153] S521 claim: issue #153 Slice 2 (multiallelic-tolerant ingestion validator) (Session 521)
 - **Deliverable:** Session claimed. `checkLinkageMarkerGenotypeFile()` (design D4), per
   `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` §5 Slice 2 — proven against
