@@ -6,6 +6,15 @@
 
 ## ACTIVE TASK
 
+### What Session 517 Did
+**Deliverable:** Issue #152 (whole-genome/whole-exome sequence input + sequence-based genetic
+metrics) -- Pre-RED design/architecture document (IN PROGRESS)
+**Started:** 2026-08-11
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 515 Handoff Evaluation (by Session 516)
 **Score: 10/10.** **What helped:** the `HANDOFFS.md` S515 receipt's `next_steps` field named this
 session's entire Slice 2 scope item-for-item -- exact function names
