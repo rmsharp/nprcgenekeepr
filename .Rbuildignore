@@ -109,3 +109,6 @@ README\.*\.png$
 ^inst/extdata/reference/pedigree_nomenclature\.html$
 ^inst/extdata/reference/5201430\.pdf$
 ^inst/extdata/reference/bioinformatics_24_2_279\.pdf$
+^FRAMEWORK_LEARNINGS\.md$
+^methodolog_trim\.py$
+^__pycache__$

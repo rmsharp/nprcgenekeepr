@@ -5,8 +5,10 @@ output:
   html_document:
     df_print: paged
   pdf_document: default
-vignette: "%\\VignetteEngine{knitr::rmarkdown_notangle}  %\\VignetteIndexEntry{Interactive
-  Use of nprcgenekeepr}  %\\usepackage[UTF-8]{inputenc}\n"
+vignette: >
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{Interactive Use of nprcgenekeepr}
+  %\usepackage[UTF-8]{inputenc}
 ---
 
 ```{r setup, include=FALSE}
