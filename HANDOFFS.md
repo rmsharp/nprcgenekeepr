@@ -121,6 +121,30 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-10.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S520
+date: 2026-08-11
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Issue #153 Slice 1 (locus-metadata ingestion + coverage validator + a new
+multiallelic STR fixture), per docs/planning/issue153-linkage-haplotype-block-metrics-plan.md SS5
+Slice 1. Strict TDD PRE-RED->RED->GREEN->REFACTOR, each transition AskUserQuestion-gated.
+what_was_done: pending
+next_steps: pending
+key_files: docs/planning/issue153-linkage-haplotype-block-metrics-plan.md SS4 (interface catalog),
+SS5 Slice 1 (scope), SS7 Dragons 1-2 (ordering/schema-coupling risk with #152; STR-fixture realism
+risk); docs/planning/issue152-sequence-input-genetic-metrics-plan.md:289-298 (locusMetadata schema
+D3, reused verbatim per D7); R/checkMarkerGenotypeFile.R (validator convention to match);
+R/modMarkerGenetics.R (D5 plug-in point, not touched this slice).
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending -- reconciled by the next session's Phase 0, per this receipt's own documented
+write-time constraint (the receipt ships in the very commit whose sha it would name).
+```
+<Session 520 claim stub -- work in progress.>
+
+```handoff
 session: S519
 date: 2026-08-11
 status: complete

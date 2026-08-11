@@ -6,6 +6,20 @@
 
 ## ACTIVE TASK
 
+### What Session 520 Did
+**Deliverable:** Issue #153 Slice 1 -- locus-metadata ingestion + coverage validator + a new
+multiallelic STR fixture (IN PROGRESS), per
+`docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` SS5 Slice 1. Following strict TDD
+(PRE-RED->RED->GREEN->REFACTOR, each transition `AskUserQuestion`-gated) and
+`DEVELOPMENT_WORKSTREAM.md`. Picked from this session's own Phase 0 priorities list (owner choice
+via `AskUserQuestion`) as the first of two directly-pickable implementation options named in S519's
+own `HANDOFFS.md` `next_steps` (#153 Slice 1 or #152 Slice 1 -- both designs ratified).
+**Started:** 2026-08-11.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 518 Handoff Evaluation (by Session 519)
 **Score: 8/10.** **What helped:** the `HANDOFFS.md` S518 receipt's `active_task`/dashboard framing
 of the 3-file ledger-size condition as the sole standing HIGH risk (and its `next_steps` naming the
