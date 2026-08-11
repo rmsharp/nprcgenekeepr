@@ -2149,3 +2149,33 @@ of issue #150 are now shipped; issue #150 closed** as part of this session's clo
 
 **This cluster (issue #150, all slices) is now fully complete.** No further items remain in this
 narrative.
+
+**Progress (S517, 2026-08-11):** the Deferred/scientific tier's first item -- issue #152's own
+design/architecture document (whole-genome/whole-exome sequence input + sequence-based genetic
+metrics) -- is DONE and RATIFIED: see
+`docs/planning/issue152-sequence-input-genetic-metrics-plan.md`. Two parallel background research
+agents (a codebase-inventory `Explore` agent; a domain-research `general-purpose` agent) plus direct
+verification of the single most load-bearing prior decision (issue #130 plan's D2, the ratified
+Bioconductor-Imports decline) grounded the design. Central findings: `markerKinship()`'s O(n²·L)
+nested-pair loop and `markerParentageLikelihood()`'s O(F·C·L·n) redundant per-candidate
+allele-frequency rescan are the real scale bottlenecks (independent of the biallelic-only question);
+a directly-applicable captive-pedigreed-macaque-colony precedent (Bimber et al. 2016, ~22,455-marker
+GBS panel + pedigree-aware imputation) grounds a realistic scope-tier ceiling; raw VCF ingestion is
+infeasible on pure file-size grounds (144 GB-900 TiB class); summary statistics computed from
+genotype data are not an automatic privacy safe-harbor (Homer et al. 2008), so any sequence-derived
+export (raw or derived) must route through the same curator-controlled gate issue #150 already
+shipped. Ten design decisions (D1-D10); four genuine judgment calls (D1 scope tier, D3
+`locusMetadata` sidecar timing, D6 initial metric set, D8 module boundary) ratified via a single
+`AskUserQuestion` round -- owner selected this document's own recommended option in all four:
+sparse/GBS-scale tier (~50,000-locus ceiling, declining to reopen the Bioconductor decline); build
+the `locusMetadata` (`locus, chrom, pos[, cM]`) sidecar now, as shared vocabulary for sibling issue
+#153; genome-wide F_ROH (new, Ceballos et al. 2018) plus genome-scale reruns of the existing
+kinship/heterozygosity/Fst functions, explicitly ceding effective-population-size-from-LD to #153; a
+new tab inside the existing `modMarkerGenetics.R`, not a dedicated new module. Scoped as 5 future
+vertical slices (ingestion+fixture; a required `markerKinship()`/`markerParentageLikelihood()`
+performance rewrite; the new F_ROH metric; a new de-identification primitive; the full module tab +
+documentation), each its own future session. No code changed this session -- design/planning only,
+matching the #133/#136/#137/#145/#146/#147/#149/#150/#151 precedent. Issue #152 intentionally left
+open. **Next in the ratified Deferred-tier order: #153 (linkage-aware/haplotype-block metrics), which
+can now reuse this session's own `locusMetadata` vocabulary; #148 (MHC) still needs its own
+scope-narrowing conversation first, per the sequencing audit's Finding #4.** See `CHANGELOG.md`.
