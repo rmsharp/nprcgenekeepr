@@ -6,6 +6,21 @@
 
 ## ACTIVE TASK
 
+### What Session 513 Did
+**Deliverable:** Issue #151 Slice 2 -- UI, `appServer.R` wiring, and documentation for individual
+mate-pair analysis (IN PROGRESS), following `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`
+and the ratified plan's own §5 Slice 2 spec
+(`docs/planning/issue151-individual-mate-pair-analysis-plan.md:181-198`), inside this project's
+Strict TDD contract (RED -> GREEN -> REFACTOR, each transition gated via `AskUserQuestion`). Picked
+from this session's own Phase 0 priorities list (owner choice via `AskUserQuestion`, over scoping a
+trim-tool config for `SESSION_NOTES.md`/`BACKLOG.md`, a routine `CHANGELOG.md`/`HANDOFFS.md` trim,
+and issue #150's policy decision).
+**Started:** 2026-08-10.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 511 Handoff Evaluation (by Session 512)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S511 receipt's `next_steps` field named
 exactly this session's pickup ("Slice 1 of `docs/planning/issue151-individual-mate-pair-analysis-plan.md`

@@ -121,6 +121,24 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-10.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S513
+date: 2026-08-10
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Issue #151 Slice 2 (UI, appServer.R wiring, docs) -- claimed, work beginning.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending -- reconciled by the next session's Phase 0, per this receipt's own documented
+mechanism.
+```
+<claimed at Phase 1B; overwritten with the full receipt at Phase 3D close-out>
+
+```handoff
 session: S512
 date: 2026-08-10
 status: complete
