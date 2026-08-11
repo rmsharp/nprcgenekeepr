@@ -152,6 +152,25 @@ commit was an out-of-band manual docs/build-config edit, not a full session with
 so status is `reconciled`, not `complete`, and there is no self-score to report.
 
 ```handoff
+session: S522
+date: 2026-08-11
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Issue #153 Slice 3 (markerRealizedRelatednessVariance(), D3a) claimed. PRE-RED
+literature derivation of the Hill & Weir (2011) closed-form variance formula (§7 Dragon 4) is next.
+what_was_done: pending
+next_steps: pending
+key_files: docs/planning/issue153-linkage-haplotype-block-metrics-plan.md §5 Slice 3, §7 Dragon 4,
+§2.13 (Hill & Weir 2011 citation); interface catalog §4 (markerRealizedRelatednessVariance() row).
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<Session 522 in progress -- claim stub only, filled at close-out.>
+
+```handoff
 session: S521
 date: 2026-08-11
 status: complete

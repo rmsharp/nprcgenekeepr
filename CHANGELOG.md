@@ -135,6 +135,14 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-08-11.md.verify.sh`](docs/archive/CHANGELOG-through-2026-08-11.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-08-11 · [issue #153] S522 claim: issue #153 Slice 3 (markerRealizedRelatednessVariance(), D3a) (Session 522)
+- **Deliverable:** Issue #153 Slice 3 per `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md`
+  §5 Slice 3 — the realized-relatedness-variance metric (D3a). This slice's own PRE-RED must first
+  derive/verify the Hill & Weir (2011) closed-form variance formula (§7 Dragon 4) before RED tests
+  can be written.
+- **Status:** Claimed. Work beginning.
+- **Ledger:** this entry only so far; the close-out entry follows at Phase 3F.
+
 ### 2026-08-11 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit 79f37e18 — corrected .Rbuildignore and vignette engine in a2interactive.Rmd
 - **Provenance:** out-of-band commit `79f37e18` (2026-08-11 17:37:14, author R. Mark Sharp), landed 7
   minutes after S521's own close-out commit `7ab01312` (17:30:38) with no Phase 1B claim stub, no

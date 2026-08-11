@@ -6,6 +6,20 @@
 
 ## ACTIVE TASK
 
+### What Session 522 Did
+**Deliverable:** Issue #153 Slice 3 -- `markerRealizedRelatednessVariance()`, the realized-
+relatedness-variance metric (D3a), per
+`docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` §5 Slice 3. This slice's own
+PRE-RED must first derive/verify the Hill & Weir (2011) closed-form variance formula (§7 Dragon 4)
+before RED tests can be written. Full strict TDD PRE-RED->RED->GREEN->REFACTOR cycle, each
+transition `AskUserQuestion`-gated, following `DEVELOPMENT_WORKSTREAM.md`. Picked from this
+session's own Phase 0 priorities list (owner choice via `AskUserQuestion`).
+**Started:** 2026-08-11.
+**Status:** Session claimed. Work beginning -- PRE-RED literature derivation next.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 520 Handoff Evaluation (by Session 521)
 **Score: 8/10.** **What helped:** the `HANDOFFS.md` S520 receipt's `next_steps` field named "Issue
 #153 Slice 2 (`checkLinkageMarkerGenotypeFile()`, the multiallelic-tolerant sibling ingestion
