@@ -121,6 +121,27 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-10.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S519
+date: 2026-08-11
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Issue #153 (linkage-aware and haplotype-block metrics for marker data) -- Pre-RED
+design/architecture document. Following ARCHITECTURE_WORKSTREAM.md, matching the #152/#146/#147/
+#149/#150/#151 precedent -- design-only, zero R/tests/man changes expected this session. Next in the
+ratified Deferred-tier sequencing order (#152 done -> #153 -> #148); can reuse #152's
+locusMetadata vocabulary.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<Session 519 claim stub -- work beginning.>
+
+```handoff
 session: S518
 date: 2026-08-11
 status: complete

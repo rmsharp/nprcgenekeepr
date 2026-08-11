@@ -6,6 +6,15 @@
 
 ## ACTIVE TASK
 
+### What Session 519 Did
+**Deliverable:** Issue #153 (linkage-aware and haplotype-block metrics for marker data) -- Pre-RED
+design/architecture document (IN PROGRESS)
+**Started:** 2026-08-11
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 517 Handoff Evaluation (by Session 518)
 **Score: 7/10.** **What helped:** the `next_steps` field's mention of the ledger-size HIGH risk as
 "also still open, unaddressed for 8-9 consecutive sessions" (alongside #152 Slice 1/#153/#148 as
