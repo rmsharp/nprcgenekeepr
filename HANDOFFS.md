@@ -178,8 +178,8 @@ runtime_smoke: n/a -- Slice 1 scope, no runtime/UI behavior changed (new R funct
 fixtures only; no Shiny module, app wiring, or existing function touched).
 changelog_ref: CHANGELOG.md 2026-08-11, two [issue #153] entries (Session 520): claim entry and
 this close-out entry.
-commit: pending -- reconciled by the next session's Phase 0, per this receipt's own documented
-write-time constraint (the receipt ships in the very commit whose sha it would name).
+commit: 3292786c -- reconciled by Session 521's Phase 0 (the receipt shipped in this commit itself,
+per this receipt's own documented write-time constraint).
 ```
 <Session 520 self-assessment: 9/10. Strengths: (1) caught my own RED-phase mistake before it became
 a real gap -- the first draft of the two fixture-scale tests used skip_if() guards that would have
