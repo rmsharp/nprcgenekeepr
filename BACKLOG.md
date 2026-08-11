@@ -2028,3 +2028,25 @@ only, matching the #133/#136/#137/#145/#147/#149/#146 precedent. **Next session 
 implements Slice 1** (the core `reportMatePairs()` function, script-callable only); Slice 2 (UI +
 `appServer.R` marker-kinship wiring + documentation) is its own separate session per §5's
 session-boundary requirement. Issue #151 intentionally left open. See `CHANGELOG.md`.
+
+**Progress (S512, 2026-08-10):** Issue #151 Slice 1 -- the core `reportMatePairs()` function
+(new, exported, script-callable only, no UI) -- is DONE, per
+`docs/planning/issue151-individual-mate-pair-analysis-plan.md` §5 Slice 1. Full strict TDD
+PRE-RED->RED->GREEN->REFACTOR cycle, each transition `AskUserQuestion`-gated. Composes the
+existing, unmodified pair-eligibility pipeline (`kinMatrix2LongForm()`/`filterPairs()`/
+`filterAge()`/`filterKinMatrix()`) into opposite-sex, minimum-age-eligible mate pairs, each row
+carrying pedigree kinship plus `NA`-safe marker-kinship and per-parent genetic-value context; a
+closed-vocabulary `excluded` frame reports why a pair was dropped ("under minimum age" or
+"user-excluded"). 8 new `test_that` blocks / 37 expectations in `tests/testthat/test_reportMatePairs.R`,
+including a regression test directly reproducing the ratified plan's own Dragon #1 (`filterAge()`'s
+NA-passes semantics means `minAge` alone cannot bound table size; the `populationIds` D4 control
+is what actually does). Full clean regression suite 0 failed/0 error (5118 passed, 15 pre-existing
+baseline warnings confirmed unchanged via `git stash -u` before/after); `lintr::lint_package()` 0
+lints; `devtools::check()` 0 errors/0 warnings/1 pre-existing note (unrelated). Fixed 2 real gaps
+found during verification: the `_pkgdown.yml` reference-coverage guard, and a `devtools::check()`
+Rd cross-reference warning (a `\link{}` to `filterAge()`, a `@noRd` internal function with no `.Rd`
+page). `NEWS.Rmd`/`NEWS.md` updated (new exported function checklist). **Issue #151 stays
+open -- Slice 2** (`R/modMatePair.R` UI, the D6 `appServer.R` marker-kinship capture, `appUI.R`
+tab mount, tutorial/article documentation, live `shinytest2` smoke test, `gh issue close 151`) **is
+the next and final planned slice**, a separate future session per the plan's own session-boundary
+requirement. See `CHANGELOG.md`.

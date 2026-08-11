@@ -261,6 +261,21 @@ knitr::opts_chunk$set(echo = TRUE)
   a matching **Exhaustive enumeration mode** checkbox (visible only when
   the current configuration is eligible) and a status message reporting
   the search outcome after each run.
+- New script-callable `reportMatePairs()` (issue #151, Slice 1) reports
+  eligible individual mate-pair candidates -- opposite-sex, minimum-age
+  pairs surviving the same eligibility screens Breeding Group Formation
+  already uses (`filterPairs()`/`filterAge()`), each row carrying pedigree
+  kinship and, when available, marker-based kinship
+  (`markerKinship()`'s KING-robust estimator) and per-parent genetic-value
+  context (`reportGV()`'s `indivMeanKin`/`gu`). No blended/composite
+  ranking score is computed; callers sort or filter the raw columns
+  themselves. A `populationIds` argument scopes the candidate pool before
+  computation (age alone does not bound table size when many individuals
+  have no recorded age); an `exclude` argument drops specific ids
+  entirely. Dropped pairs are reported separately with a reason
+  ("under minimum age" or "user-excluded"), never silently discarded.
+  Report-only, no Shiny UI yet -- a Mate Pair Analysis tab is a separate,
+  future slice.
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes

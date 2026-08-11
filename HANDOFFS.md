@@ -123,20 +123,67 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S512
 date: 2026-08-10
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Issue #151 Slice 1 -- reportMatePairs() core function, pre-RED, per
-docs/planning/issue151-individual-mate-pair-analysis-plan.md §5 Slice 1. Work beginning.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
-```
-(stub written at Phase 1B claim; overwritten at Phase 3D close-out)
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Issue #151 Slice 1 (reportMatePairs() core function) is DONE: implemented, tested,
+verified. Issue #151 stays open -- Slice 2 (UI, appServer wiring, docs, gh issue close) is the
+final planned slice, a separate future session.
+what_was_done: Wrote R/reportMatePairs.R (new, exported) + tests/testthat/test_reportMatePairs.R
+(8 test_that blocks, 37 expectations) via a full RED->GREEN->REFACTOR cycle, each transition
+AskUserQuestion-gated, per docs/planning/issue151-individual-mate-pair-analysis-plan.md §5 Slice 1.
+Composes the existing, unmodified pipeline (kinMatrix2LongForm+filterPairs+filterAge+
+filterKinMatrix) into opposite-sex/min-age-eligible mate pairs with sireId/damId resolved
+independent of matrix order, NA-safe marker-kinship and genetic-value merges, and a closed-
+vocabulary excluded-pairs reason column. git stash -u before/after confirmed 0 change to the 15
+pre-existing baseline warnings. Fixed 2 real, anticipated gaps found during verification: the
+_pkgdown.yml reference-coverage guard (added reportMatePairs to "All exposed functions") and a
+devtools::check() Rd cross-reference WARNING (\link{filterAge} -> a @noRd function with no .Rd
+page; changed to plain \code{filterAge()}). REFACTOR removed 2 redundant nrow(kin)>0L guards
+(R's vectorized indexing is already 0-row-safe). Added a NEWS.Rmd entry (new exported function
+checklist) and rendered NEWS.md (diff confirmed exactly the new bullet). Full clean regression:
+0 failed/0 error, 15 pre-existing warnings unchanged, 5118 passed (+37 vs. baseline).
+devtools::check(): 0 errors/0 warnings/1 pre-existing note. lintr::lint_package() on touched
+files: 0 lints. Commits: e9a56150 (claim), plus this close-out commit.
+next_steps: Issue #151 Slice 2 (docs/planning/issue151-individual-mate-pair-analysis-plan.md §5
+Slice 2) -- R/modMatePair.R (new modMatePairUI/modMatePairServer), the D6 appServer.R
+marker-kinship capture (modMarkerGeneticsServer()'s return value is currently discarded --
+R/appServer.R:430-439), appUI.R tab mount (§2.8 convention), tutorial/article documentation
+(Session 436 checklist -- new Shiny tab), a live shinytest2/chromote smoke test (Dragons #6/#7 on
+modalDialog()/DT NA-rendering), and gh issue close 151 at that slice's own close-out (the final
+planned slice). Start from the plan's own §5 Slice 2 files-to-touch list and DONE criteria.
+Outside this cluster, the 3 lower-priority Phase 0 items this session's own priorities list
+rendered but the owner did not pick remain open: the SESSION_NOTES.md/CHANGELOG.md/BACKLOG.md
+ledger-size crisis (flagged 4 consecutive sessions now, S509-S512 -- SESSION_NOTES.md alone is
+39,554 lines with no trim-tool config; increasingly urgent, not routine), a routine
+methodology_trim.py run on CHANGELOG.md/HANDOFFS.md (both archive triggers have fired), and issue
+#150's policy decision (owner review needed, not an engineering task).
+key_files: docs/planning/issue151-individual-mate-pair-analysis-plan.md §4 (interface catalog --
+exact column names/error contract, read this first for Slice 2's UI columns) and §5 Slice 2
+(files to touch, DONE criteria); R/reportMatePairs.R (this session's new function -- Slice 2 must
+not change its signature or behavior, per the plan's own "what does NOT change" list);
+R/appServer.R:430-439 (the modMarkerGeneticsServer call site Slice 2 must edit for D6);
+tests/testthat/test_reportMatePairs.R (the fixture -- an 11-individual pedigree with 2 NA-age
+founders reproducing Dragon #1 -- reusable for Slice 2's own module tests).
+gotchas: (1) No RED test proves a negative markerKinship value (a valid, documented
+markerKinship() output per the plan's Dragon #3) passes through reportMatePairs() unclipped --
+the implementation is a direct passthrough so it IS correct, but Slice 2's own test suite should
+add this case since Slice 1's didn't. (2) filterAge()'s NA-passes-the-filter semantics
+(R/filterAge.R:26) is why populationIds -- not minAge -- is what actually bounds table size; Slice
+2's UI must make the population-scope control mandatory-feeling (not a buried optional field), or
+the same 1.7M-row problem S511's benchmark found resurfaces in production. (3) sireId/damId
+resolution in reportMatePairs() depends on ped$sex lookups via match() -- if Slice 2 ever
+pre-filters `ped` before calling reportMatePairs(), any individual referenced in `kmat` but
+missing from the (possibly-filtered) `ped` will produce NA sex and NA sireId/damId; not currently
+guarded (no test covers it, no Slice 1 contract requires it) since Slice 1 always passes the same,
+complete ped/kmat pair. (4) SESSION_NOTES.md/CHANGELOG.md/BACKLOG.md all remain past the
+2,000-line read cap, worse each session -- see next_steps.
+runtime_smoke: n/a -- confirmed via grep that reportMatePairs() has no call site anywhere in
+R/appServer.R, R/appUI.R, or any R/mod*.R; script-callable only, matching the plan's own Slice 1
+scope and the resolveCrossCenterIds() Slice 1 precedent.
+changelog_ref: this session's close-out commit, [issue #151] tag
+commit: pending -- reconciled by the next session's Phase 0, per this receipt's own documented
+write-time constraint (it ships in the very commit whose sha it would name).
 
 ```handoff
 session: S511

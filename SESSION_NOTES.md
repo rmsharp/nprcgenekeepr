@@ -6,18 +6,129 @@
 
 ## ACTIVE TASK
 
+### Session 511 Handoff Evaluation (by Session 512)
+**Score: 9/10.** **What helped:** the `HANDOFFS.md` S511 receipt's `next_steps` field named
+exactly this session's pickup ("Slice 1 of `docs/planning/issue151-individual-mate-pair-analysis-plan.md`
+-- the core `reportMatePairs()` function (§5 Slice 1), script-callable only, no UI. Start with §4's
+interface catalog... and §5's own file/test list"), which is precisely what this session did --
+the plan's own §4 interface catalog (exact column names `sireId`/`damId`/`kinship`/
+`markerKinship`/`sireIndivMeanKin`/`sireGu`/`damIndivMeanKin`/`damGu`) removed essentially all
+design ambiguity from RED, letting the test file be written directly from the spec rather than
+re-deriving it. Gotcha (1) (`filterAge()`'s NA-passes semantics means `minAge` alone can't bound
+output; a RED test should exercise a mostly-NA-age case) was followed exactly -- Test 2's fixture
+(S3/D3 with `NA` age) was built specifically to reproduce this gotcha as a regression case, and it
+directly caught nothing wrong (the design was already correct) but confirmed the fixture design
+was on-target. Gotcha (4) (the 3 ledger files past the 2,000-line cap, "increasingly urgent, not
+routine") remains accurate and unaddressed for a fourth consecutive session -- this session again
+did not pick it (the owner chose Slice 1 instead), correct per one-deliverable-per-session, but it
+should weigh even more heavily on a near-future session's own priorities list. **What was
+missing/not applicable:** `key_files`' pointer to `R/getAnimalsWithHighKinship.R:41-59` ("the exact
+eligibility-pipeline composition Slice 1 reuses") was not actually consulted this session -- the
+plan's own §4/§5 fully specified the composition (`kinMatrix2LongForm`+`filterPairs`+`filterAge`+
+`filterKinMatrix`) without needing that file as a second reference; not a defect in the handoff
+(a reasonable pointer to offer), just unused. Gotcha (2) (`markerKinship()`'s negative/NA values
+must render sensibly) is Slice-2-UI-scoped in the handoff's own framing, but is also a live
+concern for Slice 1's `markerKinship` column -- this session's implementation passes marker-kinship
+values through unclipped (so a negative value is preserved correctly), but no RED test explicitly
+asserts this, an honest gap named in this session's own self-assessment below. **What was wrong:**
+nothing found inaccurate. **ROI:** High -- the `next_steps` and `key_files` pointer to the plan
+document meant this session could write RED directly from a fully-specified interface catalog with
+zero design back-and-forth.
+
 ### What Session 512 Did
-**Deliverable:** Issue #151 Slice 1 -- the core `reportMatePairs()` function, following
-`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` and the ratified plan's own §5 Slice 1
-spec (`docs/planning/issue151-individual-mate-pair-analysis-plan.md:155-173`), inside this
-project's Strict TDD contract (RED -> GREEN -> REFACTOR, each transition gated). Picked from this
-session's own Phase 0 priorities list (owner choice via `AskUserQuestion`, over a routine
-CHANGELOG.md/HANDOFFS.md ledger trim and scoping a SESSION_NOTES.md trim-tool config).
-**Started:** 2026-08-10.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Issue #151 Slice 1 -- the core `reportMatePairs()` function (new, exported),
+following `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` and the ratified plan's own §5
+Slice 1 spec (`docs/planning/issue151-individual-mate-pair-analysis-plan.md:155-173`), inside this
+project's Strict TDD contract (RED -> GREEN -> REFACTOR, each transition gated via `AskUserQuestion`).
+Picked from this session's own Phase 0 priorities list (owner choice via `AskUserQuestion`, over a
+routine `CHANGELOG.md`/`HANDOFFS.md` ledger trim and scoping a `SESSION_NOTES.md` trim-tool
+config).
+**Started/Completed:** 2026-08-10.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh
+issue list`, git status/log, `methodology_dashboard.py` -- health 96/100, 1 HIGH risk: 3 ledger
+files past the 2,000-line read cap, `SESSION_NOTES.md` now 39,554 lines). Ledger reconcile found
+both `CHANGELOG.md` and `HANDOFFS.md` frontiers already at `HEAD` -- no undocumented commits,
+clean. Rendered the priorities list (issue #151 Slice 1 / a routine ledger trim / scoping a
+`SESSION_NOTES.md` trim config) via `AskUserQuestion`; owner picked Slice 1. **(2)** Phase 1B claim
+stub committed (`e9a56150`) to both `SESSION_NOTES.md` and `HANDOFFS.md`. **(3)** PRE-RED->RED gate
+(`AskUserQuestion`): approved. Read `R/filterPairs.R`, `R/filterAge.R`, `R/kinMatrix2LongForm.R`,
+`R/filterThreshold.R`, `R/filterKinMatrix.R`, `R/markerKinship.R`, `R/sexCodes.R`, relevant sections
+of `R/reportGV.R`/`R/orderReport.R`/`R/columnSchema.R`/`R/assertRequiredColsPresent.R`, and existing
+test files (`test_filterPairs.R`, `test_filterAge.R`) for fixture/idiom conventions. Wrote
+`tests/testthat/test_reportMatePairs.R`: an 11-individual hand-built pedigree fixture deliberately
+shaped to reproduce the plan's own Dragon #1 (two founders with `NA` age, unbounded by `minAge`
+alone, only excluded by the D4 `populationIds` scope) as a small deterministic regression case, plus
+8 `test_that` blocks covering every Slice 1 DONE criterion from the plan's §5 test list. Confirmed
+RED cleanly: 0/8 blocks passed, every failure traced to "could not find function reportMatePairs" or
+(for the malformed-input test, tightened with a regexp pattern after noticing a bare `expect_error()`
+would spuriously pass even with the function missing) a correct regexp mismatch against that same
+error -- not a setup/typo mistake. **(4)** RED->GREEN gate (`AskUserQuestion`): approved. Wrote
+`R/reportMatePairs.R` (new, exported) composing the existing, unmodified pipeline
+(`kinMatrix2LongForm(removeDups=TRUE)` -> `filterPairs()` (opposite-sex only) -> per-row
+`sireId`/`damId` resolution from `ped$sex`, independent of matrix row/col order -> age screen ->
+user-`exclude` screen -> marker-kinship merge (`NA`-safe) -> genetic-value merge (`NA`-safe)), with
+loud `stop()` validation on a malformed `ped`/`kmat` shape via `assertRequiredColsPresent()`. `git
+stash -u` before/after comparison confirmed the session's diff changed 0 of the 15 pre-existing
+baseline warnings (a real regression check, not assumed). Full clean regression: 0 failed/0 error
+after fixing one real, anticipated gap (the `_pkgdown.yml` reference-coverage guard,
+`test_pkgdown_reference_config.R`, fixed by adding `reportMatePairs` to the "All exposed functions"
+group). `devtools::check()`: first pass found one genuine new WARNING (an Rd cross-reference to
+`filterAge`, a `@noRd` internal function with no `.Rd` page to link to) -- fixed by dropping the
+`\link{}` in favor of plain `\code{filterAge()}`; second pass 0 errors/0 warnings/1 pre-existing note
+(the `a2interactive.Rmd` vignette-engine note, unrelated). `lintr::lint_package()` on
+`R/reportMatePairs.R`: 2 line-length lints found and fixed. **(5)** GREEN->REFACTOR gate
+(`AskUserQuestion`): approved, for one specific, self-reviewed candidate -- removed two redundant
+`&& nrow(kin) > 0L` guards in the marker-kinship/genetic-value merge blocks (R's vectorized
+`match()`/`%in%`/`any()` are already 0-row-safe; the guards added noise with no behavior
+difference). Re-verified: targeted test 8/8 pass, full regression 0 failed/0 error (15 pre-existing
+warnings unchanged), `devtools::check()` 0 errors/0 warnings/1 pre-existing note, `lintr` 0 lints.
+**(6)** Close-out checklist mapping (plan §9): citation checklist N/A (no new displayed
+statistic -- `kinship()`/`markerKinship()`/`reportGV()`'s columns are consumed as-is, already
+cited); tutorial/article checklist N/A this slice (applies at Slice 2, new Shiny tab); `NEWS.Rmd`
+entry added (new exported function, matching the `markerParentageLikelihood()` Slice-1-only
+precedent style) and rendered to `NEWS.md` via `rmarkdown::render(output_format="github_document")`
+-- diff confirmed exactly the new bullet, no reflow churn; `a2interactive.Rmd` deferred per its own
+standing rule; `_pkgdown.yml` reference-coverage DONE (above); GitHub issue close-out N/A this slice
+(issue #151 stays open -- Slice 2 remains); lint DONE (above). Phase 3E runtime smoke: n/a --
+confirmed via `grep` that `reportMatePairs` has no call site in `R/appServer.R`/`R/appUI.R`/any
+`R/mod*.R` (script-callable only, matching the plan's own Slice 1 scope and the
+`resolveCrossCenterIds()` Slice 1 precedent). **(7)** This evaluation, self-assessment below,
+`CHANGELOG.md` `[issue #151]` entry, `BACKLOG.md` progress note, `HANDOFFS.md` receipt completed.
+
+**Self-assessment (Session 512): 9/10.** **Strengths:** (1) The plan's own §4 interface catalog
+(exact column names, error contract, `NULL`-safety rules) let RED be written directly from spec
+with zero design ambiguity -- a direct payoff of S511's design-session discipline. (2) Caught a
+genuine test-design bug during GREEN's own verification (not glossed over): a bare `all(cExcluded$reason
+== "user-excluded")` assertion was wrong because a pair can be legitimately excluded by age
+independent of a shared individual's separate user-exclusion (`Y x C`, Y underage regardless of
+C's exclude-list membership) -- fixed the test to `any()`, matching the actual per-pair (not
+per-individual) semantics of "reason", and documented why inline rather than silently loosening
+the assertion. (3) Ran a real `git stash -u` before/after regression comparison (matching this
+project's own established due-diligence method, `PROJECT_LEARNINGS.md` Learning 503's own
+stash-contamination caveat correctly avoided by including untracked new files via `-u`) to prove
+the 15 pre-existing baseline warnings were genuinely unchanged, rather than assuming it from the
+BACKLOG.md note alone. (4) Found and fixed a real `devtools::check()` WARNING (`\link{filterAge}`
+to a non-exported, undocumented function) that a less careful pass could have missed since the
+targeted test suite and full regression were already both green at that point -- `devtools::check()`
+is a genuinely different, necessary verification surface. (5) The REFACTOR gate produced one real,
+justified, narrowly-scoped simplification (not a rubber-stamp "nothing to refactor") found via
+actual self-review, not just proposed reflexively. **Weaknesses:** (1) No explicit RED test proves
+a negative `markerKinship` value (a valid, documented `markerKinship()` output, per the plan's own
+Dragon #3) passes through this function unclipped -- the implementation is a direct, untransformed
+passthrough so it is correct by construction, but this specific case is untested, unlike the
+NA-passthrough case which IS tested. Named here rather than silently left for Slice 2 to discover.
+(2) Did not use a multi-agent research `Workflow` for the RED-phase file reading (direct
+`Read`/`Grep`/`Bash`, matching S511's own precedent and reasoning -- no `Workflow`-opt-in signal
+present, and the plan's own interface catalog already made the research surface small). (3)
+`SESSION_NOTES.md`/`CHANGELOG.md`/`BACKLOG.md` size crisis (flagged S509/S510/S511) remains
+unaddressed for a fourth consecutive session -- correct protocol (owner picked Slice 1), but the
+risk itself keeps compounding.
+
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session), `[issue #151]` tag. No GitHub
+issue closed this session (issue #151 stays open -- Slice 2, a separate future session, is the
+final planned slice before closing it).
 
 ### Session 510 Handoff Evaluation (by Session 511)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S510 receipt's `next_steps` field named

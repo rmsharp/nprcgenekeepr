@@ -354,6 +354,7 @@ reference:
   - '`removeUninformativeFounders`'
   - '`removeUnknownAnimals`'
   - '`reportGV`'
+  - '`reportMatePairs`'
   - '`resolveCrossCenterIds`'
   - '`runGeneKeepR`'
   - '`runModularApp`'
