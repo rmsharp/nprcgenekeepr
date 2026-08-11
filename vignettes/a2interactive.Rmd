@@ -6,7 +6,7 @@ output:
     df_print: paged
   pdf_document: default
 vignette: >
-  %\VignetteEngine{knitr::knitr}
+  %\VignetteEngine{knitr::rmarkdown_notangle}
   %\VignetteIndexEntry{Interactive Use of nprcgenekeepr}
   %\usepackage[UTF-8]{inputenc}
 ---
