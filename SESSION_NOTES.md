@@ -6,6 +6,14 @@
 
 ## ACTIVE TASK
 
+### What Session 516 Did
+**Deliverable:** Issue #150 Slice 2 -- full De-Identified Export UI module (IN PROGRESS)
+**Started:** 2026-08-10
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 514 Handoff Evaluation (by Session 515)
 **Score: 8/10.** **What helped:** the `HANDOFFS.md` S514 receipt's `next_steps` field named the
 exact Slice 1 work item-for-item -- `R/obfuscatePed.R` gains `linkedDateShift` (default `TRUE`,
