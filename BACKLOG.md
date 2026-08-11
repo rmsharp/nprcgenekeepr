@@ -725,6 +725,52 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       diff-based check) does NOT get one -- only the raw `Status: N NOTEs` line (above the table)
       counts it. A session that trusts only the `❯`-bullet table, as this session nearly did, silently
       undercounts. See `CHANGELOG.md` 2026-08-11.
+- [ ] **`NEWS.Rmd` entries since ~2.0.0 have drifted far more verbose than the
+      project's own pre-1.0.8 style** (found S522, 2026-08-11, owner-directed,
+      READY, Effort M) -- entries through and including the `1.0.8 (20250723)`
+      section are short, plain bullets (e.g. "Added returned value
+      descriptions for all functions within R directory where formerly
+      missing."), one line per change, no formulas, no citations, no
+      implementation rationale. Recent entries (issue #130's marker-genetics
+      family, issue #153 Slices 1-3, etc.) have grown into multi-sentence
+      paragraphs carrying full closed-form formulas, citation strings, and
+      derivation/approximation rationale that belongs in roxygen `@references`
+      and `inst/extdata/ui_guidance/population_genetics_terms.html` instead --
+      both of which are already the user-viewable surfaces the citation
+      checklist (issue #120) requires for exactly this content. A future
+      session should rewrite the development-version entries back toward the
+      pre-1.0.8 level of detail (what changed, in a sentence, matching
+      existing bullet style) and move any calculation/derivation detail that
+      isn't already in `@references`/`population_genetics_terms.html` there
+      instead of trimming it outright. Scope this to entries from
+      `2.0.0.9000 (development version)` forward -- do not rewrite already
+      -released, frozen version sections (matching the general
+      don't-edit-frozen-history precedent used for `CHANGELOG.md`'s Legacy
+      history marker).
+- [ ] **`a2interactive.Rmd` documentation pass is due -- several exported,
+      script-callable functions shipped since the last pass (S478, 2026-08-04)
+      have zero coverage** (found S522, 2026-08-11, owner-directed, READY,
+      Effort M) -- per `CLAUDE.md`'s own deferred, non-same-session
+      `a2interactive.Rmd` checklist rule. Confirmed gaps (grep of
+      `vignettes/a2interactive.Rmd`'s section headers against `NEWS.Rmd`'s
+      `2.0.0.9000` entries): the "Marker Genetics" section demonstrates only
+      `markerKinship()`, the heterozygosity pair, Mendelian-exclusion
+      parentage verification, `resolveCrossCenterIds()`, and `markerFst()`
+      (issue #130-era) -- it has **no** section for `markerParentageLikelihood()`
+      (LOD-based candidate-parent ranking, issue #147),
+      `checkCrossCenterMapping()` (issue #149), `checkLocusMetadata()` (issue
+      #153 Slice 1), `checkLinkageMarkerGenotypeFile()` (issue #153 Slice 2),
+      or `markerRealizedRelatednessVariance()` (issue #153 Slice 3, S522).
+      Outside marker genetics, `reportMatePairs()` (issue #151 Slice 1) and
+      `readTwinRelations()` (S494, itself shipped with no `NEWS.Rmd` entry
+      either per `PROJECT_LEARNINGS.md` Learning 495) also have no matching
+      section. A future documentation-pass session should re-verify this list
+      against the actual file (do not trust it as final -- compiled via grep,
+      not an exhaustive read) and add a demonstration section per function,
+      matching the existing "Marker Genetics" section's established style
+      (reused, hand-verified fixtures; each demo chunk checked against the
+      real installed package, not hand-derived, per `PROJECT_LEARNINGS.md`
+      Learning 440's stale-local-install trap).
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability-comparison audit (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`)

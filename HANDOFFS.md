@@ -154,21 +154,91 @@ so status is `reconciled`, not `complete`, and there is no self-score to report.
 ```handoff
 session: S522
 date: 2026-08-11
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Issue #153 Slice 3 (markerRealizedRelatednessVariance(), D3a) claimed. PRE-RED
-literature derivation of the Hill & Weir (2011) closed-form variance formula (§7 Dragon 4) is next.
-what_was_done: pending
-next_steps: pending
-key_files: docs/planning/issue153-linkage-haplotype-block-metrics-plan.md §5 Slice 3, §7 Dragon 4,
-§2.13 (Hill & Weir 2011 citation); interface catalog §4 (markerRealizedRelatednessVariance() row).
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Issue #153 Slice 3 (markerRealizedRelatednessVariance(), D3a) is DONE. Full strict TDD
+PRE-RED->RED->GREEN->REFACTOR cycle, each transition AskUserQuestion-gated (REFACTOR: no candidate
+identified). Also found, isolated, and fixed (owner-confirmed) an unrelated devtools::check()
+regression from an out-of-band commit. Issue #153 stays open -- Slice 4 (markerLdBlock() + the
+obfuscateLdBlocks() de-identification primitive, D3b/D8/D9) is next per the design doc.
+what_was_done: New R/markerRealizedRelatednessVariance.R (exported), 2 internal helpers
+(.hillWeirPhi(), .hillWeirVarianceR()): estimates the variance of realized (actual) relatedness
+around pedigree-expected kinship for Parent-Offspring/Full-Siblings/Half-Siblings pairs, per the
+closed-form solution of Hill & Weir (2011). Formula derived/verified this session via 4 targeted
+WebFetch passes of the primary paper cross-checked for internal consistency, then numerically
+validated against the paper's own published Table 2 (human genome, 22 chromosomes) -- all 3
+relationship-type SDs within ~2%. Reuses existing convertRelationships() for pair classification --
+zero re-derivation of relationship logic. 9 new test_that blocks / 33 expectations in
+tests/testthat/test_markerRealizedRelatednessVariance.R, reusing nprcgenekeepr::smallPed's existing
+known FS/HS/PO pairs (no new fixture). Full clean regression 0 failed/0 error (5294 passed = 5261
+baseline + 33 new, 15 pre-existing warnings unchanged); lintr::lint_package() 0 lints (fixed 16:
+commented_code_linter via a documented nolint block, 13x implicit_integer_linter, 1x
+unnecessary_lambda_linter). devtools::check() 0 errors/0 warnings/3 NOTEs, all confirmed
+pre-existing (hand-added 3 new words -- IBD, WG, autosome -- to inst/WORDLIST; reworded "eqn" ->
+"equation" in roxygen prose). SEPARATELY: found devtools::check() failing at a2interactive.Rmd's
+pedigree-diagram-render chunk (path.expand() error via knitr:::html_screenshot()), isolated via 4
+controlled devtools::check() runs to the out-of-band commit 79f37e18's VignetteEngine change
+(knitr::rmarkdown_notangle -> knitr::knitr) -- a3manual.Rmd's own unrelated knitr::knitr built fine
+every run throughout, ruling out a blanket engine problem. Reverted the one line, owner-confirmed,
+as its own commit. Commits: 5b773863 (ledger reconcile backfill), a7bdef0b (claim), 5bfad100
+(vignette-engine fix), plus this close-out commit.
+next_steps: (1) Issue #153 Slice 4 (markerLdBlock() descriptive LD/block statistic, D3b, plus the
+obfuscateLdBlocks() de-identification primitive, D8/D9) is next per the design doc §5 -- D3(b) is
+an explicit, documented statistical compromise (no rigorous pedigree-aware LD-block method exists
+CRAN-side), so its own PRE-RED should re-read §7 Dragon 3 before RED, not just Dragon 4's resolved
+formula-derivation pattern. (2) Issue #152 Slice 1 is still open and directly pickable -- can now
+reuse checkLocusMetadata(), checkLinkageMarkerGenotypeFile(), and convertRelationships() precedent.
+(3) The 3-file ledger-size HIGH risk is still unaddressed (SESSION_NOTES.md's fence-scanner defect,
+BACKLOG.md's own compression pass, HANDOFFS.md's own archive -- trigger confirmed firing this
+session, 110KB vs 65KB budget). (4) NEW this session: inst/WORDLIST's pre-existing ~65-word gap is
+still open (BACKLOG.md Housekeeping, found S521). (5) NEW this session, owner-directed: simplify
+NEWS.Rmd entries back toward pre-1.0.8 terseness (BACKLOG.md Housekeeping, found S522). (6) NEW
+this session, owner-directed: a2interactive.Rmd documentation pass is due -- 7 functions shipped
+since S478 with zero coverage (BACKLOG.md Housekeeping, found S522, full list in the item itself).
+key_files: R/markerRealizedRelatednessVariance.R (new function + 2 internal helpers); tests/testthat/
+test_markerRealizedRelatednessVariance.R (9 test_that blocks, full derivation writeup in the file
+header); inst/WORDLIST (3 new entries); _pkgdown.yml (new reference entry);
+inst/extdata/ui_guidance/population_genetics_terms.html (new citation entry); vignettes/
+a2interactive.Rmd (VignetteEngine reverted to knitr::rmarkdown_notangle); PROJECT_LEARNINGS.md
+Learnings 521 (vignette-engine finding) and 522 (formula-verification methodology);
+docs/planning/issue153-linkage-haplotype-block-metrics-plan.md §5 Slice 4 (next slice's scope) and
+§7 Dragon 3 (D3b's own documented statistical-compromise risk).
+gotchas: (1) A VignetteEngine change is not a no-op even when the two engines' weave functions are
+byte-identical (tools::vignetteEngine() confirms this) -- verify with an actual devtools::check()
+run, not just rmarkdown::render(), before changing or "correcting" a %\VignetteEngine{...} line;
+see PROJECT_LEARNINGS.md Learning 521 for the full isolation methodology (4 controlled runs). (2)
+When implementing an academic-paper formula a design doc flags as an unresolved research risk,
+algebraic re-derivation alone is not enough verification -- numerically reproduce the paper's own
+published worked example/table as the actual acceptance gate before writing RED tests; see
+PROJECT_LEARNINGS.md Learning 522. (3) A printf-based shell append to a markdown file truncates
+silently on an unescaped % character mid-string -- use the Edit/Write tool for multi-line prose
+appends, not a shell printf/echo pipeline. (4) Manual `&` backgrounding + a Monitor-based `kill -0
+<PID>` poll is unreliable across separate Bash tool invocations (produced one silently-truncated
+log this session) -- prefer the Bash tool's own run_in_background parameter for anything you need
+to reliably wait on.
+runtime_smoke: n/a -- Slice 3 scope, no runtime/UI behavior changed (new R function only; no Shiny
+module, app wiring, or existing function touched).
+changelog_ref: CHANGELOG.md 2026-08-11, 4 entries (Session 522): ledger-reconcile backfill, claim,
+vignette-engine [ad hoc] fix, close-out.
+commit: pending -- reconciled by the next session's Phase 0, per this receipt's own documented
+write-time constraint (the receipt ships in the very commit whose sha it would name).
 ```
-<Session 522 in progress -- claim stub only, filled at close-out.>
+<Session 522 self-assessment: 8/10. Strengths: (1) treated "derive/verify the formula" as a real
+research task -- cross-checked the same equations via 4 independently targeted extraction passes
+until internally self-consistent, then numerically reproduced the paper's own published Table 2 as
+the actual verification gate, not just algebra alone; (2) found, correctly isolated (4 controlled
+devtools::check() runs, alternating exactly one variable), and fixed a real pre-existing regression
+from an out-of-band commit entirely outside Slice 3's own scope, kept as its own clearly-attributed
+commit rather than silently folded in; (3) scoped the WORDLIST/roxygen spelling fix to exactly the
+4 words this session's own new file introduced; (4) handled 3 mid-turn owner interjections without
+derailing the in-progress TDD cycle or treating a direct question as an edit instruction. Weaknesses:
+(1) a printf-based shell append to PROJECT_LEARNINGS.md was truncated mid-write by an unescaped %
+character, corrupting the file's tail -- caught via immediate re-read, fixed with Edit instead of
+another shell command, but should have used Edit/Write for this multi-line prose append from the
+start; (2) the first several background-wait attempts used a manual `&` + Monitor-`kill -0`-polling
+pattern that silently produced one truncated log before switching to the harness-native
+run_in_background parameter, which then worked reliably every time.>
 
 ```handoff
 session: S521

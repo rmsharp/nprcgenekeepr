@@ -314,6 +314,7 @@ reference:
   - '`markerObservedHeterozygosity`'
   - '`markerParentageExclusion`'
   - '`markerParentageLikelihood`'
+  - '`markerRealizedRelatednessVariance`'
   - '`meanKinship`'
   - '`modBreedingGroupsServer`'
   - '`modBreedingGroupsUI`'

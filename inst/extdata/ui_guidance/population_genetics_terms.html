@@ -345,3 +345,34 @@
   </p>
     </em>
 
+    <em>
+    <p style="padding-left: 10px">
+    <b>Realized Relatedness Variance:</b>
+    <br>
+    Pedigree kinship gives the <em>expected</em> relatedness between two
+  animals, but the <em>actual</em> fraction of genome they share
+  identical-by-descent (IBD) varies around that expectation because of
+  Mendelian sampling and linkage -- a finite number of chromosomes and a
+  finite genetic map length. For Parent-Offspring, Full-Sibling, and
+  Half-Sibling pairs, this estimates the variance of that realized
+  relatedness around the pedigree-expected value, so two pairs in the same
+  relationship category are not assumed equally related just because their
+  pedigree relationship coefficient is the same.
+  </p>
+    <p style="padding-left: 50px; padding-bottom: 15px">
+    Var<sub>FS</sub> = 2&phi;<sub>2</sub>(l) - &phi;<sub>1</sub>(l)
+  &nbsp;&nbsp; Var<sub>HS</sub> = &phi;<sub>2</sub>(l) -
+  &frac12;&phi;<sub>1</sub>(l)
+  </p>
+    <p style="padding-left: 10px; padding-bottom: 25px">
+    Where l is a chromosome's genetic map length in Morgans and
+  &phi;<sub>n</sub> is Hill &amp; Weir's closed-form integration function;
+  multiple chromosomes are combined via the equal-length approximation to
+  their exact weighted-sum combination rule. Parent-Offspring pairs have
+  zero variance -- exactly one allele is always shared IBD, regardless of
+  map length. Hill WG, Weir BS. 2011. Variation in actual relationship as
+  a consequence of Mendelian sampling and linkage. Genetics Research
+  93(1):47-64.
+  </p>
+    </em>
+

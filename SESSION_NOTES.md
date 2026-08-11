@@ -6,19 +6,131 @@
 
 ## ACTIVE TASK
 
+### Session 521 Handoff Evaluation (by Session 522)
+**Score: 9/10.** **What helped:** the `HANDOFFS.md` S521 receipt's `next_steps` field named "Issue
+#153 Slice 3 (`markerRealizedRelatednessVariance()`, D3a) is next per the design doc §5 -- its own
+PRE-RED must derive/verify the Hill & Weir (2011) closed-form variance formula first (§7 Dragon 4),
+not assume it's straightforward" as directly pickable and correctly flagged the real work ahead --
+exactly what this session picked and executed. The `gotchas` field's #1 (`devtools::check()`'s
+abbreviated `❯`-bullet table omits the spelling-NOTE bullet -- trust the raw `Status: N NOTEs`
+line) was used directly and correctly throughout every `devtools::check()` run this session,
+including the 4-run vignette-engine isolation test. `key_files`' pointer to the design doc's §5
+Slice 3 / §7 Dragon 4 / §2.13 was the entire foundation of this session's PRE-RED research phase.
+**What was missing:** nothing S521 could have reasonably anticipated -- the `a2interactive.Rmd`
+vignette-engine regression this session found and fixed came from an out-of-band commit
+(`79f37e18`) that landed 7 minutes *after* S521's own close-out, invisible to S521 by construction.
+**What was wrong:** nothing -- S521's own "0 errors/0 warnings/3 NOTEs, all confirmed pre-existing"
+claim held up exactly under this session's own independent re-verification (before the unrelated
+out-of-band regression appeared). **Minor gap:** gotcha #4 (avoid combining `run_in_background:
+true` with a trailing shell `&`) was directly relevant but this session's own first background-wait
+attempts used a *different*, not-yet-documented anti-pattern (manual `&` backgrounding plus a
+`Monitor`-based `kill -0 <PID>` poll, which silently produced a truncated log once) -- not the
+exact double-backgrounding gotcha, but a related background-execution reliability lesson;
+switching to the harness's native `run_in_background` parameter resolved it cleanly for every run
+afterward. **ROI:** Strong -- both the receipt and the design doc it pointed to were maximally
+reusable; the only real surprise this session hit (the vignette-engine regression) was
+structurally impossible for S521 to have flagged.
+
 ### What Session 522 Did
 **Deliverable:** Issue #153 Slice 3 -- `markerRealizedRelatednessVariance()`, the realized-
 relatedness-variance metric (D3a), per
-`docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` §5 Slice 3. This slice's own
-PRE-RED must first derive/verify the Hill & Weir (2011) closed-form variance formula (§7 Dragon 4)
-before RED tests can be written. Full strict TDD PRE-RED->RED->GREEN->REFACTOR cycle, each
-transition `AskUserQuestion`-gated, following `DEVELOPMENT_WORKSTREAM.md`. Picked from this
-session's own Phase 0 priorities list (owner choice via `AskUserQuestion`).
-**Started:** 2026-08-11.
-**Status:** Session claimed. Work beginning -- PRE-RED literature derivation next.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+`docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` §5 Slice 3. Full strict TDD
+PRE-RED->RED->GREEN->REFACTOR cycle, each transition `AskUserQuestion`-gated, following
+`DEVELOPMENT_WORKSTREAM.md`. Picked from this session's own Phase 0 priorities list (owner choice
+via `AskUserQuestion`) over 3 other candidates.
+**Started/Completed:** 2026-08-11.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue
+list`, git status/log, `methodology_dashboard.py` -- health 96/100, 1 HIGH risk: the 3-file
+ledger-size condition, still unaddressed). Ledger reconcile found a genuine ghost action: commit
+`79f37e18` (`.Rbuildignore` + `a2interactive.Rmd` vignette-engine change), made directly by the
+owner 7 minutes after S521's close-out, with no claim stub, `SESSION_NOTES.md` entry, or
+`HANDOFFS.md` receipt. Backfilled a `[ad hoc]` `CHANGELOG.md` entry and a `status: reconciled`
+`HANDOFFS.md` block, committed alone (`5b773863`). Rendered the priorities list via
+`AskUserQuestion` (4 options: issue #152 Slice 1, issue #153 Slice 3, the `methodology_trim.py`
+fence-scanner fix, `BACKLOG.md` compression; +2 more named below the picker per the cap rule);
+owner picked issue #153 Slice 3 (BLOCKED-tagged, needing its own research first). **(2)** Stated
+scope back, Phase 1B claim stub + `HANDOFFS.md status: pending` receipt + `CHANGELOG.md` claim
+entry committed (`a7bdef0b`). **(3)** PRE-RED: derived/verified the Hill & Weir (2011) closed-form
+variance formula via 4 targeted `WebFetch` passes of the primary paper (PMC3070763) cross-checked
+for internal algebraic consistency, then numerically validated the implementation against the
+paper's own published Table 2 (human genome, 22 chromosomes) -- full-sib/half-sib/parent-offspring
+SDs all within ~2% of the paper's own numbers, residual attributed to a documented refinement
+(sex-specific maps) deliberately not implemented. Read `R/kinship.R` and found `R/convertRelationships.R`
+already classifies pairs as Parent-Offspring/Full-Siblings/Half-Siblings from pedigree structure --
+reused directly rather than re-deriving relationship classification. Presented PRE-RED findings +
+a scope decision (3 relationship classes matching the design's own acceptance criterion, vs. also
+adding Uncle-Nephew/Cousins, vs. holding for more verification) via `AskUserQuestion`; owner picked
+the 3-class recommendation. Presented the 9-block RED test plan via the PRE-RED->RED phase gate;
+owner approved. **(4)** RED: wrote `tests/testthat/test_markerRealizedRelatednessVariance.R`
+(9 `test_that` blocks / 33 expectations, reusing `nprcgenekeepr::smallPed`'s existing known
+Full-Siblings/Half-Siblings/Parent-Offspring pairs rather than a new fixture); confirmed all 9
+blocks fail genuinely (`could not find function`), no `skip_if()` masking. **(5)** GREEN: wrote
+`R/markerRealizedRelatednessVariance.R` (2 internal helpers -- `.hillWeirPhi()`,
+`.hillWeirVarianceR()` -- plus the exported function, reusing `convertRelationships()`).
+`devtools::document()`; RED test file 33/33 pass. `lintr::lint_package()` found 16 lints
+(`commented_code_linter` on the math-notation header comment, `implicit_integer_linter` x13,
+`unnecessary_lambda_linter` in the `vapply()` call) -- fixed via a documented `# nolint start/end`
+block (established project convention) and passing `l`/`nChr` as named `vapply(...)` args instead
+of a wrapper closure; re-verified 0 lints, 33/33 tests still passing (style-only, no behavior
+change). Full clean regression 0 failed/0 error (5294 passed = 5261 baseline + 33 new, 15
+pre-existing warnings unchanged). **(6)** `devtools::check()` FAILED at `a2interactive.Rmd`'s
+`pedigree-diagram-render` chunk (`path.expand(): invalid 'path' argument`, via
+`knitr:::html_screenshot()`) -- traced to the S522-backfilled out-of-band commit `79f37e18`'s
+`VignetteEngine` change (`knitr::rmarkdown_notangle` -> `knitr::knitr`). Isolated causally, not
+assumed, via 4 back-to-back `devtools::check()` runs alternating only that one YAML line:
+`knitr::knitr` FAIL / FAIL again (rules out a flake) / `rmarkdown_notangle` PASS / `knitr::knitr`
+FAIL a third time -- `a3manual.Rmd`'s own unrelated `knitr::knitr` (unchanged since 2020) built
+cleanly every run throughout, ruling out "the engine name is broken here" generally. Owner
+confirmed via `AskUserQuestion`: reverted the one line as its own commit (`5bfad100`), separate
+from Slice 3's own commits, plus a `CHANGELOG.md` entry and `PROJECT_LEARNINGS.md` Learning 521.
+**(7)** Final `devtools::check()`: 0 errors/0 warnings/3 NOTEs, all confirmed pre-existing --
+except 4 new spelling-flagged words traced to this session's own new `.Rd` file (`IBD`, `WG`,
+`autosome`, `eqn`): hand-added `IBD`/`WG`/`autosome` to `inst/WORDLIST` in collation order (S230
+convention), reworded `eqn` -> `equation` in roxygen prose to avoid the abbreviation entirely.
+Re-verified clean after both fixes. **(8)** REFACTOR gate: no candidate identified (already
+minimal + lint-clean); owner confirmed skip via `AskUserQuestion`. **(9)** Mid-turn owner requests
+handled in place: added a `BACKLOG.md` Housekeeping item to simplify `NEWS.Rmd` entries back toward
+the pre-1.0.8 terseness level (calculation detail belongs in `@references`/
+`population_genetics_terms.html` instead); added a `BACKLOG.md` item enumerating the
+`a2interactive.Rmd` documentation-pass gap (7 functions shipped since S478 with no coverage);
+answered a direct question about `a3manual.Rmd`'s own (unrelated, unchanged-since-2020)
+`VignetteEngine` without editing it. **(10)** Close-out: this evaluation, self-assessment below,
+`NEWS.Rmd`/`NEWS.md` entry, `PROJECT_LEARNINGS.md` Learnings 521 (the vignette-engine finding) and
+522 (the formula-verification methodology), `_pkgdown.yml` entry, citation checklist
+(`population_genetics_terms.html` + roxygen `@references`, per the design doc's own explicit
+Slice-3 obligation), `CHANGELOG.md` entries, `HANDOFFS.md` receipt completed. Tutorial/article
+checklist (Session 436) confirmed not-yet-applicable (no UI this slice). No `gh issue close` --
+Slice 3 of 5, issue #153 stays open.
+
+**Self-assessment (Session 522): 8/10.** **Strengths:** (1) Treated "derive/verify the formula"
+as a real research task, not a rubber stamp -- cross-checked the same equations via 4 independently
+targeted extraction passes until internally self-consistent, then numerically reproduced the
+paper's own published Table 2 as the actual verification gate, rather than trusting a single
+WebFetch summary or the algebra alone. (2) Found, correctly isolated (4 controlled
+`devtools::check()` runs, alternating exactly one variable), and fixed a real pre-existing
+regression from an out-of-band commit -- entirely outside Slice 3's own scope -- rather than either
+ignoring it (which would have left `devtools::check()` broken) or silently folding the fix into
+Slice 3's own commits (kept it a separate, clearly-attributed commit, per owner confirmation).
+(3) Correctly scoped the WORDLIST/roxygen spelling fix to exactly the 4 words this session's own
+new file introduced, matching the S521 precedent, rather than the broader pre-existing 65+-word gap.
+(4) Handled 3 mid-turn owner interjections (a `BACKLOG.md` NEWS-verbosity item, an
+`a2interactive.Rmd` gap item, a direct question about `a3manual.Rmd`) without derailing the
+in-progress TDD cycle or treating the `a3manual.Rmd` question as an instruction to edit anything.
+**Weaknesses:** (1) A `printf`-based shell append to `PROJECT_LEARNINGS.md` (Learning 522) was
+truncated mid-write by an unescaped `%` character inside the text, corrupting the file's tail --
+caught immediately via a direct re-read (not assumed clean), and fixed with the `Edit` tool rather
+than another shell command; should have used `Edit`/`Write` for this multi-line prose append from
+the start, exactly as `SAFEGUARDS.md`'s "re-read immediately before/after editing" discipline would
+have caught faster. (2) The first several background `devtools::check()`/regression waits used a
+manual `&` + `Monitor`-with-`kill -0`-polling pattern that silently produced one truncated log
+(the harness-tracked `run_in_background` parameter, used from that point on, worked reliably every
+time) -- should have reached for the harness-native mechanism first, matching S521's own
+double-backgrounding gotcha in spirit even though the exact anti-pattern differed.
+
+**Ledger:** recorded in `CHANGELOG.md` across 4 entries this session (ledger-reconcile backfill,
+S522 claim, the vignette-engine `[ad hoc]` fix, and this close-out's final entry).
 
 ### Session 520 Handoff Evaluation (by Session 521)
 **Score: 8/10.** **What helped:** the `HANDOFFS.md` S520 receipt's `next_steps` field named "Issue

@@ -43,6 +43,7 @@ Hedrick
 Heijmans
 HEVL
 IACUC
+IBD
 ICAR
 ISAG
 JW
@@ -132,6 +133,7 @@ Vandeberg
 Vectorized
 Vn
 Vos
+WG
 YYYY
 YYYYMMDD
 addGenotype
@@ -139,6 +141,7 @@ addIdRecords
 al
 alleleFreq
 allelic
+autosome
 baseUrl
 biallelic
 birthdate

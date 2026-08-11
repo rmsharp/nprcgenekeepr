@@ -40,6 +40,15 @@ knitr::opts_chunk$set(echo = TRUE)
   microsatellite/STR panels) can be ingested.
   `checkMarkerGenotypeFile()`/`markerKinship()`'s existing biallelic
   contract is completely untouched. No Shiny UI yet.
+- New script-callable `markerRealizedRelatednessVariance()` (issue #153,
+  Slice 3) estimates the variance of *actual* (realized) relatedness around
+  a pair's pedigree-expected value for Parent-Offspring, Full-Siblings, and
+  Half-Siblings pairs -- pedigree kinship gives only an average, but the
+  true fraction of genome shared identical-by-descent varies around it
+  because of Mendelian sampling and linkage. Implements the closed-form
+  solution of Hill & Weir (2011), extending this package's existing
+  `kinship()`/`convertRelationships()` rather than a new framework; other
+  relationship categories return `NA`, not an error. No Shiny UI yet.
 - The Genetic Value Analysis tab gained a configurable **Ranking Scheme**
   control (issue #125): the existing combined kinship/uniqueness score stays
   the default, unchanged; a new categorical priority-tier scheme is now

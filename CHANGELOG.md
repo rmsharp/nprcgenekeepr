@@ -135,6 +135,59 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-08-11.md.verify.sh`](docs/archive/CHANGELOG-through-2026-08-11.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-08-11 · [issue #153] S522 close-out: Slice 3 (realized-relatedness-variance metric) shipped (Session 522)
+- **Deliverable:** Issue #153 Slice 3, per `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md`
+  §5 Slice 3 — new script-callable `markerRealizedRelatednessVariance()`, estimating the variance
+  of *actual* (realized) relatedness around a pair's pedigree-expected value for Parent-Offspring,
+  Full-Siblings, and Half-Siblings pairs (D3a), per the closed-form solution of Hill & Weir (2011).
+  Reuses `kinship()`/`convertRelationships()` rather than a new framework; other relationship
+  categories return `NA`, not an error.
+- **Process:** Full strict TDD PRE-RED→RED→GREEN→REFACTOR cycle, each transition
+  `AskUserQuestion`-gated (REFACTOR: no candidate identified). PRE-RED derived/verified the Hill &
+  Weir formula via 4 targeted literature-extraction passes cross-checked for internal consistency,
+  then numerically validated against the paper's own published Table 2 (human genome, 22
+  chromosomes) — all 3 relationship-type SDs within ~2%, closing out the design doc's §7 Dragon 4
+  research risk.
+- **Verification:** 9 new `test_that` blocks / 33 expectations in
+  `tests/testthat/test_markerRealizedRelatednessVariance.R`, reusing `smallPed`'s existing known
+  Full-Siblings/Half-Siblings/Parent-Offspring pairs (no new fixture). Full clean regression suite
+  0 failed/0 error (5294 passed = 5261 baseline + 33 new, 15 pre-existing warnings unchanged);
+  `devtools::check()` 0 errors/0 warnings/3 NOTEs, all confirmed pre-existing; `lintr::lint_package()`
+  0 lints (fixed 16 introduced during GREEN: a `commented_code_linter` false positive on a
+  math-notation comment via a documented `# nolint` block, 13 `implicit_integer_linter`, 1
+  `unnecessary_lambda_linter`). Fixed the `_pkgdown.yml` reference-coverage guard.
+- **Citation checklist (issue #120):** done this slice, per the design doc's own explicit
+  Slice-3 obligation — `inst/extdata/ui_guidance/population_genetics_terms.html` and roxygen
+  `@references` both updated with the Hill & Weir (2011) citation.
+- **Housekeeping:** hand-added 3 words (`IBD`, `WG`, `autosome`) to `inst/WORDLIST` in collation
+  order (S230 convention) — the 3 this session's own new file introduced that are genuine terms;
+  reworded a 4th (`eqn` → `equation`) in roxygen prose rather than adding the abbreviation.
+  `NEWS.Rmd`/`NEWS.md` updated. `PROJECT_LEARNINGS.md` Learning 522 added (the formula-verification
+  methodology: numeric reproduction of a paper's own published table, not algebra alone, is what
+  actually closes out a "derive/verify before RED" research risk). Owner-directed: added a
+  `BACKLOG.md` item to simplify `NEWS.Rmd` entries back toward pre-1.0.8 terseness, and a
+  `BACKLOG.md` item enumerating the `a2interactive.Rmd` documentation-pass gap (7 functions shipped
+  since S478 with no coverage). Tutorial/article checklist (Session 436) not-yet-applicable — no
+  UI this slice. Issue #153 stays open — Slice 4 (`markerLdBlock()`/`obfuscateLdBlocks()`, D3b/
+  D8/D9) is next.
+- **Ledger:** this entry plus the 3 other S522 entries above (ledger-reconcile backfill, claim,
+  vignette-engine `[ad hoc]` fix).
+
+### 2026-08-11 · [ad hoc] Fix: revert a2interactive.Rmd VignetteEngine to rmarkdown_notangle (Session 522)
+- **Found:** the out-of-band commit `79f37e18` (backfilled above) changed `a2interactive.Rmd`'s
+  `VignetteEngine` from `knitr::rmarkdown_notangle` to `knitr::knitr`, which broke
+  `devtools::check()`: `R CMD build`'s vignette-rebuild step fails at the
+  `pedigree-diagram-render` chunk with `Error in path.expand(): invalid 'path' argument` (via
+  `knitr:::html_screenshot()`).
+- **Isolated via 4 back-to-back `devtools::check()` runs**, alternating only that one YAML line:
+  `knitr::knitr` → FAIL, `knitr::knitr` → FAIL (rules out a one-off flake), `rmarkdown_notangle` →
+  PASS (0 errors/0 warnings/3 NOTEs, matches the established S521 baseline), `knitr::knitr` → FAIL
+  again. `a3manual.Rmd`'s own unrelated `knitr::knitr` (unchanged since 2020) builds fine every
+  run, so the engine name itself isn't universally broken in this environment.
+- **Fix:** reverted the one YAML line (commit `5bfad100`), separate from Slice 3's own commits.
+  The `.Rbuildignore` additions from `79f37e18` are untouched — unrelated, not evidenced as wrong.
+- **Ledger:** this entry only.
+
 ### 2026-08-11 · [issue #153] S522 claim: issue #153 Slice 3 (markerRealizedRelatednessVariance(), D3a) (Session 522)
 - **Deliverable:** Issue #153 Slice 3 per `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md`
   §5 Slice 3 — the realized-relatedness-variance metric (D3a). This slice's own PRE-RED must first
