@@ -276,6 +276,22 @@ knitr::opts_chunk$set(echo = TRUE)
   ("under minimum age" or "user-excluded"), never silently discarded.
   Report-only, no Shiny UI yet -- a Mate Pair Analysis tab is a separate,
   future slice.
+- A new **Mate Pair Analysis** tab was added (issue #151, Slice 2), a
+  curator-facing view over `reportMatePairs()` (Slice 1), kept structurally
+  and file-wise separate from Breeding Group Formation. A candidate
+  population must be chosen explicitly -- "All alive" (no recorded exit
+  date), "Top ranked by genetic value", or a pasted custom id list -- since
+  the age floor alone does not bound the candidate table on real,
+  imperfectly-curated colony data. A separate "Excluded" table shows every
+  dropped pair with its reason (never silently discarded), alongside an
+  optional exclude-list textarea. The "Eligible Pairs" table is
+  sortable/filterable and its CSV export downloads exactly the currently
+  filtered/sorted rows, not the full unfiltered table. Marker-based kinship,
+  where
+  available, now reaches this tab and the existing Marker Genetics tab
+  unchanged: `modMarkerGeneticsServer()`'s own `markerKinshipMatrix` value
+  was computed but never read by any caller until now (a one-line, additive
+  capture at its existing call site).
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes

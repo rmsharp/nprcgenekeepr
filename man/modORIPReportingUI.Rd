@@ -46,6 +46,8 @@ Other Shiny modules:
 \code{\link[=modInputUI]{modInputUI()}},
 \code{\link[=modMarkerGeneticsServer]{modMarkerGeneticsServer()}},
 \code{\link[=modMarkerGeneticsUI]{modMarkerGeneticsUI()}},
+\code{\link[=modMatePairServer]{modMatePairServer()}},
+\code{\link[=modMatePairUI]{modMatePairUI()}},
 \code{\link[=modORIPReportingServer]{modORIPReportingServer()}},
 \code{\link[=modPedigreeServer]{modPedigreeServer()}},
 \code{\link[=modPedigreeUI]{modPedigreeUI()}},

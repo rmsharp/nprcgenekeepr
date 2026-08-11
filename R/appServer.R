@@ -431,11 +431,27 @@ appServer <- function(input, output, session) {
   # genotype-driven check on relatedness, alongside (not in place of) the
   # pedigree-based kinship already computed above. Slice 3 adds a
   # pedigree-recorded-parent Mendelian-exclusion diagnostic, so the module
-  # also needs the current pedigree.
-  modMarkerGeneticsServer(
+  # also needs the current pedigree. Captured (issue #151 Slice 2, D6) so its
+  # markerKinshipMatrix reactive -- previously computed but never read by any
+  # caller -- can be threaded into Mate Pair Analysis below; this is
+  # additive-only and changes nothing about Marker Genetics' own behavior.
+  markerResults <- modMarkerGeneticsServer(
     "markerGenetics",
     kinshipMatrix = sharedKinshipMatrix,
     pedigree = reactive(shared$currentPedigree)
+  )
+
+  # Mate Pair Analysis Module (issue #151 Slice 2) -- a curator-facing
+  # individual mate-pair report, distinct from and sharing no code with
+  # Breeding Groups (D1). Reuses the same shared pedigree/kinship reactives
+  # as Breeding Groups and Marker Genetics' own genotype-based kinship
+  # (D6, above) rather than recomputing anything independently.
+  modMatePairServer(
+    "matePair",
+    pedigree = reactive(shared$currentPedigree),
+    kinshipMatrix = sharedKinshipMatrix,
+    markerKinshipMatrix = markerResults$markerKinshipMatrix,
+    geneticValues = reactive(shared$geneticValues)
   )
 
   # Cross-Center Identity Module (issue #149 Slice 2) -- a standalone

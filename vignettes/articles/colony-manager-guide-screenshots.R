@@ -26,6 +26,15 @@
 # since the source tutorial predates both tabs. See the two new blocks near
 # the end of this script.
 #
+# Session 513 addition: two captures for the new Mate Pair Analysis tab
+# (issue #151 Slice 2), appended at the very end. This is the first block in
+# this script to upload a marker genotype file (Marker Genetics' own
+# screenshots predate this script and were captured separately) -- reuses two
+# real, alive, breeding-age examplePedigree ids so the marker-kinship column
+# genuinely populates for one pair, directly demonstrating the D6 wiring
+# (modMarkerGeneticsServer()'s markerKinshipMatrix, previously discarded by
+# appServer.R, now reaching this tab) rather than showing an all-NA column.
+#
 # Usage (repo root):
 #   NOT_CRAN=true Rscript vignettes/articles/colony-manager-guide-screenshots.R
 #
@@ -559,6 +568,77 @@ do_step("open Groups sub-tab for the custom-ratio result", {
 })
 shot(app, "breeding_group_sex_ratio_specification.png",
      selector = "#breedingGroups-moduleContainer")
+
+# --------------------------------------------------------------------------
+# Mate Pair Analysis tab (NEW -- issue #151 Slice 2). Two real, alive,
+# breeding-age examplePedigree ids (one M, one F) confirmed via
+# qcStudbook()+filter at authoring time. Six ids total (3 M, 3 F) give the
+# "custom" population scope enough pairs that excluding one still leaves
+# eligible pairs to show; only the FIRST male/female pair is genotyped, so
+# its markerKinship cell is the one that must come back populated.
+# --------------------------------------------------------------------------
+mate_pair_males <- c("1QBKW9", "Y3CJ5A", "HLQ9SY")
+mate_pair_females <- c("0ZX29Q", "5PWJ0G", "WTE53B")
+
+mate_pair_genotype <- data.frame(
+  id = rep(c(mate_pair_males[1L], mate_pair_females[1L]), each = 8L),
+  locus = rep(paste0("L", 1L:8L), 2L),
+  allele1 = c(
+    "A", "A", "B", "A", "A", "B", "A", "A",
+    "A", "B", "B", "A", "B", "B", "A", "B"
+  ),
+  allele2 = c(
+    "A", "B", "B", "A", "B", "B", "B", "A",
+    "B", "B", "A", "B", "B", "A", "A", "B"
+  ),
+  stringsAsFactors = FALSE
+)
+mate_pair_genotype_path <- tempfile(fileext = ".csv")
+utils::write.csv(mate_pair_genotype, mate_pair_genotype_path,
+                 row.names = FALSE)
+
+do_step("navigate to Marker Genetics and upload genotype file", {
+  app$set_inputs(mainNavbar = "Marker Genetics")
+  do.call(app$upload_file,
+          stats::setNames(list(mate_pair_genotype_path),
+                          "markerGenetics-genotypeFile"))
+  app$wait_for_idle(timeout = 15000)
+})
+
+do_step("navigate to Mate Pair Analysis and configure a custom population", {
+  app$set_inputs(mainNavbar = "Mate Pair Analysis")
+  app$set_inputs(
+    `matePair-populationSource` = "custom",
+    `matePair-customPopulationIds` = paste(
+      c(mate_pair_males, mate_pair_females), collapse = ", "
+    ),
+    `matePair-minAge` = 1,
+    `matePair-useExcludeList` = TRUE,
+    wait_ = FALSE
+  )
+})
+do_step("wait for exclude-list textarea and set an excluded id", {
+  if (!wait_for_element(app, "#matePair-excludeIds", timeout = 10000)) {
+    stop("exclude-list textarea did not render within 10s")
+  }
+  app$set_inputs(`matePair-excludeIds` = mate_pair_males[2L], wait_ = FALSE)
+})
+do_step("click Find Eligible Pairs", {
+  click_element_safe(app, "#matePair-analyze")
+})
+do_step("wait for Mate Pair Analysis to complete", {
+  if (!wait_for_module_ready(app, "matePair", timeout = 60000)) {
+    stop("Mate Pair Analysis did not complete within 60s")
+  }
+})
+shot(app, "mate_pair_analysis_eligible_pairs.png",
+     selector = "#matePair-moduleContainer")
+
+do_step("open the Excluded tab", {
+  click_element_safe(app, "a[data-value='Excluded']")
+})
+shot(app, "mate_pair_analysis_excluded.png",
+     selector = "#matePair-moduleContainer")
 
 # --------------------------------------------------------------------------
 # Summary

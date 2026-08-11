@@ -2050,3 +2050,27 @@ open -- Slice 2** (`R/modMatePair.R` UI, the D6 `appServer.R` marker-kinship cap
 tab mount, tutorial/article documentation, live `shinytest2` smoke test, `gh issue close 151`) **is
 the next and final planned slice**, a separate future session per the plan's own session-boundary
 requirement. See `CHANGELOG.md`.
+
+**Progress (S513, 2026-08-10) -- Issue #151 fully shipped, closed:** Slice 2 -- the new
+"Mate Pair Analysis" tab (`R/modMatePair.R`), the D6 `appServer.R` marker-kinship capture
+(`modMarkerGeneticsServer()`'s previously-discarded `markerKinshipMatrix` return now reaches the
+new module), `appUI.R` tab mount, and documentation -- is DONE, per
+`docs/planning/issue151-individual-mate-pair-analysis-plan.md` §5 Slice 2, closing out the plan in
+full. Full strict TDD PRE-RED->RED->GREEN->REFACTOR cycle, each transition `AskUserQuestion`-gated.
+Along the way, found and fixed a genuine pre-existing bug in Slice 1's own `R/reportMatePairs.R`
+(bare scalar column assignment crashed when the age filter alone reduced the candidate table to
+exactly 0 rows -- fixed with its own regression test, surfaced to the owner first since it was
+outside the approved GREEN scope) and 2 guard-test regressions only a full regression read
+surfaces (`_pkgdown.yml` reference coverage; `shinytest2.yaml` E2E group-regex coverage). Full
+clean regression 0 failed/0 error (5172 passed, 15 pre-existing warnings unchanged);
+`devtools::check()` 0 errors/0 warnings/1 pre-existing note; `lintr` 0 lints on touched files. A
+**live E2E smoke test** (new, opt-in `tests/testthat/test-e2e-mate-pair-analysis-module.R`) ran
+against the real app: 8/8 assertions passed, including live proof of the D6 wiring (a real,
+non-`NA` marker-kinship value reaching the new tab) and confirmation Marker Genetics itself still
+renders correctly post-change. `NEWS.Rmd`/`NEWS.md`, a new "Mate Pair Analysis" section in
+`vignettes/articles/colony-manager-guide.qmd` with 2 new live-captured screenshots, and
+`_pkgdown.yml` reference coverage all done same-session. **Issue #151 closed.** See `CHANGELOG.md`,
+`PROJECT_LEARNINGS.md` Learnings 513-514.
+
+**This cluster (issue #151, all slices) is now fully complete.** No further items remain in this
+narrative.

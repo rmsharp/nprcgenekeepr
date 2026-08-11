@@ -227,3 +227,34 @@ test_that("an empty populationIds returns a zero-row $pairs frame with the full 
   expect_identical(nrow(result$pairs), 0L)
   expect_true(all(expectedCols %in% names(result$pairs)))
 })
+
+test_that(paste(
+  "reportMatePairs() does not crash when the age filter alone reduces the",
+  "candidate table to exactly zero rows (issue #151 Slice 2 regression)"
+), {
+  ## Found via Slice 2's own new test coverage, not by this file's original
+  ## Slice 1 suite: population-scoping down to a single opposite-sex pair
+  ## that then fails the age screen leaves `kin` at exactly 0 rows BEFORE
+  ## the markerKinship/geneticValue columns are added -- a case Slice 1's
+  ## own "under minimum age" test never exercised (Y's pairs were always
+  ## excluded alongside other, still-surviving pairs, so `kin` never
+  ## actually reached 0 rows there). On this R version, `df$col <- <scalar>`
+  ## on a 0-row data.frame errors ("replacement has 1 row, data has 0")
+  ## instead of recycling -- this reproduces that crash against the real
+  ## function, not a synthetic data.frame.
+  expect_no_error(
+    result <- reportMatePairs(ped, kmat,
+      minAge = 1L, populationIds = c("Y", "D1")
+    )
+  )
+
+  expectedCols <- c(
+    "sireId", "damId", "kinship", "markerKinship",
+    "sireIndivMeanKin", "sireGu", "damIndivMeanKin", "damGu"
+  )
+  expect_identical(nrow(result$pairs), 0L)
+  expect_true(all(expectedCols %in% names(result$pairs)))
+
+  expect_identical(nrow(result$excluded), 1L)
+  expect_identical(result$excluded$reason, "under minimum age")
+})

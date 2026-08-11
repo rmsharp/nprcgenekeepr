@@ -86,6 +86,14 @@ moduleContractServers <- list(
     server = modCrossCenterIdentityServer,
     args = list(),
     names = c("mergedPedigree", "issues", "confirmed")
+  ),
+  modMatePair = list(
+    server = modMatePairServer,
+    args = list(pedigree = shiny::reactive(NULL),
+                kinshipMatrix = shiny::reactive(NULL),
+                markerKinshipMatrix = shiny::reactive(NULL),
+                geneticValues = shiny::reactive(NULL)),
+    names = c("pairs", "excluded", "isReady")
   )
 )
 

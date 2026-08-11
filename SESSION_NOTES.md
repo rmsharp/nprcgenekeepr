@@ -6,20 +6,131 @@
 
 ## ACTIVE TASK
 
+### Session 512 Handoff Evaluation (by Session 513)
+**Score: 8/10.** **What helped:** the `HANDOFFS.md` S512 receipt's `next_steps` field named exactly
+this session's work item-for-item -- `R/modMatePair.R` (new `modMatePairUI`/`modMatePairServer`),
+the D6 `appServer.R` marker-kinship capture, `appUI.R` tab mount (§2.8 convention), tutorial/article
+documentation, a live smoke test, and `gh issue close 151` at this slice's own close-out -- all of
+which this session did, in that order. `key_files` pointed directly at
+`R/appServer.R:430-439` (the exact call site edited for D6) and the plan's own §4/§5, both used
+as-cited with zero re-derivation needed. Gotcha (2) (`filterAge()`'s NA-passes semantics means the
+UI must make population-scope mandatory-feeling) was followed exactly -- the population-scope radio
+has no "off"/"skip" option, matching D4's own ratified requirement. **What was missing:** nothing
+structural; Gotcha (1) (no RED test for a negative `markerKinship` passthrough in Slice 1's own
+suite) remains open and out of this slice's scope (a Slice-1 unit-test gap, not a Slice-2 module
+concern) -- named again here rather than silently dropped. **What was wrong:** the `next_steps`
+field's own parenthetical "a live shinytest2/chromote smoke test (Dragons #6/#7 on
+modalDialog()/DT NA-rendering)" does not match the actual ratified plan -- `grep` for "modalDialog"
+and "Dragon 7"/"Dragon #7" across `docs/planning/issue151-individual-mate-pair-analysis-plan.md`
+returns zero matches; the plan's own §7 has exactly 6 dragons, and Dragon 6 is a zero-eligible-
+population empty state, not a modal dialog. Cost nothing this session (the smoke test was planned
+independently from the plan document itself, not from this citation), but it is a real inaccuracy
+in an otherwise-accurate handoff -- see `PROJECT_LEARNINGS.md` Learning 514. **ROI:** High overall --
+the accurate 95% of the `next_steps`/`key_files` content saved substantial research time; the one
+inaccurate citation cost nothing only because it was independently verified rather than trusted.
+
 ### What Session 513 Did
 **Deliverable:** Issue #151 Slice 2 -- UI, `appServer.R` wiring, and documentation for individual
-mate-pair analysis (IN PROGRESS), following `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`
-and the ratified plan's own §5 Slice 2 spec
+mate-pair analysis (DONE -- the final planned slice; issue #151 closed), following
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` and the ratified plan's own §5 Slice 2 spec
 (`docs/planning/issue151-individual-mate-pair-analysis-plan.md:181-198`), inside this project's
 Strict TDD contract (RED -> GREEN -> REFACTOR, each transition gated via `AskUserQuestion`). Picked
 from this session's own Phase 0 priorities list (owner choice via `AskUserQuestion`, over scoping a
 trim-tool config for `SESSION_NOTES.md`/`BACKLOG.md`, a routine `CHANGELOG.md`/`HANDOFFS.md` trim,
 and issue #150's policy decision).
-**Started:** 2026-08-10.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Started/Completed:** 2026-08-10.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh
+issue list`, git status/log, `methodology_dashboard.py` -- health 96/100, 1 HIGH risk: ledger-size).
+Ledger reconcile clean (`CHANGELOG.md`/`HANDOFFS.md` frontiers already at `HEAD`). Rendered the
+priorities list via `AskUserQuestion`; owner picked Issue #151 Slice 2. **(2)** Phase 1B claim stub
+committed (`22669101`). **(3)** PRE-RED research: read `DEVELOPMENT_WORKSTREAM.md`,
+`module-contract.md`, `R/reportMatePairs.R` + its test fixture, `R/modBreedingGroups.R` and
+`R/modMarkerGenetics.R` (UI/server precedent), `R/appServer.R`/`R/appUI.R` (wiring/mount
+convention), and the plan's full §1-11 (confirming §11's ratified D3/D4/D5). Found the
+`geneticValues` shape mismatch directly by reading `R/modGeneticValue.R`'s own `gvResults()`
+eventReactive body: `shared$geneticValues` is the flat `reportGV()$report` data.frame (matching
+`modBreedingGroupsServer`'s own `geneticValues()$id` usage), not the `list(report = ...)` shape
+`reportMatePairs()` expects -- the module must wrap it. **(4)** PRE-RED->RED gate (`AskUserQuestion`,
+naming this finding plus two implementation-level calls -- "Upload list" relabeled as a paste-IDs
+textarea, no CSV export for the Excluded table): approved. Wrote `tests/testthat/test_modMatePair.R`
+(15 `test_that` blocks covering module rendering, all 3 population-scope sources, the age/exclude-
+list screens, marker-kinship NULL/populated wiring, the D7 `geneticValues` wrap (a fixture
+specifically designed so an unwrapped pass-through would silently regress to all-`NA` instead of
+erroring), filtered-vs-full CSV export, and a zero-eligible-population empty state) and added the
+`modMatePair` entry to `tests/testthat/test_moduleContract.R`. Confirmed RED cleanly: both files
+failed on "could not find function/module," not setup typos. **(5)** RED->GREEN gate
+(`AskUserQuestion`): approved. Wrote `R/modMatePair.R` (new, exported `modMatePairUI`/
+`modMatePairServer`), edited `R/appServer.R` (captured `markerResults <- modMarkerGeneticsServer(...)`,
+D6; mounted the new module) and `R/appUI.R` (new "Mate Pair Analysis" tab after Breeding Groups).
+Targeted tests found a genuine, previously-undiscovered bug in Slice 1's own `R/reportMatePairs.R`:
+`kin$col <- NA_real_` (a bare scalar) throws `"replacement has 1 row, data has 0"` on this R version
+when the age filter alone reduces `kin` to exactly 0 rows -- a case Slice 1's own test suite never
+exercised. Surfaced to the owner via `AskUserQuestion` (a file outside GREEN's approved scope);
+approved "fix now." Added a RED regression test to `test_reportMatePairs.R`, confirmed it failed
+genuinely, then fixed all 5 scalar assignments (`rep(NA_real_, nrow(kin))`) -- root-cause, minimal,
+contained to the one function. Full clean regression: 0 failed/0 error, 15 pre-existing warnings
+unchanged, 5172 passed. `devtools::check()`: 0 errors/0 warnings/1 pre-existing note (matched the
+established baseline -- a separate, PRE-EXISTING `spelling.Rout`/`.Rout.save` mismatch was confirmed
+unrelated to this session via a `git stash` baseline check before deciding not to fix it; only the
+session's own new "textarea" WORDLIST gap was fixed, matching the S502 precedent). `lintr` on
+touched files: 0 lints (first pass used a bare `linters_with_defaults()`, which ignores this
+project's own `.lintr` config and produced hundreds of false positives across the whole package --
+corrected to `lint_package()`). Two additional guard-test failures surfaced only on a full,
+untargeted regression read: `test_pkgdown_reference_config.R` (new exported functions not yet in
+`_pkgdown.yml`) and `test_shinytest2_workflow_coverage.R` (the new E2E test file not yet in any
+`.github/workflows/shinytest2.yaml` group regex) -- both fixed. **(6)** Live Phase 3E smoke test:
+wrote `tests/testthat/test-e2e-mate-pair-analysis-module.R` (opt-in, `NPRC_RUN_E2E=true`) driving
+the real app -- upload the example pedigree, upload a small genotype file for 2 real breeding-age
+ids on Marker Genetics (proving Marker Genetics itself still renders post-D6), configure and run
+Mate Pair Analysis with a 6-id custom population and one excluded id, and assert the genotyped
+pair's ids appear, the excluded id is absent from Eligible Pairs and present in Excluded with
+`"user-excluded"`, and zero related console errors. Ran it live: 8/8 assertions passed. **(7)**
+GREEN->REFACTOR gate (`AskUserQuestion`): approved, for one specific candidate -- `geneticValues()`
+was read twice in the same observer; consolidated to one read. Re-verified: targeted tests, full
+regression, lintr all clean. **(8)** Documentation: `NEWS.Rmd` entry (rendered to `NEWS.md`, diff
+confirmed clean after fixing a source line-wrap that had produced a stray "sortable/ filterable"
+space); a new "### Mate Pair Analysis" section in `vignettes/articles/colony-manager-guide.qmd`
+(mirroring the Marker Genetics section's structure); extended
+`vignettes/articles/colony-manager-guide-screenshots.R` with a new capture block (the first in that
+script to upload a genotype file) and regenerated all 81 article screenshots (all previously-
+existing captures re-touched in place, matching this script's own established "regenerate as-is"
+convention -- confirmed the 2 new screenshots visually: row 1 of Eligible Pairs shows a real,
+non-`NA` `markerKinship` value, directly proving the D6 wiring live; the Excluded tab shows all 3
+dropped pairs with `"user-excluded"`). `a2interactive.Rmd` deferred per its own standing rule (this
+is a Shiny-UI-only feature). **(9)** This evaluation, self-assessment below, `PROJECT_LEARNINGS.md`
+Learnings 513/514, `CHANGELOG.md` `[issue #151]` entry, `BACKLOG.md` progress note, `gh issue close
+151`, `HANDOFFS.md` receipt completed.
+
+**Self-assessment (Session 513): 9/10.** **Strengths:** (1) Found the `geneticValues` shape
+mismatch (flat data.frame vs. `list(report=...)`) by reading the actual reactive body in
+`R/modGeneticValue.R`, not assumed from the interface catalog's prose -- and wrote a RED test
+fixture specifically designed to catch a regression to the unwrapped form (values would silently go
+`NA`, not error). (2) Found a genuine, previously-shipped bug in `R/reportMatePairs.R` via new test
+coverage, reproduced it standalone before touching any code, surfaced it to the owner since it was
+outside GREEN's approved file scope rather than silently fixing it, and fixed it with a minimal,
+root-cause change plus its own dedicated regression test. (3) Ran a REAL live E2E smoke test against
+the running app (not just `testServer()` mocks) with a fixture specifically constructed so a real,
+non-`NA` marker-kinship value would appear -- directly, visually proving the D6 wiring live in the
+captured screenshot, not merely asserted in a unit test. (4) Caught two guard-test regressions
+(`_pkgdown.yml` coverage, `shinytest2.yaml` group-regex coverage) that only a full, untargeted
+regression read surfaces -- exactly the failure mode `PROJECT_LEARNINGS.md` Learning 312 already
+named for the second of the two. (5) Caught and corrected its own lintr invocation mistake
+(`linters_with_defaults()` bypassing the project's `.lintr` config) before treating the resulting
+noise as real. (6) Verified a specific handoff citation against its source document at Phase 3A
+rather than repeating it, finding a real inaccuracy (Learning 514). **Weaknesses:** (1) The initial
+`lintr::linters_with_defaults()` mistake cost one wasted tool call and a moment of false alarm before
+being caught -- a `lint_package()`-first instinct would have avoided it. (2) Did not use a
+multi-agent research `Workflow` for the PRE-RED reading (direct `Read`/`Grep`/`Bash`, matching
+S511/S512's own precedent) -- no `Workflow`-opt-in signal present, and the plan's own interface
+catalog kept the research surface manageable. (3) `SESSION_NOTES.md`/`CHANGELOG.md`/`BACKLOG.md`
+size crisis (flagged S509-S512) remains unaddressed for a fifth consecutive session -- correct
+protocol (owner picked Slice 2), but the risk keeps compounding; this session's own additions grow
+`SESSION_NOTES.md` further still.
+
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session), `[issue #151]` tag. **GitHub
+issue #151 closed** this session -- the final planned slice.
 
 ### Session 511 Handoff Evaluation (by Session 512)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S511 receipt's `next_steps` field named

@@ -230,6 +230,15 @@ appUI <- function(siteInfo = NULL) {
     ),
 
     # ====================
+    # Mate Pair Analysis Tab (issue #151 Slice 2)
+    # ====================
+    tabPanel(
+      "Mate Pair Analysis",
+      icon = icon("heart"),
+      modMatePairUI("matePair")
+    ),
+
+    # ====================
     # Genetic Diversity Tab
     # ====================
     tabPanel(

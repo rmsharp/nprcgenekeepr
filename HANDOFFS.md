@@ -123,16 +123,66 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S513
 date: 2026-08-10
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Issue #151 Slice 2 (UI, appServer.R wiring, docs) -- claimed, work beginning.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: Issue #151 Slice 2 (UI, appServer.R wiring, docs) is DONE -- the final planned slice.
+Issue #151 CLOSED this session.
+what_was_done: Wrote R/modMatePair.R (new modMatePairUI/modMatePairServer) + a 6-id custom/topRanked/
+allAlive population-scope control (D4), minAge + exclude-list (D5), server-side-filtered DT Eligible
+Pairs + Excluded tables, and filtered-rows-only CSV export (Dragon 4) via a full RED->GREEN->REFACTOR
+cycle, each transition AskUserQuestion-gated. Edited R/appServer.R (captured markerResults <-
+modMarkerGeneticsServer(...), D6 -- previously-discarded return value now reaches the new module) and
+R/appUI.R (new tab after Breeding Groups). Found and fixed a genuine pre-existing bug in Slice 1's
+own R/reportMatePairs.R (bare `kin$col <- NA_real_` throws when the age filter alone reduces kin to
+0 rows -- fixed to rep(NA_real_, nrow(kin)) x5, own regression test added), surfaced to the owner
+first since it was outside GREEN's approved scope. Fixed 2 guard-test regressions found only on full
+regression (_pkgdown.yml reference coverage; shinytest2.yaml E2E group-regex coverage). Added
+tests/testthat/test_modMatePair.R (15 test_that blocks) + tests/testthat/test-e2e-mate-pair-analysis-
+module.R (opt-in live E2E, ran it: 8/8 passed). Full clean regression: 0 failed/0 error, 15
+pre-existing warnings unchanged, 5172 passed. devtools::check(): 0 errors/0 warnings/1 pre-existing
+note. lintr on touched files: 0 lints. NEWS.Rmd/NEWS.md, colony-manager-guide.qmd (new "Mate Pair
+Analysis" section), colony-manager-guide-screenshots.R (new capture block, first to upload a
+genotype file) + 2 new/81 regenerated screenshots -- visually confirmed the D6 wiring live (a real,
+non-NA markerKinship value in the captured Eligible Pairs table). PROJECT_LEARNINGS.md Learnings
+513 (the reportMatePairs 0-row bug) and 514 (an inaccurate citation found in S512's own handoff).
+next_steps: Issue #151 is fully shipped and closed -- no further slices. Outside this cluster, the 3
+items this session's own Phase 0 priorities list rendered but the owner did not pick remain open:
+(1) SESSION_NOTES.md (now larger still)/BACKLOG.md have NO methodology_trim.py config at all --
+flagged 5 consecutive sessions now (S509-S513), increasingly urgent, needs its own scoping session
+to design how to safely zone-split these two specific ledgers before any mechanical trim is
+possible; (2) a routine methodology_trim.py --write run on CHANGELOG.md and HANDOFFS.md (both
+triggers fire; unlike the two above, both already have working configs -- purely mechanical); (3)
+issue #150's policy decision (owner review needed, not an engineering task). a2interactive.Rmd
+documentation for the marker-genetics function family and any other exported-function/parameter
+gaps accumulated since the last documentation pass remains its own deferred, standing item (Session
+450/478's own checklist) -- not urgent, not this session's pick.
+key_files: R/modMatePair.R (the new module, D2-D8 all implemented); R/appServer.R:430-460ish (D6
+capture + new module mount); R/reportMatePairs.R:159-176 (this session's own bug fix -- do not
+revert to bare scalar assignment); tests/testthat/test_modMatePair.R (module test fixture: 6 real
+examplePedigree ids reused in tests/testthat/test-e2e-mate-pair-analysis-module.R and
+vignettes/articles/colony-manager-guide-screenshots.R for consistency -- 1QBKW9/Y3CJ5A/HLQ9SY male,
+0ZX29Q/5PWJ0G/WTE53B female, only the first M/F pair genotyped).
+gotchas: (1) shared$geneticValues (threaded everywhere as the geneticValues reactive arg) is the
+FLAT reportGV()$report data.frame, not list(report=...) -- reportMatePairs() needs the wrap; get
+this wrong and every genetic-value column silently goes NA instead of erroring (no test would catch
+it without a fixture designed like test_modMatePair.R's own D7 wiring test). (2) lintr::lint_package()
+with NO arguments respects this project's own .lintr config (camelCase etc.); lintr::
+linters_with_defaults() does NOT and produces hundreds of false positives across the whole package
+-- always use the bare lint_package() call, never override linters= for this project's own close-out
+checklist. (3) A full, untargeted regression read can surface guard-test failures (pkgdown reference
+coverage, shinytest2.yaml group coverage) that a TARGETED test-file run never will, because those
+guards scan the whole package/repo, not just the files under test -- always run the full regression
+before considering GREEN verified, not just the targeted file. (4) The ledger-size crisis
+(SESSION_NOTES.md/BACKLOG.md, no trim config) is now a 5-session pattern -- a near-future session
+should seriously consider picking it over a 6th deferral.
+runtime_smoke: Live E2E test (tests/testthat/test-e2e-mate-pair-analysis-module.R,
+NPRC_RUN_E2E=true): 8/8 assertions passed against the real running app -- pedigree upload, genotype
+upload on Marker Genetics (confirmed still renders post-D6), Mate Pair Analysis configured/run with
+a real 6-id population and one exclusion, genotyped pair's markerKinship populated, excluded id
+correctly routed to the Excluded tab with "user-excluded", zero related console errors. Also
+visually confirmed via the regenerated colony-manager-guide-screenshots.R captures.
+changelog_ref: this session's close-out commit, [issue #151] tag
 commit: pending -- reconciled by the next session's Phase 0, per this receipt's own documented
 mechanism.
 ```

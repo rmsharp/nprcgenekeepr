@@ -156,10 +156,13 @@ reportMatePairs <- function(ped, kmat, markerKmat = NULL, geneticValues = NULL,
   excluded <- rbind(excludedAge, excludedUser)
   rownames(excluded) <- NULL
 
-  # kin may legitimately be 0-row here (every candidate pair excluded); the
-  # merges below are 0-row-safe by construction (match()/%in%/any() on
-  # empty vectors resolve to correct no-ops), so no extra guard is needed.
-  kin$markerKinship <- NA_real_
+  # kin may legitimately be 0-row here (every candidate pair excluded). The
+  # merges below are 0-row-safe by construction (match()/%in%/any() on empty
+  # vectors resolve to correct no-ops) -- but the scalar-recycling assumption
+  # for a brand-new column is NOT: `df$col <- NA_real_` errors ("replacement
+  # has 1 row, data has 0") on a 0-row data.frame rather than recycling, so
+  # every new column below is explicitly length-matched via rep(..., nrow()).
+  kin$markerKinship <- rep(NA_real_, nrow(kin))
   if (!is.null(markerKmat)) {
     bothGenotyped <- kin$sireId %in% rownames(markerKmat) &
       kin$damId %in% rownames(markerKmat)
@@ -170,10 +173,10 @@ reportMatePairs <- function(ped, kmat, markerKmat = NULL, geneticValues = NULL,
     }
   }
 
-  kin$sireIndivMeanKin <- NA_real_
-  kin$sireGu <- NA_real_
-  kin$damIndivMeanKin <- NA_real_
-  kin$damGu <- NA_real_
+  kin$sireIndivMeanKin <- rep(NA_real_, nrow(kin))
+  kin$sireGu <- rep(NA_real_, nrow(kin))
+  kin$damIndivMeanKin <- rep(NA_real_, nrow(kin))
+  kin$damGu <- rep(NA_real_, nrow(kin))
   if (!is.null(geneticValues) && !is.null(geneticValues$report)) {
     rpt <- geneticValues$report
     sireIdx <- match(kin$sireId, rpt$id)

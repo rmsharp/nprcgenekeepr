@@ -327,6 +327,8 @@ reference:
   - '`modInputUI`'
   - '`modMarkerGeneticsServer`'
   - '`modMarkerGeneticsUI`'
+  - '`modMatePairServer`'
+  - '`modMatePairUI`'
   - '`modORIPReportingServer`'
   - '`modORIPReportingUI`'
   - '`modPedigreeServer`'
