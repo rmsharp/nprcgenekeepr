@@ -123,26 +123,82 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S520
 date: 2026-08-11
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Issue #153 Slice 1 (locus-metadata ingestion + coverage validator + a new
-multiallelic STR fixture), per docs/planning/issue153-linkage-haplotype-block-metrics-plan.md SS5
-Slice 1. Strict TDD PRE-RED->RED->GREEN->REFACTOR, each transition AskUserQuestion-gated.
-what_was_done: pending
-next_steps: pending
-key_files: docs/planning/issue153-linkage-haplotype-block-metrics-plan.md SS4 (interface catalog),
-SS5 Slice 1 (scope), SS7 Dragons 1-2 (ordering/schema-coupling risk with #152; STR-fixture realism
-risk); docs/planning/issue152-sequence-input-genetic-metrics-plan.md:289-298 (locusMetadata schema
-D3, reused verbatim per D7); R/checkMarkerGenotypeFile.R (validator convention to match);
-R/modMarkerGenetics.R (D5 plug-in point, not touched this slice).
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Issue #153 Slice 1 (locus-metadata ingestion + coverage validator + a new multiallelic
+STR fixture) is DONE. Full strict TDD PRE-RED->RED->GREEN->REFACTOR cycle, each transition
+AskUserQuestion-gated (REFACTOR: no candidate identified). Issue #153 stays open -- Slice 2 (the
+multiallelic-tolerant checkLinkageMarkerGenotypeFile() ingestion path, D4) is next.
+what_was_done: New R/checkLocusMetadata.R (exported): validates a locus, chrom, pos[, cM] sidecar
+table, classifies each locus into D2's three-tier coverage (full/partial/none) via a lookup-table
+index (not nested ifelse()). New data-raw/generate_str_fixtures.R (set_seed(153L), mirrors
+generate_twin_fixtures.R's fail-loudly-at-generation-time discipline): generates and validates a
+12-locus/8-chromosome/10-individual multiallelic STR panel shaped on de Groot et al. 2025 (fully
+fabricated data, not copied), 8 full/2 partial/2 none coverage, 2 genuinely multiallelic loci --
+committed as inst/extdata/examples/example_locus_metadata.csv /
+example_str_marker_genotypes.csv, the package's first bundled long-format multiallelic marker
+fixture at any scale. 10 new test_that blocks / 16 expectations in
+tests/testthat/test_checkLocusMetadata.R, including a fixture-scale proof that the existing,
+UNMODIFIED buildMarkerGenotypeMatrix() pivots multiallelic genotypes without error (D4's structural
+claim). Full clean regression 0 failed/0 error (5249 passed, 15 pre-existing warnings unchanged);
+devtools::check() 0 errors/0 warnings/1 pre-existing note; lintr::lint_package() 0 lints on touched
+files (fixed 1 real nested_ifelse_linter + several implicit_integer_linter/line_length_linter in
+the new data-raw/ script). Fixed the _pkgdown.yml reference-coverage guard.
+NEWS.Rmd/NEWS.md updated. Commits: 619480fa (claim), plus this close-out commit.
+next_steps: (1) Issue #153 Slice 2 (checkLinkageMarkerGenotypeFile(), the multiallelic-tolerant
+sibling ingestion validator, D4) is the next planned slice for this issue -- proven against this
+session's own STR fixture, plus an explicit regression proof that checkMarkerGenotypeFile()/
+markerKinship()'s existing biallelic contract is completely untouched. (2) Issue #152 Slice 1
+(sequence-input ingestion + the locusMetadata sidecar) is still open and directly pickable -- #152's
+own ingestion Slice can now reuse this session's checkLocusMetadata() rather than authoring a
+second copy (D7's schema-reuse requirement now has a concrete implementation to point at). (3) The
+3-file ledger-size HIGH risk is still unaddressed (SESSION_NOTES.md's methodology_trim.py
+fence-scanner defect, BACKLOG.md's own compression pass); HANDOFFS.md's MEDIUM risk (now ~101KB,
+grown since S519's 94,947B) is still an easy, fully-pre-configured quick win untouched this
+session -- all three were visible in this session's own Phase 0 priorities list but not picked.
+key_files: R/checkLocusMetadata.R (new function); data-raw/generate_str_fixtures.R (fixture
+generator); tests/testthat/test_checkLocusMetadata.R (10 test_that blocks); inst/extdata/examples/
+example_locus_metadata.csv, example_str_marker_genotypes.csv (new fixtures); _pkgdown.yml:206 (new
+reference entry); docs/planning/issue153-linkage-haplotype-block-metrics-plan.md SS5 Slice 2 (the
+next slice's own scope).
+gotchas: (1) table()'s S3 class survives unname() -- identical(unname(table(x)[...]), c(8L,2L,2L))
+fails even when the underlying values match; use as.integer(table(x)[...]) instead, a pattern now
+used consistently in both the generator and the test file -- watch for this same footgun in any
+future slice comparing table() output. (2) The committed STR fixture's individual/locus naming
+(A01-A10, STR01-STR12) and file naming (example_locus_metadata.csv, example_str_marker_genotypes.csv,
+distinguishing "example_*" fabricated data from "obfuscated_rhesus_mhc_*" real de-identified data)
+were decided unilaterally during GREEN, not explicitly ratified via AskUserQuestion -- low-risk
+since the names carry no semantic weight, but a future slice referencing these fixtures by name
+should know the convention was inferred, not a documented house rule. (3) checkLocusMetadata()'s
+exact output shape (data frame + appended coverage column, not a list) is also an
+implementation-level choice not pre-specified by the design doc -- Slice 2+ should follow this same
+shape for consistency, not reinvent it.
+runtime_smoke: n/a -- Slice 1 scope, no runtime/UI behavior changed (new R function + data
+fixtures only; no Shiny module, app wiring, or existing function touched).
+changelog_ref: CHANGELOG.md 2026-08-11, two [issue #153] entries (Session 520): claim entry and
+this close-out entry.
 commit: pending -- reconciled by the next session's Phase 0, per this receipt's own documented
 write-time constraint (the receipt ships in the very commit whose sha it would name).
 ```
-<Session 520 claim stub -- work in progress.>
+<Session 520 self-assessment: 9/10. Strengths: (1) caught my own RED-phase mistake before it became
+a real gap -- the first draft of the two fixture-scale tests used skip_if() guards that would have
+made them skip rather than fail while the fixture didn't exist yet, a genuine strict-TDD violation,
+caught by actually running the RED suite and reading the output; (2) found and fixed a real,
+non-obvious bug during GREEN verification (table()'s S3 class surviving unname(), breaking
+identical()) via direct debugging rather than guessing; (3) verified D4's central empirical claim
+(buildMarkerGenotypeMatrix() has no allele-count logic) by direct code read before relying on it,
+and built a dedicated fixture-scale regression test proving it; (4) ran the full
+regression/check/lint verification suite exhaustively and fixed both real gaps it surfaced
+(_pkgdown.yml guard, nested_ifelse_linter); (5) correctly identified and declined to apply two
+close-out checklists (citation, tutorial/article) that don't yet apply to a script-only Slice 1,
+verified via git log rather than assumed. Weaknesses: (1) an initial git stash -u baseline
+comparison timed out mid-command, briefly leaving the working tree stashed (caught immediately,
+popped back with zero data loss, but the intended stash-diff regression comparison was abandoned in
+favor of a single clean run); (2) the STR fixture's naming scheme was decided unilaterally during
+GREEN rather than surfaced in the PRE-RED->RED AskUserQuestion gate; (3) did not explicitly verify
+whether inst/extdata/examples/'s naming convention had a documented rule before choosing
+example_*, inferring it from directory-listing pattern-matching instead.>
 
 ```handoff
 session: S519

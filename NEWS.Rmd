@@ -16,6 +16,21 @@ knitr::opts_chunk$set(echo = TRUE)
 - CRAN's 2.0.0 submission (2026-07-17, tagged `v2.0.0`) was accepted and
   published 2026-07-26. Development continues here on top of it; any
   future CRAN resubmission ships as 2.0.1, not a second 2.0.0 attempt.
+- New script-callable `checkLocusMetadata()` (issue #153, Slice 1) validates
+  a `locus, chrom, pos[, cM]` locus-metadata sidecar table -- the schema
+  shared with sibling issue #152's own sequence-genetics work -- and reports
+  each locus's coverage as one of three explicit tiers: `"full"` (chrom and
+  pos both known; cM is optional even within `"full"`), `"partial"`
+  (exactly one of chrom/pos known), or `"none"` (neither known), following a
+  PLINK-style three-state coverage model rather than requiring complete
+  metadata before any downstream use. A new bundled example fixture pair
+  (`example_locus_metadata.csv` / `example_str_marker_genotypes.csv`) adds
+  the package's first multiallelic, panel-scale marker-genotype example,
+  proving the existing `buildMarkerGenotypeMatrix()` already handles
+  multiallelic data unchanged -- the biallelic restriction lives entirely in
+  `checkMarkerGenotypeFile()`, deliberately not used for this fixture. No
+  Shiny UI yet -- linkage-aware/haplotype-block metrics and a matching tab
+  are separate, future slices.
 - The Genetic Value Analysis tab gained a configurable **Ranking Scheme**
   control (issue #125): the existing combined kinship/uniqueness score stays
   the default, unchanged; a new categorical priority-tier scheme is now

@@ -6,19 +6,123 @@
 
 ## ACTIVE TASK
 
+### Session 519 Handoff Evaluation (by Session 520)
+**Score: 9/10.** **What helped:** the `HANDOFFS.md` S519 receipt's `next_steps` field explicitly
+named "#153's own Slice 1 (locus-metadata ingestion + a new multiallelic STR fixture) is genuinely
+novel work since no bundled long-format marker fixture exists at any scale today" as a directly
+pickable session -- this was exactly what this session picked, with zero re-derivation needed.
+The receipt's `gotchas` #1/#2 (the Hill & Weir formula not yet derived, real risk for a future
+Slice 3; the `locusMetadata` schema unimplemented in both #152/#153 plans, whichever ships Slice 1
+first authors the canonical validator) were both directly load-bearing: gotcha #2 predicted exactly
+the situation this session found (#152 Slice 1 still unshipped) and this session's own design-doc
+citation of the identical risk (§7 Dragon 1) meant zero surprise -- the validator was authored here,
+matching the design's own documented contingency. The design document itself
+(`docs/planning/issue153-linkage-haplotype-block-metrics-plan.md`, S519's actual work product) was
+thoroughly load-bearing across this entire session's PRE-RED research: the interface catalog (§4),
+D2's literal three-tier coverage wording, D4's `buildMarkerGenotypeMatrix()` evidence, and the
+de Groot et al. 2025 panel-shape citation (§2.10) were all used directly and held up under this
+session's own independent re-verification (re-read `R/buildMarkerGenotypeMatrix.R` directly,
+confirmed no allele-count logic exists, exactly as the design doc claimed). **What was missing:**
+the exact output *shape* of `checkLocusMetadata()` (a single data frame with an added `coverage`
+column vs. a list of two objects) was left unspecified by the interface catalog -- reasonable, since
+this is an implementation-level judgment call a Pre-RED design document wouldn't be expected to
+pre-decide, and this session surfaced it via its own PRE-RED-\>RED `AskUserQuestion` gate rather than
+treating it as a handoff gap. **What was wrong:** nothing found -- every citation, file path, and
+evidentiary claim this session relied on from S519's work checked out under direct verification.
+**ROI:** Excellent -- both the `HANDOFFS.md` receipt and the design document it pointed to were
+maximally reusable; this session needed no rework or correction of anything S519 produced.
+
 ### What Session 520 Did
 **Deliverable:** Issue #153 Slice 1 -- locus-metadata ingestion + coverage validator + a new
-multiallelic STR fixture (IN PROGRESS), per
-`docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` SS5 Slice 1. Following strict TDD
-(PRE-RED->RED->GREEN->REFACTOR, each transition `AskUserQuestion`-gated) and
-`DEVELOPMENT_WORKSTREAM.md`. Picked from this session's own Phase 0 priorities list (owner choice
-via `AskUserQuestion`) as the first of two directly-pickable implementation options named in S519's
-own `HANDOFFS.md` `next_steps` (#153 Slice 1 or #152 Slice 1 -- both designs ratified).
-**Started:** 2026-08-11.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+multiallelic STR fixture, per `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` §5
+Slice 1. Full strict TDD PRE-RED->RED->GREEN->REFACTOR cycle, each transition
+`AskUserQuestion`-gated, following `DEVELOPMENT_WORKSTREAM.md`. Picked from this session's own
+Phase 0 priorities list (owner choice via `AskUserQuestion`) as the first of two directly-pickable
+implementation options named in S519's own `HANDOFFS.md` `next_steps` (#153 Slice 1 or #152 Slice
+1 -- both designs ratified).
+**Started/Completed:** 2026-08-11.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue
+list`, git status/log, `methodology_dashboard.py` -- health 96/100, 1 HIGH risk: the 3-file
+ledger-size condition, still unaddressed; `HANDOFFS.md`'s own MEDIUM risk now firing). Ledger
+reconcile clean (`CHANGELOG.md`/`HANDOFFS.md` frontiers already at `HEAD`, no undocumented commits,
+no pending receipts, no untracked ghost-session files). Rendered the priorities list via
+`AskUserQuestion` (4 options: issue #153 Slice 1 READY; issue #152 Slice 1 READY; archive
+`HANDOFFS.md` READY; fix the `methodology_trim.py` fence-scanner defect READY); owner picked issue
+#153 Slice 1. **(2)** Stated scope back to the owner (locus-metadata ingestion + coverage validator
++ STR fixture, `DEVELOPMENT_WORKSTREAM.md`, strict TDD). **(3)** Phase 1B claim stub +
+`HANDOFFS.md` `status: pending` receipt committed (`619480fa`). **(4)** PRE-RED: re-read the
+design doc's interface catalog (§4), D2/D4/D7 decisions, §2.2 (`checkMarkerGenotypeFile.R:68-78`'s
+multiallelic rejection; `buildMarkerGenotypeMatrix.R`'s lack of allele-count logic, directly
+re-verified), §2.3/§2.8 (schema reuse, no existing multiallelic fixture), §7 Dragons 1-2; read
+`checkMarkerGenotypeFile()`/`test_checkMarkerGenotypeFile.R` and
+`generate_twin_fixtures.R`/`test_checkTwinRelations.R` as style precedent; confirmed #152's
+`locusMetadata` schema (`locus, chrom, pos[, cM]`) verbatim from its own plan doc. Presented the
+concrete RED-phase test plan via `AskUserQuestion` (PRE-RED->RED gate); owner approved the
+recommended single-test-file plan. **(5)** RED: wrote
+`tests/testthat/test_checkLocusMetadata.R` (10 `test_that` blocks, 16 expectations) -- inline
+mixed-coverage classification tests plus a fixture-scale round-trip test against files that don't
+exist yet; ran and confirmed all 10 blocks fail (function missing / files missing), a genuine RED,
+not a `skip_if()`-masked no-op (caught and fixed this mistake in my own first draft before running
+it). Presented the GREEN plan via `AskUserQuestion`; owner approved. **(6)** GREEN: wrote
+`R/checkLocusMetadata.R` (new exported function, lookup-table coverage classification, not nested
+`ifelse()`) and `data-raw/generate_str_fixtures.R` (`set_seed(153L)`, 12-locus/8-chrom/10-individual
+multiallelic STR panel shaped on de Groot et al. 2025, fabricated not copied); ran the generator,
+producing `inst/extdata/examples/example_locus_metadata.csv` /
+`example_str_marker_genotypes.csv`; re-ran the RED test file -- all 16 expectations pass.
+`devtools::document()` regenerated `NAMESPACE`/`man/checkLocusMetadata.Rd`. **(7)** Verification:
+full clean regression suite 0 failed/0 error (5249 passed, 15 pre-existing warnings unchanged, via
+`NOT_CRAN=true`); `devtools::check()` 0 errors/0 warnings/1 pre-existing note (3m01s); found and
+fixed 1 `_pkgdown.yml` reference-coverage guard failure (added `checkLocusMetadata` to the "All
+exposed functions" catch-all); `lintr::lint_package()` found and fixed 1 real
+`nested_ifelse_linter` (refactored to a lookup-table index) plus several
+`implicit_integer_linter`/`line_length_linter` findings in the new `data-raw/` script -- 0 lints
+after. **(8)** REFACTOR gate: owner confirmed no candidate identified (matching S515 precedent).
+**(9)** Close-out: this evaluation, self-assessment below, `NEWS.Rmd`/`NEWS.md` entry (new
+exported-function checklist), `BACKLOG.md` progress note, 2 `CHANGELOG.md` entries (claim +
+close-out), `HANDOFFS.md` receipt completed. Citation checklist (issue #120) and tutorial/article
+checklist (Session 436) confirmed not-yet-applicable (no UI/displayed statistic this slice,
+verified via `git log` on `population_genetics_terms.html` showing it's only touched by
+UI-shipping slices). No `gh issue close` -- Slice 1 of 5, issue #153 stays open, matching every
+precedent in this cluster.
+
+**Self-assessment (Session 520): 9/10.** **Strengths:** (1) Caught my own RED-phase mistake before
+it became a real gap: the first draft of the two fixture-scale tests used `skip_if()` guards that
+would have made them *skip* rather than *fail* while the fixture didn't exist yet -- a genuine
+strict-TDD violation ("tests must fail" at RED) -- caught by actually running the RED suite and
+reading the output carefully rather than assuming the plan was correctly executed. (2) Found and
+fixed a real, non-obvious bug during GREEN verification: `identical(unname(table(x)[...]),
+c(8L,2L,2L))` failed not because the classification logic was wrong (it wasn't) but because
+`table()` retains its `"table"` S3 class through `unname()`, which `identical()` compares -- traced
+to the actual root cause via direct debugging rather than guessing, fixed consistently in both the
+generator and the test file. (3) Verified D4's central empirical claim
+(`buildMarkerGenotypeMatrix()` has no allele-count logic) by direct code read before relying on it,
+not by trusting the design doc's own citation, and built a dedicated fixture-scale regression test
+proving it, not just accepting it as background research. (4) Ran the full regression/check/lint
+verification suite exhaustively (not just the new test file) and fixed both real gaps it surfaced
+(`_pkgdown.yml` guard, `nested_ifelse_linter`) rather than treating "my new file's tests pass" as
+sufficient. (5) Correctly identified and declined to apply two close-out checklists (citation,
+tutorial/article) that don't yet apply to a script-only Slice 1, verifying via `git log` rather than
+assuming, avoiding both a missed-checklist error and a premature/wrong application of one.
+**Weaknesses:** (1) Lost real time to a background-process management stumble: an initial `git
+stash -u` baseline comparison timed out mid-command, which briefly left the working tree stashed
+(caught immediately via `git status`/`git stash list`, correctly popped back with zero data loss,
+but the baseline comparison itself was abandoned in favor of trusting the already-clean 0-failed/
+0-error single run instead of a proper stash-diff -- a slightly weaker verification than this
+project's own established stash-diff convention for regression baselines). (2) The individual/locus
+naming scheme for the STR fixture (`A01`-`A10`, `STR01`-`STR12`) was decided unilaterally during
+GREEN rather than surfaced as an explicit option in the PRE-RED->RED `AskUserQuestion` gate, which
+named the fixture's *shape* (12 loci, 8 chromosomes, coverage mix) but not its literal naming --
+a minor scope gap, not a defect, since the names carry no semantic weight, but a stricter reading of
+the phase-gate discipline would have surfaced it. (3) Did not explicitly verify whether
+`inst/extdata/examples/`'s existing naming convention (`obfuscated_rhesus_mhc_*` vs. `Example*`)
+had a documented rule anywhere before choosing `example_*` -- inferred from directory-listing
+pattern-matching rather than finding an explicit style statement, a reasonable but not fully
+verified inference.
+
+**Ledger:** recorded in `CHANGELOG.md` across 2 entries this session (S520 claim entry, and this
+close-out's final entry) -- both `[issue #153]`.
 
 ### Session 518 Handoff Evaluation (by Session 519)
 **Score: 8/10.** **What helped:** the `HANDOFFS.md` S518 receipt's `active_task`/dashboard framing

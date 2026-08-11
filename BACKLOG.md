@@ -2246,3 +2246,38 @@ matching the #133/#136/#137/#145/#146/#147/#149/#150/#151 precedent. Issue #152 
 open. **Next in the ratified Deferred-tier order: #153 (linkage-aware/haplotype-block metrics), which
 can now reuse this session's own `locusMetadata` vocabulary; #148 (MHC) still needs its own
 scope-narrowing conversation first, per the sequencing audit's Finding #4.** See `CHANGELOG.md`.
+
+**Progress (S520, 2026-08-11):** Issue #153 Slice 1 -- locus-metadata ingestion + coverage validator
++ a new multiallelic STR fixture -- is now DONE, per
+`docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` sec 5 Slice 1. Full strict TDD
+PRE-RED->RED->GREEN->REFACTOR cycle, each transition `AskUserQuestion`-gated (REFACTOR:
+owner-confirmed no candidate identified, matching the S515 precedent). New `checkLocusMetadata()`
+(D7, this session authored the canonical validator since #152's own Slice 1 has not shipped yet --
+sec 7 Dragon 1's own predicted ordering risk) validates a `locus, chrom, pos[, cM]` sidecar table
+and classifies each locus into D2's literal three-tier coverage definition ("full" = chrom AND pos
+present, cM optional; "partial" = exactly one of chrom/pos; "none" = neither), via a lookup-table
+implementation (not nested `ifelse()`, `nested_ifelse_linter` clean). New
+`data-raw/generate_str_fixtures.R` (mirrors `generate_twin_fixtures.R`'s fail-loudly-at-generation-
+time discipline, `set_seed(153L)`) generates a 12-locus/8-chromosome/10-individual multiallelic STR
+panel shaped on de Groot et al. 2025's real panel (not its literal data -- fully fabricated, sec 7
+Dragon 2), 8 full/2 partial/2 none coverage loci, 2 genuinely multiallelic (3+ allele) loci --
+committed as `inst/extdata/examples/example_locus_metadata.csv` /
+`example_str_marker_genotypes.csv`, the package's first bundled long-format multiallelic marker
+fixture at any scale (sec 2.8's confirmed gap). 10 new `test_that` blocks / 16 expectations in
+`tests/testthat/test_checkLocusMetadata.R`, including a fixture-scale proof that the existing,
+UNMODIFIED `buildMarkerGenotypeMatrix()` pivots multiallelic genotypes without error (D4's structural
+claim, empirically confirmed -- the biallelic restriction lives entirely in
+`checkMarkerGenotypeFile()`, deliberately not called on this fixture, matching Slice 2's own future
+scope). Full clean regression suite 0 failed/0 error (5249 passed, 15 pre-existing warnings
+unchanged); `devtools::check()` 0 errors/0 warnings/1 pre-existing note (unrelated, matching
+baseline); `lintr::lint_package()` 0 lints on touched files (fixed 1 real `nested_ifelse_linter` +
+several `implicit_integer_linter`/`line_length_linter` findings in `data-raw/
+generate_str_fixtures.R`, matching this project's own house style). Fixed the `_pkgdown.yml`
+reference-coverage guard (new exported function added to the "All exposed functions" catch-all
+group). `NEWS.Rmd`/`NEWS.md` updated (new exported function checklist). Citation checklist (issue
+#120) and tutorial/article checklist (Session 436) do NOT yet apply -- no UI/displayed statistic
+this slice, matching the #146/#149/#150/#151 Slice-1-only precedent (verified via `git log` on
+`population_genetics_terms.html`, last touched only by UI-shipping slices). **Issue #153 stays open
+-- Slice 2 (the multiallelic-tolerant `checkLinkageMarkerGenotypeFile()` ingestion path, D4) is the
+next planned slice**, a separate future session per the plan's own session-boundary requirement. See
+`CHANGELOG.md`.
