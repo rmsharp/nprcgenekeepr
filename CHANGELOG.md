@@ -135,6 +135,44 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-08-11.md.verify.sh`](docs/archive/CHANGELOG-through-2026-08-11.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-08-11 · [issue #153] S519 close-out: linkage-aware/haplotype-block metrics design ratified (Session 519)
+- **Deliverable:** Pre-RED design/architecture document for issue #153 (linkage-aware and
+  haplotype-block metrics for marker data) — `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md`.
+  Design-only, zero `R/`/`tests/`/`man/` changes, matching the #133/#136/#137/#145/#146/#147/#149/
+  #150/#151/#152 precedent. Picked from this session's own Phase 0 priorities list as the next
+  Deferred-tier item in the ratified genetic-metrics sequencing order (#152 done → #153 → #148).
+- **Research:** two parallel background agents (codebase inventory: confirmed no marker function
+  treats loci as ordered/positioned anywhere in `R/`; confirmed `R/checkMarkerGenotypeFile.R:68-78`
+  hard-rejects multiallelic loci; read #152's plan in full for its `locusMetadata` schema to reuse;
+  domain research: locus-order metadata realism for real colony STR panels — de Groot et al. 2025's
+  23-microsatellite colony panel has essentially no cM data and is multiallelic; classical LD/
+  haplotype-block methods assume an unrelated/randomly-mating sample, violated by a pedigreed
+  colony per Excoffier & Slatkin 1998, while the one genuinely pedigree-native method — Lander-Green
+  multipoint IBD/MERLIN — isn't CRAN-available; Hill & Weir 2011's realized-relatedness-variance
+  framework IS valid for a pedigreed sample; haplotype/block-level data is more re-identifying than
+  single-locus data per Lin, Owen & Altman 2004 and Erlich & Narayanan 2014), plus direct
+  re-verification of the two most load-bearing findings this session.
+- **9 design decisions (D1-D9)**; 4 genuine judgment calls (D3 metric choice, D4 multiallelic
+  ingestion, D5 module boundary, D8 CRAN-vs-hand-roll) ratified via a single `AskUserQuestion`
+  round — owner selected the document's own recommended option in all four: build both a
+  pedigree-valid primary metric (Hill & Weir-style) and a caveated descriptive secondary metric
+  (pairwise D′/r²); add a new multiallelic-tolerant sibling ingestion validator; a new tab inside
+  the existing `modMarkerGenetics.R`; hand-roll the D′/r² computation, no new CRAN dependency.
+  Scoped as 5 future implementation slices, each its own future session.
+- **Issue #153 intentionally left open** — design ratified, not implemented, matching every
+  precedent in this cluster. Next in the ratified order: #148 (MHC), which needs its own
+  scope-narrowing conversation first per the sequencing audit's Finding #4.
+- Cross-reference verification: all 27 cited file paths confirmed to exist via direct checks before
+  close-out.
+- Model: Claude Sonnet 5.
+
+### 2026-08-11 · [issue #153] Claimed S519 (issue #153 Pre-RED design/architecture document) (Session 519)
+- Claimed the session (commit `a11b489f`) for the next Deferred-tier item in the ratified
+  genetic-metrics sequencing order, per S517's own handoff `next_steps` and the sequencing audit's
+  own stated ordering (#152 done → #153 → #148). Wrote the Phase 1B `SESSION_NOTES.md` stub and
+  opened the `HANDOFFS.md` `status: pending` receipt.
+- Model: Claude Sonnet 5.
+
 ### 2026-08-11 · [ad hoc] S518 close-out: SESSION_NOTES.md archive blocked (fence-scanner defect found), 2 BACKLOG.md follow-ups filed, 3 CLAUDE.md checklist notes added (Session 518)
 - **SESSION_NOTES.md's own archive was investigated in full but NOT run**: independently tested `methodology_trim.py`'s `fence_scan()` against the real file (after the config from the prior entry checked out structurally) and found a legitimate 4-backtick inline code span at `SESSION_NOTES.md:23229` is misread as an unclosed block-fence opener, putting 42% of the file (17,040/40,269 lines) into a false "inside a fence" state and hiding 349 of 513 real record headings -- provably lossless if trimmed as-is (L1/L2/L3 still hold on whatever partition is computed) but structurally wrong (real per-session boundaries collapse into one oversized chunk). Not fixed this session: the fix is either editing frozen historical `SESSION_NOTES.md` content or patching the canonical tool's fence-scanning regex, both out of a housekeeping session's scope. Filed as a `BACKLOG.md` item (READY, Effort S) with both candidate fixes named.
 - **`CHANGELOG.md`'s own archive (previous entry) does not resolve its read-truncation risk**: post-archive `--check` still fires (946,570 B vs. 65,536 B budget) because the Session-325-frozen legacy-history block is a permanently-pinned 935,292 B / 3,570-line footer this tool structurally cannot archive -- 14x the budget on its own. Documented in `CLAUDE.md` as a known consequence of the already-ratified S325 "freeze legacy, go forward" decision, not re-litigated or re-opened.

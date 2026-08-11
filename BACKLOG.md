@@ -2183,6 +2183,40 @@ of issue #150 are now shipped; issue #150 closed** as part of this session's clo
 **This cluster (issue #150, all slices) is now fully complete.** No further items remain in this
 narrative.
 
+**Progress (S519, 2026-08-11):** the Deferred/scientific tier's second item -- issue #153's own
+design/architecture document (linkage-aware and haplotype-block metrics for marker data) -- is DONE
+and RATIFIED: see `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md`. Two parallel
+background research agents (codebase inventory: confirmed no marker function treats loci as
+ordered/positioned, and confirmed `checkMarkerGenotypeFile()` hard-rejects multiallelic loci;
+domain research: locus-order metadata realism, rhesus genetic-map resources, classical LD/
+haplotype-block methods, CRAN package survey, recombination-aware kinship literature,
+coverage-reporting precedent, privacy implications) plus direct re-verification of the two most
+load-bearing findings (`R/checkMarkerGenotypeFile.R:68-78`'s biallelic-only rejection; #152's D3/D4
+decisions verbatim). Central findings: a directly-sourced real captive-macaque-colony STR panel (de
+Groot et al. 2025, 23 microsatellite markers) has essentially no cM genetic-map data and is
+multiallelic -- both facts collide with this package's current assumptions (loci currently
+unordered/unpositioned everywhere; ingestion hard-rejects >2-allele loci); every classical LD/
+haplotype-block method assumes an unrelated/randomly-mating sample, which a pedigreed colony
+violates (Excoffier & Slatkin 1998), while the one genuinely pedigree-native method (Lander-Green
+multipoint IBD / MERLIN) isn't CRAN-available; haplotype/block-level exports are MORE
+re-identifying than single-locus data, not less (Lin, Owen & Altman 2004; Erlich & Narayanan 2014).
+Nine design decisions (D1-D9); four genuine judgment calls (D3 metric choice, D4 multiallelic
+ingestion, D5 module boundary, D8 CRAN-vs-hand-roll) ratified via a single `AskUserQuestion` round
+-- owner selected this document's own recommended option in all four: build both a pedigree-valid
+primary metric (Hill & Weir 2011-style realized-relatedness variance) and a caveated descriptive
+secondary metric (pairwise D'/r², same-chromosome pairs only); add a new multiallelic-tolerant
+sibling ingestion validator rather than reuse the existing biallelic-only path; a new tab inside the
+existing `modMarkerGenetics.R`, not a dedicated new module; hand-roll the D'/r² computation in base
+R rather than add a CRAN dependency. Scoped as 5 future vertical slices (locus-metadata ingestion +
+STR fixture; multiallelic-tolerant ingestion path; the realized-relatedness-variance metric,
+requiring its own literature deep-dive first; the descriptive LD statistic + de-identification
+primitive; full module tab + documentation), each its own future session. No code changed this
+session -- design/planning only, matching the #133/#136/#137/#145/#146/#147/#149/#150/#151/#152
+precedent. Issue #153 intentionally left open. **Next in the ratified Deferred-tier order: #148
+(MHC haplotype-specific frequency reporting) still needs its own scope-narrowing conversation first,
+per the sequencing audit's Finding #4, before a design document analogous to this one and #152's can
+be written for it.** See `CHANGELOG.md`.
+
 **Progress (S517, 2026-08-11):** the Deferred/scientific tier's first item -- issue #152's own
 design/architecture document (whole-genome/whole-exome sequence input + sequence-based genetic
 metrics) -- is DONE and RATIFIED: see

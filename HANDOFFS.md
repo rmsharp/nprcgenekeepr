@@ -123,23 +123,86 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S519
 date: 2026-08-11
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Issue #153 (linkage-aware and haplotype-block metrics for marker data) -- Pre-RED
-design/architecture document. Following ARCHITECTURE_WORKSTREAM.md, matching the #152/#146/#147/
-#149/#150/#151 precedent -- design-only, zero R/tests/man changes expected this session. Next in the
-ratified Deferred-tier sequencing order (#152 done -> #153 -> #148); can reuse #152's
-locusMetadata vocabulary.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: Issue #153's design/architecture document is DONE and RATIFIED
+(docs/planning/issue153-linkage-haplotype-block-metrics-plan.md). Design-only, zero R/tests/man
+changes. Issue #153 stays open -- design ratified, not implemented. Next Deferred-tier item per the
+ratified sequencing audit: #148 (MHC haplotype-specific frequency reporting), which needs its own
+scope-narrowing conversation first (Finding #4) before a design doc analogous to this one/#152's can
+be written.
+what_was_done: Two parallel background research agents (Explore: codebase inventory confirming no
+marker function treats loci as ordered/positioned, confirming R/checkMarkerGenotypeFile.R:68-78's
+hard multiallelic rejection, reading #152's plan in full for its locusMetadata schema; general-
+purpose: locus-order metadata realism via a directly-sourced 2025 real colony STR panel [de Groot et
+al.], classical LD/haplotype-block methods' population-sample-assumption violation in a pedigreed
+colony [Excoffier & Slatkin 1998], CRAN-only package survey, recombination-aware kinship [Hill &
+Weir 2011], coverage-reporting precedent [PLINK/Haploview], and privacy implications [Lin, Owen &
+Altman 2004; Erlich & Narayanan 2014]), plus direct re-verification of the two most load-bearing
+findings. Wrote docs/planning/issue153-linkage-haplotype-block-metrics-plan.md (11 sections: 9
+design decisions D1-D9, 5 forced/4 judgment-call, ratified via a single AskUserQuestion round --
+owner picked all 4 recommended options: build both a pedigree-valid primary metric and a caveated
+descriptive secondary metric; add a multiallelic-tolerant sibling ingestion validator; a new tab
+inside modMarkerGenetics.R; hand-roll the D'/r2 computation). Cross-reference verification: all 27
+cited file paths confirmed to exist. Commits: a11b489f (claim), plus this close-out commit.
+next_steps: (1) Issue #148 (MHC haplotype-specific frequency reporting) needs a scope-narrowing
+conversation first (sequencing audit Finding #4), likely producing a design-first sub-issue matching
+#152/#153's own shape -- the next item in this cluster's ratified order, but not yet a directly
+pickable design session. (2) Either #152 Slice 1 or #153 Slice 1 (both designs now ratified) is a
+directly pickable implementation session -- #153's own Slice 1 (locus-metadata ingestion + a new
+multiallelic STR fixture) is genuinely novel work since no bundled long-format marker fixture exists
+at any scale today. (3) S518's own remaining ledger-size housekeeping items are still open and
+untouched this session: fix the methodology_trim.py fence-scanner defect blocking SESSION_NOTES.md's
+archive (BACKLOG.md item, READY, Effort S); archive HANDOFFS.md itself, whose trigger is now firing
+(88,226 B vs 65,536 B budget) and is fully pre-configured (READY, Effort S, easy quick win); BACKLOG.md's
+own editorial-compression pass (READY, Effort L).
+key_files: docs/planning/issue153-linkage-haplotype-block-metrics-plan.md (the full design, all 11
+sections); R/checkMarkerGenotypeFile.R:68-78 (the multiallelic-rejection finding driving D4);
+docs/planning/issue152-sequence-input-genetic-metrics-plan.md:289-304 (the locusMetadata schema +
+vocabulary D3/D4 this design reuses verbatim); BACKLOG.md (S519 progress note, genetic-metrics
+cluster section); SESSION_NOTES.md (this session's full entry, including the Session 518 handoff
+evaluation).
+gotchas: (1) The Hill & Weir (2011) realized-relatedness-variance metric's exact closed-form formula
+was NOT derived or verified this session -- Slice 3's implementing session needs its own literature
+deep-dive before RED tests can be written; do not assume this is a straightforward lift from the
+design doc. (2) The locusMetadata schema (D7) is reused from #152's plan but is unimplemented in
+BOTH plans as of this session -- whichever of #152/#153 is implemented first must author the
+canonical validator; the other must reuse it exactly, not fork a divergent second copy; check
+BACKLOG.md/CHANGELOG.md for which shipped first before starting either Slice 1. (3) Vocabulary
+discipline (D1) requires ongoing vigilance across future slices -- "LD block"/"linkage block"/
+qualified "haplotype block" only, never bare "haplotype" (reserved for #148), per the sequencing
+audit's own vocabulary-overlap warning.
+runtime_smoke: n/a -- design-only session, no R/tests/man files touched, no runtime behavior
+changed.
+changelog_ref: CHANGELOG.md 2026-08-11 two [issue #153] entries (Session 519): claim entry and this
+close-out entry.
+commit: pending -- reconciled by the next session's Phase 0, per this receipt's own documented
+write-time constraint (the receipt ships in the very commit whose sha it would name).
 ```
-<Session 519 claim stub -- work beginning.>
+<Session 519 self-assessment: 8/10. Strengths: (1) directly verified the single most load-bearing
+codebase finding (checkMarkerGenotypeFile()'s hard multiallelic rejection) by reading the actual
+file rather than trusting the research agent's own quote, which became the load-bearing evidence for
+D4, the session's highest-leverage new-code decision; (2) pushed past "classical LD/block methods
+exist" to find and cite the specific source (Excoffier & Slatkin 1998) establishing those methods
+are statistically biased for a related sample, directly justifying building a second, genuinely
+pedigree-valid metric (Hill & Weir 2011) rather than shipping only the classical-but-biased one; (3)
+found and used a directly-on-point, current (2025) real captive-macaque-colony STR-panel source (de
+Groot et al.) that drove two separate, consequential design decisions (D2 metadata sparsity, D4
+multiallelic ingestion), grounding both in real colony data rather than an assumed ideal; (4)
+explicitly flagged unresolved research (Hill & Weir's exact formula, LDheatmap's archival causality,
+gap's relatedness-handling) as named uncertainty carried into "Here be dragons," not silently
+smoothed over; (5) verified all 27 cited file paths exist before close-out. Weaknesses: (1) the 5
+provisional function names were not cross-checked against existing naming conventions as rigorously
+as #152's own interface catalog was; (2) D3's "build both metrics" recommendation was not explicitly
+weighed against scope-creep risk -- two new statistical methods in one future slice-set is more
+ambitious than #152's single-new-statistic scope, worth watching at the Slice 3/4 split; (3) did not
+independently verify the rhesus genetic-map papers' own methodology beyond the domain-research
+agent's summary -- reasonable for a Pre-RED scope decision, but a future roxygen @references pass
+should read the primary sources directly.>
+
+```handoff
+session: S518
 
 ```handoff
 session: S518

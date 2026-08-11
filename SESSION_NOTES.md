@@ -6,14 +6,121 @@
 
 ## ACTIVE TASK
 
+### Session 518 Handoff Evaluation (by Session 519)
+**Score: 8/10.** **What helped:** the `HANDOFFS.md` S518 receipt's `active_task`/dashboard framing
+of the 3-file ledger-size condition as the sole standing HIGH risk (and its `next_steps` naming the
+newly-firing `HANDOFFS.md` byte trigger specifically) directly cross-validated this session's own
+independent Phase 0 dashboard read -- same HIGH risk, same newly-firing MEDIUM risk, found
+independently rather than copied, which is exactly the kind of cross-check a good handoff enables.
+The receipt's `gotchas` (the P1 frontier-check constraint requiring a `CHANGELOG.md` entry before
+any mid-session `--write`; a passing dry-run not proving semantic correctness) were correctly still
+current but not exercised this session (design-only, no `methodology_trim.py` work) -- appropriately
+unactionable rather than wrong. **What was missing:** nothing S518 could reasonably have supplied --
+this session's actual deliverable (issue #153's design) came from a different workstream (the
+genetic-metrics sequencing cluster) that S518's own scope never touched; S518's `next_steps` items
+(fence-scanner fix, `BACKLOG.md` compression, `HANDOFFS.md` archive) were all real, correctly still
+open, and correctly not picked this session -- the picking session (this one) chose #153 from the
+same Phase 0 priorities list instead, via `AskUserQuestion`, matching S517's own handoff (a
+different, still-open thread) rather than S518's. **What was wrong:** nothing found. **ROI:**
+Moderate-to-good -- real orientation cross-validation value (confirmed this session wasn't missing a
+newly-emerged risk), but low direct-reuse value for this session's specific deliverable, through no
+fault of the handoff itself: S518 and S519 simply worked different, both-legitimate threads from the
+same priorities list.
+
 ### What Session 519 Did
 **Deliverable:** Issue #153 (linkage-aware and haplotype-block metrics for marker data) -- Pre-RED
-design/architecture document (IN PROGRESS)
-**Started:** 2026-08-11
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+design/architecture document, following `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`,
+matching the #133/#136/#137/#145/#146/#147/#149/#150/#151/#152 precedent -- design-only session,
+zero `R/`/`tests/`/`man/` changes. Picked from this session's own Phase 0 priorities list (owner
+choice via `AskUserQuestion`) as the next item in the ratified Deferred-tier sequencing order
+(#152 done -> #153 -> #148), per S517's own handoff `next_steps` and the sequencing audit's own
+stated ordering.
+**Started/Completed:** 2026-08-11.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue
+list`, git status/log, `methodology_dashboard.py` -- health 96/100, 1 HIGH risk: the 3-file
+ledger-size condition, still unaddressed; a newly-firing `HANDOFFS.md` MEDIUM risk found this
+session, not present in S518's own report). Ledger reconcile clean (`CHANGELOG.md`/`HANDOFFS.md`
+frontiers already at `HEAD`, no undocumented commits, no pending receipts, no untracked
+ghost-session files). Rendered the priorities list via `AskUserQuestion` (4 options: #153 design
+session READY; fix the `methodology_trim.py` fence-scanner defect READY; archive `HANDOFFS.md`
+READY; implement issue #152 Slice 1 READY -- 2 more, `inst/extdata/` Phase 4 and NPRC outreach, both
+DECISION NEEDED, noted below the picker's 4-option cap); owner picked #153 design. **(2)** Stated
+scope back to the owner (one Pre-RED design document, `ARCHITECTURE_WORKSTREAM.md`, design-only);
+owner confirmed via a second, lighter-weight exchange. **(3)** Phase 1B claim stub + `HANDOFFS.md`
+`status: pending` receipt committed (`a11b489f`). **(4)** PRE-RED research: two parallel background
+agents -- a codebase-inventory `Explore` agent (direct reads of `R/modMarkerGenetics.R`, the full
+marker function family with independent-locus/biallelic-only confirmation, `docs/planning/
+issue152-sequence-input-genetic-metrics-plan.md` in full for the `locusMetadata` schema to reuse,
+issue #130's Bioconductor decline, `DESCRIPTION`, both relevant audits, existing fixtures --
+confirming zero bundled long-format marker fixtures exist at any scale --, the module contract, and
+five sibling design documents' structural templates) and a `general-purpose` domain-research agent
+(locus-order metadata realism for real colony STR panels, rhesus genetic-map resources, classical
+LD/haplotype-block methods and their population-sample-assumption violation in a pedigreed colony,
+a CRAN-only package survey, recombination-aware kinship literature, coverage/assumptions-reporting
+precedent from PLINK/Haploview, and privacy implications of haplotype-level data) -- plus this
+session's own direct re-verification of the single most load-bearing finding
+(`R/checkMarkerGenotypeFile.R:68-78`'s hard multiallelic rejection) and a direct re-read of #152's
+D3/D4 decisions verbatim. Found: a directly-sourced real captive-macaque-colony STR panel (de Groot
+et al. 2025, 23 microsatellite markers) has essentially no cM data and is multiallelic -- colliding
+with this package's current unordered-loci/biallelic-only assumptions; every classical LD/
+haplotype-block method assumes an unrelated/randomly-mating sample, violated by a pedigreed colony
+(Excoffier & Slatkin 1998), while the one genuinely pedigree-native method (Lander-Green multipoint
+IBD/MERLIN) isn't CRAN-available; Hill & Weir (2011)'s realized-relatedness-variance framework IS
+valid for a pedigreed sample and extends the existing pedigree kinship directly; haplotype/
+block-level data is MORE re-identifying than single-locus data (Lin, Owen & Altman 2004; Erlich &
+Narayanan 2014). **(5)** Wrote `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` (11
+sections, mirroring the #152 plan's own template). **(6)** Ratified 4 genuine judgment calls (D3
+metric choice, D4 multiallelic ingestion, D5 module boundary, D8 CRAN-vs-hand-roll) via a single
+`AskUserQuestion` round; owner selected this document's own recommended option in all four: build
+both a pedigree-valid primary metric (Hill & Weir-style) and a caveated descriptive secondary metric
+(pairwise D'/r2); add a multiallelic-tolerant sibling ingestion validator; a new tab inside the
+existing `modMarkerGenetics.R`; hand-roll the D'/r2 computation, no new CRAN dependency. Recorded the
+outcome in the document's own SS11. **(7)** Cross-reference verification: all 27 cited file paths
+confirmed to exist via direct `test -f` checks, plus a spot-check of the module-wiring line-number
+citations (`R/modMarkerGenetics.R` tab list, `R/appServer.R:438`, `R/appUI.R` tab structure) before
+close-out. **(8)** This evaluation, self-assessment below, `BACKLOG.md` progress note,
+`CHANGELOG.md` `[issue #153]` entry, `HANDOFFS.md` receipt completed. No `gh issue close` -- design
+ratified, not implemented, matching every precedent in this cluster.
+
+**Self-assessment (Session 519): 8/10.** **Strengths:** (1) Directly verified the single most
+load-bearing codebase finding (`checkMarkerGenotypeFile()`'s hard multiallelic rejection) by reading
+the actual file rather than trusting the research agent's own quote of it -- confirmed correct, and
+this became the load-bearing evidence for D4, the session's highest-leverage new-code decision. (2)
+Did not let the domain-research agent's literature survey settle for "classical LD/block methods
+exist, use one" -- pushed to find and cite the specific, named source (Excoffier & Slatkin 1998)
+establishing that those methods are statistically biased for a *related* sample, which directly
+justified building a second, genuinely pedigree-valid metric (Hill & Weir 2011) rather than shipping
+only the classical-but-biased one. (3) Found and used a directly-on-point, current (2025) real
+captive-macaque-colony STR-panel source (de Groot et al.) rather than settling for generic
+population-genetics literature -- this single source drove two separate, consequential design
+decisions (D2's metadata-sparsity assumption and D4's multiallelic-ingestion decision), grounding
+both in what a real colony genetics program's data actually looks like rather than an assumed ideal.
+(4) Explicitly flagged what this session's research did NOT fully resolve (Hill & Weir's exact
+closed-form formula, PLINK/LDheatmap's precise archival-reason causality, `gap`'s relatedness-
+handling in its LD-specific functions) as named uncertainty flags rather than silently smoothing them
+into confident-sounding prose -- carried into SS7 "Here be dragons" as real, actionable research risk
+for the implementing session, not omitted. (5) Verified every one of the 27 cited file paths exists
+before close-out, not just the handful directly read in this session. **Weaknesses:** (1) The 5-slice
+implementation plan's function names (`checkLinkageMarkerGenotypeFile()`, `markerRealizedRelatedness
+Variance()`, `markerLdBlock()`, `obfuscateLdBlocks()`) are explicitly marked provisional and were not
+cross-checked against this package's existing naming conventions as rigorously as the #152 plan's own
+interface catalog was (that plan's own PRE-RED explicitly verified naming precedent; this session
+named functions by analogy without a dedicated naming-convention grep pass). (2) D3's "build both
+metrics" recommendation, while well-grounded in the literature split (one method valid, one biased),
+was not weighed against a session-boundary/scope-creep risk explicitly -- two genuinely new
+statistical methods in one future implementation slice-set is more ambitious than #152's single-new-
+statistic (F_ROH) scope, and a future Slice 3/4 split session should watch for this. (3) Did not
+independently verify the rhesus-macaque genetic-map papers' (Rogers 2006, Xue 2020, Versoza 2023) own
+methodology beyond what the domain-research agent's summary reported -- reasonable for a Pre-RED
+design pass grounding a scope decision, but a future implementing session citing these in roxygen
+`@references` should read the primary sources directly, not this document's secondhand summary.
+
+**Ledger:** recorded in `CHANGELOG.md` across 2 entries this session (S519 claim entry, and this
+close-out's final entry) -- both `[issue #153]`, closing out the design deliverable this session's
+own scope produced (issue #153 itself stays open, per precedent -- design ratified, not
+implemented).
 
 ### Session 517 Handoff Evaluation (by Session 518)
 **Score: 7/10.** **What helped:** the `next_steps` field's mention of the ledger-size HIGH risk as
