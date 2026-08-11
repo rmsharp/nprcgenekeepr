@@ -60,3 +60,6 @@ revdep/
 inst/extdata/reference/5201430.pdf
 inst/extdata/reference/bioinformatics_24_2_279.pdf
 inst/extdata/reference/pedigree_nomenclature.html
+
+# Python bytecode cache from methodology_dashboard.py/methodology_trim.py (Session 514)
+__pycache__/

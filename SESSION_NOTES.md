@@ -6,15 +6,97 @@
 
 ## ACTIVE TASK
 
+### Session 513 Handoff Evaluation (by Session 514)
+**Score: 8/10.** **What helped:** the `HANDOFFS.md` S513 receipt's `next_steps` field named the 3
+lower-priority items its own Phase 0 priorities list rendered but the owner didn't pick, one of
+which -- "issue #150's policy decision (owner review needed, not an engineering task)" -- is
+exactly what this session's own owner-picked priorities list surfaced and what got picked. The
+"not an engineering task" framing correctly primed this session to lead with an `AskUserQuestion`
+policy decision before any research, matching the sequencing audit's own Finding #3 recommendation
+almost verbatim. Gotcha (2) (`lintr::lint_package()`, never `linters_with_defaults()`) remains
+accurate, though not exercised this session (zero code touched -- design-only). **What was
+missing:** nothing that blocked this session -- the handoff correctly scoped items outside its own
+issue #151 cluster as pointer-only (no file/line detail), which is appropriate since S513 had not
+researched #150 itself; this session's own PRE-RED research (§2 of the new design doc) had to be
+done from scratch, as expected for a new workstream. **What was wrong:** nothing found -- the
+`commit: pending` field remains unreconciled to a real sha, matching the same pattern already
+noted (not fixed) in S512's own receipt; this appears to be a standing, accepted convention per
+`HANDOFFS.md`'s own documented write-time constraint, not a defect specific to S513.
+**ROI:** High -- the accurate `next_steps` pointer to issue #150 (and its correct "policy, not
+engineering" framing) shaped how this session opened, at zero cost to verify.
+
 ### What Session 514 Did
-**Deliverable:** Issue #150 (de-identified pedigree export workflow) -- resolve the owner policy
-decision the `GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` Finding #3 flagged, and if
-approved, produce a ratified architecture/design document, following
-`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`. (IN PROGRESS)
-**Started:** 2026-08-10.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+**Deliverable:** Issue #150 (de-identified pedigree export workflow) -- resolved the owner policy
+decision `GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` Finding #3 flagged, and produced a
+ratified architecture/design document, following
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`. Design-only session, matching the
+#133/#136/#137/#145/#146/#147/#149/#151 precedent -- zero `R/`/`tests/`/`man/` changes.
+**Started/Completed:** 2026-08-10.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh
+issue list`, git status/log, `methodology_dashboard.py` -- health 96/100, 1 HIGH risk: ledger-size
+confirmed via `methodology_trim.py --check` on all 4 ledger files: `SESSION_NOTES.md`/`BACKLOG.md`
+have no trim config at all; `CHANGELOG.md`/`HANDOFFS.md` both have configs and both triggers
+currently fire). Ledger reconcile clean (`CHANGELOG.md`/`HANDOFFS.md` frontiers already at `HEAD`).
+Cross-checked both standing sequencing audits (genetic-metrics and pedigree-diagram clusters)
+against current `gh issue list`/`BACKLOG.md` state and confirmed all of each cluster's Tier 1/Tier
+2 ready-to-build items are now fully shipped and closed -- what remains in each is exactly what the
+priorities list below reflects. Rendered the priorities list via `AskUserQuestion`; owner picked
+issue #150's policy decision. **(2)** Phase 1B claim stub committed (`f6248e40`). **(3)** Put the
+sequencing audit's own Finding #3 policy question to the owner directly via `AskUserQuestion`
+before any technical research, per the audit's own recommendation: owner chose "yes, formalize it."
+**(4)** PRE-RED research (`ARCHITECTURE_WORKSTREAM.md` Phase 2): direct reads of
+`R/obfuscateId.R`/`R/obfuscateDate.R`/`R/obfuscatePed.R`/`R/mapIdsToObfuscated.R`/`R/calcAge.R`/
+`R/columnSchema.R`, the closest UI precedent `R/modCrossCenterIdentity.R` in full, `R/appServer.R`/
+`R/appUI.R` wiring conventions, `docs/architecture/module-contract.md`, and
+`tests/testthat/test_obfuscatePed.R`. Found `shared$currentPedigree` (not a fresh upload) is the
+correct data source, contra a naive read of #149's own upload-based precedent. **Found and
+empirically verified a real, previously-unflagged defect** (not assumed from reading the code
+alone): `obfuscatePed()` shifts each Date column independently, which can invert an individual's
+`birth`/`exit` order and produce a negative recomputed age -- reproduced via a seeded `Rscript`
+against the bundled `pedGood` fixture (25% of a small realistic-gap test case). **(5)** Wrote
+`docs/planning/issue150-deidentified-pedigree-export-plan.md` (11 sections, matching the
+established template: context, evidence-based inventory, design decisions, interface catalog,
+2-slice implementation plan, impact analysis, 4 dragons, alternatives considered, close-out
+checklist mapping, provenance, ratification status). **(6)** Ratified 4 genuine judgment calls via
+one `AskUserQuestion` round (D3 fix the date defect now in Slice 1, default `linkedDateShift =
+TRUE`; D6 explicit institutional-responsibility warning text, this app's first; D8 disclose rather
+than scrub non-id/date fields; D10 tab placement after Cross-Center Identity) -- owner selected
+this document's own recommended option in all four, no changes requested. **(7)** Posted a
+ratified-design summary comment on GitHub issue #150
+(https://github.com/rmsharp/nprcgenekeepr/issues/150#issuecomment-5248437483), matching the
+#149/#151 precedent; issue #150 stays intentionally open (design ratified, not yet implemented).
+**(8)** Housekeeping: a stray `__pycache__/` byproduct from this session's own
+`methodology_dashboard.py`/`methodology_trim.py` runs added to `.gitignore` and removed (was never
+gitignored before; confirmed via `git log` this directory has no prior tracked history). **(9)**
+This evaluation, self-assessment below, `PROJECT_LEARNINGS.md` Learning 515, `CHANGELOG.md`
+`[issue #150]` entry, `HANDOFFS.md` receipt completed.
+
+**Self-assessment (Session 514): 9/10.** **Strengths:** (1) Followed the sequencing audit's own
+Finding #3 recommendation literally -- put the exact policy question to the owner, in the owner's
+own words, before starting any technical design work, rather than assuming approval or silently
+designing around the open question. (2) Found and empirically verified (not assumed) a genuine,
+previously-shipped, previously-untested defect in `obfuscatePed()`'s date handling directly
+relevant to this feature's own core correctness promise ("relationship-preserving"), via a
+reproducible, seeded `Rscript` test against real bundled fixture data -- not a hypothetical
+concern. (3) Correctly identified that issue #150's data-source shape differs from the nearest
+precedent (#149's upload-based module) by reading `R/appServer.R`'s actual wiring for every other
+module, rather than pattern-matching #149's shape onto #150 by surface similarity. (4) Kept the
+judgment-call count to exactly 4 genuine decisions (matching the #146/#147/#149 precedent) by
+correctly classifying D1/D2/D4/D5/D7/D9 as forced/mechanical rather than padding the
+`AskUserQuestion` round with decisions that were not really the owner's to make. (5) Posted the
+GitHub issue comment matching established precedent, and correctly left the issue open
+(design-only, not implemented). **Weaknesses:** (1) Did not use a multi-agent research `Workflow`
+for the PRE-RED reading (direct `Read`/`Grep`/`Bash`, matching the majority of recent design
+sessions in this cluster) -- no `Workflow`-opt-in signal present, and the codebase surface here was
+narrow enough (4 existing functions, 1 precedent module) for direct reading to be efficient. (2)
+`SESSION_NOTES.md`/`BACKLOG.md` size crisis (flagged S509-S513, now a 6th consecutive session)
+remains unaddressed -- correct protocol (owner picked #150 over it), but this session's own
+additions grow `SESSION_NOTES.md` further still, same as every session before it.
+
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session), `[issue #150]` tag. Issue #150
+stays open (design ratified, not implemented) -- no `gh issue close` this session.
 
 ### Session 512 Handoff Evaluation (by Session 513)
 **Score: 8/10.** **What helped:** the `HANDOFFS.md` S512 receipt's `next_steps` field named exactly

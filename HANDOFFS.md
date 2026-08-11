@@ -123,19 +123,76 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S514
 date: 2026-08-10
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Issue #150 (de-identified pedigree export workflow) -- resolve the owner policy
-decision (GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md Finding #3), and if approved,
-produce a ratified architecture/design document per ARCHITECTURE_WORKSTREAM.md.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: Issue #150 (de-identified pedigree export workflow) design is DONE and RATIFIED.
+Issue #150 stays open -- Slice 1 (obfuscatePed() date fix + manifest helper) is the next pickup, a
+separate future session.
+what_was_done: Put the sequencing audit's own Finding #3 policy question to the owner via
+AskUserQuestion before any research (owner: yes, formalize it). Wrote
+docs/planning/issue150-deidentified-pedigree-export-plan.md (11 sections: context, evidence-based
+inventory, design decisions, interface catalog, 2-slice implementation plan, impact analysis, 4
+dragons, alternatives, close-out checklist mapping, provenance, ratification status) following
+ARCHITECTURE_WORKSTREAM.md. Direct reads of obfuscateId/obfuscateDate/obfuscatePed/
+mapIdsToObfuscated/calcAge/columnSchema.R, R/modCrossCenterIdentity.R in full (closest UI
+precedent), R/appServer.R/R/appUI.R wiring, module-contract.md, test_obfuscatePed.R. Found
+shared$currentPedigree (not a fresh upload) is the correct data source. Found and empirically
+verified (seeded Rscript against the bundled pedGood fixture, 25% hit rate) a real,
+previously-unflagged defect: obfuscatePed()'s independent per-column date shifting can invert
+birth/exit order and produce a negative recomputed age. Ratified 4 judgment calls via one
+AskUserQuestion round (D3 fix the defect now in Slice 1 via a new linkedDateShift parameter
+defaulting TRUE; D6 explicit institutional-responsibility warning text; D8 disclose non-id/date
+fields rather than scrub; D10 tab placement after Cross-Center Identity) -- owner selected the
+recommended option in all 4. Posted a ratified-design summary comment on GitHub issue #150.
+Housekeeping: gitignored + removed a stray __pycache__/ byproduct from this session's own tool
+runs. PROJECT_LEARNINGS.md Learning 515 (the obfuscatePed() date-shift defect). Commits: f6248e40
+(claim), plus this close-out commit.
+next_steps: Slice 1 of docs/planning/issue150-deidentified-pedigree-export-plan.md -- R/obfuscatePed.R
+gains a linkedDateShift parameter (default TRUE, D3), plus a new internal
+.buildDeidentificationManifest() helper in a new R/modDeidentifiedExport.R (D4), full strict-TDD
+PRE-RED->RED->GREEN cycle. Start from the plan's own §4 interface catalog and §5 Slice 1
+files-to-touch/DONE criteria; the RED test should assert exit-birth INVARIANCE under obfuscation
+(not just non-negativity -- see the plan's own §7 Dragon 2 on why a naive per-column loop with a
+fixed seed does not actually fix this). Slice 2 (full UI module, confirm gate, exports,
+documentation) is a separate future session per the plan's own session-boundary requirement.
+Outside this cluster, the other 3 lower-priority items this session's own Phase 0 priorities list
+rendered but the owner did not pick remain open: (1) SESSION_NOTES.md/BACKLOG.md ledger-size
+scoping session (READY, Effort M -- flagged 6 consecutive sessions now, S509-S514, no trim config
+exists for either file); (2) a routine methodology_trim.py --write run on CHANGELOG.md/HANDOFFS.md
+(both triggers fire, both already have working configs -- purely mechanical); (3) filing 2 new
+GitHub tracking issues for the genetic-metrics sequencing audit's own Finding #1 gaps
+("Longitudinal genetic-health monitoring", "Ancestry guardrails in breeding decisions") -- its own
+Recommendation 2, still undone.
+key_files: docs/planning/issue150-deidentified-pedigree-export-plan.md (the ratified design -- §3
+D1-D10, §4 interface catalog, §5 Slice 1/Slice 2 file lists, §7 the 4 dragons); R/obfuscatePed.R
+(Slice 1's edit target, do not change its existing id/name-scrub behavior, only add
+linkedDateShift); R/calcAge.R (the downstream function that turns a birth>exit inversion into a
+negative age -- read this alongside any Slice 1 fix); R/modCrossCenterIdentity.R (the closest
+existing module shape to mirror for Slice 2 -- modalDialog confirm gate + multi-downloadButton
+export pattern).
+gotchas: (1) A naive Slice-1 implementation that calls obfuscateDate() once per Date column even
+with a fixed per-row seed does NOT fix the defect -- R's RNG stream advances per draw regardless of
+a seed set once at the top, so each column still gets a genuinely different offset. The fix must
+draw exactly ONE random value per individual and apply it to every Date column for that row (plan
+§7 Dragon 2) -- write the RED test as an invariance assertion (exit-birth unchanged after
+obfuscation), not a bounds assertion (non-negative age), since a bounds-only test can pass by luck
+on some seeds while the underlying mechanism is still wrong. (2) This is a default-behavior change
+to an already-shipped @export-ed function (obfuscatePed()) -- confirmed via reading
+test_obfuscatePed.R in full that no existing test pins independent-per-column shifting, so this is
+safe, but it still needs its own NEWS.Rmd entry documenting the additive behavior change, matching
+the #149 D10 precedent. (3) modDeidentifiedExportServer must read shared$currentPedigree (D1) --
+do NOT copy #149's own fileInput-based upload shape; that was a deliberate, documented EXCEPTION to
+the majority module-wiring pattern for a reason (#149 compares two different centers' pedigrees)
+that does not apply here. (4) The ledger-size crisis (SESSION_NOTES.md/BACKLOG.md, no trim config)
+is now a 6-session pattern (S509-S514) -- a near-future session should seriously consider picking
+it over a 7th deferral.
+runtime_smoke: n/a -- docs-only session (one new file, docs/planning/issue150-deidentified-pedigree-
+export-plan.md; SESSION_NOTES.md/HANDOFFS.md/CHANGELOG.md/PROJECT_LEARNINGS.md/.gitignore updates).
+Zero R/tests/man changes; nothing to smoke-test.
+changelog_ref: this session's close-out commit, [issue #150] tag
+commit: pending -- reconciled by the next session's Phase 0, per this receipt's own documented
+write-time constraint (it ships in the very commit whose sha it would name).
 ```
 <claimed at Phase 1B; overwritten with the full receipt at Phase 3D close-out>
 
