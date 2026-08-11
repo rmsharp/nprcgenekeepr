@@ -135,6 +135,13 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-08-11.md.verify.sh`](docs/archive/CHANGELOG-through-2026-08-11.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-08-11 · [issue #153] S521 claim: issue #153 Slice 2 (multiallelic-tolerant ingestion validator) (Session 521)
+- **Deliverable:** Session claimed. `checkLinkageMarkerGenotypeFile()` (design D4), per
+  `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` §5 Slice 2 — proven against
+  Slice 1's committed STR fixture, plus a regression proof that `checkMarkerGenotypeFile()`/
+  `markerKinship()`'s existing biallelic contract stays untouched. Full strict TDD cycle to follow.
+- **Ledger:** this entry; close-out entry to follow at Phase 3F.
+
 ### 2026-08-11 · [issue #153] S520 close-out: Slice 1 (locus-metadata ingestion + coverage validator + STR fixture) shipped (Session 520)
 - **Deliverable:** Issue #153 Slice 1, per `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md`
   §5 Slice 1 — new script-callable `checkLocusMetadata()` (validates a `locus, chrom, pos[, cM]`

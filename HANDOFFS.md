@@ -121,6 +121,24 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-10.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S521
+date: 2026-08-11
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Issue #153 Slice 2 -- checkLinkageMarkerGenotypeFile(), the multiallelic-tolerant
+sibling ingestion validator (design D4). Session claimed, work beginning.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<pending -- filled at close-out>
+
+```handoff
 session: S520
 date: 2026-08-11
 status: complete

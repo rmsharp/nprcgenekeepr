@@ -6,6 +6,19 @@
 
 ## ACTIVE TASK
 
+### What Session 521 Did
+**Deliverable:** Issue #153 Slice 2 -- `checkLinkageMarkerGenotypeFile()`, the multiallelic-tolerant
+sibling ingestion validator (design D4), per
+`docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` §5 Slice 2. Full strict TDD
+PRE-RED->RED->GREEN->REFACTOR cycle, each transition `AskUserQuestion`-gated, following
+`DEVELOPMENT_WORKSTREAM.md`. Picked from this session's own Phase 0 priorities list (owner choice
+via `AskUserQuestion`) as the first of four directly-pickable options.
+**Started:** 2026-08-11.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 519 Handoff Evaluation (by Session 520)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S519 receipt's `next_steps` field explicitly
 named "#153's own Slice 1 (locus-metadata ingestion + a new multiallelic STR fixture) is genuinely
