@@ -6,14 +6,121 @@
 
 ## ACTIVE TASK
 
+### Session 516 Handoff Evaluation (by Session 517)
+**Score: 9/10.** **What helped:** the `HANDOFFS.md` S516 receipt's `next_steps` field named this
+session's exact deliverable -- "the Deferred design-only tier's own next item, #152 ... needs its
+own Pre-RED scoping/design session before any technical work, ordered ahead of #153 ... and #148"
+-- with the correct citation (`docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md`)
+and the correct ordering rationale, both verified directly against that audit at PRE-RED rather than
+trusted. `key_files`' pointer to `R/modDeidentifiedExport.R` as "the reference shape for any future
+... module" was directly useful, though not in the way the receipt implied: this session did not
+build a new no-upload module (that shape didn't fit issue #152's needs), but D7's de-identification
+decision reused `modDeidentifiedExport.R`'s confirm-gate/manifest/re-identification-key export
+pattern and `obfuscateTwinRelations()`'s sidecar-scrub convention directly -- the file was the right
+one to have read, for a different specific reason than stated. The `gotchas` (set_seed(), `git stash
+-u`, ambiguous tab-selector scoping) were all correctly still-current but none were exercised this
+session (design-only, no test/UI code written) -- appropriately unactionable rather than wrong.
+**What was missing:** nothing the predecessor could reasonably have anticipated -- the specific
+research findings that shaped today's actual design decisions (the Bimber et al. 2016
+captive-macaque-GBS-scale precedent; `markerKinship()`'s O(n²·L) nested-loop bottleneck; the VCF
+file-size scale reality) are exactly what a Pre-RED design session exists to discover, not something
+a predecessor's handoff could have pre-supplied. **What was wrong:** one small, internal
+inconsistency in S516's own close-out artifacts, not something that affected this session's work:
+the `HANDOFFS.md` receipt states the ledger-size risk is "unadressed for 9 consecutive sessions"
+while S516's own `SESSION_NOTES.md` entry (below) states "flagged 8 consecutive sessions" -- the two
+numbers disagree by one within the same session's own close-out. Flagged, not corrected (S516 already
+closed out); this session used the `SESSION_NOTES.md` figure (8) in its own Phase 0 report. Separately
+-- not a defect in the receipt, but worth naming here since this session's own orientation report
+described the `methodology_trim.py` archive tool as "new this session's orientation": a closer read
+of S514's own `SESSION_NOTES.md` entry (available at the time, not re-checked before writing that
+sentence) shows the tool and its first archive round (`0929172a`/`d07814a7`) actually predate S514's
+own Phase 0, not just S516's -- the tool was not new to the project, only newly surfaced *in this
+session's own report*. A minor overstatement in this session's own reporting, corrected here rather
+than left standing. **ROI:** High -- the `next_steps` field's deliverable identification was exactly
+right and saved a full priorities-list re-derivation; the `key_files` pointer, while off on the
+specific mechanism, was still the single most useful file to have read for this session's D7
+decision.
+
 ### What Session 517 Did
 **Deliverable:** Issue #152 (whole-genome/whole-exome sequence input + sequence-based genetic
-metrics) -- Pre-RED design/architecture document (IN PROGRESS)
-**Started:** 2026-08-11
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+metrics) -- Pre-RED design/architecture document, following
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md` -- design-only session, matching the
+#133/#136/#137/#145/#146/#147/#149/#150/#151 precedent, zero `R/`/`tests/`/`man/` changes. Picked
+from this session's own Phase 0 priorities list (owner choice via `AskUserQuestion`) as the sole
+Deferred-tier READY item, per the S516 handoff's own `next_steps` and the ratified sequencing audit's
+own ordering (#152 > #153 > #148).
+**Started/Completed:** 2026-08-11.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue
+list`, git status/log, `methodology_dashboard.py` -- health 96/100, 1 HIGH risk: the 3-file
+ledger-size condition, still unaddressed. Ledger reconcile clean (`CHANGELOG.md`/`HANDOFFS.md`
+frontiers already at `HEAD`, no undocumented commits, no pending receipts, no untracked
+ghost-session files). Cross-checked both standing sequencing audits (genetic-metrics and
+pedigree-diagram clusters) against current `gh issue list`/`BACKLOG.md` state and confirmed all of
+each cluster's Tier 1/Tier 2/Tier 3 ready-to-build items (#133/#136/#137/#145/#146/#147/#149/#150/
+#151) are now fully shipped and closed. Rendered the priorities list via `AskUserQuestion` (4
+options: #152 design session READY; file 2 new tracking issues READY; ledger-size trim READY; NPRC
+outreach DECISION NEEDED); owner picked #152. **(2)** Phase 1B claim stub committed (`9ff9d74a`).
+**(3)** PRE-RED research: two parallel background agents -- a codebase-inventory `Explore` agent
+(direct reads of both existing genotype-input pathways, the full marker function family with
+complexity/scale analysis, `modMarkerGenetics.R`'s module shape and `appServer.R` wiring, the
+de-identification pattern, `DESCRIPTION` dependencies, `module-contract.md`, and the fixture gap --
+all with file:line citations) and a domain-research `general-purpose` agent (VCF format reality,
+rhesus-macaque WGS/WES scale figures, sequence-based metrics literature, storage/privacy findings,
+precedent-software survey) -- plus this session's own direct verification of the single most
+load-bearing prior decision (issue #130 plan's D2, the ratified Bioconductor-Imports decline).
+Found: `markerKinship()`'s O(n²·L) nested-pair loop and `markerParentageLikelihood()`'s O(F·C·L·n)
+redundant per-candidate allele-frequency rescan are the real scale bottlenecks, independent of the
+biallelic question; a directly-applicable captive-pedigreed-macaque-colony precedent (Bimber et al.
+2016, ~22,455-marker GBS panel + imputation) answers "how much sequence data is realistic"; raw VCF
+ingestion is infeasible on pure file-size grounds (144 GB-900 TiB class); summary statistics from
+genotype data are not an automatic privacy safe-harbor (Homer et al. 2008). **(4)** Wrote
+`docs/planning/issue152-sequence-input-genetic-metrics-plan.md` (11 sections, mirroring the #150
+plan's own template: Context, Evidence-based inventory, 10 Design decisions D1-D10 tagged
+forced/judgment-call, Interface catalog, 5-slice Implementation plan, Impact analysis, Here be
+dragons, Alternatives considered, Close-out checklist mapping, Provenance, Ratification status).
+**(5)** Ratified 4 genuine judgment calls (D1 scope tier, D3 locusMetadata sidecar timing, D6 initial
+metric set, D8 module boundary) via a single `AskUserQuestion` round; owner selected this document's
+own recommended option in all four: sparse/GBS-scale tier (~50,000-locus ceiling, no Bioconductor
+dependency reopened); build the `locusMetadata` sidecar now (shared vocabulary for future issue
+#153); F_ROH (new, Ceballos et al. 2018) + genome-scale reruns of existing kinship/heterozygosity/Fst
+(Ne-from-LD explicitly ceded to #153); a new tab inside `modMarkerGenetics.R`, not a dedicated new
+module. Recorded the outcome in the document's own §11. **(6)** Cross-reference verification: all 16
+cited file paths (7 `docs/`, 9 `R/`) confirmed to exist via direct `test -f` checks before close-out.
+**(7)** This evaluation, self-assessment below, `BACKLOG.md` progress note, `CHANGELOG.md`
+`[issue #152]` entry, `HANDOFFS.md` receipt completed. No `gh issue close` -- design ratified, not
+implemented, matching every precedent in this cluster.
+
+**Self-assessment (Session 517): 8/10.** **Strengths:** (1) Verified the single most load-bearing
+prior decision (issue #130 D2's Bioconductor decline) via a direct source re-read rather than trusting
+the research agent's own summary of it -- caught nothing wrong, but the check was real, not
+performative. (2) Grounded every literature claim in the domain-research agent's report with a named
+paper/tool/year, and used the one directly-applicable captive-pedigreed-macaque precedent (Bimber et
+al. 2016) as the actual basis for the D1 scope-tier number, rather than picking an arbitrary round
+number. (3) Explicitly separated "forced" from "judgment call" decisions and, within the judgment
+calls, recognized that D5 (the performance-rewrite prerequisite) was not a genuinely live choice
+(its only alternative was already shown unacceptable by its own rationale) and excluded it from the
+vote rather than padding the `AskUserQuestion` round to look more thorough -- matching this project's
+own "don't manufacture false choices" discipline. (4) Explicitly defined new vocabulary (`locus`,
+`variant`, `locusMetadata`) to avoid colliding with #148's "haplotype" and #153's future "block"
+usage, catching a naming-collision risk before it could recur, not after. **Weaknesses:** (1) This
+session's own Phase 0 orientation report described the `methodology_trim.py` tool as "new this
+session's orientation" without first checking whether an earlier session had already found and used
+it -- it had (S514), which this session's own Phase 3A re-read caught and corrected, but the original
+report should have been accurate the first time. (2) No independent verification pass (e.g. a second
+agent tasked specifically with trying to refute the D1 scale-ceiling number or the D5
+complexity-class claims) was run against either research agent's own findings before they became
+load-bearing design decisions -- for a design session whose central claims (O(n²·L), the 50,000-locus
+ceiling, the VCF size figures) will govern several future implementing sessions' own scope, a
+one-pass "trust the agent, spot-check the single most load-bearing citation" approach is lighter
+verification than the #137 design session's own precedent (which ran a 3-agent adversarial review
+of a drafted document before ratification, catching a real counter-example). This is the fair
+comparison point for a design-only session's rigor bar, and this session did not meet it.
+
+**Ledger:** recorded in `CHANGELOG.md` at close-out (this session), `[issue #152]` tag. Issue #152
+stays **open** (design ratified, not implemented) -- no `gh issue close` this session, matching every
+precedent design session in this cluster.
 
 ### Session 515 Handoff Evaluation (by Session 516)
 **Score: 10/10.** **What helped:** the `HANDOFFS.md` S515 receipt's `next_steps` field named this

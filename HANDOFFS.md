@@ -123,21 +123,88 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S517
 date: 2026-08-11
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Issue #152 (whole-genome/whole-exome sequence input + sequence-based genetic
-metrics) -- Pre-RED design/architecture document. Design-only session, matching the
-#133/#136/#137/#145/#146/#147/#149/#150/#151 precedent.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Issue #152's design/architecture document is DONE and RATIFIED
+(docs/planning/issue152-sequence-input-genetic-metrics-plan.md). Design-only, zero R/tests/man
+changes. Issue #152 stays open -- design ratified, not implemented. Next Deferred-tier item per the
+ratified sequencing audit: #153 (linkage-aware/haplotype-block metrics), which can reuse this
+session's own locusMetadata vocabulary; #148 (MHC) still needs its own scope-narrowing conversation
+first.
+what_was_done: Two parallel background research agents (Explore: codebase inventory of both
+genotype-input pathways, the full marker function family with complexity/scale analysis,
+modMarkerGenetics.R's module shape, the de-identification pattern, DESCRIPTION deps,
+module-contract.md, the fixture gap; general-purpose: VCF format reality, rhesus WGS/WES scale
+figures, sequence-based metrics literature, storage/privacy findings, precedent-software survey),
+plus direct verification of issue #130 plan's D2 (ratified Bioconductor-Imports decline -- the most
+load-bearing prior decision). Wrote docs/planning/issue152-sequence-input-genetic-metrics-plan.md
+(11 sections: Context, Evidence-based inventory, 10 Design decisions D1-D10 tagged
+forced/judgment-call, Interface catalog, 5-slice Implementation plan, Impact analysis, Here be
+dragons, Alternatives considered, Close-out checklist mapping, Provenance, Ratification status).
+Ratified 4 judgment calls (D1 scope tier, D3 locusMetadata timing, D6 metric set, D8 module
+boundary) via one AskUserQuestion round -- owner picked the recommended option in all four. Commits:
+9ff9d74a (claim), plus this close-out commit.
+next_steps: Slice 1 of the ratified #152 plan (docs/planning/issue152-sequence-input-genetic-metrics-plan.md
+§5) is the natural next pickup for this specific item: a new checkSequenceGenotypeFile() validator +
+locusMetadata schema (D2/D3/D4) + a synthetic multi-locus genotype fixture (D10 -- none exists in the
+repo at all today, a pre-existing gap from issue #130's own unresolved P3 note). Slice 2 (the
+required markerKinship()/markerParentageLikelihood() performance rewrite, D5) must land before any
+genome-scale claim ships, even though it has no user-visible output of its own. Per the sequencing
+audit's own Deferred-tier order, #153's own design session (reusing this session's locusMetadata
+vocabulary) or #148's scope-narrowing conversation are the alternative next items in this cluster if
+#152 implementation is not picked up next. Also still open, unaddressed for 8-9 consecutive sessions
+per differing S516 counts (see gotcha 4): the SESSION_NOTES.md/CHANGELOG.md/BACKLOG.md 3-file
+ledger-size HIGH risk -- methodology_trim.py has run once already (commits 0929172a/d07814a7,
+predating S514) but both CHANGELOG.md/HANDOFFS.md triggers fire again, and SESSION_NOTES.md/
+BACKLOG.md still have no tool config at all.
+key_files: docs/planning/issue152-sequence-input-genetic-metrics-plan.md (this session's complete
+deliverable -- §2.2's complexity table and §3's D1-D10 decisions are the load-bearing content for any
+implementing session); R/markerKinship.R:64-109 and R/markerParentageLikelihood.R:160-313,236 (the
+two functions needing the Slice 2 performance rewrite before genome scale); R/checkMarkerGenotypeFile.R
+and R/buildMarkerGenotypeMatrix.R (the existing schema Slice 1 extends, not replaces);
+R/modDeidentifiedExport.R and R/obfuscateTwinRelations.R (the de-identification pattern Slice 4
+reuses); docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md D2/P5 (the Bioconductor
+-decline guardrail any future session must not silently reopen).
+gotchas: (1) This design's ~50,000-locus scope ceiling (D1) is a judgment call grounded in one
+literature precedent (Bimber et al. 2016), not a measured limit of this package's own code -- no
+benchmark exists yet; Slice 2's own benchmark is the first real test of whether that number holds.
+(2) D7 (de-identification) does NOT perturb genotype/allele values themselves -- there is no
+scientifically-valid "obfuscation" of an allele call the way there is for a date or a name, so the
+confirm-gate/labeling protection is inherently weaker for sequence data than for issue #150's
+pedigree export; state this plainly in any future warning text, don't imply parity. (3) D5's
+performance rewrite must produce BYTE-IDENTICAL output to the current markerKinship()/
+markerParentageLikelihood() on every existing small fixture -- this is an implementation-strategy
+change (nested loop -> Matrix-based matrix algebra; redundant rescan -> precomputed frequency table),
+not a new statistical method, and any implementing session must prove that with a regression test,
+not just "still passes." (4) S516's own close-out artifacts disagree with each other by one on the
+ledger-size flag's consecutive-session count (HANDOFFS.md says 9, SESSION_NOTES.md says 8) --
+harmless, but worth reconciling if a future session addresses that item, so the count doesn't drift
+further.
+runtime_smoke: n/a -- docs-only design session, no runtime behavior changed (matching the
+#133/#136/#137/#145/#146/#147/#149/#150/#151 precedent for design-only sessions).
+changelog_ref: CHANGELOG.md 2026-08-11 "[issue #152] Pre-RED design/architecture document" entry
+(Session 517).
+commit: pending -- reconciled by the next session's Phase 0, per this receipt's own documented
+write-time constraint (the receipt ships in the very commit whose sha it would name).
 ```
-(stub written at Phase 1B claim; overwritten at close-out)
+<Session 517 self-assessment: 8/10. Strengths: (1) verified the single most load-bearing prior
+decision (issue #130 D2's Bioconductor decline) via a direct source re-read rather than trusting the
+research agent's own summary; (2) grounded every literature claim with a named paper/tool/year, using
+the one directly-applicable captive-pedigreed-macaque precedent (Bimber et al. 2016) as the actual
+basis for the D1 scope-tier number rather than an arbitrary round number; (3) explicitly excluded D5
+from the AskUserQuestion vote once its only alternative was shown operationally unacceptable by its
+own rationale, rather than padding the round to look more thorough; (4) defined new vocabulary
+(locus/variant/locusMetadata) explicitly to avoid colliding with #148's "haplotype" and #153's future
+"block" usage. Weaknesses: (1) this session's own Phase 0 orientation report described
+methodology_trim.py as "new this session's orientation" without first checking whether an earlier
+session (S514) had already found and used it -- caught and corrected at Phase 3A, but should have
+been accurate the first time; (2) no independent adversarial-verification pass was run against either
+research agent's own findings before they became load-bearing design decisions, unlike the #137
+design session's own 3-agent adversarial-review precedent for a drafted document -- a lighter
+verification bar than this cluster's own established rigor standard for a design whose central claims
+will govern several future implementing sessions' scope.>
+
 
 ```handoff
 session: S516
