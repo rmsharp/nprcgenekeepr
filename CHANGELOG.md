@@ -131,6 +131,25 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-11 · [ad hoc] Claimed S518 (3-file ledger-size housekeeping); added SESSION_NOTES.md config to methodology_trim.py (Session 518)
+- **Deliverable so far:** claimed the session (commit `2a7f9a0e`) for the dashboard's standing HIGH
+  risk (SESSION_NOTES.md/CHANGELOG.md/BACKLOG.md all past the 2,000-line read cap, flagged
+  unaddressed 8-9 consecutive sessions), scoped to SESSION_NOTES.md (config + first archive) and
+  CHANGELOG.md (archive) after finding BACKLOG.md's 10 standing topical sections don't fit this
+  tool's chronological-record model (deferred to a future editorial-compression session).
+- **Config added:** a `SESSION_NOTES.md` `LedgerSpec` entry in `methodology_trim.py` (record_start
+  matches `### Session N Handoff Evaluation (by Session N+1)` or `### What Session N Did`, verified
+  against all 577 matching headings in the file with zero shape variance; `footer_mode="none"`,
+  confirmed by direct inspection). **Local addition, not yet upstreamed**: `methodology_trim.py` is a
+  canonical-overlay file (`BOOTSTRAP.md`'s sync table) with no documented mechanism for a local
+  `LEDGERS` entry to survive the next `chore(methodology): sync framework update from canonical` --
+  flagged in-file and in `CLAUDE.md` for that future session to re-add.
+- **Why this entry exists mid-session, not only at close-out:** `methodology_trim.py`'s own P1
+  frontier check refuses to trim any file while `CHANGELOG.md`'s own commit frontier has an
+  undocumented gap (this session's own claim commit) -- this entry closes that gap so the planned
+  SESSION_NOTES.md/CHANGELOG.md archives can run. The session's remaining actions (the archives
+  themselves) get their own entries as they land.
+
 ### 2026-08-11 · [issue #152] Pre-RED design/architecture document -- whole-genome/whole-exome sequence input + sequence-based genetic metrics (Session 517)
 - **Deliverable:** `docs/planning/issue152-sequence-input-genetic-metrics-plan.md` -- ratified design/architecture document, following `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`, matching the #133/#136/#137/#145/#146/#147/#149/#150/#151 precedent. Design-only session, zero `R/`/`tests/`/`man/` changes. Picked from this session's own Phase 0 priorities list as the sole Deferred-tier READY item, per the ratified `docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` ordering (#152 > #153 > #148).
 - **Research:** two parallel background agents (a codebase-inventory `Explore` agent; a domain-research `general-purpose` agent), plus direct verification of the single most load-bearing prior decision (`docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md` D2, the ratified Bioconductor-Imports decline). Found `markerKinship()`'s O(n²·L) nested-pair loop and `markerParentageLikelihood()`'s O(F·C·L·n) redundant per-candidate allele-frequency rescan as the real, previously-unflagged scale bottlenecks (`PROJECT_LEARNINGS.md` Learning 519); a directly-applicable captive-pedigreed-macaque-colony precedent (Bimber et al. 2016, ~22,455-marker GBS panel + pedigree-aware imputation) grounding a realistic scope-tier ceiling; raw VCF ingestion infeasible on pure file-size grounds (144 GB-900 TiB class); summary statistics from genotype data are not an automatic privacy safe-harbor (Homer et al. 2008), so any sequence-derived export must route through the same curator-controlled gate issue #150 already shipped.

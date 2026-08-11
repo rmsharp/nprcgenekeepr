@@ -152,6 +152,21 @@ def _handoff_date(text):
     return m.group(1) if m else None
 
 
+def _session_notes_date(text):
+    # Best-effort, not authoritative: unlike CHANGELOG.md/HANDOFFS.md, a session's own write-up
+    # carries no single canonical date field. Tried first: this project's own labelled convention
+    # (**Started/Completed:**, **Started:**, **Completed:**, or the older **Date:**) — covers 243 of
+    # ~512 records by direct count. Falls back to the first bare YYYY-MM-DD substring anywhere in the
+    # record for the rest. Used only to LABEL a shard's span in its own header/pointer text — never
+    # compared against anything, so an imprecise date on an unlabelled record costs nothing L1/L2/L3
+    # would notice.
+    m = re.search(r"\*\*(?:Started(?:/Completed)?|Completed|Date)\s*:\*\*\s*(\d{4}-\d{2}-\d{2})", text)
+    if m:
+        return m.group(1)
+    m = re.search(r"\d{4}-\d{2}-\d{2}", text)
+    return m.group(0) if m else None
+
+
 LEDGERS = {
     "CHANGELOG.md": LedgerSpec(
         basename="CHANGELOG.md",
@@ -203,6 +218,33 @@ LEDGERS = {
         # is present AND there are no `session:` blocks below" — so the negation is `session:`,
         # not a dated heading. Fence-aware, so the seed's wrapped example does not count itself.
         seed_negation=re.compile(r"^session:\s"),
+    ),
+    # --- LOCAL ADDITION (nprcgenekeepr, S518, 2026-08-11) --------------------------------------
+    # methodology_trim.py is a canonical-OVERLAY file per BOOTSTRAP.md's sync table ("Tracked
+    # (canonical owns them) ... overlay — replace with the latest"), and the design doc that ships
+    # this LEDGERS table documents no mechanism for a project-local entry to survive that overlay.
+    # This entry is a real, working config — verified directly against this project's own
+    # SESSION_NOTES.md (577 record-start headings; every one checked for shape variance against the
+    # two patterns below, zero found) — but it WILL be silently dropped by the next
+    # `chore(methodology): sync framework update from canonical` overlay unless that session re-adds
+    # it first. See CLAUDE.md's "Additional close-out checks" for the standing reminder to do so.
+    "SESSION_NOTES.md": LedgerSpec(
+        basename="SESSION_NOTES.md",
+        record_kind="heading",
+        # One session's own write-up is TWO adjacent records under this grammar: the evaluation of
+        # its predecessor's handoff (absent for the ~447 oldest sessions, before Phase 3A existed)
+        # and its own "what I did". Splitting them (rather than pairing them into one record) needs
+        # no special-casing for the old, evaluation-less region — "What Session N Did" alone is
+        # present for all 512 sessions on its own, so no format-transition boundary need be declared.
+        record_start=re.compile(
+            r"^### (?:Session \d+ Handoff Evaluation \(by Session \d+\)|What Session \d+ Did)\b"),
+        # Confirmed by direct inspection: the file ends mid-record (Session 1's own self-assessment
+        # bullets) — no standalone '---' with trailing content after the last record start anywhere.
+        footer_mode="none",
+        date_of_record=_session_notes_date,
+        regenerated=(),
+        content_probe=re.compile(r"^(#{1,6} |\|).*\d{4}-\d{2}-\d{2}"),
+        seed_negation=None,
     ),
 }
 
