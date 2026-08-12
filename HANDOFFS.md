@@ -171,9 +171,9 @@ runtime_smoke: n/a -- docs-only, no R/tests/man/NAMESPACE/data content touched; 
 confirms only BACKLOG.md/CHANGELOG.md/PROJECT_LEARNINGS.md/SESSION_NOTES.md/HANDOFFS.md touched.
 changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12 (HANDOFFS.md reconcile, 2
 backfills, the Housekeeping-compression deliverable)
-commit: pending
+commit: 73327ca1 (reconciled S530 -- the session's actual final commit; unknowable at write time
+since the receipt necessarily precedes the commit it would name)
 ```
-<prose pending -- filled at Phase 3D close-out>
 
 ```handoff
 session: S528

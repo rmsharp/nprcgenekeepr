@@ -131,6 +131,15 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] S530 Phase 0 reconcile: HANDOFFS.md S529 receipt commit: pending → 73327ca1 (Session 530)
+- The S529 receipt's `commit:` field was necessarily `pending` at write time (the receipt ships in
+  the commit whose sha it would name) -- the same one-hop self-referential gap the S527→S528 and
+  S528→S529 reconciles hit before it. `CHANGELOG.md`'s own frontier was already `HEAD`
+  (`73327ca1`), so no undocumented commit gap existed; only the `HANDOFFS.md` receipt needed
+  backfilling. Also removed a leftover `<prose pending -- filled at Phase 3D close-out>` placeholder
+  line that S529's close-out never filled -- recent receipts (S527/S528) carry no separate free-text
+  prose paragraph, so the placeholder was dropped rather than backfilled, matching that convention.
+
 ### 2026-08-12 · [BL-518] `BACKLOG.md` Housekeeping section compressed (Session 529)
 - **Deliverable:** Compressed `BACKLOG.md`'s "Housekeeping" section (147 of the file's then-2,501
   lines' worth of scope) per the S518 ledger-size housekeeping item -- 17 of its 19 fully-resolved
