@@ -131,6 +131,47 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [BL-535] Corrected S535's "shinytest2/chromote never renders showModal()" misdiagnosis; retrofitted issue #153's E2E export-modal coverage (Session 536)
+- **Deliverable:** Investigated the BACKLOG.md Housekeeping item S535 filed (headless-browser
+  modal-rendering gap). Found there is NO shinytest2/chromote harness limitation: S535's own
+  E2E pedigree fixture (`makeGenomicRohE2ePedigreeFile()`) omitted `columnSchema.R`'s required
+  `birth` column, so `dataInput`'s QC silently rejected it and `pedigree()` stayed NULL --
+  correctly (not a bug) blocking `req(pedigree())`/`req(sequenceExportRaw())` all the way to
+  `showModal()`. Root-caused via a live `shinytest2::AppDriver` diagnostic session: real
+  click-event listeners proved the Confirm Export click registers correctly; temporary
+  `message()` instrumentation (removed before commit) in `R/modMarkerGenetics.R`'s
+  `sequenceExportPreview`/`sequenceConfirmExport` observers pinpointed `pedigree()` as NULL;
+  the Input tab's own `#dataInput-qcErrors` output (never checked by S535's test) showed why
+  ("Missing required columns: birth"). Verified live: with `birth` added, the full Generate
+  Preview -> Confirm Export -> modal (`display: block`) -> Confirm Export OK -> modal-removed
+  sequence works end to end in headless Chrome, no different from a real browser. No production
+  `R/` code changed -- the test fixture was the only defect.
+  **Fix:** `tests/testthat/test-e2e-marker-genetics-genomic-roh-module.R` -- added `birth` to
+  the fixture, removed the false "known harness limitation" framing and graceful-skip fallback,
+  and strengthened assertions to actually drive Confirm -> Confirm OK live and check
+  `sequenceExportGuidance`'s real empty-vs-alert render state (stronger than the pre-existing
+  substring-in-static-HTML check, which let the misdiagnosis go unnoticed since a
+  `downloadButton`'s `id` is always present in its href regardless of whether real content was
+  ever generated). New `tests/testthat/test-e2e-marker-genetics-ld-block-module.R` retrofits
+  live E2E coverage for issue #153's previously-untested LD-block export modal (same corrected
+  pattern; a second, distinct QC gate -- `checkParentAge()`'s "Parent age too young" -- was
+  found and fixed via wider founder/offspring birth-date spacing). `.github/workflows/
+  shinytest2.yaml`'s CI group list updated for the new file (verified against
+  `test_shinytest2_workflow_coverage.R`'s partition guard). `BACKLOG.md` Housekeeping item
+  corrected to RESOLVED/misdiagnosed. `PROJECT_LEARNINGS.md` Learning 542 added, correcting
+  Learning 541's second finding.
+  **Verification:** Full strict TDD RED->GREEN, each phase transition gated by its own
+  `AskUserQuestion` per `CLAUDE.md`'s Development Process Contract; RED confirmed by running the
+  genomic-ROH E2E test against the original birth-less fixture (3 failures + 1 error, matching
+  S535's exact symptom), then GREEN after the fixture fix (all assertions pass); the new #153
+  test's own first honest run similarly failed (parent-age QC) before its fixture fix. Full
+  clean regression 0 failed/0 error; `devtools::check()` 0 errors/0 warnings/2 NOTEs (both
+  confirmed pre-existing via the raw `Status:` line per Learning 538). No `R/` production code
+  changed, so lint N/A (`.lintr` wholesale-exempts `tests/`) and no `devtools::document()`
+  needed. Phase 3E runtime verification: both E2E tests drive the real, running app end to end
+  in headless Chrome (this session's own deliverable IS runtime/E2E verification).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-12 · [ad hoc] S536 Phase 0 reconcile: HANDOFFS.md S535 receipt
 - `commit: pending` -> `commit: 2b54c722` (the S535 close-out commit) -- reconciled at Session
   536's Phase 0 orient, matching the S535->S534 reconcile precedent (`9abaded1`).

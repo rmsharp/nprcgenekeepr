@@ -15,34 +15,43 @@
 #' through Marker Genetics' existing genotypeFile/locusMetadataFile inputs
 #' (this slice's own Pre-RED Q1/Q2 ratification: reuse, not a dedicated
 #' upload), confirm the new Genomic ROH (F_ROH) tab renders a real result at
-#' genome scale, and drive the Generate Preview step of the curator-gated
-#' de-identified export path with zero related console errors -- matching
-#' this cluster's own established Phase 3E bar (design doc section 5 Slice 5
-#' "Done when"), as far as this test harness can verify live (see the note
-#' below).
+#' genome scale, and drive the FULL curator-gated de-identified export path
+#' -- Generate Preview -> Confirm Export -> modal -> Confirm Export OK --
+#' live, with zero related console errors, matching this cluster's own
+#' established Phase 3E bar (design doc section 5 Slice 5 "Done when").
 #'
-#' The Confirm -> Confirm OK modal step is NOT driven live here: a same-
-#' session probe found shinytest2/chromote's headless browser never renders
-#' the `showModal()` Bootstrap modal DOM for EITHER this tab's export gate OR
-#' the already-shipped issue #153 LD-block export's identical
-#' modalDialog()/showModal() pattern -- a pre-existing harness limitation,
-#' not a defect in this or #153's code (see BACKLOG.md and
-#' PROJECT_LEARNINGS.md). The server-side Preview->Confirm->Confirm-OK
-#' reactive chain is instead proven correct by
-#' test_modMarkerGenetics.R's own testServer()-based tests (faithful
-#' verification of that surface, since testServer exercises the real
-#' reactive graph, just not the browser-rendered modal).
+#' Found S536 (correcting a S535 misdiagnosis): the pedigree fixture below
+#' MUST include a `birth` column -- `columnSchema.R`'s required column list
+#' is `c("id", "sire", "dam", "sex", "birth")`, so a pedigree missing
+#' `birth` fails `dataInput`'s QC silently (visible only via the Input
+#' tab's own `qcErrors` output, which the original S535 test never
+#' checked) and `pedigree()` never populates. That, not a shinytest2/
+#' chromote rendering gap, is why S535's own probe (using the same
+#' birth-less fixture) never saw the `showModal()` DOM appear: the
+#' Confirm button's `observeEvent` correctly `req(sequenceExportRaw())`
+#' -- itself never populated because Generate Preview's own
+#' `req(pedigree())` correctly blocked on the missing column. Both
+#' `req()` guards were behaving exactly as designed. Verified live
+#' (S536): with `birth` added, the full Generate Preview -> Confirm
+#' Export -> modal -> Confirm Export OK -> download-unlock sequence
+#' works end to end in headless Chrome, no different from a real
+#' browser. See `PROJECT_LEARNINGS.md` for the full diagnosis.
 library(testthat)
 
 ## All founders -- built solely so obfuscatePed(map = TRUE) has a real alias
 ## map covering the Slice 1 fixture's own ids, not meant to be biologically
 ## realistic (mirrors test_modMarkerGenetics.R's own i152RohPed convention).
+## Includes `birth` (required by columnSchema.R's required-column list) --
+## its omission was the actual root cause of S535's misdiagnosed "harness
+## limitation" (see file header).
 makeGenomicRohE2ePedigreeFile <- function() {
   ped <- data.frame(
     id = sprintf("S%03d", 1L:50L),
     sire = NA_character_,
     dam = NA_character_,
     sex = rep(c("M", "F"), 25L),
+    birth = as.character(seq(as.Date("2015-01-01"), by = "30 days",
+                              length.out = 50L)),
     stringsAsFactors = FALSE
   )
   path <- file.path(tempdir(), "GenomicRohE2E_Pedigree.csv")
@@ -67,6 +76,14 @@ test_that("E2E: Marker Genetics' Genomic ROH (F_ROH) tab computes at genome scal
           stats::setNames(list(pedFile), "dataInput-pedigreeFileOne"))
   app$click("dataInput-getData")
   app$wait_for_idle(timeout = E2E_TIMEOUT)
+
+  ## Real regression guard for S535's own root cause: the pedigree must
+  ## actually clear QC (empty qcErrors table), not merely "the upload
+  ## didn't throw." A pedigree missing a required column fails silently
+  ## here otherwise.
+  qcErrorsText <- get_html_safe(app, "#dataInput-qcErrors")
+  expect_false(grepl("Missing required column", qcErrorsText, fixed = TRUE),
+               info = "Pedigree fixture must satisfy columnSchema.R's required columns")
 
   # ---- Upload the Slice 1 genome-scale sequence fixture on Marker Genetics
   if (!navigate_to_tab(app, "Marker Genetics")) {
@@ -107,6 +124,14 @@ test_that("E2E: Marker Genetics' Genomic ROH (F_ROH) tab computes at genome scal
   expect_match(rohHtml, "shiny-bound-output",
                info = "Genomic ROH (F_ROH) table should render")
 
+  ## Before any export action: pedigree() is loaded but nothing has been
+  ## confirmed, so sequenceExportGuidance should show the "generate a
+  ## preview" info alert (real proof the reactive chain sees a live
+  ## pedigree(), not just that the DOM element exists).
+  guidanceBefore <- get_html_safe(app, "#markerGenetics-sequenceExportGuidance")
+  expect_match(guidanceBefore, "alert-info",
+               info = "sequenceExportGuidance should prompt for Generate Preview once pedigree() is loaded")
+
   # ---- Drive Generate Preview (de-identifies the real genome-scale data) --
   app$click("markerGenetics-sequenceExportPreview")
   app$wait_for_idle(timeout = E2E_TIMEOUT)
@@ -127,23 +152,26 @@ test_that("E2E: Marker Genetics' Genomic ROH (F_ROH) tab computes at genome scal
   expect_equal(nrow(rohErrors), 0L,
                info = "No Genomic ROH (F_ROH)/Marker Genetics console error")
 
-  # ---- Confirm -> Confirm OK: known harness limitation, not driven live ---
-  # See the file header note -- shinytest2/chromote never renders the
-  # showModal() DOM here or for #153's identical, already-shipped pattern.
-  # The server-side confirm sequence itself is proven correct by
-  # test_modMarkerGenetics.R's testServer() tests. Attempt it anyway (in
-  # case a future shinytest2/chromote version fixes the harness gap) but
-  # skip gracefully, never fail, if the modal's own button isn't found.
+  # ---- Confirm -> Confirm OK: driven live end to end ----------------------
+  # Corrects S535's misdiagnosis (see file header) -- this is a real,
+  # required assertion, not a graceful self-skip: the modal MUST appear.
   app$click("markerGenetics-sequenceConfirmExport")
   app$wait_for_idle(timeout = E2E_TIMEOUT)
-  if (!click_element_safe(
-    app, "#markerGenetics-sequenceConfirmExportOk"
-  )) {
-    skip(paste(
-      "Confirm-export modal not found live (known shinytest2/chromote",
-      "headless-modal-rendering gap shared with issue #153's own export",
-      "gate -- see BACKLOG.md; server-side logic already proven correct",
-      "via testServer())"
-    ))
-  }
+  expect_true(
+    wait_for_element(app, "#markerGenetics-sequenceConfirmExportOk",
+                      timeout = E2E_TIMEOUT),
+    info = "Confirm-export modal (and its Confirm Export OK button) must render live"
+  )
+  app$click(selector = "#markerGenetics-sequenceConfirmExportOk")
+  app$wait_for_idle(timeout = E2E_TIMEOUT)
+
+  ## Real proof of confirmation: sequenceExportGuidance's renderUI() has no
+  ## else branch once sequenceExportConfirmed() is TRUE, so it renders no
+  ## alert div at all -- a stronger check than the pre-existing
+  ## substring-in-static-HTML pattern that let S535's misdiagnosis go
+  ## unnoticed (a downloadButton's id is always present in its href
+  ## regardless of whether real content was ever generated).
+  guidanceAfter <- get_html_safe(app, "#markerGenetics-sequenceExportGuidance")
+  expect_false(grepl("alert", guidanceAfter, fixed = TRUE),
+               info = "sequenceExportGuidance should render no alert once the export is confirmed")
 })

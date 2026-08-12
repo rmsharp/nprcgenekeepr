@@ -145,33 +145,27 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       that version number.
 
 ## Housekeeping
-- [ ] **`shinytest2`/`chromote` headless browser never renders a
-      `showModal()`/`modalDialog()` Bootstrap modal's DOM -- affects EVERY
-      confirm-gated de-identified export, not just one feature** (found
-      S535, 2026-08-12, READY, Effort M) -- discovered while building issue
-      #152 Slice 5's own curator export gate: `app$click()` on the
-      "Confirm Export" button correctly increments the input value and the
-      server-side `observeEvent` correctly runs (confirmed via a direct
-      `shiny::testServer()` probe -- the reactive chain, including the
-      final `sequenceExportConfirmed` flip, is 100% correct), but
-      `app$get_html("body")` after the click contains no `modal`-related
-      markup at all: the `showModal(modalDialog(...))` call's DOM update
-      never reaches the headless browser. **Confirmed NOT specific to
-      Slice 5's new code**: an identical live probe against the
-      already-shipped issue #153 LD-block export (same
-      `modalDialog()`/`showModal()`/`session$ns(...)`-in-modal-footer
-      pattern) reproduces the exact same symptom -- no `E2E` test for
-      #153's own modal existed before this session's probe, so this gap
-      predates and is independent of #152 Slice 5. Every future
-      confirm-gated export this codebase ships (following the issue
-      #150/#153/#152-Slice-5 pattern) will hit the same live-E2E blind
-      spot. A future session should investigate root cause (a `bslib`
-      version-specific modal markup change, a `shinytest2`/`chromote`
-      timing issue needing a different wait strategy than
-      `app$wait_for_idle()`, or a genuine upstream `shinytest2` gap worth
-      reporting) and, if fixable, retrofit E2E coverage for the
-      previously-untested #153 modal at the same time. See `CHANGELOG.md`,
-      `PROJECT_LEARNINGS.md` Learning 541.
+- [ ] (none remaining -- the "`shinytest2`/`chromote` headless browser never
+      renders a `showModal()`/`modalDialog()` Bootstrap modal's DOM" item
+      (found S535, 2026-08-12) is RESOLVED -- **misdiagnosed, corrected
+      S536 (2026-08-12):** there is no shinytest2/chromote harness
+      limitation. Live root-causing found S535's own E2E pedigree fixture
+      (`makeGenomicRohE2ePedigreeFile()`) omitted `columnSchema.R`'s
+      required `birth` column, so `dataInput`'s QC silently rejected it
+      (visible only via the Input tab's own `qcErrors` output, never
+      checked by that test) and `pedigree()` stayed NULL -- correctly
+      (not a bug) blocking `req(pedigree())`/`req(sequenceExportRaw())`
+      all the way to `showModal()`. Verified live: with `birth` added, the
+      full Generate Preview -> Confirm Export -> modal -> Confirm Export
+      OK -> download-unlock sequence works end to end in headless Chrome,
+      identical to a real browser. Both S535's own genomic-ROH E2E test
+      (issue #152 Slice 5) and a NEW E2E test retrofitted for issue #153's
+      previously-untested LD-block export modal now drive the full
+      sequence live (strengthened past a substring-in-static-HTML check to
+      the export-guidance UI's real empty-vs-alert state). No production
+      `R/` code changed -- the fixture was the only defect. See
+      `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 542 (corrects
+      Learning 541's second finding).
 - [ ] (none remaining -- the "`markerParentageLikelihood()`'s auto-detect
       candidate lookup never finds a candidate when both of a flagged
       animal's parent slots are recorded" item (found S498, design ratified
