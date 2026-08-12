@@ -691,6 +691,63 @@ tab). This is being tracked as a follow-on improvement.
 
 ![The Candidate Parent Assignment tab for a small example trio: C's falsely-recorded sire (Q) is Mendelian-excluded across all 10 shared loci, so its LOD score is negative infinity -- a true genetic impossibility, not merely "unlikely" (blank cells in the LOD/delta columns above render that infinite value).](shiny_app_use/marker_genetics_candidate_assignment.png){fig-alt="Marker Genetics Candidate Parent Assignment tab showing a table with one row: offspring C, role sire, candidate Q, LOD blank (negative infinity), nLociUsed 10, excluded true, lowPower false."}
 
+A sixth **Linkage and LD Block Metrics** tab (issue
+[#153](https://github.com/rmsharp/nprcgenekeepr/issues/153)) answers a
+question the other five tabs deliberately don't: whether nearby marker
+loci carry information about relatedness or linkage beyond what each
+locus contributes independently. It needs its own dedicated marker
+genotype upload (separate from the file used by the other five tabs,
+since it tolerates multiallelic panels -- e.g. microsatellite/STR panels
+-- that the other tabs' biallelic-only KING-robust estimator would
+reject) plus a locus metadata file describing each locus's chromosome,
+physical position, and (optionally) genetic-map position.
+
+Uploading the locus metadata file first shows a **coverage report**:
+real colony marker panels rarely have complete positional information,
+so every locus is classified into one of three explicit tiers --
+`full` (chromosome and position both known), `partial` (only one
+known), or `none` -- rather than silently requiring complete metadata
+before anything downstream works.
+
+![The Linkage and LD Block Metrics tab's locus metadata coverage report for a 12-locus example STR panel: 8 loci have full chromosome+position information, 2 have partial (chromosome only), and 2 have neither.](shiny_app_use/marker_genetics_linkage_coverage.png){fig-alt="Marker Genetics Linkage and LD Block Metrics tab showing a coverage summary reading '8 full, 2 partial, 2 none' above a per-locus table with locus, chrom, pos, cM, and coverage columns."}
+
+Below the coverage report, two complementary metrics are computed.
+The **Realized Relatedness Variance** table is the tab's primary,
+genuinely pedigree-valid metric (Hill & Weir 2011): pedigree-based
+kinship is only an *average* expected relatedness -- the actual
+proportion of genome shared identical-by-descent between two relatives
+varies around that average because of Mendelian sampling and linkage,
+and this table estimates that variance for Parent-Offspring,
+Full-Sibling, and Half-Sibling pairs given a curator-supplied
+chromosome count and total genetic-map length (pre-filled with rhesus
+macaque defaults, adjustable for other species or datasets). It needs
+no genotype file at all -- only the pedigree already loaded elsewhere
+in the app.
+
+The **LD Block Statistic** table is a secondary, explicitly-caveated
+descriptive measure (D' and r², computed pairwise for same-chromosome
+loci from the multiallelic genotype upload): classical
+linkage-disequilibrium theory assumes a randomly-mating population,
+which a pedigreed colony violates by construction, and no rigorous
+method that is both pedigree-aware and tolerant of multiallelic data
+currently exists as a CRAN package. A persistent, non-dismissable
+banner states this caveat directly above the table -- it always
+accompanies the statistic, since this is a genuine, documented
+limitation rather than an oversight. An optional checkbox restricts
+the computation to founder animals only, which reduces (but does not
+eliminate) the effect of related individuals in the sample.
+
+![The LD Block Statistic table for the same example STR panel: two same-chromosome locus pairs (STR01 x STR02 on chromosome 1, STR03 x STR04 on chromosome 2), each with its D'/r² values and the persistent caveat banner above.](shiny_app_use/marker_genetics_linkage_ldblock.png){fig-alt="Marker Genetics Linkage and LD Block Metrics tab showing the LD Block Statistic section: an orange caveat banner reading that the statistic is descriptive only and not pedigree-aware, a founders-only checkbox, and a table with two rows of Dprime/r2/nUsed values for locus pairs on chromosomes 1 and 2."}
+
+Because a joint, multi-locus statistic like an LD-block table carries
+*more* re-identifying power than a single-locus summary (not less), any
+exported LD-block table is de-identified and routed through the same
+curator confirm-gate pattern as the De-Identified Export tab below:
+generate a preview, confirm via a modal dialog, then download. The
+Realized Relatedness Variance table has no export control -- like the
+other five Marker Genetics tabs, it is a report-only, on-screen
+diagnostic.
+
 ### Cross-Center Identity
 
 The **Cross-Center Identity** tab (issue

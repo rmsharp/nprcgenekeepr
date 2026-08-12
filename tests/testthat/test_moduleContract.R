@@ -80,7 +80,9 @@ moduleContractServers <- list(
                 pedigree = shiny::reactive(NULL)),
     names = c("markerGenotype", "markerKinshipMatrix", "comparisonTable",
               "heterozygosityTable", "exclusionTable", "crossCenterGenotypeB",
-              "crossCenterTable", "candidateAssignmentTable", "isReady")
+              "crossCenterTable", "candidateAssignmentTable", "isReady",
+              "locusMetadataTable", "realizedRelatednessTable", "ldBlockTable",
+              "ldBlockExportTable", "ldBlockExportConfirmed")
   ),
   modCrossCenterIdentity = list(
     server = modCrossCenterIdentityServer,

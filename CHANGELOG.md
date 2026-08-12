@@ -131,6 +131,45 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [issue #153] S524 close-out: Slice 5 (full module tab, wiring, documentation) shipped -- issue #153 closed (Session 524)
+- **Deliverable:** Issue #153 Slice 5, per `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md`
+  §5 Slice 5 -- the final slice in this issue's 5-slice family. A sixth "Linkage and LD Block
+  Metrics" tab in `R/modMarkerGenetics.R` (D5, D6): a locus-metadata coverage report
+  (`checkLocusMetadata()`, Slice 1, three-tier full/partial/none classification); the primary,
+  pedigree-valid Realized Relatedness Variance table (`markerRealizedRelatednessVariance()`, Slice 3,
+  rhesus-macaque-default nChr/mapLength inputs); the secondary, descriptive LD Block Statistic table
+  (`markerLdBlock()`, Slice 4) behind a persistent, non-dismissable caveat banner; and
+  curator-controlled export wiring for the LD-block table (`obfuscateLdBlocks()`, D9) reusing issue
+  #150's confirm-gate pattern (Generate Preview -> Confirm -> Confirm-OK).
+- **Design correction (found via GREEN implementation, owner-confirmed via `AskUserQuestion`):** the
+  PRE-RED plan to reuse the existing `genotypeFile` upload (re-validated through the
+  multiallelic-tolerant sibling validator) was reverted in favor of a dedicated `linkageGenotypeFile`
+  input -- Shiny mounts every `tabPanel`'s output bindings regardless of which tab is visible, so a
+  multiallelic upload fed through the shared input broke the other 5 tabs' own DT outputs
+  simultaneously (confirmed via RED test failures, not assumed). See `PROJECT_LEARNINGS.md`
+  Learning 526.
+- **Verification:** Full strict TDD PRE-RED->RED->GREEN cycle (REFACTOR: no candidate identified),
+  each transition `AskUserQuestion`-gated. 18 new `test_that` blocks / `test_moduleContract.R`
+  updated for 5 new returned reactives (`locusMetadataTable`, `realizedRelatednessTable`,
+  `ldBlockTable`, `ldBlockExportTable`, `ldBlockExportConfirmed`). Full clean regression 0 failed/0
+  error; `devtools::check()` 0 errors/0 warnings/2 pre-existing NOTEs (vignettes/figure leftover,
+  spelling-WORDLIST gap); `lintr::lint_package()` 0 lints. Live runtime smoke test (Phase 3E) via
+  Chrome browser automation against the real running app and the Slice 1 STR fixture: coverage
+  report ("8 full, 2 partial, 2 none"), LD-block Dprime/r2 values matching the hand-verified test
+  reference exactly, the founders-only restriction guard (table correctly goes not-ready when
+  checked with no pedigree loaded, recovers when unchecked), and the export guidance state -- 0
+  console errors throughout.
+- **Documentation:** `NEWS.Rmd`/`NEWS.md` entry (rendered via `rmarkdown::render()`); new
+  `colony-manager-guide.qmd` "Linkage and LD Block Metrics" subsection with 2 new screenshots
+  (Session 436 tutorial/article checklist -- first Shiny-UI slice in this issue family); citation
+  checklist (issue #120) already satisfied at Slices 3/4, reconfirmed, no new formula this slice;
+  `_pkgdown.yml` unchanged (no new exports). `PROJECT_LEARNINGS.md` Learnings 526 (the
+  tabPanel-eager-rendering finding) and 527 (the `BACKLOG.md` narrative-staleness finding).
+  `BACKLOG.md` issue #153 narrative backfilled for S521-S523 (each never added its own Progress
+  entry) and closed out with this session's own entry.
+- **Issue #153 closed** -- all 5 slices now shipped (Slice 1: S520, Slice 2: S521, Slice 3: S522,
+  Slice 4: S523, Slice 5: this session).
+
 ### 2026-08-12 · [issue #153] S524 claim: issue #153 Slice 5 (full module tab, D5/D6/D9) (Session 524)
 - **Claim:** Phase 1B session claim for Issue #153 Slice 5 -- full module tab in
   `modMarkerGenetics.R` (D5/D6): UI coverage-report panel + persistent D3(b) caveat banner,

@@ -359,6 +359,14 @@ knitr::opts_chunk$set(echo = TRUE)
   Matches this app's established curator-controlled pattern (a
   confirmation dialog and warning text, not real access control) rather
   than building new auth infrastructure.
+- The Marker Genetics tab gained a **Linkage and LD Block Metrics** sub-tab
+  (issue #153, Slice 5, closes #153): a locus-metadata upload with a
+  three-tier coverage report (full/partial/none); the pedigree-valid
+  realized-relatedness-variance table (`markerRealizedRelatednessVariance()`,
+  Slice 3); and the descriptive LD-block table (`markerLdBlock()`, Slice 4)
+  behind a persistent, non-dismissable caveat banner. The LD-block table's
+  export is de-identified (`obfuscateLdBlocks()`) behind the same
+  curator confirm-gate pattern established by the De-Identified Export tab.
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes

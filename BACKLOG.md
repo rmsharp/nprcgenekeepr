@@ -2351,3 +2351,35 @@ this slice, matching the #146/#149/#150/#151 Slice-1-only precedent (verified vi
 -- Slice 2 (the multiallelic-tolerant `checkLinkageMarkerGenotypeFile()` ingestion path, D4) is the
 next planned slice**, a separate future session per the plan's own session-boundary requirement. See
 `CHANGELOG.md`.
+
+**Progress (S521, 2026-08-11):** Slice 2 (`checkLinkageMarkerGenotypeFile()`, D4) DONE. **Progress
+(S522, 2026-08-11):** Slice 3 (`markerRealizedRelatednessVariance()`, the pedigree-valid
+realized-relatedness-variance metric, D3a) DONE. **Progress (S523, 2026-08-11/12):** Slice 4
+(`markerLdBlock()` + `obfuscateLdBlocks()`, the descriptive LD/block statistic and its
+de-identification primitive, D3b/D8/D9) DONE. (Backfilled here at S524 close-out -- neither S521 nor
+S522 nor S523 added their own narrative entry to this file, the gap `PROJECT_LEARNINGS.md` records as
+this session's own finding; see `CHANGELOG.md` for each slice's own full, contemporaneous
+close-out record.)
+
+**Progress (S524, 2026-08-12):** Slice 5 -- full module tab, wiring, documentation -- is now DONE,
+per `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` sec 5 Slice 5. A sixth
+"Linkage and LD Block Metrics" tab in `modMarkerGenetics.R` (D5, D6) wires in the locus-metadata
+coverage report (`checkLocusMetadata()`, Slice 1), the primary realized-relatedness-variance table
+(`markerRealizedRelatednessVariance()`, Slice 3), and the secondary LD-block table behind a
+persistent, non-dismissable caveat banner (`markerLdBlock()`, Slice 4) -- plus curator-controlled
+export wiring for the LD-block table reusing issue #150's confirm-gate pattern
+(`obfuscateLdBlocks()`, D9). A dedicated `linkageGenotypeFile` upload, independent of the other five
+tabs' shared `genotypeFile`, replaced the original PRE-RED plan to reuse that shared upload --
+found empirically this session that Shiny renders every `tabPanel`'s output bindings regardless of
+which tab is visible, so a multiallelic file fed through the shared input broke the other five tabs'
+own DT outputs simultaneously (see `PROJECT_LEARNINGS.md`). Full strict TDD PRE-RED->RED->GREEN
+cycle (REFACTOR: no candidate identified), 18 new `test_that` blocks / test_moduleContract.R updated
+for 5 new returned reactives. Full clean regression 0 failed/0 error; `devtools::check()` 0
+errors/0 warnings/2 pre-existing NOTEs; `lintr::lint_package()` 0 lints. Live runtime smoke test via
+Chrome browser automation against the Slice 1 STR fixture confirmed the tab end to end (coverage
+report, LD-block values matching the hand-verified reference exactly, the founders-only
+restriction guard, the export confirm-gate's guidance states) -- see `CHANGELOG.md`. Tutorial/
+article checklist (Session 436) applied for the first time in this issue family: new
+`colony-manager-guide.qmd` "Linkage and LD Block Metrics" subsection with 2 new screenshots.
+**This cluster (issue #153, all 5 slices) is now fully complete; issue #153 closed** as part of
+this session's close-out. No further items remain in this narrative.

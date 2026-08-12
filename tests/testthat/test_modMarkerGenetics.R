@@ -462,3 +462,348 @@ test_that("modMarkerGenetics's candidate-parent-assignment table is an empty-but
                               "nLociUsed", "excluded", "lowPower")))
   })
 })
+
+## RED (issue #153 Slice 5): the module gains a sixth tab, "Linkage and LD
+## Block Metrics" (D5, D6 -- opt-in, zero change to the 5 existing tabs),
+## wiring markerRealizedRelatednessVariance() (D3a, Slice 3) and
+## markerLdBlock()/obfuscateLdBlocks() (D3b/D9, Slice 4) into the module,
+## alongside a locus-metadata coverage-report panel (checkLocusMetadata(),
+## Slice 1, D2/sec 2.14's three-tier PLINK-style model) and a
+## curator-controlled export gate for the LD-block table reusing issue
+## #150's confirm-gate pattern (modDeidentifiedExportServer's tested
+## Generate-Preview -> Confirm -> Confirm-OK sequence). The multiallelic
+## -tolerant genotype path (checkLinkageMarkerGenotypeFile(), Slice 2)
+## reuses the SAME uploaded genotypeFile as the other 5 tabs, validated by
+## a new, parallel reactive -- no new genotype file input; only a new
+## locusMetadataFile input is added (owner-ratified, this session's
+## PRE-RED).
+
+i153GenotypeFilePath <- system.file(
+  "extdata", "examples", "example_str_marker_genotypes.csv",
+  package = "nprcgenekeepr"
+)
+i153LocusMetadataFilePath <- system.file(
+  "extdata", "examples", "example_locus_metadata.csv",
+  package = "nprcgenekeepr"
+)
+
+## Ad hoc pedigree over the STR fixture's own A01-A10 ids (no pedigree
+## ships with that fixture). A01-A05 are founders (sire/dam both NA);
+## A06-A10 are not. Built solely to exercise the founder-restriction
+## checkbox -- not meant to be biologically realistic.
+i153FoundersPed <- data.frame(
+  id = sprintf("A%02d", 1L:10L),
+  sire = c(rep(NA_character_, 5L), rep("A01", 5L)),
+  dam = c(rep(NA_character_, 5L), rep("A02", 5L)),
+  stringsAsFactors = FALSE
+)
+
+test_that("modMarkerGeneticsUI has a Linkage and LD Block Metrics tab with its controls", {
+  ui <- modMarkerGeneticsUI("test")
+  ui_html <- as.character(ui)
+
+  expect_true(grepl("Linkage and LD Block Metrics", ui_html, fixed = TRUE))
+  expect_true(grepl("linkageGenotypeFile", ui_html, fixed = TRUE))
+  expect_true(grepl("locusMetadataFile", ui_html, fixed = TRUE))
+  expect_true(grepl("nChr", ui_html, fixed = TRUE))
+  expect_true(grepl("mapLength", ui_html, fixed = TRUE))
+  expect_true(grepl("ldBlockFoundersOnly", ui_html, fixed = TRUE))
+  expect_true(grepl("ldBlockExportPreview", ui_html, fixed = TRUE))
+  expect_true(grepl("ldBlockConfirmExport", ui_html, fixed = TRUE))
+  expect_true(grepl("downloadLdBlockExport", ui_html, fixed = TRUE))
+})
+
+test_that("modMarkerGeneticsUI has a persistent, non-dismissable D3(b) caveat banner", {
+  ui <- modMarkerGeneticsUI("test")
+  ui_html <- as.character(ui)
+
+  ## Static markup (not a renderUI toggle) -- always present, no close/
+  ## dismiss control, matching the "persistent, non-dismissable" design
+  ## requirement literally rather than as a togglable notification.
+  expect_true(grepl("not a rigorous, pedigree-aware", ui_html, fixed = TRUE))
+  expect_false(grepl("dismiss", ui_html, ignore.case = TRUE))
+})
+
+test_that("modMarkerGenetics's locusMetadataTable is not ready before a locus-metadata file is uploaded", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    expect_null(result$locusMetadataTable())
+  })
+})
+
+test_that("modMarkerGenetics's locusMetadataTable classifies the STR fixture into 8 full/2 partial/2 none", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    session$setInputs(locusMetadataFile = list(
+      name = "example_locus_metadata.csv", datapath = i153LocusMetadataFilePath
+    ))
+
+    tbl <- result$locusMetadataTable()
+    expect_s3_class(tbl, "data.frame")
+    expect_identical(sort(names(tbl)),
+                      sort(c("locus", "chrom", "pos", "cM", "coverage")))
+    expect_identical(nrow(tbl), 12L)
+    expect_identical(sum(tbl$coverage == "full"), 8L)
+    expect_identical(sum(tbl$coverage == "partial"), 2L)
+    expect_identical(sum(tbl$coverage == "none"), 2L)
+  })
+})
+
+test_that("modMarkerGenetics's realizedRelatednessTable is not ready before a pedigree is supplied", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    expect_null(result$realizedRelatednessTable())
+  })
+})
+
+test_that("modMarkerGenetics's realizedRelatednessTable is not ready before kinshipMatrix is available", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(NULL),
+                pedigree = shiny::reactive(nprcgenekeepr::smallPed)), {
+    result <- session$getReturned()
+    expect_null(result$realizedRelatednessTable())
+  })
+})
+
+test_that("modMarkerGenetics's realizedRelatednessTable uses the nChr=20/mapLength=28 default when inputs are unset", {
+  skip_if_not_installed("shiny")
+  ped <- nprcgenekeepr::smallPed
+  kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
+
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(kmat),
+                pedigree = shiny::reactive(ped)), {
+    result <- session$getReturned()
+
+    tbl <- result$realizedRelatednessTable()
+    expect_s3_class(tbl, "data.frame")
+    expect_identical(sort(names(tbl)),
+                      sort(c("id1", "id2", "kinship", "relation", "R", "varR", "sdR")))
+
+    ## Parent-Offspring varR is exactly 0 regardless of nChr/mapLength
+    ## (test_markerRealizedRelatednessVariance.R's own finding) -- a
+    ## robust wiring check independent of which default values are
+    ## actually used.
+    dg <- tbl[tbl$id1 == "D" & tbl$id2 == "G", ]
+    expect_identical(nrow(dg), 1L)
+    expect_identical(dg$relation, "Parent-Offspring")
+    expect_equal(dg$varR, 0)
+  })
+})
+
+test_that("modMarkerGenetics's realizedRelatednessTable respects explicit nChr/mapLength inputs", {
+  skip_if_not_installed("shiny")
+  ped <- nprcgenekeepr::smallPed
+  kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
+
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(kmat),
+                pedigree = shiny::reactive(ped)), {
+    result <- session$getReturned()
+    session$setInputs(nChr = 1L, mapLength = 1)
+    tblSmall <- result$realizedRelatednessTable()
+
+    session$setInputs(nChr = 20L, mapLength = 28)
+    tblDefault <- result$realizedRelatednessTable()
+
+    fsSmall <- tblSmall[tblSmall$id1 == "F" & tblSmall$id2 == "G", ]
+    fsDefault <- tblDefault[tblDefault$id1 == "F" & tblDefault$id2 == "G", ]
+    expect_false(isTRUE(all.equal(fsSmall$varR, fsDefault$varR)))
+  })
+})
+
+test_that("modMarkerGenetics's ldBlockTable is not ready before a genotype file is uploaded", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    session$setInputs(locusMetadataFile = list(
+      name = "example_locus_metadata.csv", datapath = i153LocusMetadataFilePath
+    ))
+    expect_null(result$ldBlockTable())
+  })
+})
+
+test_that("modMarkerGenetics's ldBlockTable is not ready before a locus-metadata file is uploaded", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    session$setInputs(linkageGenotypeFile = list(
+      name = "example_str_marker_genotypes.csv", datapath = i153GenotypeFilePath
+    ))
+    expect_null(result$ldBlockTable())
+  })
+})
+
+test_that("modMarkerGenetics computes the LD-block table matching Slice 4's hand-verified STR values", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    session$setInputs(linkageGenotypeFile = list(
+      name = "example_str_marker_genotypes.csv", datapath = i153GenotypeFilePath
+    ))
+    session$setInputs(locusMetadataFile = list(
+      name = "example_locus_metadata.csv", datapath = i153LocusMetadataFilePath
+    ))
+
+    tbl <- result$ldBlockTable()
+    expect_s3_class(tbl, "data.frame")
+
+    row12 <- tbl[tbl$locus1 == "STR01" & tbl$locus2 == "STR02", ]
+    expect_equal(row12$Dprime, 0.606061, tolerance = 1e-5)
+    expect_equal(row12$r2, 0.288889, tolerance = 1e-5)
+    expect_equal(row12$nUsed, 10L)
+    expect_true(is.na(row12$idsUsed))
+
+    row34 <- tbl[tbl$locus1 == "STR03" & tbl$locus2 == "STR04", ]
+    expect_equal(row34$Dprime, 0.662317, tolerance = 1e-5)
+    expect_equal(row34$r2, 0.498590, tolerance = 1e-5)
+  })
+})
+
+test_that("modMarkerGenetics's ldBlockTable restricts to founders when the checkbox is set", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(i153FoundersPed)), {
+    result <- session$getReturned()
+    session$setInputs(linkageGenotypeFile = list(
+      name = "example_str_marker_genotypes.csv", datapath = i153GenotypeFilePath
+    ))
+    session$setInputs(locusMetadataFile = list(
+      name = "example_locus_metadata.csv", datapath = i153LocusMetadataFilePath
+    ))
+    session$setInputs(ldBlockFoundersOnly = TRUE)
+
+    tbl <- result$ldBlockTable()
+    row12 <- tbl[tbl$locus1 == "STR01" & tbl$locus2 == "STR02", ]
+    expect_identical(row12$idsUsed, "A01,A02,A03,A04,A05")
+    expect_identical(row12$nUsed, 5L)
+  })
+})
+
+test_that("modMarkerGenetics's ldBlockTable is not ready when founder-restricted with no pedigree loaded", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    session$setInputs(linkageGenotypeFile = list(
+      name = "example_str_marker_genotypes.csv", datapath = i153GenotypeFilePath
+    ))
+    session$setInputs(locusMetadataFile = list(
+      name = "example_locus_metadata.csv", datapath = i153LocusMetadataFilePath
+    ))
+    session$setInputs(ldBlockFoundersOnly = TRUE)
+
+    expect_null(result$ldBlockTable())
+  })
+})
+
+test_that("modMarkerGenetics's ldBlockExportConfirmed starts FALSE", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    expect_false(result$ldBlockExportConfirmed())
+  })
+})
+
+test_that("modMarkerGenetics's ldBlockExportTable is NULL before Generate Export Preview is clicked", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(i153FoundersPed)), {
+    result <- session$getReturned()
+    session$setInputs(linkageGenotypeFile = list(
+      name = "example_str_marker_genotypes.csv", datapath = i153GenotypeFilePath
+    ))
+    session$setInputs(locusMetadataFile = list(
+      name = "example_locus_metadata.csv", datapath = i153LocusMetadataFilePath
+    ))
+    expect_null(result$ldBlockExportTable())
+  })
+})
+
+test_that("modMarkerGenetics's ldBlockExportTable de-identifies idsUsed via obfuscateLdBlocks after Generate Export Preview", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(i153FoundersPed)), {
+    result <- session$getReturned()
+    session$setInputs(linkageGenotypeFile = list(
+      name = "example_str_marker_genotypes.csv", datapath = i153GenotypeFilePath
+    ))
+    session$setInputs(locusMetadataFile = list(
+      name = "example_locus_metadata.csv", datapath = i153LocusMetadataFilePath
+    ))
+    session$setInputs(ldBlockFoundersOnly = TRUE)
+    session$setInputs(ldBlockExportPreview = 1)
+
+    raw <- result$ldBlockTable()
+    exported <- result$ldBlockExportTable()
+    expect_s3_class(exported, "data.frame")
+
+    rawRow <- raw[raw$locus1 == "STR01" & raw$locus2 == "STR02", ]
+    exportedRow <- exported[exported$locus1 == "STR01" & exported$locus2 == "STR02", ]
+
+    expect_false(identical(exportedRow$idsUsed, rawRow$idsUsed))
+    expect_false(grepl("A01", exportedRow$idsUsed, fixed = TRUE))
+    expect_equal(exportedRow$Dprime, rawRow$Dprime)
+    expect_equal(exportedRow$nUsed, rawRow$nUsed)
+  })
+})
+
+test_that("modMarkerGenetics's ldBlockExportConfirmed becomes TRUE after the full confirm sequence", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(i153FoundersPed)), {
+    result <- session$getReturned()
+    session$setInputs(linkageGenotypeFile = list(
+      name = "example_str_marker_genotypes.csv", datapath = i153GenotypeFilePath
+    ))
+    session$setInputs(locusMetadataFile = list(
+      name = "example_locus_metadata.csv", datapath = i153LocusMetadataFilePath
+    ))
+    session$setInputs(ldBlockExportPreview = 1)
+    session$setInputs(ldBlockConfirmExport = 1)
+    session$setInputs(ldBlockConfirmExportOk = 1)
+
+    expect_true(result$ldBlockExportConfirmed())
+  })
+})
+
+test_that("modMarkerGenetics's ldBlockExportTable stays NULL after Generate Export Preview with no pedigree loaded", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    session$setInputs(linkageGenotypeFile = list(
+      name = "example_str_marker_genotypes.csv", datapath = i153GenotypeFilePath
+    ))
+    session$setInputs(locusMetadataFile = list(
+      name = "example_locus_metadata.csv", datapath = i153LocusMetadataFilePath
+    ))
+    session$setInputs(ldBlockExportPreview = 1)
+
+    expect_null(result$ldBlockExportTable())
+  })
+})

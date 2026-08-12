@@ -18,7 +18,7 @@ upstream analysis has not yet been run.}
 upstream analysis has not yet been run.}
 }
 \value{
-A list with nine reactive elements: \code{markerGenotype}, the
+A list with fourteen reactive elements: \code{markerGenotype}, the
 raw uploaded genotype data frame (or \code{NULL} before upload);
 \code{markerKinshipMatrix}, the marker-based \code{id} x \code{id}
 kinship matrix (or \code{NULL}); \code{comparisonTable}, the per-animal
@@ -37,8 +37,21 @@ are uploaded); \code{candidateAssignmentTable}, the
 \code{\link{markerParentageLikelihood}} ranked-candidate data frame (a
 zero-row, full-column-shape data frame when no pair is flagged; or
 \code{NULL} before a genotype file and a pedigree are both available);
-and \code{isReady}, \code{TRUE} once \code{comparisonTable} has a
-value.
+\code{isReady}, \code{TRUE} once \code{comparisonTable} has a value;
+\code{locusMetadataTable}, the \code{\link{checkLocusMetadata}} output
+(or \code{NULL} before a locus-metadata file is uploaded);
+\code{realizedRelatednessTable}, the
+\code{\link{markerRealizedRelatednessVariance}} output (or \code{NULL}
+before \code{pedigree}/\code{kinshipMatrix} are both available);
+\code{ldBlockTable}, the \code{\link{markerLdBlock}} output (or
+\code{NULL} before a genotype file and a locus-metadata file are both
+uploaded, or before a pedigree is available if the founders-only
+restriction is checked); \code{ldBlockExportTable}, the
+\code{\link{obfuscateLdBlocks}}-de-identified export preview (or
+\code{NULL} before "Generate De-Identified Export Preview" is clicked
+with both \code{ldBlockTable} and \code{pedigree} available); and
+\code{ldBlockExportConfirmed}, \code{FALSE} until the confirm-gate
+modal's own Confirm button is clicked for the current export preview.
 }
 \description{
 Reads an uploaded long-format marker genotype file (D1 format: \code{id},
@@ -75,6 +88,28 @@ wired to the other tabs -- and is report-only, matching the Parentage
 Exclusion tab's own precedent: it never writes to \code{pedigree}.
 }
 \details{
+A sixth tab, "Linkage and LD Block Metrics" (issue #153 Slice 5), wires in
+three additional analyses. A locus-metadata file (\code{locus},
+\code{chrom}, \code{pos}, optionally \code{cM}) is validated and
+classified into a three-tier coverage report
+(\code{\link{checkLocusMetadata}}, D2). The realized-relatedness-variance
+table (\code{\link{markerRealizedRelatednessVariance}}, D3a) needs only
+the existing \code{kinshipMatrix}/\code{pedigree} plus a curator-supplied
+chromosome count and genetic-map length -- no genotype file at all. The
+LD-block table (\code{\link{markerLdBlock}}, D3b) reads its OWN,
+dedicated \code{linkageGenotypeFile} upload -- deliberately independent
+of the other five tabs' shared \code{genotypeFile}, since Shiny renders
+every \code{tabPanel}'s output bindings regardless of which tab is
+visible: a multiallelic file uploaded through the shared input would
+break the other five tabs' own DT outputs simultaneously, not just this
+tab's (found empirically this session, correcting the original PRE-RED
+plan). Validated through the multiallelic-tolerant sibling validator
+(\code{\link{checkLinkageMarkerGenotypeFile}}) rather than
+\code{\link{checkMarkerGenotypeFile}}. Any exported LD-block
+table is de-identified (\code{\link{obfuscateLdBlocks}}) behind a
+curator confirm-gate reusing \code{\link{modDeidentifiedExportServer}}'s
+tested Generate-Preview -> Confirm -> Confirm-OK pattern (D9).
+
 This module never touches the existing single-locus genotype path
 (\code{checkGenotypeFile}/\code{addGenotype}/\code{hasGenotype}/
 \code{getGVGenotype}/\code{geneDrop}) -- the D1 long-format schema is a

@@ -123,23 +123,113 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S524
 date: 2026-08-12
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Issue #153 Slice 5 -- full module tab in modMarkerGenetics.R (D5/D6): UI
-coverage-report panel + persistent D3(b) caveat banner, curator-controlled export wiring reusing
-issue #150's confirm-gate pattern (D9), test_moduleContract.R coverage, tutorial/article update.
-Per docs/planning/issue153-linkage-haplotype-block-metrics-plan.md §5 Slice 5. Session claimed,
-PRE-RED research beginning.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Issue #153 Slice 5 (full module tab, wiring, documentation) is DONE. Full strict TDD
+PRE-RED->RED->GREEN->REFACTOR cycle, each transition AskUserQuestion-gated (REFACTOR: no candidate
+identified). Issue #153 is now CLOSED -- all 5 slices shipped.
+what_was_done: A sixth "Linkage and LD Block Metrics" tab in R/modMarkerGenetics.R (D5, D6): a
+locus-metadata coverage report (checkLocusMetadata(), Slice 1, three-tier full/partial/none);
+the primary, pedigree-valid Realized Relatedness Variance table
+(markerRealizedRelatednessVariance(), Slice 3, rhesus-default nChr/mapLength inputs); the
+secondary, descriptive LD Block Statistic table (markerLdBlock(), Slice 4) behind a persistent,
+non-dismissable caveat banner; curator-controlled export wiring for the LD-block table
+(obfuscateLdBlocks(), D9) reusing issue #150's confirm-gate pattern (Generate Preview -> Confirm ->
+Confirm-OK). Mid-GREEN design correction (owner-confirmed via AskUserQuestion): reverted the
+PRE-RED plan to reuse the shared genotypeFile upload -- Shiny mounts every tabPanel's output
+bindings regardless of visible tab, so a multiallelic upload through the shared input broke the
+other 5 tabs' own DT outputs simultaneously (found via RED test failures) -- switched to a
+dedicated linkageGenotypeFile input instead (mirrors genotypeFileB's precedent). 18 new test_that
+blocks + test_moduleContract.R updated for 5 new returned reactives (locusMetadataTable,
+realizedRelatednessTable, ldBlockTable, ldBlockExportTable, ldBlockExportConfirmed). Full clean
+regression 0 failed/0 error; devtools::check() 0 errors/0 warnings/2 pre-existing NOTEs;
+lintr::lint_package() 0 lints. Live runtime smoke test via Chrome browser automation against the
+real running app and the Slice 1 STR fixture confirmed the tab end to end. New colony-manager-
+guide.qmd "Linkage and LD Block Metrics" subsection with 2 new screenshots (Session 436 checklist).
+Commits: 3cae4282 (Phase 0 reconcile), e8ea98a4 (claim), plus this close-out's own commit.
+next_steps: Issue #153's entire 5-slice family is now complete -- no further slices. Remaining
+open priorities from this session's own Phase 0 report: (1) Issue #152 Slice 1 (sequence
+ingestion + fixture, script-callable only) is READY -- ratified design doc
+docs/planning/issue152-sequence-input-genetic-metrics-plan.md §5 Slice 1; can reuse
+checkLocusMetadata(), checkLinkageMarkerGenotypeFile(), and this issue's own EM-verification/
+tabPanel-eager-rendering-awareness as precedent. (2) The 3-file ledger-size HIGH risk is still
+unaddressed: SESSION_NOTES.md's fence-scanner defect (BACKLOG.md, found S518, READY, Effort S);
+HANDOFFS.md's own archive is now confirmed firing (4 records headroom, 130,897B vs 65,536B budget,
+directly verified this session) but not yet its own BACKLOG.md item; BACKLOG.md's own compression
+pass (found S518, READY, Effort L). (3) 8 older HANDOFFS.md receipts (S513-S521) still carry an
+unreconciled commit: pending placeholder (this session's own ledger finding, Learning-adjacent but
+not yet its own BACKLOG item). (4) inst/WORDLIST's ~69-70-word gap (found S521, READY, Effort M).
+(5) NEWS.Rmd terseness simplification (found S522, READY, Effort M). (6) a2interactive.Rmd
+documentation pass, now 9 functions behind (found S522, READY, Effort M) -- unaffected by this
+slice (UI-only, no new script-callable function).
+key_files: R/modMarkerGenetics.R (the sixth tab, UI + server, ~300 new lines); man/
+modMarkerGeneticsServer.Rd (regenerated); tests/testthat/test_modMarkerGenetics.R (18 new
+test_that blocks, Slice 5 section starting ~line 466); tests/testthat/test_moduleContract.R
+(modMarkerGenetics names list, 5 new entries); vignettes/articles/colony-manager-guide.qmd (new
+"Linkage and LD Block Metrics" subsection) + vignettes/articles/shiny_app_use/
+marker_genetics_linkage_coverage.png / marker_genetics_linkage_ldblock.png (new screenshots);
+PROJECT_LEARNINGS.md Learnings 526 (tabPanel-eager-rendering) and 527 (BACKLOG.md
+narrative-staleness); BACKLOG.md issue #153 narrative (backfilled + closed out).
+gotchas: (1) Shiny mounts EVERY tabPanel's output bindings inside a tabsetPanel regardless of
+which tab is currently visible (CSS-hidden, not unmounted) -- a new tab that needs input in a
+shape an existing SHARED reactive's validator would reject must get its own dedicated input, never
+reuse the shared one "since the validator already rejects it the same way either way." shiny::
+testServer() propagates a sibling tab's render error as an uncaught R condition that aborts the
+whole test block, so this surfaces immediately and concretely as multiple unrelated-looking test
+failures the moment a design like this is tested -- treat that pattern (several failures appearing
+together after one small shared-reactive decision) as a signal to re-examine the decision, not just
+individually chase down failures. See PROJECT_LEARNINGS.md Learning 526. (2) markerRealizedRelated
+nessVariance() needs ONLY the pedigree-based kinshipMatrix/pedigree (already-available module
+params) -- NOT a genotype file at all; do not assume every new tab's metric needs its own upload.
+(3) numericInput's own UI-declared `value=` default is NOT automatically reflected in input$... under
+shiny::testServer() (inputs start unset unless session$setInputs() is called) -- mirror
+modDeidentifiedExportServer's own established `if (!is.null(input$x)) input$x else <default>`
+fallback pattern inside the reactive itself, not just in the UI declaration, so testServer and live
+UI behavior actually match. (4) A `nonportable_path_linter` false positive fires on any plain-text
+string containing "word/word" (no spaces needed) -- misread as a file path. Cheapest fix is
+rewording to avoid the literal "/" character entirely (e.g. "Linkage and LD" instead of "Linkage /
+LD") rather than adding 4+ separate nolint suppressions. (5) A BACKLOG.md multi-slice issue's own
+running "Progress (S<N>, ...)" narrative has no Phase-0-style reconcile-on-read backstop, unlike
+CHANGELOG.md/HANDOFFS.md -- check for gaps (grep the issue's own "Progress (S" pattern) before
+writing a final closing-marker entry, not just add your own session's contribution on top of a
+possibly-stale predecessor entry. See PROJECT_LEARNINGS.md Learning 527.
+runtime_smoke: Launched the real app (nprcgenekeepr::runGeneKeepR(launch.browser = FALSE), port
+6013) and drove it via Chrome browser automation. Confirmed: all 6 Marker Genetics tabs render
+(including the new 6th); both new file inputs accept the Slice 1 STR fixture; the coverage report
+reads "8 full, 2 partial, 2 none" exactly; the LD Block Statistic table's Dprime/r2/nUsed values
+match the test's hand-verified reference exactly (STR01xSTR02: 0.606061/0.288889; STR03xSTR04:
+0.662317/0.498590); the persistent caveat banner and export guidance text render correctly; the
+founders-only checkbox correctly makes the table go not-ready (DT stale-dimmed, matching Shiny's
+own req()-gated-render convention) when checked with no pedigree loaded, and recovers when
+unchecked. 0 console errors throughout. The full founders-restricted CONFIRM/EXPORT click sequence
+was NOT verified live end-to-end (a pre-existing, unrelated Input-tab QC-summary rendering error
+with the chosen example pedigree file blocked loading a real pedigree live) -- verified instead via
+9 of the 18 shiny::testServer() blocks, which exercise the identical server-side code path.
+changelog_ref: CHANGELOG.md 2026-08-11/12, 3 entries (Session 524): ledger-reconcile backfill,
+claim, close-out.
+commit: pending -- reconciled by the next session's Phase 0, per this receipt's own documented
+write-time constraint (the receipt ships in the very commit whose sha it would name).
 ```
-<Claim stub written at Phase 1B. Full receipt completed at Phase 3D close-out.>
+<Session 524 self-assessment: 9/10. Strengths: (1) discovered via genuine test execution, not
+assumption, that the PRE-RED-ratified "reuse the shared upload" decision had a real consequence
+(Shiny's eager tabPanel rendering breaking 5 sibling tabs) -- stopped GREEN immediately and
+presented the evidence + a concrete fix via AskUserQuestion rather than silently patching around it;
+(2) recovered cheaply from that correction (one design pivot, 8 test-input renames, no RED work
+discarded); (3) ran the full verification chain exhaustively (32+14 tests, lint, full regression,
+devtools::check()) before declaring GREEN done; (4) did not stop at automated verification --
+launched the real app via Chrome browser automation and cross-checked the live LD-block values
+against the test's own hand-verified reference numbers, and confirmed the founders-only guard's
+live behavior; (5) found and backfilled the BACKLOG.md narrative-staleness gap S523 had flagged but
+correctly deferred, converting known technical debt into a completed fix in the same close-out that
+resolves the underlying issue (final slice shipped). Weaknesses: (1) the live founders-restricted
+export/confirm-gate click sequence was verified only via shiny::testServer(), not an actual browser
+click-through, because a pre-existing unrelated Input-tab QC-summary error blocked loading a real
+pedigree live -- correctly out of scope to fix, but leaves that one path's live verification less
+direct than the coverage-report/LD-block sections; (2) a genuinely larger, full-day session
+(spanning local midnight UTC) than Slices 3/4, proportional to Slice 5's own larger scope (UI + 2
+metrics wiring + export gate + tutorial + screenshots), not a defect but worth noting for future
+UI-wiring-slice effort estimates.>
 
 ```handoff
 session: S523
