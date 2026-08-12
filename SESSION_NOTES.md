@@ -6,6 +6,19 @@
 
 ## ACTIVE TASK
 
+### What Session 533 Did
+**Deliverable:** Implement issue #152 Slice 4 -- new `R/obfuscateGenotypeMatrix.R`
+(`obfuscateGenotypeMatrix()`), the sequence-genotype-matrix de-identification primitive, per
+`docs/planning/issue152-sequence-input-genetic-metrics-plan.md` section 5 Slice 4 (design decision
+D7). Owner-picked from this session's own Phase 0 priorities list (4 options via `AskUserQuestion`)
+over the `inst/WORDLIST` gap, `NEWS.Rmd` verbosity drift, and the `a2interactive.Rmd` documentation
+pass. (IN PROGRESS)
+**Started:** 2026-08-12
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 531 Handoff Evaluation (by Session 532)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S531 receipt's `next_steps` field named
 exactly the item this session picked up (issue #152 Slice 3, F_ROH metric,

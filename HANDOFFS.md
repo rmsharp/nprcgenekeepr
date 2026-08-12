@@ -121,6 +121,25 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-10.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S533
+date: 2026-08-12
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Issue #152 Slice 4 -- new obfuscateGenotypeMatrix() (R/obfuscateGenotypeMatrix.R),
+the sequence-genotype-matrix de-identification primitive (design decision D7), per
+docs/planning/issue152-sequence-input-genetic-metrics-plan.md section 5 Slice 4. Owner-picked
+from this session's own Phase 0 priorities list.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S532
 date: 2026-08-12
 status: complete
