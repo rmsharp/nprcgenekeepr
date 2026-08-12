@@ -171,7 +171,7 @@ upstream analysis has not yet been run.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list with nine reactive elements: <code>markerGenotype</code>, the
+    <p>A list with fourteen reactive elements: <code>markerGenotype</code>, the
 raw uploaded genotype data frame (or <code>NULL</code> before upload);
 <code>markerKinshipMatrix</code>, the marker-based <code>id</code> x <code>id</code>
 kinship matrix (or <code>NULL</code>); <code>comparisonTable</code>, the per-animal
@@ -190,12 +190,46 @@ are uploaded); <code>candidateAssignmentTable</code>, the
 <code><a href="markerParentageLikelihood.html">markerParentageLikelihood</a></code> ranked-candidate data frame (a
 zero-row, full-column-shape data frame when no pair is flagged; or
 <code>NULL</code> before a genotype file and a pedigree are both available);
-and <code>isReady</code>, <code>TRUE</code> once <code>comparisonTable</code> has a
-value.</p>
+<code>isReady</code>, <code>TRUE</code> once <code>comparisonTable</code> has a value;
+<code>locusMetadataTable</code>, the <code><a href="checkLocusMetadata.html">checkLocusMetadata</a></code> output
+(or <code>NULL</code> before a locus-metadata file is uploaded);
+<code>realizedRelatednessTable</code>, the
+<code><a href="markerRealizedRelatednessVariance.html">markerRealizedRelatednessVariance</a></code> output (or <code>NULL</code>
+before <code>pedigree</code>/<code>kinshipMatrix</code> are both available);
+<code>ldBlockTable</code>, the <code><a href="markerLdBlock.html">markerLdBlock</a></code> output (or
+<code>NULL</code> before a genotype file and a locus-metadata file are both
+uploaded, or before a pedigree is available if the founders-only
+restriction is checked); <code>ldBlockExportTable</code>, the
+<code><a href="obfuscateLdBlocks.html">obfuscateLdBlocks</a></code>-de-identified export preview (or
+<code>NULL</code> before "Generate De-Identified Export Preview" is clicked
+with both <code>ldBlockTable</code> and <code>pedigree</code> available); and
+<code>ldBlockExportConfirmed</code>, <code>FALSE</code> until the confirm-gate
+modal's own Confirm button is clicked for the current export preview.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>This module never touches the existing single-locus genotype path
+    <p>A sixth tab, "Linkage and LD Block Metrics" (issue #153 Slice 5), wires in
+three additional analyses. A locus-metadata file (<code>locus</code>,
+<code>chrom</code>, <code>pos</code>, optionally <code>cM</code>) is validated and
+classified into a three-tier coverage report
+(<code><a href="checkLocusMetadata.html">checkLocusMetadata</a></code>, D2). The realized-relatedness-variance
+table (<code><a href="markerRealizedRelatednessVariance.html">markerRealizedRelatednessVariance</a></code>, D3a) needs only
+the existing <code>kinshipMatrix</code>/<code>pedigree</code> plus a curator-supplied
+chromosome count and genetic-map length – no genotype file at all. The
+LD-block table (<code><a href="markerLdBlock.html">markerLdBlock</a></code>, D3b) reads its OWN,
+dedicated <code>linkageGenotypeFile</code> upload – deliberately independent
+of the other five tabs' shared <code>genotypeFile</code>, since Shiny renders
+every <code>tabPanel</code>'s output bindings regardless of which tab is
+visible: a multiallelic file uploaded through the shared input would
+break the other five tabs' own DT outputs simultaneously, not just this
+tab's (found empirically this session, correcting the original PRE-RED
+plan). Validated through the multiallelic-tolerant sibling validator
+(<code><a href="checkLinkageMarkerGenotypeFile.html">checkLinkageMarkerGenotypeFile</a></code>) rather than
+<code><a href="checkMarkerGenotypeFile.html">checkMarkerGenotypeFile</a></code>. Any exported LD-block
+table is de-identified (<code><a href="obfuscateLdBlocks.html">obfuscateLdBlocks</a></code>) behind a
+curator confirm-gate reusing <code><a href="modDeidentifiedExportServer.html">modDeidentifiedExportServer</a></code>'s
+tested Generate-Preview -&gt; Confirm -&gt; Confirm-OK pattern (D9).</p>
+<p>This module never touches the existing single-locus genotype path
 (<code>checkGenotypeFile</code>/<code>addGenotype</code>/<code>hasGenotype</code>/
 <code>getGVGenotype</code>/<code>geneDrop</code>) – the D1 long-format schema is a
 new, sibling concern.</p>

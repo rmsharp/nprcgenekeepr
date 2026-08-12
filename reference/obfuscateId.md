@@ -36,6 +36,9 @@ value.
 Other obfuscation:
 [`mapIdsToObfuscated()`](https://github.com/rmsharp/nprcgenekeepr/reference/mapIdsToObfuscated.md),
 [`obfuscateDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateDate.md),
+[`obfuscateGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenomicROH.md),
+[`obfuscateGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenotypeMatrix.md),
+[`obfuscateLdBlocks()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateLdBlocks.md),
 [`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md),
 [`obfuscateTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateTwinRelations.md)
 
@@ -46,9 +49,9 @@ library(nprcgenekeepr)
 integerIds <- 1L:10L
 obfuscateId(integerIds, size = 4L)
 #>      1      2      3      4      5      6      7      8      9     10 
-#> "QX9S" "RG1Q" "SHIV" "VCBX" "7VUT" "9SYW" "IJ0Q" "G1D5" "WULQ" "SGTC" 
+#> "D5WU" "LQSG" "TCJH" "J6Q2" "5PCL" "0LX4" "4NN6" "X0W6" "KG6S" "5G10" 
 characterIds <- paste0(paste0(sample(LETTERS, 1L, replace = FALSE)), 1L:10L)
 obfuscateId(characterIds, size = 4L)
-#>     H1     H2     H3     H4     H5     H6     H7     H8     H9    H10 
-#> "HJ6Q" "25PC" "L0LX" "44NN" "6X0W" "6KG6" "S5G1" "08UZ" "ND7J" "VD4L" 
+#>     Y1     Y2     Y3     Y4     Y5     Y6     Y7     Y8     Y9    Y10 
+#> "7JVD" "4L2J" "HTJG" "TUEI" "08D1" "83KX" "88LJ" "FLS7" "SJBP" "4MEN" 
 ```

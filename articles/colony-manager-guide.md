@@ -865,6 +865,121 @@ loci, so its LOD score is negative infinity – a true genetic
 impossibility, not merely “unlikely” (blank cells in the LOD/delta
 columns above render that infinite value).
 
+A sixth **Linkage and LD Block Metrics** tab (issue
+[\#153](https://github.com/rmsharp/nprcgenekeepr/issues/153)) answers a
+question the other five tabs deliberately don’t: whether nearby marker
+loci carry information about relatedness or linkage beyond what each
+locus contributes independently. It needs its own dedicated marker
+genotype upload (separate from the file used by the other five tabs,
+since it tolerates multiallelic panels – e.g. microsatellite/STR panels
+– that the other tabs’ biallelic-only KING-robust estimator would
+reject) plus a locus metadata file describing each locus’s chromosome,
+physical position, and (optionally) genetic-map position.
+
+Uploading the locus metadata file first shows a **coverage report**:
+real colony marker panels rarely have complete positional information,
+so every locus is classified into one of three explicit tiers – `full`
+(chromosome and position both known), `partial` (only one known), or
+`none` – rather than silently requiring complete metadata before
+anything downstream works.
+
+![Marker Genetics Linkage and LD Block Metrics tab showing a coverage
+summary reading '8 full, 2 partial, 2 none' above a per-locus table with
+locus, chrom, pos, cM, and coverage
+columns.](shiny_app_use/marker_genetics_linkage_coverage.png)
+
+The Linkage and LD Block Metrics tab’s locus metadata coverage report
+for a 12-locus example STR panel: 8 loci have full chromosome+position
+information, 2 have partial (chromosome only), and 2 have neither.
+
+Below the coverage report, two complementary metrics are computed. The
+**Realized Relatedness Variance** table is the tab’s primary, genuinely
+pedigree-valid metric (Hill & Weir 2011): pedigree-based kinship is only
+an *average* expected relatedness – the actual proportion of genome
+shared identical-by-descent between two relatives varies around that
+average because of Mendelian sampling and linkage, and this table
+estimates that variance for Parent-Offspring, Full-Sibling, and
+Half-Sibling pairs given a curator-supplied chromosome count and total
+genetic-map length (pre-filled with rhesus macaque defaults, adjustable
+for other species or datasets). It needs no genotype file at all – only
+the pedigree already loaded elsewhere in the app.
+
+The **LD Block Statistic** table is a secondary, explicitly-caveated
+descriptive measure (D’ and r², computed pairwise for same-chromosome
+loci from the multiallelic genotype upload): classical
+linkage-disequilibrium theory assumes a randomly-mating population,
+which a pedigreed colony violates by construction, and no rigorous
+method that is both pedigree-aware and tolerant of multiallelic data
+currently exists as a CRAN package. A persistent, non-dismissable banner
+states this caveat directly above the table – it always accompanies the
+statistic, since this is a genuine, documented limitation rather than an
+oversight. An optional checkbox restricts the computation to founder
+animals only, which reduces (but does not eliminate) the effect of
+related individuals in the sample.
+
+![Marker Genetics Linkage and LD Block Metrics tab showing the LD Block
+Statistic section: an orange caveat banner reading that the statistic is
+descriptive only and not pedigree-aware, a founders-only checkbox, and a
+table with two rows of Dprime/r2/nUsed values for locus pairs on
+chromosomes 1 and 2.](shiny_app_use/marker_genetics_linkage_ldblock.png)
+
+The LD Block Statistic table for the same example STR panel: two
+same-chromosome locus pairs (STR01 x STR02 on chromosome 1, STR03 x
+STR04 on chromosome 2), each with its D’/r² values and the persistent
+caveat banner above.
+
+Because a joint, multi-locus statistic like an LD-block table carries
+*more* re-identifying power than a single-locus summary (not less), any
+exported LD-block table is de-identified and routed through the same
+curator confirm-gate pattern as the De-Identified Export tab below:
+generate a preview, confirm via a modal dialog, then download. The
+Realized Relatedness Variance table has no export control – like the
+other five Marker Genetics tabs, it is a report-only, on-screen
+diagnostic.
+
+A seventh **Genomic ROH (F_ROH)** tab (issue
+[\#152](https://github.com/rmsharp/nprcgenekeepr/issues/152), the final
+slice, closing that issue) computes a marker-based inbreeding estimate
+independent of the recorded pedigree: the genomic inbreeding coefficient
+F_ROH, derived from Runs of Homozygosity (ROH) – long stretches of
+consecutive homozygous loci that are unlikely to occur by chance and
+typically indicate the two chromosome copies at that stretch are
+identical by descent. Unlike the Linkage and LD Block Metrics tab above,
+this one needs **no separate upload**: it reuses the same genotype file
+already uploaded for the Kinship Comparison tab (now validated by a rule
+set sized for larger, sequence-scale panels) and the same locus metadata
+file already uploaded for the Linkage and LD Block Metrics tab, since
+both tabs share the same `locus`/`chrom`/`pos` vocabulary by design.
+
+A run of consecutive homozygous, non-missing loci (ordered by physical
+position along each chromosome) qualifies as an ROH segment only if it
+meets *both* a minimum SNP-count threshold and a minimum base-pair span
+threshold – the same field-standard dual-threshold convention PLINK
+uses, adjustable via the two fields above the table (pre-filled with
+PLINK’s own defaults). F_ROH is the proportion of the genome covered by
+qualifying segments.
+
+![Marker Genetics Genomic ROH (F_ROH) tab showing the minimum SNP count
+and minimum ROH segment span inputs above a table of 50 rows (S001
+through S050 visible in part), each with nSegments, totalRohLength, and
+fRoh columns populated with real, non-zero example
+values.](shiny_app_use/marker_genetics_genomic_roh.png)
+
+The Genomic ROH (F_ROH) tab computed on the bundled 50-individual,
+1,000-locus synthetic sequence-scale example panel, with the minimum-SNP
+threshold lowered from its default of 50 to 3 so the small synthetic
+panel still yields non-trivial segments: per-individual segment counts,
+total ROH length, and F_ROH.
+
+Like the Linkage and LD Block Metrics tab, any export from this tab is
+de-identified and routed through the same curator confirm-gate pattern:
+generate a preview, confirm via a modal dialog, then download. Three
+artifacts are available – the de-identified genotype matrix, the
+de-identified F_ROH table, and a transformation manifest recording the
+export’s own timestamp, package version, and the SNP-count/base-pair
+thresholds used, mirroring the De-Identified Export tab’s own manifest
+convention below.
+
 ### Cross-Center Identity
 
 The **Cross-Center Identity** tab (issue

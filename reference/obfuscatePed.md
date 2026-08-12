@@ -64,7 +64,10 @@ An obfuscated pedigree
 Other obfuscation:
 [`mapIdsToObfuscated()`](https://github.com/rmsharp/nprcgenekeepr/reference/mapIdsToObfuscated.md),
 [`obfuscateDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateDate.md),
+[`obfuscateGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenomicROH.md),
+[`obfuscateGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenotypeMatrix.md),
 [`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md),
+[`obfuscateLdBlocks()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateLdBlocks.md),
 [`obfuscateTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateTwinRelations.md)
 
 ## Examples
@@ -85,12 +88,12 @@ ped
 #> 8 o4   s2   d2   M   1 2008-04-13 <NA> 18.3     original
 obfuscatedPed
 #>       id   sire    dam sex gen      birth exit  age recordStatus
-#> 1 2JHTJG   <NA>   <NA>   F   0 2003-03-21 <NA> 23.4     original
-#> 2 TUEI08   <NA>   <NA>   F   0 2002-06-19 <NA> 24.1     original
-#> 3 D183KX   <NA>   <NA>   M   0 2000-08-13 <NA> 26.0     original
-#> 4 88LJFL   <NA>   <NA>   M   0 2005-07-04 <NA> 21.1     original
-#> 5 S7SJBP D183KX 2JHTJG   F   1 2015-03-01 <NA> 11.4     original
-#> 6 4MENXN D183KX TUEI08   F   1 2009-03-15 <NA> 17.4     original
-#> 7 ZZUQQK 88LJFL TUEI08   F   1 2012-04-17 <NA> 14.3     original
-#> 8 V6EPHQ 88LJFL TUEI08   M   1 2008-04-12 <NA> 18.3     original
+#> 1 SN7TLJ   <NA>   <NA>   F   0 2003-05-12 <NA> 23.3     original
+#> 2 2ZFC1W   <NA>   <NA>   F   0 2002-06-02 <NA> 24.2     original
+#> 3 FCDNFK   <NA>   <NA>   M   0 2000-08-05 <NA> 26.0     original
+#> 4 GJGR1A   <NA>   <NA>   M   0 2005-05-24 <NA> 21.2     original
+#> 5 T5NBEL FCDNFK SN7TLJ   F   1 2015-01-29 <NA> 11.5     original
+#> 6 FEHHE9 FCDNFK 2ZFC1W   F   1 2009-02-23 <NA> 17.5     original
+#> 7 LSYDEB GJGR1A 2ZFC1W   F   1 2012-03-23 <NA> 14.4     original
+#> 8 7YDSRN GJGR1A 2ZFC1W   M   1 2008-05-03 <NA> 18.3     original
 ```

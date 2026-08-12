@@ -52,7 +52,7 @@ summary(reportGV(ped, guIter = 10))
 #> Female Founders: 2
 #> Total Founders: 4 
 #> Founder Equivalents: 3.56 
-#> Founder Genome Equivalents: 2.68 +/- 0.14 
+#> Founder Genome Equivalents: 2.70 +/- 0.14 
 #> Live Offspring: 8 
 #> High Value Individuals: 1 
 #> Low Value Individuals: 3 

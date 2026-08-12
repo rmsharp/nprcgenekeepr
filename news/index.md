@@ -40,6 +40,33 @@
   be ingested.
   [`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)/[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)’s
   existing biallelic contract is completely untouched. No Shiny UI yet.
+- New script-callable
+  [`markerRealizedRelatednessVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerRealizedRelatednessVariance.md)
+  (issue [\#153](https://github.com/rmsharp/nprcgenekeepr/issues/153),
+  Slice 3) estimates the variance of *actual* (realized) relatedness
+  around a pair’s pedigree-expected value for Parent-Offspring,
+  Full-Siblings, and Half-Siblings pairs – pedigree kinship gives only
+  an average, but the true fraction of genome shared
+  identical-by-descent varies around it because of Mendelian sampling
+  and linkage. Implements the closed-form solution of Hill & Weir
+  (2011), extending this package’s existing
+  [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)/[`convertRelationships()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertRelationships.md)
+  rather than a new framework; other relationship categories return
+  `NA`, not an error. No Shiny UI yet.
+- New script-callable
+  [`markerLdBlock()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerLdBlock.md)
+  and
+  [`obfuscateLdBlocks()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateLdBlocks.md)
+  (issue [\#153](https://github.com/rmsharp/nprcgenekeepr/issues/153),
+  Slice 4) add a descriptive, same-chromosome pairwise LD/block
+  statistic for exploratory use – a documented, non-rigorous compromise,
+  since no method exists that is both pedigree-aware and multiallelic-
+  capable;
+  [`markerRealizedRelatednessVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerRealizedRelatednessVariance.md)
+  remains the primary, pedigree-valid metric.
+  [`obfuscateLdBlocks()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateLdBlocks.md)
+  de-identifies the optional founder-id column before export. No Shiny
+  UI yet.
 - The Genetic Value Analysis tab gained a configurable **Ranking
   Scheme** control (issue
   [\#125](https://github.com/rmsharp/nprcgenekeepr/issues/125)): the
@@ -448,6 +475,65 @@
   established curator-controlled pattern (a confirmation dialog and
   warning text, not real access control) rather than building new auth
   infrastructure.
+- The Marker Genetics tab gained a **Linkage and LD Block Metrics**
+  sub-tab (issue
+  [\#153](https://github.com/rmsharp/nprcgenekeepr/issues/153), Slice 5,
+  closes [\#153](https://github.com/rmsharp/nprcgenekeepr/issues/153)):
+  a locus-metadata upload with a three-tier coverage report
+  (full/partial/none); the pedigree-valid realized-relatedness-variance
+  table
+  ([`markerRealizedRelatednessVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerRealizedRelatednessVariance.md),
+  Slice 3); and the descriptive LD-block table
+  ([`markerLdBlock()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerLdBlock.md),
+  Slice 4) behind a persistent, non-dismissable caveat banner. The
+  LD-block table’s export is de-identified
+  ([`obfuscateLdBlocks()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateLdBlocks.md))
+  behind the same curator confirm-gate pattern established by the
+  De-Identified Export tab.
+- New script-callable
+  [`checkSequenceGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkSequenceGenotypeFile.md)
+  (issue [\#152](https://github.com/rmsharp/nprcgenekeepr/issues/152),
+  Slice 1) validates a long-format biallelic marker genotype file sized
+  for sequence-scale panels, rejecting a literal `.` placeholder and
+  warning (not stopping) above a 50,000-locus ceiling. A new bundled
+  example fixture pair (`example_sequence_genotypes.csv` /
+  `example_sequence_locus_metadata.csv`) provides a 1,000-locus,
+  50-individual panel for future slices. No Shiny UI yet.
+- [`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)
+  and
+  [`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
+  (issue [\#152](https://github.com/rmsharp/nprcgenekeepr/issues/152),
+  Slice 2) are internally rewritten for large marker panels – vectorized
+  matrix algebra and precomputed allele frequencies, respectively – with
+  output and signatures unchanged.
+- New script-callable
+  [`computeGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/computeGenomicROH.md)
+  (issue [\#152](https://github.com/rmsharp/nprcgenekeepr/issues/152),
+  Slice 3) computes per-individual genomic Runs-of-Homozygosity segments
+  and the F_ROH inbreeding coefficient from a sequence-scale marker
+  genotype matrix and locus-metadata sidecar – a marker-based inbreeding
+  estimate independent of the recorded pedigree. No Shiny UI yet.
+- New script-callable
+  [`obfuscateGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenotypeMatrix.md)
+  (issue [\#152](https://github.com/rmsharp/nprcgenekeepr/issues/152),
+  Slice 4) de-identifies a sequence-scale genotype matrix by remapping
+  its row names (individual ids) through the same alias map
+  `obfuscatePed(..., map = TRUE)` already returns; genotype values are
+  unchanged. No Shiny UI yet.
+- Marker Genetics gains a new “Genomic ROH (F_ROH)” tab (issue
+  [\#152](https://github.com/rmsharp/nprcgenekeepr/issues/152), Slice 5,
+  closing the issue): computes per-individual F_ROH from the same
+  genotype file and locus-metadata file already uploaded elsewhere in
+  the module – no new upload control, since
+  [`checkSequenceGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkSequenceGenotypeFile.md)
+  makes the existing genotype input genome-scale-capable. Any export
+  (the genotype matrix, the F_ROH table, and a transformation manifest)
+  is de-identified
+  ([`obfuscateGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenotypeMatrix.md),
+  new script-callable
+  [`obfuscateGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenomicROH.md))
+  behind the same curator confirm-gate pattern established by the
+  De-Identified Export tab.
 
 ## nprcgenekeepr 2.0.0 (20260708)
 

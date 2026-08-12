@@ -51,7 +51,10 @@ the primary validation path.
 Other obfuscation:
 [`mapIdsToObfuscated()`](https://github.com/rmsharp/nprcgenekeepr/reference/mapIdsToObfuscated.md),
 [`obfuscateDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateDate.md),
+[`obfuscateGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenomicROH.md),
+[`obfuscateGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenotypeMatrix.md),
 [`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md),
+[`obfuscateLdBlocks()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateLdBlocks.md),
 [`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
 
 ## Examples
@@ -70,5 +73,5 @@ twinRelations <- data.frame(
 obfuscated <- obfuscatePed(ped, map = TRUE)
 obfuscateTwinRelations(twinRelations, obfuscated$map)
 #>      id1    id2    code
-#> 1 1WFCDN FKGJGR MZ twin
+#> 1 832J19 KN3CMQ MZ twin
 ```

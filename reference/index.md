@@ -271,12 +271,16 @@ Funtions designed for interactive use
   : Check parent ages against a minimum age
 - [`checkRequiredCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkRequiredCols.md)
   : Check column names for required columns
+- [`checkSequenceGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkSequenceGenotypeFile.md)
+  : Check a long-format sequence-derived marker genotype file
 - [`checkTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.md)
   : Validate a twin/zygosity relations table
 - [`chooseAlleles()`](https://github.com/rmsharp/nprcgenekeepr/reference/chooseAlleles.md)
   : Combine two allele vectors by Mendelian sampling
 - [`chooseDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/chooseDate.md)
   : Choose the earlier or later of two dates
+- [`computeGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/computeGenomicROH.md)
+  : Compute genomic Runs of Homozygosity (ROH) and F_ROH
 - [`convertAncestry()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertAncestry.md)
   : Convert ancestry information to a standard code
 - [`convertDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertDate.md)
@@ -484,6 +488,8 @@ Funtions designed for interactive use
 - [`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)
   : Estimate pairwise kinship directly from marker genotypes
   (KING-robust)
+- [`markerLdBlock()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerLdBlock.md)
+  : Compute a descriptive, same-chromosome pairwise LD/block statistic
 - [`markerObservedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerObservedHeterozygosity.md)
   : Compute per-animal observed heterozygosity from marker genotypes
 - [`markerParentageExclusion()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md)
@@ -491,6 +497,9 @@ Funtions designed for interactive use
 - [`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
   : Rank candidate replacement parents by a multilocus likelihood (LOD)
   score
+- [`markerRealizedRelatednessVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerRealizedRelatednessVariance.md)
+  : Estimate the variance of realized relatedness around pedigree
+  kinship
 - [`meanKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/meanKinship.md)
   : Calculate mean kinship for each animal in a kinship matrix
 - [`modBreedingGroupsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsServer.md)
@@ -552,8 +561,14 @@ Funtions designed for interactive use
   : Summary Statistics Module - UI Function
 - [`obfuscateDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateDate.md)
   : Obfuscate dates with a random day offset
+- [`obfuscateGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenomicROH.md)
+  : De-identify a computeGenomicROH() result table
+- [`obfuscateGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenotypeMatrix.md)
+  : De-identify a sequence-scale genotype matrix
 - [`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
   : Create ID aliases of a specified length
+- [`obfuscateLdBlocks()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateLdBlocks.md)
+  : De-identify a markerLdBlock() result table
 - [`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
   : Obfuscate a pedigree by aliasing IDs and shifting dates
 - [`obfuscateTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateTwinRelations.md)

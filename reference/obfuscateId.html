@@ -97,6 +97,9 @@ ID value.</p>
     <div class="dont-index"><p>Other obfuscation:
 <code><a href="mapIdsToObfuscated.html">mapIdsToObfuscated()</a></code>,
 <code><a href="obfuscateDate.html">obfuscateDate()</a></code>,
+<code><a href="obfuscateGenomicROH.html">obfuscateGenomicROH()</a></code>,
+<code><a href="obfuscateGenotypeMatrix.html">obfuscateGenotypeMatrix()</a></code>,
+<code><a href="obfuscateLdBlocks.html">obfuscateLdBlocks()</a></code>,
 <code><a href="obfuscatePed.html">obfuscatePed()</a></code>,
 <code><a href="obfuscateTwinRelations.html">obfuscateTwinRelations()</a></code></p></div>
     </div>
@@ -107,11 +110,11 @@ ID value.</p>
 <span class="r-in"><span><span class="va">integerIds</span> <span class="op">&lt;-</span> <span class="fl">1L</span><span class="op">:</span><span class="fl">10L</span></span></span>
 <span class="r-in"><span><span class="fu">obfuscateId</span><span class="op">(</span><span class="va">integerIds</span>, size <span class="op">=</span> <span class="fl">4L</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      1      2      3      4      5      6      7      8      9     10 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> "QX9S" "RG1Q" "SHIV" "VCBX" "7VUT" "9SYW" "IJ0Q" "G1D5" "WULQ" "SGTC" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> "D5WU" "LQSG" "TCJH" "J6Q2" "5PCL" "0LX4" "4NN6" "X0W6" "KG6S" "5G10" </span>
 <span class="r-in"><span><span class="va">characterIds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">LETTERS</span>, <span class="fl">1L</span>, replace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>, <span class="fl">1L</span><span class="op">:</span><span class="fl">10L</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">obfuscateId</span><span class="op">(</span><span class="va">characterIds</span>, size <span class="op">=</span> <span class="fl">4L</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     H1     H2     H3     H4     H5     H6     H7     H8     H9    H10 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> "HJ6Q" "25PC" "L0LX" "44NN" "6X0W" "6KG6" "S5G1" "08UZ" "ND7J" "VD4L" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Y1     Y2     Y3     Y4     Y5     Y6     Y7     Y8     Y9    Y10 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> "7JVD" "4L2J" "HTJG" "TUEI" "08D1" "83KX" "88LJ" "FLS7" "SJBP" "4MEN" </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

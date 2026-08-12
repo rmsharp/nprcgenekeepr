@@ -64,14 +64,14 @@ modMarkerGeneticsServer(id, kinshipMatrix, pedigree)
 
 ## Value
 
-A list with nine reactive elements: `markerGenotype`, the raw uploaded
-genotype data frame (or `NULL` before upload); `markerKinshipMatrix`,
-the marker-based `id` x `id` kinship matrix (or `NULL`);
-`comparisonTable`, the per-animal `indivMeanKin`/`markerMeanKin`
-comparison data frame (or `NULL`); `heterozygosityTable`, the per-animal
-`ho`/`he` heterozygosity data frame (`he` is the population-wide mean
-expected heterozygosity, repeated per row) (or `NULL`);
-`exclusionTable`, the
+A list with fourteen reactive elements: `markerGenotype`, the raw
+uploaded genotype data frame (or `NULL` before upload);
+`markerKinshipMatrix`, the marker-based `id` x `id` kinship matrix (or
+`NULL`); `comparisonTable`, the per-animal
+`indivMeanKin`/`markerMeanKin` comparison data frame (or `NULL`);
+`heterozygosityTable`, the per-animal `ho`/`he` heterozygosity data
+frame (`he` is the population-wide mean expected heterozygosity,
+repeated per row) (or `NULL`); `exclusionTable`, the
 [`markerParentageExclusion`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md)
 flagged-pairs data frame (or `NULL` before a genotype file and a
 pedigree are both available); `crossCenterGenotypeB`, the raw uploaded
@@ -83,10 +83,53 @@ before both center files are uploaded); `candidateAssignmentTable`, the
 [`markerParentageLikelihood`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
 ranked-candidate data frame (a zero-row, full-column-shape data frame
 when no pair is flagged; or `NULL` before a genotype file and a pedigree
-are both available); and `isReady`, `TRUE` once `comparisonTable` has a
-value.
+are both available); `isReady`, `TRUE` once `comparisonTable` has a
+value; `locusMetadataTable`, the
+[`checkLocusMetadata`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md)
+output (or `NULL` before a locus-metadata file is uploaded);
+`realizedRelatednessTable`, the
+[`markerRealizedRelatednessVariance`](https://github.com/rmsharp/nprcgenekeepr/reference/markerRealizedRelatednessVariance.md)
+output (or `NULL` before `pedigree`/`kinshipMatrix` are both available);
+`ldBlockTable`, the
+[`markerLdBlock`](https://github.com/rmsharp/nprcgenekeepr/reference/markerLdBlock.md)
+output (or `NULL` before a genotype file and a locus-metadata file are
+both uploaded, or before a pedigree is available if the founders-only
+restriction is checked); `ldBlockExportTable`, the
+[`obfuscateLdBlocks`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateLdBlocks.md)-de-identified
+export preview (or `NULL` before "Generate De-Identified Export Preview"
+is clicked with both `ldBlockTable` and `pedigree` available); and
+`ldBlockExportConfirmed`, `FALSE` until the confirm-gate modal's own
+Confirm button is clicked for the current export preview.
 
 ## Details
+
+A sixth tab, "Linkage and LD Block Metrics" (issue \#153 Slice 5), wires
+in three additional analyses. A locus-metadata file (`locus`, `chrom`,
+`pos`, optionally `cM`) is validated and classified into a three-tier
+coverage report
+([`checkLocusMetadata`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md),
+D2). The realized-relatedness-variance table
+([`markerRealizedRelatednessVariance`](https://github.com/rmsharp/nprcgenekeepr/reference/markerRealizedRelatednessVariance.md),
+D3a) needs only the existing `kinshipMatrix`/`pedigree` plus a
+curator-supplied chromosome count and genetic-map length – no genotype
+file at all. The LD-block table
+([`markerLdBlock`](https://github.com/rmsharp/nprcgenekeepr/reference/markerLdBlock.md),
+D3b) reads its OWN, dedicated `linkageGenotypeFile` upload –
+deliberately independent of the other five tabs' shared `genotypeFile`,
+since Shiny renders every `tabPanel`'s output bindings regardless of
+which tab is visible: a multiallelic file uploaded through the shared
+input would break the other five tabs' own DT outputs simultaneously,
+not just this tab's (found empirically this session, correcting the
+original PRE-RED plan). Validated through the multiallelic-tolerant
+sibling validator
+([`checkLinkageMarkerGenotypeFile`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLinkageMarkerGenotypeFile.md))
+rather than
+[`checkMarkerGenotypeFile`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md).
+Any exported LD-block table is de-identified
+([`obfuscateLdBlocks`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateLdBlocks.md))
+behind a curator confirm-gate reusing
+[`modDeidentifiedExportServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modDeidentifiedExportServer.md)'s
+tested Generate-Preview -\> Confirm -\> Confirm-OK pattern (D9).
 
 This module never touches the existing single-locus genotype path
 (`checkGenotypeFile`/`addGenotype`/`hasGenotype`/

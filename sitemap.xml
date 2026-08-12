@@ -81,9 +81,11 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/checkParentAge.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/checkRequiredCols.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/checkSequenceGenotypeFile.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/chooseAlleles.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/chooseDate.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/computeGenomicROH.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/convertAncestry.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/convertDate.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/convertFromCenter.html</loc></url>
@@ -197,9 +199,11 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/markerExpectedHeterozygosity.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/markerLdBlock.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/markerObservedHeterozygosity.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/markerRealizedRelatednessVariance.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/meanKinship.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsServer.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsUI.html</loc></url>
@@ -231,7 +235,10 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/modSummaryStatsUI.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/nprcgenekeepr-package.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateDate.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenomicROH.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenotypeMatrix.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateLdBlocks.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateTwinRelations.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/offspringCounts.html</loc></url>
