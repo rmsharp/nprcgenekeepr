@@ -121,6 +121,26 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-10.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S523
+date: 2026-08-11
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Issue #153 Slice 4 -- markerLdBlock() (descriptive LD/haplotype-block statistic, D3b)
++ obfuscateLdBlocks() (de-identification primitive, D8/D9), per
+docs/planning/issue153-linkage-haplotype-block-metrics-plan.md §5 Slice 4. Claimed, work beginning.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending -- reconciled by the next session's Phase 0, per this receipt's own documented
+write-time constraint (the receipt ships in the very commit whose sha it would name).
+```
+<Session 523 claim stub -- Phase 1B. Filled at Phase 3D close-out.>
+
+```handoff
 session: S521b (ad hoc, reconciled)
 date: 2026-08-11
 status: reconciled

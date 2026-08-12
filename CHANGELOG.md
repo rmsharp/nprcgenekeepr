@@ -131,6 +131,18 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-11 · [issue #153] S523 claim: issue #153 Slice 4 (markerLdBlock() + obfuscateLdBlocks(), D3b/D8/D9) (Session 523)
+- **Deliverable:** Issue #153 Slice 4 per `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md`
+  §5 Slice 4 — the descriptive LD/haplotype-block statistic (`markerLdBlock()`, D3b) plus the
+  `obfuscateLdBlocks()` de-identification primitive (D8/D9). D3(b) is an explicit, documented
+  statistical compromise (no rigorous pedigree-aware LD-block method exists CRAN-side) — this
+  slice's own PRE-RED must re-read §7 Dragon 3 before RED, not just reuse Slice 3's resolved
+  formula-derivation pattern.
+- **Picked from Phase 0 priorities list** (owner choice via `AskUserQuestion`) over 3 other
+  candidates: issue #152 Slice 1, the `methodology_trim.py` fence-scanner fix, `BACKLOG.md`
+  compression.
+- **Ledger:** this entry only.
+
 ### 2026-08-11 · [issue #153] Backfilled (reconcile-on-read): undocumented commit 25606464 — S522 close-out finalization
 - **Provenance:** Session 522's own final commit (`25606464`, "docs: S522 close-out -- record
   renv.lock finding (Learning 523, HANDOFFS, SESSION_NOTES)") touched only `HANDOFFS.md`,
