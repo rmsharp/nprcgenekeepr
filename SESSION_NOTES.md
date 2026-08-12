@@ -6,15 +6,81 @@
 
 ## ACTIVE TASK
 
+### Session 533 Handoff Evaluation (by Session 534)
+**Score: 9/10.** **What helped:** the `HANDOFFS.md` S533 receipt's `next_steps` field listed
+the exact item this session picked up -- `.Rbuildignore`'s `methodology_trim.py` typo, Effort
+S, READY -- alongside the other 3 open READY items, and its `gotchas` (3) named the exact fix
+(`^methodology_trim\.py$`) and verification command (`devtools::check()` default invocation)
+this session applied verbatim. The receipt's own `key_files` claim (`.Rbuildignore:113`,
+the typo'd line) held up exactly against direct re-verification. **What was missing:**
+nothing structural -- the receipt could not have anticipated this session's own choice to add
+a `testthat` regression guard for the fix (a design decision this session made, not something
+S533 could have specified). **What was wrong:** nothing found -- every claim re-checked
+(the typo pattern, the line reference, the NOTE-count baseline, gotchas (1)/(2) about
+`lintr`/`devtools::check()` invocation) matched this session's own direct re-verification.
+**ROI:** High -- the `next_steps` and `gotchas` fields together meant this session started
+Pre-RED research already knowing the exact defect, exact fix, and exact verification command,
+with zero rediscovery needed.
+
 ### What Session 534 Did
-**Deliverable:** Fix `.Rbuildignore`'s `methodology_trim.py` pattern typo (found S533,
-`BACKLOG.md` Housekeeping, READY, Effort S) -- one-off fix per `DEVELOPMENT_WORKSTREAM.md`'s
-own "just fix it" guidance for single, clear bugs, under `CLAUDE.md`'s Development Process
-Contract (IN PROGRESS)
-**Started:** 2026-08-12
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+**Deliverable:** Fixed `.Rbuildignore`'s `methodology_trim.py` pattern typo (found S533,
+`BACKLOG.md` Housekeeping, READY, Effort S) -- a one-off fix per `DEVELOPMENT_WORKSTREAM.md`'s
+own "just fix it" guidance for a single, clear bug, still gated by `CLAUDE.md`'s Development
+Process Contract (RED->GREEN->REFACTOR, each transition via its own `AskUserQuestion`).
+Owner-picked from this session's own Phase 0 priorities list (4 options via `AskUserQuestion`)
+over issue #152 Slice 5, the `inst/WORDLIST` gap, and the `NEWS.Rmd` verbosity drift.
+**Started/Completed:** 2026-08-12.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, git status/log, `methodology_dashboard.py` -- health
+96/100, 1 HIGH-risk category unchanged). Ledger reconcile: `CHANGELOG.md` frontier already
+`HEAD`; `HANDOFFS.md`'s S533 receipt still carried `commit: pending` (status already
+`complete`), reconciled to `a99fd2c2` (the established one-hop case, `git log -1
+--format=%H -- HANDOFFS.md` confirmed), committed separately (`90cd53e8`). Rendered the
+priorities list via `AskUserQuestion` (4 options); owner picked the `.Rbuildignore` typo fix.
+**(2)** Claimed the session (commit `d1d05def`). **(3)** Pre-RED research: confirmed the typo
+directly (`.Rbuildignore:113`, `^methodolog_trim\.py$`), confirmed `methodology_trim.py`
+exists at the repo root, confirmed no existing test covers `.Rbuildignore` content, and read
+`test_pkgdown_reference_config.R` as the closest style precedent for a `testthat` guard over a
+non-R config file. **(4)** PRE-RED->RED gate: wrote `tests/testthat/test_rbuildignore.R` --
+reads `.Rbuildignore`'s non-comment lines and asserts (via `grepl(pattern,
+"methodology_trim.py", perl = TRUE)`, each candidate wrapped in `tryCatch`) that at least one
+matches. Confirmed RED: 1/1 failing against the live typo. **(5)** RED->GREEN gate: corrected
+`.Rbuildignore:113` from `^methodolog_trim\.py$` to `^methodology_trim\.py$` (the one-character
+fix). Test passed; full clean regression 0 failed/0 error. **(6)** GREEN->REFACTOR gate:
+`lintr::lint_package()` (argument-free, per Learning 539's own gotcha) found 0 lints -- no
+refactor changes needed. **(7)** Final verification: `devtools::check()` (default `cran = TRUE`
+invocation, per Learning 539) via a background task -- `checking top-level files ... OK`,
+confirming the fix's actual effect, not just the new unit test. `Status: 2 NOTEs` is unchanged
+in count but changed in composition: vignettes/figure leftover (pre-existing, unrelated) plus
+a `spelling.Rout`/`spelling.Rout.save` snapshot-mismatch NOTE under the "checking tests" step
+that carries no `❯`-bullet in the abbreviated table -- reconfirming `BACKLOG.md`'s S521
+under-counting finding, not a new discovery, and traceable to the separate, already-tracked
+`inst/WORDLIST` gap, not this fix. **(8)** Close-out: `BACKLOG.md`'s Housekeeping item marked
+resolved (compressed to the file's own short-pointer convention). Citation checklist (issue
+#120), tutorial/article checklist (Session 436), `NEWS.Rmd` checklist, and `a2interactive.Rmd`
+checklist: all N/A -- no new exported function, no displayed statistic, no Shiny feature.
+`_pkgdown.yml` checklist: N/A -- no new export. `PROJECT_LEARNINGS.md` Learning 540 records
+the reusable pattern (a `testthat` guard for a non-R config file) and a minor `nl`-vs-`grep -n`
+line-numbering near-miss caught before it produced a wrong claim.
+
+**Self-assessment (Session 534): 9/10.** **Strengths:** (1) Followed the full TDD contract
+faithfully despite this being a "one-off fix" per `DEVELOPMENT_WORKSTREAM.md`'s own guidance
+-- did not treat that guidance as license to skip `CLAUDE.md`'s gated RED->GREEN->REFACTOR
+cycle, which still applies. (2) Added a genuine regression test rather than treating a
+config-file fix as untestable -- the new `test_rbuildignore.R` guards against exactly this
+class of future typo, closing the gap Learning 539 identified (build-config typos produce no
+error/warning of their own). (3) Verified the fix's actual real-world effect
+(`devtools::check()`'s "checking top-level files" step) rather than trusting only the new unit
+test, and correctly distinguished the unrelated `spelling.Rout` NOTE from the fix's own target
+rather than conflating the two. (4) Used the harness's own background-task mechanism for
+`devtools::check()` from the start, rather than repeating S533's own documented near-miss of a
+manual `&`-backgrounding attempt. **Weaknesses:** (1) None identified this session -- the task
+was small and well-scoped, the predecessor's handoff was accurate and complete, and no
+rework or backtracking was needed at any TDD phase transition.
+**Ledger:** recorded in `CHANGELOG.md` ([BL-533] entry, this session's own Phase 0 reconcile
+entry).
 
 ### Session 532 Handoff Evaluation (by Session 533)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S532 receipt's `next_steps` field named

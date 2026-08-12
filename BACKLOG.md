@@ -579,17 +579,16 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       (reused, hand-verified fixtures; each demo chunk checked against the
       real installed package, not hand-derived, per `PROJECT_LEARNINGS.md`
       Learning 440's stale-local-install trap).
-- [ ] **`.Rbuildignore`'s `methodology_trim.py` pattern has a typo, leaving the real file
-      uncovered** (found S533, 2026-08-12, READY, Effort S) -- the line reads
-      `^methodolog_trim\.py$` (missing the "y" in "methodology"), confirmed via direct
-      `grepl(pattern, "methodology_trim.py", perl = TRUE)` returning `FALSE`. This is the
-      standing cause of `devtools::check()`'s documented "top-level files" NOTE
-      (`Non-standard file/directory found at top level: 'methodology_trim.py'`) -- not a
-      mystery, as prior sessions' own gotchas about this NOTE's "not fully understood"
-      trigger condition assumed (`PROJECT_LEARNINGS.md` Learning 538's own gotcha (1)). Fix:
-      correct the pattern to `^methodology_trim\.py$`, then re-run `devtools::check()`
-      (default `cran = TRUE` invocation, not `cran = FALSE` -- see Learning 539) to confirm
-      the NOTE drops to 1 (vignettes/figure leftover only).
+- [ ] (none remaining -- the `.Rbuildignore` `methodology_trim.py` pattern typo (found S533)
+      is RESOLVED -- S534 (2026-08-12): `^methodolog_trim\.py$` corrected to
+      `^methodology_trim\.py$`. Full strict TDD RED->GREEN->REFACTOR cycle: new
+      `tests/testthat/test_rbuildignore.R` regression guard (asserts some `.Rbuildignore`
+      pattern matches the real `methodology_trim.py` filename) confirmed RED before the fix,
+      GREEN after. `devtools::check()` (default `cran = TRUE` invocation, per Learning 539)
+      re-confirmed "checking top-level files ... OK" -- the NOTE this typo caused is gone;
+      2 NOTEs remain (vignettes/figure leftover, unrelated; a spelling.Rout.save snapshot
+      mismatch tied to the already-tracked `inst/WORDLIST` gap above, also unrelated). See
+      `CHANGELOG.md`.)
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability-comparison audit (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`)

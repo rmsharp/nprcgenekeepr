@@ -131,6 +131,36 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [BL-533] `.Rbuildignore` `methodology_trim.py` pattern typo fixed, top-level-files NOTE resolved (Session 534)
+- **Deliverable:** Fixed `.Rbuildignore`'s `methodology_trim.py` pattern typo (found S533,
+  filed to `BACKLOG.md` Housekeeping, not fixed that session): `^methodolog_trim\.py$`
+  corrected to `^methodology_trim\.py$` (the missing "y" in "methodology"). This was the
+  standing, now-confirmed root cause of `devtools::check()`'s documented "top-level files"
+  NOTE (`PROJECT_LEARNINGS.md` Learning 539's own root-cause finding).
+- **Verification:** One-off fix per `DEVELOPMENT_WORKSTREAM.md`'s own "just fix it" guidance
+  for a single, clear bug, under `CLAUDE.md`'s Development Process Contract. Full strict TDD
+  RED->GREEN->REFACTOR cycle, each transition gated by its own `AskUserQuestion`. New
+  `tests/testthat/test_rbuildignore.R` (mirroring `test_pkgdown_reference_config.R`'s
+  config-guard style): asserts some `.Rbuildignore` pattern matches the literal string
+  `"methodology_trim.py"`. RED confirmed (1/1 failing) against the live typo before editing;
+  GREEN confirmed after the one-character fix. REFACTOR: `lintr::lint_package()`
+  (argument-free, per Learning 539) found 0 lints. Full clean regression 0 failed/0 error.
+  `devtools::check()` (default `cran = TRUE` invocation) re-confirmed `checking top-level
+  files ... OK` -- the NOTE is gone. `Status: 2 NOTEs` is unchanged in count but changed in
+  composition: vignettes/figure leftover (pre-existing, unrelated) plus a
+  `spelling.Rout`/`spelling.Rout.save` snapshot-mismatch NOTE under the "checking tests" step
+  (no `❯`-bullet in the abbreviated table, reconfirming `BACKLOG.md`'s S521
+  under-counting finding) -- traces to the already-tracked, separate `inst/WORDLIST` gap, not
+  to this fix. `PROJECT_LEARNINGS.md` Learning 540 records the pattern (a `testthat` guard for
+  a non-R config file) and a minor `nl`-vs-`grep -n` line-numbering near-miss. Runtime smoke
+  test: n/a -- build-config/test-only change, no runtime code touched.
+- **Next:** `BACKLOG.md` Housekeeping item marked resolved. No further action.
+
+### 2026-08-12 · [ad hoc] S534 Phase 0 reconcile: HANDOFFS.md S533 receipt commit: pending → a99fd2c2 (Session 534)
+- Phase 0 step 6 ledger reconcile: `HANDOFFS.md`'s S533 receipt was `status: complete` but
+  `commit: pending` (the standard one-hop case). Reconciled to `a99fd2c2` (S533's own
+  close-out commit, which included the receipt itself). Committed separately (`90cd53e8`).
+
 ### 2026-08-12 · [issue #152] Slice 4 -- new `obfuscateGenotypeMatrix()` de-identification primitive shipped (Session 533)
 - **Deliverable:** New script-callable, `@export`ed `obfuscateGenotypeMatrix(genotypeMatrix, map)`
   (`R/obfuscateGenotypeMatrix.R`), per

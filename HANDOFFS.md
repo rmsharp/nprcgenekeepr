@@ -123,18 +123,52 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S534
 date: 2026-08-12
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Fix .Rbuildignore's methodology_trim.py pattern typo (found S533, BACKLOG.md
-Housekeeping, READY, Effort S) -- one-off fix per DEVELOPMENT_WORKSTREAM.md's "just fix it"
-guidance, under CLAUDE.md's Development Process Contract (RED->GREEN->REFACTOR).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: .Rbuildignore's methodology_trim.py pattern typo (found S533, BACKLOG.md
+Housekeeping) is FIXED and the item is marked resolved. Issue #152 stays open -- Slice 5
+(full module tab, wiring, curator-controlled export, documentation) remains the next and
+final planned slice for that cluster, untouched this session.
+what_was_done: Fixed .Rbuildignore:113 (^methodolog_trim\.py$ -> ^methodology_trim\.py$, the
+missing "y"), the root cause of devtools::check()'s documented "top-level files" NOTE
+(PROJECT_LEARNINGS.md Learning 539's own finding). One-off fix per DEVELOPMENT_WORKSTREAM.md's
+"just fix it" guidance, still under CLAUDE.md's Development Process Contract: full strict TDD
+RED->GREEN->REFACTOR, each transition gated by its own AskUserQuestion. New
+tests/testthat/test_rbuildignore.R (mirrors test_pkgdown_reference_config.R's config-guard
+style): asserts some .Rbuildignore pattern matches "methodology_trim.py". RED confirmed (1/1
+failing) against the live typo; GREEN confirmed after the fix; REFACTOR: lintr::lint_package()
+(argument-free) found 0 lints. Full clean regression 0 failed/0 error. devtools::check()
+(default cran = TRUE invocation) re-confirmed "checking top-level files ... OK" -- verified the
+fix's real effect, not just the new unit test. Status: 2 NOTEs unchanged in count, changed in
+composition (vignettes/figure leftover, unrelated; a spelling.Rout/spelling.Rout.save
+snapshot-mismatch NOTE under "checking tests" with no its own bullet in the abbreviated table,
+tracing to the separate, already-tracked inst/WORDLIST gap, not to this fix). BACKLOG.md
+Housekeeping item marked resolved. Citation/tutorial-article/NEWS.Rmd/a2interactive.Rmd/
+_pkgdown.yml checklists: all N/A (no new export, no displayed statistic, no Shiny feature).
+Commits: 90cd53e8 (Phase 0 HANDOFFS reconcile), d1d05def (claim), plus this close-out's own
+commit.
+next_steps: Issue #152 Slice 5 (full module tab, wiring, curator-controlled export,
+documentation, D8/D9) remains the top priority for that cluster -- see
+docs/planning/issue152-sequence-input-genetic-metrics-plan.md section 5. Other unrelated READY
+items still open: inst/WORDLIST's ~69-83-word gap (Effort M); NEWS.Rmd verbosity drift (Effort
+M, owner-directed); a2interactive.Rmd documentation pass (Effort M, owner-directed). Issue #148
+(MHC) needs its own scope-narrowing conversation before it's READY, per the sequencing audit's
+Finding #4.
+key_files: .Rbuildignore:113 (fixed, one character); tests/testthat/test_rbuildignore.R (new,
+1 test_that block); BACKLOG.md Housekeeping section (item marked resolved);
+PROJECT_LEARNINGS.md Learning 540 (new).
+gotchas: (1) devtools::check()'s "Status: N NOTEs" line can exceed what the abbreviated
+`❯`-bullet results table shows -- a "checking tests" step NOTE (e.g. a spelling.Rout/
+spelling.Rout.save snapshot mismatch) does not get its own bullet, only the raw Status line
+counts it (reconfirms BACKLOG.md's S521 finding, not new this session -- still worth watching
+on any future devtools::check() run). (2) `nl <file>`'s default mode does not number blank
+lines, so its displayed line numbers can silently drift from a file's real line numbers
+wherever a blank line precedes the point of interest -- use `grep -n` or Read's own cat -n
+-style output for a real line number, not nl's default output.
+runtime_smoke: n/a -- build-config/test-only change, no runtime code touched.
+changelog_ref: this session's own two CHANGELOG.md entries, 2026-08-12 ([BL-533]
+.Rbuildignore typo fix; [ad hoc] S534 Phase 0 reconcile: HANDOFFS.md S533 receipt)
 commit: pending
 ```
 
