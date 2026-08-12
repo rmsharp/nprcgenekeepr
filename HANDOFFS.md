@@ -121,6 +121,26 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-10.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S535
+date: 2026-08-12
+status: pending
+self_score: pending
+predecessor_score: 9
+active_task: Implement issue #152 Slice 5 -- the full module tab, wiring,
+curator-controlled export, and documentation (D8/D9), per
+docs/planning/issue152-sequence-input-genetic-metrics-plan.md section 5 Slice 5.
+Closes issue #152.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+*(stub written at Phase 1B claim; overwritten at Phase 3D close-out)*
+
+```handoff
 session: S534
 date: 2026-08-12
 status: complete

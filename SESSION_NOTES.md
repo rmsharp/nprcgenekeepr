@@ -6,6 +6,19 @@
 
 ## ACTIVE TASK
 
+### What Session 535 Did
+**Deliverable:** Implement issue #152 Slice 5 -- the full module tab, wiring, curator-controlled
+export, and documentation (D8/D9), per
+`docs/planning/issue152-sequence-input-genetic-metrics-plan.md` section 5 Slice 5. Closes issue
+#152. Owner-picked from this session's own Phase 0 priorities list (4 options via
+`AskUserQuestion`) over the `inst/WORDLIST` gap, `NEWS.Rmd` verbosity drift, and the
+`a2interactive.Rmd` documentation pass.
+**Started:** 2026-08-12.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 533 Handoff Evaluation (by Session 534)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S533 receipt's `next_steps` field listed
 the exact item this session picked up -- `.Rbuildignore`'s `methodology_trim.py` typo, Effort
