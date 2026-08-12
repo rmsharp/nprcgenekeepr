@@ -131,6 +131,18 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] S537 Phase 0 reconcile: HANDOFFS.md S536 receipt commit: pending → 66202b2a
+- `git log -1 --format=%H -- HANDOFFS.md` showed the frontier commit (`66202b2a`, the S536
+  close-out commit) still carried its own receipt's self-referential `commit: pending` placeholder
+  (legal at write time per `HANDOFFS.md`'s own format note — the receipt ships in the very commit
+  whose sha it would name). Reconciled to `66202b2a`, matching the S536→S535 (`42e3e985`/
+  `f946e0a3`) and S535→S534 (`9abaded1`) precedent. `CHANGELOG.md`'s own frontier
+  (`git log -1 --format=%H -- CHANGELOG.md`) was `420a1c53`; the only undocumented commit since
+  then was `66202b2a` itself, which — matching the established precedent that a close-out commit
+  containing only `SESSION_NOTES.md`/`HANDOFFS.md` writes is not a separate action beyond what its
+  paired fix/feat commit already logged (see `bef447c6`/`2b54c722`, neither of which got its own
+  dedicated entry) — is covered by this reconcile entry rather than a second one.
+
 ### 2026-08-12 · [BL-535] Corrected S535's "shinytest2/chromote never renders showModal()" misdiagnosis; retrofitted issue #153's E2E export-modal coverage (Session 536)
 - **Deliverable:** Investigated the BACKLOG.md Housekeeping item S535 filed (headless-browser
   modal-rendering gap). Found there is NO shinytest2/chromote harness limitation: S535's own

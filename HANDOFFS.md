@@ -186,7 +186,7 @@ inherently IS runtime/E2E verification, run repeatedly over the course of the
 diagnostic session itself, not a one-off smoke test.
 changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12 ([BL-535] the
 fix; [ad hoc] S536 Phase 0 reconcile entries)
-commit: pending
+commit: 66202b2a
 ```
 
 ```handoff
