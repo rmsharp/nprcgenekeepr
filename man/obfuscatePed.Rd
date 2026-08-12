@@ -58,6 +58,7 @@ Other obfuscation:
 \code{\link[=mapIdsToObfuscated]{mapIdsToObfuscated()}},
 \code{\link[=obfuscateDate]{obfuscateDate()}},
 \code{\link[=obfuscateId]{obfuscateId()}},
+\code{\link[=obfuscateLdBlocks]{obfuscateLdBlocks()}},
 \code{\link[=obfuscateTwinRelations]{obfuscateTwinRelations()}}
 }
 \concept{obfuscation}

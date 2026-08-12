@@ -1,0 +1,68 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+
+#' De-identify a markerLdBlock() result table
+#'
+#' Remaps the \code{idsUsed} column of a \code{\link{markerLdBlock}} result
+#' table through the same alias vector \code{\link{obfuscatePed}(..., map =
+#' TRUE)} already returns, mirroring \code{\link{obfuscateTwinRelations}}'s
+#' pattern. \code{\link{markerLdBlock}}'s output is otherwise a
+#' locus-pair-level population statistic table with no per-individual ids
+#' -- \code{idsUsed} (populated only when \code{markerLdBlock} was called
+#' with \code{founderIds}) is the only place a real id can appear, and any
+#' exported block/LD statistic table must route through the same
+#' curator-controlled de-identification gate issue #150 established (D9):
+#' a joint, multi-locus statistic carries \emph{more} identifying power
+#' than a single-locus one, not less.
+#'
+#' A row whose \code{idsUsed} contains an id absent from \code{map}
+#' \code{stop()}s rather than silently dropping or leaking the real id --
+#' \code{\link{markerLdBlock}}'s own \code{founderIds} contract should
+#' already guarantee every id is a valid pedigree id, so this is a
+#' defensive check, not the primary validation path.
+#'
+#' @param ldBlockResult data.frame as returned by
+#' \code{\link{markerLdBlock}}: at least an \code{idsUsed} column
+#' (comma-joined ids, or \code{NA}).
+#' @param map named character vector of aliases, keyed by the original id
+#' -- the \code{map} element of \code{\link{obfuscatePed}(..., map =
+#' TRUE)}'s return value.
+#' @return \code{ldBlockResult} with \code{idsUsed} ids replaced by their
+#' aliases (comma-joined, same order); a row whose \code{idsUsed} is
+#' \code{NA} is returned unchanged. Every other column is unchanged.
+#' @family obfuscation
+#' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' ped <- data.frame(
+#'   id = c("F1", "F2", "S1", "S2"),
+#'   sire = c(NA, NA, "F1", "F1"),
+#'   dam = c(NA, NA, "F2", "F2"),
+#'   sex = c("M", "F", "F", "F"),
+#'   stringsAsFactors = FALSE
+#' )
+#' ldBlockResult <- data.frame(
+#'   locus1 = "L1", locus2 = "L2", chrom = "1", Dprime = 0.5, r2 = 0.3,
+#'   nUsed = 2L, idsUsed = "F1,F2", caveat = "Descriptive statistic only.",
+#'   stringsAsFactors = FALSE
+#' )
+#' obfuscated <- obfuscatePed(ped, map = TRUE)
+#' obfuscateLdBlocks(ldBlockResult, obfuscated$map)
+obfuscateLdBlocks <- function(ldBlockResult, map) {
+  idsUsed <- ldBlockResult$idsUsed
+  hasIds <- !is.na(idsUsed)
+
+  splitIds <- strsplit(idsUsed[hasIds], ",", fixed = TRUE)
+  unknown <- setdiff(unique(unlist(splitIds)), names(map))
+  if (length(unknown) > 0L) {
+    stop("LD block id(s) not found in the de-identification map: ",
+      toString(unknown), ".")
+  }
+
+  ldBlockResult$idsUsed[hasIds] <- vapply(
+    splitIds,
+    function(ids) paste(unname(map[ids]), collapse = ","),
+    character(1L)
+  )
+  ldBlockResult
+}

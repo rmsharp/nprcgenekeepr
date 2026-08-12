@@ -131,6 +131,40 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [issue #153] S523 close-out: Slice 4 (LD block statistic + de-identification primitive) shipped (Session 523)
+- **Deliverable:** Issue #153 Slice 4, per `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md`
+  §5 Slice 4 — new script-callable `markerLdBlock()`, a descriptive, same-chromosome pairwise
+  LD/block statistic (D3b), plus `obfuscateLdBlocks()`, its de-identification sidecar (D8/D9).
+- **Research:** found a distinct gap Dragon 3 doesn't name — classical D′/r² formulas assume phased
+  haplotype data, but this package's genotype matrix is unphased. Verified (3 independent numeric
+  checks, not algebra alone) a two-locus multiallelic maximum-likelihood (EM) phase-frequency
+  estimator — Excoffier & Slatkin (1995)'s biallelic algorithm generalized to arbitrary allele
+  counts, matching the `genetics` package's own documented approach: exact match on a
+  phase-resolvable toy set; recovered a known true D within 2% on a 600-individual random-mating
+  simulation with 209 phase-ambiguous double heterozygotes; recovered a known 3×3 multiallelic
+  joint table within ~0.017 absolute error at n=800. Aggregates via Hedrick's (1987) D′ and a
+  chi-squared/Cramér's-φ²-style r², both proven (algebraically and numerically) to reduce exactly
+  to classic biallelic values. An earlier composite/Burrows'-LD attempt was abandoned after its own
+  toy-example validation came out inconsistent, traced to the toy fixture (not the formula)
+  violating the random-mating assumption the identity needs.
+- **Verification:** 16 new `test_that` blocks (12 + 4) / 38 expectations across
+  `tests/testthat/test_markerLdBlock.R` and `tests/testthat/test_obfuscateLdBlocks.R`, reusing the
+  Slice 1 STR fixture (no new fixture). Full clean regression suite 0 failed/0 error;
+  `devtools::check()` 0 errors/0 warnings/3 NOTEs, all confirmed pre-existing (hand-added 9 new
+  words to `inst/WORDLIST`); `lintr::lint_package()` 0 lints (fixed 14 introduced during GREEN).
+  Fixed along the way: a pair-list-flattening bug, a missing `utils::combn()` namespace prefix, and
+  a bare-apostrophe-inside-`\code{}` defect that broke `tools::parse_Rd()` for the whole file.
+  Fixed the `_pkgdown.yml` reference-coverage guard.
+- **Citation checklist (issue #120):** done this slice — `inst/extdata/ui_guidance/population_genetics_terms.html`
+  and roxygen `@references` both updated (Excoffier & Slatkin 1995, Hedrick 1987, Weir 1996).
+- **Housekeeping:** `NEWS.Rmd`/`NEWS.md` updated (rendered via `rmarkdown::render()`).
+  `PROJECT_LEARNINGS.md` Learnings 524 (the unphased-data/composite-vs-EM research finding) and 525
+  (the `\code{}`-apostrophe Rd-parser gotcha) added. `BACKLOG.md`'s `a2interactive.Rmd`
+  documentation-pass housekeeping item updated to include the 2 new functions. Tutorial/article
+  checklist (Session 436) not-yet-applicable — no UI this slice. Issue #153 stays open — Slice 5
+  (full module tab, wiring, documentation) is next.
+- **Ledger:** this entry plus the reconcile backfill and claim entries above.
+
 ### 2026-08-11 · [issue #153] S523 claim: issue #153 Slice 4 (markerLdBlock() + obfuscateLdBlocks(), D3b/D8/D9) (Session 523)
 - **Deliverable:** Issue #153 Slice 4 per `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md`
   §5 Slice 4 — the descriptive LD/haplotype-block statistic (`markerLdBlock()`, D3b) plus the

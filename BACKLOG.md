@@ -760,7 +760,8 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       (LOD-based candidate-parent ranking, issue #147),
       `checkCrossCenterMapping()` (issue #149), `checkLocusMetadata()` (issue
       #153 Slice 1), `checkLinkageMarkerGenotypeFile()` (issue #153 Slice 2),
-      or `markerRealizedRelatednessVariance()` (issue #153 Slice 3, S522).
+      `markerRealizedRelatednessVariance()` (issue #153 Slice 3, S522), or
+      `markerLdBlock()`/`obfuscateLdBlocks()` (issue #153 Slice 4, S523).
       Outside marker genetics, `reportMatePairs()` (issue #151 Slice 1) and
       `readTwinRelations()` (S494, itself shipped with no `NEWS.Rmd` entry
       either per `PROJECT_LEARNINGS.md` Learning 495) also have no matching

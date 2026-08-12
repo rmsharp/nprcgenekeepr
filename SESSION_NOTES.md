@@ -6,19 +6,153 @@
 
 ## ACTIVE TASK
 
+### Session 522 Handoff Evaluation (by Session 523)
+**Score: 9/10.** **What helped:** the `HANDOFFS.md` S522 receipt's `next_steps` field named "Issue
+#153 Slice 4 (`markerLdBlock()` descriptive LD/block statistic, D3b, plus the `obfuscateLdBlocks()`
+de-identification primitive, D8/D9) is next per the design doc §5 -- D3(b) is an explicit,
+documented statistical compromise (no rigorous pedigree-aware LD-block method exists CRAN-side), so
+its own PRE-RED should re-read §7 Dragon 3 before RED, not just Dragon 4's resolved
+formula-derivation pattern" as directly pickable and correctly flagged the real work ahead -- this
+session picked exactly that, and the "re-read Dragon 3, don't assume it's Dragon 4's pattern again"
+warning proved prescient: Dragon 3 as written only names "no rigorous pedigree-aware method," but
+this session found and had to resolve a SECOND, related-but-distinct research gap Dragon 3 doesn't
+name at all (the genotype matrix is unphased, so classical D/D' needs a phase estimator first, not
+just a caveat about random-mating bias). `key_files`' pointer to the design doc's §5 Slice 4 / §4
+interface catalog was the entire foundation of PRE-RED. **What was missing:** the unphased-data
+research gap itself -- not a flaw in S522's handoff (Dragon 3 as ratified genuinely doesn't name it;
+this is a design-doc gap, not a handoff gap), but worth flagging so a future slice's own PRE-RED
+doesn't assume a design doc's named Dragons are exhaustive. **What was wrong:** nothing -- S522's
+own "0 errors/0 warnings/3 NOTEs, all confirmed pre-existing" claim held up exactly under this
+session's own independent re-verification before any of this session's own changes. **ROI:**
+Strong -- the receipt and the design doc it pointed to were maximally reusable; the one real
+surprise (the unphased-data gap) was structurally invisible to S522, which never touched Slice 4's
+own scope.
+
 ### What Session 523 Did
-**Deliverable:** Issue #153 Slice 4 -- `markerLdBlock()` (descriptive LD/haplotype-block statistic,
-D3b) + `obfuscateLdBlocks()` (de-identification primitive, D8/D9), per
+**Deliverable:** Issue #153 Slice 4 -- `markerLdBlock()` (descriptive, same-chromosome pairwise
+LD/block statistic, D3b) + `obfuscateLdBlocks()` (de-identification primitive, D8/D9), per
 `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` §5 Slice 4. Full strict TDD
-PRE-RED->RED->GREEN->REFACTOR cycle, each transition `AskUserQuestion`-gated, following
-`DEVELOPMENT_WORKSTREAM.md`. Picked from this session's own Phase 0 priorities list (owner choice
-via `AskUserQuestion`) over 3 other candidates (issue #152 Slice 1, the `methodology_trim.py`
+PRE-RED->RED->GREEN->REFACTOR cycle, each transition `AskUserQuestion`-gated (REFACTOR: no candidate
+identified). Picked from this session's own Phase 0 priorities list (owner choice via
+`AskUserQuestion`) over 3 other candidates (issue #152 Slice 1, the `methodology_trim.py`
 fence-scanner fix, `BACKLOG.md` compression).
-**Started:** 2026-08-11.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Started/Completed:** 2026-08-11/2026-08-12 (session spanned local midnight UTC).
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue
+list`, git status/log, `methodology_dashboard.py` -- health 96/100, 1 HIGH risk: the 3-file
+ledger-size condition, still unaddressed; `HANDOFFS.md`'s own archive trigger now also firing,
+headroom down to 5 records). Ledger reconcile found S522's own final close-out commit (`25606464`)
+never touched `CHANGELOG.md` (it only updated `HANDOFFS.md`/`PROJECT_LEARNINGS.md`/
+`SESSION_NOTES.md`), leaving it outside the ledger frontier -- backfilled a `[issue #153]`
+`CHANGELOG.md` entry and reconciled the S522 `HANDOFFS.md` receipt's `commit: pending` field to the
+real sha, committed alone (`d5ed1dd4`). Rendered the priorities list via `AskUserQuestion` (4
+options: issue #153 Slice 4, issue #152 Slice 1, the `methodology_trim.py` fence-scanner fix,
+`BACKLOG.md` compression; +3 more named below the picker per the cap rule); owner picked issue #153
+Slice 4. **(2)** Stated scope back, Phase 1B claim stub + `HANDOFFS.md status: pending` receipt +
+`CHANGELOG.md` claim entry committed (`852fc96c`). **(3)** PRE-RED: read `DEVELOPMENT_WORKSTREAM.md`,
+the design doc's §5 Slice 4 / §7 Dragon 3 / D3/D4/D8/D9 / §4 interface catalog / §2.11-2.15 domain
+research, and precedent code (`checkLinkageMarkerGenotypeFile()`, `checkLocusMetadata()`,
+`buildMarkerGenotypeMatrix()`, `.markerAlleleFrequencyTable()`, `markerFst()`,
+`markerRealizedRelatednessVariance()`, `obfuscateTwinRelations()`, `isFounder()`/`getFounders()`),
+plus the existing Slice-1 STR fixture (found 2 usable same-chromosome pairs, STR01xSTR02/
+STR03xSTR04 -- no new fixture needed). Found the design doc's own D8/D3(b) text names classical
+D'/r² formulas that assume PHASED haplotype data, but this package's genotype matrix is UNPHASED --
+a distinct research gap Dragon 3 doesn't name. Investigated 3 candidate resolutions via `WebSearch`/
+`WebFetch`: a "composite/Burrows' LD" genotype-covariance shortcut (first attempt -- its own
+hand-built toy-example validation came out inconsistent with a hand-tallied classic-D reference by
+exactly 2x, traced to the toy dataset not actually satisfying random mating, not a formula bug, but
+not confidently resolvable from one example); a two-locus multiallelic maximum-likelihood (EM)
+phase-frequency estimator (Excoffier & Slatkin 1995, generalized from its biallelic form -- the same
+method the `genetics` package's own `LD()` documents using, confirmed via `WebFetch` of its docs);
+and a "discard phase-ambiguous individuals" simplification. Verified the EM approach via 3
+independent Rscript checks (own scratchpad files, not the package): exact match to a hand-tallied
+classic D on a phase-resolvable toy set; recovery of a known true D within 2% on a 600-individual
+random-mating simulation (209 genuinely phase-ambiguous double heterozygotes); recovery of a known
+3x3 multiallelic joint table within ~0.017 absolute error at n=800; and confirmed the Hedrick (1987)
+D'/chi-squared-r² aggregation formulas reduce EXACTLY to classic biallelic values (algebraic identity
++ numeric confirmation) and are near-zero on a shuffled no-LD control. Presented PRE-RED findings +
+3 scope decisions (LD method: EM vs. composite vs. discard-ambiguous; founder-restriction interface:
+`founderIds` param vs. full pedigree param; `obfuscateLdBlocks()` scope: add a sample-composition
+column vs. no per-individual data at all) via `AskUserQuestion`; owner picked all 3 recommendations.
+Presented the 16-block RED test plan (12 + 4) via the PRE-RED->RED phase gate, computing hand-
+verified reference values against the real STR fixture via an independent Rscript; owner approved.
+**(4)** RED: wrote `tests/testthat/test_markerLdBlock.R` (12 blocks) and
+`tests/testthat/test_obfuscateLdBlocks.R` (4 blocks); confirmed all 16 blocks fail genuinely
+(`could not find function`), no `skip_if()` masking -- caught and fixed 2 blocks that would have
+passed vacuously (a bare `expect_error()` with no message pattern is satisfied by ANY error,
+including "could not find function") by adding specific message-pattern checks. **(5)** GREEN: wrote
+`R/markerLdBlock.R` (2 internal helpers -- `.emTwoLocusPhaseFreq()`, `.aggregateLdBlockStat()` --
+plus the exported function) and `R/obfuscateLdBlocks.R` (mirrors `obfuscateTwinRelations()`
+exactly). `devtools::document()`; found and fixed a pair-list-flattening bug (`do.call(rbind, ...)`
+on a list of lists doesn't flatten -- replaced with `unlist(..., recursive = FALSE)`); both RED test
+files 38/38 expectations pass. `lintr::lint_package()` found 14 lints (1 line-length,
+13 `implicit_integer_linter`) -- fixed via explicit `0.0`/`1.0`/`2.0` literals (genuinely
+floating-point contexts, not integer indices); re-verified 0 lints. Full clean regression 0
+failed/0 error (1771 blocks, 15 pre-existing warnings unchanged, non-app/e2e). Fixed the
+`_pkgdown.yml` reference-coverage guard (2 new exports added to the "All exposed functions"
+catch-all, alphabetical position). `devtools::check()` first run found 2 real issues: `combn()`
+needs `utils::combn()` (not base R); and a bare, unbalanced apostrophe inside `\code{|D'|}` in the
+roxygen `@details` broke `tools::parse_Rd()` for the ENTIRE downstream file (`Unexpected end of
+input`, reported 10 lines after the actual defect -- traced via the `newline within quoted string`
+WARNING, not the error line, to the real location). Fixed both; re-verified clean. **(6)** Final
+`devtools::check()`: 0 errors/0 warnings/3 NOTEs -- 2 bulleted (top-level files, vignettes/`figure`
+leftover) both confirmed pre-existing; the 3rd (unbulleted spelling NOTE) is the pre-existing
+~65-70-word `inst/WORDLIST` gap (S521, tracked separately) -- hand-added the 9 new words this
+session's own new files introduced (`Cramer's`, `Excoffier`, `Hedrick's`, `LD`, `Lewontin`,
+`Sinauer`, `droppable`, `markerLdBlock`, `unphased`) in collation order (S230 convention). **(7)**
+REFACTOR gate: presented the one candidate considered (share `.markerAlleleFrequencyTable()` inside
+the EM helper instead of its own inline allele-frequency computation); owner declined, matching this
+codebase's existing sibling-implementation precedent. **(8)** Close-out: this evaluation,
+self-assessment below, `NEWS.Rmd`/`NEWS.md` entry (rendered via `rmarkdown::render()`, not hand-
+edited, avoiding the S521 line-wrap artifact), `PROJECT_LEARNINGS.md` Learnings 524 (the unphased-
+data/composite-vs-EM research finding) and 525 (the `\code{}`-apostrophe Rd-parser gotcha),
+`_pkgdown.yml` entry, citation checklist (`population_genetics_terms.html` + roxygen `@references`,
+per the design doc's own Slice-5-deferred-but-issue-#120-still-applies convention -- done same-
+slice, matching Slices 3's own precedent), `CHANGELOG.md` entries, `BACKLOG.md`'s
+`a2interactive.Rmd` housekeeping item updated to include the 2 new functions (keeps an already-open
+item accurate rather than letting it go stale). Tutorial/article checklist (Session 436) not-yet-
+applicable -- no UI this slice, matching Slices 1-3's own precedent. No `gh issue close` -- Slice 4
+of 5, issue #153 stays open; Slice 5 (full module tab, wiring, documentation) is next.
+
+**Self-assessment (Session 523): 8/10.** **Strengths:** (1) Recognized that the design doc's own
+Dragon 3 did not name an exhaustive list of research risks -- found and resolved a second, distinct
+research gap (classical D'/r² formulas assume phased data; this package's genotype matrix is
+unphased) that the ratified design doc simply doesn't mention, rather than assuming "re-read Dragon
+3" meant the full scope of PRE-RED research needed. (2) Caught its own flawed verification: the
+first LD-estimation attempt (composite/Burrows' LD) produced a result inconsistent with a
+hand-tallied reference by exactly 2x, and rather than guessing a rescaling factor to make the
+numbers match, diagnosed that the TOY EXAMPLE itself (not the formula) violated the random-mating
+assumption the identity needs -- then switched to a more rigorous, field-standard method (EM
+phase-frequency estimation, matching the `genetics` package's own documented approach) and verified
+it with 3 independent numeric checks (exact-match, random-mating-simulation-recovery,
+multiallelic-table-recovery) before presenting it as the recommendation. (3) Caught 2 RED-phase
+tests that would have passed vacuously (a bare `expect_error()` satisfied by ANY error, including
+"could not find function") before declaring RED genuinely complete -- tightened both to specific
+message-pattern checks. (4) Found and fixed 3 real GREEN-phase defects via actual verification
+(`devtools::check()`, full regression, direct `tools::parse_Rd()` reproduction), not just "tests
+pass, ship it": a pair-list-flattening bug, a missing `utils::` namespace prefix, and a previously
+undocumented `\code{}`-apostrophe Rd-parser gotcha whose reported error line (10 lines downstream)
+would have misdirected a less careful diagnosis. (5) Followed established citation/WORDLIST/
+`_pkgdown.yml`/NEWS-render conventions precisely, cross-checking each against the actual precedent
+files rather than from memory.
+**Weaknesses:** (1) The first composite-LD toy-example validation wasted real effort before
+recognizing the FIXTURE, not the formula, was flawed -- should have generated a properly
+random-mating-simulated toy set from the start (as the eventual EM verification did), rather than a
+hand-picked deterministic genotype assignment. (2) Briefly repeated the documented manual-`&` +
+separate-`wait`-call background-execution anti-pattern (S522's own gotcha #4, read during this
+session's own Phase 0 orientation) on the first `devtools::check()` background attempt -- caught
+quickly (an orphaned process, no data loss, no truncated log) and switched to the harness's native
+`run_in_background` parameter for every run afterward, but the exact known gotcha was still
+momentarily repeated despite having just read it. (3) Did not correct `BACKLOG.md`'s issue #153
+narrative section's own stale "Slice 2 is the next planned slice" line (last updated S520,
+never touched by S521/S522 either) -- left as pre-existing staleness outside this slice's own scope
+rather than fixing opportunistically, which is defensible (avoids scope creep) but means a future
+reader of that specific paragraph still sees a 3-slices-stale claim; flagging here rather than
+silently leaving it undiscovered.
+
+**Ledger:** recorded in `CHANGELOG.md` across 3 entries this session (ledger-reconcile backfill
+for `25606464`, S523 claim, this close-out's Slice 4 entry).
 
 ### Session 521 Handoff Evaluation (by Session 522)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S521 receipt's `next_steps` field named "Issue

@@ -376,3 +376,41 @@
   </p>
     </em>
 
+    <em>
+    <p style="padding-left: 10px">
+    <b>LD Block Statistic:</b>
+    <br>
+    A descriptive, exploratory-use linkage-disequilibrium (LD) statistic
+  for pairs of loci on the same chromosome -- deliberately the
+  <em>secondary</em> statistic alongside Realized Relatedness Variance
+  above, not a rigorous, pedigree-aware LD-block method. Classical LD
+  theory assumes a sample drawn at random from a population in linkage
+  equilibrium; a captive pedigreed colony genuinely violates that
+  assumption, and no method exists that is both pedigree-aware and
+  capable of handling multiallelic marker panels (e.g. microsatellites).
+  Interpret with caution.
+  </p>
+    <p style="padding-left: 50px; padding-bottom: 15px">
+    D&prime; = &sum;<sub>i</sub>&sum;<sub>j</sub> p<sub>i</sub>q<sub>j</sub>
+  |D&prime;<sub>ij</sub>| &nbsp;&nbsp; r<sup>2</sup> =
+  &sum;<sub>i</sub>&sum;<sub>j</sub> D<sub>ij</sub><sup>2</sup> /
+  (p<sub>i</sub>q<sub>j</sub>)
+  </p>
+    <p style="padding-left: 10px; padding-bottom: 25px">
+    Where the sums run over every pair of alleles (i at the first locus, j
+  at the second), p<sub>i</sub>/q<sub>j</sub> are their frequencies, and
+  D<sub>ij</sub> is estimated by a maximum-likelihood two-locus
+  phase-frequency estimator applied to unphased genotype data (a
+  double-heterozygote's phase cannot otherwise be resolved). D&prime; is
+  Hedrick's (1987) frequency-weighted average of the standardized
+  per-allele-pair disequilibrium; r<sup>2</sup> reduces exactly to the
+  classic biallelic r<sup>2</sup> when both loci happen to be biallelic.
+  Excoffier L, Slatkin M. 1995. Maximum-likelihood estimation of molecular
+  haplotype frequencies in a diploid population. Molecular Biology and
+  Evolution 12(5):921-927. Hedrick PW. 1987. Gametic disequilibrium
+  measures: proceed with caution. Genetics 117(2):331-341. Weir BS. 1996.
+  Genetic Data Analysis II: Methods for Discrete Population Genetic Data.
+  Sinauer Associates.
+  </p>
+    </em>
+

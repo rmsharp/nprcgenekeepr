@@ -44,6 +44,14 @@ R. Mark Sharp, Ph.D.
   `kinship()`/`convertRelationships()` rather than a new framework;
   other relationship categories return `NA`, not an error. No Shiny UI
   yet.
+- New script-callable `markerLdBlock()` and `obfuscateLdBlocks()` (issue
+  \#153, Slice 4) add a descriptive, same-chromosome pairwise LD/block
+  statistic for exploratory use -- a documented, non-rigorous
+  compromise, since no method exists that is both pedigree-aware and
+  multiallelic- capable; `markerRealizedRelatednessVariance()` remains
+  the primary, pedigree-valid metric. `obfuscateLdBlocks()`
+  de-identifies the optional founder-id column before export. No Shiny
+  UI yet.
 - The Genetic Value Analysis tab gained a configurable **Ranking
   Scheme** control (issue \#125): the existing combined
   kinship/uniqueness score stays the default, unchanged; a new

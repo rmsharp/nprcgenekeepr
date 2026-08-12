@@ -122,23 +122,104 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
 session: S523
-date: 2026-08-11
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Issue #153 Slice 4 -- markerLdBlock() (descriptive LD/haplotype-block statistic, D3b)
-+ obfuscateLdBlocks() (de-identification primitive, D8/D9), per
-docs/planning/issue153-linkage-haplotype-block-metrics-plan.md §5 Slice 4. Claimed, work beginning.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+date: 2026-08-12
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Issue #153 Slice 4 (markerLdBlock() + obfuscateLdBlocks(), D3b/D8/D9) is DONE. Full
+strict TDD PRE-RED->RED->GREEN->REFACTOR cycle, each transition AskUserQuestion-gated (REFACTOR: no
+candidate identified). Issue #153 stays open -- Slice 5 (full module tab, wiring, documentation) is
+next per the design doc.
+what_was_done: New R/markerLdBlock.R (exported, 2 internal helpers: .emTwoLocusPhaseFreq(),
+.aggregateLdBlockStat()) and R/obfuscateLdBlocks.R (exported). markerLdBlock() computes a
+descriptive, same-chromosome pairwise LD/block statistic (Dprime via Hedrick 1987, r2 via a
+chi-squared/Cramer's-phi-squared-style multiallelic generalization) using a two-locus multiallelic
+maximum-likelihood (EM) phase-frequency estimator (Excoffier & Slatkin 1995, generalized from
+biallelic) to handle this package's unphased genotype data -- a distinct research gap the design
+doc's own Dragon 3 doesn't name, resolved via 3 independent numeric verifications this session (see
+gotchas). obfuscateLdBlocks() mirrors obfuscateTwinRelations() exactly, remapping the optional
+comma-joined idsUsed column. 16 new test_that blocks / 38 expectations across
+tests/testthat/test_markerLdBlock.R and test_obfuscateLdBlocks.R, reusing the Slice 1 STR fixture
+(no new fixture). Full clean regression 0 failed/0 error; devtools::check() 0 errors/0 warnings/3
+NOTEs, all confirmed pre-existing (hand-added 9 words to inst/WORDLIST: Cramer's, Excoffier,
+Hedrick's, LD, Lewontin, Sinauer, droppable, markerLdBlock, unphased); lintr::lint_package() 0
+lints. Fixed the _pkgdown.yml reference-coverage guard. Citation checklist (issue #120) done
+(population_genetics_terms.html + roxygen @references: Excoffier & Slatkin 1995, Hedrick 1987, Weir
+1996). NEWS.Rmd/NEWS.md updated (rendered via rmarkdown::render()). Commits: d5ed1dd4 (ledger
+reconcile backfill for 25606464), 852fc96c (claim), plus this close-out's own commits.
+next_steps: (1) Issue #153 Slice 5 (full module tab in modMarkerGenetics.R, D5/D6; UI
+coverage-report panel + persistent D3(b) caveat banner; curator-controlled export wiring reusing
+#150's confirm-gate pattern for D9; tutorial/article update; add the new server to
+test_moduleContract.R) is next per the design doc §5 -- this is the first Shiny-UI slice in the
+issue #153 family, so the tutorial/article checklist (Session 436) applies for the first time.
+(2) Issue #152 Slice 1 is still open and directly pickable -- can now reuse checkLocusMetadata(),
+checkLinkageMarkerGenotypeFile(), convertRelationships(), AND this session's own
+.emTwoLocusPhaseFreq()-style EM-verification discipline as precedent. (3) The 3-file ledger-size
+HIGH risk is still unaddressed (SESSION_NOTES.md's fence-scanner defect, BACKLOG.md's own
+compression pass, HANDOFFS.md's own archive -- HANDOFFS.md's own archive trigger is now also firing,
+headroom down to 5 records per this session's own Phase 0 dashboard read). (4) inst/WORDLIST's
+pre-existing ~65-70-word gap is still open (BACKLOG.md Housekeeping, found S521). (5) NEWS.Rmd
+terseness simplification is still open (BACKLOG.md Housekeeping, found S522) -- this session wrote
+its own new entry comparatively tersely in the interim, but did not do the full retroactive rewrite.
+(6) a2interactive.Rmd documentation pass is still open and now covers 9 functions (BACKLOG.md
+Housekeeping, found S522, updated this session to add markerLdBlock()/obfuscateLdBlocks()).
+key_files: R/markerLdBlock.R (new function + 2 internal helpers); R/obfuscateLdBlocks.R (new
+function); tests/testthat/test_markerLdBlock.R (12 test_that blocks, full derivation writeup in the
+file header); tests/testthat/test_obfuscateLdBlocks.R (4 test_that blocks); inst/WORDLIST (9 new
+entries); _pkgdown.yml (2 new reference entries); inst/extdata/ui_guidance/population_genetics_terms.html
+(new "LD Block Statistic" entry); PROJECT_LEARNINGS.md Learnings 524 (unphased-data/EM-vs-composite
+research finding) and 525 (the \code{}-apostrophe Rd-parser gotcha);
+docs/planning/issue153-linkage-haplotype-block-metrics-plan.md §5 Slice 5 (next slice's scope).
+gotchas: (1) A design doc's named research risks ("Dragons") are not guaranteed exhaustive -- this
+session's own Dragon 3 named only "no rigorous pedigree-aware method," not the separate
+unphased-genotype-data problem; check whether the ACTUAL data shape (phased vs. unphased) matches
+what a cited classical formula assumes, don't just re-read the named Dragon and assume it covers
+everything. (2) When validating an LD/haplotype-frequency estimator against a hand-built toy
+example, generate it from an explicit random-mating process (a gamete pool sampled with
+replacement, then paired into diploids) -- a hand-picked deterministic genotype assignment can
+silently violate the assumption a formula's identity relies on and produce a misleading "off by a
+constant factor" result that looks like a formula bug but is actually a bad fixture; see
+PROJECT_LEARNINGS.md Learning 524 for the full account. (3) A bare, UNBALANCED apostrophe inside
+roxygen `\code{}` (e.g. `\code{|D'|}`) breaks `tools::parse_Rd()` for the ENTIRE downstream Rd file
+-- the parser tokenizes `\code{}` content quasi-R-syntactically, so it opens a string literal that
+swallows everything until a SECOND stray apostrophe anywhere later in the file, producing an
+"Unexpected end of input" error whose reported line is unrelated to the actual defect; the real
+signal is an earlier `newline within quoted string` WARNING. A balanced pair of apostrophes inside
+`\code{}` (e.g. `\code{kin[['x']]}`) is fine; plain-prose apostrophes outside `\code{}` (e.g.
+`\code{\link{X}}'s`) are fine too -- only an odd count inside one `\code{}` span is the defect. See
+PROJECT_LEARNINGS.md Learning 525. (4) `combn()` is in the `utils` package, not base R -- always
+`utils::combn()` in package code, or `R CMD check` flags "no visible global function definition."
+(5) `do.call(rbind, lapply(..., function(x) list_of_pairs))` does NOT flatten a list of lists the
+way you might expect -- use `unlist(lapply(...), recursive = FALSE)` instead when each element is
+itself a list you want concatenated, not row-bound. (6) Manual `&` shell backgrounding + a separate
+`wait` Bash call does NOT work reliably across separate Bash tool invocations (shell state does not
+persist between them) -- this session briefly repeated this exact, already-documented anti-pattern
+(S522's own gotcha) before switching to the Bash tool's native run_in_background parameter, which
+worked reliably for every subsequent devtools::check() run.
+runtime_smoke: n/a -- Slice 4 scope, no runtime/UI behavior changed (2 new R functions only; no
+Shiny module, app wiring, or existing function touched). Matches the established no-UI-yet
+precedent from Slices 1-3 of this same issue.
+changelog_ref: CHANGELOG.md 2026-08-11/12, 3 entries (Session 523): ledger-reconcile backfill
+(25606464), claim, close-out.
 commit: pending -- reconciled by the next session's Phase 0, per this receipt's own documented
 write-time constraint (the receipt ships in the very commit whose sha it would name).
 ```
-<Session 523 claim stub -- Phase 1B. Filled at Phase 3D close-out.>
+<Session 523 self-assessment: 8/10. Strengths: (1) recognized the design doc's named Dragons are not
+necessarily exhaustive -- found and resolved a second, distinct research gap (unphased genotype
+data vs. classical D'/r2's phased-data assumption) Dragon 3 doesn't name; (2) caught its own flawed
+first verification attempt (composite/Burrows' LD gave a result 2x off a hand-tallied reference),
+diagnosed the TOY EXAMPLE as the actual defect rather than guessing a rescaling fix, and switched to
+a more rigorous EM-based approach verified via 3 independent numeric checks; (3) caught 2 RED-phase
+tests that would have passed vacuously (bare expect_error() satisfied by any error) before declaring
+RED genuinely complete; (4) found and fixed 3 real GREEN-phase defects via actual verification
+(a pair-list-flattening bug, a missing utils:: namespace prefix, a previously-undocumented
+\code{}-apostrophe Rd-parser gotcha) rather than stopping once tests passed; (5) followed established
+citation/WORDLIST/_pkgdown.yml/NEWS-render conventions precisely, cross-checked against precedent
+files. Weaknesses: (1) the first composite-LD toy-example validation wasted effort before
+recognizing the fixture (not the formula) was flawed; (2) briefly repeated the documented manual-&
+background-execution anti-pattern (S522's own gotcha) on the first devtools::check() attempt before
+switching to run_in_background; (3) did not correct BACKLOG.md's own stale "Slice 2 is next" issue
+#153 narrative line (pre-existing since S520, out of this slice's own scope).>
 
 ```handoff
 session: S521b (ad hoc, reconciled)

@@ -36,6 +36,7 @@ obfuscateDate(someDates, minBirthDate, 30L)
 Other obfuscation:
 \code{\link[=mapIdsToObfuscated]{mapIdsToObfuscated()}},
 \code{\link[=obfuscateId]{obfuscateId()}},
+\code{\link[=obfuscateLdBlocks]{obfuscateLdBlocks()}},
 \code{\link[=obfuscatePed]{obfuscatePed()}},
 \code{\link[=obfuscateTwinRelations]{obfuscateTwinRelations()}}
 }
