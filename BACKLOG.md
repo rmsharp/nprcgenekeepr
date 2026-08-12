@@ -579,6 +579,17 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       (reused, hand-verified fixtures; each demo chunk checked against the
       real installed package, not hand-derived, per `PROJECT_LEARNINGS.md`
       Learning 440's stale-local-install trap).
+- [ ] **`.Rbuildignore`'s `methodology_trim.py` pattern has a typo, leaving the real file
+      uncovered** (found S533, 2026-08-12, READY, Effort S) -- the line reads
+      `^methodolog_trim\.py$` (missing the "y" in "methodology"), confirmed via direct
+      `grepl(pattern, "methodology_trim.py", perl = TRUE)` returning `FALSE`. This is the
+      standing cause of `devtools::check()`'s documented "top-level files" NOTE
+      (`Non-standard file/directory found at top level: 'methodology_trim.py'`) -- not a
+      mystery, as prior sessions' own gotchas about this NOTE's "not fully understood"
+      trigger condition assumed (`PROJECT_LEARNINGS.md` Learning 538's own gotcha (1)). Fix:
+      correct the pattern to `^methodology_trim\.py$`, then re-run `devtools::check()`
+      (default `cran = TRUE` invocation, not `cran = FALSE` -- see Learning 539) to confirm
+      the NOTE drops to 1 (vignettes/figure leftover only).
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability-comparison audit (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`)
@@ -1240,4 +1251,47 @@ alone); `lintr::lint_package()` 0 lints on touched files. Runtime smoke test: n/
 script-callable only, no Shiny wiring touched this slice, matching the Slice 1/2 precedent.
 **Issue #152 stays open -- Slice 4 (the new de-identification primitive,
 `R/obfuscateGenotypeMatrix.R`, D7) is the next planned slice**, a separate future session per
+the plan's own session-boundary requirement. See `CHANGELOG.md`.
+
+**Progress (S533, 2026-08-12):** Issue #152 Slice 4 -- the new `obfuscateGenotypeMatrix()`
+de-identification primitive (D7) -- is now DONE, per
+`docs/planning/issue152-sequence-input-genetic-metrics-plan.md` §5 Slice 4. Full strict TDD
+PRE-RED->RED->GREEN->REFACTOR cycle, gated by an `AskUserQuestion` at every transition per
+`CLAUDE.md`'s Development Process Contract. D7 was already ratified at the design session
+(folded into D8's own vote, §11), and the interface catalog (§4) fully specified the
+function's shape, so this slice needed no fresh Pre-RED judgment-call round, unlike Slice 3's
+3 open decisions. New `R/obfuscateGenotypeMatrix.R` mirrors `obfuscateTwinRelations()`'s/
+`obfuscateLdBlocks()`'s established de-identification pattern exactly: reads
+`rownames(genotypeMatrix)` as the ids, `stop()`s loudly (never silently drops) if any id is
+absent from `map`, otherwise remaps rownames to their alias via `unname(map[ids])` --
+genotype cell values, column names (loci), and row/column order are all untouched by
+construction. 3 new `test_that` blocks in `tests/testthat/test_obfuscateGenotypeMatrix.R`:
+remap-and-values-unchanged, stop-on-missing-id, and a round-trip through the real map
+`obfuscatePed(ped, map = TRUE)` returns -- mirroring the established test shape for this
+function family. RED confirmed (3/3 blocks failing, function not found) before
+implementation; GREEN passed all 3 blocks on the first implementation attempt. REFACTOR: a
+first lint pass mistakenly used `lintr::linters_with_defaults()` instead of the project's own
+`.lintr` config, surfacing 4 false-positive-looking findings (camelCase naming, indentation)
+this project's own config explicitly permits/disables -- caught before treating any of them
+as real; re-run with the correct `lintr::lint_package()` (no override) found 0 lints, so no
+refactor changes were needed. `PROJECT_LEARNINGS.md` Learning 539 records the near-miss.
+`devtools::document()` regenerated `NAMESPACE`/`man/obfuscateGenotypeMatrix.Rd` plus the
+`@family obfuscation` cross-reference in 6 sibling `.Rd` files (collateral, expected).
+`NEWS.Rmd` gained a terse entry (rendered to `NEWS.md` via `rmarkdown::render()`, matching
+this file pair's established regeneration convention); `_pkgdown.yml`'s "All exposed
+functions" group gained the new export at its correct alphabetical position, confirmed via
+`test_pkgdown_reference_config.R`. Citation checklist (issue #120) and tutorial/article
+checklist (Session 436): N/A this slice, per the design doc's own §9 checklist mapping (Slice
+4 is not a displayed statistic and ships no UI). Full clean regression 0 failed/0 error;
+`devtools::check()` 0 errors/0 warnings/2 NOTEs, both confirmed pre-existing (vignettes/figure
+leftover; top-level files -- `methodology_trim.py`, root-caused this session to the
+`.Rbuildignore` typo above, not a mystery). A first `devtools::check(cran = FALSE)` call
+misleadingly returned only 1 NOTE -- caught before accepting it, per Learning 538's own "a
+lower NOTE count is not automatically good news" rule; `cran = FALSE` is a non-default
+argument that suppresses the CRAN-incoming-style top-level-files check, and re-running with
+the plain default (`cran` omitted, `= TRUE`) reproduced the documented 2-NOTE baseline
+exactly. `PROJECT_LEARNINGS.md` Learning 539. Runtime smoke test: n/a -- script-callable
+only, no Shiny wiring touched this slice, matching the Slice 1/2/3 precedent.
+**Issue #152 stays open -- Slice 5 (the full module tab, wiring, curator-controlled export,
+and documentation, D8/D9) is the next and final planned slice**, a separate future session per
 the plan's own session-boundary requirement. See `CHANGELOG.md`.

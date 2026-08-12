@@ -6,18 +6,116 @@
 
 ## ACTIVE TASK
 
+### Session 532 Handoff Evaluation (by Session 533)
+**Score: 9/10.** **What helped:** the `HANDOFFS.md` S532 receipt's `next_steps` field named
+exactly the item this session picked up (issue #152 Slice 4, de-identification primitive,
+`R/obfuscateGenotypeMatrix.R`, D7) with a pointer to the plan's own section 5 -- reused directly
+in this session's Phase 0 priorities list and as the starting point for Pre-RED research.
+`gotchas` (1) (never trust a `devtools::check()` NOTE count without direct verification) was
+the single most load-bearing piece of guidance this session reused: it primed an immediate
+double-check of this session's own better-than-expected 1-NOTE `devtools::check()` result rather
+than accepting it, which led directly to finding and fixing a real invocation mistake
+(`cran = FALSE`, non-default) and, as a bonus, fully resolving `PROJECT_LEARNINGS.md` Learning
+538's own open question about the top-level-files NOTE's "not fully understood" trigger (a real
+`.Rbuildignore` typo, `methodolog_trim.py` missing the "y"). **What was missing:** nothing
+structural -- the receipt could not have anticipated this session's own two independent
+verification-invocation near-misses (the `lintr` default-linters override; the `devtools::check`
+non-default `cran` argument), since both were this session's own execution choices, not
+something derivable from S532's work. **What was wrong:** nothing found -- every claim in the
+receipt (5,457 passed/0 failed, 2 NOTEs both pre-existing, 0 lints, the 6 new WORDLIST words)
+held up; this session's own corrected `devtools::check()` re-run reproduced the exact same
+2-NOTE baseline once invoked correctly. **ROI:** High -- gotcha (1) was directly load-bearing,
+not just generally useful context, and its reuse this session closed a real standing question
+the receipt's own author had left open.
+
 ### What Session 533 Did
-**Deliverable:** Implement issue #152 Slice 4 -- new `R/obfuscateGenotypeMatrix.R`
+**Deliverable:** Implemented issue #152 Slice 4 -- new `R/obfuscateGenotypeMatrix.R`
 (`obfuscateGenotypeMatrix()`), the sequence-genotype-matrix de-identification primitive, per
-`docs/planning/issue152-sequence-input-genetic-metrics-plan.md` section 5 Slice 4 (design decision
-D7). Owner-picked from this session's own Phase 0 priorities list (4 options via `AskUserQuestion`)
-over the `inst/WORDLIST` gap, `NEWS.Rmd` verbosity drift, and the `a2interactive.Rmd` documentation
-pass. (IN PROGRESS)
-**Started:** 2026-08-12
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+`docs/planning/issue152-sequence-input-genetic-metrics-plan.md` section 5 Slice 4 (design
+decision D7). Owner-picked from this session's own Phase 0 priorities list (4 options via
+`AskUserQuestion`) over the `inst/WORDLIST` gap, `NEWS.Rmd` verbosity drift, and the
+`a2interactive.Rmd` documentation pass.
+**Started/Completed:** 2026-08-12.
+**Status:** DONE. Full strict TDD PRE-RED->RED->GREEN->REFACTOR cycle, every phase transition
+gated by its own `AskUserQuestion` per `CLAUDE.md`'s Development Process Contract.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, git status/log, `methodology_dashboard.py` -- health 96/100, 1 HIGH-risk
+category unchanged). Ledger reconcile: `CHANGELOG.md` frontier already `HEAD`; `HANDOFFS.md`'s
+S532 receipt still carried `commit: pending`, reconciled to `5149e1ab` (the established one-hop
+case), committed separately (`686f1b36`). Rendered the priorities list via `AskUserQuestion` (4
+options); owner picked issue #152 Slice 4. **(2)** Claimed the session (commit `f687965d`).
+**(3)** Pre-RED research: read the plan's interface catalog (§4), Slice 4 spec (§5), Dragon 5
+(§7), and the ratification record (§11) -- confirmed D7 was already folded into D8's own
+ratified vote at design time, so no fresh judgment-call round was needed (unlike Slice 3's 3
+open decisions). Read the two closest precedents in full -- `obfuscateTwinRelations()`/
+`obfuscateLdBlocks()` and their test files (both remap ids through the same `map` alias vector,
+`stop()` loudly on any id missing from `map`) -- plus `buildMarkerGenotypeMatrix()` (confirmed
+`genotypeMatrix`'s shape: character matrix, `rownames = ids`, `colnames = loci`) and
+`computeGenomicROH.R` (S532's own precedent for the same parameter name/shape). **(4)**
+PRE-RED->RED gate: wrote 3 `test_that` blocks in `tests/testthat/test_obfuscateGenotypeMatrix.R`
+mirroring the established de-identification-primitive test shape (remap+values-unchanged,
+stop-on-missing-id, round-trip through `obfuscatePed(..., map = TRUE)`'s real map). Confirmed
+RED: 3/3 failing, function not found. **(5)** RED->GREEN gate: wrote `R/obfuscateGenotypeMatrix.R`
+(reads `rownames(genotypeMatrix)`, `stop()`s on any id absent from `map`, otherwise remaps
+rownames via `unname(map[ids])`; genotype values/colnames/order untouched by construction). All
+3 blocks passed on the first implementation attempt; full clean regression 0 failed/0 error.
+**(6)** GREEN->REFACTOR gate: a first `lintr::lint_package(linters = lintr::linters_with_defaults())`
+call flagged 4 findings (camelCase naming, indentation) that would have been wrong to fix -- this
+project's own `.lintr` explicitly permits camelCase and disables `indentation_linter`; caught
+before treating any of them as real. Re-running the plain, argument-free `lintr::lint_package()`
+(reads `.lintr` automatically) found 0 lints -- REFACTOR complete, no changes needed. **(7)**
+Close-out verification: `rmarkdown::render("NEWS.Rmd")` (regenerates `NEWS.md`, this file pair's
+established convention) added a terse dev-version entry; `devtools::document()` regenerated
+`NAMESPACE`/`man/obfuscateGenotypeMatrix.Rd` plus the `@family obfuscation` cross-reference in 6
+sibling `.Rd` files (collateral, expected); `_pkgdown.yml`'s "All exposed functions" group gained
+the new export at its correct alphabetical position, confirmed via
+`test_pkgdown_reference_config.R`. Citation checklist (issue #120) and tutorial/article checklist
+(Session 436): N/A this slice, per the design doc's own §9 checklist mapping. **(8)** A real
+mid-close-out finding: a first `devtools::check(cran = FALSE)` call returned only **1** NOTE, not
+the documented **2**-NOTE baseline S532 set the same day. Per Learning 538's own "a lower NOTE
+count is not automatically good news" rule, investigated directly rather than accepting it:
+`args(devtools::check)` showed `cran` defaults to `TRUE`, not `FALSE` -- `cran = FALSE` was this
+session's own unexamined, non-default addition, silently suppressing the CRAN-incoming-style
+"checking top-level files" check. Re-running with the plain default reproduced the documented
+2-NOTE baseline exactly, including `Non-standard file/directory found at top level:
+'methodology_trim.py'` -- root-caused directly to a real, pre-existing `.Rbuildignore` typo
+(`^methodolog_trim\.py$`, missing the "y"), confirmed via `grepl(..., perl = TRUE)` returning
+`FALSE` against the real filename. This also resolves Learning 538's own open question about the
+NOTE's "not fully understood" trigger. Filed to `BACKLOG.md` Housekeeping (not fixed mid-session,
+matching the established "report, don't fix" precedent for an unrelated pre-existing defect).
+`PROJECT_LEARNINGS.md` Learning 539 records both this-session verification-invocation near-misses
+(the lint override and the `cran` argument) under one shared rule. **(9)** Final verification:
+full clean regression 0 failed/0 error (re-confirmed via `devtools::check()`'s own test
+execution); `devtools::check()` (default, correct invocation) 0 errors/0 warnings/2 NOTEs, both
+confirmed pre-existing; `lintr::lint_package()` (correct invocation) 0 lints on touched files.
+**(10)** Updated `BACKLOG.md`'s issue #152 tracking item with this session's progress note,
+naming Slice 5 (the full module tab + wiring + curator-controlled export + documentation, D8/D9)
+as next and final.
+
+**Self-assessment (Session 533): 9/10.** **Strengths:** (1) Followed the full TDD contract
+faithfully -- an explicit `AskUserQuestion` at every phase transition, each spelling out the
+exact planned actions before they were taken. (2) Correctly recognized D7 was already ratified
+at design time (folded into D8's vote) rather than needlessly reopening a settled decision or
+silently assuming without checking the ratification record (§11) directly. (3) Did genuine
+Pre-RED research (reading the plan's relevant sections plus both closest precedent functions and
+their tests) before writing a single test, which paid off: GREEN passed on the first attempt
+with 0 debugging iterations. (4) Caught 2 independent verification-invocation near-misses
+(the `lintr` default-linters override; `devtools::check(cran = FALSE)`) before either was
+reported as fact, applying Learning 538's own discipline -- and the second one did more than
+avoid a mistake: it fully root-caused and resolved a standing open question (the top-level-files
+NOTE's exact trigger) that S532's own gotchas had left unconfirmed, and filed the real underlying
+defect (the `.Rbuildignore` typo) to `BACKLOG.md` rather than silently letting it stand or fixing
+it out of scope. **Weaknesses:** (1) Both verification-invocation mistakes were self-inflicted in
+the first place (adding non-default arguments out of habit rather than using the project's plain
+default commands from the start) -- avoidable, and cost 2 extra `devtools::check()` runs
+(~4 minutes each) plus 1 extra `lintr` pass. (2) The very first `devtools::check()` attempt used
+a hand-rolled `&`-backgrounding + manual log redirection that silently produced an empty/near
+-empty output file despite exit code 0, wasting a debugging cycle on tooling mechanics rather
+than the package itself -- the harness's own `run_in_background: true` parameter (used
+successfully for the full regression run moments earlier) should have been the first choice, not
+a fallback after the manual approach failed silently.
+**Ledger:** recorded in `CHANGELOG.md` (issue #152 Slice 4 entry, this handoff's own entry).
 
 ### Session 531 Handoff Evaluation (by Session 532)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S531 receipt's `next_steps` field named

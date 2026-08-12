@@ -52,6 +52,7 @@ obfuscateTwinRelations(twinRelations, obfuscated$map)
 Other obfuscation:
 \code{\link[=mapIdsToObfuscated]{mapIdsToObfuscated()}},
 \code{\link[=obfuscateDate]{obfuscateDate()}},
+\code{\link[=obfuscateGenotypeMatrix]{obfuscateGenotypeMatrix()}},
 \code{\link[=obfuscateId]{obfuscateId()}},
 \code{\link[=obfuscateLdBlocks]{obfuscateLdBlocks()}},
 \code{\link[=obfuscatePed]{obfuscatePed()}}

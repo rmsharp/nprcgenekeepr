@@ -123,19 +123,62 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S533
 date: 2026-08-12
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Issue #152 Slice 4 -- new obfuscateGenotypeMatrix() (R/obfuscateGenotypeMatrix.R),
-the sequence-genotype-matrix de-identification primitive (design decision D7), per
-docs/planning/issue152-sequence-input-genetic-metrics-plan.md section 5 Slice 4. Owner-picked
-from this session's own Phase 0 priorities list.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Issue #152 Slice 4 (new obfuscateGenotypeMatrix() de-identification primitive) is
+DONE, per docs/planning/issue152-sequence-input-genetic-metrics-plan.md section 5 Slice 4.
+Issue #152 stays open -- Slice 5 (full module tab, wiring, curator-controlled export,
+documentation, D8/D9) is next and final.
+what_was_done: New @export'ed obfuscateGenotypeMatrix(genotypeMatrix, map)
+(R/obfuscateGenotypeMatrix.R): de-identifies a sequence-scale genotype matrix by remapping its
+rownames (ids) through the same alias map obfuscatePed(..., map = TRUE) already returns,
+mirroring obfuscateTwinRelations()'s/obfuscateLdBlocks()'s established pattern -- stop()s
+loudly on any id absent from map; genotype values/colnames/order unchanged by construction. D7
+was already ratified at design time (folded into D8's own vote), so no fresh Pre-RED
+judgment-call round was needed, unlike Slice 3's 3 open decisions. Full strict TDD
+PRE-RED->RED->GREEN->REFACTOR cycle, each transition gated by its own AskUserQuestion. 3 new
+test_that blocks in tests/testthat/test_obfuscateGenotypeMatrix.R (remap-and-values-unchanged,
+stop-on-missing-id, round-trip through the real map). RED confirmed (3/3 failing) before
+implementation; GREEN passed all 3 on the first attempt; REFACTOR: 0 lints needed (see gotcha).
+Close-out: devtools::document() (NAMESPACE/man regenerated, plus @family cross-ref in 6 sibling
+.Rd files), NEWS.Rmd/NEWS.md terse entry (rmarkdown::render()), _pkgdown.yml entry. Found and
+root-caused a devtools::check() NOTE-count anomaly (see gotcha) rather than accepting a
+too-good result. Final verification: full clean regression 0 failed/0 error; devtools::check()
+(correct default invocation) 0 errors/0 warnings/2 NOTEs, both confirmed pre-existing;
+lintr::lint_package() (correct invocation) 0 lints. Commits: 686f1b36 (Phase 0 HANDOFFS
+reconcile), f687965d (claim), plus this close-out's own commit.
+next_steps: Issue #152 Slice 5 (full module tab in modMarkerGenetics.R, new fileInputs/
+reactives per the plan's section 4 interface catalog, curator-controlled export UI reusing
+issue #150's confirm-gate pattern, NEWS.Rmd, tutorial/article checklist, citation checklist --
+F_ROH becomes a displayed statistic this slice, _pkgdown.yml) is the next and final planned
+slice for this cluster -- a separate future session per the plan's own session-boundary
+requirement. Unrelated READY items still open: inst/WORDLIST's ~69-83-word gap (Effort M);
+NEWS.Rmd verbosity drift (Effort M, owner-directed); a2interactive.Rmd documentation pass
+(Effort M, owner-directed, now also owing this session's own obfuscateGenotypeMatrix() once a
+documentation-pass session runs); a NEW item this session filed: .Rbuildignore's
+methodolog_trim.py typo (Effort S, READY -- see gotcha).
+key_files: R/obfuscateGenotypeMatrix.R (new, ~20 lines); tests/testthat/test_obfuscateGenotypeMatrix.R
+(new, 3 test_that blocks); man/obfuscateGenotypeMatrix.Rd (generated); .Rbuildignore:113 (the
+methodolog_trim.py typo, NOT fixed this session -- filed to BACKLOG.md Housekeeping);
+BACKLOG.md issue #152 tracking item (S533 progress note) and Housekeeping section (new typo
+item); PROJECT_LEARNINGS.md Learning 539.
+gotchas: (1) Two independent verification-invocation near-misses this session, both from
+adding a non-default argument out of habit rather than using the project's plain default
+command: lintr::lint_package(linters = lintr::linters_with_defaults()) silently discards this
+project's own .lintr config (which permits camelCase, disables indentation_linter) -- always
+call lintr::lint_package() argument-free. (2) devtools::check(cran = FALSE) silently suppresses
+the CRAN-incoming-style "checking top-level files" NOTE this project's documented 2-NOTE
+baseline depends on -- always use the plain default (cran omitted, = TRUE) when comparing
+against the baseline. (3) The top-level-files NOTE's exact trigger, left "not fully understood"
+by Learning 538, is now confirmed: .Rbuildignore's `^methodolog_trim\.py$` pattern is missing
+the "y" in "methodology" and never matches the real file -- filed to BACKLOG.md Housekeeping
+(Effort S, READY), not fixed this session (unrelated pre-existing defect, out of this slice's
+file scope).
+runtime_smoke: n/a -- script-callable only, no Shiny wiring touched this slice, matching the
+Slice 1/2/3 precedent (design doc section 5: Slice 5 is the only slice shipping a UI tab).
+changelog_ref: this session's own CHANGELOG.md entry, 2026-08-12 ([issue #152] Slice 4 --
+obfuscateGenotypeMatrix() de-identification primitive shipped)
 commit: pending
 ```
 

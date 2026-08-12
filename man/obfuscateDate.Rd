@@ -35,6 +35,7 @@ obfuscateDate(someDates, minBirthDate, 30L)
 \seealso{
 Other obfuscation:
 \code{\link[=mapIdsToObfuscated]{mapIdsToObfuscated()}},
+\code{\link[=obfuscateGenotypeMatrix]{obfuscateGenotypeMatrix()}},
 \code{\link[=obfuscateId]{obfuscateId()}},
 \code{\link[=obfuscateLdBlocks]{obfuscateLdBlocks()}},
 \code{\link[=obfuscatePed]{obfuscatePed()}},

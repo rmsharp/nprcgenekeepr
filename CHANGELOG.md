@@ -131,6 +131,53 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [issue #152] Slice 4 -- new `obfuscateGenotypeMatrix()` de-identification primitive shipped (Session 533)
+- **Deliverable:** New script-callable, `@export`ed `obfuscateGenotypeMatrix(genotypeMatrix, map)`
+  (`R/obfuscateGenotypeMatrix.R`), per
+  `docs/planning/issue152-sequence-input-genetic-metrics-plan.md` §5 Slice 4 (design decision
+  D7, already ratified at design time, folded into D8's own vote). De-identifies a
+  sequence-scale genotype matrix by remapping its row names (individual ids) through the same
+  alias map `obfuscatePed(..., map = TRUE)` already returns, mirroring
+  `obfuscateTwinRelations()`'s/`obfuscateLdBlocks()`'s established pattern exactly: `stop()`s
+  loudly (never silently drops) on any id absent from `map`; genotype values, column names
+  (loci), and row/column order are unchanged by construction.
+- **Verification:** Full strict TDD PRE-RED->RED->GREEN->REFACTOR cycle, each transition gated
+  by its own `AskUserQuestion`. 3 new `test_that` blocks in
+  `tests/testthat/test_obfuscateGenotypeMatrix.R` (remap-and-values-unchanged,
+  stop-on-missing-id, round-trip through the real `obfuscatePed(..., map = TRUE)` map). RED
+  confirmed (3/3 failing, function not found) before implementation; GREEN passed all 3 blocks
+  on the first attempt; REFACTOR: 0 lints needed (a first pass using
+  `lintr::linters_with_defaults()` produced 4 false-positive findings this project's own
+  `.lintr` config explicitly permits/disables -- caught before treating them as real; the
+  correct argument-free `lintr::lint_package()` found 0). Full clean regression 0 failed/0
+  error; `devtools::check()` (default `cran = TRUE` invocation) 0 errors/0 warnings/2 NOTEs,
+  both confirmed pre-existing. `devtools::document()` regenerated `NAMESPACE`/
+  `man/obfuscateGenotypeMatrix.Rd` plus the `@family obfuscation` cross-reference in 6 sibling
+  `.Rd` files. `NEWS.Rmd`/`NEWS.md` gained a terse entry (rendered via `rmarkdown::render()`);
+  `_pkgdown.yml`'s "All exposed functions" group gained the new export, confirmed via
+  `test_pkgdown_reference_config.R`. Citation checklist (issue #120) and tutorial/article
+  checklist (Session 436): N/A this slice, per the design doc's own §9 checklist mapping.
+  Runtime smoke test: n/a -- script-callable only, no Shiny wiring touched.
+- **Incidental finding:** a first `devtools::check(cran = FALSE)` call misleadingly returned
+  only 1 NOTE (not the documented 2-NOTE baseline) -- investigated per
+  `PROJECT_LEARNINGS.md` Learning 538's "a lower NOTE count is not automatically good news"
+  rule rather than accepted at face value; root-caused to `cran = FALSE` being a non-default
+  `devtools::check()` argument that suppresses the CRAN-incoming-style "checking top-level
+  files" check. Re-running with the correct default reproduced the documented baseline exactly
+  and fully resolved a standing open question (`PROJECT_LEARNINGS.md` Learning 538's own
+  unconfirmed NOTE-trigger gotcha): `.Rbuildignore`'s `methodology_trim.py` pattern has a typo
+  (`^methodolog_trim\.py$`, missing the "y"), confirmed via direct `grepl()` test. Filed to
+  `BACKLOG.md` Housekeeping (not fixed mid-session -- unrelated pre-existing defect).
+  `PROJECT_LEARNINGS.md` Learning 539 records this alongside the `lintr` near-miss.
+- **Next:** Issue #152 stays open -- Slice 5 (full module tab, wiring, curator-controlled
+  export, documentation, D8/D9) is the next and final planned slice, a separate future session.
+
+### 2026-08-12 · [ad hoc] S533 Phase 0 reconcile: HANDOFFS.md S532 receipt commit: pending → 5149e1ab (Session 533)
+- Phase 0 step 6 ledger reconcile: `HANDOFFS.md`'s S532 receipt was `status: complete` but
+  `commit: pending` (the standard one-hop case). Reconciled to `5149e1ab` (S532's own
+  close-out commit, which included the receipt itself). Committed separately (`686f1b36`)
+  before this session's own claim commit.
+
 ### 2026-08-12 · [issue #152] Slice 3 -- new `computeGenomicROH()` F_ROH genomic-inbreeding metric shipped (Session 532)
 - **Deliverable:** New script-callable, `@export`ed `computeGenomicROH(genotypeMatrix,
   locusMetadata, minSnp = 50L, minBp = 1e6)` (`R/computeGenomicROH.R`), per
