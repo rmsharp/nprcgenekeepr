@@ -6,6 +6,19 @@
 
 ## ACTIVE TASK
 
+### What Session 526 Did
+**Deliverable:** Issue #152 Slice 2 -- `markerKinship()`/`markerParentageLikelihood()` performance
+rewrite (D5), per `docs/planning/issue152-sequence-input-genetic-metrics-plan.md` §5 Slice 2.
+**Started:** 2026-08-11.
+**Status:** Session claimed. Work beginning. Phase 0 orient complete (ledger reconcile: S524/S525
+`HANDOFFS.md` `commit: pending` fields backfilled to their real shas, committed `bd31e874`,
+separate from this session's own claim/deliverable). Picked from this session's own Phase 0
+priorities list (owner choice via `AskUserQuestion`) over the `methodology_trim.py` fence-scanner
+fix.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 524 Handoff Evaluation (by Session 525)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S524 receipt's `next_steps` field named
 "(1) Issue #152 Slice 1 (sequence ingestion + fixture, script-callable only) is READY -- ratified

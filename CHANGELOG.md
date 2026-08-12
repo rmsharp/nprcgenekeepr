@@ -131,6 +131,14 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-11 · [issue #152] S526 claim: issue #152 Slice 2 (markerKinship()/markerParentageLikelihood() performance rewrite, D5) (Session 526)
+- **Deliverable:** Session claimed. Issue #152 Slice 2 -- rewrite `markerKinship()`
+  (currently O(n²·L)) and `markerParentageLikelihood()` (currently O(F·C·L·n)) for genome
+  scale, per `docs/planning/issue152-sequence-input-genetic-metrics-plan.md` §5 Slice 2.
+  Picked from this session's own Phase 0 priorities list (owner choice via `AskUserQuestion`)
+  over the `methodology_trim.py` fence-scanner fix.
+- **Status:** IN PROGRESS -- claim only, no implementation yet this entry.
+
 ### 2026-08-11 · [ad hoc] Reconcile-on-read: HANDOFFS.md S524/S525 receipts' `commit: pending` fields (Session 526)
 - **Ledger reconcile (Phase 0 step 6):** `CHANGELOG.md`'s own frontier and `HANDOFFS.md`'s own
   frontier both already equal `HEAD` (`686bf1b3`) — no undocumented commit gap. Two residuals: the
