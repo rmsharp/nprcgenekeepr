@@ -6,6 +6,21 @@
 
 ## ACTIVE TASK
 
+### What Session 529 Did
+**Deliverable:** Compress `BACKLOG.md`'s "Housekeeping" section (lines 147-798) -- convert
+fully-resolved items' long narrative to short pointers into `CHANGELOG.md`, matching the file's own
+established "(none remaining -- ... see `CHANGELOG.md`)" convention. Owner-picked from this
+session's own Phase 0 priorities list (4 options via `AskUserQuestion`) over issue #152 Slice 3,
+`inst/WORDLIST`, and `NEWS.Rmd` verbosity. Scope narrowed to the Housekeeping section only (of 3
+oversized sections) via a second `AskUserQuestion` after an inventory pass, over: top-10-15
+items file-wide, just the single biggest item, or a narrower prep-only pass (checkbox/ambiguity
+fixes only).
+**Started:** 2026-08-12.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 527 Handoff Evaluation (by Session 528)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S527 receipt's `next_steps` field named "File
 the newly-found `methodology_trim.py` `\b` regex defect (`BACKLOG.md` Housekeeping, found S527,

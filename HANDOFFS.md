@@ -121,6 +121,26 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-10.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S529
+date: 2026-08-12
+status: pending
+self_score: pending
+predecessor_score: 8
+active_task: Compress BACKLOG.md's "Housekeeping" section (lines 147-798) -- convert fully-resolved
+items' long narrative to short pointers into CHANGELOG.md. Scope narrowed to Housekeeping only (of
+3 oversized sections: Housekeeping/Pedigree/Genetic-metrics) via AskUserQuestion after an inventory
+pass.
+what_was_done: pending
+next_steps: pending
+key_files: BACKLOG.md:147-798 (Housekeeping section, the edit target)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<prose pending -- filled at Phase 3D close-out>
+
+```handoff
 session: S528
 date: 2026-08-12
 status: complete
