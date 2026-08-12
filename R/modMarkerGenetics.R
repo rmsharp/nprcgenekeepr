@@ -34,6 +34,58 @@
   "tool's."
 )
 
+## D7: any sequence-derived export (raw genotype matrix AND derived summary
+## tables) routes through the same curator-controlled gate issue #150
+## established -- genotype/allele values themselves are never perturbed, so
+## the confirm-gate/labeling pattern below is the only real protection
+## (issue #152 design doc sec 3 D7).
+.sequenceExportWarningText <- paste(
+  "This export de-identifies ids in the genotype matrix and F_ROH table --",
+  "genotype and allele values themselves are never altered, since there",
+  "is no scientifically-valid way to obscure an allele call while",
+  "preserving its validity. Confirming that your institution's",
+  "data-sharing and authorization policies permit this export and its",
+  "intended recipient(s) is your responsibility, not this tool's."
+)
+
+#' Build the sequence export's transformation manifest (issue #152 Slice 5)
+#'
+#' A "non-sensitive... auditable" record of how a de-identified sequence
+#' export was produced: export timestamp, package version, the exact
+#' \code{\link{computeGenomicROH}} parameters used, the exported row/locus
+#' counts, and a copy of the confirm-gate warning text shown to the curator.
+#' Deliberately never includes the id map or any raw pre-obfuscation value
+#' -- mirrors \code{.buildDeidentificationManifest}'s shape
+#' (\code{R/modDeidentifiedExport.R}), adapted to this export's own actual
+#' parameters (no \code{size}/\code{maxDelta}/\code{linkedDateShift} apply
+#' here).
+#'
+#' @param genotypeMatrix the exported (already de-identified) genotype
+#' matrix -- only its dimensions are used.
+#' @param rohTable the exported (already de-identified) F_ROH table -- only
+#' its row count is used.
+#' @param minSnp,minBp the \code{\link{computeGenomicROH}} parameters used
+#' to produce \code{rohTable}.
+#' @param warningText the D7 institutional-responsibility warning text shown
+#' at the confirm gate.
+#' @return A one-row data.frame with columns \code{timestamp},
+#' \code{packageVersion}, \code{nIndividuals}, \code{nLoci}, \code{minSnp},
+#' \code{minBp}, \code{warningText}.
+#' @noRd
+.buildSequenceExportManifest <- function(genotypeMatrix, rohTable, minSnp,
+                                          minBp, warningText) {
+  data.frame(
+    timestamp = format(Sys.time()),
+    packageVersion = getVersion(date = FALSE),
+    nIndividuals = nrow(genotypeMatrix),
+    nLoci = ncol(genotypeMatrix),
+    minSnp = minSnp,
+    minBp = minBp,
+    warningText = warningText,
+    stringsAsFactors = FALSE
+  )
+}
+
 #' Marker Genetics Module - UI Function
 #'
 #' @param id character vector of length 1. Module namespace identifier.
@@ -133,6 +185,46 @@ modMarkerGeneticsUI <- function(id) {
                         downloadButton(
                           ns("downloadLdBlockExport"),
                           "Download De-Identified LD Block Metrics"
+                        )),
+               tabPanel("Genomic ROH (F_ROH)",
+                        helpText(paste(
+                          "Reuses the genotype file and locus metadata file",
+                          "uploaded above (issue #152) -- no separate upload",
+                          "needed."
+                        )),
+                        fluidRow(
+                          column(6L,
+                                 numericInput(
+                                   ns("rohMinSnp"),
+                                   "Minimum SNP count per ROH segment:",
+                                   value = 50L, min = 1L
+                                 )),
+                          column(6L,
+                                 numericInput(
+                                   ns("rohMinBp"),
+                                   "Minimum ROH segment span (bp):",
+                                   value = 1000000.0, min = 1.0
+                                 ))
+                        ),
+                        DT::DTOutput(ns("sequenceRohTable")),
+                        actionButton(
+                          ns("sequenceExportPreview"),
+                          "Generate De-Identified Export Preview"
+                        ),
+                        uiOutput(ns("sequenceExportGuidance")),
+                        actionButton(ns("sequenceConfirmExport"),
+                                     "Confirm Export"),
+                        downloadButton(
+                          ns("downloadSequenceGenotype"),
+                          "Download De-Identified Genotype Matrix"
+                        ),
+                        downloadButton(
+                          ns("downloadSequenceRoh"),
+                          "Download De-Identified F_ROH Table"
+                        ),
+                        downloadButton(
+                          ns("downloadSequenceManifest"),
+                          "Download Export Manifest"
                         ))
              )
       )
@@ -276,7 +368,13 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
       if (is.null(raw)) {
         return(NULL)
       }
-      checked <- checkMarkerGenotypeFile(raw)
+      ## checkSequenceGenotypeFile() is a confirmed strict superset of
+      ## checkMarkerGenotypeFile()'s rule set (issue #152 Slice 5, Pre-RED
+      ## Q1): same biallelic-only checks, plus a literal-"." rejection and a
+      ## maxLoci soft-warning. This makes the existing genotypeFile input
+      ## (and its Kinship Comparison/Heterozygosity tabs) genome-scale
+      ## -capable with no new upload control or duplicate tab.
+      checked <- checkSequenceGenotypeFile(raw)
       buildMarkerGenotypeMatrix(checked)
     })
 
@@ -353,7 +451,10 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
       if (is.null(raw)) {
         return(NULL)
       }
-      checked <- checkMarkerGenotypeFile(raw)
+      ## Same checkSequenceGenotypeFile() superset swap as genotypeMatrixR()
+      ## above (issue #152 Slice 5, Pre-RED Q1) -- keeps the Cross-Center
+      ## tab's two inputs consistent with each other.
+      checked <- checkSequenceGenotypeFile(raw)
       buildMarkerGenotypeMatrix(checked)
     })
 
@@ -498,6 +599,83 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
       removeModal()
     })
 
+    ## --- Issue #152 Slice 5: Genomic ROH (F_ROH) ---------------------------
+
+    ## Pre-RED Q1/Q2 ratification: NOT a dedicated upload -- reuses
+    ## genotypeMatrixR() (now checkSequenceGenotypeFile()-validated, above)
+    ## and locusMetadata() (the SAME reactive issue #153's own tab already
+    ## populates from the shared locusMetadataFile input). Falls back to
+    ## computeGenomicROH()'s own defaults (minSnp=50L, minBp=1e6) when the
+    ## UI's numericInput default hasn't reached input$... yet, mirroring
+    ## realizedRelatedness()'s own input-fallback-default pattern above.
+    sequenceRohTable <- reactive({
+      gmat <- genotypeMatrixR()
+      lmeta <- locusMetadata()
+      if (is.null(gmat) || is.null(lmeta)) {
+        return(NULL)
+      }
+      minSnp <- if (!is.null(input$rohMinSnp)) input$rohMinSnp else 50L
+      minBp <- if (!is.null(input$rohMinBp)) input$rohMinBp else 1000000.0
+      if (is.na(minSnp) || is.na(minBp) || minSnp <= 0L || minBp <= 0L) {
+        return(NULL)
+      }
+      ## locusMetadata() is checkLocusMetadata()'s OWN output (issue #153),
+      ## which appends a `coverage` column -- 4 or 5 columns, never the raw
+      ## 3/4 computeGenomicROH() expects (it re-runs checkLocusMetadata()
+      ## internally and re-derives coverage itself). Strip it back to the
+      ## raw shape before passing on -- found via this slice's own Phase 3E
+      ## live verification (a real 4-column, with-cM fixture makes the
+      ## double-check see 5 columns and throw; a 3-column, no-cM fixture
+      ## silently mislabels `coverage` as `cM` instead, no error but wrong).
+      lmeta <- lmeta[, setdiff(names(lmeta), "coverage"), drop = FALSE]
+      computeGenomicROH(gmat, lmeta, minSnp = minSnp, minBp = minBp)
+    })
+
+    ## D7: any sequence-derived export routes through the same curator
+    ## confirm-gate pattern as the LD-block export above -- 3 artifacts
+    ## (de-identified genotype matrix, de-identified F_ROH table, manifest)
+    ## snapshotted together at "Generate Preview" click time, per this
+    ## slice's own Pre-RED Q3 ratification.
+    sequenceExportRaw <- reactiveVal(NULL)
+    sequenceExportConfirmed <- reactiveVal(FALSE)
+
+    observeEvent(input$sequenceExportPreview, {
+      req(genotypeMatrixR())
+      req(sequenceRohTable())
+      req(pedigree())
+      sequenceExportConfirmed(FALSE)
+      map <- obfuscatePed(pedigree(), map = TRUE)$map
+      deidGenotype <- obfuscateGenotypeMatrix(genotypeMatrixR(), map)
+      deidRoh <- obfuscateGenomicROH(sequenceRohTable(), map)
+      minSnp <- if (!is.null(input$rohMinSnp)) input$rohMinSnp else 50L
+      minBp <- if (!is.null(input$rohMinBp)) input$rohMinBp else 1000000.0
+      manifest <- .buildSequenceExportManifest(
+        deidGenotype, deidRoh, minSnp = minSnp, minBp = minBp,
+        warningText = .sequenceExportWarningText
+      )
+      sequenceExportRaw(list(genotypeMatrix = deidGenotype, rohTable = deidRoh,
+                              manifest = manifest))
+    })
+
+    observeEvent(input$sequenceConfirmExport, {
+      req(sequenceExportRaw())
+      showModal(modalDialog(
+        title = "Confirm De-Identified Sequence Export",
+        p(.sequenceExportWarningText),
+        footer = tagList(
+          modalButton("Cancel"),
+          actionButton(session$ns("sequenceConfirmExportOk"), "Confirm Export",
+                       class = "btn-success")
+        )
+      ))
+    })
+
+    observeEvent(input$sequenceConfirmExportOk, {
+      req(sequenceExportRaw())
+      sequenceExportConfirmed(TRUE)
+      removeModal()
+    })
+
     output$comparisonTable <- DT::renderDT({
       tbl <- comparison()
       req(tbl)
@@ -581,6 +759,51 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
       }
     )
 
+    output$sequenceRohTable <- DT::renderDT({
+      tbl <- sequenceRohTable()
+      req(tbl)
+      tbl
+    })
+
+    output$sequenceExportGuidance <- renderUI({
+      if (is.null(safeRead(pedigree))) {
+        div(class = "alert alert-warning",
+            "Load a pedigree before generating a de-identified sequence",
+            "export.")
+      } else if (!sequenceExportConfirmed()) {
+        div(class = "alert alert-info",
+            "Generate a preview, then confirm the export to unlock the",
+            "downloads.")
+      }
+    })
+
+    output$downloadSequenceGenotype <- downloadHandler(
+      filename = function() {
+        paste0("sequence_genotype_matrix_", Sys.Date(), ".csv")
+      },
+      content = function(file) {
+        write.csv(sequenceExportRaw()$genotypeMatrix, file)
+      }
+    )
+
+    output$downloadSequenceRoh <- downloadHandler(
+      filename = function() {
+        paste0("sequence_f_roh_", Sys.Date(), ".csv")
+      },
+      content = function(file) {
+        write.csv(sequenceExportRaw()$rohTable, file, row.names = FALSE)
+      }
+    )
+
+    output$downloadSequenceManifest <- downloadHandler(
+      filename = function() {
+        paste0("sequence_export_manifest_", Sys.Date(), ".csv")
+      },
+      content = function(file) {
+        write.csv(sequenceExportRaw()$manifest, file, row.names = FALSE)
+      }
+    )
+
     output$guidance <- renderUI({
       if (is.null(comparison())) {
         div(
@@ -617,7 +840,21 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
       realizedRelatednessTable = reactive(realizedRelatedness()),
       ldBlockTable = reactive(ldBlock()),
       ldBlockExportTable = reactive(ldBlockExportRaw()),
-      ldBlockExportConfirmed = reactive(ldBlockConfirmed())
+      ldBlockExportConfirmed = reactive(ldBlockConfirmed()),
+      sequenceRohTable = reactive(sequenceRohTable()),
+      sequenceExportGenotypeMatrix = reactive({
+        raw <- sequenceExportRaw()
+        if (is.null(raw)) NULL else raw$genotypeMatrix
+      }),
+      sequenceExportRohTable = reactive({
+        raw <- sequenceExportRaw()
+        if (is.null(raw)) NULL else raw$rohTable
+      }),
+      sequenceExportManifest = reactive({
+        raw <- sequenceExportRaw()
+        if (is.null(raw)) NULL else raw$manifest
+      }),
+      sequenceExportConfirmed = reactive(sequenceExportConfirmed())
     )
   })
 }

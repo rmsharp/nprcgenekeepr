@@ -1,0 +1,54 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+
+#' De-identify a computeGenomicROH() result table
+#'
+#' Remaps the \code{id} column of a \code{\link{computeGenomicROH}} result
+#' table through the same alias vector \code{\link{obfuscatePed}(..., map =
+#' TRUE)} already returns, mirroring \code{\link{obfuscateTwinRelations}}'s
+#' and \code{\link{obfuscateGenotypeMatrix}}'s pattern (issue #152 Slice 5,
+#' design decision D7: "any sequence-derived export... routes through a new
+#' de-identification primitive"). \code{\link{computeGenomicROH}}'s output
+#' is a plain per-individual data.frame keyed by a single \code{id} column
+#' -- a different shape from every prior \code{obfuscate*()} sibling, so
+#' none of them fit directly.
+#'
+#' A row whose \code{id} is absent from \code{map} \code{stop()}s rather
+#' than silently dropping or leaking the real id.
+#'
+#' @param rohTable data.frame as returned by \code{\link{computeGenomicROH}}:
+#' at least an \code{id} column.
+#' @param map named character vector of aliases, keyed by the original id
+#' -- the \code{map} element of \code{\link{obfuscatePed}(..., map =
+#' TRUE)}'s return value.
+#' @return \code{rohTable} with \code{id} replaced by its alias; every
+#' other column (\code{nSegments}, \code{totalRohLength}, \code{fRoh}) is
+#' unchanged.
+#' @family obfuscation
+#' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' ped <- data.frame(
+#'   id = c("A01", "A02"),
+#'   sire = c(NA, NA),
+#'   dam = c(NA, NA),
+#'   sex = c("M", "F"),
+#'   stringsAsFactors = FALSE
+#' )
+#' rohTable <- data.frame(
+#'   id = c("A01", "A02"), nSegments = c(1L, 0L),
+#'   totalRohLength = c(1000000, 0), fRoh = c(0.1, 0),
+#'   stringsAsFactors = FALSE
+#' )
+#' obfuscated <- obfuscatePed(ped, map = TRUE)
+#' obfuscateGenomicROH(rohTable, obfuscated$map)
+obfuscateGenomicROH <- function(rohTable, map) {
+  ids <- rohTable$id
+  unknown <- setdiff(ids, names(map))
+  if (length(unknown) > 0L) {
+    stop("Genomic ROH table id(s) not found in the de-identification map: ",
+      toString(unknown), ".")
+  }
+  rohTable$id <- unname(map[ids])
+  rohTable
+}

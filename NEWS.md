@@ -402,6 +402,16 @@ R. Mark Sharp, Ph.D.
   names (individual ids) through the same alias map
   `obfuscatePed(...,   map = TRUE)` already returns; genotype values are
   unchanged. No Shiny UI yet.
+- Marker Genetics gains a new "Genomic ROH (F_ROH)" tab (issue \#152,
+  Slice 5, closing the issue): computes per-individual F_ROH from the
+  same genotype file and locus-metadata file already uploaded elsewhere
+  in the module -- no new upload control, since
+  `checkSequenceGenotypeFile()` makes the existing genotype input
+  genome-scale-capable. Any export (the genotype matrix, the F_ROH
+  table, and a transformation manifest) is de-identified
+  (`obfuscateGenotypeMatrix()`, new script-callable
+  `obfuscateGenomicROH()`) behind the same curator confirm-gate pattern
+  established by the De-Identified Export tab.
 
 # nprcgenekeepr 2.0.0 (20260708)
 

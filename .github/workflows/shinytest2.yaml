@@ -143,6 +143,7 @@ jobs:
             "^e2e-genetic-value-"
             "^e2e-home-navigation"
             "^e2e-input-"
+            "^e2e-marker-genetics-genomic-roh-module"
             "^e2e-mate-pair-analysis-module"
             "^e2e-orip-module"
             "^e2e-pedigree-"

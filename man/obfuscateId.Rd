@@ -36,6 +36,7 @@ obfuscateId(characterIds, size = 4L)
 Other obfuscation:
 \code{\link[=mapIdsToObfuscated]{mapIdsToObfuscated()}},
 \code{\link[=obfuscateDate]{obfuscateDate()}},
+\code{\link[=obfuscateGenomicROH]{obfuscateGenomicROH()}},
 \code{\link[=obfuscateGenotypeMatrix]{obfuscateGenotypeMatrix()}},
 \code{\link[=obfuscateLdBlocks]{obfuscateLdBlocks()}},
 \code{\link[=obfuscatePed]{obfuscatePed()}},

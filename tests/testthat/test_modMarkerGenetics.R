@@ -807,3 +807,331 @@ test_that("modMarkerGenetics's ldBlockExportTable stays NULL after Generate Expo
     expect_null(result$ldBlockExportTable())
   })
 })
+
+## ---------------------------------------------------------------------
+## RED (issue #152 Slice 5): a new "Genomic ROH (F_ROH)" tab. Per this
+## slice's own Pre-RED AskUserQuestion ratification: (Q1) genome-scale
+## kinship/heterozygosity/Fst reruns are NOT a new dedicated tab/inputs --
+## they come for free once genotypeMatrixR()/genotypeMatrixBR() validate
+## via checkSequenceGenotypeFile() (a confirmed strict superset of
+## checkMarkerGenotypeFile()) instead, so the EXISTING genotypeFile/
+## genotypeFileB inputs and the Kinship Comparison/Heterozygosity/Cross-
+## Center tabs are reused unchanged, not duplicated. (Q2) F_ROH's
+## locusMetadata sidecar reuses the EXISTING locusMetadataFile input
+## (already wired to issue #153's own Linkage and LD Block Metrics tab,
+## same checkLocusMetadata() schema, D3's own shared-vocabulary intent) --
+## no second locus-metadata upload. (Q3) the curator-gated de-identified
+## export covers exactly 3 artifacts: the de-identified sequence genotype
+## matrix (obfuscateGenotypeMatrix(), Slice 4), the de-identified F_ROH
+## table (obfuscateGenomicROH(), new this slice), and a transformation
+## manifest -- mirroring modDeidentifiedExport.R's 3-artifact shape.
+##
+## Fixture: reuses test_computeGenomicROH.R's own hand-verified
+## coreGenotypeMatrix/coreLocusMetadata VALUES (3 individuals x 2
+## chromosomes, 9 loci), converted from that file's wide matrix into the
+## long-format id/locus/allele1/allele2 CSV modMarkerGeneticsServer's
+## genotypeFile input expects (a missing genotype is row-ABSENCE, per
+## buildMarkerGenotypeMatrix()'s own documented NA convention -- I2's L3 is
+## simply omitted below). Uploaded through the SAME shared `genotypeFile`
+## input the other 5 tabs already use (Q1), matching the ratified wiring
+## decision -- NOT a new dedicated upload.
+##
+## Expected, harmless side effect of that Q1 reuse: I3 is homozygous at
+## every locus (by design, for a clean F_ROH pattern), so the module's own
+## already-eager comparison()/markerKmat() reactive (unrelated to any test
+## below -- it just also reads genotypeFile) computes markerKinship() and
+## emits its documented "share no heterozygous locus... returning NA"
+## warning for the I1-I3/I2-I3 pairs. Correct, pre-existing markerKinship()
+## behavior, not a defect introduced by this fixture or this slice.
+
+i152RohGenotype <- data.frame(
+  id = c(
+    rep("I1", 9L),
+    rep("I2", 8L), # L3 omitted -- missing genotype (NA in the wide matrix)
+    rep("I3", 9L)
+  ),
+  locus = c(
+    paste0("L", 1L:9L),
+    paste0("L", c(1L, 2L, 4L:9L)),
+    paste0("L", 1L:9L)
+  ),
+  allele1 = c(
+    "A", "A", "A", "A", "A", "B", "A", "A", "A", # I1
+    "A", "A", "A", "A", "B", "A", "A", "A", # I2 (L3 omitted)
+    "A", "A", "A", "A", "A", "A", "A", "A", "A" # I3
+  ),
+  allele2 = c(
+    "A", "A", "A", "A", "B", "B", "A", "A", "A", # I1
+    "A", "A", "A", "B", "B", "B", "A", "A", # I2 (L3 omitted)
+    "A", "A", "A", "A", "A", "A", "A", "A", "A" # I3
+  ),
+  stringsAsFactors = FALSE
+)
+i152RohGenotypeFilePath <- tempfile(fileext = ".csv")
+write.csv(i152RohGenotype, i152RohGenotypeFilePath, row.names = FALSE)
+
+i152RohLocusMetadata <- data.frame(
+  locus = paste0("L", 1L:9L),
+  chrom = c(rep("1", 6L), rep("2", 3L)),
+  pos = c(0, 300000, 700000, 1100000, 1500000, 2000000, 0, 400000, 900000),
+  stringsAsFactors = FALSE
+)
+i152RohLocusMetadataFilePath <- tempfile(fileext = ".csv")
+write.csv(i152RohLocusMetadata, i152RohLocusMetadataFilePath,
+          row.names = FALSE)
+
+## All founders -- built solely so obfuscatePed(map = TRUE) has a real
+## alias map to de-identify against, not meant to be biologically
+## realistic (mirrors i153FoundersPed's own convention above).
+i152RohPed <- data.frame(
+  id = c("I1", "I2", "I3"),
+  sire = rep(NA_character_, 3L),
+  dam = rep(NA_character_, 3L),
+  stringsAsFactors = FALSE
+)
+
+test_that("modMarkerGeneticsUI has a Genomic ROH (F_ROH) tab with its controls", {
+  ui <- modMarkerGeneticsUI("test")
+  ui_html <- as.character(ui)
+
+  expect_true(grepl("Genomic ROH", ui_html, fixed = TRUE))
+  expect_true(grepl("rohMinSnp", ui_html, fixed = TRUE))
+  expect_true(grepl("rohMinBp", ui_html, fixed = TRUE))
+  expect_true(grepl("sequenceExportPreview", ui_html, fixed = TRUE))
+  expect_true(grepl("sequenceConfirmExport", ui_html, fixed = TRUE))
+  expect_true(grepl("downloadSequenceGenotype", ui_html, fixed = TRUE))
+  expect_true(grepl("downloadSequenceRoh", ui_html, fixed = TRUE))
+  expect_true(grepl("downloadSequenceManifest", ui_html, fixed = TRUE))
+})
+
+test_that("modMarkerGenetics's sequenceRohTable is not ready before a genotype file is uploaded", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    session$setInputs(locusMetadataFile = list(
+      name = "i152_roh_locus_metadata.csv",
+      datapath = i152RohLocusMetadataFilePath
+    ))
+    expect_null(result$sequenceRohTable())
+  })
+})
+
+test_that("modMarkerGenetics's sequenceRohTable is not ready before a locus-metadata file is uploaded", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "i152_roh_genotype.csv", datapath = i152RohGenotypeFilePath
+    ))
+    expect_null(result$sequenceRohTable())
+  })
+})
+
+test_that("modMarkerGenetics computes sequenceRohTable matching test_computeGenomicROH.R's own hand-verified fixture values", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "i152_roh_genotype.csv", datapath = i152RohGenotypeFilePath
+    ))
+    session$setInputs(locusMetadataFile = list(
+      name = "i152_roh_locus_metadata.csv",
+      datapath = i152RohLocusMetadataFilePath
+    ))
+    session$setInputs(rohMinSnp = 3, rohMinBp = 1000000)
+
+    tbl <- result$sequenceRohTable()
+    expect_s3_class(tbl, "data.frame")
+
+    byId <- function(col) stats::setNames(tbl[[col]], tbl$id)
+    expect_equal(byId("nSegments")[["I1"]], 1L)
+    expect_equal(byId("totalRohLength")[["I1"]], 1100000)
+    expect_equal(byId("fRoh")[["I1"]], 11 / 29, tolerance = 1e-6)
+    expect_equal(byId("nSegments")[["I2"]], 0L)
+    expect_equal(byId("fRoh")[["I2"]], 0, tolerance = 1e-6)
+    expect_equal(byId("nSegments")[["I3"]], 1L)
+    expect_equal(byId("totalRohLength")[["I3"]], 2000000)
+    expect_equal(byId("fRoh")[["I3"]], 20 / 29, tolerance = 1e-6)
+  })
+})
+
+## RED (bug found via Phase 3E live verification, this same session):
+## locusMetadata() (the shared #153 reactive) always returns
+## checkLocusMetadata()'s OWN output -- which appends a `coverage` column,
+## making its column count 4 (no cM) or 5 (with cM). computeGenomicROH()
+## internally re-runs checkLocusMetadata() on whatever it is given,
+## expecting the RAW 3/4-column shape. A 3-column raw fixture (no cM, like
+## the test above) silently passes the re-check by mistake -- "coverage"
+## gets relabeled "cM", wrong but not an error, since computeGenomicROH()
+## never reads cM for run detection. A 4-column raw fixture WITH a real cM
+## column (matching the actual committed Slice 1 fixture's own shape) makes
+## the re-check see 5 columns and throw loudly -- reproduced live in the
+## running app against inst/extdata/examples/example_sequence_locus_
+## metadata.csv (4 raw columns: locus, chrom, pos, cM).
+i152RohLocusMetadataWithCm <- i152RohLocusMetadata
+i152RohLocusMetadataWithCm$cM <- NA_real_
+i152RohLocusMetadataWithCmFilePath <- tempfile(fileext = ".csv")
+write.csv(i152RohLocusMetadataWithCm, i152RohLocusMetadataWithCmFilePath,
+          row.names = FALSE)
+
+test_that("modMarkerGenetics's sequenceRohTable does not error on a 4-column (with cM) locus-metadata file", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "i152_roh_genotype.csv", datapath = i152RohGenotypeFilePath
+    ))
+    session$setInputs(locusMetadataFile = list(
+      name = "i152_roh_locus_metadata_with_cm.csv",
+      datapath = i152RohLocusMetadataWithCmFilePath
+    ))
+    session$setInputs(rohMinSnp = 3, rohMinBp = 1000000)
+
+    tbl <- result$sequenceRohTable()
+    expect_s3_class(tbl, "data.frame")
+
+    byId <- function(col) stats::setNames(tbl[[col]], tbl$id)
+    expect_equal(byId("nSegments")[["I1"]], 1L)
+    expect_equal(byId("totalRohLength")[["I1"]], 1100000)
+    expect_equal(byId("nSegments")[["I3"]], 1L)
+    expect_equal(byId("totalRohLength")[["I3"]], 2000000)
+  })
+})
+
+test_that("modMarkerGenetics's sequenceRohTable uses minSnp=50L/minBp=1e6 defaults when inputs are unset", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "i152_roh_genotype.csv", datapath = i152RohGenotypeFilePath
+    ))
+    session$setInputs(locusMetadataFile = list(
+      name = "i152_roh_locus_metadata.csv",
+      datapath = i152RohLocusMetadataFilePath
+    ))
+    ## Defaults (minSnp=50L, minBp=1e6) exceed this small fixture's own
+    ## scale -- no individual can qualify, but the call must not error.
+    tbl <- result$sequenceRohTable()
+    expect_s3_class(tbl, "data.frame")
+    expect_true(all(tbl$nSegments == 0L))
+  })
+})
+
+test_that("modMarkerGenetics's sequenceExportConfirmed starts FALSE", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    expect_false(result$sequenceExportConfirmed())
+  })
+})
+
+test_that("modMarkerGenetics's sequence export reactives are NULL before Generate Export Preview is clicked", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(i152RohPed)), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "i152_roh_genotype.csv", datapath = i152RohGenotypeFilePath
+    ))
+    session$setInputs(locusMetadataFile = list(
+      name = "i152_roh_locus_metadata.csv",
+      datapath = i152RohLocusMetadataFilePath
+    ))
+    session$setInputs(rohMinSnp = 3, rohMinBp = 1000000)
+
+    expect_null(result$sequenceExportGenotypeMatrix())
+    expect_null(result$sequenceExportRohTable())
+    expect_null(result$sequenceExportManifest())
+  })
+})
+
+test_that("modMarkerGenetics's sequence export de-identifies the genotype matrix and F_ROH table after Generate Export Preview", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(i152RohPed)), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "i152_roh_genotype.csv", datapath = i152RohGenotypeFilePath
+    ))
+    session$setInputs(locusMetadataFile = list(
+      name = "i152_roh_locus_metadata.csv",
+      datapath = i152RohLocusMetadataFilePath
+    ))
+    session$setInputs(rohMinSnp = 3, rohMinBp = 1000000)
+    session$setInputs(sequenceExportPreview = 1)
+
+    exportedMatrix <- result$sequenceExportGenotypeMatrix()
+    expect_false(any(grepl("^I[1-3]$", rownames(exportedMatrix))))
+
+    exportedRoh <- result$sequenceExportRohTable()
+    expect_s3_class(exportedRoh, "data.frame")
+    expect_false(any(grepl("^I[1-3]$", exportedRoh$id)))
+    ## De-identification aliases id only -- the statistics themselves are
+    ## unchanged (mirrors the ldBlockExportTable precedent's own
+    ## Dprime/nUsed-unchanged assertion).
+    rawRoh <- result$sequenceRohTable()
+    expect_equal(sort(exportedRoh$fRoh), sort(rawRoh$fRoh))
+
+    manifest <- result$sequenceExportManifest()
+    expect_s3_class(manifest, "data.frame")
+    expect_equal(nrow(manifest), 1L)
+    expect_true(all(c("timestamp", "packageVersion", "nIndividuals", "nLoci",
+                       "minSnp", "minBp", "warningText") %in% names(manifest)))
+  })
+})
+
+test_that("modMarkerGenetics's sequence export stays NULL after Generate Export Preview with no pedigree loaded", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "i152_roh_genotype.csv", datapath = i152RohGenotypeFilePath
+    ))
+    session$setInputs(locusMetadataFile = list(
+      name = "i152_roh_locus_metadata.csv",
+      datapath = i152RohLocusMetadataFilePath
+    ))
+    session$setInputs(rohMinSnp = 3, rohMinBp = 1000000)
+    session$setInputs(sequenceExportPreview = 1)
+
+    expect_null(result$sequenceExportGenotypeMatrix())
+  })
+})
+
+test_that("modMarkerGenetics's sequenceExportConfirmed becomes TRUE after the full confirm sequence", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(i152RohPed)), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "i152_roh_genotype.csv", datapath = i152RohGenotypeFilePath
+    ))
+    session$setInputs(locusMetadataFile = list(
+      name = "i152_roh_locus_metadata.csv",
+      datapath = i152RohLocusMetadataFilePath
+    ))
+    session$setInputs(rohMinSnp = 3, rohMinBp = 1000000)
+    session$setInputs(sequenceExportPreview = 1)
+    session$setInputs(sequenceConfirmExport = 1)
+    session$setInputs(sequenceConfirmExportOk = 1)
+
+    expect_true(result$sequenceExportConfirmed())
+  })
+})

@@ -348,6 +348,7 @@ reference:
   - '`modSummaryStatsServer`'
   - '`modSummaryStatsUI`'
   - '`obfuscateDate`'
+  - '`obfuscateGenomicROH`'
   - '`obfuscateGenotypeMatrix`'
   - '`obfuscateId`'
   - '`obfuscateLdBlocks`'

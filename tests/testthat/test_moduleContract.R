@@ -82,7 +82,10 @@ moduleContractServers <- list(
               "heterozygosityTable", "exclusionTable", "crossCenterGenotypeB",
               "crossCenterTable", "candidateAssignmentTable", "isReady",
               "locusMetadataTable", "realizedRelatednessTable", "ldBlockTable",
-              "ldBlockExportTable", "ldBlockExportConfirmed")
+              "ldBlockExportTable", "ldBlockExportConfirmed",
+              "sequenceRohTable", "sequenceExportGenotypeMatrix",
+              "sequenceExportRohTable", "sequenceExportManifest",
+              "sequenceExportConfirmed")
   ),
   modCrossCenterIdentity = list(
     server = modCrossCenterIdentityServer,

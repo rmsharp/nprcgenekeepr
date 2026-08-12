@@ -61,6 +61,7 @@ obfuscateLdBlocks(ldBlockResult, obfuscated$map)
 Other obfuscation:
 \code{\link[=mapIdsToObfuscated]{mapIdsToObfuscated()}},
 \code{\link[=obfuscateDate]{obfuscateDate()}},
+\code{\link[=obfuscateGenomicROH]{obfuscateGenomicROH()}},
 \code{\link[=obfuscateGenotypeMatrix]{obfuscateGenotypeMatrix()}},
 \code{\link[=obfuscateId]{obfuscateId()}},
 \code{\link[=obfuscatePed]{obfuscatePed()}},
