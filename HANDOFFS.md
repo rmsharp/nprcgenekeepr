@@ -123,18 +123,64 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S537
 date: 2026-08-12
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Verify each of the 69 inst/WORDLIST-gap words (found S521) as a genuine false
-positive vs. an actual typo, and hand-add the false positives -- clearing the
-devtools::check() spelling NOTE.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 7
+active_task: inst/WORDLIST's spelling-check gap (found S521) is fully resolved -- 76
+words verified and hand-added, a permanent testthat guard added so this recurring
+drift (S443/S448/S452/S465/S490) can't silently reaccumulate again. BACKLOG.md item
+corrected to RESOLVED.
+what_was_done: Verified all 76 currently-flagged inst/WORDLIST words (BACKLOG.md's
+documented 69 was stale) as genuine false positives via source-context grep -- zero
+typos found. Excluded 4 more (CJ/PWJ/QBKW/ZX) traced to a stale, gitignored
+vignettes/a2interactive.md build byproduct a clean checkout would never see (confirmed
+via git archive HEAD). Added tests/testthat/test_wordlist_coverage.R, a permanent
+guard asserting spelling::spell_check_package() returns 0 rows. A first WORDLIST merge
+attempt (LC_ALL=C sort -u) silently reordered ~21 unrelated existing entries -- caught
+via git diff before committing, reverted, redone as a pure 76-line insertion (also
+corrects a factually-wrong "LC_ALL=C byte-order" convention claimed in 3 prior
+BACKLOG.md entries, S452/S465/S490). A full devtools::check() run then found a SECOND
+real bug the unit test alone missed: the guard's test_path("..","..") broke under R
+CMD check's own testthat.R execution (1 error) because testthat runs each test_that()
+block with CWD set to the test file's own directory, at a different depth than under
+devtools::test(). Fixed by reusing spelling::spell_check_test()'s own proven
+00_pkg_src-sibling resolution strategy at the correct depth, verified via a fast local
+R-CMD-check-layout simulation before the final full re-check. Final devtools::check():
+0 errors / 0 warnings / 1 NOTE (only the pre-existing vignettes/figure-leftover NOTE;
+spelling NOTE gone). Full strict TDD PRE-RED->RED->GREEN->REFACTOR, each transition
+AskUserQuestion-gated. Commits: 250b33d0 (the fix), plus this close-out's own docs
+commit.
+next_steps: This item is fully closed. Other unrelated READY items still open
+(unchanged by this session): NEWS.Rmd verbosity drift since 2.0.0.9000 (Effort M,
+owner-directed); a2interactive.Rmd documentation pass for 8 functions shipped since
+S478 (Effort M, owner-directed). Issue #148 (MHC) still needs its own scope-narrowing
+conversation before it's READY (sequencing audit Finding #4). LabKey integration
+remaining recs stay BLOCKED (needs a live LabKey server).
+key_files: inst/WORDLIST (76 words added, zero existing lines reordered);
+tests/testthat/test_wordlist_coverage.R (new guard test + find_pkg_src() helper);
+BACKLOG.md (item corrected to RESOLVED, S452/S465/S490's LC_ALL=C claim left as
+historical record per the frozen-history convention); PROJECT_LEARNINGS.md Learning
+543 (new).
+gotchas: (1) spelling::spell_check_package() scans the literal working directory, not
+a clean checkout -- a stale .gitignore'd vignettes/*.md build byproduct can inflate
+the flagged-word count with words CI would never see; cross-check via a git archive
+HEAD export before trusting a local count. (2) inst/WORDLIST is NOT LC_ALL=C sorted
+despite 3 BACKLOG.md entries claiming it is -- verify a loosely-hand-maintained file's
+real convention empirically (e.g. diff <(sort -f file) file) before bulk-editing it,
+and confirm any merge diff shows ONLY insertions (git diff file | grep -c "^-[^-]" ==
+0) before committing. (3) testthat::test_path() resolves relative to the test file's
+OWN directory (confirmed by printing getwd() inside a live test_that() block), which
+sits at a different depth under devtools::test() vs. R CMD check's test_check() --
+never hardcode a ".." count for locating the package source from inside a testthat
+file meant to run under both; reuse spelling::spell_check_test()'s own proven
+00_pkg_src-sibling strategy instead, and verify with a fast local simulation (a fake
+00_pkg_src-sibling directory) rather than iterating via repeated full devtools::check()
+runs (~4 min each).
+runtime_smoke: n/a -- no runtime/Shiny behavior changed (this session touched only a
+test file and a data file); the full devtools::check() run (0 errors/0 warnings/1
+pre-existing NOTE) is this session's complete build-equivalent verification.
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12 ([BL-521] the fix;
+[ad hoc] S537 Phase 0 reconcile entry)
 commit: pending
 ```
 

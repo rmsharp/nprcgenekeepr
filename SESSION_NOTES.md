@@ -6,15 +6,121 @@
 
 ## ACTIVE TASK
 
+### Session 536 Handoff Evaluation (by Session 537)
+**Score: 7/10.** **What helped:** the `HANDOFFS.md` S536 receipt's `next_steps` field
+correctly named `inst/WORDLIST`'s gap as a READY, Effort M item alongside the 2 other
+READY items and the #148 DECISION-NEEDED item -- this session picked it directly via the
+Phase 0 `AskUserQuestion` picker with zero rediscovery of "is this actually available to
+pick up." **What was missing:** the carried-forward "~69-word gap" figure (originally
+S521's count, repeated verbatim by S536 since S536 wasn't working on this item) was stale
+-- a fresh count this session found **76** genuinely tracked-source words (plus 4 more from
+a local-only stale build artifact), a real ~10% undercount from 1 day/several sessions of
+drift. Not really a strike against S536 specifically (it was quoting `BACKLOG.md`'s own
+number, not re-deriving it), but worth flagging: a "READY" item's own stated scope/effort
+figure can go stale between the session that files it and the session that picks it up,
+even a single session-gap later. **What was wrong:** nothing found -- S536's own gotchas/
+key_files concerned the shinytest2 modal investigation (issue #153/#152), unrelated to this
+session's chosen task, so nothing from that content was re-verified or contradicted here.
+**ROI:** Moderate -- the `next_steps` pointer itself was directly useful (confirmed
+availability, correct effort tag); the rest of S536's receipt had no overlap with this
+session's own work.
+
 ### What Session 537 Did
-**Deliverable:** Verify each of the 69 `inst/WORDLIST`-gap words (found S521) as a genuine
-false positive vs. an actual typo, and hand-add the false positives -- clearing the
-`devtools::check()` spelling NOTE. (IN PROGRESS)
-**Started:** 2026-08-12.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Verified each of `inst/WORDLIST`'s currently-flagged gap words (BACKLOG.md,
+found S521) as a genuine false positive vs. an actual typo, hand-added the false positives,
+and added a permanent `testthat` regression guard (`test_wordlist_coverage.R`) so this
+NOTE-only, easy-to-miss drift can't silently reaccumulate the way it has since S443.
+**Started/Completed:** 2026-08-12.
+**Status:** DONE. Full strict TDD PRE-RED->RED->GREEN->REFACTOR cycle (twice for RED->GREEN --
+once for the WORDLIST content, once more for a real bug Phase 3E-equivalent verification
+found in the new test's own path-resolution logic), every phase transition gated by its own
+`AskUserQuestion` per `CLAUDE.md`'s Development Process Contract.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, `git status`/`log`, `methodology_dashboard.py`). Ledger
+reconcile found the S536 `HANDOFFS.md` receipt's `commit: pending` field still unreconciled
+(the self-referential case: the receipt ships in the commit whose sha it names) -- fixed
+(`commit: 66202b2a`) and logged to `CHANGELOG.md` (commit `50f46b50`), matching the
+S535->S536/S534->S535 precedent. Rendered the priorities list via `AskUserQuestion`; owner
+picked the `inst/WORDLIST` spelling gap over `NEWS.Rmd` verbosity, the `a2interactive.Rmd`
+pass, and issue #148 scoping. **(2)** Claimed the session (`d4e78237`). **(3)** PRE-RED
+research: ran `spelling::spell_check_package(".", vignettes = TRUE)` and got **80** words, not
+BACKLOG's documented 69 -- traced 4 (`CJ`/`PWJ`/`QBKW`/`ZX`) to a stale, `.gitignore`'d
+`vignettes/a2interactive.md` build byproduct left over from a prior vignette render (confirmed
+by re-running the check against a `git archive HEAD` clean export: 76, not 80). Read the
+source context (via targeted `grep`) for all 76 genuinely tracked-source words; all 76
+verified as legitimate -- R identifiers/column names, citation authors (the PLINK paper,
+the Okabe-Ito palette), library/proper names (`vis.js`, `Codecov`), valid possessives, and
+standard technical/genetics vocabulary. Zero actual typos found. **(4)** Pre-RED->RED gate
+(`AskUserQuestion`, owner picked the recommended option): wrote a new permanent guard,
+`tests/testthat/test_wordlist_coverage.R`, asserting `spelling::spell_check_package()`
+returns 0 rows -- matching the established `test_pkgdown_reference_config.R` guard-test
+precedent. Confirmed RED (76 words, or 80 including the local artifact). **(5)** RED->GREEN
+gate (`AskUserQuestion`, owner approved): merged the 76 words into `inst/WORDLIST`. First
+attempt used a full `LC_ALL=C sort -u` merge, which silently reordered ~21 unrelated existing
+entries because the file's actual convention is loosely hand-maintained alphabetical, NOT a
+single machine sort key (despite several `BACKLOG.md` entries from S452/S465/S490 explicitly
+claiming an "`LC_ALL=C` byte-order" convention -- empirically false for the file as a whole,
+e.g. `corrigendum` sits between `ColonyManagerTutorial` and `Cramer's`, impossible under true
+`LC_ALL=C`). Caught via `git diff` before committing; reverted and redid it as a pure
+76-line, zero-deletion insertion (each word placed at its correct local position via a
+Python linear scan, not a global resort) -- verified via `git diff | grep -c "^-[^-]"` = 0.
+Removed the local-only stale `vignettes/a2interactive.md`/`.R` byproducts so the local
+re-run reads clean. Guard test GREEN; full clean regression 0 failed/0 error (33 pre-existing,
+unrelated warnings). **(6) A full `devtools::check()` run (the actual build-equivalent, not
+just the unit test) found a SECOND real bug:** the new test's `pkg_root <-
+testthat::test_path("..", "..")` broke under `R CMD check`'s own `testthat.R` execution --
+`1 error` on `../../DESCRIPTION: No such file or directory` -- because testthat runs every
+`test_that()` block with the working directory set to the TEST FILE'S OWN directory
+(confirmed by printing `getwd()` from inside a live test), which sits at a different depth
+relative to the package root under `devtools::test()`/`test_file()` than under R CMD check's
+`test_check()`. Root-caused and fixed by reusing `spelling::spell_check_test()`'s own proven
+strategy (a sibling `00_pkg_src` directory, R CMD check's preserved true-source copy) at the
+correct depth for a testthat context, with a `tryCatch`-guarded `test_path()` fallback for
+local dev use. Verified the fix directly (without needing a full ~4-minute re-check each
+iteration) by building a fake R-CMD-check-style directory layout in the scratchpad and running
+the real test file against it, confirming both the check-context and dev-context code paths
+resolve correctly before re-running the full check. **(7)** REFACTOR: 0 lints on the new test
+file (`lintr::lint_package()`, loaded via `pkgload::load_all()` first per Learning 224);
+`PROJECT_LEARNINGS.md` Learning 543 (both gotchas); `BACKLOG.md` item marked RESOLVED.
+**(8)** Final verification: full clean regression 0 failed/0 error; **`devtools::check()`
+(the real build-equivalent, re-run in full after the fix): 0 errors / 0 warnings / 1 NOTE**
+(only the pre-existing vignettes/figure-leftover NOTE -- the spelling NOTE is gone, and the
+2,128-block `testthat.R` run, including the new guard and all E2E suites, passed clean).
+One incidental, out-of-scope observation not investigated further: the previously-documented
+"top-level files" pre-existing NOTE did not fire this run -- not this session's item to chase
+(nothing in this session touched top-level files or `.Rbuildignore`). No NEWS.Rmd/citation/
+tutorial/`_pkgdown.yml`/`a2interactive.Rmd` close-out checklist applies (no new exported
+function, no new Shiny feature/parameter, no new displayed statistic). Phase 3E: n/a in the
+"launch the app" sense (no runtime/Shiny behavior changed -- this session touched only a test
+file and a data file); the full `devtools::check()` run above is this session's complete
+build-equivalent verification.
+
+**Self-assessment (Session 537): 9/10.** **Strengths:** (1) Did not stop at "the unit test
+passes" -- ran the actual project build-equivalent (`devtools::check()`) before declaring
+GREEN, which is exactly what caught the second, more serious bug (a genuine `R CMD check`-only
+failure the dev-context test run could never have revealed). (2) When the first WORDLIST merge
+attempt produced a larger-than-expected diff (97 insertions/21 deletions instead of a clean
+76-line addition), stopped and investigated rather than accepting it -- caught and corrected a
+convention violation before committing, and in doing so found and can now correct a
+factually-wrong claim repeated across 3 `BACKLOG.md` entries (S452/S465/S490's stated
+"`LC_ALL=C` byte-order" convention, empirically false for the actual file). (3) Built a fast,
+faithful local reproduction of the R-CMD-check directory-layout bug (rather than iterating via
+repeated ~4-minute full `devtools::check()` re-runs) to verify the path-resolution fix, and
+confirmed the exact failure mechanism (`getwd()` printed from inside a live `test_that()`
+block) before writing the fix, rather than guessing and re-running until something worked.
+(4) Verified all 76 words individually via source-context `grep` rather than trusting category
+assumptions, and caught the true count (76, not the stale documented 69) via a clean
+`git archive` re-check rather than trusting the local working tree, which had a stale artifact
+inflating the count to 80. **Weaknesses:** (1) The first attempt at merging new words into
+`inst/WORDLIST` used a naive `LC_ALL=C sort -u`, which should have been checked against the
+existing file's actual convention (a quick spot-check would have shown the mixed-case
+interleaving) BEFORE running it, not after inspecting the resulting diff -- a small amount of
+avoidable rework. (2) Similarly, the first `pkg_root <- test_path("..","..")` implementation
+was not tested against a simulated R-CMD-check context before being treated as done; a
+directly-analogous local RED-context reproduction (built anyway, only after the real check
+failed) would have caught this before spending a ~4-minute check cycle on a broken version.
+**Ledger:** recorded in `CHANGELOG.md` (this session's own entries, Phase 0 reconcile entry).
 
 ### Session 535 Handoff Evaluation (by Session 536)
 **Score: 6/10.** **What helped:** the `HANDOFFS.md` S535 receipt's `next_steps` field named
