@@ -121,6 +121,24 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-10.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S528
+date: 2026-08-12
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix the methodology_trim.py SESSION_NOTES.md LEDGERS.record_start regex's trailing \b
+boundary bug (found/filed S527, BACKLOG.md Housekeeping, READY, Effort S).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<claim stub -- filled at close-out>
+
+```handoff
 session: S527
 date: 2026-08-12
 status: complete

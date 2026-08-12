@@ -6,6 +6,20 @@
 
 ## ACTIVE TASK
 
+### What Session 528 Did
+**Deliverable:** Fix the `methodology_trim.py` `SESSION_NOTES.md` `LEDGERS.record_start` regex's
+trailing `\b` boundary bug (found and filed S527, `BACKLOG.md` Housekeeping, READY, Effort S) --
+the `\b` sits after the whole alternation, so it can never match the "Handoff Evaluation (by
+Session N)" branch (always ends in a non-word `)`), silently excluding all 75 real "Handoff
+Evaluation" headings (as of this session's own pre-claim recount) from the tool's record
+partition, independent of the fence-scanner defect S527 already fixed. Owner-picked from this
+session's own Phase 0 priorities list (4 options via `AskUserQuestion`) over issue #152 Slice 3,
+the `BACKLOG.md` ledger-size compression, and the `inst/WORDLIST` gap.
+**Started:** 2026-08-12.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### Session 526 Handoff Evaluation (by Session 527)
 **Score: 6/10.** **What helped:** the `HANDOFFS.md` S526 receipt's `next_steps` field named "the
 methodology_trim.py fence-scanner defect blocking SESSION_NOTES.md's first archive (BACKLOG.md,
