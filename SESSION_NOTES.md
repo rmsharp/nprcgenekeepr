@@ -6,16 +6,128 @@
 
 ## ACTIVE TASK
 
+### Session 526 Handoff Evaluation (by Session 527)
+**Score: 6/10.** **What helped:** the `HANDOFFS.md` S526 receipt's `next_steps` field named "the
+methodology_trim.py fence-scanner defect blocking SESSION_NOTES.md's first archive (BACKLOG.md,
+found S518, READY, Effort S)" as one of several standing Phase 0 priorities carried unchanged from
+S525's own list -- this was one of 4 items surfaced in this session's own Phase 0 priorities
+picker, and the one the owner chose. Also useful: the still-open `commit: pending` placeholder in
+S526's own receipt was exactly the kind of gap the established one-hop reconcile precedent (S526
+itself applied to S524/S525) predicts, and this session applied it correctly to S526's own receipt
+at Phase 0 step 6 without needing to be told. **What was missing:** S526's `next_steps` framed the
+fence-scanner item as a simple, bounded Effort-S pickup with a clear two-option fix already scoped
+by S518 -- reasonable given what S518 itself found, but this session's own verification (re-running
+the tool's dry-run against its own regex programmatically, not just visually re-reading the
+BACKLOG.md prose) surfaced a SECOND, independent, more subtle defect (the `record_start` regex's
+trailing `\b` never matches "Handoff Evaluation" headings) that neither S518 nor S526 had any way to
+anticipate, since it required directly testing the compiled regex against a real line rather than
+inspecting the pattern's text. Not a fault of S526's handoff -- this genuinely could only be found
+by doing the work. **What was wrong:** nothing found in S526's own substantive claims (Slice 2
+work) -- this session did not touch `R/markerKinship.R`/`R/markerParentageLikelihood.R` or their
+tests, so no independent re-verification of those claims was possible or attempted (matching the
+established precedent for sessions that pick an unrelated item, e.g. S524-on-S523). **ROI:**
+Moderate -- the receipt correctly surfaced the picked item as a candidate among several, but the
+item itself turned out to have more depth than its own BACKLOG.md write-up anticipated; the 6/10
+(lower than S526's own predecessor scores in this narrative) reflects that this session's actual
+work depended much more on its own direct verification than on anything the receipt could have
+told it, not any deficiency in the receipt itself.
+
 ### What Session 527 Did
 **Deliverable:** Fix the `methodology_trim.py` fence-scanner defect blocking `SESSION_NOTES.md`'s
-first archive (BACKLOG.md item found S518, READY, Effort S). Approach: rewrap the one offending
-paragraph in `SESSION_NOTES.md` (owner-picked over patching the canonical-overlay tool locally);
-scope is fix + verify only, not the actual `--write` archive (owner-picked). (IN PROGRESS)
-**Started:** 2026-08-12.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+first archive, per `BACKLOG.md` Housekeeping (found S518, READY, Effort S). Owner-picked from this
+session's own Phase 0 priorities list (4 options via `AskUserQuestion`) over issue #152 Slice 3, the
+`BACKLOG.md` ledger-size compression, and the `inst/WORDLIST` gap.
+**Started/Completed:** 2026-08-12.
+**Status:** DONE (originally-scoped fix). One new, independent defect found during verification and
+filed (not fixed) per the report-don't-fix-mid-session precedent.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue
+list`, git status/log, `methodology_dashboard.py` -- health 96/100, 1 HIGH-risk category (3 files:
+`SESSION_NOTES.md`/`CHANGELOG.md`/`BACKLOG.md`, all past the 2,000-line read cap), unchanged).
+Ledger reconcile: `CHANGELOG.md`/`HANDOFFS.md` frontiers both already `HEAD` (`a7c4f416`) -- no
+undocumented commit gap, but S526's own `HANDOFFS.md` receipt still carried `commit: pending` (the
+established one-hop precedent S526 itself applied to S524/S525); backfilled to `a7c4f416`, committed
+separately (`24a88dec`) before the session's own claim. **Incidental finding, not acted on:**
+`BACKLOG.md:342`'s "`inst/extdata/` reorganization -- Phase 4 (DECISION NEEDED...)" item has a stale
+header -- its own body text confirms Phases 1-4 are ALL done, but the bullet was never converted to
+the "(none remaining...)" form its resolved siblings use; flagged in the orientation report, not
+fixed (out of scope). Rendered the priorities list via `AskUserQuestion` (4 options: issue #152
+Slice 3, the fence-scanner fix, `BACKLOG.md` compression, `inst/WORDLIST`); owner picked the
+fence-scanner fix. **(2)** Investigated the defect directly before claiming (root-caused, not
+trusted from the BACKLOG prose): confirmed exactly one line in the live file starts with 3+
+backticks (`grep -n '^```'`), and that the tool's dry-run currently reports `172 record(s)
+partitioned` against a true, fence-independent heading count of 595 (`grep -cE`). Presented 2
+genuine PRE-RED scope/approach decisions via one `AskUserQuestion` round: fix approach (rewrap
+`SESSION_NOTES.md`'s one offending paragraph, recommended and picked, over patching the
+canonical-overlay `methodology_trim.py` locally or holding/reporting only) and session scope (fix +
+verify only, recommended and picked, over also running the actual first `--write` archive this
+session, deferred as a bigger, less-reversible, separate action). **(3)** Claimed the session
+(commit `7423b91a`) before any technical work. **(4)** TDD PRE-RED->RED gate (`AskUserQuestion`,
+approved): RED = re-run the tool's own dry-run BEFORE editing and record the current broken count
+as evidence (no new test file -- `methodology_trim.py` has no existing Python test suite in this
+repo and is a canonical-overlay tool this project doesn't locally extend with new test
+infrastructure); confirmed `173 record(s) partitioned` (count shifted by 1 from the pre-claim `172`
+because the Phase 1B stub itself added one more real record) versus 596 true headings. **(5)** GREEN:
+applied the exact 2-line rewrap at `SESSION_NOTES.md` (then-`:24400-24401`, shifted from S518's
+originally-reported `:23229` by 8 sessions' worth of prepended content) -- moved the word "backtick"
+from the end of one line to the start of the next, zero words/meaning changed (verified via `git
+diff`), only the physical wrap point moved. Re-ran the dry-run: `522 record(s) partitioned` --
+confirmed via a direct Python cross-check against the tool's own `fence_scan()`/`record_start` regex
+that this is the FULL count the regex is capable of matching (0 missing under the tool's actual
+pattern). **This is where the originally-scoped fix's own verification stopped short of the naive
+`596` target this session had expected at RED time -- see the new-defect finding below, which
+explains the gap.** **(6)** TDD GREEN->REFACTOR gate (`AskUserQuestion`): no candidate -- a 2-line
+prose rewrap has no refactor surface; owner confirmed, proceeded to close-out. **(7)** While
+verifying GREEN, discovered a SECOND, independent, pre-existing defect (not part of the approved
+scope): the `SESSION_NOTES.md` `LEDGERS` entry's `record_start` regex (`methodology_trim.py`, added
+S518) has a trailing `\b` that structurally can never match the "Handoff Evaluation (by Session N)"
+heading branch (always ends in `)`, a non-word char, immediately followed by end-of-line -- no
+word/non-word transition, so `\b` never fires). Confirmed directly in Python: 0 of 74 real
+"Handoff Evaluation" headings in the file match the tool's own pattern, independent of fence state
+(reproduces even with the fence-scanner bug already fixed). Presented via `AskUserQuestion`: file it
+(recommended, matches the established report-don't-fix-mid-session precedent, Learning 382) vs.
+expand scope to fix both this session; owner picked file-it. Filed as a new, precisely-diagnosed
+`BACKLOG.md` Housekeeping item (found S527, READY, Effort S, with root cause, exact reproduction, and
+a fix sketch) -- unlike the fence-scanner bug, this one IS this project's own local `LEDGERS` config
+addition (S518), not shared canonical logic, so a future session fixing it doesn't face the "raise
+upstream, don't patch locally" question the fence-scanner bug did. **(8)** Close-out: `BACKLOG.md`'s
+resolved fence-scanner item converted to the "(none remaining...)" form (matching every other
+resolved item's convention) with the full verified fix + the new finding folded in; new Housekeeping
+item added for the `\b` bug. `PROJECT_LEARNINGS.md` Learning 533 (the `\b`-after-alternation
+boundary-assertion trap). Runtime smoke test (Phase 3E): n/a -- no `R/` file, no `tests/testthat/`
+file, no config/wiring touched; only `SESSION_NOTES.md` (content-only), `HANDOFFS.md`, `BACKLOG.md`,
+`CHANGELOG.md`, `PROJECT_LEARNINGS.md` (all markdown, no runtime surface). `lintr::lint_package()`:
+N/A, no `.R` file touched. `_pkgdown.yml`/citation/tutorial/`a2interactive.Rmd`/`NEWS.Rmd` checklists:
+all N/A -- no export, no Shiny feature, no displayed statistic. No GitHub issue tied to this
+`BACKLOG.md` item (housekeeping-only, not issue-tracked).
+
+**Self-assessment (Session 527): 8/10.** **Strengths:** (1) Did not trust the BACKLOG.md prose's
+own numbers (S518's "349 of 513") at face value -- re-derived the current state directly (one
+offending line via `grep`, exact broken/true counts via the tool's own CLI and a plain grep) before
+proposing a fix, catching that the line number and exact counts had drifted since S518 without
+anyone having been wrong. (2) When the fix's own verification didn't reach the expected target
+(522, not 596), did not declare victory at "better than before" or silently redefine "done" to match
+whatever number resulted -- diagnosed the exact gap via a targeted Python cross-check
+(`fence_scan()` vs. the raw regex) before reporting anything to the user, and named the discrepancy
+precisely (74 missing, all "Handoff Evaluation" headings, 0/74) rather than vaguely. (3) Correctly
+treated the newly-found `\b` defect as a mode-switch moment (`SAFEGUARDS.md`'s "I also noticed..."
+red flag) -- stopped, reported it via `AskUserQuestion` rather than silently expanding scope, even
+though the fix would have been small and directly related. (4) Kept the originally-scoped fix
+genuinely minimal (2 lines, zero semantic change, verified via `git diff` before running the
+dry-run) rather than reflowing the whole surrounding paragraph, avoiding any risk to frozen
+historical content beyond the one necessary line-break move. **Weaknesses:** (1) The PRE-RED->RED
+gate's own RED plan named "596" as the expected GREEN target, based on a plain `grep -cE` count that
+turned out not to match the tool's actual regex (which the session had not yet tested in isolation
+at that point) -- the target was wrong by 74, discovered only during GREEN verification. This was
+disclosed transparently once found, but a more careful PRE-RED could have run the same
+regex-vs-real-line test before setting the RED/GREEN target, rather than assuming a plain grep
+pattern was equivalent to the tool's own compiled regex. (2) Did not verify whether the newly-filed
+`\b` defect might also affect other `LEDGERS` entries in `methodology_trim.py` beyond
+`SESSION_NOTES.md`'s -- the other entries were not read this session; the new BACKLOG.md item scopes
+its finding to `SESSION_NOTES.md` only, which is accurate but leaves an unverified adjacent question
+for whoever picks up the fix.
+**Ledger:** recorded in `CHANGELOG.md` across 4 entries this session (the S526 `commit: pending`
+reconcile, this session's claim, the fix, the new-defect filing).
 
 ### Session 525 Handoff Evaluation (by Session 526)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S525 receipt's `next_steps` field named
@@ -24397,8 +24509,8 @@ inline loop now calls the helper; header comment corrected; 3 new RED-then-GREEN
 Learning 335 + `[chunk-scoped-checker]` glossary entry. `CLAUDE.md` (pointer).
 `CHANGELOG.md` (this session's entries).
 
-**Gotchas for the next session:** (1) The fence-tracker only recognizes backtick
-```` ```{r}/```{R} ```` ... ```` ``` ```` fences (matching this corpus's actual
+**Gotchas for the next session:** (1) The fence-tracker only recognizes
+backtick ```` ```{r}/```{R} ```` ... ```` ``` ```` fences (matching this corpus's actual
 style, confirmed by the corpus-wide comparison above) -- it does NOT handle
 `~~~`-style fences, non-R engine chunks, or nested/malformed fences; this was a
 deliberate, user-approved scope boundary (the GREEN-phase `AskUserQuestion`

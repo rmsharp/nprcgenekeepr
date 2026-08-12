@@ -131,6 +131,26 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] S527 close-out: fence-scanner defect fixed; a second, independent regex defect found and filed (Session 527)
+- **Deliverable:** Fixed the `methodology_trim.py` fence-scanner defect blocking `SESSION_NOTES.md`'s
+  first archive (`BACKLOG.md` Housekeeping, found S518). Rewrapped the one offending paragraph
+  (`SESSION_NOTES.md`, then-line `:24400-24401`) so the 4-backtick inline code span no longer opens
+  a physical line — a 2-line, zero-content-change edit (moved the word "backtick" to the next line;
+  same words, same order). Verified: `python3 methodology_trim.py --file SESSION_NOTES.md` went
+  from `173 record(s) partitioned` (RED) to `522` (GREEN) — confirmed via a direct Python
+  `fence_scan()`/`record_start` cross-check that 522 is the FULL count the tool's own regex is
+  capable of matching (0 missing under that regex).
+- **New finding, filed not fixed (report-don't-fix-mid-session, Learning 382):** verifying the fix
+  surfaced a second, independent, pre-existing defect — the `SESSION_NOTES.md` `LEDGERS` entry's
+  `record_start` regex (added S518) has a trailing `\b` that can never match the "Handoff Evaluation
+  (by Session N)" heading branch (always ends in `)`, a non-word char, so no word/non-word boundary
+  exists at end-of-line). Confirmed: 0 of 74 real "Handoff Evaluation" headings in the file match,
+  independent of fence state. Filed as a new `BACKLOG.md` Housekeeping item (found S527, READY,
+  Effort S) with root cause, reproduction, and fix sketch. `PROJECT_LEARNINGS.md` Learning 533.
+- **Also this session:** `HANDOFFS.md` S526 receipt's `commit: pending` field reconciled to
+  `a7c4f416` (Phase 0 step 6, one-hop precedent). Ledger reconcile itself found no undocumented
+  commit gap (frontiers already `HEAD`).
+
 ### 2026-08-12 · [ad hoc] S527 claim: fix the methodology_trim.py fence-scanner defect blocking SESSION_NOTES.md's first archive (Session 527)
 - **Claim only** — `SESSION_NOTES.md` stub + `HANDOFFS.md` `status: pending` receipt committed
   before any technical work, per Phase 1B. Deliverable: rewrap the one offending paragraph in

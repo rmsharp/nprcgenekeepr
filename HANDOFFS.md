@@ -123,18 +123,54 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S527
 date: 2026-08-12
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 8
+predecessor_score: 6
 active_task: Fix the methodology_trim.py fence-scanner defect blocking SESSION_NOTES.md's first
-archive (BACKLOG.md item found S518, READY, Effort S). Approach: rewrap the one offending paragraph
-in SESSION_NOTES.md; scope is fix + verify only, not the actual --write archive.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+archive (BACKLOG.md item found S518, READY, Effort S) is DONE. A second, independent, pre-existing
+regex defect was found while verifying the fix and filed (not fixed) per the report-don't-fix-
+mid-session precedent.
+what_was_done: Rewrapped the one offending paragraph in SESSION_NOTES.md (then-line
+:24400-24401, shifted from S518's :23229) so the 4-backtick inline code span no longer opens a
+physical line -- 2-line edit, zero words/meaning changed (verified via git diff), only the wrap
+point moved. Verified via the tool's own dry run: 173 record(s) partitioned (RED) -> 522 (GREEN),
+confirmed via a direct Python fence_scan()/record_start cross-check that 522 is the full count the
+tool's own regex can match (0 missing under that regex). Commits: 24a88dec (S526 commit: pending
+reconcile), 7423b91a (claim), plus this close-out's own commit.
+next_steps: File the newly-found methodology_trim.py \b regex defect (BACKLOG.md Housekeeping,
+found S527, READY, Effort S) -- drop the trailing \b or anchor it only on the branches' own
+trailing token, not the whole alternation; re-run python3 methodology_trim.py --file
+SESSION_NOTES.md after the fix and confirm the partitioned count reaches the true total (re-derive
+via grep -cE on the two heading patterns rather than trusting the 596 literal this session
+recorded, since more sessions will have appended by pickup time) before trusting --write. This is
+this project's own local LEDGERS config addition (S518), not shared canonical logic, so unlike the
+fence-scanner bug just fixed, it does not raise the raise-upstream-don't-patch-locally question.
+Separately, remaining open Phase 0 priorities unchanged: issue #152 Slice 3 (F_ROH metric, READY,
+next per the ratified design doc); BACKLOG.md's own ledger-size housekeeping (READY, Effort L);
+inst/WORDLIST spelling gap (READY, Effort M, ~77 words); the stale inst/extdata/ Phase-4 BACKLOG.md
+header noted at this session's own Phase 0 orientation (trivial editorial fix, not yet filed as its
+own item).
+key_files: SESSION_NOTES.md (the 2-line rewrap, ~line 24400 as of this session -- will drift as
+more sessions append); methodology_trim.py (LEDGERS["SESSION_NOTES.md"].record_start, the newly-
+found \b bug's exact location, not yet edited); BACKLOG.md Housekeeping (both the resolved
+fence-scanner item and the new \b-defect item); PROJECT_LEARNINGS.md Learning 533.
+gotchas: (1) A regex `\b` placed after an alternation binds per-branch -- if one branch's text
+always ends in a non-word character (e.g. a literal `)`), `\b` can never match that branch at
+end-of-line, even though the pattern LOOKS correct and a shape-only check ("does the text match one
+of these two forms") won't catch it. Test the compiled pattern against a real representative line
+directly, not just its textual shape. (2) A record-count target computed via a plain `grep -cE` is
+NOT guaranteed to equal what the tool's own compiled regex actually matches -- this session's own
+RED/GREEN target (596) was wrong by 74 for exactly this reason, discovered only during GREEN
+verification via a direct fence_scan()-vs-regex cross-check. Always test against the tool's actual
+pattern object, not a hand-written equivalent. (3) methodology_trim.py's per-adopter LEDGERS
+entries are the project's own local config (safe to edit) -- but its shared fence-scanning
+algorithm (_FENCE, fence_scan()) is canonical logic (do not patch locally without raising it
+upstream first), a distinction that matters for scoping any future fix in this file.
+runtime_smoke: n/a -- no R/ file, no tests/testthat/ file, no config/wiring touched; only markdown
+(SESSION_NOTES.md content, HANDOFFS.md, BACKLOG.md, CHANGELOG.md, PROJECT_LEARNINGS.md), no runtime
+surface exists to smoke-test.
+changelog_ref: this session's own CHANGELOG.md entries (S526 commit: pending reconcile, S527 claim,
+close-out, 2026-08-12)
 commit: pending
 ```
 
