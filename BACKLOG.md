@@ -2428,3 +2428,51 @@ script-callable only, no Shiny wiring this slice (matches the `resolveCrossCente
 precedent). **Issue #152 stays open -- Slice 2 (the `markerKinship()`/
 `markerParentageLikelihood()` performance rewrite, D5) is the next planned slice**, a separate
 future session per the plan's own session-boundary requirement. See `CHANGELOG.md`.
+
+**Progress (S526, 2026-08-11):** Issue #152 Slice 2 -- the `markerKinship()`/
+`markerParentageLikelihood()` performance rewrite (D5) -- is now DONE, per
+`docs/planning/issue152-sequence-input-genetic-metrics-plan.md` §5 Slice 2. Full strict TDD
+PRE-RED->RED->GREEN cycle (REFACTOR: a real candidate was identified -- the
+alphabetically-first-observed-allele-as-reference idiom now exists independently in 3 places
+(`markerFst.R`, `markerParentageLikelihood.R`, the new `markerKinship.R`) -- declined via
+`AskUserQuestion` as touching `markerFst.R`, outside this slice's pre-declared file scope,
+matching the S521-S525 precedent). This slice is fundamentally a refactor (unchanged public
+signatures/output), so PRE-RED's own `AskUserQuestion` round first resolved how RED applies:
+golden-master regression tests (dput()-captured current output, `expect_identical()`) pass
+immediately as a characterization safety net; two new precedent-setting `system.time()`
+benchmark tests (no new dependency) are the slice's actual RED, gated at thresholds tighter
+than this session's own measured current runtime on the committed Slice 1 fixture
+(`markerKinship()` ~0.12-0.13s warm / 0.08s threshold; `markerParentageLikelihood()`
+~0.84-0.88s warm / 0.5s threshold, explicit id/role/candidates call, no new fixture). A real
+PRE-RED finding: a plain `dput()` does not always round-trip a double exactly (found
+`-0.3` printing for an actual `-0.30000000000000004`) -- both golden-master literals use
+`dput(x, control = c(..., "digits17"))` instead. `markerKinship()` rewritten as vectorized
+matrix algebra (integer-count matrix products via `Hz`/`Gz`/`Z0`/`Z2` indicator matrices),
+achieving ~0.07-0.09s (a ~2x speedup) while preserving the original's per-pair
+undefined-kinship warning and ordering exactly. `markerParentageLikelihood()` rewritten to
+precompute every locus's allele-frequency table once per call (was: once per
+(offspring, candidate, locus) triple), achieving ~0.35-0.39s (a ~2.4x speedup) for the
+10-candidate benchmark scenario. Both new benchmark tests include an untimed warm-up call
+before timing -- PRE-RED found the naive (no-warm-up) version flakes between ~0.12s and
+~0.26s depending on JIT warm-up state/test execution order -- plus the MEDIAN of 3 timed reps
+rather than a single call, added after a single-call design still flaked once (system-noise
+variance, not JIT) in a full `test_dir()` run despite passing 5/5 isolated `test_file()`
+reruns (`markerKinship()`'s threshold loosened 0.08s -> 0.10s accordingly; both fixes are
+`PROJECT_LEARNINGS.md` Learning 532's final form). 4 new `test_that` blocks (2
+golden-master, 2 benchmark) across the 2 existing test files; 0 regressions. Full clean
+regression 5,417 passed/0 failed/0 error (17 pre-existing warnings, unchanged), re-confirmed
+clean across 2 further solo full-suite reruns after the median-of-3 fix;
+`devtools::check()` 0 errors/0 warnings/3 NOTEs, all 3 confirmed pre-existing (top-level
+files; vignettes/figure leftover; the known ~77-word spelling-WORDLIST gap, up from ~69-70 --
+zero flagged words trace to this session's own touched files; note the 3rd NOTE does not
+appear as its own `❯` bullet in `devtools::check()`'s printed summary, only in the raw
+`Status:` line -- this session independently reproduced the exact undercounting risk
+`BACKLOG.md`'s own S521 finding above already documents); `lintr::lint_package()` found and
+fixed 9 `implicit_integer_linter` findings in the new `markerKinship.R` matrix-algebra code
+(`0`/`2`/`4` -> `0L`/`2L`/`4L`), 0 lints remaining. `_pkgdown.yml` unaffected (no new export --
+both functions already listed). `NEWS.Rmd`/`NEWS.md` terse entry added. Citation checklist
+(issue #120) and tutorial/article checklist (Session 436) N/A -- no new/displayed statistic,
+no UI change this slice. Runtime smoke test: n/a -- script-callable only, no Shiny wiring
+touched this slice. **Issue #152 stays open -- Slice 3 (the new F_ROH metric,
+`R/computeGenomicROH.R`, D6) is the next planned slice**, a separate future session per the
+plan's own session-boundary requirement. See `CHANGELOG.md`.

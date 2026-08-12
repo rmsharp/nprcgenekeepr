@@ -533,3 +533,97 @@ test_that("markerParentageLikelihood's auto-detect calls getPotentialParents wit
   expect_true(is.na(capturedPed$sire[capturedPed$id == "C"])) # blanked, not "SireWrong"
   expect_identical(capturedPed$dam[capturedPed$id == "C"], "Dam") # dam left untouched
 })
+
+## ---------------------------------------------------------------------------
+## RED (issue #152 Slice 2, D5): markerParentageLikelihood()'s O(F*C*L*n)
+## redundant per-candidate allele-frequency rescan is being fixed by
+## precomputing each locus's frequency table once. Two new blocks below --
+## a golden-master regression proof and a benchmark -- per this session's
+## PRE-RED AskUserQuestion round (same scoping as markerKinship() above:
+## RED is the benchmark only; the golden-master test is a characterization
+## safety net that passes immediately).
+## ---------------------------------------------------------------------------
+
+test_that("markerParentageLikelihood's output is byte-identical to its pre-D5-rewrite implementation", {
+  ## Golden-master snapshot: captured via dput(x, control = c(..., "digits17"))
+  ## from the real, CURRENT (still unrewritten) markerParentageLikelihood()
+  ## on this file's own O1 scenario (dyad Sunrel/Sexcl/Snoloci +
+  ## trio-conditioned Strue/Slow/Ssib via recorded dam D1), before any code
+  ## changed this session (2026-08-11). Explicit id/role/candidates -- not
+  ## auto-detection -- so this test exercises only the D5-rewritten scoring
+  ## path, independent of getPotentialParents()/markerParentageExclusion(),
+  ## neither of which this slice touches. "digits17" is load-bearing, not
+  ## cosmetic -- this session's own Pre-RED found that a plain dput() prints
+  ## just enough digits to round-trip to *some* double, not necessarily the
+  ## exact double the function actually returns (see test_markerKinship.R's
+  ## own golden-master test for the concrete -0.3-vs--0.30000000000000004
+  ## example this session hit). If this test ever needs updating to pass,
+  ## the D5 rewrite changed real behavior and is NOT behavior-preserving --
+  ## stop and investigate rather than "fixing" this expected value.
+  golden <- structure(
+    list(
+      id = c("O1", "O1", "O1", "O1", "O1", "O1"),
+      role = c("sire", "sire", "sire", "sire", "sire", "sire"),
+      candidateId = c("Strue", "Slow", "Ssib", "Sunrel", "Sexcl", "Snoloci"),
+      LOD = c(1.4069136483226261, 0.71376646776268116, -0.67252789335720953,
+              -Inf, -Inf, NA),
+      delta = c(0.69314718055994495, 1.3862943611198908, Inf, 0, NA, NA),
+      nLociUsed = c(5L, 2L, 5L, 5L, 5L, 0L),
+      excluded = c(FALSE, FALSE, FALSE, FALSE, TRUE, NA),
+      lowPower = c(FALSE, TRUE, FALSE, FALSE, FALSE, TRUE)
+    ),
+    row.names = c(NA, -6L), class = "data.frame"
+  )
+  actual <- suppressWarnings(markerParentageLikelihood(
+    genotypeMatrix, pedigree, id = "O1", role = "sire",
+    candidates = c("Strue", "Sunrel", "Sexcl", "Ssib", "Slow", "Snoloci"),
+    minLoci = 4L, maxExclusions = 2L
+  ))
+  expect_identical(actual, golden)
+})
+
+test_that("markerParentageLikelihood completes well under its pre-D5-rewrite runtime on the committed sequence-scale fixture (issue #152 Slice 2 benchmark)", {
+  ## No skip_if() guard -- same rationale as
+  ## test_markerKinship.R's own benchmark test. Threshold (0.5s) is
+  ## deliberately tighter than the pre-rewrite implementation's measured
+  ## runtime on this exact scenario (~0.84-0.88s warm, ~0.98s cold, this
+  ## session's own PRE-RED measurement) -- expected to FAIL until the D5
+  ## rewrite (precompute each locus's allele-frequency table once, instead
+  ## of rescanning it for every candidate) lands. Explicit id/role/
+  ## candidates (not auto-detection), per this session's PRE-RED
+  ## AskUserQuestion round -- reuses the committed Slice 1 fixture
+  ## directly, adding no new fixture.
+  path <- system.file(
+    "extdata", "examples", "example_sequence_genotypes.csv",
+    package = "nprcgenekeepr"
+  )
+  genotype <- read.csv(path, stringsAsFactors = FALSE)
+  checked <- checkSequenceGenotypeFile(genotype)
+  mat <- buildMarkerGenotypeMatrix(checked)
+  expect_identical(dim(mat), c(50L, 1000L))
+
+  offspringId <- rownames(mat)[1L]
+  candidateIds <- rownames(mat)[2L:11L] # 10 fixed candidates, no RNG involved
+  pedStub <- data.frame(id = offspringId, sire = NA_character_,
+                         dam = NA_character_, stringsAsFactors = FALSE)
+
+  ## Untimed warm-up call, then the MEDIAN of 3 timed reps (not a single
+  ## call) -- matches test_markerKinship.R's own benchmark test and this
+  ## session's own PRE-RED finding that a single warm timed call still
+  ## carries enough system-noise variance to occasionally flake against a
+  ## tight threshold; the median is far more stable.
+  invisible(markerParentageLikelihood(mat, pedStub, id = offspringId,
+                                       role = "sire", candidates = candidateIds,
+                                       minLoci = 1L))
+  lod <- NULL # so <<- below binds here, not in the global environment
+  timings <- vapply(seq_len(3L), function(i) {
+    system.time(
+      lod <<- markerParentageLikelihood(mat, pedStub, id = offspringId,
+                                         role = "sire",
+                                         candidates = candidateIds,
+                                         minLoci = 1L)
+    )[["elapsed"]]
+  }, numeric(1L))
+  expect_identical(nrow(lod), 10L)
+  expect_lt(stats::median(timings), 0.5)
+})

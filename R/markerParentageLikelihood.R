@@ -177,6 +177,23 @@ markerParentageLikelihood <- function(genotypeMatrix, pedigree, id = NULL,
                stringsAsFactors = FALSE)
   }
 
+  ## Precompute each locus's allele-frequency table exactly once (issue
+  ## #152 Slice 2, D5), replacing the previous per-(offspring, candidate,
+  ## locus) triple rescan (O(F*C*L*n)). The frequency table for a given
+  ## locus depends only on genotypeMatrix and that locus -- never on which
+  ## offspring/candidate is being scored -- so one pass over
+  ## colnames(genotypeMatrix) up front, shared across every call to
+  ## scoreOnePair() below, is the entire fix: the per-candidate lookup below
+  ## is the same .markerAlleleFrequencyTable() computation, called fewer
+  ## times, so output is unchanged (proven by the golden-master regression
+  ## test in test_markerParentageLikelihood.R).
+  freqTables <- stats::setNames(
+    lapply(colnames(genotypeMatrix), function(loc) {
+      .markerAlleleFrequencyTable(genotypeMatrix, loc)
+    }),
+    colnames(genotypeMatrix)
+  )
+
   lookupCandidates <- function(ppList, targetId, targetRole) {
     if (is.null(ppList)) {
       return(character(0L))
@@ -233,7 +250,7 @@ markerParentageLikelihood <- function(genotypeMatrix, pedigree, id = NULL,
         used <- !is.na(genoOffspring) & !is.na(genoCandidate)
         loci <- names(genoOffspring)[used]
         logterms <- vapply(loci, function(loc) {
-          freqTable <- .markerAlleleFrequencyTable(genotypeMatrix, loc)
+          freqTable <- freqTables[[loc]]
           refAllele <- sort(names(freqTable))[1L]
           p <- unname(freqTable[[refAllele]])
           t1 <- .markerTransmissionProbability(genoCandidate[[loc]], refAllele)

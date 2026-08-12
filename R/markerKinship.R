@@ -64,13 +64,7 @@
 markerKinship <- function(genotypeMatrix) {
   ids <- rownames(genotypeMatrix)
   n <- length(ids)
-
-  alleles <- strsplit(genotypeMatrix, "/", fixed = TRUE)
-  het <- vapply(alleles, function(a) {
-    if (length(a) != 2L) NA else a[1L] != a[2L]
-  }, logical(1L))
-  hetMat <- matrix(het, nrow = n, ncol = ncol(genotypeMatrix),
-                    dimnames = dimnames(genotypeMatrix))
+  nLoci <- ncol(genotypeMatrix)
 
   kmat <- diag(0.5, n, n)
   dimnames(kmat) <- list(ids, ids)
@@ -79,31 +73,73 @@ markerKinship <- function(genotypeMatrix) {
     return(kmat)
   }
 
-  for (i in seq_len(n - 1L)) {
-    for (j in (i + 1L):n) {
-      shared <- !is.na(genotypeMatrix[i, ]) & !is.na(genotypeMatrix[j, ])
-      hetI <- hetMat[i, shared]
-      hetJ <- hetMat[j, shared]
-      genoI <- genotypeMatrix[i, shared]
-      genoJ <- genotypeMatrix[j, shared]
+  ## Vectorized matrix algebra (issue #152 Slice 2, D5), replacing the
+  ## previous O(n^2*L) nested-pair loop. Every intermediate quantity below
+  ## (nAaI, nAaJ, nAaAa, nAAaa) is an exact integer count of 0/1 indicators,
+  ## so this reproduces the original loop's output bit-for-bit (integer
+  ## addition is associative regardless of summation order) -- proven by
+  ## the golden-master regression test in test_markerKinship.R.
+  alleles <- strsplit(genotypeMatrix, "/", fixed = TRUE)
+  a1 <- vapply(alleles, function(a) {
+    if (length(a) != 2L) NA_character_ else a[1L]
+  }, character(1L))
+  a2 <- vapply(alleles, function(a) {
+    if (length(a) != 2L) NA_character_ else a[2L]
+  }, character(1L))
+  het <- a1 != a2
+  genotyped <- !is.na(genotypeMatrix)
 
-      nAaI <- sum(hetI)
-      nAaJ <- sum(hetJ)
-      nAaAa <- sum(hetI & hetJ)
-      nAAaa <- sum(!hetI & !hetJ & genoI != genoJ)
+  Hz <- matrix(ifelse(is.na(het), 0L, het), nrow = n, ncol = nLoci)
+  Gz <- matrix(as.numeric(genotyped), nrow = n, ncol = nLoci)
 
-      nMin <- min(nAaI, nAaJ)
-      if (nMin == 0L) {
-        warning("markerKinship: '", ids[i], "' and '", ids[j], "' share no ",
-                "heterozygous locus between them; kinship is undefined for ",
-                "this pair (returning NA).")
-        phi <- NA_real_
-      } else {
-        phi <- 0.5 + (2L * nAaAa - 4L * nAAaa - nAaI - nAaJ) / (4L * nMin)
-      }
-      kmat[i, j] <- phi
-      kmat[j, i] <- phi
+  ## Per-locus reference allele -- the alphabetically first allele observed
+  ## at that locus (an arbitrary but locus-internally-consistent choice; it
+  ## need not match any biological "reference," only be applied identically
+  ## to both members of every pair at that locus). Used only to encode a
+  ## 0/1/2 reference-allele dose per cell, letting "opposite homozygotes"
+  ## (N_AAaa) reduce to two more integer-count matrix products.
+  refAllele <- vapply(seq_len(nLoci), function(l) {
+    obs <- genotypeMatrix[, l]
+    obs <- obs[!is.na(obs)]
+    calls <- unique(unlist(strsplit(obs, "/", fixed = TRUE)))
+    if (length(calls) == 0L) NA_character_ else sort(calls)[1L]
+  }, character(1L))
+  refVec <- as.vector(matrix(refAllele, nrow = n, ncol = nLoci, byrow = TRUE))
+  dose <- (a1 == refVec) + (a2 == refVec)
+  dose <- matrix(dose, nrow = n, ncol = nLoci)
+  Z0 <- matrix(ifelse(is.na(dose), 0L, dose == 0L), nrow = n, ncol = nLoci)
+  Z2 <- matrix(ifelse(is.na(dose), 0L, dose == 2L), nrow = n, ncol = nLoci)
+
+  A <- Hz %*% t(Gz)     # A[i, j] = N_Aa(i), restricted to loci shared with j
+  nAaAaMat <- Hz %*% t(Hz)
+  nAAaaMat <- Z0 %*% t(Z2) + Z2 %*% t(Z0)
+  nAaIMat <- A
+  nAaJMat <- t(A)
+  nMinMat <- pmin(nAaIMat, nAaJMat)
+
+  phi <- 0.5 + (2L * nAaAaMat - 4L * nAAaaMat - nAaIMat - nAaJMat) /
+    (4L * nMinMat)
+
+  ## Undefined-kinship pairs (nMin == 0): preserve the original loop's
+  ## per-pair warning (naming the ids, in i-then-j nested-loop order) and
+  ## NA result, rather than a single vectorized warning that would lose
+  ## both the per-pair message and the original ordering.
+  undefined <- which(nMinMat == 0L & upper.tri(nMinMat), arr.ind = TRUE)
+  if (nrow(undefined) > 0L) {
+    undefined <- undefined[order(undefined[, "row"], undefined[, "col"]),
+                            , drop = FALSE]
+    for (k in seq_len(nrow(undefined))) {
+      i <- undefined[k, "row"]
+      j <- undefined[k, "col"]
+      warning("markerKinship: '", ids[i], "' and '", ids[j], "' share no ",
+              "heterozygous locus between them; kinship is undefined for ",
+              "this pair (returning NA).")
+      phi[i, j] <- NA_real_
+      phi[j, i] <- NA_real_
     }
   }
-  kmat
+
+  diag(phi) <- 0.5
+  dimnames(phi) <- list(ids, ids)
+  phi
 }

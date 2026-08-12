@@ -388,6 +388,10 @@ R. Mark Sharp, Ph.D.
   example fixture pair (`example_sequence_genotypes.csv` /
   `example_sequence_locus_metadata.csv`) provides a 1,000-locus,
   50-individual panel for future slices. No Shiny UI yet.
+- `markerKinship()` and `markerParentageLikelihood()` (issue \#152,
+  Slice 2) are internally rewritten for large marker panels --
+  vectorized matrix algebra and precomputed allele frequencies,
+  respectively -- with output and signatures unchanged.
 
 # nprcgenekeepr 2.0.0 (20260708)
 

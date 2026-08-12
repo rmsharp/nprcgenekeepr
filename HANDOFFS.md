@@ -123,20 +123,108 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S526
 date: 2026-08-11
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Issue #152 Slice 2 -- markerKinship()/markerParentageLikelihood() performance rewrite
-(D5), per docs/planning/issue152-sequence-input-genetic-metrics-plan.md §5 Slice 2. Session claimed,
-PRE-RED not yet started.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Issue #152 Slice 2 (markerKinship()/markerParentageLikelihood() performance rewrite,
+D5) is DONE. Full strict TDD PRE-RED->RED->GREEN cycle, each transition AskUserQuestion-gated
+(REFACTOR: a real candidate identified -- a 3rd independent instance of the
+alphabetically-first-observed-allele-as-reference idiom, now in markerFst.R,
+markerParentageLikelihood.R, and the new markerKinship.R -- explicitly declined as out of this
+slice's pre-declared file scope).
+what_was_done: markerKinship() (R/markerKinship.R) rewritten from an O(n^2*L) nested-pair R loop to
+vectorized matrix algebra -- 0/1 het/genotyped indicator matrices (Hz, Gz) and a per-locus
+reference-allele dose encoding (Z0, Z2) reduce every pairwise count (N_Aa(i), N_Aa(j), N_AaAa,
+N_AAaa) to matrix products, preserving the original's per-pair undefined-kinship warning and
+emission order exactly. markerParentageLikelihood() (R/markerParentageLikelihood.R) rewritten to
+precompute every locus's .markerAlleleFrequencyTable() once per top-level call (was: once per
+offspring/candidate/locus triple). Both signatures/output shapes unchanged. Measured speedup on the
+committed Slice 1 fixture (50 individuals x 1,000 loci): markerKinship ~0.12-0.13s -> ~0.07-0.09s;
+markerParentageLikelihood (10-candidate scenario) ~0.84-0.88s -> ~0.35-0.39s. New golden-master
+regression tests (dput(x, control=c(...,"digits17")) captures, expect_identical()) plus 2 new
+precedent-setting system.time()-based benchmark tests (untimed warm-up call + median-of-3 timed
+reps + a threshold tighter than the measured pre-rewrite warm runtime -- median-of-3 added after a
+single-call design flaked once in a full test_dir() run, Learning 532) in
+tests/testthat/test_markerKinship.R and
+test_markerParentageLikelihood.R -- 4 new test_that blocks total, 0 regressions. Full clean
+regression 5,417 passed/0 failed/0 error (17 pre-existing warnings, unchanged). devtools::check() 0
+errors/0 warnings/3 NOTEs, all 3 confirmed pre-existing (raw Status: line, not the undercounting
+printed summary -- see gotchas). lintr::lint_package() found+fixed 9 implicit_integer_linter
+findings in the new markerKinship.R code, 0 lints remaining. NEWS.Rmd/NEWS.md terse entry added.
+Commits: bd31e874 (Phase 0 ledger-reconcile fix), 38fc7a10 (claim), plus this close-out's own
+commit.
+next_steps: Issue #152 Slice 3 (the new F_ROH metric, R/computeGenomicROH.R, D6, per
+docs/planning/issue152-sequence-input-genetic-metrics-plan.md sec 3 D6/sec 5 Slice 3) is next per
+the design doc -- computed per individual per chromosome from consecutive homozygous genotypes
+(ordered by pos from the D3 locusMetadata sidecar) exceeding both a minimum SNP count and a minimum
+bp span (PLINK --homozyg-style dual threshold, Ceballos et al. 2018 sec 2.7); must be validated
+against a hand-computed small synthetic case (mirroring markerFst()'s own exact-fraction-fixture
+precedent) before trusting it on the Slice 1 fixture at scale. This is also the first slice in the
+#152 family where the citation checklist (issue #120) genuinely applies -- F_ROH is a new displayed
+statistic once it ships (design doc sec 9 already names this). Separately, remaining open Phase 0
+priorities from this session's own orientation, unchanged from S525's own list: (1) the
+methodology_trim.py fence-scanner defect blocking SESSION_NOTES.md's first archive (BACKLOG.md,
+found S518, READY, Effort S); (2) the a2interactive.Rmd documentation pass, now behind by this
+session's own rewrite plus everything since S522 (READY, Effort M, deferred per its own standing
+non-same-session rule); (3) the inst/WORDLIST spelling gap, now ~77 words (found S521, READY,
+Effort M); (4) 2 now-declined REFACTOR candidates noted in BACKLOG.md's issue #152/#153 narrative
+for a future session's own deliberate, plan-mode-scoped pickup (checkMarkerGenotypeFile()'s
+3x-duplicated structural checks, S525; the alphabetically-first-allele idiom's 3x duplication,
+this session) -- likely worth tackling together in one dedicated refactor session given the
+overlapping file set.
+key_files: R/markerKinship.R (rewritten, full file, the vectorized matrix-algebra approach); R/
+markerParentageLikelihood.R (precompute added at the top of the function, ~lines 180-195; the
+per-candidate lookup site at ~line 254); tests/testthat/test_markerKinship.R (2 new test_that
+blocks at the end of the file, including the digits17 golden-master finding's own header comment);
+tests/testthat/test_markerParentageLikelihood.R (2 new test_that blocks at the end of the file);
+docs/planning/issue152-sequence-input-genetic-metrics-plan.md sec 5 Slice 3 (the next slice's DONE
+criteria); PROJECT_LEARNINGS.md Learnings 531-532.
+gotchas: (1) A plain dput() of a double vector does NOT always round-trip to the exact same double
+when reparsed -- it can print the shortest string that round-trips to SOME nearby double, not
+necessarily the actual computed one (Learning 531). Any future golden-master capture in this
+package MUST use dput(x, control = c("keepNA","keepInteger","niceNames","showAttributes",
+"digits17")), verified by an explicit round-trip identical() check, not the default form. (2) A
+system.time()-based benchmark test's pass/fail can depend on BOTH R's JIT warm-up state (fix: an
+untimed warm-up call before timing) AND ordinary single-call system-noise variance, which a
+warm-up call alone does NOT fix -- this session's own single-warm-call design passed 5/5 isolated
+test_file() reruns but still hit 1 spurious failure in a full test_dir() run; fixed by timing the
+MEDIAN of 3 timed reps, not a single call, then re-deriving the threshold from the median (Learning
+532). Always verify a new timing-based test against a full test_dir() run, not just its own file in
+isolation, before trusting it as stable. (3) devtools::check()'s printed
+summary / res$notes can undercount the true NOTE total by 1 -- the tests/spelling.R diff-vs-
+.Rout.save NOTE never gets its own printed bullet; always read the raw Status: line for the true
+count, matching BACKLOG.md's own S521 finding (independently re-confirmed this session). (4) The
+alphabetically-first-observed-allele-as-reference idiom (sort(...)[1L]) is now duplicated a 3rd
+time (markerFst.R, markerParentageLikelihood.R, markerKinship.R) -- declined for extraction this
+session (touches markerFst.R, out of scope); a future refactor session should extract a shared
+.markerReferenceAllele() helper and update all 3 call sites together, alongside the still-open
+checkMarkerGenotypeFile() 3x-duplication candidate S525 found.
+runtime_smoke: n/a -- script-callable internals-only rewrite, no Shiny wiring touched this slice
+(matches the resolveCrossCenterIds() Slice 4 / checkSequenceGenotypeFile() Slice 1 precedent).
+changelog_ref: this session's own CHANGELOG.md entries (S524/S525 ledger-reconcile fix, S526 claim,
+close-out, 2026-08-11)
 commit: pending
 ```
+Self-assessment 9/10. Strengths: (1) Measured the CURRENT implementations' real runtime directly at
+PRE-RED rather than assuming a benchmark threshold would work, grounding every subsequent judgment
+call in real numbers and catching JIT warm-up flakiness before it became a hidden surprise. (2) When
+a golden-master test spuriously failed with numerically-equal-but-not-identical values, diagnosed
+the actual mechanism (waldo::compare(), hex-float inspection) and fixed the capture method
+(digits17) rather than weakening the assertion to expect_equal(), preserving the design doc's own
+explicit byte-identical requirement. (3) When the benchmark test's first run unexpectedly passed
+against un-rewritten code, re-measured directly rather than assuming the threshold was simply
+generous, found the JIT-warm-up cause, and fixed the test's own determinism. (4) The vectorized
+markerKinship() rewrite passed its golden-master test on the first real implementation attempt -- a
+disposable PRE-RED prototype had a real bug, caught and not carried into the actual GREEN
+implementation. (5) Independently re-confirmed the devtools::check() NOTE-undercounting issue
+firsthand via the raw Status: line rather than trusting the abbreviated summary, avoiding exactly
+the trap BACKLOG.md's own S521 finding warns about. Weaknesses: (1) No live runtime verification,
+but correctly so -- genuinely script-callable-internals-only this slice, flagged explicitly rather
+than silently treated as N/A. (2) The disposable PRE-RED prototype's bug was never root-caused --
+acceptable since it was explicitly disposable research, not shipped code, but worth naming. (3) Did
+not independently re-verify S525's own prior test claims line-by-line, relying instead on this
+session's own full-regression pass count -- reasonable given zero file overlap, but worth naming
+for calibration.
 
 ```handoff
 session: S525

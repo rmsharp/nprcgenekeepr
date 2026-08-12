@@ -131,6 +131,39 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-11 · [issue #152] S526 close-out: Slice 2 (markerKinship()/markerParentageLikelihood() performance rewrite) shipped (Session 526)
+- **Deliverable:** Issue #152 Slice 2, per `docs/planning/issue152-sequence-input-genetic-metrics-plan.md`
+  §5 Slice 2 (D5) — `markerKinship()` rewritten from an O(n²·L) nested-pair R loop to vectorized
+  matrix algebra (0/1 het/genotyped indicator matrices + a per-locus reference-allele dose
+  encoding reduce every pairwise count to matrix products); `markerParentageLikelihood()`
+  rewritten to precompute every locus's allele-frequency table once per call instead of once
+  per (offspring, candidate, locus) triple. Both signatures/output shapes unchanged. Measured
+  on the committed Slice 1 fixture (50 individuals × 1,000 loci): `markerKinship()` ~0.12-0.13s
+  → ~0.07-0.09s; `markerParentageLikelihood()` (10-candidate scenario) ~0.84-0.88s → ~0.35-0.39s.
+- **Verification:** 4 new `test_that` blocks (2 golden-master regression tests via
+  `dput(x, control = c(..., "digits17"))` + `expect_identical()`; 2 new precedent-setting
+  `system.time()`-based benchmark tests, no new dependency, with an untimed warm-up call, the
+  median of 3 timed reps, and a threshold tighter than the measured pre-rewrite warm runtime —
+  median-of-3 added after a single-call design flaked once in a full-suite run). Full clean
+  regression 5,417 passed/0 failed/0 error (17 pre-existing warnings, unchanged), re-confirmed
+  clean across 2 further solo full-suite reruns. `devtools::check()` 0 errors/0
+  warnings/3 NOTEs, all 3 confirmed pre-existing (raw `Status:` line, not the printed summary,
+  which undercounts by 1 — see `PROJECT_LEARNINGS.md` Learning 532). `lintr::lint_package()`
+  found and fixed 9 `implicit_integer_linter` findings in the new `markerKinship.R` code, 0
+  lints remaining. Zero Bioconductor dependencies re-confirmed in `DESCRIPTION`.
+- **REFACTOR gate:** a real candidate (a 3rd independent instance of the
+  alphabetically-first-observed-allele-as-reference idiom, now in `markerFst.R`,
+  `markerParentageLikelihood.R`, and the new `markerKinship.R`) was identified and declined via
+  `AskUserQuestion` as out of this slice's pre-declared file scope (touches `markerFst.R`) —
+  noted in `BACKLOG.md`'s issue #152/#153 narrative for a future session.
+- **Learnings:** `PROJECT_LEARNINGS.md` Learning 531 (a plain `dput()` does not always
+  round-trip a double exactly; use `control = c(..., "digits17")` for golden-master captures)
+  and Learning 532 (a `system.time()`-based benchmark test's pass/fail can depend on JIT
+  warm-up state without an explicit untimed warm-up call; plus an independent re-confirmation
+  of the `devtools::check()` NOTE-undercounting finding from Learning/BACKLOG S521).
+- **Status:** DONE. Issue #152 stays open — Slice 3 (the new F_ROH metric, D6) is next, a
+  separate future session per the plan's own session-boundary requirement.
+
 ### 2026-08-11 · [issue #152] S526 claim: issue #152 Slice 2 (markerKinship()/markerParentageLikelihood() performance rewrite, D5) (Session 526)
 - **Deliverable:** Session claimed. Issue #152 Slice 2 -- rewrite `markerKinship()`
   (currently O(n²·L)) and `markerParentageLikelihood()` (currently O(F·C·L·n)) for genome
