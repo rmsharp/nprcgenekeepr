@@ -203,7 +203,7 @@ runtime_smoke: n/a -- script-callable internals-only rewrite, no Shiny wiring to
 (matches the resolveCrossCenterIds() Slice 4 / checkSequenceGenotypeFile() Slice 1 precedent).
 changelog_ref: this session's own CHANGELOG.md entries (S524/S525 ledger-reconcile fix, S526 claim,
 close-out, 2026-08-11)
-commit: pending
+commit: a7c4f416
 ```
 Self-assessment 9/10. Strengths: (1) Measured the CURRENT implementations' real runtime directly at
 PRE-RED rather than assuming a benchmark threshold would work, grounding every subsequent judgment

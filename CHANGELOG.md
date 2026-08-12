@@ -131,6 +131,19 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] Reconcile-on-read: HANDOFFS.md S526 receipt's `commit: pending` field (Session 527)
+- **Ledger reconcile (Phase 0 step 6):** `CHANGELOG.md`'s own frontier and `HANDOFFS.md`'s own
+  frontier both already equal `HEAD` (`a7c4f416`) — no undocumented commit gap. One residual: the
+  established one-hop precedent (reconcile your immediate predecessor's `commit: pending` field to
+  its real sha, applied by S526 for S524/S525) had not yet been applied to S526's own receipt, since
+  S526 could not know its own close-out commit's sha at write time. Reconciled S526's `commit:` field
+  to `a7c4f416` (its own close-out commit).
+- **Secondary finding, not acted on (unchanged from S524's/S526's own note):** the same `commit:
+  pending` placeholder remains unreconciled for 8 older receipts (S521, S519, S518, S517, S516, S515,
+  S514, S513) and the `HANDOFFS.md` ~line 215 malformed/duplicate S524 fenced-block fragment — both
+  still out of this narrow reconcile step's scope, still candidates for a future `BACKLOG.md`
+  housekeeping item.
+
 ### 2026-08-11 · [issue #152] S526 close-out: Slice 2 (markerKinship()/markerParentageLikelihood() performance rewrite) shipped (Session 526)
 - **Deliverable:** Issue #152 Slice 2, per `docs/planning/issue152-sequence-input-genetic-metrics-plan.md`
   §5 Slice 2 (D5) — `markerKinship()` rewritten from an O(n²·L) nested-pair R loop to vectorized
