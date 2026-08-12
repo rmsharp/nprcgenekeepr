@@ -171,7 +171,7 @@ runtime_smoke: n/a -- no R/ file, no tests/testthat/ file, no config/wiring touc
 surface exists to smoke-test.
 changelog_ref: this session's own CHANGELOG.md entries (S526 commit: pending reconcile, S527 claim,
 close-out, 2026-08-12)
-commit: pending
+commit: 08669142
 ```
 
 ```handoff

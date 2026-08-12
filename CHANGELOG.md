@@ -131,6 +131,18 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] Reconcile-on-read: HANDOFFS.md S527 receipt's `commit: pending` field (Session 528)
+- **Ledger reconcile (Phase 0 step 6):** `CHANGELOG.md`'s own frontier and `HANDOFFS.md`'s own
+  frontier both already equal `HEAD` (`08669142`) — no undocumented commit gap. One residual: the
+  same one-hop precedent S527 applied to S526's own receipt had not yet been applied to S527's own
+  receipt, since S527 could not know its own close-out commit's sha at write time. Reconciled S527's
+  `commit:` field to `08669142` (its own close-out commit).
+- **Secondary finding, not acted on (unchanged from prior sessions' own note):** the same `commit:
+  pending` placeholder remains unreconciled for older receipts (S521, S519, S518, S517, S516, S515,
+  S514, S513) and the `HANDOFFS.md` ~line 215 malformed/duplicate S524 fenced-block fragment — both
+  still out of this narrow reconcile step's scope, still candidates for a future `BACKLOG.md`
+  housekeeping item.
+
 ### 2026-08-12 · [ad hoc] S527 close-out: fence-scanner defect fixed; a second, independent regex defect found and filed (Session 527)
 - **Deliverable:** Fixed the `methodology_trim.py` fence-scanner defect blocking `SESSION_NOTES.md`'s
   first archive (`BACKLOG.md` Housekeeping, found S518). Rewrapped the one offending paragraph
