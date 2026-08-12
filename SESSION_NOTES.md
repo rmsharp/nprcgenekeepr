@@ -6,6 +6,21 @@
 
 ## ACTIVE TASK
 
+### What Session 530 Did
+**Deliverable:** Compress `BACKLOG.md`'s "Pedigree diagram vs kinship2 audit follow-ups" section
+(~896 lines, `BACKLOG.md:552-1448`) -- continuation of the S518 ledger-size-housekeeping item, 2nd
+of its 2 remaining sections, following S529's own established Housekeeping-section convention.
+Owner-picked from this session's own Phase 0 priorities list (4 options via `AskUserQuestion`) over
+issue #152 Slice 3, `inst/WORDLIST`, and `NEWS.Rmd` verbosity; then narrowed to this specific
+section (over "Genetic-metrics PDF audit follow-ups" or "inventory both first") via a second
+`AskUserQuestion` -- this section is the lower-risk of the two per S529's own note (all 4 tracked
+issues, #133/#136/#137/#145, are closed; the sibling section tracks still-open issue #152).
+**Started:** 2026-08-12.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 528 Handoff Evaluation (by Session 529)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S528 receipt's `next_steps` field listed all 5
 remaining Phase 0 priorities verbatim (issue #152 Slice 3, `BACKLOG.md` compression, `inst/WORDLIST`,
