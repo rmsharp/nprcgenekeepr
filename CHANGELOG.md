@@ -131,6 +131,10 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] S536 Phase 0 reconcile: HANDOFFS.md S535 receipt
+- `commit: pending` -> `commit: 2b54c722` (the S535 close-out commit) -- reconciled at Session
+  536's Phase 0 orient, matching the S535->S534 reconcile precedent (`9abaded1`).
+
 ### 2026-08-12 · [issue #152] GitHub issue closed (Session 535)
 - `gh issue close 152 --reason completed`, with a comment summarizing all 5 shipped slices
   (Sessions 525-535) and this session's own verification evidence. Matches the established
