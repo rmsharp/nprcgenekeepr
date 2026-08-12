@@ -188,7 +188,8 @@ existing convention (e.g. Manichaikul et al. 2010, 6 authors, listed in full).
 runtime_smoke: n/a -- script-callable only, no Shiny wiring this slice (matches the
 resolveCrossCenterIds() Slice 4 precedent).
 changelog_ref: this session's own CHANGELOG.md entries (S525 claim + close-out, 2026-08-11)
-commit: pending
+commit: 686bf1b3 (reconciled by Session 526's Phase 0 -- the receipt's own close-out commit; could
+not self-reference at write time per its own documented constraint).
 ```
 Self-assessment 9/10. Strengths: (1) PRE-RED's precedent-code review caught a genuine
 plan-staleness finding (the locusMetadata helper already shipped by sibling issue #153) rather
@@ -321,8 +322,8 @@ with the chosen example pedigree file blocked loading a real pedigree live) -- v
 9 of the 18 shiny::testServer() blocks, which exercise the identical server-side code path.
 changelog_ref: CHANGELOG.md 2026-08-11/12, 3 entries (Session 524): ledger-reconcile backfill,
 claim, close-out.
-commit: pending -- reconciled by the next session's Phase 0, per this receipt's own documented
-write-time constraint (the receipt ships in the very commit whose sha it would name).
+commit: c1e7111b (reconciled by Session 526's Phase 0 -- the receipt's own close-out commit; could
+not self-reference at write time per its own documented constraint).
 ```
 <Session 524 self-assessment: 9/10. Strengths: (1) discovered via genuine test execution, not
 assumption, that the PRE-RED-ratified "reuse the shared upload" decision had a real consequence

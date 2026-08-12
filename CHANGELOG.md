@@ -131,6 +131,22 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-11 · [ad hoc] Reconcile-on-read: HANDOFFS.md S524/S525 receipts' `commit: pending` fields (Session 526)
+- **Ledger reconcile (Phase 0 step 6):** `CHANGELOG.md`'s own frontier and `HANDOFFS.md`'s own
+  frontier both already equal `HEAD` (`686bf1b3`) — no undocumented commit gap. Two residuals: the
+  established S523→S524 one-hop precedent (reconcile your immediate predecessor's `commit: pending`
+  field to its real sha) was not applied by S525 for S524's own receipt, so both S524's and S525's
+  receipts still carried the placeholder. Reconciled S524's to `c1e7111b` (its own close-out commit)
+  and S525's to `686bf1b3` (its own close-out commit).
+- **Secondary finding, not acted on:** (1) the same `commit: pending` placeholder remains
+  unreconciled for 8 older receipts (S521, S519, S518, S517, S516, S515, S514, S513) — unchanged
+  from S524's own note; still out of this narrow reconcile step's scope, still a candidate for a
+  future `BACKLOG.md` housekeeping item. (2) `HANDOFFS.md` around line 215 has a malformed fenced
+  block — an opening ` ```handoff ` for S524 with no closing ` ``` ` before a second ` ```handoff `
+  opens the real S524 block a few lines later (lines 215–235 are an orphaned, truncated duplicate
+  fragment of the same receipt). Not fixed here — a content-integrity repair, not a ledger-frontier
+  gap; flagged for the user/a future session to decide how to handle.
+
 ### 2026-08-11 · [issue #152] S525 close-out: Slice 1 (sequence ingestion + fixture) shipped (Session 525)
 - **Deliverable:** Issue #152 Slice 1, per `docs/planning/issue152-sequence-input-genetic-metrics-plan.md`
   §5 Slice 1. New script-callable `checkSequenceGenotypeFile(genotype, locusMetadata = NULL,
