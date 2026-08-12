@@ -121,6 +121,24 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-10.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S527
+date: 2026-08-12
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix the methodology_trim.py fence-scanner defect blocking SESSION_NOTES.md's first
+archive (BACKLOG.md item found S518, READY, Effort S). Approach: rewrap the one offending paragraph
+in SESSION_NOTES.md; scope is fix + verify only, not the actual --write archive.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S526
 date: 2026-08-11
 status: complete

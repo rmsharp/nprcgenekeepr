@@ -6,6 +6,17 @@
 
 ## ACTIVE TASK
 
+### What Session 527 Did
+**Deliverable:** Fix the `methodology_trim.py` fence-scanner defect blocking `SESSION_NOTES.md`'s
+first archive (BACKLOG.md item found S518, READY, Effort S). Approach: rewrap the one offending
+paragraph in `SESSION_NOTES.md` (owner-picked over patching the canonical-overlay tool locally);
+scope is fix + verify only, not the actual `--write` archive (owner-picked). (IN PROGRESS)
+**Started:** 2026-08-12.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 525 Handoff Evaluation (by Session 526)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S525 receipt's `next_steps` field named
 "Issue #152 Slice 2 (the `markerKinship()`/`markerParentageLikelihood()` performance rewrite, D5

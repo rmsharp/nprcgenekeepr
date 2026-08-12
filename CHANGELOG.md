@@ -131,6 +131,13 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] S527 claim: fix the methodology_trim.py fence-scanner defect blocking SESSION_NOTES.md's first archive (Session 527)
+- **Claim only** — `SESSION_NOTES.md` stub + `HANDOFFS.md` `status: pending` receipt committed
+  before any technical work, per Phase 1B. Deliverable: rewrap the one offending paragraph in
+  `SESSION_NOTES.md` (owner-picked approach, over patching the canonical-overlay
+  `methodology_trim.py` locally); scope is fix + verify only this session, not the actual
+  `--write` archive (owner-picked). See `BACKLOG.md` Housekeeping (found S518).
+
 ### 2026-08-12 · [ad hoc] Reconcile-on-read: HANDOFFS.md S526 receipt's `commit: pending` field (Session 527)
 - **Ledger reconcile (Phase 0 step 6):** `CHANGELOG.md`'s own frontier and `HANDOFFS.md`'s own
   frontier both already equal `HEAD` (`a7c4f416`) — no undocumented commit gap. One residual: the
