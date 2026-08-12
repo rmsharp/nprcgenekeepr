@@ -175,7 +175,7 @@ runtime_smoke: n/a -- docs-only, no R/tests/man/NAMESPACE/data content touched; 
 confirms only BACKLOG.md/CHANGELOG.md/PROJECT_LEARNINGS.md/SESSION_NOTES.md/HANDOFFS.md touched.
 changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12 (HANDOFFS.md reconcile, the
 Genetic-metrics-PDF-audit-section compression deliverable)
-commit: pending
+commit: 043608ff
 ```
 
 ```handoff
