@@ -123,18 +123,58 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S531
 date: 2026-08-12
-status: pending
-self_score:
-predecessor_score:
-active_task: Compress BACKLOG.md's "Genetic-metrics PDF audit follow-ups" section (~753 lines,
-BACKLOG.md:907-1659) -- the 3rd and last of the S518 ledger-size-housekeeping item's oversized
-sections (Housekeeping compressed S529; "Pedigree diagram vs kinship2" compressed S530).
-what_was_done: pending
-next_steps:
-key_files:
-gotchas:
-runtime_smoke:
-changelog_ref:
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: BACKLOG.md's "Genetic-metrics PDF audit follow-ups" section (753 lines) is compressed
+and DONE. This was the 3rd and last of the S518 ledger-size-housekeeping item's oversized sections
+-- the S518 item itself is now fully RESOLVED (Housekeeping S529, "Pedigree diagram vs kinship2"
+S530, this section S531).
+what_was_done: Read the full 753-line section and identified its actual structure: an intro/triage
+paragraph, one combined bullet for issues #126/#127/#129/#130 (all closed), 6 further
+independently-tracked design->slice->close narrative chains (#147/#149/#146/#151/#150/#153, all
+closed), a S479-S483 re-audit/sequencing context paragraph, and the still-open issue #152 chain
+(design S517, Slice 1 S525, Slice 2 S526, Slice 3 next). Compressed the intro bullet and all 6
+closed chains to BACKLOG.md's own short-pointer convention via individual targeted edits; condensed
+the S479-S483 context paragraph while preserving every issue number/tier/audit-doc pointer; left
+the #152 chain fully untouched. Verified CHANGELOG.md (+ both docs/archive/CHANGELOG-through-*.md
+shards, Learning 536) carries an entry for all 39 cited session numbers -- 0 gaps. Found and fixed
+a mid-session duplication defect: the first edit for issue #153's chain replaced only its S519
+design paragraph, missing 3 further paragraphs (S520/S521-523/S524) that sat elsewhere in the
+section and became redundant duplicates -- caught by the mandatory end-to-end re-read, fixed with a
+follow-up edit, PROJECT_LEARNINGS.md Learning 537. Updated BACKLOG.md's own S518 tracking item to
+record all-3-sections-done and mark the item itself RESOLVED. Also reconciled HANDOFFS.md's S530
+receipt at Phase 0 (commit: pending -> e7feb28e, the established one-hop case). Net: section
+753->267 lines (486 removed); BACKLOG.md total 1,658->1,189. Commits: e0ca1972 (S530 receipt
+reconcile), 107c9dbc (claim), plus this close-out's own commit.
+next_steps: The S518 BACKLOG.md-ledger-housekeeping item is now fully closed -- no more sections
+remain for a future session to pick up there. Unchanged Phase 0 priorities carried forward from
+S530: issue #152 Slice 3 (F_ROH metric, R/computeGenomicROH.R, READY, per
+docs/planning/issue152-sequence-input-genetic-metrics-plan.md section 5 -- Slices 1-2 already
+shipped); inst/WORDLIST spelling gap (READY, Effort M, ~69-77 words accumulated across many past
+sessions, needs a genuine-typo-vs-false-positive editorial pass); NEWS.Rmd verbosity drift (READY,
+Effort M, owner-directed, rewrite entries from 2.0.0.9000 forward back toward the pre-1.0.8 terse
+style); a2interactive.Rmd documentation pass (READY, Effort M, several exported functions since
+S478 have zero tutorial coverage). None of these 4 were touched this session.
+key_files: BACKLOG.md:907-1173 (compressed "Genetic-metrics PDF audit follow-ups" section, now
+907-1173 after the file's own line-number shift); BACKLOG.md's own S518 item (now closed, in the
+Housekeeping section); PROJECT_LEARNINGS.md Learning 537 (this session's own finding).
+gotchas: (1) When compressing a narrative chain, grep -n for every "Progress (S###" paragraph
+belonging to that SAME issue/topic BEFORE editing, not just during a visual top-to-bottom read --
+a chain whose paragraphs are non-contiguous (interleaved with a different issue's own chain, as
+#153's design-vs-slice paragraphs were here, separated by #152's own paragraphs) is easy to
+under-replace, leaving stale duplicate paragraphs that only a full end-to-end re-read catches
+(Learning 537). (2) This section's shape (multiple independent closed per-issue chains plus one
+still-open chain) is structurally different from the Pedigree-diagram section's shape (one long
+continuous narrative chain) -- do not assume a prior session's own compression strategy transfers
+unchanged; read the target section fresh each time. (3) The S518 tracking item itself, now that all
+3 sections are done, could itself eventually be compressed to a short pointer in a future
+Housekeeping-section pass -- deliberately left verbose this session as the audit trail for the
+3-session campaign, matching S529/S530's own choice not to self-compress it early.
+runtime_smoke: n/a -- docs-only, no R/tests/man/NAMESPACE/data content touched; git diff --stat
+confirms only BACKLOG.md/CHANGELOG.md/PROJECT_LEARNINGS.md/SESSION_NOTES.md/HANDOFFS.md touched.
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12 (HANDOFFS.md reconcile, the
+Genetic-metrics-PDF-audit-section compression deliverable)
 commit: pending
 ```
 

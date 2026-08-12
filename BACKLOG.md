@@ -485,14 +485,30 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       file total 2,254->1,658 (596 removed, after this session's own S518-item progress notes added
       lines back elsewhere in the file). Zero information loss verified by re-reading the full
       compressed section end-to-end before close-out.
-      **Still open -- 1 section remains, its own future session per this item's original
-      "budget it as its own session" guidance:** "Genetic-metrics PDF audit follow-ups" (~753 lines,
-      a single living tracker for issues #146/#147/#149/#150/#151/#153 plus the still-open issue
-      #152 -- higher-risk than either section already done: a naive "compress everything with a
-      CHANGELOG pointer" pass would wrongly compress active-thread content, since most individual
-      Progress blocks carry a pointer even while the overall thread remains open). A future session
-      picking it up should re-run a fresh inventory pass first (line numbers/counts will have
-      drifted) rather than trust this note's own figures verbatim.
+      **"Genetic-metrics PDF audit follow-ups" section DONE -- S531 (2026-08-12):** the 3rd and
+      last of the item's 3 oversized sections. Compressed 8 fully-resolved issue chains
+      (#126/#127/#129/#130's shared sequencing-decision bullet, plus the individually-tracked
+      #147/#149/#146/#151/#150/#153 design->slice narrative chains) to the file's own short-pointer
+      convention; also condensed the S479-S483 re-audit/sequencing context note (still relevant --
+      it names the still-open items) without losing any issue number, tier assignment, or audit-doc
+      pointer. Left the still-open issue #152 chain (design S517, Slice 1 S525, Slice 2 S526, Slice
+      3 next) fully untouched, matching the S529/S530 "leave open items untouched" precedent. An
+      early compression pass left a real duplication defect -- the #153 chain's design paragraph was
+      replaced but its 3 slice-by-slice progress paragraphs (S520/S521-523/S524) were missed and
+      briefly duplicated the new compressed bullet -- caught by this session's own end-to-end re-read
+      before close-out and fixed by removing the now-redundant paragraphs. Verified `CHANGELOG.md`
+      (+ both `docs/archive/CHANGELOG-through-*.md` shards) carries an entry for all 39 session
+      numbers cited before compressing to a pointer -- 0 gaps found. All Learning cross-references
+      and all 13 cited `docs/planning|audits/*` file paths confirmed to resolve. Net: section
+      753->267 lines (486 removed); file total 1,658->1,173 (485 removed, some absorbed by this
+      item's own progress-note growth). Zero information loss verified by re-reading the full
+      compressed section end-to-end before close-out.
+      **The S518 item is now fully RESOLVED -- all 3 oversized sections compressed across 3
+      sessions:** Housekeeping (S529, 147->389 lines), "Pedigree diagram vs kinship2" (S530,
+      896->286 lines), "Genetic-metrics PDF audit follow-ups" (S531, 753->267 lines). File total:
+      2,501 lines (S529 start) -> 1,173 lines (S531 end), a 1,328-line/53% reduction across 3
+      sessions, with zero information loss at any step (each session's own end-to-end re-read plus
+      CHANGELOG.md/Learning/file-path cross-reference verification). See `CHANGELOG.md`.
 - [ ] **`inst/WORDLIST` has a large, long-standing gap -- `devtools::check()`'s spelling-check step
       fires a NOTE on every run** (found S521, 2026-08-11, READY, Effort M) -- confirmed via direct
       verification, not assumed: temporarily removing this session's own new files from the tree and
@@ -921,552 +937,133 @@ these as speculative future work even in 2015, matching the audit's own Recommen
 remaining findings (PMX/MateRx/Pedscope/PedSys tool-comparison notes, the "make pedigree available
 to researchers" governance recommendation) are descriptive or already-adequately-served, not gaps
 requiring tracking. See `CHANGELOG.md`.*
-- [ ] **Sequencing decision (owner-directed, S428, 2026-07-29):** #126 is now
-      DONE -- S429 (2026-07-29, see `CHANGELOG.md`). Planning issue #127 was
-      DONE -- S430 (2026-07-29). **Implementing issue #127 is now DONE --
-      S431 (2026-07-29, closes issue #127):** `reportGV()`'s `$report` carries
-      a new boolean `flagged` column (all bundled/live surfaces), see
-      `CHANGELOG.md`. **Planning issue #129 is now DONE -- S432 (2026-07-29):**
-      `docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md`
-      ratified (D1 extend `modPedigree.R`; D2 visNetwork; D3 reuse the
-      existing strict-lineal trim; D4 multi-slice). **Implementing issue #129
-      Slice 1 is now DONE -- S433 (2026-07-30):** the Pedigree Browser tab
-      gained a Diagram view (new `makePedigreeDiagramData()` + `modPedigree.R`
-      Table/Diagram tabsetPanel + `visNetwork` dependency), see `CHANGELOG.md`.
-      **Implementing issue #129 Slice 2 is now DONE -- S434 (2026-07-30,
-      closes issue #129):** clicking a diagram node re-centers the population
-      on that animal via the existing `focalIds` reactive path
-      (`visNetwork::visEvents(click = ...)` + a new `observeEvent` in
-      `modPedigree.R`). Pre-RED found and corrected a real gap in the ratified
-      plan's mechanism assumption: visNetwork does not auto-bind node clicks
-      to a Shiny input (`input$<id>_click`) the way the plan's design section
-      assumed -- confirmed hands-on that `visEvents(click = ...)` must be
-      wired explicitly. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning
-      408. **Both slices of issue #129 are now shipped; issue #129 itself is
-      closed as part of this session's close-out.** **Planning #130 is now
-      DONE -- S441 (2026-07-30):**
-      `docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md`
-      ratified (D1 long/tidy multi-locus genotype format; D2 native
-      KING-robust kinship in base R, no new hard dependency; D4 Mendelian
-      -exclusion parentage verification; D5 deterministic cross-reference
-      -table cross-center identity linking; D6 new dedicated
-      `modMarkerGenetics` module; D7 five vertical slices in dependency
-      order -- Slice 1 marker kinship first, Slices 2/3/5 depend on it,
-      Slice 4 cross-center linking is fully independent). See
-      `CHANGELOG.md`. **Implementing Slice 1 (marker-based kinship +
-      multi-locus genotype foundation) is now DONE -- S442 (2026-07-30):**
-      new `checkMarkerGenotypeFile()`/`buildMarkerGenotypeMatrix()`/
-      `markerKinship()` (KING-robust, Manichaikul et al. 2010 Eq. 11,
-      sourced and cross-verified from two independent references at
-      Pre-RED) plus a new `modMarkerGenetics` module (D6) surfacing a
-      pedigree-vs-marker mean-kinship comparison table, wired into
-      `appUI.R`/`appServer.R` as a new "Marker Genetics" tab. Full TDD
-      cycle (PRE-RED->RED->GREEN->REFACTOR, all `AskUserQuestion`-gated);
-      citation checklist (`population_genetics_terms.html` + roxygen
-      `@references`) and tutorial checklist (`colony-manager-guide.qmd`
-      "Marker Genetics" section + live screenshot) both done in-session.
-      Verified: regression suite 0/0/0 (4067 passed, 170 skipped);
-      `devtools::check()` 0 errors/0 warnings/0 notes; live
-      `shinytest2`/`chromote` smoke test confirmed a real, correctly
-      -computed comparison table with no console errors. See
-      `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learnings 422-425.
-      **Implementing Slice 2 (heterozygosity diagnostic) is now DONE --
-      S443 (2026-07-31):** new `markerObservedHeterozygosity()`/
-      `markerExpectedHeterozygosity()` (Nei 1973 gene diversity,
-      cross-verified and citation-corrected at Pre-RED away from the
-      plan's imprecise "VCFtools/PLINK --het" framing) plus a new
-      Heterozygosity tab in `modMarkerGenetics` (per-animal `ho` vs.
-      population `he`). Full TDD cycle (PRE-RED->RED->GREEN->REFACTOR,
-      all `AskUserQuestion`-gated); citation and tutorial checklists both
-      done in-session. Verified: regression suite 0/0/0 (4096 passed,
-      170 skipped); `devtools::check()` down to the single pre-existing,
-      unrelated `IACUC` spelling NOTE below (fixed the marker-genetics
-      -family spelling gap S442 left unresolved along the way -- see
-      `PROJECT_LEARNINGS.md` Learning 426); live `shinytest2`/`chromote`
-      smoke test confirmed real, correctly-computed values with no
-      console errors. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
-      Learnings 426-427.
-      **Implementing Slice 3 (Mendelian-exclusion parentage verification)
-      is now DONE -- S444 (2026-08-01):** new `markerParentageExclusion()`
-      (opposite-homozygote conflict counting over jointly-genotyped loci,
-      cross-referenced against the pedigree's recorded dam/sire) plus a
-      new Parentage Exclusion tab in `modMarkerGenetics` (flagged-pairs
-      table: `id`/`parentId`/`role`/`exclusionCount`/`nLoci`/`flagged`).
-      Dragon P4 (genotyping-error tolerance) resolved at Pre-RED via a
-      2-source-plus-adversarial-cross-check research `Workflow`:
-      `maxExclusions = 2` (flag only at 3+ inconsistent loci), citing
-      Cifuentes et al. 2006 and de Groot et al. 2025 (a real captive
-      rhesus/cynomolgus colony precedent) over the alternative bison/cattle
-      microsatellite convention, owner-approved via `AskUserQuestion`. Full
-      TDD cycle (PRE-RED->RED->GREEN->REFACTOR, all `AskUserQuestion`-gated);
-      citation and tutorial checklists both done in-session. Verified:
-      regression suite 0/0/0 (3425 passed, 182 skipped); `devtools::check()`
-      down to the single pre-existing, unrelated `IACUC` spelling NOTE (own
-      new citation words fixed in `inst/WORDLIST` same-session, see
-      `PROJECT_LEARNINGS.md` Learning 428); live `shinytest2`/`chromote`
-      smoke test confirmed real, correctly-computed exclusion counts/flags
-      (0/false for a true dam, 3/true for a falsely-recorded sire) with no
-      console errors. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learnings
-      428-430.
-      **Implementing Slice 4 (cross-center identity linking) is now DONE --
-      S446 (2026-08-01):** new `resolveCrossCenterIds(pedA, pedB, mapping)`
-      (base R, no new dependency) collapsing a curator-confirmed
-      cross-center identity link so a transferred animal becomes one node
-      with its real parents intact, instead of the artificial founder
-      issue #130 names as its literal failure mode. Dragon P6 (Shiny-wiring
-      scope) resolved via `AskUserQuestion`: script-callable function only
-      this session, no `modInput.R` UI change, matching the plan's own
-      cited `getFileDirectRelatives()` precedent. Full TDD cycle
-      (PRE-RED->RED->GREEN, REFACTOR owner-confirmed skip, all
-      `AskUserQuestion`-gated); RED fixture hand-verified against the
-      package's real `kinship()`/`findGeneration()` before any assertion
-      was written, proving both the bug (`kinship(S1,O1) == 0` on a naive
-      un-merged combination) and the fix (`== 0.125`, the correct
-      aunt/nephew coefficient across the two centers) -- see
-      `PROJECT_LEARNINGS.md` Learning 432. Citation and tutorial/article
-      checklists are N/A this slice (no new displayed statistic, no new
-      UI shipped). Verified: targeted test file 18/18 expectations;
-      regression suite 0/0/0 (3443 passed, 182 skipped); `devtools::check()`
-      0 errors/0 warnings/0 notes; `_pkgdown.yml` reference-coverage entry
-      added same-session (the gap class Slice 1 hit and had to fix
-      retroactively). See `CHANGELOG.md`.
-      **Implementing Slice 5 (cross-center differentiation statistic) is
-      now DONE -- S447 (2026-08-01), closing out issue #130's entire
-      5-slice sequencing chain:** new `markerFst(genotypeMatrixA,
-      genotypeMatrixB)` computing Hudson's Fst (Bhatia et al. 2013 Eq.10,
-      citing Hudson, Slatkin & Maddison 1992), ratio-of-sums pooling across
-      loci, base R only. Dragon P2 (estimator choice) resolved via a
-      5-agent Pre-RED research `Workflow` (3 research angles + adversarial
-      verification + synthesis) -- the adversarial pass found the first
-      pass's own "Weir & Cockerham (1984)" formula was an incomplete,
-      ~40%-off special case, confirmed against 3 independent sources; the
-      synthesis recommended switching to Hudson's estimator entirely,
-      per Bhatia et al.'s own explicit recommendation for two-named-
-      population pairwise comparisons -- see `PROJECT_LEARNINGS.md`
-      Learning 434. `modMarkerGenetics` gained a Cross-Center tab (second
-      file input). Full TDD cycle (PRE-RED->RED->GREEN, REFACTOR
-      owner-confirmed skip, all `AskUserQuestion`-gated); citation and
-      tutorial/article checklists both done in-session. Verified: full
-      regression suite 0/0 (3476 passed, 182 skipped); `devtools::check()`
-      0 errors/0 warnings/0 notes; live `shinytest2`/`chromote` smoke test
-      confirmed real, correctly-computed Fst values (byte-exact match to
-      the hand-verified fixture) with no console errors. **Issue #130 is
-      now fully implemented across all 5 slices; no open item remains in
-      this sequencing chain.** See `CHANGELOG.md`.
+- [ ] (none remaining -- the S428 (2026-07-29) owner-directed sequencing decision covering issues
+      #126/#127/#129/#130 is RESOLVED, all 4 fully shipped: **#126** (kinship/genome-uniqueness
+      distribution-shape statistics) DONE S429. **#127** (surface
+      `correctUnknownParentMeanKinship()`'s dropped `flagged` list) planned S430, implemented S431
+      (closes #127) -- `reportGV()$report` gained a boolean `flagged` column. **#129**
+      (pedigree-diagram/tree visualization) planned S432
+      (`docs/planning/issue129-pedigree-diagram-tree-visualization-plan.md`); Slice 1 (Diagram tab,
+      `makePedigreeDiagramData()` + `visNetwork`) DONE S433; Slice 2 (click-to-recenter via
+      `visEvents(click = ...)`, `PROJECT_LEARNINGS.md` Learning 408) DONE S434, closing #129. **#130**
+      (marker-based kinship/heterozygosity/parentage-verification + cross-center identity) planned
+      S441 (`docs/planning/issue130-marker-kinship-crosscenter-identity-plan.md`) as 5 vertical
+      slices, all implemented S442-S447: Slice 1 `markerKinship()` (KING-robust, Manichaikul et al.
+      2010) + new `modMarkerGenetics` module (Learnings 422-425); Slice 2
+      `markerObservedHeterozygosity()`/`markerExpectedHeterozygosity()` (Nei 1973, Learnings
+      426-427); Slice 3 `markerParentageExclusion()` (opposite-homozygote conflict counting,
+      Cifuentes et al. 2006 / de Groot et al. 2025, Learnings 428-430); Slice 4
+      `resolveCrossCenterIds()` (cross-center identity merge, Learning 432); Slice 5 `markerFst()`
+      (Hudson's estimator, Bhatia et al. 2013, Learning 434). Each slice full TDD-cycled with
+      citation/tutorial checklists done in-session. Issue #130 fully implemented across all 5 slices,
+      no open item remains. See `CHANGELOG.md`.
 
 **Second-generation re-audit and issue-sequencing (S479-S483, 2026-08-05 to 2026-08-08):** a ghost
-session (reconciled S479, see `PROJECT_LEARNINGS.md` Learning 479) produced 2 further capability
-audits -- `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-08-05.md` and a revised
-`..._2026-08-06.md` -- and filed 8 new GitHub issues against the 08-05 audit's findings: **#146**
-(configurable/exhaustive breeding-group candidate retention), **#147** (likelihood-based
-candidate-parent assignment after marker parentage exclusion), **#148** (MHC haplotype-specific
-frequency/rare-haplotype reporting), **#149** (reviewed cross-center identity-mapping workflow with
-provenance export), **#150** (de-identified pedigree export workflow for approved data sharing),
-**#151** (individual mate-pair analysis alongside breeding-group optimization), **#152**
+session (reconciled S479, `PROJECT_LEARNINGS.md` Learning 479) produced 2 further capability audits
+(`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-08-05.md`, `..._2026-08-06.md`) and filed 8
+new GitHub issues: **#146** (configurable/exhaustive breeding-group candidate retention), **#147**
+(likelihood-based candidate-parent assignment), **#148** (MHC haplotype-specific frequency
+reporting), **#149** (cross-center identity-mapping workflow with provenance export), **#150**
+(de-identified pedigree export workflow), **#151** (individual mate-pair analysis), **#152**
 (whole-genome/whole-exome sequence input + sequence-based metrics), **#153** (linkage-aware/
-haplotype-block metrics for marker data). These sat unsequenced across S479-S482 (each handoff
-noting "remain open, GitHub-only, unchanged"). **Sequencing proposed S483 (2026-08-08), owner-
-directed:** `docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` -- an 8-agent
-codebase-grounded assess + synthesize + adversarial-verify workflow recommends: **Tier 1** (design
-launch) #147, the batch's sole High-priority item (XL effort, no existing likelihood/LOD parentage
-method or pedigree-mutation pattern to build on); **Tier 2** (ready-to-build Medium) #149 > #146 >
-#151, ordered by effort/readiness and shared-file coordination (#146/#151 both touch
-`modBreedingGroups.R`); **Tier 3** (policy-gated quick win) #150 -- highest codebase readiness in the
-batch (the obfuscation primitives are already built/tested) but deliberately excluded from the audit's
-own priority table ("Policy/external"), needs an explicit owner sign-off on what "curator-controlled"
-means before it is scheduled on technical merits alone; **Deferred** (design-only) #152 > #153 > #148,
-matching the 08-06 audit's own "Deferred/scientific... advance only through separately scoped
-research/design work" guidance -- #148 flagged as filed broader than the audit recommends (a full
-feature request, not the design-only ask #152/#153 were filed as) and needing its own scope-narrowing
-conversation first. **Also found:** 2 of the audit's own High-priority rows -- "Longitudinal
-genetic-health monitoring" and "Ancestry guardrails in breeding decisions" -- have **no corresponding
-filed issue** anywhere in #146-153, despite ranking above every Medium/Deferred item in this batch; a
-future triage session should file both (as full-feature requests gated on a Pre-RED design session,
-matching #147's own shape, per the audit's Finding #1/Recommendation 2). No issues implemented or
-closed this session -- sequencing/proposal only, per the established "audit recommends, a later
-session files/implements" precedent.
-
-**Progress (S495, 2026-08-09):** Tier 1's own Pre-RED design/scoping session for issue #147
-(likelihood-based candidate-parent assignment after marker parentage exclusion) is DONE and RATIFIED:
-see `docs/planning/issue147-likelihood-parentage-assignment-plan.md`. A 4-agent research `Workflow`
-(3 independent literature angles -- CERVUS/LOD-score methods, COLONY/sibship-reconstruction methods,
-captive-primate-colony-specific precedent -- plus an adversarial synthesis pass) run alongside a
-separate codebase-inventory `Explore` agent, both spot-checked against source before use (`PROJECT_
-LEARNINGS.md` Learning 494). Central finding: CERVUS-style multilocus likelihood-ratio (LOD) scoring
-(Meagher & Thompson 1986; Marshall, Slate, Kruuk & Pemberton 1998) is the field's own answer to this
-exact problem shape, independently validated as the captive-primate-colony domain's de facto standard
-by de Groot et al. (2025) -- already cited in this package's `markerParentageExclusion()`; full-pedigree
-reconstruction (COLONY/FRANz) was found to solve a different, harder problem and was ruled out. The
-adversarial synthesis pass, explicitly stress-tested against this package's own realistic 2-10-locus
-panel sizes, found this range sits inside the literature's own documented underpowered zone and that a
-full/half sibling of the true parent can plausibly outrank it at small panel sizes -- both load-bearing
-findings drove the plan's no-percentage-confidence (raw LOD+delta+coverage only) and minimum-loci-gate
-design decisions. Ten design decisions (D1-D10); four genuine judgment calls (LOD-formula scope,
-minimum-loci-gate mechanism, report-only-vs-write-back architecture, UI integration shape) all ratified
-via a single `AskUserQuestion` round -- owner selected this document's own recommended option in all
-four cases: no-error-model formula now (error-tolerant extension deferred, pending an unretrievable
-2010 corrigendum); a fixed, literature-informed `minLoci` default; **report-only** (this package has
-zero existing pedigree-mutation precedent, confirmed by a full grep sweep -- any future write-back is
-its own separately-gated issue); and a 5th read-only "Candidate Parent Assignment" tab in
-`modMarkerGenetics.R`, matching the existing 4-tab pattern. Implementation plan is 2 vertical slices
-(core statistical function; UI + documentation), each its own future session. No code changed this
-session -- design/planning only, matching the #133/#136/#137 precedent. See `CHANGELOG.md`.
-
-**Progress (S496, 2026-08-09):** Slice 1 (core statistical function) is now DONE: new exported
-`markerParentageLikelihood()` (`R/markerParentageLikelihood.R`), ranking candidate replacement
-parents via the ratified CERVUS-style LOD score; `.markerAlleleFrequencyTable()` (D9); the D7
-extraction of `markerParentageExclusion()`'s opposite-homozygote comparison into a shared
-`.markerOppositeHomozygoteCount()` helper, byte-identical-behavior proven via a golden-master
-regression test. Full strict TDD PRE-RED->RED->GREEN->REFACTOR cycle, `AskUserQuestion`-gated at
-every transition; Pre-RED independently re-derived and hand-verified the LOD formula from first
-principles before any RED test was written. Verified: all new/changed tests pass; full clean
-regression read 0 failed/0 error (4841 passed, 175 skipped, 10 pre-existing baseline warnings
-unchanged); `devtools::check()` 2 ERRORs/1 WARNING/1 NOTE, exact pre-existing baseline match, 0 new;
-`lintr::lint_package()` 0 lints. **Slice 2 (UI + documentation) is the natural next pickup for this
-issue** -- a separate future session, per the plan's own session-boundary requirement. See
-`CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learnings 495-496.
-(Issue #147's Slice 2 was completed and the issue closed -- S498, 2026-08-09; see `CHANGELOG.md`.)
-
-**Progress (S503, 2026-08-10):** Tier 2 step 1 -- issue #149's own design/architecture document
-(reviewed cross-center identity-mapping workflow with provenance export, a Shiny wrapper around the
-existing `resolveCrossCenterIds()`) -- is DONE and RATIFIED: see
-`docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md`. Ten design decisions
-(D1-D10); a same-session, 2-agent adversarial review (correctness-vs-source; completeness/house-style
-against the #147/#137 precedent) found and fixed one significant, previously-unaddressed technical
-defect (`resolveCrossCenterIds()`'s merge step silently drops every non-`id`/`sire`/`dam` column for
-merged individuals, about to become curator-visible for the first time via the new CSV export -- now
-D10) and one design-consistency gap (the extracted conflict-check helper's row lookup silently
-depends on a `pedB` id-rewrite step the first draft never made explicit -- now fixed in D2, with a
-new Dragon). Four genuine judgment calls (D2 validation-extraction mechanism, D3 scope boundary, D8
-export-artifact set, D10 whether to fix the newly-found data-loss now) ratified via a single
-`AskUserQuestion` round -- owner selected this document's own recommended option in all four cases,
-no changes requested. **Issue #149 stays open** -- design/planning only, matching the
-#133/#136/#137/#145/#147 precedent; a 2-slice implementation (Slice 1: validation core + the D10 data
--loss fix, R-function level only; Slice 2: full UI, confirm gate, exports, documentation) is the
-natural next pickup, each its own future session. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
-Learning 502.
-
-**Progress (S504, 2026-08-10):** Slice 1 (validation core, R-function level only, no UI) is now DONE:
-new exported `checkCrossCenterMapping(pedA, pedB, mapping)` (`R/checkCrossCenterMapping.R`), the D2
-two-tier collect-all validator sharing `resolveCrossCenterIds()`'s four checks via 8 new shared
-internal helpers extracted from it (`.requireCrossCenterPedColumns`/`.requireCrossCenterMappingColumns`/
-`.checkCrossCenterUniqueness`/`.checkCrossCenterExistenceA`/`.checkCrossCenterExistenceB`/
-`.checkCrossCenterCollision`/`.checkCrossCenterConflict`/`.rewriteCrossCenterIds`/
-`.pickCrossCenterParent`). `resolveCrossCenterIds()` itself calls these in its original exact order,
-keeping its own historical `stop()` message text byte-for-byte (proven via a new golden-master test);
-all 7 pre-existing test blocks pass unmodified. The D10 data-loss fix also shipped in this slice:
-a merged pair's other shared, agreeing columns (e.g. `sex`) now survive the merge under the same
-prefer-non-`NA`/error-on-conflict rule already used for `sire`/`dam`, instead of being silently
-dropped -- an explicit, `NEWS.Rmd`-documented additive behavior change (a merge that previously
-succeeded silently on a disagreeing non-`sire`/`dam` column now raises a conflict error). Full strict
-TDD PRE-RED->RED->GREEN cycle (`AskUserQuestion`-gated at every transition; REFACTOR owner-confirmed
-skip -- implementation already matches the ratified design's own decomposition). Dragon #2 (the `pedB`
-id-rewrite must run before the conflict check's row lookup, or it silently reports zero conflicts) has
-its own dedicated regression test injecting a real conflict and confirming it is actually reported.
-10 new test blocks (9 in new `tests/testthat/test_checkCrossCenterMapping.R`, 3 appended to
-`tests/testthat/test_resolveCrossCenterIds.R`), 0 regressions. Verified: full clean regression suite 0
-failed/0 error (4951 passed, 175 skipped); `lintr::lint_package()` 0 lints on touched files;
-`devtools::check()` 0 errors/0 warnings/1 pre-existing note (vignette-engine, unchanged);
-`_pkgdown.yml` reference-coverage entry added for `checkCrossCenterMapping` (this actually caught the
-gap live -- `test_pkgdown_reference_config.R` failed until fixed); `NEWS.Rmd` entry added and
-re-rendered clean. `runtime_smoke: n/a` -- confirmed via `grep` that neither function has any call
-site in the live Shiny app yet (Slice 2 wires them in); script-callable only, matching the
-`resolveCrossCenterIds()` Slice 4 precedent. **Incidental finding, not fixed (out of this slice's
-scope):** the "10 pre-existing baseline warnings" Housekeeping item below has silently drifted to 15
-(a 3rd `test_modMarkerGenetics.R` cross-center-shaped test block now also triggers the same
-`markerKinship()` NA-warning pattern) -- confirmed pre-existing via a `git stash` comparison against
-unmodified `HEAD`, unrelated to this session's diff; that item's own count corrected below. See
-`CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 503.
-
-**Progress (S505, 2026-08-10):** Slice 2 (full UI, confirm gate, exports, documentation) is now
-DONE, closing issue #149: new `R/modCrossCenterIdentity.R`
-(`modCrossCenterIdentityUI`/`modCrossCenterIdentityServer`) -- 3 file uploads, a
-`checkCrossCenterMapping()`-backed Validation tab showing every issue at once, a Preview tab
-computing `resolveCrossCenterIds()`'s proposed merge with a per-pair lineage-change table (2 new
-internal helpers, `.buildCrossCenterLineagePreview()`/`.buildCrossCenterMergeProvenance()`), a
-`shiny::modalDialog()` confirmation gate (this app's first-ever use of the function), and 5
-downloadable export artifacts. Wired additively into `appUI.R`/`appServer.R` (self-contained, no
-`shared$...` dependency, per D3). Full strict TDD PRE-RED->RED->GREEN cycle
-(`AskUserQuestion`-gated at every transition; REFACTOR owner-confirmed skip -- implementation
-already matches the ratified design's own decomposition). 17 new test blocks, 0 regressions;
-full clean regression suite 0 failed/0 error (5026 passed, 175 skipped, 15 pre-existing warnings
-unchanged); `lintr::lint_package()` 0 lints; `devtools::check()` 0 errors/0 warnings/pre-existing
-notes only (a new spelling-drift word from this session's own roxygen was caught and fixed by
-rewording, not left for `inst/WORDLIST`). **Live `shinytest2` smoke test** against the real running
-app directly confirmed both of the plan's named highest-risk Dragons: #6 (`modalDialog()` renders
-correctly under this app's previously-untested bslib theme) and #7 (the Preview table's `NA` cells
-render as blank text, read via `app$get_js()` cell traversal, not assumed) -- zero `SEVERE` console
-entries throughout the full upload -> validate -> preview -> confirm -> export sequence.
-Documentation: `NEWS.Rmd`/`NEWS.md`, `_pkgdown.yml` reference-coverage, and a new "Cross-Center
-Identity" subsection in `colony-manager-guide.qmd` (text-only, re-rendered clean via `quarto
-render`) all done same-session; `a2interactive.Rmd` coverage explicitly deferred per its own
-standing rule. **Both slices of issue #149 are now shipped; issue #149 itself is closed as part of
-this session's close-out.** See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 504.
-
-**Progress (S507, 2026-08-10):** Tier 2 step 2 -- issue #146's design/architecture document -- is
-DONE and RATIFIED: see
-`docs/planning/issue146-configurable-exhaustive-breeding-group-retention-plan.md`. Splits the
-issue into 2 slices matching the sequencing audit's own recommendation: **Slice 1** (parameterize
-`groupAddAssign()`'s hardcoded top-5 candidate-retention cap into a `maxCandidates` argument --
-mechanical, Effort S) and **Slice 2** (a new bounded exhaustive-enumeration mode -- genuinely new
-combinatorial-search algorithm work, Effort M-L). Owner ratified 4 judgment-call decisions in a
-single `AskUserQuestion` round, selecting this document's own recommended option in all 4 cases:
-exhaustive mode scoped to `numGp==1`/no harem/no custom sex ratio only, `stop()` (not silent
-fallback) outside that scope or over the feasibility ceiling; a hand-rolled Bron-Kerbosch-style
-maximal-independent-set enumerator (no new `igraph` dependency), citing Bron & Kerbosch (1973) /
-Tomita, Tanaka & Takahashi (2006); feasibility-guard defaults `maxExhaustiveCandidates = 20L` /
-`exhaustiveTimeLimit = 10` seconds; and the UI toggle ships in Slice 2 itself, not deferred to a
-Slice 3. The design decisions are grounded in an original empirical benchmark run this session (not
-derived from any prior document): a throwaway, un-pivoted Bron-Kerbosch enumerator timed against
-synthetic conflict graphs found a counter-intuitive result -- **lower-kinship (more diverse)
-candidate pools are the slower case for exhaustive enumeration, not the faster one** -- n=20 at 5%
-density took 5.5s; n=25 at 5% density exceeded 60s, both in an unoptimized baseline implementation.
-Also confirmed the real `qcBreeders` test fixture (29 candidates, `numGp=2`) already produces 1000
-distinct partitions across 1000 random trials -- direct in-repo evidence that exhaustive
-enumeration is intractable beyond `numGp=1` at realistic scale, forcing the single-group scope
-decision. No code changed this session -- design/planning only, matching the #133/#136/#137/#147/
-#149 precedent. **Next session in this cluster implements Slice 1** (the mechanical
-`maxCandidates` parameterization); Slice 2 (exhaustive enumeration + UI) is its own separate
-session per §5's session-boundary requirement. Issue #146 intentionally left open. See
-`CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 506.
-
-**Progress (S508, 2026-08-10):** Slice 1 (mechanical `maxCandidates` parameterization) is now DONE:
-`groupAddAssign()`'s previously-hardcoded `5L` candidate-retention cap (`R/groupAddAssign.R:200`,
-the only literal site) is now a `maxCandidates = 5L` argument; `R/modBreedingGroups.R` gained a
-matching **Candidates to retain** numeric input (default 5, 1-50 per D6) threaded through
-`runFormation()`'s existing defensive-default pattern. Full strict TDD PRE-RED->RED->GREEN cycle
-(`AskUserQuestion`-gated at every transition; REFACTOR owner-confirmed skip -- implementation
-already minimal/mechanical). 5 new tests: 2 direct `groupAddAssign()` tests (real `qcBreeders`
-fixture, lowered to 3 and raised to 8, proving the old hardcode is gone in both directions), 1
-UI-control-presence test, and 2 `testServer` tests against the real (unmocked) `modBreedingGroupsServer`
-reactive code -- only the terminal `groupAddAssign()` call itself mocked -- proving `input$maxCandidates`
-reaches the real argument at both the unset-default and an explicit value. (The first attempt at the
-default-case test passed vacuously before any server change, since the mock's own default happened to
-also be 5L; caught and fixed with a sentinel default before treating RED as satisfied.) Verified: full
-clean regression suite 0 failed/0 error (5050 passed, 175 skipped, 15 pre-existing baseline warnings
-unchanged); `lintr::lint_package()` 0 lints; `devtools::check()` 0 errors/0 warnings/1 pre-existing
-note (vignette-engine, unchanged). **Live `shinytest2` smoke test:** the new control renders with the
-correct default (5) on a fresh app load with 0 console errors; a live run with `maxCandidates=1`
-consistently and correctly caps the rendered candidate dropdown to exactly 1 option (3/3 runs).
-**Incidental, out-of-scope finding, not investigated further:** attempts to also prove the "raise
-above 5" half of the live differential live (via `maxCandidates=8`) were inconclusive -- the bundled
-`obfuscated_rhesus_mhc_ped.csv` fixture converges to a single dominant maximal-set partition in the
-live app across every combination tried (`numGp=1`/`numGp=2`, loose/strict kinship threshold,
-`iter=100`), even though a direct (non-live) `groupAddAssign()` call using the same nominal parameters
-against the same fixture (read via `qcStudbook()`/`kinship()` outside the app) reliably produces 8
-distinct partitions. Not root-caused this session (matches the already-tracked, separately-filed "live
-app's QC'd copy produces one fewer node than a direct CSV read" gap above -- plausibly the same
-live-vs-direct pedigree-construction discrepancy, not confirmed). The parameter's correctness itself is
-not in doubt -- proven independently by the 2 direct-function tests and the 2 real-server-code
-`testServer` integration tests above, neither of which depends on this fixture's live diversity.
-`NEWS.Rmd`/`NEWS.md` updated. Citation/tutorial-article/`_pkgdown.yml` checklists N/A per the ratified
-plan's own §6/§9 (no new statistic, no new interaction pattern, `groupAddAssign` already listed).
-`a2interactive.Rmd` coverage deferred per its own standing rule (new parameter on an already-documented
-function). **Issue #146 stays open** -- Slice 2 (exhaustive enumeration + UI) is the natural next
-pickup, its own future session per §5's session-boundary requirement. See `CHANGELOG.md`.
-
-**Progress (S510, 2026-08-10):** Slice 2 (exhaustive enumeration mode + UI toggle) is now DONE:
-`groupAddAssign()` gained `exhaustive`/`maxExhaustiveCandidates`/`exhaustiveTimeLimit` arguments; a
-new `.enumerateMaximalIndependentSets()` helper implements the ratified hand-rolled Bron-Kerbosch
-design (D4), scoped to `numGp=1`/no harem/no custom `sexRatio` (D2) with a two-layer feasibility
-guard (D5) and named-reason `stop()`s (D9); `groupMembersReturn()` gained the D7 `exhaustive`/
-`examined`/`retentionRule` fields, byte-identical-by-default for ordinary sampling calls. The
-Breeding Group Formation tab gained the D8-ratified **Exhaustive enumeration mode** checkbox
-(visible only when D2-eligible) and a status callout. Full strict TDD PRE-RED->RED->GREEN cycle. 11
-new/extended test blocks across 4 files; full clean regression suite 0 failed/0 error (5081 passed,
-175 skipped, 15 pre-existing baseline warnings unchanged); `lintr::lint_package()` 0 lints;
-`devtools::check()` 0 errors/0 warnings/2 pre-existing notes (unrelated to this session). Live
-`shinytest2`/`chromote` smoke test against the real running app confirmed the completed and hidden
-(D2-ineligible) cases with real, correctly-computed status text; the truncated case was not
-reproduced live (deadline not user-UI-configurable; already unit-tested), an explicit judgment call
-the ratified plan itself grants. `NEWS.Rmd`/`NEWS.md` updated;
-`vignettes/manual_components/_breeding_group_formation.Rmd` gained new coverage (text-only,
-satisfying the tutorial/article checklist's "and/or" allowance). **Issue #146 is now fully
-implemented across both slices; closed as part of this session's close-out.** See `CHANGELOG.md`.
-
-**Progress (S511, 2026-08-10):** Tier 2 step 3 -- issue #151's design/architecture document
-(individual mate-pair analysis alongside breeding-group optimization) is DONE and RATIFIED: see
-`docs/planning/issue151-individual-mate-pair-analysis-plan.md`. **All of Tier 1/Tier 2's
-ready-to-build items (#147/#149/#146/#151) now have ratified designs** -- #151's is the only one
-not yet implemented. Direct reads of every function in the relevant call graph (not summarized
-from memory) found the reusable pair-eligibility pipeline (`kinMatrix2LongForm()`/`filterPairs()`/
-`filterAge()`/`filterThreshold()`) already lives entirely outside `R/modBreedingGroups.R` --
-correcting the sequencing audit's own "shared-file risk" flag for this item -- and that
-`modMarkerGeneticsServer()` already computes and returns a `markerKinshipMatrix` reactive that
-`R/appServer.R` currently discards, so "marker kinship where available" is a one-line capture, not
-new computation. An original empirical benchmark against the bundled `examplePedigree` (not
-derived from any prior document) found an unscoped candidate-pair reshape produces 1,744,722 rows
-in 54.0s, and that `filterAge()`'s NA-passes-the-filter semantics (81% of "alive" fixture
-individuals have no recorded age) means the age control alone cannot bound table size -- directly
-grounding the design's population-scope requirement. Also confirmed no continuous composite-score
-ranking precedent exists anywhere in the package (`reportGV()`'s own `orderReport()` is a
-rule-based tier classification, never a weighted formula), grounding the "raw sortable columns,
-not an invented score" recommendation. Owner ratified 3 judgment-call decisions (ranking,
-population-scope control, exclusion transparency) in a single `AskUserQuestion` round, selecting
-this document's own recommended option in all 3 cases: raw sortable/filterable columns (no
-composite score); a required population-scope radio control (mirroring Breeding Groups' own
-`animalSource` convention) applied before the pair-reshape, plus server-side `DT` paging; and a
-separate "Excluded" table with a `reason` column plus a user exclude-list textarea (mirroring
-Breeding Groups' own "seed groups" convention). No code changed this session -- design/planning
-only, matching the #133/#136/#137/#145/#147/#149/#146 precedent. **Next session in this cluster
-implements Slice 1** (the core `reportMatePairs()` function, script-callable only); Slice 2 (UI +
-`appServer.R` marker-kinship wiring + documentation) is its own separate session per §5's
-session-boundary requirement. Issue #151 intentionally left open. See `CHANGELOG.md`.
-
-**Progress (S512, 2026-08-10):** Issue #151 Slice 1 -- the core `reportMatePairs()` function
-(new, exported, script-callable only, no UI) -- is DONE, per
-`docs/planning/issue151-individual-mate-pair-analysis-plan.md` §5 Slice 1. Full strict TDD
-PRE-RED->RED->GREEN->REFACTOR cycle, each transition `AskUserQuestion`-gated. Composes the
-existing, unmodified pair-eligibility pipeline (`kinMatrix2LongForm()`/`filterPairs()`/
-`filterAge()`/`filterKinMatrix()`) into opposite-sex, minimum-age-eligible mate pairs, each row
-carrying pedigree kinship plus `NA`-safe marker-kinship and per-parent genetic-value context; a
-closed-vocabulary `excluded` frame reports why a pair was dropped ("under minimum age" or
-"user-excluded"). 8 new `test_that` blocks / 37 expectations in `tests/testthat/test_reportMatePairs.R`,
-including a regression test directly reproducing the ratified plan's own Dragon #1 (`filterAge()`'s
-NA-passes semantics means `minAge` alone cannot bound table size; the `populationIds` D4 control
-is what actually does). Full clean regression suite 0 failed/0 error (5118 passed, 15 pre-existing
-baseline warnings confirmed unchanged via `git stash -u` before/after); `lintr::lint_package()` 0
-lints; `devtools::check()` 0 errors/0 warnings/1 pre-existing note (unrelated). Fixed 2 real gaps
-found during verification: the `_pkgdown.yml` reference-coverage guard, and a `devtools::check()`
-Rd cross-reference warning (a `\link{}` to `filterAge()`, a `@noRd` internal function with no `.Rd`
-page). `NEWS.Rmd`/`NEWS.md` updated (new exported function checklist). **Issue #151 stays
-open -- Slice 2** (`R/modMatePair.R` UI, the D6 `appServer.R` marker-kinship capture, `appUI.R`
-tab mount, tutorial/article documentation, live `shinytest2` smoke test, `gh issue close 151`) **is
-the next and final planned slice**, a separate future session per the plan's own session-boundary
-requirement. See `CHANGELOG.md`.
-
-**Progress (S513, 2026-08-10) -- Issue #151 fully shipped, closed:** Slice 2 -- the new
-"Mate Pair Analysis" tab (`R/modMatePair.R`), the D6 `appServer.R` marker-kinship capture
-(`modMarkerGeneticsServer()`'s previously-discarded `markerKinshipMatrix` return now reaches the
-new module), `appUI.R` tab mount, and documentation -- is DONE, per
-`docs/planning/issue151-individual-mate-pair-analysis-plan.md` §5 Slice 2, closing out the plan in
-full. Full strict TDD PRE-RED->RED->GREEN->REFACTOR cycle, each transition `AskUserQuestion`-gated.
-Along the way, found and fixed a genuine pre-existing bug in Slice 1's own `R/reportMatePairs.R`
-(bare scalar column assignment crashed when the age filter alone reduced the candidate table to
-exactly 0 rows -- fixed with its own regression test, surfaced to the owner first since it was
-outside the approved GREEN scope) and 2 guard-test regressions only a full regression read
-surfaces (`_pkgdown.yml` reference coverage; `shinytest2.yaml` E2E group-regex coverage). Full
-clean regression 0 failed/0 error (5172 passed, 15 pre-existing warnings unchanged);
-`devtools::check()` 0 errors/0 warnings/1 pre-existing note; `lintr` 0 lints on touched files. A
-**live E2E smoke test** (new, opt-in `tests/testthat/test-e2e-mate-pair-analysis-module.R`) ran
-against the real app: 8/8 assertions passed, including live proof of the D6 wiring (a real,
-non-`NA` marker-kinship value reaching the new tab) and confirmation Marker Genetics itself still
-renders correctly post-change. `NEWS.Rmd`/`NEWS.md`, a new "Mate Pair Analysis" section in
-`vignettes/articles/colony-manager-guide.qmd` with 2 new live-captured screenshots, and
-`_pkgdown.yml` reference coverage all done same-session. **Issue #151 closed.** See `CHANGELOG.md`,
-`PROJECT_LEARNINGS.md` Learnings 513-514.
-
-**This cluster (issue #151, all slices) is now fully complete.** No further items remain in this
-narrative.
-
-**Progress (S514, 2026-08-10):** Tier 3 (policy-gated quick win) -- issue #150's own owner policy
-decision and design/architecture document (de-identified pedigree export workflow for approved data
-sharing) -- is DONE and RATIFIED: see
-`docs/planning/issue150-deidentified-pedigree-export-plan.md`. Put the sequencing audit's own
-Finding #3 policy question to the owner via `AskUserQuestion` before any technical research (its own
-recommendation, verbatim); owner answered yes, formalize it. Found and empirically verified (seeded
-`Rscript` against the bundled `pedGood` fixture, 25% hit rate) a real, previously-unflagged defect:
-`obfuscatePed()` shifts each Date column independently, which can invert an individual's birth/exit
-order and produce a negative recomputed age. Ten design decisions (D1-D10); four genuine judgment
-calls (fix the date defect now via a new `linkedDateShift` parameter defaulting `TRUE`; explicit
-institutional-responsibility warning text; disclose rather than scrub non-id/date fields; tab
-placement after Cross-Center Identity) ratified via a single `AskUserQuestion` round -- owner
-selected the recommended option in all four. Implementation plan is 2 vertical slices (core function
-work; full UI module + documentation), each its own future session. No code changed this session --
-design/planning only, matching the #133/#136/#137/#145/#146/#147/#149/#151 precedent. Issue #150
-stays intentionally open. See `CHANGELOG.md`. *(Note: this progress note was written retroactively by
-S515, reconstructed from `CHANGELOG.md`/`HANDOFFS.md` -- S514's own close-out did not append one here,
-unlike every other design-session precedent in this cluster, S495/S503/S511. Flagged, not silently
-skipped; see `PROJECT_LEARNINGS.md` Learning 516.)*
-
-**Progress (S515, 2026-08-10):** Slice 1 (core function work, R-function level only, no UI) is now
-DONE: `obfuscatePed()` gained a `linkedDateShift` parameter (default `TRUE`, D3) that draws exactly
-one random offset per individual and applies it to every Date column for that row, closing the S514
-negative-age defect while preserving each individual's exact inter-date gaps (proven by an invariance
-assertion, not just a bounds check); `linkedDateShift = FALSE` reproduces the old independent-per-
-column behavior for any caller that needs it. New internal `.buildDeidentificationManifest()` helper
-(`R/modDeidentifiedExport.R`, D4) mirrors `.buildCrossCenterMergeProvenance()`'s shape. Full strict
-TDD PRE-RED->RED->GREEN->REFACTOR cycle (REFACTOR: owner-confirmed no candidate identified), each
-transition `AskUserQuestion`-gated. Along the way, found and fixed a genuine order-dependence defect
-in this session's own RED tests: a bare `set.seed()` call is silently order-dependent in this test
-suite because this package's own `set_seed()` helper (used throughout for cross-R-version RNG
-parity) permanently changes `RNGkind(sample.kind = "Rounding")` for the rest of the testthat
-session -- switched to `set_seed()`, matching every other test file's convention, and re-derived a
-seed that reproduces the defect deterministically under that RNGkind regardless of run order
-(verified via a perturb-then-rerun check, not assumed). Full clean regression 0 failed/0 error (5186
-passed, 15 pre-existing warnings unchanged); `devtools::check()` 0 errors/0 warnings/1 pre-existing
-note (confirmed unrelated via a `git stash -u` baseline check); `lintr::lint_package()` 0 lints on
-touched files. `NEWS.Rmd`/`NEWS.md` entry done. **Slice 2 (full UI module, confirm gate, exports,
-documentation) is the natural next pickup for this issue** -- a separate future session, per the
-plan's own session-boundary requirement. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 516.
-
-**Progress (S516, 2026-08-10) -- Issue #150 fully shipped, closed:** Slice 2 (full UI module, confirm
-gate, exports, documentation) is now DONE, closing out the plan in full. New **De-Identified Export**
-Shiny module (`R/modDeidentifiedExport.R`): `modDeidentifiedExportUI`/`modDeidentifiedExportServer`
-(D1: reads `shared$currentPedigree`, no fresh upload) -- Configure & Preview tab (config controls,
-live preview, static D6 warning text) plus an Export tab gated by a `modalDialog()` confirm (mirrors
-`modCrossCenterIdentityServer`'s own shape) with 3 downloads (de-identified pedigree, D4 manifest, D5
-"DO NOT SHARE" re-identification key). Two forced correctness requirements found at Pre-RED (same
-category as the plan's own D1/D2/D4/D5/D7/D9, not owner judgment calls): the manifest snapshots the
-exact params used at Generate-Preview time rather than re-reading live input state (prevents a
-curator's post-preview slider tweak from producing a manifest that describes different params than
-what was actually exported); regenerating the preview resets `confirmed` to `FALSE` (mirrors #149's
-own D5 stale-confirmation-reset pattern). Downloads are not hard-gated on `confirmed`, matching Cross-
-Center Identity's own precedent exactly (this issue's own ratified framing: a confirmation dialog and
-warning text, not real access control). Wired into `appUI.R`/`appServer.R` (D10 tab placement after
-Cross-Center Identity). Full strict TDD PRE-RED->RED->GREEN->REFACTOR cycle, each transition
-`AskUserQuestion`-gated; REFACTOR: no candidate identified. 16 new test blocks, 0 regressions. Full
-clean regression 0 failed/0 error (5233 passed, was 5186, 15 pre-existing warnings unchanged);
-`devtools::check()` 0 errors/0 warnings/1 pre-existing NOTE (confirmed byte-identical to unmodified
-`HEAD` via `git stash -u` before/after -- including the raw-log spelling-diff NOTE, a pre-existing
-environment quirk); `lintr::lint_package()` 0 lints on touched files (fixed 3 style lints);
-`_pkgdown.yml` reference-coverage gap caught live by its own guard test, fixed. **Live smoke test**
-(ad hoc script, no permanent E2E file added, matching the #149 precedent) drove the real running app
-end to end -- Input -> De-Identified Export -> Generate Preview -> Confirm Export modal -> Export tab
--- 0 console errors; a first unscoped `a[data-value='Export']` click selector warned of multiple
-matches (Cross-Center Identity also has an "Export" tab) and was fixed to a module-scoped selector
-before trusting the result. `NEWS.Rmd`/`NEWS.md` and a new "De-Identified Export" `colony-manager-
-guide.qmd` subsection (text-only, matching Cross-Center Identity's own no-screenshot convention) done
-same-session, re-rendered clean. `a2interactive.Rmd` deferred per its own standing rule. **Both slices
-of issue #150 are now shipped; issue #150 closed** as part of this session's close-out. See
+haplotype-block metrics). Sequencing ratified S483
+(`docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md`, owner-directed, 8-agent
+codebase-grounded workflow): Tier 1 #147; Tier 2 #149 > #146 > #151; Tier 3 (policy-gated) #150;
+Deferred (design-only) #152 > #153 > #148, with #148 flagged as needing its own scope-narrowing
+conversation first (filed broader than the audit recommends). **Also found, still not filed as of
+this compression:** 2 audit-table High-priority rows -- "Longitudinal genetic-health monitoring" and
+"Ancestry guardrails in breeding decisions" -- have no corresponding GitHub issue, despite ranking
+above every Medium/Deferred item in this batch (Finding #1/Recommendation 2); a future triage session
+should file both. **Every Tier 1/2/3 item (#147, #149, #146, #151, #150) plus Deferred-tier #153 are
+now fully shipped and closed** -- see the compressed entries below. #152 (Deferred) is in progress
+(Slice 3 next). #148 remains unstarted, still needing its scope-narrowing conversation. See
 `CHANGELOG.md`.
 
-**This cluster (issue #150, all slices) is now fully complete.** No further items remain in this
-narrative.
+- [ ] (none remaining -- issue #147 (likelihood-based candidate-parent assignment after marker
+      parentage exclusion, Tier 1) is RESOLVED, both slices shipped: design ratified S495
+      (`docs/planning/issue147-likelihood-parentage-assignment-plan.md`) -- a 4-agent research
+      `Workflow` found CERVUS-style multilocus likelihood-ratio (LOD) scoring (Meagher & Thompson
+      1986; Marshall, Slate, Kruuk & Pemberton 1998) is the field's own answer, validated as the
+      captive-primate-colony domain's de facto standard by de Groot et al. (2025); ratified
+      report-only architecture (no pedigree-mutation write-back) and a 5th read-only "Candidate
+      Parent Assignment" tab in `modMarkerGenetics.R` (`PROJECT_LEARNINGS.md` Learning 494). **Slice
+      1** (core function) DONE S496: new `markerParentageLikelihood()` + `.markerAlleleFrequencyTable()`,
+      extracting a shared `.markerOppositeHomozygoteCount()` helper from `markerParentageExclusion()`
+      (Learnings 495-496). **Slice 2** (UI + docs) DONE, issue closed -- S498 (2026-08-09). See
+      `CHANGELOG.md`.)
 
-**Progress (S519, 2026-08-11):** the Deferred/scientific tier's second item -- issue #153's own
-design/architecture document (linkage-aware and haplotype-block metrics for marker data) -- is DONE
-and RATIFIED: see `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md`. Two parallel
-background research agents (codebase inventory: confirmed no marker function treats loci as
-ordered/positioned, and confirmed `checkMarkerGenotypeFile()` hard-rejects multiallelic loci;
-domain research: locus-order metadata realism, rhesus genetic-map resources, classical LD/
-haplotype-block methods, CRAN package survey, recombination-aware kinship literature,
-coverage-reporting precedent, privacy implications) plus direct re-verification of the two most
-load-bearing findings (`R/checkMarkerGenotypeFile.R:68-78`'s biallelic-only rejection; #152's D3/D4
-decisions verbatim). Central findings: a directly-sourced real captive-macaque-colony STR panel (de
-Groot et al. 2025, 23 microsatellite markers) has essentially no cM genetic-map data and is
-multiallelic -- both facts collide with this package's current assumptions (loci currently
-unordered/unpositioned everywhere; ingestion hard-rejects >2-allele loci); every classical LD/
-haplotype-block method assumes an unrelated/randomly-mating sample, which a pedigreed colony
-violates (Excoffier & Slatkin 1998), while the one genuinely pedigree-native method (Lander-Green
-multipoint IBD / MERLIN) isn't CRAN-available; haplotype/block-level exports are MORE
-re-identifying than single-locus data, not less (Lin, Owen & Altman 2004; Erlich & Narayanan 2014).
-Nine design decisions (D1-D9); four genuine judgment calls (D3 metric choice, D4 multiallelic
-ingestion, D5 module boundary, D8 CRAN-vs-hand-roll) ratified via a single `AskUserQuestion` round
--- owner selected this document's own recommended option in all four: build both a pedigree-valid
-primary metric (Hill & Weir 2011-style realized-relatedness variance) and a caveated descriptive
-secondary metric (pairwise D'/r², same-chromosome pairs only); add a new multiallelic-tolerant
-sibling ingestion validator rather than reuse the existing biallelic-only path; a new tab inside the
-existing `modMarkerGenetics.R`, not a dedicated new module; hand-roll the D'/r² computation in base
-R rather than add a CRAN dependency. Scoped as 5 future vertical slices (locus-metadata ingestion +
-STR fixture; multiallelic-tolerant ingestion path; the realized-relatedness-variance metric,
-requiring its own literature deep-dive first; the descriptive LD statistic + de-identification
-primitive; full module tab + documentation), each its own future session. No code changed this
-session -- design/planning only, matching the #133/#136/#137/#145/#146/#147/#149/#150/#151/#152
-precedent. Issue #153 intentionally left open. **Next in the ratified Deferred-tier order: #148
-(MHC haplotype-specific frequency reporting) still needs its own scope-narrowing conversation first,
-per the sequencing audit's Finding #4, before a design document analogous to this one and #152's can
-be written for it.** See `CHANGELOG.md`.
+- [ ] (none remaining -- issue #149 (reviewed cross-center identity-mapping workflow with provenance
+      export, Tier 2) is RESOLVED, both slices shipped: design ratified S503
+      (`docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md`) -- a 2-agent
+      adversarial review found and fixed a real data-loss defect (`resolveCrossCenterIds()`'s merge
+      step silently dropped every non-`id`/`sire`/`dam` column for merged individuals, about to
+      become curator-visible via the new CSV export -- now D10) plus a design-consistency gap (the
+      conflict-check helper's row lookup silently depended on an unstated `pedB` id-rewrite order,
+      fixed in D2). `PROJECT_LEARNINGS.md` Learning 502. **Slice 1** (validation core) DONE S504: new
+      `checkCrossCenterMapping()` + 8 shared internal helpers extracted from `resolveCrossCenterIds()`;
+      the D10 data-loss fix shipped as an explicit, `NEWS.Rmd`-documented behavior change (Learning
+      503). **Slice 2** (full UI, confirm gate, exports) DONE S505, closing #149: new
+      `R/modCrossCenterIdentity.R` module (this app's first `modalDialog()` confirm gate), 5
+      downloadable export artifacts, live `shinytest2` smoke test confirmed both named Dragons
+      (modal rendering under bslib; `NA`-cell rendering) (Learning 504). See `CHANGELOG.md`.)
+
+- [ ] (none remaining -- issue #146 (configurable/exhaustive breeding-group candidate retention, Tier
+      2) is RESOLVED, both slices shipped: design ratified S507
+      (`docs/planning/issue146-configurable-exhaustive-breeding-group-retention-plan.md`,
+      `PROJECT_LEARNINGS.md` Learning 506) -- an original empirical benchmark found lower-kinship
+      (more diverse) candidate pools are the SLOWER case for exhaustive enumeration (n=20 @ 5%
+      density: 5.5s; n=25: >60s), and that the real `qcBreeders` fixture already produces 1000
+      distinct partitions across 1000 trials at `numGp=2`, together grounding a `numGp==1`-only
+      scope. **Slice 1** (mechanical `maxCandidates` parameterization on `groupAddAssign()`, default
+      5, `R/groupAddAssign.R:200`) DONE S508. **Slice 2** (exhaustive enumeration mode) DONE S510,
+      closing #146: new `.enumerateMaximalIndependentSets()` (hand-rolled Bron-Kerbosch, Bron &
+      Kerbosch 1973 / Tomita et al. 2006, no new dependency) + a Breeding Group Formation tab
+      **Exhaustive enumeration mode** checkbox toggle; live `shinytest2` smoke test confirmed both
+      the completed and hidden (ineligible) cases. See `CHANGELOG.md`.)
+
+- [ ] (none remaining -- issue #151 (individual mate-pair analysis alongside breeding-group
+      optimization, Tier 2) is RESOLVED, both slices shipped: design ratified S511
+      (`docs/planning/issue151-individual-mate-pair-analysis-plan.md`) -- reused the existing
+      pair-eligibility pipeline (`kinMatrix2LongForm()`/`filterPairs()`/`filterAge()`) unmodified,
+      captured `modMarkerGeneticsServer()`'s previously-discarded `markerKinshipMatrix` reactive, and
+      ratified raw sortable columns with no invented composite score (no such ranking precedent
+      exists anywhere in the package). **Slice 1** (core `reportMatePairs()`, script-callable) DONE
+      S512. **Slice 2** (new "Mate Pair Analysis" tab, `R/modMatePair.R`, wiring the marker-kinship
+      capture) DONE S513, closing #151 -- fixed a real 0-row-crash bug found along the way in
+      `reportMatePairs()`; live E2E smoke test (8/8 assertions) confirmed the marker-kinship wiring.
+      `PROJECT_LEARNINGS.md` Learnings 513-514. See `CHANGELOG.md`.)
+
+- [ ] (none remaining -- issue #150 (de-identified pedigree export workflow for approved data
+      sharing, Tier 3 policy-gated) is RESOLVED, both slices shipped: owner approved formalizing this
+      via `AskUserQuestion` before any technical research (sequencing audit Finding #3); design
+      ratified S514 (`docs/planning/issue150-deidentified-pedigree-export-plan.md`,
+      `PROJECT_LEARNINGS.md` Learning 516) -- found and scoped a real defect: `obfuscatePed()`'s
+      independent per-Date-column shift could invert an individual's birth/exit order and produce a
+      negative age. **Slice 1** (core function) DONE S515: new `linkedDateShift` parameter (default
+      `TRUE`) on `obfuscatePed()` fixes the defect (invariance-tested, not just bounds-checked); new
+      `.buildDeidentificationManifest()` helper. **Slice 2** (full UI module, confirm gate, exports)
+      DONE S516, closing #150: new `R/modDeidentifiedExport.R` module (3 downloads: de-identified
+      pedigree, manifest, re-identification key), reusing Cross-Center Identity's `modalDialog()`
+      confirm-gate shape. See `CHANGELOG.md`.)
+
+- [ ] (none remaining -- issue #153 (linkage-aware and haplotype-block metrics for marker data,
+      Deferred/scientific tier) is RESOLVED, all 5 slices shipped: design ratified S519
+      (`docs/planning/issue153-linkage-haplotype-block-metrics-plan.md`) -- found a real captive
+      -macaque STR panel (de Groot et al. 2025) has no cM genetic-map data and is multiallelic, and
+      that classical LD/haplotype-block methods assume unrelated sampling, violated by a pedigreed
+      colony (Excoffier & Slatkin 1998); haplotype/block-level exports were also found to be MORE
+      re-identifying than single-locus data, not less (Lin, Owen & Altman 2004; Erlich & Narayanan
+      2014). Ratified building both a pedigree-valid primary metric (Hill & Weir 2011-style
+      realized-relatedness variance) and a caveated descriptive secondary metric (pairwise D'/r²,
+      same-chromosome only), plus a new multiallelic-tolerant ingestion path and a new tab inside
+      `modMarkerGenetics.R`. **Slice 1** (`checkLocusMetadata()` + a new 12-locus multiallelic STR
+      fixture) DONE S520. **Slice 2** (`checkLinkageMarkerGenotypeFile()`, multiallelic-tolerant
+      ingestion) DONE S521. **Slice 3** (`markerRealizedRelatednessVariance()`) DONE S522. **Slice
+      4** (`markerLdBlock()` + `obfuscateLdBlocks()`) DONE S523. (S521-523 each shipped without their
+      own `BACKLOG.md` narrative entry -- backfilled at S524 close-out, see `PROJECT_LEARNINGS.md`
+      for that gap.) **Slice 5** (a 6th "Linkage and LD Block Metrics" tab in `modMarkerGenetics.R`,
+      curator-controlled LD-block export reusing issue #150's confirm-gate pattern) DONE S524,
+      closing #153. See `CHANGELOG.md`.)
 
 **Progress (S517, 2026-08-11):** the Deferred/scientific tier's first item -- issue #152's own
 design/architecture document (whole-genome/whole-exome sequence input + sequence-based genetic
@@ -1497,73 +1094,6 @@ matching the #133/#136/#137/#145/#146/#147/#149/#150/#151 precedent. Issue #152 
 open. **Next in the ratified Deferred-tier order: #153 (linkage-aware/haplotype-block metrics), which
 can now reuse this session's own `locusMetadata` vocabulary; #148 (MHC) still needs its own
 scope-narrowing conversation first, per the sequencing audit's Finding #4.** See `CHANGELOG.md`.
-
-**Progress (S520, 2026-08-11):** Issue #153 Slice 1 -- locus-metadata ingestion + coverage validator
-+ a new multiallelic STR fixture -- is now DONE, per
-`docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` sec 5 Slice 1. Full strict TDD
-PRE-RED->RED->GREEN->REFACTOR cycle, each transition `AskUserQuestion`-gated (REFACTOR:
-owner-confirmed no candidate identified, matching the S515 precedent). New `checkLocusMetadata()`
-(D7, this session authored the canonical validator since #152's own Slice 1 has not shipped yet --
-sec 7 Dragon 1's own predicted ordering risk) validates a `locus, chrom, pos[, cM]` sidecar table
-and classifies each locus into D2's literal three-tier coverage definition ("full" = chrom AND pos
-present, cM optional; "partial" = exactly one of chrom/pos; "none" = neither), via a lookup-table
-implementation (not nested `ifelse()`, `nested_ifelse_linter` clean). New
-`data-raw/generate_str_fixtures.R` (mirrors `generate_twin_fixtures.R`'s fail-loudly-at-generation-
-time discipline, `set_seed(153L)`) generates a 12-locus/8-chromosome/10-individual multiallelic STR
-panel shaped on de Groot et al. 2025's real panel (not its literal data -- fully fabricated, sec 7
-Dragon 2), 8 full/2 partial/2 none coverage loci, 2 genuinely multiallelic (3+ allele) loci --
-committed as `inst/extdata/examples/example_locus_metadata.csv` /
-`example_str_marker_genotypes.csv`, the package's first bundled long-format multiallelic marker
-fixture at any scale (sec 2.8's confirmed gap). 10 new `test_that` blocks / 16 expectations in
-`tests/testthat/test_checkLocusMetadata.R`, including a fixture-scale proof that the existing,
-UNMODIFIED `buildMarkerGenotypeMatrix()` pivots multiallelic genotypes without error (D4's structural
-claim, empirically confirmed -- the biallelic restriction lives entirely in
-`checkMarkerGenotypeFile()`, deliberately not called on this fixture, matching Slice 2's own future
-scope). Full clean regression suite 0 failed/0 error (5249 passed, 15 pre-existing warnings
-unchanged); `devtools::check()` 0 errors/0 warnings/1 pre-existing note (unrelated, matching
-baseline); `lintr::lint_package()` 0 lints on touched files (fixed 1 real `nested_ifelse_linter` +
-several `implicit_integer_linter`/`line_length_linter` findings in `data-raw/
-generate_str_fixtures.R`, matching this project's own house style). Fixed the `_pkgdown.yml`
-reference-coverage guard (new exported function added to the "All exposed functions" catch-all
-group). `NEWS.Rmd`/`NEWS.md` updated (new exported function checklist). Citation checklist (issue
-#120) and tutorial/article checklist (Session 436) do NOT yet apply -- no UI/displayed statistic
-this slice, matching the #146/#149/#150/#151 Slice-1-only precedent (verified via `git log` on
-`population_genetics_terms.html`, last touched only by UI-shipping slices). **Issue #153 stays open
--- Slice 2 (the multiallelic-tolerant `checkLinkageMarkerGenotypeFile()` ingestion path, D4) is the
-next planned slice**, a separate future session per the plan's own session-boundary requirement. See
-`CHANGELOG.md`.
-
-**Progress (S521, 2026-08-11):** Slice 2 (`checkLinkageMarkerGenotypeFile()`, D4) DONE. **Progress
-(S522, 2026-08-11):** Slice 3 (`markerRealizedRelatednessVariance()`, the pedigree-valid
-realized-relatedness-variance metric, D3a) DONE. **Progress (S523, 2026-08-11/12):** Slice 4
-(`markerLdBlock()` + `obfuscateLdBlocks()`, the descriptive LD/block statistic and its
-de-identification primitive, D3b/D8/D9) DONE. (Backfilled here at S524 close-out -- neither S521 nor
-S522 nor S523 added their own narrative entry to this file, the gap `PROJECT_LEARNINGS.md` records as
-this session's own finding; see `CHANGELOG.md` for each slice's own full, contemporaneous
-close-out record.)
-
-**Progress (S524, 2026-08-12):** Slice 5 -- full module tab, wiring, documentation -- is now DONE,
-per `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` sec 5 Slice 5. A sixth
-"Linkage and LD Block Metrics" tab in `modMarkerGenetics.R` (D5, D6) wires in the locus-metadata
-coverage report (`checkLocusMetadata()`, Slice 1), the primary realized-relatedness-variance table
-(`markerRealizedRelatednessVariance()`, Slice 3), and the secondary LD-block table behind a
-persistent, non-dismissable caveat banner (`markerLdBlock()`, Slice 4) -- plus curator-controlled
-export wiring for the LD-block table reusing issue #150's confirm-gate pattern
-(`obfuscateLdBlocks()`, D9). A dedicated `linkageGenotypeFile` upload, independent of the other five
-tabs' shared `genotypeFile`, replaced the original PRE-RED plan to reuse that shared upload --
-found empirically this session that Shiny renders every `tabPanel`'s output bindings regardless of
-which tab is visible, so a multiallelic file fed through the shared input broke the other five tabs'
-own DT outputs simultaneously (see `PROJECT_LEARNINGS.md`). Full strict TDD PRE-RED->RED->GREEN
-cycle (REFACTOR: no candidate identified), 18 new `test_that` blocks / test_moduleContract.R updated
-for 5 new returned reactives. Full clean regression 0 failed/0 error; `devtools::check()` 0
-errors/0 warnings/2 pre-existing NOTEs; `lintr::lint_package()` 0 lints. Live runtime smoke test via
-Chrome browser automation against the Slice 1 STR fixture confirmed the tab end to end (coverage
-report, LD-block values matching the hand-verified reference exactly, the founders-only
-restriction guard, the export confirm-gate's guidance states) -- see `CHANGELOG.md`. Tutorial/
-article checklist (Session 436) applied for the first time in this issue family: new
-`colony-manager-guide.qmd` "Linkage and LD Block Metrics" subsection with 2 new screenshots.
-**This cluster (issue #153, all 5 slices) is now fully complete; issue #153 closed** as part of
-this session's close-out. No further items remain in this narrative.
 
 **Progress (S525, 2026-08-11):** Issue #152 Slice 1 -- sequence ingestion + fixture -- is now
 DONE, per `docs/planning/issue152-sequence-input-genetic-metrics-plan.md` §5 Slice 1. Full strict

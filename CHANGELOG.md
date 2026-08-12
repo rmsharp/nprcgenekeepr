@@ -131,6 +131,52 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [BL-518] `BACKLOG.md` "Genetic-metrics PDF audit follow-ups" section compressed, S518 item RESOLVED (Session 531)
+- **Deliverable:** Compressed `BACKLOG.md`'s "Genetic-metrics PDF audit follow-ups" section (753
+  lines) per the S518 ledger-size housekeeping item -- the 3rd and last of its 3 oversized sections
+  (Housekeeping compressed S529; "Pedigree diagram vs kinship2" compressed S530). The intro-triage
+  bullet (issues #126/#127/#129/#130, all closed) plus 6 further independently-tracked closed-issue
+  narrative chains (#147, #149, #146, #151, #150, #153 -- each its own design-ratified ->
+  Slice-N-DONE -> issue-closed sequence) rewritten to `BACKLOG.md`'s own short-pointer convention;
+  the S479-S483 re-audit/sequencing context paragraph condensed while preserving every issue
+  number, tier assignment, and audit-doc pointer. The still-open issue #152 chain (design S517,
+  Slice 1 S525, Slice 2 S526, Slice 3 next) left fully untouched.
+- **Verification before compressing (Learning 535/536's discipline, applied at a larger scale):**
+  grepped `CHANGELOG.md` (+ both `docs/archive/CHANGELOG-through-*.md` shards) for all 39 cited
+  session numbers before trusting any "See CHANGELOG.md" pointer -- 0 gaps found. All Learning
+  cross-references and all 13 cited `docs/planning|audits/*` file paths confirmed to resolve via
+  direct grep.
+- **A real mid-session defect, found and fixed before close-out:** the first edit for issue #153's
+  chain replaced only its S519 design paragraph; 3 further paragraphs (S520 Slice 1, a combined
+  S521-523 recap, S524 Slice 5/close) sat elsewhere in the section and were left as now-redundant
+  duplicates of the new compressed bullet. Caught by the mandatory full re-read of the compressed
+  section before close-out (not during editing); fixed with a follow-up edit removing the
+  duplicated 66-line block, verified via `grep -n "Progress (S"` that only the still-open #152
+  chain's 3 paragraphs remained. `PROJECT_LEARNINGS.md` Learning 537.
+- Net: section 753→267 lines (486 removed); `BACKLOG.md` total 1,658→1,189 (469 net removed,
+  after this session's own progress notes added lines back elsewhere in the file). Zero information
+  loss verified by re-reading the full compressed section end-to-end (twice -- before and after the
+  duplication fix) before close-out.
+- `BACKLOG.md`'s own S518 tracking item is now fully RESOLVED: all 3 oversized sections compressed
+  across 3 sessions (Housekeeping S529 147→389 lines; "Pedigree diagram vs kinship2" S530 896→286
+  lines; "Genetic-metrics PDF audit follow-ups" S531 753→267 lines). File total 2,501 (S529 start)
+  → 1,189 lines (S531 end), a 1,312-line/52% reduction across the campaign.
+- Also folded in this session's own Phase 0 ledger reconcile (`HANDOFFS.md`'s S530 receipt `commit:
+  pending` → `e7feb28e`, see the entry below) before the priorities picker.
+- Documentation checklists (citation/tutorial/`NEWS.Rmd`/`a2interactive.Rmd`/`_pkgdown.yml`): N/A --
+  no exported function, no UI feature, no displayed statistic. Runtime smoke test (Phase 3E): N/A --
+  docs-only, no `R/`/`tests/`/`man/`/`NAMESPACE`/`data/` content touched (`git diff --stat` confirms
+  only `BACKLOG.md`/`CHANGELOG.md`/`PROJECT_LEARNINGS.md`/`SESSION_NOTES.md`/`HANDOFFS.md`).
+  `lintr::lint_package()`: N/A, no `.R` file touched. TDD RED/GREEN/REFACTOR: N/A throughout, per
+  `CLAUDE.md`'s Development Process Contract (no code or tests involved).
+
+### 2026-08-12 · [ad hoc] S531 Phase 0 reconcile: HANDOFFS.md S530 receipt commit: pending → e7feb28e (Session 531)
+- The S530 receipt's `commit:` field was necessarily `pending` at write time (the receipt ships in
+  the commit whose sha it would name) -- the same one-hop self-referential gap the S527→S528,
+  S528→S529, and S529→S530 reconciles each hit before it. `CHANGELOG.md`'s own frontier was already
+  `HEAD` (`e7feb28e`), so no undocumented commit gap existed; only the `HANDOFFS.md` receipt needed
+  backfilling.
+
 ### 2026-08-12 · [BL-518] `BACKLOG.md` "Pedigree diagram vs kinship2 audit follow-ups" section compressed (Session 530)
 - **Deliverable:** Compressed `BACKLOG.md`'s "Pedigree diagram vs kinship2 audit follow-ups" section
   (896 lines) per the S518 ledger-size housekeeping item -- the 2nd of its 2 remaining oversized

@@ -6,16 +6,100 @@
 
 ## ACTIVE TASK
 
+### Session 530 Handoff Evaluation (by Session 531)
+**Score: 9/10.** **What helped:** the `HANDOFFS.md` S530 receipt's `gotchas` field's point (3) --
+that the remaining "Genetic-metrics PDF audit follow-ups" section "mixes closed sub-threads with
+one still-open one (#152), so per-block judgment is required, not a single chain-wide replace" --
+was exactly correct and directly shaped this session's approach: read the full section first,
+identified 7 distinct per-issue narrative chains (6 closed, 1 still-open) rather than one
+continuous chain like S530's own section, and compressed each closed chain independently while
+leaving the #152 chain and its supporting S479-S483 context untouched. Point (1) (verify every
+cited session number/Learning/file path, not just a sample) and point (2) (suspect archive-shard
+structure before concluding a ledger catastrophe) were both directly reused, at a new scale (39
+session numbers, up from 31). The receipt's own line-count estimate (~753 lines) matched the
+actual section size closely. **What was missing:** the receipt could not have anticipated the
+section's actual internal shape (7 discrete per-issue chains vs. one continuous S480-S500-style
+narrative) since that requires reading the section itself, not something derivable from the prior
+session's own work -- reasonable to not expect in a receipt. **What was wrong:** nothing found --
+the receipt's risk framing, next_steps, and gotchas all held up against what this session actually
+found. **ROI:** High -- gotcha (3) in particular was the single most load-bearing piece of guidance
+for this session's compression strategy, correctly distinguishing "safe to compress" chains from
+the one that had to stay untouched.
+
 ### What Session 531 Did
-**Deliverable:** Compress `BACKLOG.md`'s "Genetic-metrics PDF audit follow-ups" section (~753
-lines, `BACKLOG.md:907-1659`) -- the 3rd and last of the S518 ledger-size-housekeeping item's
-oversized sections (Housekeeping compressed S529; "Pedigree diagram vs kinship2" compressed S530).
-(IN PROGRESS)
-**Started:** 2026-08-12.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Compressed `BACKLOG.md`'s "Genetic-metrics PDF audit follow-ups" section (753
+lines, `BACKLOG.md:907-1659` at session start) -- the 3rd and last of the S518
+ledger-size-housekeeping item's oversized sections (Housekeeping compressed S529; "Pedigree diagram
+vs kinship2" compressed S530). Owner-picked from this session's own Phase 0 priorities list (4
+options via `AskUserQuestion`) over issue #152 Slice 3, `inst/WORDLIST`, and `NEWS.Rmd` verbosity.
+**Started/Completed:** 2026-08-12.
+**Status:** DONE -- this was the last of the 3 sections; the S518 item itself is now fully
+RESOLVED.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, git status/log, `methodology_dashboard.py` -- health 96/100, 1 HIGH-risk category
+unchanged). Ledger reconcile: `CHANGELOG.md`'s frontier was already `HEAD`, but `HANDOFFS.md`'s
+S530 receipt still carried `commit: pending` -- reconciled to `e7feb28e` (the established one-hop
+case), committed separately (`e0ca1972`) before the session's claim. Rendered the priorities list
+via `AskUserQuestion` (4 options); owner picked the `BACKLOG.md` compression item directly (no
+second narrowing question needed -- only 1 section remained, unlike S530's 2-section choice).
+**(2)** Claimed the session (commit `107c9dbc`). TDD phase: N/A throughout -- no
+`R/`/`tests/`/`man/`/`NAMESPACE`/`data/` content touched, matching S529/S530 precedent. **(3)** Read
+the full 753-line section directly (3 `Read` calls) before editing, per the Safeguards
+read-before-edit rule. Identified the section's actual structure: an intro/triage paragraph, one
+combined bullet for issues #126/#127/#129/#130 (all closed), 6 further independently-tracked
+"design ratified -> Slice N DONE -> closes issue" narrative chains (#147/#149/#146/#151/#150/#153,
+all closed), a S479-S483 re-audit/sequencing context paragraph (still relevant, names the still-open
+items), and the still-open issue #152 chain (design S517, Slice 1 S525, Slice 2 S526, Slice 3
+next). **(4)** Before compressing, grepped `CHANGELOG.md` (+ both `docs/archive/CHANGELOG-through-*.md`
+shards, per Learning 536's discipline) for all 39 cited session numbers -- 0 gaps found. **(5)**
+Compressed the intro-triage-decision bullet and each of the 6 closed chains via individual targeted
+`Edit` calls; condensed the S479-S483 context paragraph while preserving every issue number, tier
+assignment, and audit-doc pointer; left the still-open #152 chain fully untouched. **(6)** A
+mid-session defect: the first `Edit` for issue #153's chain replaced only its S519 design paragraph
+(the new bullet already summarized all 5 slices), but 3 further paragraphs (S520 Slice 1, a
+combined S521-523 recap, S524 Slice 5/close) sat elsewhere in the section, unreplaced -- now
+redundant duplicates of the new bullet. **(7)** Caught this during the mandatory full re-read of
+the compressed section before close-out (not during editing itself); fixed with a second `Edit`
+removing the now-redundant 66-line block, verified via `grep -n "Progress (S"` that only the
+still-open #152 chain's 3 paragraphs remained. `PROJECT_LEARNINGS.md` Learning 537. **(8)** Updated
+`BACKLOG.md`'s own S518 tracking item in place with this session's progress AND a closing note that
+the item itself is now fully RESOLVED (all 3 sections done across S529/S530/S531). **(9)** Re-read
+the full compressed section end-to-end (267 lines) a second time after the duplication fix to
+verify no remaining information loss, no broken markdown, no truncated sentences (also spot-checked
+`**`-balance and inline-backtick-balance across the touched range programmatically). Verified every
+preserved `PROJECT_LEARNINGS.md` Learning cross-reference (24 total) and all 13 cited
+`docs/planning|audits/*` file paths resolve via direct grep (Phase 3F cross-reference check).
+**(10)** Close-out: `PROJECT_LEARNINGS.md` Learning 537 (the multi-paragraph-chain duplication
+defect and its fix). Documentation checklists (citation/tutorial/`NEWS.Rmd`/`a2interactive.Rmd`/
+`_pkgdown.yml`): N/A -- no exported function, no UI feature, no displayed statistic touched.
+Runtime smoke test (Phase 3E): N/A -- docs-only, `git diff --stat` confirms only `BACKLOG.md`
+(this deliverable) plus `SESSION_NOTES.md`/`HANDOFFS.md`/`CHANGELOG.md`/`PROJECT_LEARNINGS.md`
+(session-notes machinery) touched. `lintr::lint_package()`: N/A, no `.R` file touched.
+
+**Self-assessment (Session 531): 8/10.** **Strengths:** (1) Read the full section before forming a
+compression strategy, correctly identifying its actual shape (7 discrete per-issue chains, not one
+continuous narrative like S530's section) and adapting the approach accordingly, rather than
+assuming the prior session's own strategy (one big consolidated-summary replace) would transfer
+unchanged. (2) Applied the Learning 535/536 CHANGELOG-verification discipline at a larger scale (39
+session numbers) with 0 gaps found and 0 false alarms. (3) Caught and self-corrected the
+mid-session duplication defect via the mandatory end-to-end re-read, rather than shipping it or
+discovering it only via an external report -- and recorded it as a new, concretely actionable
+Learning (537) rather than a vague "be more careful" note. (4) Verified every cross-reference
+(Learnings and file paths) before close-out, and closed out the parent S518 tracking item itself
+now that all 3 of its sections are done, rather than leaving that summary judgment for a future
+session to reconstruct. **Weaknesses:** (1) The duplication defect itself (item 6 above) was a real
+execution mistake, not merely a close call -- a `grep -n "Progress (S"` scoped to the #153 chain's
+own issue number BEFORE starting its `Edit` (rather than only visually parsing the chain during the
+initial top-to-bottom read) would have caught the non-contiguous 4-paragraph shape upfront and
+avoided the mistake entirely, rather than relying on the end-to-end re-read to catch it after the
+fact. This is the direct reason for the self-score below 9: the countermeasure worked, but the
+mistake should not have happened in the first place, and Learning 537 exists specifically because
+this was foreseeable. (2) Did not re-verify the still-open #152/#148 threads for currency (e.g.,
+whether #148's own scope-narrowing conversation has since occurred) -- correctly out of scope for a
+"leave open items untouched" compression pass, matching S529/S530's own identical limitation.
+**Ledger:** recorded in `CHANGELOG.md` across 3 entries this session (the S530 `commit: pending`
+reconcile, this session's own compression deliverable, this handoff's own commit).
 
 ### Session 529 Handoff Evaluation (by Session 530)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S529 receipt's `next_steps` field named both
