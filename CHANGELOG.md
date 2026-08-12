@@ -131,6 +131,43 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] S528 close-out: methodology_trim.py `\b` regex defect fixed (Session 528)
+- **Deliverable:** Fixed the `methodology_trim.py` `SESSION_NOTES.md` `LEDGERS.record_start` regex's
+  trailing `\b` boundary bug (found/filed S527, `BACKLOG.md` Housekeeping, READY, Effort S). Moved
+  `\b` so it guards only the `What Session \d+ Did` branch instead of sitting after the whole
+  alternation — `record_start = re.compile(r"^### (?:Session \d+ Handoff Evaluation \(by Session
+  \d+\)|What Session \d+ Did\b)")`. The `Handoff Evaluation (by Session N)` branch needed no `\b`
+  (already ends unambiguously in `)`); the alternative fix (dropping `\b` entirely) was considered
+  and rejected — it would also accept a hypothetical `"Didn't"`-style false match, which moving the
+  anchor avoids.
+- **TDD:** full RED→GREEN cycle, no refactor candidate (2-line diff). RED: direct `fence_scan()`/
+  `record_start` cross-check (the CLI's own dry-run was blocked by an unrelated `P1_UNDOCUMENTED`
+  gate on this session's own in-progress claim commit) showed 523 of 598 true headings matched (0 of
+  75 "Handoff Evaluation" headings). GREEN: 598 of 598, exact — confirmed both branches match and
+  the `"Didn't"`-style false-match guard remains intact (no such heading exists in the file today,
+  verified via `grep`). No existing Python test suite for `methodology_trim.py` in this repo
+  (matching S527's own precedent for this file) — RED/GREEN evidence captured via the tool's own
+  compiled regex and `fence_scan()`, not a new test file.
+- **`BACKLOG.md`:** the "record_start regex never matches Handoff Evaluation headings" item (found
+  S527) converted to the "(none remaining...)" resolved form. `PROJECT_LEARNINGS.md` Learning 534
+  (fix-tradeoff: move `\b` to the branch that needs it, don't drop it wholesale).
+- **Deferred, owner-picked:** the actual first `--write` archive of `SESSION_NOTES.md` — a future
+  session should re-run the tool's dry-run once `CHANGELOG.md` has caught up to this session's claim
+  commit, confirm the partitioned count reaches the true total, and only then trust `--write`.
+- Runtime smoke test: n/a — no `R/` file, no `tests/testthat/` file, no config/wiring touched; only
+  `methodology_trim.py` (a Python housekeeping tool, no runtime surface in the R package),
+  `SESSION_NOTES.md`, `HANDOFFS.md`, `BACKLOG.md`, `CHANGELOG.md`, `PROJECT_LEARNINGS.md` (all
+  markdown). `lintr::lint_package()`: N/A, no `.R` file touched. `_pkgdown.yml`/citation/tutorial/
+  `a2interactive.Rmd`/`NEWS.Rmd` checklists: all N/A — no export, no Shiny feature, no displayed
+  statistic. No GitHub issue tied to this `BACKLOG.md` item (housekeeping-only, not issue-tracked).
+
+### 2026-08-12 · [ad hoc] S528 claim: fix methodology_trim.py SESSION_NOTES.md record_start `\b` regex defect (Session 528)
+- **Claim only** — `SESSION_NOTES.md` stub + `HANDOFFS.md` `status: pending` receipt committed
+  (`aa4ca4a8`) before any technical work, per Phase 1B. Owner-picked fix approach (move `\b` to
+  guard only the `Did` branch, over dropping it entirely or holding/reporting only) and session
+  scope (fix + verify only, defer the actual `--write` archive) via `AskUserQuestion` before this
+  claim. See `BACKLOG.md` Housekeeping (found S527).
+
 ### 2026-08-12 · [ad hoc] Reconcile-on-read: HANDOFFS.md S527 receipt's `commit: pending` field (Session 528)
 - **Ledger reconcile (Phase 0 step 6):** `CHANGELOG.md`'s own frontier and `HANDOFFS.md`'s own
   frontier both already equal `HEAD` (`08669142`) — no undocumented commit gap. One residual: the

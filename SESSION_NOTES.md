@@ -6,19 +6,102 @@
 
 ## ACTIVE TASK
 
+### Session 527 Handoff Evaluation (by Session 528)
+**Score: 9/10.** **What helped:** the `HANDOFFS.md` S527 receipt's `next_steps` field named "File
+the newly-found `methodology_trim.py` `\b` regex defect (`BACKLOG.md` Housekeeping, found S527,
+READY, Effort S) -- drop the trailing `\b` or anchor it only on the branches' own trailing token,
+not the whole alternation" as directly pickable -- this session picked exactly that item, and the
+`gotchas` field's point (1) (the `\b`-after-alternation trap, with the exact mechanism) plus point
+(3) (which parts of `methodology_trim.py` are local/safe-to-edit vs. shared canonical logic) were
+both immediately useful: point (1) meant this session did not need to re-derive the root cause from
+scratch, and point (3) confirmed up front that this fix, unlike the fence-scanner bug, carries no
+"raise upstream first" question. The receipt's own two named fix candidates ("drop the trailing
+`\b`" vs. "anchor it only on the branches' own trailing token") were presented as an explicit
+`AskUserQuestion` choice this session, and picking the second (safer) one over the first is exactly
+the kind of decision the receipt equipped this session to make well -- see `PROJECT_LEARNINGS.md`
+Learning 534, which would not exist without that framing already being on the table. **What was
+missing:** nothing material -- the receipt's own `key_files` pointer (`methodology_trim.py`
+`LEDGERS["SESSION_NOTES.md"].record_start`, "not yet edited") was exactly the one line this session
+needed to change. **What was wrong:** the receipt's own `next_steps` literal "596" true-heading-count
+was already flagged by the receipt itself as likely stale ("re-derive via `grep -cE`... since more
+sessions will have appended by pickup time") -- and it was: this session's own pre-claim recount
+found 597 (later 598, after this session's own claim commit added one more "What Session Did"
+heading), confirmed the receipt's own caveat was correct to include, not a fault. **ROI:** High --
+the receipt named the exact next item, supplied the root-cause mechanism, the two candidate fixes,
+and the correct caveat about its own numbers going stale, leaving this session's actual work almost
+entirely to the fix-tradeoff decision itself (Learning 534) rather than any re-discovery.
+
 ### What Session 528 Did
 **Deliverable:** Fix the `methodology_trim.py` `SESSION_NOTES.md` `LEDGERS.record_start` regex's
-trailing `\b` boundary bug (found and filed S527, `BACKLOG.md` Housekeeping, READY, Effort S) --
-the `\b` sits after the whole alternation, so it can never match the "Handoff Evaluation (by
-Session N)" branch (always ends in a non-word `)`), silently excluding all 75 real "Handoff
-Evaluation" headings (as of this session's own pre-claim recount) from the tool's record
-partition, independent of the fence-scanner defect S527 already fixed. Owner-picked from this
-session's own Phase 0 priorities list (4 options via `AskUserQuestion`) over issue #152 Slice 3,
-the `BACKLOG.md` ledger-size compression, and the `inst/WORDLIST` gap.
-**Started:** 2026-08-12.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+trailing `\b` boundary bug (found and filed S527, `BACKLOG.md` Housekeeping, READY, Effort S).
+Owner-picked from this session's own Phase 0 priorities list (4 options via `AskUserQuestion`) over
+issue #152 Slice 3, the `BACKLOG.md` ledger-size compression, and the `inst/WORDLIST` gap.
+**Started/Completed:** 2026-08-12.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue
+list`, git status/log, `methodology_dashboard.py` -- health 96/100, 1 HIGH-risk category unchanged).
+Ledger reconcile: `CHANGELOG.md`/`HANDOFFS.md` frontiers both already `HEAD` (`08669142`) -- no
+undocumented commit gap, but S527's own `HANDOFFS.md` receipt still carried `commit: pending` (the
+same self-referential one-hop case S527 itself hit for S526); reconciled to `08669142`, committed
+separately (`bf9e55ac`) before the session's own claim. Rendered the priorities list via
+`AskUserQuestion` (4 options: the `\b` regex fix, issue #152 Slice 3, `BACKLOG.md` compression,
+`inst/WORDLIST`); owner picked the `\b` regex fix. **(2)** Investigated the defect directly before
+claiming (root-caused, not trusted from the `BACKLOG.md`/`PROJECT_LEARNINGS.md` prose): confirmed
+via a direct Python `pattern.match()` test against a real "Handoff Evaluation" line that the current
+regex returns `None` (the bug), and derived two candidate fixes (drop `\b` entirely vs. move it
+inside only the `Did` branch), verifying BOTH matched all 597 real headings at that point AND
+diverged on a hypothetical `"Didn't"`-style false-match case (confirmed absent from the file via
+`grep`) that only the second candidate correctly rejects. Presented via `AskUserQuestion`: fix
+approach (move `\b` inside the `Did` branch, recommended and picked, over dropping it entirely or
+holding/reporting only) and session scope (fix + verify only, recommended and picked, over also
+running the actual `--write` archive this session). **(3)** Claimed the session (commit `aa4ca4a8`)
+before any technical work. **(4)** TDD PRE-RED->RED gate (`AskUserQuestion`, approved): RED = capture
+the current broken state via a direct `fence_scan()`/`record_start` cross-check (the CLI's own
+dry-run was blocked by an unrelated `P1_UNDOCUMENTED` gate on this session's own in-progress claim
+commit, orthogonal to the regex defect) -- confirmed 523 of 598 true headings matched (0 of 75
+"Handoff Evaluation" headings; the "What Session Did" count grew to 598 total / 523 matched because
+this session's own claim commit added one more "What Session 528 Did" heading between the pre-claim
+recount and RED). **(5)** GREEN: applied the 1-line regex edit at `methodology_trim.py:239-240`
+(moved `\b` from after the whole alternation to inside only the `Did` branch) plus an explanatory
+comment. Re-verified via the same `fence_scan()`/`record_start` cross-check: `598` of `598` true
+headings matched, exact -- both branches confirmed matching via direct `pattern.match()` tests, and
+the `"Didn't"`-style false-match guard confirmed still intact. **(6)** TDD GREEN->REFACTOR gate
+(`AskUserQuestion`): no candidate -- a 1-line regex edit plus a comment has no refactor surface;
+owner confirmed, proceeded to close-out. **(7)** Close-out: `BACKLOG.md`'s resolved `\b`-regex item
+converted to the "(none remaining...)" form (matching the fence-scanner item's own convention) with
+the full verified fix folded in, including the deferred `--write` archive note. `PROJECT_LEARNINGS.md`
+Learning 534 (the fix-tradeoff: move `\b` to the branch that needs it, don't drop it wholesale --
+verified against a hypothetical false-match case the deleted-anchor candidate would have silently
+reintroduced). Runtime smoke test (Phase 3E): n/a -- no `R/` file, no `tests/testthat/` file, no
+config/wiring touched; `methodology_trim.py` is a Python housekeeping tool with no R-package runtime
+surface. `lintr::lint_package()`: N/A, no `.R` file touched. `_pkgdown.yml`/citation/tutorial/
+`a2interactive.Rmd`/`NEWS.Rmd` checklists: all N/A -- no export, no Shiny feature, no displayed
+statistic. No GitHub issue tied to this `BACKLOG.md` item (housekeeping-only, not issue-tracked).
+
+**Self-assessment (Session 528): 8/10.** **Strengths:** (1) Did not trust the `BACKLOG.md`/
+`PROJECT_LEARNINGS.md` prose's own "596"/"74" figures at face value -- re-derived the current
+counts directly (Python `grep`-equivalent scan) both before claiming and again at RED, catching that
+the true totals had already drifted (597, then 598) since S527 wrote them, exactly as S527's own
+receipt warned they would. (2) Treated "both candidate fixes pass on real data today" as
+insufficient evidence on its own -- explicitly constructed and tested a hypothetical adjacent
+false-match case (`"Didn't"`) neither candidate's real-data test would have surfaced, and let that
+distinguish the two candidates rather than picking arbitrarily or defaulting to the textually
+simpler option (dropping `\b` entirely). (3) Used the tool's own `fence_scan()`/`record_start`
+machinery directly for RED/GREEN evidence when the CLI's own dry-run was blocked by an unrelated
+gate (`P1_UNDOCUMENTED`), rather than either forcing the CLI to run somehow or treating the block as
+a reason to skip RED/GREEN verification. (4) Kept the fix minimal (1 regex line + comment, no
+surrounding code touched) and confirmed via `git diff` before running any verification. **Weaknesses:**
+(1) Did not attempt to actually resolve the `P1_UNDOCUMENTED` CLI block this session (e.g. by
+recording the claim commit in `CHANGELOG.md` before running RED/GREEN) -- worked around it via the
+direct Python cross-check instead, which is faithful evidence but means this session never actually
+saw the CLI's own dry-run output print a passing "598 record(s) partitioned" line end-to-end; that
+confirmation is deferred to a future session per this session's own close-out note. (2) Did not
+verify whether any OTHER `LEDGERS` entry in `methodology_trim.py` (beyond `SESSION_NOTES.md`'s) has
+a similar `\b`-after-alternation shape that could hit the same class of bug -- out of scope for this
+session's narrow fix, but an unverified adjacent question left for whoever next touches this file.
+**Ledger:** recorded in `CHANGELOG.md` across 3 entries this session (the S527 `commit: pending`
+reconcile, this session's claim, the fix/close-out).
 
 ### Session 526 Handoff Evaluation (by Session 527)
 **Score: 6/10.** **What helped:** the `HANDOFFS.md` S526 receipt's `next_steps` field named "the

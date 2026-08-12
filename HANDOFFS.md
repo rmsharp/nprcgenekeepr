@@ -123,20 +123,57 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S528
 date: 2026-08-12
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 8
+predecessor_score: 9
 active_task: Fix the methodology_trim.py SESSION_NOTES.md LEDGERS.record_start regex's trailing \b
-boundary bug (found/filed S527, BACKLOG.md Housekeeping, READY, Effort S).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+boundary bug (found/filed S527, BACKLOG.md Housekeeping, READY, Effort S) is DONE.
+what_was_done: Moved the trailing \b in methodology_trim.py:239-240 so it guards only the "What
+Session \d+ Did" branch instead of sitting after the whole alternation --
+record_start = re.compile(r"^### (?:Session \d+ Handoff Evaluation \(by Session \d+\)|What Session
+\d+ Did\b)"). Verified via direct fence_scan()/record_start cross-check (the CLI's own dry-run was
+blocked by an unrelated P1_UNDOCUMENTED gate on this session's own in-progress claim commit): RED =
+523/598 true headings matched (0/75 Handoff Evaluation) -> GREEN = 598/598 exact. Confirmed the
+alternative fix (dropping \b entirely) would also have been GREEN on real data but would silently
+accept a hypothetical "Didn't"-style false match -- moving \b avoids that regression
+(PROJECT_LEARNINGS.md Learning 534). Commits: bf9e55ac (S527 commit: pending reconcile), aa4ca4a8
+(claim), plus this close-out's own commit.
+next_steps: Re-run python3 methodology_trim.py --file SESSION_NOTES.md once CHANGELOG.md has caught
+up to this session's own claim commit (the P1_UNDOCUMENTED gate that blocked the CLI's dry-run this
+session should clear once the ledger frontier advances past aa4ca4a8), confirm it reports "598
+record(s) partitioned" (or the then-current true total, re-derived via grep on the two heading
+patterns, not this literal), and only then consider the actual first --write archive of
+SESSION_NOTES.md -- deferred again this session, owner-picked, matching the S527 precedent of
+keeping the archive itself a separate, later action. Separately, remaining open Phase 0 priorities
+unchanged: issue #152 Slice 3 (F_ROH metric, READY, next per the ratified design doc);
+BACKLOG.md's own ledger-size housekeeping (READY, Effort L); inst/WORDLIST spelling gap (READY,
+Effort M, ~77 words); NEWS.Rmd verbosity drift (READY, Effort M, found S522); a2interactive.Rmd
+documentation pass (READY, Effort M, found S522); the stale inst/extdata/ Phase-4 BACKLOG.md header
+(trivial editorial fix, not yet filed as its own item, noted S527).
+key_files: methodology_trim.py:239-246 (LEDGERS["SESSION_NOTES.md"].record_start, the fix + its
+explanatory comment); BACKLOG.md Housekeeping (the resolved \b-regex item); PROJECT_LEARNINGS.md
+Learning 534; SESSION_NOTES.md (unchanged by this session's fix -- only its own ACTIVE TASK section
+grew, per normal close-out).
+gotchas: (1) When a fix to a trailing \b-after-alternation bug ([[Learning 533]]-class defect) has
+two candidate one-line repairs (drop the anchor vs. move it inside the branch that needs it) and
+both pass on today's real data, test a hypothetical adjacent false-match case before picking --
+"matches everything real today" does not prove an anchor-deletion fix is safe (Learning 534). (2)
+methodology_trim.py's CLI dry-run refuses to print its partition count while any commit sits ahead
+of CHANGELOG.md's own frontier (P1_UNDOCUMENTED) -- this is EXPECTED and orthogonal to any
+LEDGERS-config defect being fixed in the same session; use a direct fence_scan()/record_start
+cross-check (import the module, call fence_scan() + spec.record_start.match() by hand) for RED/GREEN
+evidence when the CLI itself is gated this way, rather than treating the gate as a blocker to TDD
+verification. (3) methodology_trim.py's per-adopter LEDGERS entries are this project's own local
+config (safe to edit); its shared fence-scanning algorithm (_FENCE, fence_scan()) is canonical logic
+(do not patch locally without raising it upstream first) -- unchanged from S527's own note, still
+the relevant distinction for any future fix in this file.
+runtime_smoke: n/a -- no R/ file, no tests/testthat/ file, no config/wiring touched; methodology_trim.py
+is a Python housekeeping tool with no R-package runtime surface; only markdown otherwise touched
+(BACKLOG.md, CHANGELOG.md, PROJECT_LEARNINGS.md, SESSION_NOTES.md, HANDOFFS.md).
+changelog_ref: this session's own CHANGELOG.md entries (S527 commit: pending reconcile, S528 claim,
+close-out, 2026-08-12)
 commit: pending
 ```
-<claim stub -- filled at close-out>
 
 ```handoff
 session: S527
