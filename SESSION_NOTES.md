@@ -6,6 +6,12 @@
 
 ## ACTIVE TASK
 
+### What Session 525 Did
+**Deliverable:** Issue #152 Slice 1 -- sequence ingestion + fixture (IN PROGRESS)
+**Started:** 2026-08-11
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 523 Handoff Evaluation (by Session 524)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S523 receipt's `next_steps` field named "Issue
 #153 Slice 5 ... is next per the design doc §5 -- this is the first Shiny-UI slice in the issue #153

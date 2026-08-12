@@ -121,6 +121,24 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-10.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S525
+date: 2026-08-11
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Issue #152 Slice 1 -- sequence ingestion + fixture (script-callable only, no UI, no
+metric changes), per docs/planning/issue152-sequence-input-genetic-metrics-plan.md sec 5 Slice 1.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<prose pending -- filled at close-out>
+
+```handoff
 session: S524
 date: 2026-08-12
 status: complete

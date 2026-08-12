@@ -131,6 +131,16 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-11 · [issue #152] S525 claim: issue #152 Slice 1 (sequence ingestion + fixture) (Session 525)
+- **Deliverable:** Session claimed. Issue #152 Slice 1 -- `checkSequenceGenotypeFile()` (D2/D4),
+  reusing the already-shipped `checkLocusMetadata()` (D3, shipped as issue #153 Slice 1) for the
+  locus-metadata sidecar, plus a new `data-raw/` fixture-generation script and its committed
+  `inst/extdata/examples/` CSV pair, per `docs/planning/issue152-sequence-input-genetic-metrics-plan.md`
+  §5 Slice 1. Picked from this session's own Phase 0 priorities list (owner choice via
+  `AskUserQuestion`) over 3 other candidates (the `methodology_trim.py` fence-scanner fix,
+  `a2interactive.Rmd` documentation pass, `inst/WORDLIST` spelling gap).
+- **Status:** IN PROGRESS -- claim only, no implementation yet this entry.
+
 ### 2026-08-12 · [issue #153] S524 close-out: Slice 5 (full module tab, wiring, documentation) shipped -- issue #153 closed (Session 524)
 - **Deliverable:** Issue #153 Slice 5, per `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md`
   §5 Slice 5 -- the final slice in this issue's 5-slice family. A sixth "Linkage and LD Block
