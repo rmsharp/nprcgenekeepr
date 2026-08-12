@@ -123,11 +123,62 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S530
 date: 2026-08-12
-status: pending
-active_task: Compress BACKLOG.md's "Pedigree diagram vs kinship2 audit follow-ups" section
-(~896 lines, BACKLOG.md:552-1448) -- 2nd of the S518 item's 2 remaining sections, continuing S529's
-own Housekeeping-section convention. Owner-picked over the sibling "Genetic-metrics PDF audit"
-section (higher-risk, active issue #152 thread) via AskUserQuestion.
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: BACKLOG.md's "Pedigree diagram vs kinship2 audit follow-ups" section (896 lines) is
+compressed and DONE. BACKLOG.md's own S518 ledger-size-housekeeping item stays open -- 1 section
+remains ("Genetic-metrics PDF audit follow-ups," ~753 lines, higher-risk since issue #152's thread
+is still active), flagged as its own future session.
+what_was_done: Compressed 12 fully-resolved bulleted items (issues #131/#134/#135/#139, the Option 2
+kinship2-parity layout's feasibility study + design + 3 implementation slices, the duplicate-node-arc
+fix, issues #143/#144) to BACKLOG.md's own short-pointer convention. Condensed a ~375-line unbulleted
+S480-S500 Progress-narrative chain (Tier 1: 2 crash-bug fixes + issue #145's spike + a stale-doc
+refresh; Tier 2: issues #133/#136/#137/#145, each design-ratified then implemented across 1-3 slices,
+all now closed) into one ~50-line consolidated summary retaining every session number, design-doc
+path, and Learning cross-reference. Left the 4 genuinely-open items (Candidate C's connector idea;
+node-count-off-by-one; fixture-docstring mismatch; highlightNearest degree=6 bound) and 2 already-
+short resolved pointers untouched. Verified all 31 cited session numbers (S440-S500) against
+CHANGELOG.md before compressing (Learning 535's discipline) -- 0 gaps found, but only after
+discovering the naive single-file grep undercounts because CHANGELOG.md has been archived twice
+(docs/archive/CHANGELOG-through-2026-08-10.md, -2026-08-11.md); re-grepping across the live file
+plus both shards found all 31 real. PROJECT_LEARNINGS.md Learning 536. Also reconciled HANDOFFS.md's
+S529 receipt at Phase 0 (commit: pending -> 73327ca1, the established one-hop case; also dropped a
+leftover unfilled prose placeholder). Net: section 896->286 lines; BACKLOG.md total 2,254->1,658.
+Commits: b2d3c7f1 (S529 receipt reconcile), 77a50ca2 (claim), plus this close-out's own commit.
+next_steps: One future session remains for BACKLOG.md's own compression item (do NOT close it yet):
+"Genetic-metrics PDF audit follow-ups" (~753 lines) -- a single living tracker for issues
+#146/#147/#149/#150/#151/#153 (closed) PLUS the still-open issue #152 (Slice 3, F_ROH metric, is the
+next planned slice) -- higher risk than either section already done: most individual Progress blocks
+carry a CHANGELOG pointer even while the overall thread stays active, so a naive "compress everything
+with a pointer" pass would wrongly compress live content. That session should re-run a fresh
+inventory pass first (line numbers/counts will have drifted) rather than trust this session's own
+figures verbatim -- matching this session's own approach, and S529's before it. When verifying any
+CHANGELOG.md pointer for an older session, grep docs/archive/CHANGELOG-through-*.md shards too, not
+just the live file (Learning 536) -- the archive boundary will keep moving forward as more trims
+happen. Separately, unchanged Phase 0 priorities: issue #152 Slice 3 (F_ROH, READY); inst/WORDLIST
+spelling gap (READY, Effort M, ~69-77 words); NEWS.Rmd verbosity drift (READY, Effort M);
+a2interactive.Rmd doc pass (READY, Effort M).
+key_files: BACKLOG.md:552-837 (compressed "Pedigree diagram vs kinship2" section); BACKLOG.md's own
+S518 item (updated in place, not closed); CHANGELOG.md (this session's own deliverable entry + the
+S529 receipt reconcile entry, both under the 2026-08-12 dates); PROJECT_LEARNINGS.md Learning 536.
+gotchas: (1) A large narrative-chain compression (unlike a simple bullet-list compression) is a
+genuine editorial synthesis, not a mechanical shortening -- verify EVERY cited session number,
+Learning cross-reference, and file path survives the rewrite, not just a sample, since synthesis
+carries more paraphrase-drift risk than deleting verbose sentences from an otherwise-intact bullet.
+(2) When a CHANGELOG.md pointer-verification grep returns far more misses than expected (here: 31 of
+31, not a plausible FM #27 rate), suspect a structural cause (archiving) before concluding a
+project-wide ledger catastrophe -- check `grep -n "Archived.*record" CHANGELOG.md` and include any
+`docs/archive/CHANGELOG-through-*.md` shards in the re-check (Learning 536). (3) The remaining
+"Genetic-metrics PDF audit follow-ups" section is NOT like either section already compressed --
+unlike Housekeeping (simple bullets) or this section (a narrative chain that was entirely closed), it
+mixes closed sub-threads with one still-open one (#152), so per-block judgment is required, not a
+single chain-wide replace.
+runtime_smoke: n/a -- docs-only, no R/tests/man/NAMESPACE/data content touched; git diff --stat
+confirms only BACKLOG.md/CHANGELOG.md/PROJECT_LEARNINGS.md/SESSION_NOTES.md/HANDOFFS.md touched.
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12 (HANDOFFS.md reconcile, the
+Pedigree-diagram-section compression deliverable)
+commit: pending
 ```
 
 ```handoff

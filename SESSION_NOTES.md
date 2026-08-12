@@ -6,20 +6,93 @@
 
 ## ACTIVE TASK
 
+### Session 529 Handoff Evaluation (by Session 530)
+**Score: 9/10.** **What helped:** the `HANDOFFS.md` S529 receipt's `next_steps` field named both
+remaining `BACKLOG.md` sections explicitly, with an accurate relative-risk read ("Pedigree diagram vs
+kinship2" lower-risk, all 4 tracked issues closed; "Genetic-metrics PDF audit" higher-risk, issue
+#152's thread still active) -- this session's own scope-picker question reused that framing directly,
+and the owner's pick (the lower-risk section) matched the receipt's own implicit recommendation. The
+receipt's `gotchas` field's point (2) (the 2 remaining sections are NOT simple bullet lists like
+Housekeeping, both contain long unbulleted "Progress (S###, date):" narrative spans) was exactly
+correct and shaped this session's approach from the start -- expected a large narrative-chain
+compression, not a series of small bullet edits, before ever reading the section. **What was
+missing:** nothing material -- the receipt's own line-count estimate (~896 lines) matched the actual
+current section size closely enough to be useful for scoping, without this session needing to
+re-derive it before picking. **What was wrong:** nothing found -- unlike the S528→S529 evaluation,
+this session did not re-verify any specific numeric claim from the S529 receipt narrowly enough to
+catch a drift, but nothing in the receipt's own text was contradicted by this session's work either.
+**ROI:** High -- the receipt's risk framing for the 2 remaining sections was reused nearly verbatim in
+this session's own scope-decision `AskUserQuestion`, and its gotcha about narrative-chain (not
+bullet-only) content correctly set expectations for the compression approach before any reading began.
+
 ### What Session 530 Did
-**Deliverable:** Compress `BACKLOG.md`'s "Pedigree diagram vs kinship2 audit follow-ups" section
-(~896 lines, `BACKLOG.md:552-1448`) -- continuation of the S518 ledger-size-housekeeping item, 2nd
-of its 2 remaining sections, following S529's own established Housekeeping-section convention.
-Owner-picked from this session's own Phase 0 priorities list (4 options via `AskUserQuestion`) over
-issue #152 Slice 3, `inst/WORDLIST`, and `NEWS.Rmd` verbosity; then narrowed to this specific
-section (over "Genetic-metrics PDF audit follow-ups" or "inventory both first") via a second
-`AskUserQuestion` -- this section is the lower-risk of the two per S529's own note (all 4 tracked
-issues, #133/#136/#137/#145, are closed; the sibling section tracks still-open issue #152).
-**Started:** 2026-08-12.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Compressed `BACKLOG.md`'s "Pedigree diagram vs kinship2 audit follow-ups" section
+(896 lines, `BACKLOG.md:552-1447`) -- 2nd of the S518 ledger-size-housekeeping item's 2 remaining
+sections (Housekeeping compressed S529). Owner-picked from this session's own Phase 0 priorities list
+(4 options via `AskUserQuestion`) over issue #152 Slice 3, `inst/WORDLIST`, and `NEWS.Rmd` verbosity;
+then narrowed to this specific section (over "Genetic-metrics PDF audit follow-ups" or "inventory both
+first") via a second `AskUserQuestion`.
+**Started/Completed:** 2026-08-12.
+**Status:** DONE (this section only -- `BACKLOG.md`'s own S518 item stays open, 1 section remains).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, git status/log, `methodology_dashboard.py` -- health 96/100, 1 HIGH-risk category
+unchanged). Ledger reconcile: `CHANGELOG.md`'s frontier was already `HEAD`, but `HANDOFFS.md`'s S529
+receipt still carried `commit: pending` and a leftover unfilled `<prose pending>` placeholder --
+reconciled to `73327ca1` (the established one-hop case) and dropped the stale placeholder, committed
+separately (`b2d3c7f1`) before the session's claim. Rendered the priorities list via `AskUserQuestion`
+(4 options); owner picked `BACKLOG.md` housekeeping continuation, then the specific section via a
+second `AskUserQuestion`. **(2)** Claimed the session (commit `77a50ca2`). TDD phase: N/A throughout
+-- no `R/`/`tests/`/`man/`/`NAMESPACE`/`data/` content touched, matching S529's own precedent for
+docs-only deliverables. **(3)** Read the full 896-line section directly (4 `Read` calls) before
+editing, per the Safeguards read-before-edit rule. Identified 12 fully-resolved bulleted items, a
+~375-line unbulleted S480-S500 Progress-narrative chain (issues #133/#136/#137/#145/#154, all now
+closed), and 4 genuinely-open items. **(4)** Before compressing, grepped `CHANGELOG.md` for all 31
+cited session numbers (S440-S500) -- a first single-file grep returned 0 of 31 found, which traced to
+`CHANGELOG.md` having already been archived twice (`docs/archive/CHANGELOG-through-2026-08-10.md`,
+`docs/archive/CHANGELOG-through-2026-08-11.md`); re-running the grep across the live file plus both
+archive shards found all 31 present, 0 real gaps this time (unlike S529's 2-of-19). `PROJECT_LEARNINGS.md`
+Learning 536. **(5)** Compressed the 12 bulleted items via individual targeted `Edit` calls, then
+replaced the entire ~375-line S480-S500 narrative chain with one ~50-line consolidated summary
+retaining every session number, ratified design-doc path, and Learning cross-reference -- the single
+highest-value compression in the section. Left the 4 open items and 2 already-short resolved pointers
+untouched. **(6)** Updated `BACKLOG.md`'s own S518 tracking item in place (not closed -- 1 section
+remains) with this session's progress and line-count deltas. **(7)** Re-read the full compressed
+section end-to-end (286 lines) to verify no information loss, no broken markdown, no truncated
+sentences. Verified every preserved `PROJECT_LEARNINGS.md` Learning cross-reference and all 11 cited
+`docs/planning|audits|research/*` file paths resolve via direct grep (Phase 3F cross-reference check).
+**(8)** Close-out: `PROJECT_LEARNINGS.md` Learning 536 (the CHANGELOG-archive-shards verification
+finding). Documentation checklists (citation/tutorial/`NEWS.Rmd`/`a2interactive.Rmd`/`_pkgdown.yml`):
+N/A -- no exported function, no UI feature, no displayed statistic touched. Runtime smoke test
+(Phase 3E): N/A -- docs-only, `git diff --stat` confirms only `BACKLOG.md`/`CHANGELOG.md`/
+`PROJECT_LEARNINGS.md`/`SESSION_NOTES.md`/`HANDOFFS.md` touched. `lintr::lint_package()`: N/A, no
+`.R` file touched.
+
+**Self-assessment (Session 530): 9/10.** **Strengths:** (1) Applied Learning 535's verification
+discipline (grep `CHANGELOG.md` before trusting any pointer) at a larger scale (31 session numbers,
+not 2) and, when the naive single-file grep suggested a total ledger catastrophe, investigated the
+surprising result before acting on it rather than either trusting it (31 unnecessary backfills) or
+dismissing it -- found the real cause (archived shards) and recorded it as its own new learning rather
+than silently working around it. (2) Chose to condense the ~375-line unbulleted narrative chain into
+ONE consolidated summary rather than attempting per-paragraph edits, correctly judging that the
+chain's own internal structure (one paragraph per session, heavily cross-referential) made individual
+edits both riskier (more transcription surface) and less effective (would not achieve real compression
+since each paragraph's bulk is itself the target) than a single well-verified replacement. (3) Verified
+every cross-reference (Learning numbers AND doc-file paths) before close-out, not just Learning numbers
+alone, catching the class of gap S529's own close-out didn't have occasion to check (S529's Housekeeping
+compression cited fewer doc paths). (4) Re-read the full compressed section end-to-end before
+close-out, matching S529's own established verification step, rather than trusting each individual
+edit's own success in isolation. **Weaknesses:** (1) Did not re-verify the 4 still-open items in this
+section for currency (e.g., whether the node-count-off-by-one gap found S472 has since been
+investigated or superseded) -- correctly out of scope for a "leave open items untouched" compression
+pass, matching S529's own identical, explicitly-noted limitation for its own section's open items, but
+still an unexplored consolidation opportunity left for whoever eventually works those items. (2) The
+consolidated S480-S500 summary is a genuine editorial synthesis, not a mechanical shortening of
+existing sentences (unlike most of the 12 bulleted-item compressions) -- carries marginally higher risk
+of an unintentional paraphrase drift than the more mechanical edits, mitigated by the full re-read and
+Learning/file-path verification but not eliminated by them.
+**Ledger:** recorded in `CHANGELOG.md` across 3 entries this session (the S529 `commit: pending`
+reconcile, this session's own compression deliverable, this handoff's own commit).
 
 ### Session 528 Handoff Evaluation (by Session 529)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S528 receipt's `next_steps` field listed all 5

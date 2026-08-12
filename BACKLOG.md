@@ -468,16 +468,31 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       a dangling pointer that would have destroyed the only detailed record. Net: Housekeeping
       147→389 lines (263 removed); file total 2,501→2,238 (263 removed). Zero information loss
       verified by re-reading the full compressed section end-to-end before close-out.
-      **Still open -- 2 sections remain, each its own future session per this item's original
-      "budget it as its own session" guidance:** "Pedigree diagram vs kinship2 audit follow-ups"
-      (~896 lines, includes a ~375-line unbulleted Progress-narrative span tracking issues
-      #133/#136/#137/#145, all now closed -- compressible only as whole chains, not per-bullet) and
-      "Genetic-metrics PDF audit follow-ups" (~753 lines, a single living tracker for issues
-      #146/#147/#149/#150/#151/#153 plus the still-open issue #152 -- higher-risk: a naive
-      "compress everything with a CHANGELOG pointer" pass would wrongly compress active-thread
-      content, since most individual Progress blocks carry a pointer even while the overall thread
-      remains open). A future session picking either up should re-run a fresh inventory pass first
-      (line numbers/counts will have drifted) rather than trust this note's own figures verbatim.
+      **"Pedigree diagram vs kinship2 audit follow-ups" section DONE -- S530 (2026-08-12):** the
+      2nd of the item's 2 remaining sections. Compressed all 12 fully-resolved bulleted items (issues
+      #131/#134/#135/#139, Option 2 layout feasibility/design/3 implementation slices, the
+      duplicate-node-arc fix, issues #143/#144) to the file's own short-pointer convention, and
+      condensed the ~375-line unbulleted S480-S500 Progress-narrative chain (Tier 1 crash-bug fixes +
+      #145 spike + doc refresh; Tier 2 issues #133/#136/#137/#145, all closed) into one ~50-line
+      consolidated summary retaining every session number, design-doc path, and Learning
+      cross-reference. Verified `CHANGELOG.md` (+ its `docs/archive/CHANGELOG-through-*.md` shards)
+      actually carries an entry for all 31 session numbers cited before compressing to a pointer --
+      0 gaps found this time (unlike the Housekeeping section's 2). All Learning cross-references and
+      all 11 cited `docs/planning|audits|research/*` file paths confirmed to resolve. The 4 genuinely
+      -open items (Candidate C's connector idea; the 3 dangling-parent-crash-bugs and free-pass-filter
+      pointers, both already short; the node-count-off-by-one gap; the docstring-mismatch gap; the
+      `highlightNearest` degree=6 bound) left untouched. Net: section 896->286 lines (610 removed);
+      file total 2,254->1,658 (596 removed, after this session's own S518-item progress notes added
+      lines back elsewhere in the file). Zero information loss verified by re-reading the full
+      compressed section end-to-end before close-out.
+      **Still open -- 1 section remains, its own future session per this item's original
+      "budget it as its own session" guidance:** "Genetic-metrics PDF audit follow-ups" (~753 lines,
+      a single living tracker for issues #146/#147/#149/#150/#151/#153 plus the still-open issue
+      #152 -- higher-risk than either section already done: a naive "compress everything with a
+      CHANGELOG pointer" pass would wrongly compress active-thread content, since most individual
+      Progress blocks carry a pointer even while the overall thread remains open). A future session
+      picking it up should re-run a fresh inventory pass first (line numbers/counts will have
+      drifted) rather than trust this note's own figures verbatim.
 - [ ] **`inst/WORDLIST` has a large, long-standing gap -- `devtools::check()`'s spelling-check step
       fires a NOTE on every run** (found S521, 2026-08-11, READY, Effort M) -- confirmed via direct
       verification, not assumed: temporarily removing this session's own new files from the tree and
@@ -581,790 +596,186 @@ Diagram tab has zero tutorial/article coverage today. See `PROJECT_LEARNINGS.md`
 `CHANGELOG.md` for the full S436 triage record. None imply reopening issue #129 or revisiting the
 visNetwork-vs-kinship2 technology decision (D2), which stands as ratified.*
 - [ ] (none remaining -- **issue #131** (diagram image/print export, priority 1) is
-      RESOLVED: fixed S440 (2026-07-30). Added `visNetwork::visExport(type = "png",
-      name = "pedigree_diagram", label = "Export Diagram (PNG)")` to the existing pipe
-      chain in `R/modPedigree.R`'s `renderVisNetwork()` block -- zero new package
-      dependencies (`visExport()`'s JS libs -- FileSaver/Blob/canvas-toBlob/
-      html2canvas/jsPDF -- ship bundled inside `visNetwork` itself as htmlwidget
-      deps, confirmed offline/no-CDN hands-on; see `PROJECT_LEARNINGS.md` Learning
-      418). PNG chosen over PDF/JPEG via owner `AskUserQuestion` (`visExport()`
-      supports exactly one format per widget, confirmed from its R source -- not
-      additive). New unit test in `tests/testthat/test_modPedigree.R` asserts the
-      widget's JSON payload carries the export config. Documentation phase per
-      `CLAUDE.md`'s Tutorial/article documentation checklist: added a "Data Table
-      and Diagram" section to `vignettes/manual_components/_pedigree_browser.Rmd`
-      describing the Diagram tab and its new export button (scoped to this
-      session's feature only -- full Diagram-tab tutorial coverage remains issue
-      #139's separate scope). Verified: regression suite 0/0/0 (3290 passed, 182
-      skipped); `devtools::check()` 0 errors/0 warnings/0 notes; live
-      `shinytest2`/`chromote` runtime smoke test confirmed the button is genuinely
-      functional, not just error-free -- clicking it produced a real
-      `pedigree_diagram.png` file (17,374 bytes) with a valid PNG magic-number
-      signature, captured via the chromote session's own download-behavior
-      override (`PROJECT_LEARNINGS.md` Learning 419, since `get_download()`/
-      `expect_download()` don't apply to a purely client-side JS download with no
-      backing Shiny output). See `CHANGELOG.md`.)
+      RESOLVED: fixed S440 (2026-07-30) -- `visNetwork::visExport(type = "png", ...)`
+      added to `R/modPedigree.R`'s render chain, zero new package dependencies; live
+      `shinytest2`/`chromote` confirmed the button genuinely functional (real PNG
+      produced). See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 418/419.)
 - [ ] (none remaining -- **issue #134** (verify inbreeding-loop/consanguinity
       rendering, priority 4, resolves plan Dragon P2 / `PROJECT_LEARNINGS.md`
-      Learning 410) is RESOLVED: verified S453 (2026-08-02), audit-only, no
-      production code or tracked test-suite files changed. Data layer: a
-      synthetic 6-node half-sib-mating fixture confirmed `makePedigreeDiagramData()`
-      builds correct nodes/edges (no duplication, no drops) for a converging-DAG
-      loop, and `findGeneration()` correctly places it (not a cycle). Live layer:
-      found a real consanguineous-mating case already in the project's own bundled
-      E2E fixture (`inst/extdata/examples/obfuscated_rhesus_mhc_ped.csv` --
-      `GA204Z`, F=0.25, sire `8LKBV9` is also his maternal grandfather) rather than
-      inventing a second synthetic one; drove the shipped app end-to-end via
-      `shinytest2`/`chromote` (same `AppDriver` helpers `test-e2e-pedigree-module.R`
-      already uses) and queried the live `vis.js` `Network` instance's own
-      `DataSet`s directly -- confirmed no duplicate node, both loop edges present,
-      no dropped edge, zero console errors at any level, and (via the app's own
-      focal-animal+trim feature) a visually legible diamond-shaped render.
-      Conclusion: vis.js's hierarchical layout handles a real inbreeding loop
-      correctly per the plan's own P2 pass criteria. Closed via GitHub comment
-      (`https://github.com/rmsharp/nprcgenekeepr/issues/134#issuecomment-5155638782`).
-      See `CHANGELOG.md`.)
+      Learning 410) is RESOLVED: verified S453 (2026-08-02), audit-only. Confirmed
+      against a real consanguineous case in the bundled E2E fixture (`GA204Z`,
+      F=0.25) via live `shinytest2`/`chromote`: no duplicate/dropped node, 0
+      console errors, legible diamond-shaped render. vis.js's hierarchical layout
+      handles a real inbreeding loop correctly. See `CHANGELOG.md`.)
 - [ ] (none remaining -- **issue #135** (hover tooltips + search/highlight,
-      priority 5, resolves audit Recommendation #8) is RESOLVED: implemented
-      and live-verified S454 (2026-08-02). `makePedigreeDiagramData()`'s
-      nodes gain an HTML `title` field (ID/sex-spelled-out/generation/sire/
-      dam, HTML-escaped) for vis.js's native hover tooltip; the Diagram
-      widget gained `visOptions(nodesIdSelection = TRUE, highlightNearest =
-      list(enabled = TRUE, hover = TRUE, ...))` -- a "Select by id" search
-      dropdown, highlighting on hover (not click, to avoid overlapping the
-      existing click-to-navigate handler, issue #129 Slice 2). TDD RED->GREEN
-      (REFACTOR skipped, owner-confirmed -- GREEN already matched the file's
-      established style): 10 new unit tests (8 on `makePedigreeDiagramData()`,
-      2 on the widget's JSON config, matching the #131/#132 pattern);
-      regression suite 0 failed/0 error (3509 passed, unchanged 10 baseline
-      warnings); `devtools::check()` 0 errors/1 warning (pre-existing iCloud
-      duplicate-file artifact)/0 notes. Live `shinytest2`/`chromote`
-      verification against the real app (same known trio as
-      `test-e2e-pedigree-module.R`): live node `title` matches exactly; the
-      real DOM search dropdown is populated with all 375 IDs; a real
-      `change` event genuinely dims an unrelated node while leaving a
-      connected one normal (confirmed the highlight logic executes, not
-      just that config is present); click-to-navigate unaffected. One
-      accepted trade-off documented in code and `PROJECT_LEARNINGS.md`
-      Learning 443: `nodesIdSelection` can log one transient, benign
-      `[shiny] Duplicate input IDs were found` console warning from the
-      second reactive re-render onward (no permanent DOM duplication,
-      no functional impact) -- a structural fix was judged disproportionate
-      to this "optional, low-priority... UI polish" issue and would risk
-      the 3 already-shipped Diagram-tab features; owner-directed
-      (`AskUserQuestion`) to accept and document rather than fix.
-      `NEWS.Rmd`/`NEWS.md` and `vignettes/manual_components/
-      _pedigree_browser.Rmd` updated per the tutorial/article and NEWS.Rmd
-      documentation checklists. Closed via GitHub comment
-      (`https://github.com/rmsharp/nprcgenekeepr/issues/135#issuecomment-5156062877`).
-      See `CHANGELOG.md`.)
+      priority 5, resolves audit Recommendation #8) is RESOLVED: implemented and
+      live-verified S454 (2026-08-02). Nodes gained an HTML hover-tooltip `title`
+      field; the Diagram widget gained a "Select by id" search dropdown +
+      hover-highlight (not click, to avoid the existing click-to-navigate
+      handler). 10 new unit tests; live `shinytest2`/`chromote` confirmed the
+      dropdown, tooltip, and highlight-on-change all genuinely functional. One
+      accepted trade-off: a transient, benign `[shiny] Duplicate input IDs`
+      console warning, owner-directed to accept rather than fix (`PROJECT_LEARNINGS.md`
+      Learning 443). See `CHANGELOG.md`.)
 - [ ] (none remaining -- **issue #139** (document the pedigree-diagram Diagram
       tab in the manual/tutorial, discovered S436 while triaging the #131-#138
-      follow-ups) is RESOLVED: documented S455 (2026-08-02). Closed the depth
-      gap left by #131/#132/#135 each scoping their own doc update to one file
-      only -- added the shape-to-sex legend description to
-      `vignettes/manual_components/_pedigree_browser.Rmd` (previously missing
-      there, #132's own feature) and extended `vignettes/articles/
-      colony-manager-guide.qmd`'s "Diagram view" paragraph to cover
-      click-to-navigate, the 1,500-node cap, the Export Diagram (PNG) button,
-      the hover tooltip, and the Select by id search/highlight dropdown
-      (previously missing there). Owner picked prose-only depth
-      (`AskUserQuestion`) over adding new screenshots. Documentation-only --
-      no `R/` or `tests/` files changed, so the TDD RED/GREEN/REFACTOR gates
-      did not apply (S448/S451/S452/S453 precedent). Verified: `a3manual.Rmd`
-      (parent of `_pedigree_browser.Rmd`) rendered via `rmarkdown::render()`
-      with the new text present; `colony-manager-guide.qmd` rendered via
-      `quarto render` with zero errors and the new text present;
-      `tests/spelling.R` clean (no new flagged words); regression suite
-      unchanged at 0 failed/0 error (3509 passed, same 10 pre-existing
-      `test_modMarkerGenetics.R` baseline warnings). Closed via GitHub comment
-      (`https://github.com/rmsharp/nprcgenekeepr/issues/139#issuecomment-5159297837`).
-      See `CHANGELOG.md`.)
+      follow-ups) is RESOLVED: documented S455 (2026-08-02). Closed the doc-depth
+      gap left by #131/#132/#135 each scoping their own doc update to one file --
+      extended `_pedigree_browser.Rmd` (shape-to-sex legend) and
+      `colony-manager-guide.qmd`'s "Diagram view" paragraph (click-to-navigate,
+      node cap, PNG export, tooltip, search/highlight). Documentation-only, both
+      rendered clean. See `CHANGELOG.md`.)
 - [ ] (feasibility planning DONE -- S457, 2026-08-02, see
-      `docs/planning/pedigree-diagram-mating-lines-plan.md` and `CHANGELOG.md`.
-      **Pedigree Diagram tab does not visually indicate mating/couple
-      relationships** (originally discovered S456 2026-08-02 while reviewing
-      the Diagram section added to `vignettes/a2interactive.Rmd`) --
-      owner-observed, citing two kinship2 references
-      (`https://epilepsygenetics.blog/2014/04/03/straight-lines-the-art-of-drawing-pedigrees-using-kinship2/`,
-      `https://rpubs.com/dliupress/pedigreedemo`). S457 answered the
-      feasibility question empirically: built and screenshotted 3 `visNetwork`
-      POCs via `chromote`, confirming a true kinship2-style mate-line +
-      sibship-bar convention **is** achievable inside the ratified visNetwork
-      (D2) choice via invisible union/waypoint nodes with hand-computed
-      coordinates (`visHierarchicalLayout()` must be abandoned in favor of
-      fixed positions -- confirmed from the bundled vis.js source that
-      hierarchical layout cannot pin a node's free-axis position, and that no
-      orthogonal edge-routing primitive exists at all). Read the D2 ratified
-      plan's own text and found it had already explicitly named and accepted
-      this exact tradeoff at ratification time. Corrected the prior citation
-      of "Finding #8" -- the audit's "Multiple mates/spouses" item is
-      checklist table row 8, not prose Finding #8 (a different, unrelated
-      node-labels finding); the table row's own "Equivalent-different
-      -approach" disposition was about childless/remarriage unions
-      specifically, not this broader question. Owner ratified **Option 2 --
-      full kinship2-parity layout on visNetwork** (over: reopen D2/switch to
-      kinship2 -- not recommended, would regress 4 shipped interactive
-      features and lose dynamic per-node metadata exposure kinship2 has no
-      analog for; a smaller partial `visNetworkProxy`-repositioned
-      mate-line-only step; or decline) via `AskUserQuestion`.)
+      `docs/planning/pedigree-diagram-mating-lines-plan.md`. **Pedigree Diagram
+      tab does not visually indicate mating/couple relationships** (owner-observed
+      S456, citing kinship2-convention references) -- confirmed empirically (3
+      `visNetwork` POCs via `chromote`) that a true kinship2-style mate-line +
+      sibship-bar convention is achievable inside the ratified visNetwork (D2)
+      choice via invisible union/waypoint nodes with hand-computed coordinates.
+      Owner ratified **Option 2 -- full kinship2-parity layout on visNetwork**
+      via `AskUserQuestion`, over reopening D2/switching to kinship2 or a
+      smaller partial-repositioning step. See `CHANGELOG.md`.)
 - [ ] (design DONE -- S458, 2026-08-02, see
-      `docs/planning/pedigree-diagram-option2-layout-design-plan.md` and
-      `CHANGELOG.md`. **Pedigree Diagram: full kinship2-parity layout (Option
-      2 design session)** -- designed and owner-ratified (a) a
-      mating-unit/individual-duplication transformation (CraneFoot-derived)
-      that resolves crossing-minimization ordering, (b) multi-mate/half-sib
-      fan-out representation, and (c) inbreeding-loop safety **via one single
-      mechanism** -- a real fixture (`inst/extdata/examples/
-      obfuscated_rhesus_mhc_ped.csv`) confirmed this session to exercise both
-      (b) and (c) simultaneously through the same individual (`8LKBV9`, issue
-      #134's own loop fixture, independently confirmed to also be a 3-mate
-      individual). A tree-native positioning algorithm (simplified
-      Reingold-Tilford/Walker contour-merge, not kinship2's undocumented
-      internals, not a full Buchheim-Jünger-Leipert implementation, not an
-      off-the-shelf R package -- `igraph`/`data.tree` are GPL and `ggraph`
-      transitively depends on GPL `igraph`, confirmed this session) computes
-      final coordinates for the transformed forest. Owner ratified via
-      `AskUserQuestion` with one editorial direction: non-human-centric
-      terminology throughout (`sire`/`dam`/`mate`/`mating`, not
-      `husband`/`wife`/`marriage`/`spouse`).)
+      `docs/planning/pedigree-diagram-option2-layout-design-plan.md`.
+      **Pedigree Diagram: full kinship2-parity layout (Option 2 design
+      session)** -- designed and owner-ratified a mating-unit/individual
+      -duplication transformation (CraneFoot-derived) resolving
+      crossing-minimization ordering, multi-mate/half-sib fan-out, and
+      inbreeding-loop safety via one mechanism; a simplified
+      Reingold-Tilford/Walker contour-merge algorithm (not an off-the-shelf
+      package -- `igraph`/`ggraph` are GPL) computes final coordinates. Owner
+      ratified via `AskUserQuestion` with one editorial direction:
+      non-human-centric terminology (`sire`/`dam`/`mate`/`mating`). See
+      `CHANGELOG.md`.)
 - [ ] (none remaining -- **Pedigree Diagram: Option 2 implementation, Slice 1
       (mating-unit transformation)** is RESOLVED: implemented S459
       (2026-08-02). New internal `.buildMatingUnitForest()` in
-      `R/makePedigreeDiagramData.R` (D1 mating-unit identification +
-      re-parenting + duplicate-node creation, D2 deterministic anchor
-      selection, D5 partial-parentage fallback -- all three folded into this
-      one function, since D5 governs whether a mating unit is even
-      synthesized for a given child). Full TDD cycle (RED->GREEN, REFACTOR
-      owner-confirmed skip -- GREEN already matched the file's established
-      single-function style), all `AskUserQuestion`-gated. **Pre-RED found
-      and corrected a real gap in the ratified design doc's own §7/§9
-      figures** (a genuine algorithm-implementation finding, not an
-      assumption): actually running D2's anchor rule against the real
-      375-individual fixture found it collides twice (`KUENM8`, `IM1B5T`
-      each anchor 2 mating units -- the exact "rare case" D3 step 2 already
-      names), correcting §7's published 130-duplicate/742-total estimate to
-      the verified 128/740 -- owner-directed via `AskUserQuestion` to fix the
-      figures in place with an addendum, not leave the ratified doc stale.
-      15 new unit tests (input validation + reserved-id-prefix collision;
-      D5's 0-parent/1-parent fallbacks; a reconstructed real 8-node
-      `GA204Z`/`8LKBV9` loop fixture, extracted directly from
-      `inst/extdata/examples/obfuscated_rhesus_mhc_ped.csv` since the
-      original 6-node half-sib fixture cited in the design doc's §8 was
-      never committed to the test suite -- S453 was audit-only; a
-      reconstructed equivalent half-sib-mating convergent-loop fixture; the
-      real anchor-collision case verified end-to-end against the full
-      bundled fixture). Citation/tutorial/`NEWS.Rmd` checklists: N/A -- an
-      internal (`@noRd`), not-yet-wired-in function has no displayed
-      statistic and no user-facing surface (Migration Path step 4's own
-      "owed once step 3 ships, not before"). Verified: regression suite
-      0 failed/0 error (3562 passed = 3509 baseline + 53 new, 183 skipped,
-      10 pre-existing warnings, exact baseline match); `devtools::check()`
-      0 new warnings/notes (isolated via a clean-tree re-run: the pre-existing
-      iCloud-duplicate-file warning and a `vignettes/a2interactive.Rmd`
-      vignette-engine NOTE both confirmed to predate this session, unrelated
-      to this diff). Phase 3E: n/a -- no runtime behavior changed (the
-      function has no call site yet; the render-chain switch is Slice 3).
-      See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learnings 449-450.)
+      `R/makePedigreeDiagramData.R` (D1 mating-unit ID + re-parenting +
+      duplicate-node creation, D2 deterministic anchor selection, D5
+      partial-parentage fallback). Pre-RED found and corrected a real gap in
+      the ratified design doc's own §7/§9 figures (a genuine anchor collision
+      on the real fixture, corrected 130/742 -> the verified 128/740). 15 new
+      unit tests; full clean regression 0 failed/0 error; `devtools::check()`
+      0 new warnings/notes. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
+      Learnings 449-450.)
 - [ ] (none remaining -- **Pedigree Diagram: Option 2 implementation, Slice 2
       (D3 positioning algorithm)** is RESOLVED: implemented S460
-      (2026-08-02). New internal `.positionMatingUnitForest(ped, forest)` in
-      `R/makePedigreeDiagramData.R`, consuming Slice 1's
-      `.buildMatingUnitForest()` output and assigning final `x`/`gen`
-      coordinates via a simplified Reingold-Tilford/Walker-style recursive
-      contour-merge (D3), founder ordering by input row order (D4), D5's
-      one-known-parent fallback attaching directly (no synthesized union).
-      **Resolved the deferred Slice 1 question:** `duplicates` does not need
-      its own `gen` column -- the positioning function takes `ped` directly
-      (already needed for real individuals' own `gen`) and looks up a
-      duplicate's `gen` via its `realId`. Pre-RED prototyped the algorithm in
-      a throwaway POC against 8 toy fixtures plus the full real
-      375-individual fixture (matching S457's own Case-C2-POC precedent, per
-      §9's dragon flag) and found 3 non-obvious gaps the ratified design
-      didn't fully specify: (1) an individual whose one non-anchor mating
-      -unit occurrence is "free" (no duplicate node, per
-      `.buildMatingUnitForest()`'s own D2 rule) is not an independent forest
-      root -- naively treating them as one creates a phantom disconnected
-      node; fixed by folding them into their one unit's children-merge as a
-      genuine width-reserving leaf. (2) contour occupancy must be indexed by
-      each node's absolute real `gen`, not relative recursive depth --
-      because D3 step 6 (ratified) pins y to real `gen`, which diverges from
-      recursive depth once a duplicate/free-pass node is re-attached deep
-      inside another individual's subtree (impossible in a genuine tree,
-      possible here). (3) even gen-indexed contours leave a residual
-      ancestor-vs-nested-descendant exact-coincidence edge case (measured at
-      12/740 nodes, ~1.6%, on the real fixture); resolved with a small
-      deterministic post-placement nudge pass, applied only to
-      individual/union nodes (duplicates keep the design's own already
-      -accepted "not guaranteed collision-free" trade-off). All 3 findings
-      owner-approved via `AskUserQuestion` before RED. Full TDD cycle
-      (RED->GREEN, REFACTOR owner-confirmed skip -- GREEN already matched
-      the file's established pattern, e.g. `.buildMatingUnitForest()`'s own
-      nested-closure precedent). 12 new unit tests (input validation; trio
-      union-midpoint geometry; D5-mixed subtree; multi-mate uneven-depth;
-      the real `GA204Z`/`8LKBV9` loop fixture; half-sib convergent loop; an
-      isolated founder beside an unrelated family; an 8-mate wide fan-out;
-      a deeply unbalanced 6-generation chain; the full real 375-individual
-      fixture at its exact 740-node count; `gen`-column semantics).
-      Citation/tutorial/`NEWS.Rmd` checklists: N/A -- an internal (`@noRd`),
-      not-yet-wired-in function has no displayed statistic and no
-      user-facing surface (Migration Path step 4's own "owed once step 3
-      ships, not before"), matching Slice 1's own precedent. Verified:
-      regression suite 0 failed/0 error (3592 passed = 3562 baseline + 30
-      new, 183 skipped, 10 pre-existing warnings, exact baseline match);
-      `devtools::check()` exact baseline match (1 pre-existing warning, 1
-      pre-existing note, 0 new); zero lint warnings in the new code. Phase
-      3E: n/a -- no runtime behavior changed (the function has no call site
-      yet; the render-chain switch is Slice 3). Incidentally found and fixed
-      (not part of this slice's own deliverable, a 1-byte mechanical
-      correction in the file already being edited) a literal control
-      -character byte that had leaked into `PROJECT_LEARNINGS.md` Learning
-      450's own text -- the exact defect that learning describes, recursed
-      into its own bug report. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
-      Learnings 451-453.)
+      (2026-08-02). New internal `.positionMatingUnitForest(ped, forest)`
+      assigns final `x`/`gen` coordinates via a simplified Reingold-Tilford/
+      Walker-style recursive contour-merge (D3). Pre-RED prototyping found 3
+      non-obvious gaps the ratified design didn't fully specify (free-pass
+      node handling, gen-indexed vs. recursive-depth contour occupancy, a
+      residual ~1.6% exact-coincidence edge case) -- all 3 owner-approved via
+      `AskUserQuestion` before RED. 12 new unit tests; full clean regression
+      0 failed/0 error; `devtools::check()` exact baseline match. See
+      `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learnings 451-453.)
 - [ ] (none remaining -- Pedigree Diagram: Option 2 implementation, Slice 3
-      (render-chain wiring) is DONE -- S461 (2026-08-02): see `CHANGELOG.md`.
-      New exported `makePedigreeMatingLayout()` combines Slices 1/2 into the
-      `list(nodes, edges, duplicateToReal)` shape; `R/modPedigree.R`'s render
-      chain switched from `makePedigreeDiagramData()` + `visHierarchicalLayout()`
-      to the new function + `visPhysics(enabled = FALSE)`/`visNodes(physics =
-      FALSE)`/`visEdges(smooth = FALSE)` with fixed x/y. D6 integration:
-      click-to-navigate resolves duplicate-node clicks to the real individual
-      and ignores union-node clicks; the search dropdown is filtered to real
-      ids only (`visOptions(nodesIdSelection = list(values = ...))`); union
-      nodes get a small unlabeled dot + offspring-count tooltip, no legend
-      entry; mate-line/child edges render as direct (non-waypoint) edges,
-      owner-directed, with the fuller rectilinear style filed as deferred
-      issue #142. Issue #138's node cap re-derived 1,500 -> 750 individuals
-      (owner-directed via `AskUserQuestion`), commented on issue #138.
-      **Live Phase 3E verification (mandatory, not skippable for this slice)
-      found and this session fixed a genuine crash**: `.buildMatingUnitForest()`
-      (Slice 1's own file) threw "missing value where TRUE/FALSE needed" on
-      any pedigree where a sire/dam value has no own row -- e.g. this page's
-      own pre-existing "Trim pedigree based on focal animals" feature, which
-      Slices 1/2 never exercised (both `@noRd`, tested only against
-      self-contained fixtures). Root-cause fixed in Slice 1's file (a dangling
-      reference is now treated as a founder and can never anchor; its gen
-      falls back to its mating unit's own gen), not worked around in Slice 3;
-      6 new unit tests; the exact live crash re-verified fixed via
-      `shinytest2`/`chromote`. Also found (documented, not fixed, inherited
-      from Slice 2): `.buildMatingUnitForest()`'s anchor tie-break is
-      row-order-sensitive, and the live app's `qcStudbook()` step reorders
-      rows relative to the raw upload -- the real fixture's own "740 total
-      nodes" figure (Slices 1/2's unit tests, raw CSV) becomes 739 through the
-      live pipeline; both are correct, self-consistent applications of the
-      same algorithm to different (valid) row orders. See `CHANGELOG.md`,
-      `PROJECT_LEARNINGS.md` Learning 457, design doc §9.)
+      (render-chain wiring) is DONE -- S461 (2026-08-02). New exported
+      `makePedigreeMatingLayout()` combines Slices 1/2; `R/modPedigree.R`'s
+      render chain switched to it with fixed x/y (physics/smooth disabled).
+      D6 integration: click-to-navigate resolves duplicate nodes to the real
+      individual; search filtered to real ids; union nodes get a small dot +
+      tooltip; mate-line edges render direct, with the fuller rectilinear
+      style filed as deferred issue #142. Issue #138's node cap re-derived
+      1,500 -> 750. **Live Phase 3E verification found and fixed a genuine
+      crash** (`.buildMatingUnitForest()` threw on any pedigree with a
+      dangling sire/dam reference, e.g. the "Trim pedigree based on focal
+      animals" feature) -- root-caused in Slice 1's file, 6 new unit tests,
+      re-verified live. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning
+      457, design doc §9.)
 - [x] **Duplicate-node connector renders straight, not arched, unlike the
       kinship2/standard-pedigree convention** (found S468 2026-08-03) --
-      **RESOLVED -- S469 (2026-08-03):** owner observation comparing this
-      app's diagram against a reference pedigree image
-      (rpubs.com/dliupress/pedigreedemo, Pedigree 1): the referenced
-      convention draws the dashed line connecting a duplicated individual's
-      extra mating-position occurrence back to their primary occurrence as
-      a visibly **arched/curved** line. `makePedigreeMatingLayout()`'s
-      `dupEdges` now carry a per-edge vis.js `smooth` override
-      (`smooth.enabled = TRUE`, `smooth.type = "curvedCW"`,
-      `smooth.roundness = 0.2`, via 3 new dot-named columns), overriding
-      `R/modPedigree.R`'s widget-level `visEdges(smooth = FALSE)`; every
-      other edge leaves `smooth.enabled` `NA`, inheriting that global
-      default unchanged. Pre-RED read the bundled `vis-network.min.js`/
-      `visNetwork.js` source directly (not assumed) and confirmed a
-      per-edge `smooth.*` dotted-column override is a genuine, already-used
-      mechanism (same one backing edges' `color`/nodes' `color.background`)
-      -- and found a real second-function integration risk before writing
-      any test: `.addRectilinearWaypoints()`'s own fresh waypoint edges
-      needed matching NA-filled `smooth.*` columns too, or its
-      `newEdges[, names(keptEdges)]` rbind would throw "undefined columns
-      selected" once the passed-through direct-style edges carried the new
-      columns -- fixed in the same commit; `dupEdges` are never touched by
-      that function's D1/D2 waypoint logic, so the arc survives unchanged
-      under `edgeStyle = "rectilinear"` too (live-verified). Full TDD cycle
-      (RED -- 3 tests, 2 new + the existing "no new columns beyond
-      contract" test updated for the now-intentionally-changed edge column
-      set; GREEN; REFACTOR owner-confirmed skip -- GREEN already matched
-      this file's established `dashes`/`color` column-addition style).
-      Verified: regression suite 0 failed/0 error (4524 passed = 4515 + 9
-      new assertions, exact baseline 10 pre-existing warnings);
-      `devtools::check()` 0 new errors/warnings/notes (1 warning/1 note,
-      both the pre-existing unrelated iCloud-duplicate-file and
-      vignette-engine baseline); `lintr` 0 on both changed files. Live
-      `shinytest2`/`chromote` verification against the real 375-individual
-      fixture: all 128 duplicate-connector edges carry the arc override (0
-      diagram-related console errors); a small isolated-fixture screenshot
-      visually confirms the connector renders curved, distinct from the
-      straight mate-line/child edges; the `edgeStyle = "rectilinear"` radio
-      toggle re-verified live with 0 errors, arc intact. `_pedigree_browser.Rmd`'s
-      "dashed line" wording updated to "curved, dashed line" for accuracy
-      (re-rendered, confirmed present in output); no `NEWS.Rmd` entry, per
-      the shinyBS-popover-fix precedent (S437/438) -- a bug fix to existing
-      behavior, not a new function/control, is outside that checklist's own
-      scope. Analytically separate from issue #142's own mate-line/
-      sibship-bar edge-routing work (Slice 2, shipped S468) -- not folded
-      in, per this project's own scope-discipline precedent (see the
-      founder-positioning-defect item immediately below, and
-      `PROJECT_LEARNINGS.md` Learning 382). See `CHANGELOG.md`.
-- [x] **Founder-positioning defect: a non-anchor parent occurrence (founder or
-      already-duplicated multi-mate individual) whose own generation differs
-      from their mating unit's generation renders at the wrong row, visually
-      implying the wrong pairing** (DONE -- fix implemented S472, Effort M,
-      found S463, characterized S470, designed S471) -- confirmed via
-      `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`,
-      prompted by an owner observation on that document's own Example 1
-      rendering ("it appears 2 males have mated"). `.positionMatingUnitForest()`
-      assigns EVERY non-anchor parent occurrence's row -- a free-pass real node
-      OR a genuine D6 duplicate node -- from that parent's own global `gen`,
-      never from the specific mating unit the occurrence belongs to
-      (`R/makePedigreeDiagramData.R:585-591`). This is a defect in x/y
-      coordinate ASSIGNMENT, not in edge-drawing style -- **independent of and
-      would survive** a full issue #142 (rectilinear mate-line/sibship-bar)
-      implementation (#142 Slices 1-2 are themselves now shipped/done).
-      **S470 audit (`docs/audits/FOUNDER_POSITIONING_DEFECT_AUDIT_2026-08-03.md`)
-      confirmed this against real bundled fixtures, resolving the "how often in
-      practice" question S463 left open:** on the real 375-individual rhesus
-      fixture (`obfuscated_rhesus_mhc_ped.csv`), **147 of 237 mating units
-      (62%) have at least one mis-positioned parent.** Independently re-derived
-      via a blind Workflow agent (same counts, plus a general rule: mismatch
-      iff parent's own `gen` != mating-unit `gen`, no exceptions). Real
-      Japanese macaque colony data (`deidentified_jmac_ped.csv`, 2,791
-      individuals) shows the same pattern on its (small, data-sparse)
-      applicable subset. **Filed as [issue #143](https://github.com/rmsharp/nprcgenekeepr/issues/143)
-      -- S470 (2026-08-03), owner-confirmed before filing.**
-      **Fix designed -- S471 (2026-08-03):**
-      `docs/planning/issue143-founder-positioning-fix-plan.md`, owner-ratified
-      via `AskUserQuestion`. Adopts the audit's own "point-patch" candidate
-      (two synchronized edits assigning every non-anchor occurrence's row from
-      its own mating unit's `gen`), with a dangling-free-pass-parent guard the
-      plan's own adversarial review found was needed (caught and fixed a real
-      crash before ratification, reproduced against the existing `DANGLING_DAM`
-      fixture). **Direct empirical verification during planning found the
-      S470 audit's own real-fixture numbers under-reported the picture: of the
-      147 mismatches, 51 (22% of all 237 units) are ANCHOR-side mismatches the
-      audit's detection script could not distinguish from free-pass ones (both
-      lack a `__dup_` prefix) -- this fix resolves 96 of 147 (65%), not all of
-      it.** Owner reviewed this finding and directed shipping the non-anchor
-      fix now, tracking the anchor-side gap as its own urgent follow-up (see
-      the new item immediately below, [issue #144](https://github.com/rmsharp/nprcgenekeepr/issues/144)).
-      **Implemented -- S472 (2026-08-04):** both synchronized edits shipped
-      together in one commit (`R/makePedigreeDiagramData.R:494,585-600ish`),
-      following the plan's own RED/GREEN/REFACTOR Verification Plan (§7)
-      exactly -- pre-derived regression numbers confirmed to the exact
-      integer (0 non-anchor + 51 anchor mismatches remaining;
-      `edgeStyle="rectilinear"` real-fixture node count 1375 -> 1279). The
-      plan's own §6 dragon-flagged minimum-separation test was investigated
-      empirically before writing it and found NOT to discriminate a
-      desynchronized fix in this algorithm (unrelated same-row nodes are not
-      guaranteed >= minSep apart even under the correct fix); substituted a
-      stronger, empirically-verified exact x/gen value test instead (see
-      `PROJECT_LEARNINGS.md` Learning 470). Full regression suite 0 failed/0
-      error (4560 passed); `devtools::check()` 0 errors/0 warnings (1
-      pre-existing, unrelated NOTE); live-verified in the running app via
-      `shinytest2` -- FD3BB6 (the audit's own spot-checked example) plus 3
-      more previously-mismatched units now render on-row under both
-      `edgeStyle` values, zero diagram-related console errors. See
-      `CHANGELOG.md`.
+      **RESOLVED -- S469 (2026-08-03):** owner observation vs. a reference
+      pedigree image. `dupEdges` now carry a per-edge vis.js `smooth`
+      override (curved, matching the referenced convention), surviving
+      `edgeStyle = "rectilinear"` unchanged. Full TDD cycle; live
+      `shinytest2`/`chromote` confirmed all 128 duplicate-connector edges
+      arc correctly under both edge styles, 0 console errors. Analytically
+      separate from issue #142's own edge-routing work, not folded in
+      (`PROJECT_LEARNINGS.md` Learning 382). See `CHANGELOG.md`.
+- [x] **Founder-positioning defect: a non-anchor parent occurrence renders at
+      the wrong row, visually implying the wrong pairing** (found S463,
+      characterized S470, designed S471, fixed S472) -- owner-observed on
+      `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`'s
+      Example 1 ("it appears 2 males have mated"). `.positionMatingUnitForest()`
+      assigned a non-anchor occurrence's row from the parent's own global
+      `gen` rather than its specific mating unit's `gen`
+      (`R/makePedigreeDiagramData.R:585-591`) -- independent of issue #142's
+      edge-routing work. **S470 audit** confirmed 147 of 237 real-fixture
+      mating units (62%) mis-positioned; filed as
+      [issue #143](https://github.com/rmsharp/nprcgenekeepr/issues/143).
+      **S471 design/S472 fix:** a synchronized point-patch (`.positionMatingUnitForest()`
+      only) resolves 96 of 147 (65%) -- non-anchor mismatches; planning found
+      the remaining 51 (22%) are ANCHOR-side mismatches the fix's own detection
+      couldn't distinguish, tracked separately as issue #144 below. Full
+      regression 0 failed/0 error; `devtools::check()` 0 new errors/warnings;
+      live `shinytest2` re-verified previously-mismatched units now render
+      on-row. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 470.
 - [x] **Pedigree Diagram: anchor-side row mismatches -- 51 of 237 real-fixture
       mating units (22%), distinct from issue #143's non-anchor fix** (found
-      S471, incidental to designing #143's fix; filed as
-      [issue #144](https://github.com/rmsharp/nprcgenekeepr/issues/144)) --
-      **planning DONE -- S473 (2026-08-04):**
-      `docs/planning/issue144-anchor-row-mismatch-fix-plan.md`, owner-ratified
-      via `AskUserQuestion`. **The standing assumption above -- that fixing
-      this "would require restructuring `.positionMatingUnitForest()`'s
-      recursive positioning itself... materially larger than issue #143's
-      point-patch" -- turned out to be FALSE**, disproven by this session's
-      own empirical work (see `PROJECT_LEARNINGS.md` Learning 471): a node's
-      own row-reservation is already fully decoupled from its `x`-computation
-      and its recursion into children, so the anchor case can be corrected
-      with the exact same narrow `dispGenOf`-override pattern #143 itself
-      used, ~11 non-comment lines across 3 synchronized edits, entirely
-      inside `.positionMatingUnitForest()` -- `.buildMatingUnitForest()`
-      (anchor selection) stays untouched. Adopted via a 7-agent
-      characterize-then-design workflow (4 parallel characterization agents,
-      3 independently-validated candidate designs in isolated worktrees) plus
-      a 3-agent adversarial review mirroring S471's own review pattern for
-      the sibling #143 plan.
-- [ ] (none remaining -- **Implement the ratified issue #144 plan** is
-      DONE -- S474 (2026-08-04): all 3 synchronized edits shipped in one
-      commit, full RED/GREEN/REFACTOR TDD cycle (`AskUserQuestion`-gated at
-      every transition), full regression suite + `devtools::check()` +
-      live `shinytest2` verification all clean. See `CHANGELOG.md`.)
+      S471, filed as [issue #144](https://github.com/rmsharp/nprcgenekeepr/issues/144))
+      -- **planning DONE -- S473; implemented -- S474 (2026-08-04):** the
+      standing assumption that this needed restructuring
+      `.positionMatingUnitForest()`'s recursion turned out FALSE (`PROJECT_LEARNINGS.md`
+      Learning 471) -- corrected with the same narrow `dispGenOf`-override
+      pattern #143 used (~11 lines, 3 synchronized edits). Full RED/GREEN/REFACTOR
+      TDD cycle, full regression + `devtools::check()` + live `shinytest2`
+      verification all clean; 0 non-anchor + 0 anchor mismatches remaining.
+      See `CHANGELOG.md`.
 
 **Sequencing note (S480, 2026-08-08):** the items below through the `highlightNearest` degree=6
 item, plus GitHub issues #133/#136/#137/#138/#141/#145, were jointly examined for implementation
 order in `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md` (kinship2-capability-
 and nomenclature-reference-informed). Recommended order: (1) the two dangling-parent crash bugs
-below + the free-pass-filter reachability check, (2) issue #145 (sire/dam left-right placement --
-found to be a net-new layout rule request, not a fix to existing behavior, and not textually
-supported by this project's own copy of the cited nomenclature standard), (3) refresh the stale
-`.qmd` comparison doc below, (4) the owner's existing #133 > #136 > #137 > #138 order (unchanged,
-set at S436), (5) #141 and Candidate C stay deferred pending new evidence/owner sign-off. Consult
-that audit before picking up any item in this cluster.
+below + the free-pass-filter reachability check, (2) issue #145's verification spike, (3) refresh
+the stale `.qmd` comparison doc below, (4) the owner's existing #133 > #136 > #137 > #138 order, (5)
+#141 and Candidate C stay deferred pending new evidence/owner sign-off.
 
-**Progress (S481, 2026-08-08):** Tier 1 step (1) is DONE -- the 2 dangling-parent crash bugs +
-the free-pass-filter reachability check (issue #154) are fixed/closed, see `CHANGELOG.md`. Step
-(2) -- issue #145's verification spike -- is next in this cluster; steps (3)-(5) remain untouched.
+**Tier 1 -- DONE (S481, S482, S484):** the 2 dangling-parent crash bugs + the free-pass-filter
+reachability check were filed and fixed as issue #154 (S481). Issue #145's verification spike (S482,
+`docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md`) empirically confirmed
+(kinship2 v1.9.6.2 source read + 5 synthetic-pedigree tests, not inferred from docs) that kinship2
+implements **neither** a hard male-left invariant **nor** a sex-aware crossing-minimizing default --
+once an individual has multiple mates, left/right is decided purely by pedigree-data discovery order;
+the issue's own cited sources were found unreliable on this point. `docs/planning/pedigree-diagram-
+kinship2-reference-comparison.qmd` was refreshed (S484) to reflect issues #143/#144's fixes and to
+add a new Example 4 reproducing S482's own kinship2 counter-example directly (`quarto render` clean,
+37 chunks).
 
-**Progress (S482, 2026-08-08):** Tier 1 step (2) is DONE -- see
-`docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md`. Empirically confirmed
-(source read + 5 synthetic-pedigree tests against kinship2 v1.9.6.2 directly, not inferred from
-docs alone) that kinship2 implements **neither** a hard male-left invariant **nor** a
-sex-aware crossing-minimizing soft default: the single-mate case's apparent "sire-left" result is
-an indexing artifact, not a `ped$sex` check, and the moment an individual has multiple mates
-("crowding," exactly the scenario #145's own body raises), left/right is decided purely by
-pedigree-data discovery order -- confirmed by a direct counter-example (a dam with 2 sire mates,
-one sire ends up to her immediate right, the other to her immediate left). kinship2's own
-`?align.pedigree` help text frames sire/dam ordering as an overridable hint, not a rule; an
-explicit 2-row hint flips the simple-pair default with no special-casing. Also found issue #145's
-own inline citations ([2]-[7], already flagged unresolved by the S480 audit) describe
-crossing-minimization behavior that does not match kinship2's actual source -- a second,
-independent data point (beyond the S480-audited nomenclature reference) that those citations are
-unreliable. Step (3) -- refresh the stale `.qmd` comparison doc -- is next in this cluster; steps
-(4)-(5) remain untouched. See the research doc's own "Recommendation for a future #145 design
-session" section before starting any #145 design work.
+**Tier 2 -- DONE (S485-S494, S499-S500): issues #133, #136, #137, and #145 are all now fully
+implemented and closed.** Each followed design-document ratification (`AskUserQuestion`-gated
+judgment calls) then 1-3 implementation slices, each slice a full strict-TDD PRE-RED->RED->GREEN
+(->REFACTOR) cycle with clean regression + `devtools::check()` + live `shinytest2`/`chromote`
+verification, plus the citation/tutorial/`NEWS.Rmd`/`a2interactive.Rmd` documentation checklists
+applied per-slice:
+- **Issue #133** (affected/phenotype status): design S485 (`docs/planning/issue133-affected-status-
+  pedigree-diagram-plan.md` -- new `affected` logical column, `color.background` + tooltip, no new
+  dependency). Slice 1 (data model + rendering) S486 -- found and fixed a gap where the rectilinear
+  edge style would have silently erased the new coloring. Slice 2 (legend + docs) S487. **Closed
+  S487.**
+- **Issue #136** (name labels): design S488 (`docs/planning/issue136-name-labels-pedigree-diagram-
+  plan.md` -- corrected 3 premises in the issue itself; found and closed a disclosure defect,
+  `obfuscatePed()` would have left `name` unscrubbed). Slice 1 (data model + de-identification) S489.
+  Slice 2 (label rendering + off-by-default toggle + docs) S490 -- found and fixed a real
+  toggle-discarded-on-rerender defect via live verification (`PROJECT_LEARNINGS.md` Learning 490).
+  **Closed S490.**
+- **Issue #137** (twin/zygosity encoding): design S491 (`docs/planning/issue137-twin-zygosity-
+  pedigree-diagram-plan.md` -- new sidecar `twinRelations` table, zero schema.R changes; a
+  workflow-truncation tooling defect found and worked around, `PROJECT_LEARNINGS.md` Learning 491).
+  Slice 1 (data model + de-identification, `checkTwinRelations()`/`obfuscateTwinRelations()`) S492.
+  Slice 2 (core rendering, MZ/DZ/UZ connector styles) S493. Slice 3 (UI wiring, legend, docs) S494 --
+  found and filed (not fixed) a Slice 2 color-wiring gap as its own Housekeeping item. **Closed
+  S494.**
+- **Issue #145** (sire/dam left-right placement, deferred from Tier 1's spike): design S499
+  (`docs/planning/issue145-sire-dam-left-right-placement-plan.md` -- a 3-agent adversarial review
+  refuted the first proposed mechanism, `orderBySex = TRUE` parameter ratified instead). Slice 1
+  (core positioning) S500. **Closed S500** for the ratified simple-pair scope.
 
-**Progress (S484, 2026-08-08):** Tier 1 step (3) is DONE -- see
-`docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`. Refreshed the doc's stale
-founder-positioning "confirmed defect" language in Examples 1-2 (re-ran both example families
-against current `master`: `203`/`117` now correctly position adjacent to their own mate's row,
-matching kinship2's convention, verified via real layout output not just the "should be fixed"
-claim) -- updated to reflect the fix, citing issues #143/#144. Re-verified `vignettes/
-a2interactive.Rmd`'s runnable pedigree-diagram example still executes cleanly against current
-`master` (33 animals, 48/53 direct-style nodes/edges, 86/91 rectilinear -- re-verification only, no
-content rewrite needed). Added a new Example 4 (a dam with 2 sires, "role-reversed crowding")
-reproducing S482's own decisive kinship2 counter-example directly in this document, with real
-`align.pedigree()` output (`S1, D1, S2` -- dam centered, sires split by discovery order, not sex)
-alongside `nprcgenekeepr`'s own duplicate-node handling of the same data; updated the Summary table
-and closing "kinds of gap" list to add the sire/dam-ordering question (issue #145) as its own,
-now-investigated item, and to close out the founder-positioning item as fixed. Verified via a full
-`quarto render` (all 37 chunks executed cleanly, no R errors) -- rendered HTML deleted after
-verification, not committed, matching this project's established practice for `docs/planning/*.qmd`
-source-only docs. Tier 1 of the sequencing audit (crash bugs + #145 spike + this refresh) is now
-fully complete; Tier 2 (#133 > #136 > #137 > #138, owner's existing order) is next in this cluster.
-
-**Progress (S485, 2026-08-08):** Tier 2 step 1 -- issue #133's design/architecture document -- is
-DONE and RATIFIED: see `docs/planning/issue133-affected-status-pedigree-diagram-plan.md`. 8 ratified
-decisions (`affected` logical column, kinship2-name parity; single-trait v1 scope; `color.background`
-+ tooltip rendering, no new dependency/custom JS; implement in BOTH `makePedigreeDiagramData()` and
-`makePedigreeMatingLayout()` -- confirmed via `grep` that the latter, not the former, is what
-`R/modPedigree.R:446` actually calls for the live Diagram tab; a new sibling test fixture rather than
-an in-place edit to the ~20-test-pinned base fixture; a one-row `visLegend()` extension; vital-status
-(`status`) kept explicitly out of scope; exact fill color deferred to the implementing session's own
-Pre-RED). Also ruled out reusing this project's existing `condition`/`status` schema columns (both
-mean something else, confirmed via direct roxygen read -- see `PROJECT_LEARNINGS.md` Learning 485).
-Scoped as 2 future vertical slices with full RED/GREEN/DONE/Verify contracts (Slice 1: data model +
-core rendering; Slice 2: legend + documentation) -- next session in this cluster implements Slice 1.
-Issue #133 itself intentionally left open (design ratified, not yet implemented); no `gh issue close`
-this session.
-
-**Progress (S486, 2026-08-08):** Tier 2 step 2 -- issue #133 Slice 1 (data model + core rendering) --
-is DONE, full TDD RED->GREEN cycle (`AskUserQuestion`-gated at every transition, including 2 Pre-RED
-author's-call decisions: D8 fill color `#CC79A7` Okabe-Ito reddish-purple, and the `include`
-question resolved "not yet"/display-only v1). `affected` is now a recognized optional logical column
-(`.nprcColumnSchema$possible`); both `makePedigreeDiagramData()` and `makePedigreeMatingLayout()`
-render it (dominant `color.background` + "Affected: Yes/No/Unknown" tooltip line), backward
--compatible (absent column => zero output change, confirmed by dedicated regression tests). New
-sibling fixture `inst/extdata/examples/obfuscated_rhesus_mhc_ped_affected.csv` (`data-raw/
-obfuscated_rhesus_mhc_ped_affected.R`, seeded RNG, ~20% TRUE/70% FALSE/10% NA, disclosed synthetic).
-**Found and fixed one gap the design doc didn't anticipate:** `.addRectilinearWaypoints()` was
-unconditionally resetting every node's `color.background`/`color.border` to NA, which would have
-silently erased the new affected-status coloring the moment a user selected the rectilinear edge
-style (issue #142) -- fixed with a preserve-if-already-set guard, covered by a new regression test in
-`test_addRectilinearWaypoints.R`. Verified: full clean regression read 0 failed/0 error (10
-pre-existing baseline warnings unchanged, 4632 passed); `lintr::lint_package()` 0 issues on touched
-files (2 nested-`ifelse()` warnings resolved by extracting shared `.affectedColor()`/`.affectedLabel()`
-helpers rather than suppressed); `devtools::check()` returns 2 ERRORs/1 WARNING/2 NOTEs, **all
-pre-existing and unrelated to this session's diff** (confirmed via `git log`: the non-portable
-`inst/extdata/reference/...` filename dates to commit `887ee902`/S418; the `a2interactive.Rmd`
-vignette-engine NOTE and the `spelling.Rout` mismatch on issue #142-era terms are likewise untouched
-by this session) -- zero new errors/warnings/notes introduced. Live `shinytest2`/`chromote` smoke test
-(ad hoc, per Phase 3E, not committed as a new e2e test -- outside the approved Slice 1 file-touch
-list) confirmed on the real running app: the new sibling fixture visibly shades an `affected=TRUE`
-node `#CC79A7` with the tooltip line present, an `affected=FALSE` node in the same pedigree has no
-color override, 0 console errors; the base fixture (no `affected` column) shows neither the color nor
-the tooltip text anywhere and 0 console errors -- confirmed via the live vis.js Network instance's own
-DataSets (`HTMLWidgets.find(...).network.body.data.nodes.get(id)`), matching this file's own
-established "known trio" technique, not raw DOM HTML (which does not carry canvas-rendered node data
--- an initial verification pass using `get_html_safe()` alone produced a false negative before this
-was caught and corrected). `NEWS.Rmd` entry added this session (judgment call: the design doc's own
-Section 5 attributes the NEWS/tutorial checklists to "Slice 2, the session that ships the user-visible
-legend/shading," but Slice 1 itself already ships the shading/tooltip rendering per its own Section 4
-scope -- read literally, `CLAUDE.md`'s NEWS.Rmd checklist trigger ("ships a new user-facing Shiny
-feature") is satisfied now, so the entry was added at Slice 1's close rather than deferred; the
-tutorial/article walkthrough update stays correctly deferred to Slice 2 per the design doc, since a
-walkthrough is more coherent once the discoverability legend also exists). Issue #120's citation
-checklist confirmed NOT applicable (a raw display flag, not a new displayed statistic/estimator,
-matching the design doc's own Section 5 read). Issue #133 stays open (Slice 2 -- legend + docs --
-still pending); no `gh issue close` this session. Next session in this cluster implements Slice 2: see
-`docs/planning/issue133-affected-status-pedigree-diagram-plan.md` Section 4 Slice 2.
-
-**Progress (S487, 2026-08-08):** Tier 2 step 2 -- issue #133 Slice 2 (legend + documentation) -- is
-DONE, full TDD RED->GREEN cycle (`AskUserQuestion`-gated at every transition). Added one "Affected"
-row to the Diagram tab's existing shape-to-sex `visLegend()` (D6, reusing Slice 1's `#CC79A7`
-color) -- confirmed hands-on that the design doc's own Dragon #3/#4 concerns were both real: (1)
-`shape="box"` (a Pre-RED author's call, not dictated by the design doc) rendered as a label-sized
-filled pill inconsistent with the other 5 fixed-size-icon rows -- switched to `"hexagon"`; (2) the
-6th row's own label clipped against the legend's fixed 400px canvas height at the existing
-`stepY=65L` -- retuned to `stepY=54L`, live-reverified clipping-free. `visExport()` PNG capture of
-a `color.background`-only node (Dragon #3, deferred by S486) confirmed working via a real exported
-PNG (900+ matching pixels). Documentation checklists done in-session: `NEWS.Rmd`'s existing #133
-bullet updated (no second entry) to describe the legend rather than promise it "in a later
-release"; `_pedigree_browser.Rmd` and `colony-manager-guide.qmd` (owner's #133 comment requires
-both) updated and re-rendered clean. **Incidental fix:** re-rendering `NEWS.Rmd` found S486's own
-bullet had never actually been re-rendered/committed to `NEWS.md` (last touched S468) -- fixed as a
-byproduct of this session's own render, not a separate action. Citation checklist (#120)
-re-confirmed N/A. Verified: full clean regression read 0 failed/0 error (4640 passed, 10
-pre-existing warnings -- now root-caused, see the new Housekeeping item above); `lintr` 0 on
-touched files; `devtools::check()` exact pre-existing baseline (2 ERRORs/1 WARNING/2 NOTEs, all
-individually attributed, 0 new); live `shinytest2`/`chromote` smoke test confirmed all 6 legend
-rows + the main diagram's affected-node coloring + the PNG export, 0 console errors. **Both slices
-of issue #133 are now shipped; issue #133 itself is closed as part of this session's close-out.**
-Tier 2's remaining order (#136 > #137 > #138, each needing its own scoping session) is next in this
-cluster.
-
-**Progress (S488, 2026-08-08):** Tier 2 step 3 -- issue #136's design/architecture document -- is
-DONE and RATIFIED: see `docs/planning/issue136-name-labels-pedigree-diagram-plan.md` (READY for
-implementation, Slice 1 Effort S-M, Slice 2 Effort M). Owner ratified in two `AskUserQuestion`
-rounds: the framing (names exist at **some centers, inconsistently**; an optional `name` column +
-off-by-default toggle, over tooltip-only / decline / configurable label-source) and the 4
-judgment-call decisions (D3 augment `id`+name not name-only; D6 pin `useLabels = FALSE`; D10
-truncate displayed + full name in tooltip; D8 `obfuscatePed()` drops `name` to `NA`). D1/D4/D5/D7/
-D11/D12 are forced by structural traps, not voted. **The design corrects three premises in the issue
-itself:** `label` is already independent of `id` and `label != id` already ships (dup nodes `:906`,
-union nodes `:929`), so #136 is "choose the string" not "build the mechanism"; the schema's
-`first_name`/`second_name` are ALLELE names (the Learning 485 trap re-encountered); and the real
-constraint is **geometry, not the data model** -- 25.6% of adjacent label-bearing node pairs sit 48
-layout units apart with ~50-unit nodes, every id is exactly 6 chars, and nothing in the
-fixed-coordinate layout measures text. **Also found a disclosure defect** no prior session had reason
-to look for: `obfuscatePed()` scrubs only `id`/`sire`/`dam` + Date columns, so a `name` column would
-survive de-identification intact -- now a mandatory same-slice requirement (D8). Scoped as 2 slices;
-**next session in this cluster implements Slice 1** (data model + de-identification; no visible app
-change). Issue #136 intentionally left open. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 488.
-
-**Progress (S489, 2026-08-08):** Tier 2 step 3, Slice 1 -- issue #136's data model + de-identification
--- is DONE, full TDD RED->GREEN cycle (`AskUserQuestion`-gated at every transition). `name` is now a
-recognized, optional, character pedigree column: `.nprcColumnSchema$possible` gained `name` (appended
-after `affected`); `qcStudbook()` keeps it first-class (character-typed, ordered ahead of any genuine
-novel column) and coerces a factor-supplied `name` to character (mirroring the existing `species`
-precedent); `obfuscatePed()` now scrubs `name` to `NA` (D8), closing the disclosure defect S488 found.
-New sibling fixture `inst/extdata/examples/obfuscated_rhesus_mhc_ped_name.csv` (`data-raw/
-obfuscated_rhesus_mhc_ped_name.R`, seeded RNG, ~70% named/~15% empty/~15% `NA` per D4's "inconsistent"
-case, 1 deliberately long name pre-staged for Slice 2's geometry mitigation). **Pre-RED found 2 of the
-plan's suggested RED tests (trap 3 `removeDuplicates()`, trap 4 `fixColumnNames()`) already pass with
-zero code change** -- both are schema-agnostic existing behavior correctly extending to the new column
--- disclosed to the owner and included as labelled documentation/coverage rather than presented as
-RED-driving (see `PROJECT_LEARNINGS.md` Learning 489). No visible app change (Slice 1 scope); issue
-#136 stays open. Verified: full clean regression read 0 failed/0 error (10 pre-existing baseline
-warnings unchanged, 4650 passed); `lintr` 0 issues on all 8 touched files (using the project's own
-`.lintr` config, not the default linter set); `devtools::check()` 1 ERROR/1 WARNING/1 NOTE, all
-pre-existing (non-portable `inst/extdata/reference/...` filename from S418; `a2interactive.Rmd`
-vignette-engine NOTE), 0 new; end-to-end pipeline check against the new fixture confirmed `name`
-survives `qcStudbook()` and is correctly scrubbed by `obfuscatePed()`. Citation (#120), `NEWS.Rmd`, and
-tutorial/article checklists are N/A per the plan's own Section 5 (owed at Slice 2, which ships the
-user-visible rendering). REFACTOR: owner-confirmed skip (each change mirrors an existing precedent
-exactly -- `species`'s coercion block, `affected`'s roxygen bullet, D8's scrub). **Next session in this
-cluster implements Slice 2** (label rendering + toggle + documentation): see `docs/planning/
-issue136-name-labels-pedigree-diagram-plan.md` §4 Slice 2. Phase 3E: n/a, no runtime behavior change
-this slice. See `CHANGELOG.md`.
-
-**Progress (S490, 2026-08-09):** Tier 2 step 3, Slice 2 -- issue #136's label rendering + toggle +
-documentation -- is DONE, full TDD PRE-RED->RED->GREEN cycle (`AskUserQuestion`-gated at every
-transition). Pre-RED resolved both open dragons hands-on via a live `chromote` render: Dragon 1
-(multi-line `"\n"` rendering) confirmed working, no fallback needed; D10's truncation budget
-empirically calibrated at 15 characters + `"..."` against the real fixture's tightest measured
-spacing. Two new shared helpers (`.nameLabel()`, `.nameTooltipLine()`) wired into both
-`makePedigreeDiagramData()` and `makePedigreeMatingLayout()` (D7, including duplicate-node label
-parity); `R/modPedigree.R` gained an off-by-default "Show Names on Diagram" toggle (D3/D4/D6), the
-`diagramLayout` reactive strips `name` when the toggle is off, `useLabels = FALSE` pinned on the
-search dropdown (D6). **A real defect was found via live Phase 3E verification** (not caught by any
-unit test): `pedigreeDiagramUI`'s `renderUI()` rebuilds the toggle checkbox from scratch on ANY
-re-render (e.g. switching `edgeStyle`), and a hardcoded `value = FALSE` silently discarded an
-already-on toggle -- fixed with a self-referential `value = .currentShowNames()`, matching the
-pre-existing `edgeStyle` radio buttons' own pattern. Proven that a `shiny::testServer()` test cannot
-pin this class of regression at all (it never simulates the real client round-trip that is the actual
-failure mechanism); permanent coverage is instead 2 new live `shinytest2`/`chromote` tests in
-`test-e2e-pedigree-module.R`. See `PROJECT_LEARNINGS.md` Learning 490. Documentation checklists done
-in-session: `NEWS.Rmd`/`NEWS.md`, `_pedigree_browser.Rmd` **and** `colony-manager-guide.qmd` (owner's
-#136 comment requires both, both re-rendered clean), `input_format.html` (new `name` row). Verified:
-full clean regression read 0 failed/0 error (10 pre-existing baseline warnings unchanged, 4677
-passed, 173 skipped); `lintr` 0 issues on all 6 touched files (2 `commented_code_linter` false
-positives reworded away, not suppressed); `devtools::check()` 1 ERROR/1 WARNING/1 NOTE, all
-pre-existing and individually attributed, 0 new (the fresh spelling diff's extra 3 words confirmed via
-`git blame` to predate this session -- see the updated Housekeeping item above); full live
-`test-e2e-pedigree-module.R` run clean. REFACTOR: owner-confirmed skip. **Both slices of issue #136
-are now shipped; issue #136 itself is closed as part of this session's close-out.** Tier 2's remaining
-order (#137 > #138, each needing its own scoping session) is next in this cluster. See `CHANGELOG.md`.
-
-**Progress (S491, 2026-08-09):** Tier 2 step 4 -- issue #137's design/architecture document -- is
-DONE and RATIFIED: see `docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md`. A 4-agent
-research + draft + 3-lens adversarial-verify workflow, cross-checked against this session's own
-substantial independent first-hand verification (kinship2 v1.9.6.2's `relation` mechanism deparsed
-and empirically tested directly, not just read from Rd text; the codebase's rendering/obfuscation/
-schema code read directly). Central finding: twin-ness is **pairwise** (unlike #133's `affected` or
-#136's `name`, both single-individual attributes), so `.nprcColumnSchema`'s single-per-individual-row
-model structurally cannot hold it -- resolved via a new sidecar `twinRelations` table
-`(id1, id2, code)`, mirroring kinship2's own `relation` convention and this project's existing
-`applyKinshipOverrides()` precedent, needing **zero** change to `columnSchema.R`/`getPossibleCols()`/
-`qcStudbook()`/`checkRequiredCols()`/`fixColumnNames()`/`removeDuplicates()`. Confirmed kinship2's
-`relation` codes are 1=MZ/2=DZ/3=UZ **twin** plus a 4th, non-twin `4=Spouse` code the issue's own text
-omitted; confirmed via direct source read that kinship2 renders DZ with position-clustering only, no
-distinct mark, unlike MZ (extra crossbar) and UZ ("?" glyph) -- informing this design's own simpler
-direct-edge-with-label rendering choice (no attempt to reproduce kinship2's wedge geometry, ruled out
-of scope by the same Deletion-Test refactor heuristic #133 D4 cited). Also found and resolved, in the
-same slice as the data model (not deferred): `obfuscatePed()` cannot reach a second sidecar object,
-so a new `obfuscateTwinRelations()` companion consuming `obfuscatePed(..., map = TRUE)`'s existing
-`map` output is a required Slice 1 deliverable, closing the same class of PII gap #136 D8 closed for
-`name`. 4 genuine judgment calls (data-model shape D1, rendering mechanism D6, duplicate-node
-connector-targeting D7, UI-wiring slice boundary D11) ratified via a single `AskUserQuestion` round;
-owner selected this document's own recommended option in all four cases, no changes requested. A
-tooling discovery made and recorded in-session (`PROJECT_LEARNINGS.md` Learning 491): the workflow's
-own huge (~56K-character) drafted document was silently truncated to its last ~18.6K characters
-before reaching both the persisted journal and the downstream adversarial-verify agents, causing 2 of
-3 verify lenses' "blocking" findings to be false positives (content the truncated copy never showed
-them, not a real gap) -- caught only by recovering the drafting agent's raw transcript directly and
-cross-checking against this session's own independent verification. 3 genuinely new verify findings
-did survive reconciliation and are incorporated into the ratified document (a missing `CHANGELOG.md`
-ledger-format close-out item; a "twin zygosity," never bare "zygosity," prose-disambiguation
-requirement against the Marker Genetics module's existing "Heterozygosity" tab; and two rendering
-mechanics notes -- a `dashes` list-column technique and `visLegend()`'s single-call `addEdges`
-parameter). No `R/`/`tests/`/`man/` content changed this session (design-only). Issue #137 stays
-open, ready for Slice 1 implementation in a future session. See `CHANGELOG.md`.
-
-**Progress (S492, 2026-08-09):** issue #137 Slice 1 (data model + de-identification) is DONE --
-`R/checkTwinRelations.R` (validates a twin/zygosity sidecar `(id1, id2, code)` against kinship2's
-own five relation rules) and `R/obfuscateTwinRelations.R` (de-identification companion consuming
-`obfuscatePed(..., map = TRUE)`'s alias vector), both `@export`. Full strict-TDD PRE-RED->RED->GREEN
-cycle; a real RED-phase rigor gap found and fixed live (bare `expect_error()` trivially satisfied by
-"could not find function," not the intended domain rule -- `PROJECT_LEARNINGS.md` Learning 492).
-Fixture pair added (`obfuscated_rhesus_mhc_ped_twins.csv` + `..._twin_relations.csv`), built from
-REAL full-sibling structure already present in the base pedigree (not fabricated), including a twin
-who is independently a multi-mate parent (design doc sec 6 Dragon 3's exact scenario). Verified:
-full clean regression read 0 failed/0 error, 4694 passed; `lintr` 0 issues; `devtools::check()` 1
-ERROR/1 WARNING/1 NOTE, all pre-existing/individually attributed, 0 new (2 new spelling-check words
-this session's own diff introduced -- "zygosity", an ordinal-digit "th" tokenization artifact --
-were found and fixed in-session, not left as a new gap). REFACTOR: owner-confirmed skip. **Issue
-#137 stays open** -- Slice 2 (core rendering: connector edges in both diagram functions, rectilinear
-trap fix) is next in this cluster, followed by Slice 3 (UI wiring, legend, documentation). See
-`CHANGELOG.md`.
-
-**Progress (S493, 2026-08-09):** issue #137 Slice 2 (core rendering) is DONE -- both
-`makePedigreeDiagramData()` and `makePedigreeMatingLayout()` gain an optional `twinRelations`
-parameter (D1/D6/D7) rendering a distinctly-styled connector edge per twin pair via a new shared
-`.buildTwinConnectorEdges()` helper: MZ solid+"MZ", DZ short-dash `c(4L,4L)`+"DZ", UZ long-dash
-`c(14L,8L)`+"?" (D10 colors/dash patterns decided this session -- `#009E73` Okabe-Ito bluish-green,
-confirmed via grep against every hex color already in `R/` to avoid collision). `dashes` is an
-`I(list(...))` list-column, re-confirmed hands-on (a second, independent verification of the design
-doc's own Dragon #4) via a live `rbind()`/`jsonlite` test that a plain logical value and a
-numeric-vector dash pattern coerce and serialize correctly in the same column.
-`.addRectilinearWaypoints()`'s `newEdges` construction now unconditionally stamps a `label` column
-(D9) -- verified as genuinely load-bearing, not just plausible, by temporarily reverting the fix,
-re-observing the exact predicted "undefined columns selected" crash, then restoring it. Full
-strict-TDD PRE-RED->RED->GREEN->REFACTOR cycle (`AskUserQuestion`-gated at every transition; REFACTOR
-fixed one small doc-drift item, a stale non-`L`-suffixed dash value in `.buildTwinConnectorEdges()`'s
-own roxygen prose after a lint fix changed the code to integer literals). Phase 3E: a live
-`shinytest2`/`chromote` smoke test against a hand-built, zoomed focus-subset of the Slice 1 fixture
-(the 3 twin pairs + immediate family, including the D7 multi-mate-duplicate scenario) VISUALLY
-confirmed all 3 connector styles distinctly, under both `edgeStyle` settings, 0 console errors --
-closing the design doc's own Dragon #5 gap ("never visually rendered, not even once"); confirmed the
-MZ connector targets HV7LZ3's REAL node specifically, not either of her 2 `__dup_` occurrences (D7);
-confirmed the twin connectors stay direct/unrouted under `edgeStyle = "rectilinear"` while mate-lines
-route through right-angle waypoints around them (D9), exactly as designed. Verified: both targeted
-test files green (76+128 expectations); full clean regression read 0 failed/0 error, 4733 passed,
-173 skipped, 10 pre-existing baseline warnings (unchanged); `devtools::check()` 2 ERRORs/1 WARNING/2
-NOTEs, all independently traced to already-tracked `BACKLOG.md` pre-existing items (non-portable
-filename S418; vignette-engine NOTE + the exact same 9-word spelling gap tracked since S465/S490), 0
-new; `lintr::lint_package()` 0 lints on touched files. **Issue #137 stays open** -- Slice 3 (UI
-wiring, legend, documentation) is next in this cluster. See `CHANGELOG.md`.
-
-**Progress (S494, 2026-08-09):** issue #137 Slice 3 (UI wiring, legend, documentation) is DONE,
-closing the 3-slice chain. Pre-RED found the plan's own "Touches" list overstated scope: neither
-`R/appServer.R` nor `R/modInput.R` needed a change (unlike `kinshipOverrides`, `twinRelations` is
-consumed only inside `modPedigree`'s own render chain, no cross-module threading needed) --
-confirmed by direct reads before writing any code, not assumed. New `fileInput(ns("twinRelationsFile"),
-...)` lives in `modPedigreeUI()`'s STATIC UI (never the dynamically re-rendered `pedigreeDiagramUI`
-block) -- a `fileInput` has no `value=` a fresh render could read back self-referentially the way
-`checkboxInput`/`radioButtons` do, so keeping it outside any re-executing block is the only way to
-avoid silently discarding an upload (Learning 490's file-input corollary, found this session, not
-merely inherited). New `twinRelationsData()` reactive (mirrors `modGeneticValue.R`'s
-`kinshipOverrideData` precedent exactly, minus its dead warning-handling branch --
-`checkTwinRelations()` only ever `stop()`s, never `warn()`s) validates the upload against
-`pedigreeData()`, non-fatal on error. New off-by-default **Show Twin Connectors** toggle follows the
-established self-referential-value pattern (Learning 490) alongside the existing `edgeStyle`/
-`pedigreeShowNames` controls; `diagramLayout()` gates whether the validated data reaches
-`makePedigreeMatingLayout()` on the toggle, mirroring the existing `showNames`-gates-the-`name`-column
-precedent. Legend gained MZ/DZ/UZ rows via the SAME `visLegend()` call's `addEdges` parameter
-(confirmed via source read that it passes straight through with no validation, so a second call was
-never needed) -- describing exactly what Slice 2 actually renders (label + dash pattern only). New
-exported `R/readTwinRelations.R` mirrors `readKinshipOverrides()` verbatim. **Found and filed, not
-fixed:** Slice 2's own `.buildTwinConnectorEdges()` never actually wired the `#009E73` color its own
-S493 handoff narrative said was picked -- confirmed via direct grep (zero `009E73` hits in
-`R/makePedigreeDiagramData.R`) -- filed as its own Housekeeping item above rather than fixed here
-(outside Slice 3's own pre-declared file scope). Full strict-TDD PRE-RED->RED->GREEN cycle
-(`AskUserQuestion`-gated at every transition, including a dedicated pre-RED scope decision on the
-color gap; REFACTOR owner-confirmed skip -- the GREEN diff was already minimal and precedent-mirroring).
-Phase 3E: the full, real `test-e2e-pedigree-module.R` suite (13 tests, including 2 new ones for this
-slice) run live against a freshly `devtools::install()`ed package (the Learning 440 stale-install trap
-avoided proactively, not rediscovered) -- all 13 passed, including the new MZ/DZ/UZ connector-render
-test and the toggle-survives-`edgeStyle`-switch regression test (Learning 490's own pattern, applied
-to a second toggle), 0 console errors. Verified: full clean regression read 0 failed/0 error, 4758
-passed, 175 skipped, 10 pre-existing baseline warnings (unchanged); `devtools::check()` 2 ERRORs/1
-WARNING/2 NOTEs, an EXACT match to S493's own baseline, 0 new; `lintr::lint_package()` 0 lints (6
-false positives on new comments/a label string, suppressed via the established `# nolint` convention,
-not deleted or reworded). `NEWS.Rmd` and `vignettes/manual_components/_pedigree_browser.Rmd` both
-updated this session. Citation checklist (#120): N/A, confirmed explicitly -- a twin/zygosity
-connector is a relationship marker/rendering convention, not a new displayed statistic or estimator,
-matching the precedent already set for #133's `affected` flag and #136's `name` label.
-`a2interactive.Rmd` coverage remains DEFERRED per its own standing rule (a future documentation pass,
-not this slice). **Issue #137 is now fully implemented across all 3 slices; closed as part of this
-session's close-out.** See `CHANGELOG.md`.
-
-**Progress (S499, 2026-08-09):** Issue #145's own design/architecture document -- deferred since
-S482's verification spike per that spike's own "Recommendation for a future #145 design session" --
-is DONE and RATIFIED: see `docs/planning/issue145-sire-dam-left-right-placement-plan.md`. Direct
-source verification found two things the spike's own cross-project recommendation got wrong once
-re-derived against `nprcgenekeepr`'s OWN algorithm (which does not call kinship2 at all, confirmed
-this session): (a) today's simple-pair default is NOT "coincidentally male-left" the way kinship2's
-is -- the project's own canonical GA204Z/8LKBV9 fixture places the DAM left of the SIRE today, the
-opposite of the spike's assumption; (b) the multi-mate "crowding" case has no existing
-"anchor-centered, mates flank" mechanism to extend, contrary to the spike's claim that one already
-exists for unrelated reasons. A 3-agent adversarial review of the resulting draft (before
-ratification) found a real, constructed counter-example breaking the draft's first proposed
-mechanism (a subtree reflection) and refuted an overstated "gen and x are orthogonal" claim about
-issues #143/#144 using their own shipped test diffs -- both incorporated into a revised, more
-conservative mechanism (swap only the two real parents' own `x` values) before ratification, not
-patched around superficially. Three genuine judgment calls (direction, toggle shape, whether to file
-a follow-up issue for the harder multi-mate case) ratified via a single `AskUserQuestion` round,
-owner selected this document's own recommended option in all three: male-left/female-right; a new
-`orderBySex = TRUE` parameter on `makePedigreeMatingLayout()` with no UI wiring yet (Slice 2 not
-created); no follow-up issue filed for the multi-mate case. **Issue #145 stays open** -- this is
-design/planning only, matching the #133/#136/#137/#147 precedent; Slice 1 (core positioning
-behavior) is the natural next pickup, with its own Pre-RED required to empirically verify D2's
-mechanism live before RED (not yet proven beyond a paper argument -- see the plan's own §6 Dragon 1).
-See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 498.
-
-**Progress (S500, 2026-08-10):** Issue #145 Slice 1 (core positioning behavior) is DONE, implementing
-the ratified design's D1-D8: `.positionMatingUnitForest()` gained a new `orderBySex = TRUE`
-parameter (an additive post-hoc value-swap for every D1-qualifying simple pair);
-`makePedigreeMatingLayout()` threads a matching parameter through, default on. Full strict-TDD
-PRE-RED->RED->GREEN cycle (`AskUserQuestion`-gated at every transition, REFACTOR owner-confirmed
-skip). Pre-RED empirically verified D2's swap mechanism live (not just on paper) against the real
-GA204Z/8LKBV9 fixture and a reconstructed version of the adversarial review's own wide-fanout
-counter-example, re-derived to actually force the swap to fire. GREEN's own live run surfaced a
-second, independently D1-qualifying pair nested inside the wide-fanout test fixture (`C2`/`GCMate`),
-correctly swapped by the (intentionally per-unit-scoped) implementation -- the test's own assertion
-was widened to match, not the implementation narrowed (`PROJECT_LEARNINGS.md` Learning 499). Verified:
-all 8 new/modified tests pass; full clean regression read 0 failed/0 error (4881 passed, up from
-4858, same 10 pre-existing baseline warnings); `lintr::lint_package()` 0 lints on touched files;
-`devtools::check()` 0 errors/0 warnings/1 note (pre-existing `a2interactive.Rmd` baseline, unchanged
--- the first check run caught a real codoc-mismatch WARNING from a forgotten `devtools::document()`,
-fixed, which also atomically corrected a second, already-stale `.Rd` file from S498's own
-unregenerated roxygen source); live `shinytest2` smoke test (visNetwork bound, 0 diagram-related
-console errors) with a screenshot of a real 2-child qualifying family in the bundled fixture visually
-confirming male-left/female-right rendering -- satisfies the plan's own §6 dragon 3. `NEWS.Rmd`/
-`NEWS.md` updated; citation/`_pkgdown.yml`/tutorial-article checklists all N/A this slice (D7);
-`a2interactive.Rmd` deferred per its own standing rule. **Issue #145 is now fully implemented for
-the ratified simple-pair scope; closed as part of this session's close-out.** See `CHANGELOG.md`,
-`PROJECT_LEARNINGS.md` Learning 499.
+**Issue #138** (full-colony rendering beyond the 1,500-node cap) is the one item in the owner's Tier 2
+order this cluster did not reach -- still open, tracked as its own GitHub issue (`low priority`
+label), needing its own scoping session first, matching #133/#136/#137/#145's own precedent. See
+`CHANGELOG.md` for the full session-by-session record and `PROJECT_LEARNINGS.md` Learnings 485,
+488-499 for the individual technical findings.
 - [ ] **Candidate C's connector/dogleg visual-signposting idea** (found S473,
       designing the issue #144 plan; not adopted for #144 itself, Effort
       unknown, low priority) -- extends the existing D2 mate-line "dogleg"
@@ -1386,15 +797,9 @@ the ratified simple-pair scope; closed as part of this session's close-out.** Se
       fix status.)
 - [ ] (none remaining -- **the `.positionMatingUnitForest()` free-pass-filter
       reachability question is CLOSED, not fixed** -- S481 (2026-08-08):
-      investigated with 2 targeted fixtures (a never-anchoring founder with a
-      D5 direct child; a never-anchoring NON-founder with a D5 direct child,
-      the specific "if not a root" case this item worried about) and neither
-      reproduced a missing/duplicate node. Structurally, a real individual
-      excluded from `freePassIds` is either a founder (exclusion just keeps
-      them in `rootIds`, since `rootIds <- setdiff(founderIds, freePassIds)`)
-      or a non-founder (always visited via their own real parent's normal
-      recursion regardless of free-pass status) -- no path found where they
-      are lost. See `CHANGELOG.md` and issue #154's own closing note.)
+      investigated with 2 targeted fixtures, neither reproduced a missing/
+      duplicate node; structurally, no real individual is ever lost regardless
+      of free-pass status. See `CHANGELOG.md` and issue #154's own closing note.)
 - [ ] **The live app's uploaded/QC'd copy of `obfuscated_rhesus_mhc_ped.csv`
       produces one fewer node than reading the same bundled CSV directly**
       (found S472, incidental to issue #143's live verification, Effort

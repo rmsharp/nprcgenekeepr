@@ -131,6 +131,44 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [BL-518] `BACKLOG.md` "Pedigree diagram vs kinship2 audit follow-ups" section compressed (Session 530)
+- **Deliverable:** Compressed `BACKLOG.md`'s "Pedigree diagram vs kinship2 audit follow-ups" section
+  (896 lines) per the S518 ledger-size housekeeping item -- the 2nd of its 2 remaining oversized
+  sections (Housekeeping was compressed S529). 12 fully-resolved bulleted items (issues #131/#134/
+  #135/#139, the Option 2 kinship2-parity layout's feasibility study + design + 3 implementation
+  slices, the duplicate-node-arc fix, issues #143/#144) rewritten to `BACKLOG.md`'s own short-pointer
+  convention; a ~375-line unbulleted S480-S500 Progress-narrative chain (Tier 1: 2 crash-bug fixes +
+  the issue #145 verification spike + a stale-doc refresh; Tier 2: issues #133/#136/#137/#145, each
+  design-ratified then implemented across 1-3 slices, all now closed) condensed into one ~50-line
+  consolidated summary retaining every session number, ratified design-doc path, and
+  `PROJECT_LEARNINGS.md` Learning cross-reference. The 4 genuinely-open items (Candidate C's connector
+  idea; the node-count-off-by-one gap; the fixture-docstring-mismatch gap; the `highlightNearest`
+  degree=6 bound) left untouched, plus 2 already-short resolved pointers (issue #154's crash bugs;
+  the free-pass-filter reachability close-out) left as-is.
+- **Verification before compressing (Learning 535's own discipline, applied to a much larger set):**
+  grepped `CHANGELOG.md` for all 31 cited session numbers (S440-S500) before trusting any "See
+  CHANGELOG.md" pointer. A first single-file grep returned 0 of 31 found -- traced to
+  `CHANGELOG.md` having already been archived twice (`docs/archive/CHANGELOG-through-2026-08-10.md`,
+  `docs/archive/CHANGELOG-through-2026-08-11.md`); re-running the grep across the live file plus
+  both archive shards found all 31 present, 0 real gaps (unlike S529's Housekeeping pass, which
+  found 2). `PROJECT_LEARNINGS.md` Learning 536. All Learning cross-references (410, 411, 418, 419,
+  443, 449-453, 457, 470, 471, 485, 488-494, 498, 499, plus already-present 382/468) and all 11 cited
+  `docs/planning|audits|research/*` file paths confirmed to resolve via direct grep.
+- Net: section 896→286 lines (610 removed); `BACKLOG.md` total 2,254→1,658 (596 removed, after this
+  session's own S518-item progress notes added lines back elsewhere in the file). Zero
+  information loss verified by re-reading the full compressed section end-to-end before close-out.
+  `BACKLOG.md`'s own S518 tracking item updated in place (not closed) -- 1 section remains
+  ("Genetic-metrics PDF audit follow-ups," ~753 lines, higher-risk since issue #152's thread is still
+  active), flagged as its own future session.
+- Also folded in this session's own Phase 0 ledger reconcile (`HANDOFFS.md`'s S529 receipt `commit:
+  pending` → `73327ca1`, see the entry below) before the priorities picker.
+- Documentation checklists (citation/tutorial/`NEWS.Rmd`/`a2interactive.Rmd`/`_pkgdown.yml`): N/A --
+  no exported function, no UI feature, no displayed statistic. Runtime smoke test (Phase 3E): N/A --
+  docs-only, no `R/`/`tests/`/`man/`/`NAMESPACE`/`data/` content touched (`git diff --stat` confirms
+  only `BACKLOG.md`/`CHANGELOG.md`/`PROJECT_LEARNINGS.md`/`SESSION_NOTES.md`/`HANDOFFS.md`).
+  `lintr::lint_package()`: N/A, no `.R` file touched. TDD RED/GREEN/REFACTOR: N/A throughout, per
+  `CLAUDE.md`'s Development Process Contract (no code or tests involved).
+
 ### 2026-08-12 · [ad hoc] S530 Phase 0 reconcile: HANDOFFS.md S529 receipt commit: pending → 73327ca1 (Session 530)
 - The S529 receipt's `commit:` field was necessarily `pending` at write time (the receipt ships in
   the commit whose sha it would name) -- the same one-hop self-referential gap the S527→S528 and
