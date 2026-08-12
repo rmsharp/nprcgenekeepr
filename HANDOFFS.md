@@ -179,7 +179,7 @@ runtime_smoke: n/a -- script-callable only, no Shiny wiring touched this slice, 
 Slice 1/2/3 precedent (design doc section 5: Slice 5 is the only slice shipping a UI tab).
 changelog_ref: this session's own CHANGELOG.md entry, 2026-08-12 ([issue #152] Slice 4 --
 obfuscateGenotypeMatrix() de-identification primitive shipped)
-commit: pending
+commit: a99fd2c2
 ```
 
 ```handoff
