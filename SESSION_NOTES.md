@@ -6,11 +6,132 @@
 
 ## ACTIVE TASK
 
+### Session 524 Handoff Evaluation (by Session 525)
+**Score: 9/10.** **What helped:** the `HANDOFFS.md` S524 receipt's `next_steps` field named
+"(1) Issue #152 Slice 1 (sequence ingestion + fixture, script-callable only) is READY -- ratified
+design doc `docs/planning/issue152-sequence-input-genetic-metrics-plan.md` §5 Slice 1; can reuse
+`checkLocusMetadata()`, `checkLinkageMarkerGenotypeFile()`, and this issue's own
+EM-verification/tabPanel-eager-rendering-awareness as precedent" as directly pickable and
+maximally useful -- this session picked exactly that item, and the "can reuse
+`checkLocusMetadata()`" pointer was the single most load-bearing fact of PRE-RED: reading that
+function's own roxygen docs (which credit issue #152's design decision as the schema's origin)
+revealed that the #152 plan's own Slice 1 "Touches" list (written S517, before issue #153 shipped
+anything) was stale -- its "new locusMetadata validation helper" deliverable had already been
+built by issue #153 Slice 1 (S520). Without the receipt's explicit reuse pointer, this session
+might still have found this via its own precedent-code review, but the receipt made it a
+zero-search certainty rather than a discovery. **What was missing:** nothing S524 could have
+reasonably anticipated -- the return-value-contract mismatch this session found (the #152 plan's
+interface catalog says `checkSequenceGenotypeFile()` returns `TRUE` invisibly, but the actual
+established sibling-validator convention, set by S520/S521's own shipped code, returns the
+checked dataframe) is a plan-vs.-later-convention drift the S524 receipt had no way to name, since
+S524's own slice (#153 Slice 5) never touched this specific interface. **What was wrong:**
+nothing found -- S524's own claims (32+18 tests, 0 errors/0 warnings/2 NOTEs, live smoke-tested)
+were not independently re-verified line-by-line since this session worked on an unrelated file,
+but this session's own full regression run (5,408 passed) implicitly re-confirms all of S524's
+tests still pass. **ROI:** Strong -- the receipt's `next_steps` pointer was exactly the artifact
+that let PRE-RED discover the stale-plan-deliverable finding efficiently rather than by accident.
+
 ### What Session 525 Did
-**Deliverable:** Issue #152 Slice 1 -- sequence ingestion + fixture (IN PROGRESS)
-**Started:** 2026-08-11
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable:** Issue #152 Slice 1 -- sequence ingestion + fixture (script-callable only, no UI,
+no metric changes), per `docs/planning/issue152-sequence-input-genetic-metrics-plan.md` §5 Slice 1.
+Full strict TDD PRE-RED->RED->GREEN cycle, each transition `AskUserQuestion`-gated (REFACTOR: a
+real candidate was identified and explicitly declined as out of this slice's pre-declared scope).
+Picked from this session's own Phase 0 priorities list (owner choice via `AskUserQuestion`) over 3
+other candidates (the `methodology_trim.py` fence-scanner fix, the `a2interactive.Rmd`
+documentation pass, the `inst/WORDLIST` spelling gap).
+**Started/Completed:** 2026-08-11.
+**Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient (`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue
+list`, git status/log, `methodology_dashboard.py` -- health 96/100, 1 HIGH risk: the same 3-file
+ledger-size condition, unaddressed; dashboard itself stale v2.14.0 vs canonical v2.15.1,
+informational only). Ledger reconcile: no undocumented commit gap (`CHANGELOG.md`/`HANDOFFS.md`
+frontiers both already `HEAD`). Rendered the priorities list via `AskUserQuestion` (4 options:
+issue #152 Slice 1, the fence-scanner fix, the `a2interactive.Rmd` pass, the `inst/WORDLIST` gap);
+owner picked issue #152 Slice 1. **(2)** Stated scope back, Phase 1B claim stub + `HANDOFFS.md
+status: pending` receipt + `CHANGELOG.md` claim entry committed (`46c8aac2`). **(3)** PRE-RED: read
+`DEVELOPMENT_WORKSTREAM.md`, the full ratified design doc (§1-§11), and precedent code
+(`checkMarkerGenotypeFile.R`, `checkLinkageMarkerGenotypeFile.R`, `checkLocusMetadata.R`,
+`buildMarkerGenotypeMatrix.R`, `data-raw/generate_str_fixtures.R`, their test files). Discovered
+the plan's own "Touches" list was stale (see handoff evaluation above) -- `checkLocusMetadata()`
+already exists and should be REUSED, not reimplemented. Presented 4 genuine PRE-RED judgment calls
+via one `AskUserQuestion` round: return-value contract (checked dataframe vs. the plan's literal
+`TRUE` invisibly), the D1 panel-size ceiling (hardcoded vs. an overridable `maxLoci` parameter),
+Dragon 4's literal `"."` allele handling (reject vs. silently normalize), and the D10 fixture size
+within its documented 1,000-5,000-locus range (1,000x50 vs. 5,000x100). Owner picked all 4
+recommended options. Presented the 18-block RED test plan across 6 groups via the PRE-RED->RED
+phase gate; owner approved. **(4)** RED: wrote `tests/testthat/test_checkSequenceGenotypeFile.R`
+(18 `test_that` blocks). Confirmed 17/18 fail genuinely (missing function/fixture), 1 passes (the
+`checkMarkerGenotypeFile()` regression proof, correctly untouched). One early full-suite run showed
+an unrelated `test_pkgdown_reference_config.R` flake, traced (via 3 independent isolation checks)
+to resource contention from this session's OWN concurrent background diagnostic processes, not a
+real collateral defect (`PROJECT_LEARNINGS.md` Learning 529). Presented the RED->GREEN gate with
+the exact GREEN plan; owner approved. **(5)** GREEN: wrote `R/checkSequenceGenotypeFile.R` (new
+export, `genotype, locusMetadata = NULL, maxLoci = 50000L`) and
+`data-raw/generate_sequence_fixtures.R` (seeded `set_seed(152L)`, 50 individuals x 1,000 loci
+across 20 chromosomes, ~2% missingness, 100%-"full"-coverage `locusMetadata` sidecar --
+deliberately not #153's own sparse-mix convention, since this fixture's stated reuse purpose,
+Slices 2-3, needs position data for every locus). Ran the generator (`stopifnot()`s passed,
+committed the 2 fixture CSVs). All 18 RED blocks turned green. `devtools::document()` (clean
+NAMESPACE/`man/` diff, additive only). Full clean regression: 5,408 passed/0 failed/0 error (17
+pre-existing warnings, all traced to 4 unrelated pre-existing test blocks, none new).
+`lintr::lint_package()` found 2 lints (1 line-length, 1 `stopifnot_all_linter`), both fixed.
+`_pkgdown.yml` reference-coverage guard caught the missing new-export entry live; fixed
+(alphabetical, catch-all group). `spelling::spell_check_package()` found 9 words traced to the new
+file; trimmed the Danecek et al. 2011 citation to "et al." (matching the codebase's own `MacCluer
+JW, et al.` precedent, `PROJECT_LEARNINGS.md` Learning 530) and reworded 2 roxygen phrases,
+reducing the true new-word count from 9 to 4 (`GBS`, `VCF`, `VCF's`, `VCFtools`); added all 5
+(plus `Danecek`) to `inst/WORDLIST`; re-verified 0 words traced to the new file.
+`devtools::check()`: 0 errors/0 warnings/3 NOTEs, all 3 independently confirmed pre-existing
+(top-level files; vignettes/figure leftover; the known ~69-70-word spelling-WORDLIST gap -- direct
+diff confirmed zero flagged words trace to this session's files). **(6)** REFACTOR gate: a REAL
+candidate was identified this time (unlike prior slices' "no candidate found") -- `checkMarkerGenotypeFile()`'s
+structural-check logic is now duplicated a 3rd time (also in `checkLinkageMarkerGenotypeFile()`),
+a legitimate case for extracting a shared private helper. Presented via `AskUserQuestion`; owner
+declined for this session (extraction would touch 2 existing files outside this slice's
+PRE-RED-declared scope, matching the S521-S524 precedent of deferring cross-file refactors) --
+noted in `BACKLOG.md`'s narrative for a future session's own deliberate pickup. **(7)** Close-out:
+`NEWS.Rmd`/`NEWS.md` terse entry added (`rmarkdown::render()`, diff-confirmed insertion-only, 7
+lines), deliberately matching the pre-1.0.8 style `BACKLOG.md`'s own verbosity-drift item asks
+future entries to return to. Runtime smoke test (Phase 3E): n/a -- script-callable only, no Shiny
+wiring this slice (matches the `resolveCrossCenterIds()` Slice 4 precedent). Citation checklist
+(issue #120) and tutorial/article checklist (Session 436) N/A this slice (no UI/displayed statistic
+yet). `PROJECT_LEARNINGS.md` Learnings 528 (the stale-plan-deliverable-vs.-shipped-sibling-work
+discovery), 529 (the concurrent-Rscript-diagnostic-flake finding), and 530 (the multi-author-
+citation-vs.-WORDLIST-cost finding). `BACKLOG.md` issue #152/#153 narrative section got a new
+"Progress (S525, ...)" entry (issue #152 stays open -- Slice 2 is next). No GitHub issue to close
+(#152 stays open through its own 5-slice family, matching #153's own precedent).
+
+**Self-assessment (Session 525): 9/10.** **Strengths:** (1) PRE-RED's precedent-code review caught
+a genuine plan-staleness finding (the `locusMetadata` helper was already shipped by a sibling
+issue) that a shallower "just re-read the plan" PRE-RED would have missed, avoiding duplicate
+implementation work. (2) When a full-suite test run showed an unexplained, alarming collateral
+failure, did NOT assume it was caused by the new file -- ran 3 independent isolation checks
+(paired-file run, `git stash`-isolated baseline, solo full-suite rerun) before concluding it was a
+resource-contention artifact from this session's own concurrent diagnostic tooling, converting a
+potential false alarm into a documented, reusable methodology learning instead of either
+panicking or silently ignoring it. (3) Correctly identified a genuine REFACTOR candidate (3rd copy
+of duplicated structural-check logic) rather than defaulting to "no candidate found," then
+correctly declined to act on it given the cross-file scope-boundary conflict with this slice's own
+PRE-RED-declared touch-list -- surfaced the tension explicitly via `AskUserQuestion` rather than
+either silently expanding scope or silently missing the pattern. (4) Ran the full verification
+chain exhaustively (18 new tests, full regression, `devtools::check()`, `lintr`, spelling,
+`_pkgdown.yml` coverage) and caught/fixed 2 real gaps (`_pkgdown.yml` missing entry, WORDLIST
+words) rather than stopping at "tests pass." (5) Proactively simplified the Danecek et al.
+citation to avoid unnecessary WORDLIST churn, applying a pattern already present elsewhere in the
+codebase rather than mechanically adding every flagged name. **Weaknesses:** (1) No live Shiny/
+runtime verification this session, but correctly so -- this slice is genuinely script-callable
+only (matches the established Slice-1-of-N precedent across #149/#150/#151/#153's own Slice 1s);
+flagged explicitly rather than silently treated as N/A. (2) Did not independently re-verify S524's
+own prior test claims line-by-line (relied on this session's own full-regression pass count as an
+implicit confirmation) -- reasonable given zero file overlap between the two sessions' work, but
+worth naming for calibration. (3) The concurrent-background-process diagnostic detour (3 extra
+full-suite runs to isolate the pkgdown flake) added real session time beyond the minimum needed --
+justified given the alternative (declaring RED "confirmed" without ruling out a real collateral
+regression) but a future session running multiple heavy Rscript diagnostics should default to
+running them SEQUENTIALLY, not concurrently, to avoid manufacturing this exact investigation.
+**Ledger:** recorded in `CHANGELOG.md` across 2 entries this session (S525 claim, this close-out's
+Slice 1 entry).
 
 ### Session 523 Handoff Evaluation (by Session 524)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S523 receipt's `next_steps` field named "Issue

@@ -207,6 +207,7 @@ reference:
   - '`checkMarkerGenotypeFile`'
   - '`checkParentAge`'
   - '`checkRequiredCols`'
+  - '`checkSequenceGenotypeFile`'
   - '`checkTwinRelations`'
   - '`chooseAlleles`'
   - '`chooseDate`'

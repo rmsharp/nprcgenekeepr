@@ -367,6 +367,13 @@ knitr::opts_chunk$set(echo = TRUE)
   behind a persistent, non-dismissable caveat banner. The LD-block table's
   export is de-identified (`obfuscateLdBlocks()`) behind the same
   curator confirm-gate pattern established by the De-Identified Export tab.
+- New script-callable `checkSequenceGenotypeFile()` (issue #152, Slice 1)
+  validates a long-format biallelic marker genotype file sized for
+  sequence-scale panels, rejecting a literal `.` placeholder and warning
+  (not stopping) above a 50,000-locus ceiling. A new bundled example
+  fixture pair (`example_sequence_genotypes.csv` /
+  `example_sequence_locus_metadata.csv`) provides a 1,000-locus,
+  50-individual panel for future slices. No Shiny UI yet.
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes

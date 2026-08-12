@@ -123,20 +123,115 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S525
 date: 2026-08-11
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Issue #152 Slice 1 -- sequence ingestion + fixture (script-callable only, no UI, no
-metric changes), per docs/planning/issue152-sequence-input-genetic-metrics-plan.md sec 5 Slice 1.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Issue #152 Slice 1 (sequence ingestion + fixture, script-callable only, no UI) is
+DONE. Full strict TDD PRE-RED->RED->GREEN cycle, each transition AskUserQuestion-gated (REFACTOR:
+a real candidate identified -- extracting checkMarkerGenotypeFile()'s now-3x-duplicated structural
+checks -- explicitly declined as out of this slice's pre-declared file scope).
+what_was_done: New checkSequenceGenotypeFile(genotype, locusMetadata = NULL, maxLoci = 50000L)
+(R/checkSequenceGenotypeFile.R): same structural rules as checkMarkerGenotypeFile() (4 columns,
+id-first, no dup id x locus, biallelic-only), plus two new rules -- a literal "." (VCF
+missing-genotype placeholder) allele value is rejected before the biallelic count check (so the
+error is specific, not misleading), and a locus count above maxLoci (default 50000L, D1's scope
+ceiling) triggers warning() not stop(). Returns the checked dataframe (matching the 3-for-3
+sibling-validator convention, not the plan's own since-superseded "TRUE invisibly" wording).
+Reuses checkLocusMetadata() (already shipped as issue #153 Slice 1) for the optional locusMetadata
+sidecar rather than reimplementing it -- a genuine PRE-RED discovery that the plan's own "Touches"
+list was stale relative to the live tree. New data-raw/generate_sequence_fixtures.R (seeded
+set_seed(152L)): 50 individuals x 1,000 loci across 20 chromosomes, ~2% missingness, 100%-"full"-
+coverage locusMetadata sidecar (deliberately not #153's own sparse-mix convention -- reused by
+future Slices 2/3). Committed inst/extdata/examples/example_sequence_genotypes.csv /
+example_sequence_locus_metadata.csv. 18 new test_that blocks, 0 regressions. Full clean regression
+5,408 passed/0 failed/0 error (17 pre-existing warnings, all traced to 4 unrelated pre-existing
+blocks). devtools::check() 0 errors/0 warnings/3 NOTEs, all 3 confirmed pre-existing.
+lintr::lint_package() 0 lints on touched files. _pkgdown.yml catch-all-group entry added.
+inst/WORDLIST gained GBS/VCF/VCF's/VCFtools/Danecek. NEWS.Rmd/NEWS.md terse entry added. Commits:
+46c8aac2 (claim), plus this close-out's own commit.
+next_steps: Issue #152 Slice 2 (the markerKinship()/markerParentageLikelihood() performance
+rewrite, D5 -- O(n^2*L) nested-pair loop and O(F*C*L*n) redundant per-candidate allele-frequency
+rescan, per docs/planning/issue152-sequence-input-genetic-metrics-plan.md sec 3 D5/sec 5 Slice 2)
+is next per the design doc -- required prerequisite work before any genome-scale claim ships;
+both functions must produce byte-identical output to their current implementation on every
+existing small fixture (regression proof), plus a new benchmark test (system.time/bench::mark,
+precedent-setting -- none exists yet anywhere in this package) against the Slice 1 fixture at its
+full 1,000-locus scale. Separately, remaining open Phase 0 priorities from this session's own
+orientation: (1) the methodology_trim.py fence-scanner defect blocking SESSION_NOTES.md's first
+archive (BACKLOG.md, found S518, READY, Effort S); (2) the a2interactive.Rmd documentation pass,
+now 10 functions behind including this session's own checkSequenceGenotypeFile() (found S522,
+READY, Effort M -- deferred per its own standing non-same-session rule); (3) the inst/WORDLIST
+~69-70-word pre-existing spelling gap (found S521, READY, Effort M); (4) the declined REFACTOR
+candidate (extract checkMarkerGenotypeFile()'s 3x-duplicated structural-check logic into a shared
+helper) noted in BACKLOG.md's issue #152/#153 narrative for a future session's own deliberate,
+plan-mode-scoped pickup.
+key_files: R/checkSequenceGenotypeFile.R (new validator, full file); data-raw/
+generate_sequence_fixtures.R (fixture generator, full file); tests/testthat/
+test_checkSequenceGenotypeFile.R (18 new test_that blocks, full file); R/checkLocusMetadata.R
+(reused, not modified -- read its roxygen docs before touching it, they name issue #152 as the
+schema's origin); docs/planning/issue152-sequence-input-genetic-metrics-plan.md sec 5 Slice 2 (the
+next slice's DONE criteria: byte-identical regression proof + a new benchmark test against the
+Slice 1 fixture); PROJECT_LEARNINGS.md Learnings 528-530.
+gotchas: (1) The design doc's own "Touches" lists can go stale when a plan names a shared-
+vocabulary dependency on a sibling issue that ships work later -- re-verify each interface-catalog
+entry against the LIVE tree at PRE-RED (grep for the function name), not just the plan text, before
+assuming it needs to be built (Learning 528). (2) A full-suite-only test failure that won't
+reproduce in isolation, right after running 2+ concurrent Rscript diagnostic processes against
+this repo, is very likely resource contention from your own tooling -- rerun solo before treating
+it as a real regression (Learning 529). (3) Slice 2's own benchmark test is genuinely
+precedent-setting -- zero system.time/microbenchmark/bench:: tests exist anywhere in this
+package's test suite today; there is no existing pattern to copy, only the design doc's own D5/
+Slice 2 prose to work from. (4) A long-author-list @references citation should use "FirstAuthor,
+et al." from the start, not the full list, to avoid unnecessary inst/WORDLIST churn (Learning
+530) -- but a SHORT list (~6 or fewer) should still list everyone, matching this codebase's own
+existing convention (e.g. Manichaikul et al. 2010, 6 authors, listed in full).
+runtime_smoke: n/a -- script-callable only, no Shiny wiring this slice (matches the
+resolveCrossCenterIds() Slice 4 precedent).
+changelog_ref: this session's own CHANGELOG.md entries (S525 claim + close-out, 2026-08-11)
 commit: pending
 ```
-<prose pending -- filled at close-out>
+Self-assessment 9/10. Strengths: (1) PRE-RED's precedent-code review caught a genuine
+plan-staleness finding (the locusMetadata helper already shipped by sibling issue #153) rather
+than trusting the plan's own "Touches" list at face value, avoiding duplicate implementation.
+(2) When a full-suite test run showed an alarming, unexplained collateral failure, ran 3
+independent isolation checks before concluding it was a resource-contention artifact from this
+session's own concurrent diagnostic tooling, rather than either panicking or silently ignoring it
+-- converted into a documented, reusable methodology learning. (3) Identified a genuine REFACTOR
+candidate (a 3rd copy of duplicated structural-check logic) and correctly declined to act on it
+given the cross-file scope-boundary conflict with this slice's own pre-declared touch-list, rather
+than either silently expanding scope or silently missing the pattern. (4) Ran the full
+verification chain exhaustively and caught/fixed 2 real gaps (_pkgdown.yml coverage, WORDLIST
+words) rather than stopping at "tests pass." (5) Proactively simplified a long-author-list
+citation to avoid unnecessary WORDLIST churn, applying a pattern already present elsewhere in the
+codebase. Weaknesses: (1) No live runtime verification, but correctly so -- genuinely
+script-callable only this slice, flagged explicitly rather than silently treated as N/A. (2) Did
+not independently re-verify S524's own prior test claims line-by-line, relying instead on this
+session's own full-regression pass count as an implicit confirmation -- reasonable given zero file
+overlap, but worth naming. (3) The concurrent-background-process diagnostic detour added real
+session time beyond the minimum needed -- justified given the alternative (declaring RED
+"confirmed" without ruling out a real collateral regression), but a future session running
+multiple heavy Rscript diagnostics should default to sequential, not concurrent, execution.
+
+```handoff
+session: S524
+date: 2026-08-12
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Issue #153 Slice 5 (full module tab, wiring, documentation) is DONE. Full strict TDD
+PRE-RED->RED->GREEN->REFACTOR cycle, each transition AskUserQuestion-gated (REFACTOR: no candidate
+identified). Issue #153 is now CLOSED -- all 5 slices shipped.
+what_was_done: A sixth "Linkage and LD Block Metrics" tab in R/modMarkerGenetics.R (D5, D6): a
+locus-metadata coverage report (checkLocusMetadata(), Slice 1, three-tier full/partial/none);
+the primary, pedigree-valid Realized Relatedness Variance table
+(markerRealizedRelatednessVariance(), Slice 3, rhesus-default nChr/mapLength inputs); the
+secondary, descriptive LD Block Statistic table (markerLdBlock(), Slice 4) behind a persistent,
+non-dismissable caveat banner; curator-controlled export wiring for the LD-block table
+(obfuscateLdBlocks(), D9) reusing issue #150's confirm-gate pattern (Generate Preview -> Confirm ->
+Confirm-OK). Mid-GREEN design correction (owner-confirmed via AskUserQuestion): reverted the
+PRE-RED plan to reuse the shared genotypeFile upload -- Shiny mounts every tabPanel's output
+bindings regardless of visible tab, so a multiallelic upload through the shared input broke the
+other 5 tabs' own DT outputs simultaneously (found via RED test failures) -- switched to a
 
 ```handoff
 session: S524

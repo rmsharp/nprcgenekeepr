@@ -131,6 +131,47 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-11 · [issue #152] S525 close-out: Slice 1 (sequence ingestion + fixture) shipped (Session 525)
+- **Deliverable:** Issue #152 Slice 1, per `docs/planning/issue152-sequence-input-genetic-metrics-plan.md`
+  §5 Slice 1. New script-callable `checkSequenceGenotypeFile(genotype, locusMetadata = NULL,
+  maxLoci = 50000L)` (`R/checkSequenceGenotypeFile.R`): same structural rules as
+  `checkMarkerGenotypeFile()` (4 columns, id-first, no duplicate id x locus, biallelic-only), plus
+  two new rules -- a literal `"."` (VCF missing-genotype placeholder) allele value is rejected
+  before the biallelic count check runs, so the error is specific rather than misleading; and a
+  locus count above `maxLoci` (default `50000L`, D1's scope-tier ceiling) triggers `warning()`,
+  not `stop()`. Returns the checked dataframe, matching the established 3-for-3 sibling-validator
+  convention rather than the plan's own since-superseded "TRUE invisibly" interface-catalog
+  wording (PRE-RED `AskUserQuestion`, all 4 recommended options chosen). Reuses `checkLocusMetadata()`
+  (already shipped as issue #153 Slice 1, S520) for the optional `locusMetadata` sidecar rather
+  than reimplementing it -- a genuine PRE-RED discovery that the plan's own "Touches" list, written
+  before issue #153 shipped, was stale relative to the live tree (`PROJECT_LEARNINGS.md` Learning
+  528). New `data-raw/generate_sequence_fixtures.R` (seeded `set_seed(152L)`) generates a
+  50-individual x 1,000-locus synthetic biallelic SNP panel across 20 chromosomes with ~2%
+  missingness, plus a 100%-"full"-coverage `locusMetadata` sidecar (deliberately not issue #153's
+  own sparse-mix convention -- reused by the future Slice 2 benchmark and Slice 3's F_ROH metric),
+  committed as `inst/extdata/examples/example_sequence_genotypes.csv` /
+  `example_sequence_locus_metadata.csv`.
+- **Verification:** 18 new `test_that` blocks, 0 regressions. Full clean regression 5,408 passed/0
+  failed/0 error (17 pre-existing warnings, all traced to 4 unrelated pre-existing test blocks --
+  `test_appServer_server.R`, `test_modMarkerGenetics.R` x3 -- none new). `devtools::check()` 0
+  errors/0 warnings/3 NOTEs, all 3 independently confirmed pre-existing (top-level files;
+  vignettes/figure leftover; the known ~69-70-word spelling-WORDLIST gap, direct diff confirmed
+  zero flagged words trace to this session's own files). `lintr::lint_package()` 0 lints on
+  touched files (1 line-length + 1 `stopifnot_all_linter` finding fixed). `_pkgdown.yml`
+  reference-coverage guard fixed (new export added to the catch-all group). `inst/WORDLIST` gained
+  `GBS`/`VCF`/`VCF's`/`VCFtools`/`Danecek` (the Danecek et al. 2011 VCF citation was trimmed to
+  "et al." rather than all ~12 co-authors, matching this codebase's own `MacCluer JW, et al.`
+  precedent -- `PROJECT_LEARNINGS.md` Learning 530). `NEWS.Rmd`/`NEWS.md` terse entry added,
+  deliberately matching the pre-1.0.8 style. REFACTOR gate: a real candidate was identified
+  (`checkMarkerGenotypeFile()`'s structural-check logic is now duplicated a 3rd time) and
+  explicitly declined via `AskUserQuestion` as out of this slice's pre-declared file scope --
+  noted in `BACKLOG.md`'s narrative for a future session. `PROJECT_LEARNINGS.md` Learnings
+  528-530 (the stale-plan-deliverable discovery; a full-suite-only test flake traced to concurrent
+  Rscript diagnostic processes, not a real regression; the multi-author-citation-vs.-WORDLIST-cost
+  finding). Runtime smoke test: n/a -- script-callable only, no Shiny wiring this slice. Issue
+  #152 stays open -- Slice 2 (the `markerKinship()`/`markerParentageLikelihood()` performance
+  rewrite, D5) is next.
+
 ### 2026-08-11 · [issue #152] S525 claim: issue #152 Slice 1 (sequence ingestion + fixture) (Session 525)
 - **Deliverable:** Session claimed. Issue #152 Slice 1 -- `checkSequenceGenotypeFile()` (D2/D4),
   reusing the already-shipped `checkLocusMetadata()` (D3, shipped as issue #153 Slice 1) for the

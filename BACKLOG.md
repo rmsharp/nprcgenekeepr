@@ -2383,3 +2383,48 @@ article checklist (Session 436) applied for the first time in this issue family:
 `colony-manager-guide.qmd` "Linkage and LD Block Metrics" subsection with 2 new screenshots.
 **This cluster (issue #153, all 5 slices) is now fully complete; issue #153 closed** as part of
 this session's close-out. No further items remain in this narrative.
+
+**Progress (S525, 2026-08-11):** Issue #152 Slice 1 -- sequence ingestion + fixture -- is now
+DONE, per `docs/planning/issue152-sequence-input-genetic-metrics-plan.md` §5 Slice 1. Full strict
+TDD PRE-RED->RED->GREEN cycle (REFACTOR: a real candidate was identified -- a 3rd copy of
+`checkMarkerGenotypeFile()`'s structural-check logic -- but declined via `AskUserQuestion` as
+out of this slice's pre-declared file scope, matching the S521-S524 precedent of deferring
+cross-file refactors; noted for a future session). New `checkSequenceGenotypeFile()` (D2/D4):
+same structural rules as `checkMarkerGenotypeFile()`, plus two new rules this design adds -- a
+literal `"."` (VCF missing-genotype placeholder) allele value is rejected before the biallelic
+count check runs (so the error is specific, not misleadingly "more than two alleles"), and a
+locus count above a `maxLoci` parameter (default `50000L`, D1's scope-tier ceiling) triggers a
+`warning()`, not a `stop()`. A genuine PRE-RED discovery: the plan's own §5 Slice 1 deliverable
+"a new locusMetadata validation helper" (D3) was **already shipped** -- issue #153 Slice 1
+(S520) built `checkLocusMetadata()` against this exact schema, crediting #152's own design
+decision as its origin -- so this slice reuses it directly rather than reimplementing it.
+Also, per PRE-RED `AskUserQuestion` (4 decisions, all recommended options chosen): returns the
+checked dataframe (not `TRUE` invisibly, the plan's literal but since-superseded wording) to
+match the actual 3-for-3 sibling-validator convention; `maxLoci` is a parameter, not a hardcoded
+constant; the literal-`"."` case is a hard `stop()`, not a silent `NA` coercion. New
+`data-raw/generate_sequence_fixtures.R` (seeded `set_seed(152L)`) generates a 50-individual x
+1,000-locus synthetic biallelic SNP panel across 20 chromosomes with ~2% missingness, plus a
+100%-"full"-coverage `locusMetadata` sidecar (deliberately not the sparse mix #153's own STR
+fixture models -- this fixture's stated purpose is scale/performance exercise, Slice 2, and
+reuse by the future F_ROH metric, Slice 3, which needs position data for every locus) --
+committed as `inst/extdata/examples/example_sequence_genotypes.csv` /
+`example_sequence_locus_metadata.csv`. 18 new `test_that` blocks, 0 regressions. Full clean
+regression 5,408 passed/0 failed/0 error (17 pre-existing warnings, all traced to 4 unrelated,
+already-known pre-existing test blocks); `devtools::check()` 0 errors/0 warnings/3 NOTEs, all 3
+independently confirmed pre-existing (top-level files; vignettes/figure leftover; the known
+~69-70-word spelling-WORDLIST gap -- direct diff confirmed zero flagged words trace to this
+session's own new files); `lintr::lint_package()` 0 lints on touched files (1 line-length + 1
+`stopifnot_all_linter` finding fixed). `_pkgdown.yml` reference-coverage guard fixed (new export
+added to the "All exposed functions" catch-all group). `inst/WORDLIST` gained 5 new entries
+(`GBS`, `VCF`, `VCF's`, `VCFtools`, `Danecek`) for this session's own new citation/vocabulary --
+the Danecek et al. 2011 VCF citation was trimmed to first-author-plus-"et al." (matching this
+codebase's own `MacCluer JW, et al.` precedent) rather than listing all ~12 co-authors, avoiding
+4 additional WORDLIST entries for names with no other use in this package. `NEWS.Rmd`/`NEWS.md`
+terse entry added (deliberately matching the pre-1.0.8 style this file's own flagged
+verbosity-drift item, above, asks future entries to return to). Citation checklist (issue #120)
+and tutorial/article checklist (Session 436) do NOT yet apply -- no UI/displayed statistic this
+slice, matching the #146/#149/#150/#151/#153-Slice-1 precedent. Runtime smoke test: n/a --
+script-callable only, no Shiny wiring this slice (matches the `resolveCrossCenterIds()` Slice 4
+precedent). **Issue #152 stays open -- Slice 2 (the `markerKinship()`/
+`markerParentageLikelihood()` performance rewrite, D5) is the next planned slice**, a separate
+future session per the plan's own session-boundary requirement. See `CHANGELOG.md`.
