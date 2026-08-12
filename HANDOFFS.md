@@ -152,6 +152,47 @@ commit was an out-of-band manual docs/build-config edit, not a full session with
 so status is `reconciled`, not `complete`, and there is no self-score to report.
 
 ```handoff
+session: S522c (ad hoc, reconciled)
+date: 2026-08-11
+status: reconciled
+self_score: n/a -- reconstructed, not self-scored
+predecessor_score: n/a
+active_task: Out-of-band manual commit: renv.lock update (accidentally stripped all Suggests-only
+packages, the documented plain-renv::snapshot() failure mode) + a new committed vignette figure
+image. Found and fixed by Session 522's own close-out (a separate action, not this reconcile).
+what_was_done: renv.lock -- 2505 deletions removing every Suggests-only package (and transitive
+deps) from the lockfile. vignettes/figure/plot-focal-age-sex-pyramid-1.png added (a new committed
+image; devtools::check() already flags the containing directory as a knitr leftover). Commit:
+c18b7fd6.
+next_steps: n/a -- this was a standalone out-of-band commit, not a session with planned follow-on
+work. Session 522 itself found and fixed the renv.lock regression in the same session (see the
+S522 receipt above and CHANGELOG.md's own [ad hoc] fix entry) -- no further action needed on that
+front. The committed vignette/figure/*.png is unaddressed; a future session should decide whether
+it belongs committed or should be added to .gitignore alongside the vignette's other generated
+byproducts.
+key_files: renv.lock (fixed by Session 522, see above), vignettes/figure/
+plot-focal-age-sex-pyramid-1.png (unaddressed).
+gotchas: This was a small out-of-band manual commit, not a full numbered session -- no
+SESSION_NOTES.md stub or Phase 1B claim was written for it, and no HANDOFFS.md receipt existed
+until this Phase 0-style reconcile backfilled one (performed at close-out, not Phase 0, since the
+commit postdated this session's own orientation). The CHANGELOG.md ledger WAS behind (this
+reconcile also backfilled a same-day [ad hoc] entry there). See CLAUDE.md's Build/Test/Verify
+section for the renv::snapshot(dev = TRUE) requirement this commit's own renv::snapshot() call
+evidently skipped.
+runtime_smoke: n/a -- renv.lock/build-config + a static image, no runtime behavior changed by this
+commit itself.
+changelog_ref: CHANGELOG.md 2026-08-11 [ad hoc] "Backfilled (reconcile-on-read): undocumented
+commit c18b7fd6" entry (Session 522 close-out reconcile)
+commit: c18b7fd6
+```
+Block reconstructed by Session 522's own close-out (not Phase 0, since this commit postdated that
+session's orientation) from `git log` alone (the commit's own message and diff), per
+`SESSION_RUNNER.md`'s HANDOFFS.md reconcile mechanics, applied at the point of discovery rather
+than deferred to a future session's Phase 0. The commit was an out-of-band manual renv/build-config
+edit, not a full session with a Phase 1B stub -- so status is `reconciled`, not `complete`, and
+there is no self-score to report.
+
+```handoff
 session: S522
 date: 2026-08-11
 status: complete
@@ -159,9 +200,10 @@ self_score: 8
 predecessor_score: 9
 active_task: Issue #153 Slice 3 (markerRealizedRelatednessVariance(), D3a) is DONE. Full strict TDD
 PRE-RED->RED->GREEN->REFACTOR cycle, each transition AskUserQuestion-gated (REFACTOR: no candidate
-identified). Also found, isolated, and fixed (owner-confirmed) an unrelated devtools::check()
-regression from an out-of-band commit. Issue #153 stays open -- Slice 4 (markerLdBlock() + the
-obfuscateLdBlocks() de-identification primitive, D3b/D8/D9) is next per the design doc.
+identified). Also found, isolated, and fixed (owner-confirmed) TWO unrelated out-of-band
+regressions: the a2interactive.Rmd VignetteEngine break, and a renv.lock Suggests-package-drop
+break. Issue #153 stays open -- Slice 4 (markerLdBlock() + the obfuscateLdBlocks()
+de-identification primitive, D3b/D8/D9) is next per the design doc.
 what_was_done: New R/markerRealizedRelatednessVariance.R (exported), 2 internal helpers
 (.hillWeirPhi(), .hillWeirVarianceR()): estimates the variance of realized (actual) relatedness
 around pedigree-expected kinship for Parent-Offspring/Full-Siblings/Half-Siblings pairs, per the
@@ -181,8 +223,14 @@ pedigree-diagram-render chunk (path.expand() error via knitr:::html_screenshot()
 controlled devtools::check() runs to the out-of-band commit 79f37e18's VignetteEngine change
 (knitr::rmarkdown_notangle -> knitr::knitr) -- a3manual.Rmd's own unrelated knitr::knitr built fine
 every run throughout, ruling out a blanket engine problem. Reverted the one line, owner-confirmed,
-as its own commit. Commits: 5b773863 (ledger reconcile backfill), a7bdef0b (claim), 5bfad100
-(vignette-engine fix), plus this close-out commit.
+as its own commit. SEPARATELY: a second out-of-band commit (c18b7fd6, landed mid-session, after
+Phase 0's own orientation) had stripped every Suggests-only package from renv.lock (2505
+deletions) -- confirmed via renv::status(dev = TRUE) as exactly the documented plain-snapshot
+failure mode (60+ packages installed=y/recorded=n/used=y). Fixed via renv::snapshot(dev = TRUE,
+prompt = FALSE), owner-confirmed, as its own commit; renv::status(dev = TRUE) now reports "No
+issues found." Commits: 5b773863 (ledger reconcile backfill), a7bdef0b (claim), 5bfad100
+(vignette-engine fix), 96a602d1 (Slice 3 implementation + close-out docs), d920813e (renv.lock
+fix), plus this receipt's own commit.
 next_steps: (1) Issue #153 Slice 4 (markerLdBlock() descriptive LD/block statistic, D3b, plus the
 obfuscateLdBlocks() de-identification primitive, D8/D9) is next per the design doc §5 -- D3(b) is
 an explicit, documented statistical compromise (no rigorous pedigree-aware LD-block method exists
@@ -216,11 +264,18 @@ silently on an unescaped % character mid-string -- use the Edit/Write tool for m
 appends, not a shell printf/echo pipeline. (4) Manual `&` backgrounding + a Monitor-based `kill -0
 <PID>` poll is unreliable across separate Bash tool invocations (produced one silently-truncated
 log this session) -- prefer the Bash tool's own run_in_background parameter for anything you need
-to reliably wait on.
+to reliably wait on. (5) A ghost out-of-band commit can land AFTER Phase 0's own orientation
+captured HEAD, mid-session -- Phase 0's reconcile is not a one-time guarantee; re-check `git log`
+against the last commit YOU actually made before your own final close-out commit, not just once at
+Phase 0. (6) `renv::snapshot()` without `dev = TRUE` silently strips every Suggests-only package
+from `renv.lock` under this project's `snapshot.type: "explicit"` setting -- always use
+`renv::snapshot(dev = TRUE)` and `renv::status(dev = TRUE)`, per `CLAUDE.md`'s own Build/Test/
+Verify section, which this session's own out-of-band commit evidently did not follow.
 runtime_smoke: n/a -- Slice 3 scope, no runtime/UI behavior changed (new R function only; no Shiny
 module, app wiring, or existing function touched).
-changelog_ref: CHANGELOG.md 2026-08-11, 4 entries (Session 522): ledger-reconcile backfill, claim,
-vignette-engine [ad hoc] fix, close-out.
+changelog_ref: CHANGELOG.md 2026-08-11, 7 entries (Session 522): ledger-reconcile backfill (79f37e18),
+claim, vignette-engine [ad hoc] fix, close-out, renv.lock ledger-reconcile backfill (c18b7fd6),
+renv.lock [ad hoc] fix, plus this receipt's own final entry.
 commit: pending -- reconciled by the next session's Phase 0, per this receipt's own documented
 write-time constraint (the receipt ships in the very commit whose sha it would name).
 ```

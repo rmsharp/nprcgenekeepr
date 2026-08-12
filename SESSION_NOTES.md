@@ -96,13 +96,21 @@ the pre-1.0.8 terseness level (calculation detail belongs in `@references`/
 `population_genetics_terms.html` instead); added a `BACKLOG.md` item enumerating the
 `a2interactive.Rmd` documentation-pass gap (7 functions shipped since S478 with no coverage);
 answered a direct question about `a3manual.Rmd`'s own (unrelated, unchanged-since-2020)
-`VignetteEngine` without editing it. **(10)** Close-out: this evaluation, self-assessment below,
-`NEWS.Rmd`/`NEWS.md` entry, `PROJECT_LEARNINGS.md` Learnings 521 (the vignette-engine finding) and
-522 (the formula-verification methodology), `_pkgdown.yml` entry, citation checklist
+`VignetteEngine` without editing it. **(10)** A final `git log` sanity check before this session's
+own last commit found a *second*, previously-invisible out-of-band commit (`c18b7fd6`, landed
+17:49:45 -- after Phase 0's own orientation had already run): stripped every `Suggests`-only
+package from `renv.lock` (2505 deletions), exactly the plain-`renv::snapshot()`-without-`dev =
+TRUE` failure mode `CLAUDE.md` documents. Confirmed via `renv::status(dev = TRUE)` (60+ packages
+`installed=y/recorded=n/used=y`); fixed via `renv::snapshot(dev = TRUE, prompt = FALSE)`,
+owner-confirmed, as its own commit (`d920813e`); `renv::status(dev = TRUE)` now clean. **(11)**
+Close-out: this evaluation, self-assessment below, `NEWS.Rmd`/`NEWS.md` entry, `PROJECT_LEARNINGS.md`
+Learnings 521 (the vignette-engine finding), 522 (the formula-verification methodology), and 523
+(the mid-session ghost-commit finding), `_pkgdown.yml` entry, citation checklist
 (`population_genetics_terms.html` + roxygen `@references`, per the design doc's own explicit
-Slice-3 obligation), `CHANGELOG.md` entries, `HANDOFFS.md` receipt completed. Tutorial/article
-checklist (Session 436) confirmed not-yet-applicable (no UI this slice). No `gh issue close` --
-Slice 3 of 5, issue #153 stays open.
+Slice-3 obligation), `CHANGELOG.md` entries, `HANDOFFS.md` receipt completed (including a second
+`S522c (ad hoc, reconciled)` block for `c18b7fd6`). Tutorial/article checklist (Session 436)
+confirmed not-yet-applicable (no UI this slice). No `gh issue close` -- Slice 3 of 5, issue #153
+stays open.
 
 **Self-assessment (Session 522): 8/10.** **Strengths:** (1) Treated "derive/verify the formula"
 as a real research task, not a rubber stamp -- cross-checked the same equations via 4 independently
@@ -113,11 +121,16 @@ WebFetch summary or the algebra alone. (2) Found, correctly isolated (4 controll
 regression from an out-of-band commit -- entirely outside Slice 3's own scope -- rather than either
 ignoring it (which would have left `devtools::check()` broken) or silently folding the fix into
 Slice 3's own commits (kept it a separate, clearly-attributed commit, per owner confirmation).
-(3) Correctly scoped the WORDLIST/roxygen spelling fix to exactly the 4 words this session's own
-new file introduced, matching the S521 precedent, rather than the broader pre-existing 65+-word gap.
-(4) Handled 3 mid-turn owner interjections (a `BACKLOG.md` NEWS-verbosity item, an
-`a2interactive.Rmd` gap item, a direct question about `a3manual.Rmd`) without derailing the
-in-progress TDD cycle or treating the `a3manual.Rmd` question as an instruction to edit anything.
+(3) Did not stop checking `git log` after Phase 0 -- a final sanity check right before this
+session's own last commit caught a *second*, mid-session out-of-band commit that had silently
+broken `renv.lock`, structurally invisible to Phase 0's own reconcile since it postdated
+orientation; diagnosed and fixed it with the same rigor as the vignette-engine finding rather than
+assuming Phase 0's reconcile was a one-time, standing guarantee. (4) Correctly scoped the
+WORDLIST/roxygen spelling fix to exactly the 4 words this session's own new file introduced,
+matching the S521 precedent, rather than the broader pre-existing 65+-word gap. (5) Handled 3
+mid-turn owner interjections (a `BACKLOG.md` NEWS-verbosity item, an `a2interactive.Rmd` gap item,
+a direct question about `a3manual.Rmd`) without derailing the in-progress TDD cycle or treating the
+`a3manual.Rmd` question as an instruction to edit anything.
 **Weaknesses:** (1) A `printf`-based shell append to `PROJECT_LEARNINGS.md` (Learning 522) was
 truncated mid-write by an unescaped `%` character inside the text, corrupting the file's tail --
 caught immediately via a direct re-read (not assumed clean), and fixed with the `Edit` tool rather
@@ -127,10 +140,15 @@ have caught faster. (2) The first several background `devtools::check()`/regress
 manual `&` + `Monitor`-with-`kill -0`-polling pattern that silently produced one truncated log
 (the harness-tracked `run_in_background` parameter, used from that point on, worked reliably every
 time) -- should have reached for the harness-native mechanism first, matching S521's own
-double-backgrounding gotcha in spirit even though the exact anti-pattern differed.
+double-backgrounding gotcha in spirit even though the exact anti-pattern differed. (3) The second
+out-of-band commit (`c18b7fd6`) was found only by incidental luck (glancing at a routine `git log`
+before committing), not by any systematic check -- a session that didn't happen to run that exact
+command could easily have missed it and shipped on top of a broken `renv.lock` without knowing.
 
-**Ledger:** recorded in `CHANGELOG.md` across 4 entries this session (ledger-reconcile backfill,
-S522 claim, the vignette-engine `[ad hoc]` fix, and this close-out's final entry).
+**Ledger:** recorded in `CHANGELOG.md` across 7 entries this session (ledger-reconcile backfill for
+`79f37e18`, S522 claim, the `a2interactive.Rmd` vignette-engine `[ad hoc]` fix, this close-out's
+Slice 3 entry, ledger-reconcile backfill for `c18b7fd6`, the `renv.lock` `[ad hoc]` fix, and this
+final entry).
 
 ### Session 520 Handoff Evaluation (by Session 521)
 **Score: 8/10.** **What helped:** the `HANDOFFS.md` S520 receipt's `next_steps` field named "Issue
