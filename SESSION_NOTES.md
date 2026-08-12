@@ -6,6 +6,16 @@
 
 ## ACTIVE TASK
 
+### What Session 537 Did
+**Deliverable:** Verify each of the 69 `inst/WORDLIST`-gap words (found S521) as a genuine
+false positive vs. an actual typo, and hand-add the false positives -- clearing the
+`devtools::check()` spelling NOTE. (IN PROGRESS)
+**Started:** 2026-08-12.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 535 Handoff Evaluation (by Session 536)
 **Score: 6/10.** **What helped:** the `HANDOFFS.md` S535 receipt's `next_steps` field named
 the modal-rendering gap as an open item (Effort M), and `BACKLOG.md`'s own detailed Housekeeping

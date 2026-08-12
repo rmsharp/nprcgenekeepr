@@ -121,6 +121,24 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-10.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S537
+date: 2026-08-12
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Verify each of the 69 inst/WORDLIST-gap words (found S521) as a genuine false
+positive vs. an actual typo, and hand-add the false positives -- clearing the
+devtools::check() spelling NOTE.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S536
 date: 2026-08-12
 status: complete
