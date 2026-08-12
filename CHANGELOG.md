@@ -131,6 +131,16 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [issue #153] S524 claim: issue #153 Slice 5 (full module tab, D5/D6/D9) (Session 524)
+- **Claim:** Phase 1B session claim for Issue #153 Slice 5 -- full module tab in
+  `modMarkerGenetics.R` (D5/D6): UI coverage-report panel + persistent D3(b) caveat banner,
+  curator-controlled export wiring reusing issue #150's confirm-gate pattern (D9),
+  `test_moduleContract.R` coverage, tutorial/article update. Per
+  `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` §5 Slice 5. Picked from this
+  session's own Phase 0 priorities list (owner choice via `AskUserQuestion`) over 3 other
+  candidates (issue #152 Slice 1, the `methodology_trim.py` fence-scanner fix, `HANDOFFS.md`'s
+  own archive). Work beginning -- PRE-RED research next.
+
 ### 2026-08-11 · [ad hoc] Reconcile-on-read: HANDOFFS.md S523 receipt's `commit: pending` field (Session 524)
 - **Ledger reconcile (Phase 0 step 6):** `CHANGELOG.md`'s own frontier (`git log -1` on this file)
   and `HANDOFFS.md`'s own frontier both already equal `HEAD` (`905f20bf`) — no undocumented commit

@@ -6,6 +6,18 @@
 
 ## ACTIVE TASK
 
+### What Session 524 Did
+**Deliverable:** Issue #153 Slice 5 -- full module tab in `modMarkerGenetics.R` (D5/D6): UI
+coverage-report panel + persistent D3(b) caveat banner, curator-controlled export wiring reusing
+issue #150's confirm-gate pattern (D9), `test_moduleContract.R` coverage for the new server, and
+the tutorial/article update (Session 436 checklist -- first Shiny-UI slice in this issue family).
+Per `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md` §5 Slice 5. (IN PROGRESS)
+**Started:** 2026-08-12 (Session 524).
+**Status:** Session claimed. Work beginning -- PRE-RED research next.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 522 Handoff Evaluation (by Session 523)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S522 receipt's `next_steps` field named "Issue
 #153 Slice 4 (`markerLdBlock()` descriptive LD/block statistic, D3b, plus the `obfuscateLdBlocks()`
