@@ -123,19 +123,54 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S529
 date: 2026-08-12
-status: pending
-self_score: pending
-predecessor_score: 8
-active_task: Compress BACKLOG.md's "Housekeeping" section (lines 147-798) -- convert fully-resolved
-items' long narrative to short pointers into CHANGELOG.md. Scope narrowed to Housekeeping only (of
-3 oversized sections: Housekeeping/Pedigree/Genetic-metrics) via AskUserQuestion after an inventory
-pass.
-what_was_done: pending
-next_steps: pending
-key_files: BACKLOG.md:147-798 (Housekeeping section, the edit target)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: BACKLOG.md's Housekeeping section (147 of then-2,501 lines) is compressed and DONE.
+BACKLOG.md's own S518 ledger-size-housekeeping item stays open -- 2 larger, riskier sections remain
+(Pedigree diagram vs kinship2, ~896 lines; Genetic-metrics PDF audit, ~753 lines incl. the
+still-open issue #152), each flagged as its own future session.
+what_was_done: Compressed 17 of 19 fully-resolved Housekeeping items to BACKLOG.md's own established
+short-pointer convention ("(none remaining -- ... see CHANGELOG.md)"), full detail preserved via
+CHANGELOG.md pointers; left the 8 genuinely-open items untouched. Found 2 of the 19 had NO existing
+CHANGELOG.md entry at all despite ending in that exact pointer phrase (FM #27 -- inst/extdata/ reorg,
+Sessions 415-418; non-portable-filename fix, Session 497) -- backfilled proper CHANGELOG.md entries
+for both from the BACKLOG.md narrative before compressing, avoiding a dangling pointer. Also
+reconciled HANDOFFS.md's S528 receipt (commit: pending -> 529f84f5, the established one-hop case) at
+Phase 0. Net: Housekeeping 652->389 lines; BACKLOG.md total 2,501->2,254. Commits: 49771e47 (S528
+receipt reconcile), 4ab03984 (claim), plus this close-out's own commit.
+next_steps: Two future sessions remain for BACKLOG.md's own compression item (do NOT close it yet):
+(1) "Pedigree diagram vs kinship2 audit follow-ups" section (~896 lines) -- includes a ~375-line
+unbulleted Progress-narrative span tracking issues #133/#136/#137/#145 (all closed), compressible
+only as whole chains, not per-bullet. (2) "Genetic-metrics PDF audit follow-ups" section (~753
+lines) -- a single living tracker for issues #146/#147/#149/#150/#151/#153 (closed) PLUS the
+still-open issue #152 (Slice 3, F_ROH metric, is the next planned slice) -- higher risk: most
+individual Progress blocks carry a CHANGELOG pointer even while the overall thread stays active, so
+a naive "compress everything with a pointer" pass would wrongly compress live content. Either
+session should re-run a fresh inventory pass first (line numbers/counts will have drifted) rather
+than trust this session's own figures verbatim -- matching this session's own approach. Separately,
+unchanged Phase 0 priorities: issue #152 Slice 3 (F_ROH, READY); inst/WORDLIST spelling gap (READY,
+Effort M, ~69-77 words); NEWS.Rmd verbosity drift (READY, Effort M); a2interactive.Rmd doc pass
+(READY, Effort M).
+key_files: BACKLOG.md:147-535 (compressed Housekeeping section); BACKLOG.md's own S518 item
+(updated in place, not closed); CHANGELOG.md (2 backfill entries + this session's own deliverable
+entry, all under the 2026-08-12 dates); PROJECT_LEARNINGS.md Learning 535.
+gotchas: (1) A "See CHANGELOG.md" pointer inside a BACKLOG.md item's own narrative is NOT proof the
+entry exists -- 2 of 19 items this session compressed had the exact same closing phrase as the other
+17 but zero real entry behind it, textually indistinguishable from inside BACKLOG.md alone (Learning
+535). Grep CHANGELOG.md for each item's session number/keyword BEFORE compressing, every time, even
+when nothing about the item looks different from ones that turned out fine. (2) The 2 remaining
+oversized sections are NOT simple bullet lists like Housekeeping was -- both contain long unbulleted
+"Progress (S###, date):" narrative spans not attached to any single `- [ ]` item, tracking multiple
+issue sub-chains at once. A bullet-only scan will miss most of the compressible (or NOT-compressible,
+for the still-open #152 thread) content in either section. (3) When doing many individual Edit calls
+across one long section, verify each edit's old_string boundary extends far enough -- one edit this
+session left ~9 lines of duplicated trailing text from an imprecise boundary, caught only by the
+final full-section re-read, not by the individual edit's own success.
+runtime_smoke: n/a -- docs-only, no R/tests/man/NAMESPACE/data content touched; git diff --stat
+confirms only BACKLOG.md/CHANGELOG.md/PROJECT_LEARNINGS.md/SESSION_NOTES.md/HANDOFFS.md touched.
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12 (HANDOFFS.md reconcile, 2
+backfills, the Housekeeping-compression deliverable)
 commit: pending
 ```
 <prose pending -- filled at Phase 3D close-out>

@@ -147,320 +147,113 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
 ## Housekeeping
 - [ ] (none remaining -- the "`markerParentageLikelihood()`'s auto-detect
       candidate lookup never finds a candidate when both of a flagged
-      animal's parent slots are recorded" item (found S498, 2026-08-09,
-      design ratified S501) is RESOLVED -- **implemented S502 (2026-08-10):**
-      the ratified "shadow pedigree" fix
-      (`docs/planning/issue155-parentage-likelihood-candidate-lookup-plan.md`
-      §7) -- new internal `.markerFlaggedSlotPedigree()` helper in
-      `R/markerParentageLikelihood.R`, wired into both `getPotentialParents()`
-      call sites (auto-detect and the explicit `id`/`role`/
-      `candidates = NULL` branch). **Zero changes to `getPotentialParents()`
-      itself.** Full strict-TDD PRE-RED->RED->GREEN cycle
-      (`AskUserQuestion`-gated at every transition; REFACTOR owner-confirmed
-      skip -- implementation already minimal, matching the ratified design's
-      own code block verbatim). 9 new tests (5 `.markerFlaggedSlotPedigree()`
-      unit tests incl. the duplicate-`pedigree$id` guard and both-slots
-      -flagged dragon; 2 non-mocked real-`getPotentialParents()` regressions,
-      one per call site; 1 mechanism-verification mock; 1 live Shiny-module
-      regression) all confirmed genuinely RED first, then GREEN with zero
-      regressions to the 147 pre-existing assertions they sit beside. Full
-      clean regression: 0 failed/0 error (4236 passed, 201 skipped, 15
-      pre-existing-class warnings). `lintr::lint_package()`: 0 lints.
-      `devtools::check()`: 0 errors/0 warnings/2 pre-existing notes (vignette
-      -engine NOTE and a 13-word spelling-drift NOTE, both confirmed
-      unchanged by this diff -- this session's own 2 new WORDLIST gaps from
-      its new roxygen text, "positionally"/"unmutated", fixed in the same
-      commit). **Live Phase 3E `shinytest2` smoke test** against a real
-      running app (real pedigree + genotype file upload through the actual
-      Input and Marker Genetics tabs, not just `testServer()`) confirmed the
-      previously-empty Candidate Parent Assignment table now renders 2 rows
-      for a recorded-but-wrong-parent fixture (the true parent ranked first,
-      the wrong recorded parent visible with `LOD = -Inf`/`excluded = TRUE`
-      per the ratified D3(a) decision), zero console errors -- closing the
-      loop on the exact defect S498 originally found live. **Issue #155
-      closed** as part of this session's close-out. See `CHANGELOG.md`,
+      animal's parent slots are recorded" item (found S498, design ratified
+      S501) is RESOLVED -- **implemented S502 (2026-08-10):** new internal
+      `.markerFlaggedSlotPedigree()` helper (`R/markerParentageLikelihood.R`),
+      wired into both `getPotentialParents()` call sites; zero changes to
+      `getPotentialParents()` itself. Strict TDD; 9 new tests; full regression
+      0 failed/0 error. Live `shinytest2` smoke test confirmed the fix on the
+      real running app. **Issue #155 closed.** See `CHANGELOG.md`,
       `PROJECT_LEARNINGS.md` Learning 501.)
 - [ ] (none remaining -- the "`.buildTwinConnectorEdges()` (`R/makePedigreeDiagramData.R`, issue
-      #137 Slice 2) never wired the Okabe-Ito green (`#009E73`) color its own implementing
-      session's handoff narrative said it picked" item (found S494, 2026-08-09) is RESOLVED --
-      **wired S506 (2026-08-10):** owner chose "wire it in" over decline-and-close via
-      `AskUserQuestion`. `color = "#009E73"` added to `.buildTwinConnectorEdges()`'s output for
-      both `edgeStyle` values, plus a matching legend swatch in `R/modPedigree.R`. A second,
-      previously undiscovered dragon found and fixed in the same session:
-      `.addRectilinearWaypoints()` unconditionally reset every kept edge's `color` to `NA` under
-      `edgeStyle = "rectilinear"` -- the same anti-pattern issue #133 already named/fixed on the
-      node side of this same function, now fixed the same way (preserve-if-absent). Full
-      strict-TDD PRE-RED->RED->GREEN cycle; 11 new/extended test assertions across 4 files; full
-      regression suite 0 failed/0 error (exact +11/-11 delta vs. unmodified `HEAD` via
-      `git stash -u`, 0 change to the 15 pre-existing baseline warnings); `lintr` 0 lints;
-      `devtools::check()` 0 errors/0 warnings, pre-existing notes only. Live `shinytest2` smoke
-      test confirmed the color renders on the real running app under BOTH `edgeStyle` values,
-      directly proving the rectilinear dragon-fix live. See `CHANGELOG.md`,
-      `PROJECT_LEARNINGS.md` Learning 505.)
+      #137 Slice 2) never wired the Okabe-Ito green (`#009E73`) color" item (found S494) is
+      RESOLVED -- **wired S506 (2026-08-10):** color added for both `edgeStyle` values plus a
+      matching legend swatch (`R/modPedigree.R`). A second dragon found and fixed the same session:
+      `.addRectilinearWaypoints()` unconditionally reset edge color to `NA` under
+      `edgeStyle = "rectilinear"` (same anti-pattern issue #133 already fixed on the node side).
+      Strict TDD; live `shinytest2` smoke test confirmed both `edgeStyle` values. See
+      `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 505.)
 - [ ] (none remaining -- the "`devtools::check()` returns a non-portable-filename
       ERROR/WARNING for `inst/extdata/reference/Standardized Human Pedigree
-      Nomenclature: Update and Assessment of the Recommendations of the
-      Nation.html`" item (found S486, 2026-08-08) is RESOLVED -- S497
-      (2026-08-09): owner renamed the file directly (outside a session tool
-      call) to `inst/extdata/reference/pedigree_nomenclature.html`, a short,
-      portable name. **`devtools::check()` went from 1 error/1 warning/1 note
-      to 0/0/0** -- the vignette-engine NOTE this item's own S486 text already
-      flagged as "likely-related" was confirmed as exactly that: fixing only
-      the filename also cleared the `vignettes/a2interactive.Rmd` "no
-      recognized vignette engine" NOTE, even though a direct investigation
-      (`tools::pkgVignettes(check = TRUE)` against both the raw source tree
-      and a freshly-built tarball) found the vignette's own `VignetteEngine`
-      tag valid and correctly recognized throughout -- the NOTE was
-      apparently a downstream symptom of the non-portable-filename ERROR
-      derailing the check pipeline, not an independent defect. **A second,
-      incidental gap found and fixed in the same session:** the rename broke
-      a `.gitignore` pattern (`Standardized Human Pedigree Nomenclature*.html`,
-      S479) that had deliberately kept this copyrighted, local-only reference
-      file out of the public git repo -- `.gitignore` updated to the new
-      exact filename (owner's own fix). Separately, `.Rbuildignore` had
-      **never** excluded this file (or the two other S479-gitignored
-      copyrighted files, `5201430.pdf`/`bioinformatics_24_2_279.pdf`) from
-      the built package tarball at all -- `.gitignore` has no effect on
-      `R CMD build`, which reads the filesystem directly, so all three files
-      had been shipping inside every built/distributed tarball despite being
-      deliberately kept out of git. Fixed by adding `.Rbuildignore` entries
-      for all three (owner confirmed via `AskUserQuestion`); verified via a
-      fresh `pkgbuild::build()` that none of the three ship in the tarball
-      and the legitimately-shipped `Master_Genetic_metrics_2_14_15.pdf`
-      (S418, a different copyright situation) still does. The one known
-      prose reference to the old filename (`docs/audits/
-      PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`, per
-      `PROJECT_LEARNINGS.md` Learning 480) updated to the new path; historical
-      references in `SESSION_NOTES.md`/`CHANGELOG.md`/`PROJECT_LEARNINGS.md`
-      correctly left as dated narrative describing repo state as it existed
-      when written, not retroactively rewritten. **The separately-tracked
-      `spelling.Rout` WORDLIST gap (9 pre-existing words) is unrelated and
-      still open** -- see the item below.)
+      Nomenclature: ...html`" item (found S486) is RESOLVED -- S497
+      (2026-08-09): owner renamed the file (outside a session tool call) to
+      `inst/extdata/reference/pedigree_nomenclature.html`. `devtools::check()`
+      went from 1 error/1 warning/1 note to 0/0/0 -- the vignette-engine NOTE
+      was confirmed a downstream symptom of the filename ERROR, not an
+      independent defect. Incidental gap found and fixed the same session:
+      `.Rbuildignore` had never excluded this file (or 2 other copyrighted
+      files) from the built tarball, despite `.gitignore` keeping them out of
+      git -- fixed for all three, verified via `pkgbuild::build()`. **The
+      separately-tracked `spelling.Rout` WORDLIST gap is unrelated and still
+      open** -- see the item below. See `CHANGELOG.md` (backfilled Session
+      529), `PROJECT_LEARNINGS.md` Learning 480.)
 - [ ] (none remaining -- the "`NEWS.Rmd` has no checklist analogous to the
-      citation/tutorial checklists" item (discovered S446, 2026-08-01) is
-      RESOLVED: owner ratified a broad checklist via `AskUserQuestion` --
-      any session shipping a new exported function OR a user-facing Shiny
-      feature/control must add a `NEWS.Rmd` entry in the same session it
-      ships, mirroring the citation (issue #120) and tutorial/article
-      (S436) checklists. Recorded in `CLAUDE.md`'s "Additional close-out
-      checks" -- S448 (2026-08-01). Owner also directed backfilling issue
-      #130's Slices 1-5 as a one-time exception: 5 new `NEWS.Rmd` bullets
-      added to the 2.0.0.9000 section (Marker Genetics tab + Kinship,
-      Heterozygosity, Parentage Exclusion, and Cross-Center sub-tabs, plus
-      the script-callable `resolveCrossCenterIds()`), re-rendered to
-      `NEWS.md` -- diff confirmed exactly the 5 new bullets, no reflow
-      churn. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 433.)
+      citation/tutorial checklists" item (discovered S446) is RESOLVED:
+      owner ratified a broad checklist -- any session shipping a new
+      exported function OR a user-facing Shiny feature/control must add a
+      `NEWS.Rmd` entry in the same session it ships. Recorded in
+      `CLAUDE.md`'s "Additional close-out checks" -- S448 (2026-08-01).
+      Issue #130 Slices 1-5 backfilled with 5 `NEWS.Rmd` bullets as a
+      one-time exception. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
+      Learning 433.)
 - [ ] (none remaining -- the "`vignettes/a2interactive.Rmd` has no checklist
-      analogous to the Shiny-app-facing tutorial/article checklist, and
-      issue #130's entire marker-genetics function family has ZERO mentions
-      there" item (discovered S447, 2026-08-01, `PROJECT_LEARNINGS.md`
-      Learning 435) is RESOLVED -- S450 (2026-08-02): owner picked option
-      (a) via `AskUserQuestion` -- extended `CLAUDE.md`'s existing
-      documentation-checklist family with a new, explicitly DEFERRED
-      (not same-session) rule requiring `a2interactive.Rmd` coverage for
-      new exported, script-callable functions, added post-review rather
-      than in the shipping session (`CLAUDE.md` "Additional close-out
-      checks"). Owner also directed backfilling issue #130's 5
-      already-shipped marker-genetics functions in this same session (a
-      second, separate `AskUserQuestion`), mirroring the `NEWS.Rmd`
-      checklist's own one-time backfill precedent (Learning 436). Added a
-      new "## Marker Genetics" section to `vignettes/a2interactive.Rmd`
-      (6 subsections: preparing a marker genotype file, marker-based
-      kinship, heterozygosity diagnostic, parentage verification, cross-
-      center identity linking, cross-center Fst) reusing the SAME
-      hand-verified fixtures already used by the Shiny app's own
-      Marker Genetics tab screenshots in `colony-manager-guide.qmd` (the
-      P/C/U kinship/parentage trio, the X/Y/Z heterozygosity trio, and the
-      Center A/B Fst fixture from `test_modMarkerGenetics.R`), so the
-      tutorial's printed numbers match the article's tables. Every demo
-      chunk verified against the real installed package (not hand-derived)
-      before and after embedding -- see `PROJECT_LEARNINGS.md` Learning
-      440 for a stale-local-install trap hit and fixed along the way
-      (`devtools::install()` needed first; the local install lagged 3
-      slices behind source). See `CHANGELOG.md`.)
+      analogous to the tutorial/article checklist, and issue #130's marker
+      -genetics family has ZERO mentions there" item (discovered S447,
+      `PROJECT_LEARNINGS.md` Learning 435) is RESOLVED -- S450 (2026-08-02):
+      extended `CLAUDE.md`'s documentation-checklist family with a new,
+      explicitly DEFERRED (not same-session) rule requiring
+      `a2interactive.Rmd` coverage for new exported, script-callable
+      functions. Issue #130's 5 already-shipped functions backfilled with a
+      new "## Marker Genetics" section (6 subsections), reusing the same
+      hand-verified fixtures as the app's own tab screenshots. See
+      `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 440.)
 - [ ] (none remaining -- the "`devtools::check()`'s spelling NOTE is
       broader than previously tracked" item (discovered S443 as just
-      `IACUC`; broadened S448, 2026-08-01) is RESOLVED -- S452
-      (2026-08-02): re-ran `devtools::check()` fresh before touching
-      anything and found the single NOTE actually covered 13 words, not
-      12 -- the 12 the item named (`Bhatia`, `Chesser`, `Cockerham`,
-      `Fst`/`FST`, `Gst`, `Hedrick`, `Maddison`, `Meirmans`,
-      `Sankararaman`, `Slatkin`, `monomorphic`) plus the already-tracked
-      `IACUC` (`_pedigree_browser.Rmd:55`, flagged since S443, never
-      actually fixed by any session in between). All 13 hand-added to
-      `inst/WORDLIST` in `LC_ALL=C` byte-order position (not via
-      `spelling::update_wordlist()`, per S230 convention). Verified:
-      `devtools::check()` raw log now reads `Status: 1 WARNING` with no
-      NOTE (the `spelling.Rout`/`spelling.Rout.save` comparison is now
-      `OK`, vs. the prior 13-word diff block) -- the remaining WARNING is
-      the pre-existing, unrelated iCloud-sync duplicate-file artifact
-      (`R/appServer 2.R`/`R/modMarkerGenetics 2.R`); regression suite
-      unchanged at 0 failed/0 error (3489 passed, 183 skipped, 10
-      pre-existing baseline warnings), exactly matching the known-good
-      S450 baseline. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
-      Learning 441.)
+      `IACUC`; broadened S448) is RESOLVED -- S452 (2026-08-02): the single
+      NOTE actually covered 13 words, not 12; all 13 hand-added to
+      `inst/WORDLIST` in `LC_ALL=C` byte-order position. `devtools::check()`
+      raw log now reads `Status: 1 WARNING` (the pre-existing, unrelated
+      iCloud duplicate-file warning) with no spelling NOTE. See
+      `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 441.)
 - [ ] (none remaining -- the "Pre-existing `shinyBS is not defined` JS console
-      error on every page load" item (discovered S433, 2026-07-30) is
-      RESOLVED: fixed S437 (2026-07-30). Root cause confirmed experimentally:
-      this package only ever accesses shinyBS via `shinyBS::popify()`/
-      `shinyBS::addPopover()` (`R/modSummaryStats.R`), never `library(shinyBS)`
-      -- so shinyBS's own `.onAttach()` hook (which registers the `"sbs"`
-      `shiny::addResourcePath()` serving `shinyBS.js`/`shinyBS.css`) never
-      fires, since `.onAttach()` only runs on attach, not on the namespace
-      load that `::` triggers. Fixed by adding `R/zzz.R` with a package
-      `.onLoad()` that registers the same resource path itself, guarded by
-      `requireNamespace("shinyBS", quietly = TRUE)` (shinyBS is a `Suggests`
-      dependency). 2 new unit tests added to
-      `tests/testthat/test_modSummaryStats_popovers.R` (resource path
-      registered; `.onLoad()` doesn't error when shinyBS is unavailable, via
-      `mockery::stub`). Verified live via `shinytest2`/`chromote`: the
-      `ReferenceError: shinyBS is not defined` no longer occurs on app load.
-      **Live verification surfaced a second, previously-hidden, unrelated
-      defect** -- shinyBS 0.65.0's JS is incompatible with this app's bundled
-      Bootstrap 4.6.0 popover plugin (`shinyBS.js:207`'s defensive
-      `.popover("destroy")` call throws before the actual init call, so
-      popovers/tooltips remain completely non-functional, same as before this
-      fix, just with a different console error). Not fixed this session, per
-      `PROJECT_LEARNINGS.md` Learning 382/407's scope-discipline precedent --
-      filed as [issue #140](https://github.com/rmsharp/nprcgenekeepr/issues/140)
-      instead. **Issue #140 itself is now RESOLVED -- S438 (2026-07-30):**
-      fixed via a JS shim (`inst/www/js/shinyBS-popover-fix.js`, included in
-      `R/appUI.R` the same way as `data-ready.js`) that overrides shinyBS's
-      mutable `addTooltip` global to guard the `.popover("destroy")`/
-      `.tooltip("destroy")` calls that throw under Bootstrap 4.6.0 (Bootstrap
-      4 renamed `destroy` -> `dispose`, so the unguarded call fires
-      unconditionally, not just when no instance exists). Chosen over 2 other
-      researched options (vendor/patch `shinyBS.js`; migrate to
-      `bslib::tooltip()`/`popover()`, which turned out to hard-require
-      Bootstrap 5 and was out of scope). Verified live via `shinytest2`/
-      `chromote`: zero console errors AND a real `bs.popover` instance now
-      attaches to both a `popify()`-wrapped button and all 3 `addPopover()`
-      targets -- popovers/tooltips are now actually functional, not just
-      error-free (matching Learning 414's precedent: verify the underlying
-      claim, not just the absence of the originally-reported error). See
+      error on every page load" item (discovered S433) is RESOLVED: fixed
+      S437 (2026-07-30). Root cause: this package only ever accesses shinyBS
+      via `::`, never `library(shinyBS)`, so shinyBS's own `.onAttach()`
+      resource-path hook never fires. Fixed via `R/zzz.R`'s own `.onLoad()`
+      registering the same resource path, guarded by `requireNamespace()`.
+      Verified live via `shinytest2`: the console error no longer occurs.
+      **Live verification surfaced a second, unrelated defect** -- shinyBS's
+      JS is incompatible with this app's Bootstrap 4.6.0 popover plugin,
+      leaving popovers/tooltips non-functional -- filed as
+      [issue #140](https://github.com/rmsharp/nprcgenekeepr/issues/140).
+      **Issue #140 RESOLVED -- S438 (2026-07-30):** fixed via a JS shim
+      (`inst/www/js/shinyBS-popover-fix.js`) guarding the throwing
+      `.popover("destroy")`/`.tooltip("destroy")` calls. Verified live: zero
+      console errors AND popovers/tooltips actually functional. See
       `CHANGELOG.md`.)
-- [ ] **`inst/extdata/` reorganization -- Phase 4** (DECISION NEEDED -- 2 open,
-      non-blocking decisions, Effort M) -- plan:
-      `docs/planning/extdata-reorganization-plan.md` (S414). **Phase 1 DONE -- S415
-      (2026-07-28):** relocated the 12 dev-scratch + 12 orphaned zero-reference items
-      (24 total -- the plan's own summary table undercounted this as "11 + 9";
-      `PROJECT_LEARNINGS.md` Learning 381) into `dev/extdata-scratch/`, removed 3 empty
-      untracked dirs (`claude/`, `dev_scripts/`, `uat/`) + the now-empty
-      `code_under_development/`, and deleted 11 now-obsolete `.Rbuildignore` lines (the
-      10 the plan named plus one it missed, Learning 381) + 10 dead `.gitignore` lines.
-      Verified: `devtools::check()` 0 errors/0 warnings (see the new spelling-NOTE item
-      below re: the 1 NOTE found, unrelated to this reorg -- Learning 382); `R CMD build`
-      tarball no longer contains `create_nprcgenekeepr_hexbadge.R` or any other
-      dev-scratch item; regression suite unchanged at 0 failed/0 error/0 warning, 3198
-      passed, 179 skipped (S412 baseline). See `CHANGELOG.md`.
-      **Phase 2 DONE -- S416 (2026-07-28):** both blocking open decisions resolved first
-      -- subfolder name **`examples/`** (owner-picked via `AskUserQuestion`), and
-      `vignettes/a2interactive.R`'s generation status (owner-directed: `.Rmd` files are
-      the source; `.R`/`.md`/`.html` are generated derivatives -- confirmed also
-      gitignored/untracked, `.gitignore:18,20,22`, so the tracked-source fix is the
-      `.Rmd` edit alone; the local `.R` copy was regenerated via `knitr::purl()` as a
-      courtesy, not committed). `git mv`'d all 10 load-bearing files into
-      `inst/extdata/examples/`; updated the central `get_test_data_path()` test helper,
-      ~28 individual `system.file()` call sites across 15 test files, 7 path-bearing
-      roxygen/comment prose sites (`R/defaultSiteParams.R`, `R/loadSiteConfig.R`,
-      `data-raw/rhesusGenotypes.R`, `data-raw/rhesusPedigree.R`, plus 2 test-file
-      comments), and the one hardcoded path in `vignettes/a2interactive.Rmd`; regenerated
-      `man/loadSiteConfig.Rd` (the only one of the plan's 5 named `.Rd` files that
-      actually needed it -- the other 4 are generated from `R/data.R`, whose extdata
-      mentions are plain filenames with no path prefix, confirmed unaffected).
-      Verified: fresh regression suite exactly matches baseline (0 failed/0 error/0
-      warning, 3198 passed, 179 skipped); `R CMD build` tarball confirmed shipping all 10
-      files under `examples/` and nothing at the old flat path; `devtools::check()` 0
-      errors/0 warnings, 1 NOTE (the same pre-existing, unrelated spelling gap from S415,
-      confirmed untouched by this session's diff); grep sweep confirmed the only 3
-      remaining un-migrated references are exactly the ones the plan defers to Phase 3
-      (`vignettes/manual_components/_summary_of_major_functions.Rmd`'s GitHub blob URL
-      source, plus its 2 gitignored rendered byproducts). See `CHANGELOG.md`.
-      **Phase 3 DONE -- S417 (2026-07-28):** re-ran the plan's own Dragon 1 grep before
-      touching anything (never trust a prior session's or the plan's own phase prose as
-      final) and found the plan's Phase 3 "What DONE looks like" text undersold the
-      actual scope: `vignettes/articles/offline-focal-animal-workflow.qmd:104,106`
-      called `system.file("extdata", "<file>", ...)` directly with no `examples`
-      segment -- confirmed in R this returned `""` (broken) since Phase 2 moved the
-      files, even though the plan's own §8.1 evidence table had already listed this
-      exact call site. Fixed as the source bug it was, not just a re-render target.
-      Also fixed the stale GitHub blob URL in
-      `vignettes/manual_components/_summary_of_major_functions.Rmd:66`. Re-rendered all
-      3 targets (`a3manual.Rmd` with `keep_md = TRUE` to also refresh the gitignored
-      `.md` byproduct; `a2interactive.Rmd`; the `.qmd` pkgdown article via `quarto
-      render`, which required a throwaway local package install --
-      `devtools::install()` -- since the article's `library(nprcgenekeepr)` call needs
-      a real install, not just `pkgload::load_all()`). Verified: the fixed
-      `system.file()` calls resolve and return real data in the rendered article
-      (`dim(colonyPed)` = 2922 x 11, not an error); the plan's prescribed grep sweep
-      plus a broadened check of `vignettes/articles/*.html` both return zero stale-path
-      hits; `gh api` confirmed the GitHub blob URL target actually exists on
-      `origin/master` (Dragon 2's "manual link click" requirement); regression suite
-      exact baseline match (0/0/0, 3198 passed, 179 skipped); `devtools::check()` 0
-      errors/0 warnings, 1 NOTE (same pre-existing spelling gap below, confirmed
-      untouched -- read from the raw check log's `Status:` line per Learning 382, not
-      the colored summary, which again showed 0 notes). See `CHANGELOG.md`,
-      `PROJECT_LEARNINGS.md` Learning 384.
-      **Phase 4 DONE -- S418 (2026-07-28):** both open decisions resolved via
-      `AskUserQuestion`: PDF placement -> `inst/extdata/reference/` (end-user-facing
-      reference material, plan's own default); orphaned-files archive-vs-delete ->
-      keep archived at `dev/extdata-scratch/`, no change from Phase 1. `git mv`'d
-      the PDF; ran the plan's final repo-wide sweep grep, which found `README.md`
-      stale relative to its already-fixed source (`README.Rmd` `child=`-includes
-      `_summary_of_major_functions.Rmd`, fixed by S417, but never re-rendered) --
-      re-rendered `README.Rmd` to pick up the fix; see `PROJECT_LEARNINGS.md`
-      Learning 385. All other sweep hits triaged as false positives: dated
-      historical prose in `NEWS.Rmd`/`NEWS.md` and `docs/planning/`/`docs/research/`
-      documents describing repo state as it existed when written, correctly left
-      unedited. Verified: `R CMD build` tarball ships the PDF at
-      `inst/extdata/reference/` and nothing at the old flat path; regression suite
-      exact baseline (0/0/0, 3198 passed, 179 skipped); `devtools::check()` 0
-      errors/0 warnings, 1 NOTE (same pre-existing spelling gap below, confirmed
-      untouched). **The `inst/extdata/` reorganization plan is now fully executed
-      (Phases 1-4 all DONE).** See `CHANGELOG.md`.
+- [ ] (none remaining -- the "`inst/extdata/` reorganization" item (plan:
+      `docs/planning/extdata-reorganization-plan.md`, S414) is RESOLVED -- all
+      4 phases DONE (S415-S418, 2026-07-28): **Phase 1** relocated 24 dev
+      -scratch/orphaned items to `dev/extdata-scratch/`, cleaned dead
+      `.Rbuildignore`/`.gitignore` lines. **Phase 2** moved 10 load-bearing
+      files to `inst/extdata/examples/` (owner-picked name), updating ~28
+      `system.file()` call sites across 15 test files. **Phase 3** fixed 2
+      un-migrated `system.file()` calls the plan's own scope text undersold
+      (`PROJECT_LEARNINGS.md` Learning 384) + a stale GitHub blob URL. **Phase
+      4** moved the reference PDF to `inst/extdata/reference/`, re-rendered a
+      stale `README.Rmd` (Learning 385). Every phase verified against exact
+      regression baseline (0 failed/0 error) and `R CMD build` tarball
+      contents. See `CHANGELOG.md` (backfilled Session 529).)
 - [ ] (none remaining -- the "`ROADMAP.md`'s doc-engine-policy line is now stale"
-      item (flagged S418) is RESOLVED: owner resolved the editorial wording call
-      via `AskUserQuestion` -- **path-only fix**, keeping the doc-engine-policy
-      category and just correcting the location -- `ROADMAP.md:21-22` now reads
-      `dev/extdata-scratch/` developer docs instead of `inst/extdata/` developer
-      docs, matching where the 3 dev docs (`claude_code.qmd`,
-      `software_design_doc.qmd`, `meeting_notes.qmd`) actually live since the
-      extdata reorg's Phase 1 (S415) -- S420 (2026-07-29). See `CHANGELOG.md`.)
-- [ ] (none remaining -- the "`NEWS.md:8` spelling-check NOTE -- `CRAN's`/`resubmission`
-      missing from `inst/WORDLIST`" item (discovered S415, 2026-07-28) is RESOLVED:
-      both words hand-added to `inst/WORDLIST` in their case-insensitive-collation
-      position (not via `spelling::update_wordlist()`, per S230 convention) -- S421
-      (2026-07-29). Verified: `devtools::check()` raw log `Status: OK`, 0 notes.
-      See `CHANGELOG.md`.)
+      item (flagged S418) is RESOLVED: `ROADMAP.md:21-22` corrected to
+      `dev/extdata-scratch/`, matching where the extdata reorg's Phase 1 moved
+      the dev docs -- S420 (2026-07-29). See `CHANGELOG.md`.)
+- [ ] (none remaining -- the "`NEWS.md:8` spelling-check NOTE -- `CRAN's`/
+      `resubmission` missing from `inst/WORDLIST`" item (discovered S415) is
+      RESOLVED: both words hand-added -- S421 (2026-07-29). `devtools::check()`
+      `Status: OK`, 0 notes. See `CHANGELOG.md`.)
 - [ ] (none remaining -- the "`test-e2e-data-ready.R`'s 'appUI includes
       data-ready.js' test doesn't actually verify content inclusion" item
-      (discovered S438, 2026-07-30) is RESOLVED: fixed S439 (2026-07-30).
-      Replaced the hollow `inherits(app_ui, "shiny.tag.list") ||
-      inherits(app_ui, "shiny.tag")` assertion with
-      `htmltools::renderTags(app_ui)$head` content checks (a distinguishing
-      marker `"setDataReady"` plus a full-file-text match), matching the
-      pattern from `test_modSummaryStats_popovers.R` (S438). RED proven by
-      temporarily disabling `R/appUI.R`'s `includeScript(dataReadyJS)` line
-      (`if (FALSE && file.exists(dataReadyJS)) ...`), confirming the new test
-      fails for the expected reason (both `grepl()` assertions FALSE), then
-      reverting -- `git diff --stat R/appUI.R` confirmed byte-identical to
-      HEAD after revert, so no production code changed this session. GREEN:
-      regression suite 0 failed/0 error/0 warning (4006 passed, 170 skipped);
-      `devtools::check()` 0 errors/0 warnings/0 notes. REFACTOR: owner
-      -confirmed skip (single `test_that()` block, already matches the
-      established pattern verbatim). Phase 3E: n/a -- test-only change, no
-      runtime behavior affected. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
+      (discovered S438) is RESOLVED: fixed S439 (2026-07-30). Replaced the
+      hollow class-inherits assertion with `htmltools::renderTags(app_ui)$head`
+      content checks. RED proven by temporarily disabling the include, GREEN
+      restored with 0 failed/0 error. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
       Learning 417.)
 - [ ] (none remaining -- the "`CLAUDE.md`'s 'Fast single-file test' command
       silently skips the entire file for any test file that calls
       `skip_on_cran()` at top level" item (discovered S439, `PROJECT_LEARNINGS.md`
       Learning 417) is RESOLVED -- S451 (2026-08-02): `Sys.setenv(NOT_CRAN =
-      "true")` prepended to the documented one-liner in `CLAUDE.md`'s "Build /
-      Test / Verify" section, with a parenthetical explaining why and citing
-      Learning 417. Verified by reproducing the bug first (the OLD command
-      against `test-e2e-data-ready.R` reports a bare `S`/"On CRAN") then
-      confirming the NEW command runs all 34 expectations for real. See
-      `CHANGELOG.md`.)
+      "true")` prepended to the documented one-liner. See `CHANGELOG.md`.)
 - [ ] (none remaining -- the "clean up stale untracked leftover files" item (filed
       S383) is RESOLVED: 18 confirmed-dead untracked files deleted -- S384
       (2026-07-15). See `CHANGELOG.md`.)
@@ -514,85 +307,29 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       planned repository relocation had NOT yet happened (`pwd` still
       resolves to the original iCloud-synced path) -- this item cannot be
       closed until the move actually completes.
-- [x] **Accumulated `lintr::lint_package()` warnings, 45 total across 17
-      files** (found S462, Effort M) -- **part (a) DONE -- S466
-      (2026-08-03):** swept clean, satisfying the owner-directed sequencing
-      gate on issue #142 (2026-08-03: "must be completed before the pedigree
-      drawing feature is considered complete and pushed"). All 41 warnings
-      across the 16 TRACKED files fixed in 4 checkpoint commits (<=4 files
-      each), REFACTOR-only per `PROJECT_LEARNINGS.md`'s `[refactor-only]`
-      reflex (no RED/GREEN -- style-only, no new behavior). The other 4
-      warnings (of the original 45) were on the untracked iCloud-duplicate
-      `R/modMarkerGenetics 2.R` -- correctly out of scope (not part of the
-      shipped package; belongs to the iCloud-relocation item above, still
-      open). **Two lintr-heuristic false positives found and corrected in
-      the original count, not just fixed:** (1) the `nonportable_path_linter`
-      hits were NOT from the iCloud duplicate files (the S462 note above was
-      wrong on the mechanism) -- both were in the real, tracked
-      `R/makePedigreeDiagramData.R`, and on inspection were themselves also
-      false positives: the flagged string is a plain fallback LABEL
-      (`"Other / Unrecorded"`) that merely contains `/`, not a path at all.
-      (2) 4 `commented_code_linter` hits (`R/reportGV.R:195`,
-      `R/makePedigreeDiagramData.R:42`, `R/modGeneticValue.R:194,328`) were
-      live design-rationale comments (issues #125/#127/#132) that embed a
-      real R expression in prose, not dead code -- deleting them would have
-      destroyed real documentation. All 6 false positives were suppressed
-      via documented `# nolint` blocks (not deleted, not "fixed" with a
-      semantically-wrong function like `file.path()` on a non-path string).
-      One line -- `R/markerKinship.R:17`, the published KING-robust
-      estimator's `\deqn{}` LaTeX formula (Manichaikul et al. 2010) -- was
-      deliberately left over 80 chars rather than risk corrupting a
-      citation-critical formula for a stylistic gain; suppressed via a new
-      `.lintr` per-line exclusion (the project's own established mechanism)
-      instead. Full regression suite + `devtools::check()` + a live
-      `shinytest2` smoke test (4 touched-module tabs: Genetic Value
-      Analysis, Marker Genetics, Breeding Groups, Pedigree Browser; 0
-      `shiny-output-error` DOM elements, 0 SEVERE console entries) all
-      confirmed exact baseline match, 0 new warnings/notes. See
-      `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 461. **Part (b) (a
-      process fix so lint debt stops re-accumulating -- CI gate and/or a
-      Phase 3F close-out check) is NOT done and remains open** -- filed
-      below as its own item, since it's analytically separate from the
-      sweep and wasn't in this session's scope.
-- [x] **Wire a process fix so `lintr` debt stops re-accumulating** (split
-      from the item above at its own S462 "(b)" ask; READY, Effort S-M) --
-      **DONE -- S477 (2026-08-04):** pre-work investigation found this
-      item's own framing was stale, matching the S476 renv.lock precedent
-      of a backlog item's speculative framing turning out incomplete on
-      direct inspection: `.github/workflows/lint.yaml` already exists and
-      already runs `lintr::lint_package()` on every push to `master` (and
-      on PRs) with `LINTR_ERROR_ON_LINT: true` -- there was no CI job to
-      "add." The real gaps were (1) `master` carries no branch protection,
-      so a failing run blocks nothing and is trivially easy to never look
-      at, and (2) it WAS currently red -- 2 real violations
-      (`commented_code_linter`, `line_length_linter`) introduced in
-      `R/makePedigreeDiagramData.R` by S472's issue #143 fix, still unfixed
-      through S473-S476 (`gh run list --workflow=lint.yaml` showed
-      consecutive `failure` runs with nobody noticing or fixing them --
-      confirmed via `gh run view` annotations, not assumed). Surfaced this
-      corrected picture via `AskUserQuestion`; owner picked "fix the current
-      red + add a close-out check" over the narrower "just fix current red"
-      or the broader "also add branch protection" (flagged as likely
-      disproportionate given this project commits directly to `master` with
-      no PR gate). Fixed both violations (REFACTOR-only, no RED/GREEN --
-      style-only, no behavior change, matching the S238/S466 precedent): the
-      comment-block false positive suppressed via a documented `# nolint
-      start/end: commented_code_linter.` block (established project
-      convention, not deleted/reworded -- S466 precedent for live
-      design-rationale comments); the over-length line wrapped onto two
-      lines matching this file's own existing `<-`-then-indented-RHS house
-      style (confirmed via grep across `R/*.R`, not invented). Verified:
-      `lintr::lint_package()` (package loaded, matching CI's exact
-      invocation) 0 lints package-wide (was 2); full regression suite 0
-      failed/0 error (4573 passed, 171 skipped, 10 pre-existing baseline
-      warnings, unchanged from S476); `devtools::check()` unchanged from
-      baseline. Added a new "Lint close-out checklist" to `CLAUDE.md`'s
-      Additional close-out checks requiring sessions to lint touched files
-      (package loaded) before closing out, rather than relying on the
-      post-push CI run to catch it -- this is the actual recurrence-prevention
-      mechanism, since the CI job's own existence did not prevent 4
-      sessions from committing on top of a red run. See `CHANGELOG.md`,
-      `PROJECT_LEARNINGS.md` Learning 477.
+- [x] (none remaining -- the "Accumulated `lintr::lint_package()` warnings, 45
+      total across 17 files" item (found S462) is RESOLVED -- **part (a)
+      DONE -- S466 (2026-08-03):** all 41 warnings across the 16 tracked
+      files fixed (REFACTOR-only, style-only). 4 of the original 45 were on
+      an untracked iCloud-duplicate file, correctly out of scope. 6 lintr
+      false positives found and suppressed via documented `# nolint`
+      blocks/`.lintr` exclusions rather than deleted or semantically
+      mis-"fixed" (a load-bearing `\deqn{}` citation formula among them).
+      Full regression + `devtools::check()` + live `shinytest2` smoke test
+      across 4 touched module tabs all confirmed exact baseline match. See
+      `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 461. **Part (b) was
+      split out as its own item, below.**)
+- [x] (none remaining -- the "Wire a process fix so `lintr` debt stops
+      re-accumulating" item (split from the item above, S462) is RESOLVED --
+      **DONE -- S477 (2026-08-04):** found `.github/workflows/lint.yaml`
+      already existed and ran on every push -- the real gaps were no branch
+      protection (a failing run blocks nothing) and 2 real, unnoticed
+      violations red for 4 sessions (`R/makePedigreeDiagramData.R`, from
+      S472's issue #143 fix). Fixed both (REFACTOR-only); added a "Lint
+      close-out checklist" to `CLAUDE.md` requiring sessions to lint touched
+      files before closing out, rather than relying on CI alone. Verified: 0
+      lints package-wide (was 2); full regression 0 failed/0 error, unchanged
+      baseline. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 477.)
 - [ ] **`devtools::check()`'s spelling NOTE has drifted again -- 6 new words,
       not caught by any session since S461** (found S465, Effort S,
       incidental -- confirmed pre-existing, not caused by this session's own
@@ -712,19 +449,35 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `--write`.)
 - [ ] **`BACKLOG.md`'s own ledger-size housekeeping -- editorial compression, not a
       `methodology_trim.py` config** (found S518, 2026-08-11, READY, Effort L) -- `BACKLOG.md`
-      itself is one of the dashboard's 3-file HIGH-risk ledger-size items (2,181 lines, past the
-      2,000-line read cap) but does not fit `methodology_trim.py`'s chronological-record model: it
-      has only 10 `##` sections (Active, Architecture follow-ups, Up Next, Housekeeping, Outreach,
-      ...), each a large *standing topical category* that accumulates resolved-item narrative
-      indefinitely, not dated newest-on-top records -- the tool's always-retain-a-prefix/
-      archive-the-suffix cut model would archive whichever section happens to sort last, not the
-      oldest/safest content. The file's own header already states the right remedy: "Open,
-      actionable work only... for history see `CHANGELOG.md`" -- a future session should review
-      each section for fully-RESOLVED items whose long narrative write-up (some run 50+ lines, e.g.
-      the LabKey integration item) can be compressed to a short pointer with full detail preserved
-      in its existing `CHANGELOG.md` entry, rather than left in place verbatim. This is an
-      editorial/judgment task (which items are truly safe to compress without losing something
-      load-bearing), not a mechanical trim -- budget it as its own session, not a quick pass.
+      itself is one of the dashboard's 3-file HIGH-risk ledger-size items but does not fit
+      `methodology_trim.py`'s chronological-record model: it has 10 `##` sections, each a large
+      *standing topical category* that accumulates resolved-item narrative indefinitely, not dated
+      newest-on-top records. The file's own header already states the right remedy: "Open,
+      actionable work only... for history see `CHANGELOG.md`."
+      **Housekeeping section DONE -- S529 (2026-08-12):** an inventory pass (background agent, full
+      read of all 2,501 then-current lines) found 62 top-level items file-wide, 48 fully resolved,
+      ~1,500 compressible lines total, concentrated in 3 oversized sections (Housekeeping,
+      "Pedigree diagram vs kinship2," "Genetic-metrics PDF audit"). Scoped to Housekeeping only for
+      this session (owner-picked via `AskUserQuestion`, over top-15-file-wide / single-biggest-item
+      / prep-only alternatives) -- self-contained, bounded by clean section headers. All 17 of its
+      19 fully-resolved items compressed to the file's own established short-pointer convention; the
+      8 genuinely-open items (incl. this one) left untouched. **2 items had NO existing
+      `CHANGELOG.md` entry at all** (a real ledger gap, FM #27 -- not just verbose narrative): the
+      `inst/extdata/` reorg (Sessions 415-418) and the non-portable-filename fix (Session 497).
+      Backfilled proper `CHANGELOG.md` entries for both before compressing, rather than compress to
+      a dangling pointer that would have destroyed the only detailed record. Net: Housekeeping
+      147→389 lines (263 removed); file total 2,501→2,238 (263 removed). Zero information loss
+      verified by re-reading the full compressed section end-to-end before close-out.
+      **Still open -- 2 sections remain, each its own future session per this item's original
+      "budget it as its own session" guidance:** "Pedigree diagram vs kinship2 audit follow-ups"
+      (~896 lines, includes a ~375-line unbulleted Progress-narrative span tracking issues
+      #133/#136/#137/#145, all now closed -- compressible only as whole chains, not per-bullet) and
+      "Genetic-metrics PDF audit follow-ups" (~753 lines, a single living tracker for issues
+      #146/#147/#149/#150/#151/#153 plus the still-open issue #152 -- higher-risk: a naive
+      "compress everything with a CHANGELOG pointer" pass would wrongly compress active-thread
+      content, since most individual Progress blocks carry a pointer even while the overall thread
+      remains open). A future session picking either up should re-run a fresh inventory pass first
+      (line numbers/counts will have drifted) rather than trust this note's own figures verbatim.
 - [ ] **`inst/WORDLIST` has a large, long-standing gap -- `devtools::check()`'s spelling-check step
       fires a NOTE on every run** (found S521, 2026-08-11, READY, Effort M) -- confirmed via direct
       verification, not assumed: temporarily removing this session's own new files from the tree and

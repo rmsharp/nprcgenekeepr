@@ -6,20 +6,103 @@
 
 ## ACTIVE TASK
 
+### Session 528 Handoff Evaluation (by Session 529)
+**Score: 9/10.** **What helped:** the `HANDOFFS.md` S528 receipt's `next_steps` field listed all 5
+remaining Phase 0 priorities verbatim (issue #152 Slice 3, `BACKLOG.md` compression, `inst/WORDLIST`,
+`NEWS.Rmd` verbosity, `a2interactive.Rmd` pass) with correct READY/Effort tags -- this session's own
+priorities picker rendered from exactly that list, and the owner's pick (`BACKLOG.md` compression)
+was one of the four offered. The receipt's own `commit: pending` field was exactly the kind of
+one-hop gap the established S526→S527→S528 precedent predicts; this session applied the same
+reconcile mechanically at Phase 0 step 6 without needing to re-derive the pattern. **What was
+missing:** nothing material for the item this session actually picked -- the receipt's own
+`gotchas` were specific to the `\b`-regex fix (S528's own deliverable) and correctly did not attempt
+to pre-load context for a different item this session might pick instead, which is the right
+scope for a handoff (predicting the WRONG next item's gotchas would have been noise). **What was
+wrong:** nothing found -- this session did not touch `methodology_trim.py` or re-verify S528's own
+regex fix, so no independent re-check of that specific claim was attempted (matching the established
+precedent for sessions that pick an unrelated item). **ROI:** High -- the receipt's `next_steps`
+list was directly render-ready for this session's own priorities picker, and the one-hop `commit:
+pending` reconcile it flagged was mechanical to apply.
+
 ### What Session 529 Did
-**Deliverable:** Compress `BACKLOG.md`'s "Housekeeping" section (lines 147-798) -- convert
-fully-resolved items' long narrative to short pointers into `CHANGELOG.md`, matching the file's own
-established "(none remaining -- ... see `CHANGELOG.md`)" convention. Owner-picked from this
-session's own Phase 0 priorities list (4 options via `AskUserQuestion`) over issue #152 Slice 3,
-`inst/WORDLIST`, and `NEWS.Rmd` verbosity. Scope narrowed to the Housekeeping section only (of 3
-oversized sections) via a second `AskUserQuestion` after an inventory pass, over: top-10-15
-items file-wide, just the single biggest item, or a narrower prep-only pass (checkbox/ambiguity
-fixes only).
-**Started:** 2026-08-12.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Compressed `BACKLOG.md`'s "Housekeeping" section (147 of the file's then-2,501
+lines) -- 17 of 19 fully-resolved items rewritten to the file's own established short-pointer
+convention, full detail preserved via `CHANGELOG.md` pointers (2 backfilled where none existed); the
+8 genuinely-open items left untouched. Owner-picked from this session's own Phase 0 priorities list
+(4 options via `AskUserQuestion`) over issue #152 Slice 3, `inst/WORDLIST`, and `NEWS.Rmd`
+verbosity; scope narrowed to Housekeeping only (of 3 oversized sections) via a second
+`AskUserQuestion` after a background-agent inventory pass, over top-10-15-items-file-wide /
+single-biggest-item / prep-only-fixes alternatives.
+**Started/Completed:** 2026-08-12.
+**Status:** DONE (Housekeeping section only -- `BACKLOG.md`'s own S518 item stays open, 2 larger
+sections remain for future sessions, noted in its own updated write-up).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, git status/log, `methodology_dashboard.py` -- health 96/100, 1 HIGH-risk category
+unchanged). Ledger reconcile: `CHANGELOG.md`'s frontier was already `HEAD`, but `HANDOFFS.md`'s S528
+receipt still carried `commit: pending` -- reconciled to `529f84f5` (the established one-hop case),
+committed separately (`49771e47`) before the session's claim. Rendered the priorities list via
+`AskUserQuestion` (4 options); owner picked `BACKLOG.md` compression. **(2)** Dispatched a
+background-agent inventory pass (full read of all 2,501 then-current lines, not sampled) before
+committing to a scope -- found 62 top-level items file-wide, 48 fully resolved, ~1,500 compressible
+lines concentrated in 3 oversized sections, plus specific ambiguous/special-care items flagged.
+Presented the scope decision via a second `AskUserQuestion`; owner picked Housekeeping-only.
+**(3)** Claimed the session (commit `4ab03984`). TDD phase: N/A throughout -- no `R/`/`tests/`/
+`man/`/`NAMESPACE`/`data/` content touched, matching established precedent for docs-only
+deliverables (`CLAUDE.md`'s Development Process Contract has no RED/GREEN/REFACTOR gate for
+non-code work). **(4)** Re-read the full Housekeeping section directly (652 lines, 2 `Read` calls)
+before editing, per the Safeguards read-before-edit rule -- did not trust the inventory agent's
+summary alone for the actual edit targets. **(5)** Before compressing, checked `CHANGELOG.md` for
+each item's claimed pointer rather than assuming it resolved: found 2 of 19 resolved items (the
+`inst/extdata/` reorg, Sessions 415-418; the non-portable-filename fix, Session 497) had **zero**
+existing `CHANGELOG.md` entry despite ending in the file's standard "See `CHANGELOG.md`" closer --
+confirmed via direct grep by date/session-number/keyword, not assumed from absence in a partial
+read. Backfilled proper `CHANGELOG.md` entries for both (dated at backfill date, matching this
+project's own reconcile-on-read convention) before compressing either, rather than compress to a
+dangling pointer. `PROJECT_LEARNINGS.md` Learning 535. **(6)** Compressed all 17 remaining resolved
+items to the file's own established convention via individual targeted edits (not one giant
+whole-section replace, to keep each diff auditable and reduce transcription risk in matching exact
+source text). One edit (the split lintr items) initially left duplicated trailing text from an
+imprecise `old_string` boundary -- caught immediately on the next verification read, fixed with a
+follow-up edit before moving on. **(7)** Updated the `BACKLOG.md`'s-own-housekeeping tracking item
+in place (not closed -- 2 sections remain) with this session's progress, the FM #27 finding, and
+line-count deltas. **(8)** Re-read the full compressed section end-to-end (389 lines) to verify no
+information loss, no broken markdown, no truncated sentences. Verified every preserved
+`PROJECT_LEARNINGS.md` Learning cross-reference (384/385/417/433/440/441/461/477/480/501/505)
+resolves via direct grep (Phase 3F cross-reference check). **(9)** Close-out: `PROJECT_LEARNINGS.md`
+Learning 535 (the "See CHANGELOG.md" pointer isn't proof the entry exists" finding).
+Documentation checklists (citation/tutorial/`NEWS.Rmd`/`a2interactive.Rmd`/`_pkgdown.yml`): N/A --
+no exported function, no UI feature, no displayed statistic touched. Runtime smoke test (Phase 3E):
+N/A -- docs-only, `git diff --stat` confirms only `BACKLOG.md`/`CHANGELOG.md`/
+`PROJECT_LEARNINGS.md`/`SESSION_NOTES.md`/`HANDOFFS.md` touched. `lintr::lint_package()`: N/A, no
+`.R` file touched.
+
+**Self-assessment (Session 529): 9/10.** **Strengths:** (1) Did not trust the file's own
+"(none remaining -- ... see `CHANGELOG.md`)" convention at face value for items that merely LOOKED
+like the 17 real ones -- checked the actual `CHANGELOG.md` for each item's claimed pointer before
+compressing, catching 2 genuine ledger gaps (FM #27) that a mechanical "grep for `- [ ]` bullets,
+rewrite each" pass would have silently destroyed. (2) Scoped an unavoidably large, judgment-heavy
+task (the item's own text says "budget it as its own session, not a quick pass") via an
+inventory-first background agent BEFORE committing to a session boundary, rather than guessing a
+scope up front or attempting the whole file and running out of session -- the resulting
+Housekeeping-only scope was cleanly bounded (section headers give hard start/end lines) and fully
+completed, not partially done. (3) Re-read the full target section directly before editing rather
+than relying on the inventory agent's own summary for the actual edit targets (Safeguards
+read-before-edit), and re-read the full compressed result end-to-end before close-out rather than
+trusting each individual edit in isolation -- this caught the one duplicated-text mistake (below).
+(4) Verified all preserved cross-references (Learning numbers) actually resolve, per Phase 3F's
+citation-verification requirement, rather than assuming preserved citations are automatically still
+valid. **Weaknesses:** (1) One `Edit` call (the split lintr items) used an `old_string` boundary
+that didn't extend far enough, leaving ~9 lines of stale duplicated text in the file until the next
+verification read caught it -- cost one extra `Read`+`Edit` round-trip; a more careful boundary
+choice (or reading the exact end-of-item text immediately before the edit rather than from an
+earlier full-section read) would have avoided it on the first attempt. (2) Did not verify the 8
+still-open Housekeeping items for currency (e.g., whether the WORDLIST-gap-count items have already
+been superseded by the newer, larger S521 finding) -- correctly out of scope for a "leave open items
+untouched" compression pass, but left as an unexplored consolidation opportunity for whoever
+eventually works those items, not flagged anywhere else.
+**Ledger:** recorded in `CHANGELOG.md` across 4 entries this session (the S528 `commit: pending`
+reconcile, the 2 backfills, this session's own compression deliverable).
 
 ### Session 527 Handoff Evaluation (by Session 528)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S527 receipt's `next_steps` field named "File

@@ -131,6 +131,79 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [BL-518] `BACKLOG.md` Housekeeping section compressed (Session 529)
+- **Deliverable:** Compressed `BACKLOG.md`'s "Housekeeping" section (147 of the file's then-2,501
+  lines' worth of scope) per the S518 ledger-size housekeeping item -- 17 of its 19 fully-resolved
+  items rewritten to the file's own established short-pointer convention, full detail preserved via
+  `CHANGELOG.md` pointers; the 8 genuinely-open items left untouched (verbatim, including this
+  session's own compression-tracking item, updated in place with progress notes rather than closed).
+- Scoped via `AskUserQuestion` after a background-agent inventory pass (full read of all 2,501
+  then-current lines: 62 top-level items file-wide, 48 fully resolved, ~1,500 compressible lines
+  concentrated in 3 oversized sections) -- Housekeeping chosen over top-15-file-wide /
+  single-biggest-item / prep-only-fixes alternatives as the one self-contained, cleanly-bounded unit.
+- **2 items had no existing `CHANGELOG.md` entry despite ending in the file's standard "See
+  `CHANGELOG.md`" pointer** -- a real ledger gap (FM #27), not just verbose narrative: the
+  `inst/extdata/` reorganization (Sessions 415-418) and the non-portable-filename fix (Session 497),
+  see the 2 backfill entries immediately below. Backfilled both before compressing rather than
+  compress to a dangling pointer. `PROJECT_LEARNINGS.md` Learning 535.
+- Net: Housekeeping section 652→389 lines; `BACKLOG.md` total 2,501→2,254 (net, after this session's
+  own compression-tracking item grew to record what was done and what remains). Zero information
+  loss verified by re-reading the full compressed section end-to-end before close-out; all preserved
+  Learning-number cross-references (384/385/417/433/440/441/461/477/480/501/505) confirmed to still
+  resolve in `PROJECT_LEARNINGS.md` via direct grep.
+- **`BACKLOG.md`'s own item stays open** -- 2 sections remain (`Pedigree diagram vs kinship2 audit
+  follow-ups`, ~896 lines; `Genetic-metrics PDF audit follow-ups`, ~753 lines incl. the still-open
+  issue #152), each flagged as its own future session per the item's original "budget it as its own
+  session" guidance. Also folded in this session's own Phase 0 ledger reconcile (`HANDOFFS.md`'s
+  S528 receipt `commit: pending` → `529f84f5`, see the entry below) before the priorities picker.
+- Documentation checklists (citation/tutorial/`NEWS.Rmd`/`a2interactive.Rmd`/`_pkgdown.yml`): N/A --
+  no exported function, no UI feature, no displayed statistic. Runtime smoke test (Phase 3E): N/A --
+  docs-only, no `R/`/`tests/`/`man/`/`NAMESPACE`/`data/` content touched (`git diff --stat` confirms
+  only `BACKLOG.md`/`CHANGELOG.md`/`PROJECT_LEARNINGS.md`/`SESSION_NOTES.md`/`HANDOFFS.md`).
+  `lintr::lint_package()`: N/A, no `.R` file touched. TDD RED/GREEN/REFACTOR: N/A throughout, per
+  `CLAUDE.md`'s Development Process Contract (no code or tests involved).
+
+### 2026-08-12 · [ad hoc] Backfilled: `devtools::check()` non-portable-filename fix (Session 497, 2026-08-09)
+- No `CHANGELOG.md` entry existed for this session's work despite `BACKLOG.md`'s own detailed
+  write-up — found while compressing `BACKLOG.md`'s Housekeeping section (Session 529). Backfilled
+  from that narrative, not from git archaeology.
+- Owner renamed `inst/extdata/reference/Standardized Human Pedigree Nomenclature: Update and
+  Assessment of the Recommendations of the Nation.html` to `inst/extdata/reference/
+  pedigree_nomenclature.html` (outside a session tool call, per the file's copyright-sensitive
+  handling). `devtools::check()` went from 1 error/1 warning/1 note to 0/0/0 — the vignette-engine
+  NOTE (previously suspected independent) was confirmed a downstream symptom of the non-portable
+  -filename ERROR derailing the check pipeline, not its own defect, via `tools::pkgVignettes(check =
+  TRUE)` against both source and a built tarball.
+- Incidental gap found and fixed the same session: the rename broke a `.gitignore` pattern (S479)
+  that kept this copyrighted, local-only file out of git; updated to the new filename. Separately,
+  `.Rbuildignore` had **never** excluded this file — or 2 other S479-gitignored copyrighted files
+  (`5201430.pdf`, `bioinformatics_24_2_279.pdf`) — from the built package tarball at all
+  (`.gitignore` has no effect on `R CMD build`), so all three had been shipping in every distributed
+  tarball despite being deliberately kept out of git. Fixed by adding `.Rbuildignore` entries for all
+  three; verified via a fresh `pkgbuild::build()` that none of the three ship while the legitimately
+  -shipped `Master_Genetic_metrics_2_14_15.pdf` (S418, different copyright situation) still does.
+  One stale path reference fixed (`docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`);
+  `PROJECT_LEARNINGS.md` Learning 480.
+
+### 2026-08-12 · [ad hoc] Backfilled: `inst/extdata/` reorganization Phases 1-4 (Sessions 415-418, 2026-07-28)
+- No `CHANGELOG.md` entry existed for this 4-phase reorg despite each phase's own `BACKLOG.md`
+  write-up ending "See `CHANGELOG.md`" — found while compressing `BACKLOG.md`'s Housekeeping section
+  (Session 529). Backfilled from that narrative (plan: `docs/planning/extdata-reorganization-plan.md`,
+  S414), not from git archaeology.
+- **Phase 1 (S415):** relocated 24 dev-scratch/orphaned items to `dev/extdata-scratch/`; removed 3
+  empty untracked dirs + `code_under_development/`; deleted 11 obsolete `.Rbuildignore` + 10 dead
+  `.gitignore` lines. `devtools::check()` 0 errors/0 warnings; regression 0 failed/0 error, 3198
+  passed/179 skipped.
+- **Phase 2 (S416):** subfolder name `examples/` (owner-picked); `git mv`'d 10 load-bearing files
+  into `inst/extdata/examples/`; updated `get_test_data_path()`, ~28 `system.file()` call sites
+  across 15 test files, 7 roxygen/comment path references; regenerated `man/loadSiteConfig.Rd`.
+  Regression exact baseline match; `R CMD build` tarball verified.
+- **Phase 3 (S417):** fixed `offline-focal-animal-workflow.qmd`'s 2 un-migrated `system.file()`
+  calls (undersold by the plan's own "what DONE looks like" text) + a stale GitHub blob URL;
+  re-rendered 3 targets. `PROJECT_LEARNINGS.md` Learning 384.
+- **Phase 4 (S418):** PDF placement → `inst/extdata/reference/`; re-rendered stale `README.Rmd`
+  (`PROJECT_LEARNINGS.md` Learning 385). Reorg fully executed, all 4 phases DONE.
+
 ### 2026-08-12 · [ad hoc] S529 Phase 0 reconcile: HANDOFFS.md S528 receipt commit: pending → 529f84f5 (Session 529)
 - Phase 0 step 6 found `HANDOFFS.md`'s S528 receipt still carried `commit: pending` — the
   established one-hop case (the receipt necessarily ships in a commit before it can name that
