@@ -414,3 +414,33 @@
   </p>
     </em>
 
+    <em>
+    <p style="padding-left: 10px">
+    <b>Genomic Runs of Homozygosity (F<sub>ROH</sub>):</b>
+    <br>
+    Unlike the pedigree-based kinship/founder statistics above, this
+  estimates an animal's own inbreeding directly from its sequence-scale
+  marker genotypes, independent of (and often more complete than) its
+  recorded pedigree. A "run of homozygosity" is a long, unbroken stretch of
+  homozygous genotypes along one chromosome -- evidence that both
+  chromosome copies in that stretch descend from a shared recent ancestor.
+  F<sub>ROH</sub> summarizes an animal's genomic inbreeding as the fraction
+  of its genotyped genome covered by such runs.
+  </p>
+    <p style="padding-left: 50px; padding-bottom: 15px">
+    F<sub>ROH</sub> = &Sigma;L<sub>ROH</sub> / L<sub>genotyped</sub>
+  </p>
+    <p style="padding-left: 10px; padding-bottom: 25px">
+    Where L<sub>ROH</sub> is the summed length of ROH segments --
+  consecutive homozygous genotyped loci, ordered by chromosome position,
+  spanning at least a minimum number of loci and a minimum base-pair length
+  (a field-standard dual threshold; too short a run reflects only
+  background linkage disequilibrium, not real relatedness) -- and
+  L<sub>genotyped</sub> is the total genomic span covered by the marker
+  panel, a single fixed value shared across every animal so F<sub>ROH</sub>
+  stays comparable across a cohort. Ceballos FC, Joshi PK, Clark DW, Ramsay
+  M, Wilson JF. 2018. Runs of homozygosity: windows into population history
+  and trait architecture. Nature Reviews Genetics 19(4):220-234.
+  </p>
+    </em>
+

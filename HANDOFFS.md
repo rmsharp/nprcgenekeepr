@@ -123,18 +123,63 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S532
 date: 2026-08-12
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Implement issue #152 Slice 3 -- new R/computeGenomicROH.R (computeGenomicROH()), the
-genomic Runs-of-Homozygosity / F_ROH inbreeding metric, per
-docs/planning/issue152-sequence-input-genetic-metrics-plan.md section 5 Slice 3.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Issue #152 Slice 3 (new computeGenomicROH() F_ROH metric) is DONE, per
+docs/planning/issue152-sequence-input-genetic-metrics-plan.md section 5 Slice 3. Issue #152
+stays open -- Slice 4 (de-identification primitive, R/obfuscateGenotypeMatrix.R, D7) is next.
+what_was_done: New @export'ed computeGenomicROH(genotypeMatrix, locusMetadata, minSnp = 50L,
+minBp = 1e6) (R/computeGenomicROH.R): per-individual genomic Runs-of-Homozygosity segments and
+F_ROH, per-chromosome rle()-based run detection, reusing checkLocusMetadata()'s 3-tier coverage
+classification to exclude loci lacking full chrom+pos coverage. Full strict TDD
+PRE-RED->RED->GREEN->REFACTOR cycle, each transition gated by its own AskUserQuestion. A
+dedicated Pre-RED AskUserQuestion round ratified 3 design judgment calls the plan left open:
+both heterozygous AND missing genotypes end a run; F_ROH's genomeLength denominator is one
+value shared across every individual (Ceballos et al. 2018 L_autosome convention); defaults
+minSnp=50L/minBp=1e6. 9 new test_that blocks / 40 expectations in
+tests/testthat/test_computeGenomicROH.R (hand-derived exact-fraction core fixture matching
+markerFst.R's convention, plus 8 edge cases). RED confirmed (9/9 failing) before implementation;
+GREEN passed 40/40 on the first attempt; REFACTOR fixed 4 implicit_integer_linter findings, 0
+behavior change. Close-out: devtools::document() (NAMESPACE/man regenerated), citation-checklist
+entry (issue #120, population_genetics_terms.html), terse NEWS.Rmd/NEWS.md entry, _pkgdown.yml
+entry. Found devtools::check() reporting 2 NOTEs (not the documented 3-NOTE baseline) --
+investigated directly via spelling::spell_check_package() rather than accepting it, found this
+session's own new content introduced 6 genuinely new WORDLIST-gap words (bp, Ceballos, gapless,
+Joshi, PLINK's, ROH), hand-added all 6. Also fixed a Learning-530 violation in this slice's own
+first-draft citation (11-author PLINK reference copied verbatim instead of trimmed to "Purcell,
+S., et al."). Final verification: full clean regression 5,457 passed/0 failed/0 error (0
+non-baseline offenders); devtools::check() 0 errors/0 warnings/2 NOTEs (both pre-existing);
+lintr::lint_package() 0 lints on touched files. Commits: 65f14f15 (S531 receipt reconcile),
+72e33611 (claim), plus this close-out's own commit.
+next_steps: Issue #152 Slice 4 (de-identification primitive, R/obfuscateGenotypeMatrix.R, D7,
+per the plan's section 5) is the next planned slice for this cluster -- a separate future
+session per the plan's own session-boundary requirement. Unrelated READY items still open:
+inst/WORDLIST's own larger pre-existing ~77-word gap (Effort M, needs a genuine-typo-vs-
+false-positive editorial pass, distinct from the 6 words this session added); NEWS.Rmd verbosity
+drift (Effort M, owner-directed); a2interactive.Rmd documentation pass (Effort M, owner-directed,
+now also owing this session's own computeGenomicROH() once a documentation pass session runs,
+per CLAUDE.md's deferred-not-same-session rule for that checklist).
+key_files: R/computeGenomicROH.R (new, ~150 lines); tests/testthat/test_computeGenomicROH.R
+(new, 9 test_that blocks); man/computeGenomicROH.Rd (generated); inst/WORDLIST (6 new entries,
+LC_ALL=C byte-order); inst/extdata/ui_guidance/population_genetics_terms.html (new F_ROH entry,
+end of file); BACKLOG.md issue #152 tracking item (S532 progress note); PROJECT_LEARNINGS.md
+Learning 538.
+gotchas: (1) devtools::check()'s NOTE count is not fully understood in this repo -- it read 2
+(not the documented 3-NOTE baseline) both before and after this session's WORDLIST fix, and no
+tests/spelling.Rout.save reference file exists to explain a diff-against-snapshot mechanism;
+always verify the spelling gap directly via spelling::spell_check_package(), never infer it from
+the NOTE count alone, in either direction (Learning 538). (2) When reviewing a
+spell_check_package() word list in the terminal, do not tail -N it -- genuinely new words can
+sort alphabetically before the visible window and be silently missed (this session's own
+near-miss, Learning 538). (3) Any new @references citation with more than ~6 authors should use
+"FirstAuthor, S., et al." from the start (Learning 530) -- checkLocusMetadata.R's own
+11-author PLINK citation still exists unfixed (out of this session's scope) and remains a
+5-word WORDLIST-gap source if anyone copies it again.
+runtime_smoke: n/a -- script-callable only, no Shiny wiring touched this slice, matching the
+Slice 1/2 precedent (design doc section 5: Slice 5 is the only slice shipping a UI tab).
+changelog_ref: this session's own CHANGELOG.md entry, 2026-08-12 ([issue #152] Slice 3 --
+computeGenomicROH() F_ROH metric shipped)
 commit: pending
 ```
 

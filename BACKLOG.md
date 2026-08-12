@@ -1187,3 +1187,57 @@ no UI change this slice. Runtime smoke test: n/a -- script-callable only, no Shi
 touched this slice. **Issue #152 stays open -- Slice 3 (the new F_ROH metric,
 `R/computeGenomicROH.R`, D6) is the next planned slice**, a separate future session per the
 plan's own session-boundary requirement. See `CHANGELOG.md`.
+
+**Progress (S532, 2026-08-12):** Issue #152 Slice 3 -- the new `computeGenomicROH()` F_ROH
+metric (D6) -- is now DONE, per `docs/planning/issue152-sequence-input-genetic-metrics-plan.md`
+§5 Slice 3. Full strict TDD PRE-RED->RED->GREEN->REFACTOR cycle, gated by an `AskUserQuestion`
+at every transition per `CLAUDE.md`'s Development Process Contract. Three genuine judgment
+calls the design left open were ratified via a dedicated Pre-RED `AskUserQuestion` round
+(all recommended options chosen): both a heterozygous AND a missing genotype end a
+run-of-homozygosity; F_ROH's denominator (`genomeLength`) is a single value shared across
+every individual -- summed per-chromosome full-coverage-locus span from `locusMetadata`,
+Ceballos et al. (2018)'s L_autosome convention, not recomputed per individual (avoids
+conflating an individual's own missingness with inbreeding); defaults `minSnp = 50L`,
+`minBp = 1e6` (1 Mb matches PLINK's own `--homozyg-kb` default; 50 SNPs is scaled down from
+PLINK's literal 100 for this package's sparser GBS-scale target tier, D1). New
+`R/computeGenomicROH.R` reuses `checkLocusMetadata()`'s existing 3-tier coverage
+classification to exclude any locus lacking full chrom+pos coverage from both the ordered
+walk and the denominator (warned, not treated as a run-breaking gap) -- ~150 lines,
+loop-based per individual/per chromosome (this slice is new code, not one of D5's two named
+rewrite targets, so no vectorization requirement applied). 9 new `test_that` blocks in
+`tests/testthat/test_computeGenomicROH.R` (40 expectations): a hand-derived 3-individual/
+2-chromosome core fixture (exact-fraction expected values, matching `markerFst.R`'s own
+convention) plus 8 focused edge cases (heterozygous break, missing break, locus-exclusion
++warning, dual-threshold both directions, a normal zero-segment case with no spurious warning,
+absent/NULL `locusMetadata` -> `stop()`, a zero-`genomeLength` -> warning+`NA` case, and
+confirmation of the `minSnp`/`minBp` defaults). RED confirmed (9/9 blocks failing, function not
+found) before implementation; GREEN passed all 9 blocks (40/40 expectations) on the first
+implementation attempt. REFACTOR: fixed 4 `implicit_integer_linter` findings (bare `0`/`1e6`
+literals), 0 behavior change, re-confirmed 40/40 still passing. A real mid-close-out finding:
+`devtools::check()` first reported only 2 NOTEs (not the expected 3, since the known
+~69-77-word spelling-WORDLIST gap did not fire) -- direct `spelling::spell_check_package()`
+verification (not assumed) found this session's own new content introduced 6 genuinely new
+flagged words (`bp`, `Ceballos`, `gapless`, `Joshi`, `PLINK's`, `ROH`), hand-added to
+`inst/WORDLIST` in `LC_ALL=C` byte-order position. Also found and fixed a `PROJECT_LEARNINGS.md`
+Learning 530 violation this slice's own first draft made: the `@references Purcell et al.
+2007` (PLINK) citation was copied verbatim from `checkLocusMetadata.R`'s existing 11-author
+form rather than trimmed to "Purcell, S., et al. (2007)" per Learning 530's own >6-author
+rule -- fixed, removing `computeGenomicROH.Rd` as a second independent source of 5
+already-known WORDLIST-gap surnames (`Bakker`/`Ferreira`/`Maller`/`Neale`/`Sklar`, still
+present via `checkLocusMetadata.R`'s own unchanged citation, out of this slice's scope to
+fix). Citation checklist (issue #120): new "Genomic Runs of Homozygosity (F_ROH)" entry added
+to `inst/extdata/ui_guidance/population_genetics_terms.html`, matching the file's established
+per-metric style. `NEWS.Rmd`/`NEWS.md`: terse entry added (matching the Slice 1/2 entries'
+own brevity, honoring this session's own flagged NEWS-verbosity-drift backlog item rather than
+adding to it). `_pkgdown.yml`: new `computeGenomicROH` entry added at its correct alphabetical
+position in the "All exposed functions" group. `devtools::document()` run, `NAMESPACE`/
+`man/computeGenomicROH.Rd` regenerated. Full clean regression 5,457 passed/0 failed/0 error (0
+non-baseline offenders); `devtools::check()` 0 errors/0 warnings/2 NOTEs, both confirmed
+pre-existing (top-level files; vignettes/figure leftover -- the spelling NOTE is gone, not
+hidden: independently re-verified via direct `spelling::spell_check_package()`, not the
+abbreviated `❯`-bullet table `BACKLOG.md`'s own S521/S526 findings warn against trusting
+alone); `lintr::lint_package()` 0 lints on touched files. Runtime smoke test: n/a --
+script-callable only, no Shiny wiring touched this slice, matching the Slice 1/2 precedent.
+**Issue #152 stays open -- Slice 4 (the new de-identification primitive,
+`R/obfuscateGenotypeMatrix.R`, D7) is the next planned slice**, a separate future session per
+the plan's own session-boundary requirement. See `CHANGELOG.md`.

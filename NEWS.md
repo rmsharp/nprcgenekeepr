@@ -392,6 +392,11 @@ R. Mark Sharp, Ph.D.
   Slice 2) are internally rewritten for large marker panels --
   vectorized matrix algebra and precomputed allele frequencies,
   respectively -- with output and signatures unchanged.
+- New script-callable `computeGenomicROH()` (issue \#152, Slice 3)
+  computes per-individual genomic Runs-of-Homozygosity segments and the
+  F_ROH inbreeding coefficient from a sequence-scale marker genotype
+  matrix and locus-metadata sidecar -- a marker-based inbreeding
+  estimate independent of the recorded pedigree. No Shiny UI yet.
 
 # nprcgenekeepr 2.0.0 (20260708)
 

@@ -131,6 +131,43 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [issue #152] Slice 3 -- new `computeGenomicROH()` F_ROH genomic-inbreeding metric shipped (Session 532)
+- **Deliverable:** New script-callable, `@export`ed `computeGenomicROH(genotypeMatrix,
+  locusMetadata, minSnp = 50L, minBp = 1e6)` (`R/computeGenomicROH.R`), per
+  `docs/planning/issue152-sequence-input-genetic-metrics-plan.md` §5 Slice 3 (design decision
+  D6). Computes per-individual genomic Runs-of-Homozygosity segments and the F_ROH inbreeding
+  coefficient from a sequence-scale marker genotype matrix, independent of the recorded
+  pedigree. Full strict TDD PRE-RED->RED->GREEN->REFACTOR cycle, each transition gated by an
+  `AskUserQuestion` per `CLAUDE.md`'s Development Process Contract; three genuine design
+  judgment calls (run-breaking rule, F_ROH's shared-denominator convention, `minSnp`/`minBp`
+  defaults) ratified via a dedicated Pre-RED `AskUserQuestion` round.
+- **Tests:** 9 new `test_that` blocks / 40 expectations in `tests/testthat/test_computeGenomicROH.R`
+  -- a hand-derived, exact-fraction core fixture (matching `markerFst.R`'s own convention) plus 8
+  edge cases (heterozygous/missing run-breaks, locus-exclusion+warning, dual-threshold both
+  directions, a clean zero-segment case, absent-`locusMetadata` `stop()`, zero-`genomeLength`
+  warning+`NA`, default-value confirmation). RED confirmed (9/9 failing, function not found)
+  before implementation; GREEN passed all 9/40 on the first attempt; REFACTOR fixed 4
+  `implicit_integer_linter` findings with 0 behavior change.
+- **Verification:** Full clean regression 5,457 passed/0 failed/0 error (0 non-baseline
+  offenders); `devtools::check()` 0 errors/0 warnings/2 NOTEs, both confirmed pre-existing
+  (top-level files; vignettes/figure leftover). `lintr::lint_package()` 0 lints on touched
+  files. Runtime smoke test: n/a -- script-callable only, no Shiny wiring touched.
+- **Also this session:** direct `spelling::spell_check_package()` verification (not the
+  abbreviated `devtools::check()` NOTE table) found this session's own new content introduced 6
+  genuinely new spelling-gap words (`bp`, `Ceballos`, `gapless`, `Joshi`, `PLINK's`, `ROH`),
+  hand-added to `inst/WORDLIST` in `LC_ALL=C` byte-order position -- the pre-existing ~77-word
+  gap is unaffected. Also caught and fixed a `PROJECT_LEARNINGS.md` Learning 530 violation in
+  this slice's own first-draft citation (an 11-author PLINK reference copied verbatim from
+  `checkLocusMetadata.R` rather than trimmed to "Purcell, S., et al. (2007)"), removing
+  `computeGenomicROH.Rd` as a second independent source of 5 already-known WORDLIST-gap
+  surnames. Citation checklist (issue #120): new F_ROH entry added to
+  `inst/extdata/ui_guidance/population_genetics_terms.html`. `NEWS.Rmd`/`NEWS.md`: terse entry
+  added. `_pkgdown.yml`: new `computeGenomicROH` entry added. `devtools::document()` run;
+  `NAMESPACE`/`man/computeGenomicROH.Rd` regenerated.
+- **Issue #152 stays open** -- Slice 4 (new de-identification primitive,
+  `R/obfuscateGenotypeMatrix.R`, D7) is the next planned slice, a separate future session.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-12 · [BL-518] `BACKLOG.md` "Genetic-metrics PDF audit follow-ups" section compressed, S518 item RESOLVED (Session 531)
 - **Deliverable:** Compressed `BACKLOG.md`'s "Genetic-metrics PDF audit follow-ups" section (753
   lines) per the S518 ledger-size housekeeping item -- the 3rd and last of its 3 oversized sections

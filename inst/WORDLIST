@@ -9,6 +9,7 @@ CEPH
 CERVUS
 CICD
 CMD
+Ceballos
 Chesser
 Cifuentes
 Cockerham
@@ -55,6 +56,7 @@ JW
 JZV
 Joanes
 Jonquera
+Joshi
 Kalinowski
 Kimura
 Kinships
@@ -92,6 +94,7 @@ overridable
 PEDSYS
 Pemberton
 PLINK
+PLINK's
 POSIXct
 Pearson
 Ped
@@ -109,6 +112,7 @@ README
 reimplementation
 RHUB
 RNGkind
+ROH
 RQ
 RStudio
 Rbuildignore
@@ -157,6 +161,7 @@ baseUrl
 biallelic
 birthdate
 bottlenecked
+bp
 buildMarkerGenotypeMatrix
 byID
 caTools
@@ -228,6 +233,7 @@ folderPath
 fromCenter
 fromcenter
 funder
+gapless
 gdata
 geneDrop
 genotypeMatrix

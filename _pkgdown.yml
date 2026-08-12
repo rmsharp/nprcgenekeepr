@@ -211,6 +211,7 @@ reference:
   - '`checkTwinRelations`'
   - '`chooseAlleles`'
   - '`chooseDate`'
+  - '`computeGenomicROH`'
   - '`convertAncestry`'
   - '`convertDate`'
   - '`convertFromCenter`'

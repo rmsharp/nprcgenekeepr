@@ -6,18 +6,102 @@
 
 ## ACTIVE TASK
 
+### Session 531 Handoff Evaluation (by Session 532)
+**Score: 9/10.** **What helped:** the `HANDOFFS.md` S531 receipt's `next_steps` field named
+exactly the item this session picked up (issue #152 Slice 3, F_ROH metric,
+`R/computeGenomicROH.R`, READY) with an accurate pointer to
+`docs/planning/issue152-sequence-input-genetic-metrics-plan.md` section 5 -- reused directly in
+this session's own Phase 0 priorities list and as the starting point for reading the plan
+document itself. All 4 carried-forward `next_steps` items (issue #152 Slice 3, `inst/WORDLIST`,
+`NEWS.Rmd` verbosity, `a2interactive.Rmd`) matched what `BACKLOG.md` actually contained -- no
+drift found. **What was missing:** nothing that was S531's job to provide -- S531 was a
+docs-only `BACKLOG.md`-compression session with zero code/design content related to Slice 3, so
+the receipt correctly limited itself to a pointer rather than attempting algorithm-level detail;
+this session's own substantial Pre-RED research (reading the ~600-line plan document, existing
+`buildMarkerGenotypeMatrix()`/`markerFst()`/`checkLocusMetadata()`/`checkSequenceGenotypeFile()`
+conventions) was necessarily this session's own work, not a receipt gap. **What was wrong:**
+nothing found -- the `key_files` line-range claim (`BACKLOG.md:907-1173`) was accurate as of
+read time, before this session's own edits to that file. **ROI:** High for orientation --
+correctly identified and accurately scoped all 4 READY items, with zero rework needed to
+re-derive what to work on next.
+
 ### What Session 532 Did
-**Deliverable:** Implement issue #152 Slice 3 -- new `R/computeGenomicROH.R`
+**Deliverable:** Implemented issue #152 Slice 3 -- new `R/computeGenomicROH.R`
 (`computeGenomicROH()`), the genomic Runs-of-Homozygosity / F_ROH inbreeding metric, per
 `docs/planning/issue152-sequence-input-genetic-metrics-plan.md` section 5 Slice 3. Owner-picked
 from this session's own Phase 0 priorities list (4 options via `AskUserQuestion`) over the
 `inst/WORDLIST` gap, `NEWS.Rmd` verbosity drift, and the `a2interactive.Rmd` documentation pass.
-(IN PROGRESS)
-**Started:** 2026-08-12.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Started/Completed:** 2026-08-12.
+**Status:** DONE. Full strict TDD PRE-RED->RED->GREEN->REFACTOR cycle, every phase transition
+gated by its own `AskUserQuestion` per `CLAUDE.md`'s Development Process Contract.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, git status/log, `methodology_dashboard.py` -- health 96/100, 1 HIGH-risk category
+unchanged, no further detail surfaced by the dashboard itself). Ledger reconcile: `CHANGELOG.md`
+frontier already `HEAD`; `HANDOFFS.md`'s S531 receipt still carried `commit: pending`, reconciled
+to `043608ff` (the established one-hop case), committed separately (`65f14f15`). Rendered the
+priorities list via `AskUserQuestion` (4 options); owner picked issue #152 Slice 3. **(2)** Claimed
+the session (commit `72e33611`). **(3)** Read the full design plan (`docs/planning/issue152-...
+-plan.md`) sections 1-9 plus the existing `checkSequenceGenotypeFile.R`/`checkLocusMetadata.R`/
+`buildMarkerGenotypeMatrix.R`/`markerFst.R` (for the "hand-derived fixture" convention) and the
+Slice 1 fixture CSVs, before forming any test plan. **(4)** A dedicated pre-RED
+`AskUserQuestion` round ratified 3 genuine design judgment calls the plan left open (all
+recommended options chosen): both heterozygous AND missing genotypes end a run;
+F_ROH's `genomeLength` denominator is one value shared across every individual (Ceballos et al.
+2018's L_autosome convention), not recomputed per individual; defaults `minSnp = 50L`,
+`minBp = 1e6`. **(5)** PRE-RED->RED gate: wrote 9 `test_that` blocks (40 expectations) in
+`tests/testthat/test_computeGenomicROH.R` -- a hand-derived, exact-fraction 3-individual/
+2-chromosome core fixture (matching `markerFst.R`'s own convention) plus 8 edge cases. Confirmed
+RED: 9/9 failing, function not found. **(6)** RED->GREEN gate: wrote `R/computeGenomicROH.R`
+(reuses `checkLocusMetadata()`'s 3-tier coverage classification; per-chromosome `rle()`-based
+run detection). All 9 blocks (40/40 expectations) passed on the FIRST implementation attempt.
+**(7)** GREEN->REFACTOR gate: fixed 4 `implicit_integer_linter` findings (bare `0`/`1e6`
+literals), re-confirmed 40/40 still passing, 0 lints remaining. **(8)** Close-out verification:
+ran `devtools::document()` (`NAMESPACE`/`man/computeGenomicROH.Rd` regenerated), added the
+citation-checklist entry (issue #120, `population_genetics_terms.html`), a terse `NEWS.Rmd`/
+`NEWS.md` entry, and the `_pkgdown.yml` reference-coverage entry. **(9)** A real mid-close-out
+finding: `devtools::check()` first reported only **2** NOTEs, not the documented **3** baseline
+(top-level files, vignettes/figure leftover, and the known ~69-77-word spelling-WORDLIST gap).
+Investigated directly rather than accepting the lower count at face value -- direct
+`spelling::spell_check_package()` found this session's own new content introduced 6 genuinely
+new flagged words (`bp`, `Ceballos`, `gapless`, `Joshi`, `PLINK's`, `ROH`); hand-added all 6 to
+`inst/WORDLIST` in `LC_ALL=C` byte-order position. A first read of the flagged-word list via
+`tail -100` had silently hidden 2 of these (`bp`, `Ceballos`, which sort alphabetically before
+the visible window) -- caught only by re-capturing the full list to a file and reading it
+whole. `PROJECT_LEARNINGS.md` Learning 538. **(10)** Also found and fixed a Learning 530
+violation in this slice's own first-draft citation: an 11-author PLINK reference copied
+verbatim from `checkLocusMetadata.R` rather than trimmed to "Purcell, S., et al. (2007)" --
+fixed, removing `computeGenomicROH.Rd` as a 2nd independent source of 5 already-known
+WORDLIST-gap surnames (out of scope to fix `checkLocusMetadata.R` itself this session).
+**(11)** Final verification: full clean regression 5,457 passed/0 failed/0 error (0 non-baseline
+offenders, run 3 times across the session as fixes landed); `devtools::check()` 0 errors/0
+warnings/2 NOTEs, both confirmed pre-existing; `lintr::lint_package()` 0 lints on touched files.
+**(12)** Updated `BACKLOG.md`'s issue #152 tracking item with this session's progress note,
+naming Slice 4 (`R/obfuscateGenotypeMatrix.R`, D7) as next.
+
+**Self-assessment (Session 532): 9/10.** **Strengths:** (1) Followed the full TDD contract
+faithfully -- an explicit `AskUserQuestion` at every phase transition (PRE-RED scope decisions,
+PRE-RED->RED, RED->GREEN, GREEN->REFACTOR), each spelling out the exact planned actions before
+they were taken, not after. (2) Did genuine Pre-RED design work (reading the full plan document
+and every relevant existing convention) before writing a single test, which paid off directly:
+GREEN passed on the first attempt with 0 debugging iterations. (3) 9 test blocks with
+independently hand-computed exact-fraction expected values (matching `markerFst.R`'s own
+established rigor) covering the core behavior plus 8 distinct edge cases, not just a
+happy-path check. (4) Did not accept a `devtools::check()` result that looked better than
+expected at face value -- investigated why directly, which surfaced a real defect (6 unflagged
+new spelling-gap words) that would otherwise have shipped silently. (5) Caught and fixed a
+Learning-530 citation-formatting violation in its own first draft before it became a second
+independent source of WORDLIST-gap surnames. **Weaknesses:** (1) The first spelling-check
+review pass used a truncated `tail -100` capture that hid 2 of the 6 new words -- a real,
+avoidable near-miss, self-caught only by re-capturing the full list rather than trusting the
+first (incomplete) view; `PROJECT_LEARNINGS.md` Learning 538 records this so a future session
+doesn't repeat it. (2) Ran `devtools::check()` (~4 min each) and the full 5,457-test regression
+3 times each across the session as fixes landed, rather than batching the WORDLIST/citation
+fixes before the first full verification pass -- correct given the discovery order (the
+`devtools::check()` NOTE-count anomaly wasn't known until after the first run), but a more
+efficient session might have anticipated the spelling-gap risk from adding a new `@references`
+block and pre-emptively checked before the first full `check()`.
+**Ledger:** recorded in `CHANGELOG.md` (issue #152 Slice 3 entry, this handoff's own entry).
 
 ### Session 530 Handoff Evaluation (by Session 531)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S530 receipt's `gotchas` field's point (3) --
