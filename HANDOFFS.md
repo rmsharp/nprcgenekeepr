@@ -121,6 +121,24 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-10.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S536
+date: 2026-08-12
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Investigate root cause of the shinytest2/chromote headless-browser
+modal-rendering gap (found S535); fix if possible (retrofitting #153's modal E2E
+coverage at the same time), else document findings.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S535
 date: 2026-08-12
 status: complete

@@ -6,6 +6,18 @@
 
 ## ACTIVE TASK
 
+### What Session 536 Did
+**Deliverable:** Investigate the root cause of the `shinytest2`/`chromote` headless-browser
+modal-rendering gap (found S535, `BACKLOG.md` Housekeeping) -- `showModal()`/`modalDialog()`
+DOM never reaches the headless browser for confirm-gated exports (issue #152 Slice 5's new
+export gate AND the already-shipped issue #153 LD-block export). If fixable, implement the
+fix under strict TDD and retrofit live E2E coverage for #153's modal at the same time. If a
+genuine upstream limitation, document findings instead. (IN PROGRESS)
+**Started:** 2026-08-12
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### Session 534 Handoff Evaluation (by Session 535)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S534 receipt's `next_steps` field named
 issue #152 Slice 5 as the top priority, with an accurate pointer to the plan's own section 5,
