@@ -169,7 +169,7 @@ wherever a blank line precedes the point of interest -- use `grep -n` or Read's 
 runtime_smoke: n/a -- build-config/test-only change, no runtime code touched.
 changelog_ref: this session's own two CHANGELOG.md entries, 2026-08-12 ([BL-533]
 .Rbuildignore typo fix; [ad hoc] S534 Phase 0 reconcile: HANDOFFS.md S533 receipt)
-commit: pending
+commit: bef447c6
 ```
 
 ```handoff

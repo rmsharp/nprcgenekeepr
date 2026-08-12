@@ -131,6 +131,11 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] S535 Phase 0 reconcile: HANDOFFS.md S534 receipt commit: pending → bef447c6 (Session 535)
+- Phase 0 step 6 ledger reconcile: `HANDOFFS.md`'s S534 receipt was `status: complete` but
+  `commit: pending` (the standard one-hop case). Reconciled to `bef447c6` (S534's own
+  close-out commit, which included the receipt itself). Committed separately.
+
 ### 2026-08-12 · [BL-533] `.Rbuildignore` `methodology_trim.py` pattern typo fixed, top-level-files NOTE resolved (Session 534)
 - **Deliverable:** Fixed `.Rbuildignore`'s `methodology_trim.py` pattern typo (found S533,
   filed to `BACKLOG.md` Housekeeping, not fixed that session): `^methodolog_trim\.py$`
