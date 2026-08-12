@@ -6,6 +6,21 @@
 
 ## ACTIVE TASK
 
+### What Session 538 Did
+**Deliverable:** Trim `NEWS.Rmd`'s post-2.0.0 entries back to the project's terse,
+pre-1.0.8 house style (found S522, owner-directed, READY, Effort M) -- move
+formulas/citations/derivation rationale that has crept into recent entries
+(issue #130 marker-genetics family, issue #153 slices, etc.) to roxygen
+`@references` and `inst/extdata/ui_guidance/population_genetics_terms.html`,
+which are already the intended user-viewable surfaces for that content per the
+issue #120 citation checklist. Scope: ALL post-2.0.0 entries (owner-picked via
+`AskUserQuestion`, over a "worst offenders only" narrower alternative).
+**Started:** 2026-08-12.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
 ### Session 536 Handoff Evaluation (by Session 537)
 **Score: 7/10.** **What helped:** the `HANDOFFS.md` S536 receipt's `next_steps` field
 correctly named `inst/WORDLIST`'s gap as a READY, Effort M item alongside the 2 other

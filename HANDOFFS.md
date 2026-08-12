@@ -121,6 +121,26 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-10.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S538
+date: 2026-08-12
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Trim NEWS.Rmd's post-2.0.0 entries back to the project's terse,
+pre-1.0.8 house style (found S522, owner-directed, READY, Effort M) -- move
+formulas/citations/derivation rationale into roxygen @references and
+inst/extdata/ui_guidance/population_genetics_terms.html. Scope: all post-2.0.0
+entries.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S537
 date: 2026-08-12
 status: complete
