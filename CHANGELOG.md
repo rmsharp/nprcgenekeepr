@@ -131,6 +131,46 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [issue #152] Slice 5 -- full module tab, wiring, curator-controlled export, and documentation shipped, closing issue #152 (Session 535)
+- **Deliverable:** Implemented issue #152 Slice 5 -- the full module tab, wiring,
+  curator-controlled export, and documentation (D8/D9), per
+  `docs/planning/issue152-sequence-input-genetic-metrics-plan.md` section 5 Slice 5. **Closes
+  issue #152** (all 5 slices shipped, Sessions 525-535). New "Genomic ROH (F_ROH)" tab in
+  `R/modMarkerGenetics.R`: reuses the EXISTING `genotypeFile`/`genotypeFileB`/`locusMetadataFile`
+  inputs (validator swapped to the confirmed-superset `checkSequenceGenotypeFile()`, no new
+  upload controls -- a Pre-RED `AskUserQuestion`-ratified simplification of the plan's own
+  proposed interface catalog); new `sequenceRohTable` reactive; a curator confirm-gate export
+  (Generate Preview -> Confirm -> Confirm-OK -> 3 downloads: de-identified genotype matrix,
+  de-identified F_ROH table, manifest). New `R/obfuscateGenomicROH.R`
+  (`obfuscateGenomicROH()`), a new de-identification primitive for `computeGenomicROH()`'s
+  id-column table shape.
+- **Verification:** Full strict TDD PRE-RED->RED->GREEN->REFACTOR, twice (once for the main
+  slice, once more for a bug found via Phase 3E live verification), each transition gated by
+  its own `AskUserQuestion`. 13 new tests at first RED; full clean regression 0 failed/0 error.
+  **A real bug found and fixed via this slice's own Phase 3E live verification** (not caught by
+  `testServer` alone): `sequenceRohTable` passed `locusMetadata()`'s ALREADY-checked output
+  (with an appended `coverage` column) into `computeGenomicROH()`, which internally re-runs
+  `checkLocusMetadata()` expecting the raw 3/4-column shape -- silently mislabeled `coverage` as
+  `cM` on a 3-column fixture (no error, wrong data) and threw loudly on the real 4-column (with
+  `cM`) committed Slice 1 fixture. Fixed by stripping `coverage` before the second check; a new
+  4-column regression test added. **A second finding, not a defect:** `shinytest2`/`chromote`'s
+  headless browser never renders a `showModal()` modal's DOM for either this tab's export gate
+  or the already-shipped issue #153 LD-block export's identical pattern -- a pre-existing
+  harness limitation, filed to `BACKLOG.md` Housekeeping (found S535) rather than fixed
+  mid-session; the E2E test verifies everything live through Generate Preview at real
+  50x1,000-locus scale (zero console errors) and documents + gracefully skips the Confirm-modal
+  step. Final: full clean regression 0 failed/0 error (2,127 blocks); `devtools::check()` 0
+  errors/0 warnings/2 NOTEs (both confirmed pre-existing via the raw `Status:` line, per Learning
+  538's own discipline); `lintr::lint_package()` 0 lints on touched files. 1 genuinely new
+  spelling-flagged word (`computeGenomicROH`) hand-added to `inst/WORDLIST`. `_pkgdown.yml`
+  reference-coverage guard updated and passing. Tutorial/article checklist (Session 436): a new
+  "Genomic ROH (F_ROH)" section added to `vignettes/articles/colony-manager-guide.qmd` with a
+  real screenshot from the live app; `quarto render` confirmed clean. Citation checklist (issue
+  #120): N/A, already satisfied at Slice 3. `NEWS.Rmd`/`NEWS.md` entry added.
+  `PROJECT_LEARNINGS.md` Learning 541.
+- **Next:** `BACKLOG.md` issue #152 tracking item marked closed. A new Housekeeping item filed
+  for the `shinytest2`/`chromote` modal-rendering harness gap (found S535).
+
 ### 2026-08-12 · [ad hoc] S535 Phase 0 reconcile: HANDOFFS.md S534 receipt commit: pending → bef447c6 (Session 535)
 - Phase 0 step 6 ledger reconcile: `HANDOFFS.md`'s S534 receipt was `status: complete` but
   `commit: pending` (the standard one-hop case). Reconciled to `bef447c6` (S534's own

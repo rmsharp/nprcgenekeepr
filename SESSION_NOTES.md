@@ -6,18 +6,120 @@
 
 ## ACTIVE TASK
 
+### Session 534 Handoff Evaluation (by Session 535)
+**Score: 9/10.** **What helped:** the `HANDOFFS.md` S534 receipt's `next_steps` field named
+issue #152 Slice 5 as the top priority, with an accurate pointer to the plan's own section 5,
+plus the 3 other still-open READY items (`inst/WORDLIST`, `NEWS.Rmd` verbosity, `a2interactive.Rmd`)
+-- all reused directly in this session's own Phase 0 priorities list, matching what `BACKLOG.md`
+actually contained with zero drift. `gotchas` (1) (the `Status: N NOTEs` raw line can exceed the
+abbreviated `❯`-bullet table) was reused directly this session's own final `devtools::check()`
+verification, catching that `res$notes` (length 1) under-counted the raw `Status: 2 NOTEs` line
+-- exactly the failure mode the gotcha warned about, and it would have been missed without it.
+**What was missing:** nothing structural -- S534 was a small, well-scoped fix with no design
+content overlapping this session's own much larger Slice 5 work. **What was wrong:** nothing
+found -- every claim re-checked (the 2-NOTE baseline, the `.Rbuildignore` fix, the Learning 540
+cross-reference) held up. **ROI:** High -- the `next_steps` pointer and gotcha (1) were both
+directly load-bearing, not just generally useful context.
+
 ### What Session 535 Did
-**Deliverable:** Implement issue #152 Slice 5 -- the full module tab, wiring, curator-controlled
+**Deliverable:** Implemented issue #152 Slice 5 -- the full module tab, wiring, curator-controlled
 export, and documentation (D8/D9), per
-`docs/planning/issue152-sequence-input-genetic-metrics-plan.md` section 5 Slice 5. Closes issue
-#152. Owner-picked from this session's own Phase 0 priorities list (4 options via
-`AskUserQuestion`) over the `inst/WORDLIST` gap, `NEWS.Rmd` verbosity drift, and the
-`a2interactive.Rmd` documentation pass.
-**Started:** 2026-08-12.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+`docs/planning/issue152-sequence-input-genetic-metrics-plan.md` section 5 Slice 5. **Closes issue
+#152** (all 5 slices now shipped, Sessions 525-535). Owner-picked from this session's own Phase 0
+priorities list (4 options via `AskUserQuestion`) over the `inst/WORDLIST` gap, `NEWS.Rmd`
+verbosity drift, and the `a2interactive.Rmd` documentation pass.
+**Started/Completed:** 2026-08-12.
+**Status:** DONE. Full strict TDD PRE-RED->RED->GREEN->REFACTOR cycle (twice -- once for the
+main slice, once more for a bug found via Phase 3E live verification), every phase transition
+gated by its own `AskUserQuestion` per `CLAUDE.md`'s Development Process Contract.
+
+**What happened, in order:** **(1)** Phase 0 orient in full -- found and fixed a gap in its own
+initial ledger-reconcile pass (missed `HANDOFFS.md`'s S534 receipt `commit: pending` field on the
+first check; corrected and committed separately before claiming the session, per the established
+S532->S533/S533->S534 precedent). Rendered the priorities list via `AskUserQuestion`; owner picked
+issue #152 Slice 5. **(2)** Claimed the session. **(3)** Pre-RED research: read the plan's
+interface catalog (§4, explicitly marked "proposed... not built this session"), the D8/D9
+ratification record (§11, both already settled, no fresh vote needed), issue #153 Slice 5's own
+"Linkage and LD Block Metrics" tab (the closest precedent, built one session ago in this exact
+module/file with an inline curator confirm-gate export) and `modDeidentifiedExport.R`'s 3-artifact
+data/manifest/key shape, plus the existing Slice 1/3/4 deliverables. Found a genuine simplification
+the interface catalog didn't anticipate: `checkSequenceGenotypeFile()` is a confirmed strict
+superset of `checkMarkerGenotypeFile()`'s rules, making the existing `genotypeFile`/`genotypeFileB`
+inputs genome-scale-capable via a validator swap alone. A dedicated Pre-RED `AskUserQuestion` round
+(3 questions) ratified this and 2 more judgment calls the catalog left open (all recommended
+options chosen): reuse `genotypeFile`/`genotypeFileB` (not a dedicated duplicate tab); reuse the
+existing `locusMetadataFile` input (not a second upload); export exactly 3 artifacts (genotype
+matrix, F_ROH table, manifest), not all 4-5 possible tables. **(4)** PRE-RED->RED gate: 3 new
+tests in `tests/testthat/test_obfuscateGenomicROH.R` (new de-identification primitive) + 10 new
+`test_that` blocks in `tests/testthat/test_modMarkerGenetics.R` + a new live
+`tests/testthat/test-e2e-marker-genetics-genomic-roh-module.R`. Confirmed RED (13/13 new tests
+failing; 32/32 pre-existing `modMarkerGenetics` tests still passing, no regression from the edit
+alone). **(5)** RED->GREEN gate: new `R/obfuscateGenomicROH.R`; validator swap in
+`genotypeMatrixR()`/`genotypeMatrixBR()`; new "Genomic ROH (F_ROH)" tab (`sequenceRohTable`
+reactive, curator confirm-gate export, `.buildSequenceExportManifest()` helper) in
+`R/modMarkerGenetics.R`. Along the way, found and fixed 2 real gaps the full regression surfaced:
+`test_moduleContract.R`'s hardcoded return-list spec needed the 5 new reactive names; the
+`shinytest2.yaml` CI group-coverage list needed the new E2E test file added (both expected
+consequences of the new code, not defects). Full clean regression 0 failed/0 error (2,126 blocks).
+**(6)** GREEN->REFACTOR gate: 4 lint findings fixed (a `nonportable_path_linter` false positive
+resolved by rewording rather than suppressing; a line-length wrap; 2 `implicit_integer_linter`
+fixes matching `computeGenomicROH()`'s own numeric-not-integer parameter types) -- 0 lints
+remaining. **(7) Phase 3E live verification found a real bug** `testServer` alone had missed:
+`sequenceRohTable` passed `locusMetadata()`'s ALREADY-`checkLocusMetadata()`-checked output
+(with an appended `coverage` column) into `computeGenomicROH()`, which internally re-runs
+`checkLocusMetadata()` expecting the raw 3/4-column shape -- silently mislabeled `coverage` as
+`cM` on a 3-column fixture (no error, wrong data, why the original test missed it) and threw
+loudly on the real 4-column (with `cM`) committed Slice 1 fixture, reproduced live via
+`claude-in-chrome` browser automation and independently via a standalone `shinytest2` diagnostic.
+A second RED->GREEN round (own `AskUserQuestion` gate) added a 4-column regression test and fixed
+the reactive to strip `coverage` before the second check. **(8)** A second Phase 3E finding, NOT a
+defect: `shinytest2`/`chromote`'s headless browser never renders a `showModal()` modal's DOM for
+EITHER this tab's new export gate OR the already-shipped issue #153 LD-block export's identical
+pattern (confirmed via a live probe against #153 specifically) -- a pre-existing harness
+limitation predating this slice, filed to `BACKLOG.md` Housekeeping rather than fixed mid-session.
+The E2E test verifies everything live through Generate Preview at real 50x1,000-locus scale (zero
+console errors) and documents + gracefully `skip()`s the Confirm-modal step, with the server-side
+sequence itself proven correct by `testServer()`. **(9)** Final verification: full clean
+regression 0 failed/0 error (2,127 blocks, including app/e2e); `devtools::check()` 0 errors/0
+warnings/2 NOTEs (verified via the RAW `Status:` line per Learning 538's own discipline, not the
+abbreviated table alone -- both NOTEs confirmed pre-existing); `lintr::lint_package()` 0 lints on
+touched files; `devtools::document()` regenerated `NAMESPACE`/`man/obfuscateGenomicROH.Rd` + 6
+sibling `@family obfuscation` cross-references (collateral, expected). 1 genuinely new spelling
+-flagged word (`computeGenomicROH`, this session's own new file) hand-added to `inst/WORDLIST`,
+matching the Slice 1/4 precedent of adding only what the session's own content is responsible for.
+`_pkgdown.yml` reference-coverage guard: `obfuscateGenomicROH` added, guard test passes. Tutorial
+/article checklist (Session 436): a new "Genomic ROH (F_ROH)" section added to
+`vignettes/articles/colony-manager-guide.qmd` with a real screenshot captured from the live app
+(`vignettes/articles/shiny_app_use/marker_genetics_genomic_roh.png`); `quarto render` confirmed
+clean. Citation checklist (issue #120): N/A, already satisfied at Slice 3. `NEWS.Rmd`/`NEWS.md`:
+new entry added. `a2interactive.Rmd` checklist: deferred per its own standing rule, not this
+slice. `PROJECT_LEARNINGS.md` Learning 541.
+
+**Self-assessment (Session 535): 9/10.** **Strengths:** (1) Did genuine Pre-RED research
+(reading the plan's interface catalog, ratification record, and the closest precedent's actual
+code) that surfaced a real, evidence-backed simplification (`checkSequenceGenotypeFile()`'s
+superset relationship) the plan's own catalog hadn't considered, then took it to the owner as a
+Pre-RED judgment call rather than deciding unilaterally or blindly following the catalog. (2)
+Ran a genuine live Phase 3E verification (not a token smoke test) that caught a real, otherwise
+-silent server-side bug the unit tests had missed, root-caused it precisely, and fixed it through
+a proper second RED->GREEN cycle rather than patching ad hoc. (3) When the E2E test hit an
+unexplained wall (the modal never appearing), did not assume "my code is broken" and start
+guessing fixes -- instead built two independent, targeted diagnostics (a `testServer` probe
+proving the reactive logic correct; a live probe against the ALREADY-SHIPPED #153 feature) that
+definitively isolated the cause to a harness limitation, not app code, before deciding how to
+proceed. (4) Correctly distinguished "fix now" (the `coverage`-column bug, in this session's own
+new code) from "report, don't fix" (the `shinytest2` modal-rendering gap, pre-existing and
+out of scope), matching established project precedent for each. **Weaknesses:** (1) The initial
+manual `claude-in-chrome` debugging of the modal issue (before switching to the more reliable
+`shinytest2`-based diagnostic) cost some time on click-registration red herrings before the real
+root cause (a fixture/pedigree id mismatch, then the harness limitation) was isolated -- the
+standalone `shinytest2` script should probably have been the first diagnostic tool reached for,
+not the third. (2) This was a genuinely large single-session scope (new primitive, new tab, new
+export path, a mid-session bug fix, a harness-limitation investigation, plus full documentation) --
+still one pre-declared vertical slice per the plan's own Slice 5 boundary and the FM #26 slice
+test, but close to the practical ceiling for "1 and done."
+**Ledger:** recorded in `CHANGELOG.md` (issue #152 Slice 5 entry, this session's own Phase 0
+reconcile entry).
 
 ### Session 533 Handoff Evaluation (by Session 534)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S533 receipt's `next_steps` field listed

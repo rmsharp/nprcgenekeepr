@@ -123,22 +123,87 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S535
 date: 2026-08-12
-status: pending
-self_score: pending
+status: complete
+self_score: 9
 predecessor_score: 9
-active_task: Implement issue #152 Slice 5 -- the full module tab, wiring,
-curator-controlled export, and documentation (D8/D9), per
-docs/planning/issue152-sequence-input-genetic-metrics-plan.md section 5 Slice 5.
-Closes issue #152.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+active_task: Issue #152 Slice 5 (full module tab, wiring, curator-controlled export,
+documentation) is DONE. Issue #152 CLOSED -- all 5 slices shipped, Sessions 525-535.
+what_was_done: New "Genomic ROH (F_ROH)" tab in R/modMarkerGenetics.R -- reuses the
+EXISTING genotypeFile/genotypeFileB/locusMetadataFile inputs (validator swapped to
+checkSequenceGenotypeFile(), a confirmed strict superset of checkMarkerGenotypeFile(),
+per a Pre-RED AskUserQuestion-ratified simplification of the plan's own proposed
+interface catalog); new sequenceRohTable reactive; a curator confirm-gate export
+(Generate Preview -> Confirm -> Confirm-OK -> 3 downloads: de-identified genotype
+matrix, de-identified F_ROH table, manifest). New R/obfuscateGenomicROH.R
+(obfuscateGenomicROH()), a new de-identification primitive for computeGenomicROH()'s
+id-column table shape (none of the existing obfuscate* siblings fit that shape). Full
+strict TDD PRE-RED->RED->GREEN->REFACTOR, TWICE (once for the main slice, once more for
+a real bug Phase 3E live verification found): sequenceRohTable passed
+locusMetadata()'s ALREADY-checked output (with an appended coverage column) into
+computeGenomicROH(), which internally re-runs checkLocusMetadata() expecting the raw
+3/4-column shape -- silently mislabeled coverage as cM on a 3-column fixture (no error,
+wrong data) and threw loudly on the real 4-column (with cM) committed Slice 1 fixture;
+fixed by stripping coverage before the second check, new 4-column regression test
+added. A second Phase 3E finding, NOT a defect: shinytest2/chromote's headless browser
+never renders a showModal() modal's DOM for either this tab's export gate or the
+already-shipped issue #153 LD-block export's identical pattern (confirmed via a live
+probe against #153 specifically) -- a pre-existing harness limitation, filed to
+BACKLOG.md Housekeeping rather than fixed mid-session. 13 new tests at first RED (3 in
+test_obfuscateGenomicROH.R, 10 in test_modMarkerGenetics.R) + 1 live E2E test
+(test-e2e-marker-genetics-genomic-roh-module.R, verifies through Generate Preview at
+real 50x1,000-locus scale with zero console errors, gracefully skips the documented
+Confirm-modal harness gap). Full clean regression 0 failed/0 error (2,127 blocks);
+devtools::check() 0 errors/0 warnings/2 NOTEs (both confirmed pre-existing via the raw
+Status: line, not the abbreviated table alone); lintr::lint_package() 0 lints on
+touched files. inst/WORDLIST gained 1 word (computeGenomicROH, this session's own new
+file). _pkgdown.yml reference-coverage guard updated and passing. Tutorial/article
+checklist: new "Genomic ROH (F_ROH)" section in colony-manager-guide.qmd with a real
+screenshot from the live app; quarto render confirmed clean. Citation checklist: N/A,
+already satisfied at Slice 3. NEWS.Rmd/NEWS.md entry added. PROJECT_LEARNINGS.md
+Learning 541. Commits: 9abaded1 (Phase 0 HANDOFFS reconcile), 159a4d59 (claim), 4d05bf17
+(feat: the full Slice 5 deliverable), plus this close-out's own docs commit.
+next_steps: Issue #152 is fully closed -- no further slices. Other unrelated READY
+items still open: inst/WORDLIST's ~80-word gap (Effort M, unaffected by this session's
+1-word addition); NEWS.Rmd verbosity drift (Effort M, owner-directed); a2interactive.Rmd
+documentation pass (Effort M, owner-directed, now also covering this slice's own new
+obfuscateGenomicROH()/sequenceRohTable per its own deferred standing rule); the new
+shinytest2/chromote modal-rendering harness gap (Effort M, found S535, affects every
+future confirm-gated export this codebase ships). Issue #148 (MHC) needs its own
+scope-narrowing conversation before it's READY, per the sequencing audit's Finding #4 --
+now the top of the Deferred/scientific-tier cluster since #152 and #153 are both closed.
+key_files: R/modMarkerGenetics.R (new tab + validator swap); R/obfuscateGenomicROH.R
+(new); tests/testthat/test_modMarkerGenetics.R (13 new blocks incl. the bug-fix
+regression test); tests/testthat/test_obfuscateGenomicROH.R (new);
+tests/testthat/test-e2e-marker-genetics-genomic-roh-module.R (new);
+tests/testthat/test_moduleContract.R (spec updated); .github/workflows/shinytest2.yaml
+(CI group added); vignettes/articles/colony-manager-guide.qmd (new section);
+BACKLOG.md Housekeeping (new modal-rendering-gap item); PROJECT_LEARNINGS.md Learning
+541.
+gotchas: (1) Reusing an existing reactive that already ran checkX() as the RAW input to
+a second function that also calls checkX() internally is not automatically safe --
+verify the validator's own appended-column output still satisfies its own input
+contract on a second pass, and test with a fixture matching the real committed data's
+actual shape (all optional columns populated), not just the minimal shape needed for
+the primary assertion -- a coincidental column-count match can make a double-check
+fixture pass silently while being substantively wrong. (2) shinytest2/chromote's
+headless browser does not render a showModal()/modalDialog() Bootstrap modal's DOM --
+confirmed for BOTH this session's new export gate and the already-shipped issue #153
+LD-block export's identical pattern, so any future confirm-gated export's own E2E test
+will hit the same wall; testServer() is the faithful verification surface for the
+confirm sequence itself until the harness gap is diagnosed/fixed. (3) devtools::check()'s
+res$notes (structured return) can under-count vs. the raw "Status: N NOTEs" line
+(Learning 538) -- this session's own res$notes read length 1 while the raw line read
+"Status: 2 NOTEs"; always check the raw line before reporting a NOTE count.
+runtime_smoke: Live app driven both manually (claude-in-chrome browser automation,
+screenshot captured for the tutorial) and via shinytest2/chromote E2E test -- confirmed
+the new tab computes real F_ROH values at genome scale (50 individuals x 1,000 loci)
+and the existing Kinship Comparison tab is unaffected by the validator swap. The
+Confirm-modal step itself could not be verified live (see gotcha 2); its server-side
+logic is verified by testServer() instead.
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12 ([issue #152] Slice
+5; [ad hoc] S535 Phase 0 reconcile: HANDOFFS.md S534 receipt)
 commit: pending
 ```
-*(stub written at Phase 1B claim; overwritten at Phase 3D close-out)*
 
 ```handoff
 session: S534

@@ -145,6 +145,33 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       that version number.
 
 ## Housekeeping
+- [ ] **`shinytest2`/`chromote` headless browser never renders a
+      `showModal()`/`modalDialog()` Bootstrap modal's DOM -- affects EVERY
+      confirm-gated de-identified export, not just one feature** (found
+      S535, 2026-08-12, READY, Effort M) -- discovered while building issue
+      #152 Slice 5's own curator export gate: `app$click()` on the
+      "Confirm Export" button correctly increments the input value and the
+      server-side `observeEvent` correctly runs (confirmed via a direct
+      `shiny::testServer()` probe -- the reactive chain, including the
+      final `sequenceExportConfirmed` flip, is 100% correct), but
+      `app$get_html("body")` after the click contains no `modal`-related
+      markup at all: the `showModal(modalDialog(...))` call's DOM update
+      never reaches the headless browser. **Confirmed NOT specific to
+      Slice 5's new code**: an identical live probe against the
+      already-shipped issue #153 LD-block export (same
+      `modalDialog()`/`showModal()`/`session$ns(...)`-in-modal-footer
+      pattern) reproduces the exact same symptom -- no `E2E` test for
+      #153's own modal existed before this session's probe, so this gap
+      predates and is independent of #152 Slice 5. Every future
+      confirm-gated export this codebase ships (following the issue
+      #150/#153/#152-Slice-5 pattern) will hit the same live-E2E blind
+      spot. A future session should investigate root cause (a `bslib`
+      version-specific modal markup change, a `shinytest2`/`chromote`
+      timing issue needing a different wait strategy than
+      `app$wait_for_idle()`, or a genuine upstream `shinytest2` gap worth
+      reporting) and, if fixable, retrofit E2E coverage for the
+      previously-untested #153 modal at the same time. See `CHANGELOG.md`,
+      `PROJECT_LEARNINGS.md` Learning 541.
 - [ ] (none remaining -- the "`markerParentageLikelihood()`'s auto-detect
       candidate lookup never finds a candidate when both of a flagged
       animal's parent slots are recorded" item (found S498, design ratified
@@ -1294,3 +1321,49 @@ only, no Shiny wiring touched this slice, matching the Slice 1/2/3 precedent.
 **Issue #152 stays open -- Slice 5 (the full module tab, wiring, curator-controlled export,
 and documentation, D8/D9) is the next and final planned slice**, a separate future session per
 the plan's own session-boundary requirement. See `CHANGELOG.md`.
+
+**Progress (S535, 2026-08-12):** Issue #152 Slice 5 -- the full module tab, wiring,
+curator-controlled export, and documentation (D8/D9) -- is now DONE, closing issue #152 (all 5
+slices shipped). Per `docs/planning/issue152-sequence-input-genetic-metrics-plan.md` §5 Slice 5.
+A dedicated Pre-RED `AskUserQuestion` round resolved 3 genuine judgment calls the interface
+catalog left open (all recommended options chosen): genome-scale kinship/heterozygosity/Fst
+reruns reuse the EXISTING `genotypeFile`/`genotypeFileB` inputs (validator swapped to the
+confirmed-superset `checkSequenceGenotypeFile()`), not a dedicated duplicate tab; F_ROH's
+`locusMetadata` sidecar reuses the EXISTING `locusMetadataFile` input already wired to issue
+#153's own tab (D3's shared-vocabulary intent); the curator export covers exactly 3 artifacts
+(de-identified genotype matrix, de-identified F_ROH table, manifest), not all 4-5 possible
+tables. New `R/obfuscateGenomicROH.R` (`obfuscateGenomicROH()`, a new de-identification
+primitive for computeGenomicROH()'s id-column table shape -- none of the existing `obfuscate*`
+siblings fit). New "Genomic ROH (F_ROH)" tab in `R/modMarkerGenetics.R`: `sequenceRohTable`
+reactive, curator confirm-gate export (Generate Preview -> Confirm -> Confirm-OK -> 3
+downloads), `.buildSequenceExportManifest()` helper. 13 new tests (RED->GREEN->REFACTOR each
+gated by `AskUserQuestion`); full clean regression 0 failed/0 error (2,127 blocks).
+**A real bug found and fixed via this slice's own Phase 3E live verification** (not caught by
+testServer alone): `sequenceRohTable` passed `locusMetadata()`'s ALREADY-checked output
+(`checkLocusMetadata()` appends a `coverage` column) into `computeGenomicROH()`, which
+internally re-runs `checkLocusMetadata()` expecting the raw 3/4-column shape -- silently
+mislabeled `coverage` as `cM` on a 3-column fixture (no error, wrong data) and threw loudly on
+a real 4-column (with `cM`) fixture, reproduced live against the actual committed Slice 1
+fixture. Fixed by stripping the `coverage` column before the second check; a new regression
+test (4-column, with-`cM` fixture) added. **A second finding, NOT a defect**: a live probe
+found `shinytest2`/`chromote`'s headless browser never renders a `showModal()` modal's DOM for
+EITHER this tab's export gate OR the already-shipped issue #153 LD-block export's identical
+pattern -- a pre-existing harness limitation predating this slice, filed to this file's own
+Housekeeping section (found S535) rather than attempted mid-session. The live E2E test
+(`tests/testthat/test-e2e-marker-genetics-genomic-roh-module.R`) verifies everything through
+Generate Preview against the real Slice 1 fixture at full 50x1,000-locus scale (zero console
+errors); the Confirm-modal step is documented and gracefully skipped, with the server-side
+confirm sequence proven correct by `testServer()`. `devtools::check()` 0 errors/0 warnings/2
+NOTEs (both confirmed pre-existing: vignette/figure leftover; the separately-tracked
+`inst/WORDLIST` gap) -- verified via the RAW `Status: N NOTEs` line, not the abbreviated
+`❯`-bullet table alone, per Learning 538's own discipline; 1 genuinely new flagged word
+(`computeGenomicROH`, this session's own new file) hand-added to `inst/WORDLIST`, matching the
+Slice 1 precedent of adding only what the session's own new content is responsible for.
+Citation checklist (issue #120): N/A, already satisfied at Slice 3. Tutorial/article checklist
+(Session 436): DONE -- a new "Genomic ROH (F_ROH)" section added to
+`vignettes/articles/colony-manager-guide.qmd` with a real screenshot from the live app.
+`_pkgdown.yml` reference-coverage guard: DONE (`obfuscateGenomicROH` added). `a2interactive.Rmd`
+checklist: deferred per its own standing rule, not this slice. `PROJECT_LEARNINGS.md` Learning
+541. **Issue #152 closed** -- all 5 slices (ingestion+fixture, performance rewrite, F_ROH
+metric, de-identification primitive, full module+export+docs) shipped across Sessions 525-535.
+See `CHANGELOG.md`.
