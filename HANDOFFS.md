@@ -273,11 +273,12 @@ from `renv.lock` under this project's `snapshot.type: "explicit"` setting -- alw
 Verify section, which this session's own out-of-band commit evidently did not follow.
 runtime_smoke: n/a -- Slice 3 scope, no runtime/UI behavior changed (new R function only; no Shiny
 module, app wiring, or existing function touched).
-changelog_ref: CHANGELOG.md 2026-08-11, 7 entries (Session 522): ledger-reconcile backfill (79f37e18),
+changelog_ref: CHANGELOG.md 2026-08-11, 8 entries (Session 522): ledger-reconcile backfill (79f37e18),
 claim, vignette-engine [ad hoc] fix, close-out, renv.lock ledger-reconcile backfill (c18b7fd6),
-renv.lock [ad hoc] fix, plus this receipt's own final entry.
-commit: pending -- reconciled by the next session's Phase 0, per this receipt's own documented
-write-time constraint (the receipt ships in the very commit whose sha it would name).
+renv.lock [ad hoc] fix, this receipt's own final entry, plus Session 523's own reconcile-backfill
+for this receipt's finalization commit (25606464).
+commit: 25606464 (reconciled by Session 523's Phase 0 -- the receipt's own final field-completion
+landed in this commit, per the documented write-time constraint).
 ```
 <Session 522 self-assessment: 8/10. Strengths: (1) treated "derive/verify the formula" as a real
 research task -- cross-checked the same equations via 4 independently targeted extraction passes

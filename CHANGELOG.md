@@ -131,6 +131,22 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-11 · [issue #153] Backfilled (reconcile-on-read): undocumented commit 25606464 — S522 close-out finalization
+- **Provenance:** Session 522's own final commit (`25606464`, "docs: S522 close-out -- record
+  renv.lock finding (Learning 523, HANDOFFS, SESSION_NOTES)") touched only `HANDOFFS.md`,
+  `PROJECT_LEARNINGS.md`, and `SESSION_NOTES.md` — not `CHANGELOG.md` — so it fell outside this
+  ledger's own frontier (`git log -1 -- CHANGELOG.md` stayed at the prior `d920813e`). Found by
+  Session 523's Phase 0 reconcile.
+- **What it did:** finalized the `HANDOFFS.md` `S522` receipt (filled in the full commit list and
+  expanded gotchas #5/#6 for the two out-of-band regressions), added the `S522c (ad hoc,
+  reconciled)` block for `c18b7fd6`, and recorded `PROJECT_LEARNINGS.md` Learning 523 (a
+  concurrent, mid-session out-of-band commit lands invisibly to Phase 0's reconcile since it
+  postdates orientation — re-check `git log` before your own final close-out commit, not only at
+  Phase 0). All substance already narrated in the `[ad hoc]` backfill and fix entries immediately
+  below and above this one; this entry exists to close the ledger frontier gap, not to add new
+  facts.
+- **Ledger:** this backfill entry only.
+
 ### 2026-08-11 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit c18b7fd6 — renv.lock/pyramid-image change
 - **Provenance:** a second out-of-band commit, `c18b7fd6` ("update renv.lock pyramid image", author R. Mark
   Sharp, 2026-08-11 17:49:45), landed mid-session between this session's own ledger-reconcile-backfill
