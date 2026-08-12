@@ -202,7 +202,7 @@ Confirm-modal step itself could not be verified live (see gotcha 2); its server-
 logic is verified by testServer() instead.
 changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12 ([issue #152] Slice
 5; [ad hoc] S535 Phase 0 reconcile: HANDOFFS.md S534 receipt)
-commit: pending
+commit: 2b54c722
 ```
 
 ```handoff
