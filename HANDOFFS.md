@@ -123,18 +123,69 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S536
 date: 2026-08-12
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Investigate root cause of the shinytest2/chromote headless-browser
-modal-rendering gap (found S535); fix if possible (retrofitting #153's modal E2E
-coverage at the same time), else document findings.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 6
+active_task: The shinytest2/chromote "modal-rendering gap" (found S535) is fully
+resolved -- it was a misdiagnosis. No production R/ code was ever at fault; the
+defect was a test-fixture QC failure. BACKLOG.md's Housekeeping item corrected to
+RESOLVED. Issue #153's export modal now has live E2E coverage for the first time.
+what_was_done: Found there is no shinytest2/chromote headless-modal-rendering
+harness limitation. S535's own E2E pedigree fixture (makeGenomicRohE2ePedigreeFile())
+omitted columnSchema.R's required `birth` column, so dataInput's QC silently
+rejected it and pedigree() stayed NULL -- correctly (not buggily) blocking
+req(pedigree())/req(sequenceExportRaw()) all the way to showModal(). Root-caused via
+a live shinytest2::AppDriver diagnostic session (real click-event listeners proved
+the click registers; temporary message() instrumentation in
+R/modMarkerGenetics.R's sequenceExportPreview/sequenceConfirmExport observers,
+removed before commit, pinpointed pedigree() as NULL; #dataInput-qcErrors -- never
+checked by S535's test -- showed "Missing required columns: birth"). Verified live:
+with birth added, the full Generate Preview -> Confirm Export -> modal
+(display: block) -> Confirm Export OK sequence works end to end in headless Chrome.
+Fixed test-e2e-marker-genetics-genomic-roh-module.R (birth column + stronger
+assertions using sequenceExportGuidance's real empty-vs-alert state instead of a
+download button's static id substring); added new
+test-e2e-marker-genetics-ld-block-module.R retrofitting issue #153's previously
+-untested export modal (found and fixed a second, distinct checkParentAge() QC gate
+via wider founder/offspring birth-date spacing); updated
+.github/workflows/shinytest2.yaml's CI group list; corrected BACKLOG.md's
+Housekeeping item; added PROJECT_LEARNINGS.md Learning 542 (corrects Learning 541's
+second finding). Full strict TDD RED->GREEN (RED empirically confirmed by reverting
+the fixture and re-running: 3 failures + 1 error, matching S535's exact symptom),
+each phase transition gated via AskUserQuestion. No production R/ code changed.
+Commits: 420a1c53 (the fix), plus this close-out's own docs commit.
+next_steps: This item is fully closed -- no further work on the modal gap. Other
+unrelated READY items still open (unchanged by this session): inst/WORDLIST's
+~69-word gap (Effort M); NEWS.Rmd verbosity drift (Effort M, owner-directed);
+a2interactive.Rmd documentation pass (Effort M, owner-directed). Issue #148 (MHC)
+still needs its own scope-narrowing conversation before it's READY (sequencing
+audit Finding #4). LabKey integration remaining recs stay BLOCKED (needs a live
+LabKey server).
+key_files: R/modMarkerGenetics.R (untouched -- confirmed no production defect);
+tests/testthat/test-e2e-marker-genetics-genomic-roh-module.R (fixed fixture +
+strengthened assertions); tests/testthat/test-e2e-marker-genetics-ld-block-module.R
+(new); .github/workflows/shinytest2.yaml (CI group added); BACKLOG.md Housekeeping
+(corrected); PROJECT_LEARNINGS.md Learning 542 (new, corrects Learning 541).
+gotchas: (1) A test assertion that checks a static HTML fragment for a control's
+own id/name substring (e.g. grepl("downloadX", html)) is true the instant the
+control exists in the DOM, regardless of whether the reactive chain behind it ever
+populated real data -- it proves nothing about state. Prefer a UI surface that
+actually branches on the reactive in question (here, sequenceExportGuidance's
+alert-vs-empty render). (2) Before concluding "the test harness has a
+rendering/timing limitation," check every QC/validation surface (qcErrors-style
+outputs) upstream of the reactive chain being probed -- a req() guard blocking
+silently on malformed test input looks identical, from the DOM alone, to a genuine
+rendering failure, and is far more likely. (3) shinytest2::AppDriver$get_logs()
+captures the live Shiny subprocess's own message()/stderr output as "{shiny} R
+stderr" lines -- fast, precise way to binary-search which req() in a reactive chain
+is actually blocking, faster than DOM-only probing.
+runtime_smoke: Both E2E tests (genomic-ROH and the new LD-block test) drive the
+real, running app end to end in headless Chrome, verified passing via direct
+testthat::test_file() runs with NPRC_RUN_E2E=true -- this session's deliverable
+inherently IS runtime/E2E verification, run repeatedly over the course of the
+diagnostic session itself, not a one-off smoke test.
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12 ([BL-535] the
+fix; [ad hoc] S536 Phase 0 reconcile entries)
 commit: pending
 ```
 

@@ -6,17 +6,115 @@
 
 ## ACTIVE TASK
 
+### Session 535 Handoff Evaluation (by Session 536)
+**Score: 6/10.** **What helped:** the `HANDOFFS.md` S535 receipt's `next_steps` field named
+the modal-rendering gap as an open item (Effort M), and `BACKLOG.md`'s own detailed Housekeeping
+write-up (S535's investigation trail: `app$click()` incrementing the input value, a
+`shiny::testServer()` probe confirming the reactive chain, a live probe against #153's identical
+pattern) meant this session didn't have to rediscover WHAT had already been tried before
+designing a more targeted diagnostic. **What was missing:** S535's own probe never checked the
+Input tab's `#dataInput-qcErrors` output -- the one place that would have shown the real cause
+(`pedigree()` never populated because the synthetic fixture was missing a required `birth`
+column) -- and its export-path assertions (`downloadHtml` matching a download button's own `id`
+substring) don't actually prove real content was generated, which is exactly how the misdiagnosis
+went unnoticed. **What was wrong:** `gotchas` (2) stated as established fact that
+"`shinytest2`/`chromote`'s headless browser does not render a `showModal()`/`modalDialog()`
+Bootstrap modal's DOM" -- this was FALSE. Live re-investigation this session proved the modal
+renders correctly (`display: block`) once the pedigree fixture is fixed; shiny, bslib, jQuery,
+and chromote were never at fault. Trusting this gotcha at face value (rather than re-verifying
+it) would have licensed accepting a permanent test-harness limitation that does not exist.
+**ROI:** Mixed -- the `next_steps` pointer and BACKLOG.md's investigation trail were genuinely
+useful starting context, but the specific technical conclusion in `gotchas` (2) was wrong and
+had to be independently re-derived from scratch rather than trusted, costing real diagnostic time
+before the actual root cause (a QC-rejected test fixture) was found.
+
 ### What Session 536 Did
-**Deliverable:** Investigate the root cause of the `shinytest2`/`chromote` headless-browser
-modal-rendering gap (found S535, `BACKLOG.md` Housekeeping) -- `showModal()`/`modalDialog()`
-DOM never reaches the headless browser for confirm-gated exports (issue #152 Slice 5's new
-export gate AND the already-shipped issue #153 LD-block export). If fixable, implement the
-fix under strict TDD and retrofit live E2E coverage for #153's modal at the same time. If a
-genuine upstream limitation, document findings instead. (IN PROGRESS)
-**Started:** 2026-08-12
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+**Deliverable:** Investigated the root cause of the `shinytest2`/`chromote` "headless-browser
+modal-rendering gap" (found S535, `BACKLOG.md` Housekeeping). **Found there is no such harness
+limitation** -- the real defect was S535's own E2E pedigree fixture missing a required `birth`
+column, which silently failed `dataInput`'s QC and left `pedigree()` NULL, correctly (not
+buggily) blocking `req()` guards all the way to `showModal()`. Fixed the fixture, strengthened
+the genomic-ROH E2E test's assertions, and retrofitted live E2E coverage for issue #153's
+previously-untested LD-block export modal (owner-picked via `AskUserQuestion` to bundle both,
+matching the BACKLOG item's own "retrofit #153 at the same time" framing).
+**Started/Completed:** 2026-08-12.
+**Status:** DONE. Commit `420a1c53`.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, `git status`/`log`, `methodology_dashboard.py`). Ledger reconcile found the
+S535 `HANDOFFS.md` receipt's `commit: pending` field still unreconciled -- fixed
+(`commit: 2b54c722`, matching the S535 close-out commit) and logged to `CHANGELOG.md`
+(`42e3e985`, `f946e0a3`). Rendered the priorities list via `AskUserQuestion`; owner picked the
+`shinytest2`/`chromote` modal gap over the `inst/WORDLIST` gap, `NEWS.Rmd` verbosity drift, and
+the `a2interactive.Rmd` documentation pass. **(2)** Claimed the session. **(3)** PRE-RED
+research/diagnosis: wrote a standalone `shinytest2::AppDriver` diagnostic script (scratchpad,
+not committed) and iteratively narrowed the cause -- confirmed the button's real `click`/jQuery
+event listeners fire and the input value registers (ruling out a click-simulation problem);
+confirmed the modal HTML is inserted asynchronously via shiny.js's `renderDependenciesAsync`/
+`renderContentAsync` into a `#shiny-modal-wrapper`, and that wrapper never even appeared;
+confirmed BS4's `window.bootstrap.Modal.VERSION` ("4.6.0") + jQuery's `.modal()` plugin are both
+present and correctly wired. Traced the actual chain with temporary `message()` instrumentation
+in `R/modMarkerGenetics.R`'s `sequenceExportPreview`/`sequenceConfirmExport` observers (removed
+before commit): `pedigree()` was NULL, so `req(pedigree())` correctly blocked
+`sequenceExportRaw()`, so `req(sequenceExportRaw())` correctly blocked `showModal()`. The Input
+tab's own `#dataInput-qcErrors` output (never checked by S535's own test) showed why: "Missing
+required columns: birth" -- `columnSchema.R`'s required list is `c("id", "sire", "dam", "sex",
+"birth")`, and S535's synthetic `makeGenomicRohE2ePedigreeFile()` fixture never included it.
+Verified live: adding `birth` made the FULL Generate Preview -> Confirm Export -> modal
+(`display: block`) -> Confirm Export OK -> modal-removed sequence work end to end in headless
+Chrome, identical to a real browser. **(4)** Pre-RED->RED gate (`AskUserQuestion`, owner
+approved bundling the #153 retrofit): fixed `test-e2e-marker-genetics-genomic-roh-module.R`'s
+fixture and strengthened its assertions (drop the graceful-skip fallback, actually drive
+Confirm -> Confirm OK, assert `sequenceExportGuidance`'s real empty-vs-alert render state instead
+of a download button's static `id` substring). Confirmed RED by temporarily reverting the
+`birth` column and running the file directly via `testthat::test_file()`: 3 failures + 1 error,
+reproducing S535's exact symptom precisely. Wrote a NEW `test-e2e-marker-genetics-ld-block-module.R`
+retrofitting live coverage for issue #153's previously-untested export modal (same corrected
+pattern); its own first honest run failed too, but for a DIFFERENT, genuinely distinct QC gate
+(`checkParentAge()`'s "Parent age too young" -- the hand-built founder/offspring pedigree's birth
+dates were only ~10 months apart), fixed via wider (5-year) birth-date spacing. **(5)** GREEN:
+restored `birth` in the genomic-ROH fixture, confirmed all assertions pass; the new #153 test
+passed once its own parent-age gap was fixed. **No production `R/` code changed anywhere in this
+session** -- the defect was entirely in test fixtures. **(6)** REFACTOR: updated
+`.github/workflows/shinytest2.yaml`'s CI group list for the new file (verified against
+`test_shinytest2_workflow_coverage.R`'s partition-coverage guard); corrected `BACKLOG.md`'s
+Housekeeping item from an open "investigate" task to RESOLVED/misdiagnosed with the real root
+cause; added `PROJECT_LEARNINGS.md` Learning 542, explicitly correcting Learning 541's second
+finding (Learning 541 itself was left unedited, per the project's append-only-correction
+convention for historical learnings). **(7)** Verification: full clean regression 0 failed/0
+error (pre-existing, unrelated warnings in `test_modMarkerGenetics.R`/`test_appServer_server.R`
+confirmed untouched by this session); `devtools::check()` 0 errors/0 warnings/2 NOTEs (both
+confirmed pre-existing via the raw `Status:` line, per Learning 538's own discipline); lint N/A
+(`.lintr` wholesale-exempts `tests/`, and no `R/` files changed so nothing to lint or
+`document()`). Phase 3E runtime verification: both E2E tests drove the real, running app
+end-to-end in headless Chrome multiple times over the course of this session's own diagnosis --
+this session's deliverable inherently IS runtime/E2E verification.
+
+**Self-assessment (Session 536): 9/10.** **Strengths:** (1) Did not accept the predecessor's
+"harness limitation" conclusion at face value despite it being a plausible-sounding, well
+-documented finding -- re-derived the actual mechanism from first principles (shiny.js's own
+modal-insertion source, `window.bootstrap`/jQuery presence, real click-event listeners) before
+concluding anything, and that skepticism is exactly what surfaced the real bug. (2) Used a tight,
+iterative diagnostic loop (attach real event listeners -> confirm click registers -> instrument
+server-side observers -> read the one UI surface that had never been checked) rather than
+guessing at fixes; each step either confirmed or eliminated a specific hypothesis. (3) Verified
+RED empirically rather than assuming it -- reverted the fix and ran the actual test file to watch
+it fail with the exact predicted symptom, for BOTH the genomic-ROH fix and the new #153 test's
+own (different) QC gap, rather than treating "I understand the bug" as equivalent to "I've proven
+the test catches it." (4) Corrected the record honestly and completely: fixed `BACKLOG.md`'s
+false claim rather than leaving it to mislead a future session, added a `PROJECT_LEARNINGS.md`
+entry that explicitly names the prior misdiagnosis and its lesson (weak assertions checking for
+a static id substring, not real generated content) rather than quietly moving on. **Weaknesses:**
+(1) The initial diagnostic pass spent some effort on a red herring (whether `app$click()`'s
+positional-vs-`selector=` distinction mattered for actionButton click semantics) before the A/B
+test cleanly ruled it out -- the qcErrors output should probably have been checked earlier,
+given it was the one verification surface the predecessor's own investigation never touched.
+(2) This session found and fixed a SECOND, unrelated QC gate (`checkParentAge()`) while building
+the new #153 test -- appropriately handled in-session rather than treated as scope creep (it was
+a direct blocker to the one pre-approved deliverable, not a new capability), but worth naming
+explicitly as an unplanned detour the RED/GREEN gate structure absorbed cleanly.
+**Ledger:** recorded in `CHANGELOG.md` ([BL-535] entry, this session's own Phase 0 reconcile
+entries).
 
 ### Session 534 Handoff Evaluation (by Session 535)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S534 receipt's `next_steps` field named
