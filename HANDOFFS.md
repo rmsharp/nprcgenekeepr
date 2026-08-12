@@ -121,6 +121,24 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-10.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S531
+date: 2026-08-12
+status: pending
+self_score:
+predecessor_score:
+active_task: Compress BACKLOG.md's "Genetic-metrics PDF audit follow-ups" section (~753 lines,
+BACKLOG.md:907-1659) -- the 3rd and last of the S518 ledger-size-housekeeping item's oversized
+sections (Housekeeping compressed S529; "Pedigree diagram vs kinship2" compressed S530).
+what_was_done: pending
+next_steps:
+key_files:
+gotchas:
+runtime_smoke:
+changelog_ref:
+commit: pending
+```
+
+```handoff
 session: S530
 date: 2026-08-12
 status: complete

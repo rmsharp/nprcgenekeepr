@@ -6,6 +6,17 @@
 
 ## ACTIVE TASK
 
+### What Session 531 Did
+**Deliverable:** Compress `BACKLOG.md`'s "Genetic-metrics PDF audit follow-ups" section (~753
+lines, `BACKLOG.md:907-1659`) -- the 3rd and last of the S518 ledger-size-housekeeping item's
+oversized sections (Housekeeping compressed S529; "Pedigree diagram vs kinship2" compressed S530).
+(IN PROGRESS)
+**Started:** 2026-08-12.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 529 Handoff Evaluation (by Session 530)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S529 receipt's `next_steps` field named both
 remaining `BACKLOG.md` sections explicitly, with an accurate relative-risk read ("Pedigree diagram vs
