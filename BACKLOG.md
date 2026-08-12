@@ -701,12 +701,15 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       an unrelated `P1_UNDOCUMENTED` gate on the in-progress claim commit): RED = 523 of 598 true
       headings matched (0 of 75 "Handoff Evaluation" headings); GREEN = 598 of 598, exact. Also
       confirmed the fix still rejects the hypothetical `"Didn't"` false-match case (no such heading
-      exists in the file today). `PROJECT_LEARNINGS.md` Learning 534. See `CHANGELOG.md`. **A
-      future session should re-run `python3 methodology_trim.py --file SESSION_NOTES.md` once
-      `CHANGELOG.md` has caught up to this session's own claim commit, confirm `598 record(s)
-      partitioned` (or the then-current true total, re-derived via `grep`), and only THEN consider
-      the actual first `--write` archive -- deferred again this session, owner-picked, matching the
-      S527 precedent of keeping the archive itself a separate, later action.)
+      exists in the file today). **After this fix's own close-out commit advanced the
+      `CHANGELOG.md` frontier, the `P1_UNDOCUMENTED` gate cleared and the CLI's own dry-run was
+      re-run directly, confirming end-to-end (not just via the direct cross-check): `[L3_OK] 599
+      record(s) partitioned; every one byte-identical across the move` -- an exact match against the
+      true total.** `PROJECT_LEARNINGS.md` Learning 534. See `CHANGELOG.md`. The actual first
+      `--write` archive of `SESSION_NOTES.md` is still deferred, owner-picked this session, matching
+      the S527 precedent of keeping the archive itself a separate, later action -- a future session
+      should re-run the dry-run once more (counts drift as sessions append) and, if still clean, run
+      `--write`.)
 - [ ] **`BACKLOG.md`'s own ledger-size housekeeping -- editorial compression, not a
       `methodology_trim.py` config** (found S518, 2026-08-11, READY, Effort L) -- `BACKLOG.md`
       itself is one of the dashboard's 3-file HIGH-risk ledger-size items (2,181 lines, past the

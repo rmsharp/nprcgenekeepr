@@ -92,11 +92,14 @@ machinery directly for RED/GREEN evidence when the CLI's own dry-run was blocked
 gate (`P1_UNDOCUMENTED`), rather than either forcing the CLI to run somehow or treating the block as
 a reason to skip RED/GREEN verification. (4) Kept the fix minimal (1 regex line + comment, no
 surrounding code touched) and confirmed via `git diff` before running any verification. **Weaknesses:**
-(1) Did not attempt to actually resolve the `P1_UNDOCUMENTED` CLI block this session (e.g. by
-recording the claim commit in `CHANGELOG.md` before running RED/GREEN) -- worked around it via the
-direct Python cross-check instead, which is faithful evidence but means this session never actually
-saw the CLI's own dry-run output print a passing "598 record(s) partitioned" line end-to-end; that
-confirmation is deferred to a future session per this session's own close-out note. (2) Did not
+(1) At RED/GREEN time, worked around the `P1_UNDOCUMENTED` CLI block via a direct Python
+`fence_scan()`/`record_start` cross-check rather than the CLI itself -- faithful evidence, but a
+gap this session caught and closed before final close-out rather than at GREEN time: after the
+close-out commit advanced `CHANGELOG.md`'s frontier, a final verification pass re-ran the actual
+CLI and confirmed `599 record(s) partitioned` end-to-end, folded back into `HANDOFFS.md`/
+`BACKLOG.md` rather than left as a "future session" deferral. A more thorough GREEN phase would
+have recorded the claim commit's `CHANGELOG.md` entry before RED/GREEN specifically to avoid ever
+hitting the gate. (2) Did not
 verify whether any OTHER `LEDGERS` entry in `methodology_trim.py` (beyond `SESSION_NOTES.md`'s) has
 a similar `\b`-after-alternation shape that could hit the same class of bug -- out of scope for this
 session's narrow fix, but an unverified adjacent question left for whoever next touches this file.

@@ -131,25 +131,29 @@ boundary bug (found/filed S527, BACKLOG.md Housekeeping, READY, Effort S) is DON
 what_was_done: Moved the trailing \b in methodology_trim.py:239-240 so it guards only the "What
 Session \d+ Did" branch instead of sitting after the whole alternation --
 record_start = re.compile(r"^### (?:Session \d+ Handoff Evaluation \(by Session \d+\)|What Session
-\d+ Did\b)"). Verified via direct fence_scan()/record_start cross-check (the CLI's own dry-run was
-blocked by an unrelated P1_UNDOCUMENTED gate on this session's own in-progress claim commit): RED =
-523/598 true headings matched (0/75 Handoff Evaluation) -> GREEN = 598/598 exact. Confirmed the
-alternative fix (dropping \b entirely) would also have been GREEN on real data but would silently
-accept a hypothetical "Didn't"-style false match -- moving \b avoids that regression
-(PROJECT_LEARNINGS.md Learning 534). Commits: bf9e55ac (S527 commit: pending reconcile), aa4ca4a8
-(claim), plus this close-out's own commit.
-next_steps: Re-run python3 methodology_trim.py --file SESSION_NOTES.md once CHANGELOG.md has caught
-up to this session's own claim commit (the P1_UNDOCUMENTED gate that blocked the CLI's dry-run this
-session should clear once the ledger frontier advances past aa4ca4a8), confirm it reports "598
-record(s) partitioned" (or the then-current true total, re-derived via grep on the two heading
-patterns, not this literal), and only then consider the actual first --write archive of
-SESSION_NOTES.md -- deferred again this session, owner-picked, matching the S527 precedent of
-keeping the archive itself a separate, later action. Separately, remaining open Phase 0 priorities
-unchanged: issue #152 Slice 3 (F_ROH metric, READY, next per the ratified design doc);
-BACKLOG.md's own ledger-size housekeeping (READY, Effort L); inst/WORDLIST spelling gap (READY,
-Effort M, ~77 words); NEWS.Rmd verbosity drift (READY, Effort M, found S522); a2interactive.Rmd
-documentation pass (READY, Effort M, found S522); the stale inst/extdata/ Phase-4 BACKLOG.md header
-(trivial editorial fix, not yet filed as its own item, noted S527).
+\d+ Did\b)"). Verified via direct fence_scan()/record_start cross-check at RED/GREEN time (the
+CLI's own dry-run was transiently blocked by an unrelated P1_UNDOCUMENTED gate on this session's
+own in-progress claim commit): RED = 523/598 true headings matched (0/75 Handoff Evaluation) ->
+GREEN = 598/598 exact. Confirmed the alternative fix (dropping \b entirely) would also have been
+GREEN on real data but would silently accept a hypothetical "Didn't"-style false match -- moving \b
+avoids that regression (PROJECT_LEARNINGS.md Learning 534). AFTER this close-out's own commit
+(9bfc8bb4/23e69529) advanced the CHANGELOG.md frontier, the P1_UNDOCUMENTED gate cleared and the
+CLI's own dry-run was re-run directly: `python3 methodology_trim.py --file SESSION_NOTES.md` now
+prints `[L3_OK] 599 record(s) partitioned; every one byte-identical across the move` and `would
+archive 593 of 599 record(s)` -- an exact match against the true total (fresh grep re-derivation),
+confirmed end-to-end through the actual CLI, not just the direct cross-check. Commits: bf9e55ac
+(S527 commit: pending reconcile), aa4ca4a8 (claim), 9bfc8bb4 (fix), 23e69529 (close-out).
+next_steps: The fix is now confirmed end-to-end via the CLI itself (599/599, see what_was_done) --
+no further verification owed before the actual first --write archive of SESSION_NOTES.md can be
+considered. That archive itself is still deferred, owner-picked this session, matching the S527
+precedent of keeping the archive a separate, later action -- a future session should read this
+receipt, re-run the dry-run once more (counts drift as sessions append), and if it still looks
+clean, run --write. Separately, remaining open Phase 0 priorities unchanged: issue #152 Slice 3
+(F_ROH metric, READY, next per the ratified design doc); BACKLOG.md's own ledger-size housekeeping
+(READY, Effort L); inst/WORDLIST spelling gap (READY, Effort M, ~77 words); NEWS.Rmd verbosity
+drift (READY, Effort M, found S522); a2interactive.Rmd documentation pass (READY, Effort M, found
+S522); the stale inst/extdata/ Phase-4 BACKLOG.md header (trivial editorial fix, not yet filed as
+its own item, noted S527).
 key_files: methodology_trim.py:239-246 (LEDGERS["SESSION_NOTES.md"].record_start, the fix + its
 explanatory comment); BACKLOG.md Housekeeping (the resolved \b-regex item); PROJECT_LEARNINGS.md
 Learning 534; SESSION_NOTES.md (unchanged by this session's fix -- only its own ACTIVE TASK section
