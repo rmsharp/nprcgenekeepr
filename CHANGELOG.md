@@ -131,6 +131,36 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [BL-521] Fixed inst/WORDLIST's spelling-check gap; added a permanent regression guard (Session 537)
+- **Deliverable:** Verified all 76 currently-flagged `inst/WORDLIST` words (found S521;
+  BACKLOG.md's documented count of 69 was stale) as genuine false positives via source-context
+  `grep` — zero actual typos found — and hand-added them. Found and excluded 4 additional
+  words (`CJ`/`PWJ`/`QBKW`/`ZX`) traced to a stale, `.gitignore`'d `vignettes/a2interactive.md`
+  build byproduct that a clean checkout/CI would never see (confirmed via a `git archive HEAD`
+  re-check). Added a new permanent guard, `tests/testthat/test_wordlist_coverage.R`, asserting
+  `spelling::spell_check_package()` returns 0 rows, so this recurring drift (S443/S448/S452/
+  S465/S490) gets a hard test failure instead of an easy-to-miss `devtools::check()` NOTE.
+- **Corrected a factually-wrong convention** stated in 3 prior `BACKLOG.md` entries (S452/S465/
+  S490): `inst/WORDLIST` is NOT `LC_ALL=C` byte-order sorted — it is loosely hand-maintained
+  alphabetical. A first merge attempt using `LC_ALL=C sort -u` silently reordered ~21 unrelated
+  existing entries; caught via `git diff` before committing and redone as a pure 76-line
+  insertion (verified zero deletions).
+- **A full `devtools::check()` run found a second real bug**, not caught by the unit test alone:
+  the new guard's `testthat::test_path("..", "..")` broke under R CMD check's own `testthat.R`
+  execution (`1 error`) because testthat runs each `test_that()` block with the working
+  directory set to the test file's own directory, at a different relative depth than under
+  `devtools::test()`. Root-caused (confirmed via a live `getwd()` print) and fixed by reusing
+  `spelling::spell_check_test()`'s own proven `00_pkg_src`-sibling resolution strategy at the
+  correct depth, verified via a fast local R-CMD-check-layout simulation before a final full
+  re-check.
+- **Verification:** full clean regression 0 failed/0 error; final `devtools::check()` — **0
+  errors / 0 warnings / 1 NOTE** (only the pre-existing vignettes/figure-leftover NOTE; the
+  spelling NOTE is gone); `lintr::lint_package()` 0 lints on the new file. No NEWS.Rmd/citation/
+  tutorial/`_pkgdown.yml`/`a2interactive.Rmd` close-out checklist applies (no new export, no new
+  Shiny feature). Full strict TDD PRE-RED→RED→GREEN→REFACTOR, each phase transition gated via
+  `AskUserQuestion` per `CLAUDE.md`'s Development Process Contract. `PROJECT_LEARNINGS.md`
+  Learning 543.
+
 ### 2026-08-12 · [ad hoc] S537 Phase 0 reconcile: HANDOFFS.md S536 receipt commit: pending → 66202b2a
 - `git log -1 --format=%H -- HANDOFFS.md` showed the frontier commit (`66202b2a`, the S536
   close-out commit) still carried its own receipt's self-referential `commit: pending` placeholder

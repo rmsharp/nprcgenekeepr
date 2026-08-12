@@ -530,29 +530,30 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       2,501 lines (S529 start) -> 1,173 lines (S531 end), a 1,328-line/53% reduction across 3
       sessions, with zero information loss at any step (each session's own end-to-end re-read plus
       CHANGELOG.md/Learning/file-path cross-reference verification). See `CHANGELOG.md`.
-- [ ] **`inst/WORDLIST` has a large, long-standing gap -- `devtools::check()`'s spelling-check step
-      fires a NOTE on every run** (found S521, 2026-08-11, READY, Effort M) -- confirmed via direct
-      verification, not assumed: temporarily removing this session's own new files from the tree and
-      re-running `spelling::spell_check_package(".", vignettes = TRUE)` still flagged **69 words**
-      not in `inst/WORDLIST`, spanning many past sessions' files (`NEWS.md`, `a2interactive.Rmd`,
-      `_pedigree_browser.Rmd`, `_breeding_group_formation.Rmd`, `makePedigreeMatingLayout.Rd`,
-      `checkLocusMetadata.Rd`, and more) -- proper nouns/citation authors (Bakker, Ferreira, Maller,
-      Neale, Okabe, Sklar), genetics vocabulary (chrom, cM, pos, dizygotic, monozygotic, sibship,
-      zygosity-adjacent terms), and methodology/UI prose (handoff, walkthrough, onboarding, CLI,
-      shas, subplan, browsable, discoverable, unshaded, waypoint, js, vis, and others). This session
-      hand-added only the 2 words its own new `checkLinkageMarkerGenotypeFile.Rd` is responsible for
-      (`validator`, `multiallelic`) -- fixing the other 69 is a distinct, larger editorial task (verify
-      each is a genuine false positive vs. an actual typo, per the S230/S421 hand-add convention, not
-      `spelling::update_wordlist()`) out of scope for a single implementation slice. `devtools::check()`
-      currently reports **0 errors / 0 warnings / 3 NOTEs** (this spelling NOTE plus the 2
-      already-known pre-existing NOTEs: top-level files, vignette-engine) -- but S520's own close-out
-      reported only "1 pre-existing note." Confirmed via `git log` that S520 never touched any of the
-      69 flagged-word files, so the gap is not new since S520 -- the likelier explanation, worth
-      recording as its own finding: `devtools::check()`'s abbreviated results table only lists a `❯`
-      bullet for some NOTE-producing steps, and the "checking tests ... NOTE" step (spelling.R's
-      diff-based check) does NOT get one -- only the raw `Status: N NOTEs` line (above the table)
-      counts it. A session that trusts only the `❯`-bullet table, as this session nearly did, silently
-      undercounts. See `CHANGELOG.md` 2026-08-11.
+- [ ] (none remaining -- the "`inst/WORDLIST` has a large, long-standing gap" item (found S521,
+      2026-08-11) is RESOLVED -- S537 (2026-08-12): a fresh `spelling::spell_check_package(".",
+      vignettes = TRUE)` found **76** genuinely tracked-source words (not the documented 69 --
+      real drift from Sessions 522-536; 4 more, `CJ`/`PWJ`/`QBKW`/`ZX`, traced to a stale
+      `.gitignore`'d `vignettes/a2interactive.md` build byproduct, confirmed absent from a clean
+      `git archive HEAD` checkout). All 76 verified via source-context `grep` as genuine false
+      positives (R identifiers/column names, citation authors, library/proper names, valid
+      possessives, standard technical/genetics vocabulary) -- zero actual typos found -- and
+      hand-added to `inst/WORDLIST` (per the S230/S421 convention, not `spelling::update_wordlist()`).
+      **Correction to this item's own prior text and to S452/S465/S490's stated convention:**
+      `inst/WORDLIST` is NOT sorted in `LC_ALL=C` byte order -- that claim is empirically false for
+      the file as a whole (e.g. `corrigendum` sits between `ColonyManagerTutorial` and `Cramer's`,
+      impossible under true `LC_ALL=C`); the file is loosely hand-maintained alphabetical. New
+      words were inserted at their correct local position via a linear scan preserving all existing
+      line order, verified as a pure 76-line insertion (`git diff | grep -c "^-[^-]"` == 0) -- a
+      naive `LC_ALL=C sort -u` merge was tried first and silently reordered ~21 unrelated existing
+      entries before being caught and reverted. A new permanent regression guard,
+      `tests/testthat/test_wordlist_coverage.R`, asserts `spelling::spell_check_package()` returns
+      0 rows (matching the `test_pkgdown_reference_config.R` guard-test precedent), so this
+      NOTE-only drift -- previously found and partially hand-fixed at S443/S448/S452/S465/S490
+      without ever stopping the pattern from recurring -- gets a hard `testthat` failure instead of
+      an easy-to-miss NOTE going forward. `devtools::check()` confirmed clean: **0 errors / 0
+      warnings / 1 NOTE** (only the pre-existing vignettes/figure-leftover NOTE; the spelling NOTE
+      is gone). See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 543.
 - [ ] **`NEWS.Rmd` entries since ~2.0.0 have drifted far more verbose than the
       project's own pre-1.0.8 style** (found S522, 2026-08-11, owner-directed,
       READY, Effort M) -- entries through and including the `1.0.8 (20250723)`
