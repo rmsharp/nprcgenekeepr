@@ -131,6 +131,15 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] S529 Phase 0 reconcile: HANDOFFS.md S528 receipt commit: pending → 529f84f5 (Session 529)
+- Phase 0 step 6 found `HANDOFFS.md`'s S528 receipt still carried `commit: pending` — the
+  established one-hop case (the receipt necessarily ships in a commit before it can name that
+  commit's own sha) that S526→S527 and S527→S528 each applied to their predecessor. `CHANGELOG.md`'s
+  own frontier was already `HEAD` (`529f84f5`, S528's actual final commit — the post-close-out CLI
+  confirmation entry), so no undocumented-commit gap existed; only the `HANDOFFS.md` receipt itself
+  needed reconciling. Backfilled `commit: 529f84f5` with a one-line note explaining why it was
+  unknowable at write time. Committed separately, before this session's own claim.
+
 ### 2026-08-12 · [ad hoc] S528: fold in post-close-out CLI dry-run confirmation (599/599) (Session 528)
 - A final verification pass after the S528 close-out commit (`23e69529`) advanced `CHANGELOG.md`'s
   own frontier found `methodology_trim.py`'s `P1_UNDOCUMENTED` CLI gate — which blocked the tool's

@@ -176,7 +176,8 @@ is a Python housekeeping tool with no R-package runtime surface; only markdown o
 (BACKLOG.md, CHANGELOG.md, PROJECT_LEARNINGS.md, SESSION_NOTES.md, HANDOFFS.md).
 changelog_ref: this session's own CHANGELOG.md entries (S527 commit: pending reconcile, S528 claim,
 close-out, 2026-08-12)
-commit: pending
+commit: 529f84f5 (reconciled S529 -- the session's actual final commit; unknowable at write time
+since the receipt necessarily precedes the commit it would name)
 ```
 
 ```handoff
