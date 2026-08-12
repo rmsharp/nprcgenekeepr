@@ -687,30 +687,26 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       the fence-scanner's full current capability, still excludes all 74 "Handoff Evaluation"
       headings in the file (596 real headings total, confirmed via direct regex testing, 0 of the 74
       ever matched). See `CHANGELOG.md`.)
-- [ ] **`methodology_trim.py`'s `SESSION_NOTES.md` `LEDGERS` `record_start` regex never matches
-      "Handoff Evaluation" headings -- a trailing `\b` boundary bug, independent of the fence-scanner
-      defect above** (found S527, 2026-08-12, READY, Effort S) -- `record_start = re.compile(r"^###
-      (?:Session \d+ Handoff Evaluation \(by Session \d+\)|What Session \d+ Did)\b")`
-      (`methodology_trim.py`, the `SESSION_NOTES.md` `LEDGERS` entry, added S518): the `\b` sits
-      after the whole alternation, so it applies to whichever branch matched. The "What Session N
-      Did" branch ends in a word character ("Did"), so `\b` correctly fires at end-of-line. The
-      "Handoff Evaluation (by Session N)" branch always ends in `)` -- a non-word character --
-      immediately followed by end-of-line (also non-word for boundary purposes), so the required
-      word/non-word transition never exists and `\b` never matches. Confirmed directly in Python:
-      0 of 74 real "### Session N Handoff Evaluation (by Session N+1)" headings in the current file
-      match the tool's own `record_start` pattern; all 74 are silently treated as body content of
-      the record above them, not as their own record boundary -- independent of fence state (this
-      is not the S518 fence-scanner bug; it reproduces even with that bug already fixed, S527).
-      Likely fix: drop the trailing `\b` (each branch already ends unambiguously -- `)` or `Did`
-      followed by a newline -- so the boundary assertion is redundant, not load-bearing) or move it
-      so it only anchors the branches' own trailing `\d+`/`Did` token rather than the whole
-      alternation. This is this project's own local `LEDGERS` config addition (S518), not shared
-      canonical fence-scanning logic, so -- unlike the fence-scanner defect above -- fixing it here
-      does not raise the "report upstream, don't patch locally" question. Re-run `python3
-      methodology_trim.py --file SESSION_NOTES.md` after the fix and confirm the partitioned count
-      reaches the true total (596 as of S527; re-derive via `grep -cE` on the same two heading
-      patterns rather than trusting this literal number, since more sessions will have appended by
-      the time this is picked up) before trusting `--write`. See `CHANGELOG.md`.
+- [ ] (none remaining -- the "`methodology_trim.py`'s `SESSION_NOTES.md` `LEDGERS` `record_start`
+      regex never matches 'Handoff Evaluation' headings" item (found S527) is RESOLVED -- S528
+      (2026-08-12): moved the trailing `\b` so it guards only the `What Session \d+ Did` branch
+      (the one that actually needed it) instead of sitting after the whole alternation --
+      `record_start = re.compile(r"^### (?:Session \d+ Handoff Evaluation \(by Session \d+\)|What
+      Session \d+ Did\b)")`. The `Handoff Evaluation (by Session N)` branch needed no `\b` at all
+      (it already ends unambiguously in a literal `)`); dropping the anchor entirely (the other
+      candidate fix) was considered and rejected because it would also silently accept a
+      hypothetical `"### What Session N Didn't ..."` heading as a false record start -- moving `\b`
+      inside the `Did` branch keeps that guard while fixing the real bug. Verified via a direct
+      `fence_scan()`/`record_start` cross-check (the CLI's own dry-run was blocked this session by
+      an unrelated `P1_UNDOCUMENTED` gate on the in-progress claim commit): RED = 523 of 598 true
+      headings matched (0 of 75 "Handoff Evaluation" headings); GREEN = 598 of 598, exact. Also
+      confirmed the fix still rejects the hypothetical `"Didn't"` false-match case (no such heading
+      exists in the file today). `PROJECT_LEARNINGS.md` Learning 534. See `CHANGELOG.md`. **A
+      future session should re-run `python3 methodology_trim.py --file SESSION_NOTES.md` once
+      `CHANGELOG.md` has caught up to this session's own claim commit, confirm `598 record(s)
+      partitioned` (or the then-current true total, re-derived via `grep`), and only THEN consider
+      the actual first `--write` archive -- deferred again this session, owner-picked, matching the
+      S527 precedent of keeping the archive itself a separate, later action.)
 - [ ] **`BACKLOG.md`'s own ledger-size housekeeping -- editorial compression, not a
       `methodology_trim.py` config** (found S518, 2026-08-11, READY, Effort L) -- `BACKLOG.md`
       itself is one of the dashboard's 3-file HIGH-risk ledger-size items (2,181 lines, past the

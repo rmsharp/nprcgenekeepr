@@ -236,8 +236,15 @@ LEDGERS = {
         # and its own "what I did". Splitting them (rather than pairing them into one record) needs
         # no special-casing for the old, evaluation-less region — "What Session N Did" alone is
         # present for all 512 sessions on its own, so no format-transition boundary need be declared.
+        # `\b` guards only the "Did" branch (S528 fix) -- the "Handoff Evaluation ...)" branch
+        # already ends unambiguously in a literal `)`, and a trailing `\b` placed after the whole
+        # alternation binds per-branch: `)` is a non-word char immediately followed by end-of-line,
+        # so no word/non-word transition ever exists there and `\b` can never fire on that branch
+        # (found S527, PROJECT_LEARNINGS.md Learning 533). Moving `\b` inside the "Did" branch keeps
+        # its original purpose (reject a hypothetical "Didn't"-style false match) without breaking
+        # the branch that never needed it.
         record_start=re.compile(
-            r"^### (?:Session \d+ Handoff Evaluation \(by Session \d+\)|What Session \d+ Did)\b"),
+            r"^### (?:Session \d+ Handoff Evaluation \(by Session \d+\)|What Session \d+ Did\b)"),
         # Confirmed by direct inspection: the file ends mid-record (Session 1's own self-assessment
         # bullets) — no standalone '---' with trailing content after the last record start anywhere.
         footer_mode="none",
