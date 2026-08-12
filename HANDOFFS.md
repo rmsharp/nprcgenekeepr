@@ -180,7 +180,7 @@ runtime_smoke: n/a -- script-callable only, no Shiny wiring touched this slice, 
 Slice 1/2 precedent (design doc section 5: Slice 5 is the only slice shipping a UI tab).
 changelog_ref: this session's own CHANGELOG.md entry, 2026-08-12 ([issue #152] Slice 3 --
 computeGenomicROH() F_ROH metric shipped)
-commit: pending
+commit: 5149e1ab
 ```
 
 ```handoff
