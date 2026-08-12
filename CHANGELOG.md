@@ -131,6 +131,16 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] S528: fold in post-close-out CLI dry-run confirmation (599/599) (Session 528)
+- A final verification pass after the S528 close-out commit (`23e69529`) advanced `CHANGELOG.md`'s
+  own frontier found `methodology_trim.py`'s `P1_UNDOCUMENTED` CLI gate — which blocked the tool's
+  own dry-run during this session's RED/GREEN TDD phases — had cleared. Re-ran the CLI directly:
+  `[L3_OK] 599 record(s) partitioned; every one byte-identical across the move`, an exact end-to-end
+  confirmation (matching the direct `fence_scan()`/`record_start` cross-check used at RED/GREEN
+  time). Folded into `HANDOFFS.md`'s S528 receipt, `BACKLOG.md`'s resolved item, and
+  `SESSION_NOTES.md`'s self-assessment rather than left deferred to a future session. Commit
+  `6d35a192`.
+
 ### 2026-08-12 · [ad hoc] S528 close-out: methodology_trim.py `\b` regex defect fixed (Session 528)
 - **Deliverable:** Fixed the `methodology_trim.py` `SESSION_NOTES.md` `LEDGERS.record_start` regex's
   trailing `\b` boundary bug (found/filed S527, `BACKLOG.md` Housekeeping, READY, Effort S). Moved
