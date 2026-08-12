@@ -131,6 +131,20 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-11 · [ad hoc] Reconcile-on-read: HANDOFFS.md S523 receipt's `commit: pending` field (Session 524)
+- **Ledger reconcile (Phase 0 step 6):** `CHANGELOG.md`'s own frontier (`git log -1` on this file)
+  and `HANDOFFS.md`'s own frontier both already equal `HEAD` (`905f20bf`) — no undocumented commit
+  gap since S523's close-out. The one residual: S523's own `HANDOFFS.md` receipt still carried
+  `commit: pending` (legal at write time — the receipt ships in the very commit whose sha it would
+  name) and, per the established S522→S523 precedent, had not yet been reconciled to its real sha
+  by a subsequent session. Reconciled to `905f20bf`.
+- **Secondary finding, not acted on:** the same `commit: pending` placeholder is still unreconciled
+  for 8 older receipts (S521, S519, S518, S517, S516, S515, S514, S513) — the one-hop
+  reconcile-your-immediate-predecessor pattern established by S523→S522 has not been consistently
+  applied further back. Surfaced in this session's Phase 0 report; not fixed here (an 8-receipt
+  editorial sweep is out of this reconcile step's narrow scope). A future session may want to file
+  it as its own `BACKLOG.md` housekeeping item.
+
 ### 2026-08-12 · [issue #153] S523 close-out: Slice 4 (LD block statistic + de-identification primitive) shipped (Session 523)
 - **Deliverable:** Issue #153 Slice 4, per `docs/planning/issue153-linkage-haplotype-block-metrics-plan.md`
   §5 Slice 4 — new script-callable `markerLdBlock()`, a descriptive, same-chromosome pairwise

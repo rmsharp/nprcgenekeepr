@@ -201,8 +201,8 @@ Shiny module, app wiring, or existing function touched). Matches the established
 precedent from Slices 1-3 of this same issue.
 changelog_ref: CHANGELOG.md 2026-08-11/12, 3 entries (Session 523): ledger-reconcile backfill
 (25606464), claim, close-out.
-commit: pending -- reconciled by the next session's Phase 0, per this receipt's own documented
-write-time constraint (the receipt ships in the very commit whose sha it would name).
+commit: 905f20bf (reconciled by Session 524's Phase 0 -- the receipt's own close-out commit;
+could not self-reference at write time per its own documented constraint).
 ```
 <Session 523 self-assessment: 8/10. Strengths: (1) recognized the design doc's named Dragons are not
 necessarily exhaustive -- found and resolved a second, distinct research gap (unphased genotype
