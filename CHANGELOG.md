@@ -131,6 +131,31 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-11 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit c18b7fd6 — renv.lock/pyramid-image change
+- **Provenance:** a second out-of-band commit, `c18b7fd6` ("update renv.lock pyramid image", author R. Mark
+  Sharp, 2026-08-11 17:49:45), landed mid-session between this session's own ledger-reconcile-backfill
+  commit and its claim commit — after Phase 0's orientation had already captured `HEAD`, so invisible
+  to that reconcile pass. Found only when reviewing `git log` before this session's own final commit.
+- **What it did:** `renv.lock` — 2505 deletions, removing every `Suggests`-only package (and their
+  transitive dependencies) from the lockfile. `vignettes/figure/plot-focal-age-sex-pyramid-1.png` —
+  added a new committed image (the file `devtools::check()`'s "leftover from knitr" NOTE already flags).
+- **Diagnosis:** confirmed via `renv::status(dev = TRUE)` — 60+ packages (`testthat`, `devtools`,
+  `roxygen2`, `pkgdown`, `mockery`, `shinytest2`, `shinyBS`, `quarto`, `spelling`, and transitive
+  deps like `pkgload`/`chromote`/`brew`/`brio`) showed `installed=y, recorded=n, used=y` — exactly
+  the failure mode `CLAUDE.md`'s Build/Test/Verify section documents: `renv/settings.json`'s
+  `snapshot.type: "explicit"` means a plain `renv::snapshot()` (no `dev = TRUE`) only scans
+  `DESCRIPTION`'s `Imports`/`Depends`, silently dropping every `Suggests`-only package.
+- **Ledger:** this backfill entry; the fix is recorded in its own entry below.
+
+### 2026-08-11 · [ad hoc] Fix: restore renv.lock via renv::snapshot(dev = TRUE) (Session 522)
+- **Fixed** the regression backfilled above: ran `renv::snapshot(dev = TRUE, prompt = FALSE)`,
+  restoring all 60+ missing `Suggests`-only packages and transitive dependencies to `renv.lock`.
+  Verified via `renv::status(dev = TRUE)`: "No issues found -- the project is in a consistent
+  state." (Plain `renv::status()` still reports these as `used=n` — expected and documented:
+  it only checks against `Imports`/`Depends`, not `Suggests`.) Committed separately from Slice 3's
+  own commits, owner-confirmed via `AskUserQuestion`.
+- **Ledger:** this entry only.
+
 **Archived 11 record(s), 2026-08-10 → 2026-08-11** into [`docs/archive/CHANGELOG-through-2026-08-11.md`](docs/archive/CHANGELOG-through-2026-08-11.md) — same format, same order, frozen.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-08-11.md.verify.sh`](docs/archive/CHANGELOG-through-2026-08-11.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
