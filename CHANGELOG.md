@@ -131,6 +131,18 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] S538 Phase 0 reconcile: HANDOFFS.md S537 receipt commit: pending → a39f7756
+- `git log -1 --format=%H -- HANDOFFS.md` showed the frontier commit (`a39f7756`, the S537
+  close-out commit) still carried its own receipt's self-referential `commit: pending`
+  placeholder (legal at write time per `HANDOFFS.md`'s own format note — the receipt ships in
+  the very commit whose sha it would name). Reconciled to `a39f7756`, matching the
+  S537→S536 (`66202b2a`) and S536→S535 (`42e3e985`/`f946e0a3`) precedent. `CHANGELOG.md`'s own
+  frontier (`git log -1 --format=%H -- CHANGELOG.md`) was `250b33d0`; the only undocumented
+  commit since then was `a39f7756` itself, which — matching the established precedent that a
+  close-out commit containing only `SESSION_NOTES.md`/`HANDOFFS.md` writes is not a separate
+  action beyond what its paired fix commit already logged — is covered by this reconcile entry
+  rather than a second one.
+
 ### 2026-08-12 · [BL-521] Fixed inst/WORDLIST's spelling-check gap; added a permanent regression guard (Session 537)
 - **Deliverable:** Verified all 76 currently-flagged `inst/WORDLIST` words (found S521;
   BACKLOG.md's documented count of 69 was stale) as genuine false positives via source-context

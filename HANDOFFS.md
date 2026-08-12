@@ -181,7 +181,7 @@ test file and a data file); the full devtools::check() run (0 errors/0 warnings/
 pre-existing NOTE) is this session's complete build-equivalent verification.
 changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12 ([BL-521] the fix;
 [ad hoc] S537 Phase 0 reconcile entry)
-commit: pending
+commit: a39f7756
 ```
 
 ```handoff
