@@ -10,6 +10,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 541 Did
+**Deliverable:** `a2interactive.Rmd` documentation pass -- add demonstration sections for
+script-callable functions shipped since the last pass (S478/S522) that currently have zero
+coverage (owner-picked via the Phase 0 `AskUserQuestion` picker, from `BACKLOG.md`'s S522
+item). (IN PROGRESS)
+**Started:** 2026-08-12.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 539 Handoff Evaluation (by Session 540)
 **Score: 8/10.** **What helped:** the S539 `HANDOFFS.md` receipt's `gotchas` field directly
 named "`HANDOFFS.md` and `CHANGELOG.md` are STILL past their own byte-budget archive
