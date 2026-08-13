@@ -249,7 +249,8 @@ unchanged from S545's own flag, not a new gap.
 runtime_smoke: n/a -- docs-only session (BACKLOG.md/CHANGELOG.md/PROJECT_LEARNINGS.md/
 SESSION_NOTES.md/HANDOFFS.md only; zero R/ or tests/ files touched, no runtime behavior changed).
 changelog_ref: 95ae9d70
-commit: pending
+commit: 635c6457 (reconciled S549 -- self-reference at write time, per the
+S543/S544/S545 precedent: this receipt ships in the commit whose sha it names)
 ```
 
 ```handoff
