@@ -10,6 +10,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 543 Did
+**Deliverable:** `CHANGELOG.md` `SRF_RED` archive-refusal decision (owner-picked via the Phase 0
+`AskUserQuestion` picker) — investigate against the canonical `ledger-trimmer-design.md`, decide
+whether to `--force` a trim, hold, or queue an S325 legacy-migration scoping session, and record
+the decision + rationale in `BACKLOG.md`.
+**Started:** 2026-08-12.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 541 Handoff Evaluation (by Session 542)
 **Score: 9/10.** **What helped:** the S541 `HANDOFFS.md` receipt's `next_steps` field named the
 same 4-item priorities list this session's own Phase 0 rendered (CHANGELOG.md/HANDOFFS.md
