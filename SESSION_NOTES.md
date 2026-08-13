@@ -14,16 +14,148 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 543 Handoff Evaluation (by Session 544)
+
+**Score: 8/10.** **What helped:** the S543 `HANDOFFS.md` receipt’s
+`next_steps` field explicitly named “test-coverage.yaml CI break (READY
+to diagnose)” as one of 5 unchanged-from-S542 items — this is exactly
+the task Session 544 picked up, so zero rediscovery was needed to locate
+or justify it as a priority. **What was missing:** S543 could not have
+named the actual root cause (`find_pkg_src()`’s missing `inst/` check)
+since diagnosing it was explicitly out of S543’s own scope (an
+owner-confirmed decision via `AskUserQuestion`, per S543’s own notes) —
+not a gap S543 owed. **What was wrong:** the receipt’s own
+`commit: pending` self-reference (expected/normal per the established
+S538-S541 pattern — the receipt ships in the commit whose sha it would
+name, so it can’t self-reference at write time) needed reconciling to
+`4bac5d55` this session’s Phase 0 — this is routine, not an error, but
+is worth noting since S542’s evaluation of S541 explicitly called out
+when this reconcile was NOT needed; this session’s Phase 0 initially
+missed it on the first pass and caught it only on a second look before
+claiming. **ROI:** High — the `next_steps` pointer was directly
+load-bearing for both the priorities-list rendering and the task pick.
+
 ### What Session 544 Did
 
-**Deliverable:** Diagnose (and fix, if root-cause is simple) the
-`test-coverage.yaml` CI failure — 2 consecutive red runs on
-`origin/master` (S536, S540 pushes) while `R-CMD-check.yaml` is green on
-the same commits (IN PROGRESS) **Started:** 2026-08-13 **Status:**
-Session claimed. Work beginning. **Ledger:** `CHANGELOG: pending` — set
-at claim; this session’s actions are recorded in `CHANGELOG.md` at Phase
-3F. Until close-out, this line is the crash breadcrumb for the next
-session’s reconcile.
+**Deliverable:** Diagnosed and fixed the `test-coverage.yaml` CI failure
+— 2 consecutive red runs on `origin/master` (S536, S540 pushes) while
+`R-CMD-check.yaml` was green on the same commits. **Started/Completed:**
+2026-08-13. **Status:** DONE. TDD phase: RED → GREEN (no REFACTOR needed
+— the GREEN fix already factored out a shared `is_pkg_src()` helper,
+owner-confirmed via `AskUserQuestion` to skip a separate REFACTOR pass).
+Commits: `cd5eb453` (Phase 1B claim + reconcile S543’s `HANDOFFS.md`
+self-reference), `f4b478c0` (the GREEN fix: 2 new tests +
+`find_pkg_src()`’s `inst/` check), this close-out’s own commit (pending
+at write time).
+
+**What happened, in order:** **(1)** Phase 0 orient in full
+(`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list`,
+`git status`/`log`/`diff --stat`, `methodology_dashboard.py`). Ledger
+frontiers (`CHANGELOG.md`/`HANDOFFS.md`) both == `HEAD`, no undocumented
+commits, no untracked files — no ghost session. Rendered the priorities
+list (4 numbered items capped from 5, per `CLAUDE.md`’s convention) +
+`AskUserQuestion` picker; owner picked “Diagnose `test-coverage.yaml`.”
+**(2)** Read the full CI log via `gh run view <id> --log` (not
+`--log-failed`, which S542’s own investigation had found insufficient)
+and found the actual failing test: `test_wordlist_coverage.R:68:3`,
+flagging 146 already-whitelisted domain words as unknown. **Process
+slip, self-caught:** did this diagnosis reading *before* writing the
+Phase 1B claim stub, violating “claim immediately, before any technical
+work” — acknowledged and corrected by claiming immediately afterward,
+before any further work (`cd5eb453`), rather than continuing
+uncorrected. **(3)** Traced
+[`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)’s
+own source
+(`get_wordlist()`-\>`get_wordfile()`-\>`file.path(pkg_path, "inst/WORDLIST")`)
+to establish the wordlist lookup is a hardcoded source-tree-relative
+path. Diagnosed that `test_wordlist_coverage.R`’s `find_pkg_src()`
+helper’s
+[`devtools::test()`](https://devtools.r-lib.org/reference/test.html)
+fallback branch accepted an INSTALLED package directory (which retains
+`DESCRIPTION` but loses its `inst/` subdirectory — flattened into the
+package root at install time) as if it were the source tree, because it
+only checked for `DESCRIPTION`. **(4)** Reproduced the exact bug locally
+— not the full
+[`covr::package_coverage()`](http://covr.r-lib.org/reference/package_coverage.md)
+(slow, ~10 CI minutes, non-trivial to hand-construct) but the underlying
+mechanism directly: `R CMD INSTALL --install-tests --library=<tmp> .` +
+[`testthat::test_dir()`](https://testthat.r-lib.org/reference/test_dir.html)
+with `NOT_CRAN=true` — produced the identical 146-word list to the real
+CI failure, confirming the diagnosis before writing any fix code.
+**(5)** `AskUserQuestion` PRE-RED→RED gate: owner approved. Wrote 2 new
+tests pinning `find_pkg_src()`’s source-vs-installed detection directly
+(synthetic temp dirs via
+[`withr::local_tempdir()`](https://withr.r-lib.org/reference/with_tempfile.html)/`local_dir()`);
+confirmed RED (the new “rejects installed layout” test failed exactly as
+predicted; the counterpart and pre-existing test passed). **(6)**
+`AskUserQuestion` RED→GREEN gate: owner approved. Fixed
+`find_pkg_src()`: all 3 branches now require
+`dir.exists(file.path(cand, "inst"))` alongside the existing
+`DESCRIPTION` check (via a shared `is_pkg_src()` helper). Confirmed
+GREEN (all 3 tests pass); re-ran the exact covr-layout repro and
+confirmed it now `skip()`s gracefully instead of failing. **(7)** Full
+regression suite: 0 failed/0 error, 5,519 passed (up from 5,396), 178
+skipped — no offenders outside the known `test-app-`/`test-e2e-`
+baseline noise.
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html):
+0 errors/0 warnings/1 pre-existing unrelated NOTE (`vignettes/figure`
+knitr leftover). `lintr::lint()` on the touched file: 0 lints. **(8)**
+`AskUserQuestion` GREEN→REFACTOR gate: owner chose to skip REFACTOR and
+close out. Committed the fix (`f4b478c0`), pushed, and polled
+`gh run list` until all 4 workflows on that commit completed — confirmed
+**`test-coverage.yaml` `completed success`** (plus `R-CMD-check.yaml`,
+`pkgdown.yaml`, `lint.yaml` all green too) — the root-truth
+verification, since the bug only manifests under real `covr`. **(9)**
+Mid-turn user request (owner, not part of the TDD-gated deliverable):
+“add to backlog… an article about using the pedigree drawing facility
+and all of its features.” Checked first for existing coverage (issue
+\#139, resolved S455 — a paragraph, not a dedicated article, and now
+stale relative to the tab’s much-expanded feature set) before adding a
+new, distinct `BACKLOG.md` item — logged only, not implemented, to avoid
+derailing this session’s already-approved TDD scope. **(10)** Updated
+`BACKLOG.md` (resolved the `test-coverage.yaml` item) and
+`PROJECT_LEARNINGS.md` (Learning 551).
+
+**Self-assessment (Session 544): 8/10.** **Strengths:** (1) Read the
+full CI log rather than `--log-failed` (which S542 had found
+insufficient), directly avoiding a repeat of the prior session’s own
+noted limitation. (2) Traced the actual library internals
+(`spelling:::get_wordlist`/`get_wordfile`/`as_package`) rather than
+guessing at the mechanism — this is what surfaced the precise
+`inst/`-relative hardcoded path that explains the symptom exactly. (3)
+Reproduced the real bug locally via the underlying mechanism
+(`R CMD INSTALL --install-tests`) rather than the full wrapping tool
+(`covr`) — faster, more controllable, and produced a byte-for-byte match
+to the CI failure, giving high confidence in the diagnosis before any
+code changed. (4) Verified both directions of the fix (RED fails as
+predicted; GREEN passes) AND the real-world mechanism both before and
+after the fix (the direct repro), not just the synthetic unit tests —
+stronger than either alone. (5) Pushed and confirmed the actual CI job
+green rather than stopping at local verification, which is the only
+fully faithful verification available for a CI-config bug. (6) Handled
+the mid-turn user request by logging it to `BACKLOG.md` without
+expanding this session’s own TDD-gated scope to implement it.
+**Weaknesses:** (1) Did diagnosis work (reading CI logs, `spelling`
+package internals) before writing the Phase 1B claim stub — a
+protocol-order slip, self-caught and corrected, but it happened; a
+stronger session claims literally the first action after the task is
+picked, with zero exceptions. (2) Backgrounding
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+via a shell-level `&` (writing to a log file) rather than passing
+`run_in_background: true` directly to the Bash tool call meant the
+harness’s own task-tracking didn’t cover it, requiring an extra manual
+`ps`-based polling workaround to detect completion — the
+regression-suite run earlier in the same session used the correct
+pattern; should have been consistent. (3) `ScheduleWakeup` was called
+once while waiting on a background CI poll — that tool is documented as
+specific to `/loop` dynamic-mode pacing, not a general-purpose wait
+primitive, and turned out to be unnecessary since `TaskOutput`’s own
+blocking wait was sufficient; harmless here (no session was actually in
+`/loop` mode to disrupt) but should not be reached for again outside
+that context. **Ledger:** recorded in `CHANGELOG.md` (this session’s own
+entries: the claim, the fix commit, and the close-out entry covering
+`BACKLOG.md`/`PROJECT_LEARNINGS.md` findings plus the mid-turn backlog
+addition).
 
 ### Session 542 Handoff Evaluation (by Session 543)
 

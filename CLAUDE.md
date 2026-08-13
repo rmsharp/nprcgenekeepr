@@ -174,21 +174,21 @@ with `!grepl("test-app-|test-e2e-", file)`. (`load_all()` must run first
 — without it this command produces mass-spurious failures unrelated to
 anything actually broken; see Learning 377.)
 
-**[`renv::snapshot()`](https://rstudio.github.io/renv/reference/snapshot.html)
+**[`renv::snapshot()`](https://rdrr.io/pkg/renv/man/snapshot.html)
 always needs `dev = TRUE` in this project.** `renv/settings.json` sets
 `snapshot.type: "explicit"`, under which a **plain**
-[`renv::snapshot()`](https://rstudio.github.io/renv/reference/snapshot.html)
-only scans `DESCRIPTION`’s `Imports`/`Depends`/`LinkingTo` — every
+[`renv::snapshot()`](https://rdrr.io/pkg/renv/man/snapshot.html) only
+scans `DESCRIPTION`’s `Imports`/`Depends`/`LinkingTo` — every
 `Suggests`-only package (`testthat`, `dplyr`, `mockery`, `roxygen2`,
 `shinytest2`, `shinyBS`, `devtools`, `quarto`, plus their transitive
 deps like `pkgload`/`chromote`) is silently dropped from `renv.lock` on
 an ordinary snapshot, only to resurface as a missing-package crash the
 next time someone hits
-[`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html)
-(a fresh clone, an R-version bump). Always run
-`renv::snapshot(dev = TRUE)` (and `renv::status(dev = TRUE)` to check
-consistency) instead of the bare form. See `PROJECT_LEARNINGS.md`
-Learning 473/476 for the root-cause diagnosis.
+[`renv::restore()`](https://rdrr.io/pkg/renv/man/restore.html) (a fresh
+clone, an R-version bump). Always run `renv::snapshot(dev = TRUE)` (and
+`renv::status(dev = TRUE)` to check consistency) instead of the bare
+form. See `PROJECT_LEARNINGS.md` Learning 473/476 for the root-cause
+diagnosis.
 
 ------------------------------------------------------------------------
 

@@ -160,6 +160,50 @@ here, in this ledger, not in a frozen shard.
 
 ## 2026-08
 
+### 2026-08-13 · \[ad hoc\] S544 close-out: test-coverage.yaml fix confirmed green on CI, BACKLOG.md updated (item resolved + new Pedigree Diagram article item), Learning 551
+
+- **Deliverable:** Session S544’s own close-out. `BACKLOG.md`’s
+  `test-coverage.yaml` Housekeeping item (found S542) marked RESOLVED,
+  citing the fix commit and the confirmed-green CI run. Added a new
+  `BACKLOG.md` item (owner-requested mid-turn): a dedicated Pedigree
+  Diagram tutorial article, distinct from and superseding the existing
+  stale-screenshot item. Recorded `PROJECT_LEARNINGS.md` Learning 551
+  (the `covr --install-tests` vs. source-tree detection root cause, and
+  the fast local-repro technique used to confirm it without a full
+  `covr` run).
+- **Commit:** this close-out’s own commit.
+
+### 2026-08-13 · \[BL-testCoverageCovrInstallTests\] Fixed test-coverage.yaml: find_pkg_src() now requires inst/ present, not just DESCRIPTION (Session 544)
+
+- **Deliverable:** `tests/testthat/test_wordlist_coverage.R`’s
+  `find_pkg_src()` helper was mis-accepting an INSTALLED package
+  directory (retains `DESCRIPTION`, loses `inst/` — flattened into the
+  package root by `R CMD INSTALL`) as a source tree under
+  [`covr::package_coverage()`](http://covr.r-lib.org/reference/package_coverage.md)’s
+  `--install-tests` execution model, causing `spelling::get_wordfile()`
+  to silently miss `inst/WORDLIST` and flag 146 already-whitelisted
+  domain words as unknown. Fixed by requiring
+  `dir.exists(file.path(cand, "inst"))` alongside the existing
+  `DESCRIPTION` check in all 3 branches (a shared `is_pkg_src()`
+  helper). 2 new tests pin the source-vs-installed detection directly.
+  Strict TDD RED→GREEN, both gates `AskUserQuestion`-approved. Full
+  regression 0 failed/0 error (5,519 passed);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/1 pre-existing unrelated NOTE; `lintr` clean.
+  Pushed and confirmed `test-coverage.yaml` (plus
+  `R-CMD-check.yaml`/`pkgdown.yaml`/`lint.yaml`) all `completed success`
+  on the real CI run.
+- **Commit:** `f4b478c0`.
+
+### 2026-08-13 · \[ad hoc\] S544 claim: test-coverage.yaml CI diagnosis; reconciled S543’s HANDOFFS.md self-reference (Session 544)
+
+- **Deliverable:** Session 544’s Phase 1B claim stub
+  (`SESSION_NOTES.md`, `HANDOFFS.md`). Reconciled S543’s `HANDOFFS.md`
+  receipt’s `commit: pending` self-reference to `4bac5d55` (the
+  expected, routine next-session fill-in per the established S538-S541
+  pattern).
+- **Commit:** `cd5eb453`.
+
 ### 2026-08-12 · \[ad hoc\] S543 close-out: CHANGELOG.md SRF_RED decision resolved, 2 new BACKLOG.md findings, Learning 550
 
 - **Deliverable:** Session S543’s own close-out. Resolved the
@@ -319,8 +363,8 @@ rather than trusting a digest printed here. Live file 1,051,843 B →
   `[20s/21s]` (one more vignette than S134, `gvaConvergence.Rmd`). No
   timing flags anywhere.
 - **Pre-check steps:**
-  [`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html)
-  — no-op (library already synchronized);
+  [`renv::restore()`](https://rdrr.io/pkg/renv/man/restore.html) — no-op
+  (library already synchronized);
   [`roxygen2::roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html)
   — zero diff;
   [`devtools::spell_check()`](https://devtools.r-lib.org/reference/spell_check.html)
@@ -5923,7 +5967,7 @@ rather than trusting a digest printed here. Live file 1,051,843 B →
   [`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/)
   (the **installed** package); the local renv library held a stale 2.0.0
   that predated `fgSE`
-  ([`renv::status`](https://rstudio.github.io/renv/reference/status.html)
+  ([`renv::status`](https://rdrr.io/pkg/renv/man/status.html)
   out-of-sync — `calcFGSE` not exported, `reportGV` body has no `fgSE`),
   so `gv$fgSE` was `NULL` at local freeze time. The stale output existed
   only in the gitignored local freeze cache.
@@ -10375,8 +10419,7 @@ rather than trusting a digest printed here. Live file 1,051,843 B →
   chromote fetches it lazily and the e2e tests `skip_on_cran`, so the
   check never launches a browser. (The installs land in the renv
   library, not `renv.lock` — no
-  [`renv::snapshot()`](https://rstudio.github.io/renv/reference/snapshot.html)
-  run.)
+  [`renv::snapshot()`](https://rdrr.io/pkg/renv/man/snapshot.html) run.)
 - **Result — `Status: 2 NOTEs` = 0 ERROR / 0 WARNING, both NOTEs
   false-positive.** Timings all comfortable: examples `[19s/19s]`,
   `--run-donttest [19s/19s]`, tests `[41s/43s]`, vignette rebuild
@@ -12240,8 +12283,8 @@ rather than trusting a digest printed here. Live file 1,051,843 B →
   `LICENSE.md` `2017-2024` → both `2017-2026`.
 - **Verification:** `R CMD build --no-build-vignettes --no-manual`
   (base-R only, no
-  [`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html))
-  → tarball (708 entries) ships **0 cruft, 0 hidden files**; `read.dcf`
+  [`renv::restore()`](https://rdrr.io/pkg/renv/man/restore.html)) →
+  tarball (708 entries) ships **0 cruft, 0 hidden files**; `read.dcf`
   parses with `Package:` first; both `.Rd` parse with `\value`; guard
   tests `test_appUI_version.R`/`test_getVersion.R` unaffected (verified
   by reading — no version/logic change; full suite deferred to Phase 4

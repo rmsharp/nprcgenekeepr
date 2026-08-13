@@ -156,18 +156,78 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 ``` handoff
 session: S544
 date: 2026-08-13
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Diagnose (and fix, if root-cause is simple) the test-coverage.yaml CI failure -- 2
-consecutive red runs on origin/master (S536, S540 pushes) while R-CMD-check.yaml is green on the
-same commits.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: test-coverage.yaml CI failure -- RESOLVED. Diagnosed and fixed
+find_pkg_src()'s missing inst/ check in test_wordlist_coverage.R; confirmed
+test-coverage.yaml green on the real CI run (f4b478c0), along with
+R-CMD-check.yaml/pkgdown.yaml/lint.yaml. BACKLOG.md updated (item resolved,
+plus 1 new item: an owner-requested Pedigree Diagram tutorial article).
+what_was_done: Read the full gh run view --log (not --log-failed) and found
+the real failure: test_wordlist_coverage.R:68:3 flagging 146
+already-whitelisted domain words. Traced spelling::spell_check_package()'s
+source (get_wordlist->get_wordfile->file.path(pkg_path,"inst/WORDLIST")) to
+find the hardcoded source-tree-relative lookup. Diagnosed find_pkg_src()'s
+devtools::test() fallback branch accepting an INSTALLED package directory
+(retains DESCRIPTION, loses inst/ -- flattened into the package root at
+install time under covr's R CMD INSTALL --install-tests) as source.
+Reproduced byte-for-byte locally via R CMD INSTALL --install-tests +
+testthat::test_dir() (not the full covr run) before writing any fix code.
+Strict TDD: RED (2 new tests, 1 fails as predicted) -> GREEN (all 3
+branches now require dir.exists(file.path(cand,"inst")) via a shared
+is_pkg_src() helper; 3 tests pass) -- both gates AskUserQuestion-approved.
+Full regression 0 failed/0 error (5,519 passed); devtools::check() 0
+errors/0 warnings/1 pre-existing unrelated NOTE; lintr clean. Committed
+(cd5eb453 claim, f4b478c0 fix), pushed, polled gh run list until all 4
+workflows on f4b478c0 completed: test-coverage.yaml, R-CMD-check.yaml,
+pkgdown.yaml, lint.yaml all "completed success". Also actioned a mid-turn
+owner request: added a new BACKLOG.md item for a dedicated Pedigree
+Diagram tutorial article (checked issue #139 first -- already resolved
+S455 but only a paragraph, now stale relative to the tab's much-expanded
+feature set) -- logged only, not implemented, to keep this session's
+TDD-gated scope to the one approved deliverable.
+next_steps: BACKLOG.md priorities unchanged from S543 except the resolved
+item: (1) Phase 0 CI-check gap -- DECISION NEEDED on whether/how to add a
+gh run list check to Phase 0, Effort S. (2) Reopen the S325 CHANGELOG.md
+legacy-footer migration decision -- DECISION NEEDED, multi-session
+campaign, Effort L. (3) Issue #148 (MHC haplotype reporting) needs a
+scope-narrowing conversation per the ratified sequencing audit. (4) NEW
+this session: write a dedicated Pedigree Diagram tutorial article
+(BACKLOG.md, owner-requested, READY, Effort M) -- a future session should
+inventory the tab's current full feature set against the live app before
+drafting. (5) NPRC outreach owner review (DECISION NEEDED, Effort N/A);
+LabKey remaining recs (BLOCKED); issue #138 (Tier-3 deferred, no new
+evidence) each unchanged from S543.
+key_files: tests/testthat/test_wordlist_coverage.R (find_pkg_src() fix +
+2 new tests, lines 35-109); BACKLOG.md (test-coverage.yaml item resolved;
+new Pedigree Diagram article item); PROJECT_LEARNINGS.md Learning 551
+(new).
+gotchas: (1) spelling::spell_check_package()'s wordlist lookup is a
+hardcoded <path>/inst/WORDLIST -- it has no concept of an installed
+package, so ANY future helper that resolves a "package root" for this
+guard must keep proving it found a SOURCE tree (inst/ present), not just
+a directory with a DESCRIPTION file, which installed packages also have.
+(2) covr::package_coverage() runs tests against an R CMD INSTALL
+--install-tests copy, not the raw source checkout -- any test relying on
+relative-path archaeology to find "the package source" needs to account
+for this execution mode specifically; a fast local repro is plain
+R CMD INSTALL --install-tests --library=<tmp> . + testthat::test_dir()
+with NOT_CRAN=true set, no covr or GitHub Actions required. (3) When
+backgrounding a long R command, pass run_in_background: true to the Bash
+tool call directly rather than shell-level `&` + log redirection -- the
+latter escapes the harness's own task tracking and needs manual ps-based
+polling to detect completion (hit this once this session; the earlier
+regression-suite run used the correct pattern).
+runtime_smoke: n/a for Shiny runtime (no R/ production code touched) --
+the equivalent verification for a CI-config fix is the real CI run itself
+going green, which was confirmed directly (test-coverage.yaml, plus
+R-CMD-check.yaml/pkgdown.yaml/lint.yaml, all "completed success" on
+f4b478c0).
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-13 ([ad hoc]
+the claim; [BL-testCoverageCovrInstallTests] the fix; [ad hoc] the
+close-out entry covering BACKLOG.md/PROJECT_LEARNINGS.md findings and the
+mid-turn backlog addition)
 commit: pending
 ```
 
