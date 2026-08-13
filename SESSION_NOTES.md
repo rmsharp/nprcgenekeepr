@@ -14,6 +14,150 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 544 Handoff Evaluation (by Session 545)
+
+**Score: 9/10.** **What helped:** the S544 `HANDOFFS.md` receipt’s
+`next_steps` field enumerated the full unchanged-plus-new priorities
+list verbatim (Phase 0 CI-check gap, S325 reopen, issue \#148, the new
+Pedigree Diagram article, NPRC outreach, LabKey, issue \#138) — this
+session’s own Phase 0 priorities rendering matched it almost exactly
+after independently re-deriving from `BACKLOG.md` and the two sequencing
+audits, giving high confidence nothing was missed. The `gotchas` field’s
+warning about `run_in_background: true` vs. shell-level `&`
+backgrounding is a reusable process note for any future long-running
+command. **What was missing:** nothing material — the one gap found
+(S544’s own `HANDOFFS.md` receipt shipping with `commit: pending`, a
+known self-reference artifact) is not something S544 could have avoided
+at write time, and was reconciled this session’s Phase 0 exactly as the
+docs describe. **What was wrong:** nothing. **ROI:** High — the
+`next_steps` field was directly load-bearing for this session’s own
+priorities-list rendering and the `AskUserQuestion` picker.
+
+### What Session 545 Did
+
+**Deliverable:** Decided (with the owner, via `AskUserQuestion`)
+whether/how to add a GitHub Actions CI-status check to Phase 0; recorded
+the decision in `CLAUDE.md`’s “Additional Phase 0 steps.”
+**Started/Completed:** 2026-08-13. **Status:** DONE. TDD phase: N/A
+(methodology/documentation housekeeping — no production code or test
+surface, matching the S509/S528/S539/S542/S543/S544 precedent). Commits:
+`dd177a80` (Phase 0 reconcile — S544’s `HANDOFFS.md` `commit: pending`
+self-reference), `c6c6c0a6` (Phase 1B claim), this close-out’s own
+commit (pending at write time).
+
+**What happened, in order:** **(1)** Phase 0 orient in full
+(`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list`,
+`git status`/`log`/`diff --stat`, `methodology_dashboard.py`).
+`CHANGELOG.md` frontier == `HEAD` at start, no undocumented commits.
+`HANDOFFS.md` frontier == `HEAD` too, but S544’s own receipt still
+carried `commit: pending` — the same self-reference limitation S544
+itself fixed for S543 — reconciled to `126711a9` and logged
+(`dd177a80`). Rendered the priorities list (6 tagged items found via
+`BACKLOG.md` grep + both ratified sequencing audits per `CLAUDE.md`’s
+own convention; capped the `AskUserQuestion` picker at 4, noting “+2
+more below the picker”) and the picker; owner picked “Phase 0 CI-check
+decision.” **(2)** Claimed the session (`c6c6c0a6`). **(3)** Presented
+the actual decision via a 4-option `AskUserQuestion` (every-session
+unconditional / push-conditioned / branch-protection-instead / hold)
+rather than picking unilaterally, per the `CLAUDE.md` phase-gate
+precedent for owner-facing decisions; owner picked “every session,
+unconditionally.” **(4)** Wrote the decision into `CLAUDE.md`’s
+“Additional Phase 0 steps”: run `gh run list --branch master --limit 10`
+at Phase 0 step 4, every session; report (don’t fix) any
+non-`completed success` run at step 7; recorded the 3 rejected
+alternatives so a future session doesn’t re-litigate. **(5)**
+Smoke-tested the exact documented command — it surfaced a real,
+non-obvious finding on its first run: `R-CMD-check.yaml` on `126711a9`
+(S544’s own close-out push) was still `in_progress` at 15+ minutes (not
+itself a red run, but exactly the class of thing an unconditional check
+is meant to catch) — reported here, not chased, to keep this session’s
+own scope intact. **(6)** Mid-turn owner request (not part of the
+CI-check-decision deliverable): “add a backlog item to ensure results
+and plots in
+`inst/extdata/reference/ NIHMS593658-supplement-supplement_1.pdf` can be
+duplicated with `nprcgenekeepr` exported functions.” Checked first for
+existing coverage (the existing
+`GENETIC_METRICS_PDF_CAPABILITY_ AUDIT_*`/`ISSUE_129_KINSHIP2_FEATURE_COMPARISON_*`
+audits reference different source PDFs —
+`Master_Genetic_metrics_2_14_15.pdf` and the shipped Diagram tab
+respectively, neither this file) before adding a new, distinct
+`BACKLOG.md` Housekeeping item — read the PDF’s first 3 pages to confirm
+it is the kinship2 R package’s own supplementary material
+(Sinnwell/Therneau/Schaid, Mayo Clinic) with 3 concrete worked-example
+areas (pedigree plots, `pedigree.shrink()` trimming, a kinship-matrix
+table) — logged only, not investigated/implemented, to avoid derailing
+this session’s already-approved TDD-N/A scope. Also flagged that the PDF
+is currently untracked in git and not yet
+`.gitignore`/`.Rbuildignore`-listed, unlike its 2 copyrighted siblings
+in the same directory — left as-is, a future-session decision. **(7)** A
+second mid-turn owner exchange, this one a genuine question, not a task:
+“why does `BACKLOG.md` have items with ‘none remaining’ in them?”
+Investigated rather than speculating: `grep`-confirmed
+`SESSION_RUNNER.md` Phase 3F and Failure Mode \#27 both literally say
+“For a completed backlog item, remove it from `BACKLOG.md` in the same
+commit,” and `BACKLOG.md`’s own header says “Open, actionable work only…
+for history see `CHANGELOG.md`” — yet in practice 57 of the file’s ~75
+top-level bullets are rewritten-in-place “(none remaining – … RESOLVED
+…)” pointers rather than deleted, which is the root cause the
+S518/S529-S531 “own ledger-size housekeeping” item only ever mitigated
+(compressed verbose pointers to shorter ones) rather than fixed (never
+deleted a resolved item outright). Answered plainly, without editing
+anything (a question is not an instruction — Failure Mode \#23) and
+offered to log it as a `BACKLOG.md` item. Owner then explicitly asked
+for that item, naming the concern directly: a lingering pointer, however
+short, still promulgates the idea that `BACKLOG.md` is a valid place to
+look for history — it is not; `CHANGELOG.md` is. Added a second new
+`BACKLOG.md` Housekeeping item (READY, Effort L, given the scale — 57
+items to individually verify against `CHANGELOG.md` before deleting,
+matching S529’s own “confirm coverage exists before compressing”
+discipline) — logged only, not executed, same rationale as item (6).
+**(8)** `BACKLOG.md`: resolved the Phase 0 CI-check item; added 2 new
+items (the PDF-reproduction ask, the none-remaining-cleanup ask).
+**(9)** `PROJECT_LEARNINGS.md`: Learning 552 (the 2-axis decision shape,
+and the value of smoke-testing a documented-but-unrun step before
+close-out).
+
+**Self-assessment (Session 545): 8/10.** **Strengths:** (1) Correctly
+identified and reconciled S544’s `HANDOFFS.md` `commit: pending`
+self-reference at Phase 0, matching the established S543→S544 pattern,
+rather than missing it (this exact gap has recurred before it was
+caught). (2) Applied `CLAUDE.md`’s S507 “ratified sequencing audit” rule
+correctly — surfaced both issue \#138 and \#148 as first-class numbered
+priorities rather than folding them into the Informational bucket, which
+S544’s own handoff had implicitly done. (3) Presented the actual
+CI-check decision as a genuine 2-axis choice (adopt-or-not, and cadence)
+via one clean 4-option `AskUserQuestion` rather than assuming a default,
+and explicitly recorded the 3 rejected alternatives in `CLAUDE.md` so a
+future session doesn’t have to re-litigate. (4) Smoke-tested the
+newly-documented command before closing out rather than trusting the
+prose — this is what caught the real in-progress-run finding, which
+would otherwise have gone unverified. (5) Handled the mid-turn PDF-audit
+request correctly: checked for existing coverage first (found none),
+added a well-scoped item with enough context for a future session to act
+without re-deriving it, and did not expand this session’s own scope to
+do the comparison work itself. (6) Correctly distinguished the second
+mid-turn exchange as a question (answer, don’t act — Failure Mode \#23)
+from the first (a task) — investigated and answered with grep-verified
+evidence rather than speculating, then only added the `BACKLOG.md` item
+once the owner explicitly asked for it, rather than pre-emptively
+“fixing” 57 items unprompted. **Weaknesses:** (1) A
+`PROJECT_LEARNINGS.md` edit mistake — inserted Learning 552 *before*
+Learning 551 on the first attempt (wrong file position, breaking
+ascending order), caught and fixed via a second edit before commit
+rather than left wrong; a stronger session appends at the correct
+position on the first attempt by re-checking the file’s tail before
+inserting, not just before writing content. (2) Did not verify whether
+the still- `in_progress` `R-CMD-check.yaml` run for `126711a9` ever
+completed/what it reported — deliberately out of scope (a different
+investigation than this session’s own deliverable), but the close-out
+report should say plainly that this is unresolved-as-of-close, not just
+“in progress,” so the next session’s Phase 0 CI check (now itself active
+per this session’s own decision) is the one that actually confirms it.
+**Ledger:** recorded in `CHANGELOG.md` (this session’s own entries: the
+Phase 0 reconcile, the claim, the decision/deliverable, and the
+close-out entry covering `BACKLOG.md`/ `PROJECT_LEARNINGS.md` findings
+plus the mid-turn backlog addition).
+
 ### Session 543 Handoff Evaluation (by Session 544)
 
 **Score: 8/10.** **What helped:** the S543 `HANDOFFS.md` receipt’s

@@ -174,21 +174,21 @@ with `!grepl("test-app-|test-e2e-", file)`. (`load_all()` must run first
 — without it this command produces mass-spurious failures unrelated to
 anything actually broken; see Learning 377.)
 
-**[`renv::snapshot()`](https://rdrr.io/pkg/renv/man/snapshot.html)
+**[`renv::snapshot()`](https://rstudio.github.io/renv/reference/snapshot.html)
 always needs `dev = TRUE` in this project.** `renv/settings.json` sets
 `snapshot.type: "explicit"`, under which a **plain**
-[`renv::snapshot()`](https://rdrr.io/pkg/renv/man/snapshot.html) only
-scans `DESCRIPTION`’s `Imports`/`Depends`/`LinkingTo` — every
+[`renv::snapshot()`](https://rstudio.github.io/renv/reference/snapshot.html)
+only scans `DESCRIPTION`’s `Imports`/`Depends`/`LinkingTo` — every
 `Suggests`-only package (`testthat`, `dplyr`, `mockery`, `roxygen2`,
 `shinytest2`, `shinyBS`, `devtools`, `quarto`, plus their transitive
 deps like `pkgload`/`chromote`) is silently dropped from `renv.lock` on
 an ordinary snapshot, only to resurface as a missing-package crash the
 next time someone hits
-[`renv::restore()`](https://rdrr.io/pkg/renv/man/restore.html) (a fresh
-clone, an R-version bump). Always run `renv::snapshot(dev = TRUE)` (and
-`renv::status(dev = TRUE)` to check consistency) instead of the bare
-form. See `PROJECT_LEARNINGS.md` Learning 473/476 for the root-cause
-diagnosis.
+[`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html)
+(a fresh clone, an R-version bump). Always run
+`renv::snapshot(dev = TRUE)` (and `renv::status(dev = TRUE)` to check
+consistency) instead of the bare form. See `PROJECT_LEARNINGS.md`
+Learning 473/476 for the root-cause diagnosis.
 
 ------------------------------------------------------------------------
 
@@ -300,6 +300,45 @@ implicate unrelated old clutter (this session nearly did) or wrongly
 clear a copyright risk that only surfaces by actually reading the file
 (also this session — see PROJECT_LEARNINGS.md Learning 479 for both
 near-misses). See `CHANGELOG.md` 2026-08-08.
+
+**GitHub Actions CI status check (decided S545, 2026-08-13,
+owner-directed via `AskUserQuestion`):** neither `SAFEGUARDS.md`’s
+Session Recovery Protocol nor `SESSION_RUNNER.md`’s Phase 0 checklist
+inspects GitHub Actions at all, so a red CI run is invisible to
+orientation unless someone thinks to check it directly. This let a
+genuinely failing `R-CMD-check.yaml` run sit unnoticed across 13
+sessions (S526-S539) — `PROJECT_LEARNINGS.md` Learning 547 — until the
+owner asked directly.
+
+Run `gh run list --branch master --limit 10` as part of Phase 0 step 4
+(alongside `git status`/ `git log`/`git diff --stat`), **every session,
+unconditionally** — not conditioned on whether this session (or the
+prior one) pushed. This project has 7 active workflows
+(`R-CMD-check.yaml`/`lint.yaml`/`pkgdown.yaml`/`test-coverage.yaml`/`shinytest2.yaml`/`rhub.yaml`/
+`R-CMD-check-scheduled.yaml`), 4 of which trigger on every push to
+`master`; an unconditional check also catches a scheduled or
+manually-triggered workflow going red with no intervening local push at
+all — a gap a push-conditioned check would miss entirely. Deliberately
+the plain, unfiltered form (never `gh run list --workflow=<one>`, which
+only confirms that one workflow) — `PROJECT_LEARNINGS.md` Learning 549’s
+own practical rule, from the session that found `test-coverage.yaml`
+failing while `R-CMD-check.yaml` was green on the same commit.
+
+- **Report, don’t fix.** Fold any non-`completed success` run into the
+  Phase 0 step 7 report exactly like a ghost-session or ledger-reconcile
+  finding — surfaced to the user, not silently repaired or silently
+  ignored. Diagnosing/fixing a red run found this way is its own session
+  deliverable (per `SESSION_RUNNER.md`’s “1 and done”), not something
+  Phase 0 does inline.
+- **Rejected alternatives** (recorded so a future session doesn’t
+  re-litigate from scratch): a push-conditioned cadence (misses
+  scheduled-workflow-only drift, needs extra “since when” tracking
+  logic); GitHub branch protection instead of an observation step (a
+  repo-config change, not a `SESSION_RUNNER.md`/`CLAUDE.md` process
+  change, and doesn’t stop local commits stacking up unpushed in the
+  first place — a different problem than “nobody looked”); holding with
+  no change (rejected — 13 sessions of precedent was judged sufficient
+  to act on).
 
 ### Additional task-to-workstream mappings
 

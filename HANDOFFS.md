@@ -154,6 +154,92 @@ which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.1.2.
 
 ``` handoff
+session: S545
+date: 2026-08-13
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Phase 0 CI-status-check decision -- RESOLVED. Owner chose (via
+AskUserQuestion) to run gh run list --branch master --limit 10 every
+session, unconditionally; recorded in CLAUDE.md's "Additional Phase 0
+steps." 2 mid-turn owner exchanges also actioned: (1) a new BACKLOG.md
+item to verify nprcgenekeepr's exported functions can reproduce the
+kinship2 R package's own supplementary-material worked examples; (2) a
+question about why BACKLOG.md has "(none remaining)" pointer items,
+answered, then a new BACKLOG.md item to stop that practice and delete
+resolved items outright instead.
+what_was_done: Reconciled S544's HANDOFFS.md commit: pending self-reference
+to 126711a9 (dd177a80). Claimed the session (c6c6c0a6). Presented the CI
+-check decision as a 4-option AskUserQuestion (every-session unconditional
+/ push-conditioned / branch-protection-instead / hold); owner picked
+unconditional. Wrote the decision into CLAUDE.md's "Additional Phase 0
+steps" (new gh run list --branch master --limit 10 step at Phase 0 step 4,
+report-don't-fix at step 7, 3 rejected alternatives recorded). Smoke
+-tested the exact command: found R-CMD-check.yaml on 126711a9 still
+in_progress at 15+ min -- not a red run, but exactly what the new step
+exists to catch; reported, not chased. Mid-turn owner request #1: checked
+for existing coverage (none -- confirmed via grep and reading the PDF's
+first 3 pages: it is kinship2's own supplementary material, Sinnwell/
+Therneau/Schaid, Mayo Clinic, distinct from the audits' existing source
+PDFs), then added a new BACKLOG.md Housekeeping item, logged only, not
+investigated. Mid-turn exchange #2: owner asked why BACKLOG.md has "none
+remaining" items; grep-verified SESSION_RUNNER.md Phase 3F/FM#27 both say
+to remove completed items outright, confirmed 57 of ~75 top-level bullets
+are rewrite-in-place pointers instead, answered without editing anything
+(a question, not an instruction -- FM#23); owner then explicitly asked for
+a BACKLOG.md item -- added one (READY, Effort L, given 57 items need
+individual CHANGELOG.md-coverage verification before deletion). Updated
+BACKLOG.md (3 items: CI-check resolved, 2 new) and PROJECT_LEARNINGS.md
+(Learning 552).
+next_steps: BACKLOG.md priorities unchanged from S544 except the resolved
+CI-check item and 2 new items: (1) Write the Pedigree Diagram tutorial
+article (READY, Effort M). (2) Reopen the S325 CHANGELOG.md legacy-footer
+migration decision (DECISION NEEDED, Effort L). (3) Issue #148 (MHC
+haplotype reporting) needs a scope-narrowing conversation. (4) Issue #138
+(full-colony rendering) needs its own scoping session. (5) NEW: verify
+kinship2-supplement-PDF results/plots are reproducible with nprcgenekeepr
+exported functions (READY, Effort M) -- reconstruct the PDF's "fam1" 17
+-subject pedigree as a fixture first. (6) NEW: delete the 57 "(none
+remaining)" BACKLOG.md pointer bullets outright rather than compress them
+further (READY, Effort L) -- verify each has CHANGELOG.md coverage before
+deleting, per the S529 precedent. (7) NPRC outreach owner review (DECISION
+NEEDED); LabKey remaining recs (BLOCKED) unchanged. **Also: the
+R-CMD-check.yaml run flagged in_progress this session (126711a9) was never
+confirmed complete -- the next session's own new Phase 0 CI check is what
+should confirm it, not an assumption that it finished green.**
+key_files: CLAUDE.md:201-224 (new "GitHub Actions CI status check"
+subsection); BACKLOG.md (CI-check item resolved; 2 new items, Housekeeping
+section top); PROJECT_LEARNINGS.md Learning 552 (new).
+gotchas: (1) `gh run list` (unfiltered) is required, not `gh run list
+--workflow=<one>` -- a single named workflow can be green while a sibling
+is red on the same commit (Learning 549's own precedent, reused here).
+(2) inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf is
+currently untracked in git and NOT yet in .gitignore/.Rbuildignore, unlike
+its 2 copyrighted siblings in the same directory (5201430.pdf,
+bioinformatics_24_2_279.pdf) -- do not `git add` it without first deciding
+whether it needs the same copyright-driven exclusion treatment.
+(3) PROJECT_LEARNINGS.md entries are appended at the END of the file in
+ascending order -- inserting a new Learning by matching an old entry's
+text mid-file (rather than the tail) can land it BEFORE the entry it
+should follow; verify final ordering with `grep -n "^#### Learning"` after
+inserting, not just that the content landed somewhere. (4) Before deleting
+any of the 57 "(none remaining)" BACKLOG.md items (new item above), verify
+CHANGELOG.md coverage exists for each one first -- S529 found 2 cases
+where it didn't and had to backfill before compressing; the same gap could
+exist here and deleting without checking would be a real information loss,
+not just a relocation.
+runtime_smoke: n/a for Shiny runtime (no R/ production code touched) --
+the equivalent verification for a Phase-0-process change is running the
+newly-documented command itself, which was done (gh run list --branch
+master --limit 10, confirmed working and immediately useful).
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-13 ([ad
+hoc] the Phase 0 reconcile; [ad hoc] the claim; [BL-phase0CiCheck] the
+decision; [ad hoc] the close-out entry covering BACKLOG.md/
+PROJECT_LEARNINGS.md findings and the 2 mid-turn backlog additions)
+commit: pending
+```
+
+``` handoff
 session: S544
 date: 2026-08-13
 status: complete
@@ -228,7 +314,8 @@ changelog_ref: this session's own CHANGELOG.md entries, 2026-08-13 ([ad hoc]
 the claim; [BL-testCoverageCovrInstallTests] the fix; [ad hoc] the
 close-out entry covering BACKLOG.md/PROJECT_LEARNINGS.md findings and the
 mid-turn backlog addition)
-commit: pending
+commit: 126711a9 (reconciled S545 -- self-reference at write time, per the
+S543/S544 precedent: this receipt ships in the commit whose sha it names)
 ```
 
 ``` handoff
