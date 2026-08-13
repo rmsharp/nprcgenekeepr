@@ -10,14 +10,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 539 Handoff Evaluation (by Session 540)
+**Score: 8/10.** **What helped:** the S539 `HANDOFFS.md` receipt's `gotchas` field directly
+named "`HANDOFFS.md` and `CHANGELOG.md` are STILL past their own byte-budget archive
+triggers... a future session should run their own first `--write` archives" — confirmed
+independently via `methodology_dashboard.py`/`methodology_trim.py --check` during this
+session's own Phase 0, and used as-is in the priorities list. The other `next_steps` items
+(`a2interactive.Rmd` pass, issue #148 scope-narrowing, NPRC outreach, LabKey BLOCKED, 2
+doc-hygiene nits) all checked out accurately against `BACKLOG.md` when cross-referenced.
+**What was missing:** could not have named the actual task this session ended up doing (the
+`R-CMD-check.yaml` CI failure) — S539 was a docs-only session with no reason to check `gh run
+list`, and the break itself predates S539 (introduced S526, first visible on a push
+2026-08-11T22:37, again 2026-08-12T22:57). This is a systemic Phase 0 gap spanning many
+sessions (see `PROJECT_LEARNINGS.md` Learning 547), not a defect in S539's own handoff
+specifically. **What was wrong:** nothing found — re-verified the `commit: pending`
+self-reference in S539's own receipt (expected, legal at write time per `HANDOFFS.md`'s
+format note) and reconciled it during this session's Phase 0, as intended. **ROI:** High —
+the one gotcha that applied was directly load-bearing; nothing else needed rediscovery.
+
 ### What Session 540 Did
 **Deliverable:** Diagnose and fix `R-CMD-check.yaml` failing on GitHub CI (owner-directed,
-not from `BACKLOG.md`). (IN PROGRESS)
-**Started:** 2026-08-12.
-**Status:** Session claimed. Diagnosis complete (see below); fix approved by owner via
-`AskUserQuestion`, implementation beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+not from `BACKLOG.md` — picked via the Phase 0 `AskUserQuestion` picker's free-text "Other").
+**Started/Completed:** 2026-08-12. **Status:** DONE. TDD phase: REFACTOR-only (test-files
+only, zero production-code changes, no new behavior — matches the `PROJECT_LEARNINGS.md`
+Learning 477/S477 precedent for CI/test-only fixes). Commits: `77459b80` (claim),
+`7c22d2d9` (the fix itself), this close-out's own commit (pending at write time).
 
 **Diagnosis (before any file edit):** `gh run list`/`gh api .../logs` showed
 `R-CMD-check.yaml` failing 100% of the time on the last 2 pushes (ubuntu release/oldrel-1/
@@ -26,15 +43,74 @@ failures in S526's issue #152 Slice 2 benchmark tests (`test_markerKinship.R:169
 `test_markerParentageLikelihood.R:582,628`). Root-caused, not guessed: (1)/(3) are wall-clock
 `system.time()` thresholds (0.10s/0.5s) calibrated on the S526 author's local machine, which
 GitHub's shared Linux/Windows runners consistently miss by 30-90% (deterministic
-hardware-speed mismatch, not random flakiness); (2) is `expect_identical(actual, golden)` on
+hardware-speed mismatch, not random flakiness — 100% fail rate across every non-macOS job on
+every checked run). (2) is `expect_identical(actual, golden)` on
 `markerParentageLikelihood()`'s LOD/delta output — reproduced directly via a standalone
-repro script run both locally (macOS, byte-identical to golden) and inside a Linux
-`r-base:4.6.1` Docker container (differs at the 2-ULP level, e.g. `1.4069136483226261` vs
+~150-line repro script (just the handful of pure helper functions the assertion touches, no
+package install) run both locally (macOS, `dput()` output byte-identical to golden) and
+inside a Linux `r-base:4.6.1` Docker container (`docker run --rm -v <scratch>:/scratch
+r-base:4.6.1 Rscript /scratch/repro.R`): differs at the 2-ULP level (`1.4069136483226261` vs
 `...263`), confirming a benign cross-platform `log()`-libm rounding non-portability, not a
-D5-rewrite behavior regression (`markerKinship()`'s own golden-master test is unaffected —
-confirmed its computation is exact-integer matrix products with no transcendental calls).
-Owner approved (`AskUserQuestion`) the full fix: `skip_on_ci()` on both timing tests,
-`expect_equal()` for the golden-master check.
+D5-rewrite behavior regression. Confirmed `markerKinship()`'s own sibling golden-master test
+is unaffected by reading `R/markerKinship.R` directly — its computation is exact-integer
+`%*%` matrix products (0/1 indicator matrices) with zero transcendental calls, so it has no
+ULP-level cross-platform exposure at all.
+
+**Fix approved by owner via `AskUserQuestion`** (full diagnosed fix, over "timing-only" and
+"loosen thresholds instead" alternatives): `testthat::skip_on_ci()` added to both timing
+benchmarks (kept as local/interactive regression guards, each with a documenting comment
+citing the observed CI numbers); `expect_identical()` → `expect_equal()` for the golden-master
+check (comment documents the Docker-repro finding). Zero production-code changes — the D5
+rewrite itself was already correct.
+
+**Verification:** both touched files individually lint-clean (`lintr::lint_package()`, 0
+lints). Full clean regression (`pkgload::load_all()` + `testthat::test_dir(reporter =
+"silent")`) 0 failed/0 error (33 pre-existing warnings, unchanged baseline; 5,517 passed;
+`skip_on_ci()` does not skip locally since `CI` is unset, so both fixed tests actually ran and
+passed, not merely skipped-past). `devtools::check()` (plain default, `cran` omitted per
+Learning 539's own rule): 0 errors/0 warnings/1 NOTE (only the pre-existing vignettes/figure
+leftover, matching baseline exactly); `testthat.R` `[137s/137s] OK`. Runtime smoke test: n/a
+— test-file-only change, no runtime/Shiny behavior touched; the regression + check above is
+the complete build-equivalent verification. No NEWS.Rmd/citation/tutorial/`_pkgdown.yml`/
+`a2interactive.Rmd`/GitHub-issue-close checklist applies (no new exported function, no new
+Shiny feature/parameter, no new displayed statistic, no GitHub issue tied to this ad hoc
+directive). **This fix is local-only as of close-out — `master` is 16 commits ahead of
+`origin/master`, so the actual GitHub CI run stays red until a push happens** (not done this
+session — pushing is an outward-facing action needing explicit direction, and this project's
+own established convention, per `git log`, is not to push every session).
+
+**Two `PROJECT_LEARNINGS.md` entries added:** Learning 546 (the `log()` cross-platform
+finding — practical rule for when `expect_identical()` is/isn't safe on computed floating-
+point values) and Learning 547 (a 13-session-spanning process gap: no Phase 0 step checks
+GitHub Actions CI status at all, so this failure sat unnoticed since S526 — flagged as a new
+`BACKLOG.md` Housekeeping item for a future decision, per the established "report, don't fix
+mid-session" precedent for a pre-existing gap outside this session's own scope).
+
+**Self-assessment (Session 540): 9/10.** **Strengths:** (1) Did not accept a plausible-
+sounding theory (cross-platform floating point) on reasoning alone — built a minimal
+standalone repro and ran it on both platforms via Docker before touching any file, turning a
+guess into direct evidence, consistent with this project's own "verify before fixing"
+culture. (2) Precisely scoped the fix by reading `R/markerKinship.R` to confirm its sibling
+golden-master test was NOT at risk (exact-integer matrix products, no `log()`), rather than
+defensively loosening both files' assertions. (3) Respected the test's own explicit "stop and
+investigate, don't just fix this value" comment — investigated first, then changed the
+assertion strictness (not the value) with a documented rationale, rather than either ignoring
+the warning or being blocked by it. (4) Surfaced the 13-session CI-blind-spot as its own
+finding (Learning 547 + a new `BACKLOG.md` item) rather than silently fixing the immediate
+bug and moving on — matches the project's precedent of treating "how did this go unnoticed
+this long" as itself worth recording (Learning 477's own sibling gap). (5) Did not push to
+`origin` unprompted despite the fix being complete and verified — flagged the outward-facing
+follow-up explicitly rather than assuming silent completion covers it. **Weaknesses:** (1)
+Two background-command missteps cost minor time: an unnecessary internal `&` on top of
+`run_in_background: true` for `devtools::check()` (the harness's own tracking exited
+immediately while the real process kept running detached, requiring a manual `ps -p` check
+before a proper `Monitor` could be armed on the log file directly) — should have just used
+`run_in_background: true` alone without the redundant shell backgrounding. (2) Issued a few
+no-op placeholder Bash calls while waiting on the `Monitor` before recognizing that no further
+tool calls were needed at all — should have stopped calling tools the moment the guidance
+("Keep working — do not poll or sleep") was read, not after a couple of exploratory attempts.
+**Ledger:** recorded in `CHANGELOG.md` (this session's own entries: `[ad hoc]` the deliverable,
+`[ad hoc]` the S539 `HANDOFFS.md` reconcile).
 
 ### Session 538 Handoff Evaluation (by Session 539)
 **Score: 6/10.** **What helped:** the `NEWS.Rmd` verbosity-item detail was accurate and fully

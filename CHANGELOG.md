@@ -131,6 +131,42 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] Fixed R-CMD-check.yaml failing on GitHub CI (Session 540)
+- **Deliverable (owner-directed, not from `BACKLOG.md`):** `R-CMD-check.yaml` failed 100% of
+  the time on the last 2 pushes (ubuntu release/oldrel-1/devel, windows-latest — macOS
+  passed), `[ FAIL 3 | WARN 33 | SKIP 227 | PASS 5399 ]`. All 3 failures traced to S526's
+  issue #152 Slice 2 benchmark tests — the D5 performance rewrite itself is correct; only the
+  tests' environment assumptions were wrong.
+- Root-caused, not guessed: (1)/(3) `test_markerKinship.R:169` and
+  `test_markerParentageLikelihood.R:628` are `system.time()` wall-clock thresholds (0.10s/0.5s)
+  calibrated on the S526 author's local machine — GitHub's shared Linux/Windows runners
+  consistently miss them by 30-90%, a deterministic hardware-speed mismatch, not random
+  flakiness. (2) `test_markerParentageLikelihood.R:582`'s `expect_identical(actual, golden)`
+  golden-master check — confirmed via a standalone repro run both locally (macOS, byte-
+  identical to golden) and inside a Linux `r-base:4.6.1` Docker container (differs at the
+  2-ULP level, e.g. `1.4069136483226261` vs `...263`), a benign cross-platform `log()`-libm
+  rounding non-portability, not a D5-rewrite behavior regression (`markerKinship()`'s own
+  golden-master test is unaffected — its computation is exact-integer matrix products with no
+  transcendental calls, confirmed by reading `R/markerKinship.R`).
+- Fix (test-files only, zero production-code changes): `testthat::skip_on_ci()` on both
+  timing benchmarks, kept as local/interactive regression guards; `expect_identical()` →
+  `expect_equal()` for the golden-master check. Each documented with a comment recording the
+  finding. Owner approved the fix approach via `AskUserQuestion` before any edit.
+- Verification: full clean regression (`pkgload::load_all()` + `testthat::test_dir()`)
+  0 failed/0 error (33 pre-existing warnings, unchanged baseline, 5,517 passed); both touched
+  test files re-run in isolation, all pass locally (CI env var unset, so `skip_on_ci()` does
+  not skip); `devtools::check()` 0 errors/0 warnings/1 NOTE (the pre-existing vignettes/figure
+  leftover, matching baseline exactly) — `testthat.R` `[137s/137s] OK`; `lintr::lint_package()`
+  0 lints on both touched files. Runtime smoke test: n/a — test-file-only change, no runtime/
+  Shiny behavior touched.
+- `PROJECT_LEARNINGS.md` Learnings 546 (the `log()` cross-platform finding) and 547 (a
+  13-session-spanning gap: no Phase 0 step checks GitHub Actions CI status at all, so this
+  failure sat unnoticed since S526 — flagged as a new `BACKLOG.md` Housekeeping item for a
+  future decision, not fixed this session). **This fix is local-only as of this entry — the
+  actual GitHub CI run stays red until a push happens** (`master` is currently 16 commits
+  ahead of `origin/master`); a future push (this session's own, or the owner's) will trigger
+  the first genuinely green `R-CMD-check.yaml` run since S526.
+
 ### 2026-08-12 · [ad hoc] S540 Phase 0 reconcile: HANDOFFS.md S539 receipt commit: pending → d34a6447
 - `git log -1 --format=%H -- HANDOFFS.md` showed the frontier commit (`d34a6447`, the S539
   close-out commit) still carried its own receipt's self-referential `commit: pending`

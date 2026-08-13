@@ -145,6 +145,26 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       that version number.
 
 ## Housekeeping
+- [ ] **Phase 0 has no step that checks GitHub Actions CI status -- a red
+      `R-CMD-check.yaml` run sat unnoticed across 13 sessions (S526-S539)**
+      (found S540, 2026-08-12, DECISION NEEDED -- whether/how to add a Phase 0
+      step, Effort S) -- issue #152 Slice 2 (S526) introduced 3 CI-only test
+      failures (`test_markerKinship.R:169`, `test_markerParentageLikelihood.R:582,628`,
+      fixed S540); `gh run list` showed `R-CMD-check.yaml` failing on both pushes
+      since (2026-08-11T22:37, 2026-08-12T22:57), then 15 further local commits
+      landed without ever pushing again or checking CI status, until the owner
+      asked directly. Neither `SAFEGUARDS.md`'s Session Recovery Protocol nor
+      `SESSION_RUNNER.md`'s Phase 0 checklist inspects GitHub Actions at all --
+      each of the 13 sessions followed its own checklist completely as written;
+      the checklist itself has no step that would have caught this (a sibling
+      gap to `PROJECT_LEARNINGS.md` Learning 477's `lint.yaml` precedent, which
+      fixed that instance's violations but did not add a general check). Not
+      fixed this session -- a Phase 0 protocol change is its own scope decision,
+      out of a CI bug-fix session's own deliverable. A future session (or the
+      owner directly) should decide whether to add a `gh run list --limit 5` (or
+      similar) check to `CLAUDE.md`'s "Additional Phase 0 steps," and if so, at
+      what cadence (every session vs. only when `git status` shows unpushed
+      commits). See `PROJECT_LEARNINGS.md` Learning 547, `CHANGELOG.md`.
 - [ ] (none remaining -- the "`shinytest2`/`chromote` headless browser never
       renders a `showModal()`/`modalDialog()` Bootstrap modal's DOM" item
       (found S535, 2026-08-12) is RESOLVED -- **misdiagnosed, corrected

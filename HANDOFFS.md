@@ -123,21 +123,52 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S540
 date: 2026-08-12
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Diagnose and fix R-CMD-check.yaml failing on GitHub CI (owner-directed).
-Diagnosis complete: 3 CI test failures, all in S526's issue #152 Slice 2 benchmark tests
-(test_markerKinship.R:169, test_markerParentageLikelihood.R:582,628) -- 2 are CI-hardware
-timing-threshold mismatches, 1 is a cross-platform log()-libm ULP difference in a golden-
-master expect_identical() check, confirmed via a Linux Docker repro. Fix approved by owner;
-implementation in progress.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: R-CMD-check.yaml CI fix is DONE, verified locally (0 failed/0 error regression;
+devtools::check() 0 errors/0 warnings/1 NOTE, baseline-matching). NOT yet pushed -- master is
+16 commits ahead of origin/master, so the actual GitHub CI run stays red until a push.
+what_was_done: Diagnosed 3 R-CMD-check.yaml CI failures (100% fail rate, all non-macOS
+jobs, since S526): test_markerKinship.R:169 and test_markerParentageLikelihood.R:628 are
+system.time() thresholds (0.10s/0.5s) too tight for GitHub's shared runners (CI observed
+0.133-0.190s / 0.63-0.85s); test_markerParentageLikelihood.R:582's expect_identical() golden-
+master check fails on Linux/Windows from a confirmed (Docker-reproduced) 2-ULP cross-platform
+log()-libm rounding difference, not a real regression -- markerKinship()'s own golden master
+is unaffected (exact-integer matrix products, no log()). Fixed (owner-approved via
+AskUserQuestion): skip_on_ci() on both timing tests; expect_equal() for the golden-master
+check. Zero production-code changes. Commits: 77459b80 (claim), 7c22d2d9 (the fix itself),
+this close-out's own commit (sha pending at write time, self-referential).
+next_steps: Push to origin (owner-directed, not done this session) to actually turn the live
+GitHub CI run green -- the fix is verified locally but master is still 16 commits ahead of
+origin/master. Separately: BACKLOG.md priorities untouched by this session remain open --
+a2interactive.Rmd docs pass (READY, Effort M); CHANGELOG.md/HANDOFFS.md first
+methodology_trim.py --write archive (READY, Effort M -- both still past their read-cap/byte-
+budget triggers); issue #148 (MHC) scope-narrowing conversation (DECISION NEEDED); NPRC
+outreach plan owner review (DECISION NEEDED); LabKey remaining recs (BLOCKED). New this
+session: the Phase-0-has-no-CI-check gap (BACKLOG.md Housekeeping, Learning 547) needs an
+owner decision on whether/how to add a gh run list step to CLAUDE.md.
+key_files: tests/testthat/test_markerKinship.R:169 (skip_on_ci() + comment);
+tests/testthat/test_markerParentageLikelihood.R:562-576,582,610-628 (comment + expect_equal()
++ skip_on_ci() + comment); PROJECT_LEARNINGS.md Learnings 546-547 (new); BACKLOG.md
+Housekeeping (new item, the CI-check gap).
+gotchas: (1) skip_on_ci() only skips when the CI env var is set (GitHub Actions sets it) --
+locally both fixed tests actually RUN and pass, so a local regression run genuinely exercises
+the fix, not just skips past it; do not mistake a green local run for "untested." (2) The
+golden-master fix is expect_equal(), not a changed golden value -- if this test ever fails
+again, re-run the Linux Docker repro (r-base:<version> matching CI's R version) before
+assuming it's a real regression; a difference within ~1e-8 relative tolerance is very likely
+the same log()-libm non-portability, not new. (3) devtools::check() must be run WITHOUT an
+extra shell "&" on top of Bash's own run_in_background:true -- doubling the backgrounding
+makes the harness's own task tracking report "completed" the instant the wrapper script's
+last foreground line exits, while the real R process keeps running detached; check with `ps
+-p <pid>` before trusting an early "completed" notification, or better, just don't add the
+extra "&".
+runtime_smoke: n/a -- test-file-only change, no runtime/Shiny behavior touched. Full clean
+regression (0 failed/0 error) + devtools::check() (0 errors/0 warnings/1 pre-existing NOTE)
+is the complete build-equivalent verification for this deliverable.
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12 ([ad hoc] the deliverable;
+[ad hoc] the S539 HANDOFFS.md reconcile)
 commit: pending
 ```
 
