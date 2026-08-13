@@ -125,6 +125,26 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-12.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S554
+date: 2026-08-13
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix the Pedigree Diagram tab's affected-status shading defect (BACKLOG.md
+Housekeeping, found S552) -- unaffected/unknown individuals render solid-filled instead of
+open/unfilled. Traced to .affectedColor() (R/makePedigreeDiagramData.R:163-165)'s
+NA_character_ color.background falling back to visNetwork's own default fill.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<free-text prose: pending>
+
+```handoff
 session: S553
 date: 2026-08-13
 status: complete

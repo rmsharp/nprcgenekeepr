@@ -10,6 +10,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 554 Did
+**Deliverable:** Fix the Pedigree Diagram tab's affected-status shading defect (`BACKLOG.md`
+Housekeeping, found S552, owner-reported live, READY, Effort S) -- unaffected/unknown-affected
+individuals currently render solid-filled instead of open/unfilled, counter to standard pedigree
+drawing convention (filled = affected, open outline = unaffected/unknown). Traced to
+`.affectedColor()` (`R/makePedigreeDiagramData.R:163-165`): its `NA_character_` `color.background`
+for the `FALSE`/`NA` case does not render as "no fill" in visNetwork -- it falls back to the
+library's own default node fill. (IN PROGRESS)
+**Started:** 2026-08-13.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 552 Handoff Evaluation (by Session 553)
 **Score: 10/10.** **What helped:** every `key_files` pointer was accurate and directly usable --
 `R/modPedigree.R:474-483,792-812` (twinRelationsData/return list) and `R/modGeneticValue.R:221-228,523`
