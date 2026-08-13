@@ -127,11 +127,75 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S546
 date: 2026-08-13
-status: pending
-active_task: Decide whether/how to reopen the S325 "freeze legacy, go
-forward" CHANGELOG.md legacy-footer decision (BACKLOG.md Housekeeping,
-found S543); record the outcome in BACKLOG.md/CLAUDE.md as appropriate.
-what_was_done: pending
+status: complete
+self_score: 7
+predecessor_score: 9
+active_task: S325 CHANGELOG.md legacy-footer decision -- RESOLVED. Owner
+chose (via AskUserQuestion, 3 options) to scope a lighter bulk relocation
+of the frozen legacy footer into its own archive file, un-retagged, over
+the full re-tag migration campaign or holding as-is. BACKLOG.md item
+rewritten to READY/Effort M for a future session to verify (not execute).
+what_was_done: Reconciled S545's HANDOFFS.md commit: pending
+self-reference to 7021c6f7 (b2a4da5c); this also resolved S545's own
+flagged-unconfirmed R-CMD-check.yaml run on 126711a9 (confirmed completed
+success). Claimed the session (a1ad1805). Self-caught and corrected a
+process slip: called the priorities-picker AskUserQuestion before
+rendering the required prose Phase 0 report -- fixed by rendering it
+retroactively before proceeding. Re-read S543's own SRF_RED investigation
+directly (not its prose summary) and found the existing migrate-or-hold
+framing was an artifact of the original S325 choice, not exhaustive --
+the read-truncation risk traces to one pinned 935,287 B block independent
+of re-tagging, implying a 3rd, cheaper option. Presented all 3 via one
+AskUserQuestion; owner picked the bulk-relocation option. Rewrote
+BACKLOG.md's S325 item (decision resolved, re-scoped to a future
+verify-then-relocate task). Added an S546 addendum to CLAUDE.md's
+"CHANGELOG.md ledger-format resolution" note. PROJECT_LEARNINGS.md
+Learning 553 (the picker-ordering slip; re-deriving decisions from their
+underlying investigation rather than trusting a prior binary framing).
+next_steps: BACKLOG.md priorities unchanged from S545 except the S325
+item (resolved to a decision; re-scoped, not removed) and no new items
+added. In priority order: (1) Verify + execute the bulk relocation of
+CHANGELOG.md's frozen "## Legacy history (Sessions 1-324)" block into its
+own archive file, un-retagged (READY, Effort M, this session's own new
+item) -- MUST verify first: methodology_trim.py's L1/L2/L3 losslessness
+invariants survive the move, and no script/audit expects the block inline
+in CHANGELOG.md (grep docs/, bin/, *.py) -- if either check fails,
+escalate back to the full re-tag campaign or hold-as-is, both still valid
+fallbacks. (2) Verify kinship2-supplement PDF results reproduce via
+nprcgenekeepr exported functions (READY, Effort M, S545). (3) Write a
+dedicated Pedigree Diagram tab article (READY, Effort M, S544).
+(4) Delete the 57 "(none remaining)" BACKLOG.md pointer bullets outright
+(READY, Effort L, S545) -- verify CHANGELOG.md coverage per each first,
+S529 precedent. (5) BACKLOG.md's own ledger-size housekeeping, remaining
+sections beyond Housekeeping (READY, Effort L, S518/S529). (6) Issue #148
+scope-narrowing conversation; (7) issue #138 scoping session -- both per
+the ratified sequencing audits, unchanged. (8) NPRC outreach owner review
+(DECISION NEEDED); LabKey remaining recs (BLOCKED) -- both unchanged.
+key_files: BACKLOG.md Housekeeping (S325 item rewritten, top of section);
+CLAUDE.md:266-268 ("CHANGELOG.md ledger-format resolution" note, new S546
+addendum paragraph appended); PROJECT_LEARNINGS.md Learning 553 (new,
+file tail).
+gotchas: (1) The new bulk-relocation option is UNVERIFIED -- its
+feasibility (does methodology_trim.py's fence-scanner or L1/L2/L3 proof
+choke on a manual, tool-external relocation of the legacy block?) was not
+checked this session; do not treat the owner's pick as proof it will work
+cleanly, only as the chosen path to scope first. (2) methodology_trim.py
+already has one open, unrelated fence-scanner defect against
+SESSION_NOTES.md's own legacy content (CLAUDE.md's "SESSION_NOTES.md
+archive blocked by a fence-scanner defect" note, S518) -- check whether
+CHANGELOG.md's legacy block triggers the same class of defect before
+trusting any tool-assisted move. (3) inst/extdata/reference/
+NIHMS593658-supplement-supplement_1.pdf is still untracked in git and NOT
+yet in .gitignore/.Rbuildignore (S545 gotcha, still unresolved -- do not
+git add without first deciding on copyright-driven exclusion, matching
+its 2 tracked siblings' treatment).
+runtime_smoke: n/a -- no R/production code or runtime behavior touched;
+decision-only documentation session (methodology/BACKLOG/CLAUDE.md
+prose only).
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-13 ([ad
+hoc] the Phase 0 reconcile; [ad hoc] the claim; [ad hoc] the close-out
+entry covering the S325 decision, BACKLOG.md/CLAUDE.md updates, and
+Learning 553)
 commit: pending
 ```
 

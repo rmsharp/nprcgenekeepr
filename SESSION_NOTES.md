@@ -29,13 +29,69 @@ High — the `next_steps` field was directly load-bearing for this session's own
 rendering and picker.
 
 ### What Session 546 Did
-**Deliverable:** Decide (with the owner, via `AskUserQuestion`) whether/how to reopen the S325
-"freeze legacy, go forward" `CHANGELOG.md` legacy-footer decision (`BACKLOG.md` Housekeeping,
-found S543); record the outcome in `BACKLOG.md`/`CLAUDE.md` as appropriate. (IN PROGRESS)
-**Started:** 2026-08-13. **Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Decided (with the owner, via `AskUserQuestion`) whether/how to reopen the S325
+"freeze legacy, go forward" `CHANGELOG.md` legacy-footer decision; recorded the outcome in
+`BACKLOG.md`/`CLAUDE.md`.
+**Started/Completed:** 2026-08-13. **Status:** DONE. TDD phase: N/A (methodology/documentation
+housekeeping — no production code or test surface, matching the S509/S528/S539/S542/S543/S544/
+S545 precedent). Commits: `b2a4da5c` (Phase 0 reconcile — S545's `HANDOFFS.md` `commit: pending`
+self-reference), `a1ad1805` (Phase 1B claim), `acc54875` (the decision itself:
+`BACKLOG.md`/`CLAUDE.md`/`PROJECT_LEARNINGS.md`/`CHANGELOG.md`, split from the receipt commit to
+respect the 5-file blast-radius cap), this close-out receipt's own commit (pending at write time).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, `git status`/`log`/`diff --stat`, `methodology_dashboard.py`, `gh run list`).
+`CHANGELOG.md` frontier == `HEAD` at start; `HANDOFFS.md` frontier == `HEAD` too, but S545's own
+receipt still carried `commit: pending` (routine self-reference) — reconciled to `7021c6f7` and
+logged (`b2a4da5c`); while reconciling, also resolved a specific gap S545's own handoff had
+flagged unconfirmed (whether `R-CMD-check.yaml` on S544's close-out commit `126711a9` ever
+finished — it did, `completed success`). **Process slip, self-caught:** called the
+`CLAUDE.md`-mandated priorities-picker `AskUserQuestion` before rendering the required prose
+Phase 0 report — caught in the very next turn and corrected by rendering the full report
+retroactively before proceeding (`PROJECT_LEARNINGS.md` Learning 553). Rendered the priorities
+list (9 tagged items found via `BACKLOG.md` grep + both ratified sequencing audits per
+`CLAUDE.md`'s own convention; capped the `AskUserQuestion` picker at 4, noting "+5 more below the
+picker"); owner picked "Reopen S325 decision." **(2)** Claimed the session (`a1ad1805`).
+**(3)** Re-read S543's own `SRF_RED` investigation (`PROJECT_LEARNINGS.md` Learning 550) directly
+rather than trusting its prose summary, and found the existing 2-option framing (full re-tag
+migration vs. hold) was an artifact of the *original* S325 choice, not an exhaustive search of
+what's structurally possible: the read-truncation risk is caused entirely by one pinned,
+un-archived 935,287 B block, independent of whether its contents are ever re-tagged — implying a
+3rd, materially cheaper option (bulk-relocate the block into its own archive file, un-retagged)
+nobody had written down. Presented all 3 via one `AskUserQuestion`, honestly labeling the new
+option as unverified pending its own scoping session; owner picked it. **(4)** Rewrote
+`BACKLOG.md`'s S325 item: decision recorded as resolved, item itself re-scoped to READY/Effort M
+for a future session to verify (not execute) the relocation. **(5)** Added an S546 addendum to
+`CLAUDE.md`'s "CHANGELOG.md ledger-format resolution" note recording the decision and the 2
+rejected-for-now fallbacks (full migration, hold). **(6)** `PROJECT_LEARNINGS.md`: Learning 553
+(the picker-ordering process slip; the value of re-deriving a decision from its own underlying
+investigation rather than trusting a prior session's binary framing).
+
+**Self-assessment (Session 546): 7/10.** **Strengths:** (1) Correctly identified and reconciled
+S545's `HANDOFFS.md` `commit: pending` self-reference at Phase 0, and additionally resolved the
+specific unconfirmed-CI-run gap S545's own handoff flagged, rather than leaving it dangling
+another session. (2) Self-caught the picker-before-prose-report process slip in the very next
+turn rather than only noticing it at self-assessment time, and corrected it transparently instead
+of quietly proceeding as if it hadn't happened. (3) Did not stop at the existing 2-option framing
+the prior sessions' docs presented — re-read the underlying `SRF_RED` investigation directly and
+found a materially cheaper 3rd option, presented honestly (labeled unverified) rather than either
+suppressing it or silently substituting it for the documented options. (4) Correctly treated
+"decide whether/how to reopen S325" as this session's complete deliverable and did not bleed into
+scoping or executing the bulk-relocation itself, even though the owner's chosen option invited
+continuing — matching Failure Mode #18 (planning-to-implementation bleed) guidance and the
+`BACKLOG.md` item's own original "decide before scoping" framing. **Weaknesses:** (1) The
+picker-before-prose-report slip should not have happened at all — Phase 0's step ordering is
+explicit in both `SESSION_RUNNER.md` and `CLAUDE.md`'s own picker convention, and this session
+had just read both in full moments earlier. (2) Did not independently verify the new 3rd option's
+core technical premise (that `methodology_trim.py` can cleanly relocate the legacy block without
+tripping the same fence-scanner defect documented against `SESSION_NOTES.md`) before presenting
+it — correctly deferred that verification to the future scoping session and said so explicitly,
+but a stronger session might have spent five minutes confirming feasibility before offering the
+option, rather than presenting an unverified path as equally weighted against two already-vetted
+ones.
+**Ledger:** recorded in `CHANGELOG.md` (this session's own entries: the Phase 0 reconcile, the
+claim, and the close-out entry covering the S325 decision, `BACKLOG.md`/`CLAUDE.md` updates, and
+Learning 553).
 
 ### Session 544 Handoff Evaluation (by Session 545)
 **Score: 9/10.** **What helped:** the S544 `HANDOFFS.md` receipt's `next_steps` field enumerated
