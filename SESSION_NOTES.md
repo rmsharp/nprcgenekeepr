@@ -10,6 +10,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 550 Did
+**Deliverable:** Design document for threading `twinRelations` into `kinship()`'s computation
+(S549 Finding #1) — evidence-based inventory of all 15 `kinship()` call sites, the
+transitive-propagation question (matching kinship2's own `relation`-argument behavior), and
+the ratified API/data-flow shape, written to `docs/planning/`. Design only; implementation is
+a separate future session. (IN PROGRESS)
+**Started:** 2026-08-13
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 548 Handoff Evaluation (by Session 549)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` receipt's `next_steps` field's priority-ordered
 list (PDF-reproduction check first, Pedigree Diagram article second, issue #148 scoping third, NPRC/

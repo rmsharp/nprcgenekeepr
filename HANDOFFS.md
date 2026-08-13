@@ -125,6 +125,25 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-12.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S550
+date: 2026-08-13
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Design document for threading twinRelations into kinship()'s computation (S549
+Finding #1): evidence-based inventory of all 15 kinship() call sites, the transitive
+-propagation question, and the ratified API/data-flow shape. Design only, docs/planning/ --
+implementation is a separate future session.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S549
 date: 2026-08-13
 status: complete
