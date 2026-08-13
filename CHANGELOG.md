@@ -131,6 +131,29 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [BL-522] `a2interactive.Rmd` documentation pass — 8 script-callable functions/families gained demonstration sections (Session 541)
+- **Deliverable:** Added demonstration sections to `vignettes/a2interactive.Rmd` for every
+  exported, script-callable function that had shipped since the last documentation pass
+  (S478) with zero tutorial coverage, per `BACKLOG.md`'s S522 item: `markerParentageLikelihood()`,
+  `checkCrossCenterMapping()`, `checkLocusMetadata()`, `checkLinkageMarkerGenotypeFile()`,
+  `markerRealizedRelatednessVariance()`, `markerLdBlock()`, `obfuscateLdBlocks()`,
+  `reportMatePairs()`, and `readTwinRelations()`.
+- **New sections:** "Candidate-Parent Likelihood Ranking" and "Validating a Cross-Center
+  Mapping" (the latter as a lead-in immediately before the existing "Cross-Center Identity
+  Linking" section, which was trimmed of its now-redundant `pedA`/`pedB`/`mapping` setup to
+  avoid duplication) and "Multiallelic Marker Panels and Locus Metadata", "Realized
+  Relatedness Variance", "Linkage-Disequilibrium Blocks", "De-identifying LD-Block Results"
+  (all under "Marker Genetics"); a new top-level "Individual Mate-Pair Analysis" section
+  reusing the tutorial's own `trimmedPed`/`trimmedGeneticValue`/`candidates` objects; a new
+  "Twin/Zygosity Connectors" subsection inside "Pedigree Diagram".
+- **Verification:** every demo's exact values confirmed by running the real code against the
+  installed package (`pkgload::load_all()`) before writing prose, per `PROJECT_LEARNINGS.md`
+  Learning 440; full vignette re-rendered end-to-end (`rmarkdown::render()`) with no
+  unexpected errors. New identifiers added to `inst/WORDLIST`;
+  `spelling::spell_check_package(vignettes = TRUE)` 0 rows. Full clean regression 0 failed/0
+  error (4,676 passed); `devtools::check()` 0 errors/0 warnings/1 NOTE (pre-existing
+  vignettes/figure-leftover, baseline-matching). `PROJECT_LEARNINGS.md` Learning 548.
+
 ### 2026-08-12 · [ad hoc] S541 Phase 0 reconcile: HANDOFFS.md S540 receipt commit: pending → 86367737
 - **Deliverable:** Phase 0 ledger reconcile — backfilled the S540 `HANDOFFS.md` receipt's
   self-referential `commit: pending` field to `86367737` (the close-out commit's own sha, now

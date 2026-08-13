@@ -601,6 +601,52 @@ nodes make an equivalent-size diagram roughly 1.9x heavier to render. Both
 caps are internal to the Shiny app (`R/modPedigree.R`); the script-callable
 functions demonstrated here have no such limit of their own.
 
+### Twin/Zygosity Connectors
+
+A recorded pedigree has no way to represent that two siblings are twins,
+or how confident that twin call is -- that information has to come from
+outside the pedigree, typically a curator-maintained sidecar file.
+__readTwinRelations__ reads such a file (Excel or delimited text, columns
+_id1_, _id2_, _code_) with no validation of its own; __checkTwinRelations__
+then checks the result against the pedigree -- both ids must exist, an
+_MZ twin_ (monozygotic) or _DZ twin_ (dizygotic) pair must already share
+both recorded parents, and an _MZ twin_ pair must additionally match in
+recorded sex, while a _UZ twin_ (zygosity undetermined) pair has no such
+precondition. Only the validated result is accepted by
+__makePedigreeMatingLayout__'s optional _twinRelations_ argument, which
+adds a dashed twin-connector edge between the pair, styled by zygosity
+code -- the same connectors shown in the live app's Diagram tab.
+
+```{r twin-relations-setup}
+twinPed <- data.frame(
+  id = c("F1", "F2", "S1", "S2"),
+  sire = c(NA, NA, "F1", "F1"),
+  dam = c(NA, NA, "F2", "F2"),
+  sex = c("M", "F", "F", "M"),
+  stringsAsFactors = FALSE
+)
+twinPed$gen <- findGeneration(twinPed$id, twinPed$sire, twinPed$dam)
+twinRelationsCsv <- tempfile(fileext = ".csv")
+writeLines(c("id1,id2,code", "S1,S2,UZ twin"), twinRelationsCsv)
+```
+
+_S1_ and _S2_ are full siblings (both recorded parents are _F1_/_F2_), so
+a _UZ twin_ call between them passes validation:
+
+```{r twin-relations-demo}
+twinRelations <- checkTwinRelations(twinPed, readTwinRelations(twinRelationsCsv))
+twinRelations
+twinDiagramData <- makePedigreeMatingLayout(twinPed, twinRelations = twinRelations)
+twinDiagramData$edges
+```
+
+Compare the _edges_ table above to what __makePedigreeMatingLayout__
+returns for the same pedigree without _twinRelations_: the union/parent
+-child edges are identical, but only the version above has the extra row
+connecting _S1_ directly to _S2_ (dashed, labeled `"?"` for the
+undetermined zygosity code) -- that row exists only because a validated
+_twinRelations_ table was supplied.
+
 ## Genetic Value Analysis
 
 Your genetic value analysis must be carefully performed. 
@@ -959,10 +1005,69 @@ lines <- sapply(sexRatioGrp$group, function(ids) {
 for (line in lines) print(line)
 ```
 
-Examination of this table shows that of the 
-`r table(trimmedPed$sex[trimmedPed$id %in% candidates])[[1]]` females 
+Examination of this table shows that of the
+`r table(trimmedPed$sex[trimmedPed$id %in% candidates])[[1]]` females
 `r (sum(sapply(sexRatioGrp$group[-1], function(ids) length(ids))) - length(sexRatioGrp$group[-1]))`
 are included.
+
+## Individual Mate-Pair Analysis
+
+__groupAddAssign__, used throughout the previous section, forms whole
+breeding groups. __reportMatePairs__ instead answers a narrower question --
+for a candidate population, which individual sire/dam pairs are even
+eligible to be considered (opposite sex, both above __minAge__), and what
+does every available kinship/genetic-value signal say about each pair? It
+composes the package's existing pair-eligibility machinery into a single
+report, returning two tables: _pairs_, one row per eligible sire/dam
+combination, and _excluded_, one row per pair dropped and why. It computes
+no composite ranking score of its own -- sort or filter the returned
+columns as your own workflow requires. Marker-based kinship
+(__markerKinship__'s output) and each parent's genetic-value context
+(_indivMeanKin_/_gu_, from __reportGV__'s report) can both be supplied as
+optional enrichment and default to `NA` when not.
+
+We reuse the _candidates_ vector already built above, restricted further
+to a small illustrative slice -- one male and seven females -- so the
+output stays readable; a full call against all `r length(candidates)`
+candidates would return one row per opposite-sex, age-eligible pair, which
+quickly runs into the thousands.
+
+```{r mate-pairs-setup}
+smallCandidates <- head(candidates, 8L)
+trimmedPed[trimmedPed$id %in% smallCandidates, c("id", "sex", "age")]
+```
+
+```{r mate-pairs-demo}
+matePairs <- reportMatePairs(trimmedPed, trimmedGeneticValue[["kinship"]],
+                              geneticValues = trimmedGeneticValue,
+                              populationIds = smallCandidates)
+matePairs$pairs
+```
+
+With only one male in this slice, every eligible pair shares the same
+sire, so _sireIndivMeanKin_/_sireGu_ are identical across rows (both come
+from _trimmedGeneticValue_'s report for that one animal); _damIndivMeanKin_/
+_damGu_ vary by dam. _markerKinship_ is `NA` throughout, since no marker
+genotype matrix was supplied to this call.
+
+__exclude__ removes a specific id from consideration and records why in
+the _excluded_ table -- useful when a curator already knows a particular
+animal is unavailable this cycle, independent of age or sex eligibility.
+
+```{r mate-pairs-exclude-demo}
+matePairsExcluded <- reportMatePairs(trimmedPed, trimmedGeneticValue[["kinship"]],
+                                      geneticValues = trimmedGeneticValue,
+                                      populationIds = smallCandidates,
+                                      exclude = matePairs$pairs$damId[1L])
+matePairsExcluded$excluded
+```
+
+One caveat worth knowing before relying on __minAge__ alone to bound a
+real-world call: a missing (`NA`) recorded age *passes* the age screen
+rather than failing it, on the premise that an unknown age should not
+silently disqualify an otherwise-eligible animal. __populationIds__, not
+__minAge__, is the reliable way to bound which candidates a call
+considers.
 
 ## Pedigree Errors
 
@@ -1266,23 +1371,82 @@ _C_'s true dam (_P_) has zero exclusions and is not flagged; _C_'s falsely
 recorded sire (_U_) has 3 exclusions, exceeding the default
 `maxExclusions = 2`, and is correctly flagged.
 
-### Cross-Center Identity Linking
+### Candidate-Parent Likelihood Ranking
+
+Once __markerParentageExclusion__ has flagged a recorded parent as
+Mendelian-inconsistent with its offspring's genotype,
+__markerParentageLikelihood__ picks up the investigation: it ranks
+candidate replacement parents using a CERVUS-style multilocus
+likelihood-ratio (LOD) score (Meagher & Thompson 1986; Marshall, Slate,
+Kruuk & Pemberton 1998), the same approach independently validated in a
+real captive macaque colony by de Groot et al. (2025). It is deliberately
+report-only -- it never rewrites _pedigree$sire_/_pedigree$dam_; a flagged
+parent is a curator decision, not something to silently overwrite.
+Candidates default to __getPotentialParents__'s own demographically
+-eligible list (breeding age, gestation window, proven-breeder preference)
+for the flagged offspring/role, or can be supplied explicitly, as below.
+
+```{r parentage-likelihood-setup}
+likelihoodGenotype <- data.frame(
+  id = c("O", "O", "D", "D", "C1", "C1", "C2", "C2"),
+  locus = c("L1", "L2", "L1", "L2", "L1", "L2", "L1", "L2"),
+  allele1 = c("A", "A", "A", "A", "A", "A", "B", "B"),
+  allele2 = c("A", "B", "B", "A", "A", "B", "B", "B"),
+  stringsAsFactors = FALSE
+)
+likelihoodMatrix <- buildMarkerGenotypeMatrix(likelihoodGenotype)
+likelihoodPed <- data.frame(id = "O", sire = "C2", dam = "D",
+                             stringsAsFactors = FALSE)
+```
+
+_O_ is the offspring, recorded dam _D_, recorded sire _C2_; _C1_ is an
+unrecorded candidate. __markerParentageExclusion__ first shows why _C2_ is
+worth a second look:
+
+```{r parentage-exclusion-recheck}
+markerParentageExclusion(likelihoodMatrix, likelihoodPed)
+```
+
+_C2_'s single exclusion (of 2 loci) falls within the default
+`maxExclusions = 2` tolerance, so it is not `flagged` here -- but 1
+conflicting locus is still worth ranking against alternatives:
+
+```{r parentage-likelihood-demo}
+markerParentageLikelihood(likelihoodMatrix, likelihoodPed, id = "O",
+                           role = "sire", candidates = c("C1", "C2"),
+                           minLoci = 1L)
+```
+
+_C1_ -- genetically identical to _O_ at both loci -- decisively outranks
+the recorded sire _C2_ (`LOD` 0.47 vs `-Inf`). Notice _C2_'s `excluded`
+column is `FALSE` (the same tolerant test as above) even though its `LOD`
+is `-Inf`: a single opposite-homozygote locus (_C2_ is B/B at _L1_, where
+_O_ is A/A) is a zero-tolerance Mendelian impossibility under the
+likelihood model, with no allowance for ordinary genotyping error the way
+the exclusion count is. `delta` for _C1_ is `Inf`, not a large finite
+number -- the gap down to a `-Inf`-ranked neighbor is reported as
+infinite, by design.
+
+### Validating a Cross-Center Mapping
 
 When an animal transfers between centers that use independent id
 namespaces, the receiving center often has no way to know the animal's
 real parents and records it as an artificial founder -- losing its actual
 lineage even though the originating center's records still have it.
-__resolveCrossCenterIds__ fixes this: given a curator-confirmed mapping
-between the two centers' ids for the same physical animal, it merges the
-two centers' pedigrees into one, preferring whichever side actually
-recorded a parent.
+__resolveCrossCenterIds__ (next) fixes this by merging two centers'
+pedigrees given a curator-confirmed id mapping, but it `stop()`s on the
+*first* problem it finds in that mapping. __checkCrossCenterMapping__
+shares the same validation logic but never stops early -- it returns every
+problem found as a row in a data.frame, so a curator sees everything wrong
+with a mapping in one call rather than a stop-fix-rerun cycle, one problem
+at a time.
 
 In this example, _T1_ (in Center A's pedigree, _pedA_) and _X9_ (in Center
 B's pedigree, _pedB_) are the same physical animal -- Center B recorded it
 as a founder (both parents `NA`) because it never knew _T1_'s real parents,
 which Center A does have.
 
-```{r cross-center-identity-setup}
+```{r cross-center-setup}
 pedA <- data.frame(
   id = c("P1", "P2", "T1"), sire = c(NA, NA, "P1"), dam = c(NA, NA, "P2"),
   stringsAsFactors = FALSE
@@ -1293,6 +1457,36 @@ pedB <- data.frame(
 )
 mapping <- data.frame(idA = "T1", idB = "X9", stringsAsFactors = FALSE)
 ```
+
+```{r cross-center-mapping-demo}
+checkCrossCenterMapping(pedA, pedB, mapping)
+```
+
+Zero rows means the mapping is clean -- __resolveCrossCenterIds__ can be
+called on the same three inputs without error, as it is below. A mapping
+with real problems (here, _idB_ `"X9"` mapped twice, and an _idA_ value
+`"NOPE"` that doesn't exist in _pedA_) instead reports both problems at
+once, rather than only the first:
+
+```{r cross-center-mapping-bad-demo}
+badMapping <- data.frame(idA = c("T1", "NOPE"), idB = c("X9", "X9"),
+                          stringsAsFactors = FALSE)
+checkCrossCenterMapping(pedA, pedB, badMapping)
+```
+
+One subtlety: a genuine undeclared id collision between the two centers
+(an id present in both _pedA_ and _pedB_ but never named in _mapping_) is
+only ever reported once every problem above is already clean -- a
+collision check on a mapping that doesn't resolve to real pedigree rows
+would be meaningless. A clean result from this function is what licenses
+trusting the absence of a collision, not merely the absence of a
+`"collision"` row in a dirty one.
+
+### Cross-Center Identity Linking
+
+With the mapping validated above, __resolveCrossCenterIds__ merges the two
+centers' pedigrees into one, preferring whichever side actually recorded a
+parent.
 
 ```{r cross-center-identity-demo}
 resolveCrossCenterIds(pedA, pedB, mapping)
@@ -1340,6 +1534,168 @@ markerFst(matrixA, matrixB)
 _L2_ shows substantially more differentiation between the two centers than
 _L1_ does in this example; the pooled value summarizes both loci into one
 number for a quick between-center comparison.
+
+### Multiallelic Marker Panels and Locus Metadata
+
+Everything above assumed a biallelic panel -- __checkMarkerGenotypeFile__
+rejects any locus with more than two distinct alleles, since the
+KING-robust kinship estimator requires it. Real microsatellite/STR panels
+are routinely multiallelic, though, so the package provides a second, more
+permissive validator for the linkage-aware metrics below:
+__checkLinkageMarkerGenotypeFile__ keeps the same structural checks
+(column shape, no duplicate _id_ x _locus_ rows) but drops the biallelic
+restriction.
+
+```{r linkage-genotype-setup}
+strGenotype <- data.frame(
+  id = c("W", "X", "Y", "Z"),
+  locus = c("L1", "L1", "L1", "L1"),
+  allele1 = c("A", "A", "A", "A"),
+  allele2 = c("B", "C", "A", "D"),
+  stringsAsFactors = FALSE
+)
+```
+
+This locus has 4 distinct alleles (A, B, C, D) across the four animals --
+__checkLinkageMarkerGenotypeFile__ accepts it:
+
+```{r linkage-genotype-demo}
+checkLinkageMarkerGenotypeFile(strGenotype)
+```
+
+The same data fed to __checkMarkerGenotypeFile__ instead fails, exactly as
+that function is designed to:
+
+```{r biallelic-genotype-fails-demo, error = TRUE}
+checkMarkerGenotypeFile(strGenotype)
+```
+
+The metrics below also need per-locus genomic position information, which
+real curated panels rarely have complete records for.
+__checkLocusMetadata__ validates a _locus_/_chrom_/_pos_ (optionally _cM_)
+sidecar table and classifies each locus's own coverage as `"full"`
+(chromosome and position both known), `"partial"` (one of the two), or
+`"none"` (neither) -- downstream functions then decide for themselves
+which loci they can use, rather than requiring complete metadata up front.
+
+```{r locus-metadata-demo}
+locusMetadata <- data.frame(
+  locus = c("L1", "L2", "L3"),
+  chrom = c("1", "1", NA),
+  pos   = c(1000000, NA, NA),
+  stringsAsFactors = FALSE
+)
+checkLocusMetadata(locusMetadata)
+```
+
+_L1_ has both chromosome and position and is `"full"`; _L2_ has only a
+chromosome (`"partial"`); _L3_ has neither (`"none"`). __computeGenomicROH__
+(the F_ROH tab's estimator) uses only `"full"`-coverage loci and drops the
+rest with a named warning; __markerLdBlock__ below needs only _chrom_ and
+tolerates a missing _pos_/_cM_ entirely.
+
+### Realized Relatedness Variance
+
+Pedigree-expected relatedness (kinship doubled) is only an average --
+actual IBD sharing between two relatives varies around that expectation
+because of Mendelian sampling and linkage. __markerRealizedRelatednessVariance__
+computes a closed-form estimate of that variance (Hill & Weir 2011) for
+Parent-Offspring, Full-Sibling, and Half-Sibling pairs -- every other
+relationship category (grandparent, cousin, unrelated, self, and so on)
+legitimately returns `NA`, not an error, since a pedigree-wide call
+includes many such pairs as a matter of course. Despite the "marker" name
+shared with the rest of this section, it needs no genotype data at all --
+only a kinship matrix, the pedigree, and the species' chromosome count and
+total autosomal genetic map length (in Morgans).
+
+```{r realized-relatedness-variance-demo}
+smallPedKmat <- kinship(smallPed$id, smallPed$sire, smallPed$dam, smallPed$gen,
+                         sparse = FALSE)
+## Rhesus macaque autosome count/map length are used here only as an
+## example scale -- supply values appropriate to your own species.
+rrv <- markerRealizedRelatednessVariance(smallPedKmat, smallPed, nChr = 20L,
+                                          mapLength = 28)
+rrv[rrv$relation %in% c("Parent-Offspring", "Full-Siblings", "Half-Siblings"), ]
+```
+
+Parent-offspring pairs have `varR` of exactly zero, not merely small --
+biologically, exactly one allele at every locus is always IBD between a
+parent and its offspring, so there is no variance to estimate around the
+`R = 0.5` expectation. Full-sibling variance is roughly double half
+-sibling variance in this example (two independently segregating parents
+vs. one), a useful sanity check when interpreting the estimate for your
+own pedigree.
+
+### Linkage-Disequilibrium Blocks
+
+__markerLdBlock__ takes a different, more classical view of marker
+relationships: pairwise linkage disequilibrium (LD) between loci sharing a
+chromosome, using Hedrick's (1987) frequency-weighted D' and a
+multiallelic r² generalization, from phase frequencies estimated by an EM
+algorithm (generalizing Excoffier & Slatkin 1995) since this package's
+genotype matrix is unphased. It is explicitly the secondary, exploratory
+statistic in a pair with __markerRealizedRelatednessVariance__ above --
+classical LD theory assumes random mating, which a pedigreed colony
+violates, so every row of its output carries a fixed caveat saying so.
+
+```{r ld-block-setup}
+ldGenotype <- checkLinkageMarkerGenotypeFile(data.frame(
+  id = rep(c("W", "X", "Y", "Z"), 2),
+  locus = rep(c("L1", "L2"), each = 4),
+  allele1 = c("A", "A", "A", "A", "M", "M", "N", "N"),
+  allele2 = c("A", "B", "A", "B", "M", "N", "M", "N"),
+  stringsAsFactors = FALSE
+))
+ldGenotypeMatrix <- buildMarkerGenotypeMatrix(ldGenotype)
+ldLocusMetadata <- checkLocusMetadata(data.frame(
+  locus = c("L1", "L2"), chrom = c("1", "1"), pos = c(NA, NA),
+  stringsAsFactors = FALSE
+))
+```
+
+```{r ld-block-demo}
+markerLdBlock(ldGenotypeMatrix, ldLocusMetadata)
+```
+
+_D' = 1_ (the maximum possible) in this toy example -- only _X_ is a
+double heterozygote at both loci (the only source of phase ambiguity
+here), and the EM estimator resolves it to a fully-consistent phase
+assignment. Note _r²_ (1/3) does not move in lockstep with _D'_ here --
+the two statistics capture different aspects of the same association, and
+needn't agree.
+
+### De-identifying LD-Block Results
+
+__markerLdBlock__'s own output is a locus-pair-level population statistic
+with no per-individual ids in it -- except _idsUsed_, populated only when
+_founderIds_ restricts the computation to a named subset. That is the one
+place a real id can leak, and __obfuscateLdBlocks__ closes it: it remaps
+_idsUsed_ through the same alias vector __obfuscatePed__'s _map_ output
+produces, mirroring __obfuscateTwinRelations__'s existing pattern from
+elsewhere in the package's de-identification family. A row whose
+_idsUsed_ contains an id absent from the map `stop()`s loudly rather than
+silently leaking it.
+
+```{r ld-block-obfuscate-setup}
+ldBlockResult <- data.frame(
+  locus1 = "L1", locus2 = "L2", chrom = "1", Dprime = 0.5, r2 = 0.3,
+  nUsed = 2L, idsUsed = "F1,F2", caveat = "Descriptive statistic only.",
+  stringsAsFactors = FALSE
+)
+obfuscatedTwinPed <- obfuscatePed(twinPed[, c("id", "sire", "dam", "sex", "gen")],
+                                   map = TRUE)
+```
+
+```{r ld-block-obfuscate-demo}
+obfuscateLdBlocks(ldBlockResult, obfuscatedTwinPed$map)
+```
+
+The real ids _F1_/_F2_ (reusing the twin-pedigree ids from the __Pedigree
+Diagram__ section above) no longer appear in _idsUsed_ -- every other
+column (the statistics themselves) is untouched. The exact alias strings
+are randomly generated on every call and are not reproduced here; what
+matters is that no real id from the input survives into the de-identified
+table.
 
 ```{r elapsed-time}
 elapsed_time <- get_elapsed_time_str(start_time)

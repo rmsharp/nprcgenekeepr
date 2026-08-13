@@ -244,9 +244,13 @@ caTools
 calculateSexRatio
 changedCols
 checkChangedColsLst
+checkCrossCenterMapping
 checkErrorLst
+checkLinkageMarkerGenotypeFile
+checkLocusMetadata
 checkMarkerGenotypeFile
 checkRequiredCols
+checkTwinRelations
 checkable
 ci
 coeficient
@@ -270,6 +274,8 @@ csv
 curation
 currentGroups
 damBirth
+damGu
+damIndivMeanKin
 datatable
 datetime
 de
@@ -307,6 +313,7 @@ fixColumnNames
 focalAnimals
 focals
 folderPath
+founderIds
 fromCenter
 fromcenter
 funder
@@ -328,6 +335,7 @@ getIndianOriginStatus
 getLkDirectAncestors
 getPedDirectRelative
 getPedigree
+getPotentialParents
 getProductionStatus
 getProportionLow
 getPyramidPlot
@@ -347,6 +355,7 @@ hasChangedCols
 hasErrors
 herm
 heterozygosity
+heterozygote
 heterozygous
 hh
 highlightNearest
@@ -358,6 +367,9 @@ hovertext
 http
 https
 hyb
+idA
+idB
+idsUsed
 initialisms
 invalidDateRows
 invalidIdChars
@@ -389,6 +401,8 @@ markerKinship
 markerLdBlock
 markerObservedHeterozygosity
 markerParentageExclusion
+markerParentageLikelihood
+markerRealizedRelatednessVariance
 matriline
 maxGestationalPeriod
 maxKinship
@@ -426,7 +440,9 @@ nrow
 numGp
 obfuscateDate
 obfuscateId
+obfuscateLdBlocks
 obfuscatePed
+obfuscateTwinRelations
 outputing
 ovariectomy
 parentages
@@ -451,6 +467,7 @@ pgp
 pkgdown
 pluggable
 png
+populationIds
 positionally
 pre
 prefill
@@ -467,6 +484,7 @@ queryName
 rbindlist
 reactives
 readExcelPOSIXToCharacter
+readTwinRelations
 recordStatus
 recordkeeping
 removeDups
@@ -475,6 +493,7 @@ removeUnknownAnimals
 reportChanges
 reportErrors
 reportGV
+reportMatePairs
 req
 reselect
 resetPopulation
@@ -505,6 +524,8 @@ simParent
 sireAge
 sireAndDam
 sireBirth
+sireGu
+sireIndivMeanKin
 skewness
 smallPed
 smallPedTree
@@ -529,6 +550,7 @@ trimPedigree
 trimmedGeneticValue
 trimmedPed
 tryCatch
+twinRelations
 txbiomed
 ui
 uitpInput

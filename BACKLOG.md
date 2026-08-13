@@ -636,31 +636,22 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       baseline); final `devtools::check()`: **0 errors / 0 warnings / 1 NOTE** (only
       the pre-existing vignettes/figure-leftover NOTE, matching S537's own baseline
       exactly). See `CHANGELOG.md`.
-- [ ] **`a2interactive.Rmd` documentation pass is due -- several exported,
-      script-callable functions shipped since the last pass (S478, 2026-08-04)
-      have zero coverage** (found S522, 2026-08-11, owner-directed, READY,
-      Effort M) -- per `CLAUDE.md`'s own deferred, non-same-session
-      `a2interactive.Rmd` checklist rule. Confirmed gaps (grep of
-      `vignettes/a2interactive.Rmd`'s section headers against `NEWS.Rmd`'s
-      `2.0.0.9000` entries): the "Marker Genetics" section demonstrates only
-      `markerKinship()`, the heterozygosity pair, Mendelian-exclusion
-      parentage verification, `resolveCrossCenterIds()`, and `markerFst()`
-      (issue #130-era) -- it has **no** section for `markerParentageLikelihood()`
-      (LOD-based candidate-parent ranking, issue #147),
-      `checkCrossCenterMapping()` (issue #149), `checkLocusMetadata()` (issue
-      #153 Slice 1), `checkLinkageMarkerGenotypeFile()` (issue #153 Slice 2),
-      `markerRealizedRelatednessVariance()` (issue #153 Slice 3, S522), or
-      `markerLdBlock()`/`obfuscateLdBlocks()` (issue #153 Slice 4, S523).
-      Outside marker genetics, `reportMatePairs()` (issue #151 Slice 1) and
-      `readTwinRelations()` (S494, itself shipped with no `NEWS.Rmd` entry
-      either per `PROJECT_LEARNINGS.md` Learning 495) also have no matching
-      section. A future documentation-pass session should re-verify this list
-      against the actual file (do not trust it as final -- compiled via grep,
-      not an exhaustive read) and add a demonstration section per function,
-      matching the existing "Marker Genetics" section's established style
-      (reused, hand-verified fixtures; each demo chunk checked against the
-      real installed package, not hand-derived, per `PROJECT_LEARNINGS.md`
-      Learning 440's stale-local-install trap).
+- [ ] (none remaining -- the "`a2interactive.Rmd` documentation pass is due" item
+      (found S522, 2026-08-11) is RESOLVED -- S541 (2026-08-12): all 8 named
+      functions/families (`markerParentageLikelihood()`, `checkCrossCenterMapping()`,
+      `checkLocusMetadata()`, `checkLinkageMarkerGenotypeFile()`,
+      `markerRealizedRelatednessVariance()`, `markerLdBlock()`, `obfuscateLdBlocks()`,
+      `reportMatePairs()`, `readTwinRelations()`) now have a demonstration section in
+      `vignettes/a2interactive.Rmd` -- 6 new subsections under "Marker Genetics", a new
+      top-level "Individual Mate-Pair Analysis" section (reusing the tutorial's own
+      `trimmedPed`/`trimmedGeneticValue`/`candidates`), and a new "Twin/Zygosity
+      Connectors" subsection under "Pedigree Diagram". Every demo verified against the
+      real installed package before writing prose (Learning 440); one documented gap
+      (the `reportMatePairs()` D4 age-NA gotcha) could not be live-demoed against the
+      tutorial's real data and is described in prose only. Full vignette re-rendered
+      end-to-end; spelling clean (`inst/WORDLIST` gained the new identifiers); full
+      regression 0 failed/0 error; `devtools::check()` 0/0/1 NOTE (baseline-matching).
+      See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 548.)
 - [ ] (none remaining -- the `.Rbuildignore` `methodology_trim.py` pattern typo (found S533)
       is RESOLVED -- S534 (2026-08-12): `^methodolog_trim\.py$` corrected to
       `^methodology_trim\.py$`. Full strict TDD RED->GREEN->REFACTOR cycle: new
