@@ -131,6 +131,11 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] S542 Phase 0 reconcile: HANDOFFS.md S541 receipt commit: pending → 20fc8633
+- **Deliverable:** Phase 0 ledger reconcile — backfilled the S541 `HANDOFFS.md` receipt's
+  self-referential `commit: pending` field to `20fc8633` (the close-out commit's own sha, now
+  known since the commit exists), matching the S538→S539/S539→S540/S540→S541 precedent.
+
 ### 2026-08-12 · [BL-522] `a2interactive.Rmd` documentation pass — 8 script-callable functions/families gained demonstration sections (Session 541)
 - **Deliverable:** Added demonstration sections to `vignettes/a2interactive.Rmd` for every
   exported, script-callable function that had shipped since the last documentation pass

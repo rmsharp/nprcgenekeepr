@@ -173,7 +173,7 @@ verification for a vignette-only deliverable, since every new demo chunk actuall
 against the real installed package during that render.
 changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12 ([BL-522] the deliverable;
 [ad hoc] the S540 HANDOFFS.md reconcile)
-commit: pending
+commit: 20fc8633
 ```
 
 ```handoff
