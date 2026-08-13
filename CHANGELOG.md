@@ -131,6 +131,18 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] S543 close-out: CHANGELOG.md SRF_RED decision resolved, 2 new BACKLOG.md findings, Learning 550
+- **Deliverable:** Session S543's own close-out. Resolved the `CHANGELOG.md` `SRF_RED` archive
+  refusal by force-archiving (see the trim entry below), after finding the decisive structural
+  fact that the trimmable region is capped at 116,176 B against a 935,287 B permanently-pinned
+  pre-S325 legacy footer, so no trim of the tagged region can ever clear the byte/line trigger
+  regardless of force. Logged 2 new `BACKLOG.md` Housekeeping items: reopening the S325
+  "freeze legacy, go forward" decision as the only real lever (DECISION NEEDED, Effort L, needs
+  its own scoping session); and `CHANGELOG.md`'s own ~4-entries-per-session convention as a
+  possible rate contributor analogous to `HANDOFFS.md`'s diagnosed Receipt Inflation (H4), not
+  confirmed causal. `PROJECT_LEARNINGS.md` Learning 550 records the SRF-artifact-vs-structural-
+  ceiling distinction. See `SESSION_NOTES.md`, `HANDOFFS.md`.
+
 **Archived 67 record(s), 2026-08-11 → 2026-08-12** into [`docs/archive/CHANGELOG-through-2026-08-12.md`](docs/archive/CHANGELOG-through-2026-08-12.md) — same format, same order, frozen.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-08-12.md.verify.sh`](docs/archive/CHANGELOG-through-2026-08-12.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.

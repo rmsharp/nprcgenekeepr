@@ -10,16 +10,102 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 542 Handoff Evaluation (by Session 543)
+**Score: 9/10.** **What helped:** the S542 `HANDOFFS.md` receipt's `next_steps` field named
+exactly the task this session picked up — "(2) CHANGELOG.md SRF_RED refusal -- DECISION NEEDED,
+Effort S; a future session (or the owner) should choose between --force-ing a partial trim now
+vs. reopening the S325 legacy-footer migration question" — matching `BACKLOG.md`'s own item
+text exactly, zero rediscovery needed to locate the decision. The `gotchas` field's warning ("the
+SRF_RED gate is computed against the MOST RECENT archive only... Read both numbers the tool
+prints before deciding whether --force is appropriate; don't force reflexively off the RED
+reading alone") was accurate and directly shaped this session's approach — re-reading both SRF
+numbers rather than trusting one. **What was missing:** the handoff could not have named the
+decisive structural fact this session found (the tagged region is capped at 116,176 B against a
+935,287 B frozen footer, so no trim can ever clear the trigger) — that required a fresh
+`git cat-file -s` investigation S542 had no reason to perform, since its own `AskUserQuestion`
+already resolved a narrower question (whether to force THAT session, not what the RED reading
+structurally meant). Not a gap S542 owed. **What was wrong:** nothing — the cited SRF numbers
+(2.9299/0.1766) were accurate as of S542's read-time; this session's own re-read found them
+shifted slightly (2.9933/0.1804), purely from a day's worth of intervening commits, not an
+inaccuracy in the receipt. **ROI:** High — both the `next_steps` task pointer and the `gotchas`
+methodology warning were directly load-bearing for how this session started its own
+investigation.
+
 ### What Session 543 Did
 **Deliverable:** `CHANGELOG.md` `SRF_RED` archive-refusal decision (owner-picked via the Phase 0
-`AskUserQuestion` picker) — investigate against the canonical `ledger-trimmer-design.md`, decide
-whether to `--force` a trim, hold, or queue an S325 legacy-migration scoping session, and record
-the decision + rationale in `BACKLOG.md`.
-**Started:** 2026-08-12.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+`AskUserQuestion` picker, over `test-coverage.yaml` CI diagnosis / the Phase 0 CI-check-gap
+decision / issue #138 scoping) — investigated against the canonical `ledger-trimmer-design.md`,
+decided (with the owner, via two rounds of `AskUserQuestion` after the owner challenged the
+first framing) to `--force` through the refusal, and recorded the decision + rationale in
+`BACKLOG.md`.
+**Started/Completed:** 2026-08-12. **Status:** DONE. TDD phase: N/A (ledger/documentation
+housekeeping — no production code or test surface, matching the S509/S528/S539/S542 precedent).
+Commits: `ca6b17fb` (Phase 1B claim), `e27718f0` (CHANGELOG.md: log the claim commit ahead of
+the gated trim call, per Learning 545's established sequencing), `329344b1` (the forced archive
+— `CHANGELOG.md` 1,051,843 B → 945,242 B, 67 records moved to
+`docs/archive/CHANGELOG-through-2026-08-12.md`), this close-out's own commit (pending at write
+time).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, `git status`/`log`/`diff --stat`, `methodology_dashboard.py`). Ledger frontiers
+(`CHANGELOG.md`/`HANDOFFS.md`) both == `HEAD`, no undocumented commits, no untracked files — no
+ghost session. Cross-checked `BACKLOG.md`'s flat tag grep against the 2 ratified sequencing
+audits (`docs/audits/*SEQUENCING_AUDIT*.md`) per `CLAUDE.md`'s own convention, and surfaced each
+cluster's next item (issue #138, issue #148) as first-class numbered priorities rather than
+folding them into the Informational bucket. Rendered the priorities list + `AskUserQuestion`
+picker; owner picked the `CHANGELOG.md` SRF_RED decision. **(2)** Claimed the session
+(`ca6b17fb`), wrote a `HANDOFFS.md` `status: pending` stub. **(3)** Read the canonical
+`ledger-trimmer-design.md` (§1.1-1.4, §3.3, §5.3-5.4, §9-§10) to ground the decision in the
+tool's own design rather than reasoning about the refusal message alone — found its explicit H3
+RED rule ("do not archive again; the next deliverable is a rate cut, not another reset").
+**(4)** First `AskUserQuestion` presented Hold (recommended, per H3's literal text) vs. Force vs.
+a documentation-only variant — **the owner challenged this framing directly**, pointing out that
+an indefinitely-continuing project obviously needs periodic archiving to continue, which the
+"Hold" framing had not adequately reconciled. **(5)** Re-investigated with that challenge in
+mind: pulled real pre/post byte sizes for both SRF boundary events via `git cat-file -s`
+(explaining the RED reading as an artifact of a small preceding archive, not fast regrowth), then
+split the file at its `## Legacy history` marker (`awk 'NR<1374'` / `NR>=1374'`) and found the
+decisive fact — the trimmable region is capped at 116,176 B against a 935,287 B frozen footer
+(~14x the byte budget, ~1.8x the line cap) — meaning no trim, forced or not, can ever clear
+either trigger. **(6)** Second `AskUserQuestion`, reframed around that structural fact: owner
+chose to force. **(7)** Logged the claim commit to `CHANGELOG.md` first (`e27718f0`, clearing
+`P1_UNDOCUMENTED`, per Learning 545's established sequencing), confirmed the dry run now stopped
+cleanly at `SRF_RED` alone. **(8)** Ran `methodology_trim.py --file CHANGELOG.md --write
+--force`: archived 67 records; verified losslessness via the tool's own generated `verify.sh`
+(L1/L2/L3 OK) before committing; confirmed the 2 retained records were exactly the expected
+newest ones (this session's claim entry + the tool's auto-appended trim entry). Committed
+(`329344b1`). **(9)** Verified the predicted non-fix empirically: `--check` post-trim still
+reports `FIRES` at 945,242 B, confirming the footer-ceiling reasoning was correct, not just
+plausible. **(10)** Re-ran `methodology_dashboard.py`: High-risk count unchanged at 1, as
+predicted (the footer, not the tagged region, is the flagged cause). **(11)** Updated
+`BACKLOG.md`: resolved the `SRF_RED` item, added 2 new Housekeeping items (the S325
+legacy-migration decision as the only real lever; the possible `CHANGELOG.md`-side
+"Receipt Inflation" rate contributor from its own ~4-entries-per-session convention, filed
+per Learning 382's "report, don't fix mid-session" precedent). **(12)** One
+`PROJECT_LEARNINGS.md` entry: Learning 550 (the SRF-artifact-vs-structural-ceiling
+distinction, and the value of computing the decisive fact before presenting options).
+
+**Self-assessment (Session 543): 7/10.** **Strengths:** (1) Re-derived live SRF numbers and the
+actual pre/post byte sizes for both boundary events rather than trusting S542's report or
+reasoning about ratios alone — this is what surfaced the real explanation for the RED reading.
+(2) Once challenged, found and computed the genuinely decisive fact (116,176 B trimmable vs.
+935,287 B frozen footer) rather than re-presenting the same options with softer language.
+(3) Verified the reasoning empirically post-trim (`--check` still `FIRES`) instead of asserting
+it from pre-trim math alone. (4) Followed the P1_UNDOCUMENTED-clearing sequencing and
+losslessness-verification precedents correctly on the first attempt. **Weaknesses:** (1) The
+**first** `AskUserQuestion` was under-researched — it presented the canonical H3 rule as if it
+settled the matter, without first computing the footer/tagged-region split that turned out to be
+the actually decisive fact. That computation was cheap (two `awk` calls) and available from the
+start; it took the owner directly challenging the framing to prompt it, rather than this
+session's own diligence surfacing it first. A stronger first pass computes the structural ceiling
+before presenting any options, not after a correction. (2) Relatedly, the initial framing
+under-weighted the plain, obvious point the owner raised (periodic archiving of an
+indefinitely-active ledger is expected, ongoing maintenance) in favor of a more literal reading
+of the design doc's RED rule — worth naming as a bias toward the tool's stated rule over the
+project's own operating reality.
+**Ledger:** recorded in `CHANGELOG.md` (this session's own entries: the claim, the tool's own
+auto-appended `CHANGELOG.md` archive entry, and the close-out entry covering the `BACKLOG.md`/
+`PROJECT_LEARNINGS.md` findings).
 
 ### Session 541 Handoff Evaluation (by Session 542)
 **Score: 9/10.** **What helped:** the S541 `HANDOFFS.md` receipt's `next_steps` field named the

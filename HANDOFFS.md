@@ -127,18 +127,58 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S543
 date: 2026-08-12
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: CHANGELOG.md SRF_RED archive-refusal decision (owner-picked via Phase 0
-AskUserQuestion picker, over test-coverage.yaml CI diagnosis / Phase 0 CI-check-gap decision /
-issue #138 scoping).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 7
+predecessor_score: 9
+active_task: CHANGELOG.md SRF_RED archive-refusal decision -- RESOLVED. Forced the archive
+through per owner decision after finding the decisive structural fact (trimmable region capped
+at 116,176 B vs. a 935,287 B frozen legacy footer, so no trim can ever clear the byte/line
+trigger regardless of force). BACKLOG.md updated with the resolution plus 2 new queued items
+(S325 migration decision; possible CHANGELOG.md entry-rate contributor).
+what_was_done: Re-derived live SRF numbers (2.9933 vs most-recent-archive boundary 50b65d1;
+0.1804 vs largest-drop boundary 0929172a) rather than trusting S542's report; pulled actual
+pre/post byte sizes for both boundary events via git cat-file -s, explaining the RED reading as
+an artifact of 50b65d1 (2026-08-11) only freeing 35,169 B on top of a file the PRIOR day's
+0929172a archive had already settled near its floor. Split the file at its Legacy history
+marker (awk 'NR<1374' / 'NR>=1374') and found the trimmable region totals only 116,176 B against
+a 935,287 B frozen pre-S325 footer (~14x the byte budget, ~1.8x the line cap) -- meaning no trim
+can ever clear the trigger. Presented this to the owner via 2 rounds of AskUserQuestion (the
+first, Hold-recommended framing was challenged directly by the owner before this structural fact
+was even computed); owner chose to force. Logged the claim commit to CHANGELOG.md first
+(e27718f0, clearing P1_UNDOCUMENTED per Learning 545's sequencing), then ran
+methodology_trim.py --file CHANGELOG.md --write --force: archived 67 records, 1,051,843 B ->
+945,242 B, verified lossless via the tool's own generated verify.sh (L1/L2/L3 OK) before
+committing (329344b1). Verified the predicted non-fix empirically post-trim (--check still
+FIRES at 945,242 B). Updated BACKLOG.md (resolved the item, added 2 new Housekeeping items) and
+PROJECT_LEARNINGS.md (Learning 550).
+next_steps: 2 new BACKLOG.md Housekeeping items, both unstarted: (1) Reopen the S325
+"freeze legacy, go forward" decision -- the only lever that can actually clear CHANGELOG.md's
+byte/line triggers; DECISION NEEDED on whether the campaign is worth running at all, Effort L,
+needs its own scoping session. (2) CHANGELOG.md's own ~4-entries-per-session ledger convention
+may be a rate contributor analogous to HANDOFFS.md's diagnosed Receipt Inflation (H4) -- not
+confirmed causal, needs a future session to measure the housekeeping-vs-deliverable entry-byte
+split. Unchanged from S542: test-coverage.yaml CI break (READY to diagnose), Phase 0 CI-check
+gap (DECISION NEEDED), NPRC outreach owner review (DECISION NEEDED), LabKey remaining recs
+(BLOCKED), issue #138/#148 (each need their own scoping session per their ratified sequencing
+audits).
+key_files: CHANGELOG.md (1,051,843 B -> 945,242 B, 67 records archived); docs/archive/
+CHANGELOG-through-2026-08-12.md (new shard, 67 records); BACKLOG.md (SRF_RED item resolved, 2
+new Housekeeping items); PROJECT_LEARNINGS.md Learning 550 (new); /Users/rmsharp/Development/
+methodology/docs/planning/ledger-trimmer-design.md (canonical design doc read this session,
+§3.3/§5.3/§9-10 -- not part of this repo, but load-bearing for the decision).
+gotchas: (1) An SRF_RED refusal's "most recent archive" boundary can be inflated purely by that
+prior archive having been small -- pull actual pre/post byte sizes (git cat-file -s <sha>^:<f> /
+<sha>:<f>) before trusting the ratio. (2) A file with a large fixed/unarchivable region (this
+project's frozen pre-S325 legacy footer) can make SRF irrelevant to the real question -- check
+whether the fixed region alone already exceeds the budget before treating SRF as decisive either
+way. (3) This session's first AskUserQuestion was under-researched (see self-assessment) -- it
+presented the canonical design doc's literal H3 rule without first computing the footer/tagged
+split; do the awk-based structural split BEFORE presenting options on a similar future decision,
+not after a correction.
+runtime_smoke: n/a -- docs/ledger-only change, no runtime/Shiny behavior touched.
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12 ([ad hoc] the claim; [ad hoc]
+the tool's own auto-appended CHANGELOG.md archive entry; [ad hoc] the close-out entry covering
+BACKLOG.md/PROJECT_LEARNINGS.md findings)
 commit: pending
 ```
 

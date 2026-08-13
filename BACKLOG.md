@@ -181,26 +181,57 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       of scope for a ledger-archive session's own deliverable (owner confirmed via
       `AskUserQuestion`, chose to keep the archive as this session's scope and log this
       instead). A future session should diagnose and fix.
-- [ ] **`CHANGELOG.md` archive refuses via `SRF_RED` -- needs a scoping decision, not a
-      routine trim** (found S542, 2026-08-12, DECISION NEEDED, Effort S) --
-      `methodology_trim.py --file CHANGELOG.md` (dry run) refuses: SRF 2.9299 against the
-      most recent archive (`50b65d1`, 2026-08-11, only 11 records) is over the 1.00 `SRF_RED`
-      threshold -- the tool's own plan (§3.3, H3) states "a reset is the wrong move" at or
-      above that value, i.e. archiving again now would reset the *level* without addressing
-      the *rate* that regrew it. Against the largest-drop boundary instead (`0929172a`, 288
-      records), SRF is a healthy 0.1766 -- the RED reading is an artifact of yesterday's
-      unusually small preceding archive, not evidence the file can't safely shrink again.
-      `--force` would bypass the refusal, but this project's own `CHANGELOG.md` ledger-format
-      note (Session 325, "freeze legacy, go forward") already documents a deeper, related
-      problem: the frozen pre-S325 legacy block is a permanently-pinned 935,292 B footer that
-      no trim can touch, so even a clean archive of the tagged S325+ portion only partially
-      addresses the file's read-truncation risk (currently 4,932 lines, 1,050,763 B against
-      the 65,536 B budget). Not forced through this session (owner confirmed via
-      `AskUserQuestion`, chose to hold rather than override a refusal the tool's own plan
-      flags explicitly). A future session should decide: (a) `--force` a routine trim of the
-      tagged portion now, accepting it's a partial fix, or (b) treat this as the trigger to
-      finally reopen the S325 legacy-migration question this note has deferred since
-      2026-07-08. See `CHANGELOG.md`'s own "CHANGELOG.md ledger-format resolution" note.
+- [ ] (none remaining -- the "`CHANGELOG.md` archive refuses via `SRF_RED`" item (found S542)
+      is RESOLVED -- **decided and force-archived S543 (2026-08-12):** re-derived the SRF
+      numbers live rather than trusting S542's report (SRF 2.9933 against the most-recent
+      11-record archive `50b65d1`, 0.1804 against the largest-drop boundary `0929172a`) and
+      found the RED reading's own explanation: `50b65d1` only freed 35,169 B, barely denting a
+      file the PRIOR day's 588,779 B archive had already settled near its floor -- the same
+      ~105,000 B of absolute regrowth reads as alarming against a tiny recent denominator and
+      healthy against a large one. **The decisive fact, not previously computed this
+      precisely:** the trimmable (post-S325, tagged) region is capped at 116,176 B total --
+      the frozen pre-S325 legacy footer is 935,287 B on its own, ~14x the 65,536 B byte
+      budget and ~1.8x the 2,000-line read-cap, so **no trim of the tagged region, forced or
+      not, can ever clear either trigger** (confirmed post-trim: still FIRES at 945,242 B).
+      Given that, and given the project's indefinite lifespan makes periodic archiving of the
+      tagged region ordinary, expected, recurring hygiene regardless of whether it clears the
+      trigger, owner chose (via `AskUserQuestion`, after this reframing) to `--force` through
+      the refusal rather than hold indefinitely. Archived 67 records, 1,051,843 B -> 945,242 B
+      (`docs/archive/CHANGELOG-through-2026-08-12.md`), losslessness verified via the tool's
+      own generated `verify.sh` (L1/L2/L3 OK) before committing; retained record confirmed to
+      be exactly the 2 newest (this session's own claim entry + the tool's auto-appended trim
+      entry), not an over-archive. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 550.)
+- [ ] **Reopen the S325 "freeze legacy, go forward" decision -- the only lever that can
+      actually clear `CHANGELOG.md`'s byte/line triggers** (found S543, 2026-08-12, DECISION
+      NEEDED -- multi-session migration campaign, not a routine session, Effort L) -- S543's
+      `SRF_RED` investigation confirmed numerically that the frozen pre-S325 legacy footer
+      (935,287 B, ~3,567 of the file's ~3,721 post-trim lines) is now the file's entire
+      read-safety problem: it alone is ~14x the 65,536 B budget and ~1.8x the 2,000-line
+      `Read` cap, independent of how aggressively the tagged S325+ portion is trimmed. Per
+      `CLAUDE.md`'s existing "CHANGELOG.md ledger-format resolution" note, only re-tagging
+      that block (a migration campaign re-tagging ~303 already-closed pre-ledger entries into
+      the canonical `[SOURCE]`-tagged format, or an equivalent restructuring) would let a trim
+      ever reach the 65,536 B budget. Not scoped this session (a scoping/planning session of
+      its own, per `SESSION_RUNNER.md`'s multi-session-campaign guidance -- this is
+      significantly larger than the S325 owner-decision-not-to-migrate it would reopen). A
+      future session should first decide whether the campaign is worth running at all (the
+      file has operated at this size for months without incident beyond the read-truncation
+      risk itself) before scoping one.
+- [ ] **`CHANGELOG.md`'s own ~4-entries-per-session ledger convention (claim, Phase 0
+      reconcile, deliverable, close-out) may be a `CHANGELOG.md`-side analogue of the
+      already-diagnosed `HANDOFFS.md` "Receipt Inflation" (H4) rate problem** (found S543,
+      2026-08-12, Effort unknown, not investigated) -- incidental to the `SRF_RED`
+      investigation: the tagged region regrew ~105,000 B in roughly a day during an active
+      multi-session stretch (S536-S542), and a `grep -c '^### 2026-08-12'` on the pre-trim
+      file showed a large share of that region was same-day, multiple-entries-per-session
+      housekeeping (claim/reconcile/close-out entries) rather than deliverable-content
+      entries. Not confirmed as causal, and not investigated further this session (out of
+      the `SRF_RED` decision's own scope, per `PROJECT_LEARNINGS.md` Learning 382's "report,
+      don't fix mid-session" precedent). A future session could measure the actual
+      housekeeping-vs-deliverable entry-byte split and decide whether a norm analogous to
+      the canonical design's own deferred H4 remedy (`docs/planning/ledger-trimmer-design.md`
+      §10.2, "the lever is receipt size, and the mechanism would be a norm plus a check, not
+      an archiver") is worth adopting for `CHANGELOG.md` specifically.
 - [ ] (none remaining -- the "`shinytest2`/`chromote` headless browser never
       renders a `showModal()`/`modalDialog()` Bootstrap modal's DOM" item
       (found S535, 2026-08-12) is RESOLVED -- **misdiagnosed, corrected
