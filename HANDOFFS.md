@@ -127,16 +127,46 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S542
 date: 2026-08-12
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: CHANGELOG.md/HANDOFFS.md ledger archive via methodology_trim.py (in progress)
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: HANDOFFS.md archived (226,617 B -> 8,629 B, 2,908 -> 142 lines). CHANGELOG.md's own
+archive attempt refused (SRF_RED) and was deliberately NOT forced -- left for a future session's
+scoping decision, logged to BACKLOG.md. 2 new BACKLOG.md Housekeeping findings this session:
+test-coverage.yaml CI break (READY to diagnose), CHANGELOG.md SRF_RED (DECISION NEEDED).
+what_was_done: Ran methodology_trim.py --file HANDOFFS.md --write: archived 39 of 40 records to
+docs/archive/HANDOFFS-through-2026-08-12.md, verified lossless via the tool's own generated
+verify.sh (L1/L2/L3 OK) before committing. Confirmed the sole retained record was this session's
+own pending stub. Logged the Phase 1B claim commit to CHANGELOG.md first (a2550a1e), per
+Learning 545, to clear the tool's P1_UNDOCUMENTED gate. Also ran gh run list beyond the routine
+Phase 0 checklist and found test-coverage.yaml failing on origin/master's last 2 pushes (S536,
+S540) -- confirmed R-CMD-check.yaml itself had gone green (closing S541's own open question).
+Commits: 62882046 (claim), a2550a1e (ledger: record claim), 3ddb59ea (the archive), this
+close-out's own commit (sha pending at write time, self-referential).
+next_steps: Two new BACKLOG.md Housekeeping items, both unstarted: (1) test-coverage.yaml CI
+break -- READY to diagnose, Effort S/M; needs gh run view <id> --log (not --log-failed) or a
+local covr::package_coverage() repro to isolate the actual testthat.R failure past the
+spelling.R sandbox-path noise. (2) CHANGELOG.md SRF_RED refusal -- DECISION NEEDED, Effort S;
+a future session (or the owner) should choose between --force-ing a partial trim now vs.
+reopening the S325 legacy-footer migration question. Unchanged from S541: Phase 0 CI-check gap
+(DECISION NEEDED), NPRC outreach owner review (DECISION NEEDED), LabKey remaining recs (BLOCKED).
+key_files: HANDOFFS.md (archived, 142 lines); docs/archive/HANDOFFS-through-2026-08-12.md (new
+shard, 39 records); BACKLOG.md Housekeeping section (2 new items); CHANGELOG.md (claim entry +
+tool's own auto-appended archive entry); PROJECT_LEARNINGS.md Learning 549 (new).
+gotchas: (1) methodology_trim.py's SRF_RED gate is computed against the MOST RECENT archive
+only -- a small preceding trim (yesterday's 11-record CHANGELOG.md archive) can make an
+otherwise-healthy file refuse to archive again, while the SAME file reads healthy against its
+largest-drop boundary. Read both numbers the tool prints before deciding whether --force is
+appropriate; don't force reflexively off the RED reading alone. (2) The P1_UNDOCUMENTED gate
+checks CHANGELOG.md's frontier regardless of which file is being trimmed (ledger_rel_for()
+always returns "CHANGELOG.md") -- even a HANDOFFS.md-only trim needs the claim commit logged to
+CHANGELOG.md first if the claim commit doesn't itself touch CHANGELOG.md. (3) This session ran
+the Phase 0 priorities AskUserQuestion picker before the mandatory prose orientation report,
+out of CLAUDE.md's documented order -- caught and corrected mid-session by re-reading that
+convention; a future session should render the prose report first, every time.
+runtime_smoke: n/a -- docs/ledger-only change, no runtime/Shiny behavior touched.
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12 ([ad hoc] the claim; [ad hoc]
+the tool's own auto-appended HANDOFFS.md archive entry; [ad hoc] x2 for the BACKLOG.md findings)
 commit: pending
 ```
 

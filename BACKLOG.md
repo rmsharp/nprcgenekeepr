@@ -165,6 +165,42 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       similar) check to `CLAUDE.md`'s "Additional Phase 0 steps," and if so, at
       what cadence (every session vs. only when `git status` shows unpushed
       commits). See `PROJECT_LEARNINGS.md` Learning 547, `CHANGELOG.md`.
+- [ ] **`test-coverage.yaml` CI job failing on `origin/master` -- 2 consecutive pushes**
+      (found S542, 2026-08-12, READY to diagnose, Effort S/M) -- `gh run list
+      --workflow=test-coverage.yaml` shows the covr-instrumented run failing on both the
+      S536 push (2026-08-12T22:57) and the S540 push (2026-08-13T03:07:12Z), while
+      `R-CMD-check.yaml` is green on the same S540 push. Truncated log shows a `spelling.R`
+      comparison diff (`Failed to find package source directory from:
+      /home/runner/work/_temp/package/nprcgenekeepr/nprcgenekeepr-tests` -- likely a covr
+      sandbox-path artifact, not a real spelling failure, since it still prints "All Done!")
+      immediately followed by `Error: running the tests in 'testthat.R' failed` with no
+      specific failing test identified in the log captured this session -- needs a full
+      `gh run view <id> --log` (not just `--log-failed`) or a local `covr::package_coverage()`
+      repro to isolate the actual failure. Not diagnosed this session -- found via an ad hoc
+      `gh run list` check (itself prompted by the open Phase 0 CI-check-gap item above), out
+      of scope for a ledger-archive session's own deliverable (owner confirmed via
+      `AskUserQuestion`, chose to keep the archive as this session's scope and log this
+      instead). A future session should diagnose and fix.
+- [ ] **`CHANGELOG.md` archive refuses via `SRF_RED` -- needs a scoping decision, not a
+      routine trim** (found S542, 2026-08-12, DECISION NEEDED, Effort S) --
+      `methodology_trim.py --file CHANGELOG.md` (dry run) refuses: SRF 2.9299 against the
+      most recent archive (`50b65d1`, 2026-08-11, only 11 records) is over the 1.00 `SRF_RED`
+      threshold -- the tool's own plan (§3.3, H3) states "a reset is the wrong move" at or
+      above that value, i.e. archiving again now would reset the *level* without addressing
+      the *rate* that regrew it. Against the largest-drop boundary instead (`0929172a`, 288
+      records), SRF is a healthy 0.1766 -- the RED reading is an artifact of yesterday's
+      unusually small preceding archive, not evidence the file can't safely shrink again.
+      `--force` would bypass the refusal, but this project's own `CHANGELOG.md` ledger-format
+      note (Session 325, "freeze legacy, go forward") already documents a deeper, related
+      problem: the frozen pre-S325 legacy block is a permanently-pinned 935,292 B footer that
+      no trim can touch, so even a clean archive of the tagged S325+ portion only partially
+      addresses the file's read-truncation risk (currently 4,932 lines, 1,050,763 B against
+      the 65,536 B budget). Not forced through this session (owner confirmed via
+      `AskUserQuestion`, chose to hold rather than override a refusal the tool's own plan
+      flags explicitly). A future session should decide: (a) `--force` a routine trim of the
+      tagged portion now, accepting it's a partial fix, or (b) treat this as the trigger to
+      finally reopen the S325 legacy-migration question this note has deferred since
+      2026-07-08. See `CHANGELOG.md`'s own "CHANGELOG.md ledger-format resolution" note.
 - [ ] (none remaining -- the "`shinytest2`/`chromote` headless browser never
       renders a `showModal()`/`modalDialog()` Bootstrap modal's DOM" item
       (found S535, 2026-08-12) is RESOLVED -- **misdiagnosed, corrected

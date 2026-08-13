@@ -131,6 +131,15 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] S542 close-out: findings logged to BACKLOG.md, Learning 549
+- **Deliverable:** Session S542's own close-out. Logged 2 new `BACKLOG.md` Housekeeping items
+  found this session: `test-coverage.yaml` failing on `origin/master`'s last 2 pushes (S536,
+  S540) — READY to diagnose; and `CHANGELOG.md`'s own `methodology_trim.py` archive attempt
+  refusing via `SRF_RED` (2.9299 against the most recent 11-record archive, 0.1766 against the
+  largest-drop boundary) — DECISION NEEDED, deliberately not `--force`-ed past this session.
+  `PROJECT_LEARNINGS.md` Learning 549 records the SRF two-boundary discrepancy and the
+  stop-and-ask discipline applied instead of forcing.
+
 ### 2026-08-12 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-08-12.md` (39 record(s), 226,617 B → 8,629 B)
 
 **Written by:** `methodology_trim.py` v1.1.2 — a tool action, not a session's judgment.

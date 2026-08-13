@@ -10,13 +10,97 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 541 Handoff Evaluation (by Session 542)
+**Score: 9/10.** **What helped:** the S541 `HANDOFFS.md` receipt's `next_steps` field named the
+same 4-item priorities list this session's own Phase 0 rendered (CHANGELOG.md/HANDOFFS.md
+archive READY; Phase 0 CI-check gap DECISION NEEDED; NPRC outreach DECISION NEEDED; LabKey
+BLOCKED) plus explicitly flagged "a future session's Phase 0 should check whether
+`R-CMD-check.yaml`'s in-progress run went green" -- acted on directly this session's Phase 0 (it
+had gone green), and following that same thread further (running `gh run list` rather than
+stopping at the one named workflow) surfaced a real, previously-undocumented break in
+`test-coverage.yaml`. **What was missing:** nothing S541 owed -- it could not have named the
+`SRF_RED` refusal this session hit, since that only manifests when `methodology_trim.py` is
+actually invoked against `CHANGELOG.md`, which S541's own deliverable (the vignette pass) never
+did. **What was wrong:** nothing found -- the `commit: 20fc8633` self-reference was correct and
+needed no reconcile (a genuine change from the S538-S541 chain, each of which left a `pending`
+self-reference for the next session to fill). **ROI:** High -- the CI-status thread alone was
+directly responsible for this session catching a real red build that had otherwise gone
+unnoticed for 2 pushes.
+
 ### What Session 542 Did
-**Deliverable:** CHANGELOG.md/HANDOFFS.md ledger archive via `methodology_trim.py` (IN PROGRESS)
-**Started:** 2026-08-12.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Archive `HANDOFFS.md` via `methodology_trim.py --write` (owner-picked via the
+Phase 0 `AskUserQuestion` picker, then re-confirmed after a mid-orientation finding). `CHANGELOG.md`
+was in scope for the same picker option but its own dry run refused (`SRF_RED`); owner chose,
+via a second `AskUserQuestion`, to hold rather than `--force` past that refusal, and to log it as
+a `BACKLOG.md` finding instead.
+**Started/Completed:** 2026-08-12. **Status:** DONE. TDD phase: N/A (ledger/documentation
+housekeeping -- no production code or test surface, matching the S509/S528/S539 precedent).
+Commits: `62882046` (Phase 1B claim), `a2550a1e` (CHANGELOG.md: log the claim commit ahead of the
+gated trim call, per Learning 545's established sequencing), `3ddb59ea` (the archive itself --
+`HANDOFFS.md` 226,617 B -> 8,629 B, 2,908 -> 142 lines, 39 records moved to
+`docs/archive/HANDOFFS-through-2026-08-12.md`), this close-out's own commit (pending at write
+time).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, `git status`/`log`/`diff --stat`, `methodology_dashboard.py`). Found the ledger
+already fully reconciled by an earlier, separate Phase 0 pass today (commit `799c77b5`,
+"S542 -- Phase 0 reconcile HANDOFFS.md S541 receipt") -- re-verified independently rather than
+trusted: `CHANGELOG.md`/`HANDOFFS.md` frontiers both == `HEAD`, no `status: pending` stub, no
+untracked ghost-session files, no S542 claim stub yet -- confirmed no work had actually started.
+**Self-correction, caught before the user replied:** ran the Phase 0 priorities `AskUserQuestion`
+picker BEFORE rendering the required prose orientation report, out of the order `CLAUDE.md`'s
+"Present the priorities list via AskUserQuestion" convention specifies -- caught by re-reading
+that convention's own text, corrected by rendering the full prose report retroactively before
+proceeding, rather than silently leaving the gap. **(2)** Beyond the routine checklist, ran
+`gh run list` (prompted by the still-open Phase 0 CI-check-gap `BACKLOG.md` item, Learning 547) --
+confirmed `R-CMD-check.yaml` green on `origin/master`'s S540 push (closing the loose end S541's
+handoff flagged), but found `test-coverage.yaml` failing on both of the last 2 pushes (S536,
+S540) -- a genuinely new, undocumented finding. Surfaced it to the user via a second
+`AskUserQuestion` before proceeding (rather than silently expanding scope to fix it); owner
+confirmed keeping the archive as this session's deliverable and logging the CI break instead.
+**(3)** Claimed the session (`62882046`). **(4)** Dry-ran `methodology_trim.py --file
+CHANGELOG.md` and `--file HANDOFFS.md`: `CHANGELOG.md` refused with `SRF_RED` (2.9299 against the
+most recent, small 11-record archive `50b65d1`; a healthy 0.1766 against the largest-drop
+boundary `0929172a`) -- read both numbers rather than reflexively `--force`-ing past a refusal
+the tool's own design doc states as "do not archive again," and surfaced the discrepancy (plus
+its likely connection to this project's already-documented S325 legacy-footer problem) to the
+user via `AskUserQuestion`. `HANDOFFS.md` had no such refusal (single prior archive, SRF 0.2456)
+and was clear to proceed. **(5)** Per S528/S539's established gate-clearing precedent (Learning
+545), logged the claim commit to `CHANGELOG.md` on its own (`a2550a1e`) before invoking
+`--write`, since `methodology_trim.py`'s `P1_UNDOCUMENTED` gate refuses while any commit sits
+undocumented ahead of the ledger frontier. **(6)** Ran `methodology_trim.py --file HANDOFFS.md
+--write`: archived 39 of 40 records, verified losslessness via the tool's generated
+`docs/archive/HANDOFFS-through-2026-08-12.md.verify.sh` (L1/L2/L3 all OK) before committing;
+confirmed the sole retained record was this session's own pending stub, not an accidental
+over-archive. Committed (`3ddb59ea`). **(7)** Re-ran `methodology_dashboard.py`: `HANDOFFS.md`'s
+HIGH/MEDIUM risk flags are gone from the report; `CHANGELOG.md`'s remain, as expected (untouched
+this session). **(8)** Logged 2 new `BACKLOG.md` Housekeeping items: the `test-coverage.yaml` CI
+break (READY to diagnose) and the `CHANGELOG.md` `SRF_RED` refusal (DECISION NEEDED, with both
+SRF readings and the S325-footer connection spelled out for whoever picks it up). **(9)** One
+`PROJECT_LEARNINGS.md` entry: Learning 549 (the SRF two-boundary discrepancy, the
+stop-and-ask-rather-than-force discipline, and the value of a broader `gh run list` sweep over
+checking only the one named workflow).
+
+**Self-assessment (Session 542): 8/10.** **Strengths:** (1) Did not `--force` past the
+`SRF_RED` refusal reflexively -- read both SRF numbers the tool reported, recognized the
+discrepancy traced to a genuinely small preceding archive rather than a healthy file, and
+surfaced it as a decision rather than deciding alone. (2) Extended the Phase 0 checklist on its
+own initiative (running `gh run list` beyond the one workflow S541's handoff named) and caught a
+real, previously-undocumented CI break as a direct result -- then asked before letting that
+discovery expand this session's scope, rather than either silently fixing it (scope creep) or
+silently dropping it (losing the finding). (3) Verified losslessness via the tool's own generated
+script before committing the archive, and specifically checked that the retained record was the
+expected one (this session's own pending stub) rather than assuming the trim did the right thing.
+**Weaknesses:** (1) Ran the Phase 0 priorities `AskUserQuestion` before the mandatory prose
+orientation report -- a direct order violation of `CLAUDE.md`'s own written convention, caught
+and corrected only by re-reading that section mid-session rather than getting it right the first
+time; a more careful first pass would have avoided the correction entirely. (2) The session's
+actual archived-byte reduction (one file, not two) is smaller than a session that could have
+archived both cleanly -- an outcome of the SRF_RED discovery, not a process failure, but worth
+naming plainly rather than folding into the "went well" list.
+**Ledger:** recorded in `CHANGELOG.md` (this session's own entries: the claim, the tool's own
+auto-appended `HANDOFFS.md` archive entry, and the 2 `[ad hoc]` `BACKLOG.md`-finding entries
+added at close-out).
 
 ### Session 540 Handoff Evaluation (by Session 541)
 **Score: 9/10.** **What helped:** the S540 `HANDOFFS.md` receipt's `next_steps` field named
