@@ -131,6 +131,12 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] S543 claim: CHANGELOG.md SRF_RED archive-refusal decision
+- **Deliverable:** Session S543 claimed (`ca6b17fb`) to decide how to handle `CHANGELOG.md`'s
+  `methodology_trim.py` `SRF_RED` refusal (owner-picked via the Phase 0 `AskUserQuestion`
+  picker, over `test-coverage.yaml` CI diagnosis / the Phase 0 CI-check-gap decision / issue
+  #138 scoping).
+
 ### 2026-08-12 · [ad hoc] S542 close-out: findings logged to BACKLOG.md, Learning 549
 - **Deliverable:** Session S542's own close-out. Logged 2 new `BACKLOG.md` Housekeeping items
   found this session: `test-coverage.yaml` failing on `origin/master`'s last 2 pushes (S536,
