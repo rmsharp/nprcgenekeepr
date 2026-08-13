@@ -125,6 +125,25 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-12.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S547
+date: 2026-08-13
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Scope + verify the CHANGELOG.md legacy-footer bulk relocation (decided S546):
+check methodology_trim.py's L1/L2/L3 losslessness invariants against the relocated legacy
+block, grep for anything expecting it inline, and if both are clear, execute the relocation
+and update CLAUDE.md's pointer note.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S546
 date: 2026-08-13
 status: complete

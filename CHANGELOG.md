@@ -131,6 +131,13 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-N] S547 claim: scope + verify the CHANGELOG.md legacy-footer bulk relocation
+- **Deliverable:** Session S547 claimed. Picking up the `BACKLOG.md` Housekeeping item decided
+  S546 ("Scope (and if verification allows, execute) a bulk relocation of `CHANGELOG.md`'s frozen
+  pre-S325 legacy footer into its own archive file, un-retagged") — verify `methodology_trim.py`'s
+  L1/L2/L3 losslessness invariants survive the relocation, grep for anything expecting the block
+  inline, and execute if both are clear.
+
 ### 2026-08-13 · [ad hoc] S546 close-out: S325 CHANGELOG.md legacy-footer decision resolved (bulk-relocate scoped, not executed), Learning 553
 - **Deliverable:** Session S546's own close-out. `BACKLOG.md`'s "Reopen the S325 'freeze legacy,
   go forward' decision" Housekeeping item (found S543) resolved via a 3-option `AskUserQuestion`

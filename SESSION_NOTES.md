@@ -10,6 +10,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 547 Did
+**Deliverable:** Scope + verify the `CHANGELOG.md` legacy-footer bulk relocation (decided S546) —
+check `methodology_trim.py`'s L1/L2/L3 losslessness invariants against the relocated legacy block,
+grep for anything expecting it inline, and if both are clear, execute the relocation and update
+`CLAUDE.md`'s pointer note. (IN PROGRESS)
+**Started:** 2026-08-13
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 545 Handoff Evaluation (by Session 546)
 **Score: 9/10.** **What helped:** the S545 `HANDOFFS.md` receipt's `next_steps` field enumerated
 the full unchanged-plus-new priorities list verbatim (Pedigree Diagram article, S325 reopen,
