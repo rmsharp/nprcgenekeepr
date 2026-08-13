@@ -187,7 +187,7 @@ warnings/1 pre-existing NOTE) is this session's complete build-equivalent
 verification.
 changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12
 ([BL-522] the fix; [ad hoc] S538 Phase 0 reconcile entry)
-commit: pending
+commit: cf8f9bbe
 ```
 
 ```handoff

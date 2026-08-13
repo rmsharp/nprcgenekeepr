@@ -131,6 +131,18 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] S539 Phase 0 reconcile: HANDOFFS.md S538 receipt commit: pending → cf8f9bbe
+- `git log -1 --format=%H -- HANDOFFS.md` showed the frontier commit (`cf8f9bbe`, the S538
+  close-out commit) still carried its own receipt's self-referential `commit: pending`
+  placeholder (legal at write time per `HANDOFFS.md`'s own format note — the receipt ships in
+  the very commit whose sha it would name). Reconciled to `cf8f9bbe`, matching the
+  S538→S537 (`a39f7756`) and S537→S536 (`66202b2a`) precedent. `CHANGELOG.md`'s own frontier
+  (`git log -1 --format=%H -- CHANGELOG.md`) was `6504ebc6`; the only undocumented commit since
+  then was `cf8f9bbe` itself, which — matching the established precedent that a close-out
+  commit containing only `SESSION_NOTES.md`/`HANDOFFS.md` writes is not a separate action beyond
+  what its paired deliverable commit already logged — is covered by this reconcile entry rather
+  than a second one.
+
 ### 2026-08-12 · [BL-522] Trimmed NEWS.Rmd's post-2.0.0.9000 verbosity back to the project's terse pre-1.0.8 house style (Session 538)
 - **Deliverable:** Rewrote the `2.0.0.9000 (development version)` section's 26 entries
   from multi-sentence paragraphs (full closed-form formulas, citation strings,
