@@ -125,6 +125,17 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-12.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S546
+date: 2026-08-13
+status: pending
+active_task: Decide whether/how to reopen the S325 "freeze legacy, go
+forward" CHANGELOG.md legacy-footer decision (BACKLOG.md Housekeeping,
+found S543); record the outcome in BACKLOG.md/CLAUDE.md as appropriate.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S545
 date: 2026-08-13
 status: complete

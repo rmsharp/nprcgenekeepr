@@ -10,6 +10,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 545 Handoff Evaluation (by Session 546)
+**Score: 9/10.** **What helped:** the S545 `HANDOFFS.md` receipt's `next_steps` field enumerated
+the full unchanged-plus-new priorities list verbatim (Pedigree Diagram article, S325 reopen,
+issue #148, issue #138, PDF-reproduction check, delete stale `BACKLOG.md` bullets, NPRC outreach,
+LabKey) — this session's own Phase 0 priorities rendering matched it after independently
+re-deriving from `BACKLOG.md`'s own tags and both ratified sequencing audits, giving high
+confidence nothing was missed. The `gotchas` field's warning about the untracked/uncategorized
+reference PDF's copyright status remains accurate and unresolved (still untracked as of this
+session's `git status`). **What was missing:** the `next_steps` field explicitly flagged that
+"the R-CMD-check.yaml run flagged in_progress this session (126711a9) was never confirmed
+complete" — this session's own Phase 0 `gh run list` resolved it (126711a9's `R-CMD-check.yaml`
+shows `completed success`), so nothing was left dangling, but it is exactly the kind of gap the
+new CI-check step exists to catch. **What was wrong:** S545's own `HANDOFFS.md` receipt shipped
+with `commit: pending` (the standard self-reference limitation, same as S543→S544 and
+S544→S545) — reconciled this session to `7021c6f7` (`b2a4da5c`). Not an error, routine. **ROI:**
+High — the `next_steps` field was directly load-bearing for this session's own priorities-list
+rendering and picker.
+
+### What Session 546 Did
+**Deliverable:** Decide (with the owner, via `AskUserQuestion`) whether/how to reopen the S325
+"freeze legacy, go forward" `CHANGELOG.md` legacy-footer decision (`BACKLOG.md` Housekeeping,
+found S543); record the outcome in `BACKLOG.md`/`CLAUDE.md` as appropriate. (IN PROGRESS)
+**Started:** 2026-08-13. **Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 544 Handoff Evaluation (by Session 545)
 **Score: 9/10.** **What helped:** the S544 `HANDOFFS.md` receipt's `next_steps` field enumerated
 the full unchanged-plus-new priorities list verbatim (Phase 0 CI-check gap, S325 reopen, issue
