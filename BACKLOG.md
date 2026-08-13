@@ -468,6 +468,21 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       the S527 precedent of keeping the archive itself a separate, later action -- a future session
       should re-run the dry-run once more (counts drift as sessions append) and, if still clean, run
       `--write`.)
+- [ ] (none remaining -- "`SESSION_NOTES.md`'s first `methodology_trim.py --write` archive" (the
+      step deferred above) is RESOLVED -- S539 (2026-08-12): re-ran the dry-run first (620 records,
+      up from S528's 599 -- 21 sessions' worth of drift), confirmed clean, then `--write`. Archived
+      **612** of 620 records (1998-12-06 -> 2026-08-12) to
+      `docs/archive/SESSION_NOTES-through-2026-08-12.md`; live file 6,370,574 B -> 30,066 B (-99.5%,
+      well under the 65,536 B budget), 370 lines (was 42,670 -- 21x past the 2,000-line agent read
+      cap before this session). 8 records retained (the last ~3 sessions' handoff-eval/deliverable
+      pairs plus this session's own claim stub). Losslessness verified via the tool's own L1/L2/L3
+      checks and the generated `docs/archive/SESSION_NOTES-through-2026-08-12.md.verify.sh`, all
+      OK. One gate hit and cleared: the tool's `P1_UNDOCUMENTED` check refused to run while this
+      session's own claim commit sat undocumented ahead of `CHANGELOG.md`'s frontier (a trim commit
+      would have advanced the frontier and hidden that gap permanently) -- logged the claim to
+      `CHANGELOG.md` on its own first (matching the exact gate S528 hit), which cleared it. The tool
+      itself also auto-appended its own `[ad hoc]` `CHANGELOG.md` entry for the archive action. See
+      `CHANGELOG.md`.)
 - [ ] **`BACKLOG.md`'s own ledger-size housekeeping -- editorial compression, not a
       `methodology_trim.py` config** (found S518, 2026-08-11, READY, Effort L) -- `BACKLOG.md`
       itself is one of the dashboard's 3-file HIGH-risk ledger-size items but does not fit
