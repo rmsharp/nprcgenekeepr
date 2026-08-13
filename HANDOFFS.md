@@ -197,7 +197,8 @@ runtime_smoke: n/a -- docs-only planning session, no production code or runtime 
 changed (matching the design-session precedent, e.g. issue137/issue145/issue152's own
 close-outs).
 changelog_ref: see CHANGELOG.md's 2026-08-13 S550 entries (claim, deliverable, close-out).
-commit: pending
+commit: bab8ead8 (reconciled S551 -- self-reference at write time, per the
+S543/S544/S545/S549 precedent: this receipt ships in the commit whose sha it names)
 ```
 
 ```handoff
