@@ -10,6 +10,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 552 Did
+**Deliverable:** Slice 2 (the 4 script-callable functions) of the S550-ratified
+`twinRelations`-into-`kinship()` plan (`docs/planning/twin-relations-kinship-computation-plan.md`
+§4) -- `reportGV()`, `gvaConvergence()`, `createSimKinships()`, `cumulateSimKinships()` each gain
+their own `twinRelations = NULL` parameter passed straight through to their internal `kinship()`
+call. (IN PROGRESS)
+**Started:** 2026-08-13.
+**Status:** Session claimed. Work beginning. Owner also live-reported a separate defect during
+Phase 0 orientation (Pedigree Diagram tab's affected-status shading fills unaffected individuals
+too, counter to pedigree drawing convention) -- logged to `BACKLOG.md`/`CHANGELOG.md` (commit
+`d6b3ce47`) but NOT this session's deliverable; owner picked Slice 2 instead when asked.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 550 Handoff Evaluation (by Session 551)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` receipt's `next_steps` field's
 priority-ordered list matched this session's own independently-rendered Phase 0 priorities
