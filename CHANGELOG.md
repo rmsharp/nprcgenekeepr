@@ -131,6 +131,12 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] S542 claim: CHANGELOG.md/HANDOFFS.md ledger archive
+- **Deliverable:** Session claim commit `62882046` (SESSION_NOTES.md stub + HANDOFFS.md
+  `status: pending` receipt) — logged here ahead of running `methodology_trim.py`, which
+  refuses (`P1_UNDOCUMENTED`) while any commit sits undocumented past this file's frontier,
+  matching the S528 precedent.
+
 ### 2026-08-12 · [ad hoc] S542 Phase 0 reconcile: HANDOFFS.md S541 receipt commit: pending → 20fc8633
 - **Deliverable:** Phase 0 ledger reconcile — backfilled the S541 `HANDOFFS.md` receipt's
   self-referential `commit: pending` field to `20fc8633` (the close-out commit's own sha, now
