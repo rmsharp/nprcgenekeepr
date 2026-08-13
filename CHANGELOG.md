@@ -131,6 +131,31 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [BL-518] `SESSION_NOTES.md`'s first `methodology_trim.py --write` archive (Session 539)
+- **Deliverable:** Resolved the deferred remainder of the S518 ledger-size item: `SESSION_NOTES.md`
+  had climbed to 42,670 lines (21x past the 2,000-line agent read cap) and 6,370,574 B (97x the
+  65,536 B budget) — the dashboard's own top HIGH-risk flag. Both prior blockers (the fence-scanner
+  defect, S527's rewrap fix; the `record_start` regex gap, S528's fix) were already resolved, so
+  this session just re-ran the dry-run (620 records, up from S528's 599 — 21 sessions' worth of
+  drift) to confirm still clean, then `--write`.
+- Result (tool's own `[ad hoc]` entry immediately below has the mechanical detail): 612 of 620
+  records archived to `docs/archive/SESSION_NOTES-through-2026-08-12.md`; live file 30,066 B / 370
+  lines, both now well under budget. Losslessness verified via the tool's L1/L2/L3 checks and the
+  generated `.verify.sh` script — all OK.
+- One gate hit and cleared: `methodology_trim.py`'s `P1_UNDOCUMENTED` check refused to run while
+  this session's own Phase 1B claim commit sat undocumented ahead of the ledger frontier (a trim
+  commit would have advanced the frontier and hidden that gap permanently) — logged the claim to
+  `CHANGELOG.md` on its own first (see the entry below), which cleared it. `PROJECT_LEARNINGS.md`
+  Learning 545. `BACKLOG.md` item marked RESOLVED.
+
+### 2026-08-12 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-08-12.md` (612 record(s), 6,370,574 B → 30,066 B)
+
+**Written by:** `methodology_trim.py` v1.1.2 — a tool action, not a session's judgment.
+Moved the oldest **612** record(s) (1998-12-06 → 2026-08-12) out of [`SESSION_NOTES.md`](SESSION_NOTES.md) into
+[`docs/archive/SESSION_NOTES-through-2026-08-12.md`](docs/archive/SESSION_NOTES-through-2026-08-12.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/SESSION_NOTES-through-2026-08-12.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-08-12.md.verify.sh)
+rather than trusting a digest printed here. Live file 6,370,574 B → 30,066 B (−99.5%).
+
 ### 2026-08-12 · [ad hoc] S539 claimed for BACKLOG.md's SESSION_NOTES.md `--write` archive item
 - Session 539 claimed (`SESSION_NOTES.md`/`HANDOFFS.md` stub, commit `494e51b9`) to run
   `methodology_trim.py`'s first `--write` archive of `SESSION_NOTES.md` — both prior blockers
