@@ -10,6 +10,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 553 Did
+**Deliverable:** Slice 3 (full Shiny wiring) of the S550-ratified `twinRelations`-into-`kinship()`
+plan (`docs/planning/twin-relations-kinship-computation-plan.md` §4) -- promote `twinRelations` to
+app-wide reachability: `modPedigreeServer()`'s return list gains a `twinRelations` reactive entry;
+`R/appServer.R` gains `shared$twinRelations` wired into `sharedKinshipMatrix`,
+`modBreedingGroupsServer`, `modSummaryStatsServer`, and `modGeneticValueServer`; the latter passes
+it through to its own `reportGV()` call. (IN PROGRESS)
+**Started:** 2026-08-13.
+**Status:** Session claimed. Work beginning. Phase 0 also reconciled S552's `HANDOFFS.md`
+self-referential `commit: pending` field to `99796a65` (commit `49c987c8`) -- the recurring
+S543/S544/S545/S549/S550/S551 pattern, not this session's deliverable. Per the plan's own §4
+Slice 3 instruction, Pre-RED must resolve **Dragon 1** (the tab-order UX question: `twinRelations`
+is uploaded only in the Diagram tab, with no upload point for a user who never visits it) via
+`AskUserQuestion` before RED begins.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 551 Handoff Evaluation (by Session 552)
 **Score: 10/10.** **What helped:** every `key_files` pointer was exact and directly used with
 zero friction (before this session's own edits shifted line numbers) -- `R/reportGV.R:162`,
