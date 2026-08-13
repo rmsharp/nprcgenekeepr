@@ -10,6 +10,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 542 Did
+**Deliverable:** CHANGELOG.md/HANDOFFS.md ledger archive via `methodology_trim.py` (IN PROGRESS)
+**Started:** 2026-08-12.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 540 Handoff Evaluation (by Session 541)
 **Score: 9/10.** **What helped:** the S540 `HANDOFFS.md` receipt's `next_steps` field named
 "`a2interactive.Rmd` docs pass (READY, Effort M)" as an open item, plus accurately
