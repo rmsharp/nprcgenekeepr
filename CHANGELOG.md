@@ -138,6 +138,42 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-N] S554 close-out: affected-status shading defect fixed; S553 handoff evaluation
+- **Deliverable:** Session S554's own close-out. Evaluated S553's `HANDOFFS.md` receipt (9/10 --
+  `next_steps` priority list matched this session's own pick exactly, `gotchas`' full-regression
+  discipline applied cleanly to a differently-shaped change). Self-assessment 9/10 (one point held
+  back for drafting the new E2E test with an undeclared `jsonlite` dependency before checking the
+  codebase's own existing anti-dependency convention, caught only by `devtools::check()`).
+- **Commit:** this close-out's own commit.
+
+### 2026-08-13 · [BL-N] S554: .affectedColor() FALSE/NA now renders open/unfilled (white), fixing the Pedigree Diagram affected-status shading defect
+- **Deliverable:** `R/makePedigreeDiagramData.R`'s `.affectedColor()` (issue #133) FALSE/NA
+  branch changed from `NA_character_` to `"#FFFFFF"` -- unaffected/unknown-affected individuals
+  now render open/unfilled on the Pedigree Diagram tab, matching kinship2's own "unfilled if
+  0/NA" convention (verified against `docs/planning/issue133-affected-status-pedigree-diagram-plan.md`
+  §2.1's own kinship2-source research) rather than falling back to visNetwork's own default fill.
+  A genuinely single-line core change (REFACTOR declined). 6 existing unit-test assertions
+  updated across `test_makePedigreeDiagramData.R`/`test_makePedigreeMatingLayout.R`; RED properly
+  confirmed by stashing the implementation and running the updated tests against unmodified
+  source before reapplying. New live E2E test in `test-e2e-pedigree-module.R` (using the bundled
+  `obfuscated_rhesus_mhc_ped_affected.csv` fixture) queries the rendered widget's actual node
+  color for a known TRUE/FALSE/NA triple directly via JS, avoiding a `jsonlite` dependency this
+  package deliberately does not carry (an initial draft using `jsonlite::fromJSON()` was caught
+  and fixed by `devtools::check()`'s own "unstated dependencies in tests" guard).
+  `NEWS.Rmd`/`NEWS.md` gained a "Fixed:" bullet; `BACKLOG.md` item marked DONE.
+- **Verification:** `devtools::check()` 0 errors/0 warnings/1 pre-existing unrelated NOTE
+  (vignettes/figure leftover); full clean regression 0 failed/0 error (2,156 test blocks);
+  `lintr::lint_package()` 0 lints. Live `shinytest2`/`chromote`: the full
+  `test-e2e-pedigree-module.R` suite (14 tests/49 assertions, incl. the new affected-status test
+  and the pre-existing issue #137 twin-connector tests) passed with 0 regressions.
+- **Commit:** this session's own deliverable commit.
+
+### 2026-08-13 · [BL-N] S554 claim: fix the Pedigree Diagram affected-status shading defect
+- **Deliverable:** Session S554 claimed. Picking up `BACKLOG.md` Housekeeping's affected-status
+  shading defect (found S552, owner-reported live, READY, Effort S) -- full strict-TDD
+  PRE-RED->RED->GREEN(->REFACTOR) gates apply.
+- **Commit:** `402a6b5b`.
+
 ### 2026-08-13 · [BL-N] S553 close-out: Slice 3 (twinRelations full Shiny wiring) shipped, closing the item; S552 handoff evaluation, Learning 559
 - **Deliverable:** Session S553's own close-out. Evaluated S552's `HANDOFFS.md` receipt (10/10 --
   every `key_files` file:line pointer accurate and directly used, `next_steps`/`gotchas` matched

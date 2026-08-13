@@ -127,22 +127,83 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S554
 date: 2026-08-13
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 9
+predecessor_score: 9
 active_task: Fix the Pedigree Diagram tab's affected-status shading defect (BACKLOG.md
-Housekeeping, found S552) -- unaffected/unknown individuals render solid-filled instead of
-open/unfilled. Traced to .affectedColor() (R/makePedigreeDiagramData.R:163-165)'s
-NA_character_ color.background falling back to visNetwork's own default fill.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+Housekeeping, found S552) -- DONE. Unaffected/unknown individuals rendered solid-filled instead
+of open/unfilled; traced to .affectedColor() (R/makePedigreeDiagramData.R)'s NA_character_
+color.background falling back to visNetwork's own default fill instead of an explicit open/white.
+what_was_done: Full strict-TDD PRE-RED->RED->GREEN cycle (REFACTOR declined via AskUserQuestion,
+single-line core change). Root cause confirmed against kinship2's own already-researched
+convention (docs/planning/issue133-affected-status-pedigree-diagram-plan.md sec 2.1: "unfilled if
+0/NA"). Fix: .affectedColor()'s FALSE/NA branch changed from NA_character_ to "#FFFFFF" (white,
+matching the canvas's own unconfigured default background -- confirmed no visBackgroundColor
+override exists). Updated 6 existing test assertions (test_makePedigreeDiagramData.R x2 blocks,
+test_makePedigreeMatingLayout.R x1 block) from expect_true(is.na(...)) to expect_equal(...,
+"#FFFFFF"); RED properly confirmed by stashing the implementation diff and running the updated
+tests against unmodified source before reapplying. New live E2E test in
+test-e2e-pedigree-module.R using the bundled obfuscated_rhesus_mhc_ped_affected.csv fixture,
+querying the rendered visNetwork widget's actual node color for a known TRUE/FALSE/NA triple
+(677E7M/BRI2MW/MND3AC) -- first drafted with jsonlite::fromJSON(), which devtools::check()
+correctly flagged as an undeclared dependency (this package deliberately avoids jsonlite, per
+helper-shinytest2.R's own existing comment); rewrote to return the color field directly via JS
+instead of parsing JSON in R. NEWS.Rmd/NEWS.md gained a "Fixed:" bullet; BACKLOG.md item marked
+DONE. Verification: devtools::check() 0 errors/0 warnings/1 pre-existing NOTE; full clean
+regression 0 failed/0 error (2,156 blocks); lintr::lint_package() 0 lints; live shinytest2 14/14
+tests (49 assertions, 0 regressions in the 13 pre-existing pedigree-module E2E tests). Commits:
+402a6b5b (claim), this session's own deliverable + close-out commits (see next reconcile for
+shas).
+next_steps: BACKLOG.md priorities, in order: (1) Add a consanguineous-mating visual marker to the
+Diagram tab (S549 Finding #2, READY, Effort S) -- likely kinship(sire, dam) > 0 detection + a
+distinct edge style on the 2 spouse-to-union edges in R/makePedigreeMatingLayout.R. (2) Write the
+dedicated Pedigree Diagram tab article (READY, Effort M, unchanged since S544) -- inventory the
+tab's full current feature set against the live app first (matching the audit precedent in
+docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md). Lower priority: the
+branch-cleanup item (found S552, READY, Effort S -- check mergedness before deleting); issue #148
+scope-narrowing conversation (needs its own scoping session). Unchanged: NPRC outreach owner
+review (DECISION NEEDED); LabKey remaining recs (BLOCKED). Also unresolved: the shinytest2.yaml
+scheduled CI run is still red at the E2E-tier step, unchanged from S548-S553's own findings --
+still not diagnosed by any session; a future session should pick this up directly rather than
+continuing to carry it forward. Local master remains ahead of origin (27+ commits after this
+session) -- a future session should consider pushing.
+key_files: R/makePedigreeDiagramData.R (.affectedColor(), ~line 163 -- the one-line fix, plus its
+2 call sites at ~110 and ~1082-1083/1138/1155); tests/testthat/test_makePedigreeDiagramData.R,
+test_makePedigreeMatingLayout.R (the 6 updated assertions -- a template for any future
+color.background-related test change); tests/testthat/test-e2e-pedigree-module.R (the new
+affected-status E2E test, ~line 225 -- a template for querying a visNetwork node's rendered color
+directly via JS, without a jsonlite dependency); inst/extdata/examples/
+obfuscated_rhesus_mhc_ped_affected.csv (the fixture used, with known TRUE/FALSE/NA ids
+677E7M/BRI2MW/MND3AC); docs/planning/issue133-affected-status-pedigree-diagram-plan.md sec 2.1
+(kinship2's own verified affected-status rendering convention, the evidence base for this fix's
+direction).
+gotchas: (1) tests/testthat/helper-shinytest2.R has an explicit existing comment that this package
+deliberately does NOT depend on jsonlite -- grep for that comment (or run devtools::check()) before
+using jsonlite::fromJSON() or any other jsonlite call in a new test; query the specific field
+directly via JS instead (see the get_node_color() helper this session added as a template).
+(2) When writing a test change and an implementation change together in one edit batch, RED is not
+properly confirmed just by reasoning "the old code would fail this" -- stash the implementation
+diff (git diff <file> > /tmp/x.patch; git checkout -- <file>), run the updated tests against
+unmodified source to see the real failure, then reapply (git apply /tmp/x.patch) before treating
+GREEN as reached. (3) No adversarial-verification pass has been run on this fix -- flagged, not
+silently omitted.
+runtime_smoke: PASS (live). NPRC_RUN_E2E=true/NOT_CRAN=true shinytest2/chromote run of the full
+test-e2e-pedigree-module.R suite: 14/14 tests, 49 assertions, 0 failed/0 error -- including the
+new affected-status test (confirms 677E7M renders #CC79A7, BRI2MW and MND3AC render #FFFFFF) and
+0 regressions in the 13 pre-existing tests (incl. the issue #137 twin-connector tests).
+changelog_ref: this session's own CHANGELOG.md entries (claim, deliverable, close-out).
 commit: pending
 ```
-<free-text prose: pending>
+<free-text prose: Session 554 delivered the affected-status shading fix cleanly -- a genuinely
+single-line core change, grounded directly in kinship2's own already-researched convention rather
+than an intuited color choice, full strict-TDD cycle with a properly-confirmed RED (stash/
+reapply), 0 errors/0 warnings/0 lints, live E2E confirming the actual rendered color for a known
+TRUE/FALSE/NA triple. Self-score 9/10: one point held back for drafting the new E2E test with an
+undeclared dependency (jsonlite) before checking whether the package already avoided one -- caught
+only by devtools::check(), not by a pre-emptive grep -- and the still-unaddressed adversarial-
+verification gap. Predecessor score 9/10: S553's handoff was accurate and its next_steps list
+directly usable; the full-regression gotcha was general enough to apply cleanly to a
+differently-shaped change than the one that originally motivated it.>
 
 ```handoff
 session: S553

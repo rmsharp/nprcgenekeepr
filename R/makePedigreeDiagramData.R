@@ -105,8 +105,12 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     # D3 Option 1: single dominant-trait color, only affected == TRUE gets
     # a fill (D8 color, Okabe-Ito reddish-purple -- colorblind-safe,
     # distinct from both the GVA heatmap's red/yellow/green risk convention
-    # and the existing #2B7CE9 waypoint-edge blue). FALSE/NA leave
-    # color.background NA, i.e. vis.js's own default.
+    # and the existing #2B7CE9 waypoint-edge blue). FALSE/NA get an explicit
+    # open/unfilled (white) color.background, matching kinship2's own
+    # "unfilled if 0/NA" pedigree-drawing convention -- BACKLOG.md
+    # Housekeeping (found S552): leaving color.background NA here let
+    # visNetwork fall back to ITS OWN default fill, which does not read as
+    # open/unfilled, fixed in .affectedColor() below.
     nodes$color.background <- .affectedColor(affected)
   }
 
@@ -149,19 +153,23 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 
 #' Map an affected-status vector to a vis.js node fill color (issue #133 D8)
 #'
-#' \code{TRUE} gets the D8 accent color; \code{FALSE}/\code{NA} leave no
-#' override (vis.js's own default). Shared by both
-#' \code{\link{makePedigreeDiagramData}} and
+#' \code{TRUE} gets the D8 accent color (filled); \code{FALSE}/\code{NA} get
+#' an explicit white, matching kinship2's own "unfilled if 0/NA"
+#' pedigree-drawing convention (BACKLOG.md Housekeeping, found S552).
+#' Leaving \code{color.background} \code{NA} for the \code{FALSE}/\code{NA}
+#' case does NOT render as open/unfilled -- vis.js falls back to its own
+#' default node fill instead, which reads as "a different solid color," not
+#' "no fill." Shared by both \code{\link{makePedigreeDiagramData}} and
 #' \code{\link{makePedigreeMatingLayout}} (a small pure leaf utility, unlike
 #' the two functions' own deliberately-duplicated node-building logic --
 #' same sharing precedent as \code{.escapeHtml()} above).
 #'
 #' @param affected logical vector, \code{NA} allowed.
-#' @return character vector, \code{NA_character_} where no color override
-#'   applies.
+#' @return character vector: \code{"#CC79A7"} where \code{affected} is
+#'   \code{TRUE}, \code{"#FFFFFF"} otherwise (\code{FALSE} or \code{NA}).
 #' @noRd
 .affectedColor <- function(affected) {
-  ifelse(!is.na(affected) & affected, "#CC79A7", NA_character_)
+  ifelse(!is.na(affected) & affected, "#CC79A7", "#FFFFFF")
 }
 
 #' Map an affected-status vector to a human-readable Yes/No/Unknown label

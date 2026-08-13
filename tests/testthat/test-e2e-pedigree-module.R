@@ -217,6 +217,80 @@ test_that("E2E: Pedigree Browser Diagram tab shows a known trio's data", {
                info = "Dam -> mating-unit edge should exist")
 })
 
+## BACKLOG.md Housekeeping -- affected-status shading defect (found S552,
+## fixed S554): affected == TRUE renders filled (D8 color); FALSE/NA must
+## render open/unfilled (white), matching kinship2's own convention, not
+## visNetwork's own default fill.
+
+test_that(
+  "E2E: Pedigree Browser Diagram tab shades affected == TRUE individuals
+   filled and leaves FALSE/NA individuals open (unfilled), matching
+   pedigree drawing convention", {
+  skip_if_not_installed("shinytest2")
+  skip_if_not_installed("chromote")
+  skip_if_not_installed("visNetwork")
+  skip_on_cran()
+
+  app_dir <- create_test_app()
+  app <- create_app_driver(app_dir, "e2e_pedigree_diagram_affected")
+  on.exit(app$stop(), add = TRUE)
+
+  fixture <- system.file("extdata", "examples",
+                         "obfuscated_rhesus_mhc_ped_affected.csv",
+                         package = "nprcgenekeepr")
+  loaded <- upload_and_wait(app, fixture)
+  if (!loaded) skip("Upload/QC did not complete")
+
+  success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
+  if (!success) skip("Could not navigate to Pedigree tab")
+
+  clicked <- click_element_safe(app, 'a[data-value="Diagram"]')
+  if (!clicked) skip("Could not switch to the Diagram tab")
+
+  ## Returns the node's color.background directly (a plain string), not the
+  ## full node JSON -- avoids adding a jsonlite dependency just to parse one
+  ## field (helper-shinytest2.R's own established precedent: this package
+  ## does not depend on jsonlite, matching devtools::check()'s "unstated
+  ## dependencies in tests" guard).
+  get_node_color <- function(id) {
+    app$get_js(sprintf(paste0(
+      "(() => { const w = HTMLWidgets.find('#pedigree-pedigreeDiagram'); ",
+      "if (!w) return 'null'; ",
+      "const n = w.network.body.data.nodes.get('%s'); ",
+      "if (!n) return 'null'; ",
+      "return (n.color && n.color.background) ? n.color.background : ",
+      "'null'; })()"
+    ), id))
+  }
+
+  ## obfuscated_rhesus_mhc_ped_affected.csv's own known values: 677E7M is
+  ## affected == TRUE, BRI2MW is affected == FALSE, MND3AC is affected == NA.
+  trueColor <- get_node_color("677E7M")
+  if (identical(trueColor, "null")) skip("visNetwork widget instance not found")
+  falseColor <- get_node_color("BRI2MW")
+  naColor <- get_node_color("MND3AC")
+
+  expect_equal(trueColor, "#CC79A7",
+              info = "affected == TRUE should render filled with the D8 color")
+  expect_equal(falseColor, "#FFFFFF",
+              info = paste(
+                "affected == FALSE should render open/unfilled (white), not",
+                "visNetwork's own default fill -- the reported defect"
+              ))
+  expect_equal(naColor, "#FFFFFF",
+              info = paste(
+                "affected == NA (unknown) should render open/unfilled",
+                "(white), matching kinship2's own unfilled convention"
+              ))
+
+  logs <- app$get_logs()
+  diagramErrors <- logs[logs$level == "throw" &
+                          grepl("vis|network|pedigreeDiagram", logs$message,
+                                ignore.case = TRUE), ]
+  expect_equal(nrow(diagramErrors), 0L,
+               info = "No visNetwork/diagram-related console error")
+})
+
 ## issue #129 Slice 2 -- click-to-navigate interactivity smoke test.
 
 test_that(

@@ -636,8 +636,8 @@ test_that(
   realRows <- result$nodes[result$nodes$id %in% trio$id, ]
   colors <- setNames(realRows$color.background, realRows$id)
   expect_equal(colors[["P1"]], "#CC79A7")
-  expect_true(is.na(colors[["P2"]]))
-  expect_true(is.na(colors[["C1"]]))
+  expect_equal(colors[["P2"]], "#FFFFFF")
+  expect_equal(colors[["C1"]], "#FFFFFF")
 })
 
 test_that(

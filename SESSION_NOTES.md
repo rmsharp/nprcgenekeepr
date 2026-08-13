@@ -10,19 +10,94 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 553 Handoff Evaluation (by Session 554)
+**Score: 9/10.** **What helped:** the `next_steps` field's priority-ordered list matched this
+session's own independently-rendered pick exactly (item 1 of 3), and the `gotchas` field's warning
+(2) -- run the FULL `testthat::test_dir()` regression whenever a module's return shape or a mocked
+function's parameter list changes, not just the targeted files -- was directly applicable and
+followed proactively this session even though this session's own change (a pure internal function,
+not a Shiny module/mock) turned out not to trigger the same class of stub drift; running the full
+regression anyway (as the gotcha recommends unconditionally) was the correct discipline regardless.
+**What was wrong:** nothing found inaccurate. **What was missing:** nothing material to this
+session's own narrower scope. **ROI:** High -- the priority list eliminated any need to re-derive
+what to pick up next, and the full-regression discipline reinforced by the gotcha was applied
+automatically without having to re-decide it.
+
 ### What Session 554 Did
 **Deliverable:** Fix the Pedigree Diagram tab's affected-status shading defect (`BACKLOG.md`
-Housekeeping, found S552, owner-reported live, READY, Effort S) -- unaffected/unknown-affected
-individuals currently render solid-filled instead of open/unfilled, counter to standard pedigree
-drawing convention (filled = affected, open outline = unaffected/unknown). Traced to
-`.affectedColor()` (`R/makePedigreeDiagramData.R:163-165`): its `NA_character_` `color.background`
-for the `FALSE`/`NA` case does not render as "no fill" in visNetwork -- it falls back to the
-library's own default node fill. (IN PROGRESS)
-**Started:** 2026-08-13.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+Housekeeping, found S552, owner-reported live, READY, Effort S) -- **DONE.** Unaffected/unknown
+-affected individuals rendered solid-filled instead of open/unfilled, counter to standard pedigree
+drawing convention. **Started/Completed:** 2026-08-13. **Status:** DONE. TDD phase: GREEN (REFACTOR
+declined via `AskUserQuestion` -- the fix is a genuinely single-line change).
+
+**What happened, in order:** **(1)** Phase 0 orient: since this session began immediately after
+S553's own close-out in the same unbroken conversation, `SAFEGUARDS.md` (read in full earlier this
+session, unchanged) and `SESSION_NOTES.md` (just written) were carried forward rather than
+re-read verbatim; the state-changing checks were refreshed fresh (`git status`/`log`/`diff --stat`,
+`methodology_dashboard.py` [Health 96/100, 0 High+ risk, unchanged], `gh run list` [unchanged, no
+new pushes since S553's own check], ledger frontiers both at `HEAD` -- no reconcile needed). User
+picked this item from the rendered next-session options. **(2)** Wrote the Phase 1B claim stub,
+committed (`402a6b5b`). **(3)** PRE-RED: read `.affectedColor()`
+(`R/makePedigreeDiagramData.R:150-165`) and both its call sites (`makePedigreeDiagramData()`
+line ~110, `makePedigreeMatingLayout()`'s `.affectedColorForVec()` lines ~1082-1083/1138/1155),
+confirmed the union/waypoint-node color paths are structurally independent of `.affectedColor()`
+(so the fix cannot leak into those, matching their own existing "never gets affected-status
+coloring" contract). Re-read `docs/planning/issue133-affected-status-pedigree-diagram-plan.md`'s
+own kinship2-source research (§2.1): kinship2's actual convention is "unfilled if 0, hatch-filled
+if 1, unfilled plus a '?' glyph if NA" -- confirming the fix direction (FALSE/NA render as
+explicit open/white) directly from the reference implementation's own verified behavior, not
+guessed. Confirmed via the widget's own UI code that no `visBackgroundColor` override is set, so
+the canvas defaults to white -- making `"#FFFFFF"` the correct "blend into open" choice, not
+`"rgba(0,0,0,0)"` (the codebase's own existing but unrelated fully-transparent convention for
+invisible waypoint nodes, which would hide the node's outline entirely, not just its fill).
+**(4)** PRE-RED->RED gate via `AskUserQuestion`: updated 6 existing assertions across 2 files
+(`test_makePedigreeDiagramData.R` 2 blocks, `test_makePedigreeMatingLayout.R` 1 block) from
+`expect_true(is.na(...))` to `expect_equal(..., "#FFFFFF")`, plus a new live E2E test using the
+bundled `obfuscated_rhesus_mhc_ped_affected.csv` fixture. Confirmed RED properly (not just by
+inspection): stashed the not-yet-written implementation diff, ran the updated tests against the
+unmodified source, confirmed 6 failures for the right reason (old code still returns `NA`), then
+reapplied the implementation patch. **(5)** RED->GREEN gate via `AskUserQuestion`: changed
+`.affectedColor()`'s `FALSE`/`NA` branch from `NA_character_` to `"#FFFFFF"` (a single-line core
+change) plus updated roxygen/inline comments describing the old (incorrect) rationale. All
+targeted unit tests passed; full clean regression 0 failed/0 error (2,156 blocks). Live E2E
+(`NPRC_RUN_E2E=true`): the new affected-status test asserts the widget's actual rendered
+`color.background` for a known TRUE/FALSE/NA triple (677E7M/BRI2MW/MND3AC) via a direct JS query
+-- first written using `jsonlite::fromJSON()`, which `devtools::check()` correctly flagged as an
+undeclared dependency (this package deliberately does not depend on jsonlite, per
+`helper-shinytest2.R`'s own existing comment); rewrote to return the color field directly from JS
+instead of parsing JSON in R, re-verified live (14/14 tests, 49 assertions, 0 regressions in the
+13 pre-existing pedigree-module E2E tests). `devtools::document()` no-op (function is `@noRd`,
+not exported). `lintr::lint_package()` 0 lints on all touched files. **(6)** GREEN->REFACTOR gate
+via `AskUserQuestion`: owner picked "close out as-is." **(7)** `devtools::check()` (final, clean
+run) 0 errors/0 warnings/1 pre-existing NOTE (vignettes/figure leftover).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist (#120) -- N/A, a rendering-defect
+fix to already-shipped issue #133 behavior, not a new displayed statistic. Tutorial/article
+checklist -- checked, N/A: `_pedigree_browser.Rmd`/`colony-manager-guide.qmd`'s existing prose
+("individuals marked affected are additionally shaded a distinct color") makes no claim about the
+FALSE/NA appearance that needed correcting. `NEWS.Rmd` -- DONE: new "Fixed:" bullet added to the
+dev-version section (matching the file's existing issue #155 fix-bullet style, without an issue
+number since none is filed); `NEWS.md` regenerated. `a2interactive.Rmd` checklist -- N/A (Shiny-
+UI-only rendering fix, not a script-callable function gaining a parameter). GitHub issue close-out
+-- N/A, no issue was filed for this item. Lint -- DONE, 0 lints.
+
+**Self-assessment (Session 554): 9/10.** **Strengths:** (1) Verified the exact fix direction
+against kinship2's own already-researched reference behavior (the issue #133 plan document's own
+§2.1) rather than picking an "open" color by intuition -- the plan doc had already established
+"unfilled if 0/NA" as the target convention; this session found and used that existing evidence
+rather than re-deriving it. (2) Properly confirmed RED by stashing the implementation and running
+the updated tests against unmodified source (not just asserting "these tests would fail" from
+reading the diff), catching the risk of writing test+implementation changes in the same edit batch
+without an intermediate verification step. (3) `devtools::check()` caught a real dependency issue
+(`jsonlite::fromJSON()` undeclared) that a targeted test run would have missed entirely (since
+`jsonlite` happens to be installed transitively via `chromote`, the test passed locally despite
+the violation) -- fixed by matching the codebase's own already-documented "no jsonlite dependency"
+convention rather than just declaring the dependency to make the warning go away. **Weaknesses:**
+(1) The first draft of the new live E2E test used `jsonlite::fromJSON()` without first checking
+whether the package already avoids that dependency (a `grep -rn jsonlite` before writing, not
+after `devtools::check()` flagged it, would have caught this at RED instead of after a full GREEN
+verification pass). (2) No adversarial-verification pass run on this fix.
+**Ledger:** recorded in `CHANGELOG.md` (this session's claim, deliverable, and close-out entries).
 
 ### Session 552 Handoff Evaluation (by Session 553)
 **Score: 10/10.** **What helped:** every `key_files` pointer was accurate and directly usable --

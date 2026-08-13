@@ -175,17 +175,22 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       blood-relation one). Likely detectable directly from the existing kinship matrix
       (`kinship(sire, dam) > 0`) with a distinct edge style applied to that union's 2
       spouse-to-union edges.
-- [ ] **Pedigree Diagram tab's affected-status shading fills unaffected individuals too,
-      counter to standard pedigree drawing convention** (found S552, owner-reported live
-      at session start, READY, Effort S) -- issue #133's `.affectedColor()`
-      (`R/makePedigreeDiagramData.R:163-165`) sets `color.background` to `"#CC79A7"` when
-      `affected == TRUE` and `NA_character_` otherwise; in visNetwork an `NA`
-      `color.background` does not render as an *open/unfilled* node (the pedigree
-      convention: filled = affected, open outline = unaffected/unknown) -- it falls back
-      to the library's own default fill, so unaffected and unknown-affected individuals
-      still render solid-filled. Needs an explicit "no fill" (or matching
-      background/open-outline) treatment for the `FALSE`/`NA` case, not just an absent
-      color override. Not yet filed as a GitHub issue.
+- [ ] (found S552, owner-reported live, **FIXED S554**. **Pedigree Diagram tab's
+      affected-status shading fills unaffected individuals too, counter to standard
+      pedigree drawing convention** -- issue #133's `.affectedColor()`
+      (`R/makePedigreeDiagramData.R`) set `color.background` to `"#CC79A7"` when
+      `affected == TRUE` and left it `NA_character_` otherwise; in visNetwork an `NA`
+      `color.background` does not render as an *open/unfilled* node -- it falls back to
+      the library's own default fill, so unaffected/unknown-affected individuals still
+      rendered solid-filled. Fixed: `FALSE`/`NA` now get an explicit `"#FFFFFF"`
+      (open/unfilled), matching kinship2's own "unfilled if 0/NA" convention (verified
+      against the issue #133 plan document's own kinship2-source research). 6 existing
+      unit-test assertions updated (`test_makePedigreeDiagramData.R`,
+      `test_makePedigreeMatingLayout.R`); new live E2E test confirms the actual rendered
+      color for a known TRUE/FALSE/NA triple via the bundled
+      `obfuscated_rhesus_mhc_ped_affected.csv` fixture. `devtools::check()` 0 errors/0
+      warnings/1 pre-existing NOTE; full clean regression 0 failed/0 error (2,156 test
+      blocks); `lintr::lint_package()` 0 lints. Not filed as a GitHub issue.)
 - [ ] **`CHANGELOG.md`'s own ~4-entries-per-session ledger convention (claim, Phase 0
       reconcile, deliverable, close-out) may be a `CHANGELOG.md`-side analogue of the
       already-diagnosed `HANDOFFS.md` "Receipt Inflation" (H4) rate problem** (found S543,

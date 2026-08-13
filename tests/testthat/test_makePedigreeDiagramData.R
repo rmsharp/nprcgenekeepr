@@ -186,15 +186,21 @@ test_that(
 
 ## Issue #133 -- affected/phenotype/genotype status encoding (D1-D8,
 ## docs/planning/issue133-affected-status-pedigree-diagram-plan.md).
-## affected is an OPTIONAL logical column (TRUE/FALSE/NA). When present, an
-## affected == TRUE node gets a dominant `color.background` (D3 Option 1,
-## D8 color #CC79A7) and every node's tooltip gains an "Affected: Yes/No/
-## Unknown" line (D3 Option 0). Absent column => zero change to today's
-## output (backward compatible with every pre-#133 fixture/test).
+## affected is an OPTIONAL logical column (TRUE/FALSE/NA). When present,
+## every node gets an explicit `color.background`: TRUE the dominant D8
+## color (#CC79A7, filled); FALSE/NA an explicit white (#FFFFFF, open/
+## unfilled) -- matching kinship2's own "unfilled if 0/NA" convention
+## (BACKLOG.md Housekeeping, found S552: FALSE/NA originally left
+## color.background NA, which visNetwork rendered as ITS OWN default pale
+## fill, not open -- fixed here). Every node's tooltip also gains an
+## "Affected: Yes/No/Unknown" line (D3 Option 0). Absent column => zero
+## change to today's output (backward compatible with every pre-#133
+## fixture/test).
 
 test_that(
-  "makePedigreeDiagramData sets color.background only for affected == TRUE
-   rows when the affected column is present", {
+  "makePedigreeDiagramData sets an explicit color.background for every row
+   when the affected column is present -- TRUE filled, FALSE/NA explicitly
+   open/unfilled (white), not visNetwork's own default fill", {
   ped <- data.frame(
     id = c("A1", "A2", "A3"),
     sire = NA_character_, dam = NA_character_,
@@ -207,8 +213,8 @@ test_that(
   expect_true("color.background" %in% names(result$nodes))
   colors <- setNames(result$nodes$color.background, result$nodes$id)
   expect_equal(colors[["A1"]], "#CC79A7")
-  expect_true(is.na(colors[["A2"]]))
-  expect_true(is.na(colors[["A3"]]))
+  expect_equal(colors[["A2"]], "#FFFFFF")
+  expect_equal(colors[["A3"]], "#FFFFFF")
 })
 
 test_that(
@@ -244,8 +250,8 @@ test_that(
   result <- makePedigreeDiagramData(ped)
   colors <- setNames(result$nodes$color.background, result$nodes$id)
   expect_equal(colors[["A1"]], "#CC79A7")
-  expect_true(is.na(colors[["A2"]]))
-  expect_true(is.na(colors[["A3"]]))
+  expect_equal(colors[["A2"]], "#FFFFFF")
+  expect_equal(colors[["A3"]], "#FFFFFF")
 })
 
 test_that(
