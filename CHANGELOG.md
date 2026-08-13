@@ -138,6 +138,46 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-N] S550 close-out: session self-assessment, S549 handoff evaluation, Learning 557
+- **Deliverable:** Session S550's own close-out. Evaluated S549's `HANDOFFS.md` receipt (8/10 --
+  the `next_steps` priority list matched this session's own independently-rendered Phase 0
+  priorities exactly, but the `active_task`/`what_was_done` fields' "15 call sites of `kinship()`"
+  figure was found inaccurate once this session ran an AST-level inventory -- corrected, not
+  fabricated, since S549's own audit carried the same unverified number). Self-assessment (9/10),
+  handoff notes, and `PROJECT_LEARNINGS.md` Learning 557 (the call-site-verification +
+  documented-invariant-tension disciplines) written to `SESSION_NOTES.md`/`HANDOFFS.md`. See
+  `SESSION_NOTES.md` for the full record.
+
+### 2026-08-13 · [BL-N] S550: ratified design for threading `twinRelations` into `kinship()`'s computation
+- **Deliverable:** `docs/planning/twin-relations-kinship-computation-plan.md` (RATIFIED) --
+  designed how the existing `twinRelations` sidecar data model (issue #137) reaches
+  `kinship()`'s own computation, per S549 Finding #1. An AST-level (parse-and-walk) inventory
+  found 7 production call sites, not the audit's carried-forward "15" -- `reportGV()`,
+  `gvaConvergence()`, `createSimKinships()`, `cumulateSimKinships()` (the latter two confirmed
+  to have zero in-package callers, standalone script utilities), the app's shared kinship
+  reactive, and 2 Shiny-module fallback recomputes -- plus 30 test call sites; 10 further
+  matrix-consumer functions (`meanKinship()`, etc.) need no change. Derived mathematically why
+  the MZ-identity correction must live inside `kinship()`'s own recursive depth loop, not a
+  post-hoc patch on the finished matrix (a single-pass fix cannot propagate to a twin's
+  descendants -- confirmed against the audit's own `kinship(9,10)` worked example). Reconciled
+  the proposal against `R/applyKinshipOverrides.R`'s own documented "`kinship()` itself is never
+  modified" invariant by distinguishing a structural pedigree fact (twin identity) from an
+  outside-information override, verified against `makeSimPed()`'s actual pass-through behavior
+  for already-known individuals. Proposed a 3-slice implementation (core algorithm -> the 4
+  script-callable functions -> full Shiny wiring, the last flagging an unresolved tab-order UX
+  dragon for its own Pre-RED). Ratified via `AskUserQuestion` (2 judgment calls: extend
+  `kinship()`'s own signature; trust a pre-validated `twinRelations` rather than adding a new
+  `sex` parameter) -- owner selected the document's own recommended option both times, no
+  changes requested. `BACKLOG.md`'s triggering item updated with the ratified pointer and the
+  corrected call-site count. TDD phase: N/A (design/planning deliverable, no production code or
+  test surface, matching the S457/S458/S485/S488/S491/S499/S517 precedent).
+
+### 2026-08-13 · [BL-N] S550 claim: thread `twinRelations` into `kinship()`'s computation (design)
+- **Deliverable:** Session S550 claimed. Picking up the `BACKLOG.md` Housekeeping item (found
+  S549, Finding #1 of the kinship2 reproducibility audit) -- design (not implement) how the
+  existing `twinRelations` sidecar data model reaches `kinship()`'s own computation, scoped to a
+  design-document-only deliverable per an `AskUserQuestion`-gated scope decision.
+
 ### 2026-08-13 · [BL-N] S549 close-out: session self-assessment, S548 handoff evaluation, Learning 556
 - **Deliverable:** Session S549's own close-out. Evaluated S548's `HANDOFFS.md` receipt (9/10 --
   the `next_steps` priority list matched this session's own independently-rendered Phase 0

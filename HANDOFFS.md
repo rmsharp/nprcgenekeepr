@@ -127,19 +127,76 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S550
 date: 2026-08-13
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 9
+predecessor_score: 8
 active_task: Design document for threading twinRelations into kinship()'s computation (S549
-Finding #1): evidence-based inventory of all 15 kinship() call sites, the transitive
--propagation question, and the ratified API/data-flow shape. Design only, docs/planning/ --
+Finding #1) -- DONE and RATIFIED. docs/planning/twin-relations-kinship-computation-plan.md:
+AST-verified call-site inventory (7 production, not the audit's carried-forward 15), the
+mathematical case for why the correction must live inside kinship()'s own recursive depth
+loop (not a post-hoc patch), and a 3-slice implementation plan. Both judgment calls (D1:
+extend kinship() itself; D2: trust a pre-validated twinRelations) ratified via
+AskUserQuestion, owner chose the recommended option both times. Design only -- Slice 1
 implementation is a separate future session.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+what_was_done: Ran an AST-level (parse-and-walk, not text-grep) inventory of every kinship(
+call in R/ and tests/testthat/ -- corrected the audit's "15 call sites" to the true 7
+production + 30 test split, and discovered createSimKinships()/cumulateSimKinships() have
+zero in-package callers (standalone script utilities, not reached via reportGV()). Deparsed
+kinship2's own kinship.pedigree S3 method directly from the installed namespace to get its
+exact mzgrp/mzindex/in-loop-correction mechanism. Derived mathematically why a post-hoc
+single-pass patch on the finished matrix cannot correctly propagate twin identity to a
+twin's descendants, using the audit's own kinship(9,10) worked example as concrete
+confirmation. Found and reconciled a real tension with R/applyKinshipOverrides.R's own
+documented "kinship() itself is never modified" invariant -- argued twin identity is a
+structural pedigree fact, not an outside-information override, verified against
+makeSimPed()'s actual behavior (twin pairs pass through Monte Carlo simulation unchanged).
+Traced the exact Shiny data-flow gap (twinRelations reachable only inside modPedigree.R's
+own reactive scope, never promoted to shared/other tabs) against the closest existing
+precedent (kinshipOverrideData/modGeneticValue.R). Wrote the ~304-line plan document
+following this project's established design-doc structure; ran the AskUserQuestion
+ratification round (Q1/Q2); updated BACKLOG.md's triggering item with the ratified pointer
+and the corrected call-site count.
+next_steps: BACKLOG.md priorities, in order: (1) Slice 1 implementation of the now-ratified
+plan (docs/planning/twin-relations-kinship-computation-plan.md Section 4) -- add
+twinRelations = NULL to kinship() itself, port the mzgrp/mzindex mechanism, full TDD cycle
+using the S549 audit's own 10-subject fixture as the acceptance test. Full strict-TDD
+PRE-RED->RED->GREEN(->REFACTOR) gates apply (production code, unlike this session). (2) Add
+a consanguineous-mating visual marker to the Diagram tab (S549 Finding #2, READY, Effort S).
+(3) Write the dedicated Pedigree Diagram tab article (READY, Effort M, unchanged since
+S544). (4) Issue #148 scope-narrowing conversation (needs its own scoping session,
+unchanged). Unchanged from S549: NPRC outreach owner review (DECISION NEEDED); LabKey
+remaining recs (BLOCKED). **Also unresolved: the shinytest2.yaml scheduled CI run
+(31678188033) is still red at the E2E-tier step, unchanged from S548/S549's own finding --
+still not diagnosed.** Local master remains ahead of origin (14+ commits after this
+session) -- a future session should consider pushing.
+key_files: docs/planning/twin-relations-kinship-computation-plan.md (new, the full ratified
+design -- Section 4 is Slice 1's own implementation starting point, Section 2.4 has the
+exact 7-call-site table); R/kinship.R:62 (the function Slice 1 modifies);
+R/applyKinshipOverrides.R (the "never modified" comment that needs updating per the plan's
+Dragon 2); BACKLOG.md (triggering item updated with the ratified pointer + corrected count);
+PROJECT_LEARNINGS.md Learning 557 (new, file tail); SESSION_NOTES.md (S549 handoff
+evaluation + full S550 write-up).
+gotchas: (1) Do not re-cite "15 call sites" anywhere -- the AST-verified true count is 7
+production (R/reportGV.R:162, R/gvaConvergence.R:139, R/createSimKinships.R:60,
+R/cumulateSimKinships.R:63, R/appServer.R:343, R/modBreedingGroups.R:251,
+R/modSummaryStats.R:382) + 30 test call sites; the plan's own §2.4 has the full table. (2)
+createSimKinships()/cumulateSimKinships() have ZERO in-package callers -- they are
+standalone, script-callable Monte Carlo utilities (vignettes/simulatedKValues.Rmd), not
+reached via reportGV()/gvaConvergence() internally; Slice 2's implementing session should
+not assume otherwise. (3) The plan's Slice 3 (Shiny wiring) has an explicitly unresolved
+Dragon 1 -- twinRelations currently uploads only in the Diagram tab, not GV Analysis (unlike
+its closest precedent, kinshipOverrides) -- Slice 3's own Pre-RED must resolve this via
+AskUserQuestion before implementation, not this document. (4) This session did not confirm
+whether a dedicated test_gvaConvergence.R file exists under that name -- Slice 2's Pre-RED
+should check before writing tests against an assumed filename. (5) No adversarial-
+verification pass was run against this design (unlike the issue137 plan's own precedent) --
+flagged in §9, not silently omitted; worth requesting one before Slice 1 if the owner wants
+independent scrutiny of §2.2's propagation argument or §2.6's Monte-Carlo-non-interaction
+claim.
+runtime_smoke: n/a -- docs-only planning session, no production code or runtime behavior
+changed (matching the design-session precedent, e.g. issue137/issue145/issue152's own
+close-outs).
+changelog_ref: see CHANGELOG.md's 2026-08-13 S550 entries (claim, deliverable, close-out).
 commit: pending
 ```
 

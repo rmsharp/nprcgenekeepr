@@ -91,16 +91,30 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       copyrighted siblings in the same directory -- still unresolved, unchanged from S545.
       See `CHANGELOG.md`.)
 - [ ] **Thread `twinRelations` into `kinship()`'s computation, not just diagram rendering**
-      (found S549, Finding #1 of the above audit, READY for its own design session, Effort M) --
-      `nprcgenekeepr` already has a twin-declaration data model (`checkTwinRelations()`, issue
-      #137) but it feeds only the Diagram tab; every kinship-driven calculation
-      (`meanKinship()`, GVA/genetic-value scoring, breeding-group formation, mate-pair
-      analysis -- 15 call sites of `kinship()` total) silently treats a declared
-      monozygotic-twin pair as ordinary full siblings, understating their kinship by exactly
-      0.25 and understating every relative reached through either twin. Scope should include
-      propagating the override transitively (kinship2's own behavior), not just the direct
-      pair -- confirmed via a side-by-side `kinship2::kinship()` reproduction with the twin
-      relation declared. Needs its own design session given `kinship()`'s 15 call sites.
+      (found S549, Finding #1 of the above audit; **design RATIFIED S550**, see
+      `docs/planning/twin-relations-kinship-computation-plan.md` -- READY for Slice 1
+      implementation, Effort M/3 slices) -- `nprcgenekeepr` already has a twin-declaration data
+      model (`checkTwinRelations()`, issue #137) but it feeds only the Diagram tab; every
+      kinship-driven calculation silently treats a declared monozygotic-twin pair as ordinary
+      full siblings, understating their kinship and understating every relative reached
+      through either twin (transitively, not just the direct pair -- kinship2's own behavior).
+      **S550 design session corrected the call-site count**: an AST-verified inventory (not a
+      text grep) found 7 production call sites, not 15 (`reportGV()`, `gvaConvergence()`,
+      `createSimKinships()`, `cumulateSimKinships()`, the app's shared kinship reactive, and 2
+      Shiny-module fallback recomputes) plus 30 test call sites; the 6 further consumer
+      functions (`meanKinship()`, etc.) need no change since they operate on an
+      already-computed matrix. Ratified design: extend `kinship()`'s own signature with a new
+      `twinRelations = NULL` parameter (porting kinship2's `mzgrp`/`mzindex` in-loop-correction
+      mechanism directly -- a post-hoc single-pass patch on the finished matrix was proven
+      mathematically insufficient, since it cannot correctly propagate to a twin's
+      descendants); `kinship()` trusts a pre-validated `twinRelations` (documented
+      precondition) rather than re-validating internally, since its flat-vector signature has
+      no `sex` parameter to run `checkTwinRelations()`'s full rule set itself. 3-slice plan:
+      Slice 1 (core algorithm, reusing S549's own 10-subject fixture as the acceptance test),
+      Slice 2 (the 4 script-callable functions), Slice 3 (full Shiny wiring -- flagged as
+      needing its own Pre-RED resolution of an open tab-order UX question, since
+      `twinRelations` is currently uploaded only in the Diagram tab, not GV Analysis). Not yet
+      filed as a GitHub issue.
 - [ ] **Add a visual marker for consanguineous matings in the Pedigree Diagram tab**
       (found S549, Finding #2 of the above audit, READY, Effort S) -- kinship2 draws a
       doubled/thickened mate-line for a blood-related couple; `makePedigreeMatingLayout()`

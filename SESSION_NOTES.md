@@ -10,17 +10,125 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 549 Handoff Evaluation (by Session 550)
+**Score: 8/10.** **What helped:** the `HANDOFFS.md` receipt's `next_steps` field's
+priority-ordered list matched this session's own independently-rendered Phase 0 priorities
+exactly (twinRelations-into-kinship() first, consanguinity marker second, Pedigree Diagram
+article third, issue #148 fourth, NPRC/LabKey/CI-red unchanged) — no corrections needed on
+the ordering itself. The `key_files` field's pointer to the audit doc was directly useful:
+the audit's own Finding #1 worked example (`kinship(9,10)` propagation through a non-twin
+descendant) turned out to be exactly the evidence this session needed to prove the
+post-hoc-patch alternative insufficient (§2.2 of this session's own plan). **What was
+wrong:** the `active_task`/`what_was_done` fields both state "kinship()'s 15 call sites" —
+this session ran an AST-level (not text-grep) inventory and found the real number is 7
+production call sites (plus 30 test call sites), not 15. Not a fabrication — S549's own
+audit doc states the same "15" figure, so the number was carried consistently, just never
+independently re-derived. Caught only because this session's own design work required an
+exact call-site list to design against, not just an approximate count to cite. Corrected in
+this session's own plan document (§1.3, §2.4, §9) and in the `BACKLOG.md` item text, per this
+project's "don't repeat a predecessor's number without re-verifying it" precedent. **What was
+missing:** nothing material for this session's own task — `gotchas` field (1), about the
+17-subject `fam1` pedigree's unreconstructability, wasn't relevant to a kinship-algorithm
+design task. **ROI:** High — the priority list and the audit's own worked numeric example were
+both directly load-bearing, offset by one number needing independent re-verification rather
+than trust-and-cite.
+
 ### What Session 550 Did
-**Deliverable:** Design document for threading `twinRelations` into `kinship()`'s computation
-(S549 Finding #1) — evidence-based inventory of all 15 `kinship()` call sites, the
-transitive-propagation question (matching kinship2's own `relation`-argument behavior), and
-the ratified API/data-flow shape, written to `docs/planning/`. Design only; implementation is
-a separate future session. (IN PROGRESS)
-**Started:** 2026-08-13
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** A ratified design document —
+`docs/planning/twin-relations-kinship-computation-plan.md` — for threading the existing
+`twinRelations` sidecar data model (issue #137) into `kinship()`'s own computation, so a
+declared MZ-twin pair's genetic identity is reflected in every kinship-driven calculation,
+not just the Diagram tab's rendering (S549 Finding #1).
+**Started/Completed:** 2026-08-13. **Status:** DONE. TDD phase: N/A (planning/design
+deliverable — no production code or test surface, matching the S457/S458/S485/S488/S491/
+S499/S517 precedent for design sessions). Commits: this session's claim/deliverable/close-out
+commits (see `HANDOFFS.md` receipt for shas once reconciled).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, `git status`/`log`/`diff --stat`,
+`methodology_dashboard.py` [Health 96/100, 0 High+ risk, Medium risk unexplained further —
+not investigated, doesn't block], `gh run list --branch master --limit 10`). Both
+`CHANGELOG.md`/`HANDOFFS.md` ledger frontiers were effectively current — the 2-commit
+`CHANGELOG.md` gap traced to S549's own trailing close-out/reconcile commits, whose content
+was already pre-written into the CHANGELOG entry by the preceding deliverable commit (this
+project's established self-referential-commit-sha convention, S543-S549 precedent) — no
+backfill needed. Confirmed the one untracked file (the kinship2 supplement PDF) is a known,
+already-documented `BACKLOG.md` item, not a ghost session. Rendered the priorities list (4
+numbered items) + the `AskUserQuestion` picker; owner picked item 1 (thread `twinRelations`
+into `kinship()`). **(2)** A second `AskUserQuestion` scoped the session to a design-only
+deliverable (design doc, `docs/planning/`) over a design+implementation vertical slice,
+matching `SESSION_RUNNER.md`'s "Planning Sessions" gate and the item's own "needs its own
+design session" framing. **(3)** Wrote the Phase 1B claim stub to `SESSION_NOTES.md`/
+`HANDOFFS.md` *before* any investigative work began (a deliberate correction of S549's own
+self-documented ordering slip, Learning 556 point 2). **(4)** Evidence-gathering: ran an
+AST-level (not text-grep) call-site inventory via a standalone `Rscript` walk over every
+parsed `R/*.R` and `tests/testthat/*.R` file, finding 7 production call sites (not the
+audit's own carried-forward "15") plus 30 test call sites; deparsed kinship2's own
+`kinship.pedigree` S3 method directly from the installed namespace to get its exact
+`havemz`/`mzgrp`/`mzindex` mechanism (not the Rd summary); derived mathematically (§2.2 of
+the plan) why the correction must live inside the recursive depth-loop rather than as a
+single-pass patch on the finished matrix, using the audit's own `kinship(9,10)` worked
+example as concrete confirmation; read `R/applyKinshipOverrides.R`'s own roxygen text and
+found it explicitly documents "`kinship()` itself is never modified" as a deliberate
+invariant — reconciled this against the new proposal by distinguishing "outside-information
+override" (what that invariant guards against) from "structural pedigree fact" (what twin
+identity actually is), grounded in `makeSimPed()`'s own confirmed behavior (twin pairs with
+known parents pass through Monte Carlo simulation unchanged, so there is no principled reason
+the two simulations need shielding from twin identity the way they need shielding from
+kinship overrides). Traced the exact Shiny data-flow gap: `twinRelations` is currently
+reachable only inside `modPedigree.R`'s own reactive scope (the Diagram tab), never promoted
+to `shared` or threaded to the GV Analysis/Summary Stats/Breeding Groups tabs the way
+`kinshipOverrides` is — identified the closest existing precedent
+(`kinshipOverrideData`/`modGeneticValue.R`) and the one structural difference (twinRelations'
+upload point is a *different* tab than the precedent's). **(5)** Wrote the design document
+(`docs/planning/twin-relations-kinship-computation-plan.md`, ~304 lines) following this
+project's established design-doc structure (context → evidence-based inventory → design
+decisions → vertical-slice implementation plan → impact analysis → dragons → alternatives →
+close-out mapping → provenance → ratification), proposing a 3-slice implementation (core
+algorithm → the 4 script-callable functions → full Shiny wiring) and 2 genuine judgment calls
+(D1: extend `kinship()` itself vs. a new separate function; D2: trust a pre-validated
+`twinRelations` vs. add a `sex` parameter and validate internally). **(6)** Ran the
+ratification round via a single `AskUserQuestion` call (Q1/Q2 together); the owner selected
+this document's own recommended option for both, with no changes requested — extend
+`kinship()`'s own signature (D1 Option A); trust a pre-validated input (D2 Option A). Updated
+the document's Status header and §10 with the ratification outcome. **(7)** Updated
+`BACKLOG.md`'s triggering item to point at the ratified plan and correct the "15 call sites"
+figure to the AST-verified 7+30 split.
+
+**Self-assessment (Session 550): 9/10.** **Strengths:** (1) Did not trust the predecessor's
+"15 call sites" figure at face value — ran an independent AST-level inventory specifically
+because the design task required an exact list to design against, catching and correcting a
+number that had been carried unverified across two sessions (the audit, then the BACKLOG
+item). (2) Worked out, with a concrete mathematical argument grounded in the audit's own
+worked numeric example, *why* a post-hoc single-pass patch is insufficient (not just asserting
+kinship2's in-loop placement is "the way to do it") — this directly strengthens D1's
+recommendation beyond "kinship2 does it this way" into "here is the failure mode if you don't."
+(3) Surfaced and reconciled a real tension with an existing, deliberately-documented
+architectural invariant (`kinship()` "is never modified") rather than silently proposing
+something that reads as contradicting prior intent — framed as an explicit judgment call
+(Q1) rather than asserting the recommendation as obviously correct. (4) Traced the actual
+Shiny data-flow gap precisely enough to identify a genuine, unresolved dragon (the tab-order
+UX question — `twinRelations` uploads in a different tab than its closest precedent) rather
+than either ignoring it or prematurely resolving it without evidence. (5) Verified
+`makeSimPed()`'s actual behavior directly (not assumed) before concluding the two Monte Carlo
+simulations need no special-case interaction handling — a claim that could easily have gone
+unverified given how confidently kinship2's own precedent(`applyKinshipOverrides()`
+explicitly shielding simulations) could have been over-generalized. **Weaknesses:** (1) Did
+not run an adversarial-verification pass (independent agents attempting to refute the design's
+claims) the way the `issue137` plan's own provenance record shows for its precedent — flagged
+explicitly in §9 rather than silently omitted, but the mathematical propagation argument
+(§2.2) and the Monte-Carlo-non-interaction claim (§2.6) are both load-bearing and would have
+benefited from independent adversarial scrutiny before ratification, not just this session's
+own single-pass reasoning. (2) Did not confirm whether a dedicated `test_gvaConvergence.R`
+file exists under that name before citing it in the Slice 2 plan (flagged as Dragon 4 rather
+than resolved) — a 30-second `ls` would have closed this gap rather than deferring it. (3) Did
+not explicitly invoke a maximum-reasoning-effort setting at session start, as
+`SESSION_RUNNER.md`'s Planning Sessions section directs ("Set your agent's deepest available
+reasoning mode at session start... e.g. `/effort max`") — no tool was available this session
+to do so programmatically, and this gap was not raised to the user as a blocker before
+proceeding with the design work at whatever effort level was already active.
+**Ledger:** recorded in `CHANGELOG.md` (this session's claim entry, the deliverable entry,
+and this close-out entry).
 
 ### Session 548 Handoff Evaluation (by Session 549)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` receipt's `next_steps` field's priority-ordered
