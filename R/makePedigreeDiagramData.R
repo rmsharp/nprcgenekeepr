@@ -1022,15 +1022,24 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #'   sex-agnostic default unchanged.
 #' @return A list with \code{nodes} (\code{id}, \code{label}, \code{shape},
 #'   \code{title}, \code{size}, \code{x}, \code{y}), \code{edges}
-#'   (\code{from}, \code{to}, \code{dashes}, plus \code{label}/\code{color}
-#'   when \code{twinRelations} is supplied -- D10, found never wired at
-#'   S494, fixed S506), and \code{duplicateToReal} (a named character vector,
-#'   duplicate node id -> real individual id). Under
+#'   (\code{from}, \code{to}, \code{dashes}, \code{color}, \code{width} --
+#'   the latter 2 ALWAYS present once any mating unit exists, S549 Finding
+#'   #2 fixed S555: a consanguineous mating unit's (\code{kinship(sire,
+#'   dam) > 0}) 2 spouse-to-union edges get \code{"#D55E00"}/\code{4} (an
+#'   Okabe-Ito colorblind-safe vermillion, kinship2's own doubled/
+#'   thickened mate-line convention), every other edge \code{NA}; plus
+#'   \code{label} when \code{twinRelations} is supplied -- D10, found
+#'   never wired at S494, fixed S506), and \code{duplicateToReal} (a named
+#'   character vector, duplicate node id -> real individual id). Under
 #'   \code{edgeStyle = "rectilinear"}, \code{nodes} gains
 #'   \code{color.background}/\code{color.border} and \code{edges}
 #'   unconditionally gains \code{color} (see
 #'   \code{.addRectilinearWaypoints()}) -- an already-set edge \code{color}
-#'   (e.g. the twin connector's) is preserved, not reset.
+#'   (e.g. the twin connector's or the consanguinity marker's) is
+#'   preserved when the edge is KEPT as-is; a marked mate edge that gets
+#'   replaced by a D2 dogleg projection currently falls back to the
+#'   generic routing color/width (edgeStyle = "rectilinear" propagation is
+#'   a deferred follow-up, BACKLOG.md Housekeeping).
 #'
 #' @examples
 #' library(nprcgenekeepr)
@@ -1060,6 +1069,37 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
   unitIds <- matingUnits$id
   dupIds <- duplicates$id
   realIds <- as.character(ped$id)
+
+  # S549 kinship2-supplement audit, Finding #2 (BACKLOG.md Housekeeping,
+  # fixed S555): flag each mating unit whose sire/dam pair is
+  # consanguineous (kinship(sire, dam) > 0), so the 2 mate-line edges get
+  # a distinct color/width below -- kinship2's own doubled/thickened
+  # mate-line convention. Computed from the SAME sire/dam/gen columns this
+  # function already requires (a structural fact of the pedigree, unlike
+  # the optional name/twinRelations sidecars above) -- not gated behind a
+  # UI toggle, matching kinship2's own unconditional convention.
+  # twinRelations is threaded into this internal kinship() call too (the
+  # function's own already-validated parameter, used elsewhere here only
+  # for the twin CONNECTOR edges): a caller-supplied twinRelations id not
+  # present in 'ped' is already a documented "not validated here" caller
+  # error per this parameter's own contract (identical to the connector-
+  # edge usage above), and R/modPedigree.R's own twinRelationsData()
+  # guarantees validity against this exact 'ped' before either use.
+  # A sire/dam with no own row in 'ped' (dangling -- e.g. a focal-animal-
+  # trimmed view, D2's own founder-fallback precedent above) can never be
+  # deemed consanguineous with their mate: kinship() has no matrix entry
+  # for an id outside 'ped$id', so the match() guard below leaves it at
+  # the safe FALSE default rather than erroring.
+  matingUnits$consanguineous <- rep(FALSE, nrow(matingUnits))
+  if (nrow(matingUnits) > 0L) {
+    kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen,
+                     twinRelations = twinRelations)
+    sireIdx <- match(matingUnits$sire, rownames(kmat))
+    damIdx <- match(matingUnits$dam, colnames(kmat))
+    known <- !is.na(sireIdx) & !is.na(damIdx)
+    matingUnits$consanguineous[known] <-
+      kmat[cbind(sireIdx[known], damIdx[known])] > 0L
+  }
 
   ## Empirically chosen this session via a chromote render of the real
   ## GA204Z/8LKBV9 loop fixture and a wide fan-out fixture -- matches
@@ -1217,16 +1257,28 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
     dupIdx <- match(nonAnchorKey, dupKey)
     nonAnchorNodeIds <- ifelse(is.na(dupIdx), matingUnits$nonAnchor,
                                 duplicates$id[dupIdx])
+    ## S549 Finding #2 (fixed S555): the 2 mate-line edges of a
+    ## consanguineous unit get a distinct color/width (kinship2's own
+    ## doubled/thickened mate-line convention) -- Okabe-Ito colorblind-safe
+    ## vermillion, unused elsewhere in this file (#009E73 is the twin
+    ## connector, #CC79A7 is affected, #2B7CE9 is the rectilinear waypoint
+    ## edge). rep(matingUnits$consanguineous, 2L) matches this data frame's
+    ## own row order: anchor edges (unit order) then non-anchor edges (same
+    ## unit order).
+    isConsang <- rep(matingUnits$consanguineous, 2L)
     data.frame(
       from = c(matingUnits$anchor, nonAnchorNodeIds),
       to = rep(unitIds, 2L),
       dashes = FALSE,
+      color = ifelse(isConsang, "#D55E00", NA_character_),
+      width = ifelse(isConsang, 4L, NA_real_),
       smooth.enabled = NA, smooth.type = NA_character_,
       smooth.roundness = NA_real_,
       stringsAsFactors = FALSE
     )
   } else {
     data.frame(from = character(), to = character(), dashes = logical(),
+               color = character(), width = numeric(),
                smooth.enabled = logical(), smooth.type = character(),
                smooth.roundness = numeric(), stringsAsFactors = FALSE)
   }
@@ -1240,10 +1292,12 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
   ## smooth = FALSE default.
   dupEdges <- if (nrow(duplicates) > 0L) {
     data.frame(from = dupIds, to = duplicates$realId, dashes = TRUE,
+               color = NA_character_, width = NA_real_,
                smooth.enabled = TRUE, smooth.type = "curvedCW",
                smooth.roundness = 0.2, stringsAsFactors = FALSE)
   } else {
     data.frame(from = character(), to = character(), dashes = logical(),
+               color = character(), width = numeric(),
                smooth.enabled = logical(), smooth.type = character(),
                smooth.roundness = numeric(), stringsAsFactors = FALSE)
   }
@@ -1252,6 +1306,19 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
                                smooth.enabled = NA, smooth.type = NA_character_,
                                smooth.roundness = NA_real_,
                                stringsAsFactors = FALSE)
+
+  # S549 Finding #2 (fixed S555): color/width now ALWAYS exist on every
+  # edge type once any mating unit exists (see mateEdges above) --
+  # consanguinity is a structural fact of sire/dam (required columns),
+  # unlike name/twinRelations, which are genuinely optional sidecars.
+  # childEdgesOut/dupEdges never carry their own marker, so they get NA
+  # placeholders, matching the union-node color.background precedent
+  # (issue #133) of keeping columns aligned for rbind() even when a row's
+  # own value is always NA.
+  childEdgesOut$color <- rep(NA_character_, nrow(childEdgesOut))
+  childEdgesOut$width <- rep(NA_real_, nrow(childEdgesOut))
+  dupEdges$color <- rep(NA_character_, nrow(dupEdges))
+  dupEdges$width <- rep(NA_real_, nrow(dupEdges))
 
   # Issue #137 (D1, D6, D7, D9): twinRelations is an OPTIONAL sidecar
   # data.frame -- absent (NULL, default) => zero change to edges below
@@ -1262,12 +1329,10 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
   hasTwinRelations <- !is.null(twinRelations)
   if (hasTwinRelations) {
     childEdgesOut$label <- rep(NA_character_, nrow(childEdgesOut))
-    childEdgesOut$color <- rep(NA_character_, nrow(childEdgesOut))
     mateEdges$label <- rep(NA_character_, nrow(mateEdges))
-    mateEdges$color <- rep(NA_character_, nrow(mateEdges))
     dupEdges$label <- rep(NA_character_, nrow(dupEdges))
-    dupEdges$color <- rep(NA_character_, nrow(dupEdges))
     twinEdges <- .buildTwinConnectorEdges(twinRelations)
+    twinEdges$width <- rep(NA_real_, nrow(twinEdges))
     twinEdges$smooth.enabled <- rep(NA, nrow(twinEdges))
     twinEdges$smooth.type <- rep(NA_character_, nrow(twinEdges))
     twinEdges$smooth.roundness <- rep(NA_real_, nrow(twinEdges))
@@ -1463,6 +1528,18 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
   if (!"color" %in% names(keptEdges)) {
     keptEdges$color <- rep(NA_character_, nrow(keptEdges))
   }
+  ## S549 Finding #2 (fixed S555): same preserve-if-present guard for
+  ## width (the consanguinity marker's own thickness, unconditional in
+  ## makePedigreeMatingLayout() since S555). A KEPT mate edge (both
+  ## parents already at the unit's own gen, no D2 dogleg) keeps its width
+  ## unchanged, same as color. A marked mate edge that DOES get D2-dogged
+  ## currently falls back to the generic width below (edgeStyle =
+  ## "rectilinear" propagation onto dogleg replacement edges is a
+  ## deferred follow-up, BACKLOG.md Housekeeping -- narrowed to direct
+  ## style only this session, owner-directed).
+  if (!"width" %in% names(keptEdges)) {
+    keptEdges$width <- rep(NA_real_, nrow(keptEdges))
+  }
 
   ## New waypoint edges never carry the duplicate-node-connector arc (found
   ## S468, fixed S469) -- these NA placeholders keep column alignment with
@@ -1475,10 +1552,14 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
   ## "undefined columns selected" way the moment any waypoint node exists.
   ## Harmless when twinRelations is absent: `names(keptEdges)` then has no
   ## `label` to select, so this extra column is simply never picked up.
+  ## `width` (S549 Finding #2, fixed S555) is stamped NA here for the same
+  ## reason -- a new waypoint edge never inherits a marked mate edge's own
+  ## width (see the guard above and its own comment).
   newEdges <- if (length(newEdgeList) > 0L) {
     ne <- do.call(rbind, newEdgeList)
     ne$dashes <- rep(FALSE, nrow(ne))
     ne$color <- rep(edgeColor, nrow(ne))
+    ne$width <- rep(NA_real_, nrow(ne))
     ne$smooth.enabled <- NA
     ne$smooth.type <- NA_character_
     ne$smooth.roundness <- NA_real_
@@ -1486,7 +1567,8 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
     ne
   } else {
     data.frame(from = character(), to = character(), dashes = logical(),
-               color = character(), smooth.enabled = logical(),
+               color = character(), width = numeric(),
+               smooth.enabled = logical(),
                smooth.type = character(), smooth.roundness = numeric(),
                label = character(), stringsAsFactors = FALSE)
   }

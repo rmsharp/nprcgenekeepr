@@ -47,15 +47,24 @@ sex-agnostic default unchanged.}
 \value{
 A list with \code{nodes} (\code{id}, \code{label}, \code{shape},
 \code{title}, \code{size}, \code{x}, \code{y}), \code{edges}
-(\code{from}, \code{to}, \code{dashes}, plus \code{label}/\code{color}
-when \code{twinRelations} is supplied -- D10, found never wired at
-S494, fixed S506), and \code{duplicateToReal} (a named character vector,
-duplicate node id -> real individual id). Under
+(\code{from}, \code{to}, \code{dashes}, \code{color}, \code{width} --
+the latter 2 ALWAYS present once any mating unit exists, S549 Finding
+#2 fixed S555: a consanguineous mating unit's (\code{kinship(sire,
+  dam) > 0}) 2 spouse-to-union edges get \code{"#D55E00"}/\code{4} (an
+Okabe-Ito colorblind-safe vermillion, kinship2's own doubled/
+thickened mate-line convention), every other edge \code{NA}; plus
+\code{label} when \code{twinRelations} is supplied -- D10, found
+never wired at S494, fixed S506), and \code{duplicateToReal} (a named
+character vector, duplicate node id -> real individual id). Under
 \code{edgeStyle = "rectilinear"}, \code{nodes} gains
 \code{color.background}/\code{color.border} and \code{edges}
 unconditionally gains \code{color} (see
 \code{.addRectilinearWaypoints()}) -- an already-set edge \code{color}
-(e.g. the twin connector's) is preserved, not reset.
+(e.g. the twin connector's or the consanguinity marker's) is
+preserved when the edge is KEPT as-is; a marked mate edge that gets
+replaced by a D2 dogleg projection currently falls back to the
+generic routing color/width (edgeStyle = "rectilinear" propagation is
+a deferred follow-up, BACKLOG.md Housekeeping).
 }
 \description{
 The exported wrapper for the kinship2-parity pedigree layout (Pedigree

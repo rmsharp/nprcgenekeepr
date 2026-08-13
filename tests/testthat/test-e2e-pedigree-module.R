@@ -291,6 +291,67 @@ test_that(
                info = "No visNetwork/diagram-related console error")
 })
 
+## S549 Finding #2 (BACKLOG.md Housekeeping, fixed S555): consanguineous-
+## mating visual marker -- kinship2's own doubled/thickened mate-line
+## convention for a blood-related couple, ported to makePedigreeMatingLayout()
+## as a distinct edge color/width (Okabe-Ito vermillion #D55E00, width 4).
+
+test_that(
+  "E2E: Pedigree Browser Diagram tab renders every consanguineous mating
+   unit's 2 mate-line edges with the distinct #D55E00/width-4 marker,
+   and no other edge", {
+  skip_if_not_installed("shinytest2")
+  skip_if_not_installed("chromote")
+  skip_if_not_installed("visNetwork")
+  skip_on_cran()
+
+  app_dir <- create_test_app()
+  app <- create_app_driver(app_dir, "e2e_pedigree_diagram_consanguineous")
+  on.exit(app$stop(), add = TRUE)
+
+  fixture <- system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                         package = "nprcgenekeepr")
+  loaded <- upload_and_wait(app, fixture)
+  if (!loaded) skip("Upload/QC did not complete")
+
+  success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
+  if (!success) skip("Could not navigate to Pedigree tab")
+
+  clicked <- click_element_safe(app, 'a[data-value="Diagram"]')
+  if (!clicked) skip("Could not switch to the Diagram tab")
+
+  ## Query every edge's own color/width directly (no jsonlite dependency,
+  ## same helper-shinytest2.R precedent as get_node_color() above) --
+  ## filter for the marker color rather than a specific __union_<n> node
+  ## id, since that numbering is an internal implementation detail not
+  ## worth pinning in a live E2E test.
+  marked <- app$get_js(paste0(
+    "(() => { const w = HTMLWidgets.find('#pedigree-pedigreeDiagram'); ",
+    "if (!w) return 'null'; ",
+    "const edges = w.network.body.data.edges.get(); ",
+    "const m = edges.filter(e => e.color === '#D55E00'); ",
+    "return m.length + ':' + (m[0] ? m[0].width : 'none'); })()"
+  ))
+  if (identical(marked, "null")) skip("visNetwork widget instance not found")
+
+  parts <- strsplit(marked, ":", fixed = TRUE)[[1L]]
+
+  ## obfuscated_rhesus_mhc_ped.csv has 28 genuinely consanguineous mating
+  ## units (confirmed directly via kinship(sire, dam) > 0 on the raw
+  ## fixture, independent of the app) -- each contributes exactly 2
+  ## marked mate-line edges.
+  expect_equal(as.integer(parts[1L]), 56L,
+               info = "every consanguineous union's 2 mate edges marked")
+  expect_equal(parts[2L], "4")
+
+  logs <- app$get_logs()
+  diagramErrors <- logs[logs$level == "throw" &
+                          grepl("vis|network|pedigreeDiagram", logs$message,
+                                ignore.case = TRUE), ]
+  expect_equal(nrow(diagramErrors), 0L,
+               info = "No visNetwork/diagram-related console error")
+})
+
 ## issue #129 Slice 2 -- click-to-navigate interactivity smoke test.
 
 test_that(

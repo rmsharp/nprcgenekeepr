@@ -15,19 +15,115 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 marker item 1, article item 2) matched this session's own independently-rendered `AskUserQuestion`
 priorities exactly, and the owner picked item 1 directly from it -- zero re-derivation needed.
 `gotchas` (1) (the `jsonlite`-avoidance convention, with the `get_node_color()` JS-based template)
-is directly relevant if this session's own marker work needs any live E2E color/edge-attribute
-assertion. **What was wrong:** nothing found inaccurate yet (session just starting). **What was
-missing:** nothing evaluable yet at claim time. **ROI:** pending full assessment at this session's
-own close-out, once the handoff's file:line pointers are actually exercised.
+was directly reused as the exact template for this session's own new live E2E test (a `get`-style
+JS query returning a plain value, no JSON parsing). `gotchas` (2) (RED is not properly confirmed
+just by reasoning -- stash/rerun the implementation) was followed and caught a real, second-order
+mistake this session's own tests would otherwise have hidden (3 of 6 new tests vacuously passed
+against unimplemented code via R's `all(logical(0)) == TRUE` behavior -- see this session's own
+`PROJECT_LEARNINGS.md` Learning 560). **What was wrong:** nothing found inaccurate. **What was
+missing:** nothing material -- S554's own scope (a single-line color fix) didn't need to anticipate
+a materially different feature (a new derived column on a different function). **ROI:** High -- the
+`get_node_color()` JS template alone saved a full round of E2E-helper trial and error, and the
+stash/rerun gotcha, followed proactively, caught a genuine RED-confirmation defect this session's
+own first draft introduced.
 
 ### What Session 555 Did
 **Deliverable:** Add a visual marker for consanguineous matings in the Pedigree Diagram tab
-(`BACKLOG.md` Housekeeping, found S549 Finding #2, READY, Effort S) (IN PROGRESS)
-**Started:** 2026-08-13
-**Status:** Session claimed. Work beginning (PRE-RED investigation).
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+(`BACKLOG.md` Housekeeping, found S549 Finding #2, READY, Effort S) -- **DONE for
+`edgeStyle = "direct"`; `"rectilinear"` propagation deferred to a follow-up `BACKLOG.md` item
+(owner-directed hold at the PRE-RED->RED gate).** **Started/Completed:** 2026-08-13. **Status:**
+DONE (narrowed scope). TDD phase: GREEN (REFACTOR declined via `AskUserQuestion` -- diff is
+mechanical, mirrors 3 existing precedents in the same file).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, `git status`/`log`/`diff --stat`, `methodology_dashboard.py` [Health 96/100, **1
+High+ risk -- new**: `SESSION_NOTES.md` had grown to 2,021 lines, past the 2,000-line agent read
+cap, not yet in `BACKLOG.md`; also flagged a `HANDOFFS.md` archive-trigger MEDIUM risk, likewise
+not yet logged], `gh run list` [scheduled `shinytest2.yaml` still red, unchanged, not diagnosed]).
+6 untracked files found, all timestamped within ~40 minutes of session start (a Quarto build
+artifact, the already-documented kinship2 supplement PDF, and 4 new "The Compounding Loop"
+files/lock-file) -- not a ghost session (too recent), reported as new/undocumented rather than
+acted on. User picked the consanguineous-marker item from the rendered priorities list.
+**(2)** Wrote the Phase 1B claim stub, committed (`d10bbb58`). **(3)** PRE-RED: read
+`makePedigreeMatingLayout()` and `.buildMatingUnitForest()`/`.positionMatingUnitForest()` in full;
+confirmed the audit's own recommended location and mechanism (`kinship(sire, dam) > 0`). Resolved
+one design decision via `AskUserQuestion` before RED (rectilinear-dogleg propagation scope) after
+empirically verifying -- not assuming -- that a genuine D2 dogleg on a consanguineous union is
+still reachable post-issue-#143/#144 (requires an ANCHOR who anchors 2+ differently-gen'd units;
+a free-pass/duplicate non-anchor is now unconditionally pinned to its own unit's gen and can never
+dogleg). Constructing a fixture that actually exercises this took 5 empirically-verified attempts
+(each hand-derived prediction wrong for a different reason -- see `PROJECT_LEARNINGS.md` Learning
+561); mid-investigation this also surfaced a real, previously-undocumented type-coercion defect
+(a dangling parent anywhere in a pedigree silently widens `genOf` from integer to double via
+`vapply(..., numeric(1L))`, spuriously triggering the D2 dogleg on OTHER, unrelated, correctly-
+matched mate-line edges) -- logged to `BACKLOG.md` Housekeeping, not fixed (report-don't-fix
+precedent, Learning 382). Given how much investigation the rectilinear case took, the owner held
+scope to `edgeStyle = "direct"` only at the PRE-RED->RED gate; the verified 12-row dogleg fixture
+is preserved in the `BACKLOG.md` follow-up item as a ready-made starting point. **(4)** PRE-RED->RED
+gate via `AskUserQuestion`: wrote 6 new/updated `test_that()` blocks in `test_makePedigreeMatingLayout.R`
+(marks the 2 mate edges of a consanguineous union; leaves other units' mate edges NA; leaves every
+edge NA on a fully non-consanguineous ped; never flags a dangling-parent union; coexists correctly
+with `twinRelations`; the existing default-edgeStyle column-set assertion extended to include
+`color`/`width`). Confirmed RED for real (stash/rerun) -- caught that 3 of the 6 tests, as first
+written, used `all(x == y)`/`all(is.na(x))` against a not-yet-existing column, which R evaluates as
+vacuously `TRUE` (`all(logical(0))`), silently PASSING against unimplemented code; fixed by adding
+explicit column-existence assertions and switching to `expect_equal()` against concrete vectors
+(`PROJECT_LEARNINGS.md` Learning 560). Also fixed a `!result$edges$dashes` list-column filter bug
+(breaks once `twinRelations` makes `dashes` a mixed list column) by filtering on `to == unitId`
+alone. Re-ran against unmodified source: all 6 failed for the right reason. **(5)** RED->GREEN gate
+via `AskUserQuestion`: implemented `matingUnits$consanguineous` detection (one `kinship()` call,
+reusing the function's own already-validated `twinRelations` parameter too, for correctness parity
+with the just-shipped twin-kinship work) plus `color`/`width` columns on `mateEdges`, made
+unconditional (not `hasTwinRelations`-gated) on `childEdgesOut`/`dupEdges` for `rbind()` alignment
+(mirrors the union-node `color.background` "always present, NA when not applicable" precedent,
+issue #133). Making `width` unconditional broke 5 PRE-EXISTING `edgeStyle = "rectilinear"` tests
+(`.addRectilinearWaypoints()`'s own `newEdges[, names(keptEdges)]` selection had no `width` guard)
+-- fixed with the minimal, symmetric guard already established for `color` (preserve on KEPT edges,
+default on NEW waypoint edges; no propagation logic, matching the direct-style-only scope). All 6
+targeted tests passed; full clean regression 0 failed/0 error (including the live E2E suite, 15/15).
+`devtools::document()` (1 `.Rd` changed); `devtools::check()` first run found 1 real gap
+(`vermillion` -- a new roxygen word -- flagged by `test_wordlist_coverage.R`'s whole-package spell
+scan, invisible to a targeted test run, matching S551's own Learning 558 precedent exactly) --
+fixed by appending to `inst/WORDLIST`; second run 0 errors/0 warnings/1 pre-existing NOTE (the
+`vignettes/figure` leftover). The one live WARNING in between (non-portable file names) traced
+entirely to the untracked "Compounding Loop" files found at Phase 0, not this session's own diff.
+`lintr::lint_package()` found and fixed 2 `implicit_integer_linter` findings (`0`/`4` -> `0L`/`4L`).
+**(6)** GREEN->REFACTOR gate via `AskUserQuestion`: owner picked "close out as-is."
+**(7)** Phase 3E runtime smoke test: added one new live E2E test
+(`test-e2e-pedigree-module.R`, `get`-edges-by-color JS query, no `jsonlite` dependency, matching
+S554's own template) confirming 56 marked edges (28 genuinely consanguineous unions x 2, verified
+independently via a raw `kinship()` computation on the bundled fixture before writing the test) at
+width 4 on the real, live-rendered Diagram tab -- 15/15 pedigree-module E2E tests passed, 0
+regressions in the 14 pre-existing ones.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist (#120) -- N/A, a visual-rendering
+addition, not a new displayed statistic. Tutorial/article checklist -- DONE: added a paragraph to
+`vignettes/manual_components/_pedigree_browser.Rmd` and a sentence to
+`vignettes/articles/colony-manager-guide.qmd`'s own condensed "Diagram view" paragraph. `NEWS.Rmd`
+-- DONE: new bullet added to the dev-version section (matching the file's existing style); `NEWS.md`
+regenerated via `rmarkdown::render()`. `a2interactive.Rmd` checklist -- N/A (no new parameter added
+to `makePedigreeMatingLayout()`'s own signature; the return-value column contract changed instead,
+outside this checklist's stated "new function / new parameter" trigger). GitHub issue close-out --
+N/A, no issue was filed for this item. Lint -- DONE, 0 lints on all touched files.
+
+**Self-assessment (Session 555): 9/10.** **Strengths:** (1) Resolved the rectilinear-propagation
+scope question with genuine empirical evidence (a live-verified 12-row fixture proving the dogleg
+is still reachable post-#143/#144, not an assumption) before asking the owner to decide, giving
+them a real trade-off to weigh rather than a hypothetical one. (2) Caught a genuine RED-confirmation
+defect in its own first-draft tests (3 of 6 vacuously passing against unimplemented code) via the
+S554-established stash/rerun discipline -- exactly the kind of second-order catch that discipline
+exists for, not a one-off. (3) Followed the "report, don't fix mid-session" precedent cleanly when
+PRE-RED investigation surfaced a real, unrelated, previously-undocumented type-coercion bug
+(dangling-parent `genOf` widening) -- reproduced it minimally, logged it precisely with root cause
+and line numbers, and did not let it expand this session's own scope. (4) `devtools::check()`
+caught a real gap (`vermillion` spelling) a targeted test run would have missed entirely, matching
+an already-documented project pattern (Learning 558) rather than a novel mistake. **Weaknesses:**
+(1) The rectilinear-dogleg fixture construction took 5 empirically-verified attempts before
+succeeding -- each of the first 4 hand-derived predictions was wrong, costing real session time;
+the practical rule captured in Learning 561 (verify multi-rule algorithm behavior empirically from
+attempt 1, not attempt 5) should shorten this next time. (2) No independent adversarial-verification
+pass run on this fix, carried forward unaddressed from S551-S554's own flagged gap.
+**Ledger:** recorded in `CHANGELOG.md` (this session's claim, deliverable, and close-out entries).
 
 ### Session 553 Handoff Evaluation (by Session 554)
 **Score: 9/10.** **What helped:** the `next_steps` field's priority-ordered list matched this

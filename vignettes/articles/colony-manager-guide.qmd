@@ -317,7 +317,11 @@ truncated with an ellipsis on the diagram itself, with the full name
 always available in the hover tooltip. Not every animal needs a name;
 one with no name, or a pedigree with no `name` column at all, always
 renders with just its id, and the "Select by id" search dropdown below
-always lists ids, never names, regardless of the toggle.
+always lists ids, never names, regardless of the toggle. A mating between two
+blood-related animals renders its connector lines thicker and in a distinct
+color, flagging the consanguineous mating at a glance -- no optional column
+or toggle needed, since it is detected directly from the pedigree's own
+sire/dam data.
 
 ![The Pedigree Browser Diagram tab with its shape-to-sex legend.](shiny_app_use/pb_diagram_legend.png){fig-alt="Pedigree Browser Diagram tab showing an interactive pedigree diagram with sex-shaped nodes and a shape-to-sex legend panel (dot=Female, square=Male, star=Hermaphrodite, triangle=Unknown, diamond=Other/Unrecorded) to the right of the diagram."}
 

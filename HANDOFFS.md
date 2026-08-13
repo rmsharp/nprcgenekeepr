@@ -127,22 +127,97 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S555
 date: 2026-08-13
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 9
+predecessor_score: 9
 active_task: Add a visual marker for consanguineous matings in the Pedigree Diagram tab
-(BACKLOG.md Housekeeping, found S549 Finding #2, READY, Effort S) -- kinship2 draws a
-doubled/thickened mate-line for a blood-related couple; makePedigreeMatingLayout() renders every
-mating unit identically regardless of kinship(sire, dam). IN PROGRESS.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+(BACKLOG.md Housekeeping, found S549 Finding #2, READY, Effort S) -- DONE for
+edgeStyle = "direct"; "rectilinear" propagation deferred to a follow-up BACKLOG item
+(owner-directed hold at the PRE-RED->RED gate).
+what_was_done: Full strict-TDD PRE-RED->RED->GREEN cycle (REFACTOR declined via
+AskUserQuestion). matingUnits$consanguineous flag computed via one kinship(ped$id, ped$sire,
+ped$dam, ped$gen, twinRelations = twinRelations) call (reuses the function's own
+already-validated twinRelations parameter); mateEdges gains color = "#D55E00"/width = 4 for a
+consanguineous unit's 2 rows, NA otherwise; childEdgesOut/dupEdges gain color/width
+unconditionally (not hasTwinRelations-gated) for rbind() alignment, mirroring the issue #133
+union-node color.background "always present" precedent. Making width unconditional broke 5
+pre-existing edgeStyle = "rectilinear" tests (.addRectilinearWaypoints() had no width guard) --
+fixed with the same minimal preserve-on-kept/default-on-new guard already established for color
+(no propagation logic onto D2 dogleg replacement edges -- matches the direct-style-only scope).
+6 new/updated unit tests (test_makePedigreeMatingLayout.R); 1 new live E2E test
+(test-e2e-pedigree-module.R) confirms 56 marked edges (28 genuinely consanguineous unions x 2,
+independently verified via a raw kinship() computation before writing the test) at width 4 on
+the bundled 375-individual fixture, 0 regressions in the 14 pre-existing pedigree-module E2E
+tests. Incidental finding, not fixed (report-don't-fix precedent): a dangling parent anywhere in
+a pedigree silently widens .positionMatingUnitForest()'s genOf from integer to double
+(vapply(..., numeric(1L)) + c() type promotion), which can spuriously trigger
+.addRectilinearWaypoints()'s D2 dogleg on OTHER, unrelated, correctly-matched mate-line edges --
+logged to BACKLOG.md Housekeeping with a minimal reproduction and a likely fix. Verification:
+devtools::check() 0 errors/0 warnings/1 pre-existing NOTE (1 real gap fixed along the way --
+"vermillion" added to inst/WORDLIST, caught by the whole-package spell scan a targeted test run
+would have missed); full clean regression 0 failed/0 error; lintr::lint_package() 0 lints (2
+implicit_integer_linter findings fixed, 0 -> 0L, 4 -> 4L). Commits: d10bbb58 (claim), this
+session's own deliverable + close-out commits (see next reconcile for shas).
+next_steps: BACKLOG.md priorities, in order: (1) NEW, found this session: SESSION_NOTES.md is
+now 2,021+ lines -- past the 2,000-line agent read cap (dashboard HIGH risk flag), grown past
+the cap since the last archive (through 2026-08-12) during S553-S555's own 3 sessions today. Not
+yet in BACKLOG.md -- a future session should scope/run an archive pass (methodology_trim.py
+--file SESSION_NOTES.md --check first), mirroring the S518/S527/S546/S547 CHANGELOG.md
+precedent. Also flagged: HANDOFFS.md nearing its own archive trigger (MEDIUM risk, 11 records
+of headroom under the 15-record rate rule) -- same future session could fold this in. (2) Write
+the dedicated Pedigree Diagram tab article (READY, Effort M, unchanged since S544) -- inventory
+the tab's full current feature set against the live app first. (3) The 2 items this session
+itself added: the edgeStyle = "rectilinear" dogleg-propagation follow-up for the consanguineous
+marker (READY, Effort S-M, a verified 12-row fixture is preserved in the BACKLOG.md item as a
+starting point) and the dangling-parent genOf type-widening bug (READY, Effort M, scope/
+live-impact on real fixtures not yet established -- check that first). Lower priority: the
+branch-cleanup item (found S552, READY, Effort S -- check mergedness before deleting); issue
+#148 scope-narrowing conversation (needs its own scoping session). Unchanged: NPRC outreach
+owner review (DECISION NEEDED); LabKey remaining recs (BLOCKED). Also unresolved: the
+shinytest2.yaml scheduled CI run is still red at the E2E-tier step, unchanged from S548-S555's
+own findings -- still not diagnosed by any session. Local master remains ahead of origin (29+
+commits after this session) -- a future session should consider pushing.
+key_files: R/makePedigreeDiagramData.R (makePedigreeMatingLayout(), ~line 1093 -- the
+matingUnits$consanguineous detection; ~line 1247 -- mateEdges color/width construction;
+.addRectilinearWaypoints(), ~line 1531 -- the width guard mirroring the pre-existing color
+guard); tests/testthat/test_makePedigreeMatingLayout.R (:924-1085, the 6 new/updated tests --
+also a template for the "confirm RED via expect_equal(), not all(x==y)" fix, PROJECT_LEARNINGS.md
+Learning 560); tests/testthat/test-e2e-pedigree-module.R (the new consanguineous-marker E2E
+test, ~line 300 -- a template for querying vis.js edges by color via JS, get()-with-filter, no
+jsonlite); BACKLOG.md Housekeeping (2 new items this session -- the rectilinear-dogleg
+follow-up, with its own verified fixture recipe, and the dangling-parent genOf bug, with root
+cause and line numbers); PROJECT_LEARNINGS.md Learnings 560-561 (the RED-vacuous-pass trap and
+the empirical-verification-over-hand-tracing lesson, respectively).
+gotchas: (1) A RED-phase assertion of the shape all(df$col == value) or all(is.na(df$col)) does
+NOT properly confirm RED when col does not yet exist -- NULL == value and is.na(NULL) both
+evaluate to logical(0), over which all() is vacuously TRUE. Use expect_equal(actual, <concrete
+expected vector>) instead, or an explicit expect_true("col" %in% names(df)) first -- see
+PROJECT_LEARNINGS.md Learning 560. (2) Filtering an edges data frame via !df$dashes breaks with
+"invalid argument type" once twinRelations is supplied (dashes becomes a mixed list column) --
+filter by 'to'/'from' identity instead. (3) A multi-rule, stateful, order-dependent algorithm
+(e.g. .buildMatingUnitForest()'s anchor-preference rules + the "already used" avoidance
+heuristic) should be verified empirically (run it, read the actual output) from the FIRST
+attempt at constructing a targeted fixture, not hand-traced -- 4 of 5 attempts this session were
+wrong for different reasons before switching to pure empirical iteration; see
+PROJECT_LEARNINGS.md Learning 561. (4) No adversarial-verification pass has been run on this fix
+-- flagged, not silently omitted, carried forward from S551-S554's own flagged gap.
+runtime_smoke: PASS (live). NPRC_RUN_E2E=true/NOT_CRAN=true shinytest2/chromote run of the full
+test-e2e-pedigree-module.R suite: 15/15 tests passed, 0 failed/0 error -- including the new
+consanguineous-marker test (confirms 56 marked edges at width 4 on the real, live-rendered
+Diagram tab for the bundled 375-individual fixture) and 0 regressions in the 14 pre-existing
+tests (incl. the issue #133/#136/#137 affected/name/twin-connector tests).
+changelog_ref: this session's own CHANGELOG.md entries (claim, deliverable, close-out).
 commit: pending
 ```
-<free-text prose: pending>
+<free-text prose: Session 555 delivered the consanguineous-mating visual marker for the default
+edgeStyle = "direct" path -- full strict-TDD cycle, a genuinely empirically-verified PRE-RED
+decision (not an assumption) on the rectilinear-dogleg scope question, 0 errors/0 warnings/0
+lints, a new live E2E test confirming the marker actually renders in the real app. Self-score
+9/10: one point held back for the 5-attempt fixture-construction detour before switching to
+pure empirical iteration (documented as Learning 561 so it costs less next time), and the
+still-unaddressed adversarial-verification gap. Predecessor score 9/10: S554's handoff was
+accurate and its E2E-test template (get_node_color(), no jsonlite) was directly reusable
+verbatim for this session's own new edge-color E2E test.>
 
 ```handoff
 session: S554

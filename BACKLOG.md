@@ -68,6 +68,48 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       connected-component walk).
 
 ## Housekeeping
+- [ ] **A dangling (no-own-row) parent anywhere in a pedigree silently
+      widens `.positionMatingUnitForest()`'s `genOf` from integer to double,
+      which can spuriously trigger `.addRectilinearWaypoints()`'s D2
+      "dogleg" reroute on OTHER, unrelated, correctly-matched mate-line
+      edges elsewhere in the same diagram** (found S555, incidental to the
+      consanguineous-marker PRE-RED investigation above, not fixed --
+      report-don't-fix-mid-session precedent, `PROJECT_LEARNINGS.md`
+      Learning 382; READY, Effort M). Root cause:
+      `R/makePedigreeDiagramData.R`'s `.positionMatingUnitForest()`
+      (~line 644) back-fills a dangling parent's gen via
+      `vapply(danglingIds, ..., numeric(1L))` -- the `numeric(1L)` template
+      forces the result to DOUBLE regardless of `ped$gen`'s own (integer)
+      type, and `genOf <- c(genOf, ...)` then promotes the WHOLE `genOf`
+      vector (and everything derived from it -- `effGenOf`, `dispGenOf`,
+      ultimately `pos$gen`) to double via R's own type-promotion rule.
+      `.addRectilinearWaypoints()`'s D2 loop compares gens via
+      `identical(side$gen, Ugen)` -- STRICT, type-sensitive equality
+      (`identical(0, 0L)` is `FALSE`) -- so once any dangling parent exists
+      ANYWHERE in the pedigree, every mate-line edge's gen comparison
+      silently starts comparing a double against `forest$matingUnits$gen`'s
+      own integer, spuriously firing a dogleg reroute even for a union
+      whose 2 parents are demonstrably at the exact same gen (confirmed via
+      a minimal reproduction: a 2-founder union at gen 0/0 -- the existing
+      "D2: both parents at the same gen" precedent test's own no-op case --
+      gets 2 spurious `__proj_` nodes the moment an UNRELATED second union
+      elsewhere in the same `ped` references one dangling parent id).
+      **Scope/severity not yet established**: this is `edgeStyle =
+      "rectilinear"`-only (an opt-in, non-default UI toggle) and the
+      existing "0 D2 projections on the full 375-individual bundled
+      fixture" precedent test still passes, so either that fixture has no
+      live dangling-parent+mating-unit combination, or some other factor
+      masks it there -- a future session should check whether any bundled/
+      real fixture actually exercises this combination before scoping a
+      fix. **Likely fix**: coerce `fallbackGen`/`genOf` back to `ped$gen`'s
+      own storage mode after the `c()` concatenation (or use `integer(1L)`
+      in the `vapply()` template when `ped$gen` is integer), OR change
+      `.addRectilinearWaypoints()`'s own comparison from `identical()` to a
+      type-tolerant `==`/`isTRUE(all.equal(...))`. Either fix needs the
+      full `test_addRectilinearWaypoints.R`/`test_positionMatingUnitForest.R`
+      suites re-run afterward, since several of their own precedent tests
+      (documenting issue #143/#144's now-`0`-mismatch counts) implicitly
+      assume `genOf` stays integer-typed.
 - [ ] **Clean up unneeded repository branches, locally and on `origin`**
       (owner-directed, found S552, READY, Effort S) -- not investigated for
       mergedness/safety this session, just inventoried: local branches beyond
@@ -165,16 +207,42 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `NEWS.Rmd` entry extended (one combined Slices 1-3 entry); tutorial/article checklist
       applied (`vignettes/manual_components/_pedigree_browser.Rmd` gained a paragraph on the
       app-wide kinship correction). Not yet filed as a GitHub issue.
-- [ ] **Add a visual marker for consanguineous matings in the Pedigree Diagram tab**
-      (found S549, Finding #2 of the above audit, READY, Effort S) -- kinship2 draws a
-      doubled/thickened mate-line for a blood-related couple; `makePedigreeMatingLayout()`
-      renders every mating unit identically regardless of `kinship(sire, dam)`. Distinct from
-      issue #134 (verified layout *doesn't break* for consanguineous loops, closed S453 --
-      a robustness check, not a visual-signaling one) and from the "Candidate C"
-      cross-generation dogleg item below (a geometry-signposting problem, not a
-      blood-relation one). Likely detectable directly from the existing kinship matrix
-      (`kinship(sire, dam) > 0`) with a distinct edge style applied to that union's 2
-      spouse-to-union edges.
+- [ ] (found S549, Finding #2 of the above audit, **FIXED S555 for `edgeStyle = "direct"`**.
+      **Add a visual marker for consanguineous matings in the Pedigree Diagram tab** --
+      kinship2 draws a doubled/thickened mate-line for a blood-related couple;
+      `makePedigreeMatingLayout()` rendered every mating unit identically regardless of
+      `kinship(sire, dam)`. Distinct from issue #134 (verified layout *doesn't break* for
+      consanguineous loops, closed S453 -- a robustness check, not a visual-signaling one)
+      and from the "Candidate C" cross-generation dogleg item below (a geometry-signposting
+      problem, not a blood-relation one). Fixed: a mating unit whose sire/dam pair has
+      `kinship(sire, dam) > 0` (computed via the function's own already-validated
+      `twinRelations` parameter too, for correctness parity with the twinRelations-into-
+      `kinship()` work above) now renders its 2 spouse-to-union edges with a distinct color/
+      width (`"#D55E00"` Okabe-Ito vermillion, width 4) -- always on, no new UI toggle, since
+      sire/dam are required columns (a structural fact of the pedigree), unlike the optional
+      name/twinRelations sidecars. `edges` gains `color`/`width` columns unconditionally once
+      any mating unit exists. 6 new/updated unit tests (`test_makePedigreeMatingLayout.R`);
+      new live E2E test confirms 56 marked edges (28 genuinely consanguineous unions x 2) at
+      width 4 on the bundled 375-individual fixture. `devtools::check()` 0 errors/0 warnings/
+      1 pre-existing NOTE; full clean regression 0 failed/0 error; `lintr::lint_package()` 0
+      lints. Not filed as a GitHub issue.
+      **Deferred follow-up (owner-directed hold, S555):** `edgeStyle = "rectilinear"`
+      propagation -- a marked mate edge whose parent sits at a different gen than its own
+      mating unit (the D2 "dogleg" reroute; empirically confirmed live to require an anchor
+      who anchors 2+ differently-gen'd units, a real but narrow-trigger scenario, e.g.
+      cross-generation consanguineous matings) currently falls back to the generic routing-
+      blue color/default width on its 2 replacement projection edges instead of inheriting
+      the marker. `.addRectilinearWaypoints()` already defensively guards `width`/`color`
+      column presence (no crash), but does not yet propagate a dropped mate edge's own
+      color/width onto its replacement edges. A future session should extend the D2 dogleg
+      loop in `R/makePedigreeDiagramData.R` (`.addRectilinearWaypoints()`) to look up the
+      original edge's color/width before dropping it and stamp both onto its 2 new
+      projection edges, falling back to the generic blue/default only when absent -- mirrors
+      the color-preservation precedent already established there for KEPT edges (issue #137
+      D10). A verified 12-row fixture forcing this exact scenario (an anchor double-anchoring
+      2 different-gen units, one of them consanguineous) was constructed empirically this
+      session and is a ready-made starting point (see S555's own `PROJECT_LEARNINGS.md`
+      entry for the fixture and the reasoning that got there).
 - [ ] (found S552, owner-reported live, **FIXED S554**. **Pedigree Diagram tab's
       affected-status shading fills unaffected individuals too, counter to standard
       pedigree drawing convention** -- issue #133's `.affectedColor()`

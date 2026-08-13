@@ -138,6 +138,43 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-N] S555 close-out: consanguineous-mating marker shipped; S554 handoff evaluation; 2 new findings logged
+- **Deliverable:** Session S555's own close-out. Evaluated S554's `HANDOFFS.md` receipt (9/10 --
+  the `get_node_color()` E2E template was directly reusable verbatim; the stash/rerun RED-
+  confirmation gotcha caught a real second-order defect in this session's own first-draft tests).
+  Self-assessment 9/10 (one point held back for a 5-attempt fixture-construction detour before
+  switching to pure empirical iteration, documented as a new `PROJECT_LEARNINGS.md` learning so
+  it costs less next time). 2 new `BACKLOG.md` Housekeeping items logged from this session's own
+  incidental findings: the deferred `edgeStyle = "rectilinear"` dogleg-propagation follow-up, and
+  a previously-undocumented dangling-parent `genOf` integer/double type-coercion bug in
+  `.positionMatingUnitForest()`/`.addRectilinearWaypoints()` (found during PRE-RED, not fixed,
+  report-don't-fix precedent). 2 new `PROJECT_LEARNINGS.md` entries (560: a RED-phase
+  `all(x == y)`/`all(is.na(x))` assertion vacuously passes against a not-yet-existing column;
+  561: hand-tracing a multi-rule stateful algorithm is unreliable past 1-2 rules deep, verify
+  empirically instead -- the same investigation that found the type-coercion bug).
+- **Commit:** this close-out's own commit.
+
+### 2026-08-13 · [BL-N] S555: consanguineous-mating visual marker, Pedigree Diagram tab (direct style)
+- **Deliverable:** `makePedigreeMatingLayout()` now marks a consanguineous mating unit's
+  (`kinship(sire, dam) > 0`, computed via the function's own already-validated
+  `twinRelations` parameter too) 2 spouse-to-union mate-line edges with a distinct color/
+  width (`"#D55E00"` Okabe-Ito vermillion, width 4) -- kinship2's own doubled/thickened
+  mate-line convention (S549 Finding #2). Always on, no new UI toggle (sire/dam are
+  required columns). `edges` gains `color`/`width` columns unconditionally once any mating
+  unit exists. Scoped to `edgeStyle = "direct"` this session (owner-directed hold at the
+  PRE-RED->RED gate) -- `"rectilinear"` propagation onto the D2 dogleg reroute is a
+  deferred `BACKLOG.md` follow-up. Full strict-TDD cycle: 6 new/updated unit tests
+  (`test_makePedigreeMatingLayout.R`), 1 new live E2E test (`test-e2e-pedigree-module.R`,
+  56 marked edges confirmed on the bundled 375-individual fixture, 28 genuinely
+  consanguineous unions x 2). `devtools::check()` 0 errors/0 warnings/1 pre-existing NOTE;
+  full clean regression 0 failed/0 error; `lintr::lint_package()` 0 lints. Tutorial/article
+  checklist DONE (`_pedigree_browser.Rmd`, `colony-manager-guide.qmd`); `NEWS.Rmd` DONE.
+  Incidental finding, not fixed (report-don't-fix precedent): a dangling parent anywhere in
+  a pedigree silently widens `.positionMatingUnitForest()`'s `genOf` from integer to
+  double, which can spuriously trigger `.addRectilinearWaypoints()`'s D2 dogleg on OTHER,
+  unrelated, correctly-matched mate-line edges -- logged to `BACKLOG.md` Housekeeping.
+- **Commit:** this session's own deliverable commit.
+
 ### 2026-08-13 · [BL-N] S555: claim session (consanguineous-mating visual marker, Pedigree Diagram tab)
 - **Deliverable:** Session S555 claimed via Phase 1B stub (`SESSION_NOTES.md`, `HANDOFFS.md`
   `status: pending`). Task: add a visual marker for consanguineous matings in the Pedigree

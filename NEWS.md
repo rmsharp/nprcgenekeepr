@@ -163,6 +163,15 @@ R. Mark Sharp, Ph.D.
   unaffected/unknown individuals filled instead of open/unfilled,
   counter to standard pedigree drawing convention (kinship2's own
   "unfilled if 0/NA").
+- The Pedigree Diagram tab now renders a consanguineous mating's 2
+  connector lines thicker and in a distinct color (BL-N), matching
+  kinship2's own doubled/thickened mate-line convention for a
+  blood-related couple. Detected directly from the pedigree's own
+  sire/dam data (no optional column or toggle needed);
+  `makePedigreeMatingLayout()`'s returned `edges` gains `color`/`width`
+  columns accordingly. Scoped to `edgeStyle = "direct"` this release --
+  `"rectilinear"` propagation onto a cross-generation dogleg reroute is
+  a deferred follow-up.
 
 # nprcgenekeepr 2.0.0 (20260708)
 

@@ -421,7 +421,11 @@ test_that(
    to calling with edgeStyle explicitly \"direct\", no waypoint ids, and no
    edge columns beyond the existing contract plus the duplicate-connector
    arc's smooth.* override columns (contract updated S469 for the
-   duplicate-node-arc fix, found S468)", {
+   duplicate-node-arc fix, found S468) plus color/width (S549 Finding #2,
+   fixed S555 -- ALWAYS present once any mating unit exists, since
+   consanguinity is a structural fact of the required sire/dam columns,
+   unlike the optional name/twinRelations sidecars; both NA here since
+   this fixture has no consanguineous mating)", {
   ped <- data.frame(
     id = c("R1", "R2", sprintf("D%d", 1:4)),
     sire = c(NA, NA, "R1", "D1", "D2", "D3"),
@@ -438,7 +442,7 @@ test_that(
                    c("id", "label", "shape", "title", "size", "x", "y"))
   expect_setequal(names(default$edges),
                    c("from", "to", "dashes", "smooth.enabled", "smooth.type",
-                     "smooth.roundness"))
+                     "smooth.roundness", "color", "width"))
 })
 
 test_that(
@@ -915,4 +919,167 @@ test_that(
   expect_equal(connector$to, "TW2")
   expect_identical(connector$dashes[[1L]], FALSE)
   expect_identical(connector$color, "#009E73")
+})
+
+## ---- Finding #2 (S549 kinship2 supplement audit): consanguineous-mating
+## visual marker (BACKLOG.md Housekeeping) -- kinship2's own plot method
+## draws a mating between two blood-related individuals with a doubled/
+## thickened connecting line; makePedigreeMatingLayout() renders every
+## mating unit identically regardless of kinship(sire, dam). Detected
+## directly from the sire/dam/gen columns this function already requires
+## (a structural fact of the pedigree, unlike the optional name/
+## twinRelations sidecars above) -- not gated behind a UI toggle, matching
+## kinship2's own unconditional convention. Styling: Okabe-Ito colorblind-
+## safe vermillion (#D55E00, unused elsewhere in this file -- #009E73 is
+## the twin connector, #CC79A7 is affected, #2B7CE9 is the waypoint-edge
+## blue) plus a thicker width (4 vs vis.js's own default ~1), applied to
+## the 2 spouse-to-union mate-line edges. Scoped to edgeStyle = "direct"
+## this session (owner-directed hold, S555) -- edgeStyle = "rectilinear"
+## propagation is a follow-up BACKLOG item.
+
+test_that(
+  "makePedigreeMatingLayout marks the 2 mate-line edges of a
+   consanguineous mating unit (kinship(sire, dam) > 0) with a distinct
+   color/width, using the real loop fixture's own genuine father-daughter
+   mating (8LKBV9 x FJIB3R, kinship = 0.25)", {
+  loopPed <- data.frame(
+    id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
+           "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
+    sire = c(NA, NA, NA, NA, "5A6DFT", "8LKBV9", "8LKBV9", "8LKBV9"),
+    dam = c(NA, NA, NA, NA, "8DKELJ", "G8EBU9", "8P17E3", "FJIB3R"),
+    sex = c("M", "F", "F", "F", "M", "F", "F", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 2L, 2L, 3L),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(loopPed)
+  consanguineousUnit <- forest$matingUnits$id[
+    forest$matingUnits$sire == "8LKBV9" & forest$matingUnits$dam == "FJIB3R"
+  ]
+  expect_equal(length(consanguineousUnit), 1L)
+
+  result <- makePedigreeMatingLayout(loopPed)
+  expect_true("color" %in% names(result$edges))
+  expect_true("width" %in% names(result$edges))
+  mateEdges <- result$edges[result$edges$to == consanguineousUnit, ]
+  expect_equal(nrow(mateEdges), 2L)
+  expect_equal(mateEdges$color, rep("#D55E00", 2L))
+  expect_equal(mateEdges$width, rep(4, 2L))
+})
+
+test_that(
+  "makePedigreeMatingLayout leaves every mate-line edge of a
+   NON-consanguineous mating unit at NA color/width, even on a fixture
+   that has one genuinely consanguineous unit elsewhere (selective
+   marking, not a blanket style change)", {
+  loopPed <- data.frame(
+    id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
+           "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
+    sire = c(NA, NA, NA, NA, "5A6DFT", "8LKBV9", "8LKBV9", "8LKBV9"),
+    dam = c(NA, NA, NA, NA, "8DKELJ", "G8EBU9", "8P17E3", "FJIB3R"),
+    sex = c("M", "F", "F", "F", "M", "F", "F", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 2L, 2L, 3L),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(loopPed)
+  consanguineousUnit <- forest$matingUnits$id[
+    forest$matingUnits$sire == "8LKBV9" & forest$matingUnits$dam == "FJIB3R"
+  ]
+  otherUnits <- setdiff(forest$matingUnits$id, consanguineousUnit)
+  expect_equal(length(otherUnits), 3L)
+
+  result <- makePedigreeMatingLayout(loopPed)
+  expect_true("color" %in% names(result$edges))
+  expect_true("width" %in% names(result$edges))
+  otherMateEdges <- result$edges[result$edges$to %in% otherUnits, ]
+  expect_equal(nrow(otherMateEdges), 6L)
+  expect_equal(otherMateEdges$color, rep(NA_character_, 6L))
+  expect_equal(otherMateEdges$width, rep(NA_real_, 6L))
+})
+
+test_that(
+  "makePedigreeMatingLayout leaves every mate-line edge at NA color/width
+   on a pedigree with no consanguineous mating at all (no false
+   positives)", {
+  ped <- data.frame(
+    id = c("R1", "R2", sprintf("D%d", 1:4)),
+    sire = c(NA, NA, "R1", "D1", "D2", "D3"),
+    dam = c(NA, NA, "R2", NA, NA, NA),
+    sex = c("M", "F", rep("M", 4L)),
+    gen = c(0L, 0L, 1:4),
+    stringsAsFactors = FALSE
+  )
+  result <- makePedigreeMatingLayout(ped)
+  expect_true("color" %in% names(result$edges))
+  expect_true("width" %in% names(result$edges))
+  mateEdges <- result$edges[!result$edges$dashes, ]
+  expect_true(nrow(mateEdges) > 0L)
+  expect_true(all(is.na(mateEdges$color)))
+  expect_true(all(is.na(mateEdges$width)))
+})
+
+test_that(
+  "makePedigreeMatingLayout never treats a mating unit with a dangling
+   (no own row in 'ped') parent as consanguineous -- kinship() cannot be
+   evaluated for an id absent from 'ped', so the safe default is FALSE,
+   and no crash occurs (mirrors the issue #154 dangling-parent precedent
+   already established for the D2 dogleg loop)", {
+  ped <- data.frame(
+    id = c("GRANDSIRE", "SIRE", "CHILD"),
+    sire = c(NA, "GRANDSIRE", "SIRE"),
+    dam = c(NA, NA, "DANGLING_DAM"),
+    sex = c("M", "M", "F"),
+    gen = c(0L, 1L, 2L),
+    stringsAsFactors = FALSE
+  )
+  result <- expect_error(makePedigreeMatingLayout(ped), NA)
+  expect_true("color" %in% names(result$edges))
+  expect_true("width" %in% names(result$edges))
+  mateEdges <- result$edges[!result$edges$dashes, ]
+  expect_true(nrow(mateEdges) > 0L)
+  expect_true(all(is.na(mateEdges$color)))
+  expect_true(all(is.na(mateEdges$width)))
+})
+
+test_that(
+  "makePedigreeMatingLayout's consanguinity marker coexists correctly
+   with twinRelations (D6/D7's own twin connector edges) -- no column
+   conflict, no crash, both features render independently", {
+  ## Extends the existing D7 twin-connector fixture (:857-864 above) with
+  ## one added consanguineous mating: TW1 (already TW2's declared MZ
+  ## twin, mating with unrelated M1/M2) ALSO mates with her own daughter
+  ## C1 (from the TW1 x M1 union) to produce C3.
+  d7Ped <- data.frame(
+    id = c("TW1", "TW2", "M1", "M2", "C1", "C2", "C3"),
+    sire = c(NA, NA, NA, NA, "M1", "M2", "TW1"),
+    dam  = c(NA, NA, NA, NA, "TW1", "TW1", "C1"),
+    sex = c("F", "F", "M", "M", "F", "M", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 1L, 2L),
+    stringsAsFactors = FALSE
+  )
+  twinRelations <- data.frame(
+    id1 = "TW1", id2 = "TW2", code = "MZ twin", stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(d7Ped)
+  consanguineousUnit <- forest$matingUnits$id[
+    forest$matingUnits$sire == "TW1" & forest$matingUnits$dam == "C1"
+  ]
+  expect_equal(length(consanguineousUnit), 1L)
+
+  result <- expect_error(
+    makePedigreeMatingLayout(d7Ped, twinRelations = twinRelations), NA
+  )
+
+  ## The twin connector still renders correctly, unaffected.
+  connector <- result$edges[result$edges$label %in% "MZ", ]
+  expect_equal(nrow(connector), 1L)
+  expect_equal(connector$color, "#009E73")
+
+  ## The consanguineous union's own mate edges are marked, distinctly
+  ## from the twin connector's color. (result$edges$dashes is a list
+  ## column here -- twinRelations makes some rows carry a numeric dash
+  ## pattern -- so filter by 'to' alone, not '!dashes'.)
+  mateEdges <- result$edges[result$edges$to == consanguineousUnit, ]
+  expect_equal(nrow(mateEdges), 2L)
+  expect_equal(mateEdges$color, rep("#D55E00", 2L))
+  expect_equal(mateEdges$width, rep(4, 2L))
 })
