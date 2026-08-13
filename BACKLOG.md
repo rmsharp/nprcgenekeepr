@@ -165,22 +165,28 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       similar) check to `CLAUDE.md`'s "Additional Phase 0 steps," and if so, at
       what cadence (every session vs. only when `git status` shows unpushed
       commits). See `PROJECT_LEARNINGS.md` Learning 547, `CHANGELOG.md`.
-- [ ] **`test-coverage.yaml` CI job failing on `origin/master` -- 2 consecutive pushes**
-      (found S542, 2026-08-12, READY to diagnose, Effort S/M) -- `gh run list
-      --workflow=test-coverage.yaml` shows the covr-instrumented run failing on both the
-      S536 push (2026-08-12T22:57) and the S540 push (2026-08-13T03:07:12Z), while
-      `R-CMD-check.yaml` is green on the same S540 push. Truncated log shows a `spelling.R`
-      comparison diff (`Failed to find package source directory from:
-      /home/runner/work/_temp/package/nprcgenekeepr/nprcgenekeepr-tests` -- likely a covr
-      sandbox-path artifact, not a real spelling failure, since it still prints "All Done!")
-      immediately followed by `Error: running the tests in 'testthat.R' failed` with no
-      specific failing test identified in the log captured this session -- needs a full
-      `gh run view <id> --log` (not just `--log-failed`) or a local `covr::package_coverage()`
-      repro to isolate the actual failure. Not diagnosed this session -- found via an ad hoc
-      `gh run list` check (itself prompted by the open Phase 0 CI-check-gap item above), out
-      of scope for a ledger-archive session's own deliverable (owner confirmed via
-      `AskUserQuestion`, chose to keep the archive as this session's scope and log this
-      instead). A future session should diagnose and fix.
+- [ ] (none remaining -- the "`test-coverage.yaml` CI job failing on `origin/master`" item
+      (found S542, 2026-08-12) is RESOLVED -- **diagnosed and fixed S544 (2026-08-13):** root
+      cause was `tests/testthat/test_wordlist_coverage.R`'s `find_pkg_src()` helper, not a real
+      spelling regression. `covr::package_coverage()` runs tests against an
+      `R CMD INSTALL --install-tests` copy; under that layout `inst/*` content is flattened
+      into the installed package's own root (standard R install behavior), so there is no
+      `inst/` subdirectory. `find_pkg_src()`'s `devtools::test()`-fallback branch only checked
+      for a `DESCRIPTION` file (which an installed package also retains), so it accepted that
+      directory as source; `spelling::get_wordfile()` then looked for the nonexistent
+      `<that-dir>/inst/WORDLIST`, silently found nothing, and every already-whitelisted domain
+      word (146 of them) got flagged as unknown. Confirmed byte-for-byte via a direct local
+      `R CMD INSTALL --install-tests` + `testthat::test_dir()` repro (identical 146-word list
+      to the CI failure) before touching any code -- and re-confirmed after the fix that the
+      same repro now skips gracefully instead of failing. Fix: all 3 `find_pkg_src()` branches
+      now require both `DESCRIPTION` and an `inst/` subdirectory (a shared `is_pkg_src()`
+      helper) before accepting a candidate as source. Strict TDD: 2 new tests pin the
+      source-vs-installed detection directly (RED confirmed against the unfixed helper, GREEN
+      after the fix); full regression 0 failed/0 error (5,519 passed, up from 5,396); 
+      `devtools::check()` 0 errors/0 warnings/1 pre-existing unrelated NOTE; `lintr` clean.
+      Pushed and confirmed `test-coverage.yaml` green on the real CI run (`f4b478c0`) -- the
+      root-truth verification, since the bug only manifests under actual `covr`. See
+      `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 551.
 - [ ] (none remaining -- the "`CHANGELOG.md` archive refuses via `SRF_RED`" item (found S542)
       is RESOLVED -- **decided and force-archived S543 (2026-08-12):** re-derived the SRF
       numbers live rather than trusting S542's report (SRF 2.9933 against the most-recent
@@ -393,6 +399,32 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       article checklist's own "and/or" allowance). A future session should
       re-capture `pb_diagram_legend.png` (and update the surrounding prose to
       describe mate-lines/duplicate nodes) against the live app.
+- [ ] **Write a dedicated article on the Pedigree Diagram tab covering all of its
+      current features** (owner-directed, found S544, 2026-08-13, READY, Effort M) --
+      the existing coverage is a paragraph in `colony-manager-guide.qmd`'s "Diagram
+      view" section plus the `_pedigree_browser.Rmd` shape-to-sex legend (issue #139,
+      resolved S455, 2026-08-02), written before most of the tab's current capability
+      shipped. Since then the tab has gained: the Option 2 kinship2-parity
+      mating-unit/duplicate-node layout (issues #142-144, S465-473); mate-line/
+      sibship-bar rendering; twin/zygosity encoding (issue #137); affected-status
+      shading (issue #133); node-label name display (issue #136); sire/dam
+      left-right placement (issue #145); rectilinear vs. curved `edgeStyle` edge
+      rendering (issue #142 follow-up, S506); the "Select by id" search dropdown +
+      hover-highlight (S443); click-to-navigate; PNG export; and the node cap (now
+      750, not the paragraph's stale 1,500). A full standalone article -- not just an
+      extended paragraph -- would give this feature set the same documentation depth
+      as other major tabs get in `vignettes/articles/colony-manager-guide.qmd`, and
+      would subsume the stale-screenshot item directly above (a full rewrite
+      naturally re-captures `pb_diagram_legend.png` against the current render rather
+      than patching the existing paragraph in place). Not scoped or written this
+      session (found via a mid-turn user request during an unrelated CI-diagnosis
+      session; logged per the owner's explicit ask, not implemented, to keep this
+      session's TDD-gated deliverable to its one already-approved scope). A future
+      session should inventory the tab's full current feature set against the live
+      app (matching the Diagram-tab audit precedent in
+      `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`) before
+      drafting, and follow the tutorial/article documentation checklist
+      (`CLAUDE.md`, Session 436).
 - [ ] **iCloud "conflicted copy" duplicate `.R` files corrupt
       `devtools::document()`/`R CMD check` output** (found S461, Effort S,
       not a code defect) -- `R/appServer 2.R` and `R/modMarkerGenetics 2.R`
