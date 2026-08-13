@@ -131,6 +131,15 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [ad hoc] S545 Phase 0 reconcile: S544's HANDOFFS.md commit self-reference
+- **Deliverable:** Phase 0 ledger reconcile (`SESSION_RUNNER.md` step 6). S544's `HANDOFFS.md`
+  receipt shipped with `commit: pending` — the standard self-reference limitation (the receipt
+  ships in the very commit whose sha it would name), matching the S543 pattern S544 itself
+  reconciled at its own claim. `HANDOFFS.md`'s frontier (`git log -1 -- HANDOFFS.md`) ==
+  `126711a9` (S544's own close-out commit), so reconciled `commit: pending` → `126711a9`. No
+  undocumented commits found otherwise; `CHANGELOG.md`'s own frontier == `HEAD` already.
+- **Commit:** this reconcile's own commit.
+
 ### 2026-08-13 · [ad hoc] S544 close-out: test-coverage.yaml fix confirmed green on CI, BACKLOG.md updated (item resolved + new Pedigree Diagram article item), Learning 551
 - **Deliverable:** Session S544's own close-out. `BACKLOG.md`'s `test-coverage.yaml` Housekeeping
   item (found S542) marked RESOLVED, citing the fix commit and the confirmed-green CI run. Added

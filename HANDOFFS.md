@@ -199,7 +199,8 @@ changelog_ref: this session's own CHANGELOG.md entries, 2026-08-13 ([ad hoc]
 the claim; [BL-testCoverageCovrInstallTests] the fix; [ad hoc] the
 close-out entry covering BACKLOG.md/PROJECT_LEARNINGS.md findings and the
 mid-turn backlog addition)
-commit: pending
+commit: 126711a9 (reconciled S545 -- self-reference at write time, per the
+S543/S544 precedent: this receipt ships in the commit whose sha it names)
 ```
 
 ```handoff
