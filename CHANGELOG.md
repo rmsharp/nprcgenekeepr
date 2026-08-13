@@ -131,6 +131,18 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] S540 Phase 0 reconcile: HANDOFFS.md S539 receipt commit: pending → d34a6447
+- `git log -1 --format=%H -- HANDOFFS.md` showed the frontier commit (`d34a6447`, the S539
+  close-out commit) still carried its own receipt's self-referential `commit: pending`
+  placeholder (legal at write time per `HANDOFFS.md`'s own format note — the receipt ships in
+  the very commit whose sha it would name). Reconciled to `d34a6447`, matching the
+  S539→S538/S538→S537 precedent immediately below. `CHANGELOG.md`'s own frontier (`841aeae2`)
+  has a 2-commit gap (`53720f7e`, `d34a6447`) that is not a real undocumented action — both are
+  S539's own trailing close-out commits (BACKLOG.md RESOLVED + Learning 545; the SESSION_NOTES.md/
+  HANDOFFS.md handoff write itself), whose content the `[BL-518]` entry below already covers; a
+  session's own final close-out commit cannot cite its own not-yet-made sha, so a 1-2 commit
+  trailing gap of this shape is expected every session, not a gap to backfill.
+
 ### 2026-08-12 · [BL-518] `SESSION_NOTES.md`'s first `methodology_trim.py --write` archive (Session 539)
 - **Deliverable:** Resolved the deferred remainder of the S518 ledger-size item: `SESSION_NOTES.md`
   had climbed to 42,670 lines (21x past the 2,000-line agent read cap) and 6,370,574 B (97x the

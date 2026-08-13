@@ -185,7 +185,7 @@ build-equivalent verification.
 changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12
 ([ad hoc] claim + Phase 0 reconcile entries; [BL-518] the deliverable; plus
 the tool's own auto-generated [ad hoc] entry)
-commit: pending
+commit: d34a6447
 ```
 
 ```handoff
