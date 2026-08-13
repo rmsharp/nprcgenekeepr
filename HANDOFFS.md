@@ -125,6 +125,26 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-12.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S556
+date: 2026-08-13
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix the dangling-parent genOf integer/double type-coercion bug in
+.positionMatingUnitForest() (R/makePedigreeDiagramData.R), which spuriously triggers
+.addRectilinearWaypoints()'s D2 dogleg reroute on unrelated, correctly-matched mate-line edges
+elsewhere in the same diagram (BACKLOG.md Housekeeping, found S555, READY, Effort M).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<claim stub -- overwritten at Phase 3D close-out>
+
+```handoff
 session: S555
 date: 2026-08-13
 status: complete

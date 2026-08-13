@@ -10,6 +10,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 556 Did
+**Deliverable:** Fix the dangling-parent `genOf` integer/double type-coercion bug in
+`.positionMatingUnitForest()` (`R/makePedigreeDiagramData.R`), which spuriously triggers
+`.addRectilinearWaypoints()`'s D2 dogleg reroute on unrelated, correctly-matched mate-line edges
+elsewhere in the same diagram (`BACKLOG.md` Housekeeping, found S555, READY, Effort M) (IN
+PROGRESS). **Started:** 2026-08-13. **Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 554 Handoff Evaluation (by Session 555)
 **Score: 9/10.** **What helped:** the `next_steps` field's priority-ordered list (consanguineous
 marker item 1, article item 2) matched this session's own independently-rendered `AskUserQuestion`
