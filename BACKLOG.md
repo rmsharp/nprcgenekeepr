@@ -193,6 +193,29 @@ and only submission that will ever carry that version number.
 
 ## Housekeeping
 
+**Phase 0 has no step that checks GitHub Actions CI status – a red
+`R-CMD-check.yaml` run sat unnoticed across 13 sessions (S526-S539)**
+(found S540, 2026-08-12, DECISION NEEDED – whether/how to add a Phase 0
+step, Effort S) – issue \#152 Slice 2 (S526) introduced 3 CI-only test
+failures (`test_markerKinship.R:169`,
+`test_markerParentageLikelihood.R:582,628`, fixed S540); `gh run list`
+showed `R-CMD-check.yaml` failing on both pushes since
+(2026-08-11T22:37, 2026-08-12T22:57), then 15 further local commits
+landed without ever pushing again or checking CI status, until the owner
+asked directly. Neither `SAFEGUARDS.md`’s Session Recovery Protocol nor
+`SESSION_RUNNER.md`’s Phase 0 checklist inspects GitHub Actions at all –
+each of the 13 sessions followed its own checklist completely as
+written; the checklist itself has no step that would have caught this (a
+sibling gap to `PROJECT_LEARNINGS.md` Learning 477’s `lint.yaml`
+precedent, which fixed that instance’s violations but did not add a
+general check). Not fixed this session – a Phase 0 protocol change is
+its own scope decision, out of a CI bug-fix session’s own deliverable. A
+future session (or the owner directly) should decide whether to add a
+`gh run list --limit 5` (or similar) check to `CLAUDE.md`’s “Additional
+Phase 0 steps,” and if so, at what cadence (every session vs. only when
+`git status` shows unpushed commits). See `PROJECT_LEARNINGS.md`
+Learning 547, `CHANGELOG.md`.
+
 (none remaining – the “`shinytest2`/`chromote` headless browser never
 renders a `showModal()`/`modalDialog()` Bootstrap modal’s DOM” item
 (found S535, 2026-08-12) is RESOLVED – **misdiagnosed, corrected S536
@@ -584,6 +607,26 @@ matching the S527 precedent of keeping the archive itself a separate,
 later action – a future session should re-run the dry-run once more
 (counts drift as sessions append) and, if still clean, run `--write`.)
 
+(none remaining – “`SESSION_NOTES.md`‘s first
+`methodology_trim.py --write` archive” (the step deferred above) is
+RESOLVED – S539 (2026-08-12): re-ran the dry-run first (620 records, up
+from S528’s 599 – 21 sessions’ worth of drift), confirmed clean, then
+`--write`. Archived **612** of 620 records (1998-12-06 -\> 2026-08-12)
+to `docs/archive/SESSION_NOTES-through-2026-08-12.md`; live file
+6,370,574 B -\> 30,066 B (-99.5%, well under the 65,536 B budget), 370
+lines (was 42,670 – 21x past the 2,000-line agent read cap before this
+session). 8 records retained (the last ~3 sessions’
+handoff-eval/deliverable pairs plus this session’s own claim stub).
+Losslessness verified via the tool’s own L1/L2/L3 checks and the
+generated `docs/archive/SESSION_NOTES-through-2026-08-12.md.verify.sh`,
+all OK. One gate hit and cleared: the tool’s `P1_UNDOCUMENTED` check
+refused to run while this session’s own claim commit sat undocumented
+ahead of `CHANGELOG.md`’s frontier (a trim commit would have advanced
+the frontier and hidden that gap permanently) – logged the claim to
+`CHANGELOG.md` on its own first (matching the exact gate S528 hit),
+which cleared it. The tool itself also auto-appended its own `[ad hoc]`
+`CHANGELOG.md` entry for the archive action. See `CHANGELOG.md`.)
+
 **`BACKLOG.md`’s own ledger-size housekeeping – editorial compression,
 not a `methodology_trim.py` config** (found S518, 2026-08-11, READY,
 Effort L) – `BACKLOG.md` itself is one of the dashboard’s 3-file
@@ -666,64 +709,102 @@ across 3 sessions, with zero information loss at any step (each
 session’s own end-to-end re-read plus CHANGELOG.md/Learning/file-path
 cross-reference verification). See `CHANGELOG.md`.
 
-**`inst/WORDLIST` has a large, long-standing gap –
-[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)‘s
-spelling-check step fires a NOTE on every run\*\* (found S521,
-2026-08-11, READY, Effort M) – confirmed via direct verification, not
-assumed: temporarily removing this session’s own new files from the tree
-and re-running `spelling::spell_check_package(".", vignettes = TRUE)`
-still flagged **69 words** not in `inst/WORDLIST`, spanning many past
-sessions’ files (`NEWS.md`, `a2interactive.Rmd`,
-`_pedigree_browser.Rmd`, `_breeding_group_formation.Rmd`,
-`makePedigreeMatingLayout.Rd`, `checkLocusMetadata.Rd`, and more) –
-proper nouns/citation authors (Bakker, Ferreira, Maller, Neale, Okabe,
-Sklar), genetics vocabulary (chrom, cM, pos, dizygotic, monozygotic,
-sibship, zygosity-adjacent terms), and methodology/UI prose (handoff,
-walkthrough, onboarding, CLI, shas, subplan, browsable, discoverable,
-unshaded, waypoint, js, vis, and others). This session hand-added only
-the 2 words its own new `checkLinkageMarkerGenotypeFile.Rd` is
-responsible for (`validator`, `multiallelic`) – fixing the other 69 is a
-distinct, larger editorial task (verify each is a genuine false positive
-vs. an actual typo, per the S230/S421 hand-add convention, not
-[`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html))
-out of scope for a single implementation slice.
+(none remaining – the “`inst/WORDLIST` has a large, long-standing gap”
+item (found S521, 2026-08-11) is RESOLVED – S537 (2026-08-12): a fresh
+`spelling::spell_check_package(".", vignettes = TRUE)` found **76**
+genuinely tracked-source words (not the documented 69 – real drift from
+Sessions 522-536; 4 more, `CJ`/`PWJ`/`QBKW`/`ZX`, traced to a stale
+`.gitignore`’d `vignettes/a2interactive.md` build byproduct, confirmed
+absent from a clean `git archive HEAD` checkout). All 76 verified via
+source-context `grep` as genuine false positives (R identifiers/column
+names, citation authors, library/proper names, valid possessives,
+standard technical/genetics vocabulary) – zero actual typos found – and
+hand-added to `inst/WORDLIST` (per the S230/S421 convention, not
+[`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html)).
+**Correction to this item’s own prior text and to S452/S465/S490’s
+stated convention:** `inst/WORDLIST` is NOT sorted in `LC_ALL=C` byte
+order – that claim is empirically false for the file as a whole
+(e.g. `corrigendum` sits between `ColonyManagerTutorial` and `Cramer's`,
+impossible under true `LC_ALL=C`); the file is loosely hand-maintained
+alphabetical. New words were inserted at their correct local position
+via a linear scan preserving all existing line order, verified as a pure
+76-line insertion (`git diff | grep -c "^-[^-]"` == 0) – a naive
+`LC_ALL=C sort -u` merge was tried first and silently reordered ~21
+unrelated existing entries before being caught and reverted. A new
+permanent regression guard, `tests/testthat/test_wordlist_coverage.R`,
+asserts
+[`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+returns 0 rows (matching the `test_pkgdown_reference_config.R`
+guard-test precedent), so this NOTE-only drift – previously found and
+partially hand-fixed at S443/S448/S452/S465/S490 without ever stopping
+the pattern from recurring – gets a hard `testthat` failure instead of
+an easy-to-miss NOTE going forward.
 [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
-currently reports** 0 errors / 0 warnings / 3 NOTEs\*\* (this spelling
-NOTE plus the 2 already-known pre-existing NOTEs: top-level files,
-vignette-engine) – but S520’s own close-out reported only “1
-pre-existing note.” Confirmed via `git log` that S520 never touched any
-of the 69 flagged-word files, so the gap is not new since S520 – the
-likelier explanation, worth recording as its own finding:
-[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)’s
-abbreviated results table only lists a `❯` bullet for some
-NOTE-producing steps, and the “checking tests … NOTE” step (spelling.R’s
-diff-based check) does NOT get one – only the raw `Status: N NOTEs` line
-(above the table) counts it. A session that trusts only the `❯`-bullet
-table, as this session nearly did, silently undercounts. See
-`CHANGELOG.md` 2026-08-11.
+confirmed clean: **0 errors / 0 warnings / 1 NOTE** (only the
+pre-existing vignettes/figure-leftover NOTE; the spelling NOTE is gone).
+See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 543.
 
-**`NEWS.Rmd` entries since ~2.0.0 have drifted far more verbose than the
-project’s own pre-1.0.8 style** (found S522, 2026-08-11, owner-directed,
-READY, Effort M) – entries through and including the `1.0.8 (20250723)`
-section are short, plain bullets (e.g. “Added returned value
-descriptions for all functions within R directory where formerly
-missing.”), one line per change, no formulas, no citations, no
-implementation rationale. Recent entries (issue \#130’s marker-genetics
-family, issue \#153 Slices 1-3, etc.) have grown into multi-sentence
-paragraphs carrying full closed-form formulas, citation strings, and
-derivation/approximation rationale that belongs in roxygen `@references`
-and `inst/extdata/ui_guidance/population_genetics_terms.html` instead –
-both of which are already the user-viewable surfaces the citation
-checklist (issue \#120) requires for exactly this content. A future
-session should rewrite the development-version entries back toward the
-pre-1.0.8 level of detail (what changed, in a sentence, matching
-existing bullet style) and move any calculation/derivation detail that
-isn’t already in `@references`/`population_genetics_terms.html` there
-instead of trimming it outright. Scope this to entries from
-`2.0.0.9000 (development version)` forward – do not rewrite already
--released, frozen version sections (matching the general
-don’t-edit-frozen-history precedent used for `CHANGELOG.md`’s Legacy
-history marker).
+(none remaining – the “`NEWS.Rmd` entries since ~2.0.0 have drifted far
+more verbose than the project’s own pre-1.0.8 style” item (found S522,
+2026-08-11) is RESOLVED – S538 (2026-08-12): rewrote the
+`2.0.0.9000 (development version)` section’s 26 entries from
+multi-sentence paragraphs (full closed-form formulas, citation strings,
+derivation/approximation rationale) back to the pre-1.0.8
+one/two-line-per-change style, per this item’s own scoping instruction
+(below). Every dropped formula/citation was verified present in the
+relevant function’s roxygen `@references` and/or
+`inst/extdata/ui_guidance/population_genetics_terms.html` before being
+dropped (spot-checked via `grep`, including
+[`computeGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/computeGenomicROH.md)’s
+F_ROH formula, which IS covered under HTML `<sub>` markup that a
+plain-text `grep` for `F_ROH` initially missed – re-checked with broader
+terms before trusting the negative). Every issue number and every
+exported/new function name was cross-diffed old-vs-new
+(`grep -oE '#[0-9]+'` / backtick-quoted identifiers) to confirm nothing
+substantive was lost; 4 genuinely-dropped function-name mentions were
+restored after the diff caught them
+([`makeGeneticSummaryTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticSummaryTable.md),
+[`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md),
+[`getBoxWhiskerDescription()`](https://github.com/rmsharp/nprcgenekeepr/reference/getBoxWhiskerDescription.md)/[`savePlotToFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/savePlotToFile.md)/
+[`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md),
+[`createSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/createSimKinships.md)/[`cumulateSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/cumulateSimKinships.md))
+– the rest were confirmed-intentional (implementation-rationale
+mentions, not new capabilities). Net: dev-version section 386 -\> 134
+lines (252 removed); `NEWS.Rmd` 1,154 -\> 902 lines, `NEWS.md`
+re-rendered via
+`rmarkdown::render(output_format = rmarkdown::github_document(html_preview = FALSE))`
+(no `NEWS.html` litter). Section heading counts/order confirmed
+identical between `NEWS.Rmd`/`NEWS.md` (28 each). **Correctly left the
+already-released `2.0.0 (20260708)` section completely untouched, per
+this item’s own explicit “do not rewrite already-released, frozen
+version sections” instruction** – caught mid-session as a
+self-correction: an initial pass mistakenly also rewrote the frozen
+`2.0.0` section (misreading the owner-approved “all post-2.0.0 entries”
+scope-question phrasing as license to include it); re-read this item’s
+own text before finishing, recognized the conflict, and reverted that
+section verbatim from `git show HEAD:NEWS.Rmd` before re-rendering.
+`test_effectivePopulationSizeDocs.R`’s `NEWS.Rmd` regression guard
+(asserts “effective population size”/“gene diversity” both present)
+reconfirmed passing after the fix. **A first
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+run then found a second real bug** S537’s own fresh
+`test_wordlist_coverage.R` guard caught: rewriting the prose shifted
+`hunspell`/`spelling`’s context-sensitive tokenization around several
+already-benign possessive constructs (`` `fn()`'s ``/`word's`, identical
+patterns existed pre-session and passed clean under S537), newly
+flagging `centers'` and a stray, context-orphaned `'s` fragment.
+Verified both as false positives (no real typo); fixed by rephrasing the
+6 exact constructs producing them (dropping/relocating each possessive)
+rather than adding a bare `'s` to `inst/WORDLIST`, which would have
+blinded the guard to real future typos sharing that fragment.
+Re-rendered and reconfirmed
+[`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+returns 0 rows. Full clean regression 0 failed/0 error (33 pre-existing,
+unrelated warnings, unchanged from S537’s own baseline); final
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html):
+**0 errors / 0 warnings / 1 NOTE** (only the pre-existing
+vignettes/figure-leftover NOTE, matching S537’s own baseline exactly).
+See `CHANGELOG.md`.
 
 **`a2interactive.Rmd` documentation pass is due – several exported,
 script-callable functions shipped since the last pass (S478, 2026-08-04)

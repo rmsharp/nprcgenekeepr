@@ -147,6 +147,260 @@ which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.1.2.
 
 ``` handoff
+session: S540
+date: 2026-08-12
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: R-CMD-check.yaml CI fix is DONE, verified locally (0 failed/0 error regression;
+devtools::check() 0 errors/0 warnings/1 NOTE, baseline-matching). NOT yet pushed -- master is
+16 commits ahead of origin/master, so the actual GitHub CI run stays red until a push.
+what_was_done: Diagnosed 3 R-CMD-check.yaml CI failures (100% fail rate, all non-macOS
+jobs, since S526): test_markerKinship.R:169 and test_markerParentageLikelihood.R:628 are
+system.time() thresholds (0.10s/0.5s) too tight for GitHub's shared runners (CI observed
+0.133-0.190s / 0.63-0.85s); test_markerParentageLikelihood.R:582's expect_identical() golden-
+master check fails on Linux/Windows from a confirmed (Docker-reproduced) 2-ULP cross-platform
+log()-libm rounding difference, not a real regression -- markerKinship()'s own golden master
+is unaffected (exact-integer matrix products, no log()). Fixed (owner-approved via
+AskUserQuestion): skip_on_ci() on both timing tests; expect_equal() for the golden-master
+check. Zero production-code changes. Commits: 77459b80 (claim), 7c22d2d9 (the fix itself),
+this close-out's own commit (sha pending at write time, self-referential).
+next_steps: Push to origin (owner-directed, not done this session) to actually turn the live
+GitHub CI run green -- the fix is verified locally but master is still 16 commits ahead of
+origin/master. Separately: BACKLOG.md priorities untouched by this session remain open --
+a2interactive.Rmd docs pass (READY, Effort M); CHANGELOG.md/HANDOFFS.md first
+methodology_trim.py --write archive (READY, Effort M -- both still past their read-cap/byte-
+budget triggers); issue #148 (MHC) scope-narrowing conversation (DECISION NEEDED); NPRC
+outreach plan owner review (DECISION NEEDED); LabKey remaining recs (BLOCKED). New this
+session: the Phase-0-has-no-CI-check gap (BACKLOG.md Housekeeping, Learning 547) needs an
+owner decision on whether/how to add a gh run list step to CLAUDE.md.
+key_files: tests/testthat/test_markerKinship.R:169 (skip_on_ci() + comment);
+tests/testthat/test_markerParentageLikelihood.R:562-576,582,610-628 (comment + expect_equal()
++ skip_on_ci() + comment); PROJECT_LEARNINGS.md Learnings 546-547 (new); BACKLOG.md
+Housekeeping (new item, the CI-check gap).
+gotchas: (1) skip_on_ci() only skips when the CI env var is set (GitHub Actions sets it) --
+locally both fixed tests actually RUN and pass, so a local regression run genuinely exercises
+the fix, not just skips past it; do not mistake a green local run for "untested." (2) The
+golden-master fix is expect_equal(), not a changed golden value -- if this test ever fails
+again, re-run the Linux Docker repro (r-base:<version> matching CI's R version) before
+assuming it's a real regression; a difference within ~1e-8 relative tolerance is very likely
+the same log()-libm non-portability, not new. (3) devtools::check() must be run WITHOUT an
+extra shell "&" on top of Bash's own run_in_background:true -- doubling the backgrounding
+makes the harness's own task tracking report "completed" the instant the wrapper script's
+last foreground line exits, while the real R process keeps running detached; check with `ps
+-p <pid>` before trusting an early "completed" notification, or better, just don't add the
+extra "&".
+runtime_smoke: n/a -- test-file-only change, no runtime/Shiny behavior touched. Full clean
+regression (0 failed/0 error) + devtools::check() (0 errors/0 warnings/1 pre-existing NOTE)
+is the complete build-equivalent verification for this deliverable.
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12 ([ad hoc] the deliverable;
+[ad hoc] the S539 HANDOFFS.md reconcile)
+commit: pending
+```
+
+``` handoff
+session: S539
+date: 2026-08-12
+status: complete
+self_score: 9
+predecessor_score: 6
+active_task: SESSION_NOTES.md's first methodology_trim.py --write archive is
+DONE. Live file 42,670 lines / 6,370,574 B -> 370 lines / 30,066 B (612 of
+620 records archived to docs/archive/SESSION_NOTES-through-2026-08-12.md).
+BACKLOG.md item (found S518) marked RESOLVED.
+what_was_done: Re-ran the dry-run (620 records, up from S528's 599), which
+hit an unrelated P1_UNDOCUMENTED gate on this session's own claim commit --
+cleared by logging the claim to CHANGELOG.md on its own first, then re-ran
+clean (L1_OK/L2_OK/L3_OK). Ran --write: archived 612 records
+(1998-12-06 -> 2026-08-12) to docs/archive/SESSION_NOTES-through-2026-08-12.md;
+verified losslessness via the generated .verify.sh (L1/L2/L3 all OK,
+re-derived from git). Supplemented the tool's own auto-generated [ad hoc]
+CHANGELOG.md entry with a [BL-518]-tagged session entry. Marked BACKLOG.md
+item RESOLVED; added PROJECT_LEARNINGS.md Learning 545 (the
+P1_UNDOCUMENTED-on-own-claim-commit gotcha). Full clean regression: 0
+failed/0 error. Commits: 09455576 (Phase 0 reconcile), 494e51b9 (claim),
+3110c649 (claim logged to clear the gate), 841aeae2 (the archive itself),
+53720f7e (BACKLOG.md RESOLVED + Learning 545, this close-out's own commit
+pending).
+next_steps: The SESSION_NOTES.md risk flag is resolved. Other unrelated
+READY/DECISION-NEEDED items still open (unchanged by this session):
+a2interactive.Rmd documentation pass for functions shipped since S478
+(Effort M, owner-directed); filing 2 new GitHub issues for the sequencing
+audit's unfiled High-priority gaps ("Longitudinal genetic-health
+monitoring", "Ancestry guardrails in breeding decisions" -- open since S483,
+Effort S); issue #148 (MHC) needs its own scope-narrowing conversation
+before it's READY (sequencing audit Finding #4); NPRC outreach &
+announcement plan needs owner review/edit of drafts + send-timing decision
+(not a coding task). LabKey integration remaining recs stay BLOCKED (needs a
+live LabKey server). Same 2 doc-hygiene nits S538 flagged remain unfixed
+(BACKLOG.md:354's stale duplicate spelling item; the S518 housekeeping
+item's own stale unchecked checkbox despite narratively RESOLVED text) --
+low-priority, not re-flagged as new.
+key_files: SESSION_NOTES.md (370 lines, was 42,670);
+docs/archive/SESSION_NOTES-through-2026-08-12.md (new, 612 archived
+records); docs/archive/SESSION_NOTES-through-2026-08-12.md.verify.sh (new);
+CHANGELOG.md (3 new entries: claim, reconcile, deliverable, plus the tool's
+own auto-generated one); BACKLOG.md (item marked RESOLVED);
+PROJECT_LEARNINGS.md Learning 545 (new).
+gotchas: (1) methodology_trim.py's P1_UNDOCUMENTED gate refuses --write
+while ANY commit -- including the running session's own Phase 1B claim
+stub -- sits undocumented ahead of CHANGELOG.md's frontier. If your
+session's deliverable IS a trim --write call, log the claim commit to
+CHANGELOG.md on its own BEFORE attempting --write, don't wait for the usual
+Phase 3F close-out entry to cover it. (2) CUT_STRADDLES_DAY is an
+informational warning, not an error, when multiple sessions land the same
+calendar day as the cut point -- the shard filename becomes a span label,
+not a strict day boundary; harmless, matches the tool's documented design
+(SS2.3). (3) HANDOFFS.md and CHANGELOG.md are STILL past their own
+byte-budget archive triggers (dashboard MEDIUM risk) -- not this session's
+scope, but a future session should run their own first --write archives the
+same way this session did for SESSION_NOTES.md.
+runtime_smoke: n/a -- no runtime/Shiny behavior changed (docs-only session,
+SESSION_NOTES.md/CHANGELOG.md/BACKLOG.md/PROJECT_LEARNINGS.md/docs/archive
+only, all confirmed .Rbuildignore'd with no functional test dependency); the
+full clean regression (0 failed/0 error) is this session's complete
+build-equivalent verification.
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12
+([ad hoc] claim + Phase 0 reconcile entries; [BL-518] the deliverable; plus
+the tool's own auto-generated [ad hoc] entry)
+commit: d34a6447
+```
+
+``` handoff
+session: S538
+date: 2026-08-12
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: NEWS.Rmd verbosity drift (found S522) is resolved for the
+2.0.0.9000 (development version) section -- the only section this item's own
+BACKLOG.md scoping instruction authorizes. The already-released 2.0.0
+(20260708) section is correctly untouched. BACKLOG.md item marked RESOLVED.
+what_was_done: Rewrote all 26 entries in NEWS.Rmd's 2.0.0.9000 section from
+multi-sentence paragraphs (formulas, citation strings, derivation rationale)
+to the pre-1.0.8 one/two-line-per-change house style. Verified every dropped
+formula/citation already has a home in the relevant function's roxygen
+@references and/or inst/extdata/ui_guidance/population_genetics_terms.html
+(14 functions spot-checked) before dropping it from NEWS. Cross-diffed every
+issue number and function name old-vs-new; restored 4 genuinely-dropped
+function mentions the diff caught. Mid-session self-correction: an initial
+pass also rewrote the frozen, already-released 2.0.0 section (misreading my
+own scope-question phrasing) -- caught by re-reading BACKLOG.md's exact
+scoping text before finishing, reverted that section verbatim from git show
+HEAD:NEWS.Rmd, rebuilt correctly scoped. Re-rendered NEWS.md via
+rmarkdown::render(github_document(html_preview=FALSE)), no litter. A first
+devtools::check() run found a second real bug: the prose rewrite shifted
+hunspell/spelling's context-sensitive tokenization of several unchanged
+-pattern possessive constructs, newly flagging centers'/a stray 's fragment
+(1 error in test_wordlist_coverage.R) despite identical phrasing passing
+clean pre-session. Fixed by rephrasing the 6 exact constructs producing the
+flags (not by widening inst/WORDLIST with an overly-generic 's fragment).
+Final devtools::check(): 0 errors / 0 warnings / 1 NOTE (matching S537's own
+baseline exactly). Net: dev-version section 386->134 lines; NEWS.Rmd
+1,154->902 lines. Commits: this close-out's own docs commit (fix + docs
+combined, docs-only session).
+next_steps: This item is fully closed. Other unrelated READY/DECISION-NEEDED
+items still open (unchanged by this session): a2interactive.Rmd
+documentation pass for functions shipped since S478 (Effort M,
+owner-directed); issue #148 (MHC) needs its own scope-narrowing conversation
+before it's READY (sequencing audit Finding #4); NPRC outreach &
+announcement plan needs owner review/edit of drafts + send-timing decision
+(not a coding task). LabKey integration remaining recs stay BLOCKED (needs a
+live LabKey server). 2 minor doc-hygiene nits observed but not fixed (per
+report-don't-fix-mid-session precedent): BACKLOG.md:354's stale duplicate of
+the now-resolved S465/S490 spelling item, and BACKLOG.md's S518 housekeeping
+item's own stale unchecked checkbox despite narratively RESOLVED text.
+key_files: NEWS.Rmd (2.0.0.9000 section rewritten, 2.0.0 section untouched);
+NEWS.md (re-rendered); BACKLOG.md (item corrected to RESOLVED);
+PROJECT_LEARNINGS.md Learning 544 (new).
+gotchas: (1) A large prose rewrite can change hunspell/spelling's
+tokenization of UNCHANGED text elsewhere via surrounding-context
+sensitivity -- always re-run the FULL devtools::check() after a large
+NEWS.Rmd/vignette rewrite, not just the fast dev-context guard test; a diff
+introducing no new words can still newly fail. (2) When a spelling guard
+flags a fragment more generic than a real word (a bare 's, a lone
+punctuation-adjacent token), prefer rephrasing the source over widening
+inst/WORDLIST -- a wordlist entry should cover a genuine word/proper-noun,
+not a tokenizer artifact that could mask a real future typo. (3) Before
+touching a BACKLOG.md item with its own detailed scoping instruction, re-read
+that instruction's exact text immediately before drafting any
+AskUserQuestion scope options -- a paraphrase written from memory of an
+earlier skim can silently drop a hard boundary (here: "do not rewrite
+already-released, frozen version sections").
+runtime_smoke: n/a -- no runtime/Shiny behavior changed (docs-only session,
+NEWS.Rmd/NEWS.md only); the full devtools::check() run (0 errors/0
+warnings/1 pre-existing NOTE) is this session's complete build-equivalent
+verification.
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12
+([BL-522] the fix; [ad hoc] S538 Phase 0 reconcile entry)
+commit: cf8f9bbe
+```
+
+``` handoff
+session: S537
+date: 2026-08-12
+status: complete
+self_score: 9
+predecessor_score: 7
+active_task: inst/WORDLIST's spelling-check gap (found S521) is fully resolved -- 76
+words verified and hand-added, a permanent testthat guard added so this recurring
+drift (S443/S448/S452/S465/S490) can't silently reaccumulate again. BACKLOG.md item
+corrected to RESOLVED.
+what_was_done: Verified all 76 currently-flagged inst/WORDLIST words (BACKLOG.md's
+documented 69 was stale) as genuine false positives via source-context grep -- zero
+typos found. Excluded 4 more (CJ/PWJ/QBKW/ZX) traced to a stale, gitignored
+vignettes/a2interactive.md build byproduct a clean checkout would never see (confirmed
+via git archive HEAD). Added tests/testthat/test_wordlist_coverage.R, a permanent
+guard asserting spelling::spell_check_package() returns 0 rows. A first WORDLIST merge
+attempt (LC_ALL=C sort -u) silently reordered ~21 unrelated existing entries -- caught
+via git diff before committing, reverted, redone as a pure 76-line insertion (also
+corrects a factually-wrong "LC_ALL=C byte-order" convention claimed in 3 prior
+BACKLOG.md entries, S452/S465/S490). A full devtools::check() run then found a SECOND
+real bug the unit test alone missed: the guard's test_path("..","..") broke under R
+CMD check's own testthat.R execution (1 error) because testthat runs each test_that()
+block with CWD set to the test file's own directory, at a different depth than under
+devtools::test(). Fixed by reusing spelling::spell_check_test()'s own proven
+00_pkg_src-sibling resolution strategy at the correct depth, verified via a fast local
+R-CMD-check-layout simulation before the final full re-check. Final devtools::check():
+0 errors / 0 warnings / 1 NOTE (only the pre-existing vignettes/figure-leftover NOTE;
+spelling NOTE gone). Full strict TDD PRE-RED->RED->GREEN->REFACTOR, each transition
+AskUserQuestion-gated. Commits: 250b33d0 (the fix), plus this close-out's own docs
+commit.
+next_steps: This item is fully closed. Other unrelated READY items still open
+(unchanged by this session): NEWS.Rmd verbosity drift since 2.0.0.9000 (Effort M,
+owner-directed); a2interactive.Rmd documentation pass for 8 functions shipped since
+S478 (Effort M, owner-directed). Issue #148 (MHC) still needs its own scope-narrowing
+conversation before it's READY (sequencing audit Finding #4). LabKey integration
+remaining recs stay BLOCKED (needs a live LabKey server).
+key_files: inst/WORDLIST (76 words added, zero existing lines reordered);
+tests/testthat/test_wordlist_coverage.R (new guard test + find_pkg_src() helper);
+BACKLOG.md (item corrected to RESOLVED, S452/S465/S490's LC_ALL=C claim left as
+historical record per the frozen-history convention); PROJECT_LEARNINGS.md Learning
+543 (new).
+gotchas: (1) spelling::spell_check_package() scans the literal working directory, not
+a clean checkout -- a stale .gitignore'd vignettes/*.md build byproduct can inflate
+the flagged-word count with words CI would never see; cross-check via a git archive
+HEAD export before trusting a local count. (2) inst/WORDLIST is NOT LC_ALL=C sorted
+despite 3 BACKLOG.md entries claiming it is -- verify a loosely-hand-maintained file's
+real convention empirically (e.g. diff <(sort -f file) file) before bulk-editing it,
+and confirm any merge diff shows ONLY insertions (git diff file | grep -c "^-[^-]" ==
+0) before committing. (3) testthat::test_path() resolves relative to the test file's
+OWN directory (confirmed by printing getwd() inside a live test_that() block), which
+sits at a different depth under devtools::test() vs. R CMD check's test_check() --
+never hardcode a ".." count for locating the package source from inside a testthat
+file meant to run under both; reuse spelling::spell_check_test()'s own proven
+00_pkg_src-sibling strategy instead, and verify with a fast local simulation (a fake
+00_pkg_src-sibling directory) rather than iterating via repeated full devtools::check()
+runs (~4 min each).
+runtime_smoke: n/a -- no runtime/Shiny behavior changed (this session touched only a
+test file and a data file); the full devtools::check() run (0 errors/0 warnings/1
+pre-existing NOTE) is this session's complete build-equivalent verification.
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12 ([BL-521] the fix;
+[ad hoc] S537 Phase 0 reconcile entry)
+commit: a39f7756
+```
+
+``` handoff
 session: S536
 date: 2026-08-12
 status: complete
@@ -212,7 +466,7 @@ inherently IS runtime/E2E verification, run repeatedly over the course of the
 diagnostic session itself, not a one-off smoke test.
 changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12 ([BL-535] the
 fix; [ad hoc] S536 Phase 0 reconcile entries)
-commit: pending
+commit: 66202b2a
 ```
 
 ``` handoff

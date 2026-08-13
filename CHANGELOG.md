@@ -160,6 +160,329 @@ here, in this ledger, not in a frozen shard.
 
 ## 2026-08
 
+### 2026-08-12 · \[ad hoc\] Fixed R-CMD-check.yaml failing on GitHub CI (Session 540)
+
+- **Deliverable (owner-directed, not from `BACKLOG.md`):**
+  `R-CMD-check.yaml` failed 100% of the time on the last 2 pushes
+  (ubuntu release/oldrel-1/devel, windows-latest — macOS passed),
+  `[ FAIL 3 | WARN 33 | SKIP 227 | PASS 5399 ]`. All 3 failures traced
+  to S526’s issue \#152 Slice 2 benchmark tests — the D5 performance
+  rewrite itself is correct; only the tests’ environment assumptions
+  were wrong.
+- Root-caused, not guessed: (1)/(3) `test_markerKinship.R:169` and
+  `test_markerParentageLikelihood.R:628` are
+  [`system.time()`](https://rdrr.io/r/base/system.time.html) wall-clock
+  thresholds (0.10s/0.5s) calibrated on the S526 author’s local machine
+  — GitHub’s shared Linux/Windows runners consistently miss them by
+  30-90%, a deterministic hardware-speed mismatch, not random
+  flakiness. (2) `test_markerParentageLikelihood.R:582`’s
+  `expect_identical(actual, golden)` golden-master check — confirmed via
+  a standalone repro run both locally (macOS, byte- identical to golden)
+  and inside a Linux `r-base:4.6.1` Docker container (differs at the
+  2-ULP level, e.g. `1.4069136483226261` vs `...263`), a benign
+  cross-platform [`log()`](https://rdrr.io/r/base/Log.html)-libm
+  rounding non-portability, not a D5-rewrite behavior regression
+  ([`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)’s
+  own golden-master test is unaffected — its computation is
+  exact-integer matrix products with no transcendental calls, confirmed
+  by reading `R/markerKinship.R`).
+- Fix (test-files only, zero production-code changes):
+  [`testthat::skip_on_ci()`](https://testthat.r-lib.org/reference/skip.html)
+  on both timing benchmarks, kept as local/interactive regression
+  guards; `expect_identical()` → `expect_equal()` for the golden-master
+  check. Each documented with a comment recording the finding. Owner
+  approved the fix approach via `AskUserQuestion` before any edit.
+- Verification: full clean regression
+  ([`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html) +
+  [`testthat::test_dir()`](https://testthat.r-lib.org/reference/test_dir.html))
+  0 failed/0 error (33 pre-existing warnings, unchanged baseline, 5,517
+  passed); both touched test files re-run in isolation, all pass locally
+  (CI env var unset, so `skip_on_ci()` does not skip);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/1 NOTE (the pre-existing vignettes/figure
+  leftover, matching baseline exactly) — `testthat.R` `[137s/137s] OK`;
+  `lintr::lint_package()` 0 lints on both touched files. Runtime smoke
+  test: n/a — test-file-only change, no runtime/ Shiny behavior touched.
+- `PROJECT_LEARNINGS.md` Learnings 546 (the
+  [`log()`](https://rdrr.io/r/base/Log.html) cross-platform finding) and
+  547 (a 13-session-spanning gap: no Phase 0 step checks GitHub Actions
+  CI status at all, so this failure sat unnoticed since S526 — flagged
+  as a new `BACKLOG.md` Housekeeping item for a future decision, not
+  fixed this session). **This fix is local-only as of this entry — the
+  actual GitHub CI run stays red until a push happens** (`master` is
+  currently 16 commits ahead of `origin/master`); a future push (this
+  session’s own, or the owner’s) will trigger the first genuinely green
+  `R-CMD-check.yaml` run since S526.
+
+### 2026-08-12 · \[ad hoc\] S540 Phase 0 reconcile: HANDOFFS.md S539 receipt commit: pending → d34a6447
+
+- `git log -1 --format=%H -- HANDOFFS.md` showed the frontier commit
+  (`d34a6447`, the S539 close-out commit) still carried its own
+  receipt’s self-referential `commit: pending` placeholder (legal at
+  write time per `HANDOFFS.md`’s own format note — the receipt ships in
+  the very commit whose sha it would name). Reconciled to `d34a6447`,
+  matching the S539→S538/S538→S537 precedent immediately below.
+  `CHANGELOG.md`’s own frontier (`841aeae2`) has a 2-commit gap
+  (`53720f7e`, `d34a6447`) that is not a real undocumented action — both
+  are S539’s own trailing close-out commits (BACKLOG.md RESOLVED +
+  Learning 545; the SESSION_NOTES.md/ HANDOFFS.md handoff write itself),
+  whose content the `[BL-518]` entry below already covers; a session’s
+  own final close-out commit cannot cite its own not-yet-made sha, so a
+  1-2 commit trailing gap of this shape is expected every session, not a
+  gap to backfill.
+
+### 2026-08-12 · \[BL-518\] `SESSION_NOTES.md`’s first `methodology_trim.py --write` archive (Session 539)
+
+- **Deliverable:** Resolved the deferred remainder of the S518
+  ledger-size item: `SESSION_NOTES.md` had climbed to 42,670 lines (21x
+  past the 2,000-line agent read cap) and 6,370,574 B (97x the 65,536 B
+  budget) — the dashboard’s own top HIGH-risk flag. Both prior blockers
+  (the fence-scanner defect, S527’s rewrap fix; the `record_start` regex
+  gap, S528’s fix) were already resolved, so this session just re-ran
+  the dry-run (620 records, up from S528’s 599 — 21 sessions’ worth of
+  drift) to confirm still clean, then `--write`.
+- Result (tool’s own `[ad hoc]` entry immediately below has the
+  mechanical detail): 612 of 620 records archived to
+  `docs/archive/SESSION_NOTES-through-2026-08-12.md`; live file 30,066 B
+  / 370 lines, both now well under budget. Losslessness verified via the
+  tool’s L1/L2/L3 checks and the generated `.verify.sh` script — all OK.
+- One gate hit and cleared: `methodology_trim.py`’s `P1_UNDOCUMENTED`
+  check refused to run while this session’s own Phase 1B claim commit
+  sat undocumented ahead of the ledger frontier (a trim commit would
+  have advanced the frontier and hidden that gap permanently) — logged
+  the claim to `CHANGELOG.md` on its own first (see the entry below),
+  which cleared it. `PROJECT_LEARNINGS.md` Learning 545. `BACKLOG.md`
+  item marked RESOLVED.
+
+### 2026-08-12 · \[ad hoc\] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-08-12.md` (612 record(s), 6,370,574 B → 30,066 B)
+
+**Written by:** `methodology_trim.py` v1.1.2 — a tool action, not a
+session’s judgment. Moved the oldest **612** record(s) (1998-12-06 →
+2026-08-12) out of
+[`SESSION_NOTES.md`](https://github.com/rmsharp/nprcgenekeepr/SESSION_NOTES.md)
+into
+[`docs/archive/SESSION_NOTES-through-2026-08-12.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-08-12.md).
+Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run
+[`docs/archive/SESSION_NOTES-through-2026-08-12.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-08-12.md.verify.sh)
+rather than trusting a digest printed here. Live file 6,370,574 B →
+30,066 B (−99.5%).
+
+### 2026-08-12 · \[ad hoc\] S539 claimed for BACKLOG.md’s SESSION_NOTES.md `--write` archive item
+
+- Session 539 claimed (`SESSION_NOTES.md`/`HANDOFFS.md` stub, commit
+  `494e51b9`) to run `methodology_trim.py`’s first `--write` archive of
+  `SESSION_NOTES.md` — both prior blockers (the S518 fence-scanner
+  defect and its S527/S528 fixes) are resolved; this session re-runs the
+  dry-run to confirm still clean, then writes. Logged here on its own,
+  ahead of the deliverable, because `methodology_trim.py`’s own
+  `P1_UNDOCUMENTED` gate refuses to run while any commit sits
+  undocumented ahead of `CHANGELOG.md`’s frontier (a trim commit would
+  advance that frontier and hide the gap permanently) — the claim commit
+  itself needed a line before `--write` would proceed, matching the same
+  gate S528 hit and noted in `BACKLOG.md`.
+
+### 2026-08-12 · \[ad hoc\] S539 Phase 0 reconcile: HANDOFFS.md S538 receipt commit: pending → cf8f9bbe
+
+- `git log -1 --format=%H -- HANDOFFS.md` showed the frontier commit
+  (`cf8f9bbe`, the S538 close-out commit) still carried its own
+  receipt’s self-referential `commit: pending` placeholder (legal at
+  write time per `HANDOFFS.md`’s own format note — the receipt ships in
+  the very commit whose sha it would name). Reconciled to `cf8f9bbe`,
+  matching the S538→S537 (`a39f7756`) and S537→S536 (`66202b2a`)
+  precedent. `CHANGELOG.md`’s own frontier
+  (`git log -1 --format=%H -- CHANGELOG.md`) was `6504ebc6`; the only
+  undocumented commit since then was `cf8f9bbe` itself, which — matching
+  the established precedent that a close-out commit containing only
+  `SESSION_NOTES.md`/`HANDOFFS.md` writes is not a separate action
+  beyond what its paired deliverable commit already logged — is covered
+  by this reconcile entry rather than a second one.
+
+### 2026-08-12 · \[BL-522\] Trimmed NEWS.Rmd’s post-2.0.0.9000 verbosity back to the project’s terse pre-1.0.8 house style (Session 538)
+
+- **Deliverable:** Rewrote the `2.0.0.9000 (development version)`
+  section’s 26 entries from multi-sentence paragraphs (full closed-form
+  formulas, citation strings, derivation/approximation rationale) back
+  to the pre-1.0.8 one/two-line-per-change style, per this item’s own
+  explicit scoping instruction: rewrite the open development-version
+  section only, leave already-released/frozen version sections untouched
+  (matching `CHANGELOG.md`’s own Legacy-history-marker precedent).
+- Verified every dropped formula/citation string is already covered by
+  the relevant function’s roxygen `@references` and/or
+  `inst/extdata/ui_guidance/population_genetics_terms.html`
+  (spot-checked via `grep` across 14 statistic-bearing functions —
+  [`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md),
+  [`markerExpectedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerExpectedHeterozygosity.md),
+  [`markerParentageExclusion()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md),
+  [`markerFst()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md),
+  [`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md),
+  [`markerRealizedRelatednessVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerRealizedRelatednessVariance.md),
+  [`calcSkewness()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcSkewness.md)/[`calcKurtosis()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcKurtosis.md),
+  [`calcGeneDiversity()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGeneDiversity.md),
+  [`calcNeSexRatio()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeSexRatio.md)/[`calcNeVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeVariance.md),
+  [`checkLocusMetadata()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md),
+  [`markerLdBlock()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerLdBlock.md),
+  [`computeGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/computeGenomicROH.md)
+  — before dropping the citation text from `NEWS.Rmd`).
+  [`computeGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/computeGenomicROH.md)’s
+  F_ROH formula was initially a false-negative (present in the HTML page
+  under `<sub>` markup that a literal `F_ROH` `grep` missed) —
+  re-checked with broader search terms before trusting the negative.
+- Cross-diffed every issue number and every backtick-quoted exported/new
+  function name, old text vs. new, to confirm no substantive capability
+  mention was lost. 4 genuinely -dropped function-name mentions were
+  restored after the diff caught them
+  ([`makeGeneticSummaryTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticSummaryTable.md),
+  [`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md),
+  [`getBoxWhiskerDescription()`](https://github.com/rmsharp/nprcgenekeepr/reference/getBoxWhiskerDescription.md)/
+  [`savePlotToFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/savePlotToFile.md)/[`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md),
+  [`createSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/createSimKinships.md)/[`cumulateSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/cumulateSimKinships.md));
+  the remainder were confirmed-intentional (implementation-rationale
+  mentions naming an existing function, not a new capability).
+- **Mid-session self-correction:** an initial pass also rewrote the
+  already-released `2.0.0 (20260708)` section — misreading the
+  owner-approved “all post-2.0.0 entries” scope-question phrasing as
+  license to include it, contradicting this very item’s own “do not
+  rewrite already-released, frozen version sections” instruction. Caught
+  by re-reading the item’s exact text before finishing; reverted that
+  section verbatim from `git show HEAD:NEWS.Rmd` and re-rendered before
+  closing out.
+- Net: dev-version section 386 → 134 lines (252 removed); `NEWS.Rmd`
+  1,154 → 902 lines. `NEWS.md` regenerated via
+  `rmarkdown::render("NEWS.Rmd", output_format = rmarkdown::github_document(html_preview = FALSE))`
+  (no `NEWS.html` render litter, per `PROJECT_LEARNINGS.md` Learning
+  122/123’s own documented render discipline). Section-heading
+  count/order confirmed identical between `NEWS.Rmd`/`NEWS.md` (28
+  headings each, exact string match).
+- **A first
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  run found a real, second bug the unit-test-only pass missed:**
+  rewriting the dev-version section’s prose shifted
+  `hunspell`/`spelling`’s context-sensitive tokenization around several
+  already-benign `` `fn()`'s ``/ `word's` possessive constructs
+  (identical patterns existed pre-session and passed clean under S537),
+  newly flagging 2 words – `centers'` and a stray, context -orphaned
+  `'s` fragment – that S537’s fresh `test_wordlist_coverage.R` guard
+  correctly caught as a real `1 error`. Root-caused by isolating the
+  exact flagged strings/line numbers via
+  [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+  directly (not just the test’s pass/fail), and confirmed both are false
+  positives (no real typo), not reachable by adding `centers'`/a bare
+  `'s` to `inst/WORDLIST` (out of this session’s own NEWS-only scope,
+  and a bare `'s` entry would blind the guard to real future typos
+  sharing that fragment) – instead rephrased the 6 exact possessive
+  constructs producing the flags
+  ([`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)’s
+  →
+  [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+  gains… in its return value;
+  `` makePedigreeDiagramData()`'s node data `` →
+  `Node data from makePedigreeDiagramData()`; 2× `kinship2's` →
+  `a kinship2`/`the kinship2`; 2× `centers'` →
+  `from two centers`/`the populations of two centers`), re-rendered, and
+  reconfirmed
+  [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+  returns 0 rows.
+- **Verified:** `test_wordlist_coverage.R` and
+  `test_effectivePopulationSizeDocs.R`’s `NEWS.Rmd` regression guard
+  (asserts “effective population size”/“gene diversity” both present)
+  both pass. Full clean regression 0 failed/0 error (33 pre-existing,
+  unrelated warnings, unchanged from S537’s own baseline). Final
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html):
+  0 errors / 0 warnings / 1 NOTE (only the pre-existing
+  vignettes/figure-leftover NOTE — matching S537’s own baseline
+  exactly). No `R/` files touched this session (docs-only) — lint N/A.
+  Phase 3E: n/a in the “launch the app” sense (no runtime/Shiny behavior
+  changed); the
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  run above is this session’s complete build-equivalent verification.
+- TDD phase: N/A — pure documentation/editorial change, no production
+  code or test surface, matching this project’s own established
+  “planning session has no code-phases” precedent
+  (`PROJECT_LEARNINGS.md`, extended here to a docs-only session).
+
+### 2026-08-12 · \[ad hoc\] S538 Phase 0 reconcile: HANDOFFS.md S537 receipt commit: pending → a39f7756
+
+- `git log -1 --format=%H -- HANDOFFS.md` showed the frontier commit
+  (`a39f7756`, the S537 close-out commit) still carried its own
+  receipt’s self-referential `commit: pending` placeholder (legal at
+  write time per `HANDOFFS.md`’s own format note — the receipt ships in
+  the very commit whose sha it would name). Reconciled to `a39f7756`,
+  matching the S537→S536 (`66202b2a`) and S536→S535
+  (`42e3e985`/`f946e0a3`) precedent. `CHANGELOG.md`’s own frontier
+  (`git log -1 --format=%H -- CHANGELOG.md`) was `250b33d0`; the only
+  undocumented commit since then was `a39f7756` itself, which — matching
+  the established precedent that a close-out commit containing only
+  `SESSION_NOTES.md`/`HANDOFFS.md` writes is not a separate action
+  beyond what its paired fix commit already logged — is covered by this
+  reconcile entry rather than a second one.
+
+### 2026-08-12 · \[BL-521\] Fixed inst/WORDLIST’s spelling-check gap; added a permanent regression guard (Session 537)
+
+- **Deliverable:** Verified all 76 currently-flagged `inst/WORDLIST`
+  words (found S521; BACKLOG.md’s documented count of 69 was stale) as
+  genuine false positives via source-context `grep` — zero actual typos
+  found — and hand-added them. Found and excluded 4 additional words
+  (`CJ`/`PWJ`/`QBKW`/`ZX`) traced to a stale, `.gitignore`’d
+  `vignettes/a2interactive.md` build byproduct that a clean checkout/CI
+  would never see (confirmed via a `git archive HEAD` re-check). Added a
+  new permanent guard, `tests/testthat/test_wordlist_coverage.R`,
+  asserting
+  [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+  returns 0 rows, so this recurring drift (S443/S448/S452/ S465/S490)
+  gets a hard test failure instead of an easy-to-miss
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  NOTE.
+- **Corrected a factually-wrong convention** stated in 3 prior
+  `BACKLOG.md` entries (S452/S465/ S490): `inst/WORDLIST` is NOT
+  `LC_ALL=C` byte-order sorted — it is loosely hand-maintained
+  alphabetical. A first merge attempt using `LC_ALL=C sort -u` silently
+  reordered ~21 unrelated existing entries; caught via `git diff` before
+  committing and redone as a pure 76-line insertion (verified zero
+  deletions).
+- **A full
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  run found a second real bug**, not caught by the unit test alone: the
+  new guard’s `testthat::test_path("..", "..")` broke under R CMD
+  check’s own `testthat.R` execution (`1 error`) because testthat runs
+  each `test_that()` block with the working directory set to the test
+  file’s own directory, at a different relative depth than under
+  [`devtools::test()`](https://devtools.r-lib.org/reference/test.html).
+  Root-caused (confirmed via a live
+  [`getwd()`](https://rdrr.io/r/base/getwd.html) print) and fixed by
+  reusing
+  [`spelling::spell_check_test()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)’s
+  own proven `00_pkg_src`-sibling resolution strategy at the correct
+  depth, verified via a fast local R-CMD-check-layout simulation before
+  a final full re-check.
+- **Verification:** full clean regression 0 failed/0 error; final
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  — **0 errors / 0 warnings / 1 NOTE** (only the pre-existing
+  vignettes/figure-leftover NOTE; the spelling NOTE is gone);
+  `lintr::lint_package()` 0 lints on the new file. No NEWS.Rmd/citation/
+  tutorial/`_pkgdown.yml`/`a2interactive.Rmd` close-out checklist
+  applies (no new export, no new Shiny feature). Full strict TDD
+  PRE-RED→RED→GREEN→REFACTOR, each phase transition gated via
+  `AskUserQuestion` per `CLAUDE.md`’s Development Process Contract.
+  `PROJECT_LEARNINGS.md` Learning 543.
+
+### 2026-08-12 · \[ad hoc\] S537 Phase 0 reconcile: HANDOFFS.md S536 receipt commit: pending → 66202b2a
+
+- `git log -1 --format=%H -- HANDOFFS.md` showed the frontier commit
+  (`66202b2a`, the S536 close-out commit) still carried its own
+  receipt’s self-referential `commit: pending` placeholder (legal at
+  write time per `HANDOFFS.md`’s own format note — the receipt ships in
+  the very commit whose sha it would name). Reconciled to `66202b2a`,
+  matching the S536→S535 (`42e3e985`/ `f946e0a3`) and S535→S534
+  (`9abaded1`) precedent. `CHANGELOG.md`’s own frontier
+  (`git log -1 --format=%H -- CHANGELOG.md`) was `420a1c53`; the only
+  undocumented commit since then was `66202b2a` itself, which — matching
+  the established precedent that a close-out commit containing only
+  `SESSION_NOTES.md`/`HANDOFFS.md` writes is not a separate action
+  beyond what its paired fix/feat commit already logged (see
+  `bef447c6`/`2b54c722`, neither of which got its own dedicated entry) —
+  is covered by this reconcile entry rather than a second one.
+
 ### 2026-08-12 · \[BL-535\] Corrected S535’s “shinytest2/chromote never renders showModal()” misdiagnosis; retrofitted issue \#153’s E2E export-modal coverage (Session 536)
 
 - **Deliverable:** Investigated the BACKLOG.md Housekeeping item S535
