@@ -125,6 +125,26 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-12.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S555
+date: 2026-08-13
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Add a visual marker for consanguineous matings in the Pedigree Diagram tab
+(BACKLOG.md Housekeeping, found S549 Finding #2, READY, Effort S) -- kinship2 draws a
+doubled/thickened mate-line for a blood-related couple; makePedigreeMatingLayout() renders every
+mating unit identically regardless of kinship(sire, dam). IN PROGRESS.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<free-text prose: pending>
+
+```handoff
 session: S554
 date: 2026-08-13
 status: complete

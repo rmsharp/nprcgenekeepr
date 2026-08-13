@@ -10,6 +10,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 554 Handoff Evaluation (by Session 555)
+**Score: 9/10.** **What helped:** the `next_steps` field's priority-ordered list (consanguineous
+marker item 1, article item 2) matched this session's own independently-rendered `AskUserQuestion`
+priorities exactly, and the owner picked item 1 directly from it -- zero re-derivation needed.
+`gotchas` (1) (the `jsonlite`-avoidance convention, with the `get_node_color()` JS-based template)
+is directly relevant if this session's own marker work needs any live E2E color/edge-attribute
+assertion. **What was wrong:** nothing found inaccurate yet (session just starting). **What was
+missing:** nothing evaluable yet at claim time. **ROI:** pending full assessment at this session's
+own close-out, once the handoff's file:line pointers are actually exercised.
+
+### What Session 555 Did
+**Deliverable:** Add a visual marker for consanguineous matings in the Pedigree Diagram tab
+(`BACKLOG.md` Housekeeping, found S549 Finding #2, READY, Effort S) (IN PROGRESS)
+**Started:** 2026-08-13
+**Status:** Session claimed. Work beginning (PRE-RED investigation).
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 553 Handoff Evaluation (by Session 554)
 **Score: 9/10.** **What helped:** the `next_steps` field's priority-ordered list matched this
 session's own independently-rendered pick exactly (item 1 of 3), and the `gotchas` field's warning

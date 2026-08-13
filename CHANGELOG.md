@@ -138,6 +138,12 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-N] S555: claim session (consanguineous-mating visual marker, Pedigree Diagram tab)
+- **Deliverable:** Session S555 claimed via Phase 1B stub (`SESSION_NOTES.md`, `HANDOFFS.md`
+  `status: pending`). Task: add a visual marker for consanguineous matings in the Pedigree
+  Diagram tab (`BACKLOG.md` Housekeeping, found S549 Finding #2, READY, Effort S).
+- **Commit:** this claim's own commit.
+
 ### 2026-08-13 · [BL-N] S554 close-out: affected-status shading defect fixed; S553 handoff evaluation
 - **Deliverable:** Session S554's own close-out. Evaluated S553's `HANDOFFS.md` receipt (9/10 --
   `next_steps` priority list matched this session's own pick exactly, `gotchas`' full-regression
