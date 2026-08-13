@@ -138,6 +138,32 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-deleteResolvedBullets] S548: deleted 61 resolved BACKLOG.md pointer bullets outright
+- **Deliverable:** Parsed `BACKLOG.md` programmatically (Python, strict indentation-based
+  item-boundary detection — a top-level item ends only at the next `- [ ]`/`- [x]` bullet, a `## `
+  header, or a column-0 non-indented non-bullet line; blank lines followed by indented content stay
+  inside the item) into 78 top-level bulleted items: 61 matched the resolved-pointer shape
+  (`- [ ] (none remaining -- ...)` or any `- [x]`), 17 were genuinely open and left untouched. A
+  first, looser boundary rule (stop only at the next bullet or `## ` header) wrongly merged 65 lines
+  of free-standing, unbulleted Tier-1/Tier-2 sequencing narrative into a preceding `[x]` item — caught
+  by inspecting the largest merged blocks before deleting anything, not after; the stricter rule fixed
+  it and left that narrative (and 2 similar unbulleted-narrative blocks elsewhere) untouched, since it
+  was never itself a bullet.
+- **Verification (S529 precedent):** extracted every `S<N>`/`Session <N>` reference cited inside each
+  of the 61 items and confirmed each is covered by an entry somewhere in `CHANGELOG.md` or its 4
+  archive shards (incl. the new `docs/archive/CHANGELOG-legacy-pre-S325.md`) — 58 items had >=1 cited
+  session, all fully covered, zero missing (unlike S529, which found 2 gaps needing backfill first).
+  The other 3 items were bare, contentless `- [ ] (none remaining)` placeholders with no narrative to
+  verify — their sections' own preceding italicized prose already documents the resolution and its
+  `CHANGELOG.md` pointer, so nothing was at risk of being lost.
+- **Executed:** removed all 61 items (706 lines) plus this item's own trigger — `BACKLOG.md`'s
+  Housekeeping item "Stop editing resolved `BACKLOG.md` items in place..." (25 lines) — since this
+  session's work resolves it; deleted outright per its own instruction rather than left as a pointer.
+  Collapsed resulting double-blank-lines to single. `BACKLOG.md`: 1,559 -> 822 lines (a 47%
+  reduction), all 10 section headers intact, 16 genuinely open items remain (the 17th being the
+  just-resolved trigger item itself). Verified via `diff`: 0 lines added, only deletions; re-read the
+  full resulting file end-to-end before committing.
+
 ### 2026-08-13 · [BL-deleteResolvedBullets] S548 claim: delete resolved BACKLOG.md pointer bullets
 - **Deliverable:** Session S548 claimed. Picking up the `BACKLOG.md` Housekeeping item (found
   S545) — delete the ~57-62 resolved `"(none remaining -- ... RESOLVED ...)"` pointer bullets
