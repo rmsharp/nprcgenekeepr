@@ -33,27 +33,80 @@
 ## testthat context, with a devtools::test() fallback for local development.
 
 find_pkg_src <- function() {
+  ## A candidate directory only counts as a real package SOURCE tree if it has both a
+  ## DESCRIPTION file AND an inst/ subdirectory. DESCRIPTION alone is not sufficient -- an
+  ## INSTALLED package (e.g. covr::package_coverage()'s R CMD INSTALL --install-tests copy)
+  ## also retains a DESCRIPTION, but its inst/* contents get flattened into the package root at
+  ## install time, so it has no inst/ subdirectory at all. Checking for inst/ is what tells a
+  ## source tree apart from an installed one (Session 544, 2026-08-13 -- see the test_that()
+  ## pair right below this function for the exact bug this closes).
+  is_pkg_src <- function(dir) {
+    file.exists(file.path(dir, "DESCRIPTION")) && dir.exists(file.path(dir, "inst"))
+  }
+
   ## R CMD check --as-cran: the source is preserved as a sibling 00_pkg_src dir,
   ## one level shallower than testthat's own per-test-file working directory.
   cand <- list.files("../../00_pkg_src", full.names = TRUE)
-  if (length(cand) && file.exists(file.path(cand[1], "DESCRIPTION"))) {
+  if (length(cand) && is_pkg_src(cand[1])) {
     return(normalizePath(cand[1]))
   }
   ## Plain R CMD check (non --as-cran): sibling of a *.Rcheck directory.
   check_dir <- dirname(dirname(getwd()))
   if (grepl("[.]Rcheck$", check_dir)) {
     source_dir <- sub("[.]Rcheck$", "", check_dir)
-    if (file.exists(file.path(source_dir, "DESCRIPTION"))) {
+    if (is_pkg_src(source_dir)) {
       return(normalizePath(source_dir))
     }
   }
   ## devtools::test()/testthat::test_file() from the source tree.
   cand <- tryCatch(testthat::test_path("..", ".."), error = function(e) NA_character_)
-  if (!is.na(cand) && file.exists(file.path(cand, "DESCRIPTION"))) {
+  if (!is.na(cand) && is_pkg_src(cand)) {
     return(normalizePath(cand))
   }
   NULL
 }
+
+## Session 544 (2026-08-13) finding: test-coverage.yaml (covr::package_coverage(), which runs
+## tests against an R CMD INSTALL --install-tests copy) fails this guard where R-CMD-check.yaml
+## (a real R CMD check) does not. Root cause: under --install-tests, `inst/*` content is
+## flattened into the installed package's own root (standard R install behavior) -- there is no
+## `inst/` subdirectory there. find_pkg_src()'s branch 3 (the devtools::test() fallback) only
+## checked for a DESCRIPTION file, which an INSTALLED package also has, so it accepted that
+## directory as if it were the source tree. spelling::get_wordfile() then looked for
+## <that-dir>/inst/WORDLIST, silently found nothing, and every already-whitelisted domain word
+## got flagged as unknown -- reproduced locally byte-for-byte via a direct
+## `R CMD INSTALL --install-tests` + `testthat::test_dir()` repro (146 flagged words, identical
+## list to the CI failure). The 2 tests below pin find_pkg_src()'s source-vs-installed
+## detection directly, independent of a full covr/R CMD INSTALL run.
+
+test_that("find_pkg_src() rejects an installed-package layout with no inst/ directory", {
+  ## Mimics what covr's --install-tests copy looks like: a DESCRIPTION file is present (an
+  ## installed package always retains one), but inst/ is absent because its contents were
+  ## flattened into the package root at install time. A correct find_pkg_src() must not accept
+  ## this as a source tree.
+  fake_root <- withr::local_tempdir()
+  writeLines("Package: fakepkg", file.path(fake_root, "DESCRIPTION"))
+  fake_testthat_dir <- file.path(fake_root, "tests", "testthat")
+  dir.create(fake_testthat_dir, recursive = TRUE)
+
+  withr::local_dir(fake_testthat_dir)
+  expect_null(find_pkg_src())
+})
+
+test_that("find_pkg_src() accepts a real source-tree layout with inst/ present", {
+  ## The genuine-source-tree counterpart of the fake above -- same DESCRIPTION + nested
+  ## tests/testthat layout, but with inst/ present, as any real package source tree has. Must
+  ## still resolve correctly so the fix above doesn't over-tighten find_pkg_src() and break the
+  ## legitimate devtools::test()/R-CMD-check cases it already handles.
+  fake_root <- withr::local_tempdir()
+  writeLines("Package: fakepkg", file.path(fake_root, "DESCRIPTION"))
+  dir.create(file.path(fake_root, "inst"), recursive = TRUE)
+  fake_testthat_dir <- file.path(fake_root, "tests", "testthat")
+  dir.create(fake_testthat_dir, recursive = TRUE)
+
+  withr::local_dir(fake_testthat_dir)
+  expect_equal(find_pkg_src(), normalizePath(fake_root))
+})
 
 test_that("inst/WORDLIST covers every word spell_check_package flags", {
   skip_if_not_installed("spelling")
