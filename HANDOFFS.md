@@ -125,6 +125,82 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-12.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S549
+date: 2026-08-13
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: kinship2 supplementary-material PDF reproducibility audit -- DONE. Verified
+whether nprcgenekeepr's exported functions reproduce the NIHMS593658 supplement's 3
+worked-example areas; scoped down to the fully-specified 10-subject Figure S1 subset
+after confirming the full 17-subject fam1 pedigree isn't reconstructible from this repo's
+materials. Found 1 real capability gap (kinship() doesn't model MZ-twin genetic identity)
+and 1 minor diagram gap (no consanguineous-mating visual marker); 2 other candidate gaps
+(pedigree.shrink() equivalent, X-chromosome kinship) judged capability-fit non-issues.
+what_was_done: Extracted the PDF via pdftotext -layout (not visual reading) for exact
+numeric ground truth. Confirmed the full fam1 pedigree isn't reconstructible: its Figure 1
+lives in kinship2's main paper, not this supplement, not among the repo's other 2
+reference PDFs (verified their actual titles: CraneFoot 2005, PedVizApi 2008), not shipped
+in any of kinship2's 3 bundled datasets (checked directly). Reconstructed the 10-subject
+Figure S1 fixture algebraically from Table S1's own kinship values (caught and fixed one
+real transcription error mid-session: an initial attempt wrongly treated subjects 1-6 as
+all founders). nprcgenekeepr::kinship() reproduced Table S1 exactly except the pedigree's
+one MZ-twin pair's cells; confirmed this as a genuine feature gap (not a computation
+error) by running the SAME fixture through the actual installed kinship2::kinship() both
+with and without its own `relation` argument declaring the twins -- matched
+nprcgenekeepr's numbers without, matched the PDF exactly with. This also explained an
+unrelated ~0.01 per-cell drift as R's round-half-to-even vs. the paper's print rounding,
+confirmed via the same reference-implementation cross-check. Confirmed via grep that
+`twinRelations` (issue #137) feeds only the Diagram tab, never kinship()'s 15 call sites.
+Tested makePedigreeDiagramData()/makePedigreeMatingLayout() against the fixture: structure
+correct, but no visual marker exists for the one consanguineous mating (7x8) -- checked
+against issue #134 (closed, verified layout robustness only) and BACKLOG's "Candidate C"
+(a different, geometry-only gap) to confirm this is genuinely new. Wrote the audit report,
+updated BACKLOG.md (triggering item resolved; 2 new Housekeeping items filed, not yet
+GitHub issues), added CHANGELOG.md entries and PROJECT_LEARNINGS.md Learning 556.
+next_steps: BACKLOG.md priorities: this session's own item resolved; 2 new items added
+(both from this audit's findings, need a future AskUserQuestion triage session before
+becoming GitHub issues, matching the GENETIC_METRICS_PDF_CAPABILITY_AUDIT/ISSUE_129_...
+precedent): (1) thread twinRelations into kinship()'s computation (Effort M, needs its
+own design session -- kinship() has 15 call sites). (2) add a consanguineous-mating visual
+marker to the Diagram tab (Effort S). Unchanged from S548: (3) write the dedicated
+Pedigree Diagram tab article (READY, Effort M). (4) issue #148 scope-narrowing
+conversation (needs its own scoping session). (5) NPRC outreach owner review (DECISION
+NEEDED); LabKey remaining recs (BLOCKED) -- both unchanged. **Also unresolved: the
+shinytest2.yaml scheduled CI run (31678188033) is still red at the E2E-tier step,
+unchanged from S548's own finding -- still not diagnosed.** Local master remains ahead of
+origin (now 13+ commits after this session) -- a future session should consider pushing.
+key_files: docs/audits/KINSHIP2_SUPPLEMENT_REPRODUCIBILITY_AUDIT_2026-08-13.md (new, the
+full audit); BACKLOG.md Housekeeping (triggering item resolved, 2 new items added);
+CHANGELOG.md (claim/deliverable/close-out entries); PROJECT_LEARNINGS.md Learning 556
+(new, file tail); SESSION_NOTES.md (S548 handoff evaluation + full S549 write-up).
+gotchas: (1) The full 17-subject fam1 pedigree is NOT reconstructible from anything in
+this repo or the installed kinship2 package -- don't re-attempt this in a future session
+without first locating the actual kinship2 main paper (Sinnwell et al. 2014,
+*Bioinformatics*, not currently a bundled reference PDF here). (2) This session's own
+Phase 1B claim stub was written AFTER the investigative work was substantively done, not
+before -- a real process slip (Learning 556, point 2), self-caught and corrected, but a
+future session should not treat "the session completed cleanly" as proof the ordering
+didn't matter. (3) The 2 new BACKLOG items from this audit are findings, not yet
+GitHub issues -- a future session should triage them via AskUserQuestion (owner picks)
+before implementing either, matching how the ISSUE_129_KINSHIP2_FEATURE_COMPARISON
+audit's own findings were triaged in a separate session (S436), not the audit session
+itself. (4) When reconstructing a pedigree from a kinship matrix, derive parent-child
+relationships algebraically from the coefficients (0.25 = parent-offspring or full-sib)
+rather than reading the figure -- an initial attempt this session got it wrong by trusting
+the rendered image over the numbers.
+runtime_smoke: n/a -- audit/investigation deliverable, no production code or Shiny runtime
+touched. The `kinship()`/`makePedigreeDiagramData()`/`makePedigreeMatingLayout()` functions
+were exercised via ad-hoc scratch scripts (not committed), not a live app render -- a
+weakness noted in this session's self-assessment (a live chromote render would have been
+a stronger confirmation of Finding #2 specifically).
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-13 ([BL-N] the claim;
+[BL-N] the audit deliverable; [BL-N] the close-out entry covering BACKLOG.md/
+PROJECT_LEARNINGS.md updates)
+commit: pending
+```
+
+```handoff
 session: S548
 date: 2026-08-13
 status: complete

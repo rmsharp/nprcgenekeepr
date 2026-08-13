@@ -10,6 +10,107 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 548 Handoff Evaluation (by Session 549)
+**Score: 9/10.** **What helped:** the `HANDOFFS.md` receipt's `next_steps` field's priority-ordered
+list (PDF-reproduction check first, Pedigree Diagram article second, issue #148 scoping third, NPRC/
+LabKey unchanged, the new shinytest2.yaml CI finding last) matched this session's own
+independently-re-derived Phase 0 priorities list exactly — no corrections needed, unlike S548's own
+evaluation of S547 (which caught one inaccurate carried-forward claim). The `gotchas` field's warning
+(1), about the strict-boundary Markdown-parsing technique, wasn't relevant to this session's own very
+different task, but that's a scope mismatch, not a gap. **What was wrong:** nothing found — re-checked
+`BACKLOG.md` directly (per the "don't trust a handoff summary verbatim" precedent S548 itself
+established) and confirmed the item this session picked (PDF reproducibility) was accurately described.
+**What was missing:** nothing material. **ROI:** High — the priority list was directly load-bearing for
+this session's own Phase 0 render and picker, and needed zero correction.
+
+### What Session 549 Did
+**Deliverable:** A capability-comparison/reproducibility audit —
+`docs/audits/KINSHIP2_SUPPLEMENT_REPRODUCIBILITY_AUDIT_2026-08-13.md` — verifying whether
+`nprcgenekeepr`'s exported functions reproduce the kinship2 package's own supplementary-material PDF
+(`inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf`).
+**Started/Completed:** 2026-08-13. **Status:** DONE. TDD phase: N/A (audit/investigation
+deliverable — no production code or test surface, matching the S529-S548 precedent for
+non-implementation sessions). Commits: this session's claim/deliverable/close-out commits (see
+`HANDOFFS.md` receipt for shas once reconciled).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, `git status`/`log`/`diff --stat`, `methodology_dashboard.py` [Health 96/100, 0
+High+ risk], `gh run list --branch master --limit 10`). Both `CHANGELOG.md`/`HANDOFFS.md` ledger
+frontiers sat at `HEAD`, zero undocumented commits, no ghost session. Found: local `master` was 10
+commits ahead of `origin/master` (S546-S548's work, unpushed, not yet CI-verified); the scheduled
+`shinytest2.yaml` run (`31678188033`) was still red at the E2E-tier step — a repeat of S548's own
+finding, not new, reported per the S545 CI-check convention. Rendered the priorities list (5 numbered
+items after this session's own re-derivation from `BACKLOG.md`'s tags) + the `AskUserQuestion`
+picker; owner picked item 1 (verify the kinship2 PDF results). **(2) Process slip, self-caught and
+corrected (see `PROJECT_LEARNINGS.md` Learning 556, point 2):** began the investigative work (reading
+the PDF, building and testing the fixture) before writing the Phase 1B `SESSION_NOTES.md`/
+`HANDOFFS.md` claim stub, defeating the stub's crash-breadcrumb purpose for this session. Corrected
+by writing the stub retroactively before close-out rather than silently absorbing the gap, matching
+the S542/S546 precedent for self-caught process slips. **(3)** Read the 6-page PDF via `pdftotext
+-layout` (not visual/image reading) to get exact numeric values. Found the full 17-subject `fam1`
+pedigree is NOT reconstructible from this repo's materials — its Figure 1 lives in the kinship2
+*main* paper, not this supplement; confirmed neither of the repo's 2 other reference PDFs
+(`5201430.pdf`, `bioinformatics_24_2_279.pdf`) is that paper (read their actual titles: CraneFoot
+2005, PedVizApi 2008); confirmed via `data(package="kinship2")` that none of its 3 bundled datasets
+(`sample.ped`, `testped1`, `minnbreast`) match `fam1`'s structure. Scoped the audit to the
+fully-specified 10-subject Figure S1 subset instead. **(4)** Reconstructed the fixture algebraically
+from Table S1's own kinship values (not the figure) — caught and fixed one real transcription error
+mid-session (an initial attempt wrongly treated subjects 1-6 as all founders, missing that 1×2 are
+parents of 3 and 4, caught by the resulting kinship matrix diverging wildly from the PDF). **(5)** Ran
+`nprcgenekeepr::kinship()` against the corrected fixture: matched Table S1 exactly except the 2 cells
+touching the pedigree's one MZ-twin pair (8,9) — confirmed as a genuine feature gap, not a computation
+error, by reproducing the SAME fixture through the actual installed `kinship2::kinship()` both with
+and without its own `relation` argument declaring the twins (matched nprcgenekeepr exactly without;
+matched the PDF exactly with). This also explained a separate ~0.01 per-cell drift as R's own
+round-half-to-even convention vs. the paper's print rounding — confirmed by reproducing the identical
+drift in `kinship2::kinship()` on the same fixture, not a real discrepancy. **(6)** Confirmed via grep
+that `twinRelations` (issue #137's data model) feeds only `makePedigreeDiagramData()`/
+`makePedigreeMatingLayout()`, never `kinship()`'s 15 call sites across the package's
+kinship/genetic-value/breeding-group/mate-pair pipeline. **(7)** Ran the fixture through
+`makePedigreeDiagramData()`/`makePedigreeMatingLayout()`: node/edge/generation/twin-connector
+structure all correct; confirmed via `grep -in "consang"` (zero matches) that no visual marker exists
+for the pedigree's one consanguineous mating (7×8) — checked this against 2 existing BACKLOG/GitHub
+items first (issue #134, closed — verified layout robustness, not visual signaling; "Candidate C" —
+a cross-generation dogleg geometry issue, not a blood-relation one) to confirm it's a genuinely new,
+previously-untracked finding, not a duplicate. **(8)** Confirmed `trimPedigree()`/
+`removeUninformativeFounders()` solve a different problem than kinship2's `pedigree.shrink()`
+(proband-ancestor trimming vs. availability/bit-size-driven shrinking) — judged a capability-fit
+non-issue, not a gap, given the package's stated mission. Confirmed no X-chromosome-specific kinship
+computation exists — also judged non-actionable. **(9)** Wrote the audit report (4 findings, 2 with
+recommendations to file follow-up issues in a future triage session, matching the
+`GENETIC_METRICS_PDF_CAPABILITY_AUDIT`/`ISSUE_129_...` precedent rather than filing unilaterally).
+Updated `BACKLOG.md`: resolved the triggering item with a pointer to the audit; added 2 new
+Housekeeping items for Findings #1 (MZ-twin kinship gap, needs its own design session) and #2
+(consanguinity visual marker, Effort S). Added `CHANGELOG.md` entries (claim, deliverable,
+close-out) and `PROJECT_LEARNINGS.md` Learning 556 (the pdftotext/algebraic-reconstruction
+technique + the reference-implementation cross-check technique + the claim-ordering slip).
+
+**Self-assessment (Session 549): 8/10.** **Strengths:** (1) Caught and fixed a real transcription
+error in the fixture reconstruction before trusting any comparison, by noticing the resulting kinship
+matrix diverged wildly rather than assuming the tool was at fault. (2) Isolated the MZ-twin finding
+precisely by testing the reference implementation itself (with and without its own twin-relation
+mechanism) rather than stopping at "our numbers don't match the paper" — this also explained an
+unrelated rounding artifact that could otherwise have looked like additional discrepancies. (3)
+Checked 2 existing BACKLOG/GitHub items directly before claiming Finding #2 as new, rather than
+assuming novelty — confirmed issue #134 and "Candidate C" both ask different questions. (4) Correctly
+scoped down from "reconstruct the full 17-subject pedigree" (impossible with available materials) to
+"audit the fully-specified 10-subject subset," stating the limitation prominently rather than
+guessing at the missing 7 subjects' relationships. (5) Followed the established precedent of
+recommending, not unilaterally filing, GitHub issues from audit findings. **Weaknesses:** (1) The
+Phase 1B claim stub was written after the investigative work was substantively complete, not before
+it as the protocol requires — a genuine process slip, self-caught and documented (Learning 556) but a
+real deviation nonetheless, not merely a stylistic one. (2) Did not attempt a live Shiny/`chromote`
+render of the Diagram tab against the fam1 fixture to visually confirm Finding #2 (the consanguinity
+marker gap) in the actual running app — relied on the data-layer function outputs
+(`makePedigreeMatingLayout()`'s returned edge table) instead, which is sufficient to establish the
+finding (no styling field differs) but a live render would have been a stronger, Session-436-style
+confirmation. (3) Did not verify whether kinship2's own X-chromosome kinship algorithm is something
+this package's actual users (NPRC colony managers) have ever asked for — Finding #4's "likely
+non-issue" judgment is reasoned from the package's stated mission, not from a direct check of
+past `BACKLOG.md`/issue history for any prior X-linked request.
+**Ledger:** recorded in `CHANGELOG.md` (this session's claim entry, the deliverable entry, and this
+close-out entry).
+
 ### Session 547 Handoff Evaluation (by Session 548)
 **Score: 8/10.** **What helped:** the `HANDOFFS.md` receipt's `next_steps` field enumerated a
 priority-ordered list (PDF-reproduction check, Pedigree Diagram article, delete-resolved-bullets,
