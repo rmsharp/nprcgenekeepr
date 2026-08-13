@@ -10,17 +10,104 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 547 Handoff Evaluation (by Session 548)
+**Score: 8/10.** **What helped:** the `HANDOFFS.md` receipt's `next_steps` field enumerated a
+priority-ordered list (PDF-reproduction check, Pedigree Diagram article, delete-resolved-bullets,
+BACKLOG's-own-remaining-housekeeping, issue #148 scoping, NPRC/LabKey) that this session's own
+independently-rendered Phase 0 priorities list matched almost exactly after re-deriving from
+`BACKLOG.md`'s own inline tags — high confidence nothing was missed. **What was wrong:** `next_steps`
+item (4), "`BACKLOG.md`'s own remaining ledger-size housekeeping sections beyond Housekeeping/
+'Pedigree diagram vs kinship2'," is inaccurate — `BACKLOG.md`'s own text (written by S531, before
+S547 ran) states plainly that all 3 oversized sections, including "Genetic-metrics PDF audit
+follow-ups," were compressed and the S518 item fully resolved. Caught only because this session read
+`BACKLOG.md` directly rather than trusting the handoff's summary verbatim; had it gone unnoticed, a
+future session could have wasted a full session investigating an already-closed item. Corrected in
+this session's own Phase 0 report (dropped from the numbered priorities list, issue #148 promoted
+into its place) rather than silently propagated. **What was missing:** nothing material for this
+session's own task — the `gotchas` field (fence-scanner-defect generalization for future footer
+relocations) wasn't relevant here, but that's a scope mismatch, not a gap. **ROI:** Good — the
+priority list was directly load-bearing for this session's own Phase 0 render, offset by the one
+inaccuracy needing a live re-check rather than a trust-and-go.
+
 ### What Session 548 Did
-**Deliverable:** Delete the ~57-62 resolved `"(none remaining -- ... RESOLVED ...)"` pointer
+**Deliverable:** Deleted the 61 resolved `"(none remaining -- ... RESOLVED ...)"` / `[x]` pointer
 bullets in `BACKLOG.md` outright (per the file's own header and `SESSION_RUNNER.md`'s explicit
-instruction), verifying each item's resolution has a durable `CHANGELOG.md` entry first —
-matching the S529 precedent, which found 2 cases with no entry and backfilled them before
-deleting. (IN PROGRESS)
-**Started:** 2026-08-13
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+"remove it from `BACKLOG.md` in the same commit" instruction), verifying each item's resolution has
+a durable `CHANGELOG.md` entry first — matching the S529 precedent.
+**Started/Completed:** 2026-08-13. **Status:** DONE. TDD phase: N/A (methodology/documentation
+housekeeping — no production code or test surface, matching the S509/S528/S539/S542/S543/S544/
+S545/S546/S547 precedent). Commits: `011e0191` (Phase 1B claim), `95ae9d70` (the deletion +
+`CHANGELOG.md` entry), this close-out receipt's own commit (pending at write time).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, `git status`/`log`/`diff --stat`, `methodology_dashboard.py` [Health 96/100, 0
+High+ risk], `gh run list --branch master --limit 10`). Both `CHANGELOG.md`/`HANDOFFS.md` ledger
+frontiers sat at `HEAD`, zero undocumented commits, no ghost session. New finding: the scheduled
+`shinytest2.yaml` run (`31678188033`, ~8h old) had failed at the E2E-tier step — reported per the
+S545 CI-check convention, not diagnosed (out of this session's scope). Untracked-file check
+confirmed the one untracked file (`NIHMS593658-...pdf`) is already a known, documented BACKLOG item
+(S545), not a ghost session. Rendered the priorities list (4 numbered items after dropping S547's
+stale item 4, see the handoff evaluation above) + the `AskUserQuestion` picker; owner picked item 1
+(delete resolved bullets). **(2)** Claimed the session (`011e0191`) — stub in `SESSION_NOTES.md`,
+`status: pending` receipt in `HANDOFFS.md`, claim entry in `CHANGELOG.md`. **(3)** Parsed
+`BACKLOG.md` programmatically (Python) into 78 top-level bulleted items using a strict
+indentation-aware boundary rule (an item's body continues across a blank line only when the next
+non-blank line is itself indented; it stops at the next bullet, a `## ` header, or any column-0
+non-blank non-bullet line). A first, looser rule (stop only at the next bullet/header) wrongly
+merged 65 lines of free-standing Tier-1/Tier-2 sequencing narrative into a preceding `[x]` item, and
+284 lines of similar narrative into the file's last bulleted item — caught by inspecting the
+outlier-sized parsed blocks BEFORE deleting anything, fixed by the stricter rule, which correctly
+separated the narrative back out (see `PROJECT_LEARNINGS.md` Learning 555 for the full mechanism).
+**(4)** 61 items matched the resolved-pointer shape (56 `(none remaining -- ...)` + 5 `[x]`, note
+some overlap); 17 were genuinely open and left untouched. Extracted every `S<N>`/`Session <N>`
+reference cited inside each of the 61 items and cross-checked against a combined grep of
+`CHANGELOG.md` + all 4 archive shards (incl. the new `docs/archive/CHANGELOG-legacy-pre-S325.md`):
+58 items had ≥1 cited session, all fully covered, **zero gaps** (S529's own precedent found 2 gaps
+at a smaller scale). The remaining 3 items were bare, contentless `- [ ] (none remaining)`
+placeholders whose enclosing section's own preceding italicized prose already documents the
+resolution and its `CHANGELOG.md` pointer — nothing to lose. **(5)** Generated the edited file to a
+scratch path first; diffed against the original (`diff | grep -c '^+'` == 1, only the `+++` file
+header — zero actual added lines, confirming a pure deletion) before applying. Re-read the full
+847-line intermediate result end-to-end (all 10 section headers intact, no orphaned "(none
+remaining"/`[x]` bullets, no 3+-line blank-line artifacts) before overwriting the tracked file.
+**(6)** Also deleted the Housekeeping item that named this very task ("Stop editing resolved
+`BACKLOG.md` items in place...") since this session's work resolves it — removed outright per its
+own stated instruction rather than left as a stale pointer (`SESSION_RUNNER.md` Phase 3F: "remove
+[a completed item] from `BACKLOG.md` in the same commit"). Net: `BACKLOG.md` 1,559 → 822 lines (a
+47% reduction), 16 genuinely open items remain. **(7)** Added the `CHANGELOG.md` deliverable entry
+documenting the parse method, the near-miss, and the verification result; re-ran
+`methodology_trim.py --file CHANGELOG.md --check` (trigger clear, 26,685 B). Committed (`95ae9d70`).
+**(8)** `PROJECT_LEARNINGS.md` Learning 555: the strict-boundary parsing technique + the near-miss,
+generalized for reuse on any future bulk-deletion pass over a narrative-heavy Markdown file.
+
+**Self-assessment (Session 548): 9/10.** **Strengths:** (1) Used a programmatic, verifiable parse
+rather than eyeballing 1,559 lines by hand — caught a real boundary-detection bug (which would have
+deleted 65+284=349 lines of valuable, still-relevant narrative) BEFORE any deletion, by inspecting
+outlier block sizes rather than trusting the first parse. (2) Verified all 61 items' `CHANGELOG.md`
+coverage mechanically (grep across the live file + all archive shards) rather than by memory or
+spot-check, extending S529's own precedent from a smaller scale to zero gaps at 61 items. (3) Diffed
+the proposed result against the original before applying it, and re-read the full resulting file
+end-to-end afterward — both are cheap, mechanical proofs of correctness for a bulk-deletion task
+where a silent over-deletion would be easy to miss. (4) Resolved the session's own triggering
+Housekeeping item in the same commit as the work it described, and deleted it outright rather than
+leaving a stale pointer — matching the item's own stated preference exactly, not just the letter of
+"remove a completed item." (5) Caught and corrected a real inaccuracy in the predecessor's handoff
+(the stale "remaining ledger-size housekeeping" claim) via direct verification rather than
+propagating it into this session's own priorities picker. (6) Recorded a generalized Learning
+capturing the near-miss mechanism, not just the fix, so a future similar pass doesn't repeat it.
+**Weaknesses:** (1) Did not run `devtools::check()`/the test suite — judged unnecessary since zero
+`R/`/`tests/` files were touched (pure Markdown editorial work), matching the S529-S531 precedent,
+but this is a deliberate scope call worth stating explicitly rather than a silent omission (Failure
+Mode #24 caution). (2) The `CHANGELOG.md`-coverage verification method (session-number citation
+matching) is coarser than a topic-level check — it confirms "an entry exists from that session,"
+not "this bullet's specific claim is provably reflected in that entry's text." Reasonable as a
+proxy (matches S529's own methodology) but worth naming as a limitation for a future, more rigorous
+pass. (3) Did not check whether any of the 61 deleted items were linked to from outside `BACKLOG.md`
+(a GitHub issue comment, another doc) before deleting individually — did a broad repo-wide grep for
+the one item whose text was distinctive enough to search for, not an exhaustive per-item check; low
+risk since the underlying information survives in `CHANGELOG.md`/its archives regardless.
+**Ledger:** recorded in `CHANGELOG.md` (this session's claim entry, the deliverable entry, and this
+close-out entry).
 
 ### Session 546 Handoff Evaluation (by Session 547)
 **Score: 9/10.** **What helped:** both fields directly shaped this session's work. The

@@ -127,18 +127,52 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S548
 date: 2026-08-13
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Delete the ~57-62 resolved "(none remaining -- ... RESOLVED ...)" pointer bullets
-in BACKLOG.md outright, verifying each item's resolution has a durable CHANGELOG.md entry first
-(S529 precedent).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: Delete the 61 resolved "(none remaining -- ...)"/[x] pointer bullets in BACKLOG.md
+outright -- DONE. BACKLOG.md 1,559 -> 822 lines (47% reduction), 16 genuinely open items remain,
+10 section headers intact.
+what_was_done: Parsed BACKLOG.md programmatically (Python, strict indentation-aware item-boundary
+rule) into 78 top-level items; 61 matched the resolved-pointer shape. A first, looser boundary rule
+wrongly merged 349 lines of free-standing sequencing narrative into 2 items -- caught by inspecting
+outlier block sizes before deleting, fixed with the stricter rule (see Learning 555). Verified all
+61 items' cited session numbers against CHANGELOG.md + all 4 archive shards: 58 fully covered, 0
+gaps (3 were contentless placeholders needing no verification) -- extends S529's own 2-gap
+precedent to zero at a larger scale. Diffed the edited file against the original before applying
+(0 lines added, pure deletion); re-read the full result end-to-end after. Also deleted the
+Housekeeping item that named this task, since this session's work resolved it. Added a CHANGELOG.md
+deliverable entry and PROJECT_LEARNINGS.md Learning 555. Commits: 011e0191 (claim), 95ae9d70
+(deletion + CHANGELOG.md entry).
+next_steps: BACKLOG.md priorities unchanged from S547 except this item (resolved, removed) and
+S547's own stale item 4 (also removed -- was already fully resolved, see this session's handoff
+evaluation above). In priority order: (1) Verify kinship2-supplement PDF results reproduce via
+nprcgenekeepr exported functions (READY, Effort M, S545). (2) Write a dedicated Pedigree Diagram
+tab article (READY, Effort M, S544). (3) Issue #148 scope-narrowing conversation -- needs its own
+scoping session, per the ratified GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT's Finding #4 (every other
+item in that audit's order is now shipped and closed). (4) NPRC outreach owner review (DECISION
+NEEDED); LabKey remaining recs (BLOCKED) -- both unchanged, owner/external-dependent. (5) NEW this
+session: the scheduled shinytest2.yaml CI run (31678188033, triggered ~8h before this session,
+2026-08-13T07:32:33Z) failed at the "Run shinytest2 E2E tier in per-module fresh processes
+(opt-in)" step -- reported per the S545 CI-check convention, not diagnosed; a future session should
+investigate via `gh run view 31678188033 --log-failed` first.
+key_files: BACKLOG.md (61 items + the triggering Housekeeping item deleted, 1,559->822 lines, all
+10 section headers intact); CHANGELOG.md (new 2026-08-13 S548 deliverable entry documenting the
+parse method + verification; claim entry); PROJECT_LEARNINGS.md (new Learning 555, file tail);
+SESSION_NOTES.md (S547 handoff evaluation + full S548 write-up).
+gotchas: (1) A future bulk-deletion pass over a narrative-heavy Markdown file should use the
+stricter indentation-aware boundary rule from Learning 555, not the naive "stop at next
+bullet/header" rule -- the naive rule silently merges free-standing prose into the preceding
+bullet and will over-delete. Inspect outlier-sized parsed blocks before deleting anything. (2) The
+`CHANGELOG.md`-coverage verification method used here (session-number citation matching) is a
+coarse proxy, not a topic-level check -- it confirms an entry exists from the cited session, not
+that the entry specifically covers the bullet's claim. Fine as a precedent-matching check (S529
+used the same method) but a more rigorous future pass could spot-check topic match too. (3) The
+untracked NIHMS593658 PDF is still untracked/copyright-undecided as of this session's close --
+unchanged from S545's own flag, not a new gap.
+runtime_smoke: n/a -- docs-only session (BACKLOG.md/CHANGELOG.md/PROJECT_LEARNINGS.md/
+SESSION_NOTES.md/HANDOFFS.md only; zero R/ or tests/ files touched, no runtime behavior changed).
+changelog_ref: 95ae9d70
 commit: pending
 ```
 
