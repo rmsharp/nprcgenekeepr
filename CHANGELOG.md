@@ -138,6 +138,16 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [ad hoc] S552: logged a new BACKLOG.md item (clean up unneeded repository branches)
+- **Deliverable:** Owner-directed mid-session: inventoried (not deleted) local and `origin`
+  branches beyond `master`. Local: `dev`, `module`, `rlabkey-version-floor`, 4 `worktree-wf_*`
+  leftovers. Remote: `dev`, `gh-pages`, `issue103-stage5-imports`, `issue103-stage7-examples`,
+  `issue103-stage8a-title-voice`, `issue103-stage8b-dedup`, `issue8`, `issue8-fix`,
+  `marks-broken-issue8`, `module`, `nprcmanager-master`, `or-replacement`,
+  `rlabkey-version-floor`. Documented in `BACKLOG.md` (Housekeeping, READY, Effort S) for a
+  future session to check mergedness/PR-source status and decide `gh-pages` separately before
+  deleting anything -- not fixed this session (unrelated to Slice 2, the actual deliverable).
+
 ### 2026-08-13 · [ad hoc] S552: logged a new BACKLOG.md item (affected-status shading fills unaffected individuals too)
 - **Deliverable:** Phase 0 orientation surfaced a live owner observation ("unaffected individuals
   are still color filled ... counter to pedigree drawing convention") mid-report. Traced it to a

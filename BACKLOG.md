@@ -68,6 +68,21 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       connected-component walk).
 
 ## Housekeeping
+- [ ] **Clean up unneeded repository branches, locally and on `origin`**
+      (owner-directed, found S552, READY, Effort S) -- not investigated for
+      mergedness/safety this session, just inventoried: local branches beyond
+      `master` are `dev`, `module`, `rlabkey-version-floor`, and 4
+      `worktree-wf_*` leftovers (2026-08-04, workflow-tool artifacts); remote
+      (`origin`) carries `dev`, `gh-pages`, `issue103-stage5-imports`,
+      `issue103-stage7-examples`, `issue103-stage8a-title-voice`,
+      `issue103-stage8b-dedup`, `issue8`, `issue8-fix`,
+      `marks-broken-issue8`, `module`, `nprcmanager-master`,
+      `or-replacement`, `rlabkey-version-floor` beyond `master`. A future
+      session should check each for already-merged status (`git branch
+      --merged origin/master` / `git log --oneline origin/master..<branch>`)
+      before deleting, confirm none is an active PR source, and decide
+      `gh-pages`'s own disposition separately (likely a live deploy target,
+      not stale).
 - [ ] (found S545, **verified S549** -- see
       `docs/audits/KINSHIP2_SUPPLEMENT_REPRODUCIBILITY_AUDIT_2026-08-13.md`. **Verify the
       results in `inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf` (kinship2's
