@@ -138,6 +138,17 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [ad hoc] S547 close-out: session self-assessment, S546 handoff evaluation
+- **Deliverable:** Session S547's own close-out. Evaluated S546's `HANDOFFS.md` receipt (9/10 --
+  its `gotchas` field's fence-scanner-defect warning directly shaped this session's first
+  verification step, and was confirmed not applicable). Self-assessed 9/10 (strengths: verified
+  the specific structural precondition the named risk needed, not just "no errors"; used the
+  tool's own zone boundary rather than hand-picked line numbers; tested against the real tracked
+  file, not only a scratch simulation; caught and fixed a verification-script bug before trusting
+  a false result. Weakness: the temporary real-file overwrite-then-restore step carried a small,
+  low-probability crash-recovery risk a git worktree would have avoided). Full write-up in
+  `SESSION_NOTES.md`; receipt completed in `HANDOFFS.md`.
+
 ### 2026-08-13 · [BL-N] S547: verified and executed the CHANGELOG.md legacy-footer relocation, Learning 554
 - **Deliverable:** Both verification checks from the S546-decided `BACKLOG.md` item passed, and the
   relocation was executed the same session (the item's own "if verification allows, execute"

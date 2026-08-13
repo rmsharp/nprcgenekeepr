@@ -10,16 +10,106 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 546 Handoff Evaluation (by Session 547)
+**Score: 9/10.** **What helped:** both fields directly shaped this session's work. The
+`next_steps` field's ordered priority list (CHANGELOG relocation first, Effort M) matched this
+session's own independently-re-derived Phase 0 priorities list almost exactly, and the `gotchas`
+field's warning #2 — "check whether `CHANGELOG.md`'s legacy block triggers the same class of
+fence-scanner defect [found against `SESSION_NOTES.md`] before trusting any tool-assisted
+relocation" — was the exact, specific risk this session verified first, and confirmed does NOT
+apply here (zero fence markers anywhere in the legacy footer). Gotcha #1 ("the new bulk-relocation
+option is UNVERIFIED... do not treat the owner's pick as proof it will work cleanly") was also
+accurate and appropriately humble — S546 correctly deferred feasibility verification to this
+session rather than assuming it. **What was missing:** nothing material — S546's own
+"decision-only, not scoping" framing was explicit and correct; verifying the tool's internals
+(`classify_zones()`, `archive_events()`) was reasonably this session's job, not something S546
+was expected to pre-investigate. **What was wrong:** nothing found. **ROI:** High — the gotcha
+directly determined this session's first and most important verification step.
+
 ### What Session 547 Did
-**Deliverable:** Scope + verify the `CHANGELOG.md` legacy-footer bulk relocation (decided S546) —
-check `methodology_trim.py`'s L1/L2/L3 losslessness invariants against the relocated legacy block,
-grep for anything expecting it inline, and if both are clear, execute the relocation and update
-`CLAUDE.md`'s pointer note. (IN PROGRESS)
-**Started:** 2026-08-13
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Scope + verify the `CHANGELOG.md` legacy-footer bulk relocation (decided S546),
+and execute it since both verification checks passed.
+**Started/Completed:** 2026-08-13. **Status:** DONE. TDD phase: N/A (methodology/documentation
+housekeeping — no production code or test surface, matching the S509/S528/S539/S542/S543/S544/
+S545/S546 precedent). Commits: `5a4773f9` (Phase 1B claim), `8aa63693` (the verification +
+execution + this deliverable's own ledger/doc updates), this close-out receipt's own commit
+(pending at write time).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, `git status`/`log`/`diff --stat`, `methodology_dashboard.py`, `gh run list`).
+Both ledger frontiers (`CHANGELOG.md`, `HANDOFFS.md`) sat at `HEAD`, no undocumented commits, no
+ghost session. Dashboard's sole HIGH-risk flag was exactly this session's target (`CHANGELOG.md`
+past both the byte and line read-truncation caps). CI green on the last pushed commit
+(`7021c6f7`); noted that S546's own 4 commits were unpushed at Phase 0 time, so CI hadn't yet run
+against `HEAD` (docs-only diff, low risk). Rendered the full priorities list (8 items derived from
+`BACKLOG.md` tags + the ratified genetic-metrics sequencing audit's remaining item, #148) and the
+picker; owner asked one clarifying question ("what do you mean by relocation") before picking
+item 1. **(2)** Claimed the session (`5a4773f9`) — stub in `SESSION_NOTES.md`, `status: pending`
+receipt in `HANDOFFS.md`, claim entry in `CHANGELOG.md` (logged the claim to the ledger
+immediately, matching the S518/S542 precedent, in case `methodology_trim.py`'s own
+`P1_UNDOCUMENTED` frontier check mattered for the verification work). **(3)** Investigated
+`methodology_trim.py`'s internals directly rather than reasoning about it from memory:
+`LEDGERS['CHANGELOG.md']` config, `classify_zones()`'s `footer_mode="separator"` boundary logic
+(confirmed the footer starts exactly at the trailing `---` after the last dated record — the tool
+already treats the whole legacy block as an immutable pinned footer, which is *why* `--write`
+structurally cannot touch it), and `archive_events()`'s shard-discovery mechanism (glob +
+live-file-size-drop against git history, NOT filename parsing — meaning a descriptively-named
+shard is still picked up correctly). **(4) Check 1** (fence-scanner defect class): grepped the
+whole file for triple-backtick/tilde fences (exactly 4, all in front-matter documentation, cleanly
+paired, zero in the footer) and walked the tool's own `fence_scan()` directly over the extracted
+3,568-line footer content (zero fence markers found) — the specific defect `CLAUDE.md` flagged
+cannot occur here. **(5)** Ran `classify_zones()` against the current file (baseline: footer
+935,292 B) and against a simulated post-relocation version (zero findings, empty footer, all 13
+records intact) — then did a real round-trip against the actual tracked file: temporarily
+overwrote `CHANGELOG.md` with the simulated content, ran `python3 methodology_trim.py --file
+CHANGELOG.md --check` for real (`[CHECK] trigger does not fire`, 20,929 B), then `git checkout --
+CHANGELOG.md` to restore byte-for-byte before making any real edit (confirmed via `git diff
+--stat`, clean). **(6) Check 2** (nothing expects it inline): grepped `docs/`, `bin/`, `*.py`,
+`*.md` for "Legacy history"/"pre-S325"/"pre-ledger format" — no script or tool has a live
+dependency on the block's location; the only inline references were prose in 5 already-closed
+planning docs (`docs/planning/issue{137,146,147,149,151}-*.md`) and frozen archive/learnings
+history, left untouched per the project's standing precedent against editing completed documents.
+**(7) Executed:** extracted the footer via the tool's own `classify_zones()` boundary (avoiding a
+hand-picked line-number split, which would have risked an off-by-one), wrote
+`docs/archive/CHANGELOG-legacy-pre-S325.md` (a generated shard header + the verbatim 935,287 B
+legacy body — byte-for-byte verified equal to the extracted content via a direct Python
+comparison, catching and fixing one verification-script bug along the way where the first
+`.index()` call matched the header's own prose mention of "## Legacy history" instead of the real
+heading). Updated `CHANGELOG.md`'s "shard convention" note and live pointer to describe the new
+location; added a dated `###` ledger entry for the action itself (matching the existing
+"Ledger trim" entry convention). `CHANGELOG.md` is now 22,980 B / 306 lines (down from 954,673 B /
+3,836 lines); re-ran `--check` after every edit, trigger stays clear throughout. **(8)** Updated
+`CLAUDE.md`'s "CHANGELOG.md ledger-format resolution" note (S547 addendum) and resolved
+`BACKLOG.md`'s item. **(9)** `PROJECT_LEARNINGS.md` Learning 554: the verification technique
+(importing `methodology_trim.py` and calling `classify_zones()` directly against simulated
+post-edit content before making a real edit) generalized for reuse on any future footer-zone
+relocation.
+
+**Self-assessment (Session 547): 9/10.** **Strengths:** (1) Did not trust "the tool didn't
+complain" as sufficient evidence — independently confirmed the *specific structural precondition*
+the named risk (the fence-scanner defect class) needs is absent, a stronger finding than an
+absence of errors. (2) Used the tool's own `classify_zones()` to compute the exact split boundary
+rather than hand-picking line numbers with `sed`/`awk`, avoiding an off-by-one class of error;
+caught and fixed a verification-script bug (the `.index()` mismatch) before trusting a false
+"byte-identical" result rather than after. (3) Tested against the real tracked file (temporary
+overwrite + `--check` + `git checkout --` restore), not only a scratch-directory simulation,
+since `archive_events()`'s git-log lookups can't be replicated outside a real repo. (4) Discovered
+and documented an unanticipated but relevant side effect (the SRF denominator side effect on
+future `SRF_RED` refusals) rather than only reporting the narrow ask. (5) Correctly treated the
+S546-flagged planning-doc staleness as a finding to report, not a defect to fix, matching the
+project's standing precedent against editing completed documents. **Weaknesses:** (1) The
+temporary real-file overwrite-then-restore step (Phase 2, checking `--check` against the actual
+working tree) is inherently a small risk window — a crash between the overwrite and the
+`git checkout --` restore would have left `CHANGELOG.md` in the simulated (uncommitted, easily
+recoverable, but momentarily incorrect) state; a lower-risk alternative (e.g., a git worktree)
+existed and wasn't used, though the actual risk was low and the restore was verified immediately.
+(2) Did not verify whether the "one small verification-script bug" (the `.index()` mismatch)
+indicates a broader pattern worth flagging — resolved it in the moment rather than pausing to ask
+whether other verification steps in this session had the same class of self-referential-match
+risk (in this case, they didn't, checked retrospectively, but that check happened after, not as
+part of, the original fix).
+**Ledger:** recorded in `CHANGELOG.md` (this session's claim entry, the verification+execution
+entry, and this close-out entry).
 
 ### Session 545 Handoff Evaluation (by Session 546)
 **Score: 9/10.** **What helped:** the S545 `HANDOFFS.md` receipt's `next_steps` field enumerated

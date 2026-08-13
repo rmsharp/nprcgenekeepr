@@ -127,19 +127,68 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S547
 date: 2026-08-13
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Scope + verify the CHANGELOG.md legacy-footer bulk relocation (decided S546):
-check methodology_trim.py's L1/L2/L3 losslessness invariants against the relocated legacy
-block, grep for anything expecting it inline, and if both are clear, execute the relocation
-and update CLAUDE.md's pointer note.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: CHANGELOG.md legacy-footer relocation (decided S546) -- VERIFIED AND EXECUTED.
+Both named checks passed (no fence-scanner-defect risk, nothing expects the block inline);
+relocated to docs/archive/CHANGELOG-legacy-pre-S325.md. CHANGELOG.md now 22,980 B / 306
+lines (down from 954,673 B / 3,836 lines) -- both read-truncation triggers clear.
+what_was_done: Investigated methodology_trim.py's internals directly (classify_zones(),
+archive_events(), fence_scan()) rather than reasoning from memory. Check 1: grepped for
+fence markers across the whole file (4, all in front-matter, cleanly paired, zero in the
+footer) and walked fence_scan() over the extracted 3,568-line footer (zero markers) --
+the SESSION_NOTES.md-class fence-scanner defect cannot occur here. Check 2: grepped
+docs/, bin/, *.py, *.md for inline-location dependencies -- none found (archive_events()
+discovers shards by glob + live-file-size-drop, not filename parsing); only references
+were prose in 5 already-closed planning docs and frozen history, left untouched. Verified
+via classify_zones() against a simulated post-relocation file (zero findings) AND a real
+round-trip against the actual tracked file (temporary overwrite + `--check` +
+`git checkout --` restore, confirmed clean via git diff --stat) before making any real
+edit. Executed: extracted the footer via the tool's own zone boundary (not hand-picked
+line numbers), wrote docs/archive/CHANGELOG-legacy-pre-S325.md (byte-for-byte verified
+against the extracted content -- caught and fixed one verification-script bug, a wrong
+`.index()` match, before trusting a false positive). Updated CHANGELOG.md's shard-
+convention note + live pointer, added a dated ledger entry, updated CLAUDE.md's
+"CHANGELOG.md ledger-format resolution" note (S547 addendum), resolved the BACKLOG.md
+item, added PROJECT_LEARNINGS.md Learning 554 (the verification technique, generalized
+for reuse). Commits: 5a4773f9 (claim), 8aa63693 (verification + execution + doc updates).
+next_steps: BACKLOG.md priorities unchanged from S546 except this item (resolved,
+removed). In priority order: (1) Verify kinship2-supplement PDF results reproduce via
+nprcgenekeepr exported functions (READY, Effort M, S545). (2) Write a dedicated Pedigree
+Diagram tab article (READY, Effort M, S544). (3) Delete the ~57-62 "(none remaining)"
+BACKLOG.md pointer bullets outright, verifying each has a CHANGELOG.md entry first
+(READY, Effort L, S545) -- the dashboard's own MEDIUM flag adds 5 more [x]-marked items
+in the same shape, not yet counted in that total. (4) BACKLOG.md's own remaining
+ledger-size housekeeping sections beyond Housekeeping/"Pedigree diagram vs kinship2"
+(READY, Effort L, S518/S529). (5) Issue #148 scope-narrowing conversation -- needs its
+own scoping session, per the ratified GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT's Finding
+#4 (every other item in that audit's order is now shipped and closed). (6) NPRC outreach
+owner review (DECISION NEEDED); LabKey remaining recs (BLOCKED) -- both unchanged.
+key_files: CHANGELOG.md (footer removed, shard-convention note + pointer updated, new
+dated entry, now 22,980 B/306 lines); docs/archive/CHANGELOG-legacy-pre-S325.md (new
+shard, 936,976 B, verbatim relocated content); CLAUDE.md:266-270 ("CHANGELOG.md
+ledger-format resolution" note, new S547 addendum paragraph); BACKLOG.md Housekeeping
+(item resolved/removed); PROJECT_LEARNINGS.md Learning 554 (new, file tail);
+methodology_trim.py (read/imported, not modified -- LEDGERS['CHANGELOG.md'],
+classify_zones(), archive_events(), fence_scan()).
+gotchas: (1) A future footer-zone relocation on a DIFFERENT ledger file should re-run
+the same fence-marker check fresh, not assume "no fence markers" generalizes --
+CHANGELOG.md happened to have zero, but SESSION_NOTES.md's own legacy content does not
+(that's the original defect this session ruled out for CHANGELOG.md specifically). (2)
+When verifying "content X equals content Y" via string search for a boundary marker
+(e.g. `.index("## Legacy history")`), check the search string doesn't also appear
+elsewhere first (here: inside my own generated header's prose) -- a naive first-match
+search can silently compare against the wrong span and report a false negative/positive.
+Search from a more specific anchor (the actual separator, not a substring that could
+recur) or verify uniqueness first. (3) The new shard's SRF side effect (its huge
+pre-post delta becomes the SRF denominator until a newer shard exists) means CHANGELOG.md
+should be very unlikely to hit SRF_RED again for a long while -- if a future session
+sees it anyway, something else has changed structurally and is worth investigating, not
+assuming the old small-denominator pattern (Learnings 549/550) recurred identically.
+runtime_smoke: n/a -- docs/ledger-only change, no runtime/Shiny behavior touched.
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-13 ([BL-N] the claim;
+[BL-N] the verification + execution + doc updates; [ad hoc] this close-out entry)
 commit: pending
 ```
 
