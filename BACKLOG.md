@@ -251,36 +251,23 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       own generated `verify.sh` (L1/L2/L3 OK) before committing; retained record confirmed to
       be exactly the 2 newest (this session's own claim entry + the tool's auto-appended trim
       entry), not an over-archive. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 550.)
-- [ ] **Scope (and if verification allows, execute) a bulk relocation of `CHANGELOG.md`'s
-      frozen pre-S325 legacy footer into its own archive file, un-retagged** (decided S546,
-      2026-08-13, owner-directed via `AskUserQuestion`, READY, Effort M) -- resolves the
-      "whether to reopen S325 at all" question below in favor of the lightest of 3 presented
-      options, over a full re-tag migration campaign and over holding as-is. S543's `SRF_RED`
-      investigation confirmed numerically that the frozen pre-S325 legacy footer (935,287 B,
-      ~3,567 of the file's ~3,721 post-trim lines) is the file's entire read-safety problem: it
-      alone is ~14x the 65,536 B budget and ~1.8x the 2,000-line `Read` cap, independent of how
-      aggressively the tagged S325+ portion is trimmed. Rather than the full campaign to re-tag
-      ~303 pre-ledger entries into the canonical `[SOURCE]`-tagged format (`CLAUDE.md`'s
-      existing "CHANGELOG.md ledger-format resolution" note's original "or an equivalent
-      restructuring" clause), the owner chose to scope the cheaper move first: relocate the
-      entire "## Legacy history (pre-ledger format, Sessions 1-324)" block out of
-      `CHANGELOG.md` into its own archive file **as-is, unchanged, no per-entry re-tagging**
-      -- the same treatment `methodology_trim.py` already gives other archived spans, just
-      applied once to this whole pinned block instead of per-record. This alone removes the
-      ~935KB/~3,567-line block causing the read-truncation risk. **Not scoped or executed this
-      session** (decision-only, per the item's own original "decide before scoping" framing) --
-      a future session must verify before moving anything: (1) this doesn't break
-      `methodology_trim.py`'s L1/L2/L3 losslessness invariants -- note `methodology_trim.py`
-      already has one open, unrelated fence-scanner defect found against `SESSION_NOTES.md`'s
-      own legacy content (`CLAUDE.md`'s "`SESSION_NOTES.md` archive blocked by a fence-scanner
-      defect" note, found S518); worth checking whether `CHANGELOG.md`'s legacy block triggers
-      the same class of defect before trusting any tool-assisted relocation, not assuming it
-      doesn't; (2) no script/audit/cross-reference
-      (`grep` across `docs/`, `bin/`, `*.py`) currently expects the legacy block to be inline in
-      `CHANGELOG.md` rather than in a sibling archive file; (3) `CLAUDE.md`'s own "CHANGELOG.md
-      ledger-format resolution" note gets updated to point at the new archive location. If
-      verification in that future session finds a blocker, escalate back to the full re-tag
-      campaign or hold-as-is options -- both remain valid fallbacks, not discarded.
+- [ ] (none remaining -- the "Scope (and if verification allows, execute) a bulk relocation of
+      `CHANGELOG.md`'s frozen pre-S325 legacy footer into its own archive file, un-retagged" item
+      (decided S546) is RESOLVED -- **verified and executed S547 (2026-08-13):** both named
+      verification checks passed. (1) `methodology_trim.py`'s L1/L2/L3: zero fence markers of any
+      kind exist anywhere in the legacy footer (confirmed by grep and the tool's own `fence_scan()`),
+      so the `SESSION_NOTES.md` fence-scanner defect class cannot occur here; `classify_zones()` and
+      a real `--check` run against the post-relocation content both came back clean, trigger not
+      firing. (2) No script/audit/tool has a live dependency on the block's inline location --
+      `methodology_trim.py`'s own shard discovery is glob + live-file-size-drop based, not
+      filename-based, so the new shard's non-`-through-<date>` name is still picked up correctly;
+      the only inline references found were prose in already-closed planning docs and frozen
+      archive/learnings history, left untouched per standing precedent. **Executed:** the block
+      (935,287 B / 3,567 lines, byte-for-byte verified before/after) moved to
+      [`docs/archive/CHANGELOG-legacy-pre-S325.md`](docs/archive/CHANGELOG-legacy-pre-S325.md);
+      `CHANGELOG.md` is now 20,929 B / 283 lines -- both the byte and line triggers clear. See
+      `CLAUDE.md`'s "CHANGELOG.md ledger-format resolution" note (S547 addendum) and
+      `PROJECT_LEARNINGS.md` for the full verification record.
 - [ ] **`CHANGELOG.md`'s own ~4-entries-per-session ledger convention (claim, Phase 0
       reconcile, deliverable, close-out) may be a `CHANGELOG.md`-side analogue of the
       already-diagnosed `HANDOFFS.md` "Receipt Inflation" (H4) rate problem** (found S543,
