@@ -74,6 +74,11 @@
 #' through to \code{correctUnknownParentMeanKinship()} exactly as
 #' \code{\link{reportGV}} passes them. NULL uses the bundled
 #' defaults.
+#' @param twinRelations Optional data.frame of declared twin pairs
+#' (\code{id1}, \code{id2}, \code{code}) passed straight through to the
+#' internal \code{\link{kinship}} call, exactly as \code{\link{reportGV}}
+#' passes it. Only \code{code == "MZ twin"} rows affect the computed matrix.
+#' \code{NULL} (the default) is a complete no-op, matching today's behavior.
 #' @param kinshipOverrides Optional data.frame of outside-information kinship
 #' overrides (\code{id1}, \code{id2}, \code{kinship}; the coefficient \emph{f},
 #' not relatedness \emph{r}) applied to the kinship matrix before mean kinship
@@ -116,7 +121,7 @@ gvaConvergence <- function(ped, pop = NULL, nMax = 3000L, guThresh = 1L,
                            rhoMin = 0.95, seed = NULL, updateProgress = NULL,
                            breedingTable = NULL, gestationTable = NULL,
                            breedingAgeDefault = NULL, gestationDefault = NULL,
-                           kinshipOverrides = NULL) {
+                           kinshipOverrides = NULL, twinRelations = NULL) {
   if (is.null(grid)) {
     grid <- c(25L, 50L, 100L, 200L, 400L, 800L, 1500L)
   }
@@ -137,7 +142,8 @@ gvaConvergence <- function(ped, pop = NULL, nMax = 3000L, guThresh = 1L,
   probands <- as.character(ped$id[ped$population])
   genotype <- getGVGenotype(ped)
   kmat <- filterKinMatrix(probands, kinship(
-    ped$id, ped$sire, ped$dam, ped$gen
+    ped$id, ped$sire, ped$dam, ped$gen,
+    twinRelations = twinRelations
   ))
   # Issue 13 item-3 / issue 95 keep-all revert: prepare the overrides the same
   # way reportGV does -- validate, warn-drop absent-id rows (D5), and apply them

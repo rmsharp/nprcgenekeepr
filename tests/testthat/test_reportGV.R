@@ -828,3 +828,35 @@ test_that("reportGV errors clearly when 'sex' is missing instead of silently cor
   )
 })
 
+# ---------------------------------------------------------------------------
+# BL-N Slice 2 (twinRelations-into-kinship() plan, docs/planning/
+# twin-relations-kinship-computation-plan.md sec 4): reportGV() threads an
+# optional twinRelations = NULL parameter straight through to its internal
+# kinship() call (sec 2.4 call site #1), so a declared MZ-twin pair's genetic
+# identity is reflected in the returned $kinship matrix -- the same fixture
+# and ground-truth values test_kinship.R's own Slice 1 tests pin (subjects 8
+# and 9 declared MZ twins; 10 is a child of twin 8, the propagation case).
+# ---------------------------------------------------------------------------
+twinGvPed <- data.frame(
+  id   = as.character(1:10),
+  sire = c(NA, NA, "1", "1", NA, NA, "3", "6", "6", "8"),
+  dam  = c(NA, NA, "2", "2", NA, NA, "5", "4", "4", "7"),
+  sex  = c("M", "F", "M", "F", "M", "F", "F", "M", "M", "F"),
+  stringsAsFactors = FALSE
+)
+twinGvPed$gen <- findGeneration(twinGvPed$id, twinGvPed$sire, twinGvPed$dam)
+twinGvTwins <- data.frame(id1 = "8", id2 = "9", code = "MZ twin",
+  stringsAsFactors = FALSE)
+
+test_that("reportGV threads twinRelations into its returned kinship matrix (Slice 2)", {
+  gv <- reportGV(twinGvPed, guIter = 5L, twinRelations = twinGvTwins)
+  expect_equal(gv$kinship["8", "9"], 0.5)
+  expect_equal(gv$kinship["9", "10"], 0.28125)
+})
+
+test_that("reportGV without twinRelations is unaffected (backward compatibility, Slice 2)", {
+  gv <- reportGV(twinGvPed, guIter = 5L)
+  expect_equal(gv$kinship["8", "9"], 0.25)
+  expect_equal(gv$kinship["9", "10"], 0.15625)
+})
+

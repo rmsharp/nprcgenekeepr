@@ -145,6 +145,14 @@ knitr::opts_chunk$set(echo = TRUE)
   closing the issue): computes F_ROH from the already-uploaded genotype/
   locus-metadata files, with de-identified export
   (`obfuscateGenomicROH()`).
+- `kinship()` gained a **twinRelations** argument (BL-N, Slice 1) correcting
+  a declared MZ-twin pair's computed kinship to genetic identity and
+  propagating that correction to every relative reached through either twin
+  (not just the pair itself), porting kinship2's own `mzgrp`/`mzindex`
+  mechanism. `reportGV()`, `gvaConvergence()`, `createSimKinships()`, and
+  `cumulateSimKinships()` (BL-N, Slice 2) each gained a matching
+  `twinRelations` argument, passed through to their own internal kinship
+  computation. No Shiny UI yet (Slice 3).
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes

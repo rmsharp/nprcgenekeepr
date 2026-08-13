@@ -20,7 +20,8 @@ gvaConvergence(
   gestationTable = NULL,
   breedingAgeDefault = NULL,
   gestationDefault = NULL,
-  kinshipOverrides = NULL
+  kinshipOverrides = NULL,
+  twinRelations = NULL
 )
 }
 \arguments{
@@ -77,6 +78,12 @@ warn-dropped (the run is not aborted). An override REFINES the named kinship
 cell; it does not suppress the \code{+ sexMean / 2} unknown-parent
 correction, which is kept for every animal missing one parent. See
 \code{\link{applyKinshipOverrides}}.}
+
+\item{twinRelations}{Optional data.frame of declared twin pairs
+(\code{id1}, \code{id2}, \code{code}) passed straight through to the
+internal \code{\link{kinship}} call, exactly as \code{\link{reportGV}}
+passes it. Only \code{code == "MZ twin"} rows affect the computed matrix.
+\code{NULL} (the default) is a complete no-op, matching today's behavior.}
 }
 \value{
 An object of class \code{nprcgenekeeprGVConv}: a list with

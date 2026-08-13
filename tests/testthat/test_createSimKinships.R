@@ -84,3 +84,41 @@ test_that("createSimKinships does not mutate the caller's pedigree (NEW-53)", {
   expect_false(inherits(pedDF, "data.table"))
   expect_identical(class(pedDF), "data.frame")
 })
+
+# ---------------------------------------------------------------------------
+# BL-N Slice 2 (twinRelations-into-kinship() plan, docs/planning/
+# twin-relations-kinship-computation-plan.md sec 4): createSimKinships()
+# threads an optional twinRelations = NULL parameter straight through to its
+# internal kinship() call (sec 2.4 call site #3) on every simulated pedigree.
+# allSimParents = list() means makeSimPed() has nothing to impute, so every
+# simulated pedigree is identical to the input (sec 2.6: a twin pair with
+# known recorded parents passes through unchanged) -- the returned matrices
+# reproduce the Slice 1 ground-truth values (test_kinship.R) directly.
+# ---------------------------------------------------------------------------
+twinSimPed <- data.frame(
+  id   = as.character(1:10),
+  sire = c(NA, NA, "1", "1", NA, NA, "3", "6", "6", "8"),
+  dam  = c(NA, NA, "2", "2", NA, NA, "5", "4", "4", "7"),
+  stringsAsFactors = FALSE
+)
+twinSimPed$gen <- findGeneration(twinSimPed$id, twinSimPed$sire, twinSimPed$dam)
+twinSimTwins <- data.frame(id1 = "8", id2 = "9", code = "MZ twin",
+  stringsAsFactors = FALSE)
+
+test_that("createSimKinships threads twinRelations into every simulated kinship matrix (Slice 2)", {
+  sk <- createSimKinships(twinSimPed,
+    allSimParents = list(), pop = twinSimPed$id,
+    n = 2L, twinRelations = twinSimTwins
+  )
+  for (kmat in sk) {
+    expect_equal(kmat["8", "9"], 0.5)
+    expect_equal(kmat["9", "10"], 0.28125)
+  }
+})
+
+test_that("createSimKinships without twinRelations is unaffected (backward compatibility, Slice 2)", {
+  sk <- createSimKinships(twinSimPed,
+    allSimParents = list(), pop = twinSimPed$id, n = 2L
+  )
+  expect_equal(sk[[1L]]["8", "9"], 0.25)
+})

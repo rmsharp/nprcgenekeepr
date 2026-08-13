@@ -4,7 +4,13 @@
 \alias{cumulateSimKinships}
 \title{Compute kinship summary statistics across simulations}
 \usage{
-cumulateSimKinships(ped, allSimParents, pop = NULL, n = 10L)
+cumulateSimKinships(
+  ped,
+  allSimParents,
+  pop = NULL,
+  n = 10L,
+  twinRelations = NULL
+)
 }
 \arguments{
 \item{ped}{The pedigree information in data.frame format}
@@ -19,6 +25,14 @@ interest. The default is NULL.}
 \item{n}{integer value of the number of simulated pedigrees to generate.
 Must be at least 1 (\code{n < 1} is an error); the standard deviation
 requires \code{n >= 2}.}
+
+\item{twinRelations}{Optional data.frame of declared twin pairs
+(\code{id1}, \code{id2}, \code{code}) passed straight through to the
+internal \code{\link{kinship}} call; only \code{code == "MZ twin"} rows
+affect the computed matrix. \code{NULL} (the default) is a complete
+no-op, matching today's behavior. See \code{\link{kinship}}'s own
+\code{twinRelations} documentation for the full correction mechanism and
+precondition.}
 }
 \value{
 List object containing the meanKinship, sdKinship, minKinship, and

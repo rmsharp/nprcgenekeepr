@@ -301,3 +301,47 @@ test_that("gvaConvergence errors clearly when 'sex' is missing instead of silent
   )
 })
 
+# ---------------------------------------------------------------------------
+# BL-N Slice 2 (twinRelations-into-kinship() plan, docs/planning/
+# twin-relations-kinship-computation-plan.md sec 4): gvaConvergence() threads
+# an optional twinRelations = NULL parameter straight through to its internal
+# kinship() call (sec 2.4 call site #2), the identical call shape reportGV()
+# uses (test_reportGV.R's own Slice 2 test proves that call pattern is
+# correctly wired). Testability note (mirroring
+# test_gvaConvergence_kinshipOverrides.R's own documented limitation for the
+# analogous kinshipOverrides parameter): gvaConvergence() returns no
+# kinship/mean-kinship surface, only the convergence curve/recommendedIter/
+# etc -- at this fixture's tiny scale topOverlap/rankAgreement are already 1
+# at every assessed N, with or without the correction, so the curve cannot
+# observably move here. These tests therefore confirm the parameter is
+# accepted and threaded without error (plumbing); the underlying numeric
+# correctness of the threaded kinship() call is reportGV()'s own Slice 2
+# test's responsibility, per that same precedent.
+# ---------------------------------------------------------------------------
+twinConvPed <- data.frame(
+  id   = as.character(1:10),
+  sire = c(NA, NA, "1", "1", NA, NA, "3", "6", "6", "8"),
+  dam  = c(NA, NA, "2", "2", NA, NA, "5", "4", "4", "7"),
+  sex  = c("M", "F", "M", "F", "M", "F", "F", "M", "M", "F"),
+  stringsAsFactors = FALSE
+)
+twinConvPed$gen <- findGeneration(
+  twinConvPed$id, twinConvPed$sire, twinConvPed$dam
+)
+twinConvTwins <- data.frame(id1 = "8", id2 = "9", code = "MZ twin",
+  stringsAsFactors = FALSE)
+
+test_that("gvaConvergence accepts twinRelations and threads it through without error (Slice 2)", {
+  res <- gvaConvergence(twinConvPed, nMax = 50L, grid = c(10L, 20L), seed = 1L,
+    twinRelations = twinConvTwins)
+  expect_s3_class(res, "nprcgenekeeprGVConv")
+})
+
+test_that("gvaConvergence without twinRelations is unaffected (backward compatibility, Slice 2)", {
+  a <- gvaConvergence(twinConvPed, nMax = 50L, grid = c(10L, 20L), seed = 1L)
+  b <- gvaConvergence(twinConvPed, nMax = 50L, grid = c(10L, 20L), seed = 1L,
+    twinRelations = NULL)
+  expect_equal(a$convergence, b$convergence)
+  expect_identical(a$recommendedIter, b$recommendedIter)
+})
+

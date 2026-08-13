@@ -10,20 +10,124 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 551 Handoff Evaluation (by Session 552)
+**Score: 10/10.** **What helped:** every `key_files` pointer was exact and directly used with
+zero friction (before this session's own edits shifted line numbers) -- `R/reportGV.R:162`,
+`R/gvaConvergence.R:139`, `R/createSimKinships.R:60`,
+`R/cumulateSimKinships.R:63` all named the precise line of each function's own `kinship()` call
+site, matching what direct reading confirmed. `gotchas` (1) named Slice 2's own Dragon 4
+(confirm whether `test_gvaConvergence.R` exists under that name) as unconfirmed -- checked at
+PRE-RED and found it DOES exist, resolving the plan's own flagged open question cleanly.
+`gotchas` (3) (run `devtools::document()` before the first `devtools::check()`, since S551 lost
+a verification cycle by not doing so) was followed directly this session -- ran `document()`
+immediately after implementation, avoiding the exact loss S551 flagged. `gotchas` (2)
+(`createSimKinships()`/`cumulateSimKinships()` have zero in-package callers) was accurate and
+informed the fixture design (no need to worry about interaction with other callers).
+**What was wrong:** nothing found inaccurate -- every claim held up against direct verification.
+**What was missing:** nothing material -- Slice 2's own test-design choices (extending the
+`fam1` fixture with a `sex` column; the `gvaConvergence()` testability workaround) were this
+session's own PRE-RED evidence-gathering, not something S551 could have anticipated.
+**ROI:** High -- the file:line pointers eliminated all rediscovery work, and the two
+actionable gotchas (Dragon 4, `document()`-before-`check()`) were both directly applied.
+
 ### What Session 552 Did
 **Deliverable:** Slice 2 (the 4 script-callable functions) of the S550-ratified
 `twinRelations`-into-`kinship()` plan (`docs/planning/twin-relations-kinship-computation-plan.md`
-§4) -- `reportGV()`, `gvaConvergence()`, `createSimKinships()`, `cumulateSimKinships()` each gain
-their own `twinRelations = NULL` parameter passed straight through to their internal `kinship()`
-call. (IN PROGRESS)
-**Started:** 2026-08-13.
-**Status:** Session claimed. Work beginning. Owner also live-reported a separate defect during
-Phase 0 orientation (Pedigree Diagram tab's affected-status shading fills unaffected individuals
-too, counter to pedigree drawing convention) -- logged to `BACKLOG.md`/`CHANGELOG.md` (commit
-`d6b3ce47`) but NOT this session's deliverable; owner picked Slice 2 instead when asked.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+§4) -- `reportGV()`, `gvaConvergence()`, `createSimKinships()`, `cumulateSimKinships()` each
+gained their own `twinRelations = NULL` parameter passed straight through to their internal
+`kinship()` call. **Started/Completed:** 2026-08-13. **Status:** DONE. TDD phase: GREEN
+(REFACTOR declined via `AskUserQuestion` -- diff is minimal/mechanical, one new parameter + one
+call-site argument per file, already matching the codebase's established `kinshipOverrides`
+threading pattern and Slice 1's own precedent). Commits: `2cd9f8a4` (claim), this session's own
+deliverable + close-out commits (see `HANDOFFS.md` receipt for shas once reconciled).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, `git status`/`log`/`diff --stat`,
+`methodology_dashboard.py` [Health 96/100, 0 High+ risk], `gh run list --branch master --limit
+10` [scheduled `shinytest2` still red, unchanged, not diagnosed]). Both `CHANGELOG.md`/
+`HANDOFFS.md` ledger frontiers were at `HEAD` already -- no reconcile needed. Checked the 2
+untracked files individually (kinship2 supplement PDF -- known, already-documented; a Quarto
+render of the tracked `pedigree-diagram-kinship2-reference-comparison.qmd`, mtime inside S551's
+own session window -- a build artifact, not a ghost session). **The owner live-reported a
+defect mid-orientation** (Pedigree Diagram tab's affected-status shading fills unaffected
+individuals too, counter to pedigree drawing convention) -- traced to `.affectedColor()`
+(`R/makePedigreeDiagramData.R:163-165`)'s `NA_character_` `color.background` falling back to
+visNetwork's own default fill rather than an open/unfilled node; logged to `BACKLOG.md`/
+`CHANGELOG.md` (commit `d6b3ce47`), not fixed -- owner picked Slice 2 instead when asked via
+`AskUserQuestion`. **(2)** Wrote the Phase 1B claim stub, committed separately (`2cd9f8a4`).
+**Mid-session, the owner directed a second aside**: log a `BACKLOG.md` item to clean up unneeded
+local/remote git branches -- inventoried (not deleted) 4 local + 13 remote branches beyond
+`master`/`origin/master`, logged to `BACKLOG.md`/`CHANGELOG.md` (commit `6589ea3e`), work
+resumed on Slice 2 immediately after. **(3)** PRE-RED: read the ratified plan's §4 Slice 2 scope
+and all 4 target files; empirically probed (not assumed) the exact fixture needed -- extended
+`test_kinship.R`'s own `fam1` 10-subject audit fixture with a `sex` column (the only column
+`reportGV()`/`gvaConvergence()` require beyond `kinship()`'s own `id`/`sire`/`dam`/`gen`),
+confirmed via direct execution that all 4 functions run cleanly on it today, and confirmed
+calling each with `twinRelations = twins` today fails with `unused argument` (the right RED
+target). Found `test_gvaConvergence.R` already exists (Dragon 4 resolved). Found and adopted,
+for `gvaConvergence()` specifically, the exact testability limitation
+`test_gvaConvergence_kinshipOverrides.R` already documents for the analogous `kinshipOverrides`
+parameter (its own convergence-curve output has no kinship-observable surface at this fixture's
+scale) -- deferred numeric-correctness proof to `reportGV()`'s directly-observable `$kinship`
+output, matching that established precedent exactly rather than building a large synthetic
+churn fixture for a straight thread-through. **(4)** PRE-RED->RED gate via `AskUserQuestion`:
+added 8 new `test_that()` blocks (2 per file) to all 4 test files; ran them and confirmed every
+new twinRelations-using assertion failed with `unused argument` (135/41/8/15 pre-existing +
+bare-backward-compat assertions already passing, 1/2/1/1 new errors respectively -- the right
+RED shape). **(5)** RED->GREEN gate via `AskUserQuestion`: added `twinRelations = NULL` to all
+4 signatures and threaded it into each function's own internal `kinship()` call, plus matching
+roxygen (`reportGV.R`'s own `@param twinRelations` written directly and inherited by
+`createSimKinships.R`/`cumulateSimKinships.R` via their existing `@inheritParams reportGV`;
+`gvaConvergence.R` written explicitly, matching its own established non-inheriting style). All 4
+targeted test files passed clean; full clean regression read 0 failed/0 error;
+`devtools::document()` regenerated all 4 man pages cleanly (run BEFORE `devtools::check()`, per
+S551's own gotcha); `devtools::check()` 0 errors/0 warnings/1 pre-existing unrelated NOTE
+(`vignettes/figure`, confirmed to predate this session); `lintr::lint_package()` 0 lints on all
+8 touched files. **(6)** GREEN->REFACTOR gate via `AskUserQuestion`: owner picked "close out
+as-is." **(7)** Close-out: resolved the plan's own open §8 item 3 question (does `NEWS.Rmd`
+apply at Slice 2 too) -- decided yes, one combined entry covering Slices 1-2 together (a
+scripting reader cares which functions accept `twinRelations`, not the plan's internal slice
+boundary); added to `NEWS.Rmd`'s dev-version section and recorded the decision in the plan
+document itself. Updated `BACKLOG.md`'s triggering item: Slice 2 marked DONE, Slice 3 named as
+next.
+
+**Close-out checklist mapping (plan §8, stated explicitly per its own instruction):** citation
+checklist (#120) -- N/A, a capability/correctness addition to existing exported functions, not a
+new displayed statistic. Tutorial/article checklist -- N/A for Slice 2 (applies at Slice 3 only,
+per the plan's own §8 item 2 -- no new user-facing Shiny capability yet). `NEWS.Rmd` -- DONE
+this session (§8 item 3, decided above). `a2interactive.Rmd` checklist -- deferred, standing
+rule, not same-session. GitHub issue close-out -- N/A, no issue filed yet for this item. Lint --
+DONE, 0 lints on all 8 touched files.
+
+**Self-assessment (Session 552): 9/10.** **Strengths:** (1) Empirically probed the exact test
+fixture and expected values via direct execution before writing any test, rather than assuming
+column requirements from reading code alone -- caught that `reportGV()`/`gvaConvergence()` need
+only one additional column (`sex`) beyond `kinship()`'s own inputs, confirmed by running it, not
+inferred. (2) Recognized and explicitly named a real testability limitation for
+`gvaConvergence()` (no kinship-observable output surface at a small fixture's scale) rather than
+either building a disproportionately large synthetic fixture to force an observable effect or
+silently writing a numerically-unverified test -- found and matched an exact existing project
+precedent (`test_gvaConvergence_kinshipOverrides.R`) for the identical problem on an analogous
+parameter, and surfaced the reasoning explicitly in the PRE-RED->RED gate for owner visibility
+before writing the tests. (3) Followed S551's own handoff gotcha precisely
+(`devtools::document()` before the first `devtools::check()`), avoiding the exact verification-
+cycle loss the predecessor flagged. (4) Made the plan's own explicitly-deferred NEWS.Rmd
+decision (§8 item 3) deliberately rather than silently deferring it again, and recorded the
+decision back into the plan document itself so a future reader sees the resolution, not just the
+open question. (5) Handled 2 owner-directed mid-session asides (the affected-status fill defect,
+the branch-cleanup request) as their own small, separately-committed documentation actions
+without letting either derail or get silently folded into the Slice 2 deliverable. **Weaknesses:**
+(1) Did not run an independent adversarial-verification pass on the 4 call-site changes
+themselves (e.g., a second agent attempting to refute the thread-through is complete/correct) --
+relied on direct test execution and code-reading, consistent with Slice 1's own precedent but
+carrying the same un-addressed gap S551 itself flagged. (2) The `gvaConvergence()` tests, while
+matching established precedent, are a plumbing/smoke-test rather than a numeric-correctness
+proof for that one function specifically -- a defensible, precedented choice, but worth a future
+session double-checking with a larger fixture if independent verification of that call site
+specifically is ever wanted. (3) Did not investigate why the scheduled `shinytest2.yaml` CI run
+remains red (unchanged finding, carried forward from S548-S551, not this session's task).
+**Ledger:** recorded in `CHANGELOG.md` (this session's claim, deliverable, close-out, and 2
+aside entries).
 
 ### Session 550 Handoff Evaluation (by Session 551)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` receipt's `next_steps` field's

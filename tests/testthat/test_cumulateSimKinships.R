@@ -99,3 +99,40 @@ test_that("cumulateSimKinships handles n < 2 simulations (NEW-52)", {
   )
   expect_false(any(is.na(sim_n2$sdKinship)))
 })
+
+# ---------------------------------------------------------------------------
+# BL-N Slice 2 (twinRelations-into-kinship() plan, docs/planning/
+# twin-relations-kinship-computation-plan.md sec 4): cumulateSimKinships()
+# threads an optional twinRelations = NULL parameter straight through to its
+# internal kinship() call (sec 2.4 call site #4) on every simulated pedigree.
+# allSimParents = list() means every simulated pedigree is identical to the
+# input (sec 2.6), so every simulation's kinship matrix is identical -- mean
+# reproduces the Slice 1 ground truth exactly and sd is exactly 0 (n = 2
+# identical simulations), not NA.
+# ---------------------------------------------------------------------------
+twinCumPed <- data.frame(
+  id   = as.character(1:10),
+  sire = c(NA, NA, "1", "1", NA, NA, "3", "6", "6", "8"),
+  dam  = c(NA, NA, "2", "2", NA, NA, "5", "4", "4", "7"),
+  stringsAsFactors = FALSE
+)
+twinCumPed$gen <- findGeneration(twinCumPed$id, twinCumPed$sire, twinCumPed$dam)
+twinCumTwins <- data.frame(id1 = "8", id2 = "9", code = "MZ twin",
+  stringsAsFactors = FALSE)
+
+test_that("cumulateSimKinships threads twinRelations into every simulated kinship matrix (Slice 2)", {
+  csk <- cumulateSimKinships(twinCumPed,
+    allSimParents = list(), pop = twinCumPed$id,
+    n = 2L, twinRelations = twinCumTwins
+  )
+  expect_equal(csk$meanKinship["8", "9"], 0.5)
+  expect_equal(csk$meanKinship["9", "10"], 0.28125)
+  expect_equal(csk$sdKinship["8", "9"], 0)
+})
+
+test_that("cumulateSimKinships without twinRelations is unaffected (backward compatibility, Slice 2)", {
+  csk <- cumulateSimKinships(twinCumPed,
+    allSimParents = list(), pop = twinCumPed$id, n = 2L
+  )
+  expect_equal(csk$meanKinship["8", "9"], 0.25)
+})

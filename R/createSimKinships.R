@@ -46,7 +46,7 @@
 #' pop <- LETTERS[1:7]
 #' simKinships <- createSimKinships(ped, allSimParents, pop, n = 10)
 createSimKinships <- function(ped, allSimParents, pop = NULL, n = 10L,
-                              verbose = FALSE) {
+                              verbose = FALSE, twinRelations = NULL) {
   ## If user has limited the population of interest by defining 'pop',
   ## that information is incorporated via the 'population' column.
   ped <- data.table::as.data.table(ped)
@@ -59,7 +59,8 @@ createSimKinships <- function(ped, allSimParents, pop = NULL, n = 10L,
     simPed <- makeSimPed(ped, allSimParents, verbose = verbose)
     simKinships[[i]] <- kinship(
       simPed$id, simPed$sire,
-      simPed$dam, simPed$gen
+      simPed$dam, simPed$gen,
+      twinRelations = twinRelations
     )
   }
   simKinships

@@ -127,22 +127,98 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S552
 date: 2026-08-13
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 9
+predecessor_score: 10
 active_task: Slice 2 (the 4 script-callable functions) of the S550-ratified
 twinRelations-into-kinship() plan (docs/planning/twin-relations-kinship-computation-plan.md §4)
--- reportGV(), gvaConvergence(), createSimKinships(), cumulateSimKinships() each gain their own
-twinRelations = NULL parameter passed straight through to their internal kinship() call.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+-- DONE. reportGV(), gvaConvergence(), createSimKinships(), cumulateSimKinships() each gained
+their own twinRelations = NULL parameter passed straight through to their internal kinship()
+call. Full strict-TDD PRE-RED->RED->GREEN cycle (REFACTOR declined via AskUserQuestion). Slice 3
+(full Shiny wiring) is a separate future session, per the plan's own session-boundary
+discipline.
+what_was_done: Added twinRelations = NULL to reportGV() (R/reportGV.R:153, call site
+R/reportGV.R:172), gvaConvergence() (R/gvaConvergence.R:124, call site
+R/gvaConvergence.R:146), createSimKinships() (R/createSimKinships.R:49, call site
+R/createSimKinships.R:63), cumulateSimKinships() (R/cumulateSimKinships.R:49, call site
+R/cumulateSimKinships.R:67) -- each threaded straight through to that function's own internal
+kinship() call. Roxygen: reportGV.R's own new @param twinRelations, inherited by
+createSimKinships.R/cumulateSimKinships.R via their existing @inheritParams reportGV;
+gvaConvergence.R's own explicit block (matches its established non-inheriting style). 8 new
+test_that() blocks (2 per file: twin-propagation + backward-compatibility) added across
+test_reportGV.R, test_gvaConvergence.R, test_createSimKinships.R, test_cumulateSimKinships.R,
+reusing an extended (added sex column) copy of test_kinship.R's own fam1 10-subject audit
+fixture. gvaConvergence()'s own tests are a plumbing/smoke test (accepts + threads the
+parameter without error), not a numeric-correctness proof for that one call site specifically
+-- its convergence-curve output has no kinship-observable surface at this fixture's scale, the
+same documented limitation test_gvaConvergence_kinshipOverrides.R already establishes for the
+analogous kinshipOverrides parameter; numeric correctness for that exact call-site pattern is
+proven instead by reportGV()'s own directly-observable $kinship assertion. Resolved the plan's
+own open §8 item 3 question (NEWS.Rmd at Slice 2): decided yes, one combined NEWS.Rmd entry
+added covering Slices 1-2 together, and the decision recorded back into the plan document
+itself. devtools::document() regenerated 4 man pages (run BEFORE devtools::check(), per S551's
+own gotcha). Verification: devtools::check() 0 errors/0 warnings/1 pre-existing unrelated NOTE
+(vignettes/figure, confirmed to predate this session); full clean regression read 0 failed/0
+error; lintr::lint_package() 0 lints on all 8 touched files. Also handled 2 owner-directed
+mid-session asides as their own small, separately-committed documentation actions (not folded
+into the Slice 2 deliverable): logged a new BACKLOG.md item for a live-reported Pedigree
+Diagram affected-status fill-convention defect (R/makePedigreeDiagramData.R:163-165), and a
+new BACKLOG.md item inventorying unneeded local/remote git branches for future cleanup.
+next_steps: BACKLOG.md priorities, in order: (1) Slice 3 of the ratified plan (full Shiny
+wiring) -- docs/planning/twin-relations-kinship-computation-plan.md §4: modPedigreeServer()'s
+return list gains a twinRelations reactive; R/appServer.R gains shared$twinRelations and 3 new
+wiring points (sharedKinshipMatrix, modBreedingGroupsServer, modSummaryStatsServer);
+modGeneticValueServer() gains a new parameter passed to reportGV(). That session's own Pre-RED
+must resolve Dragon 1 (the open tab-order UX question: twinRelations uploads only in the
+Diagram tab, not GV Analysis) via AskUserQuestion before implementation, per the plan's own
+recommendation -- not resolved by this document. Live shinytest2/chromote E2E verification is
+required at this slice (Phase 3E), not just testServer(). (2) The newly-logged Pedigree Diagram
+affected-status fill-convention defect (found S552, READY, Effort S) -- unaffected individuals
+render solid-filled instead of open/unfilled; likely scoped to .affectedColor()/the visNetwork
+node-rendering path in R/makePedigreeDiagramData.R. (3) Add a consanguineous-mating visual
+marker to the Diagram tab (S549 Finding #2, READY, Effort S). (4) Write the dedicated Pedigree
+Diagram tab article (READY, Effort M, unchanged since S544). Lower priority: the newly-logged
+branch-cleanup item (found S552, READY, Effort S -- check mergedness before deleting); issue
+#148 scope-narrowing conversation (needs its own scoping session). Unchanged: NPRC outreach
+owner review (DECISION NEEDED); LabKey remaining recs (BLOCKED). Also unresolved: the
+shinytest2.yaml scheduled CI run is still red at the E2E-tier step, unchanged from
+S548-S551's own findings -- still not diagnosed. Local master remains ahead of origin (21+
+commits after this session) -- a future session should consider pushing.
+key_files: docs/planning/twin-relations-kinship-computation-plan.md §4 Slice 3 (the next
+implementing session's own starting point, including its own Dragon 1); R/reportGV.R:153,172,
+R/gvaConvergence.R:124,146, R/createSimKinships.R:49,63, R/cumulateSimKinships.R:49,67
+(Slice 2's own changes, now shipped); tests/testthat/test_reportGV.R,
+test_gvaConvergence.R, test_createSimKinships.R, test_cumulateSimKinships.R (the 8 new Slice 2
+test blocks -- a template for Slice 3's own module-level tests); R/modPedigree.R:474-483,792-812
+(twinRelationsData reactive and modPedigreeServer's current return list, per plan §2.7 -- Slice
+3's own starting point); R/modGeneticValue.R:221-228,523 (the closest existing precedent,
+kinshipOverrideData, per plan §2.7); NEWS.Rmd (new combined Slice 1-2 entry, dev-version
+section); BACKLOG.md (2 new items this session: affected-status fill defect, branch cleanup).
+gotchas: (1) Slice 3's own Pre-RED must resolve Dragon 1 (the tab-order UX question) via
+AskUserQuestion BEFORE implementation, per the plan's own explicit recommendation -- this is a
+real open judgment call, not a research gap to close silently. (2) Slice 3 requires live
+shinytest2/chromote E2E verification (Phase 3E), not just testServer() -- the plan's own §4
+DONE criteria state this explicitly. (3) gvaConvergence()'s own twinRelations tests are
+plumbing-only (see what_was_done) -- if a future session wants independent numeric verification
+of that specific call site, it will need a larger synthetic fixture (see
+test_gvaConvergence_kinshipOverrides.R's own dense-web fixture for the precedent shape), not
+the small fam1-based fixture used here. (4) No adversarial-verification pass has been run on
+either Slice 1 or Slice 2's implementation -- flagged, not silently omitted, carried forward
+unchanged from S551's own gotcha.
+runtime_smoke: n/a -- Slice 2 is a pure R-function signature/algorithm change with no
+Shiny/runtime wiring (Slice 3's own scope, not this session's).
+changelog_ref: this session's own CHANGELOG.md entries (claim, 2 owner-directed asides,
+deliverable, close-out).
 commit: pending
 ```
-<free-text prose: pending>
+<free-text prose: Session 552 delivered Slice 2 of the twinRelations-into-kinship() plan cleanly
+-- full strict-TDD cycle, 0 errors/0 warnings/0 lints, every new assertion verified against
+empirically-probed ground truth rather than assumed values. Self-score 9/10: the one point held
+back for the gvaConvergence() plumbing-only test gap (a defensible, precedented choice, but a
+real gap nonetheless) and the still-unaddressed adversarial-verification gap carried from Slice
+1. Predecessor score 10/10: S551's handoff was exactly right in every particular checked --
+file:line pointers, the Dragon 4 flag, and the devtools::document()-before-check() gotcha were
+all directly load-bearing with zero correction needed.>
 
 ```handoff
 session: S551

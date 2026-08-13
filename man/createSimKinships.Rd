@@ -4,7 +4,14 @@
 \alias{createSimKinships}
 \title{Build kinship matrices from simulated pedigrees}
 \usage{
-createSimKinships(ped, allSimParents, pop = NULL, n = 10L, verbose = FALSE)
+createSimKinships(
+  ped,
+  allSimParents,
+  pop = NULL,
+  n = 10L,
+  verbose = FALSE,
+  twinRelations = NULL
+)
 }
 \arguments{
 \item{ped}{The pedigree information in data.frame format}
@@ -22,6 +29,14 @@ has more animals than you want to use in the simulation by defining
 
 \item{verbose}{logical vector of length one that indicates whether or not
 to print out when an animal is missing a sire or a dam.}
+
+\item{twinRelations}{Optional data.frame of declared twin pairs
+(\code{id1}, \code{id2}, \code{code}) passed straight through to the
+internal \code{\link{kinship}} call; only \code{code == "MZ twin"} rows
+affect the computed matrix. \code{NULL} (the default) is a complete
+no-op, matching today's behavior. See \code{\link{kinship}}'s own
+\code{twinRelations} documentation for the full correction mechanism and
+precondition.}
 }
 \value{
 A list of \code{n} lists with each internal list containing a

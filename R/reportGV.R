@@ -40,6 +40,13 @@
 #' 2 years.
 #' @param gestationDefault Optional integer fallback gestation window (days) for
 #' species absent from the table. \code{NULL} uses the built-in 210 days.
+#' @param twinRelations Optional data.frame of declared twin pairs
+#' (\code{id1}, \code{id2}, \code{code}) passed straight through to the
+#' internal \code{\link{kinship}} call; only \code{code == "MZ twin"} rows
+#' affect the computed matrix. \code{NULL} (the default) is a complete
+#' no-op, matching today's behavior. See \code{\link{kinship}}'s own
+#' \code{twinRelations} documentation for the full correction mechanism and
+#' precondition.
 #' @param kinshipOverrides Optional data.frame of outside-information kinship
 #' overrides (\code{id1}, \code{id2}, \code{kinship}; the coefficient \emph{f},
 #' not relatedness \emph{r}) applied to the kinship matrix before mean kinship
@@ -143,7 +150,7 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
                      byID = TRUE, updateProgress = NULL,
                      breedingTable = NULL, gestationTable = NULL,
                      breedingAgeDefault = NULL, gestationDefault = NULL,
-                     kinshipOverrides = NULL,
+                     kinshipOverrides = NULL, twinRelations = NULL,
                      guCutoff = NULL, zScoreCutoff = NULL,
                      axisPriority = NULL) {
   # Generates a genetic value report for a provided pedigree
@@ -161,7 +168,8 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
   # Generate the kinship matrix and filter down to the animals of interest
   kmat <- filterKinMatrix(probands, kinship(
     ped$id, ped$sire, ped$dam,
-    ped$gen
+    ped$gen,
+    twinRelations = twinRelations
   ))
 
   # Issue 13 / issue 95 keep-all revert: validate the outside-information

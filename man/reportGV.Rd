@@ -16,6 +16,7 @@ reportGV(
   breedingAgeDefault = NULL,
   gestationDefault = NULL,
   kinshipOverrides = NULL,
+  twinRelations = NULL,
   guCutoff = NULL,
   zScoreCutoff = NULL,
   axisPriority = NULL
@@ -69,6 +70,14 @@ set are warn-dropped (the run is not aborted). An override REFINES the
 named kinship cell; it does not suppress the \code{+ sexMean / 2}
 unknown-parent correction, which is kept for every animal missing one
 parent. See \code{\link{applyKinshipOverrides}}.}
+
+\item{twinRelations}{Optional data.frame of declared twin pairs
+(\code{id1}, \code{id2}, \code{code}) passed straight through to the
+internal \code{\link{kinship}} call; only \code{code == "MZ twin"} rows
+affect the computed matrix. \code{NULL} (the default) is a complete
+no-op, matching today's behavior. See \code{\link{kinship}}'s own
+\code{twinRelations} documentation for the full correction mechanism and
+precondition.}
 
 \item{guCutoff}{Optional numeric genome-uniqueness threshold passed through
 to \code{orderReport} (internal), above which an animal qualifies

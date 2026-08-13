@@ -106,9 +106,10 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       copyrighted siblings in the same directory -- still unresolved, unchanged from S545.
       See `CHANGELOG.md`.)
 - [ ] **Thread `twinRelations` into `kinship()`'s computation, not just diagram rendering**
-      (found S549, Finding #1 of the above audit; design RATIFIED S550; **Slice 1 DONE S551**,
-      see `docs/planning/twin-relations-kinship-computation-plan.md` -- READY for Slice 2,
-      Effort M/3 slices, 1 of 3 done) -- `nprcgenekeepr` already has a twin-declaration data
+      (found S549, Finding #1 of the above audit; design RATIFIED S550; **Slices 1-2 DONE
+      S551-S552**, see `docs/planning/twin-relations-kinship-computation-plan.md` -- READY
+      for Slice 3, Effort M/3 slices, 2 of 3 done) -- `nprcgenekeepr` already has a
+      twin-declaration data
       model (`checkTwinRelations()`, issue #137) but it feeds only the Diagram tab; every
       kinship-driven calculation silently treats a declared monozygotic-twin pair as ordinary
       full siblings, understating their kinship and understating every relative reached
@@ -125,14 +126,24 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `kinship(9,10)=0.28125`, exact matches) plus a 3-member transitive-group fixture and a
       DZ/UZ-coded zero-treatment fixture; `devtools::check()` 0 errors/0 warnings; full clean
       regression read 0 failed/0 error. `R/applyKinshipOverrides.R`'s "never modified" roxygen
-      sentence updated per Dragon 2. **Next: Slice 2** (the 4 script-callable functions --
-      `reportGV()`, `gvaConvergence()`, `createSimKinships()`, `cumulateSimKinships()` each gain
-      their own `twinRelations = NULL` parameter passed straight through to their internal
-      `kinship()` call; PRE-RED should confirm whether `tests/testthat/test_gvaConvergence.R`
-      exists under that name, still unconfirmed). Slice 3 (full Shiny wiring) remains flagged
-      as needing its own Pre-RED resolution of an open tab-order UX question, since
-      `twinRelations` is currently uploaded only in the Diagram tab, not GV Analysis. Not yet
-      filed as a GitHub issue.
+      sentence updated per Dragon 2. **Slice 2 (the 4 script-callable functions) DONE S552**:
+      `reportGV()`, `gvaConvergence()`, `createSimKinships()`, `cumulateSimKinships()` each
+      gained their own `twinRelations = NULL` parameter passed straight through to their
+      internal `kinship()` call; `test_gvaConvergence.R` was confirmed to already exist
+      (Dragon 4 resolved, no new file needed). Verified: `reportGV()`'s returned `$kinship`
+      matches Slice 1's own ground truth exactly with twins declared; `gvaConvergence()`
+      accepts the parameter and threads it without error (its own convergence-curve output has
+      no kinship-observable surface at this fixture's scale -- the same documented limitation
+      `test_gvaConvergence_kinshipOverrides.R` already establishes for the analogous
+      `kinshipOverrides` parameter); `createSimKinships()`/`cumulateSimKinships()` both
+      directly reproduce the twin-corrected values in every simulated/mean matrix.
+      `devtools::check()` 0 errors/0 warnings/1 pre-existing unrelated NOTE; full clean
+      regression read 0 failed/0 error; `lintr::lint_package()` 0 lints on all 8 touched files.
+      One combined `NEWS.Rmd` entry added covering Slices 1-2 together (the plan's own §8
+      item 3 open question, resolved this session). **Next: Slice 3** (full Shiny wiring)
+      remains flagged as needing its own Pre-RED resolution of an open tab-order UX question,
+      since `twinRelations` is currently uploaded only in the Diagram tab, not GV Analysis.
+      Not yet filed as a GitHub issue.
 - [ ] **Add a visual marker for consanguineous matings in the Pedigree Diagram tab**
       (found S549, Finding #2 of the above audit, READY, Effort S) -- kinship2 draws a
       doubled/thickened mate-line for a blood-related couple; `makePedigreeMatingLayout()`

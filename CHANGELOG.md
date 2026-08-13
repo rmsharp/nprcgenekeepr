@@ -138,6 +138,41 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-N] S552 close-out: Slice 2 (twinRelations into 4 script-callable functions) shipped, S551 handoff evaluation
+- **Deliverable:** Session S552's own close-out. Evaluated S551's `HANDOFFS.md` receipt (10/10
+  -- every `key_files` file:line pointer exact, both gotchas [Dragon 4 confirmed resolvable;
+  `devtools::document()`-before-`check()`] directly applied, nothing inaccurate found).
+  Self-assessment (9/10), handoff notes written to `SESSION_NOTES.md`/`HANDOFFS.md`. Resolved
+  the plan's own open §8 item 3 question (NEWS.Rmd at Slice 2): added one combined `NEWS.Rmd`
+  entry covering Slices 1-2, decision recorded back into
+  `docs/planning/twin-relations-kinship-computation-plan.md`. `BACKLOG.md`'s triggering item
+  updated: Slice 2 marked DONE, Slice 3 named as next. See `SESSION_NOTES.md` for the full
+  record.
+
+### 2026-08-13 · [BL-N] S552: reportGV()/gvaConvergence()/createSimKinships()/cumulateSimKinships() gain a twinRelations parameter -- Slice 2 of the ratified plan
+- **Deliverable:** `R/reportGV.R`, `R/gvaConvergence.R`, `R/createSimKinships.R`,
+  `R/cumulateSimKinships.R` each gained a `twinRelations = NULL` parameter, threaded straight
+  through to that function's own internal `kinship()` call (plan §2.4 call sites #1-#4). 8 new
+  `test_that()` blocks (2 per file: twin-propagation + backward-compatibility) added across the
+  4 matching test files, reusing an extended (added `sex` column) copy of `test_kinship.R`'s own
+  `fam1` 10-subject audit fixture. `reportGV()`'s tests directly assert its returned `$kinship`
+  matrix against Slice 1's own ground truth; `createSimKinships()`/`cumulateSimKinships()`
+  directly assert their own returned simulated/mean matrices; `gvaConvergence()`'s tests are a
+  plumbing/smoke test (accepts + threads without error) since its convergence-curve output has
+  no kinship-observable surface at this fixture's scale -- the same documented limitation
+  `test_gvaConvergence_kinshipOverrides.R` already establishes for the analogous
+  `kinshipOverrides` parameter on the identical call-site pattern. `devtools::document()`
+  regenerated 4 man pages. Full strict-TDD PRE-RED->RED->GREEN cycle (each transition gated via
+  `AskUserQuestion`; REFACTOR declined -- diff already minimal/mechanical). Verification:
+  `devtools::check()` 0 errors/0 warnings/1 pre-existing unrelated NOTE (`vignettes/figure`,
+  confirmed to predate this session); full clean regression read 0 failed/0 error;
+  `lintr::lint_package()` 0 lints on all 8 touched files. TDD phase: GREEN.
+
+### 2026-08-13 · [BL-N] S552 claim: Slice 2 (the 4 script-callable functions) of the twinRelations-into-kinship() plan
+- **Deliverable:** Session S552 claimed. Picking up the S550-ratified plan's own Slice 2
+  (`docs/planning/twin-relations-kinship-computation-plan.md` §4) -- production code, full
+  strict-TDD PRE-RED->RED->GREEN(->REFACTOR) gates apply.
+
 ### 2026-08-13 · [ad hoc] S552: logged a new BACKLOG.md item (clean up unneeded repository branches)
 - **Deliverable:** Owner-directed mid-session: inventoried (not deleted) local and `origin`
   branches beyond `master`. Local: `dev`, `module`, `rlabkey-version-floor`, 4 `worktree-wf_*`

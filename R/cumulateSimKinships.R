@@ -45,7 +45,8 @@
 #' allSimParents <- list(simParent_1, simParent_2, simParent_3)
 #' pop <- LETTERS[1:7]
 #' cumulativeKinships <- cumulateSimKinships(ped, allSimParents, pop, n = 10)
-cumulateSimKinships <- function(ped, allSimParents, pop = NULL, n = 10L) {
+cumulateSimKinships <- function(ped, allSimParents, pop = NULL, n = 10L,
+                                twinRelations = NULL) {
   if (n < 1L) {
     stop("cumulateSimKinships() requires at least one simulation (n >= 1).")
   }
@@ -62,7 +63,8 @@ cumulateSimKinships <- function(ped, allSimParents, pop = NULL, n = 10L) {
     simPed <- makeSimPed(ped, allSimParents)
     kmat <- kinship(
       simPed$id, simPed$sire,
-      simPed$dam, simPed$gen
+      simPed$dam, simPed$gen,
+      twinRelations = twinRelations
     )
     if (first_time) { # initializes minKinship correctly and adds IDs
       minKinship <- kmat
