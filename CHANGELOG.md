@@ -131,6 +131,21 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [ad hoc] S546 close-out: S325 CHANGELOG.md legacy-footer decision resolved (bulk-relocate scoped, not executed), Learning 553
+- **Deliverable:** Session S546's own close-out. `BACKLOG.md`'s "Reopen the S325 'freeze legacy,
+  go forward' decision" Housekeeping item (found S543) resolved via a 3-option `AskUserQuestion`
+  (scope a lighter bulk relocation of the frozen legacy footer into its own archive file,
+  un-retagged / commit to the full ~303-entry re-tag migration campaign / hold as a permanent
+  known limitation) — owner picked the bulk-relocation option. `BACKLOG.md` item rewritten to
+  READY, Effort M, scoped as a future session's job (verify `methodology_trim.py` L1/L2/L3
+  invariants + no script expects the block inline, before moving anything — decision-only this
+  session, no file relocated). `CLAUDE.md`'s "CHANGELOG.md ledger-format resolution" note gained
+  an S546 addendum recording the decision and the 2 rejected-for-now fallbacks. Recorded
+  `PROJECT_LEARNINGS.md` Learning 553 (a picker-before-prose-report process slip, self-caught and
+  corrected; and the value of re-deriving a decision from its own underlying investigation rather
+  than trusting a prior session's binary framing, which is how the third option was found).
+- **Commit:** this close-out's own commit.
+
 ### 2026-08-13 · [ad hoc] S546 Phase 0 reconcile: S545's HANDOFFS.md commit self-reference
 - **Deliverable:** Phase 0 ledger reconcile (`SESSION_RUNNER.md` step 6). S545's `HANDOFFS.md`
   receipt shipped with `commit: pending` — the standard self-reference limitation (the receipt
