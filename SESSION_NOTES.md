@@ -6,20 +6,116 @@
 
 ## ACTIVE TASK
 
+### Session 537 Handoff Evaluation (by Session 538)
+**Score: 8/10.** **What helped:** the `HANDOFFS.md` S537 receipt's `next_steps` field
+correctly named "`NEWS.Rmd` verbosity drift since 2.0.0.9000 (Effort M, owner-directed)"
+as an open READY item alongside the `a2interactive.Rmd` pass and issue #148 -- this
+session picked it directly via the Phase 0 `AskUserQuestion` picker with zero
+rediscovery needed. **What was missing:** nothing S537 owed -- the item's own detailed
+scoping instruction ("rewrite the development-version entries... do not rewrite
+already-released, frozen version sections") lives in `BACKLOG.md` itself (filed S522,
+predating S537), not in S537's receipt, so this isn't a gap in S537's handoff. **What
+was wrong:** nothing found -- re-verified S537's own core claims this session touched
+incidentally (the `test_wordlist_coverage.R` guard, `inst/WORDLIST`'s 0-flagged
+baseline) by running `spelling::spell_check_package()` fresh mid-session; both held.
+**ROI:** High -- the `next_steps` pointer was directly load-bearing (confirmed
+availability, correct effort tag, correct owner-directed framing) and nothing in the
+receipt had to be second-guessed.
+
 ### What Session 538 Did
-**Deliverable:** Trim `NEWS.Rmd`'s post-2.0.0 entries back to the project's terse,
-pre-1.0.8 house style (found S522, owner-directed, READY, Effort M) -- move
-formulas/citations/derivation rationale that has crept into recent entries
-(issue #130 marker-genetics family, issue #153 slices, etc.) to roxygen
-`@references` and `inst/extdata/ui_guidance/population_genetics_terms.html`,
-which are already the intended user-viewable surfaces for that content per the
-issue #120 citation checklist. Scope: ALL post-2.0.0 entries (owner-picked via
-`AskUserQuestion`, over a "worst offenders only" narrower alternative).
-**Started:** 2026-08-12.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
-next session's reconcile.
+**Deliverable:** Trimmed `NEWS.Rmd`'s `2.0.0.9000 (development version)` section (26
+entries) from multi-sentence paragraphs (formulas, citation strings, derivation
+rationale) back to the project's pre-1.0.8 one/two-line-per-change house style, per
+`BACKLOG.md`'s own scoping instruction (found S522) -- explicitly limited to the still
+-open development-version section; the already-released `2.0.0 (20260708)` section
+stays untouched (frozen-history precedent, matching `CHANGELOG.md`'s Legacy-history
+marker).
+**Started/Completed:** 2026-08-12.
+**Status:** DONE. TDD phase: N/A (pure documentation/editorial change, no production
+code or test surface -- declared explicitly at session start, matching this project's
+own "planning session has no code-phases" precedent, extended here to a docs-only
+session). Commit: pending (this close-out's own commit).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, `git status`/`log`, `methodology_dashboard.py`).
+Ledger reconcile found the S537 `HANDOFFS.md` receipt's `commit: pending` field still
+unreconciled -- fixed (`commit: a39f7756`) and logged to `CHANGELOG.md` (commit
+`32d2a33c`), matching the S537->S536/S536->S535 precedent. Rendered the priorities list
+via `AskUserQuestion`; owner picked `NEWS.Rmd` verbosity cleanup over the
+`a2interactive.Rmd` pass, issue #148 scoping, and the NPRC outreach plan review. A
+follow-up `AskUserQuestion` confirmed full-remediation scope (all post-`2.0.0.9000`
+entries) over a narrower "worst offenders only" alternative. **(2)** Claimed the
+session. **(3)** Read the full `2.0.0.9000` section (386 lines) and the already
+-released `2.0.0` section (185 lines) firsthand. Cross-checked every formula/citation
+slated for removal against the relevant function's roxygen `@references` and/or
+`inst/extdata/ui_guidance/population_genetics_terms.html` (14 statistic-bearing
+functions spot-checked via `grep`) -- all confirmed already covered elsewhere (one
+initial false-negative, `computeGenomicROH()`'s F_ROH formula, was actually present in
+the HTML page under `<sub>` markup a literal-text `grep` missed; caught by broadening
+the search before trusting the negative). **(4)** Rewrote all 26 dev-section entries to
+terse one/two-line form via a deterministic file-splice (header + new body + rest of
+file, per `PROJECT_LEARNINGS.md` Learning 123's own documented large-doc-rewrite
+technique) rather than a fragile multi-hundred-line `Edit` match. Cross-diffed every
+issue number and backtick-quoted function name, old vs. new, to confirm no substantive
+capability mention was lost -- 4 genuinely-dropped function names were restored after
+the diff caught them. **(5) Mid-session self-correction:** the first pass also
+mistakenly rewrote the already-released `2.0.0 (20260708)` section, misreading the
+owner-approved scope-question phrasing as license to include it -- caught by re-reading
+`BACKLOG.md`'s own item text (which explicitly excludes frozen/released sections)
+before finishing; reverted that section verbatim from `git show HEAD:NEWS.Rmd` and
+rebuilt the splice correctly scoped. **(6)** Re-rendered `NEWS.md` via
+`rmarkdown::render(output_format = rmarkdown::github_document(html_preview = FALSE))`
+(no `NEWS.html` litter). **(7) A first `devtools::check()` run found a second, real bug**
+the fast dev-context guard-test pass missed: rewriting the prose shifted
+`hunspell`/`spelling`'s context-sensitive tokenization of several already-benign,
+UNCHANGED-pattern possessive constructs (`` `fn()`'s ``/`word's`, identical phrasing
+existed pre-session and passed clean under S537), newly flagging `centers'` and a
+stray, context-orphaned `'s` fragment -- `1 error` in `test_wordlist_coverage.R`.
+Isolated the exact flagged strings via `spelling::spell_check_package()` directly (not
+just the test's pass/fail), confirmed both as false positives (no real typo, no new
+vocabulary), and fixed by rephrasing the 6 exact constructs producing them -- rather
+than widening `inst/WORDLIST` with a bare `'s` fragment, which would have blinded the
+guard to a real future typo sharing that fragment. Re-rendered and reconfirmed
+`spelling::spell_check_package()` returns 0 rows. **(8)** Final verification: full
+clean regression 0 failed/0 error (33 pre-existing, unrelated warnings, unchanged from
+S537's own baseline); `test_effectivePopulationSizeDocs.R`'s `NEWS.Rmd` regression
+guard passes; **`devtools::check()` (the real build-equivalent): 0 errors / 0 warnings
+/ 1 NOTE** (only the pre-existing vignettes/figure-leftover NOTE, matching S537's own
+baseline exactly). No `R/` files touched -- lint N/A. Phase 3E: n/a in the "launch the
+app" sense (no runtime/Shiny behavior changed) -- the `devtools::check()` run above is
+this session's complete build-equivalent verification. No NEWS.Rmd/citation/tutorial/
+`_pkgdown.yml`/`a2interactive.Rmd` close-out checklist applies (no new exported
+function, no new Shiny feature/parameter, no new displayed statistic -- this session's
+own deliverable WAS the `NEWS.Rmd` edit).
+
+**Self-assessment (Session 538): 8/10.** **Strengths:** (1) Did not stop at "the diff
+looks right" -- verified every dropped formula/citation actually has a home in
+roxygen/HTML before removing it from `NEWS.Rmd`, and caught + fixed the one false
+-negative in that verification (F_ROH/`<sub>` markup) rather than trusting a single
+literal-text `grep`. (2) Cross-diffed issue numbers and function names old-vs-new as a
+mechanical completeness check rather than trusting the rewrite by feel, and restored 4
+genuinely-dropped function-name mentions the diff surfaced. (3) Caught and self
+-corrected a real scope violation (rewriting the frozen `2.0.0` section) BEFORE
+declaring done, by re-reading the source item's own exact text rather than relying on
+memory of my own scope-question phrasing -- exactly the "read before edit, don't edit
+from memory" discipline `SAFEGUARDS.md` names. (4) Ran the actual project build
+-equivalent (`devtools::check()`), not just the fast unit-test guard, which is what
+caught the second bug (the tokenization-context shift) -- a dev-context-only run would
+have shipped a broken `R CMD check`. (5) Fixed the second bug by rephrasing rather than
+reaching for the easier but worse fix (widening `inst/WORDLIST` with a bare, overly
+-generic `'s` fragment) -- reasoned explicitly about the guard's future blind-spot cost
+before choosing. **Weaknesses:** (1) The scope-question `AskUserQuestion` I wrote before
+starting was phrased ambiguously ("all post-2.0.0 entries") without having yet
+re-read `BACKLOG.md`'s own exact scoping instruction closely enough to write an
+unambiguous option -- the resulting over-scope execution was avoidable if I'd re-read
+the source item's full text immediately before drafting the scope question, not after
+already acting on my own looser paraphrase of it. (2) Did not anticipate the
+tokenization-context-sensitivity failure mode before the first `devtools::check()` run
+-- a large prose rewrite touching many possessive constructs was a plausible risk to
+flag proactively, though the actual failure was genuinely hard to predict without
+running the real tool.
+**Ledger:** recorded in `CHANGELOG.md` (this session's own entries, Phase 0 reconcile
+entry).
 
 ### Session 536 Handoff Evaluation (by Session 537)
 **Score: 7/10.** **What helped:** the `HANDOFFS.md` S536 receipt's `next_steps` field

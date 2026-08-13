@@ -123,20 +123,70 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S538
 date: 2026-08-12
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Trim NEWS.Rmd's post-2.0.0 entries back to the project's terse,
-pre-1.0.8 house style (found S522, owner-directed, READY, Effort M) -- move
-formulas/citations/derivation rationale into roxygen @references and
-inst/extdata/ui_guidance/population_genetics_terms.html. Scope: all post-2.0.0
-entries.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: NEWS.Rmd verbosity drift (found S522) is resolved for the
+2.0.0.9000 (development version) section -- the only section this item's own
+BACKLOG.md scoping instruction authorizes. The already-released 2.0.0
+(20260708) section is correctly untouched. BACKLOG.md item marked RESOLVED.
+what_was_done: Rewrote all 26 entries in NEWS.Rmd's 2.0.0.9000 section from
+multi-sentence paragraphs (formulas, citation strings, derivation rationale)
+to the pre-1.0.8 one/two-line-per-change house style. Verified every dropped
+formula/citation already has a home in the relevant function's roxygen
+@references and/or inst/extdata/ui_guidance/population_genetics_terms.html
+(14 functions spot-checked) before dropping it from NEWS. Cross-diffed every
+issue number and function name old-vs-new; restored 4 genuinely-dropped
+function mentions the diff caught. Mid-session self-correction: an initial
+pass also rewrote the frozen, already-released 2.0.0 section (misreading my
+own scope-question phrasing) -- caught by re-reading BACKLOG.md's exact
+scoping text before finishing, reverted that section verbatim from git show
+HEAD:NEWS.Rmd, rebuilt correctly scoped. Re-rendered NEWS.md via
+rmarkdown::render(github_document(html_preview=FALSE)), no litter. A first
+devtools::check() run found a second real bug: the prose rewrite shifted
+hunspell/spelling's context-sensitive tokenization of several unchanged
+-pattern possessive constructs, newly flagging centers'/a stray 's fragment
+(1 error in test_wordlist_coverage.R) despite identical phrasing passing
+clean pre-session. Fixed by rephrasing the 6 exact constructs producing the
+flags (not by widening inst/WORDLIST with an overly-generic 's fragment).
+Final devtools::check(): 0 errors / 0 warnings / 1 NOTE (matching S537's own
+baseline exactly). Net: dev-version section 386->134 lines; NEWS.Rmd
+1,154->902 lines. Commits: this close-out's own docs commit (fix + docs
+combined, docs-only session).
+next_steps: This item is fully closed. Other unrelated READY/DECISION-NEEDED
+items still open (unchanged by this session): a2interactive.Rmd
+documentation pass for functions shipped since S478 (Effort M,
+owner-directed); issue #148 (MHC) needs its own scope-narrowing conversation
+before it's READY (sequencing audit Finding #4); NPRC outreach &
+announcement plan needs owner review/edit of drafts + send-timing decision
+(not a coding task). LabKey integration remaining recs stay BLOCKED (needs a
+live LabKey server). 2 minor doc-hygiene nits observed but not fixed (per
+report-don't-fix-mid-session precedent): BACKLOG.md:354's stale duplicate of
+the now-resolved S465/S490 spelling item, and BACKLOG.md's S518 housekeeping
+item's own stale unchecked checkbox despite narratively RESOLVED text.
+key_files: NEWS.Rmd (2.0.0.9000 section rewritten, 2.0.0 section untouched);
+NEWS.md (re-rendered); BACKLOG.md (item corrected to RESOLVED);
+PROJECT_LEARNINGS.md Learning 544 (new).
+gotchas: (1) A large prose rewrite can change hunspell/spelling's
+tokenization of UNCHANGED text elsewhere via surrounding-context
+sensitivity -- always re-run the FULL devtools::check() after a large
+NEWS.Rmd/vignette rewrite, not just the fast dev-context guard test; a diff
+introducing no new words can still newly fail. (2) When a spelling guard
+flags a fragment more generic than a real word (a bare 's, a lone
+punctuation-adjacent token), prefer rephrasing the source over widening
+inst/WORDLIST -- a wordlist entry should cover a genuine word/proper-noun,
+not a tokenizer artifact that could mask a real future typo. (3) Before
+touching a BACKLOG.md item with its own detailed scoping instruction, re-read
+that instruction's exact text immediately before drafting any
+AskUserQuestion scope options -- a paraphrase written from memory of an
+earlier skim can silently drop a hard boundary (here: "do not rewrite
+already-released, frozen version sections").
+runtime_smoke: n/a -- no runtime/Shiny behavior changed (docs-only session,
+NEWS.Rmd/NEWS.md only); the full devtools::check() run (0 errors/0
+warnings/1 pre-existing NOTE) is this session's complete build-equivalent
+verification.
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12
+([BL-522] the fix; [ad hoc] S538 Phase 0 reconcile entry)
 commit: pending
 ```
 
