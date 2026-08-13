@@ -125,6 +125,26 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-12.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S551
+date: 2026-08-13
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Slice 1 (core algorithm) of the S550-ratified twinRelations-into-kinship() plan
+(docs/planning/twin-relations-kinship-computation-plan.md §4): add twinRelations = NULL to
+kinship(), port kinship2's mzgrp/mzindex MZ-transitive-correction mechanism into the existing
+recursive depth loop. Production code -- full strict-TDD PRE-RED->RED->GREEN(->REFACTOR)
+gates apply.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S550
 date: 2026-08-13
 status: complete

@@ -10,6 +10,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 551 Did
+**Deliverable:** Slice 1 (core algorithm) of the S550-ratified `twinRelations`-into-`kinship()`
+plan (`docs/planning/twin-relations-kinship-computation-plan.md` §4) — add a `twinRelations =
+NULL` parameter to `kinship()`, porting kinship2's `mzgrp`/`mzindex` MZ-transitive-correction
+mechanism into the existing recursive depth loop. (IN PROGRESS)
+**Started:** 2026-08-13
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 549 Handoff Evaluation (by Session 550)
 **Score: 8/10.** **What helped:** the `HANDOFFS.md` receipt's `next_steps` field's
 priority-ordered list matched this session's own independently-rendered Phase 0 priorities
