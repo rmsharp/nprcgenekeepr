@@ -125,6 +125,24 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-12.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S544
+date: 2026-08-13
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Diagnose (and fix, if root-cause is simple) the test-coverage.yaml CI failure -- 2
+consecutive red runs on origin/master (S536, S540 pushes) while R-CMD-check.yaml is green on the
+same commits.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S543
 date: 2026-08-12
 status: complete
@@ -179,7 +197,7 @@ runtime_smoke: n/a -- docs/ledger-only change, no runtime/Shiny behavior touched
 changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12 ([ad hoc] the claim; [ad hoc]
 the tool's own auto-appended CHANGELOG.md archive entry; [ad hoc] the close-out entry covering
 BACKLOG.md/PROJECT_LEARNINGS.md findings)
-commit: pending
+commit: 4bac5d55
 ```
 
 ```handoff

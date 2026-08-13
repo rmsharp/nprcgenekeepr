@@ -10,6 +10,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 544 Did
+**Deliverable:** Diagnose (and fix, if root-cause is simple) the `test-coverage.yaml` CI failure —
+2 consecutive red runs on `origin/master` (S536, S540 pushes) while `R-CMD-check.yaml` is green on
+the same commits (IN PROGRESS)
+**Started:** 2026-08-13
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 542 Handoff Evaluation (by Session 543)
 **Score: 9/10.** **What helped:** the S542 `HANDOFFS.md` receipt's `next_steps` field named
 exactly the task this session picked up — "(2) CHANGELOG.md SRF_RED refusal -- DECISION NEEDED,
