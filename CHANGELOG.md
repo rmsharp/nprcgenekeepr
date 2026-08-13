@@ -131,6 +131,37 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [ad hoc] S545 close-out: Phase 0 CI-check decision recorded in CLAUDE.md, BACKLOG.md updated (item resolved + 2 new items), Learning 552
+- **Deliverable:** Session S545's own close-out. `BACKLOG.md`'s "Phase 0 has no step that checks
+  GitHub Actions CI status" Housekeeping item (found S540) marked RESOLVED, citing the
+  `CLAUDE.md` decision. Added 2 new `BACKLOG.md` items (both owner-directed mid-turn): (1) verify
+  `nprcgenekeepr`'s exported functions can reproduce the kinship2 R package's own
+  supplementary-material worked examples (`inst/extdata/reference/
+  NIHMS593658-supplement-supplement_1.pdf`); (2) stop editing resolved `BACKLOG.md` items in
+  place into "(none remaining)" pointers — delete them outright instead, per `SESSION_RUNNER.md`
+  Phase 3F / FM#27's own literal instruction (57 of ~75 top-level bullets currently carry this
+  pattern). Recorded `PROJECT_LEARNINGS.md` Learning 552 (the 2-axis CI-check decision shape, and
+  the value of smoke-testing a documented-but-unrun Phase 0 step before close-out).
+- **Commit:** this close-out's own commit.
+
+### 2026-08-13 · [BL-phase0CiCheck] Decided the Phase 0 GitHub Actions CI-status check: gh run list --branch master --limit 10, every session, unconditionally (Session 545)
+- **Deliverable:** `BACKLOG.md`'s "Phase 0 has no step that checks GitHub Actions CI status" item
+  (found S540, `PROJECT_LEARNINGS.md` Learning 547). Presented the decision as a 4-option
+  `AskUserQuestion` (every-session unconditional / push-conditioned / branch-protection-instead /
+  hold); owner chose unconditional. Recorded in `CLAUDE.md`'s "Additional Phase 0 steps": run
+  `gh run list --branch master --limit 10` at Phase 0 step 4 every session (never conditioned on
+  whether this project pushed, since a scheduled/manually-triggered workflow can go red with no
+  intervening local push at all); report, don't fix, any non-`completed success` run at step 7;
+  the 3 rejected alternatives recorded so a future session doesn't re-litigate. Smoke-tested the
+  documented command immediately: found `R-CMD-check.yaml` on `126711a9` still `in_progress` at
+  15+ minutes — not a red run, but exactly the class of thing the new step exists to catch;
+  reported, not chased, to keep this session's own scope intact.
+- **Commit:** `7741b47e`.
+
+### 2026-08-13 · [ad hoc] S545 claim: Phase 0 CI-status-check decision
+- **Deliverable:** Session 545's Phase 1B claim stub (`SESSION_NOTES.md`, `HANDOFFS.md`).
+- **Commit:** `c6c6c0a6`.
+
 ### 2026-08-13 · [ad hoc] S545 Phase 0 reconcile: S544's HANDOFFS.md commit self-reference
 - **Deliverable:** Phase 0 ledger reconcile (`SESSION_RUNNER.md` step 6). S544's `HANDOFFS.md`
   receipt shipped with `commit: pending` — the standard self-reference limitation (the receipt
@@ -138,7 +169,7 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
   reconciled at its own claim. `HANDOFFS.md`'s frontier (`git log -1 -- HANDOFFS.md`) ==
   `126711a9` (S544's own close-out commit), so reconciled `commit: pending` → `126711a9`. No
   undocumented commits found otherwise; `CHANGELOG.md`'s own frontier == `HEAD` already.
-- **Commit:** this reconcile's own commit.
+- **Commit:** `dd177a80`.
 
 ### 2026-08-13 · [ad hoc] S544 close-out: test-coverage.yaml fix confirmed green on CI, BACKLOG.md updated (item resolved + new Pedigree Diagram article item), Learning 551
 - **Deliverable:** Session S544's own close-out. `BACKLOG.md`'s `test-coverage.yaml` Housekeeping
