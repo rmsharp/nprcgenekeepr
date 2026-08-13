@@ -127,20 +127,86 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S551
 date: 2026-08-13
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 9
+predecessor_score: 9
 active_task: Slice 1 (core algorithm) of the S550-ratified twinRelations-into-kinship() plan
-(docs/planning/twin-relations-kinship-computation-plan.md §4): add twinRelations = NULL to
-kinship(), port kinship2's mzgrp/mzindex MZ-transitive-correction mechanism into the existing
-recursive depth loop. Production code -- full strict-TDD PRE-RED->RED->GREEN(->REFACTOR)
-gates apply.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+(docs/planning/twin-relations-kinship-computation-plan.md §4) -- DONE. kinship() gained a
+twinRelations = NULL parameter porting kinship2's mzgrp/mzindex MZ-transitive-identity
+mechanism into the existing recursive depth loop. Full strict-TDD PRE-RED->RED->GREEN cycle
+(REFACTOR declined via AskUserQuestion). Slice 2 (the 4 script-callable functions) is a
+separate future session, per the plan's own session-boundary discipline.
+what_was_done: Added twinRelations = NULL to kinship() (R/kinship.R): filters to code == "MZ
+twin" rows, matches id1/id2 against the id vector, ports kinship2's mzgrp union-find
+transitive grouping + mzindex all-pairs expansion (plan §2.1), applies the correction inside
+the existing depth loop after each depth's individuals are processed (not a post-hoc pass --
+plan §2.2). Updated R/applyKinshipOverrides.R's "kinship() itself is never modified" roxygen
+sentence per the ratified Dragon-2 obligation, distinguishing a structural pedigree fact from
+an outside-information override. Added 5 new test_that() blocks to
+tests/testthat/test_kinship.R: MZ-propagation-to-a-non-twin-descendant, backward-compatibility
+(no twinRelations), 3-member transitive-group (union-find), DZ/UZ-coded zero-treatment, and a
+sparse=TRUE/FALSE equivalence pin (caught as a real gap in the plan's own §4 test list via a
+post-GREEN self-check, added before close-out). Regenerated man/kinship.Rd and
+man/applyKinshipOverrides.Rd via devtools::document() (a stale-Rd WARNING devtools::check()
+caught that the targeted test run alone missed). Added "validator's" to inst/WORDLIST (a
+whole-package spelling-coverage ERROR devtools::check() caught, also invisible to a targeted
+test run). Verification: devtools::check() 0 errors/0 warnings/1 pre-existing unrelated NOTE
+(vignettes/figure leftover, confirmed via git log to predate this session); full clean
+regression read 0 failed/0 error; lintr::lint_package() 0 lints on all 3 touched files; direct
+reproduction of the audit's 3 previously-divergent cells against kinship2 ground truth
+(kinship(8,9)=0.5, kinship(9,10)=0.28125, kinship(10,10)=0.53125, all exact). Close-out
+checklist mapping stated explicitly per the plan's §8: citation (#120) N/A (correctness fix,
+not a new statistic); NEWS.Rmd/tutorial-article N/A for Slice 1 (applies at Slice 3 per the
+plan); a2interactive.Rmd deferred per its own standing rule; GitHub issue close-out N/A (no
+issue filed yet).
+next_steps: BACKLOG.md priorities, in order: (1) Slice 2 of the ratified plan
+(docs/planning/twin-relations-kinship-computation-plan.md §4) -- reportGV(), gvaConvergence(),
+createSimKinships(), cumulateSimKinships() each gain their own twinRelations = NULL parameter
+passed straight through to their internal kinship() call; that session's own PRE-RED should
+confirm whether a dedicated test_gvaConvergence.R file exists under that name (unconfirmed,
+Dragon 4) and decide the NEWS.Rmd-at-Slice-2 question the plan leaves open (§8 item 3). Full
+strict-TDD gates apply. (2) Add a consanguineous-mating visual marker to the Diagram tab (S549
+Finding #2, READY, Effort S). (3) Write the dedicated Pedigree Diagram tab article (READY,
+Effort M, unchanged since S544). (4) Issue #148 scope-narrowing conversation (needs its own
+scoping session, unchanged). Unchanged from S550: NPRC outreach owner review (DECISION
+NEEDED); LabKey remaining recs (BLOCKED). **Also unresolved: the shinytest2.yaml scheduled CI
+run is still red at the E2E-tier step, unchanged from S548/S549/S550's own findings -- still
+not diagnosed.** Local master remains ahead of origin (18+ commits after this session) -- a
+future session should consider pushing.
+key_files: docs/planning/twin-relations-kinship-computation-plan.md §4 Slice 2 (the next
+implementing session's own starting point); R/kinship.R:62 (Slice 1's own change, now shipped
+-- the twinRelations parameter and mzgrp/mzindex mechanism); R/reportGV.R:162,
+R/gvaConvergence.R:139, R/createSimKinships.R:60, R/cumulateSimKinships.R:63 (Slice 2's 4
+target call sites, per the plan's own §2.4 table); tests/testthat/test_kinship.R (the 5 new
+Slice 1 test blocks, a template for Slice 2's own per-function propagation +
+backward-compatibility assertions); inst/WORDLIST (gained "validator's" this session);
+PROJECT_LEARNINGS.md Learning 558 (new, file tail); SESSION_NOTES.md (S550 handoff evaluation
++ full S551 write-up).
+gotchas: (1) Slice 2's own PRE-RED must confirm whether tests/testthat/test_gvaConvergence.R
+exists under that name before writing tests against an assumed filename (plan's own Dragon 4,
+still unconfirmed -- Slice 1 did not need this file). (2) createSimKinships()/
+cumulateSimKinships() have ZERO in-package callers (confirmed by S550, unchanged) -- they are
+standalone, script-callable Monte Carlo utilities, not reached via reportGV()/gvaConvergence()
+internally; Slice 2 should not assume otherwise. (3) After any roxygen edit to an exported
+function, run devtools::document() BEFORE the first devtools::check() -- this session lost a
+verification cycle (~4 min) by not doing so proactively; a targeted testthat::test_file() run
+will not catch a stale Rd or a WORDLIST spelling gap, only the full devtools::check() does. (4)
+Slice 3's own Pre-RED still has an explicitly unresolved Dragon 1 (twinRelations uploads only
+in the Diagram tab, not GV Analysis) -- unchanged from S550, not Slice 2's concern. (5) No
+adversarial-verification pass was run on Slice 1's own implementation (only empirical
+ground-truth matching against kinship2 across 3 fixture families) -- flagged explicitly, not
+silently omitted; worth requesting one before Slice 2 if the owner wants independent scrutiny
+of the ported mzgrp/mzindex mechanism itself.
+runtime_smoke: n/a -- Slice 1 is a pure R-function signature/algorithm change with a
+default-NULL, fully backward-compatible new parameter; nothing in the Shiny app passes
+twinRelations yet (that's Slice 3), so no runtime dispatch path changed. Verified instead via
+the full clean regression read, which includes the app-level test-app-*/test-e2e-* files (0
+failed/0 error) -- the correct verification surface for a script-level change not yet
+UI-reachable, matching the plan's own Slice 1 DONE criteria (which name devtools::check() +
+the full regression read, not a live shinytest2/chromote run -- that's reserved for Slice 3's
+own DONE criteria).
+changelog_ref: see CHANGELOG.md's 2026-08-13 S551 entries (reconcile, claim, deliverable,
+close-out).
 commit: pending
 ```
 

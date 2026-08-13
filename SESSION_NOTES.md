@@ -10,16 +10,138 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 550 Handoff Evaluation (by Session 551)
+**Score: 9/10.** **What helped:** the `HANDOFFS.md` receipt's `next_steps` field's
+priority-ordered list matched this session's own independently-rendered Phase 0 priorities
+exactly (Slice 1 first, consanguinity marker second, Pedigree Diagram article third, issue
+#148 fourth, NPRC/LabKey/CI-red unchanged) — the owner picked exactly item 1 as the receipt's
+own list anticipated. The `key_files` field's pointers (`R/kinship.R:62`, the exact function
+touched; `R/applyKinshipOverrides.R`, the exact roxygen sentence needing the Dragon-2 update;
+the plan doc itself) were all used directly, with zero friction, exactly as cited. The
+`gotchas` field's warning (1) not to re-cite "15 call sites" was followed — the plan's own
+AST-verified 7-production-call-site table (§2.4) was used as-is. **What was wrong:** nothing
+found inaccurate — every claim in the receipt held up against direct verification. **What was
+missing:** nothing material to this session's own task; the 2 gaps `devtools::check()` caught
+this session (a stale `man/kinship.Rd`, an uncovered `inst/WORDLIST` spelling flag) are
+inherent to any design-only session's blind spot — they arise from the specific implementing
+session's own prose choices, not something S550 could have anticipated or flagged in advance.
+**ROI:** High — the priority list and every key-file pointer were directly load-bearing, with
+zero corrections needed.
+
 ### What Session 551 Did
 **Deliverable:** Slice 1 (core algorithm) of the S550-ratified `twinRelations`-into-`kinship()`
-plan (`docs/planning/twin-relations-kinship-computation-plan.md` §4) — add a `twinRelations =
-NULL` parameter to `kinship()`, porting kinship2's `mzgrp`/`mzindex` MZ-transitive-correction
-mechanism into the existing recursive depth loop. (IN PROGRESS)
-**Started:** 2026-08-13
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+plan (`docs/planning/twin-relations-kinship-computation-plan.md` §4) — `kinship()` gains a
+`twinRelations = NULL` parameter, porting kinship2's `mzgrp`/`mzindex` MZ-transitive-identity
+mechanism into the existing recursive depth loop. **Started/Completed:** 2026-08-13.
+**Status:** DONE. TDD phase: GREEN (REFACTOR declined via `AskUserQuestion` — code already
+clean, 0 lints, closely mirrors the ratified port). Commits: `1dd82f6c` (claim), `ec056055`
+(Phase 0 reconcile, S550's `HANDOFFS.md` self-reference), this session's own deliverable +
+close-out commit (see `HANDOFFS.md` receipt for its sha once reconciled next session).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, `git status`/`log`/`diff --stat`,
+`methodology_dashboard.py` [Health 96/100, 0 High+ risk, Medium risk unexplained further, not
+investigated, doesn't block], `gh run list --branch master --limit 10` [the scheduled
+`shinytest2` run is still red, unchanged from S548/S549/S550's own findings, not diagnosed]).
+Both `CHANGELOG.md`/`HANDOFFS.md` ledger frontiers were at `HEAD` (`bab8ead8`) — no
+undocumented commits — but S550's own `HANDOFFS.md` receipt still carried the standard
+`commit: pending` self-reference (the receipt ships in the commit whose sha it would name);
+reconciled it to `bab8ead8` in its own commit (`ec056055`) before the report, per the
+established S543/S544/S545/S549 precedent. Rendered the priorities list (4 numbered items) +
+the `AskUserQuestion` picker; owner picked item 1 (Slice 1 implementation). **(2)** Wrote the
+Phase 1B claim stub to `SESSION_NOTES.md`/`HANDOFFS.md` before any technical work, committed
+separately (`1dd82f6c`). **(3)** Read `R/kinship.R` (the actual target code, not the plan's
+paraphrase of it), `tests/testthat/test_kinship.R` (existing 2-block style/fixture
+convention), and `R/applyKinshipOverrides.R`'s "never modified" sentence (the Dragon-2
+obligation §10's ratification outcome explicitly assigns to "the Slice 1 implementing
+session"). Derived exact expected numeric values for all 4 of the plan's own §4 test fixtures
+by running them through the installed `kinship2` package directly (ground truth) and today's
+unmodified `kinship()` (backward-compat baseline) — not guessed from the plan's prose: the
+`fam1` 10-subject fixture (`kinship(8,9)=0.5`, `kinship(9,10)=0.28125` with the twin declared;
+`0.25`/`0.15625` without, today's unchanged values), a 3-sibling transitive-group trio
+(`kinship(A,B)=kinship(A,C)=kinship(B,C)=kinship(A,A)=0.5`), and a DZ/UZ-coded pair
+(`kinship(A,B)=0.25`, zero special treatment, confirmed against `kinship2` itself). **(4)**
+PRE-RED→RED gate via `AskUserQuestion`: added 4 new `test_that()` blocks to
+`tests/testthat/test_kinship.R` calling `kinship(..., twinRelations = ...)`; ran them and
+confirmed all 4 new-behavior assertions failed on `unused argument` (the right reason — the
+parameter didn't exist yet), while the backward-compatibility block (no new argument) already
+passed, correctly pinning today's uncorrected values, and the 2 pre-existing blocks were
+unaffected. **(5)** RED→GREEN gate via `AskUserQuestion`: implemented the new parameter in
+`R/kinship.R` — filters `twinRelations` to `code == "MZ twin"` rows, matches `id1`/`id2`
+against the `id` vector to get row/col indices, ports kinship2's `mzgrp` union-find transitive
+grouping and `mzindex` all-pairs expansion (deparsed in the plan's §2.1) verbatim, applies the
+correction inside the existing depth loop immediately after each depth's individuals are
+processed (not a post-hoc pass — §2.2's propagation requirement). Updated
+`R/applyKinshipOverrides.R`'s roxygen text to distinguish a structural pedigree fact (twin
+identity) from an outside-information override, per Dragon 2. Ran the targeted test file — all
+16 assertions passed. **(6)** Ran the full clean regression read (0 failed, 0 error, no
+offenders) and `devtools::check()` — which surfaced 2 real gaps a targeted test run alone would
+have missed: a `WARNING` for stale `man/kinship.Rd` (roxygen edited, `devtools::document()`
+never run) and a full-suite-only `ERROR` from `test_wordlist_coverage.R` (the new roxygen
+prose's "validator's" not covered by `inst/WORDLIST`). Fixed both — `devtools::document()`
+regenerated `man/kinship.Rd`/`man/applyKinshipOverrides.Rd`; `validator's` added to
+`inst/WORDLIST` following the file's own established possessive-word precedent (`commit's`,
+`merge's`, `handoff's`) — and a third `devtools::check()` run confirmed **0 errors, 0
+warnings**, 1 NOTE (the pre-existing, unrelated `vignettes/figure` leftover directory,
+confirmed via `git log` to predate this session, left unfixed as out-of-scope). Also lint-clean
+(`lintr::lint_package()`, all 3 touched files, 0 lints; one false-positive
+`nonportable_path_linter` hit on a new `stop()` message suppressed via `# nolint start/end`,
+matching the file's own `checkTwinRelations.R` precedent). **(7)** GREEN→REFACTOR gate via
+`AskUserQuestion`: owner picked "close out as-is" (code already clean, well-commented, mirrors
+the ratified port closely). **(8)** Before closing out, a self-directed manual check
+(`sparse = TRUE` vs. `FALSE`, both with `twinRelations` supplied) found the underlying
+computation was already correct but had no committed regression pin for that interaction — the
+plan's own §4 test list didn't include it. Added one more `test_that()` block (17th
+assertion), mirroring the file's own pre-existing sparse/dense-equivalence pattern for the
+no-twin case. Re-ran targeted tests (17/17 pass), lint (0 lints), and the full clean regression
+read (0 failed, 0 error) one final time. **(9)** Direct reproduction check against the audit's
+3 previously-divergent cells: `kinship(8,9)=0.5`, `kinship(9,10)=0.28125`,
+`kinship(10,10)=0.53125` (unaffected) — all exact matches to `kinship2`'s own ground truth,
+satisfying Slice 1's own DONE criterion verbatim.
+
+**Close-out checklist mapping (plan §8, stated explicitly per its own instruction, not
+silently omitted):** citation checklist (#120) — N/A, a correctness fix to an existing
+exported function's internal computation, not a new displayed statistic/estimator.
+`NEWS.Rmd`/tutorial-article checklists — N/A for Slice 1 specifically, per the plan's own §8
+item 3 ("Slices 1-2 are internal/script-level signature additions... applies at Slice 3");
+Slice 2's own implementing session still owns the "defensible case for `NEWS.Rmd` at Slice 2
+too" question the plan leaves open. `a2interactive.Rmd` checklist — deferred, not same-slice,
+per its own standing rule. GitHub issue close-out — N/A, no issue filed yet for this item.
+`BACKLOG.md`'s triggering item updated: Slice 1 marked DONE, Slice 2 (the 4 script-callable
+functions) named as the next pickup.
+
+**Self-assessment (Session 551): 9/10.** **Strengths:** (1) Derived every test's exact
+expected numeric value empirically (via `kinship2` as ground truth, and the package's own
+current behavior for backward-compat baselines) rather than trusting the plan's prose or the
+paper's rounded figures — matching the plan's own explicit instruction (§4: "not the paper's
+rounded 0.28, to keep the test exact"). (2) Ran the full `devtools::check()` build-equivalent,
+not just the targeted test file, which is precisely what caught 2 real gaps (stale Rd,
+uncovered spelling) a narrower verification loop would have shipped past — directly avoiding
+failure mode #24 (build-passes-ship-it). (3) Followed the strict-TDD phase-gate protocol
+exactly (PRE-RED→RED→GREEN, each via `AskUserQuestion`), including verifying the RED tests
+failed for the *right* reason (`unused argument`), not merely that they failed at all. (4)
+Executed the ratified plan's own explicitly-assigned Dragon-2 obligation (updating
+`R/applyKinshipOverrides.R`'s roxygen sentence) without needing a separate reminder — caught it
+directly from reading §10's ratification outcome during PRE-RED. (5) Caught and fixed a real
+test-coverage gap (the `sparse = TRUE` + `twinRelations` interaction) before close-out via a
+self-directed check, rather than letting an untested-but-correct code path ship silently. (6)
+Kept scope disciplined — touched only Slice 1's declared files, did not "fix" the pre-existing
+unrelated `vignettes/figure` NOTE (reported it instead, per `SAFEGUARDS.md`'s scope-creep
+discipline), did not start Slice 2. **Weaknesses:** (1) Did not proactively run
+`devtools::document()` immediately after editing the roxygen comment, before the first
+`devtools::check()` — a known R-packaging step that would have caught the stale-Rd `WARNING` a
+cycle earlier (~4 min saved). (2) Did not run an independent adversarial-verification pass on
+the implementation itself (e.g., a second agent attempting to refute the `mzgrp`/`mzindex`
+port's correctness), despite the design's own provenance section (§9) explicitly flagging that
+no such pass was run on the *design* either — relied instead on empirical ground-truth matching
+against `kinship2` across 3 independent fixture families (propagation, transitive-group, DZ/UZ
+no-op), which is strong evidence but not independent review. (3) The sparse-path test gap
+(Strength 5 above) was caught only via my own post-GREEN manual check, not anticipated during
+PRE-RED test planning — the plan's own §4 test list (drawn up before implementation) didn't
+name this existing-parameter interaction either, so both the plan and my own initial test list
+missed it; only closed because I checked before declaring done rather than after.
+**Ledger:** recorded in `CHANGELOG.md` (this session's reconcile, claim, deliverable, and
+close-out entries).
 
 ### Session 549 Handoff Evaluation (by Session 550)
 **Score: 8/10.** **What helped:** the `HANDOFFS.md` receipt's `next_steps` field's

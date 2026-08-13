@@ -28,6 +28,23 @@
 #' @param sparse logical flag. If \code{TRUE}, \code{Matrix::Diagnol()} is
 #' used to make a unit diagonal matrix. If \code{FALSE}, \code{base::diag()} is
 #' used to make a unit square matrix.
+#' @param twinRelations \code{NULL} (default, no-op) or a data.frame with
+#' columns \code{id1}, \code{id2}, \code{code} declaring twin pairs (see
+#' \code{\link{checkTwinRelations}}). Only \code{code == "MZ twin"} rows
+#' affect the computed matrix -- \code{"DZ twin"}/\code{"UZ twin"} rows are
+#' accepted but get zero special treatment, matching kinship2's own
+#' \code{relation} mechanism. A declared MZ-twin pair's coefficient is
+#' corrected to equal their shared self-kinship (genetic identity), and the
+#' correction is propagated transitively (chained MZ declarations, e.g.
+#' A-B and B-C, also correct the undeclared A-C pair) and to every relative
+#' computed at a later pedigree depth through either twin -- not just the
+#' declared pair's own cell. \code{twinRelations} is trusted as already
+#' validated by \code{\link{checkTwinRelations}} (this function has no
+#' \code{sex} parameter and so cannot re-run that validator's full rule set
+#' itself); only a cheap self-contained check (both ids present in \code{id})
+#' is performed here. See
+#' \code{docs/planning/twin-relations-kinship-computation-plan.md} for the
+#' full design rationale.
 #'
 #' @return A kinship square matrix
 #'
@@ -59,7 +76,8 @@
 #' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
 #' ped
 #' kmat
-kinship <- function(id, father.id, mother.id, pdepth, sparse = FALSE) { # nolint: object_name_linter
+kinship <- function(id, father.id, mother.id, pdepth, sparse = FALSE, # nolint: object_name_linter
+                     twinRelations = NULL) {
   # Returns: Matrix (row and col names are 'id')
   n <- length(id)
   if (anyDuplicated(id)) {
@@ -80,6 +98,52 @@ kinship <- function(id, father.id, mother.id, pdepth, sparse = FALSE) { # nolint
   mrow <- match(mother.id, id, nomatch = n + 1L) # row number of the mother
   drow <- match(father.id, id, nomatch = n + 1L) # row number of the dad
 
+  ## MZ-twin transitive-identity correction (ported from kinship2's own
+  ## mzgrp/mzindex mechanism -- see
+  ## docs/planning/twin-relations-kinship-computation-plan.md §2.1). Built
+  ## once, up front: mzgrp is a union-find grouping of chained MZ
+  ## declarations (A-B, B-C => {A,B,C} one group) and mzindex expands each
+  ## group to every ordered off-diagonal pair within it -- the matrix cells
+  ## the depth loop below must overwrite. Applying this inside the depth
+  ## loop (not as a post-hoc pass on the finished matrix) is required for
+  ## the correction to propagate to relatives computed at a later depth --
+  ## see the plan's §2.2 for the mathematical argument.
+  havemz <- FALSE
+  if (!is.null(twinRelations)) {
+    mzRows <- twinRelations[twinRelations$code == "MZ twin", , drop = FALSE]
+    if (nrow(mzRows) > 0L) {
+      mzId1 <- match(mzRows$id1, id)
+      mzId2 <- match(mzRows$id2, id)
+      if (anyNA(c(mzId1, mzId2))) {
+        # nolint start: nonportable_path_linter.
+        stop("All twinRelations id1/id2 values must be present in id.")
+        # nolint end: nonportable_path_linter.
+      }
+      havemz <- TRUE
+      mzmat <- cbind(mzId1, mzId2)
+      mzgrp <- seq_len(max(mzmat))
+      repeat {
+        if (all(mzgrp[mzmat[, 1L]] == mzgrp[mzmat[, 2L]])) {
+          break
+        }
+        for (i in seq_len(nrow(mzmat))) {
+          mzgrp[mzmat[i, 1L]] <- mzgrp[mzmat[i, 2L]] <- min(mzgrp[mzmat[i, ]])
+        }
+      }
+      mzindex <- cbind(
+        unlist(tapply(mzmat, mzgrp[mzmat], function(x) {
+          z <- unique(x)
+          rep(z, length(z))
+        })),
+        unlist(tapply(mzmat, mzgrp[mzmat], function(x) {
+          z <- unique(x)
+          rep(z, each = length(z))
+        }))
+      )
+      mzindex <- mzindex[mzindex[, 1L] != mzindex[, 2L], , drop = FALSE]
+    }
+  }
+
   # Those at depth == 0 don't need to be processed
   # Subjects with depth = i must be processed before those at depth i + 1.
   # Any parent is guarranteed to be at a lower depth than their children
@@ -95,6 +159,9 @@ kinship <- function(id, father.id, mother.id, pdepth, sparse = FALSE) { # nolint
       ## own inbreeding coefficient (the kinship between its two parents).
       kmat[i, ] <- kmat[, i] <- (kmat[mom, ] + kmat[dad, ]) / 2L
       kmat[i, i] <- (1L + kmat[mom, dad]) / 2L
+    }
+    if (havemz) {
+      kmat[mzindex] <- (diag(kmat))[mzindex[, 1L]]
     }
   }
 

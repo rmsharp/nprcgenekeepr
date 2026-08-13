@@ -138,6 +138,57 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-N] S551 close-out: Slice 1 (kinship() twinRelations parameter) shipped, S550 handoff evaluation, Learning 558
+- **Deliverable:** Session S551's own close-out. Evaluated S550's `HANDOFFS.md` receipt (9/10 --
+  every claim held up against direct verification, `next_steps`/`key_files` used directly with
+  zero friction, nothing inaccurate found). Self-assessment (9/10), handoff notes, and
+  `PROJECT_LEARNINGS.md` Learning 558 (`devtools::check()` catches verification-surface gaps a
+  targeted test run cannot; a ratified plan's own test list is a floor, not a ceiling) written
+  to `SESSION_NOTES.md`/`HANDOFFS.md`. `BACKLOG.md`'s triggering item updated: Slice 1 marked
+  DONE, Slice 2 named as next. See `SESSION_NOTES.md` for the full record.
+
+### 2026-08-13 · [BL-N] S551: kinship() gains a twinRelations parameter (MZ-twin transitive-identity correction) -- Slice 1 of the ratified plan
+- **Deliverable:** `R/kinship.R` gained a `twinRelations = NULL` parameter, porting kinship2's
+  `mzgrp`/`mzindex` MZ-transitive-identity mechanism (plan §2.1) into the existing recursive
+  depth loop, applied after each depth's individuals are processed (not a post-hoc pass on the
+  finished matrix -- plan §2.2's propagation requirement). `R/applyKinshipOverrides.R`'s
+  "kinship() itself is never modified" roxygen sentence updated per the ratified Dragon-2
+  obligation, distinguishing a structural pedigree fact (twin identity) from an
+  outside-information override. 5 new `test_that()` blocks in `tests/testthat/test_kinship.R`:
+  MZ-propagation-to-a-non-twin-descendant, backward-compatibility (no `twinRelations`), a
+  3-member transitive-group (union-find), DZ/UZ-coded zero-treatment, and a
+  `sparse = TRUE`/`FALSE` equivalence pin (a real gap in the plan's own §4 test list, caught via
+  a post-GREEN self-check and closed before close-out). `man/kinship.Rd` and
+  `man/applyKinshipOverrides.Rd` regenerated via `devtools::document()`; `inst/WORDLIST` gained
+  "validator's" -- both fixing gaps `devtools::check()` surfaced that the targeted test file
+  alone did not. Full strict-TDD PRE-RED->RED->GREEN cycle (each transition gated via
+  `AskUserQuestion`; REFACTOR declined -- code already clean). Verification: `devtools::check()`
+  0 errors/0 warnings/1 pre-existing unrelated NOTE (`vignettes/figure` leftover, confirmed via
+  `git log` to predate this session); full clean regression read 0 failed/0 error;
+  `lintr::lint_package()` 0 lints on all 3 touched files; direct reproduction of the audit's 3
+  previously-divergent cells against `kinship2` ground truth (`kinship(8,9)=0.5`,
+  `kinship(9,10)=0.28125`, `kinship(10,10)=0.53125`, all exact). Close-out checklist mapping
+  (plan §8): citation (#120) N/A; `NEWS.Rmd`/tutorial-article N/A for Slice 1 (applies at Slice
+  3 per the plan); `a2interactive.Rmd` deferred; GitHub issue close-out N/A (no issue filed
+  yet). TDD phase: GREEN.
+
+### 2026-08-13 · [BL-N] S551 claim: Slice 1 (core algorithm) of the twinRelations-into-kinship() plan
+- **Deliverable:** Session S551 claimed. Picking up the S550-ratified plan's own Slice 1
+  (`docs/planning/twin-relations-kinship-computation-plan.md` §4) -- production code, full
+  strict-TDD PRE-RED->RED->GREEN(->REFACTOR) gates apply.
+
+### 2026-08-13 · [ad hoc] S551 Phase 0 reconcile: S550's HANDOFFS.md commit self-reference
+- **Deliverable:** Phase 0 ledger reconcile (`SESSION_RUNNER.md` step 6). S550's `HANDOFFS.md`
+  receipt shipped with `commit: pending` -- the standard self-reference limitation (the receipt
+  ships in the very commit whose sha it would name), matching the S543-S545/S549 precedent each
+  prior session reconciled at its own claim. `HANDOFFS.md`'s frontier (`git log -1 --
+  HANDOFFS.md`) == `bab8ead8` (S550's own close-out commit), so reconciled `commit: pending` ->
+  `bab8ead8`. No other undocumented commits found; `CHANGELOG.md`'s own frontier == `HEAD`
+  already. `gh run list --branch master --limit 10` showed the scheduled `shinytest2.yaml` run
+  still red at the E2E-tier step, unchanged from S548/S549/S550's own findings -- not diagnosed
+  this session (report, don't fix, per established precedent).
+- **Commit:** this reconcile's own commit (`ec056055`).
+
 ### 2026-08-13 · [BL-N] S550 close-out: session self-assessment, S549 handoff evaluation, Learning 557
 - **Deliverable:** Session S550's own close-out. Evaluated S549's `HANDOFFS.md` receipt (8/10 --
   the `next_steps` priority list matched this session's own independently-rendered Phase 0

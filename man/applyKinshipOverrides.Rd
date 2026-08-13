@@ -33,8 +33,17 @@ matrix and on a value above the exact positive-semi-definiteness bound
 \code{sqrt(kmat[id1, id1] * kmat[id2, id2])}. Soft, run-preserving
 handling of ids outside the analysis set is the caller's responsibility
 -- \code{\link{reportGV}} warn-drops non-member ids before calling this.
-\code{kinship()} itself is never modified (it has several callers, including
-two simulations that must not take current-kinship overrides).
+This function's own algorithm -- writing outside-information overrides
+onto an already-computed matrix -- is never applied inside
+\code{\link{kinship}} itself (it has several callers, including two
+simulations that must not take current-kinship overrides). This is a
+different kind of adjustment than \code{\link{kinship}}'s own
+\code{twinRelations} parameter: a declared MZ-twin pair's genetic identity
+is a structural pedigree fact, like \code{sire}/\code{dam}/\code{sex}, not
+outside information overriding a pedigree-derived computation -- both
+simulations pass a known twin pair through unchanged, so twin identity
+needs no shielding of the kind overrides require. See
+\code{docs/planning/twin-relations-kinship-computation-plan.md} §2.3.
 }
 \examples{
 ped <- nprcgenekeepr::qcPed

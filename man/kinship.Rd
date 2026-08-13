@@ -4,7 +4,7 @@
 \alias{kinship}
 \title{Generate a kinship matrix}
 \usage{
-kinship(id, father.id, mother.id, pdepth, sparse = FALSE)
+kinship(id, father.id, mother.id, pdepth, sparse = FALSE, twinRelations = NULL)
 }
 \arguments{
 \item{id}{character vector of IDs for a set of animals.}
@@ -21,6 +21,24 @@ animal.}
 \item{sparse}{logical flag. If \code{TRUE}, \code{Matrix::Diagnol()} is
 used to make a unit diagonal matrix. If \code{FALSE}, \code{base::diag()} is
 used to make a unit square matrix.}
+
+\item{twinRelations}{\code{NULL} (default, no-op) or a data.frame with
+columns \code{id1}, \code{id2}, \code{code} declaring twin pairs (see
+\code{\link{checkTwinRelations}}). Only \code{code == "MZ twin"} rows
+affect the computed matrix -- \code{"DZ twin"}/\code{"UZ twin"} rows are
+accepted but get zero special treatment, matching kinship2's own
+\code{relation} mechanism. A declared MZ-twin pair's coefficient is
+corrected to equal their shared self-kinship (genetic identity), and the
+correction is propagated transitively (chained MZ declarations, e.g.
+A-B and B-C, also correct the undeclared A-C pair) and to every relative
+computed at a later pedigree depth through either twin -- not just the
+declared pair's own cell. \code{twinRelations} is trusted as already
+validated by \code{\link{checkTwinRelations}} (this function has no
+\code{sex} parameter and so cannot re-run that validator's full rule set
+itself); only a cheap self-contained check (both ids present in \code{id})
+is performed here. See
+\code{docs/planning/twin-relations-kinship-computation-plan.md} for the
+full design rationale.}
 }
 \value{
 A kinship square matrix
