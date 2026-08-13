@@ -10,6 +10,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 540 Did
+**Deliverable:** Diagnose and fix `R-CMD-check.yaml` failing on GitHub CI (owner-directed,
+not from `BACKLOG.md`). (IN PROGRESS)
+**Started:** 2026-08-12.
+**Status:** Session claimed. Diagnosis complete (see below); fix approved by owner via
+`AskUserQuestion`, implementation beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
+**Diagnosis (before any file edit):** `gh run list`/`gh api .../logs` showed
+`R-CMD-check.yaml` failing 100% of the time on the last 2 pushes (ubuntu release/oldrel-1/
+devel, windows-latest — macOS passes), `[ FAIL 3 | WARN 33 | SKIP 227 | PASS 5399 ]`, all 3
+failures in S526's issue #152 Slice 2 benchmark tests (`test_markerKinship.R:169`,
+`test_markerParentageLikelihood.R:582,628`). Root-caused, not guessed: (1)/(3) are wall-clock
+`system.time()` thresholds (0.10s/0.5s) calibrated on the S526 author's local machine, which
+GitHub's shared Linux/Windows runners consistently miss by 30-90% (deterministic
+hardware-speed mismatch, not random flakiness); (2) is `expect_identical(actual, golden)` on
+`markerParentageLikelihood()`'s LOD/delta output — reproduced directly via a standalone
+repro script run both locally (macOS, byte-identical to golden) and inside a Linux
+`r-base:4.6.1` Docker container (differs at the 2-ULP level, e.g. `1.4069136483226261` vs
+`...263`), confirming a benign cross-platform `log()`-libm rounding non-portability, not a
+D5-rewrite behavior regression (`markerKinship()`'s own golden-master test is unaffected —
+confirmed its computation is exact-integer matrix products with no transcendental calls).
+Owner approved (`AskUserQuestion`) the full fix: `skip_on_ci()` on both timing tests,
+`expect_equal()` for the golden-master check.
+
 ### Session 538 Handoff Evaluation (by Session 539)
 **Score: 6/10.** **What helped:** the `NEWS.Rmd` verbosity-item detail was accurate and fully
 closed (nothing to re-verify), and the 4 other items S538's `next_steps` did name

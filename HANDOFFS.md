@@ -121,6 +121,27 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-10.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S540
+date: 2026-08-12
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Diagnose and fix R-CMD-check.yaml failing on GitHub CI (owner-directed).
+Diagnosis complete: 3 CI test failures, all in S526's issue #152 Slice 2 benchmark tests
+(test_markerKinship.R:169, test_markerParentageLikelihood.R:582,628) -- 2 are CI-hardware
+timing-threshold mismatches, 1 is a cross-platform log()-libm ULP difference in a golden-
+master expect_identical() check, confirmed via a Linux Docker repro. Fix approved by owner;
+implementation in progress.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S539
 date: 2026-08-12
 status: complete
