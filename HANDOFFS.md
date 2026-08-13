@@ -169,7 +169,7 @@ regression (0 failed/0 error) + devtools::check() (0 errors/0 warnings/1 pre-exi
 is the complete build-equivalent verification for this deliverable.
 changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12 ([ad hoc] the deliverable;
 [ad hoc] the S539 HANDOFFS.md reconcile)
-commit: pending
+commit: 86367737
 ```
 
 ```handoff

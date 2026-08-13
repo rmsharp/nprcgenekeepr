@@ -131,6 +131,11 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] S541 Phase 0 reconcile: HANDOFFS.md S540 receipt commit: pending → 86367737
+- **Deliverable:** Phase 0 ledger reconcile — backfilled the S540 `HANDOFFS.md` receipt's
+  self-referential `commit: pending` field to `86367737` (the close-out commit's own sha, now
+  known since the commit exists), matching the S538→S539/S539→S540 precedent.
+
 ### 2026-08-12 · [ad hoc] Fixed R-CMD-check.yaml failing on GitHub CI (Session 540)
 - **Deliverable (owner-directed, not from `BACKLOG.md`):** `R-CMD-check.yaml` failed 100% of
   the time on the last 2 pushes (ubuntu release/oldrel-1/devel, windows-latest — macOS
