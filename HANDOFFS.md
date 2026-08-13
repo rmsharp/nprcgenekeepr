@@ -123,18 +123,56 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S541
 date: 2026-08-12
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: a2interactive.Rmd documentation pass -- add demonstration sections for
-script-callable functions shipped since S478/S522 with zero tutorial coverage. Claimed,
-not yet started.
-what_was_done: pending
-next_steps: pending
-key_files: vignettes/a2interactive.Rmd; BACKLOG.md (S522 item)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: a2interactive.Rmd documentation pass is DONE -- all 8 functions/families named
+in BACKLOG.md's S522 item now have a demonstration section. Vignette re-rendered end-to-end,
+clean; devtools::check() 0/0/1 NOTE (baseline-matching). Not pushed to origin this session.
+what_was_done: Added 9 new sections to vignettes/a2interactive.Rmd: "Twin/Zygosity
+Connectors" (readTwinRelations/checkTwinRelations, inside Pedigree Diagram);
+"Individual Mate-Pair Analysis" (reportMatePairs, new top-level section after Breeding Group
+Formation); "Candidate-Parent Likelihood Ranking" (markerParentageLikelihood) and "Validating
+a Cross-Center Mapping" (checkCrossCenterMapping, restructured as lead-in to the existing
+Cross-Center Identity Linking section, which was trimmed of its now-redundant setup chunk);
+"Multiallelic Marker Panels and Locus Metadata" (checkLinkageMarkerGenotypeFile +
+checkLocusMetadata), "Realized Relatedness Variance" (markerRealizedRelatednessVariance),
+"Linkage-Disequilibrium Blocks" (markerLdBlock), "De-identifying LD-Block Results"
+(obfuscateLdBlocks) -- all appended to Marker Genetics. Every demo verified by running the
+real code against the installed package before writing prose. Commits: c9ebc12d (Phase 0
+HANDOFFS.md reconcile), 18ed535f (claim), this close-out's own commit (sha pending at write
+time, self-referential).
+next_steps: The a2interactive.Rmd checklist item is now fully closed. BACKLOG.md's remaining
+priorities are unchanged by this session: CHANGELOG.md/HANDOFFS.md first
+methodology_trim.py --write archive (READY, Effort M -- both still past their read-cap/byte
+-budget triggers, confirmed live this session too); Phase 0 CI-check gap decision (DECISION
+NEEDED, Effort S); NPRC outreach plan owner review (DECISION NEEDED); LabKey remaining recs
+(BLOCKED). Separately: origin/master already carries the S540 CI fix (pushed outside a
+session, R-CMD-check.yaml was in_progress on that push as of this session's Phase 0) -- a
+future session's Phase 0 should check whether that run went green.
+key_files: vignettes/a2interactive.Rmd (9 new sections, ~372 added lines); inst/WORDLIST (21
+new identifiers); BACKLOG.md (S522 item compressed to a resolved pointer);
+PROJECT_LEARNINGS.md Learning 548 (new).
+gotchas: (1) The vignette's "Cross-Center Identity Linking" section no longer builds its own
+pedA/pedB/mapping -- they're now built once in the new "Validating a Cross-Center Mapping"
+section immediately before it. Any future edit touching either section must keep that
+dependency in mind (don't reorder them, don't delete the earlier setup chunk). (2) The
+reportMatePairs() D4 "NA age passes the age filter" gotcha is documented in prose only, not
+demoed live -- every NA-age individual in the tutorial's own trimmedPed is absent from the
+kinship matrix entirely (an unrelated screening effect via reportGV()'s population scoping),
+so there is no real individual in this pedigree to cleanly demonstrate it with; do not assume
+one exists if extending this section later. (3) HANDOFFS.md has a documentation section (near
+the top) showing the receipt FORMAT inside a 4-backtick illustrative fence -- a real per
+-session stub must go among the actual receipts further down (after the "Archived N record(s)"
+line), not inside that illustrative block; this session initially got that wrong and had to
+fix it before committing.
+runtime_smoke: n/a in the "launch the Shiny app" sense -- no runtime/Shiny behavior changed.
+The vignette was re-rendered end-to-end via rmarkdown::render() twice (verified clean, all 9
+new sections present, no unexpected errors) -- this IS the complete runtime-equivalent
+verification for a vignette-only deliverable, since every new demo chunk actually executes
+against the real installed package during that render.
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12 ([BL-522] the deliverable;
+[ad hoc] the S540 HANDOFFS.md reconcile)
 commit: pending
 ```
 

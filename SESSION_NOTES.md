@@ -10,16 +10,121 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 540 Handoff Evaluation (by Session 541)
+**Score: 9/10.** **What helped:** the S540 `HANDOFFS.md` receipt's `next_steps` field named
+"`a2interactive.Rmd` docs pass (READY, Effort M)" as an open item, plus accurately
+characterized the `CHANGELOG.md`/`HANDOFFS.md` archive (READY), the Phase 0 CI-check gap
+(DECISION NEEDED), NPRC outreach (DECISION NEEDED), and LabKey (BLOCKED) -- all 5 were used
+directly in this session's Phase 0 priorities list with zero rediscovery needed; the
+`CHANGELOG.md`/`HANDOFFS.md` archive claim was independently re-confirmed live via
+`methodology_trim.py --check` (both still firing) rather than trusted blind, and matched
+exactly. **What was missing:** nothing S540 owed -- the actual how-to-document guidance (which
+8 functions, what style to match) lives in `BACKLOG.md`'s own S522 item text, not S540's
+handoff, which is expected since S540 didn't scope that item. **What was wrong:** one claim
+was stale by read-time, not wrong at write-time: `active_task` said the CI fix was "NOT yet
+pushed -- master is 16 commits ahead of origin/master," but `git fetch` at this session's own
+Phase 0 showed `origin/master` already at the S540 close-out commit, with `R-CMD-check.yaml`
+`in_progress` on that push (started 2026-08-13T03:07:12Z, evidently pushed by the owner outside
+a session) -- a fact that changed after S540 wrote its receipt, not an inaccuracy in the
+receipt itself. **ROI:** High -- the `next_steps` field was directly load-bearing for
+constructing the priorities list, and every named item held up under independent
+cross-verification.
+
 ### What Session 541 Did
-**Deliverable:** `a2interactive.Rmd` documentation pass -- add demonstration sections for
-script-callable functions shipped since the last pass (S478/S522) that currently have zero
-coverage (owner-picked via the Phase 0 `AskUserQuestion` picker, from `BACKLOG.md`'s S522
-item). (IN PROGRESS)
-**Started:** 2026-08-12.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** `a2interactive.Rmd` documentation pass -- added demonstration sections for
+all 8 script-callable functions/families named in `BACKLOG.md`'s S522 item that had shipped
+since the last pass (S478) with zero tutorial coverage (owner-picked via the Phase 0
+`AskUserQuestion` picker).
+**Started/Completed:** 2026-08-12.
+**Status:** DONE. TDD phase: N/A (pure documentation change to a vignette -- no production
+code or test surface, matching the S538/S539 docs-only-session precedent). Commits:
+`c9ebc12d` (Phase 0 HANDOFFS.md reconcile), `18ed535f` (claim), this close-out's own commit
+(pending at write time).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, `git status`/`log`/`fetch`, `methodology_dashboard.py`).
+Ledger reconcile found the S540 `HANDOFFS.md` receipt's self-referential `commit: pending`
+field unreconciled -- fixed (`commit: 86367737`) and logged to `CHANGELOG.md` (commit
+`c9ebc12d`), matching the S538->S539/S539->S540 precedent; no ghost session (CHANGELOG.md
+frontier already matched `HEAD` before that reconcile). Rendered the priorities list (4 of 5
+numbered items capped into the `AskUserQuestion` picker, LabKey BLOCKED excluded per the cap
+rule and noted in prose); owner picked the `a2interactive.Rmd` pass. **(2)** Claimed the
+session (`18ed535f`). **(3)** Re-verified `BACKLOG.md`'s S522 gap list against the actual file
+(`grep '^## \|^### '` on `vignettes/a2interactive.Rmd`) -- confirmed accurate, no drift.
+**(4)** Dispatched 5 parallel research agents (one per function/family) to read source,
+roxygen docs, and tests, and report a verified minimal example with exact output for each.
+**(5)** Before writing any vignette prose, independently re-ran every single reported example
+via `Rscript -e` against `pkgload::load_all(".")` -- all research-agent values matched exactly,
+but this caught a real problem once real tutorial objects were reused:
+`reportMatePairs(populationIds = candidates)` (all 280) produced a 17,568-row table, unusable
+for a tutorial; narrowed to `head(candidates, 8L)` (6 real pairs) instead. Also attempted a
+live repro of `reportMatePairs()`'s documented D4 "`NA` age passes the age filter" gotcha
+against the tutorial's own `trimmedPed`, but abandoned it: all 194 `NA`-age individuals in
+`trimmedPed` are absent from the kinship matrix entirely (an unrelated screening effect), so no
+real individual exists there to demonstrate D4 cleanly -- described in prose only rather than
+faked. **(6)** Wrote and inserted 9 new sections via `Edit`: "Twin/Zygosity Connectors" (inside
+"Pedigree Diagram"), "Individual Mate-Pair Analysis" (new top-level section after "Breeding
+Group Formation"), "Candidate-Parent Likelihood Ranking" and "Validating a Cross-Center
+Mapping" (the latter restructured as the natural lead-in immediately before the existing
+"Cross-Center Identity Linking" section, which was trimmed of its now-redundant `pedA`/`pedB`/
+`mapping` setup chunk to avoid duplicating already-built objects), and "Multiallelic Marker
+Panels and Locus Metadata"/"Realized Relatedness Variance"/"Linkage-Disequilibrium Blocks"/
+"De-identifying LD-Block Results" (appended to "Marker Genetics"). **(7) Own editing mistake,
+caught before commit:** the first `HANDOFFS.md` claim-stub edit landed inside the file's own
+illustrative 4-backtick example fence (documentation showing the receipt *format*, not a real
+receipt) rather than among the real per-session receipts -- caught by re-reading the file
+immediately after editing, fixed by moving the stub to the correct location before the S540
+block. **(8)** Verification: full vignette re-rendered end-to-end twice via
+`rmarkdown::render()` (once to a scratch tempdir, once persisted to the session scratchpad for
+inspection) -- both clean; grepped the rendered HTML for all 8 new section headers (all
+present) and for error strings (only the pre-existing `qcStudbook()` demo errors and this
+session's own intentional `checkMarkerGenotypeFile()` multiallelic-rejection demo, `error =
+TRUE`, both expected). `spelling::spell_check_package(vignettes = TRUE)` flagged 21 new
+genuine identifiers (function/argument/column names); hand-added each to `inst/WORDLIST` at
+its alphabetically-appropriate position, matching the established convention; re-check returned
+0 rows. `tests/testthat/test_wordlist_coverage.R` passed. Full clean regression
+(`pkgload::load_all()` + `testthat::test_dir(reporter = "silent")`): 0 failed/0 error (4,676
+passed, 33 pre-existing warnings, unchanged baseline). `devtools::check()`: 0 errors/0
+warnings/1 NOTE (only the pre-existing vignettes/figure-leftover NOTE, matching baseline
+exactly) -- "checking re-building of vignette outputs" also passed. No `R/` files touched --
+lint N/A. Runtime smoke test: the vignette re-render itself IS this deliverable's closest
+runtime equivalent (it executes every new demo against the real installed package end-to-end,
+not just a static text check) -- no separate Shiny app launch applies since no runtime/Shiny
+behavior changed. No NEWS.Rmd/citation/tutorial-article/`_pkgdown.yml`/GitHub-issue-close
+checklist applies (no new exported function, no new Shiny feature/parameter, no new displayed
+statistic -- this documents already-shipped functions). **(9)** `BACKLOG.md`'s S522 item
+compressed to a terse "(none remaining -- ... RESOLVED ...)" pointer, matching the file's
+dominant convention (checked against several sibling examples before choosing this over a
+long appended paragraph). Two `PROJECT_LEARNINGS.md`-style entries: `PROJECT_LEARNINGS.md`
+Learning 548 (the live-verification-before-prose discipline, the pair-count-explosion catch,
+and the honest D4 scope reduction).
+
+**Self-assessment (Session 541): 9/10.** **Strengths:** (1) Never transcribed a subagent's
+claimed output values directly into tutorial prose -- every one was independently re-run
+against the real installed package first, catching a real problem (the 17,568-row pairs table)
+that abstract review of the research reports alone would have missed. (2) When a documented
+behavior (D4's age-NA gotcha) couldn't be cleanly demonstrated against the tutorial's own real
+data, said so and fell back to prose-only rather than fabricating a scenario that would
+misrepresent what the real data actually does. (3) Restructured "Cross-Center Identity Linking"
+to remove a now-redundant setup chunk instead of leaving two copies of the same
+`pedA`/`pedB`/`mapping` construction in the file, then verified the restructuring didn't break
+anything via a full end-to-end re-render (not just checking the new chunk in isolation).
+(4) Caught and fixed its own `HANDOFFS.md` editing mistake (landing content inside an
+illustrative example fence) before it reached a commit, by re-reading the file immediately
+after editing rather than trusting the edit succeeded as intended. (5) Followed the
+`inst/WORDLIST`'s established loosely-alphabetical convention carefully (21 new words placed
+at researched positions) rather than appending them in a block at the end. **Weaknesses:**
+(1) The 5 parallel research agents were dispatched before fully deciding section placement for
+all 8 functions/families, which worked out fine here but meant two placement decisions
+(splitting "Validating a Cross-Center Mapping" out of "Candidate-Parent Likelihood Ranking";
+restructuring "Cross-Center Identity Linking") were made after the research phase rather than
+being research questions themselves -- a slightly tighter agent prompt could have asked for
+placement recommendations more explicitly up front. (2) Did not push this session's commits to
+`origin` -- consistent with this project's own established convention (no push without
+explicit direction) and noted in the report, but worth flagging since `R-CMD-check.yaml`
+CI status for `origin/master` remains whatever S540's push left it at.
+**Ledger:** recorded in `CHANGELOG.md` (this session's own entries: `[BL-522]` the deliverable,
+`[ad hoc]` the S540 `HANDOFFS.md` reconcile).
 
 ### Session 539 Handoff Evaluation (by Session 540)
 **Score: 8/10.** **What helped:** the S539 `HANDOFFS.md` receipt's `gotchas` field directly
