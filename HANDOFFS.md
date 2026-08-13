@@ -207,7 +207,7 @@ changelog_ref: this session's own CHANGELOG.md entries, 2026-08-13 ([ad
 hoc] the Phase 0 reconcile; [ad hoc] the claim; [BL-phase0CiCheck] the
 decision; [ad hoc] the close-out entry covering BACKLOG.md/
 PROJECT_LEARNINGS.md findings and the 2 mid-turn backlog additions)
-commit: pending
+commit: 7021c6f7
 ```
 
 ```handoff

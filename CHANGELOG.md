@@ -131,6 +131,18 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [ad hoc] S546 Phase 0 reconcile: S545's HANDOFFS.md commit self-reference
+- **Deliverable:** Phase 0 ledger reconcile (`SESSION_RUNNER.md` step 6). S545's `HANDOFFS.md`
+  receipt shipped with `commit: pending` — the standard self-reference limitation (the receipt
+  ships in the very commit whose sha it would name), matching the S543→S544 and S544→S545
+  pattern each prior session reconciled at its own claim. `HANDOFFS.md`'s frontier
+  (`git log -1 -- HANDOFFS.md`) == `7021c6f7` (S545's own close-out commit), so reconciled
+  `commit: pending` → `7021c6f7`. No undocumented commits found otherwise; `CHANGELOG.md`'s own
+  frontier == `HEAD` already; `gh run list --branch master --limit 10` confirmed all 4 workflows
+  on `7021c6f7` (S545's close-out push) completed successfully, resolving the
+  still-`in_progress` `R-CMD-check.yaml` run S545's own handoff had flagged unconfirmed.
+- **Commit:** this reconcile's own commit.
+
 ### 2026-08-13 · [ad hoc] S545 close-out: Phase 0 CI-check decision recorded in CLAUDE.md, BACKLOG.md updated (item resolved + 2 new items), Learning 552
 - **Deliverable:** Session S545's own close-out. `BACKLOG.md`'s "Phase 0 has no step that checks
   GitHub Actions CI status" Housekeeping item (found S540) marked RESOLVED, citing the
