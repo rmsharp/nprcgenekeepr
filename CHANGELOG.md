@@ -131,6 +131,16 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] S539 claimed for BACKLOG.md's SESSION_NOTES.md `--write` archive item
+- Session 539 claimed (`SESSION_NOTES.md`/`HANDOFFS.md` stub, commit `494e51b9`) to run
+  `methodology_trim.py`'s first `--write` archive of `SESSION_NOTES.md` — both prior blockers
+  (the S518 fence-scanner defect and its S527/S528 fixes) are resolved; this session re-runs the
+  dry-run to confirm still clean, then writes. Logged here on its own, ahead of the deliverable,
+  because `methodology_trim.py`'s own `P1_UNDOCUMENTED` gate refuses to run while any commit sits
+  undocumented ahead of `CHANGELOG.md`'s frontier (a trim commit would advance that frontier and
+  hide the gap permanently) — the claim commit itself needed a line before `--write` would proceed,
+  matching the same gate S528 hit and noted in `BACKLOG.md`.
+
 ### 2026-08-12 · [ad hoc] S539 Phase 0 reconcile: HANDOFFS.md S538 receipt commit: pending → cf8f9bbe
 - `git log -1 --format=%H -- HANDOFFS.md` showed the frontier commit (`cf8f9bbe`, the S538
   close-out commit) still carried its own receipt's self-referential `commit: pending`
