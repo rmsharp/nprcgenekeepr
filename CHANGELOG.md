@@ -131,6 +131,14 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-08-12.md` (39 record(s), 226,617 B → 8,629 B)
+
+**Written by:** `methodology_trim.py` v1.1.2 — a tool action, not a session's judgment.
+Moved the oldest **39** record(s) (2026-08-10 → 2026-08-12) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-08-12.md`](docs/archive/HANDOFFS-through-2026-08-12.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-08-12.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-12.md.verify.sh)
+rather than trusting a digest printed here. Live file 226,617 B → 8,629 B (−96.2%).
+
 ### 2026-08-12 · [ad hoc] S542 claim: CHANGELOG.md/HANDOFFS.md ledger archive
 - **Deliverable:** Session claim commit `62882046` (SESSION_NOTES.md stub + HANDOFFS.md
   `status: pending` receipt) — logged here ahead of running `methodology_trim.py`, which
