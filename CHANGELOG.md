@@ -131,6 +131,74 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-12 · [BL-522] Trimmed NEWS.Rmd's post-2.0.0.9000 verbosity back to the project's terse pre-1.0.8 house style (Session 538)
+- **Deliverable:** Rewrote the `2.0.0.9000 (development version)` section's 26 entries
+  from multi-sentence paragraphs (full closed-form formulas, citation strings,
+  derivation/approximation rationale) back to the pre-1.0.8 one/two-line-per-change
+  style, per this item's own explicit scoping instruction: rewrite the open
+  development-version section only, leave already-released/frozen version sections
+  untouched (matching `CHANGELOG.md`'s own Legacy-history-marker precedent).
+- Verified every dropped formula/citation string is already covered by the relevant
+  function's roxygen `@references` and/or
+  `inst/extdata/ui_guidance/population_genetics_terms.html` (spot-checked via `grep`
+  across 14 statistic-bearing functions — `markerKinship()`, `markerExpectedHeterozygosity()`,
+  `markerParentageExclusion()`, `markerFst()`, `markerParentageLikelihood()`,
+  `markerRealizedRelatednessVariance()`, `calcSkewness()`/`calcKurtosis()`,
+  `calcGeneDiversity()`, `calcNeSexRatio()`/`calcNeVariance()`, `checkLocusMetadata()`,
+  `markerLdBlock()`, `computeGenomicROH()` — before dropping the citation text from
+  `NEWS.Rmd`). `computeGenomicROH()`'s F_ROH formula was initially a false-negative
+  (present in the HTML page under `<sub>` markup that a literal `F_ROH` `grep` missed) —
+  re-checked with broader search terms before trusting the negative.
+- Cross-diffed every issue number and every backtick-quoted exported/new function name,
+  old text vs. new, to confirm no substantive capability mention was lost. 4 genuinely
+  -dropped function-name mentions were restored after the diff caught them
+  (`makeGeneticSummaryTable()`, `getPossibleCols()`, `getBoxWhiskerDescription()`/
+  `savePlotToFile()`/`getPyramidPlot()`, `createSimKinships()`/`cumulateSimKinships()`);
+  the remainder were confirmed-intentional (implementation-rationale mentions naming an
+  existing function, not a new capability).
+- **Mid-session self-correction:** an initial pass also rewrote the already-released
+  `2.0.0 (20260708)` section — misreading the owner-approved "all post-2.0.0 entries"
+  scope-question phrasing as license to include it, contradicting this very item's own
+  "do not rewrite already-released, frozen version sections" instruction. Caught by
+  re-reading the item's exact text before finishing; reverted that section verbatim
+  from `git show HEAD:NEWS.Rmd` and re-rendered before closing out.
+- Net: dev-version section 386 → 134 lines (252 removed); `NEWS.Rmd` 1,154 → 902 lines.
+  `NEWS.md` regenerated via
+  `rmarkdown::render("NEWS.Rmd", output_format = rmarkdown::github_document(html_preview = FALSE))`
+  (no `NEWS.html` render litter, per `PROJECT_LEARNINGS.md` Learning 122/123's own
+  documented render discipline). Section-heading count/order confirmed identical
+  between `NEWS.Rmd`/`NEWS.md` (28 headings each, exact string match).
+- **A first `devtools::check()` run found a real, second bug the unit-test-only pass
+  missed:** rewriting the dev-version section's prose shifted `hunspell`/`spelling`'s
+  context-sensitive tokenization around several already-benign `` `fn()`'s ``/
+  `word's` possessive constructs (identical patterns existed pre-session and passed
+  clean under S537), newly flagging 2 words -- `centers'` and a stray, context
+  -orphaned `'s` fragment -- that S537's fresh `test_wordlist_coverage.R` guard
+  correctly caught as a real `1 error`. Root-caused by isolating the exact flagged
+  strings/line numbers via `spelling::spell_check_package()` directly (not just the
+  test's pass/fail), and confirmed both are false positives (no real typo), not
+  reachable by adding `centers'`/a bare `'s` to `inst/WORDLIST` (out of this session's
+  own NEWS-only scope, and a bare `'s` entry would blind the guard to real future
+  typos sharing that fragment) -- instead rephrased the 6 exact possessive
+  constructs producing the flags (`groupAddAssign()`'s → `groupAddAssign()` gains...
+  in its return value; `` makePedigreeDiagramData()`'s node data `` → `Node data from
+  makePedigreeDiagramData()`; 2× `kinship2's` → `a kinship2`/`the kinship2`; 2×
+  `centers'` → `from two centers`/`the populations of two centers`), re-rendered, and
+  reconfirmed `spelling::spell_check_package()` returns 0 rows.
+- **Verified:** `test_wordlist_coverage.R` and `test_effectivePopulationSizeDocs.R`'s
+  `NEWS.Rmd` regression guard (asserts "effective population size"/"gene diversity"
+  both present) both pass. Full clean regression 0 failed/0 error (33 pre-existing,
+  unrelated warnings, unchanged from S537's own baseline). Final `devtools::check()`:
+  0 errors / 0 warnings / 1 NOTE (only the pre-existing vignettes/figure-leftover
+  NOTE — matching S537's own baseline exactly). No `R/` files touched this session
+  (docs-only) — lint N/A. Phase 3E: n/a in the "launch the app" sense (no
+  runtime/Shiny behavior changed); the `devtools::check()` run above is this
+  session's complete build-equivalent verification.
+- TDD phase: N/A — pure documentation/editorial change, no production code or test
+  surface, matching this project's own established "planning session has no
+  code-phases" precedent (`PROJECT_LEARNINGS.md`, extended here to a docs-only
+  session).
+
 ### 2026-08-12 · [ad hoc] S538 Phase 0 reconcile: HANDOFFS.md S537 receipt commit: pending → a39f7756
 - `git log -1 --format=%H -- HANDOFFS.md` showed the frontier commit (`a39f7756`, the S537
   close-out commit) still carried its own receipt's self-referential `commit: pending`

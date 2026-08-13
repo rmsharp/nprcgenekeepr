@@ -5,413 +5,148 @@ R. Mark Sharp, Ph.D.
 
 # nprcgenekeepr 2.0.0.9000 (development version)
 
-- CRAN's 2.0.0 submission (2026-07-17, tagged `v2.0.0`) was accepted and
-  published 2026-07-26. Development continues here on top of it; any
-  future CRAN resubmission ships as 2.0.1, not a second 2.0.0 attempt.
-- New script-callable `checkLocusMetadata()` (issue \#153, Slice 1)
-  validates a `locus, chrom, pos[, cM]` locus-metadata sidecar table --
-  the schema shared with sibling issue \#152's own sequence-genetics
-  work -- and reports each locus's coverage as one of three explicit
-  tiers: `"full"` (chrom and pos both known; cM is optional even within
-  `"full"`), `"partial"` (exactly one of chrom/pos known), or `"none"`
-  (neither known), following a PLINK-style three-state coverage model
-  rather than requiring complete metadata before any downstream use. A
-  new bundled example fixture pair (`example_locus_metadata.csv` /
-  `example_str_marker_genotypes.csv`) adds the package's first
-  multiallelic, panel-scale marker-genotype example, proving the
-  existing `buildMarkerGenotypeMatrix()` already handles multiallelic
-  data unchanged -- the biallelic restriction lives entirely in
-  `checkMarkerGenotypeFile()`, deliberately not used for this fixture.
-  No Shiny UI yet -- linkage-aware/haplotype-block metrics and a
-  matching tab are separate, future slices.
-- New script-callable `checkLinkageMarkerGenotypeFile()` (issue \#153,
-  Slice 2) is a sibling to `checkMarkerGenotypeFile()`: it validates the
-  same long-format `id`/`locus`/`allele1`/`allele2` genotype table and
-  retains the same column-count, `id`-first-column, and duplicate-row
-  checks, but deliberately omits the more-than-two-distinct-alleles-per-
-  locus rejection -- so real, multiallelic colony marker panels (e.g.
-  microsatellite/STR panels) can be ingested.
-  `checkMarkerGenotypeFile()`/`markerKinship()`'s existing biallelic
-  contract is completely untouched. No Shiny UI yet.
-- New script-callable `markerRealizedRelatednessVariance()` (issue
-  \#153, Slice 3) estimates the variance of *actual* (realized)
-  relatedness around a pair's pedigree-expected value for
-  Parent-Offspring, Full-Siblings, and Half-Siblings pairs -- pedigree
-  kinship gives only an average, but the true fraction of genome shared
-  identical-by-descent varies around it because of Mendelian sampling
-  and linkage. Implements the closed-form solution of Hill & Weir
-  (2011), extending this package's existing
-  `kinship()`/`convertRelationships()` rather than a new framework;
-  other relationship categories return `NA`, not an error. No Shiny UI
-  yet.
-- New script-callable `markerLdBlock()` and `obfuscateLdBlocks()` (issue
-  \#153, Slice 4) add a descriptive, same-chromosome pairwise LD/block
-  statistic for exploratory use -- a documented, non-rigorous
-  compromise, since no method exists that is both pedigree-aware and
-  multiallelic- capable; `markerRealizedRelatednessVariance()` remains
-  the primary, pedigree-valid metric. `obfuscateLdBlocks()`
-  de-identifies the optional founder-id column before export. No Shiny
-  UI yet.
-- The Genetic Value Analysis tab gained a configurable **Ranking
-  Scheme** control (issue \#125): the existing combined
-  kinship/uniqueness score stays the default, unchanged; a new
-  categorical priority-tier scheme is now selectable alongside it, with
-  adjustable high-uniqueness and low-kinship cutoffs and a choice of
-  which axis takes priority when an animal qualifies for both.
-  `reportGV()` gained matching `guCutoff`, `zScoreCutoff`, and
-  `axisPriority` arguments for scripted use, each defaulting to today's
-  behavior when omitted.
-- The Breeding Group Formation tab now surfaces up to 5 distinct
-  candidate groupings per run (issue \#125), instead of only the single
-  best-scoring one, with a new selector to switch among them (and a
-  comparison table of each candidate's score) without re-running the
-  group-formation algorithm. Leaving the selector at its default (the
-  best-scoring candidate) is unchanged from today's behavior.
-  `groupAddAssign()`'s return value gains a `candidates` list field for
-  scripted use; the existing top-level `group`/`score`/`groupKin` fields
-  are unchanged (they alias the best candidate).
-- The Breeding Group Formation tab gained an **Include animals by**
-  control (issue \#128): the existing top-N cutoff stays the default,
-  unchanged; a new **Genetic-value floor** option excludes any candidate
-  whose Genetic Value Analysis result is "Low Value" instead of applying
-  a fixed count, for all three animal-source choices. Animals labeled
-  "Undetermined" still pass (a data gap, not evidence of low value); an
-  animal with no Genetic Value Analysis result at all does not pass.
-  Leaving the control at its default ("Top N ranked") reproduces today's
-  exact behavior.
-- The Genetic Value Analysis Summary Statistics tab's Mean Kinship /
-  Genome Uniqueness distribution table gained **Skewness** and
-  **Kurtosis** columns (issue \#126), alongside the existing Min/1st
-  Quartile/Mean/Median/3rd Quartile/Max columns;
-  `makeGeneticSummaryTable()` gained the same two columns for script
-  use. Both are the bias-adjusted Fisher-Pearson estimators (Joanes &
-  Gill 1998), exposed as new exported functions
-  `calcSkewness()`/`calcKurtosis()`; either reads "N/A" when the
-  underlying values are too few or have zero variance to compute.
-  `modSummaryStatsServer()` gained matching `mkShape`/`guShape`
-  return-list reactives for scripted use.
-- The Genetic Value Analysis rankings table (and both CSV downloads)
-  gained a **flagged** column (issue \#127): `TRUE` for a
-  one-unknown-parent animal that `reportGV()`'s mean-kinship correction
-  left uncorrected for lack of an eligible contemporaneous breeding-age
-  peer cohort, `FALSE` for every other animal. Previously this
-  information was silently discarded; there was no way to tell such an
-  animal apart from one whose correction succeeded.
-- The Pedigree Browser tab gained a **Diagram** view (issue \#129, Slice
-  1): alongside the existing sortable table, a new tab renders the same
-  focal-animal-trimmed population as an interactive pedigree diagram --
-  sex-shaped nodes (square/dot/star/triangle), directed sire/dam edges,
-  and a generation-ordered top-down layout -- via a new `visNetwork`
-  dependency. Diagrams above 750 animals show an informative message
-  instead of an unbounded render; narrow the focal-animal selection to
-  view one. Clicking a node (issue \#129, Slice 2) now re-centers the
-  population on that animal, re-driving the same focal-animal selection
-  the Table tab and focal-animal text box already share -- switch back
-  to the Table tab (or enable "Trim pedigree based on focal animals") to
-  see the new selection reflected there.
-- The Diagram tab's layout was rebuilt for a kinship2-style,
-  mating-aware convention (Pedigree Diagram Option 2): a mate's own
-  mating(s) now render as small connector nodes with a mate-line to each
-  parent and a line down to their shared children, instead of two
-  independent sire/dam edges into each child. An individual who mates
-  more than once (or whose lineage loops back on itself, e.g. a
-  consanguineous mating) appears once per mating as a duplicate node,
-  connected back to their main occurrence by a dashed line -- hovering,
-  clicking, or searching any occurrence behaves identically to the
-  individual's main occurrence. The animal-count display limit above
-  dropped from 1,500 to 750 individuals as a result (a colony pedigree
-  typically renders roughly twice as many total diagram nodes as animals
-  under this convention). A new exported function,
-  `makePedigreeMatingLayout()`, computes this layout for scripted use;
-  the existing `makePedigreeDiagramData()` is unchanged and still
-  available for a simpler one-node-per-animal diagram.
-- A new **Marker Genetics** tab, starting with a **Kinship Comparison**
-  sub-tab, was added (issue \#130, Slice 1) alongside the existing
-  pedigree-based analyses: given an uploaded multi-locus marker genotype
-  file, it computes a KING-robust marker-based kinship estimate
-  (Manichaikul et al. 2010) for each pair of genotyped animals and
-  displays it side by side with the existing pedigree-based kinship, so
-  a curator can spot pedigree/marker mean-kinship disagreements. New
-  exported functions `checkMarkerGenotypeFile()`,
-  `buildMarkerGenotypeMatrix()`, and `markerKinship()` support the same
-  computation for scripted use.
-- The Marker Genetics tab gained a **Heterozygosity** sub-tab (issue
-  \#130, Slice 2): per-animal observed heterozygosity alongside the
-  population's expected heterozygosity (Nei 1973 gene diversity),
-  computed from the same uploaded genotype file. New exported functions
-  `markerObservedHeterozygosity()` and `markerExpectedHeterozygosity()`.
-- The Marker Genetics tab gained a **Parentage Exclusion** sub-tab
-  (issue \#130, Slice 3): cross-references each animal's
-  pedigree-recorded dam/sire against the uploaded genotypes and flags
-  any recorded parent contradicted by 3 or more opposite-homozygote
-  loci, a genotyping-error-tolerant Mendelian-exclusion threshold
-  (Cifuentes et al. 2006). New exported function
-  `markerParentageExclusion()`.
-- New exported function `resolveCrossCenterIds(pedA, pedB, mapping)`
-  (issue \#130, Slice 4) merges two centers' pedigrees using a
-  curator-confirmed cross-center identity-link table, so a transferred
-  animal becomes one node with its real recorded parents intact instead
-  of an artificial founder at the receiving center. Script-callable
-  only; no Shiny UI change this slice.
-- The Marker Genetics tab gained a **Cross-Center** sub-tab (issue
-  \#130, Slice 5): given a second, independently uploaded Center B
-  genotype file, computes Hudson's Fst (Bhatia et al. 2013) between the
-  two centers' populations at each shared locus, plus a pooled estimate
-  across loci. New exported function `markerFst()`.
-- The Pedigree Browser's Diagram tab gained an in-app **shape-to-sex
-  legend** (issue \#132): a panel next to the diagram now shows what
-  each node shape means (dot = Female, square = Male, star =
-  Hermaphrodite, triangle = Unknown, diamond = Other/Unrecorded), so
-  this no longer has to be looked up outside the app.
-- The Pedigree Browser's Diagram tab gained **hover tooltips and a
-  search/highlight dropdown** (issue \#135): hovering any animal now
-  shows its ID, sex, generation, sire, and dam; a new "Select by id"
-  dropdown lets you jump straight to an animal by ID, dimming everything
-  except it and its direct connections. `makePedigreeDiagramData()`'s
-  returned node data gains a `title` field for scripted use.
-- The Pedigree Browser's Diagram tab gained a **Diagram Edge Style**
-  toggle (issue \#142): the default "Direct" style is unchanged; a new
-  "Rectilinear (kinship2-style)" option routes mate-line and sibship-bar
-  connections as strict right angles instead of straight diagonal
-  segments, matching the classic pedigree-chart convention. Diagrams
-  above 400 animals under the rectilinear style show the same
-  informative message the existing 750-animal direct-style limit already
-  shows (the rectilinear style renders more total diagram nodes per
-  animal, so its display limit is lower). `makePedigreeMatingLayout()`
-  gained a matching `edgeStyle = c("direct", "rectilinear")` argument
-  for scripted use, defaulting to "direct" (unchanged existing behavior
-  for every current caller).
-- The Pedigree Browser's Diagram tab can now shade **affected-status**
-  individuals (issue \#133): an optional new `affected` logical column
-  (matching kinship2's own `affected` argument naming) marks an animal
-  as affected by a condition of interest; when present, affected
-  individuals are shaded on the diagram and every node's hover tooltip
-  gains an "Affected: Yes/No/Unknown" line. Pedigrees without an
-  `affected` column render exactly as before. Both
-  `makePedigreeDiagramData()` and `makePedigreeMatingLayout()` gained
-  this optional-column support. The Diagram tab's shape-to-sex legend
-  gained a matching "Affected" swatch so the new shading is discoverable
-  without hovering over a node.
-- The Pedigree Browser's Diagram tab can now show **animal names**
-  alongside id (issue \#136): an optional new `name` character column
-  marks an animal's human-readable name/nickname; a new, off-by-default
-  **Show Names on Diagram** toggle switches each real (and
-  duplicate-occurrence) node's label from id-only to a two-line "id" +
-  name form, with a name longer than 15 characters truncated with an
-  ellipsis on the canvas label (the full name is always shown in the
-  hover tooltip). Not every center records a name, and not every animal
-  has one -- an animal with no name, or a pedigree with no `name` column
-  at all, renders exactly as before. The diagram's "Select by id" search
-  dropdown always lists ids, never names, regardless of the toggle.
+- CRAN accepted the 2.0.0 submission (tagged `v2.0.0`); published
+  2026-07-26. Development continues here on top of it.
+- New `checkLocusMetadata()` (issue \#153, Slice 1) validates a
+  locus-metadata sidecar table (`locus, chrom, pos[, cM]`) and reports
+  each locus’s coverage as `"full"`, `"partial"`, or `"none"`,
+  PLINK-style. New example fixtures
+  `example_locus_metadata.csv`/`example_str_marker_genotypes.csv`. No
+  Shiny UI yet.
+- New `checkLinkageMarkerGenotypeFile()` (issue \#153, Slice 2), a
+  sibling to `checkMarkerGenotypeFile()` that accepts multiallelic
+  marker panels (e.g. STR/microsatellite). No Shiny UI yet.
+- New `markerRealizedRelatednessVariance()` (issue \#153, Slice 3)
+  estimates the variance of realized (marker-based) relatedness around a
+  pair’s pedigree-expected value. No Shiny UI yet.
+- New `markerLdBlock()` and `obfuscateLdBlocks()` (issue \#153, Slice 4)
+  add a descriptive same-chromosome pairwise LD/block statistic. No
+  Shiny UI yet.
+- Genetic Value Analysis tab gained a configurable **Ranking Scheme**
+  control (issue \#125): a new priority-tier scheme alongside the
+  existing combined kinship/uniqueness score. `reportGV()` gained
+  matching `guCutoff`/ `zScoreCutoff`/`axisPriority` arguments.
+- Breeding Group Formation tab now surfaces up to 5 candidate groupings
+  per run (issue \#125), with a selector and comparison table.
+  `groupAddAssign()` gains a `candidates` list field in its return
+  value.
+- Breeding Group Formation tab gained an **Include animals by** control
+  (issue \#128): a Genetic-value-floor option alongside the existing
+  top-N cutoff.
+- Genetic Value Analysis Summary Statistics table gained **Skewness**
+  and **Kurtosis** columns (issue \#126) via new exported
+  `calcSkewness()`/ `calcKurtosis()`; `makeGeneticSummaryTable()` gained
+  matching columns.
+- Genetic Value Analysis rankings table gained a **flagged** column
+  (issue \#127) marking animals whose mean-kinship correction could not
+  be applied for lack of an eligible peer cohort.
+- Pedigree Browser tab gained a **Diagram** view (issue \#129): an
+  interactive pedigree diagram via `visNetwork`, with click-to-recenter
+  on a focal animal. Diagrams above 750 animals show an informative
+  message instead of rendering.
+- Diagram tab layout rebuilt for a kinship2-style, mating-aware
+  convention (Pedigree Diagram Option 2): mate-line connectors and
+  duplicate nodes for multiply-mated individuals; display limit dropped
+  from 1,500 to 750. New exported `makePedigreeMatingLayout()`;
+  `makePedigreeDiagramData()` unchanged.
+- New **Marker Genetics** tab with a **Kinship Comparison** sub-tab
+  (issue \#130, Slice 1): a KING-robust marker-based kinship estimate
+  alongside pedigree-based kinship. New exported
+  `checkMarkerGenotypeFile()`, `buildMarkerGenotypeMatrix()`,
+  `markerKinship()`.
+- Marker Genetics tab gained a **Heterozygosity** sub-tab (issue \#130,
+  Slice 2): per-animal observed vs. population expected heterozygosity.
+  New exported
+  `markerObservedHeterozygosity()`/`markerExpectedHeterozygosity()`.
+- Marker Genetics tab gained a **Parentage Exclusion** sub-tab (issue
+  \#130, Slice 3): flags a pedigree-recorded parent contradicted by 3+
+  opposite-homozygote loci. New exported `markerParentageExclusion()`.
+- New exported `resolveCrossCenterIds(pedA, pedB, mapping)` (issue
+  \#130, Slice 4) merges pedigrees from two centers via a
+  curator-confirmed identity-link table. Script-callable only.
+- Marker Genetics tab gained a **Cross-Center** sub-tab (issue \#130,
+  Slice 5): Hudson’s Fst between the populations of two centers. New
+  exported `markerFst()`.
+- Diagram tab gained an in-app **shape-to-sex legend** (issue \#132).
+- Diagram tab gained **hover tooltips and a search/highlight dropdown**
+  (issue \#135). Node data from `makePedigreeDiagramData()` gains a
+  `title` field.
+- Diagram tab gained a **Diagram Edge Style** toggle (issue \#142): a
+  “Rectilinear (kinship2-style)” option alongside the default “Direct”
+  style. `makePedigreeMatingLayout()` gained a matching `edgeStyle`
+  argument.
+- Diagram tab can now shade **affected-status** individuals (issue
+  \#133) via an optional `affected` column, matching a kinship2 naming
+  convention.
+- Diagram tab can now show **animal names** alongside id (issue \#136)
+  via an optional `name` column and a **Show Names on Diagram** toggle.
   `getPossibleCols()` gained `name` alongside the existing `affected`;
-  `obfuscatePed()` scrubs `name` to `NA`, so a de-identified pedigree
-  never leaks an animal's real name. Both `makePedigreeDiagramData()`
-  and `makePedigreeMatingLayout()` gained this optional-column support.
-- The Pedigree Browser's Diagram tab can now show **twin/zygosity
-  connectors** (issue \#137), adopting kinship2's own MZ/DZ/UZ twin-code
-  convention: an optional twin-relations sidecar file (`id1`, `id2`,
-  `code` columns, `code` one of `"MZ twin"`/`"DZ twin"`/`"UZ twin"`) can
-  be uploaded alongside the pedigree, and a new, off-by-default **Show
-  Twin Connectors** toggle draws a distinctly-styled connector line
-  between each declared twin pair's own diagram nodes -- solid for MZ,
-  short-dashed for DZ, long-dashed with a "?" label for UZ (a callback
-  to kinship2's own UZ glyph), all three drawn in a colorblind-safe
-  Okabe-Ito bluish-green (`#009E73`) -- with a matching legend entry.
-  Twin declarations are validated against the pedigree (both ids must
-  exist and differ; an MZ/DZ pair must already share both `sire` and
-  `dam`; MZ additionally requires matching `sex`; UZ has no such
-  precondition) via the new exported `checkTwinRelations()`; a companion
-  `obfuscateTwinRelations()` scrubs a twin-relations table's ids through
-  the same alias map `obfuscatePed(..., map = TRUE)` produces, so a
-  de-identified export never leaks real ids through this sidecar. A
-  pedigree loaded without any twin data renders exactly as before. Both
-  `makePedigreeDiagramData()` and `makePedigreeMatingLayout()` gained an
-  optional `twinRelations` argument for scripted use.
-- New script-callable `markerParentageLikelihood()` (issue \#147) ranks
-  candidate replacement parents for a recorded parent
-  `markerParentageExclusion()` has flagged as Mendelian-inconsistent,
-  using a CERVUS-style multilocus likelihood-ratio (LOD) score (Meagher
-  & Thompson 1986; Marshall, Slate, Kruuk & Pemberton 1998).
-  Report-only: it never writes to a pedigree's `sire`/`dam` columns, and
-  `markerParentageExclusion()` itself is unchanged and remains the
-  independent Mendelian-exclusion check. Reports raw `LOD`, `delta` (the
-  gap to the next-ranked candidate), `nLociUsed`, `excluded`, and
-  `lowPower` per candidate, deliberately without a simulation-calibrated
-  percentage confidence (see the function's own documentation for why).
-  The Marker Genetics tab gained a matching **Candidate Parent
-  Assignment** sub-tab surfacing this ranking for every flagged pair in
-  the uploaded genotype file and current pedigree, with no new file
-  input needed.
-- Fixed (issue \#155): the Candidate Parent Assignment sub-tab's
-  auto-detect default previously showed no candidates at all for the
-  common real-world case of a flagged animal whose recorded parent is
-  present but wrong (only a genuinely *missing* recorded parent worked
-  before). Both the auto-detect default and
-  `markerParentageLikelihood()`'s explicit
-  `id`/`role`/`candidates = NULL` script-callable form are fixed; no
-  change to either function's exported signature or return shape.
-- The Pedigree Browser's Diagram tab now defaults to placing the male
-  parent to the left in a simple two-parent mating pair, matching common
-  pedigree-drawing convention (issue \#145) -- a new, additive default,
-  not a bug fix: the diagram never had sex-based left-right positioning
-  before. Applies only to a mating pair whose two real parents each have
-  an unambiguous male/female sex code and no other mate or partial
-  -parentage relationship; multi-mate/"crowded" families keep today's
-  layout, unaffected. `makePedigreeMatingLayout()` gained a matching
-  `orderBySex` argument (default `TRUE`) for scripted use; setting it to
-  `FALSE` reproduces the prior, sex-agnostic default exactly.
-- New exported function `checkCrossCenterMapping(pedA, pedB, mapping)`
-  (issue \#149, Slice 1): the "show every problem at once" companion to
-  `resolveCrossCenterIds()`, sharing its id-existence,
-  mapping-uniqueness, id-collision, and parent-conflict checks but never
-  stopping on a domain problem -- every one found is returned as a row
-  instead, so all of them can be reviewed together rather than one at a
-  time. Script-callable only; no Shiny UI change this slice. Also fixes
-  a data-loss defect in `resolveCrossCenterIds()` itself: a merged
-  individual's shared, agreeing columns beyond `id`/`sire`/`dam` (e.g.
-  `sex`) were previously silently dropped; they are now carried through
-  under the same prefer-non-`NA`/error-on-conflict rule already used for
-  `sire`/`dam`. This is an additive behavior change -- a merged pair
-  whose two centers disagree on such a column, which previously merged
-  silently, now raises the same kind of conflict error `sire`/`dam`
-  disagreement always has.
-- New **Cross-Center Identity** tab (issue \#149, Slice 2): a Shiny
-  workflow around `resolveCrossCenterIds()`/`checkCrossCenterMapping()`.
-  Upload two centers' pedigrees plus a curator-reviewed identity
-  mapping; every validation issue is shown at once (no fixing one
-  problem at a time); once clean, a Preview tab shows the proposed
-  merge's lineage changes (which side each resolved `sire`/`dam` value
-  came from); an explicit confirmation dialog gates access to 5
-  downloadable artifacts (Merged Pedigree, Mapping, Validation Results,
-  Merge Summary, Provenance). Retains the
-  no-automatic-identity-inference policy -- identity is established only
-  by the uploaded mapping file, never guessed from matching id strings.
-  A standalone review/export tool this slice: the merged pedigree is a
-  downloadable CSV, not fed into any other tab's analysis; re-upload it
-  through the Input tab's existing pedigree-file path to use it
-  downstream.
+  `obfuscatePed()` scrubs `name` for de-identified exports.
+- Diagram tab can now show **twin/zygosity connectors** (issue \#137),
+  adopting the kinship2 MZ/DZ/UZ twin-code convention. New exported
+  `checkTwinRelations()`/`obfuscateTwinRelations()`.
+- New exported `markerParentageLikelihood()` (issue \#147) ranks
+  candidate replacement parents for a Mendelian-inconsistent recorded
+  parent using a CERVUS-style multilocus likelihood-ratio (LOD) score.
+  Report-only. Marker Genetics tab gained a matching **Candidate Parent
+  Assignment** sub-tab.
+- Fixed (issue \#155): the Candidate Parent Assignment sub-tab’s
+  auto-detect default missed the common case of a flagged animal whose
+  recorded parent is present but wrong.
+- Diagram tab now defaults to placing the male parent on the left in a
+  two-parent mating pair (issue \#145). `makePedigreeMatingLayout()`
+  gained a matching `orderBySex` argument (default `TRUE`).
+- New exported `checkCrossCenterMapping(pedA, pedB, mapping)` (issue
+  \#149, Slice 1) reports every cross-center mapping problem at once
+  instead of stopping at the first. Also fixes a data-loss defect in
+  `resolveCrossCenterIds()` (non-id/sire/dam columns were silently
+  dropped on merge).
+- New **Cross-Center Identity** tab (issue \#149, Slice 2): a curator
+  workflow around `resolveCrossCenterIds()`/`checkCrossCenterMapping()`,
+  with a merge preview and 5 downloadable artifacts behind a
+  confirmation dialog.
 - `groupAddAssign()` gained a `maxCandidates` argument (issue \#146,
-  Slice 1) replacing the previously-hardcoded cap of 5 distinct retained
-  candidate solutions; the default remains 5, unchanged. The Breeding
-  Group Formation tab gained a matching **Candidates to retain** control
-  (default 5, 1-50) next to the existing simulation-count input.
+  Slice 1), replacing the hardcoded cap of 5. Breeding Group Formation
+  tab gained a matching **Candidates to retain** control.
 - `groupAddAssign()` gained an `exhaustive` argument (issue \#146, Slice
-  2, closes \#146): when `TRUE`, every possible single-group partition
-  is enumerated instead of randomly sampled, guaranteeing the retained
-  candidates include the true best groupings rather than the best a
-  sample happened to find. Supported only for `numGp = 1` with no harem
-  or custom `sexRatio`; an out-of-scope request, or one whose candidate
-  pool exceeds the new `maxExhaustiveCandidates` argument (default 20),
-  stops with a message naming the reason rather than silently falling
-  back to sampling. A new `exhaustiveTimeLimit` argument (default 10
-  seconds) bounds search time, degrading gracefully to a truncated
-  (non-exhaustive) result rather than blocking indefinitely. The return
-  value gains `exhaustive`, `examined`, and `retentionRule` fields when
-  this mode is used; ordinary (sampling) calls are unaffected. The
-  Breeding Group Formation tab gained a matching **Exhaustive
-  enumeration mode** checkbox (visible only when the current
-  configuration is eligible) and a status message reporting the search
-  outcome after each run.
-- New script-callable `reportMatePairs()` (issue \#151, Slice 1) reports
-  eligible individual mate-pair candidates -- opposite-sex, minimum-age
-  pairs surviving the same eligibility screens Breeding Group Formation
-  already uses (`filterPairs()`/`filterAge()`), each row carrying
-  pedigree kinship and, when available, marker-based kinship
-  (`markerKinship()`'s KING-robust estimator) and per-parent
-  genetic-value context (`reportGV()`'s `indivMeanKin`/`gu`). No
-  blended/composite ranking score is computed; callers sort or filter
-  the raw columns themselves. A `populationIds` argument scopes the
-  candidate pool before computation (age alone does not bound table size
-  when many individuals have no recorded age); an `exclude` argument
-  drops specific ids entirely. Dropped pairs are reported separately
-  with a reason ("under minimum age" or "user-excluded"), never silently
-  discarded. Report-only, no Shiny UI yet -- a Mate Pair Analysis tab is
-  a separate, future slice.
-- A new **Mate Pair Analysis** tab was added (issue \#151, Slice 2), a
-  curator-facing view over `reportMatePairs()` (Slice 1), kept
-  structurally and file-wise separate from Breeding Group Formation. A
-  candidate population must be chosen explicitly -- "All alive" (no
-  recorded exit date), "Top ranked by genetic value", or a pasted custom
-  id list -- since the age floor alone does not bound the candidate
-  table on real, imperfectly-curated colony data. A separate "Excluded"
-  table shows every dropped pair with its reason (never silently
-  discarded), alongside an optional exclude-list textarea. The "Eligible
-  Pairs" table is sortable/filterable and its CSV export downloads
-  exactly the currently filtered/sorted rows, not the full unfiltered
-  table. Marker-based kinship, where available, now reaches this tab and
-  the existing Marker Genetics tab unchanged:
-  `modMarkerGeneticsServer()`'s own `markerKinshipMatrix` value was
-  computed but never read by any caller until now (a one-line, additive
-  capture at its existing call site).
+  2, closes \#146): enumerates every possible single-group partition
+  instead of sampling, for `numGp = 1`. Breeding Group Formation tab
+  gained a matching **Exhaustive enumeration mode** checkbox.
+- New exported `reportMatePairs()` (issue \#151, Slice 1) reports
+  eligible individual mate-pair candidates with pedigree/marker kinship
+  and genetic-value context. Report-only.
+- New **Mate Pair Analysis** tab (issue \#151, Slice 2), a curator view
+  over `reportMatePairs()`, kept separate from Breeding Group Formation.
 - `obfuscatePed()` gained a **linkedDateShift** argument (issue \#150,
-  Slice 1), defaulting to `TRUE`: every Date column of one individual
-  (e.g. `birth`/`exit`/`death`) is now shifted by the same, single
-  random offset, preserving that individual's inter-date gaps exactly.
-  The previous behavior -- each Date column shifted independently --
-  could invert an individual's recorded date order (e.g. an obfuscated
-  `exit` preceding an obfuscated `birth`), producing a negative
-  recomputed `age`; the old behavior is still available via
-  `linkedDateShift = FALSE` for any caller that needs it. Ships ahead of
-  a future de-identified pedigree export workflow (Slice 2) that depends
-  on this fix.
+  Slice 1, default `TRUE`): shifts all of one individual’s Date columns
+  by the same offset, preserving inter-date gaps (previously could
+  invert date order).
 - New **De-Identified Export** tab (issue \#150, Slice 2, closes \#150):
-  a curator-facing workflow around the existing `obfuscatePed()`
-  (Slice 1) and a new transformation-manifest helper. Exports the
-  pedigree already loaded in the current session -- no separate upload
-  -- with configurable alias-id length, maximum date shift, and the
-  `linkedDateShift` toggle (Slice 1's fix, on by default). A live
-  preview shows the de-identified output before anything is exported; an
-  explicit confirmation dialog, carrying an institutional-responsibility
-  disclaimer (this app's first), gates 3 downloadable artifacts: the
-  de-identified pedigree, a transformation manifest (parameters used,
-  row count, timestamp -- never the id map or any raw pre-obfuscation
-  value), and a distinctly labeled re-identification key ("DO NOT
-  SHARE"). Fields other than id, dam, sire, dates, and name (e.g.
-  `origin`, `status`) pass through unchanged -- disclosed in the warning
-  text and manifest, not silently scrubbed. Matches this app's
-  established curator-controlled pattern (a confirmation dialog and
-  warning text, not real access control) rather than building new auth
-  infrastructure.
-- The Marker Genetics tab gained a **Linkage and LD Block Metrics**
-  sub-tab (issue \#153, Slice 5, closes \#153): a locus-metadata upload
-  with a three-tier coverage report (full/partial/none); the
-  pedigree-valid realized-relatedness-variance table
-  (`markerRealizedRelatednessVariance()`, Slice 3); and the descriptive
-  LD-block table (`markerLdBlock()`, Slice 4) behind a persistent,
-  non-dismissable caveat banner. The LD-block table's export is
-  de-identified (`obfuscateLdBlocks()`) behind the same curator
-  confirm-gate pattern established by the De-Identified Export tab.
-- New script-callable `checkSequenceGenotypeFile()` (issue \#152,
-  Slice 1) validates a long-format biallelic marker genotype file sized
-  for sequence-scale panels, rejecting a literal `.` placeholder and
-  warning (not stopping) above a 50,000-locus ceiling. A new bundled
-  example fixture pair (`example_sequence_genotypes.csv` /
-  `example_sequence_locus_metadata.csv`) provides a 1,000-locus,
-  50-individual panel for future slices. No Shiny UI yet.
+  a curator workflow around `obfuscatePed()` with a live preview and 3
+  downloadable artifacts (de-identified pedigree, transformation
+  manifest, re-identification key) behind a confirmation dialog.
+- Marker Genetics tab gained a **Linkage and LD Block Metrics** sub-tab
+  (issue \#153, Slice 5, closes \#153): locus-metadata coverage report,
+  realized-relatedness-variance table, and LD-block table, with
+  de-identified export.
+- New exported `checkSequenceGenotypeFile()` (issue \#152, Slice 1)
+  validates a sequence-scale marker genotype file. New example fixtures
+  `example_sequence_genotypes.csv`/`example_sequence_locus_metadata.csv`.
+  No Shiny UI yet.
 - `markerKinship()` and `markerParentageLikelihood()` (issue \#152,
-  Slice 2) are internally rewritten for large marker panels --
-  vectorized matrix algebra and precomputed allele frequencies,
-  respectively -- with output and signatures unchanged.
-- New script-callable `computeGenomicROH()` (issue \#152, Slice 3)
-  computes per-individual genomic Runs-of-Homozygosity segments and the
-  F_ROH inbreeding coefficient from a sequence-scale marker genotype
-  matrix and locus-metadata sidecar -- a marker-based inbreeding
-  estimate independent of the recorded pedigree. No Shiny UI yet.
-- New script-callable `obfuscateGenotypeMatrix()` (issue \#152, Slice 4)
-  de-identifies a sequence-scale genotype matrix by remapping its row
-  names (individual ids) through the same alias map
-  `obfuscatePed(...,   map = TRUE)` already returns; genotype values are
-  unchanged. No Shiny UI yet.
-- Marker Genetics gains a new "Genomic ROH (F_ROH)" tab (issue \#152,
-  Slice 5, closing the issue): computes per-individual F_ROH from the
-  same genotype file and locus-metadata file already uploaded elsewhere
-  in the module -- no new upload control, since
-  `checkSequenceGenotypeFile()` makes the existing genotype input
-  genome-scale-capable. Any export (the genotype matrix, the F_ROH
-  table, and a transformation manifest) is de-identified
-  (`obfuscateGenotypeMatrix()`, new script-callable
-  `obfuscateGenomicROH()`) behind the same curator confirm-gate pattern
-  established by the De-Identified Export tab.
+  Slice 2) rewritten internally for large marker panels (vectorized
+  matrix algebra, precomputed allele frequencies); output unchanged.
+- New exported `computeGenomicROH()` (issue \#152, Slice 3) computes
+  per-individual genomic Runs-of-Homozygosity segments and the F_ROH
+  inbreeding coefficient from sequence-scale marker data. No Shiny UI
+  yet.
+- New exported `obfuscateGenotypeMatrix()` (issue \#152, Slice 4)
+  de-identifies a sequence-scale genotype matrix’s individual ids. No
+  Shiny UI yet.
+- Marker Genetics gained a **Genomic ROH (F_ROH)** tab (issue \#152,
+  Slice 5, closing the issue): computes F_ROH from the already-uploaded
+  genotype/ locus-metadata files, with de-identified export
+  (`obfuscateGenomicROH()`).
 
 # nprcgenekeepr 2.0.0 (20260708)
 
@@ -436,7 +171,7 @@ R. Mark Sharp, Ph.D.
     species (previously only rhesus macaque), with numeric rather than
     integer breeding ages so fractional minima are represented exactly.
     `getPotentialParents()` and the Potential Parents tab derive each
-    animal's gestation window from its `species` via the new
+    animal’s gestation window from its `species` via the new
     `getSpeciesGestation()`; the Genetic Value Analysis missing-parent
     correction uses per-species minimum breeding ages; and an optional
     configuration-file entry (`speciesOverridesPath`, plus
@@ -449,13 +184,13 @@ R. Mark Sharp, Ph.D.
     `checkParentAge()`, `runQcStudbook()`, and `getPotentialParents()`
     now accept `minSireAge` and `minDamAge` in place of a single
     `minParentAge` (kept as a deprecated alias that sets both). The
-    Shiny app's single "Minimum Parent Age" field is replaced by
-    separate "Minimum Sire Age" and "Minimum Dam Age" fields. (#119)
+    Shiny app’s single “Minimum Parent Age” field is replaced by
+    separate “Minimum Sire Age” and “Minimum Dam Age” fields. (#119)
   - New **ORIP Reporting** tab with ONPRC colony summaries for the NIH
     Office of Research Infrastructure Programs (site information, a
     colony table with founder counts, genetic-diversity metrics, and CSV
     exports); shown only at ONPRC. (#47, \#49)
-  - The Pedigree Browser "trim based on focal animals" option now
+  - The Pedigree Browser “trim based on focal animals” option now
     includes descendants as well as ancestors, via the new exported
     `getDescendantPedigree()`. (#35)
   - Added the exported founder helpers `isFounder()` and
@@ -464,37 +199,37 @@ R. Mark Sharp, Ph.D.
     making the auto-generated placeholder-ID format configurable
     (default `"U%04d"`). (#44, \#38)
   - Genetic Value Analysis tab parity: the genome-uniqueness threshold
-    is now a user control (default 4), a subset filter and "Export
-    Subset" download were added, the default gene-drop iterations
+    is now a user control (default 4), a subset filter and “Export
+    Subset” download were added, the default gene-drop iterations
     changed to 1000 (matched at the function level: `reportGV()` and
     `geneDrop()` now also default to 1000, down from 5000), and an inert
-    "Minimum breeding age" slider was removed.
+    “Minimum breeding age” slider was removed.
   - Improved visualizations: educational box-plot popovers
     (`getBoxWhiskerDescription()`), plot export to PNG, PDF, and SVG
     (`savePlotToFile()`), and an enhanced age-sex pyramid
     (`getPyramidPlot()`).
   - The Genetic Value Analysis now reports three additional
     population-genetic summaries: **gene diversity**
-    (`GD = 1 - 1 / (2 * FG)`) and -- over the current living breeders --
-    a **sex-ratio effective population size**
-    (`4 * Nm * Nf / (Nm + Nf)`) and a **variance effective population
-    size** (the Crow & Kimura (1970) form), via the new exported
-    `calcGeneDiversity()`, `calcNeSexRatio()`, and `calcNeVariance()`;
-    each is defined, with its idealizing assumptions, in the in-app
-    Population Genetics Terms panel. (#118)
+    (`GD = 1 - 1 / (2 * FG)`) and – over the current living breeders – a
+    **sex-ratio effective population size** (`4 * Nm * Nf / (Nm + Nf)`)
+    and a **variance effective population size** (the Crow &
+    Kimura (1970) form), via the new exported `calcGeneDiversity()`,
+    `calcNeSexRatio()`, and `calcNeVariance()`; each is defined, with
+    its idealizing assumptions, in the in-app Population Genetics Terms
+    panel. (#118)
   - The Genetic Value Analysis now reports the sampling precision of
-    each animal's genome uniqueness: a new `guSE` column (the gene-drop
-    Monte Carlo standard error, via the new `calcGUSE()`) and a "Genome
-    Uniqueness SE (max)" summary row. The new `gvaConvergence()` gives
+    each animal’s genome uniqueness: a new `guSE` column (the gene-drop
+    Monte Carlo standard error, via the new `calcGUSE()`) and a “Genome
+    Uniqueness SE (max)” summary row. The new `gvaConvergence()` gives
     evidence-based advice on how many gene-drop iterations a pedigree
     needs for a stable ranking, by comparing rankings from split halves
     of one gene drop; it also accepts a `kinshipOverrides` argument.
   - The Genetic Value Analysis now corrects the mean kinship of animals
     missing one parent, which previously understated their relatedness
     and let them rank as more genetically valuable than they should. A
-    new `parentage` column labels each animal "known", "one unknown
-    parent", or "both unknown"; animals with both parents unknown and no
-    recorded origin ("Undetermined") are now ranked last, with genome
+    new `parentage` column labels each animal “known”, “one unknown
+    parent”, or “both unknown”; animals with both parents unknown and no
+    recorded origin (“Undetermined”) are now ranked last, with genome
     uniqueness reported as 0 rather than the inflated gene-drop-founder
     artifact value. Animals recorded as genuine imports (an `origin`)
     are unaffected. *(Changes reported rankings and genome-uniqueness
@@ -524,12 +259,12 @@ R. Mark Sharp, Ph.D.
     configuration file was present, via the new tolerant
     `loadSiteConfig()`. (#50)
   - The **About** panel now shows the installed package version
-    dynamically (it previously displayed a hard-coded "Version 1.0.8").
+    dynamically (it previously displayed a hard-coded “Version 1.0.8”).
   - `geneDrop()` now reports duplicate animal IDs with a clear error
     instead of the base-R `duplicate 'row.names' are not allowed`
     message.
   - Reading a file whose final line lacks a trailing newline no longer
-    emits the spurious "incomplete final line" warning. (#4)
+    emits the spurious “incomplete final line” warning. (#4)
   - `addGenotype()` now coerces its allele columns to character, so the
     integer allele encoding is consistent whether they are supplied as
     character or factor.
@@ -542,7 +277,7 @@ R. Mark Sharp, Ph.D.
   - New dependencies: `bslib`, `DT`, and `ggplot2` (Imports);
     `shinytest2` (Suggests).
   - `create_wkbk()` now writes `.xlsx` files with `openxlsx` instead of
-    `WriteXLS`, removing the package's Perl requirement (`WriteXLS`
+    `WriteXLS`, removing the package’s Perl requirement (`WriteXLS`
     shelled out to a bundled Perl script). Output and behavior are
     otherwise unchanged.
   - Replaced the magrittr pipe (`%>%`) with the base R native pipe
@@ -564,10 +299,10 @@ R. Mark Sharp, Ph.D.
     column: it is recognized and placed immediately after `sex` in the
     canonical column order, and typed as character, rather than
     surviving as an untyped trailing column.
-  - In the Pedigree Browser tab, "Clear Focal Animals" now also clears a
+  - In the Pedigree Browser tab, “Clear Focal Animals” now also clears a
     focal-animals list uploaded via the file browser (and its displayed
     file name) and any focal Ids typed into the text box, so neither is
-    silently re-read on the next "Update Focal Animals".
+    silently re-read on the next “Update Focal Animals”.
   - `getPedDirectRelatives(unrelatedParents = TRUE)` now returns a
     placeholder ego record for a referenced parent with no record of its
     own, instead of erroring; previously dormant since no caller
@@ -587,28 +322,28 @@ R. Mark Sharp, Ph.D.
     columns (direct columns) while ONPRC uses the `Id/parents/dam`
     lookup-traversal form (curated parentage).
   - Fixed a CRAN Policy violation: the Shiny application no longer
-    writes a debug log file to the user's home directory unconditionally
+    writes a debug log file to the user’s home directory unconditionally
     at startup. The log file is now created only after a user explicitly
-    enables the Input tab's "Debug on" checkbox, matching the documented
+    enables the Input tab’s “Debug on” checkbox, matching the documented
     behavior.
   - Fixed a data-corruption bug: uploading a pedigree as an Excel
     workbook via the Input tab silently converted every alphanumeric
     sire/dam ID to a missing value, collapsing the pedigree to
     near-all-founders with no error or warning shown to the user. CSV
     and tab/comma-delimited text uploads were unaffected.
-  - Fixed the Breeding Groups tab's "Custom" sex ratio option: selecting
+  - Fixed the Breeding Groups tab’s “Custom” sex ratio option: selecting
     it previously had no numeric input to specify the ratio and silently
-    behaved identically to "None". A numeric "Custom ratio (F per M)"
-    field now appears when "Custom" is selected, and its value is used
+    behaved identically to “None”. A numeric “Custom ratio (F per M)”
+    field now appears when “Custom” is selected, and its value is used
     when forming groups.
-  - Fixed the Breeding Groups tab's "Number of top animals" field: it
+  - Fixed the Breeding Groups tab’s “Number of top animals” field: it
     never appeared regardless of the selected animal source, including
-    the default "Top ranked" selection where it is supposed to be
+    the default “Top ranked” selection where it is supposed to be
     visible on page load.
   - `data(examplePedigree)` now includes a `fromCenter` (colony-origin)
     column, derived from its existing `origin`/`recordStatus` fields, so
     the Potential Parents tab can show a populated result (1,587
-    candidates) against the package's own example data instead of only
+    candidates) against the package’s own example data instead of only
     its graceful-degradation message.
 
 # nprcgenekeepr 1.0.8 (20250723)
@@ -691,7 +426,7 @@ R. Mark Sharp, Ph.D.
     animals with incomplete parental information that are known to have
     been born within the colony. These animals may have 0 or 1 known
     parents but have a value in the pedigree file or database for the
-    *fromcenter* or *fromCenter* field of "Y", "YES", "T", or "TRUE".
+    *fromcenter* or *fromCenter* field of “Y”, “YES”, “T”, or “TRUE”.
 - Minor changes
   - Increase unit test coverage primarily to include more rare events
     and events that should not happen and are trapped and result in
@@ -700,22 +435,22 @@ R. Mark Sharp, Ph.D.
 
 # nprcgenekeepr 1.0.5 (20210328)
 
-- Major changes -- none
+- Major changes – none
 - Minor changes
   - CRAN submission primarily in response to a change in `shiny 1.6`
     that removed an internal `shiny` function (`shiny:::%OR%`) and
     replaced it with `rlang::%||%`
   - Stale URL in historical documentation that were causing notes to be
     generated in automated tests have been removed.
-  - A URL referring to Terry Therneau's page was updated from "http" to
-    "https".
+  - A URL referring to Terry Therneau’s page was updated from “http” to
+    “https”.
   - I have incremented the version from 1.0.4 (github.com only version)
     to 1.0.5, updated NEWS to reflect the changes, and updated all
     documentation to reflect the version change.
 
 # nprcgenekeepr 1.0.4.9003 (20210318)
 
-- Major changes -- none
+- Major changes – none
 - Minor changes
   - Testing .travis.yml code change to get textshaping to build on all
     systems..
@@ -724,7 +459,7 @@ R. Mark Sharp, Ph.D.
 
 # nprcgenekeepr 1.0.4 (20210318)
 
-- Major changes -- none
+- Major changes – none
 - Minor changes
   - Added suppression of warnings from DT at beginning of server.R since
     it is unlikely for anyone to call affected functions in the
@@ -735,12 +470,12 @@ R. Mark Sharp, Ph.D.
 
 # nprcgenekeepr 1.0.3 (20200526)
 
-- Major changes -- none
+- Major changes – none
 - Minor changes
   - CRAN re-submission: responded to the two requests provided by
     reviewer
-    - I have removed the capitalization from "Genetic Tools for Colony
-      Management" and "Genetic Value Analysis Reports" within
+    - I have removed the capitalization from “Genetic Tools for Colony
+      Management” and “Genetic Value Analysis Reports” within
       DESCRIPTION.
     - I have removed the conditional installation of DT from the ui.R
       file.
@@ -750,7 +485,7 @@ R. Mark Sharp, Ph.D.
 
 # nprcgenekeepr 1.0.2 (20200517)
 
-- Major changes -- none
+- Major changes – none
 - Minor changes
   - CRAN re-submission: responded to all requests provided by reviewer
     - I have not changed the capitalization of `Shiny` in the
@@ -777,7 +512,7 @@ R. Mark Sharp, Ph.D.
 
 # nprcgenekeepr 1.0.1 (20200510)
 
-- Major changes -- none
+- Major changes – none
 - Minor changes
   - CRAN re-submission: responded to all requests provided by reviewer
     - Reduced the time required for unit test from over 12 minutes to
@@ -788,8 +523,7 @@ R. Mark Sharp, Ph.D.
       the number of stochastic modeling iterations by orders of
       magnitude without reducing the examples provided for user-facing
       functions.
-    - Checking (--as-cran --run-donttest) Duration: 2m 21.8s on my
-      system.
+    - Checking (–as-cran –run-donttest) Duration: 2m 21.8s on my system.
     - The files with the Rd-tag of `\arguments` missing do not take
       arguments.
     - Corrected private referencing (`:::`) for exported functions.
@@ -805,19 +539,19 @@ R. Mark Sharp, Ph.D.
 
 # nprcgenekeepr 1.0 (20200415)
 
-- Major changes -- none
+- Major changes – none
 - Minor changes
   - CRAN submission
 
 # nprcgenekeepr 0.5.43 (20200414)
 
-- Major changes -- none
+- Major changes – none
 - Minor changes
   - Final preparation for CRAN submission
 
 # nprcgenekeepr 0.5.42.9012 (20200412)
 
-- Major changes -- none
+- Major changes – none
 - Minor changes
   - Updated unit test for dataframe2string to account for change in age
     of a sire from 8.67 to 8.66 years.
@@ -825,7 +559,7 @@ R. Mark Sharp, Ph.D.
 
 # nprcgenekeepr 0.5.42.9011 (20200409)
 
-- Major changes -- none
+- Major changes – none
 - Minor changes
   - Build failed on Travis-ci due to unit test failure but the test has
     never failed and does not fail on other builds. Removed set_seed()
@@ -836,7 +570,7 @@ R. Mark Sharp, Ph.D.
 
 # nprcgenekeepr 0.5.42.9010 (20200405)
 
-- Major changes -- none
+- Major changes – none
 - Minor changes
   - Added code to address issue 1 (GitHub). See comment 1 for details,
     but more should be done.
@@ -844,7 +578,7 @@ R. Mark Sharp, Ph.D.
 
 # nprcgenekeepr 0.5.42.9009 (20200402)
 
-- Major changes -- none
+- Major changes – none
 - Minor changes
   - Wrapped example for `makeExamplePedigreeFile` with `\dontrun{}`
     because R 4.0.0 alpha was leaving the side effect of the dataframe
@@ -852,21 +586,21 @@ R. Mark Sharp, Ph.D.
 
 # nprcgenekeepr 0.5.42.9008 (20200321)
 
-- Major changes -- none
+- Major changes – none
 - Minor changes
   - Changed dependency to R \>= 3.6 since caTools is not available for R
     \< 3.6.
 
 # nprcgenekeepr 0.5.42.9007 (20200319)
 
-- Major changes -- none
+- Major changes – none
 - Minor changes
   - Changed warnings unit test for getLkDirectAncestors to work with
     Windows.
 
 # nprcgenekeepr 0.5.42.9006 (20200319)
 
-- Major changes -- none
+- Major changes – none
 - Minor changes
   - Completed examples in function documentation
   - Corrected spelling of several word throughout found with
@@ -874,7 +608,7 @@ R. Mark Sharp, Ph.D.
 
 # nprcgenekeepr 0.5.42.9005 (20200201)
 
-- Major changes -- none
+- Major changes – none
 - Minor changes
   - Added examples to function documentation
   - Added ColonyManagerTutorial.Rmd initial draft, which is copy of
@@ -882,7 +616,7 @@ R. Mark Sharp, Ph.D.
 
 # nprcgenekeepr 0.5.42.9004 (20200201)
 
-- Major changes -- none
+- Major changes – none
 - Minor changes
   - Added examples to function documentation
   - Added obfuscated rhesus pedigree and rhesus haplotypes to use in
@@ -890,7 +624,7 @@ R. Mark Sharp, Ph.D.
 
 # nprcgenekeepr 0.5.42.9003
 
-- Major changes -- none
+- Major changes – none
 - Minor changes
   - Renamed local and remote repositories from nprcmanager to
     nprcgenekeepr.
@@ -906,11 +640,11 @@ R. Mark Sharp, Ph.D.
   - Conversion worked
     - Running the build check had OK: 739; Failed: 0; Warnings: 0;
       Skipped: 0
-- Minor changes -- none
+- Minor changes – none
 
 # nprcmanager 0.5.42.9001
 
-- Major changes -- none
+- Major changes – none
 - Minor changes
   - Adding small executable examples in `roxygen2` comments that will go
     into the Rd-files. Since I have tests, I am wrapping the examples in
@@ -919,9 +653,9 @@ R. Mark Sharp, Ph.D.
     `par()` with  
     `opar <- par(no.readonly =TRUE)`  
     `on.exit(par(opar))`  
-  - Removed the word "Implements" from the title.
+  - Removed the word “Implements” from the title.
   - Reworded the first sentence of the Description element and therein
-    removing "implements" and "nprcmanager" as unnecessary words.
+    removing “implements” and “nprcmanager” as unnecessary words.
   - Added single quotes around all package, software, and API names
     within the Description element of the DESCRIPTION file.
 
@@ -929,12 +663,12 @@ R. Mark Sharp, Ph.D.
 
 - Major changes
   - Added ability to export genetic summary statistic plots
-- Minor changes -- none
+- Minor changes – none
 
 # nprcmanager 0.5.42 (20191208)
 
 - CRAN submission
-- Move output of suspicious parent list from the user's home directory
+- Move output of suspicious parent list from the user’s home directory
   to the result of `tempdir()`.
 
 # nprcmanager 0.5.41 (20191130)
@@ -944,7 +678,7 @@ R. Mark Sharp, Ph.D.
 # nprcmanager 0.5.40.9002 (20191119)
 
 - Tried to get vignette for shiny application to find images on all
-  building platforms by adding "./" to relative path.
+  building platforms by adding “./” to relative path.
 
 # nprcmanager 0.5.40.9001 (20191115)
 
@@ -987,7 +721,7 @@ R. Mark Sharp, Ph.D.
 - Added colorIndex to list returned by getIndianOriginStatus(),
   getProductionStatus(), and getProportionLow(). Updated related unit
   tests
-- Changed getSiteInfo() to reflect ONPRC's query structure
+- Changed getSiteInfo() to reflect ONPRC’s query structure
 - Changed .Rbuildignore to leave out .png image files needed for Shiny
   tutorial.
 
@@ -1157,7 +891,7 @@ R. Mark Sharp, Ph.D.
 
 # nprcmanager 0.5.10 (20190428)
 
-- Corrected roxygen2 comment "@export" in getAnimalsWithHighKinship().
+- Corrected roxygen2 comment “@export” in getAnimalsWithHighKinship().
 - Added unit test for fillGroupMembersWithSexRatio()
 
 # nprcmanager 0.5.09 (20190428)

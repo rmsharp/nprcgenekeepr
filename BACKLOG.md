@@ -554,28 +554,53 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       an easy-to-miss NOTE going forward. `devtools::check()` confirmed clean: **0 errors / 0
       warnings / 1 NOTE** (only the pre-existing vignettes/figure-leftover NOTE; the spelling NOTE
       is gone). See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 543.
-- [ ] **`NEWS.Rmd` entries since ~2.0.0 have drifted far more verbose than the
-      project's own pre-1.0.8 style** (found S522, 2026-08-11, owner-directed,
-      READY, Effort M) -- entries through and including the `1.0.8 (20250723)`
-      section are short, plain bullets (e.g. "Added returned value
-      descriptions for all functions within R directory where formerly
-      missing."), one line per change, no formulas, no citations, no
-      implementation rationale. Recent entries (issue #130's marker-genetics
-      family, issue #153 Slices 1-3, etc.) have grown into multi-sentence
-      paragraphs carrying full closed-form formulas, citation strings, and
-      derivation/approximation rationale that belongs in roxygen `@references`
-      and `inst/extdata/ui_guidance/population_genetics_terms.html` instead --
-      both of which are already the user-viewable surfaces the citation
-      checklist (issue #120) requires for exactly this content. A future
-      session should rewrite the development-version entries back toward the
-      pre-1.0.8 level of detail (what changed, in a sentence, matching
-      existing bullet style) and move any calculation/derivation detail that
-      isn't already in `@references`/`population_genetics_terms.html` there
-      instead of trimming it outright. Scope this to entries from
-      `2.0.0.9000 (development version)` forward -- do not rewrite already
-      -released, frozen version sections (matching the general
-      don't-edit-frozen-history precedent used for `CHANGELOG.md`'s Legacy
-      history marker).
+- [ ] (none remaining -- the "`NEWS.Rmd` entries since ~2.0.0 have drifted far more
+      verbose than the project's own pre-1.0.8 style" item (found S522, 2026-08-11) is
+      RESOLVED -- S538 (2026-08-12): rewrote the `2.0.0.9000 (development version)`
+      section's 26 entries from multi-sentence paragraphs (full closed-form formulas,
+      citation strings, derivation/approximation rationale) back to the pre-1.0.8
+      one/two-line-per-change style, per this item's own scoping instruction (below).
+      Every dropped formula/citation was verified present in the relevant function's
+      roxygen `@references` and/or `inst/extdata/ui_guidance/population_genetics_terms.html`
+      before being dropped (spot-checked via `grep`, including `computeGenomicROH()`'s
+      F_ROH formula, which IS covered under HTML `<sub>` markup that a plain-text
+      `grep` for `F_ROH` initially missed -- re-checked with broader terms before
+      trusting the negative). Every issue number and every exported/new function name
+      was cross-diffed old-vs-new (`grep -oE '#[0-9]+'` / backtick-quoted identifiers)
+      to confirm nothing substantive was lost; 4 genuinely-dropped function-name
+      mentions were restored after the diff caught them (`makeGeneticSummaryTable()`,
+      `getPossibleCols()`, `getBoxWhiskerDescription()`/`savePlotToFile()`/
+      `getPyramidPlot()`, `createSimKinships()`/`cumulateSimKinships()`) --
+      the rest were confirmed-intentional (implementation-rationale mentions, not new
+      capabilities). Net: dev-version section 386 -> 134 lines (252 removed);
+      `NEWS.Rmd` 1,154 -> 902 lines, `NEWS.md` re-rendered via
+      `rmarkdown::render(output_format = rmarkdown::github_document(html_preview = FALSE))`
+      (no `NEWS.html` litter). Section heading counts/order confirmed identical between
+      `NEWS.Rmd`/`NEWS.md` (28 each). **Correctly left the already-released
+      `2.0.0 (20260708)` section completely untouched, per this item's own explicit
+      "do not rewrite already-released, frozen version sections" instruction** --
+      caught mid-session as a self-correction: an initial pass mistakenly also
+      rewrote the frozen `2.0.0` section (misreading the owner-approved "all
+      post-2.0.0 entries" scope-question phrasing as license to include it); re-read
+      this item's own text before finishing, recognized the conflict, and reverted
+      that section verbatim from `git show HEAD:NEWS.Rmd` before re-rendering.
+      `test_effectivePopulationSizeDocs.R`'s `NEWS.Rmd` regression guard (asserts
+      "effective population size"/"gene diversity" both present) reconfirmed passing
+      after the fix. **A first `devtools::check()` run then found a second real bug**
+      S537's own fresh `test_wordlist_coverage.R` guard caught: rewriting the prose
+      shifted `hunspell`/`spelling`'s context-sensitive tokenization around several
+      already-benign possessive constructs (`` `fn()`'s ``/`word's`, identical
+      patterns existed pre-session and passed clean under S537), newly flagging
+      `centers'` and a stray, context-orphaned `'s` fragment. Verified both as false
+      positives (no real typo); fixed by rephrasing the 6 exact constructs producing
+      them (dropping/relocating each possessive) rather than adding a bare `'s` to
+      `inst/WORDLIST`, which would have blinded the guard to real future typos
+      sharing that fragment. Re-rendered and reconfirmed
+      `spelling::spell_check_package()` returns 0 rows. Full clean regression 0
+      failed/0 error (33 pre-existing, unrelated warnings, unchanged from S537's own
+      baseline); final `devtools::check()`: **0 errors / 0 warnings / 1 NOTE** (only
+      the pre-existing vignettes/figure-leftover NOTE, matching S537's own baseline
+      exactly). See `CHANGELOG.md`.
 - [ ] **`a2interactive.Rmd` documentation pass is due -- several exported,
       script-callable functions shipped since the last pass (S478, 2026-08-04)
       have zero coverage** (found S522, 2026-08-11, owner-directed, READY,
