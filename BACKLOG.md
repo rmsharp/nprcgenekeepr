@@ -106,10 +106,9 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       copyrighted siblings in the same directory -- still unresolved, unchanged from S545.
       See `CHANGELOG.md`.)
 - [ ] **Thread `twinRelations` into `kinship()`'s computation, not just diagram rendering**
-      (found S549, Finding #1 of the above audit; design RATIFIED S550; **Slices 1-2 DONE
-      S551-S552**, see `docs/planning/twin-relations-kinship-computation-plan.md` -- READY
-      for Slice 3, Effort M/3 slices, 2 of 3 done) -- `nprcgenekeepr` already has a
-      twin-declaration data
+      (found S549, Finding #1 of the above audit; design RATIFIED S550; **all 3 slices DONE
+      S551-S553, RESOLVED**, see `docs/planning/twin-relations-kinship-computation-plan.md`)
+      -- `nprcgenekeepr` already had a twin-declaration data
       model (`checkTwinRelations()`, issue #137) but it feeds only the Diagram tab; every
       kinship-driven calculation silently treats a declared monozygotic-twin pair as ordinary
       full siblings, understating their kinship and understating every relative reached
@@ -140,10 +139,32 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `devtools::check()` 0 errors/0 warnings/1 pre-existing unrelated NOTE; full clean
       regression read 0 failed/0 error; `lintr::lint_package()` 0 lints on all 8 touched files.
       One combined `NEWS.Rmd` entry added covering Slices 1-2 together (the plan's own §8
-      item 3 open question, resolved this session). **Next: Slice 3** (full Shiny wiring)
-      remains flagged as needing its own Pre-RED resolution of an open tab-order UX question,
-      since `twinRelations` is currently uploaded only in the Diagram tab, not GV Analysis.
-      Not yet filed as a GitHub issue.
+      item 3 open question, resolved this session). **Slice 3 (full Shiny wiring) DONE S553,
+      closing this item:** `modPedigreeServer()`'s return list gained a `twinRelations`
+      reactive (the raw, ungated `twinRelationsData()`, unaffected by the "Show Twin
+      Connectors" toggle); `R/appServer.R` gained `shared$twinRelations`, wired into
+      `sharedKinshipMatrix`'s own `kinship()` call and threaded through to
+      `modGeneticValueServer`/`modBreedingGroupsServer`/`modSummaryStatsServer` (each gained
+      a matching `twinRelations` parameter on their own fallback `kinship()` recompute path).
+      Dragon 1 (the tab-order UX question) resolved via Pre-RED `AskUserQuestion`: a single
+      upload point (Diagram tab only) -- Shiny's reactive graph runs every module from
+      session start, not gated by tab visibility, so "regardless of tab visit order" is
+      satisfied mechanically without a second, duplicate upload control; decision recorded in
+      the plan document's own §6 Dragon 1. Verified live end-to-end (Phase 3E, new
+      `test-e2e-twin-relations-cross-tab.R`): a `twinRelations` file uploaded on the Diagram
+      tab is reflected in the Summary Statistics kinship export for the declared MZ pair
+      without ever visiting Genetic Value Analysis; the pre-existing
+      `test-e2e-pedigree-module.R` twin-connector suite (13 tests/45 assertions) re-confirmed
+      unaffected. `devtools::check()` 0 errors/0 warnings/1 pre-existing unrelated NOTE; full
+      clean regression 0 failed/0 error (2,155 test blocks); `lintr::lint_package()` 0 lints on
+      all touched files. Fixed 3 pre-existing test-double staleness gaps the full regression
+      (not the targeted run) surfaced in untouched files:
+      `test_appServer_logging.R`'s own local `modPedigreeServer` stub, `test_modGeneticValue.R`'s
+      2 `local_mocked_bindings(reportGV = ...)` signatures, and `test_moduleContract.R`'s
+      `modPedigreeServer` return-name whitelist -- see `PROJECT_LEARNINGS.md` Learning 559.
+      `NEWS.Rmd` entry extended (one combined Slices 1-3 entry); tutorial/article checklist
+      applied (`vignettes/manual_components/_pedigree_browser.Rmd` gained a paragraph on the
+      app-wide kinship correction). Not yet filed as a GitHub issue.
 - [ ] **Add a visual marker for consanguineous matings in the Pedigree Diagram tab**
       (found S549, Finding #2 of the above audit, READY, Effort S) -- kinship2 draws a
       doubled/thickened mate-line for a blood-related couple; `makePedigreeMatingLayout()`

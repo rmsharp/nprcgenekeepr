@@ -4,7 +4,12 @@
 \alias{modGeneticValueServer}
 \title{Genetic Value Analysis Module - Server Function}
 \usage{
-modGeneticValueServer(id, pedigree, speciesOverrides = reactive(NULL))
+modGeneticValueServer(
+  id,
+  pedigree,
+  speciesOverrides = reactive(NULL),
+  twinRelations = reactive(NULL)
+)
 }
 \arguments{
 \item{id}{character vector of length 1. Module namespace identifier.}
@@ -17,6 +22,15 @@ overrides loaded at boot by \code{\link{loadSpeciesOverrides}} (a list with
 \code{gestationDefault}), or \code{NULL}. Threaded into
 \code{\link{reportGV}}. Defaults to \code{reactive(NULL)}
 so no config file means bundled behavior.}
+
+\item{twinRelations}{reactive returning a validated twin/zygosity sidecar
+data.frame (\code{id1}, \code{id2}, \code{code}), or \code{NULL}. Unlike
+\code{kinshipOverrideFile} below, this data does not originate inside this
+module -- it is uploaded on the Pedigree Browser's Diagram tab and threaded
+in by \code{appServer} (BL-N Slice 3), so a declared MZ-twin pair's
+corrected kinship is reflected in \code{\link{reportGV}}'s output
+regardless of which tab the user visits first. Defaults to
+\code{reactive(NULL)} (no twins declared).}
 }
 \value{
 List with \code{geneticValues}, \code{topAnimals},

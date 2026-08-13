@@ -65,7 +65,10 @@ muffleConfig <- function(expr) {
 stubPed <- function(id, ...) list(
   pedigree = shiny::reactive(NULL), processedPedigree = shiny::reactive(NULL),
   focalAnimals = shiny::reactive(NULL), nAnimals = shiny::reactive(0L),
-  populationCount = shiny::reactive(0L), isReady = shiny::reactive(FALSE)
+  populationCount = shiny::reactive(0L), isReady = shiny::reactive(FALSE),
+  # BL-N Slice 3: appServer's own shared$twinRelations observer reads this
+  # unconditionally (no req()) -- an incomplete stub missing it would error.
+  twinRelations = shiny::reactive(NULL)
 )
 stubGV <- function(id, ...) list(
   geneticValues = shiny::reactive(NULL), topAnimals = shiny::reactive(NULL),

@@ -10,7 +10,8 @@ modSummaryStatsServer(
   pedigree,
   kinshipMatrix = NULL,
   founderStats = NULL,
-  kinshipOverrides = NULL
+  kinshipOverrides = NULL,
+  twinRelations = NULL
 )
 }
 \arguments{
@@ -43,6 +44,14 @@ The override moves the kinship \emph{value} only; the \code{relation}
 structure, not from the kinship value). Overridden pairs are flagged
 with a logical \code{overridden} column in the relationship table.
 \code{NULL} (the default) is a no-op.}
+
+\item{twinRelations}{optional reactive returning a validated twin/zygosity
+sidecar data.frame (\code{id1}, \code{id2}, \code{code}); see
+\code{\link{checkTwinRelations}}. When the module recomputes kinship from
+the pedigree (the usual path), it is passed straight through to
+\code{\link{kinship}} so the relationship table and the kinship CSV
+export reflect a declared MZ-twin pair's corrected identity regardless
+of tab order (BL-N Slice 3). \code{NULL} (the default) is a no-op.}
 }
 \value{
 A list with reactive components:

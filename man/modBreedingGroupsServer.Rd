@@ -9,7 +9,8 @@ modBreedingGroupsServer(
   pedigree,
   geneticValues = NULL,
   kinshipMatrix = NULL,
-  kinshipOverrides = NULL
+  kinshipOverrides = NULL,
+  twinRelations = NULL
 )
 }
 \arguments{
@@ -35,7 +36,16 @@ When the module recomputes kinship from the pedigree (the shared
 \code{kinshipMatrix} is unavailable), the overrides are applied to that
 matrix so group formation reflects them regardless of tab order.
 \code{NULL} (the default) is a no-op. A provided \code{kinshipMatrix} is
-expected to already carry overrides applied at its source.
+expected to already carry overrides applied at its source.}
+
+\item{twinRelations}{optional reactive returning a validated twin/zygosity
+sidecar data.frame (\code{id1}, \code{id2}, \code{code}); see
+\code{\link{checkTwinRelations}}. When the module recomputes kinship from
+the pedigree (the shared \code{kinshipMatrix} is unavailable), it is
+passed straight through to \code{\link{kinship}} so group formation
+reflects a declared MZ-twin pair's corrected identity regardless of tab
+order (BL-N Slice 3). \code{NULL} (the default) is a no-op. A provided
+\code{kinshipMatrix} is expected to already reflect it at its source.
 
 Up to 5 distinct candidate groupings are formed per run (issue #125), with
 a "Candidate grouping" selector letting the user switch among them without

@@ -127,23 +127,94 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S553
 date: 2026-08-13
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 9
+predecessor_score: 10
 active_task: Slice 3 (full Shiny wiring) of the S550-ratified twinRelations-into-kinship() plan
-(docs/planning/twin-relations-kinship-computation-plan.md §4) -- modPedigreeServer() gains a
-twinRelations return-list entry; R/appServer.R gains shared$twinRelations wired into
-sharedKinshipMatrix, modBreedingGroupsServer, modSummaryStatsServer, and modGeneticValueServer
-(which passes it through to reportGV()).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+(docs/planning/twin-relations-kinship-computation-plan.md §4) -- DONE, closing the item (all 3
+slices shipped). modPedigreeServer() gained a twinRelations return-list entry; R/appServer.R
+gained shared$twinRelations wired into sharedKinshipMatrix, modBreedingGroupsServer,
+modSummaryStatsServer, and modGeneticValueServer (which passes it through to reportGV()). Dragon
+1 (tab-order UX question) resolved: single upload point, verified regardless-of-tab-order live.
+what_was_done: Full strict-TDD PRE-RED->RED->GREEN cycle (REFACTOR declined via AskUserQuestion).
+Dragon 1 resolved via AskUserQuestion on a technical finding (Shiny's reactive graph runs every
+module from session start, not gated by tab visibility) -- single upload point (Diagram tab),
+recorded back into the plan doc's own §6 item 1. 13 new test_that() blocks across 5 files: 3 new
+(test_modBreedingGroups_twinRelations.R, test_modSummaryStats_twinRelations.R,
+test_modGeneticValue_twinRelations.R, mirroring the 3 existing *_kinshipOverrides.R files), 1
+extended (test_modPedigree_twinRelations.R, +2 blocks), 1 extended (test_appServer_server.R,
+stub captures + 1 new wiring test). Production: R/modPedigree.R (new twinRelations return-list
+entry), R/appServer.R (shared$twinRelations slot + observer + threaded into sharedKinshipMatrix
++ 3 module calls), R/modGeneticValue.R (new twinRelations parameter -> reportGV()),
+R/modBreedingGroups.R (new twinRelations parameter -> getKinshipMatrix() -> kinship()),
+R/modSummaryStats.R (new twinRelations parameter -> getKinshipMatrix()'s kinship() call). Full
+clean regression (not just the 5 targeted files) surfaced and this session fixed 3 real,
+pre-existing test-double staleness gaps in UNTOUCHED files (test_appServer_logging.R's own local
+modPedigreeServer stub; test_modGeneticValue.R's 2 local_mocked_bindings(reportGV=...) copies;
+test_moduleContract.R's return-name whitelist) plus 2 mechanical additions (shinytest2.yaml CI
+group regex; 1 inst/WORDLIST word, "ungated"). Verification: devtools::check() 0 errors/0
+warnings/1 pre-existing NOTE; full clean regression 0 failed/0 error (2,155 blocks, 5,568
+passed); lintr::lint_package() 0 lints (1 line-length finding fixed). Commits: 1fb74127 (claim),
+this session's own deliverable + close-out commits (see next reconcile for shas).
+next_steps: BACKLOG.md priorities, in order (all unchanged from S552's own list except twinRelations
+now fully closed): (1) Pedigree Diagram affected-status fill-convention defect (found S552, READY,
+Effort S) -- unaffected individuals render solid-filled instead of open/unfilled; scoped to
+.affectedColor()/R/makePedigreeDiagramData.R:163-165. (2) Add a consanguineous-mating visual marker
+to the Diagram tab (S549 Finding #2, READY, Effort S). (3) Write the dedicated Pedigree Diagram tab
+article (READY, Effort M, unchanged since S544). Lower priority: the branch-cleanup item (found
+S552, READY, Effort S -- check mergedness before deleting); issue #148 scope-narrowing conversation
+(needs its own scoping session). Unchanged: NPRC outreach owner review (DECISION NEEDED); LabKey
+remaining recs (BLOCKED). Also unresolved: the shinytest2.yaml scheduled CI run is still red at the
+E2E-tier step, unchanged from S548-S552's own findings -- still not diagnosed (this session's own
+NEW e2e file, test-e2e-twin-relations-cross-tab.R, was added to that same scheduled workflow's group
+list but was NOT run through the scheduled CI itself this session -- only locally with
+NPRC_RUN_E2E=true). Local master remains ahead of origin (24+ commits after this session) -- a
+future session should consider pushing.
+key_files: docs/planning/twin-relations-kinship-computation-plan.md §6 item 1 (Dragon 1's recorded
+resolution) -- the BL-N twinRelations item is now fully closed, no more slices; R/modPedigree.R
+(new twinRelations return-list entry, near the end of modPedigreeServer's return list);
+R/appServer.R (shared reactiveValues twinRelations slot, its own observer, and 4 call-site
+threads -- sharedKinshipMatrix, modGeneticValueServer, modSummaryStatsServer,
+modBreedingGroupsServer); R/modGeneticValue.R, R/modBreedingGroups.R, R/modSummaryStats.R (each
+gained a twinRelations parameter, matching the kinshipOverrides precedent's own shape);
+tests/testthat/test-e2e-twin-relations-cross-tab.R (the new live cross-tab test, a template for
+any future cross-module propagation test); tests/testthat/test_appServer_server.R (stubPed/stubGV/
+stubBG now capture their own twinRelations arg via ctl$twins/ctl$gvTwinRelations/ctl$bgTwinRelations
+-- a reusable pattern for verifying appServer wiring, not just return-value propagation).
+gotchas: (1) shiny::testServer()'s own return value is the LAST EXPRESSION evaluated in the test
+block, NOT the module's own return list -- use session$getReturned() called FROM INSIDE the block
+(test_modPedigree.R's own established convention) to read return-list reactives; this session
+initially got this wrong and had to fix 2 test blocks. (2) Any session that adds a new entry to a
+Shiny module's return list, or a new parameter to a function reached via local_mocked_bindings()/a
+hand-written stub anywhere else in the suite, MUST run the full testthat::test_dir() regression
+before declaring GREEN -- a targeted run of only the files the session's own diff touched is
+structurally blind to stale test doubles elsewhere (this session found 3; see PROJECT_LEARNINGS.md
+Learning 559 for the full pattern and a 2-part grep recipe: grep for other local stubs of the same
+module name, AND separately grep for "realFunctionName = function(" to catch
+local_mocked_bindings() copies). (3) The scheduled shinytest2.yaml CI run remains red, unchanged
+since S548 -- still not diagnosed by any session since; a future session should pick this up
+directly rather than continuing to carry it forward as a known-red baseline. (4) No adversarial-
+verification pass has been run on Slices 1-3 as a whole -- flagged, not silently omitted, carried
+forward from S551/S552's own identical gotcha.
+runtime_smoke: PASS (live). NPRC_RUN_E2E=true/NOT_CRAN=true shinytest2/chromote run of the new
+test-e2e-twin-relations-cross-tab.R: 3/3 assertions passed (uploads twinRelations on the Diagram
+tab, navigates straight to Summary Statistics without ever visiting Genetic Value Analysis,
+confirms the MZ pair's kinship export reads 0.5). Also re-ran the full pre-existing
+test-e2e-pedigree-module.R suite (13 tests/45 assertions, incl. the issue #137 twin-connector
+tests) to confirm no regression from the modPedigree.R return-list change -- 0 failed/0 error.
+changelog_ref: this session's own CHANGELOG.md entries (claim, HANDOFFS reconcile, deliverable,
+close-out).
 commit: pending
 ```
-<free-text prose: pending>
+<free-text prose: Session 553 delivered Slice 3 of the twinRelations-into-kinship() plan, closing
+the item across all 3 slices -- full strict-TDD cycle, Dragon 1 resolved via a genuine technical
+finding (not an arbitrary pick), a live cross-tab E2E test exercising the literal Dragon-1
+scenario, 0 errors/0 warnings/0 lints. Self-score 9/10: one point held back for an avoidable
+test-authoring mistake (testServer's own return-value convention) caught only at RED rather than
+by checking established precedent first, and the still-unaddressed adversarial-verification gap
+carried from Slices 1-2. Predecessor score 10/10: S552's handoff was exactly right in every
+particular checked -- file:line pointers, the Dragon 1 framing, and the live-E2E gotcha were all
+directly load-bearing with zero correction needed.>
 
 ```handoff
 session: S552

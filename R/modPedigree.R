@@ -209,6 +209,12 @@ modPedigreeUI <- function(id) {
 #'   \item \code{nAnimals} - Count of animals in filtered pedigree
 #'   \item \code{populationCount} - Count of animals marked as population
 #'   \item \code{isReady} - Logical indicating if pedigree data is ready
+#'   \item \code{twinRelations} - The validated twin/zygosity sidecar
+#'     (\code{NULL} if none uploaded or invalid). Unlike the Diagram tab's
+#'     own rendering, this is the raw, ungated reactive -- not filtered by
+#'     the "Show Twin Connectors" toggle -- so callers outside this module
+#'     (e.g. \code{appServer}) see the validated data regardless of that
+#'     toggle's state (BL-N Slice 3).
 #' }
 #'
 #' @seealso \code{\link{modPedigreeUI}} for the UI component
@@ -809,6 +815,13 @@ modPedigreeServer <- function(id, studbook) {
       }),
       isReady = reactive({
         !is.null(pedigreeData()) && nrow(pedigreeData()) > 0L
+      }),
+      # BL-N Slice 3: the raw, ungated twinRelationsData() reactive, so
+      # appServer can thread a declared twin identity into kinship-driven
+      # calculations app-wide -- not just this tab's own diagram rendering
+      # (which stays gated behind "Show Twin Connectors", untouched here).
+      twinRelations = reactive({
+        twinRelationsData()
       })
     )
   })

@@ -152,6 +152,7 @@ jobs:
             "^e2e-pyramid-"
             "^e2e-settings-about"
             "^e2e-summary-statistics"
+            "^e2e-twin-relations-"
             "^e2e-workflow-integration"
           )
           fail=0

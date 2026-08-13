@@ -50,7 +50,12 @@ appServer <- function(input, output, session) {
     currentStudbook = NULL,
     currentPedigree = NULL,
     geneticValues = NULL,
-    breedingGroups = NULL
+    breedingGroups = NULL,
+    # BL-N Slice 3: the validated twinRelations sidecar, uploaded only on the
+    # Pedigree Browser's Diagram tab (modPedigree.R), threaded app-wide from
+    # here. NULL (no twins declared) is the common, steady state -- not an
+    # unready/loading state -- unlike currentPedigree/geneticValues below.
+    twinRelations = NULL
   )
 
   # ========================================
@@ -307,6 +312,14 @@ appServer <- function(input, output, session) {
     shared$currentPedigree <- pedigreeResults$pedigree()
   })
 
+  # BL-N Slice 3: propagate the Diagram tab's validated twinRelations sidecar
+  # app-wide. Deliberately no req() -- NULL (no twins declared, or none
+  # uploaded yet) is a valid, common steady state that downstream kinship
+  # calls must see as "no correction," not an unready state to block on.
+  observe({
+    shared$twinRelations <- pedigreeResults$twinRelations()
+  })
+
   # Age-Sex Pyramid Module
   modPyramidServer(
     "pyramid",
@@ -317,7 +330,8 @@ appServer <- function(input, output, session) {
   gvResults <- modGeneticValueServer(
     "geneticValue",
     pedigree = reactive(shared$currentPedigree),
-    speciesOverrides = reactive(shared$speciesOverrides)
+    speciesOverrides = reactive(shared$speciesOverrides),
+    twinRelations = reactive(shared$twinRelations)
   )
 
   # Update shared data when genetic values are calculated
@@ -340,7 +354,8 @@ appServer <- function(input, output, session) {
     if (!"gen" %in% names(ped)) {
       ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
     }
-    kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
+    kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen,
+                    twinRelations = shared$twinRelations)
     overrides <- if (is.null(gvResults$kinshipOverrides)) {
       NULL
     } else {
@@ -360,7 +375,8 @@ appServer <- function(input, output, session) {
     pedigree = reactive(shared$currentPedigree),
     kinshipMatrix = sharedKinshipMatrix,
     founderStats = gvResults$founderStats,
-    kinshipOverrides = gvResults$kinshipOverrides
+    kinshipOverrides = gvResults$kinshipOverrides,
+    twinRelations = reactive(shared$twinRelations)
   )
 
   # ORIP Reporting Module (ONPRC-only, #49) -- mount only for an actual ONPRC
@@ -406,7 +422,8 @@ appServer <- function(input, output, session) {
     pedigree = reactive(shared$currentPedigree),
     geneticValues = reactive(shared$geneticValues),
     kinshipMatrix = sharedKinshipMatrix,
-    kinshipOverrides = gvResults$kinshipOverrides
+    kinshipOverrides = gvResults$kinshipOverrides,
+    twinRelations = reactive(shared$twinRelations)
   )
 
   # Capture the formed breeding groups into shared state (issue #112 Slice S4)

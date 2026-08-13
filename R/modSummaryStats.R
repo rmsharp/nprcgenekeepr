@@ -272,6 +272,13 @@ modSummaryStatsUI <- function(id) {
 #'   structure, not from the kinship value). Overridden pairs are flagged
 #'   with a logical \code{overridden} column in the relationship table.
 #'   \code{NULL} (the default) is a no-op.
+#' @param twinRelations optional reactive returning a validated twin/zygosity
+#'   sidecar data.frame (\code{id1}, \code{id2}, \code{code}); see
+#'   \code{\link{checkTwinRelations}}. When the module recomputes kinship from
+#'   the pedigree (the usual path), it is passed straight through to
+#'   \code{\link{kinship}} so the relationship table and the kinship CSV
+#'   export reflect a declared MZ-twin pair's corrected identity regardless
+#'   of tab order (BL-N Slice 3). \code{NULL} (the default) is a no-op.
 #'
 #' @return A list with reactive components:
 #' \itemize{
@@ -307,7 +314,8 @@ modSummaryStatsUI <- function(id) {
 #' @export
 modSummaryStatsServer <- function(id, geneticValues, pedigree,
                                    kinshipMatrix = NULL, founderStats = NULL,
-                                   kinshipOverrides = NULL) {
+                                   kinshipOverrides = NULL,
+                                   twinRelations = NULL) {
   moduleServer(id, function(input, output, session) {
 
     # ========================================
@@ -379,7 +387,12 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
       if (!"gen" %in% names(ped)) {
         ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
       }
-      kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
+      # BL-N Slice 3: a declared twin identity is threaded straight into
+      # kinship() itself (not a post-hoc matrix patch, mirroring reportGV()'s
+      # own call shape).
+      twins <- if (is.null(twinRelations)) NULL else twinRelations()
+      kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE,
+                      twinRelations = twins)
       overrides <- if (is.null(kinshipOverrides)) NULL else kinshipOverrides()
       applyKinshipOverridesToMatrix(kmat, overrides)
     })

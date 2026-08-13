@@ -162,6 +162,14 @@ modGeneticValueUI <- function(id) {
 #' \code{gestationDefault}), or \code{NULL}. Threaded into
 #' \code{\link{reportGV}}. Defaults to \code{reactive(NULL)}
 #' so no config file means bundled behavior.
+#' @param twinRelations reactive returning a validated twin/zygosity sidecar
+#' data.frame (\code{id1}, \code{id2}, \code{code}), or \code{NULL}. Unlike
+#' \code{kinshipOverrideFile} below, this data does not originate inside this
+#' module -- it is uploaded on the Pedigree Browser's Diagram tab and threaded
+#' in by \code{appServer} (BL-N Slice 3), so a declared MZ-twin pair's
+#' corrected kinship is reflected in \code{\link{reportGV}}'s output
+#' regardless of which tab the user visits first. Defaults to
+#' \code{reactive(NULL)} (no twins declared).
 #'
 #' @return List with \code{geneticValues}, \code{topAnimals},
 #' \code{nAnalyzed}, \code{kinshipMatrix}, \code{founderStats},
@@ -178,7 +186,8 @@ modGeneticValueUI <- function(id) {
 #' @family Shiny modules
 #' @export
 modGeneticValueServer <- function(id, pedigree,
-                                  speciesOverrides = reactive(NULL)) {
+                                  speciesOverrides = reactive(NULL),
+                                  twinRelations = reactive(NULL)) {
   moduleServer(id, function(input, output, session) {
 
     # Store full reportGV results
@@ -312,6 +321,7 @@ modGeneticValueServer <- function(id, pedigree,
           breedingAgeDefault = ov$breedingAgeDefault,
           gestationDefault = ov$gestationDefault,
           kinshipOverrides = kinshipOverrideData(),
+          twinRelations = twinRelations(),
           guCutoff = guCutoffChoice(),
           zScoreCutoff = zScoreCutoffChoice(),
           axisPriority = axisPriorityChoice()

@@ -111,6 +111,17 @@ breaking the diagram; the pedigree renders exactly as it would with no
 twin data at all until a valid file is supplied. A pedigree with no twin
 data uploaded is unaffected by this feature entirely.
 
+Uploading this file does more than draw connectors: a declared
+monozygotic (MZ) pair's kinship is corrected to genetic identity
+throughout the application, not just on this diagram. Once uploaded, the
+correction is reflected in **Summary Statistics**, **Breeding Group
+Formation**, and **Genetic Value Analysis** -- including for every
+relative reached through either twin, not just the pair itself -- no
+matter which of those tabs is visited first or whether the **Show Twin
+Connectors** toggle above is ever switched on (that toggle controls only
+this diagram's own rendering). DZ and UZ pairs are unaffected by this
+correction; only a declared MZ pair's kinship changes.
+
 ### Module Interface
 
 The `modPedigree` module accepts input from `modInput` and returns reactive values

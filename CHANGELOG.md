@@ -138,6 +138,72 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-N] S553 close-out: Slice 3 (twinRelations full Shiny wiring) shipped, closing the item; S552 handoff evaluation, Learning 559
+- **Deliverable:** Session S553's own close-out. Evaluated S552's `HANDOFFS.md` receipt (10/10 --
+  every `key_files` file:line pointer accurate and directly used, `next_steps`/`gotchas` matched
+  this session's own independently-derived plan point for point, Dragon 1's framing as a live
+  judgment call rather than an assumed answer set up exactly the right Pre-RED investigation).
+  Self-assessment 9/10 (one point held back for an avoidable `shiny::testServer()` return-value
+  mistake caught only at RED, and the still-carried-forward adversarial-verification gap).
+  Appended `PROJECT_LEARNINGS.md` Learning 559 (full cross-file `testthat::test_dir()` regression
+  reads are necessary, not optional, when a Shiny module's return shape or a mocked dependency's
+  parameter list changes -- 3 real stub/mock-drift gaps this session's own targeted 5-file run
+  could not see were caught only by the full suite). Updated `BACKLOG.md`'s triggering item: all 3
+  slices DONE, item fully resolved.
+- **Commit:** this close-out's own commit.
+
+### 2026-08-13 · [BL-N] S553: modPedigreeServer/appServer/modGeneticValueServer/modBreedingGroupsServer/modSummaryStatsServer gain twinRelations wiring -- Slice 3 of the ratified plan, closing the item
+- **Deliverable:** Full Shiny wiring for the S550-ratified `twinRelations`-into-`kinship()` plan
+  (`docs/planning/twin-relations-kinship-computation-plan.md` §4 Slice 3). `modPedigreeServer()`'s
+  return list gained a `twinRelations` reactive (the raw, ungated `twinRelationsData()`);
+  `R/appServer.R` gained a `shared$twinRelations` slot populated by a deliberately `req()`-free
+  observer, threaded into `sharedKinshipMatrix`'s own `kinship()` call and through to
+  `modGeneticValueServer`/`modBreedingGroupsServer`/`modSummaryStatsServer` (each gained a matching
+  `twinRelations` parameter on its own fallback `kinship()` recompute path, mirroring the
+  `kinshipOverrides` precedent's exact shape). Dragon 1 (the tab-order UX question) resolved via
+  Pre-RED `AskUserQuestion`: a single upload point (Diagram tab only) -- Shiny's reactive graph
+  runs every module from session start, not gated by tab visibility, so "regardless of tab visit
+  order" is satisfied mechanically; resolution recorded back into the plan document's own §6
+  Dragon 1 text. 13 new `test_that()` blocks across 5 files (3 new: `test_modBreedingGroups_twinRelations.R`,
+  `test_modSummaryStats_twinRelations.R`, `test_modGeneticValue_twinRelations.R`; 2 extended:
+  `test_modPedigree_twinRelations.R`, `test_appServer_server.R`). New live E2E test
+  `test-e2e-twin-relations-cross-tab.R` verifies the literal Dragon-1 scenario end to end.
+  Full clean regression (not just the targeted files) surfaced and this session fixed 3 real,
+  pre-existing test-double staleness gaps in files this session's diff never touched
+  (`test_appServer_logging.R`'s own local `modPedigreeServer` stub, `test_modGeneticValue.R`'s 2
+  `local_mocked_bindings(reportGV = ...)` copies, `test_moduleContract.R`'s return-name whitelist)
+  plus 2 mechanical additions (a new `.github/workflows/shinytest2.yaml` CI-group regex; 1
+  `inst/WORDLIST` word, "ungated"). `NEWS.Rmd`/`NEWS.md` extended (one combined Slices 1-3 entry);
+  `vignettes/manual_components/_pedigree_browser.Rmd` gained a paragraph on the app-wide kinship
+  correction (tutorial/article checklist).
+- **Verification:** `devtools::check()` 0 errors/0 warnings/1 pre-existing unrelated NOTE
+  (vignettes/figure leftover); full clean regression 0 failed/0 error (2,155 test blocks, 5,568
+  passed, 33 pre-existing baseline warnings); `lintr::lint_package()` 0 lints on all touched files
+  (1 line-length finding fixed). Live `shinytest2`/`chromote` (`NPRC_RUN_E2E=true`): the new
+  cross-tab test 3/3 assertions passed; the pre-existing `test-e2e-pedigree-module.R` suite (13
+  tests/45 assertions, incl. issue #137's own twin-connector tests) re-confirmed unaffected.
+- **Commit:** this session's own deliverable commit.
+
+### 2026-08-13 · [ad hoc] S553 Phase 0 reconcile: S552's HANDOFFS.md commit self-reference
+- **Deliverable:** Phase 0 ledger reconcile (`SESSION_RUNNER.md` step 6). S552's `HANDOFFS.md`
+  receipt shipped with `commit: pending` -- the standard self-reference limitation (the receipt
+  ships in the very commit whose sha it would name), matching the S543-S545/S549-S551 precedent
+  each prior session reconciled at its own claim. `HANDOFFS.md`'s frontier (`git log -1 --
+  HANDOFFS.md`) == `99796a65` (S552's own deliverable+close-out commit, bundled together that
+  session), so reconciled `commit: pending` -> `99796a65`. No other undocumented commits found;
+  `CHANGELOG.md`'s own frontier == `HEAD` already. `gh run list --branch master --limit 10` showed
+  the scheduled `shinytest2.yaml` run still red at the E2E-tier step, unchanged from
+  S548-S552's own findings -- not diagnosed this session (report, don't fix, per established
+  precedent).
+- **Commit:** this reconcile's own commit (`49c987c8`).
+
+### 2026-08-13 · [BL-N] S553 claim: Slice 3 (full Shiny wiring) of the twinRelations-into-kinship() plan
+- **Deliverable:** Session S553 claimed. Picking up the S550-ratified plan's own Slice 3
+  (`docs/planning/twin-relations-kinship-computation-plan.md` §4) -- production code, full
+  strict-TDD PRE-RED->RED->GREEN(->REFACTOR) gates apply; Pre-RED must additionally resolve Dragon
+  1 (the tab-order UX question) via `AskUserQuestion` before implementation.
+- **Commit:** `1fb74127`.
+
 ### 2026-08-13 · [BL-N] S552 close-out: Slice 2 (twinRelations into 4 script-callable functions) shipped, S551 handoff evaluation
 - **Deliverable:** Session S552's own close-out. Evaluated S551's `HANDOFFS.md` receipt (10/10
   -- every `key_files` file:line pointer exact, both gotchas [Dragon 4 confirmed resolvable;

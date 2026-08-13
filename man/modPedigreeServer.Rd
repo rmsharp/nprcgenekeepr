@@ -22,6 +22,12 @@ gen columns
 \item \code{nAnimals} - Count of animals in filtered pedigree
 \item \code{populationCount} - Count of animals marked as population
 \item \code{isReady} - Logical indicating if pedigree data is ready
+\item \code{twinRelations} - The validated twin/zygosity sidecar
+(\code{NULL} if none uploaded or invalid). Unlike the Diagram tab's
+own rendering, this is the raw, ungated reactive -- not filtered by
+the "Show Twin Connectors" toggle -- so callers outside this module
+(e.g. \code{appServer}) see the validated data regardless of that
+toggle's state (BL-N Slice 3).
 }
 }
 \description{

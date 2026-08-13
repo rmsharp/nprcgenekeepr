@@ -192,6 +192,14 @@ modBreedingGroupsUI <- function(id) {
 #'   matrix so group formation reflects them regardless of tab order.
 #'   \code{NULL} (the default) is a no-op. A provided \code{kinshipMatrix} is
 #'   expected to already carry overrides applied at its source.
+#' @param twinRelations optional reactive returning a validated twin/zygosity
+#'   sidecar data.frame (\code{id1}, \code{id2}, \code{code}); see
+#'   \code{\link{checkTwinRelations}}. When the module recomputes kinship from
+#'   the pedigree (the shared \code{kinshipMatrix} is unavailable), it is
+#'   passed straight through to \code{\link{kinship}} so group formation
+#'   reflects a declared MZ-twin pair's corrected identity regardless of tab
+#'   order (BL-N Slice 3). \code{NULL} (the default) is a no-op. A provided
+#'   \code{kinshipMatrix} is expected to already reflect it at its source.
 #'
 #' Up to 5 distinct candidate groupings are formed per run (issue #125), with
 #' a "Candidate grouping" selector letting the user switch among them without
@@ -222,7 +230,8 @@ modBreedingGroupsUI <- function(id) {
 #' @export
 modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
                                     kinshipMatrix = NULL,
-                                    kinshipOverrides = NULL) {
+                                    kinshipOverrides = NULL,
+                                    twinRelations = NULL) {
   moduleServer(id, function(input, output, session) {
 
     # Store results from groupAddAssign
@@ -230,7 +239,8 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
 
     # Helper: use the shared kinship matrix (issue #122 Phase 2) if provided,
     # else calculate from pedigree
-    getKinshipMatrix <- function(ped, kinshipMatrix, overrides = NULL) {
+    getKinshipMatrix <- function(ped, kinshipMatrix, overrides = NULL,
+                                 twinRelations = NULL) {
       # Try the shared kinship matrix first
       if (!is.null(kinshipMatrix)) {
         kmat <- tryCatch(kinshipMatrix(), error = function(e) NULL)
@@ -244,11 +254,14 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
       # recomputed matrix so group formation reflects them even when the GV tab
       # was not run first. The genetic-value-output branch above already carries
       # overrides (applied inside reportGV). Ids absent from the matrix are
-      # warn-dropped, never aborting the module (D5).
+      # warn-dropped, never aborting the module (D5). BL-N Slice 3: a declared
+      # twin identity is threaded straight into kinship() itself (not a
+      # post-hoc matrix patch, mirroring reportGV()'s own call shape).
       if (!"gen" %in% names(ped)) {
         ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
       }
-      kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
+      kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen,
+                      twinRelations = twinRelations)
       applyKinshipOverridesToMatrix(kmat, overrides)
     }
 
@@ -329,10 +342,10 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
         }
 
         incProgress(0.2, detail = "Calculating kinship")
-        kmat <- getKinshipMatrix(
-          ped, kinshipMatrix,
-          if (is.null(kinshipOverrides)) NULL else kinshipOverrides()
-        )
+        ovr <- if (is.null(kinshipOverrides)) NULL else kinshipOverrides()
+        twins <- if (is.null(twinRelations)) NULL else twinRelations()
+        kmat <- getKinshipMatrix(ped, kinshipMatrix, overrides = ovr,
+                                 twinRelations = twins)
 
         incProgress(0.3, detail = "Running group formation algorithm")
 

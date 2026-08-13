@@ -132,3 +132,63 @@ test_that(
     }
   )
 })
+
+# ---------------------------------------------------------------------------
+# BL-N Slice 3 (twinRelations-into-kinship() plan, docs/planning/
+# twin-relations-kinship-computation-plan.md sec 4): modPedigreeServer()'s
+# return list gains a twinRelations reactive so appServer can thread it
+# app-wide (sec 2.7). Unlike diagramLayout()'s twinRelations (gated by the
+# "Show Twin Connectors" toggle, D11), this return-list entry is the RAW,
+# UNGATED twinRelationsData() reactive -- the toggle only ever controlled
+# whether the diagram RENDERS connectors, never whether the underlying
+# validated data exists (sec 2.7's own already-confirmed reading of the
+# existing gate).
+# ---------------------------------------------------------------------------
+
+test_that(
+  "modPedigreeServer's return list exposes a twinRelations reactive matching
+   twinRelationsData(), independent of the Show Twin Connectors toggle
+   (Slice 3)", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  csv <- tempfile(fileext = ".csv")
+  on.exit(unlink(csv), add = TRUE)
+  writeLines(c("id1,id2,code", "S1,S2,MZ twin"), csv)
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(studbook = shiny::reactive({ twinPed() })),
+    {
+      # Toggle deliberately left at its default (off) -- the return-list
+      # entry must still carry the validated data (unlike diagramLayout()'s
+      # own gated copy).
+      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE,
+                         twinRelationsFile = fileInfo(csv))
+      session$flushReact()
+      result <- session$getReturned()
+      twins <- result$twinRelations()
+      expect_true(is.data.frame(twins))
+      expect_identical(nrow(twins), 1L)
+      expect_true(all(c("S1", "S2") %in% c(twins$id1, twins$id2)))
+    }
+  )
+})
+
+test_that(
+  "modPedigreeServer's return-list twinRelations entry is NULL when no
+   twinRelations file is uploaded (backward compatibility, Slice 3)", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(studbook = shiny::reactive({ twinPed() })),
+    {
+      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
+      session$flushReact()
+      result <- session$getReturned()
+      expect_null(result$twinRelations())
+    }
+  )
+})

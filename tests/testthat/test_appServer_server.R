@@ -64,18 +64,26 @@ stubInput <- function(id, ...) {
 
 stubPed <- function(id, ...) {
   ctl$ped <- shiny::reactiveVal(NULL)
+  # BL-N Slice 3: a controllable stand-in for modPedigreeServer()'s own new
+  # twinRelations return-list entry (the raw, ungated twinRelationsData()).
+  ctl$twins <- shiny::reactiveVal(NULL)
   list(
     pedigree = shiny::reactive(ctl$ped()),
     processedPedigree = shiny::reactive(NULL),
     focalAnimals = shiny::reactive(NULL),
     nAnimals = shiny::reactive(0L),
     populationCount = shiny::reactive(0L),
-    isReady = shiny::reactive(FALSE)
+    isReady = shiny::reactive(FALSE),
+    twinRelations = shiny::reactive(ctl$twins())
   )
 }
 
-stubGV <- function(id, ...) {
+stubGV <- function(id, pedigree, speciesOverrides = shiny::reactive(NULL),
+                    twinRelations = shiny::reactive(NULL), ...) {
   ctl$gv <- shiny::reactiveVal(NULL)
+  # BL-N Slice 3: capture the twinRelations reactive appServer passes in, so
+  # a test can confirm the wiring (not just stub the return value).
+  ctl$gvTwinRelations <- twinRelations
   list(
     geneticValues = shiny::reactive(ctl$gv()),
     topAnimals = shiny::reactive(NULL),
@@ -88,8 +96,12 @@ stubGV <- function(id, ...) {
   )
 }
 
-stubBG <- function(id, ...) {
+stubBG <- function(id, pedigree, geneticValues = NULL, kinshipMatrix = NULL,
+                    kinshipOverrides = NULL, twinRelations = NULL, ...) {
   ctl$grp <- shiny::reactiveVal(NULL)
+  # BL-N Slice 3: capture the twinRelations reactive appServer passes in, so
+  # a test can confirm the wiring (not just stub the return value).
+  ctl$bgTwinRelations <- twinRelations
   list(
     groups = shiny::reactive(ctl$grp()),
     nGroups = shiny::reactive(0L),
@@ -209,6 +221,84 @@ test_that("appServer wires child-module outputs into shared state", {
   expect_true(pedSet)
   expect_true(gvSet)
   expect_identical(bgGroups, list(c("a", "b")))
+})
+
+# =============================================================================
+# 2b. BL-N Slice 3 (twinRelations-into-kinship() plan, docs/planning/
+#     twin-relations-kinship-computation-plan.md sec 4): shared$twinRelations
+#     is populated from the pedigree module's own new return-list entry, feeds
+#     sharedKinshipMatrix()'s own kinship() call, and is threaded through to
+#     the GV Analysis and Breeding Groups module calls -- this is the literal
+#     Dragon-1 wiring the plan's own Pre-RED resolved (single upload point,
+#     app-wide propagation regardless of tab visit order).
+# =============================================================================
+
+# Reuses test_kinship.R's own fam1 fixture (subjects 8/9 declared MZ twins,
+# 10 a child of twin 8 -- the propagation case), without a gen column --
+# sharedKinshipMatrix() computes gen itself when absent (mirrors its own
+# existing pedSet fixture convention of a minimal pedigree).
+twinFixturePed <- function() {
+  data.frame(
+    id   = as.character(1:10),
+    sire = c(NA, NA, "1", "1", NA, NA, "3", "6", "6", "8"),
+    dam  = c(NA, NA, "2", "2", NA, NA, "5", "4", "4", "7"),
+    stringsAsFactors = FALSE
+  )
+}
+
+twinFixtureTwins <- function() {
+  data.frame(id1 = "8", id2 = "9", code = "MZ twin", stringsAsFactors = FALSE)
+}
+
+test_that(paste("appServer wires shared$twinRelations from the pedigree",
+                "module into sharedKinshipMatrix and the downstream GV/",
+                "Breeding-Groups module calls (Slice 3)"), {
+  twinsSet <- FALSE
+  kmAtTwins <- NULL
+  gvArgTwins <- "unset"
+  bgArgTwins <- "unset"
+
+  testthat::with_mocked_bindings(
+    modInputServer = stubInput,
+    modPedigreeServer = stubPed,
+    modGeneticValueServer = stubGV,
+    modBreedingGroupsServer = stubBG,
+    modPyramidServer = noopServer,
+    modSummaryStatsServer = noopServer,
+    modGeneticDiversityServer = noopServer,
+    modPotentialParentsServer = noopServer,
+    .package = "nprcgenekeepr",
+    {
+      muffleConfig(shiny::testServer(appServer, {
+        session$flushReact()
+        ctl$ped(twinFixturePed())
+        ctl$twins(twinFixtureTwins())
+        session$flushReact()
+        twinsSet <<- identical(shared$twinRelations, twinFixtureTwins())
+        kmAtTwins <<- sharedKinshipMatrix()
+        # twinRelations is documented (mirroring kinshipOverrides) as an
+        # optional reactive OR a plain NULL default -- guard the call rather
+        # than assume a function, matching modBreedingGroups.R's own
+        # is.null()-then-call idiom for kinshipOverrides.
+        gvArgTwins <<- if (is.function(ctl$gvTwinRelations)) {
+          ctl$gvTwinRelations()
+        } else {
+          ctl$gvTwinRelations
+        }
+        bgArgTwins <<- if (is.function(ctl$bgTwinRelations)) {
+          ctl$bgTwinRelations()
+        } else {
+          ctl$bgTwinRelations
+        }
+      }))
+    }
+  )
+
+  expect_true(twinsSet)
+  expect_equal(kmAtTwins["8", "9"], 0.5)
+  expect_equal(kmAtTwins["9", "10"], 0.28125)
+  expect_identical(gvArgTwins, twinFixtureTwins())
+  expect_identical(bgArgTwins, twinFixtureTwins())
 })
 
 # =============================================================================

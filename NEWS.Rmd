@@ -152,7 +152,10 @@ knitr::opts_chunk$set(echo = TRUE)
   mechanism. `reportGV()`, `gvaConvergence()`, `createSimKinships()`, and
   `cumulateSimKinships()` (BL-N, Slice 2) each gained a matching
   `twinRelations` argument, passed through to their own internal kinship
-  computation. No Shiny UI yet (Slice 3).
+  computation. Shiny wiring (BL-N, Slice 3): a twin/zygosity sidecar
+  uploaded on the Pedigree Browser's Diagram tab now corrects kinship
+  everywhere in the app -- Summary Statistics, Breeding Groups, and Genetic
+  Value Analysis -- regardless of which tab is visited first.
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes
