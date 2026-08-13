@@ -14,6 +14,427 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 544 Did
+
+**Deliverable:** Diagnose (and fix, if root-cause is simple) the
+`test-coverage.yaml` CI failure — 2 consecutive red runs on
+`origin/master` (S536, S540 pushes) while `R-CMD-check.yaml` is green on
+the same commits (IN PROGRESS) **Started:** 2026-08-13 **Status:**
+Session claimed. Work beginning. **Ledger:** `CHANGELOG: pending` — set
+at claim; this session’s actions are recorded in `CHANGELOG.md` at Phase
+3F. Until close-out, this line is the crash breadcrumb for the next
+session’s reconcile.
+
+### Session 542 Handoff Evaluation (by Session 543)
+
+**Score: 9/10.** **What helped:** the S542 `HANDOFFS.md` receipt’s
+`next_steps` field named exactly the task this session picked up — “(2)
+CHANGELOG.md SRF_RED refusal – DECISION NEEDED, Effort S; a future
+session (or the owner) should choose between –force-ing a partial trim
+now vs. reopening the S325 legacy-footer migration question” — matching
+`BACKLOG.md`’s own item text exactly, zero rediscovery needed to locate
+the decision. The `gotchas` field’s warning (“the SRF_RED gate is
+computed against the MOST RECENT archive only… Read both numbers the
+tool prints before deciding whether –force is appropriate; don’t force
+reflexively off the RED reading alone”) was accurate and directly shaped
+this session’s approach — re-reading both SRF numbers rather than
+trusting one. **What was missing:** the handoff could not have named the
+decisive structural fact this session found (the tagged region is capped
+at 116,176 B against a 935,287 B frozen footer, so no trim can ever
+clear the trigger) — that required a fresh `git cat-file -s`
+investigation S542 had no reason to perform, since its own
+`AskUserQuestion` already resolved a narrower question (whether to force
+THAT session, not what the RED reading structurally meant). Not a gap
+S542 owed. **What was wrong:** nothing — the cited SRF numbers
+(2.9299/0.1766) were accurate as of S542’s read-time; this session’s own
+re-read found them shifted slightly (2.9933/0.1804), purely from a day’s
+worth of intervening commits, not an inaccuracy in the receipt. **ROI:**
+High — both the `next_steps` task pointer and the `gotchas` methodology
+warning were directly load-bearing for how this session started its own
+investigation.
+
+### What Session 543 Did
+
+**Deliverable:** `CHANGELOG.md` `SRF_RED` archive-refusal decision
+(owner-picked via the Phase 0 `AskUserQuestion` picker, over
+`test-coverage.yaml` CI diagnosis / the Phase 0 CI-check-gap decision /
+issue \#138 scoping) — investigated against the canonical
+`ledger-trimmer-design.md`, decided (with the owner, via two rounds of
+`AskUserQuestion` after the owner challenged the first framing) to
+`--force` through the refusal, and recorded the decision + rationale in
+`BACKLOG.md`. **Started/Completed:** 2026-08-12. **Status:** DONE. TDD
+phase: N/A (ledger/documentation housekeeping — no production code or
+test surface, matching the S509/S528/S539/S542 precedent). Commits:
+`ca6b17fb` (Phase 1B claim), `e27718f0` (CHANGELOG.md: log the claim
+commit ahead of the gated trim call, per Learning 545’s established
+sequencing), `329344b1` (the forced archive — `CHANGELOG.md` 1,051,843 B
+→ 945,242 B, 67 records moved to
+`docs/archive/CHANGELOG-through-2026-08-12.md`), this close-out’s own
+commit (pending at write time).
+
+**What happened, in order:** **(1)** Phase 0 orient in full
+(`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list`,
+`git status`/`log`/`diff --stat`, `methodology_dashboard.py`). Ledger
+frontiers (`CHANGELOG.md`/`HANDOFFS.md`) both == `HEAD`, no undocumented
+commits, no untracked files — no ghost session. Cross-checked
+`BACKLOG.md`’s flat tag grep against the 2 ratified sequencing audits
+(`docs/audits/*SEQUENCING_AUDIT*.md`) per `CLAUDE.md`’s own convention,
+and surfaced each cluster’s next item (issue \#138, issue \#148) as
+first-class numbered priorities rather than folding them into the
+Informational bucket. Rendered the priorities list + `AskUserQuestion`
+picker; owner picked the `CHANGELOG.md` SRF_RED decision. **(2)**
+Claimed the session (`ca6b17fb`), wrote a `HANDOFFS.md`
+`status: pending` stub. **(3)** Read the canonical
+`ledger-trimmer-design.md` (§1.1-1.4, §3.3, §5.3-5.4, §9-§10) to ground
+the decision in the tool’s own design rather than reasoning about the
+refusal message alone — found its explicit H3 RED rule (“do not archive
+again; the next deliverable is a rate cut, not another reset”). **(4)**
+First `AskUserQuestion` presented Hold (recommended, per H3’s literal
+text) vs. Force vs. a documentation-only variant — **the owner
+challenged this framing directly**, pointing out that an
+indefinitely-continuing project obviously needs periodic archiving to
+continue, which the “Hold” framing had not adequately reconciled.
+**(5)** Re-investigated with that challenge in mind: pulled real
+pre/post byte sizes for both SRF boundary events via `git cat-file -s`
+(explaining the RED reading as an artifact of a small preceding archive,
+not fast regrowth), then split the file at its `## Legacy history`
+marker (`awk 'NR<1374'` / `NR>=1374'`) and found the decisive fact — the
+trimmable region is capped at 116,176 B against a 935,287 B frozen
+footer (~14x the byte budget, ~1.8x the line cap) — meaning no trim,
+forced or not, can ever clear either trigger. **(6)** Second
+`AskUserQuestion`, reframed around that structural fact: owner chose to
+force. **(7)** Logged the claim commit to `CHANGELOG.md` first
+(`e27718f0`, clearing `P1_UNDOCUMENTED`, per Learning 545’s established
+sequencing), confirmed the dry run now stopped cleanly at `SRF_RED`
+alone. **(8)** Ran
+`methodology_trim.py --file CHANGELOG.md --write --force`: archived 67
+records; verified losslessness via the tool’s own generated `verify.sh`
+(L1/L2/L3 OK) before committing; confirmed the 2 retained records were
+exactly the expected newest ones (this session’s claim entry + the
+tool’s auto-appended trim entry). Committed (`329344b1`). **(9)**
+Verified the predicted non-fix empirically: `--check` post-trim still
+reports `FIRES` at 945,242 B, confirming the footer-ceiling reasoning
+was correct, not just plausible. **(10)** Re-ran
+`methodology_dashboard.py`: High-risk count unchanged at 1, as predicted
+(the footer, not the tagged region, is the flagged cause). **(11)**
+Updated `BACKLOG.md`: resolved the `SRF_RED` item, added 2 new
+Housekeeping items (the S325 legacy-migration decision as the only real
+lever; the possible `CHANGELOG.md`-side “Receipt Inflation” rate
+contributor from its own ~4-entries-per-session convention, filed per
+Learning 382’s “report, don’t fix mid-session” precedent). **(12)** One
+`PROJECT_LEARNINGS.md` entry: Learning 550 (the
+SRF-artifact-vs-structural-ceiling distinction, and the value of
+computing the decisive fact before presenting options).
+
+**Self-assessment (Session 543): 7/10.** **Strengths:** (1) Re-derived
+live SRF numbers and the actual pre/post byte sizes for both boundary
+events rather than trusting S542’s report or reasoning about ratios
+alone — this is what surfaced the real explanation for the RED reading.
+(2) Once challenged, found and computed the genuinely decisive fact
+(116,176 B trimmable vs. 935,287 B frozen footer) rather than
+re-presenting the same options with softer language. (3) Verified the
+reasoning empirically post-trim (`--check` still `FIRES`) instead of
+asserting it from pre-trim math alone. (4) Followed the
+P1_UNDOCUMENTED-clearing sequencing and losslessness-verification
+precedents correctly on the first attempt. **Weaknesses:** (1) The
+**first** `AskUserQuestion` was under-researched — it presented the
+canonical H3 rule as if it settled the matter, without first computing
+the footer/tagged-region split that turned out to be the actually
+decisive fact. That computation was cheap (two `awk` calls) and
+available from the start; it took the owner directly challenging the
+framing to prompt it, rather than this session’s own diligence surfacing
+it first. A stronger first pass computes the structural ceiling before
+presenting any options, not after a correction. (2) Relatedly, the
+initial framing under-weighted the plain, obvious point the owner raised
+(periodic archiving of an indefinitely-active ledger is expected,
+ongoing maintenance) in favor of a more literal reading of the design
+doc’s RED rule — worth naming as a bias toward the tool’s stated rule
+over the project’s own operating reality. **Ledger:** recorded in
+`CHANGELOG.md` (this session’s own entries: the claim, the tool’s own
+auto-appended `CHANGELOG.md` archive entry, and the close-out entry
+covering the `BACKLOG.md`/ `PROJECT_LEARNINGS.md` findings).
+
+### Session 541 Handoff Evaluation (by Session 542)
+
+**Score: 9/10.** **What helped:** the S541 `HANDOFFS.md` receipt’s
+`next_steps` field named the same 4-item priorities list this session’s
+own Phase 0 rendered (CHANGELOG.md/HANDOFFS.md archive READY; Phase 0
+CI-check gap DECISION NEEDED; NPRC outreach DECISION NEEDED; LabKey
+BLOCKED) plus explicitly flagged “a future session’s Phase 0 should
+check whether `R-CMD-check.yaml`’s in-progress run went green” – acted
+on directly this session’s Phase 0 (it had gone green), and following
+that same thread further (running `gh run list` rather than stopping at
+the one named workflow) surfaced a real, previously-undocumented break
+in `test-coverage.yaml`. **What was missing:** nothing S541 owed – it
+could not have named the `SRF_RED` refusal this session hit, since that
+only manifests when `methodology_trim.py` is actually invoked against
+`CHANGELOG.md`, which S541’s own deliverable (the vignette pass) never
+did. **What was wrong:** nothing found – the `commit: 20fc8633`
+self-reference was correct and needed no reconcile (a genuine change
+from the S538-S541 chain, each of which left a `pending` self-reference
+for the next session to fill). **ROI:** High – the CI-status thread
+alone was directly responsible for this session catching a real red
+build that had otherwise gone unnoticed for 2 pushes.
+
+### What Session 542 Did
+
+**Deliverable:** Archive `HANDOFFS.md` via `methodology_trim.py --write`
+(owner-picked via the Phase 0 `AskUserQuestion` picker, then
+re-confirmed after a mid-orientation finding). `CHANGELOG.md` was in
+scope for the same picker option but its own dry run refused
+(`SRF_RED`); owner chose, via a second `AskUserQuestion`, to hold rather
+than `--force` past that refusal, and to log it as a `BACKLOG.md`
+finding instead. **Started/Completed:** 2026-08-12. **Status:** DONE.
+TDD phase: N/A (ledger/documentation housekeeping – no production code
+or test surface, matching the S509/S528/S539 precedent). Commits:
+`62882046` (Phase 1B claim), `a2550a1e` (CHANGELOG.md: log the claim
+commit ahead of the gated trim call, per Learning 545’s established
+sequencing), `3ddb59ea` (the archive itself – `HANDOFFS.md` 226,617 B
+-\> 8,629 B, 2,908 -\> 142 lines, 39 records moved to
+`docs/archive/HANDOFFS-through-2026-08-12.md`), this close-out’s own
+commit (pending at write time).
+
+**What happened, in order:** **(1)** Phase 0 orient in full
+(`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list`,
+`git status`/`log`/`diff --stat`, `methodology_dashboard.py`). Found the
+ledger already fully reconciled by an earlier, separate Phase 0 pass
+today (commit `799c77b5`, “S542 – Phase 0 reconcile HANDOFFS.md S541
+receipt”) – re-verified independently rather than trusted:
+`CHANGELOG.md`/`HANDOFFS.md` frontiers both == `HEAD`, no
+`status: pending` stub, no untracked ghost-session files, no S542 claim
+stub yet – confirmed no work had actually started. **Self-correction,
+caught before the user replied:** ran the Phase 0 priorities
+`AskUserQuestion` picker BEFORE rendering the required prose orientation
+report, out of the order `CLAUDE.md`’s “Present the priorities list via
+AskUserQuestion” convention specifies – caught by re-reading that
+convention’s own text, corrected by rendering the full prose report
+retroactively before proceeding, rather than silently leaving the gap.
+**(2)** Beyond the routine checklist, ran `gh run list` (prompted by the
+still-open Phase 0 CI-check-gap `BACKLOG.md` item, Learning 547) –
+confirmed `R-CMD-check.yaml` green on `origin/master`’s S540 push
+(closing the loose end S541’s handoff flagged), but found
+`test-coverage.yaml` failing on both of the last 2 pushes (S536, S540) –
+a genuinely new, undocumented finding. Surfaced it to the user via a
+second `AskUserQuestion` before proceeding (rather than silently
+expanding scope to fix it); owner confirmed keeping the archive as this
+session’s deliverable and logging the CI break instead. **(3)** Claimed
+the session (`62882046`). **(4)** Dry-ran
+`methodology_trim.py --file CHANGELOG.md` and `--file HANDOFFS.md`:
+`CHANGELOG.md` refused with `SRF_RED` (2.9299 against the most recent,
+small 11-record archive `50b65d1`; a healthy 0.1766 against the
+largest-drop boundary `0929172a`) – read both numbers rather than
+reflexively `--force`-ing past a refusal the tool’s own design doc
+states as “do not archive again,” and surfaced the discrepancy (plus its
+likely connection to this project’s already-documented S325
+legacy-footer problem) to the user via `AskUserQuestion`. `HANDOFFS.md`
+had no such refusal (single prior archive, SRF 0.2456) and was clear to
+proceed. **(5)** Per S528/S539’s established gate-clearing precedent
+(Learning 545), logged the claim commit to `CHANGELOG.md` on its own
+(`a2550a1e`) before invoking `--write`, since `methodology_trim.py`’s
+`P1_UNDOCUMENTED` gate refuses while any commit sits undocumented ahead
+of the ledger frontier. **(6)** Ran
+`methodology_trim.py --file HANDOFFS.md --write`: archived 39 of 40
+records, verified losslessness via the tool’s generated
+`docs/archive/HANDOFFS-through-2026-08-12.md.verify.sh` (L1/L2/L3 all
+OK) before committing; confirmed the sole retained record was this
+session’s own pending stub, not an accidental over-archive. Committed
+(`3ddb59ea`). **(7)** Re-ran `methodology_dashboard.py`: `HANDOFFS.md`’s
+HIGH/MEDIUM risk flags are gone from the report; `CHANGELOG.md`’s
+remain, as expected (untouched this session). **(8)** Logged 2 new
+`BACKLOG.md` Housekeeping items: the `test-coverage.yaml` CI break
+(READY to diagnose) and the `CHANGELOG.md` `SRF_RED` refusal (DECISION
+NEEDED, with both SRF readings and the S325-footer connection spelled
+out for whoever picks it up). **(9)** One `PROJECT_LEARNINGS.md` entry:
+Learning 549 (the SRF two-boundary discrepancy, the
+stop-and-ask-rather-than-force discipline, and the value of a broader
+`gh run list` sweep over checking only the one named workflow).
+
+**Self-assessment (Session 542): 8/10.** **Strengths:** (1) Did not
+`--force` past the `SRF_RED` refusal reflexively – read both SRF numbers
+the tool reported, recognized the discrepancy traced to a genuinely
+small preceding archive rather than a healthy file, and surfaced it as a
+decision rather than deciding alone. (2) Extended the Phase 0 checklist
+on its own initiative (running `gh run list` beyond the one workflow
+S541’s handoff named) and caught a real, previously-undocumented CI
+break as a direct result – then asked before letting that discovery
+expand this session’s scope, rather than either silently fixing it
+(scope creep) or silently dropping it (losing the finding). (3) Verified
+losslessness via the tool’s own generated script before committing the
+archive, and specifically checked that the retained record was the
+expected one (this session’s own pending stub) rather than assuming the
+trim did the right thing. **Weaknesses:** (1) Ran the Phase 0 priorities
+`AskUserQuestion` before the mandatory prose orientation report – a
+direct order violation of `CLAUDE.md`’s own written convention, caught
+and corrected only by re-reading that section mid-session rather than
+getting it right the first time; a more careful first pass would have
+avoided the correction entirely. (2) The session’s actual archived-byte
+reduction (one file, not two) is smaller than a session that could have
+archived both cleanly – an outcome of the SRF_RED discovery, not a
+process failure, but worth naming plainly rather than folding into the
+“went well” list. **Ledger:** recorded in `CHANGELOG.md` (this session’s
+own entries: the claim, the tool’s own auto-appended `HANDOFFS.md`
+archive entry, and the 2 `[ad hoc]` `BACKLOG.md`-finding entries added
+at close-out).
+
+### Session 540 Handoff Evaluation (by Session 541)
+
+**Score: 9/10.** **What helped:** the S540 `HANDOFFS.md` receipt’s
+`next_steps` field named “`a2interactive.Rmd` docs pass (READY, Effort
+M)” as an open item, plus accurately characterized the
+`CHANGELOG.md`/`HANDOFFS.md` archive (READY), the Phase 0 CI-check gap
+(DECISION NEEDED), NPRC outreach (DECISION NEEDED), and LabKey (BLOCKED)
+– all 5 were used directly in this session’s Phase 0 priorities list
+with zero rediscovery needed; the `CHANGELOG.md`/`HANDOFFS.md` archive
+claim was independently re-confirmed live via
+`methodology_trim.py --check` (both still firing) rather than trusted
+blind, and matched exactly. **What was missing:** nothing S540 owed –
+the actual how-to-document guidance (which 8 functions, what style to
+match) lives in `BACKLOG.md`’s own S522 item text, not S540’s handoff,
+which is expected since S540 didn’t scope that item. **What was wrong:**
+one claim was stale by read-time, not wrong at write-time: `active_task`
+said the CI fix was “NOT yet pushed – master is 16 commits ahead of
+origin/master,” but `git fetch` at this session’s own Phase 0 showed
+`origin/master` already at the S540 close-out commit, with
+`R-CMD-check.yaml` `in_progress` on that push (started
+2026-08-13T03:07:12Z, evidently pushed by the owner outside a session) –
+a fact that changed after S540 wrote its receipt, not an inaccuracy in
+the receipt itself. **ROI:** High – the `next_steps` field was directly
+load-bearing for constructing the priorities list, and every named item
+held up under independent cross-verification.
+
+### What Session 541 Did
+
+**Deliverable:** `a2interactive.Rmd` documentation pass – added
+demonstration sections for all 8 script-callable functions/families
+named in `BACKLOG.md`’s S522 item that had shipped since the last pass
+(S478) with zero tutorial coverage (owner-picked via the Phase 0
+`AskUserQuestion` picker). **Started/Completed:** 2026-08-12.
+**Status:** DONE. TDD phase: N/A (pure documentation change to a
+vignette – no production code or test surface, matching the S538/S539
+docs-only-session precedent). Commits: `c9ebc12d` (Phase 0 HANDOFFS.md
+reconcile), `18ed535f` (claim), this close-out’s own commit (pending at
+write time).
+
+**What happened, in order:** **(1)** Phase 0 orient in full
+(`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list`,
+`git status`/`log`/`fetch`, `methodology_dashboard.py`). Ledger
+reconcile found the S540 `HANDOFFS.md` receipt’s self-referential
+`commit: pending` field unreconciled – fixed (`commit: 86367737`) and
+logged to `CHANGELOG.md` (commit `c9ebc12d`), matching the
+S538-\>S539/S539-\>S540 precedent; no ghost session (CHANGELOG.md
+frontier already matched `HEAD` before that reconcile). Rendered the
+priorities list (4 of 5 numbered items capped into the `AskUserQuestion`
+picker, LabKey BLOCKED excluded per the cap rule and noted in prose);
+owner picked the `a2interactive.Rmd` pass. **(2)** Claimed the session
+(`18ed535f`). **(3)** Re-verified `BACKLOG.md`’s S522 gap list against
+the actual file (`grep '^## \|^### '` on `vignettes/a2interactive.Rmd`)
+– confirmed accurate, no drift. **(4)** Dispatched 5 parallel research
+agents (one per function/family) to read source, roxygen docs, and
+tests, and report a verified minimal example with exact output for each.
+**(5)** Before writing any vignette prose, independently re-ran every
+single reported example via `Rscript -e` against
+`pkgload::load_all(".")` – all research-agent values matched exactly,
+but this caught a real problem once real tutorial objects were reused:
+`reportMatePairs(populationIds = candidates)` (all 280) produced a
+17,568-row table, unusable for a tutorial; narrowed to
+`head(candidates, 8L)` (6 real pairs) instead. Also attempted a live
+repro of
+[`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)’s
+documented D4 “`NA` age passes the age filter” gotcha against the
+tutorial’s own `trimmedPed`, but abandoned it: all 194 `NA`-age
+individuals in `trimmedPed` are absent from the kinship matrix entirely
+(an unrelated screening effect), so no real individual exists there to
+demonstrate D4 cleanly – described in prose only rather than faked.
+**(6)** Wrote and inserted 9 new sections via `Edit`: “Twin/Zygosity
+Connectors” (inside “Pedigree Diagram”), “Individual Mate-Pair Analysis”
+(new top-level section after “Breeding Group Formation”),
+“Candidate-Parent Likelihood Ranking” and “Validating a Cross-Center
+Mapping” (the latter restructured as the natural lead-in immediately
+before the existing “Cross-Center Identity Linking” section, which was
+trimmed of its now-redundant `pedA`/`pedB`/ `mapping` setup chunk to
+avoid duplicating already-built objects), and “Multiallelic Marker
+Panels and Locus Metadata”/“Realized Relatedness
+Variance”/“Linkage-Disequilibrium Blocks”/ “De-identifying LD-Block
+Results” (appended to “Marker Genetics”). **(7) Own editing mistake,
+caught before commit:** the first `HANDOFFS.md` claim-stub edit landed
+inside the file’s own illustrative 4-backtick example fence
+(documentation showing the receipt *format*, not a real receipt) rather
+than among the real per-session receipts – caught by re-reading the file
+immediately after editing, fixed by moving the stub to the correct
+location before the S540 block. **(8)** Verification: full vignette
+re-rendered end-to-end twice via
+[`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)
+(once to a scratch tempdir, once persisted to the session scratchpad for
+inspection) – both clean; grepped the rendered HTML for all 8 new
+section headers (all present) and for error strings (only the
+pre-existing
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+demo errors and this session’s own intentional
+[`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)
+multiallelic-rejection demo, `error = TRUE`, both expected).
+`spelling::spell_check_package(vignettes = TRUE)` flagged 21 new genuine
+identifiers (function/argument/column names); hand-added each to
+`inst/WORDLIST` at its alphabetically-appropriate position, matching the
+established convention; re-check returned 0 rows.
+`tests/testthat/test_wordlist_coverage.R` passed. Full clean regression
+([`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html) +
+`testthat::test_dir(reporter = "silent")`): 0 failed/0 error (4,676
+passed, 33 pre-existing warnings, unchanged baseline).
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html):
+0 errors/0 warnings/1 NOTE (only the pre-existing
+vignettes/figure-leftover NOTE, matching baseline exactly) – “checking
+re-building of vignette outputs” also passed. No `R/` files touched –
+lint N/A. Runtime smoke test: the vignette re-render itself IS this
+deliverable’s closest runtime equivalent (it executes every new demo
+against the real installed package end-to-end, not just a static text
+check) – no separate Shiny app launch applies since no runtime/Shiny
+behavior changed. No
+NEWS.Rmd/citation/tutorial-article/`_pkgdown.yml`/GitHub-issue-close
+checklist applies (no new exported function, no new Shiny
+feature/parameter, no new displayed statistic – this documents
+already-shipped functions). **(9)** `BACKLOG.md`’s S522 item compressed
+to a terse “(none remaining – … RESOLVED …)” pointer, matching the
+file’s dominant convention (checked against several sibling examples
+before choosing this over a long appended paragraph). Two
+`PROJECT_LEARNINGS.md`-style entries: `PROJECT_LEARNINGS.md` Learning
+548 (the live-verification-before-prose discipline, the
+pair-count-explosion catch, and the honest D4 scope reduction).
+
+**Self-assessment (Session 541): 9/10.** **Strengths:** (1) Never
+transcribed a subagent’s claimed output values directly into tutorial
+prose – every one was independently re-run against the real installed
+package first, catching a real problem (the 17,568-row pairs table) that
+abstract review of the research reports alone would have missed. (2)
+When a documented behavior (D4’s age-NA gotcha) couldn’t be cleanly
+demonstrated against the tutorial’s own real data, said so and fell back
+to prose-only rather than fabricating a scenario that would misrepresent
+what the real data actually does. (3) Restructured “Cross-Center
+Identity Linking” to remove a now-redundant setup chunk instead of
+leaving two copies of the same `pedA`/`pedB`/`mapping` construction in
+the file, then verified the restructuring didn’t break anything via a
+full end-to-end re-render (not just checking the new chunk in
+isolation). (4) Caught and fixed its own `HANDOFFS.md` editing mistake
+(landing content inside an illustrative example fence) before it reached
+a commit, by re-reading the file immediately after editing rather than
+trusting the edit succeeded as intended. (5) Followed the
+`inst/WORDLIST`’s established loosely-alphabetical convention carefully
+(21 new words placed at researched positions) rather than appending them
+in a block at the end. **Weaknesses:** (1) The 5 parallel research
+agents were dispatched before fully deciding section placement for all 8
+functions/families, which worked out fine here but meant two placement
+decisions (splitting “Validating a Cross-Center Mapping” out of
+“Candidate-Parent Likelihood Ranking”; restructuring “Cross-Center
+Identity Linking”) were made after the research phase rather than being
+research questions themselves – a slightly tighter agent prompt could
+have asked for placement recommendations more explicitly up front. (2)
+Did not push this session’s commits to `origin` – consistent with this
+project’s own established convention (no push without explicit
+direction) and noted in the report, but worth flagging since
+`R-CMD-check.yaml` CI status for `origin/master` remains whatever S540’s
+push left it at. **Ledger:** recorded in `CHANGELOG.md` (this session’s
+own entries: `[BL-522]` the deliverable, `[ad hoc]` the S540
+`HANDOFFS.md` reconcile).
+
 ### Session 539 Handoff Evaluation (by Session 540)
 
 **Score: 8/10.** **What helped:** the S539 `HANDOFFS.md` receipt’s

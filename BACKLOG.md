@@ -216,6 +216,91 @@ Phase 0 steps,” and if so, at what cadence (every session vs. only when
 `git status` shows unpushed commits). See `PROJECT_LEARNINGS.md`
 Learning 547, `CHANGELOG.md`.
 
+**`test-coverage.yaml` CI job failing on `origin/master` – 2 consecutive
+pushes** (found S542, 2026-08-12, READY to diagnose, Effort S/M) –
+`gh run list --workflow=test-coverage.yaml` shows the covr-instrumented
+run failing on both the S536 push (2026-08-12T22:57) and the S540 push
+(2026-08-13T03:07:12Z), while `R-CMD-check.yaml` is green on the same
+S540 push. Truncated log shows a `spelling.R` comparison diff
+(`Failed to find package source directory from: /home/runner/work/_temp/package/nprcgenekeepr/nprcgenekeepr-tests`
+– likely a covr sandbox-path artifact, not a real spelling failure,
+since it still prints “All Done!”) immediately followed by
+`Error: running the tests in 'testthat.R' failed` with no specific
+failing test identified in the log captured this session – needs a full
+`gh run view <id> --log` (not just `--log-failed`) or a local
+[`covr::package_coverage()`](http://covr.r-lib.org/reference/package_coverage.md)
+repro to isolate the actual failure. Not diagnosed this session – found
+via an ad hoc `gh run list` check (itself prompted by the open Phase 0
+CI-check-gap item above), out of scope for a ledger-archive session’s
+own deliverable (owner confirmed via `AskUserQuestion`, chose to keep
+the archive as this session’s scope and log this instead). A future
+session should diagnose and fix.
+
+(none remaining – the “`CHANGELOG.md` archive refuses via `SRF_RED`”
+item (found S542) is RESOLVED – **decided and force-archived S543
+(2026-08-12):** re-derived the SRF numbers live rather than trusting
+S542’s report (SRF 2.9933 against the most-recent 11-record archive
+`50b65d1`, 0.1804 against the largest-drop boundary `0929172a`) and
+found the RED reading’s own explanation: `50b65d1` only freed 35,169 B,
+barely denting a file the PRIOR day’s 588,779 B archive had already
+settled near its floor – the same ~105,000 B of absolute regrowth reads
+as alarming against a tiny recent denominator and healthy against a
+large one. **The decisive fact, not previously computed this
+precisely:** the trimmable (post-S325, tagged) region is capped at
+116,176 B total – the frozen pre-S325 legacy footer is 935,287 B on its
+own, ~14x the 65,536 B byte budget and ~1.8x the 2,000-line read-cap, so
+**no trim of the tagged region, forced or not, can ever clear either
+trigger** (confirmed post-trim: still FIRES at 945,242 B). Given that,
+and given the project’s indefinite lifespan makes periodic archiving of
+the tagged region ordinary, expected, recurring hygiene regardless of
+whether it clears the trigger, owner chose (via `AskUserQuestion`, after
+this reframing) to `--force` through the refusal rather than hold
+indefinitely. Archived 67 records, 1,051,843 B -\> 945,242 B
+(`docs/archive/CHANGELOG-through-2026-08-12.md`), losslessness verified
+via the tool’s own generated `verify.sh` (L1/L2/L3 OK) before
+committing; retained record confirmed to be exactly the 2 newest (this
+session’s own claim entry + the tool’s auto-appended trim entry), not an
+over-archive. See `CHANGELOG.md`, `PROJECT_LEARNINGS.md` Learning 550.)
+
+**Reopen the S325 “freeze legacy, go forward” decision – the only lever
+that can actually clear `CHANGELOG.md`’s byte/line triggers** (found
+S543, 2026-08-12, DECISION NEEDED – multi-session migration campaign,
+not a routine session, Effort L) – S543’s `SRF_RED` investigation
+confirmed numerically that the frozen pre-S325 legacy footer (935,287 B,
+~3,567 of the file’s ~3,721 post-trim lines) is now the file’s entire
+read-safety problem: it alone is ~14x the 65,536 B budget and ~1.8x the
+2,000-line `Read` cap, independent of how aggressively the tagged S325+
+portion is trimmed. Per `CLAUDE.md`’s existing “CHANGELOG.md
+ledger-format resolution” note, only re-tagging that block (a migration
+campaign re-tagging ~303 already-closed pre-ledger entries into the
+canonical `[SOURCE]`-tagged format, or an equivalent restructuring)
+would let a trim ever reach the 65,536 B budget. Not scoped this session
+(a scoping/planning session of its own, per `SESSION_RUNNER.md`’s
+multi-session-campaign guidance – this is significantly larger than the
+S325 owner-decision-not-to-migrate it would reopen). A future session
+should first decide whether the campaign is worth running at all (the
+file has operated at this size for months without incident beyond the
+read-truncation risk itself) before scoping one.
+
+**`CHANGELOG.md`’s own ~4-entries-per-session ledger convention (claim,
+Phase 0 reconcile, deliverable, close-out) may be a `CHANGELOG.md`-side
+analogue of the already-diagnosed `HANDOFFS.md` “Receipt Inflation” (H4)
+rate problem** (found S543, 2026-08-12, Effort unknown, not
+investigated) – incidental to the `SRF_RED` investigation: the tagged
+region regrew ~105,000 B in roughly a day during an active multi-session
+stretch (S536-S542), and a `grep -c '^### 2026-08-12'` on the pre-trim
+file showed a large share of that region was same-day,
+multiple-entries-per-session housekeeping (claim/reconcile/close-out
+entries) rather than deliverable-content entries. Not confirmed as
+causal, and not investigated further this session (out of the `SRF_RED`
+decision’s own scope, per `PROJECT_LEARNINGS.md` Learning 382’s “report,
+don’t fix mid-session” precedent). A future session could measure the
+actual housekeeping-vs-deliverable entry-byte split and decide whether a
+norm analogous to the canonical design’s own deferred H4 remedy
+(`docs/planning/ledger-trimmer-design.md` §10.2, “the lever is receipt
+size, and the mechanism would be a norm plus a check, not an archiver”)
+is worth adopting for `CHANGELOG.md` specifically.
+
 (none remaining – the “`shinytest2`/`chromote` headless browser never
 renders a `showModal()`/`modalDialog()` Bootstrap modal’s DOM” item
 (found S535, 2026-08-12) is RESOLVED – **misdiagnosed, corrected S536
@@ -806,43 +891,33 @@ unrelated warnings, unchanged from S537’s own baseline); final
 vignettes/figure-leftover NOTE, matching S537’s own baseline exactly).
 See `CHANGELOG.md`.
 
-**`a2interactive.Rmd` documentation pass is due – several exported,
-script-callable functions shipped since the last pass (S478, 2026-08-04)
-have zero coverage** (found S522, 2026-08-11, owner-directed, READY,
-Effort M) – per `CLAUDE.md`’s own deferred, non-same-session
-`a2interactive.Rmd` checklist rule. Confirmed gaps (grep of
-`vignettes/a2interactive.Rmd`’s section headers against `NEWS.Rmd`’s
-`2.0.0.9000` entries): the “Marker Genetics” section demonstrates only
-[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md),
-the heterozygosity pair, Mendelian-exclusion parentage verification,
-[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md),
-and
-[`markerFst()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md)
-(issue \#130-era) – it has **no** section for
-[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
-(LOD-based candidate-parent ranking, issue \#147),
-[`checkCrossCenterMapping()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkCrossCenterMapping.md)
-(issue \#149),
-[`checkLocusMetadata()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md)
-(issue \#153 Slice 1),
-[`checkLinkageMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLinkageMarkerGenotypeFile.md)
-(issue \#153 Slice 2),
-[`markerRealizedRelatednessVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerRealizedRelatednessVariance.md)
-(issue \#153 Slice 3, S522), or
-[`markerLdBlock()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerLdBlock.md)/[`obfuscateLdBlocks()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateLdBlocks.md)
-(issue \#153 Slice 4, S523). Outside marker genetics,
+(none remaining – the “`a2interactive.Rmd` documentation pass is due”
+item (found S522, 2026-08-11) is RESOLVED – S541 (2026-08-12): all 8
+named functions/families
+([`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md),
+[`checkCrossCenterMapping()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkCrossCenterMapping.md),
+[`checkLocusMetadata()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md),
+[`checkLinkageMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLinkageMarkerGenotypeFile.md),
+[`markerRealizedRelatednessVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerRealizedRelatednessVariance.md),
+[`markerLdBlock()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerLdBlock.md),
+[`obfuscateLdBlocks()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateLdBlocks.md),
+[`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md),
+[`readTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/readTwinRelations.md))
+now have a demonstration section in `vignettes/a2interactive.Rmd` – 6
+new subsections under “Marker Genetics”, a new top-level “Individual
+Mate-Pair Analysis” section (reusing the tutorial’s own
+`trimmedPed`/`trimmedGeneticValue`/`candidates`), and a new
+“Twin/Zygosity Connectors” subsection under “Pedigree Diagram”. Every
+demo verified against the real installed package before writing prose
+(Learning 440); one documented gap (the
 [`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
-(issue \#151 Slice 1) and
-[`readTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/readTwinRelations.md)
-(S494, itself shipped with no `NEWS.Rmd` entry either per
-`PROJECT_LEARNINGS.md` Learning 495) also have no matching section. A
-future documentation-pass session should re-verify this list against the
-actual file (do not trust it as final – compiled via grep, not an
-exhaustive read) and add a demonstration section per function, matching
-the existing “Marker Genetics” section’s established style (reused,
-hand-verified fixtures; each demo chunk checked against the real
-installed package, not hand-derived, per `PROJECT_LEARNINGS.md` Learning
-440’s stale-local-install trap).
+D4 age-NA gotcha) could not be live-demoed against the tutorial’s real
+data and is described in prose only. Full vignette re-rendered
+end-to-end; spelling clean (`inst/WORDLIST` gained the new identifiers);
+full regression 0 failed/0 error;
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+0/0/1 NOTE (baseline-matching). See `CHANGELOG.md`,
+`PROJECT_LEARNINGS.md` Learning 548.)
 
 (none remaining – the `.Rbuildignore` `methodology_trim.py` pattern typo
 (found S533) is RESOLVED – S534 (2026-08-12): `^methodolog_trim\.py$`
