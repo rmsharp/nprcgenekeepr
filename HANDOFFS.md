@@ -209,7 +209,9 @@ runtime_smoke: n/a -- Slice 2 is a pure R-function signature/algorithm change wi
 Shiny/runtime wiring (Slice 3's own scope, not this session's).
 changelog_ref: this session's own CHANGELOG.md entries (claim, 2 owner-directed asides,
 deliverable, close-out).
-commit: pending
+commit: 99796a65 (reconciled S553 -- self-reference at write time, per the
+S543/S544/S545/S549/S550 precedent: this receipt ships in the commit whose sha it names;
+S552 bundled its deliverable and close-out into one commit, so this is also the deliverable sha)
 ```
 <free-text prose: Session 552 delivered Slice 2 of the twinRelations-into-kinship() plan cleanly
 -- full strict-TDD cycle, 0 errors/0 warnings/0 lints, every new assertion verified against
