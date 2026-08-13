@@ -68,32 +68,49 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       connected-component walk).
 
 ## Housekeeping
-- [ ] **Verify the results and plots in `inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf`
-      can be reproduced with `nprcgenekeepr`'s own exported functions** (owner-directed, found S545,
-      2026-08-13, READY, Effort M) -- the PDF is the supplementary material for Sinnwell, Therneau &
-      Schaid, "The kinship2 R Package for Pedigree Data" (Mayo Clinic; PMC manuscript NIHMS593658),
-      worked against a small 17-subject, 4-generation example pedigree ("fam1") with identical twins
-      and a consanguineous marriage. It covers 3 capability areas with concrete, checkable outputs:
-      (1) **pedigree plots** (`kinship2::plot.pedigree()`, including the multi-indicator
-      shape-shading/legend variant and the Figure S1 10-subject subset); (2) **pedigree
-      trimming/shrinking** (`kinship2::pedigree.shrink()`'s availability-then-affected-status
-      iterative-removal algorithm, worked example: 17 subjects/19 bits -> 10 subjects/8 bits); (3) a
-      **kinship matrix** worked example (Table S1) with named expected values (self 0.50,
-      parent-offspring 0.25, grandparent-grandchild/avuncular/double-first-cousin 0.125). A future
-      session should reconstruct the `fam1` pedigree as a package fixture, then check whether existing
-      exported functions already reproduce each of the 3 areas' numeric/visual results (this project
-      already has kinship-computation and pedigree-diagram functions per issue #129/#130's own
-      shipped work) or whether gaps exist -- likely shaped as a capability-comparison audit first
-      (matching the `ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md` precedent, a related but
-      distinct prior audit scoped to diagram-rendering only, not trimming or the kinship-matrix
-      worked values), not a same-session implementation. **Not investigated this session** (mid-turn
-      owner request during an unrelated Phase-0-CI-check-decision session; logged per the owner's
-      explicit ask, to keep this session's own already-approved scope intact, matching the
-      S544/Learning-382 "report, don't fix mid-session" precedent). **Note:** the PDF is currently
-      untracked in git (`git status` shows `??`) and not yet listed in `.gitignore`/`.Rbuildignore` --
-      the other 2 reference PDFs in the same directory (`5201430.pdf`, `bioinformatics_24_2_279.pdf`)
-      are both gitignored as unpublished/copyrighted third-party material; a future session should
-      decide whether this PDF needs the same treatment before it's committed.
+- [ ] (found S545, **verified S549** -- see
+      `docs/audits/KINSHIP2_SUPPLEMENT_REPRODUCIBILITY_AUDIT_2026-08-13.md`. **Verify the
+      results in `inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf` (kinship2's
+      supplementary material) can be reproduced with `nprcgenekeepr`'s own exported
+      functions.** Scope caveat found first: the full 17-subject `fam1` pedigree cannot be
+      exactly reconstructed from this repo's materials (its Figure 1 lives in the kinship2
+      *main* paper, not this supplement, not among the repo's other reference PDFs, and not
+      shipped in any installed `kinship2` dataset) -- audited the fully-specified 10-subject
+      Figure S1 subset instead, reconstructed from Table S1's own kinship values (verified,
+      not guessed from the figure). Result: `kinship()`'s autosomal matrix reproduces Table S1
+      **exactly** except cells touching the pedigree's one MZ-twin pair (a real, if
+      narrow-trigger, capability gap -- see the 2 new items below); pedigree-diagram structure
+      (nodes/edges/generations/twin-connector) is correct via `makePedigreeDiagramData()`/
+      `makePedigreeMatingLayout()`; kinship2's `pedigree.shrink()` (bit-size-driven,
+      availability/affected-status trimming) has no `nprcgenekeepr` equivalent, judged a
+      capability-fit non-issue (different problem domain, not this package's mission); no
+      X-chromosome-specific kinship computation exists (also judged out of current scope). See
+      the audit doc for the full evidence, including a `kinship2`-reproduced side-by-side
+      confirming the MZ-twin gap's mechanism precisely. **Note:** the PDF remains untracked
+      in git and not yet in `.gitignore`/`.Rbuildignore`, unlike its 2 gitignored
+      copyrighted siblings in the same directory -- still unresolved, unchanged from S545.
+      See `CHANGELOG.md`.)
+- [ ] **Thread `twinRelations` into `kinship()`'s computation, not just diagram rendering**
+      (found S549, Finding #1 of the above audit, READY for its own design session, Effort M) --
+      `nprcgenekeepr` already has a twin-declaration data model (`checkTwinRelations()`, issue
+      #137) but it feeds only the Diagram tab; every kinship-driven calculation
+      (`meanKinship()`, GVA/genetic-value scoring, breeding-group formation, mate-pair
+      analysis -- 15 call sites of `kinship()` total) silently treats a declared
+      monozygotic-twin pair as ordinary full siblings, understating their kinship by exactly
+      0.25 and understating every relative reached through either twin. Scope should include
+      propagating the override transitively (kinship2's own behavior), not just the direct
+      pair -- confirmed via a side-by-side `kinship2::kinship()` reproduction with the twin
+      relation declared. Needs its own design session given `kinship()`'s 15 call sites.
+- [ ] **Add a visual marker for consanguineous matings in the Pedigree Diagram tab**
+      (found S549, Finding #2 of the above audit, READY, Effort S) -- kinship2 draws a
+      doubled/thickened mate-line for a blood-related couple; `makePedigreeMatingLayout()`
+      renders every mating unit identically regardless of `kinship(sire, dam)`. Distinct from
+      issue #134 (verified layout *doesn't break* for consanguineous loops, closed S453 --
+      a robustness check, not a visual-signaling one) and from the "Candidate C"
+      cross-generation dogleg item below (a geometry-signposting problem, not a
+      blood-relation one). Likely detectable directly from the existing kinship matrix
+      (`kinship(sire, dam) > 0`) with a distinct edge style applied to that union's 2
+      spouse-to-union edges.
 - [ ] **`CHANGELOG.md`'s own ~4-entries-per-session ledger convention (claim, Phase 0
       reconcile, deliverable, close-out) may be a `CHANGELOG.md`-side analogue of the
       already-diagnosed `HANDOFFS.md` "Receipt Inflation" (H4) rate problem** (found S543,

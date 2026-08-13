@@ -138,6 +138,40 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-N] S549 close-out: session self-assessment, S548 handoff evaluation, Learning 556
+- **Deliverable:** Session S549's own close-out. Evaluated S548's `HANDOFFS.md` receipt (9/10 --
+  the `next_steps` priority list matched this session's own independently-rendered Phase 0
+  priorities exactly; nothing inaccurate found). Self-assessment, handoff notes, and
+  `PROJECT_LEARNINGS.md` Learning 556 written to `SESSION_NOTES.md`/`HANDOFFS.md`. See
+  `SESSION_NOTES.md` for the full record.
+
+### 2026-08-13 · [BL-N] S549: kinship2 supplementary-material reproducibility audit
+- **Deliverable:** `docs/audits/KINSHIP2_SUPPLEMENT_REPRODUCIBILITY_AUDIT_2026-08-13.md` --
+  verified whether `nprcgenekeepr`'s exported functions reproduce
+  `inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf` (kinship2's own
+  supplementary material). Found the full 17-subject `fam1` pedigree isn't reconstructible
+  from this repo's materials (Figure 1 lives in the kinship2 *main* paper, not this
+  supplement, not among the repo's other reference PDFs, not shipped in any installed
+  `kinship2` dataset); audited the fully-specified 10-subject Figure S1 subset instead,
+  reconstructed from Table S1's own kinship values (verified via the paper's stated
+  self/parent-offspring/avuncular/cousin coefficients, not guessed from the figure). Result:
+  `kinship()`'s autosomal matrix reproduces Table S1 exactly except the pedigree's one
+  MZ-twin pair's cells (Finding #1 -- a real capability gap: `twinRelations` feeds only the
+  Diagram tab, not `kinship()`'s 15 call sites, confirmed via a side-by-side
+  `kinship2::kinship()` reproduction with the twin relation declared); pedigree-diagram
+  structure (nodes/edges/generations/twin-connector) is correct via
+  `makePedigreeDiagramData()`/`makePedigreeMatingLayout()`, but no visual marker exists for a
+  consanguineous mating (Finding #2, distinct from the already-closed issue #134 and from the
+  BACKLOG "Candidate C" dogleg item); kinship2's `pedigree.shrink()` and X-chromosome kinship
+  have no `nprcgenekeepr` equivalent, both judged capability-fit non-issues rather than gaps
+  (Findings #3/#4). `BACKLOG.md` updated: the triggering item resolved with a pointer; 2 new
+  Housekeeping items filed for Findings #1/#2, recommended for future `AskUserQuestion` triage
+  (matching the `GENETIC_METRICS_PDF_CAPABILITY_AUDIT`/`ISSUE_129_...` precedent), not filed as
+  GitHub issues this session. TDD phase: N/A (audit/investigation deliverable, no production
+  code or test surface, matching the S529-S548 precedent).
+
+### 2026-08-13 · [BL-N] S549 claim: kinship2 supplement PDF reproducibility audit
+
 ### 2026-08-13 · [ad hoc] S548 close-out: session self-assessment, S547 handoff evaluation, Learning 555
 - **Deliverable:** Session S548's own close-out. Evaluated S547's `HANDOFFS.md` receipt (8/10 --
   its `next_steps` priority list matched this session's own independently-rendered Phase 0
