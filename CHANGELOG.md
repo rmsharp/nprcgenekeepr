@@ -138,6 +138,12 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-deleteResolvedBullets] S548 claim: delete resolved BACKLOG.md pointer bullets
+- **Deliverable:** Session S548 claimed. Picking up the `BACKLOG.md` Housekeeping item (found
+  S545) — delete the ~57-62 resolved `"(none remaining -- ... RESOLVED ...)"` pointer bullets
+  outright, verifying each item's resolution has a durable `CHANGELOG.md` entry first (S529
+  precedent: 2 cases had none and needed backfilling before deletion).
+
 ### 2026-08-13 · [ad hoc] S547 close-out: session self-assessment, S546 handoff evaluation
 - **Deliverable:** Session S547's own close-out. Evaluated S546's `HANDOFFS.md` receipt (9/10 --
   its `gotchas` field's fence-scanner-defect warning directly shaped this session's first

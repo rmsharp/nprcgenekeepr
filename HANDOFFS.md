@@ -125,6 +125,24 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-12.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S548
+date: 2026-08-13
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Delete the ~57-62 resolved "(none remaining -- ... RESOLVED ...)" pointer bullets
+in BACKLOG.md outright, verifying each item's resolution has a durable CHANGELOG.md entry first
+(S529 precedent).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S547
 date: 2026-08-13
 status: complete

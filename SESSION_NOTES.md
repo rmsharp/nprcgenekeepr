@@ -10,6 +10,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 548 Did
+**Deliverable:** Delete the ~57-62 resolved `"(none remaining -- ... RESOLVED ...)"` pointer
+bullets in `BACKLOG.md` outright (per the file's own header and `SESSION_RUNNER.md`'s explicit
+instruction), verifying each item's resolution has a durable `CHANGELOG.md` entry first —
+matching the S529 precedent, which found 2 cases with no entry and backfilled them before
+deleting. (IN PROGRESS)
+**Started:** 2026-08-13
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 546 Handoff Evaluation (by Session 547)
 **Score: 9/10.** **What helped:** both fields directly shaped this session's work. The
 `next_steps` field's ordered priority list (CHANGELOG relocation first, Effort M) matched this
