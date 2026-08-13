@@ -125,6 +125,17 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-12.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S545
+date: 2026-08-13
+status: pending
+active_task: Decide whether/how to add a GitHub Actions CI-status check to
+Phase 0, and if adopted, record it in CLAUDE.md's "Additional Phase 0
+steps."
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S544
 date: 2026-08-13
 status: complete

@@ -10,6 +10,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 544 Handoff Evaluation (by Session 545)
+**Score: 9/10.** **What helped:** the S544 `HANDOFFS.md` receipt's `next_steps` field enumerated
+the full unchanged-plus-new priorities list verbatim (Phase 0 CI-check gap, S325 reopen, issue
+#148, the new Pedigree Diagram article, NPRC outreach, LabKey, issue #138) — this session's own
+Phase 0 priorities rendering matched it almost exactly after independently re-deriving from
+`BACKLOG.md` and the two sequencing audits, giving high confidence nothing was missed. The
+`gotchas` field's warning about `run_in_background: true` vs. shell-level `&` backgrounding is a
+reusable process note for any future long-running command. **What was missing:** nothing
+material — the one gap found (S544's own `HANDOFFS.md` receipt shipping with `commit: pending`,
+a known self-reference artifact) is not something S544 could have avoided at write time, and was
+reconciled this session's Phase 0 exactly as the docs describe. **What was wrong:** nothing.
+**ROI:** High — the `next_steps` field was directly load-bearing for this session's own
+priorities-list rendering and the `AskUserQuestion` picker.
+
+### What Session 545 Did
+**Deliverable:** [IN PROGRESS] Decide whether/how to add a GitHub Actions CI-status check to
+Phase 0, and if adopted, record it in `CLAUDE.md`'s "Additional Phase 0 steps."
+**Started:** 2026-08-13. **Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 543 Handoff Evaluation (by Session 544)
 **Score: 8/10.** **What helped:** the S543 `HANDOFFS.md` receipt's `next_steps` field explicitly
 named "test-coverage.yaml CI break (READY to diagnose)" as one of 5 unchanged-from-S542 items —
