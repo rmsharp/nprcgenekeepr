@@ -10,11 +10,94 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 538 Handoff Evaluation (by Session 539)
+**Score: 6/10.** **What helped:** the `NEWS.Rmd` verbosity-item detail was accurate and fully
+closed (nothing to re-verify), and the 4 other items S538's `next_steps` did name
+(`a2interactive.Rmd` pass, issue #148 scoping, NPRC outreach, LabKey BLOCKED) all checked out
+against `BACKLOG.md` exactly as described when this session cross-referenced them during Phase 0.
+**What was missing:** S538's `next_steps` field did **not** mention `SESSION_NOTES.md`'s deferred
+`methodology_trim.py --write` archive — a genuinely READY item that `BACKLOG.md` had carried since
+S528 (2026-08-12, the same day, several sessions earlier), explicitly instructing "a future session
+should re-run the dry-run once more ... and, if still clean, run `--write`." This session found it
+only by cross-referencing the dashboard's own risk flags (the project's single HIGH-risk item,
+42,670 lines / 21x the read cap) against a `BACKLOG.md` grep, not from S538's handoff — the exact
+kind of rediscovery a complete `next_steps` field exists to prevent. **What was wrong:** nothing
+found — the 2 doc-hygiene nits S538 reported (not fixed, per the report-don't-fix-mid-session
+precedent) were re-confirmed present and un-fixed, matching S538's own description exactly.
+**ROI:** Moderate — 4 of 5 relevant open items were named accurately and needed no rediscovery, but
+the one omission (the project's own top risk flag) cost a real independent discovery pass this
+session had to do itself.
+
 ### What Session 539 Did
-**Deliverable:** `SESSION_NOTES.md`'s first `methodology_trim.py --write` archive (IN PROGRESS)
-**Started:** 2026-08-12
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable:** `SESSION_NOTES.md`'s first `methodology_trim.py --write` archive — the deferred
+remainder of the `BACKLOG.md` item found S518, blockers resolved S527/S528.
+**Started/Completed:** 2026-08-12.
+**Status:** DONE. TDD phase: N/A (mechanical tool-driven archive of process-documentation files, no
+production code or test surface — same precedent S538 declared for its own docs-only session).
+Commits: `841aeae2` (the archive itself), `53720f7e` (`BACKLOG.md` RESOLVED + `PROJECT_LEARNINGS.md`
+Learning 545), plus 2 earlier Phase 0/claim reconcile commits (`09455576`, `494e51b9`, `3110c649`).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, `git status`/`log`, `methodology_dashboard.py`). Ledger reconcile found the S538
+`HANDOFFS.md` receipt's `commit: pending` field still unreconciled — fixed (`commit: cf8f9bbe`) and
+logged to `CHANGELOG.md` (commit `09455576`), matching the S538→S537/S537→S536 precedent. Rendered
+the priorities list (6 numbered items derived from `BACKLOG.md` tags + the ratified sequencing
+audit's own still-open recommendation, capped at 4 for the `AskUserQuestion` picker) — owner picked
+the `SESSION_NOTES.md` archive over the `a2interactive.Rmd` pass, filing 2 new GitHub issues for
+audit-flagged gaps, and issue #148 scoping. **(2)** Claimed the session (`494e51b9`). **(3)** First
+`methodology_trim.py --file SESSION_NOTES.md` dry-run hit an unrelated `P1_UNDOCUMENTED` gate: this
+session's own claim commit sat undocumented ahead of `CHANGELOG.md`'s frontier, and the tool refuses
+to run while any commit is undocumented (a trim commit would permanently hide the gap). Cleared it
+by logging the claim to `CHANGELOG.md` on its own first (`3110c649`) — matching the identical gate
+S528 hit, but unlike S528 (whose GREEN work didn't depend on the gated CLI), this session's
+deliverable required it. **(4)** Re-ran the dry-run clean (620 records, up from S528's 599 — 21
+sessions' drift): `L1_OK`/`L2_OK`/`L3_OK`, would archive 612 of 620 records, live file
+6,370,574 B → 30,066 B. **(5)** Ran `--write`: archived 612 records (1998-12-06 → 2026-08-12) to
+`docs/archive/SESSION_NOTES-through-2026-08-12.md`; live `SESSION_NOTES.md` now 370 lines / 30,066 B
+(was 42,670 lines / 6,370,574 B — 21x/97x past the read-cap/byte-budget before this session).
+Verified losslessness via the generated `docs/archive/SESSION_NOTES-through-2026-08-12.md.verify.sh`
+(`L1`/`L2`/`L3` all OK, re-derived from git, not trusted from a printed digest) — the tool also
+auto-appended its own `[ad hoc]` `CHANGELOG.md` entry for the mechanical action, which this session
+supplemented with a `[BL-518]`-tagged session entry per the project's established convention.
+**(6)** Marked the `BACKLOG.md` item RESOLVED with the concrete numbers; added `PROJECT_LEARNINGS.md`
+Learning 545 (the `P1_UNDOCUMENTED`-on-own-claim-commit gotcha, generalizable to any future
+tool-driven deliverable gated the same way). **(7)** Verification: full clean regression via
+`pkgload::load_all()` + `testthat::test_dir(reporter="silent")` — 0 failed/0 error, matching the
+established baseline; confirmed via `.Rbuildignore` that none of the touched files (`SESSION_NOTES.md`,
+`CHANGELOG.md`, `BACKLOG.md`, `PROJECT_LEARNINGS.md`, `docs/`) are part of the R package build
+surface, and no test file has a functional (non-comment) dependency on their content. No `R/` files
+touched — lint N/A. Phase 3E: n/a in the "launch the app" sense (no runtime/Shiny behavior changed);
+the clean regression run above is this session's complete build-equivalent verification. No
+NEWS.Rmd/citation/tutorial/`_pkgdown.yml`/`a2interactive.Rmd` close-out checklist applies (no new
+exported function, no new Shiny feature/parameter, no new displayed statistic). Blast-radius note:
+split the deliverable into 2 commits (archive output: 4 files; `BACKLOG.md`+`PROJECT_LEARNINGS.md`:
+2 files) rather than 1, to stay under the 5-file-per-commit cap (`SAFEGUARDS.md`).
+
+**Self-assessment (Session 539): 9/10.** **Strengths:** (1) Surfaced the `SESSION_NOTES.md` archive
+as a first-class priority option even though S538's own handoff omitted it, by cross-referencing the
+dashboard's risk flags against a `BACKLOG.md` grep rather than relying solely on the handoff's
+`next_steps` — caught the predecessor's gap during Phase 3A rather than after. (2) Diagnosed the
+`P1_UNDOCUMENTED` gate correctly on first encounter (recognized it as the same gate S528's own
+`BACKLOG.md` entry documented) and fixed the root cause (log the claim commit first) rather than
+reaching for `--force` or working around the tool. (3) Did not trust the tool's own success message
+at face value — ran the generated `.verify.sh` independently and confirmed `L1`/`L2`/`L3` all `OK`
+before treating the archive as done. (4) Respected the 5-file blast-radius cap by splitting the
+deliverable into 2 commits along a natural boundary (tool output vs. this session's own bookkeeping)
+rather than bundling everything into one oversized commit. (5) Verified the docs-only change was
+genuinely inert to the package build (`.Rbuildignore` coverage + grep for functional test
+dependencies) rather than assuming it from the file types alone, then ran the actual clean
+regression anyway rather than skipping verification because "it's just markdown." **Weaknesses:**
+(1) Did not anticipate the `P1_UNDOCUMENTED` gate before the first dry-run attempt, despite
+`BACKLOG.md`'s own S528 entry describing the exact same gate firing on an in-progress claim commit —
+a closer re-read of that entry during Phase 0 (rather than only noting "both blockers resolved")
+would have let this session log the claim commit to `CHANGELOG.md` proactively instead of hitting
+the gate and reacting. (2) The priorities-list `AskUserQuestion` surfaced only 4 of 6 numbered
+candidates (the tool's 4-option cap) — correctly noted the cap per `CLAUDE.md`'s own formatting
+rule, but did not separately flag NPRC outreach/LabKey in the spoken reply as "+2 more" as crisply
+as the written prose list did.
+**Ledger:** recorded in `CHANGELOG.md` (this session's own entries: `[BL-518]` the deliverable,
+2x `[ad hoc]` Phase 0 reconcile + claim-clearing entries, plus the tool's own auto-generated
+`[ad hoc]` entry).
 
 ### Session 537 Handoff Evaluation (by Session 538)
 **Score: 8/10.** **What helped:** the `HANDOFFS.md` S537 receipt's `next_steps` field

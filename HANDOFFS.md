@@ -123,18 +123,68 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S539
 date: 2026-08-12
-status: pending
-self_score:
-predecessor_score:
-active_task: SESSION_NOTES.md's first methodology_trim.py --write archive --
-both prior blockers (S518 fence-scanner defect) are resolved (S527 rewrap,
-S528 regex fix); re-run the dry-run to confirm still clean, then --write.
-what_was_done: pending
-next_steps: pending
-key_files: SESSION_NOTES.md; methodology_trim.py
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 6
+active_task: SESSION_NOTES.md's first methodology_trim.py --write archive is
+DONE. Live file 42,670 lines / 6,370,574 B -> 370 lines / 30,066 B (612 of
+620 records archived to docs/archive/SESSION_NOTES-through-2026-08-12.md).
+BACKLOG.md item (found S518) marked RESOLVED.
+what_was_done: Re-ran the dry-run (620 records, up from S528's 599), which
+hit an unrelated P1_UNDOCUMENTED gate on this session's own claim commit --
+cleared by logging the claim to CHANGELOG.md on its own first, then re-ran
+clean (L1_OK/L2_OK/L3_OK). Ran --write: archived 612 records
+(1998-12-06 -> 2026-08-12) to docs/archive/SESSION_NOTES-through-2026-08-12.md;
+verified losslessness via the generated .verify.sh (L1/L2/L3 all OK,
+re-derived from git). Supplemented the tool's own auto-generated [ad hoc]
+CHANGELOG.md entry with a [BL-518]-tagged session entry. Marked BACKLOG.md
+item RESOLVED; added PROJECT_LEARNINGS.md Learning 545 (the
+P1_UNDOCUMENTED-on-own-claim-commit gotcha). Full clean regression: 0
+failed/0 error. Commits: 09455576 (Phase 0 reconcile), 494e51b9 (claim),
+3110c649 (claim logged to clear the gate), 841aeae2 (the archive itself),
+53720f7e (BACKLOG.md RESOLVED + Learning 545, this close-out's own commit
+pending).
+next_steps: The SESSION_NOTES.md risk flag is resolved. Other unrelated
+READY/DECISION-NEEDED items still open (unchanged by this session):
+a2interactive.Rmd documentation pass for functions shipped since S478
+(Effort M, owner-directed); filing 2 new GitHub issues for the sequencing
+audit's unfiled High-priority gaps ("Longitudinal genetic-health
+monitoring", "Ancestry guardrails in breeding decisions" -- open since S483,
+Effort S); issue #148 (MHC) needs its own scope-narrowing conversation
+before it's READY (sequencing audit Finding #4); NPRC outreach &
+announcement plan needs owner review/edit of drafts + send-timing decision
+(not a coding task). LabKey integration remaining recs stay BLOCKED (needs a
+live LabKey server). Same 2 doc-hygiene nits S538 flagged remain unfixed
+(BACKLOG.md:354's stale duplicate spelling item; the S518 housekeeping
+item's own stale unchecked checkbox despite narratively RESOLVED text) --
+low-priority, not re-flagged as new.
+key_files: SESSION_NOTES.md (370 lines, was 42,670);
+docs/archive/SESSION_NOTES-through-2026-08-12.md (new, 612 archived
+records); docs/archive/SESSION_NOTES-through-2026-08-12.md.verify.sh (new);
+CHANGELOG.md (3 new entries: claim, reconcile, deliverable, plus the tool's
+own auto-generated one); BACKLOG.md (item marked RESOLVED);
+PROJECT_LEARNINGS.md Learning 545 (new).
+gotchas: (1) methodology_trim.py's P1_UNDOCUMENTED gate refuses --write
+while ANY commit -- including the running session's own Phase 1B claim
+stub -- sits undocumented ahead of CHANGELOG.md's frontier. If your
+session's deliverable IS a trim --write call, log the claim commit to
+CHANGELOG.md on its own BEFORE attempting --write, don't wait for the usual
+Phase 3F close-out entry to cover it. (2) CUT_STRADDLES_DAY is an
+informational warning, not an error, when multiple sessions land the same
+calendar day as the cut point -- the shard filename becomes a span label,
+not a strict day boundary; harmless, matches the tool's documented design
+(SS2.3). (3) HANDOFFS.md and CHANGELOG.md are STILL past their own
+byte-budget archive triggers (dashboard MEDIUM risk) -- not this session's
+scope, but a future session should run their own first --write archives the
+same way this session did for SESSION_NOTES.md.
+runtime_smoke: n/a -- no runtime/Shiny behavior changed (docs-only session,
+SESSION_NOTES.md/CHANGELOG.md/BACKLOG.md/PROJECT_LEARNINGS.md/docs/archive
+only, all confirmed .Rbuildignore'd with no functional test dependency); the
+full clean regression (0 failed/0 error) is this session's complete
+build-equivalent verification.
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12
+([ad hoc] claim + Phase 0 reconcile entries; [BL-518] the deliverable; plus
+the tool's own auto-generated [ad hoc] entry)
 commit: pending
 ```
 
