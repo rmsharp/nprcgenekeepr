@@ -138,6 +138,18 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [ad hoc] S552: logged a new BACKLOG.md item (affected-status shading fills unaffected individuals too)
+- **Deliverable:** Phase 0 orientation surfaced a live owner observation ("unaffected individuals
+  are still color filled ... counter to pedigree drawing convention") mid-report. Traced it to a
+  concrete mechanism -- issue #133's `.affectedColor()` (`R/makePedigreeDiagramData.R:163-165`)
+  sets `color.background` to `NA_character_` for `affected == FALSE`/`NA`, which visNetwork
+  renders as its own default solid fill rather than an open/unfilled node. Documented as a new
+  `BACKLOG.md` item (Housekeeping section, READY, Effort S) rather than fixed mid-session, since
+  the owner picked a different item (Slice 2 of the `twinRelations`-into-`kinship()` plan) for
+  this session's actual deliverable -- matching the established "report an incidentally-found
+  gap, don't fix it mid-session" precedent (`PROJECT_LEARNINGS.md` Learning 382). Not yet filed
+  as a GitHub issue.
+
 ### 2026-08-13 · [BL-N] S551 close-out: Slice 1 (kinship() twinRelations parameter) shipped, S550 handoff evaluation, Learning 558
 - **Deliverable:** Session S551's own close-out. Evaluated S550's `HANDOFFS.md` receipt (9/10 --
   every claim held up against direct verification, `next_steps`/`key_files` used directly with
