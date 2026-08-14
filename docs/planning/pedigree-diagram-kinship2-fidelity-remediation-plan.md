@@ -228,7 +228,46 @@ solid fill. `NEWS.Rmd` entry added. See `CHANGELOG.md`.
   (small, single-decision) -- otherwise straightforward enough to go directly into a normal
   RED→GREEN cycle once picked up.
 
-### Track 2 -- Flip the default `edgeStyle` to `"rectilinear"` (Claim 1)
+### Track 2 -- Flip the default `edgeStyle` to `"rectilinear"` (Claim 1) -- DONE S574
+
+**DONE S574 (2026-08-14):** implemented exactly as scoped below, after Track 4 landed (S573) per
+the sequencing note. `makePedigreeMatingLayout()`'s `edgeStyle` argument default reordered to
+`c("rectilinear", "direct")`; `R/modPedigree.R`'s `.currentEdgeStyle()` NULL-input fallback
+(what the radio's own `selected =` reads before any user interaction) flipped `"direct"` ->
+`"rectilinear"` -- a 2-line source diff. Test blast radius: 1 helper fix
+(`test_addRectilinearWaypoints.R`'s `.buildLayoutAndForest()`, which must still build direct-style
+preconditions since it feeds the function that ADDS rectilinear waypoints), 8 blocks in
+`test_makePedigreeMatingLayout.R` and 5 in `test_modPedigree.R` pinned to `edgeStyle = "direct"`
+explicitly (they test direct-style-specific structural invariants that previously rode the
+implicit default), 2 central "defaults to..." tests rewritten to assert the new default, plus 2
+new assertions (a true-implicit-default 400-cap test, a true-implicit-default highlightNearest
+degree:6 check) closing gaps the original scan missed. A 9th, previously-uncaught gap
+(`test-e2e-pedigree-module.R`'s own trio-edge-structure test, pinned to `"direct"` explicitly) was
+found only after re-installing the dev package into the `renv` library -- `shinytest2::AppDriver`
+spawns a genuinely separate `Rscript` process that reads the *installed* package, not whatever
+`pkgload::load_all()` shadows in the calling session, so the first full-regression pass had
+silently exercised the E2E suite against the pre-flip installed code. Verified: full clean
+regression 0 failed/0 error among true offenders (1 pre-existing unrelated
+`test_wordlist_coverage.R` spelling failure only); `devtools::check()` 0 errors/0 warnings/1
+pre-existing unrelated NOTE (`vignettes/figure/` knitr leftover); `lintr::lint_package()` 0 lints
+on all 5 touched `.R` source files. All 6 named must-not-regress features live-verified against
+the real bundled fixture, post-reinstall: click-to-navigate (#129) and shape-to-sex legend (#132)
+via the corrected `test-e2e-pedigree-module.R` re-run; PNG export (#131) and the search/highlight
+control (#135) confirmed present in the live full-page DOM; inbreeding-loop/consanguineous marking
+(#134) confirmed live via JS DataSet query (56 marked edges, color `#D55E00`, width 4, on the real
+fixture); the node cap (#138) confirmed both at the unit level (400/401 boundary, implicit default)
+and live (radio pre-selection reads back `"rectilinear"` with zero interaction). Timed render of
+the real/bundled 375-individual fixture (upload -> Diagram tab idle): 3.05 seconds -- no
+regression, consistent with node counts having *dropped* since Track 4 (714/1202, not risen).
+Documentation debt: `vignettes/a2interactive.Rmd` (routing-choice prose, the "Direct Edge Style"
+code chunk explicitly pinned, a stale in-code comment, the "Rectilinear Edge Style" section's
+stale default claim) and `vignettes/articles/colony-manager-guide.qmd` (the edge-style toggle
+description, the now-style-dependent 750/400 node-cap claim) both updated. `NEWS.Rmd`/`NEWS.md`
+and the `makePedigreeMatingLayout()` roxygen docstring (+ regenerated `man/`) updated. A 3rd
+vignette, `vignettes/articles/pedigree-diagram.qmd`, also had stale default/cap claims corrected
+(found during the doc pass, not named in this Track's original "documentation debt" note above).
+REFACTOR phase skipped (owner-confirmed via `AskUserQuestion`, diff already minimal). See
+`CHANGELOG.md`.
 
 - **Scope:** Change `makePedigreeMatingLayout()`'s `edgeStyle` default and `R/modPedigree.R`'s
   `radioButtons(selected = ...)` default from `"direct"` to `"rectilinear"`. This is a *behavior*
@@ -392,11 +431,11 @@ separately-scoped enhancement (see the plan's own §5/§8).
 
 ## 5. Recommended pickup order
 
-**Status as of S573 (2026-08-14):** Tracks 1, 3, and 4 are DONE (S570, S571, S572/S573
-respectively -- see each Track's own section above). Only **Track 2** (flip default to
-rectilinear) and **Track 5** (broaden rectilinear coverage, blocked on Track 2/re-measurement)
-remain. This original recommended order (below) is left as written -- historical planning
-narrative, not retroactively edited.
+**Status as of S574 (2026-08-14):** Tracks 1, 2, 3, and 4 are DONE (S570, S574, S571, S572/S573
+respectively -- see each Track's own section above). Only **Track 5** (broaden rectilinear
+coverage, re-measurement now possible against the landed Track 2 default) remains. This original
+recommended order (below) is left as written -- historical planning narrative, not retroactively
+edited.
 
 1. **Track 1** (unaffected fill) -- smallest, lowest-risk, highest-visibility win; no dependency on
    anything else.

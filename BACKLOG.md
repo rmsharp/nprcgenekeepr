@@ -68,6 +68,17 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       connected-component walk).
 
 ## Housekeeping
+- [ ] (found S574, 2026-08-14, incidental to Track 2's default-flip documentation pass, READY,
+      Effort S) **`shiny_app_use/pb_diagram_legend.png` (used in both
+      `vignettes/articles/colony-manager-guide.qmd` and `vignettes/articles/pedigree-diagram.qmd`)
+      visibly shows the "Direct" radio button pre-selected** -- accurate when captured, but Track 2
+      (S574) flipped the Diagram tab's own zero-interaction default to "Rectilinear", so the
+      screenshot's own radio-button state (and its diagonal-line routing) no longer matches what a
+      fresh session actually renders. Not reshot this session -- out of scope for the default-flip
+      deliverable itself, matching `PROJECT_LEARNINGS.md` Learning 382's "report, don't fix
+      mid-session" precedent (mirrors the S461/S544 stale-screenshot pattern already resolved once
+      for this same image, S560). A future session should recapture it via the live app (chromote),
+      same small real 6-animal subgraph, with Rectilinear now pre-selected with no interaction.
 - [ ] (found S573, 2026-08-14, incidental to this session's own Phase 3F CHANGELOG.md entries,
       READY, Effort S) **`CHANGELOG.md`'s byte-budget archive trigger fires** (`python3
       methodology_trim.py --file CHANGELOG.md --check`: 83,410 B against the 65,536 B budget as

@@ -234,6 +234,13 @@ R. Mark Sharp, Ph.D.
   pulled to a single relocated row (22 individuals in the bundled
   example pedigree, up from 2; the corresponding duplicate-node count
   drops from 128 to 102).
+- Changed: the Pedigree Diagram tab's default **Diagram Edge Style** is
+  now **Rectilinear (kinship2-style)**, not Direct -- the toggle (issue
+  \#142) and the option itself are unchanged, only which one applies
+  with no user interaction. `makePedigreeMatingLayout()`'s own
+  `edgeStyle` argument default flips to match. The node cap that applies
+  with no style chosen is therefore now 400 animals (previously 750);
+  switching to Direct raises it back to 750.
 
 # nprcgenekeepr 2.0.0 (20260708)
 
