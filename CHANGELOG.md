@@ -138,6 +138,40 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [BL-N] S568: close out (Compounding Loop reference files build-ignore decision resolved)
+- **Deliverable:** Resolved the disposition of the 4 untracked "Compounding Loop" files in
+  `inst/extdata/reference/`, flagged S567 as bundled into every built package tarball unlike this
+  project's deliberately-excluded reference files. Investigated before presenting the decision: the
+  3 real files (`.html`/`.pdf`/`.webarchive`) are a saved Claude Artifact about this project's own
+  `SESSION_RUNNER.md`/`SAFEGUARDS.md` methodology (`github.com/KJ5HST/methodology`) -- personal
+  reference material, not genetics/package content, distinct from the existing 4 gitignored files
+  (copyrighted scientific papers). The 4th file, `~$e Compounding Loop.html`, was confirmed via
+  byte inspection to be a content-less Microsoft/LibreOffice editor lock file (162 B, the owner's
+  own name in the binary lock-file format), never committed (`git log` empty). Owner decision (via
+  `AskUserQuestion`): gitignore + `.Rbuildignore` the 3 real files in place, matching the
+  established S479/S497/S567 precedent (over moving them out of `inst/extdata/reference/`
+  entirely, tracking+shipping them, or deleting them outright); deleted the lock file
+  unconditionally. Added a new, distinct comment block to both `.gitignore` and `.Rbuildignore`
+  (not merged into the existing NIHMS/copyrighted-paper blocks, whose rationale doesn't apply to
+  this file's actual nature) -- wrote the `.Rbuildignore` comment paren-free from the start,
+  applying S567's own documented gotcha rather than repeating its mistake. Verified via an actual
+  `pkgbuild::build()` + tarball-content inspection that all 3 real files are now excluded (the
+  NIHMS precedent and the 1 tracked exception both re-confirmed unaffected); `git check-ignore -v`
+  confirms all 3 match the new `.gitignore` rule. Full `devtools::check()`: 0 errors, 0 warnings, 0
+  notes -- this also resolved the long-standing "checking for portable file names" WARNING every
+  recent session had carried forward as pre-existing (these exact files were its cause).
+  `BACKLOG.md` updated in place (the item marked RESOLVED). Incidentally found, reported (not
+  fixed): an empty, untracked `inst/extdata/reference/untitled folder` directory (dated the same
+  day as the Compounding Loop files) surfaced in this session's own build log -- added as a new
+  `BACKLOG.md` Housekeeping item. No TDD phase gate applies (no production `R/` code changed --
+  config-only, plus deleting one content-less file). Commits: `794e095c` (claim) + this close-out
+  commit.
+
+### 2026-08-14 · [BL-N] S568: claim session (Compounding Loop reference files build-ignore decision)
+- **Deliverable:** Claim stub for deciding the disposition of the 4 untracked "Compounding Loop"
+  files in `inst/extdata/reference/`, flagged S567 as bundled into every built package tarball.
+  Commit: `794e095c`.
+
 ### 2026-08-14 · [ad hoc] S567: reconcile HANDOFFS.md commit self-reference (`9a721a1d`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` ->
   `619ffd98` (the close-out commit whose sha the receipt itself couldn't name until after

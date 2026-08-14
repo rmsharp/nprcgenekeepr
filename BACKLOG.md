@@ -640,21 +640,37 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `articles/pedigree-diagram` to the `contents:` list in the same alphabetical-ish position its
       neighbors already establish.
 - [ ] (found S567, 2026-08-14, incidental to a `pkgbuild::build()`/tarball-content check while
-      resolving the kinship2 PDF's `.Rbuildignore` classification, Effort S, not fixed this
-      session) **The untracked "Compounding Loop" files
-      (`inst/extdata/reference/The Compounding Loop.{html,pdf,webarchive}` + the
-      `~$e Compounding Loop.html` Office lock file) are bundled into every built package tarball**,
-      unlike the reference PDFs this project deliberately `.gitignore`/`.Rbuildignore`s -- confirmed
-      by direct tarball inspection (`tar tzf`) this session. They also trip `devtools::check()`'s
-      "checking for portable file names" WARNING (confirmed pre-existing/unrelated to this
-      session's own diff, matching every recent session's identical finding). These 4 files were
-      already assessed by S566 as "the owner's own saved reference material, no matching
-      issue/session claim" and left untouched -- this item is only about their *build-ignore*
-      status, not their presence on disk or in git. A future session should ask the owner whether
-      these 4 files belong in `inst/extdata/reference/` at all (a git-tracked location that ships
-      in the built package) or should move somewhere `.Rbuildignore`-excluded like the 4
-      already-excluded reference PDFs, given they're plain personal reference material rather than
-      package-relevant content.
+      resolving the kinship2 PDF's `.Rbuildignore` classification, **RESOLVED S568**.
+      **The untracked "Compounding Loop" files were bundled into every built package tarball**,
+      unlike the reference PDFs this project deliberately `.gitignore`/`.Rbuildignore`s. Investigated
+      before presenting the decision: the 3 real files (`.html`/`.pdf`/`.webarchive`) turned out to be
+      a saved Claude Artifact about this project's own `SESSION_RUNNER.md`/`SAFEGUARDS.md` methodology
+      (`github.com/KJ5HST/methodology`) -- personal reference material, not genetics/package content,
+      but also not the same as the existing 4 gitignored files (those are copyrighted scientific
+      papers). The 4th file, `~$e Compounding Loop.html`, was confirmed via byte inspection to be a
+      content-less Microsoft/LibreOffice editor lock file (162 B, just the owner's own name in the
+      binary lock-file format), not reference material at all. Presented via `AskUserQuestion`: owner
+      picked "gitignore + `.Rbuildignore` in place," matching the established precedent (over moving
+      the files out of `inst/extdata/reference/` entirely, tracking+shipping them, or deleting them
+      outright); the lock file was deleted unconditionally (never committed, confirmed via
+      `git log -- <file>` returning empty, zero content value). Verified via an actual
+      `pkgbuild::build()` + tarball-content inspection that all 3 real files are now excluded (the
+      NIHMS precedent and the 1 tracked exception both re-confirmed unaffected);
+      `git check-ignore -v` confirms all 3 match the new `.gitignore` rule. `devtools::check()`: 0
+      errors, 0 warnings, 0 notes -- this also resolved the long-standing "checking for portable
+      file names" WARNING every recent session had been carrying forward as pre-existing (these
+      exact files were its cause). Incidental finding logged, not fixed: an empty
+      `inst/extdata/reference/untitled folder` directory (dated the same day as the Compounding Loop
+      files) surfaced during this session's own build-log inspection -- new Housekeeping item below.
+      See `CHANGELOG.md`.)
+- [ ] (found S568, 2026-08-14, incidental to this session's own `pkgbuild::build()` verification,
+      Effort S, not fixed this session) **An empty, untracked `inst/extdata/reference/untitled
+      folder` directory** (dated 2026-08-13, the same day as the now-resolved "Compounding Loop"
+      files) sits in the package source tree -- `R CMD build` silently drops it during staging
+      ("Removed empty directory..."), so it has no build-correctness impact, but it's a stray Finder
+      artifact with no content. A future session should confirm with the owner it's safe to delete
+      and remove it (no `.gitignore`/`.Rbuildignore` entry needed for an already-build-dropped empty
+      directory -- just a filesystem cleanup).
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability-comparison audit (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`)

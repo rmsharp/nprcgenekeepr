@@ -134,18 +134,62 @@ This file currently holds **8** receipt(s). Computed by `methodology_trim.py` on
 ```handoff
 session: S568
 date: 2026-08-14
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Decide (with the owner) the disposition of the 4 untracked "Compounding Loop" files
-  in inst/extdata/reference/ (currently bundled into every built package tarball, unlike this
-  project's deliberately-excluded reference files) and apply that decision.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Resolved the disposition of the 4 untracked "Compounding Loop" files in
+  inst/extdata/reference/, flagged S567 as bundled into every built package tarball. DONE --
+  gitignored/.Rbuildignored the 3 real files, deleted the 4th (a content-less lock file).
+what_was_done: Investigated before presenting the decision: confirmed none of the 4 files were
+  yet gitignored (genuinely untracked, unlike the 4 existing precedent files); read the 3 real
+  files' actual content (file/pdftotext/HTML-text extraction) and found they are a saved Claude
+  Artifact about this project's own SESSION_RUNNER.md/SAFEGUARDS.md methodology
+  (github.com/KJ5HST/methodology), not genetics/package content and not the same kind of material
+  as the existing copyrighted-paper precedent files; confirmed via byte inspection that the 4th
+  file, ~$e Compounding Loop.html, is a content-less Microsoft/LibreOffice editor lock file (162
+  B), never committed (git log empty). Owner picked gitignore+Rbuildignore-in-place for the 3
+  real files via AskUserQuestion (over moving them out of the directory, tracking+shipping them,
+  or deleting outright); deleted the lock file unconditionally. Added a new, distinct comment
+  block to both .gitignore/.Rbuildignore (the existing block's "no open-access marking"
+  rationale doesn't describe this file). Wrote the .Rbuildignore comment paren-free from the
+  start, applying S567's own documented gotcha rather than repeating its mistake. Verified via an
+  actual pkgbuild::build() + tarball inspection (all 3 excluded; NIHMS precedent + the 1 tracked
+  exception both unaffected) and git check-ignore -v (all 3 match). Full devtools::check(): 0
+  errors, 0 warnings, 0 notes -- also resolved the long-standing "portable file names" WARNING
+  every recent session (S563-S567) had carried forward as pre-existing, since these files were
+  its cause. BACKLOG.md updated (item marked RESOLVED). Incidental finding logged, not fixed: an
+  empty, untracked inst/extdata/reference/untitled folder directory (dated the same day as the
+  Compounding Loop files), surfaced via the build log's own "Removed empty directory" message --
+  new BACKLOG.md Housekeeping item. Commits: 794e095c (claim) + this close-out commit.
+next_steps: This specific item is fully RESOLVED -- no further action owed on the Compounding
+  Loop files themselves. BACKLOG.md priorities otherwise unchanged from S567's own handoff, plus
+  this session's own new finding: (1) the empty inst/extdata/reference/untitled folder directory
+  this session logged (READY, Effort S -- confirm with owner it's safe to delete, then rm it; no
+  build-correctness impact since R CMD build already drops it silently). (2) LabKey (BLOCKED,
+  Effort M -- remainder needs a live LabKey server). (3) _pkgdown.yml missing
+  articles/pedigree-diagram entry (READY, Effort S). (4) issue #148/MHC (DECISION NEEDED --
+  needs its own scope-narrowing conversation first, per the ratified Deferred-tier sequencing
+  order). (5) NPRC outreach (DECISION NEEDED, Effort N/A, owner-executed real-world action, not
+  a coding task).
+key_files: .gitignore:75-85 (new Compounding Loop exclusion + comment); .Rbuildignore:119-126
+  (same, paren-free per the file's own parsing rule); BACKLOG.md (item marked RESOLVED; new
+  Housekeeping item for the empty "untitled folder" finding).
+gotchas: (1) .Rbuildignore parses EVERY line -- including `#` comment lines -- as a Perl regex;
+  an unbalanced parenthesis anywhere aborts `R CMD build` with a PCRE error (S567's own gotcha,
+  re-confirmed still load-bearing -- this session applied it correctly by writing the new
+  comment paren-free from the start). (2) `git status` "Untracked" vs. "Ignored" is a reliable,
+  fast signal for whether a file already has gitignore coverage -- don't assume "shows up in git
+  status" means "already handled the same way as its siblings"; these 4 files looked similar to
+  the existing 4 precedent files by location/pattern but were NOT yet gitignored at all, a fact
+  only `git status --ignored`/`check-ignore` surfaces directly. (3) `pkgbuild::build()`'s own
+  console output reports "Removed empty directory ..." for any empty dir under the staged
+  source tree -- a free, incidental signal for stray empty directories, worth scanning even when
+  the build's main purpose is unrelated verification.
+runtime_smoke: n/a -- config-only change (.gitignore/.Rbuildignore) plus deleting one
+  content-less file, no Shiny/application runtime behavior touched. The applicable "build
+  equivalent" (R CMD build actually excluding the target files from the built tarball, plus a
+  full devtools::check()) was verified directly.
+changelog_ref: CHANGELOG.md 2026-08-14 S568 claim + close-out entries
 commit: pending
 ```
 

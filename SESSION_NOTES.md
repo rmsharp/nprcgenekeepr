@@ -14,14 +14,109 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 567 Handoff Evaluation (by Session 568)
+**Score: 9/10.** **What helped:** the handoff's `next_steps` field named this session's exact
+deliverable verbatim -- "the new incidental finding this session logged -- should the 4
+'Compounding Loop' files move to an .Rbuildignore-excluded location... Effort S" -- and the
+owner picked exactly this item via this session's own priorities-list `AskUserQuestion`. The
+handoff's `gotchas` field (the `.Rbuildignore` "every line, including `#` comments, is a Perl
+regex -- an unbalanced paren aborts `R CMD build`" warning) was directly load-bearing again:
+this session wrote its own `.Rbuildignore` comment paren-free from the start, avoiding the exact
+bug S567 had to catch and fix. **What was missing:** nothing material -- S567's own finding was
+necessarily structural only (the files are bundled into the tarball), since investigating their
+actual *content* was this session's own job, not something S567 could have anticipated or done
+without expanding its own scope. **What was wrong:** nothing identified. **ROI:** High.
+
 ### What Session 568 Did
-**Deliverable:** Decide (with the owner) the disposition of the 4 untracked "Compounding Loop"
-files in `inst/extdata/reference/` (currently bundled into every built package tarball, unlike
-this project's deliberately-excluded reference files) and apply that decision. (IN PROGRESS)
-**Started:** 2026-08-14.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+**Deliverable:** Resolved the disposition of the 4 untracked "Compounding Loop" files in
+`inst/extdata/reference/`, flagged S567 as bundled into every built package tarball unlike this
+project's deliberately-excluded reference files. **DONE.**
+**Started/Completed:** 2026-08-14. **Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SESSION_RUNNER.md`, `SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, `git status`/`log`/`diff --stat` [67 commits ahead of
+`origin/master`, unpushed], `methodology_dashboard.py` [Health 96/100, 0 High+ risk, tool itself
+stale v2.14.0 vs canonical v2.15.2 -- reported, not fixed], `gh run list --branch master --limit
+10` [push-triggered workflows green; scheduled `shinytest2.yaml` red a 3rd consecutive time,
+2026-08-12/13/14 -- reported, not diagnosed], ledger reconcile [`CHANGELOG.md` frontier == `HEAD`,
+no gap; `HANDOFFS.md` frontier one commit behind `HEAD`, but that trailing commit was S567's own
+already-handled self-reference bookkeeping, not a new unrecorded action]; re-examined the 5
+untracked files (down from S567's own 6, since the NIHMS PDF is now gitignored) -- all previously
+assessed, no new ghost session. Cross-checked `docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_
+AUDIT_2026-08-08.md`'s own ratified Deferred-tier order per `CLAUDE.md`'s sequencing-audit-cluster
+check, confirming issue #148/MHC is next now that #152/#153 are closed. Rendered a 4-item (of 5
+candidates, capped per `CLAUDE.md`'s `AskUserQuestion` rule) priorities list -- owner picked the
+Compounding Loop files item. **(2)** Investigated before presenting the actual decision, rather
+than a generic keep/drop question: confirmed via `git status --ignored`/`check-ignore` that,
+unlike the 4 existing precedent files, none of the 4 Compounding Loop files were yet gitignored at
+all (genuinely untracked, not just unadded); read the 3 real files' actual content (`file`,
+`pdftotext -layout`, an HTML title/text extraction) and found they are a saved Claude Artifact
+about this project's own `SESSION_RUNNER.md`/`SAFEGUARDS.md` methodology
+(`github.com/KJ5HST/methodology`) -- personal reference material, but a materially different kind
+than the existing 4 gitignored files (copyrighted genetics/scientific papers); confirmed via byte
+inspection (`file`, `cat -v`) that the 4th file, `~$e Compounding Loop.html`, is a content-less
+Microsoft/LibreOffice editor lock file (162 B, only the owner's own name in the binary lock-file
+signature), and via `git log -- <file>` (empty) that it was never committed. Presented this
+nuance via `AskUserQuestion` (gitignore-in-place / move out of the directory entirely / track+ship
+/ delete outright, for the 3 real files; the lock file flagged for unconditional deletion either
+way) -- owner picked gitignore-in-place, matching the S479/S497/S567 precedent. **(3)** Phase 1B:
+claim stubs written to `SESSION_NOTES.md`/`HANDOFFS.md`, committed (`794e095c`). **(4)** No TDD
+phase gate applies -- config-only change (`.gitignore`/`.Rbuildignore`) plus deleting one
+content-less file, no production `R/` code touched, matching the S566/S567 precedent for
+non-code deliverables. **(5)** Added a new, distinct comment block to both `.gitignore` and
+`.Rbuildignore` (not merged into the existing NIHMS/copyrighted-paper blocks, whose "no
+open-access marking"/redistribution-rights rationale doesn't describe this file's actual nature)
+-- wrote the `.Rbuildignore` comment paren-free from the start, directly applying S567's own
+documented gotcha rather than repeating its mistake. Deleted the lock file (`rm`, not `git rm` --
+never tracked). **(6)** Verified: `git check-ignore -v` confirms all 3 real files now match the
+new `.gitignore` rule; an actual `pkgbuild::build()` + tarball-content inspection confirms all 3
+are excluded from the built tarball (the NIHMS precedent and the 1 tracked exception,
+`Master_Genetic_metrics_2_14_15.pdf`, both re-confirmed unaffected); full `devtools::check()`
+returned **0 errors, 0 warnings, 0 notes** -- this also resolved the long-standing "checking for
+portable file names" WARNING every recent session (S563-S567 at least) had carried forward as
+pre-existing, since these exact files were its cause. **(7)** Close-out: updated `BACKLOG.md`'s
+item to RESOLVED with the full rationale and verification evidence; logged an incidental, unfixed
+finding (an empty, untracked `inst/extdata/reference/untitled folder` directory, dated the same
+day as the Compounding Loop files, surfaced only via the build log's own "Removed empty
+directory" message -- confirmed via a second build run to be the only such directory anywhere in
+the package) as a new `BACKLOG.md` Housekeeping item, per the established "report, don't fix
+mid-session" precedent.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A (no new displayed
+statistic). Tutorial/article documentation checklist N/A (no new Shiny UI feature). `NEWS.Rmd`
+entry checklist N/A -- confirmed by direct precedent: none of S479/S497/S567, the prior sessions
+that added files to this exact `.gitignore`/`.Rbuildignore` block, has any `NEWS.Rmd` mention.
+`a2interactive.Rmd` checklist N/A (no new exported function or parameter). GitHub issue close-out
+checklist N/A (this was a `BACKLOG.md`-only item, never filed as a GitHub issue). Lint checklist
+N/A (no `.R` files touched). `_pkgdown.yml` reference-coverage checklist N/A (no new exported
+function).
+
+**Self-assessment (Session 568): 9/10.** **Strengths:** (1) Investigated the 3 real files' actual
+content before presenting the decision (they're a saved Claude Artifact about this project's own
+methodology, not generic "personal reference material") -- gave the owner a materially more
+informed choice than a generic keep/drop question, and surfaced that the directory's existing
+precedent comment ("no open-access marking," copyrighted journal articles) doesn't actually
+describe this file's situation, so a new, distinct comment block was warranted rather than
+appending to the existing one. (2) Correctly separated the 4th file (a content-less editor lock
+file) from the other 3 (real reference content) instead of treating all 4 uniformly -- confirmed
+via byte-level inspection, not assumed from the filename pattern alone. (3) Applied S567's own
+documented `.Rbuildignore` paren-free gotcha correctly on the first attempt, avoiding the exact
+bug the immediately-prior session had to catch and fix -- direct evidence the gotcha-documentation
+mechanism works. (4) Verified via an actual `pkgbuild::build()` + tarball-content inspection +
+full `devtools::check()`, not by trusting the ignore-file edit was syntactically fine -- and this
+verification incidentally confirmed the fix also resolved a ~5-session-old pre-existing WARNING no
+one had traced to root cause this precisely before. (5) Surfaced an incidental, unrelated finding
+(the empty "untitled folder" directory) discovered as a side effect of this session's own
+verification step, reported and tracked rather than silently fixed. **Weaknesses:** (1) Did not
+proactively sweep the whole `inst/extdata/reference/` directory for other stray/untracked
+artifacts before running the build -- the empty "untitled folder" finding was caught only
+incidentally, via the build log's own output, not by a deliberate `ls -la` pass at the start of
+the investigation step; a slightly more thorough initial sweep could have surfaced it one step
+earlier. (2) No independent adversarial verification of the "this is a saved Claude Artifact about
+the methodology" content read beyond direct inspection of the extracted text/title -- low risk
+here since the file's own content is unambiguous (no legal/copyright judgment call like S567's
+NIHMS redistribution-rights question), but still a single-pass read, not cross-checked.
+**Ledger:** recorded in `CHANGELOG.md` (this session's claim and close-out entries).
 
 ### Session 566 Handoff Evaluation (by Session 567)
 **Score: 9/10.** **What helped:** the handoff's `next_steps` field explicitly carried forward
