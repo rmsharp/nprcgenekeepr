@@ -1,0 +1,426 @@
+# CHANGELOG.md — archive: 2026-08-12 → 2026-08-13
+
+Retired records from [`CHANGELOG.md`](../../CHANGELOG.md), moved here so the live ledger stays small enough to read
+in one pass. Same format, same newest-on-top order — this is the same ledger, continued.
+
+Holds **34 record(s), 2026-08-12 → 2026-08-13**. Cut key: `2026-08-13`. Counts here are computed from the file
+itself, never carried forward. This shard is frozen: it states no forward-looking rule,
+because the live file owns those and a copy of one was wrong a day after it was written.
+
+---
+
+### 2026-08-13 · [BL-N] S553 claim: Slice 3 (full Shiny wiring) of the twinRelations-into-kinship() plan
+- **Deliverable:** Session S553 claimed. Picking up the S550-ratified plan's own Slice 3
+  (`docs/planning/twin-relations-kinship-computation-plan.md` §4) -- production code, full
+  strict-TDD PRE-RED->RED->GREEN(->REFACTOR) gates apply; Pre-RED must additionally resolve Dragon
+  1 (the tab-order UX question) via `AskUserQuestion` before implementation.
+- **Commit:** `1fb74127`.
+
+### 2026-08-13 · [BL-N] S552 close-out: Slice 2 (twinRelations into 4 script-callable functions) shipped, S551 handoff evaluation
+- **Deliverable:** Session S552's own close-out. Evaluated S551's `HANDOFFS.md` receipt (10/10
+  -- every `key_files` file:line pointer exact, both gotchas [Dragon 4 confirmed resolvable;
+  `devtools::document()`-before-`check()`] directly applied, nothing inaccurate found).
+  Self-assessment (9/10), handoff notes written to `SESSION_NOTES.md`/`HANDOFFS.md`. Resolved
+  the plan's own open §8 item 3 question (NEWS.Rmd at Slice 2): added one combined `NEWS.Rmd`
+  entry covering Slices 1-2, decision recorded back into
+  `docs/planning/twin-relations-kinship-computation-plan.md`. `BACKLOG.md`'s triggering item
+  updated: Slice 2 marked DONE, Slice 3 named as next. See `SESSION_NOTES.md` for the full
+  record.
+
+### 2026-08-13 · [BL-N] S552: reportGV()/gvaConvergence()/createSimKinships()/cumulateSimKinships() gain a twinRelations parameter -- Slice 2 of the ratified plan
+- **Deliverable:** `R/reportGV.R`, `R/gvaConvergence.R`, `R/createSimKinships.R`,
+  `R/cumulateSimKinships.R` each gained a `twinRelations = NULL` parameter, threaded straight
+  through to that function's own internal `kinship()` call (plan §2.4 call sites #1-#4). 8 new
+  `test_that()` blocks (2 per file: twin-propagation + backward-compatibility) added across the
+  4 matching test files, reusing an extended (added `sex` column) copy of `test_kinship.R`'s own
+  `fam1` 10-subject audit fixture. `reportGV()`'s tests directly assert its returned `$kinship`
+  matrix against Slice 1's own ground truth; `createSimKinships()`/`cumulateSimKinships()`
+  directly assert their own returned simulated/mean matrices; `gvaConvergence()`'s tests are a
+  plumbing/smoke test (accepts + threads without error) since its convergence-curve output has
+  no kinship-observable surface at this fixture's scale -- the same documented limitation
+  `test_gvaConvergence_kinshipOverrides.R` already establishes for the analogous
+  `kinshipOverrides` parameter on the identical call-site pattern. `devtools::document()`
+  regenerated 4 man pages. Full strict-TDD PRE-RED->RED->GREEN cycle (each transition gated via
+  `AskUserQuestion`; REFACTOR declined -- diff already minimal/mechanical). Verification:
+  `devtools::check()` 0 errors/0 warnings/1 pre-existing unrelated NOTE (`vignettes/figure`,
+  confirmed to predate this session); full clean regression read 0 failed/0 error;
+  `lintr::lint_package()` 0 lints on all 8 touched files. TDD phase: GREEN.
+
+### 2026-08-13 · [BL-N] S552 claim: Slice 2 (the 4 script-callable functions) of the twinRelations-into-kinship() plan
+- **Deliverable:** Session S552 claimed. Picking up the S550-ratified plan's own Slice 2
+  (`docs/planning/twin-relations-kinship-computation-plan.md` §4) -- production code, full
+  strict-TDD PRE-RED->RED->GREEN(->REFACTOR) gates apply.
+
+### 2026-08-13 · [ad hoc] S552: logged a new BACKLOG.md item (clean up unneeded repository branches)
+- **Deliverable:** Owner-directed mid-session: inventoried (not deleted) local and `origin`
+  branches beyond `master`. Local: `dev`, `module`, `rlabkey-version-floor`, 4 `worktree-wf_*`
+  leftovers. Remote: `dev`, `gh-pages`, `issue103-stage5-imports`, `issue103-stage7-examples`,
+  `issue103-stage8a-title-voice`, `issue103-stage8b-dedup`, `issue8`, `issue8-fix`,
+  `marks-broken-issue8`, `module`, `nprcmanager-master`, `or-replacement`,
+  `rlabkey-version-floor`. Documented in `BACKLOG.md` (Housekeeping, READY, Effort S) for a
+  future session to check mergedness/PR-source status and decide `gh-pages` separately before
+  deleting anything -- not fixed this session (unrelated to Slice 2, the actual deliverable).
+
+### 2026-08-13 · [ad hoc] S552: logged a new BACKLOG.md item (affected-status shading fills unaffected individuals too)
+- **Deliverable:** Phase 0 orientation surfaced a live owner observation ("unaffected individuals
+  are still color filled ... counter to pedigree drawing convention") mid-report. Traced it to a
+  concrete mechanism -- issue #133's `.affectedColor()` (`R/makePedigreeDiagramData.R:163-165`)
+  sets `color.background` to `NA_character_` for `affected == FALSE`/`NA`, which visNetwork
+  renders as its own default solid fill rather than an open/unfilled node. Documented as a new
+  `BACKLOG.md` item (Housekeeping section, READY, Effort S) rather than fixed mid-session, since
+  the owner picked a different item (Slice 2 of the `twinRelations`-into-`kinship()` plan) for
+  this session's actual deliverable -- matching the established "report an incidentally-found
+  gap, don't fix it mid-session" precedent (`PROJECT_LEARNINGS.md` Learning 382). Not yet filed
+  as a GitHub issue.
+
+### 2026-08-13 · [BL-N] S551 close-out: Slice 1 (kinship() twinRelations parameter) shipped, S550 handoff evaluation, Learning 558
+- **Deliverable:** Session S551's own close-out. Evaluated S550's `HANDOFFS.md` receipt (9/10 --
+  every claim held up against direct verification, `next_steps`/`key_files` used directly with
+  zero friction, nothing inaccurate found). Self-assessment (9/10), handoff notes, and
+  `PROJECT_LEARNINGS.md` Learning 558 (`devtools::check()` catches verification-surface gaps a
+  targeted test run cannot; a ratified plan's own test list is a floor, not a ceiling) written
+  to `SESSION_NOTES.md`/`HANDOFFS.md`. `BACKLOG.md`'s triggering item updated: Slice 1 marked
+  DONE, Slice 2 named as next. See `SESSION_NOTES.md` for the full record.
+
+### 2026-08-13 · [BL-N] S551: kinship() gains a twinRelations parameter (MZ-twin transitive-identity correction) -- Slice 1 of the ratified plan
+- **Deliverable:** `R/kinship.R` gained a `twinRelations = NULL` parameter, porting kinship2's
+  `mzgrp`/`mzindex` MZ-transitive-identity mechanism (plan §2.1) into the existing recursive
+  depth loop, applied after each depth's individuals are processed (not a post-hoc pass on the
+  finished matrix -- plan §2.2's propagation requirement). `R/applyKinshipOverrides.R`'s
+  "kinship() itself is never modified" roxygen sentence updated per the ratified Dragon-2
+  obligation, distinguishing a structural pedigree fact (twin identity) from an
+  outside-information override. 5 new `test_that()` blocks in `tests/testthat/test_kinship.R`:
+  MZ-propagation-to-a-non-twin-descendant, backward-compatibility (no `twinRelations`), a
+  3-member transitive-group (union-find), DZ/UZ-coded zero-treatment, and a
+  `sparse = TRUE`/`FALSE` equivalence pin (a real gap in the plan's own §4 test list, caught via
+  a post-GREEN self-check and closed before close-out). `man/kinship.Rd` and
+  `man/applyKinshipOverrides.Rd` regenerated via `devtools::document()`; `inst/WORDLIST` gained
+  "validator's" -- both fixing gaps `devtools::check()` surfaced that the targeted test file
+  alone did not. Full strict-TDD PRE-RED->RED->GREEN cycle (each transition gated via
+  `AskUserQuestion`; REFACTOR declined -- code already clean). Verification: `devtools::check()`
+  0 errors/0 warnings/1 pre-existing unrelated NOTE (`vignettes/figure` leftover, confirmed via
+  `git log` to predate this session); full clean regression read 0 failed/0 error;
+  `lintr::lint_package()` 0 lints on all 3 touched files; direct reproduction of the audit's 3
+  previously-divergent cells against `kinship2` ground truth (`kinship(8,9)=0.5`,
+  `kinship(9,10)=0.28125`, `kinship(10,10)=0.53125`, all exact). Close-out checklist mapping
+  (plan §8): citation (#120) N/A; `NEWS.Rmd`/tutorial-article N/A for Slice 1 (applies at Slice
+  3 per the plan); `a2interactive.Rmd` deferred; GitHub issue close-out N/A (no issue filed
+  yet). TDD phase: GREEN.
+
+### 2026-08-13 · [BL-N] S551 claim: Slice 1 (core algorithm) of the twinRelations-into-kinship() plan
+- **Deliverable:** Session S551 claimed. Picking up the S550-ratified plan's own Slice 1
+  (`docs/planning/twin-relations-kinship-computation-plan.md` §4) -- production code, full
+  strict-TDD PRE-RED->RED->GREEN(->REFACTOR) gates apply.
+
+### 2026-08-13 · [ad hoc] S551 Phase 0 reconcile: S550's HANDOFFS.md commit self-reference
+- **Deliverable:** Phase 0 ledger reconcile (`SESSION_RUNNER.md` step 6). S550's `HANDOFFS.md`
+  receipt shipped with `commit: pending` -- the standard self-reference limitation (the receipt
+  ships in the very commit whose sha it would name), matching the S543-S545/S549 precedent each
+  prior session reconciled at its own claim. `HANDOFFS.md`'s frontier (`git log -1 --
+  HANDOFFS.md`) == `bab8ead8` (S550's own close-out commit), so reconciled `commit: pending` ->
+  `bab8ead8`. No other undocumented commits found; `CHANGELOG.md`'s own frontier == `HEAD`
+  already. `gh run list --branch master --limit 10` showed the scheduled `shinytest2.yaml` run
+  still red at the E2E-tier step, unchanged from S548/S549/S550's own findings -- not diagnosed
+  this session (report, don't fix, per established precedent).
+- **Commit:** this reconcile's own commit (`ec056055`).
+
+### 2026-08-13 · [BL-N] S550 close-out: session self-assessment, S549 handoff evaluation, Learning 557
+- **Deliverable:** Session S550's own close-out. Evaluated S549's `HANDOFFS.md` receipt (8/10 --
+  the `next_steps` priority list matched this session's own independently-rendered Phase 0
+  priorities exactly, but the `active_task`/`what_was_done` fields' "15 call sites of `kinship()`"
+  figure was found inaccurate once this session ran an AST-level inventory -- corrected, not
+  fabricated, since S549's own audit carried the same unverified number). Self-assessment (9/10),
+  handoff notes, and `PROJECT_LEARNINGS.md` Learning 557 (the call-site-verification +
+  documented-invariant-tension disciplines) written to `SESSION_NOTES.md`/`HANDOFFS.md`. See
+  `SESSION_NOTES.md` for the full record.
+
+### 2026-08-13 · [BL-N] S550: ratified design for threading `twinRelations` into `kinship()`'s computation
+- **Deliverable:** `docs/planning/twin-relations-kinship-computation-plan.md` (RATIFIED) --
+  designed how the existing `twinRelations` sidecar data model (issue #137) reaches
+  `kinship()`'s own computation, per S549 Finding #1. An AST-level (parse-and-walk) inventory
+  found 7 production call sites, not the audit's carried-forward "15" -- `reportGV()`,
+  `gvaConvergence()`, `createSimKinships()`, `cumulateSimKinships()` (the latter two confirmed
+  to have zero in-package callers, standalone script utilities), the app's shared kinship
+  reactive, and 2 Shiny-module fallback recomputes -- plus 30 test call sites; 10 further
+  matrix-consumer functions (`meanKinship()`, etc.) need no change. Derived mathematically why
+  the MZ-identity correction must live inside `kinship()`'s own recursive depth loop, not a
+  post-hoc patch on the finished matrix (a single-pass fix cannot propagate to a twin's
+  descendants -- confirmed against the audit's own `kinship(9,10)` worked example). Reconciled
+  the proposal against `R/applyKinshipOverrides.R`'s own documented "`kinship()` itself is never
+  modified" invariant by distinguishing a structural pedigree fact (twin identity) from an
+  outside-information override, verified against `makeSimPed()`'s actual pass-through behavior
+  for already-known individuals. Proposed a 3-slice implementation (core algorithm -> the 4
+  script-callable functions -> full Shiny wiring, the last flagging an unresolved tab-order UX
+  dragon for its own Pre-RED). Ratified via `AskUserQuestion` (2 judgment calls: extend
+  `kinship()`'s own signature; trust a pre-validated `twinRelations` rather than adding a new
+  `sex` parameter) -- owner selected the document's own recommended option both times, no
+  changes requested. `BACKLOG.md`'s triggering item updated with the ratified pointer and the
+  corrected call-site count. TDD phase: N/A (design/planning deliverable, no production code or
+  test surface, matching the S457/S458/S485/S488/S491/S499/S517 precedent).
+
+### 2026-08-13 · [BL-N] S550 claim: thread `twinRelations` into `kinship()`'s computation (design)
+- **Deliverable:** Session S550 claimed. Picking up the `BACKLOG.md` Housekeeping item (found
+  S549, Finding #1 of the kinship2 reproducibility audit) -- design (not implement) how the
+  existing `twinRelations` sidecar data model reaches `kinship()`'s own computation, scoped to a
+  design-document-only deliverable per an `AskUserQuestion`-gated scope decision.
+
+### 2026-08-13 · [BL-N] S549 close-out: session self-assessment, S548 handoff evaluation, Learning 556
+- **Deliverable:** Session S549's own close-out. Evaluated S548's `HANDOFFS.md` receipt (9/10 --
+  the `next_steps` priority list matched this session's own independently-rendered Phase 0
+  priorities exactly; nothing inaccurate found). Self-assessment, handoff notes, and
+  `PROJECT_LEARNINGS.md` Learning 556 written to `SESSION_NOTES.md`/`HANDOFFS.md`. See
+  `SESSION_NOTES.md` for the full record.
+
+### 2026-08-13 · [BL-N] S549: kinship2 supplementary-material reproducibility audit
+- **Deliverable:** `docs/audits/KINSHIP2_SUPPLEMENT_REPRODUCIBILITY_AUDIT_2026-08-13.md` --
+  verified whether `nprcgenekeepr`'s exported functions reproduce
+  `inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf` (kinship2's own
+  supplementary material). Found the full 17-subject `fam1` pedigree isn't reconstructible
+  from this repo's materials (Figure 1 lives in the kinship2 *main* paper, not this
+  supplement, not among the repo's other reference PDFs, not shipped in any installed
+  `kinship2` dataset); audited the fully-specified 10-subject Figure S1 subset instead,
+  reconstructed from Table S1's own kinship values (verified via the paper's stated
+  self/parent-offspring/avuncular/cousin coefficients, not guessed from the figure). Result:
+  `kinship()`'s autosomal matrix reproduces Table S1 exactly except the pedigree's one
+  MZ-twin pair's cells (Finding #1 -- a real capability gap: `twinRelations` feeds only the
+  Diagram tab, not `kinship()`'s 15 call sites, confirmed via a side-by-side
+  `kinship2::kinship()` reproduction with the twin relation declared); pedigree-diagram
+  structure (nodes/edges/generations/twin-connector) is correct via
+  `makePedigreeDiagramData()`/`makePedigreeMatingLayout()`, but no visual marker exists for a
+  consanguineous mating (Finding #2, distinct from the already-closed issue #134 and from the
+  BACKLOG "Candidate C" dogleg item); kinship2's `pedigree.shrink()` and X-chromosome kinship
+  have no `nprcgenekeepr` equivalent, both judged capability-fit non-issues rather than gaps
+  (Findings #3/#4). `BACKLOG.md` updated: the triggering item resolved with a pointer; 2 new
+  Housekeeping items filed for Findings #1/#2, recommended for future `AskUserQuestion` triage
+  (matching the `GENETIC_METRICS_PDF_CAPABILITY_AUDIT`/`ISSUE_129_...` precedent), not filed as
+  GitHub issues this session. TDD phase: N/A (audit/investigation deliverable, no production
+  code or test surface, matching the S529-S548 precedent).
+
+### 2026-08-13 · [BL-N] S549 claim: kinship2 supplement PDF reproducibility audit
+
+### 2026-08-13 · [ad hoc] S548 close-out: session self-assessment, S547 handoff evaluation, Learning 555
+- **Deliverable:** Session S548's own close-out. Evaluated S547's `HANDOFFS.md` receipt (8/10 --
+  its `next_steps` priority list matched this session's own independently-rendered Phase 0
+  priorities almost exactly, but item (4) was inaccurate: `BACKLOG.md`'s own text shows the
+  "remaining ledger-size housekeeping" work it named was already fully resolved by S531; caught by
+  reading `BACKLOG.md` directly and corrected in this session's own Phase 0 report rather than
+  propagated). Self-assessed 9/10 (strengths: caught a real parser boundary-detection bug before
+  any deletion by inspecting outlier block sizes; verified all 61 items' `CHANGELOG.md` coverage
+  mechanically with 0 gaps; diffed the proposed result against the original before applying and
+  re-read the full file after; resolved the session's own triggering `BACKLOG.md` item in the same
+  commit, deleted outright per its own stated preference. Weaknesses: no `devtools::check()` run
+  [deliberate -- zero `R/`/`tests/` files touched]; the coverage-verification method is a coarse
+  session-citation proxy, not topic-level; did not exhaustively check for external links to each of
+  the 61 deleted items individually). Full write-up in `SESSION_NOTES.md`; receipt completed in
+  `HANDOFFS.md`. New finding surfaced (not diagnosed): the scheduled `shinytest2.yaml` CI run
+  (`31678188033`) failed at the E2E-tier step -- reported per the S545 CI-check convention.
+
+### 2026-08-13 · [BL-deleteResolvedBullets] S548: deleted 61 resolved BACKLOG.md pointer bullets outright
+- **Deliverable:** Parsed `BACKLOG.md` programmatically (Python, strict indentation-based
+  item-boundary detection — a top-level item ends only at the next `- [ ]`/`- [x]` bullet, a `## `
+  header, or a column-0 non-indented non-bullet line; blank lines followed by indented content stay
+  inside the item) into 78 top-level bulleted items: 61 matched the resolved-pointer shape
+  (`- [ ] (none remaining -- ...)` or any `- [x]`), 17 were genuinely open and left untouched. A
+  first, looser boundary rule (stop only at the next bullet or `## ` header) wrongly merged 65 lines
+  of free-standing, unbulleted Tier-1/Tier-2 sequencing narrative into a preceding `[x]` item — caught
+  by inspecting the largest merged blocks before deleting anything, not after; the stricter rule fixed
+  it and left that narrative (and 2 similar unbulleted-narrative blocks elsewhere) untouched, since it
+  was never itself a bullet.
+- **Verification (S529 precedent):** extracted every `S<N>`/`Session <N>` reference cited inside each
+  of the 61 items and confirmed each is covered by an entry somewhere in `CHANGELOG.md` or its 4
+  archive shards (incl. the new `docs/archive/CHANGELOG-legacy-pre-S325.md`) — 58 items had >=1 cited
+  session, all fully covered, zero missing (unlike S529, which found 2 gaps needing backfill first).
+  The other 3 items were bare, contentless `- [ ] (none remaining)` placeholders with no narrative to
+  verify — their sections' own preceding italicized prose already documents the resolution and its
+  `CHANGELOG.md` pointer, so nothing was at risk of being lost.
+- **Executed:** removed all 61 items (706 lines) plus this item's own trigger — `BACKLOG.md`'s
+  Housekeeping item "Stop editing resolved `BACKLOG.md` items in place..." (25 lines) — since this
+  session's work resolves it; deleted outright per its own instruction rather than left as a pointer.
+  Collapsed resulting double-blank-lines to single. `BACKLOG.md`: 1,559 -> 822 lines (a 47%
+  reduction), all 10 section headers intact, 16 genuinely open items remain (the 17th being the
+  just-resolved trigger item itself). Verified via `diff`: 0 lines added, only deletions; re-read the
+  full resulting file end-to-end before committing.
+
+### 2026-08-13 · [BL-deleteResolvedBullets] S548 claim: delete resolved BACKLOG.md pointer bullets
+- **Deliverable:** Session S548 claimed. Picking up the `BACKLOG.md` Housekeeping item (found
+  S545) — delete the ~57-62 resolved `"(none remaining -- ... RESOLVED ...)"` pointer bullets
+  outright, verifying each item's resolution has a durable `CHANGELOG.md` entry first (S529
+  precedent: 2 cases had none and needed backfilling before deletion).
+
+### 2026-08-13 · [ad hoc] S547 close-out: session self-assessment, S546 handoff evaluation
+- **Deliverable:** Session S547's own close-out. Evaluated S546's `HANDOFFS.md` receipt (9/10 --
+  its `gotchas` field's fence-scanner-defect warning directly shaped this session's first
+  verification step, and was confirmed not applicable). Self-assessed 9/10 (strengths: verified
+  the specific structural precondition the named risk needed, not just "no errors"; used the
+  tool's own zone boundary rather than hand-picked line numbers; tested against the real tracked
+  file, not only a scratch simulation; caught and fixed a verification-script bug before trusting
+  a false result. Weakness: the temporary real-file overwrite-then-restore step carried a small,
+  low-probability crash-recovery risk a git worktree would have avoided). Full write-up in
+  `SESSION_NOTES.md`; receipt completed in `HANDOFFS.md`.
+
+### 2026-08-13 · [BL-N] S547: verified and executed the CHANGELOG.md legacy-footer relocation, Learning 554
+- **Deliverable:** Both verification checks from the S546-decided `BACKLOG.md` item passed, and the
+  relocation was executed the same session (the item's own "if verification allows, execute"
+  framing). **Check 1** (`methodology_trim.py` L1/L2/L3): zero fence markers anywhere in the legacy
+  footer (grep + the tool's own `fence_scan()`), so the `SESSION_NOTES.md` fence-scanner defect
+  class cannot occur here; `classify_zones()` and a real `--check` run against the post-relocation
+  content both came back clean, `[CHECK] trigger does not fire`. **Check 2** (nothing expects it
+  inline): grepped `docs/`, `bin/`, `*.py` — no script/tool has a live dependency on the block's
+  location; `methodology_trim.py`'s `archive_events()` discovers shards by glob + a live-file-
+  size-drop check, not filename parsing, so the new shard's descriptive (non-`-through-<date>`)
+  name is still picked up correctly. Only inline references found were prose in already-closed
+  planning docs and frozen archive/learnings history — left untouched per standing precedent
+  against editing completed documents.
+- **Executed:** relocated the block (935,287 B / 3,567 lines, byte-for-byte verified before/after)
+  to [`docs/archive/CHANGELOG-legacy-pre-S325.md`](../../docs/archive/CHANGELOG-legacy-pre-S325.md);
+  updated this file's "shard convention" note and live pointer to describe the new location.
+  `CHANGELOG.md` is now 20,929 B / 283 lines — both the byte and line triggers clear (down from
+  954,673 B / 3,836 lines). `CLAUDE.md`'s "CHANGELOG.md ledger-format resolution" note gained an
+  S547 addendum recording the verification and execution. `BACKLOG.md`'s item resolved.
+  `PROJECT_LEARNINGS.md` Learning 554 records the verification technique (importing
+  `methodology_trim.py` and calling its `classify_zones()` directly against simulated post-edit
+  content before making the real edit) for reuse on any future footer-zone relocation.
+
+### 2026-08-13 · [BL-N] S547 claim: scope + verify the CHANGELOG.md legacy-footer bulk relocation
+- **Deliverable:** Session S547 claimed. Picking up the `BACKLOG.md` Housekeeping item decided
+  S546 ("Scope (and if verification allows, execute) a bulk relocation of `CHANGELOG.md`'s frozen
+  pre-S325 legacy footer into its own archive file, un-retagged") — verify `methodology_trim.py`'s
+  L1/L2/L3 losslessness invariants survive the relocation, grep for anything expecting the block
+  inline, and execute if both are clear.
+
+### 2026-08-13 · [ad hoc] S546 close-out: S325 CHANGELOG.md legacy-footer decision resolved (bulk-relocate scoped, not executed), Learning 553
+- **Deliverable:** Session S546's own close-out. `BACKLOG.md`'s "Reopen the S325 'freeze legacy,
+  go forward' decision" Housekeeping item (found S543) resolved via a 3-option `AskUserQuestion`
+  (scope a lighter bulk relocation of the frozen legacy footer into its own archive file,
+  un-retagged / commit to the full ~303-entry re-tag migration campaign / hold as a permanent
+  known limitation) — owner picked the bulk-relocation option. `BACKLOG.md` item rewritten to
+  READY, Effort M, scoped as a future session's job (verify `methodology_trim.py` L1/L2/L3
+  invariants + no script expects the block inline, before moving anything — decision-only this
+  session, no file relocated). `CLAUDE.md`'s "CHANGELOG.md ledger-format resolution" note gained
+  an S546 addendum recording the decision and the 2 rejected-for-now fallbacks. Recorded
+  `PROJECT_LEARNINGS.md` Learning 553 (a picker-before-prose-report process slip, self-caught and
+  corrected; and the value of re-deriving a decision from its own underlying investigation rather
+  than trusting a prior session's binary framing, which is how the third option was found).
+- **Commit:** this close-out's own commit.
+
+### 2026-08-13 · [ad hoc] S546 Phase 0 reconcile: S545's HANDOFFS.md commit self-reference
+- **Deliverable:** Phase 0 ledger reconcile (`SESSION_RUNNER.md` step 6). S545's `HANDOFFS.md`
+  receipt shipped with `commit: pending` — the standard self-reference limitation (the receipt
+  ships in the very commit whose sha it would name), matching the S543→S544 and S544→S545
+  pattern each prior session reconciled at its own claim. `HANDOFFS.md`'s frontier
+  (`git log -1 -- HANDOFFS.md`) == `7021c6f7` (S545's own close-out commit), so reconciled
+  `commit: pending` → `7021c6f7`. No undocumented commits found otherwise; `CHANGELOG.md`'s own
+  frontier == `HEAD` already; `gh run list --branch master --limit 10` confirmed all 4 workflows
+  on `7021c6f7` (S545's close-out push) completed successfully, resolving the
+  still-`in_progress` `R-CMD-check.yaml` run S545's own handoff had flagged unconfirmed.
+- **Commit:** this reconcile's own commit.
+
+### 2026-08-13 · [ad hoc] S545 close-out: Phase 0 CI-check decision recorded in CLAUDE.md, BACKLOG.md updated (item resolved + 2 new items), Learning 552
+- **Deliverable:** Session S545's own close-out. `BACKLOG.md`'s "Phase 0 has no step that checks
+  GitHub Actions CI status" Housekeeping item (found S540) marked RESOLVED, citing the
+  `CLAUDE.md` decision. Added 2 new `BACKLOG.md` items (both owner-directed mid-turn): (1) verify
+  `nprcgenekeepr`'s exported functions can reproduce the kinship2 R package's own
+  supplementary-material worked examples (`inst/extdata/reference/
+  NIHMS593658-supplement-supplement_1.pdf`); (2) stop editing resolved `BACKLOG.md` items in
+  place into "(none remaining)" pointers — delete them outright instead, per `SESSION_RUNNER.md`
+  Phase 3F / FM#27's own literal instruction (57 of ~75 top-level bullets currently carry this
+  pattern). Recorded `PROJECT_LEARNINGS.md` Learning 552 (the 2-axis CI-check decision shape, and
+  the value of smoke-testing a documented-but-unrun Phase 0 step before close-out).
+- **Commit:** this close-out's own commit.
+
+### 2026-08-13 · [BL-phase0CiCheck] Decided the Phase 0 GitHub Actions CI-status check: gh run list --branch master --limit 10, every session, unconditionally (Session 545)
+- **Deliverable:** `BACKLOG.md`'s "Phase 0 has no step that checks GitHub Actions CI status" item
+  (found S540, `PROJECT_LEARNINGS.md` Learning 547). Presented the decision as a 4-option
+  `AskUserQuestion` (every-session unconditional / push-conditioned / branch-protection-instead /
+  hold); owner chose unconditional. Recorded in `CLAUDE.md`'s "Additional Phase 0 steps": run
+  `gh run list --branch master --limit 10` at Phase 0 step 4 every session (never conditioned on
+  whether this project pushed, since a scheduled/manually-triggered workflow can go red with no
+  intervening local push at all); report, don't fix, any non-`completed success` run at step 7;
+  the 3 rejected alternatives recorded so a future session doesn't re-litigate. Smoke-tested the
+  documented command immediately: found `R-CMD-check.yaml` on `126711a9` still `in_progress` at
+  15+ minutes — not a red run, but exactly the class of thing the new step exists to catch;
+  reported, not chased, to keep this session's own scope intact.
+- **Commit:** `7741b47e`.
+
+### 2026-08-13 · [ad hoc] S545 claim: Phase 0 CI-status-check decision
+- **Deliverable:** Session 545's Phase 1B claim stub (`SESSION_NOTES.md`, `HANDOFFS.md`).
+- **Commit:** `c6c6c0a6`.
+
+### 2026-08-13 · [ad hoc] S545 Phase 0 reconcile: S544's HANDOFFS.md commit self-reference
+- **Deliverable:** Phase 0 ledger reconcile (`SESSION_RUNNER.md` step 6). S544's `HANDOFFS.md`
+  receipt shipped with `commit: pending` — the standard self-reference limitation (the receipt
+  ships in the very commit whose sha it would name), matching the S543 pattern S544 itself
+  reconciled at its own claim. `HANDOFFS.md`'s frontier (`git log -1 -- HANDOFFS.md`) ==
+  `126711a9` (S544's own close-out commit), so reconciled `commit: pending` → `126711a9`. No
+  undocumented commits found otherwise; `CHANGELOG.md`'s own frontier == `HEAD` already.
+- **Commit:** `dd177a80`.
+
+### 2026-08-13 · [ad hoc] S544 close-out: test-coverage.yaml fix confirmed green on CI, BACKLOG.md updated (item resolved + new Pedigree Diagram article item), Learning 551
+- **Deliverable:** Session S544's own close-out. `BACKLOG.md`'s `test-coverage.yaml` Housekeeping
+  item (found S542) marked RESOLVED, citing the fix commit and the confirmed-green CI run. Added
+  a new `BACKLOG.md` item (owner-requested mid-turn): a dedicated Pedigree Diagram tutorial
+  article, distinct from and superseding the existing stale-screenshot item. Recorded
+  `PROJECT_LEARNINGS.md` Learning 551 (the `covr --install-tests` vs. source-tree detection
+  root cause, and the fast local-repro technique used to confirm it without a full `covr` run).
+- **Commit:** this close-out's own commit.
+
+### 2026-08-13 · [BL-testCoverageCovrInstallTests] Fixed test-coverage.yaml: find_pkg_src() now requires inst/ present, not just DESCRIPTION (Session 544)
+- **Deliverable:** `tests/testthat/test_wordlist_coverage.R`'s `find_pkg_src()` helper was
+  mis-accepting an INSTALLED package directory (retains `DESCRIPTION`, loses `inst/` — flattened
+  into the package root by `R CMD INSTALL`) as a source tree under `covr::package_coverage()`'s
+  `--install-tests` execution model, causing `spelling::get_wordfile()` to silently miss
+  `inst/WORDLIST` and flag 146 already-whitelisted domain words as unknown. Fixed by requiring
+  `dir.exists(file.path(cand, "inst"))` alongside the existing `DESCRIPTION` check in all 3
+  branches (a shared `is_pkg_src()` helper). 2 new tests pin the source-vs-installed detection
+  directly. Strict TDD RED→GREEN, both gates `AskUserQuestion`-approved. Full regression 0
+  failed/0 error (5,519 passed); `devtools::check()` 0 errors/0 warnings/1 pre-existing
+  unrelated NOTE; `lintr` clean. Pushed and confirmed `test-coverage.yaml` (plus
+  `R-CMD-check.yaml`/`pkgdown.yaml`/`lint.yaml`) all `completed success` on the real CI run.
+- **Commit:** `f4b478c0`.
+
+### 2026-08-13 · [ad hoc] S544 claim: test-coverage.yaml CI diagnosis; reconciled S543's HANDOFFS.md self-reference (Session 544)
+- **Deliverable:** Session 544's Phase 1B claim stub (`SESSION_NOTES.md`, `HANDOFFS.md`).
+  Reconciled S543's `HANDOFFS.md` receipt's `commit: pending` self-reference to `4bac5d55`
+  (the expected, routine next-session fill-in per the established S538-S541 pattern).
+- **Commit:** `cd5eb453`.
+
+### 2026-08-12 · [ad hoc] S543 close-out: CHANGELOG.md SRF_RED decision resolved, 2 new BACKLOG.md findings, Learning 550
+- **Deliverable:** Session S543's own close-out. Resolved the `CHANGELOG.md` `SRF_RED` archive
+  refusal by force-archiving (see the trim entry below), after finding the decisive structural
+  fact that the trimmable region is capped at 116,176 B against a 935,287 B permanently-pinned
+  pre-S325 legacy footer, so no trim of the tagged region can ever clear the byte/line trigger
+  regardless of force. Logged 2 new `BACKLOG.md` Housekeeping items: reopening the S325
+  "freeze legacy, go forward" decision as the only real lever (DECISION NEEDED, Effort L, needs
+  its own scoping session); and `CHANGELOG.md`'s own ~4-entries-per-session convention as a
+  possible rate contributor analogous to `HANDOFFS.md`'s diagnosed Receipt Inflation (H4), not
+  confirmed causal. `PROJECT_LEARNINGS.md` Learning 550 records the SRF-artifact-vs-structural-
+  ceiling distinction. See `SESSION_NOTES.md`, `HANDOFFS.md`.
+
+**Archived 67 record(s), 2026-08-11 → 2026-08-12** into [`docs/archive/CHANGELOG-through-2026-08-12.md`](../../docs/archive/CHANGELOG-through-2026-08-12.md) — same format, same order, frozen.
+Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-08-12.md.verify.sh`](../../docs/archive/CHANGELOG-through-2026-08-12.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
+
+**Relocated the entire pre-Session-325 legacy block (roughly 303 record(s), Sessions 1-324,
+pre-ledger format)** into [`docs/archive/CHANGELOG-legacy-pre-S325.md`](../../docs/archive/CHANGELOG-legacy-pre-S325.md)
+— S547, 2026-08-13 — verbatim, un-retagged, frozen, same order. Unlike the pointer above, this was
+a one-time manual relocation of the frozen footer zone, not a `methodology_trim.py --write` trim of
+the records zone, so there is no tool-generated `.verify.sh` for it; losslessness was instead
+verified directly (a byte-for-byte comparison of the moved content against what `classify_zones()`
+reported as the footer, plus a post-relocation `--check` run confirming the tool's own zone
+classification and trigger both resolve cleanly) — see this file's own S547 entry and
+`PROJECT_LEARNINGS.md` for the full verification record.
+
+### 2026-08-12 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-08-12.md` (67 record(s), 1,051,843 B → 945,242 B)
+
+**Written by:** `methodology_trim.py` v1.1.2 — a tool action, not a session's judgment.
+Moved the oldest **67** record(s) (2026-08-11 → 2026-08-12) out of [`CHANGELOG.md`](../../CHANGELOG.md) into
+[`docs/archive/CHANGELOG-through-2026-08-12.md`](../../docs/archive/CHANGELOG-through-2026-08-12.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/CHANGELOG-through-2026-08-12.md.verify.sh`](../../docs/archive/CHANGELOG-through-2026-08-12.md.verify.sh)
+rather than trusting a digest printed here. Live file 1,051,843 B → 945,242 B (−10.1%).
+
+### 2026-08-12 · [ad hoc] S543 claim: CHANGELOG.md SRF_RED archive-refusal decision
+- **Deliverable:** Session S543 claimed (`ca6b17fb`) to decide how to handle `CHANGELOG.md`'s
+  `methodology_trim.py` `SRF_RED` refusal (owner-picked via the Phase 0 `AskUserQuestion`
+  picker, over `test-coverage.yaml` CI diagnosis / the Phase 0 CI-check-gap decision / issue
+  #138 scoping).
+
