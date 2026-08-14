@@ -422,7 +422,7 @@ modPedigreeServer <- function(id, studbook) {
     # the node cap that applies to it.
     .currentEdgeStyle <- function() {
       if (is.null(input$pedigreeEdgeStyle)) {
-        "direct"
+        "rectilinear"
       } else {
         input$pedigreeEdgeStyle
       }

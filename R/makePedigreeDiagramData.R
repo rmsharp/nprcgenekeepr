@@ -1037,13 +1037,14 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #' @param ped data frame with \code{id}, \code{sire}, \code{dam},
 #'   \code{sex}, and \code{gen} columns, same contract as
 #'   \code{\link{makePedigreeDiagramData}}.
-#' @param edgeStyle one of \code{"direct"} (default -- a straight edge from
-#'   each parent to their mating unit and from each mating unit to each
-#'   child, matching this function's own original, still-default behavior)
-#'   or \code{"rectilinear"} (issue #142 -- routes mate-line and sibship-bar
-#'   edges through invisible waypoint nodes via
-#'   \code{.addRectilinearWaypoints()} so they render as a strict right
-#'   angle, kinship2-style, instead of a direct diagonal/straight segment).
+#' @param edgeStyle one of \code{"rectilinear"} (default since Track 2,
+#'   docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md --
+#'   issue #142's routing of mate-line and sibship-bar edges through
+#'   invisible waypoint nodes via \code{.addRectilinearWaypoints()} so they
+#'   render as a strict right angle, kinship2-style, instead of a direct
+#'   diagonal/straight segment) or \code{"direct"} (this function's own
+#'   original behavior -- a straight edge from each parent to their mating
+#'   unit and from each mating unit to each child).
 #' @param twinRelations optional data.frame with columns \code{id1},
 #'   \code{id2}, \code{code} (see \code{\link{checkTwinRelations}}) --
 #'   issue #137 D1/D6/D7. Not validated here; validate with
@@ -1088,8 +1089,8 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #' layout <- makePedigreeMatingLayout(nprcgenekeepr::examplePedigree)
 #'
 #' @export
-makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
-                                                          "rectilinear"),
+makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
+                                                          "direct"),
                                       twinRelations = NULL,
                                       orderBySex = TRUE) {
   if (!is.data.frame(ped)) {
