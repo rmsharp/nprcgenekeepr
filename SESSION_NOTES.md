@@ -14,6 +14,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 566 Did
+**Deliverable:** File 3 GitHub issues (one each for kinship2 supplement Tracks A [X-chromosome
+kinship], B [`shrinkPedigree()`], C [consanguineous-marker edge propagation], all now complete),
+each filed then closed citing its commit/`CHANGELOG.md` entry; and publish a new
+numeric+graphic fidelity validation article, `vignettes/articles/kinship2-fidelity-
+validation.qmd` (matching the `fg-se-validation.qmd` precedent), comparing nprcgenekeepr's Track
+A/B/C outputs directly against kinship2's own reference outputs -- numeric tables plus rendered
+pedigree-diagram graphics. (IN PROGRESS)
+**Started:** 2026-08-14
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 564 Handoff Evaluation (by Session 565)
 **Score: 9/10.** **What helped:** `next_steps` named Track B verbatim as the pickup
 ("a `pedigree.shrink()` equivalent, new `shrinkPedigree()`, Effort L, most novel of

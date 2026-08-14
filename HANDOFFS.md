@@ -128,8 +128,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
-This file currently holds **5** receipt(s). Computed by `methodology_trim.py` on every
+This file currently holds **6** receipt(s). Computed by `methodology_trim.py` on every
 `--check`/`--write` run, never hand-maintained.
+
+```handoff
+session: S566
+date: 2026-08-14
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: File 3 GitHub issues (kinship2 supplement Tracks A/B/C, all now complete),
+  each filed then closed citing its commit/CHANGELOG entry; publish a new numeric+graphic
+  fidelity validation article (vignettes/articles/kinship2-fidelity-validation.qmd)
+  comparing nprcgenekeepr's Track A/B/C outputs against kinship2's own reference outputs,
+  matching the fg-se-validation.qmd precedent.
+what_was_done: pending
+next_steps: pending
+key_files: docs/planning/kinship2-supplement-full-reproduction-plan.md (the plan being
+  closed out); vignettes/articles/fg-se-validation.qmd (the validation-article
+  precedent); R/kinship.R (Track A), R/shrinkPedigree.R (Track B),
+  R/makePedigreeDiagramData.R (Track C, .addRectilinearWaypoints())
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<in progress -- claim stub only, full receipt written at close-out>
 
 ```handoff
 session: S565

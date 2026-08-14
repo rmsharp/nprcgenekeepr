@@ -138,6 +138,22 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [BL-N] S566: claim session (close out kinship2 supplement full-reproduction plan: file GitHub issues for Tracks A/B/C + publish a numeric+graphic fidelity validation article)
+- **Deliverable:** Phase 0 orient complete (Health 96/100, 0 High+ risk; `shinytest2.yaml`
+  scheduled CI red 2 consecutive runs [2026-08-12, 2026-08-13] after 8 straight prior green,
+  reported not diagnosed; 60 commits unpushed, unchanged pattern; ledger reconcile --
+  `CHANGELOG.md`/`HANDOFFS.md` frontiers both == `HEAD`, no gap, no backfill needed; no ghost
+  session -- 6 untracked files individually assessed, none reads as an undocumented deliverable).
+  Priorities list (2 numbered items) rendered via `AskUserQuestion` -- owner picked "file GitHub
+  issues for kinship2 supplement Tracks A/B/C" (all 3 now complete: C S563, A S564, B S565), then
+  directed the deliverable be expanded to also include a numeric+graphic fidelity validation
+  article comparing nprcgenekeepr against kinship2, matching the existing
+  `vignettes/articles/fg-se-validation.qmd` precedent. Owner confirmed via a follow-up
+  `AskUserQuestion`: 3 separate GitHub issues, one per track, each filed then immediately closed
+  citing its commit/`CHANGELOG.md` entry (matching the established #142/#143/#144 close-out
+  precedent). Claim stubs written to `SESSION_NOTES.md`/`HANDOFFS.md` (`status: pending`). Work
+  beginning.
+
 ### 2026-08-14 · [ad hoc] S565: reconcile HANDOFFS.md commit self-reference (`f68a24ff`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` ->
   `f68a24ff` (the close-out commit whose sha the receipt itself couldn't name until
