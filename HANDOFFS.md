@@ -193,8 +193,8 @@ gotchas: (1) The plan document's §1.4 duplicate-node/multi-anchor figures are n
 runtime_smoke: n/a -- docs-only session, no code changed, no runtime behavior to verify. The one
   throwaway R script run this session was a scratchpad validation aid (not committed, not part of
   the package), matching #143/#144's own precedent for candidate-validation scripts.
-changelog_ref: this session's own CHANGELOG.md entries (Phase 3F, below)
-commit: pending -- reconciled by the next session's Phase 0 reconcile
+changelog_ref: this session's own CHANGELOG.md entries (Phase 3F)
+commit: c5d2c5a9
 ```
 
 ```handoff
