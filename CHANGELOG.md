@@ -138,6 +138,15 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-N] S560: claim session (write vignettes/articles/pedigree-diagram.qmd)
+- **Deliverable:** Phase 1B claim stub only. Session 560 will write a new dedicated article,
+  `vignettes/articles/pedigree-diagram.qmd`, documenting the Pedigree Diagram tab's full
+  current feature set (BACKLOG.md Housekeeping, found S544, owner-directed) with
+  freshly-captured live-app screenshots via a `shinytest2::AppDriver` script (matching
+  `colony-manager-guide-screenshots.R`'s pattern) -- also resolving the separately-flagged
+  stale `pb_diagram_legend.png` item. Doc-location and screenshot-capture scope confirmed via
+  `AskUserQuestion` (new dedicated article; yes, capture fresh screenshots).
+
 ### 2026-08-13 · [ad hoc] S560 Phase 0 reconcile: S559's HANDOFFS.md commit self-reference
 - **Deliverable:** Phase 0 ledger reconcile (`SESSION_RUNNER.md` step 6). S559's `HANDOFFS.md`
   receipt shipped with `commit: pending` -- the standard self-reference limitation (the receipt

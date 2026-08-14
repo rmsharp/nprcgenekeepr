@@ -14,6 +14,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 560 Did
+**Deliverable:** Write a new dedicated article, `vignettes/articles/pedigree-diagram.qmd`,
+documenting the Pedigree Diagram tab's full current feature set (Option 2 kinship2-parity
+layout, mate-line/sibship-bar rendering, twin/zygosity encoding, affected-status shading,
+consanguineous-mating markers, node-label names, sire/dam left-right placement, `edgeStyle`
+rectilinear/curved edges, search + hover-highlight, click-to-navigate, PNG export, 750-node
+cap), with freshly-captured live-app screenshots via a `shinytest2::AppDriver` script
+(matching `colony-manager-guide-screenshots.R`'s pattern) — also resolving the stale
+`pb_diagram_legend.png` item (BACKLOG.md Housekeeping, found S544, owner-directed via
+`AskUserQuestion` for both doc-location and screenshot-capture scope). (IN PROGRESS)
+**Started:** 2026-08-13.
+**Status:** Session claimed. Work beginning. TDD phase: N/A (documentation only, no
+implementation/test code).
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 558 Handoff Evaluation (by Session 559)
 **Score: 9/10.** **What helped:** the `next_steps` field named this exact item verbatim as
 item 1 of its priority list -- "`SESSION_NOTES.md` is now 2,400+ lines -- past the

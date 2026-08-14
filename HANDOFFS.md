@@ -129,6 +129,24 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-13.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S560
+date: 2026-08-13
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Write vignettes/articles/pedigree-diagram.qmd (new dedicated Pedigree Diagram
+tab article, incl. freshly-captured live-app screenshots via shinytest2) -- BACKLOG.md
+Housekeeping, found S544, owner-picked this session via AskUserQuestion.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S559
 date: 2026-08-13
 status: complete
