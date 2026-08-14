@@ -138,6 +138,56 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [ad hoc] S571: close out (Track 3 minimum mate-spacing guarantee DONE)
+- **Deliverable:** Closed out Track 3 of `docs/planning/pedigree-diagram-kinship2-fidelity-
+  remediation-plan.md` -- self-assessed 6/10 (docked for skipping the mandatory RED->GREEN
+  `AskUserQuestion` phase-gate, self-caught mid-session, disclosed in full and retroactively
+  accepted by the owner via `AskUserQuestion`; and for an avoidable `git stash`/foreground-timeout
+  mishap that briefly stashed this session's own uncommitted work, self-recovered with no loss);
+  evaluated S570's own handoff 7/10 (accurate, load-bearing gotchas on grep-scoping and
+  line-number drift; but `next_steps` inaccurately claimed Track 3 has "no open sub-decision"
+  when the plan document it cites says otherwise, and gotcha (3)'s blanket claim that
+  `examplePedigree` is "NOT informative for Track 3" was overstated -- it was essential for
+  catching a real edge-case bug). Added `PROJECT_LEARNINGS.md` Learning 575 (verify a
+  spacing/geometry guarantee against the largest real fixture available, not just a plan's own
+  named small completion-criteria fixtures) and Learning 576 (a self-caught mid-session TDD
+  gate skip still requires full disclosure and a retroactive-accept question, not silent
+  continuation); bumped `CLAUDE.md`'s learning-count pointer (574->576). See `SESSION_NOTES.md`
+  Session 571 entry, `HANDOFFS.md` S571 receipt.
+
+### 2026-08-14 · [ad hoc] S571: Track 3 minimum mate-spacing guarantee (GREEN)
+- **Deliverable:** `.positionMatingUnitForest()` (`R/makePedigreeDiagramData.R`) gained a new
+  `sweepMinSep()` post-merge sweep enforcing the algorithm's existing `minSep` (1 unit) between
+  every pair of same-generation real/duplicate individual nodes -- closing the documented S461
+  dragon (`docs/planning/pedigree-diagram-option2-layout-design-plan.md:486-495`): the
+  `mergeSubtrees()` contour-merge only guaranteed non-collision, not a minimum visual gap, between
+  2 unrelated nodes nested at different recursion depths (never inputs to the same merge call).
+  PRE-RED mechanism decision (`AskUserQuestion`): a global post-merge sweep over the widen-
+  contour-leaf-width alternative, since the latter cannot reach the actual dragon. Applied once
+  before `finalUnitX` (mating-unit midpoints reflect swept parent positions) and once more at the
+  very end of the function -- a 2nd interaction bug found live against the bundled 375-individual
+  `examplePedigree` (not required by the plan's own completion criteria, done anyway): the
+  pre-existing final de-collision pass's epsilon-nudge could erode an already-swept gap by 1e-3;
+  fixed by re-sweeping last (0 residual violations across 5,334 real-fixture gaps, was 28). New
+  test (`test_positionMatingUnitForest.R:278-308`, general minSep property, confirmed RED against
+  unmodified source); the file's 1 pre-existing exact-value pinned test (`:191-260`) recomputed
+  against the fixed implementation's own live output. REFACTOR skipped (owner-confirmed, diff
+  already minimal). Verified: targeted file green; full clean regression 1 pre-existing
+  failure/33 pre-existing warnings, confirmed byte-identical to a committed-HEAD baseline via an
+  isolated `git worktree`; `lintr::lint_package()` 0 lints; `devtools::check()` 0 errors/0
+  warnings/1 pre-existing NOTE. Numeric spacing-variance before/after: Track B fixture min gap
+  0.5->1.0 (variance 0.839->0.733), Track C fixture min gap 0.5->1.0 (variance 0.397->0.2); live
+  `chromote` re-renders of both (scratch location) confirm uniform spacing and that Track C's
+  consanguineous marker/duplicate dashed connector both stay legible. `NEWS.Rmd` entry added; plan
+  document annotated `DONE S571` with verified file:line citations. **Process note:** the
+  RED->GREEN `AskUserQuestion` gate was skipped before this implementation was written --
+  self-caught, disclosed, and retroactively accepted by the owner (see close-out entry above).
+
+### 2026-08-14 · [ad hoc] S571: claim session (Track 3 minimum mate-spacing guarantee)
+- **Deliverable:** Claim stub for implementing Track 3 of `docs/planning/pedigree-diagram-
+  kinship2-fidelity-remediation-plan.md`. Owner-picked via `AskUserQuestion` over a Track 4 design
+  session / issue #148 scoping / the LabKey follow-up. Commit: `92ecdb6f`.
+
 ### 2026-08-14 · [ad hoc] S570: reconcile HANDOFFS.md commit self-reference (`1e7590c2`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` ->
   `1e7590c2` (the close-out commit whose sha the receipt itself couldn't name until after it
