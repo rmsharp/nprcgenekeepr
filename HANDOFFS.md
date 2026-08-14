@@ -132,6 +132,26 @@ This file currently holds **8** receipt(s). Computed by `methodology_trim.py` on
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S567
+date: 2026-08-14
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Resolve the copyright/licensing classification of
+  inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf (kinship2's own supplementary
+  material), unresolved since S545. Owner decided via AskUserQuestion: gitignore it, matching
+  the S479/S497 precedent for this directory.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<claim stub -- filled at close-out>
+
+```handoff
 session: S566
 date: 2026-08-14
 status: complete

@@ -14,6 +14,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 567 Did
+**Deliverable:** Resolve the copyright/licensing classification of
+`inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf` (kinship2's own supplementary
+material), unresolved since S545. (IN PROGRESS)
+**Started:** 2026-08-14.
+**Status:** Session claimed. Owner decided (via `AskUserQuestion`): gitignore it, matching the
+S479/S497 precedent for this directory. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 565 Handoff Evaluation (by Session 566)
 **Score: 9/10.** **What helped:** `next_steps` explicitly named "the owner may want to file one
 (or three) [GitHub issues] retroactively" -- directly anticipating the GitHub-issue-filing half
