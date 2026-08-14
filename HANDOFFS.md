@@ -132,6 +132,25 @@ This file currently holds **8** receipt(s). Computed by `methodology_trim.py` on
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S573
+date: 2026-08-14
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Track 4 implementation (gen-aware D2 anchor selection, Candidate A) from
+docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md -- vertical-slice session, plan
+document is the pre-declared contract (ratified S572).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<pending>
+
+```handoff
 session: S572
 date: 2026-08-14
 status: complete

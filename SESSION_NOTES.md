@@ -14,6 +14,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 573 Did
+**Deliverable:** Track 4 implementation (gen-aware D2 anchor selection, Candidate A) from
+`docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md` (IN PROGRESS)
+**Started:** 2026-08-14
+**Status:** Session claimed. Work beginning. Vertical-slice session (plan document is the
+pre-declared contract, ratified S572) -- following the plan's own §6 Migration Path / §7
+Verification Plan under strict TDD (PRE-RED -> RED -> GREEN -> REFACTOR, each transition gated
+via `AskUserQuestion`).
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 571 Handoff Evaluation (by Session 572)
 **Score: 9/10.** **What helped:** the handoff's `next_steps` field correctly named Track 4's
 design session as "the long-pole item" that "does not block on anything else... worth starting
