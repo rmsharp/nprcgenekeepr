@@ -208,6 +208,14 @@ knitr::opts_chunk$set(echo = TRUE)
   whether the `affected` column exists, matching kinship2's own convention
   for pedigrees with no phenotype data (the package's own bundled
   `examplePedigree` among them).
+- Fixed: the Pedigree Diagram tab could space adjacent mates/siblings
+  unevenly -- the layout algorithm only guaranteed nodes did not exactly
+  overlap, not a fixed minimum gap, so two unrelated same-generation nodes
+  positioned deep in different branches of the family tree could land
+  visibly closer together than a directly-adjacent pair. Every pair of
+  same-generation individuals now keeps at least the algorithm's own
+  minimum-separation unit apart, matching kinship2's own near-uniform mate
+  spacing.
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes

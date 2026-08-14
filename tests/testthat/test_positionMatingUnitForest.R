@@ -163,33 +163,48 @@ test_that(".positionMatingUnitForest positions the real GA204Z/8LKBV9 loop
 ## variants, including the fully-fixed one) -- so this exact-value
 ## assertion is used instead, as a strictly stronger guard.
 ##
-## issue #144 fix (this session): this SAME fixture also embeds one of the
+## issue #144 fix: this SAME fixture also embeds one of the
 ## 51 real-fixture anchor-side mismatches -- 8P17E3 anchors the unit3 union
 ## (dam="8P17E3") at unitGen=1, but her own raw ped$gen is 0. The #144 fix
 ## (docs/planning/issue144-anchor-row-mismatch-fix-plan.md, Candidate B:
 ## effGenOf) moves her DISPLAYED gen to 1 (matching her unit), leaving her
 ## x (2.00, computed purely from mergeSubtrees(), never from ownGen)
-## unchanged -- empirically confirmed this session against a patched
+## unchanged -- empirically confirmed against a patched
 ## 3-edit prototype. Every other id/union/duplicate value below is
 ## unaffected by #144 (none of them anchor a mismatched unit in this
 ## fixture) -- re-confirmed unchanged against the same prototype.
+##
+## Track 3 update (docs/planning/pedigree-diagram-kinship2-fidelity-
+## remediation-plan.md Track 3, this session): the paragraph above records
+## that a geometric minimum-separation check was tried and REJECTED as a
+## TEST-DISCRIMINATOR for the #143 desync bug, not that the underlying
+## algorithm didn't need one -- that claim ("unrelated same-row nodes are
+## not guaranteed >= minSep apart even under the fully-corrected fix") is
+## now FALSE: .positionMatingUnitForest() gained an actual minSep guarantee
+## this session (a global post-merge sweep over every real/duplicate
+## individual node), and every value below is its updated, re-verified
+## output. This exact-value test remains the right guard for the same
+## reason as before (a geometric check alone still can't discriminate an
+## Edit-1/Edit-2-style desync) -- see the new, separate general-property
+## test directly below this one for the minSep guarantee itself.
 
 test_that(".positionMatingUnitForest's exact x/gen values for the real
            GA204Z/8LKBV9 loop fixture catch a desynchronized (only one of
            the two) issue #143 fix, and reflect issue #144's anchor-side
            effGenOf correction for 8P17E3 -- not just the corrected gen
-           values alone. 5A6DFT/8DKELJ's own x values are UPDATED for issue
-           #145 (male-left/female-right default, D2/D3): this pair is the
+           values alone. 5A6DFT/8DKELJ's own x values reflect issue #145
+           (male-left/female-right default, D2/D3): this pair is the
            forest's only D1-qualifying (mate-count-1, unambiguous-M/F, no
            D5 child) unit, so 5A6DFT (sire, sex 'M') and 8DKELJ (dam, sex
-           'F') swap places -- (-0.50, 0.00) instead of the pre-#145
-           (0.00, -0.50) -- while every other value below (all inside
+           'F') swap places -- while every other value below (all inside
            8LKBV9's own 3-mate subtree, D1-excluded by mate-count) is
-           UNCHANGED, confirming the swap is scoped exactly to the one
-           qualifying pair and does not cascade downstream (empirically
-           re-verified live against this exact fixture, issue #145 Slice 1
-           Pre-RED, docs/planning/issue145-sire-dam-left-right-placement-
-           plan.md §6 dragon 1).", {
+           unaffected by #145, confirming the swap is scoped exactly to the
+           one qualifying pair and does not cascade downstream. Every value
+           below additionally reflects Track 3's minSep guarantee (this
+           session): every one of the 5 same-gen gaps in this fixture
+           (gen 0: 1 pair; gen 1: 3 pairs; gen 2: 2 pairs) is now exactly
+           minSep = 1 apart, re-verified live against the fixed
+           implementation.", {
   ped <- data.frame(
     id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
            "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
@@ -208,32 +223,88 @@ test_that(".positionMatingUnitForest's exact x/gen values for the real
   }
 
   expectPos("5A6DFT", -0.50, 0L)  # issue #145: swapped from 0.00 (male left)
-  expectPos("8DKELJ", 0.00, 0L)   # issue #145: swapped from -0.50 (female right)
-  expectPos("G8EBU9", 0.00, 1L)  # CHANGED from (0.25, 0L), issue #143
-  expectPos("8P17E3", 2.00, 1L)  # gen CHANGED from 0L, issue #144 (she
+  expectPos("8DKELJ", 0.50, 0L)   # Track 3: x CHANGED from 0.00 (gap to
+                                   # 5A6DFT was 0.50, now the enforced 1.00)
+  expectPos("G8EBU9", 0.00, 1L)  # issue #143
+  expectPos("8P17E3", 2.00, 1L)  # gen: issue #144 (she
                                  # anchors unit3, unitGen=1); x unaffected
-  expectPos("8LKBV9", 0.50, 1L)
+  expectPos("8LKBV9", 1.00, 1L)  # Track 3: x CHANGED from 0.50 (gap to
+                                   # G8EBU9 was 0.50, now 1.00)
   expectPos("FJIB3R", 1.00, 2L)
-  expectPos("9VGCCV", 2.00, 2L)
+  expectPos("9VGCCV", 3.00, 2L)  # Track 3: x CHANGED from 2.00 (gap to
+                                   # FJIB3R was 1.00 already at minSep, but
+                                   # dupAt4's own push, below, cascades)
   expectPos("GA204Z", 1.00, 3L)
 
   unit1 <- forest$matingUnits$id[forest$matingUnits$sire == "5A6DFT"]
   unit2 <- forest$matingUnits$id[forest$matingUnits$dam == "G8EBU9"]
   unit3 <- forest$matingUnits$id[forest$matingUnits$dam == "8P17E3"]
   unit4 <- forest$matingUnits$id[forest$matingUnits$dam == "FJIB3R"]
-  expectPos(unit1, -0.25, 0L)
-  expectPos(unit2, 0.25, 1L)
-  expectPos(unit3, 2.20, 1L)
-  expectPos(unit4, 1.20, 2L)
+  ## Every mating-unit dot's x is the midpoint of its own 2 (now Track-3-
+  ## swept) parent positions -- Track 3 does not sweep union nodes
+  ## directly, so each of these 4 values is purely a downstream
+  ## consequence of the individual-node changes above, not a separate
+  ## sweep input.
+  expectPos(unit1, 0.00, 0L)  # CHANGED from -0.25: midpoint(-0.50, 0.50)
+  expectPos(unit2, 0.50, 1L)  # CHANGED from 0.25: midpoint(0.00, 1.00)
+  expectPos(unit3, 2.50, 1L)  # CHANGED from 2.20: midpoint(2.00, dupAt3=3.00)
+  expectPos(unit4, 1.50, 2L)  # CHANGED from 1.20: midpoint(1.00, dupAt4=2.00)
 
   dupAt3 <- forest$duplicates$id[forest$duplicates$matingUnitId == unit3]
   dupAt4 <- forest$duplicates$id[forest$duplicates$matingUnitId == unit4]
-  ## Both duplicates' x shifts from baseline (2.65, 1.65) -- Edit 1's
-  ## contour move for G8EBU9 cascades through the whole tree's layout, not
-  ## just her own position -- but only dupAt4's gen visibly changes (1
-  ## -> 2); dupAt3's gen coincidentally matches its unit's gen either way.
-  expectPos(dupAt3, 2.40, 1L)  # x CHANGED from 2.65; gen unaffected
-  expectPos(dupAt4, 1.40, 2L)  # x CHANGED from 1.65; gen CHANGED from 1L
+  ## Both duplicates' x are pushed by Track 3's own sweep (gen-1 and gen-2
+  ## rows each had a sub-minSep gap against their left neighbor: 8P17E3 to
+  ## dupAt3 was 0.40; FJIB3R to dupAt4 was 0.40).
+  expectPos(dupAt3, 3.00, 1L)  # x CHANGED from 2.40; gen unaffected
+  expectPos(dupAt4, 2.00, 2L)  # x CHANGED from 1.40; gen unaffected
+})
+
+## ---- Track 3: minimum mate-spacing guarantee (kinship2 fidelity
+## remediation plan, docs/planning/pedigree-diagram-kinship2-fidelity-
+## remediation-plan.md Track 3) --------------------------------------------
+## D3's contour-merge (mergeSubtrees(), :683-703) only guarantees adjacent
+## subtrees do not exactly overlap -- it does not guarantee a minimum visual
+## gap between two unrelated same-generation nodes nested at different
+## recursion depths (documented dragon,
+## pedigree-diagram-option2-layout-design-plan.md:486-495, "New dragon found
+## S461"). This test asserts the general property directly, reusing the real
+## GA204Z/8LKBV9 loop fixture already established above -- its own docstring
+## (:148-164) already recorded that this exact fixture contains 300+ such
+## close-but-non-identical pairs in the real 375-individual pedigree.
+## Confirmed empirically against UNMODIFIED source this session: gen 0 gap
+## 0.5, gen 1 gaps 0.5/0.4, gen 2 gaps 0.4/0.6 -- all below the existing
+## minSep = 1 constant already used elsewhere in the algorithm.
+
+test_that(".positionMatingUnitForest guarantees at least minSep (1 unit)
+           between every pair of same-generation real/duplicate individual
+           nodes -- not just non-collision -- for the real GA204Z/8LKBV9
+           loop fixture", {
+  ped <- data.frame(
+    id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
+           "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
+    sire = c(NA, NA, NA, NA, "5A6DFT", "8LKBV9", "8LKBV9", "8LKBV9"),
+    dam = c(NA, NA, NA, NA, "8DKELJ", "G8EBU9", "8P17E3", "FJIB3R"),
+    sex = c("M", "F", "F", "F", "M", "F", "F", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 2L, 2L, 3L),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForest(ped, forest)
+
+  ## Real + duplicate individual nodes only -- mating-unit "__union_*" dot
+  ## nodes are derived midpoints of their own 2 parents, not independently
+  ## laid-out leaves, so they are out of scope for the full minSep
+  ## guarantee (this session's PRE-RED AskUserQuestion decision).
+  indiv <- pos[.nodeKind(pos$id) != "union", ]
+  gens <- sort(unique(indiv$gen))
+  minGaps <- vapply(gens, function(g) {
+    xs <- sort(indiv$x[indiv$gen == g])
+    if (length(xs) < 2L) return(Inf)
+    min(diff(xs))
+  }, numeric(1L))
+  expect_true(all(minGaps >= 1L - 1e-6),
+              info = paste("min gap per gen (", paste(gens, collapse = ","),
+                            "):", paste(round(minGaps, 3), collapse = ", ")))
 })
 
 ## ---- issue #145 Slice 1: male-left/female-right default (D1-D4) -------

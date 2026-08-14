@@ -755,6 +755,43 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     effGenOf[[aid]] <- max(genOf[[aid]], unitGenOf[anchorUnitsOf[[aid]]])
   }
 
+  # nolint start: commented_code_linter.
+  ## D3 step 6 correction (issue #143): every NON-ANCHOR occurrence -- a
+  ## free-pass real node or a genuine duplicate -- renders at its own
+  ## MATING UNIT's gen, not the underlying individual's global tree-native
+  ## gen (which can legitimately differ, e.g. a founder marrying into a
+  ## later generation). The intersect(freePassIds, realIds) guard is
+  ## required: freePassIds can contain dangling ids (no own row in 'ped',
+  ## S461) that are absent from realIds -- indexing dispGenOf by such an id
+  ## would silently APPEND rather than error, misaligning it with
+  ## realIds/nodes$id.
+  ##
+  ## Computed here -- ahead of the recursive descent below, moved from its
+  ## original post-positioning location (Track 3,
+  ## docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md
+  ## Track 3; a pure reordering, same logic, no behavior change) -- because
+  ## Track 3's minimum-spacing sweep, below, needs to group nodes by the
+  ## same DISPLAY row a viewer actually sees, not raw ped$gen.
+  # nolint end
+  dispGenOf <- genOf[realIds]
+  realFreePassIds <- intersect(freePassIds, realIds)
+  if (length(realFreePassIds) > 0L) {
+    dispGenOf[realFreePassIds] <-
+      unname(unitGenOf[freePassUnitOf[realFreePassIds]])
+  }
+  ## D3 step 6 correction (issue #144): an ANCHOR occurrence renders at its
+  ## own EFFECTIVE gen (effGenOf -- max of its raw gen and every unit it
+  ## anchors), mirroring the free-pass override above. The
+  ## intersect(names(anchorUnitsOf), realIds) guard is defensive (an
+  ## anchor is never a dangling id in the current pipeline, by
+  ## .buildMatingUnitForest()'s own guard, so this is not currently a live
+  ## failure path) but harmless and symmetric with the free-pass guard
+  ## above.
+  realAnchorIds <- intersect(names(anchorUnitsOf), realIds)
+  if (length(realAnchorIds) > 0L) {
+    dispGenOf[realAnchorIds] <- unname(effGenOf[realAnchorIds])
+  }
+
   ## Recursive descent (post-order): mating units recurse into their
   ## real children (plus any free-pass non-anchor parent, D3 step 5);
   ## individuals recurse into the mating units they anchor plus any D5
@@ -852,6 +889,55 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     dupX <- unname(unitProvX[duplicates$matingUnitId]) + minSep * 0.4
   }
 
+  # nolint start: commented_code_linter.
+  ## Track 3 minimum-spacing guarantee
+  ## (docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md
+  ## Track 3; PRE-RED AskUserQuestion decision, this session): mergeSubtrees()
+  ## above only guarantees adjacent subtrees do not exactly overlap -- it
+  ## reserves however much width a subtree's own descendants need, not a
+  ## fixed minimum gap. Two unrelated free-pass/duplicate nodes nested at
+  ## different recursion depths are never inputs to the SAME
+  ## mergeSubtrees() call, so no leaf-width change inside the recursive
+  ## merge itself can guarantee spacing between them (documented dragon,
+  ## pedigree-diagram-option2-layout-design-plan.md:486-495, "New dragon
+  ## found S461"). This global post-merge sweep -- over every REAL and
+  ## DUPLICATE individual node (mating-unit "__union_*" dots are excluded;
+  ## their x is a derived midpoint of their own 2 parents below, not an
+  ## independently laid-out leaf) -- closes that gap directly: group by
+  ## DISPLAY gen, sort left-to-right, and push any node closer than minSep
+  ## to its left neighbor out to exactly minSep. sweepMinSep() is applied
+  ## HERE (before finalUnitX below, so every mating unit's own
+  ## midpoint-of-parents position reflects the swept parent positions) AND
+  ## again at the very end of this function (after the final de-collision
+  ## pass and the orderBySex swap, neither of which are sweep inputs but
+  ## either CAN disturb a value the sweep already fixed here -- found live
+  ## against the real 375-individual bundled fixture this session: the
+  ## de-collision pass's epsilon-nudge, breaking an unrelated real/union
+  ## exact-coincidence, moved a real node 1e-3 closer to an already-
+  ## minSep-exact duplicate neighbor).
+  # nolint end
+  sweepMinSep <- function(ids, xVals, genVals) {
+    x <- stats::setNames(xVals, ids)
+    for (g in unique(genVals)) {
+      rowIds <- ids[genVals == g]
+      if (length(rowIds) < 2L) next
+      rowIds <- rowIds[order(x[rowIds], rowIds)]
+      for (i in 2L:length(rowIds)) {
+        prevX <- x[[rowIds[i - 1L]]]
+        if (x[[rowIds[i]]] < prevX + minSep) {
+          x[[rowIds[i]]] <- prevX + minSep
+        }
+      }
+    }
+    x
+  }
+  sweepIds <- c(realIds, duplicates$id)
+  sweepGen <- c(unname(dispGenOf[realIds]),
+                unname(unitGenOf[duplicates$matingUnitId]))
+  sweepX <- sweepMinSep(sweepIds, c(unname(realX), dupX), sweepGen)
+  realX <- sweepX[realIds]
+  dupX <- unname(sweepX[duplicates$id])
+
   finalUnitX <- numeric(nrow(matingUnits))
   if (nrow(matingUnits) > 0L) {
     for (i in seq_len(nrow(matingUnits))) {
@@ -864,49 +950,24 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
       }
       anchorX <- realX[[matingUnits$anchor[i]]]
       dupRow <- which(duplicates$matingUnitId == matingUnits$id[i])
+      nonAnchorId <- matingUnits$nonAnchor[i]
       nonAnchorX <- if (length(dupRow) == 1L) {
         dupX[dupRow]
+      } else if (nonAnchorId %in% names(sweepX)) {
+        # A free-pass non-anchor REAL individual was positioned via the
+        # same recursive walk as everything else and swept above like any
+        # other real node (Track 3) -- read its swept, not pre-sweep,
+        # position.
+        sweepX[[nonAnchorId]]
       } else {
-        # A free-pass non-anchor (real OR dangling, S461) was positioned
-        # via the SAME recursive walk as everything else, but -- unlike a
-        # duplicate -- has no forest$duplicates row and is not
-        # necessarily in realIds, so it must be read from the
-        # unrestricted absX environment, not the realIds-only realX
-        # vector.
-        absX[[matingUnits$nonAnchor[i]]]
+        # A free-pass non-anchor DANGLING id (S461, no own row in 'ped')
+        # has no visible node and so was never a Track 3 sweep input --
+        # read it from the unrestricted absX environment instead, exactly
+        # as before Track 3.
+        absX[[nonAnchorId]]
       }
       finalUnitX[i] <- (anchorX + nonAnchorX) / 2L
     }
-  }
-
-  # nolint start: commented_code_linter.
-  ## D3 step 6 correction (issue #143): every NON-ANCHOR occurrence -- a
-  ## free-pass real node or a genuine duplicate -- renders at its own
-  ## MATING UNIT's gen, not the underlying individual's global tree-native
-  ## gen (which can legitimately differ, e.g. a founder marrying into a
-  ## later generation). The intersect(freePassIds, realIds) guard is
-  ## required: freePassIds can contain dangling ids (no own row in 'ped',
-  ## S461) that are absent from realIds -- indexing dispGenOf by such an id
-  ## would silently APPEND rather than error, misaligning it with
-  ## realIds/nodes$id.
-  # nolint end
-  dispGenOf <- genOf[realIds]
-  realFreePassIds <- intersect(freePassIds, realIds)
-  if (length(realFreePassIds) > 0L) {
-    dispGenOf[realFreePassIds] <-
-      unname(unitGenOf[freePassUnitOf[realFreePassIds]])
-  }
-  ## D3 step 6 correction (issue #144): an ANCHOR occurrence renders at its
-  ## own EFFECTIVE gen (effGenOf -- max of its raw gen and every unit it
-  ## anchors), mirroring the free-pass override above. The
-  ## intersect(names(anchorUnitsOf), realIds) guard is defensive (an
-  ## anchor is never a dangling id in the current pipeline, by
-  ## .buildMatingUnitForest()'s own guard, so this is not currently a live
-  ## failure path) but harmless and symmetric with the free-pass guard
-  ## above.
-  realAnchorIds <- intersect(names(anchorUnitsOf), realIds)
-  if (length(realAnchorIds) > 0L) {
-    dispGenOf[realAnchorIds] <- unname(effGenOf[realAnchorIds])
   }
 
   nodes <- data.frame(
@@ -978,6 +1039,18 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
       }
     }
   }
+
+  ## Track 3 (see sweepMinSep()'s own definition/comment above): re-apply
+  ## the minSep sweep one final time, now that every later step (the
+  ## de-collision pass and the orderBySex swap) has had its say. The
+  ## orderBySex swap only exchanges 2 existing values (never introduces a
+  ## new one), so it cannot itself erode a gap -- but the de-collision
+  ## pass's epsilon-nudge can, and does, on the real fixture (see above).
+  ## This final pass is idempotent when nothing upstream disturbed the
+  ## first sweep's result.
+  nodes$x[match(sweepIds, nodes$id)] <-
+    unname(sweepMinSep(sweepIds, nodes$x[match(sweepIds, nodes$id)],
+                        sweepGen))
 
   nodes
 }

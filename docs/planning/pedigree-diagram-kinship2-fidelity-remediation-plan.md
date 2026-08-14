@@ -258,7 +258,52 @@ solid fill. `NEWS.Rmd` entry added. See `CHANGELOG.md`.
   user sees. Doing Track 2 first is not wrong, just makes the still-open gaps more visible sooner
   rather than later -- a legitimate, valid ordering choice for the owner to make explicitly.
 
-### Track 3 -- Minimum mate-spacing guarantee (Claim 3, and indirectly 4c)
+### Track 3 -- Minimum mate-spacing guarantee (Claim 3, and indirectly 4c) -- DONE S571
+
+**DONE S571 (2026-08-14):** implemented exactly as scoped below. PRE-RED mechanism decision
+(post-merge global sweep vs. widening the contour-merge's own per-leaf reservation) resolved via
+`AskUserQuestion` before RED: the post-merge sweep, since the widen-leaf-width alternative only
+strengthens spacing between subtrees directly compared within the SAME `mergeSubtrees()` call and
+does not reach the motivating dragon (2 unrelated free-pass/duplicate nodes nested at different
+recursion depths, never inputs to the same merge call). `.positionMatingUnitForest()`
+(`R/makePedigreeDiagramData.R:919-939` `sweepMinSep()`) now sweeps every real/duplicate individual
+node at each display-gen row left-to-right, pushing any node closer than the existing `minSep`
+(1 unit) to its left neighbor out to exactly `minSep`; applied once before `finalUnitX` (:934-939,
+so a mating unit's own midpoint-of-parents position reflects the swept parent positions) and once
+more at the very end of the function (:1043-1053), after the final de-collision pass and the
+`orderBySex` swap -- a real interaction found live against the bundled 375-individual
+`examplePedigree` fixture (not the small hand-built fixtures): the de-collision pass's own
+epsilon-nudge, resolving an unrelated real/mating-unit-dot exact coincidence, could erode an
+already-swept gap by 1e-3 unit. Fixed by re-sweeping last; 0 residual violations across the real
+fixture's 5,334 same-gen gaps (was 28, all exactly 0.001 under `minSep`) after the fix.
+`dispGenOf`'s computation was moved earlier in the function (a pure reordering, no logic change)
+so the sweep can group by display gen. The `nonAnchorX` free-pass lookup in the `finalUnitX` loop
+(`:941-975`) now reads the swept position for a real free-pass individual, falling back to the
+pre-Track-3 `absX` lookup only for a dangling (no own row in `ped`) free-pass id, which has no
+visible node and so is not a sweep input. New test:
+`tests/testthat/test_positionMatingUnitForest.R:278-308` (general property: every same-gen
+real/duplicate gap `>= minSep`, reusing the file's own real `GA204Z`/`8LKBV9` loop fixture,
+empirically confirmed failing against unmodified source at gen 0/1/2, gaps 0.5/0.5/0.4/0.4/0.6).
+One pre-existing exact-value pinned test (`:191-260`) recomputed against the fixed
+implementation's own verified output -- every one of its 5 same-gen gaps in that fixture is now
+exactly `minSep = 1` apart. Verified: targeted file green; full clean regression 1 pre-existing
+failure/33 pre-existing warnings (byte-identical to a `git worktree`-checked committed-HEAD
+baseline -- confirmed nothing new); `lintr::lint_package()` 0 lints; `devtools::check()` 0
+errors/0 warnings/1 pre-existing unrelated NOTE (`vignettes/figure/` knitr leftover). Numeric
+spacing-variance, computed before/after on the Track B (16-subject) and Track C (9-subject)
+fixtures from `data-raw/kinship2FidelityValidation.R`: Track B min gap 0.5->1.0, variance
+0.839->0.733; Track C min gap 0.5->1.0, variance 0.397->0.2. Live `chromote` re-renders of both
+fixtures (scratch location, not the shipped article images) confirm visibly uniform spacing and
+the Track C consanguineous marker/duplicate dashed connector both remain legible. `NEWS.Rmd` entry
+added. REFACTOR phase skipped (owner-confirmed via `AskUserQuestion`, diff already minimal). See
+`CHANGELOG.md`.
+
+**Not done this session:** the shipped `vignettes/articles/kinship2-fidelity-validation.qmd`
+article's own `trackB-nprc-*`/`trackC-nprc-*` screenshots are now stale (captured before this
+fix) -- re-rendering and committing fresh article images was judged out of Track 3's own scope
+(matching Track 1's own precedent of not touching any vignette article); a future session should
+regenerate them via `data-raw/kinship2FidelityValidation.R` if the article is revisited.
+
 
 - **Scope:** `docs/planning/pedigree-diagram-option2-layout-design-plan.md`'s own S461 dragon:
   replace `mergeSubtrees()`'s "just enough to avoid exact overlap" contour math with a genuine
