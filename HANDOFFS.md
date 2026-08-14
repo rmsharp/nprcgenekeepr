@@ -131,20 +131,81 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S560
 date: 2026-08-13
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 9
+predecessor_score: 9
 active_task: Write vignettes/articles/pedigree-diagram.qmd (new dedicated Pedigree Diagram
 tab article, incl. freshly-captured live-app screenshots via shinytest2) -- BACKLOG.md
-Housekeeping, found S544, owner-picked this session via AskUserQuestion.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+Housekeeping, found S544 -- DONE.
+what_was_done: Wrote vignettes/articles/pedigree-diagram.qmd (9 sections: Overview, Node
+shapes/legend, Diagram Edge Style, Consanguineous marker, Affected-status shading, Showing
+names, Twin/zygosity relations, Interacting with the diagram, Script-callable equivalent, See
+also) plus vignettes/articles/pedigree-diagram-screenshots.R (a new shinytest2::AppDriver
+screenshot script, 5 screenshots against small feature-relevant subgraphs trimmed from the
+bundled obfuscated_rhesus_mhc_ped*.csv fixtures). Regenerated pb_diagram_legend.png in place
+and fixed colony-manager-guide.qmd's stale pre-Option-2 "one node per animal... directed
+sire/dam edges" opening sentence + added the new article to its function-group table.
+Updated a2interactive.Rmd's own cross-reference to point to the new article. quarto render
+clean on both .qmd files; targeted rmarkdown::render() on a2interactive.Rmd (the one real,
+non-ignored vignette touched) confirmed clean; lintr::lint_package() 0 lints.
+next_steps: BACKLOG.md priorities, in order: (1) Fix edgeStyle="rectilinear" consanguineous-
+marker color/width propagation on dogleg-rerouted edges (READY, Effort S, found S555 -- a
+verified 12-row reproduction fixture already exists). (2) Decide add-vs-remove for
+HANDOFFS.md's FRONTMATTER_FIELD_ABSENT finding (DECISION NEEDED, Effort S, first seen S508).
+(3) Issue #148 (MHC haplotype frequency reporting) needs a scope-narrowing conversation
+before implementation, per the ratified genetic-metrics sequencing audit (DECISION NEEDED).
+Unchanged: NPRC outreach owner review (DECISION NEEDED); LabKey remaining recs (BLOCKED); the
+scheduled shinytest2.yaml CI run is still red, unchanged since S548, still not diagnosed by
+any session. Local master remains ahead of origin (44+ commits after this session) -- a
+future session should consider pushing.
+key_files: vignettes/articles/pedigree-diagram.qmd (new article); vignettes/articles/
+pedigree-diagram-screenshots.R (new screenshot script); vignettes/articles/shiny_app_use/
+pb_diagram_legend.png (regenerated) + diagram_rectilinear_edge_style.png/
+diagram_show_names.png/diagram_affected_shading.png/diagram_twin_connectors.png (new);
+vignettes/articles/colony-manager-guide.qmd (Diagram-view paragraph fixed, table row 2
+updated); vignettes/a2interactive.Rmd (cross-reference updated); BACKLOG.md Housekeeping (2
+items resolved, compressed); PROJECT_LEARNINGS.md (new Learning 566); CLAUDE.md:282
+(learnings-count pointer).
+gotchas: (1) A live-app screenshot of a full 375-animal bundled fixture is functionally
+correct but visually illegible -- trim to a small (3-7 animal) feature-relevant subgraph via
+the Diagram tab's own Focal Animals + Trim Pedigree controls BEFORE capturing (Learning 566).
+(2) The consanguineous-marker color CANNOT be shown in a close-up/zoomed screenshot when the
+marked edge's own endpoint node radius exceeds its world-space length -- confirmed via direct
+network.getPositions()/canvasToDOM() JS queries against the live visNetwork widget, not a
+screenshot-technique failure; describe it in prose instead of chasing a zoom fix (Learning
+566). (3) Quarto crossref syntax `[text](@sec-x)` (markdown-link-wrapped) does NOT resolve --
+only bare `@sec-x` or `(@sec-x)` do, and even those render as "(Section N)" against
+UN-numbered headings in this project's own quarto config, which is why this article uses
+plain prose section-name pointers throughout instead, matching every sibling article's own
+convention (none of which use quarto crossrefs at all).
+runtime_smoke: n/a -- pure documentation (a new article + a screenshot-generation script
+under vignettes/articles/, fully build-ignored via .Rbuildignore); no R/ package code
+changed, no runtime/Shiny behavior surface to launch or observe. Stated explicitly, not
+silently skipped.
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-13 (reconcile, claim,
+deliverable, close-out)
 commit: pending
 ```
+<**Self-score 9/10.** +: (1) read all 3 existing coverage surfaces
+(`_pedigree_browser.Rmd`, `colony-manager-guide.qmd`, `a2interactive.Rmd`) before writing,
+catching `colony-manager-guide.qmd`'s own stale pre-Option-2 opening sentence directly.
+(2) did not accept the first illegible screenshot pass as good enough -- iterated to a
+concrete fix (trim to a feature-relevant focal set via the app's own existing controls).
+(3) when a specific screenshot (the consanguineous-marker close-up) genuinely could not work,
+verified WHY via direct JS/canvas-position queries rather than guessing, then described the
+limitation honestly in prose instead of shipping a misleading image. (4) verified with the
+actual build tool (`quarto render`) rather than eyeballing markdown, catching 2 real defects
+(broken crossref syntax, a fabricated vignette title) before they shipped. (5) confirmed the
+actual build-ignore/lint scope (`.Rbuildignore`, `.lintr`) rather than assuming close-out
+checklist triggers applied broadly. -: (1) the first full-fixture screenshot pass was a
+predictable, avoidable mistake -- `a2interactive.Rmd`'s own prose, read earlier the same
+session, already explained why a dense real fixture doesn't demonstrate features legibly.
+(2) no independent adversarial-verification pass beyond this session's own manual review --
+the same standing gap flagged across many prior sessions. (3) did not push the now 44+ local
+commits to `origin`, matching the repeatedly-deferred precedent from S548 onward.
+**Predecessor (S559) score: 9/10** -- see the Session 559 Handoff Evaluation in
+SESSION_NOTES.md for the full breakdown; its `next_steps` field named this exact item
+verbatim as item 1 of its priority list, followed as the literal picked option.>
 
 ```handoff
 session: S559

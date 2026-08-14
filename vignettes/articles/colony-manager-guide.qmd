@@ -97,7 +97,7 @@ that demonstrates the same underlying functions directly through the R API.
 | # | Function group | App tab(s) | Read deeper (R-API walkthrough) |
 |---|---|---|---|
 | 1 | Quality control of studbooks | Input | [Studbook Quality Control](studbook-quality-control.html) |
-| 2 | Pedigree construction and browsing, including identifying candidate parents for animals with unknown parentage | Pedigree Browser, Potential Parents | [Building a Focal-Animal Pedigree Offline](offline-focal-animal-workflow.html) |
+| 2 | Pedigree construction and browsing, including identifying candidate parents for animals with unknown parentage | Pedigree Browser, Potential Parents | [Building a Focal-Animal Pedigree Offline](offline-focal-animal-workflow.html); [The Pedigree Diagram Tab](pedigree-diagram.html) |
 | 3 | Age-sex demographic display | Age-Sex Pyramid | [Age-Sex Pyramid Plots](age-sex-pyramid.html) |
 | 4 | Genetic value analysis (mean kinship, genome uniqueness) | Genetic Value Analysis, Genetic Value Analysis and Breeding Group Description | [Genetic Value Analysis](genetic-value-analysis.html); [Validating the Founder-Genome-Equivalent Standard Error](fg-se-validation.html) |
 | 5 | Breeding-group formation and ongoing diversity monitoring | Breeding Groups, Genetic Diversity | [Forming Breeding Groups](breeding-group-formation.html) |
@@ -304,9 +304,14 @@ the population used for the remaining tabs) -- matching the shipped
 
 **Diagram view.** Alongside the table, the Pedigree Browser's **Diagram** tab
 renders the same population as an interactive pedigree diagram: one node per
-animal, shaped by sex, with directed sire/dam edges laid out top-down by
-generation. A legend to the right of the diagram shows what each shape means.
-If the pedigree data includes an optional `affected` column, individuals
+animal, shaped by sex, connected via a mating-unit convention -- a mate's
+own matings render as a small connector between the two parents, with a
+line down to their shared children, the same convention traditional
+pedigree charts (and the `kinship2` R package) use. A **Diagram Edge Style**
+toggle above the diagram switches between a straight-line routing (the
+default) and a strict-right-angle routing matching `kinship2`'s own look. A
+legend to the right of the diagram shows what each shape means. If the
+pedigree data includes an optional `affected` column, individuals
 marked affected are additionally shaded a distinct color, with a matching
 "Affected" entry in the same legend -- pedigrees without an `affected`
 column render unshaded, as before. If the pedigree data includes an
@@ -321,9 +326,14 @@ always lists ids, never names, regardless of the toggle. A mating between two
 blood-related animals renders its connector lines thicker and in a distinct
 color, flagging the consanguineous mating at a glance -- no optional column
 or toggle needed, since it is detected directly from the pedigree's own
-sire/dam data.
+sire/dam data. If a colony records twin births, an optional Twin/Zygosity
+Relations file can be uploaded to draw a distinctly-styled connector between
+a declared pair's own nodes -- and, for a declared monozygotic pair,
+corrects their kinship to genetic identity throughout the application, not
+just this diagram. See **The Pedigree Diagram Tab** article for the full
+tour of every feature this tab offers, with a screenshot of each.
 
-![The Pedigree Browser Diagram tab with its shape-to-sex legend.](shiny_app_use/pb_diagram_legend.png){fig-alt="Pedigree Browser Diagram tab showing an interactive pedigree diagram with sex-shaped nodes and a shape-to-sex legend panel (dot=Female, square=Male, star=Hermaphrodite, triangle=Unknown, diamond=Other/Unrecorded) to the right of the diagram."}
+![The Pedigree Browser Diagram tab with its shape-to-sex legend.](shiny_app_use/pb_diagram_legend.png){fig-alt="Pedigree Browser Diagram tab showing an interactive pedigree diagram with sex-shaped nodes and a shape-to-sex legend panel (dot=Female, square=Male, star=Hermaphrodite, triangle=Unknown, diamond=Other/Unrecorded, hexagon=Affected) to the right of the diagram."}
 
 Diagrams render up to **750 animals** -- for larger populations, narrow the
 focal-animal selection first (see **Focal animals** above). Hovering any node

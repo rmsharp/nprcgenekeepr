@@ -14,22 +14,141 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 559 Handoff Evaluation (by Session 560)
+**Score: 9/10.** **What helped:** the `next_steps` field named this exact item verbatim as
+item 1 of its priority list -- "(1) Write the dedicated Pedigree Diagram tab article (READY,
+Effort M, unchanged since S544)" -- and this session's own independently-rendered
+`AskUserQuestion` priorities list (built fresh from `BACKLOG.md`'s own tags, per Phase 0
+step 7, not copied from the handoff) surfaced the identical item as option 1; the user's pick
+matched with zero re-derivation needed. `key_files` correctly listed every ledger/doc file
+S559 touched, letting this session confirm at a glance that none of them were relevant to
+its own different deliverable. **What was wrong:** nothing found inaccurate -- the `commit:
+pending` self-reference limitation in S559's own `HANDOFFS.md` receipt was the documented,
+expected placeholder (not an error), reconciled to `abf1a984` this session's own Phase 0 step
+6, matching the established S543-S559 precedent. **What was missing:** `gotchas` were scoped
+entirely to `methodology_trim.py`'s chained-`--write` interaction (S559's own deliverable) and
+had no way to anticipate this session's actual pitfall (a live-app screenshot of a
+375-animal fixture is functionally correct but visually illegible; a specific color marker
+can be geometrically occluded at every zoom level) -- not a real gap, since S559 never
+touched the Diagram tab or its screenshots. **ROI:** High -- the `next_steps` pointer named
+the exact deliverable, its exact BACKLOG.md tag/effort, and its own found-session, leaving
+zero time spent re-establishing what needed doing; this session's own time went entirely into
+the harder screenshot-legibility and article-writing work the item itself called for.
+
 ### What Session 560 Did
 **Deliverable:** Write a new dedicated article, `vignettes/articles/pedigree-diagram.qmd`,
-documenting the Pedigree Diagram tab's full current feature set (Option 2 kinship2-parity
-layout, mate-line/sibship-bar rendering, twin/zygosity encoding, affected-status shading,
-consanguineous-mating markers, node-label names, sire/dam left-right placement, `edgeStyle`
-rectilinear/curved edges, search + hover-highlight, click-to-navigate, PNG export, 750-node
-cap), with freshly-captured live-app screenshots via a `shinytest2::AppDriver` script
-(matching `colony-manager-guide-screenshots.R`'s pattern) — also resolving the stale
-`pb_diagram_legend.png` item (BACKLOG.md Housekeeping, found S544, owner-directed via
-`AskUserQuestion` for both doc-location and screenshot-capture scope). (IN PROGRESS)
-**Started:** 2026-08-13.
-**Status:** Session claimed. Work beginning. TDD phase: N/A (documentation only, no
-implementation/test code).
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+documenting the Pedigree Diagram tab's full current feature set, with freshly-captured
+live-app screenshots -- **DONE.** (BACKLOG.md Housekeeping, found S544, owner-directed via
+`AskUserQuestion` for both doc-location and screenshot-capture scope this session.)
+**Started/Completed:** 2026-08-13. **Status:** DONE. Not a TDD-gated session (no
+implementation/test code; declared N/A, matching the S559 pure-documentation precedent).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SESSION_RUNNER.md`,
+`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list`, `git status`/`log`/`diff --stat`,
+`methodology_dashboard.py` [Health 96/100, 0 High+ risk, 1 pre-existing MEDIUM -- a large
+vendor JS file under `.Rproj.user/`, not a project concern], `gh run list --branch master
+--limit 10` [all push-triggered workflows green on latest commits; scheduled
+`shinytest2.yaml` still red, unchanged since S548, not diagnosed], ledger reconcile
+[`CHANGELOG.md`/`HANDOFFS.md` frontiers both at `HEAD`; one self-reference artifact found and
+fixed -- S559's own `HANDOFFS.md` receipt `commit: pending` -> `abf1a984`, logged and
+committed separately (`9e8b57ee`) per the one-write-Phase-0-permits rule]). 6 untracked files
+found, same known/pre-existing set S555-S559 already flagged. Rendered the priorities list (3
+numbered items in the `AskUserQuestion` picker) -- user picked "Pedigree Diagram article."
+**(2)** A 2nd `AskUserQuestion` round resolved 2 real scope decisions before claiming: doc
+location (new dedicated article, matching the established per-tab-article convention --
+`age-sex-pyramid.qmd`/`genetic-value-analysis.qmd`/`breeding-group-formation.qmd` -- over
+expanding `colony-manager-guide.qmd` in place) and screenshot capture (yes, via `shinytest2`,
+over text/code-only). **(3)** Wrote the Phase 1B claim stub to `SESSION_NOTES.md` and
+`HANDOFFS.md` (`status: pending`) plus a `CHANGELOG.md` claim entry, committed (`edae2611`).
+**(4)** Stated understanding back to the user, declaring TDD phase N/A (no code/tests
+planned). **(5)** Read the existing coverage first: `vignettes/manual_components/
+_pedigree_browser.Rmd` (the most complete, S553-updated narrative source -- fed into the PDF/
+Word manual, not pkgdown), `vignettes/articles/colony-manager-guide.qmd`'s own "Diagram view"
+paragraph (found stale -- still said "one node per animal... directed sire/dam edges,"
+predating the Option 2 mating-unit convention), and `vignettes/a2interactive.Rmd`'s "Pedigree
+Diagram" section (the script-callable API deep dive, already thorough and current). **(6)**
+Wrote `vignettes/articles/pedigree-diagram-screenshots.R`, a new `shinytest2::AppDriver`
+screenshot-generation script (matching `colony-manager-guide-screenshots.R`'s own
+conventions, one fresh `AppDriver` per bundled fixture rather than one shared session, since
+each screenshot needs a different `obfuscated_rhesus_mhc_ped*.csv` example). First pass
+(5 screenshots against the full 375-animal fixtures) was functionally correct but visually
+illegible -- fixed by narrowing each fixture to a small (3-7 animal) feature-relevant
+subgraph via the tab's own existing Focal Animals + Trim Pedigree controls before capturing
+(a specific known consanguineous sire/dam pair found via `kinship(sire,dam) > 0` computed
+directly against the raw fixture; all 3 declared twin pairs from the twin-relations fixture
+at once). A 6th planned "consanguineous marker close-up" screenshot was abandoned after
+direct JS/canvas-position queries confirmed the marked edge is geometrically occluded by its
+own endpoint node's rendered radius at every zoom level tested (1.5x-13x) -- a real property
+of the live diagram's own vis.js rendering, not a screenshot artifact -- resolved by
+describing the marker honestly in prose instead of presenting a misleading close-up. **(7)**
+Wrote the article (203 lines, 9 sections: Overview, Node shapes/legend, Diagram Edge Style,
+Consanguineous marker, Affected-status shading, Showing names, Twin/zygosity relations,
+Interacting with the diagram, Script-callable equivalent, See also), cross-linking to
+`colony-manager-guide.qmd` and `a2interactive.Rmd` in both directions. Fixed 3 issues found
+during a `quarto render` verification pass: `[text](@sec-x)` markdown-link-wrapped crossrefs
+don't resolve (only bare `@sec-x`/`(@sec-x)` do) -- replaced all with plain prose pointers
+instead, since no sibling article in this project uses quarto's numbered-crossref feature and
+introducing "(Section N)" links pointing at un-numbered headings would have been an
+inconsistent, confusing one-off; a fabricated companion-vignette title ("Building blocks:
+interactive R workflows") that doesn't match `a2interactive.Rmd`'s real title ("Interactive
+Use of nprcgenekeepr"); one line-wrap artifact from an earlier edit. **(8)** Updated
+`colony-manager-guide.qmd`: fixed its own stale "one node per animal... directed sire/dam
+edges" opening sentence to describe the actual mating-unit convention and `edgeStyle`
+toggle, added a twin-connectors mention and a pointer to the new article, added the new
+article to the Section 2 function-group table's row 2 (Pedigree Browser), and refreshed the
+regenerated `pb_diagram_legend.png`'s alt text (now includes the Affected legend row).
+Updated `a2interactive.Rmd`'s own existing cross-reference to point to the new dedicated
+article instead of `colony-manager-guide.qmd`'s paragraph. **(9)** Verification: `quarto
+render` on both `.qmd` files (clean, both build-ignored via `^vignettes/articles$` in
+`.Rbuildignore` so neither touches `R CMD check`); a targeted `rmarkdown::render()` on
+`a2interactive.Rmd` (the one REAL, non-ignored CRAN vignette touched) confirmed it still
+knits cleanly end-to-end; `lintr::lint_package()` 0 lints (the new `.R` script lives under
+`vignettes/`, which `.lintr`'s own `exclusions` list already excludes from scope). Phase 3E
+runtime smoke test: N/A, stated explicitly -- no R/ package code changed, nothing to launch.
+**(10)** Logged `PROJECT_LEARNINGS.md` Learning 566 (the screenshot-legibility fix + the
+node-radius-occlusion geometry finding) and refreshed `CLAUDE.md`'s learnings-count pointer
+(566, ~2.3 MB).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A (no new statistic/
+estimator); tutorial/article checklist -- this session's deliverable IS that checklist's
+target; `NEWS.Rmd` checklist N/A (no new exported function/Shiny control, pure documentation);
+`a2interactive.Rmd` checklist N/A (updated an existing cross-reference, not a new function/
+parameter); GitHub issue close-out N/A (BACKLOG.md item, no issue number); lint checklist --
+ran, 0 lints (file excluded by `.lintr` config regardless); `_pkgdown.yml` reference-coverage
+checklist N/A (no new exported function, and this project has no `_pkgdown.yml` at all --
+confirmed via repo-wide search).
+
+**Self-assessment (Session 560): 9/10.** **Strengths:** (1) Read the 3 existing coverage
+surfaces (`_pedigree_browser.Rmd`, `colony-manager-guide.qmd`, `a2interactive.Rmd`) before
+writing anything, avoiding both duplication and contradiction with what already existed --
+directly caught `colony-manager-guide.qmd`'s own stale opening sentence this way. (2) Did not
+accept the first screenshot pass as "good enough" -- recognized illegibility as a real defect
+against the deliverable's actual purpose (documentation a reader can see) and iterated to a
+concrete fix (trim to a feature-relevant focal set) rather than shipping technically-correct-
+but-useless images. (3) When the consanguineous-marker close-up genuinely could not be made
+to work, verified WHY via direct JS/canvas-position queries rather than guessing or quietly
+shipping a misleading image, then made the honest call to describe the limitation in prose --
+matching this project's own standing "report the real state, don't fabricate" discipline.
+(4) Verified render-correctness with the actual build tool (`quarto render`) rather than
+trusting the markdown by eye, which caught 2 real defects (broken crossref syntax, a
+fabricated vignette title) before they shipped. (5) Confirmed the actual build-ignore/lint
+scope (`.Rbuildignore`, `.lintr`) rather than assuming the close-out checklists' file-touching
+triggers applied, avoiding both a skipped real check (the a2interactive.Rmd render) and an
+unnecessary one (a full `devtools::check()` for a change with zero R/ package-code surface).
+**Weaknesses:** (1) The first screenshot pass (full 375-animal fixtures, no trimming) was a
+predictable mistake in hindsight -- the same illegibility problem `a2interactive.Rmd`'s own
+existing prose already explains ("too dense for a single static demonstration to usefully
+show every feature at once," its stated reason for using a small synthetic pedigree instead)
+was sitting in a file this session read early on, before the first capture attempt; catching
+that connection sooner would have saved a full capture-and-review cycle. (2) No independent
+adversarial-verification pass beyond the tool's own render checks and this session's own
+manual screenshot review -- the same standing gap flagged across many consecutive prior
+sessions, here even more relevant since prose-accuracy claims (e.g. exact hex colors, exact
+node-cap numbers) were self-verified against source rather than checked by a second reader/
+agent. (3) Did not push the now 44+ local commits to `origin` -- left for the owner/a future
+session, matching the repeatedly-deferred precedent from S548 onward.
+**Ledger:** recorded in `CHANGELOG.md` (this session's reconcile, claim, deliverable, and
+close-out entries).
 
 ### Session 558 Handoff Evaluation (by Session 559)
 **Score: 9/10.** **What helped:** the `next_steps` field named this exact item verbatim as

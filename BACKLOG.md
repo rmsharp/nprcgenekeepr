@@ -292,47 +292,25 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       the canonical design's own deferred H4 remedy (`docs/planning/ledger-trimmer-design.md`
       §10.2, "the lever is receipt size, and the mechanism would be a norm plus a check, not
       an archiver") is worth adopting for `CHANGELOG.md` specifically.
-- [ ] **`vignettes/articles/colony-manager-guide.qmd`'s Diagram-tab screenshot
-      (`pb_diagram_legend.png`) is now visually stale** (found S461, Effort S)
-      -- its surrounding prose still says "one node per animal... directed
-      sire/dam edges," and the embedded PNG shows the pre-Option-2 render, but
-      the Diagram tab now renders the kinship2-style mating-unit/duplicate-node
-      convention (S461). The "1,500 animals" number in this same paragraph was
-      already fixed to 750 this session (a text-only change independent of the
-      screenshot). Deferred rather than fixed this session (re-capturing a live
-      screenshot -- upload the fixture, navigate tabs, screenshot, re-render the
-      `.qmd` -- was judged disproportionate to a same-session text fix; the
-      `vignettes/manual_components/_pedigree_browser.Rmd` component, which has
-      no screenshot, WAS fully updated this session, satisfying the tutorial/
-      article checklist's own "and/or" allowance). A future session should
-      re-capture `pb_diagram_legend.png` (and update the surrounding prose to
-      describe mate-lines/duplicate nodes) against the live app.
-- [ ] **Write a dedicated article on the Pedigree Diagram tab covering all of its
-      current features** (owner-directed, found S544, 2026-08-13, READY, Effort M) --
-      the existing coverage is a paragraph in `colony-manager-guide.qmd`'s "Diagram
-      view" section plus the `_pedigree_browser.Rmd` shape-to-sex legend (issue #139,
-      resolved S455, 2026-08-02), written before most of the tab's current capability
-      shipped. Since then the tab has gained: the Option 2 kinship2-parity
-      mating-unit/duplicate-node layout (issues #142-144, S465-473); mate-line/
-      sibship-bar rendering; twin/zygosity encoding (issue #137); affected-status
-      shading (issue #133); node-label name display (issue #136); sire/dam
-      left-right placement (issue #145); rectilinear vs. curved `edgeStyle` edge
-      rendering (issue #142 follow-up, S506); the "Select by id" search dropdown +
-      hover-highlight (S443); click-to-navigate; PNG export; and the node cap (now
-      750, not the paragraph's stale 1,500). A full standalone article -- not just an
-      extended paragraph -- would give this feature set the same documentation depth
-      as other major tabs get in `vignettes/articles/colony-manager-guide.qmd`, and
-      would subsume the stale-screenshot item directly above (a full rewrite
-      naturally re-captures `pb_diagram_legend.png` against the current render rather
-      than patching the existing paragraph in place). Not scoped or written this
-      session (found via a mid-turn user request during an unrelated CI-diagnosis
-      session; logged per the owner's explicit ask, not implemented, to keep this
-      session's TDD-gated deliverable to its one already-approved scope). A future
-      session should inventory the tab's full current feature set against the live
-      app (matching the Diagram-tab audit precedent in
-      `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`) before
-      drafting, and follow the tutorial/article documentation checklist
-      (`CLAUDE.md`, Session 436).
+- [ ] (found S461, **RESOLVED S560**. **Stale `pb_diagram_legend.png` screenshot and its
+      surrounding pre-Option-2 prose in `colony-manager-guide.qmd`.** Regenerated the
+      screenshot against a small, legible, real 6-animal subgraph (the Option 2
+      mating-unit/duplicate-node convention, incl. a consanguineous marker); rewrote the
+      paragraph's opening sentence to describe the mating-unit convention and the
+      `edgeStyle` toggle, and added a twin-connectors mention. See `CHANGELOG.md`.)
+- [ ] (owner-directed, found S544, **RESOLVED S560**. **New dedicated article,
+      `vignettes/articles/pedigree-diagram.qmd`, covering the Pedigree Diagram tab's full
+      current feature set** (node shapes/legend, `edgeStyle` direct vs. rectilinear,
+      consanguineous marker, affected-status shading, name labels, twin/zygosity
+      relations and their app-wide kinship correction, hover/click/search/PNG-export
+      interaction, and the script-callable `makePedigreeMatingLayout()`/
+      `visNetwork::visNetwork()` equivalent) -- matches the established per-tab-article
+      convention (`age-sex-pyramid.qmd`, `genetic-value-analysis.qmd`,
+      `breeding-group-formation.qmd`), with 5 freshly-captured live-app screenshots via a
+      new `shinytest2::AppDriver` script (`pedigree-diagram-screenshots.R`). Cross-linked
+      from `colony-manager-guide.qmd`'s function-group table and `a2interactive.Rmd`'s own
+      "Pedigree Diagram" section. Subsumes the stale-screenshot item above. See
+      `CHANGELOG.md`.)
 - [ ] **iCloud "conflicted copy" duplicate `.R` files corrupt
       `devtools::document()`/`R CMD check` output** (found S461, Effort S,
       not a code defect) -- `R/appServer 2.R` and `R/modMarkerGenetics 2.R`

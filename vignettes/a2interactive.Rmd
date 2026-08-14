@@ -359,9 +359,10 @@ node/edge data in this convention, and __visNetwork::visNetwork__ (from the
 __visNetwork__ package, a dependency of __nprcgenekeepr__) renders it. (A
 simpler function, __makePedigreeDiagramData__, remains available for a plain
 one-node-per-animal diagram without this convention -- it is no longer what
-the Shiny app itself uses.) See the "Diagram view" part of the
-_colony-manager-guide_ article for the equivalent point-and-click workflow
-and screenshots.
+the Shiny app itself uses.) See the _pedigree-diagram_ article for the
+equivalent point-and-click workflow and screenshots of every feature --
+including affected-status shading, name labels, and twin/zygosity
+connectors, none of which this scripted walkthrough demonstrates.
 
 That parent-to-mating-to-child connector has two available routings,
 selected by __makePedigreeMatingLayout__'s _edgeStyle_ argument:

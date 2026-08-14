@@ -138,6 +138,45 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-N] S560 close-out: Pedigree Diagram article shipped; S559 handoff evaluation; Learning 566 logged
+- **Deliverable:** Session S560's own close-out. Evaluated S559's `HANDOFFS.md` receipt
+  (9/10 -- its `next_steps` field named this exact item verbatim as item 1 of its priority
+  list, followed as the literal picked option; nothing found inaccurate; `gotchas` had no way
+  to anticipate this session's screenshot-legibility pitfall, not a real gap). Self-assessed
+  9/10 (full breakdown in `SESSION_NOTES.md`/`HANDOFFS.md`). Logged
+  `PROJECT_LEARNINGS.md` Learning 566 (screenshot-legibility fix via focal-animal trimming +
+  the node-radius/edge-length occlusion geometry finding) and refreshed `CLAUDE.md`'s
+  learnings-count pointer (560+ sessions, 566 learnings, ~2.3 MB). Compressed both resolved
+  `BACKLOG.md` Housekeeping items (the S461 stale-screenshot item and this session's own
+  S544 article item) to the file's established short-pointer convention.
+
+### 2026-08-13 · [BL-N] S560: write vignettes/articles/pedigree-diagram.qmd (new dedicated Pedigree Diagram tab article)
+- **Deliverable:** New dedicated article `vignettes/articles/pedigree-diagram.qmd` (9
+  sections: Overview, Node shapes/legend, Diagram Edge Style, Consanguineous marker,
+  Affected-status shading, Showing names, Twin/zygosity relations, Interacting with the
+  diagram, Script-callable equivalent, See also) documenting the Pedigree Diagram tab's full
+  current feature set, matching the established per-tab-article convention
+  (`age-sex-pyramid.qmd`/`genetic-value-analysis.qmd`/`breeding-group-formation.qmd`).
+  New `vignettes/articles/pedigree-diagram-screenshots.R` (a `shinytest2::AppDriver`
+  screenshot-generation script, one fresh `AppDriver` per bundled example fixture) produced 5
+  screenshots, each trimmed to a small feature-relevant subgraph via the Diagram tab's own
+  Focal Animals + Trim Pedigree controls (a first full-fixture pass was functionally correct
+  but visually illegible -- see Learning 566). Regenerated `pb_diagram_legend.png` in place
+  (Option 2 mating-unit convention, resolving the S461 stale-screenshot item) and fixed
+  `colony-manager-guide.qmd`'s own stale pre-Option-2 opening sentence, added a twin-
+  connectors mention and a pointer to the new article, and added the new article to the
+  Section 2 function-group table (row 2, Pedigree Browser). Updated `a2interactive.Rmd`'s own
+  cross-reference to point to the new article instead of `colony-manager-guide.qmd`'s
+  paragraph. **Verification:** `quarto render` clean on both `.qmd` files (both fully
+  build-ignored via `^vignettes/articles$` in `.Rbuildignore`, so neither reaches
+  `R CMD check`); a targeted `rmarkdown::render()` on `a2interactive.Rmd` (the one real,
+  non-ignored CRAN vignette touched) confirmed it still knits cleanly end-to-end;
+  `lintr::lint_package()` 0 lints (the new `.R` script lives under `vignettes/`, already
+  excluded from `.lintr`'s own scan scope). Phase 3E runtime smoke test: n/a, stated
+  explicitly -- no R/ package code changed. Not a TDD-gated session (documentation only).
+- **BACKLOG.md:** resolves both the S544 dedicated-article item and the S461
+  stale-screenshot item it subsumes (see close-out entry above for the compression).
+
 ### 2026-08-13 · [BL-N] S560: claim session (write vignettes/articles/pedigree-diagram.qmd)
 - **Deliverable:** Phase 1B claim stub only. Session 560 will write a new dedicated article,
   `vignettes/articles/pedigree-diagram.qmd`, documenting the Pedigree Diagram tab's full
