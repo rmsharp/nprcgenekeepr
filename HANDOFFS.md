@@ -132,6 +132,24 @@ This file currently holds **8** receipt(s). Computed by `methodology_trim.py` on
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S570
+date: 2026-08-14
+status: pending
+self_score:
+predecessor_score:
+active_task: Implement Track 1 (default unaffected fill to unfilled/white) from
+  docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md §4. Mating-unit dot
+  nodes stay NA (resolved via AskUserQuestion before RED).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S569
 date: 2026-08-14
 status: complete

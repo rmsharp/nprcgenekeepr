@@ -14,6 +14,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 570 Did
+**Deliverable:** Implement Track 1 (default unaffected fill to unfilled/white) from
+`docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §4. (IN PROGRESS)
+**Started:** 2026-08-14.
+**Status:** Session claimed. Work beginning. Scope decision resolved via `AskUserQuestion`
+before RED: mating-unit dot nodes stay `NA` (unconditional, matching the plan's own
+recommendation) -- not given an explicit fill.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 568 Handoff Evaluation (by Session 569)
 **Score: 9/10.** **What helped:** the handoff's `next_steps` field named 5 concrete pickup
 candidates with tags/effort, and its `gotchas` field (`.Rbuildignore` paren-free rule,
