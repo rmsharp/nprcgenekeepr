@@ -132,6 +132,24 @@ This file currently holds **8** receipt(s). Computed by `methodology_trim.py` on
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S571
+date: 2026-08-14
+status: pending
+self_score:
+predecessor_score:
+active_task: Implement Track 3 (minimum mate-spacing guarantee) from
+  docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md §Track 3. Owner-picked
+  via AskUserQuestion over Track 4 design session / issue #148 scoping / LabKey follow-up.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S570
 date: 2026-08-14
 status: complete

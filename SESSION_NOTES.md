@@ -14,6 +14,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 571 Did
+**Deliverable:** Implement Track 3 (Minimum mate-spacing guarantee) from
+`docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §Track 3. (IN PROGRESS)
+**Started:** 2026-08-14. **Status:** Session claimed. Work beginning -- Phase 0 orient complete
+(Health 96/100, 0 High+ risk, ledger frontiers == HEAD, scheduled `shinytest2.yaml` red a 2nd
+consecutive day, reported not diagnosed). Owner picked Track 3 via `AskUserQuestion` over Track 4
+design session / issue #148 scoping / LabKey follow-up.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 569 Handoff Evaluation (by Session 570)
 **Score: 9/10.** **What helped:** the handoff's `next_steps` field named Track 1 and Track 3 as
 concrete, well-scoped candidates ready for a direct PRE-RED->RED->GREEN cycle, and precisely
