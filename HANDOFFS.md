@@ -128,32 +128,93 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
-This file currently holds **6** receipt(s). Computed by `methodology_trim.py` on every
+This file currently holds **8** receipt(s). Computed by `methodology_trim.py` on every
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
 session: S566
 date: 2026-08-14
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: File 3 GitHub issues (kinship2 supplement Tracks A/B/C, all now complete),
-  each filed then closed citing its commit/CHANGELOG entry; publish a new numeric+graphic
-  fidelity validation article (vignettes/articles/kinship2-fidelity-validation.qmd)
-  comparing nprcgenekeepr's Track A/B/C outputs against kinship2's own reference outputs,
-  matching the fg-se-validation.qmd precedent.
-what_was_done: pending
-next_steps: pending
-key_files: docs/planning/kinship2-supplement-full-reproduction-plan.md (the plan being
-  closed out); vignettes/articles/fg-se-validation.qmd (the validation-article
-  precedent); R/kinship.R (Track A), R/shrinkPedigree.R (Track B),
-  R/makePedigreeDiagramData.R (Track C, .addRectilinearWaypoints())
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: File 3 GitHub issues (kinship2 supplement Tracks A/B/C, all now complete)
+  and publish a numeric+graphic fidelity validation article comparing nprcgenekeepr
+  against kinship2 -- DONE, closing out the whole kinship2 supplement
+  full-reproduction plan.
+what_was_done: Filed and closed 3 GitHub issues (#156 Track A, #157 Track B, #158
+  Track C), each citing its implementing commit and this session's own independent
+  re-verification. New data-raw/kinship2FidelityValidation.R computes each track's
+  numeric/graphic comparison live against the installed (non-dependency) kinship2
+  1.9.6.2, reusing each track's own already-committed test fixture verbatim, and
+  writes 8 PNGs. New vignettes/articles/kinship2-fidelity-validation.qmd (matching
+  fg-se-validation.qmd's precedent) embeds the results as frozen tables/images --
+  ALL 3 tracks came back exact matches (Track A: 0 max-abs-diff across 200 kinship
+  matrix cells; Track B: identical surviving-subject-set and bitSize trajectory;
+  Track C: same consanguineous union flagged under both edge styles). Caught and
+  fixed 2 real bugs by re-running and inspecting actual output: a kinship2
+  sex-validation mismatch in 2 fixtures, and a %in%/NA-comparison defect that
+  silently inflated an edge count from 2/3 to 14/10 (would have shipped wrong
+  numbers if not caught). Fixed a Quarto _files-suffix directory-naming collision
+  found via an actual failed render. lintr::lint_package() 0 lints (24 fixed);
+  spelling::spell_check_package() 0 new flags (4 words added to inst/WORDLIST, 1
+  resolved by rewording); devtools::check() 0 errors/1 warning+1 note, both
+  confirmed pre-existing/unrelated. Updated BACKLOG.md (RESOLVED) and _pkgdown.yml
+  (new article registered in the articles: contents: list). Commits: 53bd647a
+  (claim) + this close-out commit.
+next_steps: The kinship2 supplement full-reproduction plan
+  (docs/planning/kinship2-supplement-full-reproduction-plan.md) is now FULLY closed
+  out -- all 3 tracks implemented, tested, issue-tracked, and independently
+  fidelity-verified against kinship2. No further work is owed on it. Separately,
+  2 items carried forward unchanged: (1) the kinship2 supplement PDF
+  (inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf) remains
+  untracked -- a copyright/licensing decision still owed to the owner. (2) An
+  incidental finding this session: _pkgdown.yml's articles: contents: list is
+  missing articles/pedigree-diagram (every other article, including this
+  session's new one, is listed) -- not fixed (out of scope), logged as a new
+  BACKLOG.md Housekeeping item; a future session should confirm whether this
+  actually affects the live site's navbar/discoverability before treating it as
+  more than cosmetic. BACKLOG.md priorities otherwise unchanged: LabKey (BLOCKED,
+  Effort M), NPRC outreach (DECISION NEEDED, Effort N/A), issue #148 (DECISION
+  NEEDED -- needs its own scope-narrowing conversation first).
+key_files: vignettes/articles/kinship2-fidelity-validation.qmd (the full article);
+  data-raw/kinship2FidelityValidation.R (the reproducible generator script, 0
+  lints); vignettes/articles/kinship2-fidelity-validation-img/ (8 generated PNGs);
+  BACKLOG.md (kinship2 plan tracker item, now RESOLVED); _pkgdown.yml:59 (new
+  articles: entry); inst/WORDLIST (4 new words).
+gotchas: (1) Quarto reserves the exact directory name "<qmd-basename>_files/" for
+  its own knitr output -- a hand-populated directory of that name collides with
+  the render-time freezer/copy logic (a WalkError, confirmed hands-on). Name
+  hand-populated asset directories something else (this session used "-img"
+  suffix, matching pedigree-diagram-screenshots.R's own plain SHOT_DIR
+  convention). (2) `x %in% "literal"` and `x == "literal"` BOTH produce NA (not
+  FALSE) for an NA left-hand side -- naive `df[cond, ]` indexing on an NA-heavy
+  column (e.g. an optional "color" column, NA for every unmarked row) silently
+  keeps one all-NA row per NA instead of dropping it, inflating the row count.
+  Always guard explicitly: `!is.na(x) & x == "literal"`. Caught this session only
+  by re-running and inspecting output after a lintr-suggested %in%->== rewrite,
+  not by trusting the fix. (3) kinship2::pedigree()'s dadid=male/momid=female
+  validation is STRICTER than nprcgenekeepr's own sire/dam columns (which carry
+  no such constraint) -- a committed nprcgenekeepr test fixture may list an
+  individual as "sire" in one row despite a different declared sex, and
+  kinship2::pedigree() will reject it outright. Swap just that row's 2
+  parent-column values for the kinship2-side object only if this recurs; never
+  alter the nprcgenekeepr-side fixture itself. (4) fg-se-validation.qmd's own
+  creation has ZERO NEWS.Rmd mentions (grep confirms) -- this class of pure
+  validation-article deliverable is not NEWS-worthy by established precedent, not
+  just by inference; don't add one reflexively.
+runtime_smoke: No live shinytest2/chromote app run -- this deliverable is
+  script-callable/documentation only (no Shiny UI change). The article's own
+  graphics WERE generated via a real chromote screenshot pipeline
+  (visNetwork widget -> saved HTML -> chromote screenshot), confirmed working by
+  visually inspecting all 8 resulting PNGs before embedding them, and the
+  package's own devtools::check() (which runs the full test suite) came back
+  0 errors.
+changelog_ref: CHANGELOG.md, S566 entries (claim + close-out, both [BL-N]-tagged)
 commit: pending
 ```
-<in progress -- claim stub only, full receipt written at close-out>
+<Full close-out receipt. See SESSION_NOTES.md's own Session 566 entry for the
+complete narrative and self-assessment breakdown -- this block is the durable,
+machine-checkable summary of the same session.>
 
 ```handoff
 session: S565

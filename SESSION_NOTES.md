@@ -14,19 +14,151 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 565 Handoff Evaluation (by Session 566)
+**Score: 9/10.** **What helped:** `next_steps` explicitly named "the owner may want to file one
+(or three) [GitHub issues] retroactively" -- directly anticipating the GitHub-issue-filing half
+of this session's own deliverable before the owner asked for it. The established "kinship2 is
+not a Suggests dependency -- cross-validate live during Pre-RED/interactively, hardcode the
+verified results, never call `kinship2::` from committed code" precedent (restated in this
+handoff's `what_was_done` and traceable through S563/564/565's own test files) was directly
+load-bearing: it is exactly the discipline this session's own
+`data-raw/kinship2FidelityValidation.R` had to follow (kinship2 installed locally, run offline,
+never added as a dependency, its results embedded as static images/tables in the article rather
+than recomputed at render time). The `.lintr` camelCase-allowed gotcha and the "verify an
+implementation-following lint fix by re-running, don't trust it blindly" spirit of gotcha (2)
+(about test-transcription completeness) both generalized correctly into this session's own work
+(see self-assessment below). **What was missing:** nothing S565 should have anticipated -- the
+specific "also build a fidelity-validation article" request came from the owner mid-session, not
+predictable from S565's own scope. Two genuinely new gotchas surfaced this session that no prior
+handoff could have named: Quarto reserves a `<basename>_files/` directory name for its own
+knitr output, and a pre-populated directory of that exact name collides with the render-time
+freezer (`WalkError`); and `x %in% "literal"`/`x == "literal"` both produce `NA`, not `FALSE`,
+for an `NA` left-hand side, which silently inflates `data.frame[cond, ]` row counts via
+all-`NA` rows unless explicitly guarded -- both are now recorded below for the next session.
+**What was wrong:** nothing identified. **ROI:** High.
+
 ### What Session 566 Did
-**Deliverable:** File 3 GitHub issues (one each for kinship2 supplement Tracks A [X-chromosome
-kinship], B [`shrinkPedigree()`], C [consanguineous-marker edge propagation], all now complete),
-each filed then closed citing its commit/`CHANGELOG.md` entry; and publish a new
-numeric+graphic fidelity validation article, `vignettes/articles/kinship2-fidelity-
-validation.qmd` (matching the `fg-se-validation.qmd` precedent), comparing nprcgenekeepr's Track
-A/B/C outputs directly against kinship2's own reference outputs -- numeric tables plus rendered
-pedigree-diagram graphics. (IN PROGRESS)
-**Started:** 2026-08-14
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Filed 3 GitHub issues (one each for kinship2 supplement Tracks A [X-chromosome
+kinship, `#156`], B [`shrinkPedigree()`, `#157`], C [consanguineous-marker edge propagation,
+`#158`], all now complete), each filed then immediately closed citing its implementing commit and
+verification evidence; and published a new numeric+graphic fidelity validation article,
+[`vignettes/articles/kinship2-fidelity-validation.qmd`](vignettes/articles/kinship2-fidelity-validation.qmd)
+(matching the `fg-se-validation.qmd` precedent), comparing nprcgenekeepr's Track A/B/C outputs
+directly against a live, installed kinship2 1.9.6.2 -- numeric tables plus 8 rendered PNG images
+(kinship-matrix heatmaps, before/after `shrinkPedigree()` pedigree diagrams, and direct/
+rectilinear consanguineous-marker diagrams from both packages). **DONE.**
+**Started/Completed:** 2026-08-14. **Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SESSION_RUNNER.md`, `SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, `git status`/`log`/`diff --stat` [60 commits ahead of
+`origin/master`, unpushed], `methodology_dashboard.py` [Health 96/100, 0 High+ risk],
+`gh run list --branch master --limit 10` [push-triggered workflows green; scheduled
+`shinytest2.yaml` newly red 2 consecutive runs, 2026-08-12/13, after 8 prior green -- reported,
+not diagnosed], ledger reconcile [`CHANGELOG.md`/`HANDOFFS.md` frontiers both == `HEAD`, no gap];
+individually assessed all 6 untracked files (none read as an undocumented deliverable -- the
+kinship2 supplement PDF and a `.qmd` render byproduct were already-known/flagged, the 3
+"Compounding Loop" files + 1 Office lock file read as the owner's own saved reference material,
+no matching issue/session claim). Rendered a 2-item priorities list via `AskUserQuestion` --
+owner picked "file GitHub issues for kinship2 supplement Tracks A/B/C." **(2)** Owner then
+directed (free text) the deliverable be expanded to also include a numeric+graphic fidelity
+validation article; a follow-up `AskUserQuestion` resolved the issue-filing approach (3 separate
+issues, filed then closed, matching the #142/#143/#144 precedent) before work began. **(3)**
+Phase 1B: claim stubs written to `SESSION_NOTES.md`/`HANDOFFS.md`/`CHANGELOG.md`, committed
+(`53bd647a`). **(4)** No TDD phase-gate applies to this deliverable -- no production `R/` code
+changed; all 3 tracks' own implementation, tests, and TDD cycles were completed in prior sessions
+(S563/564/565). This session's work is documentation/verification only (a new `data-raw/*.R`
+script and a new `vignettes/articles/*.qmd`), the same class of deliverable as
+`fg-se-validation.qmd`'s own creation, which likewise required no RED/GREEN/REFACTOR gate. **(5)**
+Reused each track's own already-committed, already-verified test fixtures verbatim (`fam1` from
+`test_kinship.R`; the 16-subject composite fixture from `test_shrinkPedigree.R`; the 9-subject
+dogleg fixture from `test_makePedigreeMatingLayout.R`) rather than inventing new ones, so every
+number in the article traces to a fixture already proven correct, not a fresh, unverified
+construction. Wrote `data-raw/kinship2FidelityValidation.R`: computes each track's comparison
+live against the installed (non-dependency) kinship2 1.9.6.2, writes 8 PNGs (a base-R heatmap
+grid for Track A; `kinship2::plot.pedigree()` PNGs plus `chromote`-screenshotted
+`makePedigreeMatingLayout()`/`visNetwork` PNGs for Tracks B/C). **(6)** 2 real bugs caught and
+fixed by re-running and inspecting actual output, not by trusting a fix's plausibility: (a)
+`kinship2::pedigree()`'s stricter sire=male/dam=female validation rejected the Track B and C
+fixtures' own `sex` values as originally guessed -- fixed by deriving `sex` from each fixture's
+own inherited sire/dam roles (Track B) and by swapping one row's 2 parent-column values for the
+kinship2-side object only, leaving the nprcgenekeepr-side fixture exactly as committed (Track C);
+(b) a `lintr`-suggested `%in%` -> `==` rewrite of the Track C edge-marking check silently
+inflated the "marked edges" count from 2/3 to 14/10 by producing `NA` rows for the many `NA`-color
+(unmarked) edges -- caught only because the script's own printed summary was re-inspected after
+the "fix," not assumed correct; fixed with an explicit `!is.na(...) & ... == ...` guard. **(7)**
+`quarto render` first failed with a `WalkError` -- the image directory's original name
+(`kinship2-fidelity-validation_files`) collided with Quarto's own reserved
+`<basename>_files/` output-directory convention; renamed to `kinship2-fidelity-validation-img/`
+(matching `pedigree-diagram-screenshots.R`'s own plain, non-suffixed directory-naming precedent),
+confirmed clean render + all 8 image references resolve + 0 broken cross-refs. **(8)** Verified,
+iteratively: `lintr::lint_package()` found 24 lints in the new script (implicit-integer literals,
+`paste(..., collapse=", ")` vs. `toString()`, the `%in%`/NA defect above, an unnecessary
+`library(visNetwork)`/`library(htmlwidgets)` when every call was already namespace-prefixed, and
+a SCREAMING_CASE `OUT_DIR` that doesn't match this project's allowed `snake_case`/`CamelCase`/
+`camelCase` styles) -- all fixed, re-verified 0 lints; `spelling::spell_check_package()` found 5
+new words (`ncol`, `NIHMS`, `nprcgenekeepr's`, `PMC`, `reconstructible`) -- 4 added to
+`inst/WORDLIST` in `LC_ALL=C` byte-order position, the 5th resolved by rewording to the
+already-accepted `reconstructable` instead of adding a near-duplicate; `devtools::check()` 0
+errors, 1 warning + 1 note, both confirmed pre-existing and unrelated to this session's diff (the
+already-untracked "Compounding Loop" files' non-portable names; a pre-existing `vignettes/figure/`
+knitr leftover) -- matching every recent session's own identical finding. **(9)** Filed 3 GitHub
+issues (`#156`/`#157`/`#158`), each citing its track's implementing commit and this article's own
+independent re-verification; closed all 3 immediately, matching the owner-confirmed approach.
+**(10)** Close-out: updated `BACKLOG.md`'s kinship2 plan tracker item to RESOLVED with the full
+issue/article summary; added `articles/kinship2-fidelity-validation` to `_pkgdown.yml`'s explicit
+navbar `contents:` list (a real, established convention this session's own new article had to
+join); logged an incidental, unfixed finding (`pedigree-diagram.qmd` itself is missing from that
+same `contents:` list, found while adding the new entry -- reported, not fixed, per the
+established "report, don't fix mid-session" precedent).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A (no new displayed
+statistic -- this session validates existing statistics against a reference, adds none). Tutorial/
+article documentation checklist N/A (no new Shiny UI feature). `NEWS.Rmd` entry checklist N/A --
+confirmed by direct precedent, not just inference: `fg-se-validation.qmd`'s own creation (the
+article this session's structure is modeled on) has zero `NEWS.Rmd` mentions either
+(`grep -i "fg-se-validation" NEWS.Rmd` returns nothing). `a2interactive.Rmd` checklist N/A (no new
+exported function or parameter shipped this session -- Track A/B/C's own new
+functions/parameters were already flagged in S564/S565's own handoffs as a future deferred-pass
+trigger; unchanged by this session). GitHub issue close-out checklist DONE (3 issues filed and
+closed in-session, citing commit + verification evidence, matching the #142/#143/#144
+precedent). Lint checklist DONE (0 lints on the touched `.R` file, no suppressions needed).
+`_pkgdown.yml` reference-coverage checklist DONE in spirit -- no new exported function (N/A to
+the letter of the checklist), but the new article was added to the `articles:` `contents:` list
+for the same reason the checklist exists (discoverability of new pkgdown-relevant content).
+
+**Self-assessment (Session 566): 8/10.** **Strengths:** (1) Followed the established
+"kinship2 is not a dependency" discipline correctly and by design, not by accident -- the script
+runs kinship2 offline/interactively and the article embeds frozen results, exactly matching
+`fg-se-validation.qmd`'s own precedent, rather than reaching for the simpler-looking but
+precedent-violating option of adding kinship2 as a live Suggests dependency. (2) Reused every
+track's own already-committed, already-verified test fixture verbatim rather than constructing
+new ones, so this article's evidence is anchored to fixtures already proven correct by 3 prior
+sessions' own TDD cycles, not a fresh and separately-fallible construction. (3) Caught 2 real,
+non-cosmetic bugs (the kinship2 sex-validation mismatch; the NA-comparison edge-count inflation)
+by actually re-running the script and inspecting its printed output after each change, not by
+assuming a plausible-looking fix worked -- the second one in particular would have silently
+shipped wrong numbers (14/10 instead of 2/3) into a public-facing validation article if not
+caught. (4) Caught the Quarto `_files`-suffix directory collision by actually running
+`quarto render` rather than assuming a directory name was safe. (5) Did not stop at "the numbers
+match" -- generated and visually inspected all 8 images before embedding them, confirming they
+show what the prose claims (e.g., that both packages independently converge on a duplicate-node
+convention for a multi-union individual, a detail only visible by looking at the actual kinship2
+plot, not assumed from its documentation). **Weaknesses:** (1) Did not explicitly declare a
+TDD-phase status ("no TDD phase -- documentation/validation deliverable") at the top of every
+individual response during execution, only reasoned about it once, internally, before starting
+work -- `CLAUDE.md`'s enforcement rule ("declare the current phase at the top of every response")
+was satisfied in substance (no production code was written without a phase gate) but not in the
+letter of turn-by-turn declaration. (2) 2 avoidable rounds of rework (the kinship2 sex-validation
+fixture fix; the lint-suggested-fix regression) that a closer initial reading of kinship2's own
+`pedigree()` validation rules and a more skeptical read of the `scalar_in_linter`'s own NA warning
+text before applying its suggested rewrite could have avoided on the first pass. (3) No
+independent adversarial verification of this session's own numbers beyond re-running the script
+itself and visually inspecting the resulting images -- same standing gap flagged across many
+prior sessions' own self-assessments. (4) Did not push the now 62 local unpushed commits --
+matches established precedent (left for the owner), but worth flagging again given the count
+keeps growing.
+**Ledger:** recorded in `CHANGELOG.md` (this session's reconcile, claim, deliverable, and
+close-out entries).
 
 ### Session 564 Handoff Evaluation (by Session 565)
 **Score: 9/10.** **What helped:** `next_steps` named Track B verbatim as the pickup

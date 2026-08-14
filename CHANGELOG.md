@@ -138,6 +138,44 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [BL-N] S566: close out (kinship2 supplement full-reproduction plan fully RESOLVED -- GitHub issues filed+closed, fidelity validation article published)
+- **Deliverable:** Filed and closed 3 GitHub issues (`#156` Track A/X-chromosome kinship,
+  `#157` Track B/`shrinkPedigree()`, `#158` Track C/consanguineous-marker propagation), each
+  citing its implementing commit (`7bbc6273`/`f68a24ff`/`89be00ca`) and this session's own
+  independent re-verification. New `data-raw/kinship2FidelityValidation.R` computes each
+  track's numeric/graphic comparison live against the installed (non-dependency) kinship2
+  1.9.6.2, reusing each track's own already-committed test fixture verbatim (`fam1` from
+  `test_kinship.R`; the 16-subject composite from `test_shrinkPedigree.R`; the 9-subject dogleg
+  fixture from `test_makePedigreeMatingLayout.R`), and writes 8 PNGs. New
+  `vignettes/articles/kinship2-fidelity-validation.qmd` (matching
+  `vignettes/articles/fg-se-validation.qmd`'s own precedent) embeds the results as frozen
+  tables/images -- **all 3 tracks came back exact matches**: Track A's autosomal and X-linked
+  kinship matrices are bit-for-bit identical to kinship2's own output (max abs diff = 0 across
+  200 compared cells); Track B's `shrinkPedigree()` reproduces kinship2's exact surviving
+  subject set and exact `bitSize` trajectory on a 16-subject fixture, shown as before/after
+  pedigree diagrams from both packages; Track C's consanguineous marker flags the same union
+  kinship2 flags under both edge styles (2 marked edges direct, 3 rectilinear). Caught and
+  fixed 2 real bugs by re-running and inspecting actual script output, not by trusting a
+  plausible-looking fix: kinship2's stricter sire=male/dam=female pedigree validation rejected
+  2 fixtures' guessed `sex` values (fixed without altering the nprcgenekeepr-side fixtures
+  themselves); a `lintr`-suggested `%in%` -> `==` rewrite silently inflated an edge count from
+  2/3 to 14/10 via `NA`-comparison rows (fixed with an explicit `!is.na()` guard) -- see
+  `PROJECT_LEARNINGS.md`-bound gotchas in `HANDOFFS.md`'s own S566 receipt. Also fixed a Quarto
+  `<basename>_files/`-suffix directory-naming collision found via an actual failed
+  `quarto render`. `lintr::lint_package()` 0 lints (24 fixed on the new script);
+  `spelling::spell_check_package()` 0 new flags (4 words added to `inst/WORDLIST`
+  `LC_ALL=C`-positioned, 1 resolved by rewording to an already-accepted synonym);
+  `devtools::check()` 0 errors, 1 warning + 1 note, both confirmed pre-existing/unrelated
+  (untracked "Compounding Loop" files' non-portable names; a pre-existing `vignettes/figure/`
+  knitr leftover). Updated `BACKLOG.md`'s kinship2 plan tracker item to RESOLVED with the full
+  summary; added `articles/kinship2-fidelity-validation` to `_pkgdown.yml`'s `articles:`
+  `contents:` navbar list. Incidentally found, reported (not fixed): that same list is missing
+  `articles/pedigree-diagram` -- logged as a new `BACKLOG.md` Housekeeping item. **The kinship2
+  supplement full-reproduction plan is now FULLY closed out** (all 3 tracks implemented S563-
+  S565, all 3 issue-tracked and independently fidelity-verified S566). See `SESSION_NOTES.md`,
+  `HANDOFFS.md`, `BACKLOG.md`.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-14 · [BL-N] S566: claim session (close out kinship2 supplement full-reproduction plan: file GitHub issues for Tracks A/B/C + publish a numeric+graphic fidelity validation article)
 - **Deliverable:** Phase 0 orient complete (Health 96/100, 0 High+ risk; `shinytest2.yaml`
   scheduled CI red 2 consecutive runs [2026-08-12, 2026-08-13] after 8 straight prior green,

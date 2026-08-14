@@ -308,8 +308,22 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       this repo, and Track B additionally had no PDF-printed worked example to check
       against at all (the PDF only names *which* subjects a shrink would trim, never
       their relationships) -- Track B verified against the installed
-      `kinship2::pedigree.shrink()` directly instead. None of the 3 tracks has a
-      GitHub issue yet.
+      `kinship2::pedigree.shrink()` directly instead. **RESOLVED S566:** filed and
+      closed 3 GitHub issues (#156 Track A, #157 Track B, #158 Track C), each citing
+      its implementing commit and verification evidence; published a new numeric+
+      graphic fidelity validation article,
+      [`vignettes/articles/kinship2-fidelity-validation.qmd`](../vignettes/articles/kinship2-fidelity-validation.qmd)
+      (matching the `fg-se-validation.qmd` precedent), running the SAME fixture from
+      each track's own committed test file through both packages, live, side by
+      side: Track A's autosomal and X-linked kinship matrices are bit-for-bit
+      identical to kinship2's own output (max abs diff = 0 across 200 compared
+      cells); Track B's `shrinkPedigree()` reproduces kinship2's exact surviving
+      subject set and exact `bitSize` trajectory on a 16-subject fixture, shown as
+      before/after pedigree diagrams from both packages; Track C's consanguineous
+      marker flags the same union kinship2 flags under both edge styles. Generated
+      by `data-raw/kinship2FidelityValidation.R` (kinship2 installed locally,
+      offline, matching the established "no new Suggests dependency" precedent) --
+      see that script's own header for the reproduction command. See `CHANGELOG.md`.
 - [ ] (**Track A above, DONE S564.** `kinship()` gained `chrtype = c("autosome", "x")`
       and `sex` arguments -- X-chromosome kinship (kinship2 supplement Table S2), core
       algorithm only per ratified D-A2 Option A (no propagation to
@@ -606,6 +620,18 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       2,501 lines (S529 start) -> 1,173 lines (S531 end), a 1,328-line/53% reduction across 3
       sessions, with zero information loss at any step (each session's own end-to-end re-read plus
       CHANGELOG.md/Learning/file-path cross-reference verification). See `CHANGELOG.md`.
+- [ ] (found S566, 2026-08-14, incidental to adding the kinship2 fidelity validation article to
+      `_pkgdown.yml`'s `articles:` `contents:` list, Effort S, not fixed this session) **`_pkgdown.yml`'s
+      explicit `articles: contents:` navbar-order list (added S409) is missing
+      `articles/pedigree-diagram`** -- every other article under `vignettes/articles/` (including the one
+      this session added) is listed; `pedigree-diagram.qmd` (added S560) is not, despite that session's own
+      close-out narrative claiming it followed "the established per-tab-article convention." Unclear whether
+      pkgdown still discovers and builds the page (just missing from the pinned navbar order) or drops it
+      from the site entirely -- not verified this session (out of scope, "report, don't fix mid-session"
+      precedent). A future session should confirm the actual site behavior (a local `pkgdown::build_site()`
+      or checking the live gh-pages deploy for the page) and, if missing from the navbar, add
+      `articles/pedigree-diagram` to the `contents:` list in the same alphabetical-ish position its
+      neighbors already establish.
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability-comparison audit (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`)

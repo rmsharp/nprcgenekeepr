@@ -58,6 +58,7 @@ articles:
   - articles/fg-se-validation
   - articles/genetic-value-analysis
   - gvaConvergence
+  - articles/kinship2-fidelity-validation
   - articles/offline-focal-animal-workflow
   - simulatedKValues
   - articles/studbook-quality-control
