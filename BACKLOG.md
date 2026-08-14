@@ -296,18 +296,20 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       only, deterministic tie-break [diverges from kinship2's own `runif()`
       non-determinism by design, ratified], the most novel of the 3, Effort L -- 2 of
       kinship2's own internal helpers [`excludeUnavailFounders`/`excludeStrayMarryin`]
-      were not yet deparsed by the plan, left as an explicit Pre-RED item); **Track C**
+      were not yet deparsed by the plan, left as an explicit Pre-RED item) -- **DONE
+      S565**, see below; **Track C**
       (finish the `edgeStyle="rectilinear"` consanguineous-marker color/width
       propagation from the deferred item directly above -- smallest of the 3, Effort S,
       no open design question) -- **DONE S563**, see the deferred-follow-up item above
       and `CHANGELOG.md`. Plan's own §6.2 suggests C -> A -> B pickup order
-      (smallest/lowest-risk first) but does not force it. **Track B remains open**
-      (Effort L). Verification caveat carried from the S549 audit: the full 17-subject
-      `fam1` pedigree still isn't reconstructible from this repo, and Track B
-      additionally has no PDF-printed worked example to check against at all (the PDF
-      only names *which* subjects a shrink would trim, never their relationships) --
-      Track B verifies against the installed `kinship2::pedigree.shrink()` directly
-      instead. None of the 3 tracks has a GitHub issue yet.
+      (smallest/lowest-risk first) but does not force it. **All 3 tracks are now
+      DONE** (C: S563, A: S564, B: S565). Verification caveat carried from the S549
+      audit: the full 17-subject `fam1` pedigree still isn't reconstructible from
+      this repo, and Track B additionally had no PDF-printed worked example to check
+      against at all (the PDF only names *which* subjects a shrink would trim, never
+      their relationships) -- Track B verified against the installed
+      `kinship2::pedigree.shrink()` directly instead. None of the 3 tracks has a
+      GitHub issue yet.
 - [ ] (**Track A above, DONE S564.** `kinship()` gained `chrtype = c("autosome", "x")`
       and `sex` arguments -- X-chromosome kinship (kinship2 supplement Table S2), core
       algorithm only per ratified D-A2 Option A (no propagation to
@@ -340,6 +342,59 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       the file's own established convention and the 5 pre-existing lints already in
       this file, confirmed via `git stash`, left untouched). Not filed as a GitHub
       issue, matching Track C's own precedent. See `CHANGELOG.md`.)
+- [ ] (**Track B above, DONE S565.** New `R/shrinkPedigree.R`:
+      `shrinkPedigree(ped, genotyped, affected = NULL, maxBits = 16L)`, a
+      `kinship2::pedigree.shrink()` equivalent over this package's own
+      `id`/`sire`/`dam` data-frame pedigree representation. All 8 of kinship2's own
+      internal helpers (`pedigree.shrink`, `bitSize`, `findUnavailable`,
+      `excludeUnavailFounders`, `excludeStrayMarryin`, `findAvailNonInform`,
+      `findAvailAffected`, `pedigree.trim`) were deparsed directly from the installed
+      namespace (1.9.6.2) at Pre-RED -- including the 2 the plan itself flagged as
+      not yet deparsed. 4 findings beyond the plan's own framing, all documented in
+      the function's own roxygen: (1) `excludeStrayMarryin` ignores `genotyped`
+      entirely -- any childless founder is removed unconditionally; (2)
+      `excludeUnavailFounders`'s real criterion requires the founder couple have
+      exactly one child together *and* neither parent married to anyone else,
+      confirmed by a live negative-case test; (3) kinship2's own
+      `all(x == 0, na.rm = TRUE)` non-informative-affected check treats `NA` the
+      same as unaffected; (4) a real, empirically-confirmed divergence -- kinship2's
+      own `pedigree()` constructor forbids a single-known-parent individual
+      ("Subjects must have both a father and mother, or have neither"), so its
+      algorithm never has to define that case, but this package's pedigrees allow
+      partial parentage as ordinary data (`getIdsWithOneParent()`); a literal port
+      would divide a zero-length vector and error, so `shrinkPedigree()` never marks
+      such an individual non-informative instead (documented, tested, no crash). A
+      5th finding: kinship2's own `idTrimmed`/`idList$affect` record only the single
+      trial candidate per affected-priority round even when its removal cascades
+      further (confirmed live: a fixture exists where kinship2's own `pedSizeFinal`
+      drops by 2 in one round but `idTrimmed` names only 1) -- `shrinkPedigree()`
+      deliberately fixes this, recording every id actually removed each round, so
+      `pedSizeOriginal - pedSizeFinal` always equals `length(idTrimmed)` (does not
+      change which individuals survive, only audit-trail completeness). Deterministic
+      lowest-id (string-sorted) tie-break (D-B2) confirmed against a fixture proven
+      live to be a genuine ~50/50 tie in kinship2's own `runif()`-based reference.
+      14 `test_that()` blocks (20 expectation markers incl. a 5-iteration
+      determinism-repeat loop) in new `tests/testthat/test_shrinkPedigree.R`, every
+      hardcoded expected value (id sets, `bitSize` trajectories, `idList` groupings)
+      independently verified live against the installed `kinship2` 1.9.6.2 this
+      session (not hand-derived), confirmed failing for the right reason against
+      unmodified source before GREEN -- including one test added mid-GREEN after the
+      idTrimmed-completeness finding above surfaced. `devtools::check()` 0 errors, 1
+      warning + 1 note, both confirmed pre-existing/unrelated via `git stash`
+      (matching Track A/C's own findings exactly). Full clean regression 1
+      pre-existing failure (`test_wordlist_coverage.R`, `matings`/`runnable` from
+      `.qmd` articles, confirmed via `git stash`); this session's own new spelling
+      flag (`orchestrator`, from roxygen prose) fixed via `inst/WORDLIST`, not left
+      as new debt. `lintr::lint_package()` 0 lints (no suppressions needed -- an
+      earlier speculative round of `# nolint: object_name_linter` comments was found
+      unnecessary, since this project's `.lintr` already allows camelCase, and was
+      removed). `_pkgdown.yml` reference-coverage checklist: added to both the
+      "Primary interactive functions" curated group and the "All exposed functions"
+      catch-all (a real gap `test_pkgdown_reference_config.R` caught). **All 3 tracks
+      of the kinship2 supplement full-reproduction plan are now DONE** (C: S563, A:
+      S564, B: S565). None filed as a GitHub issue, matching the established
+      "recommend, don't unilaterally file" precedent -- the owner may wish to file
+      one (or three) before further related work. See `CHANGELOG.md`.)
 - [ ] (found S552, owner-reported live, **FIXED S554**. **Pedigree Diagram tab's
       affected-status shading fills unaffected individuals too, counter to standard
       pedigree drawing convention** -- issue #133's `.affectedColor()`

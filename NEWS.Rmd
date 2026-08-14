@@ -191,6 +191,15 @@ knitr::opts_chunk$set(echo = TRUE)
   too. `chrtype = "autosome"` (the default) is unaffected -- every existing
   call site keeps its current behavior unchanged. Script-callable only; no
   Shiny UI yet.
+- New `shrinkPedigree()` (BL-N, the kinship2 supplement full-reproduction
+  plan's Track B), a `kinship2::pedigree.shrink()` equivalent: trims a
+  pedigree down to the individuals needed to keep it genetically
+  informative within a genotyping-cost budget (`maxBits`), given which
+  individuals are genotyped and, optionally, which are affected by a trait
+  of interest. Deterministic tie-break by lowest `id` (string-sorted) --
+  kinship2's own reference implementation breaks ties via `runif()`, so the
+  same input can give a different answer run-to-run there. Script-callable
+  only; no Shiny UI yet.
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes

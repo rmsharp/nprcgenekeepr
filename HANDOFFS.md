@@ -133,24 +133,90 @@ This file currently holds **5** receipt(s). Computed by `methodology_trim.py` on
 
 ```handoff
 session: S565
-date: 2026-08-13
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Implement Track B of the ratified kinship2 supplement full-reproduction
-  plan -- new R/shrinkPedigree.R (genotyped/affected/maxBits params, deterministic
-  lowest-id tie-break, script-callable only).
-what_was_done: pending
-next_steps: pending
-key_files: docs/planning/kinship2-supplement-full-reproduction-plan.md:221-367 (Track
-  B spec); R/kinship.R (sibling Track A precedent, DONE S564)
-gotchas: 2 kinship2 internal helpers (excludeUnavailFounders/excludeStrayMarryin) not
-  yet deparsed by the plan -- first Pre-RED task, may force re-scope
-runtime_smoke: pending
-changelog_ref: pending
+date: 2026-08-14
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Track B of the ratified kinship2 supplement full-reproduction plan --
+  DONE. shrinkPedigree() ported. All 3 tracks of the plan are now complete
+  (C: S563, A: S564, B: S565).
+what_was_done: Full PRE-RED->RED->GREEN TDD cycle (REFACTOR skipped, owner choice),
+  each transition AskUserQuestion-gated. PRE-RED deparsed all 8 of kinship2's own
+  internal helpers directly from the installed namespace (1.9.6.2), including the 2
+  the plan itself flagged as undeparsed -- found 5 things beyond the plan's own
+  framing (4 at PRE-RED, 1 more mid-GREEN): excludeStrayMarryin ignores genotyped
+  entirely; excludeUnavailFounders requires exactly-one-child AND neither-parent-
+  remarried; NA affected status counts as unaffected; a single-known-parent
+  individual crashes a literal port (kinship2's own pedigree() forbids that input
+  shape, this package's data model doesn't) -- handled conservatively instead,
+  documented, tested; and kinship2's own idTrimmed/idList$affect silently omit
+  cascade-removed ids in the affected-priority tier (confirmed live via a dedicated
+  fixture) -- shrinkPedigree() deliberately fixes this bookkeeping gap.
+  PROJECT_LEARNINGS.md Learnings 571/572 logged. RED: 14 new test_that() blocks (20
+  expectation markers) in new tests/testthat/test_shrinkPedigree.R, every hardcoded
+  expected value independently verified live against installed kinship2, not
+  hand-derived; 1 more test added mid-GREEN after finding 5 surfaced. GREEN: new
+  R/shrinkPedigree.R (8 functions); first test run caught a test-transcription bug
+  (missing affected arg), not an implementation bug -- fixed, all 20 markers pass.
+  Verified: full clean regression 1 pre-existing failure (test_wordlist_coverage.R,
+  confirmed via git stash unrelated); lintr::lint_package() 0 lints (stripped an
+  initial round of unneeded nolint comments that were themselves causing new
+  line_length findings); devtools::check() 2 cycles to 0 errors/1 pre-existing
+  warning/1 pre-existing note -- 1st cycle found and fixed 2 real gaps
+  (_pkgdown.yml reference-coverage missing the new export; a new spelling flag,
+  "orchestrator", fixed via inst/WORDLIST). Commits: c1c54cb7 (claim) + this
+  close-out commit.
+next_steps: All 3 tracks of the kinship2 supplement full-reproduction plan
+  (docs/planning/kinship2-supplement-full-reproduction-plan.md) are now DONE.
+  None of the 3 has a GitHub issue yet (matches the established "recommend, don't
+  unilaterally file" precedent) -- the owner may want to file one (or three)
+  retroactively, or decide it's not worth it now that the work is complete.
+  Separately, 2 unresolved open items carried forward unchanged from S564: (1)
+  inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf (the kinship2
+  supplement PDF itself) remains untracked -- a possible copyright/licensing
+  question the owner should decide (commit it, gitignore it, or leave local-only).
+  (2) shrinkPedigree() (and kinship()'s new chrtype/sex params from Track A) are
+  exactly the trigger case for a future a2interactive.Rmd documentation pass
+  (deferred by design, per that checklist's own standing rule -- not overdue yet).
+  BACKLOG.md priorities otherwise unchanged: LabKey (BLOCKED, Effort M), NPRC
+  outreach (DECISION NEEDED, Effort N/A), issue #148 (DECISION NEEDED -- needs its
+  own scope-narrowing conversation first).
+key_files: R/shrinkPedigree.R (the full Track B implementation -- shrinkPedigree()
+  plus 7 internal helpers, extensively documented in its own roxygen); tests/
+  testthat/test_shrinkPedigree.R (14 test_that() blocks, 20 expectation markers);
+  _pkgdown.yml (shrinkPedigree added to 2 reference groups); inst/WORDLIST
+  ("orchestrator" added); NEWS.Rmd (new entry); BACKLOG.md (kinship2 plan tracker,
+  Track B annotated DONE, all 3 tracks complete); PROJECT_LEARNINGS.md Learnings
+  571-572; docs/planning/kinship2-supplement-full-reproduction-plan.md §4 (the
+  spec this session implemented, now fully closed out).
+gotchas: (1) kinship2's own findAvailAffected()'s trial-removal loop calls the FULL
+  findUnavailable() cascade for each candidate, not a single-row removal --
+  measuring bitSize after a candidate's removal means measuring after any
+  stray-marryin/childless-non-founder cascade too, not just the candidate alone.
+  (2) A test fixture transcribed from a live Pre-RED scratch-verification script
+  must carry over EVERY argument used in that verification, not just the ped/
+  genotyped shape -- an omitted optional argument with its own non-trivial default
+  (affected here) silently changes which code path fires (Learning 572). (3) This
+  project's .lintr already allows camelCase (object_name_linter styles =
+  snake_case/CamelCase/camelCase) -- do not reflexively add
+  `# nolint: object_name_linter` comments by pattern-matching an older file; verify
+  the lint actually fires first, since an unneeded nolint comment can itself push a
+  line over the 80-char limit and create a NEW finding. (4) cyclocomp_linter is
+  explicitly disabled in this project's .lintr (`cyclocomp_linter = NULL`) --
+  referencing it in a nolint comment produces a "could not find linter" warning,
+  not a suppression. (5) The `&`/`disown` double-backgrounding trap (S563's own
+  finding, restated in S564's handoff) still caught this session once -- prefer
+  `run_in_background: true` alone, or a Monitor with an explicit completion-check
+  loop, never manual `&`/`disown`.
+runtime_smoke: No live shinytest2/chromote run this session -- Track B is
+  script-callable only (ratified D-B3, no Shiny tab), so there is no runtime/UI
+  wiring to smoke-test. Behavior was verified by direct execution instead:
+  devtools::check()'s own testthat run exercises every new code path against the
+  new test fixtures, and every hardcoded expected value was independently
+  cross-validated live against the installed kinship2::pedigree.shrink().
+changelog_ref: CHANGELOG.md, S565 entries (claim + close-out, both `[BL-N]`-tagged)
 commit: pending
 ```
-<in progress -- claim stub only, full receipt written at close-out>
 
 ```handoff
 session: S564

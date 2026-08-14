@@ -138,6 +138,37 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [BL-N] S565: close out (Track B of kinship2 supplement full-reproduction plan DONE -- all 3 tracks now complete)
+- **Deliverable:** New `R/shrinkPedigree.R`: `shrinkPedigree(ped, genotyped,
+  affected = NULL, maxBits = 16L)`, a `kinship2::pedigree.shrink()` equivalent over
+  this package's own `id`/`sire`/`dam` data-frame pedigree representation. All 8 of
+  kinship2's own internal helpers deparsed directly from the installed namespace
+  (1.9.6.2) at Pre-RED, including the 2 the plan itself flagged as undeparsed. 5
+  findings beyond the plan's own framing (documented in the function's own roxygen
+  and `PROJECT_LEARNINGS.md` Learnings 571-572): `excludeStrayMarryin` ignores
+  `genotyped` entirely; `excludeUnavailFounders` requires exactly-one-child AND
+  neither-parent-remarried; `NA` affected status counts as unaffected; a
+  single-known-parent individual would crash a literal port (kinship2's own
+  `pedigree()` forbids that input shape; this package's data model allows it) --
+  handled conservatively instead; and kinship2's own `idTrimmed`/`idList$affect`
+  silently omit cascade-removed ids in the affected-priority tier (confirmed live
+  via a dedicated fixture) -- `shrinkPedigree()` deliberately fixes this
+  bookkeeping gap. Deterministic lowest-id (string-sorted) tie-break (D-B2)
+  confirmed against a fixture proven live to be a genuine tie in kinship2's own
+  `runif()`-based reference. 14 `test_that()` blocks (20 expectation markers) in
+  new `tests/testthat/test_shrinkPedigree.R`, every hardcoded expected value
+  independently verified live against installed `kinship2`, not hand-derived.
+  `devtools::check()` 0 errors, 1 warning + 1 note, both confirmed pre-existing via
+  `git stash`; full clean regression 1 pre-existing failure
+  (`test_wordlist_coverage.R`, confirmed unrelated); `lintr::lint_package()` 0
+  lints. Fixed 2 real gaps found by `devtools::check()`: `_pkgdown.yml` reference
+  coverage (added `shrinkPedigree` to 2 groups) and a new spelling flag
+  (`orchestrator`, `inst/WORDLIST`). `NEWS.Rmd` entry added. **All 3 tracks of the
+  kinship2 supplement full-reproduction plan are now DONE** (C: S563, A: S564, B:
+  S565); none has a GitHub issue yet. See `SESSION_NOTES.md`, `HANDOFFS.md`,
+  `BACKLOG.md`.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-13 · [BL-N] S565: claim session (implement Track B of kinship2 supplement full-reproduction plan)
 - **Deliverable:** Phase 0 orient complete (Health 96/100, 0 High+ risk; scheduled
   `shinytest2.yaml` CI still red, unchanged/undiagnosed since S548, reported not

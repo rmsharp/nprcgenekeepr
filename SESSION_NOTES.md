@@ -14,18 +14,173 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 564 Handoff Evaluation (by Session 565)
+**Score: 9/10.** **What helped:** `next_steps` named Track B verbatim as the pickup
+("a `pedigree.shrink()` equivalent, new `shrinkPedigree()`, Effort L, most novel of
+the 3") and its `gotchas` field named the EXACT first Pre-RED task with no
+hedging -- "2 kinship2 internal helpers (`excludeUnavailFounders`/
+`excludeStrayMarryin`) not yet deparsed by the plan -- first Pre-RED task, may force
+re-scope." This was precisely accurate: deparsing those 2 helpers live was in fact
+the first substantive action this session took, and it did surface real complexity
+(though not enough to force a narrower re-scope -- see below). Gotcha (1)/(2) about
+`devtools::document()`/`check()` sync (Learning 570) generalized well: this session
+ran `document()` immediately before every `check()` launch and never edited roxygen
+mid-run, needing only 2 `check()` cycles (vs. S564's own 4) to reach a clean result.
+`key_files` correctly pointed at the plan's §4 spec. **What was missing:** nothing
+material -- the handoff's own gotcha (5) (the `&`/`disown` double-backgrounding
+trap) was read during orientation but still recurred once this session (see
+self-assessment below), so the WARNING itself wasn't sufficient prevention, though
+that is a limit of any written warning, not a gap in what S564 wrote. **What was
+wrong:** nothing identified. **ROI:** High -- the gotchas field specifically was the
+single most load-bearing sentence of the handoff, directly shaping this session's
+first action.
+
 ### What Session 565 Did
-**Deliverable:** Implement Track B of the ratified kinship2 supplement full-reproduction
-plan (`docs/planning/kinship2-supplement-full-reproduction-plan.md` §4) -- new
-`R/shrinkPedigree.R` exporting `shrinkPedigree(ped, genotyped, affected = NULL,
-maxBits = 16)`, porting kinship2's `pedigree.shrink()` 5-helper algorithm (deterministic
-lowest-id tie-break per D-B2, `genotyped` naming per D-B1, script-callable only per D-B3).
-(IN PROGRESS)
-**Started:** 2026-08-13.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
-next session's reconcile.
+**Deliverable:** Implement Track B of the ratified kinship2 supplement
+full-reproduction plan (`docs/planning/kinship2-supplement-full-reproduction-plan.md`
+§4) -- new `R/shrinkPedigree.R` exporting `shrinkPedigree(ped, genotyped,
+affected = NULL, maxBits = 16L)`, a `kinship2::pedigree.shrink()` equivalent over
+this package's own `id`/`sire`/`dam` data-frame pedigree representation. **DONE.**
+**Started/Completed:** 2026-08-13/2026-08-14. **Status:** DONE. TDD phase: REFACTOR
+skipped by owner choice (no structural improvement identified, matching Track A/C's
+own precedent) -- full PRE-RED -> RED -> GREEN cycle completed, each transition
+gated by `AskUserQuestion`.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SESSION_RUNNER.md`,
+`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list`, `git status`/`log`/`diff --stat`
+[57 commits ahead of `origin/master`, unpushed, unchanged pattern since S548],
+`methodology_dashboard.py` [Health 96/100, 0 High+ risk], `gh run list --branch
+master --limit 10` [push-triggered workflows green on last-pushed commit; scheduled
+`shinytest2.yaml` still red, unchanged since S548, not diagnosed -- report, don't
+fix], ledger reconcile [`CHANGELOG.md`/`HANDOFFS.md` frontiers both == `HEAD`, no
+gap, no backfill needed]. Same 6 untracked files S564 already flagged, unchanged --
+no ghost session. Cross-checked the ratified genetic-metrics sequencing audit's own
+prose order per `CLAUDE.md`'s sequencing-audit-cluster check, surfacing issue #148
+(DECISION NEEDED) as a priorities option. Rendered a 4-item priorities list via
+`AskUserQuestion` -- owner picked Track B. **(2)** Read the plan's §4 (Track B) in
+full; stated understanding back to the user. **(3)** Phase 1B: wrote claim stubs to
+`SESSION_NOTES.md`/`HANDOFFS.md`/`CHANGELOG.md`, committed (`c1c54cb7`). **(4)**
+PRE-RED: deparsed all 8 of kinship2's own internal helpers directly from the
+installed namespace (1.9.6.2) -- `pedigree.shrink`, `bitSize`, `findUnavailable`,
+`excludeUnavailFounders`, `excludeStrayMarryin`, `findAvailNonInform`,
+`findAvailAffected`, `pedigree.trim` -- including the 2 the plan itself flagged as
+undeparsed. **4 findings beyond the plan's own framing** (all now documented in the
+function's own roxygen and `PROJECT_LEARNINGS.md` Learnings 571-572): (a)
+`excludeStrayMarryin` ignores `genotyped` entirely; (b) `excludeUnavailFounders`
+requires the founder couple have exactly one child together AND neither parent
+married elsewhere, confirmed via a live negative-case test; (c) kinship2's own
+`all(x == 0, na.rm = TRUE)` non-informative-affected check treats `NA` as
+unaffected; (d) a real, empirically-confirmed divergence -- kinship2's own
+`pedigree()` constructor forbids a single-known-parent individual, so its algorithm
+never has to handle it, but this package's pedigrees allow partial parentage as
+ordinary data (`getIdsWithOneParent()`); a literal port would divide a zero-length
+vector and error, so `shrinkPedigree()` conservatively never marks such an
+individual non-informative instead. A **5th finding**, surfaced mid-GREEN: kinship2's
+own `idTrimmed`/`idList$affect` record only the single trial candidate per
+affected-priority round, silently omitting any id removed as a cascade side-effect
+(confirmed live: a 5-row fixture where kinship2's own `pedSizeFinal` drops by 2 in
+one round but `idTrimmed` names only 1) -- `shrinkPedigree()` deliberately fixes
+this bookkeeping gap (does not change which individuals survive). Every fixture's
+expected values (id sets, `bitSize` trajectories, `idList` groupings) were
+independently verified live against the installed `kinship2::pedigree.shrink()`,
+not hand-derived, matching Track A's own evidence standard; the verification
+strategy itself was clarified (cross-validate live during Pre-RED only, hardcode
+into the committed test, no new `Suggests` dependency -- matching Track A's own
+precedent that `test_kinship.R` never calls `kinship2::` live either). Gated
+PRE-RED->RED via `AskUserQuestion`. **(5)** RED: added 14 `test_that()` blocks (20
+expectation markers incl. a 5-iteration determinism-repeat loop) to new
+`tests/testthat/test_shrinkPedigree.R`; confirmed all fail for the right reason
+(function not found) before GREEN; added 1 more test mid-GREEN after finding (5)
+above surfaced, re-confirmed RED for it too. **(6)** Gated RED->GREEN via
+`AskUserQuestion`. Implemented `R/shrinkPedigree.R` (validation; `.bitSizeOf()`;
+`.isParentOf()`; `.findUnavailable()`; `.excludeUnavailFounders()`;
+`.strayMarryinIds()`; `.findAvailNonInform()`; `.findAvailAffected()`), using named
+(by id) `genotyped`/`affected` vectors throughout for robust realignment across
+row-removing subsets, reusing the existing `isFounder()` rather than reimplementing
+it. First test run found 2 failures traced to a test-transcription bug, not an
+implementation bug (an omitted `affected` argument silently triggered the absent-
+affected-defaults-to-`FALSE` design choice -- Learning 572); fixed the test, all 20
+markers passed. **(7)** Verified, iteratively: targeted test file all pass; full
+clean regression 1 pre-existing failure (`test_wordlist_coverage.R`, `matings`/
+`runnable` from unrelated `.qmd` articles, confirmed via `git stash`);
+`lintr::lint_package()` found 0 real lints, but an initial speculative round of
+`# nolint: object_name_linter` comments (mimicking `kinship.R`'s own pattern
+without verifying necessity) turned out unneeded -- this project's `.lintr` already
+allows camelCase -- and several of those comments pushed lines over the 80-char
+limit, creating NEW `line_length_linter` findings; stripped all of them and fixed
+the one genuine finding (`maxBits = 16` -> `16L`, `implicit_integer_linter`), landing
+at 0 lints with no suppressions at all. `devtools::check()` first cycle found 2 real
+gaps: `test_pkgdown_reference_config.R` failing (new export missing from
+`_pkgdown.yml`'s reference coverage -- fixed, added to both the curated "Primary
+interactive functions" group and the "All exposed functions" catch-all) and a new
+spelling flag (`orchestrator`, from roxygen prose -- fixed via `inst/WORDLIST`);
+2nd cycle 0 errors/1 warning + 1 note, both confirmed pre-existing/unrelated via
+`git stash` (matching Track A/C's own exact findings). Logged `PROJECT_LEARNINGS.md`
+Learnings 571 (kinship2's own `idTrimmed` bookkeeping gap) and 572 (the test-
+transcription-must-match-verification-arguments-exactly lesson). **(8)** Gated
+GREEN->REFACTOR via `AskUserQuestion` -- owner chose to skip. **(9)** Close-out:
+annotated `BACKLOG.md`'s kinship2 plan tracker (Track B DONE, all 3 tracks now
+complete, full verification summary added); added a `NEWS.Rmd` entry; reviewed the
+tutorial/article checklist (N/A -- script-callable only, no Shiny UI, matching
+Track A's own precedent); reviewed the `a2interactive.Rmd` checklist (N/A this
+session by design -- deferred pass, `shrinkPedigree()` is exactly the trigger case
+for a future documentation pass); GitHub issue checklist N/A (no issue filed yet
+for any of the 3 tracks, matching the established "recommend, don't unilaterally
+file" precedent -- now worth flagging to the owner since all 3 are DONE); citation
+checklist N/A (script-callable, no new displayed statistic, though a roxygen
+`@references` citation was added anyway on the project's own sourcing-discipline
+precedent); `_pkgdown.yml` checklist DONE (added above); refreshed `CLAUDE.md`'s
+learnings-count pointer (570->572).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist -- added a roxygen
+`@references` citation (Sinnwell/Therneau/Schaid 2014, matching Track A's own
+citation) even though N/A (no new UI statistic). Tutorial/article checklist N/A
+(script-callable only). `NEWS.Rmd` entry checklist DONE. `a2interactive.Rmd`
+checklist N/A (deferred by design; flagged as a future trigger, alongside Track A's
+own `kinship()` new-params trigger). GitHub issue close-out N/A (no issue exists
+for any of the 3 tracks). Lint checklist DONE (0 lints, no suppressions needed).
+`_pkgdown.yml` reference-coverage checklist DONE (a real gap this session's own
+`devtools::check()` caught and fixed).
+
+**Self-assessment (Session 565): 8/10.** **Strengths:** (1) Did not trust the
+plan's own brief characterization of kinship2's algorithm -- deparsed all 8 internal
+helpers directly from the installed namespace and empirically tested edge cases
+(the founder-becomes-non-parent-mid-loop crash scenario; the genuine bitSize-tie
+fixture; the cascade-during-phase-3 bookkeeping gap) rather than assuming the
+plan's summary was complete. (2) Found and fixed a real, reproducible defect in
+kinship2's OWN reference implementation's bookkeeping (Learning 571) via a
+deliberately constructed cascade fixture, not by accident -- and made a clean,
+documented, non-behavior-changing design choice about it rather than silently
+matching or silently diverging. (3) Caught a self-introduced test bug (the missing
+`affected` argument) via the FIRST GREEN test run rather than assuming an
+unexpected failure meant the implementation was wrong -- traced it back to the
+Pre-RED scratch script and confirmed the fix was in the test, not the source
+(Learning 572), matching Track A/C's own RED-phase vacuous-pass-trap discipline
+extended into GREEN. (4) Caught its own speculative-suppression lint mistake (adding
+unneeded `# nolint: object_name_linter` comments that then themselves caused
+`line_length_linter` findings) and fixed it properly (removed the unneeded
+comments, verified against `.lintr`'s actual config) rather than layering more
+suppressions on top. (5) Caught the `_pkgdown.yml` reference-coverage gap via the
+full regression run, not a special dedicated check -- fixed in the same session per
+the established checklist. **Weaknesses:** (1) Hit the exact double-backgrounding
+pitfall the S564 handoff explicitly warned about (gotcha 5) once this session
+(a manual `&`/`disown` background job for `regression2.log`) despite having read
+that warning during Phase 0 orientation -- recovered via a `Monitor` until-loop
+rather than trusting a premature notification, and every subsequent background
+command correctly used `run_in_background: true`, but the pattern itself was not
+avoided on the first attempt. (2) `devtools::check()` still needed 2 full cycles
+(~4 min each) rather than 1, because the `_pkgdown.yml`/`WORDLIST` gaps were only
+found by the first full `check()` run rather than by a more targeted pre-check
+(e.g. running `test_pkgdown_reference_config.R` and a manual `spelling::
+spell_check_package()` call BEFORE the first full `check()` launch would have
+caught both gaps faster). (3) No independent adversarial-verification pass beyond
+this session's own direct test/check output and the live kinship2 cross-checks --
+same standing gap flagged across many prior sessions. (4) Did not file a GitHub
+issue for any of the 3 now-complete tracks (or push the now 58+ local commits) --
+matches established precedent, left for the owner/a future session, but worth
+flagging more prominently now that the whole plan is complete.
+**Ledger:** recorded in `CHANGELOG.md` (this session's reconcile, claim, deliverable,
+and close-out entries).
 
 ### Session 563 Handoff Evaluation (by Session 564)
 **Score: 8/10.** **What helped:** `next_steps` explicitly named Track A as a
