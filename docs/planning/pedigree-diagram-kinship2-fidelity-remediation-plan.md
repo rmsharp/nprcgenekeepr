@@ -186,7 +186,26 @@ own.
 Each track is independently shippable and independently session-boundable -- picking one does not
 require picking another first, except where noted.
 
-### Track 1 -- Default unaffected fill to unfilled/white (Claim 2)
+### Track 1 -- Default unaffected fill to unfilled/white (Claim 2) -- DONE S570
+
+**DONE S570 (2026-08-14):** implemented exactly as scoped below. Scope decision (mating-unit
+dot nodes) resolved via `AskUserQuestion` before RED: stay `NA`, matching this section's own
+recommendation. `makePedigreeDiagramData()`'s `affected` and `makePedigreeMatingLayout()`'s
+`affectedOf` are now computed unconditionally (all-`NA` when the column is absent) so
+`.affectedColor()`/`.affectedColorForVec()` return an explicit `#FFFFFF` for every real/duplicate
+node regardless of column presence; the Affected-tooltip-line gate is unchanged (still absent
+without the column). `.addRectilinearWaypoints()` needed no change -- it already preserves a
+pre-existing `color.background` rather than resetting it. New/modified tests:
+`test_makePedigreeDiagramData.R:266-282`, `test_makePedigreeMatingLayout.R:660-683,716-742`,
+plus one pre-existing test (`test_makePedigreeMatingLayout.R:420-450`) whose column-set
+assertion also encoded the old contract, caught by the full regression run, not the original
+RED-phase scoping. Verified: both targeted test files green; full clean regression 0
+failed/0 error; `lintr::lint_package()` 0 lints on the touched file; `devtools::check()` 0
+errors/0 warnings/1 pre-existing unrelated NOTE (`vignettes/figure/` knitr leftover, not
+introduced this session); a live `chromote` render of the bundled `examplePedigree` (7,306
+nodes, no `affected` column) and a small 8-individual fixture both confirm every real/duplicate
+node renders visually unfilled (white interior, colored outline), not vis.js's own default
+solid fill. `NEWS.Rmd` entry added. See `CHANGELOG.md`.
 
 - **Scope:** `makePedigreeDiagramData()` and `makePedigreeMatingLayout()` both currently gate
   `color.background` entirely behind `hasAffected`. Change so every real/duplicate node gets an

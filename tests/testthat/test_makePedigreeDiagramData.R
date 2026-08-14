@@ -193,9 +193,17 @@ test_that(
 ## (BACKLOG.md Housekeeping, found S552: FALSE/NA originally left
 ## color.background NA, which visNetwork rendered as ITS OWN default pale
 ## fill, not open -- fixed here). Every node's tooltip also gains an
-## "Affected: Yes/No/Unknown" line (D3 Option 0). Absent column => zero
-## change to today's output (backward compatible with every pre-#133
-## fixture/test).
+## "Affected: Yes/No/Unknown" line (D3 Option 0), gated on the column's
+## actual presence (an absent column has no basis for "Unknown").
+##
+## Track 1 (docs/planning/pedigree-diagram-kinship2-fidelity-remediation-
+## plan.md, found S569): an ABSENT affected column no longer leaves
+## color.background unset -- every node now gets an explicit white
+## (#FFFFFF) fill unconditionally, matching kinship2's own "unfilled"
+## default for pedigrees with no phenotype data at all (the package's own
+## bundled examplePedigree among them). The tooltip's Affected line is
+## unaffected by this change -- still absent when the column itself is
+## absent.
 
 test_that(
   "makePedigreeDiagramData sets an explicit color.background for every row
@@ -255,9 +263,10 @@ test_that(
 })
 
 test_that(
-  "makePedigreeDiagramData produces byte-identical output for a ped with
-   no affected column at all -- backward compatible with every pre-#133
-   fixture/test", {
+  "makePedigreeDiagramData defaults every node to an explicit white
+   (#FFFFFF) color.background when the ped has no affected column at all
+   (Track 1, docs/planning/pedigree-diagram-kinship2-fidelity-remediation-
+   plan.md) -- the tooltip's Affected line stays absent, unchanged", {
   trio <- data.frame(
     id = c("P1", "P2", "C1"),
     sire = c(NA, NA, "P1"),
@@ -267,7 +276,8 @@ test_that(
     stringsAsFactors = FALSE
   )
   result <- makePedigreeDiagramData(trio)
-  expect_false("color.background" %in% names(result$nodes))
+  expect_true("color.background" %in% names(result$nodes))
+  expect_true(all(result$nodes$color.background == "#FFFFFF"))
   expect_false(any(grepl("Affected", result$nodes$title, fixed = TRUE)))
 })
 

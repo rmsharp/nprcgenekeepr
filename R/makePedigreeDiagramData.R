@@ -72,8 +72,8 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   # character/other value; anything that doesn't parse becomes NA, matching
   # kinship2's own NA-tolerant contract rather than erroring.
   hasAffected <- "affected" %in% names(ped)
+  affected <- if (hasAffected) as.logical(ped$affected) else rep(NA, nrow(ped))
   if (hasAffected) {
-    affected <- as.logical(ped$affected)
     titles <- paste0(titles,
                       sprintf("<br><b>Affected:</b> %s",
                               .affectedLabel(affected)))
@@ -101,18 +101,20 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     title = titles,
     stringsAsFactors = FALSE
   )
-  if (hasAffected) {
-    # D3 Option 1: single dominant-trait color, only affected == TRUE gets
-    # a fill (D8 color, Okabe-Ito reddish-purple -- colorblind-safe,
-    # distinct from both the GVA heatmap's red/yellow/green risk convention
-    # and the existing #2B7CE9 waypoint-edge blue). FALSE/NA get an explicit
-    # open/unfilled (white) color.background, matching kinship2's own
-    # "unfilled if 0/NA" pedigree-drawing convention -- BACKLOG.md
-    # Housekeeping (found S552): leaving color.background NA here let
-    # visNetwork fall back to ITS OWN default fill, which does not read as
-    # open/unfilled, fixed in .affectedColor() below.
-    nodes$color.background <- .affectedColor(affected)
-  }
+  # D3 Option 1: single dominant-trait color, only affected == TRUE gets
+  # a fill (D8 color, Okabe-Ito reddish-purple -- colorblind-safe,
+  # distinct from both the GVA heatmap's red/yellow/green risk convention
+  # and the existing #2B7CE9 waypoint-edge blue). FALSE/NA get an explicit
+  # open/unfilled (white) color.background, matching kinship2's own
+  # "unfilled if 0/NA" pedigree-drawing convention -- BACKLOG.md
+  # Housekeeping (found S552): leaving color.background NA here let
+  # visNetwork fall back to ITS OWN default fill, which does not read as
+  # open/unfilled, fixed in .affectedColor() below. Track 1
+  # (docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md,
+  # found S569): unconditional now -- an absent affected column defaults
+  # every node to the same explicit white fill instead of vis.js's own
+  # default (`affected` above is already an all-NA vector in that case).
+  nodes$color.background <- .affectedColor(affected)
 
   hasSire <- !is.na(ped$sire)
   hasDam <- !is.na(ped$dam)
@@ -1134,10 +1136,15 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
   # (R/modPedigree.R). Coerce defensively via as.logical() (see that
   # function's own comment for why).
   hasAffected <- "affected" %in% names(ped)
+  # Track 1 (docs/planning/pedigree-diagram-kinship2-fidelity-remediation-
+  # plan.md, found S569): an absent affected column no longer means
+  # `.affectedColorForVec()` goes uncalled -- affectedOf is an all-NA named
+  # vector instead of NULL so .affectedColor() below still returns an
+  # explicit white fill for every real/duplicate node.
   affectedOf <- if (hasAffected) {
     stats::setNames(as.logical(ped$affected), realIds)
   } else {
-    NULL
+    stats::setNames(rep(NA, length(realIds)), realIds)
   }
   .affectedColorForVec <- function(ids) {
     .affectedColor(affectedOf[ids])
@@ -1194,9 +1201,10 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
     title = .titleForIds(realIds),
     size = 25L, stringsAsFactors = FALSE
   )
-  if (hasAffected) {
-    realNodes$color.background <- .affectedColorForVec(realIds)
-  }
+  # Track 1: unconditional now -- .affectedColorForVec() already returns an
+  # explicit white fill for every id when affectedOf is all-NA (no affected
+  # column at all).
+  realNodes$color.background <- .affectedColorForVec(realIds)
 
   dupNodes <- if (nrow(duplicates) > 0L) {
     df <- data.frame(
@@ -1211,15 +1219,13 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
                       "<br><i>(duplicate occurrence)</i>"),
       size = 25L, stringsAsFactors = FALSE
     )
-    if (hasAffected) {
-      df$color.background <- .affectedColorForVec(duplicates$realId)
-    }
+    df$color.background <- .affectedColorForVec(duplicates$realId)
     df
   } else {
     df <- data.frame(id = character(), label = character(),
                       shape = character(), title = character(),
                       size = numeric(), stringsAsFactors = FALSE)
-    if (hasAffected) df$color.background <- character()
+    df$color.background <- character()
     df
   }
 
@@ -1233,15 +1239,17 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
       stringsAsFactors = FALSE
     )
     # A mating union is not an individual -- it never gets affected-status
-    # coloring (D4), but the column must still exist here for rbind() to
-    # align with realNodes/dupNodes when hasAffected.
-    if (hasAffected) df$color.background <- NA_character_
+    # coloring (D4); stays NA unconditionally, whether or not affected
+    # exists at all (Track 1, owner decision S570 -- mating-unit dots are
+    # visually distinct from real/duplicate nodes on purpose). The column
+    # must still exist here for rbind() to align with realNodes/dupNodes.
+    df$color.background <- NA_character_
     df
   } else {
     df <- data.frame(id = character(), label = character(),
                       shape = character(), title = character(),
                       size = numeric(), stringsAsFactors = FALSE)
-    if (hasAffected) df$color.background <- character()
+    df$color.background <- character()
     df
   }
 

@@ -425,7 +425,10 @@ test_that(
    fixed S555 -- ALWAYS present once any mating unit exists, since
    consanguinity is a structural fact of the required sire/dam columns,
    unlike the optional name/twinRelations sidecars; both NA here since
-   this fixture has no consanguineous mating)", {
+   this fixture has no consanguineous mating) and color.background (Track
+   1, docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md,
+   found S569 -- ALWAYS present now, unconditional on the affected column's
+   presence)", {
   ped <- data.frame(
     id = c("R1", "R2", sprintf("D%d", 1:4)),
     sire = c(NA, NA, "R1", "D1", "D2", "D3"),
@@ -439,7 +442,8 @@ test_that(
   expect_equal(default, explicit)
   expect_false(any(grepl("^__drop_|^__bar_|^__proj_", default$nodes$id)))
   expect_setequal(names(default$nodes),
-                   c("id", "label", "shape", "title", "size", "x", "y"))
+                   c("id", "label", "shape", "title", "size",
+                     "color.background", "x", "y"))
   expect_setequal(names(default$edges),
                    c("from", "to", "dashes", "smooth.enabled", "smooth.type",
                      "smooth.roundness", "color", "width"))
@@ -562,6 +566,15 @@ test_that(
 ## Duplicate nodes inherit their real individual's color (matching how
 ## they already inherit shape/title); mating-unit nodes get no coloring
 ## (a union is not an individual).
+##
+## Track 1 (docs/planning/pedigree-diagram-kinship2-fidelity-remediation-
+## plan.md, found S569): an ABSENT affected column no longer leaves
+## color.background unset on real/duplicate nodes -- they now get an
+## explicit white (#FFFFFF) fill unconditionally, matching kinship2's own
+## "unfilled" default. Mating-unit dot nodes stay NA either way (owner
+## decision, S570) -- they are not individuals and were never part of the
+## affected-status convention. The tooltip's Affected line is unaffected
+## by this change -- still absent when the column itself is absent.
 
 test_that(
   "makePedigreeMatingLayout sets color.background for affected == TRUE real
@@ -645,9 +658,11 @@ test_that(
 })
 
 test_that(
-  "makePedigreeMatingLayout produces no color.background column and no
-   Affected tooltip line for a ped with no affected column at all --
-   backward compatible with every pre-#133 fixture/test", {
+  "makePedigreeMatingLayout defaults every real/duplicate node to an
+   explicit white (#FFFFFF) color.background when the ped has no affected
+   column at all (Track 1, docs/planning/pedigree-diagram-kinship2-
+   fidelity-remediation-plan.md), leaves mating-unit dot nodes NA, and
+   leaves the tooltip's Affected line absent, unchanged", {
   trio <- data.frame(
     id = c("P1", "P2", "C1"),
     sire = c(NA, NA, "P1"), dam = c(NA, NA, "P2"),
@@ -655,7 +670,15 @@ test_that(
     stringsAsFactors = FALSE
   )
   result <- makePedigreeMatingLayout(trio)
-  expect_false("color.background" %in% names(result$nodes))
+  expect_true("color.background" %in% names(result$nodes))
+
+  realRows <- result$nodes[result$nodes$id %in% trio$id, ]
+  expect_true(all(realRows$color.background == "#FFFFFF"))
+
+  unitRows <- result$nodes[!(result$nodes$id %in% trio$id), ]
+  expect_true(nrow(unitRows) > 0L)
+  expect_true(all(is.na(unitRows$color.background)))
+
   expect_false(any(grepl("Affected", result$nodes$title, fixed = TRUE)))
 })
 
@@ -684,6 +707,34 @@ test_that(
 
   ## Waypoint nodes keep their own, unrelated fully-transparent contract
   ## (issue #142) -- unaffected by #133's coloring.
+  waypointRows <- result$nodes[grepl("^__drop_|^__bar_|^__proj_",
+                                      result$nodes$id), ]
+  expect_true(nrow(waypointRows) > 0L)
+  expect_true(all(waypointRows$color.background == "rgba(0,0,0,0)"))
+})
+
+test_that(
+  "makePedigreeMatingLayout's Track 1 default white fill survives
+   edgeStyle = \"rectilinear\" for a ped with no affected column at all --
+   .addRectilinearWaypoints() must preserve it rather than reset to NA,
+   same precedent as the affected-column case above", {
+  loopPed <- data.frame(
+    id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
+           "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
+    sire = c(NA, NA, NA, NA, "5A6DFT", "8LKBV9", "8LKBV9", "8LKBV9"),
+    dam = c(NA, NA, NA, NA, "8DKELJ", "G8EBU9", "8P17E3", "FJIB3R"),
+    sex = c("M", "F", "F", "F", "M", "F", "F", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 2L, 2L, 3L),
+    stringsAsFactors = FALSE
+  )
+  result <- makePedigreeMatingLayout(loopPed, edgeStyle = "rectilinear")
+  expect_true("color.background" %in% names(result$nodes))
+
+  realColor <- result$nodes$color.background[result$nodes$id == "8LKBV9"]
+  expect_equal(realColor, "#FFFFFF")
+
+  ## Waypoint nodes keep their own, unrelated fully-transparent contract
+  ## (issue #142) -- unaffected by Track 1's coloring.
   waypointRows <- result$nodes[grepl("^__drop_|^__bar_|^__proj_",
                                       result$nodes$id), ]
   expect_true(nrow(waypointRows) > 0L)

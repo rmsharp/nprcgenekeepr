@@ -200,6 +200,14 @@ knitr::opts_chunk$set(echo = TRUE)
   kinship2's own reference implementation breaks ties via `runif()`, so the
   same input can give a different answer run-to-run there. Script-callable
   only; no Shiny UI yet.
+- Fixed: the Pedigree Diagram tab's affected-status shading rendered every
+  individual filled with visNetwork's own default color when a pedigree had
+  no `affected` column at all -- unlike the already-fixed case where the
+  column is present but a value is `FALSE`/`NA` (above). Every individual
+  now defaults to an explicit open/unfilled (white) fill regardless of
+  whether the `affected` column exists, matching kinship2's own convention
+  for pedigrees with no phenotype data (the package's own bundled
+  `examplePedigree` among them).
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes
