@@ -132,6 +132,27 @@ This file currently holds **5** receipt(s). Computed by `methodology_trim.py` on
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S565
+date: 2026-08-13
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement Track B of the ratified kinship2 supplement full-reproduction
+  plan -- new R/shrinkPedigree.R (genotyped/affected/maxBits params, deterministic
+  lowest-id tie-break, script-callable only).
+what_was_done: pending
+next_steps: pending
+key_files: docs/planning/kinship2-supplement-full-reproduction-plan.md:221-367 (Track
+  B spec); R/kinship.R (sibling Track A precedent, DONE S564)
+gotchas: 2 kinship2 internal helpers (excludeUnavailFounders/excludeStrayMarryin) not
+  yet deparsed by the plan -- first Pre-RED task, may force re-scope
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<in progress -- claim stub only, full receipt written at close-out>
+
+```handoff
 session: S564
 date: 2026-08-13
 status: complete

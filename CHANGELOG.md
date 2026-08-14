@@ -138,6 +138,21 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-N] S565: claim session (implement Track B of kinship2 supplement full-reproduction plan)
+- **Deliverable:** Phase 0 orient complete (Health 96/100, 0 High+ risk; scheduled
+  `shinytest2.yaml` CI still red, unchanged/undiagnosed since S548, reported not
+  diagnosed; 57 commits unpushed, unchanged precedent since S548; ledger reconcile --
+  `CHANGELOG.md`/`HANDOFFS.md` frontiers both == `HEAD`, no gap, no backfill needed;
+  no ghost session -- same 6 untracked files S564 already flagged, unchanged). Cross-
+  checked the ratified genetic-metrics sequencing audit's own prose order (per
+  `CLAUDE.md`'s sequencing-audit-cluster check) -- surfaced issue #148 (DECISION
+  NEEDED, needs its own scope-narrowing conversation) as a priorities-list option.
+  Priorities list (4 items) rendered via `AskUserQuestion` -- owner picked Track B
+  (`shrinkPedigree()`, a `pedigree.shrink()` equivalent) of the ratified kinship2
+  supplement full-reproduction plan (`docs/planning/kinship2-supplement-full-
+  reproduction-plan.md` §4). Claim stubs written to `SESSION_NOTES.md`/`HANDOFFS.md`
+  (`status: pending`). Work beginning.
+
 ### 2026-08-13 · [BL-N] S564: claim session (implement Track A of kinship2 supplement full-reproduction plan)
 - **Deliverable:** Phase 0 orient complete (Health 96/100, 0 High+ risk; `shinytest2.yaml`
   scheduled CI red 2 days running, reported not diagnosed; 54 commits unpushed, unchanged

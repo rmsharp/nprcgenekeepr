@@ -14,6 +14,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 565 Did
+**Deliverable:** Implement Track B of the ratified kinship2 supplement full-reproduction
+plan (`docs/planning/kinship2-supplement-full-reproduction-plan.md` §4) -- new
+`R/shrinkPedigree.R` exporting `shrinkPedigree(ped, genotyped, affected = NULL,
+maxBits = 16)`, porting kinship2's `pedigree.shrink()` 5-helper algorithm (deterministic
+lowest-id tie-break per D-B2, `genotyped` naming per D-B1, script-callable only per D-B3).
+(IN PROGRESS)
+**Started:** 2026-08-13.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
 ### Session 563 Handoff Evaluation (by Session 564)
 **Score: 8/10.** **What helped:** `next_steps` explicitly named Track A as a
 legitimate next pickup with an accurate one-line scope ("kinship() gains chrtype/sex,
