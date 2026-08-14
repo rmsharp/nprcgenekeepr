@@ -189,7 +189,7 @@ runtime_smoke: Live chromote render (not committed, scratchpad script matching
   real/duplicate node renders visually unfilled (white interior, colored outline) and mating-unit
   dots stay small/distinct, not vis.js's own default solid fill.
 changelog_ref: CHANGELOG.md 2026-08-14 S570 entries (this close-out)
-commit: pending
+commit: 1e7590c2
 ```
 
 ```handoff

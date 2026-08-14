@@ -138,6 +138,11 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [ad hoc] S570: reconcile HANDOFFS.md commit self-reference (`1e7590c2`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` ->
+  `1e7590c2` (the close-out commit whose sha the receipt itself couldn't name until after it
+  was made) -- matching the established S562-S569 precedent.
+
 ### 2026-08-14 · [ad hoc] S570: close out (Track 1 unaffected-fill default DONE)
 - **Deliverable:** Closed out Track 1 of `docs/planning/pedigree-diagram-kinship2-fidelity-
   remediation-plan.md` -- self-assessed 8/10 (docked for a PRE-RED grep-based test investigation
