@@ -182,6 +182,15 @@ knitr::opts_chunk$set(echo = TRUE)
   waypoint-edge style on a doglegged mate edge, even though the
   `edgeStyle = "direct"` style always showed it correctly (BL-N, part of
   the kinship2 supplement full-reproduction plan's Track C).
+- `kinship()` gained `chrtype = c("autosome", "x")` and `sex` arguments
+  (BL-N, the kinship2 supplement full-reproduction plan's Track A):
+  `chrtype = "x"` computes X-chromosome kinship instead of the default
+  autosomal calculation (a male's X comes from his mother only; a female's
+  X-linked kinship follows the usual average-of-parents formula). The
+  existing `twinRelations` MZ-twin correction applies inside the new branch
+  too. `chrtype = "autosome"` (the default) is unaffected -- every existing
+  call site keeps its current behavior unchanged. Script-callable only; no
+  Shiny UI yet.
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes

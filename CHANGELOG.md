@@ -149,6 +149,42 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
   drift since S562 ratification). Claim stubs written to `SESSION_NOTES.md`/`HANDOFFS.md`
   (`status: pending`). Work beginning.
 
+### 2026-08-13 · [BL-N] S564: close out (Track A of kinship2 supplement full-reproduction plan DONE)
+- **Deliverable:** `kinship()` gained `chrtype = c("autosome", "x")` and `sex`
+  arguments (Track A, `docs/planning/kinship2-supplement-full-reproduction-plan.md`
+  §3) -- X-chromosome kinship reproducing the kinship2 supplement's Table S2, core
+  algorithm only per ratified D-A2 Option A. Full PRE-RED→RED→GREEN TDD cycle, each
+  transition `AskUserQuestion`-gated; REFACTOR skipped (owner choice, matching Track
+  C's own precedent).
+- **PRE-RED finding beyond the plan's own framing:** Table S2's printed values
+  already embed the MZ-twin correction (Figure S1 declares subjects 8/9 identical
+  twins) -- one fixture satisfies both "reproduce Table S2" and the plan's
+  separately-listed "combined X-linked + MZ-twin" coverage requirement. Full 10x10
+  matrix transcribed via `pdftotext -layout` against
+  `inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf` and
+  cross-validated by hand-porting kinship2's own algorithm against the installed
+  `kinship2` 1.9.6.2.
+- **Fix:** `chrtype = "autosome"` (default) is byte-identical to every prior call
+  site (pinned by `expect_identical()`); the new `chrtype = "x"` branch reuses the
+  existing MZ-twin `mzgrp`/`mzindex` correction unchanged.
+- **Tests:** 6 new `test_that()` blocks in `tests/testthat/test_kinship.R` (Table S2
+  reproduction; twin-correction isolation; backward-compat pin; `sex`/`chrtype`
+  validation; unknown-sex NA propagation), all confirmed failing for the right
+  reason against unmodified source before GREEN.
+- **Verify:** `devtools::check()` 0 errors, 1 warning + 1 note, both confirmed
+  pre-existing/unrelated via `git stash` (matches Track C's S563 findings exactly);
+  full clean regression 1 pre-existing failure (`test_wordlist_coverage.R`,
+  confirmed via `git stash`); 2 new spelling flags from a new `@references`
+  citation fixed via `inst/WORDLIST` (not left as debt); `lintr::lint_package()` 0
+  new lints (2 introduced suppressed via documented `# nolint`, matching file
+  convention; 5 pre-existing confirmed via `git stash`, left untouched).
+- **Docs:** `NEWS.Rmd` entry added; roxygen `@references` added citing the kinship2
+  supplement source; `BACKLOG.md`'s kinship2 plan tracker annotated (Track B remains
+  open); `PROJECT_LEARNINGS.md` Learning 570 logged (`devtools::check()`'s
+  `man/*.Rd` regeneration is not reliably synced to a pre-launch `document()` call --
+  always `document()` immediately before each `check()` launch). Not filed as a
+  GitHub issue, matching Track C's own precedent.
+
 ### 2026-08-13 · [ad hoc] S563: reconcile HANDOFFS.md commit self-reference (`89be00ca`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` ->
   `89be00ca` (the close-out commit whose sha the receipt itself couldn't name until after it

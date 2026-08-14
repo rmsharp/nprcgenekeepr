@@ -291,23 +291,55 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `docs/planning/kinship2-supplement-full-reproduction-plan.md`. 3 independently
       session-sliceable tracks, no shared code: **Track A** (X-chromosome kinship,
       Table S2 -- `kinship()` gains `chrtype`/`sex` params, ratified scope is the core
-      algorithm only, Effort M); **Track B** (a `pedigree.shrink()` equivalent -- new
-      `shrinkPedigree()` function, script-callable only, deterministic tie-break
-      [diverges from kinship2's own `runif()` non-determinism by design, ratified],
-      the most novel of the 3, Effort L -- 2 of kinship2's own internal helpers
-      [`excludeUnavailFounders`/`excludeStrayMarryin`] were not yet deparsed by the
-      plan, left as an explicit Pre-RED item); **Track C** (finish the
-      `edgeStyle="rectilinear"` consanguineous-marker color/width propagation from the
-      deferred item directly above -- smallest of the 3, Effort S, no open design
-      question) -- **DONE S563**, see the deferred-follow-up item above and
-      `CHANGELOG.md`. Plan's own §6.2 suggests C -> A -> B pickup order (smallest/lowest-risk
-      first) but does not force it. **Tracks A and B remain open** (Effort M and L
-      respectively). Verification caveat carried from the S549 audit: the
-      full 17-subject `fam1` pedigree still isn't reconstructible from this repo, and
-      Track B additionally has no PDF-printed worked example to check against at all
-      (the PDF only names *which* subjects a shrink would trim, never their
-      relationships) -- Track B verifies against the installed `kinship2::pedigree.shrink()`
-      directly instead. None of the 3 tracks has a GitHub issue yet.
+      algorithm only, Effort M) -- **DONE S564**, see below; **Track B** (a
+      `pedigree.shrink()` equivalent -- new `shrinkPedigree()` function, script-callable
+      only, deterministic tie-break [diverges from kinship2's own `runif()`
+      non-determinism by design, ratified], the most novel of the 3, Effort L -- 2 of
+      kinship2's own internal helpers [`excludeUnavailFounders`/`excludeStrayMarryin`]
+      were not yet deparsed by the plan, left as an explicit Pre-RED item); **Track C**
+      (finish the `edgeStyle="rectilinear"` consanguineous-marker color/width
+      propagation from the deferred item directly above -- smallest of the 3, Effort S,
+      no open design question) -- **DONE S563**, see the deferred-follow-up item above
+      and `CHANGELOG.md`. Plan's own §6.2 suggests C -> A -> B pickup order
+      (smallest/lowest-risk first) but does not force it. **Track B remains open**
+      (Effort L). Verification caveat carried from the S549 audit: the full 17-subject
+      `fam1` pedigree still isn't reconstructible from this repo, and Track B
+      additionally has no PDF-printed worked example to check against at all (the PDF
+      only names *which* subjects a shrink would trim, never their relationships) --
+      Track B verifies against the installed `kinship2::pedigree.shrink()` directly
+      instead. None of the 3 tracks has a GitHub issue yet.
+- [ ] (**Track A above, DONE S564.** `kinship()` gained `chrtype = c("autosome", "x")`
+      and `sex` arguments -- X-chromosome kinship (kinship2 supplement Table S2), core
+      algorithm only per ratified D-A2 Option A (no propagation to
+      `reportGV()`/`gvaConvergence()`/`createSimKinships()`/`cumulateSimKinships()` or
+      the Shiny app). `chrtype = "autosome"` (the default) is byte-identical to every
+      prior call site -- pinned by an `expect_identical()` regression test. Full 10x10
+      Table S2 transcribed directly from
+      `inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf` via
+      `pdftotext -layout` (not read visually) and cross-validated by hand-porting
+      kinship2's own deparsed X-linked algorithm, run live against the installed
+      `kinship2` 1.9.6.2. PRE-RED finding beyond the plan's own framing: Table S2's
+      printed values already embed the MZ-twin correction (Figure S1 declares subjects
+      8/9 identical twins), so one fixture (the existing `fam1`/`twins` pair already in
+      `tests/testthat/test_kinship.R`, extended with a `sex` column) satisfies both
+      "reproduce Table S2" and the plan's separately-listed "combined X-linked +
+      MZ-twin" coverage requirement. 6 new `test_that()` blocks (Table S2 reproduction;
+      twin-correction isolation; backward-compat `expect_identical()` pin; `sex`
+      validation; invalid-`chrtype` validation; unknown-sex NA propagation), all
+      confirmed failing for the right reason against unmodified source before GREEN.
+      `devtools::check()` 0 errors, 1 warning + 1 note, both confirmed pre-existing/
+      unrelated via `git stash` (the untracked "Compounding Loop" files' non-portable
+      names; a pre-existing `vignettes/figure/` knitr leftover) -- matching Track C's
+      own S563 findings exactly. Full clean regression 1 pre-existing failure
+      (`test_wordlist_coverage.R`), confirmed via `git stash` unrelated (`matings`/
+      `runnable`, from `.qmd` articles, untouched by this diff); this session's own
+      2 new spelling flags (`Schaid`/`Sinnwell`, from a new roxygen `@references`
+      citation) were fixed via `inst/WORDLIST` additions, not left as new debt.
+      `lintr::lint_package()` 0 new lints (2 introduced by new camelCase variable names
+      `sexNum`/`founderDiag` suppressed via `# nolint: object_name_linter`, matching
+      the file's own established convention and the 5 pre-existing lints already in
+      this file, confirmed via `git stash`, left untouched). Not filed as a GitHub
+      issue, matching Track C's own precedent. See `CHANGELOG.md`.)
 - [ ] (found S552, owner-reported live, **FIXED S554**. **Pedigree Diagram tab's
       affected-status shading fills unaffected individuals too, counter to standard
       pedigree drawing convention** -- issue #133's `.affectedColor()`

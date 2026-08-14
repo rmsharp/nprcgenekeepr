@@ -4,7 +4,16 @@
 \alias{kinship}
 \title{Generate a kinship matrix}
 \usage{
-kinship(id, father.id, mother.id, pdepth, sparse = FALSE, twinRelations = NULL)
+kinship(
+  id,
+  father.id,
+  mother.id,
+  pdepth,
+  sparse = FALSE,
+  twinRelations = NULL,
+  chrtype = "autosome",
+  sex = NULL
+)
 }
 \arguments{
 \item{id}{character vector of IDs for a set of animals.}
@@ -34,11 +43,32 @@ A-B and B-C, also correct the undeclared A-C pair) and to every relative
 computed at a later pedigree depth through either twin -- not just the
 declared pair's own cell. \code{twinRelations} is trusted as already
 validated by \code{\link{checkTwinRelations}} (this function has no
-\code{sex} parameter and so cannot re-run that validator's full rule set
-itself); only a cheap self-contained check (both ids present in \code{id})
-is performed here. See
+\code{sex} parameter of its own and so cannot re-run that validator's full
+rule set itself); only a cheap self-contained check (both ids present in
+\code{id}) is performed here. See
 \code{docs/planning/twin-relations-kinship-computation-plan.md} for the
 full design rationale.}
+
+\item{chrtype}{\code{"autosome"} (default) or \code{"x"}. When
+\code{"autosome"}, behavior is unchanged from every prior version of this
+function -- \code{sex} is not required and is ignored if supplied. When
+\code{"x"}, computes X-chromosome kinship instead: a male's X comes from
+his mother only (self-kinship 1, since he carries a single copy); a
+female's X-linked kinship follows the same average-of-parents formula as
+the autosomal case (self-kinship 0.5, as usual). An individual with
+unrecognized \code{sex} gets \code{NA} kinship with everyone, including
+their own self-kinship value. The MZ-twin correction
+(\code{twinRelations}) applies inside this branch identically to the
+autosomal branch. Ported from kinship2's
+own \code{kinship.default()} X-linked branch; see
+\code{docs/planning/kinship2-supplement-full-reproduction-plan.md} §3 for
+the full design rationale.}
+
+\item{sex}{\code{NULL} (default) or a character vector, the same length as
+\code{id}, using this package's own internal sex codes (\code{sexCodes}):
+\code{"M"}/\code{"F"}; any other value, including \code{NA}, is treated as
+unknown). Required when \code{chrtype = "x"}; ignored (may be omitted)
+when \code{chrtype = "autosome"}.}
 }
 \value{
 A kinship square matrix
@@ -70,6 +100,13 @@ kmat
 }
 \references{
 \url{https://cran.r-project.org/package=kinship2}
+
+The \code{chrtype = "x"} branch is ported from kinship2's own X-chromosome
+kinship algorithm, described and worked (Table S2) in its supplementary
+material:
+
+Sinnwell JP, Therneau TM, Schaid DJ (2014). "The kinship2 R
+Package for Pedigree Data." \emph{Human Heredity}, 78(2), 91-93.
 
 $Id: kinship.s,v 1.5 2003/01/04 19:07:53 therneau Exp $
 

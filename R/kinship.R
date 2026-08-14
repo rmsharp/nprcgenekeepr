@@ -40,11 +40,30 @@
 #' computed at a later pedigree depth through either twin -- not just the
 #' declared pair's own cell. \code{twinRelations} is trusted as already
 #' validated by \code{\link{checkTwinRelations}} (this function has no
-#' \code{sex} parameter and so cannot re-run that validator's full rule set
-#' itself); only a cheap self-contained check (both ids present in \code{id})
-#' is performed here. See
+#' \code{sex} parameter of its own and so cannot re-run that validator's full
+#' rule set itself); only a cheap self-contained check (both ids present in
+#' \code{id}) is performed here. See
 #' \code{docs/planning/twin-relations-kinship-computation-plan.md} for the
 #' full design rationale.
+#' @param chrtype \code{"autosome"} (default) or \code{"x"}. When
+#' \code{"autosome"}, behavior is unchanged from every prior version of this
+#' function -- \code{sex} is not required and is ignored if supplied. When
+#' \code{"x"}, computes X-chromosome kinship instead: a male's X comes from
+#' his mother only (self-kinship 1, since he carries a single copy); a
+#' female's X-linked kinship follows the same average-of-parents formula as
+#' the autosomal case (self-kinship 0.5, as usual). An individual with
+#' unrecognized \code{sex} gets \code{NA} kinship with everyone, including
+#' their own self-kinship value. The MZ-twin correction
+#' (\code{twinRelations}) applies inside this branch identically to the
+#' autosomal branch. Ported from kinship2's
+#' own \code{kinship.default()} X-linked branch; see
+#' \code{docs/planning/kinship2-supplement-full-reproduction-plan.md} §3 for
+#' the full design rationale.
+#' @param sex \code{NULL} (default) or a character vector, the same length as
+#' \code{id}, using this package's own internal sex codes (\code{sexCodes}):
+#' \code{"M"}/\code{"F"}; any other value, including \code{NA}, is treated as
+#' unknown). Required when \code{chrtype = "x"}; ignored (may be omitted)
+#' when \code{chrtype = "autosome"}.
 #'
 #' @return A kinship square matrix
 #'
@@ -58,6 +77,12 @@
 #'
 #' The R version became the kinship2 package available on CRAN:
 #' @references \url{https://cran.r-project.org/package=kinship2}
+#'
+#' The \code{chrtype = "x"} branch is ported from kinship2's own X-chromosome
+#' kinship algorithm, described and worked (Table S2) in its supplementary
+#' material:
+#' @references Sinnwell JP, Therneau TM, Schaid DJ (2014). "The kinship2 R
+#' Package for Pedigree Data." \emph{Human Heredity}, 78(2), 91-93.
 #'
 #' $Id: kinship.s,v 1.5 2003/01/04 19:07:53 therneau Exp $
 #'
@@ -77,26 +102,49 @@
 #' ped
 #' kmat
 kinship <- function(id, father.id, mother.id, pdepth, sparse = FALSE, # nolint: object_name_linter
-                     twinRelations = NULL) {
+                     twinRelations = NULL, chrtype = "autosome", sex = NULL) {
   # Returns: Matrix (row and col names are 'id')
   n <- length(id)
   if (anyDuplicated(id)) {
     stop("All id values must be unique")
   }
-  ## Mendelian 1/2: a non-inbred animal's self-kinship is 1/2, so kmat starts
-  ## as one-half of the identity matrix (each founder's self-kinship is 0.5).
-  if (sparse) {
-    kmat <- Diagonal(n + 1L) / 2L
-  } else {
-    kmat <- diag(n + 1L) / 2L
-  }
-
-  kmat[n + 1L, n + 1L] <- 0L # if A and B both have "unknown" dad, this ensures
-  # that they won't end up 'related' in the matrix
+  chrtype <- match.arg(casefold(chrtype), c("autosome", "x"))
 
   # id number "n + 1" is a placeholder for missing parents
   mrow <- match(mother.id, id, nomatch = n + 1L) # row number of the mother
   drow <- match(father.id, id, nomatch = n + 1L) # row number of the dad
+
+  if (chrtype == "x") {
+    if (is.null(sex) || length(sex) != n) {
+      stop("invalid sex vector")
+    }
+    ## X-linked founder self-kinship: males are hemizygous (a single X copy,
+    ## so self-kinship = 1); females follow the usual non-inbred 0.5. Unknown
+    ## sex gets NA. The "n + 1" placeholder row/col (missing-parent stand-in)
+    ## is appended as 0, matching the autosomal branch's own placeholder
+    ## treatment below.
+    sexNum <- ifelse(sex == sexCodes[["male"]], 1L, # nolint: object_name_linter
+      ifelse(sex == sexCodes[["female"]], 2L, NA_integer_)
+    )
+    founderDiag <- ifelse(is.na(sexNum), NA_real_, (3L - sexNum) / 2L) # nolint: object_name_linter
+    if (sparse) {
+      kmat <- Diagonal(x = c(founderDiag, 0))
+    } else {
+      kmat <- diag(c(founderDiag, 0))
+    }
+  } else {
+    ## Mendelian 1/2: a non-inbred animal's self-kinship is 1/2, so kmat
+    ## starts as one-half of the identity matrix (each founder's self-kinship
+    ## is 0.5).
+    if (sparse) {
+      kmat <- Diagonal(n + 1L) / 2L
+    } else {
+      kmat <- diag(n + 1L) / 2L
+    }
+
+    kmat[n + 1L, n + 1L] <- 0L # if A and B both have "unknown" dad, this
+    # ensures that they won't end up 'related' in the matrix
+  }
 
   ## MZ-twin transitive-identity correction (ported from kinship2's own
   ## mzgrp/mzindex mechanism -- see
@@ -154,11 +202,22 @@ kinship <- function(id, father.id, mother.id, pdepth, sparse = FALSE, # nolint: 
     for (i in indx) {
       mom <- mrow[i]
       dad <- drow[i]
-      ## Mendelian 1/2: i's kinship with any j is the average of its two
-      ## parents' kinships with j; i's self-kinship is half of one plus its
-      ## own inbreeding coefficient (the kinship between its two parents).
-      kmat[i, ] <- kmat[, i] <- (kmat[mom, ] + kmat[dad, ]) / 2L
-      kmat[i, i] <- (1L + kmat[mom, dad]) / 2L
+      if (chrtype == "x" && !is.na(sexNum[i]) && sexNum[i] == 1L) {
+        ## Male: X comes from the mother only.
+        kmat[i, ] <- kmat[, i] <- kmat[mom, ]
+        kmat[i, i] <- 1L
+      } else if (chrtype == "x" && is.na(sexNum[i])) {
+        ## Unknown sex: no defensible X-linked value.
+        kmat[i, ] <- kmat[, i] <- NA
+        kmat[i, i] <- NA
+      } else {
+        ## Autosomal, or X-linked female (same average-of-parents formula).
+        ## Mendelian 1/2: i's kinship with any j is the average of its two
+        ## parents' kinships with j; i's self-kinship is half of one plus its
+        ## own inbreeding coefficient (the kinship between its two parents).
+        kmat[i, ] <- kmat[, i] <- (kmat[mom, ] + kmat[dad, ]) / 2L
+        kmat[i, i] <- (1L + kmat[mom, dad]) / 2L
+      }
     }
     if (havemz) {
       kmat[mzindex] <- (diag(kmat))[mzindex[, 1L]]

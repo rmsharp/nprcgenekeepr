@@ -134,24 +134,80 @@ This file currently holds **5** receipt(s). Computed by `methodology_trim.py` on
 ```handoff
 session: S564
 date: 2026-08-13
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Implement Track A of the ratified kinship2 supplement full-reproduction
-  plan (docs/planning/kinship2-supplement-full-reproduction-plan.md §3) -- extend
-  kinship() with chrtype="autosome"|"x" and a new sex parameter, core algorithm only
-  (ratified D-A2 Option A).
-what_was_done: pending
-next_steps: pending
-key_files: R/kinship.R:79-171 (kinship() to extend); tests/testthat/test_kinship.R
-  (new test block); docs/planning/kinship2-supplement-full-reproduction-plan.md:98-217
-  (Track A spec)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: Track A of the ratified kinship2 supplement full-reproduction plan --
+  DONE. kinship() gained chrtype = c("autosome", "x") and sex arguments; Track B
+  (a pedigree.shrink() equivalent) remains open.
+what_was_done: Full PRE-RED->RED->GREEN TDD cycle (REFACTOR skipped, owner choice),
+  each transition AskUserQuestion-gated. PRE-RED transcribed the PDF's full 10x10
+  Table S2 via pdftotext -layout and cross-validated it by hand-porting kinship2's
+  own X-linked algorithm, run live against the installed kinship2 1.9.6.2 --
+  discovered Table S2's own printed values already embed the MZ-twin correction
+  (Figure S1's subjects 8/9 are twins), so one fixture satisfies both "reproduce
+  Table S2" and the plan's separately-listed "combined X-linked+MZ-twin" coverage
+  requirement. RED: 6 new test_that() blocks in tests/testthat/test_kinship.R,
+  caught and fixed one vacuous-pass assertion before confirming all 6 fail for the
+  right reason. GREEN: new chrtype/sex params, an X-linked depth-loop branch reusing
+  the existing MZ-twin mzgrp/mzindex correction unchanged; chrtype="autosome"
+  (default) left byte-for-byte untouched, pinned by expect_identical(). Verified:
+  targeted tests pass; full clean regression 1 pre-existing failure
+  (test_wordlist_coverage.R, confirmed via git stash); lintr::lint_package() 2 new
+  lints suppressed via documented # nolint (5 pre-existing left untouched);
+  devtools::check() needed 4 cycles to reach 0 errors/1 pre-existing warning/1
+  pre-existing note (a real codoc mismatch from a stale man/kinship.Rd, a broken
+  \\link{sexCodes} cross-reference, and 2 new spelling flags were each found and
+  fixed along the way -- PROJECT_LEARNINGS.md Learning 570 logged on the
+  check()/document() sync gap this exposed). Commits: bfd9532f (claim) + this
+  close-out commit.
+next_steps: Pick up Track B (a pedigree.shrink() equivalent, new shrinkPedigree(),
+  Effort L, most novel of the 3 -- its own Pre-RED must first deparse kinship2's
+  excludeUnavailFounders/excludeStrayMarryin helpers, not yet done) --
+  docs/planning/kinship2-supplement-full-reproduction-plan.md §4. Separate session
+  (different capability, never bundled per SESSION_RUNNER.md's vertical-slice rule).
+  Neither Track A nor B has a GitHub issue yet -- the owner may wish to file for
+  both before further implementation. Separately: an unresolved open item from this
+  session -- inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf (the
+  kinship2 supplement PDF itself) remains untracked; a possible copyright/licensing
+  question the owner should decide (commit it, gitignore it, or leave local-only)
+  before more documentation accumulates assuming one answer. BACKLOG.md priorities
+  otherwise unchanged: LabKey (BLOCKED, Effort M), NPRC outreach (DECISION NEEDED,
+  Effort N/A), issue #148 (DECISION NEEDED -- needs its own scope-narrowing
+  conversation first).
+key_files: R/kinship.R:79-193 (kinship(), the full Track A diff -- chrtype/sex
+  params, X-linked branch, roxygen docs); tests/testthat/test_kinship.R:31-95 (fam1
+  fixture + gen column, and the 6 new Track A test_that() blocks); man/kinship.Rd
+  (regenerated); NEWS.Rmd (new entry); inst/WORDLIST (2 new proper-noun entries);
+  BACKLOG.md (kinship2 plan tracker, Track A annotated DONE); PROJECT_LEARNINGS.md
+  Learning 570 (the check()/document() sync gap); docs/planning/kinship2-supplement-
+  full-reproduction-plan.md §4 (Track B, the next pickup).
+gotchas: (1) Always run devtools::document() manually immediately before every
+  devtools::check() launch -- check()'s own man/*.Rd regeneration is not reliably
+  synced to a pre-launch document() call (Learning 570); a codoc-mismatch or
+  Rd-cross-reference WARNING may just mean "document() wasn't re-run after the last
+  edit," not a genuine defect. (2) Do not launch a long-running check() and then
+  keep editing roxygen/NEWS.Rmd "while waiting" -- assume any such run is now
+  unreliable and re-run after document(). (3) Track B's own Pre-RED must deparse
+  excludeUnavailFounders/excludeStrayMarryin before writing RED tests -- still not
+  done. (4) Track B naming: use `genotyped`, never `avail`/`available` (collides
+  with R/makeAvailable.R's own unrelated breeding-group concept). (5) The
+  double-backgrounding pitfall (an `&`-suffixed command inside or alongside a
+  run_in_background:true Bash call produces a premature "completed" notification
+  while the R process keeps running detached) recurred twice this session despite
+  being a documented S563 finding -- prefer run_in_background:true alone, or a
+  Monitor with an explicit grep-for-completion-marker loop, never `&`/`disown`.
+runtime_smoke: No live shinytest2/chromote run this session -- Track A is
+  script-callable only (ratified D-A2 Option A explicitly excludes the Shiny app),
+  so there is no runtime/UI wiring to smoke-test. Behavior was verified by direct
+  execution instead: devtools::check()'s own testthat run (145s) exercises every
+  new code path against the new test fixtures, not merely a build-passes check.
+changelog_ref: CHANGELOG.md "S564: close out (Track A of kinship2 supplement
+  full-reproduction plan DONE)"
 commit: pending
 ```
-Session claimed; work beginning. Full receipt filled at close-out (Phase 3D).
+Full receipt filled at close-out (Phase 3D); `commit` reconciled next (self-reference,
+matching the S562/S563 precedent).
 
 ```handoff
 session: S563

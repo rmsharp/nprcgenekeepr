@@ -32,6 +32,7 @@ fam1 <- data.frame(
   id   = as.character(1:10),
   sire = c(NA, NA, "1", "1", NA, NA, "3", "6", "6", "8"),
   dam  = c(NA, NA, "2", "2", NA, NA, "5", "4", "4", "7"),
+  sex  = c("M", "F", "M", "F", "F", "M", "F", "M", "M", "F"),
   stringsAsFactors = FALSE
 )
 fam1$gen <- findGeneration(fam1$id, fam1$sire, fam1$dam)
@@ -92,4 +93,79 @@ test_that("kinship() applies zero correction for DZ/UZ-coded pairs", {
     kmat <- kinship(trio$id, trio$sire, trio$dam, trio$gen, twinRelations = twins)
     expect_equal(kmat["A", "B"], 0.25)
   }
+})
+
+## Track A -- X-chromosome kinship (kinship2 supplement Table S2). Values
+## transcribed directly from the PDF via `pdftotext -layout` against
+## inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf, then
+## cross-validated by hand-running kinship2's own deparsed X-linked algorithm
+## (docs/planning/kinship2-supplement-full-reproduction-plan.md §3.1) against
+## the fam1 fixture. Table S2's own printed values already embed the MZ-twin
+## correction (Figure S1 declares subjects 8/9 identical twins), so this one
+## fixture exercises both "reproduce Table S2" and the X-linked/MZ-twin
+## interaction the plan calls out as untested by kinship2's own supplement.
+test_that("kinship() with chrtype = 'x' reproduces the kinship2 supplement's
+  Table S2, including the MZ-twin correction baked into subjects 8/9", {
+  twins <- data.frame(id1 = "8", id2 = "9", code = "MZ twin",
+    stringsAsFactors = FALSE)
+  kmat <- kinship(fam1$id, fam1$sire, fam1$dam, fam1$gen,
+    chrtype = "x", sex = fam1$sex, twinRelations = twins)
+  expect_equal(kmat["1", "1"], 1.00) # male self-kinship = 1, not 0.5
+  expect_equal(kmat["2", "2"], 0.50) # female self-kinship = 0.5, as autosomal
+  expect_equal(kmat["1", "3"], 0.00) # father-son: no X transmitted
+  expect_equal(kmat["1", "4"], 0.50) # father-daughter: X always transmitted
+  expect_equal(kmat["2", "3"], 0.50) # mother-son: X always transmitted
+  expect_equal(kmat["8", "9"], 1.00) # MZ twins, X-linked: identity, not 0.5
+  expect_equal(kmat["9", "10"], 0.5625) # correction propagates to descendant
+})
+
+test_that("kinship() with chrtype = 'x' and no twinRelations differs from the
+  twin-corrected matrix only at the twin-affected cells", {
+  kmat <- kinship(fam1$id, fam1$sire, fam1$dam, fam1$gen,
+    chrtype = "x", sex = fam1$sex)
+  expect_equal(kmat["8", "9"], 0.50)
+  expect_equal(kmat["9", "10"], 0.3125)
+  # Unaffected cells are identical with or without the (absent) correction.
+  expect_equal(kmat["1", "4"], 0.50)
+  expect_equal(kmat["1", "1"], 1.00)
+})
+
+test_that("kinship() explicit chrtype = 'autosome' is byte-identical to
+  omitting chrtype entirely (backward-compatibility pin)", {
+  withChrtype <- kinship(fam1$id, fam1$sire, fam1$dam, fam1$gen,
+    chrtype = "autosome")
+  withoutChrtype <- kinship(fam1$id, fam1$sire, fam1$dam, fam1$gen)
+  expect_identical(withChrtype, withoutChrtype)
+})
+
+test_that("kinship() with chrtype = 'x' validates its sex argument", {
+  expect_error(
+    kinship(fam1$id, fam1$sire, fam1$dam, fam1$gen, chrtype = "x"),
+    "sex"
+  )
+  expect_error(
+    kinship(fam1$id, fam1$sire, fam1$dam, fam1$gen,
+      chrtype = "x", sex = fam1$sex[-1L]),
+    "sex"
+  )
+})
+
+test_that("kinship() rejects an unrecognized chrtype", {
+  expect_error(
+    kinship(fam1$id, fam1$sire, fam1$dam, fam1$gen,
+      chrtype = "y", sex = fam1$sex),
+    "should be one of"
+  )
+})
+
+test_that("kinship() with chrtype = 'x' gives NA kinship for a subject with
+  unknown sex", {
+  sexUnknown <- fam1$sex
+  sexUnknown[10L] <- "U"
+  kmat <- kinship(fam1$id, fam1$sire, fam1$dam, fam1$gen,
+    chrtype = "x", sex = sexUnknown)
+  expect_true(all(is.na(kmat["10", ])))
+  expect_true(all(is.na(kmat[, "10"])))
+  # Unrelated cells elsewhere in the matrix are unaffected.
+  expect_equal(kmat["1", "4"], 0.50)
 })

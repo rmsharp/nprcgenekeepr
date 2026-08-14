@@ -14,18 +14,145 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 563 Handoff Evaluation (by Session 564)
+**Score: 8/10.** **What helped:** `next_steps` explicitly named Track A as a
+legitimate next pickup with an accurate one-line scope ("kinship() gains chrtype/sex,
+Effort M") and pointed to the plan's §3/§4. Correctly flagged that none of the 3
+tracks has a GitHub issue yet. No claim about Track A specifically turned out to be
+wrong -- S563 didn't attempt Track A itself, so its handoff's value here was mostly
+"confirm this is a valid, unblocked next pickup," which held. **What was missing:**
+nothing S563 should have caught -- the one substantive PRE-RED finding this session
+made (Table S2's printed values already embed the MZ-twin correction, so "reproduce
+Table S2" and "combined X-linked+MZ-twin fixture" are the same test, not two) is a
+property of the plan document itself (written S562), not something S563's own
+Track-C-focused handoff omitted. **ROI:** Positive but modest -- the handoff correctly
+pointed at a valid task; the real load-bearing document for this session was the plan
+itself, not S563's handoff prose.
+
 ### What Session 564 Did
 **Deliverable:** Implement Track A of the ratified kinship2 supplement
 full-reproduction plan (`docs/planning/kinship2-supplement-full-reproduction-plan.md`
 §3) -- extend `kinship()` with `chrtype = "autosome"|"x"` and a new `sex` parameter,
 porting kinship2's X-linked kinship algorithm (core algorithm only, ratified D-A2
-Option A -- no propagation to `reportGV()`/`gvaConvergence()`/`createSimKinships()`/
-`cumulateSimKinships()` or the Shiny app). (IN PROGRESS)
-**Started:** 2026-08-13
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded
-in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for
-the next session's reconcile.
+Option A). **DONE.** **Started/Completed:** 2026-08-13. **Status:** DONE. TDD phase:
+REFACTOR skipped by owner choice (no structural improvement identified, matching
+Track C's own S563 precedent) -- full PRE-RED -> RED -> GREEN cycle completed, each
+transition gated by `AskUserQuestion`.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SESSION_RUNNER.md`,
+`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list`, `git status`/`log`/`diff --stat`
+[54 commits ahead of `origin/master`, unpushed, unchanged pattern since S548],
+`methodology_dashboard.py` [Health 96/100, 0 High+ risk], `gh run list --branch
+master --limit 10` [push-triggered workflows green; scheduled `shinytest2.yaml` red 2
+days running (2026-08-12, 2026-08-13), reported not diagnosed], ledger reconcile
+[`CHANGELOG.md` frontier == `HEAD`; `HANDOFFS.md` frontier one commit behind `HEAD`,
+the same self-reference limitation S562/S563 already documented -- no backfill
+needed]). Flagged 6 untracked files, all same-day (no ghost-session signal): a
+`.qmd`'s rendered `.html` build artifact (harmless), the kinship2 supplement PDF
+itself (flagged as an unresolved copyright/licensing question for the owner -- not
+acted on), and the already-known "Compounding Loop" clutter. Rendered the priorities
+list (4 items) via `AskUserQuestion` -- owner picked the kinship2 plan, Track A.
+**(2)** Read the plan's §3 (Track A) and the current `kinship()` source in full;
+confirmed no drift since S562 ratification; stated understanding back to the user.
+**(3)** Phase 1B: wrote claim stubs to `SESSION_NOTES.md`/`HANDOFFS.md`/
+`CHANGELOG.md`, committed (`bfd9532f`). **(4)** PRE-RED: transcribed the PDF's full
+10x10 Table S2 via `pdftotext -layout` (not read visually); cross-validated by
+hand-porting kinship2's own deparsed X-linked algorithm in a scratch script, run live
+via `Rscript` against the installed `kinship2` 1.9.6.2 for an independent
+cross-check. **Finding beyond the plan's own framing:** Table S2's printed values
+already embed the MZ-twin correction (Figure S1 declares subjects 8/9 identical
+twins) -- confirmed empirically that a plain X-linked computation without the
+correction does NOT match Table S2, but applying the same per-depth `mzgrp`/
+`mzindex` correction already in `kinship()` reproduces it exactly, all 100 cells.
+Confirmed the project's own `sexCodes` ("M"/"F") convention, not kinship2's numeric
+1/2, was the right parameter shape -- no open design question. Gated PRE-RED->RED via
+`AskUserQuestion`. **(5)** RED: added 6 `test_that()` blocks to
+`tests/testthat/test_kinship.R` (Table S2 reproduction incl. the twin interaction;
+twin-correction isolation; `expect_identical()` backward-compat pin; `sex`
+validation; invalid-`chrtype` validation; unknown-sex NA propagation); caught and
+fixed one vacuous-pass test (the invalid-`chrtype` assertion initially matched any
+error, not specifically a `match.arg` failure) before confirming all 6 blocks fail
+for the right reason against unmodified source. **(6)** Gated RED->GREEN via
+`AskUserQuestion`. Implemented: `chrtype`/`sex` params, an X-linked branch in the
+depth loop (male: X from mother only, self-kinship 1; female: same average-of-
+parents formula as autosomal), reusing the existing MZ-twin correction unchanged;
+`chrtype = "autosome"` (default) path left byte-for-byte untouched. **(7)** Verified,
+iteratively: targeted test file all pass; full clean regression 1 pre-existing
+failure (`test_wordlist_coverage.R`, confirmed via `git stash` identical on
+unmodified source); `lintr::lint_package()` found 2 new lints from new camelCase
+variable names, suppressed via documented `# nolint` (5 pre-existing left
+untouched, confirmed via `git stash`); `devtools::check()` needed 4 cycles (~16 min)
+to reach 0 errors -- 1st cycle found a real codoc mismatch (`man/kinship.Rd` stale
+relative to the new `chrtype`/`sex` roxygen, fixed via manual `devtools::document()`);
+2nd cycle (after adding a `NEWS.Rmd` entry and a roxygen `@references` block while
+the run was in flight) found a broken `\link{sexCodes}` cross-reference (an internal
+`@noRd` object with no Rd page -- fixed by removing the `\link`) plus 3 new spelling
+flags (`Schaid`/`Sinnwell` from the new citation, `themself` from new prose --
+fixed via `inst/WORDLIST` additions and a rephrase, not left as debt); 3rd and 4th
+cycles confirmed clean down to the same 2 pre-existing WARNING/NOTE S563 already
+found (untracked "Compounding Loop" filenames; `vignettes/figure/` knitr leftover).
+Logged `PROJECT_LEARNINGS.md` Learning 570 on the `check()`/`document()` sync gap.
+**(8)** Gated GREEN->REFACTOR via `AskUserQuestion` -- owner chose to skip. **(9)**
+Close-out: annotated `BACKLOG.md`'s kinship2 plan tracker (Track A DONE, Track B
+remains open, full verification summary added); added a `NEWS.Rmd` entry; reviewed
+the tutorial/article checklist (N/A -- script-callable only, no Shiny UI touched,
+matching the plan's own explicit scope); reviewed the `a2interactive.Rmd` checklist
+(N/A this session by design -- deferred pass, but `kinship()` gaining new parameters
+is exactly the trigger case for a future documentation pass to pick up); GitHub issue
+checklist N/A (no issue filed yet, matching Track C's own "recommend, don't
+unilaterally file" precedent); `_pkgdown.yml` checklist N/A (no new exported
+function); refreshed `CLAUDE.md`'s learnings-count pointer (569->570).
+
+**Open item flagged, not resolved:** `inst/extdata/reference/NIHMS593658-supplement-
+supplement_1.pdf` (a copy of the kinship2 supplement journal PDF, sourced from PMC's
+NIHMS manuscript system) remains untracked. This session's own roxygen citation
+deliberately does NOT claim the PDF is "bundled with this package," specifically to
+avoid presuming a licensing decision that belongs to the owner. A future session (or
+the owner directly) should decide whether to `git add` it, gitignore it, or leave it
+local-only before it accumulates further dependent documentation that assumes one
+answer or the other.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist -- added a roxygen
+`@references` citation for the algorithm's source (Sinnwell/Therneau/Schaid 2014);
+not a "new displayed statistic" (no UI), so the UI-guidance-page requirement is N/A,
+but the citation was added anyway on the project's own sourcing-discipline precedent.
+Tutorial/article checklist N/A (script-callable only). `NEWS.Rmd` entry checklist
+DONE. `a2interactive.Rmd` checklist N/A (deferred by design; flagged as a future
+trigger). GitHub issue close-out N/A (no issue exists yet). Lint checklist DONE (2
+new lints suppressed with documented rationale; 5 pre-existing confirmed and left
+alone). `_pkgdown.yml` reference-coverage checklist N/A (no new exported function).
+
+**Self-assessment (Session 564): 8/10.** **Strengths:** (1) Did not trust the plan
+document's own framing of "reproduce Table S2" and "combined X-linked+MZ-twin
+fixture" as two separate requirements -- independently discovered via live
+cross-validation (a scratch script run against the installed `kinship2` package) that
+they're the same fixture, before writing any test code. (2) Caught a vacuous-pass
+test during RED itself (the invalid-`chrtype` assertion) rather than discovering it
+only at REFACTOR or a future audit, matching the project's own Learning 560/562
+discipline. (3) Ran a genuine independent cross-check of expected values (hand-ported
+algorithm vs. the installed reference package vs. the PDF's own transcribed text --
+three independent sources agreeing) rather than trusting a single derivation. (4)
+Fixed every new spelling/lint flag this session introduced rather than accepting them
+as new debt, while correctly leaving pre-existing debt (confirmed via `git stash`)
+untouched -- did not conflate "in a touched file" with "caused by this diff." (5)
+Explicitly declined to assert a licensing/bundling claim about the untracked PDF
+citation, flagging it for the owner instead of deciding unilaterally. **Weaknesses:**
+(1) Needed 4 full `devtools::check()` cycles (~16 minutes) instead of 1-2, because
+roxygen edits (NEWS.Rmd content aside) continued after the first `check()` launch
+without an intervening manual `document()` call -- the exact gap Learning 570
+documents; a stricter "freeze all doc edits before check() launch" discipline would
+have saved real wall-clock time. (2) Hit the same double-backgrounding pattern
+S563's own self-assessment flagged as a weakness (an `&`-suffixed command producing a
+premature "completed" notification while the R process kept running detached) twice
+more this session, despite having read that exact warning during Phase 0 orientation
+-- recovered each time via direct `ps` checks and `TaskOutput`/Monitor polling, but
+the pattern itself was not avoided. (3) No independent adversarial-verification pass
+beyond this session's own direct test/check output -- same standing gap flagged
+across many prior sessions. (4) Did not file a GitHub issue for Track A (or push the
+now 56+ local commits) -- matches established precedent, left for the owner/a future
+session.
+**Ledger:** recorded in `CHANGELOG.md` (this session's reconcile, claim, deliverable,
+and close-out entries).
 
 ### Session 562 Handoff Evaluation (by Session 563)
 **Score: 7/10.** **What helped:** `next_steps` named this exact item verbatim as the
