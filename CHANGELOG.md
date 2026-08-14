@@ -138,6 +138,18 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [ad hoc] S560 Phase 0 reconcile: S559's HANDOFFS.md commit self-reference
+- **Deliverable:** Phase 0 ledger reconcile (`SESSION_RUNNER.md` step 6). S559's `HANDOFFS.md`
+  receipt shipped with `commit: pending` -- the standard self-reference limitation (the receipt
+  ships in the very commit whose sha it would name), matching the S543-S545/S549-S553/S558-S559
+  precedent each prior session reconciled at its own claim. `HANDOFFS.md`'s frontier (`git log -1
+  -- HANDOFFS.md`) == `abf1a984` (S559's own close-out commit), so reconciled `commit: pending` ->
+  `abf1a984`. `CHANGELOG.md`'s own frontier == `HEAD` already (zero-commit gap, no backfill
+  needed). `gh run list --branch master --limit 10` showed the scheduled `shinytest2.yaml` run
+  still red (23m52s, 2026-08-13T07:32:33Z), unchanged from S548-S559's own findings -- not
+  diagnosed this session (report, don't fix, per established precedent).
+- **Commit:** this reconcile's own commit.
+
 ### 2026-08-13 · [ad hoc] S559 close-out: SESSION_NOTES.md/HANDOFFS.md/CHANGELOG.md all archived; S558 handoff evaluation; Learning 565 logged
 - **Deliverable:** Session S559's own close-out. Evaluated S558's `HANDOFFS.md` receipt (9/10
   -- its `next_steps` field named this exact item verbatim as item 1 of its priority list,

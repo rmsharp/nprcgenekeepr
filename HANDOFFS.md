@@ -187,7 +187,7 @@ runtime/Shiny behavior surface exists to launch or observe. Stated explicitly, n
 skipped.
 changelog_ref: this session's own CHANGELOG.md entries, 2026-08-13 (claim; 3 ledger-trim
 entries auto-written by methodology_trim.py; this close-out entry)
-commit: pending
+commit: abf1a984
 ```
 <**Self-score 8/10.** +: (1) ran --check before every --write and verified losslessness via
 each shard's own generated verify.sh before every commit -- caught the chained-trim defect
