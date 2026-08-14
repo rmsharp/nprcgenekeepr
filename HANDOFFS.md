@@ -134,21 +134,67 @@ This file currently holds **8** receipt(s). Computed by `methodology_trim.py` on
 ```handoff
 session: S572
 date: 2026-08-14
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 8
+predecessor_score: 9
 active_task: Track 4 design session (anchor/founder generation-row alignment) from
-  docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md §Track 4. A ratified
-  PRE-RED decision between option (a) (keep anchor-tracks-deepest-union + Candidate C
-  signposting) and option (b) (anchor at own natural gen, duplicate the far mate), written as
-  its own docs/planning/*-plan.md. Not started.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+  docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md §Track 4. DONE -- design
+  ratified (Candidate A: gen-aware D2 anchor selection). Implementation is a separate future
+  session, per Track 4's own completion criteria.
+what_was_done: Wrote docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md (RATIFIED),
+  following ARCHITECTURE_WORKSTREAM.md. Decision space reconstructed from 2 sibling planning
+  sessions (issue143/issue144 plans) rather than the remediation plan's own loose (a)/(b)
+  paraphrase -- found Candidate A/B/C already designed and empirically validated there. Adopted
+  Candidate A (owner-ratified via AskUserQuestion): rewrite preferAnchor() gen-first, remove the
+  used/elimination shortcut, delete effGenOf/the anchor dispGenOf override as a provable
+  consequence (net simplification, not addition). Derived that a founder always has gen=0
+  (founder-preference is a special case of gen-preference) and that Candidate A resolves both
+  committed residual-acceptance regression tests (test_positionMatingUnitForest.R:809-893) via
+  one mechanism. Independently re-simulated Candidate A's own trade-off numbers via a throwaway,
+  uncommitted R script against the real 375-individual fixture: confirmed 0 anchor mismatches
+  (the structural claim) and found 22 multi-anchor individuals/102 duplicate nodes (vs #144's own
+  cited 21/103 -- close, folded into the plan's own evidence rather than left unchallenged).
+  Cross-updated the remediation plan's Track 4 section (DESIGN RATIFIED S572) and BACKLOG.md's
+  Candidate C item (not closed, still available). Added PROJECT_LEARNINGS.md Learning 577 (a
+  handoff's own document pointer is a starting citation, not the complete one -- follow its own
+  References/Alternatives-Considered sections one level deeper). No R files touched; no RED/GREEN
+  code this session. Commits: 3a4ecc05 (claim), plus this close-out's own commit (below).
+next_steps: The next session on this thread implements the ratified decision --
+  docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md §6 Migration Path and §7
+  Verification Plan are the direct RED/GREEN/REFACTOR instructions (edit preferAnchor() and the
+  elimination-branch removal in .buildMatingUnitForest(), delete effGenOf/the anchor dispGenOf
+  override in .positionMatingUnitForest(), rewrite the 2 residual-acceptance tests, re-measure
+  every carried-forward number against the full pipeline rather than trusting either the #144 or
+  this session's own throwaway-script figures). Per the remediation plan's own §5, Track 2 (flip
+  edgeStyle default) should wait until this implementation lands. Issue #148's scope-narrowing
+  conversation, the LabKey BLOCKED item, and the NPRC outreach plan remain independent, unrelated
+  pickup candidates (this session's own Phase 0 priorities list).
+key_files: docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md (this session's own
+  deliverable, all sections); docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md
+  (Track 4 section, DESIGN RATIFIED annotation); docs/planning/issue144-anchor-row-mismatch-fix-plan.md
+  (the prior art this session's own decision builds directly on, §5 Alternatives Considered);
+  R/makePedigreeDiagramData.R:347-546 (.buildMatingUnitForest, D1/D2 -- the future implementation
+  session's edit target), :610-1056 (.positionMatingUnitForest, effGenOf/dispGenOf -- the other
+  edit target); tests/testthat/test_positionMatingUnitForest.R:809-893 (the 2 regression tests to
+  flip from residual-acceptance to residual-resolution); BACKLOG.md:782-800 (Candidate C item,
+  annotated).
+gotchas: (1) The plan document's §1.4 duplicate-node/multi-anchor figures are now BRACKETED by 2
+  close-but-not-identical estimates (103/21 from #144's own session, 102/22 from this session's
+  own re-simulation) -- neither is the implementation session's authoritative number; §7 step 4
+  says this explicitly, but a future reader skimming only §1.3's headline "-20%, 2->21" figure
+  could mistake it for exact. (2) `isFounderOf()`'s fate (dead code vs. merged vs. reused
+  elsewhere) is deliberately left open in §8 -- do not assume it should simply be deleted without
+  checking whether anything else in .buildMatingUnitForest() still calls it (this session did not
+  exhaustively grep every remaining call site). (3) The plan's §6 step 4 carries forward #144's
+  own "~38 failures across 13 blocks" test-blast-radius estimate unmodified since D1/D2 source is
+  confirmed unchanged since #144 -- but 3 commits' worth of OTHER file changes (Track 1, Track 3,
+  this session's own docs) could still shift the exact count; treat it as an order-of-magnitude
+  expectation only, matching the plan's own explicit caveat.
+runtime_smoke: n/a -- docs-only session, no code changed, no runtime behavior to verify. The one
+  throwaway R script run this session was a scratchpad validation aid (not committed, not part of
+  the package), matching #143/#144's own precedent for candidate-validation scripts.
+changelog_ref: this session's own CHANGELOG.md entries (Phase 3F, below)
+commit: pending -- reconciled by the next session's Phase 0 reconcile
 ```
 
 ```handoff

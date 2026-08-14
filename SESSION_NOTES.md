@@ -14,17 +14,124 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 571 Handoff Evaluation (by Session 572)
+**Score: 9/10.** **What helped:** the handoff's `next_steps` field correctly named Track 4's
+design session as "the long-pole item" that "does not block on anything else... worth starting
+early since it is 2+ sessions on its own" -- exactly what the owner picked this session. Gotcha
+(4) directed this session to "start by re-reading `docs/planning/pedigree-diagram-kinship2-
+fidelity-remediation-plan.md` §Track 4 directly... rather than re-deriving the options from
+scratch" -- followed, and correct as far as it went. **What was missing:** gotcha (4)'s own
+pointer stopped at the remediation plan's own Track 4 section, which turned out to be a loose
+paraphrase of a much richer, already-validated decision space living one citation-hop deeper in
+`docs/planning/issue144-anchor-row-mismatch-fix-plan.md` (3 named candidates, empirically
+validated, with a structural proof and measured trade-off figures) -- neither S571's handoff nor
+the remediation plan's own Track 4 entry cited that document. This is not a fault of S571's own
+work (Track 3 never needed to read it) but is exactly the gap `PROJECT_LEARNINGS.md` Learning 577
+(this session) now documents for future handoffs writing "see document X for this decision."
+**What was wrong:** nothing identified -- Track 3's own reported numbers/citations all held up
+under this session's independent re-verification (§1.4 of this session's own plan document
+re-confirmed Track 3 doesn't interact with Track 4's scope, as S571 itself predicted). **ROI:**
+high -- the accurate `next_steps` framing and gotcha (4)'s starting pointer materially shortened
+this session's own orientation, even though the deeper prior art still had to be self-discovered.
+
 ### What Session 572 Did
 **Deliverable:** Track 4 design session (anchor/founder generation-row alignment) from
-`docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §Track 4 -- a ratified
-PRE-RED decision between option (a) (keep anchor-tracks-deepest-union + adopt the already-designed
-"Candidate C" dogleg signposting) and option (b) (anchor at own natural gen, duplicate the far
-mate instead), written as its own `docs/planning/*-plan.md`. (IN PROGRESS)
-**Started:** 2026-08-14.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+`docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §Track 4. **DONE
+(design ratified; implementation is a separate future session, per Track 4's own completion
+criteria).** **Started/Completed:** 2026-08-14. **Status:** DONE. Workstream:
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`. No RED/GREEN implementation code this
+session (an explicit scope boundary declared at Phase 1 and held throughout) -- one throwaway,
+uncommitted R validation script was run against the real fixture to independently verify a
+candidate's own numeric claims (see below), matching this project's own established "isolated
+validation script, not committed" precedent from the #143/#144 planning sessions.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SESSION_RUNNER.md`, `SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list` [12 open], `git status`/`log`/`diff --stat` [81 commits ahead
+of `origin/master`, unpushed; 1 untracked file -- investigated, confirmed via `git log`/
+`check-ignore` to be the SAME already-cleared Quarto render byproduct S570/S571 investigated, not
+a new ghost-session signal], `methodology_dashboard.py` [Health 96/100, 0 High+ risk; the
+dashboard script itself flagged as stale, v2.14.0 vs canonical v2.15.2 -- informational only],
+`gh run list --branch master --limit 10` [push-triggered workflows green; scheduled
+`shinytest2.yaml` red a 3rd consecutive day -- reported, not diagnosed], ledger reconcile
+[`CHANGELOG.md`/`HANDOFFS.md` frontiers both == `HEAD`, zero gap]). Rendered a 4-item priorities
+list (Track 4 design session, issue #148 scoping, LabKey follow-up, NPRC outreach plan) via
+`AskUserQuestion` -- owner picked Track 4. **(2)** Phase 1B: claim stub written to
+`SESSION_NOTES.md`/`HANDOFFS.md`, committed (`3a4ecc05`). **(3)** Research phase: read the
+remediation plan's own Track 4 section, §2.4a evidence, and §3 "already decided" boundary; then,
+per gotcha-driven investigation, read `docs/planning/pedigree-diagram-option2-layout-design-plan.md`
+in full (D1-D6 origin, the S461 dragon already predicting this exact residual) and discovered
+`docs/planning/issue144-anchor-row-mismatch-fix-plan.md` -- the sibling planning session that had
+already designed and empirically validated 3 named candidates (A/B/C) for precisely this decision
+class, including a structural proof for Candidate A and measured trade-off figures (duplicate
+nodes -20%, multi-anchor 2->21), explicitly predicting and leaving open the exact residual Track 4
+targets (`test_positionMatingUnitForest.R:809-893`, already committed as residual-*acceptance*
+regression tests). Also read `docs/planning/issue143-founder-positioning-fix-plan.md` for
+Candidate A/C's own naming ancestry ("Candidate 2"/"Candidate 3"). **(4)** Independent analysis:
+derived by hand that a founder's `gen` is always 0 (`R/findGeneration.R:46-54`), so
+founder-preference is a special case of gen-preference -- Candidate A's new tie-break rule
+subsumes D2's original rule 1 rather than discarding it. Traced that Candidate A's mechanism
+provably resolves BOTH committed residual-acceptance regression tests (the multi-unit case and the
+D5-direct-child case) via one mechanism, a connection neither prior plan's own text made
+explicitly. **(5)** Presented the decision to the owner via `AskUserQuestion` (Candidate A
+recommended / Candidate C / hold-for-more-evidence, trade-offs stated in the question itself, not
+deferred to the linked document) -- owner selected Candidate A. **(6)** Wrote
+`docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md` (RATIFIED), following
+`ARCHITECTURE_WORKSTREAM.md`'s own template, specifying the exact new `preferAnchor()` rule and
+the removal of the elimination/"used" shortcut, and proving (not just asserting) that this
+decision lets `effGenOf`/the anchor `dispGenOf` override (issue #144's own compensating mechanism)
+be deleted rather than layered further -- a net simplification, not a net addition. **(7)** Before
+closing out, independently re-verified Candidate A's own carried-forward trade-off numbers rather
+than trusting the #144-era figures unmodified: wrote and ran a throwaway R script (scratchpad
+only, not committed) reimplementing the new rule against the live, real 375-individual bundled
+fixture. Confirmed the structural claim exactly (0 anchor mismatches) and found the redistribution
+figures close to but not identical to #144's own cited numbers (22 vs 21 multi-anchor individuals,
+102 vs 103 duplicate nodes, both attributable to the throwaway script not replicating every
+dangling-parent edge case the full pipeline handles) -- folded this fresh evidence into the plan
+document rather than leaving the carried-forward numbers unchallenged. **(8)** Verified and
+corrected 2 citation-precision errors in the plan document before finalizing (an imprecise line
+range for the removed elimination branch; a fabricated-looking "349-..." ellipsis citation,
+replaced with a real grepped range) -- caught by re-reading the actual source rather than trusting
+first-draft citations. **(9)** Cross-updated the remediation plan's own Track 4 section (marked
+"DESIGN RATIFIED S572, implementation not yet started") and `BACKLOG.md`'s standing "Candidate C"
+item (annotated that Track 4 chose Candidate A instead, without closing Candidate C out as
+declined -- it remains available per the new plan's own §5/§8 non-exclusion note).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A (no new displayed
+statistic). Tutorial/article documentation checklist N/A (no code shipped this session -- a
+design decision only; applies to the eventual implementation session instead). `NEWS.Rmd` entry
+checklist N/A (no exported function/feature shipped). `a2interactive.Rmd` checklist N/A (same
+reason). GitHub issue close-out checklist N/A (no `BACKLOG.md` item marked DONE this session --
+Track 4 originates from a planning document, not a tracked GitHub issue). Lint checklist N/A (zero
+`.R` files touched -- the validation script lives only in the session scratchpad, never committed).
+`_pkgdown.yml` reference-coverage checklist N/A (no new exported function).
+
+**Self-assessment (Session 572): 8/10.** **Strengths:** (1) Did not stop at the handoff's own
+pointer (the remediation plan's Track 4 section) -- followed its citation trail one level deeper
+into the #143/#144 planning documents and found the real, already-validated decision space,
+materially improving the session's own output over what a literal reading of the gotcha would have
+produced (now `PROJECT_LEARNINGS.md` Learning 577). (2) Derived, not merely asserted, the
+founder-equals-gen0 structural realization and the "Candidate A resolves both committed residual
+tests via one mechanism" connection -- independent verification, not trust in the prior plan's own
+conclusions. (3) Re-simulated Candidate A's own numeric claims against the live real fixture before
+finalizing, rather than presenting 1-session-old carried-forward figures as current fact --
+found and disclosed the small (1-individual, 1-node) discrepancy honestly rather than silently
+adopting the closer-sounding number. (4) Caught and fixed 2 of its own citation-precision errors
+before finalizing, by re-reading source rather than trusting first-draft line ranges. (5)
+Cross-updated every place this decision touches (the remediation plan, `BACKLOG.md`'s Candidate C
+item, the new plan document itself) rather than leaving the new document as an island.
+**Weaknesses:** (1) The re-simulation (strength 3) was a good instinct but was scoped narrowly (D1/D2
+anchor selection only) -- it did not attempt to re-simulate the full downstream node-count
+cascade (740->? total nodes, rectilinear 1228->? nodes) the plan's own §7 verification step 4
+still defers entirely to the future implementation session; a more thorough session might have
+extended the throwaway script that far. (2) This session's own `AskUserQuestion` for the Candidate
+A/B/C decision offered 3 options but did not include an explicit 4th "adopt A now, and also
+schedule a live-render check before calling it done" hybrid -- the plan document's own §5/§7 folds
+that expectation in afterward (a live render is part of the implementation session's own DONE
+criteria) rather than it being an owner-selected option at decision time; in retrospect this was
+the right call (the owner's choice was clearly A, and folding the live-render expectation into
+verification rather than the decision itself avoids re-asking a question whose answer was already
+clear), but it is worth naming as a choice made, not an oversight avoided by accident.
+**Ledger:** recorded in `CHANGELOG.md` (this session's entries).
 
 ### Session 570 Handoff Evaluation (by Session 571)
 **Score: 7/10.** **What helped:** `key_files` citations (`R/makePedigreeDiagramData.R`

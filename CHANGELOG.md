@@ -138,6 +138,29 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [ad hoc] S572: Track 4 design session ratified (Candidate A: gen-aware D2 anchor selection)
+- **Deliverable:** `docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md` (RATIFIED) --
+  Track 4 of `docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md`. Decision:
+  make `.buildMatingUnitForest()`'s `preferAnchor()` tie-break gen-first and remove the elimination
+  shortcut, so every anchor's own `gen` matches every mating unit it anchors by construction --
+  provably closing the row-mismatch residual issue #144's own plan explicitly predicted and left
+  open, and letting `effGenOf`/the anchor `dispGenOf` override (issue #144's own compensating
+  mechanism) be deleted as a consequence. Ratified via `AskUserQuestion` over Candidate C (dogleg
+  signposting) and hold-for-more-evidence, with the measured cost (duplicate nodes -20%, multi-anchor
+  individuals 2->21) disclosed in the question itself. No implementation code this session --
+  design/decision only; implementation is a separate future session.
+- **Verification:** independently re-simulated the new rule via a throwaway, uncommitted R script
+  against the real 375-individual bundled fixture -- confirmed 0 anchor mismatches (the structural
+  claim) and closely-matching redistribution figures (22 multi-anchor/102 duplicates vs. #144's own
+  cited 21/103).
+- Cross-updated `docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` (Track 4
+  marked DESIGN RATIFIED S572) and `BACKLOG.md`'s standing "Candidate C" item (annotated, not
+  closed). Added `PROJECT_LEARNINGS.md` Learning 577.
+
+### 2026-08-14 · [ad hoc] S572: claim session (Track 4 design session)
+- **Deliverable:** Session-claim stub in `SESSION_NOTES.md`/`HANDOFFS.md` (commit `3a4ecc05`), per
+  Phase 1B.
+
 ### 2026-08-14 · [ad hoc] S571: reconcile HANDOFFS.md commit self-reference (`5add5050`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` ->
   `5add5050` (the close-out commit whose sha the receipt itself couldn't name until after it
