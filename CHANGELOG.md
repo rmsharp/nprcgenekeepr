@@ -138,6 +138,57 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [ad hoc] S573: close out (Track 4 implementation DONE)
+- **Deliverable:** Closed out Track 4 implementation (gen-aware D2 anchor selection, Candidate A)
+  of `docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md` -- self-assessed 9/10
+  (adversarial-verification gap flagged S551-S558 still open on this larger-than-usual
+  vertical-slice session; live-verification screenshots too zoomed-out to visually distinguish
+  individual multi-anchor nodes, though live-JS-queried coordinates substantively cover the same
+  requirement). Evaluated S572's own handoff 9/10 (accurate, executable §6/§7 pointer; zero
+  material gaps except an unflagged second-order consequence -- the consanguineous-marker dogleg
+  test's own full premise rewrite). Added `PROJECT_LEARNINGS.md` Learning 578 (a committed
+  regression test's fixture can outlive the exact scenario it demonstrates once an upstream fix
+  closes a defect class structurally; needs a full premise rewrite, not a value update).
+  Cross-updated both planning documents (implementation record appended to Track 4's own plan;
+  the remediation plan's own Track 4 section and §5 status note) and `BACKLOG.md`'s Candidate C
+  item. See `SESSION_NOTES.md` Session 573 entry, `HANDOFFS.md` S573 receipt.
+
+### 2026-08-14 · [ad hoc] S573: Track 4 implementation (gen-aware D2 anchor selection, Candidate A) (GREEN)
+- **Deliverable:** `.buildMatingUnitForest()`'s `preferAnchor()` (`R/makePedigreeDiagramData.R`)
+  rewritten gen-first (prefers the deeper-gen parent, subsuming founder-preference -- a founder
+  always has `gen == 0`), the elimination/`used` shortcut and now-dead `isFounderOf()` removed.
+  `.positionMatingUnitForest()`'s `effGenOf` computation and the anchor `dispGenOf` override
+  deleted; `positionIndividual()`'s 2 call sites revert to `genOf`. Net simplification: 24
+  insertions / 69 deletions. Establishes the structural invariant `matingUnits$gen ==
+  genOf[[anchor]]` unconditionally, closing the anchor-side row-mismatch residual issue #144's own
+  plan explicitly predicted and left open (51/237 real-fixture mismatches -> 0). PRE-RED:
+  prototyped the exact edit directly against live source (stash/rerun precedent), captured the
+  full 16-block/43-expectation blast radius, reverted before writing RED tests. New invariant test
+  (0 exceptions on the real fixture) plus the 2 residual-acceptance tests at
+  `test_positionMatingUnitForest.R:809-893` rewritten to residual-resolved assertions, confirmed
+  RED against unmodified source. GREEN: all 16 pre-existing blocks across
+  `test_buildMatingUnitForest.R`/`test_positionMatingUnitForest.R`/
+  `test_addRectilinearWaypoints.R`/`test_makePedigreeMatingLayout.R` re-derived from live
+  implementation output, including a full premise rewrite of the consanguineous-marker
+  dogleg-propagation test (its triggering scenario is now structurally unreachable). REFACTOR
+  declined (owner-confirmed via `AskUserQuestion` -- the GREEN diff already is the net
+  simplification). Measured redistribution on the real fixture: duplicate nodes 128->102 (-20.3%),
+  multi-anchor individuals 2->22 (max 5, `WCPXHD`), direct-style nodes 740->714, rectilinear nodes
+  1228->1202. Verified: full clean regression 0 failed/0 error; `devtools::check()` 0 errors/0
+  warnings/1 pre-existing unrelated NOTE; `lintr::lint_package()` 0 lints on all 5 touched files.
+  Phase 3E: live `shinytest2` verification against the real bundled fixture, both `edgeStyle`
+  values -- node counts matched exactly, zero diagram-related console errors, 2 screenshots, 4
+  multi-anchor individuals live-queried with valid coordinates; the existing 15-test/52-assertion
+  live E2E pedigree-module suite passed unchanged. `NEWS.Rmd` entry added (regenerated `NEWS.md`,
+  incidentally catching it up on 5 entries already in `NEWS.Rmd` since S563-S571 that had never
+  been regenerated). Commit: `f7724917`.
+
+### 2026-08-14 · [ad hoc] S573: claim session (Track 4 implementation)
+- **Deliverable:** Claim stub for implementing Track 4 (gen-aware D2 anchor selection, Candidate
+  A) of `docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md` (ratified S572).
+  Owner-picked via `AskUserQuestion` over Track 2 (flip default `edgeStyle`), issue #148's
+  scope-narrowing conversation, and the NPRC outreach plan. Commit: `1ebcb006`.
+
 ### 2026-08-14 · [ad hoc] S572: reconcile HANDOFFS.md commit self-reference (`c5d2c5a9`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` ->
   `c5d2c5a9` (the close-out commit whose sha the receipt itself couldn't name until after it was

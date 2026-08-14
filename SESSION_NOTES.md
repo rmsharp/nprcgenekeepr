@@ -14,17 +14,148 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 572 Handoff Evaluation (by Session 573)
+**Score: 9/10.** **What helped:** `next_steps` pointed directly at the plan document's own §6
+Migration Path / §7 Verification Plan as "the direct RED/GREEN/REFACTOR instructions" -- followed
+exactly, and the plan was detailed enough to execute against with no further re-derivation of the
+decision itself. `next_steps`' explicit warning to "re-measure every carried-forward number
+against the full pipeline rather than trusting either the #144 or [S572's] own throwaway-script
+figures" was followed to the letter -- this session's own live-pipeline re-measurement landed on
+102 duplicates/22 multi-anchor individuals, matching S572's own throwaway-script re-simulation
+exactly (not #144's original 103/21), resolving gotcha (1)'s own flagged bracket. Gotcha (2)
+("`isFounderOf()`'s fate... do not assume it should simply be deleted without checking whether
+anything else... still calls it") was followed directly: grepped all call sites (zero remaining
+after the one `preferAnchor()` call was removed), then deleted it as confirmed-dead code. Gotcha
+(3) (the "~38 failures/13 blocks" test-blast-radius is an order-of-magnitude estimate, not exact)
+held precisely as framed -- this session's own real count was 43 expectations/16 blocks, close but
+not identical, exactly the kind of drift the gotcha itself predicted. `key_files`' line ranges for
+both edit targets (`:347-546`, `:610-1056`) and the residual-test range (`:809-893`) were all
+byte-accurate against the live file -- zero drift since S572's own citation, confirming the
+handoff's own claims rather than requiring re-verification from scratch. **What was missing:** no
+mention that the consanguineous-marker dogleg-propagation test
+(`test_makePedigreeMatingLayout.R`, S563's own Track C addition) would need a full premise rewrite
+(not just a value change) -- its entire triggering scenario becomes structurally unreachable under
+Track 4's invariant, a second-order consequence neither the handoff nor the plan document's own
+Impact Analysis table (§5) called out explicitly (that table lists the rectilinear dogleg mechanism
+generally, but not this specific committed test by name). Not a real gap -- this session's own
+full-regression-driven discovery process (re-run, read the failure, re-derive from live output)
+was already the correct methodology regardless, and the plan's own §6 step 4 explicitly anticipated
+"every test... whose hardcoded expectations encode the old anchor-selection outcome" needing
+updates without enumerating each one. **What was wrong:** nothing found inaccurate. **ROI:** high
+-- the plan document was executable nearly as-written, and both technical gotchas (the estimate
+bracket, the `isFounderOf()` ambiguity) were directly actionable, saving real re-derivation time.
+
 ### What Session 573 Did
 **Deliverable:** Track 4 implementation (gen-aware D2 anchor selection, Candidate A) from
-`docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md` (IN PROGRESS)
-**Started:** 2026-08-14
-**Status:** Session claimed. Work beginning. Vertical-slice session (plan document is the
-pre-declared contract, ratified S572) -- following the plan's own §6 Migration Path / §7
-Verification Plan under strict TDD (PRE-RED -> RED -> GREEN -> REFACTOR, each transition gated
-via `AskUserQuestion`).
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+`docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md` -- **DONE.** Vertical-slice
+session (the ratified S572 plan document is the pre-declared contract enumerating this exact
+layer set, all one capability). **Started/Completed:** 2026-08-14. **Status:** DONE. TDD phase:
+GREEN (REFACTOR declined via `AskUserQuestion` -- the GREEN diff already *is* the plan's own
+net-simplification claim; no further refactor candidate found on review).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SESSION_RUNNER.md`, `SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list` [12 open], `git status`/`log`/`diff --stat` [86 commits ahead
+of `origin/master`, unpushed; 1 untracked file -- the same already-cleared Quarto render byproduct
+prior sessions investigated, re-confirmed via its `<meta name="generator" content="quarto-1.7.33">`
+header and matching `.qmd` source filename, not a new ghost-session signal],
+`methodology_dashboard.py` [Health 96/100, 1 HIGH risk -- `SESSION_NOTES.md` 2,109 lines, past the
+2,000-line cap, recurring/unaddressed since a recent trim; 2 MEDIUM archive-trigger flags on
+`HANDOFFS.md`/`CHANGELOG.md`], `gh run list --branch master --limit 10` [scheduled `shinytest2.yaml`
+red again today, a multi-day-consecutive pattern, reported not diagnosed; all push-triggered
+workflows green], ledger reconcile [`CHANGELOG.md`/`HANDOFFS.md` frontiers both == `HEAD`, zero
+gap]). Rendered a 4-item priorities list (Track 4 implementation, Track 2 flip-default, issue #148
+scope-narrowing, NPRC outreach) via `AskUserQuestion` -- owner picked Track 4 implementation.
+**(2)** Phase 1B: claim stub written to `SESSION_NOTES.md`/`HANDOFFS.md` (`status: pending`),
+committed (`1ebcb006`). **(3)** PRE-RED: read both target functions in full, confirmed zero line
+drift against the plan's own citations; prototyped the exact §2.1-2.3 edit directly against the
+live source (this project's established stash/rerun precedent), ran it against the real
+375-individual fixture and both synthetic residual fixtures (`test_positionMatingUnitForest.R:
+809-893`), captured the full 16-block/43-expectation blast radius across the 4 affected test
+files, then reverted (`git checkout --`) before writing any test. **(4)** PRE-RED->RED gate via
+`AskUserQuestion`: rewrote the 2 residual-acceptance tests to residual-resolved assertions using
+the empirically-confirmed new anchor assignments, added a new general-property invariant test
+(`matingUnits$gen == genOf[[anchor]]`, 0 exceptions on the real fixture). Confirmed RED for real
+against unmodified source -- all 6 assertions failed for the right reason, including the invariant
+test's real-fixture count (51/237 mismatches, matching the plan's own cited figure exactly).
+**(5)** RED->GREEN gate via `AskUserQuestion`: applied the verified implementation edit
+(`R/makePedigreeDiagramData.R`: `preferAnchor()` rewritten gen-first; the elimination/`used`
+shortcut and now-dead `isFounderOf()` removed; `effGenOf`'s computation and the anchor `dispGenOf`
+override deleted; `positionIndividual()`'s 2 call sites reverted to `genOf` -- 24 insertions / 69
+deletions, net simplification). Confirmed the 6 RED assertions now pass, then worked through the
+16 pre-existing blocks/43 expectations across `test_buildMatingUnitForest.R`,
+`test_positionMatingUnitForest.R`, `test_addRectilinearWaypoints.R`, and
+`test_makePedigreeMatingLayout.R` one file at a time, re-deriving each new expected value from
+live implementation output (not hand-derivation) -- including a full premise rewrite of the
+consanguineous-marker dogleg-propagation test (S563's own Track C addition), whose triggering
+scenario (an anchor spanning 2 differently-gen'd units) becomes structurally unreachable under
+Track 4's invariant. All 4 files independently confirmed green. Fixed one dangling-fragment
+comment defect introduced by an earlier edit's partial `old_string` match, caught by re-reading
+the file rather than trusting the edit succeeded cleanly. Full clean regression: 0 failed/0 error
+among true offenders (excluding baseline `test-app-`/`test-e2e-` noise); `devtools::document()`
+no-op beyond this session's own edits; `devtools::check()` 0 errors/0 warnings/1 pre-existing
+unrelated NOTE (`vignettes/figure/` knitr leftover); `lintr::lint_package()` 0 lints across all 5
+touched files. Re-measured final figures against the live full pipeline: 237 mating units
+(unchanged), duplicate nodes 128->102 (-20.3%), multi-anchor individuals 2->22 (max 5, `WCPXHD`),
+anchor-side mismatches 51->0 (structural invariant), direct-style nodes 740->714, rectilinear
+nodes 1228->1202. **(6)** GREEN->REFACTOR gate via `AskUserQuestion`: owner picked "close out
+as-is" (no refactor candidate found -- the GREEN diff already is the net simplification). **(7)**
+Phase 3E live verification: a `shinytest2` session against the real bundled fixture, both
+`edgeStyle` values -- node counts matched exactly (714/1202); zero diagram-related console errors
+either style; 4 of the newly-created multi-anchor individuals (`WCPXHD`, `HV7LZ3`, `KUENM8`,
+`LVK7AI`) queried live via the rendered visNetwork widget, all with valid coordinates (including
+`KUENM8`'s own genuine duplicate node); 2 screenshots taken confirming a clean render with no
+visible defect; the existing 15-test/52-assertion live E2E pedigree-module suite
+(`NPRC_RUN_E2E=true`) passed unchanged, confirming issue #143's non-anchor units and every other
+already-shipped Diagram-tab feature are unaffected. **(8)** Updated both planning documents
+(`docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md` status -> IMPLEMENTED, full
+implementation record added; the remediation plan's own Track 4 section and §5 status note) and
+`BACKLOG.md`'s standing Candidate C item (still open, annotated with the live-rendered result).
+Added a `NEWS.Rmd` "Fixed:" entry; regenerated `NEWS.md` via `rmarkdown::render()` (default
+format, matching the S556 precedent) -- this incidentally caught `NEWS.md` up on 5 entries already
+in `NEWS.Rmd` since S563-S571 that had never been regenerated in, a pre-existing gap this session's
+own required render step corrected as a side effect, not a separate fix.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A (no new displayed
+statistic). Tutorial/article documentation checklist N/A (an internal defensive fix -- no new
+tab/control/interaction pattern; matches the Track 1/Track 3 precedent exactly). `NEWS.Rmd` entry
+checklist DONE (above). `a2interactive.Rmd` checklist N/A (no new exported function/parameter --
+`.buildMatingUnitForest()`/`.positionMatingUnitForest()` are internal `@noRd` functions, unchanged
+signatures). GitHub issue close-out checklist N/A (no `BACKLOG.md` item marked DONE this session;
+no new issue filed, matching Track 1/3's own established "recommend, don't unilaterally file"
+precedent -- Track 4 originates from a planning document, not a tracked GitHub issue). Lint
+checklist DONE (0 lints on all 5 touched files). `_pkgdown.yml` reference-coverage checklist N/A
+(no new exported function).
+
+**Phase 3E runtime smoke test:** DONE, not silently skipped -- see step (7) above; this
+deliverable changes rendered runtime behavior (node positions/counts in the live Diagram tab), so
+build-clean alone would not have been sufficient.
+
+**Self-assessment (Session 573): 9/10.** **Strengths:** (1) Never wrote a RED test from hand-derived
+expected values -- every new/modified assertion (the 3 RED-phase blocks, and all 16 pre-existing
+blocks touched during GREEN) was re-derived from live implementation output, following this
+project's own established "empirical, not hand-derivation" discipline throughout, including the
+consanguineous-marker test's full premise rewrite rather than papering over the value changes.
+(2) Confirmed RED for real against unmodified source before any implementation edit landed, not
+merely reasoned about -- caught the invariant test's real-fixture count matching the plan's own
+cited 51/237 figure exactly, independent corroboration the RED tests exercised the right code path.
+(3) Followed the prototype-patch-then-revert PRE-RED discipline (S556's own precedent) to gather
+the full blast radius BEFORE committing to RED test content, avoiding a mid-RED surprise. (4) Ran
+the complete verification chain from the plan's own §7 (RED/GREEN/REFACTOR, re-measurement, full
+regression, `devtools::check()`, lint, live `shinytest2` verification with real screenshots and
+live JS-queried node coordinates) rather than stopping at "tests pass." (5) Caught and fixed its
+own dangling-comment-fragment defect (a partial `old_string` match) by re-reading the file rather
+than trusting the edit tool's success report. (6) Updated every downstream document the plan's own
+"what this decision touches" analysis named (both planning docs, `BACKLOG.md`, `NEWS.Rmd`/`NEWS.md`)
+in the same session, not deferred. **Weaknesses:** (1) No independent adversarial-verification
+pass run on this fix -- the same standing gap S551-S558 flagged across 7+ consecutive sessions,
+still not addressed here (a large single-session vertical slice, arguably higher-value for
+adversarial review than most). (2) The live-verification screenshots are taken at default zoom on
+the full 375-individual fixture, too compressed to visually distinguish individual multi-anchor
+nodes by eye -- the "real look" requirement (§7 step 8c) was substantively satisfied via live
+JS-queried coordinates instead (arguably stronger evidence than a squint at a screenshot), but a
+zoomed-in crop centered on one of the 4 named individuals would have been a more literal fulfillment
+of "give the owner a real look."
+**Ledger:** recorded in `CHANGELOG.md` (this session's claim, deliverable, and close-out entries).
 
 ### Session 571 Handoff Evaluation (by Session 572)
 **Score: 9/10.** **What helped:** the handoff's `next_steps` field correctly named Track 4's

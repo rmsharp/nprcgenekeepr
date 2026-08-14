@@ -134,21 +134,98 @@ This file currently holds **8** receipt(s). Computed by `methodology_trim.py` on
 ```handoff
 session: S573
 date: 2026-08-14
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 9
+predecessor_score: 9
 active_task: Track 4 implementation (gen-aware D2 anchor selection, Candidate A) from
-docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md -- vertical-slice session, plan
-document is the pre-declared contract (ratified S572).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+  docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md. DONE -- vertical-slice session,
+  the ratified S572 plan document was the pre-declared contract. Full strict TDD
+  PRE-RED->RED->GREEN cycle (REFACTOR declined -- the GREEN diff already is the plan's own
+  net-simplification claim).
+what_was_done: R/makePedigreeDiagramData.R -- preferAnchor() rewritten gen-first (prefers deeper
+  gen, subsuming founder-preference), the elimination/used shortcut and now-dead isFounderOf()
+  removed, effGenOf's computation and the anchor dispGenOf override deleted,
+  positionIndividual()'s 2 call sites reverted to genOf (24 insertions / 69 deletions, net
+  simplification). New invariant test (matingUnits$gen == genOf[[anchor]], 0 exceptions on the
+  real fixture) plus the 2 residual-acceptance tests at
+  tests/testthat/test_positionMatingUnitForest.R:809-893 rewritten to residual-resolved
+  assertions -- confirmed RED for real against unmodified source, then GREEN. 16 pre-existing
+  blocks/43 expectations across test_buildMatingUnitForest.R/test_positionMatingUnitForest.R/
+  test_addRectilinearWaypoints.R/test_makePedigreeMatingLayout.R re-derived from live
+  implementation output, including a full premise rewrite of the consanguineous-marker
+  dogleg-propagation test (its triggering scenario is now structurally unreachable, PROJECT_LEARNINGS.md
+  Learning 578). Final measured figures: duplicate nodes 128->102, multi-anchor individuals
+  2->22 (max 5, WCPXHD), anchor mismatches 51->0, direct-style nodes 740->714, rectilinear nodes
+  1228->1202. Full clean regression 0 failed/0 error; devtools::check() 0 errors/0 warnings/1
+  pre-existing NOTE; 0 lints on all 5 touched files. Phase 3E: live shinytest2 verification (both
+  edgeStyle values, zero console errors, node counts matched exactly, 2 screenshots, existing
+  15-test/52-assertion E2E suite unchanged). Updated both planning documents, BACKLOG.md's
+  Candidate C item, added a NEWS.Rmd entry (regenerated NEWS.md, incidentally catching it up on
+  5 pre-existing unregenerated entries from S563-S571). Commits: 1ebcb006 (claim), plus this
+  close-out's own commit (below).
+next_steps: Only Track 2 (flip default edgeStyle to "rectilinear") and Track 5 (broaden
+  rectilinear coverage, blocked on Track 2) remain in the kinship2-fidelity remediation plan
+  (docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md §5) -- Track 2 is now
+  fully unblocked (Track 3's spacing fix and Track 4's anchor-selection decision are both
+  landed). Track 2's own section (remediation plan, search "### Track 2") lists its own
+  completion criteria: re-verify 6 already-shipped features (#129/#131/#132/#134/#135/#138) live
+  under the new default, re-confirm the ~37%-regression-then-fixed rectilinear perf figure still
+  holds at the new (lower) node counts, and update 2 vignette/article docs in the same session
+  per CLAUDE.md's documentation-debt note. Independent, unrelated pickup candidates from this
+  session's own Phase 0 priorities list: issue #148's MHC scope-narrowing conversation (READY,
+  Effort S), the LabKey integration BLOCKED item (needs a live server), and the NPRC outreach
+  plan (DECISION NEEDED, owner-executed, not a coding task).
+key_files: R/makePedigreeDiagramData.R:403-412 (new gen-first preferAnchor()), :742-748 (the
+  no-anchor-override comment replacing the deleted effGenOf/dispGenOf mechanism -- that
+  mechanism itself no longer exists in the file, this is where its removal is explained);
+  tests/testthat/test_positionMatingUnitForest.R:798-928 (the 3 RED-phase
+  blocks); docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md (implementation record
+  appended); docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md (Track 4
+  section + §5 status note); tests/testthat/test_makePedigreeMatingLayout.R:1095-1169 (the
+  fully-rewritten consanguineous-dogleg test, Learning 578's own example).
+gotchas: (1) `.buildLayoutAndForest()`/`.isWaypoint()` and similar test-local helper functions in
+  test_addRectilinearWaypoints.R are NOT loaded by pkgload::load_all() -- source the test file
+  directly (or define the helper inline) when re-deriving values in a standalone Rscript, not
+  just when running via testthat::test_file(). (2) shinytest2's skip_if_not_installed()/
+  skip_on_cran() throw a hard error (not a soft skip) when called outside a testthat::test_that()
+  context -- wrap any standalone live-verification script's body in test_that() even when it's
+  scratch, not committed. (3) NPRC_RUN_E2E=true is a SEPARATE env var from NOT_CRAN=true -- the
+  bundled E2E suite is gated on both; setting only NOT_CRAN silently skips every E2E test with no
+  error, easy to mistake for "already verified." (4) Track 2's own remediation-plan section notes
+  its perf-regression re-confirmation should happen "at the current node cap" -- the node cap
+  itself didn't change this session, but the node COUNT feeding into that regression's own timing
+  did (740->714 direct, 1228->1202 rectilinear), so re-time it fresh rather than reuse either the
+  #144-era or this session's own figures as a stand-in for an actual timed run.
+runtime_smoke: Live shinytest2 verification against the real bundled fixture (obfuscated_rhesus_mhc_ped.csv),
+  both edgeStyle values -- node counts matched the predicted figures exactly (714 direct, 1202
+  rectilinear), zero diagram-related console errors, 2 screenshots confirmed a clean render, 4
+  live-queried multi-anchor individuals all rendered with valid coordinates. The existing
+  15-test/52-assertion live E2E pedigree-module suite (NPRC_RUN_E2E=true) passed unchanged.
+changelog_ref: this session's own CHANGELOG.md entries (claim, deliverable, close-out)
+commit: pending -- reconciled by the next session's Phase 0 if this line is not overwritten
+  before the final commit
 ```
-<pending>
+<**Self-score 9/10.** +: (1) full empirical PRE-RED prototype-then-revert before any RED test was
+written, capturing the exact blast radius up front rather than discovering it incrementally.
+(2) confirmed RED for real against unmodified source, not reasoned about -- the invariant test's
+real-fixture mismatch count (51/237) independently matched the plan's own cited figure exactly.
+(3) re-derived every one of the 16 broken pre-existing test blocks from live implementation
+output, including recognizing when a test's entire premise (not just its numbers) needed
+rewriting -- documented as a new, reusable pattern (Learning 578). (4) ran the plan's own full
+§7 verification chain end to end: RED/GREEN/REFACTOR, re-measurement against the live pipeline
+(not carried-forward estimates), full regression, devtools::check(), lint, AND a genuine
+shinytest2 live-render check with real screenshots and live-queried node coordinates -- not just
+"tests pass." (5) caught and fixed a self-introduced dangling-comment-fragment defect by
+re-reading the file rather than trusting the edit tool's own success report. (6) updated every
+downstream document the plan's own impact analysis named, same session. -: (1) no independent
+adversarial-verification pass -- the standing gap flagged S551-S558, still open here on a
+larger-than-usual single-session change. (2) the live-verification screenshots are too zoomed-out
+to visually distinguish individual multi-anchor nodes by eye; the live-JS-queried coordinates
+substantively cover the same "real look" requirement but a zoomed crop would have been the more
+literal fulfillment.
+**Predecessor (S572) score: 9/10** -- see the Session 572 Handoff Evaluation in SESSION_NOTES.md
+for the full breakdown; its next_steps field pointed directly at the plan document's own §6/§7 as
+executable instructions, followed with no material gaps found.>
 
 ```handoff
 session: S572
