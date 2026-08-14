@@ -191,7 +191,7 @@ runtime_smoke: Live shinytest2 verification against the real bundled fixture
   pedigreeEdgeStyle input ever set) -- see what_was_done for full detail. 0 diagram-related
   console errors; 3.05s timed render.
 changelog_ref: this session's own CHANGELOG.md entries (claim, deliverable, close-out)
-commit: pending
+commit: 98327c27
 ```
 
 ```handoff

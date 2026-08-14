@@ -138,6 +138,15 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [ad hoc] S574: reconcile HANDOFFS.md commit self-reference (`98327c27`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` ->
+  `98327c27` (the close-out commit whose sha the receipt itself couldn't name until after it was
+  made) -- matching the established S562-S573 precedent.
+
+### 2026-08-14 · [ad hoc] S574: close out (Track 2 implementation DONE) (`98327c27`)
+- **Deliverable:** Evaluated S573's handoff (9/10), self-assessed (9/10), documented
+  `PROJECT_LEARNINGS.md` Learning 579, wrote the full `HANDOFFS.md` receipt.
+
 ### 2026-08-14 · [ad hoc] S574: downstream updates (NEWS, plan doc, BACKLOG) (`4931ef91`)
 - **Deliverable:** `NEWS.Rmd`/`NEWS.md` "Changed:" entry; remediation plan's Track 2 section
   marked DONE with full implementation record, §5 status line updated (only Track 5 remains);
