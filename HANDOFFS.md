@@ -132,6 +132,24 @@ This file currently holds **8** receipt(s). Computed by `methodology_trim.py` on
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S574
+date: 2026-08-14
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Track 2 implementation (flip default edgeStyle to "rectilinear") from
+  docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md Track 2.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<pending>
+
+```handoff
 session: S573
 date: 2026-08-14
 status: complete

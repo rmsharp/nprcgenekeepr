@@ -14,6 +14,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 574 Did
+**Deliverable:** Track 2 implementation (flip default `edgeStyle` to `"rectilinear"`) from
+`docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §Track 2 (IN PROGRESS)
+**Started:** 2026-08-14
+**Status:** Session claimed. Work beginning. Following the plan's own §Track 2 scope/completion
+criteria under strict TDD (PRE-RED -> RED -> GREEN -> REFACTOR, each transition gated via
+`AskUserQuestion`).
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 572 Handoff Evaluation (by Session 573)
 **Score: 9/10.** **What helped:** `next_steps` pointed directly at the plan document's own §6
 Migration Path / §7 Verification Plan as "the direct RED/GREEN/REFACTOR instructions" -- followed
