@@ -138,6 +138,11 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [ad hoc] S568: reconcile HANDOFFS.md commit self-reference (`61ce96a4`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> `61ce96a4`
+  (the close-out commit whose sha the receipt itself couldn't name until after it was made) -- the
+  standard self-reference limitation, reconciled immediately, matching the S562-S567 precedent.
+
 ### 2026-08-14 · [BL-N] S568: close out (Compounding Loop reference files build-ignore decision resolved)
 - **Deliverable:** Resolved the disposition of the 4 untracked "Compounding Loop" files in
   `inst/extdata/reference/`, flagged S567 as bundled into every built package tarball unlike this

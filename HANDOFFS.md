@@ -190,7 +190,7 @@ runtime_smoke: n/a -- config-only change (.gitignore/.Rbuildignore) plus deletin
   equivalent" (R CMD build actually excluding the target files from the built tarball, plus a
   full devtools::check()) was verified directly.
 changelog_ref: CHANGELOG.md 2026-08-14 S568 claim + close-out entries
-commit: pending
+commit: 61ce96a4
 ```
 
 ```handoff
