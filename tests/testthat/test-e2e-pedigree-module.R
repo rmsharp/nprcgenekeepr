@@ -168,6 +168,13 @@ test_that("E2E: Pedigree Browser Diagram tab shows a known trio's data", {
   clicked <- click_element_safe(app, 'a[data-value="Diagram"]')
   if (!clicked) skip("Could not switch to the Diagram tab")
 
+  ## Track 2 flips the default to "rectilinear" -- pin "direct" explicitly:
+  ## this test's own edge-structure assertions below are specifically
+  ## about the D6 direct-edge mate-line convention (child <- __union_<n>
+  ## <- {sire, dam}), not the rectilinear waypoint-routed equivalent.
+  app$set_inputs(`pedigree-pedigreeEdgeStyle` = "direct")
+  app$wait_for_idle(timeout = E2E_TIMEOUT)
+
   ## The widget renders to an HTML5 canvas, so node/edge content is not
   ## otherwise DOM-inspectable -- query the live vis.js Network instance's
   ## DataSets directly, the same mechanism visNetworkProxy() itself uses.

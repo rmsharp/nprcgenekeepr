@@ -1517,7 +1517,7 @@ test_that(
 
 test_that(
   "modPedigreeServer renders the diagram widget at exactly 750 animals
-   (the re-derived Slice 3 cap)", {
+   (the re-derived Slice 3 cap) under edgeStyle = \"direct\"", {
   skip_if_not_installed("shiny")
   skip_if_not_installed("visNetwork")
 
@@ -1537,9 +1537,13 @@ test_that(
       studbook = shiny::reactive({ test_studbook })
     ),
     {
+      ## Track 2 flips the default to "rectilinear" (own cap 400, not
+      ## 750) -- pin "direct" explicitly, since 750 is specifically the
+      ## direct-style cap.
       session$setInputs(
         displayUnknownIds = TRUE,
-        trimPedigree = FALSE
+        trimPedigree = FALSE,
+        pedigreeEdgeStyle = "direct"
       )
       session$flushReact()
 
@@ -1551,7 +1555,7 @@ test_that(
 
 test_that(
   "modPedigreeServer shows an informative message just above the
-   re-derived 750-animal Slice 3 cap", {
+   re-derived 750-animal Slice 3 cap under edgeStyle = \"direct\"", {
   skip_if_not_installed("shiny")
   skip_if_not_installed("visNetwork")
 
@@ -1571,15 +1575,59 @@ test_that(
       studbook = shiny::reactive({ test_studbook })
     ),
     {
+      ## Track 2 flips the default to "rectilinear" -- pin "direct"
+      ## explicitly, same reasoning as the sibling test just above.
       session$setInputs(
         displayUnknownIds = TRUE,
-        trimPedigree = FALSE
+        trimPedigree = FALSE,
+        pedigreeEdgeStyle = "direct"
       )
       session$flushReact()
 
       html <- output$pedigreeDiagramUI$html
       expect_false(grepl("visNetwork", html))
       expect_true(grepl("750", html, fixed = TRUE))
+    }
+  )
+})
+
+test_that(
+  "modPedigreeServer's node cap is 400 under the new default (no explicit
+   edgeStyle input) -- Track 2 re-verification of issue #138's node-cap
+   feature: 400 renders fine, 401 shows the over-cap message naming 400,
+   matching .currentDiagramCap()'s rectilinear branch now applying with
+   no user interaction at all", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  makeStudbook <- function(n) {
+    bigId <- sprintf("A%04d", seq_len(n))
+    data.frame(
+      id = bigId, sire = NA_character_, dam = NA_character_,
+      sex = rep(c("M", "F"), length.out = n), stringsAsFactors = FALSE
+    )
+  }
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(studbook = shiny::reactive({ makeStudbook(400L) })),
+    {
+      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
+      session$flushReact()
+      html <- output$pedigreeDiagramUI$html
+      expect_true(grepl("visNetwork", html))
+    }
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(studbook = shiny::reactive({ makeStudbook(401L) })),
+    {
+      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
+      session$flushReact()
+      html <- output$pedigreeDiagramUI$html
+      expect_false(grepl("visNetwork", html))
+      expect_true(grepl("400", html, fixed = TRUE))
     }
   )
 })
@@ -1699,9 +1747,10 @@ test_that(
 ## ---- edgeStyle wiring (issue #142 Slice 2) -------------------------------
 
 test_that(
-  "modPedigreeServer's diagram defaults to edgeStyle = \"direct\" -- no
-   __drop_/__bar_/__proj_ waypoint ids in the rendered widget when no
-   style input has been set, matching pre-issue-142 behavior", {
+  "modPedigreeServer's diagram defaults to edgeStyle = \"rectilinear\"
+   (Track 2, docs/planning/pedigree-diagram-kinship2-fidelity-remediation-
+   plan.md) -- __drop_/__bar_/__proj_ waypoint ids ARE inserted into the
+   rendered widget when no style input has been set", {
   skip_if_not_installed("shiny")
   skip_if_not_installed("visNetwork")
 
@@ -1726,7 +1775,7 @@ test_that(
       session$flushReact()
 
       widgetJson <- output$pedigreeDiagram
-      expect_false(grepl("__drop_|__bar_|__proj_", widgetJson))
+      expect_true(grepl("__drop_|__bar_|__proj_", widgetJson))
     }
   )
 })
@@ -1910,8 +1959,10 @@ test_that(
 })
 
 test_that(
-  "modPedigreeServer's highlightNearest degree is style-aware -- 1 under
-   \"direct\" (unchanged), raised under \"rectilinear\" so degree-1 hover
+  "modPedigreeServer's highlightNearest degree is style-aware -- 6 under
+   the new rectilinear default with NO style input set at all (Track 2
+   re-verification of issue #135), 1 under \"direct\" explicitly
+   (unchanged), raised under \"rectilinear\" explicitly so degree-1 hover
    does not visibly light up nothing at all when the nearest edge-graph
    neighbor is now an invisible waypoint node (live-confirmed regression,
    S468: a plain child's hover on \"direct\" reaches a visible union dot
@@ -1934,7 +1985,13 @@ test_that(
       studbook = shiny::reactive({ test_studbook })
     ),
     {
+      ## Track 2: with NO pedigreeEdgeStyle input at all, the new default
+      ## (rectilinear) now applies -- degree:6, not degree:1.
       session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
+      session$flushReact()
+      expect_true(grepl('"degree":6', output$pedigreeDiagram, fixed = TRUE))
+
+      session$setInputs(pedigreeEdgeStyle = "direct")
       session$flushReact()
       expect_true(grepl('"degree":1', output$pedigreeDiagram, fixed = TRUE))
 

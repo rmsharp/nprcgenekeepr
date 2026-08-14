@@ -59,7 +59,10 @@ test_that(
     stringsAsFactors = FALSE
   )
   forest <- .buildMatingUnitForest(trio)
-  result <- makePedigreeMatingLayout(trio)
+  ## Track 2 flips the default to "rectilinear" -- pin "direct" explicitly
+  ## since this block tests the direct-style node-population invariant
+  ## (one row per real individual/duplicate/mating unit, no waypoints).
+  result <- makePedigreeMatingLayout(trio, edgeStyle = "direct")
   expect_equal(nrow(result$nodes), nrow(trio) + nrow(forest$duplicates) +
                  nrow(forest$matingUnits))
   expect_setequal(result$nodes$id,
@@ -206,7 +209,9 @@ test_that(
     stringsAsFactors = FALSE
   )
   forest <- .buildMatingUnitForest(ped)
-  result <- makePedigreeMatingLayout(ped)
+  ## Track 2 flips the default to "rectilinear" -- pin "direct" explicitly:
+  ## this block tests Slice 1's own unrewritten child edges.
+  result <- makePedigreeMatingLayout(ped, edgeStyle = "direct")
   childRows <- result$edges[!result$edges$dashes &
                                result$edges$to %in% c("C1", "C2", "C3"), ]
   expect_setequal(paste(childRows$from, childRows$to),
@@ -403,7 +408,9 @@ test_that(
     stringsAsFactors = FALSE
   )
   forest <- .buildMatingUnitForest(ped)
-  result <- makePedigreeMatingLayout(ped)
+  ## Track 2 flips the default to "rectilinear" -- pin "direct" explicitly,
+  ## since 714 is specifically the direct-style node count (Track 4).
+  result <- makePedigreeMatingLayout(ped, edgeStyle = "direct")
 
   expect_equal(nrow(result$nodes), 714L)
   expect_false(any(is.na(result$nodes$x)))
@@ -418,16 +425,19 @@ test_that(
 ## ---- edgeStyle parameter (issue #142 Slice 2) ---------------------------
 
 test_that(
-  "makePedigreeMatingLayout defaults to edgeStyle = \"direct\" -- identical
-   to calling with edgeStyle explicitly \"direct\", no waypoint ids, and no
-   edge columns beyond the existing contract plus the duplicate-connector
-   arc's smooth.* override columns (contract updated S469 for the
-   duplicate-node-arc fix, found S468) plus color/width (S549 Finding #2,
-   fixed S555 -- ALWAYS present once any mating unit exists, since
-   consanguinity is a structural fact of the required sire/dam columns,
-   unlike the optional name/twinRelations sidecars; both NA here since
-   this fixture has no consanguineous mating) and color.background (Track
-   1, docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md,
+  "makePedigreeMatingLayout defaults to edgeStyle = \"rectilinear\" (Track 2,
+   docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md) --
+   identical to calling with edgeStyle explicitly \"rectilinear\", inserts
+   __drop_/__bar_/__proj_ waypoint ids, and gains color.border on every
+   node (the invisible-waypoint contract) alongside no edge columns beyond
+   the existing contract plus the duplicate-connector arc's smooth.*
+   override columns (contract updated S469 for the duplicate-node-arc fix,
+   found S468) plus color/width (S549 Finding #2, fixed S555 -- ALWAYS
+   present once any mating unit exists, since consanguinity is a
+   structural fact of the required sire/dam columns, unlike the optional
+   name/twinRelations sidecars; both NA here since this fixture has no
+   consanguineous mating) and color.background (Track 1,
+   docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md,
    found S569 -- ALWAYS present now, unconditional on the affected column's
    presence)", {
   ped <- data.frame(
@@ -439,12 +449,12 @@ test_that(
     stringsAsFactors = FALSE
   )
   default <- makePedigreeMatingLayout(ped)
-  explicit <- makePedigreeMatingLayout(ped, edgeStyle = "direct")
+  explicit <- makePedigreeMatingLayout(ped, edgeStyle = "rectilinear")
   expect_equal(default, explicit)
-  expect_false(any(grepl("^__drop_|^__bar_|^__proj_", default$nodes$id)))
+  expect_true(any(grepl("^__drop_|^__bar_|^__proj_", default$nodes$id)))
   expect_setequal(names(default$nodes),
                    c("id", "label", "shape", "title", "size",
-                     "color.background", "x", "y"))
+                     "color.background", "x", "y", "color.border"))
   expect_setequal(names(default$edges),
                    c("from", "to", "dashes", "smooth.enabled", "smooth.type",
                      "smooth.roundness", "color", "width"))
@@ -670,7 +680,10 @@ test_that(
     sex = c("M", "F", "M"), gen = c(0L, 0L, 1L),
     stringsAsFactors = FALSE
   )
-  result <- makePedigreeMatingLayout(trio)
+  ## Track 2 flips the default to "rectilinear" -- pin "direct" explicitly:
+  ## the sibling test just below already covers this property surviving
+  ## edgeStyle = "rectilinear" separately.
+  result <- makePedigreeMatingLayout(trio, edgeStyle = "direct")
   expect_true("color.background" %in% names(result$nodes))
 
   realRows <- result$nodes[result$nodes$id %in% trio$id, ]
@@ -925,7 +938,11 @@ test_that(
   expect_true(any(forest$duplicates$realId == "TW1"))  ## sanity: Dragon 3
                                                           ## scenario is real
 
-  result <- makePedigreeMatingLayout(d7Ped, twinRelations = twinRelations)
+  ## Track 2 flips the default to "rectilinear" -- pin "direct" explicitly:
+  ## the sibling test just below already covers edgeStyle = "rectilinear"
+  ## with twinRelations present separately.
+  result <- makePedigreeMatingLayout(d7Ped, twinRelations = twinRelations,
+                                      edgeStyle = "direct")
   connector <- result$edges[result$edges$label %in% "MZ", ]
   expect_equal(nrow(connector), 1L)
   expect_equal(connector$from, "TW1")
@@ -1060,7 +1077,13 @@ test_that(
     gen = c(0L, 0L, 1:4),
     stringsAsFactors = FALSE
   )
-  result <- makePedigreeMatingLayout(ped)
+  ## Track 2 flips the default to "rectilinear" -- pin "direct" explicitly:
+  ## `!dashes` selects EVERY non-dashed edge, which under rectilinear also
+  ## catches the new waypoint-touching edges (explicit, non-NA color by
+  ## design -- test_addRectilinearWaypoints.R's own D1/D2 vis.js
+  ## color-inherit fix), unlike the sibling tests above that select by
+  ## `to == unit` and so are unaffected either way.
+  result <- makePedigreeMatingLayout(ped, edgeStyle = "direct")
   expect_true("color" %in% names(result$edges))
   expect_true("width" %in% names(result$edges))
   mateEdges <- result$edges[!result$edges$dashes, ]
@@ -1083,7 +1106,11 @@ test_that(
     gen = c(0L, 1L, 2L),
     stringsAsFactors = FALSE
   )
-  result <- expect_error(makePedigreeMatingLayout(ped), NA)
+  ## Track 2 flips the default to "rectilinear" -- pin "direct" explicitly,
+  ## since this block asserts raw (unrewritten) mate-edge color/width.
+  result <- expect_error(
+    makePedigreeMatingLayout(ped, edgeStyle = "direct"), NA
+  )
   expect_true("color" %in% names(result$edges))
   expect_true("width" %in% names(result$edges))
   mateEdges <- result$edges[!result$edges$dashes, ]

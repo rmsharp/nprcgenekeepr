@@ -29,7 +29,14 @@
 ## ---- test helpers (not exported, local to this file) --------------------
 
 .buildLayoutAndForest <- function(ped) {
-  layout <- makePedigreeMatingLayout(ped)
+  ## Track 2 (docs/planning/pedigree-diagram-kinship2-fidelity-remediation-
+  ## plan.md) flips makePedigreeMatingLayout()'s own default to
+  ## "rectilinear" -- this helper must still build DIRECT-style
+  ## preconditions explicitly, since .addRectilinearWaypoints() (the
+  ## function under test throughout this file) is the thing that ADDS the
+  ## waypoints; it expects direct-style input, not already-rectilinear
+  ## input.
+  layout <- makePedigreeMatingLayout(ped, edgeStyle = "direct")
   forest <- .buildMatingUnitForest(ped)
   pos <- .positionMatingUnitForest(ped, forest)
   list(nodes = layout$nodes, edges = layout$edges, forest = forest, pos = pos)
