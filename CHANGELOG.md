@@ -138,6 +138,13 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [ad hoc] S562: reconcile HANDOFFS.md commit self-reference (`0ce5ac60`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` ->
+  `0ce5ac60` (the close-out commit whose sha the receipt itself couldn't name until
+  after it was made) -- the standard self-reference limitation, reconciled immediately
+  rather than deferred to a future session's Phase 0.
+- **Commit:** `8a6cf5e7`.
+
 ### 2026-08-13 · [BL-N] S562 close-out: kinship2 supplement PDF full-reproduction plan RATIFIED; Learning 568 logged
 - **Deliverable:** `docs/planning/kinship2-supplement-full-reproduction-plan.md` (~600
   lines) -- a plan to fully reproduce `NIHMS593658-supplement-supplement_1.pdf`'s
