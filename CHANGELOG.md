@@ -138,6 +138,40 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [ad hoc] S570: close out (Track 1 unaffected-fill default DONE)
+- **Deliverable:** Closed out Track 1 of `docs/planning/pedigree-diagram-kinship2-fidelity-
+  remediation-plan.md` -- self-assessed 8/10 (docked for a PRE-RED grep-based test investigation
+  that missed one pre-existing test whose assertion encoded the old contract by omission, caught
+  only by the mandated full-regression run); evaluated S569's own handoff 9/10. Added
+  `PROJECT_LEARNINGS.md` Learning 574 (a keyword grep across test files is a PRE-RED scoping
+  starting point, not a completeness guarantee, for exact-column-list assertions that encode a
+  field's absence by omission rather than by name); bumped `CLAUDE.md`'s learning-count pointer
+  (573->574). See `SESSION_NOTES.md` Session 570 entry, `HANDOFFS.md` S570 receipt.
+
+### 2026-08-14 · [ad hoc] S570: Track 1 unaffected-fill default (GREEN) (`17d20d3d`)
+- **Deliverable:** `makePedigreeDiagramData()` and `makePedigreeMatingLayout()`
+  (`R/makePedigreeDiagramData.R`) now default every real/duplicate node to an explicit white
+  (`#FFFFFF`) `color.background` even when the pedigree has no `affected` column at all --
+  previously gated entirely behind `hasAffected`, leaving vis.js's own default fill on every node
+  (the S552->S554 fix only covered the `hasAffected == TRUE` case; the package's own bundled
+  `examplePedigree` has no `affected` column, so this was the common case, not an edge case).
+  Mating-unit dot nodes stay `NA` unconditionally (owner decision via `AskUserQuestion`).
+  `.addRectilinearWaypoints()` needed no change -- it already preserves a pre-existing
+  `color.background` rather than resetting it. Full TDD cycle: RED (2 tests modified, 1 added,
+  confirmed failing against the unmodified implementation), GREEN (implementation + 1 additional
+  pre-existing test fix caught by the full regression run, not the original RED-phase scoping --
+  see Learning 574), REFACTOR skipped (owner-confirmed, diff already minimal). Verified: targeted
+  test files green; full clean regression 0 failed/0 error; `lintr::lint_package()` 0 lints;
+  `devtools::check()` 0 errors/0 warnings/1 pre-existing unrelated NOTE (`vignettes/figure/` knitr
+  leftover); live `chromote` render of the bundled `examplePedigree` (7,306 nodes) and an
+  8-individual fixture both visually confirm unfilled nodes. `NEWS.Rmd` entry added; plan document
+  annotated `DONE S570` with verified file:line citations.
+
+### 2026-08-14 · [ad hoc] S570: claim session (Track 1 unaffected-fill default)
+- **Deliverable:** Claim stub for implementing Track 1 of `docs/planning/pedigree-diagram-
+  kinship2-fidelity-remediation-plan.md`. Scope decision resolved via `AskUserQuestion` before
+  RED: mating-unit dot nodes stay `NA`, matching the plan's own recommendation. Commit: `4ec6ef79`.
+
 ### 2026-08-14 · [ad hoc] S569: reconcile HANDOFFS.md commit self-reference (`af9a387c`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> `af9a387c`
   (the close-out commit whose sha the receipt itself couldn't name until after it was made) --

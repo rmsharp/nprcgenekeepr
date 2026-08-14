@@ -134,18 +134,61 @@ This file currently holds **8** receipt(s). Computed by `methodology_trim.py` on
 ```handoff
 session: S570
 date: 2026-08-14
-status: pending
-self_score:
-predecessor_score:
-active_task: Implement Track 1 (default unaffected fill to unfilled/white) from
-  docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md §4. Mating-unit dot
-  nodes stay NA (resolved via AskUserQuestion before RED).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Track 1 (default unaffected fill to unfilled/white) from
+  docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md §4. DONE -- full
+  PRE-RED->RED->GREEN cycle, REFACTOR skipped (owner-confirmed, diff already minimal).
+what_was_done: makePedigreeDiagramData() and makePedigreeMatingLayout()
+  (R/makePedigreeDiagramData.R) now default every real/duplicate node to an explicit white
+  (#FFFFFF) color.background even when the pedigree has no affected column at all -- previously
+  gated entirely behind hasAffected. Mating-unit dot nodes stay NA unconditionally (owner
+  decision). .addRectilinearWaypoints() needed no change -- already preserves a pre-existing
+  color.background. RED: test_makePedigreeDiagramData.R:266-282 and
+  test_makePedigreeMatingLayout.R:660-683,716-742 modified/added, confirmed failing against the
+  unmodified implementation. GREEN: implementation change plus 1 additional pre-existing test fix
+  (test_makePedigreeMatingLayout.R:420-450, an exact-column-list assertion that also encoded the
+  old contract, caught by the full regression run, not the original PRE-RED grep scoping -- see
+  PROJECT_LEARNINGS.md Learning 574). Verified: targeted files green; full clean regression 0
+  failed/0 error; lintr::lint_package() 0 lints; devtools::check() 0 errors/0 warnings/1
+  pre-existing unrelated NOTE (vignettes/figure/ knitr leftover). Live chromote render of the
+  bundled examplePedigree (7,306 nodes) and an 8-individual fixture both visually confirm
+  unfilled nodes. NEWS.Rmd entry added; plan document annotated DONE S570 with re-verified
+  file:line citations. Commits: 4ec6ef79 (claim), 17d20d3d (GREEN implementation).
+next_steps: Per the plan's own §5 recommended order, Track 3 (minimum mate-spacing guarantee,
+  no open sub-decision) is the natural next pickup -- goes directly into PRE-RED->RED->GREEN.
+  Track 4's dedicated design session (anchor/generation-row alignment) does not block Track 3 and
+  could be picked up in parallel/instead if the owner wants to start the long-pole item early
+  (2+ sessions on its own per the plan). Track 2 (flip edgeStyle default) should wait until after
+  Track 3 lands, per the plan's own sequencing rationale (a rectilinear default over a still-
+  crowded layout undersells the change). See docs/planning/pedigree-diagram-kinship2-fidelity-
+  remediation-plan.md §4 (Track 3/Track 4 own scope/effort/risk/completion-criteria) and §5.
+key_files: R/makePedigreeDiagramData.R:74-80,104-117 (makePedigreeDiagramData() fix),
+  :1138-1148,1197-1256 (makePedigreeMatingLayout() fix), :1635-1647 (.addRectilinearWaypoints()'s
+  pre-existing preservation guard, confirmed unchanged); tests/testthat/test_makePedigreeDiagramData.R:266-282;
+  tests/testthat/test_makePedigreeMatingLayout.R:420-450,660-683,716-742; NEWS.Rmd (Track 1 entry,
+  appended at the end of the 2.0.0.9000 dev-version block); docs/planning/pedigree-diagram-
+  kinship2-fidelity-remediation-plan.md (Track 1 section, DONE annotation).
+gotchas: (1) A keyword grep across a test file for the field name being changed will NOT find a
+  test asserting that field's absence via an exact column-list/expect_setequal() check -- the
+  field name never appears as text in that kind of assertion. The full clean regression run is
+  the real backstop for this class of test, not the PRE-RED grep (PROJECT_LEARNINGS.md Learning
+  574) -- worth checking proactively for Track 3, not just relying on regression to catch it
+  again. (2) Track 3's own plan section (already-documented "dragon":
+  docs/planning/pedigree-diagram-option2-layout-design-plan.md:486-495) targets
+  .positionMatingUnitForest()'s mergeSubtrees()/minSep contour-merge
+  (R/makePedigreeDiagramData.R:681-701 per the plan's own citation -- re-verify against current
+  line numbers before editing, this session's own experience is that they drift). (3) This
+  project's own bundled examplePedigree (no affected column) is a good fixture for Track 1-style
+  visual smoke tests but is NOT informative for Track 3 (spacing) -- use the trackB 16-subject
+  fixture the plan's own Claim 3 evidence is measured against instead.
+runtime_smoke: Live chromote render (not committed, scratchpad script matching
+  data-raw/kinship2FidelityValidation.R's own screenshot_layout() pattern) of
+  nprcgenekeepr::examplePedigree (7,306 nodes) and an 8-individual fixture, both confirming every
+  real/duplicate node renders visually unfilled (white interior, colored outline) and mating-unit
+  dots stay small/distinct, not vis.js's own default solid fill.
+changelog_ref: CHANGELOG.md 2026-08-14 S570 entries (this close-out)
 commit: pending
 ```
 

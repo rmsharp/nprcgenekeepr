@@ -14,16 +14,122 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 569 Handoff Evaluation (by Session 570)
+**Score: 9/10.** **What helped:** the handoff's `next_steps` field named Track 1 and Track 3 as
+concrete, well-scoped candidates ready for a direct PRE-RED->RED->GREEN cycle, and precisely
+named Track 1's one open sub-decision (mating-unit dot fill) -- this session used that framing
+almost verbatim in its own `AskUserQuestion`. The `gotchas` field's tip that
+`nprcgenekeepr::examplePedigree` is the go-to fixture for reproducing the default-fill gap live
+was directly load-bearing: this session used exactly that fixture (7,306 nodes) for its Phase 3E
+runtime smoke test. `key_files` citations (`.affectedColor()`, `edgeStyle` default,
+`effGenOf` fix, `mergeSubtrees`/`minSep`, `dupEdges`) were accurate and let this session locate
+Track 1's exact code (`R/makePedigreeDiagramData.R:104-115`/`1197-1246`) without re-deriving it
+from scratch. **What was missing:** the handoff could not have anticipated the one pre-existing
+test (`test_makePedigreeMatingLayout.R:420-450`) whose exact-column-list assertion also encoded
+the old contract -- that gap belongs to this session's own PRE-RED grep-based investigation, not
+a predecessor-handoff omission (see this session's own Weaknesses below and
+`PROJECT_LEARNINGS.md` Learning 574). **What was wrong:** nothing identified. **ROI:** High --
+the next_steps/gotchas fields materially shortened both scope decision-making and the runtime
+verification step.
+
 ### What Session 570 Did
-**Deliverable:** Implement Track 1 (default unaffected fill to unfilled/white) from
-`docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §4. (IN PROGRESS)
-**Started:** 2026-08-14.
-**Status:** Session claimed. Work beginning. Scope decision resolved via `AskUserQuestion`
-before RED: mating-unit dot nodes stay `NA` (unconditional, matching the plan's own
-recommendation) -- not given an explicit fill.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Implemented Track 1 (default unaffected fill to unfilled/white) from
+`docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §4. **DONE.**
+**Started/Completed:** 2026-08-14. **Status:** DONE. Full TDD cycle (PRE-RED->RED->GREEN, REFACTOR
+skipped by owner decision) with an `AskUserQuestion` phase-gate crossed at every transition, per
+this project's Development Process Contract.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SESSION_RUNNER.md`, `SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list` [12 open], `git status`/`log`/`diff --stat` [73 commits ahead
+of `origin/master`, unpushed; 1 untracked file -- investigated, not assumed benign: confirmed via
+`git log`/`check-ignore` to be a Quarto render byproduct of an already-tracked `.qmd`, never
+itself tracked, not a ghost-session deliverable], `methodology_dashboard.py` [Health 96/100, 0
+High+ risk], `gh run list --branch master --limit 10` [push-triggered workflows green; scheduled
+`shinytest2.yaml` red again -- reported, not diagnosed], ledger reconcile [`CHANGELOG.md`/
+`HANDOFFS.md` frontiers both == `HEAD`, zero gap]). Rendered a 3-item priorities list (from
+`BACKLOG.md` tags + S569's own `next_steps` + the ratified `GENETIC_METRICS_ISSUES_SEQUENCING_
+AUDIT_2026-08-08.md` cluster order for issue #148) via `AskUserQuestion` -- owner picked "Pedigree
+Track 1 or 3," then a follow-up question narrowed to Track 1 specifically (both are independently
+shippable per the plan, so picking both in one session would have violated "1 and done"/FM #26).
+**(2)** Resolved Track 1's one open PRE-RED scope decision via `AskUserQuestion` (separate from
+the RED phase-gate, per `CLAUDE.md`'s "pre-RED scope decision is a separate AskUserQuestion" rule):
+mating-unit dot nodes stay `NA` unconditionally, matching the plan's own recommendation. **(3)**
+Phase 1B: claim stub written to `SESSION_NOTES.md`/`HANDOFFS.md`, committed (`4ec6ef79`) --
+learning from S569's own self-identified gap, written BEFORE any code investigation this time.
+**(4)** PRE-RED->RED gate (`AskUserQuestion`): read the exact current contract
+(`R/makePedigreeDiagramData.R:74-117` `hasAffected` gate in `makePedigreeDiagramData()`,
+`:1138-1256` in `makePedigreeMatingLayout()`, `:1635-1647`'s existing `color.background`-
+preservation guard in `.addRectilinearWaypoints()` -- confirmed needing no change) before writing
+tests. Modified 2 existing tests encoding the old "no affected column -> no color.background"
+contract (`test_makePedigreeDiagramData.R:266-282`, `test_makePedigreeMatingLayout.R:660-683`) and
+added 1 new test (`test_makePedigreeMatingLayout.R:716-742`, rectilinear-mode fill survival).
+Confirmed RED: both files run against the UNMODIFIED implementation, exactly the 2/3 new/modified
+assertions failed, all other tests passed. **(5)** RED->GREEN gate (`AskUserQuestion`): made
+`affected`/`affectedOf` unconditional (all-`NA` when the column is absent) in both functions;
+removed the `hasAffected` gate around `color.background` assignment on real/duplicate nodes
+(now always `.affectedColor()`/`.affectedColorForVec()`) and made mating-unit dot nodes'
+`NA_character_` assignment unconditional too (both empty- and non-empty-branch). Re-ran both
+target files: GREEN except 1 unanticipated pre-existing-test failure
+(`test_makePedigreeMatingLayout.R:420-450`'s exact-column-list assertion, which also encoded the
+old contract but wasn't caught by the original PRE-RED grep -- see Weaknesses/Learning 574 below).
+Fixed that test transparently (same file, same already-approved scope), re-ran: fully GREEN.
+**(6)** Full verification: `devtools::test_dir()` clean regression 0 failed/0 error suite-wide;
+`lintr::lint_package()` 0 lints on the touched `R/` file; `devtools::check()` 0 errors/0
+warnings/1 NOTE (pre-existing `vignettes/figure/` knitr leftover, confirmed unrelated and
+pre-existing per S569's own prior report -- not introduced this session). **(7)** GREEN->REFACTOR
+gate (`AskUserQuestion`): recommended and owner confirmed skipping REFACTOR -- diff already
+minimal, no duplication introduced beyond the pre-existing parallel-implementation pattern between
+the two functions. **(8)** Phase 3E runtime smoke test: live `chromote` render (matching
+`data-raw/kinship2FidelityValidation.R`'s own established `screenshot_layout()` pattern, reused
+from a scratchpad script, not committed) of the bundled `nprcgenekeepr::examplePedigree` (7,306
+nodes, confirmed live to have no `affected` column) -- numerically confirmed every real/duplicate
+`color.background == "#FFFFFF"`; a small 8-individual fixture screenshot visually confirmed every
+node renders unfilled (white interior, colored outline) rather than vis.js's own default solid
+fill, with mating-union dots staying small/distinct per the resolved scope decision. **(9)**
+Committed the GREEN implementation (`17d20d3d`) separately from the claim commit, matching this
+session's own blast-radius discipline (5 files: `R/`, 2 test files, `NEWS.Rmd`, plan-doc
+annotation). Added a `NEWS.Rmd` entry (matching the sibling S552->S554 "Fixed:" entry's own
+style/precedent for the `hasAffected == TRUE` case) and annotated Track 1 `DONE S570` in the plan
+document with verified file:line citations (re-checked against the file AFTER all edits, not
+transcribed from memory -- 2 of the 4 citation blocks had shifted line numbers from earlier
+drafting and were corrected before finalizing). **(10)** Close-out: added `PROJECT_LEARNINGS.md`
+Learning 574 (a keyword grep across test files is a PRE-RED scoping starting point, not a
+completeness guarantee, for exact-column-list assertions that encode a field's absence by
+omission rather than by name); bumped `CLAUDE.md`'s learning-count pointer (573->574).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A (no new displayed
+statistic). Tutorial/article documentation checklist N/A (a default-fill bugfix to existing
+rendering, not a new tab/control/interaction pattern). `NEWS.Rmd` entry checklist DONE (added,
+matching the sibling S552->S554 "Fixed:" precedent for user-visible rendering-behavior changes).
+`a2interactive.Rmd` checklist N/A (no new exported function/parameter -- `makePedigreeDiagramData()`/
+`makePedigreeMatingLayout()`'s signatures are unchanged). GitHub issue close-out checklist N/A (no
+`BACKLOG.md` item marked DONE this session -- Track 1 originates from a planning document, not a
+tracked GitHub issue; no new issue filed, matching the "recommend, don't unilaterally file"
+precedent since this is a narrow single-track fix, not a batch like S566's Tracks A/B/C). Lint
+checklist DONE (`lintr::lint_package()` 0 lints on the touched file). `_pkgdown.yml`
+reference-coverage checklist N/A (no new exported function).
+
+**Self-assessment (Session 570): 8/10.** **Strengths:** (1) Followed every TDD phase gate via
+`AskUserQuestion` as required by the Development Process Contract, including the separate
+pre-RED scope decision (mating-unit dot fill) kept distinct from the RED gate itself, matching
+`CLAUDE.md`'s explicit rule. (2) Wrote the Phase 1B claim stub BEFORE any code investigation this
+time, directly correcting S569's own self-identified process gap rather than repeating it. (3)
+Verified GREEN with 4 independent layers, not just "tests pass": targeted files, full clean
+regression, lint, `devtools::check()`, AND a live visual render at both a synthetic small scale
+and the full bundled 7,306-node fixture -- the large-scale render specifically confirms the fix
+generalizes beyond a hand-built test fixture. (4) Re-verified every file:line citation in the plan
+document's DONE annotation against the actual post-edit file state rather than trusting numbers
+transcribed while drafting -- caught and fixed 2 that had shifted. **Weaknesses:** (1) The
+original PRE-RED grep-based test investigation (`grep -n "hasAffected|color.background|affected"`)
+missed one pre-existing test (`test_makePedigreeMatingLayout.R:420-450`) whose assertion encoded
+the old contract by omitting `color.background` from an exact expected-column list rather than by
+naming it -- only the mandated full-regression run during GREEN verification caught it. Recorded
+as `PROJECT_LEARNINGS.md` Learning 574 rather than smoothed over; fixed transparently within the
+already-approved RED/GREEN scope for that file rather than treated as new unscoped work. (2) Did
+not verify the fix against a second real (non-bundled-example) no-`affected`-column fixture beyond
+`examplePedigree` -- a reasonable but not fully exhaustive generalization claim, matching a
+similar caveat S569 itself flagged for its own analogous claim.
+**Ledger:** recorded in `CHANGELOG.md` (this session's entries).
 
 ### Session 568 Handoff Evaluation (by Session 569)
 **Score: 9/10.** **What helped:** the handoff's `next_steps` field named 5 concrete pickup
