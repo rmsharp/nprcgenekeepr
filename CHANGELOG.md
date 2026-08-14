@@ -138,6 +138,11 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [ad hoc] S575: reconcile HANDOFFS.md commit self-reference (`bb0c9bb2`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` ->
+  `bb0c9bb2` (the close-out commit whose sha the receipt itself couldn't name until after it was
+  made) -- matching the established S562-S574 precedent.
+
 ### 2026-08-14 · [ad hoc] S575: close out (Track 5 re-measurement DONE, no gap found)
 - **Deliverable:** Evaluated S574's handoff (9/10), self-assessed (9/10), documented
   `PROJECT_LEARNINGS.md` Learning 580 (live/offline cross-validation + structural-proof pattern for

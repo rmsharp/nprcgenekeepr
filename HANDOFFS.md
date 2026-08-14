@@ -190,7 +190,7 @@ runtime_smoke: N/A by the letter of the rule (no runtime behavior changed -- inv
   fixture was performed anyway (see what_was_done), specifically to substantiate this session's own
   measurement claims, not as a change-verification gate. 0 diagram-related console errors.
 changelog_ref: this session's own CHANGELOG.md entries (claim, deliverable, close-out)
-commit: pending
+commit: bb0c9bb2
 ```
 
 ```handoff
