@@ -330,9 +330,24 @@ regenerate them via `data-raw/kinship2FidelityValidation.R` if the article is re
   same `gen`; a live re-render of Track B/C's own fixtures compared pixel-metrically against the
   existing article images.
 
-### Track 4 -- Anchor/founder generation-row alignment (Claim 4a) -- DECISION-GATED, own session
+### Track 4 -- Anchor/founder generation-row alignment (Claim 4a) -- DESIGN RATIFIED S572, implementation not yet started
 
-- **Scope:** This is the architecturally significant item. It requires a **dedicated design
+**DESIGN RATIFIED S572 (2026-08-14):** the dedicated design session this Track called for is done
+-- see `docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md`. Reframed the (a)/(b)
+choice below using issue #144's own already-validated Candidate A/B/C characterization (not
+re-derived from scratch): (a) below corresponds to the status quo (Candidate B, already shipped)
+optionally layered with Candidate C's signposting; (b) below corresponds to Candidate A
+(gen-aware D2 anchor selection). **Candidate A was ratified** via `AskUserQuestion` -- provably
+(not just empirically) closes the row-mismatch defect class as a structural invariant, and as a
+direct consequence lets `effGenOf` (issue #144's own compensating mechanism) be deleted rather
+than layered further. Cost, disclosed and accepted: duplicate-node count -20% (128->103),
+multi-anchor individuals 2->21 (up to 5-way) on the real fixture. Candidate C is not precluded --
+remains available as a future, separately-scoped enhancement (see the plan's own §5/§8). **The
+implementation itself is unstarted** -- this Track's own "L (design) + L (implementation)"
+estimate carries forward unchanged for the remaining implementation session(s).
+
+- **Scope (original framing, superseded by the ratified plan's own §2 above):** This is the
+  architecturally significant item. It requires a **dedicated design
   session** (its own `AskUserQuestion`-gated PRE-RED scope decision, per `CLAUDE.md`'s Development
   Process Contract and this project's own established precedent for exactly this kind of choice --
   see §3) before any RED/GREEN work, because 2 genuinely different, defensible target designs

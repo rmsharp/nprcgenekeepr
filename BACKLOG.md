@@ -792,6 +792,13 @@ label), needing its own scoping session first, matching #133/#136/#137/#145's ow
       sign-off to pursue -- independently valuable as a diagram-readability
       enhancement, decoupled from #144's own resolution (which does not need
       it). See `docs/planning/issue144-anchor-row-mismatch-fix-plan.md` §5/§8.
+      **Also considered and again not adopted for the kinship2-fidelity remediation plan's
+      Track 4 (S572, 2026-08-14)** -- Track 4 ratified Candidate A (gen-aware D2 anchor
+      selection) instead, see
+      `docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md` §3/§8. Still not
+      precluded -- remains open as a future, separately-scoped enhancement if a live render of
+      Track 4's own redistribution leaves remaining cross-generation mate-lines the owner wants
+      signposted for legibility.
 - [ ] **The live app's uploaded/QC'd copy of `obfuscated_rhesus_mhc_ped.csv`
       produces one fewer node than reading the same bundled CSV directly**
       (found S472, incidental to issue #143's live verification, Effort
