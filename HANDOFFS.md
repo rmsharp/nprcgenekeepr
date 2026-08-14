@@ -204,10 +204,8 @@ runtime_smoke: No live shinytest2/chromote run this session -- Track A is
   new code path against the new test fixtures, not merely a build-passes check.
 changelog_ref: CHANGELOG.md "S564: close out (Track A of kinship2 supplement
   full-reproduction plan DONE)"
-commit: pending
+commit: 7bbc6273
 ```
-Full receipt filled at close-out (Phase 3D); `commit` reconciled next (self-reference,
-matching the S562/S563 precedent).
 
 ```handoff
 session: S563

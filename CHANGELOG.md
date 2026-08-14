@@ -149,6 +149,12 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
   drift since S562 ratification). Claim stubs written to `SESSION_NOTES.md`/`HANDOFFS.md`
   (`status: pending`). Work beginning.
 
+### 2026-08-13 · [ad hoc] S564: reconcile HANDOFFS.md commit self-reference (`7bbc6273`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` ->
+  `7bbc6273` (the close-out commit whose sha the receipt itself couldn't name until
+  after it was made) -- the standard self-reference limitation, reconciled
+  immediately, matching the S562/S563 precedent.
+
 ### 2026-08-13 · [BL-N] S564: close out (Track A of kinship2 supplement full-reproduction plan DONE)
 - **Deliverable:** `kinship()` gained `chrtype = c("autosome", "x")` and `sex`
   arguments (Track A, `docs/planning/kinship2-supplement-full-reproduction-plan.md`
