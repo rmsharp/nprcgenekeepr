@@ -182,7 +182,7 @@ runtime_smoke: n/a -- config-only change (.gitignore/.Rbuildignore), no Shiny/ap
   the target file from the built tarball) was verified directly, twice: once that caught the
   regex bug, once confirming the fix.
 changelog_ref: CHANGELOG.md 2026-08-14 S567 claim + close-out entries
-commit: pending
+commit: 619ffd98
 ```
 
 ```handoff
