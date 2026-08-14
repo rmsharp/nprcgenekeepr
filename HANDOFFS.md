@@ -203,7 +203,7 @@ runtime_smoke: Numeric verification (0 same-gen gaps under minSep across the rea
   fixtures, visually confirming uniform mate/sibling spacing and that Track C's consanguineous
   marker + duplicate dashed connector both remain legible.
 changelog_ref: CHANGELOG.md 2026-08-14 S571 entries (this close-out)
-commit: pending
+commit: 5add5050
 ```
 
 ```handoff
