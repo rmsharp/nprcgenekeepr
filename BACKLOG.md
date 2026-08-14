@@ -68,6 +68,17 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       connected-component walk).
 
 ## Housekeeping
+- [ ] (found S573, 2026-08-14, incidental to this session's own Phase 3F CHANGELOG.md entries,
+      READY, Effort S) **`CHANGELOG.md`'s byte-budget archive trigger fires** (`python3
+      methodology_trim.py --file CHANGELOG.md --check`: 83,410 B against the 65,536 B budget as
+      of this session's own entries) -- flagged as a MEDIUM dashboard risk at Phase 0 by several
+      recent sessions (S557 onward) but never logged as its own actionable item, so it kept
+      recurring silently. Not trimmed this session (out of scope for the Track 4 implementation
+      deliverable, matching `PROJECT_LEARNINGS.md` Learning 382's "report, don't fix mid-session"
+      precedent). A future session should run `python3 methodology_trim.py --file CHANGELOG.md
+      --write` (after `--check`'s own losslessness proof) and commit the resulting shard
+      separately, matching the `SESSION_NOTES.md`/`HANDOFFS.md` archive precedent already
+      established for this project's other ledgers.
 - [ ] (found S508, 2026-08-10, re-surfaced S559, 2026-08-13, **RESOLVED S561**.
       **`HANDOFFS.md`'s declared `methodology_trim.py` regenerated field ("retained
       receipt count") had no matching "This file currently holds **N**" sentence in the
@@ -793,12 +804,14 @@ label), needing its own scoping session first, matching #133/#136/#137/#145's ow
       enhancement, decoupled from #144's own resolution (which does not need
       it). See `docs/planning/issue144-anchor-row-mismatch-fix-plan.md` §5/§8.
       **Also considered and again not adopted for the kinship2-fidelity remediation plan's
-      Track 4 (S572, 2026-08-14)** -- Track 4 ratified Candidate A (gen-aware D2 anchor
-      selection) instead, see
-      `docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md` §3/§8. Still not
-      precluded -- remains open as a future, separately-scoped enhancement if a live render of
-      Track 4's own redistribution leaves remaining cross-generation mate-lines the owner wants
-      signposted for legibility.
+      Track 4 (design S572, implemented S573, 2026-08-14)** -- Track 4 ratified and shipped
+      Candidate A (gen-aware D2 anchor selection) instead, see
+      `docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md` §3/§8. Live-rendered
+      (S573, both `edgeStyle` values, zero console errors) with the redistribution this decision
+      predicted (duplicate nodes 128->102, multi-anchor individuals 2->22, max 5). Still not
+      precluded -- remains open as a future, separately-scoped enhancement if the owner judges,
+      from that live render, that remaining cross-generation mate-lines still benefit from
+      signposting for legibility.
 - [ ] **The live app's uploaded/QC'd copy of `obfuscated_rhesus_mhc_ped.csv`
       produces one fewer node than reading the same bundled CSV directly**
       (found S472, incidental to issue #143's live verification, Effort

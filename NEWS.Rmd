@@ -216,6 +216,19 @@ knitr::opts_chunk$set(echo = TRUE)
   same-generation individuals now keeps at least the algorithm's own
   minimum-separation unit apart, matching kinship2's own near-uniform mate
   spacing.
+- Fixed: the Pedigree Diagram tab could render a mating unit's anchor
+  parent at a generation row that didn't match the union's own generation,
+  whenever the two parents' own generations differed -- a common pattern
+  (62% of mating units in the bundled example pedigree). Previously
+  compensated by relocating the anchor's own displayed row after the fact;
+  now resolved at the source instead: whichever parent has the deeper
+  generation always becomes the anchor, so the mismatch can no longer
+  occur (a structural guarantee, not a case-by-case correction). A
+  measured visual consequence: individuals who anchor multiple matings at
+  different generations now more often appear as a duplicate node at one
+  of their own mating units, rather than being pulled to a single
+  relocated row (22 individuals in the bundled example pedigree, up from
+  2; the corresponding duplicate-node count drops from 128 to 102).
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes

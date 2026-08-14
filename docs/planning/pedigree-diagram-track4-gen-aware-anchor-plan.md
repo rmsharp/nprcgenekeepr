@@ -1,6 +1,55 @@
 # Pedigree Diagram Track 4: gen-aware anchor selection (generation-row alignment)
 
-**Status:** RATIFIED 2026-08-14 -- proceed to implementation as written. See §9.
+**Status:** IMPLEMENTED S573 (2026-08-14). See §9 for ratification and the implementation record
+below for the full verification result (§6/§7 executed as written; no deviations).
+
+**Implementation record (S573, 2026-08-14):** `preferAnchor()` rewritten gen-first, the
+elimination/`used` shortcut and now-dead `isFounderOf()` removed (§2.1-2.2); `effGenOf` and the
+anchor `dispGenOf` override deleted, `positionIndividual()`'s 2 call sites reverted to `genOf`
+(§2.3) -- all in one commit, matching §6's migration path. Source diff: 24 insertions / 69
+deletions (net simplification, confirming §2.3's prediction empirically, not just structurally).
+Full strict TDD PRE-RED->RED->GREEN cycle (REFACTOR declined via `AskUserQuestion` -- the GREEN
+diff already **is** the plan's own net-simplification claim; no further refactor candidate
+found). New invariant test (`matingUnits$gen == genOf[[anchor]]`, 0 exceptions on the real
+375-individual fixture) plus the 2 residual-acceptance tests at
+`tests/testthat/test_positionMatingUnitForest.R:809-893` rewritten to residual-resolved
+assertions, confirmed RED against unmodified source for the right reason, then GREEN. 16
+pre-existing blocks / 43 expectations across the 4 touched test files re-derived from live
+implementation output (not hand-derived), per §6 step 4 -- close to the plan's own "~38/13"
+order-of-magnitude estimate.
+
+**§7 step 4 final re-measured figures** (all confirmed against the live full pipeline, not the
+throwaway validation script's own simplified re-simulation from §1.4):
+
+| Metric | Pre-Track-4 (Candidate B) | Post-Track-4 (Candidate A) |
+|---|---|---|
+| Mating units | 237 | 237 (unchanged) |
+| Duplicate nodes | 128 | **102** (-20.3%) |
+| Multi-anchor individuals | 2 (`KUENM8`, `IM1B5T`) | **22** (max 5, `WCPXHD`) |
+| Anchor-side mismatches | 0 (via `effGenOf` compensation) | **0** (structural invariant, §2.4) |
+| Direct-style node count (real fixture) | 740 | **714** |
+| Rectilinear-style node count (real fixture) | 1,228 | **1,202** |
+
+**Verification:** full clean regression 0 failed/0 error (excluding pre-existing baseline
+`test-app-`/`test-e2e-` noise); `devtools::check()` 0 errors/0 warnings/1 pre-existing
+unrelated NOTE (`vignettes/figure/` knitr leftover); `lintr::lint_package()` 0 lints on all 5
+touched files. §7 step 5 (`GA204Z`/`8LKBV9` fixture): zero overlap, zero non-termination,
+re-verified via the rewritten tests. §7 step 6 (Track 3 minSep guarantee): re-verified holding
+on both the synthetic fixture and the real 375-individual fixture (min gap = 1, no NA x/gen).
+§7 step 8 (Phase 3E live verification): a live `shinytest2` session against the real bundled
+fixture confirmed, for both `edgeStyle` values -- node counts match exactly (714 direct / 1,202
+rectilinear); zero diagram-related console errors; 4 of the newly-created multi-anchor
+individuals (`WCPXHD`, `HV7LZ3`, `KUENM8`, `LVK7AI`) queried live via the rendered visNetwork
+widget, all with valid (non-`NA`) coordinates, including `KUENM8`'s own genuine duplicate node;
+2 screenshots taken (direct and rectilinear) confirming a clean render with no visible defect;
+the existing live E2E pedigree-module suite (15 tests, 52 assertions covering click-to-navigate,
+PNG export, the shape-to-sex legend, hover-tooltip/search, inbreeding-loop rendering, the
+consanguineous-mating marker, and twin connectors) passed unchanged, confirming issue #143's own
+already-fixed non-anchor units and every other already-shipped Diagram-tab feature are
+unaffected.
+
+**§9 owner-directed follow-up, unaffected either way:** `BACKLOG.md`'s standing "Candidate C"
+item remains open, not precluded by this implementation, exactly as §5/§8 already recorded.
 **Session:** S572 (2026-08-14). **Workstream:** `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`
 (chosen over `DESIGN_WORKSTREAM.md`, matching this project's own established precedent for
 pedigree-diagram positioning work -- S432's issue #129 plan, S458's Option 2 layout plan, S464's

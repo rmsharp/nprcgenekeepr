@@ -330,21 +330,27 @@ regenerate them via `data-raw/kinship2FidelityValidation.R` if the article is re
   same `gen`; a live re-render of Track B/C's own fixtures compared pixel-metrically against the
   existing article images.
 
-### Track 4 -- Anchor/founder generation-row alignment (Claim 4a) -- DESIGN RATIFIED S572, implementation not yet started
+### Track 4 -- Anchor/founder generation-row alignment (Claim 4a) -- DONE S573 (design S572, implementation S573)
 
-**DESIGN RATIFIED S572 (2026-08-14):** the dedicated design session this Track called for is done
--- see `docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md`. Reframed the (a)/(b)
-choice below using issue #144's own already-validated Candidate A/B/C characterization (not
-re-derived from scratch): (a) below corresponds to the status quo (Candidate B, already shipped)
-optionally layered with Candidate C's signposting; (b) below corresponds to Candidate A
-(gen-aware D2 anchor selection). **Candidate A was ratified** via `AskUserQuestion` -- provably
-(not just empirically) closes the row-mismatch defect class as a structural invariant, and as a
-direct consequence lets `effGenOf` (issue #144's own compensating mechanism) be deleted rather
-than layered further. Cost, disclosed and accepted: duplicate-node count -20% (128->103),
-multi-anchor individuals 2->21 (up to 5-way) on the real fixture. Candidate C is not precluded --
-remains available as a future, separately-scoped enhancement (see the plan's own §5/§8). **The
-implementation itself is unstarted** -- this Track's own "L (design) + L (implementation)"
-estimate carries forward unchanged for the remaining implementation session(s).
+**DESIGN RATIFIED S572, IMPLEMENTED S573 (2026-08-14):** see
+`docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md` for both the ratified decision
+and the full implementation record. Reframed the (a)/(b) choice below using issue #144's own
+already-validated Candidate A/B/C characterization (not re-derived from scratch): (a) below
+corresponds to the status quo (Candidate B, already shipped) optionally layered with Candidate
+C's signposting; (b) below corresponds to Candidate A (gen-aware D2 anchor selection).
+**Candidate A was ratified** via `AskUserQuestion` -- provably (not just empirically) closes the
+row-mismatch defect class as a structural invariant, and as a direct consequence let `effGenOf`
+(issue #144's own compensating mechanism) be deleted rather than layered further. **Implemented
+S573:** `preferAnchor()` rewritten gen-first, the elimination/`used` shortcut and `effGenOf`/
+anchor `dispGenOf` override removed -- a net-simplifying single commit (24 insertions / 69
+deletions). Final measured cost on the real fixture: duplicate-node count 128->**102** (-20.3%,
+the plan's own throwaway-script estimate of 103 was off by 1 as predicted), multi-anchor
+individuals 2->**22** (max 5, `WCPXHD`, the plan's own estimate of 21 was likewise off by 1).
+Rectilinear-style node count 1,228->**1,202**. Full clean regression, `devtools::check()` (0
+errors/0 warnings/1 pre-existing unrelated NOTE), 0 lints, and a live `shinytest2` render (both
+`edgeStyle` values, zero console errors, the existing 15-test/52-assertion live E2E suite
+unchanged) all confirm the fix. Candidate C is not precluded -- remains available as a future,
+separately-scoped enhancement (see the plan's own §5/§8).
 
 - **Scope (original framing, superseded by the ratified plan's own §2 above):** This is the
   architecturally significant item. It requires a **dedicated design
@@ -385,6 +391,12 @@ estimate carries forward unchanged for the remaining implementation session(s).
   side-by-side render is taken.
 
 ## 5. Recommended pickup order
+
+**Status as of S573 (2026-08-14):** Tracks 1, 3, and 4 are DONE (S570, S571, S572/S573
+respectively -- see each Track's own section above). Only **Track 2** (flip default to
+rectilinear) and **Track 5** (broaden rectilinear coverage, blocked on Track 2/re-measurement)
+remain. This original recommended order (below) is left as written -- historical planning
+narrative, not retroactively edited.
 
 1. **Track 1** (unaffected fill) -- smallest, lowest-risk, highest-visibility win; no dependency on
    anything else.
