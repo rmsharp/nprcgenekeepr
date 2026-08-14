@@ -138,6 +138,25 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [ad hoc] S575: close out (Track 5 re-measurement DONE, no gap found)
+- **Deliverable:** Evaluated S574's handoff (9/10), self-assessed (9/10), documented
+  `PROJECT_LEARNINGS.md` Learning 580 (live/offline cross-validation + structural-proof pattern for
+  coverage questions), wrote the full `HANDOFFS.md` receipt.
+
+### 2026-08-14 · [ad hoc] S575: Track 5 re-measurement (no rectilinear routing gap found) (`3c3412af`)
+- **Deliverable:** `docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §Track 5
+  -- re-measured, after Tracks 3-4 landed, how much diagonal-edge residue remains in
+  `edgeStyle = "rectilinear"` mode. Cross-validated 3 ways: offline `makePedigreeMatingLayout()` on
+  the real 375-individual fixture (0 non-dashed diagonal edges vs. 237 in `direct` mode);
+  structural proof from `.addRectilinearWaypoints()`'s D1/D2 loops (coverage guaranteed by
+  construction, any pedigree); live `shinytest2`/`chromote` query of the rendered `visNetwork`
+  widget matching the offline figures exactly. All 5 tracks of the remediation plan are now
+  resolved -- no `.addRectilinearWaypoints()` change was warranted. Mid-session: published a
+  direct-vs-rectilinear comparison Artifact at owner request.
+
+### 2026-08-14 · [ad hoc] S575: claim session (Track 5 re-measurement) (`68432947`)
+- **Deliverable:** Phase 1B claim stub written to `SESSION_NOTES.md`/`HANDOFFS.md`.
+
 ### 2026-08-14 · [ad hoc] S574: reconcile HANDOFFS.md commit self-reference (`98327c27`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` ->
   `98327c27` (the close-out commit whose sha the receipt itself couldn't name until after it was

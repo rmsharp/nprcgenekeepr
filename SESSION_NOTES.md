@@ -14,18 +14,112 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 574 Handoff Evaluation (by Session 575)
+**Score: 9/10.** **What helped:** `next_steps` named Track 5 as the sole remaining item in the
+kinship2-fidelity remediation plan, explicitly noted "no effort estimate given... re-measure
+against the now-current default first" -- exactly matching the owner's own `AskUserQuestion` scope
+pick this session ("measure against real fixture," stop-and-report if a gap is found). Gotcha (1)
+(shinytest2 spawns a separate Rscript reading the INSTALLED package, not `pkgload::load_all()`'s
+shadow) and gotcha (2) (`NPRC_RUN_E2E` is separate from `NOT_CRAN`) were both followed directly in
+this session's own live-verification script -- reinstalled the dev package before the first live
+check, set both env vars explicitly -- and both traps were avoided cleanly, with zero rediscovery
+cost. `key_files` correctly pointed at the plan doc's own Track 5 section. **What was missing:**
+nothing critical -- the handoff couldn't reasonably have named the specific measurement methodology
+(cross-validating an offline `makePedigreeMatingLayout()` call against a live `visNetwork` widget
+DataSet query) since that was this session's own judgment call, appropriately left open by the
+deliberately-unscoped "re-measure first" framing. Also not named: `test_makePedigreeMatingLayout.R`'s
+own Track-4-era inline comment (lines 1131-1144) had already informally answered half of Track 5's
+question (the anchor-side D2 dogleg is now permanently unreachable) -- a connection this session had
+to make itself by reading that test file's docstring, not something S574 could have been expected to
+flag before Track 5 was even picked. **What was wrong:** nothing found inaccurate. **ROI:** high --
+every gotcha applied directly saved real time; the `next_steps` framing meant zero re-derivation of
+what to do first.
+
 ### What Session 575 Did
 **Deliverable:** Track 5 (broaden rectilinear routing coverage) re-measurement from
-`docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §Track 5 (IN PROGRESS)
-**Started:** 2026-08-14 18:20 CDT
-**Status:** Session claimed. Owner scoped this session (via `AskUserQuestion`) to pure
-re-measurement: render the bundled real fixture live in `edgeStyle="rectilinear"` mode, inventory
-any remaining diagonal/non-orthogonal edges, and report findings -- stop and write up if genuine
-gaps are found rather than implementing a fix this session (implementation, if any, is a future
-session's decision). No RED phase will be entered unless the owner explicitly re-scopes mid-session.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+`docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §Track 5 -- **DONE, no
+follow-up needed.** TDD phase: PRE-RED only (pure re-measurement/evidence-gathering per the owner's
+own scope pick; no RED phase entered since no genuine gap was found to fix).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SESSION_RUNNER.md`, `SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list` [12 open], `git status`/`log`/`diff --stat` [97 commits ahead of
+`origin/master`, unpushed; 1 untracked file -- the same already-investigated Quarto render
+byproduct], `methodology_dashboard.py` [Health 96/100, 1 HIGH risk -- `SESSION_NOTES.md` past the
+2,000-line cap], `gh run list --branch master --limit 10` [scheduled `shinytest2.yaml` red 2
+consecutive days, still not diagnosed], ledger reconcile [`CHANGELOG.md`/`HANDOFFS.md` frontiers
+both == `HEAD`, zero gap]). Rendered a 4-item priorities list via `AskUserQuestion` -- owner picked
+Track 5. A 2nd `AskUserQuestion` scoped Track 5 itself to pure re-measurement (owner's own
+"measure against real fixture" pick, over "measure + implement if small"). **(2)** Phase 1B: claim
+stub written to `SESSION_NOTES.md`/`HANDOFFS.md` (`status: pending`), committed (`68432947`).
+**(3)** Read `.addRectilinearWaypoints()` (`R/makePedigreeDiagramData.R:1466` onward) in full to
+understand exactly what D1 (sibship-bar)/D2 (mate-line dogleg) cover, plus the plan's own Claim
+4a/4b/4c write-ups for context on what "genuine gap" would mean. **(4)** Measured 3 independent
+ways, all in exact agreement: (a) offline, `makePedigreeMatingLayout()` called directly on the real
+375-individual bundled fixture -- 1,265/1,315 edges orthogonal, all 50 non-orthogonal edges are the
+intentionally-curved duplicate-connector dashed arcs (`smooth.enabled=TRUE`), zero non-dashed
+diagonal edges (vs. 237 in `direct` mode on the same fixture); (b) structural proof by reading the
+code -- D1 waypoint-routes every child edge unconditionally, D2 either keeps a mate edge direct (only
+when already same-row, hence automatically horizontal) or replaces it with 2 new orthogonal legs, so
+every non-connector edge is orthogonal by construction, for any pedigree shape, not just this one;
+confirmed Track 4's own landed invariant (`test_makePedigreeMatingLayout.R:1131-1144`) makes the
+anchor-side D2 dogleg permanently unreachable, and re-ran the exact original Track C synthetic
+fixture that first demonstrated the "P1-to-A"/"X-to-C1" diagonal-edge scenario in Claim 4b -- 23/24
+edges orthogonal, the 1 exception again a dashed connector arc, not a straight diagonal; (c) live,
+`shinytest2`/`chromote` against the real bundled fixture (dev package reinstalled first,
+`devtools::install(quick=TRUE, upgrade=FALSE)` -- note `upgrade="never"` errors on this devtools
+version) -- true implicit default reads back `"rectilinear"`, a live JS query of the rendered
+`visNetwork` widget's own node/edge `DataSet`s reproduces the offline figures exactly
+(`{orth:1265, diag:50, diagDashed:50, diagNonDashed:0}`), zero diagram-related console errors, and
+confirmed `visEdges(smooth=FALSE)` (`R/modPedigree.R:614`) is the app's global default so every
+non-dashed edge renders as a literal straight segment between its exact coordinates -- the
+geometric measurement matches what actually paints on screen. **(5)** Mid-session, the user asked
+"where can I see the comparative output" -- built and published a small-subgraph (13 real animals,
+QC-passing) live direct-vs-rectilinear screenshot comparison plus the full measurement table and
+structural-proof summary as a published Artifact
+(<https://claude.ai/code/artifact/6769b9f9-d94a-4675-8c67-7e19567cda79>). Also answered a 2nd
+mid-session question (confirmed `vignettes/articles/kinship2-fidelity-validation.html`/`.qmd`
+untouched this session, last touched S566). **(6)** Updated the remediation plan document's own
+Track 5 section with the full evidence record and the §5 status line (all 5 tracks now resolved).
+No `.addRectilinearWaypoints()` change made -- none was warranted.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation/tutorial-article/`NEWS.Rmd`/
+`a2interactive.Rmd`/GitHub-issue-close-out/lint/`_pkgdown.yml` checklists all N/A -- no `R/` or
+`tests/` file was touched this session (investigation/re-measurement only, no code change, no new
+exported function or user-facing feature). Matches the established precedent for audit/measurement
+sessions (e.g. S545/S549) that produce a finding, not a fix.
+
+**Phase 3E runtime smoke test:** N/A by the letter of the rule (no runtime behavior changed this
+session) -- but a live `shinytest2` verification against the real bundled fixture was performed
+anyway (see step 4c above), specifically to substantiate this session's own measurement claims
+against the actual running app, not as a change-verification gate. 0 diagram-related console
+errors.
+
+**Self-assessment (Session 575): 9/10.** **Strengths:** (1) Cross-validated the same measurement 3
+independent ways (offline computation on the real fixture, live browser DataSet query on the same
+fixture, offline computation on the original synthetic fixture that first demonstrated the
+problem) -- all in exact agreement, leaving no ambiguity in the conclusion. (2) Established the
+finding as a structural guarantee (proof by construction: D1 covers every child edge, D2 covers
+every mate edge either directly-same-row or via a 2-orthogonal-leg dogleg), not merely an empirical
+observation bounded to one fixture -- a stronger, more durable claim than "this fixture happens to
+have 0." (3) Correctly identified and excluded the duplicate-connector dashed arcs as a different,
+deliberately-curved visual element (matching kinship2's own convention, already covered by the
+separate, already-resolved Claim 4c) rather than miscounting them as a gap. (4) Followed the
+owner's exact scope pick precisely -- measured, found no gap, stopped and wrote up rather than
+inventing follow-up work to fill the session. (5) Applied 2 gotchas from S574's own handoff
+directly and successfully, avoiding both traps that cost S574 real time. (6) Verified the live
+app's actual rendering config (`visEdges(smooth=FALSE)` global default + per-edge `smooth.enabled`
+overrides) to confirm the geometric measurement corresponds to what actually paints as a straight
+line vs. a curve on screen, not just an abstract coordinate fact. (7) Responded to 2 mid-session
+user questions with direct, evidence-based answers (a git-history check for the "did you rewrite
+X" question; a published, designed Artifact with a real live-app comparison for the "where can I
+see this" question) rather than a bare verbal claim. **Weaknesses:** (1) No independent
+adversarial-verification pass -- a standing gap flagged across S551-S574 (9+ consecutive sessions),
+still unaddressed. (2) The first attempt at the small-subgraph comparison fixture failed live QC
+twice (a dangling out-of-family parent reference, then a missing `birth` column) before landing on
+a working 13-row fixture -- both fixable in under a minute once diagnosed via `qcStudbook()` run
+offline, but a small amount of avoidable churn a slightly more careful first fixture construction
+(checking QC's required-columns list before writing the subset) would have skipped.
+**Ledger:** recorded in `CHANGELOG.md` (this session's claim, deliverable, and close-out entries).
 
 ### Session 573 Handoff Evaluation (by Session 574)
 **Score: 9/10.** **What helped:** `next_steps` correctly identified Track 2 as fully unblocked

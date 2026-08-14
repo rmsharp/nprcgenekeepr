@@ -134,20 +134,64 @@ This file currently holds **9** receipt(s). Computed by `methodology_trim.py` on
 ```handoff
 session: S575
 date: 2026-08-14
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 9
+predecessor_score: 9
 active_task: Track 5 (broaden rectilinear routing coverage) re-measurement from
-  docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md §Track 5
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+  docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md §Track 5. DONE -- no gap
+  found, no follow-up needed. TDD phase: PRE-RED only (pure re-measurement, owner-scoped; no RED
+  entered).
+what_was_done: Measured 3 independent ways, all in exact agreement: (a) offline
+  makePedigreeMatingLayout() on the real 375-individual bundled fixture -- 1,265/1,315 edges
+  orthogonal, all 50 non-orthogonal edges are the intentionally-curved duplicate-connector dashed
+  arcs, 0 non-dashed diagonal edges (vs. 237 in "direct" mode); (b) structural proof from reading
+  .addRectilinearWaypoints() -- D1 routes every child edge unconditionally, D2 keeps a mate edge
+  direct only when already same-row (automatically horizontal) or replaces it with 2 orthogonal
+  legs, so coverage is guaranteed by construction for any pedigree, not just this fixture;
+  confirmed via test_makePedigreeMatingLayout.R:1131-1144 that Track 4's own invariant makes the
+  anchor-side D2 dogleg permanently unreachable, and re-ran the original Track C fixture that
+  first demonstrated the diagonal-edge scenario -- 23/24 edges orthogonal, same result; (c) live
+  shinytest2/chromote against the real fixture (dev package reinstalled first) -- a live JS query
+  of the rendered visNetwork widget's own DataSets reproduces the offline figures exactly, 0
+  console errors. Updated the remediation plan's Track 5 section with the full evidence record and
+  the §5 status line (all 5 tracks now resolved). Mid-session: built and published a comparison
+  Artifact (small real 13-animal subgraph, direct vs. rectilinear, live screenshots) at owner
+  request -- https://claude.ai/code/artifact/6769b9f9-d94a-4675-8c67-7e19567cda79. Commits:
+  68432947 (claim), 3c3412af (deliverable), plus this close-out's own commit (below).
+next_steps: The kinship2-fidelity remediation plan is now FULLY RESOLVED (all 5 tracks) -- no
+  further work remains on it. Next pickup pool (from this session's own Phase 0 priorities list):
+  issue #148's MHC scope-narrowing conversation (DECISION NEEDED); recapture
+  shiny_app_use/pb_diagram_legend.png (READY, Effort S, found S574); CHANGELOG.md's byte-budget
+  archive trim (READY, Effort S, found S573); the scheduled shinytest2.yaml CI failure (now red 3+
+  consecutive days as of this session, reported by 3 consecutive sessions now, still not
+  diagnosed -- worth a session of its own given how long it has persisted); SESSION_NOTES.md's own
+  line-cap overage (no BACKLOG item yet).
+key_files: docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md (search "RE-MEASURED
+  S575" for the Track 5 section), R/makePedigreeDiagramData.R:1466-1611 (.addRectilinearWaypoints(),
+  D1/D2 loops -- the structural proof), tests/testthat/test_makePedigreeMatingLayout.R:1122-1191
+  (the Track C fixture + its own Track-4-era inline comment).
+gotchas: (1) A live/offline cross-check methodology worth reusing for any future "does mechanism X
+  cover every case" question: query the live visNetwork widget's own
+  network.body.data.{nodes,edges}.get() via app$get_js(), compute orthogonality the same way
+  offline via the exported layout function directly, and confirm they match -- catches both a data-
+  level gap and a rendering-config divergence (this app's own visEdges(smooth=FALSE) default) that
+  a pure R-level check alone would miss. (2) Any naive (from.x===to.x)||(from.y===to.y)
+  orthogonality check will always flag the duplicate-individual dashed connector arcs as
+  "diagonal" -- they are DELIBERATELY curved (smooth.type="curvedCW"), not a routing gap; bucket
+  dashed/curved edges separately or a future measurement will misreport a phantom gap (see
+  PROJECT_LEARNINGS.md Learning 580). (3) devtools::install(quick=TRUE, upgrade=FALSE) is the
+  working incantation on this devtools version -- upgrade="never" errors ("must be a single TRUE,
+  FALSE, or NA"). (4) A hand-built small pedigree fixture for a live-app upload needs a birth
+  column (qcStudbook() hard-errors "Required field(s) missing: birth" without it) and no dangling
+  out-of-family parent references (NA them out to make founders) -- both cost a throwaway QC-
+  failure round-trip this session before landing on a working 13-row fixture.
+runtime_smoke: N/A by the letter of the rule (no runtime behavior changed -- investigation only,
+  no R/ or tests/ file touched) -- but a live shinytest2 verification against the real bundled
+  fixture was performed anyway (see what_was_done), specifically to substantiate this session's own
+  measurement claims, not as a change-verification gate. 0 diagram-related console errors.
+changelog_ref: this session's own CHANGELOG.md entries (claim, deliverable, close-out)
 commit: pending
 ```
-<claimed at Phase 1B, not yet closed out>
 
 ```handoff
 session: S574
