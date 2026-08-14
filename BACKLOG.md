@@ -267,6 +267,28 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       2 different-gen units, one of them consanguineous) was constructed empirically this
       session and is a ready-made starting point (see S555's own `PROJECT_LEARNINGS.md`
       entry for the fixture and the reasoning that got there).
+- [ ] **Fully reproduce kinship2 supplementary-material PDF's results** (owner-directed
+      follow-up to the S549 audit above -- "duplicate the work done in that PDF,"
+      overriding that audit's own "no action" verdict on 2 of its 4 findings; plan
+      RATIFIED S562, READY, Effort L overall) -- plan complete:
+      `docs/planning/kinship2-supplement-full-reproduction-plan.md`. 3 independently
+      session-sliceable tracks, no shared code: **Track A** (X-chromosome kinship,
+      Table S2 -- `kinship()` gains `chrtype`/`sex` params, ratified scope is the core
+      algorithm only, Effort M); **Track B** (a `pedigree.shrink()` equivalent -- new
+      `shrinkPedigree()` function, script-callable only, deterministic tie-break
+      [diverges from kinship2's own `runif()` non-determinism by design, ratified],
+      the most novel of the 3, Effort L -- 2 of kinship2's own internal helpers
+      [`excludeUnavailFounders`/`excludeStrayMarryin`] were not yet deparsed by the
+      plan, left as an explicit Pre-RED item); **Track C** (finish the
+      `edgeStyle="rectilinear"` consanguineous-marker color/width propagation from the
+      deferred item directly above -- smallest of the 3, Effort S, no open design
+      question). Plan's own §6.2 suggests C -> A -> B pickup order (smallest/lowest-risk
+      first) but does not force it. Verification caveat carried from the S549 audit: the
+      full 17-subject `fam1` pedigree still isn't reconstructible from this repo, and
+      Track B additionally has no PDF-printed worked example to check against at all
+      (the PDF only names *which* subjects a shrink would trim, never their
+      relationships) -- Track B verifies against the installed `kinship2::pedigree.shrink()`
+      directly instead. None of the 3 tracks has a GitHub issue yet.
 - [ ] (found S552, owner-reported live, **FIXED S554**. **Pedigree Diagram tab's
       affected-status shading fills unaffected individuals too, counter to standard
       pedigree drawing convention** -- issue #133's `.affectedColor()`

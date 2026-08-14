@@ -134,22 +134,73 @@ This file currently holds **4** receipt(s). Computed by `methodology_trim.py` on
 ```handoff
 session: S562
 date: 2026-08-13
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 8
+predecessor_score: 9
 active_task: Write a plan document to fully reproduce
 inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf's results with
-nprcgenekeepr -- X-chromosome kinship (Table S2), a pedigree.shrink() equivalent, and
-the edgeStyle="rectilinear" consanguineous-marker propagation follow-up.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+nprcgenekeepr -- DONE, RATIFIED.
+what_was_done: Wrote docs/planning/kinship2-supplement-full-reproduction-plan.md
+(~600 lines), following the S550 twin-kinship plan's own structure/evidence
+standard. 3 independently session-sliceable tracks: Track A (X-chromosome kinship,
+kinship() gains chrtype/sex, core-algorithm-only per ratified scope); Track B (a
+new shrinkPedigree() function porting kinship2's own 5-helper pedigree.shrink()
+algorithm, script-callable only, deterministic tie-break -- the most novel track,
+with 2 kinship2 sub-helpers left as an explicit Pre-RED item); Track C (finish the
+edgeStyle="rectilinear" consanguineous-marker color/width propagation, smallest,
+no open design question). Deparsed kinship2's own installed namespace directly for
+both new capabilities (kinship.default's chrtype="x" branch; pedigree.shrink's
+full helper chain). Found 2 real traps: the `available`/`avail` naming collision
+with R/makeAvailable.R's unrelated breeding-group concept, and the MZ-twin
+correction's interaction with the new X-linked branch. Ratified 4 judgment calls
+via one AskUserQuestion call (owner picked this plan's own recommended option in
+all 4 cases). Added a BACKLOG.md Housekeeping pointer item. Logged
+PROJECT_LEARNINGS.md Learning 568 (the session's own scope-arc/mid-turn-
+interruption-misreading process learning). Commits: 749d0530 (claim) + this
+close-out commit.
+next_steps: Implement one track (Track C recommended first -- smallest, no open
+design question, fixture already built: R/makePedigreeDiagramData.R's
+.addRectilinearWaypoints() D2 loop, ~2-line fix). Track A next (X-chromosome
+kinship -- moderate, well-precedented signature extension to kinship()). Track B
+last (pedigree.shrink() equivalent -- most novel; its own Pre-RED must first
+deparse kinship2's excludeUnavailFounders/excludeStrayMarryin helpers, not yet
+read this session). Each track is its own separate implementation session (never
+bundled -- 3 different capabilities per SESSION_RUNNER.md's vertical-slice rule).
+None of the 3 tracks has a GitHub issue yet -- the owner may wish to file 3 before
+implementation begins. BACKLOG.md priorities otherwise unchanged from S561: LabKey
+(BLOCKED, Effort M), NPRC outreach (DECISION NEEDED, Effort N/A).
+key_files: docs/planning/kinship2-supplement-full-reproduction-plan.md (the
+deliverable, all sections); R/makePedigreeDiagramData.R:1489-1531 (Track C's exact
+gap, .addRectilinearWaypoints() D2 loop); R/kinship.R:79-171 (Track A's extension
+point); R/trimPedigree.R, R/removeUninformativeFounders.R (confirmed NOT reused by
+Track B -- a different problem); R/columnSchema.R:23 (affected column, reusable by
+Track B); R/makeAvailable.R (the naming-collision trap Track B's own D-B1 avoids);
+docs/planning/twin-relations-kinship-computation-plan.md (S550, the structural
+precedent this plan followed); docs/audits/
+KINSHIP2_SUPPLEMENT_REPRODUCIBILITY_AUDIT_2026-08-13.md (S549, the triggering
+audit); BACKLOG.md Housekeeping (the new pointer item, inserted directly after the
+existing deferred edgeStyle="rectilinear" note).
+gotchas: (1) Track B's own Pre-RED must deparse
+excludeUnavailFounders/excludeStrayMarryin (kinship2::getFromNamespace(...)) before
+writing RED tests -- not done this session, explicitly flagged as an open item, not
+assumed. (2) Track B's naming: use `genotyped`, never `avail`/`available` -- the
+latter collides with R/makeAvailable.R's own unrelated breeding-group-candidate-pool
+concept already in this package's public vocabulary. (3) Track A's X-linked branch
+must apply the existing MZ-twin mzgrp/mzindex correction inside the new chrtype="x"
+loop too (kinship2 itself does this) -- omitting it would silently regress
+twin-kinship parity for any pedigree with both a declared MZ pair and an X-linked
+kinship request. (4) Track B cannot be verified against the PDF's own printed
+numbers at any reachable scale (only Tracks A/C can) -- verify against installed
+kinship2::pedigree.shrink() directly instead, on a self-constructed fixture. (5) The
+plan's own AST call-site counts for kinship() (inherited context from the S550 plan)
+predate this session and should be re-counted at Track A implementation time, not
+trusted as still-current.
+runtime_smoke: n/a -- docs-only planning session, no R/ package code changed,
+nothing to launch. Stated explicitly, not silently skipped.
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-13 (claim; this
+close-out entry)
 commit: pending
 ```
-<Claim stub -- filled in full at Phase 3D close-out.>
 
 ```handoff
 session: S561

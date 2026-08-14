@@ -14,21 +14,148 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 561 Handoff Evaluation (by Session 562)
+**Score: 9/10.** **What helped:** the `next_steps` field named this exact item
+verbatim as item (1) of its priority list -- "Fix `edgeStyle=\"rectilinear\"`
+consanguineous-marker color/width propagation on dogleg-rerouted edges (found S555 --
+a verified 12-row reproduction fixture already exists; S560's own handoff called this
+\"READY, Effort S\" but `BACKLOG.md`'s own inline text for the item carries no
+matching tag -- add the tag when picking..." -- which became, almost verbatim, Track C
+of this session's own plan (`docs/planning/kinship2-supplement-full-reproduction-
+plan.md` §5), including independently re-confirming S560/S561's own "READY, Effort S"
+characterization via this session's own direct code read (§5.2: "no design decision
+needed, mechanically forced by the existing precedent"). `key_files`/`gotchas` were
+scoped entirely to S561's own receipt-count-sentence work and had no way to anticipate
+this session's actual pivot (an owner directive broadening scope mid-session from
+"tag one item" to "plan a full 3-track reproduction") -- not a real gap, since S561
+could not have predicted an owner-directed scope expansion that hadn't been asked for
+yet. **What was wrong:** nothing found inaccurate. **What was missing:** n/a, see
+above. **ROI:** High -- even though this session's actual deliverable grew far beyond
+what S561's handoff anticipated, the one concrete pointer it did give (the
+`edgeStyle="rectilinear"` gap, its exact file/line evidence, and its own verified
+12-row fixture) was directly reusable as Track C's entire evidence section with zero
+re-derivation.
+
 ### What Session 562 Did
-**Deliverable:** Write a plan document to fully reproduce
+**Deliverable:** Write a plan document,
+`docs/planning/kinship2-supplement-full-reproduction-plan.md`, to fully reproduce
 `inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf`'s (kinship2's own
-supplementary material) results with `nprcgenekeepr` -- covering the 2 capabilities
-`docs/audits/KINSHIP2_SUPPLEMENT_REPRODUCIBILITY_AUDIT_2026-08-13.md` (S549) judged
-"no action, capability-fit" (X-chromosome kinship for Table S2; a `pedigree.shrink()`
-equivalent) plus the 1 remaining partial gap (the `edgeStyle="rectilinear"`
-consanguineous-marker color/width propagation, so the Figure S1 plot fully matches
-too). (IN PROGRESS)
-**Started:** 2026-08-13. **Status:** Session claimed. Work beginning. TDD phase: N/A
-(planning/design document, no test or production code -- matches the S550 precedent
-for the twin-kinship design session).
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded
-in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for
-the next session's reconcile.
+supplementary material) results with `nprcgenekeepr` -- **DONE, RATIFIED.**
+**Started/Completed:** 2026-08-13. **Status:** DONE. TDD phase: N/A (planning/design
+document, no test or production code -- matches the S550 precedent for the
+twin-kinship design session).
+
+**Scope arc (owner-directed, mid-session, twice):** the session opened as a
+continuation of a prior-turn Q&A about where `docs/audits/
+KINSHIP2_SUPPLEMENT_REPRODUCIBILITY_AUDIT_2026-08-13.md`'s (S549) results live. The
+next instruction ("use the gap analysis to develop backlog items") was read as
+formalizing/tagging that audit's one remaining open finding (Track C below) --
+confirmed via `AskUserQuestion`, Phase 1B prep begun. A then-genuinely-accidental
+mid-turn interruption (the user was only fixing a typo in an aside, not redirecting)
+was initially misread as a scope correction, triggering an unneeded full re-scope
+round; the user then clarified both points separately, and -- critically -- confirmed
+the REAL goal all along was broader: literal reproduction of the PDF's results,
+including 2 capabilities (X-chromosome kinship, a `pedigree.shrink()` equivalent) the
+S549 audit had explicitly judged "no action, capability-fit." No work was lost at
+either pivot -- nothing had been committed past the claim-stub stage yet. Logged as
+`PROJECT_LEARNINGS.md` Learning 568.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SESSION_RUNNER.md`,
+`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list`, `git status`/`log`/`diff --stat`
+[46 commits ahead of `origin/master`, unpushed, unchanged pattern since S548],
+`methodology_dashboard.py` [Health 96/100, 0 High+ risk], `gh run list --branch
+master --limit 10` [all push-triggered workflows green on latest pushed commit;
+scheduled `shinytest2.yaml` still red, unchanged since S548, not diagnosed this
+session -- report, don't fix], ledger reconcile [`CHANGELOG.md`/`HANDOFFS.md`
+frontiers both == `HEAD`, zero-commit gap]). 6 untracked files individually checked
+(not just by directory/extension): the kinship2 supplement PDF + its own
+`docs/planning/*.html` sibling trace to S549's already-committed audit, not a ghost
+session; the 4 "Compounding Loop" files remain the same untriaged clutter flagged
+since S555. Rendered the priorities list (2 tagged `BACKLOG.md` items: LabKey
+BLOCKED, NPRC outreach DECISION NEEDED) via `AskUserQuestion` -- rejected by the user
+for clarification, which redirected the session onto the S549-audit thread instead
+(see scope arc above). **(2)** After the 2nd re-scope, stated understanding back to
+the user and declared TDD phase N/A. **(3)** Wrote the Phase 1B claim stub to
+`SESSION_NOTES.md`/`HANDOFFS.md` (`status: pending`) plus a `CHANGELOG.md` claim
+entry, committed (`749d0530`). **(4)** Evidence gathering: read the S550 twin-kinship
+plan (`docs/planning/twin-relations-kinship-computation-plan.md`) as the structural
+precedent to follow; deparsed kinship2's own installed-namespace mechanisms directly
+(not the Rd docs) for both new capabilities -- `kinship.default`'s `chrtype="x"`
+branch (X-linked kinship: males inherit the mother's row only and have self-kinship
+1.0, not 0.5; females use the same avg-of-parents formula as autosomal; the existing
+MZ-twin `mzindex` correction applies inside the X-linked branch too, a real
+interaction trap flagged in the plan) and `pedigree.shrink()`'s full 5-helper
+orchestration (`bitSize`, `findUnavailable`, `findAvailNonInform`,
+`findAvailAffected` [uses `runif()` for non-deterministic tie-breaks -- flagged as a
+design decision, not silently ported], `pedigree.trim`). Read
+`R/kinship.R` (current, post-twin-work state), `R/trimPedigree.R`,
+`R/removeUninformativeFounders.R`, `R/columnSchema.R` (confirmed `affected` already
+exists as an optional pedigree column, issue #133 -- reusable for the shrink-equivalent
+with zero new column), `R/makeAvailable.R` (confirmed a real, unrelated "available"
+naming collision with kinship2's own `avail` argument -- breeding-group candidate
+pools, not genotyping status), and `R/makePedigreeDiagramData.R`'s full
+`.addRectilinearWaypoints()` (found the exact 2-line gap: the D2 dogleg loop never
+looks up a dropped mate edge's own color/width before building its replacement
+projection edges). **(5)** Drafted the plan
+(`docs/planning/kinship2-supplement-full-reproduction-plan.md`, ~600 lines): 3
+independently-sliceable tracks (A: X-chromosome kinship: `kinship()` gains
+`chrtype`/`sex`; B: a `shrinkPedigree()` equivalent, the most novel of the 3; C: the
+rectilinear marker-propagation fix, smallest, no open design question), a scope
+caveat carried forward from S549 (the full 17-subject `fam1` pedigree still isn't
+reconstructible) plus a new one specific to Track B (the PDF gives no reproducible
+`pedigree.shrink()` worked example at any reachable scale -- Track B verifies against
+the installed `kinship2::pedigree.shrink()` directly instead, stated explicitly
+rather than discovered mid-implementation), per-track evidence/design-decision/
+vertical-slice/dragons sections mirroring the S550 precedent's structure,
+alternatives-considered, close-out checklist mapping, and provenance. **(6)** Ratified
+4 genuine judgment calls via one `AskUserQuestion` call (Track A propagation scope,
+Track B naming, Track B tie-break determinism, Track B UI) -- owner selected the
+plan's own recommended option in all 4 cases, no changes requested. Updated the plan's
+status to RATIFIED and filled in the ratification-outcome section. **(7)** Added a
+new `BACKLOG.md` Housekeeping pointer item (owner-directed follow-up to the S549
+audit, tagged READY/Effort L overall with per-track S/M/L breakdown) directly below
+the existing deferred rectilinear-marker item, so future Phase 0 priorities scans
+surface it. **(8)** Logged `PROJECT_LEARNINGS.md` Learning 568 (the scope-arc/
+mid-turn-interruption-misreading process learning) and refreshed `CLAUDE.md`'s
+learnings-count pointer (568, ~2.3 MB).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation/tutorial-article/`NEWS.Rmd`/
+`a2interactive.Rmd`/GitHub-issue-close-out checklists -- all N/A (a planning document,
+no R code, no new function/UI/statistic shipped, no linked GitHub issue yet -- the
+plan's own §7 explicitly defers 3 of these checklists to whichever future session
+implements each track); lint checklist N/A (no `.R` files touched); `_pkgdown.yml`
+reference-coverage checklist N/A (no new exported function).
+
+**Self-assessment (Session 562): 8/10.** **Strengths:** (1) Followed the S550
+twin-kinship plan's own structure and evidence standard closely (deparse the
+installed namespace directly, not just Rd docs; separate forced decisions from
+genuine judgment calls; ratify via `AskUserQuestion` in the same session) rather than
+inventing a new, untested plan-document shape. (2) Found and flagged 2 real,
+non-obvious traps before they could become implementation-time surprises: the
+`available`/`avail` naming collision (§6.3 of the plan) and the MZ-twin correction's
+interaction with the new X-linked branch (§3.1 point 3) -- both would have been easy
+to miss without directly reading the relevant existing code/deparsed namespace first.
+(3) Was honest about a real evidence gap rather than papering over it: Track B's own
+2 undeparsed kinship2 sub-helpers (`excludeUnavailFounders`/`excludeStrayMarryin`)
+are explicitly flagged as an open Pre-RED item, not silently assumed. (4) Correctly
+recovered from a genuine scope-interpretation mistake (misreading a typo-fix
+interruption as a scope correction) by asking rather than guessing, and did not let
+the correction cost any committed work.
+**Weaknesses:** (1) The mid-session re-scope churn (3 `AskUserQuestion` rounds before
+settling on the final task) cost real turns and could have been partially avoided by
+asking one broader clarifying question earlier, before assuming "use the gap analysis
+to develop backlog items" meant only the narrow tagging task. (2) No independent
+adversarial-verification pass on the plan's own technical claims (the X-linked/MZ-twin
+interaction argument, the `pedigree.shrink()` algorithm transcription) -- flagged
+explicitly in the plan's own §8 Provenance rather than silently omitted, matching the
+S550 precedent's own disclosed limitation, but still an unaudited gap. (3) Did not
+file GitHub issues for any of the 3 tracks (left as a follow-up per the plan's own §7
+recommendation, matching the established "recommend, don't unilaterally file"
+precedent -- not necessarily a defect, but worth naming). (4) Did not push the now
+47+ local commits to `origin` -- left for the owner/a future session, matching the
+repeatedly-deferred precedent from S548 onward.
+**Ledger:** recorded in `CHANGELOG.md` (this session's reconcile, claim, deliverable,
+and close-out entries).
 
 ### Session 560 Handoff Evaluation (by Session 561)
 **Score: 9/10.** **What helped:** the `next_steps` field named this exact item verbatim as

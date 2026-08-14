@@ -138,6 +138,29 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-N] S562 close-out: kinship2 supplement PDF full-reproduction plan RATIFIED; Learning 568 logged
+- **Deliverable:** `docs/planning/kinship2-supplement-full-reproduction-plan.md` (~600
+  lines) -- a plan to fully reproduce `NIHMS593658-supplement-supplement_1.pdf`'s
+  results, following up on the S549 audit's own "no action" verdict on 2 of its 4
+  findings, at explicit owner direction. 3 independently session-sliceable tracks:
+  Track A (X-chromosome kinship, `kinship()` gains `chrtype`/`sex`, core-algorithm-only
+  scope); Track B (a new `shrinkPedigree()` function porting kinship2's own
+  `pedigree.shrink()` 5-helper algorithm, script-callable only, deterministic
+  tie-break); Track C (finish the `edgeStyle="rectilinear"` consanguineous-marker
+  color/width propagation). All 4 judgment-call questions ratified via one
+  `AskUserQuestion` call -- owner selected the plan's own recommended option in every
+  case. `BACKLOG.md` Housekeeping gained a new pointer item. No `R/`/`tests/`/`man/`
+  content changed -- this session is design-only, matching the S550 twin-kinship plan's
+  own precedent that ratification closes the design session, not the implementation
+  one. `PROJECT_LEARNINGS.md` Learning 568 logged (the session's own scope-arc
+  process learning: a request phrased as a question about a past session's output is
+  not itself a scope signal for the current one). `CLAUDE.md` learnings-count pointer
+  refreshed (568, ~2.3 MB).
+- **Verification:** N/A build-equivalent for a planning document (no code/tests to
+  run); Phase 3E runtime smoke test N/A, stated explicitly (no R/ package code
+  changed).
+- **Commit:** this session's own close-out commit.
+
 ### 2026-08-13 · [BL-N] S562: claim session (plan to fully reproduce kinship2 supplement PDF's results)
 - **Deliverable:** Phase 1B claim. Write a plan document to fully reproduce
   `inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf`'s results with
