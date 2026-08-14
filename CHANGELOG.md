@@ -138,6 +138,29 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-N] S561 close-out: HANDOFFS.md FRONTMATTER_FIELD_ABSENT finding resolved; Learning 567 logged
+- **Deliverable:** Session S561's own close-out. Evaluated S560's `HANDOFFS.md` receipt (9/10
+  -- `next_steps` named this exact item verbatim as item 2 of its priority list; nothing found
+  inaccurate; `gotchas` had no way to anticipate this session's actual pitfall, a stale
+  tool-behavior claim in `BACKLOG.md`'s own prose). Added "This file currently holds **3**
+  receipt(s)." to `HANDOFFS.md`'s front matter (owner-picked remedy via `AskUserQuestion`),
+  verified via a direct unit-check of `methodology_trim.py`'s own compiled regex plus a
+  dry-run `--cut @<sha>` record-count confirmation (the live archive trigger doesn't fire this
+  session, so a real `--write` couldn't verify it directly). Found and corrected a stale claim
+  in the process: `methodology_trim.py`'s `--check` path structurally cannot reach
+  `apply_regenerated()` (it returns before the archive-plan-building code that calls it) --
+  only a real `--write` that builds an archive plan does, contradicting the original S508
+  finding's "every check/write run" framing. Logged as `PROJECT_LEARNINGS.md` Learning 567;
+  `BACKLOG.md` item annotated RESOLVED in place with the corrected framing; `CLAUDE.md`'s
+  learnings-count pointer refreshed (561+ sessions, 567 learnings). Self-assessed 9/10 --
+  caught and corrected its own initial N=2-vs-3 counting mistake (the Phase 1B claim stub is
+  itself a live receipt) via the tool's own record parser rather than trusting a hand
+  computation; stayed scoped to the one decision, deferring the adjacent
+  `edgeStyle="rectilinear"` tag-gap finding to a future session. Runtime smoke test: n/a --
+  docs/config-only change, no R package or Shiny code touched. 45+ local commits remain
+  unpushed (unchanged, deferred again per the S548-onward precedent).
+- **BACKLOG.md:** resolves the S508/S559 `HANDOFFS.md` regenerated-field item.
+
 ### 2026-08-13 · [BL-N] S561: claim session (resolve HANDOFFS.md FRONTMATTER_FIELD_ABSENT finding)
 - **Deliverable:** Phase 1B claim stub only. Session 561 will add a self-updating "This file
   currently holds **N** receipt(s)" sentence to `HANDOFFS.md`'s front matter, resolving the

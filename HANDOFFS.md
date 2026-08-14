@@ -128,24 +128,73 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+This file currently holds **3** receipt(s). Computed by `methodology_trim.py` on every
+`--check`/`--write` run, never hand-maintained.
+
 ```handoff
 session: S561
 date: 2026-08-13
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 9
+predecessor_score: 9
 active_task: Resolve HANDOFFS.md's recurring FRONTMATTER_FIELD_ABSENT finding (BACKLOG.md
 Housekeeping, found S508, re-surfaced S559) -- add a self-updating "This file currently holds
-**N** receipt(s)" sentence to HANDOFFS.md's front matter.
-what_was_done: pending
-next_steps: pending
-key_files: HANDOFFS.md, methodology_trim.py
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+**N** receipt(s)" sentence to HANDOFFS.md's front matter -- DONE.
+what_was_done: Added "This file currently holds **3** receipt(s). Computed by
+methodology_trim.py on every --check/--write run, never hand-maintained." to HANDOFFS.md's
+front matter, right after the last "Archived N record(s)..." pointer block. Owner picked this
+remedy (over removing the regenerated config entry) via AskUserQuestion. Verified via a direct
+unit-check (imported methodology_trim's own LEDGERS["HANDOFFS.md"].regenerated[0] regex,
+confirmed it matches and extracts the correct value) and a dry-run --cut @<sha> (no --write)
+confirming the live record parser counts exactly 3, matching the sentence -- the live archive
+trigger doesn't fire this session, so a real --write couldn't be used to verify directly.
+Found and corrected a stale claim in the process: methodology_trim.py's --check path returns
+before ever reaching apply_regenerated() (only a real --write that builds an archive plan
+does), contradicting the original S508 finding's "every check/write run" framing -- logged as
+PROJECT_LEARNINGS.md Learning 567 and corrected in the BACKLOG.md item's own resolved-item
+text. Commit e2d051fe (claim) + this close-out commit.
+next_steps: BACKLOG.md priorities, in order: (1) Fix edgeStyle="rectilinear" consanguineous-
+marker color/width propagation on dogleg-rerouted edges (found S555 -- a verified 12-row
+reproduction fixture already exists; S560's own handoff called this "READY, Effort S" but
+BACKLOG.md's own inline text for the item carries no matching tag -- add the tag when picking
+this up, or as its own tiny fix first). (2) Issue #148 (MHC haplotype frequency reporting)
+needs a scope-narrowing conversation before implementation, per the ratified genetic-metrics
+sequencing audit (DECISION NEEDED). Unchanged: NPRC outreach owner review (DECISION NEEDED);
+LabKey remaining recs (BLOCKED); the scheduled shinytest2.yaml CI run is still red, unchanged
+since S548, still not diagnosed by any session. Local master remains ahead of origin (45+
+commits after this session) -- a future session should consider pushing.
+key_files: HANDOFFS.md:127-131 (the new front-matter sentence); methodology_trim.py:196-221
+(the LEDGERS["HANDOFFS.md"] regenerated-field regex this sentence must match);
+BACKLOG.md:70-90 (item annotated RESOLVED); PROJECT_LEARNINGS.md (new Learning 567);
+CLAUDE.md:282 (learnings-count pointer).
+gotchas: (1) methodology_trim.py's --check path structurally cannot reach apply_regenerated()
+-- it returns at line ~1610, before the archive-plan-building code (~1660+) that calls it at
+line 1707. Don't expect a --check run to surface or clear a FRONTMATTER_FIELD_ABSENT finding;
+only a real --write with the trigger firing (or an explicit --cut) does. (2) A digit --cut
+falls back to the archived span's max date for the shard filename, which collides with an
+already-existing same-day shard (SHARD_EXISTS) -- use a non-digit --cut (a date, or @<ref>) to
+pick a distinct dry-run shard name when probing this code path safely. (3) Count "retained"
+receipts AFTER writing the Phase 1B claim stub, not before -- the stub is itself a live receipt
+the moment it's committed; this session wrote N=2 first and had to correct it to 3.
+runtime_smoke: n/a -- docs/config-only change (a front-matter sentence + a Python tool's
+LEDGERS config was only READ, not modified); no R package or Shiny code touched.
+changelog_ref: this session's 2 CHANGELOG.md entries (claim, close-out) dated 2026-08-13
 commit: pending
 ```
-<pending>
+<free-text: Strengths (1) traced methodology_trim.py's actual control flow rather than trusting
+a 3-session-old prose characterization of its behavior, catching and correcting a stale claim
+in the process; (2) caught its own N=2-vs-3 counting mistake by checking against the tool's own
+record parser rather than trusting a hand computation; (3) verified a fix that couldn't be
+exercised live (trigger doesn't fire) via two independent indirect methods instead of shipping
+it unverified; (4) stayed narrowly scoped to the one decision, explicitly deferring the
+tempting adjacent edgeStyle="rectilinear" tag-gap fix to a future session.
+Weaknesses (1) the ordering mistake that produced the initial wrong N=2 (should have counted
+receipts after, not before, writing the claim stub); (2) no second-agent adversarial
+verification, though the diff is small (3 lines) and low-risk; (3) 45+ local commits still
+unpushed, deferred again.
+**Predecessor (S560) score: 9/10** -- see the Session 560 Handoff Evaluation in
+SESSION_NOTES.md for the full breakdown; its next_steps field named this exact item verbatim as
+item 2 of its priority list, followed as the literal picked option.>
 
 ```handoff
 session: S560

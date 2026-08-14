@@ -14,15 +14,117 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 560 Handoff Evaluation (by Session 561)
+**Score: 9/10.** **What helped:** the `next_steps` field named this exact item verbatim as
+item 2 of its priority list -- "(2) Decide add-vs-remove for HANDOFFS.md's
+FRONTMATTER_FIELD_ABSENT finding (DECISION NEEDED, Effort S, first seen S508)" -- matching
+this session's own independently-rendered `AskUserQuestion` priorities list (built fresh from
+`BACKLOG.md`'s own tags, per Phase 0 step 7, not copied from the handoff), which surfaced the
+same 3 tagged items (this one, LabKey BLOCKED, NPRC DECISION NEEDED) with zero re-derivation
+needed. `key_files` and the rest of `next_steps` (unchanged BLOCKED/DECISION NEEDED items, the
+still-red scheduled `shinytest2.yaml`, the 44+ unpushed local commits) all cross-checked clean
+against this session's own independent Phase 0 findings. **What was wrong:** nothing found
+inaccurate. **What was missing:** `gotchas` were scoped entirely to S560's own
+screenshot-legibility findings and had no way to anticipate this session's actual pitfall (a
+tool-behavior claim carried in `BACKLOG.md` prose since S508 -- "every `--check`/`--write` run
+... prints" the finding -- turned out to be inaccurate for the current `methodology_trim.py`
+version; see this session's own Learning 567) -- not a real gap, since S560 never touched
+`methodology_trim.py`. One minor inconsistency worth flagging forward: `next_steps` item (1)
+(the `edgeStyle="rectilinear"` consanguineous-marker color-propagation fix) characterizes it as
+"(READY, Effort S)", but `BACKLOG.md`'s own inline text for that item (the "Deferred follow-up"
+paragraph under the consanguineous-marker entry) carries no matching inline tag -- so this
+session's own tag-only `AskUserQuestion` priorities render correctly omitted it, even though
+S560's handoff (correctly, per its own investigation) knew it was ready. A future session
+adding that inline tag would close the gap between the handoff's characterization and what the
+tag-scan actually sees. **ROI:** High -- the `next_steps` pointer named the exact item, its
+exact tag/effort, and its own found-session, leaving zero time spent re-establishing what
+needed deciding; this session's own time went entirely into implementing the decision and
+verifying a tool-behavior claim the original finding had gotten wrong.
+
 ### What Session 561 Did
 **Deliverable:** Resolve `HANDOFFS.md`'s recurring `FRONTMATTER_FIELD_ABSENT` finding
 (`BACKLOG.md` Housekeeping, found S508, re-surfaced S559) -- add a self-updating "This file
 currently holds **N** receipt(s)" sentence to `HANDOFFS.md`'s front matter (owner-picked via
-`AskUserQuestion`, over removing the `regenerated` config entry). (IN PROGRESS)
-**Started:** 2026-08-13. **Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+`AskUserQuestion`, over removing the `regenerated` config entry from `methodology_trim.py`).
+**DONE.** **Started/Completed:** 2026-08-13. **Status:** DONE. TDD phase: N/A (declared at
+claim) -- methodology/ledger housekeeping, no R package code or `testthat` tests involved
+(`methodology_trim.py` has no Python test suite in this repo; it's a canonical-overlay tool),
+matching the established precedent for prior ledger-housekeeping sessions (S508, S559, S560).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SESSION_RUNNER.md`,
+`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list`, `git status`/`log`/`diff --stat`,
+`methodology_dashboard.py` [Health 96/100, 0 High+ risk, 2 MEDIUM -- the pre-existing
+`.Rproj.user` vendor-JS file, not a project concern; `HANDOFFS.md` at 11 records of headroom
+before its next archive-rate trigger], `gh run list --branch master --limit 10` [all
+push-triggered workflows green on the last-pushed commit, ~S544/S545 vintage -- nothing has
+run against the 44 unpushed local commits yet, expected; scheduled `shinytest2.yaml` still
+red, unchanged since S548, still undiagnosed], ledger reconcile [`CHANGELOG.md`/`HANDOFFS.md`
+frontiers both == `HEAD` (`2b3e8ef6`), zero-commit gap, no backfill needed]). 6 untracked files
+found -- verified individually (not just by directory/extension, per the ghost-session-check
+discipline): the kinship2 supplement PDF and its own `docs/planning/*.html` Quarto-render
+sibling are both already-documented/tracked-by-`.qmd`-source known clutter (unresolved
+git-tracking decision since S545); the 4 "Compounding Loop" files (a browser-saved article +
+its lock-file byproduct) were first flagged S555, still untriaged -- none read as an
+undocumented deliverable, so no new ghost-session finding. Rendered the priorities list (3
+tagged items from `BACKLOG.md`: this one, LabKey BLOCKED, NPRC outreach DECISION NEEDED) via
+`AskUserQuestion` -- user picked the `HANDOFFS.md` field decision. **(2)** A 2nd
+`AskUserQuestion` resolved the item's own pre-recorded scope decision (add the front-matter
+sentence vs. remove the `regenerated` config entry) -- user picked "add the sentence."
+**(3)** Wrote the Phase 1B claim stub to `SESSION_NOTES.md` and `HANDOFFS.md`
+(`status: pending`) plus a `CHANGELOG.md` claim entry, committed (`e2d051fe`). **(4)** Declared
+TDD phase N/A, stated understanding back to the user. **(5)** Read `methodology_trim.py`'s
+`LEDGERS["HANDOFFS.md"]` config (the `regenerated` tuple's regex,
+`(This file currently holds \*\*)(\d+)(\*\*)`) and `HANDOFFS.md`'s own "Size, and when to
+archive" section (the existing pointer-block convention its sibling ledgers already follow) to
+match wording/placement exactly. Added "This file currently holds **N** receipt(s). Computed
+by `methodology_trim.py` on every `--check`/`--write` run, never hand-maintained." immediately
+after the last "Archived N record(s)..." pointer block, before the first real `handoff` fence.
+**(6)** Computed N: initially wrote 2 (the pre-claim retained count), then caught and corrected
+it to 3 once the session's own Phase 1B claim stub was itself counted as a live receipt --
+confirmed via the tool's own record parser (a dry-run `--cut @e2d051fe`, refused with
+`CUT_OUT_OF_RANGE ... selects 0 retained records of 3`), not just recomputed by hand. **(7)**
+Verified two ways, since the live archive trigger doesn't fire this session (20-record
+headroom): a direct unit-check importing `methodology_trim`'s own compiled regex against the
+new sentence (matches, extracts the correct old value); a `--check` re-run confirming no new
+findings. **(8)** In the process, found and corrected a stale claim: tracing
+`methodology_trim.py`'s actual control flow (`--check` returns at line ~1610, before the
+archive-plan-building code that calls `apply_regenerated()` at line 1707) shows the original
+S508 finding's own framing -- "every `--check`/`--write` run ... prints" the warning -- is
+inaccurate for the current tool version; only a real `--write` that builds an archive plan
+reaches that check. Logged as `PROJECT_LEARNINGS.md` Learning 567. **(9)** Annotated the
+`BACKLOG.md` item RESOLVED in place (matching the established sibling-entry convention --
+`FIXED S555`/`RESOLVED S560`-style annotation, not deletion), including the corrected framing.
+**(10)** Refreshed `CLAUDE.md`'s learnings-count pointer (561+ sessions, 567 learnings).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation/tutorial-article/`NEWS.Rmd`/
+`a2interactive.Rmd`/GitHub-issue-close-out checklists -- all N/A (no R code, no new
+function/UI/statistic, no linked GitHub issue); lint checklist N/A (no `.R` files touched);
+`_pkgdown.yml` reference-coverage checklist N/A (no new exported function).
+
+**Self-assessment (Session 561): 9/10.** **Strengths:** (1) Did not accept the `--check`
+verification path at face value -- when a dry-run couldn't reach `apply_regenerated()` under
+normal conditions, traced the actual control flow rather than assuming the fix was unverifiable
+or silently shipping it unverified, and found two safe verification paths that don't require a
+real archive event. (2) Caught its own arithmetic mistake (N=2 vs. the correct N=3, since the
+session's own claim stub is itself a live receipt) by checking against the tool's own record
+count rather than trusting the first hand-computed value. (3) Recognized the original finding's
+"every check/write" framing as a claim to re-verify against source, not a fact to carry
+forward -- and did so, correcting `BACKLOG.md`'s own resolved-item text rather than silently
+inheriting a stale characterization. (4) Kept the session narrowly scoped to the one decision +
+its implementation, explicitly declining to also fix the newly-found `edgeStyle="rectilinear"`
+tag gap noted above (deferred to a future session per the ghost-session/no-mid-session-fix
+precedent) even though it would have been a small, tempting addition.
+**Weaknesses:** (1) The first hand-written front-matter sentence (N=2) was wrong the moment it
+was written, since the Phase 1B claim stub had already been added to the same file earlier in
+the same session -- a predictable ordering mistake (write the claim stub, THEN count receipts,
+not count-then-claim) that a stricter sequencing would have avoided outright rather than
+catching after the fact. (2) No independent adversarial-verification pass beyond this session's
+own direct regex/CLI checks -- the same standing gap flagged across many prior sessions,
+here on a small enough diff (3 lines) that the risk is low, but still unaudited by a second
+reader/agent. (3) Did not push the now 45+ local commits to `origin` -- left for the owner/a
+future session, matching the repeatedly-deferred precedent from S548 onward.
+**Ledger:** recorded in `CHANGELOG.md` (this session's reconcile, claim, deliverable, and
+close-out entries).
 
 ### Session 559 Handoff Evaluation (by Session 560)
 **Score: 9/10.** **What helped:** the `next_steps` field named this exact item verbatim as
