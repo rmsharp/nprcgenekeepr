@@ -14,16 +14,102 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 566 Handoff Evaluation (by Session 567)
+**Score: 9/10.** **What helped:** the handoff's `next_steps` field explicitly carried forward
+"the kinship2 supplement PDF ... remains untracked -- a copyright/licensing decision still owed
+to the owner," unchanged since S545 -- this was the exact sentence this session's
+`AskUserQuestion` priorities list drew on, and the owner picked it. The established
+`.gitignore`/`.Rbuildignore` S479/S497 precedent (3 files, "no open-access marking," extended to
+`.Rbuildignore` because `.gitignore` alone doesn't affect the built tarball) was directly
+load-bearing -- exactly the mechanism this session had to extend to a 4th file. **What was
+missing:** nothing material -- S566 could not have anticipated which of its several carried-
+forward items the owner would pick, and named this one specifically enough to act on
+immediately. **What was wrong:** nothing identified. **ROI:** High.
+
 ### What Session 567 Did
-**Deliverable:** Resolve the copyright/licensing classification of
+**Deliverable:** Resolved the copyright/licensing classification of
 `inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf` (kinship2's own supplementary
-material), unresolved since S545. (IN PROGRESS)
-**Started:** 2026-08-14.
-**Status:** Session claimed. Owner decided (via `AskUserQuestion`): gitignore it, matching the
-S479/S497 precedent for this directory. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+material), unresolved since S545. **DONE.**
+**Started/Completed:** 2026-08-14. **Status:** DONE.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SESSION_RUNNER.md`, `SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, `git status`/`log`/`diff --stat` [63 commits ahead of
+`origin/master`, unpushed], `methodology_dashboard.py` [Health 96/100, 0 High+ risk, tool itself
+stale v2.14.0 vs canonical v2.15.2 -- reported, not fixed], `gh run list --branch master --limit
+10` [scheduled `shinytest2.yaml` red again 2026-08-13, a new run `in_progress` at check time --
+reported, not diagnosed], ledger reconcile [`CHANGELOG.md`/`HANDOFFS.md` frontiers both == `HEAD`,
+no gap]; re-examined all 6 untracked files against S566's own individual assessment -- all
+unchanged, no new ghost session. Cross-checked the ratified genetic-metrics sequencing audit's own
+prose order per `CLAUDE.md`'s sequencing-audit-cluster check, surfacing issue #148 (MHC, next in
+the Deferred tier now that #152/#153 are both closed) as its own numbered priority option, not
+folded into the flat Informational bucket. Rendered a 4-item priorities list (of 5 candidates,
+capped per `CLAUDE.md`'s AskUserQuestion rule) via `AskUserQuestion` -- owner picked the kinship2
+PDF copyright decision. **(2)** Investigated before presenting the actual decision, rather than
+asking a generic "keep or drop" question: read the .gitignore/.Rbuildignore precedent comments in
+full, read the PDF's own first page to confirm what it is (kinship2's own supplementary material,
+Sinnwell/Therneau/Schaid, Mayo Clinic) and that it's an NIHMS/PMC deposit -- a materially different
+situation from the 3 already-gitignored "no open-access marking" files (this one DOES carry NIH
+public-access marking) but also not the same as the one tracked exception
+(`Master_Genetic_metrics_2_14_15.pdf`, NPRC's own work product). Presented 3 real options
+(gitignore / track / delete) with that nuance via `AskUserQuestion` -- owner picked gitignore,
+matching the S479/S497 precedent. **(3)** Phase 1B: claim stubs written to
+`SESSION_NOTES.md`/`HANDOFFS.md`, committed (`1b84ca97`). **(4)** No TDD phase gate applies --
+config-only change (`.gitignore`/`.Rbuildignore`), no production `R/` code touched, matching the
+S566 precedent for non-code deliverables. **(5)** Added a distinguishing comment (not merged into
+the existing 3-file comment block, which would have made that comment's own "no open-access
+marking" claim inaccurate for a 4th, differently-situated file) to both files. **(6)** Caught and
+fixed a real bug in my own first edit, by verifying rather than assuming: `.Rbuildignore`'s own
+header explicitly warns every line (including `#` comments) is parsed as a Perl regex and an
+unbalanced paren aborts `R CMD build` -- my first comment's parenthetical text split an opening
+and closing paren across two separate lines, doing exactly that. Caught immediately by actually
+running `pkgbuild::build()` (PCRE compilation error, not a guess), fixed by removing all
+parentheses from the `.Rbuildignore` comment (matching that file's own established paren-free
+comment convention). **(7)** Re-verified: `git status --ignored` shows the file correctly moved
+from Untracked to Ignored; a fresh `R CMD build`/tarball inspection confirms the file is excluded
+from the built package (matching the other 3 precedent files; the one tracked exception still
+ships as expected); full `devtools::check()` (vignettes skipped for speed, matching this project's
+own fast-check convention) returned 0 errors, 1 warning (non-portable "Compounding Loop"
+filenames -- confirmed pre-existing/unrelated to this diff, the identical finding every recent
+session has reported), 0 notes. **(8)** Close-out: updated `BACKLOG.md`'s trailing "Note" on the
+kinship2-reproducibility-audit item to RESOLVED with the full rationale and verification evidence;
+logged an incidental, unfixed finding (the untracked "Compounding Loop" files ARE bundled into the
+built tarball, unlike the gitignored/Rbuildignored reference files -- discovered by this session's
+own tarball inspection, out of scope, not fixed, per the established "report, don't fix
+mid-session" precedent -- added as a new `BACKLOG.md` Housekeeping item).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A (no new displayed
+statistic). Tutorial/article documentation checklist N/A (no new Shiny UI feature). `NEWS.Rmd`
+entry checklist N/A -- confirmed by direct precedent: neither S479 nor S497, the two prior
+sessions that added files to this exact `.gitignore`/`.Rbuildignore` block, has any `NEWS.Rmd`
+mention (`grep`-confirmed). `a2interactive.Rmd` checklist N/A (no new exported function or
+parameter). GitHub issue close-out checklist N/A (this was a `BACKLOG.md`-only item, never filed
+as a GitHub issue). Lint checklist N/A (no `.R` files touched). `_pkgdown.yml` reference-coverage
+checklist N/A (no new exported function).
+
+**Self-assessment (Session 567): 9/10.** **Strengths:** (1) Did not take the owner's "gitignore
+it" pick as license to skip investigation -- read the PDF's own first page and the existing
+precedent comments before drafting new ones, so the new comment states the real, more nuanced
+rationale (NIHMS/PMC public-reading-access vs. redistribution rights) instead of just copying the
+existing "no open-access marking" language onto a file that doesn't actually fit that description.
+(2) Caught a real, self-introduced bug (the `.Rbuildignore` unbalanced-paren-across-lines PCRE
+error) by actually running the build rather than trusting a comment edit was safe -- the file's
+own header had already warned about exactly this trap, and the first draft violated it anyway;
+the catch came from verification discipline, not from reading the warning carefully enough the
+first time (see Weaknesses). (3) Verified the actual mechanism the change targets -- a real
+`R CMD build` + tarball content inspection -- rather than stopping at "the ignore files parse
+without error," which would have missed whether the pattern actually matches the target file's
+path. (4) Surfaced an incidental, unrelated finding (the "Compounding Loop" files' tarball
+bundling) discovered as a side effect of this session's own verification step, reported and
+tracked rather than silently noted or silently fixed. **Weaknesses:** (1) The `.Rbuildignore`
+paren bug was avoidable on the first pass -- the file's own header comment states the exact rule
+violated ("every line in this file is a perl regex -- an unbalanced paren even in a comment
+aborts R CMD build, so keep lines paren-free"), and it was read during this session's own
+investigation step before drafting the comment, yet the first draft used parenthetical prose
+anyway. (2) No independent adversarial verification of the copyright-nuance framing presented to
+the owner (the NIHMS/PMC redistribution-rights distinction) beyond direct reasoning about what an
+NIHMS deposit represents -- a domain-legal question, not one with a mechanical check available in
+this repo.
+**Ledger:** recorded in `CHANGELOG.md` (this session's claim and close-out entries).
 
 ### Session 565 Handoff Evaluation (by Session 566)
 **Score: 9/10.** **What helped:** `next_steps` explicitly named "the owner may want to file one

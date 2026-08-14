@@ -138,6 +138,36 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [BL-N] S567: close out (kinship2 supplement PDF copyright classification resolved)
+- **Deliverable:** Resolved the copyright/licensing classification of
+  `inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf` (kinship2's own supplementary
+  material), unresolved since S545. Owner decision (via `AskUserQuestion`): gitignore it,
+  matching the S479/S497 precedent for this directory -- it is an NIHMS/PMC deposit (free
+  reading access under NIH's public-access policy) but that isn't confirmed to carry
+  third-party redistribution rights, so it is excluded from this PUBLIC repo out of the same
+  caution as the 3 already-gitignored files, not because it fails their "no open-access
+  marking" test. Added a distinguishing comment (not merged into the existing 3-file comment,
+  which would have made that comment's own rationale inaccurate) to both `.gitignore` and
+  `.Rbuildignore`. Caught and fixed a real bug in my own first edit: `.Rbuildignore` treats
+  every line, including `#` comments, as a Perl regex (the file's own header warns of this
+  exactly), and my first comment's parenthetical text had an unbalanced paren split across
+  lines, aborting `R CMD build` with a PCRE compilation error -- caught immediately by actually
+  running the build, not assumed safe. Verified via an actual `R CMD build`/`pkgbuild::build()`
+  that the file is excluded from the built tarball (matching the other 3 precedent files;
+  `Master_Genetic_metrics_2_14_15.pdf`, the one tracked exception, still ships as expected). Full
+  `devtools::check()`: 0 errors, 1 warning (non-portable "Compounding Loop" filenames --
+  confirmed pre-existing/unrelated, same finding as every recent session), 0 notes. `BACKLOG.md`
+  updated in place (the item's trailing "Note" marked RESOLVED). Incidentally found, reported
+  (not fixed): that same tarball inspection showed the untracked "Compounding Loop" files (the
+  source of the portable-file-names warning) ARE bundled into the built tarball, unlike the
+  deliberately excluded reference PDFs -- added as a new `BACKLOG.md` Housekeeping item. No TDD
+  phase gate applies (no production `R/` code changed -- config-only). Commits: `1b84ca97`
+  (claim) + this close-out commit.
+
+### 2026-08-14 · [BL-N] S567: claim session (resolve NIHMS593658 PDF copyright classification)
+- **Deliverable:** Claim stub for resolving the kinship2 supplement PDF's copyright/licensing
+  classification, flagged unresolved in every session since S545. Commit: `1b84ca97`.
+
 ### 2026-08-14 · [ad hoc] S566: reconcile HANDOFFS.md commit self-reference (`d0390201`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` ->
   `d0390201` (the close-out commit whose sha the receipt itself couldn't name until

@@ -109,6 +109,13 @@ README\.*\.png$
 ^inst/extdata/reference/pedigree_nomenclature\.html$
 ^inst/extdata/reference/5201430\.pdf$
 ^inst/extdata/reference/bioinformatics_24_2_279\.pdf$
+
+# kinship2's own supplementary material -- an NIHMS/PMC deposit, free reading access via NIH's
+# public-access policy, not confirmed to carry third-party redistribution rights. Mirrors
+# .gitignore's own S567 exclusion; extended here for the same reason S497 extended the 3 files
+# above -- .gitignore has no effect on R CMD build's tarball contents. Session 567, 2026-08-14,
+# owner decision via AskUserQuestion, see CHANGELOG.md.
+^inst/extdata/reference/NIHMS593658-supplement-supplement_1\.pdf$
 ^FRAMEWORK_LEARNINGS\.md$
 ^methodology_trim\.py$
 ^__pycache__$

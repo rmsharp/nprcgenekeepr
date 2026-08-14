@@ -134,22 +134,56 @@ This file currently holds **8** receipt(s). Computed by `methodology_trim.py` on
 ```handoff
 session: S567
 date: 2026-08-14
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Resolve the copyright/licensing classification of
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Resolved the copyright/licensing classification of
   inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf (kinship2's own supplementary
-  material), unresolved since S545. Owner decided via AskUserQuestion: gitignore it, matching
-  the S479/S497 precedent for this directory.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+  material), unresolved since S545. DONE -- gitignored, matching the S479/S497 precedent.
+what_was_done: Investigated before presenting the decision (read the PDF's own first page --
+  kinship2's own supplementary material, Sinnwell/Therneau/Schaid, Mayo Clinic; an NIHMS/PMC
+  deposit, a materially different situation from the 3 existing "no open-access marking"
+  gitignored files). Owner picked gitignore via AskUserQuestion. Added a distinguishing
+  comment (not merged into the existing 3-file comment, which would have made its own
+  rationale inaccurate) to .gitignore and .Rbuildignore. Caught and fixed a real
+  self-introduced bug: .Rbuildignore parses every line, including # comments, as a Perl regex
+  (its own header warns of this), and my first comment's parenthetical text split an
+  unbalanced paren across 2 lines, aborting R CMD build with a PCRE error -- caught by
+  actually running pkgbuild::build(), fixed by removing all parens from the comment. Verified
+  via a real R CMD build + tarball inspection that the file is now excluded (matching the 3
+  precedent files; the 1 tracked exception still ships). devtools::check(): 0 errors, 1
+  pre-existing/unrelated warning, 0 notes. BACKLOG.md updated (item's Note marked RESOLVED).
+  Incidental finding logged, not fixed: tarball inspection showed the untracked "Compounding
+  Loop" files ARE bundled into the built package (unlike the deliberately-excluded reference
+  PDFs) -- new BACKLOG.md Housekeeping item. Commits: 1b84ca97 (claim) + this close-out commit.
+next_steps: This specific item is fully RESOLVED -- no further action owed on the NIHMS PDF
+  itself. 2 items carried forward: (1) the new incidental finding this session logged --
+  should the 4 "Compounding Loop" files move to an .Rbuildignore-excluded location, given
+  they're personal reference material that currently ships in the built package and trips the
+  portable-file-names WARNING? Effort S. (2) BACKLOG.md priorities otherwise unchanged from
+  S566's own handoff: LabKey (BLOCKED, Effort M), _pkgdown.yml missing pedigree-diagram entry
+  (READY, Effort S), issue #148/MHC (DECISION NEEDED -- needs its own scope-narrowing
+  conversation, next in the ratified Deferred-tier sequencing order now that #152/#153 are both
+  closed), NPRC outreach (DECISION NEEDED, Effort N/A).
+key_files: .gitignore:64-72 (new NIHMS593658 exclusion + comment); .Rbuildignore:113-118 (same,
+  paren-free per the file's own parsing rule); BACKLOG.md (kinship2-reproducibility-audit item's
+  Note, now RESOLVED; new Housekeeping item for the Compounding Loop tarball-bundling finding).
+gotchas: .Rbuildignore parses EVERY line -- including `#` comment lines -- as a Perl regex
+  applied to build the source-package file list. An unbalanced parenthesis anywhere, even
+  split across two separate comment lines (each line is its own independent regex), aborts
+  `R CMD build` with "PCRE pattern compilation error: missing closing parenthesis." The file's
+  own header already warns of this ("keep lines paren-free") but it's easy to violate anyway
+  when writing multi-line prose comments -- write .Rbuildignore comments with em-dashes/commas,
+  never parentheses, and verify with an actual `pkgbuild::build()`/`R CMD build`, not just
+  a syntax-looks-fine read. `.gitignore` has no such restriction (its `#` lines are true
+  comments) -- the two files' comment conventions are NOT interchangeable.
+runtime_smoke: n/a -- config-only change (.gitignore/.Rbuildignore), no Shiny/application
+  runtime behavior touched. The applicable "build equivalent" (R CMD build actually excluding
+  the target file from the built tarball) was verified directly, twice: once that caught the
+  regex bug, once confirming the fix.
+changelog_ref: CHANGELOG.md 2026-08-14 S567 claim + close-out entries
 commit: pending
 ```
-<claim stub -- filled at close-out>
 
 ```handoff
 session: S566

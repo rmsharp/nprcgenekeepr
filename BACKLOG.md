@@ -167,10 +167,17 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       capability-fit non-issue (different problem domain, not this package's mission); no
       X-chromosome-specific kinship computation exists (also judged out of current scope). See
       the audit doc for the full evidence, including a `kinship2`-reproduced side-by-side
-      confirming the MZ-twin gap's mechanism precisely. **Note:** the PDF remains untracked
-      in git and not yet in `.gitignore`/`.Rbuildignore`, unlike its 2 gitignored
-      copyrighted siblings in the same directory -- still unresolved, unchanged from S545.
-      See `CHANGELOG.md`.)
+      confirming the MZ-twin gap's mechanism precisely. **Note, RESOLVED S567:** the PDF's
+      copyright/licensing classification (untracked in git, absent from
+      `.gitignore`/`.Rbuildignore` unlike its copyrighted siblings in the same directory) was
+      unresolved since S545. Owner decision (via `AskUserQuestion`, 2026-08-14): gitignore it,
+      matching the S479/S497 precedent -- it is an NIHMS/PMC deposit (free reading access under
+      NIH's public-access policy) but that is not confirmed to carry third-party redistribution
+      rights, so it is excluded from this PUBLIC repo out of the same caution as the other 3
+      files, not because it fails their "no open-access marking" test. `.gitignore`/
+      `.Rbuildignore` both updated; verified by an actual `R CMD build` that the file is now
+      excluded from the built tarball (the file remains on local disk, still usable by
+      `data-raw/kinship2FidelityValidation.R`). See `CHANGELOG.md`.)
 - [ ] **Thread `twinRelations` into `kinship()`'s computation, not just diagram rendering**
       (found S549, Finding #1 of the above audit; design RATIFIED S550; **all 3 slices DONE
       S551-S553, RESOLVED**, see `docs/planning/twin-relations-kinship-computation-plan.md`)
@@ -632,6 +639,22 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       or checking the live gh-pages deploy for the page) and, if missing from the navbar, add
       `articles/pedigree-diagram` to the `contents:` list in the same alphabetical-ish position its
       neighbors already establish.
+- [ ] (found S567, 2026-08-14, incidental to a `pkgbuild::build()`/tarball-content check while
+      resolving the kinship2 PDF's `.Rbuildignore` classification, Effort S, not fixed this
+      session) **The untracked "Compounding Loop" files
+      (`inst/extdata/reference/The Compounding Loop.{html,pdf,webarchive}` + the
+      `~$e Compounding Loop.html` Office lock file) are bundled into every built package tarball**,
+      unlike the reference PDFs this project deliberately `.gitignore`/`.Rbuildignore`s -- confirmed
+      by direct tarball inspection (`tar tzf`) this session. They also trip `devtools::check()`'s
+      "checking for portable file names" WARNING (confirmed pre-existing/unrelated to this
+      session's own diff, matching every recent session's identical finding). These 4 files were
+      already assessed by S566 as "the owner's own saved reference material, no matching
+      issue/session claim" and left untouched -- this item is only about their *build-ignore*
+      status, not their presence on disk or in git. A future session should ask the owner whether
+      these 4 files belong in `inst/extdata/reference/` at all (a git-tracked location that ships
+      in the built package) or should move somewhere `.Rbuildignore`-excluded like the 4
+      already-excluded reference PDFs, given they're plain personal reference material rather than
+      package-relevant content.
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability-comparison audit (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`)
