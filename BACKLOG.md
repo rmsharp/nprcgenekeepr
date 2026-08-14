@@ -97,21 +97,33 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       unrelated); full clean regression 0 failed/0 error; live E2E
       (`test-e2e-pedigree-module.R`) 15/15, 0 regressions;
       `lintr::lint_package()` 0 lints. Not filed as a GitHub issue.)
-- [ ] **Clean up unneeded repository branches, locally and on `origin`**
-      (owner-directed, found S552, READY, Effort S) -- not investigated for
-      mergedness/safety this session, just inventoried: local branches beyond
-      `master` are `dev`, `module`, `rlabkey-version-floor`, and 4
-      `worktree-wf_*` leftovers (2026-08-04, workflow-tool artifacts); remote
-      (`origin`) carries `dev`, `gh-pages`, `issue103-stage5-imports`,
-      `issue103-stage7-examples`, `issue103-stage8a-title-voice`,
-      `issue103-stage8b-dedup`, `issue8`, `issue8-fix`,
-      `marks-broken-issue8`, `module`, `nprcmanager-master`,
-      `or-replacement`, `rlabkey-version-floor` beyond `master`. A future
-      session should check each for already-merged status (`git branch
-      --merged origin/master` / `git log --oneline origin/master..<branch>`)
-      before deleting, confirm none is an active PR source, and decide
-      `gh-pages`'s own disposition separately (likely a live deploy target,
-      not stale).
+- [ ] **5 stale, unmerged `origin` branches need an owner decision before deletion**
+      (found S552, **partially resolved S557** -- 7 confirmed-safe branches deleted; this
+      is what remains). S557 fetched with `--prune` (which alone cleared 4 already-deleted-
+      upstream refs: `issue103-stage5-imports/7/8a/8b`, all with merged PRs #104-#113), then
+      checked every remaining non-`master` branch against `origin/master` via `git branch
+      --merged`/`--no-merged` plus `git rev-list --count` and `gh pr list --state open`
+      (0 open PRs repo-wide, so none was an active PR source). **Deleted as confirmed-safe**
+      (0 commits ahead of `master`, prior PR merged): `dev` (local+remote, PRs #20/21/23/24),
+      `rlabkey-version-floor` (local+remote, PR #57), `or-replacement` (remote only, PR #19);
+      plus 4 local-only `worktree-wf_*` leftovers (2026-08-04 workflow-tool artifacts, all 4
+      pointing at the same commit `d6ab24c4`, confirmed an ancestor of `master` -- zero
+      unique commits, no active `git worktree` referenced any of them). **Left for owner
+      decision** (each has real commits never merged into `master` and no PR was ever
+      opened for it, so "safe" cannot be established mechanically): `module` (local+remote,
+      48 ahead, last commit 2026-01-26 -- the most recent and most likely to be live WIP);
+      `issue8` (remote only, 103 ahead, last commit 2024-01-20 -- PRs #22/#25 merged
+      *other* branches' content, not this one directly, so its own unmerged commits may be
+      superseded rather than needed); `issue8-fix` (remote only, 57 ahead, last commit
+      2021-12-01, no PR ever); `marks-broken-issue8` (remote only, 49 ahead, last commit
+      2021-11-01, no PR ever -- name itself suggests an abandoned experiment);
+      `nprcmanager-master` (remote only, 8 ahead, last commit 2017-03-03, no PR ever -- a
+      pre-rename project snapshot from before "nprcgenekeepr"). A future session (or the
+      owner directly) should review each branch's actual diff against `master`
+      (`git log -p origin/master..origin/<branch>`) to judge whether its unmerged content is
+      still wanted, then delete or explicitly keep. `gh-pages` was confirmed live (the
+      `pkgdown.yaml` deploy target, `.github/workflows/pkgdown.yaml`) and excluded from this
+      cleanup entirely, not just deferred.
 - [ ] (found S545, **verified S549** -- see
       `docs/audits/KINSHIP2_SUPPLEMENT_REPRODUCIBILITY_AUDIT_2026-08-13.md`. **Verify the
       results in `inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf` (kinship2's

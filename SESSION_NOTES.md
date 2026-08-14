@@ -10,14 +10,89 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 556 Handoff Evaluation (by Session 557)
+**Score: 9/10.** **What helped:** the `next_steps` field named this exact item verbatim --
+"Clean up unneeded repository branches (found S552, READY, Effort S -- check mergedness before
+deleting)" -- as item 3 of its priority list, and "check mergedness before deleting" was followed
+as the literal first investigative step (`git branch --merged`/`--no-merged` against
+`origin/master`, `git rev-list --count` ahead/behind, `gh pr list`). **What was wrong:** nothing
+found inaccurate. **What was missing:** the handoff's one-line pointer didn't carry forward S552's
+own original inventory detail (which specific branches existed, that 4 were `issue103-stage*`
+already superseded) -- not a real gap, since `BACKLOG.md`'s own item text (written S552, read
+directly this session) already carried that detail; the `next_steps` pointer correctly didn't
+duplicate it. **ROI:** High -- the one-line "check mergedness before deleting" pointer was exactly
+the right-sized instruction: specific enough to start from, not so prescriptive it pre-empted this
+session's own PR-history cross-check (which surfaced a real nuance -- `issue8`'s content was
+merged via `dev`/other PRs, not directly, so raw `--no-merged` status alone would have
+mis-classified it as straightforwardly unmerged).
+
 ### What Session 557 Did
 **Deliverable:** Clean up unneeded repository branches, locally and on `origin` (`BACKLOG.md`
-Housekeeping, found S552, READY, Effort S) (IN PROGRESS)
-**Started:** 2026-08-13
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+Housekeeping, found S552, READY, Effort S) -- **DONE for the 7 confirmed-safe branches; the 5
+genuinely unmerged branches are narrowed to an explicit owner-decision item, not resolved.**
+**Started/Completed:** 2026-08-13. **Status:** DONE (narrowed scope, matching the item's own
+"confirm none is an active PR source" framing). Not a TDD-gated session (no code/test changes).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SESSION_RUNNER.md`, `SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, `git status`/`log`/`diff --stat`, `methodology_dashboard.py`
+[Health 96/100, 1 High+ risk -- `SESSION_NOTES.md` 2,238 lines, past the 2,000-line cap, still
+unchanged/not in `BACKLOG.md` since S555 first flagged it; also a MEDIUM `HANDOFFS.md`
+archive-trigger risk, likewise still not logged], `gh run list --branch master --limit 10`
+[scheduled `shinytest2.yaml` still red, unchanged, not diagnosed], both sequencing-audit docs
+re-checked per `CLAUDE.md`'s Phase 0 customization [genetic-metrics cluster's next item, issue
+#148, confirmed still the right next item; pedigree-diagram cluster's Tier 1/2 items confirmed
+already resolved via `gh issue list` (#133/#136/#137 no longer open), only the explicitly-deferred
+Tier 3 items (#138/#141) remain]). 6 untracked files found, all pre-dating the last commit --
+same set S555/S556 already flagged as known/not-a-ghost-session, reported unchanged. Ledger
+reconcile: `CHANGELOG.md`/`HANDOFFS.md` frontiers both at `HEAD` (`a2e3ecb8`), zero-commit gap,
+no backfill needed. Rendered the priorities list (6 numbered items from `BACKLOG.md` tags plus
+the audit-sourced #148 item, first 4 in the `AskUserQuestion` picker per the 4-option cap) --
+user picked "Clean up branches." **(2)** Wrote the Phase 1B claim stub to `SESSION_NOTES.md` and
+`HANDOFFS.md` (`status: pending`), committed (`7597c4f2`). **(3)** Stated understanding back to
+the user, declaring TDD phase N/A for this session (no implementation/test code planned -- a
+repository-housekeeping deliverable, so the RED/GREEN/REFACTOR gates don't apply). **(4)**
+Inventoried every non-`master` branch: `git fetch origin --prune` (cleared 4 already-deleted-
+upstream refs for free: `issue103-stage5-imports/7/8a/8b`), `git branch -r --merged`/`--no-merged
+origin/master`, `git rev-list --count` ahead/behind for each of the 8 remaining remote branches,
+`gh pr list --state open` (0 open PRs) and `--state all` (cross-referenced `headRefName` against
+every branch name to distinguish "genuinely never merged" from "content merged via a different
+branch"). Confirmed `gh-pages` as the live `pkgdown.yaml` deploy target (excluded from cleanup).
+Confirmed the 4 `worktree-wf_*` local branches all point at commit `d6ab24c4`, an ancestor of
+`master` (zero unique commits), with no active `git worktree` referencing any of them.
+**(5)** Presented the full findings table to the user, then gated the actual deletions behind an
+`AskUserQuestion` (deleting a remote branch is hard to reverse) -- owner picked "delete all 7 safe
+branches." **(6)** Executed: `git branch -d`/`-D` for the 6 local deletions (`dev`,
+`rlabkey-version-floor`, 4x `worktree-wf_*`), `git push origin --delete` for the 3 remote
+deletions (`dev`, `rlabkey-version-floor`, `or-replacement`), re-fetched with `--prune` to confirm.
+Left untouched, exactly as scoped: `module`, `issue8`, `issue8-fix`, `marks-broken-issue8`,
+`nprcmanager-master` (each has real unmerged commits and no PR history to lean on) and `gh-pages`
+(live deploy target).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation/tutorial-article/`NEWS.Rmd`/
+`a2interactive.Rmd`/GitHub-issue-close-out checklists -- all N/A, no code shipped, no issue filed
+for this item, no new function/parameter/statistic. Lint -- N/A, no `.R` files touched.
+
+**Phase 3E runtime smoke test:** N/A, stated explicitly (not silently skipped) -- branch deletion
+has no runtime/Shiny behavior surface; nothing to launch or observe.
+
+**Self-assessment (Session 557): 8/10.** **Strengths:** (1) Never deleted anything without first
+establishing mergedness AND PR-history cross-reference AND (for the remote deletions) explicit
+owner sign-off -- three independent safety checks before any hard-to-reverse action, per
+`SAFEGUARDS.md`'s "verify before delete" rule and the outward-facing-action confirmation norm.
+(2) Caught a real nuance a naive `--no-merged` read would have missed: `issue8`'s own commits
+show as unmerged directly, but its content reached `master` via intermediate PRs (#22/#25 into
+`dev`), which changes how a future session should read that branch's status. (3) `git fetch
+--prune` up front did real, free cleanup (4 stale refs) before any manual reasoning was needed --
+worth establishing as a standing first step for any future branch-hygiene session. (4) Rewrote
+the `BACKLOG.md` item to hand the next session a self-contained decision list (per-branch ahead
+count, last-commit date, PR history) rather than a bare "5 branches remain" note.
+**Weaknesses:** (1) Did not review the actual diff content (`git log -p origin/master..origin/
+<branch>`) of any of the 5 remaining branches, so the handoff can describe *what* is unmerged
+(commit counts, dates) but not *whether* it's still wanted -- left entirely to a future session
+or the owner. (2) `module`'s local branch (identical to `origin/module`) was left in place
+without being called out as needing the same eventual disposition as its remote counterpart --
+implied but not stated as its own explicit follow-up.
+**Ledger:** recorded in `CHANGELOG.md` (this session's claim, deliverable, and close-out entries).
 
 ### Session 555 Handoff Evaluation (by Session 556)
 **Score: 9/10.** **What helped:** the `next_steps` field named this exact item (item 3 of the

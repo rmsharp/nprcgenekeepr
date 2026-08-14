@@ -138,6 +138,44 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-N] S557 close-out: 7 stale branches deleted; S556 handoff evaluation
+- **Deliverable:** Session S557's own close-out. Evaluated S556's `HANDOFFS.md` receipt (9/10 --
+  its `next_steps` field named this exact item, "Clean up unneeded repository branches (found
+  S552, READY, Effort S -- check mergedness before deleting)," and the "check mergedness before
+  deleting" pointer was followed as the literal first investigative step). Self-assessment 8/10
+  (thorough merge-status + PR-history cross-check before any deletion, owner confirmation
+  obtained via `AskUserQuestion` before touching `origin`; one point held back for not also
+  reviewing the 5 remaining branches' actual diffs against `master`, which would have let this
+  session propose a disposition for at least the oldest/clearest ones rather than leaving all 5
+  as a flat "needs owner review" list). `BACKLOG.md` Housekeeping item narrowed to the 5 remaining
+  unmerged branches.
+- **Commit:** this close-out's own commit.
+
+### 2026-08-13 · [BL-N] S557: delete 7 confirmed-safe repository branches (3 remote+local, 4 local-only)
+- **Deliverable:** Inventoried every branch beyond `master`/`gh-pages` (`BACKLOG.md` Housekeeping,
+  found S552) via `git fetch --prune`, `git branch --merged`/`--no-merged` against
+  `origin/master`, `git rev-list --count` ahead/behind, and `gh pr list --state open`/`--state
+  all` (0 open PRs repo-wide -- none was an active PR source). `git fetch --prune` alone cleared
+  4 already-deleted-upstream remote-tracking refs (`issue103-stage5-imports/7/8a/8b`, all with
+  merged PRs #104-#113). Deleted as confirmed-safe (0 commits ahead of `master`, prior PR
+  merged), with owner sign-off via `AskUserQuestion` before any `origin` deletion: `dev`
+  (local+remote, PRs #20/21/23/24), `rlabkey-version-floor` (local+remote, PR #57),
+  `or-replacement` (remote only, PR #19); plus 4 local-only `worktree-wf_*` leftovers
+  (2026-08-04 workflow-tool artifacts, all 4 pointing at commit `d6ab24c4`, confirmed an
+  ancestor of `master` -- zero unique commits, no active `git worktree` referenced any of
+  them). Left for a future owner decision: `module`, `issue8`, `issue8-fix`,
+  `marks-broken-issue8`, `nprcmanager-master` (each has real commits never merged into
+  `master` and no PR was ever opened for it). `gh-pages` confirmed live (the `pkgdown.yaml`
+  deploy target) and excluded from the cleanup entirely. No code/test files touched -- pure git
+  housekeeping, no `devtools::check()`/regression run applicable.
+- **Commit:** this session's own deliverable commit.
+
+### 2026-08-13 · [BL-N] S557: claim session (clean up unneeded repository branches)
+- **Deliverable:** Session S557 claimed via Phase 1B stub (`SESSION_NOTES.md`, `HANDOFFS.md`
+  `status: pending`). Task: clean up unneeded repository branches, locally and on `origin`
+  (`BACKLOG.md` Housekeeping, found S552, READY, Effort S).
+- **Commit:** `7597c4f2`.
+
 ### 2026-08-13 · [BL-N] S556 close-out: dangling-parent genOf type-coercion bug fixed; S555 handoff evaluation; Learning 562 logged
 - **Deliverable:** Session S556's own close-out. Evaluated S555's `HANDOFFS.md` receipt (9/10 --
   the `next_steps` field named this exact item with a "check that first" pointer to the scope
