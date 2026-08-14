@@ -202,8 +202,7 @@ runtime_smoke: Live shinytest2 verification against the real bundled fixture (ob
   live-queried multi-anchor individuals all rendered with valid coordinates. The existing
   15-test/52-assertion live E2E pedigree-module suite (NPRC_RUN_E2E=true) passed unchanged.
 changelog_ref: this session's own CHANGELOG.md entries (claim, deliverable, close-out)
-commit: pending -- reconciled by the next session's Phase 0 if this line is not overwritten
-  before the final commit
+commit: 21022157
 ```
 <**Self-score 9/10.** +: (1) full empirical PRE-RED prototype-then-revert before any RED test was
 written, capturing the exact blast radius up front rather than discovering it incrementally.

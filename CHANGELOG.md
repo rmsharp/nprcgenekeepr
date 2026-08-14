@@ -138,6 +138,11 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [ad hoc] S573: reconcile HANDOFFS.md commit self-reference (`21022157`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` ->
+  `21022157` (the close-out commit whose sha the receipt itself couldn't name until after it was
+  made) -- matching the established S562-S572 precedent.
+
 ### 2026-08-14 · [ad hoc] S573: close out (Track 4 implementation DONE)
 - **Deliverable:** Closed out Track 4 implementation (gen-aware D2 anchor selection, Candidate A)
   of `docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md` -- self-assessed 9/10
