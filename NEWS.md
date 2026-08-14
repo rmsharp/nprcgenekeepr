@@ -172,6 +172,14 @@ R. Mark Sharp, Ph.D.
   columns accordingly. Scoped to `edgeStyle = "direct"` this release --
   `"rectilinear"` propagation onto a cross-generation dogleg reroute is
   a deferred follow-up.
+- Fixed: a pedigree with a dangling (no-own-row) parent anywhere in it
+  could cause the Pedigree Diagram tab's `edgeStyle = "rectilinear"`
+  style to spuriously reroute other, unrelated mate-line edges through
+  an unneeded cross-generation "dogleg," even when those edges' own
+  parents were already at the correct generation. Caused by an internal
+  type-coercion defect (a dangling parent's generation fallback silently
+  widened an internal generation vector from integer to double, breaking
+  a strict type-sensitive equality check elsewhere).
 
 # nprcgenekeepr 2.0.0 (20260708)
 

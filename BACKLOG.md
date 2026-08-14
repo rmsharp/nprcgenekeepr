@@ -68,48 +68,35 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       connected-component walk).
 
 ## Housekeeping
-- [ ] **A dangling (no-own-row) parent anywhere in a pedigree silently
-      widens `.positionMatingUnitForest()`'s `genOf` from integer to double,
-      which can spuriously trigger `.addRectilinearWaypoints()`'s D2
+- [ ] (found S555, incidental to the consanguineous-marker PRE-RED
+      investigation above, **FIXED S556**. **A dangling (no-own-row)
+      parent anywhere in a pedigree silently widened
+      `.positionMatingUnitForest()`'s `genOf` from integer to double,
+      which could spuriously trigger `.addRectilinearWaypoints()`'s D2
       "dogleg" reroute on OTHER, unrelated, correctly-matched mate-line
-      edges elsewhere in the same diagram** (found S555, incidental to the
-      consanguineous-marker PRE-RED investigation above, not fixed --
-      report-don't-fix-mid-session precedent, `PROJECT_LEARNINGS.md`
-      Learning 382; READY, Effort M). Root cause:
-      `R/makePedigreeDiagramData.R`'s `.positionMatingUnitForest()`
-      (~line 644) back-fills a dangling parent's gen via
-      `vapply(danglingIds, ..., numeric(1L))` -- the `numeric(1L)` template
-      forces the result to DOUBLE regardless of `ped$gen`'s own (integer)
-      type, and `genOf <- c(genOf, ...)` then promotes the WHOLE `genOf`
-      vector (and everything derived from it -- `effGenOf`, `dispGenOf`,
-      ultimately `pos$gen`) to double via R's own type-promotion rule.
-      `.addRectilinearWaypoints()`'s D2 loop compares gens via
-      `identical(side$gen, Ugen)` -- STRICT, type-sensitive equality
-      (`identical(0, 0L)` is `FALSE`) -- so once any dangling parent exists
-      ANYWHERE in the pedigree, every mate-line edge's gen comparison
-      silently starts comparing a double against `forest$matingUnits$gen`'s
-      own integer, spuriously firing a dogleg reroute even for a union
-      whose 2 parents are demonstrably at the exact same gen (confirmed via
-      a minimal reproduction: a 2-founder union at gen 0/0 -- the existing
-      "D2: both parents at the same gen" precedent test's own no-op case --
-      gets 2 spurious `__proj_` nodes the moment an UNRELATED second union
-      elsewhere in the same `ped` references one dangling parent id).
-      **Scope/severity not yet established**: this is `edgeStyle =
-      "rectilinear"`-only (an opt-in, non-default UI toggle) and the
-      existing "0 D2 projections on the full 375-individual bundled
-      fixture" precedent test still passes, so either that fixture has no
-      live dangling-parent+mating-unit combination, or some other factor
-      masks it there -- a future session should check whether any bundled/
-      real fixture actually exercises this combination before scoping a
-      fix. **Likely fix**: coerce `fallbackGen`/`genOf` back to `ped$gen`'s
-      own storage mode after the `c()` concatenation (or use `integer(1L)`
-      in the `vapply()` template when `ped$gen` is integer), OR change
-      `.addRectilinearWaypoints()`'s own comparison from `identical()` to a
-      type-tolerant `==`/`isTRUE(all.equal(...))`. Either fix needs the
-      full `test_addRectilinearWaypoints.R`/`test_positionMatingUnitForest.R`
-      suites re-run afterward, since several of their own precedent tests
-      (documenting issue #143/#144's now-`0`-mismatch counts) implicitly
-      assume `genOf` stays integer-typed.
+      edges elsewhere in the same diagram.** Root cause: the dangling-
+      parent gen fallback used `vapply(danglingIds, ..., numeric(1L))` --
+      forcing a double even though the value it returns
+      (`matingUnits$gen`) was already integer -- and `genOf <- c(genOf,
+      ...)` then silently widened the WHOLE `genOf` vector via R's own
+      type-promotion rule, corrupting `.addRectilinearWaypoints()`'s
+      strict, type-sensitive `identical(side$gen, Ugen)` comparison.
+      Fixed: `numeric(1L)` -> `integer(1L)` (matches the value's actual
+      source type). Empirically confirmed on a 5-row reproduction fixture
+      (an unrelated, already-on-row union spuriously doglegged purely
+      because a second, unrelated union referenced a dangling parent --
+      0 spurious nodes after the fix). Scope was `edgeStyle =
+      "rectilinear"`-only; the bundled 375-individual real fixture has no
+      dangling parents and was never affected. 4 new/updated unit tests
+      (3 `expect_type(pos$gen, "integer")` assertions added to existing
+      `test_positionMatingUnitForest.R` dangling-parent tests -- existing
+      `expect_equal()`-based assertions are type-blind to this class of
+      bug, `PROJECT_LEARNINGS.md` Learning 562 -- plus 1 new end-to-end
+      regression test in `test_addRectilinearWaypoints.R`). `devtools::
+      check()` 0 errors/1 pre-existing warning/1 pre-existing note (both
+      unrelated); full clean regression 0 failed/0 error; live E2E
+      (`test-e2e-pedigree-module.R`) 15/15, 0 regressions;
+      `lintr::lint_package()` 0 lints. Not filed as a GitHub issue.)
 - [ ] **Clean up unneeded repository branches, locally and on `origin`**
       (owner-directed, found S552, READY, Effort S) -- not investigated for
       mergedness/safety this session, just inventoried: local branches beyond

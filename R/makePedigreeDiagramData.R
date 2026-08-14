@@ -639,11 +639,23 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   ## individual is never an anchor, so they need only a free-pass/
   ## duplicate leaf gen, never a recursively-positioned one). Found live,
   ## S461.
+  ##
+  ## integer(1L), not numeric(1L) (found S555, fixed S556): matingUnits$gen
+  ## (the value this vapply() actually returns) is already integer -- a
+  ## numeric(1L) template forces a double regardless, and genOf <- c(genOf,
+  ## ...) then silently widens the WHOLE genOf vector (every real
+  ## individual's gen too, not just the dangling entries) from integer to
+  ## double via R's own type-promotion rule, the moment ANY dangling parent
+  ## exists anywhere in 'ped'. That double then survives into
+  ## dispGenOf/nodes$gen/pos$gen, while .addRectilinearWaypoints()'s D2 loop
+  ## compares gens via identical() -- type-sensitive (identical(0, 0L) is
+  ## FALSE) -- so it started spuriously doglegging OTHER, unrelated,
+  ## correctly-matched mate-line edges elsewhere in the same diagram.
   danglingIds <- setdiff(c(matingUnits$sire, matingUnits$dam), realIds)
   if (length(danglingIds) > 0L) {
     fallbackGen <- vapply(danglingIds, function(x) {
       matingUnits$gen[matingUnits$sire == x | matingUnits$dam == x][1L]
-    }, numeric(1L))
+    }, integer(1L))
     genOf <- c(genOf, stats::setNames(fallbackGen, danglingIds))
   }
 

@@ -10,15 +10,107 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 555 Handoff Evaluation (by Session 556)
+**Score: 9/10.** **What helped:** the `next_steps` field named this exact item (item 3 of the
+priority list) with an explicit "check that first" pointer to the scope/live-impact question --
+followed as the literal first PRE-RED step, confirming the bundled 375-individual fixture has no
+dangling parents and was never affected. The `BACKLOG.md` item S555 itself wrote carried the full
+root-cause diagnosis (`R/makePedigreeDiagramData.R:644`, `vapply(..., numeric(1L))`, `c()` type
+promotion) and a "likely fix" (`integer(1L)` template) that turned out exactly correct on first
+empirical verification -- PRE-RED investigation went straight to confirming rather than
+re-deriving the diagnosis from scratch. `gotchas` (3) (empirically verify a positioning
+algorithm's actual behavior rather than hand-tracing, `PROJECT_LEARNINGS.md` Learning 561) was
+followed directly: patched the live source file and ran both affected test suites before
+committing to a RED test plan, rather than reasoning abstractly about type propagation.
+**What was wrong:** nothing found inaccurate. **What was missing:** `gotchas` (1) documented that
+`all(x == y)`-style RED assertions vacuously pass against a missing column, but not that
+`expect_equal()` is ALSO type-blind to double-vs-integer (a distinct blind spot) -- this session
+had to discover that independently via a 2-line empirical check before it was clear the new RED
+tests needed `expect_type()`, not `expect_equal()`; now documented as
+`PROJECT_LEARNINGS.md` Learning 562 so a future session doesn't have to rediscover it. **ROI:**
+High -- the root-cause diagnosis and likely-fix suggestion were both exactly correct, letting
+PRE-RED investigation confirm rather than re-derive, and the reproduction fixture built into the
+`BACKLOG.md` item description was reused directly for the new RED test.
+
 ### What Session 556 Did
 **Deliverable:** Fix the dangling-parent `genOf` integer/double type-coercion bug in
-`.positionMatingUnitForest()` (`R/makePedigreeDiagramData.R`), which spuriously triggers
-`.addRectilinearWaypoints()`'s D2 dogleg reroute on unrelated, correctly-matched mate-line edges
-elsewhere in the same diagram (`BACKLOG.md` Housekeeping, found S555, READY, Effort M) (IN
-PROGRESS). **Started:** 2026-08-13. **Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+`.positionMatingUnitForest()` (`BACKLOG.md` Housekeeping, found S555, READY, Effort M) --
+**DONE.** A dangling parent anywhere in a pedigree silently widened `genOf` from integer to
+double, which could spuriously trigger `.addRectilinearWaypoints()`'s D2 dogleg reroute on
+unrelated, correctly-matched mate-line edges elsewhere in the diagram (`edgeStyle =
+"rectilinear"`-only). **Started/Completed:** 2026-08-13. **Status:** DONE. TDD phase: GREEN
+(REFACTOR declined via `AskUserQuestion` -- the fix is a single `vapply()` type-template change
+plus an explanatory comment; nothing structurally to refactor).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SESSION_RUNNER.md`, `SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list`, `git status`/`log`/`diff --stat`, `methodology_dashboard.py`
+[Health 96/100, 1 High+ risk -- `SESSION_NOTES.md` 2,136 lines, past the 2,000-line agent read
+cap, unchanged from S555's own flag, still not in `BACKLOG.md`], `gh run list --branch master
+--limit 10` [scheduled `shinytest2.yaml` still red, unchanged, not diagnosed], sequencing-audit
+cross-check per `CLAUDE.md`'s Phase 0 customization [genetic-metrics cluster's own next item,
+issue #148, surfaced as its own numbered priority per the audit's "scope-narrowing conversation
+first" recommendation; pedigree-diagram cluster's own Tier 1 items (B1-B9) confirmed already
+resolved/compressed away, nothing further to surface there]). 6 untracked files found, all
+timestamped ~16:32-16:39 same day -- the identical set S555 already flagged as too-recent/
+not-a-ghost-session; reported unchanged, not acted on. User picked the dangling-parent bug from
+the rendered `AskUserQuestion` priorities. **(2)** Wrote the Phase 1B claim stub, committed
+(`f9706d81`). **(3)** PRE-RED: read `.positionMatingUnitForest()`/`.addRectilinearWaypoints()`
+in full; confirmed the root cause matches S555's own `BACKLOG.md` diagnosis exactly. Empirically
+reproduced the bug on a new 5-row fixture (an unrelated, already-on-row `P1xP2` union --
+the existing "D2: both parents at the same gen" no-op precedent -- gets 3 spurious `__proj_`
+nodes purely because a second, unrelated union elsewhere references a dangling parent).
+Empirically verified the candidate fix (`numeric(1L)` -> `integer(1L)`) by patching the live
+source file directly, running both affected suites (`test_positionMatingUnitForest.R` 133
+assertions, `test_addRectilinearWaypoints.R` 81 assertions -- both pass unchanged), then
+reverting via `git checkout --` before writing any RED tests. Discovered mid-investigation that
+`expect_equal()` is type-blind to double-vs-integer (`expect_equal(0, 0L)` passes) -- meaning 3
+pre-existing dangling-parent tests were already passing against the (buggy, double-typed) `gen`
+column the whole time, and a new RED test using the same assertion style would be equally blind;
+logged as `PROJECT_LEARNINGS.md` Learning 562. **(4)** PRE-RED->RED gate via `AskUserQuestion`:
+extended 3 existing dangling-parent tests in `test_positionMatingUnitForest.R` with
+`expect_type(pos$gen, "integer")`, plus 1 new end-to-end test in `test_addRectilinearWaypoints.R`
+reproducing the exact spurious-dogleg symptom on the verified 5-row fixture. Confirmed RED for
+real against unmodified source (not just reasoning): all 4 failed for the right reason (3x
+"Actual type: double"; 1x 3 spurious `__proj_` nodes plus mate-edge replacement).
+**(5)** RED->GREEN gate via `AskUserQuestion`: applied the verified fix
+(`R/makePedigreeDiagramData.R:646`) plus an explanatory comment documenting the root cause and
+its downstream effect. All 4 targeted tests passed; full clean regression 0 failed/0 error (no
+non-baseline offenders); `devtools::document()` no-op (`@noRd`, not exported);
+`devtools::check()` 0 errors/1 pre-existing warning (the untracked "Compounding Loop" files
+flagged at Phase 0, unrelated to this diff)/1 pre-existing note (`vignettes/figure` leftover);
+`lintr::lint_package()` 0 lints on touched files. **(6)** GREEN->REFACTOR gate via
+`AskUserQuestion`: owner picked "close out as-is." **(7)** Phase 3E runtime smoke test: ran the
+live E2E pedigree-module suite (`NPRC_RUN_E2E=true`) -- 15/15 passed, 0 regressions, confirming
+the fix doesn't disturb the live-rendered app (the bundled fixture has no dangling parents, so
+nothing new is visibly different there, which is itself the expected, correct outcome).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist (#120) -- N/A, an internal
+defensive fix, not a new displayed statistic. Tutorial/article checklist -- N/A, no existing
+documented prose claim needed correcting (the narrow dangling-parent + rectilinear scenario was
+never described in any vignette/article). `NEWS.Rmd` -- DONE: new "Fixed:" bullet added to the
+dev-version section; `NEWS.md` regenerated via `rmarkdown::render()` using the file's own default
+`github_document` format (a first attempt with an explicit `md_document` override produced a
+much larger, incorrect diff -- reverted and re-rendered with no override). `a2interactive.Rmd`
+checklist -- N/A, no new exported function/parameter (`@noRd` internal fix only). GitHub issue
+close-out -- N/A, no issue was filed for this item. Lint -- DONE, 0 lints on touched files.
+
+**Self-assessment (Session 556): 9/10.** **Strengths:** (1) PRE-RED investigation matched S555's
+own root-cause diagnosis exactly and empirically verified the exact fix (source patch, test run,
+revert) BEFORE writing any RED tests, so RED->GREEN was fast and confident rather than
+exploratory. (2) Discovered and documented a new test-assertion blind spot
+(`expect_equal()`'s double-vs-integer type-blindness) rather than writing RED tests that would
+have been just as vacuously blind as the existing suite already was -- caught via a deliberate
+empirical check, not assumed. (3) Followed the established stash/rerun RED-confirmation
+discipline and the prototype-patch-then-revert PRE-RED discipline (both prior-session precedents)
+cleanly. (4) Minimal, surgical fix (a 6-character diff) with a thorough explanatory comment,
+verified against the full clean regression AND the live E2E suite before closing out.
+**Weaknesses:** (1) No independent adversarial-verification pass run on this fix -- carried
+forward unaddressed from S551-S555's own flagged gap (5 consecutive sessions now). (2) Did not
+investigate whether any real (non-bundled, non-synthetic) pedigree with dangling parents +
+`edgeStyle = "rectilinear"` exists in practice -- the `BACKLOG.md` item's own "scope/severity not
+yet established" framing was resolved only for the bundled fixture (confirmed unaffected), not
+for real-world usage patterns generally.
+**Ledger:** recorded in `CHANGELOG.md` (this session's claim, deliverable, and close-out entries).
 
 ### Session 554 Handoff Evaluation (by Session 555)
 **Score: 9/10.** **What helped:** the `next_steps` field's priority-ordered list (consanguineous

@@ -570,6 +570,11 @@ test_that(".positionMatingUnitForest positions the mating unit whose
   unitX <- pos$x[pos$id == forest$matingUnits$id]
   expect_false(is.na(unitX))
   expect_true(is.finite(unitX))
+  ## found S555: the dangling-parent gen fallback must not widen 'gen'
+  ## from integer to double -- expect_equal(0, 0L) is type-blind, so this
+  ## needs expect_type(), not a numeric-equality assertion, to actually
+  ## catch the coercion.
+  expect_type(pos$gen, "integer")
   .expectNoOverlap(pos)
 })
 
@@ -595,6 +600,8 @@ test_that(".positionMatingUnitForest positions a dangling parent's
   expect_equal(nrow(dupRow), 1L)
   expect_false(is.na(dupRow$gen))
   expect_false(is.na(dupRow$x))
+  ## found S555: see the free-pass dangling-parent test above.
+  expect_type(pos$gen, "integer")
   .expectNoOverlap(pos)
 })
 
@@ -655,6 +662,8 @@ test_that(".positionMatingUnitForest positions a mating unit whose sire AND
   expect_true(is.finite(unitRow$x))
   childRow <- pos[pos$id == "CHILD", ]
   expect_true(is.finite(childRow$x))
+  ## found S555: see the free-pass dangling-parent test above.
+  expect_type(pos$gen, "integer")
   .expectNoOverlap(pos)
 })
 

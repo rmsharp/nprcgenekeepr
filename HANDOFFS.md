@@ -127,22 +127,96 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S556
 date: 2026-08-13
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 9
+predecessor_score: 9
 active_task: Fix the dangling-parent genOf integer/double type-coercion bug in
-.positionMatingUnitForest() (R/makePedigreeDiagramData.R), which spuriously triggers
-.addRectilinearWaypoints()'s D2 dogleg reroute on unrelated, correctly-matched mate-line edges
-elsewhere in the same diagram (BACKLOG.md Housekeeping, found S555, READY, Effort M).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+.positionMatingUnitForest() (BACKLOG.md Housekeeping, found S555, READY, Effort M) -- DONE.
+what_was_done: Full strict-TDD PRE-RED->RED->GREEN cycle (REFACTOR declined via
+AskUserQuestion). Root cause confirmed matching S555's own BACKLOG.md diagnosis exactly:
+vapply(danglingIds, ..., numeric(1L)) at R/makePedigreeDiagramData.R:644-646 forced a double even
+though the value it returns (matingUnits$gen) is already integer; genOf <- c(genOf, ...) then
+silently widened the WHOLE genOf vector to double via R's type-promotion rule the moment any
+dangling parent existed anywhere in the pedigree, corrupting .addRectilinearWaypoints()'s strict
+identical(side$gen, Ugen) gen-match check and spuriously firing the D2 dogleg on unrelated,
+correctly-matched mate-line edges. Fixed: numeric(1L) -> integer(1L) (a 6-character diff, matching
+the value's actual source type), plus an explanatory comment. Empirically verified BOTH the
+reproduction and the fix live before writing any RED tests (patched the source, ran both affected
+suites, reverted via git checkout --). 4 new/updated tests: 3 expect_type(pos$gen, "integer")
+assertions added to existing dangling-parent tests in test_positionMatingUnitForest.R, 1 new
+end-to-end regression test in test_addRectilinearWaypoints.R (5-row fixture: an unrelated
+already-on-row union stays at 0 proj nodes even when a second, unrelated union references a
+dangling parent). Discovered expect_equal() is type-blind to double-vs-integer -- existing tests
+were already vacuously passing against the buggy double-typed gen column -- logged as
+PROJECT_LEARNINGS.md Learning 562. Verification: full clean regression 0 failed/0 error;
+devtools::check() 0 errors/1 pre-existing warning/1 pre-existing note (both unrelated, traced to
+the untracked "Compounding Loop" files flagged at Phase 0); devtools::document() no-op (@noRd);
+lintr::lint_package() 0 lints; live E2E (NPRC_RUN_E2E=true) 15/15, 0 regressions. NEWS.Rmd DONE
+(new Fixed: bullet; NEWS.md regenerated via the file's own default github_document format).
+BACKLOG.md item marked FIXED S556. Commits: f9706d81 (claim), this session's own deliverable +
+close-out commit (see next reconcile for its sha).
+next_steps: BACKLOG.md priorities, in order: (1) SESSION_NOTES.md is now 2,180+ lines -- past the
+2,000-line agent read cap (dashboard HIGH risk flag), unchanged/still not in BACKLOG.md since
+S555 first flagged it -- a future session should scope/run an archive pass
+(methodology_trim.py --file SESSION_NOTES.md --check first), mirroring the CHANGELOG.md
+precedent (S518/S527/S546/S547). Also unresolved: HANDOFFS.md's own archive-trigger MEDIUM risk
+(fired per the dashboard, 9 records of headroom left). (2) Extend the consanguineous-mating
+marker to edgeStyle = "rectilinear" (deferred follow-up, S555 -- a verified 12-row fixture is
+preserved in the BACKLOG.md item as a starting point; unaffected by this session's own fix, since
+that fixture has no dangling parents). (3) Clean up unneeded repository branches (found S552,
+READY, Effort S -- check mergedness before deleting). (4) Write the dedicated Pedigree Diagram
+tab article (READY, Effort M, unchanged since S544). Lower priority: BACKLOG.md's own ledger-size
+housekeeping via editorial compression (S518, READY, Effort L); the CHANGELOG.md per-session
+housekeeping-entry-bloat question (S543); stale Diagram-tab screenshot (S461, subsumed by item
+4); iCloud conflicted-copy .R file risk (S461); 15-warning test-suite drift (S504, not
+root-caused). Per the genetic-metrics sequencing audit's own ratified order: issue #148 needs a
+scope-narrowing conversation before implementation (its own Tier-1 predecessors #152/#153 are
+both already closed). Unchanged: NPRC outreach owner review (DECISION NEEDED); LabKey remaining
+recs (BLOCKED). Also unresolved: the shinytest2.yaml scheduled CI run is still red, unchanged
+from S548-S556's own findings -- still not diagnosed by any session. Local master remains ahead
+of origin (30+ commits after this session) -- a future session should consider pushing.
+key_files: R/makePedigreeDiagramData.R:633-654 (.positionMatingUnitForest()'s dangling-parent
+gen fallback, the 1-line fix plus its explanatory comment) and :1477-1519
+(.addRectilinearWaypoints()'s D2 dogleg loop, where the corrupted type manifested);
+tests/testthat/test_positionMatingUnitForest.R (3 extended dangling-parent tests, each gained
+one expect_type(pos$gen, "integer") assertion); tests/testthat/test_addRectilinearWaypoints.R
+(the new end-to-end regression test, right after the "D2: both parents at the same gen"
+precedent it extends); BACKLOG.md Housekeeping (item marked FIXED S556);
+PROJECT_LEARNINGS.md Learning 562 (the expect_equal() type-blindness trap, a 3rd sibling of
+Learning 560's vacuous-pass-trap family).
+gotchas: (1) expect_equal(actual, expected) is type-blind between double and integer
+(expect_equal(0, 0L) passes) -- a numeric-equality assertion CANNOT detect a storage-mode
+regression no matter how it's phrased; use expect_type()/is.integer()/identical() instead when
+the bug's symptom is a type change, not a value change. See PROJECT_LEARNINGS.md Learning 562.
+(2) Before trusting "existing tests already cover this," check whether the existing assertion
+STYLE is structurally capable of detecting the specific symptom -- a suite green on both sides of
+a real fix is a reason to inspect the assertions, not a reason to skip writing new ones.
+(3) Prototype-patching the live source file to empirically verify a candidate fix during PRE-RED
+(then git checkout -- to revert before RED) is an established, accepted discipline in this
+project (S555's own issue #144 precedent) -- use it when a fix's correctness is verifiable via a
+quick live run, rather than reasoning abstractly about type propagation.
+runtime_smoke: PASS (live). NPRC_RUN_E2E=true/NOT_CRAN=true shinytest2/chromote run of the full
+test-e2e-pedigree-module.R suite: 15/15 tests passed, 0 failed/0 error -- confirms the fix doesn't
+disturb the live-rendered app (the bundled 375-individual fixture has no dangling parents, so
+nothing new is visibly different there, which is itself the expected, correct outcome).
+changelog_ref: this session's own CHANGELOG.md entries (claim, deliverable, close-out).
 commit: pending
 ```
-<claim stub -- overwritten at Phase 3D close-out>
+<free-text prose: Session 556 fixed the dangling-parent genOf integer/double type-coercion bug
+S555 found and logged (not fixed) during its own PRE-RED investigation. Root cause and likely fix
+were both diagnosed exactly correctly by S555's own BACKLOG.md write-up; this session's PRE-RED
+work confirmed both empirically (a live source patch + test run + revert, before any RED test was
+written) rather than re-deriving them from scratch. The fix itself is a 6-character diff
+(numeric(1L) -> integer(1L)) plus an explanatory comment. A genuinely new finding this session
+contributed on its own: expect_equal() is type-blind to double-vs-integer, meaning 3 pre-existing
+dangling-parent tests had already been silently passing against the buggy double-typed gen column
+the whole time -- documented as Learning 562 (a 3rd sibling of Learning 560's vacuous-pass-trap
+family) so a future RED-phase session recognizes the pattern immediately rather than discovering
+it fresh. Self-score 9/10: strong PRE-RED-to-GREEN execution and a genuinely useful new learning,
+held back one point for the still-unaddressed lack of independent adversarial verification
+(now a 5-session-running gap across S551-S556) and for not investigating real-world (non-bundled)
+prevalence of the dangling-parent + rectilinear combination beyond the reproduction fixture.
+Predecessor score (S555): 9/10 -- see the full evaluation in SESSION_NOTES.md.>
 
 ```handoff
 session: S555

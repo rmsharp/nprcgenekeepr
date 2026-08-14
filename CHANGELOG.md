@@ -138,6 +138,44 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-N] S556 close-out: dangling-parent genOf type-coercion bug fixed; S555 handoff evaluation; Learning 562 logged
+- **Deliverable:** Session S556's own close-out. Evaluated S555's `HANDOFFS.md` receipt (9/10 --
+  the `next_steps` field named this exact item with a "check that first" pointer to the scope
+  question, followed as the literal first PRE-RED step; the root-cause diagnosis and likely-fix
+  suggestion in S555's own `BACKLOG.md` write-up were both exactly correct). Self-assessment
+  9/10 (strong PRE-RED-to-GREEN execution and a new documented learning; one point held back for
+  the still-unaddressed adversarial-verification gap, now 5 sessions running, and for not
+  investigating real-world prevalence beyond the reproduction fixture). `BACKLOG.md` Housekeeping
+  item marked FIXED S556. New `PROJECT_LEARNINGS.md` Learning 562 (`expect_equal()` is type-blind
+  to double-vs-integer -- a 3rd sibling of Learning 560's vacuous-pass-trap family). `NEWS.Rmd`
+  gained a "Fixed:" bullet; `NEWS.md` regenerated.
+- **Commit:** this close-out's own commit.
+
+### 2026-08-13 · [BL-N] S556: fix dangling-parent genOf integer/double type-coercion bug in .positionMatingUnitForest()
+- **Deliverable:** `R/makePedigreeDiagramData.R:646` -- the dangling-parent gen fallback's
+  `vapply(danglingIds, ..., numeric(1L))` forced a double even though the value it returns
+  (`matingUnits$gen`) was already integer; `genOf <- c(genOf, ...)` then silently widened the
+  WHOLE `genOf` vector to double via R's own type-promotion rule the moment any dangling parent
+  existed anywhere in the pedigree, corrupting `.addRectilinearWaypoints()`'s strict
+  `identical(side$gen, Ugen)` gen-match check and spuriously firing the D2 dogleg reroute on
+  unrelated, correctly-matched mate-line edges (`edgeStyle = "rectilinear"`-only; the bundled
+  375-individual real fixture has no dangling parents and was never affected). Fixed:
+  `numeric(1L)` -> `integer(1L)` (a 6-character diff, matching the value's actual source type).
+  Empirically verified both the reproduction and the fix live (source patch + test run + revert)
+  before writing any RED tests. 4 new/updated unit tests (3 `expect_type(pos$gen, "integer")`
+  assertions added to existing `test_positionMatingUnitForest.R` dangling-parent tests, 1 new
+  end-to-end regression test in `test_addRectilinearWaypoints.R`). `devtools::check()` 0 errors/
+  1 pre-existing warning/1 pre-existing note (both unrelated); full clean regression 0 failed/0
+  error; live E2E (`NPRC_RUN_E2E=true`) 15/15, 0 regressions; `lintr::lint_package()` 0 lints.
+  Not filed as a GitHub issue.
+- **Commit:** this session's own deliverable commit.
+
+### 2026-08-13 · [BL-N] S556: claim session (fix dangling-parent genOf type-coercion bug)
+- **Deliverable:** Session S556 claimed via Phase 1B stub (`SESSION_NOTES.md`, `HANDOFFS.md`
+  `status: pending`). Task: fix the dangling-parent `genOf` integer/double type-coercion bug in
+  `.positionMatingUnitForest()` (`BACKLOG.md` Housekeeping, found S555, READY, Effort M).
+- **Commit:** `f9706d81`.
+
 ### 2026-08-13 · [BL-N] S555 close-out: consanguineous-mating marker shipped; S554 handoff evaluation; 2 new findings logged
 - **Deliverable:** Session S555's own close-out. Evaluated S554's `HANDOFFS.md` receipt (9/10 --
   the `get_node_color()` E2E template was directly reusable verbatim; the stash/rerun RED-

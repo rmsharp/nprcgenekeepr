@@ -257,6 +257,48 @@ test_that(".addRectilinearWaypoints adds zero projection nodes for a
   expect_setequal(mateEdgesBefore$from, mateEdgesAfter$from)
 })
 
+## ---- D2: a dangling parent ELSEWHERE in the pedigree must not spuriously
+## dogleg an unrelated, already-on-row union (found S555, incidental to the
+## consanguineous-marker PRE-RED investigation; BACKLOG.md Housekeeping) --
+## .positionMatingUnitForest()'s dangling-parent gen fallback
+## (R/makePedigreeDiagramData.R ~line 646) used vapply(..., numeric(1L)),
+## widening the WHOLE 'genOf' vector from integer to double via c()'s type-
+## promotion rule the moment ANY dangling parent exists anywhere in 'ped' --
+## not just the dangling entries. .addRectilinearWaypoints()'s D2 loop
+## compares gens via identical(), which is type-sensitive
+## (identical(0, 0L) is FALSE), so this fixture's P1xC1 union -- the same
+## "both parents at the same gen" no-op case as the precedent test above --
+## started spuriously doglegging purely because an UNRELATED second union
+## (OTHERxDANGLING_MOM) referenced a dangling parent. Empirically confirmed
+## against unmodified source (3 spurious __proj_ nodes) before writing this
+## assertion. --------------------------------------------------------------
+
+test_that(".addRectilinearWaypoints adds zero projection nodes for a
+           mating unit whose parents are at the same gen (D2's no-op case)
+           even when an UNRELATED mating unit elsewhere in the same
+           pedigree has a dangling parent", {
+  ped <- data.frame(
+    id = c("P1", "P2", "C1", "OTHER", "OTHERCHILD"),
+    sire = c(NA, NA, "P1", NA, "OTHER"),
+    dam = c(NA, NA, "P2", NA, "DANGLING_MOM"),
+    sex = c("M", "F", "M", "M", "F"),
+    gen = c(0L, 0L, 1L, 0L, 1L),
+    stringsAsFactors = FALSE
+  )
+  inputs <- .buildLayoutAndForest(ped)
+  unitId <- inputs$forest$matingUnits$id[inputs$forest$matingUnits$sire ==
+                                            "P1"]
+  mateEdgesBefore <- inputs$edges[inputs$edges$to == unitId, ]
+  result <- .addRectilinearWaypoints(inputs$nodes, inputs$edges,
+                                      inputs$forest, inputs$pos)
+
+  projIds <- result$nodes$id[grepl("^__proj_", result$nodes$id)]
+  expect_equal(length(projIds), 0L)
+
+  mateEdgesAfter <- result$edges[result$edges$to == unitId, ]
+  expect_setequal(mateEdgesBefore$from, mateEdgesAfter$from)
+})
+
 ## ---- D2: non-anchor parent off-row -- RESOLVED by issue #143's fix ------
 ## Before issue #143's fix, this was "the common 96/237 real case": DAM (a
 ## free-pass, non-anchor parent) rendered at her own gen (0) instead of her
