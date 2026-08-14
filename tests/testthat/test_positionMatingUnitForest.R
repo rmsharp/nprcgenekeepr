@@ -111,12 +111,12 @@ test_that(".positionMatingUnitForest positions a multi-mate anchor's 2
 ## ---- real GA204Z/8LKBV9 loop fixture (from Slice 1's own test suite) --
 
 test_that(".positionMatingUnitForest positions the real GA204Z/8LKBV9 loop
-           fixture (8LKBV9 anchors 1 of 3 mating units, duplicated at the
-           other 2) without overlap, with each duplicate's gen matching ITS
-           OWN mating unit's gen (issue #143 fix -- not uniformly 8LKBV9's
-           own real gen, since the 2 units he's duplicated at have
-           different gens: max(8LKBV9=1, 8P17E3=0)=1 and
-           max(8LKBV9=1, FJIB3R=2)=2)", {
+           fixture (Track 4: 8LKBV9 now anchors 2 of his 3 mating units --
+           his 2 founder mates, on gen alone -- and is duplicated at
+           exactly the other 1, his own daughter FJIB3R's unit, which she
+           now anchors) without overlap, with the duplicate's gen matching
+           ITS OWN mating unit's gen (issue #143 fix, still in effect,
+           unaffected by Track 4: 2L, not 8LKBV9's own raw gen of 1L)", {
   ped <- data.frame(
     id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
            "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
@@ -131,16 +131,11 @@ test_that(".positionMatingUnitForest positions the real GA204Z/8LKBV9 loop
 
   kDup <- pos[pos$id %in% forest$duplicates$id[
     forest$duplicates$realId == "8LKBV9"], ]
-  expect_equal(nrow(kDup), 2L)
+  expect_equal(nrow(kDup), 1L)
 
-  unit3 <- forest$matingUnits$id[forest$matingUnits$dam == "8P17E3"]
   unit4 <- forest$matingUnits$id[forest$matingUnits$dam == "FJIB3R"]
-  dupAt3 <- forest$duplicates$id[forest$duplicates$matingUnitId == unit3]
   dupAt4 <- forest$duplicates$id[forest$duplicates$matingUnitId == unit4]
-  expect_equal(pos$gen[pos$id == dupAt3], 1L)  # unit3's own gen
-  expect_equal(pos$gen[pos$id == dupAt4], 2L)  # unit4's own gen -- CHANGED
-                                                # from the pre-fix formula
-                                                # (8LKBV9's own gen, 1L)
+  expect_equal(pos$gen[pos$id == dupAt4], 2L)  # unit4's own gen
 
   .expectNoOverlap(pos)
 })
@@ -163,48 +158,45 @@ test_that(".positionMatingUnitForest positions the real GA204Z/8LKBV9 loop
 ## variants, including the fully-fixed one) -- so this exact-value
 ## assertion is used instead, as a strictly stronger guard.
 ##
-## issue #144 fix: this SAME fixture also embeds one of the
-## 51 real-fixture anchor-side mismatches -- 8P17E3 anchors the unit3 union
-## (dam="8P17E3") at unitGen=1, but her own raw ped$gen is 0. The #144 fix
-## (docs/planning/issue144-anchor-row-mismatch-fix-plan.md, Candidate B:
-## effGenOf) moves her DISPLAYED gen to 1 (matching her unit), leaving her
-## x (2.00, computed purely from mergeSubtrees(), never from ownGen)
-## unchanged -- empirically confirmed against a patched
-## 3-edit prototype. Every other id/union/duplicate value below is
-## unaffected by #144 (none of them anchor a mismatched unit in this
-## fixture) -- re-confirmed unchanged against the same prototype.
+## Track 4 update (docs/planning/pedigree-diagram-track4-gen-aware-anchor-
+## plan.md, this session): this SAME fixture previously embedded one of the
+## 51 real-fixture anchor-side mismatches -- 8P17E3 anchored the unit3 union
+## (dam="8P17E3") at unitGen=1, despite her own raw ped$gen being 0, and
+## issue #144's now-deleted effGenOf mechanism relocated her DISPLAYED gen
+## to 1 to compensate. Under Track 4's gen-first D2 tie-break, 8LKBV9
+## (gen 1) now beats 8P17E3 (gen 0) outright and anchors unit3 himself --
+## there is no mismatch left to relocate. 8P17E3 becomes unit3's NON-anchor
+## (free-pass) occurrence instead, and issue #143's still-unchanged
+## non-anchor override renders her at her unit's gen (1) regardless -- same
+## displayed value as before, reached by a different, now-invariant-
+## respecting mechanism. Her x (2.00) is unaffected either way, since x
+## comes purely from mergeSubtrees(), never from ownGen. 8LKBV9 himself
+## keeps 3 mates but now anchors 2 of them (his 2 founder mates) instead of
+## 1 (re-verify against test_buildMatingUnitForest.R's own updated figure)
+## -- moving G8EBU9's union and 8P17E3's union positions, which cascade
+## into 8LKBV9's own x. FJIB3R (gen 2) still beats 8LKBV9 (gen 1) on unit4
+## and anchors it, unchanged from before. Every value below re-verified
+## live against the current implementation, not hand-derived.
 ##
-## Track 3 update (docs/planning/pedigree-diagram-kinship2-fidelity-
-## remediation-plan.md Track 3, this session): the paragraph above records
-## that a geometric minimum-separation check was tried and REJECTED as a
-## TEST-DISCRIMINATOR for the #143 desync bug, not that the underlying
-## algorithm didn't need one -- that claim ("unrelated same-row nodes are
-## not guaranteed >= minSep apart even under the fully-corrected fix") is
-## now FALSE: .positionMatingUnitForest() gained an actual minSep guarantee
-## this session (a global post-merge sweep over every real/duplicate
-## individual node), and every value below is its updated, re-verified
-## output. This exact-value test remains the right guard for the same
-## reason as before (a geometric check alone still can't discriminate an
-## Edit-1/Edit-2-style desync) -- see the new, separate general-property
-## test directly below this one for the minSep guarantee itself.
+## 5A6DFT/8DKELJ's own x values reflect issue #145 (male-left/female-right
+## default, D2/D3): this pair is the forest's only D1-qualifying
+## (mate-count-1, unambiguous-M/F, no D5 child) unit, so 5A6DFT (sire, sex
+## 'M') and 8DKELJ (dam, sex 'F') swap places -- unaffected by Track 4
+## (unit1 does not involve 8LKBV9's family). Every value below additionally
+## reflects Track 3's minSep guarantee: every same-gen gap in this fixture
+## is now exactly minSep = 1 apart, re-verified live against the fixed
+## implementation.
 
 test_that(".positionMatingUnitForest's exact x/gen values for the real
-           GA204Z/8LKBV9 loop fixture catch a desynchronized (only one of
-           the two) issue #143 fix, and reflect issue #144's anchor-side
-           effGenOf correction for 8P17E3 -- not just the corrected gen
-           values alone. 5A6DFT/8DKELJ's own x values reflect issue #145
-           (male-left/female-right default, D2/D3): this pair is the
-           forest's only D1-qualifying (mate-count-1, unambiguous-M/F, no
-           D5 child) unit, so 5A6DFT (sire, sex 'M') and 8DKELJ (dam, sex
-           'F') swap places -- while every other value below (all inside
-           8LKBV9's own 3-mate subtree, D1-excluded by mate-count) is
-           unaffected by #145, confirming the swap is scoped exactly to the
-           one qualifying pair and does not cascade downstream. Every value
-           below additionally reflects Track 3's minSep guarantee (this
-           session): every one of the 5 same-gen gaps in this fixture
-           (gen 0: 1 pair; gen 1: 3 pairs; gen 2: 2 pairs) is now exactly
-           minSep = 1 apart, re-verified live against the fixed
-           implementation.", {
+           GA204Z/8LKBV9 loop fixture reflect Track 4's gen-first D2
+           anchor selection -- 8LKBV9 now anchors his 2 founder mates
+           (gen alone beats founder-preference's old outcome for the same
+           winner) but loses the anchor role for 8P17E3's unit to 8LKBV9
+           himself (gen 1 beats her gen 0), and issue #143's non-anchor
+           override still renders her at her unit's gen. 5A6DFT/8DKELJ's
+           own x values reflect issue #145 (male-left/female-right
+           default, D2/D3), unaffected by Track 4. Every value below
+           additionally reflects Track 3's minSep guarantee.", {
   ped <- data.frame(
     id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
            "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
@@ -222,19 +214,21 @@ test_that(".positionMatingUnitForest's exact x/gen values for the real
     expect_equal(pos$gen[pos$id == id], gen)
   }
 
-  expectPos("5A6DFT", -0.50, 0L)  # issue #145: swapped from 0.00 (male left)
-  expectPos("8DKELJ", 0.50, 0L)   # Track 3: x CHANGED from 0.00 (gap to
-                                   # 5A6DFT was 0.50, now the enforced 1.00)
-  expectPos("G8EBU9", 0.00, 1L)  # issue #143
-  expectPos("8P17E3", 2.00, 1L)  # gen: issue #144 (she
-                                 # anchors unit3, unitGen=1); x unaffected
-  expectPos("8LKBV9", 1.00, 1L)  # Track 3: x CHANGED from 0.50 (gap to
-                                   # G8EBU9 was 0.50, now 1.00)
-  expectPos("FJIB3R", 1.00, 2L)
-  expectPos("9VGCCV", 3.00, 2L)  # Track 3: x CHANGED from 2.00 (gap to
-                                   # FJIB3R was 1.00 already at minSep, but
-                                   # dupAt4's own push, below, cascades)
-  expectPos("GA204Z", 1.00, 3L)
+  expectPos("5A6DFT", -0.50, 0L)  # issue #145: male left; unaffected by Track 4
+  expectPos("8DKELJ", 0.50, 0L)   # unaffected by Track 4
+  expectPos("G8EBU9", -0.75, 1L)  # issue #143; x CHANGED (8LKBV9 now
+                                    # anchors this unit's OWN subtree merge
+                                    # differently, since he also anchors
+                                    # unit3 now)
+  expectPos("8P17E3", 1.50, 1L)  # gen: issue #143's non-anchor override
+                                  # (she no longer anchors unit3, 8LKBV9
+                                  # does -- Track 4); x CHANGED
+  expectPos("8LKBV9", 0.50, 1L)  # x CHANGED: his own gen (1), unrelocated
+                                  # -- he now anchors BOTH founder units
+  expectPos("FJIB3R", 0.25, 2L)  # x CHANGED; still anchors unit4 (gen 2
+                                  # beats 8LKBV9's gen 1), unaffected
+  expectPos("9VGCCV", 2.25, 2L)  # x CHANGED
+  expectPos("GA204Z", 0.25, 3L)  # x CHANGED
 
   unit1 <- forest$matingUnits$id[forest$matingUnits$sire == "5A6DFT"]
   unit2 <- forest$matingUnits$id[forest$matingUnits$dam == "G8EBU9"]
@@ -245,18 +239,19 @@ test_that(".positionMatingUnitForest's exact x/gen values for the real
   ## directly, so each of these 4 values is purely a downstream
   ## consequence of the individual-node changes above, not a separate
   ## sweep input.
-  expectPos(unit1, 0.00, 0L)  # CHANGED from -0.25: midpoint(-0.50, 0.50)
-  expectPos(unit2, 0.50, 1L)  # CHANGED from 0.25: midpoint(0.00, 1.00)
-  expectPos(unit3, 2.50, 1L)  # CHANGED from 2.20: midpoint(2.00, dupAt3=3.00)
-  expectPos(unit4, 1.50, 2L)  # CHANGED from 1.20: midpoint(1.00, dupAt4=2.00)
+  expectPos(unit1, 0.00, 0L)   # midpoint(-0.50, 0.50), unaffected
+  expectPos(unit2, -0.125, 1L)  # CHANGED: midpoint(-0.75, 0.50)
+  expectPos(unit3, 1.00, 1L)   # CHANGED: midpoint(0.50, 1.50) -- 8LKBV9's
+                                 # own position now, not a duplicate's
+  expectPos(unit4, 0.75, 2L)   # CHANGED: midpoint(0.25, dupAt4=1.25)
 
-  dupAt3 <- forest$duplicates$id[forest$duplicates$matingUnitId == unit3]
   dupAt4 <- forest$duplicates$id[forest$duplicates$matingUnitId == unit4]
-  ## Both duplicates' x are pushed by Track 3's own sweep (gen-1 and gen-2
-  ## rows each had a sub-minSep gap against their left neighbor: 8P17E3 to
-  ## dupAt3 was 0.40; FJIB3R to dupAt4 was 0.40).
-  expectPos(dupAt3, 3.00, 1L)  # x CHANGED from 2.40; gen unaffected
-  expectPos(dupAt4, 2.00, 2L)  # x CHANGED from 1.40; gen unaffected
+  ## unit3 no longer has a duplicate (8LKBV9 anchors it directly now,
+  ## §7 step 4's "duplicate-node count re-measurement" -- this fixture's
+  ## own contribution to that drop).
+  expect_equal(forest$duplicates$matingUnitId[
+    forest$duplicates$realId == "8LKBV9"], unit4)
+  expectPos(dupAt4, 1.25, 2L)  # x CHANGED; gen unaffected (unit4's own gen)
 })
 
 ## ---- Track 3: minimum mate-spacing guarantee (kinship2 fidelity
@@ -539,7 +534,10 @@ test_that(".positionMatingUnitForest positions the full real
 
   expect_equal(nrow(pos), nrow(ped) + nrow(forest$duplicates) +
                  nrow(forest$matingUnits))
-  expect_equal(nrow(pos), 740L)  # 375 + 128 + 237, Slice 1's own §7 figures
+  ## CHANGED from 740L (375 + 128 + 237) -- Track 4's gen-first D2
+  ## redistribution drops the duplicate count to 102 (see
+  ## test_buildMatingUnitForest.R's own updated figure): 375 + 102 + 237.
+  expect_equal(nrow(pos), 714L)
   expect_false(any(is.na(pos$x)))
   expect_false(any(is.na(pos$gen)))
   .expectNoOverlap(pos)
@@ -548,16 +546,14 @@ test_that(".positionMatingUnitForest positions the full real
 ## ---- gen semantics: every node's gen matches its source-of-truth ------
 
 test_that(".positionMatingUnitForest's gen column matches each occurrence's
-           CORRECTED source of truth (issues #143/#144): a FREE-PASS or
-           DUPLICATE occurrence's own MATING UNIT's gen (issue #143 --
-           previously every occurrence used its own ped$gen uniformly,
-           which mis-positioned any non-anchor occurrence whose personal
-           gen differed from its mating unit's gen), an ANCHOR's own
-           EFFECTIVE gen -- max(own ped$gen, every unit gen it anchors)
-           (issue #144 -- previously an anchor's raw ped$gen was used
-           unconditionally, which mis-positioned an anchor whose personal
-           gen was SHALLOWER than the unit(s) it anchors), and a mating
-           unit's already-verified max(parent gens) from Slice 1", {
+           CORRECTED source of truth (issue #143, plus Track 4's own
+           structural invariant in place of issue #144's now-deleted
+           effGenOf): a FREE-PASS or DUPLICATE occurrence's own MATING
+           UNIT's gen (issue #143 -- unaffected by Track 4), an ANCHOR's
+           own RAW gen -- always equal to its unit's gen by construction
+           now (Track 4 §2.3/§2.4, no relocation mechanism needed or
+           present any longer), and a mating unit's already-verified
+           max(parent gens) from Slice 1", {
   ped <- data.frame(
     id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
            "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
@@ -571,39 +567,43 @@ test_that(".positionMatingUnitForest's gen column matches each occurrence's
   pos <- .positionMatingUnitForest(ped, forest)
 
   ## Non-parent leaves keep their own ped$gen (never an anchor, never a
-  ## unit parent). Anchors' EFFECTIVE gen is max(own ped$gen, the gen of
-  ## every unit they anchor) (issue #144) -- hand-verified against
-  ## forest$matingUnits$anchor/gen this session: 5A6DFT/8P17E3/8LKBV9/
-  ## FJIB3R each anchor exactly the one unit they belong to;
-  ## 9VGCCV/GA204Z are non-parent children, never sire/dam of any unit.
+  ## unit parent). Anchors display their own RAW gen, unconditionally --
+  ## Track 4 makes this always equal the unit's gen by construction, so no
+  ## separate "effective gen" concept exists any longer. Re-verified
+  ## against forest$matingUnits$anchor/gen this session: 8LKBV9 now anchors
+  ## BOTH founder units (G8EBU9's and 8P17E3's), FJIB3R still anchors her
+  ## own unit; 9VGCCV/GA204Z are non-parent children, never sire/dam of any
+  ## unit.
   expect_equal(pos$gen[pos$id == "5A6DFT"], 0L)
-  ## 8P17E3 anchors unit3 (dam="8P17E3"), unitGen=max(8LKBV9=1,8P17E3=0)=1
-  ## -- her own raw gen (0) is SHALLOWER, so her effective gen is 1L.
-  ## CHANGED from 0L, issue #144.
-  expect_equal(pos$gen[pos$id == "8P17E3"], 1L)
   expect_equal(pos$gen[pos$id == "8LKBV9"], 1L)
   expect_equal(pos$gen[pos$id == "FJIB3R"], 2L)
   expect_equal(pos$gen[pos$id == "9VGCCV"], 2L)
   expect_equal(pos$gen[pos$id == "GA204Z"], 3L)
 
   ## 8DKELJ is free-pass, but her one unit's gen (max(5A6DFT=0, 8DKELJ=0))
-  ## already equals her own gen -- no VISIBLE change, still 0.
+  ## already equals her own gen -- no visible change, still 0.
   expect_equal(pos$gen[pos$id == "8DKELJ"], 0L)
 
   ## G8EBU9 is free-pass and mismatched: her own gen is 0, but her one
-  ## unit's gen (max(8LKBV9=1, G8EBU9=0)) is 1 -- CHANGES from the pre-fix
-  ## 0.
+  ## unit's gen (max(8LKBV9=1, G8EBU9=0)) is 1 -- issue #143's non-anchor
+  ## override, unaffected by Track 4.
   expect_equal(pos$gen[pos$id == "G8EBU9"], 1L)
 
-  ## Duplicates: each duplicate's gen is now its OWN mating unit's gen, not
-  ## 8LKBV9's personal gen (1) uniformly -- one coincidentally still 1
-  ## (its unit's gen matches 8LKBV9's own gen), the other CHANGES to 2.
-  unit3 <- forest$matingUnits$id[forest$matingUnits$dam == "8P17E3"]
+  ## 8P17E3 CHANGED from anchoring unit3 (pre-Track-4) to being its
+  ## free-pass non-anchor occurrence: 8LKBV9 (gen 1) now beats her (gen 0)
+  ## on the gen-first tie-break. She keeps the SAME displayed gen (1,
+  ## issue #143's non-anchor override, since her unit's gen is 1) via a
+  ## different, now-invariant-respecting mechanism -- no longer via
+  ## issue #144's deleted effGenOf relocation, since she is no longer an
+  ## anchor at all.
+  expect_equal(pos$gen[pos$id == "8P17E3"], 1L)
+
+  ## Only 1 duplicate exists now (8LKBV9 at unit4, FJIB3R's unit) --
+  ## unit3 no longer needs one, since 8LKBV9 anchors it directly.
   unit4 <- forest$matingUnits$id[forest$matingUnits$dam == "FJIB3R"]
-  dupAt3 <- forest$duplicates$id[forest$duplicates$matingUnitId == unit3]
   dupAt4 <- forest$duplicates$id[forest$duplicates$matingUnitId == unit4]
-  expect_equal(pos$gen[pos$id == dupAt3], 1L)
-  expect_equal(pos$gen[pos$id == dupAt4], 2L)  # CHANGED from 1L
+  expect_equal(nrow(forest$duplicates), 1L)
+  expect_equal(pos$gen[pos$id == dupAt4], 2L)  # unit4's own gen
 
   unitRows <- pos[pos$id %in% forest$matingUnits$id, ]
   expect_equal(
@@ -795,22 +795,28 @@ test_that(".positionMatingUnitForest resolves every NON-ANCHOR and every
   expect_equal(sum(sideRows$mismatched & sideRows$isAnchor), 0L)
 })
 
-## ---- issue #144 §6 dragon: the one residual the fix does not close -----
-## (an anchor anchoring 2+ mating units at genuinely DIFFERENT unitGen
-## values, or a single-unit anchor with a D5 direct child shallower than
-## its own relocated effGen). Neither shape occurs in either bundled real
-## fixture (docs/planning/issue144-anchor-row-mismatch-fix-plan.md §6) --
-## these are new, purpose-built synthetic fixtures asserting deterministic,
-## non-crashing, non-NA behavior, not a fix for the residual itself (out of
-## scope by design, plan §8). Both fixtures independently constructed and
-## verified this session against a patched 3-edit prototype before being
-## committed here.
+## ---- Track 4 (Candidate A, gen-aware D2 anchor selection): the issue
+## #144 §6 dragon, now structurally closed --------------------------------
+## Both fixtures below are the SAME 2 synthetic pedigrees issue #144's own
+## session built to demonstrate the residual Candidate B (effGenOf)
+## accepted rather than closed (an anchor anchoring 2+ mating units at
+## genuinely different unitGen, or a single-unit anchor with a D5 direct
+## child shallower than its own relocated effGen). Under Candidate A's
+## gen-first D2 tie-break (docs/planning/pedigree-diagram-track4-gen-aware-
+## anchor-plan.md §2.1-2.3), NEITHER shape can occur any longer: an
+## individual can only ever anchor units where their own gen is >= the
+## other parent's, so unitGen == genOf[[anchor]] unconditionally (§2.4) --
+## instead of relocating an anchor's own displayed row (effGenOf), the
+## anchor-selection ITSELF now changes for whichever unit would otherwise
+## have mismatched. Verified empirically against the live implementation
+## before being committed here (matching Track 3's own established
+## practice, not hand-derivation).
 
-test_that(".positionMatingUnitForest handles an anchor that anchors 2
-           mating units at differing unitGen without crashing or producing
-           NA -- effGenOf's max() rule resolves the DEEPER unit but
-           RELOCATES (does not eliminate) the mismatch to the SHALLOWER
-           one, net anchor-mismatch count unchanged (plan §6(a))", {
+test_that(".positionMatingUnitForest resolves an anchor that WOULD HAVE
+           anchored 2 mating units at differing unitGen under the old
+           founder/mate-count tie-break -- gen-first D2 selection instead
+           reassigns the deeper unit's anchor to its own deeper-gen parent,
+           so every unit satisfies gen == genOf[[anchor]] (Track 4 §2.4)", {
   ped <- data.frame(
     id   = c("GF1", "GF2", "HUB",
              "SEEDP1", "MATE1", "MATE1SEED", "MATE1CHILD",
@@ -836,37 +842,45 @@ test_that(".positionMatingUnitForest handles an anchor that anchors 2
   )
   forest <- .buildMatingUnitForest(ped)
 
-  ## Confirm this fixture's own premise before testing the residual: HUB
-  ## anchors BOTH units (via 2 pre-seeded elimination/preference wins), at
-  ## genuinely different unitGen (1 and 5).
   unitShallow <- forest$matingUnits$id[forest$matingUnits$sire == "HUB" &
                                           forest$matingUnits$dam == "MATE1"]
   unitDeep <- forest$matingUnits$id[forest$matingUnits$sire == "HUB" &
                                        forest$matingUnits$dam == "MATE2"]
+  ## HUB (gen 1) beats MATE1 (gen 0) on the shallow unit -- unaffected,
+  ## same winner as before. On the deep unit, MATE2 (gen 5) now beats HUB
+  ## (gen 1) -- HUB anchors only ONE of the two units, not both, closing
+  ## the differing-unitGen-per-anchor shape as structurally impossible.
   expect_equal(forest$matingUnits$anchor[forest$matingUnits$id == unitShallow],
                "HUB")
   expect_equal(forest$matingUnits$anchor[forest$matingUnits$id == unitDeep],
-               "HUB")
+               "MATE2")
   expect_equal(forest$matingUnits$gen[forest$matingUnits$id == unitShallow], 1L)
   expect_equal(forest$matingUnits$gen[forest$matingUnits$id == unitDeep], 5L)
+
+  ## The invariant this decision establishes: every unit's gen equals its
+  ## own anchor's raw gen -- 0 exceptions, checked directly rather than
+  ## via the 2 units picked out above alone.
+  genOf <- stats::setNames(ped$gen, ped$id)
+  expect_equal(forest$matingUnits$gen,
+               unname(genOf[forest$matingUnits$anchor]))
 
   pos <- .positionMatingUnitForest(ped, forest)
   expect_false(any(is.na(pos$x)))
   expect_false(any(is.na(pos$gen)))
   .expectNoOverlap(pos)
 
-  ## HUB's effective gen is max(own gen=1, unitShallow=1, unitDeep=5) = 5
-  ## -- matches the deeper unit (resolved), mismatches the shallower one
-  ## (relocated, not eliminated).
-  expect_equal(pos$gen[pos$id == "HUB"], 5L)
+  ## HUB's displayed gen is simply its own raw gen (1) -- no relocation
+  ## mechanism exists any longer (effGenOf is gone), and none is needed:
+  ## HUB only anchors the one unit whose gen already matches its own.
+  expect_equal(pos$gen[pos$id == "HUB"], 1L)
 })
 
-test_that(".positionMatingUnitForest handles a single-unit anchor whose
-           relocated effGen is DEEPER than a D5 direct child's own gen
-           without crashing or producing NA -- the child renders 'above'
-           (shallower than) its own now-relocated parent, a valid but
-           visually-inverted layout the fix does not attempt to resolve
-           (plan §6, widened residual trigger)", {
+test_that(".positionMatingUnitForest resolves a single-unit anchor whose
+           old founder/mate-count tie-break would have relocated its
+           displayed gen deeper than a D5 direct child's own gen --
+           gen-first D2 selection instead reassigns the unit's anchor to
+           the deeper-gen parent, so the shallower original anchor is
+           displayed at its own unrelocated gen (Track 4 §2.4)", {
   ped <- data.frame(
     id   = c("ANCHOR", "MATE", "MATECHILD", "D5CHILD"),
     sire = c(NA, NA, "ANCHOR", "ANCHOR"),
@@ -876,7 +890,11 @@ test_that(".positionMatingUnitForest handles a single-unit anchor whose
     stringsAsFactors = FALSE
   )
   forest <- .buildMatingUnitForest(ped)
-  expect_equal(forest$matingUnits$anchor, "ANCHOR")
+  ## MATE (gen 4) beats ANCHOR (gen 1) under the gen-first rule -- the
+  ## unit's anchor is now MATE, not ANCHOR (a name from the old fixture's
+  ## own pre-Track-4 vintage, kept for continuity with the fixture's own
+  ## history rather than renamed).
+  expect_equal(forest$matingUnits$anchor, "MATE")
   expect_equal(forest$matingUnits$gen, 4L)
 
   pos <- .positionMatingUnitForest(ped, forest)
@@ -884,10 +902,29 @@ test_that(".positionMatingUnitForest handles a single-unit anchor whose
   expect_false(any(is.na(pos$gen)))
   .expectNoOverlap(pos)
 
-  ## ANCHOR's effective gen is max(own gen=1, unit gen=4) = 4 -- matches
-  ## its unit (resolved). D5CHILD keeps its own gen (2), unaffected by the
-  ## fix (D5 direct children are never in effGenOf's domain) -- shallower
-  ## than its now-relocated parent.
-  expect_equal(pos$gen[pos$id == "ANCHOR"], 4L)
+  ## ANCHOR is no longer an anchor at all -- its displayed gen is simply
+  ## its own raw gen (1), unrelocated. D5CHILD keeps its own gen (2),
+  ## unaffected either way (D5 direct children were never in effGenOf's
+  ## domain, and still aren't in genOf's).
+  expect_equal(pos$gen[pos$id == "ANCHOR"], 1L)
   expect_equal(pos$gen[pos$id == "D5CHILD"], 2L)
+})
+
+test_that(".positionMatingUnitForest's every mating unit satisfies the
+           Track 4 invariant -- gen == genOf[[anchor]], 0 exceptions -- on
+           the real 375-individual bundled fixture (docs/planning/
+           pedigree-diagram-track4-gen-aware-anchor-plan.md §2.4/§7 step 1:
+           the direct, general-property test this decision's own
+           correctness claim rests on, not fixture-specific alone)", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  genOf <- stats::setNames(ped$gen, as.character(ped$id))
+
+  expect_false(any(is.na(forest$matingUnits$anchor)))
+  expect_equal(forest$matingUnits$gen,
+               unname(genOf[forest$matingUnits$anchor]))
 })

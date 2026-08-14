@@ -346,28 +346,34 @@ test_that(".addRectilinearWaypoints adds zero projection nodes for a
   expect_true(any(result$edges$from == "SIRE" & result$edges$to == unitId))
 })
 
-## ---- D2: anchor parent off-row -- RESOLVED by issue #144's fix ---------
+## ---- D2: anchor parent off-row -- RESOLVED by issue #144's fix, then
+## by Track 4's structural invariant -----------------------------------
 ## Before issue #144's fix, this was the anchor-side counterpart to the
 ## "D2: non-anchor parent off-row" test above: SIRE (the anchor of unit1)
 ## rendered at his own raw gen (1) instead of his mating unit's gen (2),
 ## triggering an anchor-side dogleg. Issue #144's fix (docs/planning/
-## issue144-anchor-row-mismatch-fix-plan.md, Candidate B: effGenOf) moves
-## SIRE's displayed row to max(his own gen, every unit he anchors) = his
-## mating unit's own gen, so he is now ON-ROW for this exact fixture -- the
-## dogleg no longer fires. Confirmed empirically this session (0 anchor
-## mismatches on the real fixture, and directly on this fixture: SIRE's
-## post-fix gen is 2, matching unit1's gen). Full rewrite, not a value
-## tweak -- the original fixture's entire premise (this unit exhibits an
-## anchor mismatch) is obsolete under this fix (plan §4.3/§6). This test
-## now documents the "already on-row" no-op case for BOTH sides of unit1
-## at once (SIRE, the anchor; DAM's duplicate, already on-row since #143),
-## mirroring the "D2: both parents at the same gen" test above.
+## issue144-anchor-row-mismatch-fix-plan.md, Candidate B: effGenOf) moved
+## SIRE's displayed row to match his unit instead, resolving that
+## particular case without eliminating the defect class.
+##
+## Track 4 (Candidate A, gen-aware D2, this session): CHANGED again, and
+## more fundamentally this time -- gen-first D2 selection now picks DAM
+## (gen 2), not SIRE (gen 1), as unit1's anchor (she beats him on gen
+## alone, overriding the old founder-tie/mate-count tie-break that used to
+## favor SIRE). DAM's own raw gen already equals unit1's gen by
+## construction (Track 4 §2.3's structural invariant), so she needs no
+## relocation and never did; she also anchors her OTHER unit (with
+## OTHERMATE) the same way, so she is never duplicated at all -- this
+## fixture now has 0 duplicates, not 1. SIRE becomes the free-pass
+## non-anchor occurrence at unit1, still displayed at unit1's gen (2) via
+## issue #143's unchanged non-anchor override, unaffected by Track 4. Full
+## rewrite, not a value tweak -- both fixtures' anchor identity changes.
 
 test_that(".addRectilinearWaypoints adds zero projection nodes for a
-           mating unit whose anchor parent USED TO be off-row before issue
-           #144's fix, and is now on-row (matching its mating unit's own
-           gen) -- leaves both the anchor's own direct edge and the
-           non-anchor's duplicate-node edge unchanged", {
+           mating unit whose anchor (Track 4: gen-first D2 selects DAM,
+           not SIRE) already has genOf[[anchor]] == unit gen by
+           construction -- leaves both the anchor's own direct edge and
+           the non-anchor's free-pass edge unchanged", {
   ped <- data.frame(
     id = c("SGF", "SGM", "SIRE", "DGP", "DAM", "OTHERMATE", "CHILD",
            "OTHERCHILD"),
@@ -383,21 +389,19 @@ test_that(".addRectilinearWaypoints adds zero projection nodes for a
                                     forest$matingUnits$dam == "DAM"]
   expect_equal(length(unit1), 1L)
   expect_equal(forest$matingUnits$anchor[forest$matingUnits$id == unit1],
-               "SIRE")  # fewer total mating units (1) than DAM (2)
+               "DAM")  # deeper gen (2) beats SIRE's (1)
   expect_equal(forest$matingUnits$gen[forest$matingUnits$id == unit1], 2L)
-  ## DAM anchors her OTHER unit (with OTHERMATE, a founder), so her
-  ## occurrence at unit1 (non-anchor) is a duplicate, not her real node.
-  dupRow <- forest$duplicates[forest$duplicates$realId == "DAM" &
-                                 forest$duplicates$matingUnitId == unit1, ]
-  expect_equal(nrow(dupRow), 1L)
-  nonAnchorNodeId <- dupRow$id
+  ## DAM anchors BOTH her units now (this one and OTHERMATE's) -- neither
+  ## ever needs a duplicate, since her own raw gen already equals both
+  ## units' gens by construction.
+  expect_equal(nrow(forest$duplicates), 0L)
 
-  ## SIRE (anchor) now on-row: effGenOf(SIRE) = max(own gen=1, unit1's
-  ## gen=2) = 2, matching unit1's own gen. CHANGED from 1L pre-#144.
+  ## DAM (anchor) is on-row by construction -- no relocation mechanism
+  ## exists any longer, and none is needed.
+  expect_equal(inputs$pos$gen[inputs$pos$id == "DAM"], 2L)
+  ## SIRE is the free-pass non-anchor occurrence, on-row via issue #143's
+  ## still-unchanged override (his own raw gen is 1).
   expect_equal(inputs$pos$gen[inputs$pos$id == "SIRE"], 2L)
-  ## DAM's duplicate is already on-row (gen 2 == unit1's gen 2), unaffected
-  ## by #144 -- unchanged from before.
-  expect_equal(inputs$pos$gen[inputs$pos$id == nonAnchorNodeId], 2L)
 
   result <- .addRectilinearWaypoints(inputs$nodes, inputs$edges,
                                       forest, inputs$pos)
@@ -408,11 +412,10 @@ test_that(".addRectilinearWaypoints adds zero projection nodes for a
                                     result$nodes$id)]
   expect_equal(length(projIds), 0L)
 
-  ## Both original direct/duplicate edges into unit1 are untouched -- no
+  ## Both original direct/free-pass edges into unit1 are untouched -- no
   ## dogleg needed on either side.
+  expect_true(any(result$edges$from == "DAM" & result$edges$to == unit1))
   expect_true(any(result$edges$from == "SIRE" & result$edges$to == unit1))
-  expect_true(any(result$edges$from == nonAnchorNodeId &
-                     result$edges$to == unit1))
 })
 
 ## ---- real 375-individual bundled fixture: node-count re-measurement ----
@@ -422,23 +425,27 @@ test_that(".addRectilinearWaypoints adds zero projection nodes for a
 ## 1,375 estimate.)
 
 test_that(".addRectilinearWaypoints applied to the full real
-           375-individual bundled fixture produces the node count issue
-           #144's fix predicts (740 direct-style nodes + 488 D1 waypoints +
-           0 D2 projections = 1,228 -- down from 1,279/1,375, since #143
-           resolved all 96 non-anchor D2 mismatches and #144 now resolves
-           the remaining 51 anchor-side ones), or documents the actual
-           count if it drifts", {
+           375-individual bundled fixture produces the node count Track 4
+           predicts (714 direct-style nodes + 488 D1 waypoints +
+           0 D2 projections = 1,202 -- CHANGED from 1,228/1,279/1,375:
+           Track 4's gen-first D2 selection drops the direct-style node
+           count from 740 to 714 [fewer duplicates, test_buildMatingUnitForest.R's
+           own updated figure], while D2 projections stay at 0, now as a
+           structural invariant rather than an empirical outcome, since
+           #143 resolved all 96 non-anchor D2 mismatches and Track 4 now
+           makes anchor-side mismatches impossible by construction), or
+           documents the actual count if it drifts", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
     stringsAsFactors = FALSE
   )
   inputs <- .buildLayoutAndForest(ped)
-  expect_equal(nrow(inputs$nodes), 740L)  # direct-style baseline, S459/S461
+  expect_equal(nrow(inputs$nodes), 714L)  # CHANGED from 740L, Track 4
 
   result <- .addRectilinearWaypoints(inputs$nodes, inputs$edges,
                                       inputs$forest, inputs$pos)
-  expect_equal(nrow(result$nodes), 1228L)  # CHANGED from 1279L, issue #144
+  expect_equal(nrow(result$nodes), 1202L)  # CHANGED from 1228L, Track 4
 
   ## No NA coordinates or duplicate (id, waypoint) collisions among the
   ## new waypoint nodes.

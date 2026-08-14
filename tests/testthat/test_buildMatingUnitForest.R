@@ -220,10 +220,22 @@ test_that(".buildMatingUnitForest breaks a full founder/mate-count tie by
 ## the test suite (S453 was audit-only); this 8-node real-data extraction
 ## is used instead, matching this project's Learning 442 "check bundled
 ## data first" convention.
+##
+## Track 4 (Candidate A, gen-aware D2): CHANGED from "anchors exactly 1 of
+## 3, duplicated at the other 2" -- 8LKBV9 (gen 1) now beats both founder
+## mates G8EBU9/8P17E3 (gen 0) on gen alone (unaffected in outcome, but no
+## longer via founder-preference specifically), AND his own daughter
+## FJIB3R (gen 2) now unambiguously beats HIM on gen (unaffected in
+## outcome -- FJIB3R already won that unit under the old mate-count
+## tie-break too). Net anchor count for 8LKBV9 is unchanged in mechanism
+## but the historical "exactly 1" framing was never a Track-4-relevant
+## invariant -- re-verified empirically against the live implementation.
 
 test_that(".buildMatingUnitForest resolves the real GA204Z/8LKBV9 loop:
-           8LKBV9 anchors exactly 1 of his 3 mating units and is
-           duplicated at exactly the other 2 (§1.4)", {
+           8LKBV9 anchors exactly 2 of his 3 mating units (his 2 founder
+           mates, on gen alone) and is duplicated at exactly the other 1
+           (his own daughter FJIB3R's unit, which she anchors) -- Track 4
+           gen-aware D2 selection", {
   ped <- data.frame(
     id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
            "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
@@ -242,10 +254,10 @@ test_that(".buildMatingUnitForest resolves the real GA204Z/8LKBV9 loop:
     result$matingUnits$sire == "8LKBV9" | result$matingUnits$dam == "8LKBV9",
   ]
   expect_equal(nrow(kUnits), 3L)
-  expect_equal(sum(kUnits$anchor == "8LKBV9"), 1L)
+  expect_equal(sum(kUnits$anchor == "8LKBV9"), 2L)
 
   kDuplicates <- result$duplicates[result$duplicates$realId == "8LKBV9", ]
-  expect_equal(nrow(kDuplicates), 2L)
+  expect_equal(nrow(kDuplicates), 1L)
   expect_setequal(kDuplicates$matingUnitId,
                    kUnits$id[kUnits$anchor != "8LKBV9"])
 
@@ -294,10 +306,10 @@ test_that(".buildMatingUnitForest resolves a half-sib-mating convergent
 ## ---- §9 dragon: anchor-collision fallback + full real-fixture check ---
 
 test_that(".buildMatingUnitForest resolves the real anchor-collision case
-           (both parents already anchoring a different, earlier unit) by
-           letting the individual anchor a second unit -- D3 step 2's own
-           'rare case' allowance -- rather than erroring, and the totals
-           match this session's corrected §7 figures", {
+           (an individual's own gen is deep enough to anchor more than one
+           mating unit) rather than erroring, and the totals match Track
+           4's own corrected §1.4/§7 figures (gen-aware D2 selection,
+           docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md)", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -306,7 +318,12 @@ test_that(".buildMatingUnitForest resolves the real anchor-collision case
   result <- .buildMatingUnitForest(ped)
 
   expect_equal(nrow(result$matingUnits), 237L)
-  expect_equal(nrow(result$duplicates), 128L)
+  ## CHANGED from 128L -- Track 4's gen-first D2 tie-break redistributes
+  ## which parent anchors many units, reducing the duplicate-node count
+  ## (§1.4/§5: 128 -> 103 predicted, 102 confirmed against the live
+  ## full-pipeline implementation, off by 1 from the predicted figure for
+  ## the reason §1.4 itself already documents).
+  expect_equal(nrow(result$duplicates), 102L)
 
   ## Every mating unit has exactly one anchor, chosen from its own two
   ## parents (the invariant that always holds unconditionally by
@@ -317,12 +334,28 @@ test_that(".buildMatingUnitForest resolves the real anchor-collision case
   ))
   expect_false(any(is.na(result$matingUnits$anchor)))
 
-  ## The 2 individuals this session found DO anchor more than one unit
-  ## (the rare collision case), verified explicitly rather than assumed.
+  ## CHANGED from 2 individuals (KUENM8, IM1B5T) under Candidate B to 22
+  ## under Candidate A (§1.4/§5) -- every mating unit an anchor holds now
+  ## shares that anchor's own gen (Track 4 §2.3's structural invariant),
+  ## so an individual anchoring multiple units is no longer the rare
+  ## "collision" case Candidate B needed a fallback for; it is the
+  ## ordinary outcome whenever an individual's own gen is the deepest of
+  ## more than one of their mating-unit pairings.
   anchorCounts <- table(result$matingUnits$anchor)
   multiAnchor <- names(anchorCounts[anchorCounts > 1])
-  expect_setequal(multiAnchor, c("KUENM8", "IM1B5T"))
-  expect_equal(as.integer(anchorCounts[["KUENM8"]]), 2L)
+  expect_setequal(multiAnchor, c(
+    "0Q077X", "45YQV5", "62PLX3", "665C2Y", "8DKELJ", "8LKBV9", "9JC6RF",
+    "9M5YFR", "GA204Z", "HV7LZ3", "IM1B5T", "KUENM8", "LVK7AI", "P49ZD1",
+    "PUEUBL", "RR1711", "RYP77M", "S0ZHJP", "SPHGC9", "VTZFWZ", "WCPXHD",
+    "YPHFHF"
+  ))
+  expect_equal(length(multiAnchor), 22L)
+  ## WCPXHD anchors the most (5, the max any individual holds); a few
+  ## others anchor 3; the remainder of the 22 anchor 2.
+  expect_equal(as.integer(anchorCounts[["WCPXHD"]]), 5L)
+  expect_equal(as.integer(anchorCounts[["HV7LZ3"]]), 3L)
+  expect_equal(as.integer(anchorCounts[["KUENM8"]]), 3L)
+  expect_equal(as.integer(anchorCounts[["LVK7AI"]]), 3L)
   expect_equal(as.integer(anchorCounts[["IM1B5T"]]), 2L)
 })
 
@@ -379,7 +412,11 @@ test_that(".buildMatingUnitForest's dangling-reference handling does not
   )
   result <- .buildMatingUnitForest(ped)
   expect_equal(nrow(result$matingUnits), 237L)
-  expect_equal(nrow(result$duplicates), 128L)
+  ## CHANGED from 128L -- Track 4's gen-first D2 redistribution (see the
+  ## anchor-collision test above); this test's own point (dangling
+  ## references don't change anchor assignment for a fully self-contained
+  ## pedigree) is unaffected by which specific figure is current.
+  expect_equal(nrow(result$duplicates), 102L)
 })
 
 test_that(".buildMatingUnitForest does not select a dangling parent as

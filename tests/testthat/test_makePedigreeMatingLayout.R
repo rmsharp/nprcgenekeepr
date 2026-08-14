@@ -84,7 +84,7 @@ test_that(
   forest <- .buildMatingUnitForest(loopPed)
   result <- makePedigreeMatingLayout(loopPed)
   dupIds <- forest$duplicates$id[forest$duplicates$realId == "8LKBV9"]
-  expect_equal(length(dupIds), 2L)
+  expect_equal(length(dupIds), 1L)  # CHANGED from 2L, Track 4 (gen-first D2)
 
   realShape <- result$nodes$shape[result$nodes$id == "8LKBV9"]
   dupShapes <- result$nodes$shape[result$nodes$id %in% dupIds]
@@ -394,7 +394,8 @@ test_that(
 
 test_that(
   "makePedigreeMatingLayout on the full real 375-individual bundled
-   fixture produces exactly the 740 nodes established by Slices 1/2, with
+   fixture produces exactly the 714 nodes established by Track 4 (CHANGED
+   from 740L -- gen-first D2 selection drops the duplicate count), with
    no NA x/y and the expected edge composition", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
@@ -404,7 +405,7 @@ test_that(
   forest <- .buildMatingUnitForest(ped)
   result <- makePedigreeMatingLayout(ped)
 
-  expect_equal(nrow(result$nodes), 740L)
+  expect_equal(nrow(result$nodes), 714L)
   expect_false(any(is.na(result$nodes$x)))
   expect_false(any(is.na(result$nodes$y)))
 
@@ -487,19 +488,19 @@ test_that(
 
 test_that(
   "makePedigreeMatingLayout on the full real 375-individual bundled
-   fixture produces exactly 1,228 nodes under edgeStyle = \"rectilinear\"
-   (issue #143's fix resolved all 96 non-anchor D2 mismatches, dropping
-   the D2 projection count from 147 to 51; issue #144's fix now resolves
-   those remaining 51 anchor-side ones too, dropping the projection count
-   to 0 -- CHANGED from 1279L; re-confirmed through the actual public
-   entry point, not just Slice 1's internal helper)", {
+   fixture produces exactly 1,202 nodes under edgeStyle = \"rectilinear\"
+   (CHANGED from 1,228/1,279 -- Track 4's gen-first D2 selection drops the
+   714 direct-style node count (was 740) while D2 projections stay at 0,
+   now a structural invariant rather than an empirical outcome; re-confirmed
+   through the actual public entry point, not just Slice 1's internal
+   helper)", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
     stringsAsFactors = FALSE
   )
   result <- makePedigreeMatingLayout(ped, edgeStyle = "rectilinear")
-  expect_equal(nrow(result$nodes), 1228L)
+  expect_equal(nrow(result$nodes), 1202L)
   expect_false(any(is.na(result$nodes$x)))
   expect_false(any(is.na(result$nodes$y)))
 })
@@ -783,7 +784,7 @@ test_that(
   forest <- .buildMatingUnitForest(loopPed)
   result <- makePedigreeMatingLayout(loopPed)
   dupIds <- forest$duplicates$id[forest$duplicates$realId == "8LKBV9"]
-  expect_equal(length(dupIds), 2L)
+  expect_equal(length(dupIds), 1L)  # CHANGED from 2L, Track 4 (gen-first D2)
 
   realLabel <- result$nodes$label[result$nodes$id == "8LKBV9"]
   dupLabels <- result$nodes$label[result$nodes$id %in% dupIds]
@@ -1095,34 +1096,31 @@ test_that(
 ## docs/planning/kinship2-supplement-full-reproduction-plan.md §5; S549
 ## Finding #2's own deferred follow-up, BACKLOG.md Housekeeping): finish
 ## edgeStyle = "rectilinear" consanguineous-marker propagation onto D2
-## dogleg-rerouted projection edges. When a marked mate edge's own parent
-## sits at a different generation than its mating unit (because that
-## parent also anchors a 2nd, differently-gen'd unit elsewhere --
-## .addRectilinearWaypoints()'s own D2 loop), the loop currently builds 2
-## new projection edges without looking up the original edge's color/width
-## first, so they fall through to the generic #2B7CE9/NA fallback instead
-## of carrying the consanguinity marker onto the reroute. Fixture: A and Y
-## are full siblings (children of P1 x P2, kinship = 0.5); A x Y is the
-## consanguineous union under test. A is ALSO the anchor of a 2nd, unrelated
-## union (A x X, X a founder with gen = 3) processed earlier, and Y is
-## ALSO the anchor of a 3rd, unrelated union (Y x W) processed earlier too
-## -- both already "used" by the time A x Y is processed, so the D2
-## anchor-preference tie-break (tied founder status, tied mate count) falls
-## to ascending id ("A" < "Y"), and A wins anchor of the consanguineous
-## union. A's own displayed gen is then the MAX across every unit A
-## anchors (3, from A x X) -- differing from the consanguineous union's own
-## gen (1, pmax(A's gen = 1, Y's gen = 1)) -- forcing exactly one dogleg,
-## on A's own side. Verified empirically this session (S563): direct-style
-## correctly marks both mate edges (#D55E00/4); rectilinear-style currently
-## drops the marker on A's doglegged side (falls to #2B7CE9/NA) while Y's
-## non-doglegged duplicate-node side keeps it correctly (pinned to the
-## union's own gen, issue #143/#144's own precedent) -- confirming the
-## propagation gap is real and selective (not a blanket regression).
+## dogleg-rerouted projection edges. Originally (S563), this fixture forced
+## exactly one dogleg via an anchor-side gen mismatch (A anchored 2 units
+## at differing gens under the old founder/mate-count D2 tie-break) and
+## caught a real marker-propagation gap on the doglegged side.
+##
+## Track 4 (gen-aware D2, this session): CHANGED -- under the gen-first
+## tie-break, X (gen 3) now beats A (gen 1) for the A x X union (X anchors
+## it instead), so A no longer anchors any unit whose gen differs from his
+## own; the consanguineous union A x Y (both gen 1) is the only unit A
+## anchors, and it already matches his own raw gen. Track 4's own
+## structural invariant (§2.3: genOf[[anchor]] == unitGen, unconditionally)
+## makes the anchor-side D2 dogleg permanently unreachable for ANY fixture,
+## not just this one -- .addRectilinearWaypoints()'s D2 loop is retained
+## (dead code under the current invariant, kept for defensive symmetry
+## with the non-anchor side, which never had this guarantee), but nothing
+## can trigger it anymore. This test now confirms exactly that: 0
+## projection nodes, and the marker propagates correctly on the
+## now-exclusively-direct paths on both sides.
 
 test_that(
   "makePedigreeMatingLayout (edgeStyle = \"rectilinear\") propagates a
-   consanguineous mating unit's color/width marker onto its D2
-   dogleg-rerouted projection edges, not just the un-doglegged side", {
+   consanguineous mating unit's color/width marker onto both direct
+   edges, with 0 D2 projection nodes -- Track 4's structural invariant
+   makes the anchor-side dogleg this fixture used to force (S563)
+   permanently unreachable", {
   ped <- data.frame(
     id   = c("P1", "P2", "A", "Y", "X", "W", "C1", "C2", "GC"),
     sire = c(NA, NA, "P1", "P1", NA, NA, "A", "Y", "A"),
@@ -1138,28 +1136,28 @@ test_that(
   expect_equal(length(consangUnit), 1L)
   expect_equal(forest$matingUnits$anchor[forest$matingUnits$id == consangUnit],
                "A")
+  ## A x X's anchor CHANGED from A to X (gen-first: X's gen 3 beats A's 1)
+  ## -- the mechanism that used to force A's own dogleg no longer applies.
+  otherUnit <- forest$matingUnits$id[
+    forest$matingUnits$sire == "A" & forest$matingUnits$dam == "X"
+  ]
+  expect_equal(forest$matingUnits$anchor[forest$matingUnits$id == otherUnit],
+               "X")
 
   result <- makePedigreeMatingLayout(ped, edgeStyle = "rectilinear")
   projNodeId <- sprintf("__proj_A_%s", consangUnit)
-  expect_true(projNodeId %in% result$nodes$id)
+  expect_false(projNodeId %in% result$nodes$id)
+  expect_false(any(grepl("^__proj_", result$nodes$id)))
 
-  ## A's side: the 2 new projection edges (A -> proj, proj -> union) must
-  ## carry the SAME marker the original A -> union edge had, not the
-  ## generic waypoint-edge fallback.
-  fromEdge <- result$edges[result$edges$from == "A" &
-                              result$edges$to == projNodeId, ]
-  toEdge <- result$edges[result$edges$from == projNodeId &
-                             result$edges$to == consangUnit, ]
-  expect_equal(nrow(fromEdge), 1L)
-  expect_equal(nrow(toEdge), 1L)
-  expect_equal(fromEdge$color, "#D55E00")
-  expect_equal(fromEdge$width, 4)
-  expect_equal(toEdge$color, "#D55E00")
-  expect_equal(toEdge$width, 4)
+  ## A's side: a plain direct edge into the union, carrying the marker.
+  aEdge <- result$edges[result$edges$from == "A" &
+                            result$edges$to == consangUnit, ]
+  expect_equal(nrow(aEdge), 1L)
+  expect_equal(aEdge$color, "#D55E00")
+  expect_equal(aEdge$width, 4)
 
-  ## Y's side never doglegs (her duplicate node is pinned to the union's
-  ## own gen) -- her edge must still carry the marker too, confirming the
-  ## fix is additive, not a reshuffle of which side keeps it.
+  ## Y's side: her duplicate-node edge, carrying the marker (unchanged
+  ## from before -- her side never doglegged either way).
   yEdge <- result$edges[grepl("^__dup_Y_", result$edges$from) &
                             result$edges$to == consangUnit, ]
   expect_equal(nrow(yEdge), 1L)

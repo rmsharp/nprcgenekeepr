@@ -395,24 +395,15 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     unionIds <- sprintf("__union_%d", seq_len(nUnits))
 
     mateCountTab <- table(c(unitSire, unitDam))
-    isFounderOf <- function(x) {
-      idx <- match(x, ids)
-      # A referenced parent with no own row in this (possibly
-      # focal-animal-trimmed, addBackParents = FALSE) view has no known
-      # -parent information here -- treat as a founder rather than
-      # letting NA propagate into a TRUE/FALSE comparison (found live,
-      # S461: R/modPedigree.R's own trim feature keeps a blood relative's
-      # row but not that relative's own mate's row).
-      if (is.na(idx)) return(TRUE)
-      !hasSire[idx] & !hasDam[idx]
-    }
 
     # D2: deterministic anchor preference between 2 candidates -- prefer
-    # non-founder, then fewer total mating units, then ascending id.
+    # deeper gen (subsumes founder-preference: a founder always has
+    # gen == 0, the shallowest possible value), then fewer total mating
+    # units, then ascending id.
     preferAnchor <- function(a, b) {
-      fa <- isFounderOf(a)
-      fb <- isFounderOf(b)
-      if (fa != fb) return(!fa)
+      ga <- genOf[[a]]
+      gb <- genOf[[b]]
+      if (ga != gb) return(ga > gb)
       ca <- mateCountTab[[a]]
       cb <- mateCountTab[[b]]
       if (ca != cb) return(ca < cb)
@@ -420,7 +411,6 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     }
 
     parentIds <- unique(c(unitSire, unitDam))
-    used <- stats::setNames(rep(FALSE, length(parentIds)), parentIds)
     anchorOf <- character(nUnits)
     nonAnchorOf <- character(nUnits)
     for (u in seq_len(nUnits)) {
@@ -430,36 +420,20 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
       p2Real <- p2 %in% ids
       # A dangling parent (no own row here) can never anchor -- there is
       # no individual to recursively position for them (D3 only
-      # positions real ids). Their real mate wins outright, regardless of
-      # "used" status (found live, S461). When NEITHER parent is real
-      # (issue #154), there is no positionable anchor at all -- anchor/
-      # nonAnchor are left NA rather than arbitrarily forcing a dangling
-      # id into anchor (which .positionMatingUnitForest()'s recursive
-      # descent could then never reach).
+      # positions real ids). Their real mate wins outright. When NEITHER
+      # parent is real (issue #154), there is no positionable anchor at
+      # all -- anchor/nonAnchor are left NA rather than arbitrarily
+      # forcing a dangling id into anchor (which
+      # .positionMatingUnitForest()'s recursive descent could then never
+      # reach).
       winner <- if (!p1Real && !p2Real) {
         NA_character_
       } else if (p1Real != p2Real) {
         if (p1Real) p1 else p2
+      } else if (preferAnchor(p1, p2)) {
+        p1
       } else {
-        p1Used <- used[[p1]]
-        p2Used <- used[[p2]]
-        # p1Used-xor-p2Used: the unused one wins by elimination. Otherwise
-        # (neither used -- the normal case -- or both already used
-        # elsewhere -- the rare collision D3 step 2 explicitly allows) the
-        # same D2 comparison decides, since preferAnchor() doesn't consult
-        # "used" status at all.
-        if (p1Used && !p2Used) {
-          p2
-        } else if (p2Used && !p1Used) {
-          p1
-        } else if (preferAnchor(p1, p2)) {
-          p1
-        } else {
-          p2
-        }
-      }
-      if (!is.na(winner)) {
-        used[[winner]] <- TRUE
+        p2
       }
       anchorOf[u] <- winner
       nonAnchorOf[u] <- if (is.na(winner)) {
@@ -741,20 +715,6 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   }
   freePassOfUnit <- split(names(freePassUnitOf), freePassUnitOf)
 
-  ## issue #144 fix: an anchor's EFFECTIVE gen (used for its own contour
-  ## row-reservation and, below, its displayed gen) is max(its own raw
-  ## ped$gen, the gen of every mating unit it anchors) -- not its raw
-  ## ped$gen alone, which mis-positions an anchor whose personal gen is
-  ## shallower than a unit it anchors (51/237 real-fixture mating units).
-  ## Degrades to genOf[[id]] unchanged for every individual who never
-  ## anchors anything (max() over an empty unitGenOf slice plus the scalar
-  ## returns the scalar).
-  anchorUnitsOf <- split(matingUnits$id, matingUnits$anchor)
-  effGenOf <- genOf
-  for (aid in names(anchorUnitsOf)) {
-    effGenOf[[aid]] <- max(genOf[[aid]], unitGenOf[anchorUnitsOf[[aid]]])
-  }
-
   # nolint start: commented_code_linter.
   ## D3 step 6 correction (issue #143): every NON-ANCHOR occurrence -- a
   ## free-pass real node or a genuine duplicate -- renders at its own
@@ -779,18 +739,13 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     dispGenOf[realFreePassIds] <-
       unname(unitGenOf[freePassUnitOf[realFreePassIds]])
   }
-  ## D3 step 6 correction (issue #144): an ANCHOR occurrence renders at its
-  ## own EFFECTIVE gen (effGenOf -- max of its raw gen and every unit it
-  ## anchors), mirroring the free-pass override above. The
-  ## intersect(names(anchorUnitsOf), realIds) guard is defensive (an
-  ## anchor is never a dangling id in the current pipeline, by
-  ## .buildMatingUnitForest()'s own guard, so this is not currently a live
-  ## failure path) but harmless and symmetric with the free-pass guard
-  ## above.
-  realAnchorIds <- intersect(names(anchorUnitsOf), realIds)
-  if (length(realAnchorIds) > 0L) {
-    dispGenOf[realAnchorIds] <- unname(effGenOf[realAnchorIds])
-  }
+  ## No anchor-side override is needed here (Track 4, issue #144's own
+  ## effGenOf mechanism removed): under the new gen-first D2 tie-break
+  ## (.buildMatingUnitForest()'s preferAnchor()), every mating unit's
+  ## anchor has genOf[[anchor]] >= genOf[[nonAnchor]] by construction, so
+  ## genOf[[anchor]] == unitGen for every unit an individual anchors --
+  ## an anchor's own raw gen is already its correct display gen, with no
+  ## exceptions to correct for.
 
   ## Recursive descent (post-order): mating units recurse into their
   ## real children (plus any free-pass non-anchor parent, D3 step 5);
@@ -828,12 +783,12 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     if (length(subIds) == 0L) {
       relNode[[id]] <- list(childIds = character(0L),
                              childOffsets = numeric(0L))
-      return(leafContour(effGenOf[[id]]))
+      return(leafContour(genOf[[id]]))
     }
     subResults <- lapply(subIds, function(sid) {
       if (sid %in% unitIds) positionUnit(sid) else positionIndividual(sid)
     })
-    fin <- finalizeNode(mergeSubtrees(subResults), effGenOf[[id]])
+    fin <- finalizeNode(mergeSubtrees(subResults), genOf[[id]])
     relNode[[id]] <- list(childIds = subIds,
                            childOffsets = fin$childOffsets)
     list(x = fin$ownX, contour = fin$contour)
