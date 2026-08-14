@@ -128,8 +128,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
-This file currently holds **3** receipt(s). Computed by `methodology_trim.py` on every
+This file currently holds **4** receipt(s). Computed by `methodology_trim.py` on every
 `--check`/`--write` run, never hand-maintained.
+
+```handoff
+session: S562
+date: 2026-08-13
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Write a plan document to fully reproduce
+inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf's results with
+nprcgenekeepr -- X-chromosome kinship (Table S2), a pedigree.shrink() equivalent, and
+the edgeStyle="rectilinear" consanguineous-marker propagation follow-up.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<Claim stub -- filled in full at Phase 3D close-out.>
 
 ```handoff
 session: S561

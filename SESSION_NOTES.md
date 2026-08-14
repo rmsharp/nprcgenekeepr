@@ -14,6 +14,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 562 Did
+**Deliverable:** Write a plan document to fully reproduce
+`inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf`'s (kinship2's own
+supplementary material) results with `nprcgenekeepr` -- covering the 2 capabilities
+`docs/audits/KINSHIP2_SUPPLEMENT_REPRODUCIBILITY_AUDIT_2026-08-13.md` (S549) judged
+"no action, capability-fit" (X-chromosome kinship for Table S2; a `pedigree.shrink()`
+equivalent) plus the 1 remaining partial gap (the `edgeStyle="rectilinear"`
+consanguineous-marker color/width propagation, so the Figure S1 plot fully matches
+too). (IN PROGRESS)
+**Started:** 2026-08-13. **Status:** Session claimed. Work beginning. TDD phase: N/A
+(planning/design document, no test or production code -- matches the S550 precedent
+for the twin-kinship design session).
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded
+in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for
+the next session's reconcile.
+
 ### Session 560 Handoff Evaluation (by Session 561)
 **Score: 9/10.** **What helped:** the `next_steps` field named this exact item verbatim as
 item 2 of its priority list -- "(2) Decide add-vs-remove for HANDOFFS.md's

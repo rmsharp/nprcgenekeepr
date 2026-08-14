@@ -138,6 +138,15 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-N] S562: claim session (plan to fully reproduce kinship2 supplement PDF's results)
+- **Deliverable:** Phase 1B claim. Write a plan document to fully reproduce
+  `inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf`'s results with
+  `nprcgenekeepr` -- X-chromosome kinship (Table S2), a `pedigree.shrink()` equivalent, and
+  the `edgeStyle="rectilinear"` consanguineous-marker propagation follow-up (the 2 items
+  `docs/audits/KINSHIP2_SUPPLEMENT_REPRODUCIBILITY_AUDIT_2026-08-13.md` judged out of scope
+  plus the 1 remaining partial gap).
+- **Commit:** this claim's own commit.
+
 ### 2026-08-13 · [BL-N] S561 close-out: HANDOFFS.md FRONTMATTER_FIELD_ABSENT finding resolved; Learning 567 logged
 - **Deliverable:** Session S561's own close-out. Evaluated S560's `HANDOFFS.md` receipt (9/10
   -- `next_steps` named this exact item verbatim as item 2 of its priority list; nothing found
