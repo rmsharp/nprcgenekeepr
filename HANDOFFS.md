@@ -200,7 +200,7 @@ gotchas: (1) Track 4 (generation-row alignment) is architecturally significant -
 runtime_smoke: n/a -- planning/documentation-only session, no R/ or tests/ file touched, nothing
   to runtime-verify.
 changelog_ref: CHANGELOG.md 2026-08-14 S569 entry (this close-out)
-commit: pending
+commit: af9a387c
 ```
 
 ```handoff
