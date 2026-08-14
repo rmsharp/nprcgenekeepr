@@ -199,7 +199,7 @@ runtime_smoke: n/a -- docs-only planning session, no R/ package code changed,
 nothing to launch. Stated explicitly, not silently skipped.
 changelog_ref: this session's own CHANGELOG.md entries, 2026-08-13 (claim; this
 close-out entry)
-commit: pending
+commit: 0ce5ac60
 ```
 
 ```handoff
