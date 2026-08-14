@@ -14,6 +14,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 561 Did
+**Deliverable:** Resolve `HANDOFFS.md`'s recurring `FRONTMATTER_FIELD_ABSENT` finding
+(`BACKLOG.md` Housekeeping, found S508, re-surfaced S559) -- add a self-updating "This file
+currently holds **N** receipt(s)" sentence to `HANDOFFS.md`'s front matter (owner-picked via
+`AskUserQuestion`, over removing the `regenerated` config entry). (IN PROGRESS)
+**Started:** 2026-08-13. **Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 559 Handoff Evaluation (by Session 560)
 **Score: 9/10.** **What helped:** the `next_steps` field named this exact item verbatim as
 item 1 of its priority list -- "(1) Write the dedicated Pedigree Diagram tab article (READY,

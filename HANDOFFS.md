@@ -129,6 +129,25 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-13.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S561
+date: 2026-08-13
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Resolve HANDOFFS.md's recurring FRONTMATTER_FIELD_ABSENT finding (BACKLOG.md
+Housekeeping, found S508, re-surfaced S559) -- add a self-updating "This file currently holds
+**N** receipt(s)" sentence to HANDOFFS.md's front matter.
+what_was_done: pending
+next_steps: pending
+key_files: HANDOFFS.md, methodology_trim.py
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<pending>
+
+```handoff
 session: S560
 date: 2026-08-13
 status: complete

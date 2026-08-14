@@ -138,6 +138,15 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-N] S561: claim session (resolve HANDOFFS.md FRONTMATTER_FIELD_ABSENT finding)
+- **Deliverable:** Phase 1B claim stub only. Session 561 will add a self-updating "This file
+  currently holds **N** receipt(s)" sentence to `HANDOFFS.md`'s front matter, resolving the
+  recurring `FRONTMATTER_FIELD_ABSENT` finding `methodology_trim.py` prints on every
+  `--check`/`--write` run against `HANDOFFS.md` (`BACKLOG.md` Housekeeping, found S508,
+  re-surfaced S559). Remedy confirmed via `AskUserQuestion`: add the front-matter sentence
+  (over removing the `regenerated` entry from `methodology_trim.py`'s `LEDGERS["HANDOFFS.md"]`
+  config).
+
 ### 2026-08-13 · [BL-N] S560 close-out: Pedigree Diagram article shipped; S559 handoff evaluation; Learning 566 logged
 - **Deliverable:** Session S560's own close-out. Evaluated S559's `HANDOFFS.md` receipt
   (9/10 -- its `next_steps` field named this exact item verbatim as item 1 of its priority
