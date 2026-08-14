@@ -14,6 +14,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 572 Did
+**Deliverable:** Track 4 design session (anchor/founder generation-row alignment) from
+`docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §Track 4 -- a ratified
+PRE-RED decision between option (a) (keep anchor-tracks-deepest-union + adopt the already-designed
+"Candidate C" dogleg signposting) and option (b) (anchor at own natural gen, duplicate the far
+mate instead), written as its own `docs/planning/*-plan.md`. (IN PROGRESS)
+**Started:** 2026-08-14.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 570 Handoff Evaluation (by Session 571)
 **Score: 7/10.** **What helped:** `key_files` citations (`R/makePedigreeDiagramData.R`
 `.positionMatingUnitForest()`, `mergeSubtrees()`/`minSep`) were accurate and let this session

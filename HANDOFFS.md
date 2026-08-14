@@ -132,6 +132,26 @@ This file currently holds **8** receipt(s). Computed by `methodology_trim.py` on
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S572
+date: 2026-08-14
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Track 4 design session (anchor/founder generation-row alignment) from
+  docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md §Track 4. A ratified
+  PRE-RED decision between option (a) (keep anchor-tracks-deepest-union + Candidate C
+  signposting) and option (b) (anchor at own natural gen, duplicate the far mate), written as
+  its own docs/planning/*-plan.md. Not started.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S571
 date: 2026-08-14
 status: complete
