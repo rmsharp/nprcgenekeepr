@@ -37,12 +37,13 @@ right of the diagram shows the same mapping, so it never has to be memorized.
 
 ![The Diagram tab on a small, real 6-animal pedigree, with its shape-to-sex legend. The two connector lines joining the top union render thicker and in a distinct vermillion color -- see "Consanguineous mating marker" below.](shiny_app_use/pb_diagram_legend.png){fig-alt="Pedigree Browser Diagram tab showing a small interactive pedigree diagram with sex-shaped nodes and a shape-to-sex legend panel (dot=Female, square=Male, star=Hermaphrodite, triangle=Unknown, diamond=Other/Unrecorded, hexagon=Affected) to the right of the diagram."}
 
-Diagrams render up to **750 animals** -- for a larger population, narrow the
-focal-animal selection first (the **Focal Animals** panel to the left of the
-diagram; see the Colony Manager's Guide article for the full trimming
-workflow). The limit drops to **400 animals** when the Rectilinear edge style
-below is selected, since that style renders more total diagram nodes per
-animal (invisible routing waypoints, described there).
+Diagrams render up to **400 animals** under the default Rectilinear edge
+style (**750** if switched to Direct, below) -- for a larger population,
+narrow the focal-animal selection first (the **Focal Animals** panel to the
+left of the diagram; see the Colony Manager's Guide article for the full
+trimming workflow). Rectilinear's lower cap reflects it rendering more
+total diagram nodes per animal (invisible routing waypoints, described
+below) for the same visual complexity.
 
 An animal that mates more than once, or whose lineage loops back on itself
 (e.g. a consanguineous mating), appears once per mating; each occurrence
@@ -54,12 +55,12 @@ the animal's main occurrence ("Interacting with the diagram" below).
 ## Diagram Edge Style: Direct vs. Rectilinear {#sec-edgestyle}
 
 A **Diagram Edge Style** toggle above the diagram switches the parent-to-
-mating-to-child connector between two routings: **Direct** (the default --
-a single straight or lightly sloped line all the way from parent to mating
-dot to child) and **Rectilinear (kinship2-style)** -- strict horizontal/
-vertical right angles throughout: a horizontal segment between the two
-parents, a vertical drop to the mating dot, a horizontal bar across the
-children, and a vertical drop into each one.
+mating-to-child connector between two routings: **Rectilinear
+(kinship2-style)** (the default -- strict horizontal/vertical right angles
+throughout: a horizontal segment between the two parents, a vertical drop
+to the mating dot, a horizontal bar across the children, and a vertical
+drop into each one) and **Direct** -- a single straight or lightly sloped
+line all the way from parent to mating dot to child.
 
 ![The same 6-animal pedigree with Diagram Edge Style set to Rectilinear -- the same relationships, routed in strict right angles.](shiny_app_use/diagram_rectilinear_edge_style.png){fig-alt="Pedigree Browser Diagram tab with the Rectilinear edge style selected, showing the same pedigree routed with horizontal and vertical right-angle connectors instead of straight lines."}
 

@@ -366,15 +366,16 @@ connectors, none of which this scripted walkthrough demonstrates.
 
 That parent-to-mating-to-child connector has two available routings,
 selected by __makePedigreeMatingLayout__'s _edgeStyle_ argument:
-`"direct"` (the default -- a single straight or lightly sloped line all the
-way from parent to mating dot to child) and `"rectilinear"` (strict
-horizontal/vertical right angles throughout -- a horizontal segment between
-the two parents, a vertical drop to the mating dot, a horizontal sibship bar
-across the children, and a vertical drop into each one, matching the
-convention the __kinship2__ R package uses). The Shiny app's Diagram tab
+`"rectilinear"` (the default, Track 2, docs/planning/pedigree-diagram-
+kinship2-fidelity-remediation-plan.md -- strict horizontal/vertical right
+angles throughout: a horizontal segment between the two parents, a vertical
+drop to the mating dot, a horizontal sibship bar across the children, and a
+vertical drop into each one, matching the convention the __kinship2__ R
+package uses) and `"direct"` (a single straight or lightly sloped line all
+the way from parent to mating dot to child). The Shiny app's Diagram tab
 exposes the same choice live as a "Diagram Edge Style" toggle above the
 diagram; in a script it is just this one argument. Both are demonstrated
-below -- _direct_ first (matching the tab's own default), _rectilinear_
+below -- _direct_ first, _rectilinear_ (matching the tab's own default)
 afterward.
 
 The _trimmedPed_ pedigree built earlier in this tutorial has
@@ -438,7 +439,11 @@ shapes to appear in the diagram below at least once, across
 ### Direct Edge Style
 
 ```{r pedigree-diagram-data}
-diagramData <- makePedigreeMatingLayout(demoPed)
+## edgeStyle is now explicit -- Track 2 flipped the package's own default
+## to "rectilinear", so this section's own "Direct Edge Style" labeling
+## needs edgeStyle = "direct" spelled out rather than relying on the
+## (now different) implicit default.
+diagramData <- makePedigreeMatingLayout(demoPed, edgeStyle = "direct")
 names(diagramData)
 nrow(diagramData$nodes)
 nrow(diagramData$edges)
@@ -495,8 +500,8 @@ visNetwork::visNetwork(diagramData$nodes, diagramData$edges) |>
       # Excludes all 5 of makePedigreeMatingLayout()'s reserved node-id
       # prefixes -- __union_/__dup_ can appear under either edge style;
       # __drop_/__bar_/__proj_ only appear under "rectilinear" (see below).
-      # Harmless no-op here since demoPed's diagramData was built with the
-      # default "direct" style, but keeps this pattern identical to the
+      # Harmless no-op here since diagramData was built with edgeStyle =
+      # "direct" explicit above, but keeps this pattern identical to the
       # rectilinear chunk below and to R/modPedigree.R's own.
       values = diagramData$nodes$id[
         !grepl("^__union_|^__dup_|^__drop_|^__bar_|^__proj_",
@@ -517,13 +522,14 @@ this tutorial, where finding one animal by eye is much harder.
 
 ### Rectilinear Edge Style
 
-The diagram above uses __makePedigreeMatingLayout__'s default _direct_ edge
-style. Passing `edgeStyle = "rectilinear"` instead draws the same
-relationships -- same _demoPed_, same animals, same parent/child/mating
-structure -- with strict right angles: a horizontal line directly between
-mates, a vertical drop to their shared mating dot, a horizontal bar across
-their children, and a vertical drop into each child, matching the
-convention the __kinship2__ R package uses.
+The diagram above uses the _direct_ edge style, requested explicitly.
+Omitting `edgeStyle` entirely (or passing `edgeStyle = "rectilinear"`
+explicitly, as below) draws the same relationships -- same _demoPed_, same
+animals, same parent/child/mating structure -- with strict right angles: a
+horizontal line directly between mates, a vertical drop to their shared
+mating dot, a horizontal bar across their children, and a vertical drop
+into each child, matching the convention the __kinship2__ R package uses,
+and matching __makePedigreeMatingLayout__'s own default (Track 2).
 
 ```{r pedigree-diagram-rectilinear-data}
 diagramDataRectilinear <- makePedigreeMatingLayout(demoPed,
