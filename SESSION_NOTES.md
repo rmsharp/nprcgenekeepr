@@ -14,6 +14,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 575 Did
+**Deliverable:** Track 5 (broaden rectilinear routing coverage) re-measurement from
+`docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §Track 5 (IN PROGRESS)
+**Started:** 2026-08-14 18:20 CDT
+**Status:** Session claimed. Owner scoped this session (via `AskUserQuestion`) to pure
+re-measurement: render the bundled real fixture live in `edgeStyle="rectilinear"` mode, inventory
+any remaining diagonal/non-orthogonal edges, and report findings -- stop and write up if genuine
+gaps are found rather than implementing a fix this session (implementation, if any, is a future
+session's decision). No RED phase will be entered unless the owner explicitly re-scopes mid-session.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 573 Handoff Evaluation (by Session 574)
 **Score: 9/10.** **What helped:** `next_steps` correctly identified Track 2 as fully unblocked
 ("Track 3's spacing fix and Track 4's anchor-selection decision are both landed") and pointed at
