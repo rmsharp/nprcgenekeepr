@@ -14,6 +14,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 564 Did
+**Deliverable:** Implement Track A of the ratified kinship2 supplement
+full-reproduction plan (`docs/planning/kinship2-supplement-full-reproduction-plan.md`
+§3) -- extend `kinship()` with `chrtype = "autosome"|"x"` and a new `sex` parameter,
+porting kinship2's X-linked kinship algorithm (core algorithm only, ratified D-A2
+Option A -- no propagation to `reportGV()`/`gvaConvergence()`/`createSimKinships()`/
+`cumulateSimKinships()` or the Shiny app). (IN PROGRESS)
+**Started:** 2026-08-13
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded
+in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for
+the next session's reconcile.
+
 ### Session 562 Handoff Evaluation (by Session 563)
 **Score: 7/10.** **What helped:** `next_steps` named this exact item verbatim as the
 recommended first pickup ("Track C recommended first -- smallest, no open design

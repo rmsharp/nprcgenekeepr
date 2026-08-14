@@ -132,6 +132,28 @@ This file currently holds **5** receipt(s). Computed by `methodology_trim.py` on
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S564
+date: 2026-08-13
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement Track A of the ratified kinship2 supplement full-reproduction
+  plan (docs/planning/kinship2-supplement-full-reproduction-plan.md §3) -- extend
+  kinship() with chrtype="autosome"|"x" and a new sex parameter, core algorithm only
+  (ratified D-A2 Option A).
+what_was_done: pending
+next_steps: pending
+key_files: R/kinship.R:79-171 (kinship() to extend); tests/testthat/test_kinship.R
+  (new test block); docs/planning/kinship2-supplement-full-reproduction-plan.md:98-217
+  (Track A spec)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+Session claimed; work beginning. Full receipt filled at close-out (Phase 3D).
+
+```handoff
 session: S563
 date: 2026-08-13
 status: complete

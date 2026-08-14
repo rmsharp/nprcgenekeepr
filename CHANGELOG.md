@@ -138,6 +138,17 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-N] S564: claim session (implement Track A of kinship2 supplement full-reproduction plan)
+- **Deliverable:** Phase 0 orient complete (Health 96/100, 0 High+ risk; `shinytest2.yaml`
+  scheduled CI red 2 days running, reported not diagnosed; 54 commits unpushed, unchanged
+  precedent since S548; no ghost session, no ledger reconcile needed). Priorities list
+  rendered via `AskUserQuestion` -- owner picked Track A (X-chromosome kinship, Table S2)
+  of the ratified kinship2 supplement full-reproduction plan
+  (`docs/planning/kinship2-supplement-full-reproduction-plan.md` §3). Confirmed
+  `R/kinship.R`'s current `kinship()` signature matches the plan's stated baseline (no
+  drift since S562 ratification). Claim stubs written to `SESSION_NOTES.md`/`HANDOFFS.md`
+  (`status: pending`). Work beginning.
+
 ### 2026-08-13 · [ad hoc] S563: reconcile HANDOFFS.md commit self-reference (`89be00ca`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` ->
   `89be00ca` (the close-out commit whose sha the receipt itself couldn't name until after it
