@@ -68,6 +68,23 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       connected-component walk).
 
 ## Housekeeping
+- [ ] **`HANDOFFS.md`'s declared `methodology_trim.py` regenerated field ("retained receipt
+      count") has no matching "This file currently holds **N**" sentence in the file's own
+      front matter** (found S508, 2026-08-10, re-surfaced S559, 2026-08-13, Effort S,
+      DECISION NEEDED) -- every `--check`/`--write` run against `HANDOFFS.md` prints a soft
+      `FRONTMATTER_FIELD_ABSENT` finding ("declared regenerated field 'retained receipt
+      count' not found in front matter -- its value cannot be kept true. Add it, or remove
+      it from the config."). Non-blocking (confirmed again S559: `--write` still completes,
+      L1/L2/L3 still hold) but has now recurred on every one of `HANDOFFS.md`'s 3 archive
+      passes to date (S508, 2026-08-10; a second pass, 2026-08-12; S559, 2026-08-13) with no
+      session yet choosing between the tool's own 2 offered remedies: add a "This file
+      currently holds **N** receipt(s)" sentence to the front matter (matching
+      `SESSION_NOTES.md`'s and `CHANGELOG.md`'s own "Archived N record(s)..." pointer
+      convention, so the count becomes self-updating), or remove the `regenerated` entry
+      from `methodology_trim.py`'s `LEDGERS["HANDOFFS.md"]` config (accepting that this
+      file just doesn't carry a live count). A future session should make and record that
+      choice explicitly via `AskUserQuestion` rather than let the finding keep recurring
+      silently.
 - [ ] (found S555, incidental to the consanguineous-marker PRE-RED
       investigation above, **FIXED S556**. **A dangling (no-own-row)
       parent anywhere in a pedigree silently widened
