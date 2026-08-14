@@ -417,7 +417,7 @@ separately-scoped enhancement (see the plan's own §5/§8).
   `docs/planning/*-plan.md`, following this document's own evidence in §2.4a as its starting
   inventory rather than re-deriving it from scratch.
 
-### Track 5 -- Broaden rectilinear routing coverage (Claim 4b) -- reassess after Tracks 3-4
+### Track 5 -- Broaden rectilinear routing coverage (Claim 4b) -- RE-MEASURED S575, NO GAP FOUND
 
 - **Scope:** Re-measure, after Tracks 3 and 4 land, how much diagonal-edge residue remains in
   `edgeStyle = "rectilinear"` mode. Track 4a's resolution in particular may eliminate most of the
@@ -429,13 +429,61 @@ separately-scoped enhancement (see the plan's own §5/§8).
 - **Session boundary:** explicitly deferred; re-open only after Tracks 3-4 land and a fresh
   side-by-side render is taken.
 
+**RE-MEASURED S575 (2026-08-14) -- zero genuine diagonal-edge gap found; no follow-up needed.**
+Owner scoped this session (via `AskUserQuestion`) to pure re-measurement: render the real fixture
+live in `edgeStyle = "rectilinear"` mode, inventory any remaining diagonal/non-orthogonal edges,
+and report -- stop rather than implement if genuine gaps are found. None were.
+
+Measured three ways, all in exact agreement:
+
+1. **Offline, the real bundled 375-individual fixture**
+   (`obfuscated_rhesus_mhc_ped.csv`, via `makePedigreeMatingLayout(ped, edgeStyle =
+   "rectilinear")` directly): of 1,315 edges, 1,265 are orthogonal (`from.x == to.x` or
+   `from.y == to.y`) and 50 are not. **All 50 of the non-orthogonal edges are duplicate-individual
+   dashed connector arcs** (`dashes == TRUE`, `smooth.enabled == TRUE`, `smooth.type ==
+   "curvedCW"`) -- the Claim 4c connector, already confirmed present and intentionally curved, not
+   a straight-line routing target of D1/D2 at all. Zero non-dashed diagonal edges. By comparison,
+   `edgeStyle = "direct"` on the same fixture has 237 non-dashed diagonal edges (28.7% of its 827
+   total) -- the routing problem rectilinear mode exists to solve, now fully closed on real data.
+2. **Structural, not just empirical:** D1 (sibship-bar) waypoint-routes every `childEdges` entry
+   unconditionally, so every child edge is orthogonal by construction. D2 (mate-line dogleg) keeps
+   a mate edge direct only when the side's own gen already equals the mating unit's gen -- which
+   means same row, hence automatically horizontal -- and otherwise replaces it with two new legs
+   that are each, by construction, one pure-vertical and one pure-horizontal segment. Every mate
+   edge is therefore orthogonal too, either directly or via the dogleg, for **any** pedigree shape,
+   not only fixtures actually tested. Track 4's own landed invariant
+   (`tests/testthat/test_makePedigreeMatingLayout.R:1131-1144`, `genOf[[anchor]] == unitGen`
+   unconditionally) additionally makes the anchor-side D2 dogleg permanently unreachable --
+   confirmed by re-running the exact synthetic fixture that originally demonstrated the "P1-to-A",
+   "X-to-C1" diagonal-edge scenario in Claim 4b (`P1/P2/A/Y/X/W/C1/C2/GC`,
+   `test_makePedigreeMatingLayout.R:1145-1191`): 23 of 24 edges orthogonal, the 1 exception again a
+   `__dup_A_1 -> A` dashed connector arc, not a straight diagonal line.
+3. **Live app, real fixture** (`shinytest2`/`chromote`, dev package reinstalled first to avoid the
+   stale-install trap `PROJECT_LEARNINGS.md` flagged for S574): true implicit default (no
+   `pedigreeEdgeStyle` input ever set) reads back `"rectilinear"`; a live JS query of the rendered
+   `visNetwork` widget's own node/edge `DataSet`s reproduces the offline figures **exactly** --
+   `{nNodes: 1202, nEdges: 1315, orth: 1265, diag: 50, diagDashed: 50, diagNonDashed: 0}` -- with
+   zero diagram-related console errors. `visEdges(smooth = FALSE)` is the app's global default
+   (`R/modPedigree.R:614`), so every non-dashed edge (no per-edge `smooth` override) renders as a
+   literal straight segment between its exact coordinates; only the dup connectors carry their own
+   `smooth.enabled = TRUE` override, confirming the geometric measurement matches what actually
+   paints on screen, not just the underlying data.
+
+**Conclusion:** the plan's own contingency ("if genuine gaps remain... scope a follow-up") does not
+trigger. Track 4a's generation-row-alignment fix eliminated the dogleg-forcing scenario that
+motivated this track in the first place, and D1/D2 already cover 100% of non-connector edges by
+construction. No `.addRectilinearWaypoints()` change is warranted. This closes the kinship2
+fidelity remediation plan -- **all 5 tracks are now resolved** (1: S570, 2: S574, 3: S571, 4:
+S572/S573, 5: S575).
+
 ## 5. Recommended pickup order
 
-**Status as of S574 (2026-08-14):** Tracks 1, 2, 3, and 4 are DONE (S570, S574, S571, S572/S573
-respectively -- see each Track's own section above). Only **Track 5** (broaden rectilinear
-coverage, re-measurement now possible against the landed Track 2 default) remains. This original
-recommended order (below) is left as written -- historical planning narrative, not retroactively
-edited.
+**Status as of S575 (2026-08-14): all 5 tracks are now resolved.** Tracks 1-4 are DONE (S570,
+S574, S571, S572/S573 respectively). **Track 5 was re-measured S575 and found no genuine gap** --
+see its own section above for the full 3-way evidence record (offline computation, structural
+proof, live app). This plan document's own work is complete; no further track remains open. This
+original recommended order (below) is left as written -- historical planning narrative, not
+retroactively edited.
 
 1. **Track 1** (unaffected fill) -- smallest, lowest-risk, highest-visibility win; no dependency on
    anything else.
