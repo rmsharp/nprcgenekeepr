@@ -208,7 +208,7 @@ actual returned data, not merely a build-passes check. Stated explicitly, not
 silently skipped.
 changelog_ref: this session's own CHANGELOG.md entries, 2026-08-13 (claim; this
 close-out entry)
-commit: pending
+commit: 89be00ca
 ```
 
 ```handoff
