@@ -1497,6 +1497,15 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
     if (id %in% names(genOf)) unname(genOf[[id]]) else NA_real_
   }
   dropMateEdge <- rep(FALSE, nrow(edges))
+  ## Track C (kinship2 supplement plan §5 / S549 Finding #2's deferred
+  ## follow-up, fixed S563): a marked mate edge's color/width, keyed by the
+  ## projId of the dogleg replacing it -- applied as a post-hoc override
+  ## below, after 'ne's blanket fallback assignment, since newEdgeList also
+  ## holds the D1 sibship-bar/chain edges (no color/width columns of their
+  ## own) and do.call(rbind, newEdgeList) requires matching columns across
+  ## every entry.
+  projColor <- character()
+  projWidth <- numeric()
   if (nrow(matingUnits) > 0L) {
     dupKey <- paste0(duplicates$realId, duplicates$matingUnitId)
     for (i in seq_len(nrow(matingUnits))) {
@@ -1524,6 +1533,24 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
           from = c(side$nodeId, projId), to = c(projId, U),
           stringsAsFactors = FALSE
         )
+        ## Mirrors the KEPT-edges color-preservation precedent (issue #137
+        ## D10, :1534-1554 below): look up the original mate edge's own
+        ## color/width before it gets dropped, so a consanguineous unit's
+        ## marker survives onto its 2 dogleg replacement edges instead of
+        ## always falling to the generic waypoint-edge fallback. Falls
+        ## through to that same fallback (no entry recorded) when the
+        ## original edge had no marker (an ordinary, non-consanguineous
+        ## mating) -- selective, not a blanket style change.
+        origIdx <- which(edges$from == side$nodeId & edges$to == U)
+        if (length(origIdx) > 0L && "color" %in% names(edges) &&
+              !is.na(edges$color[[origIdx[[1L]]]])) {
+          projColor[[projId]] <- edges$color[[origIdx[[1L]]]]
+          projWidth[[projId]] <- if ("width" %in% names(edges)) {
+            edges$width[[origIdx[[1L]]]]
+          } else {
+            NA_real_
+          }
+        }
         dropMateEdge <- dropMateEdge |
           (edges$from == side$nodeId & edges$to == U)
       }
@@ -1576,6 +1603,17 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("direct",
     ne$smooth.type <- NA_character_
     ne$smooth.roundness <- NA_real_
     ne$label <- NA_character_
+    ## Track C (kinship2 supplement plan §5, fixed S563): override the
+    ## generic fallback just stamped above for the 2 edges of each marked
+    ## dogleg (recorded by projId in the D2 loop) -- every other new edge
+    ## (D1 sibship-bar/chain edges, unmarked doglegs) is untouched.
+    if (length(projColor) > 0L) {
+      hit <- match(ne$to, names(projColor))
+      hit[is.na(hit)] <- match(ne$from[is.na(hit)], names(projColor))
+      marked <- !is.na(hit)
+      ne$color[marked] <- unname(projColor[hit[marked]])
+      ne$width[marked] <- unname(projWidth[hit[marked]])
+    }
     ne
   } else {
     data.frame(from = character(), to = character(), dashes = logical(),

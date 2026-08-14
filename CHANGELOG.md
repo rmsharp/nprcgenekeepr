@@ -138,6 +138,31 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-N] S563: close out (Track C of kinship2 supplement full-reproduction plan DONE)
+- **Deliverable:** `edgeStyle="rectilinear"` consanguineous-marker color/width now survives a D2
+  dogleg reroute in `R/makePedigreeDiagramData.R`'s `.addRectilinearWaypoints()` (Track C,
+  `docs/planning/kinship2-supplement-full-reproduction-plan.md` §5; S549 Finding #2's deferred
+  follow-up, S555). Full PRE-RED→RED→GREEN TDD cycle, each transition `AskUserQuestion`-gated;
+  REFACTOR skipped (owner choice, diff already minimal).
+- **Fix:** the D2 loop looks up a dropped mate edge's own color/width (keyed by the dogleg's
+  `projId`) and applies it as a post-hoc override after the existing generic-fallback assignment
+  — required by `do.call(rbind, newEdgeList)`'s column-alignment constraint across D1/D2 edge
+  types, a structural wrinkle the originating plan did not anticipate.
+- **Fixture:** the plan's referenced "12-row fixture" was never committed as code — read
+  `.buildMatingUnitForest()`'s anchor-selection algorithm directly from source and built an
+  independently-verified 9-row equivalent, correct on the first attempt (`PROJECT_LEARNINGS.md`
+  Learning 569).
+- **Verification:** 1 new `test_that()` block (5 assertions,
+  `tests/testthat/test_makePedigreeMatingLayout.R`) confirmed RED then GREEN; sibling
+  `test_addRectilinearWaypoints.R` unaffected; full clean regression 1 pre-existing failure
+  (`test_wordlist_coverage.R`, confirmed via `git stash` unrelated to this diff);
+  `lintr::lint_package()` 0 lints on touched files; `devtools::check()` 0 errors, 1 warning + 1
+  note, both confirmed pre-existing/unrelated (untracked "Compounding Loop" files' non-portable
+  names; a pre-existing `vignettes/figure/` knitr leftover).
+- **Docs:** `NEWS.Rmd` entry added; `BACKLOG.md`'s S555 deferred-follow-up item annotated
+  `FIXED S563`; the kinship2 plan's Track C clause annotated `DONE S563` (Tracks A/B remain
+  open, no GitHub issue filed yet for any of the 3 tracks). **Model:** Claude Sonnet 5.
+
 ### 2026-08-13 · [BL-N] S563: claim session (implement Track C of kinship2 supplement full-reproduction plan)
 - **Deliverable:** Implement Track C (`docs/planning/kinship2-supplement-full-reproduction-plan.md`
   §5) — finish `edgeStyle="rectilinear"` consanguineous-marker color/width propagation onto D2

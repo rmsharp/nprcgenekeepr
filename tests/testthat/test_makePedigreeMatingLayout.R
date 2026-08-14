@@ -1040,6 +1040,82 @@ test_that(
   expect_true(all(is.na(mateEdges$width)))
 })
 
+## ---- Track C (kinship2 supplement full-reproduction plan,
+## docs/planning/kinship2-supplement-full-reproduction-plan.md §5; S549
+## Finding #2's own deferred follow-up, BACKLOG.md Housekeeping): finish
+## edgeStyle = "rectilinear" consanguineous-marker propagation onto D2
+## dogleg-rerouted projection edges. When a marked mate edge's own parent
+## sits at a different generation than its mating unit (because that
+## parent also anchors a 2nd, differently-gen'd unit elsewhere --
+## .addRectilinearWaypoints()'s own D2 loop), the loop currently builds 2
+## new projection edges without looking up the original edge's color/width
+## first, so they fall through to the generic #2B7CE9/NA fallback instead
+## of carrying the consanguinity marker onto the reroute. Fixture: A and Y
+## are full siblings (children of P1 x P2, kinship = 0.5); A x Y is the
+## consanguineous union under test. A is ALSO the anchor of a 2nd, unrelated
+## union (A x X, X a founder with gen = 3) processed earlier, and Y is
+## ALSO the anchor of a 3rd, unrelated union (Y x W) processed earlier too
+## -- both already "used" by the time A x Y is processed, so the D2
+## anchor-preference tie-break (tied founder status, tied mate count) falls
+## to ascending id ("A" < "Y"), and A wins anchor of the consanguineous
+## union. A's own displayed gen is then the MAX across every unit A
+## anchors (3, from A x X) -- differing from the consanguineous union's own
+## gen (1, pmax(A's gen = 1, Y's gen = 1)) -- forcing exactly one dogleg,
+## on A's own side. Verified empirically this session (S563): direct-style
+## correctly marks both mate edges (#D55E00/4); rectilinear-style currently
+## drops the marker on A's doglegged side (falls to #2B7CE9/NA) while Y's
+## non-doglegged duplicate-node side keeps it correctly (pinned to the
+## union's own gen, issue #143/#144's own precedent) -- confirming the
+## propagation gap is real and selective (not a blanket regression).
+
+test_that(
+  "makePedigreeMatingLayout (edgeStyle = \"rectilinear\") propagates a
+   consanguineous mating unit's color/width marker onto its D2
+   dogleg-rerouted projection edges, not just the un-doglegged side", {
+  ped <- data.frame(
+    id   = c("P1", "P2", "A", "Y", "X", "W", "C1", "C2", "GC"),
+    sire = c(NA, NA, "P1", "P1", NA, NA, "A", "Y", "A"),
+    dam  = c(NA, NA, "P2", "P2", NA, NA, "X", "W", "Y"),
+    sex  = c("M", "F", "M", "F", "F", "M", "F", "M", "M"),
+    gen  = c(0L, 0L, 1L, 1L, 3L, 1L, 4L, 2L, 2L),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  consangUnit <- forest$matingUnits$id[
+    forest$matingUnits$sire == "A" & forest$matingUnits$dam == "Y"
+  ]
+  expect_equal(length(consangUnit), 1L)
+  expect_equal(forest$matingUnits$anchor[forest$matingUnits$id == consangUnit],
+               "A")
+
+  result <- makePedigreeMatingLayout(ped, edgeStyle = "rectilinear")
+  projNodeId <- sprintf("__proj_A_%s", consangUnit)
+  expect_true(projNodeId %in% result$nodes$id)
+
+  ## A's side: the 2 new projection edges (A -> proj, proj -> union) must
+  ## carry the SAME marker the original A -> union edge had, not the
+  ## generic waypoint-edge fallback.
+  fromEdge <- result$edges[result$edges$from == "A" &
+                              result$edges$to == projNodeId, ]
+  toEdge <- result$edges[result$edges$from == projNodeId &
+                             result$edges$to == consangUnit, ]
+  expect_equal(nrow(fromEdge), 1L)
+  expect_equal(nrow(toEdge), 1L)
+  expect_equal(fromEdge$color, "#D55E00")
+  expect_equal(fromEdge$width, 4)
+  expect_equal(toEdge$color, "#D55E00")
+  expect_equal(toEdge$width, 4)
+
+  ## Y's side never doglegs (her duplicate node is pinned to the union's
+  ## own gen) -- her edge must still carry the marker too, confirming the
+  ## fix is additive, not a reshuffle of which side keeps it.
+  yEdge <- result$edges[grepl("^__dup_Y_", result$edges$from) &
+                            result$edges$to == consangUnit, ]
+  expect_equal(nrow(yEdge), 1L)
+  expect_equal(yEdge$color, "#D55E00")
+  expect_equal(yEdge$width, 4)
+})
+
 test_that(
   "makePedigreeMatingLayout's consanguinity marker coexists correctly
    with twinRelations (D6/D7's own twin connector edges) -- no column

@@ -176,6 +176,12 @@ knitr::opts_chunk$set(echo = TRUE)
   defect (a dangling parent's generation fallback silently widened an
   internal generation vector from integer to double, breaking a strict
   type-sensitive equality check elsewhere).
+- The Pedigree Diagram tab's consanguineous-mating marker (above) now also
+  survives an `edgeStyle = "rectilinear"` cross-generation "dogleg" reroute
+  -- previously the marker's color/width fell back to the generic
+  waypoint-edge style on a doglegged mate edge, even though the
+  `edgeStyle = "direct"` style always showed it correctly (BL-N, part of
+  the kinship2 supplement full-reproduction plan's Track C).
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes

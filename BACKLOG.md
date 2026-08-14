@@ -267,6 +267,23 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       2 different-gen units, one of them consanguineous) was constructed empirically this
       session and is a ready-made starting point (see S555's own `PROJECT_LEARNINGS.md`
       entry for the fixture and the reasoning that got there).
+      **FIXED S563** (Track C of the kinship2 supplement full-reproduction plan below,
+      `docs/planning/kinship2-supplement-full-reproduction-plan.md` §5): S555's own
+      12-row fixture code was never committed, so a fresh, independently-verified 9-row
+      equivalent (a consanguineous full-sib mating forced to dogleg by its anchor also
+      anchoring an unrelated, higher-gen union) was constructed and confirmed live this
+      session. `.addRectilinearWaypoints()`'s D2 loop now looks up a dropped mate edge's
+      own color/width (keyed by the dogleg's `projId`) and stamps both onto its 2
+      replacement projection edges via a post-hoc override after the existing generic
+      fallback assignment, applied only when a marker was present -- mirrors the
+      KEPT-edges precedent exactly, no other edges affected. 1 new `test_that()` block
+      (`tests/testthat/test_makePedigreeMatingLayout.R`, 5 assertions) confirmed RED
+      against unmodified source, then GREEN. `devtools::check()` 0 errors / 1 warning +
+      1 note (both confirmed pre-existing/unrelated: the untracked "Compounding Loop"
+      clutter files' non-portable names, and a pre-existing `vignettes/figure/` knitr
+      leftover); full clean regression 1 pre-existing failure unrelated to this change
+      (`test_wordlist_coverage.R`, confirmed via `git stash`); `lintr::lint_package()` 0
+      lints on touched files. Not filed as a GitHub issue.
 - [ ] **Fully reproduce kinship2 supplementary-material PDF's results** (owner-directed
       follow-up to the S549 audit above -- "duplicate the work done in that PDF,"
       overriding that audit's own "no action" verdict on 2 of its 4 findings; plan
@@ -282,8 +299,10 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       plan, left as an explicit Pre-RED item); **Track C** (finish the
       `edgeStyle="rectilinear"` consanguineous-marker color/width propagation from the
       deferred item directly above -- smallest of the 3, Effort S, no open design
-      question). Plan's own §6.2 suggests C -> A -> B pickup order (smallest/lowest-risk
-      first) but does not force it. Verification caveat carried from the S549 audit: the
+      question) -- **DONE S563**, see the deferred-follow-up item above and
+      `CHANGELOG.md`. Plan's own §6.2 suggests C -> A -> B pickup order (smallest/lowest-risk
+      first) but does not force it. **Tracks A and B remain open** (Effort M and L
+      respectively). Verification caveat carried from the S549 audit: the
       full 17-subject `fam1` pedigree still isn't reconstructible from this repo, and
       Track B additionally has no PDF-printed worked example to check against at all
       (the PDF only names *which* subjects a shrink would trim, never their

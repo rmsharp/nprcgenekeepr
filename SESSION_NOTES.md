@@ -14,19 +14,138 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 562 Handoff Evaluation (by Session 563)
+**Score: 7/10.** **What helped:** `next_steps` named this exact item verbatim as the
+recommended first pickup ("Track C recommended first -- smallest, no open design
+question... `R/makePedigreeDiagramData.R`'s `.addRectilinearWaypoints()` D2 loop"),
+and `key_files` pointed directly at `R/makePedigreeDiagramData.R:1489-1531` -- exactly
+the right code, saving real location-finding time. The "no open design question"
+characterization was accurate and held throughout (§5.2 was correct: the fix mirrors
+an existing precedent, issue #137 D10, with no genuine judgment call). **What was
+wrong:** two claims did not hold up. (1) "fixture already built" -- S562 inherited
+`BACKLOG.md`'s own S555-era wording without independently verifying it; the actual
+12-row fixture was never committed as code, only described in prose
+(`PROJECT_LEARNINGS.md` Learning 561), and had to be reconstructed from scratch this
+session (Learning 569). (2) "~2-line fix" undersold the real diff: `do.call(rbind,
+newEdgeList)`'s column-alignment requirement (D1 sibship-bar edges share the same
+list, with no color/width columns of their own) forced a 2-part fix (an in-loop
+lookup plus a post-hoc override after the existing blanket-fallback assignment), not
+a simple in-place edit -- neither S562 nor the plan's own §5.3 flagged this structural
+constraint. **What was missing:** no warning about the `newEdgeList`/`do.call(rbind)`
+shared-list constraint between D1 and D2 edges -- would have saved a few minutes of
+design-space exploration before landing on the post-hoc-override approach.
+**ROI:** Net positive -- the accurate file/line pointer and correct "no design
+decision" framing outweighed the 2 inaccuracies, which were caught quickly via direct
+empirical verification (Pre-RED) rather than costing a wasted implementation attempt.
+
 ### What Session 563 Did
 **Deliverable:** Implement Track C of the ratified kinship2 supplement
 full-reproduction plan (`docs/planning/kinship2-supplement-full-reproduction-plan.md`
 §5) -- finish `edgeStyle="rectilinear"` consanguineous-marker color/width propagation
-onto D2 dogleg-rerouted projection edges in
-`R/makePedigreeDiagramData.R`'s `.addRectilinearWaypoints()`. (IN PROGRESS)
-**Started:** 2026-08-13.
-**Status:** Session claimed. Work beginning. Following strict TDD
-(PRE-RED -> RED -> GREEN -> REFACTOR), each transition gated by `AskUserQuestion`
-per `CLAUDE.md`'s Development Process Contract override.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded
-in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for
-the next session's reconcile.
+onto D2 dogleg-rerouted projection edges in `R/makePedigreeDiagramData.R`'s
+`.addRectilinearWaypoints()`. **DONE.** **Started/Completed:** 2026-08-13. **Status:**
+DONE. TDD phase: REFACTOR skipped by owner choice (diff already minimal, no structural
+improvement identified) -- full PRE-RED -> RED -> GREEN cycle completed, each
+transition gated by `AskUserQuestion` per `CLAUDE.md`'s Development Process Contract
+override.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SESSION_RUNNER.md`,
+`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list`, `git status`/`log`/`diff --stat`
+[50 commits ahead of `origin/master`, unpushed, unchanged pattern since S548],
+`methodology_dashboard.py` [Health 96/100, 0 High+ risk], `gh run list --branch
+master --limit 10` [push-triggered workflows green on last-pushed commit; scheduled
+`shinytest2.yaml` still red, unchanged since S548, not diagnosed -- report, don't
+fix], ledger reconcile [`CHANGELOG.md` frontier == `HEAD`; `HANDOFFS.md` frontier one
+commit behind `HEAD`, but that commit only documents a known self-reference
+limitation already resolved -- no backfill needed]). Found and reported a stale
+`BACKLOG.md` tag (the "ledger-size housekeeping" item's header still said
+`READY, Effort L` though its body stated `fully RESOLVED` since S531) -- excluded from
+the priorities picker, flagged for future cleanup. Rendered the priorities list (4
+tagged/surfaced items, including issue #148 surfaced via the ratified sequencing-audit
+prose per `CLAUDE.md`'s own check) via `AskUserQuestion` -- user picked the kinship2
+reproduction plan, Track C. **(2)** Read the plan's §5 (Track C) in full; stated
+understanding back to the user. **(3)** Phase 1B: wrote the claim stub to
+`SESSION_NOTES.md`/`HANDOFFS.md` (`status: pending`) plus a `CHANGELOG.md` claim
+entry, committed (`91c78152`). **(4)** PRE-RED: confirmed the exact gap
+(`R/makePedigreeDiagramData.R`'s D2 dogleg loop, ~line 1523, builds new projection
+edges without color/width, falling to the generic `#2B7CE9`/`NA` stamp later);
+confirmed no design decision needed (mirrors the KEPT-edges precedent, issue #137
+D10); confirmed the test home (`tests/testthat/test_makePedigreeMatingLayout.R`,
+extending the existing "Finding #2" block). Discovered the plan's referenced "12-row
+fixture" was never committed as code -- read `.buildMatingUnitForest()`'s anchor-
+selection algorithm directly from source (not hand-traced) and constructed an
+independently-verified 9-row equivalent on the first attempt (Learning 569), verified
+live via `Rscript` before writing any test code. Gated PRE-RED->RED via
+`AskUserQuestion`. **(5)** RED: added 1 new `test_that()` block (5 assertions) to
+`tests/testthat/test_makePedigreeMatingLayout.R`; confirmed all 4 substantive
+assertions fail for the right reason against unmodified source (color/width mismatch,
+not a missing-column vacuous-pass per Learning 560's own trap). **(6)** Gated RED->
+GREEN via `AskUserQuestion`. Implemented the fix: a `projColor`/`projWidth` lookup
+recorded during the D2 loop (keyed by each dogleg's `projId`), applied as a post-hoc
+override after the existing blanket color/width fallback assignment (required by
+`do.call(rbind, newEdgeList)`'s column-alignment constraint across D1/D2 edge types --
+not anticipated by the plan). **(7)** Verified: targeted test file (all pass); sibling
+`test_addRectilinearWaypoints.R` (all pass, no regression); full clean regression (1
+pre-existing failure, `test_wordlist_coverage.R`, confirmed via `git stash` to fail
+identically on unmodified source -- unrelated 2-word spelling gap already present
+project-wide); `lintr::lint_package()` on touched files (0 lints); `devtools::check()`
+(0 errors, 1 warning + 1 note, both confirmed pre-existing/unrelated -- the untracked
+"Compounding Loop" clutter files' non-portable names, and a pre-existing
+`vignettes/figure/` knitr leftover). **(8)** Gated GREEN->REFACTOR via
+`AskUserQuestion` -- owner chose to skip (diff already minimal). **(9)** Close-out:
+annotated `BACKLOG.md`'s S555 deferred-follow-up item `FIXED S563` with full
+verification summary; annotated the kinship2 plan's Track C clause `DONE S563`,
+noting Tracks A/B remain open; added a `NEWS.Rmd` entry; reviewed the tutorial-article
+checklist (`vignettes/articles/pedigree-diagram.qmd`'s "Consanguineous mating marker"
+section already claims "applies under both edge styles" -- now fully accurate as a
+result of this fix, no edit needed); logged `PROJECT_LEARNINGS.md` Learning 569 (the
+anchor-selection-algorithm-read-directly-from-source technique); refreshed
+`CLAUDE.md`'s learnings-count pointer.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A (a rendering-
+correctness fix to an existing display, not a new displayed statistic); tutorial/
+article checklist reviewed, no edit needed (see above); `NEWS.Rmd` entry checklist
+DONE; `a2interactive.Rmd` checklist N/A (`makePedigreeMatingLayout()`'s own signature
+is unchanged -- no new parameter, Shiny-UI-only rendering fix); GitHub issue
+close-out N/A (Track C, like all 3 tracks, has no GitHub issue yet -- plan's own §7
+recommends filing 3, not filed by this session, matching the established
+"recommend, don't unilaterally file" precedent); lint checklist DONE (0 lints);
+`_pkgdown.yml` reference-coverage checklist N/A (no new exported function, no
+signature change to an existing one).
+
+**Self-assessment (Session 563): 9/10.** **Strengths:** (1) Did not trust the
+inherited "fixture already built" claim at face value -- searched for the actual
+fixture code, found it was never committed, and read the underlying algorithm
+directly from source rather than re-attempting S555's own trial-and-error approach
+(Learning 561) or fabricating a plausible-looking fixture that might not actually
+trigger the target code path. The constructed 9-row fixture worked correctly on the
+first empirical verification. (2) Followed the RED-phase vacuous-pass-trap discipline
+(Learnings 560/562) throughout -- every new assertion used `expect_equal()` against a
+concrete expected value, never `all(x==y)`/`expect_true(all(is.na(...)))`. (3) Caught
+a structural constraint the plan itself did not anticipate (the `do.call(rbind,
+newEdgeList)` column-alignment requirement forcing a 2-part fix) by reading the full
+surrounding function before editing, rather than attempting the naive "just add
+color/width to the D2 data.frame" edit and discovering the `rbind()` failure only at
+test time. (4) Ran the full `devtools::check()` (not just targeted/regression tests)
+and positively confirmed, via `git stash`, that both findings it surfaced (1 warning,
+1 note) pre-date this session's diff -- rather than assuming pre-existing status
+without checking. (5) Followed every TDD phase-gate via `AskUserQuestion` exactly as
+`CLAUDE.md` requires, with each option spelling out concrete next-phase actions.
+**Weaknesses:** (1) The background `devtools::check()` run initially double-
+backgrounded (an `&`-suffixed command inside a `run_in_background: true` Bash call),
+causing a premature "completed" task notification while the actual R process kept
+running detached -- required manual `ps`-based polling and 2 `Monitor` calls to
+recover a reliable completion signal; a cleaner approach would have used
+`run_in_background: true` alone, without the internal `&`. (2) No independent
+adversarial-verification pass beyond this session's own direct test/check output --
+same standing gap flagged across many prior sessions, low risk here given the small,
+mechanically-forced diff and full green verification, but still unaudited by a second
+reader/agent. (3) Did not file a GitHub issue for Track C (or the other 2 tracks),
+matching precedent but leaving all 3 tracks still untracked outside `BACKLOG.md`/the
+plan document. (4) Did not push the now 53+ local commits to `origin` -- left for the
+owner/a future session, matching the repeatedly-deferred precedent from S548 onward.
+**Ledger:** recorded in `CHANGELOG.md` (this session's reconcile, claim, deliverable,
+and close-out entries).
 
 ### Session 561 Handoff Evaluation (by Session 562)
 **Score: 9/10.** **What helped:** the `next_steps` field named this exact item

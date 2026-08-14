@@ -128,29 +128,88 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
-This file currently holds **4** receipt(s). Computed by `methodology_trim.py` on every
+This file currently holds **5** receipt(s). Computed by `methodology_trim.py` on every
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
 session: S563
 date: 2026-08-13
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 9
+predecessor_score: 7
 active_task: Implement Track C of the ratified kinship2 supplement
 full-reproduction plan (docs/planning/kinship2-supplement-full-reproduction-plan.md
 §5) -- edgeStyle="rectilinear" consanguineous-marker color/width propagation onto D2
 dogleg-rerouted projection edges, R/makePedigreeDiagramData.R
-.addRectilinearWaypoints(). IN PROGRESS.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+.addRectilinearWaypoints(). DONE.
+what_was_done: Full PRE-RED->RED->GREEN TDD cycle (REFACTOR skipped, owner choice --
+diff already minimal), each transition AskUserQuestion-gated. PRE-RED found the
+plan's referenced "12-row fixture" was never committed as code; read
+.buildMatingUnitForest()'s anchor-selection algorithm directly from source and built
+an independently-verified 9-row equivalent on the first attempt (Learning 569). RED:
+1 new test_that() block (5 assertions) in
+tests/testthat/test_makePedigreeMatingLayout.R, confirmed failing for the right
+reason against unmodified source. GREEN: R/makePedigreeDiagramData.R's D2 loop now
+looks up a dropped mate edge's color/width (keyed by the dogleg's projId) and applies
+it as a post-hoc override after the existing generic-fallback assignment (required by
+do.call(rbind, newEdgeList)'s column-alignment constraint across D1/D2 edge types --
+a structural wrinkle the plan itself did not anticipate). Verified: targeted +
+sibling test files all pass; full clean regression 1 pre-existing failure
+(test_wordlist_coverage.R, confirmed via git stash unrelated to this diff);
+lintr::lint_package() 0 lints on touched files; devtools::check() 0 errors, 1
+warning + 1 note, both confirmed pre-existing/unrelated (untracked "Compounding
+Loop" files' non-portable names; a pre-existing vignettes/figure/ knitr leftover).
+Close-out: BACKLOG.md's S555 deferred-follow-up item annotated FIXED S563;
+kinship2 plan's Track C clause annotated DONE S563 (Tracks A/B remain open);
+NEWS.Rmd entry added; PROJECT_LEARNINGS.md Learning 569 logged. Commits: 91c78152
+(claim) + this close-out commit.
+next_steps: Pick up Track A (X-chromosome kinship, kinship() gains chrtype/sex,
+Effort M) or Track B (a pedigree.shrink() equivalent, new shrinkPedigree(),
+Effort L, most novel -- its own Pre-RED must first deparse kinship2's
+excludeUnavailFounders/excludeStrayMarryin helpers, not yet done) --
+docs/planning/kinship2-supplement-full-reproduction-plan.md §3/§4. Each is its own
+separate implementation session (different capability, never bundled with the
+other per SESSION_RUNNER.md's vertical-slice rule). None of the 3 tracks has a
+GitHub issue yet -- the owner may wish to file 3 before further implementation.
+Separately: a stale BACKLOG.md tag was found this session (the "ledger-size
+housekeeping" item, S518, still says READY/Effort L in its header though its body
+says fully RESOLVED since S531) -- a 1-line tag cleanup, not urgent. BACKLOG.md
+priorities otherwise unchanged: LabKey (BLOCKED, Effort M), NPRC outreach
+(DECISION NEEDED, Effort N/A), issue #148 (DECISION NEEDED -- needs its own
+scope-narrowing conversation first, surfaced via the ratified sequencing audit's
+own prose order, not an inline tag).
+key_files: R/makePedigreeDiagramData.R:1499-1622 (.addRectilinearWaypoints(), the
+D2 loop + post-hoc override, this session's entire production diff);
+tests/testthat/test_makePedigreeMatingLayout.R:1043-1120 (the new Track C test
+block); docs/planning/kinship2-supplement-full-reproduction-plan.md §3/§4 (Tracks
+A/B, the next pickups); PROJECT_LEARNINGS.md Learning 569 (the anchor-selection
+algorithm, reusable for any future D2-dogleg-targeting fixture); BACKLOG.md (the
+S555 deferred-follow-up item and the kinship2 plan item, both annotated this
+session).
+gotchas: (1) do.call(rbind, newEdgeList) requires matching columns across every
+entry -- D1's sibship-bar/chain edges have no color/width columns of their own, so
+any future edit to this function that wants per-edge color/width must either add
+those columns to ALL newEdgeList entries or use the post-hoc-override pattern this
+session established (projColor/projWidth keyed by a unique id, applied after the
+blanket fallback assignment) -- do not attempt to set color/width directly inside
+the D2 loop's own data.frame() call, it will be silently clobbered by the later
+blanket assignment. (2) Track B's own Pre-RED must deparse
+excludeUnavailFounders/excludeStrayMarryin before writing RED tests -- still not
+done. (3) Track B naming: use `genotyped`, never `avail`/`available` (collides
+with R/makeAvailable.R's own unrelated breeding-group concept). (4) Track A's
+X-linked branch must apply the existing MZ-twin mzgrp/mzindex correction inside
+the new chrtype="x" loop too.
+runtime_smoke: No live shinytest2/chromote run this session -- judged sufficient
+per the plan's own §5.3 allowance ("a rendering-detail fix, not a new interaction
+pattern"): the new unit test directly asserts on the exact edges data.frame
+makePedigreeMatingLayout() returns, the same structure R/modPedigree.R's
+visNetwork::renderVisNetwork() consumes for rendering -- a static review of the
+actual returned data, not merely a build-passes check. Stated explicitly, not
+silently skipped.
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-13 (claim; this
+close-out entry)
 commit: pending
 ```
-<claim stub -- filled at Phase 3D close-out>
 
 ```handoff
 session: S562
