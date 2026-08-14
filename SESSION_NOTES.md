@@ -10,6 +10,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 559 Did
+**Deliverable:** Archive `SESSION_NOTES.md` (past the 2,000-line agent read cap, dashboard HIGH
+risk, unresolved since S555) via `methodology_trim.py`; also check `HANDOFFS.md`'s own MEDIUM
+archive-trigger risk in the same pass. (IN PROGRESS)
+**Started:** 2026-08-13.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 557 Handoff Evaluation (by Session 558)
 **Score: 9/10.** **What helped:** the `next_steps` field named this exact item (item 2 of
 its priority list) with an explicit starting-point pointer -- "starting with `module`

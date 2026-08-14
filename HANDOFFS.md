@@ -125,6 +125,24 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-12.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S559
+date: 2026-08-13
+status: pending
+self_score: pending
+predecessor_score: 9
+active_task: Archive SESSION_NOTES.md (past the 2,000-line agent read cap, dashboard HIGH risk,
+unresolved since S555) via methodology_trim.py; also check HANDOFFS.md's own MEDIUM
+archive-trigger risk in the same pass.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S558
 date: 2026-08-13
 status: complete
@@ -186,7 +204,7 @@ runtime_smoke: n/a -- pure git/repository housekeeping (branch deletion), no run
 behavior surface exists to launch or observe. Stated explicitly, not silently skipped.
 changelog_ref: this session's own CHANGELOG.md entries, 2026-08-13 ([BL-N] the claim; [BL-N]
 the deliverable/branch-deletion entry; [BL-N] this close-out entry)
-commit: pending
+commit: cafd7d49
 ```
 <**Self-score 9/10.** +: (1) built a new, concrete evidence methodology (merge-base position
 vs. master's own later history; name-existence cross-check; deliberate-deletion check) for the

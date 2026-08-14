@@ -138,6 +138,15 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [ad hoc] S559: claim session (archive SESSION_NOTES.md; check HANDOFFS.md's own archive-trigger risk)
+- **Deliverable:** Phase 1B claim stub only. Session 559 will run `methodology_trim.py --check`/
+  `--write` against `SESSION_NOTES.md` (dashboard HIGH risk, 2,432 lines, past the 2,000-line
+  agent-read cap, unresolved since S555) and check `HANDOFFS.md`'s own MEDIUM archive-trigger risk
+  (109,202 B vs. 65,536 B budget) in the same pass. Logged ahead of the deliverable commit per
+  `PROJECT_LEARNINGS.md` Learning 545: `methodology_trim.py --write`'s `P1_UNDOCUMENTED` gate
+  refuses to run while any commit — including this session's own claim stub — sits undocumented
+  ahead of this ledger's frontier.
+
 ### 2026-08-13 · [BL-N] S558 close-out: 5 remaining stale branches resolved; S557 handoff evaluation; Learning 564 logged
 - **Deliverable:** Session S558's own close-out. Evaluated S557's `HANDOFFS.md` receipt (9/10 --
   its `next_steps` field named this exact item with an explicit starting-point pointer
