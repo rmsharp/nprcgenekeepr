@@ -14,6 +14,120 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 568 Handoff Evaluation (by Session 569)
+**Score: 9/10.** **What helped:** the handoff's `next_steps` field named 5 concrete pickup
+candidates with tags/effort, and its `gotchas` field (`.Rbuildignore` paren-free rule,
+`git status --ignored`/`check-ignore` as the reliable "already covered" signal) generalized well
+even though this session picked none of those 5 items -- the user instead opened a new,
+unlisted task (pedigree-diagram/kinship2 visual comparison), which no prior handoff could have
+anticipated. **What was missing:** nothing material for the task actually picked -- an untargeted
+handoff can't name a task the user hasn't asked for yet, and S568's own scope (Compounding Loop
+files) was unrelated to pedigree-diagram rendering. **What was wrong:** nothing identified.
+**ROI:** Neutral-to-high for orientation generally (ledger/CI/dashboard state all confirmed
+accurate), N/A for this session's actual deliverable.
+
+### What Session 569 Did
+**Deliverable:** A planning document comparing nprcgenekeepr's Pedigree Diagram rendering against
+kinship2's, verifying 4 owner-observed differences against source/images/prior design docs, and
+proposing a phased remediation plan. **DONE.**
+**Started/Completed:** 2026-08-14. **Status:** DONE. Planning session -- no RED/GREEN/REFACTOR
+phase applies (`SESSION_RUNNER.md` "Planning Sessions": the plan is the deliverable; no
+implementation this session). No `AskUserQuestion` phase-gate crossed.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SESSION_RUNNER.md`, `SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list` [12 open], `git status`/`log`/`diff --stat` [71 commits ahead
+of `origin/master`, unpushed; 1 untracked file, confirmed benign per S555-557 precedent],
+`methodology_dashboard.py` [Health 96/100, 0 High+ risk], `gh run list --branch master --limit 10`
+[push-triggered workflows green; scheduled `shinytest2.yaml` red a 3rd consecutive day -- reported,
+not diagnosed], ledger reconcile [`CHANGELOG.md`/`HANDOFFS.md` frontiers both == `HEAD`, zero gap]).
+Rendered a 5-item priorities list (capped at 4 in the `AskUserQuestion` picker per `CLAUDE.md`'s
+rule) sourced from S568's own handoff `next_steps`. The user did not answer that question --
+instead opened a new, unlisted task (compare Pedigree Diagram rendering to kinship2, plan the
+fix) in the next message. **(2)** Investigated each of the user's 4 claims directly against
+evidence rather than from memory/assumption: read `R/makePedigreeDiagramData.R` in full (1,662
+lines); viewed the actual `vignettes/articles/kinship2-fidelity-validation-img/trackB-*.png` and
+`trackC-*.png` PNGs (not just alt text or prose); read the Track C test fixture
+(`tests/testthat/test_makePedigreeMatingLayout.R:1046-1117`) and its own root-cause comment; read
+`R/findGeneration.R` in full to confirm founders always get `gen = 0`; read both prior ratified
+design docs governing this code (`docs/planning/pedigree-diagram-option2-layout-design-plan.md`,
+`docs/planning/pedigree-diagram-rectilinear-waypoint-design-plan.md`) for already-decided scope
+and previously-flagged "here be dragons" gaps; confirmed `nprcgenekeepr::examplePedigree` has no
+`affected` column live. Findings: claim 1 (default edge style) and claim 2 (unaffected fill)
+confirmed as well-scoped default-value gaps -- claim 2 specifically is NOT the same gap
+`BACKLOG.md`'s S552->S554 fix already closed (that fix only handled the `hasAffected == TRUE`
+case; no-`affected`-column pedigrees, the package's own bundled example among them, were never
+addressed). Claim 3 (spacing) is not new -- it is an already-documented, unresolved "dragon"
+(`...option2-layout-design-plan.md:486-495`, "no exact collision, not a minimum visual spacing").
+Claim 4a (generation-row alignment) is the most consequential finding: confirmed via the rendered
+image that a `.positionMatingUnitForest()` anchor renders below its own child, root-caused to the
+issue #144 `effGenOf = max(own gen, every anchored union's gen)` rule -- and confirmed, via
+`...rectilinear-waypoint-design-plan.md:90-94`'s own prior 62%-of-real-mating-units measurement,
+that the underlying mechanism is common on real data, not a fixture artifact, even though the
+specific test fixture's `X gen = 3` value could not itself arise from `findGeneration()`. This
+exact question was already flagged twice in prior docs as "a separate, unpicked item" needing its
+own owner sign-off (`...rectilinear-waypoint-design-plan.md:101-117`; `BACKLOG.md`'s "Candidate C"
+item, `:782-794`) -- not a new discovery, but newly confirmed still open and now given a concrete
+before/after image citation. Claim 4b (rectilinear scope) confirmed as real but narrower than
+claimed absence -- issue #142 shipped sibship-bar + dogleg waypoints specifically, not
+every-edge-orthogonal. Claim 4c (dashed duplicate-arc) was REFUTED as "missing": `dupEdges`
+(`R/makePedigreeDiagramData.R:1305-1315`) unconditionally builds it; the rendered image confirms it
+renders, just barely legibly, because of claim 3's own spacing gap -- not a second, independent
+defect. **(3)** Wrote `docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md`: the
+evidence above, "what's already decided" cross-references, and 5 independently-shippable
+remediation tracks (Track 1 unaffected-fill default, Track 2 flip `edgeStyle` default, Track 3
+minimum mate-spacing guarantee, Track 4 the anchor/generation-row decision -- flagged as its own
+dedicated design session, matching this project's Development Process Contract's PRE-RED
+scope-decision gate, Track 5 broaden rectilinear coverage, reassessed after 3-4 land), each with
+scope/effort/risk/completion-criteria/verification-commands/session-boundary, plus a recommended
+pickup order. Verified every file:line citation against source with `grep`/`sed` after a first
+draft (2 citations were off by several lines on first pass -- `BACKLOG.md`'s Candidate C item and
+the option2 plan's "New dragon" note -- both corrected before treating the document as final; see
+Gotchas). **(4)** Close-out: added `PROJECT_LEARNINGS.md` Learning 573 (viewing rendered images
+directly, not just prose/code, resolved a "missing feature" vs. "present but illegible" ambiguity;
+checking a generating function's actual contract before judging a test fixture's realism), bumped
+`CLAUDE.md`'s learning-count pointer (572->573).
+
+**Process gap, self-identified:** Phase 1B's claim stub (`SESSION_NOTES.md` + `HANDOFFS.md`
+`status: pending`, committed before technical work begins) was NOT written before starting the
+investigation above -- this session went directly from receiving the task into research. Caught
+only at close-out, re-reading `SESSION_RUNNER.md` while writing this entry. No harm resulted this
+time (the session did not crash, and this write now covers the full record), but this is exactly
+the gap Phase 1B exists to catch when a session DOES crash mid-investigation. Recorded as an
+explicit, not-omitted self-assessment weakness below, not smoothed over.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A (no new displayed
+statistic). Tutorial/article documentation checklist N/A (no shipped Shiny UI feature -- this is a
+planning document, not an implementation). `NEWS.Rmd` entry checklist N/A (no new exported
+function/feature shipped). `a2interactive.Rmd` checklist N/A (no new exported function/parameter).
+GitHub issue close-out checklist N/A (no `BACKLOG.md` item marked DONE this session -- no new
+GitHub issues filed either, matching the established "recommend, don't unilaterally file"
+precedent since Track 4 in particular needs its own owner sign-off first). Lint checklist N/A (no
+`.R` files touched). `_pkgdown.yml` reference-coverage checklist N/A (no new exported function).
+
+**Self-assessment (Session 569): 7/10.** **Strengths:** (1) Verified all 4 claims against direct
+evidence (source line numbers, rendered PNG pixels, prior design docs) rather than accepting or
+dismissing them from the article's prose alone -- this changed the actual conclusion for claim 4c
+(refuted as "missing," confirmed present-but-illegible) and sharpened claim 4a from "the user's
+impression" into a precisely root-caused, already-partially-documented architectural question with
+a measured real-data frequency (62%). (2) Cross-referenced 2 full prior design docs and found both
+already anticipated and explicitly deferred 2 of the 4 claims (spacing, generation-alignment) as
+their own "here be dragons"/"separate, unpicked item" notes -- the plan correctly frames these as
+"re-confirmed still open," not new discoveries, avoiding both under-crediting prior work and
+mis-scoping the remediation as smaller than it is. (3) Caught and fixed 2 inaccurate line-number
+citations via a dedicated grep-verification pass before finalizing, rather than trusting citations
+transcribed while reading. **Weaknesses:** (1) The Phase 1B claim stub was skipped entirely until
+self-caught at close-out (see above) -- a real, not hypothetical, protocol gap for this specific
+session, docked accordingly. (2) Did not re-render the actual `trackB`/`trackC` fixtures live
+(`chromote`/`shinytest2`) to numerically measure the claimed spacing variance -- relied on visual
+pixel-position estimation from the static PNGs, which is directionally solid (P1-P2 vs. P3-P4 gap
+ratio is large and obvious) but not as rigorous as a live re-render with exact coordinate
+extraction would have been; left as an explicit verification step for Track 3's own future
+implementation session rather than done here. (3) Did not verify the `nprcgenekeepr::examplePedigree`
+column check against a second fixture (e.g. the bundled real 375-individual CSV) to confirm the
+"most uploaded studbooks lack `affected`" claim beyond the one bundled example -- a reasonable,
+but not fully substantiated, generalization.
+**Ledger:** recorded in `CHANGELOG.md` (this session's entries).
+
 ### Session 567 Handoff Evaluation (by Session 568)
 **Score: 9/10.** **What helped:** the handoff's `next_steps` field named this session's exact
 deliverable verbatim -- "the new incidental finding this session logged -- should the 4

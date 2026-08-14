@@ -138,6 +138,20 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [ad hoc] S569: close out (Pedigree Diagram/kinship2 fidelity remediation plan)
+- **Deliverable:** `docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` --
+  verified the owner's 4-point visual comparison (default edge style, unaffected-fill default,
+  mate-spacing uniformity, and the fidelity-validation article's Track C generation-alignment/
+  rectilinear-scope/duplicate-arc findings) against source, rendered images, and 2 prior ratified
+  design docs; proposed 5 independently-shippable remediation tracks with scope/effort/risk/
+  completion-criteria/verification, Track 4 (anchor/generation-row alignment) flagged as needing
+  its own dedicated design session. Planning session only -- no `R/`/`tests/` file touched, no
+  implementation. Added `PROJECT_LEARNINGS.md` Learning 573 (verify visual-fidelity claims
+  against rendered images, not prose/code alone); bumped `CLAUDE.md`'s learning-count pointer
+  (572->573). Self-identified process gap: the Phase 1B claim stub was not written before this
+  session's investigation began (see `SESSION_NOTES.md`/`HANDOFFS.md`). See `SESSION_NOTES.md`
+  Session 569 entry, `HANDOFFS.md` S569 receipt.
+
 ### 2026-08-14 · [ad hoc] S568: reconcile HANDOFFS.md commit self-reference (`61ce96a4`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> `61ce96a4`
   (the close-out commit whose sha the receipt itself couldn't name until after it was made) -- the

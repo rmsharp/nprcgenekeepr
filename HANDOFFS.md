@@ -132,6 +132,78 @@ This file currently holds **8** receipt(s). Computed by `methodology_trim.py` on
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S569
+date: 2026-08-14
+status: complete
+self_score: 7
+predecessor_score: 9
+active_task: Planning session comparing nprcgenekeepr's Pedigree Diagram rendering against
+  kinship2's (owner-observed 4-point comparison) and proposing a phased remediation plan. DONE --
+  docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md written, no implementation.
+what_was_done: Verified all 4 owner claims against direct evidence (source, rendered PNGs, prior
+  design docs), not from memory: read R/makePedigreeDiagramData.R in full; viewed the actual
+  trackB-*.png/trackC-*.png images (not just alt text); read the Track C test fixture and its
+  root-cause comment (test_makePedigreeMatingLayout.R:1046-1117); read R/findGeneration.R in full
+  (confirms founders always get gen=0); read both prior ratified design docs
+  (pedigree-diagram-option2-layout-design-plan.md, pedigree-diagram-rectilinear-waypoint-design-
+  plan.md) for already-decided scope and pre-flagged gaps; confirmed examplePedigree has no
+  affected column live. Findings: claim 1 (default edge style "direct" not "rectilinear") and
+  claim 2 (unaffected fill, NOT the same gap the S552->S554 fix already closed -- that fix only
+  covered hasAffected==TRUE) are well-scoped default-value gaps. Claim 3 (mate spacing) is an
+  already-documented, unresolved "dragon" (option2 plan :486-495, "no exact collision, not a
+  minimum visual spacing"). Claim 4a (generation-row alignment) is the most consequential finding
+  -- confirmed via the rendered image that an anchor renders below its own child, root-caused to
+  the issue #144 effGenOf=max(own gen, every anchored union's gen) rule; confirmed via the
+  rectilinear-waypoint plan's own prior 62%-of-real-mating-units measurement (:90-94) that the
+  mechanism is common on real data; already flagged twice in prior docs as "a separate, unpicked
+  item" (:101-117; BACKLOG.md's Candidate C item :782-794) needing its own owner sign-off. Claim
+  4b (rectilinear scope) confirmed real but narrower than claimed absence (issue #142 shipped
+  sibship-bar+dogleg waypoints specifically, not every-edge-orthogonal). Claim 4c (dashed
+  duplicate-arc) REFUTED as missing -- dupEdges (:1305-1315) unconditionally builds it; the image
+  confirms it renders, just barely legibly, because of claim 3's own spacing gap. Wrote the plan
+  document: evidence, "already decided" cross-references, 5 independently-shippable tracks (1
+  unaffected-fill default, 2 flip edgeStyle default, 3 minimum mate-spacing guarantee, 4 the
+  anchor/generation-row decision -- its own dedicated design session, 5 broaden rectilinear
+  coverage, reassessed after 3-4 land), each with scope/effort/risk/completion-criteria/
+  verification/session-boundary, plus a recommended pickup order. Verified every file:line
+  citation against source after a first draft; corrected 2 that were off by several lines. Added
+  PROJECT_LEARNINGS.md Learning 573; bumped CLAUDE.md's learning-count pointer (572->573).
+next_steps: This is a DRAFT plan only -- no code changed. A future session should either (a) pick
+  up Track 1 (unaffected-fill default) or Track 3 (minimum mate-spacing) directly, both
+  well-scoped enough to enter a normal PRE-RED->RED->GREEN cycle without further design work
+  (Track 1 has one small open sub-decision: should mating-unit dot nodes also go transparent, or
+  stay NA/vis.js-default -- resolve via a quick AskUserQuestion before RED), or (b) open Track 4
+  as its own dedicated design session (the anchor/generation-row decision) first, since it is the
+  long-pole item and gates how much Track 5 turns out to need. Track 2 (flip edgeStyle default)
+  should wait until after Track 3 lands per the plan's own sequencing rationale. See
+  docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md §5 for the full
+  recommended order and each track's own session-boundary note.
+key_files: docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md (this session's
+  deliverable, all 5 tracks); R/makePedigreeDiagramData.R:171-173 (.affectedColor()), :1061-1062
+  (edgeStyle default), :742-754 (issue #144 effGenOf fix, the claim-4a root cause), :681-701
+  (mergeSubtrees/minSep, the claim-3 root cause), :1305-1315 (dupEdges, claim 4c); R/findGeneration.R
+  (full file, confirms founder gen=0 always); docs/planning/pedigree-diagram-option2-layout-
+  design-plan.md:486-495 (spacing dragon); docs/planning/pedigree-diagram-rectilinear-waypoint-
+  design-plan.md:90-94,101-117 (62% measurement, scope-boundary note); BACKLOG.md:419-427
+  (S552->S554 fix scope), :782-794 (Candidate C item).
+gotchas: (1) Track 4 (generation-row alignment) is architecturally significant -- D2/D3 are shared
+  foundation for both edge styles, the duplicate-node model, and the 750-node cap; per this
+  project's Vertical Slice gates it cannot be folded into a slice with Tracks 1-3, and per the
+  Development Process Contract needs its own PRE-RED AskUserQuestion choosing between the plan's
+  2 named design alternatives before any RED work. (2) The Phase 1B claim stub was NOT written
+  before this session's investigation began -- caught only at close-out (see SESSION_NOTES.md's
+  own "Process gap, self-identified" note). A future session should not repeat this: write the
+  stub immediately after the task is understood, before any research/reads. (3) This project's
+  own bundled examplePedigree has no `affected` column -- useful as the go-to fixture for
+  confirming Track 1's fix, since it already reproduces the default-fill gap live without needing
+  a synthetic fixture.
+runtime_smoke: n/a -- planning/documentation-only session, no R/ or tests/ file touched, nothing
+  to runtime-verify.
+changelog_ref: CHANGELOG.md 2026-08-14 S569 entry (this close-out)
+commit: pending
+```
+
+```handoff
 session: S568
 date: 2026-08-14
 status: complete
