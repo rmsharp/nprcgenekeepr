@@ -116,6 +116,15 @@ README\.*\.png$
 # above -- .gitignore has no effect on R CMD build's tarball contents. Session 567, 2026-08-14,
 # owner decision via AskUserQuestion, see CHANGELOG.md.
 ^inst/extdata/reference/NIHMS593658-supplement-supplement_1\.pdf$
+
+# 3 personal reference files -- "The Compounding Loop", a saved Claude Artifact about this
+# project's own session methodology, not scientific/genetics reference material like the files
+# above. Mirrors .gitignore's own S568 exclusion; extended here for the same reason S497/S567
+# extended the files above -- .gitignore has no effect on R CMD build's tarball contents.
+# Session 568, 2026-08-14, owner decision via AskUserQuestion, see CHANGELOG.md.
+^inst/extdata/reference/The Compounding Loop\.html$
+^inst/extdata/reference/The Compounding Loop\.pdf$
+^inst/extdata/reference/The Compounding Loop\.webarchive$
 ^FRAMEWORK_LEARNINGS\.md$
 ^methodology_trim\.py$
 ^__pycache__$

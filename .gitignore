@@ -72,5 +72,17 @@ inst/extdata/reference/pedigree_nomenclature.html
 # CHANGELOG.md.
 inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf
 
+# 3 personal reference files ("The Compounding Loop") saved from a Claude Artifact about this
+# project's own SESSION_RUNNER.md/SAFEGUARDS.md methodology (github.com/KJ5HST/methodology) --
+# not scientific/genetics reference material like the files above, and unrelated to this
+# package's own subject matter. Kept off this PUBLIC repo as personal reference, matching the
+# same "gitignore in place" pattern established for the files above. A 4th file found alongside
+# these 3, a Microsoft/LibreOffice editor lock file with no content
+# ("~$e Compounding Loop.html"), was deleted outright rather than gitignored. Session 568,
+# 2026-08-14, owner decision via AskUserQuestion, see CHANGELOG.md.
+inst/extdata/reference/The Compounding Loop.html
+inst/extdata/reference/The Compounding Loop.pdf
+inst/extdata/reference/The Compounding Loop.webarchive
+
 # Python bytecode cache from methodology_dashboard.py/methodology_trim.py (Session 514)
 __pycache__/
