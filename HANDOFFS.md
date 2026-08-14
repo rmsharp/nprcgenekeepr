@@ -131,18 +131,85 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S559
 date: 2026-08-13
-status: pending
-self_score: pending
+status: complete
+self_score: 8
 predecessor_score: 9
 active_task: Archive SESSION_NOTES.md (past the 2,000-line agent read cap, dashboard HIGH risk,
-unresolved since S555) via methodology_trim.py; also check HANDOFFS.md's own MEDIUM
-archive-trigger risk in the same pass.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+unresolved since S555) via methodology_trim.py; also checked and archived HANDOFFS.md
+(dashboard MEDIUM risk) and, once its own byte trigger fired as a direct side effect,
+CHANGELOG.md too -- DONE, all 3 ledgers archived and verified.
+what_was_done: Ran methodology_trim.py --write against SESSION_NOTES.md, HANDOFFS.md, and
+CHANGELOG.md. First attempt chained all 3 --write calls without committing between them,
+which broke CHANGELOG.md's own generated verify.sh (compared against a stale HEAD, 2
+entries behind) -- not real data loss (the tool's own in-process L1/L2/L3 checks, run
+against true in-memory content, had already passed), but an invalid comparison. Recovered
+via a precise surgical unwind of just the premature CHANGELOG.md trim, then re-ran all 3 as
+separate write-verify-commit cycles per the tool's own advertised discipline. Final commits:
+4c7f8415 (claim), 8e586478 (SESSION_NOTES.md: 2,432->339 lines, 208,194->27,604 B), 306a4b4d
+(HANDOFFS.md: 109,667->9,200 B), ec76e487 (CHANGELOG.md: 67,414->33,924 B). All 3 shards'
+verify.sh scripts pass cleanly against real committed HEAD. Also fixed S558's own HANDOFFS.md
+receipt commit: pending -> cafd7d49 before archiving it (documented reconcile exception).
+Logged PROJECT_LEARNINGS.md Learning 565 (the chained-trim/verify.sh interaction) and a new
+BACKLOG.md Housekeeping item (HANDOFFS.md's recurring FRONTMATTER_FIELD_ABSENT finding,
+first seen S508, needs an explicit add-vs-remove decision). Updated CLAUDE.md's stale
+"Sessions 1-504+; 503 learnings" pointer to the current count.
+next_steps: BACKLOG.md priorities, in order: (1) Write the dedicated Pedigree Diagram tab
+article (READY, Effort M, unchanged since S544). (2) Fix edgeStyle="rectilinear"
+consanguineous-marker color/width propagation on dogleg-rerouted edges (READY, Effort S,
+found S555 -- a verified 12-row reproduction fixture already exists). (3) Decide add-vs-
+remove for HANDOFFS.md's FRONTMATTER_FIELD_ABSENT finding (new this session, DECISION
+NEEDED, Effort S). (4) Issue #148 (MHC haplotype frequency reporting) needs a
+scope-narrowing conversation before implementation, per the ratified genetic-metrics
+sequencing audit. Unchanged: NPRC outreach owner review (DECISION NEEDED); LabKey remaining
+recs (BLOCKED); the scheduled shinytest2.yaml CI run is still red, unchanged from
+S544-S559's own findings, still not diagnosed by any session. Local master remains ahead of
+origin (38+ commits after this session) -- a future session should consider pushing.
+key_files: BACKLOG.md Housekeeping (new HANDOFFS.md front-matter-field item);
+PROJECT_LEARNINGS.md (new Learning 565); CLAUDE.md:282 (learnings-count pointer);
+docs/archive/SESSION_NOTES-through-2026-08-13.md, docs/archive/HANDOFFS-through-2026-08-13.md,
+docs/archive/CHANGELOG-through-2026-08-13.md (the 3 new shards, each with its own .verify.sh).
+No R/ or tests/ files touched this session (pure ledger/documentation housekeeping).
+gotchas: (1) methodology_trim.py's generated verify.sh validates an uncommitted --write
+against HEAD -- if a session's deliverable is archiving MULTIPLE ledger files in one
+sitting, commit each file's own --write (and run its verify.sh) BEFORE running --write
+against the next file, exactly as the tool's own printed output says ("one ledger, one
+shard, one entry, one commit, one revert"). CHANGELOG.md is the one most likely to break
+this way, since every OTHER ledger's own trim writes an entry into it as a side effect. See
+PROJECT_LEARNINGS.md Learning 565 for the full recovery methodology if this is hit anyway.
+(2) A ledger's own byte trigger can fire as a side effect of another ledger's trim entries
+landing in it -- re-run --check on CHANGELOG.md after archiving any other ledger, even if
+it wasn't part of the original plan. (3) HANDOFFS.md's declared "retained receipt count"
+regenerated front-matter field has no matching sentence in the file's actual front matter
+(a real, non-blocking, recurring FRONTMATTER_FIELD_ABSENT finding since S508) -- don't
+mistake it for a new defect; it's tracked in BACKLOG.md Housekeeping now, decision pending.
+runtime_smoke: n/a -- pure ledger/documentation housekeeping (archiving 3 ledger files), no
+runtime/Shiny behavior surface exists to launch or observe. Stated explicitly, not silently
+skipped.
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-13 (claim; 3 ledger-trim
+entries auto-written by methodology_trim.py; this close-out entry)
 commit: pending
 ```
+<**Self-score 8/10.** +: (1) ran --check before every --write and verified losslessness via
+each shard's own generated verify.sh before every commit -- caught the chained-trim defect
+itself rather than committing broken state. (2) recovered via a precise, minimal surgical
+unwind (removing exactly the erroneous trim's own top-inserted entry and bottom-removed
+tail) rather than a blanket revert that would have discarded 2 valid trims' work.
+(3) extended scope to CHANGELOG.md's own trigger only because this session's own actions
+caused it to fire, without treating that as license for unrelated scope creep. (4) fixed
+the S558 receipt's stale commit: pending placeholder using the documented reconcile
+exception. (5) surfaced the pre-existing S508-era HANDOFFS.md FRONTMATTER_FIELD_ABSENT
+finding as an explicit, trackable BACKLOG.md decision item instead of letting it keep
+recurring silently. (6) documented the chained-trim gotcha as PROJECT_LEARNINGS.md
+Learning 565. -: (1) the core mistake -- chaining 3 --write calls without committing
+between them despite the tool's own printed guidance saying exactly that -- was avoidable
+and cost real session time to recover from. (2) no independent adversarial-verification
+pass beyond the tool's own internal checks and this session's own manual review -- the same
+standing gap S551-S558 have flagged across 7 consecutive sessions, though the risk here is
+lower given the tool's own L1/L2/L3 checks are themselves independent verification.
+(3) did not push the now 38+ local commits to origin -- left for the owner/a future
+session, matching the repeatedly-deferred precedent from S548 onward.
+**Predecessor (S558) score: 9/10** -- see the Session 558 Handoff Evaluation in
+SESSION_NOTES.md for the full breakdown; its next_steps field named this exact item
+verbatim as item 1 of its priority list, followed as the literal first and only
+investigative step.>
 

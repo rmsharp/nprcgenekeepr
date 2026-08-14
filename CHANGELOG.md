@@ -138,6 +138,22 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [ad hoc] S559 close-out: SESSION_NOTES.md/HANDOFFS.md/CHANGELOG.md all archived; S558 handoff evaluation; Learning 565 logged
+- **Deliverable:** Session S559's own close-out. Evaluated S558's `HANDOFFS.md` receipt (9/10
+  -- its `next_steps` field named this exact item verbatim as item 1 of its priority list,
+  followed as the literal first and only investigative step; nothing found inaccurate beyond
+  the expected, documented `commit: pending` self-reference, reconciled to `cafd7d49` before
+  archiving). Self-assessed 8/10 (the one point off: an avoidable process mistake -- chained
+  3 `methodology_trim.py --write` calls across different ledger files without committing
+  between them, breaking `CHANGELOG.md`'s own generated `verify.sh` comparison against a
+  stale `HEAD` -- caught before any commit, recovered via a precise surgical unwind, and
+  documented as `PROJECT_LEARNINGS.md` Learning 565 so a future multi-ledger archive session
+  doesn't repeat it). Logged a new `BACKLOG.md` Housekeeping item for `HANDOFFS.md`'s
+  recurring, non-blocking `FRONTMATTER_FIELD_ABSENT` finding (first seen S508, needs an
+  explicit add-vs-remove decision). Updated `CLAUDE.md`'s stale "Sessions 1-504+; 503
+  learnings" pointer to the current count (559+; 565 learnings). See `SESSION_NOTES.md` for
+  the full record.
+
 **Archived 34 record(s), 2026-08-12 → 2026-08-13** into [`docs/archive/CHANGELOG-through-2026-08-13.md`](docs/archive/CHANGELOG-through-2026-08-13.md) — same format, same order, frozen.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-08-13.md.verify.sh`](docs/archive/CHANGELOG-through-2026-08-13.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.

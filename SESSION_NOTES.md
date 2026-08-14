@@ -14,15 +14,115 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 558 Handoff Evaluation (by Session 559)
+**Score: 9/10.** **What helped:** the `next_steps` field named this exact item verbatim as
+item 1 of its priority list -- "`SESSION_NOTES.md` is now 2,400+ lines -- past the
+2,000-line agent read cap (dashboard HIGH risk, unchanged/still not in `BACKLOG.md` since
+S555 first flagged it, 4 consecutive sessions now) -- a future session should scope/run an
+archive pass (`methodology_trim.py --file SESSION_NOTES.md --check` first), mirroring the
+`CHANGELOG.md` precedent" -- followed as the literal first and only investigative step
+before running `--check`. The user picked this exact item from the rendered
+`AskUserQuestion` priorities picker with zero re-derivation needed. **What was wrong:**
+nothing found inaccurate in the record of S558's own work; the receipt's `commit: pending`
+placeholder was the expected, documented self-reference limitation (the receipt ships in
+the very commit whose sha it would name), not an error -- reconciled to `cafd7d49` this
+session before archiving it, per `HANDOFFS.md`'s own stated exception allowing a `commit:`
+field to be filled in inside an already-archived receipt. **What was missing:** S558's
+`gotchas` were scoped entirely to its own branch-cleanup deliverable and had no way to
+anticipate this session's actual pitfall (chaining multiple `methodology_trim.py --write`
+calls across different ledger files without committing between them breaks the generated
+`verify.sh`'s comparison against `HEAD` -- Learning 565); not a real gap, since S558 never
+touched `methodology_trim.py` itself. **ROI:** High -- the `next_steps` pointer named the
+exact file, the exact dashboard risk, the session-count it had gone unresolved, and the
+exact command to start with, leaving zero time spent re-establishing what needed doing.
+
 ### What Session 559 Did
-**Deliverable:** Archive `SESSION_NOTES.md` (past the 2,000-line agent read cap, dashboard HIGH
-risk, unresolved since S555) via `methodology_trim.py`; also check `HANDOFFS.md`'s own MEDIUM
-archive-trigger risk in the same pass. (IN PROGRESS)
-**Started:** 2026-08-13.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Archive `SESSION_NOTES.md` (past the 2,000-line agent read cap, dashboard
+HIGH risk, unresolved since S555) via `methodology_trim.py`; also checked and archived
+`HANDOFFS.md` (dashboard MEDIUM risk) and, once its own byte trigger fired as a direct
+side effect, `CHANGELOG.md` too. **DONE, all 3 ledgers archived and verified.**
+**Started/Completed:** 2026-08-13. **Status:** DONE. Not a TDD-gated session (no code/test
+changes, pure ledger/documentation housekeeping).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SESSION_RUNNER.md`,
+`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list`, `git status`/`log`/`diff --stat`,
+`methodology_dashboard.py` [Health 96/100, 1 High risk -- `SESSION_NOTES.md` 2,432 lines,
+unresolved 4 sessions; 1 Medium -- `HANDOFFS.md` archive trigger fired, 109,202 B vs.
+65,536 B budget], `gh run list --branch master --limit 10` [scheduled `shinytest2.yaml`
+still red, unchanged, still not diagnosed], ledger reconcile [`CHANGELOG.md`/`HANDOFFS.md`
+frontiers both at `HEAD` (`cafd7d49`), zero-commit gap, no backfill needed]). 6 untracked
+files found, same known/pre-existing set S555-S558 already flagged. Rendered the
+priorities list (4 numbered items in the `AskUserQuestion` picker) -- user picked "Archive
+SESSION_NOTES.md." **(2)** Wrote the Phase 1B claim stub to `SESSION_NOTES.md` and
+`HANDOFFS.md` (`status: pending`); also fixed S558's own `HANDOFFS.md` receipt
+`commit: pending` -> `cafd7d49` (the documented reconcile exception) and logged an `[ad
+hoc]` `CHANGELOG.md` claim entry ahead of the deliverable, per `PROJECT_LEARNINGS.md`
+Learning 545 (`methodology_trim.py --write`'s `P1_UNDOCUMENTED` gate refuses to run while
+any commit, including the session's own claim stub, sits undocumented ahead of the
+ledger's frontier) -- committed (`4c7f8415`). **(3)** Stated understanding back to the
+user, declaring TDD phase N/A. **(4)** Ran `--check` against `SESSION_NOTES.md` and
+`HANDOFFS.md` (both fired); ran `--write` against both **without committing between
+them** -- a mistake. Each `--write` appends its own self-describing entry into
+`CHANGELOG.md`, so by the time `CHANGELOG.md`'s own byte trigger was checked (a direct,
+foreseeable side effect of those 2 new entries) and its own `--write` run, its generated
+`verify.sh` compared the shard+live split (55 records) against a stale `HEAD` (53
+records, 2 behind) and FAILED L1/L3 -- not real data loss (the tool's own in-process
+L1_OK/L2_OK/L3_OK checks, run against the true in-memory pre-write content, had already
+passed correctly), but an invalid comparison caused by not following the tool's own
+printed guidance ("one ledger, one shard, one entry, one commit, one revert"). **(5)**
+Recovered by surgically unwinding just the premature `CHANGELOG.md` trim (removed its
+own added entry, restored its removed tail records from `HEAD`, deleted its shard files
+-- safe because insertions/deletions from independent trims land in non-overlapping
+regions of the file), then re-ran all 3 trims as 3 fully separate commit-verify-protect
+cycles in file order: `SESSION_NOTES.md` --write -> verify (PASS) -> commit (`8e586478`);
+`HANDOFFS.md` --write -> verify (PASS) -> commit (`306a4b4d`); `CHANGELOG.md` --write ->
+verify (PASS) -> commit (`ec76e487`). All 3 shards' `verify.sh` scripts now pass cleanly
+against real committed `HEAD`. Final sizes: `SESSION_NOTES.md` 2,432 -> 339 lines (208,194
+-> 27,604 B); `HANDOFFS.md` 4,877-equivalent -> 148 lines (109,667 -> 9,200 B);
+`CHANGELOG.md` 67,414 -> 33,924 B. All 3 triggers clear. **(6)** Documented the chained-
+trim/`verify.sh` interaction as `PROJECT_LEARNINGS.md` Learning 565. **(7)** Logged a new
+`BACKLOG.md` Housekeeping item for `HANDOFFS.md`'s recurring, non-blocking
+`FRONTMATTER_FIELD_ABSENT` finding (the declared "retained receipt count" regenerated
+field has no matching front-matter sentence to update -- first seen S508, still
+unresolved, needs an explicit add-vs-remove decision from a future session). **(8)**
+Updated `CLAUDE.md`'s stale "Sessions 1-504+; 503 learnings" pointer to the current count
+(559+; 565 learnings), a cross-reference this session's own `PROJECT_LEARNINGS.md` edit
+touched.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation/tutorial-article/`NEWS.Rmd`/
+`a2interactive.Rmd`/GitHub-issue-close-out checklists -- all N/A, no code shipped, no
+issue filed, no new function/parameter/statistic. Lint -- N/A, no `.R` files touched.
+
+**Phase 3E runtime smoke test:** N/A, stated explicitly (not silently skipped) -- ledger
+archiving has no runtime/Shiny behavior surface; nothing to launch or observe.
+
+**Self-assessment (Session 559): 8/10.** **Strengths:** (1) Ran `--check` before every
+`--write`, and verified losslessness via each shard's own generated `verify.sh` before
+every commit -- caught the chained-trim defect itself rather than committing broken state
+and finding out later. (2) When the defect was found, recovered via a precise, minimal
+surgical unwind (removing exactly the erroneous trim's own top-inserted entry and bottom-
+removed tail, both non-overlapping with the other 2 valid trims' pending edits) rather
+than a blanket revert that would have discarded good work. (3) Extended scope to
+`CHANGELOG.md`'s own trigger only because this session's own actions caused it to fire --
+avoided leaving a self-inflicted red flag for the next session, without treating this as
+license for unrelated scope creep. (4) Fixed the S558 receipt's stale `commit: pending`
+placeholder using the documented reconcile exception before archiving it. (5) Surfaced the
+pre-existing (S508-era) `HANDOFFS.md` `FRONTMATTER_FIELD_ABSENT` finding as an explicit,
+trackable `BACKLOG.md` decision item instead of letting it keep recurring silently on every
+future archive. (6) Documented the chained-trim gotcha as `PROJECT_LEARNINGS.md` Learning
+565 so a future multi-ledger archive session doesn't repeat the mistake.
+**Weaknesses:** (1) The core mistake itself -- chaining 3 `--write` calls without
+committing between them despite the tool's own printed guidance saying exactly that --
+was avoidable with a more careful first read of that guidance; the recovery was clean but
+the mistake cost real session time. (2) No independent adversarial-verification pass
+beyond the tool's own internal checks and this session's own manual diff/verify review --
+the same standing gap S551-S558 have flagged across 7 consecutive sessions now, though the
+risk profile here is lower than for a judgment-based code deliverable since the tool's own
+L1/L2/L3 checks are themselves a form of independent verification. (3) Did not push the
+now 38+ local commits to `origin` -- left for the owner/a future session rather than
+assumed, matching the repeatedly-deferred precedent from S548 onward.
+**Ledger:** recorded in `CHANGELOG.md` (this session's claim, 3 deliverable/trim, and
+close-out entries).
 
 ### Session 557 Handoff Evaluation (by Session 558)
 **Score: 9/10.** **What helped:** the `next_steps` field named this exact item (item 2 of
