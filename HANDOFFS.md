@@ -132,6 +132,24 @@ This file currently holds **8** receipt(s). Computed by `methodology_trim.py` on
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S568
+date: 2026-08-14
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Decide (with the owner) the disposition of the 4 untracked "Compounding Loop" files
+  in inst/extdata/reference/ (currently bundled into every built package tarball, unlike this
+  project's deliberately-excluded reference files) and apply that decision.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S567
 date: 2026-08-14
 status: complete

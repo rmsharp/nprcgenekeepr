@@ -14,6 +14,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 568 Did
+**Deliverable:** Decide (with the owner) the disposition of the 4 untracked "Compounding Loop"
+files in `inst/extdata/reference/` (currently bundled into every built package tarball, unlike
+this project's deliberately-excluded reference files) and apply that decision. (IN PROGRESS)
+**Started:** 2026-08-14.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### Session 566 Handoff Evaluation (by Session 567)
 **Score: 9/10.** **What helped:** the handoff's `next_steps` field explicitly carried forward
 "the kinship2 supplement PDF ... remains untracked -- a copyright/licensing decision still owed
