@@ -14,16 +14,127 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 573 Handoff Evaluation (by Session 574)
+**Score: 9/10.** **What helped:** `next_steps` correctly identified Track 2 as fully unblocked
+("Track 3's spacing fix and Track 4's anchor-selection decision are both landed") and pointed at
+the remediation plan's own "### Track 2" section for completion criteria -- followed directly as
+the session's scope statement. The plan's own 6-named-feature "must not regress" list (#129/#131/
+#132/#134/#135/#138) was specific enough to drive both the RED test plan and the live verification
+plan with no re-derivation needed. Gotcha (3) ("`NPRC_RUN_E2E=true` is a SEPARATE env var from
+`NOT_CRAN=true`") was followed directly and avoided a silent-skip trap. **What was missing:**
+neither the handoff nor the plan document anticipated that `shinytest2::AppDriver` spawns a
+genuinely separate `Rscript` subprocess that reads the *installed* package, not whatever
+`pkgload::load_all()` shadows in the calling session -- this session's first full-regression pass
+(after applying GREEN) silently exercised the entire E2E suite against the STALE pre-flip
+installed code, reporting false-clean. Only caught because this session independently decided to
+re-verify the live E2E suite specifically for Track 2's own "must not regress" claims and noticed
+the installed package's `edgeStyle` default hadn't changed. Now documented as its own
+`PROJECT_LEARNINGS.md` learning (see below) so a future session's live/E2E verification doesn't
+repeat the false-clean trap. **What was wrong:** nothing found inaccurate -- gotcha (4)'s own
+"re-time it fresh rather than reuse either the #144-era or this session's own figures" was followed
+(3.05s live timed render, not reused from any prior session). **ROI:** high -- the plan's own
+6-feature list and completion criteria made the RED/verification plan largely mechanical; the one
+real surprise (the stale-install trap) was a genuinely new discovery this session had to make
+itself, not something a better handoff could have pre-empted (S573 itself never ran a live E2E
+verification against a freshly-changed default, so had no occasion to hit this).
+
 ### What Session 574 Did
 **Deliverable:** Track 2 implementation (flip default `edgeStyle` to `"rectilinear"`) from
-`docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §Track 2 (IN PROGRESS)
-**Started:** 2026-08-14
-**Status:** Session claimed. Work beginning. Following the plan's own §Track 2 scope/completion
-criteria under strict TDD (PRE-RED -> RED -> GREEN -> REFACTOR, each transition gated via
-`AskUserQuestion`).
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+`docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §Track 2 -- **DONE.**
+**Started/Completed:** 2026-08-14. **Status:** DONE. TDD phase: GREEN (REFACTOR declined via
+`AskUserQuestion` -- the diff is already minimal: a 2-line source default flip plus explicit
+`edgeStyle = "direct"` pins on tests/docs that depended on the old implicit default).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SESSION_RUNNER.md`, `SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list` [12 open], `git status`/`log`/`diff --stat` [90 commits ahead of
+`origin/master`, unpushed; 1 untracked file -- the same already-cleared Quarto render byproduct
+prior sessions investigated], `methodology_dashboard.py` [Health 96/100, 1 HIGH risk --
+`SESSION_NOTES.md` 2,252 lines, past the 2,000-line cap], `gh run list --branch master --limit 10`
+[scheduled `shinytest2.yaml` red 2 consecutive days, reported not diagnosed; all push-triggered
+workflows green], ledger reconcile [`CHANGELOG.md`/`HANDOFFS.md` frontiers both == `HEAD`, zero
+gap]). Rendered a 4-item priorities list via `AskUserQuestion` -- owner picked Track 2. **(2)**
+Phase 1B: claim stub written to `SESSION_NOTES.md`/`HANDOFFS.md` (`status: pending`), committed
+(`1a81aefd`). **(3)** PRE-RED: read both target call sites (`R/makePedigreeDiagramData.R:1091`,
+`R/modPedigree.R:423-429`) in full; prototyped the 2-line flip directly against live source, ran
+the full test suite to empirically catalog the blast radius (53 failed expectations across 4
+files: `test_addRectilinearWaypoints.R`, `test_makePedigreeMatingLayout.R`, `test_modPedigree.R`,
+plus 1 pre-existing unrelated `test_wordlist_coverage.R` failure confirmed via a stash test), then
+reverted before writing any test. **(4)** PRE-RED->RED gate via `AskUserQuestion`: pinned 1 test
+helper (`.buildLayoutAndForest()`) and 12 test blocks across 2 files to `edgeStyle = "direct"`
+explicitly (they test direct-style-specific structural invariants that previously rode the
+implicit default), rewrote 2 central "defaults to edgeStyle" tests to assert the new default, and
+added 2 new assertions (a true-implicit-default 400-node-cap test, a true-implicit-default
+highlightNearest degree:6 check). Confirmed RED for real against unmodified source: 6 assertions
+failed for the right reason (3 in each rewritten "defaults to" test); all pinned/collateral
+assertions passed unchanged (correct -- unaffected by source state either way). **(5)** RED->GREEN
+gate via `AskUserQuestion`: applied the 2-line default flip. Discovered 1 gap the original
+PRE-RED scan missed (`test_makePedigreeMatingLayout.R`'s "leaves every mate-line edge at NA
+color/width on a pedigree with no consanguineous mating" block -- its `!dashes` selection also
+catches new waypoint-touching edges under rectilinear, unlike sibling blocks selecting by
+`to == unit`); fixed with the same `edgeStyle = "direct"` pin. All 3 targeted test files GREEN;
+full clean regression 0 failed/0 error among true offenders. **(6)** Installed the dev package into
+the `renv` library (`devtools::install(quick = TRUE, upgrade = FALSE)`) before any live/E2E
+verification -- discovered the installed copy still had the OLD default, meaning a naive live
+verification would have silently tested stale code. Re-ran the E2E pedigree suite against the
+corrected install and found a 2nd real gap: `test-e2e-pedigree-module.R`'s trio-edge-structure test
+asserted a direct-style-specific `__union_<n>` edge pattern via the implicit default; fixed by
+pinning `pedigree-pedigreeEdgeStyle = "direct"` live before the assertion. Re-confirmed 0 failed/0
+error. **(7)** `devtools::check()`: 0 errors/0 warnings/1 pre-existing unrelated NOTE
+(`vignettes/figure/` knitr leftover) -- the 1 reported test "ERROR" is the same pre-existing,
+diff-unrelated `test_wordlist_coverage.R` spelling failure. `lintr::lint_package()`: 0 lints on all
+5 touched `.R` files. `devtools::document()`: regenerated `man/makePedigreeMatingLayout.Rd` from
+the updated roxygen docstring. **(8)** Phase 3E live verification (`shinytest2`/`chromote` against
+the real bundled 375-individual fixture, corrected install): TRUE implicit default (no
+`pedigreeEdgeStyle` input ever set) reads back `"rectilinear"`; 488 waypoint nodes present (JS
+DataSet query, matching the unit-level 1202-714 delta exactly); PNG export and the search/highlight
+control both present in the live full-page DOM; the real consanguineous mating unit's marker
+survives with 56 edges at color `#D55E00`/width 4; zero diagram-related console errors; timed
+render (upload -> Diagram tab idle) 3.05 seconds. **(9)** Updated documentation: `vignettes/
+a2interactive.Rmd` (routing-choice prose, the "Direct Edge Style" code chunk explicitly pinned to
+avoid silently rendering rectilinear under its own label, a stale in-code comment, the "Rectilinear
+Edge Style" section's stale default claim), `vignettes/articles/colony-manager-guide.qmd` (edge-
+style toggle description, the now-style-dependent 400/750 node-cap claim), and a 3rd vignette found
+during the pass but not named in the plan's own documentation-debt note --
+`vignettes/articles/pedigree-diagram.qmd` (same two classes of stale claim). Flagged (not fixed)
+`shiny_app_use/pb_diagram_legend.png` as now showing a stale "Direct" pre-selection in
+`BACKLOG.md` Housekeeping. Added a `NEWS.Rmd` "Changed:" entry; regenerated `NEWS.md`. Updated both
+planning documents (remediation plan's Track 2 section -> DONE with full record, §5 status line).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A (no new displayed statistic).
+Tutorial/article documentation checklist DONE (3 vignettes updated, above). `NEWS.Rmd` entry
+checklist DONE. `a2interactive.Rmd` checklist N/A for the "new function" trigger (no new exported
+function/parameter this session) but its own demonstration section was updated anyway since Track
+2 changed the default it describes -- treated as in-session documentation debt, not deferred.
+GitHub issue close-out checklist N/A (no `BACKLOG.md` item marked DONE this session; Track 2
+originates from a planning document, not a tracked GitHub issue, matching Track 1/3/4 precedent).
+Lint checklist DONE (0 lints on all 5 touched `.R` files). `_pkgdown.yml` reference-coverage
+checklist N/A (no new exported function).
+
+**Phase 3E runtime smoke test:** DONE, not silently skipped -- see step (8) above; this deliverable
+changes rendered runtime behavior (the diagram's own zero-interaction default), so build-clean
+alone would not have been sufficient. Also note: the FIRST live-verification attempt was silently
+wrong (stale install) until independently caught and corrected -- see Learning below.
+
+**Self-assessment (Session 574): 9/10.** **Strengths:** (1) Never trusted "the full regression
+passed" as sufficient live/E2E confirmation -- independently reinstalled the dev package and
+re-ran the E2E suite specifically to verify Track 2's own claims, which is what caught the stale-
+install trap AND a 2nd real test gap (`test-e2e-pedigree-module.R`'s union-id assertion) that a
+less skeptical Phase 3E would have missed entirely. (2) Found and fixed a genuine PRE-RED scan gap
+(the `!dashes`-selecting color/width test) via full-regression evidence rather than assuming the
+original blast-radius catalog was complete. (3) Found a 3rd vignette (`pedigree-diagram.qmd`) with
+stale default/cap claims that neither the plan's own documentation-debt note nor the session's own
+initial scan named -- caught via an incidental `BACKLOG.md` cross-reference, not luck. (4) Every
+RED test's expected value was empirically confirmed against live implementation output (prototype-
+patch-then-revert discipline), not hand-derived. (5) Live JS DataSet queries (waypoint count, marker
+edges) rather than DOM-HTML grepping once the canvas-widget limitation was discovered -- caught its
+own methodology error and corrected rather than reporting a false negative. **Weaknesses:** (1) No
+independent adversarial-verification pass run on this fix -- the same standing gap S551-S573 have
+flagged unaddressed across 8+ consecutive sessions. (2) The stale-install trap cost real session
+time (a full live-verification pass had to be discarded and redone) -- a future session's own
+Phase 3E should install the dev package BEFORE the first live/E2E attempt, not discover the need
+reactively; captured as a new `PROJECT_LEARNINGS.md` learning below specifically so this isn't
+rediscovered.
+**Ledger:** recorded in `CHANGELOG.md` (this session's claim, deliverable, and close-out entries).
 
 ### Session 572 Handoff Evaluation (by Session 573)
 **Score: 9/10.** **What helped:** `next_steps` pointed directly at the plan document's own §6

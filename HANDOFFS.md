@@ -134,20 +134,65 @@ This file currently holds **8** receipt(s). Computed by `methodology_trim.py` on
 ```handoff
 session: S574
 date: 2026-08-14
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 9
+predecessor_score: 9
 active_task: Track 2 implementation (flip default edgeStyle to "rectilinear") from
-  docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md Track 2.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+  docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md Track 2. DONE. TDD phase:
+  GREEN (REFACTOR declined via AskUserQuestion -- diff already minimal).
+what_was_done: R/makePedigreeDiagramData.R:1091 edgeStyle arg reordered to
+  c("rectilinear", "direct"); R/modPedigree.R:423-429 .currentEdgeStyle()'s NULL-input fallback
+  flipped "direct" -> "rectilinear" (2-line source diff). Test fixes: 1 helper
+  (test_addRectilinearWaypoints.R's .buildLayoutAndForest()) + 13 blocks across
+  test_makePedigreeMatingLayout.R/test_modPedigree.R pinned to edgeStyle = "direct" explicitly
+  (direct-style-specific invariants that rode the old implicit default) or rewritten to assert
+  the new default; 2 new true-implicit-default assertions added (400-cap boundary,
+  highlightNearest degree:6). A 9th gap (test-e2e-pedigree-module.R's trio __union_ edge
+  assertion) found and fixed only after reinstalling the dev package -- see gotchas. Verified:
+  full clean regression 0 failed/0 error among true offenders; devtools::check() 0 errors/0
+  warnings/1 pre-existing NOTE; 0 lints on 5 touched .R files. Live shinytest2 (real bundled
+  fixture, reinstalled dev package): true implicit default reads "rectilinear", 488 waypoint
+  nodes, PNG export + search/highlight present, consanguineous marker survives (56 edges,
+  #D55E00/width 4), 0 console errors, 3.05s timed render. Updated 3 vignettes
+  (a2interactive.Rmd, colony-manager-guide.qmd, pedigree-diagram.qmd -- the 3rd found during the
+  doc pass, not named in the plan's own documentation-debt note), NEWS.Rmd/NEWS.md, roxygen
+  docstring + regenerated man/, both planning docs, BACKLOG.md (1 new stale-screenshot item
+  flagged, not fixed). Commits: 1a81aefd (claim), plus this close-out's own commit (below).
+next_steps: Only Track 5 (broaden rectilinear coverage) remains in the kinship2-fidelity
+  remediation plan (docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md) --
+  explicitly deferred pending a fresh side-by-side render/re-measurement against the now-landed
+  Track 2 default; no effort estimate given (project's own "don't scope speculatively"
+  precedent). Independent, unrelated pickup candidates: issue #148's MHC scope-narrowing
+  conversation (READY, Effort S); CHANGELOG.md's byte-budget archive (READY, Effort S, found
+  S573); the stale pb_diagram_legend.png screenshot (READY, Effort S, found this session); the
+  scheduled shinytest2.yaml CI failure (2+ days red, reported not diagnosed by 2 consecutive
+  sessions now); SESSION_NOTES.md's own 2,252+-line overage (no BACKLOG item yet).
+key_files: R/makePedigreeDiagramData.R:1091 (edgeStyle arg default), :1040-1046 (roxygen doc),
+  R/modPedigree.R:423-429 (.currentEdgeStyle()), tests/testthat/test_makePedigreeMatingLayout.R
+  (8 blocks, search "Track 2 flips the default"), tests/testthat/test_modPedigree.R (5 blocks,
+  same search string), tests/testthat/test-e2e-pedigree-module.R:171-176 (the reinstall-surfaced
+  fix), docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md (search "DONE S574").
+gotchas: (1) shinytest2::AppDriver spawns a genuinely separate Rscript subprocess reading the
+  INSTALLED package, not whatever pkgload::load_all() shadows in the calling session -- any
+  live/E2E verification MUST devtools::install() the dev source first, and VERIFY the install
+  landed (formals() check), or the result is meaningless regardless of how clean it looks
+  (PROJECT_LEARNINGS.md Learning 579, this session's own hard-won discovery -- cost a full
+  discarded live-verification pass). (2) A full `testthat::test_dir()` regression run with
+  NPRC_RUN_E2E unset SKIPS the entire E2E suite silently -- its "0 failed" is NOT evidence the
+  E2E suite passed, only that it didn't run; NPRC_RUN_E2E=true is required separately (S573's own
+  gotcha, reconfirmed). (3) Track 5 (the only remaining item) has no effort estimate by design --
+  do not invent one; re-measure against the now-current default first. (4) The `!dashes`-selecting
+  test pattern (vs. `to == unit`) is NOT edgeStyle-safe even when it looks structural --
+  waypoint-touching edges get real (non-NA) colors by design, so any `!dashes`/similar broad
+  selector in a future diagram-behavior test should be checked against BOTH edge styles, not
+  assumed style-agnostic just because it doesn't mention edgeStyle.
+runtime_smoke: Live shinytest2 verification against the real bundled fixture
+  (obfuscated_rhesus_mhc_ped.csv), reinstalled dev package, TRUE implicit default (no
+  pedigreeEdgeStyle input ever set) -- see what_was_done for full detail. 0 diagram-related
+  console errors; 3.05s timed render.
+changelog_ref: this session's own CHANGELOG.md entries (claim, deliverable, close-out)
 commit: pending
 ```
-<pending>
 
 ```handoff
 session: S573

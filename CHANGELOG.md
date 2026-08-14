@@ -138,6 +138,37 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [ad hoc] S574: downstream updates (NEWS, plan doc, BACKLOG) (`4931ef91`)
+- **Deliverable:** `NEWS.Rmd`/`NEWS.md` "Changed:" entry; remediation plan's Track 2 section
+  marked DONE with full implementation record, §5 status line updated (only Track 5 remains);
+  `BACKLOG.md` Housekeeping item flagging `pb_diagram_legend.png` as a now-stale screenshot
+  (found, not fixed, this session).
+
+### 2026-08-14 · [ad hoc] S574: vignette updates for the new default (`6a619ad1`)
+- **Deliverable:** Updated `vignettes/a2interactive.Rmd`, `vignettes/articles/colony-manager-
+  guide.qmd`, and `vignettes/articles/pedigree-diagram.qmd` (the 3rd found during this session's
+  own doc pass, not named in Track 2's own documentation-debt note) -- all default-behavior/
+  node-cap prose corrected to match the new rectilinear default.
+
+### 2026-08-14 · [ad hoc] S574: test updates for the default edgeStyle flip (`1db9af90`)
+- **Deliverable:** 1 test helper + 13 blocks pinned to `edgeStyle = "direct"` explicitly or
+  rewritten to assert the new default, across `test_addRectilinearWaypoints.R`/
+  `test_makePedigreeMatingLayout.R`/`test_modPedigree.R`. A 9th gap in
+  `test-e2e-pedigree-module.R` found and fixed only after reinstalling the dev package into the
+  `renv` library (`PROJECT_LEARNINGS.md` Learning 579).
+
+### 2026-08-14 · [ad hoc] S574: Track 2 implementation (flip default edgeStyle to rectilinear) (`cb5141f7`)
+- **Deliverable:** `docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §Track 2
+  -- `makePedigreeMatingLayout()`'s `edgeStyle` default and `R/modPedigree.R`'s
+  `.currentEdgeStyle()` NULL-fallback flipped `"direct"` -> `"rectilinear"` (2-line source diff,
+  matching roxygen docstring + regenerated `man/`). Verified: full clean regression 0 failed/0
+  error among true offenders; `devtools::check()` 0 errors/0 warnings/1 pre-existing NOTE; 0
+  lints; live `shinytest2` verification of all 6 named must-not-regress features (#129/#131/#132/
+  #134/#135/#138) against the real bundled fixture (reinstalled dev package), 3.05s timed render.
+
+### 2026-08-14 · [ad hoc] S574: claim session (Track 2 implementation) (`1a81aefd`)
+- **Deliverable:** Phase 1B claim stub written to `SESSION_NOTES.md`/`HANDOFFS.md`.
+
 ### 2026-08-14 · [ad hoc] S573: reconcile HANDOFFS.md commit self-reference (`21022157`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` ->
   `21022157` (the close-out commit whose sha the receipt itself couldn't name until after it was
