@@ -210,7 +210,7 @@ runtime_smoke: No live shinytest2/chromote app run -- this deliverable is
   package's own devtools::check() (which runs the full test suite) came back
   0 errors.
 changelog_ref: CHANGELOG.md, S566 entries (claim + close-out, both [BL-N]-tagged)
-commit: pending
+commit: d0390201
 ```
 <Full close-out receipt. See SESSION_NOTES.md's own Session 566 entry for the
 complete narrative and self-assessment breakdown -- this block is the durable,

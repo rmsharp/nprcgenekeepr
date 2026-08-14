@@ -138,6 +138,12 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [ad hoc] S566: reconcile HANDOFFS.md commit self-reference (`d0390201`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` ->
+  `d0390201` (the close-out commit whose sha the receipt itself couldn't name until
+  after it was made) -- the standard self-reference limitation, reconciled
+  immediately, matching the S562/S563/S564/S565 precedent.
+
 ### 2026-08-14 · [BL-N] S566: close out (kinship2 supplement full-reproduction plan fully RESOLVED -- GitHub issues filed+closed, fidelity validation article published)
 - **Deliverable:** Filed and closed 3 GitHub issues (`#156` Track A/X-chromosome kinship,
   `#157` Track B/`shrinkPedigree()`, `#158` Track C/consanguineous-marker propagation), each
