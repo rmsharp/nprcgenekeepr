@@ -138,6 +138,51 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-N] S558 close-out: 5 remaining stale branches resolved; S557 handoff evaluation; Learning 564 logged
+- **Deliverable:** Session S558's own close-out. Evaluated S557's `HANDOFFS.md` receipt (9/10 --
+  its `next_steps` field named this exact item with an explicit starting-point pointer
+  ("starting with `module`, most recent, most likely live WIP"), followed as the literal first
+  branch investigated; `gotchas` (2) and (3) both applied/resolved directly). Self-assessment
+  9/10 (built a new, concrete no-PR-history evidence methodology rather than re-presenting the
+  same bare ahead-count table; every recommendation backed by a specific checkable fact; still
+  gated all 5 hard-to-reverse deletions behind explicit `AskUserQuestion` confirmation despite
+  the strength of the evidence; one point held back for not exhaustively verifying every one of
+  `module`'s 120 unique files or every one of `issue8`'s 103 commit patches, and for the
+  still-unaddressed adversarial-verification gap now 6 sessions running). `PROJECT_LEARNINGS.md`
+  Learning 564 logged (merge-base-position + name-existence + deliberate-deletion evidence
+  technique for the no-PR-history case). `BACKLOG.md` Housekeeping branch-cleanup item (open
+  since S552) is now fully RESOLVED.
+- **Commit:** this close-out's own commit.
+
+### 2026-08-13 · [BL-N] S558: delete the 5 remaining stale repository branches (module local+remote; issue8/issue8-fix/marks-broken-issue8/nprcmanager-master remote-only)
+- **Deliverable:** Reviewed the 5 branches S557 left as an owner decision (`BACKLOG.md`
+  Housekeeping, found S552) via content-based evidence, not mergedness (none ever had a PR
+  opened): `module`'s merge-base with `master` (`3773e63b`, 2025-12-30) is the exact commit
+  where master's own modularization effort began -- master's own subsequent history
+  independently completed that same effort more thoroughly, including a
+  `feat!: Phase 9 -- delete the legacy monolithic Shiny application` commit `module` never got;
+  of `module`'s 120 files absent from `master`, none was a substantial unique capability (the
+  legacy app, superseded sample data, and ~9 small 21-110-line scratch helpers/test modules with
+  modern equivalents already on `master`). `issue8`/`issue8-fix`/`marks-broken-issue8` share one
+  2021-04-21 merge-base; `issue8-fix`/`marks-broken-issue8` are near-duplicates (8 files differ);
+  every function name traceable from their commits (`createSimKinships`, `cumulateSimKinships`,
+  `getPotentialParents`, `summarizeKinshipValues`, `countKinshipValues`, `kinshipMatrixToKValues`,
+  `combinerKinshipTriangles`) already exists on `master` today with full `man/`+
+  `tests/testthat/` coverage. `nprcmanager-master` has no merge-base at all with `master` --
+  the project's literal first 8 commits under its pre-rename name (2017). Findings presented via
+  2 `AskUserQuestion` calls (4-option cap); owner approved all 5. Deleted: `module`
+  (local+remote), `issue8`/`issue8-fix`/`marks-broken-issue8`/`nprcmanager-master` (remote
+  only). `git branch -a` now shows only `master` and `gh-pages` (the live `pkgdown.yaml` deploy
+  target). No code/test files touched -- pure git housekeeping.
+- **Commit:** this session's own deliverable commit.
+
+### 2026-08-13 · [BL-N] S558: claim session (review 5 remaining stale branches, decide delete vs. keep)
+- **Deliverable:** Session S558 claimed via Phase 1B stub (`SESSION_NOTES.md`, `HANDOFFS.md`
+  `status: pending`). Task: review the 5 remaining stale `origin` branches' actual diff content
+  and get an explicit owner decision (delete vs. keep) for each (`BACKLOG.md` Housekeeping,
+  found S552, narrowed S557).
+- **Commit:** `15ff56d1`.
+
 ### 2026-08-13 · [BL-N] S557 close-out: 7 stale branches deleted; S556 handoff evaluation
 - **Deliverable:** Session S557's own close-out. Evaluated S556's `HANDOFFS.md` receipt (9/10 --
   its `next_steps` field named this exact item, "Clean up unneeded repository branches (found

@@ -127,20 +127,86 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S558
 date: 2026-08-13
-status: pending
-self_score: TBD
-predecessor_score: 8
+status: complete
+self_score: 9
+predecessor_score: 9
 active_task: Review the 5 remaining stale origin branches' actual diff content (module, issue8,
 issue8-fix, marks-broken-issue8, nprcmanager-master) and get an explicit owner decision
-(delete vs. keep) for each. BACKLOG.md Housekeeping, found S552, narrowed S557.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+(delete vs. keep) for each. BACKLOG.md Housekeeping, found S552, narrowed S557 -- DONE, all 5
+deleted, item fully RESOLVED.
+what_was_done: Investigated each branch via merge-base position against master's own
+subsequent history, comm -23 file-list diffing, git ls-tree name-existence checks against
+master's current tree, and a git log --diff-filter=D deliberate-deletion check (no PR history
+existed for any of the 5, so Learning 563's PR-cross-reference technique didn't apply -- had to
+develop a different evidence approach, now Learning 564). Findings: module's merge-base is the
+exact commit where master's own modularization work began, and master completed that same
+effort independently and more thoroughly (incl. a Phase 9 legacy-app-deletion commit module
+never got); issue8/issue8-fix/marks-broken-issue8 share one 2021-04-21 merge-base, with every
+function name traceable from their commits already shipped on master today (man/ docs +
+tests/testthat/ coverage); nprcmanager-master has no merge-base at all with master (the
+project's first 8 commits, pre-rename, 2017). Presented via 2 AskUserQuestion calls (4-option
+cap); owner approved all 5. Deleted: module (local+remote), issue8/issue8-fix/
+marks-broken-issue8/nprcmanager-master (remote only) via git branch -D + git push origin
+--delete, confirmed via git fetch --prune (git branch -a now shows only master and gh-pages).
+BACKLOG.md item rewritten to a compressed RESOLVED note. Commits: 15ff56d1 (claim), this
+session's own deliverable + close-out commits (see next reconcile for their shas).
+next_steps: BACKLOG.md priorities, in order: (1) SESSION_NOTES.md is now 2,400+ lines -- past
+the 2,000-line agent read cap (dashboard HIGH risk, unchanged/still not in BACKLOG.md since
+S555 first flagged it, 4 consecutive sessions now) -- a future session should scope/run an
+archive pass (methodology_trim.py --file SESSION_NOTES.md --check first), mirroring the
+CHANGELOG.md precedent. Also unresolved: HANDOFFS.md's own archive-trigger MEDIUM risk
+(unchanged, still not logged). (2) Write the dedicated Pedigree Diagram tab article (READY,
+Effort M, unchanged since S544). (3) BACKLOG.md's own ledger-size housekeeping via editorial
+compression on its 2 remaining oversized sections (S518, READY, Effort L -- Housekeeping
+section already done S529, and the branch-cleanup item that made it oversized is now itself
+compressed by this session). Per the genetic-metrics sequencing audit's own ratified order:
+issue #148 needs a scope-narrowing conversation before implementation. Unchanged: NPRC outreach
+owner review (DECISION NEEDED, not a coding task); LabKey remaining recs (BLOCKED); the
+edgeStyle="rectilinear" consanguineous-marker propagation follow-up (S555/S556, untagged,
+ready-made fixture). Also unresolved: the shinytest2.yaml scheduled CI run is still red,
+unchanged from S548-S558's own findings -- still not diagnosed by any session. Local master
+remains ahead of origin (36+ commits after this session) -- a future session should consider
+pushing.
+key_files: BACKLOG.md Housekeeping (branch-cleanup item compressed to a resolved note);
+PROJECT_LEARNINGS.md (new Learning 564); no R/ or tests/ files touched this session (pure git
+housekeeping, no code change).
+gotchas: (1) When a stale branch has no PR history at all, git branch --merged/--no-merged and
+gh pr list (Learning 563's own remedy) have nothing to cross-reference -- reach instead for
+merge-base position (does master's own history redo/complete the same work after the fork
+point?), a git ls-tree name-existence check against master's current tree, and (for legacy
+content) a git log --diff-filter=D check for a deliberate deletion on master's own line. See
+PROJECT_LEARNINGS.md Learning 564 for the full worked methodology. (2) This is owner-confirmed
+evidence, not a mechanical proof the way PR-merge status is -- always gate the actual deletion
+behind explicit AskUserQuestion sign-off even when the evidence is strong; this session did not
+verify every one of module's 120 unique files or every one of issue8's 103 commit patches
+individually, only a representative/targeted sample. (3) AskUserQuestion's 4-option cap means a
+5-branch decision needs 2 separate question blocks (or grouping near-duplicate branches into
+one option) -- plan for this before drafting the questions, not after hitting the cap.
+runtime_smoke: n/a -- pure git/repository housekeeping (branch deletion), no runtime/Shiny
+behavior surface exists to launch or observe. Stated explicitly, not silently skipped.
+changelog_ref: this session's own CHANGELOG.md entries, 2026-08-13 ([BL-N] the claim; [BL-N]
+the deliverable/branch-deletion entry; [BL-N] this close-out entry)
 commit: pending
 ```
+<**Self-score 9/10.** +: (1) built a new, concrete evidence methodology (merge-base position
+vs. master's own later history; name-existence cross-check; deliberate-deletion check) for the
+no-PR-history case rather than re-presenting the same bare ahead-count table S557 already had.
+(2) every recommendation backed by a specific, checkable fact (a merge-base commit hash and
+what master did after it; exact function names found via git ls-tree; the Phase 9 deletion
+commit) rather than a vague "this looks old" judgment. (3) still gated all 5 hard-to-reverse
+remote deletions behind explicit owner confirmation despite the strength of the evidence.
+(4) closed the item fully (RESOLVED, not narrowed further) and recorded the new technique as
+its own PROJECT_LEARNINGS.md entry, cross-referenced against Learning 563. -: (1) did not
+exhaustively verify every one of module's 120 unique files or every one of issue8's 103 commit
+patches -- a representative/targeted sample, not full coverage. (2) no independent
+adversarial-verification pass on the "safe to delete" judgment beyond the owner's own sign-off
+-- the same standing gap S551-S557 have now flagged unaddressed across 6 consecutive sessions.
+**Predecessor (S557) score: 9/10** -- see the Session 557 Handoff Evaluation in
+SESSION_NOTES.md for the full breakdown; its next_steps field named this exact item with an
+explicit starting-point pointer, followed as the literal first branch investigated.>
+
+```handoff
+session: S557
 
 ```handoff
 session: S557

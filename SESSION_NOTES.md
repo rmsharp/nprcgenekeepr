@@ -10,16 +10,115 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 557 Handoff Evaluation (by Session 558)
+**Score: 9/10.** **What helped:** the `next_steps` field named this exact item (item 2 of
+its priority list) with an explicit starting-point pointer -- "starting with `module`
+(most recent, 2026-01-26, most likely live WIP)" -- followed as the literal first branch
+investigated. `gotchas` (2) ("`git fetch --prune` is a free, zero-risk first step... run it
+before any manual branch-status reasoning") was followed directly at the very start of this
+session's investigation. `gotchas` (3) (a local branch mirroring its remote counterpart
+should get the SAME disposition, not merely implied) was resolved this session: local
+`module` was deleted together with `origin/module` in the same step, both stated explicitly.
+The item's own per-branch table (ahead-count, last-commit date, PR history) let this session
+skip straight to diff-content investigation instead of re-deriving the branch list from
+scratch. **What was wrong:** nothing found inaccurate -- every ahead-count/last-commit-date
+this session re-verified matched S557's own table exactly. **What was missing:** `gotchas`
+(1) (the `--merged`/PR-history cross-check technique, Learning 563) doesn't directly apply
+to any of these 5 branches (none ever had a PR opened), so this session had to develop a
+different evidence technique (merge-base-position-vs-master's-own-later-history,
+name-existence cross-check, deliberate-deletion check -- now Learning 564) from scratch;
+not a real gap in S557's handoff, since S557 explicitly scoped its own gotchas to what it
+had actually encountered, not a technique for a case it hadn't hit yet. **ROI:** High -- the
+per-branch table and the "starting with `module`" pointer meant zero time spent
+re-establishing which branches remained or why; all of this session's own time went into
+the harder diff-content investigation the item itself called for.
+
 ### What Session 558 Did
 **Deliverable:** Review the 5 remaining stale `origin` branches' actual diff content
 (`module`, `issue8`, `issue8-fix`, `marks-broken-issue8`, `nprcmanager-master`) and get an
 explicit owner decision (delete vs. keep) for each (`BACKLOG.md` Housekeeping, found S552,
-narrowed S557) (IN PROGRESS).
-**Started:** 2026-08-13.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+narrowed S557) -- **DONE, all 5 deleted, item fully RESOLVED.**
+**Started/Completed:** 2026-08-13. **Status:** DONE. Not a TDD-gated session (no code/test
+changes, pure repository housekeeping).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SESSION_RUNNER.md`,
+`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list`, `git status`/`log`/`diff --stat`,
+`methodology_dashboard.py` [Health 96/100, 1 High+ risk -- `SESSION_NOTES.md` 2,322 lines,
+past the 2,000-line cap, unchanged/unlogged for 3+ consecutive sessions now; 1 MEDIUM --
+`HANDOFFS.md` archive trigger fired, 102,724 B vs. 65,536 B budget, also unlogged],
+`gh run list --branch master --limit 10` [scheduled `shinytest2.yaml` still red, unchanged,
+still not diagnosed], ledger reconcile [`CHANGELOG.md`/`HANDOFFS.md` frontiers both at
+`HEAD` (`791e69a0`), zero-commit gap, no backfill needed]). 6 untracked files found, same
+known/pre-existing set S555-S557 already flagged (5 in `inst/extdata/reference/` plus
+`docs/planning/pedigree-diagram-kinship2-reference-comparison.html`, confirmed this session
+to be the rendered output of the *tracked* `.qmd` of the same name, not a mystery
+deliverable). Rendered the priorities list (6 numbered items sourced from `BACKLOG.md`'s
+own tags plus the audit-sourced issue #148 item, first 4 in the `AskUserQuestion` picker
+per the 4-option cap) -- user picked "Resolve 5 stale branches." **(2)** Wrote the Phase 1B
+claim stub to `SESSION_NOTES.md` and `HANDOFFS.md` (`status: pending`), committed
+(`15ff56d1`). **(3)** Stated understanding back to the user, declaring TDD phase N/A (no
+implementation/test code planned). **(4)** Investigated each branch: `git fetch --prune`
+first, then per branch -- ahead-count/last-commit re-verification (matched S557's table
+exactly), `git merge-base` against `master` plus a `git log` read of what `master`'s OWN
+history did after that fork point, `comm -23` file-list diffing (`module` only, 120 unique
+files), targeted `git ls-tree -r --name-only master | grep` name-existence checks for every
+substantively-named unique function/file, and a `git log --diff-filter=D` check confirming
+`inst/application/` (the legacy monolithic app `module` still carries) was deliberately
+deleted on `master`'s own line (`feat!: Phase 9`). Findings: `module`'s merge-base is the
+exact commit where master's own modularization work began, and master completed that same
+effort independently and more thoroughly; `issue8`/`issue8-fix`/`marks-broken-issue8` share
+one 2021-04-21 merge-base, `issue8-fix`/`marks-broken-issue8` are near-duplicates (8 files
+differ), and every function name traceable from their commits already exists on `master`
+today with full `man/`+`tests/testthat/` coverage; `nprcmanager-master` has no merge-base
+at all with `master` (the project's literal first 8 commits, pre-rename, 2017).
+**(5)** Presented the full evidence table, then gated the actual deletions behind 2
+`AskUserQuestion` calls (a 4-option multiSelect for `module`/`issue8`/`issue8-fix`/
+`marks-broken-issue8`, plus a single-select for `nprcmanager-master` -- split across 2
+questions to respect the 4-option-per-question cap) -- owner approved all 5. **(6)**
+Executed: `git branch -D module` (local), `git push origin --delete module issue8
+issue8-fix marks-broken-issue8 nprcmanager-master`, re-fetched with `--prune` to confirm --
+`git branch -a` now shows only `master` and `gh-pages`. **(7)** Rewrote the `BACKLOG.md`
+item to a compressed resolved note (matching the file's own established convention for
+fully-resolved Housekeeping items) and added `PROJECT_LEARNINGS.md` Learning 564
+documenting the 3-technique evidence methodology (merge-base position vs. master's own
+later history; name-existence cross-check; deliberate-deletion check) for the
+no-PR-history case Learning 563 (S557) didn't cover.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation/tutorial-article/`NEWS.Rmd`/
+`a2interactive.Rmd`/GitHub-issue-close-out checklists -- all N/A, no code shipped, no issue
+filed for this item, no new function/parameter/statistic. Lint -- N/A, no `.R` files
+touched.
+
+**Phase 3E runtime smoke test:** N/A, stated explicitly (not silently skipped) -- branch
+deletion has no runtime/Shiny behavior surface; nothing to launch or observe.
+
+**Self-assessment (Session 558): 9/10.** **Strengths:** (1) Did not stop at "no PR trail,
+can't be established" for these 5 branches -- built a genuinely new, concrete evidence
+methodology (merge-base position vs. master's own later history; name-existence
+cross-check against master's current tree; deliberate-deletion check) rather than
+re-presenting the same bare ahead-count table S557 already had. (2) Every recommendation
+was backed by a specific, checkable fact (e.g., `module`'s merge-base commit hash and what
+master did after it; exact function names found via `git ls-tree`; the `feat!: Phase 9`
+deletion commit) rather than a vague "this looks old" judgment. (3) Still gated all 5
+hard-to-reverse remote deletions behind explicit owner confirmation via `AskUserQuestion`
+despite the strength of the evidence -- did not treat the evidence as self-authorizing.
+(4) Closed the item fully (not narrowed further) -- `BACKLOG.md`'s branch-cleanup item,
+open since S552, is now RESOLVED. (5) Recorded the new evidence technique as its own
+`PROJECT_LEARNINGS.md` entry (564) rather than letting it live only in this session's
+commit history, explicitly cross-referencing Learning 563 (S557) as the sibling technique
+for the has-PR-history case.
+**Weaknesses:** (1) Did not exhaustively verify every one of `module`'s 120 unique files
+individually -- spot-checked ~9 of the smaller R files plus a directory-level check on the
+legacy app; did not diff vignette PNG byte content or confirm every sample-data CSV has a
+modern replacement (a reasonable scope boundary given the file count, but worth naming
+honestly rather than implying exhaustive coverage). (2) Did not read full `git log -p`
+patches for every one of `issue8`'s 103 commits -- relied on the oneline commit log plus
+function-name cross-checks; a small chance remains that a genuinely orphaned fix is buried
+in there undetected. (3) No independent adversarial-verification pass on the "safe to
+delete" judgment beyond the owner's own sign-off -- the same standing gap S551-S557 have
+now flagged unaddressed across 6 consecutive sessions for different deliverables.
+**Ledger:** recorded in `CHANGELOG.md` (this session's claim, deliverable, and close-out
+entries).
 
 ### Session 556 Handoff Evaluation (by Session 557)
 **Score: 9/10.** **What helped:** the `next_steps` field named this exact item verbatim --

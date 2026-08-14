@@ -97,33 +97,35 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       unrelated); full clean regression 0 failed/0 error; live E2E
       (`test-e2e-pedigree-module.R`) 15/15, 0 regressions;
       `lintr::lint_package()` 0 lints. Not filed as a GitHub issue.)
-- [ ] **5 stale, unmerged `origin` branches need an owner decision before deletion**
-      (found S552, **partially resolved S557** -- 7 confirmed-safe branches deleted; this
-      is what remains). S557 fetched with `--prune` (which alone cleared 4 already-deleted-
-      upstream refs: `issue103-stage5-imports/7/8a/8b`, all with merged PRs #104-#113), then
-      checked every remaining non-`master` branch against `origin/master` via `git branch
-      --merged`/`--no-merged` plus `git rev-list --count` and `gh pr list --state open`
-      (0 open PRs repo-wide, so none was an active PR source). **Deleted as confirmed-safe**
-      (0 commits ahead of `master`, prior PR merged): `dev` (local+remote, PRs #20/21/23/24),
-      `rlabkey-version-floor` (local+remote, PR #57), `or-replacement` (remote only, PR #19);
-      plus 4 local-only `worktree-wf_*` leftovers (2026-08-04 workflow-tool artifacts, all 4
-      pointing at the same commit `d6ab24c4`, confirmed an ancestor of `master` -- zero
-      unique commits, no active `git worktree` referenced any of them). **Left for owner
-      decision** (each has real commits never merged into `master` and no PR was ever
-      opened for it, so "safe" cannot be established mechanically): `module` (local+remote,
-      48 ahead, last commit 2026-01-26 -- the most recent and most likely to be live WIP);
-      `issue8` (remote only, 103 ahead, last commit 2024-01-20 -- PRs #22/#25 merged
-      *other* branches' content, not this one directly, so its own unmerged commits may be
-      superseded rather than needed); `issue8-fix` (remote only, 57 ahead, last commit
-      2021-12-01, no PR ever); `marks-broken-issue8` (remote only, 49 ahead, last commit
-      2021-11-01, no PR ever -- name itself suggests an abandoned experiment);
-      `nprcmanager-master` (remote only, 8 ahead, last commit 2017-03-03, no PR ever -- a
-      pre-rename project snapshot from before "nprcgenekeepr"). A future session (or the
-      owner directly) should review each branch's actual diff against `master`
-      (`git log -p origin/master..origin/<branch>`) to judge whether its unmerged content is
-      still wanted, then delete or explicitly keep. `gh-pages` was confirmed live (the
-      `pkgdown.yaml` deploy target, `.github/workflows/pkgdown.yaml`) and excluded from this
-      cleanup entirely, not just deferred.
+- [ ] (found S552, **RESOLVED S558**. **Repository branch cleanup, all 12 stale branches
+      now deleted.** S557 deleted 7 confirmed-safe branches (0 commits ahead of `master`,
+      prior PR merged) via mechanical mergedness/PR-history checks. The remaining 5 --
+      `module`, `issue8`, `issue8-fix`, `marks-broken-issue8`, `nprcmanager-master` -- each
+      had real unmerged commits and no PR history, so mergedness alone couldn't establish
+      "safe." S558 read each branch's actual diff content (commit history, diffstats,
+      merge-bases, and targeted function/file cross-checks against `master`) rather than
+      relying on mergedness status: `module`'s merge-base with `master` sits exactly where
+      master's own modularization work began (`3773e63b`, 2025-12-30) -- master went on to
+      independently complete that same effort more thoroughly (incl. a `feat!: Phase 9`
+      commit deleting the legacy `inst/application` app that `module` never got); of
+      `module`'s 120 files absent from `master`, none were a substantial unique capability
+      (mostly the legacy app, superseded sample data, and small 21-110-line scratch
+      helpers/test modules with modern equivalents already on `master`, e.g.
+      `nprcgenekeeper.R` -> `R/nprcgenekeepr-package.R`). `issue8`/`issue8-fix`/
+      `marks-broken-issue8` all shared the same ancient 2021-04-21 merge-base;
+      `issue8-fix`/`marks-broken-issue8` were near-duplicates of each other (8 files
+      differ); every named function traceable from their commits
+      (`createSimKinships`/`cumulateSimKinships`/`getPotentialParents`/
+      `summarizeKinshipValues`/`countKinshipValues`/`kinshipMatrixToKValues`/
+      `combinerKinshipTriangles`) already exists on `master` today, complete with `man/`
+      docs and `tests/testthat/` coverage. `nprcmanager-master` shared **no merge-base at
+      all** with `master` (a disjoint root) -- the project's literal first 8 commits under
+      its original "nprcmanager" name (2017). Findings presented to the owner via
+      `AskUserQuestion`; all 5 approved for deletion. Deleted: `module` (local+remote),
+      `issue8`/`issue8-fix`/`marks-broken-issue8`/`nprcmanager-master` (remote only).
+      `git branch -a` now shows only `master` and `gh-pages` (the live `pkgdown.yaml`
+      deploy target, confirmed live and excluded from cleanup by S557). See
+      `CHANGELOG.md`.)
 - [ ] (found S545, **verified S549** -- see
       `docs/audits/KINSHIP2_SUPPLEMENT_REPRODUCIBILITY_AUDIT_2026-08-13.md`. **Verify the
       results in `inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf` (kinship2's
