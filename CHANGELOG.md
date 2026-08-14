@@ -138,6 +138,12 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [ad hoc] S567: reconcile HANDOFFS.md commit self-reference (`9a721a1d`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` ->
+  `619ffd98` (the close-out commit whose sha the receipt itself couldn't name until after
+  it was made) -- the standard self-reference limitation, reconciled immediately, matching
+  the S562/S563/S564/S565/S566 precedent.
+
 ### 2026-08-14 · [BL-N] S567: close out (kinship2 supplement PDF copyright classification resolved)
 - **Deliverable:** Resolved the copyright/licensing classification of
   `inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf` (kinship2's own supplementary
