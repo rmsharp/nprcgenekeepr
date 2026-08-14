@@ -138,6 +138,13 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-13 · [BL-N] S563: claim session (implement Track C of kinship2 supplement full-reproduction plan)
+- **Deliverable:** Implement Track C (`docs/planning/kinship2-supplement-full-reproduction-plan.md`
+  §5) — finish `edgeStyle="rectilinear"` consanguineous-marker color/width propagation onto D2
+  dogleg-rerouted projection edges in `R/makePedigreeDiagramData.R`'s
+  `.addRectilinearWaypoints()`. Claim only; work in progress, strict TDD
+  (PRE-RED→RED→GREEN→REFACTOR), each transition gated by `AskUserQuestion`.
+
 ### 2026-08-13 · [ad hoc] S562: reconcile HANDOFFS.md commit self-reference (`0ce5ac60`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` ->
   `0ce5ac60` (the close-out commit whose sha the receipt itself couldn't name until

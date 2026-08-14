@@ -14,6 +14,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 563 Did
+**Deliverable:** Implement Track C of the ratified kinship2 supplement
+full-reproduction plan (`docs/planning/kinship2-supplement-full-reproduction-plan.md`
+§5) -- finish `edgeStyle="rectilinear"` consanguineous-marker color/width propagation
+onto D2 dogleg-rerouted projection edges in
+`R/makePedigreeDiagramData.R`'s `.addRectilinearWaypoints()`. (IN PROGRESS)
+**Started:** 2026-08-13.
+**Status:** Session claimed. Work beginning. Following strict TDD
+(PRE-RED -> RED -> GREEN -> REFACTOR), each transition gated by `AskUserQuestion`
+per `CLAUDE.md`'s Development Process Contract override.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded
+in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for
+the next session's reconcile.
+
 ### Session 561 Handoff Evaluation (by Session 562)
 **Score: 9/10.** **What helped:** the `next_steps` field named this exact item
 verbatim as item (1) of its priority list -- "Fix `edgeStyle=\"rectilinear\"`

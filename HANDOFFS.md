@@ -132,6 +132,27 @@ This file currently holds **4** receipt(s). Computed by `methodology_trim.py` on
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S563
+date: 2026-08-13
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement Track C of the ratified kinship2 supplement
+full-reproduction plan (docs/planning/kinship2-supplement-full-reproduction-plan.md
+§5) -- edgeStyle="rectilinear" consanguineous-marker color/width propagation onto D2
+dogleg-rerouted projection edges, R/makePedigreeDiagramData.R
+.addRectilinearWaypoints(). IN PROGRESS.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<claim stub -- filled at Phase 3D close-out>
+
+```handoff
 session: S562
 date: 2026-08-13
 status: complete
