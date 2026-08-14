@@ -125,6 +125,24 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-12.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S558
+date: 2026-08-13
+status: pending
+self_score: TBD
+predecessor_score: 8
+active_task: Review the 5 remaining stale origin branches' actual diff content (module, issue8,
+issue8-fix, marks-broken-issue8, nprcmanager-master) and get an explicit owner decision
+(delete vs. keep) for each. BACKLOG.md Housekeeping, found S552, narrowed S557.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S557
 date: 2026-08-13
 status: complete

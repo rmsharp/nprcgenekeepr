@@ -10,6 +10,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 558 Did
+**Deliverable:** Review the 5 remaining stale `origin` branches' actual diff content
+(`module`, `issue8`, `issue8-fix`, `marks-broken-issue8`, `nprcmanager-master`) and get an
+explicit owner decision (delete vs. keep) for each (`BACKLOG.md` Housekeeping, found S552,
+narrowed S557) (IN PROGRESS).
+**Started:** 2026-08-13.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 556 Handoff Evaluation (by Session 557)
 **Score: 9/10.** **What helped:** the `next_steps` field named this exact item verbatim --
 "Clean up unneeded repository branches (found S552, READY, Effort S -- check mergedness before
