@@ -138,6 +138,12 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [ad hoc] S565: reconcile HANDOFFS.md commit self-reference (`f68a24ff`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` ->
+  `f68a24ff` (the close-out commit whose sha the receipt itself couldn't name until
+  after it was made) -- the standard self-reference limitation, reconciled
+  immediately, matching the S562/S563/S564 precedent.
+
 ### 2026-08-14 · [BL-N] S565: close out (Track B of kinship2 supplement full-reproduction plan DONE -- all 3 tracks now complete)
 - **Deliverable:** New `R/shrinkPedigree.R`: `shrinkPedigree(ped, genotyped,
   affected = NULL, maxBits = 16L)`, a `kinship2::pedigree.shrink()` equivalent over

@@ -215,7 +215,7 @@ runtime_smoke: No live shinytest2/chromote run this session -- Track B is
   new test fixtures, and every hardcoded expected value was independently
   cross-validated live against the installed kinship2::pedigree.shrink().
 changelog_ref: CHANGELOG.md, S565 entries (claim + close-out, both `[BL-N]`-tagged)
-commit: pending
+commit: f68a24ff
 ```
 
 ```handoff
