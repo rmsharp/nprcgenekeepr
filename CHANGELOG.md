@@ -138,6 +138,11 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [ad hoc] S581: reconcile HANDOFFS.md commit self-reference (`6dd26870`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> `6dd26870`
+  (the close-out commit's own sha, unknowable until after that commit was made) -- matching the
+  established S562-S580 precedent.
+
 ### 2026-08-14 · [BL-N] S581: close out (locale-dependent order() tie-break sweep DONE)
 - **Deliverable:** `BACKLOG.md` order()-sweep item (found S578) -- **DONE**. Fresh
   `grep -n "order(" R/*.R` (26 sites) classified all; 4 real hits fixed (`method = "radix"`

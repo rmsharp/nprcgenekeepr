@@ -187,7 +187,7 @@ runtime_smoke: qcStudbook/orderReport/bgGroupView are all live runtime-behavior-
   test-e2e-breeding-groups-module.R all pass. Full live E2E suite also run for full confidence.
 changelog_ref: 12ebaba4 (S580's own last CHANGELOG entry before this session's 6 new entries --
   see the 2026-08-14 section, "S581:" prefixed entries)
-commit: pending
+commit: 6dd26870
 ```
 Self-score breakdown (9/10): +caught 2 plausible-looking false positives via empirical RED-phase
 verification before writing any implementation code, exactly the Strict-TDD safeguard this
