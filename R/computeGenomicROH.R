@@ -109,6 +109,17 @@ computeGenomicROH <- function(genotypeMatrix, locusMetadata,
   ## "run," unlike buildMarkerGenotypeMatrix()'s first-appearance order.
   fullMeta <- locusMetadata[isFull & locusMetadata$locus %in%
                                colnames(genotypeMatrix), , drop = FALSE]
+  # NOT the Learning 585 locale-dependent order() defect class: chrom (a
+  # character column) IS a locale-sensitive primary sort key here, so
+  # fullMeta's own row order does vary by locale -- but the function's
+  # RETURNED value does not. chromGroups (below) is built via split(), which
+  # groups by chrom value regardless of inter-group order, and WITHIN one
+  # chrom's rows the relative order is decided entirely by the numeric `pos`
+  # secondary key (locale-independent; equal-string ties don't invoke
+  # collation). Confirmed live (withr::with_locale, LC_COLLATE "C" vs.
+  # "en_US.UTF-8") that computeGenomicROH()'s output is byte-identical
+  # across locales despite fullMeta's own intermediate row order differing
+  # (BACKLOG, found S578, investigated S581) -- no method = "radix" needed.
   fullMeta <- fullMeta[order(fullMeta$chrom, fullMeta$pos), , drop = FALSE]
 
   ## genomeLength: sum, per chromosome, of (max pos - min pos) among the

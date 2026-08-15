@@ -104,6 +104,12 @@ kinshipMatrixToKValues <- function(kinshipMatrix) {
 
   kValues <- as.data.table(as.table(kinshipMatrix))
   kValues <- kValues[!is.na(kValues$N), ]
+  # NOT the Learning 585 locale-dependent order() defect class: kValues is a
+  # data.table, and `[.data.table]` auto-substitutes this order() call with
+  # data.table's own forder() (confirmed live via options(datatable.verbose
+  # = TRUE), which sorts character columns byte/C-locale regardless of
+  # LC_COLLATE. Investigated and confirmed locale-independent as written
+  # (BACKLOG, found S578, investigated S581) -- no method = "radix" needed.
   kValues <- kValues[order(kValues$V1, kValues$V2), ]
   names(kValues) <- c("id_1", "id_2", "kinship")
   kValues$id_1 <- as.character(kValues$id_1)
