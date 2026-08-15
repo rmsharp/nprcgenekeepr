@@ -19,15 +19,32 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       duplicate-occurrence-selection root-cause fix (plan §2.4) is named, evidence-gathered, but
       deliberately deferred, not scheduled. See the 3 new READY items directly below for the
       implementation sessions this plan produced.
-- [ ] **Implement Track 1 (D1 sibship-bar row offset)** (found S592, READY, Effort S) — plan
-      §2.1/§6 Session A:
+- [x] **Implement Track 1 (D1 sibship-bar row offset)** (found S592, Effort S) — **DONE S593
+      (2026-08-15).** Plan §2.1/§6 Session A:
       [`docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`](docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md).
-      Give the D1 sibship bar a genuine intermediate row via one `sibshipBarFraction` constant —
-      an unconditional geometric guarantee (`barY` strictly between two `gen*yScale` rows), no
-      detection logic needed. Closes issue #160's 2 originally-reported collisions. Requires
-      updating ~11 existing golden-value tests in `test_addRectilinearWaypoints.R` that hardcode
-      `y == childY` (expected, disclosed test churn documenting a real fix, not a regression). No
-      ratified invariant reopened.
+      `sibshipBarFraction = 0.4` constant added to `.addRectilinearWaypoints()`'s D1 loop
+      (`R/makePedigreeDiagramData.R`); bar/drop waypoints now land on a genuine intermediate row
+      instead of the child's own row. Reproduced issue #160's 2 originally-reported collisions
+      byte-for-byte against the actual `kinship2::sample.ped` family 2 fixture cited in the
+      collision-avoidance plan's own evidence (`204`=-270/`205`=-150/`__union_2`=-210,
+      `209`=210/`__bar_207`=90/`__bar_208`=390) — both cleared. Correction to the plan's own
+      estimate: only 2 test blocks (not ~11) hardcoded `y == childY`; direct inspection, not the
+      inherited count, governed the actual test update. **Found during implementation, not
+      anticipated by the plan:** no single fixed rational `sibshipBarFraction` is collision-free
+      for every possible generation gap (a `p/q` fraction coincides with a pinned row whenever the
+      gap is a multiple of `q`) — confirmed empirically on the real 375-individual bundled fixture
+      (1 gap-5 D1 group, 2/488 waypoints). Owner-directed: disclosed and counted in the test suite
+      rather than hidden by a weaker assertion; deferred to Track 2 below, which is gap-agnostic.
+      **Second residual, matching S592's own flagged gotcha** (plan §8, checked this session per
+      that handoff's explicit instruction): 2 different sibships sharing a generation gap can still
+      land their bars on the identical row if their x-ranges overlap (a bar-vs-bar collision, not
+      bar-vs-node). Track 1 substantially reduces this — the offset depends on both the parent's
+      and child's own row, not just the child's, splitting most same-generation sibships onto
+      different rows — but does not eliminate it: 42 such cases pre-Track1, 9 post-Track1 (79%
+      reduction) on the real fixture. Also counted in the test suite; also deferred to Track 2.
+      Full clean regression: 0 failed/0 error. `lintr::lint_package()`: no lints. Issue #160 not
+      yet closed — Track 2 still required for the comment-1 duplicate-connector finding and both
+      disclosed residuals above.
 - [ ] **Implement Track 2 (general same-row detect-and-jog framework)** (found S592, READY, Effort
       L) — plan §2.2/§6 Session B (should follow Track 1, not strictly blocked by it):
       [`docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`](docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md).

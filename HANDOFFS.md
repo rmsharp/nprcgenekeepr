@@ -138,19 +138,62 @@ This file currently holds **12** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S593
 date: 2026-08-15
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Implement Track 1 (D1 sibship-bar genuine intermediate row) -- Session A of
-  docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md section 2.1/section 6
-  (BACKLOG.md, found S592, READY, Effort S). Full PRE-RED -> RED -> GREEN -> REFACTOR TDD gates.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Track 1 (D1 sibship-bar genuine intermediate row, issue #160) -- DONE. Session A of
+  docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md section 2.1/section 6.
+  sibshipBarFraction = 0.4 added to .addRectilinearWaypoints()'s D1 loop. Issue #160 not closed --
+  Track 2 (general detect-and-jog, READY, Effort L) still required for the comment-1 duplicate-
+  connector finding and both disclosed residuals below.
+what_was_done: Full PRE-RED -> RED -> GREEN -> REFACTOR TDD cycle. RED: updated 2 real
+  golden-value test blocks (not ~11 as the plan estimated) + 2 new tests (collision-1 mechanism
+  reproduction; real-fixture invariant). 9 assertions failed against current code, confirming RED.
+  GREEN: sibshipBarFraction/barY formula added, minimum change. Found during GREEN (not
+  anticipated by the plan): no fixed rational fraction is collision-free for every generation gap
+  -- 2/488 real-fixture waypoints collide for a gap-5 union; disclosed as a counted residual
+  (owner-directed via AskUserQuestion) rather than hidden. REFACTOR: lint clean, full regression
+  0 failed/0 error (twice), devtools::check() 0 errors/0 warnings/1 pre-existing unrelated NOTE,
+  issue #160 collisions reproduced byte-for-byte against the real kinship2::sample.ped family 2
+  fixture, NEWS.Rmd/NEWS.md entries, GitHub issue #160 comment. Re-checked S592's own flagged
+  gotcha (bar-vs-bar collisions) during Phase 3A -- found this session's own RED tests had NOT
+  covered it; measured 42 cases pre-Track1 -> 9 post-Track1 (79% reduction, not elimination),
+  added a permanent regression test, second GitHub issue #160 comment. Commits: b1a650a4 (claim),
+  71ce091c (implementation), 6cb913fc (bar-vs-bar residual + test), plus this close-out.
+next_steps: Pick up Track 2 (general same-row detect-and-jog framework, READY, Effort L) --
+  docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md section 2.2/section 6
+  Session B. Closes issue #160 fully (both Track 1 + Track 2 required) and is gap-agnostic, so it
+  should also absorb both residuals this session disclosed (the gap-5 bar-vs-node case and the
+  bar-vs-bar case) rather than requiring a 3rd patch -- confirm this explicitly during Track 2's
+  own PRE-RED scope check, since the plan's original section 2.2 text predates both findings.
+  Track 3 (S583 parent-span clamp, DECISION NEEDED -- its own PRE-RED reopening confirmation,
+  Effort M) is independent and can be picked up in any order relative to Track 2. Other
+  still-open items unchanged from S592's own next_steps: LabKey integration remainder (BLOCKED);
+  NPRC outreach plan (DECISION NEEDED); issue #148 scoping (DECISION NEEDED); SESSION_NOTES.md
+  archive still blocked by the methodology_trim.py fence-scanner defect (found S518), file now
+  ~4,600+ lines, HIGH dashboard risk, still growing.
+key_files: R/makePedigreeDiagramData.R:1529-1567 (Track 1's actual shipped code, the D1 loop with
+  sibshipBarFraction); R/makePedigreeDiagramData.R:1107-1498 (makePedigreeMatingLayout, Track 2's
+  call-site addition at :1428-1432); tests/testthat/test_addRectilinearWaypoints.R (all Track 1
+  test coverage, including both disclosed-residual regression tests); docs/planning/pedigree-
+  diagram-same-row-collision-avoidance-plan.md section 2.2/section 6 Session B (Track 2's spec).
+gotchas: Track 2's own PRE-RED scope check should explicitly decide whether it subsumes both of
+  Track 1's disclosed residuals (recommended, since Track 2 is gap-agnostic by design) or leaves
+  them as permanent, accepted limitations -- don't silently assume either without stating it.
+  test_addRectilinearWaypoints.R's real-fixture tests hardcode exact counts (2 residual waypoints,
+  42/9 bar-vs-bar collisions) -- these are point-in-time measurements on the CURRENT bundled
+  fixture; if Track 2 changes node placement upstream of D1, or the bundled fixture itself is
+  regenerated, these counts may need re-measuring, not just re-asserting. The GREEN->REFACTOR
+  AskUserQuestion gate is easy to skip once GREEN's own tests pass and momentum carries into
+  verification work -- watch for this specifically at Track 2's own GREEN->REFACTOR transition.
+runtime_smoke: Verified via direct function-chain execution (makePedigreeMatingLayout() ->
+  .addRectilinearWaypoints(), the exact chain R/modPedigree.R:588 calls with no override) against
+  both the real 375-individual bundled fixture and the exact kinship2::sample.ped fixture from the
+  bug report -- not a full shiny::runApp() launch, a disclosed scope choice, not a silent skip.
+changelog_ref: CHANGELOG.md 2026-08-15 entries between the S592 close-out block and this session's
+  own close-out entry above it (claim, implementation is commit-message-only per Phase 3F -- see
+  the close-out entry's own detail bullets for the full account).
+commit: b1a650a4, 71ce091c, 6cb913fc, plus this close-out
 ```
 
 ```handoff

@@ -138,6 +138,35 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [BL-1] S593: close out (Track 1 -- D1 sibship-bar row offset, issue #160)
+- **Deliverable:** Track 1 (D1 sibship-bar genuine intermediate row) shipped, closing issue
+  #160's 2 originally-reported collisions. `sibshipBarFraction = 0.4` added to
+  `.addRectilinearWaypoints()`'s D1 loop (`R/makePedigreeDiagramData.R`). Reproduced byte-for-byte
+  against the actual `kinship2::sample.ped` family 2 fixture cited in the collision-avoidance
+  plan's own evidence — both collisions confirmed cleared.
+- **Two disclosed residuals found during implementation** (neither anticipated by the plan's
+  Session A bullet in the bar-vs-node case; the bar-vs-bar case was named as an open gotcha by
+  S592's own handoff, checked and measured here): (1) no fixed rational `sibshipBarFraction` is
+  collision-free for every generation gap — 2/488 waypoints collide on the real fixture for a
+  gap-5 union; (2) two different sibships sharing a generation gap can still land bars on the
+  identical row if x-ranges overlap — 42 cases before Track 1, 9 after (79% reduction, not
+  elimination). Both counted in a permanent regression test, disclosed in `NEWS.Rmd`/`BACKLOG.md`/
+  2 GitHub issue #160 comments, deferred to Track 2 (gap-agnostic general detect-and-jog).
+- **Action taken:** `lintr::lint_package()` clean on both touched files. Full clean regression
+  (`NOT_CRAN` set, `load_all()` first): 0 failed/0 error, twice. `devtools::check()`: 0 errors/0
+  warnings/1 NOTE (pre-existing `vignettes/figure` knitr leftover, dated Aug 11, unrelated).
+  `NEWS.Rmd`/`NEWS.md` entries added and rendered. 2 GitHub issue #160 comments posted with full
+  evidence. `BACKLOG.md` Track 1 item marked DONE. Checked `vignettes/articles/kinship2-fidelity-
+  validation.qmd` for stale screenshots (1 image technically affected, judged not stale for the
+  unrelated feature it documents, not regenerated — disclosed, not silently decided). Issue #160
+  not closed — Track 2 still required. Commits: `71ce091c` (implementation), `6cb913fc`
+  (bar-vs-bar residual disclosure + test), plus this close-out.
+- **Protocol note:** the GREEN→REFACTOR `AskUserQuestion` gate was skipped mid-session (proceeded
+  directly from a passing GREEN run into lint/regression/`devtools::check()`/NEWS/GitHub-comment
+  work) — caught before Phase 3 close-out, acknowledged per `CLAUDE.md`'s Error Handling section,
+  retroactively confirmed via `AskUserQuestion` before continuing. See `SESSION_NOTES.md`
+  Self-Assessment for the full account.
+
 ### 2026-08-15 · [BL-1] S593: claim session (implement Track 1 -- D1 sibship-bar row offset)
 - **Deliverable (in progress):** Implement Track 1 (D1 sibship-bar genuine intermediate row) --
   Session A of `docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md` §2.1/§6
