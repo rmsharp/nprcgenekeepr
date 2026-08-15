@@ -138,6 +138,21 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [BL-N] S584: push master to origin (148 commits) + dispatch shinytest2.yaml
+- **Deliverable:** Non-commit action, recorded per failure mode #27. Owner directed "push" after
+  this session's close-out surfaced the 145-commit divergence as a `BACKLOG.md` DECISION NEEDED
+  item; the unpushed state was **not** deliberate. Pushed `7021c6f7..7436a7a9` (148 commits = the
+  145 pre-existing + this session's 3), clean fast-forward, no force, `master -> master`, verified
+  by `git push --dry-run` before executing. `master` and `origin/master` now in sync for the first
+  time since S545 (2026-08-13).
+- **CI consequence:** the 4 push-triggered workflows (`R-CMD-check`, `lint`, `pkgdown`,
+  `test-coverage`) fired automatically against current `HEAD` -- their first run against any work
+  since S545. `shinytest2.yaml` has no push trigger (`schedule`/`workflow_dispatch` only), so it was
+  dispatched by hand: `gh workflow run shinytest2.yaml --ref master`, run `31868762486`. This is the
+  run that actually observes S584's own fix in CI rather than locally.
+- **`BACKLOG.md` item closed** in the same commit (the "local master is 145 commits ahead" item
+  filed earlier this session).
+
 ### 2026-08-15 · [ad hoc] S584: reconcile HANDOFFS.md commit self-reference (`f36146ea`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> the three
   real shas (`f36146ea` close-out, `66593c61` fix + guard, `9b23075e` claim) -- unknowable until

@@ -91,8 +91,14 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       a bare `R CMD check` and `devtools::check()` (the latter sets it) -- that is the most likely
       explanation to check first, and it also determines whether CI's own `R-CMD-check.yaml` is
       currently masking this failure. See `CHANGELOG.md`.
-- [ ] (found S584, 2026-08-15, incidental to diagnosing the red scheduled `shinytest2.yaml` run,
-      **DECISION NEEDED -- owner decides whether/when to push; Effort S**) **Local `master` is 145
+- [x] (found S584, 2026-08-15, incidental to diagnosing the red scheduled `shinytest2.yaml` run,
+      **RESOLVED S584 -- owner directed "push" in-session; the unpushed state was NOT deliberate.**
+      Pushed `7021c6f7..7436a7a9`, 148 commits, clean fast-forward, no force. `master` and
+      `origin/master` now in sync. The 4 push-triggered workflows fired automatically;
+      `shinytest2.yaml` was additionally dispatched by hand (`gh workflow run shinytest2.yaml
+      --ref master`, run `31868762486`) because it has no push trigger -- exactly as this item
+      predicted. Outcome of those 5 runs is recorded in `CHANGELOG.md`. Original finding, kept for
+      the record:) **Local `master` was 145
       commits ahead of `origin/master` and unpushed, so every scheduled CI workflow is testing a
       snapshot from Session 545 (`7021c6f7`, 2026-08-13) rather than current work.** Confirmed from
       the failing run's own log (`Commit: 7021c6f7...`, `git checkout ... refs/remotes/origin/master`)
@@ -108,11 +114,9 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       are likewise reporting on 145-commit-old code, and have not run against any work since S545.
       **Not acted on unilaterally** -- a push of 145 commits is an owner call, not a housekeeping
       decision a session should make on its own (and `master` carries no branch protection, so a
-      push is immediately live). A future session picking this up should confirm with the owner
-      whether the unpushed state is deliberate, and if not, push and then verify all 5 workflows
-      go green against current `HEAD` -- expecting `shinytest2.yaml` to need a manual
-      `workflow_dispatch` run, since a push alone does not trigger it. See `PROJECT_LEARNINGS.md`
-      Learning 592 and `CHANGELOG.md`.
+      push is immediately live). The owner then directed the push in the same session, which is why
+      this item opened and closed within S584. See `PROJECT_LEARNINGS.md` Learning 592 and
+      `CHANGELOG.md`.
 - [x] (found S579, 2026-08-14, incidental to this session's own post-close-out ledger re-check;
       **RESOLVED S580**. **`HANDOFFS.md`'s own archive trigger fired** (line headroom 4 records,
       125,404 B against the 65,536 B budget). `--write` (dry run) refused with `SRF_RED` (SRF
