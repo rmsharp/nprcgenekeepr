@@ -138,6 +138,41 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [BL-N] S577: close out (duplicate-connector arc curve-direction fix DONE)
+- **Deliverable:** GREEN implementation ratified via both TDD phase gates (`AskUserQuestion`
+  PRE-RED->RED and RED->GREEN, both approved as written; GREEN->REFACTOR offered and explicitly
+  skipped). `R/makePedigreeDiagramData.R`'s `dupEdges` construction now x-orders `from`/`to`
+  instead of always `from=dupId`, matching kinship2's own `arcconnect()` convention (always sorts
+  its pair by x before drawing). Verified: targeted tests 188/188, full clean regression
+  4854/4854 (0 error), 0 lint on the touched file, real 375-individual fixture re-measurement
+  52/52 same-row connectors now correct (was 19/52), live `visNetwork`/`chromote` render visually
+  confirms the convex bow. Self-score 9/10; S576 handoff evaluation 9/10. See `HANDOFFS.md` S577
+  receipt for the full record.
+
+### 2026-08-14 · [BL-N] S577: downstream updates (BACKLOG item removed, plan doc section 7a) (`ee22559c`)
+- **Deliverable:** Removed the resolved `BACKLOG.md` Housekeeping item. Updated
+  `docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` section 7a with the root
+  cause and fix summary.
+
+### 2026-08-14 · [BL-N] S577: GREEN, x-order duplicate-connector from/to (`a01c176c`)
+- **Deliverable:** `R/makePedigreeDiagramData.R` `dupEdges` construction (~line 1342): order
+  `from`/`to` by ascending x (using the already-computed `nodes$x`) instead of the fixed
+  `from=dupId, to=realId`, `smooth.type="curvedCW"`/`smooth.roundness=0.2` unchanged. Fixes the
+  duplicate-individual dashed connector's bow direction to match kinship2's own convention
+  regardless of which occurrence sits left/right. Verified self-contained: `dupEdges$color`/`width`
+  are unconditionally NA regardless of `from`/`to`, and no downstream
+  `.addRectilinearWaypoints()` D1/D2 logic keys off a duplicate-connector row's `from`/`to`.
+
+### 2026-08-14 · [BL-N] S577: RED, duplicate-connector arc x-ordering (`0d013838`)
+- **Deliverable:** Added 2 new tests to `tests/testthat/test_makePedigreeMatingLayout.R` (a
+  deterministic `loopPed`-fixture case + the real 375-individual bundled fixture) asserting every
+  dashed duplicate-connector edge has `from.x <= to.x`. Updated 3 existing tests whose filters
+  assumed `from` is always the duplicate id, relaxed to `{from,to}` set membership. Confirmed RED:
+  184 pass / 4 fail against the pre-fix implementation.
+
+### 2026-08-14 · [ad hoc] S577: claim session (duplicate-individual arc curve-direction fix) (`a04090ec`)
+- **Deliverable:** Phase 1B claim stub written to `SESSION_NOTES.md`/`HANDOFFS.md`.
+
 ### 2026-08-14 · [ad hoc] S576: reconcile HANDOFFS.md commit self-reference (`ce8c50a1`) (Backfilled reconcile-on-read, Session 577)
 - **Deliverable:** Fixed S576's own `HANDOFFS.md` receipt `commit: pending` -> `7b04a911` (the
   close-out commit whose sha the receipt itself couldn't name until after it was made) -- matching

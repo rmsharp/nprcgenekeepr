@@ -134,23 +134,70 @@ This file currently holds **10** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S577
 date: 2026-08-14
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 9
+predecessor_score: 9
 active_task: Duplicate-individual dashed connector arc curve-direction fix (BACKLOG.md
-  Housekeeping, found S575, §7a of the kinship2-fidelity remediation plan) -- confirm the exact
-  vis.js mechanism controlling bow direction (edge from/to order, a smooth.roundness sign, or a
-  curvedCW/curvedCCW swap) before changing anything, then correct it to match kinship2's own
-  convex arcconnect() convention. Session claimed, work beginning.
-what_was_done: pending
-next_steps: pending
-key_files: R/makePedigreeDiagramData.R:1345 (the curvedCW smooth-type declaration for the
-  duplicate-individual dashed connector)
-gotchas: from/to edge order is also load-bearing for this same function's color/width
-  preservation logic (per the originating BACKLOG item) -- do not change it without checking that
-  dependency first.
-runtime_smoke: pending
-changelog_ref: pending
+  Housekeeping, found S575, plan doc section 7a) -- DONE. Fixed the arc to bow toward ancestors
+  (matching kinship2's own arcconnect() convention) regardless of which occurrence -- duplicate or
+  real -- happens to sit at a smaller x.
+what_was_done: Derived the exact vis.js curvedCW/curvedCCW bow-direction formula from the bundled
+  vis-network.min.js (Edge._getViaCoordinates) and kinship2's own arcconnect() source (deparse()d
+  from plot.pedigree, since it is not exported). Found the bug is position-DEPENDENT, not a fixed
+  wrong choice: measured 19/52 same-row duplicate connectors correct pre-fix on the real
+  375-individual bundled fixture, 33/52 wrong -- proving neither a blanket from/to swap nor a
+  blanket curvedCW/curvedCCW swap would fix it (either just inverts which subset is wrong). RED:
+  2 new tests (deterministic loopPed fixture + real fixture) asserting from.x <= to.x on every
+  duplicate connector; updated 3 existing tests whose filters assumed from is always the duplicate
+  id. Confirmed RED (184/188 pass). GREEN: x-ordered dupEdges' from/to by ascending x
+  (R/makePedigreeDiagramData.R ~line 1342), smooth.type/roundness unchanged. Confirmed GREEN
+  (188/188 targeted; 4854/4854 full clean regression, 0 error; 0 lint on touched file; real-fixture
+  re-measurement 52/52 same-row connectors now correct). REFACTOR gate offered, explicitly skipped
+  (diff already minimal). Runtime/visual verification: rendered + chromote-screenshotted a same-row
+  demo case, visually confirmed convex/upward bow matching kinship2. devtools::check(): 1 error
+  (test_wordlist_coverage.R, "matings"/"visNetwork's"), confirmed pre-existing/unrelated via git
+  stash + diff against S576's own final commit (7b04a911) -- identical failure before any of this
+  session's changes, not fixed here. Commits: a12ca391 (Phase 0 ledger-reconcile backfill,
+  CHANGELOG.md missing an entry for S576's own ce8c50a1), a04090ec (claim), 0d013838 (RED),
+  a01c176c (GREEN), ee22559c (downstream: BACKLOG.md item removed, plan doc section 7a updated),
+  plus this close-out's own commit (below).
+next_steps: No further work on this item -- DONE. Session picks the next BACKLOG.md priority at a
+  future Phase 0: Track 6 implementation (READY, Effort L, the ratified S576 design -- 3
+  coordinated changes per its own section 6 Migration Path, RED phase should write the finalUnitX
+  invariant test + duplicate-vs-real de-collision regression test first); sibling
+  subtree-width-asymmetry (READY but not scoped, likely needs its own design session, found S576);
+  stale screenshot pb_diagram_legend.png recapture (READY, Effort S, found S574); CHANGELOG.md's
+  own byte-budget archive trigger (READY, Effort S, found S573, still firing -- 92,063 B against
+  65,536 B as of this session's own entries); the scheduled shinytest2.yaml CI failure (red 2+
+  consecutive days, still not diagnosed); SESSION_NOTES.md's own line-cap overage (no BACKLOG item
+  yet, 2,652+ lines, past the 2,000-line cap -- a routine methodology_trim.py archive is due).
+key_files: R/makePedigreeDiagramData.R:1342-1360ish (the dupEdges construction, the fix itself),
+  tests/testthat/test_makePedigreeMatingLayout.R (RED tests + 3 updated existing tests, search for
+  "x-ordered"), docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md section 7a
+  (the updated record with the root cause and fix summary).
+gotchas: (1) The BACKLOG item's own "load-bearing for color/width" caution does NOT apply to
+  dupEdges specifically -- verified directly: dupEdges$color/width are unconditionally NA
+  regardless of from/to (set explicitly after construction), and no downstream
+  .addRectilinearWaypoints() D1/D2 dogleg logic keys off a duplicate-connector row's from/to (D2
+  only matches rows whose `to` is a union id "__union_*"; a duplicate connector's `to` is always a
+  real individual id). Don't assume this caution generalizes to every from/to change in this
+  function -- it's real for mateEdges (D2's own dogleg lookup), not for dupEdges. (2) ~50% (50/102)
+  of all duplicate connectors are CROSS-row (dup and real at different gen) -- a case kinship2's own
+  algorithm never produces (its duplicates are always same-row), so there is no reference convention
+  to match there. The x-ordering fix applies uniformly to these too (for consistency, not because
+  it's known-correct for that case) -- if the visual result for cross-row connectors ever looks
+  wrong, that's a distinct, unexplored question, not a bug in this fix's own scope. (3) The vis.js
+  curvedCW/curvedCCW formulas are NOT simple mirror images with negated roundness -- negating
+  smooth.roundness while keeping smooth.type="curvedCW" shrinks the arc's bow magnitude toward zero
+  rather than flipping its side (both the angle-rotation term AND the magnitude term share the same
+  `(.5*i+.5)` coefficient in the CW formula) -- verified by extracting the actual minified source,
+  not assumed from the parameter name.
+runtime_smoke: DONE -- rendered 2 demo pedigrees via visNetwork::visSave() + chromote screenshot
+  (a cross-row case reproducing the loopPed fixture, and a new minimal same-row polygamous-founder
+  case built specifically to isolate the kinship2-comparable scenario); visually confirmed the
+  same-row case now bows convex/upward, matching kinship2 exactly.
+changelog_ref: this session's own CHANGELOG.md entries (ledger-reconcile backfill, claim, RED,
+  GREEN, downstream updates, close-out)
 commit: pending
 ```
 

@@ -14,14 +14,131 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 576 Handoff Evaluation (by Session 577)
+**Score: 9/10.** **What helped:** the `HANDOFFS.md` S576 receipt's `next_steps` explicitly named
+"the arc curve-direction item (§7a, READY, Effort S/M)" as still-open, and the receipt's own
+`gotchas` (2) named the exact caution ("from/to order is also load-bearing for... color/width
+preservation logic") this session had to verify before trusting the fix -- both directly on point,
+zero rediscovery cost. **What was missing:** the receipt (and the originating `BACKLOG.md` item)
+framed the fix as choosing among 3 candidate mechanisms (from/to swap, `smooth.roundness` sign, or
+a `curvedCW`/`curvedCCW` swap) as if any one blanket choice would suffice -- this session's own
+empirical measurement found that framing incomplete: the bug is position-DEPENDENT (33/52 same-row
+connectors wrong, not 52/52), so any blanket global swap would just invert which subset is wrong,
+not fix it. Not a fault of S576 (it explicitly deferred investigation, "not measured further this
+session"), but worth naming since a less-careful implementer could have shipped a "fix" that looked
+plausible and still failed roughly the same fraction of cases. **What was wrong:** nothing found
+inaccurate. **ROI:** high -- the precise `R/makePedigreeDiagramData.R:1345` pointer and the
+color/width-preservation gotcha both saved real investigation time.
+
 ### What Session 577 Did
 **Deliverable:** Duplicate-individual dashed connector arc curve-direction fix (`BACKLOG.md`
-Housekeeping, found S575) (IN PROGRESS)
-**Started:** 2026-08-14
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+Housekeeping, found S575, plan doc §7a) -- **DONE.** Following
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` under Strict TDD (RED→GREEN, both
+phase-gated via `AskUserQuestion`; REFACTOR gate offered and explicitly skipped -- GREEN diff judged
+already minimal/single-concern). **Started/Completed:** 2026-08-14.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SESSION_RUNNER.md`, `SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list` [12 open, unchanged], `git status`/`log`/`diff --stat` [106
+commits ahead of `origin/master`, unpushed; 1 untracked file -- the same already-investigated Quarto
+render byproduct], `methodology_dashboard.py` [Health 96/100, 1 HIGH risk --
+`SESSION_NOTES.md` past the 2,000-line cap, unchanged], `gh run list --branch master --limit 10`
+[scheduled `shinytest2.yaml` red 2 consecutive days, still not diagnosed; all push-triggered
+workflows green]). **Ledger reconcile found a real gap** (the first in many sessions): `CHANGELOG.md`'s
+frontier trailed `HEAD` by one commit -- S576's own `ce8c50a1` ("reconcile HANDOFFS.md commit
+self-reference") had no matching `CHANGELOG.md` entry, breaking the established S562-S575 pattern.
+Backfilled and committed separately (`a12ca391`) before the Phase 0 report, per `SESSION_RUNNER.md`
+step 6. Rendered the priorities list (4 items in the `AskUserQuestion` picker, 3 more noted below
+it) -- the picker's answer arrived from an accidental terminal-window click, not a genuine choice;
+the user caught and flagged this immediately, then explicitly confirmed proceeding with the
+originally-selected item anyway ("go ahead with that, its fine") once asked. **(2)** Phase 1B: claim
+stub written to `SESSION_NOTES.md`/`HANDOFFS.md` (`status: pending`), committed (`a04090ec`).
+**(3)** Read `DEVELOPMENT_WORKSTREAM.md` and the relevant section of
+`R/makePedigreeDiagramData.R` (the `dupEdges` construction at the time, plus
+`.addRectilinearWaypoints()`'s D1/D2 dogleg loops) to verify the `BACKLOG.md` item's own caution
+("`from`/`to` order is also load-bearing for... color/width preservation logic elsewhere in this
+same function") -- confirmed it does NOT apply to `dupEdges` specifically: its `color`/`width` are
+unconditionally NA regardless of `from`/`to`, and no downstream from/to-keyed logic (D1/D2) matches
+a duplicate-connector row (`to` is a real individual id, never a union id). **(4)** Extracted the
+exact vis.js `curvedCW`/`curvedCCW` bow-direction formulas directly from the bundled
+`vis-network.min.js` (`Edge._getViaCoordinates`, found via the installed `visNetwork` package's
+`htmlwidgets/lib/vis/` directory) and kinship2's own `arcconnect()` source (`plot.pedigree`'s nested
+function, extracted via `deparse(kinship2::plot.pedigree)` since it isn't exported). Derived
+analytically that kinship2 always bows toward ancestors because it pre-sorts its pair by x
+(`tx <- sort(tx)`), while vis-network's bow direction is a function of which endpoint is `from` --
+meaning the two conventions only agree when the duplicate happens to sit left of its real self.
+**(5)** Wrote and ran a throwaway validation script against the real 375-individual bundled fixture:
+confirmed empirically that only 19/52 same-row duplicate connectors currently bow correctly (33/52
+wrong) -- proving neither a blanket `from`/`to` swap nor a blanket `curvedCW`→`curvedCCW` swap would
+fix this (either would just invert which subset is wrong). Also found 50/102 (49%) of all duplicate
+connectors are cross-row (a case kinship2's own algorithm never produces, so no reference convention
+exists to match there). **(6)** Presented findings via `AskUserQuestion` (PRE-RED→RED gate) --
+approved. **(7) RED:** added 2 new tests to `tests/testthat/test_makePedigreeMatingLayout.R`
+(a deterministic `loopPed`-fixture case + the real 375-individual fixture) asserting every dashed
+duplicate-connector edge has `from.x <= to.x`; updated 3 existing tests whose filters assumed `from`
+is always the duplicate id (relaxed to `{from,to}` set membership). Confirmed RED: 184 pass / 4 fail.
+Committed (`0d013838`). **(8)** `AskUserQuestion` (RED→GREEN gate) -- approved. **(9) GREEN:**
+in `R/makePedigreeDiagramData.R`'s `dupEdges` construction (~line 1342), replaced the fixed
+`from = dupIds, to = duplicates$realId` with an x-ordered pair (smaller-x endpoint becomes `from`),
+`smooth.type`/`roundness` unchanged. Confirmed GREEN: targeted 188/188 pass; full clean regression
+4854/4854 pass, 0 error, no non-baseline failures; `lintr::lint_package()` 0 lints on the touched
+file; real-fixture re-measurement: 52/52 same-row connectors now bow correctly (was 19/52).
+Committed (`a01c176c`). **(10)** `AskUserQuestion` (GREEN→REFACTOR gate) -- REFACTOR explicitly
+skipped (diff judged already minimal). **(11) Runtime/visual verification (Phase 3E):** rendered 2
+demo pedigrees (the `loopPed` cross-row case + a new minimal same-row polygamous-founder case) via
+`visNetwork`/`visSave()`, screenshotted both with `chromote::ChromoteSession`, and visually confirmed
+the same-row case now bows convex/upward -- matching kinship2 exactly, the precise complaint the
+owner raised. **(12)** `devtools::check()`: 1 error (`test_wordlist_coverage.R` flags
+`matings`/`visNetwork's`), 0 warnings, 1 note. Confirmed via `git stash` + a direct diff against
+S576's own final commit (`7b04a911`) that this exact failure is pre-existing and unrelated --
+identical flagged words, fails identically before any of this session's changes -- so not fixed
+here, matching this project's own established "report, don't fix mid-session" precedent for this
+exact recurring gap (`BACKLOG.md` has multiple prior instances of this same test being
+confirmed-pre-existing). **(13)** Downstream updates: removed the resolved `BACKLOG.md` item;
+updated the remediation plan's §7a with the root cause/fix summary. Committed (`ee22559c`).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation/tutorial-article/`a2interactive.Rmd`/
+GitHub-issue-close-out/`_pkgdown.yml` checklists all N/A -- no new displayed statistic, no new
+Shiny tab/control, no new script-callable function/parameter, not tied to a GitHub issue number, no
+new export. NEWS.Rmd checklist N/A -- matches the original S469 curvedCW-arc fix's own precedent
+(an internal rendering-direction bugfix to an already-shipped feature, not a new export or Shiny
+control; confirmed via `grep` that S469's own fix has no `NEWS.Rmd` mention either). Lint checklist
+DONE -- 0 lints on the touched `R/` file.
+
+**Phase 3E runtime smoke test:** DONE, not skipped -- see step (11) above. This change affects live
+Shiny rendering (Pedigree Diagram tab), so build/test passing alone was treated as necessary but not
+sufficient, per `DEVELOPMENT_WORKSTREAM.md`'s own hard-gate verification checklist.
+
+**Self-assessment (Session 577): 9/10.** **Strengths:** (1) Did not accept the `BACKLOG.md` item's
+own framing of the fix at face value -- derived the actual vis.js/kinship2 formulas from primary
+source (bundled minified JS + `deparse()`d R source) rather than guessing, then empirically measured
+BEFORE choosing an implementation, which caught that the "3 candidate mechanisms" framing was
+incomplete (the bug is position-dependent, not a uniform flip -- see the handoff-evaluation note
+above). This is a direct instance of the independent-adversarial-verification practice this
+project's own standing gap (S551-S576, flagged unaddressed across 10+ consecutive sessions) has been
+missing, applied here to a `BACKLOG.md` item's OWN reasoning, not just to code. (2) Verified the
+"load-bearing for color/width" caution directly against the actual downstream code before trusting
+it, rather than working around it defensively or ignoring it -- found it didn't apply to this edge
+type, with the specific reasoning recorded (not just "checked, fine"). (3) Full TDD discipline:
+phase declared at the top of every response, both PRE-RED→RED and RED→GREEN gates run as genuine
+`AskUserQuestion` calls with concrete planned actions, RED confirmed failing (184/188) before GREEN,
+GREEN confirmed passing (188/188) with no scope beyond the RED tests' own assertions. (4) Real
+runtime/visual verification, not just green tests -- rendered and screenshotted a same-row case
+specifically to confirm the convex-bow claim directly, matching this project's own established
+"validate against a live render, not just a scalar metric" precedent (Track 6, S576). (5) Correctly
+identified the `devtools::check()` error as pre-existing via the same `git stash`/prior-commit-diff
+methodology this project has used before, rather than either silently ignoring it or scope-creeping
+into fixing unrelated `inst/WORDLIST` gaps. **Weaknesses:** (1) Did not investigate or attempt to
+define a sensible bow-direction convention for the 50/102 (49%) cross-row duplicate connectors --
+explicitly out of scope (kinship2 has no equivalent case to match), but also not filed as its own
+follow-up item since it isn't a clear defect, just an open aesthetic question; a future session or
+the owner may want to weigh in on whether this matters. (2) No independent adversarial-verification
+pass by a separate agent/session on this fix -- the same standing gap flagged for 10+ consecutive
+prior sessions, now 11, including this one. (3) The mid-session `AskUserQuestion` mis-click (see
+step 1 above) cost a short back-and-forth to confirm the user's actual intent before proceeding --
+handled by stopping and asking rather than assuming, but worth naming as a process hiccup, not
+purely external.
+**Ledger:** recorded in `CHANGELOG.md` (this session's reconcile-backfill, claim, RED, GREEN, and
+downstream-update entries).
 
 ### Session 575 Handoff Evaluation (by Session 576)
 **Score: 8/10.** **What helped:** the `BACKLOG.md` item S575 filed (found via owner review of a
