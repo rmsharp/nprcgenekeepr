@@ -138,6 +138,14 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [ad hoc] S576: reconcile HANDOFFS.md commit self-reference (`ce8c50a1`) (Backfilled reconcile-on-read, Session 577)
+- **Deliverable:** Fixed S576's own `HANDOFFS.md` receipt `commit: pending` -> `7b04a911` (the
+  close-out commit whose sha the receipt itself couldn't name until after it was made) -- matching
+  the established S562-S575 precedent. Backfilled at Session 577 Phase 0 reconcile: the commit
+  itself (`ce8c50a1`, made at S576 close-out) landed with no corresponding `CHANGELOG.md` entry,
+  found via the `CHANGELOG.md` frontier (`7b04a911`) trailing `HEAD` by one commit while
+  `HANDOFFS.md`'s own frontier had no gap.
+
 ### 2026-08-14 · [BL-N] S576: close out (Track 6 design ratified)
 - **Deliverable:** Design document ratified via `AskUserQuestion` ("proceed as written").
   `docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md` DONE. Updated
