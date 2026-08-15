@@ -138,6 +138,14 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [BL-N] S580: claim session (HANDOFFS.md byte-budget/line-headroom archive trim)
+- **Deliverable:** Phase 1B claim stub written to `SESSION_NOTES.md`/`HANDOFFS.md` (`status:
+  pending`) for this session's deliverable: archive `HANDOFFS.md`'s tagged-receipt portion into a
+  new dated shard (`BACKLOG.md` Housekeeping, found S579) -- both the line-headroom (4 records
+  against the 15-record threshold) and byte-budget (125,043 B against 65,536 B) triggers fire.
+  Owner-picked via `AskUserQuestion` over 3 other READY items (locale-dependent `order()` sweep,
+  sibling subtree-width asymmetry, stale `pb_diagram_legend.png` screenshot).
+
 ### 2026-08-14 · [BL-N] S579: post-close-out finding: HANDOFFS.md's own archive trigger fires
 - **Deliverable:** A post-close-out `--check` sweep of both ledgers (prompted by this session's
   own `CHANGELOG.md` trim) found `HANDOFFS.md`'s line-headroom trigger now fires (4 records

@@ -132,6 +132,23 @@ This file currently holds **10** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S580
+date: 2026-08-14
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: HANDOFFS.md byte-budget/line-headroom archive trim (BACKLOG.md Housekeeping, found S579)
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+pending
+
+```handoff
 session: S579
 date: 2026-08-14
 status: complete

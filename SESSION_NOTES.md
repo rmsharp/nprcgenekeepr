@@ -14,6 +14,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 580 Did
+**Deliverable:** `HANDOFFS.md` byte-budget/line-headroom archive trim (`BACKLOG.md` Housekeeping,
+found S579) (IN PROGRESS)
+**Started:** 2026-08-14
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 578 Handoff Evaluation (by Session 579)
 **Score: 7/10.** **What helped:** the `next_steps` field named this exact item verbatim ("trim
 CHANGELOG.md (byte-budget archive trigger fired at 83,410 B vs the 65,536 B budget, Effort S)")
