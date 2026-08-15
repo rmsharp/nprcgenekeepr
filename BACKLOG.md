@@ -161,17 +161,48 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       same core recursive positioning algorithm). See
       `docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md` §1.4/§8 for the
       full measurement and reasoning.
-- [ ] (found S574, 2026-08-14, incidental to Track 2's default-flip documentation pass, READY,
-      Effort S) **`shiny_app_use/pb_diagram_legend.png` (used in both
+- [x] (found S574, 2026-08-14, incidental to Track 2's default-flip documentation pass,
+      **RESOLVED S582**. **`shiny_app_use/pb_diagram_legend.png` (used in both
       `vignettes/articles/colony-manager-guide.qmd` and `vignettes/articles/pedigree-diagram.qmd`)
-      visibly shows the "Direct" radio button pre-selected** -- accurate when captured, but Track 2
+      visibly showed the "Direct" radio button pre-selected** -- accurate when captured, but Track 2
       (S574) flipped the Diagram tab's own zero-interaction default to "Rectilinear", so the
-      screenshot's own radio-button state (and its diagonal-line routing) no longer matches what a
-      fresh session actually renders. Not reshot this session -- out of scope for the default-flip
-      deliverable itself, matching `PROJECT_LEARNINGS.md` Learning 382's "report, don't fix
-      mid-session" precedent (mirrors the S461/S544 stale-screenshot pattern already resolved once
-      for this same image, S560). A future session should recapture it via the live app (chromote),
-      same small real 6-animal subgraph, with Rectilinear now pre-selected with no interaction.
+      screenshot's own radio-button state (and its diagonal-line routing) no longer matched what a
+      fresh session actually rendered (mirrors the S461/S544 stale-screenshot pattern already
+      resolved once for this same image, S560). **Fixed (S582):** recaptured via the live app
+      (`shinytest2`/chromote), same fixture/focal-animal set the canonical
+      `vignettes/articles/pedigree-diagram-screenshots.R` script's own "Base fixture" step uses
+      (`obfuscated_rhesus_mhc_ped.csv`, focal ids `8LKBV9`/`FJIB3R`/`GA204Z`, selector
+      `#pedigree-moduleContainer`) -- deliberately no `pedigreeEdgeStyle` interaction, so the shot
+      captures whatever the app's own zero-interaction default renders (confirmed live via
+      `R/modPedigree.R`'s `.currentEdgeStyle()`, which now returns `"rectilinear"` when
+      `input$pedigreeEdgeStyle` is `NULL`). New screenshot confirmed showing "Rectilinear
+      (kinship2-style)" pre-selected with right-angle edge routing, diffed visually against the
+      prior committed image (extracted via `git show 2b3e8ef6:...`) to confirm only the intended
+      radio-button/routing state changed. Build-equivalent verification: `pkgdown::build_article()`
+      for both `articles/pedigree-diagram` and `articles/colony-manager-guide` rendered clean via
+      `quarto render`, and the built HTML's embedded image was MD5-confirmed identical to the new
+      source PNG (not a stale cached copy); render litter (`pkgdown_site/`, `pkgdown/`) removed
+      before commit. Neither article's surrounding prose needed a text change -- both already said
+      "under the default Rectilinear edge style" (already updated by Track 2's own S574 pass), so
+      only the image itself was stale. One incidental finding, not fixed (out of this item's scope,
+      matching `PROJECT_LEARNINGS.md` Learning 382's "report, don't fix mid-session" precedent):
+      `vignettes/articles/pedigree-diagram-screenshots.R`'s other 3 non-base-fixture screenshots
+      (`diagram_show_names.png`, `diagram_affected_shading.png`, `diagram_twin_connectors.png`)
+      also never set `pedigreeEdgeStyle` before capture, so they may have gone stale by the exact
+      same default-flip mechanism -- not verified either way this session, a future session should
+      check.
+- [ ] (found S582, 2026-08-14, incidental to the `pb_diagram_legend.png` reshoot above, READY,
+      Effort S -- not verified) **`vignettes/articles/pedigree-diagram-screenshots.R`'s other 3
+      non-base-fixture screenshots may have gone stale by the same default-flip mechanism as
+      `pb_diagram_legend.png` above.** `diagram_show_names.png`, `diagram_affected_shading.png`,
+      and `diagram_twin_connectors.png` are each captured without ever setting
+      `pedigreeEdgeStyle` (see the script's own "3.", "4.", "5." sections) -- like
+      `pb_diagram_legend.png` before this session's fix, each therefore renders whatever the app's
+      zero-interaction default is, which Track 2 (S574) changed from "direct" to "rectilinear". If
+      any of these 3 committed images still show diagonal (`direct`-style) edge routing, they are
+      stale in the same way `pb_diagram_legend.png` was. Not checked this session (out of the
+      pb_diagram_legend.png item's own scope) -- a future session should open each and confirm,
+      reshooting via the same script/technique if stale.
 - [ ] (found S508, 2026-08-10, re-surfaced S559, 2026-08-13, **RESOLVED S561**.
       **`HANDOFFS.md`'s declared `methodology_trim.py` regenerated field ("retained
       receipt count") had no matching "This file currently holds **N**" sentence in the

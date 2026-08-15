@@ -14,16 +14,112 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 581 Handoff Evaluation (by Session 582)
+**Score: 9/10.** **What helped:** the `next_steps` field's priorities list (screenshot reshoot,
+sibling subtree-width asymmetry, #148 scope-narrowing, NPRC outreach) matched, item-for-item and
+in the same order, what this session independently reconstructed from `BACKLOG.md` at Phase 0 --
+no rediscovery cost, and the item this session picked (the screenshot reshoot) was the top of that
+list. `key_files`/`changelog_ref` were accurate. **What was missing:** the `BACKLOG.md` item's own
+text (found S574, carried unedited into S581's handoff) already said exactly what to do ("recapture
+it via the live app (chromote), same small real 6-animal subgraph, with Rectilinear now
+pre-selected with no interaction") but did not name the existing canonical capture script
+(`vignettes/articles/pedigree-diagram-screenshots.R`) or its exact fixture/focal-id parameters --
+this session had to locate and read that script itself (`grep -rln "pb_diagram_legend"`) rather
+than being pointed at it directly; a `key_files` entry for that script would have saved a few
+minutes. **What was wrong:** nothing found inaccurate -- the `gotchas` field's CI-status note
+(scheduled `shinytest2.yaml` red 2 consecutive days) was independently reconfirmed still true at
+this session's own Phase 0 (now a 3rd consecutive day). **ROI:** high -- the priorities list and
+picker worked correctly on the first pass.
+
 ### What Session 582 Did
 **Deliverable:** Reshoot `shiny_app_use/pb_diagram_legend.png` (`BACKLOG.md`, found S574) --
-stale screenshot shows the old "Direct" radio pre-selected; Track 2 (S574) flipped the Diagram
-tab's zero-interaction default to Rectilinear, so the image no longer matches what a fresh
-session renders (IN PROGRESS)
-**Started:** 2026-08-14
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**DONE**. Not a Strict-TDD task (no `R/` source or test code changed -- a documentation-asset
+recapture, matching the S461/S544/S560/S574 precedent for this same class of session); stated
+explicitly at Phase 0 hand-off, RED/GREEN/REFACTOR gates N/A. Followed
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`'s structure for the mechanics.
+**Started:** 2026-08-14. **Completed:** 2026-08-15 (session crossed midnight).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list` [12 open, unchanged], `git status`/`log`/`diff --stat` [138 commits ahead of
+`origin/master`, unpushed; 1 untracked benign `.qmd`-render-byproduct file, confirmed via
+`git check-ignore` + cross-referenced against `SESSION_NOTES.md`/`PROJECT_LEARNINGS.md` mentions
+as the same recurring pattern S581 also saw], `methodology_dashboard.py` [Health 96/100, 1 HIGH
+risk -- `SESSION_NOTES.md` at 3,253 lines, past the 2,000-line cap, archiving still blocked on the
+documented fence-scanner defect], `gh run list --branch master --limit 10` [4 push-triggered
+workflows green; scheduled `shinytest2.yaml` red on both 2026-08-13 and 2026-08-14, a 2nd
+consecutive-day recurrence of what S581 first flagged]). Ledger reconcile: both
+`CHANGELOG.md`/`HANDOFFS.md` frontier == `HEAD`, no gap, no ghost session. Rendered the priorities
+list (4 numbered items capped per `CLAUDE.md`'s picker convention, from `BACKLOG.md`'s own
+READY/BLOCKED/DECISION-NEEDED tags plus the ratified `GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT`'s
+own #148 scope-narrowing finding) and the `AskUserQuestion` picker; user picked the
+`pb_diagram_legend.png` reshoot. **(2)** Phase 1B claim stub committed (`e0462f12`), including a
+proactive `CHANGELOG.md` `[BL-N]` entry for the claim commit and a `status: pending` `HANDOFFS.md`
+receipt. **(3)** Located the canonical capture mechanism: `grep -rln "pb_diagram_legend" R/*
+vignettes/**` found `vignettes/articles/pedigree-diagram-screenshots.R`'s own "1-2. Base fixture"
+section (fixture `obfuscated_rhesus_mhc_ped.csv`, focal ids `8LKBV9`/`FJIB3R`/`GA204Z`, selector
+`#pedigree-moduleContainer`) -- deliberately does NOT set `pedigreeEdgeStyle` before its first shot,
+so it inherits whatever the app's own zero-interaction default is. Confirmed live in
+`R/modPedigree.R:419-429`: `.currentEdgeStyle()` returns `"rectilinear"` when
+`input$pedigreeEdgeStyle` is `NULL` (the comment directly above it is now stale -- still says
+"defaulting to 'direct'" -- but the code itself is correct and matches Track 2's S574 flip; not
+fixed, out of this session's scope, noted only). **(4)** Wrote a standalone scratch script (not
+committed) reproducing ONLY that Base-fixture step through its first `shot()` call -- deliberately
+not sourcing/running the full canonical script, so the other 4 committed screenshots
+(`diagram_rectilinear_edge_style.png`, `diagram_show_names.png`, `diagram_affected_shading.png`,
+`diagram_twin_connectors.png`) stayed untouched, keeping this session's file changes to exactly the
+one image `BACKLOG.md`'s item named. Ran it (`NOT_CRAN=true Rscript ...`); captured successfully.
+**(5)** Verified the result: `Read`-displayed the new PNG (shows "Rectilinear (kinship2-style)"
+pre-selected, right-angle edge routing) side by side with the prior committed image (extracted via
+`git show 2b3e8ef6:vignettes/articles/shiny_app_use/pb_diagram_legend.png`, which shows "Direct"
+pre-selected, diagonal routing) -- confirmed only the intended radio-button/routing state changed,
+same fixture/focal set/toast-notification layout in both. **(6)** Build-equivalent verification
+(per `SAFEGUARDS.md`, matching the established `pkgdown::build_article()`-is-the-real-consumer
+precedent): snapshotted `git status --porcelain` first, then `pkgdown::build_article()` for both
+`articles/pedigree-diagram` and `articles/colony-manager-guide` (the two `.qmd` files referencing
+this image) -- both rendered clean via `quarto render`, no errors. `md5` of the built HTML's
+embedded `shiny_app_use/pb_diagram_legend.png` matched the new source PNG exactly (not a stale
+cached copy). Cleaned render litter (`pkgdown_site/`, `pkgdown/`) before commit, re-confirmed
+`git status` showed only the one intended file change. Checked both articles' surrounding prose for
+any now-inconsistent "Direct"-default claim -- found none; both already said "under the default
+Rectilinear edge style" (already updated by Track 2's own S574 pass), so only the image itself
+needed the fix. **(7)** Close-out: `BACKLOG.md` item marked `[x]`/RESOLVED with full outcome, plus
+a new standalone item filed for an incidental finding (the script's other 3 non-base-fixture shots
+share the identical never-sets-`pedigreeEdgeStyle` omission and may be stale by the same mechanism
+-- not verified either way this session, matching `PROJECT_LEARNINGS.md` Learning 382's
+"report, don't fix mid-session" precedent); `PROJECT_LEARNINGS.md` Learning 589 (the generalizable
+"a shared capture script's OTHER steps sharing the same omission are unverified peers, not a
+separate concern" pattern).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A (no new displayed statistic);
+tutorial/article checklist N/A (the article already exists and already describes the current
+default correctly -- only its screenshot was stale); `NEWS.Rmd` checklist N/A (no new exported
+function or user-facing feature/control -- a documentation-asset-only change, matching the
+S461/S544/S560/S574 precedent of zero `NEWS.Rmd` entries for this exact class of session, confirmed
+via `grep -n "S574\|S560\|S544" NEWS.Rmd` returning nothing); `a2interactive.Rmd` checklist N/A (no
+exported function/parameter involved); GitHub issue close-out N/A (not filed as an issue, matching
+the item's own established precedent); lint checklist N/A (no `.R` file under `R/` touched -- the
+scratch capture script lived outside the tracked tree and was never committed); `_pkgdown.yml`
+reference-coverage N/A (no new exported function).
+
+**Self-assessment (Session 582): 9/10.** **Strengths:** (1) Kept the fix scoped to exactly the one
+named file by writing a standalone reproduction of only the needed capture step, rather than
+running the full canonical script (which would have silently touched 4 other screenshots not in
+this item's stated scope) -- deliberate anti-scope-creep discipline. (2) Verified through the REAL
+consumer (`pkgdown::build_article()` + MD5 comparison of the built HTML's embedded image), not just
+"the file changed on disk," matching the established Learning-443 precedent for doc-asset
+verification. (3) Diffed the new image against the prior committed one before treating the task as
+done, rather than assuming the capture succeeded from the script's own exit code alone. (4) Read
+the underlying `.currentEdgeStyle()` source to confirm the mechanism (why a zero-interaction
+capture would inherit the new default) rather than assuming the BACKLOG item's framing was
+correct without checking. (5) Found and filed (rather than silently fixed OR silently ignored) a
+real incidental discovery: 3 sibling screenshots in the same script share the identical staleness
+mechanism, unverified. **Weaknesses:** (1) Did not verify whether the 3 sibling screenshots are
+actually currently stale -- filed the finding but did not spend the ~10 minutes to open and check
+them, which might have let this session close out the whole staleness class in one pass rather
+than leaving a new open item. (2) Still no independent adversarial-verification pass by a separate
+agent/session -- the same standing gap flagged for 15+ consecutive prior sessions.
+**Ledger:** recorded in `CHANGELOG.md` (claim + close-out -- 2 entries this session, both
+`[BL-N]`-tagged).
 
 ### Session 580 Handoff Evaluation (by Session 581)
 **Score: 9/10.** **What helped:** the `next_steps` field's priorities list (order() sweep,

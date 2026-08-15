@@ -138,6 +138,23 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [BL-N] S582: close out (pb_diagram_legend.png reshoot DONE)
+- **Deliverable:** `BACKLOG.md` item (found S574) -- **DONE**. Recaptured
+  `vignettes/articles/shiny_app_use/pb_diagram_legend.png` via a standalone `shinytest2`/chromote
+  script reproducing the canonical `pedigree-diagram-screenshots.R`'s "Base fixture" step
+  (`obfuscated_rhesus_mhc_ped.csv`, focal ids `8LKBV9`/`FJIB3R`/`GA204Z`, selector
+  `#pedigree-moduleContainer`), deliberately not setting `pedigreeEdgeStyle` so the capture
+  inherits the app's own current zero-interaction default (`"rectilinear"`, confirmed live via
+  `R/modPedigree.R`'s `.currentEdgeStyle()`). New image confirmed showing "Rectilinear
+  (kinship2-style)" pre-selected with right-angle edge routing, diffed visually against the prior
+  committed image. Build-equivalent: `pkgdown::build_article()` for both `articles/pedigree-diagram`
+  and `articles/colony-manager-guide` rendered clean (`quarto render`); built HTML's embedded image
+  MD5-confirmed identical to the new source PNG. Render litter removed before commit. Neither
+  article's prose needed a change (already said "Rectilinear" is the default, from Track 2's own
+  S574 pass). Incidental finding filed as its own `BACKLOG.md` item, not fixed: the same script's
+  other 3 non-base-fixture screenshots share the identical never-sets-`pedigreeEdgeStyle` omission
+  and may be stale by the same mechanism, unverified. See `PROJECT_LEARNINGS.md` Learning 589.
+
 ### 2026-08-14 · [BL-N] S582: claim (reshoot pb_diagram_legend.png)
 - **Deliverable:** Session claimed. `BACKLOG.md` item (found S574) -- reshoot
   `shiny_app_use/pb_diagram_legend.png`, stale since Track 2 (S574) flipped the Diagram tab's

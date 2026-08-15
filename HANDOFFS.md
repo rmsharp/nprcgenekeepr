@@ -137,19 +137,57 @@ This file currently holds **2** receipt(s). Computed by `methodology_trim.py` on
 
 ```handoff
 session: S582
-date: 2026-08-14
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Reshoot shiny_app_use/pb_diagram_legend.png (BACKLOG.md, found S574) -- stale
-  screenshot shows the old "Direct" radio pre-selected; Track 2 (S574) flipped the Diagram tab's
-  zero-interaction default to Rectilinear.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+date: 2026-08-15
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Reshoot shiny_app_use/pb_diagram_legend.png (BACKLOG.md, found S574) -- DONE. New
+  image shows Rectilinear (kinship2-style) pre-selected with right-angle edge routing, matching
+  the Diagram tab's current zero-interaction default (flipped from "direct" by Track 2, S574).
+what_was_done: Located the canonical capture mechanism (vignettes/articles/
+  pedigree-diagram-screenshots.R's "Base fixture" step, which never sets pedigreeEdgeStyle).
+  Wrote a standalone scratch script reproducing only that step through its first shot() (not the
+  full canonical script, to avoid touching the other 4 committed screenshots) and ran it
+  (NOT_CRAN=true Rscript ...) -- captured successfully. Diffed the new PNG against the prior
+  committed one (git show 2b3e8ef6:...) -- confirmed only the radio-button/routing state changed.
+  Build-equivalent: pkgdown::build_article() for both articles/pedigree-diagram and
+  articles/colony-manager-guide rendered clean; MD5-confirmed the built HTML embeds the new PNG,
+  not a stale copy. Render litter removed before commit. BACKLOG.md item marked [x]/RESOLVED;
+  PROJECT_LEARNINGS.md Learning 589 added. Commit pending (this close-out).
+next_steps: BACKLOG.md's remaining numbered items (order this session's Phase 0 presented, none
+  else picked): a new item this session filed -- verify whether pedigree-diagram-screenshots.R's
+  other 3 non-base-fixture screenshots (diagram_show_names.png, diagram_affected_shading.png,
+  diagram_twin_connectors.png) are ALSO stale by the same never-sets-pedigreeEdgeStyle mechanism
+  (found S582, not verified either way -- open each and compare against a fresh capture); Pedigree
+  Diagram sibling subtree-width asymmetry (READY but likely needs its own design session, found
+  S576); BACKLOG.md ledger-size housekeeping -- editorial compression (READY, Effort L, found
+  S518); #148 MHC scope-narrowing conversation (DECISION NEEDED); NPRC outreach & announcement
+  plan (DECISION NEEDED, owner review). Separately: scheduled shinytest2.yaml CI run still red on
+  2026-08-13 and 2026-08-14 (2 consecutive days as of this session's own Phase 0 check) --
+  unchanged/undiagnosed across 2 sessions now, worth a dedicated diagnose session soon.
+  SESSION_NOTES.md is 3,300+ lines, past the 2,000-line HIGH-risk cap -- do NOT run
+  methodology_trim.py --write on it until the documented fence-scanner defect is fixed.
+key_files: vignettes/articles/shiny_app_use/pb_diagram_legend.png (the regenerated screenshot);
+  vignettes/articles/pedigree-diagram-screenshots.R:139-163 (the canonical "Base fixture" capture
+  step this session's standalone script reproduced); R/modPedigree.R:419-429 (.currentEdgeStyle(),
+  confirms the live default and that its own comment is now stale -- not fixed, noted only);
+  BACKLOG.md (S574 item marked RESOLVED S582; new incidental-finding item filed just below it);
+  PROJECT_LEARNINGS.md Learning 589 (the generalizable "sibling capture steps are unverified
+  peers" pattern).
+gotchas: A UI-default flip silently changes what EVERY zero-interaction capture step in a shared
+  script renders, not just the one instance someone happened to notice and report -- grep the
+  script for the changed input name across ALL its steps, not just the flagged one, before
+  assuming the fix is complete. Also: R/modPedigree.R:419-421's own comment above
+  .currentEdgeStyle() still says the default is "direct" -- the CODE is correct (returns
+  "rectilinear"), only the comment is stale; a future session touching this function should fix
+  the comment too, not just be aware the code is right.
+runtime_smoke: Documentation-asset-only change (no Shiny runtime behavior touched), so the
+  relevant "runtime" is the doc build pipeline, not the live app. pkgdown::build_article() for
+  both consuming articles rendered clean via quarto render; MD5-verified the built HTML actually
+  embeds the new image, not a stale cached one -- the real-consumer verification this project's
+  own Learning 443 precedent calls for.
+changelog_ref: a98010d9 (S581's own last CHANGELOG entry before this session's 2 new entries --
+  see the 2026-08-14/2026-08-15 sections, "S582:" prefixed entries)
 commit: pending
 ```
 
