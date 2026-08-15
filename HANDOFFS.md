@@ -170,7 +170,7 @@ gotchas: The S547 legacy-footer relocation's SRF_RED "fix" is NOT durable -- any
   the first AskUserQuestion call of a session, not after making the same mistake again.
 runtime_smoke: n/a -- docs/ledger-only change, no runtime behavior touched.
 changelog_ref: 66d5aa54
-commit: pending
+commit: c35b1983
 ```
 
 

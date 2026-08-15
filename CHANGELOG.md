@@ -138,6 +138,10 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [ad hoc] S579: reconcile HANDOFFS.md commit self-reference (`c35b1983`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> `c35b1983`
+  (the close-out commit's own sha, unknowable until after that commit was made).
+
 ### 2026-08-14 · [BL-N] S579: close out (CHANGELOG.md byte-budget archive trim DONE)
 - **Deliverable:** Session S579's own close-out. Evaluated S578's `HANDOFFS.md` receipt (7/10 --
   the `next_steps` pointer to this exact item was accurate and immediately actionable, but no
