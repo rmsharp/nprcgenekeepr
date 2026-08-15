@@ -138,6 +138,22 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [BL-N] S589: close out (pedigree-diagram non-rigid layout feasibility spike)
+- **Deliverable:** Ran the pedigree-diagram layout feasibility spike (`BACKLOG.md`, found S588,
+  HIGH PRIORITY) — `docs/planning/pedigree-diagram-nonrigid-layout-spike-plan.md` + a runnable
+  evidence document, `docs/planning/pedigree-diagram-nonrigid-layout-spike-evidence.qmd`.
+  Prototyped a barycenter/median layered-DAG compaction candidate (owner-selected via
+  `AskUserQuestion`): 20% gap reduction and zero edge crossings on the synthetic example, but
+  **regressed** the real 375-individual fixture under a faithful full-pipeline measurement
+  (9/251→15/251 edges over threshold, 6.1x layout-width growth), root-caused to convergence
+  instability at high-mate-count "hub" individuals. **Verdict: NOT FEASIBLE as prototyped.**
+  Owner-ratified recommendation: a second, narrower spike adapting a proven library
+  (`igraph::layout_with_sugiyama()`) rather than tuning this candidate further; campaign document
+  deferred. Updated `BACKLOG.md` (S588 item DONE, new READY item for the 2nd spike); commented on
+  GitHub issue #159 (not closed). Added `PROJECT_LEARNINGS.md` Learnings 598–600; fixed a stale
+  learnings-count cross-reference in `CLAUDE.md`. Planning/investigation session, TDD phases
+  inapplicable — no `R/` file touched.
+
 ### 2026-08-15 · [BL-N] S589: claim (pedigree-diagram layout feasibility spike)
 - **Deliverable:** Non-commit-adjacent claim entry per Phase 1B. Session claimed to run the
   pedigree-diagram layout feasibility spike (`BACKLOG.md`, found S588, HIGH PRIORITY) —

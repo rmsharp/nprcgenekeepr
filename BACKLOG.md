@@ -234,25 +234,45 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       [#159](https://github.com/rmsharp/nprcgenekeepr/issues/159) filed and then updated same-session
       to reflect the priority correction (title/body rewritten, `premature optimization` label
       removed). See `CHANGELOG.md` and `PROJECT_LEARNINGS.md` Learning 596.
-- [ ] (found S588, 2026-08-15, design session for the item directly above, READY, Effort M for the
-      spike itself -- HIGH PRIORITY per owner directive, work cost explicitly not a deterrent)
-      **Pedigree Diagram layout: feasibility spike for a non-rigid/constraint-aware replacement of
-      `.positionMatingUnitForest()`'s current rigid-subtree model.** One bounded session:
-      prototype ONE non-rigid/constraint-aware layout candidate (script-level, not integrated into
-      `R/`) and test it against (a) `docs/planning/pedigree-diagram-sibling-subtree-width-plan.md`'s
-      own 13-individual synthetic example -- rendered and checked visually for edge crossings, not
-      just gap size -- and (b) the real 375-individual bundled fixture, measured for regressions
-      using a *faithful* reproduction of `.positionMatingUnitForest()`'s actual final-position
-      pipeline (including the `orderBySex` swap and final de-collision pass -- the design session's
-      own proxy measurement was explicitly simplified and should not be reused as-is for this
-      go/no-go decision). Close out with a clear verdict: feasible (name the candidate, rough
-      implementation size) or not (name why, whether a second candidate is worth a second spike).
-      **This spike's own close-out decides whether a dedicated
-      `docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md`-based campaign document is warranted** --
-      the design session deliberately did not draft one, since a multi-phase campaign needs the
-      spike's own evidence about the new algorithm's actual shape first. See
-      `docs/planning/pedigree-diagram-sibling-subtree-width-plan.md` §6 for the full scope and §1.6
-      for why the obvious "tune the current algorithm" path is already ruled out.
+- [x] (found S588, 2026-08-15, design session for the item directly above,
+      **RESOLVED S589 -- NOT FEASIBLE.**
+      `docs/planning/pedigree-diagram-nonrigid-layout-spike-plan.md` +
+      [`-evidence.qmd`](../docs/planning/pedigree-diagram-nonrigid-layout-spike-evidence.qmd)).
+      Prototyped a barycenter/median layered-DAG compaction candidate (owner-selected via
+      `AskUserQuestion`, over a force-directed alternative). Synthetic 13-individual example:
+      modest real improvement (A-B gap 2.5->2.0, 20% reduction), zero edge crossings (row order
+      provably preserved by construction, verified empirically). Real 375-individual fixture,
+      faithful full-pipeline measurement (harness verified byte-identical to the shipped
+      algorithm; baseline reproduced Track 6's own published 9/251, 3.6%, max 4,121.25 exactly):
+      **regressed** to 15/251 (5.98%), max offset 5,344, overall layout width 6.1x wider --
+      consistent across a 5-point hyperparameter sweep, never better than 15/251. Root cause
+      diagnosed: convergence instability at high-mate-count "hub" individuals (found one sire
+      with 5 separate mating unions) -- a structural feature entirely absent from the small
+      synthetic example. Found and fixed 2 real implementation bugs along the way (an unbounded
+      Jacobi-update ratchet; a self-referential down-sweep target), documented for any future
+      attempt. This is the SECOND independently-designed candidate (after S588's own
+      bounded-lookahead candidate) to improve the toy example while regressing the real fixture,
+      via a different failure mechanism each time (edge crossings there; convergence instability
+      here). Ratified via `AskUserQuestion`: **recommend a second, narrower spike adapting a
+      proven, convergence-guaranteed implementation** (e.g. `igraph::layout_with_sugiyama()`,
+      confirmed a well-established CRAN package though not installed in this environment) rather
+      than tuning this candidate further; campaign document deferred until that spike has
+      evidence. See `CHANGELOG.md` and `PROJECT_LEARNINGS.md`.
+- [ ] (found S589, 2026-08-15, follow-on to the item directly above, READY, Effort M --
+      HIGH PRIORITY per the same owner directive, work cost explicitly not a deterrent)
+      **Pedigree Diagram layout: SECOND feasibility spike, adapting a proven/convergence-
+      guaranteed implementation instead of a hand-rolled one.** Adapt
+      `igraph::layout_with_sugiyama()` (add `igraph` to `Suggests` if it stays
+      investigation-only, matching the `kinship2` reference-only precedent) OR a properly-ported
+      Brandes-Köpf (2002) horizontal coordinate assignment to this project's own mating-unit-
+      forest data structures. Test against the SAME two fixtures the first spike used (the
+      13-individual synthetic example, checked visually for crossings; the real 375-individual
+      fixture, measured with the SAME faithful full-pipeline metric
+      `docs/planning/pedigree-diagram-nonrigid-layout-spike-evidence.qmd` established) so results
+      are directly comparable across all 3 candidates now on record. Close out with a clear
+      verdict; that verdict decides the campaign-document question (deferred twice now). See
+      `docs/planning/pedigree-diagram-nonrigid-layout-spike-plan.md` §6 for the full scope and
+      §1.6 for the specific hub-node convergence failure the first spike diagnosed.
 - [ ] (found S583, 2026-08-15, incidental to a user question about the just-reshot
       `pb_diagram_legend.png` screenshot, READY, Effort unknown -- not scoped, likely needs its
       own design session before any fix) **Pedigree Diagram: a mating union with a single child (or

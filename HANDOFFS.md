@@ -138,22 +138,89 @@ This file currently holds **4** receipt(s). Computed by `methodology_trim.py` on
 ```handoff
 session: S589
 date: 2026-08-15
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 9
+predecessor_score: 10
 active_task: Pedigree Diagram layout feasibility spike (BACKLOG.md, found S588, HIGH PRIORITY) --
-  prototype ONE non-rigid/constraint-aware layout candidate (barycenter/median layered-DAG
-  compaction), tested against the synthetic example and a faithful real-fixture reproduction.
-  Close out with a feasible/not-feasible verdict.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+  DONE. Verdict NOT FEASIBLE as prototyped (barycenter/median candidate regresses the real
+  fixture 9/251->15/251, 6.1x width blowup). Recommendation (owner-ratified): a second, narrower
+  spike adapting a proven library (igraph::layout_with_sugiyama(), checked not installed but a
+  well-established CRAN package) rather than tuning this candidate further. Campaign document
+  still deferred.
+what_was_done: Prototyped a barycenter/median layered-DAG compaction candidate (owner-selected
+  via AskUserQuestion). Built a faithful harness: a byte-identical "seed" copy of the shipped
+  recursive contour-merge (cross-checked 0 diff vs the real .positionMatingUnitForest() at both
+  the synthetic and real-fixture scale) plus a verbatim "finish pipeline" (orderBySex/Track 6
+  finalUnitX/de-collision/final sweep), so the candidate vs. baseline comparison is fully
+  faithful, not a proxy. Found and fixed 2 real implementation bugs (an unbounded Jacobi-update
+  ratchet between nodes sharing one pull source; a self-referential down-sweep target using the
+  wrong "unit x" function) via a row-sequential alternating down/up sweep redesign. Synthetic
+  13-individual example: A-B gap 2.5->2.0 (20% reduction), zero edge crossings (verified visually
+  and via a row-order-rank check). Real 375-individual fixture, faithful full-pipeline metric
+  (baseline reproduced Track 6's own published 9/251, 3.6%, max 4,121.25 exactly, confirming
+  harness fidelity): candidate REGRESSED to 15/251 (5.98%), max offset 5,344, layout width 6.1x
+  wider -- confirmed not a tuning artifact via a 5-point hyperparameter sweep. Diagnosed the
+  single worst-regressed edge to a mating-unit sire with 5 separate mating unions (a "hub"
+  topology absent from the small synthetic example) as the convergence-failure mechanism. Wrote
+  docs/planning/pedigree-diagram-nonrigid-layout-spike-plan.md + -evidence.qmd (quarto render 0
+  errors); updated BACKLOG.md (S588 item DONE, new READY item for the 2nd spike); commented on
+  GitHub issue #159 (not closed, work continues); wrote PROJECT_LEARNINGS.md Learnings 598-600;
+  fixed CLAUDE.md's stale learnings-count pointer. Commits: 1faee690 (claim), plus this close-out.
+next_steps: The next session (if picked up) is a SECOND, bounded feasibility spike (BACKLOG.md,
+  found S589, HIGH PRIORITY) -- adapt igraph::layout_with_sugiyama() (add igraph to Suggests if
+  it stays investigation-only, matching the kinship2 reference-only precedent) OR a properly-
+  ported Brandes-Kopf (2002) horizontal coordinate assignment to this project's own
+  mating-unit-forest data structures. Test against the SAME two fixtures this spike used (the
+  13-individual synthetic example from docs/planning/pedigree-diagram-sibling-subtree-width-
+  plan.md, checked visually for crossings; the real 375-individual fixture, measured with the
+  SAME faithful full-pipeline metric docs/planning/pedigree-diagram-nonrigid-layout-spike-
+  evidence.qmd established -- reuse it, do not re-derive) so results are directly comparable
+  across all 3 candidates now on record. Close out with a clear verdict; that verdict decides the
+  campaign-document question (deferred twice now, see docs/planning/pedigree-diagram-nonrigid-
+  layout-spike-plan.md §6). Do NOT re-attempt tuning THIS session's own barycenter/median
+  candidate -- the owner-ratified recommendation was explicitly "proven library over further
+  hand-rolling," not a return to this implementation. Also still open, unrelated: SESSION_NOTES.md
+  is 3,990+ lines (HIGH dashboard risk, growing), not archived since 2026-08-13; CHANGELOG.md is
+  past its 65,536 B archive-trigger budget (MEDIUM risk, noted this session, not acted on).
+key_files: docs/planning/pedigree-diagram-nonrigid-layout-spike-plan.md (the verdict + full
+  rationale, esp. \S1.6 hub-node diagnosis and \S6 migration path for the 2nd spike);
+  docs/planning/pedigree-diagram-nonrigid-layout-spike-evidence.qmd (runnable, embeds the full
+  candidate implementation -- reuse its measureFaithful()/xScale=120 methodology directly rather
+  than re-deriving it); R/makePedigreeDiagramData.R:584-1026 (.positionMatingUnitForest(), the
+  function any 2nd-spike candidate must still faithfully wrap downstream of, exactly as this
+  spike's finishPipeline() did); PROJECT_LEARNINGS.md Learnings 598-600 (the 2 implementation
+  bugs + the hub-node blind spot, read before writing a 2nd candidate's own convergence logic).
+gotchas: Track 6's own "200 units" violating-edge threshold is stated in SCALED (rendered) units
+  -- multiply raw .positionMatingUnitForest() x-offsets by xScale=120 (R/makePedigreeDiagramData.R
+  :1166) before comparing to 200, or the baseline silently comes out as 0/251 instead of the real
+  9/251 (hit this exact bug live this session, first attempt). A fully-simultaneous ("Jacobi")
+  position update with a push-right-only minSep sweep has no fixed reference frame and diverges
+  unboundedly even when the one metric you're watching looks stable -- always trace overall
+  layout width across many iterations too (Learning 599). Do not reuse the SAME "unit x" function
+  for both a down-sweep and an up-sweep target in a bidirectional relaxation -- they need
+  DIFFERENT unit-position notions (parent-mean vs. child-mean) or one direction becomes
+  self-referential (Learning 598). A small synthetic example with max 1 mate per individual
+  cannot exercise high-mate-count "hub" convergence failures -- test any new candidate against a
+  fixture containing multi-mate individuals from the start, not only after a real-fixture
+  regression surfaces it (Learning 600).
+runtime_smoke: n/a -- docs-only investigation, no R/ file touched, no runtime behavior changed
+  (matches the S588 design-session precedent).
+changelog_ref: see CHANGELOG.md 2026-08-15 entries, S589 claim + close-out, [BL-N]-tagged.
+commit: pending -- this close-out commit's own sha, unknowable until after it exists; will
+  self-reconcile in a follow-up commit, matching the S562-S588 precedent.
 ```
-(stub -- filled at Phase 3D close-out)
+Self-score breakdown: **9/10.** Strengths: faithful full-pipeline harness cross-checked
+byte-identical against the shipped function at both scales before trusting any comparison; caught
+and fixed a real scaling bug in the first metric attempt by cross-checking against Track 6's own
+published baseline rather than trusting the first number; diagnosed the real-fixture regression's
+structural cause (a specific hub individual), not just its aggregate size; found and documented 2
+real implementation bugs with general lessons, not just point fixes; checked (not assumed)
+`igraph` availability before recommending it; ratified the verdict via `AskUserQuestion` before
+finalizing documents. Weaknesses: the `xScale` bug could have been caught before running anything
+by reading the design doc's own evidence.qmd more carefully first (it already divided by 120 in
+its own proxy measurement -- a hint this session initially missed); no independent adversarial-
+verification pass (22+ consecutive prior sessions, standing gap); diagnosed only the single
+worst-regressed edge structurally, not all 15.
 
 ```handoff
 session: S588
