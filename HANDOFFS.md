@@ -132,8 +132,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
-This file currently holds **2** receipt(s). Computed by `methodology_trim.py` on every
+This file currently holds **3** receipt(s). Computed by `methodology_trim.py` on every
 `--check`/`--write` run, never hand-maintained.
+
+```handoff
+session: S587
+date: 2026-08-15
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix red R-CMD-check.yaml CI -- add 4 words (matings, Rectilinear's, runnable,
+  visNetwork's) flagged by spelling::spell_check_package() to inst/WORDLIST.
+what_was_done: pending
+next_steps: pending
+key_files: inst/WORDLIST, tests/testthat/test_wordlist_coverage.R:111
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+(stub written at Phase 1B claim; filled at Phase 3D close-out)
 
 ```handoff
 session: S586

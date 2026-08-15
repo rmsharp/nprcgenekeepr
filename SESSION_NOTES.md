@@ -14,6 +14,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 587 Did
+**Deliverable:** Fix red `R-CMD-check.yaml` CI (`BACKLOG.md` Housekeeping, found S584) -- add the
+4 words `spelling::spell_check_package()` flags (`matings`, `Rectilinear's`, `runnable`,
+`visNetwork's`) to `inst/WORDLIST` (IN PROGRESS)
+**Started:** 2026-08-15
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 585 Handoff Evaluation (by Session 586)
 **Score: 9/10.** **What helped:** the `next_steps` field named the exact 2 remaining CI reds S584
 filed, each with its precise location (`R/kinship.R:127,131,133`), effort tag, and an explicit
