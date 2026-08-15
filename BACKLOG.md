@@ -68,19 +68,18 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       connected-component walk).
 
 ## Housekeeping
-- [ ] (found S579, 2026-08-14, incidental to this session's own post-close-out ledger re-check,
-      READY, Effort S) **`HANDOFFS.md`'s own archive trigger fires** (`python3
-      methodology_trim.py --file HANDOFFS.md --check`: line headroom only 4 records against the
-      15-record fire threshold -- the more urgent of the 2 caps, since it tracks the rate toward
-      the hard 2,000-line agent-read truncation cap; also 125,043 B against the 65,536 B byte
-      budget). Not trimmed this session (out of scope for the `CHANGELOG.md` deliverable, matching
-      `PROJECT_LEARNINGS.md` Learning 382's "report, don't fix mid-session" precedent). A future
-      session should run `python3 methodology_trim.py --file HANDOFFS.md --check` fresh (numbers
-      will have moved), then `--write` after confirming losslessness -- **note the SRF boundaries
-      already diverge on this file too** (1.1530 against the most-recent archive `306a4b4` vs.
-      0.1197 against the largest-drop boundary `d07814a`, a 9.63x spread): expect a possible
-      `SRF_RED` refusal and be ready to pull absolute byte deltas for both boundaries before
-      deciding, per `PROJECT_LEARNINGS.md` Learnings 549/550/586.
+- [x] (found S579, 2026-08-14, incidental to this session's own post-close-out ledger re-check;
+      **RESOLVED S580**. **`HANDOFFS.md`'s own archive trigger fired** (line headroom 4 records,
+      125,404 B against the 65,536 B budget). `--write` (dry run) refused with `SRF_RED` (SRF
+      1.1566 against the most-recent archive `306a4b4` vs. 0.1201 against the largest-drop
+      boundary `d07814a`, 9.63x spread) -- the same recurring shape Learnings 549/550/586
+      diagnosed, now confirmed on this file too (`PROJECT_LEARNINGS.md` Learning 587). Pulled
+      absolute byte deltas for both boundaries (116,204 B genuine regrowth in ~1 day vs. `306a4b4`,
+      driven by 10 receipts averaging ~12.5 KB each); surfaced via `AskUserQuestion`
+      (force/hold/raise-budget) -- owner chose **force**. Dry-run preview with `--force` confirmed
+      L1/L2/L3 losslessness (21 of 22 records, 125,404 B -> 9,682 B) before writing; ran
+      `--write --force`; the new shard's own `verify.sh` confirmed OK; post-trim `--check` clears
+      both triggers (9,682 B, SRF non-positive against both boundaries). See `CHANGELOG.md`.)
 - [x] (found S575, 2026-08-14, owner review of a published live-comparison artifact; **DESIGN
       RATIFIED S576, 2026-08-14; IMPLEMENTED S578, 2026-08-14 -- DONE**) **Pedigree Diagram:
       children are frequently rendered far from their own parent union -- a real, widespread

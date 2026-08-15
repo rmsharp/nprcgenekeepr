@@ -138,6 +138,16 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [BL-N] S580: downstream updates (BACKLOG item resolved, PROJECT_LEARNINGS 587)
+- **Deliverable:** Removed the resolved `BACKLOG.md` Housekeeping item (`HANDOFFS.md`'s archive
+  trigger, found S579), replaced with a short resolution pointer. Added `PROJECT_LEARNINGS.md`
+  Learning 587: confirms the Learning 586 `SRF_RED` recurrence pattern is not `CHANGELOG.md`-
+  specific -- the very next session hit it on `HANDOFFS.md` too, a file Learning 549 had cited as
+  having "proceeded cleanly" the one time it was checked. Also repositioned `HANDOFFS.md`'s own
+  "This file currently holds N receipt(s)" sentence back to immediately after the newest archive
+  pointer (the tool's in-place regex edit left it stranded between the 3rd and 4th pointer blocks
+  after this session's new pointer was inserted), matching the established S508/S561 convention.
+
 ### 2026-08-14 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-08-14.md` (21 record(s), 125,404 B → 9,682 B)
 
 **Written by:** `methodology_trim.py` v1.1.2 — a tool action, not a session's judgment.
