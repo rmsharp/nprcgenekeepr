@@ -95,8 +95,16 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       touched files. Live/visual verification: rendered + chromote-screenshotted the small
       GA204Z/8LKBV9 fixture (both `edgeStyle` values) and the full real fixture (both values,
       0 console errors) -- visually confirmed a union now sits close to its own child (matches
-      the fix's intent) and the duplicate dashed-connector convention is unaffected. See
-      `CHANGELOG.md`.
+      the fix's intent) and the duplicate dashed-connector convention is unaffected.
+      **`devtools::check()`** (run as its own separate build-equivalent step, not skipped as
+      redundant with the already-green `test_dir()` regression) **found a genuinely PRE-EXISTING
+      latent defect this session's own change first exposed:** the de-collision pass's `order()`
+      tie-break on node id strings is locale-dependent (`LC_COLLATE`), so which of 2 exactly-tied
+      nodes absorbs the 1e-3 epsilon nudge could differ between an interactive session's locale
+      and `R CMD check`'s own build environment -- reproduced directly via `LC_ALL=C`. Fixed with
+      `method = "radix"` (locale-independent byte-order) on both affected `order()` calls;
+      re-verified both locales now produce identical, matching output. See `PROJECT_LEARNINGS.md`
+      Learning 585. See `CHANGELOG.md`.
 - [ ] (found S576, 2026-08-14, incidental to Track 6's own empirical validation of the
       child-centered union-position design, READY, Effort unknown -- not scoped) **Pedigree
       Diagram: sibling subtree-width asymmetry -- 2-3 direct children of the same mating unit can

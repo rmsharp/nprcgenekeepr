@@ -481,10 +481,28 @@ own §2.1 snippet and §5 Impact Analysis table did not state:
   multi-generation context in that truncation, not a Track 6 defect; not used as evidence.)
 - REFACTOR: gate offered; not needed beyond what GREEN already required (the reorder itself
   *is* the structural change §2 called for -- no separate cleanup pass identified).
+- `devtools::check()` (run as its own step, not skipped as redundant with the already-green
+  `test_dir()` regression) initially found 5 failures, not the 1 known pre-existing
+  `test_wordlist_coverage.R` failure -- a THIRD finding beyond the 2 named above, this one
+  surfacing only after GREEN, not caught by Pre-RED validation. Root cause: `order()` on a
+  character node-id vector is locale-dependent (`LC_COLLATE`); the broadened de-collision pass
+  (§2.3) and `sweepMinSep()`'s own tie-break both sort node ids this way, so WHICH of 2
+  exactly-tied nodes absorbs the 1e-3 epsilon nudge differed between the interactive session's
+  `en_US.UTF-8` locale and `devtools::check()`'s own build environment -- reproduced directly via
+  `LC_ALL=C`. A genuinely PRE-EXISTING latent defect (the original pre-Track-6 de-collision pass
+  used the same non-radix `order()`); this decision's own widened node-category coverage is what
+  first exposed it as an observable, hardcoded-test-breaking symptom. Fixed with
+  `method = "radix"` (R's only locale-independent character-vector ordering) on both `order()`
+  calls; re-verified both locales produce identical output, and the headline figures tightened
+  slightly under the now-deterministic tie-break (9/251, max 4,121.25 exact match to the ratified
+  figure, duplicate-to-union distance 47.93/48.00). Re-ran `devtools::check()` after the fix:
+  clean against the same pre-existing baseline only (1 error, 0 warnings, 1 note -- all confirmed
+  pre-existing/unrelated). See `PROJECT_LEARNINGS.md` Learning 585.
 
 **Files changed:** `R/makePedigreeDiagramData.R` (`.positionMatingUnitForest()`,
-~line 833 onward -- single coordinated commit); `tests/testthat/test_positionMatingUnitForest.R`
-(2 new tests, 3 updated tests).
+~line 833 onward -- single coordinated commit, plus a follow-up locale-independence fix);
+`tests/testthat/test_positionMatingUnitForest.R` (2 new tests, 3 updated tests, plus the
+locale-stable value corrections).
 
 ---
 
