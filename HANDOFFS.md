@@ -138,18 +138,67 @@ This file currently holds **2** receipt(s). Computed by `methodology_trim.py` on
 ```handoff
 session: S584
 date: 2026-08-15
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Diagnose the red scheduled shinytest2.yaml CI run -- failing on consecutive scheduled
-  runs since 2026-08-13, first flagged S581, undiagnosed across 3 sessions. Deliverable is the
-  diagnosis (root cause with evidence from the actual failing run), not necessarily a fix.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Diagnose the red scheduled shinytest2.yaml CI run (red 3 consecutive nights,
+  2026-08-12/13/14) -- DONE. Root cause found, reproduced with the CI's literal command, scoped by
+  a call-graph sweep, and (owner-directed at a pre-RED gate) fixed with a regression guard. All
+  local verification green; NOT yet observable in CI (see gotchas).
+what_was_done: Root cause -- .github/workflows/shinytest2.yaml:161-183 runs the E2E tier via
+  `Rscript -e testthat::test_dir(...)` per module group, bypassing tests/testthat.R, the only file
+  that calls library(nprcgenekeepr). test_dir() does not attach the package under test and no
+  helper-/setup-.R does either, so package exports are absent in that process. Fix -- qualified the
+  one offending call (nprcgenekeepr::makeExamplePedigreeFile) and added
+  tests/testthat/test_e2e_package_qualification.R, a static guard that fails if ANY
+  test-{app,e2e}-*.R file calls a package export bare. Verified 4 ways -- guard GREEN; the
+  previously-failing group rerun with the EXACT CI command now passes 8/8 in the un-attached
+  environment; full clean regression 5,958 passed / 1 pre-existing unrelated failure
+  (test_wordlist_coverage.R) / 0 errors; lintr 0 lints on touched files. devtools::check() 1 error /
+  0 warnings / 1 note -- BOTH pre-existing, provenance verified (see gotchas), neither caused here.
+  Commits 9b23075e (claim) and the close-out commit.
+next_steps: FIRST, decide the push question (filed as a BACKLOG.md Housekeeping item, DECISION
+  NEEDED): local master is 145 commits ahead of origin/master, so all scheduled/push CI is testing
+  S545-era code and THIS session's fix cannot go green in CI until a push happens. shinytest2.yaml
+  has no push trigger, so after pushing it needs a manual `gh workflow run shinytest2.yaml` to
+  confirm -- do not wait for the nightly if you want same-session confirmation. Otherwise
+  BACKLOG.md's numbered items are: the 3 pedigree-diagram-screenshots.R sibling screenshots that
+  may share pb_diagram_legend.png's staleness mechanism (found S582, READY, Effort S -- the
+  cheapest remaining item); SESSION_NOTES.md archive (dashboard's only HIGH risk, trim trigger
+  fires at 3,437 lines / 290,404 B, and the fence-scanner defect that previously blocked it appears
+  resolved -- verify the SRF refusal before --write); a full-fixture sweep for the S583
+  union-outside-parents-span finding (READY, Effort S); sibling subtree-width asymmetry design
+  session (S576, Effort L); BACKLOG.md ledger-size housekeeping, final Genetic-metrics section
+  (S518, Effort L); #148 MHC scope-narrowing (DECISION NEEDED); NPRC outreach (DECISION NEEDED).
+key_files: tests/testthat/test-e2e-mate-pair-analysis-module.R:61 (the fixed call, now
+  nprcgenekeepr::-qualified with a comment saying why it must stay that way -- it was at :58, the
+  line CI's error names, before this session's 3 comment lines shifted it);
+  tests/testthat/test_e2e_package_qualification.R:1-40 (the new guard, with the full mechanism
+  written up in its header comment); .github/workflows/shinytest2.yaml:161-183 (the per-group
+  Rscript loop that never attaches the package -- the actual source of the divergence);
+  tests/testthat.R:4 (the library(nprcgenekeepr) call CI bypasses);
+  tests/testthat/test_shinytest2_workflow_coverage.R (the sibling guard this one mirrors).
+gotchas: (1) `gh run view <id> --log` and `--log-failed` both return EMPTY for these runs; the only
+  path that worked was `gh api repos/rmsharp/nprcgenekeepr/actions/jobs/<jobId>/logs`. Get the job
+  id from `gh run view <runId>`. (2) When reproducing the CI command locally, do NOT copy
+  RENV_CONFIG_AUTOLOADER_ENABLED=false from the workflow -- CI installs to the site library, but
+  locally it strips the renv library from .libPaths(), so create_test_app() returns "" and the run
+  fails at a DIFFERENT line for an unrelated reason, masking the real defect. This cost a wasted
+  cycle. (3) `gh run list --branch master --limit 10` truncates below the first failure and
+  undercounted this streak as 2 runs when it was 3 -- use `--workflow=shinytest2.yaml` to see a
+  full streak once you know which workflow is red. (4) A scheduled run's log records the sha it
+  checked out; ALWAYS compare it to local HEAD before diagnosing (`git rev-list --count
+  <sha>..HEAD`). Here it was 145 behind, which made a correct-at-HEAD CI group look like a defect.
+  (5) `devtools::check()` is currently RED on master and has been since S573 -- 1 error, from
+  test_wordlist_coverage.R flagging `matings`/`visNetwork's` in NEWS.md. Do NOT read that error as
+  something your own session broke; confirm provenance with `git status --porcelain NEWS.md
+  inst/WORDLIST` and `git log -S'<word>' -- NEWS.md` before spending time on it. Filed as its own
+  BACKLOG.md item (Effort S -- a one-line inst/WORDLIST addition).
+runtime_smoke: PASS -- the previously-failing E2E group was rerun end to end against the live app
+  (real Chrome via shinytest2/AppDriver, real pedigree upload, real Marker Genetics genotype
+  upload, real Mate Pair Analysis run) in the exact un-attached environment CI uses:
+  files=1 passed=8 failed=0 skipped=0 error=0.
+changelog_ref: 9b23075e (this session's claim entry -- see the 2026-08-15 section, "S584:" entries)
 commit: pending
 ```
 

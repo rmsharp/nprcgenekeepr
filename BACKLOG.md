@@ -68,6 +68,51 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       connected-component walk).
 
 ## Housekeeping
+- [ ] (found S584, 2026-08-15, incidental to running the build equivalent during close-out,
+      **READY, Effort S**) **`devtools::check()` -- the project's own documented build equivalent --
+      is RED on `master` and has been since S573, with no session reporting it.** Final line:
+      `1 error | 0 warnings | 1 note`. The error is `test_wordlist_coverage.R:121` failing because
+      `inst/WORDLIST` does not cover 2 words `spelling::spell_check_package()` flags: **`matings`**
+      (`NEWS.md:232`) and **`visNetwork's`** (`NEWS.md:208`). Both entered `NEWS.md` in `c9860f4b`
+      (S573, 2026-08-14 14:34). The note is the long-known `vignettes/figure/` knitr leftover
+      (already tracked elsewhere in this file). Under the `test_dir` clean-regression read the same
+      test flags **4** words (`matings`, `Rectilinear's`, `runnable`, `visNetwork's`) rather than 2,
+      because that read sees the vignette `.qmd` sources while the built package under `check()`
+      sees only `NEWS.md` -- so a fix must cover all 4, not just the 2 `check()` reports.
+      **Fix is expected to be a one-line `inst/WORDLIST` addition** (all 4 are legitimate domain or
+      package-name terms, not misspellings), plus a re-run of the build equivalent to confirm it
+      returns to `0 errors`. Not fixed in S584 (a second deliverable, out of that session's
+      diagnose-the-CI-failure scope -- `PROJECT_LEARNINGS.md` Learning 382's report-don't-fix
+      precedent). **Worth a moment's care when picking this up:** S581's own handoff reports
+      `devtools::check()` as "0 errors/0 warnings/1 pre-existing NOTE" at a close-out ~9 hours AFTER
+      `c9860f4b` landed. S584 could not reconstruct why that run differed and deliberately drew no
+      conclusion; a session fixing this should note that `test_wordlist_coverage.R:113` calls
+      `skip_on_cran()`, so whether the test runs at all depends on `NOT_CRAN`, which differs between
+      a bare `R CMD check` and `devtools::check()` (the latter sets it) -- that is the most likely
+      explanation to check first, and it also determines whether CI's own `R-CMD-check.yaml` is
+      currently masking this failure. See `CHANGELOG.md`.
+- [ ] (found S584, 2026-08-15, incidental to diagnosing the red scheduled `shinytest2.yaml` run,
+      **DECISION NEEDED -- owner decides whether/when to push; Effort S**) **Local `master` is 145
+      commits ahead of `origin/master` and unpushed, so every scheduled CI workflow is testing a
+      snapshot from Session 545 (`7021c6f7`, 2026-08-13) rather than current work.** Confirmed from
+      the failing run's own log (`Commit: 7021c6f7...`, `git checkout ... refs/remotes/origin/master`)
+      and `git rev-list --count origin/master..master` = 145. Two live consequences, both hit during
+      S584's diagnosis: **(a)** the nightly `shinytest2.yaml` red/green signal says nothing about the
+      code actually being written -- S584's own fix for the genuine defect it found is verified
+      locally but CANNOT be observed green in CI until a push happens, since that workflow is
+      `schedule`/`workflow_dispatch` only (no push trigger); **(b)** CI logs from a stale snapshot
+      produce false defect signals -- S584 initially read a missing `^e2e-twin-relations-` module
+      group in the CI log as a possible Learning-312 partition-drift defect, when in fact both that
+      test file and its group regex were added together in the unpushed `c91f7c49` and are correct
+      at `HEAD`. The 4 push-triggered workflows (`R-CMD-check`, `lint`, `pkgdown`, `test-coverage`)
+      are likewise reporting on 145-commit-old code, and have not run against any work since S545.
+      **Not acted on unilaterally** -- a push of 145 commits is an owner call, not a housekeeping
+      decision a session should make on its own (and `master` carries no branch protection, so a
+      push is immediately live). A future session picking this up should confirm with the owner
+      whether the unpushed state is deliberate, and if not, push and then verify all 5 workflows
+      go green against current `HEAD` -- expecting `shinytest2.yaml` to need a manual
+      `workflow_dispatch` run, since a push alone does not trigger it. See `PROJECT_LEARNINGS.md`
+      Learning 592 and `CHANGELOG.md`.
 - [x] (found S579, 2026-08-14, incidental to this session's own post-close-out ledger re-check;
       **RESOLVED S580**. **`HANDOFFS.md`'s own archive trigger fired** (line headroom 4 records,
       125,404 B against the 65,536 B budget). `--write` (dry run) refused with `SRF_RED` (SRF

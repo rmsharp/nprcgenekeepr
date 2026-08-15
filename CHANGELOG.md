@@ -138,6 +138,46 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] S584: close out (shinytest2.yaml CI red diagnosed AND fixed, + regression guard)
+- **Deliverable:** Root-caused the scheduled `shinytest2.yaml` failure (red 3 consecutive nights,
+  2026-08-12/13/14): `.github/workflows/shinytest2.yaml:161-183` runs the E2E tier by spawning one
+  `Rscript -e 'testthat::test_dir(...)'` per module group, which bypasses `tests/testthat.R` -- the
+  only file in the repo calling `library(nprcgenekeepr)`. `test_dir()` does not attach the package
+  under test and no `helper-*.R`/`setup.R` does either, so package exports are absent in that
+  process (`exists("makeExamplePedigreeFile")` -> `FALSE`).
+  `tests/testthat/test-e2e-mate-pair-analysis-module.R:58` called `makeExamplePedigreeFile()` bare
+  (correctly exported at `NAMESPACE:136`; a pure lookup failure) and had never once passed in CI --
+  it shipped in `8781709d` (S513, issue #151 Slice 2) and the nightly went red the night it landed.
+  Every local verification path `CLAUDE.md` documents begins with `pkgload::load_all()`, which DOES
+  attach the package, so no local run could have reproduced it.
+- **Scope, measured not assumed:** a call-graph sweep of all 30 `test-{e2e,app}-*.R` files
+  (bare called names intersected with `getNamespaceExports()`, minus helper- and self-defined
+  names) found **exactly one** offending call site.
+- **Fix (Strict TDD, all 3 gates fired as `AskUserQuestion` calls before their phase's first edit):**
+  RED -- new `tests/testthat/test_e2e_package_qualification.R`, a static guard that fails if any
+  E2E-tier file calls a package export bare, confirmed failing and naming the offender. GREEN --
+  one-line qualification to `nprcgenekeepr::makeExamplePedigreeFile(` plus a comment recording why
+  it must stay qualified. REFACTOR not entered (nothing to restructure; stated, not skipped).
+- **Verification:** guard GREEN; the previously-failing group rerun with the EXACT CI command in the
+  un-attached environment now `files=1 passed=8 failed=0 skipped=0 error=0` (also clearing the
+  workflow's own `p == 0` silent-skip guard); full clean regression 5,958 passed / 1 pre-existing
+  unrelated failure (`test_wordlist_coverage.R`) / 0 errors; `lintr::lint_package()` 0 lints on
+  touched files; `devtools::check()` **1 error / 0 warnings / 1 note — both pre-existing, neither
+  caused by this session** (the error is the same `test_wordlist_coverage.R` failure, flagging
+  `matings` and `visNetwork's` from `NEWS.md:232`/`NEWS.md:208`; the note is the known
+  `vignettes/figure/` knitr leftover). Provenance verified rather than assumed: both words entered
+  `NEWS.md` in `c9860f4b` (S573, 2026-08-14 14:34), and this session modified neither `NEWS.md` nor
+  `inst/WORDLIST`. Filed as its own `BACKLOG.md` item — the project's documented build equivalent
+  has been red since S573 with no session reporting it.
+- **Cleared, not assumed:** the commit titled "corrected .Rbuildignore" (`79f37e18`) sits in the
+  regression window but its diff touches nothing under `R/`; and the CI log's missing
+  `^e2e-twin-relations-` module group is a stale-snapshot artifact, not a Learning-312 partition
+  drift -- both that test file and its group regex were added together in the unpushed `c91f7c49`.
+- **Filed:** new `BACKLOG.md` Housekeeping item (DECISION NEEDED) -- local `master` is 145 commits
+  ahead of `origin/master`, so all CI is testing S545-era code and this fix cannot be observed green
+  until a push (and `shinytest2.yaml`, having no push trigger, then needs a manual
+  `workflow_dispatch`). See `PROJECT_LEARNINGS.md` Learnings 591 and 592.
+
 ### 2026-08-15 · [ad hoc] S584: claim (diagnose the red scheduled shinytest2.yaml CI run)
 - **Deliverable:** Session claimed. Phase 0's unconditional `gh run list --branch master` check
   (the `CLAUDE.md` convention ratified S545) found the scheduled `shinytest2.yaml` workflow

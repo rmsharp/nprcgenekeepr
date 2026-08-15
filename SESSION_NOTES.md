@@ -14,18 +14,138 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 583 Handoff Evaluation (by Session 584)
+**Score: 9/10.** **What helped:** the `gotchas` field's closing instruction -- "when investigating a
+live user-reported visual, reproduce the EXACT data through the actual layout function ... don't
+estimate" -- generalized directly into this session's own method: reproduce the CI failure with the
+CI's *literal* command rather than the project's documented local equivalent, which is precisely
+what separated a real diagnosis from a plausible-but-wrong one here. The `next_steps` field also
+correctly carried forward "scheduled shinytest2.yaml CI run still red (3+ consecutive days as of
+this session), unchanged/undiagnosed" as a distinct, separately-listed item rather than burying it
+in the BACKLOG bullets -- it survived 3 consecutive handoffs (S581 -> S582 -> S583) intact, which is
+why it was still visible for this session's Phase 0 to pick up at all. **What was missing:** the
+CI-red note said "3+ consecutive days" but never recorded the failing run's own id, checked-out sha,
+or which module group failed -- all three were one `gh` call away for any of S581/S582/S583, and
+recording even the run id would have let this session skip re-deriving the regression window from
+scratch. More consequentially: no handoff in that chain noted that the scheduled workflow tests
+`origin/master`, which is 145 commits behind -- the single most important framing fact about the
+failure, and one that flipped the interpretation of a second apparent defect (see Learning 592).
+That is a genuine gap, though a subtle one, and it is now written down. **What was wrong:** one
+minor inaccuracy -- "3+ consecutive days" undercounted; the run list shows failures on 2026-08-12,
+08-13 and 08-14, and the first failure was 08-12, not 08-13. The `Phase 0` report inherited this and
+initially said 2 failing runs, because `gh run list --branch master --limit 10` truncates below the
+08-12 run; `--workflow=shinytest2.yaml` was needed to see the full streak. **ROI:** high -- the
+carried-forward CI item is the entire reason this deliverable existed.
+
 ### What Session 584 Did
-**Deliverable:** Diagnose the red scheduled `shinytest2.yaml` CI run (failing on consecutive
-scheduled runs since 2026-08-13, first flagged S581, never diagnosed) -- root cause identified with
-evidence from the actual failing run. (IN PROGRESS)
-**Started:** 2026-08-15.
-**Status:** Session claimed. Work beginning. Scoped as diagnosis; if the root cause proves to be a
-small bounded fix, it goes through a `AskUserQuestion` phase gate before any code is touched
-(Strict TDD applies to any `R/` or test change) -- if large, it is filed and this session closes out
-on the diagnosis alone.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Diagnose the red scheduled `shinytest2.yaml` CI run (red on 3 consecutive nightly
+runs, 2026-08-12/13/14; first flagged S581, undiagnosed across 3 sessions) -- **DONE**, root cause
+found, reproduced, scoped, and (owner-directed at a pre-RED gate) **fixed with a regression guard**.
+A Strict-TDD task: PRE-RED -> RED -> GREEN gates all fired as `AskUserQuestion` calls before their
+phase's first file edit. REFACTOR not entered (see below).
+**Started/Completed:** 2026-08-15.
+
+**Root cause.** `.github/workflows/shinytest2.yaml:161-183` runs the E2E tier by spawning one
+`Rscript -e 'testthat::test_dir("tests/testthat", filter = ...)'` per module group (Phase-8e-7's
+fresh-process Chrome-flake mitigation). That bypasses `tests/testthat.R`, which is the ONLY file in
+the repo calling `library(nprcgenekeepr)`; `test_dir()` does not attach the package under test, and
+no `helper-*.R`/`setup.R` does either. So in that process the package's exports are simply absent
+(`Rscript -e 'exists("makeExamplePedigreeFile")'` -> `FALSE`).
+`tests/testthat/test-e2e-mate-pair-analysis-module.R:58` called `makeExamplePedigreeFile()` **bare**
+-- correctly exported at `NAMESPACE:136`, valid arguments, purely a lookup failure. It shipped in
+`8781709d` (S513, issue #151 Slice 2) and had **never once passed in CI**: the nightly run went red
+the night it landed. Every local verification path `CLAUDE.md` documents opens with
+`pkgload::load_all()`, which DOES attach the package, so S513's own verification structurally could
+not have reproduced it, and the E2E tier is not a per-PR gate.
+
+**What happened, in order:** **(1)** Phase 0 orient in full; ledger/handoff frontiers both == `HEAD`,
+no ghost session, dashboard 96/100. Owner picked this item from the `AskUserQuestion` picker.
+**(2)** Phase 1B claim committed (`9b23075e`). **(3)** Pulled the failing job log via
+`gh api repos/rmsharp/nprcgenekeepr/actions/jobs/94704451685/logs` -- note `gh run view --log` and
+`--log-failed` both returned EMPTY for this run, the API path was the only one that worked.
+Isolated the one failing group of 19 (`^e2e-mate-pair-analysis-module`, `error=1`) and its exact
+message. **(4)** Established the regression window by mapping each run's `head_sha`
+(`gh api .../actions/runs/<id> --jq '.head_sha'`): last green `6333eaad` (08-11), first red
+`79f37e18` (08-12). Checked and **cleared** the tempting suspect in that window -- the commit is
+literally titled "corrected .Rbuildignore", but its diff only adds `FRAMEWORK_LEARNINGS.md`/
+`__pycache__` entries, nothing under `R/`. The real cause is the new test file added in the same
+window. **(5)** Reproduced locally with the CI's literal command -- same file, same line 58, same
+message, same `files=1 passed=0 failed=0 skipped=0 error=1`. **(6)** Swept all 30
+`test-{e2e,app}-*.R` files by parsing each one's call graph and intersecting bare called names
+against `getNamespaceExports()` (minus helper- and self-defined names): **exactly one hit**, this
+one. The other 29 use only helper-defined functions. **(7)** Presented the diagnosis and asked the
+owner how to proceed via `AskUserQuestion` (fix+guard / fix only / diagnosis only / structural fix)
+-- owner picked fix + regression guard. **(8)** RED: new `tests/testthat/test_e2e_package_qualification.R`,
+confirmed failing and naming the offender. **(9)** GREEN: one-line qualification to
+`nprcgenekeepr::makeExamplePedigreeFile(`, plus a 3-line comment saying why it must stay qualified.
+
+**Verification (4 checks, all run this session):** (1) guard test GREEN under `load_all()`;
+(2) **faithful check** -- the previously-failing group rerun with the EXACT CI command
+(`NOT_CRAN=true NPRC_RUN_E2E=true Rscript -e 'testthat::test_dir(..., filter="^e2e-mate-pair-analysis-module")'`,
+un-attached package, real Chrome) now reports `files=1 passed=8 failed=0 skipped=0 error=0`, which
+also clears the workflow's own `p == 0` silent-skip guard; (3) full clean regression 5,958 passed /
+**1 pre-existing unrelated failure** (`test_wordlist_coverage.R`, flagging `matings`,
+`Rectilinear's`, `runnable`, `visNetwork's` -- all from the pedigree-diagram articles, none present
+in either file this session touched) / 0 errors; (4) `lintr::lint_package()` **0 lints on touched
+files** (3 package-wide, all pre-existing in `R/kinship.R`, untouched here). Build equivalent:
+`devtools::check()` -- **1 error, 0 warnings, 1 note, and BOTH are pre-existing**. The error is the
+same `test_wordlist_coverage.R` failure (2 words under check -- `matings`, `visNetwork's` -- vs. 4
+under `test_dir`, because the built package sees `NEWS.md` but not the vignettes' `.qmd` source);
+the note is the known `vignettes/figure/` knitr leftover. Provenance verified, not assumed: both
+words entered `NEWS.md` in `c9860f4b` (S573, 2026-08-14 14:34) and this session modified neither
+`NEWS.md` nor `inst/WORDLIST` (`git status --porcelain NEWS.md inst/WORDLIST` empty).
+**Note the discrepancy, recorded factually without a conclusion:** S581's handoff (close-out
+2026-08-14 23:14, i.e. ~9 hours AFTER `c9860f4b` landed) reports `devtools::check()` as "0 errors/0
+warnings/1 pre-existing NOTE." This session cannot reconstruct why that run differed; what is
+verified here is only that the failure exists now and its cause predates this session by 11
+sessions. Filed as its own `BACKLOG.md` item rather than fixed mid-session (`PROJECT_LEARNINGS.md`
+Learning 382's report-don't-fix precedent) -- the fix is a one-line `inst/WORDLIST` addition, but it
+is a second deliverable.
+
+**REFACTOR not entered, deliberately:** the GREEN diff is a one-line qualification plus a new test
+file that already lints clean at 0; there is no structure to improve without inventing scope. Stated
+rather than silently skipped.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A (no new displayed statistic);
+tutorial/article checklist N/A (no new user-facing Shiny feature/control -- a test-only CI fix);
+`NEWS.Rmd` checklist N/A (no new exported function or user-facing feature; matches the S581
+precedent for a fix-only session); `a2interactive.Rmd` checklist N/A (no exported function or
+parameter added/changed); GitHub issue close-out N/A (the CI failure was never filed as an issue);
+lint checklist **DONE** (0 lints on both touched files); `_pkgdown.yml` reference-coverage N/A (no
+new exported function).
+
+**Self-assessment (Session 584): 8/10.** (Marked down from 9 by weakness 3 below -- a verification
+claim written before its run returned.) **Strengths:** (1) Reproduced the failure with the CI's
+literal command rather than the project's documented local recipe -- the ONLY way to see this defect,
+since every documented local path attaches the package and passes. (2) Checked and explicitly cleared
+the misleading suspect in the regression window (the commit titled "corrected .Rbuildignore") by
+reading its actual diff instead of trusting its subject line. (3) Caught that CI was running a
+145-commit-stale `origin/master`, which reframed a second apparent defect (a missing
+`^e2e-twin-relations-` CI group) as a stale-snapshot artifact rather than a real Learning-312
+partition drift -- verified by dating both the test file and its group regex to the same unpushed
+commit `c91f7c49`, not assumed. (4) Proved the fix's scope mechanically (a call-graph sweep of all
+30 files) instead of grepping for the symbol already known to be broken, so "exactly one call site"
+is a measured result, not an assumption. (5) All three TDD gates fired as real `AskUserQuestion`
+calls before their phase's first edit -- the specific discipline Learning 576 was written about.
+**Weaknesses:** (1) The Phase 0 report undercounted the failure streak (said 2 runs, actually 3)
+because it used `gh run list --branch master --limit 10`, whose window truncates below the first
+failure -- the `--workflow=` form needed to see the full streak was only run after the task was
+assigned. `CLAUDE.md`'s Phase 0 convention deliberately prescribes the unfiltered form, so this is a
+real limitation of that step worth knowing, not a deviation from it. (2) Still no independent
+adversarial-verification pass by a separate agent/session -- the same standing gap flagged for 17+
+consecutive prior sessions. (3) **Wrote a verification result into `CHANGELOG.md`/`SESSION_NOTES.md`
+before the run that produced it had finished** -- drafted "`devtools::check()` 0 errors / 0 warnings
+/ 1 pre-existing NOTE" from the partial log while the check was still running, and the real result
+was `1 error / 0 warnings / 1 note`. Self-caught at the final read and corrected in all three
+ledgers before the close-out commit, and the error is genuinely pre-existing (provenance verified to
+`c9860f4b`, S573) -- but the claim was written as fact before it was one, which is exactly the shape
+of failure mode #11 (claims from memory/expectation rather than from the file). The correct
+discipline is to leave verification fields blank until the run returns. (4) The fix cannot be
+*observed* green in CI from this session: the
+workflow is `schedule`/`workflow_dispatch` only and the commits are unpushed, so the verification
+here is local-only, however faithful (filed as its own `BACKLOG.md` item).
+**Ledger:** recorded in `CHANGELOG.md` (claim + close-out -- 2 entries this session, both
+`[ad hoc]`-tagged).
 
 ### Session 582 Handoff Evaluation (by Session 583)
 **Score: 9/10.** **What helped:** S582's `key_files` correctly pointed at
