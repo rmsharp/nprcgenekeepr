@@ -14,6 +14,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 576 Did
+**Deliverable:** Design document for the pedigree-diagram parent-child positioning offset fix
+(`BACKLOG.md` Housekeeping, found S575, owner review of the published comparison artifact) --
+evaluating candidate fixes (deriving a mating unit's final x from its own children's positions vs.
+propagating `sweepMinSep()`'s row-stretch factor to dependent rows), following
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md` -- matching this project's established
+precedent for pedigree-diagram positioning-algorithm decisions (S432/S458/S464/S471/S473/S572).
+(IN PROGRESS)
+**Started:** 2026-08-14
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### Session 575 Post-Close-Out Correction (same session, owner review)
 **This corrects the Session 575 close-out below -- read this first.** After Session 575 closed out
 Track 5 as "DONE, no follow-up needed" and published a live comparison artifact, the owner reviewed
