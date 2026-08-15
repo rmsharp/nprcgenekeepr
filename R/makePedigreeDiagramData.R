@@ -866,7 +866,7 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     for (g in unique(genVals)) {
       rowIds <- ids[genVals == g]
       if (length(rowIds) < 2L) next
-      rowIds <- rowIds[order(x[rowIds], rowIds)]
+      rowIds <- rowIds[order(x[rowIds], rowIds, method = "radix")]
       for (i in 2L:length(rowIds)) {
         prevX <- x[[rowIds[i - 1L]]]
         if (x[[rowIds[i]]] < prevX + minSep) {
@@ -996,7 +996,7 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   ## pass did not previously need to reach (including 1 PRE-EXISTING
   ## coincidence unrelated to this decision that today's narrower pass
   ## also missed). Nudge apart deterministically, in (gen, id) order.
-  ord <- order(nodes$gen, nodes$id)
+  ord <- order(nodes$gen, nodes$id, method = "radix")
   seenAtGen <- new.env(parent = emptyenv())
   for (i in ord) {
     genKey <- as.character(nodes$gen[i])

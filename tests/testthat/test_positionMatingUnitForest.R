@@ -198,15 +198,16 @@ test_that(".positionMatingUnitForest positions the real GA204Z/8LKBV9 loop
 ## union-position-plan.md, this session): a mating unit's final x is now
 ## the midpoint of its OWN CHILDREN's final x (§2.1), not its 2 parents'
 ## midpoint -- all 4 union values (unit1-4) and the duplicate (dupAt4)
-## change. dupX is now derived from the new finalUnitX (§2.2). 3 REAL
-## individual values also change, for 2 different reasons -- NOT "union/
-## duplicate values only", confirmed by empirical Pre-RED validation before
-## writing this test: (a) 8DKELJ/FJIB3R shift by exactly the existing
-## 1e-3 de-collision epsilon (the existing final de-collision pass's own
-## mechanism, unchanged, now triggered by a different node population) --
-## functionally a no-op; (b) 9VGCCV shifts by a real 0.5 units, because
-## §2.2 removes duplicates from Track 3's sweepIds/sweepGen input set,
-## which changes the gen-2 sweep's own competition (previously 3 entries:
+## change; unit1/unit4 additionally absorb the existing final de-collision
+## pass's 1e-3 epsilon nudge (§2.3), since each exactly ties its single
+## child's x at the same gen -- see the docstring immediately above the
+## expectPos() calls below for why unit1/unit4 (not 8DKELJ/FJIB3R) are the
+## ones nudged. dupX is now derived from the new finalUnitX (§2.2). 1 REAL
+## individual value also changes -- NOT "union/duplicate values only",
+## confirmed by empirical Pre-RED validation before writing this test:
+## 9VGCCV shifts by a real 0.5 units, because §2.2 removes duplicates from
+## Track 3's sweepIds/sweepGen input set, which changes the gen-2 sweep's
+## own competition (previously 3 entries:
 ## FJIB3R/9VGCCV/dupAt4; now 2: FJIB3R/9VGCCV) -- a real, non-epsilon
 ## consequence of §2.2 the design doc's own §5 Impact Analysis table did
 ## not state (it claimed real-individual sweeping is "otherwise
@@ -244,8 +245,9 @@ test_that(".positionMatingUnitForest's exact x/gen values for the real
   }
 
   expectPos("5A6DFT", -0.50, 0L)  # issue #145: male left; unaffected by Track 4
-  expectPos("8DKELJ", 0.5010, 0L)  # Track 6: CHANGED, 1e-3 de-collision
-                                    # epsilon only (was 0.50)
+  expectPos("8DKELJ", 0.50, 0L)  # unaffected by Track 4 (the de-collision
+                                  # epsilon lands on unit1 instead -- see
+                                  # below; locale-independent, method="radix")
   expectPos("G8EBU9", -0.75, 1L)  # issue #143; x CHANGED (8LKBV9 now
                                     # anchors this unit's OWN subtree merge
                                     # differently, since he also anchors
@@ -255,10 +257,10 @@ test_that(".positionMatingUnitForest's exact x/gen values for the real
                                   # does -- Track 4); x CHANGED
   expectPos("8LKBV9", 0.50, 1L)  # x CHANGED: his own gen (1), unrelocated
                                   # -- he now anchors BOTH founder units
-  expectPos("FJIB3R", 0.2510, 2L)  # Track 6: CHANGED, 1e-3 de-collision
-                                    # epsilon only (was 0.25); still
-                                    # anchors unit4 (gen 2 beats 8LKBV9's
-                                    # gen 1), unaffected
+  expectPos("FJIB3R", 0.25, 2L)  # still anchors unit4 (gen 2 beats
+                                  # 8LKBV9's gen 1), unaffected (the
+                                  # de-collision epsilon lands on unit4
+                                  # instead -- see below)
   expectPos("9VGCCV", 1.75, 2L)  # Track 6: CHANGED, a REAL (non-epsilon)
                                   # shift -- §2.2 drops duplicates from
                                   # Track 3's gen-2 sweep competition (was
@@ -270,16 +272,32 @@ test_that(".positionMatingUnitForest's exact x/gen values for the real
   unit3 <- forest$matingUnits$id[forest$matingUnits$dam == "8P17E3"]
   unit4 <- forest$matingUnits$id[forest$matingUnits$dam == "FJIB3R"]
   ## Track 6: every mating-unit dot's x is now the midpoint of its OWN
-  ## CHILDREN's final x (§2.1), not its 2 parents' midpoint.
-  expectPos(unit1, 0.50, 0L)   # CHANGED: unit1's only child is 8LKBV9
-                                 # (x=0.50) -- midpoint of a single child
-                                 # is that child's own x
+  ## CHILDREN's final x (§2.1), not its 2 parents' midpoint. unit1 and
+  ## unit4 each land in an exact-coincidence tie with a real individual at
+  ## the same gen (0 and 2 respectively) that the broadened de-collision
+  ## pass (§2.3) breaks with a 1e-3 epsilon nudge -- WHICH of the 2 tied
+  ## nodes gets nudged is decided by the de-collision loop's own
+  ## (gen, id)-order iteration (`order(..., method = "radix")`, a
+  ## deliberately locale-INDEPENDENT byte-order tie-break -- found live
+  ## this session that the default (locale-dependent) `order()` gave a
+  ## DIFFERENT answer under `LC_ALL=C` than under `en_US.UTF-8`, silently
+  ## flipping which node absorbs the nudge and failing `R CMD check`'s own
+  ## test run without ever touching a source file). Under byte order, a
+  ## digit-leading real id ("8LKBV9") sorts before an underscore-leading
+  ## union id ("__union_1") -- unit1/unit4 are visited LATER in the pass
+  ## and so are the ones nudged, not 8DKELJ/FJIB3R.
+  expectPos(unit1, 0.501, 0L)  # CHANGED: unit1's only child is 8LKBV9
+                                 # (x=0.50) -- midpoint of a single child is
+                                 # that child's own x, then +1e-3 (tied
+                                 # with 8DKELJ at gen 0, radix-order nudges
+                                 # unit1)
   expectPos(unit2, 0.25, 1L)  # CHANGED: unit2's only child is FJIB3R
-                                # (x=0.2510)
+                                # (x=0.25)
   expectPos(unit3, 1.75, 1L)   # CHANGED: unit3's only child is 9VGCCV
                                  # (x=1.75)
-  expectPos(unit4, 0.25, 2L)   # CHANGED: unit4's only child is GA204Z
-                                 # (x=0.25)
+  expectPos(unit4, 0.251, 2L)  # CHANGED: unit4's only child is GA204Z
+                                 # (x=0.25), then +1e-3 (tied with FJIB3R
+                                 # at gen 2, radix-order nudges unit4)
 
   dupAt4 <- forest$duplicates$id[forest$duplicates$matingUnitId == unit4]
   ## unit3 no longer has a duplicate (8LKBV9 anchors it directly now,
