@@ -171,6 +171,14 @@ here, in this ledger, not in a frozen shard.
 
 ## 2026-08
 
+### 2026-08-15 · \[ad hoc\] S586: push commits (`c17451e7..981e463c`)
+
+- **Deliverable:** Non-commit action, recorded per failure mode \#27.
+  Owner-directed push of this session’s 3 commits (`a8367a4f` claim,
+  `b1e8f8f2` fix + close-out, `981e463c` HANDOFFS.md reconcile) — the
+  lint.yaml fix plus the CLAUDE.md verification-formula correction.
+  Clean fast-forward, no force. `master` and `origin/master` in sync.
+
 ### 2026-08-15 · \[ad hoc\] S586: reconcile HANDOFFS.md commit self-reference (`b1e8f8f2`)
 
 - **Deliverable:** Fixed this session’s own `HANDOFFS.md` receipt
