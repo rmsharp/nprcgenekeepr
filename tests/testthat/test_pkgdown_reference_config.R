@@ -85,6 +85,35 @@ test_that("\"Data objects\" group covers every data/ object", {
   )
 })
 
+test_that("_pkgdown.yml articles: contents covers every real article", {
+  ## BACKLOG.md (found S584): vignettes/articles/pedigree-diagram.qmd landed in
+  ## 2b3e8ef6 (S560) without a matching _pkgdown.yml articles: entry, so
+  ## build_articles_index() aborts and the docs site never deploys. The
+  ## reference:-coverage tests above catch a missing exported function; there
+  ## was no equivalent guard for a missing article. pkg$vignettes$name is
+  ## pkgdown's own ground-truth article list (partials like
+  ## _ColonyManagerTutorial.Rmd are auto-excluded, matching pkgdown's own
+  ## build behavior) -- compare it against what's actually configured.
+  skip_if_not(file.exists(pkgdown_yml), no_pkgdown_yml_msg)
+  skip_if_not_installed("pkgdown")
+
+  pkg <- getPkgdownConfig()
+  configured <- unique(unlist(lapply(
+    pkg$meta$articles, function(g) g$contents
+  )))
+  real_articles <- pkg$vignettes$name
+  missing <- setdiff(real_articles, configured)
+
+  expect_identical(
+    missing, character(0),
+    info = paste0(
+      length(missing), " article(s) not covered by any ",
+      "_pkgdown.yml articles: contents list:\n",
+      paste(missing, collapse = ", ")
+    )
+  )
+})
+
 test_that("inst/_pkgdown.yml (shadowed duplicate) no longer exists", {
   expect_false(
     file.exists(file.path(pkg_root, "inst", "_pkgdown.yml")),
