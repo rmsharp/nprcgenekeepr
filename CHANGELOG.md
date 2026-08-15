@@ -138,6 +138,19 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [BL-N] Added planning-session backlog item for the shared collision-avoidance gap
+- **Deliverable:** Owner-directed. Added a `BACKLOG.md` Active item proposing a dedicated planning
+  session to address the shared root cause behind issue #160, issue #161, and the S583
+  union-position item — all trace to `.positionMatingUnitForest()`/`.addRectilinearWaypoints()`
+  computing node/edge placement locally with no check for what else occupies that x/y region. No
+  code changed; the item itself asks for a plan document, not an implementation, per
+  `SESSION_RUNNER.md`'s Planning Sessions discipline.
+
+### 2026-08-15 · [ad hoc] Push commits (`ea49636e..25697bb9`)
+- **Deliverable:** Owner-directed. Pushed 11 local commits (S588-S590's own claim/deliverable/
+  reconcile docs, plus this conversation's issue #160/#161 ledger entries) to `origin/master`,
+  clean fast-forward, no force.
+
 ### 2026-08-15 · [issue #161] Filed pedigree-diagram mating-unit-marker kinship2-parity question
 - **Deliverable:** Filed [issue #161](https://github.com/rmsharp/nprcgenekeepr/issues/161) — found
   live in conversation reviewing a fresh render of the `A x Y` consanguineous fixture against
