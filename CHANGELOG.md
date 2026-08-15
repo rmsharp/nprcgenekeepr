@@ -138,6 +138,20 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [BL-N] S583: close out (union-outside-parents-span finding filed)
+- **Deliverable:** New `BACKLOG.md` item filed (found S583) -- a mating union with a single child
+  (or whose children's own midpoint falls outside the parents' span) can be positioned entirely
+  outside its own two parents' x-range, diverging from kinship2's own always-centered-between-
+  spouses convention. Distinct from the S576 sibling subtree-width item (that one measures
+  distance from a union to its CHILDREN; this one measures distance from a union to its PARENTS --
+  an axis Track 6's own verification never checked). Reproduced live via
+  `makePedigreeMatingLayout()` on the real `obfuscated_rhesus_mhc_ped.csv` fixture, the same
+  6-animal subgraph `pb_diagram_legend.png` depicts: `5A6DFT` x=-60, `8DKELJ` x=60, their union
+  x=120 (outside the parent span). Confirmed via a direct `kinship2::pedigree()`/`plot.pedigree()`
+  comparison of the identical pedigree -- kinship2 centers the descent line between the two
+  parents unconditionally. No code changed; investigation and filing only, per the user's own
+  choice among 3 offered next steps. See `PROJECT_LEARNINGS.md` Learning 590.
+
 ### 2026-08-15 · [BL-N] S583: claim (file union-outside-parents-span finding)
 - **Deliverable:** Session claimed. Investigating a user question about `pb_diagram_legend.png`
   surfaced that a mating union's x can land entirely outside its own two parents' x-span (not just

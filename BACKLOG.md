@@ -161,6 +161,36 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       same core recursive positioning algorithm). See
       `docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md` §1.4/§8 for the
       full measurement and reasoning.
+- [ ] (found S583, 2026-08-15, incidental to a user question about the just-reshot
+      `pb_diagram_legend.png` screenshot, READY, Effort unknown -- not scoped, likely needs its
+      own design session before any fix) **Pedigree Diagram: a mating union with a single child (or
+      whose children's own midpoint happens to fall outside the parents' span) can be positioned
+      entirely OUTSIDE its own two parents' x-range, not merely off-center between them --
+      diverges from kinship2's own convention, which always centers the union symbol between the
+      two spouses regardless of where children end up.** Distinct from the S576 sibling
+      subtree-width item directly above: S576 measures how far a union ends up from ITS OWN
+      CHILDREN; this finding is about how far the union can end up from ITS OWN PARENTS -- an axis
+      Track 6's own verification (`docs/planning/pedigree-diagram-track6-child-centered-union-
+      position-plan.md` §1.4/§2.4) never measured, because `finalUnitX[U] ==
+      (min(x[C]) + max(x[C])) / 2` (unconditional midpoint of a union's children) has no term for
+      the union's own parents at all. For a union with exactly one child, this collapses to
+      `finalUnitX[U] == x[thatChild]` -- zero centering benefit (nothing to center between) while
+      actively decoupling the union from its parents' span if that one child's own x has been
+      pulled elsewhere by ITS OWN later descendants. **Concrete, reproduced example** (the real
+      `obfuscated_rhesus_mhc_ped.csv` fixture, `trimPedigree(c("8LKBV9","FJIB3R","GA204Z"), ped)`,
+      the same 6-animal subgraph `pb_diagram_legend.png` depicts): `5A6DFT` (sire) x = -60,
+      `8DKELJ` (dam) x = 60, their union (`__union_1`, sole child `8LKBV9`) x = **120** -- entirely
+      outside the `[-60, 60]` parent span, past the dam, because `8LKBV9`'s own x is pulled right
+      by his own 2 further-generation matings (verified live via `makePedigreeMatingLayout()`,
+      exact coordinates reproduced from the live layout function, not estimated). Built the
+      identical 6-subject pedigree in `kinship2::pedigree()`/`plot.pedigree()` as a direct
+      side-by-side reference: kinship2 draws the descent line from the exact midpoint between
+      `5A6DFT` and `8DKELJ`, never displaced outside their span, confirming this is a real
+      divergence from kinship2 parity, not a stylistic difference this project has already
+      accepted. Not investigated further this session (no candidate fix evaluated) -- likely needs
+      its own design session, since a fix must decide how to reconcile "center on children" (Track
+      6's own stated goal, still valid for multi-child unions) with "never leave the parents' own
+      span" (kinship2's invariant) without reopening Track 6's already-ratified formula wholesale.
 - [x] (found S574, 2026-08-14, incidental to Track 2's default-flip documentation pass,
       **RESOLVED S582**. **`shiny_app_use/pb_diagram_legend.png` (used in both
       `vignettes/articles/colony-manager-guide.qmd` and `vignettes/articles/pedigree-diagram.qmd`)

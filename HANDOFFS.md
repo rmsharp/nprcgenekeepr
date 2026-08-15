@@ -138,18 +138,47 @@ This file currently holds **2** receipt(s). Computed by `methodology_trim.py` on
 ```handoff
 session: S583
 date: 2026-08-15
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 9
+predecessor_score: 9
 active_task: File a new BACKLOG.md finding -- a mating union can be positioned entirely outside
   its own two parents' x-span (not merely off-center), found live via a user question about
-  pb_diagram_legend.png, confirmed via direct kinship2 comparison.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+  pb_diagram_legend.png, confirmed via direct kinship2 comparison -- DONE, filed.
+what_was_done: Reproduced the exact scenario live via makePedigreeMatingLayout() on
+  trimPedigree(c("8LKBV9","FJIB3R","GA204Z"), obfuscated_rhesus_mhc_ped.csv) -- confirmed 5A6DFT
+  x=-60, 8DKELJ x=60, their union x=120 (outside the parent span). Built the identical pedigree in
+  kinship2::pedigree()/plot.pedigree() -- confirmed kinship2 centers the descent line between
+  parents unconditionally, a real divergence. Presented both findings + asked the user how to
+  proceed via AskUserQuestion; user picked "file as a new BACKLOG item." Filed in BACKLOG.md
+  (found S583, placed after the related S576 item, explicit about how it differs) and
+  PROJECT_LEARNINGS.md Learning 590. No code changed.
+next_steps: This finding (union-outside-parents-span, found S583) needs its own design session
+  before any fix -- reconciling Track 6's "center on children" goal with kinship2's "never leave
+  the parents' span" invariant without reopening Track 6's ratified formula wholesale. A quick
+  sweep of the full 375-animal fixture (mirroring S576's own "9/251 edges" measurement style)
+  would strengthen the filed item's scope claim beyond the single reproduced example. Otherwise,
+  BACKLOG.md's remaining numbered items are unchanged from S582's own handoff: sibling
+  subtree-width asymmetry (READY but likely needs its own design session, found S576); BACKLOG.md
+  ledger-size housekeeping (READY, Effort L, found S518); #148 MHC scope-narrowing conversation
+  (DECISION NEEDED); NPRC outreach & announcement plan (DECISION NEEDED); the 3
+  pedigree-diagram-screenshots.R sibling screenshots that may share pb_diagram_legend.png's own
+  staleness mechanism (found S582, unverified). Separately: scheduled shinytest2.yaml CI run still
+  red (3+ consecutive days as of this session), unchanged/undiagnosed.
+key_files: R/makePedigreeDiagramData.R:966-975 (finalUnitX -- the union-x-from-children formula
+  with the parent-distance blind spot); docs/planning/pedigree-diagram-track6-child-centered-
+  union-position-plan.md §1.4/§2.4 (the invariant and verification plan that never measured
+  distance-to-parents); BACKLOG.md (new item filed directly after the S576 finding);
+  PROJECT_LEARNINGS.md Learning 590.
+gotchas: kinship2::pedigree()'s dadid/momid arguments need explicit character "0" (via
+  missid = "0") for missing parents -- ifelse(is.na(x), 0, x) against a character vector silently
+  produces a type that fails kinship2's own id-set validation with a confusing "value not found in
+  id list" error; build the missing-parent vector with a character "0" literal from the start. Also:
+  when investigating a live user-reported visual, reproduce the EXACT data (same fixture, same
+  focal ids) through the actual layout function for real coordinates -- don't estimate from the
+  screenshot pixel positions.
+runtime_smoke: n/a -- documentation-only finding, no runtime code touched.
+changelog_ref: 918e7364 (S582's own last commit before this session's 2 new CHANGELOG entries --
+  see the 2026-08-15 section, "S583:" prefixed entries)
 commit: pending
 ```
 

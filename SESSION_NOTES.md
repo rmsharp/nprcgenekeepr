@@ -14,16 +14,82 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 582 Handoff Evaluation (by Session 583)
+**Score: 9/10.** **What helped:** S582's `key_files` correctly pointed at
+`R/modPedigree.R:419-429` (`.currentEdgeStyle()`), which this session re-read directly to explain
+the live default mechanism to the user without re-deriving it from scratch. S582's own gotcha note
+("a UI-default flip silently changes what EVERY zero-interaction capture step... renders") and its
+filed incidental-finding item primed an expectation that this diagram's positioning logic had
+recently-changed, non-obvious behavior worth checking carefully rather than assuming a rendering
+glitch -- useful framing when the user's question arrived. **What was missing:** nothing S582 owed
+for its own deliverable -- this session's finding is new territory (Track 6's parent-distance blind
+spot), not something S582's own scope (a screenshot reshoot) could have caught or should have
+flagged. **What was wrong:** nothing found inaccurate. **ROI:** high -- no wasted rediscovery, and
+the immediate context (this exact 6-animal subgraph, this exact screenshot) was still fresh from
+S582's own work, which is why the user's question could be answered so directly.
+
 ### What Session 583 Did
 **Deliverable:** File a new `BACKLOG.md` finding -- a mating union can be positioned entirely
 outside its own two parents' x-span (not merely off-center), discovered live via a user question
-about the just-reshot `pb_diagram_legend.png`; confirmed via direct kinship2 comparison (IN
-PROGRESS)
-**Started:** 2026-08-15
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+about the just-reshot `pb_diagram_legend.png` -- **DONE**. Investigation/documentation only, no
+code changes; not a Strict-TDD task (no `R/` source or test touched), stated explicitly.
+**Started/Completed:** 2026-08-15.
+
+**What happened, in order:** **(1)** User asked why a descent line in the freshly-reshot
+`pb_diagram_legend.png` appeared to come from beside the dam rather than from between the two
+parents. Read `R/makePedigreeDiagramData.R:966-975` (Track 6's `finalUnitX` computation -- a
+union's x is the midpoint of its own CHILDREN, not its parents) and reproduced the exact scenario
+live: `trimPedigree(c("8LKBV9","FJIB3R","GA204Z"), obfuscated_rhesus_mhc_ped.csv)` (the same
+6-animal subgraph the screenshot depicts) through `makePedigreeMatingLayout()`, printing real
+coordinates -- confirmed `5A6DFT` (sire) x=-60, `8DKELJ` (dam) x=60, their union (`__union_1`,
+sole child `8LKBV9`) x=**120**, entirely outside the parents' own span. **(2)** User asked whether
+this matches kinship2's own drawing convention. Built the IDENTICAL 6-subject pedigree via
+`kinship2::pedigree()`/`plot.pedigree()` (had to pass `missid = "0"` explicitly and character-typed
+`dadid`/`momid` -- `ifelse()`'s type coercion against a bare numeric `0` fails kinship2's own id-set
+validation) and rendered it -- kinship2 draws the descent line from the exact midpoint between the
+two parents, confirming a real divergence, not a stylistic choice already accepted. **(3)** User
+asked to see the actual app rendering before accepting the conclusion -- re-displayed
+`pb_diagram_legend.png` (already on disk from S582) alongside the kinship2 plot for a direct visual
+comparison; both agreed with the numeric evidence. **(4)** Presented both findings (the mechanism
+and the kinship2 divergence) and asked the user how to proceed via `AskUserQuestion` (file as a
+BACKLOG item / start a design session now / no action) rather than starting a fix unprompted
+(`SESSION_RUNNER.md` Failure Mode #23, question-as-instruction) -- user picked "file as a new
+BACKLOG item." **(5)** Phase 1B claim stub committed (`c47c5314`). **(6)** Filed the finding in
+`BACKLOG.md` (found S583, placed directly after the related S576 sibling subtree-width item),
+explicit about how it's distinct from S576 (S576 measures union-to-CHILDREN distance; this
+measures union-to-PARENTS distance, an axis Track 6's own verification never checked) and citing
+the exact reproduced coordinates plus the kinship2 comparison as evidence. `PROJECT_LEARNINGS.md`
+Learning 590 (the generalizable "a design's invariant proven for one direction says nothing about
+the other" + "a live user glance remains a distinct verification modality automated metrics don't
+replace" pattern).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A; tutorial/article checklist
+N/A (no shipped feature, a filed finding only); `NEWS.Rmd` checklist N/A (no code/feature change);
+`a2interactive.Rmd` checklist N/A; GitHub issue close-out N/A (not filed as an issue -- matching
+the established "recommend/file in BACKLOG.md, don't unilaterally open a GitHub issue" precedent
+for this class of finding); lint checklist N/A (no `.R` file touched); `_pkgdown.yml`
+reference-coverage N/A.
+
+**Self-assessment (Session 583): 9/10.** **Strengths:** (1) Did not treat the user's question as
+an instruction to fix anything -- investigated, presented evidence, and explicitly asked before
+acting, avoiding Failure Mode #23. (2) Verified through direct reproduction (exact coordinates from
+the live layout function; an identical pedigree built and plotted through the actual reference
+implementation, kinship2) rather than reasoning from the screenshot alone or from memory of what
+kinship2 "should" do -- matching the established Learning 443 "verify through the real consumer"
+discipline. (3) Correctly distinguished this finding from the superficially-similar, already-filed
+S576 item by identifying the specific unmeasured axis (parent-distance vs. child-distance) rather
+than either duplicating S576 or silently merging the two. (4) Read the Track 6 design doc's own
+rationale/alternatives section before concluding this was a genuine gap, not a already-considered-
+and-accepted tradeoff -- confirmed the doc's own verification scope never covered this axis rather
+than assuming. **Weaknesses:** (1) Still no independent adversarial-verification pass by a separate
+agent/session -- the same standing gap flagged for 16+ consecutive prior sessions. (2) Did not
+check whether any OTHER mating unit in the full 375-animal fixture (not just this one hand-picked
+example) also shows a union outside its parents' span -- the filed item's evidence rests on one
+concrete case; a quick sweep (mirroring the S576 finding's own "9/251 edges" style measurement)
+would have made the filed item's scope claim stronger, though the single reproduced example is
+sufficient to establish the defect is real.
+**Ledger:** recorded in `CHANGELOG.md` (claim + close-out -- 2 entries this session, both
+`[BL-N]`-tagged).
 
 ### Session 581 Handoff Evaluation (by Session 582)
 **Score: 9/10.** **What helped:** the `next_steps` field's priorities list (screenshot reshoot,
