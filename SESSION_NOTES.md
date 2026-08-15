@@ -14,6 +14,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 583 Did
+**Deliverable:** File a new `BACKLOG.md` finding -- a mating union can be positioned entirely
+outside its own two parents' x-span (not merely off-center), discovered live via a user question
+about the just-reshot `pb_diagram_legend.png`; confirmed via direct kinship2 comparison (IN
+PROGRESS)
+**Started:** 2026-08-15
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 581 Handoff Evaluation (by Session 582)
 **Score: 9/10.** **What helped:** the `next_steps` field's priorities list (screenshot reshoot,
 sibling subtree-width asymmetry, #148 scope-narrowing, NPRC outreach) matched, item-for-item and

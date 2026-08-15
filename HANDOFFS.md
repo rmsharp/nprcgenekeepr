@@ -136,6 +136,24 @@ This file currently holds **2** receipt(s). Computed by `methodology_trim.py` on
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S583
+date: 2026-08-15
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: File a new BACKLOG.md finding -- a mating union can be positioned entirely outside
+  its own two parents' x-span (not merely off-center), found live via a user question about
+  pb_diagram_legend.png, confirmed via direct kinship2 comparison.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S582
 date: 2026-08-15
 status: complete

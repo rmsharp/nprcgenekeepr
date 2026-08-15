@@ -138,6 +138,13 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [BL-N] S583: claim (file union-outside-parents-span finding)
+- **Deliverable:** Session claimed. Investigating a user question about `pb_diagram_legend.png`
+  surfaced that a mating union's x can land entirely outside its own two parents' x-span (not just
+  off-center among children) -- filing this as a new `BACKLOG.md` finding, distinct from the
+  already-tracked S576 sibling subtree-width item. Phase 1B stub written to `SESSION_NOTES.md`;
+  pending receipt opened in `HANDOFFS.md`.
+
 ### 2026-08-15 · [ad hoc] S582: reconcile HANDOFFS.md commit self-reference (`3e8870d2`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> `3e8870d2`
   (the close-out commit's own sha, unknowable until after that commit was made) -- matching the
