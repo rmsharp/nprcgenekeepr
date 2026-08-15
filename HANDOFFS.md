@@ -199,7 +199,7 @@ runtime_smoke: PASS -- the previously-failing E2E group was rerun end to end aga
   upload, real Mate Pair Analysis run) in the exact un-attached environment CI uses:
   files=1 passed=8 failed=0 skipped=0 error=0.
 changelog_ref: 9b23075e (this session's claim entry -- see the 2026-08-15 section, "S584:" entries)
-commit: pending
+commit: f36146ea (close-out); 66593c61 (the fix + guard); 9b23075e (claim)
 ```
 
 ```handoff

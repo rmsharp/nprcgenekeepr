@@ -138,6 +138,11 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] S584: reconcile HANDOFFS.md commit self-reference (`f36146ea`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> the three
+  real shas (`f36146ea` close-out, `66593c61` fix + guard, `9b23075e` claim) -- unknowable until
+  after those commits existed. Matches the established S562-S583 precedent.
+
 ### 2026-08-15 · [ad hoc] S584: close out (shinytest2.yaml CI red diagnosed AND fixed, + regression guard)
 - **Deliverable:** Root-caused the scheduled `shinytest2.yaml` failure (red 3 consecutive nights,
   2026-08-12/13/14): `.github/workflows/shinytest2.yaml:161-183` runs the E2E tier by spawning one
