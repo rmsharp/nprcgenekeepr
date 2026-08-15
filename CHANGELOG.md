@@ -138,6 +138,11 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [BL-N] S581: claim session (locale-dependent order() tie-break sweep)
+- **Deliverable:** Phase 1B claim. Picked via Phase 0 `AskUserQuestion` from `BACKLOG.md`'s
+  order()-sweep item (found S578). Wrote `SESSION_NOTES.md` claim stub and `HANDOFFS.md`
+  `status: pending` receipt. PRE-RED investigation (fresh grep + classification) up next.
+
 ### 2026-08-14 · [ad hoc] S580: reconcile HANDOFFS.md commit self-reference (`75c23fe5`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> `75c23fe5`
   (the close-out commit's own sha, unknowable until after that commit was made) -- matching the

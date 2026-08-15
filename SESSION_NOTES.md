@@ -14,6 +14,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 581 Did
+**Deliverable:** Locale-dependent `order()` tie-break sweep (`BACKLOG.md`, found S578, picked via
+this session's Phase 0 `AskUserQuestion`) (IN PROGRESS)
+**Started:** 2026-08-14
+**Status:** Session claimed. Work beginning -- PRE-RED investigation (fresh `grep -n "order(" R/*.R`,
+classify each hit char-vs-numeric, before proposing RED-phase test scope).
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 579 Handoff Evaluation (by Session 580)
 **Score: 9/10.** **What helped:** the `gotchas` field named this exact recurring risk verbatim —
 "The S547 legacy-footer relocation's `SRF_RED` 'fix' is NOT durable — any subsequent small archive
