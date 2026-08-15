@@ -198,7 +198,7 @@ runtime_smoke: DONE -- rendered 2 demo pedigrees via visNetwork::visSave() + chr
   same-row case now bows convex/upward, matching kinship2 exactly.
 changelog_ref: this session's own CHANGELOG.md entries (ledger-reconcile backfill, claim, RED,
   GREEN, downstream updates, close-out)
-commit: pending
+commit: 3a1a8de4
 ```
 
 ```handoff

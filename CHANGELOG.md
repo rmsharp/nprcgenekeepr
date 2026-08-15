@@ -138,6 +138,14 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [ad hoc] S577: reconcile HANDOFFS.md commit self-reference (`3a1a8de4`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> `3a1a8de4`
+  (the close-out commit whose sha the receipt itself couldn't name until after it was made) --
+  matching the established S562-S576 precedent. Bundled into the SAME commit as this entry (unlike
+  S576's own instance of this same action, which this session's Phase 0 found had no matching
+  `CHANGELOG.md` entry at all and had to backfill) -- applying this session's own Phase 0 finding
+  immediately rather than repeating the gap.
+
 ### 2026-08-14 · [BL-N] S577: close out (duplicate-connector arc curve-direction fix DONE)
 - **Deliverable:** GREEN implementation ratified via both TDD phase gates (`AskUserQuestion`
   PRE-RED->RED and RED->GREEN, both approved as written; GREEN->REFACTOR offered and explicitly
