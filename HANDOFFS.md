@@ -187,8 +187,7 @@ runtime_smoke: PASS -- ran the actual CI-failing mechanism directly
   pushing unilaterally.
 changelog_ref: eace45d8 (this session's claim entry) -- see the 2026-08-15 section, "S585:"
   entries
-commit: eace45d8 (claim); 9ab5b507 (fix + guard); close-out commit: pending (this receipt ships
-  in that commit)
+commit: eace45d8 (claim); 9ab5b507 (fix + guard); 6a34c351 (close-out)
 ```
 
 ```handoff

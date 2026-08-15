@@ -138,6 +138,11 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] S585: reconcile HANDOFFS.md commit self-reference (`6a34c351`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> the three
+  real shas (`6a34c351` close-out, `9ab5b507` fix + guard, `eace45d8` claim) -- unknowable until
+  after those commits existed. Matches the established S562-S584 precedent.
+
 ### 2026-08-15 · [BL-N] S585: close out (pkgdown.yaml CI fix — articles: contents: gap)
 - **Deliverable:** Fix the red `pkgdown.yaml` CI (`BACKLOG.md` Housekeeping, found S584 — and,
   discovered while removing the item, independently found a day earlier by S566, never
