@@ -14,29 +14,112 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 580 Handoff Evaluation (by Session 581)
+**Score: 9/10.** **What helped:** the `next_steps` field's priorities list (order() sweep,
+screenshot reshoot, sibling subtree-width asymmetry, #148 scope-narrowing, NPRC outreach) matched,
+item-for-item and in the same order, what this session independently reconstructed from
+`BACKLOG.md` at Phase 0 -- no rediscovery cost. `gotchas` correctly flagged the `SRF_RED`
+recurrence pattern as now confirmed on both `CHANGELOG.md` and `HANDOFFS.md`, which this session
+didn't need (no ledger-trim work this session) but which was accurate and well-scoped regardless.
+**What was missing:** nothing S580 owed for its own deliverable -- the order()-sweep item this
+session picked up was S578's own filing, not S580's; S580's handoff correctly pointed at it as an
+existing `BACKLOG.md` option rather than re-describing it. **What was wrong:** nothing found
+inaccurate. **ROI:** high -- the priorities list let Phase 0's `AskUserQuestion` picker render
+correctly on the first pass with no rediscovery.
+
 ### What Session 581 Did
 **Deliverable:** Locale-dependent `order()` tie-break sweep (`BACKLOG.md`, found S578, picked via
-this session's Phase 0 `AskUserQuestion`) (IN PROGRESS)
-**Started:** 2026-08-14
-**Status:** RED complete. Fresh `grep -n "order(" R/*.R` found 26 call sites; classified all (17
-not locale-sensitive -- numeric/index sort keys; 2 already `method="radix"` from Track 6). Of the
-6 initially flagged as real hits (char-column sorts), 2 corrected to FALSE POSITIVES via empirical
-verification during RED: `kinshipMatrixToKValues.R:107` (protected by `data.table`'s own
-`[.data.table]` auto-substitution to `forder()`, confirmed via `datatable.verbose`);
-`computeGenomicROH.R:112` (the intermediate `fullMeta` row order IS locale-sensitive, but the
-returned value is provably invariant -- `split()` groups by chrom regardless of inter-group order,
-and same-chrom pos tie-breaking is itself locale-independent; confirmed identical output across
-`LC_COLLATE="C"` vs. `"en_US.UTF-8"` on a fixture built to flip the intermediate order). 4 real
-hits confirmed and RED tests written+verified failing for the right reason:
-`orderReport.R:81/93` (`test_orderReport.R`, 2 new `test_that` blocks), `qcStudbook.R:323`
-(`test_qcStudbook.R`, 1 new block), `modBreedingGroups.R:690` `bgGroupView` (`test_modBreedingGroups.R`,
-1 new block, `shiny::testServer()` -- no prior coverage of this reactive existed). All 4 confirmed
-failing pre-fix (`_ctrl,A1,a9,b17,B2` vs. expected radix order `A1,B2,_ctrl,a9,b17`); 0 pre-existing
-test regressions in the 3 touched files. GREEN (add `method="radix"` to the 4 confirmed call sites)
-next, pending user go-ahead.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+this session's Phase 0 `AskUserQuestion`) -- **DONE**. Following
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` and the Strict-TDD RED->GREEN->REFACTOR
+gates (all 3 phase transitions gated via `AskUserQuestion`, per `CLAUDE.md`'s Phase-gate format).
+**Started/Completed:** 2026-08-14.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list` [12 open, unchanged], `git status`/`log`/`diff --stat` [132 commits ahead of
+`origin/master`, unpushed; 1 untracked benign `.qmd`-render-byproduct file, same recurring
+pattern], `methodology_dashboard.py` [Health 96/100, 1 HIGH risk -- `SESSION_NOTES.md` at 3,146
+lines, past the 2,000-line cap, archiving blocked on the documented fence-scanner defect], `gh run
+list --branch master --limit 10` [4 push-triggered workflows green; scheduled `shinytest2.yaml`
+red 2 consecutive days, unchanged/undiagnosed, reported not fixed]). Ledger reconcile: both
+`CHANGELOG.md`/`HANDOFFS.md` frontier == `HEAD`, no gap, no ghost session. Rendered the priorities
+list (4 numbered items + 2 lower-priority + informational, capped at 4 per `CLAUDE.md`'s picker
+convention) and the `AskUserQuestion` picker; user picked the order()-sweep item. **(2)** Phase 1B
+claim stub committed (`a23beab7`), including a proactive `CHANGELOG.md` `[BL-N]` entry for the
+claim commit itself. **(3)** PRE-RED: fresh `grep -n "order(" R/*.R` (26 sites), classified all by
+reading each call site's sort key. 17 not locale-sensitive; 2 already `method="radix"` (Track 6).
+6 flagged as real hits (character-column sorts) -- presented via `AskUserQuestion` (full 6-hit
+scope vs. narrower 5-hit scope deferring the untested Shiny reactive); user picked full scope.
+**(4)** RED: empirical divergence testing (constructing fixtures whose default-locale `order()`
+output diverges from `method="radix"`, confirmed via this environment's own default `LC_COLLATE`
+being `en_US.UTF-8`) corrected 2 of the 6 to FALSE POSITIVES **before writing any test for them**
+-- `kinshipMatrixToKValues.R:107` (its `kValues` object is a `data.table`; `[.data.table]`
+auto-substitutes `order()` with `data.table`'s own locale-independent `forder()`, confirmed live
+via `options(datatable.verbose = TRUE)`) and `computeGenomicROH.R:112` (the intermediate `fullMeta`
+row order IS locale-sensitive, but the function's returned value is provably invariant --
+`split()` groups by chrom regardless of inter-group order, and same-chrom tie-breaking uses the
+numeric `pos` secondary key; confirmed via `withr::with_locale(LC_COLLATE="C")` vs.
+`"en_US.UTF-8"` that output is byte-identical). 4 real hits confirmed and RED tests written: 2 new
+blocks in `test_orderReport.R` (imports/noParentage tiers), 1 in `test_qcStudbook.R`, 1 in
+`test_modBreedingGroups.R` (new `shiny::testServer()` test for `bgGroupView` -- no prior coverage
+of that reactive existed). All 4 confirmed failing for the right reason against unmodified source
+(`_ctrl,A1,a9,b17,B2` vs. expected radix order `A1,B2,_ctrl,a9,b17`); 0 regressions in the 3
+touched test files. Committed (`afe39632`). **(5)** GREEN gate approved via `AskUserQuestion`;
+added `method = "radix"` to the 4 confirmed call sites (`R/orderReport.R:81,93`,
+`R/qcStudbook.R:323`, `R/modBreedingGroups.R:690`) -- minimum change, no other logic touched.
+Verified: all 4 targeted tests GREEN; full clean regression 5,955 passed / 1 pre-existing failure
+unrelated (`test_wordlist_coverage.R`) / 0 errors / 33 pre-existing warnings (both match the
+established baseline); `lintr::lint_package()` (project's own `.lintr` config, NOT the default
+linter set -- caught and corrected this mid-session after an initial run against
+`linters_with_defaults()` produced misleading noise) 0 lints on all 3 touched files;
+`devtools::check()` 0 errors/0 warnings/1 pre-existing NOTE (`vignettes/figure/` knitr leftover).
+Committed (`5583a621`). **(6)** REFACTOR gate approved via `AskUserQuestion`; added explanatory
+comments (no behavior change) to `kinshipMatrixToKValues.R`/`computeGenomicROH.R` documenting why
+each is safe, so a future session re-running the same grep doesn't re-derive the investigation.
+Verified no behavior change (both files' own suites pass unchanged, 0 lints). Committed
+(`15450f0d`). **(7)** Phase 3E runtime smoke test: qcStudbook/orderReport/bgGroupView are all
+live runtime-behavior-affecting call paths (file upload QC, Genetic Value Analysis report
+ordering, Breeding Groups tab display), so a full-suite `test_dir()` pass alone was judged
+insufficient -- re-ran with `NPRC_RUN_E2E=true` (opt-in live `shinytest2`/`chromote` browser
+tests, skipped by default and NOT included in the earlier full-regression pass): all 3 directly
+relevant E2E files pass (`test-e2e-mate-pair-analysis-module.R`,
+`test-e2e-genetic-value-tutorial.R`, `test-e2e-breeding-groups-module.R`), plus the complete live
+E2E suite run in background for full confidence. **(8)** Close-out: `NEWS.Rmd` "Fixed:" entry
+added (dev-version section, matching the file's own established bug-fix-entry convention);
+`BACKLOG.md` item marked `[x]`/RESOLVED with full outcome; `PROJECT_LEARNINGS.md` Learning 588
+(the classification methodology -- why 2 of 6 pattern-matches were false positives, and the
+practical rule for telling them apart before writing a RED test).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A (no new displayed
+statistic); tutorial/article checklist N/A (no new Shiny tab/control, existing behavior corrected,
+not a new feature); `NEWS.Rmd` checklist DONE (see above); `a2interactive.Rmd` checklist N/A (no
+new exported function or new parameter -- `orderReport` is `@noRd` internal, the other 3 touched
+functions are pre-existing with unchanged signatures); GitHub issue close-out N/A (not filed as an
+issue, matching the established "internal ordering bug, not filed" precedent for comparable
+S563-S565 findings); lint checklist DONE (0 lints, project's own `.lintr` config); `_pkgdown.yml`
+reference-coverage N/A (no new exported function).
+
+**Self-assessment (Session 581): 9/10.** **Strengths:** (1) Strict-TDD discipline caught 2
+plausible-looking false positives BEFORE any implementation code was written -- a pattern-only
+classification ("sorts a character column") would have "fixed" 2 things that were never broken;
+empirical verification during RED is exactly the safeguard that prevented it. (2) Caught and
+corrected an in-session lint-tooling mistake (ran `linters_with_defaults()` instead of the
+project's own `.lintr` config, which produced misleading pre-existing-style noise) before it
+reached a commit or a false close-out claim. (3) Recognized that "tests pass" alone was
+insufficient for Phase 3E given 3 confirmed runtime-behavior-affecting call paths, and ran the
+opt-in live E2E suite (`NPRC_RUN_E2E=true`) rather than silently treating the (E2E-skipping)
+full-regression pass as runtime verification -- avoided failure mode #24 (build/test-passes-ship-it)
+in a form specific to this project's own opt-in E2E convention. (4) All 3 TDD phase gates run via
+`AskUserQuestion` per `CLAUDE.md`'s Phase-gate format, each spelling out the exact next actions.
+(5) Documented the false-positive reasoning in-code (not just in `BACKLOG.md`/`PROJECT_LEARNINGS.md`)
+so a future session re-running the same grep doesn't have to re-derive it. **Weaknesses:** (1)
+Still no independent adversarial-verification pass by a separate agent/session -- the same
+standing gap flagged for 14+ consecutive prior sessions, unaddressed again this session. (2) The
+scope-narrowing correction (6 hits -> 4 real + 2 false positives) happened mid-RED rather than
+being caught at PRE-RED -- a more careful PRE-RED investigation (checking object class / downstream
+consumption before presenting the classification table) could have surfaced this before the first
+`AskUserQuestion` gate, saving the user from approving a scope that immediately shrank.
+**Ledger:** recorded in `CHANGELOG.md` (claim, RED, GREEN, REFACTOR, verification, and this
+close-out entry -- 6 entries this session, all `[BL-N]`-tagged).
 
 ### Session 579 Handoff Evaluation (by Session 580)
 **Score: 9/10.** **What helped:** the `gotchas` field named this exact recurring risk verbatim —

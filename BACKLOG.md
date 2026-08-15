@@ -117,24 +117,30 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `method = "radix"` (locale-independent byte-order) on both affected `order()` calls;
       re-verified both locales now produce identical, matching output. See `PROJECT_LEARNINGS.md`
       Learning 585. See `CHANGELOG.md`.
-- [ ] (found S578, 2026-08-14, a broader grep sweep after fixing the locale-dependent `order()`
-      defect above, READY, Effort M -- not scoped per-instance) **The same locale-dependent
-      `order()` tie-break class (`PROJECT_LEARNINGS.md` Learning 585) exists more broadly across
-      the package, not just in `.positionMatingUnitForest()`.** `grep -n "order(" R/*.R` found
-      several more character-vector sorts using plain (non-`method = "radix"`) `order()`, most
-      notably 2 EXPORTED, widely-used functions where the affected sort is a user-facing row
-      ORDER (not a computed VALUE, so lower severity than this session's own bug, but still a
-      real cross-locale reproducibility gap): `qcStudbook()` (`R/qcStudbook.R:323`,
-      `order(gen, id)`) and `orderReport()` (`R/orderReport.R:81,93`, `order(id)`). Not
-      investigated exhaustively or fixed this session (out of scope for the Track 6 deliverable,
-      matching `PROJECT_LEARNINGS.md` Learning 382's "report, don't fix mid-session" precedent) --
-      the full `grep` output (not filtered per-instance for severity) is in this session's own
-      `SESSION_NOTES.md`. A future session should (a) re-run the grep fresh (this list may be
-      incomplete/stale by the time it's picked up), (b) classify each hit by whether it sorts a
-      character id/label column (locale-sensitive) vs. a numeric column (not affected), (c) for
-      each real hit, decide case-by-case whether `method = "radix"` is the right fix (it is for
-      plain ascending id/label sorts; a sort mixing numeric and character keys via `with(...,
-      order(colA, colB))` needs closer inspection) rather than blanket-applying it.
+- [x] (found S578, 2026-08-14, a broader grep sweep after fixing the locale-dependent `order()`
+      defect above, **RESOLVED S581**. **The same locale-dependent `order()` tie-break class
+      (`PROJECT_LEARNINGS.md` Learning 585) existed more broadly across the package.** Fresh
+      `grep -n "order(" R/*.R` (26 call sites) classified all: 17 not locale-sensitive (numeric/
+      index sort keys), 2 already `method="radix"` (Track 6). Of the 6 initially flagged as real
+      hits (character-column sorts), empirical verification (RED-phase divergence testing,
+      `withr::with_locale`) corrected 2 to FALSE POSITIVES: `kinshipMatrixToKValues.R:107`
+      (protected by `data.table`'s own `[.data.table]` auto-substitution to `forder()`, confirmed
+      via `datatable.verbose`) and `computeGenomicROH.R:112` (the intermediate `fullMeta` row
+      order IS locale-sensitive, but the returned value is provably invariant -- `split()` groups
+      by chrom regardless of inter-group order, same-chrom tie-breaking uses the numeric `pos`
+      key; confirmed identical output across `LC_COLLATE="C"` vs. `"en_US.UTF-8"`). Explanatory
+      comments left in both files documenting why, so a future session re-running this grep
+      doesn't re-derive the investigation. **4 real hits fixed** (`method = "radix"` added,
+      RED->GREEN->REFACTOR): `orderReport.R:81,93` (imports/noParentage tiers),
+      `qcStudbook.R:323` (`order(gen, id)`), `modBreedingGroups.R:690` `bgGroupView` (Ego ID,
+      no prior test coverage of this reactive existed -- new `shiny::testServer()` test added).
+      Verification: 4 targeted RED tests GREEN; full clean regression 1 pre-existing failure
+      unrelated (`test_wordlist_coverage.R`), 0 errors; 0 lints on touched files
+      (`lintr::lint_package()`, project's own `.lintr` config); `devtools::check()` 0 errors/0
+      warnings/1 pre-existing NOTE; live E2E (`NPRC_RUN_E2E=true`) confirmed all 3 affected
+      runtime paths -- `test-e2e-mate-pair-analysis-module.R` (qcStudbook), `test-e2e-genetic-
+      value-tutorial.R` (orderReport/reportGV), `test-e2e-breeding-groups-module.R` (bgGroupView)
+      -- all pass. See `PROJECT_LEARNINGS.md` Learning 588. See `CHANGELOG.md`.
 - [ ] (found S576, 2026-08-14, incidental to Track 6's own empirical validation of the
       child-centered union-position design, READY, Effort unknown -- not scoped) **Pedigree
       Diagram: sibling subtree-width asymmetry -- 2-3 direct children of the same mating unit can

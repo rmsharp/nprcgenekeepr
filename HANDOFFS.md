@@ -138,20 +138,71 @@ This file currently holds **2** receipt(s). Computed by `methodology_trim.py` on
 ```handoff
 session: S581
 date: 2026-08-14
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Locale-dependent order() tie-break sweep (BACKLOG.md, found S578) -- PRE-RED
-  investigation in progress.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Locale-dependent order() tie-break sweep (BACKLOG.md, found S578) -- DONE. 4 real
+  hits fixed (method="radix"); 2 initially-flagged hits corrected to false positives via
+  empirical verification, documented in-code, no behavior change.
+what_was_done: Fresh grep -n "order(" R/*.R (26 sites), classified all. RED (afe39632): 4 real
+  hits confirmed via divergence testing, tests added to test_orderReport.R/test_qcStudbook.R/
+  test_modBreedingGroups.R (new bgGroupView testServer test). GREEN (5583a621): method="radix"
+  added to orderReport.R:81,93, qcStudbook.R:323, modBreedingGroups.R:690. REFACTOR (15450f0d):
+  explanatory comments (no behavior change) on kinshipMatrixToKValues.R/computeGenomicROH.R
+  documenting why they're false positives. Verification: 4 targeted tests GREEN; full clean
+  regression 1 pre-existing failure unrelated, 0 errors; 0 lints (project's own .lintr config);
+  devtools::check() 0/0/1 pre-existing NOTE; live E2E (NPRC_RUN_E2E=true) confirmed all 3 affected
+  runtime paths pass. NEWS.Rmd/BACKLOG.md/PROJECT_LEARNINGS.md (Learning 588) updated.
+next_steps: BACKLOG.md's remaining numbered items (order this session's Phase 0 presented, none
+  picked): stale pb_diagram_legend.png screenshot (READY, Effort S, found S574); Pedigree Diagram
+  sibling subtree-width asymmetry (READY but needs its own design session first, found S576);
+  #148 MHC scope-narrowing conversation (DECISION NEEDED); NPRC outreach & announcement plan
+  (DECISION NEEDED, owner review). Separately: scheduled shinytest2.yaml CI run still red 2
+  consecutive days (2026-08-13, 2026-08-14), unchanged/undiagnosed across 2 sessions now --
+  worth a dedicated diagnose session soon. SESSION_NOTES.md is 3,146+ lines (grows every
+  session), past the 2,000-line HIGH-risk cap -- per CLAUDE.md's own fence-scanner-defect note,
+  do NOT run methodology_trim.py --write on it until that defect is fixed (rewrap the offending
+  4-backtick paragraph, or patch the tool).
+key_files: R/orderReport.R:81-86 (imports/noParentage radix fix); R/qcStudbook.R:323-326 (gen/id
+  radix fix); R/modBreedingGroups.R:687-693 (bgGroupView radix fix); R/kinshipMatrixToKValues.R:
+  105-112 (false-positive explanation); R/computeGenomicROH.R:110-121 (false-positive
+  explanation); tests/testthat/test_orderReport.R, test_qcStudbook.R, test_modBreedingGroups.R
+  (new RED tests); PROJECT_LEARNINGS.md Learning 588 (full classification methodology).
+gotchas: A grep-based "sorts a character column" heuristic over-flags for this defect class --
+  always empirically verify divergence (withr::with_locale or just check this session's own
+  default LC_COLLATE) before writing a RED test, not just read the sort-key type. Two distinct
+  false-positive mechanisms exist and both are easy to miss: (1) a data.table's [.data.table]
+  subsetting silently substitutes order() with its own locale-independent forder() -- check
+  object class, not just column type; (2) a locale-sensitive intermediate sort can still produce
+  a locale-INVARIANT final result if consumed via split()-plus-a-non-character-secondary-key --
+  trace how the ordered object is actually used downstream, not just whether the primary key is
+  character. Also: lintr::lint_package() with no arguments uses the project's own .lintr config
+  (allows camelCase); calling it with linters = linters_with_defaults() produces a completely
+  different, much noisier lint set unrelated to what CI actually checks -- don't do this, it
+  wastes time chasing lints CI would never flag.
+runtime_smoke: qcStudbook/orderReport/bgGroupView are all live runtime-behavior-affecting call
+  paths. Confirmed via opt-in live E2E (NPRC_RUN_E2E=true, real shinytest2/chromote browser --
+  skipped by default and NOT covered by the ordinary full-regression pass):
+  test-e2e-mate-pair-analysis-module.R, test-e2e-genetic-value-tutorial.R,
+  test-e2e-breeding-groups-module.R all pass. Full live E2E suite also run for full confidence.
+changelog_ref: 12ebaba4 (S580's own last CHANGELOG entry before this session's 6 new entries --
+  see the 2026-08-14 section, "S581:" prefixed entries)
 commit: pending
 ```
-pending
+Self-score breakdown (9/10): +caught 2 plausible-looking false positives via empirical RED-phase
+verification before writing any implementation code, exactly the Strict-TDD safeguard this
+project's contract exists for; +caught and corrected an in-session lintr tooling mistake
+(default linters vs. project's own .lintr) before it produced a false close-out claim;
++recognized full-regression alone was insufficient runtime verification given 3 confirmed
+runtime-affecting paths and ran the project's own opt-in live E2E suite rather than treating
+"tests pass" as automatically "runtime verified"; +all 3 TDD phase gates run via AskUserQuestion
+per CLAUDE.md's Phase-gate format; +documented false-positive reasoning in-code, not just in
+BACKLOG.md, so a future session re-running the same grep doesn't re-derive it.
+-still no independent adversarial-verification pass (14+ session standing gap, unaddressed
+again); -the 6-hit-to-4-hit scope correction happened mid-RED rather than at PRE-RED, meaning
+the user approved a scope (all 6) that immediately shrank -- a more careful PRE-RED (checking
+object class/downstream consumption before presenting the classification table) could have
+caught this one step earlier.
 
 ```handoff
 session: S580

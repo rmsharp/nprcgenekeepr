@@ -138,6 +138,47 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [BL-N] S581: close out (locale-dependent order() tie-break sweep DONE)
+- **Deliverable:** `BACKLOG.md` order()-sweep item (found S578) -- **DONE**. Fresh
+  `grep -n "order(" R/*.R` (26 sites) classified all; 4 real hits fixed (`method = "radix"`
+  added, RED->GREEN->REFACTOR): `orderReport.R:81,93`, `qcStudbook.R:323`,
+  `modBreedingGroups.R:690` `bgGroupView`. 2 initially-flagged hits corrected to false positives
+  via empirical verification: `kinshipMatrixToKValues.R:107` (data.table's own `forder()`
+  auto-substitution), `computeGenomicROH.R:112` (returned value provably locale-invariant despite
+  the intermediate sort being locale-sensitive) -- explanatory comments added, no behavior change.
+  See `PROJECT_LEARNINGS.md` Learning 588 for the full classification methodology.
+
+### 2026-08-14 · [BL-N] S581: verification (full clean regression + live E2E)
+- **Deliverable:** 4 targeted RED tests confirmed GREEN post-fix; full clean regression 5,955
+  passed / 1 pre-existing failure unrelated (`test_wordlist_coverage.R`) / 0 errors / 33
+  pre-existing warnings (both match the established baseline); 0 lints on all 5 touched R files
+  (`lintr::lint_package()`, project's own `.lintr` config); `devtools::check()` 0 errors/0
+  warnings/1 pre-existing NOTE (`vignettes/figure/` knitr leftover). Live E2E
+  (`NPRC_RUN_E2E=true`, real `shinytest2`/`chromote` browser) confirmed all 3 affected runtime
+  paths: `test-e2e-mate-pair-analysis-module.R` (qcStudbook), `test-e2e-genetic-value-tutorial.R`
+  (orderReport/reportGV), `test-e2e-breeding-groups-module.R` (bgGroupView) -- all pass.
+
+### 2026-08-14 · [BL-N] S581: REFACTOR (explanatory comments, no behavior change)
+- **Deliverable:** Added comments to `R/kinshipMatrixToKValues.R:107` and
+  `R/computeGenomicROH.R:112` documenting why each is NOT the Learning 585 defect class despite
+  superficially matching the character-column-sort pattern. Verified no behavior change (both
+  files' own test suites pass unchanged); 0 lints.
+
+### 2026-08-14 · [BL-N] S581: GREEN (method="radix" for 4 confirmed hits)
+- **Deliverable:** `R/orderReport.R:81,93`, `R/qcStudbook.R:323`, `R/modBreedingGroups.R:690` --
+  `method = "radix"` added to each locale-dependent `order()` call. 4 targeted RED tests now
+  GREEN; full clean regression 1 pre-existing failure unrelated, 0 errors; 0 lints on touched
+  files; `devtools::check()` 0 errors/0 warnings/1 pre-existing NOTE.
+
+### 2026-08-14 · [BL-N] S581: RED (4 confirmed locale-dependent order() hits)
+- **Deliverable:** Fresh `grep -n "order(" R/*.R` classification (26 sites). 4 real hits
+  confirmed via empirical divergence testing and RED tests added: `test_orderReport.R` (2 new
+  blocks), `test_qcStudbook.R` (1 new block), `test_modBreedingGroups.R` (1 new block,
+  `shiny::testServer()` -- no prior coverage of `bgGroupView` existed). All 4 confirmed failing
+  for the right reason against unmodified source; 0 regressions in the 3 touched test files. 2
+  initially-flagged hits (`kinshipMatrixToKValues.R:107`, `computeGenomicROH.R:112`) corrected to
+  false positives during this same investigation -- no test written for either (nothing to prove).
+
 ### 2026-08-14 · [BL-N] S581: claim session (locale-dependent order() tie-break sweep)
 - **Deliverable:** Phase 1B claim. Picked via Phase 0 `AskUserQuestion` from `BACKLOG.md`'s
   order()-sweep item (found S578). Wrote `SESSION_NOTES.md` claim stub and `HANDOFFS.md`
