@@ -14,6 +14,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 589 Did
+**Deliverable:** Pedigree Diagram layout feasibility spike (`BACKLOG.md`, found S588, HIGH
+PRIORITY) -- prototype ONE non-rigid/constraint-aware layout candidate (barycenter/median
+layered-DAG compaction, owner-selected via `AskUserQuestion` over a force-directed alternative),
+tested against the design doc's 13-individual synthetic example and a faithful reproduction of the
+real 375-individual fixture's full pipeline. Close out with a feasible/not-feasible verdict.
+(IN PROGRESS)
+**Started:** 2026-08-15.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 587 Handoff Evaluation (by Session 588)
 **Score: 10/10.** **What helped:** the `next_steps` field named this exact item as recommendation
 (3) of 3 remaining READY items, explicitly describing it as "2 related open geometry gaps... need

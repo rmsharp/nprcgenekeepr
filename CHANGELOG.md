@@ -138,6 +138,13 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [BL-N] S589: claim (pedigree-diagram layout feasibility spike)
+- **Deliverable:** Non-commit-adjacent claim entry per Phase 1B. Session claimed to run the
+  pedigree-diagram layout feasibility spike (`BACKLOG.md`, found S588, HIGH PRIORITY) —
+  prototype one non-rigid/constraint-aware layout candidate (barycenter/median layered-DAG
+  compaction, owner-selected via `AskUserQuestion`), tested against the synthetic example and a
+  faithful real-fixture reproduction. Planning/investigation session, TDD phases inapplicable.
+
 ### 2026-08-15 · [ad hoc] S588: reconcile HANDOFFS.md commit self-reference (`999c3b74`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: ... this close-out
   commit` -> the real sha (`999c3b74`, close-out) — unknowable until after that commit existed.

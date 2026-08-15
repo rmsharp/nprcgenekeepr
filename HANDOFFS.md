@@ -136,6 +136,26 @@ This file currently holds **4** receipt(s). Computed by `methodology_trim.py` on
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S589
+date: 2026-08-15
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Pedigree Diagram layout feasibility spike (BACKLOG.md, found S588, HIGH PRIORITY) --
+  prototype ONE non-rigid/constraint-aware layout candidate (barycenter/median layered-DAG
+  compaction), tested against the synthetic example and a faithful real-fixture reproduction.
+  Close out with a feasible/not-feasible verdict.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+(stub -- filled at Phase 3D close-out)
+
+```handoff
 session: S588
 date: 2026-08-15
 status: complete
