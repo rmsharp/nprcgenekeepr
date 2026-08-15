@@ -68,6 +68,39 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       connected-component walk).
 
 ## Housekeeping
+- [ ] (found S584, 2026-08-15, revealed by the S584 push finally letting CI see current `HEAD`,
+      **READY, Effort S**) **`pkgdown.yaml` CI is RED: `articles/pedigree-diagram` is missing from
+      `_pkgdown.yml`'s articles index, so the docs-site build aborts and the site never deploys.**
+      Exact failure (run `31868761401`): ``Error in `build_articles_index()`: ! In _pkgdown.yml, 1
+      vignette missing from index: "articles/pedigree-diagram".`` Provenance:
+      `vignettes/articles/pedigree-diagram.qmd` landed in `2b3e8ef6` (**S560**, the new Pedigree
+      Diagram tab article) and that commit **never touched `_pkgdown.yml`** (verified:
+      `git show --stat 2b3e8ef6 | grep -c _pkgdown.yml` -> 0). **Fix is one line** -- add
+      `  - articles/pedigree-diagram` to the `articles:` -> `contents:` list. Scope verified in both
+      directions this session (`yaml::read_yaml("_pkgdown.yml")` vs. the on-disk `.qmd`/`.Rmd`
+      inventory): this is the ONLY genuine gap, and nothing listed in `_pkgdown.yml` is missing from
+      disk. (`_ColonyManagerTutorial` also appears unlisted but is an underscore-prefixed partial,
+      not a standalone article -- which is why pkgdown's own message counts exactly 1.) Note the
+      close-out-checklist parallel: `CLAUDE.md` already carries a `_pkgdown.yml` **reference**-coverage
+      checklist for new exported *functions*; there is no equivalent for new *articles*, which is
+      exactly the gap S560 fell through. A session fixing this should consider whether to add that
+      checklist clause. See `CHANGELOG.md`.
+- [ ] (found S584, 2026-08-15, revealed by the S584 push finally letting CI see current `HEAD`,
+      **READY, Effort S**) **`lint.yaml` CI is RED on 3 pre-existing lints in `R/kinship.R`.**
+      The workflow sets `LINTR_ERROR_ON_LINT: true`, so any lint fails the job. Exact findings
+      (run `31868761462`): `R/kinship.R:127` `[nested_ifelse_linter]` ("Don't use nested ifelse()
+      calls"), `R/kinship.R:131` and `R/kinship.R:133` `[implicit_integer_linter]` ("Use 0L or 0.0
+      to avoid implicit integers"). These are the same 3 that `lintr::lint_package()` reports
+      locally -- the entire package-wide lint count is exactly these 3. Provenance: `git blame`
+      puts all three in `7bbc6273` (2026-08-13, **S564**, `kinship()` gains `chrtype="x"`/`sex` for
+      X-chromosome kinship, Track A). **Note this is a close-out-checklist miss, not a novel gap:**
+      `CLAUDE.md`'s Lint close-out checklist (found S577) already requires any session touching a
+      tracked `.R` file to run `lintr::lint_package()` on touched files and fix or `# nolint`-
+      suppress what it flags, precisely so CI never has to catch it -- S564 either did not run it or
+      did not act on it. A session fixing this should decide per-finding between a real fix and a
+      documented `# nolint` (the 2 `implicit_integer` ones are trivially fixable as `0L`; the
+      `nested_ifelse` one is a judgment call about readability in that function). Any `R/` change
+      here is Strict-TDD territory -- behavior must be provably unchanged. See `CHANGELOG.md`.
 - [ ] (found S584, 2026-08-15, incidental to running the build equivalent during close-out,
       **READY, Effort S**) **`devtools::check()` -- the project's own documented build equivalent --
       is RED on `master` and has been since S573, with no session reporting it.** Final line:
@@ -83,7 +116,17 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       package-name terms, not misspellings), plus a re-run of the build equivalent to confirm it
       returns to `0 errors`. Not fixed in S584 (a second deliverable, out of that session's
       diagnose-the-CI-failure scope -- `PROJECT_LEARNINGS.md` Learning 382's report-don't-fix
-      precedent). **Worth a moment's care when picking this up:** S581's own handoff reports
+      precedent). **The open `NOT_CRAN`/masking question this item originally raised is now
+      ANSWERED** (same session, after the S584 push let CI run against current `HEAD`): **CI is NOT
+      masking it.** `R-CMD-check.yaml` (run `31868761411`) failed on **all 5 platform jobs** --
+      ubuntu release/devel/oldrel-1, macOS release, Windows release -- each with the identical
+      `Status: 1 ERROR, 1 NOTE` and the same `test_wordlist_coverage.R:121` failure naming `matings`
+      and `visNetwork's`. `r-lib/actions` sets `NOT_CRAN`, so `skip_on_cran()` never fires and the
+      test genuinely runs in CI. **This is therefore a live CI red on every platform, not merely a
+      local one.** It also settles the S581 discrepancy recorded below: the failure is real,
+      reproducible and platform-independent, so S581's reported "0 errors" does not hold up --
+      treat any `devtools::check()` claim in handoffs from S573 onward as unverified until re-run.
+      Original note, kept for the record: S581's own handoff reports
       `devtools::check()` as "0 errors/0 warnings/1 pre-existing NOTE" at a close-out ~9 hours AFTER
       `c9860f4b` landed. S584 could not reconstruct why that run differed and deliberately drew no
       conclusion; a session fixing this should note that `test_wordlist_coverage.R:113` calls

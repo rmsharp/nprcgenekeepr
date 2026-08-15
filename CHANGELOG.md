@@ -138,6 +138,28 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] S584: CI outcome of the push — S584's fix CONFIRMED green; 3 pre-existing reds surfaced
+- **`shinytest2` SUCCESS** (run `31868762486`) — **this session's fix confirmed in CI, not just
+  locally.** The previously-failing group reports
+  `^e2e-mate-pair-analysis-module: files=1 passed=8 failed=0 skipped=0 error=0` (was `error=1`),
+  matching the local reproduction exactly; all 19 module groups pass. Independent bonus
+  confirmation of Learning 592: `^e2e-twin-relations-: files=1 passed=3` now appears and runs,
+  proving its absence from the old CI log was a stale-snapshot artifact, never a partition drift.
+- **`test-coverage` SUCCESS.**
+- **3 pre-existing failures surfaced, none caused by this session, each independently dated** — all
+  invisible to CI until this push because it had been pinned to a 145-commit-stale `origin/master`:
+  - **`pkgdown` FAILURE** (`31868761401`) — `articles/pedigree-diagram` missing from `_pkgdown.yml`;
+    the article landed in `2b3e8ef6` (S560) without an index entry. Docs site does not deploy.
+  - **`lint` FAILURE** (`31868761462`) — 3 lints in `R/kinship.R:127,131,133` from `7bbc6273`
+    (S564); the job sets `LINTR_ERROR_ON_LINT: true`. A miss against `CLAUDE.md`'s own Lint
+    close-out checklist, not a novel gap.
+  - **`R-CMD-check` FAILURE** (`31868761411`) — all 5 platform jobs, `Status: 1 ERROR, 1 NOTE`, the
+    `inst/WORDLIST` gap from `c9860f4b` (S573). **Answers this session's own open question:** CI is
+    NOT masking it (`r-lib/actions` sets `NOT_CRAN`, so `skip_on_cran()` never fires), which also
+    settles the S581 "0 errors" discrepancy — the failure is real and platform-independent.
+- **All 3 filed as `BACKLOG.md` items, none fixed** — each is a separate deliverable under
+  "1 and done" (`PROJECT_LEARNINGS.md` Learning 382's report-don't-fix precedent).
+
 ### 2026-08-15 · [BL-N] S584: push master to origin (148 commits) + dispatch shinytest2.yaml
 - **Deliverable:** Non-commit action, recorded per failure mode #27. Owner directed "push" after
   this session's close-out surfaced the 145-commit divergence as a `BACKLOG.md` DECISION NEEDED

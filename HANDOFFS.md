@@ -157,12 +157,20 @@ what_was_done: Root cause -- .github/workflows/shinytest2.yaml:161-183 runs the 
   (test_wordlist_coverage.R) / 0 errors; lintr 0 lints on touched files. devtools::check() 1 error /
   0 warnings / 1 note -- BOTH pre-existing, provenance verified (see gotchas), neither caused here.
   Commits 9b23075e (claim) and the close-out commit.
-next_steps: FIRST, decide the push question (filed as a BACKLOG.md Housekeeping item, DECISION
-  NEEDED): local master is 145 commits ahead of origin/master, so all scheduled/push CI is testing
-  S545-era code and THIS session's fix cannot go green in CI until a push happens. shinytest2.yaml
-  has no push trigger, so after pushing it needs a manual `gh workflow run shinytest2.yaml` to
-  confirm -- do not wait for the nightly if you want same-session confirmation. Otherwise
-  BACKLOG.md's numbered items are: the 3 pedigree-diagram-screenshots.R sibling screenshots that
+next_steps: The push question is RESOLVED -- owner directed it in-session, 148 commits pushed,
+  master == origin/master, and shinytest2 confirmed green (run 31868762486). THE TOP PRIORITY IS NOW
+  CI TRIAGE: the push revealed 3 pre-existing reds, each filed as its own READY BACKLOG.md
+  Housekeeping item and each a separate deliverable. In recommended pickup order (cheapest and most
+  mechanical first): (1) pkgdown -- add `  - articles/pedigree-diagram` to _pkgdown.yml's
+  articles/contents list, one line, scope verified in both directions (S560 gap; the docs site is
+  currently not deploying at all, so this has the widest user-visible blast radius); (2)
+  R-CMD-check -- add the flagged words to inst/WORDLIST, remembering the test_dir read flags 4
+  (matings, Rectilinear's, runnable, visNetwork's) while check() flags 2, so cover all 4 (S573 gap,
+  red on all 5 platforms); (3) lint -- R/kinship.R:127,131,133, per-finding choice between a real
+  fix and a documented # nolint; this one touches R/ so it is Strict-TDD territory and behavior must
+  be provably unchanged (S564 gap). Do NOT bundle these: three files, three fixes, three
+  deliverables. Then the pre-existing queue: the 3 pedigree-diagram-screenshots.R sibling
+  screenshots that
   may share pb_diagram_legend.png's staleness mechanism (found S582, READY, Effort S -- the
   cheapest remaining item); SESSION_NOTES.md archive (dashboard's only HIGH risk, trim trigger
   fires at 3,437 lines / 290,404 B, and the fence-scanner defect that previously blocked it appears
@@ -194,10 +202,11 @@ gotchas: (1) `gh run view <id> --log` and `--log-failed` both return EMPTY for t
   something your own session broke; confirm provenance with `git status --porcelain NEWS.md
   inst/WORDLIST` and `git log -S'<word>' -- NEWS.md` before spending time on it. Filed as its own
   BACKLOG.md item (Effort S -- a one-line inst/WORDLIST addition).
-runtime_smoke: PASS -- the previously-failing E2E group was rerun end to end against the live app
-  (real Chrome via shinytest2/AppDriver, real pedigree upload, real Marker Genetics genotype
-  upload, real Mate Pair Analysis run) in the exact un-attached environment CI uses:
-  files=1 passed=8 failed=0 skipped=0 error=0.
+runtime_smoke: PASS, locally AND in CI. Locally the previously-failing E2E group was rerun end to
+  end against the live app (real Chrome via shinytest2/AppDriver, real pedigree upload, real Marker
+  Genetics genotype upload, real Mate Pair Analysis run) in the exact un-attached environment CI
+  uses: files=1 passed=8 failed=0 skipped=0 error=0. Then CONFIRMED in CI after the owner-directed
+  push -- shinytest2 run 31868762486 SUCCESS, same group same numbers, all 19 groups green.
 changelog_ref: 9b23075e (this session's claim entry -- see the 2026-08-15 section, "S584:" entries)
 commit: f36146ea (close-out); 66593c61 (the fix + guard); 9b23075e (claim)
 ```
