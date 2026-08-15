@@ -256,9 +256,13 @@ R. Mark Sharp, Ph.D.
   sibship-bar/drop waypoints now land on a genuine intermediate row (40%
   of the way from the parent/union row to the children's row) rather
   than the children's own row, an unconditional geometric guarantee for
-  the common 1-generation-gap case. A rare residual can still occur for
-  a union placed an exact multiple of 5 generations from its child;
-  tracked for a future general same-row collision-avoidance pass.
+  the common 1-generation-gap case. Two disclosed residuals remain, both
+  tracked for a future general same-row collision-avoidance pass: a rare
+  bar-vs-node coincidence for a union placed an exact multiple of 5
+  generations from its child, and a reduced-but-not-eliminated
+  bar-vs-bar case (2 unrelated sibships at the same generation gap with
+  overlapping horizontal spans; cut from 42 to 9 cases in the bundled
+  example pedigree).
 
 # nprcgenekeepr 2.0.0 (20260708)
 

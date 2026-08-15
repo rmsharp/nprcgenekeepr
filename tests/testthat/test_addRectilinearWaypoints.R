@@ -618,6 +618,77 @@ test_that(".addRectilinearWaypoints's D1 bar/drop waypoints never share a
   expect_equal(origNonWp, resultNonWp)
 })
 
+## ---- Track 1 (issue #160), gotcha flagged in the collision-avoidance
+## plan's own section 8 (found S592, verified S593): applying the SAME
+## sibshipBarFraction to every sibship means two DIFFERENT sibships
+## spanning the same generation gap can still land their bars on the
+## identical row if their x-ranges overlap -- a bar-vs-bar collision, not
+## the bar-vs-pinned-node case the tests above cover. Track 1
+## substantially reduces this (the offset depends on BOTH the parent's and
+## the child's own row, not just the child's, so most same-generation
+## sibships now land on different rows) but does not eliminate it --
+## disclosed and counted here, not silently dropped, deferred to Track 2's
+## general framework alongside the other residual above. --------------------
+
+test_that(".addRectilinearWaypoints's D1 bar-vs-bar same-row x-overlap
+           collisions (2 different sibships sharing a generation gap,
+           whose bar x-spans overlap) are substantially reduced but not
+           eliminated by Track 1, on the real 375-individual bundled
+           fixture -- a residual named in the collision-avoidance plan's
+           own section 8, counted here so a regression would be caught", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  inputs <- .buildLayoutAndForest(ped)
+  result <- .addRectilinearWaypoints(inputs$nodes, inputs$edges,
+                                      inputs$forest, inputs$pos)
+
+  childEdges <- inputs$forest$childEdges
+  xOf <- stats::setNames(result$nodes$x, result$nodes$id)
+  yOf <- stats::setNames(result$nodes$y, result$nodes$id)
+  genOf <- stats::setNames(inputs$pos$gen, inputs$pos$id)
+  fromIds <- unique(childEdges$from)
+
+  groups <- lapply(fromIds, function(fromId) {
+    kids <- childEdges$to[childEdges$from == fromId]
+    ids <- c(sprintf("__drop_%s", fromId), sprintf("__bar_%s", kids))
+    ids <- ids[ids %in% names(xOf)]
+    list(y = unname(yOf[ids[1L]]), xlo = min(xOf[ids]), xhi = max(xOf[ids]))
+  })
+  n <- length(groups)
+  countHits <- function(ys) {
+    hits <- 0L
+    for (i in seq_len(n - 1L)) {
+      for (j in seq(i + 1L, n)) {
+        overlap <- groups[[i]]$xlo <= groups[[j]]$xhi &&
+          groups[[j]]$xlo <= groups[[i]]$xhi
+        if (isTRUE(all.equal(ys[[i]], ys[[j]])) && overlap) {
+          hits <- hits + 1L
+        }
+      }
+    }
+    hits
+  }
+  newHits <- countHits(vapply(groups, `[[`, numeric(1L), "y"))
+
+  ## OLD-code comparison: every D1 group's bar sat at y = childGen * yScale
+  ## (the pre-Track1 formula). x-spans are unaffected by Track 1 (only y
+  ## changed), so re-running the same x-overlap test against the OLD y
+  ## assignment measures how much Track 1 actually improved.
+  yScale <- 150L
+  oldYs <- vapply(fromIds, function(fromId) {
+    kids <- childEdges$to[childEdges$from == fromId]
+    unname(genOf[kids[1L]]) * yScale
+  }, numeric(1L))
+  oldHits <- countHits(oldYs)
+
+  expect_equal(oldHits, 42L)  # pre-Track1 baseline, measured this session
+  expect_equal(newHits, 9L)   # post-Track1: a 79% reduction, not zero
+  expect_true(newHits < oldHits)
+})
+
 ## ---- issue #154: dangling, free-pass non-anchor parent crash (BACKLOG.md
 ## former item B3) -- confirmed by direct reproduction against master
 ## before this fix: the D2 mate-line-dogleg loop built genOf from
