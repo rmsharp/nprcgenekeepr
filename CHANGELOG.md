@@ -138,6 +138,11 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] S583: reconcile HANDOFFS.md commit self-reference (`ce830dbe`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> `ce830dbe`
+  (the close-out commit's own sha, unknowable until after that commit was made) -- matching the
+  established S562-S582 precedent.
+
 ### 2026-08-15 · [BL-N] S583: close out (union-outside-parents-span finding filed)
 - **Deliverable:** New `BACKLOG.md` item filed (found S583) -- a mating union with a single child
   (or whose children's own midpoint falls outside the parents' span) can be positioned entirely

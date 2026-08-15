@@ -179,7 +179,7 @@ gotchas: kinship2::pedigree()'s dadid/momid arguments need explicit character "0
 runtime_smoke: n/a -- documentation-only finding, no runtime code touched.
 changelog_ref: 918e7364 (S582's own last commit before this session's 2 new CHANGELOG entries --
   see the 2026-08-15 section, "S583:" prefixed entries)
-commit: pending
+commit: ce830dbe
 ```
 
 ```handoff
