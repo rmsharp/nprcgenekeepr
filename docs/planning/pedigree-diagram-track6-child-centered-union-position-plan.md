@@ -1,7 +1,9 @@
 # Pedigree Diagram Track 6: child-centered mating-unit position
 
-**Status:** DESIGN, session S576 (2026-08-14). Implementation is a separate future session (§6),
-matching Track 4's own design/implementation split (S572 design, S573 implementation).
+**Status:** DESIGN, session S576 (2026-08-14). **IMPLEMENTED, session S578 (2026-08-14)** --
+matching Track 4's own design/implementation split (S572 design, S573 implementation). See
+§10 for the implementation record, including 2 corrections Pre-RED empirical validation found
+beyond this document's own §2.1 snippet.
 
 **Origin:** `docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §7b (found S575,
 owner review of a published live-comparison artifact) -- filed as a `BACKLOG.md` Housekeeping item,
@@ -421,6 +423,68 @@ trade-offs stated directly in the question itself (91% violating-edge reduction,
 reduction, the 9 residual out-of-scope edges, the duplicate-to-union distance fix). Owner selected
 "Proceed as written." No further modification requested; the decision is ratified as written in
 §2.
+
+---
+
+## 10. Implementation Record (S578, 2026-08-14)
+
+Implemented per §6 Migration Path, with 2 corrections found by Pre-RED empirical validation
+(re-implementing the formula against unmodified `.buildMatingUnitForest()` output BEFORE
+touching production code, per this session's own established discipline) that this document's
+own §2.1 snippet and §5 Impact Analysis table did not state:
+
+1. **Implementation-order correction.** §2.1's snippet shows `finalUnitX` computed in-place at
+   its old pre-`orderBySex` location. Simulating that literally: the §2.4 invariant breaks for
+   any union whose child is *also* swapped later as a parent in a deeper union (a common case --
+   most individuals are both someone's child and someone's parent). Measured on the real
+   fixture: 19/251 edges >200 units (not the ratified 9/251), max offset 9,112 (not 4,121).
+   **Fix:** the `orderBySex` block itself was moved earlier in the function (was after the final
+   de-collision pass; now right after the initial real-individual positions are established),
+   and `finalUnitX`/`dupX` are computed after it. Same formula, same 3 coordinated changes (§2.1-
+   §2.3) -- only their position in the existing pipeline moves. Re-measured with the reorder:
+   9/251, max 4,121.37 (matches the ratified 4,121.25 to within the existing 1e-3 de-collision
+   epsilon), duplicate-to-union distance 48.00/48.00 exact.
+2. **Blast-radius correction.** §5 claims real-individual sweeping is "otherwise unchanged."
+   Empirically false in one respect: removing duplicates from Track 3's sweep pool (§2.2)
+   changes the sweep's own competition at a shared gen, which can shift a real individual's x
+   non-trivially (not epsilon) when a duplicate previously occupied a competing slot -- measured
+   on the small GA204Z/8LKBV9 fixture, `9VGCCV` shifts 2.25 -> 1.75 (0.5 units). This narrowed
+   which existing tests needed re-derivation: `test_positionMatingUnitForest.R`'s "issue #143
+   fix" exact-value block had 8 of 13 `expectPos()` calls change (not the 5 union/duplicate-only
+   values the design doc's own framing implied), plus 2 further pre-existing tests the design
+   doc did not anticipate (the "basic trio" test's own `unionX == (p1x+p2x)/2` assertion, which
+   directly encoded the OLD parent-midpoint behavior; and the Track 3 minSep-guarantee test,
+   narrowed to real individuals only now that duplicates share union nodes' existing "not a full
+   minSep guarantee" posture, §8's own accepted-risk framing extended one category further).
+
+**Verification (§7), re-measured at implementation time, not assumed from S576:**
+
+- RED: 3 tests added/updated in `test_positionMatingUnitForest.R` (the §2.4 invariant on the
+  small + real fixtures; the duplicate-vs-any-node exact-coincidence test; the "issue #143 fix"
+  exact-value block) confirmed failing against unmodified source, for the right reasons
+  (including a genuinely pre-existing duplicate/union coincidence, `__dup_LUPGF8_3` vs.
+  `__union_191` at gen 4, unrelated to this decision but closed as a side effect of §2.3).
+- GREEN: all 30 tests in `test_positionMatingUnitForest.R` pass (28 original/updated + the 2
+  newly-discovered pre-existing tests fixed alongside them); `test_addRectilinearWaypoints.R`,
+  `test_makePedigreeMatingLayout.R`, `test_buildMatingUnitForest.R` all pass unchanged (0
+  hardcoded waypoint-coordinate or node-count assertions were affected, confirmed by grep before
+  RED). Full clean regression: 1 pre-existing failure (`test_wordlist_coverage.R`), 0 new.
+  `lintr::lint_package()`: 0 lints on both touched files.
+- Live verification (§7 step 8): rendered + `chromote`-screenshotted the small GA204Z/8LKBV9
+  fixture under both `edgeStyle` values -- visually confirmed `GA204Z` sits almost directly
+  below its own parent union (matching `FJIB3R`'s x to within the 1e-3 de-collision epsilon),
+  and the 8LKBV9xFJIB3R consanguineous duplicate dashed connector renders unaffected. Rendered +
+  screenshotted the full real 375-individual fixture under both `edgeStyle` values: 0
+  diagram-related console errors, layout visually sane at scale. (A quick WCPXHD-only subgraph
+  attempt, built by truncating the real fixture to an 11-node neighborhood and recomputing
+  `gen`, produced a visually crowded, misleading render -- an artifact of losing the real
+  multi-generation context in that truncation, not a Track 6 defect; not used as evidence.)
+- REFACTOR: gate offered; not needed beyond what GREEN already required (the reorder itself
+  *is* the structural change §2 called for -- no separate cleanup pass identified).
+
+**Files changed:** `R/makePedigreeDiagramData.R` (`.positionMatingUnitForest()`,
+~line 833 onward -- single coordinated commit); `tests/testthat/test_positionMatingUnitForest.R`
+(2 new tests, 3 updated tests).
 
 ---
 

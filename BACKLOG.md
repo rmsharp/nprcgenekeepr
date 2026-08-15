@@ -68,24 +68,35 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       connected-component walk).
 
 ## Housekeeping
-- [ ] (found S575, 2026-08-14, owner review of a published live-comparison artifact; **DESIGN
-      RATIFIED S576, 2026-08-14**, READY for implementation, Effort L) **Pedigree Diagram: children
-      are frequently rendered far from their own parent union -- a real, widespread legibility gap,
-      distinct from and not caught by Track 5's diagonal-edge measurement.** Re-measured on the
-      real 375-individual bundled fixture: of 251 child-edge groups, 100 (40%) have a
-      parent-union-to-child horizontal offset exceeding 200 layout units, 73 (29%) exceed 500
-      units, max offset 10,687 units. Root cause: a mating unit's final x is the midpoint of its 2
-      real parents' positions (`R/makePedigreeDiagramData.R:924`), decoupled from where its own
-      child was positioned during the earlier recursive descent. Full record:
-      `docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §7b/§4 Track 6.
-      **Design session held S576**: ratified "Extended Candidate A" (recompute the union's x from
-      its own children's final span, recompute the duplicate-parent node's x from the new union x,
-      broaden the existing de-collision pass to cover duplicates) --
-      `docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md`. Measured on
-      the real fixture: violating edges 100/251 -> 9/251 (91% reduction), worst-case offset
-      10,687 -> 4,121 (61% reduction). A future session should implement per that document's §6
-      Migration Path / §7 Verification Plan (separate session from this design, matching Track 4's
-      own S572/S573 split).
+- [x] (found S575, 2026-08-14, owner review of a published live-comparison artifact; **DESIGN
+      RATIFIED S576, 2026-08-14; IMPLEMENTED S578, 2026-08-14 -- DONE**) **Pedigree Diagram:
+      children are frequently rendered far from their own parent union -- a real, widespread
+      legibility gap, distinct from and not caught by Track 5's diagonal-edge measurement.**
+      Root cause: a mating unit's final x was the midpoint of its 2 real parents' positions,
+      decoupled from where its own child was positioned during the earlier recursive descent.
+      Design: `docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md`
+      (Extended Candidate A -- recompute the union's x from its own children's final span,
+      recompute the duplicate-parent node's x from the new union x, broaden the existing
+      de-collision pass to cover duplicates). **Implementation (S578):** Pre-RED empirical
+      validation found 2 corrections beyond the ratified design doc's own §2.1 snippet: (1)
+      `finalUnitX`/`dupX` must be computed AFTER the `orderBySex` block, not at its
+      literally-described pre-orderBySex location, or the invariant breaks for any union whose
+      child is also swapped as a parent in a deeper union (measured 19/251 >200-unit violations
+      without the reorder vs. the ratified 9/251 with it); (2) 3 real-individual x values (not
+      just union/duplicate) shift as a side effect of removing duplicates from Track 3's sweep
+      pool -- a real, non-epsilon consequence (`9VGCCV`, 0.5 units) the design doc's own §5
+      Impact Analysis table did not state. Implemented with the reorder; re-measured on the real
+      375-individual fixture: violating edges 100/251 -> 9/251 (91% reduction), worst-case
+      offset 10,687 -> 4,121.37 (matches ratified figures), duplicate-to-union distance 61.94/
+      120.12 -> 48.00/48.00 (exact match), 0 exact x/gen coincidences post-fix (including 1
+      pre-existing duplicate/union coincidence unrelated to this decision, closed as a side
+      effect). Full clean regression 1 pre-existing failure unrelated (`test_wordlist_coverage.R`,
+      confirmed via the full suite run before vs. after); `lintr::lint_package()` 0 lints on
+      touched files. Live/visual verification: rendered + chromote-screenshotted the small
+      GA204Z/8LKBV9 fixture (both `edgeStyle` values) and the full real fixture (both values,
+      0 console errors) -- visually confirmed a union now sits close to its own child (matches
+      the fix's intent) and the duplicate dashed-connector convention is unaffected. See
+      `CHANGELOG.md`.
 - [ ] (found S576, 2026-08-14, incidental to Track 6's own empirical validation of the
       child-centered union-position design, READY, Effort unknown -- not scoped) **Pedigree
       Diagram: sibling subtree-width asymmetry -- 2-3 direct children of the same mating unit can
