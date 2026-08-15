@@ -138,6 +138,30 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [BL-1] S592: close out — root-cause architecture plan (issues #160/#161/S583 collision-avoidance gap)
+- **Deliverable:** `docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md` — a
+  3-track phased architecture plan addressing the shared "no same-row collision-avoidance for
+  placement" root cause behind issues #160, #161, and the S583 union-position gap. Built via a
+  12-agent research/design/judge `Workflow` (5 research readers, 4 independent candidate
+  architectures, 3 independently-lensed judges — 12/12 completed, 0 errors); no single candidate
+  won on all 3 judge lenses, so this document synthesizes the highest-scoring, judge-vetted piece
+  of each rather than adopting one wholesale. Owner-ratified via `AskUserQuestion` (both
+  Recommended options selected: the 3-track synthesis, and deferring issue #161's
+  marker-visibility decision until Tracks 1–3 ship).
+- **Tracks:** Track 1 (D1 sibship-bar genuine intermediate row — an unconditional geometric
+  guarantee, no detection logic, closes issue #160's 2 originally-reported collisions); Track 2
+  (general same-row detect-and-jog framework wired into `makePedigreeMatingLayout()` itself so
+  every caller benefits — closes issue #160 comment 1's broadened finding); Track 3 (parent-span
+  clamp on `finalUnitX`, a deliberate disclosed reopening of Track 6 §2.4, its own PRE-RED gate at
+  implementation time — closes the S583 item). The narrower duplicate-occurrence-selection root
+  fix and issue #161 are named, not scheduled/deferred, not implemented.
+- **Not implemented this session** — planning session, output is the document, not code; no
+  `R/`/`tests/` file touched, TDD phases INAPPLICABLE (matches the S588/S589/S590 precedent).
+- **Action taken:** commented on issues #160 and #161 linking the plan (neither closed — both
+  remain open pending implementation); updated `BACKLOG.md` (planning item marked DONE, 3 new
+  READY/DECISION-NEEDED implementation items added, the #160/#161/S583 items annotated with
+  pointers to the plan); verified every cross-referenced file/citation in the plan resolves.
+
 ### 2026-08-15 · [BL-1] S592: claim session (root-cause planning: issues #160/#161/S583 collision-avoidance gap)
 - **Deliverable (in progress):** Planning session addressing `BACKLOG.md`'s "Active" item (found
   S591) — the shared "no same-row collision-avoidance for placement" root cause behind issues

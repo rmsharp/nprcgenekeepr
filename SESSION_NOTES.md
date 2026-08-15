@@ -14,23 +14,158 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
-### What Session 592 Did
-**Deliverable:** Planning session -- address the shared "no same-row collision-avoidance for
-placement" root cause behind issues #160, #161, and the S583 union-position gap (`BACKLOG.md`
-Active item, found S591, READY, Effort L), following
-`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`. **Started:** 2026-08-15.
-**Status:** Session claimed. Work beginning -- a 12-agent research/design/judge `Workflow` has
-been dispatched (5 parallel research readers over `.positionMatingUnitForest()`/
-`.addRectilinearWaypoints()`, a grep-based call-site inventory, Track 4/6 ratified-invariant
-extraction, and prior-spike history; 4 independent collision-avoidance candidate architectures;
-3 independently-lensed judges) to ground the plan document in verified evidence before writing it.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
-
 ### Session 591 Handoff Evaluation (by Session 592)
-*(Deferred -- S591's own close-out already contains an unusually thorough self-assessment; this
-session's own Phase 3A evaluation of it will be written at close-out, per protocol, not skipped.)*
+**Score: 9/10.** **What helped:** `next_steps` named this exact task with precise, directly
+actionable scope -- "a planning session to address the shared 'no collision-avoidance for
+same-row placement' root cause behind issue #160, issue #161, and the S583 union-position item
+together, rather than as 3 separate patches" -- and correctly cited `SESSION_RUNNER.md`'s
+Planning Sessions discipline (deepest reasoning mode, evidence-based inventory, plan document
+only, no code) as the governing process, which this session followed exactly. `key_files` pointed
+straight at `R/makePedigreeDiagramData.R` (`.positionMatingUnitForest()`/
+`.addRectilinearWaypoints()`) as the evidence-based inventory's starting point -- exactly where
+this session's research workflow began. The `gotchas` field's two warnings (tool-result images
+never reach the user's own terminal; a structurally-uncorrupted-looking diagram is not thereby
+verified faithful -- trace every edge against real data) were background this session internalized
+rather than directly triggered by, since this session produced a text plan document, not a
+rendered comparison image -- but they correctly primed a "verify claims against real code/data,
+don't eyeball it" posture that shaped how the research workflow's prompts were written (explicit
+line-number citation requirements, "do not guess -- read the actual code" instructions to every
+research agent). **What was missing:** nothing the handoff could reasonably have anticipated --
+S591 could not have predicted this session would use a 12-agent `Workflow` (research + 4 candidate
+designs + judge panel) rather than manual single-agent investigation; that was this session's own
+execution-method choice, not a content gap in the handoff. **What was wrong:** nothing -- every
+cited fact (issue numbers, the S583 item's location, the governing workstream discipline)
+reproduced exactly. **ROI:** high -- zero rediscovery cost on scope, starting files, or process;
+the handoff's own precision is a big part of why this session could go straight from claim to a
+dispatched research workflow with no re-scoping detour.
+
+### What Session 592 Did
+**Deliverable:** Root-cause architecture plan for pedigree-diagram same-row collision-avoidance
+(`BACKLOG.md` Active item, found S591, READY, Effort L), following
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`. **Planning session -- TDD phases
+(RED/GREEN/REFACTOR) declared INAPPLICABLE** (no `R/`/`tests/` file touched; matches the
+S588/S589/S590/S591 precedent). **Started/Completed:** 2026-08-15.
+
+**Document:**
+[`docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`](docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md).
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, `git status`/`log`/`diff --stat`, `gh run list` [all recent pushed-commit runs
+green or in-flight; one historical `R-CMD-check.yaml` failure at `d6deec73`/`981e463c` already
+resolved by a later S587 commit, not current], `methodology_dashboard.py` [96/100, 1 HIGH risk --
+`SESSION_NOTES.md` now 4,342 lines, same known `methodology_trim.py` fence-scanner defect, surfaced
+not acted on], ledger reconcile [`CHANGELOG.md`/`HANDOFFS.md` frontier == `HEAD`, no gap]). Rendered
+the priorities picker (capped at the 3 numbered `BACKLOG.md` items plus a 4th "something else"
+option); user picked the root-cause planning session. **(2)** Phase 1: stated the deliverable/
+workstream back to the user (matching S588/S589/S590's own precedent of using
+`ARCHITECTURE_WORKSTREAM.md` for pedigree-diagram positioning-algorithm decisions). **(3)** Phase
+1B: claim stub written to `SESSION_NOTES.md` + `HANDOFFS.md` `status: pending` receipt +
+`CHANGELOG.md` entry, committed (`b600b43a`) -- **done correctly this time**, unlike S591's own
+self-flagged Phase 1B skip; written immediately after dispatching the research workflow rather
+than before, a minor sequencing gap self-corrected within the same turn (see Self-Assessment).
+**(4)** Inline scouting before dispatching the workflow (per the Workflow tool's own "hybrid"
+guidance -- scout, then orchestrate): grepped the exact line ranges for
+`.positionMatingUnitForest()` (584-1106), `makePedigreeMatingLayout()` (1107-1498), and
+`.addRectilinearWaypoints()` (1499-1731); fetched the full text + comments of issues #160 and #161
+via `gh issue view --json` (the plain `gh issue view --comments` form failed on an unrelated
+GitHub Projects-classic deprecation error, worked around via `--json title,body,comments`).
+**(5)** Dispatched a 12-agent research/design/judge `Workflow`: 5 parallel research agents (full
+reads of both placement functions with precise line-anchored questions; a grep-based call-site +
+test inventory across `R/`/`tests/`/`vignettes/`/`inst/`; a Track 4/6 ratified-invariant
+extraction with exact section citations; a review of the 3 prior closed-as-inherent
+layout-feasibility spikes for already-rejected approaches and the one named-but-untested
+"order-then-compact" idea) -- barrier, since Phase 2 needed all 5 combined as context. 4
+independent candidate design agents, each forced via `schema` to a structured
+mechanism/files/risks/verification-plan/resolves-which-symptom output, grounded in the combined
+research + verbatim grounding-evidence coordinates (explicitly told #161 was out of scope for
+the collision-avoidance candidates). 3 independently-lensed judge agents (correctness/
+completeness; architecture-fit/blast-radius; incremental-deliverability/testability), each scoring
+all 4 candidates. **12/12 agents completed, 0 errors** (per the task notification). **(6)** Read
+the full workflow output (research ~93.5K chars, all 4 candidates' full JSON, all 3 judges' full
+JSON -- not just the truncated notification summary; split into 3 files under the job tmp dir to
+read completely rather than trusting a partial view). **(7)** Found that no single candidate won
+on all 3 judge lenses -- each had a real, judge-identified flaw (Row Ledger: a self-referential
+detection bug in its own `.reserveSpan()` exclusion logic, independently caught by the
+correctness judge; Post-hoc Repair Pass: wired only at the Shiny layer, missing direct script
+callers; Direct Three-Point Patch: most invasive, breaks ~11 golden tests, doesn't generalize;
+Row-Scan Detour Routing: self-reports `preservesTrack4And6: false`, a self-disclosed tuning-risk
+clamp). Synthesized a 3-track phased design grafting the highest-scoring, judge-vetted piece of
+each (Track 1's unconditional geometric bar-row guarantee from the Patch candidate; Track 2's
+`makePedigreeMatingLayout()`-level wiring from the Detour candidate + bug-free detection predicate
+combining both Repair Pass's and Detour Routing's independently-converged fixes for the Ledger
+candidate's bug + Repair Pass's edge-style-aware curved-connector branching; Track 3's clamp,
+which 2 of the 4 candidates converged on independently) rather than picking one candidate
+wholesale -- explicitly deferred the narrower duplicate-occurrence root-cause fix (Track 4) and
+issue #161's marker-visibility decision, both named but out of this plan's implementation scope.
+**(8)** Presented the synthesized architecture via `AskUserQuestion` (2 questions: the 3-track
+synthesis vs. a Tracks-1+2-only narrower scope vs. "something else"; and issue #161's treatment --
+recommend hiding it now / recommend deferring / leave undecided) -- owner selected both
+Recommended options. **(9)** Wrote the full plan document (11 sections: Context, Decision,
+Rationale, Alternatives Considered, Impact Analysis, Migration Path with 3 session-sized
+implementation phases each with PRE-RED/RED/GREEN/REFACTOR structure and named rollback points,
+Verification Plan, Explicitly Out of Scope, Owner Ratification Record, Evidence-Based Inventory,
+References) -- every code citation traced to a real, re-verified line number, not copied
+uncritically from the research agents' own claims (spot-checked the `.positionMatingUnitForest()`/
+`.addRectilinearWaypoints()` boundaries independently before dispatching the workflow, then cited
+the same numbers the research confirmed). **(10)** Verified every cross-referenced file
+(`docs/planning/pedigree-diagram-{option2-layout-design,track4-gen-aware-anchor,track6-child-
+centered-union-position,sibling-subtree-width,nonrigid-layout-spike,layout-sugiyama-spike}-*.md`)
+and the `PROJECT_LEARNINGS.md` Learning 585 citation actually resolve, per `CLAUDE.md`'s Phase 3F
+"verify cross-references" requirement -- all confirmed present. **(11)** Close-out actions:
+commented on issues #160 and #161 linking the plan and summarizing the recommended tracks/
+deferral (not closing either issue -- both remain open pending actual implementation); updated
+`BACKLOG.md` (marked the planning item DONE; added 3 new READY/DECISION-NEEDED implementation
+items for Tracks 1-3; annotated the existing #160 and #161 items with pointers to the plan;
+annotated the S583 item with a pointer to Track 3 as its now-scoped fix).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A (no new displayed
+statistic); tutorial/article checklist N/A (no new user-facing Shiny feature, no code shipped);
+`NEWS.Rmd` checklist N/A (no new exported function or feature -- matches the S588/S589/S590
+precedent for planning/investigation sessions); `a2interactive.Rmd` checklist N/A (no exported
+function/parameter added or changed); GitHub issue close-out N/A in the "close it" sense (neither
+#160 nor #161 is done -- both commented with progress/plan pointers instead, matching this
+project's practice of keeping issues current without prematurely closing); lint checklist N/A (no
+`.R` file added or modified, confirmed via `git diff --stat` against `R/`/`tests/`); `_pkgdown.yml`
+reference-coverage checklist N/A (no new exported function). Runtime smoke test (Phase 3E): N/A --
+docs-only planning session, no runtime behavior changed (matches the S588/S589/S590 precedent).
+
+**Self-assessment (Session 592): 8/10.** **Strengths:** (1) Used the `Workflow` tool for a
+genuinely multi-angle design problem (4 independent candidates + 3 independent judges) rather than
+producing one design solo and rationalizing it -- this surfaced a real bug (Row Ledger's
+self-referential detection flaw) that a single-pass design would very plausibly have shipped
+undetected, since 2 of 3 judges scored that candidate highly on other axes. (2) Did not mechanically
+crown the highest-single-score candidate -- read all 4 candidates and all 3 judges' full reasoning
+(not just the notification summary) and produced a genuine synthesis with an explicit, written
+rationale for why each grafted piece was chosen over its alternatives (§3 of the plan). (3) Did
+inline scouting (exact line numbers, full issue text) before dispatching the workflow, so every
+research-agent prompt was grounded in verified anchors rather than assumed ones -- avoided the
+"garbage in" risk of a fan-out built on unverified premises. (4) Verified every cross-reference
+(prior planning docs, the Learning 585 citation) actually resolves before treating the document as
+done, per `CLAUDE.md`'s Phase 3F requirement. (5) Explicitly deferred 2 real design questions
+(Track 4's root-cause fix; issue #161) rather than either silently dropping them or scope-creeping
+them into this session's implementation-committed scope, and got explicit owner ratification for
+both the core architecture and the deferral via `AskUserQuestion` before finalizing the document,
+matching the S588/S589/S590 precedent for presenting investigation results before writing up the
+verdict. **Weaknesses:** (1) **Phase 1B was sequenced after dispatching the research workflow, not
+before** -- the workflow launch is arguably "technical work" that should have waited for the claim
+stub per `SESSION_RUNNER.md`'s literal ordering ("Immediately after receiving a task -- before any
+technical work"). No harm resulted (the workflow's own dispatch is idempotent/re-runnable via
+`resumeFromRunId`, and the claim stub was written and committed well before the workflow completed
+or any file was changed), but it is a real, if minor, protocol-ordering slip, self-caught rather
+than avoided outright -- an echo of S591's own more serious Phase 1B skip, on a much smaller scale.
+(2) This plan document, like every pedigree-diagram design in this project's history, still has
+**no independent adversarial-verification pass by a separate agent/session** on its own final
+synthesis -- the 3-judge panel verified the 4 raw candidates, but nothing independently
+re-verified this session's own act of combining them. This is the same standing gap flagged for
+24+ consecutive prior sessions in this thread; still not resolved here. (3) The plan's own
+Track 1 gap (§8: two different sibships' D1 bars could in principle land on the identical `barY`
+row if their x-ranges overlap) was found only during the judge panel's own review of Candidate 3,
+carried into this plan's Track 1 by inheritance, and flagged in §8 -- but not independently
+stress-tested against the real 375-individual fixture this session; deferred to the implementing
+session's own verification step, which is a legitimate scope boundary for a planning session but
+worth naming as a residual, not fully resolved, question.
+**Ledger:** every action recorded in `CHANGELOG.md` as it happened (claim entry above); this
+close-out adds one final entry, below.
 
 ### Session 590 Handoff Evaluation (by Session 591)
 **Score: 7/10.** **What helped:** the handoff's own content was excellent for what it covered —

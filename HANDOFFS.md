@@ -138,24 +138,62 @@ This file currently holds **12** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S592
 date: 2026-08-15
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Planning session -- address the shared "no same-row collision-avoidance for
-  placement" root cause behind issues #160, #161, and the S583 union-position gap
-  (BACKLOG.md Active item, found S591, READY, Effort L). Following ARCHITECTURE_WORKSTREAM.md.
-what_was_done: pending
-next_steps: pending
-key_files: R/makePedigreeDiagramData.R:584 (.positionMatingUnitForest), R/makePedigreeDiagramData.R:1499
-  (.addRectilinearWaypoints), R/makePedigreeDiagramData.R:1107 (makePedigreeMatingLayout)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Planning session -- DONE. Root-cause architecture plan for pedigree-diagram same-row
+  collision-avoidance (BACKLOG.md Active item, found S591), following ARCHITECTURE_WORKSTREAM.md.
+  Document: docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md. 3 implementation
+  tracks (Track 1 D1 bar-row offset; Track 2 general detect-and-jog framework; Track 3 S583
+  parent-span clamp) added to BACKLOG.md as separate READY/DECISION-NEEDED items -- none
+  implemented this session (planning session, output is the document, not code).
+what_was_done: Dispatched a 12-agent research/design/judge Workflow (5 research readers, 4
+  candidate architectures, 3 judges) -- 12/12 completed, 0 errors. No single candidate won on all
+  3 judge lenses (each had a real flaw: a self-referential detection bug, Shiny-only wiring, an
+  invasive patch breaking ~11 golden tests, or a self-disclosed tuning-risk clamp). Synthesized
+  the highest-scoring, judge-vetted piece of each into a 3-track phased plan; owner-ratified via
+  AskUserQuestion (both Recommended options selected). Wrote the 11-section plan document; every
+  code citation re-verified against real line numbers, every cross-reference confirmed to
+  resolve. Commented on issues #160 and #161 linking the plan (neither closed -- both remain open
+  pending implementation). Updated BACKLOG.md: planning item marked DONE, 3 new implementation
+  items added, existing #160/#161/S583 items annotated with pointers to the plan. Commits:
+  b600b43a (claim), plus this close-out.
+next_steps: Pick up one of the 3 new BACKLOG.md READY/DECISION-NEEDED items this plan produced,
+  smallest/most-certain first per the plan's own §6 ordering -- Track 1 (D1 sibship-bar row
+  offset, READY, Effort S, no ratified invariant reopened) is the natural first implementation
+  session: docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md §2.1/§6 Session A.
+  Track 2 (general detect-and-jog framework, READY, Effort L) should follow. Track 3 (S583 clamp,
+  DECISION NEEDED -- its own PRE-RED reopening confirmation required before any RED test, Effort
+  M) is independent and can be picked up in any order relative to 1/2. Other still-open items
+  unchanged from S591's own next_steps: LabKey integration remainder (BLOCKED); NPRC outreach plan
+  (DECISION NEEDED); 3 possibly-stale pedigree screenshots (found S582); SESSION_NOTES.md archive
+  still blocked by the methodology_trim.py fence-scanner defect (found S518), file now ~4,400+
+  lines, HIGH dashboard risk, still growing.
+key_files: docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md (the deliverable);
+  R/makePedigreeDiagramData.R:966-975 (finalUnitX loop, Track 3's edit site);
+  R/makePedigreeDiagramData.R:1530-1552 (D1 sibship-bar loop, Track 1's edit site);
+  R/makePedigreeDiagramData.R:1107-1498 (makePedigreeMatingLayout, Track 2's call-site addition
+  at :1428-1432); tests/testthat/test_addRectilinearWaypoints.R (~11 golden-value tests Track 1
+  must update); tests/testthat/test_positionMatingUnitForest.R:986,:1019 (invariant tests Track 3
+  must update).
+gotchas: Track 1's own fix has one named, not-yet-stress-tested residual (plan §8): applying the
+  SAME uniform sibshipBarFraction to every sibship means two different sibships spanning the same
+  generation gap could in principle land their bars on the identical row if their x-ranges
+  overlap -- check this empirically against the real 375-individual fixture during Track 1's own
+  implementation, before considering it fully closed. Track 3 requires its own PRE-RED
+  AskUserQuestion at implementation time (a second, code-level reopening confirmation) even though
+  the architecture itself was already ratified at the planning level this session -- do not skip
+  that gate assuming this session's ratification already covers it. The workflow's full raw
+  research/candidate/judge output is preserved in the workflow transcript's journal.jsonl (path in
+  the plan doc §4/§10) -- read that, not just this session's own summary, if a future session
+  needs the un-synthesized detail on any rejected candidate.
+runtime_smoke: n/a -- no R/ or tests/ file touched, no runtime behavior changed. Docs-only
+  planning session (matches the S588/S589/S590 precedent).
+changelog_ref: see CHANGELOG.md 2026-08-15 entries between the S591 close-out block and this
+  session's own close-out entry below it (claim entry, GitHub comments, BACKLOG.md update, plan
+  document).
+commit: b600b43a, plus this close-out
 ```
-Claim stub -- a 12-agent research/design/judge Workflow was dispatched immediately after this
-claim to ground the plan in verified evidence (5 research readers, 4 candidate architectures,
-3 judges) before the plan document is written. Full receipt filled at close-out.
 
 ```handoff
 session: S591
