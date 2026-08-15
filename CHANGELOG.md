@@ -165,6 +165,11 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
   adapt `igraph::layout_with_sugiyama()` (owner-selected via `AskUserQuestion`), tested against
   the same two fixtures S589 used. Planning/investigation session, TDD phases inapplicable.
 
+### 2026-08-15 · [ad hoc] S590: reconcile HANDOFFS.md commit self-reference (`f3492719`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> the real
+  sha (`f3492719`, close-out) — unknowable until after that commit existed. Matches the
+  established S562-S589 precedent.
+
 ### 2026-08-15 · [ad hoc] S589: reconcile HANDOFFS.md commit self-reference (`691071a0`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> the real
   sha (`691071a0`, close-out) — unknowable until after that commit existed. Matches the

@@ -203,7 +203,7 @@ gotchas: library(nprcgenekeepr) can silently load a STALE renv-cached build in t
 runtime_smoke: n/a -- docs-only investigation, no R/ file touched, no runtime behavior changed
   (matches the S588/S589 precedent).
 changelog_ref: see CHANGELOG.md 2026-08-15 entries, S590 claim + close-out, [BL-N]-tagged.
-commit: pending
+commit: f3492719 (close-out)
 ```
 
 ```handoff
