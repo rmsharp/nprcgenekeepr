@@ -14,6 +14,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 577 Did
+**Deliverable:** Duplicate-individual dashed connector arc curve-direction fix (`BACKLOG.md`
+Housekeeping, found S575) (IN PROGRESS)
+**Started:** 2026-08-14
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 575 Handoff Evaluation (by Session 576)
 **Score: 8/10.** **What helped:** the `BACKLOG.md` item S575 filed (found via owner review of a
 published artifact) named the exact root-cause line (`R/makePedigreeDiagramData.R:924`,

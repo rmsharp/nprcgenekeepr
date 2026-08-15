@@ -132,6 +132,29 @@ This file currently holds **10** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S577
+date: 2026-08-14
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Duplicate-individual dashed connector arc curve-direction fix (BACKLOG.md
+  Housekeeping, found S575, §7a of the kinship2-fidelity remediation plan) -- confirm the exact
+  vis.js mechanism controlling bow direction (edge from/to order, a smooth.roundness sign, or a
+  curvedCW/curvedCCW swap) before changing anything, then correct it to match kinship2's own
+  convex arcconnect() convention. Session claimed, work beginning.
+what_was_done: pending
+next_steps: pending
+key_files: R/makePedigreeDiagramData.R:1345 (the curvedCW smooth-type declaration for the
+  duplicate-individual dashed connector)
+gotchas: from/to edge order is also load-bearing for this same function's color/width
+  preservation logic (per the originating BACKLOG item) -- do not change it without checking that
+  dependency first.
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S576
 date: 2026-08-14
 status: complete
