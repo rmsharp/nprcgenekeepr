@@ -40,10 +40,20 @@ positive-semi-definiteness bound
 `sqrt(kmat[id1, id1] * kmat[id2, id2])`. Soft, run-preserving handling
 of ids outside the analysis set is the caller's responsibility –
 [`reportGV`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-warn-drops non-member ids before calling this.
-[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
-itself is never modified (it has several callers, including two
-simulations that must not take current-kinship overrides).
+warn-drops non-member ids before calling this. This function's own
+algorithm – writing outside-information overrides onto an
+already-computed matrix – is never applied inside
+[`kinship`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+itself (it has several callers, including two simulations that must not
+take current-kinship overrides). This is a different kind of adjustment
+than
+[`kinship`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)'s
+own `twinRelations` parameter: a declared MZ-twin pair's genetic
+identity is a structural pedigree fact, like `sire`/`dam`/`sex`, not
+outside information overriding a pedigree-derived computation – both
+simulations pass a known twin pair through unchanged, so twin identity
+needs no shielding of the kind overrides require. See
+`docs/planning/twin-relations-kinship-computation-plan.md` §2.3.
 
 ## Examples
 

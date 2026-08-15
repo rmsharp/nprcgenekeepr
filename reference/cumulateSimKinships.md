@@ -9,7 +9,13 @@ element is the maximum value of the kinships.
 ## Usage
 
 ``` r
-cumulateSimKinships(ped, allSimParents, pop = NULL, n = 10L)
+cumulateSimKinships(
+  ped,
+  allSimParents,
+  pop = NULL,
+  n = 10L,
+  twinRelations = NULL
+)
 ```
 
 ## Arguments
@@ -34,6 +40,17 @@ cumulateSimKinships(ped, allSimParents, pop = NULL, n = 10L)
   integer value of the number of simulated pedigrees to generate. Must
   be at least 1 (`n < 1` is an error); the standard deviation requires
   `n >= 2`.
+
+- twinRelations:
+
+  Optional data.frame of declared twin pairs (`id1`, `id2`, `code`)
+  passed straight through to the internal
+  [`kinship`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+  call; only `code == "MZ twin"` rows affect the computed matrix. `NULL`
+  (the default) is a complete no-op, matching today's behavior. See
+  [`kinship`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)'s
+  own `twinRelations` documentation for the full correction mechanism
+  and precondition.
 
 ## Value
 

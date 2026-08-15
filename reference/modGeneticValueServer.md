@@ -5,7 +5,12 @@ Genetic Value Analysis Module - Server Function
 ## Usage
 
 ``` r
-modGeneticValueServer(id, pedigree, speciesOverrides = reactive(NULL))
+modGeneticValueServer(
+  id,
+  pedigree,
+  speciesOverrides = reactive(NULL),
+  twinRelations = reactive(NULL)
+)
 ```
 
 ## Arguments
@@ -27,6 +32,18 @@ modGeneticValueServer(id, pedigree, speciesOverrides = reactive(NULL))
   `gestationDefault`), or `NULL`. Threaded into
   [`reportGV`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md).
   Defaults to `reactive(NULL)` so no config file means bundled behavior.
+
+- twinRelations:
+
+  reactive returning a validated twin/zygosity sidecar data.frame
+  (`id1`, `id2`, `code`), or `NULL`. Unlike `kinshipOverrideFile` below,
+  this data does not originate inside this module – it is uploaded on
+  the Pedigree Browser's Diagram tab and threaded in by `appServer`
+  (BL-N Slice 3), so a declared MZ-twin pair's corrected kinship is
+  reflected in
+  [`reportGV`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)'s
+  output regardless of which tab the user visits first. Defaults to
+  `reactive(NULL)` (no twins declared).
 
 ## Value
 

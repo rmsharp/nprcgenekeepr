@@ -184,6 +184,8 @@ Funtions designed for interactive use
   : Remove placeholder animals added for unknown parents
 - [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
   : Run the GeneKeepR Shiny Application
+- [`shrinkPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/shrinkPedigree.md)
+  : Shrink a pedigree to fit within a bit-size budget
 - [`trimPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/trimPedigree.md)
   : Trim a pedigree to a group's ancestors
 - [`summary(`*`<nprcgenekeeprErr>`*`)`](https://github.com/rmsharp/nprcgenekeepr/reference/summary.md)
@@ -630,6 +632,8 @@ Funtions designed for interactive use
   : Determine if Changed Columns tab should be displayed
 - [`shouldShowOripTab()`](https://github.com/rmsharp/nprcgenekeepr/reference/shouldShowOripTab.md)
   : Determine if the ORIP Reporting tab should be displayed
+- [`shrinkPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/shrinkPedigree.md)
+  : Shrink a pedigree to fit within a bit-size budget
 - [`summarizeKinshipValues()`](https://github.com/rmsharp/nprcgenekeepr/reference/summarizeKinshipValues.md)
   : Summarize imputed kinship values
 - [`toCharacter()`](https://github.com/rmsharp/nprcgenekeepr/reference/toCharacter.md)

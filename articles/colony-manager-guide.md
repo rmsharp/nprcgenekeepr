@@ -90,7 +90,7 @@ functions directly through the R API.
 | \# | Function group | App tab(s) | Read deeper (R-API walkthrough) |
 |----|----|----|----|
 | 1 | Quality control of studbooks | Input | [Studbook Quality Control](https://github.com/rmsharp/nprcgenekeepr/articles/studbook-quality-control.md) |
-| 2 | Pedigree construction and browsing, including identifying candidate parents for animals with unknown parentage | Pedigree Browser, Potential Parents | [Building a Focal-Animal Pedigree Offline](https://github.com/rmsharp/nprcgenekeepr/articles/offline-focal-animal-workflow.md) |
+| 2 | Pedigree construction and browsing, including identifying candidate parents for animals with unknown parentage | Pedigree Browser, Potential Parents | [Building a Focal-Animal Pedigree Offline](https://github.com/rmsharp/nprcgenekeepr/articles/offline-focal-animal-workflow.md); [The Pedigree Diagram Tab](https://github.com/rmsharp/nprcgenekeepr/articles/pedigree-diagram.md) |
 | 3 | Age-sex demographic display | Age-Sex Pyramid | [Age-Sex Pyramid Plots](https://github.com/rmsharp/nprcgenekeepr/articles/age-sex-pyramid.md) |
 | 4 | Genetic value analysis (mean kinship, genome uniqueness) | Genetic Value Analysis, Genetic Value Analysis and Breeding Group Description | [Genetic Value Analysis](https://github.com/rmsharp/nprcgenekeepr/articles/genetic-value-analysis.md); [Validating the Founder-Genome-Equivalent Standard Error](https://github.com/rmsharp/nprcgenekeepr/articles/fg-se-validation.md) |
 | 5 | Breeding-group formation and ongoing diversity monitoring | Breeding Groups, Genetic Diversity | [Forming Breeding Groups](https://github.com/rmsharp/nprcgenekeepr/articles/breeding-group-formation.md) |
@@ -341,8 +341,13 @@ the shipped `examplePedigree`’s own downstream numbers below.
 
 **Diagram view.** Alongside the table, the Pedigree Browser’s
 **Diagram** tab renders the same population as an interactive pedigree
-diagram: one node per animal, shaped by sex, with directed sire/dam
-edges laid out top-down by generation. A legend to the right of the
+diagram: one node per animal, shaped by sex, connected via a mating-unit
+convention – a mate’s own matings render as a small connector between
+the two parents, with a line down to their shared children, the same
+convention traditional pedigree charts (and the `kinship2` R package)
+use. A **Diagram Edge Style** toggle above the diagram switches between
+a strict-right-angle routing matching `kinship2`’s own look (the
+default) and a straight-line routing. A legend to the right of the
 diagram shows what each shape means. If the pedigree data includes an
 optional `affected` column, individuals marked affected are additionally
 shaded a distinct color, with a matching “Affected” entry in the same
@@ -355,28 +360,39 @@ diagram itself, with the full name always available in the hover
 tooltip. Not every animal needs a name; one with no name, or a pedigree
 with no `name` column at all, always renders with just its id, and the
 “Select by id” search dropdown below always lists ids, never names,
-regardless of the toggle.
+regardless of the toggle. A mating between two blood-related animals
+renders its connector lines thicker and in a distinct color, flagging
+the consanguineous mating at a glance – no optional column or toggle
+needed, since it is detected directly from the pedigree’s own sire/dam
+data. If a colony records twin births, an optional Twin/Zygosity
+Relations file can be uploaded to draw a distinctly-styled connector
+between a declared pair’s own nodes – and, for a declared monozygotic
+pair, corrects their kinship to genetic identity throughout the
+application, not just this diagram. See **The Pedigree Diagram Tab**
+article for the full tour of every feature this tab offers, with a
+screenshot of each.
 
 ![Pedigree Browser Diagram tab showing an interactive pedigree diagram
 with sex-shaped nodes and a shape-to-sex legend panel (dot=Female,
 square=Male, star=Hermaphrodite, triangle=Unknown,
-diamond=Other/Unrecorded) to the right of the
+diamond=Other/Unrecorded, hexagon=Affected) to the right of the
 diagram.](shiny_app_use/pb_diagram_legend.png)
 
 The Pedigree Browser Diagram tab with its shape-to-sex legend.
 
-Diagrams render up to **750 animals** – for larger populations, narrow
-the focal-animal selection first (see **Focal animals** above). Hovering
-any node shows its ID, sex, generation, sire, dam, and (when present)
-affected status without leaving the diagram. Clicking a node re-centers
-the population on that animal, the same as typing its ID into the
-focal-animals text area above – a quick way to explore a different
-branch of the pedigree. A **Select by id** dropdown above the diagram
-lets you jump straight to one animal by ID, dimming every other node
-except it and its direct connections – useful for finding one animal in
-a large, busy diagram. An **Export Diagram (PNG)** button in the
-diagram’s own corner saves the current view as an image file, useful for
-husbandry reports, IACUC documents, or presentations.
+Diagrams render up to **400 animals** under the default rectilinear
+style (**750** if switched to the straight-line style) – for larger
+populations, narrow the focal-animal selection first (see **Focal
+animals** above). Hovering any node shows its ID, sex, generation, sire,
+dam, and (when present) affected status without leaving the diagram.
+Clicking a node re-centers the population on that animal, the same as
+typing its ID into the focal-animals text area above – a quick way to
+explore a different branch of the pedigree. A **Select by id** dropdown
+above the diagram lets you jump straight to one animal by ID, dimming
+every other node except it and its direct connections – useful for
+finding one animal in a large, busy diagram. An **Export Diagram (PNG)**
+button in the diagram’s own corner saves the current view as an image
+file, useful for husbandry reports, IACUC documents, or presentations.
 
 ### Age-Sex Pyramid
 

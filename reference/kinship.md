@@ -8,7 +8,16 @@ passed into the function.
 ## Usage
 
 ``` r
-kinship(id, father.id, mother.id, pdepth, sparse = FALSE)
+kinship(
+  id,
+  father.id,
+  mother.id,
+  pdepth,
+  sparse = FALSE,
+  twinRelations = NULL,
+  chrtype = "autosome",
+  sex = NULL
+)
 ```
 
 ## Arguments
@@ -37,6 +46,50 @@ kinship(id, father.id, mother.id, pdepth, sparse = FALSE)
   [`base::diag()`](https://rdrr.io/r/base/diag.html) is used to make a
   unit square matrix.
 
+- twinRelations:
+
+  `NULL` (default, no-op) or a data.frame with columns `id1`, `id2`,
+  `code` declaring twin pairs (see
+  [`checkTwinRelations`](https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.md)).
+  Only `code == "MZ twin"` rows affect the computed matrix –
+  `"DZ twin"`/`"UZ twin"` rows are accepted but get zero special
+  treatment, matching kinship2's own `relation` mechanism. A declared
+  MZ-twin pair's coefficient is corrected to equal their shared
+  self-kinship (genetic identity), and the correction is propagated
+  transitively (chained MZ declarations, e.g. A-B and B-C, also correct
+  the undeclared A-C pair) and to every relative computed at a later
+  pedigree depth through either twin – not just the declared pair's own
+  cell. `twinRelations` is trusted as already validated by
+  [`checkTwinRelations`](https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.md)
+  (this function has no `sex` parameter of its own and so cannot re-run
+  that validator's full rule set itself); only a cheap self-contained
+  check (both ids present in `id`) is performed here. See
+  `docs/planning/twin-relations-kinship-computation-plan.md` for the
+  full design rationale.
+
+- chrtype:
+
+  `"autosome"` (default) or `"x"`. When `"autosome"`, behavior is
+  unchanged from every prior version of this function – `sex` is not
+  required and is ignored if supplied. When `"x"`, computes X-chromosome
+  kinship instead: a male's X comes from his mother only (self-kinship
+  1, since he carries a single copy); a female's X-linked kinship
+  follows the same average-of-parents formula as the autosomal case
+  (self-kinship 0.5, as usual). An individual with unrecognized `sex`
+  gets `NA` kinship with everyone, including their own self-kinship
+  value. The MZ-twin correction (`twinRelations`) applies inside this
+  branch identically to the autosomal branch. Ported from kinship2's own
+  `kinship.default()` X-linked branch; see
+  `docs/planning/kinship2-supplement-full-reproduction-plan.md` §3 for
+  the full design rationale.
+
+- sex:
+
+  `NULL` (default) or a character vector, the same length as `id`, using
+  this package's own internal sex codes (`sexCodes`): `"M"`/`"F"`; any
+  other value, including `NA`, is treated as unknown). Required when
+  `chrtype = "x"`; ignored (may be omitted) when `chrtype = "autosome"`.
+
 ## Value
 
 A kinship square matrix
@@ -56,6 +109,13 @@ other statistics.
 ## References
 
 <https://cran.r-project.org/package=kinship2>
+
+The `chrtype = "x"` branch is ported from kinship2's own X-chromosome
+kinship algorithm, described and worked (Table S2) in its supplementary
+material:
+
+Sinnwell JP, Therneau TM, Schaid DJ (2014). "The kinship2 R Package for
+Pedigree Data." *Human Heredity*, 78(2), 91-93.
 
 \$Id: kinship.s,v 1.5 2003/01/04 19:07:53 therneau Exp \$
 

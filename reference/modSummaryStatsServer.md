@@ -13,7 +13,8 @@ modSummaryStatsServer(
   pedigree,
   kinshipMatrix = NULL,
   founderStats = NULL,
-  kinshipOverrides = NULL
+  kinshipOverrides = NULL,
+  twinRelations = NULL
 )
 ```
 
@@ -59,6 +60,18 @@ modSummaryStatsServer(
   structure, not from the kinship value). Overridden pairs are flagged
   with a logical `overridden` column in the relationship table. `NULL`
   (the default) is a no-op.
+
+- twinRelations:
+
+  optional reactive returning a validated twin/zygosity sidecar
+  data.frame (`id1`, `id2`, `code`); see
+  [`checkTwinRelations`](https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.md).
+  When the module recomputes kinship from the pedigree (the usual path),
+  it is passed straight through to
+  [`kinship`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+  so the relationship table and the kinship CSV export reflect a
+  declared MZ-twin pair's corrected identity regardless of tab order
+  (BL-N Slice 3). `NULL` (the default) is a no-op.
 
 ## Value
 

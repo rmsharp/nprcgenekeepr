@@ -33,7 +33,9 @@ groups while maximizing group sizes."><meta property="og:image" content="https:/
     <li><a class="dropdown-item" href="../articles/fg-se-validation.html">Validating the Founder-Genome-Equivalent Standard Error</a></li>
     <li><a class="dropdown-item" href="../articles/genetic-value-analysis.html">Genetic Value Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/gvaConvergence.html">Gene-Drop Iteration Convergence</a></li>
+    <li><a class="dropdown-item" href="../articles/kinship2-fidelity-validation.html">Fidelity Validation Against kinship2</a></li>
     <li><a class="dropdown-item" href="../articles/offline-focal-animal-workflow.html">Building a Focal-Animal Pedigree Offline</a></li>
+    <li><a class="dropdown-item" href="../articles/pedigree-diagram.html">The Pedigree Diagram Tab</a></li>
     <li><a class="dropdown-item" href="../articles/simulatedKValues.html">Quick Example of Simulated Kinships with Partial Parentage</a></li>
     <li><a class="dropdown-item" href="../articles/studbook-quality-control.html">Studbook Quality Control</a></li>
   </ul></li>
@@ -67,7 +69,8 @@ groups while maximizing group sizes.</p>
 <span>  <span class="va">pedigree</span>,</span>
 <span>  geneticValues <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  kinshipMatrix <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  kinshipOverrides <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  kinshipOverrides <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  twinRelations <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -106,7 +109,18 @@ When the module recomputes kinship from the pedigree (the shared
 <code>kinshipMatrix</code> is unavailable), the overrides are applied to that
 matrix so group formation reflects them regardless of tab order.
 <code>NULL</code> (the default) is a no-op. A provided <code>kinshipMatrix</code> is
-expected to already carry overrides applied at its source.</p>
+expected to already carry overrides applied at its source.</p></dd>
+
+
+<dt id="arg-twinrelations">twinRelations<a class="anchor" aria-label="anchor" href="#arg-twinrelations"></a></dt>
+<dd><p>optional reactive returning a validated twin/zygosity
+sidecar data.frame (<code>id1</code>, <code>id2</code>, <code>code</code>); see
+<code><a href="checkTwinRelations.html">checkTwinRelations</a></code>. When the module recomputes kinship from
+the pedigree (the shared <code>kinshipMatrix</code> is unavailable), it is
+passed straight through to <code><a href="kinship.html">kinship</a></code> so group formation
+reflects a declared MZ-twin pair's corrected identity regardless of tab
+order (BL-N Slice 3). <code>NULL</code> (the default) is a no-op. A provided
+<code>kinshipMatrix</code> is expected to already reflect it at its source.</p>
 <p>Up to 5 distinct candidate groupings are formed per run (issue #125), with
 a "Candidate grouping" selector letting the user switch among them without
 re-running <code><a href="groupAddAssign.html">groupAddAssign</a></code>. All reactive components below

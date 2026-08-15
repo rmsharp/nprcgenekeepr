@@ -223,6 +223,111 @@
   closing the issue): computes F_ROH from the already-uploaded genotype/
   locus-metadata files, with de-identified export
   ([`obfuscateGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenomicROH.md)).
+- [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+  gained a **twinRelations** argument (BL-N, Slice 1) correcting a
+  declared MZ-twin pair’s computed kinship to genetic identity and
+  propagating that correction to every relative reached through either
+  twin (not just the pair itself), porting kinship2’s own
+  `mzgrp`/`mzindex` mechanism.
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md),
+  [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md),
+  [`createSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/createSimKinships.md),
+  and
+  [`cumulateSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/cumulateSimKinships.md)
+  (BL-N, Slice 2) each gained a matching `twinRelations` argument,
+  passed through to their own internal kinship computation. Shiny wiring
+  (BL-N, Slice 3): a twin/zygosity sidecar uploaded on the Pedigree
+  Browser’s Diagram tab now corrects kinship everywhere in the app –
+  Summary Statistics, Breeding Groups, and Genetic Value Analysis –
+  regardless of which tab is visited first.
+- Fixed: the Pedigree Diagram tab’s affected-status shading rendered
+  unaffected/unknown individuals filled instead of open/unfilled,
+  counter to standard pedigree drawing convention (kinship2’s own
+  “unfilled if 0/NA”).
+- The Pedigree Diagram tab now renders a consanguineous mating’s 2
+  connector lines thicker and in a distinct color (BL-N), matching
+  kinship2’s own doubled/thickened mate-line convention for a
+  blood-related couple. Detected directly from the pedigree’s own
+  sire/dam data (no optional column or toggle needed);
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)’s
+  returned `edges` gains `color`/`width` columns accordingly. Scoped to
+  `edgeStyle = "direct"` this release – `"rectilinear"` propagation onto
+  a cross-generation dogleg reroute is a deferred follow-up.
+- Fixed: a pedigree with a dangling (no-own-row) parent anywhere in it
+  could cause the Pedigree Diagram tab’s `edgeStyle = "rectilinear"`
+  style to spuriously reroute other, unrelated mate-line edges through
+  an unneeded cross-generation “dogleg,” even when those edges’ own
+  parents were already at the correct generation. Caused by an internal
+  type-coercion defect (a dangling parent’s generation fallback silently
+  widened an internal generation vector from integer to double, breaking
+  a strict type-sensitive equality check elsewhere).
+- The Pedigree Diagram tab’s consanguineous-mating marker (above) now
+  also survives an `edgeStyle = "rectilinear"` cross-generation “dogleg”
+  reroute – previously the marker’s color/width fell back to the generic
+  waypoint-edge style on a doglegged mate edge, even though the
+  `edgeStyle = "direct"` style always showed it correctly (BL-N, part of
+  the kinship2 supplement full-reproduction plan’s Track C).
+- [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+  gained `chrtype = c("autosome", "x")` and `sex` arguments (BL-N, the
+  kinship2 supplement full-reproduction plan’s Track A): `chrtype = "x"`
+  computes X-chromosome kinship instead of the default autosomal
+  calculation (a male’s X comes from his mother only; a female’s
+  X-linked kinship follows the usual average-of-parents formula). The
+  existing `twinRelations` MZ-twin correction applies inside the new
+  branch too. `chrtype = "autosome"` (the default) is unaffected – every
+  existing call site keeps its current behavior unchanged.
+  Script-callable only; no Shiny UI yet.
+- New
+  [`shrinkPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/shrinkPedigree.md)
+  (BL-N, the kinship2 supplement full-reproduction plan’s Track B), a
+  `kinship2::pedigree.shrink()` equivalent: trims a pedigree down to the
+  individuals needed to keep it genetically informative within a
+  genotyping-cost budget (`maxBits`), given which individuals are
+  genotyped and, optionally, which are affected by a trait of interest.
+  Deterministic tie-break by lowest `id` (string-sorted) – kinship2’s
+  own reference implementation breaks ties via
+  [`runif()`](https://rdrr.io/r/stats/Uniform.html), so the same input
+  can give a different answer run-to-run there. Script-callable only; no
+  Shiny UI yet.
+- Fixed: the Pedigree Diagram tab’s affected-status shading rendered
+  every individual filled with visNetwork’s own default color when a
+  pedigree had no `affected` column at all – unlike the already-fixed
+  case where the column is present but a value is `FALSE`/`NA` (above).
+  Every individual now defaults to an explicit open/unfilled (white)
+  fill regardless of whether the `affected` column exists, matching
+  kinship2’s own convention for pedigrees with no phenotype data (the
+  package’s own bundled `examplePedigree` among them).
+- Fixed: the Pedigree Diagram tab could space adjacent mates/siblings
+  unevenly – the layout algorithm only guaranteed nodes did not exactly
+  overlap, not a fixed minimum gap, so two unrelated same-generation
+  nodes positioned deep in different branches of the family tree could
+  land visibly closer together than a directly-adjacent pair. Every pair
+  of same-generation individuals now keeps at least the algorithm’s own
+  minimum-separation unit apart, matching kinship2’s own near-uniform
+  mate spacing.
+- Fixed: the Pedigree Diagram tab could render a mating unit’s anchor
+  parent at a generation row that didn’t match the union’s own
+  generation, whenever the two parents’ own generations differed – a
+  common pattern (62% of mating units in the bundled example pedigree).
+  Previously compensated by relocating the anchor’s own displayed row
+  after the fact; now resolved at the source instead: whichever parent
+  has the deeper generation always becomes the anchor, so the mismatch
+  can no longer occur (a structural guarantee, not a case-by-case
+  correction). A measured visual consequence: individuals who anchor
+  multiple matings at different generations now more often appear as a
+  duplicate node at one of their own mating units, rather than being
+  pulled to a single relocated row (22 individuals in the bundled
+  example pedigree, up from 2; the corresponding duplicate-node count
+  drops from 128 to 102).
+- Changed: the Pedigree Diagram tab’s default **Diagram Edge Style** is
+  now **Rectilinear (kinship2-style)**, not Direct – the toggle (issue
+  [\#142](https://github.com/rmsharp/nprcgenekeepr/issues/142)) and the
+  option itself are unchanged, only which one applies with no user
+  interaction.
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)’s
+  own `edgeStyle` argument default flips to match. The node cap that
+  applies with no style chosen is therefore now 400 animals (previously
+  750); switching to Direct raises it back to 750.
 
 ## nprcgenekeepr 2.0.0 (20260708)
 

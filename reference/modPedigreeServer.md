@@ -37,6 +37,12 @@ A list of reactive values:
 
 - `isReady` - Logical indicating if pedigree data is ready
 
+- `twinRelations` - The validated twin/zygosity sidecar (`NULL` if none
+  uploaded or invalid). Unlike the Diagram tab's own rendering, this is
+  the raw, ungated reactive – not filtered by the "Show Twin Connectors"
+  toggle – so callers outside this module (e.g. `appServer`) see the
+  validated data regardless of that toggle's state (BL-N Slice 3).
+
 ## Details
 
 This module processes the studbook by:

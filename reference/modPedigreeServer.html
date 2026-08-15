@@ -29,7 +29,9 @@ selection, pedigree processing, filtering, and data export."><meta property="og:
     <li><a class="dropdown-item" href="../articles/fg-se-validation.html">Validating the Founder-Genome-Equivalent Standard Error</a></li>
     <li><a class="dropdown-item" href="../articles/genetic-value-analysis.html">Genetic Value Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/gvaConvergence.html">Gene-Drop Iteration Convergence</a></li>
+    <li><a class="dropdown-item" href="../articles/kinship2-fidelity-validation.html">Fidelity Validation Against kinship2</a></li>
     <li><a class="dropdown-item" href="../articles/offline-focal-animal-workflow.html">Building a Focal-Animal Pedigree Offline</a></li>
+    <li><a class="dropdown-item" href="../articles/pedigree-diagram.html">The Pedigree Diagram Tab</a></li>
     <li><a class="dropdown-item" href="../articles/simulatedKValues.html">Quick Example of Simulated Kinships with Partial Parentage</a></li>
     <li><a class="dropdown-item" href="../articles/studbook-quality-control.html">Studbook Quality Control</a></li>
   </ul></li>
@@ -81,6 +83,12 @@ gen columns</p></li>
 <li><p><code>nAnimals</code> - Count of animals in filtered pedigree</p></li>
 <li><p><code>populationCount</code> - Count of animals marked as population</p></li>
 <li><p><code>isReady</code> - Logical indicating if pedigree data is ready</p></li>
+<li><p><code>twinRelations</code> - The validated twin/zygosity sidecar
+(<code>NULL</code> if none uploaded or invalid). Unlike the Diagram tab's
+own rendering, this is the raw, ungated reactive – not filtered by
+the "Show Twin Connectors" toggle – so callers outside this module
+(e.g. <code>appServer</code>) see the validated data regardless of that
+toggle's state (BL-N Slice 3).</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

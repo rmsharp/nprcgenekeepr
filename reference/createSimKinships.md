@@ -7,7 +7,14 @@ forming the *Monte Carlo* estimates for the kinship values.
 ## Usage
 
 ``` r
-createSimKinships(ped, allSimParents, pop = NULL, n = 10L, verbose = FALSE)
+createSimKinships(
+  ped,
+  allSimParents,
+  pop = NULL,
+  n = 10L,
+  verbose = FALSE,
+  twinRelations = NULL
+)
 ```
 
 ## Arguments
@@ -37,6 +44,17 @@ createSimKinships(ped, allSimParents, pop = NULL, n = 10L, verbose = FALSE)
 
   logical vector of length one that indicates whether or not to print
   out when an animal is missing a sire or a dam.
+
+- twinRelations:
+
+  Optional data.frame of declared twin pairs (`id1`, `id2`, `code`)
+  passed straight through to the internal
+  [`kinship`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+  call; only `code == "MZ twin"` rows affect the computed matrix. `NULL`
+  (the default) is a complete no-op, matching today's behavior. See
+  [`kinship`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)'s
+  own `twinRelations` documentation for the full correction mechanism
+  and precondition.
 
 ## Value
 

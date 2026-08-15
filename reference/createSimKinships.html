@@ -31,7 +31,9 @@ be used in forming the Monte Carlo estimates for the kinship values."><meta prop
     <li><a class="dropdown-item" href="../articles/fg-se-validation.html">Validating the Founder-Genome-Equivalent Standard Error</a></li>
     <li><a class="dropdown-item" href="../articles/genetic-value-analysis.html">Genetic Value Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/gvaConvergence.html">Gene-Drop Iteration Convergence</a></li>
+    <li><a class="dropdown-item" href="../articles/kinship2-fidelity-validation.html">Fidelity Validation Against kinship2</a></li>
     <li><a class="dropdown-item" href="../articles/offline-focal-animal-workflow.html">Building a Focal-Animal Pedigree Offline</a></li>
+    <li><a class="dropdown-item" href="../articles/pedigree-diagram.html">The Pedigree Diagram Tab</a></li>
     <li><a class="dropdown-item" href="../articles/simulatedKValues.html">Quick Example of Simulated Kinships with Partial Parentage</a></li>
     <li><a class="dropdown-item" href="../articles/studbook-quality-control.html">Studbook Quality Control</a></li>
   </ul></li>
@@ -59,7 +61,14 @@ be used in forming the <em>Monte Carlo</em> estimates for the kinship values.</p
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">createSimKinships</span><span class="op">(</span><span class="va">ped</span>, <span class="va">allSimParents</span>, pop <span class="op">=</span> <span class="cn">NULL</span>, n <span class="op">=</span> <span class="fl">10L</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">createSimKinships</span><span class="op">(</span></span>
+<span>  <span class="va">ped</span>,</span>
+<span>  <span class="va">allSimParents</span>,</span>
+<span>  pop <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  n <span class="op">=</span> <span class="fl">10L</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  twinRelations <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -90,6 +99,16 @@ has more animals than you want to use in the simulation by defining
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
 <dd><p>logical vector of length one that indicates whether or not
 to print out when an animal is missing a sire or a dam.</p></dd>
+
+
+<dt id="arg-twinrelations">twinRelations<a class="anchor" aria-label="anchor" href="#arg-twinrelations"></a></dt>
+<dd><p>Optional data.frame of declared twin pairs
+(<code>id1</code>, <code>id2</code>, <code>code</code>) passed straight through to the
+internal <code><a href="kinship.html">kinship</a></code> call; only <code>code == "MZ twin"</code> rows
+affect the computed matrix. <code>NULL</code> (the default) is a complete
+no-op, matching today's behavior. See <code><a href="kinship.html">kinship</a></code>'s own
+<code>twinRelations</code> documentation for the full correction mechanism and
+precondition.</p></dd>
 
 </dl></div>
     <div class="section level2">

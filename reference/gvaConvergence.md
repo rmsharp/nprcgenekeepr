@@ -21,7 +21,8 @@ gvaConvergence(
   gestationTable = NULL,
   breedingAgeDefault = NULL,
   gestationDefault = NULL,
-  kinshipOverrides = NULL
+  kinshipOverrides = NULL,
+  twinRelations = NULL
 )
 ```
 
@@ -118,6 +119,16 @@ gvaConvergence(
   kinship cell; it does not suppress the `+ sexMean / 2` unknown-parent
   correction, which is kept for every animal missing one parent. See
   [`applyKinshipOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md).
+
+- twinRelations:
+
+  Optional data.frame of declared twin pairs (`id1`, `id2`, `code`)
+  passed straight through to the internal
+  [`kinship`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+  call, exactly as
+  [`reportGV`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+  passes it. Only `code == "MZ twin"` rows affect the computed matrix.
+  `NULL` (the default) is a complete no-op, matching today's behavior.
 
 ## Value
 

@@ -168,11 +168,15 @@ The build-equivalent for this R package (relocated here from
 
 **Clean regression read** (the `test-app-*`/`test-e2e-*` files are
 pre-existing baseline noise — see Learning \#2/#4 below):
-`pkgload::load_all(".", quiet=TRUE); as.data.frame(testthat::test_dir("tests/testthat", reporter="silent", stop_on_failure=FALSE))`,
+`Sys.setenv(NOT_CRAN = "true"); pkgload::load_all(".", quiet=TRUE); as.data.frame(testthat::test_dir("tests/testthat", reporter="silent", stop_on_failure=FALSE))`,
 then check `sum(failed)` **and** `sum(error)`, isolating true offenders
 with `!grepl("test-app-|test-e2e-", file)`. (`load_all()` must run first
 — without it this command produces mass-spurious failures unrelated to
-anything actually broken; see Learning 377.)
+anything actually broken; see Learning 377. `NOT_CRAN` must be set too —
+without it, any file with a top-level `skip_on_cran()`
+\[e.g. `test_wordlist_coverage.R`\] silently bare-skips and its failure
+vanishes from `sum(failed)` instead of counting; see Learning 417 and
+Learning 594, which hit exactly this omission in this command.)
 
 **[`renv::snapshot()`](https://rstudio.github.io/renv/reference/snapshot.html)
 always needs `dev = TRUE` in this project.** `renv/settings.json` sets
@@ -517,6 +521,59 @@ the tagged-record portion are still worth doing (real, if small,
 reduction) but do not by themselves resolve the file’s read-truncation
 risk; only re-opening the S325 decision (a migration campaign) would.**
 
+**S325 reopened, decision only (S546, 2026-08-13, owner-directed via
+`AskUserQuestion`):** presented with 3 options — (a) scope a lighter
+bulk relocation of the frozen legacy block into its own archive file
+as-is, no per-entry re-tagging; (b) commit to the full multi-session
+re-tag campaign this note originally declined; (c) hold as a permanent
+known limitation — the owner picked (a). `BACKLOG.md` Housekeeping now
+carries the scoping/verification item (READY, Effort M): a future
+session must confirm the relocation doesn’t break
+`methodology_trim.py`’s L1/L2/L3 losslessness invariants and that no
+script/audit expects the legacy block inline, before moving it. (b) and
+(c) remain valid fallbacks if that verification finds a blocker — not
+discarded, just not attempted first. This is a decision-only entry; no
+file has moved yet.
+
+**S325 verified and executed (S547, 2026-08-13):** both verification
+checks passed, and the relocation was executed the same session (the
+item’s own “if verification allows, execute” framing). **Check 1
+(`methodology_trim.py` L1/L2/L3):** the legacy footer contains zero
+triple-or-more backtick/tilde fence markers anywhere (confirmed by grep
+and by walking the tool’s own `fence_scan()` over the extracted content)
+— the fence-scanner defect class found against `SESSION_NOTES.md`
+(`CLAUDE.md`’s own note above) cannot occur here, there is nothing
+fence-shaped to misparse. `classify_zones()` run directly against the
+post-relocation content reports zero findings (footer cleanly empty, all
+13 records intact), and a real `--check` run against the modified
+working tree (before commit) reports `[CHECK] trigger does not fire` at
+20,929 B — down from 954,673 B. **Check 2 (nothing expects it inline):**
+grepped `docs/`, `bin/`, `*.py` for “Legacy
+history”/“pre-S325”/“pre-ledger format” — no script or tool has a live,
+mechanical dependency on the block’s location; `methodology_trim.py`’s
+own `archive_events()` discovers shards by glob + a live-file-size-drop
+check, not by filename parsing, so the new shard’s non-`-through-<date>`
+name (`CHANGELOG-legacy-pre-S325.md`, chosen because this is a one-time
+bulk move, not a dated cut) is still correctly picked up. The only
+references found were prose in already-closed planning docs
+(`docs/planning/issue{137,146,147,149,151}-*.md`, each with a stale
+“close-out prepends an entry above `## Legacy history`” checklist line)
+and historical narrative in frozen archive shards/`PROJECT_LEARNINGS.md`
+— left untouched, matching the project’s standing precedent against
+retroactively editing completed/frozen documents. **Executed:** the
+block (935,287 B / 3,567 lines, byte-for-byte verified against what
+`classify_zones()` reported as the footer before any edit) moved to
+[`docs/archive/CHANGELOG-legacy-pre-S325.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-legacy-pre-S325.md);
+`CHANGELOG.md`’s “shard convention” section and its live-pointer
+paragraph updated to describe the new location; `CHANGELOG.md` is now
+20,929 B / 283 lines, both triggers clear. **Side effect, not previously
+anticipated:** because `archive_events()`’s SRF baseline is now this new
+shard (pre=954,673 B, post=20,929 B), the SRF denominator for future
+`CHANGELOG.md` archive-refusal checks becomes ~934,000 B — resolving,
+for a long while, the small-denominator `SRF_RED` false-refusal pattern
+Learnings 549/550 diagnosed. See `PROJECT_LEARNINGS.md` for the full
+verification record.
+
 **`methodology_trim.py` local-customization checklist (found S518,
 2026-08-11):** `methodology_trim.py` is a canonical-**overlay** file per
 `BOOTSTRAP.md`’s sync table (“Tracked (canonical owns them) … overlay —
@@ -559,7 +616,7 @@ workstream **and** the RED→GREEN→REFACTOR gates.
 
 ### Project-specific Learnings
 
-Project institutional memory (Sessions 1–504+; 503 learnings, ~2.1 MB)
+Project institutional memory (Sessions 1–573+; 578 learnings, ~2.4 MB)
 lives in
 [`PROJECT_LEARNINGS.md`](https://github.com/rmsharp/nprcgenekeepr/PROJECT_LEARNINGS.md)
 — extracted from this file to keep `CLAUDE.md` within its size budget

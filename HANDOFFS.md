@@ -153,271 +153,441 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.1.2.
 
+**Archived 17 record(s), 2026-08-12 → 2026-08-13** into
+[`docs/archive/HANDOFFS-through-2026-08-13.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/HANDOFFS-through-2026-08-13.md)
+— same format, same order, frozen. Losslessness is proved by
+[`docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh),
+which re-derives L1/L2/L3 from git; run it rather than trusting this
+sentence. Written by `methodology_trim.py` v1.1.2.
+
+**Archived 21 record(s), 2026-08-13 → 2026-08-14** into
+[`docs/archive/HANDOFFS-through-2026-08-14.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/HANDOFFS-through-2026-08-14.md)
+— same format, same order, frozen. Losslessness is proved by
+[`docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh),
+which re-derives L1/L2/L3 from git; run it rather than trusting this
+sentence. Written by `methodology_trim.py` v1.1.2.
+
+This file currently holds **2** receipt(s). Computed by
+`methodology_trim.py` on every `--check`/`--write` run, never
+hand-maintained.
+
 ``` handoff
-session: S545
-date: 2026-08-13
+session: S586
+date: 2026-08-15
 status: complete
-self_score: 8
+self_score: 9
 predecessor_score: 9
-active_task: Phase 0 CI-status-check decision -- RESOLVED. Owner chose (via
-AskUserQuestion) to run gh run list --branch master --limit 10 every
-session, unconditionally; recorded in CLAUDE.md's "Additional Phase 0
-steps." 2 mid-turn owner exchanges also actioned: (1) a new BACKLOG.md
-item to verify nprcgenekeepr's exported functions can reproduce the
-kinship2 R package's own supplementary-material worked examples; (2) a
-question about why BACKLOG.md has "(none remaining)" pointer items,
-answered, then a new BACKLOG.md item to stop that practice and delete
-resolved items outright instead.
-what_was_done: Reconciled S544's HANDOFFS.md commit: pending self-reference
-to 126711a9 (dd177a80). Claimed the session (c6c6c0a6). Presented the CI
--check decision as a 4-option AskUserQuestion (every-session unconditional
-/ push-conditioned / branch-protection-instead / hold); owner picked
-unconditional. Wrote the decision into CLAUDE.md's "Additional Phase 0
-steps" (new gh run list --branch master --limit 10 step at Phase 0 step 4,
-report-don't-fix at step 7, 3 rejected alternatives recorded). Smoke
--tested the exact command: found R-CMD-check.yaml on 126711a9 still
-in_progress at 15+ min -- not a red run, but exactly what the new step
-exists to catch; reported, not chased. Mid-turn owner request #1: checked
-for existing coverage (none -- confirmed via grep and reading the PDF's
-first 3 pages: it is kinship2's own supplementary material, Sinnwell/
-Therneau/Schaid, Mayo Clinic, distinct from the audits' existing source
-PDFs), then added a new BACKLOG.md Housekeeping item, logged only, not
-investigated. Mid-turn exchange #2: owner asked why BACKLOG.md has "none
-remaining" items; grep-verified SESSION_RUNNER.md Phase 3F/FM#27 both say
-to remove completed items outright, confirmed 57 of ~75 top-level bullets
-are rewrite-in-place pointers instead, answered without editing anything
-(a question, not an instruction -- FM#23); owner then explicitly asked for
-a BACKLOG.md item -- added one (READY, Effort L, given 57 items need
-individual CHANGELOG.md-coverage verification before deletion). Updated
-BACKLOG.md (3 items: CI-check resolved, 2 new) and PROJECT_LEARNINGS.md
-(Learning 552).
-next_steps: BACKLOG.md priorities unchanged from S544 except the resolved
-CI-check item and 2 new items: (1) Write the Pedigree Diagram tutorial
-article (READY, Effort M). (2) Reopen the S325 CHANGELOG.md legacy-footer
-migration decision (DECISION NEEDED, Effort L). (3) Issue #148 (MHC
-haplotype reporting) needs a scope-narrowing conversation. (4) Issue #138
-(full-colony rendering) needs its own scoping session. (5) NEW: verify
-kinship2-supplement-PDF results/plots are reproducible with nprcgenekeepr
-exported functions (READY, Effort M) -- reconstruct the PDF's "fam1" 17
--subject pedigree as a fixture first. (6) NEW: delete the 57 "(none
-remaining)" BACKLOG.md pointer bullets outright rather than compress them
-further (READY, Effort L) -- verify each has CHANGELOG.md coverage before
-deleting, per the S529 precedent. (7) NPRC outreach owner review (DECISION
-NEEDED); LabKey remaining recs (BLOCKED) unchanged. **Also: the
-R-CMD-check.yaml run flagged in_progress this session (126711a9) was never
-confirmed complete -- the next session's own new Phase 0 CI check is what
-should confirm it, not an assumption that it finished green.**
-key_files: CLAUDE.md:201-224 (new "GitHub Actions CI status check"
-subsection); BACKLOG.md (CI-check item resolved; 2 new items, Housekeeping
-section top); PROJECT_LEARNINGS.md Learning 552 (new).
-gotchas: (1) `gh run list` (unfiltered) is required, not `gh run list
---workflow=<one>` -- a single named workflow can be green while a sibling
-is red on the same commit (Learning 549's own precedent, reused here).
-(2) inst/extdata/reference/NIHMS593658-supplement-supplement_1.pdf is
-currently untracked in git and NOT yet in .gitignore/.Rbuildignore, unlike
-its 2 copyrighted siblings in the same directory (5201430.pdf,
-bioinformatics_24_2_279.pdf) -- do not `git add` it without first deciding
-whether it needs the same copyright-driven exclusion treatment.
-(3) PROJECT_LEARNINGS.md entries are appended at the END of the file in
-ascending order -- inserting a new Learning by matching an old entry's
-text mid-file (rather than the tail) can land it BEFORE the entry it
-should follow; verify final ordering with `grep -n "^#### Learning"` after
-inserting, not just that the content landed somewhere. (4) Before deleting
-any of the 57 "(none remaining)" BACKLOG.md items (new item above), verify
-CHANGELOG.md coverage exists for each one first -- S529 found 2 cases
-where it didn't and had to backfill before compressing; the same gap could
-exist here and deleting without checking would be a real information loss,
-not just a relocation.
-runtime_smoke: n/a for Shiny runtime (no R/ production code touched) --
-the equivalent verification for a Phase-0-process change is running the
-newly-documented command itself, which was done (gh run list --branch
-master --limit 10, confirmed working and immediately useful).
-changelog_ref: this session's own CHANGELOG.md entries, 2026-08-13 ([ad
-hoc] the Phase 0 reconcile; [ad hoc] the claim; [BL-phase0CiCheck] the
-decision; [ad hoc] the close-out entry covering BACKLOG.md/
-PROJECT_LEARNINGS.md findings and the 2 mid-turn backlog additions)
-commit: pending
+active_task: Fix red lint.yaml CI (BACKLOG.md Housekeeping, found S584) -- 3 pre-existing lints in
+  R/kinship.R:127,131,133 from S564's X-chromosome kinship work -- DONE. Collapsed a nested
+  ifelse() into a vectorized match()/index lookup; fixed 2 bare-0 implicit-integer literals.
+  0 lints package-wide (down from 3), all verification green.
+what_was_done: Found a pre-RED test-coverage gap (chrtype='x' + sparse=TRUE, untested) and added
+  test_that("kinship() with chrtype = 'x' gives identical results for sparse = TRUE and sparse =
+  FALSE") to tests/testthat/test_kinship.R -- confirmed passing against UNMODIFIED code (this is a
+  pure refactor task, no new behavior, so no failing-first RED -- surfaced and approved explicitly
+  at the PRE-RED->RED gate). Then in R/kinship.R: replaced the 3-line nested ifelse computing
+  sexNum with `c(1L, 2L)[match(sex, c(sexCodes[["male"]], sexCodes[["female"]]))]`; changed
+  `c(founderDiag, 0)` -> `c(founderDiag, 0.0)` in both sparse/dense branches. Also fixed a
+  documentation defect found this session: CLAUDE.md's "Clean regression read" formula was
+  missing the NOT_CRAN=true prefix its neighbor requires, silently producing a false "0 failed"
+  read (PROJECT_LEARNINGS.md Learning 594). Commits a8367a4f (claim), plus this close-out.
+next_steps: 2 more S584-filed items remain READY, Effort S each (do NOT bundle): (1)
+  R-CMD-check.yaml/WORDLIST -- add matings/Rectilinear's/runnable/visNetwork's to inst/WORDLIST
+  (red since S573). (2) Reshoot 3 possibly-stale screenshots (found S582) --
+  diagram_show_names.png/diagram_affected_shading.png/diagram_twin_connectors.png may still show
+  stale direct-style edges after the rectilinear default flip; not yet checked. Also: SESSION_
+  NOTES.md archive (dashboard's only HIGH risk, 3,663 lines past the 2,000-line cap -- still needs
+  someone to verify the Learning-518 fence-scanner defect is actually resolved before --write, per
+  S585's own carried-forward note -- this session did not investigate it further). Push to origin
+  is still the owner's call (4+ local commits ahead as of this session's start, now more);
+  R-CMD-check.yaml/pkgdown.yaml/lint.yaml will not go green on origin until pushed -- this
+  session's own lint.yaml fix is UNVERIFIED IN ACTUAL CI for the same reason.
+key_files: R/kinship.R:126-131 (the fix, now 6 lines shorter than before); tests/testthat/
+  test_kinship.R:133-140 (the new parity test, placed before the "explicit chrtype = 'autosome'"
+  backward-compat test); CLAUDE.md:119 (Clean regression read formula, NOT_CRAN prefix added);
+  PROJECT_LEARNINGS.md Learning 594 (the formula-gap writeup).
+gotchas: (1) `CLAUDE.md`'s documented "Clean regression read" command, run exactly as written
+  BEFORE this session's fix, silently produced sum(failed)=0 when 1 was actually expected --
+  test_wordlist_coverage.R has skip_on_cran() and the command didn't set NOT_CRAN. Now fixed in
+  CLAUDE.md itself; a session running an OLDER cached copy of the instructions would still hit
+  this. (2) The chrtype='x' branch this session touched is script-callable only -- confirmed via
+  grep that zero R/mod*.R, appServer.R, or appUI.R files reference `chrtype` -- so this fix has NO
+  live-Shiny-app surface at all; do not expect to see it in the running app. (3) The
+  match()/indexing refactor pattern (`c(1L, 2L)[match(x, c(a, b))]`) used here for a 2-way lookup
+  is a reusable idiom if another nested_ifelse_linter finding turns up elsewhere in this codebase.
+runtime_smoke: n/a -- confirmed via grep that the modified code path (chrtype='x') is unreferenced
+  by any Shiny module/UI file (R/mod*.R, appServer.R, appUI.R all 0 matches for `chrtype`);
+  script-callable only, exercised exclusively by tests/testthat/test_kinship.R, which is fully
+  green. Not a Phase-3E-covered surface (no startup/wiring/dispatch/config-resolution change).
+changelog_ref: a8367a4f (this session's claim entry) -- see the 2026-08-15 section, "S586:" entries
+commit: a8367a4f (claim); b1e8f8f2 (fix + close-out)
 ```
 
 ``` handoff
-session: S544
-date: 2026-08-13
+session: S585
+date: 2026-08-15
 status: complete
-self_score: 8
+self_score: 9
 predecessor_score: 8
-active_task: test-coverage.yaml CI failure -- RESOLVED. Diagnosed and fixed
-find_pkg_src()'s missing inst/ check in test_wordlist_coverage.R; confirmed
-test-coverage.yaml green on the real CI run (f4b478c0), along with
-R-CMD-check.yaml/pkgdown.yaml/lint.yaml. BACKLOG.md updated (item resolved,
-plus 1 new item: an owner-requested Pedigree Diagram tutorial article).
-what_was_done: Read the full gh run view --log (not --log-failed) and found
-the real failure: test_wordlist_coverage.R:68:3 flagging 146
-already-whitelisted domain words. Traced spelling::spell_check_package()'s
-source (get_wordlist->get_wordfile->file.path(pkg_path,"inst/WORDLIST")) to
-find the hardcoded source-tree-relative lookup. Diagnosed find_pkg_src()'s
-devtools::test() fallback branch accepting an INSTALLED package directory
-(retains DESCRIPTION, loses inst/ -- flattened into the package root at
-install time under covr's R CMD INSTALL --install-tests) as source.
-Reproduced byte-for-byte locally via R CMD INSTALL --install-tests +
-testthat::test_dir() (not the full covr run) before writing any fix code.
-Strict TDD: RED (2 new tests, 1 fails as predicted) -> GREEN (all 3
-branches now require dir.exists(file.path(cand,"inst")) via a shared
-is_pkg_src() helper; 3 tests pass) -- both gates AskUserQuestion-approved.
-Full regression 0 failed/0 error (5,519 passed); devtools::check() 0
-errors/0 warnings/1 pre-existing unrelated NOTE; lintr clean. Committed
-(cd5eb453 claim, f4b478c0 fix), pushed, polled gh run list until all 4
-workflows on f4b478c0 completed: test-coverage.yaml, R-CMD-check.yaml,
-pkgdown.yaml, lint.yaml all "completed success". Also actioned a mid-turn
-owner request: added a new BACKLOG.md item for a dedicated Pedigree
-Diagram tutorial article (checked issue #139 first -- already resolved
-S455 but only a paragraph, now stale relative to the tab's much-expanded
-feature set) -- logged only, not implemented, to keep this session's
-TDD-gated scope to the one approved deliverable.
-next_steps: BACKLOG.md priorities unchanged from S543 except the resolved
-item: (1) Phase 0 CI-check gap -- DECISION NEEDED on whether/how to add a
-gh run list check to Phase 0, Effort S. (2) Reopen the S325 CHANGELOG.md
-legacy-footer migration decision -- DECISION NEEDED, multi-session
-campaign, Effort L. (3) Issue #148 (MHC haplotype reporting) needs a
-scope-narrowing conversation per the ratified sequencing audit. (4) NEW
-this session: write a dedicated Pedigree Diagram tutorial article
-(BACKLOG.md, owner-requested, READY, Effort M) -- a future session should
-inventory the tab's current full feature set against the live app before
-drafting. (5) NPRC outreach owner review (DECISION NEEDED, Effort N/A);
-LabKey remaining recs (BLOCKED); issue #138 (Tier-3 deferred, no new
-evidence) each unchanged from S543.
-key_files: tests/testthat/test_wordlist_coverage.R (find_pkg_src() fix +
-2 new tests, lines 35-109); BACKLOG.md (test-coverage.yaml item resolved;
-new Pedigree Diagram article item); PROJECT_LEARNINGS.md Learning 551
-(new).
-gotchas: (1) spelling::spell_check_package()'s wordlist lookup is a
-hardcoded <path>/inst/WORDLIST -- it has no concept of an installed
-package, so ANY future helper that resolves a "package root" for this
-guard must keep proving it found a SOURCE tree (inst/ present), not just
-a directory with a DESCRIPTION file, which installed packages also have.
-(2) covr::package_coverage() runs tests against an R CMD INSTALL
---install-tests copy, not the raw source checkout -- any test relying on
-relative-path archaeology to find "the package source" needs to account
-for this execution mode specifically; a fast local repro is plain
-R CMD INSTALL --install-tests --library=<tmp> . + testthat::test_dir()
-with NOT_CRAN=true set, no covr or GitHub Actions required. (3) When
-backgrounding a long R command, pass run_in_background: true to the Bash
-tool call directly rather than shell-level `&` + log redirection -- the
-latter escapes the harness's own task tracking and needs manual ps-based
-polling to detect completion (hit this once this session; the earlier
-regression-suite run used the correct pattern).
-runtime_smoke: n/a for Shiny runtime (no R/ production code touched) --
-the equivalent verification for a CI-config fix is the real CI run itself
-going green, which was confirmed directly (test-coverage.yaml, plus
-R-CMD-check.yaml/pkgdown.yaml/lint.yaml, all "completed success" on
-f4b478c0).
-changelog_ref: this session's own CHANGELOG.md entries, 2026-08-13 ([ad hoc]
-the claim; [BL-testCoverageCovrInstallTests] the fix; [ad hoc] the
-close-out entry covering BACKLOG.md/PROJECT_LEARNINGS.md findings and the
-mid-turn backlog addition)
-commit: 126711a9 (reconciled S545 -- self-reference at write time, per the
-S543/S544 precedent: this receipt ships in the commit whose sha it names)
+active_task: Fix red pkgdown.yaml CI (BACKLOG.md Housekeeping, found S584; also independently
+  found and left unfixed by S566 a day earlier) -- DONE. Added the missing
+  articles/pedigree-diagram entry to _pkgdown.yml plus a regression-test guard. All verification
+  green, including a direct invocation of the actual CI-failing pkgdown internal function.
+what_was_done: Added a 4th test_that() to tests/testthat/test_pkgdown_reference_config.R
+  comparing pkg$vignettes$name (pkgdown's own ground-truth article list) against the configured
+  articles: contents: list via setdiff() -- mirrors the file's existing reference:-coverage
+  pattern. RED confirmed (failed naming articles/pedigree-diagram). Then added
+  `- articles/pedigree-diagram` to _pkgdown.yml's articles: contents: list. GREEN confirmed (5/5
+  passing). Removed 2 duplicate BACKLOG.md items for the identical gap (S584's and a previously
+  unfixed S566 entry). Commits eace45d8 (claim) and 9ab5b507 (fix + guard).
+next_steps: The 2 remaining S584-filed CI reds are still open and READY, Effort S each (do NOT
+  bundle -- separate deliverables): (1) R-CMD-check.yaml -- add matings/Rectilinear's/runnable/
+  visNetwork's to inst/WORDLIST (S573 gap, red on all 5 platforms); (2) lint.yaml --
+  R/kinship.R:127,131,133, 3 pre-existing lints, touches R/ so Strict-TDD applies. Then:
+  SESSION_NOTES.md archive (dashboard's only HIGH risk, 3,570 lines past the 2,000-line cap --
+  verify the Learning-518 fence-scanner defect is actually resolved before --write); sibling
+  pedigree-diagram-screenshots.R reshoot (Effort S); S583's full-fixture sweep for the
+  union-outside-parents-span finding (Effort S); sibling subtree-width asymmetry design session
+  (S576, Effort L); BACKLOG.md ledger-size housekeeping (S518, Effort L); #148 MHC
+  scope-narrowing (DECISION NEEDED); NPRC outreach (DECISION NEEDED). Also worth a future
+  session's look, per Learning 593: whether _pkgdown.yml's other config sections (home:,
+  template:) would benefit from a similar completeness guard -- not scoped or investigated this
+  session.
+key_files: tests/testthat/test_pkgdown_reference_config.R:88-114 (the new test, 4th in the
+  file); _pkgdown.yml:63 (the one-line fix, in the articles: -> contents: list); BACKLOG.md
+  Housekeeping (2 duplicate entries for this gap removed -- see PROJECT_LEARNINGS.md Learning
+  593 for why 2 existed).
+gotchas: (1) Calling `pkgdown:::build_articles_index(pkg)` directly (bypassing full
+  `build_site()`) to faithfully reproduce the CI-failing step also triggers favicon generation as
+  a side effect, creating an untracked pkgdown/favicon/ directory -- remove it before commit, it
+  is not part of any deliverable. (2) BACKLOG.md can carry 2 independent, unfixed entries for the
+  identical gap under different "found S<N>" headings far apart in the file -- grep the whole
+  file for the affected symbol/config-key before filing a new finding, not just the section a new
+  item would naturally land in (Learning 593). (3) test_pkgdown_reference_config.R's
+  getPkgdownConfig() cache (module-level env, computed once per test *file* run) means the new
+  test and the 3 pre-existing ones share one pkgdown::as_pkgdown() call -- don't re-call it
+  per-test.
+runtime_smoke: PASS -- ran the actual CI-failing mechanism directly
+  (`pkgdown:::build_articles_index(pkg)`), which previously errored `! In _pkgdown.yml, 1
+  vignette missing from index: "articles/pedigree-diagram"` and now succeeds, writing
+  articles/index.html. NOT yet observed green in CI itself -- commits are on local master,
+  unpushed as of this receipt; push is the owner's call, matching S584's own precedent of not
+  pushing unilaterally.
+changelog_ref: eace45d8 (this session's claim entry) -- see the 2026-08-15 section, "S585:"
+  entries
+commit: eace45d8 (claim); 9ab5b507 (fix + guard); 6a34c351 (close-out)
 ```
 
 ``` handoff
-session: S543
-date: 2026-08-12
-status: complete
-self_score: 7
-predecessor_score: 9
-active_task: CHANGELOG.md SRF_RED archive-refusal decision -- RESOLVED. Forced the archive
-through per owner decision after finding the decisive structural fact (trimmable region capped
-at 116,176 B vs. a 935,287 B frozen legacy footer, so no trim can ever clear the byte/line
-trigger regardless of force). BACKLOG.md updated with the resolution plus 2 new queued items
-(S325 migration decision; possible CHANGELOG.md entry-rate contributor).
-what_was_done: Re-derived live SRF numbers (2.9933 vs most-recent-archive boundary 50b65d1;
-0.1804 vs largest-drop boundary 0929172a) rather than trusting S542's report; pulled actual
-pre/post byte sizes for both boundary events via git cat-file -s, explaining the RED reading as
-an artifact of 50b65d1 (2026-08-11) only freeing 35,169 B on top of a file the PRIOR day's
-0929172a archive had already settled near its floor. Split the file at its Legacy history
-marker (awk 'NR<1374' / 'NR>=1374') and found the trimmable region totals only 116,176 B against
-a 935,287 B frozen pre-S325 footer (~14x the byte budget, ~1.8x the line cap) -- meaning no trim
-can ever clear the trigger. Presented this to the owner via 2 rounds of AskUserQuestion (the
-first, Hold-recommended framing was challenged directly by the owner before this structural fact
-was even computed); owner chose to force. Logged the claim commit to CHANGELOG.md first
-(e27718f0, clearing P1_UNDOCUMENTED per Learning 545's sequencing), then ran
-methodology_trim.py --file CHANGELOG.md --write --force: archived 67 records, 1,051,843 B ->
-945,242 B, verified lossless via the tool's own generated verify.sh (L1/L2/L3 OK) before
-committing (329344b1). Verified the predicted non-fix empirically post-trim (--check still
-FIRES at 945,242 B). Updated BACKLOG.md (resolved the item, added 2 new Housekeeping items) and
-PROJECT_LEARNINGS.md (Learning 550).
-next_steps: 2 new BACKLOG.md Housekeeping items, both unstarted: (1) Reopen the S325
-"freeze legacy, go forward" decision -- the only lever that can actually clear CHANGELOG.md's
-byte/line triggers; DECISION NEEDED on whether the campaign is worth running at all, Effort L,
-needs its own scoping session. (2) CHANGELOG.md's own ~4-entries-per-session ledger convention
-may be a rate contributor analogous to HANDOFFS.md's diagnosed Receipt Inflation (H4) -- not
-confirmed causal, needs a future session to measure the housekeeping-vs-deliverable entry-byte
-split. Unchanged from S542: test-coverage.yaml CI break (READY to diagnose), Phase 0 CI-check
-gap (DECISION NEEDED), NPRC outreach owner review (DECISION NEEDED), LabKey remaining recs
-(BLOCKED), issue #138/#148 (each need their own scoping session per their ratified sequencing
-audits).
-key_files: CHANGELOG.md (1,051,843 B -> 945,242 B, 67 records archived); docs/archive/
-CHANGELOG-through-2026-08-12.md (new shard, 67 records); BACKLOG.md (SRF_RED item resolved, 2
-new Housekeeping items); PROJECT_LEARNINGS.md Learning 550 (new); /Users/rmsharp/Development/
-methodology/docs/planning/ledger-trimmer-design.md (canonical design doc read this session,
-§3.3/§5.3/§9-10 -- not part of this repo, but load-bearing for the decision).
-gotchas: (1) An SRF_RED refusal's "most recent archive" boundary can be inflated purely by that
-prior archive having been small -- pull actual pre/post byte sizes (git cat-file -s <sha>^:<f> /
-<sha>:<f>) before trusting the ratio. (2) A file with a large fixed/unarchivable region (this
-project's frozen pre-S325 legacy footer) can make SRF irrelevant to the real question -- check
-whether the fixed region alone already exceeds the budget before treating SRF as decisive either
-way. (3) This session's first AskUserQuestion was under-researched (see self-assessment) -- it
-presented the canonical design doc's literal H3 rule without first computing the footer/tagged
-split; do the awk-based structural split BEFORE presenting options on a similar future decision,
-not after a correction.
-runtime_smoke: n/a -- docs/ledger-only change, no runtime/Shiny behavior touched.
-changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12 ([ad hoc] the claim; [ad hoc]
-the tool's own auto-appended CHANGELOG.md archive entry; [ad hoc] the close-out entry covering
-BACKLOG.md/PROJECT_LEARNINGS.md findings)
-commit: 4bac5d55
-```
-
-``` handoff
-session: S542
-date: 2026-08-12
+session: S584
+date: 2026-08-15
 status: complete
 self_score: 8
 predecessor_score: 9
-active_task: HANDOFFS.md archived (226,617 B -> 8,629 B, 2,908 -> 142 lines). CHANGELOG.md's own
-archive attempt refused (SRF_RED) and was deliberately NOT forced -- left for a future session's
-scoping decision, logged to BACKLOG.md. 2 new BACKLOG.md Housekeeping findings this session:
-test-coverage.yaml CI break (READY to diagnose), CHANGELOG.md SRF_RED (DECISION NEEDED).
-what_was_done: Ran methodology_trim.py --file HANDOFFS.md --write: archived 39 of 40 records to
-docs/archive/HANDOFFS-through-2026-08-12.md, verified lossless via the tool's own generated
-verify.sh (L1/L2/L3 OK) before committing. Confirmed the sole retained record was this session's
-own pending stub. Logged the Phase 1B claim commit to CHANGELOG.md first (a2550a1e), per
-Learning 545, to clear the tool's P1_UNDOCUMENTED gate. Also ran gh run list beyond the routine
-Phase 0 checklist and found test-coverage.yaml failing on origin/master's last 2 pushes (S536,
-S540) -- confirmed R-CMD-check.yaml itself had gone green (closing S541's own open question).
-Commits: 62882046 (claim), a2550a1e (ledger: record claim), 3ddb59ea (the archive), this
-close-out's own commit (sha pending at write time, self-referential).
-next_steps: Two new BACKLOG.md Housekeeping items, both unstarted: (1) test-coverage.yaml CI
-break -- READY to diagnose, Effort S/M; needs gh run view <id> --log (not --log-failed) or a
-local covr::package_coverage() repro to isolate the actual testthat.R failure past the
-spelling.R sandbox-path noise. (2) CHANGELOG.md SRF_RED refusal -- DECISION NEEDED, Effort S;
-a future session (or the owner) should choose between --force-ing a partial trim now vs.
-reopening the S325 legacy-footer migration question. Unchanged from S541: Phase 0 CI-check gap
-(DECISION NEEDED), NPRC outreach owner review (DECISION NEEDED), LabKey remaining recs (BLOCKED).
-key_files: HANDOFFS.md (archived, 142 lines); docs/archive/HANDOFFS-through-2026-08-12.md (new
-shard, 39 records); BACKLOG.md Housekeeping section (2 new items); CHANGELOG.md (claim entry +
-tool's own auto-appended archive entry); PROJECT_LEARNINGS.md Learning 549 (new).
-gotchas: (1) methodology_trim.py's SRF_RED gate is computed against the MOST RECENT archive
-only -- a small preceding trim (yesterday's 11-record CHANGELOG.md archive) can make an
-otherwise-healthy file refuse to archive again, while the SAME file reads healthy against its
-largest-drop boundary. Read both numbers the tool prints before deciding whether --force is
-appropriate; don't force reflexively off the RED reading alone. (2) The P1_UNDOCUMENTED gate
-checks CHANGELOG.md's frontier regardless of which file is being trimmed (ledger_rel_for()
-always returns "CHANGELOG.md") -- even a HANDOFFS.md-only trim needs the claim commit logged to
-CHANGELOG.md first if the claim commit doesn't itself touch CHANGELOG.md. (3) This session ran
-the Phase 0 priorities AskUserQuestion picker before the mandatory prose orientation report,
-out of CLAUDE.md's documented order -- caught and corrected mid-session by re-reading that
-convention; a future session should render the prose report first, every time.
-runtime_smoke: n/a -- docs/ledger-only change, no runtime/Shiny behavior touched.
-changelog_ref: this session's own CHANGELOG.md entries, 2026-08-12 ([ad hoc] the claim; [ad hoc]
-the tool's own auto-appended HANDOFFS.md archive entry; [ad hoc] x2 for the BACKLOG.md findings)
-commit: pending
+active_task: Diagnose the red scheduled shinytest2.yaml CI run (red 3 consecutive nights,
+  2026-08-12/13/14) -- DONE. Root cause found, reproduced with the CI's literal command, scoped by
+  a call-graph sweep, and (owner-directed at a pre-RED gate) fixed with a regression guard. All
+  local verification green; NOT yet observable in CI (see gotchas).
+what_was_done: Root cause -- .github/workflows/shinytest2.yaml:161-183 runs the E2E tier via
+  `Rscript -e testthat::test_dir(...)` per module group, bypassing tests/testthat.R, the only file
+  that calls library(nprcgenekeepr). test_dir() does not attach the package under test and no
+  helper-/setup-.R does either, so package exports are absent in that process. Fix -- qualified the
+  one offending call (nprcgenekeepr::makeExamplePedigreeFile) and added
+  tests/testthat/test_e2e_package_qualification.R, a static guard that fails if ANY
+  test-{app,e2e}-*.R file calls a package export bare. Verified 4 ways -- guard GREEN; the
+  previously-failing group rerun with the EXACT CI command now passes 8/8 in the un-attached
+  environment; full clean regression 5,958 passed / 1 pre-existing unrelated failure
+  (test_wordlist_coverage.R) / 0 errors; lintr 0 lints on touched files. devtools::check() 1 error /
+  0 warnings / 1 note -- BOTH pre-existing, provenance verified (see gotchas), neither caused here.
+  Commits 9b23075e (claim) and the close-out commit.
+next_steps: The push question is RESOLVED -- owner directed it in-session, 148 commits pushed,
+  master == origin/master, and shinytest2 confirmed green (run 31868762486). THE TOP PRIORITY IS NOW
+  CI TRIAGE: the push revealed 3 pre-existing reds, each filed as its own READY BACKLOG.md
+  Housekeeping item and each a separate deliverable. In recommended pickup order (cheapest and most
+  mechanical first): (1) pkgdown -- add `  - articles/pedigree-diagram` to _pkgdown.yml's
+  articles/contents list, one line, scope verified in both directions (S560 gap; the docs site is
+  currently not deploying at all, so this has the widest user-visible blast radius); (2)
+  R-CMD-check -- add the flagged words to inst/WORDLIST, remembering the test_dir read flags 4
+  (matings, Rectilinear's, runnable, visNetwork's) while check() flags 2, so cover all 4 (S573 gap,
+  red on all 5 platforms); (3) lint -- R/kinship.R:127,131,133, per-finding choice between a real
+  fix and a documented # nolint; this one touches R/ so it is Strict-TDD territory and behavior must
+  be provably unchanged (S564 gap). Do NOT bundle these: three files, three fixes, three
+  deliverables. Then the pre-existing queue: the 3 pedigree-diagram-screenshots.R sibling
+  screenshots that
+  may share pb_diagram_legend.png's staleness mechanism (found S582, READY, Effort S -- the
+  cheapest remaining item); SESSION_NOTES.md archive (dashboard's only HIGH risk, trim trigger
+  fires at 3,437 lines / 290,404 B, and the fence-scanner defect that previously blocked it appears
+  resolved -- verify the SRF refusal before --write); a full-fixture sweep for the S583
+  union-outside-parents-span finding (READY, Effort S); sibling subtree-width asymmetry design
+  session (S576, Effort L); BACKLOG.md ledger-size housekeeping, final Genetic-metrics section
+  (S518, Effort L); #148 MHC scope-narrowing (DECISION NEEDED); NPRC outreach (DECISION NEEDED).
+key_files: tests/testthat/test-e2e-mate-pair-analysis-module.R:61 (the fixed call, now
+  nprcgenekeepr::-qualified with a comment saying why it must stay that way -- it was at :58, the
+  line CI's error names, before this session's 3 comment lines shifted it);
+  tests/testthat/test_e2e_package_qualification.R:1-40 (the new guard, with the full mechanism
+  written up in its header comment); .github/workflows/shinytest2.yaml:161-183 (the per-group
+  Rscript loop that never attaches the package -- the actual source of the divergence);
+  tests/testthat.R:4 (the library(nprcgenekeepr) call CI bypasses);
+  tests/testthat/test_shinytest2_workflow_coverage.R (the sibling guard this one mirrors).
+gotchas: (1) `gh run view <id> --log` and `--log-failed` both return EMPTY for these runs; the only
+  path that worked was `gh api repos/rmsharp/nprcgenekeepr/actions/jobs/<jobId>/logs`. Get the job
+  id from `gh run view <runId>`. (2) When reproducing the CI command locally, do NOT copy
+  RENV_CONFIG_AUTOLOADER_ENABLED=false from the workflow -- CI installs to the site library, but
+  locally it strips the renv library from .libPaths(), so create_test_app() returns "" and the run
+  fails at a DIFFERENT line for an unrelated reason, masking the real defect. This cost a wasted
+  cycle. (3) `gh run list --branch master --limit 10` truncates below the first failure and
+  undercounted this streak as 2 runs when it was 3 -- use `--workflow=shinytest2.yaml` to see a
+  full streak once you know which workflow is red. (4) A scheduled run's log records the sha it
+  checked out; ALWAYS compare it to local HEAD before diagnosing (`git rev-list --count
+  <sha>..HEAD`). Here it was 145 behind, which made a correct-at-HEAD CI group look like a defect.
+  (5) `devtools::check()` is currently RED on master and has been since S573 -- 1 error, from
+  test_wordlist_coverage.R flagging `matings`/`visNetwork's` in NEWS.md. Do NOT read that error as
+  something your own session broke; confirm provenance with `git status --porcelain NEWS.md
+  inst/WORDLIST` and `git log -S'<word>' -- NEWS.md` before spending time on it. Filed as its own
+  BACKLOG.md item (Effort S -- a one-line inst/WORDLIST addition).
+runtime_smoke: PASS, locally AND in CI. Locally the previously-failing E2E group was rerun end to
+  end against the live app (real Chrome via shinytest2/AppDriver, real pedigree upload, real Marker
+  Genetics genotype upload, real Mate Pair Analysis run) in the exact un-attached environment CI
+  uses: files=1 passed=8 failed=0 skipped=0 error=0. Then CONFIRMED in CI after the owner-directed
+  push -- shinytest2 run 31868762486 SUCCESS, same group same numbers, all 19 groups green.
+changelog_ref: 9b23075e (this session's claim entry -- see the 2026-08-15 section, "S584:" entries)
+commit: f36146ea (close-out); 66593c61 (the fix + guard); 9b23075e (claim)
 ```
+
+``` handoff
+session: S583
+date: 2026-08-15
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: File a new BACKLOG.md finding -- a mating union can be positioned entirely outside
+  its own two parents' x-span (not merely off-center), found live via a user question about
+  pb_diagram_legend.png, confirmed via direct kinship2 comparison -- DONE, filed.
+what_was_done: Reproduced the exact scenario live via makePedigreeMatingLayout() on
+  trimPedigree(c("8LKBV9","FJIB3R","GA204Z"), obfuscated_rhesus_mhc_ped.csv) -- confirmed 5A6DFT
+  x=-60, 8DKELJ x=60, their union x=120 (outside the parent span). Built the identical pedigree in
+  kinship2::pedigree()/plot.pedigree() -- confirmed kinship2 centers the descent line between
+  parents unconditionally, a real divergence. Presented both findings + asked the user how to
+  proceed via AskUserQuestion; user picked "file as a new BACKLOG item." Filed in BACKLOG.md
+  (found S583, placed after the related S576 item, explicit about how it differs) and
+  PROJECT_LEARNINGS.md Learning 590. No code changed.
+next_steps: This finding (union-outside-parents-span, found S583) needs its own design session
+  before any fix -- reconciling Track 6's "center on children" goal with kinship2's "never leave
+  the parents' span" invariant without reopening Track 6's ratified formula wholesale. A quick
+  sweep of the full 375-animal fixture (mirroring S576's own "9/251 edges" measurement style)
+  would strengthen the filed item's scope claim beyond the single reproduced example. Otherwise,
+  BACKLOG.md's remaining numbered items are unchanged from S582's own handoff: sibling
+  subtree-width asymmetry (READY but likely needs its own design session, found S576); BACKLOG.md
+  ledger-size housekeeping (READY, Effort L, found S518); #148 MHC scope-narrowing conversation
+  (DECISION NEEDED); NPRC outreach & announcement plan (DECISION NEEDED); the 3
+  pedigree-diagram-screenshots.R sibling screenshots that may share pb_diagram_legend.png's own
+  staleness mechanism (found S582, unverified). Separately: scheduled shinytest2.yaml CI run still
+  red (3+ consecutive days as of this session), unchanged/undiagnosed.
+key_files: R/makePedigreeDiagramData.R:966-975 (finalUnitX -- the union-x-from-children formula
+  with the parent-distance blind spot); docs/planning/pedigree-diagram-track6-child-centered-
+  union-position-plan.md §1.4/§2.4 (the invariant and verification plan that never measured
+  distance-to-parents); BACKLOG.md (new item filed directly after the S576 finding);
+  PROJECT_LEARNINGS.md Learning 590.
+gotchas: kinship2::pedigree()'s dadid/momid arguments need explicit character "0" (via
+  missid = "0") for missing parents -- ifelse(is.na(x), 0, x) against a character vector silently
+  produces a type that fails kinship2's own id-set validation with a confusing "value not found in
+  id list" error; build the missing-parent vector with a character "0" literal from the start. Also:
+  when investigating a live user-reported visual, reproduce the EXACT data (same fixture, same
+  focal ids) through the actual layout function for real coordinates -- don't estimate from the
+  screenshot pixel positions.
+runtime_smoke: n/a -- documentation-only finding, no runtime code touched.
+changelog_ref: 918e7364 (S582's own last commit before this session's 2 new CHANGELOG entries --
+  see the 2026-08-15 section, "S583:" prefixed entries)
+commit: ce830dbe
+```
+
+``` handoff
+session: S582
+date: 2026-08-15
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Reshoot shiny_app_use/pb_diagram_legend.png (BACKLOG.md, found S574) -- DONE. New
+  image shows Rectilinear (kinship2-style) pre-selected with right-angle edge routing, matching
+  the Diagram tab's current zero-interaction default (flipped from "direct" by Track 2, S574).
+what_was_done: Located the canonical capture mechanism (vignettes/articles/
+  pedigree-diagram-screenshots.R's "Base fixture" step, which never sets pedigreeEdgeStyle).
+  Wrote a standalone scratch script reproducing only that step through its first shot() (not the
+  full canonical script, to avoid touching the other 4 committed screenshots) and ran it
+  (NOT_CRAN=true Rscript ...) -- captured successfully. Diffed the new PNG against the prior
+  committed one (git show 2b3e8ef6:...) -- confirmed only the radio-button/routing state changed.
+  Build-equivalent: pkgdown::build_article() for both articles/pedigree-diagram and
+  articles/colony-manager-guide rendered clean; MD5-confirmed the built HTML embeds the new PNG,
+  not a stale copy. Render litter removed before commit. BACKLOG.md item marked [x]/RESOLVED;
+  PROJECT_LEARNINGS.md Learning 589 added. Commit pending (this close-out).
+next_steps: BACKLOG.md's remaining numbered items (order this session's Phase 0 presented, none
+  else picked): a new item this session filed -- verify whether pedigree-diagram-screenshots.R's
+  other 3 non-base-fixture screenshots (diagram_show_names.png, diagram_affected_shading.png,
+  diagram_twin_connectors.png) are ALSO stale by the same never-sets-pedigreeEdgeStyle mechanism
+  (found S582, not verified either way -- open each and compare against a fresh capture); Pedigree
+  Diagram sibling subtree-width asymmetry (READY but likely needs its own design session, found
+  S576); BACKLOG.md ledger-size housekeeping -- editorial compression (READY, Effort L, found
+  S518); #148 MHC scope-narrowing conversation (DECISION NEEDED); NPRC outreach & announcement
+  plan (DECISION NEEDED, owner review). Separately: scheduled shinytest2.yaml CI run still red on
+  2026-08-13 and 2026-08-14 (2 consecutive days as of this session's own Phase 0 check) --
+  unchanged/undiagnosed across 2 sessions now, worth a dedicated diagnose session soon.
+  SESSION_NOTES.md is 3,300+ lines, past the 2,000-line HIGH-risk cap -- do NOT run
+  methodology_trim.py --write on it until the documented fence-scanner defect is fixed.
+key_files: vignettes/articles/shiny_app_use/pb_diagram_legend.png (the regenerated screenshot);
+  vignettes/articles/pedigree-diagram-screenshots.R:139-163 (the canonical "Base fixture" capture
+  step this session's standalone script reproduced); R/modPedigree.R:419-429 (.currentEdgeStyle(),
+  confirms the live default and that its own comment is now stale -- not fixed, noted only);
+  BACKLOG.md (S574 item marked RESOLVED S582; new incidental-finding item filed just below it);
+  PROJECT_LEARNINGS.md Learning 589 (the generalizable "sibling capture steps are unverified
+  peers" pattern).
+gotchas: A UI-default flip silently changes what EVERY zero-interaction capture step in a shared
+  script renders, not just the one instance someone happened to notice and report -- grep the
+  script for the changed input name across ALL its steps, not just the flagged one, before
+  assuming the fix is complete. Also: R/modPedigree.R:419-421's own comment above
+  .currentEdgeStyle() still says the default is "direct" -- the CODE is correct (returns
+  "rectilinear"), only the comment is stale; a future session touching this function should fix
+  the comment too, not just be aware the code is right.
+runtime_smoke: Documentation-asset-only change (no Shiny runtime behavior touched), so the
+  relevant "runtime" is the doc build pipeline, not the live app. pkgdown::build_article() for
+  both consuming articles rendered clean via quarto render; MD5-verified the built HTML actually
+  embeds the new image, not a stale cached one -- the real-consumer verification this project's
+  own Learning 443 precedent calls for.
+changelog_ref: a98010d9 (S581's own last CHANGELOG entry before this session's 2 new entries --
+  see the 2026-08-14/2026-08-15 sections, "S582:" prefixed entries)
+commit: 3e8870d2
+```
+
+``` handoff
+session: S581
+date: 2026-08-14
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Locale-dependent order() tie-break sweep (BACKLOG.md, found S578) -- DONE. 4 real
+  hits fixed (method="radix"); 2 initially-flagged hits corrected to false positives via
+  empirical verification, documented in-code, no behavior change.
+what_was_done: Fresh grep -n "order(" R/*.R (26 sites), classified all. RED (afe39632): 4 real
+  hits confirmed via divergence testing, tests added to test_orderReport.R/test_qcStudbook.R/
+  test_modBreedingGroups.R (new bgGroupView testServer test). GREEN (5583a621): method="radix"
+  added to orderReport.R:81,93, qcStudbook.R:323, modBreedingGroups.R:690. REFACTOR (15450f0d):
+  explanatory comments (no behavior change) on kinshipMatrixToKValues.R/computeGenomicROH.R
+  documenting why they're false positives. Verification: 4 targeted tests GREEN; full clean
+  regression 1 pre-existing failure unrelated, 0 errors; 0 lints (project's own .lintr config);
+  devtools::check() 0/0/1 pre-existing NOTE; live E2E (NPRC_RUN_E2E=true) confirmed all 3 affected
+  runtime paths pass. NEWS.Rmd/BACKLOG.md/PROJECT_LEARNINGS.md (Learning 588) updated.
+next_steps: BACKLOG.md's remaining numbered items (order this session's Phase 0 presented, none
+  picked): stale pb_diagram_legend.png screenshot (READY, Effort S, found S574); Pedigree Diagram
+  sibling subtree-width asymmetry (READY but needs its own design session first, found S576);
+  #148 MHC scope-narrowing conversation (DECISION NEEDED); NPRC outreach & announcement plan
+  (DECISION NEEDED, owner review). Separately: scheduled shinytest2.yaml CI run still red 2
+  consecutive days (2026-08-13, 2026-08-14), unchanged/undiagnosed across 2 sessions now --
+  worth a dedicated diagnose session soon. SESSION_NOTES.md is 3,146+ lines (grows every
+  session), past the 2,000-line HIGH-risk cap -- per CLAUDE.md's own fence-scanner-defect note,
+  do NOT run methodology_trim.py --write on it until that defect is fixed (rewrap the offending
+  4-backtick paragraph, or patch the tool).
+key_files: R/orderReport.R:81-86 (imports/noParentage radix fix); R/qcStudbook.R:323-326 (gen/id
+  radix fix); R/modBreedingGroups.R:687-693 (bgGroupView radix fix); R/kinshipMatrixToKValues.R:
+  105-112 (false-positive explanation); R/computeGenomicROH.R:110-121 (false-positive
+  explanation); tests/testthat/test_orderReport.R, test_qcStudbook.R, test_modBreedingGroups.R
+  (new RED tests); PROJECT_LEARNINGS.md Learning 588 (full classification methodology).
+gotchas: A grep-based "sorts a character column" heuristic over-flags for this defect class --
+  always empirically verify divergence (withr::with_locale or just check this session's own
+  default LC_COLLATE) before writing a RED test, not just read the sort-key type. Two distinct
+  false-positive mechanisms exist and both are easy to miss: (1) a data.table's [.data.table]
+  subsetting silently substitutes order() with its own locale-independent forder() -- check
+  object class, not just column type; (2) a locale-sensitive intermediate sort can still produce
+  a locale-INVARIANT final result if consumed via split()-plus-a-non-character-secondary-key --
+  trace how the ordered object is actually used downstream, not just whether the primary key is
+  character. Also: lintr::lint_package() with no arguments uses the project's own .lintr config
+  (allows camelCase); calling it with linters = linters_with_defaults() produces a completely
+  different, much noisier lint set unrelated to what CI actually checks -- don't do this, it
+  wastes time chasing lints CI would never flag.
+runtime_smoke: qcStudbook/orderReport/bgGroupView are all live runtime-behavior-affecting call
+  paths. Confirmed via opt-in live E2E (NPRC_RUN_E2E=true, real shinytest2/chromote browser --
+  skipped by default and NOT covered by the ordinary full-regression pass):
+  test-e2e-mate-pair-analysis-module.R, test-e2e-genetic-value-tutorial.R,
+  test-e2e-breeding-groups-module.R all pass. Full live E2E suite also run for full confidence.
+changelog_ref: 12ebaba4 (S580's own last CHANGELOG entry before this session's 6 new entries --
+  see the 2026-08-14 section, "S581:" prefixed entries)
+commit: 6dd26870
+```
+
+Self-score breakdown (9/10): +caught 2 plausible-looking false positives
+via empirical RED-phase verification before writing any implementation
+code, exactly the Strict-TDD safeguard this project’s contract exists
+for; +caught and corrected an in-session lintr tooling mistake (default
+linters vs. project’s own .lintr) before it produced a false close-out
+claim; +recognized full-regression alone was insufficient runtime
+verification given 3 confirmed runtime-affecting paths and ran the
+project’s own opt-in live E2E suite rather than treating “tests pass” as
+automatically “runtime verified”; +all 3 TDD phase gates run via
+AskUserQuestion per CLAUDE.md’s Phase-gate format; +documented
+false-positive reasoning in-code, not just in BACKLOG.md, so a future
+session re-running the same grep doesn’t re-derive it. -still no
+independent adversarial-verification pass (14+ session standing gap,
+unaddressed again); -the 6-hit-to-4-hit scope correction happened
+mid-RED rather than at PRE-RED, meaning the user approved a scope (all
+6) that immediately shrank – a more careful PRE-RED (checking object
+class/downstream consumption before presenting the classification table)
+could have caught this one step earlier.
+
+``` handoff
+session: S580
+date: 2026-08-14
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: HANDOFFS.md byte-budget/line-headroom archive trim (BACKLOG.md Housekeeping, found
+  S579) -- DONE. Archived 21 of 22 records to a new dated shard; both triggers clear (9,682 B vs
+  65,536 B budget; line-headroom metric abstains, fewer than 1 record since the split).
+what_was_done: Hit SRF_RED on the dry run (SRF 1.1566 against the most-recent archive 306a4b4, vs.
+  0.1201 against the largest-drop boundary d07814a) -- Learning 549/550/586's false-refusal pattern,
+  now confirmed on HANDOFFS.md too (a file Learning 549 had previously called clean). Pulled
+  absolute byte deltas for both boundaries before deciding (116,204 B real regrowth in ~1 day);
+  surfaced both readings + 3 options via AskUserQuestion; user chose --force. Verified losslessness
+  3 ways (dry-run L1/L2/L3, the shard's own verify.sh, post-trim --check). Caught and fixed a
+  cosmetic front-matter drift the tool's in-place edit left behind (the "currently holds N
+  receipt(s)" sentence stranded between 2 archive pointers) -- repositioned to match the S508/S561
+  convention. Removed the resolved BACKLOG.md item; added PROJECT_LEARNINGS.md Learning 587.
+  Commits: 9f4110f8 (claim), 838e94ff (the trim), 12ebaba4 (BACKLOG/Learning update), plus this
+  close-out commit.
+next_steps: BACKLOG.md's remaining numbered items (in the order presented this session's Phase 0,
+  none picked): locale-dependent order() sweep (qcStudbook()/orderReport(), READY, Effort M);
+  stale pb_diagram_legend.png screenshot (READY, Effort S); Pedigree Diagram sibling
+  subtree-width asymmetry (READY but needs its own design session first, found S576); #148 MHC
+  scope-narrowing conversation (DECISION NEEDED); NPRC outreach & announcement plan (DECISION
+  NEEDED, owner review). Separately, not yet its own BACKLOG item: SESSION_NOTES.md is 3,049+ lines
+  (grows every session), past the 2,000-line dashboard HIGH-risk cap -- per CLAUDE.md's own
+  "SESSION_NOTES.md archive blocked by a fence-scanner defect" note, do NOT run
+  methodology_trim.py --write on it yet; the 4-backtick inline-code-span false-fence at line
+  ~23229 must be fixed first (rewrap that one paragraph, or patch the tool's fence-scanner) or the
+  archive will misplace ~42% of the file's real record boundaries even though L1/L2/L3 would still
+  report lossless.
+key_files: HANDOFFS.md (live receipt ledger, now 9,682 B); docs/archive/HANDOFFS-through-2026-08-14.md
+  (+.verify.sh, the new shard, 21 records); BACKLOG.md (Housekeeping section, item resolved);
+  PROJECT_LEARNINGS.md Learning 587 (the cross-file SRF_RED recurrence).
+gotchas: The SRF_RED false-refusal pattern (Learnings 549/550/586/587) is now confirmed on BOTH
+  ledger files this project's methodology_trim.py config tracks, not a CHANGELOG.md quirk -- expect
+  it again on either file, and on SESSION_NOTES.md too once its fence-scanner defect is fixed and it
+  starts archiving. Always pull absolute byte deltas (git cat-file -s <sha>^:<file> / <sha>:<file>)
+  before trusting the ratio alone; the two boundaries can disagree by an order of magnitude on the
+  same real regrowth. Also: methodology_trim.py's in-place FRONTMATTER_FIELD_REGENERATED edit does
+  NOT reposition the "currently holds N receipt(s)" sentence relative to newly-inserted archive
+  pointers -- check its position after every --write and move it back to immediately-after-newest
+  if a new pointer landed above it.
+runtime_smoke: n/a -- docs/ledger-only change, no runtime behavior touched.
+changelog_ref: 12ebaba4
+commit: 75c23fe5
+```
+
+**Self-score breakdown (9/10):** +caught the P1_UNDOCUMENTED-avoidance
+opportunity from S579’s own experience and applied it proactively;
++pulled absolute byte deltas before the SRF_RED decision rather than
+trusting the ratio; +caught and fixed the stranded front-matter
+sentence; +verified losslessness 3 independent ways; +recorded a
+forward-looking, cross-file-generalized learning. -still no independent
+adversarial-verification pass (13+ session standing gap, unaddressed
+again); -skipped a second dedicated scope-confirmation `AskUserQuestion`
+after the picker, relying on the picker option’s own description instead
+(defensible, but a departure from S579’s own pattern worth a future
+session’s consistency judgment).

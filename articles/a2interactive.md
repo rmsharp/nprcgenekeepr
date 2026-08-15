@@ -331,22 +331,24 @@ prepares a pedigree’s node/edge data in this convention, and
 dependency of **nprcgenekeepr**) renders it. (A simpler function,
 **makePedigreeDiagramData**, remains available for a plain
 one-node-per-animal diagram without this convention – it is no longer
-what the Shiny app itself uses.) See the “Diagram view” part of the
-*colony-manager-guide* article for the equivalent point-and-click
-workflow and screenshots.
+what the Shiny app itself uses.) See the *pedigree-diagram* article for
+the equivalent point-and-click workflow and screenshots of every feature
+– including affected-status shading, name labels, and twin/zygosity
+connectors, none of which this scripted walkthrough demonstrates.
 
 That parent-to-mating-to-child connector has two available routings,
 selected by **makePedigreeMatingLayout**’s *edgeStyle* argument:
-`"direct"` (the default – a single straight or lightly sloped line all
-the way from parent to mating dot to child) and `"rectilinear"` (strict
-horizontal/vertical right angles throughout – a horizontal segment
-between the two parents, a vertical drop to the mating dot, a horizontal
-sibship bar across the children, and a vertical drop into each one,
-matching the convention the **kinship2** R package uses). The Shiny
-app’s Diagram tab exposes the same choice live as a “Diagram Edge Style”
-toggle above the diagram; in a script it is just this one argument. Both
-are demonstrated below – *direct* first (matching the tab’s own
-default), *rectilinear* afterward.
+`"rectilinear"` (the default, Track 2, docs/planning/pedigree-diagram-
+kinship2-fidelity-remediation-plan.md – strict horizontal/vertical right
+angles throughout: a horizontal segment between the two parents, a
+vertical drop to the mating dot, a horizontal sibship bar across the
+children, and a vertical drop into each one, matching the convention the
+**kinship2** R package uses) and `"direct"` (a single straight or
+lightly sloped line all the way from parent to mating dot to child). The
+Shiny app’s Diagram tab exposes the same choice live as a “Diagram Edge
+Style” toggle above the diagram; in a script it is just this one
+argument. Both are demonstrated below – *direct* first, *rectilinear*
+(matching the tab’s own default) afterward.
 
 The *trimmedPed* pedigree built earlier in this tutorial has 704 animals
 – realistic for the live Shiny application’s pan-and-zoom canvas, but
@@ -419,7 +421,11 @@ across 4 generations and 33 animals.
 
 ``` r
 
-diagramData <- makePedigreeMatingLayout(demoPed)
+## edgeStyle is now explicit -- Track 2 flipped the package's own default
+## to "rectilinear", so this section's own "Direct Edge Style" labeling
+## needs edgeStyle = "direct" spelled out rather than relying on the
+## (now different) implicit default.
+diagramData <- makePedigreeMatingLayout(demoPed, edgeStyle = "direct")
 names(diagramData)
 ```
 
@@ -486,8 +492,8 @@ visNetwork::visNetwork(diagramData$nodes, diagramData$edges) |>
       # Excludes all 5 of makePedigreeMatingLayout()'s reserved node-id
       # prefixes -- __union_/__dup_ can appear under either edge style;
       # __drop_/__bar_/__proj_ only appear under "rectilinear" (see below).
-      # Harmless no-op here since demoPed's diagramData was built with the
-      # default "direct" style, but keeps this pattern identical to the
+      # Harmless no-op here since diagramData was built with edgeStyle =
+      # "direct" explicit above, but keeps this pattern identical to the
       # rectilinear chunk below and to R/modPedigree.R's own.
       values = diagramData$nodes$id[
         !grepl("^__union_|^__dup_|^__drop_|^__bar_|^__proj_",
@@ -509,13 +515,15 @@ harder.
 
 ### Rectilinear Edge Style
 
-The diagram above uses **makePedigreeMatingLayout**’s default *direct*
-edge style. Passing `edgeStyle = "rectilinear"` instead draws the same
-relationships – same *demoPed*, same animals, same parent/child/mating
-structure – with strict right angles: a horizontal line directly between
-mates, a vertical drop to their shared mating dot, a horizontal bar
-across their children, and a vertical drop into each child, matching the
-convention the **kinship2** R package uses.
+The diagram above uses the *direct* edge style, requested explicitly.
+Omitting `edgeStyle` entirely (or passing `edgeStyle = "rectilinear"`
+explicitly, as below) draws the same relationships – same *demoPed*,
+same animals, same parent/child/mating structure – with strict right
+angles: a horizontal line directly between mates, a vertical drop to
+their shared mating dot, a horizontal bar across their children, and a
+vertical drop into each child, matching the convention the **kinship2**
+R package uses, and matching **makePedigreeMatingLayout**’s own default
+(Track 2).
 
 ``` r
 
@@ -655,18 +663,24 @@ twinDiagramData <- makePedigreeMatingLayout(twinPed, twinRelations = twinRelatio
 twinDiagramData$edges
 ```
 
-    ##        from        to dashes smooth.enabled smooth.type smooth.roundness label
-    ## 1 __union_1        S1  FALSE             NA        <NA>               NA  <NA>
-    ## 2 __union_1        S2  FALSE             NA        <NA>               NA  <NA>
-    ## 3        F1 __union_1  FALSE             NA        <NA>               NA  <NA>
-    ## 4        F2 __union_1  FALSE             NA        <NA>               NA  <NA>
-    ## 5        S1        S2  14, 8             NA        <NA>               NA     ?
-    ##     color
-    ## 1    <NA>
-    ## 2    <NA>
-    ## 3    <NA>
-    ## 4    <NA>
-    ## 5 #009E73
+    ##                from               to dashes smooth.enabled smooth.type
+    ## 3                F1        __union_1  FALSE             NA        <NA>
+    ## 4                F2        __union_1  FALSE             NA        <NA>
+    ## 5                S1               S2  14, 8             NA        <NA>
+    ## 1         __union_1 __drop___union_1  FALSE             NA        <NA>
+    ## 2          __bar_S1               S1  FALSE             NA        <NA>
+    ## 31         __bar_S2               S2  FALSE             NA        <NA>
+    ## 41         __bar_S1 __drop___union_1  FALSE             NA        <NA>
+    ## 51 __drop___union_1         __bar_S2  FALSE             NA        <NA>
+    ##    smooth.roundness   color width label
+    ## 3                NA    <NA>    NA  <NA>
+    ## 4                NA    <NA>    NA  <NA>
+    ## 5                NA #009E73    NA     ?
+    ## 1                NA #2B7CE9    NA  <NA>
+    ## 2                NA #2B7CE9    NA  <NA>
+    ## 31               NA #2B7CE9    NA  <NA>
+    ## 41               NA #2B7CE9    NA  <NA>
+    ## 51               NA #2B7CE9    NA  <NA>
 
 Compare the *edges* table above to what **makePedigreeMatingLayout**
 returns for the same pedigree without *twinRelations*: the union/parent
@@ -1431,7 +1445,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmphiiGzO/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmptfhBtb/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -2203,7 +2217,7 @@ into the de-identified table.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-08-13 06:37:18.323969. The processing
+The current date and time is 2026-08-15 16:15:47.230599. The processing
 time for this document was 22 seconds..
 
 ``` r

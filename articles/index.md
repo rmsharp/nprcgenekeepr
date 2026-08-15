@@ -21,8 +21,12 @@
   Analysis](https://github.com/rmsharp/nprcgenekeepr/articles/genetic-value-analysis.md):
 - [Gene-Drop Iteration
   Convergence](https://github.com/rmsharp/nprcgenekeepr/articles/gvaConvergence.md):
+- [Fidelity Validation Against
+  kinship2](https://github.com/rmsharp/nprcgenekeepr/articles/kinship2-fidelity-validation.md):
 - [Building a Focal-Animal Pedigree
   Offline](https://github.com/rmsharp/nprcgenekeepr/articles/offline-focal-animal-workflow.md):
+- [The Pedigree Diagram
+  Tab](https://github.com/rmsharp/nprcgenekeepr/articles/pedigree-diagram.md):
 - [Quick Example of Simulated Kinships with Partial
   Parentage](https://github.com/rmsharp/nprcgenekeepr/articles/simulatedKValues.md):
 - [Studbook Quality

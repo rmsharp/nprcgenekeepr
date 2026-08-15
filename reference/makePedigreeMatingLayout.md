@@ -18,7 +18,7 @@ Path step 2).
 ``` r
 makePedigreeMatingLayout(
   ped,
-  edgeStyle = c("direct", "rectilinear"),
+  edgeStyle = c("rectilinear", "direct"),
   twinRelations = NULL,
   orderBySex = TRUE
 )
@@ -34,13 +34,14 @@ makePedigreeMatingLayout(
 
 - edgeStyle:
 
-  one of `"direct"` (default – a straight edge from each parent to their
-  mating unit and from each mating unit to each child, matching this
-  function's own original, still-default behavior) or `"rectilinear"`
-  (issue \#142 – routes mate-line and sibship-bar edges through
+  one of `"rectilinear"` (default since Track 2,
+  docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md –
+  issue \#142's routing of mate-line and sibship-bar edges through
   invisible waypoint nodes via `.addRectilinearWaypoints()` so they
   render as a strict right angle, kinship2-style, instead of a direct
-  diagonal/straight segment).
+  diagonal/straight segment) or `"direct"` (this function's own original
+  behavior – a straight edge from each parent to their mating unit and
+  from each mating unit to each child).
 
 - twinRelations:
 
@@ -68,13 +69,22 @@ makePedigreeMatingLayout(
 ## Value
 
 A list with `nodes` (`id`, `label`, `shape`, `title`, `size`, `x`, `y`),
-`edges` (`from`, `to`, `dashes`, plus `label`/`color` when
-`twinRelations` is supplied – D10, found never wired at S494, fixed
-S506), and `duplicateToReal` (a named character vector, duplicate node
-id -\> real individual id). Under `edgeStyle = "rectilinear"`, `nodes`
-gains `color.background`/`color.border` and `edges` unconditionally
-gains `color` (see `.addRectilinearWaypoints()`) – an already-set edge
-`color` (e.g. the twin connector's) is preserved, not reset.
+`edges` (`from`, `to`, `dashes`, `color`, `width` – the latter 2 ALWAYS
+present once any mating unit exists, S549 Finding \#2 fixed S555: a
+consanguineous mating unit's (`kinship(sire, dam) > 0`) 2
+spouse-to-union edges get `"#D55E00"`/`4` (an Okabe-Ito colorblind-safe
+vermillion, kinship2's own doubled/ thickened mate-line convention),
+every other edge `NA`; plus `label` when `twinRelations` is supplied –
+D10, found never wired at S494, fixed S506), and `duplicateToReal` (a
+named character vector, duplicate node id -\> real individual id). Under
+`edgeStyle = "rectilinear"`, `nodes` gains
+`color.background`/`color.border` and `edges` unconditionally gains
+`color` (see `.addRectilinearWaypoints()`) – an already-set edge `color`
+(e.g. the twin connector's or the consanguinity marker's) is preserved
+when the edge is KEPT as-is; a marked mate edge that gets replaced by a
+D2 dogleg projection currently falls back to the generic routing
+color/width (edgeStyle = "rectilinear" propagation is a deferred
+follow-up, BACKLOG.md Housekeeping).
 
 ## Details
 

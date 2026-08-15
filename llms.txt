@@ -391,6 +391,8 @@ Funtions designed for interactive use
   : Remove placeholder animals added for unknown parents
 - [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
   : Run the GeneKeepR Shiny Application
+- [`shrinkPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/shrinkPedigree.md)
+  : Shrink a pedigree to fit within a bit-size budget
 - [`trimPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/trimPedigree.md)
   : Trim a pedigree to a group's ancestors
 - [`summary(`*`<nprcgenekeeprErr>`*`)`](https://github.com/rmsharp/nprcgenekeepr/reference/summary.md)
@@ -837,6 +839,8 @@ Funtions designed for interactive use
   : Determine if Changed Columns tab should be displayed
 - [`shouldShowOripTab()`](https://github.com/rmsharp/nprcgenekeepr/reference/shouldShowOripTab.md)
   : Determine if the ORIP Reporting tab should be displayed
+- [`shrinkPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/shrinkPedigree.md)
+  : Shrink a pedigree to fit within a bit-size budget
 - [`summarizeKinshipValues()`](https://github.com/rmsharp/nprcgenekeepr/reference/summarizeKinshipValues.md)
   : Summarize imputed kinship values
 - [`toCharacter()`](https://github.com/rmsharp/nprcgenekeepr/reference/toCharacter.md)
@@ -869,8 +873,12 @@ Funtions designed for interactive use
   Analysis](https://github.com/rmsharp/nprcgenekeepr/articles/genetic-value-analysis.md):
 - [Gene-Drop Iteration
   Convergence](https://github.com/rmsharp/nprcgenekeepr/articles/gvaConvergence.md):
+- [Fidelity Validation Against
+  kinship2](https://github.com/rmsharp/nprcgenekeepr/articles/kinship2-fidelity-validation.md):
 - [Building a Focal-Animal Pedigree
   Offline](https://github.com/rmsharp/nprcgenekeepr/articles/offline-focal-animal-workflow.md):
+- [The Pedigree Diagram
+  Tab](https://github.com/rmsharp/nprcgenekeepr/articles/pedigree-diagram.md):
 - [Quick Example of Simulated Kinships with Partial
   Parentage](https://github.com/rmsharp/nprcgenekeepr/articles/simulatedKValues.md):
 - [Studbook Quality

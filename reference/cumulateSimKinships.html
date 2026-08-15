@@ -35,7 +35,9 @@ and the forth element is the maximum value of the kinships."><meta property="og:
     <li><a class="dropdown-item" href="../articles/fg-se-validation.html">Validating the Founder-Genome-Equivalent Standard Error</a></li>
     <li><a class="dropdown-item" href="../articles/genetic-value-analysis.html">Genetic Value Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/gvaConvergence.html">Gene-Drop Iteration Convergence</a></li>
+    <li><a class="dropdown-item" href="../articles/kinship2-fidelity-validation.html">Fidelity Validation Against kinship2</a></li>
     <li><a class="dropdown-item" href="../articles/offline-focal-animal-workflow.html">Building a Focal-Animal Pedigree Offline</a></li>
+    <li><a class="dropdown-item" href="../articles/pedigree-diagram.html">The Pedigree Diagram Tab</a></li>
     <li><a class="dropdown-item" href="../articles/simulatedKValues.html">Quick Example of Simulated Kinships with Partial Parentage</a></li>
     <li><a class="dropdown-item" href="../articles/studbook-quality-control.html">Studbook Quality Control</a></li>
   </ul></li>
@@ -65,7 +67,13 @@ and the forth element is the maximum value of the kinships.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">cumulateSimKinships</span><span class="op">(</span><span class="va">ped</span>, <span class="va">allSimParents</span>, pop <span class="op">=</span> <span class="cn">NULL</span>, n <span class="op">=</span> <span class="fl">10L</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">cumulateSimKinships</span><span class="op">(</span></span>
+<span>  <span class="va">ped</span>,</span>
+<span>  <span class="va">allSimParents</span>,</span>
+<span>  pop <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  n <span class="op">=</span> <span class="fl">10L</span>,</span>
+<span>  twinRelations <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -91,6 +99,16 @@ interest. The default is NULL.</p></dd>
 <dd><p>integer value of the number of simulated pedigrees to generate.
 Must be at least 1 (<code>n &lt; 1</code> is an error); the standard deviation
 requires <code>n &gt;= 2</code>.</p></dd>
+
+
+<dt id="arg-twinrelations">twinRelations<a class="anchor" aria-label="anchor" href="#arg-twinrelations"></a></dt>
+<dd><p>Optional data.frame of declared twin pairs
+(<code>id1</code>, <code>id2</code>, <code>code</code>) passed straight through to the
+internal <code><a href="kinship.html">kinship</a></code> call; only <code>code == "MZ twin"</code> rows
+affect the computed matrix. <code>NULL</code> (the default) is a complete
+no-op, matching today's behavior. See <code><a href="kinship.html">kinship</a></code>'s own
+<code>twinRelations</code> documentation for the full correction mechanism and
+precondition.</p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -27,7 +27,9 @@
     <li><a class="dropdown-item" href="../articles/fg-se-validation.html">Validating the Founder-Genome-Equivalent Standard Error</a></li>
     <li><a class="dropdown-item" href="../articles/genetic-value-analysis.html">Genetic Value Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/gvaConvergence.html">Gene-Drop Iteration Convergence</a></li>
+    <li><a class="dropdown-item" href="../articles/kinship2-fidelity-validation.html">Fidelity Validation Against kinship2</a></li>
     <li><a class="dropdown-item" href="../articles/offline-focal-animal-workflow.html">Building a Focal-Animal Pedigree Offline</a></li>
+    <li><a class="dropdown-item" href="../articles/pedigree-diagram.html">The Pedigree Diagram Tab</a></li>
     <li><a class="dropdown-item" href="../articles/simulatedKValues.html">Quick Example of Simulated Kinships with Partial Parentage</a></li>
     <li><a class="dropdown-item" href="../articles/studbook-quality-control.html">Studbook Quality Control</a></li>
   </ul></li>
@@ -53,7 +55,12 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">modGeneticValueServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">pedigree</span>, speciesOverrides <span class="op">=</span> <span class="fu">reactive</span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">modGeneticValueServer</span><span class="op">(</span></span>
+<span>  <span class="va">id</span>,</span>
+<span>  <span class="va">pedigree</span>,</span>
+<span>  speciesOverrides <span class="op">=</span> <span class="fu">reactive</span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span>,</span>
+<span>  twinRelations <span class="op">=</span> <span class="fu">reactive</span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -75,6 +82,17 @@ overrides loaded at boot by <code><a href="loadSpeciesOverrides.html">loadSpecie
 <code>gestationDefault</code>), or <code>NULL</code>. Threaded into
 <code><a href="reportGV.html">reportGV</a></code>. Defaults to <code>reactive(NULL)</code>
 so no config file means bundled behavior.</p></dd>
+
+
+<dt id="arg-twinrelations">twinRelations<a class="anchor" aria-label="anchor" href="#arg-twinrelations"></a></dt>
+<dd><p>reactive returning a validated twin/zygosity sidecar
+data.frame (<code>id1</code>, <code>id2</code>, <code>code</code>), or <code>NULL</code>. Unlike
+<code>kinshipOverrideFile</code> below, this data does not originate inside this
+module – it is uploaded on the Pedigree Browser's Diagram tab and threaded
+in by <code>appServer</code> (BL-N Slice 3), so a declared MZ-twin pair's
+corrected kinship is reflected in <code><a href="reportGV.html">reportGV</a></code>'s output
+regardless of which tab the user visits first. Defaults to
+<code>reactive(NULL)</code> (no twins declared).</p></dd>
 
 </dl></div>
     <div class="section level2">

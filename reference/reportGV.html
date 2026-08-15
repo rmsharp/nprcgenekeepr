@@ -27,7 +27,9 @@
     <li><a class="dropdown-item" href="../articles/fg-se-validation.html">Validating the Founder-Genome-Equivalent Standard Error</a></li>
     <li><a class="dropdown-item" href="../articles/genetic-value-analysis.html">Genetic Value Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/gvaConvergence.html">Gene-Drop Iteration Convergence</a></li>
+    <li><a class="dropdown-item" href="../articles/kinship2-fidelity-validation.html">Fidelity Validation Against kinship2</a></li>
     <li><a class="dropdown-item" href="../articles/offline-focal-animal-workflow.html">Building a Focal-Animal Pedigree Offline</a></li>
+    <li><a class="dropdown-item" href="../articles/pedigree-diagram.html">The Pedigree Diagram Tab</a></li>
     <li><a class="dropdown-item" href="../articles/simulatedKValues.html">Quick Example of Simulated Kinships with Partial Parentage</a></li>
     <li><a class="dropdown-item" href="../articles/studbook-quality-control.html">Studbook Quality Control</a></li>
   </ul></li>
@@ -65,6 +67,7 @@
 <span>  breedingAgeDefault <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  gestationDefault <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  kinshipOverrides <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  twinRelations <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  guCutoff <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  zScoreCutoff <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  axisPriority <span class="op">=</span> <span class="cn">NULL</span></span>
@@ -143,6 +146,16 @@ set are warn-dropped (the run is not aborted). An override REFINES the
 named kinship cell; it does not suppress the <code>+ sexMean / 2</code>
 unknown-parent correction, which is kept for every animal missing one
 parent. See <code><a href="applyKinshipOverrides.html">applyKinshipOverrides</a></code>.</p></dd>
+
+
+<dt id="arg-twinrelations">twinRelations<a class="anchor" aria-label="anchor" href="#arg-twinrelations"></a></dt>
+<dd><p>Optional data.frame of declared twin pairs
+(<code>id1</code>, <code>id2</code>, <code>code</code>) passed straight through to the
+internal <code><a href="kinship.html">kinship</a></code> call; only <code>code == "MZ twin"</code> rows
+affect the computed matrix. <code>NULL</code> (the default) is a complete
+no-op, matching today's behavior. See <code><a href="kinship.html">kinship</a></code>'s own
+<code>twinRelations</code> documentation for the full correction mechanism and
+precondition.</p></dd>
 
 
 <dt id="arg-gucutoff">guCutoff<a class="anchor" aria-label="anchor" href="#arg-gucutoff"></a></dt>

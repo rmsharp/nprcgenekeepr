@@ -332,17 +332,24 @@ animal that mates more than once, or whose lineage loops back on itself
 (e.g. a consanguineous mating), appears once per mating, with each
 occurrence joined back to its main occurrence by a curved, dashed line;
 hovering, clicking, or searching any occurrence behaves identically to
-the animal’s main occurrence. Clicking an animal re-centers the
-population on it, the same as entering its ID in the focal-animals text
-area. An **Export Diagram (PNG)** button, shown in the diagram’s own
-corner, saves the current diagram view as a PNG image file – useful for
-husbandry reports, IACUC documents, or presentations. Hovering any
-animal shows its ID, sex, generation, sire, dam, and (when the pedigree
-data includes it) affected status. A **Select by id** dropdown above the
-diagram lets you jump straight to a specific animal by ID, dimming every
-node except it and its direct connections – useful for locating one
-animal in a large, busy diagram without narrowing the focal-animal
-selection.
+the animal’s main occurrence. When a mating pairs two blood-related
+animals (their kinship coefficient is greater than zero), the two
+connector lines joining that pair to their shared mating point render
+thicker and in a distinct color (a colorblind-safe vermillion), matching
+the doubled/thickened mate-line convention traditional pedigree charts
+use to flag a consanguineous mating at a glance – every other mating
+renders unchanged. This marker always reflects the pedigree’s own
+sire/dam data; it needs no optional column and no toggle. Clicking an
+animal re-centers the population on it, the same as entering its ID in
+the focal-animals text area. An **Export Diagram (PNG)** button, shown
+in the diagram’s own corner, saves the current diagram view as a PNG
+image file – useful for husbandry reports, IACUC documents, or
+presentations. Hovering any animal shows its ID, sex, generation, sire,
+dam, and (when the pedigree data includes it) affected status. A
+**Select by id** dropdown above the diagram lets you jump straight to a
+specific animal by ID, dimming every node except it and its direct
+connections – useful for locating one animal in a large, busy diagram
+without narrowing the focal-animal selection.
 
 If a colony records twin births, an optional **Twin/Zygosity Relations**
 file can be uploaded from the panel to the right of the focal-animal
@@ -362,6 +369,17 @@ and dam) is rejected with an on-screen notification rather than breaking
 the diagram; the pedigree renders exactly as it would with no twin data
 at all until a valid file is supplied. A pedigree with no twin data
 uploaded is unaffected by this feature entirely.
+
+Uploading this file does more than draw connectors: a declared
+monozygotic (MZ) pair’s kinship is corrected to genetic identity
+throughout the application, not just on this diagram. Once uploaded, the
+correction is reflected in **Summary Statistics**, **Breeding Group
+Formation**, and **Genetic Value Analysis** – including for every
+relative reached through either twin, not just the pair itself – no
+matter which of those tabs is visited first or whether the **Show Twin
+Connectors** toggle above is ever switched on (that toggle controls only
+this diagram’s own rendering). DZ and UZ pairs are unaffected by this
+correction; only a declared MZ pair’s kinship changes.
 
 ### Module Interface
 

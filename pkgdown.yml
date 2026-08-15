@@ -11,10 +11,12 @@ articles:
   articles/fg-se-validation: fg-se-validation.html
   articles/genetic-value-analysis: genetic-value-analysis.html
   gvaConvergence: gvaConvergence.html
+  articles/kinship2-fidelity-validation: kinship2-fidelity-validation.html
   articles/offline-focal-animal-workflow: offline-focal-animal-workflow.html
+  articles/pedigree-diagram: pedigree-diagram.html
   simulatedKValues: simulatedKValues.html
   articles/studbook-quality-control: studbook-quality-control.html
-last_built: 2026-08-13T06:35Z
+last_built: 2026-08-15T16:13Z
 urls:
   reference: https://github.com/rmsharp/nprcgenekeepr/reference
   article: https://github.com/rmsharp/nprcgenekeepr/articles

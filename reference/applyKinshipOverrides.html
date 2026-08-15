@@ -39,7 +39,9 @@ rows."><meta property="og:image" content="https://github.com/rmsharp/nprcgenekee
     <li><a class="dropdown-item" href="../articles/fg-se-validation.html">Validating the Founder-Genome-Equivalent Standard Error</a></li>
     <li><a class="dropdown-item" href="../articles/genetic-value-analysis.html">Genetic Value Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/gvaConvergence.html">Gene-Drop Iteration Convergence</a></li>
+    <li><a class="dropdown-item" href="../articles/kinship2-fidelity-validation.html">Fidelity Validation Against kinship2</a></li>
     <li><a class="dropdown-item" href="../articles/offline-focal-animal-workflow.html">Building a Focal-Animal Pedigree Offline</a></li>
+    <li><a class="dropdown-item" href="../articles/pedigree-diagram.html">The Pedigree Diagram Tab</a></li>
     <li><a class="dropdown-item" href="../articles/simulatedKValues.html">Quick Example of Simulated Kinships with Partial Parentage</a></li>
     <li><a class="dropdown-item" href="../articles/studbook-quality-control.html">Studbook Quality Control</a></li>
   </ul></li>
@@ -101,8 +103,17 @@ matrix and on a value above the exact positive-semi-definiteness bound
 <code>sqrt(kmat[id1, id1] * kmat[id2, id2])</code>. Soft, run-preserving
 handling of ids outside the analysis set is the caller's responsibility
 – <code><a href="reportGV.html">reportGV</a></code> warn-drops non-member ids before calling this.
-<code><a href="kinship.html">kinship()</a></code> itself is never modified (it has several callers, including
-two simulations that must not take current-kinship overrides).</p>
+This function's own algorithm – writing outside-information overrides
+onto an already-computed matrix – is never applied inside
+<code><a href="kinship.html">kinship</a></code> itself (it has several callers, including two
+simulations that must not take current-kinship overrides). This is a
+different kind of adjustment than <code><a href="kinship.html">kinship</a></code>'s own
+<code>twinRelations</code> parameter: a declared MZ-twin pair's genetic identity
+is a structural pedigree fact, like <code>sire</code>/<code>dam</code>/<code>sex</code>, not
+outside information overriding a pedigree-derived computation – both
+simulations pass a known twin pair through unchanged, so twin identity
+needs no shielding of the kind overrides require. See
+<code>docs/planning/twin-relations-kinship-computation-plan.md</code> §2.3.</p>
     </div>
 
     <div class="section level2">

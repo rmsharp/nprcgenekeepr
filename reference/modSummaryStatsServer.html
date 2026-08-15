@@ -31,7 +31,9 @@ relationship designation analysis."><meta property="og:image" content="https://g
     <li><a class="dropdown-item" href="../articles/fg-se-validation.html">Validating the Founder-Genome-Equivalent Standard Error</a></li>
     <li><a class="dropdown-item" href="../articles/genetic-value-analysis.html">Genetic Value Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/gvaConvergence.html">Gene-Drop Iteration Convergence</a></li>
+    <li><a class="dropdown-item" href="../articles/kinship2-fidelity-validation.html">Fidelity Validation Against kinship2</a></li>
     <li><a class="dropdown-item" href="../articles/offline-focal-animal-workflow.html">Building a Focal-Animal Pedigree Offline</a></li>
+    <li><a class="dropdown-item" href="../articles/pedigree-diagram.html">The Pedigree Diagram Tab</a></li>
     <li><a class="dropdown-item" href="../articles/simulatedKValues.html">Quick Example of Simulated Kinships with Partial Parentage</a></li>
     <li><a class="dropdown-item" href="../articles/studbook-quality-control.html">Studbook Quality Control</a></li>
   </ul></li>
@@ -65,7 +67,8 @@ relationship designation analysis.</p>
 <span>  <span class="va">pedigree</span>,</span>
 <span>  kinshipMatrix <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  founderStats <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  kinshipOverrides <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  kinshipOverrides <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  twinRelations <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -113,6 +116,16 @@ The override moves the kinship <em>value</em> only; the <code>relation</code>
 structure, not from the kinship value). Overridden pairs are flagged
 with a logical <code>overridden</code> column in the relationship table.
 <code>NULL</code> (the default) is a no-op.</p></dd>
+
+
+<dt id="arg-twinrelations">twinRelations<a class="anchor" aria-label="anchor" href="#arg-twinrelations"></a></dt>
+<dd><p>optional reactive returning a validated twin/zygosity
+sidecar data.frame (<code>id1</code>, <code>id2</code>, <code>code</code>); see
+<code><a href="checkTwinRelations.html">checkTwinRelations</a></code>. When the module recomputes kinship from
+the pedigree (the usual path), it is passed straight through to
+<code><a href="kinship.html">kinship</a></code> so the relationship table and the kinship CSV
+export reflect a declared MZ-twin pair's corrected identity regardless
+of tab order (BL-N Slice 3). <code>NULL</code> (the default) is a no-op.</p></dd>
 
 </dl></div>
     <div class="section level2">

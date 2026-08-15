@@ -43,7 +43,9 @@ this is an additive sibling function (Migration Path step 2)."><meta property="o
     <li><a class="dropdown-item" href="../articles/fg-se-validation.html">Validating the Founder-Genome-Equivalent Standard Error</a></li>
     <li><a class="dropdown-item" href="../articles/genetic-value-analysis.html">Genetic Value Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/gvaConvergence.html">Gene-Drop Iteration Convergence</a></li>
+    <li><a class="dropdown-item" href="../articles/kinship2-fidelity-validation.html">Fidelity Validation Against kinship2</a></li>
     <li><a class="dropdown-item" href="../articles/offline-focal-animal-workflow.html">Building a Focal-Animal Pedigree Offline</a></li>
+    <li><a class="dropdown-item" href="../articles/pedigree-diagram.html">The Pedigree Diagram Tab</a></li>
     <li><a class="dropdown-item" href="../articles/simulatedKValues.html">Quick Example of Simulated Kinships with Partial Parentage</a></li>
     <li><a class="dropdown-item" href="../articles/studbook-quality-control.html">Studbook Quality Control</a></li>
   </ul></li>
@@ -79,7 +81,7 @@ this is an additive sibling function (Migration Path step 2).</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">makePedigreeMatingLayout</span><span class="op">(</span></span>
 <span>  <span class="va">ped</span>,</span>
-<span>  edgeStyle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"direct"</span>, <span class="st">"rectilinear"</span><span class="op">)</span>,</span>
+<span>  edgeStyle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rectilinear"</span>, <span class="st">"direct"</span><span class="op">)</span>,</span>
 <span>  twinRelations <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  orderBySex <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -96,13 +98,14 @@ this is an additive sibling function (Migration Path step 2).</p>
 
 
 <dt id="arg-edgestyle">edgeStyle<a class="anchor" aria-label="anchor" href="#arg-edgestyle"></a></dt>
-<dd><p>one of <code>"direct"</code> (default – a straight edge from
-each parent to their mating unit and from each mating unit to each
-child, matching this function's own original, still-default behavior)
-or <code>"rectilinear"</code> (issue #142 – routes mate-line and sibship-bar
-edges through invisible waypoint nodes via
-<code>.addRectilinearWaypoints()</code> so they render as a strict right
-angle, kinship2-style, instead of a direct diagonal/straight segment).</p></dd>
+<dd><p>one of <code>"rectilinear"</code> (default since Track 2,
+docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md –
+issue #142's routing of mate-line and sibship-bar edges through
+invisible waypoint nodes via <code>.addRectilinearWaypoints()</code> so they
+render as a strict right angle, kinship2-style, instead of a direct
+diagonal/straight segment) or <code>"direct"</code> (this function's own
+original behavior – a straight edge from each parent to their mating
+unit and from each mating unit to each child).</p></dd>
 
 
 <dt id="arg-twinrelations">twinRelations<a class="anchor" aria-label="anchor" href="#arg-twinrelations"></a></dt>
@@ -133,15 +136,24 @@ sex-agnostic default unchanged.</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list with <code>nodes</code> (<code>id</code>, <code>label</code>, <code>shape</code>,
 <code>title</code>, <code>size</code>, <code>x</code>, <code>y</code>), <code>edges</code>
-(<code>from</code>, <code>to</code>, <code>dashes</code>, plus <code>label</code>/<code>color</code>
-when <code>twinRelations</code> is supplied – D10, found never wired at
-S494, fixed S506), and <code>duplicateToReal</code> (a named character vector,
-duplicate node id -&gt; real individual id). Under
+(<code>from</code>, <code>to</code>, <code>dashes</code>, <code>color</code>, <code>width</code> –
+the latter 2 ALWAYS present once any mating unit exists, S549 Finding
+#2 fixed S555: a consanguineous mating unit's (<code>kinship(sire,
+  dam) &gt; 0</code>) 2 spouse-to-union edges get <code>"#D55E00"</code>/<code>4</code> (an
+Okabe-Ito colorblind-safe vermillion, kinship2's own doubled/
+thickened mate-line convention), every other edge <code>NA</code>; plus
+<code>label</code> when <code>twinRelations</code> is supplied – D10, found
+never wired at S494, fixed S506), and <code>duplicateToReal</code> (a named
+character vector, duplicate node id -&gt; real individual id). Under
 <code>edgeStyle = "rectilinear"</code>, <code>nodes</code> gains
 <code>color.background</code>/<code>color.border</code> and <code>edges</code>
 unconditionally gains <code>color</code> (see
 <code>.addRectilinearWaypoints()</code>) – an already-set edge <code>color</code>
-(e.g. the twin connector's) is preserved, not reset.</p>
+(e.g. the twin connector's or the consanguinity marker's) is
+preserved when the edge is KEPT as-is; a marked mate edge that gets
+replaced by a D2 dogleg projection currently falls back to the
+generic routing color/width (edgeStyle = "rectilinear" propagation is
+a deferred follow-up, BACKLOG.md Housekeeping).</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

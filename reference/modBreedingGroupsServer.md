@@ -13,7 +13,8 @@ modBreedingGroupsServer(
   pedigree,
   geneticValues = NULL,
   kinshipMatrix = NULL,
-  kinshipOverrides = NULL
+  kinshipOverrides = NULL,
+  twinRelations = NULL
 )
 ```
 
@@ -53,6 +54,19 @@ modBreedingGroupsServer(
   matrix so group formation reflects them regardless of tab order.
   `NULL` (the default) is a no-op. A provided `kinshipMatrix` is
   expected to already carry overrides applied at its source.
+
+- twinRelations:
+
+  optional reactive returning a validated twin/zygosity sidecar
+  data.frame (`id1`, `id2`, `code`); see
+  [`checkTwinRelations`](https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.md).
+  When the module recomputes kinship from the pedigree (the shared
+  `kinshipMatrix` is unavailable), it is passed straight through to
+  [`kinship`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+  so group formation reflects a declared MZ-twin pair's corrected
+  identity regardless of tab order (BL-N Slice 3). `NULL` (the default)
+  is a no-op. A provided `kinshipMatrix` is expected to already reflect
+  it at its source.
 
   Up to 5 distinct candidate groupings are formed per run (issue \#125),
   with a "Candidate grouping" selector letting the user switch among
