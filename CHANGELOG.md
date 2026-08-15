@@ -138,6 +138,11 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] S586: reconcile HANDOFFS.md commit self-reference (`b1e8f8f2`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: ... close-out commit
+  sha to follow` -> the real sha (`b1e8f8f2`, fix + close-out) — unknowable until after that commit
+  existed. Matches the established S562-S585 precedent.
+
 ### 2026-08-15 · [BL-N] S586: close out (lint.yaml CI fix — R/kinship.R nested-ifelse + implicit-integer)
 - **Deliverable:** Fix the red `lint.yaml` CI (`BACKLOG.md` Housekeeping, found S584) — 3
   pre-existing lints in `R/kinship.R:127,131,133` from S564's X-chromosome kinship work — DONE.

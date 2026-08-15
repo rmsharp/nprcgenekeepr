@@ -184,7 +184,7 @@ runtime_smoke: n/a -- confirmed via grep that the modified code path (chrtype='x
   script-callable only, exercised exclusively by tests/testthat/test_kinship.R, which is fully
   green. Not a Phase-3E-covered surface (no startup/wiring/dispatch/config-resolution change).
 changelog_ref: a8367a4f (this session's claim entry) -- see the 2026-08-15 section, "S586:" entries
-commit: a8367a4f (claim); close-out commit sha to follow
+commit: a8367a4f (claim); b1e8f8f2 (fix + close-out)
 ```
 
 ```handoff
