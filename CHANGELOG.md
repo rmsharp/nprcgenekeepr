@@ -138,6 +138,11 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [ad hoc] S580: reconcile HANDOFFS.md commit self-reference (`75c23fe5`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> `75c23fe5`
+  (the close-out commit's own sha, unknowable until after that commit was made) -- matching the
+  established S562-S579 precedent.
+
 ### 2026-08-14 · [BL-N] S580: close out (HANDOFFS.md byte-budget/line-headroom archive trim DONE)
 - **Deliverable:** Session S580's own close-out. Evaluated S579's `HANDOFFS.md` receipt (9/10 --
   the `gotchas` field's `SRF_RED` non-durability warning primed this session for the identical

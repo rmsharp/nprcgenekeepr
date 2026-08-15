@@ -181,7 +181,7 @@ gotchas: The SRF_RED false-refusal pattern (Learnings 549/550/586/587) is now co
   if a new pointer landed above it.
 runtime_smoke: n/a -- docs/ledger-only change, no runtime behavior touched.
 changelog_ref: 12ebaba4
-commit: pending
+commit: 75c23fe5
 ```
 **Self-score breakdown (9/10):** +caught the P1_UNDOCUMENTED-avoidance opportunity from S579's own
 experience and applied it proactively; +pulled absolute byte deltas before the SRF_RED decision
