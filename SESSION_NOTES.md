@@ -18,8 +18,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 **Deliverable:** Locale-dependent `order()` tie-break sweep (`BACKLOG.md`, found S578, picked via
 this session's Phase 0 `AskUserQuestion`) (IN PROGRESS)
 **Started:** 2026-08-14
-**Status:** Session claimed. Work beginning -- PRE-RED investigation (fresh `grep -n "order(" R/*.R`,
-classify each hit char-vs-numeric, before proposing RED-phase test scope).
+**Status:** RED complete. Fresh `grep -n "order(" R/*.R` found 26 call sites; classified all (17
+not locale-sensitive -- numeric/index sort keys; 2 already `method="radix"` from Track 6). Of the
+6 initially flagged as real hits (char-column sorts), 2 corrected to FALSE POSITIVES via empirical
+verification during RED: `kinshipMatrixToKValues.R:107` (protected by `data.table`'s own
+`[.data.table]` auto-substitution to `forder()`, confirmed via `datatable.verbose`);
+`computeGenomicROH.R:112` (the intermediate `fullMeta` row order IS locale-sensitive, but the
+returned value is provably invariant -- `split()` groups by chrom regardless of inter-group order,
+and same-chrom pos tie-breaking is itself locale-independent; confirmed identical output across
+`LC_COLLATE="C"` vs. `"en_US.UTF-8"` on a fixture built to flip the intermediate order). 4 real
+hits confirmed and RED tests written+verified failing for the right reason:
+`orderReport.R:81/93` (`test_orderReport.R`, 2 new `test_that` blocks), `qcStudbook.R:323`
+(`test_qcStudbook.R`, 1 new block), `modBreedingGroups.R:690` `bgGroupView` (`test_modBreedingGroups.R`,
+1 new block, `shiny::testServer()` -- no prior coverage of this reactive existed). All 4 confirmed
+failing pre-fix (`_ctrl,A1,a9,b17,B2` vs. expected radix order `A1,B2,_ctrl,a9,b17`); 0 pre-existing
+test regressions in the 3 touched files. GREEN (add `method="radix"` to the 4 confirmed call sites)
+next, pending user go-ahead.
 **Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
 `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
 session's reconcile.

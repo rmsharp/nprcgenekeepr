@@ -410,3 +410,27 @@ test_that("qcStudbook's line-316 guard fires on a contrived internal fault (issu
     "required column\\(s\\) missing.*sex"
   )
 })
+
+## BACKLOG (found S578, broadened S581): the final `order(gen, id)` reorder
+## (qcStudbook.R L323) uses plain, locale-dependent `order()`, the same class
+## of bug Learning 585 fixed in `.positionMatingUnitForest()` via
+## `method = "radix"`. Empirically confirmed (S581) this session that plain
+## `order()` on this id set diverges between `LC_COLLATE = "C"` and this
+## environment's own default (`en_US.UTF-8`) -- byte/radix order is
+## `A1, B2, _ctrl, a9, b17`; the current default-locale order is
+## `_ctrl, A1, a9, b17, B2`. All 5 animals are founders (gen 0), so `gen` is
+## constant and the observed row order is entirely decided by the `id`
+## secondary key.
+test_that("qcStudbook orders same-generation ids by byte/radix order, not locale collation (#578)", {
+  divergingIds <- c("b17", "B2", "a9", "A1", "_ctrl")
+  qcOrderPed <- data.frame(
+    id = divergingIds,
+    sire = rep(NA_character_, 5L),
+    dam = rep(NA_character_, 5L),
+    sex = rep("F", 5L),
+    birth = rep(as.Date("2010-01-01"), 5L),
+    stringsAsFactors = FALSE
+  )
+  out <- suppressWarnings(qcStudbook(qcOrderPed, minParentAge = NULL))
+  expect_identical(out$id, c("A1", "B2", "_ctrl", "a9", "b17"))
+})

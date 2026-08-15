@@ -163,3 +163,58 @@ test_that("orderReport custom guCutoff/zScoreCutoff change tier membership (#125
   expect_identical(outDefault$id, c("Y2", "Y1"))
   expect_identical(outCustom$id, c("Y1", "Y2"))
 })
+
+## BACKLOG (found S578, broadened S581): the imports/noParentage `order(id)`
+## calls at orderReport.R L81/L93 (no `age` column present) use plain,
+## locale-dependent `order()`, the same class of bug Learning 585 fixed in
+## `.positionMatingUnitForest()` via `method = "radix"`. Empirically confirmed
+## (S581) this session that plain `order()` on this id set diverges between
+## `LC_COLLATE = "C"` and this environment's own default (`en_US.UTF-8`) --
+## byte/radix order is `A1, B2, _ctrl, a9, b17`; the current default-locale
+## order is `_ctrl, A1, a9, b17, B2`. Both fixtures below are ALL
+## both-unknown-parent founders with no `age` column, so every row lands in
+## a single tier (imports or noParentage respectively) and the returned
+## `$id` sequence is exactly that tier's own order() output.
+test_that("orderReport imports tier orders ids by byte/radix order, not locale collation (#578)", {
+  divergingIds <- c("b17", "B2", "a9", "A1", "_ctrl")
+  rptImports <- data.frame(
+    id = divergingIds,
+    sire = rep(NA_character_, 5L),
+    dam = rep(NA_character_, 5L),
+    origin = rep("TEXAS", 5L),
+    gu = rep(50, 5L),
+    zScores = rep(-2.0, 5L),
+    parentage = rep("both unknown", 5L),
+    stringsAsFactors = FALSE
+  )
+  pedImports <- data.frame(
+    id = divergingIds,
+    sire = rep(NA_character_, 5L),
+    dam = rep(NA_character_, 5L),
+    stringsAsFactors = FALSE
+  )
+  out <- nprcgenekeepr:::orderReport(rptImports, pedImports)
+  expect_identical(out$id, c("A1", "B2", "_ctrl", "a9", "b17"))
+})
+
+test_that("orderReport noParentage tier orders ids by byte/radix order, not locale collation (#578)", {
+  divergingIds <- c("b17", "B2", "a9", "A1", "_ctrl")
+  rptNoParentage <- data.frame(
+    id = divergingIds,
+    sire = rep(NA_character_, 5L),
+    dam = rep(NA_character_, 5L),
+    gu = rep(2, 5L),
+    zScores = rep(1.0, 5L),
+    parentage = rep("both unknown", 5L),
+    stringsAsFactors = FALSE
+  )
+  pedNoParentage <- data.frame(
+    id = divergingIds,
+    sire = rep(NA_character_, 5L),
+    dam = rep(NA_character_, 5L),
+    stringsAsFactors = FALSE
+  )
+  out <- nprcgenekeepr:::orderReport(rptNoParentage, pedNoParentage)
+  expect_identical(out$id, c("A1", "B2", "_ctrl", "a9", "b17"))
+  expect_true(all(out$value == "Undetermined"))
+})

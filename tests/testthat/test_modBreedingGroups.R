@@ -1734,3 +1734,45 @@ test_that("modBreedingGroupsServer: NPRC_BG_SEED env var is read when option abs
   expect_true(recorder$called)
   expect_equal(recorder$seed, 7L)
 })
+
+## BACKLOG (found S578, broadened S581): bgGroupView's `order(gp$\`Ego ID\`)`
+## (modBreedingGroups.R L690) uses plain, locale-dependent `order()`, the same
+## class of bug Learning 585 fixed in `.positionMatingUnitForest()` via
+## `method = "radix"`. Empirically confirmed (S581) this session that plain
+## `order()` on this id set diverges between `LC_COLLATE = "C"` and this
+## environment's own default (`en_US.UTF-8`) -- byte/radix order is
+## `A1, B2, _ctrl, a9, b17`; the current default-locale order observed live
+## via this exact reactive was `_ctrl, A1, a9, b17, B2`. `nGroups = 1` +
+## `maxKinship = 1.0` puts every unrelated founder into the single group, so
+## Group 1's own displayed order is entirely decided by bgGroupView's own
+## `order()` call.
+test_that("bgGroupView orders the displayed group by byte/radix id order, not locale collation (#578)", {
+  skip_if_not_installed("shiny")
+
+  divergingIds <- c("b17", "B2", "a9", "A1", "_ctrl")
+  test_ped <- data.frame(
+    id = divergingIds,
+    sire = rep(NA_character_, 5L),
+    dam = rep(NA_character_, 5L),
+    sex = c("M", "F", "M", "F", "M"),
+    birth = rep(as.Date("2010-01-01"), 5L),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped }),
+      geneticValues = NULL
+    ),
+    {
+      session$setInputs(animalSource = "all", nGroups = 1,
+                        maxKinship = 1.0, sexRatio = "none")
+      session$setInputs(formGroups = 1)
+      session$setInputs(viewGrp = 1)
+
+      view <- bgGroupView()
+      expect_identical(view$`Ego ID`, c("A1", "B2", "_ctrl", "a9", "b17"))
+    }
+  )
+})
