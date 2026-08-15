@@ -171,6 +171,36 @@ here, in this ledger, not in a frozen shard.
 
 ## 2026-08
 
+### 2026-08-15 · \[ad hoc\] S587: reconcile HANDOFFS.md commit self-reference (`45b44585`)
+
+- **Deliverable:** Fixed this session’s own `HANDOFFS.md` receipt
+  `commit: ... close-out commit sha to follow` -\> the real sha
+  (`45b44585`, fix + close-out) — unknowable until after that commit
+  existed. Matches the established S562-S586 precedent.
+
+### 2026-08-15 · \[BL-N\] S587: close out (R-CMD-check.yaml CI fix — inst/WORDLIST gap)
+
+- **Deliverable:** Fix the red `R-CMD-check.yaml` CI (`BACKLOG.md`
+  Housekeeping, found S584) — added 4 words
+  [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+  flags (`matings`, `Rectilinear's`, `runnable`, `visNetwork's`) to
+  `inst/WORDLIST`, each at its alphabetic neighbor. All 4 confirmed via
+  grep as legitimate tracked-source domain/package-name terms before
+  whitelisting, not typos. Owner interrupted mid-verification to
+  question running the full `test_dir()` clean regression for a non-code
+  data-file change — corrected to
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  alone (the literal CI-matching build equivalent): 0 errors/0
+  warnings/1 pre-existing unrelated NOTE; `test_wordlist_ coverage.R`
+  3/3 passing. Written up as `PROJECT_LEARNINGS.md` Learning 595.
+  Removed the completed item from `BACKLOG.md` Housekeeping.
+
+### 2026-08-15 · \[BL-N\] S587: claim (fix red R-CMD-check.yaml CI)
+
+- **Deliverable:** Non-commit-adjacent claim entry per Phase 1B. Session
+  claimed to fix the `inst/WORDLIST` gap `BACKLOG.md` Housekeeping filed
+  at S584.
+
 ### 2026-08-15 · \[ad hoc\] S586: push commits (`c17451e7..981e463c`)
 
 - **Deliverable:** Non-commit action, recorded per failure mode \#27.
