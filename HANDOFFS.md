@@ -138,19 +138,57 @@ This file currently holds **2** receipt(s). Computed by `methodology_trim.py` on
 ```handoff
 session: S585
 date: 2026-08-15
-status: pending
-self_score:
-predecessor_score:
-active_task: Fix red pkgdown.yaml CI (BACKLOG.md Housekeeping, found S584) -- add the missing
-  articles/pedigree-diagram entry to _pkgdown.yml, plus a regression-test guard mirroring the
-  existing reference:-coverage tests. RED phase in progress.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: Fix red pkgdown.yaml CI (BACKLOG.md Housekeeping, found S584; also independently
+  found and left unfixed by S566 a day earlier) -- DONE. Added the missing
+  articles/pedigree-diagram entry to _pkgdown.yml plus a regression-test guard. All verification
+  green, including a direct invocation of the actual CI-failing pkgdown internal function.
+what_was_done: Added a 4th test_that() to tests/testthat/test_pkgdown_reference_config.R
+  comparing pkg$vignettes$name (pkgdown's own ground-truth article list) against the configured
+  articles: contents: list via setdiff() -- mirrors the file's existing reference:-coverage
+  pattern. RED confirmed (failed naming articles/pedigree-diagram). Then added
+  `- articles/pedigree-diagram` to _pkgdown.yml's articles: contents: list. GREEN confirmed (5/5
+  passing). Removed 2 duplicate BACKLOG.md items for the identical gap (S584's and a previously
+  unfixed S566 entry). Commits eace45d8 (claim) and 9ab5b507 (fix + guard).
+next_steps: The 2 remaining S584-filed CI reds are still open and READY, Effort S each (do NOT
+  bundle -- separate deliverables): (1) R-CMD-check.yaml -- add matings/Rectilinear's/runnable/
+  visNetwork's to inst/WORDLIST (S573 gap, red on all 5 platforms); (2) lint.yaml --
+  R/kinship.R:127,131,133, 3 pre-existing lints, touches R/ so Strict-TDD applies. Then:
+  SESSION_NOTES.md archive (dashboard's only HIGH risk, 3,570 lines past the 2,000-line cap --
+  verify the Learning-518 fence-scanner defect is actually resolved before --write); sibling
+  pedigree-diagram-screenshots.R reshoot (Effort S); S583's full-fixture sweep for the
+  union-outside-parents-span finding (Effort S); sibling subtree-width asymmetry design session
+  (S576, Effort L); BACKLOG.md ledger-size housekeeping (S518, Effort L); #148 MHC
+  scope-narrowing (DECISION NEEDED); NPRC outreach (DECISION NEEDED). Also worth a future
+  session's look, per Learning 593: whether _pkgdown.yml's other config sections (home:,
+  template:) would benefit from a similar completeness guard -- not scoped or investigated this
+  session.
+key_files: tests/testthat/test_pkgdown_reference_config.R:88-114 (the new test, 4th in the
+  file); _pkgdown.yml:63 (the one-line fix, in the articles: -> contents: list); BACKLOG.md
+  Housekeeping (2 duplicate entries for this gap removed -- see PROJECT_LEARNINGS.md Learning
+  593 for why 2 existed).
+gotchas: (1) Calling `pkgdown:::build_articles_index(pkg)` directly (bypassing full
+  `build_site()`) to faithfully reproduce the CI-failing step also triggers favicon generation as
+  a side effect, creating an untracked pkgdown/favicon/ directory -- remove it before commit, it
+  is not part of any deliverable. (2) BACKLOG.md can carry 2 independent, unfixed entries for the
+  identical gap under different "found S<N>" headings far apart in the file -- grep the whole
+  file for the affected symbol/config-key before filing a new finding, not just the section a new
+  item would naturally land in (Learning 593). (3) test_pkgdown_reference_config.R's
+  getPkgdownConfig() cache (module-level env, computed once per test *file* run) means the new
+  test and the 3 pre-existing ones share one pkgdown::as_pkgdown() call -- don't re-call it
+  per-test.
+runtime_smoke: PASS -- ran the actual CI-failing mechanism directly
+  (`pkgdown:::build_articles_index(pkg)`), which previously errored `! In _pkgdown.yml, 1
+  vignette missing from index: "articles/pedigree-diagram"` and now succeeds, writing
+  articles/index.html. NOT yet observed green in CI itself -- commits are on local master,
+  unpushed as of this receipt; push is the owner's call, matching S584's own precedent of not
+  pushing unilaterally.
+changelog_ref: eace45d8 (this session's claim entry) -- see the 2026-08-15 section, "S585:"
+  entries
+commit: eace45d8 (claim); 9ab5b507 (fix + guard); close-out commit: pending (this receipt ships
+  in that commit)
 ```
 
 ```handoff

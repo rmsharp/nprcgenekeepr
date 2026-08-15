@@ -14,19 +14,98 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 584 Handoff Evaluation (by Session 585)
+**Score: 8/10.** **What helped:** the `next_steps` field's recommended pickup order ("cheapest and
+most mechanical first: (1) pkgdown ... widest user-visible blast radius") put this exact item at
+the top, and this session followed that order. More valuable than the handoff prose itself was the
+`BACKLOG.md` item S584 wrote in the same session -- it had already done the exact-fix
+investigation (verified in both directions against the on-disk `.qmd`/`.Rmd` inventory, provenance
+traced to `2b3e8ef6`/S560, the precise CI error message quoted) so this session could go straight
+to designing the RED test without repeating that discovery work. **What was missing:** S584's own
+item did not cross-reference (or apparently search for) a pre-existing, textually-independent
+`BACKLOG.md` entry for the IDENTICAL gap, filed a day earlier by S566 (2026-08-14, found
+incidental to a different article addition) and never fixed -- ~800 lines away in the same file.
+This session found the duplicate only while grepping the file to remove its own item at close-out,
+not because anything in S584's handoff or its own `BACKLOG.md` item flagged it. Now written up as
+`PROJECT_LEARNINGS.md` Learning 593 (grep before filing). **What was wrong:** nothing in S584's
+technical claims about the pkgdown gap itself was inaccurate -- the fix, the error message, and the
+provenance all verified exactly as stated. **ROI:** high -- the pre-done investigation and the
+correctly-ordered recommendation meant this session started RED design immediately at Phase 1,
+with no rediscovery cost beyond the duplicate-entry find (which cost minutes, not a redo).
+
 ### What Session 585 Did
-**Deliverable:** Fix the red `pkgdown.yaml` CI (`BACKLOG.md` Housekeeping, found S584) -- add the
-missing `articles/pedigree-diagram` entry to `_pkgdown.yml`'s `articles:` `contents:` list, plus a
-regression-test guard mirroring the existing `reference:`-coverage tests (owner-directed scope, via
-`AskUserQuestion`). (IN PROGRESS)
-**Started:** 2026-08-15.
-**Status:** Session claimed. Phase 0 orient complete (dashboard 96/100, 1 HIGH risk --
-`SESSION_NOTES.md` size, unrelated to this task; no ghost session; ledger frontiers reconciled).
-Pre-RED scope decision and PRE-RED->RED gate both fired as `AskUserQuestion` calls before any file
-edit. Work beginning: RED test in `tests/testthat/test_pkgdown_reference_config.R`.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Fix the red `pkgdown.yaml` CI (`BACKLOG.md` Housekeeping, found S584; also
+independently found and left unfixed by S566 a day earlier -- see below) -- **DONE**. Added the
+missing `- articles/pedigree-diagram` line to `_pkgdown.yml`'s `articles:` `contents:` list, plus
+a new regression-test guard mirroring the file's existing `reference:`-coverage tests. A
+Strict-TDD task: a pre-RED scope decision, then PRE-RED -> RED -> GREEN -> (GREEN->REFACTOR
+declined) all fired as `AskUserQuestion` calls before their phase's first file edit.
+**Started/Completed:** 2026-08-15.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, `git status`/`log`/`diff --stat`, `methodology_dashboard.py` [96/100, 1 HIGH risk
+-- `SESSION_NOTES.md` 3,570 lines, unrelated to this task], ledger reconcile [`CHANGELOG.md`
+frontier == `HEAD`, `HANDOFFS.md` 1 commit behind but that commit was CHANGELOG-only after S584's
+receipt was already `complete` -- no backfill needed], `docs/planning/*.html` untracked-file check
+[re-confirmed the known S558 finding: gitignore-unignored rendered Quarto output of a tracked
+`.qmd`, not a ghost-session artifact]). Rendered the 4-item priorities picker (the 3 new S584 CI
+reds + the SESSION_NOTES.md archive); user picked the pkgdown fix. **(2)** Investigated the
+testable seam before declaring RED: found `tests/testthat/test_pkgdown_reference_config.R` already
+covers `reference:` (function/data-object) completeness but has no equivalent for `articles:`
+completeness -- posed this as a pre-RED scope `AskUserQuestion` (fix-only / fix+guard /
+fix+guard+close the CLAUDE.md checklist gap); user picked fix+guard. **(3)** Designed the exact
+test (`pkg$vignettes$name` -- pkgdown's own ground-truth article list, partials auto-excluded --
+vs. `unlist(pkg$meta$articles[[1]]$contents)`, `setdiff()`, `expect_identical(missing,
+character(0))`) by inspecting the live `pkgdown::as_pkgdown(".")` structure first, then presented
+it as the PRE-RED->RED gate; approved. **(4)** Phase 1B claim stub committed (`eace45d8`) -- done
+after the investigation above, which was read-only orientation, not file edits. **(5)** RED: added
+the 4th `test_that()` to `test_pkgdown_reference_config.R`; ran it standalone -- failed exactly as
+predicted, naming `articles/pedigree-diagram`, 3 pre-existing tests in the file unaffected.
+**(6)** Presented the RED->GREEN gate with the exact one-line fix and its list placement; approved.
+**(7)** GREEN: added `- articles/pedigree-diagram` to `_pkgdown.yml`. **(8)** Verified 5 ways: RED
+test now 5/5 passing; full clean regression 5,958-ish passed / 1 pre-existing unrelated failure
+(`test_wordlist_coverage.R`, the already-filed S573 WORDLIST gap) / 0 errors; `lintr` 0 lints on
+the touched R file; directly invoked `pkgdown:::build_articles_index(pkg)` (the exact function
+CI's error names) and confirmed it now succeeds where it previously errored -- the faithful check,
+mirroring S584's own "reproduce with the literal failing mechanism" discipline. A stray
+`pkgdown/favicon/` directory this direct call generated as a side effect was removed before commit
+(not part of the deliverable). **(9)** GREEN->REFACTOR gate: presented and declined (recommended)
+-- the diff is a one-line YAML addition plus one already-clean test block, no structure to improve.
+**(10)** At close-out, grepped `BACKLOG.md` for "pkgdown" to locate the item to remove and found a
+SECOND, independent, unfixed entry for the identical gap (S566, 2026-08-14) -- removed both.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A (no new displayed
+statistic); tutorial/article checklist N/A (no new user-facing Shiny feature/control -- a
+docs-site config fix); `NEWS.Rmd` checklist N/A (no new exported function or user-facing feature);
+`a2interactive.Rmd` checklist N/A (no exported function/parameter added or changed); GitHub issue
+close-out N/A (tracked only in `BACKLOG.md`, never filed as a GitHub issue); lint checklist
+**DONE** (0 lints on the touched R file; `_pkgdown.yml` is YAML, not lintr-applicable);
+`_pkgdown.yml` reference-coverage checklist N/A (that checklist covers new exported *functions*;
+none added here -- though this session's own fix closes the *sibling* gap for new *articles* the
+checklist doesn't cover, per the declined 3rd scope option).
+
+**Self-assessment (Session 585): 9/10.** **Strengths:** (1) Recognized the testable seam
+(`test_pkgdown_reference_config.R`'s existing pattern) before declaring RED, rather than treating
+"add one YAML line" as untestable and skipping straight to GREEN -- this is what made the task
+genuinely Strict-TDD-compliant rather than TDD-in-name-only. (2) Verified the fix against the
+ACTUAL CI-failing mechanism (`pkgdown:::build_articles_index()`), not just the new unit test --
+matching S584's own "reproduce with the literal command" precedent generalized to a different CI
+surface. (3) Caught and removed a stray generated artifact (`pkgdown/favicon/`) before it could
+leak into the commit, rather than only checking `git status` after staging. (4) Found and cleaned
+up a genuine process gap (the S566/S584 duplicate `BACKLOG.md` entries) at close-out rather than
+just removing "the one item I fixed" and leaving the stale duplicate behind -- and wrote it up as a
+generalizable learning (593) rather than treating it as a one-off oddity. (5) All 4 TDD gates
+(pre-RED scope, PRE-RED->RED, RED->GREEN, GREEN->REFACTOR) fired as real `AskUserQuestion` calls
+before their phase's first edit, including the GREEN->REFACTOR gate even though the answer was "no
+REFACTOR needed" -- stated and gated, not silently skipped. **Weaknesses:** (1) Still no
+independent adversarial-verification pass by a separate agent/session -- the same standing gap
+flagged for 18+ consecutive prior sessions. (2) Read `pkg$vignettes$name`/`pkg$meta$articles`
+structure via one exploratory `Rscript` call rather than reading `pkgdown`'s own source for
+`as_pkgdown()` first -- worked correctly here, but an exploratory print-and-inspect step run
+directly against a live package object is somewhat closer to "trial and error" than the more
+rigorous source-reading discipline S584 used for the `test_dir()` non-attachment root cause.
+**Ledger:** recorded in `CHANGELOG.md` (claim + close-out -- 2 entries this session, both
+`[BL-N]`-tagged).
 
 ### Session 583 Handoff Evaluation (by Session 584)
 **Score: 9/10.** **What helped:** the `gotchas` field's closing instruction -- "when investigating a

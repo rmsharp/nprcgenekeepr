@@ -69,23 +69,6 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
 
 ## Housekeeping
 - [ ] (found S584, 2026-08-15, revealed by the S584 push finally letting CI see current `HEAD`,
-      **READY, Effort S**) **`pkgdown.yaml` CI is RED: `articles/pedigree-diagram` is missing from
-      `_pkgdown.yml`'s articles index, so the docs-site build aborts and the site never deploys.**
-      Exact failure (run `31868761401`): ``Error in `build_articles_index()`: ! In _pkgdown.yml, 1
-      vignette missing from index: "articles/pedigree-diagram".`` Provenance:
-      `vignettes/articles/pedigree-diagram.qmd` landed in `2b3e8ef6` (**S560**, the new Pedigree
-      Diagram tab article) and that commit **never touched `_pkgdown.yml`** (verified:
-      `git show --stat 2b3e8ef6 | grep -c _pkgdown.yml` -> 0). **Fix is one line** -- add
-      `  - articles/pedigree-diagram` to the `articles:` -> `contents:` list. Scope verified in both
-      directions this session (`yaml::read_yaml("_pkgdown.yml")` vs. the on-disk `.qmd`/`.Rmd`
-      inventory): this is the ONLY genuine gap, and nothing listed in `_pkgdown.yml` is missing from
-      disk. (`_ColonyManagerTutorial` also appears unlisted but is an underscore-prefixed partial,
-      not a standalone article -- which is why pkgdown's own message counts exactly 1.) Note the
-      close-out-checklist parallel: `CLAUDE.md` already carries a `_pkgdown.yml` **reference**-coverage
-      checklist for new exported *functions*; there is no equivalent for new *articles*, which is
-      exactly the gap S560 fell through. A session fixing this should consider whether to add that
-      checklist clause. See `CHANGELOG.md`.
-- [ ] (found S584, 2026-08-15, revealed by the S584 push finally letting CI see current `HEAD`,
       **READY, Effort S**) **`lint.yaml` CI is RED on 3 pre-existing lints in `R/kinship.R`.**
       The workflow sets `LINTR_ERROR_ON_LINT: true`, so any lint fails the job. Exact findings
       (run `31868761462`): `R/kinship.R:127` `[nested_ifelse_linter]` ("Don't use nested ifelse()
@@ -884,18 +867,6 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       2,501 lines (S529 start) -> 1,173 lines (S531 end), a 1,328-line/53% reduction across 3
       sessions, with zero information loss at any step (each session's own end-to-end re-read plus
       CHANGELOG.md/Learning/file-path cross-reference verification). See `CHANGELOG.md`.
-- [ ] (found S566, 2026-08-14, incidental to adding the kinship2 fidelity validation article to
-      `_pkgdown.yml`'s `articles:` `contents:` list, Effort S, not fixed this session) **`_pkgdown.yml`'s
-      explicit `articles: contents:` navbar-order list (added S409) is missing
-      `articles/pedigree-diagram`** -- every other article under `vignettes/articles/` (including the one
-      this session added) is listed; `pedigree-diagram.qmd` (added S560) is not, despite that session's own
-      close-out narrative claiming it followed "the established per-tab-article convention." Unclear whether
-      pkgdown still discovers and builds the page (just missing from the pinned navbar order) or drops it
-      from the site entirely -- not verified this session (out of scope, "report, don't fix mid-session"
-      precedent). A future session should confirm the actual site behavior (a local `pkgdown::build_site()`
-      or checking the live gh-pages deploy for the page) and, if missing from the navbar, add
-      `articles/pedigree-diagram` to the `contents:` list in the same alphabetical-ish position its
-      neighbors already establish.
 - [ ] (found S567, 2026-08-14, incidental to a `pkgbuild::build()`/tarball-content check while
       resolving the kinship2 PDF's `.Rbuildignore` classification, **RESOLVED S568**.
       **The untracked "Compounding Loop" files were bundled into every built package tarball**,

@@ -138,6 +138,40 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [BL-N] S585: close out (pkgdown.yaml CI fix — articles: contents: gap)
+- **Deliverable:** Fix the red `pkgdown.yaml` CI (`BACKLOG.md` Housekeeping, found S584 — and,
+  discovered while removing the item, independently found a day earlier by S566, never
+  cross-referenced by either session) — DONE. Added the missing `- articles/pedigree-diagram`
+  line to `_pkgdown.yml`'s `articles:` → `contents:` list, plus a new regression-test guard (4th
+  `test_that()` in `test_pkgdown_reference_config.R`) mirroring the file's existing
+  `reference:`-coverage tests: compares `pkg$vignettes$name` (pkgdown's own ground-truth article
+  list, partials auto-excluded) against the configured `articles: contents:` list via `setdiff()`.
+  Strict-TDD: a pre-RED scope decision, PRE-RED→RED, RED→GREEN, and GREEN→REFACTOR (skipped,
+  declared, not silently omitted) all fired as `AskUserQuestion` gates before their phase's first
+  edit.
+- **Verification (5 checks, all run this session):** (1) RED confirmed — the new test failed,
+  naming `articles/pedigree-diagram` exactly, with the file's 3 pre-existing tests unaffected;
+  (2) GREEN confirmed — same test file 5/5 passing; (3) full clean regression — 1 pre-existing
+  unrelated failure (`test_wordlist_coverage.R`, the already-filed S573 WORDLIST gap), 0 errors;
+  (4) `lintr::lint_package()` — 0 lints on the touched R file; (5) faithful check — directly
+  invoked `pkgdown:::build_articles_index(pkg)`, the exact internal function CI's error names
+  (`Error in build_articles_index(): ! In _pkgdown.yml, 1 vignette missing from index`), and
+  confirmed it now succeeds. (A stray `pkgdown/favicon/` directory this direct call generated as a
+  side effect was removed before commit — not part of the deliverable.)
+- **Housekeeping:** removed 2 `BACKLOG.md` items for the identical gap — S584's (found via this
+  session's own push finally letting CI run) and a previously-unfixed S566 entry (2026-08-14,
+  filed a day earlier, never cross-referenced by S584). See `PROJECT_LEARNINGS.md` Learning 593
+  for the generalizable "grep before filing" rule this collision motivates.
+- **Not done, out of scope (user-directed via the pre-RED `AskUserQuestion`):** did not add an
+  articles-index-coverage clause to `CLAUDE.md`'s existing `_pkgdown.yml` reference-coverage
+  checklist — offered as a 3rd scope option, declined in favor of "fix + regression test guard"
+  only.
+
+### 2026-08-15 · [BL-N] S585: claim (fix red pkgdown.yaml CI)
+- **Deliverable:** Session claimed. Picked from the Phase 0 priorities picker as the widest-
+  blast-radius of the 3 CI reds S584 filed (the docs site was not deploying at all). Phase 1B stub
+  written to `SESSION_NOTES.md`; pending receipt opened in `HANDOFFS.md`.
+
 ### 2026-08-15 · [ad hoc] S584: push documentation commits (`7436a7a9..07824e0a`)
 - **Deliverable:** Non-commit action, recorded per failure mode #27. Owner-directed second push of
   this session's 2 remaining documentation-only commits (`9c817bcb`, `07824e0a` — `BACKLOG.md`,
