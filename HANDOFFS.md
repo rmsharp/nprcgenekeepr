@@ -136,6 +136,28 @@ This file currently holds **12** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S592
+date: 2026-08-15
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Planning session -- address the shared "no same-row collision-avoidance for
+  placement" root cause behind issues #160, #161, and the S583 union-position gap
+  (BACKLOG.md Active item, found S591, READY, Effort L). Following ARCHITECTURE_WORKSTREAM.md.
+what_was_done: pending
+next_steps: pending
+key_files: R/makePedigreeDiagramData.R:584 (.positionMatingUnitForest), R/makePedigreeDiagramData.R:1499
+  (.addRectilinearWaypoints), R/makePedigreeDiagramData.R:1107 (makePedigreeMatingLayout)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+Claim stub -- a 12-agent research/design/judge Workflow was dispatched immediately after this
+claim to ground the plan in verified evidence (5 research readers, 4 candidate architectures,
+3 judges) before the plan document is written. Full receipt filled at close-out.
+
+```handoff
 session: S591
 date: 2026-08-15
 status: complete

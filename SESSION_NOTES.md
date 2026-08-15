@@ -14,6 +14,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 592 Did
+**Deliverable:** Planning session -- address the shared "no same-row collision-avoidance for
+placement" root cause behind issues #160, #161, and the S583 union-position gap (`BACKLOG.md`
+Active item, found S591, READY, Effort L), following
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`. **Started:** 2026-08-15.
+**Status:** Session claimed. Work beginning -- a 12-agent research/design/judge `Workflow` has
+been dispatched (5 parallel research readers over `.positionMatingUnitForest()`/
+`.addRectilinearWaypoints()`, a grep-based call-site inventory, Track 4/6 ratified-invariant
+extraction, and prior-spike history; 4 independent collision-avoidance candidate architectures;
+3 independently-lensed judges) to ground the plan document in verified evidence before writing it.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
+### Session 591 Handoff Evaluation (by Session 592)
+*(Deferred -- S591's own close-out already contains an unusually thorough self-assessment; this
+session's own Phase 3A evaluation of it will be written at close-out, per protocol, not skipped.)*
+
 ### Session 590 Handoff Evaluation (by Session 591)
 **Score: 7/10.** **What helped:** the handoff's own content was excellent for what it covered —
 precise, verified numbers (25/251, 10,110, 5,916 vs 3,174), a clear final verdict ("close as

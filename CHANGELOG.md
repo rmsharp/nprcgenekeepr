@@ -138,6 +138,19 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [BL-1] S592: claim session (root-cause planning: issues #160/#161/S583 collision-avoidance gap)
+- **Deliverable (in progress):** Planning session addressing `BACKLOG.md`'s "Active" item (found
+  S591) — the shared "no same-row collision-avoidance for placement" root cause behind issues
+  #160, #161, and the S583 union-position gap, following `ARCHITECTURE_WORKSTREAM.md`. User
+  selected this item from a 4-option Phase 0 priorities picker over the two narrower
+  decision-only alternatives (#160 alone, #161 alone) and the lower-priority/informational bucket.
+- **Action taken:** Claim stub written to `SESSION_NOTES.md`; `status: pending` receipt opened in
+  `HANDOFFS.md`. Dispatched a 12-agent research/design/judge `Workflow` (5 parallel research
+  readers over `.positionMatingUnitForest()`/`.addRectilinearWaypoints()`, a grep-based call-site
+  inventory, Track 4/6 ratified-invariant extraction, and prior-spike history; 4 independent
+  collision-avoidance candidate architectures; 3 independently-lensed judges) to ground the plan
+  in verified evidence before writing it.
+
 ### 2026-08-15 · [ad hoc] S591: close out (live investigation — issues #160/#161, no code changed)
 - **Deliverable:** Close-out for a session with no pre-declared task (Phase 1B was skipped — see
   `SESSION_NOTES.md` self-assessment) that ran as organic, user-driven investigation: answered a
