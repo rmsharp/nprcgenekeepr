@@ -219,8 +219,8 @@ test_that(
 })
 
 test_that(
-  "makePedigreeMatingLayout's edges include a dashed connector from each
-   duplicate node to its real individual", {
+  "makePedigreeMatingLayout's edges include a dashed connector between each
+   duplicate node and its real individual", {
   loopPed <- data.frame(
     id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
            "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
@@ -232,17 +232,96 @@ test_that(
   )
   forest <- .buildMatingUnitForest(loopPed)
   result <- makePedigreeMatingLayout(loopPed)
-  ## A duplicate id can also be a mate-line edge's "from" (its solid edge
+  ## A duplicate id can also be a mate-line edge's endpoint (its solid edge
   ## to the union where it's positioned) -- filter to the DASHED connector
-  ## specifically, not every edge originating from a duplicate id.
-  dupConnectors <- result$edges[result$edges$from %in% forest$duplicates$id &
-                                   result$edges$dashes, ]
+  ## specifically, not every edge touching a duplicate id. The connector's
+  ## from/to are x-ordered (ascending), not always dup->real (found S575
+  ## owner review, root-caused/fixed S577 -- see the x-ordering test below)
+  ## -- so check {from, to} SET membership, not a fixed column.
+  dupConnectors <- result$edges[
+    (result$edges$from %in% forest$duplicates$id |
+       result$edges$to %in% forest$duplicates$id) & result$edges$dashes, ]
   expect_equal(nrow(dupConnectors), nrow(forest$duplicates))
   expect_true(all(dupConnectors$dashes))
-  expect_setequal(
-    dupConnectors$to,
-    forest$duplicates$realId[match(dupConnectors$from, forest$duplicates$id)]
+  pairOk <- vapply(seq_len(nrow(dupConnectors)), function(i) {
+    dupId <- if (dupConnectors$from[i] %in% forest$duplicates$id) {
+      dupConnectors$from[i]
+    } else {
+      dupConnectors$to[i]
+    }
+    realId <- forest$duplicates$realId[forest$duplicates$id == dupId]
+    setequal(c(dupConnectors$from[i], dupConnectors$to[i]), c(dupId, realId))
+  }, logical(1L))
+  expect_true(all(pairOk))
+})
+
+test_that(
+  "makePedigreeMatingLayout's duplicate-node connector edges are x-ordered
+   (from.x <= to.x), matching kinship2's own arcconnect() convention (nested
+   in plot.pedigree: 'tx <- sort(tx)' before drawing) of sorting the pair by
+   x first so the arc always bows toward ancestors regardless of which
+   occurrence is the duplicate -- found S575 (owner review of a published
+   comparison artifact: nprcgenekeepr's arc bows the wrong way relative to
+   kinship2), root-caused and fixed S577. vis-network's curvedCW bow
+   direction (Edge._getViaCoordinates in the bundled vis-network.min.js)
+   depends on which endpoint is 'from', so the OLD always-from=dup,
+   always-to=real convention bowed the wrong way whenever the duplicate
+   happened to land to the right of its real self (measured S577: 33 of 52
+   same-row connectors on the real bundled fixture) -- neither a blanket
+   from/to swap nor a blanket curvedCW->curvedCCW swap would have fixed
+   this, since it is position-dependent, not a uniform flip.", {
+  loopPed <- data.frame(
+    id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
+           "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
+    sire = c(NA, NA, NA, NA, "5A6DFT", "8LKBV9", "8LKBV9", "8LKBV9"),
+    dam = c(NA, NA, NA, NA, "8DKELJ", "G8EBU9", "8P17E3", "FJIB3R"),
+    sex = c("M", "F", "F", "F", "M", "F", "F", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 2L, 2L, 3L),
+    stringsAsFactors = FALSE
   )
+  forest <- .buildMatingUnitForest(loopPed)
+  result <- makePedigreeMatingLayout(loopPed)
+  isDupConnector <- (result$edges$from %in% forest$duplicates$id |
+                        result$edges$to %in% forest$duplicates$id) &
+    result$edges$dashes
+  dupConnectors <- result$edges[isDupConnector, ]
+  ## This fixture has exactly 1 duplicate (8LKBV9's non-anchor occurrence at
+  ## __union_4), deliberately chosen because it already exercises the
+  ## PRE-FIX-broken case: the duplicate lands to the right of its real self
+  ## (x 150 vs 60), so the pre-fix from=dup/to=real ordering bowed away from
+  ## ancestors.
+  expect_equal(nrow(dupConnectors), 1L)
+  nodes <- result$nodes
+  fromX <- nodes$x[match(dupConnectors$from, nodes$id)]
+  toX <- nodes$x[match(dupConnectors$to, nodes$id)]
+  expect_true(all(fromX <= toX))
+  ## Locks in the specific swap this fixture exercises: the real self
+  ## (smaller x) becomes `from`; the duplicate (larger x) becomes `to` --
+  ## the OPPOSITE of the pre-fix from=dup,to=real default.
+  expect_equal(dupConnectors$from, "8LKBV9")
+  expect_equal(dupConnectors$to, "__dup_8LKBV9_1")
+})
+
+test_that(
+  "makePedigreeMatingLayout's duplicate-node connector edges are x-ordered
+   on the real 375-individual bundled fixture -- confirms the fix at scale,
+   not just the small deterministic case above (found S575, fixed S577)", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  result <- makePedigreeMatingLayout(ped, edgeStyle = "direct")
+  isDupConnector <- (result$edges$from %in% forest$duplicates$id |
+                        result$edges$to %in% forest$duplicates$id) &
+    result$edges$dashes
+  dupConnectors <- result$edges[isDupConnector, ]
+  expect_equal(nrow(dupConnectors), nrow(forest$duplicates))
+  nodes <- result$nodes
+  fromX <- nodes$x[match(dupConnectors$from, nodes$id)]
+  toX <- nodes$x[match(dupConnectors$to, nodes$id)]
+  expect_true(all(fromX <= toX))
 })
 
 test_that(
@@ -263,7 +342,10 @@ test_that(
   )
   forest <- .buildMatingUnitForest(loopPed)
   result <- makePedigreeMatingLayout(loopPed)
-  isDupConnector <- result$edges$from %in% forest$duplicates$id &
+  ## Membership check on {from, to}, not a fixed column -- the connector's
+  ## from/to are x-ordered, not always dup->real (found S575, fixed S577).
+  isDupConnector <- (result$edges$from %in% forest$duplicates$id |
+                        result$edges$to %in% forest$duplicates$id) &
     result$edges$dashes
   dupConnectors <- result$edges[isDupConnector, ]
   otherEdges <- result$edges[!isDupConnector, ]
@@ -291,7 +373,10 @@ test_that(
   )
   forest <- .buildMatingUnitForest(loopPed)
   result <- makePedigreeMatingLayout(loopPed, edgeStyle = "rectilinear")
-  isDupConnector <- result$edges$from %in% forest$duplicates$id &
+  ## Membership check on {from, to}, not a fixed column -- the connector's
+  ## from/to are x-ordered, not always dup->real (found S575, fixed S577).
+  isDupConnector <- (result$edges$from %in% forest$duplicates$id |
+                        result$edges$to %in% forest$duplicates$id) &
     result$edges$dashes
   dupConnectors <- result$edges[isDupConnector, ]
   expect_true(nrow(dupConnectors) > 0L)
