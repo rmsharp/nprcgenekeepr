@@ -196,7 +196,7 @@ runtime_smoke: N/A -- no runtime behavior changed this session (a design documen
   tests/ file touched). Stated explicitly, not silently skipped, matching Track 4's S572 precedent
   for design-session close-outs.
 changelog_ref: this session's own CHANGELOG.md entries (claim, deliverable, close-out)
-commit: pending
+commit: 7b04a911
 ```
 
 ```handoff
