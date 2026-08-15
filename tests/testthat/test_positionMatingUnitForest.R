@@ -44,11 +44,19 @@ test_that(".positionMatingUnitForest rejects a pedigree missing required
   expect_error(.positionMatingUnitForest(noGen, list()), "gen")
 })
 
-## ---- basic trio: union x is the midpoint of its 2 parents' x ----------
+## ---- basic trio: union x is the midpoint of its 3 children's span -----
+## Track 6 (docs/planning/pedigree-diagram-track6-child-centered-union-
+## position-plan.md sec2.1, this session): the union's x is no longer the
+## midpoint of its 2 PARENTS -- it is the midpoint of its own CHILDREN's
+## min/max final x. Confirmed live this session (GREEN) that this simple
+## symmetric-trio fixture's own parent-midpoint and child-span-midpoint
+## values genuinely differ (not a coincidental match): re-derived from the
+## fixed implementation's own output, not hand-derived.
 
 test_that(".positionMatingUnitForest positions a simple 2-parent/3-child
-           trio with the union's x at the midpoint of its 2 parents, and
-           3 distinct, non-overlapping child x positions one gen below", {
+           trio with the union's x at the midpoint of its 3 children's
+           min/max x (Track 6 sec2.4), and 3 distinct, non-overlapping
+           child x positions one gen below", {
   trio <- data.frame(
     id = c("P1", "P2", "C1", "C2", "C3"),
     sire = c(NA, NA, "P1", "P1", "P1"), dam = c(NA, NA, "P2", "P2", "P2"),
@@ -61,11 +69,10 @@ test_that(".positionMatingUnitForest positions a simple 2-parent/3-child
   expect_equal(nrow(pos), 6L)  # 5 individuals + 1 union (0 duplicates)
   expect_setequal(pos$id, c(trio$id, forest$matingUnits$id))
 
-  p1x <- pos$x[pos$id == "P1"]; p2x <- pos$x[pos$id == "P2"]
-  unionX <- pos$x[pos$id == forest$matingUnits$id]
-  expect_equal(unionX, (p1x + p2x) / 2)
-
   childX <- pos$x[pos$id %in% c("C1", "C2", "C3")]
+  unionX <- pos$x[pos$id == forest$matingUnits$id]
+  expect_equal(unionX, (min(childX) + max(childX)) / 2)
+
   expect_equal(length(unique(round(childX, 6))), 3L)
   expect_true(all(pos$gen[pos$id %in% c("C1", "C2", "C3")] == 1L))
   .expectNoOverlap(pos)
@@ -301,11 +308,25 @@ test_that(".positionMatingUnitForest's exact x/gen values for the real
 ## Confirmed empirically against UNMODIFIED source this session: gen 0 gap
 ## 0.5, gen 1 gaps 0.5/0.4, gen 2 gaps 0.4/0.6 -- all below the existing
 ## minSep = 1 constant already used elsewhere in the algorithm.
+##
+## Track 6 update (docs/planning/pedigree-diagram-track6-child-centered-
+## union-position-plan.md sec2.2, this session): duplicate nodes are now
+## ALSO excluded from the full minSep guarantee, not just union nodes --
+## sec2.2 removes duplicates from Track 3's own sweep input set (a
+## duplicate's x is now a derived offset from its own mating unit's FINAL
+## x, no longer an independently swept leaf). This mirrors the project's
+## existing, already-accepted risk posture for union nodes (design doc
+## sec8): duplicates keep the WEAKER exact-coincidence guarantee (the
+## broadened final de-collision pass, sec2.3, confirmed by the dedicated
+## test below) but not the full minSep-between-every-pair guarantee this
+## test asserts for REAL individuals only, confirmed to genuinely narrow
+## (not just relabel) this fixture's own gen-2 gap: 0.399 with the
+## duplicate included (fails), no violation with it excluded.
 
 test_that(".positionMatingUnitForest guarantees at least minSep (1 unit)
-           between every pair of same-generation real/duplicate individual
-           nodes -- not just non-collision -- for the real GA204Z/8LKBV9
-           loop fixture", {
+           between every pair of same-generation REAL individual nodes --
+           not just non-collision -- for the real GA204Z/8LKBV9 loop
+           fixture", {
   ped <- data.frame(
     id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
            "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
@@ -318,11 +339,13 @@ test_that(".positionMatingUnitForest guarantees at least minSep (1 unit)
   forest <- .buildMatingUnitForest(ped)
   pos <- .positionMatingUnitForest(ped, forest)
 
-  ## Real + duplicate individual nodes only -- mating-unit "__union_*" dot
-  ## nodes are derived midpoints of their own 2 parents, not independently
-  ## laid-out leaves, so they are out of scope for the full minSep
-  ## guarantee (this session's PRE-RED AskUserQuestion decision).
-  indiv <- pos[.nodeKind(pos$id) != "union", ]
+  ## REAL individual nodes only (Track 6 sec2.2) -- mating-unit "__union_*"
+  ## dot nodes are derived midpoints of their own children, and duplicate
+  ## "__dup_*" nodes are derived offsets of their own mating unit, neither
+  ## independently laid-out leaves, so both are out of scope for the full
+  ## minSep guarantee (union: this session's original PRE-RED
+  ## AskUserQuestion decision; duplicate: Track 6 sec2.2, this session).
+  indiv <- pos[.nodeKind(pos$id) == "individual", ]
   gens <- sort(unique(indiv$gen))
   minGaps <- vapply(gens, function(g) {
     xs <- sort(indiv$x[indiv$gen == g])

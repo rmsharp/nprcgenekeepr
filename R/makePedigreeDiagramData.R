@@ -832,44 +832,34 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 
   realX <- vapply(realIds, function(i) absX[[i]], numeric(1L))
 
-  ## D3 step 5 / step 4: duplicate nodes are offset adjacent to their
-  ## mating unit's PROVISIONAL x (pre-finalization, children-driven);
-  ## each mating unit's FINAL x is then the midpoint of its 2 parents.
-  unitProvX <- stats::setNames(
-    vapply(unitIds, function(u) absX[[u]], numeric(1L)), unitIds
-  )
-
-  dupX <- numeric(nrow(duplicates))
-  if (nrow(duplicates) > 0L) {
-    dupX <- unname(unitProvX[duplicates$matingUnitId]) + minSep * 0.4
-  }
-
   # nolint start: commented_code_linter.
   ## Track 3 minimum-spacing guarantee
   ## (docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md
   ## Track 3; PRE-RED AskUserQuestion decision, this session): mergeSubtrees()
   ## above only guarantees adjacent subtrees do not exactly overlap -- it
   ## reserves however much width a subtree's own descendants need, not a
-  ## fixed minimum gap. Two unrelated free-pass/duplicate nodes nested at
-  ## different recursion depths are never inputs to the SAME
-  ## mergeSubtrees() call, so no leaf-width change inside the recursive
-  ## merge itself can guarantee spacing between them (documented dragon,
+  ## fixed minimum gap. Two unrelated free-pass nodes nested at different
+  ## recursion depths are never inputs to the SAME mergeSubtrees() call, so
+  ## no leaf-width change inside the recursive merge itself can guarantee
+  ## spacing between them (documented dragon,
   ## pedigree-diagram-option2-layout-design-plan.md:486-495, "New dragon
-  ## found S461"). This global post-merge sweep -- over every REAL and
-  ## DUPLICATE individual node (mating-unit "__union_*" dots are excluded;
-  ## their x is a derived midpoint of their own 2 parents below, not an
-  ## independently laid-out leaf) -- closes that gap directly: group by
-  ## DISPLAY gen, sort left-to-right, and push any node closer than minSep
-  ## to its left neighbor out to exactly minSep. sweepMinSep() is applied
-  ## HERE (before finalUnitX below, so every mating unit's own
-  ## midpoint-of-parents position reflects the swept parent positions) AND
-  ## again at the very end of this function (after the final de-collision
-  ## pass and the orderBySex swap, neither of which are sweep inputs but
-  ## either CAN disturb a value the sweep already fixed here -- found live
-  ## against the real 375-individual bundled fixture this session: the
-  ## de-collision pass's epsilon-nudge, breaking an unrelated real/union
-  ## exact-coincidence, moved a real node 1e-3 closer to an already-
-  ## minSep-exact duplicate neighbor).
+  ## found S461"). This global post-merge sweep -- over every REAL
+  ## individual node only (mating-unit "__union_*" dots and DUPLICATE nodes
+  ## are excluded; Track 6,
+  ## docs/planning/pedigree-diagram-track6-child-centered-union-position-
+  ## plan.md sec2.2, removed duplicates from this sweep -- a duplicate's x
+  ## is now a derived offset from its own mating unit's FINAL x, computed
+  ## below, not an independently laid-out leaf any longer) -- closes that
+  ## gap directly: group by DISPLAY gen, sort left-to-right, and push any
+  ## node closer than minSep to its left neighbor out to exactly minSep.
+  ## sweepMinSep() is applied HERE (before orderBySex/finalUnitX below, so
+  ## every downstream computation reads swept real positions) AND again at
+  ## the very end of this function (after the broadened final de-collision
+  ## pass, which is not a sweep input but CAN disturb a value the sweep
+  ## already fixed here -- found live against the real 375-individual
+  ## bundled fixture: the de-collision pass's epsilon-nudge, breaking an
+  ## unrelated exact-coincidence, moved a real node 1e-3 closer to an
+  ## already-minSep-exact neighbor).
   # nolint end
   sweepMinSep <- function(ids, xVals, genVals) {
     x <- stats::setNames(xVals, ids)
@@ -886,72 +876,17 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     }
     x
   }
-  sweepIds <- c(realIds, duplicates$id)
-  sweepGen <- c(unname(dispGenOf[realIds]),
-                unname(unitGenOf[duplicates$matingUnitId]))
-  sweepX <- sweepMinSep(sweepIds, c(unname(realX), dupX), sweepGen)
+  sweepIds <- realIds
+  sweepGen <- unname(dispGenOf[realIds])
+  sweepX <- sweepMinSep(sweepIds, unname(realX), sweepGen)
   realX <- sweepX[realIds]
-  dupX <- unname(sweepX[duplicates$id])
-
-  finalUnitX <- numeric(nrow(matingUnits))
-  if (nrow(matingUnits) > 0L) {
-    for (i in seq_len(nrow(matingUnits))) {
-      if (is.na(matingUnits$anchor[i])) {
-        # Orphan unit (issue #154 -- both parents dangling): no real
-        # anchor/non-anchor to average -- its own root-level position
-        # (already assigned above via positionUnit()) IS its final x.
-        finalUnitX[i] <- unitProvX[[matingUnits$id[i]]]
-        next
-      }
-      anchorX <- realX[[matingUnits$anchor[i]]]
-      dupRow <- which(duplicates$matingUnitId == matingUnits$id[i])
-      nonAnchorId <- matingUnits$nonAnchor[i]
-      nonAnchorX <- if (length(dupRow) == 1L) {
-        dupX[dupRow]
-      } else if (nonAnchorId %in% names(sweepX)) {
-        # A free-pass non-anchor REAL individual was positioned via the
-        # same recursive walk as everything else and swept above like any
-        # other real node (Track 3) -- read its swept, not pre-sweep,
-        # position.
-        sweepX[[nonAnchorId]]
-      } else {
-        # A free-pass non-anchor DANGLING id (S461, no own row in 'ped')
-        # has no visible node and so was never a Track 3 sweep input --
-        # read it from the unrestricted absX environment instead, exactly
-        # as before Track 3.
-        absX[[nonAnchorId]]
-      }
-      finalUnitX[i] <- (anchorX + nonAnchorX) / 2L
-    }
-  }
 
   nodes <- data.frame(
-    id = c(realIds, duplicates$id, unitIds),
-    x = c(unname(realX), dupX, finalUnitX),
-    gen = c(unname(dispGenOf), unname(unitGenOf[duplicates$matingUnitId]),
-            matingUnits$gen),
+    id = c(realIds, unitIds),
+    x = c(unname(realX), rep(NA_real_, length(unitIds))),
+    gen = c(unname(dispGenOf), matingUnits$gen),
     stringsAsFactors = FALSE
   )
-
-  ## Final de-collision pass (real-individual/mating-unit nodes only):
-  ## an ancestor's own point can exactly coincide with a nested
-  ## duplicate/free-pass descendant's point at the same gen (see
-  ## @noRd above); nudge apart deterministically, in (gen, id) order.
-  isDuplicate <- nodes$id %in% duplicates$id
-  nonDupIdx <- which(!isDuplicate)
-  ord <- order(nodes$gen[nonDupIdx], nodes$id[nonDupIdx])
-  nonDupIdx <- nonDupIdx[ord]
-  seenAtGen <- new.env(parent = emptyenv())
-  for (i in nonDupIdx) {
-    genKey <- as.character(nodes$gen[i])
-    used <- seenAtGen[[genKey]]
-    x <- nodes$x[i]
-    while (!is.null(used) && any(abs(used - x) < 1e-9)) {
-      x <- x + 1e-3
-    }
-    nodes$x[i] <- x
-    seenAtGen[[genKey]] <- c(used, x)
-  }
 
   # nolint start: commented_code_linter.
   ## issue #145 D1-D4/D2 (male-left/female-right default,
@@ -968,6 +903,20 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   ## so both swapped values already occupy positions inside the
   ## pre-existing footprint before AND after -- no child, duplicate, or
   ## ancestor moves.
+  ##
+  ## Track 6 moved this block EARLIER in the function (was after the final
+  ## de-collision pass; docs/planning/pedigree-diagram-track6-child-
+  ## centered-union-position-plan.md, Pre-RED finding, this session): the
+  ## new finalUnitX formula below (sec2.1) reads a mating unit's own
+  ## CHILDREN's x, and a child can itself be a swapped parent in a
+  ## DIFFERENT, deeper mating unit -- computing finalUnitX from a pre-swap
+  ## child position would silently go stale the moment that child is later
+  ## swapped. Running the swap first (it only ever touches 2 REAL
+  ## individuals' x, never a union or duplicate) and finalUnitX second
+  ## closes this; verified empirically against the real fixture (measured
+  ## 19/251 > 200-unit offset without this reordering vs. the ratified
+  ## 9/251 with it). The swap's own logic/guard conditions are unchanged --
+  ## only its position in the pipeline moves.
   # nolint end
   if (isTRUE(orderBySex)) {
     sexOf <- stats::setNames(as.character(ped$sex), realIds)
@@ -995,14 +944,80 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     }
   }
 
+  # nolint start: commented_code_linter.
+  ## Track 6 (docs/planning/pedigree-diagram-track6-child-centered-union-
+  ## position-plan.md sec2.1/sec2.2, this session): a mating unit's final x
+  ## is now the midpoint of its OWN CHILDREN's final x -- reusing the SAME
+  ## midpoint-of-merged-span formula D3 step 2 already uses for the
+  ## PROVISIONAL position (finalizeNode() above), just applied again here
+  ## to the FINAL (post-sweep, post-orderBySex) child positions, instead of
+  ## overridden by the 2 parents' midpoint. Every mating unit has >= 1
+  ## child by construction (.buildMatingUnitForest() only synthesizes a
+  ## unit from an observed child row), including orphan units (issue #154,
+  ## both parents dangling) -- so no anchor/non-anchor/orphan-unit
+  ## branching or provisional-position fallback is needed any longer (net
+  ## simplification, not just a substitution).
+  ##
+  ## A duplicate node is then offset adjacent to its OWN mating unit's new
+  ## FINAL x (sec2.2, was the pre-finalization PROVISIONAL x) -- restoring
+  ## D3 step 5's own stated intent ("positioned immediately adjacent to
+  ## their mating unit") now that "final" means something different.
+  # nolint end
+  finalUnitX <- stats::setNames(numeric(nrow(matingUnits)), matingUnits$id)
+  if (nrow(matingUnits) > 0L) {
+    for (i in seq_len(nrow(matingUnits))) {
+      uid <- matingUnits$id[i]
+      kids <- childEdges$to[childEdges$from == uid]
+      kidX <- nodes$x[match(kids, nodes$id)]
+      finalUnitX[[uid]] <- (min(kidX) + max(kidX)) / 2L
+    }
+  }
+  nodes$x[match(matingUnits$id, nodes$id)] <- unname(finalUnitX[matingUnits$id])
+
+  dupX <- numeric(nrow(duplicates))
+  if (nrow(duplicates) > 0L) {
+    dupX <- unname(finalUnitX[duplicates$matingUnitId]) + minSep * 0.4
+  }
+  nodes <- rbind(nodes, data.frame(
+    id = duplicates$id, x = dupX,
+    gen = unname(unitGenOf[duplicates$matingUnitId]),
+    stringsAsFactors = FALSE
+  ))
+
+  ## Final de-collision pass -- Track 6 (sec2.3) broadened this to EVERY
+  ## node (real, duplicate, AND mating-unit), not just real/union: an
+  ## ancestor's own point can exactly coincide with a nested duplicate/
+  ## free-pass descendant's point at the same gen (see @noRd above), and
+  ## sec2.2's dupX (now anchored to the union's own final x rather than an
+  ## independent Track-3-swept position) is no longer protected by Track
+  ## 3's own minSep guarantee -- confirmed live against the real fixture
+  ## this session (Pre-RED): removing duplicates from Track 3's sweep
+  ## surfaces exact duplicate/real and duplicate/union coincidences this
+  ## pass did not previously need to reach (including 1 PRE-EXISTING
+  ## coincidence unrelated to this decision that today's narrower pass
+  ## also missed). Nudge apart deterministically, in (gen, id) order.
+  ord <- order(nodes$gen, nodes$id)
+  seenAtGen <- new.env(parent = emptyenv())
+  for (i in ord) {
+    genKey <- as.character(nodes$gen[i])
+    used <- seenAtGen[[genKey]]
+    x <- nodes$x[i]
+    while (!is.null(used) && any(abs(used - x) < 1e-9)) {
+      x <- x + 1e-3
+    }
+    nodes$x[i] <- x
+    seenAtGen[[genKey]] <- c(used, x)
+  }
+
   ## Track 3 (see sweepMinSep()'s own definition/comment above): re-apply
-  ## the minSep sweep one final time, now that every later step (the
-  ## de-collision pass and the orderBySex swap) has had its say. The
-  ## orderBySex swap only exchanges 2 existing values (never introduces a
-  ## new one), so it cannot itself erode a gap -- but the de-collision
-  ## pass's epsilon-nudge can, and does, on the real fixture (see above).
-  ## This final pass is idempotent when nothing upstream disturbed the
-  ## first sweep's result.
+  ## the minSep sweep one final time, now that the broadened de-collision
+  ## pass has had its say -- its epsilon-nudge can, and does, erode a gap
+  ## Track 3 already fixed above (found live against the real
+  ## 375-individual bundled fixture). REAL individuals only (Track 6
+  ## sec2.2) -- duplicates are no longer a Track 3 sweep input; the
+  ## broadened de-collision pass above is what protects them now, not a
+  ## Track-3-shaped guarantee. This final pass is idempotent when nothing
+  ## upstream disturbed the first sweep's result.
   nodes$x[match(sweepIds, nodes$id)] <-
     unname(sweepMinSep(sweepIds, nodes$x[match(sweepIds, nodes$id)],
                         sweepGen))
