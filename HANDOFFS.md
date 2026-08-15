@@ -138,19 +138,62 @@ This file currently holds **4** receipt(s). Computed by `methodology_trim.py` on
 ```handoff
 session: S588
 date: 2026-08-15
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 9
+predecessor_score: 10
 active_task: Design a fix for "Pedigree Diagram: sibling subtree-width asymmetry" (BACKLOG.md,
-  found S576) -- one architecture/design document per ARCHITECTURE_WORKSTREAM.md. Planning
-  session, TDD phases inapplicable.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+  found S576) -- docs/planning/pedigree-diagram-sibling-subtree-width-plan.md +
+  -evidence.qmd -- DONE. Decision: COMMIT to a redesign (a mid-session owner correction
+  superseded an initial DEFER recommendation) -- next session is a bounded feasibility spike,
+  not code yet.
+what_was_done: Built a 13-individual synthetic reproduction of the sibling-subtree-width-
+  asymmetry mechanism; rendered it via kinship2 and nprcgenekeepr side by side (3 PNGs shown to
+  the owner inline, per an explicit mid-turn request to see figures before assessing the work).
+  Tested one candidate (bounded-depth contour-merge lookahead in .positionMatingUnitForest()) --
+  REJECTED: closed the toy-example gap (2.5->1.0 raw) but introduced an edge crossing between two
+  other siblings, and regressed a simplified real-fixture proxy measure (0.8%->3.2%), the
+  opposite trend from the toy example. First AskUserQuestion ratified DEFER (Round 1); owner
+  corrected mid-turn ("high priority... work cost is not a deterrent"); found the deeper reason no
+  low-risk fix exists (the shipped algorithm's rigid-subtree model is the same one Reingold-
+  Tilford/Walker/Buchheim-Jünger-Leipert -- issue #141's own target -- all use; none would fix
+  this, since they compute the same layout faster, not a tighter one). Second AskUserQuestion
+  ratified COMMIT to a redesign (Round 2, supersedes Round 1, both recorded transparently in the
+  design doc's §9). Filed GitHub issue #159 under Round 1's framing, then edited it (title, body,
+  premature-optimization label removed) to reflect Round 2. Updated BACKLOG.md (S576 item DONE;
+  new READY high-priority spike item added). Wrote PROJECT_LEARNINGS.md Learnings 596-597.
+  Commits: 5bafb83d (claim), plus this close-out.
+next_steps: The next session is a bounded, single-session feasibility spike (BACKLOG.md, found
+  S588, HIGH PRIORITY) -- prototype ONE non-rigid/constraint-aware layout candidate (script-level,
+  not R/), tested against (a) this document's own 13-individual synthetic example (docs/planning/
+  pedigree-diagram-sibling-subtree-width-plan.md, rendered and checked visually for crossings, not
+  just gap size) and (b) the real 375-individual fixture (measured for regressions using a
+  FAITHFUL reproduction of .positionMatingUnitForest()'s actual final pipeline, including
+  orderBySex + the final de-collision pass -- this session's own real-fixture measurement was an
+  explicitly simplified proxy, do not reuse it as-is for a go/no-go call). Close out with a clear
+  feasible/not-feasible verdict; that verdict decides whether a dedicated *_CAMPAIGN.md
+  (TEMPLATE_CAMPAIGN.md) is warranted. Do NOT bundle the related S583 item ("union outside parent
+  span") into the spike -- deliberately kept out of scope, see design doc §8. Also still open,
+  unrelated: SESSION_NOTES.md is 3,900+ lines (HIGH dashboard risk), not archived since 2026-08-13.
+key_files: docs/planning/pedigree-diagram-sibling-subtree-width-plan.md (the design doc, esp. §1.6
+  the rigid-subtree finding and §6 the spike's own scope); docs/planning/pedigree-diagram-sibling-
+  subtree-width-evidence.qmd (runnable reproduction of every number/figure cited); R/
+  makePedigreeDiagramData.R:584-833 (.positionMatingUnitForest(), the function any spike
+  prototypes against); GitHub issue #159 (the live tracker, already updated to Round 2's framing).
+gotchas: (1) `getPedDirectRelatives()` cannot isolate a small real-fixture subgraph for this class
+  of investigation -- it returns nearly the whole 375-individual connected component; use a
+  synthetic pedigree instead, as this session did, not an attempted real-fixture extraction.
+  (2) This session's real-fixture "measure()" proxy (evidence doc) is deliberately simplified
+  (stops after the first sweepMinSep() pass, skips orderBySex + the final de-collision pass) --
+  its ABSOLUTE percentages do not match Track 6's own published 3.6% baseline; only the TREND
+  across lookahead depth K was relied on. The spike needs a faithful reproduction, not this proxy,
+  for its own go/no-go evidence. (3) Issue #141 is a superficially similar but factually different
+  concern (runtime, not layout) on the SAME function -- do not fold the spike's work into #141 or
+  vice versa; §1.1/§1.6 of the design doc lay out why they're distinct.
+runtime_smoke: n/a -- no R/ source file touched; zero runtime behavior changed. All experimental
+  algorithm code lived in /private/tmp scratchpad (never committed) or the docs/planning/*.qmd
+  evidence doc (Quarto-only, not part of the package).
+changelog_ref: see the 2026-08-15 section, "S588:" entries
+commit: 5bafb83d (claim); this close-out commit
 ```
 
 ```handoff

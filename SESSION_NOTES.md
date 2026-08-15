@@ -14,19 +14,123 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 587 Handoff Evaluation (by Session 588)
+**Score: 10/10.** **What helped:** the `next_steps` field named this exact item as recommendation
+(3) of 3 remaining READY items, explicitly describing it as "2 related open geometry gaps... need
+their own design session before a fix is attempted" -- this session picked it directly from the
+Phase 0 priorities picker (option 1, same order) and never had to independently discover that the
+item needed a design (not implementation) session, or that a second, related item (S583) existed
+alongside it. **What was missing:** nothing the handoff itself could reasonably have anticipated --
+S587's own deliverable (a WORDLIST fix) had no reason to investigate pedigree-diagram geometry, so
+it could not have flagged that issue #141 exists on the same function with a superficially similar
+name (this session had to discover and distinguish that itself, §1.1 of the design doc). **What was
+wrong:** nothing -- the item's framing ("likely needs its own design session given the change
+surface") held up exactly as stated once investigated. **ROI:** high -- zero rediscovery cost on
+which item to pick; all of this session's substantial investigation was the item's own genuine
+content, not handoff-gap recovery.
+
 ### What Session 588 Did
 **Deliverable:** Design a fix for "Pedigree Diagram: sibling subtree-width asymmetry" (`BACKLOG.md`,
-found S576) -- one architecture/design document at `docs/planning/` per
-`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md` (IN PROGRESS). **Planning session -- TDD
-phases (RED/GREEN/REFACTOR) declared INAPPLICABLE** (`PROJECT_LEARNINGS.md` precedent: a planning
-session is not strict-TDD; the CLAUDE.md TDD override governs only implementation sessions).
-**Started:** 2026-08-15.
-**Status:** Session claimed. Work beginning -- investigation done (synthetic repro built, kinship2 +
-nprcgenekeepr renderings produced, one candidate mitigation empirically tested and rejected with
-visual evidence), design document not yet written.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+found S576) -- one architecture/design document,
+`docs/planning/pedigree-diagram-sibling-subtree-width-plan.md`, per
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`, plus a runnable evidence document,
+`docs/planning/pedigree-diagram-sibling-subtree-width-evidence.qmd` -- **DONE**. **Planning
+session -- TDD phases (RED/GREEN/REFACTOR) declared INAPPLICABLE** (`PROJECT_LEARNINGS.md`
+precedent: a planning session is not strict-TDD; the `CLAUDE.md` TDD override governs only
+implementation sessions).
+**Started/Completed:** 2026-08-15.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, `git status`/`log`/`diff --stat`, `gh run list` [S587's own push still
+`in_progress` on `R-CMD-check.yaml`/`pkgdown.yaml`/`test-coverage.yaml`, `lint.yaml` green; the prior
+S586 push's `R-CMD-check.yaml` failure was the exact defect S587 had just fixed], `methodology_
+dashboard.py` [96/100, 1 HIGH risk -- `SESSION_NOTES.md` 3,852 lines, unrelated to this task], ledger
+reconcile [`CHANGELOG.md` frontier == `HEAD`, no gap; `HANDOFFS.md` 2 commits behind but both were
+CHANGELOG-only "record push action" entries after S587's own receipt was already `complete` -- no
+backfill needed], untracked-file check [`docs/planning/pedigree-diagram-kinship2-reference-
+comparison.html` -- re-confirmed the known S558-class rendered-Quarto-output pattern]). Rendered the
+4-item priorities picker from `BACKLOG.md`'s tagged items (2 pedigree-diagram design items, the
+LabKey BLOCKED item, the NEWS/screenshot-verification item); user picked the sibling
+subtree-width-asymmetry design item. **(2)** Investigated the code (`R/makePedigreeDiagramData.R`'s
+`.positionMatingUnitForest()`, `mergeSubtrees()`, `finalizeNode()`) and Track 6's own plan doc
+(`docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md` §1.4/§8, the item's
+origin) before designing anything. Built a 13-individual synthetic reproduction isolating the
+mechanism (a childless sibling `A` vs. `B`, anchoring a 2-generation-deep, 2-child-per-union
+subtree) after determining the real fixture's own `__union_15` subgraph couldn't be cleanly
+isolated (`getPedDirectRelatives()` returns nearly the whole 375-individual connected component).
+**(3)** Owner interjected mid-turn (before any file write) asking to see the actual rendered
+figures compared against kinship2 before assessing the work satisfactory -- rendered and displayed
+inline 3 PNGs: kinship2's own rendering, nprcgenekeepr's shipped rendering (confirmed the 300-raw-
+unit `A`-`B` gap), and a candidate mitigation's rendering. **(4)** Tested one candidate (bounded-
+depth contour-merge lookahead) both on the synthetic example and the real fixture -- **rejected**:
+closed the toy-example gap (2.5->1.0 raw) but introduced an edge crossing between two OTHER
+siblings, and regressed a simplified real-fixture proxy measure (0.8%->3.2%) in the OPPOSITE
+direction from the toy example -- written up as `PROJECT_LEARNINGS.md` Learning 596. **(5)** Wrote
+the Phase 1B claim stub + `HANDOFFS.md` pending receipt, committed (`5bafb83d`) -- done after the
+investigation above, which was read-only/scratchpad-only, not repo file edits. **(6)** First
+`AskUserQuestion` ratification: presented the evidence and 3 options; owner selected "Defer,
+document, file issue" (Round 1). **(7)** Owner corrected mid-turn: "these layout issues are a high
+priority and may require a lot of work... the work cost is not a deterrent." **(8)** Investigated
+further (no new file writes) and found the deeper reason no low-risk fix exists: the shipped
+algorithm's "rigid-subtree" model (every subtree an opaque block, minimal-safe-gap contour merge)
+is the SAME model Reingold-Tilford/Walker/Buchheim-Jünger-Leipert (issue #141's own named target)
+all use -- none of them would fix this, since they compute the same layout faster, not a tighter
+one. Genuinely closing the gap needs a different paradigm entirely. **(9)** Second
+`AskUserQuestion` ratification with this new finding: owner selected "Recommend a full redesign
+effort" (Round 2, supersedes Round 1). **(10)** Wrote both documents reflecting Round 2 (§2 Decision:
+commit to a redesign, scope a next-session feasibility spike, defer campaign-drafting until the
+spike has evidence; §9 records both ratification rounds transparently, Round 1 kept not deleted).
+Rendered the evidence `.qmd` via `quarto render` (0 errors) -- the documentation build equivalent
+(`SAFEGUARDS.md` "Verify the Build Equivalent"); the untracked `.html` output is left uncommitted,
+matching the established `docs/planning/*.qmd`-tracked/`*.html`-untracked convention. **(11)** Filed
+GitHub issue #159 under Round 1's framing (labeled `enhancement` + `premature optimization`), then
+edited it (title, body, label removed) to reflect Round 2 once the correction landed -- documented
+in the design doc rather than silently overwritten. **(12)** Updated `BACKLOG.md`: marked the S576
+item DONE with the full Round 1->Round 2 narrative; added a new READY, high-priority item for the
+feasibility spike, citing the design doc's §6 Migration Path. **(13)** Wrote up 2 new
+`PROJECT_LEARNINGS.md` entries: Learning 596 (test a candidate against both a toy example AND the
+real fixture -- render the output, not just the summary metric, since a toy example's own trend can
+invert at scale) and Learning 597 (a "small measured impact" framing implicitly answers a priority
+question the assistant should surface explicitly via `AskUserQuestion`, not infer and fold into a
+single recommended option).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A (no new displayed statistic);
+tutorial/article checklist N/A (no new user-facing Shiny feature, no code shipped); `NEWS.Rmd`
+checklist N/A (no new exported function or feature); `a2interactive.Rmd` checklist N/A (no exported
+function/parameter added or changed); GitHub issue close-out N/A (this session OPENED an issue,
+#159, rather than closing one -- no existing issue was resolved); lint checklist N/A (no `.R` file
+added or modified -- all candidate-algorithm code lived in `/private/tmp` scratchpad or the
+`docs/planning/*.qmd` evidence doc, never `R/`); `_pkgdown.yml` reference-coverage checklist N/A (no
+new exported function).
+
+**Self-assessment (Session 588): 9/10.** **Strengths:** (1) Followed the project's own "measure
+before deciding" discipline (Track 6's own precedent) rather than reasoning from prose alone --
+built a real synthetic reproduction, rendered it, and empirically tested the one plausible
+candidate before recommending anything. (2) Directly honored the owner's mid-turn request to see
+actual rendered figures compared against kinship2, producing 3 concrete renderings and a
+runnable, quarto-rendered-clean evidence document rather than describing results in prose only.
+(3) Found a REAL, non-obvious flaw in the "obvious" first candidate (edge crossing + real-fixture
+regression, not just "seemed complex") -- and then, after the priority correction, found the
+DEEPER reason (the rigid-subtree paradigm itself, shared with the Reingold-Tilford/Walker/
+Buchheim-Jünger-Leipert family issue #141 names) rather than stopping at the first rejected
+candidate. (4) Handled the mid-session priority correction transparently -- documented both
+ratification rounds in the design doc rather than silently rewriting history, updated the already-
+filed GitHub issue rather than abandoning it, and wrote up the meta-lesson (Learning 597) about why
+the first recommendation needed correcting. (5) Correctly held the planning/implementation
+boundary (FM #18) even after being told cost is not a deterrent -- scoped a concrete next-session
+feasibility spike rather than starting to prototype production code in this same session.
+**Weaknesses:** (1) Still no independent adversarial-verification pass by a separate agent/session
+-- the same standing gap flagged for 21+ consecutive prior sessions. (2) The original Round-1
+recommendation (defer) rested on an unstated inference from "small measured impact" to "low
+priority" without first asking the owner directly whether cost/effort tolerance was the binding
+constraint -- this is the session's own most substantive mistake, corrected only because the owner
+caught it, not because this session's own process surfaced the gap in the first `AskUserQuestion`'s
+own framing (written up as Learning 597 specifically so a future session's own design
+recommendations ask this axis explicitly). (3) The real-fixture regression measurement for the
+tested candidate remains a simplified proxy (missing `orderBySex` and the final de-collision pass)
+-- explicitly caveated in both documents and the gap is assigned to the next session's own spike,
+but a more faithful measurement could have been built this session at some additional cost.
+**Ledger:** recorded in `CHANGELOG.md` (claim + close-out entries, `[BL-N]`-tagged).
 
 ### Session 586 Handoff Evaluation (by Session 587)
 **Score: 10/10.** **What helped:** the `next_steps` field named this exact item as recommendation

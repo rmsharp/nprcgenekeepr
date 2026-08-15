@@ -1,0 +1,374 @@
+---
+title: "Pedigree Diagram: Sibling Subtree-Width Asymmetry -- Evidence"
+subtitle: "Supporting evidence for docs/planning/pedigree-diagram-sibling-subtree-width-plan.md -- not a package vignette, not shipped"
+date: today
+format:
+  html:
+    embed-resources: true
+    toc: true
+    df-print: kable
+---
+
+## Purpose
+
+`BACKLOG.md` (found S576, incidental to Track 6's own empirical validation) flags that 2-3 direct
+children of the same mating unit can land far apart in `x` purely because their own
+descendant-subtree sizes differ -- independent of where the union itself is positioned. This
+document builds a small, self-contained reproduction of that mechanism, renders it via
+**kinship2** (the reference convention, matching the project's own
+`pedigree-diagram-kinship2-reference-comparison.qmd` precedent) and via `nprcgenekeepr`'s current
+shipped algorithm side by side, then empirically tests one candidate mitigation (a bounded-depth
+contour-merge lookahead) against both this small example and the real 375-individual bundled
+fixture. **No package code is changed here** -- this is investigation feeding the design document's
+own Decision section.
+
+`kinship2` is installed only into this project's local `renv` library for this one-off comparison
+(not added to `DESCRIPTION`, not snapshotted into `renv.lock`) -- it is reference material, not a
+dependency, matching the established precedent.
+
+## Setup
+
+```{r setup}
+#| message: false
+suppressWarnings(suppressMessages(library(kinship2)))
+library(nprcgenekeepr)
+```
+
+## The reproduction
+
+A minimal pedigree isolating the mechanism: `P1`x`P2` have two children. `A` is a childless leaf.
+`B` anchors a 2-generation-deep, 2-children-per-union subtree (`B`x`BM` -> `B1`,`B2`; `B1`x`B1M` ->
+`B1a`,`B1b`; `B2`x`B2M` -> `B2a`,`B2b`) -- 13 individuals total.
+
+```{r build-ped}
+build_ped <- function(rows) {
+  ped <- do.call(rbind, lapply(rows, as.data.frame, stringsAsFactors = FALSE))
+  ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
+  ped
+}
+r <- function(id, sire = NA, dam = NA, sex) list(id = id, sire = sire, dam = dam, sex = sex)
+
+rows <- list(
+  r("P1", sex = "M"), r("P2", sex = "F"),
+  r("A", "P1", "P2", "M"), r("B", "P1", "P2", "F"),
+  r("BM", sex = "M"),
+  r("B1", "BM", "B", "M"), r("B2", "BM", "B", "F"),
+  r("B1M", sex = "F"), r("B2M", sex = "M"),
+  r("B1a", "B1", "B1M", "F"), r("B1b", "B1", "B1M", "M"),
+  r("B2a", "B2M", "B2", "F"), r("B2b", "B2M", "B2", "M")
+)
+ped <- build_ped(rows)
+ped
+```
+
+## kinship2's own rendering
+
+```{r kinship2-render}
+#| fig-width: 9
+#| fig-height: 5.5
+sireCode <- ifelse(is.na(ped$sire), "0", ped$sire)
+damCode  <- ifelse(is.na(ped$dam), "0", ped$dam)
+sexCode  <- ifelse(ped$sex == "M", 1, 2)
+pedK <- kinship2::pedigree(id = ped$id, dadid = sireCode, momid = damCode,
+                            sex = sexCode, missid = "0")
+plot(pedK)
+title(main = "kinship2::plot.pedigree() -- sibling subtree-width asymmetry example")
+```
+
+`A` renders compact, close to the rest of the family, despite `B`'s much wider subtree.
+
+## nprcgenekeepr's current (shipped) rendering
+
+```{r nprc-render}
+#| fig-width: 9
+#| fig-height: 5.5
+layout <- makePedigreeMatingLayout(ped, edgeStyle = "rectilinear")
+nodes <- layout$nodes
+edges <- layout$edges
+plot(nodes$x, -nodes$y, type = "n", axes = FALSE, xlab = "", ylab = "",
+     main = "nprcgenekeepr::makePedigreeMatingLayout() (edgeStyle='rectilinear') -- same data",
+     xlim = range(nodes$x) + c(-20, 20))
+for (i in seq_len(nrow(edges))) {
+  fx <- nodes$x[nodes$id == edges$from[i]]; fy <- -nodes$y[nodes$id == edges$from[i]]
+  tx <- nodes$x[nodes$id == edges$to[i]];   ty <- -nodes$y[nodes$id == edges$to[i]]
+  if (length(fx) && length(tx)) segments(fx, fy, tx, ty, col = "grey40")
+}
+realNodes <- nodes[!grepl("^__", nodes$id), ]
+points(realNodes$x, -realNodes$y, pch = 1, cex = 2.4)
+text(realNodes$x, -realNodes$y, labels = realNodes$id, cex = 0.75, pos = 1, offset = 0.9)
+
+gap <- abs(diff(nodes$x[nodes$id %in% c("A", "B")]))
+cat("A x:", nodes$x[nodes$id == "A"], " B x:", nodes$x[nodes$id == "B"], " gap:", gap, "\n")
+```
+
+**Confirms the mechanism exactly:** `A`'s own position is unaffected by `B`'s subtree -- `A`
+has no descendants to collide with -- yet the union's children-merge step reserves `B`'s full
+descendant footprint against `A`'s, pushing `A` far away to avoid an overlap that never occurs at
+`A`'s own generation row.
+
+## Candidate mitigation: bounded-depth contour-merge lookahead
+
+The shipped `.positionMatingUnitForest()` (`R/makePedigreeDiagramData.R`) compares two sibling
+subtrees' *entire* contour (every generation row, however deep) when deciding how far apart to
+place them. One plausible-looking fix: only compare rows within `K` generations of the merge
+point, trusting the existing row-based `sweepMinSep()` post-pass (Track 3) to resolve any
+resulting same-row crowding at deeper generations. The function below is a modified copy of
+`.positionMatingUnitForest()` (investigation-only, not part of the package) with exactly that one
+change -- `mergeSubtrees()` gains an `atGen` parameter and its `finite` mask is windowed to
+`[atGen, atGen + lookaheadK]`.
+
+```{r candidate-fn}
+#| code-fold: true
+positionBoundedLookahead <- function(ped, forest, orderBySex = TRUE, lookaheadK = Inf) {
+  ped$gen[is.na(ped$gen)] <- 0L
+  matingUnits <- forest$matingUnits
+  duplicates <- forest$duplicates
+  childEdges <- forest$childEdges
+  unitIds <- matingUnits$id
+  realIds <- as.character(ped$id)
+  genOf <- stats::setNames(ped$gen, realIds)
+  danglingIds <- setdiff(c(matingUnits$sire, matingUnits$dam), realIds)
+  if (length(danglingIds) > 0L) {
+    fallbackGen <- vapply(danglingIds, function(x) {
+      matingUnits$gen[matingUnits$sire == x | matingUnits$dam == x][1L]
+    }, integer(1L))
+    genOf <- c(genOf, stats::setNames(fallbackGen, danglingIds))
+  }
+  unitGenOf <- stats::setNames(matingUnits$gen, unitIds)
+  maxGen <- max(ped$gen, if (nrow(matingUnits) > 0L) matingUnits$gen else 0L, na.rm = TRUE)
+  if (!is.finite(maxGen)) maxGen <- 0L
+  minSep <- 1L
+
+  leafContour <- function(gen) {
+    left <- rep(Inf, maxGen + 1L); right <- rep(-Inf, maxGen + 1L)
+    left[gen + 1L] <- 0L; right[gen + 1L] <- 0L
+    list(x = 0L, contour = list(left = left, right = right))
+  }
+
+  ## MODIFIED from the shipped mergeSubtrees(): takes atGen, masks the
+  ## finite comparison to rows in [atGen, atGen + lookaheadK] only -- rows
+  ## beyond that are treated as "no constraint" for THIS merge decision.
+  mergeSubtrees <- function(subResults, atGen) {
+    n <- length(subResults)
+    xs <- numeric(n)
+    contour <- subResults[[1L]]$contour
+    rowIdx <- seq_along(contour$right) - 1L
+    windowMask <- rowIdx >= atGen & rowIdx <= (atGen + lookaheadK)
+    if (n > 1L) {
+      for (i in 2L:n) {
+        ci <- subResults[[i]]$contour
+        finite <- is.finite(contour$right) & is.finite(ci$left) & windowMask
+        shift <- minSep
+        if (any(finite)) {
+          needed <- max(contour$right[finite] - ci$left[finite] + minSep)
+          shift <- max(shift, needed)
+        }
+        xs[i] <- shift
+        contour <- list(left = pmin(contour$left, ci$left + shift),
+                         right = pmax(contour$right, ci$right + shift))
+      }
+    }
+    list(xs = xs, contour = contour)
+  }
+
+  finalizeNode <- function(merged, ownGen) {
+    xs <- merged$xs
+    ownX <- (xs[1L] + xs[length(xs)]) / 2L
+    shiftAmt <- -ownX
+    contour <- list(left = merged$contour$left + shiftAmt, right = merged$contour$right + shiftAmt)
+    contour$left[ownGen + 1L] <- min(contour$left[ownGen + 1L], 0L)
+    contour$right[ownGen + 1L] <- max(contour$right[ownGen + 1L], 0L)
+    list(ownX = ownX, childOffsets = xs - ownX, contour = contour)
+  }
+
+  anchoredUnits <- matingUnits[!is.na(matingUnits$anchor), , drop = FALSE]
+  everAnchor <- unique(anchoredUnits$anchor)
+  nonAnchorSides <- c(anchoredUnits$sire, anchoredUnits$dam)
+  neverAnchorIds <- setdiff(unique(nonAnchorSides), everAnchor)
+  hasOwnDirectChild <- function(id) any(childEdges$from == id & !(childEdges$from %in% unitIds))
+  freePassIds <- Filter(function(id) !hasOwnDirectChild(id), neverAnchorIds)
+  freePassUnitOf <- stats::setNames(character(length(freePassIds)), freePassIds)
+  for (fp in freePassIds) {
+    ownUnits <- matingUnits$id[matingUnits$sire == fp | matingUnits$dam == fp]
+    dupUnits <- duplicates$matingUnitId[duplicates$realId == fp]
+    freePassUnitOf[[fp]] <- setdiff(ownUnits, dupUnits)[1L]
+  }
+  freePassOfUnit <- split(names(freePassUnitOf), freePassUnitOf)
+
+  dispGenOf <- genOf[realIds]
+  realFreePassIds <- intersect(freePassIds, realIds)
+  if (length(realFreePassIds) > 0L) {
+    dispGenOf[realFreePassIds] <- unname(unitGenOf[freePassUnitOf[realFreePassIds]])
+  }
+
+  relNode <- new.env(parent = emptyenv())
+
+  positionUnit <- function(unitId) {
+    kidIds <- childEdges$to[childEdges$from == unitId]
+    fpHere <- freePassOfUnit[[unitId]]
+    subIds <- c(fpHere, kidIds)
+    subResults <- lapply(subIds, function(sid) {
+      if (!is.null(fpHere) && sid %in% fpHere) leafContour(unitGenOf[[unitId]]) else positionIndividual(sid)
+    })
+    fin <- finalizeNode(mergeSubtrees(subResults, unitGenOf[[unitId]]), unitGenOf[[unitId]])
+    relNode[[unitId]] <- list(childIds = subIds, childOffsets = fin$childOffsets)
+    list(x = fin$ownX, contour = fin$contour)
+  }
+
+  positionIndividual <- function(id) {
+    unitSub <- matingUnits$id[matingUnits$anchor %in% id]
+    directSub <- childEdges$to[childEdges$from == id & !(childEdges$from %in% unitIds)]
+    subIds <- c(unitSub, directSub)
+    if (length(subIds) == 0L) {
+      relNode[[id]] <- list(childIds = character(0L), childOffsets = numeric(0L))
+      return(leafContour(genOf[[id]]))
+    }
+    subResults <- lapply(subIds, function(sid) if (sid %in% unitIds) positionUnit(sid) else positionIndividual(sid))
+    fin <- finalizeNode(mergeSubtrees(subResults, genOf[[id]]), genOf[[id]])
+    relNode[[id]] <- list(childIds = subIds, childOffsets = fin$childOffsets)
+    list(x = fin$ownX, contour = fin$contour)
+  }
+
+  hasParentEdge <- realIds %in% childEdges$to
+  founderIds <- realIds[!hasParentEdge]
+  rootIds <- setdiff(founderIds, freePassIds)
+  rootIds <- rootIds[order(match(rootIds, realIds))]
+  orphanUnitIds <- matingUnits$id[is.na(matingUnits$anchor)]
+
+  rootResults <- c(lapply(rootIds, positionIndividual), lapply(orphanUnitIds, positionUnit))
+  allRootIds <- c(rootIds, orphanUnitIds)
+  rootMerge <- mergeSubtrees(rootResults, 0L)
+
+  absX <- new.env(parent = emptyenv())
+  assignAbs <- function(id, base) {
+    absX[[id]] <- base
+    node <- relNode[[id]]
+    if (!is.null(node) && length(node$childIds) > 0L) {
+      for (i in seq_along(node$childIds)) assignAbs(node$childIds[i], base + node$childOffsets[i])
+    }
+  }
+  for (i in seq_along(allRootIds)) assignAbs(allRootIds[i], rootMerge$xs[i])
+
+  realX <- vapply(realIds, function(i) absX[[i]], numeric(1L))
+
+  sweepMinSep <- function(ids, xVals, genVals) {
+    x <- stats::setNames(xVals, ids)
+    for (g in unique(genVals)) {
+      rowIds <- ids[genVals == g]
+      if (length(rowIds) < 2L) next
+      rowIds <- rowIds[order(x[rowIds], rowIds, method = "radix")]
+      for (i in 2L:length(rowIds)) {
+        prevX <- x[[rowIds[i - 1L]]]
+        if (x[[rowIds[i]]] < prevX + minSep) x[[rowIds[i]]] <- prevX + minSep
+      }
+    }
+    x
+  }
+  sweepX <- sweepMinSep(realIds, unname(realX), unname(dispGenOf[realIds]))
+  realX <- sweepX[realIds]
+
+  data.frame(id = realIds, x = unname(realX), gen = unname(dispGenOf[realIds]),
+             stringsAsFactors = FALSE)
+}
+```
+
+### Candidate result on the small example: `A`-`B` gap by lookahead depth
+
+```{r candidate-small}
+forest <- nprcgenekeepr:::.buildMatingUnitForest(ped)
+res <- lapply(c(0, 1, 2, Inf), function(K) {
+  pos <- positionBoundedLookahead(ped, forest, lookaheadK = K)
+  data.frame(K = K, gap_raw = abs(diff(pos$x[pos$id %in% c("A", "B")])))
+})
+do.call(rbind, res)
+```
+
+`K = 0` (the tightest possible bound) closes the `A`-`B` gap from 2.5 raw units (matches the
+shipped algorithm, `K = Inf`) down to 1 -- promising in isolation.
+
+### Candidate rendering at `K = 0`
+
+```{r candidate-render}
+#| fig-width: 9
+#| fig-height: 5.5
+pos0 <- positionBoundedLookahead(ped, forest, lookaheadK = 0)
+pos0$x <- pos0$x * 120L  # match makePedigreeMatingLayout()'s own xScale
+plot(pos0$x, -pos0$gen * 150, type = "n", axes = FALSE, xlab = "", ylab = "",
+     main = "CANDIDATE (bounded lookahead K=0) -- same data -- NOT shipped, illustration only",
+     xlim = range(pos0$x) + c(-20, 20))
+for (i in seq_len(nrow(ped))) {
+  cx <- pos0$x[pos0$id == ped$id[i]]; cy <- -pos0$gen[pos0$id == ped$id[i]] * 150
+  if (!is.na(ped$sire[i])) {
+    sx <- pos0$x[pos0$id == ped$sire[i]]; sy <- -pos0$gen[pos0$id == ped$sire[i]] * 150
+    if (length(sx) && length(cx)) segments(sx, sy, cx, cy, col = "grey60", lty = 2)
+  }
+  if (!is.na(ped$dam[i])) {
+    dx <- pos0$x[pos0$id == ped$dam[i]]; dy <- -pos0$gen[pos0$id == ped$dam[i]] * 150
+    if (length(dx) && length(cx)) segments(dx, dy, cx, cy, col = "grey60", lty = 2)
+  }
+}
+points(pos0$x, -pos0$gen * 150, pch = 1, cex = 2.4)
+text(pos0$x, -pos0$gen * 150, labels = pos0$id, cex = 0.75, pos = 1, offset = 0.9)
+```
+
+**The tighter `A`-`B` gap comes at a real cost: `B1`'s and `B2`'s own connecting lines now cross**
+(visible in the plot above, in the `B1`/`B2M` and `B2`/`BM` region) -- an edge-crossing defect that
+did not exist in the shipped algorithm's rendering above. Edge crossings are a strictly worse
+legibility problem than "correct but wide": a reader can no longer trace parentage by following an
+uninterrupted line.
+
+### Candidate result on the real 375-individual fixture
+
+```{r candidate-real}
+pedReal <- read.csv("../../inst/extdata/examples/obfuscated_rhesus_mhc_ped.csv",
+                     stringsAsFactors = FALSE)
+pedReal$id <- as.character(pedReal$id)
+pedReal$sire <- as.character(pedReal$sire)
+pedReal$dam <- as.character(pedReal$dam)
+pedReal$gen <- findGeneration(pedReal$id, pedReal$sire, pedReal$dam)
+forestReal <- nprcgenekeepr:::.buildMatingUnitForest(pedReal)
+childEdges <- forestReal$childEdges
+matingUnits <- forestReal$matingUnits
+
+measure <- function(posDf) {
+  xOf <- stats::setNames(posDf$x, posDf$id)
+  offsets <- c()
+  for (u in matingUnits$id) {
+    kids <- childEdges$to[childEdges$from == u]
+    kidsReal <- intersect(kids, posDf$id)
+    if (length(kidsReal) == 0) next
+    kx <- xOf[kidsReal]
+    unitX <- (min(kx) + max(kx)) / 2
+    for (k in kidsReal) offsets <- c(offsets, abs(xOf[[k]] - unitX))
+  }
+  c(n = length(offsets), pct_over_threshold = mean(offsets > 200 / 120) * 100,
+    max_raw_offset = max(offsets))
+}
+
+resReal <- lapply(c(0, 1, 2, 3, Inf), function(K) {
+  pos <- positionBoundedLookahead(pedReal, forestReal, lookaheadK = K)
+  m <- measure(pos)
+  data.frame(K = K, n_edges = m[["n"]], pct_over_threshold = round(m[["pct_over_threshold"]], 1),
+             max_raw_offset = round(m[["max_raw_offset"]], 2))
+})
+do.call(rbind, resReal)
+```
+
+**Caveat:** this `measure()` proxy is simplified relative to the shipped algorithm's actual final
+positions (it stops after the first `sweepMinSep()` pass and does not apply the `orderBySex` swap
+or the final de-collision pass), so its absolute percentages should not be compared directly against
+Track 6's own published baseline figures (`docs/planning/pedigree-diagram-track6-child-centered-
+union-position-plan.md` \S1.4: 9/251, 3.6%, measured with the full pipeline). The trend across `K`
+under this *same* simplified methodology is still meaningful: **tightening the lookahead makes the
+real-fixture measure worse, not better** (`K = 0`'s `pct_over_threshold` is higher than `K = Inf`'s)
+-- the opposite direction from the small example. A full, faithful re-measurement against the
+shipped pipeline's exact final positions is deferred to an implementation session, should one ever
+be scheduled.
+
+## Conclusion
+
+The bounded-lookahead candidate is **rejected**: it trades a "correct but wide" layout for a
+"narrower but crossing" one on the very example constructed to show it working best, and it
+regresses (does not improve) the real fixture's own measure under the same methodology. No other
+low-risk candidate was identified this session. See the design document's own Decision/Rationale
+sections for the resulting recommendation.

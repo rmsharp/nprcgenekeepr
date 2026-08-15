@@ -208,26 +208,51 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       runtime paths -- `test-e2e-mate-pair-analysis-module.R` (qcStudbook), `test-e2e-genetic-
       value-tutorial.R` (orderReport/reportGV), `test-e2e-breeding-groups-module.R` (bgGroupView)
       -- all pass. See `PROJECT_LEARNINGS.md` Learning 588. See `CHANGELOG.md`.
-- [ ] (found S576, 2026-08-14, incidental to Track 6's own empirical validation of the
-      child-centered union-position design, READY, Effort unknown -- not scoped) **Pedigree
-      Diagram: sibling subtree-width asymmetry -- 2-3 direct children of the same mating unit can
-      land far apart in x purely because their own descendant-subtree sizes differ, independent of
-      where the union itself is positioned.** Distinct from (and not resolved by) Track 6's own
-      child-centered union-position fix: even a union perfectly centered between its children
-      cannot keep both edges short when the children themselves are positioned far apart. Measured
-      on the real 375-individual fixture as Track 6's own residual: 9/251 (3.6%) child edges still
-      exceed a 200-scaled-unit offset after Track 6's fix lands, concentrated in unions with only
-      2-3 children. Concrete example: `__union_15` (gen 0)'s 2 children sit at raw x 29.88 and
-      98.56 -- a 68.68-unit gap between direct siblings, more than half the entire fixture's own
-      raw-x range. Root cause is one level down the same recursive contour-merge pattern Track 6
-      addresses at the union level (D3, `docs/planning/pedigree-diagram-option2-layout-design-plan.md`):
-      an individual's x is the centroid of their OWN full descendant subtree, so 2 siblings with
-      very differently-sized subtrees (one prolific branch, one sparse/childless) end up far apart
-      regardless of any parent-level positioning choice. Not investigated further this session (no
-      candidate fix evaluated) -- likely needs its own design session given the change surface (the
-      same core recursive positioning algorithm). See
-      `docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md` §1.4/§8 for the
-      full measurement and reasoning.
+- [x] (found S576, 2026-08-14, incidental to Track 6's own empirical validation of the
+      child-centered union-position design, **DESIGN SESSION DONE S588, 2026-08-15 -- DECISION:
+      COMMIT to a redesign (owner corrected mid-session from an initial DEFER, see below).**)
+      **Pedigree Diagram: sibling subtree-width asymmetry -- 2-3 direct children of the same mating
+      unit can land far apart in x purely because their own descendant-subtree sizes differ,
+      independent of where the union itself is positioned.** Design session
+      `docs/planning/pedigree-diagram-sibling-subtree-width-plan.md` (evidence:
+      `docs/planning/pedigree-diagram-sibling-subtree-width-evidence.qmd`) built a synthetic
+      reproduction, rendered it via kinship2 and nprcgenekeepr side by side, and empirically tested
+      the one plausible low-risk candidate (a bounded-depth contour-merge lookahead in
+      `.positionMatingUnitForest()`). **Rejected**: it closes the sibling gap on the toy example but
+      introduces a genuinely worse defect (2 siblings' own connecting lines cross) and *regresses* a
+      simplified real-fixture measure (3.2% vs. the shipped algorithm's 0.8% under the same proxy
+      methodology) -- the opposite direction from the toy example. Deeper finding (design doc §1.6):
+      **no low-risk tuning of the current algorithm can fix this at all** -- `.positionMatingUnitForest()`
+      uses the same rigid-subtree model as Reingold-Tilford/Walker/Buchheim-Jünger-Leipert (issue
+      #141's own named target), all of which compute the *same* layout faster, not a tighter one; a
+      real fix needs a different layout paradigm entirely. First ratified as DEFER (document as
+      inherent, file a low-priority tracker) -- **owner corrected mid-session: "these layout issues
+      are a high priority and may require a lot of work; the work cost is not a deterrent."**
+      Re-ratified via a second `AskUserQuestion`: commit to the redesign, scoped as a dedicated
+      follow-up effort (see the new item directly below), not an immediate code change in this
+      planning session. Companion GitHub issue
+      [#159](https://github.com/rmsharp/nprcgenekeepr/issues/159) filed and then updated same-session
+      to reflect the priority correction (title/body rewritten, `premature optimization` label
+      removed). See `CHANGELOG.md` and `PROJECT_LEARNINGS.md` Learning 596.
+- [ ] (found S588, 2026-08-15, design session for the item directly above, READY, Effort M for the
+      spike itself -- HIGH PRIORITY per owner directive, work cost explicitly not a deterrent)
+      **Pedigree Diagram layout: feasibility spike for a non-rigid/constraint-aware replacement of
+      `.positionMatingUnitForest()`'s current rigid-subtree model.** One bounded session:
+      prototype ONE non-rigid/constraint-aware layout candidate (script-level, not integrated into
+      `R/`) and test it against (a) `docs/planning/pedigree-diagram-sibling-subtree-width-plan.md`'s
+      own 13-individual synthetic example -- rendered and checked visually for edge crossings, not
+      just gap size -- and (b) the real 375-individual bundled fixture, measured for regressions
+      using a *faithful* reproduction of `.positionMatingUnitForest()`'s actual final-position
+      pipeline (including the `orderBySex` swap and final de-collision pass -- the design session's
+      own proxy measurement was explicitly simplified and should not be reused as-is for this
+      go/no-go decision). Close out with a clear verdict: feasible (name the candidate, rough
+      implementation size) or not (name why, whether a second candidate is worth a second spike).
+      **This spike's own close-out decides whether a dedicated
+      `docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md`-based campaign document is warranted** --
+      the design session deliberately did not draft one, since a multi-phase campaign needs the
+      spike's own evidence about the new algorithm's actual shape first. See
+      `docs/planning/pedigree-diagram-sibling-subtree-width-plan.md` §6 for the full scope and §1.6
+      for why the obvious "tune the current algorithm" path is already ruled out.
 - [ ] (found S583, 2026-08-15, incidental to a user question about the just-reshot
       `pb_diagram_legend.png` screenshot, READY, Effort unknown -- not scoped, likely needs its
       own design session before any fix) **Pedigree Diagram: a mating union with a single child (or

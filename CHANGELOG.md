@@ -138,6 +138,23 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [BL-N] S588: close out (pedigree-diagram sibling subtree-width asymmetry design)
+- **Deliverable:** Designed a fix for "Pedigree Diagram: sibling subtree-width asymmetry"
+  (`BACKLOG.md`, found S576) — `docs/planning/pedigree-diagram-sibling-subtree-width-plan.md` +
+  a runnable evidence document, `docs/planning/pedigree-diagram-sibling-subtree-width-evidence.qmd`.
+  Built a 13-individual synthetic reproduction, rendered it via kinship2 and nprcgenekeepr side by
+  side, and empirically tested one candidate (bounded-depth contour-merge lookahead) — rejected: it
+  closed the toy-example gap but introduced an edge crossing and regressed a real-fixture proxy
+  measure. Found the deeper reason no low-risk tuning of the current algorithm can work (the
+  rigid-subtree model shared with the Reingold-Tilford/Walker/Buchheim-Jünger-Leipert family issue
+  #141 names). First ratified DEFER (Round 1); owner corrected mid-session ("high priority, work
+  cost is not a deterrent"); re-ratified COMMIT to a redesign (Round 2, both rounds recorded
+  transparently). Filed GitHub issue #159, then updated it to reflect Round 2. Updated `BACKLOG.md`
+  (S576 item DONE; new READY high-priority feasibility-spike item added). Wrote
+  `PROJECT_LEARNINGS.md` Learnings 596 (test candidates against both a toy example and the real
+  fixture, render output not just metrics) and 597 (surface priority/cost-tolerance questions
+  explicitly via `AskUserQuestion` rather than inferring them from measured technical severity).
+
 ### 2026-08-15 · [BL-N] S588: claim (design a fix for pedigree-diagram sibling subtree-width asymmetry)
 - **Deliverable:** Non-commit-adjacent claim entry per Phase 1B. Session claimed to design a fix
   for "Pedigree Diagram: sibling subtree-width asymmetry" (`BACKLOG.md`, found S576) — one
