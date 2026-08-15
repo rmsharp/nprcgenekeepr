@@ -167,9 +167,78 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.1.2.
 
-This file currently holds **4** receipt(s). Computed by
+This file currently holds **12** receipt(s). Computed by
 `methodology_trim.py` on every `--check`/`--write` run, never
 hand-maintained.
+
+``` handoff
+session: S591
+date: 2026-08-15
+status: complete
+self_score: 6
+predecessor_score: 7
+active_task: No pre-declared task -- Phase 1B (claim the session) was skipped; the session ran as
+  organic, user-driven conversation from Phase 0 straight into open-ended investigation. Ended
+  with: 2 real pedigree-diagram rendering defects found and filed as GitHub issues (#160, #161)
+  from LIVE, current-HEAD renders (not saved artifacts); a BACKLOG.md item confirmed live
+  (S583 union-outside-parents'-span); a new BACKLOG.md Active item proposing a dedicated planning
+  session to address the shared root cause behind all three.
+what_was_done: (1) Answered a user history question via a 5-agent parallel research workflow over
+  the kinship2-visual-parity effort's planning docs/audits. (2) Corrected 2 self-caught-by-user
+  errors: mischaracterized pre-remediation evidence images as post-remediation results; claimed
+  to have "displayed" plots that only rendered into the assistant's own tool-result context, never
+  reaching the user. (3) Generated fresh current-HEAD renders (pkgload::load_all(), not
+  library() -- Learning 603) of kinship2::sample.ped family 2 + a hand-built consanguineous A x Y
+  fixture; fixed a visHierarchicalLayout() misconfiguration that was overriding the package's own
+  fixed coordinates (R/modPedigree.R:607-611 confirms the real app never calls it); published as
+  a self-contained HTML Artifact (pedigree-fidelity-proof.html). (4) User caught 2 real relationship
+  errors in the render (false parentage implied by coordinate collisions); traced both against
+  makePedigreeMatingLayout()'s own nodes/edges + pixel crops; updated the published Artifact
+  in place with an honest defect callout rather than leaving false reassurance live. (5) Filed
+  issue #160 (owner-directed): sibship-bar/duplicate-connector lines can visually imply false
+  parentage when an unrelated same-row node collides with the line. (6) A second fixture review
+  found 2 more instances broadening #160's root cause (commented there), a live reconfirmation of
+  the already-tracked S583 BACKLOG item (annotated, not re-filed), and a new kinship2-parity
+  question (filed as issue #161, owner-directed: hide the union-node marker?). (7) CHANGELOG.md/
+  BACKLOG.md entries for every action as it happened. (8) Pushed twice (owner-directed both times)
+  -- 13 total commits now on origin/master. (9) Added a BACKLOG.md Active item for a dedicated
+  planning session on the shared root cause. Commits: 5bd295c4, 25697bb9, 2549e2e9, plus this
+  close-out. No R/ or tests/ file touched at any point.
+next_steps: The new BACKLOG.md Active item (top of file) is the clear next pick: a planning
+  session to address the shared "no collision-avoidance for same-row placement" root cause behind
+  issue #160, issue #161, and the S583 union-position item together, rather than as 3 separate
+  patches -- see BACKLOG.md for the full framing and SESSION_RUNNER.md's Planning Sessions
+  discipline (deepest reasoning mode, evidence-based inventory, plan document only, no code).
+  Other still-open items unchanged from S590's own next_steps: LabKey integration remainder
+  (BLOCKED); NPRC outreach plan (DECISION NEEDED, not a coding task); 3 possibly-stale pedigree
+  screenshots (found S582); SESSION_NOTES.md archive still blocked by the methodology_trim.py
+  fence-scanner defect (found S518) -- file now 4,300+ lines, HIGH dashboard risk, still growing.
+key_files: R/makePedigreeDiagramData.R (.positionMatingUnitForest()/.addRectilinearWaypoints(),
+  unchanged this session -- the planning item's own future evidence-based inventory starts here);
+  R/modPedigree.R:592-736 (the real renderVisNetwork() call -- the exact recipe any future
+  from-source render must match: no visHierarchicalLayout(), visPhysics(enabled=FALSE),
+  visNodes(physics=FALSE)); issue #160 (github.com/rmsharp/nprcgenekeepr/issues/160) and its
+  comment thread (full coordinate evidence, 2 fixtures); issue #161
+  (github.com/rmsharp/nprcgenekeepr/issues/161); PROJECT_LEARNINGS.md Learning 604 (the
+  verify-against-ground-truth methodology gap this session's own errors demonstrated).
+gotchas: Tool-result images (Read/computer screenshots) render into the assistant's own context
+  only -- they do NOT reach the user's terminal. Any deliverable meant to show the user an image
+  must be published somewhere they can open (an Artifact page; a committed file) or explicitly
+  screenshotted-and-saved-to-disk-then-referenced, never just "described as displayed." A rendered
+  diagram that looks structurally uncorrupted is NOT thereby verified correct -- trace every edge
+  against the actual node/edge data before calling it faithful (Learning 604); this session's own
+  worst mistake was skipping that trace once. Phase 1B was skipped this session with no actual
+  data loss (every action still landed a CHANGELOG.md entry as it happened) -- but a future
+  session should not treat that as evidence Phase 1B is optional; it is a lucky outcome of this
+  session's own after-the-fact discipline, not a demonstrated safe shortcut.
+runtime_smoke: n/a -- no R/ or tests/ file touched, no runtime behavior changed. All rendering
+  work happened in /private/tmp scratchpad scripts against the installed/loaded package, never
+  modifying shipped source.
+changelog_ref: see CHANGELOG.md 2026-08-15 entries between the S590 close-out block and this
+  session's own close-out entry below it (issue #160 filing + comment, issue #161 filing, the
+  S583 annotation, the planning-item addition, 2 push records).
+commit: 2549e2e9, plus this close-out
+```
 
 ``` handoff
 session: S590
