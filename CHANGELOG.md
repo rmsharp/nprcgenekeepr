@@ -138,6 +138,17 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] S584: push documentation commits (`7436a7a9..07824e0a`)
+- **Deliverable:** Non-commit action, recorded per failure mode #27. Owner-directed second push of
+  this session's 2 remaining documentation-only commits (`9c817bcb`, `07824e0a` — `BACKLOG.md`,
+  `CHANGELOG.md`, `HANDOFFS.md`; no source or test files). Clean fast-forward, no force. `master`
+  and `origin/master` in sync.
+- **Expected CI consequence, stated up front:** this re-triggers the 4 push-triggered workflows.
+  `pkgdown`, `lint` and `R-CMD-check` are expected to fail again — the 3 pre-existing defects
+  recorded in the entry below are untouched by a docs-only push, and were deliberately left unfixed
+  as separate deliverables. `test-coverage` is expected to pass. No new information is anticipated
+  from these runs; they are a side effect of the push, not a verification step.
+
 ### 2026-08-15 · [ad hoc] S584: CI outcome of the push — S584's fix CONFIRMED green; 3 pre-existing reds surfaced
 - **`shinytest2` SUCCESS** (run `31868762486`) — **this session's fix confirmed in CI, not just
   locally.** The previously-failing group reports
