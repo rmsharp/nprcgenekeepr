@@ -6,6 +6,30 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 ## Active
 
+**Planning session: address the shared “no collision-avoidance for
+same-row placement” root cause behind issues \#160, \#161, and the S583
+union-position gap** (found 2026-08-15, incidental to this
+conversation’s own live kinship2-fidelity review, READY, Effort L —
+planning session, not a fix) — three independent findings from the same
+day’s review trace to the SAME underlying gap in
+`.positionMatingUnitForest()`/`.addRectilinearWaypoints()`: node/edge
+placement is computed locally (per-union, per-child) with no check for
+what else already occupies that x/y region. [Issue
+\#160](https://github.com/rmsharp/nprcgenekeepr/issues/160) (sibship-bar
+and duplicate-connector lines colliding with unrelated nodes) and the
+S583 item directly below (a union landing outside its own parents’ span)
+are two symptoms of this one gap, not two separate bugs — a single
+design pass may resolve both together rather than as separate patches.
+[Issue \#161](https://github.com/rmsharp/nprcgenekeepr/issues/161)
+(whether to hide the union-node marker) is a smaller, related decision
+the same session could pick up alongside, since it touches the same
+rendering code and its answer affects how visible any remaining
+collision cases would be. Per `SESSION_RUNNER.md`’s Planning Sessions
+discipline: deepest available reasoning mode, evidence-based inventory
+(grep every call site these functions share), per-phase completion
+criteria — output is a plan document, not code; implementation is 1+
+separate sessions after that.
+
 **Pedigree Diagram: rectilinear sibship bar can visually imply false
 parentage** (found live in conversation 2026-08-15, not a claimed
 session, filed as [issue

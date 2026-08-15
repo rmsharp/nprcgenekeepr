@@ -124,6 +124,16 @@
 <div class="section level2">
 <h2 id="id_2026-08">2026-08<a class="anchor" aria-label="anchor" href="#id_2026-08"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-08-15--bl-n-added-planning-session-backlog-item-for-the-shared-collision-avoidance-gap">2026-08-15 · [BL-N] Added planning-session backlog item for the shared collision-avoidance gap<a class="anchor" aria-label="anchor" href="#id_2026-08-15--bl-n-added-planning-session-backlog-item-for-the-shared-collision-avoidance-gap"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Owner-directed. Added a <code>BACKLOG.md</code> Active item proposing a dedicated planning session to address the shared root cause behind issue #160, issue #161, and the S583 union-position item — all trace to <code>.positionMatingUnitForest()</code>/<code>.addRectilinearWaypoints()</code> computing node/edge placement locally with no check for what else occupies that x/y region. No code changed; the item itself asks for a plan document, not an implementation, per <code>SESSION_RUNNER.md</code>’s Planning Sessions discipline.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-08-15--ad-hoc-push-commits-ea49636e25697bb9">2026-08-15 · [ad hoc] Push commits (<code>ea49636e..25697bb9</code>)<a class="anchor" aria-label="anchor" href="#id_2026-08-15--ad-hoc-push-commits-ea49636e25697bb9"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Owner-directed. Pushed 11 local commits (S588-S590’s own claim/deliverable/ reconcile docs, plus this conversation’s issue #160/#161 ledger entries) to <code>origin/master</code>, clean fast-forward, no force.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-08-15--issue-161-filed-pedigree-diagram-mating-unit-marker-kinship2-parity-question">2026-08-15 · [issue #161] Filed pedigree-diagram mating-unit-marker kinship2-parity question<a class="anchor" aria-label="anchor" href="#id_2026-08-15--issue-161-filed-pedigree-diagram-mating-unit-marker-kinship2-parity-question"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> Filed <a href="https://github.com/rmsharp/nprcgenekeepr/issues/161">issue #161</a> — found live in conversation reviewing a fresh render of the <code>A x Y</code> consanguineous fixture against kinship2. kinship2 draws no marker for a mating (a plain line intersection); nprcgenekeepr draws a small filled circle for every <code>__union_N</code> node. Mechanically feasible via the same <code>size = 0</code> + transparent-color technique already used for invisible D1/D2 rectilinear waypoints (issue #142, S465), but a genuine design question, not an obvious fix. Not implemented — needs a decision first. Also added to <code>BACKLOG.md</code> Active.</li>
