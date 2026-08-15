@@ -138,23 +138,54 @@ This file currently holds **2** receipt(s). Computed by `methodology_trim.py` on
 ```handoff
 session: S586
 date: 2026-08-15
-status: pending
-self_score:
+status: complete
+self_score: 9
 predecessor_score: 9
 active_task: Fix red lint.yaml CI (BACKLOG.md Housekeeping, found S584) -- 3 pre-existing lints in
-  R/kinship.R:127,131,133 from S564's X-chromosome kinship work. Pre-RED scope decided (close a
-  found coverage gap: no existing test combines chrtype='x' with sparse=TRUE) and PRE-RED->RED
-  gate approved.
-what_was_done: pending
-next_steps: pending
-key_files: R/kinship.R:126-134 (the 3 lint sites); tests/testthat/test_kinship.R (new
-  sparse/dense parity test for chrtype='x' to be added)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+  R/kinship.R:127,131,133 from S564's X-chromosome kinship work -- DONE. Collapsed a nested
+  ifelse() into a vectorized match()/index lookup; fixed 2 bare-0 implicit-integer literals.
+  0 lints package-wide (down from 3), all verification green.
+what_was_done: Found a pre-RED test-coverage gap (chrtype='x' + sparse=TRUE, untested) and added
+  test_that("kinship() with chrtype = 'x' gives identical results for sparse = TRUE and sparse =
+  FALSE") to tests/testthat/test_kinship.R -- confirmed passing against UNMODIFIED code (this is a
+  pure refactor task, no new behavior, so no failing-first RED -- surfaced and approved explicitly
+  at the PRE-RED->RED gate). Then in R/kinship.R: replaced the 3-line nested ifelse computing
+  sexNum with `c(1L, 2L)[match(sex, c(sexCodes[["male"]], sexCodes[["female"]]))]`; changed
+  `c(founderDiag, 0)` -> `c(founderDiag, 0.0)` in both sparse/dense branches. Also fixed a
+  documentation defect found this session: CLAUDE.md's "Clean regression read" formula was
+  missing the NOT_CRAN=true prefix its neighbor requires, silently producing a false "0 failed"
+  read (PROJECT_LEARNINGS.md Learning 594). Commits a8367a4f (claim), plus this close-out.
+next_steps: 2 more S584-filed items remain READY, Effort S each (do NOT bundle): (1)
+  R-CMD-check.yaml/WORDLIST -- add matings/Rectilinear's/runnable/visNetwork's to inst/WORDLIST
+  (red since S573). (2) Reshoot 3 possibly-stale screenshots (found S582) --
+  diagram_show_names.png/diagram_affected_shading.png/diagram_twin_connectors.png may still show
+  stale direct-style edges after the rectilinear default flip; not yet checked. Also: SESSION_
+  NOTES.md archive (dashboard's only HIGH risk, 3,663 lines past the 2,000-line cap -- still needs
+  someone to verify the Learning-518 fence-scanner defect is actually resolved before --write, per
+  S585's own carried-forward note -- this session did not investigate it further). Push to origin
+  is still the owner's call (4+ local commits ahead as of this session's start, now more);
+  R-CMD-check.yaml/pkgdown.yaml/lint.yaml will not go green on origin until pushed -- this
+  session's own lint.yaml fix is UNVERIFIED IN ACTUAL CI for the same reason.
+key_files: R/kinship.R:126-131 (the fix, now 6 lines shorter than before); tests/testthat/
+  test_kinship.R:133-140 (the new parity test, placed before the "explicit chrtype = 'autosome'"
+  backward-compat test); CLAUDE.md:119 (Clean regression read formula, NOT_CRAN prefix added);
+  PROJECT_LEARNINGS.md Learning 594 (the formula-gap writeup).
+gotchas: (1) `CLAUDE.md`'s documented "Clean regression read" command, run exactly as written
+  BEFORE this session's fix, silently produced sum(failed)=0 when 1 was actually expected --
+  test_wordlist_coverage.R has skip_on_cran() and the command didn't set NOT_CRAN. Now fixed in
+  CLAUDE.md itself; a session running an OLDER cached copy of the instructions would still hit
+  this. (2) The chrtype='x' branch this session touched is script-callable only -- confirmed via
+  grep that zero R/mod*.R, appServer.R, or appUI.R files reference `chrtype` -- so this fix has NO
+  live-Shiny-app surface at all; do not expect to see it in the running app. (3) The
+  match()/indexing refactor pattern (`c(1L, 2L)[match(x, c(a, b))]`) used here for a 2-way lookup
+  is a reusable idiom if another nested_ifelse_linter finding turns up elsewhere in this codebase.
+runtime_smoke: n/a -- confirmed via grep that the modified code path (chrtype='x') is unreferenced
+  by any Shiny module/UI file (R/mod*.R, appServer.R, appUI.R all 0 matches for `chrtype`);
+  script-callable only, exercised exclusively by tests/testthat/test_kinship.R, which is fully
+  green. Not a Phase-3E-covered surface (no startup/wiring/dispatch/config-resolution change).
+changelog_ref: a8367a4f (this session's claim entry) -- see the 2026-08-15 section, "S586:" entries
+commit: a8367a4f (claim); close-out commit sha to follow
 ```
-<!-- S586 claim stub; overwritten at Phase 3D close-out -->
 
 ```handoff
 session: S585

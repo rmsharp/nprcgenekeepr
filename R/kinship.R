@@ -123,14 +123,12 @@ kinship <- function(id, father.id, mother.id, pdepth, sparse = FALSE, # nolint: 
     ## sex gets NA. The "n + 1" placeholder row/col (missing-parent stand-in)
     ## is appended as 0, matching the autosomal branch's own placeholder
     ## treatment below.
-    sexNum <- ifelse(sex == sexCodes[["male"]], 1L, # nolint: object_name_linter
-      ifelse(sex == sexCodes[["female"]], 2L, NA_integer_)
-    )
+    sexNum <- c(1L, 2L)[match(sex, c(sexCodes[["male"]], sexCodes[["female"]]))] # nolint: object_name_linter
     founderDiag <- ifelse(is.na(sexNum), NA_real_, (3L - sexNum) / 2L) # nolint: object_name_linter
     if (sparse) {
-      kmat <- Diagonal(x = c(founderDiag, 0))
+      kmat <- Diagonal(x = c(founderDiag, 0.0))
     } else {
-      kmat <- diag(c(founderDiag, 0))
+      kmat <- diag(c(founderDiag, 0.0))
     }
   } else {
     ## Mendelian 1/2: a non-inbred animal's self-kinship is 1/2, so kmat

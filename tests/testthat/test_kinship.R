@@ -130,6 +130,15 @@ test_that("kinship() with chrtype = 'x' and no twinRelations differs from the
   expect_equal(kmat["1", "1"], 1.00)
 })
 
+test_that("kinship() with chrtype = 'x' gives identical results for
+  sparse = TRUE and sparse = FALSE", {
+  kmatDense <- kinship(fam1$id, fam1$sire, fam1$dam, fam1$gen,
+    chrtype = "x", sex = fam1$sex, sparse = FALSE)
+  kmatSparse <- kinship(fam1$id, fam1$sire, fam1$dam, fam1$gen,
+    chrtype = "x", sex = fam1$sex, sparse = TRUE)
+  expect_identical(as.numeric(kmatSparse), as.numeric(kmatDense))
+})
+
 test_that("kinship() explicit chrtype = 'autosome' is byte-identical to
   omitting chrtype entirely (backward-compatibility pin)", {
   withChrtype <- kinship(fam1$id, fam1$sire, fam1$dam, fam1$gen,

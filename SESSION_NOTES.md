@@ -14,16 +14,101 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 585 Handoff Evaluation (by Session 586)
+**Score: 9/10.** **What helped:** the `next_steps` field named the exact 2 remaining CI reds S584
+filed, each with its precise location (`R/kinship.R:127,131,133`), effort tag, and an explicit
+"do NOT bundle -- separate deliverables" instruction -- this session picked the first-listed item
+and never had to rediscover which lines were affected or which lint rules fired; that was
+confirmed byte-for-byte via a fresh `lintr::lint_package()` run at session start. The Phase 0
+priorities picker (this project's own `AskUserQuestion` convention) surfaced it as option 1 in the
+same order. **What was missing:** nothing about the lint item itself -- S585's own deliverable
+(pkgdown) had no reason to investigate `R/kinship.R`'s test coverage, so the sparse=TRUE +
+chrtype='x' gap this session found and closed was never going to be in that handoff; not a fair
+ding. **What was wrong:** nothing -- the 3 lint locations, rule names, and provenance (`7bbc6273`,
+S564) all verified exactly as stated. **ROI:** high -- zero rediscovery cost for the picked item;
+this session's only original investigation was the coverage-gap finding, which is inherent to any
+session actually starting RED design on this file, not a handoff gap.
+
 ### What Session 586 Did
 **Deliverable:** Fix red `lint.yaml` CI (`BACKLOG.md` Housekeeping, found S584) -- 3 pre-existing
-lints in `R/kinship.R:127,131,133` from S564's X-chromosome kinship work (IN PROGRESS).
-**Started:** 2026-08-15.
-**Status:** Session claimed. Pre-RED scope decided (add a missing sparse=TRUE + chrtype='x'
-regression test before touching line 131, closing a coverage gap found this session) and the
-PRE-RED->RED gate approved. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+lints in `R/kinship.R:127,131,133` from S564's X-chromosome kinship work -- **DONE**. Collapsed the
+nested `ifelse()` computing `sexNum` into a single vectorized `match()`/index lookup; changed 2
+bare `0` literals to `0.0`. A Strict-TDD task: a pre-RED scope decision, then PRE-RED -> RED ->
+GREEN -> (GREEN->REFACTOR declined) all fired as `AskUserQuestion` calls before their phase's
+first file edit.
+**Started/Completed:** 2026-08-15.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, `git status`/`log`/`diff --stat`, `methodology_dashboard.py` [96/100, 1 HIGH risk
+-- `SESSION_NOTES.md` 3,663 lines, unrelated to this task], `gh run list` [3 known pre-existing
+reds: R-CMD-check/pkgdown/lint, all already documented; pkgdown fixed locally but unpushed],
+ledger reconcile [both `CHANGELOG.md` and `HANDOFFS.md` frontiers == `HEAD`, no gap], untracked-file
+check [`docs/planning/pedigree-diagram-kinship2-reference-comparison.html` -- confirmed known
+S558-class rendered-Quarto-output pattern via its tracked `.qmd` sibling and `.gitignore:28`, not a
+ghost session]). Rendered the 4-item priorities picker from `BACKLOG.md`'s READY-tagged items; user
+picked the lint fix. **(2)** Investigated the testable seam before declaring RED: read
+`R/kinship.R:104-147` and confirmed the exact 3 lint sites via a fresh `lintr::lint_package()` run;
+read `tests/testthat/test_kinship.R` in full and found comprehensive dense-branch (chrtype='x',
+sparse=FALSE-default) coverage but zero tests combining `chrtype = "x"` with `sparse = TRUE` --
+posed this as a pre-RED scope `AskUserQuestion` (fix+close-gap / fix-only); user picked
+fix+close-gap. **(3)** Verified the proposed test would currently PASS (not fail) against
+unmodified code -- since this is a pure lint/refactor task with no new behavior, there is no
+failing-first RED in the classic sense; presented this explicitly at the PRE-RED->RED gate rather
+than silently declaring RED for a test that couldn't fail; approved. **(4)** Phase 1B claim stub
+committed (`a8367a4f`) -- done after the investigation above, which was read-only, not file edits.
+**(5)** RED: added `test_that("kinship() with chrtype = 'x' gives identical results for sparse =
+TRUE and sparse = FALSE")` to `test_kinship.R`; ran it standalone -- confirmed GREEN as predicted
+(34/34 assertions passing, matching the PRE-RED->RED gate's own stated expectation).
+**(6)** GREEN: collapsed the nested `ifelse()` (`sexNum` computation) into
+`c(1L, 2L)[match(sex, c(sexCodes[["male"]], sexCodes[["female"]]))]` -- provably equivalent by R's
+own `match()`/vector-indexing semantics (unmatched/NA -> `NA_integer_`, matches -> `1L`/`2L`,
+identical to the original 3-way `ifelse` nesting); changed `c(founderDiag, 0)` -> `c(founderDiag,
+0.0)` in both the sparse and dense branches (no behavior change -- `c()` already coerces `0` to
+double via type promotion regardless of literal form). **(7)** Verified 4 ways: new test file
+34/34 assertions passing; `lintr::lint_package()` (CI's literal mechanism,
+`LINTR_ERROR_ON_LINT=true`) -- 0 lints package-wide (down from 3); full clean regression
+(`NOT_CRAN=true`) -- 0 new failures/errors, only the pre-existing documented
+`test_wordlist_coverage.R` WORDLIST gap remains; runtime-reachability grep (`chrtype` across
+`R/mod*.R`/`appServer.R`/`appUI.R`) -- 0 matches, confirming the modified branch is script-callable
+only and not wired to any live Shiny path (Phase 3E basis). **(8)** GREEN->REFACTOR gate: presented
+and declined (recommended) -- the diff is already minimal (one collapsed line, two literal
+changes), 0 lints, no further structural improvement identified. **(9)** Found and fixed, at
+close-out, a documentation defect in `CLAUDE.md`'s own "Clean regression read" formula: it omits
+the `NOT_CRAN=true` prefix its neighboring "Fast single-file test" formula requires, so run
+verbatim it silently skips `skip_on_cran()`-gated files and produces a false "0 failed" where 1 was
+expected -- caught only because this session's own Phase 0 orientation had already established the
+WORDLIST gap as a known open failure. Fixed inline (`CLAUDE.md` Build/Test/Verify table); written
+up as `PROJECT_LEARNINGS.md` Learning 594.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A (no new displayed
+statistic); tutorial/article checklist N/A (no new user-facing Shiny feature -- confirmed via grep
+that `chrtype` is unreferenced by any Shiny module/UI file); `NEWS.Rmd` checklist N/A (no new
+exported function or feature -- `kinship()`'s signature unchanged since S564); `a2interactive.Rmd`
+checklist N/A (no exported function/parameter added or changed); GitHub issue close-out N/A
+(tracked only in `BACKLOG.md`, never filed as a GitHub issue); lint checklist **DONE** (0 lints
+package-wide on the touched file); `_pkgdown.yml` reference-coverage checklist N/A (no new exported
+function).
+
+**Self-assessment (Session 586): 9/10.** **Strengths:** (1) Found and closed a genuine test-
+coverage gap (sparse=TRUE + chrtype='x') before touching the line it would have left unprotected,
+rather than treating "just fix the lint" as license to skip investigation. (2) Recognized and
+transparently surfaced -- rather than glossed over -- that this task's RED phase cannot be
+failing-first in the classic TDD sense (no new behavior exists to fail), and got explicit sign-off
+on that classification at the PRE-RED->RED gate instead of silently redefining "RED." (3) Verified
+runtime-reachability empirically (grep for `chrtype` across every Shiny module/UI file) rather than
+assuming the Phase 3E smoke-test criteria didn't apply -- an evidence-based N/A, not a hand-waved
+one. (4) Caught a real, generalizable documentation defect in `CLAUDE.md`'s own verification
+formula by nearly falling for it myself (got a false "0 failed" on the first regression run,
+recognized the contradiction against Phase 0's own findings, root-caused it, fixed it, and wrote up
+Learning 594) rather than either missing it or leaving it for a future session to rediscover.
+**Weaknesses:** (1) Still no independent adversarial-verification pass by a separate agent/session
+-- the same standing gap flagged for 19+ consecutive prior sessions. (2) The `CLAUDE.md` fix,
+while small, safe, and directly related to verification honesty, is technically a scope addition
+beyond "fix 3 lints" -- judged in-bounds per SAFEGUARDS.md's own precedent (many prior sessions
+added close-out-checklist items to this exact file for identical reasons), but a stricter reading
+could have deferred it to a separate `BACKLOG.md` item instead of fixing inline.
+**Ledger:** recorded in `CHANGELOG.md` (claim + close-out -- 2 entries this session, both
+`[BL-N]`-tagged).
 
 ### Session 584 Handoff Evaluation (by Session 585)
 **Score: 8/10.** **What helped:** the `next_steps` field's recommended pickup order ("cheapest and

@@ -138,6 +138,46 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [BL-N] S586: close out (lint.yaml CI fix — R/kinship.R nested-ifelse + implicit-integer)
+- **Deliverable:** Fix the red `lint.yaml` CI (`BACKLOG.md` Housekeeping, found S584) — 3
+  pre-existing lints in `R/kinship.R:127,131,133` from S564's X-chromosome kinship work — DONE.
+  Collapsed the nested `ifelse()` computing `sexNum` (line 126-128) into a single vectorized
+  `match()`/index lookup (`c(1L, 2L)[match(sex, c(sexCodes[["male"]], sexCodes[["female"]]))]`),
+  provably behavior-identical by R's own coercion/indexing semantics; changed the two bare `0`
+  literals in `c(founderDiag, 0)` (sparse and dense branches) to `0.0`. Strict-TDD: a pre-RED
+  scope decision (close a found test-coverage gap before touching the sparse branch), PRE-RED→RED,
+  and GREEN→REFACTOR (declined, recommended) all fired as `AskUserQuestion` gates before their
+  phase's first edit.
+- **Pre-RED finding:** no existing test combined `chrtype = "x"` with `sparse = TRUE` — the dense
+  X-linked branch was thoroughly characterized (self-kinship, unknown-sex→NA, twin correction) but
+  the sparse X-linked branch (containing one of the two implicit-integer lint sites) had zero
+  coverage. Added `test_that("kinship() with chrtype = 'x' gives identical results for sparse =
+  TRUE and sparse = FALSE")` to `tests/testthat/test_kinship.R`, mirroring the file's existing
+  twin-corrected sparse/dense-parity test. Confirmed GREEN against unmodified code (not a
+  failing-first RED — this is a pure refactor task with no new behavior, so the safety-net test
+  starts passing by design, a distinction surfaced and approved at the PRE-RED→RED gate).
+- **Verification:** (1) new test file 34/34 assertions passing after the fix; (2)
+  `lintr::lint_package()` (the literal `lint.yaml` CI mechanism, `LINTR_ERROR_ON_LINT=true`) — 0
+  lints package-wide, down from 3; (3) full clean regression (`NOT_CRAN=true`) — 0 new
+  failures/errors, the only failure is the pre-existing, already-documented
+  `test_wordlist_coverage.R` WORDLIST gap (S573); (4) runtime-reachability check — grepped
+  `R/mod*.R`/`appServer.R`/`appUI.R` for `chrtype`: zero matches, confirming the modified branch is
+  script-callable only, not wired to any live Shiny path (all in-app `kinship()` calls use the
+  default autosomal branch, untouched by this fix) — the basis for the Phase 3E runtime-smoke
+  determination.
+- **Process fix (found this session, close-out documentation):** `CLAUDE.md`'s "Clean regression
+  read" formula was missing the `NOT_CRAN=true` prefix its neighboring "Fast single-file test"
+  formula requires — run verbatim as documented, it silently skipped `test_wordlist_coverage.R`'s
+  `skip_on_cran()` and reported a false `sum(failed): 0` where 1 was expected. Caught only because
+  this session's own Phase 0 orientation had already established the WORDLIST gap as a known
+  open failure. Fixed inline in `CLAUDE.md` (added the prefix); see `PROJECT_LEARNINGS.md` Learning
+  594.
+
+### 2026-08-15 · [BL-N] S586: claim (fix red lint.yaml CI)
+- **Deliverable:** Session claimed. Picked from the Phase 0 priorities picker (1 of 4 options,
+  first-listed per S585's own `next_steps` ordering). Phase 1B stub written to `SESSION_NOTES.md`;
+  pending receipt opened in `HANDOFFS.md`. Commit `a8367a4f`.
+
 ### 2026-08-15 · [ad hoc] S585: reconcile HANDOFFS.md commit self-reference (`6a34c351`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> the three
   real shas (`6a34c351` close-out, `9ab5b507` fix + guard, `eace45d8` claim) -- unknowable until

@@ -68,22 +68,6 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       connected-component walk).
 
 ## Housekeeping
-- [ ] (found S584, 2026-08-15, revealed by the S584 push finally letting CI see current `HEAD`,
-      **READY, Effort S**) **`lint.yaml` CI is RED on 3 pre-existing lints in `R/kinship.R`.**
-      The workflow sets `LINTR_ERROR_ON_LINT: true`, so any lint fails the job. Exact findings
-      (run `31868761462`): `R/kinship.R:127` `[nested_ifelse_linter]` ("Don't use nested ifelse()
-      calls"), `R/kinship.R:131` and `R/kinship.R:133` `[implicit_integer_linter]` ("Use 0L or 0.0
-      to avoid implicit integers"). These are the same 3 that `lintr::lint_package()` reports
-      locally -- the entire package-wide lint count is exactly these 3. Provenance: `git blame`
-      puts all three in `7bbc6273` (2026-08-13, **S564**, `kinship()` gains `chrtype="x"`/`sex` for
-      X-chromosome kinship, Track A). **Note this is a close-out-checklist miss, not a novel gap:**
-      `CLAUDE.md`'s Lint close-out checklist (found S577) already requires any session touching a
-      tracked `.R` file to run `lintr::lint_package()` on touched files and fix or `# nolint`-
-      suppress what it flags, precisely so CI never has to catch it -- S564 either did not run it or
-      did not act on it. A session fixing this should decide per-finding between a real fix and a
-      documented `# nolint` (the 2 `implicit_integer` ones are trivially fixable as `0L`; the
-      `nested_ifelse` one is a judgment call about readability in that function). Any `R/` change
-      here is Strict-TDD territory -- behavior must be provably unchanged. See `CHANGELOG.md`.
 - [ ] (found S584, 2026-08-15, incidental to running the build equivalent during close-out,
       **READY, Effort S**) **`devtools::check()` -- the project's own documented build equivalent --
       is RED on `master` and has been since S573, with no session reporting it.** Final line:
