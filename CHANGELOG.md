@@ -138,6 +138,13 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [BL-N] S579: post-close-out finding: HANDOFFS.md's own archive trigger fires
+- **Deliverable:** A post-close-out `--check` sweep of both ledgers (prompted by this session's
+  own `CHANGELOG.md` trim) found `HANDOFFS.md`'s line-headroom trigger now fires (4 records
+  against the 15-record threshold) -- not fixed this session (out of scope), filed as a new
+  `BACKLOG.md` Housekeeping item with the SRF boundary numbers already pulled for whoever picks
+  it up next.
+
 ### 2026-08-14 · [ad hoc] S579: reconcile HANDOFFS.md commit self-reference (`c35b1983`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> `c35b1983`
   (the close-out commit's own sha, unknowable until after that commit was made).
