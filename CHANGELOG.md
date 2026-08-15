@@ -138,6 +138,14 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [BL-1] S593: claim session (implement Track 1 -- D1 sibship-bar row offset)
+- **Deliverable (in progress):** Implement Track 1 (D1 sibship-bar genuine intermediate row) --
+  Session A of `docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md` §2.1/§6
+  (`BACKLOG.md`, found S592, READY, Effort S). User selected this item from the Phase 0
+  priorities picker over Track 2, Track 3, and issue #148 scoping.
+- **Action taken:** Claim stub written to `SESSION_NOTES.md`; `status: pending` receipt opened
+  in `HANDOFFS.md`. Full PRE-RED -> RED -> GREEN -> REFACTOR TDD gates to follow.
+
 ### 2026-08-15 · [ad hoc] S592: reconcile HANDOFFS.md commit self-reference (14a405b1)
 - **Action taken:** updated S592's own `HANDOFFS.md` receipt `commit:` field from the
   write-time placeholder (`b600b43a, plus this close-out`) to the actual close-out commit sha

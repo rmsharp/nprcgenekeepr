@@ -136,6 +136,24 @@ This file currently holds **12** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S593
+date: 2026-08-15
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement Track 1 (D1 sibship-bar genuine intermediate row) -- Session A of
+  docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md section 2.1/section 6
+  (BACKLOG.md, found S592, READY, Effort S). Full PRE-RED -> RED -> GREEN -> REFACTOR TDD gates.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S592
 date: 2026-08-15
 status: complete

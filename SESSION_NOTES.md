@@ -14,6 +14,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 593 Did
+**Deliverable:** Implement Track 1 (D1 sibship-bar genuine intermediate row) — Session A of
+`docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md` §2.1/§6 (`BACKLOG.md`,
+found S592, READY, Effort S). (IN PROGRESS)
+**Started:** 2026-08-15.
+**Status:** Session claimed. Work beginning. Following the plan's own §6 Session A migration
+path (PRE-RED -> RED -> GREEN -> REFACTOR), full TDD gates per `CLAUDE.md`'s Development
+Process Contract.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### Session 591 Handoff Evaluation (by Session 592)
 **Score: 9/10.** **What helped:** `next_steps` named this exact task with precise, directly
 actionable scope -- "a planning session to address the shared 'no collision-avoidance for
