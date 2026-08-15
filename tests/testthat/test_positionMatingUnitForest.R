@@ -186,6 +186,27 @@ test_that(".positionMatingUnitForest positions the real GA204Z/8LKBV9 loop
 ## reflects Track 3's minSep guarantee: every same-gen gap in this fixture
 ## is now exactly minSep = 1 apart, re-verified live against the fixed
 ## implementation.
+##
+## Track 6 update (docs/planning/pedigree-diagram-track6-child-centered-
+## union-position-plan.md, this session): a mating unit's final x is now
+## the midpoint of its OWN CHILDREN's final x (§2.1), not its 2 parents'
+## midpoint -- all 4 union values (unit1-4) and the duplicate (dupAt4)
+## change. dupX is now derived from the new finalUnitX (§2.2). 3 REAL
+## individual values also change, for 2 different reasons -- NOT "union/
+## duplicate values only", confirmed by empirical Pre-RED validation before
+## writing this test: (a) 8DKELJ/FJIB3R shift by exactly the existing
+## 1e-3 de-collision epsilon (the existing final de-collision pass's own
+## mechanism, unchanged, now triggered by a different node population) --
+## functionally a no-op; (b) 9VGCCV shifts by a real 0.5 units, because
+## §2.2 removes duplicates from Track 3's sweepIds/sweepGen input set,
+## which changes the gen-2 sweep's own competition (previously 3 entries:
+## FJIB3R/9VGCCV/dupAt4; now 2: FJIB3R/9VGCCV) -- a real, non-epsilon
+## consequence of §2.2 the design doc's own §5 Impact Analysis table did
+## not state (it claimed real-individual sweeping is "otherwise
+## unchanged"). Every value below re-verified live against a from-scratch
+## reimplementation of Extended Candidate A (§2.1-2.3) run against
+## UNMODIFIED .buildMatingUnitForest() output, not hand-derived --
+## matching this project's own established Track 3/4 practice.
 
 test_that(".positionMatingUnitForest's exact x/gen values for the real
            GA204Z/8LKBV9 loop fixture reflect Track 4's gen-first D2
@@ -196,7 +217,8 @@ test_that(".positionMatingUnitForest's exact x/gen values for the real
            override still renders her at her unit's gen. 5A6DFT/8DKELJ's
            own x values reflect issue #145 (male-left/female-right
            default, D2/D3), unaffected by Track 4. Every value below
-           additionally reflects Track 3's minSep guarantee.", {
+           additionally reflects Track 3's minSep guarantee, AND Track 6's
+           child-centered union/duplicate x formula (sec2.1/sec2.2).", {
   ped <- data.frame(
     id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
            "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
@@ -215,7 +237,8 @@ test_that(".positionMatingUnitForest's exact x/gen values for the real
   }
 
   expectPos("5A6DFT", -0.50, 0L)  # issue #145: male left; unaffected by Track 4
-  expectPos("8DKELJ", 0.50, 0L)   # unaffected by Track 4
+  expectPos("8DKELJ", 0.5010, 0L)  # Track 6: CHANGED, 1e-3 de-collision
+                                    # epsilon only (was 0.50)
   expectPos("G8EBU9", -0.75, 1L)  # issue #143; x CHANGED (8LKBV9 now
                                     # anchors this unit's OWN subtree merge
                                     # differently, since he also anchors
@@ -225,25 +248,31 @@ test_that(".positionMatingUnitForest's exact x/gen values for the real
                                   # does -- Track 4); x CHANGED
   expectPos("8LKBV9", 0.50, 1L)  # x CHANGED: his own gen (1), unrelocated
                                   # -- he now anchors BOTH founder units
-  expectPos("FJIB3R", 0.25, 2L)  # x CHANGED; still anchors unit4 (gen 2
-                                  # beats 8LKBV9's gen 1), unaffected
-  expectPos("9VGCCV", 2.25, 2L)  # x CHANGED
+  expectPos("FJIB3R", 0.2510, 2L)  # Track 6: CHANGED, 1e-3 de-collision
+                                    # epsilon only (was 0.25); still
+                                    # anchors unit4 (gen 2 beats 8LKBV9's
+                                    # gen 1), unaffected
+  expectPos("9VGCCV", 1.75, 2L)  # Track 6: CHANGED, a REAL (non-epsilon)
+                                  # shift -- §2.2 drops duplicates from
+                                  # Track 3's gen-2 sweep competition (was
+                                  # 3 entries, now 2), see docstring above
   expectPos("GA204Z", 0.25, 3L)  # x CHANGED
 
   unit1 <- forest$matingUnits$id[forest$matingUnits$sire == "5A6DFT"]
   unit2 <- forest$matingUnits$id[forest$matingUnits$dam == "G8EBU9"]
   unit3 <- forest$matingUnits$id[forest$matingUnits$dam == "8P17E3"]
   unit4 <- forest$matingUnits$id[forest$matingUnits$dam == "FJIB3R"]
-  ## Every mating-unit dot's x is the midpoint of its own 2 (now Track-3-
-  ## swept) parent positions -- Track 3 does not sweep union nodes
-  ## directly, so each of these 4 values is purely a downstream
-  ## consequence of the individual-node changes above, not a separate
-  ## sweep input.
-  expectPos(unit1, 0.00, 0L)   # midpoint(-0.50, 0.50), unaffected
-  expectPos(unit2, -0.125, 1L)  # CHANGED: midpoint(-0.75, 0.50)
-  expectPos(unit3, 1.00, 1L)   # CHANGED: midpoint(0.50, 1.50) -- 8LKBV9's
-                                 # own position now, not a duplicate's
-  expectPos(unit4, 0.75, 2L)   # CHANGED: midpoint(0.25, dupAt4=1.25)
+  ## Track 6: every mating-unit dot's x is now the midpoint of its OWN
+  ## CHILDREN's final x (§2.1), not its 2 parents' midpoint.
+  expectPos(unit1, 0.50, 0L)   # CHANGED: unit1's only child is 8LKBV9
+                                 # (x=0.50) -- midpoint of a single child
+                                 # is that child's own x
+  expectPos(unit2, 0.25, 1L)  # CHANGED: unit2's only child is FJIB3R
+                                # (x=0.2510)
+  expectPos(unit3, 1.75, 1L)   # CHANGED: unit3's only child is 9VGCCV
+                                 # (x=1.75)
+  expectPos(unit4, 0.25, 2L)   # CHANGED: unit4's only child is GA204Z
+                                 # (x=0.25)
 
   dupAt4 <- forest$duplicates$id[forest$duplicates$matingUnitId == unit4]
   ## unit3 no longer has a duplicate (8LKBV9 anchors it directly now,
@@ -251,7 +280,10 @@ test_that(".positionMatingUnitForest's exact x/gen values for the real
   ## own contribution to that drop).
   expect_equal(forest$duplicates$matingUnitId[
     forest$duplicates$realId == "8LKBV9"], unit4)
-  expectPos(dupAt4, 1.25, 2L)  # x CHANGED; gen unaffected (unit4's own gen)
+  expectPos(dupAt4, 0.65, 2L)  # Track 6: CHANGED (§2.2, dupX = new
+                                # finalUnitX[unit4] + minSep*0.4 =
+                                # 0.25 + 0.4); gen unaffected (unit4's own
+                                # gen)
 })
 
 ## ---- Track 3: minimum mate-spacing guarantee (kinship2 fidelity
@@ -927,4 +959,82 @@ test_that(".positionMatingUnitForest's every mating unit satisfies the
   expect_false(any(is.na(forest$matingUnits$anchor)))
   expect_equal(forest$matingUnits$gen,
                unname(genOf[forest$matingUnits$anchor]))
+})
+
+## ---- Track 6 (child-centered mating-unit position): docs/planning/
+## pedigree-diagram-track6-child-centered-union-position-plan.md §2.4's
+## own invariant, plus the §2.3 duplicate-vs-any-node de-collision
+## broadening. Both confirmed empirically to fail against UNMODIFIED
+## source (Pre-RED, this session) before being committed here -- the §2.4
+## invariant fails because current code centers a union over its 2
+## PARENTS, not its children (baseline: 100/251 child edges >200 scaled
+## units on the real fixture, per the design doc's own §1.4 measurement,
+## reproduced live this session); the de-collision test fails because the
+## real fixture already has 1 PRE-EXISTING duplicate/union exact
+## coincidence current code's own de-collision pass does not reach
+## (duplicates are excluded from it today) -- a gap this decision's §2.3
+## closes as a side effect, not something §2.1/§2.2 alone introduce. -----
+
+test_that(".positionMatingUnitForest's every mating unit satisfies the
+           Track 6 §2.4 invariant -- finalUnitX equals the midpoint of its
+           own children's final x, within the existing 1e-3 de-collision
+           epsilon's own tolerance -- on the small GA204Z/8LKBV9 loop
+           fixture (single-child units) and the real 375-individual
+           bundled fixture (multi-child units)", {
+  checkInvariant <- function(ped) {
+    forest <- .buildMatingUnitForest(ped)
+    pos <- .positionMatingUnitForest(ped, forest)
+    matingUnits <- forest$matingUnits
+    childEdges <- forest$childEdges
+    for (i in seq_len(nrow(matingUnits))) {
+      uid <- matingUnits$id[i]
+      kids <- childEdges$to[childEdges$from == uid]
+      kidX <- pos$x[match(kids, pos$id)]
+      expected <- (min(kidX) + max(kidX)) / 2
+      actual <- pos$x[pos$id == uid]
+      expect_equal(actual, expected, tolerance = 2e-3,
+                   info = paste("unit", uid, "expected", expected,
+                                 "actual", actual))
+    }
+  }
+
+  small <- data.frame(
+    id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
+           "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
+    sire = c(NA, NA, NA, NA, "5A6DFT", "8LKBV9", "8LKBV9", "8LKBV9"),
+    dam = c(NA, NA, NA, NA, "8DKELJ", "G8EBU9", "8P17E3", "FJIB3R"),
+    sex = c("M", "F", "F", "F", "M", "F", "F", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 2L, 2L, 3L),
+    stringsAsFactors = FALSE
+  )
+  checkInvariant(small)
+
+  real <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  checkInvariant(real)
+})
+
+test_that(".positionMatingUnitForest has zero exact x/gen coincidence
+           among real, duplicate, AND mating-unit nodes together (Track 6
+           §2.3's broadened de-collision pass) -- confirmed empirically
+           this session (Pre-RED) that the real 375-individual bundled
+           fixture already has 1 duplicate/union coincidence under
+           UNMODIFIED source (a pre-existing gap this decision's own §2.3
+           closes as a side effect, not a new regression §2.1/§2.2
+           introduce)", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForest(ped, forest)
+  key <- paste(round(pos$x, 6), pos$gen)
+  expect_false(any(duplicated(key)),
+               info = paste("colliding ids:",
+                             paste(pos$id[key %in% key[duplicated(key)]],
+                                   collapse = ", ")))
 })
