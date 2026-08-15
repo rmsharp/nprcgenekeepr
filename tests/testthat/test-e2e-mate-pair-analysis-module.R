@@ -55,7 +55,10 @@ test_that("E2E: Mate Pair Analysis reports a live pair with marker kinship after
 
   # ---- Load the bundled example pedigree (Input tab) ----------------------
   if (!navigate_to_tab(app, "Input")) skip("Could not navigate to Input")
-  examplePedFile <- makeExamplePedigreeFile(
+  ## Must stay nprcgenekeepr::-qualified: the nightly shinytest2 job runs this
+  ## tier via testthat::test_dir(), which never attaches the package (see
+  ## test_e2e_package_qualification.R, which guards this).
+  examplePedFile <- nprcgenekeepr::makeExamplePedigreeFile(
     file.path(tempdir(), "MatePairE2E_Pedigree.csv"), fileType = "csv"
   )
   do.call(app$upload_file,
