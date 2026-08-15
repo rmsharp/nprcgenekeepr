@@ -138,17 +138,57 @@ This file currently holds **1** receipt(s). Computed by `methodology_trim.py` on
 ```handoff
 session: S580
 date: 2026-08-14
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: HANDOFFS.md byte-budget/line-headroom archive trim (BACKLOG.md Housekeeping, found S579)
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: HANDOFFS.md byte-budget/line-headroom archive trim (BACKLOG.md Housekeeping, found
+  S579) -- DONE. Archived 21 of 22 records to a new dated shard; both triggers clear (9,682 B vs
+  65,536 B budget; line-headroom metric abstains, fewer than 1 record since the split).
+what_was_done: Hit SRF_RED on the dry run (SRF 1.1566 against the most-recent archive 306a4b4, vs.
+  0.1201 against the largest-drop boundary d07814a) -- Learning 549/550/586's false-refusal pattern,
+  now confirmed on HANDOFFS.md too (a file Learning 549 had previously called clean). Pulled
+  absolute byte deltas for both boundaries before deciding (116,204 B real regrowth in ~1 day);
+  surfaced both readings + 3 options via AskUserQuestion; user chose --force. Verified losslessness
+  3 ways (dry-run L1/L2/L3, the shard's own verify.sh, post-trim --check). Caught and fixed a
+  cosmetic front-matter drift the tool's in-place edit left behind (the "currently holds N
+  receipt(s)" sentence stranded between 2 archive pointers) -- repositioned to match the S508/S561
+  convention. Removed the resolved BACKLOG.md item; added PROJECT_LEARNINGS.md Learning 587.
+  Commits: 9f4110f8 (claim), 838e94ff (the trim), 12ebaba4 (BACKLOG/Learning update), plus this
+  close-out commit.
+next_steps: BACKLOG.md's remaining numbered items (in the order presented this session's Phase 0,
+  none picked): locale-dependent order() sweep (qcStudbook()/orderReport(), READY, Effort M);
+  stale pb_diagram_legend.png screenshot (READY, Effort S); Pedigree Diagram sibling
+  subtree-width asymmetry (READY but needs its own design session first, found S576); #148 MHC
+  scope-narrowing conversation (DECISION NEEDED); NPRC outreach & announcement plan (DECISION
+  NEEDED, owner review). Separately, not yet its own BACKLOG item: SESSION_NOTES.md is 3,049+ lines
+  (grows every session), past the 2,000-line dashboard HIGH-risk cap -- per CLAUDE.md's own
+  "SESSION_NOTES.md archive blocked by a fence-scanner defect" note, do NOT run
+  methodology_trim.py --write on it yet; the 4-backtick inline-code-span false-fence at line
+  ~23229 must be fixed first (rewrap that one paragraph, or patch the tool's fence-scanner) or the
+  archive will misplace ~42% of the file's real record boundaries even though L1/L2/L3 would still
+  report lossless.
+key_files: HANDOFFS.md (live receipt ledger, now 9,682 B); docs/archive/HANDOFFS-through-2026-08-14.md
+  (+.verify.sh, the new shard, 21 records); BACKLOG.md (Housekeeping section, item resolved);
+  PROJECT_LEARNINGS.md Learning 587 (the cross-file SRF_RED recurrence).
+gotchas: The SRF_RED false-refusal pattern (Learnings 549/550/586/587) is now confirmed on BOTH
+  ledger files this project's methodology_trim.py config tracks, not a CHANGELOG.md quirk -- expect
+  it again on either file, and on SESSION_NOTES.md too once its fence-scanner defect is fixed and it
+  starts archiving. Always pull absolute byte deltas (git cat-file -s <sha>^:<file> / <sha>:<file>)
+  before trusting the ratio alone; the two boundaries can disagree by an order of magnitude on the
+  same real regrowth. Also: methodology_trim.py's in-place FRONTMATTER_FIELD_REGENERATED edit does
+  NOT reposition the "currently holds N receipt(s)" sentence relative to newly-inserted archive
+  pointers -- check its position after every --write and move it back to immediately-after-newest
+  if a new pointer landed above it.
+runtime_smoke: n/a -- docs/ledger-only change, no runtime behavior touched.
+changelog_ref: 12ebaba4
 commit: pending
 ```
-pending
+**Self-score breakdown (9/10):** +caught the P1_UNDOCUMENTED-avoidance opportunity from S579's own
+experience and applied it proactively; +pulled absolute byte deltas before the SRF_RED decision
+rather than trusting the ratio; +caught and fixed the stranded front-matter sentence; +verified
+losslessness 3 independent ways; +recorded a forward-looking, cross-file-generalized learning.
+-still no independent adversarial-verification pass (13+ session standing gap, unaddressed again);
+-skipped a second dedicated scope-confirmation `AskUserQuestion` after the picker, relying on the
+picker option's own description instead (defensible, but a departure from S579's own pattern worth
+a future session's consistency judgment).
 

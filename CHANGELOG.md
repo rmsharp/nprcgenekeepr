@@ -138,6 +138,16 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [BL-N] S580: close out (HANDOFFS.md byte-budget/line-headroom archive trim DONE)
+- **Deliverable:** Session S580's own close-out. Evaluated S579's `HANDOFFS.md` receipt (9/10 --
+  the `gotchas` field's `SRF_RED` non-durability warning primed this session for the identical
+  divergence on `HANDOFFS.md`, saving a full re-diagnosis). Self-assessed 9/10 (proactively added
+  the claim commit's own ledger entry instead of waiting for `P1_UNDOCUMENTED` to catch it; pulled
+  absolute byte deltas before the `SRF_RED` decision; caught and fixed a stranded front-matter
+  sentence the tool's own edit left behind; weakness: still no independent adversarial-verification
+  pass, and skipped a second scope-confirmation `AskUserQuestion` after the picker). Wrote handoff
+  notes to `SESSION_NOTES.md`; completed the `HANDOFFS.md` receipt (`status: complete`).
+
 ### 2026-08-14 · [BL-N] S580: downstream updates (BACKLOG item resolved, PROJECT_LEARNINGS 587)
 - **Deliverable:** Removed the resolved `BACKLOG.md` Housekeeping item (`HANDOFFS.md`'s archive
   trigger, found S579), replaced with a short resolution pointer. Added `PROJECT_LEARNINGS.md`

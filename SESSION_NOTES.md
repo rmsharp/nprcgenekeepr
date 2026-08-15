@@ -14,14 +14,102 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 579 Handoff Evaluation (by Session 580)
+**Score: 9/10.** **What helped:** the `gotchas` field named this exact recurring risk verbatim —
+"The S547 legacy-footer relocation's `SRF_RED` 'fix' is NOT durable — any subsequent small archive
+of the same file becomes the new most-recent boundary and can re-trigger `SRF_RED` almost
+immediately" — and while it was written about `CHANGELOG.md`, it primed me to expect (and I
+confirmed at Phase 0) that `HANDOFFS.md` carried the identical divergence (9.63x spread between its
+two SRF boundaries) before I ever ran `--write`. The `next_steps` field's priorities list matched,
+item-for-item, what I independently reconstructed from `BACKLOG.md` at Phase 0 — no rediscovery
+cost. `key_files`/`changelog_ref` were accurate and let me verify the prior session's own claims
+quickly rather than trusting them blind. **What was missing:** nothing S579 owed — the
+`HANDOFFS.md`-specific finding (SRF numbers, the new `BACKLOG.md` item) was filed in a legitimate
+post-close-out commit (`753f9bda`) made *after* this receipt was written, so it structurally
+couldn't appear in the receipt's own `next_steps`/`gotchas` fields; it was still fully discoverable
+via `BACKLOG.md` at this session's own Phase 0. **What was wrong:** nothing found inaccurate.
+**ROI:** high — the `gotchas` field's generalizable framing ("expect to re-diagnose this same
+shape") is exactly what let this session move straight to pulling absolute byte deltas instead of
+first re-deriving that the ratio-only reading was misleading.
+
 ### What Session 580 Did
 **Deliverable:** `HANDOFFS.md` byte-budget/line-headroom archive trim (`BACKLOG.md` Housekeeping,
-found S579) (IN PROGRESS)
-**Started:** 2026-08-14
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+found S579) — **DONE**. Following `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`; a
+housekeeping/tooling action (no `R/` source touched), so the Strict-TDD RED/GREEN/REFACTOR gates
+from `CLAUDE.md`'s Development Process Contract do not apply — stated explicitly, matching the
+S579 precedent for the same class of action. **Started/Completed:** 2026-08-14.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list` [12 open, unchanged], `git status`/`log`/`diff --stat` [127 commits ahead of
+`origin/master`, unpushed; 1 untracked benign file, the same recurring `.qmd` render byproduct],
+`methodology_dashboard.py` [Health 96/100, 1 HIGH risk — `SESSION_NOTES.md` at 3,049 lines, past
+the 2,000-line cap, no `BACKLOG.md` item filed for it yet], `gh run list --branch master --limit
+10` [scheduled `shinytest2.yaml` red 2 consecutive days, unchanged/undiagnosed]). Ledger reconcile:
+`CHANGELOG.md` frontier at `HEAD`; `HANDOFFS.md` frontier one commit behind `HEAD`, but the
+intervening commit (`753f9bda`) only touched `BACKLOG.md`/`CHANGELOG.md` (a legitimate
+post-close-out finding, already logged) — no gap, no ghost session. **(2)** Rendered the
+priorities list (4 numbered READY/BLOCKED/DECISION-NEEDED items + 2 lower-priority + informational,
+capped at 4 per `CLAUDE.md`'s picker convention) and the `AskUserQuestion` picker — flagged the
+`HANDOFFS.md` item's own live SRF divergence directly in its option description, since the numbers
+were already known from S579's own filing. User picked the `HANDOFFS.md` trim. **(3)** Stated
+understanding back in prose (no second scope-confirmation `AskUserQuestion` — the picker's own
+option description already spelled out the exact actions and the known risk, so a second round
+would have been redundant; the substantive decision point, reached at step 5 below, still got its
+own `AskUserQuestion`). **(4)** Phase 1B claim stub committed (`9f4110f8`), including a proactive
+`CHANGELOG.md` `[BL-N]` entry for the claim commit itself (S579 had to add this after the fact when
+the trim tool's `P1_UNDOCUMENTED` check caught it missing — added it up front this time instead of
+repeating that gap). **(5)** `--check` confirmed both triggers fire (4-record line headroom;
+125,404 B vs. 65,536 B); `--write` (dry run) refused with `SRF_RED` (SRF 1.1566 vs. the
+most-recent archive `306a4b4` [its own drop 100,467 B] vs. 0.1201 vs. the largest-drop boundary
+`d07814a` [drop 804,043 B] — 9.63x spread). Pulled absolute byte deltas via `git cat-file -s`
+before deciding (Learning 550's practical rule): 116,204 B genuine regrowth in ~1 day vs.
+`306a4b4`, driven by 10 receipts averaging ~12.5 KB each (this project's own already-flagged
+"Receipt Inflation" pattern) — not a tiny-denominator artifact, since `306a4b4`'s own drop was
+itself substantial. Surfaced both readings, the absolute deltas, and 3 options (force /
+hold-and-log / raise-budget) via `AskUserQuestion` rather than deciding unilaterally — user chose
+**force**. **(6)** Dry-run preview with `--force` confirmed L1/L2/L3 losslessness (21 of 22
+records, 125,404 B → 9,682 B) before writing; ran `--write --force`; ran the shard's own generated
+`verify.sh` (OK); confirmed post-trim `--check` clears both triggers (9,682 B, line headroom
+abstains — fewer than 1 record since the split — SRF non-positive against both boundaries, the
+tool's own "not usefully compared" state). Caught and fixed a cosmetic drift the tool's in-place
+regex edit left behind: the "This file currently holds **N** receipt(s)" sentence was stranded
+between the 3rd and 4th archive-pointer blocks after this session's new pointer was inserted;
+repositioned it back to immediately after the newest pointer, restoring the established S508/S561
+convention (re-verified `--check` still parses it correctly after the move). Committed the trim
+(`838e94ff`). **(7)** Removed the resolved `BACKLOG.md` item (found S579); added
+`PROJECT_LEARNINGS.md` Learning 587 (the `SRF_RED` recurrence pattern confirmed on `HANDOFFS.md`
+too, not `CHANGELOG.md`-specific as Learning 586 might have read in isolation — explicitly flags
+`SESSION_NOTES.md` as the next candidate once its fence-scanner defect is fixed). Committed
+(`12ebaba4`).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation/tutorial-article/`a2interactive.Rmd`/
+GitHub-issue-close-out/`_pkgdown.yml`/`NEWS.Rmd`/lint checklists all N/A — no `R/` source touched,
+no new export, no Shiny feature, not tied to a GitHub issue.
+
+**Phase 3E runtime smoke test:** n/a — docs/ledger-only change, no runtime behavior touched. Not
+silently skipped: stated explicitly per `SESSION_RUNNER.md` §3E.
+
+**Self-assessment (Session 580): 9/10.** **Strengths:** (1) Added the claim commit's own
+`CHANGELOG.md` entry proactively rather than waiting for the trim tool's `P1_UNDOCUMENTED` check to
+catch it missing — applied S579's own experience immediately instead of repeating the gap. (2) When
+`SRF_RED` fired, pulled absolute byte deltas for both boundaries before presenting the decision,
+matching the established Learning 549/550/586 practical rule exactly — did not reflexively force or
+silently hold. (3) Caught a real cosmetic-but-convention-violating drift (the stranded "currently
+holds N receipt(s)" sentence) that a less careful read of the tool's own diff would have missed and
+committed as-is. (4) Verified losslessness 3 ways (dry-run L1/L2/L3, the shard's own `verify.sh`,
+post-trim `--check`) rather than trusting any single check. (5) Recorded the new learning with a
+forward-looking generalization (flagging `SESSION_NOTES.md` as the next likely instance) rather
+than treating this as a closed, file-specific incident. **Weaknesses:** (1) Still no independent
+adversarial-verification pass by a separate agent/session — the same standing gap flagged for 13+
+consecutive prior sessions, unaddressed again this session (lower stakes here, housekeeping not
+application code, but the gap itself is unchanged). (2) Skipped a second, dedicated
+scope-confirmation `AskUserQuestion` after the picker (relied on the picker's own option
+description instead) — defensible given the description already spelled out the exact action and
+known risk, but a future session should consider whether this project's own established pattern
+(S579 did run a second confirmation round) is worth doing unconditionally for consistency rather
+than judging case-by-case.
+**Ledger:** recorded in `CHANGELOG.md` (this session's claim, the trim action itself, the
+downstream `BACKLOG`/`PROJECT_LEARNINGS` update, plus this close-out entry).
 
 ### Session 578 Handoff Evaluation (by Session 579)
 **Score: 7/10.** **What helped:** the `next_steps` field named this exact item verbatim ("trim
