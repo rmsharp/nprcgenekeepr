@@ -138,6 +138,11 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] S587: reconcile HANDOFFS.md commit self-reference (`45b44585`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: ... close-out commit
+  sha to follow` -> the real sha (`45b44585`, fix + close-out) — unknowable until after that
+  commit existed. Matches the established S562-S586 precedent.
+
 ### 2026-08-15 · [BL-N] S587: close out (R-CMD-check.yaml CI fix — inst/WORDLIST gap)
 - **Deliverable:** Fix the red `R-CMD-check.yaml` CI (`BACKLOG.md` Housekeeping, found S584) —
   added 4 words `spelling::spell_check_package()` flags (`matings`, `Rectilinear's`, `runnable`,
