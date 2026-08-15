@@ -1339,8 +1339,26 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
   ## the widget-level `visEdges(smooth = FALSE)` in R/modPedigree.R).
   ## Every other edge leaves these columns NA, inheriting that global
   ## smooth = FALSE default.
+  ##
+  ## from/to are x-ordered (ascending), not always dupId->realId (found
+  ## S575 owner review: the arc bowed the wrong way relative to kinship2's
+  ## own convention; root-caused/fixed S577). kinship2's arcconnect() (nested
+  ## in plot.pedigree) always sorts its pair by x first ('tx <- sort(tx)')
+  ## before drawing, so its arc always bows toward ancestors regardless of
+  ## which occurrence is the duplicate. vis-network's curvedCW bow direction
+  ## (Edge._getViaCoordinates in the bundled vis-network.min.js) depends on
+  ## which endpoint is `from`, so the old always-from=dup convention bowed
+  ## the wrong way whenever the duplicate happened to land to the right of
+  ## its real self -- measured S577 on the real bundled fixture: 33 of 52
+  ## same-row connectors. x-ordering the pair here (mirroring kinship2's own
+  ## sort) reproduces the position-independent bow direction exactly.
   dupEdges <- if (nrow(duplicates) > 0L) {
-    data.frame(from = dupIds, to = duplicates$realId, dashes = TRUE,
+    dupX <- nodes$x[match(dupIds, nodes$id)]
+    realX <- nodes$x[match(duplicates$realId, nodes$id)]
+    dupIsLeft <- dupX <= realX
+    data.frame(from = ifelse(dupIsLeft, dupIds, duplicates$realId),
+               to = ifelse(dupIsLeft, duplicates$realId, dupIds),
+               dashes = TRUE,
                color = NA_character_, width = NA_real_,
                smooth.enabled = TRUE, smooth.type = "curvedCW",
                smooth.roundness = 0.2, stringsAsFactors = FALSE)
