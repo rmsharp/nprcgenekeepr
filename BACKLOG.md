@@ -68,6 +68,39 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       connected-component walk).
 
 ## Housekeeping
+- [ ] (found S575, 2026-08-14, owner review of a published live-comparison artifact, READY,
+      Effort L) **Pedigree Diagram: children are frequently rendered far from their own parent
+      union -- a real, widespread legibility gap, distinct from and not caught by Track 5's
+      diagonal-edge measurement.** Re-measured on the real 375-individual bundled fixture: of 251
+      child-edge groups, 100 (40%) have a parent-union-to-child horizontal offset exceeding 200
+      layout units, 73 (29%) exceed 500 units, max offset 10,687 units. Root cause: a mating
+      unit's final x is the midpoint of its 2 real parents' positions
+      (`R/makePedigreeDiagramData.R:924`), decoupled from where its own child was positioned
+      during the earlier recursive descent; Track 3's `sweepMinSep()` then stretches the parent
+      row and child row independently, and a highly-polygamous individual's crowded parent row
+      stretches faster than the child row, compounding across the fan-out. Every individual edge
+      is still orthogonal (Track 5's own finding is unaffected) -- this is a distinct failure
+      mode: a technically-right-angle path can still travel a long, visually-confusable horizontal
+      distance to a child not positioned under its own parent. Full record, including the
+      small-demo evidence that first surfaced this (`L31S6S`, 6 mates, offset growing -60 to -540
+      across his unions): `docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md`
+      §7b. Not fixed this session -- needs its own design session (the change surface is the core
+      recursive positioning algorithm shared by every diagram render, not a same-session patch).
+      A future session should evaluate whether a union's final x should instead be derived from
+      (or reconciled with) its own children's positions, or whether `sweepMinSep()` needs to
+      propagate a row's stretch factor to dependent rows, before choosing a fix.
+- [ ] (found S575, 2026-08-14, owner review of a published live-comparison artifact, READY,
+      Effort S/M) **Pedigree Diagram's duplicate-individual dashed connector arc curves the wrong
+      way relative to kinship2.** Claim 4c (the kinship2 fidelity remediation plan) verified the
+      arc is present (`dashes = TRUE, smooth.type = "curvedCW"`,
+      `R/makePedigreeDiagramData.R:1345`) but never checked bow direction against kinship2's own
+      `arcconnect()` convention -- a gap in the original audit, not a regression. Owner's direct
+      visual comparison: kinship2 draws this arc convex, nprcgenekeepr draws it concave. Not
+      investigated further this session (no fix attempted). A future session should confirm the
+      exact vis.js mechanism controlling bow direction (edge `from`/`to` order, a
+      `smooth.roundness` sign, or a `curvedCW`/`curvedCCW` swap) before changing anything, since
+      `from`/`to` order is also load-bearing for this same function's color/width preservation
+      logic. See `docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §7a.
 - [ ] (found S574, 2026-08-14, incidental to Track 2's default-flip documentation pass, READY,
       Effort S) **`shiny_app_use/pb_diagram_legend.png` (used in both
       `vignettes/articles/colony-manager-guide.qmd` and `vignettes/articles/pedigree-diagram.qmd`)

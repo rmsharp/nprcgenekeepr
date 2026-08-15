@@ -14,6 +14,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 575 Post-Close-Out Correction (same session, owner review)
+**This corrects the Session 575 close-out below -- read this first.** After Session 575 closed out
+Track 5 as "DONE, no follow-up needed" and published a live comparison artifact, the owner reviewed
+that artifact directly and identified 2 real issues neither Track 5 nor any prior Claim (1-4c)
+checked for: **(1)** the duplicate-individual dashed connector arc bows concave, opposite
+kinship2's own convex `arcconnect()` convention -- Claim 4c only ever verified the arc's presence,
+never its direction. **(2)** Children are frequently rendered far from their own parent union --
+re-measured on the real 375-individual fixture: 100/251 (40%) child-edge groups have a
+parent-union-to-child horizontal offset >200 layout units, 73/251 (29%) exceed 500, max 10,687.
+Root-caused to `finalUnitX <- (anchorX + nonAnchorX) / 2` (`R/makePedigreeDiagramData.R:924`) being
+decoupled from where the child was actually positioned, combined with Track 3's `sweepMinSep()`
+stretching the parent row and child row at different rates for a highly-polygamous individual.
+Every edge is still orthogonal (Track 5's own narrow claim is unaffected) -- this is a distinct
+legibility failure mode. **Both filed as new `BACKLOG.md` Housekeeping items, not fixed** (owner
+chose "file both, stop here" via `AskUserQuestion` over further same-session investigation or an
+artifact-only wording fix). The published artifact
+(<https://claude.ai/code/artifact/6769b9f9-d94a-4675-8c67-7e19567cda79>) was corrected in place
+(same URL) to remove the overclaim and document both findings. The remediation plan document
+(`docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §7) has the full record.
+**Lesson for future sessions:** a "0 gap" measurement answers exactly the question it was scoped
+to ask (edge *shape*) and no more -- it does not by itself establish overall diagram legibility
+(node *position*). Publishing a real, high-resolution artifact and inviting review caught this
+where a purely numeric close-out would not have.
+
 ### Session 574 Handoff Evaluation (by Session 575)
 **Score: 9/10.** **What helped:** `next_steps` named Track 5 as the sole remaining item in the
 kinship2-fidelity remediation plan, explicitly noted "no effort estimate given... re-measure
@@ -37,9 +61,14 @@ what to do first.
 
 ### What Session 575 Did
 **Deliverable:** Track 5 (broaden rectilinear routing coverage) re-measurement from
-`docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §Track 5 -- **DONE, no
-follow-up needed.** TDD phase: PRE-RED only (pure re-measurement/evidence-gathering per the owner's
-own scope pick; no RED phase entered since no genuine gap was found to fix).
+`docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §Track 5 -- **DONE for its
+own narrow question (edge orthogonality: 0 gap, confirmed correct and unchanged). CORRECTED
+same-session: NOT "no follow-up needed" overall** -- owner review of the published comparison
+artifact surfaced 2 real findings outside Track 5's own scope (connector curve direction; a
+widespread parent-child positioning offset), both filed as new `BACKLOG.md` items. See the
+correction note at the top of this ACTIVE TASK section for the full record. TDD phase: PRE-RED
+only throughout (pure re-measurement/evidence-gathering and investigation; no RED phase entered,
+no code changed).
 
 **What happened, in order:** **(1)** Phase 0 orient in full (`SESSION_RUNNER.md`, `SAFEGUARDS.md`,
 `SESSION_NOTES.md`, `gh issue list` [12 open], `git status`/`log`/`diff --stat` [97 commits ahead of
@@ -94,32 +123,51 @@ anyway (see step 4c above), specifically to substantiate this session's own meas
 against the actual running app, not as a change-verification gate. 0 diagram-related console
 errors.
 
-**Self-assessment (Session 575): 9/10.** **Strengths:** (1) Cross-validated the same measurement 3
-independent ways (offline computation on the real fixture, live browser DataSet query on the same
-fixture, offline computation on the original synthetic fixture that first demonstrated the
-problem) -- all in exact agreement, leaving no ambiguity in the conclusion. (2) Established the
-finding as a structural guarantee (proof by construction: D1 covers every child edge, D2 covers
-every mate edge either directly-same-row or via a 2-orthogonal-leg dogleg), not merely an empirical
-observation bounded to one fixture -- a stronger, more durable claim than "this fixture happens to
-have 0." (3) Correctly identified and excluded the duplicate-connector dashed arcs as a different,
-deliberately-curved visual element (matching kinship2's own convention, already covered by the
-separate, already-resolved Claim 4c) rather than miscounting them as a gap. (4) Followed the
-owner's exact scope pick precisely -- measured, found no gap, stopped and wrote up rather than
-inventing follow-up work to fill the session. (5) Applied 2 gotchas from S574's own handoff
-directly and successfully, avoiding both traps that cost S574 real time. (6) Verified the live
-app's actual rendering config (`visEdges(smooth=FALSE)` global default + per-edge `smooth.enabled`
-overrides) to confirm the geometric measurement corresponds to what actually paints as a straight
-line vs. a curve on screen, not just an abstract coordinate fact. (7) Responded to 2 mid-session
-user questions with direct, evidence-based answers (a git-history check for the "did you rewrite
-X" question; a published, designed Artifact with a real live-app comparison for the "where can I
-see this" question) rather than a bare verbal claim. **Weaknesses:** (1) No independent
-adversarial-verification pass -- a standing gap flagged across S551-S574 (9+ consecutive sessions),
-still unaddressed. (2) The first attempt at the small-subgraph comparison fixture failed live QC
-twice (a dangling out-of-family parent reference, then a missing `birth` column) before landing on
-a working 13-row fixture -- both fixable in under a minute once diagnosed via `qcStudbook()` run
-offline, but a small amount of avoidable churn a slightly more careful first fixture construction
-(checking QC's required-columns list before writing the subset) would have skipped.
-**Ledger:** recorded in `CHANGELOG.md` (this session's claim, deliverable, and close-out entries).
+**Self-assessment (Session 575), original: 9/10.** **Strengths:** (1) Cross-validated the same
+measurement 3 independent ways (offline computation on the real fixture, live browser DataSet
+query on the same fixture, offline computation on the original synthetic fixture that first
+demonstrated the problem) -- all in exact agreement, leaving no ambiguity in the conclusion. (2)
+Established the finding as a structural guarantee (proof by construction: D1 covers every child
+edge, D2 covers every mate edge either directly-same-row or via a 2-orthogonal-leg dogleg), not
+merely an empirical observation bounded to one fixture -- a stronger, more durable claim than "this
+fixture happens to have 0." (3) ~~Correctly identified and excluded the duplicate-connector dashed
+arcs as a different, deliberately-curved visual element (matching kinship2's own convention,
+already covered by the separate, already-resolved Claim 4c) rather than miscounting them as a
+gap.~~ **WRONG -- see correction below: the arcs are present but curve the opposite direction from
+kinship2's own convention; "matching kinship2's own convention" was asserted without ever checking
+direction.** (4) Followed the owner's exact scope pick precisely -- measured, found no gap, stopped
+and wrote up rather than inventing follow-up work to fill the session. (5) Applied 2 gotchas from
+S574's own handoff directly and successfully, avoiding both traps that cost S574 real time. (6)
+Verified the live app's actual rendering config (`visEdges(smooth=FALSE)` global default +
+per-edge `smooth.enabled` overrides) to confirm the geometric measurement corresponds to what
+actually paints as a straight line vs. a curve on screen, not just an abstract coordinate fact. (7)
+Responded to 2 mid-session user questions with direct, evidence-based answers (a git-history check
+for the "did you rewrite X" question; a published, designed Artifact with a real live-app
+comparison for the "where can I see this" question) rather than a bare verbal claim. **Weaknesses:**
+(1) No independent adversarial-verification pass -- a standing gap flagged across S551-S574 (9+
+consecutive sessions), still unaddressed; **this session is a direct illustration of why it
+matters: the owner's own review of the published artifact is what caught 2 real gaps a
+self-verification pass did not.** (2) The first attempt at the small-subgraph comparison fixture
+failed live QC twice (a dangling out-of-family parent reference, then a missing `birth` column)
+before landing on a working 13-row fixture. (3) **The core miss:** measured edge *shape*
+(orthogonal vs. diagonal) exhaustively and correctly, but never checked overall diagram
+*legibility* -- whether a child ends up positioned anywhere near its own parent, or whether a
+connector's curve direction matches kinship2's own convention. A "0 gap" result answered exactly
+the question it was scoped to ask and no more; presenting it as "no follow-up needed" overall,
+rather than "no follow-up needed for edge orthogonality specifically," was the actual error, not
+any single measurement. (4) The published artifact's own "What to look for" callout asserted
+kinship2 similarity without having verified it -- an avoidable overclaim; the underlying data
+(node x/y coordinates, all already computed) would have shown the position-offset problem
+immediately if it had been checked, without requiring the owner to catch it visually.
+
+**Corrected self-assessment: 6/10.** The measurement work itself (strengths 1, 2, 4-7) remains
+sound and is unaffected. The overall score drops because the close-out's own headline claim
+("Track 5 DONE, no follow-up needed") materially overstated what was actually established, and a
+published artifact carried that overstatement to the owner before it was caught -- by the owner,
+not by this session's own review. See the correction note above (top of this ACTIVE TASK section)
+and `docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §7 for the full record.
+**Ledger:** recorded in `CHANGELOG.md` (this session's claim, deliverable, close-out, and
+correction entries).
 
 ### Session 573 Handoff Evaluation (by Session 574)
 **Score: 9/10.** **What helped:** `next_steps` correctly identified Track 2 as fully unblocked

@@ -138,6 +138,20 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [ad hoc] S575: post-close-out correction (2 real findings owner caught in the published artifact)
+- **Deliverable:** Owner review of the published comparison artifact identified 2 real issues
+  neither Track 5 nor any prior Claim (1-4c) checked: (1) the duplicate-connector dashed arc bows
+  concave, opposite kinship2's own convex `arcconnect()` convention; (2) children are frequently
+  rendered far from their own parent union -- 100/251 (40%) real-fixture child-edge groups exceed a
+  200-unit horizontal offset, 73/251 (29%) exceed 500, max 10,687, root-caused to
+  `R/makePedigreeDiagramData.R:924`'s parent-midpoint union-x computation being decoupled from
+  child position, compounded by Track 3's per-row `sweepMinSep()`. Corrected the published artifact
+  in place (same URL), the remediation plan (`docs/planning/pedigree-diagram-kinship2-fidelity-
+  remediation-plan.md` new §7), this session's own `SESSION_NOTES.md`/`HANDOFFS.md` records
+  (self-score revised 9 -> 6), and `PROJECT_LEARNINGS.md` (new Learning 581, plus repositioned
+  Learning 580 which had been inserted out of order). Filed 2 new `BACKLOG.md` Housekeeping items
+  for future dedicated sessions -- neither fixed this session.
+
 ### 2026-08-14 · [ad hoc] S575: reconcile HANDOFFS.md commit self-reference (`bb0c9bb2`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` ->
   `bb0c9bb2` (the close-out commit whose sha the receipt itself couldn't name until after it was

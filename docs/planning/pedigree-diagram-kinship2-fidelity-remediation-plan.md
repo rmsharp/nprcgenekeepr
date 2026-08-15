@@ -469,21 +469,28 @@ Measured three ways, all in exact agreement:
    `smooth.enabled = TRUE` override, confirming the geometric measurement matches what actually
    paints on screen, not just the underlying data.
 
-**Conclusion:** the plan's own contingency ("if genuine gaps remain... scope a follow-up") does not
-trigger. Track 4a's generation-row-alignment fix eliminated the dogleg-forcing scenario that
-motivated this track in the first place, and D1/D2 already cover 100% of non-connector edges by
-construction. No `.addRectilinearWaypoints()` change is warranted. This closes the kinship2
-fidelity remediation plan -- **all 5 tracks are now resolved** (1: S570, 2: S574, 3: S571, 4:
-S572/S573, 5: S575).
+**Conclusion (narrow, Track 5's own question only):** the plan's own contingency ("if genuine gaps
+remain... scope a follow-up") does not trigger *for Track 5's specific question* -- Track 4a's
+generation-row-alignment fix eliminated the dogleg-forcing scenario that motivated this track, and
+D1/D2 already cover 100% of non-connector edges by construction. No `.addRectilinearWaypoints()`
+change is warranted **for diagonal-edge routing specifically**.
+
+**CORRECTION (S575, same session, caught by owner review of the published comparison artifact):**
+this narrow conclusion does NOT mean the rectilinear diagram is now fully legible or that no
+follow-up is needed overall -- that broader framing, stated in this session's original close-out,
+was an overreach beyond what Track 5 actually measured. Reviewing the published comparison
+artifact, the owner identified 2 real, previously-uncaught issues neither Track 5 nor any prior
+Claim (1-4c) checked for. See §7 below for the full record. **Both are filed as new `BACKLOG.md`
+items for a dedicated future session; neither is fixed here.**
 
 ## 5. Recommended pickup order
 
-**Status as of S575 (2026-08-14): all 5 tracks are now resolved.** Tracks 1-4 are DONE (S570,
-S574, S571, S572/S573 respectively). **Track 5 was re-measured S575 and found no genuine gap** --
-see its own section above for the full 3-way evidence record (offline computation, structural
-proof, live app). This plan document's own work is complete; no further track remains open. This
-original recommended order (below) is left as written -- historical planning narrative, not
-retroactively edited.
+**Status as of S575 (2026-08-14): Tracks 1-5 are each resolved for their own originally-scoped
+question** (1: S570, 2: S574, 3: S571, 4: S572/S573, 5: S575 -- diagonal-edge coverage
+specifically). **This does NOT mean the plan's overall goal (kinship2 visual-fidelity parity) is
+fully achieved** -- §7 below records 2 new findings surfaced the same session, after this status
+line was first written, that remain open. This original recommended order (below) is left as
+written -- historical planning narrative, not retroactively edited.
 
 1. **Track 1** (unaffected fill) -- smallest, lowest-risk, highest-visibility win; no dependency on
    anything else.
@@ -510,3 +517,53 @@ No `R/` or `tests/` file was modified in this session. No `AskUserQuestion` phas
 (no RED phase was entered). The next session that picks up Track 1, 2, or 3 begins its own
 PRE-RED→RED→GREEN cycle per `CLAUDE.md`'s Development Process Contract; the next session that picks
 up Track 4 begins its own dedicated design session first.
+
+## 7. Post-close-out findings (S575) -- 2 new gaps, neither covered by Claims 1-4c or any Track
+
+S575 originally closed this plan out as fully resolved after Track 5's own measurement. The owner
+then reviewed the session's published comparison artifact directly and identified 2 real issues,
+neither of which any prior Claim (1, 2, 3, 4a, 4b, 4c) or Track (1-5) checked for. Both are filed
+as new `BACKLOG.md` items (Housekeeping) for a dedicated future session -- **not fixed here**, per
+this project's "report, don't fix mid-session" precedent (`PROJECT_LEARNINGS.md` Learning 382), and
+because the 2nd finding touches the core positioning algorithm (plan-mode / design-session
+territory, not a same-session patch).
+
+### 7a. Duplicate-connector arc curves the wrong way relative to kinship2
+
+Claim 4c (§2.4 above) verified the dashed duplicate-individual connector is *present*
+(`dashes = TRUE, smooth.type = "curvedCW"`) but never checked *which way* it bows relative to
+kinship2's own `arcconnect()` convention -- a gap in the original audit, not a regression. Owner's
+direct visual comparison of the published artifact's screenshots: kinship2 draws this arc convex,
+nprcgenekeepr draws it concave. Not measured further this session (no fix attempted) -- a future
+session should confirm the exact vis.js mechanism controlling bow direction (edge `from`/`to` order,
+`smooth.roundness` sign, or a `curvedCW` vs `curvedCCW` swap) before changing anything, since the
+`from`/`to` order is also load-bearing for the color/width preservation logic elsewhere in this
+same function.
+
+### 7b. Children are frequently rendered far from their own parent union -- a real, widespread legibility gap
+
+Discovered investigating the owner's report that, in the published comparison artifact's
+rectilinear image, the right-side unions' children were not positioned under their parents and were
+hard to attribute, with horizontal runs crossing near other parents' children. Re-measured on the
+**real 375-individual bundled fixture** (not just the small demo): of 251 child-edge groups, **100
+(40%) have a parent-union-to-child horizontal offset exceeding 200 layout units, 73 (29%) exceed 500
+units, and the maximum offset is 10,687 units.**
+
+**Root cause**, read directly from `.positionMatingUnitForest()` (`R/makePedigreeDiagramData.R:584`
+onward): a mating unit's *final displayed* x is computed as the midpoint of its two real parents'
+positions (`finalUnitX <- (anchorX + nonAnchorX) / 2`, line 924) -- entirely decoupled from where
+its own child was positioned during the earlier recursive descent. Track 3's minimum-spacing sweep
+(`sweepMinSep()`, §Track 3 above) then runs independently **per generation row**. A highly-polygamous
+individual crowds many nodes (himself plus every duplicate copy plus every mate) onto the *parent*
+row, which needs substantial spreading to satisfy `minSep`; the *child* row, with proportionally
+fewer nodes, needs much less. The two rows stretch at different rates, and the resulting union-vs-
+child mismatch compounds across a fan-out -- confirmed on the small demo fixture (L31S6S, 6 mates)
+where the offset grows roughly monotonically from -60 to -540 units across his 6 unions in x-order.
+
+Every individual **edge** is still orthogonal (Track 5's own claim is unaffected) -- this is a
+distinct failure mode: the routed right-angle path has to travel a long, visually-confusable
+horizontal distance to reach a child that is not under its own parent, which is what produced the
+"horizontal lines connecting progeny from different parents" the owner observed. Not investigated
+further this session (no candidate fix evaluated, no correlation with `orderBySex` or sweep order
+checked) -- flagged for a dedicated design session given the change surface (the core recursive
+positioning algorithm, shared by every diagram render regardless of `edgeStyle`).

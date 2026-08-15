@@ -135,12 +135,14 @@ This file currently holds **9** receipt(s). Computed by `methodology_trim.py` on
 session: S575
 date: 2026-08-14
 status: complete
-self_score: 9
+self_score: 6
 predecessor_score: 9
 active_task: Track 5 (broaden rectilinear routing coverage) re-measurement from
-  docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md §Track 5. DONE -- no gap
-  found, no follow-up needed. TDD phase: PRE-RED only (pure re-measurement, owner-scoped; no RED
-  entered).
+  docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md §Track 5. DONE for its own
+  narrow question (edge orthogonality: 0 gap, correct and unchanged). CORRECTED same session: NOT
+  "no follow-up needed" overall -- owner review of the published artifact surfaced 2 real findings
+  outside Track 5's own scope (see the free-text correction below the fence). TDD phase: PRE-RED
+  only throughout (no RED entered, no code changed).
 what_was_done: Measured 3 independent ways, all in exact agreement: (a) offline
   makePedigreeMatingLayout() on the real 375-individual bundled fixture -- 1,265/1,315 edges
   orthogonal, all 50 non-orthogonal edges are the intentionally-curved duplicate-connector dashed
@@ -158,14 +160,17 @@ what_was_done: Measured 3 independent ways, all in exact agreement: (a) offline
   Artifact (small real 13-animal subgraph, direct vs. rectilinear, live screenshots) at owner
   request -- https://claude.ai/code/artifact/6769b9f9-d94a-4675-8c67-7e19567cda79. Commits:
   68432947 (claim), 3c3412af (deliverable), plus this close-out's own commit (below).
-next_steps: The kinship2-fidelity remediation plan is now FULLY RESOLVED (all 5 tracks) -- no
-  further work remains on it. Next pickup pool (from this session's own Phase 0 priorities list):
-  issue #148's MHC scope-narrowing conversation (DECISION NEEDED); recapture
-  shiny_app_use/pb_diagram_legend.png (READY, Effort S, found S574); CHANGELOG.md's byte-budget
-  archive trim (READY, Effort S, found S573); the scheduled shinytest2.yaml CI failure (now red 3+
-  consecutive days as of this session, reported by 3 consecutive sessions now, still not
-  diagnosed -- worth a session of its own given how long it has persisted); SESSION_NOTES.md's own
-  line-cap overage (no BACKLOG item yet).
+next_steps: Track 5's own edge-orthogonality question is resolved; the remediation plan's OVERALL
+  goal is NOT fully resolved -- 2 new BACKLOG.md Housekeeping items need their own future sessions:
+  (a) the duplicate-connector arc's curve direction (Effort S/M, needs a vis.js
+  smooth.type/roundness investigation before changing anything); (b) the parent-child positioning
+  offset (Effort L, needs its own design session -- touches the core recursive positioning
+  algorithm in .positionMatingUnitForest(), shared by every diagram render regardless of
+  edgeStyle). Also still open from this session's own Phase 0 priorities list: issue #148's MHC
+  scope-narrowing conversation (DECISION NEEDED); recapture shiny_app_use/pb_diagram_legend.png
+  (READY, Effort S, found S574); CHANGELOG.md's byte-budget archive trim (READY, Effort S, found
+  S573); the scheduled shinytest2.yaml CI failure (now red 3+ consecutive days, still not
+  diagnosed); SESSION_NOTES.md's own line-cap overage (no BACKLOG item yet).
 key_files: docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md (search "RE-MEASURED
   S575" for the Track 5 section), R/makePedigreeDiagramData.R:1466-1611 (.addRectilinearWaypoints(),
   D1/D2 loops -- the structural proof), tests/testthat/test_makePedigreeMatingLayout.R:1122-1191
@@ -189,9 +194,20 @@ runtime_smoke: N/A by the letter of the rule (no runtime behavior changed -- inv
   no R/ or tests/ file touched) -- but a live shinytest2 verification against the real bundled
   fixture was performed anyway (see what_was_done), specifically to substantiate this session's own
   measurement claims, not as a change-verification gate. 0 diagram-related console errors.
-changelog_ref: this session's own CHANGELOG.md entries (claim, deliverable, close-out)
+changelog_ref: this session's own CHANGELOG.md entries (claim, deliverable, close-out, correction)
 commit: bb0c9bb2
 ```
+**Post-close-out correction, same session:** after this receipt was first written with
+`self_score: 9` and "no follow-up needed," the owner reviewed the published comparison artifact
+directly and found 2 real issues neither Track 5 nor any prior Claim checked for -- the duplicate
+connector's curve direction (concave here, convex in kinship2) and a widespread parent-child
+positioning offset (100/251 real-fixture child-edge groups >200 units off, 73/251 >500, max
+10,687; root-caused to `finalUnitX`'s parent-midpoint computation being decoupled from where the
+child was actually positioned, compounded by Track 3's per-row spacing sweep). Both filed as new
+`BACKLOG.md` items; the published artifact and this receipt were both corrected in place. Score
+revised 9 -> 6: the measurement work itself was sound, but "no follow-up needed" overstated what a
+narrowly-scoped edge-orthogonality measurement actually established. See `SESSION_NOTES.md`'s own
+correction note (top of ACTIVE TASK) and the remediation plan's §7 for the full record.
 
 ```handoff
 session: S574
