@@ -136,6 +136,24 @@ This file currently holds **2** receipt(s). Computed by `methodology_trim.py` on
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S585
+date: 2026-08-15
+status: pending
+self_score:
+predecessor_score:
+active_task: Fix red pkgdown.yaml CI (BACKLOG.md Housekeeping, found S584) -- add the missing
+  articles/pedigree-diagram entry to _pkgdown.yml, plus a regression-test guard mirroring the
+  existing reference:-coverage tests. RED phase in progress.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S584
 date: 2026-08-15
 status: complete

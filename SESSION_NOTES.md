@@ -14,6 +14,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 585 Did
+**Deliverable:** Fix the red `pkgdown.yaml` CI (`BACKLOG.md` Housekeeping, found S584) -- add the
+missing `articles/pedigree-diagram` entry to `_pkgdown.yml`'s `articles:` `contents:` list, plus a
+regression-test guard mirroring the existing `reference:`-coverage tests (owner-directed scope, via
+`AskUserQuestion`). (IN PROGRESS)
+**Started:** 2026-08-15.
+**Status:** Session claimed. Phase 0 orient complete (dashboard 96/100, 1 HIGH risk --
+`SESSION_NOTES.md` size, unrelated to this task; no ghost session; ledger frontiers reconciled).
+Pre-RED scope decision and PRE-RED->RED gate both fired as `AskUserQuestion` calls before any file
+edit. Work beginning: RED test in `tests/testthat/test_pkgdown_reference_config.R`.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 583 Handoff Evaluation (by Session 584)
 **Score: 9/10.** **What helped:** the `gotchas` field's closing instruction -- "when investigating a
 live user-reported visual, reproduce the EXACT data through the actual layout function ... don't
