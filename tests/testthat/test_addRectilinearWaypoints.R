@@ -117,15 +117,23 @@ test_that(".addRectilinearWaypoints inserts a 2-point sibship-bar chain (one
   expect_true(all(wpRows$`color.background` == "rgba(0,0,0,0)"))
   expect_true(all(wpRows$`color.border` == "rgba(0,0,0,0)"))
 
-  ## Drop node sits at the union's own x, on the child's row (y).
+  ## Drop node sits at the union's own x. Track 1 (issue #160, found S591,
+  ## plan docs/planning/pedigree-diagram-same-row-collision-avoidance-
+  ## plan.md section 2.1): the bar/drop row is a genuine intermediate row
+  ## (sibshipBarFraction = 0.4 of the way from the union's own row to the
+  ## child's row) -- NOT the child's own row, which is the direct
+  ## mechanical cause of issue #160's 2 reported collisions.
   unitRow <- result$nodes[result$nodes$id == unitId, ]
   c1Row <- result$nodes[result$nodes$id == "C1", ]
   dropRow <- result$nodes[result$nodes$id == dropId, ]
   barRow <- result$nodes[result$nodes$id == barId, ]
+  expectedBarY <- c1Row$y - (c1Row$y - unitRow$y) * 0.4
   expect_equal(dropRow$x, unitRow$x)
-  expect_equal(dropRow$y, c1Row$y)
+  expect_equal(dropRow$y, expectedBarY)
   expect_equal(barRow$x, c1Row$x)
-  expect_equal(barRow$y, c1Row$y)
+  expect_equal(barRow$y, expectedBarY)
+  expect_true(expectedBarY > unitRow$y && expectedBarY < c1Row$y)
+  expect_false(isTRUE(expectedBarY == c1Row$y))
 
   ## New edges: union -- drop (vertical), drop -- bar (the 1-segment
   ## chain, horizontal or zero-length per D1 step 4), bar -- C1
@@ -174,14 +182,21 @@ test_that(".addRectilinearWaypoints inserts a 4-point sibship-bar chain for
   barIds <- wpIds[grepl("^__bar_", wpIds)]
   expect_equal(length(barIds), 3L)
 
-  ## Each bar-point sits at its own child's x, on the shared child row.
+  ## Each bar-point sits at its own child's x. Track 1 (issue #160, plan
+  ## section 2.1): the bar row is a genuine intermediate row (0.4 of the
+  ## way from the union's own row to the child row), never the child's own
+  ## row.
+  unitRow <- result$nodes[result$nodes$id == unitId, ]
   childRows <- result$nodes[result$nodes$id %in% c("C1", "C2", "C3"), ]
   for (bid in barIds) {
     childId <- sub("^__bar_", "", bid)
     barRow <- result$nodes[result$nodes$id == bid, ]
     childRow <- childRows[childRows$id == childId, ]
+    expectedBarY <- childRow$y - (childRow$y - unitRow$y) * 0.4
     expect_equal(barRow$x, childRow$x)
-    expect_equal(barRow$y, childRow$y)
+    expect_equal(barRow$y, expectedBarY)
+    expect_true(expectedBarY > unitRow$y && expectedBarY < childRow$y)
+    expect_false(isTRUE(expectedBarY == childRow$y))
   }
 
   ## The bar chain connects all 4 points (drop + 3 bar-points) in
@@ -212,6 +227,74 @@ test_that(".addRectilinearWaypoints inserts a 4-point sibship-bar chain for
   for (cid in c("C1", "C2", "C3")) {
     expect_false(any(result$edges$from == unitId & result$edges$to == cid))
   }
+})
+
+## ---- D1: issue #160 collision 1's exact mechanism -- a sibship child who
+## anchors her own mating union (Track 1, docs/planning/pedigree-diagram-
+## same-row-collision-avoidance-plan.md section 2.1, found S591/S592) ------
+## Issue #160 collision 1: 204/205 are children of 201x202 (a sibship bar).
+## 204 separately anchors her own union with 203; by Track 4's ratified
+## invariant (matingUnits$gen == genOf[[anchor]]), that union's gen equals
+## 204's own gen -- the SAME row 201x202's sibship-bar children (204/205)
+## occupy, and (pre-fix) the SAME row the OLD bar-waypoint y formula
+## (y = childY) stamped every bar/drop point at. This fixture reproduces
+## that structural mechanism (C1 anchors her own union with M1): before
+## Track 1, the union's own y and the sibship bar's y are identical; the
+## fix's whole point is to make that impossible regardless of x-placement.
+
+test_that(".addRectilinearWaypoints's D1 bar row never coincides with a
+           same-generation union's own row -- issue #160 collision 1's
+           exact mechanism (a sibship child anchors her own mating
+           union)", {
+  ped <- data.frame(
+    id   = c("P1", "P2", "C1", "C2", "M1", "GC1"),
+    sire = c(NA, NA, "P1", "P1", NA, "M1"),
+    dam  = c(NA, NA, "P2", "P2", NA, "C1"),
+    sex  = c("M", "F", "F", "M", "M", "F"),
+    gen  = c(0L, 0L, 1L, 1L, 1L, 2L),
+    stringsAsFactors = FALSE
+  )
+  inputs <- .buildLayoutAndForest(ped)
+  matingUnits <- inputs$forest$matingUnits
+  unit1 <- matingUnits$id[matingUnits$sire == "P1" & matingUnits$dam == "P2"]
+  unit2 <- matingUnits$id[matingUnits$sire == "M1" & matingUnits$dam == "C1"]
+  expect_equal(length(unit1), 1L)
+  expect_equal(length(unit2), 1L)
+
+  ## Track 4's own ratified invariant puts unit2 at gen 1 regardless of
+  ## which parent (C1 or M1) wins the anchor tie-break, since both are gen
+  ## 1 -- the same row P1xP2's own children (C1/C2, also gen 1) occupy.
+  expect_equal(matingUnits$gen[matingUnits$id == unit2], 1L)
+
+  result <- .addRectilinearWaypoints(inputs$nodes, inputs$edges,
+                                      inputs$forest, inputs$pos)
+
+  unit1Row <- result$nodes[result$nodes$id == unit1, ]
+  unit2Row <- result$nodes[result$nodes$id == unit2, ]
+  dropId1 <- sprintf("__drop_%s", unit1)
+  barIds1 <- sprintf("__bar_%s", c("C1", "C2"))
+  bar1Rows <- result$nodes[result$nodes$id %in% c(dropId1, barIds1), ]
+  expect_equal(nrow(bar1Rows), 3L)
+
+  ## The guarantee under test: unit1's D1 bar/drop row is never unit2's
+  ## own row (or any other pinned node's row), and sits strictly between
+  ## unit1's own row and the children's row -- never stamped at childY.
+  c1Row <- result$nodes[result$nodes$id == "C1", ]
+  expect_false(any(bar1Rows$y == unit2Row$y))
+  expect_false(any(bar1Rows$y == c1Row$y))
+  expect_true(all(bar1Rows$y > unit1Row$y & bar1Rows$y < c1Row$y))
+
+  ## Track 1 never moves an existing (non-waypoint) node's VALUE -- only a
+  ## synthetic waypoint's y changes. expect_equal, not expect_identical: a
+  ## barY arithmetic result is a double, and rbind() widens the whole
+  ## shared y column to double even for untouched integer values -- a
+  ## harmless R storage-type promotion, not a value change.
+  origNonWp <- inputs$nodes[order(inputs$nodes$id), c("id", "x", "y")]
+  rownames(origNonWp) <- NULL
+  resultNonWp <- result$nodes[!.isWaypoint(result$nodes$id), ]
+  resultNonWp <- resultNonWp[order(resultNonWp$id), c("id", "x", "y")]
+  rownames(resultNonWp) <- NULL
+  expect_equal(origNonWp, resultNonWp)
 })
 
 ## ---- D1 generalizes to a D5 single-known-parent group (no mate-line) ----
@@ -460,6 +543,79 @@ test_that(".addRectilinearWaypoints applied to the full real
   expect_false(any(is.na(wpRows$x)))
   expect_false(any(is.na(wpRows$y)))
   expect_false(any(duplicated(wpRows$id)))
+})
+
+## ---- Track 1 (issue #160): D1 bar/drop row never coincides with any
+## pinned (real/duplicate/union) node's row for the common 1-generation-gap
+## case, on the real 375-individual fixture -- the closest available
+## exhaustive check for the actual collision risk (488 D1 waypoints across
+## many sibships/generation gaps). A stronger claim, "barY is never an
+## exact multiple of yScale for ANY gap", is not literally true: for a
+## fixed rational sibshipBarFraction = p/q in lowest terms (0.4 = 2/5), a
+## generation gap that is an exact multiple of q (5) reproduces the
+## coincidence -- no fixed fraction is collision-free for every possible
+## gap. Found empirically on this fixture (owner-directed, found S593,
+## disclosed rather than hidden by a weaker assertion): exactly 2
+## waypoints, one gap-5 D1 group (a union whose child is placed 5
+## generations below it). Deferred to Track 2's general same-row
+## detect-and-jog framework (plan section 2.2), which is not gap-specific
+## and is the designed backstop for whatever Track 1 cannot structurally
+## eliminate -- counted here, not silently dropped, so a regression (a
+## growing residual) would be caught. --------------------------------------
+
+test_that(".addRectilinearWaypoints's D1 bar/drop waypoints never share a
+           row with any real/duplicate/union node for a 1-generation gap
+           (the common case, and issue #160's own reported shape), on the
+           real 375-individual bundled fixture; a rare, disclosed residual
+           of exactly 2 waypoints survives for one larger-gap group; and no
+           existing node's x/y ever changes", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  inputs <- .buildLayoutAndForest(ped)
+  result <- .addRectilinearWaypoints(inputs$nodes, inputs$edges,
+                                      inputs$forest, inputs$pos)
+
+  wpRows <- result$nodes[.isWaypoint(result$nodes$id), ]
+  barWpRows <- wpRows[grepl("^__(drop|bar)_", wpRows$id), ]
+  expect_true(nrow(barWpRows) > 0L)
+
+  pinnedYs <- unique(result$nodes$y[!.isWaypoint(result$nodes$id)])
+
+  ## Per-D1-group collision tally, by that group's own generation gap
+  ## (childGen - parentGen), mirroring the production D1 loop's own
+  ## per-fromId grouping.
+  childEdges <- inputs$forest$childEdges
+  genOf <- stats::setNames(inputs$pos$gen, inputs$pos$id)
+  gap1Collisions <- 0L
+  totalResidual <- 0L
+  for (fromId in unique(childEdges$from)) {
+    kids <- childEdges$to[childEdges$from == fromId]
+    gap <- unname(genOf[kids[1L]] - genOf[fromId])
+    groupIds <- c(sprintf("__drop_%s", fromId), sprintf("__bar_%s", kids))
+    groupRows <- result$nodes[result$nodes$id %in% groupIds, ]
+    hits <- sum(groupRows$y %in% pinnedYs)
+    if (!is.na(gap) && gap == 1L) {
+      gap1Collisions <- gap1Collisions + hits
+    }
+    totalResidual <- totalResidual + hits
+  }
+  expect_equal(gap1Collisions, 0L)
+  expect_equal(totalResidual, 2L)
+
+  ## Track 1 never moves an existing (non-waypoint) node's VALUE -- only a
+  ## synthetic waypoint's y changes. expect_equal, not expect_identical: a
+  ## barY arithmetic result is a double, and rbind() widens the whole
+  ## shared y column to double even for untouched integer values -- a
+  ## harmless R storage-type promotion, not a value change.
+  origNonWp <- inputs$nodes[order(inputs$nodes$id), c("id", "x", "y")]
+  rownames(origNonWp) <- NULL
+  resultNonWp <- result$nodes[!.isWaypoint(result$nodes$id), ]
+  resultNonWp <- resultNonWp[order(resultNonWp$id), c("id", "x", "y")]
+  rownames(resultNonWp) <- NULL
+  expect_equal(origNonWp, resultNonWp)
 })
 
 ## ---- issue #154: dangling, free-pass non-anchor parent crash (BACKLOG.md

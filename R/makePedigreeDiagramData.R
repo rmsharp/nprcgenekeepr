@@ -1527,16 +1527,35 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
   dropChildEdge <- rep(FALSE, nrow(edges))
 
   ## D1: sibship-bar waypoint chain (generalizes to D5 groups, §2.1).
+  ## Track 1 (issue #160, found S591, plan docs/planning/pedigree-diagram-
+  ## same-row-collision-avoidance-plan.md section 2.1, fixed S593): the bar/
+  ## drop row used to be stamped at y = childY -- the exact same row every
+  ## real/duplicate/union node at that generation also occupies, which is
+  ## the direct mechanical cause of issue #160's 2 reported collisions
+  ## (a same-generation union, or an unrelated node, landing on the bar).
+  ## sibshipBarFraction gives the bar a genuine intermediate row instead: a
+  ## fixed, non-zero, non-one fraction of the way from the parent/union row
+  ## to the child row. Every real/duplicate/union node's y is an exact
+  ## integer multiple of yScale by construction (:1303), so this row can
+  ## never coincide with one -- an unconditional geometric guarantee, not a
+  ## heuristic; no detection logic needed.
+  sibshipBarFraction <- 0.4
   for (fromId in unique(childEdges$from)) {
     kids <- childEdges$to[childEdges$from == fromId]
     childY <- unname(yOf[[kids[1L]]])
+    parentY <- unname(yOf[[fromId]])
+    barY <- if (is.na(childY) || is.na(parentY)) {
+      childY
+    } else {
+      childY - (childY - parentY) * sibshipBarFraction
+    }
     dropId <- sprintf("__drop_%s", fromId)
     barIds <- sprintf("__bar_%s", kids)
 
     barPointIds <- c(dropId, barIds)
     barPointX <- c(unname(xOf[[fromId]]), unname(xOf[kids]))
     newNodeList[[length(newNodeList) + 1L]] <- data.frame(
-      id = barPointIds, x = barPointX, y = childY, stringsAsFactors = FALSE
+      id = barPointIds, x = barPointX, y = barY, stringsAsFactors = FALSE
     )
 
     vertEdges <- data.frame(from = c(fromId, barIds), to = c(dropId, kids),
