@@ -687,7 +687,10 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
       gp <- addSexAndAgeToGroup(ids, pedigree())
       gp$age <- round(gp$age, 1L)
       colnames(gp) <- c("Ego ID", "Sex", "Age in Years")
-      gp[order(gp$`Ego ID`), , drop = FALSE]
+      # method = "radix": Ego ID is a character column -- plain order() is
+      # locale-dependent (Learning 585), method = "radix" is byte-order and
+      # locale-independent.
+      gp[order(gp$`Ego ID`, method = "radix"), , drop = FALSE]
     })
 
     # Within-group kinship submatrix of the selected group, derived from the

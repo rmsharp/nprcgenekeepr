@@ -78,7 +78,10 @@ orderReport <- function(rpt, ped, guCutoff = NULL, zScoreCutoff = NULL,
   if ("age" %in% names(imports)) {
     finalRpt$imports <- imports[with(imports, order(age)), ]
   } else {
-    finalRpt$imports <- imports[with(imports, order(id)), ]
+    # method = "radix": id is a character column -- plain order() is
+    # locale-dependent (Learning 585), method = "radix" is byte-order and
+    # locale-independent.
+    finalRpt$imports <- imports[with(imports, order(id, method = "radix")), ]
   }
   rpt <- rpt[!i, ]
   origin <- origin[!i]
@@ -90,7 +93,9 @@ orderReport <- function(rpt, ped, guCutoff = NULL, zScoreCutoff = NULL,
   if ("age" %in% names(noParentage)) {
     finalRpt$noParentage <- noParentage[with(noParentage, order(age)), ]
   } else {
-    finalRpt$noParentage <- noParentage[with(noParentage, order(id)), ]
+    # method = "radix": same locale-independence rationale as imports above.
+    finalRpt$noParentage <-
+      noParentage[with(noParentage, order(id, method = "radix")), ]
   }
   rpt <- rpt[!i, ]
 

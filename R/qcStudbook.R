@@ -320,7 +320,10 @@ qcStudbook <- function(sb, minSireAge = NULL, minDamAge = NULL,
   cols <- intersect(getPossibleCols(), colnames(sb))
   novelCols <- colnames(sb)[!colnames(sb) %in% cols]
   sb <- sb[, c(cols, novelCols)]
-  sb <- sb[with(sb, order(gen, id)), ]
+  # method = "radix": id is a character column -- plain order() is
+  # locale-dependent (Learning 585), method = "radix" is byte-order and
+  # locale-independent.
+  sb <- sb[with(sb, order(gen, id, method = "radix")), ]
   rownames(sb) <- seq_len(length.out = nrow(sb))
 
   # Ensuring the IDs are stored as characters
