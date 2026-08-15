@@ -138,6 +138,11 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] S588: reconcile HANDOFFS.md commit self-reference (`999c3b74`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: ... this close-out
+  commit` -> the real sha (`999c3b74`, close-out) — unknowable until after that commit existed.
+  Matches the established S562-S587 precedent.
+
 ### 2026-08-15 · [BL-N] S588: close out (pedigree-diagram sibling subtree-width asymmetry design)
 - **Deliverable:** Designed a fix for "Pedigree Diagram: sibling subtree-width asymmetry"
   (`BACKLOG.md`, found S576) — `docs/planning/pedigree-diagram-sibling-subtree-width-plan.md` +

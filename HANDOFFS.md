@@ -193,7 +193,7 @@ runtime_smoke: n/a -- no R/ source file touched; zero runtime behavior changed. 
   algorithm code lived in /private/tmp scratchpad (never committed) or the docs/planning/*.qmd
   evidence doc (Quarto-only, not part of the package).
 changelog_ref: see the 2026-08-15 section, "S588:" entries
-commit: 5bafb83d (claim); this close-out commit
+commit: 5bafb83d (claim); 999c3b74 (close-out)
 ```
 
 ```handoff
