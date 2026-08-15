@@ -68,27 +68,24 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       connected-component walk).
 
 ## Housekeeping
-- [ ] (found S575, 2026-08-14, owner review of a published live-comparison artifact, READY,
-      Effort L) **Pedigree Diagram: children are frequently rendered far from their own parent
-      union -- a real, widespread legibility gap, distinct from and not caught by Track 5's
-      diagonal-edge measurement.** Re-measured on the real 375-individual bundled fixture: of 251
-      child-edge groups, 100 (40%) have a parent-union-to-child horizontal offset exceeding 200
-      layout units, 73 (29%) exceed 500 units, max offset 10,687 units. Root cause: a mating
-      unit's final x is the midpoint of its 2 real parents' positions
-      (`R/makePedigreeDiagramData.R:924`), decoupled from where its own child was positioned
-      during the earlier recursive descent; Track 3's `sweepMinSep()` then stretches the parent
-      row and child row independently, and a highly-polygamous individual's crowded parent row
-      stretches faster than the child row, compounding across the fan-out. Every individual edge
-      is still orthogonal (Track 5's own finding is unaffected) -- this is a distinct failure
-      mode: a technically-right-angle path can still travel a long, visually-confusable horizontal
-      distance to a child not positioned under its own parent. Full record, including the
-      small-demo evidence that first surfaced this (`L31S6S`, 6 mates, offset growing -60 to -540
-      across his unions): `docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md`
-      §7b. Not fixed this session -- needs its own design session (the change surface is the core
-      recursive positioning algorithm shared by every diagram render, not a same-session patch).
-      A future session should evaluate whether a union's final x should instead be derived from
-      (or reconciled with) its own children's positions, or whether `sweepMinSep()` needs to
-      propagate a row's stretch factor to dependent rows, before choosing a fix.
+- [ ] (found S575, 2026-08-14, owner review of a published live-comparison artifact; **DESIGN
+      RATIFIED S576, 2026-08-14**, READY for implementation, Effort L) **Pedigree Diagram: children
+      are frequently rendered far from their own parent union -- a real, widespread legibility gap,
+      distinct from and not caught by Track 5's diagonal-edge measurement.** Re-measured on the
+      real 375-individual bundled fixture: of 251 child-edge groups, 100 (40%) have a
+      parent-union-to-child horizontal offset exceeding 200 layout units, 73 (29%) exceed 500
+      units, max offset 10,687 units. Root cause: a mating unit's final x is the midpoint of its 2
+      real parents' positions (`R/makePedigreeDiagramData.R:924`), decoupled from where its own
+      child was positioned during the earlier recursive descent. Full record:
+      `docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §7b/§4 Track 6.
+      **Design session held S576**: ratified "Extended Candidate A" (recompute the union's x from
+      its own children's final span, recompute the duplicate-parent node's x from the new union x,
+      broaden the existing de-collision pass to cover duplicates) --
+      `docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md`. Measured on
+      the real fixture: violating edges 100/251 -> 9/251 (91% reduction), worst-case offset
+      10,687 -> 4,121 (61% reduction). A future session should implement per that document's §6
+      Migration Path / §7 Verification Plan (separate session from this design, matching Track 4's
+      own S572/S573 split).
 - [ ] (found S575, 2026-08-14, owner review of a published live-comparison artifact, READY,
       Effort S/M) **Pedigree Diagram's duplicate-individual dashed connector arc curves the wrong
       way relative to kinship2.** Claim 4c (the kinship2 fidelity remediation plan) verified the
@@ -101,6 +98,26 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `smooth.roundness` sign, or a `curvedCW`/`curvedCCW` swap) before changing anything, since
       `from`/`to` order is also load-bearing for this same function's color/width preservation
       logic. See `docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §7a.
+- [ ] (found S576, 2026-08-14, incidental to Track 6's own empirical validation of the
+      child-centered union-position design, READY, Effort unknown -- not scoped) **Pedigree
+      Diagram: sibling subtree-width asymmetry -- 2-3 direct children of the same mating unit can
+      land far apart in x purely because their own descendant-subtree sizes differ, independent of
+      where the union itself is positioned.** Distinct from (and not resolved by) Track 6's own
+      child-centered union-position fix: even a union perfectly centered between its children
+      cannot keep both edges short when the children themselves are positioned far apart. Measured
+      on the real 375-individual fixture as Track 6's own residual: 9/251 (3.6%) child edges still
+      exceed a 200-scaled-unit offset after Track 6's fix lands, concentrated in unions with only
+      2-3 children. Concrete example: `__union_15` (gen 0)'s 2 children sit at raw x 29.88 and
+      98.56 -- a 68.68-unit gap between direct siblings, more than half the entire fixture's own
+      raw-x range. Root cause is one level down the same recursive contour-merge pattern Track 6
+      addresses at the union level (D3, `docs/planning/pedigree-diagram-option2-layout-design-plan.md`):
+      an individual's x is the centroid of their OWN full descendant subtree, so 2 siblings with
+      very differently-sized subtrees (one prolific branch, one sparse/childless) end up far apart
+      regardless of any parent-level positioning choice. Not investigated further this session (no
+      candidate fix evaluated) -- likely needs its own design session given the change surface (the
+      same core recursive positioning algorithm). See
+      `docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md` §1.4/§8 for the
+      full measurement and reasoning.
 - [ ] (found S574, 2026-08-14, incidental to Track 2's default-flip documentation pass, READY,
       Effort S) **`shiny_app_use/pb_diagram_legend.png` (used in both
       `vignettes/articles/colony-manager-guide.qmd` and `vignettes/articles/pedigree-diagram.qmd`)

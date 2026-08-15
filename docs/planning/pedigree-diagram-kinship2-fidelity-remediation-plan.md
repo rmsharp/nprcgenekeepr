@@ -483,6 +483,25 @@ artifact, the owner identified 2 real, previously-uncaught issues neither Track 
 Claim (1-4c) checked for. See §7 below for the full record. **Both are filed as new `BACKLOG.md`
 items for a dedicated future session; neither is fixed here.**
 
+### Track 6 -- Child-centered mating-unit position (§7b) -- DESIGN RATIFIED S576, IMPLEMENTATION PENDING
+
+**DESIGN RATIFIED S576 (2026-08-14):** `docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md`
+decides (Extended Candidate A, owner-ratified via `AskUserQuestion`): recompute a mating unit's
+final `x` as the midpoint of its own children's final `x`-span (not the midpoint of its two
+parents, today's formula) at `R/makePedigreeDiagramData.R:896-926`; recompute the duplicate
+(non-anchor-parent) node's `x` from that new union `x` instead of the pre-sweep provisional
+position; broaden the existing final de-collision pass to cover duplicate nodes, closing a side
+effect the first change alone would introduce. Measured on the real 375-individual fixture:
+violating child-edges (>200 scaled-unit horizontal offset) 100/251 -> 9/251 (91% reduction),
+worst-case offset 10,687 -> 4,121 scaled units (61% reduction), duplicate-to-union distance
+tightens from mean 62/max 120 to a constant 48. The 9 residual edges trace to a distinct,
+out-of-scope phenomenon (sibling subtree-width asymmetry -- 2-3 direct children of one union whose
+own descendant-subtree sizes differ enough that they land far apart in `x` regardless of the
+union's position) -- flagged for its own future `BACKLOG.md` item at implementation close-out, not
+folded into this decision's completion criteria. **Implementation is a separate future session**
+(the design document's own §6 Migration Path / §7 Verification Plan), matching Track 4's own
+design/implementation split (S572/S573).
+
 ## 5. Recommended pickup order
 
 **Status as of S575 (2026-08-14): Tracks 1-5 are each resolved for their own originally-scoped
@@ -567,3 +586,9 @@ horizontal distance to reach a child that is not under its own parent, which is 
 further this session (no candidate fix evaluated, no correlation with `orderBySex` or sweep order
 checked) -- flagged for a dedicated design session given the change surface (the core recursive
 positioning algorithm, shared by every diagram render regardless of `edgeStyle`).
+
+**Design session held S576 (2026-08-14):** see §4 Track 6 above and
+`docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md` for the ratified
+decision, measured trade-offs, and the explicit residual scope (a distinct, out-of-scope
+sibling-subtree-width-asymmetry phenomenon affecting 9/251 edges, not resolved by this decision).
+Implementation is a separate future session.
