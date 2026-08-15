@@ -86,18 +86,6 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       10,687 -> 4,121 (61% reduction). A future session should implement per that document's §6
       Migration Path / §7 Verification Plan (separate session from this design, matching Track 4's
       own S572/S573 split).
-- [ ] (found S575, 2026-08-14, owner review of a published live-comparison artifact, READY,
-      Effort S/M) **Pedigree Diagram's duplicate-individual dashed connector arc curves the wrong
-      way relative to kinship2.** Claim 4c (the kinship2 fidelity remediation plan) verified the
-      arc is present (`dashes = TRUE, smooth.type = "curvedCW"`,
-      `R/makePedigreeDiagramData.R:1345`) but never checked bow direction against kinship2's own
-      `arcconnect()` convention -- a gap in the original audit, not a regression. Owner's direct
-      visual comparison: kinship2 draws this arc convex, nprcgenekeepr draws it concave. Not
-      investigated further this session (no fix attempted). A future session should confirm the
-      exact vis.js mechanism controlling bow direction (edge `from`/`to` order, a
-      `smooth.roundness` sign, or a `curvedCW`/`curvedCCW` swap) before changing anything, since
-      `from`/`to` order is also load-bearing for this same function's color/width preservation
-      logic. See `docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` §7a.
 - [ ] (found S576, 2026-08-14, incidental to Track 6's own empirical validation of the
       child-centered union-position design, READY, Effort unknown -- not scoped) **Pedigree
       Diagram: sibling subtree-width asymmetry -- 2-3 direct children of the same mating unit can

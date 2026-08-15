@@ -547,17 +547,30 @@ this project's "report, don't fix mid-session" precedent (`PROJECT_LEARNINGS.md`
 because the 2nd finding touches the core positioning algorithm (plan-mode / design-session
 territory, not a same-session patch).
 
-### 7a. Duplicate-connector arc curves the wrong way relative to kinship2
+### 7a. Duplicate-connector arc curves the wrong way relative to kinship2 -- FIXED S577
 
 Claim 4c (§2.4 above) verified the dashed duplicate-individual connector is *present*
 (`dashes = TRUE, smooth.type = "curvedCW"`) but never checked *which way* it bows relative to
 kinship2's own `arcconnect()` convention -- a gap in the original audit, not a regression. Owner's
 direct visual comparison of the published artifact's screenshots: kinship2 draws this arc convex,
-nprcgenekeepr draws it concave. Not measured further this session (no fix attempted) -- a future
-session should confirm the exact vis.js mechanism controlling bow direction (edge `from`/`to` order,
-`smooth.roundness` sign, or a `curvedCW` vs `curvedCCW` swap) before changing anything, since the
-`from`/`to` order is also load-bearing for the color/width preservation logic elsewhere in this
-same function.
+nprcgenekeepr draws it concave.
+
+**Root-caused and fixed S577.** kinship2's own `arcconnect()` (a function nested in `plot.pedigree`)
+always sorts its pair by x first (`tx <- sort(tx)`) before drawing, so its arc always bows toward
+ancestors regardless of which occurrence is the duplicate. vis-network's `curvedCW` bow direction
+(`Edge._getViaCoordinates` in the bundled `vis-network.min.js`) is a function of which endpoint is
+`from` -- so the old always-`from = dupId, to = realId` convention bowed the wrong way whenever the
+duplicate happened to land to the right of its real self. Measured on the real 375-individual
+bundled fixture: 33 of 52 same-row connectors bowed the wrong way pre-fix; a naive blanket
+`from`/`to` swap or `curvedCW`/`curvedCCW` swap would NOT have fixed this correctly (it is
+position-dependent, not a uniform flip -- it would just invert which 33 vs. 19 were wrong). Fix:
+x-order the pair (smaller-x endpoint becomes `from`) instead of a fixed dup/real assignment, mirroring
+kinship2's own sort -- verified self-contained (`from`/`to`'s color/width are unconditionally NA for
+this edge type, and no downstream `.addRectilinearWaypoints()` logic keys off a duplicate
+connector's `from`/`to`, despite the caution above). Post-fix: 52/52 same-row connectors bow toward
+ancestors, matching kinship2 exactly (visually confirmed via a live `visNetwork`/chromote render of
+a same-row duplicate case). See `tests/testthat/test_makePedigreeMatingLayout.R` and
+`R/makePedigreeDiagramData.R` (`dupEdges` construction, ~line 1342) for the implementation.
 
 ### 7b. Children are frequently rendered far from their own parent union -- a real, widespread legibility gap
 
