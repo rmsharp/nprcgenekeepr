@@ -138,6 +138,29 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [issue #161] Filed pedigree-diagram mating-unit-marker kinship2-parity question
+- **Deliverable:** Filed [issue #161](https://github.com/rmsharp/nprcgenekeepr/issues/161) — found
+  live in conversation reviewing a fresh render of the `A x Y` consanguineous fixture against
+  kinship2. kinship2 draws no marker for a mating (a plain line intersection); nprcgenekeepr draws
+  a small filled circle for every `__union_N` node. Mechanically feasible via the same
+  `size = 0` + transparent-color technique already used for invisible D1/D2 rectilinear waypoints
+  (issue #142, S465), but a genuine design question, not an obvious fix. Not implemented — needs a
+  decision first. Also added to `BACKLOG.md` Active.
+
+### 2026-08-15 · [issue #160] Commented with a second, broader reproduction
+- **Deliverable:** Commented on [issue #160](https://github.com/rmsharp/nprcgenekeepr/issues/160#issuecomment-5304476340)
+  with a second fixture (the `A x Y` consanguineous example) showing a more severe instance of the
+  same defect: P1×P2's own union lands entirely outside their parents' span (traced to Track 6's
+  centering formula using a duplicated child's *real*, far-away occurrence instead of the nearby
+  duplicate), and the resulting over-stretched sibship bar collides with both an unrelated node (W)
+  and a duplicate-connector dashed edge. Broadens the diagnosed root cause: the collision isn't
+  specific to the sibship-bar D1 loop — any straight same-row edge (sibship bar or
+  duplicate-connector) lacks collision-avoidance against an intervening node. Also annotated the
+  related-but-distinct `BACKLOG.md` S583 item (union-outside-parents'-span) with a 3-instance live
+  reconfirmation of that already-tracked gap on the same fixture (X×A, A×Y, W×Y unions each
+  collapsing to their one child's x) — not filed as a new issue, since it's the same gap already
+  tracked there. No code changed.
+
 ### 2026-08-15 · [issue #160] Filed pedigree-diagram rectilinear sibship-bar false-parentage defect
 - **Deliverable:** Filed [issue #160](https://github.com/rmsharp/nprcgenekeepr/issues/160) — found
   live in conversation (not a claimed session), while generating fresh kinship2-vs-nprcgenekeepr

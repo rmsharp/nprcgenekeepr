@@ -13,7 +13,21 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       as that sibling's child. Reproduced on the "cleanest comparison" 14-person fixture (no
       multi-mate ambiguity), 2 independent collisions found in one render. Needs a design session
       to give the bar genuine vertical clearance without reopening Track 4/6's ratified invariants
-      — see issue #160 for full reproduction/evidence. Not fixed here.
+      — see issue #160 for full reproduction/evidence. Not fixed here. **Update (same day):** a
+      second, more severe reproduction (P1&times;P2's own union landing entirely outside their
+      span, plus a duplicate-connector line rendering behind an unrelated node) traced the root
+      cause one level deeper — see the issue's comment thread. The defect is broader than the
+      sibship-bar D1 loop alone: any straight same-row edge (sibship bar OR duplicate-connector)
+      can collide with an intervening unrelated node.
+- [ ] **Pedigree Diagram: consider hiding the mating-unit node marker to match kinship2's
+      plain-intersection convention** (found live in conversation 2026-08-15, not a claimed
+      session, filed as [issue #161](https://github.com/rmsharp/nprcgenekeepr/issues/161),
+      DECISION NEEDED, Effort S if approved) — kinship2 draws no marker for a mating, just a plain
+      line intersection; nprcgenekeepr draws a small filled circle for every union. Mechanically
+      easy (the `size = 0` + transparent-color technique already used for invisible D1/D2
+      waypoints applies directly), but a genuine design call, not an obvious fix — the dot may be
+      a useful explicit anchor independent of kinship2 parity. Needs a decision before
+      implementation.
 
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 *Resolves the former "Tracker reconciliation" decision item (S365) --
@@ -333,6 +347,14 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       its own design session, since a fix must decide how to reconcile "center on children" (Track
       6's own stated goal, still valid for multi-child unions) with "never leave the parents' own
       span" (kinship2's invariant) without reopening Track 6's already-ratified formula wholesale.
+      **Confirmed again live (2026-08-15, found in conversation, not a claimed session):** the
+      same single-child collapse (`finalUnitX[U] == x[thatChild]`) reproduced 3 more times in one
+      small 9-person fixture (`kinship2-fidelity-validation.qmd`'s Track C consanguineous
+      example) -- the X&times;A, A&times;Y, and W&times;Y unions each sit exactly at their one
+      child's x rather than their own parents' midpoint. See
+      [issue #160](https://github.com/rmsharp/nprcgenekeepr/issues/160)'s comment thread for the
+      full coordinate evidence (a related but distinct finding on the same fixture). Not filed as
+      its own issue -- this is the same already-tracked gap, not a new one.
 - [x] (found S574, 2026-08-14, incidental to Track 2's default-flip documentation pass,
       **RESOLVED S582**. **`shiny_app_use/pb_diagram_legend.png` (used in both
       `vignettes/articles/colony-manager-guide.qmd` and `vignettes/articles/pedigree-diagram.qmd`)
