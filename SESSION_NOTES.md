@@ -14,14 +14,119 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 578 Handoff Evaluation (by Session 579)
+**Score: 7/10.** **What helped:** the `next_steps` field named this exact item verbatim ("trim
+CHANGELOG.md (byte-budget archive trigger fired at 83,410 B vs the 65,536 B budget, Effort S)")
+as one of 3 ready follow-ups, and `BACKLOG.md`'s own item (found S573) gave the precise command
+sequence (`--check` then `--write`, matching the `SESSION_NOTES.md`/`HANDOFFS.md` precedent) —
+enough to start immediately with no rediscovery cost for the mechanics themselves. **What was
+missing:** no `gotchas` entry (in either S578's receipt or S573's original `BACKLOG.md` filing)
+warned that archiving `CHANGELOG.md` specifically carries a real risk of hitting the `SRF_RED`
+refusal — a well-documented recurring pattern in this exact project (`PROJECT_LEARNINGS.md`
+Learnings 549/550, both `CHANGELOG.md` archive attempts) that anyone scoping "run `--write` and
+commit" as a flat Effort S task should have flagged as a live possibility, not a surprise. It
+was — the dry run refused, turning what was scoped as a 2-command mechanical task into a full
+investigation-and-`AskUserQuestion` round trip. Not S578's fault specifically (S578 didn't touch
+`CHANGELOG.md` archiving at all this session, and S573's own filing predates knowing the file
+was even over budget again) — but the gap traces to nobody connecting "this file has hit
+`SRF_RED` twice before" to "this Effort-S estimate assumes it won't." **What was wrong:** nothing
+inaccurate — the `what_was_done` and `gotchas` fields for the Track 6 deliverable itself (the
+`orderBySex` reorder, the `method="radix"` locale fix) were precise and matched what I found on
+inspection. **ROI:** positive but lower than S578's own predecessor score (8/10) — the mechanics
+pointer saved setup time, but the missing risk flag cost most of that back in an unplanned
+detour.
+
 ### What Session 579 Did
 **Deliverable:** `CHANGELOG.md` byte-budget archive trim (`BACKLOG.md` Housekeeping, found S573) —
-run `methodology_trim.py --check` then `--write` to archive the tagged-record portion into a new
-dated shard, verify the trigger clears, commit the shard. (IN PROGRESS)
-**Started:** 2026-08-14.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+**DONE**, with one significant unplanned detour. Following
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`; this is a housekeeping/tooling action
+(no `R/` source touched), so the Strict-TDD RED/GREEN/REFACTOR gates from `CLAUDE.md`'s
+Development Process Contract do not apply — stated explicitly rather than silently skipped, and
+confirmed via the pre-work `AskUserQuestion` scope-confirmation round in place of the phase gates.
+**Started/Completed:** 2026-08-14.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list` [12 open, unchanged], `git status`/`log`/`diff --stat` [121 commits ahead of
+`origin/master`, unpushed; 1 untracked file — confirmed benign, the same `.qmd`'s Quarto render
+byproduct pattern established by prior sessions], `methodology_dashboard.py` [Health 96/100, 1
+HIGH risk — `SESSION_NOTES.md` at 2,935 lines, past the 2,000-line read cap, not yet its own
+`BACKLOG.md` item], `gh run list --branch master --limit 10` [scheduled `shinytest2.yaml` red 2
+consecutive days, unchanged/undiagnosed]). Ledger reconcile: `CHANGELOG.md`/`HANDOFFS.md`
+frontiers both at `HEAD`, clean no-op. **Process note (self-caught mid-session, matching the
+exact shape of `PROJECT_LEARNINGS.md` Learning 553):** initially called the priorities-picker
+`AskUserQuestion` before rendering the required prose Phase 0 report — caught before the user
+responded to anything downstream of it, corrected by rendering the full prose report in the very
+next message before treating the picker's answer as the task pick. **(2)** Rendered the
+priorities list (6 numbered items + 2 lower-priority + informational; cross-checked both ratified
+sequencing audits per `CLAUDE.md`'s dedicated instruction — confirmed all Tier 1/2 items in both
+are now closed, leaving only #148 [needs a scope-narrowing conversation] and #138 [explicitly
+deprioritized] as each cluster's own last remaining item) — user picked the `CHANGELOG.md`
+archive trigger. **(3)** Confirmed scope via a second `AskUserQuestion` (per the "state your
+understanding back" step) — approved as described. **(4)** Phase 1B claim stub committed
+(`f18431b0`). **(5)** Ran `methodology_trim.py --file CHANGELOG.md` (dry run): refused with
+`P1_UNDOCUMENTED` — the claim commit itself was undocumented in `CHANGELOG.md`'s own ledger,
+which the tool correctly refuses to trim past (a trim commit advances the ledger frontier and
+would hide an undocumented commit permanently). Added the claim's own `[ad hoc]` entry, committed
+separately (`ea9a05f9`), re-ran — frontier clean. **(6)** Re-ran the dry run: byte trigger fired
+genuinely (101,210 B vs. 65,536 B budget; line headroom healthy, 63 records) but the tool refused
+again, this time with `SRF_RED` — SRF 2.0091 against the most-recent archive (`ec76e487`, S559,
+removed only 33,490 B) vs. a healthy 0.0840 against the largest-drop boundary (the S547
+legacy-footer relocation, ~931,693 B removed) — the exact false-refusal shape
+`PROJECT_LEARNINGS.md` Learnings 549/550 diagnosed, recurring because the refusal keys on the
+MOST RECENT archive, not the largest-drop one. Pulled absolute byte deltas for both boundaries
+via `git cat-file -s` (Learning 550's practical rule) rather than trusting the ratios: confirmed
+real ~67,286 B regrowth in ~26 hours, driven by this project's own high session velocity, not
+tiny-denominator noise. **(7)** Surfaced both readings, the absolute deltas, and 3 options (force
+/ hold-and-log / raise the budget) via `AskUserQuestion` rather than deciding unilaterally,
+matching Learning 549's established practical rule — user chose **force**. **(8)** Dry-run
+preview with `--force` confirmed L1/L2/L3 losslessness (62 of 98 records, 101,210 B → 32,753 B)
+before writing; ran `--write --force`; ran the shard's own generated `verify.sh` (OK); confirmed
+post-trim `--check` clears the trigger (32,753 B, line headroom 4,677 records) and that both SRF
+readings go non-positive (the tool's own "not usefully compared" state, not a fresh verdict).
+**(9)** Removed the resolved `BACKLOG.md` item (found S573); added `PROJECT_LEARNINGS.md`
+Learning 586 (the SRF_RED recurrence, why the S547 relocation's fix wasn't permanent, and the
+practical rule). Staged `CHANGELOG.md` + the new shard + `BACKLOG.md` + `PROJECT_LEARNINGS.md`
+together, committed (`66d5aa54`).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation/tutorial-article/`a2interactive.Rmd`/
+GitHub-issue-close-out/`_pkgdown.yml`/`NEWS.Rmd` checklists all N/A — no `R/` source touched, no
+new export, no Shiny feature, not tied to a GitHub issue. Lint checklist N/A — no `.R` file
+touched. `git status --ignored` confirms `docs/planning/pedigree-diagram-kinship2-reference-
+comparison.html` is genuinely untracked-but-not-ignored (matches the `!docs/planning/**`
+un-ignore rule); left as-is, matching prior sessions' treatment of the same file.
+
+**Phase 3E runtime smoke test:** n/a — docs/ledger-only change, no runtime behavior touched. Not
+silently skipped: stated explicitly per `SESSION_RUNNER.md` §3E.
+
+**Self-assessment (Session 579): 8/10.** **Strengths:** (1) Caught and corrected the
+picker-before-prose-report ordering mistake within the same turn, before it compounded —
+recognized the exact shape of a previously-documented failure mode (Learning 553) in real time
+rather than after the fact. (2) When the trim tool hit a real, designed refusal gate
+(`SRF_RED`), stopped rather than reflexively `--force`-ing or silently declaring the task blocked
+— pulled the absolute byte deltas for both boundaries (not just the ratios) before presenting the
+decision to the user, matching the established Learning 549/550 practical rule exactly. (3)
+Recognized this was a RECURRENCE of a known pattern (not a fresh anomaly), correctly noted that
+the S547 legacy-relocation "fix" was never durable against a subsequent small archive resetting
+the most-recent-boundary baseline, and recorded that nuance as a new learning rather than treating
+this instance as either "already solved" or "brand new." (4) Verified losslessness at each
+step — the dry run's own L1/L2/L3 output before `--write`, then the shard's generated `verify.sh`,
+then a post-trim `--check` — rather than trusting any single check. (5) Followed the CLAUDE.md
+sequencing-audit cross-check instruction properly at Phase 0 (both ratified audits checked
+against current `gh issue list` state, not just grepped for inline `BACKLOG.md` tags), surfacing
+#148/#138 as first-class options rather than folding them into the informational bucket.
+**Weaknesses:** (1) The picker-before-prose mistake (Learning 553's exact shape) happened despite
+that learning existing in this project's own memory for 33 sessions — re-reading `CLAUDE.md`'s
+priorities-picker convention text more carefully before the first `AskUserQuestion` call would
+have caught it before, not after, the tool call. (2) Did not think to check whether `CHANGELOG.md`
+had a live `SRF_RED` risk during Phase 0 orientation, even though the dashboard/BACKLOG context
+made "this file is over budget again" visible before I picked the task — a quick
+`methodology_trim.py --check` during orientation (not just after committing to the task) would
+have surfaced the risk one step earlier, before a claim commit was already in place. (3) Still no
+independent adversarial-verification pass by a separate agent/session — the same standing gap
+flagged for 12+ consecutive prior sessions, unaddressed again this session (lower stakes here,
+housekeeping not application code, but the gap itself is unchanged).
+**Ledger:** recorded in `CHANGELOG.md` (this session's claim, frontier-reconcile, and the trim
+action itself, plus this close-out entry).
 
 ### Session 577 Handoff Evaluation (by Session 578)
 **Score: 8/10.** **What helped:** S577's ledger reconcile and priorities-list housekeeping left

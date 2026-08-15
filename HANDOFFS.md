@@ -134,20 +134,45 @@ This file currently holds **10** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S579
 date: 2026-08-14
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: CHANGELOG.md byte-budget archive trim (BACKLOG.md Housekeeping, found S573) -- run
-  methodology_trim.py --check then --write, verify the trigger clears, commit the shard.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: CHANGELOG.md byte-budget archive trim (BACKLOG.md Housekeeping, found S573) -- DONE.
+  Archived 62 of 98 records to a new dated shard; trigger clears (32,753 B vs 65,536 B budget).
+what_was_done: Hit SRF_RED on the dry run (SRF 2.0091 against the most-recent archive ec76e487,
+  vs. 0.0840 against the largest-drop S547 legacy-relocation boundary) -- the Learning 549/550
+  false-refusal pattern recurring. Pulled absolute byte deltas for both boundaries before
+  deciding (67,286 B real regrowth in ~26h); surfaced both readings + 3 options via
+  AskUserQuestion; user chose --force. Verified losslessness 3 ways (dry-run L1/L2/L3, the
+  shard's own verify.sh, post-trim --check). Removed the resolved BACKLOG.md item; added
+  PROJECT_LEARNINGS.md Learning 586. Commits: f18431b0 (claim), ea9a05f9 (frontier reconcile),
+  66d5aa54 (the trim + BACKLOG/Learning update), plus this close-out commit.
+next_steps: BACKLOG.md's remaining numbered items (in the order presented this session's Phase 0,
+  none picked): locale-dependent order() sweep (qcStudbook()/orderReport(), READY, Effort M);
+  stale pb_diagram_legend.png screenshot (READY, Effort S); Pedigree Diagram sibling
+  subtree-width asymmetry (READY but needs its own design session first, found S576); #148 MHC
+  scope-narrowing conversation (DECISION NEEDED, ratified GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT
+  cluster's own last item); NPRC outreach & announcement plan (DECISION NEEDED, owner review).
+  Separately, not yet its own BACKLOG item: SESSION_NOTES.md is 2,935 lines, past the 2,000-line
+  dashboard HIGH-risk cap -- a future session should either archive it (methodology_trim.py
+  --file SESSION_NOTES.md) or file it as its own item, matching the CHANGELOG.md byte-trigger
+  precedent this session just resolved.
+key_files: CHANGELOG.md (live ledger, now 32,753 B); docs/archive/CHANGELOG-through-2026-08-14.md
+  (+.verify.sh, the new shard, 62 records); BACKLOG.md (Housekeeping section, item removed);
+  PROJECT_LEARNINGS.md Learning 586 (the SRF_RED recurrence).
+gotchas: The S547 legacy-footer relocation's SRF_RED "fix" is NOT durable -- any subsequent small
+  archive of the same file becomes the new most-recent boundary and can re-trigger SRF_RED almost
+  immediately (this session hit it ~1 day after the prior small archive, ec76e487). A future
+  CHANGELOG.md archive session should expect to re-diagnose this same shape (pull both boundaries'
+  absolute byte deltas, don't trust the ratio alone) rather than assume it's permanently resolved.
+  Also: this session self-caught a Learning-553-shaped mistake (calling the priorities-picker
+  AskUserQuestion before the prose Phase 0 report) -- re-read CLAUDE.md's picker convention before
+  the first AskUserQuestion call of a session, not after making the same mistake again.
+runtime_smoke: n/a -- docs/ledger-only change, no runtime behavior touched.
+changelog_ref: 66d5aa54
 commit: pending
 ```
-(pending -- filled at Phase 3D close-out)
+
 
 ```handoff
 session: S578

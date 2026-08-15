@@ -138,6 +138,16 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [BL-N] S579: close out (CHANGELOG.md byte-budget archive trim DONE)
+- **Deliverable:** Session S579's own close-out. Evaluated S578's `HANDOFFS.md` receipt (7/10 --
+  the `next_steps` pointer to this exact item was accurate and immediately actionable, but no
+  `gotchas` entry warned that `CHANGELOG.md` archiving carries a real, previously-documented risk
+  of `SRF_RED` refusal). Self-assessed 8/10 (self-caught a Learning-553-shaped picker-before-prose
+  mistake within the same turn; surfaced the `SRF_RED` refusal's two boundary readings plus
+  absolute byte deltas to the user rather than force-passing or silently blocking; weakness: the
+  risk wasn't checked during Phase 0, only after committing to the task). Wrote handoff notes to
+  `SESSION_NOTES.md`; completed the `HANDOFFS.md` receipt (`status: complete`).
+
 **Archived 62 record(s), 2026-08-13 → 2026-08-14** into [`docs/archive/CHANGELOG-through-2026-08-14.md`](docs/archive/CHANGELOG-through-2026-08-14.md) — same format, same order, frozen.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-08-14.md.verify.sh`](docs/archive/CHANGELOG-through-2026-08-14.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
