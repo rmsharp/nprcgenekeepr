@@ -138,6 +138,12 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [ad hoc] S579: claim session (CHANGELOG.md byte-budget archive trim) (`f18431b0`)
+- **Deliverable:** Phase 1B claim stub (`SESSION_NOTES.md`) and `HANDOFFS.md` `status: pending`
+  receipt for this session's deliverable: archive `CHANGELOG.md`'s tagged-record portion into a
+  new dated shard (`BACKLOG.md` Housekeeping, found S573) — the byte trigger fires again
+  (100,783 B against the 65,536 B budget).
+
 ### 2026-08-14 · [ad hoc] S578: reconcile HANDOFFS.md commit self-reference (`b321df39`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> `b321df39`
   (the close-out commit whose sha the receipt itself couldn't name until after it was made) --
