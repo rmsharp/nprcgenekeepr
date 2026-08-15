@@ -138,6 +138,15 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [ad hoc] S578: reconcile HANDOFFS.md commit self-reference (`b321df39`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> `b321df39`
+  (the close-out commit whose sha the receipt itself couldn't name until after it was made) --
+  matching the established S562-S577 precedent.
+
+### 2026-08-14 · [BL-N] S578: close out (Track 6 child-centered union-position implementation DONE) (`b321df39`)
+- **Deliverable:** Full session record written (`SESSION_NOTES.md`, `HANDOFFS.md` receipt). See
+  the receipt for the complete self-assessment (9/10) and predecessor evaluation (8/10).
+
 ### 2026-08-14 · [BL-N] S578: Track 6 downstream updates for locale-independence fix (BACKLOG, plan doc section 10) (`26f7d909`)
 - **Deliverable:** Documents the `devtools::check()`-found, `LC_ALL=C`-reproduced locale-dependent
   tie-break defect and its `method = "radix"` fix in the `BACKLOG.md` DONE item and the plan

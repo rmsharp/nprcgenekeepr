@@ -216,7 +216,7 @@ runtime_smoke: DONE -- rendered + chromote-screenshotted both the small GA204Z/8
   child, matching the fix's intent.
 changelog_ref: 6 entries this session (claim, RED, GREEN, downstream round 1, locale fix,
   downstream round 2) -- see CHANGELOG.md 2026-08-14 S578 entries.
-commit: pending
+commit: b321df39
 ```
 
 ```handoff
