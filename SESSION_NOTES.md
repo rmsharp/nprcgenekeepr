@@ -14,6 +14,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 588 Did
+**Deliverable:** Design a fix for "Pedigree Diagram: sibling subtree-width asymmetry" (`BACKLOG.md`,
+found S576) -- one architecture/design document at `docs/planning/` per
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md` (IN PROGRESS). **Planning session -- TDD
+phases (RED/GREEN/REFACTOR) declared INAPPLICABLE** (`PROJECT_LEARNINGS.md` precedent: a planning
+session is not strict-TDD; the CLAUDE.md TDD override governs only implementation sessions).
+**Started:** 2026-08-15.
+**Status:** Session claimed. Work beginning -- investigation done (synthetic repro built, kinship2 +
+nprcgenekeepr renderings produced, one candidate mitigation empirically tested and rejected with
+visual evidence), design document not yet written.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 586 Handoff Evaluation (by Session 587)
 **Score: 10/10.** **What helped:** the `next_steps` field named this exact item as recommendation
 (1) of 2 remaining S584-filed READY items, with the precise 4-word list (`matings`,

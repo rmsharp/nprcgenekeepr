@@ -138,6 +138,11 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [BL-N] S588: claim (design a fix for pedigree-diagram sibling subtree-width asymmetry)
+- **Deliverable:** Non-commit-adjacent claim entry per Phase 1B. Session claimed to design a fix
+  for "Pedigree Diagram: sibling subtree-width asymmetry" (`BACKLOG.md`, found S576) — one
+  architecture/design document, planning session, TDD phases inapplicable.
+
 ### 2026-08-15 · [ad hoc] S587: push commits (`d6deec73..94fcab60`)
 - **Deliverable:** Non-commit action, recorded per failure mode #27. Owner-directed push of this
   session's 4 commits (`8b4d0f18` claim, `45b44585` fix + close-out, `8d4ae826` HANDOFFS.md

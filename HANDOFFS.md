@@ -132,8 +132,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
-This file currently holds **3** receipt(s). Computed by `methodology_trim.py` on every
+This file currently holds **4** receipt(s). Computed by `methodology_trim.py` on every
 `--check`/`--write` run, never hand-maintained.
+
+```handoff
+session: S588
+date: 2026-08-15
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Design a fix for "Pedigree Diagram: sibling subtree-width asymmetry" (BACKLOG.md,
+  found S576) -- one architecture/design document per ARCHITECTURE_WORKSTREAM.md. Planning
+  session, TDD phases inapplicable.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
 
 ```handoff
 session: S587
