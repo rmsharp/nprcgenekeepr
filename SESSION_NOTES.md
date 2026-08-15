@@ -14,6 +14,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 579 Did
+**Deliverable:** `CHANGELOG.md` byte-budget archive trim (`BACKLOG.md` Housekeeping, found S573) —
+run `methodology_trim.py --check` then `--write` to archive the tagged-record portion into a new
+dated shard, verify the trigger clears, commit the shard. (IN PROGRESS)
+**Started:** 2026-08-14.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### Session 577 Handoff Evaluation (by Session 578)
 **Score: 8/10.** **What helped:** S577's ledger reconcile and priorities-list housekeeping left
 `BACKLOG.md` accurate and uncluttered — the Track 6 item (design ratified S576, READY, Effort L)

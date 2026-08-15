@@ -132,6 +132,24 @@ This file currently holds **10** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S579
+date: 2026-08-14
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: CHANGELOG.md byte-budget archive trim (BACKLOG.md Housekeeping, found S573) -- run
+  methodology_trim.py --check then --write, verify the trigger clears, commit the shard.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+(pending -- filled at Phase 3D close-out)
+
+```handoff
 session: S578
 date: 2026-08-14
 status: complete
