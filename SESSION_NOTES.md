@@ -14,6 +14,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 586 Did
+**Deliverable:** Fix red `lint.yaml` CI (`BACKLOG.md` Housekeeping, found S584) -- 3 pre-existing
+lints in `R/kinship.R:127,131,133` from S564's X-chromosome kinship work (IN PROGRESS).
+**Started:** 2026-08-15.
+**Status:** Session claimed. Pre-RED scope decided (add a missing sparse=TRUE + chrtype='x'
+regression test before touching line 131, closing a coverage gap found this session) and the
+PRE-RED->RED gate approved. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 584 Handoff Evaluation (by Session 585)
 **Score: 8/10.** **What helped:** the `next_steps` field's recommended pickup order ("cheapest and
 most mechanical first: (1) pkgdown ... widest user-visible blast radius") put this exact item at

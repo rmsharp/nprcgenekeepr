@@ -136,6 +136,27 @@ This file currently holds **2** receipt(s). Computed by `methodology_trim.py` on
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S586
+date: 2026-08-15
+status: pending
+self_score:
+predecessor_score: 9
+active_task: Fix red lint.yaml CI (BACKLOG.md Housekeeping, found S584) -- 3 pre-existing lints in
+  R/kinship.R:127,131,133 from S564's X-chromosome kinship work. Pre-RED scope decided (close a
+  found coverage gap: no existing test combines chrtype='x' with sparse=TRUE) and PRE-RED->RED
+  gate approved.
+what_was_done: pending
+next_steps: pending
+key_files: R/kinship.R:126-134 (the 3 lint sites); tests/testthat/test_kinship.R (new
+  sparse/dense parity test for chrtype='x' to be added)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<!-- S586 claim stub; overwritten at Phase 3D close-out -->
+
+```handoff
 session: S585
 date: 2026-08-15
 status: complete
