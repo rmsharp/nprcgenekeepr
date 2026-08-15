@@ -134,20 +134,70 @@ This file currently holds **10** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S576
 date: 2026-08-14
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 8
+predecessor_score: 8
 active_task: Design document for the pedigree-diagram parent-child positioning offset fix
-  (BACKLOG.md Housekeeping, found S575) following ARCHITECTURE_WORKSTREAM.md
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+  (BACKLOG.md Housekeeping, found S575) -- DONE, ratified. Extended Candidate A: recompute a
+  mating unit's x from its own children's final x-span (not its 2 parents), recompute the
+  duplicate node's x from the new union x, broaden the existing de-collision pass to cover
+  duplicates. TDD phase: N/A/PRE-RED throughout (a plan document, no code changed).
+what_was_done: Read .positionMatingUnitForest() (R/makePedigreeDiagramData.R:584-1011) and
+  .addRectilinearWaypoints()'s D1/D2 loops (:1497-1595) in full to trace the root cause. Wrote and
+  ran a throwaway validation script against the real 375-individual bundled fixture
+  (obfuscated_rhesus_mhc_ped.csv): reproduced S575's own baseline exactly (100/251 edges >200
+  scaled units, 73/251 >500, max 10,687), then measured the proposed fix -- 9/251 >200 (91%
+  reduction), max 4,121 (61% reduction). Investigated the 9 residual edges directly: traced to a
+  distinct out-of-scope phenomenon (sibling subtree-width asymmetry), not a partial failure of the
+  fix. Also measured a metric not named by the originating BACKLOG item (duplicate-node-to-union
+  distance) and found the union-only fix alone would regress it (mean 62->849, max 120->10,567) --
+  extended the design to fix it too (mean/max back to a constant 48). Wrote
+  docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md (9 sections). Ratified
+  via AskUserQuestion (owner selected "proceed as written"). Updated the remediation plan (new
+  Track 6 entry, §7b pointer), the originating BACKLOG.md item (DESIGN RATIFIED S576), filed a new
+  BACKLOG.md item for the residual finding, and appended PROJECT_LEARNINGS.md Learning 582. Commits:
+  43dac0f7 (claim), plus this close-out's own commit (below).
+next_steps: Implement per the design doc's own §6 Migration Path / §7 Verification Plan -- a
+  separate future session (matching Track 4's own S572 design / S573 implementation split). Key
+  starting points: (1) replace the finalUnitX loop at R/makePedigreeDiagramData.R:896-926 with the
+  children-derived formula (design doc §2.1); (2) relocate/reformulate dupX after it, remove
+  duplicates from sweepIds/sweepGen (§2.2); (3) broaden the final de-collision pass (:936-954) to
+  include duplicates (§2.3) -- all 3 as one coordinated commit, not separable, since (2)/(3) exist
+  specifically to close the side effect (1) alone would introduce. RED phase: write the new
+  invariant test (finalUnitX == midpoint of children's final x-span, 0 exceptions on the real
+  fixture) and a duplicate-vs-real de-collision regression test first. Also still open from this
+  session's own Phase 0 priorities list: the arc curve-direction item (§7a, READY, Effort S/M); the
+  new sibling-subtree-width-asymmetry item filed this session (Effort unknown, needs its own
+  scoping); issue #148's MHC scope-narrowing conversation (DECISION NEEDED); the legend screenshot
+  recapture (READY, Effort S); CHANGELOG.md's byte-budget trim (READY, Effort S); the scheduled
+  shinytest2.yaml CI failure (now red 3+ consecutive days, still not diagnosed); SESSION_NOTES.md's
+  own line-cap overage (no BACKLOG item yet).
+key_files: docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md (the full
+  design, especially §2 Decision and §6 Migration Path), R/makePedigreeDiagramData.R:896-926
+  (finalUnitX, the code to replace), R/makePedigreeDiagramData.R:842-845 (dupX, to relocate/
+  reformulate), R/makePedigreeDiagramData.R:936-954 (final de-collision pass, to broaden),
+  docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md §4 Track 6 / §7b (the
+  cross-referenced status).
+gotchas: (1) S575's reported offset units (200/500/10,687) are makePedigreeMatingLayout()'s own
+  SCALED display units (xScale = 120L, :1151/:1287) -- .positionMatingUnitForest() itself, called
+  directly (as the implementation session's own RED tests likely will), returns RAW pre-scale
+  units; multiply by 120 before comparing to any of this session's or S575's own reported figures,
+  or the numbers will look off by exactly that factor (this session hit this itself before
+  reconciling it). (2) The 3 changes (§2.1/§2.2/§2.3) are NOT independently choosable -- implementing
+  finalUnitX's recompute (§2.1) alone, without also moving dupX (§2.2) and broadening the
+  de-collision pass (§2.3), reintroduces essentially the same defect class on the duplicate-node
+  side (measured this session, mean distance 62->849). (3) Every mating unit has >=1 child by
+  construction (.buildMatingUnitForest() only ever synthesizes a unit from an observed child row)
+  -- no empty-kids fallback is needed in the new finalUnitX loop. (4) The 9 residual >200-unit edges
+  after this fix are EXPECTED, not a bug in the implementation -- they trace to sibling
+  subtree-width asymmetry (a separate, already-filed BACKLOG item), not to an error in Extended
+  Candidate A; don't chase them as if the implementation is incomplete.
+runtime_smoke: N/A -- no runtime behavior changed this session (a design document only, no R/ or
+  tests/ file touched). Stated explicitly, not silently skipped, matching Track 4's S572 precedent
+  for design-session close-outs.
+changelog_ref: this session's own CHANGELOG.md entries (claim, deliverable, close-out)
 commit: pending
 ```
-<claimed at Phase 1B, not yet closed out>
 
 ```handoff
 session: S575

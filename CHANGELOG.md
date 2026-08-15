@@ -138,6 +138,29 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [BL-N] S576: close out (Track 6 design ratified)
+- **Deliverable:** Design document ratified via `AskUserQuestion` ("proceed as written").
+  `docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md` DONE. Updated
+  `docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md` (new §4 Track 6 entry, §7b
+  pointer), `BACKLOG.md` (originating item annotated DESIGN RATIFIED S576; new item filed for the
+  residual sibling-subtree-width-asymmetry finding), `PROJECT_LEARNINGS.md` (Learning 582).
+  Self-score 8/10; S575 handoff evaluation 8/10. See `HANDOFFS.md` S576 receipt for the full record.
+
+### 2026-08-14 · [BL-N] S576: Track 6 design -- child-centered mating-unit position
+- **Deliverable:** Design document for the pedigree-diagram parent-child positioning offset
+  (`BACKLOG.md` Housekeeping, found S575). Decided "Extended Candidate A": recompute a mating
+  unit's final x from its own children's final x-span instead of its 2 parents; recompute the
+  duplicate (non-anchor-parent) node's x from the new union x; broaden the existing de-collision
+  pass to cover duplicates (closes a regression the union-only fix alone would introduce, measured
+  this session). Validated on the real 375-individual bundled fixture: violating child-edges
+  100/251 -> 9/251 (91% reduction), worst-case offset 10,687 -> 4,121 scaled units (61% reduction),
+  duplicate-to-union distance mean 62/max 120 -> constant 48. 9 residual edges (3.6%) traced to a
+  distinct, out-of-scope phenomenon (sibling subtree-width asymmetry), filed as its own new
+  `BACKLOG.md` item. Implementation is a separate future session.
+
+### 2026-08-14 · [ad hoc] S576: claim session (parent-child positioning offset design) (`43dac0f7`)
+- **Deliverable:** Phase 1B claim stub written to `SESSION_NOTES.md`/`HANDOFFS.md`.
+
 ### 2026-08-14 · [ad hoc] S575: post-close-out correction (2 real findings owner caught in the published artifact)
 - **Deliverable:** Owner review of the published comparison artifact identified 2 real issues
   neither Track 5 nor any prior Claim (1-4c) checked: (1) the duplicate-connector dashed arc bows

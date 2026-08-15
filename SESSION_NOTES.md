@@ -14,18 +14,128 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 575 Handoff Evaluation (by Session 576)
+**Score: 8/10.** **What helped:** the `BACKLOG.md` item S575 filed (found via owner review of a
+published artifact) named the exact root-cause line (`R/makePedigreeDiagramData.R:924`,
+`finalUnitX <- (anchorX + nonAnchorX) / 2`) and gave a precise, reproducible baseline (100/251 edges
+>200 units, 73/251 >500, max 10,687) -- this session's own fresh measurement reproduced those
+figures almost exactly (§1.4 of the resulting design doc), confirming the handoff's own numbers were
+accurate, not just plausible-sounding. The item's own "needs its own design session" framing and
+Effort L tag correctly predicted the scope; `SESSION_RUNNER.md`'s Architecture-vs-Design workstream
+choice was also implicitly signaled by this project's own established pattern across 5 prior
+sessions (S432/S458/S464/S471/S473/S572), which S575 didn't need to restate. **What was missing:**
+`HANDOFFS.md`'s S575 receipt pointed `key_files` at `.addRectilinearWaypoints()`
+(`R/makePedigreeDiagramData.R:1466-1611`) -- Track 5's own surface, not `.positionMatingUnitForest()`
+(`:584-1011`), the function this session actually needed to read in depth; a few minutes of
+independent navigation were needed to locate the real target. **What was wrong:** nothing found
+inaccurate -- S575 explicitly declined to investigate candidate fixes ("not investigated further
+this session"), so it could not have been expected to anticipate the duplicate-node side effect this
+session discovered only by empirically validating its own proposed fix (§1.4/§2.2 of the design
+doc) -- that gap belongs to this session's own analysis, not a missed handoff obligation. **ROI:**
+high -- the accurate root-cause line and reproducible baseline meant zero time re-deriving what the
+problem even was; the only cost was locating the right function to read.
+
 ### What Session 576 Did
 **Deliverable:** Design document for the pedigree-diagram parent-child positioning offset fix
-(`BACKLOG.md` Housekeeping, found S575, owner review of the published comparison artifact) --
-evaluating candidate fixes (deriving a mating unit's final x from its own children's positions vs.
-propagating `sweepMinSep()`'s row-stretch factor to dependent rows), following
-`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md` -- matching this project's established
-precedent for pedigree-diagram positioning-algorithm decisions (S432/S458/S464/S471/S473/S572).
-(IN PROGRESS)
-**Started:** 2026-08-14
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+(`BACKLOG.md` Housekeeping, found S575) -- **DONE, ratified.**
+`docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md`, following
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md` (matching this project's established
+precedent for pedigree-diagram positioning-algorithm decisions: S432/S458/S464/S471/S473/S572).
+**Started/Completed:** 2026-08-14. TDD phase: N/A/PRE-RED throughout -- this document is a plan, not
+code, matching Track 4's own precedent; no RED phase entered, no `R/`/`tests/` file changed.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SESSION_RUNNER.md`, `SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list` [12 open], `git status`/`log`/`diff --stat` [102 commits ahead
+of `origin/master`, unpushed; 1 untracked file -- the same already-investigated Quarto render
+byproduct], `methodology_dashboard.py` [Health 96/100, 1 HIGH risk -- `SESSION_NOTES.md` past the
+2,000-line cap, unchanged from S575's own report], `gh run list --branch master --limit 10`
+[scheduled `shinytest2.yaml` red 2 consecutive days, reported not diagnosed; all push-triggered
+workflows green], ledger reconcile [`CHANGELOG.md`/`HANDOFFS.md` frontiers both == `HEAD`, zero
+gap]). Rendered a 5-item priorities list (4 in the `AskUserQuestion` picker, 1 noted below it) --
+owner picked the parent-child positioning offset design. **(2)** Phase 1B: claim stub written to
+`SESSION_NOTES.md`/`HANDOFFS.md` (`status: pending`), committed (`43dac0f7`). **(3)** Read
+`ARCHITECTURE_WORKSTREAM.md` and the Track 4 design plan
+(`docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md`) in full as the direct structural
+precedent for this project's own design-document conventions (workstream choice, §-numbering, the
+"what is already decided" scoping discipline). **(4)** Read `.positionMatingUnitForest()`
+(`R/makePedigreeDiagramData.R:584-1011`) and `.addRectilinearWaypoints()`'s D1/D2 loops
+(`:1497-1595`) in full to trace the exact root cause: a mating unit's `x` is centered over its own
+children during the recursive descent (`unitProvX`), then OVERRIDDEN by the midpoint of its 2
+parents' positions (`finalUnitX`, the shipped formula) -- decoupling it from where its children
+actually render, and D1's sibship-bar drawing (parent/union point to each child, sorted by x) is
+what turns that decoupling into the long horizontal runs the owner observed. **(5)** Wrote and ran a
+throwaway validation script (`/private/tmp/.../validate_child_centered_union.R`, not committed)
+against the real 375-individual bundled fixture (`obfuscated_rhesus_mhc_ped.csv`) via
+`.buildMatingUnitForest()` + `.positionMatingUnitForest()` directly: reproduced S575's own baseline
+exactly (100/251 edges >200 units, 73/251 >500, max 10,687 -- confirmed the "251" figure is
+`nrow(childEdges)`, one row per edge, not per union, and that S575's reported units are
+`makePedigreeMatingLayout()`'s own `xScale = 120L`-scaled units, not the raw units
+`.positionMatingUnitForest()` itself returns). **(6)** Measured "Candidate A" (recompute a union's
+`x` as the midpoint of its own children's final x-span instead of its 2 parents): 9/251 edges >200
+(91% reduction), max 4,121 (61% reduction) -- then investigated the 9 residual edges directly and
+found they trace to a DIFFERENT phenomenon (2-3 direct siblings whose own descendant-subtree sizes
+differ enough that they land far apart in x regardless of the union's position, e.g. `__union_15`'s
+2 children 68.68 raw units apart, more than half the fixture's own x-range) -- explicitly out of
+scope, not folded into this fix's own completion claim. **(7)** Also measured a metric NOT named by
+the BACKLOG item's own framing (duplicate-node-to-union distance, checked because the duplicate
+node's own `x` formula references the same value being changed) and found Candidate A ALONE would
+regress it badly (mean 62->849, max 120->10,567 scaled units) -- a real side effect the union-only
+fix would have introduced. Extended the design (recompute the duplicate's `x` from the NEW union
+position; broaden the existing exact-coincidence de-collision pass to cover duplicates, since
+removing them from Track 3's sweep loses that protection) and re-measured: distance back to a
+constant 48 (tighter than baseline), one new exact-coincidence collision found and confirmed closed
+by the broadened de-collision pass (worst gap 0.001 after, matching the pass's own existing
+precedent). **(8)** Wrote the design document in full (9 sections, matching Track 4's own template:
+Context/Decision/Rationale/Alternatives/Impact/Migration/Verification/Out-of-Scope/Ratification).
+**(9)** Ratified via `AskUserQuestion` (3 options: proceed as written/recommended, proceed with
+modifications, hold) -- owner selected "proceed as written." **(10)** Downstream updates: the
+remediation plan's own §4 (new "Track 6" entry) and §7b (pointer to the new design doc); the
+originating `BACKLOG.md` item annotated "DESIGN RATIFIED S576, READY for implementation"; a NEW
+`BACKLOG.md` Housekeeping item filed this same session for the residual sibling-subtree-width-
+asymmetry finding (§6 above) -- matching this project's own precedent of filing a discovered finding
+in the session that found it, not deferring the filing to a later session (an inconsistency in this
+document's own first draft, self-caught and corrected before close-out, not by the owner).
+**(11)** Appended `PROJECT_LEARNINGS.md` Learning 582 (the duplicate-node side-effect discovery and
+its own generalizable practical rule: grep every OTHER computation reading a value before changing
+it, not just the one the originating finding named).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation/tutorial-article/`NEWS.Rmd`/
+`a2interactive.Rmd`/GitHub-issue-close-out/lint/`_pkgdown.yml` checklists all N/A -- no `R/` or
+`tests/` file was touched this session (a design document only; the throwaway validation script was
+never committed). Matches the established precedent for planning/design sessions (e.g. Track 4's own
+S572) that produce a document, not a code change.
+
+**Phase 3E runtime smoke test:** N/A by the letter of the rule -- no runtime behavior changed this
+session (a design document, not an implementation). Not silently skipped: stated explicitly, matching
+this project's own established convention for design-session close-outs (Track 4's S572 used the
+same framing).
+
+**Self-assessment (Session 576): 8/10.** **Strengths:** (1) Ran real empirical validation against
+the actual bundled 375-individual fixture before ratifying -- reproduced S575's own baseline exactly
+first (confirming measurement methodology), then measured the proposed fix, rather than reasoning
+from theory alone. (2) Discovered and closed a genuine regression the fix alone would have
+introduced (the duplicate-node side effect, §7 above) by checking a metric the originating BACKLOG
+item never asked for -- directly exercising the "grep every other computation reading the value
+being changed" discipline this session's own Learning 582 generalizes, and a concrete instance of
+the independent-adversarial-verification practice this project's own standing gap
+(S551-S575, flagged unaddressed across 9+ consecutive sessions) has been missing. (3) Honestly scoped
+the residual (9/251 edges, a distinct out-of-scope phenomenon) rather than claiming full resolution
+-- directly applying Learning 581's own practical rule from the immediately preceding session, the
+exact discipline this whole design session exists because a prior overclaim was corrected. (4)
+Filed the newly-discovered residual as its own `BACKLOG.md` item this same session, not deferred.
+(5) Followed this project's own established Architecture-vs-Design workstream convention without
+being told, reasoning from 5 prior sessions' own pattern rather than defaulting to the task's
+surface-level "design" wording. **Weaknesses:** (1) No independent adversarial-verification pass by
+a separate agent/session on this design itself -- the same standing gap S551-S575 flagged, now
+S576, a 10th consecutive session without it; this session's own self-run empirical validation,
+however rigorous, is not a substitute for genuine independent skepticism. (2) This document's own
+first draft contained a self-introduced inconsistency (§8's "file at implementation close-out"
+language, contradicting this project's own established "file immediately" precedent) -- caught and
+corrected before close-out by re-reading the project's own precedent, not by an external check;
+worth naming plainly rather than silently fixing without a trace. (3) Validated against only the one
+real bundled fixture (matching Track 4/5's own precedent, but a genuinely independent second data
+point -- e.g. a synthetic fixture engineered to stress polygamy more directly -- was not sought).
+**Ledger:** recorded in `CHANGELOG.md` (this session's claim, deliverable, and close-out entries).
 
 ### Session 575 Post-Close-Out Correction (same session, owner review)
 **This corrects the Session 575 close-out below -- read this first.** After Session 575 closed out
