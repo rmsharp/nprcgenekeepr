@@ -206,8 +206,7 @@ gotchas: Track 6's own "200 units" violating-edge threshold is stated in SCALED 
 runtime_smoke: n/a -- docs-only investigation, no R/ file touched, no runtime behavior changed
   (matches the S588 design-session precedent).
 changelog_ref: see CHANGELOG.md 2026-08-15 entries, S589 claim + close-out, [BL-N]-tagged.
-commit: pending -- this close-out commit's own sha, unknowable until after it exists; will
-  self-reconcile in a follow-up commit, matching the S562-S588 precedent.
+commit: 691071a0 (close-out)
 ```
 Self-score breakdown: **9/10.** Strengths: faithful full-pipeline harness cross-checked
 byte-identical against the shipped function at both scales before trusting any comparison; caught

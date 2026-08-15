@@ -138,6 +138,11 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] S589: reconcile HANDOFFS.md commit self-reference (`691071a0`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> the real
+  sha (`691071a0`, close-out) — unknowable until after that commit existed. Matches the
+  established S562-S588 precedent.
+
 ### 2026-08-15 · [BL-N] S589: close out (pedigree-diagram non-rigid layout feasibility spike)
 - **Deliverable:** Ran the pedigree-diagram layout feasibility spike (`BACKLOG.md`, found S588,
   HIGH PRIORITY) — `docs/planning/pedigree-diagram-nonrigid-layout-spike-plan.md` + a runnable
