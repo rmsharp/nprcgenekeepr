@@ -14,6 +14,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 584 Did
+**Deliverable:** Diagnose the red scheduled `shinytest2.yaml` CI run (failing on consecutive
+scheduled runs since 2026-08-13, first flagged S581, never diagnosed) -- root cause identified with
+evidence from the actual failing run. (IN PROGRESS)
+**Started:** 2026-08-15.
+**Status:** Session claimed. Work beginning. Scoped as diagnosis; if the root cause proves to be a
+small bounded fix, it goes through a `AskUserQuestion` phase gate before any code is touched
+(Strict TDD applies to any `R/` or test change) -- if large, it is filed and this session closes out
+on the diagnosis alone.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 582 Handoff Evaluation (by Session 583)
 **Score: 9/10.** **What helped:** S582's `key_files` correctly pointed at
 `R/modPedigree.R:419-429` (`.currentEdgeStyle()`), which this session re-read directly to explain

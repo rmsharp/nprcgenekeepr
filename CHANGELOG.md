@@ -138,6 +138,15 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] S584: claim (diagnose the red scheduled shinytest2.yaml CI run)
+- **Deliverable:** Session claimed. Phase 0's unconditional `gh run list --branch master` check
+  (the `CLAUDE.md` convention ratified S545) found the scheduled `shinytest2.yaml` workflow
+  `completed failure` on both 2026-08-13 and 2026-08-14 -- first flagged by S581's own Phase 0,
+  carried forward unchanged through S582/S583's handoffs, never diagnosed. Owner picked this as
+  this session's deliverable from the Phase 0 priorities picker. Scoped as diagnosis (root cause
+  with evidence from the actual failing run); any fix goes through a phase gate first. Phase 1B
+  stub written to `SESSION_NOTES.md`; pending receipt opened in `HANDOFFS.md`.
+
 ### 2026-08-15 · [ad hoc] S583: reconcile HANDOFFS.md commit self-reference (`ce830dbe`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> `ce830dbe`
   (the close-out commit's own sha, unknowable until after that commit was made) -- matching the

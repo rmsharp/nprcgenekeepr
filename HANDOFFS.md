@@ -136,6 +136,24 @@ This file currently holds **2** receipt(s). Computed by `methodology_trim.py` on
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S584
+date: 2026-08-15
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Diagnose the red scheduled shinytest2.yaml CI run -- failing on consecutive scheduled
+  runs since 2026-08-13, first flagged S581, undiagnosed across 3 sessions. Deliverable is the
+  diagnosis (root cause with evidence from the actual failing run), not necessarily a fix.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S583
 date: 2026-08-15
 status: complete
