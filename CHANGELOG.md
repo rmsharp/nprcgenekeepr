@@ -138,6 +138,22 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] S591: close out (live investigation — issues #160/#161, no code changed)
+- **Deliverable:** Close-out for a session with no pre-declared task (Phase 1B was skipped — see
+  `SESSION_NOTES.md` self-assessment) that ran as organic, user-driven investigation: answered a
+  history question via a 5-agent research workflow, corrected 2 self-caught-by-user errors (a
+  mischaracterized evidence source; tool-result images that never reached the user), generated
+  fresh current-HEAD kinship2-vs-nprcgenekeepr renders and published them as an Artifact, found
+  and filed 2 real pedigree-diagram rendering defects (issues #160, #161) with coordinate-level
+  evidence, confirmed the already-tracked S583 `BACKLOG.md` item live, and added a planning-session
+  `BACKLOG.md` item for the shared root cause. Full narrative in `SESSION_NOTES.md` "What Session
+  591 Did." `PROJECT_LEARNINGS.md` Learning 604 added (verify-against-ground-truth methodology
+  gap); `CLAUDE.md`'s stale learnings-count pointer fixed (603→604, S590→S591). Self-score 6/10 —
+  real weaknesses named plainly (Phase 1B skipped; TDD phase never declared per-response; session
+  shape doesn't fit the "one deliverable" model). No `R/`/`tests/` file touched; runtime smoke test
+  n/a. `HANDOFFS.md` receipt written directly as `status: complete` (no prior `pending` stub
+  existed, since Phase 1B was skipped).
+
 ### 2026-08-15 · [BL-N] Added planning-session backlog item for the shared collision-avoidance gap
 - **Deliverable:** Owner-directed. Added a `BACKLOG.md` Active item proposing a dedicated planning
   session to address the shared root cause behind issue #160, issue #161, and the S583
