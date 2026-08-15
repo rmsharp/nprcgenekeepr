@@ -14,15 +14,162 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 577 Handoff Evaluation (by Session 578)
+**Score: 8/10.** **What helped:** S577's ledger reconcile and priorities-list housekeeping left
+`BACKLOG.md` accurate and uncluttered — the Track 6 item (design ratified S576, READY, Effort L)
+sat cleanly at the top of Housekeeping with its full context (root cause, ratified formula,
+measured headline figures, plan-doc pointer) intact and correct; the priorities-list
+`AskUserQuestion` picker Phase 0 renders from that same tag matched exactly what I picked. The
+CI-status finding (`shinytest2.yaml` red 2 consecutive days) was surfaced accurately and remained
+correctly unresolved/unclaimed, not silently dropped. **What was missing:** nothing S577 owed —
+S577 worked a different, unrelated BACKLOG item (the duplicate-connector arc fix) and correctly
+left Track 6 untouched for a future session, exactly as its own design doc's status line
+prescribed ("Implementation is a separate future session"). Not a gap in S577's own handoff; the
+2 implementation-order/blast-radius corrections this session found were never S577's to catch —
+they belong to Track 6's own S576 design session, which didn't fully validate the ratified §2.1
+snippet's literal pipeline placement (see this session's own Learning 584). **What was wrong:**
+nothing found inaccurate. **ROI:** solid — the accurate BACKLOG state and CI note both saved
+verification time at Phase 0, even though S577's own deliverable was orthogonal to this session's.
+
 ### What Session 578 Did
 **Deliverable:** Track 6 Pedigree Diagram child-centered union-position implementation
 (`BACKLOG.md` Housekeeping, design ratified S576, plan doc
-`docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md`) (IN PROGRESS)
-**Started:** 2026-08-14
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+`docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md`) — **DONE**.
+Following `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` under Strict TDD (PRE-RED→RED
+and RED→GREEN both phase-gated via `AskUserQuestion`; GREEN→REFACTOR offered and explicitly
+skipped — diff judged already minimal). **Started/Completed:** 2026-08-14.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SESSION_RUNNER.md`, `SAFEGUARDS.md`,
+`SESSION_NOTES.md`, `gh issue list` [12 open, unchanged], `git status`/`log`/`diff --stat` [113
+commits ahead of `origin/master`, unpushed; 1 untracked Quarto-render byproduct, already
+S577-investigated], `methodology_dashboard.py` [Health 96/100, 1 HIGH risk —
+`SESSION_NOTES.md` past the 2,000-line cap], `gh run list --branch master --limit 10` [scheduled
+`shinytest2.yaml` red 2 consecutive days, unchanged/undiagnosed; all push-triggered workflows
+green]). Ledger reconcile: `CHANGELOG.md`/`HANDOFFS.md` frontiers both at `HEAD`, clean no-op.
+Rendered the priorities list (4 items in the `AskUserQuestion` picker) — user picked "Track 6
+implementation." **(2)** Phase 1B claim stub committed (`ca921a92`). **(3)** Read
+`docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md` in full and
+re-verified its contract against current `R/makePedigreeDiagramData.R:584` onward (gate (a)
+re-verification) — line numbers drifted by a few from S576's own citations (unrelated intervening
+S577 work in a different section) but structure unchanged, no drift. **(4) Pre-RED empirical
+validation** (throwaway scripts, not committed): re-implemented the full function with Extended
+Candidate A applied at its literal §2.1-described location — found the §2.4 invariant breaks when
+a union's child is also a swapped `orderBySex` parent in a deeper union (19/251 violations, not
+the ratified 9/251). Moving `finalUnitX`/`dupX` to compute AFTER `orderBySex` fixed it exactly
+(9/251, max 4,121.37, duplicate-to-union distance 48.00/48.00 — all matching S576's ratified
+figures). Also found removing duplicates from Track 3's sweep pool (§2.2) shifts a real
+individual's x non-trivially (`9VGCCV`, 0.5 units on the small fixture) — a blast-radius
+correction the design doc's own §5 table didn't state. Located the exact pre-existing duplicate/
+union collision (`__dup_LUPGF8_3` vs `__union_191`, gen 4) under UNMODIFIED source. **(5)**
+Presented both findings via `AskUserQuestion` (PRE-RED→RED gate) — approved as written. **(6)
+RED:** added 2 new tests to `test_positionMatingUnitForest.R` (the §2.4 invariant on the small +
+real fixtures; a duplicate-vs-any-node exact-coincidence test) and updated the "issue #143 fix"
+exact-value block (8 of 13 `expectPos()` values, re-derived from the throwaway reimplementation).
+Confirmed RED: 3 touched tests fail (8/27, 225/241, 1/1), 25 others pass unchanged. Committed
+(`0780cdfd`). **(7)** `AskUserQuestion` (RED→GREEN gate) — approved as written. **(8) GREEN:**
+implemented the reordered pipeline in `.positionMatingUnitForest()` — dropped `unitProvX`/anchor-
+nonAnchor-orphan branching entirely (net simplification), moved `orderBySex` earlier, computed
+`finalUnitX`/`dupX` after it, broadened the final de-collision pass to all node categories.
+Running the full targeted file surfaced 2 FURTHER pre-existing test failures the pre-RED grep
+missed (derived-equality assertions, not magic-number literals: the "basic trio" test's own
+`unionX == (p1x+p2x)/2`, and the Track 3 minSep-guarantee test asserting the full guarantee over
+duplicates too) — fixed both within GREEN, matching the "re-derive from live output" precedent.
+Confirmed GREEN: all 30 tests in the file pass; the 3 other potentially-affected test files
+(`test_addRectilinearWaypoints.R`/`test_makePedigreeMatingLayout.R`/`test_buildMatingUnitForest.R`)
+pass unchanged (confirmed via grep beforehand: 0 hardcoded waypoint-coordinate assertions exist);
+full clean regression 1 pre-existing unrelated failure (`test_wordlist_coverage.R`), 0 new;
+`lintr::lint_package()` 0 lints on both touched files. Committed (`f65ecbea`). **(9)**
+`AskUserQuestion` (GREEN→REFACTOR gate) — REFACTOR explicitly skipped (the reorder IS the
+structural change §2 called for; no further cleanup identified). **(10) Runtime/visual
+verification (Phase 3E):** rendered + `chromote`-screenshotted the small GA204Z/8LKBV9 fixture
+(both `edgeStyle` values) — visually confirmed `GA204Z` sits almost directly below its own
+parent union. Rendered + screenshotted the full real 375-individual fixture (both `edgeStyle`
+values): 0 diagram-related console errors, layout visually sane at scale. A quick WCPXHD-only
+11-node subgraph attempt produced a misleading crowded render (own construction artifact — lost
+multi-generation context recomputing `gen` on a truncated subset); not used as evidence,
+documented as such in the plan doc. **(11)** Downstream updates (round 1): marked the
+`BACKLOG.md` item DONE with the corrected figures; added §10 (Implementation Record) to the plan
+doc. Committed (`228b5071`). **(12)** Added `PROJECT_LEARNINGS.md` Learning 584 (the
+pipeline-ordering interaction + derived-equality blast-radius findings). **(13) `devtools::check()`
+found a THIRD, genuinely new problem**: 5 test failures, not the expected 1 pre-existing
+`test_wordlist_coverage.R` failure — run as its own separate step per `CLAUDE.md`'s Build/Test/
+Verify table, not skipped as redundant with the already-green `pkgload::load_all()` + `test_dir()`
+regression read that preceded it (that distinction is exactly what caught this). Root-caused via
+a cheap `LC_ALL=C` reproduction (no code change): the broadened de-collision pass (§2.3) and
+`sweepMinSep()`'s own tie-break both sort node ids via plain `order()`, which is
+`LC_COLLATE`-locale-dependent for character vectors — WHICH of 2 exactly-tied same-gen nodes
+absorbs the pass's 1e-3 epsilon nudge differed between the interactive session's `en_US.UTF-8`
+and `devtools::check()`'s own build environment. A genuinely PRE-EXISTING latent defect (the
+original pre-Track-6 pass used the same non-radix `order()`) that this decision's own widened
+node-category coverage first exposed as an observable, hardcoded-test-breaking symptom. **(14)**
+Fixed with `method = "radix"` on both `order()` calls (R's only locale-independent
+character-vector ordering); updated 4 `expectPos()` values in the small-fixture exact-value test
+to match the new locale-stable output (the epsilon nudge now lands on `unit1`/`unit4` instead of
+`8DKELJ`/`FJIB3R`). Confirmed: targeted file green under both locales; full clean regression
+under `LC_ALL=C` 1 pre-existing failure/0 new; `lintr::lint_package()` 0 lints. Committed
+(`b0467657`). **(15)** Added `PROJECT_LEARNINGS.md` Learning 585 (the locale-dependence finding
+and practical rule). **(16)** Downstream updates (round 2): documented the locale finding/fix in
+`BACKLOG.md` and plan doc §10. Committed (`26f7d909`). **(17)** Re-ran `devtools::check()` a
+final time to confirm: `[FAIL 1 | WARN 33 | SKIP 197 | PASS 5961]` — exactly the known
+pre-existing `test_wordlist_coverage.R` failure, 0 warnings, 1 note (the pre-existing
+`vignettes/figure` knitr leftover) — clean against the established baseline, matching S577's own
+precedent exactly.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation/tutorial-article/`a2interactive.Rmd`/
+GitHub-issue-close-out/`_pkgdown.yml` checklists all N/A — no new displayed statistic, no new
+Shiny tab/control, no new script-callable function/parameter, not tied to a GitHub issue number
+(not filed as one, matching this BACKLOG item's own convention), no new export. NEWS.Rmd checklist
+N/A — matches Track 3/4/5's own precedent (internal rendering-algorithm correctness fixes to an
+already-shipped feature, not a new export or Shiny control; confirmed via `grep` that none of
+Track 3/4/5 have a `NEWS.Rmd` mention either). Lint checklist DONE — 0 lints on both touched files.
+
+**Phase 3E runtime smoke test:** DONE, not skipped — see step (10) above. This change affects live
+Shiny rendering (Pedigree Diagram tab, both `edgeStyle` values), so build/test passing alone was
+treated as necessary but not sufficient.
+
+**Self-assessment (Session 578): 9/10.** **Strengths:** (1) Did not implement the ratified design
+doc's own §2.1 code snippet literally at face value — built a full throwaway reimplementation
+(not just the isolated formula) and ran it against the real fixture BEFORE writing any RED test,
+catching a genuine pipeline-ordering interaction (the `orderBySex` reorder requirement) the design
+session's own narrower validation didn't simulate. This is a second consecutive session applying
+independent empirical verification to a prior session's own ratified reasoning, not just its code
+(S577's Learning 583 did this to a BACKLOG item's framing; this session did it to a ratified
+design doc's own implementation snippet) — direct progress against this project's own long-flagged
+standing gap (no independent adversarial-verification pass, S551+). (2) Found and disclosed a
+blast-radius correction (§5's "otherwise unchanged" claim) the design doc itself got wrong, with
+the exact measured magnitude, rather than silently absorbing it into the implementation. (3)
+Caught 2 FURTHER pre-existing test breaks during GREEN that a systematic pre-RED grep (searching
+for hardcoded x-value literals) structurally could not find (derived-equality assertions) — fixed
+them rather than treating an unexpected test failure as a signal to weaken the new test's own
+assertion. (4) Ran `devtools::check()` as its OWN separate step rather than treating the
+already-green `pkgload::load_all()` + `test_dir()` regression as sufficient — exactly this
+distinction is what caught a genuinely pre-existing, previously-invisible locale-dependent
+non-determinism defect (`order()`'s `LC_COLLATE` sensitivity) that this session's own change first
+exposed as an observable symptom. Root-caused it with the cheapest possible reproduction
+(`LC_ALL=C`, no code change) before touching source, fixed it with the smallest correct change
+(`method = "radix"`), and re-verified against BOTH the targeted file and the full regression suite
+under the failing locale, not just the original one. (5) Full TDD discipline maintained across a
+session with 3 genuine mid-flight corrections (2 Pre-RED, 1 post-GREEN): phase declared every
+response, both gates run as real `AskUserQuestion` calls with the corrections explicitly named as
+part of the "exact planned actions," RED confirmed failing for the right reasons before GREEN. (6)
+Live visual verification included an honest negative result (the WCPXHD subgraph attempt) rather
+than omitting it or passing off a misleading render as evidence. **Weaknesses:** (1) The
+WCPXHD-subgraph render attempt was a wasted step that a moment's more thought (recomputing `gen`
+on a truncated subset destroys the multi-generation context that spreads a polygamous anchor's
+mates apart) would have avoided — cheap in tokens, but worth naming. (2) Still no independent
+adversarial-verification pass by a SEPARATE agent/session on this fix — the same standing gap
+flagged for 11+ consecutive prior sessions, now 12, including this one; this session's own Pre-RED
+rigor and the `devtools::check()` catch are partial mitigants but not a substitute for a genuinely
+independent second reviewer — notably, the locale defect was caught by RUNNING the authoritative
+check, not by any reasoning step that could substitute for a second reviewer's eyes.
+**Follow-up done, not just noted:** ran `grep -n "order(" R/*.R` across the whole package (not
+just the touched file) to check whether the same locale-dependent tie-break class exists
+elsewhere — confirmed it does, most notably in 2 exported functions (`qcStudbook()`,
+`orderReport()`) whose row-order output could differ across locales. Filed as its own scoped
+`BACKLOG.md` Housekeeping item rather than fixed (out of scope for this deliverable, "report,
+don't fix mid-session" precedent) or silently dropped.
+**Ledger:** recorded in `CHANGELOG.md` (this session's claim, RED, GREEN, locale-fix, and 2
+downstream-update entries).
 
 ### Session 576 Handoff Evaluation (by Session 577)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S576 receipt's `next_steps` explicitly named

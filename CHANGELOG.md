@@ -138,6 +138,67 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [BL-N] S578: Track 6 downstream updates for locale-independence fix (BACKLOG, plan doc section 10) (`26f7d909`)
+- **Deliverable:** Documents the `devtools::check()`-found, `LC_ALL=C`-reproduced locale-dependent
+  tie-break defect and its `method = "radix"` fix in the `BACKLOG.md` DONE item and the plan
+  doc's section 10 Implementation Record. Also files a new `BACKLOG.md` Housekeeping item for the
+  same defect class found more broadly across the package (`qcStudbook()`, `orderReport()`), not
+  fixed this session.
+
+### 2026-08-14 · [BL-N] S578: locale-independent tie-break in de-collision pass (`b0467657`)
+- **Deliverable:** `devtools::check()` (run as its own separate build-equivalent step, not
+  skipped as redundant with the already-green `pkgload::load_all()` + `test_dir()` regression
+  read) surfaced 5 test failures, not the 1 known pre-existing `test_wordlist_coverage.R`
+  failure. Root-caused via `LC_ALL=C` reproduction (no code change): `order()` on a character
+  node-id vector is `LC_COLLATE`-locale-dependent, so which of 2 exactly-tied same-gen nodes
+  absorbs the de-collision pass's 1e-3 epsilon nudge can differ between locales -- a genuinely
+  pre-existing latent defect (the original pre-Track-6 pass used the same non-radix `order()`)
+  that this session's own widened node-category coverage first exposed as an observable,
+  hardcoded-test-breaking symptom. Fixed by adding `method = "radix"` (R's only
+  locale-independent character-vector ordering) to both affected `order()` calls in
+  `.positionMatingUnitForest()`; updated 4 `expectPos()` values in
+  `test_positionMatingUnitForest.R` to match the new locale-stable output. Verified: targeted
+  file green under both `en_US.UTF-8` and `LC_ALL=C`; full clean regression under `LC_ALL=C` 1
+  pre-existing unrelated failure, 0 new; `lintr::lint_package()` 0 lints; `devtools::check()`
+  re-run clean against the established baseline only. `PROJECT_LEARNINGS.md` Learning 585 records
+  the finding.
+
+### 2026-08-14 · [BL-N] S578: Track 6 downstream updates (BACKLOG, plan doc section 10) (`228b5071`)
+- **Deliverable:** Marked the `BACKLOG.md` Housekeeping item DONE (implemented S578). Added
+  section 10 (Implementation Record) to
+  `docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md` documenting the
+  2 Pre-RED corrections, re-measured headline figures, and verification evidence.
+
+### 2026-08-14 · [BL-N] S578: GREEN, Track 6 child-centered mating-unit position (`f65ecbea`)
+- **Deliverable:** Implements `docs/planning/pedigree-diagram-track6-child-centered-union-
+  position-plan.md` §2 (Extended Candidate A, design ratified S576) in
+  `.positionMatingUnitForest()` (`R/makePedigreeDiagramData.R`): a mating unit's `finalUnitX` is
+  now the midpoint of its own children's final x (was its 2 parents' midpoint); a duplicate
+  node's `dupX` is now derived from the new `finalUnitX`; the final de-collision pass is
+  broadened to cover every node (real, duplicate, union). Pre-RED empirical validation found the
+  `orderBySex` block must move earlier in the function (finalUnitX/dupX computed after it, not
+  at §2.1's literally-described pre-orderBySex location) for the §2.4 invariant to hold. Also
+  fixed 2 pre-existing tests whose assertions directly encoded the old parent-midpoint behavior.
+  Verified: all 30 tests in `test_positionMatingUnitForest.R` pass; full clean regression 1
+  pre-existing unrelated failure, 0 new; `lintr::lint_package()` 0 lints; real-fixture
+  re-measurement matches the ratified figures (100/251→9/251 violating edges, 61.94/120.12→
+  48.00/48.00 duplicate-to-union distance, 0 exact coincidences); live `visNetwork`/`chromote`
+  render (both `edgeStyle` values, small + full real fixture) 0 console errors, visually
+  confirms unions now sit close to their own children.
+
+### 2026-08-14 · [BL-N] S578: RED, Track 6 child-centered union-position invariant (`0780cdfd`)
+- **Deliverable:** Added 2 new tests to `test_positionMatingUnitForest.R` (the §2.4 invariant on
+  the small GA204Z/8LKBV9 fixture + the real 375-individual fixture; a duplicate-vs-any-node
+  exact-coincidence test) and updated the existing "issue #143 fix" exact-value test (8 of 13
+  `expectPos()` calls, re-derived live via a from-scratch reimplementation of Extended
+  Candidate A run against unmodified `.buildMatingUnitForest()` output). Confirmed RED: the 3
+  touched tests fail against unmodified source (8/27, 225/241, 1/1 expectations), including a
+  genuine pre-existing duplicate/union coincidence unrelated to this decision; all 25 other
+  tests in the file pass unchanged.
+
+### 2026-08-14 · [ad hoc] S578: claim session (Track 6 child-centered union-position implementation) (`ca921a92`)
+- **Deliverable:** Phase 1B claim stub written to `SESSION_NOTES.md`/`HANDOFFS.md`.
+
 ### 2026-08-14 · [ad hoc] S577: reconcile HANDOFFS.md commit self-reference (`3a1a8de4`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> `3a1a8de4`
   (the close-out commit whose sha the receipt itself couldn't name until after it was made) --

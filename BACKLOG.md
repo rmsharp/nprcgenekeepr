@@ -105,6 +105,24 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `method = "radix"` (locale-independent byte-order) on both affected `order()` calls;
       re-verified both locales now produce identical, matching output. See `PROJECT_LEARNINGS.md`
       Learning 585. See `CHANGELOG.md`.
+- [ ] (found S578, 2026-08-14, a broader grep sweep after fixing the locale-dependent `order()`
+      defect above, READY, Effort M -- not scoped per-instance) **The same locale-dependent
+      `order()` tie-break class (`PROJECT_LEARNINGS.md` Learning 585) exists more broadly across
+      the package, not just in `.positionMatingUnitForest()`.** `grep -n "order(" R/*.R` found
+      several more character-vector sorts using plain (non-`method = "radix"`) `order()`, most
+      notably 2 EXPORTED, widely-used functions where the affected sort is a user-facing row
+      ORDER (not a computed VALUE, so lower severity than this session's own bug, but still a
+      real cross-locale reproducibility gap): `qcStudbook()` (`R/qcStudbook.R:323`,
+      `order(gen, id)`) and `orderReport()` (`R/orderReport.R:81,93`, `order(id)`). Not
+      investigated exhaustively or fixed this session (out of scope for the Track 6 deliverable,
+      matching `PROJECT_LEARNINGS.md` Learning 382's "report, don't fix mid-session" precedent) --
+      the full `grep` output (not filtered per-instance for severity) is in this session's own
+      `SESSION_NOTES.md`. A future session should (a) re-run the grep fresh (this list may be
+      incomplete/stale by the time it's picked up), (b) classify each hit by whether it sorts a
+      character id/label column (locale-sensitive) vs. a numeric column (not affected), (c) for
+      each real hit, decide case-by-case whether `method = "radix"` is the right fix (it is for
+      plain ascending id/label sorts; a sort mixing numeric and character keys via `with(...,
+      order(colA, colB))` needs closer inspection) rather than blanket-applying it.
 - [ ] (found S576, 2026-08-14, incidental to Track 6's own empirical validation of the
       child-centered union-position design, READY, Effort unknown -- not scoped) **Pedigree
       Diagram: sibling subtree-width asymmetry -- 2-3 direct children of the same mating unit can

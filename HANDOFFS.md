@@ -134,23 +134,90 @@ This file currently holds **10** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S578
 date: 2026-08-14
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 9
+predecessor_score: 8
 active_task: Track 6 Pedigree Diagram child-centered union-position implementation (BACKLOG.md
-  Housekeeping, design ratified S576, plan doc
-  docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md). Session claimed,
-  work beginning.
-what_was_done: pending
-next_steps: pending
-key_files: R/makePedigreeDiagramData.R:584 (.positionMatingUnitForest()), :842-845 (dupX), :889-891
-  (sweepIds/sweepGen), :896-926 (finalUnitX loop), :936-954 (final de-collision pass)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+  Housekeeping, design ratified S576) -- DONE. A mating unit's x is now the midpoint of its own
+  children's final x (was its 2 parents' midpoint), fixing the widespread "children rendered far
+  from their own parent union" legibility gap.
+what_was_done: Implemented docs/planning/pedigree-diagram-track6-child-centered-union-position-
+  plan.md sec2 (Extended Candidate A) in .positionMatingUnitForest(). Pre-RED empirical validation
+  (throwaway reimplementation of the whole function, run against unmodified
+  .buildMatingUnitForest() output before touching production code) found 2 corrections beyond the
+  ratified design doc's own sec2.1 snippet: (1) finalUnitX/dupX must be computed AFTER the
+  orderBySex block, not at its literally-described pre-orderBySex location, or the sec2.4
+  invariant breaks for a union whose child is also a swapped parent in a deeper union (measured
+  19/251 violations without the reorder vs. the ratified 9/251 with it); (2) 3 real-individual x
+  values (not just union/duplicate) shift as a side effect of sec2.2 removing duplicates from
+  Track 3's sweep pool -- a real, non-epsilon consequence the design doc's own sec5 table did not
+  state. RED: 2 new tests + 1 updated exact-value test in test_positionMatingUnitForest.R,
+  confirmed failing (commit 0780cdfd). GREEN: implemented with the reorder; also fixed 2 FURTHER
+  pre-existing tests (derived-equality assertions a magic-number grep couldn't find) that directly
+  encoded the old formula (commit f65ecbea). devtools::check(), run as its own separate step
+  (not skipped as redundant with the already-green pkgload::load_all()+test_dir() regression),
+  THEN found a 3rd, genuinely new problem: 5 failures, not the expected 1 pre-existing
+  test_wordlist_coverage.R failure. Root-caused via a cheap LC_ALL=C reproduction (no code
+  change): order() on a character node-id vector is LC_COLLATE-locale-dependent, so WHICH of 2
+  exactly-tied same-gen nodes absorbs the de-collision pass's 1e-3 epsilon nudge differed between
+  the interactive en_US.UTF-8 session and devtools::check()'s own build environment -- a
+  genuinely PRE-EXISTING latent defect (the original pre-Track-6 pass used the same non-radix
+  order()) this decision's own widened node-category coverage first exposed. Fixed with
+  method = "radix" on both affected order() calls (commit b0467657); re-verified both locales
+  produce identical output. Confirmed GREEN (final): all 30 tests in the touched file pass under
+  BOTH locales; 3 other test files pass unchanged; full clean regression under LC_ALL=C 1
+  pre-existing unrelated failure (test_wordlist_coverage.R), 0 new; lintr::lint_package() 0
+  lints; devtools::check() re-run clean: [FAIL 1 | WARN 33 | SKIP 197 | PASS 5961] -- exactly the
+  known pre-existing wordlist failure, 0 warnings, 1 pre-existing note (vignettes/figure knitr
+  leftover). Re-measured on the real 375-individual fixture (now locale-stable): violating child
+  edges 100/251 -> 9/251, max offset 10,687 -> 4,121.25 (exact match to the ratified figure),
+  duplicate-to-union distance 61.94/120.12 -> 47.93/48.00, 0 exact x/gen coincidences post-fix.
+  Live/visual verification: rendered + chromote-screenshotted the small GA204Z/8LKBV9 fixture and
+  the full real fixture, both edgeStyle values, 0 console errors. A broader grep sweep
+  (`grep -n "order(" R/*.R`) after fixing found the SAME locale-dependent order() class exists
+  more broadly across the package (2 exported functions: qcStudbook(), orderReport()) -- filed as
+  its own BACKLOG.md item, not fixed (out of scope). Downstream updates: BACKLOG.md item marked
+  DONE (2 rounds -- initial + the locale-fix addendum), plan doc section 10 added/extended,
+  PROJECT_LEARNINGS.md Learnings 584+585 recorded. Commits: ca921a92 (claim), 0780cdfd (RED),
+  f65ecbea (GREEN), 228b5071 (downstream round 1), b0467657 (locale fix), 26f7d909 (downstream
+  round 2), plus this close-out commit.
+next_steps: BACKLOG.md's next Housekeeping item (found S576, READY but "Effort unknown -- not
+  scoped"): sibling subtree-width asymmetry -- 2-3 direct children of one mating unit can land far
+  apart in x purely from differing descendant-subtree sizes, independent of union position. This
+  is explicitly NOT a routine pickup -- it needs its own design/scoping session first (same core
+  recursive positioning algorithm as Track 6, one level down the recursion). Do not attempt a
+  quick implementation without that scoping session. Separately, 3 Effort-S/M READY items: the
+  new locale-dependent-order() sweep item this session filed (qcStudbook()/orderReport(), Effort
+  M); recapture the stale pb_diagram_legend.png screenshot (Effort S); trim CHANGELOG.md
+  (byte-budget archive trigger fired at 83,410 B vs the 65,536 B budget, Effort S).
+key_files: R/makePedigreeDiagramData.R:584 onward (.positionMatingUnitForest(), the whole
+  restructured mid-section -- sweep, orderBySex, finalUnitX/dupX, de-collision [now
+  method="radix"], final resweep [now method="radix"], in that new order); R/qcStudbook.R:323
+  and R/orderReport.R:81,93 (the 2 exported-function instances of the same locale-dependent
+  order() class, not yet fixed); tests/testthat/test_positionMatingUnitForest.R (2 new tests + 3
+  updated tests, plus 4 locale-stable value corrections); docs/planning/pedigree-diagram-track6-
+  child-centered-union-position-plan.md section 10 (the full corrected implementation record,
+  including the locale-fix addendum).
+gotchas: The next session touching .positionMatingUnitForest() must re-verify the NEW pipeline
+  order (sweep -> orderBySex -> finalUnitX/dupX -> de-collision -> final resweep) before changing
+  it further -- the orderBySex-before-finalUnitX ordering is LOAD-BEARING (Learning 584), not
+  incidental. Also LOAD-BEARING: both order() calls in this function now use method = "radix" --
+  reverting to plain order() reintroduces the LC_COLLATE-locale-dependent non-determinism
+  (Learning 585); this is invisible under a single-locale interactive session and only surfaces
+  via devtools::check() or an explicit LC_ALL=C rerun. A pre-RED grep for test blast radius must
+  search BOTH hardcoded magic-number assertions AND derived-equality assertions (e.g.
+  expect_equal(x, (a+b)/2)) -- the latter is invisible to a numeric-literal-only search. Any
+  future session that also fixes qcStudbook()/orderReport() (the filed follow-up item) should
+  re-run devtools::check() under LC_ALL=C explicitly, not just the faster test_dir() read, since
+  that is the ONLY thing that caught this class of defect this session.
+runtime_smoke: DONE -- rendered + chromote-screenshotted both the small GA204Z/8LKBV9 fixture and
+  the full real 375-individual fixture, both edgeStyle values ("direct"/"rectilinear"); 0
+  diagram-related console errors in either; visually confirmed a union now sits close to its own
+  child, matching the fix's intent.
+changelog_ref: 6 entries this session (claim, RED, GREEN, downstream round 1, locale fix,
+  downstream round 2) -- see CHANGELOG.md 2026-08-14 S578 entries.
 commit: pending
 ```
-<claim stub — filled at Phase 3D close-out>
 
 ```handoff
 session: S577
