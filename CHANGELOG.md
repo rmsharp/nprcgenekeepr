@@ -171,6 +171,15 @@ here, in this ledger, not in a frozen shard.
 
 ## 2026-08
 
+### 2026-08-15 · \[ad hoc\] S587: push commits (`d6deec73..94fcab60`)
+
+- **Deliverable:** Non-commit action, recorded per failure mode \#27.
+  Owner-directed push of this session’s 4 commits (`8b4d0f18` claim,
+  `45b44585` fix + close-out, `8d4ae826` HANDOFFS.md reconcile,
+  `94fcab60` CHANGELOG reconcile-of-reconcile) — the `inst/WORDLIST`
+  fix. Clean fast-forward, no force. `master` and `origin/master` in
+  sync.
+
 ### 2026-08-15 · \[ad hoc\] S587: reconcile HANDOFFS.md commit self-reference (`45b44585`)
 
 - **Deliverable:** Fixed this session’s own `HANDOFFS.md` receipt
