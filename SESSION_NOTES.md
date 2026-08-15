@@ -14,15 +14,98 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 586 Handoff Evaluation (by Session 587)
+**Score: 10/10.** **What helped:** the `next_steps` field named this exact item as recommendation
+(1) of 2 remaining S584-filed READY items, with the precise 4-word list (`matings`,
+`Rectilinear's`, `runnable`, `visNetwork's`), the target file (`inst/WORDLIST`), the "red since
+S573" provenance, and an explicit "do NOT bundle" instruction -- this session picked it directly
+from the Phase 0 priorities picker (option 1, same order) and never had to independently discover
+which words were flagged or why; a fresh `spelling::spell_check_package()` run at PRE-RED
+confirmed the exact same 4 words byte-for-byte. **What was missing:** nothing about the item
+itself. **What was wrong:** nothing -- the word list, file, and CI-red claim all verified exactly
+as stated; the one gotcha ("UNVERIFIED IN ACTUAL CI" pending a push) had already resolved itself
+by the time this session started, since S586 pushed before this session's own Phase 0 (confirmed
+live: `R-CMD-check.yaml` was red on `origin/master` for this exact reason). **ROI:** high -- zero
+rediscovery cost; this session's only original investigation was confirming each word's tracked-
+source occurrence before whitelisting it (a due-diligence step this task's own scope required
+regardless of handoff quality).
+
 ### What Session 587 Did
-**Deliverable:** Fix red `R-CMD-check.yaml` CI (`BACKLOG.md` Housekeeping, found S584) -- add the
-4 words `spelling::spell_check_package()` flags (`matings`, `Rectilinear's`, `runnable`,
-`visNetwork's`) to `inst/WORDLIST` (IN PROGRESS)
-**Started:** 2026-08-15
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Fix red `R-CMD-check.yaml` CI (`BACKLOG.md` Housekeeping, found S584) -- add 4
+words `spelling::spell_check_package()` flags (`matings`, `Rectilinear's`, `runnable`,
+`visNetwork's`) to `inst/WORDLIST` -- **DONE**. A Strict-TDD task: a pre-RED scope decision, then
+PRE-RED -> RED -> GREEN -> (GREEN->REFACTOR declined) all fired as `AskUserQuestion` calls before
+their phase's first file edit.
+**Started/Completed:** 2026-08-15.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, `git status`/`log`/`diff --stat`, `gh run list` [confirmed `R-CMD-check.yaml` RED
+on the 2 most recent pushes, `lint.yaml`/`pkgdown.yaml`/`test-coverage.yaml` all green],
+`methodology_dashboard.py` [96/100, 1 HIGH risk -- `SESSION_NOTES.md` 3,759 lines, unrelated to
+this task], ledger reconcile [`CHANGELOG.md` frontier == `HEAD`, no gap; `HANDOFFS.md` 1 commit
+behind but that commit was CHANGELOG-only after S586's receipt was already `complete` -- no
+backfill needed], untracked-file check [`docs/planning/pedigree-diagram-kinship2-reference-
+comparison.html` -- re-confirmed the known S558-class rendered-Quarto-output pattern via its
+tracked `.qmd` sibling and `.gitignore:28`, not a ghost session]). Rendered the 4-item priorities
+picker from `BACKLOG.md`'s READY-tagged items; user picked the WORDLIST/R-CMD-check fix.
+**(2)** Investigated the testable seam before declaring RED: read `tests/testthat/
+test_wordlist_coverage.R` in full and found `test_wordlist_coverage.R:111`'s existing coverage
+guard was ALREADY failing (confirmed live: 4 words flagged, matching BACKLOG.md's documented
+finding exactly) -- posed a pre-RED scope `AskUserQuestion` (whitelist all 4 as-is / reword the 2
+possessive-apostrophe occurrences and whitelist only the other 2); user picked whitelist-all-4.
+Grepped each word's tracked-source occurrence (`NEWS.md:232`/`vignettes/articles/*.qmd` for
+`matings`; `pedigree-diagram.qmd:44` for `Rectilinear's`; `pedigree-diagram.qmd:184` for
+`runnable`; `NEWS.md:208` for `visNetwork's`) to confirm all 4 are legitimate domain/package-name
+terms before whitelisting, not typos. **(3)** Presented the PRE-RED->RED gate explicitly
+classifying this as a non-classic-RED task (mirrors S586's own lint-fix classification): the
+pre-existing `test_wordlist_coverage.R:111` test IS the RED artifact (no new test needed), RED
+satisfied by re-confirming the live failure before any WORDLIST edit; approved. **(4)** Phase 1B
+claim stub + `HANDOFFS.md` pending receipt committed (`8b4d0f18`) -- done after the investigation
+above, which was read-only, not file edits. **(5)** RED confirmed: `test_wordlist_coverage.R`
+standalone run failed exactly as predicted (4 words named). **(6)** Presented the RED->GREEN gate
+with the exact fix (4 one-line `inst/WORDLIST` additions at each word's alphabetic neighbor) and
+its full verification plan; approved. **(7)** GREEN: added `matings` (after
+`makePedigreeMatingLayout`), `Rectilinear's` (after `Reformats`), `runnable` (after
+`Roychoudhury`), `visNetwork's` (after the existing `visNetwork`) to `inst/WORDLIST`.
+**(8) Mid-verification correction (owner-directed):** started running the full `test_dir()` clean
+regression per the approved plan, matching S585/S586's own reflexive habit for every recent
+close-out regardless of change size -- the owner interrupted to ask why, since `inst/WORDLIST` is
+a plain-text data file with no code-execution surface and no mechanism to affect any test's logic
+beyond the one guard test that reads it. Killed the background run, agreed the correction was
+right, and re-scoped verification to what the change actually needed: the target test standalone
+(already GREEN, 3/3) plus `devtools::check()` as the literal CI-matching build equivalent (this is
+what `R-CMD-check.yaml` itself runs). Written up as `PROJECT_LEARNINGS.md` Learning 595.
+**(9)** Verified: `devtools::check()` -- **0 errors, 0 warnings, 1 pre-existing unrelated NOTE**
+(the long-known `vignettes/figure/` knitr leftover); its own `testthat.R` run (which includes
+`test_wordlist_coverage.R`) passed clean. `lintr::lint_package()` and the full `test_dir()`
+regression were judged N/A/unnecessary for this change (no R source touched; see Learning 595) --
+not run. **(10)** GREEN->REFACTOR gate: presented and declined (recommended) -- the diff is 4
+one-line additions to a plain-text list, no structure to improve.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A (no new displayed
+statistic); tutorial/article checklist N/A (no new user-facing Shiny feature); `NEWS.Rmd` checklist
+N/A (no new exported function or feature); `a2interactive.Rmd` checklist N/A (no exported
+function/parameter added or changed); GitHub issue close-out N/A (tracked only in `BACKLOG.md`,
+never filed as a GitHub issue); lint checklist N/A (no `.R` file added or modified -- `inst/
+WORDLIST` is plain-text data); `_pkgdown.yml` reference-coverage checklist N/A (no new exported
+function).
+
+**Self-assessment (Session 587): 9/10.** **Strengths:** (1) Recognized the pre-existing
+`test_wordlist_coverage.R:111` guard as the RED artifact rather than writing a redundant new test,
+and transparently classified this at the PRE-RED->RED gate rather than silently skipping RED.
+(2) Verified each of the 4 words' tracked-source legitimacy via grep before whitelisting, rather
+than trusting BACKLOG.md's characterization alone. (3) Verified the fix against the ACTUAL
+CI-failing mechanism (`devtools::check()`), matching the established S584/S585 "reproduce with the
+literal command" precedent. (4) All TDD gates fired as real `AskUserQuestion` calls before their
+phase's first edit. **Weaknesses:** (1) Still no independent adversarial-verification pass by a
+separate agent/session -- the same standing gap flagged for 20+ consecutive prior sessions.
+(2) The core weakness this session actually had: defaulted to running the full `test_dir()`
+clean-regression ritual out of habit before stopping to reason about whether this specific
+low-risk, non-code change needed it -- the owner had to interrupt and correct this mid-session
+rather than this session catching it unprompted. Docked a point for this; written up as Learning
+595 so a future session doesn't repeat it.
+**Ledger:** recorded in `CHANGELOG.md` (claim + close-out -- 2 entries this session, both
+`[BL-N]`-tagged).
 
 ### Session 585 Handoff Evaluation (by Session 586)
 **Score: 9/10.** **What helped:** the `next_steps` field named the exact 2 remaining CI reds S584

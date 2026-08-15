@@ -138,6 +138,21 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [BL-N] S587: close out (R-CMD-check.yaml CI fix — inst/WORDLIST gap)
+- **Deliverable:** Fix the red `R-CMD-check.yaml` CI (`BACKLOG.md` Housekeeping, found S584) —
+  added 4 words `spelling::spell_check_package()` flags (`matings`, `Rectilinear's`, `runnable`,
+  `visNetwork's`) to `inst/WORDLIST`, each at its alphabetic neighbor. All 4 confirmed via grep as
+  legitimate tracked-source domain/package-name terms before whitelisting, not typos. Owner
+  interrupted mid-verification to question running the full `test_dir()` clean regression for a
+  non-code data-file change — corrected to `devtools::check()` alone (the literal CI-matching
+  build equivalent): 0 errors/0 warnings/1 pre-existing unrelated NOTE; `test_wordlist_
+  coverage.R` 3/3 passing. Written up as `PROJECT_LEARNINGS.md` Learning 595. Removed the
+  completed item from `BACKLOG.md` Housekeeping.
+
+### 2026-08-15 · [BL-N] S587: claim (fix red R-CMD-check.yaml CI)
+- **Deliverable:** Non-commit-adjacent claim entry per Phase 1B. Session claimed to fix the
+  `inst/WORDLIST` gap `BACKLOG.md` Housekeeping filed at S584.
+
 ### 2026-08-15 · [ad hoc] S586: push commits (`c17451e7..981e463c`)
 - **Deliverable:** Non-commit action, recorded per failure mode #27. Owner-directed push of this
   session's 3 commits (`a8367a4f` claim, `b1e8f8f2` fix + close-out, `981e463c` HANDOFFS.md

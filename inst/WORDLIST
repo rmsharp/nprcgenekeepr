@@ -102,6 +102,7 @@ linkedDateShift
 LOD
 lowPower
 makePedigreeMatingLayout
+matings
 Maller
 markerMeanKin
 MAXGROUPS
@@ -174,11 +175,13 @@ RStudio
 Rbuildignore
 Rdoc
 Reformats
+Rectilinear's
 Rhub
 Rlabkey
 Rmd
 Rouweler
 Roychoudhury
+runnable
 scriptable
 sha
 shas
@@ -574,6 +577,7 @@ vasxOvx
 vectorized
 vger
 visNetwork
+visNetwork's
 withKin
 wkbk
 www

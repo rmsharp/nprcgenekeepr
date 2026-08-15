@@ -138,20 +138,51 @@ This file currently holds **3** receipt(s). Computed by `methodology_trim.py` on
 ```handoff
 session: S587
 date: 2026-08-15
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Fix red R-CMD-check.yaml CI -- add 4 words (matings, Rectilinear's, runnable,
-  visNetwork's) flagged by spelling::spell_check_package() to inst/WORDLIST.
-what_was_done: pending
-next_steps: pending
-key_files: inst/WORDLIST, tests/testthat/test_wordlist_coverage.R:111
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 10
+active_task: Fix red R-CMD-check.yaml CI (BACKLOG.md Housekeeping, found S584) -- add 4 words
+  (matings, Rectilinear's, runnable, visNetwork's) flagged by spelling::spell_check_package() to
+  inst/WORDLIST -- DONE. devtools::check() now 0 errors/0 warnings/1 pre-existing unrelated NOTE.
+what_was_done: The pre-existing tests/testthat/test_wordlist_coverage.R:111 coverage guard was
+  already RED (confirmed live, 4 words flagged) -- no new test needed, it served as RED directly.
+  Grepped each word's tracked-source occurrence (NEWS.md:232/208, vignettes/articles/pedigree-
+  diagram.qmd:15,44,184) to confirm all 4 are legitimate domain/package-name terms, not typos,
+  before whitelisting (pre-RED scope AskUserQuestion: whitelist-all-4 over reword-possessives).
+  Added each word to inst/WORDLIST at its alphabetic neighbor (matings after
+  makePedigreeMatingLayout; Rectilinear's after Reformats; runnable after Roychoudhury;
+  visNetwork's after visNetwork). Verified via devtools::check() (0 errors/0 warnings/1
+  pre-existing NOTE) rather than the full test_dir() clean regression -- owner interrupted
+  mid-run to question running the full suite for a non-code data-file change with only one
+  consuming test; corrected and documented as PROJECT_LEARNINGS.md Learning 595. Commits:
+  8b4d0f18 (claim), plus this close-out.
+next_steps: 3 READY items remain in BACKLOG.md, none bundled with this session's work (do NOT
+  combine): (1) Verify 3 possibly-stale pedigree-diagram screenshots (found S582, Effort S) --
+  diagram_show_names.png/diagram_affected_shading.png/diagram_twin_connectors.png never set
+  pedigreeEdgeStyle before capture, may still show pre-rectilinear-default-flip diagonal routing,
+  same mechanism pb_diagram_legend.png had (fixed S582). (2) BACKLOG.md's own ledger-size
+  housekeeping (found S518, Effort L) -- 2 of 3 oversized sections already compressed (S529/S530),
+  remaining section(s) still need the same editorial-compression pass. (3) Pedigree Diagram
+  layout design session (found S576/S583, not scoped) -- 2 related open geometry gaps (sibling
+  subtree-width asymmetry; unions landing outside their own parents' x-span) need their own
+  design session before a fix is attempted. Also: SESSION_NOTES.md is the dashboard's only HIGH
+  risk (3,759+ lines as of this session, past the 2,000-line read cap, growing since the last
+  archive at 2026-08-13) -- not investigated further this session.
+key_files: inst/WORDLIST (the fix, 4 one-line additions); tests/testthat/
+  test_wordlist_coverage.R:111 (the pre-existing guard that served as RED); PROJECT_LEARNINGS.md
+  Learning 595 (the verification-scope writeup).
+gotchas: (1) inst/WORDLIST's own sort order is loose/inconsistent (several entries already
+  out of alphabetic place, e.g. Rbuildignore after RStudio, vermillion appended at the very end)
+  -- this session placed new entries at their nearest alphabetic neighbor matching the file's
+  established (imperfect) convention, not a strict sort; do not assume `sort -c` will pass.
+  (2) For any future non-code/data-file-only fix, do not reflexively run the full test_dir()
+  clean regression -- reason first about whether the change has any mechanism to affect
+  unrelated tests (see Learning 595).
+runtime_smoke: n/a -- inst/WORDLIST is read only by devtools::check()'s spelling test, not
+  loaded by the package at runtime; no Shiny/app code path affected.
+changelog_ref: see the 2026-08-15 section, "S587:" entries
+commit: 8b4d0f18 (claim); close-out commit sha to follow
 ```
-(stub written at Phase 1B claim; filled at Phase 3D close-out)
 
 ```handoff
 session: S586

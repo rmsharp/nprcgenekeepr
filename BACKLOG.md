@@ -68,9 +68,17 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       connected-component walk).
 
 ## Housekeeping
-- [ ] (found S584, 2026-08-15, incidental to running the build equivalent during close-out,
-      **READY, Effort S**) **`devtools::check()` -- the project's own documented build equivalent --
-      is RED on `master` and has been since S573, with no session reporting it.** Final line:
+- [x] (found S584, 2026-08-15, incidental to running the build equivalent during close-out,
+      **RESOLVED S587.** Added the 4 flagged words (`matings`, `Rectilinear's`, `runnable`,
+      `visNetwork's`) to `inst/WORDLIST`, each placed at its alphabetic neighbor; all 4 confirmed
+      via grep as legitimate tracked-source domain/package-name terms (`NEWS.md`/`vignettes/
+      articles/pedigree-diagram.qmd`), not typos, before whitelisting. `devtools::check()` --
+      the literal CI-matching build equivalent -- now returns 0 errors/0 warnings/1 pre-existing
+      unrelated NOTE (the long-known `vignettes/figure/` knitr leftover); `test_wordlist_
+      coverage.R` passes 3/3. See `CHANGELOG.md` and `PROJECT_LEARNINGS.md` Learning 595.
+      Original finding, kept for the record:) **`devtools::check()` -- the project's own
+      documented build equivalent -- was RED on `master` and had been since S573, with no session
+      reporting it.** Final line:
       `1 error | 0 warnings | 1 note`. The error is `test_wordlist_coverage.R:121` failing because
       `inst/WORDLIST` does not cover 2 words `spelling::spell_check_package()` flags: **`matings`**
       (`NEWS.md:232`) and **`visNetwork's`** (`NEWS.md:208`). Both entered `NEWS.md` in `c9860f4b`
