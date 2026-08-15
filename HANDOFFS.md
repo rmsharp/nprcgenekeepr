@@ -181,7 +181,7 @@ gotchas: (1) inst/WORDLIST's own sort order is loose/inconsistent (several entri
 runtime_smoke: n/a -- inst/WORDLIST is read only by devtools::check()'s spelling test, not
   loaded by the package at runtime; no Shiny/app code path affected.
 changelog_ref: see the 2026-08-15 section, "S587:" entries
-commit: 8b4d0f18 (claim); close-out commit sha to follow
+commit: 8b4d0f18 (claim); 45b44585 (fix + close-out)
 ```
 
 ```handoff
