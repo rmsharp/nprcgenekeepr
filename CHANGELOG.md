@@ -138,6 +138,26 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [issue #160] Filed pedigree-diagram rectilinear sibship-bar false-parentage defect
+- **Deliverable:** Filed [issue #160](https://github.com/rmsharp/nprcgenekeepr/issues/160) — found
+  live in conversation (not a claimed session), while generating fresh kinship2-vs-nprcgenekeepr
+  comparison renders from current HEAD (`f12e7cbb`) to visually verify the Track 1-6
+  kinship2-fidelity remediation effort. On `kinship2::sample.ped` family 2 (14 people, no
+  multi-mate individuals — the project's own "cleanest comparison" fixture), under
+  `edgeStyle = "rectilinear"` (the current shipped default since Track 2, S574): the rectilinear
+  sibship-bar waypoints sit at the exact same y as the children's own row (zero vertical drop from
+  an intermediate bar row), so the bar reads as a straight mate-line chain — and 2 unrelated nodes
+  (203×204's own mating-unit dot; 209, a marry-in founder with no blood relation to 201×202) land
+  directly on that line, each visually implying a parent-child relationship that does not exist.
+  Confirmed against `makePedigreeMatingLayout()`'s own returned `nodes`/`edges` (coordinate
+  collision, not a rendering artifact) and against a pixel-level screenshot crop of both collision
+  points. Root cause is a pre-existing design gap in `.addRectilinearWaypoints()` (issue #142) —
+  not a regression from Track 1-6, which measured edge orthogonality but never checked for
+  coordinate collisions between unrelated nodes. Not fixed this conversation — no session claimed,
+  reported per the established "report, don't fix mid-session" precedent (`PROJECT_LEARNINGS.md`
+  Learning 382); needs its own design pass. See issue #160 for full reproduction steps and
+  evidence.
+
 ### 2026-08-15 · [BL-N] S590: close out (pedigree-diagram layout SECOND feasibility spike -- igraph::layout_with_sugiyama())
 - **Deliverable:** Ran the pedigree-diagram layout SECOND feasibility spike (`BACKLOG.md`, found
   S589, HIGH PRIORITY) — `docs/planning/pedigree-diagram-layout-sugiyama-spike-plan.md` + a

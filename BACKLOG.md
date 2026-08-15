@@ -4,6 +4,16 @@
 future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.md` Phase 0.)*
 
 ## Active
+- [ ] **Pedigree Diagram: rectilinear sibship bar can visually imply false parentage** (found live
+      in conversation 2026-08-15, not a claimed session, filed as
+      [issue #160](https://github.com/rmsharp/nprcgenekeepr/issues/160), DECISION NEEDED, Effort
+      unscoped) — under `edgeStyle = "rectilinear"` (current shipped default), the sibship-bar
+      waypoints sit at the exact same y as the children's own row, so an unrelated same-row node
+      (a sibling's own mating-unit dot, a marry-in mate) can land directly on the bar line and read
+      as that sibling's child. Reproduced on the "cleanest comparison" 14-person fixture (no
+      multi-mate ambiguity), 2 independent collisions found in one render. Needs a design session
+      to give the bar genuine vertical clearance without reopening Track 4/6's ratified invariants
+      — see issue #160 for full reproduction/evidence. Not fixed here.
 
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 *Resolves the former "Tracker reconciliation" decision item (S365) --
