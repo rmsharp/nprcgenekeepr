@@ -138,6 +138,12 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-14 · [BL-N] S582: claim (reshoot pb_diagram_legend.png)
+- **Deliverable:** Session claimed. `BACKLOG.md` item (found S574) -- reshoot
+  `shiny_app_use/pb_diagram_legend.png`, stale since Track 2 (S574) flipped the Diagram tab's
+  zero-interaction default to Rectilinear. Phase 1B stub written to `SESSION_NOTES.md`; pending
+  receipt opened in `HANDOFFS.md`.
+
 ### 2026-08-14 · [ad hoc] S581: reconcile HANDOFFS.md commit self-reference (`6dd26870`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> `6dd26870`
   (the close-out commit's own sha, unknowable until after that commit was made) -- matching the

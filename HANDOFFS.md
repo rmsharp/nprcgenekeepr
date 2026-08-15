@@ -136,6 +136,24 @@ This file currently holds **2** receipt(s). Computed by `methodology_trim.py` on
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S582
+date: 2026-08-14
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Reshoot shiny_app_use/pb_diagram_legend.png (BACKLOG.md, found S574) -- stale
+  screenshot shows the old "Direct" radio pre-selected; Track 2 (S574) flipped the Diagram tab's
+  zero-interaction default to Rectilinear.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S581
 date: 2026-08-14
 status: complete

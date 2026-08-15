@@ -14,6 +14,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 582 Did
+**Deliverable:** Reshoot `shiny_app_use/pb_diagram_legend.png` (`BACKLOG.md`, found S574) --
+stale screenshot shows the old "Direct" radio pre-selected; Track 2 (S574) flipped the Diagram
+tab's zero-interaction default to Rectilinear, so the image no longer matches what a fresh
+session renders (IN PROGRESS)
+**Started:** 2026-08-14
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 580 Handoff Evaluation (by Session 581)
 **Score: 9/10.** **What helped:** the `next_steps` field's priorities list (order() sweep,
 screenshot reshoot, sibling subtree-width asymmetry, #148 scope-narrowing, NPRC outreach) matched,
