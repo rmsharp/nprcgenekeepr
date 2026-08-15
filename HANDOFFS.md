@@ -167,9 +167,232 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.1.2.
 
-This file currently holds **3** receipt(s). Computed by
+This file currently holds **4** receipt(s). Computed by
 `methodology_trim.py` on every `--check`/`--write` run, never
 hand-maintained.
+
+``` handoff
+session: S590
+date: 2026-08-15
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Pedigree Diagram layout SECOND feasibility spike -- DONE. Verdict NOT FEASIBLE
+  (igraph::layout_with_sugiyama() regresses the real fixture on every axis: 25/251 vs baseline
+  9/251, max offset 10,110 vs 4,121, crossings 5,916 vs 3,174). Owner-ratified: CLOSE the
+  non-rigid-layout investigation as inherent -- 3 independent candidates (bounded-lookahead,
+  barycenter/median, sugiyama), 3 distinct failure mechanisms, same real-fixture regression
+  pattern. GitHub issue #159 closed. No further spike is scoped on this thread.
+what_was_done: Adapted igraph::layout_with_sugiyama() (owner-selected via AskUserQuestion) to
+  this project's mating-unit-forest structures, reusing S589's own faithful harness verbatim
+  (buildSeed/finishPipeline/measureFaithful, confirmed byte-identical via programmatic diff).
+  Found and fixed 2 real methodological issues: (1) the renv-cached installed nprcgenekeepr
+  build is stale (predates Track 6 by ~3.5h) -- library(nprcgenekeepr) silently loads the old
+  pre-Track-6 formula; switched to pkgload::load_all() throughout, confirmed 0-diff crosscheck
+  at both fixture scales; (2) layout_with_sugiyama()'s own crossing-minimization heuristic is
+  vertex-order-sensitive (natural order hit an avoidable 4-crossing local optimum on the toy
+  example) -- implemented standard multi-restart (20 random-order trials, keep best via a new
+  countCrossings() metric). Synthetic 13-individual example: 0 crossings, A-B gap 2.5->2.0 (20%
+  reduction, matching S589's own candidate). Real 375-individual fixture (baseline reproduced
+  9/251, 3.6%, max 4,121.25 exactly): candidate regressed to 25/251 (9.96%), max offset 10,110,
+  width 2.4x wider, AND crossings worse than baseline (5,916 vs 3,174) -- confirmed not a tuning
+  artifact via a 4-point restart/seed sweep and an edge-weight check (zero measurable effect).
+  Diagnosed to a different high-mate-count hub individual (4 mating unions); mechanism: sugiyama
+  optimizes global crossing/straightness with no term for full-sibling compactness, unlike the
+  shipped model's own recursive per-subtree construction. Wrote
+  docs/planning/pedigree-diagram-layout-sugiyama-spike-plan.md + -evidence.qmd (quarto render 0
+  errors, rendered numbers spot-checked against scratchpad); updated BACKLOG.md (item DONE, no
+  new spike item added per the close-as-inherent verdict); closed GitHub issue #159 with the
+  full 3-candidate evidence; wrote PROJECT_LEARNINGS.md Learnings 601-603; fixed CLAUDE.md's
+  stale learnings-count pointer. Commits: 568b62d8 (claim), plus this close-out.
+next_steps: No next step on THIS pedigree-diagram-layout thread -- closed as inherent this
+  session, do NOT reopen it without new evidence that changes the picture (a real production
+  pedigree where the asymmetry causes a reported problem, not another toy-example spike). The
+  next session's Phase 0 should re-render BACKLOG.md's priorities list; as of this session's
+  close, the remaining numbered READY/BLOCKED/DECISION-NEEDED items are: (1) Pedigree Diagram --
+  a mating union positioned outside its own PARENTS' x-range (found S583, BACKLOG.md, distinct
+  axis from this closed thread -- not scoped, likely needs its own design session first); (2)
+  LabKey integration remainder (BLOCKED -- needs a live LabKey server to test/observe); (3) NPRC
+  outreach & announcement plan (DECISION NEEDED -- owner review/edit of ready drafts, not a
+  coding task). Lower-priority: 3 possibly-stale pedigree screenshots to verify (found S582,
+  Effort S); BACKLOG.md's own remaining ledger-size housekeeping sections (found S518, Effort
+  L); SESSION_NOTES.md archive blocked by a methodology_trim.py fence-scanner defect (found
+  S518) -- file now 4,150+ lines (HIGH dashboard risk) and still growing.
+key_files: docs/planning/pedigree-diagram-layout-sugiyama-spike-plan.md (the verdict + full
+  rationale, esp. \S1.6 the sugiyama-specific failure mechanism and \S2 the untested
+  order-then-compact idea recorded for a future revisit); docs/planning/pedigree-diagram-layout-
+  sugiyama-spike-evidence.qmd (runnable, embeds the full candidate + countCrossings() -- reuse
+  directly rather than re-deriving if this thread is ever reopened);
+  R/makePedigreeDiagramData.R:584-1026 (.positionMatingUnitForest(), unchanged this session);
+  PROJECT_LEARNINGS.md Learnings 601-603 (sugiyama order-sensitivity, proven-algorithm-objective-
+  mismatch, and the stale-renv-install trap -- read Learning 603 before ANY future session
+  trusts a library(nprcgenekeepr)-based crosscheck in this project).
+gotchas: library(nprcgenekeepr) can silently load a STALE renv-cached build in this project --
+  always use pkgload::load_all(".") for any comparison whose validity rests on matching current
+  R/ source (Learning 603); the staleness surfaced as a partial mismatch (union nodes only, 0 on
+  real-individual nodes), not a uniform offset, so a coarse "looks about right" check would have
+  missed it. igraph::layout_with_sugiyama()'s crossing-minimization is vertex-order-sensitive --
+  never trust a single run's crossing count; multi-restart against an independently-computed
+  crossing metric is required (Learning 601). A proven library's own optimization objective does
+  not imply it preserves an unrelated downstream property your own metric needs -- check the
+  metric that matters directly, don't infer it from the library's reputation (Learning 602).
+runtime_smoke: n/a -- docs-only investigation, no R/ file touched, no runtime behavior changed
+  (matches the S588/S589 precedent).
+changelog_ref: see CHANGELOG.md 2026-08-15 entries, S590 claim + close-out, [BL-N]-tagged.
+commit: f3492719 (close-out)
+```
+
+``` handoff
+session: S589
+date: 2026-08-15
+status: complete
+self_score: 9
+predecessor_score: 10
+active_task: Pedigree Diagram layout feasibility spike (BACKLOG.md, found S588, HIGH PRIORITY) --
+  DONE. Verdict NOT FEASIBLE as prototyped (barycenter/median candidate regresses the real
+  fixture 9/251->15/251, 6.1x width blowup). Recommendation (owner-ratified): a second, narrower
+  spike adapting a proven library (igraph::layout_with_sugiyama(), checked not installed but a
+  well-established CRAN package) rather than tuning this candidate further. Campaign document
+  still deferred.
+what_was_done: Prototyped a barycenter/median layered-DAG compaction candidate (owner-selected
+  via AskUserQuestion). Built a faithful harness: a byte-identical "seed" copy of the shipped
+  recursive contour-merge (cross-checked 0 diff vs the real .positionMatingUnitForest() at both
+  the synthetic and real-fixture scale) plus a verbatim "finish pipeline" (orderBySex/Track 6
+  finalUnitX/de-collision/final sweep), so the candidate vs. baseline comparison is fully
+  faithful, not a proxy. Found and fixed 2 real implementation bugs (an unbounded Jacobi-update
+  ratchet between nodes sharing one pull source; a self-referential down-sweep target using the
+  wrong "unit x" function) via a row-sequential alternating down/up sweep redesign. Synthetic
+  13-individual example: A-B gap 2.5->2.0 (20% reduction), zero edge crossings (verified visually
+  and via a row-order-rank check). Real 375-individual fixture, faithful full-pipeline metric
+  (baseline reproduced Track 6's own published 9/251, 3.6%, max 4,121.25 exactly, confirming
+  harness fidelity): candidate REGRESSED to 15/251 (5.98%), max offset 5,344, layout width 6.1x
+  wider -- confirmed not a tuning artifact via a 5-point hyperparameter sweep. Diagnosed the
+  single worst-regressed edge to a mating-unit sire with 5 separate mating unions (a "hub"
+  topology absent from the small synthetic example) as the convergence-failure mechanism. Wrote
+  docs/planning/pedigree-diagram-nonrigid-layout-spike-plan.md + -evidence.qmd (quarto render 0
+  errors); updated BACKLOG.md (S588 item DONE, new READY item for the 2nd spike); commented on
+  GitHub issue #159 (not closed, work continues); wrote PROJECT_LEARNINGS.md Learnings 598-600;
+  fixed CLAUDE.md's stale learnings-count pointer. Commits: 1faee690 (claim), plus this close-out.
+next_steps: The next session (if picked up) is a SECOND, bounded feasibility spike (BACKLOG.md,
+  found S589, HIGH PRIORITY) -- adapt igraph::layout_with_sugiyama() (add igraph to Suggests if
+  it stays investigation-only, matching the kinship2 reference-only precedent) OR a properly-
+  ported Brandes-Kopf (2002) horizontal coordinate assignment to this project's own
+  mating-unit-forest data structures. Test against the SAME two fixtures this spike used (the
+  13-individual synthetic example from docs/planning/pedigree-diagram-sibling-subtree-width-
+  plan.md, checked visually for crossings; the real 375-individual fixture, measured with the
+  SAME faithful full-pipeline metric docs/planning/pedigree-diagram-nonrigid-layout-spike-
+  evidence.qmd established -- reuse it, do not re-derive) so results are directly comparable
+  across all 3 candidates now on record. Close out with a clear verdict; that verdict decides the
+  campaign-document question (deferred twice now, see docs/planning/pedigree-diagram-nonrigid-
+  layout-spike-plan.md §6). Do NOT re-attempt tuning THIS session's own barycenter/median
+  candidate -- the owner-ratified recommendation was explicitly "proven library over further
+  hand-rolling," not a return to this implementation. Also still open, unrelated: SESSION_NOTES.md
+  is 3,990+ lines (HIGH dashboard risk, growing), not archived since 2026-08-13; CHANGELOG.md is
+  past its 65,536 B archive-trigger budget (MEDIUM risk, noted this session, not acted on).
+key_files: docs/planning/pedigree-diagram-nonrigid-layout-spike-plan.md (the verdict + full
+  rationale, esp. \S1.6 hub-node diagnosis and \S6 migration path for the 2nd spike);
+  docs/planning/pedigree-diagram-nonrigid-layout-spike-evidence.qmd (runnable, embeds the full
+  candidate implementation -- reuse its measureFaithful()/xScale=120 methodology directly rather
+  than re-deriving it); R/makePedigreeDiagramData.R:584-1026 (.positionMatingUnitForest(), the
+  function any 2nd-spike candidate must still faithfully wrap downstream of, exactly as this
+  spike's finishPipeline() did); PROJECT_LEARNINGS.md Learnings 598-600 (the 2 implementation
+  bugs + the hub-node blind spot, read before writing a 2nd candidate's own convergence logic).
+gotchas: Track 6's own "200 units" violating-edge threshold is stated in SCALED (rendered) units
+  -- multiply raw .positionMatingUnitForest() x-offsets by xScale=120 (R/makePedigreeDiagramData.R
+  :1166) before comparing to 200, or the baseline silently comes out as 0/251 instead of the real
+  9/251 (hit this exact bug live this session, first attempt). A fully-simultaneous ("Jacobi")
+  position update with a push-right-only minSep sweep has no fixed reference frame and diverges
+  unboundedly even when the one metric you're watching looks stable -- always trace overall
+  layout width across many iterations too (Learning 599). Do not reuse the SAME "unit x" function
+  for both a down-sweep and an up-sweep target in a bidirectional relaxation -- they need
+  DIFFERENT unit-position notions (parent-mean vs. child-mean) or one direction becomes
+  self-referential (Learning 598). A small synthetic example with max 1 mate per individual
+  cannot exercise high-mate-count "hub" convergence failures -- test any new candidate against a
+  fixture containing multi-mate individuals from the start, not only after a real-fixture
+  regression surfaces it (Learning 600).
+runtime_smoke: n/a -- docs-only investigation, no R/ file touched, no runtime behavior changed
+  (matches the S588 design-session precedent).
+changelog_ref: see CHANGELOG.md 2026-08-15 entries, S589 claim + close-out, [BL-N]-tagged.
+commit: 691071a0 (close-out)
+```
+
+Self-score breakdown: **9/10.** Strengths: faithful full-pipeline
+harness cross-checked byte-identical against the shipped function at
+both scales before trusting any comparison; caught and fixed a real
+scaling bug in the first metric attempt by cross-checking against Track
+6’s own published baseline rather than trusting the first number;
+diagnosed the real-fixture regression’s structural cause (a specific hub
+individual), not just its aggregate size; found and documented 2 real
+implementation bugs with general lessons, not just point fixes; checked
+(not assumed) `igraph` availability before recommending it; ratified the
+verdict via `AskUserQuestion` before finalizing documents. Weaknesses:
+the `xScale` bug could have been caught before running anything by
+reading the design doc’s own evidence.qmd more carefully first (it
+already divided by 120 in its own proxy measurement – a hint this
+session initially missed); no independent adversarial- verification pass
+(22+ consecutive prior sessions, standing gap); diagnosed only the
+single worst-regressed edge structurally, not all 15.
+
+``` handoff
+session: S588
+date: 2026-08-15
+status: complete
+self_score: 9
+predecessor_score: 10
+active_task: Design a fix for "Pedigree Diagram: sibling subtree-width asymmetry" (BACKLOG.md,
+  found S576) -- docs/planning/pedigree-diagram-sibling-subtree-width-plan.md +
+  -evidence.qmd -- DONE. Decision: COMMIT to a redesign (a mid-session owner correction
+  superseded an initial DEFER recommendation) -- next session is a bounded feasibility spike,
+  not code yet.
+what_was_done: Built a 13-individual synthetic reproduction of the sibling-subtree-width-
+  asymmetry mechanism; rendered it via kinship2 and nprcgenekeepr side by side (3 PNGs shown to
+  the owner inline, per an explicit mid-turn request to see figures before assessing the work).
+  Tested one candidate (bounded-depth contour-merge lookahead in .positionMatingUnitForest()) --
+  REJECTED: closed the toy-example gap (2.5->1.0 raw) but introduced an edge crossing between two
+  other siblings, and regressed a simplified real-fixture proxy measure (0.8%->3.2%), the
+  opposite trend from the toy example. First AskUserQuestion ratified DEFER (Round 1); owner
+  corrected mid-turn ("high priority... work cost is not a deterrent"); found the deeper reason no
+  low-risk fix exists (the shipped algorithm's rigid-subtree model is the same one Reingold-
+  Tilford/Walker/Buchheim-Jünger-Leipert -- issue #141's own target -- all use; none would fix
+  this, since they compute the same layout faster, not a tighter one). Second AskUserQuestion
+  ratified COMMIT to a redesign (Round 2, supersedes Round 1, both recorded transparently in the
+  design doc's §9). Filed GitHub issue #159 under Round 1's framing, then edited it (title, body,
+  premature-optimization label removed) to reflect Round 2. Updated BACKLOG.md (S576 item DONE;
+  new READY high-priority spike item added). Wrote PROJECT_LEARNINGS.md Learnings 596-597.
+  Commits: 5bafb83d (claim), plus this close-out.
+next_steps: The next session is a bounded, single-session feasibility spike (BACKLOG.md, found
+  S588, HIGH PRIORITY) -- prototype ONE non-rigid/constraint-aware layout candidate (script-level,
+  not R/), tested against (a) this document's own 13-individual synthetic example (docs/planning/
+  pedigree-diagram-sibling-subtree-width-plan.md, rendered and checked visually for crossings, not
+  just gap size) and (b) the real 375-individual fixture (measured for regressions using a
+  FAITHFUL reproduction of .positionMatingUnitForest()'s actual final pipeline, including
+  orderBySex + the final de-collision pass -- this session's own real-fixture measurement was an
+  explicitly simplified proxy, do not reuse it as-is for a go/no-go call). Close out with a clear
+  feasible/not-feasible verdict; that verdict decides whether a dedicated *_CAMPAIGN.md
+  (TEMPLATE_CAMPAIGN.md) is warranted. Do NOT bundle the related S583 item ("union outside parent
+  span") into the spike -- deliberately kept out of scope, see design doc §8. Also still open,
+  unrelated: SESSION_NOTES.md is 3,900+ lines (HIGH dashboard risk), not archived since 2026-08-13.
+key_files: docs/planning/pedigree-diagram-sibling-subtree-width-plan.md (the design doc, esp. §1.6
+  the rigid-subtree finding and §6 the spike's own scope); docs/planning/pedigree-diagram-sibling-
+  subtree-width-evidence.qmd (runnable reproduction of every number/figure cited); R/
+  makePedigreeDiagramData.R:584-833 (.positionMatingUnitForest(), the function any spike
+  prototypes against); GitHub issue #159 (the live tracker, already updated to Round 2's framing).
+gotchas: (1) `getPedDirectRelatives()` cannot isolate a small real-fixture subgraph for this class
+  of investigation -- it returns nearly the whole 375-individual connected component; use a
+  synthetic pedigree instead, as this session did, not an attempted real-fixture extraction.
+  (2) This session's real-fixture "measure()" proxy (evidence doc) is deliberately simplified
+  (stops after the first sweepMinSep() pass, skips orderBySex + the final de-collision pass) --
+  its ABSOLUTE percentages do not match Track 6's own published 3.6% baseline; only the TREND
+  across lookahead depth K was relied on. The spike needs a faithful reproduction, not this proxy,
+  for its own go/no-go evidence. (3) Issue #141 is a superficially similar but factually different
+  concern (runtime, not layout) on the SAME function -- do not fold the spike's work into #141 or
+  vice versa; §1.1/§1.6 of the design doc lay out why they're distinct.
+runtime_smoke: n/a -- no R/ source file touched; zero runtime behavior changed. All experimental
+  algorithm code lived in /private/tmp scratchpad (never committed) or the docs/planning/*.qmd
+  evidence doc (Quarto-only, not part of the package).
+changelog_ref: see the 2026-08-15 section, "S588:" entries
+commit: 5bafb83d (claim); 999c3b74 (close-out)
+```
 
 ``` handoff
 session: S587

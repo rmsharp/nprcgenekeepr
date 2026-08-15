@@ -21,6 +21,538 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 589 Handoff Evaluation (by Session 590)
+
+**Score: 9/10.** **What helped:** the `next_steps` field named this
+exact task with full, precise scope — “a SECOND, bounded feasibility
+spike… adapt `igraph::layout_with_sugiyama()`… OR a properly-ported
+Brandes-Köpf (2002)… Test against the SAME two fixtures this spike used…
+measured with the SAME faithful full-pipeline metric… reuse it, do not
+re-derive” — followed exactly: the harness
+(`buildSeed`/`finishPipeline`/`measureFaithful`) was reused verbatim
+(confirmed byte-identical via a programmatic diff against the source
+`.qmd`, not just eyeballed). The `gotchas` field’s hub-node warning
+(Learning 600 — “a small synthetic example cannot exercise
+high-mate-count hub convergence failures”) directly predicted this
+session’s own eventual finding (a DIFFERENT hub individual, same
+structural class, breaking a THIRD independent candidate) — recognizing
+the pattern quickly once found, rather than being surprised by it, saved
+real diagnostic time. **What was missing:** nothing the handoff itself
+could reasonably have anticipated — this session’s two genuinely new
+findings (the stale renv-installed-package issue;
+`layout_with_sugiyama()`’s own vertex-order sensitivity requiring
+multi-restart) were both outside what S589’s own work touched (S589
+confirmed `igraph` merely NOT installed, never exercised it). **What was
+wrong:** nothing — every cited baseline number (9/251, 3.6%, max
+4,121.25) reproduced exactly. **ROI:** high — zero rediscovery cost on
+task scope, fixtures, or methodology; the hub-node caution meant this
+session’s own diagnosis phase was fast and targeted rather than
+exploratory.
+
+### What Session 590 Did
+
+**Deliverable:** Pedigree Diagram layout SECOND feasibility spike
+(`BACKLOG.md`, found S589, HIGH PRIORITY) — adapt
+`igraph::layout_with_sugiyama()` (owner-selected via `AskUserQuestion`
+over a ported Brandes-Köpf 2002 alternative) to this project’s
+mating-unit-forest data structures, tested against the same two fixtures
+S589 used. **Verdict: NOT FEASIBLE as prototyped — investigation CLOSED
+AS INHERENT (owner-ratified).** Two documents:
+`docs/planning/pedigree-diagram-layout-sugiyama-spike-plan.md` +
+[`-evidence.qmd`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-layout-sugiyama-spike-evidence.qmd),
+following `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`.
+**Planning/investigation session — TDD phases (RED/GREEN/REFACTOR)
+declared INAPPLICABLE** (matches the S588/S589 precedent: no `R/` file
+touched, all candidate code lived in `/private/tmp` scratchpad and the
+evidence `.qmd`). **Started/Completed:** 2026-08-15.
+
+**What happened, in order:** **(1)** Phase 0 orient in full
+(`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list`,
+`git status`/`log`/`diff --stat`, `gh run list` \[all pushed-commit runs
+through S587 green; S588/S589’s 6 local commits not yet pushed, no CI
+signal\], `methodology_dashboard.py` \[96/100, 1 HIGH risk —
+`SESSION_NOTES.md` 4,105 lines, growing since 2026-08-13, blocked by a
+known `methodology_trim.py` fence-scanner defect — surfaced, not acted
+on\], ledger reconcile \[`CHANGELOG.md`/`HANDOFFS.md` frontier ==
+`HEAD`, no gap\]). Rendered the 4-item priorities picker; user picked
+the 2nd layout feasibility spike (option 1). **(2)** Phase 1: confirmed
+`igraph` installable in this environment (it was not previously) and
+sanity-checked `layout_with_sugiyama()` on a toy DAG before presenting
+the pre-work `AskUserQuestion`; owner selected
+`igraph::layout_with_sugiyama()` (Recommended option) over the ported
+Brandes-Köpf alternative. **(3)** Phase 1B: claim stub + `HANDOFFS.md`
+pending receipt, committed (`568b62d8`). **(4)** Read the workstream
+doc, S589’s own plan+evidence documents in full, and
+`R/makePedigreeDiagramData.R:584-1026` before building anything. **(5)**
+Built the candidate in `/private/tmp` scratchpad: reused S589’s own
+`buildSeed()`/`finishPipeline()`/`measureFaithful()` verbatim (confirmed
+byte-identical via a programmatic diff against the source `.qmd`, not
+eyeballed), plus a new `buildSugiyamaGraph()` constructing the same
+parent-union-child DAG as an `igraph` object with `layer` = display
+generation. **(6)** First crosscheck attempt via
+[`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/)
+reported a NONZERO diff (max 1.375, entirely on mating-UNION x values, 0
+on real-individual values) — did not accept this as noise; traced it via
+[`deparse()`](https://rdrr.io/r/base/deparse.html)-diffing the installed
+function against a
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)-loaded
+one, finding the renv-cached installed build (timestamped 2026-08-14
+18:24) predates the Track 6 commit (`f65ecbea`, 21:56:10 same day) by
+~3.5h — a genuinely stale build silently loaded by plain
+[`library()`](https://rdrr.io/r/base/library.html). Switched to
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+throughout; crosscheck then reproduced 0 diff at both fixture scales.
+**(7)** First `layout_with_sugiyama()` run on the synthetic example
+(natural vertex order) produced 4 avoidable edge crossings; rather than
+accepting this, ran a 30-trial random-vertex-order sensitivity check
+(found 0 crossings on trial 1, 30/30 trials found a 0-crossing layout)
+and confirmed `maxiter` increases (100→500→2000) had zero effect —
+diagnosed as genuine input-order sensitivity in the heuristic itself,
+not an iteration-budget problem. Implemented standard multi-restart (20
+random-order trials, keep the best by an independently-written
+`countCrossings()`, since the prior candidate’s own
+“row-order-preserved” check does not apply when row order is no longer
+fixed). **(8)** Synthetic example: 0 crossings, A-B gap 2.5→2.0 (20%
+reduction, matching S589’s own candidate’s exact improvement) — visually
+confirmed via a rendered side-by-side PNG. **(9)** Real fixture:
+baseline metric reproduced S589’s own published 9/251, 3.6%, max
+4,121.25 exactly (harness fidelity confirmed). Candidate (best of 20
+restarts) REGRESSED on every axis: 25/251 (9.96%), max offset 10,110,
+layout width 2.4x wider, AND crossings worse than baseline (5,916 vs
+3,174 — this algorithm’s own stated objective). **(10)** Confirmed not a
+tuning artifact via a 4-point restart-count/seed sweep (never better
+than 25/251) and an edge-weight check (up to 10:1 favoring
+union-to-child edges) that had ZERO measurable effect on the result — a
+real, checked limitation, not exploited further. **(11)** Diagnosed the
+worst edge to a different high-mate-count hub individual (4 mating
+unions); explained the mechanism (sugiyama optimizes global
+crossing/straightness, with no term for full-sibling compactness, unlike
+the shipped model’s recursive per-subtree construction). **(12)**
+Presented the full investigation via `AskUserQuestion` (4 options: close
+as inherent / recommend a hybrid order-then-compact 3rd spike /
+recommend a ported Brandes-Köpf 3rd spike / hold and tune further);
+owner selected the Recommended option (close as inherent). **(13)**
+Wrote both documents reflecting that verdict; rendered the evidence
+`.qmd` via `quarto render` (0 errors) and spot-checked the rendered
+HTML’s own numbers against the scratchpad computations, not just trusted
+the render. **(14)** Updated `BACKLOG.md`: marked the S589 spike item
+DONE with the full result; did NOT add a new READY item (per the “close
+as inherent” verdict — no next spike is scoped). **(15)** Commented on
+and CLOSED GitHub issue \#159 citing the cumulative 3-candidate evidence
+(matches `CLAUDE.md`’s GitHub issue close-out checklist — a
+decline/wontfix-class decision, not a shipped fix). **(16)** Wrote up 3
+new `PROJECT_LEARNINGS.md` entries (601: `layout_with_sugiyama()`’s own
+vertex-order sensitivity and the multi-restart mitigation; 602: a proven
+algorithm’s own optimization objective does not imply a downstream
+metric’s requirements; 603: the renv-cached stale-install trap and why
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+must be used for any shipped-function crosscheck); fixed the now-stale
+learnings count/session-range pointer in `CLAUDE.md`.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A
+(no new displayed statistic); tutorial/article checklist N/A (no new
+user-facing Shiny feature, no code shipped); `NEWS.Rmd` checklist N/A
+(no new exported function or feature); `a2interactive.Rmd` checklist N/A
+(no exported function/parameter added or changed); GitHub issue
+close-out DONE (issue \#159 closed this session, citing the
+`CHANGELOG.md` entry and cumulative evidence); lint checklist N/A (no
+`.R` file added or modified — all candidate code lived in `/private/tmp`
+scratchpad and `docs/planning/*.qmd`, confirmed via `git diff --stat`
+against `R/`/`tests/`); `_pkgdown.yml` reference-coverage checklist N/A
+(no new exported function). Runtime smoke test (Phase 3E): N/A —
+docs-only investigation, no runtime behavior changed (matches the
+S588/S589 precedent).
+
+**Self-assessment (Session 590): 9/10.** **Strengths:** (1) Reused
+S589’s own faithful harness verbatim, confirmed via programmatic diff
+rather than eyeballing — no silent transcription drift. (2) When the
+FIRST crosscheck came back nonzero, did not shrug it off as
+floating-point noise or retry blindly — traced it to a genuine,
+previously-unnoticed environmental defect (a stale renv-cached install
+predating Track 6) via
+[`deparse()`](https://rdrr.io/r/base/deparse.html)-diffing, discovering
+something no prior session had found. (3) When the FIRST
+`layout_with_sugiyama()` run produced worse-than-shipped crossings on
+the toy example, did not accept “the library must just be worse here” —
+ran a systematic 30-trial sensitivity check that found the true cause
+(order-sensitivity, not an algorithmic limit) and implemented the
+standard mitigation (multi-restart) before drawing any conclusion. (4)
+Recognized that the prior candidate’s own “row-order-preserved”
+verification metric did not apply to a structurally different candidate
+(one that doesn’t fix row order) and built a new, general,
+independently-correct metric (`countCrossings()`) rather than reusing an
+inapplicable check. (5) Ran a proper 4-point sensitivity sweep plus an
+edge-weight check before concluding “not a tuning artifact,” matching
+the rigor bar of both prior sessions in this thread. (6) Diagnosed the
+real-fixture regression to its specific structural cause (a hub
+individual) and explained the MECHANISM (objective mismatch), not just
+the symptom. (7) Ratified the verdict via `AskUserQuestion` before
+finalizing documents, and closed out the full chain (BACKLOG.md, GitHub
+issue, PROJECT_LEARNINGS.md) in the same session per the established
+checklists. (8) Named a genuinely new, untested idea (hybrid
+order-then-compact) for the record without pursuing it, respecting the
+“one candidate per spike” scope boundary the owner’s own “close as
+inherent” decision confirmed was the right call. **Weaknesses:** (1)
+Still no independent adversarial-verification pass by a separate
+agent/session — the same standing gap flagged for 23+ consecutive prior
+sessions now. (2) Did not fully resolve WHY S589’s own
+[`library()`](https://rdrr.io/r/base/library.html)-based crosscheck
+reported a clean 0 diff despite the installed package apparently already
+being stale at that time — flagged as an open question in this session’s
+own plan doc §8 rather than root-caused; legitimate “report, don’t fix
+mid-session” scoping, but leaves a loose thread for whoever next touches
+that document. (3) The new `countCrossings()` function is O(n²) per
+(lo,hi) generation-gap bucket — fine at this fixture’s scale (612
+vertices, 725 edges, sub-second) but not verified to scale gracefully to
+a much larger future fixture. **Ledger:** recorded in `CHANGELOG.md`
+(claim + close-out entries, `[BL-N]`-tagged).
+
+### Session 588 Handoff Evaluation (by Session 589)
+
+**Score: 10/10.** **What helped:** the `next_steps` field named this
+exact task with full, precise scope – “a bounded, single-session
+feasibility spike… prototype ONE non-rigid/ constraint-aware layout
+candidate (script-level, not R/), tested against (a) \[the\]
+13-individual synthetic example… rendered and checked visually for
+crossings… and (b) the real 375-individual fixture (measured for
+regressions using a FAITHFUL reproduction of
+.positionMatingUnitForest()’s actual final pipeline, including
+orderBySex + the final de-collision pass – this session’s own
+real-fixture measurement was an explicitly simplified proxy, do not
+reuse it as-is)” – every one of those specifics (script-level scope,
+both fixtures, the crossing check, the explicit instruction not to reuse
+the simplified proxy) was directly actionable and followed exactly; zero
+rediscovery cost. The `gotchas` field’s “Do NOT bundle the related S583
+item” instruction was also followed – S583 never entered this session’s
+scope. **What was missing:** nothing the handoff itself could reasonably
+have anticipated – WHICH candidate paradigm to prototype was correctly
+left as this session’s own decision (S588’s design doc §4 named 2
+directions without committing to one), surfaced via `AskUserQuestion` at
+this session’s own Phase 1 rather than being something the prior handoff
+should have pre-decided. **What was wrong:** nothing – every claim in
+the handoff (the rejected bounded-lookahead candidate’s own failure
+mode, the “no low-risk tuning” finding, the simplified-proxy caveat)
+held up exactly as stated once re-verified. **ROI:** high – the precise,
+faithful-methodology instruction alone likely saved a full round of
+“build a metric, discover it doesn’t match the cited baseline, re-derive
+the real methodology” (which is exactly what happened anyway on the
+FIRST metric attempt this session, before the `xScale` scaling bug was
+found and fixed – see self-assessment below; the handoff’s caution was
+warranted even though this session still needed one extra fix pass to
+fully honor it).
+
+### What Session 589 Did
+
+**Deliverable:** Pedigree Diagram layout feasibility spike
+(`BACKLOG.md`, found S588, HIGH PRIORITY) – prototype ONE
+non-rigid/constraint-aware layout candidate (barycenter/median
+layered-DAG compaction, owner-selected via `AskUserQuestion` over a
+force-directed alternative), tested against the design doc’s
+13-individual synthetic example and a faithful reproduction of the real
+375-individual fixture’s full pipeline. **Verdict: NOT FEASIBLE as
+prototyped** – **DONE.** Two documents:
+`docs/planning/pedigree-diagram-nonrigid-layout-spike-plan.md` +
+[`-evidence.qmd`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-nonrigid-layout-spike-evidence.qmd),
+following `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`.
+**Planning/investigation session – TDD phases (RED/GREEN/REFACTOR)
+declared INAPPLICABLE** (matches the S588 design-session precedent: no
+`R/` file touched, all candidate code lived in `/private/tmp` scratchpad
+and the evidence `.qmd`). **Started/Completed:** 2026-08-15.
+
+**What happened, in order:** **(1)** Phase 0 orient in full
+(`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list`,
+`git status`/`log`/`diff --stat`, `gh run list` \[most recent pushed
+commit – S587’s push – all 4 workflows green; S588’s 3 local commits not
+yet pushed, no CI signal yet\], `methodology_dashboard.py` \[96/100, 1
+HIGH risk – `SESSION_NOTES.md` 3,970 lines, unrelated to this task; also
+surfaced a MEDIUM `CHANGELOG.md` archive-trigger flag, not acted on –
+out of scope\], ledger reconcile \[`CHANGELOG.md`/`HANDOFFS.md` frontier
+== `HEAD`, no gap\]). Rendered the 4-item priorities picker from
+`BACKLOG.md`’s tagged items; user picked the feasibility spike (option
+1). **(2)** Phase 1: read the design doc and its evidence `.qmd` in
+full, then `R/makePedigreeDiagramData.R:584-1026`
+(`.positionMatingUnitForest()`’s complete pipeline) before proposing an
+approach. Presented a pre-work `AskUserQuestion` naming the 2 candidate
+directions the design doc left open (barycenter/median layered-DAG
+compaction vs. force-directed row-constrained relaxation); owner picked
+barycenter/median (Recommended option). **(3)** Phase 1B: claim stub +
+`HANDOFFS.md` pending receipt, committed (`1faee690`). **(4)** Built the
+candidate in `/private/tmp` scratchpad: a verbatim-copied “seed” (the
+shipped recursive contour-merge, cross-checked byte-identical against
+the real `.positionMatingUnitForest()` at BOTH the synthetic and
+real-fixture scale, max diff 0), a barycenter/median refinement, and a
+verbatim-copied “finish pipeline” (`orderBySex`/Track 6
+`finalUnitX`/de-collision/final sweep) so the comparison is fully
+faithful, not a proxy. **(5)** Found and fixed 2 real bugs empirically
+during development (not caught by code review alone – found via
+per-iteration position tracing): an unbounded Jacobi-update ratchet (2
+nodes sharing their only pull source compute an identical target
+forever; the order-preserving sweep can only push right, so it
+re-separates them by `minSep` every iteration, diverging linearly) and a
+self-referential down-sweep target (using the SAME “unit x” function –
+children-mean – for both sweep directions made a child’s down-pull
+target trivially include itself). Fixed via a row-sequential alternating
+down/up sweep design (the standard Sugiyama structure) and 2 distinct
+unit-position functions (`liveUnitParentX`/`liveUnitChildX`). **(6)**
+Synthetic example: candidate closed the A-B gap 2.5-\>2.0 (20%
+reduction), zero edge crossings (verified visually AND via a direct
+row-order-rank check, 0 mismatches). **(7)** Real fixture: FIRST metric
+attempt compared raw (unscaled) offsets against the literal `200`
+threshold and got a nonsensical 0/251 baseline (should have been 9/251)
+– caught immediately by cross-checking against Track 6’s own published
+baseline rather than trusting the first number; root cause was a missing
+`xScale = 120` multiplier (Track 6’s own “200 units” is stated in
+SCALED/rendered units); fixed, and the corrected baseline reproduced
+Track 6’s exact 9/251, 3.6%, max 4,121.25. **(8)** Corrected
+real-fixture metric: candidate REGRESSED to 15/251 (5.98%), max offset
+5,344, overall real-node layout width 6.1x wider – confirmed not a
+tuning artifact via a 5-point `(rounds, alpha)` hyperparameter sweep,
+never better than 15/251. **(9)** Diagnosed the single worst-regressed
+edge (27x worsening) to a mating unit whose sire has 5 separate mating
+unions – a high-mate-count “hub” topology entirely absent from the
+13-individual synthetic example. Checked whether
+`igraph::layout_with_sugiyama()` (a proven, published implementation of
+the same paradigm) was available in this environment – not installed,
+but confirmed a well-established CRAN package, named as the concrete
+lower-risk recommendation. **(10)** Presented the full investigation via
+`AskUserQuestion` (3 options: recommend a 2nd spike using a proven
+library / close the investigation as inherent / tune this candidate
+further); owner selected the Recommended option (2nd spike, proven
+library). **(11)** Wrote both documents reflecting that verdict;
+rendered the evidence `.qmd` via `quarto render` (0 errors) – the
+documentation build equivalent; verified every cited figure in the
+rendered HTML output matches the scratchpad computations. **(12)**
+Updated `BACKLOG.md`: marked the S588 spike item DONE with the full
+result; added a new READY, HIGH-PRIORITY item for the recommended 2nd
+spike. **(13)** Commented on GitHub issue \#159 with the session’s
+findings and recommendation (did not close – the redesign effort
+continues). **(14)** Wrote up 3 new `PROJECT_LEARNINGS.md` entries (598:
+the down/up target conflation bug; 599: the
+Jacobi-update/asymmetric-sweep divergence and “trace overall width, not
+just the target metric” lesson; 600: the hub-node convergence blind spot
+and “diagnose the worst offender’s structural cause, not just the
+aggregate” lesson); fixed the now-stale learnings count/session-range
+claim in `CLAUDE.md`’s own pointer paragraph (Phase 3F cross-reference
+check, having just extended the numbered learnings set).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A
+(no new displayed statistic); tutorial/article checklist N/A (no new
+user-facing Shiny feature, no code shipped); `NEWS.Rmd` checklist N/A
+(no new exported function or feature); `a2interactive.Rmd` checklist N/A
+(no exported function/parameter added or changed); GitHub issue
+close-out N/A (issue \#159 stays open – commented with findings, not
+resolved, work continues); lint checklist N/A (no `.R` file added or
+modified – all candidate code lived in `/private/tmp` scratchpad and the
+`docs/planning/*.qmd` evidence doc, never `R/`); `_pkgdown.yml`
+reference-coverage checklist N/A (no new exported function). Runtime
+smoke test (Phase 3E): N/A – docs-only investigation, no runtime
+behavior changed (matches the S588 design-session precedent).
+
+**Self-assessment (Session 589): 9/10.** **Strengths:** (1) Followed the
+handoff’s explicit instruction to build a FAITHFUL full-pipeline
+reproduction rather than reusing S588’s own simplified proxy –
+cross-checked the seed byte-identical against the real shipped function
+at BOTH scales before trusting any comparison built on it, and
+cross-checked the violation metric against Track 6’s own
+independently-published baseline (catching a real scaling bug in the
+process – see weakness 1). (2) When the FIRST real-fixture metric came
+back nonsensical (0/251), did not report it as a positive/neutral result
+– treated the mismatch against Track 6’s own published number as a
+signal to debug the harness before trusting anything downstream, per
+this project’s own “measure before deciding” discipline. (3) Diagnosed
+the real-fixture regression’s actual structural cause (a specific
+high-mate-count hub individual) rather than reporting only the aggregate
+percentage, directly actionable for scoping a next attempt (Learning
+600). (4) Found and documented 2 real implementation bugs in the
+candidate itself, both discovered via empirical iteration-tracing rather
+than code review alone – and wrote up the general lesson each one
+teaches (Learnings 598-599), not just the specific fix. (5) Named a
+concrete, checked lower-risk alternative
+(`igraph::layout_with_sugiyama()`) for the next attempt rather than only
+reporting “this failed” – verified it wasn’t installed rather than
+assuming, so the recommendation is checked, not guessed. (6) Ratified
+the verdict via `AskUserQuestion` before finalizing the documents,
+matching the S588 precedent, rather than unilaterally deciding the
+recommendation. **Weaknesses:** (1) The first real-fixture metric
+attempt had a real bug (missing `xScale` multiplier) that a more careful
+FIRST read of the design doc’s own evidence.qmd (which already divided
+by 120 in its own proxy measurement, a hint this session initially
+missed) could have caught before running anything – cost one extra
+debug-and-rerun cycle, not large but avoidable. (2) Still no independent
+adversarial-verification pass by a separate agent/session – the same
+standing gap flagged for 22+ consecutive prior sessions now. (3) The
+candidate’s own convergence failure was diagnosed for only the single
+worst-regressed edge, not systematically across all 15 regressed edges –
+sufficient to identify the general mechanism (explicitly scoped as such,
+§8 of the plan doc) but a future spike attempting to actually FIX a
+hub-node-aware algorithm would need a fuller structural survey than this
+session provided. **Ledger:** recorded in `CHANGELOG.md` (claim +
+close-out entries, `[BL-N]`-tagged).
+
+### Session 587 Handoff Evaluation (by Session 588)
+
+**Score: 10/10.** **What helped:** the `next_steps` field named this
+exact item as recommendation (3) of 3 remaining READY items, explicitly
+describing it as “2 related open geometry gaps… need their own design
+session before a fix is attempted” – this session picked it directly
+from the Phase 0 priorities picker (option 1, same order) and never had
+to independently discover that the item needed a design (not
+implementation) session, or that a second, related item (S583) existed
+alongside it. **What was missing:** nothing the handoff itself could
+reasonably have anticipated – S587’s own deliverable (a WORDLIST fix)
+had no reason to investigate pedigree-diagram geometry, so it could not
+have flagged that issue \#141 exists on the same function with a
+superficially similar name (this session had to discover and distinguish
+that itself, §1.1 of the design doc). **What was wrong:** nothing – the
+item’s framing (“likely needs its own design session given the change
+surface”) held up exactly as stated once investigated. **ROI:** high –
+zero rediscovery cost on which item to pick; all of this session’s
+substantial investigation was the item’s own genuine content, not
+handoff-gap recovery.
+
+### What Session 588 Did
+
+**Deliverable:** Design a fix for “Pedigree Diagram: sibling
+subtree-width asymmetry” (`BACKLOG.md`, found S576) – one
+architecture/design document,
+`docs/planning/pedigree-diagram-sibling-subtree-width-plan.md`, per
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`, plus a
+runnable evidence document,
+`docs/planning/pedigree-diagram-sibling-subtree-width-evidence.qmd` –
+**DONE**. **Planning session – TDD phases (RED/GREEN/REFACTOR) declared
+INAPPLICABLE** (`PROJECT_LEARNINGS.md` precedent: a planning session is
+not strict-TDD; the `CLAUDE.md` TDD override governs only implementation
+sessions). **Started/Completed:** 2026-08-15.
+
+**What happened, in order:** **(1)** Phase 0 orient in full
+(`SAFEGUARDS.md`, `SESSION_NOTES.md`, `gh issue list`,
+`git status`/`log`/`diff --stat`, `gh run list` \[S587’s own push still
+`in_progress` on `R-CMD-check.yaml`/`pkgdown.yaml`/`test-coverage.yaml`,
+`lint.yaml` green; the prior S586 push’s `R-CMD-check.yaml` failure was
+the exact defect S587 had just fixed\], `methodology_ dashboard.py`
+\[96/100, 1 HIGH risk – `SESSION_NOTES.md` 3,852 lines, unrelated to
+this task\], ledger reconcile \[`CHANGELOG.md` frontier == `HEAD`, no
+gap; `HANDOFFS.md` 2 commits behind but both were CHANGELOG-only “record
+push action” entries after S587’s own receipt was already `complete` –
+no backfill needed\], untracked-file check
+\[`docs/planning/pedigree-diagram-kinship2-reference- comparison.html` –
+re-confirmed the known S558-class rendered-Quarto-output pattern\]).
+Rendered the 4-item priorities picker from `BACKLOG.md`’s tagged items
+(2 pedigree-diagram design items, the LabKey BLOCKED item, the
+NEWS/screenshot-verification item); user picked the sibling
+subtree-width-asymmetry design item. **(2)** Investigated the code
+(`R/makePedigreeDiagramData.R`’s `.positionMatingUnitForest()`,
+`mergeSubtrees()`, `finalizeNode()`) and Track 6’s own plan doc
+(`docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md`
+§1.4/§8, the item’s origin) before designing anything. Built a
+13-individual synthetic reproduction isolating the mechanism (a
+childless sibling `A` vs. `B`, anchoring a 2-generation-deep,
+2-child-per-union subtree) after determining the real fixture’s own
+`__union_15` subgraph couldn’t be cleanly isolated
+([`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)
+returns nearly the whole 375-individual connected component). **(3)**
+Owner interjected mid-turn (before any file write) asking to see the
+actual rendered figures compared against kinship2 before assessing the
+work satisfactory – rendered and displayed inline 3 PNGs: kinship2’s own
+rendering, nprcgenekeepr’s shipped rendering (confirmed the 300-raw-
+unit `A`-`B` gap), and a candidate mitigation’s rendering. **(4)**
+Tested one candidate (bounded- depth contour-merge lookahead) both on
+the synthetic example and the real fixture – **rejected**: closed the
+toy-example gap (2.5-\>1.0 raw) but introduced an edge crossing between
+two OTHER siblings, and regressed a simplified real-fixture proxy
+measure (0.8%-\>3.2%) in the OPPOSITE direction from the toy example –
+written up as `PROJECT_LEARNINGS.md` Learning 596. **(5)** Wrote the
+Phase 1B claim stub + `HANDOFFS.md` pending receipt, committed
+(`5bafb83d`) – done after the investigation above, which was
+read-only/scratchpad-only, not repo file edits. **(6)** First
+`AskUserQuestion` ratification: presented the evidence and 3 options;
+owner selected “Defer, document, file issue” (Round 1). **(7)** Owner
+corrected mid-turn: “these layout issues are a high priority and may
+require a lot of work… the work cost is not a deterrent.” **(8)**
+Investigated further (no new file writes) and found the deeper reason no
+low-risk fix exists: the shipped algorithm’s “rigid-subtree” model
+(every subtree an opaque block, minimal-safe-gap contour merge) is the
+SAME model Reingold-Tilford/Walker/Buchheim-Jünger-Leipert (issue
+\#141’s own named target) all use – none of them would fix this, since
+they compute the same layout faster, not a tighter one. Genuinely
+closing the gap needs a different paradigm entirely. **(9)** Second
+`AskUserQuestion` ratification with this new finding: owner selected
+“Recommend a full redesign effort” (Round 2, supersedes Round 1).
+**(10)** Wrote both documents reflecting Round 2 (§2 Decision: commit to
+a redesign, scope a next-session feasibility spike, defer
+campaign-drafting until the spike has evidence; §9 records both
+ratification rounds transparently, Round 1 kept not deleted). Rendered
+the evidence `.qmd` via `quarto render` (0 errors) – the documentation
+build equivalent (`SAFEGUARDS.md` “Verify the Build Equivalent”); the
+untracked `.html` output is left uncommitted, matching the established
+`docs/planning/*.qmd`-tracked/`*.html`-untracked convention. **(11)**
+Filed GitHub issue \#159 under Round 1’s framing (labeled
+`enhancement` + `premature optimization`), then edited it (title, body,
+label removed) to reflect Round 2 once the correction landed –
+documented in the design doc rather than silently overwritten. **(12)**
+Updated `BACKLOG.md`: marked the S576 item DONE with the full Round
+1-\>Round 2 narrative; added a new READY, high-priority item for the
+feasibility spike, citing the design doc’s §6 Migration Path. **(13)**
+Wrote up 2 new `PROJECT_LEARNINGS.md` entries: Learning 596 (test a
+candidate against both a toy example AND the real fixture – render the
+output, not just the summary metric, since a toy example’s own trend can
+invert at scale) and Learning 597 (a “small measured impact” framing
+implicitly answers a priority question the assistant should surface
+explicitly via `AskUserQuestion`, not infer and fold into a single
+recommended option).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A
+(no new displayed statistic); tutorial/article checklist N/A (no new
+user-facing Shiny feature, no code shipped); `NEWS.Rmd` checklist N/A
+(no new exported function or feature); `a2interactive.Rmd` checklist N/A
+(no exported function/parameter added or changed); GitHub issue
+close-out N/A (this session OPENED an issue, \#159, rather than closing
+one – no existing issue was resolved); lint checklist N/A (no `.R` file
+added or modified – all candidate-algorithm code lived in `/private/tmp`
+scratchpad or the `docs/planning/*.qmd` evidence doc, never `R/`);
+`_pkgdown.yml` reference-coverage checklist N/A (no new exported
+function).
+
+**Self-assessment (Session 588): 9/10.** **Strengths:** (1) Followed the
+project’s own “measure before deciding” discipline (Track 6’s own
+precedent) rather than reasoning from prose alone – built a real
+synthetic reproduction, rendered it, and empirically tested the one
+plausible candidate before recommending anything. (2) Directly honored
+the owner’s mid-turn request to see actual rendered figures compared
+against kinship2, producing 3 concrete renderings and a runnable,
+quarto-rendered-clean evidence document rather than describing results
+in prose only. (3) Found a REAL, non-obvious flaw in the “obvious” first
+candidate (edge crossing + real-fixture regression, not just “seemed
+complex”) – and then, after the priority correction, found the DEEPER
+reason (the rigid-subtree paradigm itself, shared with the
+Reingold-Tilford/Walker/ Buchheim-Jünger-Leipert family issue \#141
+names) rather than stopping at the first rejected candidate. (4) Handled
+the mid-session priority correction transparently – documented both
+ratification rounds in the design doc rather than silently rewriting
+history, updated the already- filed GitHub issue rather than abandoning
+it, and wrote up the meta-lesson (Learning 597) about why the first
+recommendation needed correcting. (5) Correctly held the
+planning/implementation boundary (FM \#18) even after being told cost is
+not a deterrent – scoped a concrete next-session feasibility spike
+rather than starting to prototype production code in this same session.
+**Weaknesses:** (1) Still no independent adversarial-verification pass
+by a separate agent/session – the same standing gap flagged for 21+
+consecutive prior sessions. (2) The original Round-1 recommendation
+(defer) rested on an unstated inference from “small measured impact” to
+“low priority” without first asking the owner directly whether
+cost/effort tolerance was the binding constraint – this is the session’s
+own most substantive mistake, corrected only because the owner caught
+it, not because this session’s own process surfaced the gap in the first
+`AskUserQuestion`’s own framing (written up as Learning 597 specifically
+so a future session’s own design recommendations ask this axis
+explicitly). (3) The real-fixture regression measurement for the tested
+candidate remains a simplified proxy (missing `orderBySex` and the final
+de-collision pass) – explicitly caveated in both documents and the gap
+is assigned to the next session’s own spike, but a more faithful
+measurement could have been built this session at some additional cost.
+**Ledger:** recorded in `CHANGELOG.md` (claim + close-out entries,
+`[BL-N]`-tagged).
+
 ### Session 586 Handoff Evaluation (by Session 587)
 
 **Score: 10/10.** **What helped:** the `next_steps` field named this

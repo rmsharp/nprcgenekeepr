@@ -171,6 +171,196 @@ here, in this ledger, not in a frozen shard.
 
 ## 2026-08
 
+### 2026-08-15 · \[issue \#161\] Filed pedigree-diagram mating-unit-marker kinship2-parity question
+
+- **Deliverable:** Filed [issue
+  \#161](https://github.com/rmsharp/nprcgenekeepr/issues/161) — found
+  live in conversation reviewing a fresh render of the `A x Y`
+  consanguineous fixture against kinship2. kinship2 draws no marker for
+  a mating (a plain line intersection); nprcgenekeepr draws a small
+  filled circle for every `__union_N` node. Mechanically feasible via
+  the same `size = 0` + transparent-color technique already used for
+  invisible D1/D2 rectilinear waypoints (issue \#142, S465), but a
+  genuine design question, not an obvious fix. Not implemented — needs a
+  decision first. Also added to `BACKLOG.md` Active.
+
+### 2026-08-15 · \[issue \#160\] Commented with a second, broader reproduction
+
+- **Deliverable:** Commented on [issue
+  \#160](https://github.com/rmsharp/nprcgenekeepr/issues/160#issuecomment-5304476340)
+  with a second fixture (the `A x Y` consanguineous example) showing a
+  more severe instance of the same defect: P1×P2’s own union lands
+  entirely outside their parents’ span (traced to Track 6’s centering
+  formula using a duplicated child’s *real*, far-away occurrence instead
+  of the nearby duplicate), and the resulting over-stretched sibship bar
+  collides with both an unrelated node (W) and a duplicate-connector
+  dashed edge. Broadens the diagnosed root cause: the collision isn’t
+  specific to the sibship-bar D1 loop — any straight same-row edge
+  (sibship bar or duplicate-connector) lacks collision-avoidance against
+  an intervening node. Also annotated the related-but-distinct
+  `BACKLOG.md` S583 item (union-outside-parents’-span) with a 3-instance
+  live reconfirmation of that already-tracked gap on the same fixture
+  (X×A, A×Y, W×Y unions each collapsing to their one child’s x) — not
+  filed as a new issue, since it’s the same gap already tracked there.
+  No code changed.
+
+### 2026-08-15 · \[issue \#160\] Filed pedigree-diagram rectilinear sibship-bar false-parentage defect
+
+- **Deliverable:** Filed [issue
+  \#160](https://github.com/rmsharp/nprcgenekeepr/issues/160) — found
+  live in conversation (not a claimed session), while generating fresh
+  kinship2-vs-nprcgenekeepr comparison renders from current HEAD
+  (`f12e7cbb`) to visually verify the Track 1-6 kinship2-fidelity
+  remediation effort. On `kinship2::sample.ped` family 2 (14 people, no
+  multi-mate individuals — the project’s own “cleanest comparison”
+  fixture), under `edgeStyle = "rectilinear"` (the current shipped
+  default since Track 2, S574): the rectilinear sibship-bar waypoints
+  sit at the exact same y as the children’s own row (zero vertical drop
+  from an intermediate bar row), so the bar reads as a straight
+  mate-line chain — and 2 unrelated nodes (203×204’s own mating-unit
+  dot; 209, a marry-in founder with no blood relation to 201×202) land
+  directly on that line, each visually implying a parent-child
+  relationship that does not exist. Confirmed against
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)’s
+  own returned `nodes`/`edges` (coordinate collision, not a rendering
+  artifact) and against a pixel-level screenshot crop of both collision
+  points. Root cause is a pre-existing design gap in
+  `.addRectilinearWaypoints()` (issue \#142) — not a regression from
+  Track 1-6, which measured edge orthogonality but never checked for
+  coordinate collisions between unrelated nodes. Not fixed this
+  conversation — no session claimed, reported per the established
+  “report, don’t fix mid-session” precedent (`PROJECT_LEARNINGS.md`
+  Learning 382); needs its own design pass. See issue \#160 for full
+  reproduction steps and evidence.
+
+### 2026-08-15 · \[BL-N\] S590: close out (pedigree-diagram layout SECOND feasibility spike – igraph::layout_with_sugiyama())
+
+- **Deliverable:** Ran the pedigree-diagram layout SECOND feasibility
+  spike (`BACKLOG.md`, found S589, HIGH PRIORITY) —
+  `docs/planning/pedigree-diagram-layout-sugiyama-spike-plan.md` + a
+  runnable evidence document,
+  `docs/planning/pedigree-diagram-layout-sugiyama-spike-evidence.qmd`.
+  Adapted `igraph::layout_with_sugiyama()` (owner-selected via
+  `AskUserQuestion` over a ported Brandes-Köpf 2002 alternative),
+  reusing S589’s own faithful harness verbatim. Found and fixed 2 real
+  methodological issues en route: a stale renv-cached installed package
+  build (predates Track 6 by ~3.5h —
+  [`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/)
+  silently loads it;
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  used throughout instead) and `layout_with_sugiyama()`’s own
+  vertex-order-sensitive crossing heuristic (mitigated via standard
+  multi-restart). Synthetic example: 20% gap reduction, 0 crossings
+  (matching S589’s own candidate). Real 375-individual fixture:
+  **regressed** on every axis measured (9/251→25/251 edges over
+  threshold, max offset 4,121→10,110, crossings 3,174→5,916), confirmed
+  not a tuning artifact via a restart/seed sweep and an edge-weight
+  check. **Verdict: NOT FEASIBLE as prototyped.** This is the THIRD
+  independently-designed candidate to regress the real fixture.
+  Owner-ratified: **close the non-rigid-layout investigation as
+  inherent** — no further spike scoped on this thread. Updated
+  `BACKLOG.md` (item DONE, no new spike item added); commented on and
+  **closed** GitHub issue \#159 with the cumulative 3-candidate
+  evidence. Added `PROJECT_LEARNINGS.md` Learnings 601–603; fixed a
+  stale learnings-count cross-reference in `CLAUDE.md`.
+  Planning/investigation session, TDD phases inapplicable — no `R/` file
+  touched.
+
+### 2026-08-15 · \[BL-N\] S590: claim (pedigree-diagram layout SECOND feasibility spike)
+
+- **Deliverable:** Non-commit-adjacent claim entry per Phase 1B. Session
+  claimed to run the pedigree-diagram layout SECOND feasibility spike
+  (`BACKLOG.md`, found S589, HIGH PRIORITY) — adapt
+  `igraph::layout_with_sugiyama()` (owner-selected via
+  `AskUserQuestion`), tested against the same two fixtures S589 used.
+  Planning/investigation session, TDD phases inapplicable.
+
+### 2026-08-15 · \[ad hoc\] S590: reconcile HANDOFFS.md commit self-reference (`f3492719`)
+
+- **Deliverable:** Fixed this session’s own `HANDOFFS.md` receipt
+  `commit: pending` -\> the real sha (`f3492719`, close-out) —
+  unknowable until after that commit existed. Matches the established
+  S562-S589 precedent.
+
+### 2026-08-15 · \[ad hoc\] S589: reconcile HANDOFFS.md commit self-reference (`691071a0`)
+
+- **Deliverable:** Fixed this session’s own `HANDOFFS.md` receipt
+  `commit: pending` -\> the real sha (`691071a0`, close-out) —
+  unknowable until after that commit existed. Matches the established
+  S562-S588 precedent.
+
+### 2026-08-15 · \[BL-N\] S589: close out (pedigree-diagram non-rigid layout feasibility spike)
+
+- **Deliverable:** Ran the pedigree-diagram layout feasibility spike
+  (`BACKLOG.md`, found S588, HIGH PRIORITY) —
+  `docs/planning/pedigree-diagram-nonrigid-layout-spike-plan.md` + a
+  runnable evidence document,
+  `docs/planning/pedigree-diagram-nonrigid-layout-spike-evidence.qmd`.
+  Prototyped a barycenter/median layered-DAG compaction candidate
+  (owner-selected via `AskUserQuestion`): 20% gap reduction and zero
+  edge crossings on the synthetic example, but **regressed** the real
+  375-individual fixture under a faithful full-pipeline measurement
+  (9/251→15/251 edges over threshold, 6.1x layout-width growth),
+  root-caused to convergence instability at high-mate-count “hub”
+  individuals. **Verdict: NOT FEASIBLE as prototyped.** Owner-ratified
+  recommendation: a second, narrower spike adapting a proven library
+  (`igraph::layout_with_sugiyama()`) rather than tuning this candidate
+  further; campaign document deferred. Updated `BACKLOG.md` (S588 item
+  DONE, new READY item for the 2nd spike); commented on GitHub issue
+  \#159 (not closed). Added `PROJECT_LEARNINGS.md` Learnings 598–600;
+  fixed a stale learnings-count cross-reference in `CLAUDE.md`.
+  Planning/investigation session, TDD phases inapplicable — no `R/` file
+  touched.
+
+### 2026-08-15 · \[BL-N\] S589: claim (pedigree-diagram layout feasibility spike)
+
+- **Deliverable:** Non-commit-adjacent claim entry per Phase 1B. Session
+  claimed to run the pedigree-diagram layout feasibility spike
+  (`BACKLOG.md`, found S588, HIGH PRIORITY) — prototype one
+  non-rigid/constraint-aware layout candidate (barycenter/median
+  layered-DAG compaction, owner-selected via `AskUserQuestion`), tested
+  against the synthetic example and a faithful real-fixture
+  reproduction. Planning/investigation session, TDD phases inapplicable.
+
+### 2026-08-15 · \[ad hoc\] S588: reconcile HANDOFFS.md commit self-reference (`999c3b74`)
+
+- **Deliverable:** Fixed this session’s own `HANDOFFS.md` receipt
+  `commit: ... this close-out commit` -\> the real sha (`999c3b74`,
+  close-out) — unknowable until after that commit existed. Matches the
+  established S562-S587 precedent.
+
+### 2026-08-15 · \[BL-N\] S588: close out (pedigree-diagram sibling subtree-width asymmetry design)
+
+- **Deliverable:** Designed a fix for “Pedigree Diagram: sibling
+  subtree-width asymmetry” (`BACKLOG.md`, found S576) —
+  `docs/planning/pedigree-diagram-sibling-subtree-width-plan.md` + a
+  runnable evidence document,
+  `docs/planning/pedigree-diagram-sibling-subtree-width-evidence.qmd`.
+  Built a 13-individual synthetic reproduction, rendered it via kinship2
+  and nprcgenekeepr side by side, and empirically tested one candidate
+  (bounded-depth contour-merge lookahead) — rejected: it closed the
+  toy-example gap but introduced an edge crossing and regressed a
+  real-fixture proxy measure. Found the deeper reason no low-risk tuning
+  of the current algorithm can work (the rigid-subtree model shared with
+  the Reingold-Tilford/Walker/Buchheim-Jünger-Leipert family issue \#141
+  names). First ratified DEFER (Round 1); owner corrected mid-session
+  (“high priority, work cost is not a deterrent”); re-ratified COMMIT to
+  a redesign (Round 2, both rounds recorded transparently). Filed GitHub
+  issue \#159, then updated it to reflect Round 2. Updated `BACKLOG.md`
+  (S576 item DONE; new READY high-priority feasibility-spike item
+  added). Wrote `PROJECT_LEARNINGS.md` Learnings 596 (test candidates
+  against both a toy example and the real fixture, render output not
+  just metrics) and 597 (surface priority/cost-tolerance questions
+  explicitly via `AskUserQuestion` rather than inferring them from
+  measured technical severity).
+
+### 2026-08-15 · \[BL-N\] S588: claim (design a fix for pedigree-diagram sibling subtree-width asymmetry)
+
+- **Deliverable:** Non-commit-adjacent claim entry per Phase 1B. Session
+  claimed to design a fix for “Pedigree Diagram: sibling subtree-width
+  asymmetry” (`BACKLOG.md`, found S576) — one architecture/design
+  document, planning session, TDD phases inapplicable.
+
 ### 2026-08-15 · \[ad hoc\] S587: push commits (`d6deec73..94fcab60`)
 
 - **Deliverable:** Non-commit action, recorded per failure mode \#27.

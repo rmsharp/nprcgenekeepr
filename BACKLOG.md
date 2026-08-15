@@ -6,6 +6,38 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 ## Active
 
+**Pedigree Diagram: rectilinear sibship bar can visually imply false
+parentage** (found live in conversation 2026-08-15, not a claimed
+session, filed as [issue
+\#160](https://github.com/rmsharp/nprcgenekeepr/issues/160), DECISION
+NEEDED, Effort unscoped) — under `edgeStyle = "rectilinear"` (current
+shipped default), the sibship-bar waypoints sit at the exact same y as
+the children’s own row, so an unrelated same-row node (a sibling’s own
+mating-unit dot, a marry-in mate) can land directly on the bar line and
+read as that sibling’s child. Reproduced on the “cleanest comparison”
+14-person fixture (no multi-mate ambiguity), 2 independent collisions
+found in one render. Needs a design session to give the bar genuine
+vertical clearance without reopening Track 4/6’s ratified invariants —
+see issue \#160 for full reproduction/evidence. Not fixed here. **Update
+(same day):** a second, more severe reproduction (P1×P2’s own union
+landing entirely outside their span, plus a duplicate-connector line
+rendering behind an unrelated node) traced the root cause one level
+deeper — see the issue’s comment thread. The defect is broader than the
+sibship-bar D1 loop alone: any straight same-row edge (sibship bar OR
+duplicate-connector) can collide with an intervening unrelated node.
+
+**Pedigree Diagram: consider hiding the mating-unit node marker to match
+kinship2’s plain-intersection convention** (found live in conversation
+2026-08-15, not a claimed session, filed as [issue
+\#161](https://github.com/rmsharp/nprcgenekeepr/issues/161), DECISION
+NEEDED, Effort S if approved) — kinship2 draws no marker for a mating,
+just a plain line intersection; nprcgenekeepr draws a small filled
+circle for every union. Mechanically easy (the `size = 0` +
+transparent-color technique already used for invisible D1/D2 waypoints
+applies directly), but a genuine design call, not an obvious fix — the
+dot may be a useful explicit anchor independent of kinship2 parity.
+Needs a decision before implementation.
+
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 
 *Resolves the former “Tracker reconciliation” decision item (S365) –
@@ -302,30 +334,120 @@ confirmed all 3 affected runtime paths –
 `PROJECT_LEARNINGS.md` Learning 588. See `CHANGELOG.md`.
 
 (found S576, 2026-08-14, incidental to Track 6’s own empirical
-validation of the child-centered union-position design, READY, Effort
-unknown – not scoped) **Pedigree Diagram: sibling subtree-width
-asymmetry – 2-3 direct children of the same mating unit can land far
-apart in x purely because their own descendant-subtree sizes differ,
-independent of where the union itself is positioned.** Distinct from
-(and not resolved by) Track 6’s own child-centered union-position fix:
-even a union perfectly centered between its children cannot keep both
-edges short when the children themselves are positioned far apart.
-Measured on the real 375-individual fixture as Track 6’s own residual:
-9/251 (3.6%) child edges still exceed a 200-scaled-unit offset after
-Track 6’s fix lands, concentrated in unions with only 2-3 children.
-Concrete example: `__union_15` (gen 0)’s 2 children sit at raw x 29.88
-and 98.56 – a 68.68-unit gap between direct siblings, more than half the
-entire fixture’s own raw-x range. Root cause is one level down the same
-recursive contour-merge pattern Track 6 addresses at the union level
-(D3, `docs/planning/pedigree-diagram-option2-layout-design-plan.md`): an
-individual’s x is the centroid of their OWN full descendant subtree, so
-2 siblings with very differently-sized subtrees (one prolific branch,
-one sparse/childless) end up far apart regardless of any parent-level
-positioning choice. Not investigated further this session (no candidate
-fix evaluated) – likely needs its own design session given the change
-surface (the same core recursive positioning algorithm). See
-`docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md`
-§1.4/§8 for the full measurement and reasoning.
+validation of the child-centered union-position design, **DESIGN SESSION
+DONE S588, 2026-08-15 – DECISION: COMMIT to a redesign (owner corrected
+mid-session from an initial DEFER, see below).**) **Pedigree Diagram:
+sibling subtree-width asymmetry – 2-3 direct children of the same mating
+unit can land far apart in x purely because their own descendant-subtree
+sizes differ, independent of where the union itself is positioned.**
+Design session
+`docs/planning/pedigree-diagram-sibling-subtree-width-plan.md`
+(evidence:
+`docs/planning/pedigree-diagram-sibling-subtree-width-evidence.qmd`)
+built a synthetic reproduction, rendered it via kinship2 and
+nprcgenekeepr side by side, and empirically tested the one plausible
+low-risk candidate (a bounded-depth contour-merge lookahead in
+`.positionMatingUnitForest()`). **Rejected**: it closes the sibling gap
+on the toy example but introduces a genuinely worse defect (2 siblings’
+own connecting lines cross) and *regresses* a simplified real-fixture
+measure (3.2% vs. the shipped algorithm’s 0.8% under the same proxy
+methodology) – the opposite direction from the toy example. Deeper
+finding (design doc §1.6): **no low-risk tuning of the current algorithm
+can fix this at all** – `.positionMatingUnitForest()` uses the same
+rigid-subtree model as Reingold-Tilford/Walker/Buchheim-Jünger-Leipert
+(issue \#141’s own named target), all of which compute the *same* layout
+faster, not a tighter one; a real fix needs a different layout paradigm
+entirely. First ratified as DEFER (document as inherent, file a
+low-priority tracker) – **owner corrected mid-session: “these layout
+issues are a high priority and may require a lot of work; the work cost
+is not a deterrent.”** Re-ratified via a second `AskUserQuestion`:
+commit to the redesign, scoped as a dedicated follow-up effort (see the
+new item directly below), not an immediate code change in this planning
+session. Companion GitHub issue
+[\#159](https://github.com/rmsharp/nprcgenekeepr/issues/159) filed and
+then updated same-session to reflect the priority correction (title/body
+rewritten, `premature optimization` label removed). See `CHANGELOG.md`
+and `PROJECT_LEARNINGS.md` Learning 596.
+
+(found S588, 2026-08-15, design session for the item directly above,
+**RESOLVED S589 – NOT FEASIBLE.**
+`docs/planning/pedigree-diagram-nonrigid-layout-spike-plan.md` +
+[`-evidence.qmd`](https://github.com/rmsharp/docs/planning/pedigree-diagram-nonrigid-layout-spike-evidence.qmd)).
+Prototyped a barycenter/median layered-DAG compaction candidate
+(owner-selected via `AskUserQuestion`, over a force-directed
+alternative). Synthetic 13-individual example: modest real improvement
+(A-B gap 2.5-\>2.0, 20% reduction), zero edge crossings (row order
+provably preserved by construction, verified empirically). Real
+375-individual fixture, faithful full-pipeline measurement (harness
+verified byte-identical to the shipped algorithm; baseline reproduced
+Track 6’s own published 9/251, 3.6%, max 4,121.25 exactly):
+**regressed** to 15/251 (5.98%), max offset 5,344, overall layout width
+6.1x wider – consistent across a 5-point hyperparameter sweep, never
+better than 15/251. Root cause diagnosed: convergence instability at
+high-mate-count “hub” individuals (found one sire with 5 separate mating
+unions) – a structural feature entirely absent from the small synthetic
+example. Found and fixed 2 real implementation bugs along the way (an
+unbounded Jacobi-update ratchet; a self-referential down-sweep target),
+documented for any future attempt. This is the SECOND
+independently-designed candidate (after S588’s own bounded-lookahead
+candidate) to improve the toy example while regressing the real fixture,
+via a different failure mechanism each time (edge crossings there;
+convergence instability here). Ratified via `AskUserQuestion`:
+**recommend a second, narrower spike adapting a proven,
+convergence-guaranteed implementation**
+(e.g. `igraph::layout_with_sugiyama()`, confirmed a well-established
+CRAN package though not installed in this environment) rather than
+tuning this candidate further; campaign document deferred until that
+spike has evidence. See `CHANGELOG.md` and `PROJECT_LEARNINGS.md`.
+
+(found S589, 2026-08-15, follow-on to the item directly above,
+**RESOLVED S590 – NOT FEASIBLE; INVESTIGATION CLOSED AS INHERENT.**
+`docs/planning/pedigree-diagram-layout-sugiyama-spike-plan.md` +
+[`-evidence.qmd`](https://github.com/rmsharp/docs/planning/pedigree-diagram-layout-sugiyama-spike-evidence.qmd)).
+Adapted `igraph::layout_with_sugiyama()` (owner-selected via
+`AskUserQuestion` over a ported Brandes-Köpf 2002 alternative; `igraph`
+confirmed installable, used investigation-only, not added to
+`DESCRIPTION`). Synthetic 13-individual example: matched the first
+spike’s own improvement (A-B gap 2.5-\>2.0, 20% reduction), 0 crossings
+(best of 20 random-vertex-order restarts – found necessary: the natural
+construction order hit an avoidable 4-crossing local optimum;
+multi-restart is standard practice for this class of heuristic). Real
+375-individual fixture, faithful full-pipeline measurement (harness
+re-verified byte-identical to shipped source via
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html);
+baseline reproduced 9/251, 3.6%, max 4,121.25 exactly): **regressed on
+every axis measured** – 25/251 (9.96%), max offset 10,110, layout width
+2.4x wider, AND crossings worse than baseline (5,916 vs 3,174, despite
+crossing-minimization being this algorithm’s own objective). Not a
+tuning artifact: confirmed across a 4-point restart/seed sweep and an
+edge-weight check (`weights` param had zero measurable effect with
+explicit `layers` supplied – a checked, reported limitation). Root cause
+diagnosed: a different high-mate-count hub individual (4 mating unions);
+mechanism differs from the first spike’s convergence instability –
+sugiyama’s own global crossing/straightness objective has no term
+preserving one union’s full-sibling compactness, unlike the shipped
+model’s recursive contour-merge, which achieves it by construction.
+THIRD independently-designed candidate (bounded-lookahead,
+barycenter/median, now a proven library) to improve the toy example
+while regressing the real fixture, via a THIRD distinct failure
+mechanism each time. Ratified via `AskUserQuestion`: **close the
+non-rigid-layout investigation as inherent** – 3 independent paradigms
+converging on the same real-fixture failure pattern is sufficient
+evidence the current rigid-subtree model is a reasonable local optimum;
+stop pursuing further spikes on this thread without new evidence that
+changes the picture. One untested idea recorded for the record, not
+pursued (§2 of the plan doc): a hybrid “order-then-compact” approach
+(sugiyama’s proven low-crossing order, fed into a contour-merge-style
+compaction pass instead of sugiyama’s own coordinate assignment).
+Companion GitHub issue
+[\#159](https://github.com/rmsharp/nprcgenekeepr/issues/159) closed
+same-session citing this cumulative 3-candidate evidence. Incidental
+finding, reported not fixed: the renv-cached installed `nprcgenekeepr`
+build was stale (predates Track 6 by ~3.5h) –
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+used throughout instead of
+[`library()`](https://rdrr.io/r/base/library.html). See `CHANGELOG.md`
+and `PROJECT_LEARNINGS.md`.
 
 (found S583, 2026-08-15, incidental to a user question about the
 just-reshot `pb_diagram_legend.png` screenshot, READY, Effort unknown –
@@ -353,7 +475,7 @@ later descendants. **Concrete, reproduced example** (the real
 subgraph `pb_diagram_legend.png` depicts): `5A6DFT` (sire) x = -60,
 `8DKELJ` (dam) x = 60, their union (`__union_1`, sole child `8LKBV9`) x
 = **120** – entirely outside the `[-60, 60]` parent span, past the dam,
-because `8LKBV9`’s own x is pulled right by his own 2 further-generation
+because `8LKBV9`‘s own x is pulled right by his own 2 further-generation
 matings (verified live via
 [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md),
 exact coordinates reproduced from the live layout function, not
@@ -368,6 +490,16 @@ design session, since a fix must decide how to reconcile “center on
 children” (Track 6’s own stated goal, still valid for multi-child
 unions) with “never leave the parents’ own span” (kinship2’s invariant)
 without reopening Track 6’s already-ratified formula wholesale.
+**Confirmed again live (2026-08-15, found in conversation, not a claimed
+session):** the same single-child collapse
+(`finalUnitX[U] == x[thatChild]`) reproduced 3 more times in one small
+9-person fixture (`kinship2-fidelity-validation.qmd`’s Track C
+consanguineous example) – the X×A, A×Y, and W×Y unions each sit exactly
+at their one child’s x rather than their own parents’ midpoint. See
+[issue \#160](https://github.com/rmsharp/nprcgenekeepr/issues/160)’s
+comment thread for the full coordinate evidence (a related but distinct
+finding on the same fixture). Not filed as its own issue – this is the
+same already-tracked gap, not a new one.
 
 (found S574, 2026-08-14, incidental to Track 2’s default-flip
 documentation pass, **RESOLVED S582**.
