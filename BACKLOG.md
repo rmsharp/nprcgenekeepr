@@ -258,21 +258,41 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       confirmed a well-established CRAN package though not installed in this environment) rather
       than tuning this candidate further; campaign document deferred until that spike has
       evidence. See `CHANGELOG.md` and `PROJECT_LEARNINGS.md`.
-- [ ] (found S589, 2026-08-15, follow-on to the item directly above, READY, Effort M --
-      HIGH PRIORITY per the same owner directive, work cost explicitly not a deterrent)
-      **Pedigree Diagram layout: SECOND feasibility spike, adapting a proven/convergence-
-      guaranteed implementation instead of a hand-rolled one.** Adapt
-      `igraph::layout_with_sugiyama()` (add `igraph` to `Suggests` if it stays
-      investigation-only, matching the `kinship2` reference-only precedent) OR a properly-ported
-      Brandes-Köpf (2002) horizontal coordinate assignment to this project's own mating-unit-
-      forest data structures. Test against the SAME two fixtures the first spike used (the
-      13-individual synthetic example, checked visually for crossings; the real 375-individual
-      fixture, measured with the SAME faithful full-pipeline metric
-      `docs/planning/pedigree-diagram-nonrigid-layout-spike-evidence.qmd` established) so results
-      are directly comparable across all 3 candidates now on record. Close out with a clear
-      verdict; that verdict decides the campaign-document question (deferred twice now). See
-      `docs/planning/pedigree-diagram-nonrigid-layout-spike-plan.md` §6 for the full scope and
-      §1.6 for the specific hub-node convergence failure the first spike diagnosed.
+- [x] (found S589, 2026-08-15, follow-on to the item directly above,
+      **RESOLVED S590 -- NOT FEASIBLE; INVESTIGATION CLOSED AS INHERENT.**
+      `docs/planning/pedigree-diagram-layout-sugiyama-spike-plan.md` +
+      [`-evidence.qmd`](../docs/planning/pedigree-diagram-layout-sugiyama-spike-evidence.qmd)).
+      Adapted `igraph::layout_with_sugiyama()` (owner-selected via `AskUserQuestion` over a ported
+      Brandes-Köpf 2002 alternative; `igraph` confirmed installable, used investigation-only, not
+      added to `DESCRIPTION`). Synthetic 13-individual example: matched the first spike's own
+      improvement (A-B gap 2.5->2.0, 20% reduction), 0 crossings (best of 20 random-vertex-order
+      restarts -- found necessary: the natural construction order hit an avoidable 4-crossing
+      local optimum; multi-restart is standard practice for this class of heuristic). Real
+      375-individual fixture, faithful full-pipeline measurement (harness re-verified
+      byte-identical to shipped source via `pkgload::load_all()`; baseline reproduced 9/251, 3.6%,
+      max 4,121.25 exactly): **regressed on every axis measured** -- 25/251 (9.96%), max offset
+      10,110, layout width 2.4x wider, AND crossings worse than baseline (5,916 vs 3,174, despite
+      crossing-minimization being this algorithm's own objective). Not a tuning artifact:
+      confirmed across a 4-point restart/seed sweep and an edge-weight check (`weights` param had
+      zero measurable effect with explicit `layers` supplied -- a checked, reported limitation).
+      Root cause diagnosed: a different high-mate-count hub individual (4 mating unions);
+      mechanism differs from the first spike's convergence instability -- sugiyama's own global
+      crossing/straightness objective has no term preserving one union's full-sibling compactness,
+      unlike the shipped model's recursive contour-merge, which achieves it by construction. THIRD
+      independently-designed candidate (bounded-lookahead, barycenter/median, now a proven
+      library) to improve the toy example while regressing the real fixture, via a THIRD distinct
+      failure mechanism each time. Ratified via `AskUserQuestion`: **close the non-rigid-layout
+      investigation as inherent** -- 3 independent paradigms converging on the same real-fixture
+      failure pattern is sufficient evidence the current rigid-subtree model is a reasonable local
+      optimum; stop pursuing further spikes on this thread without new evidence that changes the
+      picture. One untested idea recorded for the record, not pursued (§2 of the plan doc): a
+      hybrid "order-then-compact" approach (sugiyama's proven low-crossing order, fed into a
+      contour-merge-style compaction pass instead of sugiyama's own coordinate assignment).
+      Companion GitHub issue [#159](https://github.com/rmsharp/nprcgenekeepr/issues/159) closed
+      same-session citing this cumulative 3-candidate evidence. Incidental finding, reported not
+      fixed: the renv-cached installed `nprcgenekeepr` build was stale (predates Track 6 by
+      ~3.5h) -- `pkgload::load_all()` used throughout instead of `library()`. See `CHANGELOG.md`
+      and `PROJECT_LEARNINGS.md`.
 - [ ] (found S583, 2026-08-15, incidental to a user question about the just-reshot
       `pb_diagram_legend.png` screenshot, READY, Effort unknown -- not scoped, likely needs its
       own design session before any fix) **Pedigree Diagram: a mating union with a single child (or

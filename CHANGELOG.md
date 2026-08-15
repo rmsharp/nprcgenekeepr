@@ -138,6 +138,33 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [BL-N] S590: close out (pedigree-diagram layout SECOND feasibility spike -- igraph::layout_with_sugiyama())
+- **Deliverable:** Ran the pedigree-diagram layout SECOND feasibility spike (`BACKLOG.md`, found
+  S589, HIGH PRIORITY) — `docs/planning/pedigree-diagram-layout-sugiyama-spike-plan.md` + a
+  runnable evidence document, `docs/planning/pedigree-diagram-layout-sugiyama-spike-evidence.qmd`.
+  Adapted `igraph::layout_with_sugiyama()` (owner-selected via `AskUserQuestion` over a ported
+  Brandes-Köpf 2002 alternative), reusing S589's own faithful harness verbatim. Found and fixed 2
+  real methodological issues en route: a stale renv-cached installed package build (predates
+  Track 6 by ~3.5h — `library(nprcgenekeepr)` silently loads it; `pkgload::load_all()` used
+  throughout instead) and `layout_with_sugiyama()`'s own vertex-order-sensitive crossing
+  heuristic (mitigated via standard multi-restart). Synthetic example: 20% gap reduction, 0
+  crossings (matching S589's own candidate). Real 375-individual fixture: **regressed** on every
+  axis measured (9/251→25/251 edges over threshold, max offset 4,121→10,110, crossings
+  3,174→5,916), confirmed not a tuning artifact via a restart/seed sweep and an edge-weight
+  check. **Verdict: NOT FEASIBLE as prototyped.** This is the THIRD independently-designed
+  candidate to regress the real fixture. Owner-ratified: **close the non-rigid-layout
+  investigation as inherent** — no further spike scoped on this thread. Updated `BACKLOG.md`
+  (item DONE, no new spike item added); commented on and **closed** GitHub issue #159 with the
+  cumulative 3-candidate evidence. Added `PROJECT_LEARNINGS.md` Learnings 601–603; fixed a stale
+  learnings-count cross-reference in `CLAUDE.md`. Planning/investigation session, TDD phases
+  inapplicable — no `R/` file touched.
+
+### 2026-08-15 · [BL-N] S590: claim (pedigree-diagram layout SECOND feasibility spike)
+- **Deliverable:** Non-commit-adjacent claim entry per Phase 1B. Session claimed to run the
+  pedigree-diagram layout SECOND feasibility spike (`BACKLOG.md`, found S589, HIGH PRIORITY) —
+  adapt `igraph::layout_with_sugiyama()` (owner-selected via `AskUserQuestion`), tested against
+  the same two fixtures S589 used. Planning/investigation session, TDD phases inapplicable.
+
 ### 2026-08-15 · [ad hoc] S589: reconcile HANDOFFS.md commit self-reference (`691071a0`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> the real
   sha (`691071a0`, close-out) — unknowable until after that commit existed. Matches the

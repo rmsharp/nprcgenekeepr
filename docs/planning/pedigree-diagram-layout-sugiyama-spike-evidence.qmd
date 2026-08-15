@@ -1,0 +1,693 @@
+---
+title: "Pedigree Diagram: igraph::layout_with_sugiyama() Layout Feasibility Spike -- Evidence"
+subtitle: "Supporting evidence for docs/planning/pedigree-diagram-layout-sugiyama-spike-plan.md -- not a package vignette, not shipped"
+date: today
+format:
+  html:
+    embed-resources: true
+    toc: true
+    df-print: kable
+---
+
+## Purpose
+
+`BACKLOG.md` (found S589, HIGH PRIORITY) scoped this SECOND feasibility spike: adapt a proven,
+convergence-guaranteed layout implementation -- `igraph::layout_with_sugiyama()` -- to this
+project's mating-unit-forest data structures, and test it against the SAME two fixtures the first
+spike (S589, barycenter/median) used, reusing that spike's own faithful full-pipeline metric.
+Owner selected `igraph::layout_with_sugiyama()` over a ported Brandes-Köpf (2002) alternative via
+`AskUserQuestion`, at this session's Phase 1.
+
+**No package code is changed here.** `igraph` is installed only into this project's local `renv`
+library for this one-off comparison (confirmed installable this session; not added to
+`DESCRIPTION`, not snapshotted into `renv.lock` -- matching the `kinship2` reference-only
+precedent).
+
+**Incidental finding, reported not fixed (`PROJECT_LEARNINGS.md` Learning 382 precedent):** the
+renv-cached INSTALLED `nprcgenekeepr` copy was built 2026-08-14 18:24, ~3.5h BEFORE Track 6
+shipped (commit `f65ecbea`, 2026-08-14 21:56:10) -- `library(nprcgenekeepr)` silently loads that
+STALE pre-Track-6 build. This session used `pkgload::load_all()` throughout instead, matching this
+project's own documented build-equivalent convention (`CLAUDE.md` "Fast single-file test"). Every
+number below is against TRUE current source, confirmed by a 0-diff crosscheck at both fixture
+scales (below) -- but the prior spike's own qmd used `library(nprcgenekeepr)`, so its own
+crosscheck evidence rests on this same stale-package risk. Not re-verified here (out of this
+session's own scope); a future session touching that document should re-render it with
+`load_all()` to confirm its numbers are unaffected.
+
+## Setup
+
+```{r setup}
+#| message: false
+suppressMessages(pkgload::load_all(".", quiet = TRUE))
+suppressWarnings(suppressMessages(library(igraph)))
+```
+
+## The candidate implementation
+
+Build the same parent-union-child DAG `.positionMatingUnitForest()` walks (vertices = real
+individuals + mating units; edges = sire/dam -> unit, unit/individual -> child, verbatim from
+`forest$matingUnits`/`forest$childEdges`), with each vertex's `layer` fixed to its DISPLAY
+generation (`dispGenOf` for individuals, `unitGenOf` for units -- identical to the shipped
+function's own generation accounting). Hand this graph to `igraph::layout_with_sugiyama()`,
+extract only the REAL individuals' `x` from its layout (mating-unit `x` is discarded --
+`finishPipeline()`'s own Track 6 `finalUnitX` recomputes it from children exactly as the shipped
+pipeline does), then feed those `x` values through the **identical** downstream pipeline the
+shipped function uses (`orderBySex` swap, Track 6 `finalUnitX`-from-children, duplicate offset,
+final de-collision, final sweep) -- verbatim from `R/makePedigreeDiagramData.R:884-1025`, reused
+byte-for-byte from the first spike's own harness.
+
+```{r harness-fns}
+#| code-fold: true
+## ---- SEED + FINISH PIPELINE: verbatim copy, reused from the first spike's own
+## harness (docs/planning/pedigree-diagram-nonrigid-layout-spike-evidence.qmd),
+## itself a byte-identical transcription of R/makePedigreeDiagramData.R:584-1025.
+buildSeed <- function(ped, forest) {
+  ped$gen[is.na(ped$gen)] <- 0L
+  matingUnits <- forest$matingUnits
+  duplicates <- forest$duplicates
+  childEdges <- forest$childEdges
+  unitIds <- matingUnits$id
+  realIds <- as.character(ped$id)
+  genOf <- stats::setNames(ped$gen, realIds)
+
+  danglingIds <- setdiff(c(matingUnits$sire, matingUnits$dam), realIds)
+  if (length(danglingIds) > 0L) {
+    fallbackGen <- vapply(danglingIds, function(x) {
+      matingUnits$gen[matingUnits$sire == x | matingUnits$dam == x][1L]
+    }, integer(1L))
+    genOf <- c(genOf, stats::setNames(fallbackGen, danglingIds))
+  }
+
+  unitGenOf <- stats::setNames(matingUnits$gen, unitIds)
+  maxGen <- max(ped$gen, if (nrow(matingUnits) > 0L) matingUnits$gen else 0L,
+                na.rm = TRUE)
+  if (!is.finite(maxGen)) maxGen <- 0L
+  minSep <- 1L
+
+  leafContour <- function(gen) {
+    left <- rep(Inf, maxGen + 1L); right <- rep(-Inf, maxGen + 1L)
+    left[gen + 1L] <- 0L; right[gen + 1L] <- 0L
+    list(x = 0L, contour = list(left = left, right = right))
+  }
+
+  mergeSubtrees <- function(subResults) {
+    n <- length(subResults)
+    xs <- numeric(n)
+    contour <- subResults[[1L]]$contour
+    if (n > 1L) {
+      for (i in 2L:n) {
+        ci <- subResults[[i]]$contour
+        finite <- is.finite(contour$right) & is.finite(ci$left)
+        shift <- minSep
+        if (any(finite)) {
+          needed <- max(contour$right[finite] - ci$left[finite] + minSep)
+          shift <- max(shift, needed)
+        }
+        xs[i] <- shift
+        contour <- list(left = pmin(contour$left, ci$left + shift),
+                         right = pmax(contour$right, ci$right + shift))
+      }
+    }
+    list(xs = xs, contour = contour)
+  }
+
+  finalizeNode <- function(merged, ownGen) {
+    xs <- merged$xs
+    ownX <- (xs[1L] + xs[length(xs)]) / 2L
+    shiftAmt <- -ownX
+    contour <- list(left = merged$contour$left + shiftAmt,
+                     right = merged$contour$right + shiftAmt)
+    contour$left[ownGen + 1L] <- min(contour$left[ownGen + 1L], 0L)
+    contour$right[ownGen + 1L] <- max(contour$right[ownGen + 1L], 0L)
+    list(ownX = ownX, childOffsets = xs - ownX, contour = contour)
+  }
+
+  anchoredUnits <- matingUnits[!is.na(matingUnits$anchor), , drop = FALSE]
+  everAnchor <- unique(anchoredUnits$anchor)
+  nonAnchorSides <- c(anchoredUnits$sire, anchoredUnits$dam)
+  neverAnchorIds <- setdiff(unique(nonAnchorSides), everAnchor)
+  hasOwnDirectChild <- function(id) {
+    any(childEdges$from == id & !(childEdges$from %in% unitIds))
+  }
+  freePassIds <- Filter(function(id) !hasOwnDirectChild(id), neverAnchorIds)
+  freePassUnitOf <- stats::setNames(character(length(freePassIds)), freePassIds)
+  for (fp in freePassIds) {
+    ownUnits <- matingUnits$id[matingUnits$sire == fp | matingUnits$dam == fp]
+    dupUnits <- duplicates$matingUnitId[duplicates$realId == fp]
+    freePassUnitOf[[fp]] <- setdiff(ownUnits, dupUnits)[1L]
+  }
+  freePassOfUnit <- split(names(freePassUnitOf), freePassUnitOf)
+
+  dispGenOf <- genOf[realIds]
+  realFreePassIds <- intersect(freePassIds, realIds)
+  if (length(realFreePassIds) > 0L) {
+    dispGenOf[realFreePassIds] <-
+      unname(unitGenOf[freePassUnitOf[realFreePassIds]])
+  }
+
+  relNode <- new.env(parent = emptyenv())
+
+  positionUnit <- function(unitId) {
+    kidIds <- childEdges$to[childEdges$from == unitId]
+    fpHere <- freePassOfUnit[[unitId]]
+    subIds <- c(fpHere, kidIds)
+    subResults <- lapply(subIds, function(sid) {
+      if (!is.null(fpHere) && sid %in% fpHere) {
+        leafContour(unitGenOf[[unitId]])
+      } else {
+        positionIndividual(sid)
+      }
+    })
+    fin <- finalizeNode(mergeSubtrees(subResults), unitGenOf[[unitId]])
+    relNode[[unitId]] <- list(childIds = subIds, childOffsets = fin$childOffsets)
+    list(x = fin$ownX, contour = fin$contour)
+  }
+
+  positionIndividual <- function(id) {
+    unitSub <- matingUnits$id[matingUnits$anchor %in% id]
+    directSub <- childEdges$to[childEdges$from == id &
+                                  !(childEdges$from %in% unitIds)]
+    subIds <- c(unitSub, directSub)
+    if (length(subIds) == 0L) {
+      relNode[[id]] <- list(childIds = character(0L), childOffsets = numeric(0L))
+      return(leafContour(genOf[[id]]))
+    }
+    subResults <- lapply(subIds, function(sid) {
+      if (sid %in% unitIds) positionUnit(sid) else positionIndividual(sid)
+    })
+    fin <- finalizeNode(mergeSubtrees(subResults), genOf[[id]])
+    relNode[[id]] <- list(childIds = subIds, childOffsets = fin$childOffsets)
+    list(x = fin$ownX, contour = fin$contour)
+  }
+
+  hasParentEdge <- realIds %in% childEdges$to
+  founderIds <- realIds[!hasParentEdge]
+  rootIds <- setdiff(founderIds, freePassIds)
+  rootIds <- rootIds[order(match(rootIds, realIds))]
+  orphanUnitIds <- matingUnits$id[is.na(matingUnits$anchor)]
+
+  rootResults <- c(lapply(rootIds, positionIndividual),
+                    lapply(orphanUnitIds, positionUnit))
+  allRootIds <- c(rootIds, orphanUnitIds)
+  rootMerge <- mergeSubtrees(rootResults)
+
+  absX <- new.env(parent = emptyenv())
+  assignAbs <- function(id, base) {
+    absX[[id]] <- base
+    node <- relNode[[id]]
+    if (!is.null(node) && length(node$childIds) > 0L) {
+      for (i in seq_along(node$childIds)) {
+        assignAbs(node$childIds[i], base + node$childOffsets[i])
+      }
+    }
+  }
+  for (i in seq_along(allRootIds)) assignAbs(allRootIds[i], rootMerge$xs[i])
+
+  realX <- vapply(realIds, function(i) absX[[i]], numeric(1L))
+
+  sweepMinSep <- function(ids, xVals, genVals) {
+    x <- stats::setNames(xVals, ids)
+    for (g in unique(genVals)) {
+      rowIds <- ids[genVals == g]
+      if (length(rowIds) < 2L) next
+      rowIds <- rowIds[order(x[rowIds], rowIds, method = "radix")]
+      for (i in 2L:length(rowIds)) {
+        prevX <- x[[rowIds[i - 1L]]]
+        if (x[[rowIds[i]]] < prevX + minSep) x[[rowIds[i]]] <- prevX + minSep
+      }
+    }
+    x
+  }
+  sweepGen <- unname(dispGenOf[realIds])
+  sweepX <- sweepMinSep(realIds, unname(realX), sweepGen)
+  realX <- unname(sweepX[realIds])
+
+  list(realIds = realIds, realX = realX, dispGenOf = dispGenOf,
+       matingUnits = matingUnits, childEdges = childEdges,
+       duplicates = duplicates, unitIds = unitIds, unitGenOf = unitGenOf,
+       minSep = minSep, sweepGen = sweepGen, sweepMinSep = sweepMinSep,
+       hasOwnDirectChild = hasOwnDirectChild, ped = ped)
+}
+
+finishPipeline <- function(seed, realX, orderBySex = TRUE) {
+  realIds <- seed$realIds
+  matingUnits <- seed$matingUnits
+  duplicates <- seed$duplicates
+  childEdges <- seed$childEdges
+  unitIds <- seed$unitIds
+  unitGenOf <- seed$unitGenOf
+  dispGenOf <- seed$dispGenOf
+  minSep <- seed$minSep
+  sweepGen <- seed$sweepGen
+  sweepMinSep <- seed$sweepMinSep
+  hasOwnDirectChild <- seed$hasOwnDirectChild
+  ped <- seed$ped
+
+  nodes <- data.frame(
+    id = c(realIds, unitIds),
+    x = c(unname(realX), rep(NA_real_, length(unitIds))),
+    gen = c(unname(dispGenOf), matingUnits$gen),
+    stringsAsFactors = FALSE
+  )
+
+  if (isTRUE(orderBySex)) {
+    sexOf <- stats::setNames(as.character(ped$sex), realIds)
+    mateCount <- table(c(matingUnits$sire, matingUnits$dam))
+    for (u in seq_len(nrow(matingUnits))) {
+      sireId <- matingUnits$sire[u]
+      damId <- matingUnits$dam[u]
+      if (!(sireId %in% realIds) || !(damId %in% realIds)) next
+      if (mateCount[[sireId]] != 1L || mateCount[[damId]] != 1L) next
+      if (hasOwnDirectChild(sireId) || hasOwnDirectChild(damId)) next
+      sireSex <- sexOf[[sireId]]
+      damSex <- sexOf[[damId]]
+      isQualifying <- (identical(sireSex, "M") && identical(damSex, "F")) ||
+        (identical(sireSex, "F") && identical(damSex, "M"))
+      if (!isQualifying) next
+      maleId <- if (identical(sireSex, "M")) sireId else damId
+      femaleId <- if (identical(sireSex, "F")) sireId else damId
+      mIdx <- which(nodes$id == maleId)
+      fIdx <- which(nodes$id == femaleId)
+      if (nodes$x[mIdx] > nodes$x[fIdx]) {
+        tmp <- nodes$x[mIdx]
+        nodes$x[mIdx] <- nodes$x[fIdx]
+        nodes$x[fIdx] <- tmp
+      }
+    }
+  }
+
+  finalUnitX <- stats::setNames(numeric(nrow(matingUnits)), matingUnits$id)
+  if (nrow(matingUnits) > 0L) {
+    for (i in seq_len(nrow(matingUnits))) {
+      uid <- matingUnits$id[i]
+      kids <- childEdges$to[childEdges$from == uid]
+      kidX <- nodes$x[match(kids, nodes$id)]
+      finalUnitX[[uid]] <- (min(kidX) + max(kidX)) / 2L
+    }
+  }
+  nodes$x[match(matingUnits$id, nodes$id)] <- unname(finalUnitX[matingUnits$id])
+
+  dupX <- numeric(nrow(duplicates))
+  if (nrow(duplicates) > 0L) {
+    dupX <- unname(finalUnitX[duplicates$matingUnitId]) + minSep * 0.4
+  }
+  nodes <- rbind(nodes, data.frame(
+    id = duplicates$id, x = dupX,
+    gen = unname(unitGenOf[duplicates$matingUnitId]),
+    stringsAsFactors = FALSE
+  ))
+
+  ord <- order(nodes$gen, nodes$id, method = "radix")
+  seenAtGen <- new.env(parent = emptyenv())
+  for (i in ord) {
+    genKey <- as.character(nodes$gen[i])
+    used <- seenAtGen[[genKey]]
+    xx <- nodes$x[i]
+    while (!is.null(used) && any(abs(used - xx) < 1e-9)) {
+      xx <- xx + 1e-3
+    }
+    nodes$x[i] <- xx
+    seenAtGen[[genKey]] <- c(used, xx)
+  }
+
+  nodes$x[match(realIds, nodes$id)] <-
+    unname(sweepMinSep(realIds, nodes$x[match(realIds, nodes$id)], sweepGen))
+
+  nodes
+}
+
+positionSeedOnly <- function(ped, forest, orderBySex = TRUE) {
+  seed <- buildSeed(ped, forest)
+  finishPipeline(seed, seed$realX, orderBySex = orderBySex)
+}
+
+## ---- Faithful full-pipeline metric -- verbatim from the first spike's evidence.qmd.
+xScale <- 120
+measureFaithful <- function(nodes, forest) {
+  matingUnits <- forest$matingUnits
+  childEdges <- forest$childEdges
+  xOf <- stats::setNames(nodes$x, nodes$id)
+  offsets <- c()
+  for (i in seq_len(nrow(matingUnits))) {
+    uid <- matingUnits$id[i]
+    kids <- intersect(childEdges$to[childEdges$from == uid], names(xOf))
+    if (length(kids) == 0L) next
+    unitX <- xOf[[uid]]
+    for (k in kids) offsets <- c(offsets, abs(xOf[[k]] - unitX))
+  }
+  offsetsScaled <- offsets * xScale
+  c(n = length(offsetsScaled), n_over_200 = sum(offsetsScaled > 200),
+    pct_over_200 = mean(offsetsScaled > 200) * 100,
+    max_offset_scaled = max(offsetsScaled))
+}
+
+## ---- NEW (S590): absolute edge-crossing counter -- needed because, unlike the
+## first spike's own candidate (which fixed row order from a known non-crossing
+## seed BY CONSTRUCTION), igraph's own crossing-minimization can and does
+## reorder rows, so a comparison-to-seed order check is not a valid crossing
+## proxy here. Counts crossings directly: for every pair of edges connecting
+## the SAME two (lo,hi) display gens, they cross iff the left-to-right order of
+## their low-gen endpoints disagrees with the order of their high-gen endpoints.
+countCrossings <- function(nodes, forest) {
+  xOf <- stats::setNames(nodes$x, nodes$id)
+  genOf <- stats::setNames(nodes$gen, nodes$id)
+  matingUnits <- forest$matingUnits
+  childEdges <- forest$childEdges
+  eFrom <- c(); eTo <- c()
+  for (i in seq_len(nrow(matingUnits))) {
+    uid <- matingUnits$id[i]
+    for (p in c(matingUnits$sire[i], matingUnits$dam[i])) {
+      if (p %in% names(xOf) && uid %in% names(xOf)) {
+        eFrom <- c(eFrom, p); eTo <- c(eTo, uid)
+      }
+    }
+  }
+  for (i in seq_len(nrow(childEdges))) {
+    f <- childEdges$from[i]; t <- childEdges$to[i]
+    if (f %in% names(xOf) && t %in% names(xOf)) {
+      eFrom <- c(eFrom, f); eTo <- c(eTo, t)
+    }
+  }
+  gFrom <- genOf[eFrom]; gTo <- genOf[eTo]
+  lo <- pmin(gFrom, gTo); hi <- pmax(gFrom, gTo)
+  swap <- gFrom > gTo
+  loId <- ifelse(swap, eTo, eFrom)
+  hiId <- ifelse(swap, eFrom, eTo)
+  key <- paste(lo, hi)
+  crossings <- 0L
+  for (k in unique(key)) {
+    idx <- which(key == k)
+    if (length(idx) < 2L) next
+    xlo <- xOf[loId[idx]]; xhi <- xOf[hiId[idx]]
+    n <- length(idx)
+    for (a in seq_len(n - 1L)) for (b in (a + 1L):n) {
+      dlo <- xlo[a] - xlo[b]; dhi <- xhi[a] - xhi[b]
+      if (dlo != 0 && dhi != 0 && sign(dlo) != sign(dhi)) crossings <- crossings + 1L
+    }
+  }
+  crossings
+}
+
+## ---- CANDIDATE: build the parent-union-child DAG and hand it to
+## igraph::layout_with_sugiyama().
+buildSugiyamaGraph <- function(seed) {
+  realIds <- seed$realIds
+  unitIds <- seed$unitIds
+  matingUnits <- seed$matingUnits
+  childEdges <- seed$childEdges
+  dispGenOf <- seed$dispGenOf
+  unitGenOf <- seed$unitGenOf
+
+  vIds <- c(realIds, unitIds)
+  vLayer <- c(unname(dispGenOf[realIds]), unname(unitGenOf[unitIds]))
+
+  eFrom <- c(); eTo <- c()
+  for (i in seq_len(nrow(matingUnits))) {
+    uid <- matingUnits$id[i]
+    for (p in c(matingUnits$sire[i], matingUnits$dam[i])) {
+      if (p %in% realIds) { eFrom <- c(eFrom, p); eTo <- c(eTo, uid) }
+    }
+  }
+  for (i in seq_len(nrow(childEdges))) {
+    eFrom <- c(eFrom, childEdges$from[i]); eTo <- c(eTo, childEdges$to[i])
+  }
+
+  igraph::graph_from_data_frame(
+    d = data.frame(from = eFrom, to = eTo, stringsAsFactors = FALSE),
+    vertices = data.frame(name = vIds, layer = vLayer, stringsAsFactors = FALSE),
+    directed = TRUE
+  )
+}
+
+## Multi-restart (S590 finding, see "Sensitivity" below): igraph's own
+## crossing-minimization heuristic is sensitive to input vertex order -- the
+## natural construction order hit an avoidable local optimum on the small
+## synthetic example (4 crossings vs. achievable 0). Standard mitigation for
+## layered-graph heuristics: run `restarts` random vertex-order trials, keep
+## whichever minimizes actual crossings (this document's own countCrossings(),
+## not a proxy). Still "adapt the proven implementation," not a new algorithm.
+positionIgraphCandidate <- function(ped, forest, orderBySex = TRUE, hgap = 1,
+                                     restarts = 20L, seed = 1L) {
+  sd <- buildSeed(ped, forest)
+  g <- buildSugiyamaGraph(sd)
+  n <- igraph::vcount(g)
+  set.seed(seed)
+  bestNodes <- NULL
+  bestCrossings <- Inf
+  for (trial in seq_len(restarts)) {
+    perm <- if (trial == 1L) seq_len(n) else sample(n)
+    gp <- igraph::permute(g, perm)
+    res <- igraph::layout_with_sugiyama(gp, layers = igraph::V(gp)$layer,
+                                         hgap = hgap, vgap = 1)
+    xOf <- stats::setNames(res$layout[, 1], igraph::V(gp)$name)
+    realX <- unname(xOf[sd$realIds])
+    nodes <- finishPipeline(sd, realX, orderBySex = orderBySex)
+    cr <- countCrossings(nodes, forest)
+    if (cr < bestCrossings) {
+      bestCrossings <- cr
+      bestNodes <- nodes
+      if (cr == 0L) break
+    }
+  }
+  attr(bestNodes, "crossings") <- bestCrossings
+  bestNodes
+}
+```
+
+## Cross-check: the seed reproduction is byte-identical to the shipped algorithm
+
+```{r crosscheck-small}
+build_ped <- function(rows) {
+  ped <- do.call(rbind, lapply(rows, as.data.frame, stringsAsFactors = FALSE))
+  ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
+  ped
+}
+r <- function(id, sire = NA, dam = NA, sex) list(id = id, sire = sire, dam = dam, sex = sex)
+rows <- list(
+  r("P1", sex = "M"), r("P2", sex = "F"),
+  r("A", "P1", "P2", "M"), r("B", "P1", "P2", "F"),
+  r("BM", sex = "M"),
+  r("B1", "BM", "B", "M"), r("B2", "BM", "B", "F"),
+  r("B1M", sex = "F"), r("B2M", sex = "M"),
+  r("B1a", "B1", "B1M", "F"), r("B1b", "B1", "B1M", "M"),
+  r("B2a", "B2M", "B2", "F"), r("B2b", "B2M", "B2", "M")
+)
+ped <- build_ped(rows)
+forest <- nprcgenekeepr:::.buildMatingUnitForest(ped)
+
+shipped <- nprcgenekeepr:::.positionMatingUnitForest(ped, forest, orderBySex = TRUE)
+mySeed <- positionSeedOnly(ped, forest, orderBySex = TRUE)
+mySeed <- mySeed[order(mySeed$id), ]
+shippedOrd <- shipped[order(shipped$id), c("id", "x", "gen")]
+cat("Synthetic example: max |x| diff =", max(abs(mySeed$x - shippedOrd$x)), "\n")
+```
+
+```{r crosscheck-real}
+pedReal <- read.csv("../../inst/extdata/examples/obfuscated_rhesus_mhc_ped.csv",
+                     stringsAsFactors = FALSE)
+pedReal$id <- as.character(pedReal$id)
+pedReal$sire <- as.character(pedReal$sire)
+pedReal$dam <- as.character(pedReal$dam)
+pedReal$gen <- findGeneration(pedReal$id, pedReal$sire, pedReal$dam)
+forestReal <- nprcgenekeepr:::.buildMatingUnitForest(pedReal)
+
+shippedReal <- nprcgenekeepr:::.positionMatingUnitForest(pedReal, forestReal, orderBySex = TRUE)
+seedNodesReal <- positionSeedOnly(pedReal, forestReal, orderBySex = TRUE)
+seedOrd <- seedNodesReal[order(seedNodesReal$id), ]
+shipOrd <- shippedReal[order(shippedReal$id), ]
+cat("Real 375-individual fixture: max |x| diff =",
+    max(abs(seedOrd$x - shipOrd$x)), "\n")
+```
+
+Both are 0 -- the harness is faithful at both scales, so downstream comparisons are trustworthy.
+
+## Synthetic example: candidate vs. shipped
+
+```{r synth-render}
+#| fig-width: 11
+#| fig-height: 5.5
+seedNodes <- positionSeedOnly(ped, forest, orderBySex = TRUE)
+candNodes <- positionIgraphCandidate(ped, forest, orderBySex = TRUE, restarts = 20L, seed = 1L)
+
+renderNodes <- function(nodes, forest, title) {
+  childEdges <- forest$childEdges
+  matingUnits <- forest$matingUnits
+  xOf <- stats::setNames(nodes$x, nodes$id)
+  genOf <- stats::setNames(nodes$gen, nodes$id)
+  plot(nodes$x, -nodes$gen, type = "n", axes = FALSE, xlab = "", ylab = "",
+       main = title, xlim = range(nodes$x) + c(-1, 1))
+  for (i in seq_len(nrow(matingUnits))) {
+    uid <- matingUnits$id[i]
+    for (p in c(matingUnits$sire[i], matingUnits$dam[i])) {
+      if (p %in% names(xOf)) {
+        segments(xOf[[p]], -genOf[[p]], xOf[[uid]], -genOf[[uid]], col = "grey50")
+      }
+    }
+  }
+  for (i in seq_len(nrow(childEdges))) {
+    fromId <- childEdges$from[i]; toId <- childEdges$to[i]
+    if (fromId %in% names(xOf) && toId %in% names(xOf)) {
+      segments(xOf[[fromId]], -genOf[[fromId]], xOf[[toId]], -genOf[[toId]], col = "grey20")
+    }
+  }
+  realNodes <- nodes[!grepl("^__", nodes$id), ]
+  points(realNodes$x, -realNodes$gen, pch = 1, cex = 2.2)
+  text(realNodes$x, -realNodes$gen, labels = realNodes$id, cex = 0.7, pos = 1, offset = 0.8)
+}
+
+par(mfrow = c(1, 2))
+gapS <- abs(diff(seedNodes$x[match(c("A", "B"), seedNodes$id)]))
+gapC <- abs(diff(candNodes$x[match(c("A", "B"), candNodes$id)]))
+renderNodes(seedNodes, forest, sprintf("SHIPPED -- A-B gap = %.2f", gapS))
+renderNodes(candNodes, forest,
+            sprintf("igraph sugiyama (20 restarts) -- A-B gap = %.2f, crossings = %d",
+                    gapC, attr(candNodes, "crossings")))
+```
+
+The candidate closes the `A`-`B` gap from `r round(gapS,2)` to `r round(gapC,2)` (a
+`r round(100*(1-gapC/gapS))`% reduction) -- matching the FIRST spike's own barycenter/median
+candidate's exact toy-example improvement -- with **0 crossings**, achieved via a properly
+published, proven crossing-minimization algorithm.
+
+### Sensitivity: the natural vertex order alone hits an avoidable local optimum
+
+```{r sensitivity-order}
+seedS_small <- buildSeed(ped, forest)
+g_small <- buildSugiyamaGraph(seedS_small)
+res_natural <- igraph::layout_with_sugiyama(g_small, layers = igraph::V(g_small)$layer,
+                                             hgap = 1, vgap = 1)
+xOf_natural <- stats::setNames(res_natural$layout[, 1], igraph::V(g_small)$name)
+nodes_natural <- finishPipeline(seedS_small, unname(xOf_natural[seedS_small$realIds]),
+                                 orderBySex = TRUE)
+cat("Natural vertex order (no restart): crossings =",
+    countCrossings(nodes_natural, forest), "\n")
+cat("Best of 20 random-order restarts: crossings =",
+    attr(candNodes, "crossings"), "\n")
+```
+
+`igraph::layout_with_sugiyama()`'s crossing-minimization heuristic is sensitive to input vertex
+order: the natural construction order (matching `.buildMatingUnitForest()`'s own id order) landed
+on 4 avoidable crossings on this 13-individual example; a single random reorder found 0 on the
+first trial, and 30/30 random trials in ad hoc testing found at least one 0-crossing layout.
+Multi-restart (standard practice for layered-graph heuristics -- not a new algorithm, just
+mitigating a known local-optimum risk in the proven one) is used for every result below.
+
+## Real 375-individual fixture: the faithful full-pipeline measurement
+
+Reusing the first spike's own methodology exactly: for each mating unit, each child edge's
+`|childX - unitX|` against the FULL-pipeline `finalUnitX`, scaled by `xScale = 120`.
+
+```{r real-baseline}
+baselineMetric <- measureFaithful(seedNodesReal, forestReal)
+baselineMetric
+baselineCrossings <- countCrossings(seedNodesReal, forestReal)
+cat("Baseline (shipped) crossings:", baselineCrossings, "\n")
+```
+
+This exactly reproduces the first spike's own published baseline (9/251 edges, 3.6%, max
+4,121.25), confirming the harness is faithful.
+
+```{r real-candidate}
+t0 <- Sys.time()
+candNodesReal <- positionIgraphCandidate(pedReal, forestReal, orderBySex = TRUE,
+                                          restarts = 20L, seed = 1L)
+candTime <- as.numeric(Sys.time() - t0, units = "secs")
+cat("Candidate compute time (20 restarts, 375 individuals):", round(candTime, 2), "s\n")
+
+candidateMetric <- measureFaithful(candNodesReal, forestReal)
+candidateMetric
+cat("Candidate crossings:", attr(candNodesReal, "crossings"), "\n")
+```
+
+```{r real-comparison}
+cat(sprintf("Baseline:  %d/%d edges >200 units (%.2f%%), max offset %.2f, crossings %d\n",
+            baselineMetric[["n_over_200"]], baselineMetric[["n"]],
+            baselineMetric[["pct_over_200"]], baselineMetric[["max_offset_scaled"]],
+            baselineCrossings))
+cat(sprintf("Candidate: %d/%d edges >200 units (%.2f%%), max offset %.2f, crossings %d\n",
+            candidateMetric[["n_over_200"]], candidateMetric[["n"]],
+            candidateMetric[["pct_over_200"]], candidateMetric[["max_offset_scaled"]],
+            attr(candNodesReal, "crossings")))
+
+realSeed <- seedNodesReal[!grepl("^__", seedNodesReal$id), ]
+realCand <- candNodesReal[!grepl("^__", candNodesReal$id), ]
+cat(sprintf("\nOverall real-node x range -- baseline: %.1f, candidate: %.1f (%.1fx)\n",
+            diff(range(realSeed$x)), diff(range(realCand$x)),
+            diff(range(realCand$x)) / diff(range(realSeed$x))))
+```
+
+**The candidate regresses the real fixture on every axis measured**: 25/251 edges exceed the
+200-unit threshold (9.96%, vs. baseline 3.6%), the worst single offset grows from 4,121 to 10,110,
+the overall layout width for real individuals more than doubles, and -- notably, since crossing
+minimization is this algorithm's own stated objective -- **crossings are also worse than
+baseline** (5,916 vs. 3,174), even after picking the best of 20 restarts.
+
+### Sensitivity: restart count, seed, and edge weights -- not a tuning artifact
+
+```{r hp-sweep}
+sweepResults <- lapply(list(
+  list(restarts = 5, seed = 1), list(restarts = 10, seed = 2),
+  list(restarts = 40, seed = 3), list(restarts = 40, seed = 99)
+), function(p) {
+  cand <- positionIgraphCandidate(pedReal, forestReal, orderBySex = TRUE,
+                                   restarts = p$restarts, seed = p$seed)
+  m <- measureFaithful(cand, forestReal)
+  data.frame(restarts = p$restarts, seed = p$seed,
+             crossings = attr(cand, "crossings"),
+             n_over_200 = m[["n_over_200"]], pct = round(m[["pct_over_200"]], 2),
+             max_offset = round(m[["max_offset_scaled"]], 1))
+})
+do.call(rbind, sweepResults)
+```
+
+Every restart-count/seed combination regresses relative to the 9/251 (3.6%) baseline -- never
+better than 25/251 (9.96%). A separate check confirmed `weights` passed to
+`layout_with_sugiyama()` (tried favoring union-to-child edges up to 10:1 over parent-to-union
+edges, intended to encourage tighter full-sibling grouping) had **zero measurable effect** on the
+resulting layout in this implementation when explicit `layers` are also supplied -- a real,
+checked limitation of this specific knob for this use case, not exploited further.
+
+### Why it fails: sugiyama's own objective doesn't preserve full-sibling compactness
+
+```{r hub-diagnostic}
+mu <- forestReal$matingUnits
+xOf <- stats::setNames(candNodesReal$x, candNodesReal$id)
+worstOff <- -1; worstU <- NULL
+for (i in seq_len(nrow(mu))) {
+  uid <- mu$id[i]
+  kids <- intersect(forestReal$childEdges$to[forestReal$childEdges$from == uid], names(xOf))
+  if (!length(kids)) next
+  for (k in kids) {
+    off <- abs(xOf[[k]] - xOf[[uid]]) * xScale
+    if (off > worstOff) { worstOff <- off; worstU <- uid }
+  }
+}
+worst <- mu[mu$id == worstU, ]
+worst
+cat("Sire", worst$sire, "own mate count:",
+    sum(mu$sire == worst$sire | mu$dam == worst$sire), "\n")
+kids <- intersect(forestReal$childEdges$to[forestReal$childEdges$from == worstU], names(xOf))
+cat("This union's own children's x:", paste(round(xOf[kids], 2), collapse = ", "), "\n")
+```
+
+The single worst-regressed edge again traces to a hub individual (**4 separate mating unions** --
+a different individual from the first spike's own hub, but the same STRUCTURAL feature). Unlike
+the first spike's convergence-instability failure, here the mechanism is different: sugiyama's
+crossing-minimization and horizontal-coordinate-assignment optimize for overall graph
+straightness/crossing count across the WHOLE graph, with no explicit preference for keeping one
+mating unit's own full siblings close together -- a hub individual's several subtrees compete for
+horizontal space across the whole layout, and the algorithm can (and does) scatter one union's
+full-sibling group widely if doing so serves its own global objective. The shipped rigid-subtree
+model achieves tight full-sibling grouping BY CONSTRUCTION (each subtree recursively reserves a
+compact, contiguous span); a proven algorithm optimizing a genuinely different objective does not
+inherit that property for free.
+
+## Conclusion
+
+**This is the THIRD independently-designed candidate** (after the sibling design session's
+bounded-lookahead candidate, S588, and the first spike's barycenter/median candidate, S589) **to
+show the same qualitative pattern**: improves the small synthetic example, regresses the real
+375-individual fixture -- via a THIRD distinct failure mechanism each time (edge crossings;
+convergence instability; full-sibling scattering under a proven library's own global objective).
+Not a tuning artifact: confirmed across a 4-point restart/seed sweep and an edge-weight check that
+had no effect. See the spike's own plan document for the resulting verdict.

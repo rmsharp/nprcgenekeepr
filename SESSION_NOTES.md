@@ -14,16 +14,136 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 589 Handoff Evaluation (by Session 590)
+**Score: 9/10.** **What helped:** the `next_steps` field named this exact task with full,
+precise scope — "a SECOND, bounded feasibility spike... adapt `igraph::layout_with_sugiyama()`...
+OR a properly-ported Brandes-Köpf (2002)... Test against the SAME two fixtures this spike used...
+measured with the SAME faithful full-pipeline metric... reuse it, do not re-derive" — followed
+exactly: the harness (`buildSeed`/`finishPipeline`/`measureFaithful`) was reused verbatim
+(confirmed byte-identical via a programmatic diff against the source `.qmd`, not just eyeballed).
+The `gotchas` field's hub-node warning (Learning 600 — "a small synthetic example cannot exercise
+high-mate-count hub convergence failures") directly predicted this session's own eventual finding
+(a DIFFERENT hub individual, same structural class, breaking a THIRD independent candidate) —
+recognizing the pattern quickly once found, rather than being surprised by it, saved real
+diagnostic time. **What was missing:** nothing the handoff itself could reasonably have
+anticipated — this session's two genuinely new findings (the stale renv-installed-package issue;
+`layout_with_sugiyama()`'s own vertex-order sensitivity requiring multi-restart) were both outside
+what S589's own work touched (S589 confirmed `igraph` merely NOT installed, never exercised it).
+**What was wrong:** nothing — every cited baseline number (9/251, 3.6%, max 4,121.25) reproduced
+exactly. **ROI:** high — zero rediscovery cost on task scope, fixtures, or methodology; the
+hub-node caution meant this session's own diagnosis phase was fast and targeted rather than
+exploratory.
+
 ### What Session 590 Did
-**Deliverable:** Pedigree Diagram layout: SECOND feasibility spike, adapting
-`igraph::layout_with_sugiyama()` (owner-selected via `AskUserQuestion` over a ported
-Brandes-Köpf 2002 alternative) instead of a hand-rolled implementation (`BACKLOG.md`,
-found S589, HIGH PRIORITY). (IN PROGRESS)
-**Started:** 2026-08-15.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
-next session's reconcile.
+**Deliverable:** Pedigree Diagram layout SECOND feasibility spike (`BACKLOG.md`, found S589, HIGH
+PRIORITY) — adapt `igraph::layout_with_sugiyama()` (owner-selected via `AskUserQuestion` over a
+ported Brandes-Köpf 2002 alternative) to this project's mating-unit-forest data structures, tested
+against the same two fixtures S589 used. **Verdict: NOT FEASIBLE as prototyped — investigation
+CLOSED AS INHERENT (owner-ratified).** Two documents:
+`docs/planning/pedigree-diagram-layout-sugiyama-spike-plan.md` +
+[`-evidence.qmd`](docs/planning/pedigree-diagram-layout-sugiyama-spike-evidence.qmd), following
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`. **Planning/investigation session — TDD
+phases (RED/GREEN/REFACTOR) declared INAPPLICABLE** (matches the S588/S589 precedent: no `R/` file
+touched, all candidate code lived in `/private/tmp` scratchpad and the evidence `.qmd`).
+**Started/Completed:** 2026-08-15.
+
+**What happened, in order:** **(1)** Phase 0 orient in full (`SAFEGUARDS.md`, `SESSION_NOTES.md`,
+`gh issue list`, `git status`/`log`/`diff --stat`, `gh run list` [all pushed-commit runs through
+S587 green; S588/S589's 6 local commits not yet pushed, no CI signal], `methodology_dashboard.py`
+[96/100, 1 HIGH risk — `SESSION_NOTES.md` 4,105 lines, growing since 2026-08-13, blocked by a
+known `methodology_trim.py` fence-scanner defect — surfaced, not acted on], ledger reconcile
+[`CHANGELOG.md`/`HANDOFFS.md` frontier == `HEAD`, no gap]). Rendered the 4-item priorities picker;
+user picked the 2nd layout feasibility spike (option 1). **(2)** Phase 1: confirmed `igraph`
+installable in this environment (it was not previously) and sanity-checked
+`layout_with_sugiyama()` on a toy DAG before presenting the pre-work `AskUserQuestion`; owner
+selected `igraph::layout_with_sugiyama()` (Recommended option) over the ported Brandes-Köpf
+alternative. **(3)** Phase 1B: claim stub + `HANDOFFS.md` pending receipt, committed (`568b62d8`).
+**(4)** Read the workstream doc, S589's own plan+evidence documents in full, and
+`R/makePedigreeDiagramData.R:584-1026` before building anything. **(5)** Built the candidate in
+`/private/tmp` scratchpad: reused S589's own `buildSeed()`/`finishPipeline()`/`measureFaithful()`
+verbatim (confirmed byte-identical via a programmatic diff against the source `.qmd`, not
+eyeballed), plus a new `buildSugiyamaGraph()` constructing the same parent-union-child DAG as an
+`igraph` object with `layer` = display generation. **(6)** First crosscheck attempt via
+`library(nprcgenekeepr)` reported a NONZERO diff (max 1.375, entirely on mating-UNION x values, 0
+on real-individual values) — did not accept this as noise; traced it via `deparse()`-diffing the
+installed function against a `pkgload::load_all()`-loaded one, finding the renv-cached installed
+build (timestamped 2026-08-14 18:24) predates the Track 6 commit (`f65ecbea`, 21:56:10 same day)
+by ~3.5h — a genuinely stale build silently loaded by plain `library()`. Switched to
+`pkgload::load_all()` throughout; crosscheck then reproduced 0 diff at both fixture scales.
+**(7)** First `layout_with_sugiyama()` run on the synthetic example (natural vertex order)
+produced 4 avoidable edge crossings; rather than accepting this, ran a 30-trial random-vertex-order
+sensitivity check (found 0 crossings on trial 1, 30/30 trials found a 0-crossing layout) and
+confirmed `maxiter` increases (100→500→2000) had zero effect — diagnosed as genuine input-order
+sensitivity in the heuristic itself, not an iteration-budget problem. Implemented standard
+multi-restart (20 random-order trials, keep the best by an independently-written
+`countCrossings()`, since the prior candidate's own "row-order-preserved" check does not apply
+when row order is no longer fixed). **(8)** Synthetic example: 0 crossings, A-B gap 2.5→2.0 (20%
+reduction, matching S589's own candidate's exact improvement) — visually confirmed via a rendered
+side-by-side PNG. **(9)** Real fixture: baseline metric reproduced S589's own published 9/251,
+3.6%, max 4,121.25 exactly (harness fidelity confirmed). Candidate (best of 20 restarts) REGRESSED
+on every axis: 25/251 (9.96%), max offset 10,110, layout width 2.4x wider, AND crossings worse
+than baseline (5,916 vs 3,174 — this algorithm's own stated objective). **(10)** Confirmed not a
+tuning artifact via a 4-point restart-count/seed sweep (never better than 25/251) and an
+edge-weight check (up to 10:1 favoring union-to-child edges) that had ZERO measurable effect on
+the result — a real, checked limitation, not exploited further. **(11)** Diagnosed the worst edge
+to a different high-mate-count hub individual (4 mating unions); explained the mechanism (sugiyama
+optimizes global crossing/straightness, with no term for full-sibling compactness, unlike the
+shipped model's recursive per-subtree construction). **(12)** Presented the full investigation via
+`AskUserQuestion` (4 options: close as inherent / recommend a hybrid order-then-compact 3rd spike
+/ recommend a ported Brandes-Köpf 3rd spike / hold and tune further); owner selected the
+Recommended option (close as inherent). **(13)** Wrote both documents reflecting that verdict;
+rendered the evidence `.qmd` via `quarto render` (0 errors) and spot-checked the rendered HTML's
+own numbers against the scratchpad computations, not just trusted the render. **(14)** Updated
+`BACKLOG.md`: marked the S589 spike item DONE with the full result; did NOT add a new READY item
+(per the "close as inherent" verdict — no next spike is scoped). **(15)** Commented on and CLOSED
+GitHub issue #159 citing the cumulative 3-candidate evidence (matches `CLAUDE.md`'s GitHub
+issue close-out checklist — a decline/wontfix-class decision, not a shipped fix). **(16)** Wrote up
+3 new `PROJECT_LEARNINGS.md` entries (601: `layout_with_sugiyama()`'s own vertex-order sensitivity
+and the multi-restart mitigation; 602: a proven algorithm's own optimization objective does not
+imply a downstream metric's requirements; 603: the renv-cached stale-install trap and why
+`pkgload::load_all()` must be used for any shipped-function crosscheck); fixed the now-stale
+learnings count/session-range pointer in `CLAUDE.md`.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A (no new displayed
+statistic); tutorial/article checklist N/A (no new user-facing Shiny feature, no code shipped);
+`NEWS.Rmd` checklist N/A (no new exported function or feature); `a2interactive.Rmd` checklist N/A
+(no exported function/parameter added or changed); GitHub issue close-out DONE (issue #159 closed
+this session, citing the `CHANGELOG.md` entry and cumulative evidence); lint checklist N/A (no
+`.R` file added or modified — all candidate code lived in `/private/tmp` scratchpad and
+`docs/planning/*.qmd`, confirmed via `git diff --stat` against `R/`/`tests/`); `_pkgdown.yml`
+reference-coverage checklist N/A (no new exported function). Runtime smoke test (Phase 3E): N/A —
+docs-only investigation, no runtime behavior changed (matches the S588/S589 precedent).
+
+**Self-assessment (Session 590): 9/10.** **Strengths:** (1) Reused S589's own faithful harness
+verbatim, confirmed via programmatic diff rather than eyeballing — no silent transcription drift.
+(2) When the FIRST crosscheck came back nonzero, did not shrug it off as floating-point noise or
+retry blindly — traced it to a genuine, previously-unnoticed environmental defect (a stale
+renv-cached install predating Track 6) via `deparse()`-diffing, discovering something no prior
+session had found. (3) When the FIRST `layout_with_sugiyama()` run produced worse-than-shipped
+crossings on the toy example, did not accept "the library must just be worse here" — ran a
+systematic 30-trial sensitivity check that found the true cause (order-sensitivity, not an
+algorithmic limit) and implemented the standard mitigation (multi-restart) before drawing any
+conclusion. (4) Recognized that the prior candidate's own "row-order-preserved" verification
+metric did not apply to a structurally different candidate (one that doesn't fix row order) and
+built a new, general, independently-correct metric (`countCrossings()`) rather than reusing an
+inapplicable check. (5) Ran a proper 4-point sensitivity sweep plus an edge-weight check before
+concluding "not a tuning artifact," matching the rigor bar of both prior sessions in this thread.
+(6) Diagnosed the real-fixture regression to its specific structural cause (a hub individual) and
+explained the MECHANISM (objective mismatch), not just the symptom. (7) Ratified the verdict via
+`AskUserQuestion` before finalizing documents, and closed out the full chain (BACKLOG.md, GitHub
+issue, PROJECT_LEARNINGS.md) in the same session per the established checklists. (8) Named a
+genuinely new, untested idea (hybrid order-then-compact) for the record without pursuing it,
+respecting the "one candidate per spike" scope boundary the owner's own "close as inherent"
+decision confirmed was the right call. **Weaknesses:** (1) Still no independent
+adversarial-verification pass by a separate agent/session — the same standing gap flagged for 23+
+consecutive prior sessions now. (2) Did not fully resolve WHY S589's own `library()`-based
+crosscheck reported a clean 0 diff despite the installed package apparently already being stale at
+that time — flagged as an open question in this session's own plan doc §8 rather than root-caused;
+legitimate "report, don't fix mid-session" scoping, but leaves a loose thread for whoever next
+touches that document. (3) The new `countCrossings()` function is O(n²) per (lo,hi) generation-gap
+bucket — fine at this fixture's scale (612 vertices, 725 edges, sub-second) but not verified to
+scale gracefully to a much larger future fixture.
+**Ledger:** recorded in `CHANGELOG.md` (claim + close-out entries, `[BL-N]`-tagged).
 
 ### Session 588 Handoff Evaluation (by Session 589)
 **Score: 10/10.** **What helped:** the `next_steps` field named this exact task with full,
