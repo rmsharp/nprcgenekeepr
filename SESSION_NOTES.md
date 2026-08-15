@@ -14,6 +14,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 578 Did
+**Deliverable:** Track 6 Pedigree Diagram child-centered union-position implementation
+(`BACKLOG.md` Housekeeping, design ratified S576, plan doc
+`docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md`) (IN PROGRESS)
+**Started:** 2026-08-14
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 576 Handoff Evaluation (by Session 577)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` S576 receipt's `next_steps` explicitly named
 "the arc curve-direction item (§7a, READY, Effort S/M)" as still-open, and the receipt's own

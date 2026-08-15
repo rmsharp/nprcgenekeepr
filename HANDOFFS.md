@@ -132,6 +132,27 @@ This file currently holds **10** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S578
+date: 2026-08-14
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Track 6 Pedigree Diagram child-centered union-position implementation (BACKLOG.md
+  Housekeeping, design ratified S576, plan doc
+  docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md). Session claimed,
+  work beginning.
+what_was_done: pending
+next_steps: pending
+key_files: R/makePedigreeDiagramData.R:584 (.positionMatingUnitForest()), :842-845 (dupX), :889-891
+  (sweepIds/sweepGen), :896-926 (finalUnitX loop), :936-954 (final de-collision pass)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<claim stub — filled at Phase 3D close-out>
+
+```handoff
 session: S577
 date: 2026-08-14
 status: complete
