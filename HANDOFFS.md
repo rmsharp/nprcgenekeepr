@@ -192,7 +192,7 @@ runtime_smoke: n/a -- no R/ or tests/ file touched, no runtime behavior changed.
 changelog_ref: see CHANGELOG.md 2026-08-15 entries between the S591 close-out block and this
   session's own close-out entry below it (claim entry, GitHub comments, BACKLOG.md update, plan
   document).
-commit: b600b43a, plus this close-out
+commit: b600b43a, 14a405b1
 ```
 
 ```handoff

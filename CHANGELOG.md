@@ -138,6 +138,12 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] S592: reconcile HANDOFFS.md commit self-reference (14a405b1)
+- **Action taken:** updated S592's own `HANDOFFS.md` receipt `commit:` field from the
+  write-time placeholder (`b600b43a, plus this close-out`) to the actual close-out commit sha
+  (`b600b43a, 14a405b1`), matching the established S589/S590/S591 precedent for this
+  self-referential field.
+
 ### 2026-08-15 · [BL-1] S592: close out — root-cause architecture plan (issues #160/#161/S583 collision-avoidance gap)
 - **Deliverable:** `docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md` — a
   3-track phased architecture plan addressing the shared "no same-row collision-avoidance for
