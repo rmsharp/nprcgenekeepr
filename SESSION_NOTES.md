@@ -14,6 +14,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 590 Did
+**Deliverable:** Pedigree Diagram layout: SECOND feasibility spike, adapting
+`igraph::layout_with_sugiyama()` (owner-selected via `AskUserQuestion` over a ported
+Brandes-Köpf 2002 alternative) instead of a hand-rolled implementation (`BACKLOG.md`,
+found S589, HIGH PRIORITY). (IN PROGRESS)
+**Started:** 2026-08-15.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
 ### Session 588 Handoff Evaluation (by Session 589)
 **Score: 10/10.** **What helped:** the `next_steps` field named this exact task with full,
 precise scope -- "a bounded, single-session feasibility spike... prototype ONE non-rigid/

@@ -136,6 +136,25 @@ This file currently holds **4** receipt(s). Computed by `methodology_trim.py` on
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S590
+date: 2026-08-15
+status: pending
+self_score: pending
+predecessor_score: 9
+active_task: Pedigree Diagram layout SECOND feasibility spike -- adapt
+  igraph::layout_with_sugiyama() (owner-selected via AskUserQuestion) to this
+  project's mating-unit-forest structures; test against the same 2 fixtures S589
+  used. Work beginning.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S589
 date: 2026-08-15
 status: complete
