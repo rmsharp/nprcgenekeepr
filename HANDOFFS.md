@@ -188,7 +188,7 @@ runtime_smoke: Documentation-asset-only change (no Shiny runtime behavior touche
   own Learning 443 precedent calls for.
 changelog_ref: a98010d9 (S581's own last CHANGELOG entry before this session's 2 new entries --
   see the 2026-08-14/2026-08-15 sections, "S582:" prefixed entries)
-commit: pending
+commit: 3e8870d2
 ```
 
 ```handoff

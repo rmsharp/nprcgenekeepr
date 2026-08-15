@@ -138,6 +138,11 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] S582: reconcile HANDOFFS.md commit self-reference (`3e8870d2`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> `3e8870d2`
+  (the close-out commit's own sha, unknowable until after that commit was made) -- matching the
+  established S562-S581 precedent.
+
 ### 2026-08-15 · [BL-N] S582: close out (pb_diagram_legend.png reshoot DONE)
 - **Deliverable:** `BACKLOG.md` item (found S574) -- **DONE**. Recaptured
   `vignettes/articles/shiny_app_use/pb_diagram_legend.png` via a standalone `shinytest2`/chromote
