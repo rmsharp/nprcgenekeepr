@@ -154,17 +154,6 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       mid-session" precedent (mirrors the S461/S544 stale-screenshot pattern already resolved once
       for this same image, S560). A future session should recapture it via the live app (chromote),
       same small real 6-animal subgraph, with Rectilinear now pre-selected with no interaction.
-- [ ] (found S573, 2026-08-14, incidental to this session's own Phase 3F CHANGELOG.md entries,
-      READY, Effort S) **`CHANGELOG.md`'s byte-budget archive trigger fires** (`python3
-      methodology_trim.py --file CHANGELOG.md --check`: 83,410 B against the 65,536 B budget as
-      of this session's own entries) -- flagged as a MEDIUM dashboard risk at Phase 0 by several
-      recent sessions (S557 onward) but never logged as its own actionable item, so it kept
-      recurring silently. Not trimmed this session (out of scope for the Track 4 implementation
-      deliverable, matching `PROJECT_LEARNINGS.md` Learning 382's "report, don't fix mid-session"
-      precedent). A future session should run `python3 methodology_trim.py --file CHANGELOG.md
-      --write` (after `--check`'s own losslessness proof) and commit the resulting shard
-      separately, matching the `SESSION_NOTES.md`/`HANDOFFS.md` archive precedent already
-      established for this project's other ledgers.
 - [ ] (found S508, 2026-08-10, re-surfaced S559, 2026-08-13, **RESOLVED S561**.
       **`HANDOFFS.md`'s declared `methodology_trim.py` regenerated field ("retained
       receipt count") had no matching "This file currently holds **N**" sentence in the
