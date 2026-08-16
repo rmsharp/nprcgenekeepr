@@ -136,6 +136,24 @@ This file currently holds **12** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S596
+date: 2026-08-15
+status: pending
+self_score: pending
+predecessor_score: 8
+active_task: Implement Track 3 (S583 parent-span clamp) -- plan §2.3/§6 Session C of
+  docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md. PRE-RED reading done;
+  awaiting the track's own PRE-RED reopening-confirmation AskUserQuestion before any RED test.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S595
 date: 2026-08-15
 status: complete
