@@ -14,6 +14,16 @@ it is failure mode #27.
 > `NEWS.md` / `NEWS.Rmd`. This file tracks the development *process* and methodology
 > history, not package releases.
 
+### 2026-08-16 · [ad hoc] S594 claim: lossless archive trim of SESSION_NOTES.md (Session 594)
+- **Deliverable:** Lossless archive trim of `SESSION_NOTES.md`, user-directed at Phase 0 (dashboard
+  HIGH-risk flag, file at 4,645 lines / 395,482 B). PRE-RED investigation: the `CLAUDE.md` note
+  framing this as blocked by a `methodology_trim.py` fence-scanner defect (S518) is stale — both
+  that defect and the follow-on `\b`-boundary defect (S527, `PROJECT_LEARNINGS.md` Learning 533)
+  were already fixed (S527/S528) and two archives already succeeded. Actual current blocker: a
+  fresh `SRF_RED` refusal (SRF 2.0371 vs. 0.0576, 35.35x spread across two archive boundaries),
+  matching the `CHANGELOG.md`/`HANDOFFS.md` pattern `PROJECT_LEARNINGS.md` Learnings 549/586/587
+  already diagnosed. Session claimed; decision pending.
+
 ## How to add an entry
 
 At close-out, prepend one entry per action, **newest on top**, directly below this

@@ -14,6 +14,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 594 Did
+**Deliverable:** Lossless archive trim of `SESSION_NOTES.md` (found live in conversation
+2026-08-15/16, user-directed at Phase 0) (IN PROGRESS)
+**Started:** 2026-08-16
+**Status:** Session claimed. Work beginning. PRE-RED investigation already found: the
+`CLAUDE.md`/`BACKLOG.md` framing of this item as "blocked by a fence-scanner defect" (S518) is
+now **stale** — `methodology_trim.py`'s `SESSION_NOTES.md` `LedgerSpec` shows both the original
+fence-scanner defect (S518) and the follow-on `\b`-boundary defect (S527/PROJECT_LEARNINGS.md
+Learning 533) were already fixed (S527/S528), and two archive rounds already ran successfully
+(612 records → `docs/archive/SESSION_NOTES-through-2026-08-12.md`; 40 records →
+`docs/archive/SESSION_NOTES-through-2026-08-13.md`). The actual current blocker is a fresh
+`SRF_RED` refusal (`methodology_trim.py --file SESSION_NOTES.md`, dry run): SRF 2.0371 against
+the most recent archive (`8e58647`, 2026-08-13, a small 180,590 B drop) vs. 0.0576 against the
+largest-drop boundary (`841aeae`, 2026-08-12, a 6,340,508 B drop) — a 35.35x spread, the exact
+`SRF_RED` small-denominator pattern `PROJECT_LEARNINGS.md` Learnings 549/586/587 already
+diagnosed for `CHANGELOG.md`/`HANDOFFS.md`, now confirmed on `SESSION_NOTES.md` as Learning 587
+anticipated it eventually would be. Current file: 395,482 B / 77 real session-record headings
+(grep ground-truth, matches the tool's live-file parse — no fence-scanner artifacts present, 0
+backtick-fence-opening lines in the live portion). Decision on how to proceed (force / hold /
+raise budget) pending `AskUserQuestion`, per the established Learning 549 precedent (surface both
+readings, let the owner decide — don't `--force` unilaterally).
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 592 Handoff Evaluation (by Session 593)
 **Score: 9/10.** **What helped:** `next_steps` named the exact next task with precise, directly
 actionable scope -- "Track 1 (D1 sibship-bar row offset, READY, Effort S, no ratified invariant

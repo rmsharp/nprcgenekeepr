@@ -136,6 +136,28 @@ This file currently holds **12** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S594
+date: 2026-08-16
+status: pending
+self_score: <1-10>
+predecessor_score: <1-10>
+active_task: Lossless archive trim of SESSION_NOTES.md (user-directed at Phase 0). PRE-RED found
+  the CLAUDE.md/BACKLOG.md "blocked by fence-scanner defect" framing is stale (fixed S527/S528,
+  2 archives already ran); actual blocker is a fresh SRF_RED refusal (SRF 2.0371 vs 0.0576, a
+  35.35x spread against two different archive boundaries) matching the established Learning
+  549/586/587 pattern. Decision pending via AskUserQuestion.
+what_was_done: pending
+next_steps: pending
+key_files: methodology_trim.py:231-255 (SESSION_NOTES.md LedgerSpec); SESSION_NOTES.md (live
+  file, 395,482 B / 77 records); CLAUDE.md (stale fence-scanner-defect note to correct)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<in progress>
+
+```handoff
 session: S593
 date: 2026-08-15
 status: complete
