@@ -18,6 +18,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 595 Did
+**Deliverable:** Implement Track 2 (general same-row detect-and-jog collision framework) — plan
+§2.2/§6 Session B of
+[`docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`](docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md).
+(IN PROGRESS)
+**Started:** 2026-08-15.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 593 Handoff Evaluation (by Session 594)
 **Score: 7/10.** **What helped:** the handoff was thorough and accurate for its own workstream
 (pedigree-diagram collision avoidance) and its "Other still-open items unchanged from S592's own

@@ -136,6 +136,23 @@ This file currently holds **12** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S595
+date: 2026-08-15
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement Track 2 (general same-row detect-and-jog collision framework) -- plan
+  §2.2/§6 Session B of docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S594
 date: 2026-08-15
 status: complete

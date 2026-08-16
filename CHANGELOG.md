@@ -16,6 +16,12 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-15 · [issue #160] S595 claim: implement Track 2 (general same-row detect-and-jog collision framework)
+- **Deliverable claimed:** plan §2.2/§6 Session B of
+  `docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md` — new
+  `.resolveEdgeNodeCollisions()` wired into `makePedigreeMatingLayout()`. Session stub written to
+  `SESSION_NOTES.md`; `HANDOFFS.md` `status: pending` receipt opened. Work beginning.
+
 ### 2026-08-15 · [ad hoc] S594 close-out: SESSION_NOTES.md archive DONE, stale CLAUDE.md fence-scanner note corrected (Session 594)
 - **Deliverable:** Lossless archive trim of `SESSION_NOTES.md` — **DONE.** Found the `CLAUDE.md`
   "archive blocked by a fence-scanner defect (S518)" note stale: that defect and a second,
