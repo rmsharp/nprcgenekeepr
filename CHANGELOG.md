@@ -16,6 +16,21 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-16 · [issue #160] S596 close-out: handoff evaluation, self-assessment, Learning 609, HANDOFFS.md receipt
+- **Close-out actions (reconcile-on-read backfill, Session 597 Phase 0):** evaluated S595's handoff
+  (8/10, `SESSION_NOTES.md`); self-assessed this session (9/10); completed the `HANDOFFS.md`
+  `status: complete` receipt (all 6 fields); added `PROJECT_LEARNINGS.md` Learning 609
+  (testthat/waldo tolerance-semantics gotcha — `expect_equal()`/`all.equal()` with a bare
+  `tolerance=N` is scale-relative, not absolute) and refreshed `CLAUDE.md`'s stale learnings-count
+  pointer (604→609 learnings, S591+→S596+). Next session's candidates named in the handoff: (1)
+  decide the fate of Track 3's 2 disclosed trade-offs (new `BACKLOG.md` follow-up item), (2) issue
+  #161's now-unblocked deferred decision, (3) the small S582 stale-screenshot check — none
+  mandated. Commits: `6261d6f9` (Learning 609 + `CLAUDE.md` refresh), `6ba6289e`
+  (`HANDOFFS.md`/`SESSION_NOTES.md` close-out). This entry itself was the gap: S596 wrote the
+  Track 3 deliverable entry below but, unlike S595's own "close-out" entry precedent, never logged
+  a matching entry for these 2 trailing commits — caught by Session 597's Phase 0 ledger reconcile
+  (`CHANGELOG.md` frontier `e4795723` vs. `HEAD` `6ba6289e`).
+
 ### 2026-08-16 · [issue #160] S596: Track 3 (S583 parent-span clamp) shipped
 - **Deliverable:** new clamp loop in `.positionMatingUnitForest()` (`R/makePedigreeDiagramData.R`)
   — plan §2.3/§6 Session C of
