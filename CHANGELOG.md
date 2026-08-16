@@ -171,6 +171,123 @@ here, in this ledger, not in a frozen shard.
 
 ## 2026-08
 
+### 2026-08-15 · \[BL-1\] S593: close out (Track 1 – D1 sibship-bar row offset, issue \#160)
+
+- **Deliverable:** Track 1 (D1 sibship-bar genuine intermediate row)
+  shipped, closing issue \#160’s 2 originally-reported collisions.
+  `sibshipBarFraction = 0.4` added to `.addRectilinearWaypoints()`’s D1
+  loop (`R/makePedigreeDiagramData.R`). Reproduced byte-for-byte against
+  the actual `kinship2::sample.ped` family 2 fixture cited in the
+  collision-avoidance plan’s own evidence — both collisions confirmed
+  cleared.
+- **Two disclosed residuals found during implementation** (neither
+  anticipated by the plan’s Session A bullet in the bar-vs-node case;
+  the bar-vs-bar case was named as an open gotcha by S592’s own handoff,
+  checked and measured here): (1) no fixed rational `sibshipBarFraction`
+  is collision-free for every generation gap — 2/488 waypoints collide
+  on the real fixture for a gap-5 union; (2) two different sibships
+  sharing a generation gap can still land bars on the identical row if
+  x-ranges overlap — 42 cases before Track 1, 9 after (79% reduction,
+  not elimination). Both counted in a permanent regression test,
+  disclosed in `NEWS.Rmd`/`BACKLOG.md`/ 2 GitHub issue \#160 comments,
+  deferred to Track 2 (gap-agnostic general detect-and-jog).
+- **Action taken:** `lintr::lint_package()` clean on both touched files.
+  Full clean regression (`NOT_CRAN` set, `load_all()` first): 0 failed/0
+  error, twice.
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html):
+  0 errors/0 warnings/1 NOTE (pre-existing `vignettes/figure` knitr
+  leftover, dated Aug 11, unrelated). `NEWS.Rmd`/`NEWS.md` entries added
+  and rendered. 2 GitHub issue \#160 comments posted with full evidence.
+  `BACKLOG.md` Track 1 item marked DONE. Checked
+  `vignettes/articles/kinship2-fidelity- validation.qmd` for stale
+  screenshots (1 image technically affected, judged not stale for the
+  unrelated feature it documents, not regenerated — disclosed, not
+  silently decided). Issue \#160 not closed — Track 2 still required.
+  Commits: `71ce091c` (implementation), `6cb913fc` (bar-vs-bar residual
+  disclosure + test), plus this close-out.
+- **Protocol note:** the GREEN→REFACTOR `AskUserQuestion` gate was
+  skipped mid-session (proceeded directly from a passing GREEN run into
+  lint/regression/[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)/NEWS/GitHub-comment
+  work) — caught before Phase 3 close-out, acknowledged per
+  `CLAUDE.md`’s Error Handling section, retroactively confirmed via
+  `AskUserQuestion` before continuing. See `SESSION_NOTES.md`
+  Self-Assessment for the full account.
+
+### 2026-08-15 · \[BL-1\] S593: claim session (implement Track 1 – D1 sibship-bar row offset)
+
+- **Deliverable (in progress):** Implement Track 1 (D1 sibship-bar
+  genuine intermediate row) – Session A of
+  `docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`
+  §2.1/§6 (`BACKLOG.md`, found S592, READY, Effort S). User selected
+  this item from the Phase 0 priorities picker over Track 2, Track 3,
+  and issue \#148 scoping.
+- **Action taken:** Claim stub written to `SESSION_NOTES.md`;
+  `status: pending` receipt opened in `HANDOFFS.md`. Full PRE-RED -\>
+  RED -\> GREEN -\> REFACTOR TDD gates to follow.
+
+### 2026-08-15 · \[ad hoc\] S592: reconcile HANDOFFS.md commit self-reference (14a405b1)
+
+- **Action taken:** updated S592’s own `HANDOFFS.md` receipt `commit:`
+  field from the write-time placeholder
+  (`b600b43a, plus this close-out`) to the actual close-out commit sha
+  (`b600b43a, 14a405b1`), matching the established S589/S590/S591
+  precedent for this self-referential field.
+
+### 2026-08-15 · \[BL-1\] S592: close out — root-cause architecture plan (issues \#160/#161/S583 collision-avoidance gap)
+
+- **Deliverable:**
+  `docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`
+  — a 3-track phased architecture plan addressing the shared “no
+  same-row collision-avoidance for placement” root cause behind issues
+  \#160, \#161, and the S583 union-position gap. Built via a 12-agent
+  research/design/judge `Workflow` (5 research readers, 4 independent
+  candidate architectures, 3 independently-lensed judges — 12/12
+  completed, 0 errors); no single candidate won on all 3 judge lenses,
+  so this document synthesizes the highest-scoring, judge-vetted piece
+  of each rather than adopting one wholesale. Owner-ratified via
+  `AskUserQuestion` (both Recommended options selected: the 3-track
+  synthesis, and deferring issue \#161’s marker-visibility decision
+  until Tracks 1–3 ship).
+- **Tracks:** Track 1 (D1 sibship-bar genuine intermediate row — an
+  unconditional geometric guarantee, no detection logic, closes issue
+  \#160’s 2 originally-reported collisions); Track 2 (general same-row
+  detect-and-jog framework wired into
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+  itself so every caller benefits — closes issue \#160 comment 1’s
+  broadened finding); Track 3 (parent-span clamp on `finalUnitX`, a
+  deliberate disclosed reopening of Track 6 §2.4, its own PRE-RED gate
+  at implementation time — closes the S583 item). The narrower
+  duplicate-occurrence-selection root fix and issue \#161 are named, not
+  scheduled/deferred, not implemented.
+- **Not implemented this session** — planning session, output is the
+  document, not code; no `R/`/`tests/` file touched, TDD phases
+  INAPPLICABLE (matches the S588/S589/S590 precedent).
+- **Action taken:** commented on issues \#160 and \#161 linking the plan
+  (neither closed — both remain open pending implementation); updated
+  `BACKLOG.md` (planning item marked DONE, 3 new READY/DECISION-NEEDED
+  implementation items added, the \#160/#161/S583 items annotated with
+  pointers to the plan); verified every cross-referenced file/citation
+  in the plan resolves.
+
+### 2026-08-15 · \[BL-1\] S592: claim session (root-cause planning: issues \#160/#161/S583 collision-avoidance gap)
+
+- **Deliverable (in progress):** Planning session addressing
+  `BACKLOG.md`’s “Active” item (found S591) — the shared “no same-row
+  collision-avoidance for placement” root cause behind issues \#160,
+  \#161, and the S583 union-position gap, following
+  `ARCHITECTURE_WORKSTREAM.md`. User selected this item from a 4-option
+  Phase 0 priorities picker over the two narrower decision-only
+  alternatives (#160 alone, \#161 alone) and the
+  lower-priority/informational bucket.
+- **Action taken:** Claim stub written to `SESSION_NOTES.md`;
+  `status: pending` receipt opened in `HANDOFFS.md`. Dispatched a
+  12-agent research/design/judge `Workflow` (5 parallel research readers
+  over `.positionMatingUnitForest()`/`.addRectilinearWaypoints()`, a
+  grep-based call-site inventory, Track 4/6 ratified-invariant
+  extraction, and prior-spike history; 4 independent collision-avoidance
+  candidate architectures; 3 independently-lensed judges) to ground the
+  plan in verified evidence before writing it.
+
 ### 2026-08-15 · \[ad hoc\] S591: close out (live investigation — issues \#160/#161, no code changed)
 
 - **Deliverable:** Close-out for a session with no pre-declared task

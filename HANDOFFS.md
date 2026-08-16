@@ -172,6 +172,127 @@ This file currently holds **12** receipt(s). Computed by
 hand-maintained.
 
 ``` handoff
+session: S593
+date: 2026-08-15
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Track 1 (D1 sibship-bar genuine intermediate row, issue #160) -- DONE. Session A of
+  docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md section 2.1/section 6.
+  sibshipBarFraction = 0.4 added to .addRectilinearWaypoints()'s D1 loop. Issue #160 not closed --
+  Track 2 (general detect-and-jog, READY, Effort L) still required for the comment-1 duplicate-
+  connector finding and both disclosed residuals below.
+what_was_done: Full PRE-RED -> RED -> GREEN -> REFACTOR TDD cycle. RED: updated 2 real
+  golden-value test blocks (not ~11 as the plan estimated) + 2 new tests (collision-1 mechanism
+  reproduction; real-fixture invariant). 9 assertions failed against current code, confirming RED.
+  GREEN: sibshipBarFraction/barY formula added, minimum change. Found during GREEN (not
+  anticipated by the plan): no fixed rational fraction is collision-free for every generation gap
+  -- 2/488 real-fixture waypoints collide for a gap-5 union; disclosed as a counted residual
+  (owner-directed via AskUserQuestion) rather than hidden. REFACTOR: lint clean, full regression
+  0 failed/0 error (twice), devtools::check() 0 errors/0 warnings/1 pre-existing unrelated NOTE,
+  issue #160 collisions reproduced byte-for-byte against the real kinship2::sample.ped family 2
+  fixture, NEWS.Rmd/NEWS.md entries, GitHub issue #160 comment. Re-checked S592's own flagged
+  gotcha (bar-vs-bar collisions) during Phase 3A -- found this session's own RED tests had NOT
+  covered it; measured 42 cases pre-Track1 -> 9 post-Track1 (79% reduction, not elimination),
+  added a permanent regression test, second GitHub issue #160 comment. Commits: b1a650a4 (claim),
+  71ce091c (implementation), 6cb913fc (bar-vs-bar residual + test), plus this close-out.
+next_steps: Pick up Track 2 (general same-row detect-and-jog framework, READY, Effort L) --
+  docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md section 2.2/section 6
+  Session B. Closes issue #160 fully (both Track 1 + Track 2 required) and is gap-agnostic, so it
+  should also absorb both residuals this session disclosed (the gap-5 bar-vs-node case and the
+  bar-vs-bar case) rather than requiring a 3rd patch -- confirm this explicitly during Track 2's
+  own PRE-RED scope check, since the plan's original section 2.2 text predates both findings.
+  Track 3 (S583 parent-span clamp, DECISION NEEDED -- its own PRE-RED reopening confirmation,
+  Effort M) is independent and can be picked up in any order relative to Track 2. Other
+  still-open items unchanged from S592's own next_steps: LabKey integration remainder (BLOCKED);
+  NPRC outreach plan (DECISION NEEDED); issue #148 scoping (DECISION NEEDED); SESSION_NOTES.md
+  archive still blocked by the methodology_trim.py fence-scanner defect (found S518), file now
+  ~4,600+ lines, HIGH dashboard risk, still growing.
+key_files: R/makePedigreeDiagramData.R:1529-1567 (Track 1's actual shipped code, the D1 loop with
+  sibshipBarFraction); R/makePedigreeDiagramData.R:1107-1498 (makePedigreeMatingLayout, Track 2's
+  call-site addition at :1428-1432); tests/testthat/test_addRectilinearWaypoints.R (all Track 1
+  test coverage, including both disclosed-residual regression tests); docs/planning/pedigree-
+  diagram-same-row-collision-avoidance-plan.md section 2.2/section 6 Session B (Track 2's spec).
+gotchas: Track 2's own PRE-RED scope check should explicitly decide whether it subsumes both of
+  Track 1's disclosed residuals (recommended, since Track 2 is gap-agnostic by design) or leaves
+  them as permanent, accepted limitations -- don't silently assume either without stating it.
+  test_addRectilinearWaypoints.R's real-fixture tests hardcode exact counts (2 residual waypoints,
+  42/9 bar-vs-bar collisions) -- these are point-in-time measurements on the CURRENT bundled
+  fixture; if Track 2 changes node placement upstream of D1, or the bundled fixture itself is
+  regenerated, these counts may need re-measuring, not just re-asserting. The GREEN->REFACTOR
+  AskUserQuestion gate is easy to skip once GREEN's own tests pass and momentum carries into
+  verification work -- watch for this specifically at Track 2's own GREEN->REFACTOR transition.
+runtime_smoke: Verified via direct function-chain execution (makePedigreeMatingLayout() ->
+  .addRectilinearWaypoints(), the exact chain R/modPedigree.R:588 calls with no override) against
+  both the real 375-individual bundled fixture and the exact kinship2::sample.ped fixture from the
+  bug report -- not a full shiny::runApp() launch, a disclosed scope choice, not a silent skip.
+changelog_ref: CHANGELOG.md 2026-08-15 entries between the S592 close-out block and this session's
+  own close-out entry above it (claim, implementation is commit-message-only per Phase 3F -- see
+  the close-out entry's own detail bullets for the full account).
+commit: b1a650a4, 71ce091c, 6cb913fc, plus this close-out
+```
+
+``` handoff
+session: S592
+date: 2026-08-15
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Planning session -- DONE. Root-cause architecture plan for pedigree-diagram same-row
+  collision-avoidance (BACKLOG.md Active item, found S591), following ARCHITECTURE_WORKSTREAM.md.
+  Document: docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md. 3 implementation
+  tracks (Track 1 D1 bar-row offset; Track 2 general detect-and-jog framework; Track 3 S583
+  parent-span clamp) added to BACKLOG.md as separate READY/DECISION-NEEDED items -- none
+  implemented this session (planning session, output is the document, not code).
+what_was_done: Dispatched a 12-agent research/design/judge Workflow (5 research readers, 4
+  candidate architectures, 3 judges) -- 12/12 completed, 0 errors. No single candidate won on all
+  3 judge lenses (each had a real flaw: a self-referential detection bug, Shiny-only wiring, an
+  invasive patch breaking ~11 golden tests, or a self-disclosed tuning-risk clamp). Synthesized
+  the highest-scoring, judge-vetted piece of each into a 3-track phased plan; owner-ratified via
+  AskUserQuestion (both Recommended options selected). Wrote the 11-section plan document; every
+  code citation re-verified against real line numbers, every cross-reference confirmed to
+  resolve. Commented on issues #160 and #161 linking the plan (neither closed -- both remain open
+  pending implementation). Updated BACKLOG.md: planning item marked DONE, 3 new implementation
+  items added, existing #160/#161/S583 items annotated with pointers to the plan. Commits:
+  b600b43a (claim), plus this close-out.
+next_steps: Pick up one of the 3 new BACKLOG.md READY/DECISION-NEEDED items this plan produced,
+  smallest/most-certain first per the plan's own §6 ordering -- Track 1 (D1 sibship-bar row
+  offset, READY, Effort S, no ratified invariant reopened) is the natural first implementation
+  session: docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md §2.1/§6 Session A.
+  Track 2 (general detect-and-jog framework, READY, Effort L) should follow. Track 3 (S583 clamp,
+  DECISION NEEDED -- its own PRE-RED reopening confirmation required before any RED test, Effort
+  M) is independent and can be picked up in any order relative to 1/2. Other still-open items
+  unchanged from S591's own next_steps: LabKey integration remainder (BLOCKED); NPRC outreach plan
+  (DECISION NEEDED); 3 possibly-stale pedigree screenshots (found S582); SESSION_NOTES.md archive
+  still blocked by the methodology_trim.py fence-scanner defect (found S518), file now ~4,400+
+  lines, HIGH dashboard risk, still growing.
+key_files: docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md (the deliverable);
+  R/makePedigreeDiagramData.R:966-975 (finalUnitX loop, Track 3's edit site);
+  R/makePedigreeDiagramData.R:1530-1552 (D1 sibship-bar loop, Track 1's edit site);
+  R/makePedigreeDiagramData.R:1107-1498 (makePedigreeMatingLayout, Track 2's call-site addition
+  at :1428-1432); tests/testthat/test_addRectilinearWaypoints.R (~11 golden-value tests Track 1
+  must update); tests/testthat/test_positionMatingUnitForest.R:986,:1019 (invariant tests Track 3
+  must update).
+gotchas: Track 1's own fix has one named, not-yet-stress-tested residual (plan §8): applying the
+  SAME uniform sibshipBarFraction to every sibship means two different sibships spanning the same
+  generation gap could in principle land their bars on the identical row if their x-ranges
+  overlap -- check this empirically against the real 375-individual fixture during Track 1's own
+  implementation, before considering it fully closed. Track 3 requires its own PRE-RED
+  AskUserQuestion at implementation time (a second, code-level reopening confirmation) even though
+  the architecture itself was already ratified at the planning level this session -- do not skip
+  that gate assuming this session's ratification already covers it. The workflow's full raw
+  research/candidate/judge output is preserved in the workflow transcript's journal.jsonl (path in
+  the plan doc §4/§10) -- read that, not just this session's own summary, if a future session
+  needs the un-synthesized detail on any rejected candidate.
+runtime_smoke: n/a -- no R/ or tests/ file touched, no runtime behavior changed. Docs-only
+  planning session (matches the S588/S589/S590 precedent).
+changelog_ref: see CHANGELOG.md 2026-08-15 entries between the S591 close-out block and this
+  session's own close-out entry below it (claim entry, GitHub comments, BACKLOG.md update, plan
+  document).
+commit: b600b43a, 14a405b1
+```
+
+``` handoff
 session: S591
 date: 2026-08-15
 status: complete

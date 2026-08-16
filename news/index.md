@@ -328,6 +328,31 @@
   own `edgeStyle` argument default flips to match. The node cap that
   applies with no style chosen is therefore now 400 animals (previously
   750); switching to Direct raises it back to 750.
+- Fixed: row order in the Genetic Value Analysis imports/no-parentage
+  tiers, the pedigree table produced by
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md),
+  and the Breeding Group Formation tab’s group-member table could vary
+  depending on the server/session’s own locale (`LC_COLLATE`) – an id
+  set sorted one way under one locale and a different way under another,
+  purely from character-collation differences, not any change in the
+  underlying data. All three now sort ids in a fixed, locale-independent
+  byte order.
+- Fixed: in the Pedigree Diagram tab’s Rectilinear edge style, a sibship
+  bar could visually pass through an unrelated node’s own row – most
+  visibly, a sibling who separately anchors her own mating union at the
+  same generation (issue
+  [\#160](https://github.com/rmsharp/nprcgenekeepr/issues/160)).
+  `.addRectilinearWaypoints()`’s D1 sibship-bar/drop waypoints now land
+  on a genuine intermediate row (40% of the way from the parent/union
+  row to the children’s row) rather than the children’s own row, an
+  unconditional geometric guarantee for the common 1-generation-gap
+  case. Two disclosed residuals remain, both tracked for a future
+  general same-row collision-avoidance pass: a rare bar-vs-node
+  coincidence for a union placed an exact multiple of 5 generations from
+  its child, and a reduced-but-not-eliminated bar-vs-bar case (2
+  unrelated sibships at the same generation gap with overlapping
+  horizontal spans; cut from 42 to 9 cases in the bundled example
+  pedigree).
 
 ## nprcgenekeepr 2.0.0 (20260708)
 

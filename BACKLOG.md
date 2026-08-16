@@ -9,58 +9,116 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 **Planning session: address the shared “no collision-avoidance for
 same-row placement” root cause behind issues \#160, \#161, and the S583
 union-position gap** (found 2026-08-15, incidental to this
-conversation’s own live kinship2-fidelity review, READY, Effort L —
-planning session, not a fix) — three independent findings from the same
-day’s review trace to the SAME underlying gap in
-`.positionMatingUnitForest()`/`.addRectilinearWaypoints()`: node/edge
-placement is computed locally (per-union, per-child) with no check for
-what else already occupies that x/y region. [Issue
-\#160](https://github.com/rmsharp/nprcgenekeepr/issues/160) (sibship-bar
-and duplicate-connector lines colliding with unrelated nodes) and the
-S583 item directly below (a union landing outside its own parents’ span)
-are two symptoms of this one gap, not two separate bugs — a single
-design pass may resolve both together rather than as separate patches.
-[Issue \#161](https://github.com/rmsharp/nprcgenekeepr/issues/161)
-(whether to hide the union-node marker) is a smaller, related decision
-the same session could pick up alongside, since it touches the same
-rendering code and its answer affects how visible any remaining
-collision cases would be. Per `SESSION_RUNNER.md`’s Planning Sessions
-discipline: deepest available reasoning mode, evidence-based inventory
-(grep every call site these functions share), per-phase completion
-criteria — output is a plan document, not code; implementation is 1+
-separate sessions after that.
+conversation’s own live kinship2-fidelity review) — **DONE S592
+(2026-08-15).** A 12-agent research/design/judge `Workflow` produced 4
+independently-scored candidate architectures (no single one won on all 3
+judge lenses); synthesized into a 3-track phased plan, owner-ratified
+via `AskUserQuestion`:
+[`docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md).
+Track 1 (D1 sibship-bar geometric row offset — unconditional guarantee,
+closes issue \#160’s 2 originally-reported collisions), Track 2 (general
+same-row detect-and-jog framework, wired into
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+itself — closes issue \#160 comment 1’s broadened finding), Track 3
+(parent-span clamp on `finalUnitX`, its own PRE-RED reopening gate —
+closes S583). Issue \#161 addressed with a recommendation to defer (plan
+§2.5). The underlying duplicate-occurrence-selection root-cause fix
+(plan §2.4) is named, evidence-gathered, but deliberately deferred, not
+scheduled. See the 3 new READY items directly below for the
+implementation sessions this plan produced.
+
+**Implement Track 1 (D1 sibship-bar row offset)** (found S592, Effort S)
+— **DONE S593 (2026-08-15).** Plan §2.1/§6 Session A:
+[`docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md).
+`sibshipBarFraction = 0.4` constant added to
+`.addRectilinearWaypoints()`’s D1 loop (`R/makePedigreeDiagramData.R`);
+bar/drop waypoints now land on a genuine intermediate row instead of the
+child’s own row. Reproduced issue \#160’s 2 originally-reported
+collisions byte-for-byte against the actual `kinship2::sample.ped`
+family 2 fixture cited in the collision-avoidance plan’s own evidence
+(`204`=-270/`205`=-150/`__union_2`=-210,
+`209`=210/`__bar_207`=90/`__bar_208`=390) — both cleared. Correction to
+the plan’s own estimate: only 2 test blocks (not ~11) hardcoded
+`y == childY`; direct inspection, not the inherited count, governed the
+actual test update. **Found during implementation, not anticipated by
+the plan:** no single fixed rational `sibshipBarFraction` is
+collision-free for every possible generation gap (a `p/q` fraction
+coincides with a pinned row whenever the gap is a multiple of `q`) —
+confirmed empirically on the real 375-individual bundled fixture (1
+gap-5 D1 group, 2/488 waypoints). Owner-directed: disclosed and counted
+in the test suite rather than hidden by a weaker assertion; deferred to
+Track 2 below, which is gap-agnostic. **Second residual, matching S592’s
+own flagged gotcha** (plan §8, checked this session per that handoff’s
+explicit instruction): 2 different sibships sharing a generation gap can
+still land their bars on the identical row if their x-ranges overlap (a
+bar-vs-bar collision, not bar-vs-node). Track 1 substantially reduces
+this — the offset depends on both the parent’s and child’s own row, not
+just the child’s, splitting most same-generation sibships onto different
+rows — but does not eliminate it: 42 such cases pre-Track1, 9
+post-Track1 (79% reduction) on the real fixture. Also counted in the
+test suite; also deferred to Track 2. Full clean regression: 0 failed/0
+error. `lintr::lint_package()`: no lints. Issue \#160 not yet closed —
+Track 2 still required for the comment-1 duplicate-connector finding and
+both disclosed residuals above.
+
+**Implement Track 2 (general same-row detect-and-jog framework)** (found
+S592, READY, Effort L) — plan §2.2/§6 Session B (should follow Track 1,
+not strictly blocked by it):
+[`docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md).
+New `.resolveEdgeNodeCollisions()`, wired into
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+itself (not just the Shiny layer) so every caller benefits. Closes issue
+\#160 comment 1’s broadened finding (the duplicate-connector collision
+behind `W`) and covers D2’s dogleg leg / kept mate edges / twin
+connectors before they’re separately reported. Never moves an existing
+node — additive waypoints/reroutes only. Closes issue \#160 fully once
+shipped alongside Track 1.
+
+**Implement Track 3 (S583 parent-span clamp)** (found S592, DECISION
+NEEDED — its own PRE-RED reopening confirmation required before any RED
+test, Effort M) — plan §2.3/§6 Session C:
+[`docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md).
+Clamps `finalUnitX` into its own two parents’ `[min, max]` range,
+closing the S583 item directly below. **This is a deliberate, disclosed
+reopening of Track 6 §2.4’s “unconditionally” wording** — already
+ratified at the planning level (this session, via `AskUserQuestion`),
+but the TDD contract requires its own explicit PRE-RED confirmation gate
+at implementation time before writing any RED test (plan §6). Requires
+updating the `matingUnits$gen == genOf[[anchor]]`-adjacent “every mating
+unit satisfies the invariant” tests at
+`test_positionMatingUnitForest.R:986`/`:1019` to accept “formula OR
+clamped-to-parent-range,” and auditing
+`test_makePedigreeMatingLayout.R:428`.
 
 **Pedigree Diagram: rectilinear sibship bar can visually imply false
 parentage** (found live in conversation 2026-08-15, not a claimed
 session, filed as [issue
-\#160](https://github.com/rmsharp/nprcgenekeepr/issues/160), DECISION
-NEEDED, Effort unscoped) — under `edgeStyle = "rectilinear"` (current
-shipped default), the sibship-bar waypoints sit at the exact same y as
-the children’s own row, so an unrelated same-row node (a sibling’s own
-mating-unit dot, a marry-in mate) can land directly on the bar line and
-read as that sibling’s child. Reproduced on the “cleanest comparison”
-14-person fixture (no multi-mate ambiguity), 2 independent collisions
-found in one render. Needs a design session to give the bar genuine
-vertical clearance without reopening Track 4/6’s ratified invariants —
-see issue \#160 for full reproduction/evidence. Not fixed here. **Update
-(same day):** a second, more severe reproduction (P1×P2’s own union
-landing entirely outside their span, plus a duplicate-connector line
-rendering behind an unrelated node) traced the root cause one level
-deeper — see the issue’s comment thread. The defect is broader than the
-sibship-bar D1 loop alone: any straight same-row edge (sibship bar OR
-duplicate-connector) can collide with an intervening unrelated node.
+\#160](https://github.com/rmsharp/nprcgenekeepr/issues/160)) —
+**root-cause plan written S592** (see the 3 READY implementation items
+above); this item now tracks issue \#160 itself and closes once Tracks
+1+2 both ship. Reproduced on the “cleanest comparison” 14-person fixture
+(no multi-mate ambiguity), 2 independent collisions found in one render;
+not fixed here. **Update (same day):** a second, more severe
+reproduction (P1×P2’s own union landing entirely outside their span,
+plus a duplicate-connector line rendering behind an unrelated node)
+traced the root cause one level deeper — see the issue’s comment thread.
+The defect is broader than the sibship-bar D1 loop alone: any straight
+same-row edge (sibship bar OR duplicate-connector) can collide with an
+intervening unrelated node.
 
 **Pedigree Diagram: consider hiding the mating-unit node marker to match
 kinship2’s plain-intersection convention** (found live in conversation
 2026-08-15, not a claimed session, filed as [issue
-\#161](https://github.com/rmsharp/nprcgenekeepr/issues/161), DECISION
-NEEDED, Effort S if approved) — kinship2 draws no marker for a mating,
-just a plain line intersection; nprcgenekeepr draws a small filled
-circle for every union. Mechanically easy (the `size = 0` +
-transparent-color technique already used for invisible D1/D2 waypoints
-applies directly), but a genuine design call, not an obvious fix — the
-dot may be a useful explicit anchor independent of kinship2 parity.
-Needs a decision before implementation.
+\#161](https://github.com/rmsharp/nprcgenekeepr/issues/161)) —
+**addressed S592: recommend deferring** until Tracks 1-3 above ship and
+stabilize (plan §2.5) — hiding the marker would make any remaining,
+not-yet-repaired same-row collision harder to spot, not easier, while
+the collision-avoidance framework is still unproven on the real fixture.
+Mechanically easy (the `size = 0` + transparent-color technique already
+used for invisible D1/D2 waypoints applies directly) but a genuine
+design call, not an obvious fix — the dot may be a useful explicit
+anchor independent of kinship2 parity. Still needs a final decision
+before implementation, just not this session.
 
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 
@@ -523,7 +581,12 @@ at their one child’s x rather than their own parents’ midpoint. See
 [issue \#160](https://github.com/rmsharp/nprcgenekeepr/issues/160)’s
 comment thread for the full coordinate evidence (a related but distinct
 finding on the same fixture). Not filed as its own issue – this is the
-same already-tracked gap, not a new one.
+same already-tracked gap, not a new one. **Scoped for a fix, S592
+(2026-08-15):** this is exactly what “Implement Track 3 (S583
+parent-span clamp)” above resolves –
+[`docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md)
+§2.3. A future implementation session should close this item when Track
+3 ships, not treat it as a separate unscoped design question.
 
 (found S574, 2026-08-14, incidental to Track 2’s default-flip
 documentation pass, **RESOLVED S582**.
