@@ -137,25 +137,64 @@ This file currently holds **12** receipt(s). Computed by `methodology_trim.py` o
 
 ```handoff
 session: S594
-date: 2026-08-16
-status: pending
-self_score: <1-10>
-predecessor_score: <1-10>
-active_task: Lossless archive trim of SESSION_NOTES.md (user-directed at Phase 0). PRE-RED found
-  the CLAUDE.md/BACKLOG.md "blocked by fence-scanner defect" framing is stale (fixed S527/S528,
-  2 archives already ran); actual blocker is a fresh SRF_RED refusal (SRF 2.0371 vs 0.0576, a
-  35.35x spread against two different archive boundaries) matching the established Learning
-  549/586/587 pattern. Decision pending via AskUserQuestion.
-what_was_done: pending
-next_steps: pending
-key_files: methodology_trim.py:231-255 (SESSION_NOTES.md LedgerSpec); SESSION_NOTES.md (live
-  file, 395,482 B / 77 records); CLAUDE.md (stale fence-scanner-defect note to correct)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+date: 2026-08-15
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: Lossless archive trim of SESSION_NOTES.md -- DONE. 76 records archived to
+  docs/archive/SESSION_NOTES-through-2026-08-15.md; live file 397,442 B -> 5,262 B. Dashboard
+  HIGH+ risk 1 -> 0. Stale CLAUDE.md "blocked by fence-scanner defect" note corrected to verified
+  current state (both underlying defects were fixed S527/S528; this is the 3rd successful archive
+  round, not the 1st).
+what_was_done: Found the CLAUDE.md/HANDOFFS.md-repeated "SESSION_NOTES.md archive blocked by a
+  fence-scanner defect (S518)" claim was stale -- verified directly (0 backtick-fence lines in
+  the live file; methodology_trim.py's own LedgerSpec code comments cite S527/S528 fixes;
+  PROJECT_LEARNINGS.md Learning 533 documents the fix; 2 archive rounds already completed).
+  Real current blocker: fresh SRF_RED refusal (SRF 2.0371 vs 0.0576 vs two different archive
+  boundaries, 35.35x spread) -- the exact pattern Learnings 549/586/587 diagnosed for
+  CHANGELOG.md/HANDOFFS.md and Learning 587 predicted would recur here. Pulled absolute byte
+  deltas, presented both readings via AskUserQuestion (force/hold/raise-budget); user chose
+  force. Ran --force --write: 76 records archived, L1/L2/L3 confirmed both by the tool's own
+  output and independently via the generated .verify.sh script. Corrected the stale CLAUDE.md
+  note. Added PROJECT_LEARNINGS.md Learning 607 (the stale-persistent-note pattern + Learning
+  587's prediction materializing). Commits: a3c8f1c9 (claim, with a same-session date-error
+  self-correction), plus this close-out.
+next_steps: No further action required on this item -- SESSION_NOTES.md archiving is confirmed
+  working and the dashboard risk flag is clear. The next SRF_RED refusal on this file (when it
+  next accumulates enough new session records) will need the same force/hold/raise-budget
+  AskUserQuestion treatment -- not a defect, an expected recurring decision point per Learning
+  586's own practical rule (a large archive event's denominator doesn't stay "most recent" for
+  long on a high-velocity project). Otherwise: pick up from the Phase 0 priorities list this
+  session's own orientation report rendered (Track 2 general same-row detect-and-jog framework,
+  READY, Effort L, is the standing top recommendation per S593's own next_steps -- unaffected by
+  this session's unrelated housekeeping detour).
+key_files: methodology_trim.py:231-255 (SESSION_NOTES.md LedgerSpec, unmodified -- config
+  already correct); CLAUDE.md (the corrected fence-scanner-defect note, now titled "SESSION_NOTES.md
+  archive fence-scanner defect ... historical, not current state"); PROJECT_LEARNINGS.md Learning
+  607 (new); docs/archive/SESSION_NOTES-through-2026-08-15.md +
+  docs/archive/SESSION_NOTES-through-2026-08-15.md.verify.sh (the new shard + its losslessness
+  proof).
+gotchas: The 2 records kept live in SESSION_NOTES.md after this trim are NOT a matched
+  session-pair (methodology_trim.py keeps the top-K headings by FILE POSITION, not by
+  session-grouping) -- they are this session's own claim/eval headings plus the OLD "Session 592
+  Handoff Evaluation (by Session 593)" heading; "What Session 593 Did" itself was archived away
+  in the same trim (fully preserved, just no longer live-visible) -- don't be surprised the live
+  file's 2 headings don't pair into one full session record. A future SESSION_NOTES.md SRF_RED
+  refusal is expected, not a new bug -- see next_steps.
+runtime_smoke: n/a -- docs/ledger-only session, no R package or Shiny app runtime behavior
+  touched; methodology_trim.py itself was not modified, only run.
+changelog_ref: CHANGELOG.md 2026-08-15 entries -- the tool-authored "Ledger trim: SESSION_NOTES.md
+  -> ..." entry plus this session's own claim and close-out entries, all under the "## 2026-08"
+  heading near the top of the file.
+commit: a3c8f1c9 (claim), plus this close-out
 ```
-<in progress>
+**Self-score breakdown:** +Verified a stale claim rather than trusting repetition; +followed the
+established SRF_RED decision precedent exactly; +independently re-verified losslessness via the
+generated script, not just console output; +corrected the stale note same-session; +caught and
+fixed a self-introduced date error before it could propagate. −The date error should not have
+happened in the first place (correct date was in context, mistyped 3 times); −didn't check for a
+dedicated BACKLOG.md item before starting (there wasn't one, but the check itself was skipped
+until close-out).
 
 ```handoff
 session: S593

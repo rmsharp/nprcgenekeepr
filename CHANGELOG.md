@@ -14,7 +14,34 @@ it is failure mode #27.
 > `NEWS.md` / `NEWS.Rmd`. This file tracks the development *process* and methodology
 > history, not package releases.
 
-### 2026-08-16 · [ad hoc] S594 claim: lossless archive trim of SESSION_NOTES.md (Session 594)
+## 2026-08
+
+### 2026-08-15 · [ad hoc] S594 close-out: SESSION_NOTES.md archive DONE, stale CLAUDE.md fence-scanner note corrected (Session 594)
+- **Deliverable:** Lossless archive trim of `SESSION_NOTES.md` — **DONE.** Found the `CLAUDE.md`
+  "archive blocked by a fence-scanner defect (S518)" note stale: that defect and a second,
+  independent `\b`-boundary defect were fixed S527/S528, and 2 archive rounds had already run
+  successfully since. The actual live blocker was a fresh `SRF_RED` refusal (SRF 2.0371 vs.
+  0.0576, a 35.35x spread across two archive boundaries) — the same pattern
+  `PROJECT_LEARNINGS.md` Learnings 549/586/587 diagnosed for `CHANGELOG.md`/`HANDOFFS.md`, and
+  which Learning 587 explicitly predicted would recur here. Surfaced both readings +absolute
+  byte deltas via `AskUserQuestion`; owner chose `--force`. `methodology_trim.py --force --write`
+  archived 76 records to `docs/archive/SESSION_NOTES-through-2026-08-15.md` (see the tool's own
+  entry directly below); L1/L2/L3 losslessness confirmed both by the tool's console output and
+  independently via the generated `.verify.sh` script. Dashboard HIGH+ risk 1 → 0 (health
+  unchanged, 96/100). Corrected the `CLAUDE.md` note to the verified current state. Added
+  `PROJECT_LEARNINGS.md` Learning 607 (stale-persistent-note pattern; Learning 587's prediction
+  confirmed). No `BACKLOG.md` item existed for this — nothing to remove there. Commits: `a3c8f1c9`
+  (claim, self-corrected a same-session date typo), plus this close-out.
+
+### 2026-08-15 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-08-15.md` (76 record(s), 397,442 B → 5,262 B)
+
+**Written by:** `methodology_trim.py` v1.1.2 — a tool action, not a session's judgment.
+Moved the oldest **76** record(s) (2026-01-26 → 2026-08-15) out of [`SESSION_NOTES.md`](SESSION_NOTES.md) into
+[`docs/archive/SESSION_NOTES-through-2026-08-15.md`](docs/archive/SESSION_NOTES-through-2026-08-15.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/SESSION_NOTES-through-2026-08-15.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-08-15.md.verify.sh)
+rather than trusting a digest printed here. Live file 397,442 B → 5,262 B (−98.7%).
+
+### 2026-08-15 · [ad hoc] S594 claim: lossless archive trim of SESSION_NOTES.md (Session 594)
 - **Deliverable:** Lossless archive trim of `SESSION_NOTES.md`, user-directed at Phase 0 (dashboard
   HIGH-risk flag, file at 4,645 lines / 395,482 B). PRE-RED investigation: the `CLAUDE.md` note
   framing this as blocked by a `methodology_trim.py` fence-scanner defect (S518) is stale — both
