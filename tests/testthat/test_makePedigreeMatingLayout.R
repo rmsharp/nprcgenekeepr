@@ -583,21 +583,32 @@ test_that(
 
 test_that(
   "makePedigreeMatingLayout on the full real 375-individual bundled
-   fixture produces exactly 1,202 nodes under edgeStyle = \"rectilinear\"
-   (CHANGED from 1,228/1,279 -- Track 4's gen-first D2 selection drops the
-   714 direct-style node count (was 740) while D2 projections stay at 0,
-   now a structural invariant rather than an empirical outcome; re-confirmed
-   through the actual public entry point, not just Slice 1's internal
-   helper)", {
+   fixture produces exactly 1,502 nodes under edgeStyle = \"rectilinear\"
+   (CHANGED from 1,202 -- Track 2, issue #160 comment 1,
+   docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md
+   sec2.2: .resolveEdgeNodeCollisions() adds 2 __jog_ waypoints for each
+   of the 150 same-row straight-edge collisions found + repaired on this
+   real fixture, 1,202 + 300 = 1,502; re-confirmed through the actual
+   public entry point, not just the internal helper)", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
     stringsAsFactors = FALSE
   )
-  result <- makePedigreeMatingLayout(ped, edgeStyle = "rectilinear")
-  expect_equal(nrow(result$nodes), 1202L)
+  ## 52 curved-duplicate-connector collisions remain as disclosed,
+  ## unconfirmed-by-coordinate-math heuristic residuals (Track 2's own
+  ## documented posture) -- makePedigreeMatingLayout() warns, non-fatal.
+  result <- withCallingHandlers(
+    makePedigreeMatingLayout(ped, edgeStyle = "rectilinear"),
+    warning = function(w) {
+      expect_match(conditionMessage(w), "same-row edge-node collision")
+      invokeRestart("muffleWarning")
+    }
+  )
+  expect_equal(nrow(result$nodes), 1502L)
   expect_false(any(is.na(result$nodes$x)))
   expect_false(any(is.na(result$nodes$y)))
+  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 300L)
 })
 
 ## ---- orderBySex parameter (issue #145 Slice 1, D8 option (b)) ----------
@@ -957,11 +968,28 @@ test_that(
 ## -column-names backward-compat guard already at :419-442 above continues
 ## to hold unmodified -- twinRelations absent adds no new columns.
 
+## Track 2 (issue #160 comment 1, docs/planning/pedigree-diagram-same-row-
+## collision-avoidance-plan.md sec2.2, this session): twin/zygosity
+## connectors are explicitly one of the same-row straight-edge types
+## .resolveEdgeNodeCollisions() proactively covers. Confirmed live this
+## session: all 3 connectors on this real Slice 1 fixture pair genuinely
+## collide with an unrelated node on their own row (verified via direct
+## coordinate inspection before updating this test, not assumed), so each
+## is now split into a 3-segment jog (from -> __jog_N_a -> __jog_N_b ->
+## to) by the SAME repair mechanism as any other straight edge -- while
+## still preserving its own color/label/dashes identity on every segment
+## (the D2-dogleg color-preservation precedent, Track C/S563, generalized
+## here; found and fixed this session after an earlier version of
+## .resolveEdgeNodeCollisions() blanket-reset color and silently dropped
+## the connectors' own identity entirely).
+
 test_that(
   "makePedigreeMatingLayout adds a distinctly-styled MZ/DZ/UZ connector edge
    per twin pair on the real Slice 1 fixture pair, using kinship2's own
    'MZ'/'DZ'/'?' labels, all sharing the same Okabe-Ito #009E73 color (D6,
-   D10, found unwired S494, fixed S506)", {
+   D10, found unwired S494, fixed S506) -- each split into a Track 2 jog
+   (3 segments, color/label/dashes preserved on all 3) since all 3
+   connectors genuinely collide with an unrelated node on their own row", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped_twins.csv",
                 package = "nprcgenekeepr"),
@@ -973,27 +1001,33 @@ test_that(
                 package = "nprcgenekeepr"),
     stringsAsFactors = FALSE
   )
-  result <- makePedigreeMatingLayout(ped, twinRelations = twinRelations)
+  result <- withCallingHandlers(
+    makePedigreeMatingLayout(ped, twinRelations = twinRelations),
+    warning = function(w) {
+      expect_match(conditionMessage(w), "same-row edge-node collision")
+      invokeRestart("muffleWarning")
+    }
+  )
   connectors <- result$edges[!is.na(result$edges$label), ]
-  expect_equal(nrow(connectors), 3L)
+  expect_equal(nrow(connectors), 9L)  # 3 pairs x 3 jog segments each
 
-  mz <- connectors[connectors$from == "E06FRB", ]
-  expect_equal(mz$to, "HV7LZ3")
-  expect_equal(mz$label, "MZ")
-  expect_identical(mz$dashes[[1L]], FALSE)
-  expect_equal(mz$color, "#009E73")
+  .expectJoggedConnector <- function(connectors, fromId, toId, label,
+                                      dashPattern) {
+    seg <- connectors[connectors$label == label, ]
+    expect_equal(nrow(seg), 3L)
+    expect_true(all(seg$color == "#009E73"))
+    expect_true(all(vapply(seg$dashes, identical, logical(1L), dashPattern)))
+    ## The 3 segments chain fromId -> ... -> toId through 2 new __jog_
+    ## waypoints (never a __dup_ occurrence -- D7's own contract).
+    expect_true(fromId %in% seg$from)
+    expect_true(toId %in% seg$to)
+    expect_true(all(grepl("^__jog_", setdiff(c(seg$from, seg$to),
+                                              c(fromId, toId)))))
+  }
 
-  dz <- connectors[connectors$from == "8GSXTQ", ]
-  expect_equal(dz$to, "P844CW")
-  expect_equal(dz$label, "DZ")
-  expect_identical(dz$dashes[[1L]], c(4L, 4L))
-  expect_equal(dz$color, "#009E73")
-
-  uz <- connectors[connectors$from == "BRI2MW", ]
-  expect_equal(uz$to, "677E7M")
-  expect_equal(uz$label, "?")
-  expect_identical(uz$dashes[[1L]], c(14L, 8L))
-  expect_equal(uz$color, "#009E73")
+  .expectJoggedConnector(connectors, "E06FRB", "HV7LZ3", "MZ", FALSE)
+  .expectJoggedConnector(connectors, "8GSXTQ", "P844CW", "DZ", c(4L, 4L))
+  .expectJoggedConnector(connectors, "BRI2MW", "677E7M", "?", c(14L, 8L))
 })
 
 test_that(

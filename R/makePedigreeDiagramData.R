@@ -1427,8 +1427,25 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
 
   if (edgeStyle == "rectilinear") {
     waypoints <- .addRectilinearWaypoints(nodes, edges, forest, pos)
-    nodes <- waypoints$nodes
-    edges <- waypoints$edges
+    ## Track 2 (issue #160 comment 1, docs/planning/pedigree-diagram-same-
+    ## row-collision-avoidance-plan.md sec2.2): general same-row detect-
+    ## and-jog framework, wired here (not only at the Shiny layer) so
+    ## every caller of this documented, exported function benefits
+    ## identically. Never moves an existing node -- only adds waypoints/
+    ## reroutes edges (checked explicitly by this function's own tests).
+    resolved <- .resolveEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
+    nodes <- resolved$nodes
+    edges <- resolved$edges
+    if (nrow(resolved$residuals) > 0L) {
+      warning(sprintf(
+        paste0("makePedigreeMatingLayout(): %d same-row edge-node ",
+               "collision(s) could not be fully resolved (residual after ",
+               "the repair-pass cap, or an unconfirmed curved-connector ",
+               "heuristic) -- rendered output may still show a straight ",
+               "or curved edge passing near an unrelated node."),
+        nrow(resolved$residuals)
+      ), call. = FALSE)
+    }
   }
 
   list(nodes = nodes, edges = edges, duplicateToReal = duplicateToReal)
@@ -1747,4 +1764,344 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
   finalNodes <- rbind(keptNodes, newNodes[, names(keptNodes)])
 
   list(nodes = finalNodes, edges = finalEdges)
+}
+
+#' Detect and repair same-row straight-edge/unrelated-node collisions
+#' (Pedigree Diagram, Track 2, issue #160 comment 1)
+#'
+#' Internal helper for the general same-row collision-avoidance framework
+#' (\code{docs/planning/pedigree-diagram-same-row-collision-avoidance-
+#' plan.md} sec2.2). Consumes the already-final \code{nodes}/\code{edges}
+#' tables \code{\link{makePedigreeMatingLayout}} assembles after
+#' \code{\link{.addRectilinearWaypoints}} runs (rectilinear style), and
+#' returns a repaired \code{nodes}/\code{edges} pair plus a \code{residuals}
+#' data frame disclosing anything that could not be fully, provably
+#' resolved -- never silently dropped.
+#'
+#' A straight (non-curved) same-row edge -- \code{y[from] == y[to]}, and
+#' \code{smooth.enabled} not \code{TRUE} -- collides with any OTHER node
+#' at that same row whose \code{x} falls in the edge's open interval
+#' \code{(min(x1, x2), max(x1, x2))} (strict interior containment, per the
+#' plan's own load-bearing precedent that a distance threshold does not
+#' discriminate real collisions from harmless near-misses,
+#' \code{test_positionMatingUnitForest.R:150-217}). Excluded from
+#' "colliding": the edge's own 2 endpoints, and any node directly
+#' graph-adjacent (via any existing edge, either direction) to either
+#' endpoint -- a structural member of the same union/sibship the span
+#' belongs to (so a bar never flags its own child, and a union never
+#' flags its own other parent). This graph-adjacency rule needs no
+#' \code{forest} parameter: every structural relationship this function
+#' must not flag is already encoded directly in \code{edges} (e.g. a D1
+#' bar-point's own vertical edge to its child; a union's own 2 direct
+#' mate edges to its parents).
+#'
+#' Repair is a strictly rectilinear 2-waypoint "step": the flagged edge
+#' \code{u -> v} (row \code{y0}) is replaced by \code{u -> J1 -> J2 -> v},
+#' with \code{J1}/\code{J2} at \code{(x[u], y0 + jogY)}/\code{(x[v],
+#' y0 + jogY)} -- a short vertical step, a horizontal run at the offset
+#' row (clearing every obstacle in the original span in a single step,
+#' not one jog per obstacle), then back down. \code{jogY} is a small
+#' fraction of the smallest real row-to-row gap actually present in
+#' \code{nodes} -- never a hardcoded \code{yScale}, so the repair stays
+#' correct if \code{xScale}/\code{yScale} are ever retuned. New waypoint
+#' ids use the \code{__jog_} prefix (joining the existing reserved-prefix
+#' set documented at \code{vignettes/a2interactive.Rmd:500}). Detection
+#' and repair repeat for up to 3 passes (the new offset row can, rarely,
+#' collide with something else); anything still colliding after the cap
+#' is left unrepaired and recorded in \code{residuals} with
+#' \code{kind == "straight-residual"} -- never dropped, never an infinite
+#' loop, matching Track 6 sec8's "general crowding is accepted as
+#' partial, not absolute" posture.
+#'
+#' The curved duplicate-connector arc (\code{smooth.enabled == TRUE}) is
+#' never rerouted through rectilinear waypoints -- that would destroy its
+#' already-shipped, separately-tuned arc styling (S577/S468/S469).
+#' Instead it gets its own same-row check (its \code{gen} can differ from
+#' its real occurrence's \code{gen}, so it is only sometimes same-row)
+#' and, on a collision, a disclosed heuristic nudge (increasing
+#' \code{smooth.roundness}) with no closed-form clearance proof -- always
+#' recorded in \code{residuals} with \code{kind == "curved-heuristic"}
+#' when applied, since its actual effect is confirmed only by rendered-
+#' image inspection, not by coordinate math alone.
+#'
+#' \strong{Never moves an existing node:} every pre-existing node's own
+#' \code{x}/\code{y} is byte-identical before/after -- only new waypoint
+#' nodes are added and edges rerouted (checked explicitly by this
+#' function's own tests, \code{test_resolveEdgeNodeCollisions.R}).
+#'
+#' @param nodes the \code{nodes} data frame (after
+#'   \code{\link{.addRectilinearWaypoints}}, rectilinear style).
+#' @param edges the \code{edges} data frame (after
+#'   \code{\link{.addRectilinearWaypoints}}, rectilinear style).
+#' @return A list with \code{nodes}, \code{edges} (same shape as the
+#'   inputs, with any new \code{__jog_} waypoints/edges added), and
+#'   \code{residuals} -- a data frame (\code{from}, \code{to}, \code{kind})
+#'   disclosing every collision this function could not fully, provably
+#'   resolve.
+#' @noRd
+.resolveEdgeNodeCollisions <- function(nodes, edges) {
+  if (!is.data.frame(nodes)) {
+    stop(".resolveEdgeNodeCollisions() requires 'nodes' to be a data frame.")
+  }
+  if (!is.data.frame(edges)) {
+    stop(".resolveEdgeNodeCollisions() requires 'edges' to be a data frame.")
+  }
+
+  maxPasses <- 3L
+  jogFraction <- 0.15
+  roundnessBump <- 0.3
+  waypointColor <- "#2B7CE9"
+
+  .adjacency <- function(edges) {
+    adj <- new.env(parent = emptyenv())
+    addAdj <- function(a, b) {
+      cur <- adj[[a]]
+      adj[[a]] <- if (is.null(cur)) b else c(cur, b)
+    }
+    if (nrow(edges) > 0L) {
+      for (i in seq_len(nrow(edges))) {
+        addAdj(edges$from[[i]], edges$to[[i]])
+        addAdj(edges$to[[i]], edges$from[[i]])
+      }
+    }
+    adj
+  }
+
+  ## Detects every STRAIGHT (non-curved) same-row edge with >=1 true
+  ## (non-structural) obstacle in its interior span. Returns the row
+  ## indices of the colliding edges (one entry per edge, regardless of
+  ## how many obstacles it has -- one jog clears an edge's whole span).
+  .detectStraight <- function(nodes, edges) {
+    if (nrow(edges) == 0L) {
+      return(integer(0L))
+    }
+    xOf <- stats::setNames(nodes$x, nodes$id)
+    yOf <- stats::setNames(nodes$y, nodes$id)
+    adj <- .adjacency(edges)
+    byRow <- split(nodes$id, nodes$y)
+    hitRows <- integer(0L)
+    hasSmooth <- "smooth.enabled" %in% names(edges)
+    for (i in seq_len(nrow(edges))) {
+      f <- edges$from[[i]]
+      t <- edges$to[[i]]
+      yf <- yOf[[f]]
+      yt <- yOf[[t]]
+      if (is.null(yf) || is.null(yt) || is.na(yf) || is.na(yt) ||
+            !isTRUE(yf == yt)) {
+        next
+      }
+      se <- if (hasSmooth) edges$smooth.enabled[[i]] else NA
+      if (!is.na(se) && isTRUE(se)) {
+        next  ## curved connector -- its own branch below
+      }
+      xf <- xOf[[f]]
+      xt <- xOf[[t]]
+      lo <- min(xf, xt)
+      hi <- max(xf, xt)
+      candidates <- setdiff(byRow[[as.character(yf)]], c(f, t))
+      if (length(candidates) == 0L) {
+        next
+      }
+      cx <- xOf[candidates]
+      inside <- candidates[cx > lo & cx < hi]
+      if (length(inside) == 0L) {
+        next
+      }
+      structMembers <- union(adj[[f]], adj[[t]])
+      trueObstacles <- setdiff(inside, structMembers)
+      if (length(trueObstacles) > 0L) {
+        hitRows <- c(hitRows, i)
+      }
+    }
+    hitRows
+  }
+
+  .matchColumns <- function(added, template) {
+    for (col in setdiff(names(template), names(added))) {
+      added[[col]] <- if (is.character(template[[col]])) {
+        NA_character_
+      } else if (is.logical(template[[col]])) {
+        NA
+      } else {
+        NA_real_
+      }
+    }
+    added[, names(template), drop = FALSE]
+  }
+
+  residualList <- list()
+  jogCounter <- 0L
+  pass <- 0L
+  repeat {
+    pass <- pass + 1L
+    hitRows <- .detectStraight(nodes, edges)
+    if (length(hitRows) == 0L || pass > maxPasses) {
+      break
+    }
+    xOf <- stats::setNames(nodes$x, nodes$id)
+    yOf <- stats::setNames(nodes$y, nodes$id)
+    distinctYs <- sort(unique(nodes$y))
+
+    ## jogUnit is computed PER ROW (this edge's own y0's nearest distinct
+    ## neighbor row), never a single global minimum across the whole
+    ## diagram -- found empirically this session (S595) via a rendered
+    ## visual check: on a large, densely-waypointed real pedigree, SOME
+    ## unrelated pair of rows elsewhere can be extremely close together
+    ## (e.g. 2 stacked jog levels from an earlier pass), and a GLOBAL
+    ## minimum gap squeezes every OTHER row's own jog down to that same
+    ## tiny, visually-imperceptible offset even where ample local
+    ## clearance exists. A local per-row gap keeps each jog's own offset
+    ## proportional to the space actually available around it.
+    .localGap <- function(y0) {
+      others <- distinctYs[distinctYs != y0]
+      if (length(others) == 0L) {
+        return(1L)
+      }
+      min(abs(others - y0))
+    }
+    hitY0s <- unique(vapply(hitRows, function(i) yOf[[edges$from[[i]]]],
+                             numeric(1L)))
+    jogUnitOf <- stats::setNames(
+      jogFraction * vapply(hitY0s, .localGap, numeric(1L)),
+      as.character(hitY0s)
+    )
+
+    ## Interval-schedule same-row colliding edges onto distinct offset
+    ## LEVELS (greedy graph coloring by x-span overlap), rather than
+    ## jogging every edge at a given row to the identical offset --
+    ## found empirically this session (S595) on the real 375-individual
+    ## fixture: a single shared jogY offset for every edge at one row
+    ## created 132 NEW jog-vs-jog collisions among the repair waypoints
+    ## themselves (150 -> 184 residual edges), the opposite of a repair.
+    ## Two edges whose x-spans do not overlap can safely share a level;
+    ## two that DO overlap get pushed to different levels (1*jogUnit,
+    ## 2*jogUnit, ...). Scoped per row (distinct y0 groups never need to
+    ## coordinate levels with each other).
+    hitInfo <- lapply(hitRows, function(i) {
+      f <- edges$from[[i]]
+      t <- edges$to[[i]]
+      list(i = i, y0 = yOf[[f]], lo = min(xOf[[f]], xOf[[t]]),
+           hi = max(xOf[[f]], xOf[[t]]))
+    })
+    levelOf <- stats::setNames(integer(length(hitRows)),
+                                 as.character(hitRows))
+    byY0 <- split(hitInfo, vapply(hitInfo, function(h) h$y0, numeric(1L)))
+    for (grp in byY0) {
+      grp <- grp[order(vapply(grp, function(h) h$lo, numeric(1L)))]
+      levelEnds <- numeric(0L)  # levelEnds[k] = current max 'hi' at level k
+      for (h in grp) {
+        free <- which(levelEnds <= h$lo)
+        lvl <- if (length(free) > 0L) free[[1L]] else length(levelEnds) + 1L
+        levelEnds[[lvl]] <- h$hi
+        levelOf[[as.character(h$i)]] <- lvl
+      }
+    }
+
+    newNodeRows <- list()
+    newEdgeRows <- list()
+    dropRows <- rep(FALSE, nrow(edges))
+    for (i in hitRows) {
+      f <- edges$from[[i]]
+      t <- edges$to[[i]]
+      y0 <- yOf[[f]]
+      xf <- xOf[[f]]
+      xt <- xOf[[t]]
+      jogY <- levelOf[[as.character(i)]] * jogUnitOf[[as.character(y0)]]
+      jogCounter <- jogCounter + 1L
+      j1 <- sprintf("__jog_%d_a", jogCounter)
+      j2 <- sprintf("__jog_%d_b", jogCounter)
+      newNodeRows[[length(newNodeRows) + 1L]] <- data.frame(
+        id = c(j1, j2), x = c(xf, xt), y = c(y0 + jogY, y0 + jogY),
+        stringsAsFactors = FALSE
+      )
+      ## Preserve every other column from the ORIGINAL edge (color,
+      ## width, label, dashes, smooth.*) onto all 3 replacement segments
+      ## -- matching the established D2-dogleg color/width-preservation
+      ## precedent (Track C, S563) and D10's own "preserve, never
+      ## blanket-reset" rule (found this session: an earlier version of
+      ## this function blanket-reset color to the generic waypoint
+      ## color, silently destroying a twin-connector's or a
+      ## consanguinity marker's own identity color --
+      ## test_makePedigreeMatingLayout.R's own twin-connector suite
+      ## caught it). Only an ORDINARY edge (no color of its own) gets
+      ## the generic waypoint color, since a transparent waypoint node's
+      ## own border would otherwise let the edge inherit an invisible
+      ## color (S465's own Pre-RED finding).
+      origRow <- edges[i, , drop = FALSE]
+      segRows <- origRow[rep(1L, 3L), , drop = FALSE]
+      segRows$from <- c(f, j1, j2)
+      segRows$to <- c(j1, j2, t)
+      if ("color" %in% names(segRows) && is.na(origRow$color[[1L]])) {
+        segRows$color <- waypointColor
+      }
+      newEdgeRows[[length(newEdgeRows) + 1L]] <- segRows
+      dropRows[[i]] <- TRUE
+    }
+
+    addedNodes <- .matchColumns(do.call(rbind, newNodeRows), nodes)
+    nodes <- rbind(nodes, addedNodes)
+
+    addedEdges <- do.call(rbind, newEdgeRows)
+    edges <- rbind(edges[!dropRows, , drop = FALSE], addedEdges)
+  }
+  if (length(hitRows) > 0L) {
+    for (i in hitRows) {
+      residualList[[length(residualList) + 1L]] <- data.frame(
+        from = edges$from[[i]], to = edges$to[[i]],
+        kind = "straight-residual", stringsAsFactors = FALSE
+      )
+    }
+  }
+
+  ## Curved duplicate-connector heuristic branch.
+  if (nrow(edges) > 0L && "smooth.enabled" %in% names(edges)) {
+    xOf <- stats::setNames(nodes$x, nodes$id)
+    yOf <- stats::setNames(nodes$y, nodes$id)
+    adj <- .adjacency(edges)
+    byRow <- split(nodes$id, nodes$y)
+    isCurved <- !is.na(edges$smooth.enabled) & edges$smooth.enabled
+    curvedIdx <- which(isCurved)
+    for (i in curvedIdx) {
+      f <- edges$from[[i]]
+      t <- edges$to[[i]]
+      yf <- yOf[[f]]
+      yt <- yOf[[t]]
+      if (is.null(yf) || is.null(yt) || is.na(yf) || is.na(yt) ||
+            !isTRUE(yf == yt)) {
+        next
+      }
+      xf <- xOf[[f]]
+      xt <- xOf[[t]]
+      lo <- min(xf, xt)
+      hi <- max(xf, xt)
+      candidates <- setdiff(byRow[[as.character(yf)]], c(f, t))
+      if (length(candidates) == 0L) {
+        next
+      }
+      cx <- xOf[candidates]
+      inside <- candidates[cx > lo & cx < hi]
+      if (length(inside) == 0L) {
+        next
+      }
+      structMembers <- union(adj[[f]], adj[[t]])
+      trueObstacles <- setdiff(inside, structMembers)
+      if (length(trueObstacles) > 0L) {
+        edges$smooth.roundness[[i]] <- edges$smooth.roundness[[i]] +
+          roundnessBump
+        residualList[[length(residualList) + 1L]] <- data.frame(
+          from = f, to = t, kind = "curved-heuristic",
+          stringsAsFactors = FALSE
+        )
+      }
+    }
+  }
+
+  residuals <- if (length(residualList) > 0L) {
+    do.call(rbind, residualList)
+  } else {
+    data.frame(from = character(), to = character(), kind = character(),
+               stringsAsFactors = FALSE)
+  }
+
+  list(nodes = nodes, edges = edges, residuals = residuals)
 }
