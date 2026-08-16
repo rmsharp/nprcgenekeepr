@@ -138,18 +138,61 @@ This file currently holds **12** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S595
 date: 2026-08-15
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 8
+predecessor_score: 8
 active_task: Implement Track 2 (general same-row detect-and-jog collision framework) -- plan
-  §2.2/§6 Session B of docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+  §2.2/§6 Session B of docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md. DONE.
+  Issue #160 closed.
+what_was_done: New .resolveEdgeNodeCollisions(nodes, edges) (R/makePedigreeDiagramData.R), wired
+  into makePedigreeMatingLayout()'s edgeStyle=="rectilinear" branch. Strict-interior-containment
+  detection (graph-adjacency structural-member exclusion, no forest param needed) + a rectilinear
+  2-waypoint jog repair + a disclosed smooth.roundness heuristic for the curved duplicate
+  connector. Found (not anticipated by the plan) 150 of 725 straight same-row edges already
+  colliding on the real 375-fixture (3,081 obstacle-pairs) -- owner-directed to fold into scope
+  unchanged. Found and fixed 2 real bugs via full regression + chromote visual verification: a
+  shared row offset created 132 NEW jog-vs-jog collisions (fixed with interval-scheduled
+  multi-level jogging, 150->0 residuals); an edge-replacement bug silently destroyed twin-
+  connector/consanguinity-marker color identity (fixed by preserving the full original edge row,
+  a 3rd instance of the established D10/S506/Track-C-S563 "preserve, never blanket-reset"
+  precedent -- PROJECT_LEARNINGS.md Learning 608). devtools::check() 0/0/1-pre-existing-NOTE; full
+  regression 0 failed/0 error; lintr clean. NEWS.Rmd/NEWS.md, BACKLOG.md, CHANGELOG.md updated;
+  issue #160 closed citing S593+S595 evidence. Self-flagged (not user-caught) process gap: ran
+  REFACTOR (bug fixes/tuning/verification) without its own prior AskUserQuestion gate --
+  disclosed retroactively, user confirmed the completed work was acceptable.
+next_steps: Track 3 (S583 parent-span clamp) is the last of the 3-track plan -- plan §2.3/§6
+  Session C, docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md. Requires its OWN
+  explicit PRE-RED reopening-confirmation AskUserQuestion (a deliberate, disclosed reopening of
+  Track 6 §2.4's "unconditionally" wording, already ratified at the planning level S592) before
+  any RED test. Clamps finalUnitX into its own 2 parents' [min,max] range; update
+  test_positionMatingUnitForest.R:986/:1019 ("formula OR clamped-to-parent-range") and audit
+  test_makePedigreeMatingLayout.R:428. Closes the BACKLOG.md S583 item. Separately, not scoped
+  this session: the 3 possibly-stale non-base-fixture Pedigree Diagram screenshots (found S582,
+  READY, Effort S) remain unchecked; a2interactive.Rmd's reserved-node-id-prefix list needs the
+  new __jog_ prefix added whenever that vignette's own deferred documentation pass next runs
+  (Learning 478's drift class, same mechanism as the earlier edgeStyle gap).
+key_files: R/makePedigreeDiagramData.R:1842-2107 (.resolveEdgeNodeCollisions(), new) and
+  :1428-1448 (its call site in makePedigreeMatingLayout()); tests/testthat/
+  test_resolveEdgeNodeCollisions.R (new, 8 blocks); tests/testthat/test_makePedigreeMatingLayout.R
+  (node-count + twin-connector tests updated); docs/planning/pedigree-diagram-same-row-collision-
+  avoidance-plan.md §2.2/§6 Session C (Track 3, next).
+gotchas: D2 doglegs are structurally unreachable via the real pipeline today (Track 4 + issue
+  #143's invariants) -- don't expect .resolveEdgeNodeCollisions()'s D2-shaped detection to ever
+  fire on real data; it's defensive/proactive coverage only, verified via a hand-built synthetic
+  fixture. The curved-connector heuristic is a disclosed nudge with NO closed-form clearance proof
+  -- 52 residuals remain on the real fixture; a future session re-touching duplicate-connector
+  rendering should re-render and visually re-confirm, not assume the heuristic still suffices.
+  jogY is computed PER ROW (each edge's own nearest distinct-y neighbor), not globally -- if a
+  future change adds new intermediate rows (e.g. a 2nd offset tier), re-verify this still produces
+  visually legible jogs via a rendered screenshot, not just 0-collision assertions.
+runtime_smoke: R/modPedigree.R:588 confirmed to call makePedigreeMatingLayout() directly, no
+  wrapper -- the live Shiny app inherits this fix automatically. Chromote-rendered the actual
+  function's own output (comment-1 fixture before/after; a real straight-edge jog on the twin-
+  connector fixture) as the runtime-equivalent check, matching Track 1/S593's own precedent for
+  this algorithmic-change class; no full shinytest2/AppDriver boot this session.
+changelog_ref: CHANGELOG.md 2026-08-15 entries under "## 2026-08" (S595 claim + S595 ship/close
+  entries).
+commit: 89d23e2a (RED), c7bdbe4b (GREEN+REFACTOR), c104808c (docs/close), plus this close-out
 ```
 
 ```handoff

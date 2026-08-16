@@ -16,6 +16,14 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-15 · [issue #160] S595 close-out: handoff evaluation, self-assessment, Learning 608, HANDOFFS.md receipt
+- **Close-out actions:** evaluated S594's handoff (8/10, `SESSION_NOTES.md`); self-assessed this
+  session (8/10); completed the `HANDOFFS.md` `status: complete` receipt (all 6 fields, including a
+  disclosed process note about the missed GREEN→REFACTOR gate); self-flagged and disclosed that
+  gap to the user via `AskUserQuestion` before proceeding, rather than after. Next session's
+  recommended pickup: Track 3 (S583 parent-span clamp, plan §2.3/§6 Session C — its own PRE-RED
+  reopening-confirmation gate required first).
+
 ### 2026-08-15 · [issue #160] S595: Track 2 (general same-row detect-and-jog framework) shipped, issue #160 closed
 - **Deliverable:** new `.resolveEdgeNodeCollisions()` (`R/makePedigreeDiagramData.R`), wired into
   `makePedigreeMatingLayout()`'s `edgeStyle == "rectilinear"` branch — plan §2.2/§6 Session B of
