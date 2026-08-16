@@ -53,10 +53,20 @@ test_that(".positionMatingUnitForest rejects a pedigree missing required
 ## values genuinely differ (not a coincidental match): re-derived from the
 ## fixed implementation's own output, not hand-derived.
 
+## Track 3 update (docs/planning/pedigree-diagram-same-row-collision-
+## avoidance-plan.md sec2.3/sec6 Session C, GREEN, this session): this
+## fixture's own P1(-1.5)/P2(0) placement is asymmetric enough that the
+## raw child-centered midpoint (0.5, Track 6 sec2.4) falls OUTSIDE
+## [-1.5, 0] -- Track 3 clamps it to P2's own x (0, the nearer boundary),
+## +1e-3 (now tied with P2 at gen 0, broken by the existing final
+## de-collision pass). Found live this session -- not one of the plan's
+## own named S583 examples, but the same clamp mechanism applies to
+## every union, confirming the fix is general, not case-specific.
 test_that(".positionMatingUnitForest positions a simple 2-parent/3-child
-           trio with the union's x at the midpoint of its 3 children's
-           min/max x (Track 6 sec2.4), and 3 distinct, non-overlapping
-           child x positions one gen below", {
+           trio with the union's x clamped to its nearer parent's own x
+           (Track 3) -- the children's own midpoint (Track 6 sec2.4)
+           would otherwise fall outside P1/P2's own span -- and 3
+           distinct, non-overlapping child x positions one gen below", {
   trio <- data.frame(
     id = c("P1", "P2", "C1", "C2", "C3"),
     sire = c(NA, NA, "P1", "P1", "P1"), dam = c(NA, NA, "P2", "P2", "P2"),
@@ -71,7 +81,7 @@ test_that(".positionMatingUnitForest positions a simple 2-parent/3-child
 
   childX <- pos$x[pos$id %in% c("C1", "C2", "C3")]
   unionX <- pos$x[pos$id == forest$matingUnits$id]
-  expect_equal(unionX, (min(childX) + max(childX)) / 2)
+  expect_equal(unionX, 0.001, tolerance = 1e-6)
 
   expect_equal(length(unique(round(childX, 6))), 3L)
   expect_true(all(pos$gen[pos$id %in% c("C1", "C2", "C3")] == 1L))
@@ -293,8 +303,12 @@ test_that(".positionMatingUnitForest's exact x/gen values for the real
                                  # unit1)
   expectPos(unit2, 0.25, 1L)  # CHANGED: unit2's only child is FJIB3R
                                 # (x=0.25)
-  expectPos(unit3, 1.75, 1L)   # CHANGED: unit3's only child is 9VGCCV
-                                 # (x=1.75)
+  expectPos(unit3, 1.501, 1L)   # Track 3 (this session): unit3's only
+                                 # child is 9VGCCV (x=1.75), but that
+                                 # exceeds sire 8LKBV9(0.5)/dam
+                                 # 8P17E3(1.5)'s own span -- clamped to
+                                 # 8P17E3's own x (1.5), then +1e-3 (now
+                                 # tied with 8P17E3 at gen 1)
   expectPos(unit4, 0.251, 2L)  # CHANGED: unit4's only child is GA204Z
                                  # (x=0.25), then +1e-3 (tied with FJIB3R
                                  # at gen 2, radix-order nudges unit4)

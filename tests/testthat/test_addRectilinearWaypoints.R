@@ -628,14 +628,36 @@ test_that(".addRectilinearWaypoints's D1 bar/drop waypoints never share a
 ## the child's own row, not just the child's, so most same-generation
 ## sibships now land on different rows) but does not eliminate it --
 ## disclosed and counted here, not silently dropped, deferred to Track 2's
-## general framework alongside the other residual above. --------------------
+## general framework alongside the other residual above.
+##
+## Track 3 update (docs/planning/pedigree-diagram-same-row-collision-
+## avoidance-plan.md sec2.3/sec6 Session C, REFACTOR, this session):
+## x-spans are NO LONGER unaffected by union clamping -- each group's
+## "drop" point sits at its OWN UNION's x (barPointX <- c(xOf[[fromId]],
+## xOf[kids]), fromId being the union id), and Track 3 pulls a runaway
+## union back inside its own parents' span. That is exactly Track 3's
+## purpose (fixing the S583 parent-span containment defect), but it
+## moves the drop point back INTO the x-region other relatives'
+## subtrees occupy, substantially WORSENING this already-disclosed
+## bar-vs-bar residual: 42 -> 348 pre-Track-1-equivalent baseline hits,
+## 9 -> 116 post-Track-1 hits (both re-measured live this session).
+## Owner-directed (AskUserQuestion, this session): accept as a disclosed
+## trade-off -- Track 3 fixes a DIFFERENT, higher-priority invariant
+## (parent-span containment, kinship2 parity) than this ALREADY-
+## ACKNOWLEDGED-as-imperfect residual (sec8's own "not examined in this
+## plan" framing) -- not fixed here; filed as its own BACKLOG.md
+## follow-up per sec8's own instruction ("file it as its own issue if
+## found").
 
 test_that(".addRectilinearWaypoints's D1 bar-vs-bar same-row x-overlap
            collisions (2 different sibships sharing a generation gap,
-           whose bar x-spans overlap) are substantially reduced but not
-           eliminated by Track 1, on the real 375-individual bundled
-           fixture -- a residual named in the collision-avoidance plan's
-           own section 8, counted here so a regression would be caught", {
+           whose bar x-spans overlap) are substantially reduced by Track
+           1 relative to pre-Track-1, but WORSENED by Track 3's parent-
+           span clamp (an accepted, disclosed trade-off -- see the
+           docstring above), on the real 375-individual bundled fixture
+           -- a residual named in the collision-avoidance plan's own
+           section 8, counted here so a further regression would be
+           caught", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -675,8 +697,13 @@ test_that(".addRectilinearWaypoints's D1 bar-vs-bar same-row x-overlap
 
   ## OLD-code comparison: every D1 group's bar sat at y = childGen * yScale
   ## (the pre-Track1 formula). x-spans are unaffected by Track 1 (only y
-  ## changed), so re-running the same x-overlap test against the OLD y
-  ## assignment measures how much Track 1 actually improved.
+  ## changed) -- but ARE affected by Track 3 (this session), since the
+  ## drop point's x is the union's own x, now clamped. Both oldHits and
+  ## newHits below are measured against the SAME (post-Track-3) x-spans,
+  ## so this remains a clean isolated measurement of Track 1's own y-only
+  ## contribution -- re-running the same x-overlap test against the OLD y
+  ## assignment measures how much Track 1 actually improved, holding
+  ## Track 3's x-span effect constant across both.
   yScale <- 150L
   oldYs <- vapply(fromIds, function(fromId) {
     kids <- childEdges$to[childEdges$from == fromId]
@@ -684,8 +711,12 @@ test_that(".addRectilinearWaypoints's D1 bar-vs-bar same-row x-overlap
   }, numeric(1L))
   oldHits <- countHits(oldYs)
 
-  expect_equal(oldHits, 42L)  # pre-Track1 baseline, measured this session
-  expect_equal(newHits, 9L)   # post-Track1: a 79% reduction, not zero
+  ## Track 3 (this session) substantially worsens BOTH counts, since it
+  ## moves the drop point's x back toward the union's own (now-clamped)
+  ## parents -- an accepted, disclosed trade-off (see the docstring
+  ## above), re-measured live this session.
+  expect_equal(oldHits, 348L)  # pre-Track1-equivalent baseline, post-Track3
+  expect_equal(newHits, 116L)  # post-Track1 AND post-Track3
   expect_true(newHits < oldHits)
 })
 

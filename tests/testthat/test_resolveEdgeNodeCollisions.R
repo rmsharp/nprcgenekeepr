@@ -357,12 +357,23 @@ test_that("makePedigreeMatingLayout() wires .resolveEdgeNodeCollisions()
 ## post-fix residual count filled in once GREEN is implemented and
 ## measured empirically (same discipline as Track 1's own disclosed 42 ->
 ## 9 bar-vs-bar residual count).
+##
+## Track 3 update (docs/planning/pedigree-diagram-same-row-collision-
+## avoidance-plan.md sec2.3/sec6 Session C, REFACTOR, this session): this
+## file's OWN baseline is measured against .addRectilinearWaypoints()
+## output, which is now built on Track 3's clamped union positions --
+## pulling a runaway union back inside its own parents' span (Track 3's
+## whole point) coincidentally resolves some of what Track 2 used to have
+## to detect and jog. 150 -> 105 colliding edges (-30%), 3,081 -> 1,431
+## obstacle-pairs (-53%), re-measured live this session, an owner-accepted
+## trade-off disclosed alongside the D1 bar-vs-bar WORSENING this same
+## clamp causes (test_addRectilinearWaypoints.R's own baseline test).
 
 test_that(".resolveEdgeNodeCollisions dramatically reduces the real
            375-individual bundled fixture's same-row collision count
-           (150 colliding edges / 3,081 obstacle-pairs pre-fix), and any
-           residual is disclosed via the residuals data frame, never
-           silently dropped", {
+           (105 colliding edges / 1,431 obstacle-pairs pre-fix, post-
+           Track-3), and any residual is disclosed via the residuals data
+           frame, never silently dropped", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -376,8 +387,8 @@ test_that(".resolveEdgeNodeCollisions dramatically reduces the real
 
   baseline <- .findEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
   baselineEdges <- unique(baseline[, c("from", "to")])
-  expect_equal(nrow(baselineEdges), 150L)
-  expect_equal(nrow(baseline), 3081L)
+  expect_equal(nrow(baselineEdges), 105L)
+  expect_equal(nrow(baseline), 1431L)
 
   result <- .resolveEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
   afterFix <- .findEdgeNodeCollisions(result$nodes, result$edges)

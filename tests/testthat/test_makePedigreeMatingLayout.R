@@ -583,19 +583,26 @@ test_that(
 
 test_that(
   "makePedigreeMatingLayout on the full real 375-individual bundled
-   fixture produces exactly 1,502 nodes under edgeStyle = \"rectilinear\"
+   fixture produces exactly 1,412 nodes under edgeStyle = \"rectilinear\"
    (CHANGED from 1,202 -- Track 2, issue #160 comment 1,
    docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md
    sec2.2: .resolveEdgeNodeCollisions() adds 2 __jog_ waypoints for each
-   of the 150 same-row straight-edge collisions found + repaired on this
-   real fixture, 1,202 + 300 = 1,502; re-confirmed through the actual
-   public entry point, not just the internal helper)", {
+   of the 105 same-row straight-edge collisions found + repaired on this
+   real fixture (post-Track-3; was 150 pre-Track-3), 1,202 + 210 = 1,412;
+   re-confirmed through the actual public entry point, not just the
+   internal helper. Track 3 update (sec2.3/sec6 Session C, REFACTOR, this
+   session): clamping a runaway union back inside its own parents' span
+   coincidentally resolves some of what Track 2 used to have to detect
+   and jog -- 150 -> 105 collisions, re-measured live this session, an
+   owner-accepted trade-off disclosed alongside the D1 bar-vs-bar
+   WORSENING this same clamp causes
+   (test_addRectilinearWaypoints.R's own baseline test).)", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
     stringsAsFactors = FALSE
   )
-  ## 52 curved-duplicate-connector collisions remain as disclosed,
+  ## Curved-duplicate-connector collisions remain as disclosed,
   ## unconfirmed-by-coordinate-math heuristic residuals (Track 2's own
   ## documented posture) -- makePedigreeMatingLayout() warns, non-fatal.
   result <- withCallingHandlers(
@@ -605,10 +612,10 @@ test_that(
       invokeRestart("muffleWarning")
     }
   )
-  expect_equal(nrow(result$nodes), 1502L)
+  expect_equal(nrow(result$nodes), 1412L)
   expect_false(any(is.na(result$nodes$x)))
   expect_false(any(is.na(result$nodes$y)))
-  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 300L)
+  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 210L)
 })
 
 ## ---- orderBySex parameter (issue #145 Slice 1, D8 option (b)) ----------

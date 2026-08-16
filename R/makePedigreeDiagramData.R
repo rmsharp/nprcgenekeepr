@@ -972,6 +972,36 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
       finalUnitX[[uid]] <- (min(kidX) + max(kidX)) / 2L
     }
   }
+
+  ## Track 3 (docs/planning/pedigree-diagram-same-row-collision-avoidance-
+  ## plan.md sec2.3/sec6 Session C, issue #160 / BACKLOG.md's S583 item): clamp
+  ## each union's finalUnitX into its own 2 parents' [min, max] x-range.
+  ## A disclosed, owner-ratified (S592 sec9) reopening of the sec2.4
+  ## "unconditionally" wording above -- whenever the child-centered
+  ## formula already falls inside the parent span (the common,
+  ## already-correct case), this is a no-op; it engages only for the
+  ## outlier cases issue #160/S583 found (a union with a single child, or
+  ## whose children's own midpoint happens to fall outside the parents'
+  ## span). Must run BEFORE nodes$x is synced below and BEFORE dupX is
+  ## computed (sec2.2), so both read the FINAL (clamped) union x. Skips a
+  ## unit whose sire or dam has NO node of its own (a dangling free-pass
+  ## reference, no own row in 'ped' -- match() returns NA) rather than
+  ## propagating NA into finalUnitX: there is no parent x to clamp
+  ## against, so the unconditional formula value is left untouched,
+  ## matching this function's own existing dangling-parent precedent
+  ## elsewhere (found live this session, regressed 2 pre-existing tests
+  ## before this guard was added).
+  for (i in seq_len(nrow(matingUnits))) {
+    uid <- matingUnits$id[i]
+    parentX <- nodes$x[match(c(matingUnits$sire[i], matingUnits$dam[i]),
+                              nodes$id)]
+    if (!anyNA(parentX)) {
+      lo <- min(parentX)
+      hi <- max(parentX)
+      finalUnitX[[uid]] <- min(max(finalUnitX[[uid]], lo), hi)
+    }
+  }
+
   nodes$x[match(matingUnits$id, nodes$id)] <- unname(finalUnitX[matingUnits$id])
 
   dupX <- numeric(nrow(duplicates))
