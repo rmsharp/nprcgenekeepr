@@ -16,6 +16,38 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-16 · [issue #160] S596: Track 3 (S583 parent-span clamp) shipped
+- **Deliverable:** new clamp loop in `.positionMatingUnitForest()` (`R/makePedigreeDiagramData.R`)
+  — plan §2.3/§6 Session C of
+  `docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`. Clamps each mating unit's
+  `finalUnitX` into its own 2 parents' `[min, max]` x-range whenever the child-centered formula
+  would place it outside that span — a disclosed, owner-ratified reopening of Track 6 §2.4's
+  "unconditionally" wording (S592 §9, re-confirmed via this session's own PRE-RED
+  `AskUserQuestion`). Skips a union with a dangling (free-pass) parent rather than propagating
+  `NA` — found live this session, fixed after regressing 2 pre-existing tests. Reproduced
+  BACKLOG.md's own S583 example byte-for-byte via `trimPedigree()` against the real
+  375-individual bundled fixture, plus the 9-subject consanguineous fixture BACKLOG names.
+  **2 trade-offs found during REFACTOR, both disclosed and owner-accepted via `AskUserQuestion`:**
+  the plan's own §7 faithful child-centering metric worsens (9/251 → 53/251 child edges over the
+  200-unit threshold, max offset 4,121 → 10,627), and the already-disclosed D1 bar-vs-bar
+  x-overlap residual (plan §8) worsens substantially (9 → 116 post-Track-1 hits) — both trace to
+  the same mechanism (pulling a runaway union back toward its own parents moves it away from its
+  children and back toward neighboring subtrees). Beneficial side effect: Track 2's own same-row
+  collision baseline drops (150 → 105 edges, node count 1,502 → 1,412). Updated
+  `test_positionMatingUnitForest.R`, `test_resolveEdgeNodeCollisions.R`,
+  `test_makePedigreeMatingLayout.R`, `test_addRectilinearWaypoints.R` with disclosed,
+  behavior-driven golden-value churn. `devtools::check()` 0 errors/0 warnings/1 pre-existing NOTE;
+  full clean regression 0 failed/0 error; `lintr::lint_package()` no lints. `NEWS.Rmd`/`NEWS.md`
+  entry added. `BACKLOG.md`'s Track 3 and S583 items marked DONE; a new follow-up item filed for
+  the 2 accepted trade-offs. Commits: `8b8e399d` (RED), plus this session's GREEN+REFACTOR and
+  close-out.
+
+### 2026-08-15 · [issue #160] S596 claim: implement Track 3 (S583 parent-span clamp)
+- **Deliverable claimed:** plan §2.3/§6 Session C of
+  `docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md` — clamp `finalUnitX` into
+  its own 2 parents' `[min, max]` range in `.positionMatingUnitForest()`. Session stub written to
+  `SESSION_NOTES.md`; `HANDOFFS.md` `status: pending` receipt opened. Work beginning.
+
 ### 2026-08-15 · [issue #160] S595 close-out: handoff evaluation, self-assessment, Learning 608, HANDOFFS.md receipt
 - **Close-out actions:** evaluated S594's handoff (8/10, `SESSION_NOTES.md`); self-assessed this
   session (8/10); completed the `HANDOFFS.md` `status: complete` receipt (all 6 fields, including a

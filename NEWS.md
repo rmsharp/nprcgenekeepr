@@ -261,8 +261,9 @@ R. Mark Sharp, Ph.D.
   bar-vs-node coincidence for a union placed an exact multiple of 5
   generations from its child, and a reduced-but-not-eliminated
   bar-vs-bar case (2 unrelated sibships at the same generation gap with
-  overlapping horizontal spans; cut from 42 to 9 cases in the bundled
-  example pedigree).
+  overlapping horizontal spans; see below for the current count in the
+  bundled example pedigree, which the parent-span containment fix below
+  further affects).
 - Fixed: in the Pedigree Diagram tab's Rectilinear edge style, a
   straight same-row edge -- a kept parent-to-union mate line, or a
   duplicate individual's own dashed connector -- could visually pass
@@ -270,12 +271,33 @@ R. Mark Sharp, Ph.D.
   pedigrees where a founder's own mating union can land far from the
   founder (issue \#160). `makePedigreeMatingLayout()` now detects any
   such collision and inserts a small local reroute clear of the
-  obstacle, never moving an existing node; this closed 150 of 150
-  straight-edge collisions found on the bundled 375-individual example
-  pedigree. The curved duplicate-connector arc gets a smaller, disclosed
+  obstacle, never moving an existing node; this closes every
+  straight-edge collision found on the bundled 375-individual example
+  pedigree (105, down from an original 150 -- the parent-span
+  containment fix below resolves some of these before this detector even
+  runs). The curved duplicate-connector arc gets a smaller, disclosed
   nudge instead (increasing its curvature) since rerouting it through
   right-angle waypoints would destroy its own established arc styling --
-  confirmed visually, not just by coordinate math.
+  confirmed visually, not just by coordinate math; 47 curved-connector
+  cases remain disclosed, unconfirmed-by-coordinate-math residuals.
+- Fixed: in the Pedigree Diagram tab, a mating union could be positioned
+  entirely outside its own two parents' x-range -- most visibly a union
+  with a single child, which has no midpoint of its own to center on and
+  simply inherited that child's x, however far the child's own later
+  descendants had pulled it (BACKLOG.md's S583 item, part of the same
+  root cause as issue \#160). The union's x is now clamped into its own
+  2 parents' `[min, max]` range whenever the ordinary child-centered
+  formula would place it outside that span, matching kinship2's
+  convention of always centering the union between its two parents. This
+  is a disclosed trade-off, not a free improvement: clamping a union
+  necessarily moves it further from its own children's true midpoint for
+  the unions it affects (measured on the bundled example pedigree: 9 of
+  251 child edges exceeded a 200-unit centering threshold before this
+  fix, 53 after), and it also increases how often two unrelated
+  sibships' own bars visually overlap in x-range at the same generation
+  gap (a pre-existing, already-disclosed residual; 9 cases before this
+  fix, 116 after, on the bundled example pedigree). Both are accepted,
+  disclosed costs of fixing the more severe parent-span defect.
 
 # nprcgenekeepr 2.0.0 (20260708)
 

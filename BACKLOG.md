@@ -93,18 +93,38 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       twin-connector golden-value tests updated to reflect the real, disclosed behavior change (not
       silently left broken). Closes issue #160 comment 1's broadened finding; issue #160 closed
       this session citing both Session A (S593) and this session's evidence.
-- [ ] **Implement Track 3 (S583 parent-span clamp)** (found S592, DECISION NEEDED — its own
-      PRE-RED reopening confirmation required before any RED test, Effort M) — plan §2.3/§6
-      Session C:
+- [x] **Implement Track 3 (S583 parent-span clamp)** (found S592, Effort M) — **DONE S596
+      (2026-08-16).** Plan §2.3/§6 Session C:
       [`docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`](docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md).
-      Clamps `finalUnitX` into its own two parents' `[min, max]` range, closing the S583 item
-      directly below. **This is a deliberate, disclosed reopening of Track 6 §2.4's
-      "unconditionally" wording** — already ratified at the planning level (this session, via
-      `AskUserQuestion`), but the TDD contract requires its own explicit PRE-RED confirmation gate
-      at implementation time before writing any RED test (plan §6). Requires updating the
-      `matingUnits$gen == genOf[[anchor]]`-adjacent "every mating unit satisfies the invariant"
-      tests at `test_positionMatingUnitForest.R:986`/`:1019` to accept "formula OR
-      clamped-to-parent-range," and auditing `test_makePedigreeMatingLayout.R:428`.
+      New clamp loop in `.positionMatingUnitForest()` (`R/makePedigreeDiagramData.R`): after the
+      existing `finalUnitX` (child-centered midpoint) computation, each union's x is clamped into
+      its own 2 parents' `[min, max]` range whenever the formula would otherwise place it outside
+      that span — a disclosed, owner-ratified reopening of Track 6 §2.4's "unconditionally"
+      wording (S592 §9, re-confirmed via this session's own PRE-RED `AskUserQuestion` per the
+      plan's own additional gate). Skips a union whose sire or dam has no node of its own (a
+      dangling free-pass reference) rather than propagating `NA` — found live this session,
+      regressed 2 pre-existing tests before the guard was added. Reproduced BACKLOG's own S583
+      example byte-for-byte via `trimPedigree(c("8LKBV9","FJIB3R","GA204Z"), ped)` against the
+      real 375-individual bundled fixture (`__union_1` 120→60, now inside `[-60,60]`), plus the
+      9-subject `P1/P2/A/Y/X/W/C1/C2/GC` consanguineous fixture BACKLOG names ("3 more times").
+      **2 disclosed trade-offs found during REFACTOR, both owner-accepted via `AskUserQuestion`
+      (not fixed this session):** (1) the plan's own §7 faithful child-centering metric worsens —
+      9 of 251 child edges exceeded the 200-unit threshold pre-fix, 53 post-fix (max offset
+      4,121→10,627) — a mechanical consequence of clamping a union off its child-centered
+      position; (2) the already-disclosed D1 bar-vs-bar x-overlap residual (plan §8) worsens
+      substantially — 42→348 pre-Track-1-equivalent baseline hits, 9→116 post-Track-1 hits — since
+      pulling a runaway union back toward its own parents moves its sibship bar's drop point back
+      into the x-region other relatives' subtrees occupy. Both trade for a higher-priority fix
+      (parent-span containment / kinship2 parity). A beneficial side effect: Track 3 also reduces
+      Track 2's own same-row collision baseline (150→105 edges, −30%; 3,081→1,431 obstacle-pairs,
+      −53%; node count 1,502→1,412). Updated `test_positionMatingUnitForest.R` (2 new tests + the
+      Track 6 §2.4 invariant loosened to "formula OR clamped," 2 pre-existing golden-value tests
+      corrected), `test_resolveEdgeNodeCollisions.R`, `test_makePedigreeMatingLayout.R`, and
+      `test_addRectilinearWaypoints.R` (all disclosed, behavior-driven churn, not silent). Full
+      clean regression: 0 failed/0 error. `devtools::check()`: 0 errors/0 warnings/1 pre-existing
+      NOTE. `lintr::lint_package()` on touched files: 0 lints. See the follow-up item below for the
+      2 accepted trade-offs, filed per plan §8's own "file it as its own issue if found"
+      instruction.
 - [x] **Pedigree Diagram: rectilinear sibship bar can visually imply false parentage** (found live
       in conversation 2026-08-15, not a claimed session, filed as
       [issue #160](https://github.com/rmsharp/nprcgenekeepr/issues/160)) — **RESOLVED S595
@@ -126,7 +146,34 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       real fixture. Mechanically easy (the `size = 0` + transparent-color technique already used
       for invisible D1/D2 waypoints applies directly) but a genuine design call, not an obvious
       fix — the dot may be a useful explicit anchor independent of kinship2 parity. Still needs a
-      final decision before implementation, just not this session.
+      final decision before implementation, just not this session. **Tracks 1-3 all shipped as of
+      S596 (2026-08-16)** — the deferral condition this recommendation named is now satisfied; a
+      future session may pick up the #161 decision itself, though "stabilize" (S592's own word) may
+      warrant some observation first given Track 3's own disclosed trade-offs (see the follow-up
+      item below).
+
+- [ ] **Track 3's 2 disclosed trade-offs (child-centering quality, D1 bar-vs-bar overlap) — accept
+      as shipped, or investigate a narrower mechanism** (found S596, 2026-08-16, Effort unknown —
+      DECISION NEEDED, not scoped) — plan §2.3/§6 Session C's parent-span clamp
+      (`docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`) was owner-accepted
+      "as designed" this session via `AskUserQuestion`, but 2 costs were measured, not merely
+      anticipated: (1) the plan's own §7 faithful child-centering metric on the real 375-individual
+      bundled fixture worsens from 9/251 child edges exceeding a 200-unit threshold (3.6%, max
+      offset 4,121) to 53/251 (21.1%, max offset 10,627); (2) the pre-existing, already-disclosed
+      D1 bar-vs-bar x-overlap residual (plan §8) worsens from 9 to 116 post-Track-1 hits (42→348
+      pre-Track-1-equivalent). Both trace to the same mechanism: clamping a runaway union back
+      inside its own parents' span moves it (and its sibship bar's drop point) away from its
+      children's true midpoint and back toward the x-region other relatives' subtrees occupy. A
+      future session should decide whether this is acceptable as a permanent trade-off (matching
+      plan §2.4's own deferred Track 4 — a narrower fix substituting the locally-relevant
+      duplicate's x, estimated to bring the headline P1×P2 case to x≈-6 vs. the clamp's x=0, a
+      materially tighter centering — was already designed and vetted but not adopted into this
+      plan's scope) or warrants revisiting the clamp's own design (e.g. scoping it to single-child
+      unions only, where Track 6's "centering" concept is arguably meaningless anyway, per the
+      original S583 report's own framing; or a partial/soft pull instead of a hard clamp). Not
+      filed as its own GitHub issue — matches this project's own precedent (`BACKLOG.md`'s S583
+      item was itself "the same already-tracked gap, not a new one") of tracking a same-root-cause
+      finding here rather than opening a new issue.
 
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 *Resolves the former "Tracker reconciliation" decision item (S365) --
@@ -416,9 +463,12 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       fixed: the renv-cached installed `nprcgenekeepr` build was stale (predates Track 6 by
       ~3.5h) -- `pkgload::load_all()` used throughout instead of `library()`. See `CHANGELOG.md`
       and `PROJECT_LEARNINGS.md`.
-- [ ] (found S583, 2026-08-15, incidental to a user question about the just-reshot
-      `pb_diagram_legend.png` screenshot, READY, Effort unknown -- not scoped, likely needs its
-      own design session before any fix) **Pedigree Diagram: a mating union with a single child (or
+- [x] (found S583, 2026-08-15, incidental to a user question about the just-reshot
+      `pb_diagram_legend.png` screenshot. **RESOLVED S596 (2026-08-16)** — Track 3's parent-span
+      clamp above closes this item exactly as scoped S592; `__union_1` now lands at x=60 (the
+      dam's own boundary), inside `[-60,60]`, byte-for-byte reproduced against this item's own
+      concrete example. 2 disclosed trade-offs found during REFACTOR — see the new follow-up item
+      above. Original finding, kept for the record:) **Pedigree Diagram: a mating union with a single child (or
       whose children's own midpoint happens to fall outside the parents' span) can be positioned
       entirely OUTSIDE its own two parents' x-range, not merely off-center between them --
       diverges from kinship2's own convention, which always centers the union symbol between the
