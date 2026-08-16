@@ -16,6 +16,23 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-15 · [issue #160] S595: Track 2 (general same-row detect-and-jog framework) shipped, issue #160 closed
+- **Deliverable:** new `.resolveEdgeNodeCollisions()` (`R/makePedigreeDiagramData.R`), wired into
+  `makePedigreeMatingLayout()`'s `edgeStyle == "rectilinear"` branch — plan §2.2/§6 Session B of
+  `docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`. Detects and repairs any
+  straight same-row edge colliding with an unrelated node (a strictly rectilinear 2-waypoint
+  "step," never moving an existing node); the curved duplicate connector gets a disclosed
+  `smooth.roundness`-bump heuristic instead, visually confirmed via `chromote`. Found and fixed 2
+  real implementation bugs mid-REFACTOR (jog-vs-jog collisions from a single shared row offset;
+  color/label identity loss on twin-connector/consanguinity-marker edges), both caught by the full
+  regression + rendered-image verification, not assumed. Real 375-individual bundled fixture: 150
+  → 0 straight-edge collisions (3,081 obstacle-pairs pre-fix); 52 curved-heuristic residuals
+  disclosed. `devtools::check()` 0 errors/0 warnings/1 pre-existing NOTE; full clean regression 0
+  failed/0 error; `lintr::lint_package()` no lints. `NEWS.Rmd`/`NEWS.md` entry added.
+  `BACKLOG.md`'s Track 2 and issue #160 items marked DONE. GitHub issue #160 closed citing both
+  Session A (S593) and this session's evidence. Commits: `89d23e2a` (RED), `c7bdbe4b`
+  (GREEN+REFACTOR), plus this close-out.
+
 ### 2026-08-15 · [issue #160] S595 claim: implement Track 2 (general same-row detect-and-jog collision framework)
 - **Deliverable claimed:** plan §2.2/§6 Session B of
   `docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md` — new

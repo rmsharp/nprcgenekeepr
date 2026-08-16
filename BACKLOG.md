@@ -45,14 +45,54 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       Full clean regression: 0 failed/0 error. `lintr::lint_package()`: no lints. Issue #160 not
       yet closed — Track 2 still required for the comment-1 duplicate-connector finding and both
       disclosed residuals above.
-- [ ] **Implement Track 2 (general same-row detect-and-jog framework)** (found S592, READY, Effort
-      L) — plan §2.2/§6 Session B (should follow Track 1, not strictly blocked by it):
+- [x] **Implement Track 2 (general same-row detect-and-jog framework)** (found S592, Effort L) —
+      **DONE S595 (2026-08-15).** Plan §2.2/§6 Session B:
       [`docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`](docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md).
-      New `.resolveEdgeNodeCollisions()`, wired into `makePedigreeMatingLayout()` itself (not just
-      the Shiny layer) so every caller benefits. Closes issue #160 comment 1's broadened finding
-      (the duplicate-connector collision behind `W`) and covers D2's dogleg leg / kept mate edges /
-      twin connectors before they're separately reported. Never moves an existing node — additive
-      waypoints/reroutes only. Closes issue #160 fully once shipped alongside Track 1.
+      New `.resolveEdgeNodeCollisions(nodes, edges)` (`R/makePedigreeDiagramData.R`), wired into
+      `makePedigreeMatingLayout()`'s existing `edgeStyle == "rectilinear"` branch (not just the
+      Shiny layer) so every caller benefits identically. Detection: strict interior containment on
+      same-row (`y1==y2`), non-curved edges, excluding the edge's own 2 endpoints and any node
+      directly graph-adjacent to either (derived from the edge graph alone, no `forest` parameter
+      needed — correctly excludes a bar's own child even in Track 1's disclosed p/q-coincidence
+      residual). Repair: a strictly rectilinear 2-waypoint "step" (`u -> J1 -> J2 -> v` at a
+      parallel offset row), never a diagonal; new `__jog_` ids joining the reserved node-id-prefix
+      set (`vignettes/a2interactive.Rmd:500` — deferred to that vignette's own standing checklist,
+      not updated this session). The curved duplicate connector gets its own disclosed
+      `smooth.roundness`-bump heuristic branch instead (rerouting it through rectilinear waypoints
+      would destroy its established arc styling) — confirmed by rendered-image inspection
+      (`chromote`), not coordinate math alone: visually clears the reported obstacle in the exact
+      issue #160 comment-1 `P1`/`X`/`A`/`Y`/`W`/`C1`/`GC`/`C2` reproduction.
+      **Found during implementation, not anticipated by the plan:** the real 375-individual bundled
+      fixture already had 150 of 725 straight same-row edges (20.7%) colliding pre-fix — 3,081
+      total edge-obstacle pairs, overwhelmingly (139/150) ordinary kept parent-to-union mate edges
+      spanning a wide, many-founder generation-0 row (up to 89 simultaneous obstacles on one edge),
+      not D1 bars (5) or D2 doglegs (0 — confirmed structurally unreachable under Track 4 + issue
+      #143's shipped invariants, so the RED test's own "D2-dogleg-leg" fixture is a hand-built
+      synthetic exercise of the general detector, not a pipeline reproduction). Owner-directed
+      (`AskUserQuestion`) to fold this into Track 2 unchanged rather than re-scope. **2 real bugs
+      found and fixed mid-REFACTOR, both via empirical/visual verification, not assumed:** (1) a
+      single shared `jogY` offset for every colliding edge at one row created 132 NEW jog-vs-jog
+      collisions among the repair waypoints themselves (150 → 184 residual edges, the opposite of a
+      repair) — fixed with interval-scheduled multi-level jogging (greedy graph-coloring by x-span
+      overlap), reducing straight-edge residuals to **0**; (2) an earlier version blanket-reset
+      every replacement edge's `color` to the generic waypoint color, silently destroying a twin
+      connector's or consanguinity marker's own identity — caught by the full regression
+      (`test_makePedigreeMatingLayout.R`'s own twin-connector suite), fixed by copying every column
+      from the original edge onto all 3 replacement segments (matching the established D2-dogleg
+      color/width-preservation precedent, Track C/S563). Final real-fixture measurement: 150 → 0
+      straight-edge residuals (1,202 → 1,502 nodes, 300 `__jog_` waypoints); 52 curved-heuristic
+      residuals remain (disclosed, unconfirmed-by-coordinate-math nudges — the curved connector's
+      own gen can differ from its real occurrence's, so not every one collides with something a
+      rectilinear reroute could help). No id-based/character `order()` introduced (all sorting is
+      numeric, `y`/`x`/`lo`), so the locale-determinism verification item (plan §7.5) is N/A this
+      track. `devtools::check()`: 0 errors/0 warnings/1 pre-existing NOTE (`vignettes/figure/`);
+      full clean regression 0 failed/0 error (2 initially-flagged failures in
+      `test_markerKinship.R`/`test_markerParentageLikelihood.R` confirmed transient/unrelated —
+      pass cleanly in isolation, timing-sensitive benchmarks untouched by this diff);
+      `lintr::lint_package()`: no lints. `test_makePedigreeMatingLayout.R`'s own node-count and
+      twin-connector golden-value tests updated to reflect the real, disclosed behavior change (not
+      silently left broken). Closes issue #160 comment 1's broadened finding; issue #160 closed
+      this session citing both Session A (S593) and this session's evidence.
 - [ ] **Implement Track 3 (S583 parent-span clamp)** (found S592, DECISION NEEDED — its own
       PRE-RED reopening confirmation required before any RED test, Effort M) — plan §2.3/§6
       Session C:
@@ -65,13 +105,14 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `matingUnits$gen == genOf[[anchor]]`-adjacent "every mating unit satisfies the invariant"
       tests at `test_positionMatingUnitForest.R:986`/`:1019` to accept "formula OR
       clamped-to-parent-range," and auditing `test_makePedigreeMatingLayout.R:428`.
-- [ ] **Pedigree Diagram: rectilinear sibship bar can visually imply false parentage** (found live
+- [x] **Pedigree Diagram: rectilinear sibship bar can visually imply false parentage** (found live
       in conversation 2026-08-15, not a claimed session, filed as
-      [issue #160](https://github.com/rmsharp/nprcgenekeepr/issues/160)) — **root-cause plan
-      written S592** (see the 3 READY implementation items above); this item now tracks issue #160
-      itself and closes once Tracks 1+2 both ship. Reproduced on the "cleanest comparison"
-      14-person fixture (no multi-mate ambiguity), 2 independent collisions found in one render;
-      not fixed here. **Update (same day):** a second, more severe reproduction (P1&times;P2's own
+      [issue #160](https://github.com/rmsharp/nprcgenekeepr/issues/160)) — **RESOLVED S595
+      (2026-08-15), closed citing both Session A (S593, Track 1) and Session B (S595, Track 2)
+      evidence.** Root-cause plan written S592 (see the 2 DONE implementation items above).
+      Reproduced on the "cleanest comparison" 14-person fixture (no multi-mate ambiguity), 2
+      independent collisions found in one render; not fixed here. **Update (same day):** a second,
+      more severe reproduction (P1&times;P2's own
       union landing entirely outside their span, plus a duplicate-connector line rendering behind
       an unrelated node) traced the root cause one level deeper — see the issue's comment thread.
       The defect is broader than the sibship-bar D1 loop alone: any straight same-row edge
