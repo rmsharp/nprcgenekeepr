@@ -137,20 +137,63 @@ This file currently holds **12** receipt(s). Computed by `methodology_trim.py` o
 
 ```handoff
 session: S596
-date: 2026-08-15
-status: pending
-self_score: pending
+date: 2026-08-16
+status: complete
+self_score: 9
 predecessor_score: 8
 active_task: Implement Track 3 (S583 parent-span clamp) -- plan §2.3/§6 Session C of
-  docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md. PRE-RED reading done;
-  awaiting the track's own PRE-RED reopening-confirmation AskUserQuestion before any RED test.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+  docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md. DONE. BACKLOG.md's S583
+  item closed. All 3 tracks of the same-row collision-avoidance plan now shipped.
+what_was_done: New clamp loop in .positionMatingUnitForest() (R/makePedigreeDiagramData.R:966-999)
+  -- clamps each mating unit's finalUnitX into its own 2 parents' [min,max] x-range, skipping a
+  union with a dangling (free-pass) parent. Reproduced BACKLOG's S583 example byte-for-byte via
+  trimPedigree() against the real 375-individual fixture, plus the 9-subject consanguineous
+  fixture BACKLOG names. Found and disclosed 2 substantial trade-offs via AskUserQuestion (both
+  owner-accepted): the plan's own §7 child-centering metric worsens (9/251 -> 53/251 edges over
+  200-unit threshold), and the already-disclosed D1 bar-vs-bar residual worsens (9 -> 116
+  post-Track-1 hits). Beneficial side effect: Track 2's own collision baseline improves (150->105
+  edges, node count 1,502->1,412). Updated test_positionMatingUnitForest.R (2 new tests + loosened
+  invariant + 2 corrected golden values), test_resolveEdgeNodeCollisions.R,
+  test_makePedigreeMatingLayout.R, test_addRectilinearWaypoints.R (all disclosed churn).
+  devtools::check() 0/0/1-pre-existing-NOTE; full regression 0 failed/0 error; lintr clean.
+  NEWS.Rmd/NEWS.md, BACKLOG.md (S583 + Track 3 DONE, new follow-up item filed, issue #161 item
+  annotated), CHANGELOG.md, PROJECT_LEARNINGS.md Learning 609 all updated.
+next_steps: 3 open candidates, none mandated -- pick per priority/interest: (1) BACKLOG.md's new
+  follow-up item (filed this session, right after the Track 3 item) -- decide whether Track 3's 2
+  disclosed trade-offs (child-centering, bar-vs-bar) are a permanent accepted cost or warrant a
+  narrower clamp mechanism (e.g. single-child-only, or a partial/soft pull); DECISION NEEDED, not
+  scoped, likely needs its own design session. (2) Issue #161 (hide the mating-unit marker) --
+  its own deferred-until-Tracks-1-3-ship condition (plan §2.5) is now satisfied; still a genuine
+  design call needing a fresh AskUserQuestion, not an obvious pick. (3) The pre-existing S582 item
+  (READY, Effort S): verify whether vignettes/articles/pedigree-diagram-screenshots.R's 3
+  non-base-fixture screenshots (diagram_show_names.png, diagram_affected_shading.png,
+  diagram_twin_connectors.png) went stale from the same pedigreeEdgeStyle default-flip mechanism
+  pb_diagram_legend.png needed fixing for -- small, well-scoped, unrelated to this thread.
+key_files: R/makePedigreeDiagramData.R:966-999 (.positionMatingUnitForest()'s new Track 3 clamp);
+  tests/testthat/test_positionMatingUnitForest.R (2 new tests ~line 1100-1200, loosened
+  checkInvariant ~line 1037-1067, 2 corrected golden values ~line 56-90/296); test_resolveEdgeNodeCollisions.R
+  ~line 350-390; test_makePedigreeMatingLayout.R ~line 584-616; test_addRectilinearWaypoints.R
+  ~line 621-712; docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md (§2.3/§6/§7/§8,
+  the governing plan, now fully implemented across Tracks 1-3).
+gotchas: testthat::expect_equal()/all.equal() with a bare tolerance=N argument is SCALE-RELATIVE,
+  not absolute -- expect_equal(120, 60, tolerance=1) PASSES (see PROJECT_LEARNINGS.md Learning
+  609). For an actual absolute-unit check use expect_true(abs(actual-expected) < N) explicitly,
+  with a 1e-9-scale buffer if the comparison can land exactly on a boundary from repeated 1e-3
+  de-collision nudges. A union with a dangling (no-own-row) parent has no resolvable x -- any
+  future code touching finalUnitX must guard for NA parent lookups the same way this session's
+  clamp does (R/makePedigreeDiagramData.R's new `if (!anyNA(parentX))` guard). The plan's own §7
+  faithful child-centering metric and the D1 bar-vs-bar residual count (both re-measured this
+  session) are now materially different from the plan's own original numbers -- don't cite the
+  plan document's own pre-Track-3 figures without checking BACKLOG.md's Track 3 entry for the
+  current, post-fix numbers first.
+runtime_smoke: R/modPedigree.R:588 confirmed unchanged -- calls makePedigreeMatingLayout()
+  directly, so the live Shiny app inherits this fix automatically. Numeric ground-truth coordinate
+  verification (exact -60/60/60 reproduction) was the primary evidence relied upon; an attempted
+  chromote screenshot was not polished enough to serve as standalone evidence. No full
+  shinytest2/AppDriver boot, matching Track 1/2's own precedent for this change class.
+changelog_ref: CHANGELOG.md 2026-08-16/2026-08-15 entries under "## 2026-08" (S596 claim + S596
+  deliverable entries).
+commit: 8b8e399d (RED), plus this session's GREEN+REFACTOR and close-out commits
 ```
 
 ```handoff

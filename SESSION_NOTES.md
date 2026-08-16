@@ -18,15 +18,141 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 595 Handoff Evaluation (by Session 596)
+**Score: 8/10.** **What helped:** `HANDOFFS.md`'s `next_steps` field correctly named the exact next
+task (Track 3, S583 parent-span clamp, plan §2.3/§6 Session C), correctly flagged the required
+PRE-RED reopening-confirmation gate before any RED test, correctly described the clamp mechanism
+(`finalUnitX` into its own 2 parents' `[min, max]` range), and correctly predicted
+`test_positionMatingUnitForest.R` would need updating and that `test_makePedigreeMatingLayout.R:428`
+needed an audit (true — confirmed via direct read that it needs no source change, since both sides
+of its comparison flow through the same, now-clamped, function). Went straight into an accurate
+PRE-RED reading without having to rediscover the task from scratch. **What was wrong:** the cited
+line numbers `test_positionMatingUnitForest.R:986`/`:1019` were stale/imprecise — `:986` actually
+pointed at an unrelated Track 4 gen-invariant test (not the one needing updates); the real target
+(the Track 6 §2.4 `checkInvariant` helper) was found via direct re-reading, not the citation, per
+this project's own "re-read before editing" discipline — cost nothing since I re-verified anyway,
+but a future handoff should re-confirm line citations against a fresh read before writing them, not
+carry them from an earlier planning-session read. **What was missing:** no hint that REFACTOR would
+surface substantial cross-file, cross-track consequences (the child-centering metric worsening 9→53
+of 251 edges; the D1 bar-vs-bar residual worsening 9→116 hits; a beneficial Track 2 collision-count
+reduction 150→105) — though this is arguably not a fair ding against S595's own handoff, since S595
+hadn't implemented Track 3 yet and was accurately relaying the plan's own stated scope, which itself
+under-stated the downstream impact; the magnitude was only knowable by actually implementing and
+fully regression-testing the change, which is exactly what this session did. **ROI:** high — saved
+re-deriving the task, the required gate, and the mechanism from the plan document cold.
+
 ### What Session 596 Did
 **Deliverable:** Implement Track 3 (S583 parent-span clamp) — plan §2.3/§6 Session C of
 [`docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`](docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md).
-(IN PROGRESS)
-**Started:** 2026-08-15.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**DONE.** Strict TDD PRE-RED→RED→GREEN→REFACTOR, `AskUserQuestion` at every declared transition,
+including 2 additional mid-REFACTOR disclosure gates for unanticipated findings (see below).
+**Started/Completed:** 2026-08-15/16.
+
+**PRE-RED:** read plan §2.3/§2.4/§6 Session C/§9 in full, the current `finalUnitX`/`dupX` code
+(`R/makePedigreeDiagramData.R:966-980`), the existing Track 6 §2.4 invariant test, and both target
+fixtures — the S583 single-child chain (reproduced via `trimPedigree(c("8LKBV9","FJIB3R","GA204Z"),
+ped)` against the real 375-individual bundled fixture, not the pre-existing hand-built "small"
+fixture that happens to share the same individual ids but produces materially different, weaker
+numbers) and the 9-subject `P1/P2/A/Y/X/W/C1/C2/GC` consanguineous fixture BACKLOG.md names ("3
+more times", also `test_makePedigreeMatingLayout.R`'s own Track C dogleg fixture, S563). Empirically
+verified BACKLOG's own headline numbers live (`5A6DFT` x=-60, `8DKELJ` x=60, `__union_1` x=120,
+entirely outside `[-60,60]`) before writing any test, matching this project's own "verify-first"
+discipline.
+
+**RED:** 2 new tests in `tests/testthat/test_positionMatingUnitForest.R` asserting
+`finalUnitX[U] %in% [min(sireX,damX), max(sireX,damX)]` for every mating unit in both fixtures, both
+confirmed genuinely failing against unmodified source. Loosened the pre-existing Track 6 §2.4
+invariant test to accept "formula OR clamped-to-parent-range" (passes identically pre-Track-3, no
+behavior change). Found and fixed a real test-logic bug before treating RED as clean: `all.equal()`'s
+default tolerance is RELATIVE not absolute, spuriously flagging an unrelated 0.001 epsilon nudge in
+the small fixture — fixed by switching to explicit absolute-difference comparisons (+ a 1e-9
+float-representation buffer for a second, genuine boundary case found on the real fixture). Also
+found `testthat::expect_equal(120, 60, tolerance = 1)` PASSES (waldo's tolerance is scale-relative
+too) — a "headline pinned value" assertion I'd written was toothless until rewritten as an explicit
+`expect_true(abs(...) < 1)`. Both gotchas generalized into `PROJECT_LEARNINGS.md` Learning 609.
+Full clean regression: 0 error/3 failed, all 3 the intended new/updated assertions in this one file,
+zero collateral elsewhere. Committed `8b8e399d`.
+
+**GREEN:** inserted the clamp loop (plan §2.3, verbatim) into `.positionMatingUnitForest()`, between
+the existing `finalUnitX` computation and its write-back to `nodes$x`. Found and fixed a real edge
+case the plan's own snippet didn't guard: a union whose sire or dam is a dangling free-pass
+reference (no own row in `ped`) has no resolvable node position, so `nodes$x[match(...)]` returns
+`NA` and the naive clamp corrupted `finalUnitX` to `NA` — regressed 2 pre-existing dangling-parent
+tests before the `if (!anyNA(parentX))` guard was added. Isolated-file run: 3 failures remained, all
+legitimate, disclosed consequences of the clamp on 2 OTHER pre-existing golden-value tests in the
+SAME file (a basic 2-parent/3-child trio, and the real GA204Z/8LKBV9 loop fixture's `unit3`) — both
+updated with disclosed reasoning, matching the established Track 1/S593 test-churn precedent.
+
+**REFACTOR:** full-suite regression surfaced 3 MORE downstream files affected by the same clamp
+(all traced to `.addRectilinearWaypoints()`'s D1 drop point anchoring its x to the UNION's own,
+now-clamped, x): `test_resolveEdgeNodeCollisions.R` and `test_makePedigreeMatingLayout.R` both
+IMPROVED (Track 3 coincidentally resolves some cases Track 2 used to have to jog: 150→105
+collisions, node count 1,502→1,412); `test_addRectilinearWaypoints.R`'s already-disclosed D1
+bar-vs-bar residual (plan §8) WORSENED substantially (9→116 post-Track-1 hits) — pulling a runaway
+union back toward its own parents moves its sibship bar's drop point back into the x-region other
+relatives' subtrees occupy. Stopped and disclosed this via `AskUserQuestion` before touching any
+golden values — owner accepted the trade-off. Re-ran the plan's own §7 item-3 faithful
+child-centering metric (methodology from `docs/planning/pedigree-diagram-nonrigid-layout-spike-
+evidence.qmd`) and found a SECOND, larger, unanticipated cost: 9→53 of 251 child edges now exceed
+the 200-unit threshold (max offset 4,121→10,627) — the direct mechanical consequence of clamping a
+union off its child-centered position. Stopped and disclosed this too via a second `AskUserQuestion`
+before finalizing — owner again accepted, as designed. Updated all 3 downstream files' golden values
+with full disclosed reasoning. `devtools::check()`: 0 errors/0 warnings/1 pre-existing NOTE
+(`vignettes/figure/`, unrelated). Full clean regression: 0 failed/0 error (2,159 blocks).
+`lintr::lint_package()` on all 5 touched files: 0 lints. `NEWS.Rmd`/`NEWS.md` updated (2 bullets:
+corrected Track 1's own stale "42→9" bar-vs-bar reference, added the new Track 3 entry disclosing
+both trade-offs). `BACKLOG.md`: Track 3 item and the original S583 raw-finding item both marked
+DONE; issue #161's deferred-decision item annotated (Tracks 1-3 now all shipped, its own deferral
+condition is satisfied); a new follow-up item filed for the 2 accepted trade-offs (not fixed this
+session, per `PROJECT_LEARNINGS.md` Learning 382's "report, don't fix mid-session" precedent).
+`CHANGELOG.md`: claim + deliverable entries added (S596 claim entry itself was missed at the time
+of the claim commit — backfilled here at close-out, same session, not left for a future reconcile).
+`PROJECT_LEARNINGS.md` Learning 609 added (testthat/waldo tolerance-semantics gotcha). No GitHub
+issue to close for Track 3 itself (BACKLOG's own S583 item was never filed as its own issue — "the
+same already-tracked gap, not a new one," matching S592's own precedent).
+
+**Runtime smoke test (Phase 3E):** `R/modPedigree.R:588` confirmed unchanged, still calling
+`makePedigreeMatingLayout()` directly — the live Shiny app inherits this fix automatically. A quick
+`chromote`-rendered screenshot of the trimPedigree S583 example was attempted but not polished
+enough to serve as evidence on its own; the numeric ground-truth coordinate verification (exact
+`-60`/`60`/`60` reproduction against BACKLOG's own cited example, run repeatedly through this
+session) is the stronger, actually-relied-upon verification here, consistent with this project's
+own "verify diagrams against ground truth" standing preference (`MEMORY.md`) — traced the specific
+edge/node coordinates programmatically rather than trusting a screenshot alone. No full
+`shinytest2`/`AppDriver` boot this session, matching Track 1/Track 2's own established precedent for
+this same algorithmic-change class.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A (no new displayed statistic).
+Tutorial/article checklist N/A (no new Shiny tab/control — internal algorithm fix under an existing
+control). `NEWS.Rmd` checklist DONE (see above). `a2interactive.Rmd` checklist: N/A — Track 3 adds
+no new exported parameter and touches only `@noRd`/internal `.positionMatingUnitForest()`; no new
+reserved node-id prefix either (unlike Track 2's `__jog_`). `_pkgdown.yml` checklist N/A (no new
+exported function). Lint checklist DONE (0 lints across all 5 touched files). GitHub issue
+close-out N/A (no GitHub issue for this specific item — see above).
+
+**Self-assessment (Session 596): 9/10.** **Strengths:** (1) Pulled the EXACT real-fixture
+reproduction (`trimPedigree()` against the bundled CSV) for the headline S583 example rather than
+reusing a pre-existing look-alike fixture that would have produced weaker, less faithful numbers —
+caught the discrepancy by actually computing both and comparing. (2) Caught 2 genuine test-logic
+bugs (relative- vs absolute-tolerance semantics) before treating RED as clean, rather than accepting
+"3 failures, roughly matches expectation" at face value — generalized into a durable Learning. (3)
+Caught a real production-code edge case (dangling parent → `NA` propagation) via full regression,
+not assumption, and fixed it minimally rather than over-engineering a broader guard. (4) When full
+regression surfaced 2 SEPARATE, substantial, unanticipated trade-offs (bar-vs-bar worsening;
+child-centering worsening) during REFACTOR, stopped BOTH times and disclosed via `AskUserQuestion`
+before touching golden values or declaring done — did not repeat S595's own self-flagged "skipped
+gate" process gap from the immediately preceding session. (5) Traced the SECOND finding's exact
+mechanism (D1 drop point anchors to the union's own x) before presenting it, not just reporting "the
+number changed." **Weaknesses:** (1) Missed logging my own claim commit (`ec968418`) to
+`CHANGELOG.md` at the time it was made — caught and backfilled at close-out, same session, but
+should have been logged immediately per Phase 3F's own "one per commit" discipline. (2) The initial
+clamp implementation's tolerance-comparison choices (`all.equal` then plain `abs()`) took 2 iterations
+to get right rather than being correct on the first attempt — though each iteration was driven by a
+genuine empirical failure, not guesswork, matching this project's own verify-before-writing
+discipline. **ROI:** high — issue-adjacent BACKLOG item (S583) fully closed with real, measured
+evidence; 3 genuine implementation/test-logic bugs caught before shipping; 2 substantial trade-offs
+surfaced and explicitly owner-ratified rather than silently absorbed into updated test numbers; a
+new, durable, broadly-applicable testing-methodology Learning recorded for future sessions.
 
 ### Session 594 Handoff Evaluation (by Session 595)
 **Score: 8/10.** **What helped:** `HANDOFFS.md`'s `next_steps` field correctly deferred to S593's
