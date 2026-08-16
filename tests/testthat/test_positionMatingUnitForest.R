@@ -1017,11 +1017,23 @@ test_that(".positionMatingUnitForest's every mating unit satisfies the
 ## closes as a side effect, not something §2.1/§2.2 alone introduce. -----
 
 test_that(".positionMatingUnitForest's every mating unit satisfies the
-           Track 6 §2.4 invariant -- finalUnitX equals the midpoint of its
-           own children's final x, within the existing 1e-3 de-collision
-           epsilon's own tolerance -- on the small GA204Z/8LKBV9 loop
-           fixture (single-child units) and the real 375-individual
-           bundled fixture (multi-child units)", {
+           Track 6 §2.4 invariant, LOOSENED by Track 3 (docs/planning/
+           pedigree-diagram-same-row-collision-avoidance-plan.md §2.3/§6
+           Session C, a disclosed reopening of §2.4's 'unconditionally'
+           wording, owner-ratified S592 §9): finalUnitX equals EITHER the
+           midpoint of its own children's final x (the original formula,
+           whenever that already falls inside the union's own 2 parents'
+           x-range) OR that midpoint clamped into the parents' [min, max]
+           range (whenever it doesn't) -- within the existing 1e-3
+           de-collision epsilon's own tolerance -- on the small
+           GA204Z/8LKBV9 loop fixture (single-child units) and the real
+           375-individual bundled fixture (multi-child units). Passes
+           identically on UNMODIFIED source (the 'formula' branch alone
+           already covers every case pre-Track-3, since no clamp exists
+           yet) -- this loosening adds no new passing case today; it only
+           keeps this invariant true once Track 3's GREEN phase ships the
+           clamp. The dedicated Track 3 tests below assert the clamp
+           itself (containment), confirmed failing pre-GREEN.", {
   checkInvariant <- function(ped) {
     forest <- .buildMatingUnitForest(ped)
     pos <- .positionMatingUnitForest(ped, forest)
@@ -1031,11 +1043,31 @@ test_that(".positionMatingUnitForest's every mating unit satisfies the
       uid <- matingUnits$id[i]
       kids <- childEdges$to[childEdges$from == uid]
       kidX <- pos$x[match(kids, pos$id)]
-      expected <- (min(kidX) + max(kidX)) / 2
+      formulaX <- (min(kidX) + max(kidX)) / 2
+      sireX <- pos$x[pos$id == matingUnits$sire[i]]
+      damX <- pos$x[pos$id == matingUnits$dam[i]]
+      lo <- min(sireX, damX); hi <- max(sireX, damX)
+      clampedX <- min(max(formulaX, lo), hi)
       actual <- pos$x[pos$id == uid]
-      expect_equal(actual, expected, tolerance = 2e-3,
-                   info = paste("unit", uid, "expected", expected,
-                                 "actual", actual))
+      ## Absolute-difference comparison (+ a 1e-9 float-representation
+      ## buffer), matching the ORIGINAL expect_equal(actual, expected,
+      ## tolerance = 2e-3)'s own semantics -- all.equal()'s default
+      ## tolerance is RELATIVE, which spuriously flagged the small
+      ## fixture's own __union_4 (formula/clamped 0.25, actual 0.251, a
+      ## pre-existing 0.001 de-collision-epsilon nudge unrelated to Track
+      ## 3): a 0.001 absolute difference is comfortably inside 2e-3
+      ## absolute tolerance but exceeds a 2e-3 RELATIVE tolerance at this
+      ## scale. The 1e-9 buffer absorbs a second, unrelated finding: the
+      ## real 375-fixture's __union_5 lands EXACTLY 0.002000000 (two
+      ## stacked 1e-3 de-collision nudges) from its own formula value --
+      ## a real boundary case, not a rounding artifact, that a bare `<=`
+      ## comparison can fail on float-representation noise alone (both
+      ## found live this session, Pre-RED).
+      expect_true(
+        abs(actual - formulaX) <= 2e-3 + 1e-9 ||
+          abs(actual - clampedX) <= 2e-3 + 1e-9,
+        info = paste("unit", uid, "formula", formulaX, "clamped",
+                      clampedX, "actual", actual))
     }
   }
 
@@ -1078,4 +1110,96 @@ test_that(".positionMatingUnitForest has zero exact x/gen coincidence
                info = paste("colliding ids:",
                              paste(pos$id[key %in% key[duplicated(key)]],
                                    collapse = ", ")))
+})
+
+## ---- Track 3 (parent-span clamp on finalUnitX): docs/planning/
+## pedigree-diagram-same-row-collision-avoidance-plan.md §2.3/§6 Session
+## C. Closes the BACKLOG.md S583 item. A disclosed, owner-ratified (S592
+## §9, re-confirmed this session's own PRE-RED AskUserQuestion per the
+## plan's own additional gate) reopening of Track 6 §2.4's
+## "unconditionally" wording: a union's finalUnitX must be clamped into
+## its own 2 parents' [min, max] x-range whenever the child-centered
+## formula alone would place it outside that span. Both fixtures below
+## confirmed empirically (Pre-RED, this session, via direct
+## .positionMatingUnitForest()/makePedigreeMatingLayout() calls against
+## UNMODIFIED source) to violate simple parent-span containment before
+## being committed here. --------------------------------------------------
+
+test_that(".positionMatingUnitForest clamps finalUnitX into its own 2
+           parents' [min, max] x-range -- BACKLOG.md's own S583 concrete
+           example, reproduced via trimPedigree() against the real
+           375-individual bundled fixture (not a hand-built
+           approximation)", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  trimmed <- trimPedigree(c("8LKBV9", "FJIB3R", "GA204Z"), ped)
+  forest <- .buildMatingUnitForest(trimmed)
+  pos <- .positionMatingUnitForest(trimmed, forest)
+  matingUnits <- forest$matingUnits
+
+  for (i in seq_len(nrow(matingUnits))) {
+    uid <- matingUnits$id[i]
+    sireX <- pos$x[pos$id == matingUnits$sire[i]]
+    damX <- pos$x[pos$id == matingUnits$dam[i]]
+    lo <- min(sireX, damX); hi <- max(sireX, damX)
+    ux <- pos$x[pos$id == uid]
+    expect_true(ux >= lo - 2e-3 - 1e-9 && ux <= hi + 2e-3 + 1e-9,
+                info = paste("unit", uid, "x", ux, "parent range",
+                              lo, hi))
+  }
+
+  ## The headline S583 case, pinned to its own exact reported numbers
+  ## (BACKLOG.md, scaled coordinates: 5A6DFT x=-60, 8DKELJ x=60,
+  ## UNCLAMPED __union_1 x=120 -- entirely outside [-60,60], past the
+  ## dam). Post-clamp, __union_1 must land AT the dam's own x (60), the
+  ## nearer boundary of [-60,60] to the raw formula value of 120 --
+  ## verified live this session via makePedigreeMatingLayout() against
+  ## UNMODIFIED source (currently 120, confirmed failing), not estimated.
+  ## expect_true()/abs(), NOT expect_equal(..., tolerance=1): waldo's
+  ## `tolerance` is a RELATIVE-scale comparison, not an absolute-unit
+  ## one -- expect_equal(120, 60, tolerance = 1) PASSES (found live this
+  ## session), which would make this assertion pass both before AND
+  ## after the clamp ships, silently proving nothing.
+  scaled <- makePedigreeMatingLayout(trimmed)$nodes
+  expect_equal(scaled$x[scaled$id == "5A6DFT"], -60)
+  expect_equal(scaled$x[scaled$id == "8DKELJ"], 60)
+  expect_true(abs(scaled$x[scaled$id == "__union_1"] - 60) < 1,
+              info = paste("__union_1 x =",
+                            scaled$x[scaled$id == "__union_1"]))
+})
+
+test_that(".positionMatingUnitForest clamps finalUnitX for every mating
+           unit on the 9-subject P1/P2/A/Y/X/W/C1/C2/GC consanguineous
+           fixture (test_makePedigreeMatingLayout.R's own Track C dogleg
+           fixture, S563) -- BACKLOG.md's 'reproduced 3 more times'
+           finding for the X×A, A×Y, and W×Y single-child
+           unions, plus the P1×P2 founder union (a 2-child union
+           also found, live this session, to violate containment)", {
+  ped <- data.frame(
+    id   = c("P1", "P2", "A", "Y", "X", "W", "C1", "C2", "GC"),
+    sire = c(NA, NA, "P1", "P1", NA, NA, "A", "Y", "A"),
+    dam  = c(NA, NA, "P2", "P2", NA, NA, "X", "W", "Y"),
+    sex  = c("M", "F", "M", "F", "F", "M", "F", "M", "M"),
+    gen  = c(0L, 0L, 1L, 1L, 3L, 1L, 4L, 2L, 2L),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForest(ped, forest)
+  matingUnits <- forest$matingUnits
+  expect_equal(nrow(matingUnits), 4L)
+
+  for (i in seq_len(nrow(matingUnits))) {
+    uid <- matingUnits$id[i]
+    sireX <- pos$x[pos$id == matingUnits$sire[i]]
+    damX <- pos$x[pos$id == matingUnits$dam[i]]
+    lo <- min(sireX, damX); hi <- max(sireX, damX)
+    ux <- pos$x[pos$id == uid]
+    expect_true(ux >= lo - 2e-3 - 1e-9 && ux <= hi + 2e-3 + 1e-9,
+                info = paste("unit", uid, "(sire", matingUnits$sire[i],
+                              "dam", matingUnits$dam[i], ") x", ux,
+                              "parent range", lo, hi))
+  }
 })
