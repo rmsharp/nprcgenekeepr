@@ -137,22 +137,77 @@ This file currently holds **12** receipt(s). Computed by `methodology_trim.py` o
 
 ```handoff
 session: S599
-date: 2026-08-16
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Redesign plan for the duplicate-occurrence-selection centering fix (BACKLOG.md's Track
-  3 trade-offs follow-up; see docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md
-  §6). Resolving open questions 1-3/6 (qualification-rule design, tie-break decision, PRE-RED gate
-  draft, naming) via docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md. Planning-only.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+date: 2026-08-17
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Ran a fresh redesign attempt against S598's investigation doc §6 open questions
+  (docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md). A 12-agent
+  design->synthesize->critique->repair->critique workflow produced a repaired design that STILL
+  fails adversarial critique on a new axis (unbounded substitution magnitude, not the qualification
+  logic S598/this session's round 1 refined). Presented via AskUserQuestion; owner chose hold again.
+  Appended full findings as the doc's new §8; §8.6 is the updated open-questions entry point.
+what_was_done: Confirmed no code drift since the investigation doc's HEAD (git diff f7afa0fd..HEAD
+  -- R/ tests/ empty); re-read R/makePedigreeDiagramData.R:455-524,955-1015 fresh, confirming the
+  duplicates-table insertion-order determinism and the exact Pass-1/clamp/dupX splice zone. Ran a
+  12-agent Workflow (wf_115a9428-581, 0 errors): 4 independent candidate qualification-rule designs
+  (Symmetric Blend / Sibling-Union-Count Abstention / 2-Child Eligibility Gate / SQD Gate -- the
+  last disqualified live, still misfires 0.7), each live-verified via pkgload::load_all() + real
+  .buildMatingUnitForest()/.positionMatingUnitForest() internals; synthesized into "Sibling-
+  Relationship-Count Abstention Guard"; round-1 critique found a NEW compounding misfire (2 children
+  of one union each substituting toward a shared 3rd sibling, 0.5->3.775); repaired with a Layer-2
+  abstention ceiling (neutralizes it, live-reconfirmed); round-2 critique on the repair STILL
+  designStillSound:false on 2/3 lenses -- unbounded magnitude in the untouched single-substitution
+  case (-0.05->-16.238 live-measured as an unrelated fan-out grew) and a TDD white-box-test
+  necessity (both abstention branches are output-identical to today's shipped behavior, so a
+  black-box RED test would pass pre-implementation). Presented via AskUserQuestion (hold /
+  one-more-repair / ship-disclosed); user picked hold. Appended investigation doc §8 (full
+  candidate table, both critique rounds, updated open questions at §8.6), updated its status banner
+  and decision log, updated BACKLOG.md's Track 3 item with an S599 progress note, added
+  PROJECT_LEARNINGS.md Learnings 613-614, refreshed CLAUDE.md's learnings-count pointer. Commit
+  02efe41a (Phase 1B claim), plus this session's close-out commit.
+next_steps: A future redesign session should start at the investigation doc's §8.6, not §6 (now
+  superseded). The primary open problem is the substitution formula's own magnitude
+  (rawDupX <- rawFinalUnitX[V] + minSep*0.4, inherited unchanged by every candidate across both
+  S598 and S599) -- bounding it should be the design target, not another qualification-logic
+  refinement. Read §8.6 item 3 first: 2 independent attempts have now failed adversarial critique,
+  and an explicit go/no-go on whether this is the right layer to fix child-centering quality at all
+  may be warranted before a 3rd attempt. Separately, unrelated: issue #148's scope-narrowing
+  conversation and the S582 screenshot staleness check (READY, Effort S) remain exactly as prior
+  sessions left them, still valid candidates if a session doesn't want to pick up a 3rd redesign
+  attempt.
+key_files: docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md (the
+  deliverable; §8.6 is the entry point for a future redesign session); R/makePedigreeDiagramData.R:966-1010
+  (the exact splice zone, reconfirmed unchanged); BACKLOG.md:196-232ish (Track 3 trade-offs item,
+  now with the S599 progress note); PROJECT_LEARNINGS.md (Learnings 613-614).
+gotchas: The core open problem is magnitude, not qualification/abstention logic -- do not spend a
+  3rd session re-refining when-to-substitute without first addressing what-value-to-substitute's own
+  boundedness. This session's scratchpad R scripts (candidate simulations, the fan-width magnitude
+  sweep) were not committed (ephemeral, matching S598's own precedent) -- reconstruct from the
+  investigation doc's §8.4 prose (exact numbers given) rather than from memory. A repaired design is
+  a NEW design for critique purposes -- re-run all 3 lenses fresh against any future repair, don't
+  narrow the re-check to just the one finding the repair targeted (Learning 613).
+runtime_smoke: n/a -- docs-only planning/investigation session, no R/tests code touched or shipped.
+changelog_ref: CHANGELOG.md 2026-08-17, "S599: duplicate-occurrence-selection centering redesign
+  attempt — still not sound, investigation doc §8" entry.
+commit: 02efe41a (Phase 1B claim), plus this session's close-out commit
 ```
+Self-assessment 8/10 (+): ran a genuinely fresh adversarial critique round against the repair itself
+rather than narrowly re-checking the one finding it targeted, and found a real, deeper,
+previously-undiscovered magnitude problem; recognized the workflow's bounded repair allowance was
+exhausted and stopped to ask the owner rather than iterating further or shipping silently, matching
+S598's own precedent at a second, deeper decision point; wrote a substantive §8 update (condensed
+candidate table, both critique rounds in full, updated open questions) rather than a thin note;
+independently re-verified load-bearing claims at every level rather than trusting sibling-agent
+self-reports; every new cross-reference verified to resolve before commit. (−): the 12-agent
+workflow (~1.6M subagent tokens, ~62 min) did not converge to a ratified design, and a magnitude-
+stress fixture in the FIRST round's own verification requirements (not only round-2's critique)
+might have surfaced the problem one cycle earlier; did not proactively flag "the substitution
+formula itself was never questioned" as a risk before spending the full budget, though the gap
+traces to S598's own §6 not naming that axis either. Predecessor (S598) scored 9/10: the
+investigation doc's §6 drove this entire session's design work with zero rediscovery cost, its
+"2 candidates already tried and failed" note prevented wasted re-attempts, and every one of its
+claims re-verified live this session without correction.
 
 ```handoff
 session: S598

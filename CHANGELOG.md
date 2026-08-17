@@ -16,6 +16,41 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-17 · [ad hoc] S599: duplicate-occurrence-selection centering redesign attempt — still not sound
+- **Session summary:** picked up S598's investigation doc §6 open questions (`BACKLOG.md`'s Track 3
+  trade-offs follow-up). Confirmed no code drift since S598's HEAD, then ran a 12-agent
+  design→synthesize→critique→repair→critique `Workflow` (`wf_115a9428-581`, 0 errors): 4 independent
+  candidate qualification-rule designs (Symmetric Blend, Sibling-Union-Count Abstention, 2-Child
+  Eligibility Gate, Sole-Qualifying-Duplicate Gate — the last disqualified live, still misfires
+  `0.7`), each live-verified via `pkgload::load_all()` against the target case (`-6`) and the
+  primary counter-example (stays at raw `0.5`). Synthesized into "Sibling-Relationship-Count
+  Abstention Guard"; round-1 adversarial critique found a NEW compounding misfire (2 different
+  children of one union each substituting toward a shared 3rd sibling, `0.5→3.775`); repaired with a
+  Layer-2 abstention ceiling that neutralized it (live-reconfirmed). **Round-2 critique on the
+  repair still `designStillSound: false` on 2 of 3 lenses** — an unbounded-magnitude problem in the
+  untouched "safe" single-substitution case (`-0.05→-16.238` live-measured as an unrelated
+  fan-out grew, driven by the substitution formula itself, inherited unchanged from the original
+  S592 design by every candidate tried across both S598 and this session) and a TDD white-box-test
+  necessity (both abstention branches are output-identical to today's shipped behavior, so a
+  black-box RED test would pass pre-implementation). Presented via `AskUserQuestion`; owner chose
+  hold again, over one more targeted repair round or shipping disclosed. Appended full findings as
+  the investigation doc's new §8 (candidate table, both critique rounds, updated decision log,
+  status banner) — §8.6 supersedes §6 as the entry point for a future redesign session, with an
+  explicit flag that a 3rd attempt should first weigh whether this is the right layer to fix
+  child-centering quality at, given 2 consecutive attempts have now failed adversarial critique.
+  Updated `BACKLOG.md`'s Track 3 trade-offs item with the S599 progress note. Added
+  `PROJECT_LEARNINGS.md` Learnings 613 (a repair earns a fresh full critique, not a narrower re-check)
+  and 614 (verifying direction ≠ verifying magnitude for a substitution-based design); `CLAUDE.md`
+  learnings-count pointer refreshed (612→614, ~2.4→~2.5 MB).
+- **Files:** `docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`
+  (§8 appended, status banner + decision log updated); `BACKLOG.md` (S599 progress note);
+  `PROJECT_LEARNINGS.md` (Learnings 613-614); `CLAUDE.md` (learnings pointer); `SESSION_NOTES.md` /
+  `HANDOFFS.md` (session claim + close-out).
+- **Verification:** docs-only session, no `R/`/`tests/` file touched (confirmed via
+  `git diff --stat`); no `devtools::check()`/regression/lint run needed. Every new cross-reference in
+  the investigation doc verified to resolve before commit.
+- Model: Claude Sonnet 5.
+
 ### 2026-08-16 · [ad hoc] S598: duplicate-occurrence-selection centering fix — investigation, held for redesign
 - **Session summary:** picked up `BACKLOG.md`'s "Track 3's 2 disclosed trade-offs" item, scoped to
   the child-centering half only. Ran a 6-agent research/verify/adversarial-critique workflow

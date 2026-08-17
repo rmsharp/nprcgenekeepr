@@ -18,16 +18,131 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 598 Handoff Evaluation (by Session 599)
+**Score: 9/10.** **What helped:** the investigation doc's §6 was the entry point exactly as
+instructed — this session started design work directly from its 7 open questions with zero
+rediscovery, and its explicit "2 candidate guards were tried live and both failed" note (question 1)
+saved real time by preventing a design agent from re-trying either. `key_files` correctly pointed at
+`R/makePedigreeDiagramData.R:966-1010` — re-verified unchanged before use. The `gotchas` field's
+"do not call it Track 4" was heeded throughout (every candidate/design this session produced was
+explicitly named something else). **What was wrong:** nothing found — every claim re-verified
+live this session (the `-6`/`0.12`/120x-multiplier numbers, the Track C `0.2` figure, the
+`duplicates` structural-insertion-order determinism) matched S598's own figures exactly.
+**What was missing:** S598 could not have anticipated that a REPAIRED design addressing its own
+named counter-example would itself have a deeper, orthogonal problem (unbounded substitution
+magnitude, §8.4) — that axis was invisible until this session's own round-2 critique went looking
+for it; not a fair gap in S598's handoff, since S598's own critique was killed by the qualification
+question first and never got far enough to probe magnitude. **ROI:** high — the §6 open-questions
+list drove this entire session's design work with no rediscovery cost.
+
 ### What Session 599 Did
-**Deliverable:** Redesign plan for the duplicate-occurrence-selection centering fix (resolve
-investigation doc §6 open questions 1-3/6) (IN PROGRESS)
-**Started:** 2026-08-16
-**Status:** Session claimed. Work beginning — following
-`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`, matching the parent collision-avoidance
-plan's own precedent. Planning-only session (SESSION_RUNNER.md Planning Sessions discipline): the
-plan is the deliverable, no RED/GREEN/REFACTOR code this session.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+**Deliverable: a further investigation-document update, not a ratified plan** — appended §8 to
+[`docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`](docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md).
+Ran a fresh 12-agent design→synthesize→critique(→repair→critique) `Workflow` against S598's §6 open
+questions; found a repaired design that still fails adversarial critique on a genuinely new axis
+(substitution magnitude, not qualification logic); presented the finding via `AskUserQuestion` and,
+per owner direction, held rather than shipping or iterating further. **DONE** in the sense the
+session's actual final deliverable shape allows — this is the second consecutive session on this
+fix to end in "hold," and §8.6 explicitly flags that a 3rd attempt should first weigh whether the
+whole approach is right, not just retry the same substitution-formula shape a 3rd time.
+**Started/Completed:** 2026-08-16/2026-08-17.
+
+**What actually happened, in order:**
+
+1. **Full Phase 0 orientation** (`SESSION_RUNNER.md`/`SAFEGUARDS.md` read in full; `SESSION_NOTES.md`;
+   `gh issue list` — 13 open; `gh run list --branch master` — last 10 runs all `completed success`;
+   `git status`/`log`/`diff --stat` — clean tree except 4 untracked `docs/planning/*.html` renders,
+   each verified live to have a tracked `.qmd` source, not a ghost session; `methodology_dashboard.py`
+   — 96/100 health, 0 High+ risk; ledger reconcile — `CHANGELOG.md`/`HANDOFFS.md` frontiers both ==
+   HEAD, no gap; also cross-checked both sequencing-audit docs per `CLAUDE.md`'s own S507 gotcha —
+   found nothing new beyond what `BACKLOG.md` already surfaces (the pedigree-diagram audit's own
+   Tier 1/2 items are all closed; the genetic-metrics audit's #148 item is already `BACKLOG.md`'s own
+   tracked "scope-narrowing" item)). Rendered a 3-item `BACKLOG.md`-sourced priorities picker via
+   `AskUserQuestion` (Track 4 centering redesign / issue #148 scope-narrowing / S582 screenshot
+   check) — **user picked "Track 4 centering redesign."**
+2. **Phase 1**: stated deliverable/workstream back to the user
+   (`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`, matching the parent collision-avoidance
+   plan's own precedent) and declared TDD phase **PRE-RED** (planning-only, no RED/GREEN/REFACTOR
+   code this session, per `SESSION_RUNNER.md`'s Planning Sessions discipline).
+3. **Phase 1B claim**: stub written to `SESSION_NOTES.md` + `status: pending` receipt opened in
+   `HANDOFFS.md`, committed (`02efe41a`) before any technical work, per protocol.
+4. **Phase 2 Research**: confirmed no code drift since the investigation doc's own HEAD
+   (`git diff f7afa0fd..HEAD --stat -- R/ tests/` empty), then re-read
+   `R/makePedigreeDiagramData.R:455-524` and `:955-1015` fresh (not from memory) to confirm the
+   `duplicates`-construction loop's structural-insertion-order determinism and the exact Pass
+   1/clamp/dupX splice zone the investigation doc claimed — both matched exactly.
+5. **12-agent `Workflow`** (design→synthesize→critique→repair→critique, detailed in the investigation
+   doc's new §8): 4 independent candidate qualification-rule designs, each live-verified via
+   `pkgload::load_all()` + real `.buildMatingUnitForest()`/`.positionMatingUnitForest()` internals
+   against the target case and the primary counter-example; a synthesis combining the strongest
+   candidate's mechanism; a 3-lens adversarial critique (invariant preservation, edge cases,
+   test-blast-radius/TDD-sequencing — same 3 lenses S598 used) that found a NEW compounding misfire
+   (2 children of one union each substituting toward a shared 3rd sibling, `0.5→3.775`); a bounded
+   repair round adding an abstention ceiling that neutralized it; a second critique pass on the
+   repair that **also** returned `designStillSound: false` on 2 of 3 lenses — an unbounded-magnitude
+   problem in the untouched "safe" single-substitution case (`-0.05→-16.238` as an unrelated fan-out
+   grew, live-measured) and a TDD white-box-test necessity finding. All 12 agents completed, 0
+   errors (`wf_115a9428-581`).
+6. **Presented the round-2 finding via `AskUserQuestion`** (3 options: hold-and-write-investigation /
+   one-more-targeted-repair-round / ship-disclosed). **User picked hold.** Appended §8 to the
+   investigation document (workflow structure, all 4 candidates condensed into a table, the
+   synthesis/round-1/repair/round-2 findings in full, what was reconfirmed vs. newly found, and an
+   updated §8.6 open-questions list superseding §6). Updated the status banner and decision log.
+   Updated `BACKLOG.md`'s Track 3 trade-offs item with an S599 progress note pointing at §8.
+   Verified every new cross-reference resolves (the workflow journal file, all internal §-references,
+   the re-checked `R/makePedigreeDiagramData.R` line claims) before committing.
+7. Added `PROJECT_LEARNINGS.md` Learnings 613 (a repair earns a fresh full critique, not a narrower
+   "did this fix the one thing" check) and 614 (verifying direction is not verifying magnitude, for
+   any substitution-based design) — matching the file's own established format. Refreshed `CLAUDE.md`'s
+   `PROJECT_LEARNINGS.md` pointer line (612→614 learnings).
+
+**Runtime smoke test (Phase 3E):** n/a — docs-only planning/investigation session; no `R/`/`tests/`
+file touched or shipped (confirmed via `git status`/`git diff --stat` before close-out).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation/tutorial-article/`NEWS.Rmd`/
+`a2interactive.Rmd`/`_pkgdown.yml`/lint checklists all N/A (no `.R` file touched, no new exported
+function or Shiny feature, no runtime behavior changed). GitHub issue close-out N/A (this item was
+never filed as its own issue, matching `BACKLOG.md`'s established precedent for this same-root-cause
+finding, same as S598).
+
+**Self-assessment (Session 599): 8/10.** **Strengths:** (1) Ran a genuinely adversarial second
+critique round against the repair itself, rather than treating "the repair fixed the finding it was
+built for" as sufficient — found a real, deeper, previously-undiscovered problem (magnitude, not
+direction) that none of the 6 designs this session produced (4 candidates + synthesis + repair) had
+been tested against. (2) Recognized the workflow's bounded repair allowance was exhausted and
+stopped to ask the owner rather than open-ended iterating or silently shipping — matching S598's own
+established precedent exactly, at a second, deeper decision point. (3) Wrote a substantive,
+well-organized investigation update (§8, with a condensed comparison table for the 4 candidates)
+rather than a thin "still broken" note — a future session gets the same "start here, don't re-derive"
+value S598's own §6 gave this session. (4) Independently re-verified load-bearing claims at every
+level (re-read the source code fresh rather than trusting the investigation doc's line numbers;
+the synthesis and both critique rounds each independently re-derived numbers rather than trusting
+sibling agents' self-reports) — no claim in the final document rests on unverified agent output.
+(5) Every new cross-reference verified to resolve before commit. **Weaknesses:** (1) The 12-agent
+workflow was expensive (~1.6M subagent tokens, ~62 minutes) and did not converge to a ratified
+design — in retrospect, including a magnitude-stress fixture (grow an unrelated subtree, check the
+substituted value stays bounded) in the FIRST round's own candidate-verification requirements, not
+only in the round-2 critique, might have surfaced this problem one cycle earlier and saved the
+repair round's own cost. (2) Did not proactively flag "the substitution formula itself has never
+been questioned, only the logic gating it" as a risk before spending the full budget — this only
+became visible once the critique itself found it, though the investigation doc's own §6 (written by
+S598) also never named this axis, so the gap isn't unique to this session's own planning. **ROI:**
+moderate-to-high — no design shipped, but a second consecutive live-verified failure at increasing
+depth (qualification logic, then magnitude) is real, hard-won evidence that narrows what a 3rd
+attempt needs to prioritize (§8.6 item 1), and item 3's explicit "reconsider the approach" flag may
+save a 3rd session from repeating the same substitution-formula shape a 3rd time.
+
+**Gotchas for the next session:** (1) Start at the investigation document's **§8.6**, not §6 (§6 is
+now marked superseded). (2) The core open problem is the substitution formula's own magnitude
+(`rawDupX <- rawFinalUnitX[V] + minSep*0.4`), not the qualification/abstention logic around it —
+every candidate this session and S598 tried used that formula unchanged; a 3rd attempt should treat
+bounding it as the primary target, not a footnote. (3) Before diving into a 3rd redesign attempt,
+read §8.6 item 3 first — 2 independent attempts have now failed adversarial critique, and it may be
+worth an explicit go/no-go on whether this is the right layer to fix child-centering quality at all,
+rather than assuming a 3rd attempt at the same mechanism shape will succeed. (4) The workflow's own
+scratchpad R scripts (fixture constructions, the fan-width magnitude sweep) were not committed
+(ephemeral, matching S598's own established precedent) — reconstruct from the investigation doc's
+§8.4 prose (exact numbers given) if needed again, not from memory of this note.
 
 ### Session 597 Handoff Evaluation (by Session 598)
 **Score: 7/10.** **What helped:** `HANDOFFS.md`'s `next_steps` named exactly 3 candidates
