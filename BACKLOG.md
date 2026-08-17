@@ -193,6 +193,27 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       repair sidesteps that by working after layout, on the already-placed bar geometry, matching
       Track 2's own established precedent for this class of residual.
 
+      **Progress (S598, 2026-08-16), child-centering half only:** user picked this item, then
+      narrowed scope to the child-centering cost specifically (the "Track 4" substitution named
+      above), leaving the D1 bar-vs-bar residual as its own separate, still-untouched follow-up.
+      A research/verify/adversarial-critique workflow re-derived the substitution design against
+      current HEAD (confirmed exact insertion point `R/makePedigreeDiagramData.R:974-994`, live
+      re-verified the -6 vs. 0.12 numbers) — **but found a genuine, live-verified correctness gap
+      inside the design's own claimed scope**: when one individual mates 2+ different co-siblings
+      of the same union, the substitution can move the union's center farther from true, not
+      closer (verified with real fixture numbers, not just reasoned about). Presented via
+      `AskUserQuestion`, owner chose **hold — needs a redesign session** over shipping either the
+      flawed design (disclosed) or an unverified patch. Full evidence (code-state, live numbers,
+      grep inventory, 3 adversarial critiques, open questions a redesign must resolve) written to
+      [`docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`](docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md)
+      — explicitly an investigation, not a ratified plan; also flags that `BACKLOG.md`'s/the
+      collision-avoidance plan's own "Track 4" shorthand for this fix collides with the
+      already-shipped, unrelated `pedigree-diagram-track4-gen-aware-anchor-plan.md` and should not
+      be reused as a name going forward. **Next: a future session runs a fresh design pass on the
+      open questions in that document's §6**, then implementation (its own separate session,
+      per this project's planning→implementation session-boundary discipline). D1 bar-vs-bar
+      residual (the 3rd-possibility paragraph above) remains completely untouched.
+
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 *Resolves the former "Tracker reconciliation" decision item (S365) --
 `docs/audits/XARCH_TRACKER_RECONCILIATION_AUDIT_2026-07-11.md` re-verified all 8

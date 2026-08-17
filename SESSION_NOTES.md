@@ -18,20 +18,126 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 597 Handoff Evaluation (by Session 598)
+**Score: 7/10.** **What helped:** `HANDOFFS.md`'s `next_steps` named exactly 3 candidates
+(Track 3 trade-offs decision / issue #161 / S582 screenshot check), all still accurate and
+immediately actionable — the Phase 0 priorities picker rendered them verbatim, and the user's own
+pick ("Track 3 trade-offs decision") came directly from that list with zero rediscovery needed.
+The `gotchas` field's warning that the refreshed external artifact was never committed (render
+script lived only in scratchpad) was correctly scoped as "not this session's problem" and ignored,
+appropriately. **What was wrong:** nothing found — S597's own claims (ledger backfill, artifact
+staleness finding, all 3 candidates left exactly as S596 left them) were re-verified where it
+mattered (the `CHANGELOG.md`/`HANDOFFS.md` frontier check independently confirmed no new gap) and
+held up. **What was missing:** S597's handoff couldn't have anticipated that "Track 4," the name
+its own `next_steps` used for the child-centering substitution, collides with an already-shipped,
+unrelated plan document (`pedigree-diagram-track4-gen-aware-anchor-plan.md`) — this only surfaced
+once this session actually went to go read that plan and found two different documents both
+using the name for different things. Not a fair ding against S597, which was itself relaying
+`BACKLOG.md`'s own (already-established) shorthand. **ROI:** high — the 3-candidate list, still
+valid, drove this session's entire Phase 1 pick with no rediscovery cost.
+
 ### What Session 598 Did
-**Deliverable:** Plan document scoping Track 4 (duplicate-occurrence-selection root fix, plan
-§2.4 of
-[`docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`](docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md))
-(IN PROGRESS)
-**Started:** 2026-08-16
-**Status:** Session claimed. Phase 0 orientation complete (no ledger gap found — `CHANGELOG.md`/
-`HANDOFFS.md` frontier both == HEAD `f7afa0fd`). User picked "Track 3 trade-offs decision" from
-the priorities picker, then narrowed to "Scope Track 4 (centering)" — the 2 costs Track 3
-disclosed (child-centering degradation, D1 bar-vs-bar residual) are being treated as 2 separate
-follow-ups; this session scopes only the centering one via Track 4. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable: an investigation document, not a ratified implementation plan** —
+[`docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`](docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md).
+**DONE**, in the sense the session's actual final deliverable shape allows: research/verify/
+adversarially-critique the deferred "duplicate-occurrence-selection" fix (`BACKLOG.md`'s informal
+"Track 4," the child-centering half of Track 3's disclosed trade-offs) against current HEAD, then
+**hold** — owner-directed via `AskUserQuestion` — rather than adopt a design a live adversarial
+check found a genuine correctness gap in. **Started/Completed:** 2026-08-16.
+
+**What actually happened, in order:**
+
+1. **Full Phase 0 orientation** (SESSION_RUNNER.md/SAFEGUARDS.md read in full; `SESSION_NOTES.md`;
+   `gh issue list` — 13 open; `gh run list --branch master` — last 10 runs all `completed success`;
+   `git status`/`log`/`diff --stat` — 15 commits ahead of `origin/master`, 4 untracked
+   `docs/planning/*.html` renders, verified live (not just trusted from S597's own note) each has a
+   tracked `.qmd` source; `methodology_dashboard.py` — 96/100 health, 0 High+ risk; ledger reconcile
+   — `CHANGELOG.md`/`HANDOFFS.md` frontier both == HEAD, no gap). Rendered the `BACKLOG.md`-sourced
+   4-item priorities picker (capped per `CLAUDE.md`'s own rule, including the sequencing-audit
+   cross-check that surfaced issue #148's scope-narrowing item as a 4th option not inline-tagged in
+   `BACKLOG.md`) via `AskUserQuestion` — **user picked "Track 3 trade-offs decision."**
+2. **Phase 1 scope narrowing**, own `AskUserQuestion`: the item bundles 2 distinct costs
+   (child-centering degradation, D1 bar-vs-bar residual) with 3 named resolution paths for the
+   former specifically. User picked **"Scope Track 4 (centering)"** — planning-only, matching
+   `SESSION_RUNNER.md`'s Planning Sessions discipline (no RED/GREEN this session).
+3. **Phase 1B claim**: stub written to `SESSION_NOTES.md` + `status: pending` receipt opened in
+   `HANDOFFS.md`, committed (`9b94d7ce`) before any technical work, per protocol.
+4. **Design refresh workflow** (6 agents: 3 parallel verify — code-state relocation, live
+   re-verification via `pkgload::load_all()` against the exact `.commentOneFixture()` fixture, and
+   a grep-based evidence inventory — then 3 parallel adversarial-critique lenses — invariant
+   preservation, edge cases, test-blast-radius/TDD-sequencing). Confirmed the original S592
+   12-agent-workflow design (never adopted, named "fix (a)" in that transcript) still fits current
+   HEAD exactly at `R/makePedigreeDiagramData.R:974-994`, and live-reproduced its headline number
+   (0.12 shipped → -6 under the fix, on the issue #160 comment-1 fixture). **The edge-cases critique
+   found `designStillSound: false`**: a live-verified fixture where one individual mates 2 different
+   co-siblings of the same union makes the fix's own qualification rule move the union's center
+   *farther* from true, not closer — inside the design's own stated scope, not an excluded shape.
+5. **User-directed browser-comparison side quest** (mid-session, before processing the workflow
+   completion): rendered the exact issue #160 comment-1 fixture through both `kinship2` and
+   `nprcgenekeepr` (`chromote` + `visNetwork::saveWidget`, ad hoc scratchpad script, not committed)
+   for a direct visual comparison, at the user's request. Traced every edge in the nprcgenekeepr
+   render against the fixture's own sire/dam columns before presenting (ground-truth verification,
+   not just "looks uncorrupted," per `MEMORY.md`'s standing preference) — confirmed topologically
+   correct; the one visible positional anomaly (`__union_1` sitting almost on top of P2, not
+   centered between its children) is precisely the phenomenon this session's own investigation is
+   about, not a rendering defect.
+6. **Presented the edge-case finding via `AskUserQuestion`** (3 options: ship-as-designed-with-
+   disclosure / add-an-untested-guard / hold-for-redesign). **User picked hold.** Wrote the full
+   investigation document (§0-§7: naming-collision flag, the original design verbatim, fresh
+   code-state/live-number/grep-inventory verification, all 3 critique reports in full, 7 concrete
+   open questions for a future redesign session, decision log) rather than a ratified plan — status
+   banner at the top makes this explicit. Verified every new cross-reference in the document
+   resolves (`docs/planning/pedigree-diagram-track6-...md`, this session's own workflow journal
+   path, `PROJECT_LEARNINGS.md` Learnings 585/588) before committing.
+7. Updated `BACKLOG.md`'s Track 3 trade-offs item with an S598 progress note pointing at the new
+   investigation doc and naming the concrete next step (a redesign session against the doc's §6).
+
+**Runtime smoke test (Phase 3E):** n/a — docs-only planning session, no `R/`/`tests/` code
+touched or shipped. The kinship2/nprcgenekeepr comparison renders were ad hoc scratchpad scripts
+(not committed), matching S597's own established precedent for this kind of side-quest.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation/tutorial-article/`NEWS.Rmd`/
+`a2interactive.Rmd`/`_pkgdown.yml`/lint checklists all N/A (no `.R` file touched, no new exported
+function or Shiny feature, no runtime behavior changed). GitHub issue close-out N/A (this item was
+never filed as its own issue, matching `BACKLOG.md`'s own established precedent for this
+same-root-cause finding).
+
+**Self-assessment (Session 598): 8/10.** **Strengths:** (1) Did not implement a design an
+adversarial workflow found a genuine, live-verified correctness gap in, even though the gap was
+found only after a first `AskUserQuestion` had already committed to scoping this fix — surfaced it
+immediately and let the owner re-decide rather than quietly shipping a narrower guard I would have
+had to invent (and, per my own live arithmetic check mid-session, would likely have gotten wrong —
+2 candidate guards considered and rejected in real time, both failing to actually exclude the
+counter-example). (2) Independently verified the original S592 design against current HEAD rather
+than trusting either its own historical claims or `BACKLOG.md`'s summary of it — found and
+corrected a real discrepancy (the shipped clamp produces 0.12, not the design-time-predicted exact
+0, because of a de-collision nudge the original design predates). (3) Found and flagged the "Track
+4" naming collision between 2 unrelated plan documents before it could confuse a future session
+mid-implementation. (4) Kept the mid-session user-directed visual-comparison request from derailing
+the planning workstream — did it, verified it against ground truth, then returned cleanly to
+processing the just-completed workflow. (5) Every new cross-reference in the investigation document
+verified to resolve before commit, not assumed. **Weaknesses:** (1) The session's actual deliverable
+shape (an investigation, not a plan) only became clear mid-session, after the workflow ran — a
+sharper Phase 1 framing might have named this possibility explicitly before committing to "scope
+Track 4 (centering)" as if a clean plan were the likely outcome. (2) The comparison-render scratchpad
+script (`render_compare.R`) was not committed, matching precedent but meaning a future session
+wanting the same comparison must reconstruct it from this note rather than finding a checked-in
+copy — flagged as a gotcha below. **ROI:** high — the session avoided shipping a design with a
+verified-wrong-direction failure mode inside its own claimed scope, at the cost of not producing a
+directly implementable plan this session; the investigation document should make the eventual
+redesign session materially faster than starting cold.
+
+**Gotchas for the next session:** (1) Do not reuse "Track 4" as a name for whatever plan eventually
+ships the duplicate-occurrence-selection fix — it collides with the shipped
+`pedigree-diagram-track4-gen-aware-anchor-plan.md`; see the investigation doc's §1. (2) The
+kinship2/nprcgenekeepr comparison render script from this session
+(`render_compare.R`, plus `chromote`'s `set_viewport_size()` — not
+`screenshot(width=,height=)`, which errors — for sizing a headless-Chrome screenshot of a
+`visNetwork` htmlwidget) was not committed; reconstruct from this note if needed again, using
+`tests/testthat/test_resolveEdgeNodeCollisions.R:271-281`'s `.commentOneFixture()` for the same
+fixture. (3) The investigation document's §6 (7 open questions) is where a redesign session should
+start — do not re-run the verification workflow from scratch, its findings are fresh as of this
+session (current HEAD `f7afa0fd`+this session's own docs commits).
 
 ### Session 596 Handoff Evaluation (by Session 597)
 **Score: 8/10.** **What helped:** `HANDOFFS.md`'s `next_steps` field named 3 clear, accurate

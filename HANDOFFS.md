@@ -138,21 +138,72 @@ This file currently holds **12** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S598
 date: 2026-08-16
-status: pending
-self_score: pending
-predecessor_score: 6
-active_task: Plan document scoping Track 4 (duplicate-occurrence-selection root fix, plan §2.4 of
-  docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md) — the child-centering half
-  of Track 3's 2 disclosed trade-offs. User explicitly separated it from the D1 bar-vs-bar residual
-  (a different follow-up, not in this session's scope) via AskUserQuestion.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: Investigated the child-centering half of Track 3's 2 disclosed trade-offs (the
+  duplicate-occurrence-selection substitution, BACKLOG.md's informal "Track 4"). NOT shipped as a
+  ratified plan -- a 6-agent verify/critique workflow found a live-verified correctness gap inside
+  the design's own claimed scope; owner chose to hold for a redesign session rather than ship it
+  disclosed or patch it with an unverified guard. Full evidence written to
+  docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md. D1 bar-vs-bar
+  residual (the other trade-off) remains completely untouched, its own separate follow-up.
+what_was_done: Ran a 6-agent workflow (3 parallel verify: code-state relocation against current
+  HEAD, live re-derivation via pkgload::load_all() on the exact issue #160 comment-1 fixture, a
+  grep-based evidence inventory; then 3 parallel adversarial-critique lenses: invariant
+  preservation, edge cases, test-blast-radius/TDD-sequencing) against the never-adopted S592 "fix
+  (a)" design. Confirmed exact current insertion point R/makePedigreeDiagramData.R:974-994 and
+  reproduced the headline number (0.12 shipped -> -6 under the fix). The edge-cases lens found
+  designStillSound: false -- a sibling mating 2 different co-siblings of the same union can move
+  the union's center FARTHER from true, verified with real fixture numbers. Presented via
+  AskUserQuestion; owner picked hold-for-redesign. Wrote the investigation document (status banner
+  making clear it is not a ratified plan; naming-collision flag re "Track 4" vs. the unrelated,
+  shipped pedigree-diagram-track4-gen-aware-anchor-plan.md; all 3 critique reports in full; 7
+  concrete open questions for a redesign session). Updated BACKLOG.md's Track 3 item with the S598
+  progress note. Side quest (user-directed): rendered the issue #160 comment-1 fixture through both
+  kinship2 and nprcgenekeepr for visual comparison, ground-truth edge-traced before presenting.
+  Added PROJECT_LEARNINGS.md Learnings 611/612; CLAUDE.md pointer refreshed. Commit 9b94d7ce
+  (Phase 1B claim), plus this session's close-out commit.
+next_steps: A future session should start at the investigation document's §6 (7 open questions),
+  not re-run the verification workflow -- its findings are fresh as of current HEAD f7afa0fd+this
+  session's docs commits. Question 1 (design a qualification rule that doesn't misfire on the
+  2-co-siblings pattern) is the real work; 2 candidate guards were tried live this session and both
+  failed to exclude the counter-example (documented in §6 so they aren't re-tried blind). Once a
+  corrected design is ratified, it still needs its own dedicated PRE-RED reopening AskUserQuestion
+  (a second reopening of Track 6 §2.4) before any RED test, per this project's TDD contract and
+  Track 3's own precedent. Separately, unrelated: issue #161 (hide mating-unit marker) and the S582
+  screenshot staleness check (READY, Effort S) remain exactly as S596/S597 left them, still valid
+  candidates if a session doesn't want to pick up the redesign.
+key_files: docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md (the
+  deliverable, §6 is the entry point for a redesign session); R/makePedigreeDiagramData.R:966-1010
+  (the exact splice zone a redesign will touch); BACKLOG.md:155-~215 (Track 3 trade-offs item, now
+  with the S598 progress note); PROJECT_LEARNINGS.md (Learnings 611-612).
+gotchas: Do not name a future plan "Track 4" -- collides with the shipped
+  pedigree-diagram-track4-gen-aware-anchor-plan.md (investigation doc §1). The kinship2/
+  nprcgenekeepr comparison render script (render_compare.R) was not committed -- reconstruct from
+  SESSION_NOTES.md if needed again; chromote's set_viewport_size() sizes the screenshot, NOT
+  screenshot(width=,height=), which errors ("unused arguments"). The Track C 9-subject test fixture
+  (test_positionMatingUnitForest.R:1188-1219) passes today only by scale coincidence -- do not treat
+  its current silence as proof any future design is safe at production scale.
+runtime_smoke: n/a -- docs-only planning/investigation session, no R/tests code touched or shipped.
+changelog_ref: CHANGELOG.md 2026-08-16, "S598: duplicate-occurrence-selection centering fix —
+  investigation, held for redesign" entry.
+commit: 9b94d7ce (Phase 1B claim), plus this session's close-out commit
 ```
+Self-assessment 8/10 (+): did not implement a design an adversarial workflow found a genuine,
+live-verified wrong-direction gap in, even after already committing to scoping this fix — surfaced
+it and let the owner re-decide rather than quietly shipping a guard I'd likely have gotten wrong (2
+live-improvised candidates both failed to exclude the counter-example); independently re-verified
+the S592 design against current HEAD rather than trusting it, finding a real discrepancy (shipped
+0.12, not the design-time-predicted 0); found and flagged the "Track 4" naming collision before it
+could confuse an implementation session; kept a mid-session user-directed visual-comparison request
+from derailing the investigation, ground-truth-verified before presenting; verified every new
+cross-reference resolves before commit. (−): the deliverable's actual shape (investigation, not a
+plan) only became clear mid-session; the comparison-render script wasn't committed, matching
+precedent but costing a future session reconstruction effort. Predecessor (S597) scored 7/10: an
+accurate, immediately-actionable 3-candidate `next_steps` list drove this session's entire Phase 1
+pick with zero rediscovery cost; nothing found wrong; the only gap (the "Track 4" naming collision)
+wasn't fairly attributable to S597, which was relaying `BACKLOG.md`'s own pre-existing shorthand.
 
 ```handoff
 session: S597

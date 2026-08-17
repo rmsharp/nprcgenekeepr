@@ -16,6 +16,31 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-16 · [ad hoc] S598: duplicate-occurrence-selection centering fix — investigation, held for redesign
+- **Session summary:** picked up `BACKLOG.md`'s "Track 3's 2 disclosed trade-offs" item, scoped to
+  the child-centering half only. Ran a 6-agent research/verify/adversarial-critique workflow
+  against the never-adopted S592 "fix (a)" design (duplicate-occurrence substitution): confirmed it
+  still fits current HEAD exactly at `R/makePedigreeDiagramData.R:974-994` and live-reproduced its
+  headline number (0.12 shipped → -6 under the fix, issue #160 comment-1 fixture) — but one of 3
+  adversarial critique lenses found a genuine, live-verified correctness gap inside the design's own
+  claimed scope (a sibling mating 2 different co-siblings of the same union can move the union's
+  center farther from true, not closer). Presented via `AskUserQuestion`; owner chose to hold for a
+  redesign session rather than ship the flawed design (disclosed) or an unverified patch — 2
+  candidate guards improvised live this session were both checked against the counter-example and
+  both failed to exclude it. Wrote the full evidence record to
+  `docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md` (explicitly an
+  investigation, not a ratified plan) — flags a naming collision between `BACKLOG.md`'s informal
+  "Track 4" shorthand for this fix and the unrelated, already-shipped
+  `pedigree-diagram-track4-gen-aware-anchor-plan.md`. Updated `BACKLOG.md`'s Track 3 trade-offs item
+  with the S598 progress note and next step. Also rendered the issue #160 comment-1 fixture through
+  both `kinship2` and `nprcgenekeepr` (ad hoc, not committed) for a user-requested visual comparison,
+  ground-truth-verified edge-by-edge before presenting. Added `PROJECT_LEARNINGS.md` Learnings 611
+  (adversarial critique found a real gap in an already-multi-agent-vetted design) and 612 (the
+  "Track 4" naming-collision gotcha); `CLAUDE.md` learnings-count pointer refreshed (610→612,
+  S597+→S598+).
+- **Commits:** `9b94d7ce` (Phase 1B session claim), plus this session's close-out commit.
+- **Model:** claude-sonnet-5.
+
 ### 2026-08-16 · [ad hoc] S597: Phase 0 orientation + ledger backfill + stale-artifact correction — no BACKLOG item picked
 - **Session summary:** did not pick or advance any of S596's 3 offered BACKLOG priorities (Track 3
   trade-offs decision / issue #161 / S582 screenshot check); Phase 1 was never completed. Ran a
