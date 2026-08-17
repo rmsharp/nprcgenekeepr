@@ -18,19 +18,167 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 599 Handoff Evaluation (by Session 600)
+**Score: 9/10.** **What helped:** `HANDOFFS.md`'s `next_steps`/`gotchas` fields were precise and
+directly shaped this session's design: "start at §8.6, not §6," "the primary open problem is the
+substitution formula's own magnitude, not qualification/abstention logic," and "an explicit go/no-go
+... may be warranted before a 3rd attempt" were all followed exactly — this session's own first
+`AskUserQuestion` posed that exact go/no-go, and once the owner picked "refine," the workflow was
+scoped to require a magnitude-stress fixture from round 1 (S599's own self-diagnosed weakness) and to
+re-run all 3 critique lenses fresh against the repair (Learning 613's own practical rule, cited
+verbatim in the gotchas field). Both directives worked exactly as intended: the magnitude-bound
+arithmetic itself survived 2 full adversarial-critique rounds with zero violations found — direct
+evidence the process fix S599 recommended actually closed the gap it targeted. `key_files` (the
+investigation doc, `R/makePedigreeDiagramData.R:966-1010`, `BACKLOG.md`'s Track 3 item,
+Learnings 613-614) were all re-verified accurate before use. **What was wrong:** nothing found —
+§8.5's "confirmed still holds" claims (insertion point, `duplicates` table determinism, target-case
+reproducibility) all reconfirmed exactly by this session's own fresh workflow. **What was missing:**
+S599 could not have anticipated that a magnitude-bounded design would still fail for 2 entirely
+different reasons — a silent reinterpretation of the "given, do not redesign" qualification rule
+(Learning 615) and a wrong-reference-frame bound (Learning 616) — since §8.5 itself had already
+declared the qualification/abstention logic solved, and no session before this one had reason to
+distrust that. Not a fair gap: these were invisible until this session's own critique specifically
+went looking for them. **ROI:** high — the precise gotchas drove this session's entire workflow
+design with zero rediscovery cost, and the one directive S599 could give ("front-load magnitude
+testing") measurably worked, even though the overall attempt still failed on new grounds.
+
 ### What Session 600 Did
-**Deliverable:** 3rd redesign attempt for the duplicate-occurrence-selection centering fix
-(`docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md` §8.6) — staying on
-the substitution-formula layer (owner-picked via `AskUserQuestion` over pivoting to a post-hoc
-bounded nudge, running both in parallel, or accepting Track 3's trade-offs as permanent), but
-requiring every candidate to pass a magnitude-stress fixture from round 1 (§8.6 item 1, and S599's
-own self-identified process gap), and resolving the TDD white-box test problem (§8.6 item 2) as part
-of the design itself. (IN PROGRESS)
-**Started:** 2026-08-17.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable: a third investigation-document update, not a ratified plan** — appended §9 to
+[`docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`](docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md).
+Ran a fresh 12-agent design→synthesize→critique(→repair→critique) `Workflow`, this time scoped
+specifically to bound the substitution formula's magnitude (per owner direction, via
+`AskUserQuestion`, over 3 alternatives) with every candidate required to pass a magnitude-stress
+fixture from round 1; found a design that converges cleanly on the magnitude question but still fails
+adversarial critique on 2 different, deeper axes (a silent reinterpretation of a component marked
+"given, do not redesign," and a bound measured against the wrong reference frame); presented the
+finding via `AskUserQuestion` and, per owner direction, held — writing up the findings and filing an
+independently-discovered, unrelated real bug separately rather than shipping or iterating further.
+**DONE** in the sense the session's actual final deliverable shape allows — the 3rd consecutive
+session on this fix to end in "hold," each at a measurably deeper layer than the last.
+**Started/Completed:** 2026-08-17.
+
+**What actually happened, in order:**
+
+1. **Full Phase 0 orientation** (`SESSION_RUNNER.md`/`SAFEGUARDS.md` read in full; `SESSION_NOTES.md`;
+   `gh issue list` — 13 open; `gh run list --branch master` — last 10 runs all `completed success`;
+   `git status`/`log`/`diff --stat` — clean tree except 4 untracked `docs/planning/*.html` renders,
+   each re-verified to have a tracked `.qmd` source and to be correctly un-ignored by
+   `.gitignore`'s own `!docs/planning/**` negation (not a ghost session); `methodology_dashboard.py`
+   — 96/100 health, 0 High+ risk (noted the dashboard script itself is running a stale local copy,
+   v2.14.0 vs. canonical v2.15.2 — out of this session's scope); ledger reconcile —
+   `CHANGELOG.md`/`HANDOFFS.md` frontiers both == HEAD, no gap; cross-checked both sequencing-audit
+   docs per `CLAUDE.md`'s own S507 gotcha — confirmed issue #148's scope-narrowing item is already
+   `BACKLOG.md`'s own tracked item, nothing new). Rendered a 4-item `BACKLOG.md`-sourced priorities
+   picker via `AskUserQuestion` (Track 3 centering 3rd attempt / screenshot staleness check / LabKey
+   live-server follow-up / NPRC outreach plan review) — **user picked "Track 3 centering — 3rd
+   attempt."**
+2. **Phase 1**: stated deliverable/workstream back to the user
+   (`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`, matching S598/S599's own precedent)
+   and declared TDD phase **PRE-RED** (planning-only, no RED/GREEN/REFACTOR code this session).
+3. **Phase 1B claim**: stub written to `SESSION_NOTES.md` + `status: pending` receipt opened in
+   `HANDOFFS.md`, committed (`abafdee7`) before any technical work, per protocol.
+4. **Re-read the investigation doc fresh** (not from memory) and found §8.6 item 3 explicitly framed
+   the next step as a go/no-go the owner should make, not something to decide unilaterally — posed a
+   dedicated `AskUserQuestion` (refine-with-magnitude-bounded-from-round-1 / pivot-to-post-hoc-nudge /
+   run-both / accept-as-permanent) before running any workflow. **User picked "Refine substitution,
+   bound magnitude."**
+5. **12-agent `Workflow`** (design→synthesize→critique→repair→critique, detailed in the investigation
+   doc's new §9): Layers 1/2 (qualification/abstention) held as given per S599's own §8.5 finding
+   that only magnitude remained open; 4 independent candidate magnitude-bounding mechanisms, each
+   required to pass a magnitude-stress fixture from round 1 (not deferred to critique, per the user's
+   own directive and Learning 614's own "weaknesses" note); 2 candidates independently converged on
+   an identical "cap the substitution delta to `±K·minSep`" design. Synthesis claimed success on all
+   4 required fixtures with a provable bound. Round-1 critique (3 lenses, same as S598/S599) found
+   the synthesis's entire success was contingent on silently reinterpreting the "given, do not
+   redesign" Layer 1 qualification rule (under the literal rule, Pass 2 is dead code for exactly the
+   target case's own shape), plus a newly-load-bearing locale dependency in `preferAnchor()`'s
+   tie-break. A repair round elevated both findings honestly (marked the design "CONTINGENT, not
+   unconditional") and corrected the bound to a tighter universal form. Round-2 critique (same 3
+   lenses, re-run fresh per Learning 613) still failed 2 of 3 lenses: the bound measures against the
+   wrong reference frame (overshoots the real children's own span by 50% in the tightest common case,
+   undetected across 2 rounds), and the `preferAnchor()` bug is broader/more urgent than the repair
+   characterized it (already corrupts shipped output today, structurally guaranteed for every
+   full-sibling mate pair) — plus 4 independent test-blast-radius problems (a live 120x scale bug in
+   the design's own proposed RED test, among others). All 12 agents completed, 0 errors
+   (`wf_be91a88b-c4c`, ~1.86M subagent tokens, ~94 min).
+6. **Presented the round-2 finding via `AskUserQuestion`** (4 options: hold-and-file-the-locale-bug-
+   separately / one-more-repair / pivot-to-post-hoc-nudge-now / accept-as-permanent). **User picked
+   hold.** Appended §9 to the investigation document (workflow structure, all 4 candidates condensed
+   into a table, the synthesis/round-1/repair/round-2 findings in full, the independent
+   `preferAnchor()` finding, an updated §9.7 open-questions list superseding §8.6). Updated the status
+   banner and decision log. Fixed a self-introduced duplication bug in the References section during
+   the edit (caught by re-reading the file after the edit, not assumed clean) before committing.
+   Updated `BACKLOG.md`'s Track 3 trade-offs item with an S600 progress note.
+7. **Filed the independently-discovered `preferAnchor()` locale-non-determinism bug separately**
+   (per `PROJECT_LEARNINGS.md` Learning 382's "report, don't fix mid-session" precedent) — not fixed
+   this session. Filed as [GitHub issue #162](https://github.com/rmsharp/nprcgenekeepr/issues/162)
+   and a new `BACKLOG.md` Housekeeping item, independent of and unblocked by the centering-fix
+   investigation it was found during.
+8. Added `PROJECT_LEARNINGS.md` Learnings 615 (a "given, do not redesign" component can be silently
+   reinterpreted and this must be checked against its literal wording), 616 (a provably-bounded
+   quantity can still violate the invariant it protects if it measures the wrong reference frame),
+   and 617 (closing a known failure mode narrows the search but doesn't bound how many more rounds
+   are needed) — matching the file's own established format. Refreshed `CLAUDE.md`'s
+   `PROJECT_LEARNINGS.md` pointer line (614→617 learnings, S599+→S600+).
+
+**Runtime smoke test (Phase 3E):** n/a — docs-only planning/investigation session; no `R/`/`tests/`
+file touched or shipped (confirmed via `git status`/`git diff --stat` before close-out).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation/tutorial-article/`NEWS.Rmd`/
+`a2interactive.Rmd`/`_pkgdown.yml`/lint checklists all N/A (no `.R` file touched, no new exported
+function or Shiny feature, no runtime behavior changed). GitHub issue close-out: N/A for the
+centering-fix investigation itself (never filed as its own issue, matching S598/S599's own
+established precedent); the newly-filed issue #162 is correctly left OPEN (a bug report, not a
+completed `BACKLOG.md` DONE item — the close-out checklist governs closing issues for shipped work,
+not filing new ones).
+
+**Self-assessment (Session 600): 9/10.** **Strengths:** (1) Posed the §8.6 item 3 go/no-go as its
+own dedicated `AskUserQuestion` before running any workflow, rather than assuming "refine" was the
+default — matching the project's own TDD-contract framing of pre-RED scope decisions as the author's
+to make only when not genuinely the user's call. (2) Directly incorporated S599's own two concrete
+process recommendations (magnitude-stress fixture from round 1; full fresh re-critique on any repair)
+into the workflow's own structure rather than treating them as advisory — and verified live that both
+worked exactly as intended. (3) Ran a genuinely adversarial second critique round against the repair
+itself rather than treating "the repair fixed the finding it was built for" as sufficient — found 2
+real, deeper, previously-undiscovered problems (a silent given-component reinterpretation, and a
+wrong-reference-frame bound) that none of the round's own 6 designs (4 candidates + synthesis +
+repair) had been tested against. (4) Did not let an incidentally-discovered, unrelated, real bug
+(the `preferAnchor()` locale dependency) get absorbed into or delay this investigation's own scope —
+filed it separately and immediately, matching established precedent, rather than either fixing it
+mid-session or losing track of it in the investigation doc's own narrative. (5) Caught and fixed a
+self-introduced editing bug (a duplicated References section) by re-reading the file after the edit
+rather than assuming the edit landed cleanly — matching `SAFEGUARDS.md`'s own "verify cross-references
+added or changed this session" discipline. (6) Independently re-verified load-bearing claims at every
+level (re-read the source code fresh; the synthesis and both critique rounds each independently
+re-derived numbers). **Weaknesses:** (1) The 12-agent workflow was again expensive (~1.86M subagent
+tokens, ~94 minutes) and did not converge to a ratified design — a 3rd consecutive session-level
+non-convergence on the same underlying mechanism, which itself is the strongest evidence yet for the
+go/no-go question §9.7 item 1 now poses more forcefully. (2) Did not anticipate that scoping Layers
+1/2 as "given" would itself become the design's fatal flaw — in retrospect, a critique lens
+explicitly re-deriving the given component from its literal wording (rather than trusting the design
+under review's own interpretation of it) could have been built into round 1 rather than discovered
+only by round-1's own critique; this is now captured as Learning 615 for a future session's benefit.
+**ROI:** moderate-to-high — no design shipped, but a 3rd independently-verified failure at yet
+another depth (now: does the mechanism even fire under its own given rules; is the bound measuring
+the right thing) is strong, hard-won evidence narrowing what a 4th attempt would need, and the
+incidentally-found `preferAnchor()` bug is itself a real, valuable, independent deliverable this
+session's workflow would not have found any other way.
+
+**Gotchas for the next session:** (1) Start at the investigation document's **§9.7**, not §8.6 (§8.6
+is now marked superseded). (2) §9.7 item 1 is now a much stronger recommendation than §8.6 item 3's
+original framing: 3 independent attempts have failed at 3 different depths, and a 4th attempt at the
+same mechanism should be the option needing justification, not the default — explicitly weigh the
+post-hoc-bounded-nudge alternative or accepting Track 3's trade-offs as permanent first. (3) If a 4th
+attempt is chosen anyway, it cannot start from a magnitude bound alone — it must first resolve, as
+its own dedicated PRE-RED question, whether Layer 1's qualification rule is read literally (in which
+case the whole mechanism needs redesigning, not just bounding) or restricted (in which case the
+`preferAnchor()` fix, issue #162, must ship alongside it). (4) Issue #162 (`preferAnchor()`'s locale
+bug) is independently actionable right now, completely unblocked by any of the centering-fix
+decisions above — a future session could pick that up on its own as a quick, well-scoped Effort-S
+fix with a clear suggested remedy (Learning 585's own radix-based approach) already named. (5) The
+workflow's own scratchpad R scripts were not committed (ephemeral, matching S598/S599's own
+established precedent) — reconstruct from the investigation doc's §9 prose (exact numbers given) if
+needed again, not from memory of this note.
 
 ### Session 598 Handoff Evaluation (by Session 599)
 **Score: 9/10.** **What helped:** the investigation doc's §6 was the entry point exactly as

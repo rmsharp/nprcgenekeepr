@@ -138,21 +138,72 @@ This file currently holds **12** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S600
 date: 2026-08-17
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: 3rd redesign attempt for the duplicate-occurrence-selection centering fix
-  (docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md, §8.6) -- staying
-  on the substitution-formula layer, but requiring every candidate to pass a magnitude-stress
-  fixture from round 1 (not just final critique), per S599's own gotcha and §8.6 item 1. Also
-  resolving the TDD white-box test problem (§8.6 item 2) as part of the design itself.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Ran a 3rd redesign attempt (magnitude-bound) against S599's investigation doc §8.6 open
+  questions. Found a design that converges cleanly on magnitude but STILL fails adversarial critique
+  on 2 different, deeper axes (a silent reinterpretation of a "given, do not redesign" component; a
+  bound measured against the wrong reference frame). Held again via AskUserQuestion. Also
+  independently discovered and separately filed a real, pre-existing preferAnchor() locale bug
+  (issue #162).
+what_was_done: Posed §8.6 item 3's go/no-go as its own dedicated AskUserQuestion before running any
+  workflow (refine-with-magnitude-bounded-from-round-1 / pivot-to-post-hoc-nudge / run-both /
+  accept-as-permanent) -- owner picked "refine." Ran a 12-agent Workflow (wf_be91a88b-c4c, 0 errors,
+  ~1.86M subagent tokens, ~94 min): Layers 1/2 held as given per S599's own §8.5 finding; 4
+  independent magnitude-bounding candidates, each required to pass a magnitude-stress fixture from
+  round 1 (not deferred to critique, per user directive + Learning 614's own weakness note); 2
+  candidates independently converged on an identical "cap the substitution delta to ±K*minSep"
+  design. Synthesis claimed success on all 4 fixtures. Round-1 critique (3 lenses, same as
+  S598/S599) found the synthesis's success was CONTINGENT on silently reinterpreting Layer 1's own
+  given qualification rule (literal rule makes Pass 2 dead code for the target case's own shape),
+  plus a newly-load-bearing preferAnchor() locale dependency. Repair round elevated both findings
+  honestly, corrected the bound to a tighter universal K*minSep/2-for-any-n form. Round-2 critique
+  (same 3 lenses, re-run fresh per Learning 613) STILL designStillSound:false on 2/3 lenses: bound
+  measures the wrong reference frame (overshoots real children's own span by 50% in the tightest
+  common case, undetected 2 full rounds); preferAnchor() bug is broader than characterized (already
+  corrupts shipped output today, structurally guaranteed for every full-sibling mate pair); 4
+  independent test-blast-radius problems including a live 120x pixel-scale bug in the design's own
+  proposed RED test. Presented via AskUserQuestion (hold-and-file-separately / one-more-repair /
+  pivot-to-post-hoc-nudge / accept-as-permanent); user picked hold. Appended investigation doc §9
+  (full candidate table, both critique rounds, the independent finding, updated §9.7 open
+  questions), updated status banner and decision log -- caught and fixed a self-introduced
+  References-section duplication by re-reading the file after the edit. Updated BACKLOG.md's Track 3
+  item with an S600 progress note. Filed the preferAnchor() bug as GitHub issue #162 + a new
+  BACKLOG.md Housekeeping item (not fixed, per Learning 382). Separately, owner-directed: checked
+  current MIT-license state before acting (found already done since S102), then added a scoped
+  MIT-badge/REUSE-badge BACKLOG.md item split by risk. Added PROJECT_LEARNINGS.md Learnings 615-617.
+  Commit abafdee7 (Phase 1B claim), plus this session's close-out commits.
+next_steps: A future redesign session should start at the investigation doc's §9.7, not §8.6 (now
+  superseded). §9.7 item 1 is now a much stronger recommendation than §8.6 item 3's original framing
+  -- 3 independent attempts have failed at 3 different depths (wrong direction, then unbounded
+  magnitude, then dead-under-its-own-given-rules plus wrong reference frame), so a 4th attempt at
+  this same mechanism should be the option needing justification, not the default. Explicitly weigh
+  the post-hoc-bounded-nudge alternative or accepting Track 3's trade-offs as permanent first.
+  Separately and fully unblocked: issue #162 (preferAnchor()'s locale bug) is independently
+  actionable right now as a quick, well-scoped Effort-S fix with a suggested remedy already named
+  (Learning 585's own radix-based comparator). The screenshot-staleness check and LabKey/NPRC items
+  from prior sessions' priorities lists remain untouched, still valid candidates.
+key_files: docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md (the
+  deliverable; §9.7 is the entry point for a future redesign session); R/makePedigreeDiagramData.R:
+  966-1010 (the centering-fix splice zone, reconfirmed unchanged) and :403-411 (preferAnchor(), the
+  independently-found locale bug, issue #162); BACKLOG.md (Track 3 item's S600 progress note, the new
+  preferAnchor() Housekeeping item, the MIT/REUSE badge item); PROJECT_LEARNINGS.md (Learnings
+  615-617).
+gotchas: The core problem is no longer just magnitude -- it's whether the mechanism fires at all
+  under Layer 1's literal given rule, and whether any bound measures the right reference frame. Do
+  not start a 4th attempt from "just add a bound" again; read §9.7 items 1-2 first. Issue #162 is
+  completely independent of the centering-fix investigation's own unresolved state -- a session
+  wanting a quick, well-scoped win could pick it up without waiting on any centering-fix decision.
+  This session's scratchpad R scripts were not committed (ephemeral, matching S598/S599's own
+  precedent) -- reconstruct from the investigation doc's §9 prose (exact numbers given) if needed.
+  A repaired design is a NEW design for critique purposes (Learning 613) -- this was followed this
+  session and confirmed to work (the magnitude arithmetic itself never failed); keep doing it.
+runtime_smoke: n/a -- docs-only planning/investigation session, no R/tests code touched or shipped.
+changelog_ref: CHANGELOG.md 2026-08-17, "S600: duplicate-occurrence-selection centering — 3rd
+  attempt (magnitude-bound), still not sound, plus an independent finding" entry (plus 2 sibling
+  entries the same day for the preferAnchor() issue filing and the MIT/REUSE badge item).
+commit: abafdee7 (Phase 1B claim), plus this session's close-out commits
 ```
 
 ```handoff

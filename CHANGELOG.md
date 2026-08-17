@@ -16,6 +16,78 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-17 · [ad hoc] S600: duplicate-occurrence-selection centering — 3rd attempt (magnitude-bound), still not sound, plus an independent finding
+- **Session summary:** picked up S599's investigation doc §8.6 open questions (`BACKLOG.md`'s Track 3
+  trade-offs follow-up). Posed the §8.6 item 3 go/no-go as a dedicated `AskUserQuestion`
+  (refine-with-magnitude-bounded-from-round-1 / pivot-to-post-hoc-nudge / run-both / accept-as-
+  permanent); owner picked "refine." Ran a 3rd 12-agent design→synthesize→critique→repair→critique
+  `Workflow` (`wf_be91a88b-c4c`, 0 errors, ~1.86M subagent tokens): Layers 1/2 held as given per
+  S599's own §8.5 finding, 4 independent magnitude-bounding candidates each required to pass a
+  magnitude-stress fixture from round 1 (S599's own self-identified process gap); 2 candidates
+  independently converged on an identical "cap the substitution delta to `±K·minSep`" design.
+  Synthesis claimed success on all 4 required fixtures. **Round-1 critique found the synthesis's
+  entire success was contingent on silently reinterpreting Layer 1's own "given, do not redesign"
+  qualification rule** — under the literal rule, Pass 2 is dead code for exactly the target case's
+  own shape — plus a newly-load-bearing locale dependency in `preferAnchor()`'s tie-break. A repair
+  round elevated both findings honestly and corrected the magnitude bound to a tighter universal
+  form. **Round-2 critique (same 3 lenses, re-run fresh) still `designStillSound: false` on 2 of 3
+  lenses**: the bound measures against the wrong reference frame (overshoots the real children's own
+  span by 50% in the tightest, most common legitimate case, undetected across 2 full rounds), and
+  the `preferAnchor()` locale bug is broader than characterized (already corrupts today's shipped
+  output, structurally guaranteed for every full-sibling mate pair) — plus a live 120x pixel-scale
+  bug in the design's own proposed RED test. Presented via `AskUserQuestion`; owner chose hold again,
+  over one more repair round, pivoting to a post-hoc nudge, or accepting Track 3's trade-offs as
+  permanent. Appended full findings as the investigation doc's new §9 (candidate table, both critique
+  rounds, the independent finding, updated decision log, status banner) — §9.7 supersedes §8.6, now
+  with a much stronger recommendation to treat a 4th attempt at this mechanism as needing
+  justification, not the default (3 consecutive sessions have each failed at a deeper layer). Updated
+  `BACKLOG.md`'s Track 3 trade-offs item with the S600 progress note. Added `PROJECT_LEARNINGS.md`
+  Learnings 615 (a "given" component can be silently reinterpreted, must be checked against its
+  literal wording), 616 (a provably-bounded quantity can still violate the invariant it protects if
+  it measures the wrong reference frame), and 617 (closing one round's failure mode narrows but
+  doesn't bound the search); `CLAUDE.md` learnings-count pointer refreshed (614→617).
+- **Files:** `docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`
+  (§9 appended, status banner + decision log updated, a self-introduced References-section
+  duplication caught and fixed before commit); `BACKLOG.md` (S600 progress note); `PROJECT_LEARNINGS.md`
+  (Learnings 615-617); `CLAUDE.md` (learnings pointer); `SESSION_NOTES.md` / `HANDOFFS.md` (session
+  claim + close-out).
+- **Verification:** docs-only session, no `R/`/`tests/` file touched (confirmed via
+  `git diff --stat`); no `devtools::check()`/regression/lint run needed. Every new cross-reference in
+  the investigation doc re-verified to resolve before commit (including re-reading the file after the
+  edit to catch the duplication bug above).
+- Model: Claude Sonnet 5.
+
+### 2026-08-17 · [ad hoc] S600: file preferAnchor() locale-non-determinism bug, found incidental to the above
+- **Session summary:** the magnitude-bound workflow above independently discovered a real,
+  pre-existing, standalone defect unrelated to whether the centering fix ever ships:
+  `preferAnchor()` (`R/makePedigreeDiagramData.R:403-411`, Track 4's gen→mateCount→id tie-break)
+  falls back to a bare `a < b` string comparison, confirmed live `LC_COLLATE`-locale-dependent — the
+  same defect class as `PROJECT_LEARNINGS.md` Learning 585, but here confirmed to already corrupt
+  today's shipped pipeline output for any tied-generation, tied-mate-count parent pair (proved
+  structurally guaranteed for every full-sibling mate pair via `findGeneration()`'s BFS layering).
+  Per Learning 382's "report, don't fix mid-session" precedent, not fixed this session — filed as
+  [GitHub issue #162](https://github.com/rmsharp/nprcgenekeepr/issues/162) and a new `BACKLOG.md`
+  Housekeeping item (READY, Effort S), with the suggested fix (Learning 585's own radix-based
+  comparator) already named.
+- **Files:** `BACKLOG.md` (new Housekeeping item). GitHub issue #162 filed (not a repo file change).
+- **Verification:** n/a — issue filing and documentation only, no code change.
+- Model: Claude Sonnet 5.
+
+### 2026-08-17 · [ad hoc] S600: MIT license + REUSE compliance badge item added to BACKLOG (owner-directed)
+- **Session summary:** owner asked to add a `BACKLOG.md` item for making the project MIT-licensed and
+  adding license/REUSE badges to `README.Rmd`. Checked current state first rather than assuming the
+  ask was unmet: `DESCRIPTION`'s `License: MIT + file LICENSE` plus tracked `LICENSE`/`LICENSE.md`
+  have existed since S102's CRAN hygiene pass — presented this via `AskUserQuestion` rather than
+  filing a redundant item; owner narrowed scope to the badges specifically. Split into 2 sub-items by
+  risk: the MIT badge (a static shields.io image, safe to add, READY/Effort S) and the REUSE badge
+  (a LIVE compliance check against api.reuse.software; verified this repo currently has none of what
+  REUSE compliance requires — no `LICENSES/` dir, no SPDX headers, no `REUSE.toml`/`.reuse/dep5` — so
+  adding it as-is would likely render red/non-compliant; flagged DECISION NEEDED with the concrete
+  compliance path named, rather than adding a badge likely to embarrass the README).
+- **Files:** `BACKLOG.md` (new Housekeeping item).
+- **Verification:** n/a — documentation only, no code change.
+- Model: Claude Sonnet 5.
+
 ### 2026-08-17 · [ad hoc] S599: duplicate-occurrence-selection centering redesign attempt — still not sound
 - **Session summary:** picked up S598's investigation doc §6 open questions (`BACKLOG.md`'s Track 3
   trade-offs follow-up). Confirmed no code drift since S598's HEAD, then ran a 12-agent
