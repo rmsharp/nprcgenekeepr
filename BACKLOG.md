@@ -237,6 +237,34 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       explicitly flags that a future session should weigh continuing to refine this specific
       substitution mechanism against fixing child-centering quality at a different layer entirely.
 
+      **Progress (S600, 2026-08-17), magnitude-bound attempt — still not sound, plus an independent
+      finding:** owner picked up the §8.6 item 3 go/no-go explicitly (via `AskUserQuestion`: refine
+      with magnitude bounded from round 1 / pivot to a post-hoc nudge / run both / accept as
+      permanent) and chose to refine, scoping Layers 1/2 as given and requiring every candidate to
+      pass a magnitude-stress fixture from round 1 (S599's own self-identified process gap). A 3rd
+      12-agent `Workflow` produced 4 candidates, 2 of which independently converged on an identical
+      "cap the substitution delta to `±K·minSep`" mechanism; synthesized, critiqued (3 lenses),
+      repaired, critiqued again — **still `designStillSound: false` on 2 of 3 lenses after the
+      repair**, this time at a deeper level: (1) the design's entire numeric success turns out to be
+      contingent on silently reinterpreting Layer 1's own GIVEN qualification rule (marked
+      off-limits this session) — under the literal rule, Pass 2 is dead code for exactly the 2-child
+      mutual-mate shape both required fixtures use; (2) even granting that reinterpretation, the
+      magnitude bound measures against the wrong reference frame and can overshoot the real
+      children's own span by 50% in the *common*, tightly-spaced case, undetected across 2 full
+      critique rounds; (3) `checkInvariant()`'s already-flagged dead-code trap (§8.6 item 4) was
+      inherited unaddressed, and the design's own proposed RED test has a live 120x pixel-scale bug.
+      **Three independent attempts (S598, S599, S600) have now all failed adversarial critique, each
+      at a deeper layer.** Full record appended as
+      [`docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`](docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md)
+      §9 — **start at §9.7** for a future session. §9.7 item 1 now recommends treating a 4th attempt
+      at this same mechanism as the option needing justification, not the default.
+      **Independent finding, not fixed here:** the workflow also discovered a real, pre-existing,
+      standalone defect independent of this whole investigation — `preferAnchor()`'s
+      (`R/makePedigreeDiagramData.R:403-411`) final tie-break is locale-dependent and already
+      corrupts shipped pipeline output for any tied-generation full-sibling mate pair. Filed
+      separately below (Housekeeping) and as a GitHub issue, per Learning 382's "report, don't fix
+      mid-session" precedent.
+
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 *Resolves the former "Tracker reconciliation" decision item (S365) --
 `docs/audits/XARCH_TRACKER_RECONCILIATION_AUDIT_2026-07-11.md` re-verified all 8
@@ -300,6 +328,24 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       connected-component walk).
 
 ## Housekeeping
+- [ ] **`preferAnchor()`'s final tie-break is locale-dependent, corrupts shipped output for
+      tied-generation sibling pairs** (found S600, 2026-08-17, incidental to an adversarial-critique
+      `Workflow` scoping an unrelated magnitude bound; filed as
+      [issue #162](https://github.com/rmsharp/nprcgenekeepr/issues/162), READY, Effort S) --
+      `preferAnchor()` (`R/makePedigreeDiagramData.R:403-411`, Track 4's gen->mateCount->id tie-break)
+      falls back to a bare `a < b` string comparison, confirmed live `LC_COLLATE`-locale-dependent
+      (e.g. `'a1' < 'A1'` flips between locale `"C"` and `"en_US.UTF-8"` on the real
+      `.buildMatingUnitForest()`) -- the same defect class `PROJECT_LEARNINGS.md` Learning 585
+      already fixed elsewhere in this exact function. Not a rare edge case: the tied-generation
+      precondition is structurally guaranteed for every full-sibling mate pair (proved from
+      `findGeneration()`'s BFS layering), and already corrupts a whole subtree's node positions
+      between locales with zero duplicate-occurrence/Pass-2 involvement -- confirmed on a trivial
+      2-generation fixture. 0 full-sibling mate pairs exist in the real 375-individual bundled
+      fixture today, so this isn't manifesting in the test corpus, but that's a property of one
+      dataset, not a structural guarantee, for a feature whose purpose is visualizing inbred
+      colonies. Suggested fix: reuse Learning 585's own radix-based comparator approach. Not fixed
+      this session (report, don't fix mid-session, per Learning 382) -- independent of, and
+      unblocked by, the duplicate-occurrence-selection centering investigation it was found during.
 - [ ] **Add MIT license badge + REUSE compliance badge to `README.Rmd`** (found 2026-08-17,
       owner-directed, Effort S for the MIT badge / DECISION NEEDED for the REUSE badge) -- the
       package is already MIT licensed (`DESCRIPTION`'s `License: MIT + file LICENSE`;
