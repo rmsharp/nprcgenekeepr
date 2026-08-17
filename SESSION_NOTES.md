@@ -18,6 +18,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 598 Did
+**Deliverable:** Plan document scoping Track 4 (duplicate-occurrence-selection root fix, plan
+§2.4 of
+[`docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`](docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md))
+(IN PROGRESS)
+**Started:** 2026-08-16
+**Status:** Session claimed. Phase 0 orientation complete (no ledger gap found — `CHANGELOG.md`/
+`HANDOFFS.md` frontier both == HEAD `f7afa0fd`). User picked "Track 3 trade-offs decision" from
+the priorities picker, then narrowed to "Scope Track 4 (centering)" — the 2 costs Track 3
+disclosed (child-centering degradation, D1 bar-vs-bar residual) are being treated as 2 separate
+follow-ups; this session scopes only the centering one via Track 4. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 596 Handoff Evaluation (by Session 597)
 **Score: 8/10.** **What helped:** `HANDOFFS.md`'s `next_steps` field named 3 clear, accurate
 candidates (Track 3's disclosed trade-offs decision; issue #161's now-unblocked design call; the

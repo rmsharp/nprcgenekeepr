@@ -136,6 +136,25 @@ This file currently holds **12** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S598
+date: 2026-08-16
+status: pending
+self_score: pending
+predecessor_score: 6
+active_task: Plan document scoping Track 4 (duplicate-occurrence-selection root fix, plan §2.4 of
+  docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md) — the child-centering half
+  of Track 3's 2 disclosed trade-offs. User explicitly separated it from the D1 bar-vs-bar residual
+  (a different follow-up, not in this session's scope) via AskUserQuestion.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S597
 date: 2026-08-16
 status: complete
