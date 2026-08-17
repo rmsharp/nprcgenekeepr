@@ -18,6 +18,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 601 Did
+**Deliverable:** Resolve investigation doc §9.7 item 1's go/no-go
+(`docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`) — owner picked
+"pivot to post-hoc-bounded-nudge" via `AskUserQuestion`, over accepting Track 3's trade-offs as
+permanent or authorizing a 4th attempt at the same pre-clamp substitution mechanism 3 prior sessions
+(S598/S599/S600) failed. This session runs a fresh design→critique `Workflow` scoped specifically to
+the untried post-hoc mechanism shape (a bounded correction applied AFTER Track 3's clamp, per §8.6
+item 3's own suggestion — never tried across any of the 3 prior attempts, all of which stayed on the
+pre-clamp substitution layer). (IN PROGRESS)
+**Started:** 2026-08-17.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 599 Handoff Evaluation (by Session 600)
 **Score: 9/10.** **What helped:** `HANDOFFS.md`'s `next_steps`/`gotchas` fields were precise and
 directly shaped this session's design: "start at §8.6, not §6," "the primary open problem is the

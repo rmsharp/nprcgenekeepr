@@ -136,6 +136,26 @@ This file currently holds **12** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S601
+date: 2026-08-17
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Resolve investigation doc §9.7 item 1's go/no-go
+  (docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md) -- owner picked
+  "pivot to post-hoc-bounded-nudge" via AskUserQuestion. Run a fresh design->critique Workflow scoped
+  to a bounded correction applied AFTER Track 3's clamp (untried across S598/S599/S600, which all
+  stayed on the pre-clamp substitution mechanism).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S600
 date: 2026-08-17
 status: complete
