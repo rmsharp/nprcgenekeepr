@@ -18,6 +18,127 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 596 Handoff Evaluation (by Session 597)
+**Score: 8/10.** **What helped:** `HANDOFFS.md`'s `next_steps` field named 3 clear, accurate
+candidates (Track 3's disclosed trade-offs decision; issue #161's now-unblocked design call; the
+S582 stale-screenshot check) — all 3 fed directly into this session's Phase 0 priorities report
+verbatim, with no rediscovery needed. **What was wrong:** S596's own self-assessment claimed full
+ledger discipline ("Missed logging my own claim commit ... backfilled at close-out, same
+session") but this session's Phase 0 ledger reconcile found a SECOND, un-backfilled gap S596 never
+caught: 2 trailing close-out commits (`6261d6f9` Learning 609 + `CLAUDE.md` refresh, `6ba6289e`
+the close-out itself) had no matching `CHANGELOG.md` entry, unlike S595's own precedent of a
+dedicated "close-out" entry. Backfilled this session (`8fc0e383`) — see that commit and this
+session's own CHANGELOG entry below. **What was missing:** nothing the handoff could reasonably
+have anticipated — S596 could not have predicted this session would decline all 3 offered
+candidates in favor of a user-directed browser detour. **ROI:** high on the 3-candidate list
+itself (immediately actionable, still fully valid); moderate overall once the missed ledger entry
+is weighed in — the gap cost this session one Phase 0 backfill cycle to catch and fix.
+
+### What Session 597 Did
+**Deliverable: none of S596's 3 offered BACKLOG priorities were picked or advanced.** This session
+did not complete Phase 1 (no task was ever claimed via `AskUserQuestion`) — the user interrupted
+the initial priorities question to ask clarifying questions instead, and the conversation then
+followed a different thread through to a user-directed close-out request (context budget
+concerns). Recorded honestly as a process deviation, not a completed deliverable.
+**Started/Completed:** 2026-08-16.
+
+**What actually happened, in order:**
+
+1. **Full Phase 0 orientation.** `SESSION_RUNNER.md`/`SAFEGUARDS.md` read in full;
+   `SESSION_NOTES.md` read; `gh issue list` (13 open); `gh run list --branch master` (last 4 runs —
+   lint/pkgdown/test-coverage/R-CMD-check, from S593's push — all `completed success`); `git
+   status`/`log`/`diff --stat` (branch 13 commits ahead of `origin/master`, 4 untracked
+   `docs/planning/*.html` renders confirmed to have tracked `.qmd` sources — not a ghost session,
+   matches the established never-track-planning-renders convention); `methodology_dashboard.py`
+   (96/100 health, 0 High+ risk). **Ledger reconcile found and backfilled a real 2-commit
+   `CHANGELOG.md` gap** left by S596 (detailed in the handoff evaluation above) — commit
+   `8fc0e383`, `docs(changelog): backfill S596 close-out ledger entry`. Rendered the
+   `BACKLOG.md`-sourced priorities picker (3 candidates, matching S596's own `next_steps`) via
+   `AskUserQuestion` — **user declined the picker to ask a clarifying question instead** ("explain
+   Track 3's 2 disclosed trade-offs").
+
+2. **Conversational Q&A, no files touched.** Explained Track 3's 2 disclosed trade-offs
+   (child-centering degradation, D1 bar-vs-bar worsening) from `BACKLOG.md`/`CHANGELOG.md`
+   evidence. User asked a genuine architecture question — "why can't the D1 bar-vs-bar residual be
+   avoided by just spacing the x-ranges further apart?" — answered by reading
+   `.positionMatingUnitForest()`'s contour-merge code directly (`R/makePedigreeDiagramData.R:584-
+   1010`) and the plan doc's own §1 record of 3 prior global-relayout investigations (S588/S589/
+   S590) already closed as NOT FEASIBLE for the same structural reason (a high-mate-count hub
+   individual's several subtrees compete for one horizontal budget). User then said "let's keep as
+   possibilities Track 4 and ... a bar-aware detect-and-jog repair" — **this edit was not made in
+   the moment** (the conversation moved to an unrelated browser request before it was written) —
+   **completed retroactively at close-out** (see item 4 below), not silently dropped.
+
+3. **User-directed browser detour → artifact regeneration side-quest.** User asked to view a
+   specific `claude.ai/code/artifact/...` URL ("Pedigree Fidelity Proof," a prior session's
+   kinship2-vs-nprcgenekeepr comparison). Browser scroll/resize automation failed repeatedly (5+
+   distinct approaches — wheel, Page Down, spacebar, fullscreen, `resize_window` timeout) — stopped
+   retrying per the harness's own "avoid rabbit holes" guidance and asked the user for help, who
+   then pasted the relevant screenshots directly. **The artifact's own "previously-unreported
+   defect" callout turned out to be stale** — traced its stamped commit (`f12e7cbb`) to Session
+   590, predating issue #160's filing (`5bd295c4`) and all 3 fix tracks; the callout was verbatim
+   `PROJECT_LEARNINGS.md` Learning 604, already fixed. Regenerated both plates
+   (`kinship2::sample.ped` family 2; the issue #160 comment-1 `P1/P2/X/A/Y/W/C1/GC/C2` fixture)
+   fresh against current HEAD via `pkgload::load_all()` + `chromote`, with **independently
+   re-derived** (not calling `.resolveEdgeNodeCollisions()` itself) ground-truth collision checks:
+   0 same-row collisions on both plates; Track 1's fix confirmed via exact coordinates (D1 bar row
+   at y=90, exactly 60 units off the children's row at y=150, matching `sibshipBarFraction=0.4`
+   precisely); Plate 2's one flagged residual confirmed to be the known, already-disclosed
+   `__dup_Y_1 -> Y` curved-heuristic case from Track 2/S595, not a new defect. Published the
+   refresh to the SAME artifact URL (`https://claude.ai/code/artifact/49990492-bab9-43c5-8202-
+   cad4742f8cf5`), with a correction callout explaining the old version's staleness. **This
+   artifact is external (claude.ai-hosted), not git-tracked** — its render script lived only in
+   this session's ephemeral scratchpad, not committed anywhere in this repo.
+
+4. **Close-out, on explicit user request** ("this seems to have taken a lot of context ... prepare
+   a close-out report"). Completed item 2's dropped edit: added a 3rd possibility (a bar-aware
+   detect-and-jog repair for the D1 bar-vs-bar residual specifically, distinct from the existing
+   Track 4 substitution) to `BACKLOG.md`'s Track 3 trade-offs follow-up item. Added
+   `PROJECT_LEARNINGS.md` Learning 610 (a previously-published external artifact's stamped commit
+   sha can go stale with nothing in Phase 0's own ledger-reconcile positioned to catch it, since
+   that reconcile only walks git-tracked files). `CLAUDE.md` learnings-count pointer refreshed
+   (609→610, S596+→S597+).
+
+**Runtime smoke test (Phase 3E):** n/a — no R/production code touched this session. The only
+git-tracked changes are the Phase 0 ledger backfill (`8fc0e383`) and this close-out's own docs
+edits (`BACKLOG.md`/`PROJECT_LEARNINGS.md`/`CLAUDE.md`/`SESSION_NOTES.md`/`HANDOFFS.md`/
+`CHANGELOG.md`).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation/tutorial-article/`NEWS.Rmd`/
+`a2interactive.Rmd`/`_pkgdown.yml` checklists all N/A (no R code, no new exported function, no
+user-facing Shiny feature). GitHub issue close-out N/A (no issue closed this session). Lint
+checklist N/A (no `.R` files touched).
+
+**Self-assessment (Session 597): 6/10.** **Strengths:** (1) Caught a genuine ledger gap in Phase 0
+(S596's 2 un-logged trailing commits) via mechanical reconcile rather than trusting the prior
+session's own "ledger complete" self-report, and backfilled it correctly, on its own commit,
+before the Phase 0 report. (2) Applied this project's own "verify diagrams against ground truth"
+discipline (`MEMORY.md`, Learning 604) a level deeper than usual — not just verifying a fresh
+render, but verifying a PREVIOUSLY-PUBLISHED artifact's own claimed provenance against `git log`
+before trusting its narrative, catching that it was describing an already-fixed defect as new.
+(3) Built genuinely independent verification code for the artifact refresh (not calling the
+package's own collision-repair logic circularly) rather than trusting `makePedigreeMatingLayout()`
+to have checked its own work. (4) Recognized and completed a dropped user request (the BACKLOG.md
+2-possibilities edit) at close-out rather than silently omitting it or claiming it was already
+done. (5) Stopped retrying failing browser automation after 5+ distinct approaches and asked the
+user for help, per the harness's own explicit guidance, rather than continuing to burn turns on a
+non-responsive page. **Weaknesses:** (1) **Never completed Phase 1 / picked a BACKLOG priority** —
+despite a full Phase 0 orientation surfacing 3 ready, ratified candidates, this session's entire
+context budget went to a user-directed browser detour and its follow-on artifact-regeneration
+side-quest instead; none of the 3 candidates are any closer to done than S596 left them. (2) Left
+the "record 2 possibilities in BACKLOG.md" request incomplete mid-conversation and did not
+proactively return to it — only surfaced and fixed at close-out, prompted by assembling an honest
+handoff rather than by its own initiative right after the browser detour ended. (3) The artifact
+regeneration, while valuable and well-verified, was not one of `BACKLOG.md`'s own ready/prioritized
+items — real work happened, but it was not the work the project's own priorities list had queued
+up, and it produced no git-tracked deliverable (the render script exists only in this session's
+scratchpad). **ROI:** mixed — the ledger integrity fix and the stale-artifact correction are both
+real, verified, useful outcomes (the latter specifically prevents the user from later trusting a
+public-facing page that was describing fixed-twice-over behavior as an open defect), but the
+session's own budget was spent without advancing any BACKLOG priority, so the next session starts
+on the exact same 3-candidate decision menu S596 left, now with one small BACKLOG.md documentation
+addition and this close-out's own housekeeping layered on top.
+
 ### Session 595 Handoff Evaluation (by Session 596)
 **Score: 8/10.** **What helped:** `HANDOFFS.md`'s `next_steps` field correctly named the exact next
 task (Track 3, S583 parent-span clamp, plan §2.3/§6 Session C), correctly flagged the required

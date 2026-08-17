@@ -136,6 +136,69 @@ This file currently holds **12** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S597
+date: 2026-08-16
+status: complete
+self_score: 6
+predecessor_score: 8
+active_task: None of S596's 3 offered BACKLOG priorities (Track 3 trade-offs decision / issue #161
+  / S582 screenshot check) were picked or advanced -- Phase 1 was never completed. Session instead
+  ran a full Phase 0 orientation, then followed a user-directed browser detour into an artifact
+  regeneration side-quest, then closed out on explicit user request (context-budget concern). All
+  3 candidates remain exactly as S596 left them for the next session.
+what_was_done: Phase 0 ledger reconcile found and backfilled a real 2-commit CHANGELOG.md gap
+  S596 left (its own 2 trailing close-out commits had no matching ledger entry) -- commit
+  8fc0e383. Explained Track 3's trade-offs and the bar-vs-bar architecture (why upstream spacing
+  can't fix it -- 3 prior global-relayout spikes already closed NOT FEASIBLE) in conversation, no
+  files touched at the time. Reviewed a previously-published claude.ai "Pedigree Fidelity Proof"
+  artifact and found it stale -- its "not previously reported" defect callout was verbatim
+  PROJECT_LEARNINGS.md Learning 604, already fixed twice over (Tracks 1-2); traced its stamped
+  commit f12e7cbb to Session 590, predating issue #160's own filing. Regenerated both plates fresh
+  against current HEAD via pkgload::load_all() + chromote, with independently re-derived (not
+  circular) collision verification: 0 same-row collisions both plates; Track 1's fix confirmed via
+  exact coordinates; Plate 2's 1 residual confirmed to be the known curved-heuristic case, not new.
+  Republished to the same artifact URL with a correction callout. At close-out: completed a
+  dropped mid-conversation user request (BACKLOG.md's Track 3 item gained a 3rd possibility -- a
+  bar-aware detect-and-jog repair for the bar-vs-bar residual specifically); added
+  PROJECT_LEARNINGS.md Learning 610 (stale external-artifact provenance); refreshed CLAUDE.md's
+  learnings-count pointer (609->610).
+next_steps: Unchanged from S596 -- pick per priority/interest: (1) BACKLOG.md's Track 3
+  trade-offs follow-up item (DECISION NEEDED, not scoped) -- now names 3 options: the plan's own
+  deferred Track 4 substitution, a narrower/soft-pull clamp redesign, or (new this session) a
+  bar-aware detect-and-jog repair for the bar-vs-bar residual specifically. (2) Issue #161 (hide
+  the mating-unit marker) -- deferred-until-Tracks-1-3-ship condition now satisfied, still a
+  genuine design call needing its own AskUserQuestion. (3) The pre-existing S582 item (READY,
+  Effort S): verify whether pedigree-diagram-screenshots.R's 3 non-base-fixture screenshots went
+  stale from the same pedigreeEdgeStyle default-flip pb_diagram_legend.png needed fixing for.
+key_files: BACKLOG.md:155-190 (Track 3 trade-offs item, now 3 possibilities); PROJECT_LEARNINGS.md
+  (Learning 610, appended after Learning 609); CHANGELOG.md (S596 close-out backfill entry + this
+  session's own entry, both under "## 2026-08"); CLAUDE.md:282 (learnings-count pointer).
+gotchas: The refreshed "Pedigree Fidelity Proof" artifact (https://claude.ai/code/artifact/
+  49990492-bab9-43c5-8202-cad4742f8cf5) is NOT git-tracked -- its render script
+  (render_fidelity_plates.R) lived only in this session's ephemeral scratchpad, not committed
+  anywhere in this repo. A future session wanting to regenerate it again will need to
+  reconstruct the render approach from this SESSION_NOTES.md entry (kinship2::pedigree() requires
+  an explicit missid="0" when dadid/momid get coerced to character by ifelse() -- a real gotcha
+  hit and fixed this session) rather than finding a checked-in copy. Do not assume any of S596's 3
+  candidates advanced -- BACKLOG.md's Track 3 item gained documentation only, no decision was made.
+runtime_smoke: n/a -- docs-only session, no R/production code touched.
+changelog_ref: CHANGELOG.md 2026-08-16 entries under "## 2026-08" (S596 close-out backfill + S597
+  session summary).
+commit: 8fc0e383 (Phase 0 ledger backfill), plus this session's close-out commit
+```
+Self-assessment 6/10 (+): caught a real ledger gap S596's own self-report missed; verified a
+previously-published artifact's claimed provenance against `git log` rather than trusting its
+prose, catching a stale "new defect" claim that was actually Learning 604, already fixed twice;
+built independent (non-circular) verification for the artifact refresh; completed a dropped user
+request at close-out instead of silently omitting it; stopped retrying failing browser automation
+per the harness's own guidance instead of burning turns. (−): never completed Phase 1 -- none of
+S596's 3 ready BACKLOG candidates advanced despite a full Phase 0 surfacing them clearly; left the
+BACKLOG.md edit request incomplete mid-conversation until close-out forced a review; the artifact
+regeneration, though valuable, was not a `BACKLOG.md`-prioritized item and produced no git-tracked
+deliverable. Predecessor (S596) scored 8/10: accurate, immediately-actionable `next_steps`, docked
+for a ledger gap its own self-assessment claimed was fully closed.
+
+```handoff
 session: S596
 date: 2026-08-16
 status: complete

@@ -175,6 +175,24 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       item was itself "the same already-tracked gap, not a new one") of tracking a same-root-cause
       finding here rather than opening a new issue.
 
+      **A third possibility, found live in conversation (2026-08-16, unclaimed session), for the
+      separate D1 bar-vs-bar residual specifically** (not the child-centering cost, which only the
+      Track 4 substitution above addresses): a future session could add a bar-aware detect-and-jog
+      repair — conceptually closer to Track 2's `.resolveEdgeNodeCollisions()`, but applied to the
+      D1 bar-chain edges themselves (currently excluded from Track 2's own detection, since that
+      pass catches edge-vs-*node* collisions, not edge-vs-*edge* overlap between two different
+      sibships' bars) — rather than trying to prevent the coincidence upstream by reserving extra
+      horizontal margin during layout. Upstream prevention was considered and rejected as
+      architecturally infeasible: `.positionMatingUnitForest()`'s contour-merge packs subtree
+      spacing at integer generation rows only (no concept of the fractional bar row D1 waypoints
+      occupy), and the 3 prior global-relayout investigations (S588 bounded-lookahead, S589
+      barycenter/median, S590 `igraph::layout_with_sugiyama()`, plan §1) were all already closed as
+      NOT FEASIBLE for exactly this reason — a high-mate-count "hub" individual's several subtrees
+      compete for the same horizontal budget, so widening one gap to guarantee no future bar
+      coincidence ripples into neighboring subtrees rather than localizing cleanly. A detect-and-jog
+      repair sidesteps that by working after layout, on the already-placed bar geometry, matching
+      Track 2's own established precedent for this class of residual.
+
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 *Resolves the former "Tracker reconciliation" decision item (S365) --
 `docs/audits/XARCH_TRACKER_RECONCILIATION_AUDIT_2026-07-11.md` re-verified all 8

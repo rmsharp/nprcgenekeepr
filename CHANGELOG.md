@@ -16,6 +16,31 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-16 · [ad hoc] S597: Phase 0 orientation + ledger backfill + stale-artifact correction — no BACKLOG item picked
+- **Session summary:** did not pick or advance any of S596's 3 offered BACKLOG priorities (Track 3
+  trade-offs decision / issue #161 / S582 screenshot check); Phase 1 was never completed. Ran a
+  full Phase 0 orientation (found and backfilled a real 2-commit `CHANGELOG.md` gap left by S596's
+  own close-out, commit `8fc0e383` — see the entry directly below), then followed a user-directed
+  browser detour into an unplanned side-quest: reviewed a previously-published claude.ai "Pedigree
+  Fidelity Proof" artifact and found its "not previously reported" defect callout was stale —
+  verbatim `PROJECT_LEARNINGS.md` Learning 604, already fixed twice over by Tracks 1–2 — traced its
+  stamped commit `f12e7cbb` to Session 590, predating issue #160's own filing. Regenerated both
+  comparison plates fresh against current HEAD (`pkgload::load_all()` + `chromote`), with
+  independently re-derived (non-circular) ground-truth collision verification: 0 same-row
+  collisions on both plates; Track 1's fix confirmed via exact node coordinates (D1 bar row 60
+  units off the children's row, matching `sibshipBarFraction=0.4`); the one flagged residual on
+  Plate 2 confirmed to be the known, already-disclosed curved-heuristic case, not new. Republished
+  to the same artifact URL with a correction callout. This artifact is external (claude.ai-hosted),
+  not git-tracked — its render script lived only in this session's ephemeral scratchpad. At
+  close-out, completed a dropped mid-conversation user request: `BACKLOG.md`'s Track 3 trade-offs
+  item gained a 3rd possibility (a bar-aware detect-and-jog repair for the D1 bar-vs-bar residual
+  specifically). Added `PROJECT_LEARNINGS.md` Learning 610 (a previously-published external
+  artifact's stamped commit sha can go stale with nothing in Phase 0's own ledger-reconcile
+  positioned to catch it, since that reconcile only walks git-tracked files). `CLAUDE.md`
+  learnings-count pointer refreshed (609→610). No R/production code touched; no runtime smoke test
+  applicable. `HANDOFFS.md` `status: complete` receipt written (self-assessment 6/10 — real ledger
+  and stale-artifact fixes, but no BACKLOG priority advanced this session).
+
 ### 2026-08-16 · [issue #160] S596 close-out: handoff evaluation, self-assessment, Learning 609, HANDOFFS.md receipt
 - **Close-out actions (reconcile-on-read backfill, Session 597 Phase 0):** evaluated S595's handoff
   (8/10, `SESSION_NOTES.md`); self-assessed this session (9/10); completed the `HANDOFFS.md`
