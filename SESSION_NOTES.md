@@ -18,6 +18,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 600 Did
+**Deliverable:** 3rd redesign attempt for the duplicate-occurrence-selection centering fix
+(`docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md` §8.6) — staying on
+the substitution-formula layer (owner-picked via `AskUserQuestion` over pivoting to a post-hoc
+bounded nudge, running both in parallel, or accepting Track 3's trade-offs as permanent), but
+requiring every candidate to pass a magnitude-stress fixture from round 1 (§8.6 item 1, and S599's
+own self-identified process gap), and resolving the TDD white-box test problem (§8.6 item 2) as part
+of the design itself. (IN PROGRESS)
+**Started:** 2026-08-17.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 598 Handoff Evaluation (by Session 599)
 **Score: 9/10.** **What helped:** the investigation doc's §6 was the entry point exactly as
 instructed — this session started design work directly from its 7 open questions with zero

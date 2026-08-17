@@ -136,6 +136,26 @@ This file currently holds **12** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S600
+date: 2026-08-17
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: 3rd redesign attempt for the duplicate-occurrence-selection centering fix
+  (docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md, §8.6) -- staying
+  on the substitution-formula layer, but requiring every candidate to pass a magnitude-stress
+  fixture from round 1 (not just final critique), per S599's own gotcha and §8.6 item 1. Also
+  resolving the TDD white-box test problem (§8.6 item 2) as part of the design itself.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S599
 date: 2026-08-17
 status: complete
