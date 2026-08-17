@@ -214,6 +214,29 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       per this project's planning→implementation session-boundary discipline). D1 bar-vs-bar
       residual (the 3rd-possibility paragraph above) remains completely untouched.
 
+      **Progress (S599, 2026-08-17), redesign attempt — still not sound:** ran a 12-agent
+      design→synthesize→critique→repair→critique `Workflow` against S598's §6 open questions: 4
+      independently live-verified candidate qualification rules, synthesized into one ("Sibling-
+      Relationship-Count Abstention Guard"), adversarially critiqued (found a NEW compounding
+      misfire — 2 different children of one union each substituting toward a shared 3rd sibling,
+      swinging `0.5→3.775`), repaired (a "Layer 2" abstention ceiling neutralizing that), then
+      critiqued again — **still `designStillSound: false` on 2 of 3 lenses**: (1) the substitution
+      formula itself (inherited unchanged from the original S592 design by every candidate this
+      session tried) has **unbounded magnitude** — a single, "legitimate" substitution can drift
+      arbitrarily far (`-0.05→-16.238` live-measured) driven by unrelated ordinary breeding
+      structure hanging off the sibling-mate union, collapsing the centered union onto one child
+      and discarding the other; (2) both abstention branches produce output bit-identical to
+      today's shipped behavior, so a naive black-box RED test would pass before any implementation
+      exists, conflicting with this project's own TDD contract. Presented via `AskUserQuestion`
+      again (repair-once-more / ship-disclosed / hold), owner again chose **hold — write
+      investigation doc**. Full record (all 4 candidates, both critique rounds, 2 drafted PRE-RED
+      question texts, updated open-questions list) appended as
+      [`docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`](docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md)
+      §8 — **start at §8.6** for a future redesign session, not §6 (superseded). Two independent
+      redesign attempts (S598, S599) have now both failed adversarial critique; §8.6 item 3
+      explicitly flags that a future session should weigh continuing to refine this specific
+      substitution mechanism against fixing child-centering quality at a different layer entirely.
+
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 *Resolves the former "Tracker reconciliation" decision item (S365) --
 `docs/audits/XARCH_TRACKER_RECONCILIATION_AUDIT_2026-07-11.md` re-verified all 8

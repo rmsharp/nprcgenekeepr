@@ -1,13 +1,21 @@
 # Pedigree Diagram: Duplicate-Occurrence-Selection Centering Fix — Investigation
 
-> **STATUS: INVESTIGATION ONLY — NO DESIGN RATIFIED.** This document is deliberately **not** an
-> implementation plan. Session 598 (2026-08-16) ran a research/verify/adversarial-critique
+> **STATUS: INVESTIGATION ONLY — NO DESIGN RATIFIED, ROUND 2.** This document is deliberately
+> **not** an implementation plan. Session 598 (2026-08-16) ran a research/verify/adversarial-critique
 > workflow against the previously-designed fix and found a genuine, live-verified correctness gap
 > *inside the design's own claimed scope* (§5.2). Presented with that finding via `AskUserQuestion`,
 > the owner chose **"Hold — needs a redesign session"** over shipping the flawed design as-is or
-> patching it with an unverified guard invented on the spot. This document exists so a future
-> session does not have to re-derive any of the evidence below — it should start directly at §6
-> (Open Questions a Redesign Must Resolve).
+> patching it with an unverified guard invented on the spot. **Session 599 (2026-08-17) picked up
+> that redesign**: a 12-agent design→synthesize→critique(→repair→critique) workflow produced 4
+> independently-verified candidates, synthesized and repaired one into "The Bounded
+> Sibling-Substitution Guard," and found it **still unsound** on a second adversarial-critique pass
+> — a deeper, previously-undiscovered problem (§8.4) in the substitution formula every candidate
+> inherited unchanged from the original S592 design, not merely in the qualification/abstention
+> logic around it. Presented via `AskUserQuestion` again, the owner again chose **"Hold — write
+> investigation doc"** over one more targeted repair round or shipping disclosed. This document
+> exists so a future session does not have to re-derive any of the evidence below — it should start
+> directly at **§8.6 (Open Questions, Updated After Session 599)**, which supersedes §6's
+> now-largely-resolved items.
 
 ## 0. What this addresses (and what it deliberately does not)
 
@@ -325,7 +333,13 @@ documented in §4.2 — worth a scale-realistic regression test distinct from th
 reproduction, so an unrelated future change to scale constants doesn't silently stop exercising
 Pass 2 at all.
 
-## 6. Open Questions a Redesign Must Resolve
+## 6. Open Questions a Redesign Must Resolve (as of S598 — superseded, see §8.6)
+
+> **Superseded by §8.** Session 599 addressed items 1–2 below (a redesign was produced and
+> re-verified) but found a new, deeper problem the attempt itself surfaced — see §8.6 for the
+> current, authoritative open-questions list. Items 4–7 below are still accurate and still open;
+> item 3's own PRE-RED question was drafted twice more in §8 (once per candidate/repair), superseding
+> any draft here.
 
 A future session picking this up should treat these as the actual work, not re-run the
 verification above (all fresh as of 2026-08-16, current HEAD `f7afa0fd`+):
@@ -354,14 +368,181 @@ verification above (all fresh as of 2026-08-16, current HEAD `f7afa0fd`+):
 7. Re-screenshot-verify `vignettes/articles/kinship2-fidelity-validation.qmd`'s Track C section
    (§4.4) once a design ships, rather than trusting the arithmetic alone.
 
-## 7. Decision log (this session)
+## 7. Decision log
 
+**Session 598 (2026-08-16):**
 - User selected **"Track 3 trade-offs decision"** from the Phase 0 priorities picker, then
   **"Scope Track 4 (centering)"** specifically (separating it from the D1 bar-vs-bar residual,
   which stays a distinct, unstarted follow-up).
 - Presented with §5.2's live-verified wrong-direction finding, user selected **"Hold — needs a
   redesign session"** over shipping the original design with a disclosed limitation, or patching it
   with an unverified guard. This document is the resulting record.
+
+**Session 599 (2026-08-17):**
+- User picked **"Track 4 centering redesign"** from the Phase 0 priorities picker (the investigation
+  document's own §6 open questions, framed as "a design session against the investigation doc's §6
+  open questions").
+- Ran the 12-agent design→synthesize→critique→repair→critique workflow documented in §8.
+- Presented with the repair round's own still-unsound critique findings (§8.4) via
+  `AskUserQuestion`, user again selected **"Hold — write investigation doc"** over one more targeted
+  repair round (bounding the substitution formula's magnitude specifically) or shipping the repaired
+  design disclosed (matching how Track 3's own clamp shipped with 2 disclosed trade-offs). §8 is the
+  resulting record; §8.6 is where a future session should start.
+
+## 8. Session 599: Redesign Attempt — Still Not Sound
+
+This section documents Session 599's own redesign attempt in full, so a future session does not
+have to re-run the workflow to recover what was tried, what was found, and why it wasn't shipped.
+Workflow run id `wf_115a9428-581`, transcript
+`/Users/rmsharp/.claude/projects/-Users-rmsharp-Development-nprcgenekeepr/8498e72d-b984-4146-98b9-d75c637eda68/subagents/workflows/wf_115a9428-581/journal.jsonl`
+(12 agents, all completed, 0 errors). All numbers below are live-verified (via `pkgload::load_all()`
+plus the real `.buildMatingUnitForest()`/`.positionMatingUnitForest()` internals, fixtures
+hand-simulated on top — no production code was written or modified), not merely reasoned about,
+matching this project's own established discipline (`MEMORY.md`).
+
+### 8.1 Structure of the workflow
+
+4 independent design agents, each assigned a different direction from §6's own item 1 (plus one
+open assignment), ran in parallel and live-verified their own candidate against the target case
+(`.commentOneFixture()`, expected -6 scaled) and §5.2's primary counter-example (P1/P2→A,B,C; A×B
+anchored by A, B×C anchored by C — B duplicated only once, at B×C). A synthesis agent combined the
+strongest ideas into one recommended design. Three adversarial-critique lenses (invariant
+preservation, edge cases, test-blast-radius/TDD-sequencing — the same 3 lenses S598 used) then ran
+against the synthesis. Because the edge-cases lens returned `designStillSound: false`, a bounded
+repair round ran automatically (one synthesis + 3 critiques), matching the pattern documented for
+exactly this situation. The repair round's own critique **also** returned `designStillSound: false`
+on 2 of 3 lenses — at which point the workflow's single bounded repair allowance was exhausted, and
+the finding was presented to the owner rather than iterated further, matching S598's own precedent.
+
+### 8.2 The 4 candidates (condensed)
+
+| # | Candidate | Core mechanism | Target case | Counter-example | Notably rejected because |
+|---|---|---|---|---|---|
+| 1 | Symmetric Qualifying-Occurrence Blend | Arithmetic mean across ALL qualifying occurrences (real + every qualifying duplicate) instead of hard substitution | -6 (exact) | Corrected stays at raw 0.5 (not 0.7) | More machinery (a "never anchors anywhere" population, a "home union of the real occurrence" derivation) than the winning candidate for no extra correctness |
+| 2 | Sibling-Union-Count Abstention Guard | Scans a child's ENTIRE mating-union membership (not just the `duplicates` table) for sibling-consanguineous relationships; abstains on 2+ | -6 (exact) | Corrected stays at raw 0.5 | Selected as the synthesis's Layer 1 — see §8.3 |
+| 3 | Pass 2 Sibling-Pair Eligibility Gate | Restrict Pass 2 to unions with exactly 2 children (provably excludes 2+-simultaneous-qualifying-duplicate cases by construction) | -6 (exact) | Corrected stays at raw 0.5 | Forfeits ALL correction on 3+-child unions, including clearly benign cases (live-demonstrated: unrestricted Pass 2 is also unreliable in general on 3+-child unions, not just on the B-pathology, which somewhat mitigates this cost but doesn't eliminate the forfeiture) |
+| 4 | Sole-Qualifying-Duplicate (SQD) Gate | Counts only physical rows in the `duplicates` table (not full union membership) | -6 (exact) | **Still misfires — 0.7**, wrong direction | Disqualified outright: B has only 1 physical duplicate row in the primary counter-example (her other sibling relationship is satisfied by her own free, non-duplicated real occurrence), so a duplicates-table-only count sees n=1 and substitutes anyway |
+
+### 8.3 Synthesis and the round-1 compounding finding
+
+The synthesis adopted Candidate 2's mechanism nearly verbatim — full mating-union-membership scan,
+abstain when a child has 2+ qualifying sibling-consanguineous relationships — naming it the
+"Sibling-Relationship-Count Abstention Guard." Its own no-tie-break claim was independently
+re-verified (10 randomized permutations of the `duplicates` row order gave a bit-identical result).
+
+**Round-1 edge-cases critique found a new compounding shape absent from every candidate's own test
+set**: when **two different** children of the same 3+-child union each have their own separate,
+independently-qualifying (non-abstaining) relationship with a **third, shared** sibling, both
+substitutions fire and compound in the min/max formula. Constructed live (P1×P2→A, Y, Q; Q mates
+both A and Y; A and Y each additionally anchor 2 outside mates, flipping anchor assignment via the
+already-shipped Track 4 `preferAnchor()` gen→mateCount→id rule so Q — not A/Y — is the duplicated
+side): Q correctly abstains (n=2, matching the design's own intended fix), but A and Y **each**
+individually qualify (n=1) and compound — `corrected` swings from raw `0.5` to **`3.775`**, a
+3.275-unit wrong-direction swing, larger than the original §5.2 counter-example's own 0.2-unit
+swing.
+
+### 8.4 The repair ("Bounded Sibling-Substitution Guard") and the round-2 findings that killed it
+
+**Repair**: added a "Layer 2" — after Layer 1 resolves every child of a union, count `nActive`
+(children that actually substituted, not merely qualified-but-already-correct). If `nActive >= 2`,
+the **whole union** abstains, reverting to the unmodified Pass-1 raw value exactly. Live-verified:
+the compounding fixture above reverts from `3.775` back to bit-identical raw `0.5`; a 3-way
+extension (Q mates 3 siblings) generalizes correctly; 10 more randomized permutation sweeps
+confirmed no order-dependence was introduced. The repair's own honestly-disclosed cost: a
+constructed "2 independent, non-overlapping sibling pairs under one union" fixture shows Layer 2
+forfeits a **legitimate** correction (`0.75 → -0.05` under Layer 1 alone, reverted to `0.75` by
+Layer 2) — currently costing nothing on the real 375-individual corpus (every union there is at
+`nActive = 0`), but a real, disclosed trade-off nonetheless.
+
+**Round-2 critique (re-run against the repair) — 2 of 3 lenses still `designStillSound: false`:**
+
+1. **Edge cases (major) — unbounded magnitude in the case Layer 2 explicitly leaves alone.** A
+   single, "legitimate" substitution (`nActive = 1` — exactly the mechanism the *target case itself*
+   relies on, and exactly the shape both S598's design and S599's repair verified as safe) inherits
+   however much **unrelated, ordinary** breeding structure happens to hang off the sibling-mate
+   union. Live-measured on a constructed fixture (P1×P2→A,B; A×B is the sibling union V; V's other
+   child is given a growing, entirely ordinary fan of her own outside mates/children — nothing
+   consanguineous about it): `corrected` drifts from `-0.05` (fan width 0) to `-0.487` (2) to
+   `-1.613` (4) to `-3.862` (8) to `-8.363` (16) to **`-16.238`** (30) — growing without visible
+   bound — while `raw` stays fixed at `0.75` throughout (self-balancing, since it never reads `V`'s
+   own center). At fan width 30, `corrected` sits almost exactly on top of one child's own real x,
+   discarding the other child from the computation entirely — collapsing the union's center onto
+   one child, defeating Track 6's own stated "child-centered midpoint of **both** children" design
+   goal. Track 3's clamp still bounds the *final rendered* value (no crash, no `NaN`) — but that is
+   a last-resort safety net, not evidence the fix is working as intended for this shape. **This
+   defect lives in the substitution formula itself** (`rawDupX <- rawFinalUnitX[V] + minSep*0.4`,
+   inherited unchanged from the original S592 design by all 4 candidates and the synthesis/repair
+   alike) — not in the qualification/abstention logic Session 599 spent its whole effort refining.
+   The critique notes this shape is plausible in real colony data (a sibling's own descendant having
+   an ordinary breeding career is unremarkable) even though it doesn't occur in the current
+   375-individual bundled fixture.
+2. **Test blast radius (major) — both abstention branches are output-indistinguishable from
+   today's shipped behavior.** Because a correctly-abstaining/reverted union's `finalUnitX` is
+   bit-identical to what today's code (no Pass 2 at all) already produces, a black-box test
+   asserting on final pipeline x-output for either the primary counter-example or the compounding
+   fixture would **already pass before a single line of the fix exists** — directly conflicting with
+   this project's own TDD contract ("RED: tests must fail"). A valid fix exists (white-box
+   assertions on the substitution machinery's own internal `sibUnions()`/`nActive` counts, or
+   splitting Layer 1 and Layer 2 into two sequential PRE-RED/RED/GREEN cycles so a real
+   intermediate exists to be RED against) but must be named explicitly in whatever plan eventually
+   implements this, not discovered mid-RED.
+
+Both drafted PRE-RED reopening `AskUserQuestion` texts (one for the pre-repair synthesis, one for
+the repair) are preserved in the workflow journal (`wf_115a9428-581`) referenced above, in case a
+future session wants their exact wording as a starting point once a design that survives critique
+actually exists.
+
+### 8.5 What Session 599 confirmed still holds (do not re-verify)
+
+- The exact insertion point (`R/makePedigreeDiagramData.R:966-1010`, confirmed unchanged at current
+  HEAD before this session's own claim commit).
+- `duplicates` is deterministic by construction (structural insertion order) — reconfirmed via a
+  distinct uniqueness proof this session found: `.buildMatingUnitForest()`'s duplicate-assignment
+  loop emits at most one row per `(realId, matingUnitId)` pair by construction, so no candidate's
+  `n==1` substitution branch ever actually has more than one row to "pick" from — the tie-break
+  question is fully eliminated by every candidate here, not merely deferred.
+- The target case (`-6` scaled) and the primary §5.2 counter-example (stays at raw `0.5`, not `0.7`)
+  are both reproducible exactly, by multiple independent candidates, using multiple independent
+  live-verification passes (original 4-candidate round, synthesis, repair, round-2 critique) — this
+  part of the problem is solved; what remains open is §8.4's magnitude problem plus §8.6 below.
+- A dangling-parent + Layer-2-ceiling combination is safe (no crash, finite non-`NA` result, Track
+  3's clamp correctly skipped exactly as its existing guard requires) — previously unverified,
+  closed this session.
+
+### 8.6 Open Questions, Updated After Session 599
+
+A future session picking this up should start here, not re-run §8's workflow:
+
+1. **Bound the substitution formula's magnitude, not just its qualification logic.** §8.4 finding
+   1 is the primary open problem — every candidate this session tried used `rawDupX <-
+   rawFinalUnitX[V] + minSep*0.4` unchanged from the original S592 design, and none questioned
+   whether that formula itself needs a cap (e.g., abstain when `|rawDupX - kid's real x|` exceeds
+   some multiple of the local span; or a different formula that doesn't inherit `V`'s own full
+   subtree drift). This is a different axis from Session 599's entire effort (which only refined
+   *when* to substitute, never *what value* to substitute in) — a fresh design pass should treat it
+   as the primary target, not a footnote.
+2. **Resolve the TDD white-box test problem (§8.4 finding 2) before RED starts**, whichever design
+   ships: either write white-box assertions on internal qualification/abstention state, or split
+   into sequential PRE-RED/RED/GREEN cycles per mechanism layer, so a real intermediate exists to be
+   RED against. Do not let an implementing session discover this mid-RED, as the round-2 critique
+   itself warned.
+3. **Consider whether the whole "duplicate-occurrence-selection" approach is the right level to fix
+   this at.** Two independent redesign attempts (S598's original design, S599's repaired synthesis)
+   have now both failed adversarial critique from a genuine, live-verified correctness angle. A
+   future session should weigh continuing to refine this specific mechanism against reconsidering
+   whether child-centering quality for this class of case is better addressed at a different layer
+   entirely (e.g., a post-hoc bounded nudge after Track 3's clamp, rather than a pre-clamp
+   substitution) — not dictated here, but worth an explicit go/no-go before a third redesign attempt
+   sinks more effort into the same formula shape.
+4. §6's original items 4 ("add a qualifying fixture to `checkInvariant()`'s call list"), 5 ("add a
+   scale-realistic regression test"), and 7 ("re-screenshot-verify `kinship2-fidelity-validation.qmd`")
+   remain accurate and unaddressed — carry forward unchanged. Item 4 has a sharper finding now:
+   `.commentOneFixture()` (not Track C) is required, since Track C's own raw and corrected values
+   clamp to the identical boundary and would leave the new invariant disjunct as dead code — verified
+   independently twice this session (round-1 and round-2 critiques both found this the same way).
+5. Pick a name for whatever design eventually ships — "Bounded Sibling-Substitution Guard" is this
+   session's own working name for the (still-rejected) repair; a future session's actual ratified
+   design should get its own name once it survives critique, not inherit this one by default.
 
 ## References
 
@@ -374,8 +555,11 @@ verification above (all fresh as of 2026-08-16, current HEAD `f7afa0fd`+):
 - S592 original design source: workflow journal
   `/Users/rmsharp/.claude/projects/-Users-rmsharp-Development-nprcgenekeepr/5f68259f-6622-4bdd-8531-d2c60ad9fcb0/subagents/workflows/wf_57184bfd-eb7/journal.jsonl`
   (entry index 19).
-- This session's own verification/critique workflow: run id `wf_9d347c8d-cca`, transcript dir
+- Session 598's own verification/critique workflow: run id `wf_9d347c8d-cca`, transcript dir
   `/Users/rmsharp/.claude/projects/-Users-rmsharp-Development-nprcgenekeepr/35248b9b-b6e4-48b2-9fb3-d981fda4ed45/subagents/workflows/wf_9d347c8d-cca/journal.jsonl`.
+- Session 599's own design→synthesize→critique→repair→critique workflow (§8): run id
+  `wf_115a9428-581`, transcript
+  `/Users/rmsharp/.claude/projects/-Users-rmsharp-Development-nprcgenekeepr/8498e72d-b984-4146-98b9-d75c637eda68/subagents/workflows/wf_115a9428-581/journal.jsonl`.
 - `BACKLOG.md` — Track 3's disclosed-trade-offs follow-up item (this document's parent task).
 - `PROJECT_LEARNINGS.md` Learning 585 / Learning 588 — the radix-ordering non-determinism class
   §5.1's tie-break finding references.
