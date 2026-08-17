@@ -136,6 +136,25 @@ This file currently holds **12** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S599
+date: 2026-08-16
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Redesign plan for the duplicate-occurrence-selection centering fix (BACKLOG.md's Track
+  3 trade-offs follow-up; see docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md
+  §6). Resolving open questions 1-3/6 (qualification-rule design, tie-break decision, PRE-RED gate
+  draft, naming) via docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md. Planning-only.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S598
 date: 2026-08-16
 status: complete

@@ -18,6 +18,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 599 Did
+**Deliverable:** Redesign plan for the duplicate-occurrence-selection centering fix (resolve
+investigation doc §6 open questions 1-3/6) (IN PROGRESS)
+**Started:** 2026-08-16
+**Status:** Session claimed. Work beginning — following
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`, matching the parent collision-avoidance
+plan's own precedent. Planning-only session (SESSION_RUNNER.md Planning Sessions discipline): the
+plan is the deliverable, no RED/GREEN/REFACTOR code this session.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### Session 597 Handoff Evaluation (by Session 598)
 **Score: 7/10.** **What helped:** `HANDOFFS.md`'s `next_steps` named exactly 3 candidates
 (Track 3 trade-offs decision / issue #161 / S582 screenshot check), all still accurate and
