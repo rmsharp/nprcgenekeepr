@@ -1,6 +1,6 @@
 # Pedigree Diagram: Duplicate-Occurrence-Selection Centering Fix — Investigation
 
-> **STATUS: INVESTIGATION ONLY — NO DESIGN RATIFIED, ROUND 2.** This document is deliberately
+> **STATUS: INVESTIGATION ONLY — NO DESIGN RATIFIED, ROUND 3.** This document is deliberately
 > **not** an implementation plan. Session 598 (2026-08-16) ran a research/verify/adversarial-critique
 > workflow against the previously-designed fix and found a genuine, live-verified correctness gap
 > *inside the design's own claimed scope* (§5.2). Presented with that finding via `AskUserQuestion`,
@@ -12,10 +12,23 @@
 > — a deeper, previously-undiscovered problem (§8.4) in the substitution formula every candidate
 > inherited unchanged from the original S592 design, not merely in the qualification/abstention
 > logic around it. Presented via `AskUserQuestion` again, the owner again chose **"Hold — write
-> investigation doc"** over one more targeted repair round or shipping disclosed. This document
-> exists so a future session does not have to re-derive any of the evidence below — it should start
-> directly at **§8.6 (Open Questions, Updated After Session 599)**, which supersedes §6's
-> now-largely-resolved items.
+> investigation doc"** over one more targeted repair round or shipping disclosed. **Session 600
+> (2026-08-17), owner-directed to specifically bound the substitution formula's magnitude (§8.6 item
+> 1), ran a 3rd 12-agent workflow and again found the result unsound** — this time at a deeper level
+> still: the design's own numeric success turned out to be **contingent on silently reinterpreting
+> Layer 1's qualification rule** (the part explicitly marked "GIVEN... do not redesign"), which under
+> its *literal* wording makes Pass 2 dead code for exactly the 2-child mutual-mate shape both the
+> target case and the magnitude-stress case use; that reinterpretation in turn depends on
+> `preferAnchor()`'s tie-break, confirmed **genuinely locale-dependent** — the same defect class as
+> Learning 585, but here found to already corrupt today's *shipped* output independent of this fix
+> entirely (filed separately, not fixed here — see §9.6). A repair round corrected the bound and
+> disclosed the contingency honestly, but a second critique pass found the bound itself measures
+> against the wrong reference frame (overshoots the real children's own span, not just the raw
+> midpoint, in the *common* tightly-spaced case) plus a live scale bug in the design's own proposed
+> RED test. Presented via `AskUserQuestion` a third time, the owner again chose **"Hold — write up
+> findings, file the locale bug separately."** This document exists so a future session does not have
+> to re-derive any of the evidence below — it should start directly at **§9.7 (Open Questions,
+> Updated After Session 600)**, which supersedes §8.6.
 
 ## 0. What this addresses (and what it deliberately does not)
 
@@ -389,6 +402,22 @@ verification above (all fresh as of 2026-08-16, current HEAD `f7afa0fd`+):
   design disclosed (matching how Track 3's own clamp shipped with 2 disclosed trade-offs). §8 is the
   resulting record; §8.6 is where a future session should start.
 
+**Session 600 (2026-08-17):**
+- Picked up from the Phase 0 priorities picker ("Track 3 centering — 3rd attempt"). Presented with a
+  dedicated go/no-go `AskUserQuestion` (§8.6 item 3's own standing precondition) — refine the
+  substitution formula with magnitude bounded from round 1 / pivot to a post-hoc bounded nudge after
+  Track 3's clamp / run both in parallel / accept Track 3's trade-offs as permanent — user picked
+  **"Refine substitution, bound magnitude."**
+- Ran a 3rd 12-agent design→synthesize→critique→repair→critique workflow, this time requiring every
+  candidate to pass a magnitude-stress fixture from round 1 (not deferred to a final critique) per
+  the user's own directive and S599's self-identified process gap. Documented in full as §9.
+- Presented with the repair round's own still-unsound (2 of 3 lenses) round-2 critique findings
+  (§9.4) via `AskUserQuestion` — hold-and-file-the-locale-bug-separately / one-more-repair / pivot-
+  to-post-hoc-nudge-now / accept-Track-3-trade-offs-as-permanent — user again selected **"Hold, write
+  up findings + file the locale bug separately."** §9 is the resulting record; §9.7 is where a future
+  session should start. The independently-discovered `preferAnchor()` locale-non-determinism bug
+  (§9.6) was filed as its own `BACKLOG.md` item / GitHub issue, not fixed here.
+
 ## 8. Session 599: Redesign Attempt — Still Not Sound
 
 This section documents Session 599's own redesign attempt in full, so a future session does not
@@ -544,12 +573,215 @@ A future session picking this up should start here, not re-run §8's workflow:
    session's own working name for the (still-rejected) repair; a future session's actual ratified
    design should get its own name once it survives critique, not inherit this one by default.
 
+## 9. Session 600: Magnitude-Bound Attempt — Still Not Sound, Plus an Independent Finding
+
+This section documents Session 600's own attempt in full, so a future session does not have to
+re-run the workflow to recover what was tried, what was found, and why it wasn't shipped. Workflow
+run id `wf_be91a88b-c4c`, transcript
+`/Users/rmsharp/.claude/projects/-Users-rmsharp-Development-nprcgenekeepr/e71fe261-3ee7-497a-a427-3b763ae9a8b2/subagents/workflows/wf_be91a88b-c4c/journal.jsonl`
+(12 agents, all completed, 0 errors, ~1.86M subagent tokens, ~94 min). All numbers below are
+live-verified (via `pkgload::load_all()` plus the real `.buildMatingUnitForest()`/
+`.positionMatingUnitForest()` internals, fixtures hand-simulated on top where noted — no production
+code was written or modified), not merely reasoned about, matching this project's own established
+discipline (`MEMORY.md`).
+
+### 9.1 Structure of the workflow
+
+Per the owner's own directive (§7's Session 600 decision log entry) and S599's self-identified
+process gap (§8's own weakness #1), this round deliberately scoped Layers 1/2 (the
+qualification/abstention logic) as **given and unmodified** — S599's §8.5 had already confirmed those
+solved except for magnitude — and required **every** candidate to live-verify against a
+magnitude-stress fixture (fixture 4 below) from round 1, not deferred to a final critique. 4
+independent design agents, each assigned a different mechanism direction (delta-cap, local-partner
+re-rooting, saturating blend, structural provenance filter), live-verified their own candidate
+against 4 required fixtures. A synthesis agent combined the strongest ideas. 3 adversarial-critique
+lenses (invariant preservation, edge cases, test-blast-radius/TDD-sequencing — the same 3 lenses S598
+and S599 used) ran against the synthesis. The invariant-preservation lens returned
+`designStillSound: false`, triggering one bounded repair round (matching the pattern established
+S599). The repair round's own re-critique **also** returned `designStillSound: false` on 2 of 3
+lenses (invariant preservation again, and test blast radius) — at which point the workflow's single
+bounded repair allowance was exhausted, and the finding was presented to the owner rather than
+iterated further, matching S598/S599's own precedent.
+
+### 9.2 The 4 candidates (condensed)
+
+| # | Candidate | Core mechanism | Fixture 1 (target, −6) | Fixture 4 (magnitude stress) | Notably rejected/adopted because |
+|---|---|---|---|---|---|
+| 1 | Fixed-MinSep Delta Cap | Clamp the substitution delta to `±K·minSep` (K=2), a fixed constant independent of `V`'s subtree | −6, unclipped | Bounded, saturates at −0.25 from fan=2 through 500 | Adopted — converged independently with #2 |
+| 2 | Real-Position Deviation Cap | Identical mechanism, independently derived from a different starting hint | −6, unclipped | Same numbers as #1 | Adopted alongside #1 |
+| 3 | Saturating Blend (tanh) | `kidRealX + K_max·tanh(delta/K)`, smooth asymptote | −5.7957 (3.4% off target) | Bounded, but ~10× looser ceiling (~10 units vs. ~1) | Strictly dominated by #1/#2 on both axes the task cares about |
+| 4 | Provenance-Pruned Local Recompute | Re-derive `V`'s raw position from a pruned pedigree copy excluding irrelevant subtrees | −6, exact (full-inherit branch) | **Fails** — bounds only `V`'s own channel; the *anchor* sibling's real x is a 2nd, untouched channel that stays unbounded (−0.05→−163.75) | A broadened variant closes it but exceeds the task's declared scope (touching a non-substituting sibling's real x) |
+
+### 9.3 Synthesis and the round-1 critique findings
+
+The synthesis ("MinSep-Relative Delta Cap," K=2) adopted the convergent Candidates 1/2 mechanism —
+cap the substitution's deviation from the *substituting kid's own real x* to `±K·minSep`, exploiting
+an algebraic identity of this codebase's Pass-1 formula (a 2-child union's raw midpoint is exactly
+the mean of both children's real x, so bounding one child's delta bounds the midpoint's shift to
+`cap/2`). Independently re-verified live rather than trusted, and claimed success on all 4 required
+fixtures with a provable bound.
+
+**Round-1 critique — invariant preservation returned `designStillSound: false`, 2 major findings:**
+
+1. **The synthesis's entire numeric success is contingent on silently narrowing Layer 1's own GIVEN
+   qualification rule.** Layer 1 as given is symmetric ("kid is a parent of `V` and `V`'s other
+   parent is also a child of the same union `U`"). Live-verified structurally: for **any** exactly
+   2-child union whose children mate each other — precisely fixture 1's (A, Y) shape and fixture 4's
+   (A, B) shape, the two fixtures this whole exercise exists to satisfy — **both** children qualify
+   via the identical shared `V` under the literal rule, forcing `nActive = 2` always, so Layer 2's
+   own given, unmodified revert-to-raw guard **always** fires and Pass 2 never runs. Reaching either
+   fixture's stated target requires restricting "qualifying" to "kid is the actual duplicated
+   (non-anchor) party at `V`" — a real, load-bearing reinterpretation of a component this session's
+   own task explicitly marked off-limits, not a scope choice available to Layer 3 alone.
+2. **That reinterpretation creates a new dependency on `preferAnchor()`'s tie-break** (which sibling
+   is "anchor" vs. "duplicated"), confirmed live to be **`LC_COLLATE`-locale-dependent** for its final
+   `a < b` string comparison — the same defect class `PROJECT_LEARNINGS.md` Learning 585 already had
+   to fix elsewhere in this exact function, recurring here. Under the literal Layer 1 reading this
+   never mattered (Pass 2 never ran); the reinterpretation makes it load-bearing. See §9.6 — this
+   finding matured into an independent, standalone bug over the course of the round-2 critique.
+
+The edge-cases lens (`designStillSound: true`) found 1 major finding not fatal to the mechanism: an
+undisclosed "frozen vs. mutable raw-value" ambiguity for nested/chained sibling-consanguineous
+unions (no required fixture catches it; the core clamp survived extensive adversarial magnitude
+stress, chaining, and parallel-compounding constructions). The test-blast-radius lens
+(`designStillSound: true`) found 2 major findings: `checkInvariant()`'s already-flagged §8.6 item 4
+dead-code trap (0/103 duplicate rows in either existing test corpus qualify) was inherited
+unaddressed, and no dedicated PRE-RED reopening `AskUserQuestion` was drafted despite §5.3's own
+standing requirement.
+
+### 9.4 The repair and the round-2 findings that killed it
+
+**Repair:** Rather than patch around Finding 1, the repair **elevated it to a first-class, blocking,
+unratified dependency** (renamed the design "CONTINGENT," refused to claim implementation-readiness),
+documented Finding 2 (the locale dependency) as coupled to it, corrected the magnitude bound to a
+single universal `K·minSep/2` for any union size (tightened from the synthesis's looser two-tier
+claim, re-derived and live-confirmed via a 200,000-trial randomized check plus a 140-trial
+real-pipeline battery, 0 exceptions), and proposed a concrete `checkInvariant()` 3rd-disjunct
+extension plus a dedicated randomized magnitude-bound property test (run live as a proof-of-concept
+ahead of any implementation). Overall verdict: explicitly **"CONTINGENT success, not unconditional"**
+— recommended a future session's next step is a dedicated PRE-RED `AskUserQuestion` resolving the
+qualification-rule reading and the `preferAnchor()` locale-safety fix together, before any
+implementation.
+
+**Round-2 critique (re-run against the repair) — 2 of 3 lenses still `designStillSound: false`:**
+
+1. **Invariant preservation (major) — the bound measures against the wrong reference frame.** The
+   cap bounds deviation from the *raw Pass-1 midpoint*, not from the real children's own span — so
+   for the **tightest, most common, perfectly legitimate case** (two full-sib children spaced exactly
+   `minSep = 1` apart — the default configuration for exactly the sibling-mate scenario this whole
+   fix targets), the correction can overshoot the real children's own span by up to 50% while *still*
+   satisfying the design's own `|corrected − raw| ≤ cap/2` bound exactly. Live-verified: real children
+   at x=0/x=1 (span=1), worst-case substituted value gives `correctedCenter = 1.5`, **outside** the
+   real children's `[0,1]` span by half that span. Track 3's downstream clamp does not reliably
+   rescue this — it clamps to the union's 2 *parents'* range, not its *children's*. This survived 2
+   full critique rounds undetected only because fixture 1's own span (2.75) happened to be wide
+   enough to mask it — neither round's verification battery ever measured deviation from the real
+   children's own footprint, only from the raw center.
+2. **Invariant preservation (major) — Finding 2 (the locale bug) is broader and more urgent than
+   characterized.** Independently re-confirmed: it is **not** "a new non-determinism surface,
+   entirely introduced by the reinterpretation" as the repair framed it — it **already corrupts
+   today's shipped pipeline output**, for any tied-generation, tied-mate-count parent pair, with
+   **zero** Pass-2/Layer-3 involvement (a live 2-generation fixture with no Pass 2 at all produces
+   substantially different node positions across a whole subtree between locales). The precondition
+   (tied generation) is **structurally guaranteed** for every full-sibling mate pair — proven directly
+   from `findGeneration()`'s BFS layering (full siblings are always placed in the same generation
+   iteration) — i.e., load-bearing for precisely the target use case (visualizing consanguineous
+   colonies), not a rare edge case. See §9.6.
+3. **Test blast radius (major, ×4) — the TDD story has 4 independent, live-verified problems.**
+   (a) The proposed `checkInvariant()` extension is *still* vacuous against both test corpora it
+   would actually run against (0/103 qualify) — the design's own writeup never mentions widening the
+   call list, inheriting exactly the trap §5.3/§8.6 item 4 already named. (b) Even the doc's own
+   prescribed remedy (add `.commentOneFixture()` to the call list) would *also* still be vacuous under
+   the literal Layer-1 reading — the `checkInvariant()` gap and Finding 1's reading ambiguity are "the
+   same blocking dependency wearing two hats," not two separable items as the design frames them.
+   (c) The design's own proposed RED assertion has a **live, confirmed scale bug**: `-0.25` is only
+   valid against `.positionMatingUnitForest()`'s internal abstract-unit return; the outer
+   `makePedigreeMatingLayout()` surface (the actual black-box target, `xScale = 120L`) produces `-30`,
+   not `-0.25` — the design's own text treats the two as interchangeable and would fail a literally-
+   written RED test for the wrong reason. (d) The recommended single PRE-RED `AskUserQuestion`
+   conflates 2 categorically different decisions (a Layers-1/2-scoped correctness reopening the
+   investigation doc's own §6 item 1 leaves room for a **full redesign**, vs. Layer 3's own additive,
+   non-reopening scope choice) without disclosing that, and treats the riskier one as a near-foregone
+   conclusion.
+
+Both edge-cases lens re-runs (round 1 and round 2) stayed `designStillSound: true` — the core clamp
+arithmetic itself withstood extensive, deliberately adversarial stress (fan widths to 10,000, nested
+chains to depth 8, dual/parallel independently-growing fans, forced extreme-flip reordering) with no
+bound violation found in either round. **The mechanism's own arithmetic is sound; the problems are
+all in what it silently depends on and what it fails to discharge.**
+
+### 9.5 What Session 600 confirmed still holds (do not re-verify)
+
+- The exact insertion point (`R/makePedigreeDiagramData.R:966-1010`) and Track 3's clamp ordering,
+  reconfirmed unchanged.
+- The magnitude-bound *arithmetic* itself (a hard clamp on the substitution delta) is structurally
+  sound and provably bounds the raw-center shift to `cap/2` for any union size — this survived 2
+  independent adversarial-critique rounds intact. What is unresolved is (a) whether Pass 2 can ever
+  legally fire at all under Layer 1's literal given rule, (b) the reference frame the bound should
+  measure against, and (c) the TDD/test-infrastructure obligations around it.
+- `checkInvariant()`'s dead-code trap (§8.6 item 4, previously flagged) is reconfirmed exactly:
+  0/103 duplicate rows in either existing test corpus (`small`, the real 375-individual fixture)
+  qualify as sibling-consanguineous under any reading tried this session.
+
+### 9.6 Independent finding, filed separately: `preferAnchor()`'s locale-dependent tie-break
+
+**Not fixed this session — filed as its own item, per `PROJECT_LEARNINGS.md` Learning 382's
+"report, don't fix mid-session" precedent.** `preferAnchor()` (`R/makePedigreeDiagramData.R:403-411`,
+Track 4's gen→mateCount→id tie-break) falls back to a bare `a < b` string comparison as its final
+tie-break. Live-confirmed on the real `.buildMatingUnitForest()`: for two same-generation,
+same-mate-count sibling ids (`"a1"`/`"A1"`), which one is selected as "anchor" flips between locale
+`"C"` and locale `"en_US.UTF-8"` — and this is **not limited to anchor/non-anchor labeling**: a
+trivial 2-generation fixture with **no** Pass 2/duplicate-occurrence involvement at all produces
+substantially different node x-positions across a whole subtree between locales, because the flip
+changes the recursive descent's merge order. The precondition (a tied-generation parent pair) is
+**structurally guaranteed** for every full-sibling mate pair, proven directly from
+`findGeneration()`'s BFS layering logic — not a rare or adversarial shape. A scan of the real
+375-individual bundled fixture found 0 full-sibling mate pairs today (so this is not currently
+manifesting in the test corpus), but that is a property of one dataset, not a structural guarantee,
+for a diagram feature whose purpose is visualizing inbred/consanguineous colonies. This is
+independent of whether the duplicate-occurrence-selection fix (this whole document) ever ships — see
+`BACKLOG.md`'s Housekeeping section and the filed GitHub issue for tracking; the likely remedy (a
+radix-based, locale-independent comparator) mirrors `PROJECT_LEARNINGS.md` Learning 585's own fix for
+an analogous defect elsewhere in this exact function.
+
+### 9.7 Open Questions, Updated After Session 600
+
+A future session picking this up should start here, not re-run §9's workflow:
+
+1. **The go/no-go question (§8.6 item 3) now has much stronger evidence behind it.** 3 independent
+   attempts (S598's original design, S599's repaired synthesis, S600's magnitude-bound synthesis
+   *and* its own repair) have all failed adversarial critique, each at a deeper layer — wrong
+   direction, then unbounded magnitude, then (this session) dead-under-its-own-given-rules plus a
+   wrong reference frame for the bound. A future session should treat continuing to refine this exact
+   mechanism (pre-clamp substitution into `.positionMatingUnitForest()`) as the option needing
+   justification, not the default — explicitly weigh the post-hoc-bounded-nudge alternative (applied
+   *after* Track 3's clamp, §8.6 item 3's own suggestion) or accepting Track 3's 2 disclosed
+   trade-offs as permanent, before a 4th attempt at this same formula shape.
+2. **If a 4th attempt at this mechanism is chosen anyway**, it cannot start from Layer 3 alone — it
+   must first resolve, as its own dedicated PRE-RED reopening question (not bundled with Layer 3's own
+   scope, per round-2's finding 3d), whether Layer 1's qualification rule is read literally (in which
+   case Pass 2 is dead code for the 2-child mutual-mate shape and the entire mechanism needs a
+   different qualification rule, not just a magnitude bound) or restricted to "duplicated party only"
+   (in which case `preferAnchor()`'s locale bug, §9.6, must ship alongside it, not be assumed already
+   fixed). And whatever bound ships must measure against the real children's own span, not just the
+   raw midpoint (§9.4 finding 1) — a materially different, unverified design from anything tried
+   across all 3 sessions so far.
+3. `checkInvariant()` cannot be extended with a 3rd disjunct as previously planned without also
+   widening its call list to include a genuinely qualifying fixture (§9.5) — and even that alone is
+   insufficient until item 2's qualification-rule question is resolved, since which fixture qualifies
+   is itself reading-dependent.
+4. §8.6's own carried-forward items — adding a scale-realistic regression test, re-screenshot-
+   verifying `kinship2-fidelity-validation.qmd`'s Track C section — remain accurate and unaddressed.
+5. The `preferAnchor()` locale bug (§9.6) is independently actionable regardless of how items 1-4
+   resolve — see the filed `BACKLOG.md`/GitHub issue.
+
 ## References
 
 - `docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md` — Tracks 1-3 (shipped),
   §2.4/§8/§9 (this fix's origin and deferral).
 - `docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md` — the *other*, already-shipped
-  "Track 4" (gen-aware anchor selection) — see §1's naming-collision note.
+  "Track 4" (gen-aware anchor selection) — see §1's naming-collision note. `preferAnchor()`'s locale
+  bug (§9.6) lives in this plan's own delivered code, not in anything this document's fix would add.
 - `docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md` — Track 6, whose
   §2.4 formula this fix would (a second time) reopen.
 - S592 original design source: workflow journal
@@ -560,6 +792,11 @@ A future session picking this up should start here, not re-run §8's workflow:
 - Session 599's own design→synthesize→critique→repair→critique workflow (§8): run id
   `wf_115a9428-581`, transcript
   `/Users/rmsharp/.claude/projects/-Users-rmsharp-Development-nprcgenekeepr/8498e72d-b984-4146-98b9-d75c637eda68/subagents/workflows/wf_115a9428-581/journal.jsonl`.
-- `BACKLOG.md` — Track 3's disclosed-trade-offs follow-up item (this document's parent task).
+- Session 600's own design→synthesize→critique→repair→critique workflow (§9): run id
+  `wf_be91a88b-c4c`, transcript
+  `/Users/rmsharp/.claude/projects/-Users-rmsharp-Development-nprcgenekeepr/e71fe261-3ee7-497a-a427-3b763ae9a8b2/subagents/workflows/wf_be91a88b-c4c/journal.jsonl`.
+- `BACKLOG.md` — Track 3's disclosed-trade-offs follow-up item (this document's parent task) and the
+  separately-filed `preferAnchor()` locale-non-determinism item (§9.6).
 - `PROJECT_LEARNINGS.md` Learning 585 / Learning 588 — the radix-ordering non-determinism class
-  §5.1's tie-break finding references.
+  §5.1's tie-break finding references, and Learning 382 — the "report, don't fix mid-session"
+  precedent §9.6 follows.
