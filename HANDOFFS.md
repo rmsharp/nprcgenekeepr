@@ -136,6 +136,69 @@ This file currently holds **14** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S605
+date: 2026-08-18
+status: complete
+self_score: 6
+predecessor_score: 6
+active_task: DONE -- R-CMD-check.yaml CI-red fixed (inst/WORDLIST missing "radix").
+what_was_done: inst/WORDLIST -- added "radix" (before RData), the one word
+  spelling::spell_check_package() flagged as uncovered. Root cause: S604's own close-out edit to
+  NEWS.Rmd/NEWS.md (issue #162's "byte/radix order" bullet) introduced the word after S604's own
+  full-clean-regression check had already run, so it was never re-verified -- same defect class as
+  the S584/S587 md's precedent. Found via this session's own Phase 0 gh run list check, picked by
+  the user from the rendered priorities list, fixed same-session. Full TDD PRE-RED->RED->GREEN->
+  REFACTOR with all 3 gated AskUserQuestions; RED was the pre-existing, already-failing
+  test_wordlist_coverage.R assertion (no new test needed). Verification: target test 0 failures;
+  full clean-regression suite 0 failed/0 error project-wide; direct
+  spelling::spell_check_package(".", vignettes = TRUE) -- "No spelling errors found." No .R file
+  touched. Fix committed as 9d851fb5. This session's own close-out (docs) commit sha is pending
+  (self-reference workaround, matching S600/S602/S603/S604 precedent -- will be recorded via a
+  follow-up commit once this receipt's own commit is known).
+next_steps: No further work on this item -- the CI-red is resolved (verified locally; the next push
+  will confirm R-CMD-check.yaml itself goes green). shinytest2.yaml (scheduled) is also RED as of
+  this session's Phase 0 check (intermittent history: red 08-12/13/14, green 08-15x2/08-16/08-17,
+  red again 08-18) -- not diagnosed this session, a future session should look if it stays red.
+  Priorities list rendered this session (not picked): issue #161 decision (hide mating-unit marker),
+  Track 3's 2 disclosed trade-offs (accept or investigate), MIT license badge, issue #148
+  scope-narrowing conversation (per GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md Finding
+  #4) -- all still open, none newly scoped this session.
+key_files: inst/WORDLIST:167 (the fix); tests/testthat/test_wordlist_coverage.R:121 (the pre-existing
+  test that caught it); NEWS.Rmd:325/NEWS.md:333 (where "radix" was introduced, S604); PROJECT_LEARNINGS.md
+  Learning 624 (the first instance of this session's own process gap) and 625 (this session's
+  recurrence).
+gotchas: This session's own Phase 1 response stated an intention to do "Phase 1B and PRE-RED research
+  first," then only did PRE-RED research and went straight to the GREEN edit -- skipping Phase 1B a
+  second time, one session after Learning 624 documented the exact same gap. Caught only while
+  writing this close-out, after the fix had already landed (later than S604's own catch). A future
+  session should not assume that reading a fresh PROJECT_LEARNINGS.md entry about a gap prevents
+  repeating it -- the countermeasure has to be a same-turn tool-call habit (write the stub file
+  immediately after stating the deliverable, before any Read/Bash call), not a remembered intention.
+  Separately: `gh run view <id> --log-failed` / `--log` returned empty for this repo's runs; use
+  `gh api repos/{owner}/{repo}/actions/jobs/<job-id>/logs` instead to get the raw log.
+runtime_smoke: n/a -- inst/WORDLIST is a spell-check dictionary, not runtime code; no service
+  registration, dispatch, or config-resolution behavior changed. Stated explicitly.
+changelog_ref: pending
+commit: pending
+```
+<self_score breakdown: +2 root cause correctly traced (not just "radix isn't in the list" but WHY --
+S604's own close-out edit outran its own regression check), directly useful for Learning 625's
+framing; +2 full TDD cycle with all 3 gated AskUserQuestions, RED confirmed as the pre-existing
+failing test rather than fabricating a redundant new one, GREEN confirmed with both the target test
+AND a full 0/0 clean-regression read AND a direct package-wide spelling check; +1 the standing
+CI-status check (gh run list) caught both a new AND a pre-existing (shinytest2) red run, matching
+CLAUDE.md's unconditional-check convention; +1 the Phase 1B gap was self-caught and documented with a
+sharper practical rule (Learning 625) rather than left for a future session to rediscover; -2 for
+committing the EXACT gap Learning 624 named, one session later, despite explicitly stating the
+intention not to -- the self-catch is good, but the recurrence itself is the more consequential fact.
+predecessor_score breakdown: 6/10 -- S604's Phase-1B gotcha was read and explicitly quoted back at
+Phase 1 of this session, which is real credit, but the `what_was_done` field's "full clean regression:
+0/0 across the ENTIRE suite" claim did not in fact cover the state S604 actually pushed (the NEWS
+edit landed after that check ran), and that gap is what produced this session's actual CI-red
+finding -- a claim in a handoff field should describe the state that got committed, not a
+mid-session checkpoint that predates the final edits.>
+
+```handoff
 session: S604
 date: 2026-08-18
 status: complete

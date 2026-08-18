@@ -16,6 +16,29 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-18 · [ad hoc] S605: fix R-CMD-check.yaml CI-red — `inst/WORDLIST` missing "radix"
+- **Deliverable:** `inst/WORDLIST` — added `radix` (before `RData`), the one word
+  `spelling::spell_check_package()` flagged as uncovered. Root cause: S604's close-out edit to
+  `NEWS.Rmd`/`NEWS.md` (issue #162's changelog bullet, "byte/radix order") introduced the word
+  *after* S604's own full-clean-regression check had already run, so it was never re-verified —
+  same defect class as the S584/S587 precedent (`md's`, backfilled S603/S604). Found during this
+  session's own Phase 0 CI-status check (`gh run list`), reported (not filed as a `BACKLOG.md`
+  item — trivial enough to fix same-session per the "just fix it" one-off-bug convention) and
+  fixed in the same session, per user pick from the rendered priorities list. Verification: target
+  test (`test_wordlist_coverage.R`) 0 failures; full clean-regression suite 0 failed/0 error
+  project-wide; direct `spelling::spell_check_package(".", vignettes = TRUE)` — "No spelling
+  errors found." No `.R` file touched (lint N/A); no runtime behavior changed (Phase 3E N/A,
+  stated explicitly). TDD: full PRE-RED→RED→GREEN→REFACTOR cycle with all 3 gated
+  `AskUserQuestion`s — RED was the already-existing, already-failing `test_wordlist_coverage.R`
+  assertion (no new test needed, the existing test fully captured the requirement); REFACTOR
+  concluded as a genuine no-op (single-line addition to a flat word list).
+- **Process note (self-flagged):** this session again skipped Phase 1B (the `SESSION_NOTES.md`
+  claim stub + `HANDOFFS.md` `status: pending` receipt, committed *before* any technical work) —
+  the exact gap S604 self-flagged and logged as `PROJECT_LEARNINGS.md` Learning 624 one session
+  earlier, in the very same session that documented it. Caught only after the GREEN edit had
+  already landed, not before. See the updated Learning 624 entry and this session's `HANDOFFS.md`
+  receipt for the corrective framing.
+
 ### 2026-08-18 · [ad hoc] S604: record close-out commit sha in HANDOFFS.md receipt (`6f645d4a`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit`/`changelog_ref: pending` ->
   `6f645d4a` (the close-out commit whose sha the receipt itself couldn't name until after it was
