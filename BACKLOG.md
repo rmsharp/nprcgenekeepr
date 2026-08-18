@@ -430,33 +430,13 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       connected-component walk).
 
 ## Housekeeping
-- [ ] **Add MIT license badge + REUSE compliance badge to `README.Rmd`** (found 2026-08-17,
-      owner-directed, Effort S for the MIT badge / DECISION NEEDED for the REUSE badge) -- the
-      package is already MIT licensed (`DESCRIPTION`'s `License: MIT + file LICENSE`;
-      `LICENSE`/`LICENSE.md` both committed since S102's CRAN hygiene pass), just not badged.
-      `README.Rmd`'s existing `<!-- badges: start -->`...`<!-- badges: end -->` block (lines 14-24)
-      has 7 badges (repostatus, lifecycle, 3x CRAN, R-CMD-check, DOI, Codecov) but no license badge.
-      **MIT badge (READY, Effort S):** add
-      `[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)` to the
-      block -- a static shields.io badge, no compliance mechanism, safe to add immediately. Must
-      re-render `README.md` from `README.Rmd` afterward (`devtools::build_readme()` or equivalent --
-      `README.md` is generated, not hand-edited, per its own `github_document` header and S418's own
-      "re-render README" precedent) rather than hand-editing both files independently.
-      **REUSE badge (DECISION NEEDED before implementing):**
-      `[![REUSE status](https://api.reuse.software/badge/github.com/rmsharp/nprcgenekeepr)](https://api.reuse.software/info/github.com/rmsharp/nprcgenekeepr)`
-      is a LIVE compliance check against api.reuse.software (the [REUSE](https://reuse.software/)
-      spec), not a static image -- verified this repo currently has NEITHER a `LICENSES/` directory
-      NOR any `SPDX-License-Identifier` header NOR a `REUSE.toml`/`.reuse/dep5` file (grepped `R/`
-      and repo root -- 0 hits of any). Adding the badge as-is would very likely render a red/
-      non-compliant status in the README, arguably worse than no badge at all. Real compliance
-      needs: a `LICENSES/MIT.txt` (REUSE's own convention for the license text, distinct from the
-      existing `LICENSE.md`), plus either an SPDX header per source file or a `REUSE.toml`/
-      `.reuse/dep5` covering exceptions (docs, data files, the already-`.gitignore`/
-      `.Rbuildignore`d copyrighted reference PDFs this section's S567/S568 item already tracks
-      separately) -- a real, bounded documentation task, not a one-line badge add. A future session
-      should run `reuse lint` (or the equivalent tool) first to get an exact gap list before scoping
-      the work, then decide whether to (a) do the compliance work, then add the badge, or (b) skip
-      the REUSE badge and ship just the MIT badge.
+- [x] **Add MIT license badge + REUSE compliance badge to `README.Rmd`** (found 2026-08-17,
+      owner-directed) -- **DONE S607 (2026-08-18).** Both badges added, `README.md` re-rendered.
+      REUSE compliance implemented for real, not just the badge: `reuse` CLI installed (v6.2.0),
+      `LICENSES/MIT.txt` + `REUSE.toml` added (blanket MIT/R. Mark Sharp, with a carve-out for
+      `renv/activate.R` and the 4 `man/figures/lifecycle-*.svg` files, both third-party/Posit
+      Software PBC). `reuse lint`: 1234/1234 compliant. `devtools::check()`: 0 new NOTEs. See
+      `CHANGELOG.md` and `PROJECT_LEARNINGS.md` Learning 627.
 - [x] (found S584, 2026-08-15, incidental to running the build equivalent during close-out,
       **RESOLVED S587.** Added the 4 flagged words (`matings`, `Rectilinear's`, `runnable`,
       `visNetwork's`) to `inst/WORDLIST`, each placed at its alphabetic neighbor; all 4 confirmed

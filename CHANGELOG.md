@@ -16,6 +16,33 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-18 · [ad hoc] S607: MIT + REUSE license badges added to README.Rmd, full REUSE compliance
+- **Deliverable:** `BACKLOG.md` Housekeeping item (added S600, `[ad hoc]` entry above) — both halves
+  DONE. **MIT badge:** static shields.io badge added to `README.Rmd`'s existing badges block;
+  `README.md` re-rendered via `devtools::build_readme()`. **REUSE badge:** owner picked "do the
+  compliance work now" over skipping the badge or holding, via `AskUserQuestion`. Installed the
+  `reuse` CLI (v6.2.0, `brew install reuse` — not previously available locally) rather than
+  approximating compliance from spec knowledge alone. `reuse lint` before any change: 0/1234 files
+  (tracked + untracked working-tree content) had a valid SPDX license identifier, confirming the
+  S567/S600 grep finding. Added `LICENSES/MIT.txt` (canonical SPDX text via `reuse download MIT`,
+  network-verified) and `REUSE.toml`: one blanket `"**"` annotation (`2017-2026 R. Mark Sharp`, MIT)
+  covering all first-party content, plus a carve-out for 5 files vendored in by tooling and not
+  authored by this project — `renv/activate.R` and the 4 `man/figures/lifecycle-*.svg` badges — both
+  confirmed MIT / Posit Software, PBC by checking `renv`'s and `lifecycle`'s own installed
+  `DESCRIPTION`, not assumed. `inst/extdata/reference/Master_Genetic_metrics_2_14_15.pdf`'s copyright
+  status was genuinely ambiguous from PDF metadata alone (generic "Word" authorship) — owner confirmed
+  via `AskUserQuestion` it is the project's own MIT-licensed work, distinct from the 4 already-
+  gitignored third-party papers (S567/S568). `reuse lint` after: **1234/1234 compliant, 0 missing** —
+  verified against the real tool, not assumed from the config. `.Rbuildignore` gained `REUSE.toml`/
+  `LICENSES`, matching the existing `CITATION.cff`/`codecov.yml`/`_pkgdown.yml` precedent;
+  `devtools::check()` confirmed 0 new NOTEs from this change (the 1 warning + 2 notes present — the
+  recurring Office lock file, `scratchpad/`, the long-standing `vignettes/figure/` knitr leftover —
+  are all pre-existing, unrelated to this session). REUSE badge will render green only after this
+  commit is pushed (api.reuse.software queries the live GitHub repo, not the local working tree).
+  New `PROJECT_LEARNINGS.md` Learning 627 (run the real compliance tool, don't approximate it).
+  `CLAUDE.md` learnings-count pointer refreshed (626→627, S606+→S607+).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-18 · [ad hoc] S606: record close-out commit sha in HANDOFFS.md receipt (`b10b6d2d`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit`/`changelog_ref: pending`
   -> `b10b6d2d` (the close-out commit whose sha the receipt itself couldn't name until after it was

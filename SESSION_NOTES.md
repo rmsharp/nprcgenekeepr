@@ -29,12 +29,101 @@ re-derivation needed beyond a quick re-verification of the REUSE compliance gap 
 headers / no `LICENSES/` / no `REUSE.toml`, matching S567's original grep).
 
 ### What Session 607 Did
-**Deliverable: Add MIT license badge to `README.Rmd` + resolve the REUSE-badge scope decision.**
-**Status: Session claimed. Work beginning.**
-**Started:** 2026-08-18.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable: MIT + REUSE license badges added to `README.Rmd`, full REUSE compliance
+implemented.** **DONE.**
+**Started/Completed:** 2026-08-18.
+
+**What actually happened, in order:**
+
+1. **Phase 0 orientation** — read `SESSION_RUNNER.md`/`SAFEGUARDS.md` in full; `SESSION_NOTES.md`
+   (S606's active task, DONE); `gh issue list` (13 open); `git status`/`log`/`diff --stat` (clean,
+   only pre-existing untracked clutter); `methodology_dashboard.py` (96/100 health, 0 High+ risk);
+   `gh run list --branch master` (S606's `R-CMD-check.yaml` still `in_progress` at 26+ min,
+   longer than the ~18-24 min recent baseline — flagged, not diagnosed; `shinytest2.yaml`
+   scheduled run still red, recurring/undiagnosed across several sessions). Ledger reconcile:
+   `CHANGELOG.md`/`HANDOFFS.md` frontiers both == `HEAD` (`dbb64ce5`) — no gap, no ghost session.
+   Also re-verified S606's own deferred check (the "Pedigree diagram vs kinship2" section's
+   regrowth risk): 179 lines, down from S530's 286 — not regrown, no action needed.
+2. Rendered the `BACKLOG.md`-sourced priorities list (4 numbered items: issue #161 decision,
+   MIT/REUSE badges, issue #148 scope-narrowing, Track 3 redesign scoping) via `AskUserQuestion`
+   — **user picked MIT/REUSE badges.**
+3. **Phase 1B claimed FIRST**, before any edit: wrote the `SESSION_NOTES.md` stub and the
+   `HANDOFFS.md` `status: pending` receipt, committed (`fdbc0f88`).
+4. **MIT badge:** added the static shields.io badge to `README.Rmd`'s badges block (after
+   lifecycle, before CRAN_version); re-rendered `README.md` via `devtools::build_readme()`;
+   verified the rendered diff was clean (only the badge + the expected date/version-date
+   re-render side effects). Committed (`7ff11d2c`).
+5. **REUSE badge decision**: re-verified the compliance gap was unchanged from S567's original
+   grep (0 SPDX headers, no `LICENSES/`, no `REUSE.toml`/`.reuse/dep5`); presented the 3-way
+   decision (do compliance work now / skip badge / hold) via `AskUserQuestion` — **user picked
+   "do compliance work now."**
+6. **REUSE compliance implementation**: installed the `reuse` CLI (`brew install reuse`, v6.2.0 —
+   not previously available locally) rather than approximating from spec knowledge alone.
+   `reuse lint` before any change: 0/1234 files (tracked + untracked working-tree content) had a
+   valid license identifier — confirmed the true scope, larger than a `git ls-files R/` count
+   alone would suggest. Downloaded the canonical SPDX MIT text (`reuse download MIT` →
+   `LICENSES/MIT.txt`, network-verified, not hand-typed). Wrote `REUSE.toml`: a blanket `"**"`
+   annotation (`2017-2026 R. Mark Sharp`, MIT) plus a carve-out for 5 files vendored in by
+   tooling and not authored by this project — `renv/activate.R` and the 4
+   `man/figures/lifecycle-*.svg` badges — both confirmed MIT / Posit Software, PBC by checking
+   `renv`'s and `lifecycle`'s own installed `DESCRIPTION` (`Rscript -e 'read.dcf(system.file(...))'`),
+   not assumed.
+7. **One genuine provenance ambiguity found and escalated, not guessed at:**
+   `inst/extdata/reference/Master_Genetic_metrics_2_14_15.pdf` is tracked/shipped (unlike the 4
+   already-gitignored copyrighted reference papers, S567/S568) but its PDF metadata showed only
+   generic "Word" authorship, no real provenance signal. Presented via `AskUserQuestion`
+   (project's own MIT work / third-party, exclude / unknown, leave unresolved) — **user confirmed
+   it is the project's own MIT-licensed work.**
+8. **Verification, not assumption:** `reuse lint` after all changes — **1234/1234 files
+   compliant, 0 missing.** Added `REUSE.toml`/`LICENSES` to `.Rbuildignore` (matching the existing
+   `CITATION.cff`/`codecov.yml`/`_pkgdown.yml` precedent); `devtools::check()` confirmed **0 new
+   NOTEs** from this change — the 1 warning + 2 notes present (recurring Office lock file,
+   `scratchpad/`, long-standing `vignettes/figure/` knitr leftover) are all pre-existing,
+   unrelated to this session. Full test suite ran clean as part of `check()`
+   (`Running 'testthat.R' ... OK`). Added the REUSE badge to `README.Rmd`, re-rendered
+   `README.md`. Committed (`c8ea1123`).
+9. **Close-out**: `PROJECT_LEARNINGS.md` Learning 627 (run the real compliance tool, don't
+   approximate it); `CLAUDE.md` (learnings-count pointer 626→627, Sessions 1–606+→1–607+);
+   `CHANGELOG.md`; `BACKLOG.md` (item marked DONE); this file; `HANDOFFS.md`.
+
+**TDD phase:** N/A throughout — documentation/repo-metadata edit (`README.Rmd`, `REUSE.toml`,
+`LICENSES/`, `.Rbuildignore`), no `R/`/`tests/`/`man/`/`NAMESPACE`/`data/` content touched
+(confirmed via `git diff --stat` at every commit), matching the established precedent for
+`README.Rmd`/`NEWS.Rmd`/`BACKLOG.md`-only sessions (e.g. S606). No test file governs README badge
+content (confirmed by grep before starting) — nothing to write RED against.
+
+**Runtime smoke test (Phase 3E):** N/A — pure documentation/repo-metadata change, no
+`R/`/service-registration/dispatch/config-resolution behavior touched. Stated explicitly, not
+silently skipped.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation/tutorial/`NEWS.Rmd`/`a2interactive.Rmd`/
+`_pkgdown.yml` checklists all N/A — no exported function, UI feature, or displayed statistic
+touched. GitHub issue close-out checklist N/A — this item was never tied to a GitHub issue (added
+to `BACKLOG.md` directly, S600). Lint close-out checklist N/A — no `.R` file touched.
+
+**Self-assessment (Session 607): 9/10.** **Strengths:** (1) Did not assume the REUSE compliance
+gap from the existing grep-based BACKLOG.md note — installed and ran the actual `reuse` CLI both
+before and after, catching the true scope (1234 files, not just `R/`) and proving compliance
+rather than asserting it from the config alone. (2) Found 2 third-party-vendored files
+(`renv/activate.R`, the lifecycle SVG badges) that a naive blanket declaration would have
+misattributed to the project — verified their real copyright holder against each dependency's own
+installed `DESCRIPTION` rather than assuming everything under version control is project-authored.
+(3) Escalated a genuine copyright-provenance ambiguity (the Genetic-metrics PDF) to the owner via
+`AskUserQuestion` instead of inferring an answer, matching this project's own heightened care
+around content that could misattribute copyright. (4) Verified the build equivalent
+(`devtools::check()`) after the `.Rbuildignore` change and confirmed 0 new NOTEs, not just "no new
+errors." (5) Re-checked S606's own deferred regrowth question ("Pedigree diagram vs kinship2")
+during Phase 0 even though it wasn't this session's own scope, closing a loose end cheaply.
+**Weaknesses:** (1) Installing a new Homebrew package (`reuse`) is a small side effect on the
+user's local machine outside the repo itself — done without a separate explicit ask, on the
+judgment that it was low-risk/reversible and directly served the owner-picked task; a stricter
+session might have confirmed first. (2) The REUSE badge needed a push to render correctly
+(api.reuse.software queries the live GitHub repo, not the local working tree) — pushed at
+close-out (`c8ea1123`), matching this project's established practice (local was already in sync
+with `origin/master` at this session's own Phase 0), but not verified live afterward (api.reuse.software
+may take a few minutes to crawl the new commit) — a future session or the owner should confirm the
+badge actually renders green.
+**Ledger:** recorded in `CHANGELOG.md` this session (claim + MIT badge + REUSE compliance).
 
 ### Session 605 Handoff Evaluation (by Session 606)
 **Score: 8/10.** **What helped:** the `next_steps` field's rendered priorities list (issue #161
