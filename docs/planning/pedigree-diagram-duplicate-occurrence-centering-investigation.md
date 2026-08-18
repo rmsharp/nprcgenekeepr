@@ -1,6 +1,6 @@
 # Pedigree Diagram: Duplicate-Occurrence-Selection Centering Fix — Investigation
 
-> **STATUS: INVESTIGATION ONLY — NO DESIGN RATIFIED, ROUND 3.** This document is deliberately
+> **STATUS: INVESTIGATION ONLY — DESIGN FOUND SOUND (PRE-RED), NOT YET IMPLEMENTED.** This document is deliberately
 > **not** an implementation plan. Session 598 (2026-08-16) ran a research/verify/adversarial-critique
 > workflow against the previously-designed fix and found a genuine, live-verified correctness gap
 > *inside the design's own claimed scope* (§5.2). Presented with that finding via `AskUserQuestion`,
@@ -27,8 +27,24 @@
 > midpoint, in the *common* tightly-spaced case) plus a live scale bug in the design's own proposed
 > RED test. Presented via `AskUserQuestion` a third time, the owner again chose **"Hold — write up
 > findings, file the locale bug separately."** This document exists so a future session does not have
-> to re-derive any of the evidence below — it should start directly at **§9.7 (Open Questions,
-> Updated After Session 600)**, which supersedes §8.6.
+> to re-derive any of the evidence below — it should start directly at **§11.4 (Status)**, which
+> supersedes every prior round's own open-questions section.
+>
+> **Session 601 (2026-08-17), owner-directed via `AskUserQuestion` to pivot away from the pre-clamp
+> substitution mechanism S598-S600 all used, ran a 4th 12-agent workflow against a structurally
+> different mechanism — a POST-HOC BOUNDED NUDGE applied AFTER Track 3's clamp — and found it likewise
+> unsound.** Round 2 critique discovered a strictly worse-than-erasure regression on a nested/chained
+> sibling-consanguineous shape (a union Track 3 alone already handled correctly gets actively
+> corrupted by the nudge), broader than the design's own disclosed "boundary flip" risk. Separately,
+> the repair round discovered the qualifying condition never fires on either of this project's own
+> test corpora (0/4 `small`, 0/237 real 375-individual fixture) — so even a sound version of this
+> mechanism would currently have zero measured effect on any pedigree this package tests or ships.
+> **Owner-directed via a second `AskUserQuestion` to attempt one more, narrowly-scoped repair (fix
+> only the worse-than-erasure regression, leave the separate erasure trade-off alone), a 5th workflow
+> found a "Track-3-Engagement Gate" — the nudge fires only for unions Track 3's own clamp actually
+> altered — that closes the regression and survived a full, fresh 3-lens adversarial critique with
+> zero major findings (§11).** This is the first design across 5 workflow attempts in this
+> investigation to do so. It is still PRE-RED — see §11.4.
 
 ## 0. What this addresses (and what it deliberately does not)
 
@@ -774,6 +790,284 @@ A future session picking this up should start here, not re-run §9's workflow:
    verifying `kinship2-fidelity-validation.qmd`'s Track C section — remain accurate and unaddressed.
 5. The `preferAnchor()` locale bug (§9.6) is independently actionable regardless of how items 1-4
    resolve — see the filed `BACKLOG.md`/GitHub issue.
+
+## 10. Session 601: Post-Hoc Bounded Nudge Pivot — Also Not Sound, Plus New Real-World-Impact Evidence
+
+This section documents Session 601's own attempt in full, so a future session does not have to
+re-run the workflow to recover what was tried, what was found, and why it wasn't shipped. Workflow
+run id `wf_2d657d34-184` (12 agents, all completed, 0 errors, ~2.10M subagent tokens, ~92 min). All
+numbers below are live-verified (via `pkgload::load_all()` plus the real
+`.buildMatingUnitForest()`/`.positionMatingUnitForest()` internals and, for outer-surface claims,
+the real exported `makePedigreeMatingLayout()`, not merely reasoned about — this project's own
+established discipline (`MEMORY.md`).
+
+### 10.1 The pivot and why it's a different mechanism, not a rename
+
+All 3 prior attempts (S598-S600) tried a **pre-clamp substitution**: replacing a child's x value
+*before* Track 3's clamp runs (`R/makePedigreeDiagramData.R:966-1003`). Per the owner's own
+`AskUserQuestion` directive at claim time, this session instead scoped 4 independent design agents to
+a **post-hoc bounded nudge** applied strictly *after* Track 3's clamp has already run, and *before*
+`nodes$x` is synced (line 1005) / `dupX` is computed (lines 1007-1010) — reading an already-clamped,
+parent-span-safe starting point rather than a raw value that must then survive being clamped.
+Design agents were explicitly told they were **not** bound by Layers 1/2's original "given, do not
+redesign" qualification rule (written for the pre-clamp mechanism) and had to re-derive and justify
+their own qualification rule from its literal wording — targeting Learning 615 (a silently-narrowed
+"given" rule) and Learning 616 (a magnitude bound measured against the wrong reference frame)
+directly in the design/critique prompts.
+
+### 10.2 The 4 candidates (condensed)
+
+| # | Candidate | Core mechanism | F1 (target, →−6) | `preferAnchor()` dependency | Notably found |
+|---|---|---|---|---|---|
+| 1 | Post-Clamp Span-Relative Bounded Pull | Nudge bounded to `K_frac·realSpan` (K=0.4, proven-safe ceiling 0.5) | −0.05 exact (=−6 scaled) | Inherited via `duplicates` table (same as shipped `dupX`), not newly load-bearing | Real children's own span is not fan-invariant — legitimately grows with unrelated structure (a structural fact of the layout, not a bug) |
+| 2 | Post-Clamp Bounded Duplicate-Anchored Nudge (+ Real-Occurrence Disqualification) | Nudge toward `dupX`-style local value, capped `K·childSpan` (K=0.5 proven threshold); adds a 3rd qualification clause disqualifying a kid whose own real occurrence is *also* sibling-consanguineous | −6.0 exact | Same as #1 — inherited, not new | First-draft (2-clause) version reproduced the exact already-rejected S599 Candidate-4 "SQD Gate" wrong-direction failure (0.7) — caught live, fixed by the 3rd clause |
+| 3 | Post-Clamp Deviation-Gated Relaxation (PCDR) | Numeric-only (no id/anchor comparison) "which sibling deviates more from V's center" test; damped relaxation toward target | −30 outer (different internal formula, same direction) | **Zero** — pure geometric/numeric test, verified by construction to read no id/anchor/duplicates-table field at all | First version had a real parent-span-violating bug (target=2.0 outside parent span), caught live and fixed with an added clamp; could not reproduce the doc's own §8.4 magnitude-explosion sequence from prose (traced to a hard mathematical invariant of `finalizeNode()` that keeps a *symmetric* fan from ever drifting a union's own raw center) |
+| 4 | Post-Clamp Bounded Sibling-Union Nudge | Qualify only when *exactly one* other mating unit has both parents among U's children; abstain on 2+ or on an exact near/far-sibling distance tie | −0.05 exact (=−6 scaled) | **Zero** — reads only `sire`/`dam`/`id`/`childEdges`, no anchor/duplicates dependency | Abstains on exact ties — live-confirmed the "textbook" symmetric 2-sibling-mate shape ties at every tested fan width, so this common shape gets **no** correction; also surfaced a previously-undocumented "founder-mate generation-tie" reference-frame instability in the *shipped* Track-6 algorithm itself (unrelated to this fix), handled by a fixed `±2·minSep` delta cap independent of any drifting reference frame |
+
+All 4 independently reproduced the historical −6/−0.05 target-case number via structurally different
+routes. 2 of 4 (Candidates 3 and 4) verified **zero** `preferAnchor()`/issue #162 dependency — a
+genuine, disclosed improvement over every pre-clamp attempt, which all needed the anchor/duplicated
+distinction as load-bearing logic.
+
+### 10.3 Synthesis and the round-1 critique findings
+
+The synthesis, **"Post-Clamp Children-Span-Clipped Duplicate Nudge,"** adopted Candidate 1/2's core
+shape but replaced the tunable `K_frac`/`K` constant with a **provably-derived** bound: each
+qualifying kid's substituted value is explicitly clipped into `[min(realKidX), max(realKidX)]` before
+averaging, so `target` is provably within the real children's own footprint *for any number of
+simultaneously-qualifying children* — no tunable constant. Independently re-verifying every
+candidate's own numbers (not trusting self-reports), the synthesis agent found and fixed one real
+overshoot bug none of the 4 candidates' own reports had surfaced: the *unclipped* version of the
+formula overshoots the real children's span by up to 0.2 units on the literal mandated 2-child,
+span-`minSep` case — closed by the explicit clip.
+
+**Round-1 critique — all 3 lenses returned `designStillSound: false`:**
+
+1. **Invariant preservation (major).** The synthesis's central proof — "provably within the real
+   children's footprint, unconditionally" — is false once its own *mandatory* second safety net (an
+   unconditional re-clamp into Track 3's own parent-span `[lo, hi]`) is accounted for. Live-constructed
+   a minimal, realistic fixture (`P,Q → B,A`; `B` genuinely duplicated via an unrelated outside mate;
+   real x span exactly `minSep = 1`, matching the task's own mandated degenerate case) where a
+   correctly-qualifying kid's Stage-1 target (`1.25`, exactly at the span boundary — the clip's own
+   math sound in isolation) gets forced back down to `0.00` by the parent-span reclamp — **bit-identical
+   to Track 3 alone, 0.25 units (25% of the span) outside the real children's own footprint.** F1's own
+   apparent success is a property of that one fixture's favorable parent/child-span proportions, not a
+   structural guarantee — the same "success masked by one fixture's proportions" pattern that fooled 2
+   full prior critique rounds in S600 (§9.4 finding 1).
+2. **Edge cases (major).** The reclamp-erasure above is not rare: a follow-up randomized sweep found it
+   engaging in 34.9% (37/106) of structurally-qualifying constructed cases, always total (never
+   partial). The design's own "never the binding constraint in every fixture tested" framing is an
+   artifact of F1-F4 all happening to have a parent pair that co-drifts with the child subtree, not a
+   general property.
+3. **Test blast radius & TDD sequencing (major, ×3).** F2/F3's no-op branches are bit-identical to
+   shipped output at *both* the internal and outer-surface level — the same TDD white-box problem every
+   prior session flagged, with no concrete extraction point proposed. `checkInvariant()`'s dead-code
+   trap recurs unaddressed under this new rule (0/103 in both existing corpora, never checked by the
+   synthesis). No dedicated PRE-RED reopening `AskUserQuestion` was drafted, the 4th consecutive session
+   to reach this stage without satisfying §5.3's own standing requirement.
+
+### 10.4 The repair and the round-2 findings that killed it
+
+**Repair** — renamed **"...(Reclamp-Contingent, Not Unconditional)"** — honestly walked back the
+"unconditional" claim rather than papering over it: the true provable claim is that Stage 1's
+*pre-reclamp* target is bounded; the *final* output is that target further clamped into Track 3's own
+parent span, which can and does erase the correction (100% erasure, reconfirmed live on the minimal
+counter-example). **New finding, not previously known:** against the *only* two test corpora this
+project has, the qualifying condition **never fires** — `small` (0/4 mating units), the real
+375-individual bundled fixture (0/237) — so *today*, neither this mechanism's benefit nor its erasure
+risk touches any pedigree this package actually ships or tests against; both are confined to
+hand-constructed fixtures. The repair also proposed a concrete white-box extraction
+(`.computeDupNudge()`, returning `qualifyingKids`/`preReclampTarget` before any reclamp is applied) to
+resolve the TDD problem, and drafted (imperfectly — see below) a PRE-RED reopening `AskUserQuestion`
+with 3 options, the 3rd being closing the whole investigation as a permanent known limitation given
+the 0/237 real-corpus finding plus 4 consecutive failed sessions.
+
+**Round-2 critique (fresh, all 3 lenses re-run against the repair):**
+
+1. **Invariant preservation — still `designStillSound: false`.** Reconfirmed the reclamp-erasure finding
+   live, fresh, on an independently-built fixture — unchanged from round 1 (the repair discloses the
+   problem honestly; it does not fix it, because it mathematically cannot without violating Track 3's
+   own shipped invariant).
+2. **Edge cases — still `designStillSound: false`, and *worse* than round 1.** Live-constructed the
+   exact adversarial shape this round was specifically directed to build — a 2-level chained/nested
+   sibling-consanguineous relationship (an inner qualifying union nested inside an outer one). Track 3
+   *alone*, with no fix at all, already handles the inner union **perfectly** (raw midpoint already
+   equals the true center, no clamp needed, shipped x = 0.000). This design's own nudge, however,
+   computes a target using the inner union's qualifying duplicate's *own* clamped position (semantically
+   unrelated — several generations removed) and lands at **−0.249** after its own mandatory reclamp — a
+   value **strictly worse** than either its own Stage-1 target (−0.8) *or* Track-3-alone's already-correct
+   answer (0.000). This is not mere erasure (reverting to Track 3's own value); it is a **freshly
+   introduced regression on a case the shipped pipeline already got right**, discovered on the very
+   first such construction attempted. The failure surface is also broader than the design's own
+   disclosed "boundary flip" risk (which required nesting on *both* sides of the parent span) — this
+   counter-example is only a one-sided straddle.
+3. **Test blast radius & TDD sequencing — now `designStillSound: true`** (all findings minor). The
+   proposed `.computeDupNudge()` extraction was independently re-implemented and confirmed workable; the
+   `checkInvariant()` remedy (add `.commentOneFixture()` to the call list + a 3rd disjunct, together) was
+   confirmed to be a real, non-vacuous RED→GREEN pair — the first time in 4 sessions this specific trap
+   has been fully closed. 2 minor process nits: the drafted `AskUserQuestion` header doesn't match
+   `CLAUDE.md`'s own mandated `TDD: <FROM>→<TO>` format, and its Option 2 conflates 2 categorically
+   different alternatives (ship the helper unwired for review, vs. close the investigation permanently)
+   into one selectable option.
+
+### 10.5 What Session 601 confirmed still holds (do not re-verify)
+
+- The exact insertion point for a post-hoc mechanism (`R/makePedigreeDiagramData.R`, strictly between
+  the end of Track 3's clamp loop [line 1003] and the `nodes$x` sync [line 1005]/`dupX` computation
+  [lines 1007-1010]) is confirmed workable and unchanged, across 4 independently-built candidates plus
+  a synthesis plus a repair.
+- The target-case number (−6 scaled / −0.05 abstract) is reproducible via a post-hoc mechanism, exactly
+  matching every pre-clamp attempt's own hand-simulated figure, via a structurally different route —
+  this part of the problem remains solved in isolation; what's unsolved is what happens when Track 3's
+  own reclamp engages.
+- A post-hoc mechanism *can* be designed with **zero** `preferAnchor()`/issue #162 dependency
+  (Candidates 3 and 4, live-verified by construction) — a genuine, novel option not available to any
+  pre-clamp mechanism tried across S598-S600, useful if a future session pursues this mechanism family
+  further and wants to sidestep issue #162 entirely rather than wait on it.
+- Track 3's own parent-span clamp, when re-applied as a mandatory second safety net, structurally
+  guarantees the *final* output never exits the parent span — confirmed across every fixture and both
+  critique rounds. What is NOT guaranteed is that the final output stays within the *real children's*
+  own span once that second clamp engages, nor that engaging it merely "erases" rather than actively
+  worsens a case Track 3 alone already handled correctly.
+
+### 10.6 Independent evidence: this problem class currently has zero measured real-world impact
+
+Discovered by the repair round, reconfirmed independently by round-2 critique: under this session's
+(reasonably conservative, but not unusually narrow) qualification rule, **zero** mating units qualify
+for the nudge in either of this project's own test corpora — the `small` fixture (0/4) or the real
+375-individual bundled fixture (0/237). The originally-reported issue #160 comment 1 shape
+(`.commentOneFixture()`, this document's own F1/target case throughout) is a real, user-reported
+pattern, but its exact structural precondition (a 2-child mutual-mate union where the non-anchor child
+*also* has an unrelated outside mate) does not currently recur anywhere in the one real-scale corpus
+this package ships and tests against. This does not mean the underlying problem is fictional — it
+means that, as currently scoped and tested, neither the benefit of fixing it nor the risk of a flawed
+fix touches any pedigree this project can currently observe.
+
+### 10.7 Open Questions, Updated After Session 601
+
+A future session picking this up should start here, not re-run §10's workflow:
+
+1. **The go/no-go question is now stronger still.** 4 consecutive sessions (S598-S601), across 2
+   structurally different mechanism families (pre-clamp substitution ×3, post-hoc nudge ×1), have each
+   failed adversarial critique — the post-hoc attempt's own round-2 finding (a regression *worse* than
+   doing nothing, on a case the shipped pipeline already handles correctly) is, if anything, a stronger
+   caution than any prior round's finding, not a weaker one. Combined with §10.6's zero-real-corpus-
+   impact finding, a future session should treat **continuing to refine either mechanism family** as the
+   option needing the strongest justification yet — explicitly weigh accepting Track 3's 2 disclosed
+   trade-offs as permanent, or closing this investigation outright, before a 5th attempt.
+2. **If a 5th attempt is chosen anyway**, and it stays in the post-hoc-nudge family, it inherits 2 new,
+   unresolved problems from this session: (a) the parent-span reclamp can turn a correct nudge into an
+   active regression on nested/chained sibling-consanguineous shapes, not just erase it — any further
+   attempt must either prove this cannot happen for a narrower, provably-safe class of unions, or accept
+   the regression as a disclosed, bounded risk; (b) whatever mechanism ships should prefer Candidate 3 or
+   4's own zero-`preferAnchor()`-dependency property over Candidate 1/2's inherited one, if practical —
+   a genuinely available choice this session discovered, not present in any pre-clamp design.
+3. `checkInvariant()`'s dead-code trap has a **confirmed-workable** remedy under this session's own
+   qualification rule (add `.commentOneFixture()` to the call list + a 3rd disjunct, together — a real
+   RED→GREEN pair, independently re-verified by round-2 critique) — the first time in 4 sessions this
+   specific trap has been closed, though only for this one rule's own shape, and only in isolation from
+   item 1's larger go/no-go question.
+4. §9.7's own carried-forward items — a scale-realistic regression test, re-screenshot-verifying
+   `kinship2-fidelity-validation.qmd`'s Track C section — remain accurate and unaddressed.
+5. The `preferAnchor()` locale bug (§9.6, filed as issue #162) remains independently actionable
+   regardless of how items 1-4 resolve.
+
+## 11. Session 601 (continued): Narrow Repair Converges — First Design To Survive Full Critique
+
+Immediately following §10, the owner directed a **narrow repair** (not a full 5th redesign) targeting
+specifically §10.4's edge-cases finding — the worse-than-erasure regression on nested/chained
+sibling-consanguineous unions — while explicitly leaving the separate, already-accepted
+invariant-preservation erasure finding (§10.4 point 1) untouched. Workflow run id `wf_f8b481f4-0f8`
+(6 agents: 2 repair candidates → 1 synthesis → 3 fresh critique lenses, 0 errors, ~1.04M subagent
+tokens, ~55 min). **All 3 critique lenses returned `designStillSound: true`** — the first design in
+this investigation's 5 workflow attempts (S598, S599, S600, S601×2) to survive a full adversarial
+critique cleanly. No 2nd repair round was needed.
+
+### 11.1 The fix: a Track-3-Engagement Gate
+
+**Root cause (independently re-diagnosed by both candidates and the synthesis):** Track 6's raw
+Pass-1 formula is, by construction, always a union's own mathematically-correct child-centered answer.
+Track 3's clamp is a no-op precisely when that raw value already falls inside the union's parent span
+— meaning Track-3-alone's shipped output is *already correct*, with nothing to improve. The nudge's
+substitution formula, however, reads a semantically unrelated signal (a qualifying duplicate's own
+already-clamped position, potentially several generations removed on a nested shape) with no way to
+know whether the union it's nudging actually needed correcting. When it didn't, the nudge pulls an
+already-correct value toward an unrelated one, and the mandatory reclamp cannot undo this because the
+corrupted target can still legally sit inside the union's own parent span — just at a worse location.
+
+**The fix, verbatim (synthesis of both candidates, which independently converged on the same idea):**
+
+> "A mating unit U's post-clamp nudge may fire only if Track 3's own clamp loop actually altered U's
+> value: `engaged(U) := |rawFinalUnitX[U] - clampedFinalUnitX[U]| > 1e-9` (`rawFinalUnitX` captured
+> immediately after Track 6's raw child-midpoint loop, before Track 3's clamp runs; `clampedFinalUnitX`
+> captured immediately after Track 3's clamp loop finishes). When `engaged(U)` is FALSE, U's nudge is
+> unconditionally suppressed regardless of how many of U's children otherwise satisfy Layer 1's
+> existing, unchanged per-kid (a)/(b) qualification rule."
+
+A fixed absolute epsilon (`1e-9`, matching this file's own existing de-collision-pass convention) was
+chosen over `all.equal()`'s relative tolerance — live-confirmed structurally sound: `min(max(x,lo),hi)`
+is an exact floating operation, so every raw/clamped delta observed across ~15 fixtures (both
+candidates plus the critique round) was either exactly `0.0` or `>= 0.0625` — no near-threshold
+ambiguous case arose in any construction tried.
+
+### 11.2 Live verification (independently re-confirmed by both candidates, the synthesis, and critique)
+
+- **Regression closed:** the exact §10.4 nested-fixture reconstruction (and multiple independently
+  varied nested/chained constructions) — `engaged(inner union) = FALSE` → nudge suppressed → final
+  output bit-identical to Track-3-alone's own already-correct value, never worse than doing nothing.
+- **F1 (target case) unaffected:** `.commentOneFixture()` — raw=0.75, clamped=0 (Track 3 genuinely
+  engaged) → `engaged = TRUE` → nudge proceeds exactly as before, byte-identical gated vs. ungated
+  (−0.05 abstract / −6.0 scaled).
+- **F2/F3 (wrong-direction, compounding) unaffected:** both still cleanly, bit-identically no-op — the
+  gate is a further AND-ed restriction on an already-0-qualifying set, structurally unable to change
+  either outcome.
+- **Not over-suppressive:** critique independently constructed a fresh adversarial variant where an
+  *inner* union is genuinely Track-3-engaged (its own nudge target survives the reclamp, a real,
+  needed correction) and confirmed `engaged = TRUE` correctly permits it — gated and ungated outputs
+  bit-identical throughout.
+- **Provably out of scope for the erasure finding:** `engaged(U) = TRUE` is a *precondition* for the
+  already-accepted erasure trade-off (§10.4 point 1) to even arise, so the gate is a pure pass-through
+  there by construction — confirmed both logically and by 2 independent live erasure instances hit
+  incidentally this session, both identical gated vs. ungated.
+- **Black-box RED-testability, a genuine improvement over F2/F3:** critique confirmed the nested
+  regression fixture *is* testable directly on the outer `makePedigreeMatingLayout()` surface (unlike
+  F2/F3's white-box-only no-ops) — a constructed fixture's `__union_3` lands at `x = -28.4` (buggy,
+  ungated) vs. `x = 67.5` (correct, gated), both live-computed on the real exported function.
+
+### 11.3 Round-1 critique — remaining minor findings (no majors; not blocking)
+
+- **Invariant preservation:** confirmed sound on every count above, plus one informational note —
+  genuinely-Track-3-engaged *nested* corrections appear structurally harder to construct than a
+  top-level one (tied to a DFS `mergeSubtrees` interaction found live), consistent with §10.6's
+  0/237 real-corpus finding that this whole mechanism class is currently rare in practice.
+- **Edge cases:** (1) the `1e-9` epsilon is empirically, not provably, safe — no near-threshold case
+  arose in ~15 fixtures, but this isn't exhaustive. (2) A previously-undisclosed corollary: Track 3's
+  own clamp loop unconditionally skips dangling-parent unions, so `rawFinalUnitX == clampedFinalUnitX`
+  always holds for them — `engaged` is always `FALSE` there, meaning the gate incidentally also filters
+  every dangling-parent union. Judged benign (the nudge's own reclamp is equally unavailable there,
+  so a fired nudge would have no safety net anyway) but should be stated explicitly, not left implicit.
+  (3) An inner-engaged/outer-no-op combination (the mirror image of the tested shapes) was not directly
+  constructed — no counter-evidence found, but a residual untested corner.
+- **Test blast radius & TDD:** (a) the round-2-approved `.computeDupNudge()` 6-argument signature has
+  no slot for `rawFinalUnitX` — live-verified a fix requiring no new parameter (`rawFinalUnitX[U]` can
+  be recomputed inside the helper from `nodes$x` of U's real children, which is finalized before Track
+  6's raw loop runs and never touched afterward) — not yet written down anywhere, should be resolved
+  explicitly before RED. (b) `checkInvariant()`'s already-approved 3rd-disjunct remedy needs no change
+  under this narrower gate, but its OR-based structure still can't distinguish "correctly suppressed"
+  from "the whole mechanism silently never fired" — F1's own case needs a strict, single-value
+  regression assertion independent of the loose corpus-wide sweep (already known from round 2, restated
+  here as a must-not-forget for RED).
+
+### 11.4 Status
+
+This design — **synthesis + Track-3-engagement gate**, in full — is the first in this investigation to
+survive a complete, fresh, 3-lens adversarial critique with zero major findings. It remains **PRE-RED**:
+no production code has been written, and per this project's TDD contract, a dedicated PRE-RED→RED
+`AskUserQuestion` (still not drafted — §10.4/§10.7 item 3's own standing obligation) is required before
+any RED test is written. The 3 minor findings above (§11.3) are not blocking but should inform that
+transition's scope: resolving the `.computeDupNudge()` signature question and stating the
+dangling-parent corollary explicitly are cheap, concrete pre-RED tasks; the untested inner-engaged/
+outer-no-op corner is a reasonable thing to check in the same pass rather than defer again.
 
 ## References
 
