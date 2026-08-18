@@ -265,6 +265,48 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       separately below (Housekeeping) and as a GitHub issue, per Learning 382's "report, don't fix
       mid-session" precedent.
 
+      **Progress (S601, 2026-08-17), post-hoc-nudge pivot — also not sound, plus a zero-real-impact
+      finding:** owner picked up §9.7 item 1's go/no-go via `AskUserQuestion` (accept Track 3
+      trade-offs as permanent / pivot to post-hoc nudge / authorize a 4th pre-clamp attempt / hold)
+      and chose to pivot — a mechanism shape untried by S598-S600, all of which stayed on a pre-clamp
+      substitution. A 4th 12-agent `Workflow` produced 4 candidates applying a bounded correction
+      *after* Track 3's clamp instead of before it; 2 of the 4 verified **zero** dependency on
+      `preferAnchor()`/issue #162 (a genuine improvement no pre-clamp design could offer). Synthesized,
+      critiqued (3 lenses) — **all 3 `designStillSound: false`** — repaired, critiqued again — **still
+      `designStillSound: false` on 2 of 3 lenses**, and the edge-cases finding is *worse* than any
+      prior round: on a nested/chained sibling-consanguineous shape, the nudge actively corrupts a
+      union Track 3 alone already positioned correctly (no fix needed there at all), landing farther
+      from the true center than either the nudge's own uncapped target or the shipped baseline.
+      **New, independent finding: under this session's qualification rule, the fix never fires on
+      either existing test corpus (0/4 `small`, 0/237 real 375-individual fixture)** — even a sound
+      version of this mechanism would currently touch zero pedigrees this package tests or ships.
+      **Four independent attempts across 2 structurally different mechanism families (S598, S599,
+      S600 pre-clamp; S601 post-hoc) have now all failed adversarial critique.** Full record appended
+      as
+      [`docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`](docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md)
+      §10.
+
+      **Progress (S601 continued, 2026-08-17), narrow repair converges — first sound design in this
+      investigation:** owner chose a 5th, narrowly-scoped attempt (fix only the worse-than-erasure
+      regression above; leave the separate, already-accepted erasure trade-off alone) rather than a
+      full 6th redesign. A 5th `Workflow` (6 agents: 2 candidates, both independently converging on
+      the same idea) produced a **"Track-3-Engagement Gate"**: the nudge fires for a union only if
+      Track 3's own clamp actually altered that union's value (`|raw - clamped| > 1e-9`); a union
+      Track 3 left untouched — the exact precondition for the regression — is a hard no-op instead.
+      Live-verified: closes the regression on multiple nested/chained reconstructions (never worse
+      than doing nothing), leaves F1/F2/F3 byte-identical to before, doesn't over-suppress a
+      genuinely-needed inner correction (tested), and is provably a pure pass-through for the
+      separate erasure trade-off (which requires the gate's own precondition to already be true).
+      **Fresh 3-lens adversarial critique returned `designStillSound: true` on all 3 lenses** — zero
+      major findings, only 3 minor ones (an unresolved `.computeDupNudge()` signature question with a
+      live-verified no-new-parameter fix; a disclosed dangling-parent corollary; one untested corner).
+      **This is the first design across 5 workflow attempts (S598, S599, S600, S601×2) in this
+      investigation to survive a full adversarial critique cleanly.** Still PRE-RED — no production
+      code written; a dedicated PRE-RED→RED `AskUserQuestion` remains this project's own standing
+      requirement before any RED test is written. Full record:
+      [`docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`](docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md)
+      §11 — **start at §11.4** for a future session.
+
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 *Resolves the former "Tracker reconciliation" decision item (S365) --
 `docs/audits/XARCH_TRACKER_RECONCILIATION_AUDIT_2026-07-11.md` re-verified all 8
