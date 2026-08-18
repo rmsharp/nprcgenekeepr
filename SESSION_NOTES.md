@@ -18,6 +18,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 606 Did
+**Deliverable:** `BACKLOG.md` housekeeping — continue editorial compression of BACKLOG.md's
+remaining oversized sections ("Pedigree diagram vs kinship2," "Genetic-metrics PDF audit"), beyond
+S529/S530/S531's already-completed Housekeeping-section pass. Owner-picked from this session's own
+Phase 0 priorities list (4 options via `AskUserQuestion`), over Track 3's disclosed trade-offs,
+issue #161's decision, and the MIT/REUSE license badges. Exact scope within the 2 remaining
+sections not yet determined — an inventory pass (matching S529's own method) is the next step.
+(IN PROGRESS)
+**Started:** 2026-08-18.
+**Status:** Session claimed. Work beginning. Written BEFORE any investigation/inventory work, per
+`PROJECT_LEARNINGS.md` Learning 624/625's finding that stating an intention to do Phase 1B is not
+the same event as emitting the tool calls for it — this stub is being written as the very next
+action after task selection, ahead of even read-only inventory work, deliberately stricter than the
+S529 precedent (which deferred its own claim commit until after an inventory pass + scope-narrowing
+question).
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 604 Handoff Evaluation (by Session 605)
 **Score: 6/10.** **What helped:** the `gotchas` field ("this session skipped Phase 1B... a future
 session should explicitly check off Phase 1B as its own line item, separate from the TDD phase-gate

@@ -136,6 +136,25 @@ This file currently holds **14** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S606
+date: 2026-08-18
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: IN PROGRESS -- BACKLOG.md housekeeping, editorial compression of the 2 remaining
+  oversized sections ("Pedigree diagram vs kinship2," "Genetic-metrics PDF audit"), continuing the
+  S529/S530/S531 precedent. Exact scope not yet determined -- inventory pass pending.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<claim stub -- filled at close-out (Phase 3D)>
+
+```handoff
 session: S605
 date: 2026-08-18
 status: complete
