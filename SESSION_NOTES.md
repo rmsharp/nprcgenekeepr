@@ -18,6 +18,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 608 Did
+**Deliverable:** Track 3's disclosed child-centering trade-off — decide accept-as-permanent vs.
+investigate a narrower mechanism, pivoted (owner-directed, `AskUserQuestion`) to investigating the
+newly-found, structurally distinct Track 6 single-child union/parent-coincidence defect (found
+S603) rather than the exhausted 5-attempt duplicate-occurrence-selection mechanism. (IN PROGRESS)
+**Started:** 2026-08-18.
+**Status:** Session claimed late — Phase 1B was skipped when the task was first picked (research
+and a 15-agent investigation `Workflow` were run before this stub was written); caught and
+corrected before any further work, not left for a future session's reconcile to catch. Investigation
+`Workflow` (Evidence → Design → Synthesize → Critique → Repair → Critique-2) already complete;
+write-up in progress.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 606 Handoff Evaluation (by Session 607)
 **Score: 8/10.** **What helped:** the `next_steps`/priorities framing (issue #161 decision, MIT/
 REUSE badges, issue #148 scope-narrowing, the re-check of "Pedigree diagram vs kinship2" for

@@ -132,8 +132,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
-This file currently holds **14** receipt(s). Computed by `methodology_trim.py` on every
+This file currently holds **15** receipt(s). Computed by `methodology_trim.py` on every
 `--check`/`--write` run, never hand-maintained.
+
+```handoff
+session: S608
+date: 2026-08-18
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Track 3 child-centering trade-off decision, pivoted to investigating the S603-found
+  Track 6 single-child union/parent-coincidence defect (distinct from the exhausted 5-attempt
+  duplicate-occurrence-selection mechanism S598-602).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<free-text prose: filled at Phase 3D close-out>
 
 ```handoff
 session: S607
