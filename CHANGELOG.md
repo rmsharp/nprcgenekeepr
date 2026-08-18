@@ -15,6 +15,476 @@ missed. Taking an action and not recording it is failure mode \#27.
 > “Changelog”) live in `NEWS.md` / `NEWS.Rmd`. This file tracks the
 > development *process* and methodology history, not package releases.
 
+## 2026-08
+
+### 2026-08-17 · \[ad hoc\] S601: duplicate-occurrence-selection centering — narrow repair converges (5th workflow attempt, first sound design in this investigation)
+
+- **Session summary:** owner directed a narrowly-scoped repair (fix only
+  the worse-than-erasure regression the pivot workflow found; leave the
+  separately-accepted erasure trade-off alone) rather than a full 6th
+  redesign. A 6-agent `Workflow` (`wf_f8b481f4-0f8`, 0 errors, ~1.04M
+  subagent tokens, ~55 min): 2 independent repair candidates converged
+  on an identical idea — a “Track-3- Engagement Gate”
+  (`engaged(U) := |rawFinalUnitX[U] - clampedFinalUnitX[U]| > 1e-9`;
+  suppress the nudge entirely when Track 3’s own clamp never altered U’s
+  value, since a union it left untouched has nothing to repair).
+  Synthesized; **fresh 3-lens adversarial critique returned
+  `designStillSound: true` on all 3 lenses** — zero major findings, 3
+  minor ones. No 2nd repair round needed. **First design across 5
+  workflow attempts in this investigation (S598, S599, S600, S601×2) to
+  survive a full adversarial critique cleanly.** Live-verified: closes
+  the regression on multiple nested/chained reconstructions, leaves the
+  target case and both no-op fixtures byte-identical to before, does not
+  over-suppress a genuinely-needed correction, and is a provable pure
+  pass-through for the separate erasure trade-off. Presented the
+  milestone via `AskUserQuestion` (close out now / address 3 minor
+  findings first); owner chose close out now, matching this project’s
+  plan/implementation session-boundary discipline (still PRE-RED, no
+  code written). Appended full findings as the investigation doc’s new
+  §11; updated the doc’s status banner and “start here” pointer (now
+  §11.4) across all 3 places it appears. Added `PROJECT_LEARNINGS.md`
+  Learnings 618-620 (a mandatory safety clamp can compose with a proven
+  bound to produce a result worse than doing nothing; gate a repair
+  mechanism on whether its own target constraint was actually binding; a
+  fix’s real-world qualifying frequency on the project’s own test
+  corpora is load-bearing go/no-go evidence). Refreshed `CLAUDE.md`’s
+  `PROJECT_LEARNINGS.md` pointer (617→620 learnings, S600+→S601+).
+- **Files:**
+  `docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`
+  (§11 + banner), `BACKLOG.md` (Track 3 trade-offs progress note),
+  `PROJECT_LEARNINGS.md` (Learnings 618-620), `CLAUDE.md` (pointer
+  refresh), `SESSION_NOTES.md`, `HANDOFFS.md` (close-out).
+- **Model:** Claude Sonnet 5 (main loop); Claude Sonnet 5 (all
+  subagents, both workflows).
+
+### 2026-08-17 · \[ad hoc\] S601: duplicate-occurrence-selection centering — pivot to post-hoc-bounded-nudge (4th workflow attempt), still not sound, plus a zero-real-impact finding
+
+- **Session summary:** picked up S600’s investigation doc §9.7 item 1
+  go/no-go (`BACKLOG.md`’s Track 3 trade-offs follow-up). Posed the
+  go/no-go as a dedicated `AskUserQuestion` (accept Track 3 trade-offs
+  as permanent / pivot to post-hoc nudge / authorize a 4th pre-clamp
+  attempt / hold); owner picked “pivot” — a mechanism shape untried by
+  S598/S599/S600, all of which stayed on a pre-clamp substitution. A
+  12-agent `Workflow` (`wf_2d657d34-184`, 0 errors, ~2.10M subagent
+  tokens, ~92 min): 4 independent post-hoc-nudge candidates (2 of 4
+  verified **zero** dependency on `preferAnchor()`/issue \#162 — a
+  genuine option no pre-clamp design ever had), synthesis, round-1
+  critique (**all 3 lenses `designStillSound: false`**), repair, round-2
+  critique (**still false on 2 of 3**): invariant-preservation
+  reconfirmed a reclamp-erasure problem; edge-cases found something
+  *worse* — a nested/chained sibling-consanguineous shape where the
+  nudge actively corrupts a union Track 3 alone already positioned
+  correctly, landing farther from the true center than either the
+  nudge’s own uncapped target or doing nothing. **New, independent
+  finding: the qualifying condition never fires on either existing test
+  corpus (0/4 `small`, 0/237 real 375-individual fixture)** — even a
+  sound version of this mechanism would currently touch zero pedigrees
+  this package tests or ships. **Four independent attempts across 2
+  structurally different mechanism families (S598-S600 pre-clamp, S601
+  post-hoc) have now all failed adversarial critique.** Presented via
+  `AskUserQuestion`; owner chose a narrowly-scoped repair over accepting
+  Track 3’s trade-offs as permanent, a full 5th redesign, or holding
+  (see the following entry, same session). Appended full findings as the
+  investigation doc’s new §10 (workflow structure, 4-candidate table,
+  synthesis, both critique rounds, the repair, the zero-real-impact
+  finding, updated §10.7 open questions).
+- **Files:**
+  `docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`
+  (§10), `BACKLOG.md` (Track 3 trade-offs progress note).
+- **Model:** Claude Sonnet 5 (main loop); Claude Sonnet 5 (all
+  subagents).
+
+### 2026-08-17 · \[ad hoc\] S600: duplicate-occurrence-selection centering — 3rd attempt (magnitude-bound), still not sound, plus an independent finding
+
+- **Session summary:** picked up S599’s investigation doc §8.6 open
+  questions (`BACKLOG.md`’s Track 3 trade-offs follow-up). Posed the
+  §8.6 item 3 go/no-go as a dedicated `AskUserQuestion`
+  (refine-with-magnitude-bounded-from-round-1 / pivot-to-post-hoc-nudge
+  / run-both / accept-as- permanent); owner picked “refine.” Ran a 3rd
+  12-agent design→synthesize→critique→repair→critique `Workflow`
+  (`wf_be91a88b-c4c`, 0 errors, ~1.86M subagent tokens): Layers 1/2 held
+  as given per S599’s own §8.5 finding, 4 independent magnitude-bounding
+  candidates each required to pass a magnitude-stress fixture from round
+  1 (S599’s own self-identified process gap); 2 candidates independently
+  converged on an identical “cap the substitution delta to `±K·minSep`”
+  design. Synthesis claimed success on all 4 required fixtures.
+  **Round-1 critique found the synthesis’s entire success was contingent
+  on silently reinterpreting Layer 1’s own “given, do not redesign”
+  qualification rule** — under the literal rule, Pass 2 is dead code for
+  exactly the target case’s own shape — plus a newly-load-bearing locale
+  dependency in `preferAnchor()`’s tie-break. A repair round elevated
+  both findings honestly and corrected the magnitude bound to a tighter
+  universal form. **Round-2 critique (same 3 lenses, re-run fresh) still
+  `designStillSound: false` on 2 of 3 lenses**: the bound measures
+  against the wrong reference frame (overshoots the real children’s own
+  span by 50% in the tightest, most common legitimate case, undetected
+  across 2 full rounds), and the `preferAnchor()` locale bug is broader
+  than characterized (already corrupts today’s shipped output,
+  structurally guaranteed for every full-sibling mate pair) — plus a
+  live 120x pixel-scale bug in the design’s own proposed RED test.
+  Presented via `AskUserQuestion`; owner chose hold again, over one more
+  repair round, pivoting to a post-hoc nudge, or accepting Track 3’s
+  trade-offs as permanent. Appended full findings as the investigation
+  doc’s new §9 (candidate table, both critique rounds, the independent
+  finding, updated decision log, status banner) — §9.7 supersedes §8.6,
+  now with a much stronger recommendation to treat a 4th attempt at this
+  mechanism as needing justification, not the default (3 consecutive
+  sessions have each failed at a deeper layer). Updated `BACKLOG.md`’s
+  Track 3 trade-offs item with the S600 progress note. Added
+  `PROJECT_LEARNINGS.md` Learnings 615 (a “given” component can be
+  silently reinterpreted, must be checked against its literal wording),
+  616 (a provably-bounded quantity can still violate the invariant it
+  protects if it measures the wrong reference frame), and 617 (closing
+  one round’s failure mode narrows but doesn’t bound the search);
+  `CLAUDE.md` learnings-count pointer refreshed (614→617).
+- **Files:**
+  `docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`
+  (§9 appended, status banner + decision log updated, a self-introduced
+  References-section duplication caught and fixed before commit);
+  `BACKLOG.md` (S600 progress note); `PROJECT_LEARNINGS.md` (Learnings
+  615-617); `CLAUDE.md` (learnings pointer); `SESSION_NOTES.md` /
+  `HANDOFFS.md` (session claim + close-out).
+- **Verification:** docs-only session, no `R/`/`tests/` file touched
+  (confirmed via `git diff --stat`); no
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)/regression/lint
+  run needed. Every new cross-reference in the investigation doc
+  re-verified to resolve before commit (including re-reading the file
+  after the edit to catch the duplication bug above).
+- Model: Claude Sonnet 5.
+
+### 2026-08-17 · \[ad hoc\] S600: file preferAnchor() locale-non-determinism bug, found incidental to the above
+
+- **Session summary:** the magnitude-bound workflow above independently
+  discovered a real, pre-existing, standalone defect unrelated to
+  whether the centering fix ever ships: `preferAnchor()`
+  (`R/makePedigreeDiagramData.R:403-411`, Track 4’s gen→mateCount→id
+  tie-break) falls back to a bare `a < b` string comparison, confirmed
+  live `LC_COLLATE`-locale-dependent — the same defect class as
+  `PROJECT_LEARNINGS.md` Learning 585, but here confirmed to already
+  corrupt today’s shipped pipeline output for any tied-generation,
+  tied-mate-count parent pair (proved structurally guaranteed for every
+  full-sibling mate pair via
+  [`findGeneration()`](https://github.com/rmsharp/nprcgenekeepr/reference/findGeneration.md)’s
+  BFS layering). Per Learning 382’s “report, don’t fix mid-session”
+  precedent, not fixed this session — filed as [GitHub issue
+  \#162](https://github.com/rmsharp/nprcgenekeepr/issues/162) and a new
+  `BACKLOG.md` Housekeeping item (READY, Effort S), with the suggested
+  fix (Learning 585’s own radix-based comparator) already named.
+- **Files:** `BACKLOG.md` (new Housekeeping item). GitHub issue \#162
+  filed (not a repo file change).
+- **Verification:** n/a — issue filing and documentation only, no code
+  change.
+- Model: Claude Sonnet 5.
+
+### 2026-08-17 · \[ad hoc\] S600: MIT license + REUSE compliance badge item added to BACKLOG (owner-directed)
+
+- **Session summary:** owner asked to add a `BACKLOG.md` item for making
+  the project MIT-licensed and adding license/REUSE badges to
+  `README.Rmd`. Checked current state first rather than assuming the ask
+  was unmet: `DESCRIPTION`’s `License: MIT + file LICENSE` plus tracked
+  `LICENSE`/`LICENSE.md` have existed since S102’s CRAN hygiene pass —
+  presented this via `AskUserQuestion` rather than filing a redundant
+  item; owner narrowed scope to the badges specifically. Split into 2
+  sub-items by risk: the MIT badge (a static shields.io image, safe to
+  add, READY/Effort S) and the REUSE badge (a LIVE compliance check
+  against api.reuse.software; verified this repo currently has none of
+  what REUSE compliance requires — no `LICENSES/` dir, no SPDX headers,
+  no `REUSE.toml`/`.reuse/dep5` — so adding it as-is would likely render
+  red/non-compliant; flagged DECISION NEEDED with the concrete
+  compliance path named, rather than adding a badge likely to embarrass
+  the README).
+- **Files:** `BACKLOG.md` (new Housekeeping item).
+- **Verification:** n/a — documentation only, no code change.
+- Model: Claude Sonnet 5.
+
+### 2026-08-17 · \[ad hoc\] S599: duplicate-occurrence-selection centering redesign attempt — still not sound
+
+- **Session summary:** picked up S598’s investigation doc §6 open
+  questions (`BACKLOG.md`’s Track 3 trade-offs follow-up). Confirmed no
+  code drift since S598’s HEAD, then ran a 12-agent
+  design→synthesize→critique→repair→critique `Workflow`
+  (`wf_115a9428-581`, 0 errors): 4 independent candidate
+  qualification-rule designs (Symmetric Blend, Sibling-Union-Count
+  Abstention, 2-Child Eligibility Gate, Sole-Qualifying-Duplicate Gate —
+  the last disqualified live, still misfires `0.7`), each live-verified
+  via
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  against the target case (`-6`) and the primary counter-example (stays
+  at raw `0.5`). Synthesized into “Sibling-Relationship-Count Abstention
+  Guard”; round-1 adversarial critique found a NEW compounding misfire
+  (2 different children of one union each substituting toward a shared
+  3rd sibling, `0.5→3.775`); repaired with a Layer-2 abstention ceiling
+  that neutralized it (live-reconfirmed). **Round-2 critique on the
+  repair still `designStillSound: false` on 2 of 3 lenses** — an
+  unbounded-magnitude problem in the untouched “safe”
+  single-substitution case (`-0.05→-16.238` live-measured as an
+  unrelated fan-out grew, driven by the substitution formula itself,
+  inherited unchanged from the original S592 design by every candidate
+  tried across both S598 and this session) and a TDD white-box-test
+  necessity (both abstention branches are output-identical to today’s
+  shipped behavior, so a black-box RED test would pass
+  pre-implementation). Presented via `AskUserQuestion`; owner chose hold
+  again, over one more targeted repair round or shipping disclosed.
+  Appended full findings as the investigation doc’s new §8 (candidate
+  table, both critique rounds, updated decision log, status banner) —
+  §8.6 supersedes §6 as the entry point for a future redesign session,
+  with an explicit flag that a 3rd attempt should first weigh whether
+  this is the right layer to fix child-centering quality at, given 2
+  consecutive attempts have now failed adversarial critique. Updated
+  `BACKLOG.md`’s Track 3 trade-offs item with the S599 progress note.
+  Added `PROJECT_LEARNINGS.md` Learnings 613 (a repair earns a fresh
+  full critique, not a narrower re-check) and 614 (verifying direction ≠
+  verifying magnitude for a substitution-based design); `CLAUDE.md`
+  learnings-count pointer refreshed (612→614, _(2.4→)2.5 MB).
+- **Files:**
+  `docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`
+  (§8 appended, status banner + decision log updated); `BACKLOG.md`
+  (S599 progress note); `PROJECT_LEARNINGS.md` (Learnings 613-614);
+  `CLAUDE.md` (learnings pointer); `SESSION_NOTES.md` / `HANDOFFS.md`
+  (session claim + close-out).
+- **Verification:** docs-only session, no `R/`/`tests/` file touched
+  (confirmed via `git diff --stat`); no
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)/regression/lint
+  run needed. Every new cross-reference in the investigation doc
+  verified to resolve before commit.
+- Model: Claude Sonnet 5.
+
+### 2026-08-16 · \[ad hoc\] S598: duplicate-occurrence-selection centering fix — investigation, held for redesign
+
+- **Session summary:** picked up `BACKLOG.md`’s “Track 3’s 2 disclosed
+  trade-offs” item, scoped to the child-centering half only. Ran a
+  6-agent research/verify/adversarial-critique workflow against the
+  never-adopted S592 “fix (a)” design (duplicate-occurrence
+  substitution): confirmed it still fits current HEAD exactly at
+  `R/makePedigreeDiagramData.R:974-994` and live-reproduced its headline
+  number (0.12 shipped → -6 under the fix, issue \#160 comment-1
+  fixture) — but one of 3 adversarial critique lenses found a genuine,
+  live-verified correctness gap inside the design’s own claimed scope (a
+  sibling mating 2 different co-siblings of the same union can move the
+  union’s center farther from true, not closer). Presented via
+  `AskUserQuestion`; owner chose to hold for a redesign session rather
+  than ship the flawed design (disclosed) or an unverified patch — 2
+  candidate guards improvised live this session were both checked
+  against the counter-example and both failed to exclude it. Wrote the
+  full evidence record to
+  `docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`
+  (explicitly an investigation, not a ratified plan) — flags a naming
+  collision between `BACKLOG.md`’s informal “Track 4” shorthand for this
+  fix and the unrelated, already-shipped
+  `pedigree-diagram-track4-gen-aware-anchor-plan.md`. Updated
+  `BACKLOG.md`’s Track 3 trade-offs item with the S598 progress note and
+  next step. Also rendered the issue \#160 comment-1 fixture through
+  both `kinship2` and `nprcgenekeepr` (ad hoc, not committed) for a
+  user-requested visual comparison, ground-truth-verified edge-by-edge
+  before presenting. Added `PROJECT_LEARNINGS.md` Learnings 611
+  (adversarial critique found a real gap in an
+  already-multi-agent-vetted design) and 612 (the “Track 4”
+  naming-collision gotcha); `CLAUDE.md` learnings-count pointer
+  refreshed (610→612, S597+→S598+).
+- **Commits:** `9b94d7ce` (Phase 1B session claim), plus this session’s
+  close-out commit.
+- **Model:** claude-sonnet-5.
+
+### 2026-08-16 · \[ad hoc\] S597: Phase 0 orientation + ledger backfill + stale-artifact correction — no BACKLOG item picked
+
+- **Session summary:** did not pick or advance any of S596’s 3 offered
+  BACKLOG priorities (Track 3 trade-offs decision / issue \#161 / S582
+  screenshot check); Phase 1 was never completed. Ran a full Phase 0
+  orientation (found and backfilled a real 2-commit `CHANGELOG.md` gap
+  left by S596’s own close-out, commit `8fc0e383` — see the entry
+  directly below), then followed a user-directed browser detour into an
+  unplanned side-quest: reviewed a previously-published claude.ai
+  “Pedigree Fidelity Proof” artifact and found its “not previously
+  reported” defect callout was stale — verbatim `PROJECT_LEARNINGS.md`
+  Learning 604, already fixed twice over by Tracks 1–2 — traced its
+  stamped commit `f12e7cbb` to Session 590, predating issue \#160’s own
+  filing. Regenerated both comparison plates fresh against current HEAD
+  ([`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html) +
+  `chromote`), with independently re-derived (non-circular) ground-truth
+  collision verification: 0 same-row collisions on both plates; Track
+  1’s fix confirmed via exact node coordinates (D1 bar row 60 units off
+  the children’s row, matching `sibshipBarFraction=0.4`); the one
+  flagged residual on Plate 2 confirmed to be the known,
+  already-disclosed curved-heuristic case, not new. Republished to the
+  same artifact URL with a correction callout. This artifact is external
+  (claude.ai-hosted), not git-tracked — its render script lived only in
+  this session’s ephemeral scratchpad. At close-out, completed a dropped
+  mid-conversation user request: `BACKLOG.md`’s Track 3 trade-offs item
+  gained a 3rd possibility (a bar-aware detect-and-jog repair for the D1
+  bar-vs-bar residual specifically). Added `PROJECT_LEARNINGS.md`
+  Learning 610 (a previously-published external artifact’s stamped
+  commit sha can go stale with nothing in Phase 0’s own ledger-reconcile
+  positioned to catch it, since that reconcile only walks git-tracked
+  files). `CLAUDE.md` learnings-count pointer refreshed (609→610). No
+  R/production code touched; no runtime smoke test applicable.
+  `HANDOFFS.md` `status: complete` receipt written (self-assessment 6/10
+  — real ledger and stale-artifact fixes, but no BACKLOG priority
+  advanced this session).
+
+### 2026-08-16 · \[issue \#160\] S596 close-out: handoff evaluation, self-assessment, Learning 609, HANDOFFS.md receipt
+
+- **Close-out actions (reconcile-on-read backfill, Session 597 Phase
+  0):** evaluated S595’s handoff (8/10, `SESSION_NOTES.md`);
+  self-assessed this session (9/10); completed the `HANDOFFS.md`
+  `status: complete` receipt (all 6 fields); added
+  `PROJECT_LEARNINGS.md` Learning 609 (testthat/waldo
+  tolerance-semantics gotcha —
+  `expect_equal()`/[`all.equal()`](https://rdrr.io/r/base/all.equal.html)
+  with a bare `tolerance=N` is scale-relative, not absolute) and
+  refreshed `CLAUDE.md`’s stale learnings-count pointer (604→609
+  learnings, S591+→S596+). Next session’s candidates named in the
+  handoff: (1) decide the fate of Track 3’s 2 disclosed trade-offs (new
+  `BACKLOG.md` follow-up item), (2) issue \#161’s now-unblocked deferred
+  decision, (3) the small S582 stale-screenshot check — none mandated.
+  Commits: `6261d6f9` (Learning 609 + `CLAUDE.md` refresh), `6ba6289e`
+  (`HANDOFFS.md`/`SESSION_NOTES.md` close-out). This entry itself was
+  the gap: S596 wrote the Track 3 deliverable entry below but, unlike
+  S595’s own “close-out” entry precedent, never logged a matching entry
+  for these 2 trailing commits — caught by Session 597’s Phase 0 ledger
+  reconcile (`CHANGELOG.md` frontier `e4795723` vs. `HEAD` `6ba6289e`).
+
+### 2026-08-16 · \[issue \#160\] S596: Track 3 (S583 parent-span clamp) shipped
+
+- **Deliverable:** new clamp loop in `.positionMatingUnitForest()`
+  (`R/makePedigreeDiagramData.R`) — plan §2.3/§6 Session C of
+  `docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`.
+  Clamps each mating unit’s `finalUnitX` into its own 2 parents’
+  `[min, max]` x-range whenever the child-centered formula would place
+  it outside that span — a disclosed, owner-ratified reopening of Track
+  6 §2.4’s “unconditionally” wording (S592 §9, re-confirmed via this
+  session’s own PRE-RED `AskUserQuestion`). Skips a union with a
+  dangling (free-pass) parent rather than propagating `NA` — found live
+  this session, fixed after regressing 2 pre-existing tests. Reproduced
+  BACKLOG.md’s own S583 example byte-for-byte via
+  [`trimPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/trimPedigree.md)
+  against the real 375-individual bundled fixture, plus the 9-subject
+  consanguineous fixture BACKLOG names. **2 trade-offs found during
+  REFACTOR, both disclosed and owner-accepted via `AskUserQuestion`:**
+  the plan’s own §7 faithful child-centering metric worsens (9/251 →
+  53/251 child edges over the 200-unit threshold, max offset 4,121 →
+  10,627), and the already-disclosed D1 bar-vs-bar x-overlap residual
+  (plan §8) worsens substantially (9 → 116 post-Track-1 hits) — both
+  trace to the same mechanism (pulling a runaway union back toward its
+  own parents moves it away from its children and back toward
+  neighboring subtrees). Beneficial side effect: Track 2’s own same-row
+  collision baseline drops (150 → 105 edges, node count 1,502 → 1,412).
+  Updated `test_positionMatingUnitForest.R`,
+  `test_resolveEdgeNodeCollisions.R`, `test_makePedigreeMatingLayout.R`,
+  `test_addRectilinearWaypoints.R` with disclosed, behavior-driven
+  golden-value churn.
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/1 pre-existing NOTE; full clean regression 0
+  failed/0 error; `lintr::lint_package()` no lints. `NEWS.Rmd`/`NEWS.md`
+  entry added. `BACKLOG.md`’s Track 3 and S583 items marked DONE; a new
+  follow-up item filed for the 2 accepted trade-offs. Commits:
+  `8b8e399d` (RED), plus this session’s GREEN+REFACTOR and close-out.
+
+### 2026-08-15 · \[issue \#160\] S596 claim: implement Track 3 (S583 parent-span clamp)
+
+- **Deliverable claimed:** plan §2.3/§6 Session C of
+  `docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`
+  — clamp `finalUnitX` into its own 2 parents’ `[min, max]` range in
+  `.positionMatingUnitForest()`. Session stub written to
+  `SESSION_NOTES.md`; `HANDOFFS.md` `status: pending` receipt opened.
+  Work beginning.
+
+### 2026-08-15 · \[issue \#160\] S595 close-out: handoff evaluation, self-assessment, Learning 608, HANDOFFS.md receipt
+
+- **Close-out actions:** evaluated S594’s handoff (8/10,
+  `SESSION_NOTES.md`); self-assessed this session (8/10); completed the
+  `HANDOFFS.md` `status: complete` receipt (all 6 fields, including a
+  disclosed process note about the missed GREEN→REFACTOR gate);
+  self-flagged and disclosed that gap to the user via `AskUserQuestion`
+  before proceeding, rather than after. Next session’s recommended
+  pickup: Track 3 (S583 parent-span clamp, plan §2.3/§6 Session C — its
+  own PRE-RED reopening-confirmation gate required first).
+
+### 2026-08-15 · \[issue \#160\] S595: Track 2 (general same-row detect-and-jog framework) shipped, issue \#160 closed
+
+- **Deliverable:** new `.resolveEdgeNodeCollisions()`
+  (`R/makePedigreeDiagramData.R`), wired into
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)’s
+  `edgeStyle == "rectilinear"` branch — plan §2.2/§6 Session B of
+  `docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`.
+  Detects and repairs any straight same-row edge colliding with an
+  unrelated node (a strictly rectilinear 2-waypoint “step,” never moving
+  an existing node); the curved duplicate connector gets a disclosed
+  `smooth.roundness`-bump heuristic instead, visually confirmed via
+  `chromote`. Found and fixed 2 real implementation bugs mid-REFACTOR
+  (jog-vs-jog collisions from a single shared row offset; color/label
+  identity loss on twin-connector/consanguinity-marker edges), both
+  caught by the full regression + rendered-image verification, not
+  assumed. Real 375-individual bundled fixture: 150 → 0 straight-edge
+  collisions (3,081 obstacle-pairs pre-fix); 52 curved-heuristic
+  residuals disclosed.
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 warnings/1 pre-existing NOTE; full clean regression 0
+  failed/0 error; `lintr::lint_package()` no lints. `NEWS.Rmd`/`NEWS.md`
+  entry added. `BACKLOG.md`’s Track 2 and issue \#160 items marked DONE.
+  GitHub issue \#160 closed citing both Session A (S593) and this
+  session’s evidence. Commits: `89d23e2a` (RED), `c7bdbe4b`
+  (GREEN+REFACTOR), plus this close-out.
+
+### 2026-08-15 · \[issue \#160\] S595 claim: implement Track 2 (general same-row detect-and-jog collision framework)
+
+- **Deliverable claimed:** plan §2.2/§6 Session B of
+  `docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`
+  — new `.resolveEdgeNodeCollisions()` wired into
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md).
+  Session stub written to `SESSION_NOTES.md`; `HANDOFFS.md`
+  `status: pending` receipt opened. Work beginning.
+
+### 2026-08-15 · \[ad hoc\] S594 close-out: SESSION_NOTES.md archive DONE, stale CLAUDE.md fence-scanner note corrected (Session 594)
+
+- **Deliverable:** Lossless archive trim of `SESSION_NOTES.md` —
+  **DONE.** Found the `CLAUDE.md` “archive blocked by a fence-scanner
+  defect (S518)” note stale: that defect and a second, independent
+  `\b`-boundary defect were fixed S527/S528, and 2 archive rounds had
+  already run successfully since. The actual live blocker was a fresh
+  `SRF_RED` refusal (SRF 2.0371 vs. 0.0576, a 35.35x spread across two
+  archive boundaries) — the same pattern `PROJECT_LEARNINGS.md`
+  Learnings 549/586/587 diagnosed for `CHANGELOG.md`/`HANDOFFS.md`, and
+  which Learning 587 explicitly predicted would recur here. Surfaced
+  both readings +absolute byte deltas via `AskUserQuestion`; owner chose
+  `--force`. `methodology_trim.py --force --write` archived 76 records
+  to `docs/archive/SESSION_NOTES-through-2026-08-15.md` (see the tool’s
+  own entry directly below); L1/L2/L3 losslessness confirmed both by the
+  tool’s console output and independently via the generated `.verify.sh`
+  script. Dashboard HIGH+ risk 1 → 0 (health unchanged, 96/100).
+  Corrected the `CLAUDE.md` note to the verified current state. Added
+  `PROJECT_LEARNINGS.md` Learning 607 (stale-persistent-note pattern;
+  Learning 587’s prediction confirmed). No `BACKLOG.md` item existed for
+  this — nothing to remove there. Commits: `a3c8f1c9` (claim,
+  self-corrected a same-session date typo), plus this close-out.
+
+### 2026-08-15 · \[ad hoc\] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-08-15.md` (76 record(s), 397,442 B → 5,262 B)
+
+**Written by:** `methodology_trim.py` v1.1.2 — a tool action, not a
+session’s judgment. Moved the oldest **76** record(s) (2026-01-26 →
+2026-08-15) out of
+[`SESSION_NOTES.md`](https://github.com/rmsharp/nprcgenekeepr/SESSION_NOTES.md)
+into
+[`docs/archive/SESSION_NOTES-through-2026-08-15.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-08-15.md).
+Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run
+[`docs/archive/SESSION_NOTES-through-2026-08-15.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-08-15.md.verify.sh)
+rather than trusting a digest printed here. Live file 397,442 B → 5,262
+B (−98.7%).
+
+### 2026-08-15 · \[ad hoc\] S594 claim: lossless archive trim of SESSION_NOTES.md (Session 594)
+
+- **Deliverable:** Lossless archive trim of `SESSION_NOTES.md`,
+  user-directed at Phase 0 (dashboard HIGH-risk flag, file at 4,645
+  lines / 395,482 B). PRE-RED investigation: the `CLAUDE.md` note
+  framing this as blocked by a `methodology_trim.py` fence-scanner
+  defect (S518) is stale — both that defect and the follow-on
+  `\b`-boundary defect (S527, `PROJECT_LEARNINGS.md` Learning 533) were
+  already fixed (S527/S528) and two archives already succeeded. Actual
+  current blocker: a fresh `SRF_RED` refusal (SRF 2.0371 vs. 0.0576,
+  35.35x spread across two archive boundaries), matching the
+  `CHANGELOG.md`/`HANDOFFS.md` pattern `PROJECT_LEARNINGS.md` Learnings
+  549/586/587 already diagnosed. Session claimed; decision pending.
+
 ## How to add an entry
 
 At close-out, prepend one entry per action, **newest on top**, directly

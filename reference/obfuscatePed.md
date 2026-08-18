@@ -84,7 +84,7 @@ ped
 #> 4 s2 <NA> <NA>   M   0 2005-06-19 <NA> 21.2     original
 #> 5 o1   s1   d1   F   1 2015-02-04 <NA> 11.5     original
 #> 6 o2   s1   d2   F   1 2009-03-17 <NA> 17.4     original
-#> 7 o3   s2   d2   F   1 2012-04-11 <NA> 14.3     original
+#> 7 o3   s2   d2   F   1 2012-04-11 <NA> 14.4     original
 #> 8 o4   s2   d2   M   1 2008-04-13 <NA> 18.3     original
 obfuscatedPed
 #>       id   sire    dam sex gen      birth exit  age recordStatus
@@ -92,7 +92,7 @@ obfuscatedPed
 #> 2 2ZFC1W   <NA>   <NA>   F   0 2002-06-02 <NA> 24.2     original
 #> 3 FCDNFK   <NA>   <NA>   M   0 2000-08-05 <NA> 26.0     original
 #> 4 GJGR1A   <NA>   <NA>   M   0 2005-05-24 <NA> 21.2     original
-#> 5 T5NBEL FCDNFK SN7TLJ   F   1 2015-01-29 <NA> 11.5     original
+#> 5 T5NBEL FCDNFK SN7TLJ   F   1 2015-01-29 <NA> 11.6     original
 #> 6 FEHHE9 FCDNFK 2ZFC1W   F   1 2009-02-23 <NA> 17.5     original
 #> 7 LSYDEB GJGR1A 2ZFC1W   F   1 2012-03-23 <NA> 14.4     original
 #> 8 7YDSRN GJGR1A 2ZFC1W   M   1 2008-05-03 <NA> 18.3     original

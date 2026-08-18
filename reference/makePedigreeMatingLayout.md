@@ -105,4 +105,5 @@ built speculatively here.
 ``` r
 library(nprcgenekeepr)
 layout <- makePedigreeMatingLayout(nprcgenekeepr::examplePedigree)
+#> Warning: makePedigreeMatingLayout(): 327 same-row edge-node collision(s) could not be fully resolved (residual after the repair-pass cap, or an unconfirmed curved-connector heuristic) -- rendered output may still show a straight or curved edge passing near an unrelated node.
 ```

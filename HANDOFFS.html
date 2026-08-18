@@ -141,6 +141,443 @@ when it reconstructs a receipt a crashed session never completed — you never w
 <p><strong>Archived 17 record(s), 2026-08-12 → 2026-08-13</strong> into <a href="docs/archive/HANDOFFS-through-2026-08-13.html"><code>docs/archive/HANDOFFS-through-2026-08-13.md</code></a> — same format, same order, frozen. Losslessness is proved by <a href="docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh"><code>docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh</code></a>, which re-derives L1/L2/L3 from git; run it rather than trusting this sentence. Written by <code>methodology_trim.py</code> v1.1.2.</p>
 <p><strong>Archived 21 record(s), 2026-08-13 → 2026-08-14</strong> into <a href="docs/archive/HANDOFFS-through-2026-08-14.html"><code>docs/archive/HANDOFFS-through-2026-08-14.md</code></a> — same format, same order, frozen. Losslessness is proved by <a href="docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh"><code>docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh</code></a>, which re-derives L1/L2/L3 from git; run it rather than trusting this sentence. Written by <code>methodology_trim.py</code> v1.1.2.</p>
 <p>This file currently holds <strong>12</strong> receipt(s). Computed by <code>methodology_trim.py</code> on every <code>--check</code>/<code>--write</code> run, never hand-maintained.</p>
+<pre class="handoff"><code>session: S601
+date: 2026-08-17
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Resolved investigation doc §9.7 item 1's go/no-go (pivot to post-hoc-bounded-nudge, an
+  untried mechanism shape). The pivot itself also failed (§10) -- worse-than-erasure regression on
+  nested/chained unions, plus a new finding that the fix's qualifying condition never fires on either
+  test corpus (0/4, 0/237). A subsequent narrowly-scoped repair (§11) closed the regression with a
+  "Track-3-Engagement Gate" and survived full adversarial critique with zero major findings -- the
+  first sound design in this investigation's 5-workflow history. Owner chose to close out now; design
+  stays PRE-RED, not yet implemented.
+what_was_done: Ran 2 Workflows. (1) wf_2d657d34-184, 12 agents, 0 errors, ~2.10M tokens, ~92 min:
+  design-&gt;synthesize-&gt;critique-&gt;repair-&gt;critique against the post-hoc-nudge pivot; both critique
+  rounds designStillSound:false; found the qualifying condition fires 0/4 small, 0/237 real-corpus.
+  Appended investigation doc §10. (2) wf_f8b481f4-0f8, 6 agents, 0 errors, ~1.04M tokens, ~55 min: a
+  narrow repair (2 candidates -&gt; synthesis -&gt; fresh 3-lens critique) targeting only the worse-than-
+  erasure regression, per owner directive; all 3 lenses designStillSound:true. Appended investigation
+  doc §11. Updated BACKLOG.md's Track 3 trade-offs item (2 progress notes). Added
+  PROJECT_LEARNINGS.md Learnings 618-620; refreshed CLAUDE.md's learnings-count pointer. No commit sha
+  yet -- filled at Phase 3F just before this receipt's own final commit.
+next_steps: Start at investigation doc §11.4 (Status), not §10.7 or earlier. Draft the standing
+  PRE-RED-&gt;RED AskUserQuestion (CLAUDE.md's "TDD: PRE-RED-&gt;RETO" header format -- note: use the
+  literal "TDD: PRE-RED-&gt;RED" format, not the malformed draft one of this session's own repair-
+  workflow agents produced) before writing any RED test; the design to implement is the §11.1
+  synthesis (Track-3-Engagement Gate), NOT the pre-repair §10.3 design (proven unsound). Then resolve
+  §11.3's 3 minor findings as part of that same PRE-RED scoping: the .computeDupNudge() signature gap
+  (fix already known: recompute rawFinalUnitX inside the helper from nodes$x, no new parameter
+  needed), the dangling-parent corollary (state explicitly), and the untested inner-engaged/outer-
+  no-op corner (quick construction, no counter-evidence exists yet).
+key_files: docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md:788-969
+  (new §10-§11), R/makePedigreeDiagramData.R:966-1010 (exact insertion point, unchanged),
+  BACKLOG.md:240-303 (Track 3 trade-offs item), PROJECT_LEARNINGS.md:1927-1933 (Learnings 618-620).
+gotchas: See SESSION_NOTES.md's own "Gotchas for the next session" (6 items) -- most load-bearing:
+  the design ready to implement is §11's repaired synthesis, not §10's pre-repair one; a dedicated
+  PRE-RED-&gt;RED AskUserQuestion is mandatory before any RED test per this project's TDD contract and
+  was not drafted this session in investigation-doc form.
+runtime_smoke: n/a -- docs-only planning/investigation session, no R/ or tests/ file touched
+  (confirmed via git status/git diff --stat before close-out).
+changelog_ref: pending -- filled at Phase 3F, same commit as this receipt.
+commit: pending -- filled at Phase 3F, same commit as this receipt.</code></pre>
+<p><strong>Self-score breakdown:</strong> +Posed the go/no-go, the narrow-repair scope, and the close-out choice each as their own dedicated <code>AskUserQuestion</code> rather than defaulting any of them. +Explicitly engineered Learnings 615/616 into the pivot workflow’s own prompts as named traps – neither recurred. +Scoped the repair narrowly per the owner’s own directive rather than defaulting to a full redesign, and it converged in one round. +Surfaced the 0/237 real-corpus finding as its own explicit piece of evidence (now Learning 620) rather than burying it in a correctness write-up. +Delegated both large raw workflow-output extractions to subagents, preserving verbatim technical fidelity without blowing this session’s own context budget. +Did not chase the milestone into RED/GREEN implementation despite reaching one – closed out cleanly at the plan/implementation boundary. -This session’s total scope (2 full workflows, ~18 agents, ~3.15M subagent tokens) is ~1.5-2x any single prior session in this investigation; every expansion was owner-directed at an explicit decision point, but flagged here rather than treated as automatically licensed. -Did not sketch even an outline of the standing PRE-RED-&gt;RED question, though arguably correctly deferred to the session that will actually act on it.</p>
+<pre class="handoff"><code>session: S600
+date: 2026-08-17
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Ran a 3rd redesign attempt (magnitude-bound) against S599's investigation doc §8.6 open
+  questions. Found a design that converges cleanly on magnitude but STILL fails adversarial critique
+  on 2 different, deeper axes (a silent reinterpretation of a "given, do not redesign" component; a
+  bound measured against the wrong reference frame). Held again via AskUserQuestion. Also
+  independently discovered and separately filed a real, pre-existing preferAnchor() locale bug
+  (issue #162).
+what_was_done: Posed §8.6 item 3's go/no-go as its own dedicated AskUserQuestion before running any
+  workflow (refine-with-magnitude-bounded-from-round-1 / pivot-to-post-hoc-nudge / run-both /
+  accept-as-permanent) -- owner picked "refine." Ran a 12-agent Workflow (wf_be91a88b-c4c, 0 errors,
+  ~1.86M subagent tokens, ~94 min): Layers 1/2 held as given per S599's own §8.5 finding; 4
+  independent magnitude-bounding candidates, each required to pass a magnitude-stress fixture from
+  round 1 (not deferred to critique, per user directive + Learning 614's own weakness note); 2
+  candidates independently converged on an identical "cap the substitution delta to ±K*minSep"
+  design. Synthesis claimed success on all 4 fixtures. Round-1 critique (3 lenses, same as
+  S598/S599) found the synthesis's success was CONTINGENT on silently reinterpreting Layer 1's own
+  given qualification rule (literal rule makes Pass 2 dead code for the target case's own shape),
+  plus a newly-load-bearing preferAnchor() locale dependency. Repair round elevated both findings
+  honestly, corrected the bound to a tighter universal K*minSep/2-for-any-n form. Round-2 critique
+  (same 3 lenses, re-run fresh per Learning 613) STILL designStillSound:false on 2/3 lenses: bound
+  measures the wrong reference frame (overshoots real children's own span by 50% in the tightest
+  common case, undetected 2 full rounds); preferAnchor() bug is broader than characterized (already
+  corrupts shipped output today, structurally guaranteed for every full-sibling mate pair); 4
+  independent test-blast-radius problems including a live 120x pixel-scale bug in the design's own
+  proposed RED test. Presented via AskUserQuestion (hold-and-file-separately / one-more-repair /
+  pivot-to-post-hoc-nudge / accept-as-permanent); user picked hold. Appended investigation doc §9
+  (full candidate table, both critique rounds, the independent finding, updated §9.7 open
+  questions), updated status banner and decision log -- caught and fixed a self-introduced
+  References-section duplication by re-reading the file after the edit. Updated BACKLOG.md's Track 3
+  item with an S600 progress note. Filed the preferAnchor() bug as GitHub issue #162 + a new
+  BACKLOG.md Housekeeping item (not fixed, per Learning 382). Separately, owner-directed: checked
+  current MIT-license state before acting (found already done since S102), then added a scoped
+  MIT-badge/REUSE-badge BACKLOG.md item split by risk. Added PROJECT_LEARNINGS.md Learnings 615-617.
+  Commit abafdee7 (Phase 1B claim), plus this session's close-out commits.
+next_steps: A future redesign session should start at the investigation doc's §9.7, not §8.6 (now
+  superseded). §9.7 item 1 is now a much stronger recommendation than §8.6 item 3's original framing
+  -- 3 independent attempts have failed at 3 different depths (wrong direction, then unbounded
+  magnitude, then dead-under-its-own-given-rules plus wrong reference frame), so a 4th attempt at
+  this same mechanism should be the option needing justification, not the default. Explicitly weigh
+  the post-hoc-bounded-nudge alternative or accepting Track 3's trade-offs as permanent first.
+  Separately and fully unblocked: issue #162 (preferAnchor()'s locale bug) is independently
+  actionable right now as a quick, well-scoped Effort-S fix with a suggested remedy already named
+  (Learning 585's own radix-based comparator). The screenshot-staleness check and LabKey/NPRC items
+  from prior sessions' priorities lists remain untouched, still valid candidates.
+key_files: docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md (the
+  deliverable; §9.7 is the entry point for a future redesign session); R/makePedigreeDiagramData.R:
+  966-1010 (the centering-fix splice zone, reconfirmed unchanged) and :403-411 (preferAnchor(), the
+  independently-found locale bug, issue #162); BACKLOG.md (Track 3 item's S600 progress note, the new
+  preferAnchor() Housekeeping item, the MIT/REUSE badge item); PROJECT_LEARNINGS.md (Learnings
+  615-617).
+gotchas: The core problem is no longer just magnitude -- it's whether the mechanism fires at all
+  under Layer 1's literal given rule, and whether any bound measures the right reference frame. Do
+  not start a 4th attempt from "just add a bound" again; read §9.7 items 1-2 first. Issue #162 is
+  completely independent of the centering-fix investigation's own unresolved state -- a session
+  wanting a quick, well-scoped win could pick it up without waiting on any centering-fix decision.
+  This session's scratchpad R scripts were not committed (ephemeral, matching S598/S599's own
+  precedent) -- reconstruct from the investigation doc's §9 prose (exact numbers given) if needed.
+  A repaired design is a NEW design for critique purposes (Learning 613) -- this was followed this
+  session and confirmed to work (the magnitude arithmetic itself never failed); keep doing it.
+runtime_smoke: n/a -- docs-only planning/investigation session, no R/tests code touched or shipped.
+changelog_ref: CHANGELOG.md 2026-08-17, "S600: duplicate-occurrence-selection centering — 3rd
+  attempt (magnitude-bound), still not sound, plus an independent finding" entry (plus 2 sibling
+  entries the same day for the preferAnchor() issue filing and the MIT/REUSE badge item).
+commit: abafdee7 (Phase 1B claim), plus this session's close-out commits</code></pre>
+<pre class="handoff"><code>session: S599
+date: 2026-08-17
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Ran a fresh redesign attempt against S598's investigation doc §6 open questions
+  (docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md). A 12-agent
+  design-&gt;synthesize-&gt;critique-&gt;repair-&gt;critique workflow produced a repaired design that STILL
+  fails adversarial critique on a new axis (unbounded substitution magnitude, not the qualification
+  logic S598/this session's round 1 refined). Presented via AskUserQuestion; owner chose hold again.
+  Appended full findings as the doc's new §8; §8.6 is the updated open-questions entry point.
+what_was_done: Confirmed no code drift since the investigation doc's HEAD (git diff f7afa0fd..HEAD
+  -- R/ tests/ empty); re-read R/makePedigreeDiagramData.R:455-524,955-1015 fresh, confirming the
+  duplicates-table insertion-order determinism and the exact Pass-1/clamp/dupX splice zone. Ran a
+  12-agent Workflow (wf_115a9428-581, 0 errors): 4 independent candidate qualification-rule designs
+  (Symmetric Blend / Sibling-Union-Count Abstention / 2-Child Eligibility Gate / SQD Gate -- the
+  last disqualified live, still misfires 0.7), each live-verified via pkgload::load_all() + real
+  .buildMatingUnitForest()/.positionMatingUnitForest() internals; synthesized into "Sibling-
+  Relationship-Count Abstention Guard"; round-1 critique found a NEW compounding misfire (2 children
+  of one union each substituting toward a shared 3rd sibling, 0.5-&gt;3.775); repaired with a Layer-2
+  abstention ceiling (neutralizes it, live-reconfirmed); round-2 critique on the repair STILL
+  designStillSound:false on 2/3 lenses -- unbounded magnitude in the untouched single-substitution
+  case (-0.05-&gt;-16.238 live-measured as an unrelated fan-out grew) and a TDD white-box-test
+  necessity (both abstention branches are output-identical to today's shipped behavior, so a
+  black-box RED test would pass pre-implementation). Presented via AskUserQuestion (hold /
+  one-more-repair / ship-disclosed); user picked hold. Appended investigation doc §8 (full
+  candidate table, both critique rounds, updated open questions at §8.6), updated its status banner
+  and decision log, updated BACKLOG.md's Track 3 item with an S599 progress note, added
+  PROJECT_LEARNINGS.md Learnings 613-614, refreshed CLAUDE.md's learnings-count pointer. Commit
+  02efe41a (Phase 1B claim), plus this session's close-out commit.
+next_steps: A future redesign session should start at the investigation doc's §8.6, not §6 (now
+  superseded). The primary open problem is the substitution formula's own magnitude
+  (rawDupX &lt;- rawFinalUnitX[V] + minSep*0.4, inherited unchanged by every candidate across both
+  S598 and S599) -- bounding it should be the design target, not another qualification-logic
+  refinement. Read §8.6 item 3 first: 2 independent attempts have now failed adversarial critique,
+  and an explicit go/no-go on whether this is the right layer to fix child-centering quality at all
+  may be warranted before a 3rd attempt. Separately, unrelated: issue #148's scope-narrowing
+  conversation and the S582 screenshot staleness check (READY, Effort S) remain exactly as prior
+  sessions left them, still valid candidates if a session doesn't want to pick up a 3rd redesign
+  attempt.
+key_files: docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md (the
+  deliverable; §8.6 is the entry point for a future redesign session); R/makePedigreeDiagramData.R:966-1010
+  (the exact splice zone, reconfirmed unchanged); BACKLOG.md:196-232ish (Track 3 trade-offs item,
+  now with the S599 progress note); PROJECT_LEARNINGS.md (Learnings 613-614).
+gotchas: The core open problem is magnitude, not qualification/abstention logic -- do not spend a
+  3rd session re-refining when-to-substitute without first addressing what-value-to-substitute's own
+  boundedness. This session's scratchpad R scripts (candidate simulations, the fan-width magnitude
+  sweep) were not committed (ephemeral, matching S598's own precedent) -- reconstruct from the
+  investigation doc's §8.4 prose (exact numbers given) rather than from memory. A repaired design is
+  a NEW design for critique purposes -- re-run all 3 lenses fresh against any future repair, don't
+  narrow the re-check to just the one finding the repair targeted (Learning 613).
+runtime_smoke: n/a -- docs-only planning/investigation session, no R/tests code touched or shipped.
+changelog_ref: CHANGELOG.md 2026-08-17, "S599: duplicate-occurrence-selection centering redesign
+  attempt — still not sound, investigation doc §8" entry.
+commit: 02efe41a (Phase 1B claim), plus this session's close-out commit</code></pre>
+<p>Self-assessment 8/10 (+): ran a genuinely fresh adversarial critique round against the repair itself rather than narrowly re-checking the one finding it targeted, and found a real, deeper, previously-undiscovered magnitude problem; recognized the workflow’s bounded repair allowance was exhausted and stopped to ask the owner rather than iterating further or shipping silently, matching S598’s own precedent at a second, deeper decision point; wrote a substantive §8 update (condensed candidate table, both critique rounds in full, updated open questions) rather than a thin note; independently re-verified load-bearing claims at every level rather than trusting sibling-agent self-reports; every new cross-reference verified to resolve before commit. (−): the 12-agent workflow (~1.6M subagent tokens, ~62 min) did not converge to a ratified design, and a magnitude- stress fixture in the FIRST round’s own verification requirements (not only round-2’s critique) might have surfaced the problem one cycle earlier; did not proactively flag “the substitution formula itself was never questioned” as a risk before spending the full budget, though the gap traces to S598’s own §6 not naming that axis either. Predecessor (S598) scored 9/10: the investigation doc’s §6 drove this entire session’s design work with zero rediscovery cost, its “2 candidates already tried and failed” note prevented wasted re-attempts, and every one of its claims re-verified live this session without correction.</p>
+<pre class="handoff"><code>session: S598
+date: 2026-08-16
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: Investigated the child-centering half of Track 3's 2 disclosed trade-offs (the
+  duplicate-occurrence-selection substitution, BACKLOG.md's informal "Track 4"). NOT shipped as a
+  ratified plan -- a 6-agent verify/critique workflow found a live-verified correctness gap inside
+  the design's own claimed scope; owner chose to hold for a redesign session rather than ship it
+  disclosed or patch it with an unverified guard. Full evidence written to
+  docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md. D1 bar-vs-bar
+  residual (the other trade-off) remains completely untouched, its own separate follow-up.
+what_was_done: Ran a 6-agent workflow (3 parallel verify: code-state relocation against current
+  HEAD, live re-derivation via pkgload::load_all() on the exact issue #160 comment-1 fixture, a
+  grep-based evidence inventory; then 3 parallel adversarial-critique lenses: invariant
+  preservation, edge cases, test-blast-radius/TDD-sequencing) against the never-adopted S592 "fix
+  (a)" design. Confirmed exact current insertion point R/makePedigreeDiagramData.R:974-994 and
+  reproduced the headline number (0.12 shipped -&gt; -6 under the fix). The edge-cases lens found
+  designStillSound: false -- a sibling mating 2 different co-siblings of the same union can move
+  the union's center FARTHER from true, verified with real fixture numbers. Presented via
+  AskUserQuestion; owner picked hold-for-redesign. Wrote the investigation document (status banner
+  making clear it is not a ratified plan; naming-collision flag re "Track 4" vs. the unrelated,
+  shipped pedigree-diagram-track4-gen-aware-anchor-plan.md; all 3 critique reports in full; 7
+  concrete open questions for a redesign session). Updated BACKLOG.md's Track 3 item with the S598
+  progress note. Side quest (user-directed): rendered the issue #160 comment-1 fixture through both
+  kinship2 and nprcgenekeepr for visual comparison, ground-truth edge-traced before presenting.
+  Added PROJECT_LEARNINGS.md Learnings 611/612; CLAUDE.md pointer refreshed. Commit 9b94d7ce
+  (Phase 1B claim), plus this session's close-out commit.
+next_steps: A future session should start at the investigation document's §6 (7 open questions),
+  not re-run the verification workflow -- its findings are fresh as of current HEAD f7afa0fd+this
+  session's docs commits. Question 1 (design a qualification rule that doesn't misfire on the
+  2-co-siblings pattern) is the real work; 2 candidate guards were tried live this session and both
+  failed to exclude the counter-example (documented in §6 so they aren't re-tried blind). Once a
+  corrected design is ratified, it still needs its own dedicated PRE-RED reopening AskUserQuestion
+  (a second reopening of Track 6 §2.4) before any RED test, per this project's TDD contract and
+  Track 3's own precedent. Separately, unrelated: issue #161 (hide mating-unit marker) and the S582
+  screenshot staleness check (READY, Effort S) remain exactly as S596/S597 left them, still valid
+  candidates if a session doesn't want to pick up the redesign.
+key_files: docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md (the
+  deliverable, §6 is the entry point for a redesign session); R/makePedigreeDiagramData.R:966-1010
+  (the exact splice zone a redesign will touch); BACKLOG.md:155-~215 (Track 3 trade-offs item, now
+  with the S598 progress note); PROJECT_LEARNINGS.md (Learnings 611-612).
+gotchas: Do not name a future plan "Track 4" -- collides with the shipped
+  pedigree-diagram-track4-gen-aware-anchor-plan.md (investigation doc §1). The kinship2/
+  nprcgenekeepr comparison render script (render_compare.R) was not committed -- reconstruct from
+  SESSION_NOTES.md if needed again; chromote's set_viewport_size() sizes the screenshot, NOT
+  screenshot(width=,height=), which errors ("unused arguments"). The Track C 9-subject test fixture
+  (test_positionMatingUnitForest.R:1188-1219) passes today only by scale coincidence -- do not treat
+  its current silence as proof any future design is safe at production scale.
+runtime_smoke: n/a -- docs-only planning/investigation session, no R/tests code touched or shipped.
+changelog_ref: CHANGELOG.md 2026-08-16, "S598: duplicate-occurrence-selection centering fix —
+  investigation, held for redesign" entry.
+commit: 9b94d7ce (Phase 1B claim), plus this session's close-out commit</code></pre>
+<p>Self-assessment 8/10 (+): did not implement a design an adversarial workflow found a genuine, live-verified wrong-direction gap in, even after already committing to scoping this fix — surfaced it and let the owner re-decide rather than quietly shipping a guard I’d likely have gotten wrong (2 live-improvised candidates both failed to exclude the counter-example); independently re-verified the S592 design against current HEAD rather than trusting it, finding a real discrepancy (shipped 0.12, not the design-time-predicted 0); found and flagged the “Track 4” naming collision before it could confuse an implementation session; kept a mid-session user-directed visual-comparison request from derailing the investigation, ground-truth-verified before presenting; verified every new cross-reference resolves before commit. (−): the deliverable’s actual shape (investigation, not a plan) only became clear mid-session; the comparison-render script wasn’t committed, matching precedent but costing a future session reconstruction effort. Predecessor (S597) scored 7/10: an accurate, immediately-actionable 3-candidate <code>next_steps</code> list drove this session’s entire Phase 1 pick with zero rediscovery cost; nothing found wrong; the only gap (the “Track 4” naming collision) wasn’t fairly attributable to S597, which was relaying <code>BACKLOG.md</code>’s own pre-existing shorthand.</p>
+<pre class="handoff"><code>session: S597
+date: 2026-08-16
+status: complete
+self_score: 6
+predecessor_score: 8
+active_task: None of S596's 3 offered BACKLOG priorities (Track 3 trade-offs decision / issue #161
+  / S582 screenshot check) were picked or advanced -- Phase 1 was never completed. Session instead
+  ran a full Phase 0 orientation, then followed a user-directed browser detour into an artifact
+  regeneration side-quest, then closed out on explicit user request (context-budget concern). All
+  3 candidates remain exactly as S596 left them for the next session.
+what_was_done: Phase 0 ledger reconcile found and backfilled a real 2-commit CHANGELOG.md gap
+  S596 left (its own 2 trailing close-out commits had no matching ledger entry) -- commit
+  8fc0e383. Explained Track 3's trade-offs and the bar-vs-bar architecture (why upstream spacing
+  can't fix it -- 3 prior global-relayout spikes already closed NOT FEASIBLE) in conversation, no
+  files touched at the time. Reviewed a previously-published claude.ai "Pedigree Fidelity Proof"
+  artifact and found it stale -- its "not previously reported" defect callout was verbatim
+  PROJECT_LEARNINGS.md Learning 604, already fixed twice over (Tracks 1-2); traced its stamped
+  commit f12e7cbb to Session 590, predating issue #160's own filing. Regenerated both plates fresh
+  against current HEAD via pkgload::load_all() + chromote, with independently re-derived (not
+  circular) collision verification: 0 same-row collisions both plates; Track 1's fix confirmed via
+  exact coordinates; Plate 2's 1 residual confirmed to be the known curved-heuristic case, not new.
+  Republished to the same artifact URL with a correction callout. At close-out: completed a
+  dropped mid-conversation user request (BACKLOG.md's Track 3 item gained a 3rd possibility -- a
+  bar-aware detect-and-jog repair for the bar-vs-bar residual specifically); added
+  PROJECT_LEARNINGS.md Learning 610 (stale external-artifact provenance); refreshed CLAUDE.md's
+  learnings-count pointer (609-&gt;610).
+next_steps: Unchanged from S596 -- pick per priority/interest: (1) BACKLOG.md's Track 3
+  trade-offs follow-up item (DECISION NEEDED, not scoped) -- now names 3 options: the plan's own
+  deferred Track 4 substitution, a narrower/soft-pull clamp redesign, or (new this session) a
+  bar-aware detect-and-jog repair for the bar-vs-bar residual specifically. (2) Issue #161 (hide
+  the mating-unit marker) -- deferred-until-Tracks-1-3-ship condition now satisfied, still a
+  genuine design call needing its own AskUserQuestion. (3) The pre-existing S582 item (READY,
+  Effort S): verify whether pedigree-diagram-screenshots.R's 3 non-base-fixture screenshots went
+  stale from the same pedigreeEdgeStyle default-flip pb_diagram_legend.png needed fixing for.
+key_files: BACKLOG.md:155-190 (Track 3 trade-offs item, now 3 possibilities); PROJECT_LEARNINGS.md
+  (Learning 610, appended after Learning 609); CHANGELOG.md (S596 close-out backfill entry + this
+  session's own entry, both under "## 2026-08"); CLAUDE.md:282 (learnings-count pointer).
+gotchas: The refreshed "Pedigree Fidelity Proof" artifact (https://claude.ai/code/artifact/
+  49990492-bab9-43c5-8202-cad4742f8cf5) is NOT git-tracked -- its render script
+  (render_fidelity_plates.R) lived only in this session's ephemeral scratchpad, not committed
+  anywhere in this repo. A future session wanting to regenerate it again will need to
+  reconstruct the render approach from this SESSION_NOTES.md entry (kinship2::pedigree() requires
+  an explicit missid="0" when dadid/momid get coerced to character by ifelse() -- a real gotcha
+  hit and fixed this session) rather than finding a checked-in copy. Do not assume any of S596's 3
+  candidates advanced -- BACKLOG.md's Track 3 item gained documentation only, no decision was made.
+runtime_smoke: n/a -- docs-only session, no R/production code touched.
+changelog_ref: CHANGELOG.md 2026-08-16 entries under "## 2026-08" (S596 close-out backfill + S597
+  session summary).
+commit: 8fc0e383 (Phase 0 ledger backfill), plus this session's close-out commit</code></pre>
+<p>Self-assessment 6/10 (+): caught a real ledger gap S596’s own self-report missed; verified a previously-published artifact’s claimed provenance against <code>git log</code> rather than trusting its prose, catching a stale “new defect” claim that was actually Learning 604, already fixed twice; built independent (non-circular) verification for the artifact refresh; completed a dropped user request at close-out instead of silently omitting it; stopped retrying failing browser automation per the harness’s own guidance instead of burning turns. (−): never completed Phase 1 – none of S596’s 3 ready BACKLOG candidates advanced despite a full Phase 0 surfacing them clearly; left the BACKLOG.md edit request incomplete mid-conversation until close-out forced a review; the artifact regeneration, though valuable, was not a <code>BACKLOG.md</code>-prioritized item and produced no git-tracked deliverable. Predecessor (S596) scored 8/10: accurate, immediately-actionable <code>next_steps</code>, docked for a ledger gap its own self-assessment claimed was fully closed.</p>
+<pre class="handoff"><code>session: S596
+date: 2026-08-16
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: Implement Track 3 (S583 parent-span clamp) -- plan §2.3/§6 Session C of
+  docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md. DONE. BACKLOG.md's S583
+  item closed. All 3 tracks of the same-row collision-avoidance plan now shipped.
+what_was_done: New clamp loop in .positionMatingUnitForest() (R/makePedigreeDiagramData.R:966-999)
+  -- clamps each mating unit's finalUnitX into its own 2 parents' [min,max] x-range, skipping a
+  union with a dangling (free-pass) parent. Reproduced BACKLOG's S583 example byte-for-byte via
+  trimPedigree() against the real 375-individual fixture, plus the 9-subject consanguineous
+  fixture BACKLOG names. Found and disclosed 2 substantial trade-offs via AskUserQuestion (both
+  owner-accepted): the plan's own §7 child-centering metric worsens (9/251 -&gt; 53/251 edges over
+  200-unit threshold), and the already-disclosed D1 bar-vs-bar residual worsens (9 -&gt; 116
+  post-Track-1 hits). Beneficial side effect: Track 2's own collision baseline improves (150-&gt;105
+  edges, node count 1,502-&gt;1,412). Updated test_positionMatingUnitForest.R (2 new tests + loosened
+  invariant + 2 corrected golden values), test_resolveEdgeNodeCollisions.R,
+  test_makePedigreeMatingLayout.R, test_addRectilinearWaypoints.R (all disclosed churn).
+  devtools::check() 0/0/1-pre-existing-NOTE; full regression 0 failed/0 error; lintr clean.
+  NEWS.Rmd/NEWS.md, BACKLOG.md (S583 + Track 3 DONE, new follow-up item filed, issue #161 item
+  annotated), CHANGELOG.md, PROJECT_LEARNINGS.md Learning 609 all updated.
+next_steps: 3 open candidates, none mandated -- pick per priority/interest: (1) BACKLOG.md's new
+  follow-up item (filed this session, right after the Track 3 item) -- decide whether Track 3's 2
+  disclosed trade-offs (child-centering, bar-vs-bar) are a permanent accepted cost or warrant a
+  narrower clamp mechanism (e.g. single-child-only, or a partial/soft pull); DECISION NEEDED, not
+  scoped, likely needs its own design session. (2) Issue #161 (hide the mating-unit marker) --
+  its own deferred-until-Tracks-1-3-ship condition (plan §2.5) is now satisfied; still a genuine
+  design call needing a fresh AskUserQuestion, not an obvious pick. (3) The pre-existing S582 item
+  (READY, Effort S): verify whether vignettes/articles/pedigree-diagram-screenshots.R's 3
+  non-base-fixture screenshots (diagram_show_names.png, diagram_affected_shading.png,
+  diagram_twin_connectors.png) went stale from the same pedigreeEdgeStyle default-flip mechanism
+  pb_diagram_legend.png needed fixing for -- small, well-scoped, unrelated to this thread.
+key_files: R/makePedigreeDiagramData.R:966-999 (.positionMatingUnitForest()'s new Track 3 clamp);
+  tests/testthat/test_positionMatingUnitForest.R (2 new tests ~line 1100-1200, loosened
+  checkInvariant ~line 1037-1067, 2 corrected golden values ~line 56-90/296); test_resolveEdgeNodeCollisions.R
+  ~line 350-390; test_makePedigreeMatingLayout.R ~line 584-616; test_addRectilinearWaypoints.R
+  ~line 621-712; docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md (§2.3/§6/§7/§8,
+  the governing plan, now fully implemented across Tracks 1-3).
+gotchas: testthat::expect_equal()/all.equal() with a bare tolerance=N argument is SCALE-RELATIVE,
+  not absolute -- expect_equal(120, 60, tolerance=1) PASSES (see PROJECT_LEARNINGS.md Learning
+  609). For an actual absolute-unit check use expect_true(abs(actual-expected) &lt; N) explicitly,
+  with a 1e-9-scale buffer if the comparison can land exactly on a boundary from repeated 1e-3
+  de-collision nudges. A union with a dangling (no-own-row) parent has no resolvable x -- any
+  future code touching finalUnitX must guard for NA parent lookups the same way this session's
+  clamp does (R/makePedigreeDiagramData.R's new `if (!anyNA(parentX))` guard). The plan's own §7
+  faithful child-centering metric and the D1 bar-vs-bar residual count (both re-measured this
+  session) are now materially different from the plan's own original numbers -- don't cite the
+  plan document's own pre-Track-3 figures without checking BACKLOG.md's Track 3 entry for the
+  current, post-fix numbers first.
+runtime_smoke: R/modPedigree.R:588 confirmed unchanged -- calls makePedigreeMatingLayout()
+  directly, so the live Shiny app inherits this fix automatically. Numeric ground-truth coordinate
+  verification (exact -60/60/60 reproduction) was the primary evidence relied upon; an attempted
+  chromote screenshot was not polished enough to serve as standalone evidence. No full
+  shinytest2/AppDriver boot, matching Track 1/2's own precedent for this change class.
+changelog_ref: CHANGELOG.md 2026-08-16/2026-08-15 entries under "## 2026-08" (S596 claim + S596
+  deliverable entries).
+commit: 8b8e399d (RED), plus this session's GREEN+REFACTOR and close-out commits</code></pre>
+<pre class="handoff"><code>session: S595
+date: 2026-08-15
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: Implement Track 2 (general same-row detect-and-jog collision framework) -- plan
+  §2.2/§6 Session B of docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md. DONE.
+  Issue #160 closed.
+what_was_done: New .resolveEdgeNodeCollisions(nodes, edges) (R/makePedigreeDiagramData.R), wired
+  into makePedigreeMatingLayout()'s edgeStyle=="rectilinear" branch. Strict-interior-containment
+  detection (graph-adjacency structural-member exclusion, no forest param needed) + a rectilinear
+  2-waypoint jog repair + a disclosed smooth.roundness heuristic for the curved duplicate
+  connector. Found (not anticipated by the plan) 150 of 725 straight same-row edges already
+  colliding on the real 375-fixture (3,081 obstacle-pairs) -- owner-directed to fold into scope
+  unchanged. Found and fixed 2 real bugs via full regression + chromote visual verification: a
+  shared row offset created 132 NEW jog-vs-jog collisions (fixed with interval-scheduled
+  multi-level jogging, 150-&gt;0 residuals); an edge-replacement bug silently destroyed twin-
+  connector/consanguinity-marker color identity (fixed by preserving the full original edge row,
+  a 3rd instance of the established D10/S506/Track-C-S563 "preserve, never blanket-reset"
+  precedent -- PROJECT_LEARNINGS.md Learning 608). devtools::check() 0/0/1-pre-existing-NOTE; full
+  regression 0 failed/0 error; lintr clean. NEWS.Rmd/NEWS.md, BACKLOG.md, CHANGELOG.md updated;
+  issue #160 closed citing S593+S595 evidence. Self-flagged (not user-caught) process gap: ran
+  REFACTOR (bug fixes/tuning/verification) without its own prior AskUserQuestion gate --
+  disclosed retroactively, user confirmed the completed work was acceptable.
+next_steps: Track 3 (S583 parent-span clamp) is the last of the 3-track plan -- plan §2.3/§6
+  Session C, docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md. Requires its OWN
+  explicit PRE-RED reopening-confirmation AskUserQuestion (a deliberate, disclosed reopening of
+  Track 6 §2.4's "unconditionally" wording, already ratified at the planning level S592) before
+  any RED test. Clamps finalUnitX into its own 2 parents' [min,max] range; update
+  test_positionMatingUnitForest.R:986/:1019 ("formula OR clamped-to-parent-range") and audit
+  test_makePedigreeMatingLayout.R:428. Closes the BACKLOG.md S583 item. Separately, not scoped
+  this session: the 3 possibly-stale non-base-fixture Pedigree Diagram screenshots (found S582,
+  READY, Effort S) remain unchecked; a2interactive.Rmd's reserved-node-id-prefix list needs the
+  new __jog_ prefix added whenever that vignette's own deferred documentation pass next runs
+  (Learning 478's drift class, same mechanism as the earlier edgeStyle gap).
+key_files: R/makePedigreeDiagramData.R:1842-2107 (.resolveEdgeNodeCollisions(), new) and
+  :1428-1448 (its call site in makePedigreeMatingLayout()); tests/testthat/
+  test_resolveEdgeNodeCollisions.R (new, 8 blocks); tests/testthat/test_makePedigreeMatingLayout.R
+  (node-count + twin-connector tests updated); docs/planning/pedigree-diagram-same-row-collision-
+  avoidance-plan.md §2.2/§6 Session C (Track 3, next).
+gotchas: D2 doglegs are structurally unreachable via the real pipeline today (Track 4 + issue
+  #143's invariants) -- don't expect .resolveEdgeNodeCollisions()'s D2-shaped detection to ever
+  fire on real data; it's defensive/proactive coverage only, verified via a hand-built synthetic
+  fixture. The curved-connector heuristic is a disclosed nudge with NO closed-form clearance proof
+  -- 52 residuals remain on the real fixture; a future session re-touching duplicate-connector
+  rendering should re-render and visually re-confirm, not assume the heuristic still suffices.
+  jogY is computed PER ROW (each edge's own nearest distinct-y neighbor), not globally -- if a
+  future change adds new intermediate rows (e.g. a 2nd offset tier), re-verify this still produces
+  visually legible jogs via a rendered screenshot, not just 0-collision assertions.
+runtime_smoke: R/modPedigree.R:588 confirmed to call makePedigreeMatingLayout() directly, no
+  wrapper -- the live Shiny app inherits this fix automatically. Chromote-rendered the actual
+  function's own output (comment-1 fixture before/after; a real straight-edge jog on the twin-
+  connector fixture) as the runtime-equivalent check, matching Track 1/S593's own precedent for
+  this algorithmic-change class; no full shinytest2/AppDriver boot this session.
+changelog_ref: CHANGELOG.md 2026-08-15 entries under "## 2026-08" (S595 claim + S595 ship/close
+  entries).
+commit: 89d23e2a (RED), c7bdbe4b (GREEN+REFACTOR), c104808c (docs/close), plus this close-out</code></pre>
+<pre class="handoff"><code>session: S594
+date: 2026-08-15
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: Lossless archive trim of SESSION_NOTES.md -- DONE. 76 records archived to
+  docs/archive/SESSION_NOTES-through-2026-08-15.md; live file 397,442 B -&gt; 5,262 B. Dashboard
+  HIGH+ risk 1 -&gt; 0. Stale CLAUDE.md "blocked by fence-scanner defect" note corrected to verified
+  current state (both underlying defects were fixed S527/S528; this is the 3rd successful archive
+  round, not the 1st).
+what_was_done: Found the CLAUDE.md/HANDOFFS.md-repeated "SESSION_NOTES.md archive blocked by a
+  fence-scanner defect (S518)" claim was stale -- verified directly (0 backtick-fence lines in
+  the live file; methodology_trim.py's own LedgerSpec code comments cite S527/S528 fixes;
+  PROJECT_LEARNINGS.md Learning 533 documents the fix; 2 archive rounds already completed).
+  Real current blocker: fresh SRF_RED refusal (SRF 2.0371 vs 0.0576 vs two different archive
+  boundaries, 35.35x spread) -- the exact pattern Learnings 549/586/587 diagnosed for
+  CHANGELOG.md/HANDOFFS.md and Learning 587 predicted would recur here. Pulled absolute byte
+  deltas, presented both readings via AskUserQuestion (force/hold/raise-budget); user chose
+  force. Ran --force --write: 76 records archived, L1/L2/L3 confirmed both by the tool's own
+  output and independently via the generated .verify.sh script. Corrected the stale CLAUDE.md
+  note. Added PROJECT_LEARNINGS.md Learning 607 (the stale-persistent-note pattern + Learning
+  587's prediction materializing). Commits: a3c8f1c9 (claim, with a same-session date-error
+  self-correction), plus this close-out.
+next_steps: No further action required on this item -- SESSION_NOTES.md archiving is confirmed
+  working and the dashboard risk flag is clear. The next SRF_RED refusal on this file (when it
+  next accumulates enough new session records) will need the same force/hold/raise-budget
+  AskUserQuestion treatment -- not a defect, an expected recurring decision point per Learning
+  586's own practical rule (a large archive event's denominator doesn't stay "most recent" for
+  long on a high-velocity project). Otherwise: pick up from the Phase 0 priorities list this
+  session's own orientation report rendered (Track 2 general same-row detect-and-jog framework,
+  READY, Effort L, is the standing top recommendation per S593's own next_steps -- unaffected by
+  this session's unrelated housekeeping detour).
+key_files: methodology_trim.py:231-255 (SESSION_NOTES.md LedgerSpec, unmodified -- config
+  already correct); CLAUDE.md (the corrected fence-scanner-defect note, now titled "SESSION_NOTES.md
+  archive fence-scanner defect ... historical, not current state"); PROJECT_LEARNINGS.md Learning
+  607 (new); docs/archive/SESSION_NOTES-through-2026-08-15.md +
+  docs/archive/SESSION_NOTES-through-2026-08-15.md.verify.sh (the new shard + its losslessness
+  proof).
+gotchas: The 2 records kept live in SESSION_NOTES.md after this trim are NOT a matched
+  session-pair (methodology_trim.py keeps the top-K headings by FILE POSITION, not by
+  session-grouping) -- they are this session's own claim/eval headings plus the OLD "Session 592
+  Handoff Evaluation (by Session 593)" heading; "What Session 593 Did" itself was archived away
+  in the same trim (fully preserved, just no longer live-visible) -- don't be surprised the live
+  file's 2 headings don't pair into one full session record. A future SESSION_NOTES.md SRF_RED
+  refusal is expected, not a new bug -- see next_steps.
+runtime_smoke: n/a -- docs/ledger-only session, no R package or Shiny app runtime behavior
+  touched; methodology_trim.py itself was not modified, only run.
+changelog_ref: CHANGELOG.md 2026-08-15 entries -- the tool-authored "Ledger trim: SESSION_NOTES.md
+  -&gt; ..." entry plus this session's own claim and close-out entries, all under the "## 2026-08"
+  heading near the top of the file.
+commit: a3c8f1c9 (claim), plus this close-out</code></pre>
+<p><strong>Self-score breakdown:</strong> +Verified a stale claim rather than trusting repetition; +followed the established SRF_RED decision precedent exactly; +independently re-verified losslessness via the generated script, not just console output; +corrected the stale note same-session; +caught and fixed a self-introduced date error before it could propagate. −The date error should not have happened in the first place (correct date was in context, mistyped 3 times); −didn’t check for a dedicated BACKLOG.md item before starting (there wasn’t one, but the check itself was skipped until close-out).</p>
 <pre class="handoff"><code>session: S593
 date: 2026-08-15
 status: complete
