@@ -128,3 +128,10 @@ README\.*\.png$
 ^FRAMEWORK_LEARNINGS\.md$
 ^methodology_trim\.py$
 ^__pycache__$
+
+# REUSE Software (reuse.software) compliance config -- repo-level licensing
+# metadata for the REUSE badge, not R package content. Mirrors the existing
+# CITATION.cff/codecov.yml/_pkgdown.yml precedent of ignoring repo-root
+# tooling files. Session 607, 2026-08-18.
+^REUSE\.toml$
+^LICENSES$

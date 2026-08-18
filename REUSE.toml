@@ -1,0 +1,26 @@
+version = 1
+SPDX-PackageName = "nprcgenekeepr"
+SPDX-PackageSupplier = "R. Mark Sharp <rmsharp@me.com>"
+SPDX-PackageDownloadLocation = "https://github.com/rmsharp/nprcgenekeepr"
+
+# Default: everything in this repository is original project content,
+# MIT-licensed (DESCRIPTION's License: MIT + file LICENSE).
+[[annotations]]
+path = "**"
+SPDX-FileCopyrightText = "2017-2026 R. Mark Sharp"
+SPDX-License-Identifier = "MIT"
+
+# Third-party files vendored in verbatim by tooling, not authored by this
+# project. Both are MIT-licensed by their own upstream package, so they need
+# no entry in LICENSES/ beyond MIT.txt above -- only a different copyright
+# holder.
+[[annotations]]
+path = [
+  "renv/activate.R",
+  "man/figures/lifecycle-deprecated.svg",
+  "man/figures/lifecycle-experimental.svg",
+  "man/figures/lifecycle-stable.svg",
+  "man/figures/lifecycle-superseded.svg",
+]
+SPDX-FileCopyrightText = "Posit Software, PBC"
+SPDX-License-Identifier = "MIT"
