@@ -172,6 +172,23 @@ This file currently holds **14** receipt(s). Computed by
 hand-maintained.
 
 ``` handoff
+session: S607
+date: 2026-08-18
+status: pending
+self_score: pending
+predecessor_score: 8
+active_task: Add MIT license badge to README.Rmd + resolve the REUSE-badge scope decision
+  (BACKLOG.md Housekeeping, found 2026-08-17).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+``` handoff
 session: S606
 date: 2026-08-18
 status: complete
