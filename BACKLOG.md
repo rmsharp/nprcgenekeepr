@@ -1709,7 +1709,45 @@ PDF audit follow-ups” (S531, 753-\>267 lines). File total: 2,501 lines
 (S529 start) -\> 1,173 lines (S531 end), a 1,328-line/53% reduction
 across 3 sessions, with zero information loss at any step (each
 session’s own end-to-end re-read plus CHANGELOG.md/Learning/file-path
-cross-reference verification). See `CHANGELOG.md`.
+cross-reference verification). See `CHANGELOG.md`. **Correction (S606,
+2026-08-18): “fully RESOLVED” held only as a snapshot – a standing
+topical section regrows as later sessions append their own progress
+narrative to it, exactly the accumulation pattern this item’s own
+opening paragraph names as the root problem.** Between S531 and this
+session, 3 further issue \#152 slice-completion sessions (S532/S533/
+S535) each appended their own multi-paragraph progress update to
+“Genetic-metrics PDF audit follow-ups,” regrowing it from S531’s 267
+lines back to 304 – with issue \#152 now fully closed (S535), unlike at
+S531’s compression time (then still open, Slice 3 pending). Owner picked
+this section for re-compression this session via `AskUserQuestion` (over
+“Pedigree diagram vs kinship2” and “both sections”). Re-compressed: the
+6 progress paragraphs (S517 design + Slices 1-5) condensed into 1
+consolidated summary retaining every session number, design-doc path,
+and Learning cross-reference. Also corrected 2 stale claims found in the
+same pass, not just compressed around them: the section’s own intro
+paragraph still said “#152 (Deferred) is in progress (Slice 3 next)”
+(superseded by S535’s close); and the S535 paragraph’s own
+“shinytest2/chromote headless-modal-rendering harness limitation”
+finding was never corrected in place after `PROJECT_LEARNINGS.md`
+Learning 542 (S536) retracted it as a test-pedigree-fixture defect
+(missing `birth` column), not a harness limitation. Verified
+`CHANGELOG.md` (+ its `docs/archive/CHANGELOG-through-*.md` shards)
+carries an entry for all 6 session numbers cited
+(S517/S525/S526/S532/S533/S535) before compressing to a pointer – 0 gaps
+found (1 apparent gap, S492, was a search-pattern false negative: the
+archive heading reads “Session 492,” not “S492”). All 6 cited
+`PROJECT_LEARNINGS.md` Learning cross-references
+(532/538/539/540/541/542) and the 1 cited `docs/planning/*.md` path
+confirmed to resolve; issues \#152/#153’s CLOSED state independently
+confirmed via `gh issue view`, not assumed from prose. Net: section
+304-\>80 lines (224 removed); file total 1,881-\>1,657 (224 removed).
+Zero information loss verified by re-reading the full compressed section
+end-to-end before close-out. **“Pedigree diagram vs kinship2” (S530’s
+own prior compression target) was NOT re-checked this session for the
+same regrowth pattern** – out of this session’s own scope; a future
+session should check whether it, too, has regrown since S530, and should
+treat this item’s own “fully RESOLVED” framing as describing a recurring
+maintenance need, not a one-time fix. See `CHANGELOG.md`.
 
 (found S567, 2026-08-14, incidental to a
 [`pkgbuild::build()`](https://pkgbuild.r-lib.org/reference/build.html)/tarball-content
@@ -2075,404 +2113,73 @@ monitoring” and “Ancestry guardrails in breeding decisions” – have no
 corresponding GitHub issue, despite ranking above every Medium/Deferred
 item in this batch (Finding \#1/Recommendation 2); a future triage
 session should file both. **Every Tier 1/2/3 item (#147, \#149, \#146,
-\#151, \#150) plus Deferred-tier \#153 are now fully shipped and
-closed** – see the compressed entries below. \#152 (Deferred) is in
-progress (Slice 3 next). \#148 remains unstarted, still needing its
-scope-narrowing conversation. See `CHANGELOG.md`.
+\#151, \#150) plus Deferred-tier \#152 and \#153 are now fully shipped
+and closed** – see the compressed entry below. \#148 remains unstarted,
+still needing its scope-narrowing conversation. See `CHANGELOG.md`.
 
-**Progress (S517, 2026-08-11):** the Deferred/scientific tier’s first
-item – issue \#152’s own design/architecture document
-(whole-genome/whole-exome sequence input + sequence-based genetic
-metrics) – is DONE and RATIFIED: see
-`docs/planning/issue152-sequence-input-genetic-metrics-plan.md`. Two
-parallel background research agents (a codebase-inventory `Explore`
-agent; a domain-research `general-purpose` agent) plus direct
-verification of the single most load-bearing prior decision (issue \#130
-plan’s D2, the ratified Bioconductor-Imports decline) grounded the
-design. Central findings:
-[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)’s
-O(n²·L) nested-pair loop and
-[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)’s
-O(F·C·L·n) redundant per-candidate allele-frequency rescan are the real
-scale bottlenecks (independent of the biallelic-only question); a
-directly-applicable captive-pedigreed-macaque-colony precedent (Bimber
-et al. 2016, ~22,455-marker GBS panel + pedigree-aware imputation)
-grounds a realistic scope-tier ceiling; raw VCF ingestion is infeasible
-on pure file-size grounds (144 GB-900 TiB class); summary statistics
-computed from genotype data are not an automatic privacy safe-harbor
-(Homer et al. 2008), so any sequence-derived export (raw or derived)
-must route through the same curator-controlled gate issue \#150 already
-shipped. Ten design decisions (D1-D10); four genuine judgment calls (D1
-scope tier, D3 `locusMetadata` sidecar timing, D6 initial metric set, D8
-module boundary) ratified via a single `AskUserQuestion` round – owner
-selected this document’s own recommended option in all four:
-sparse/GBS-scale tier (~50,000-locus ceiling, declining to reopen the
-Bioconductor decline); build the `locusMetadata`
-(`locus, chrom, pos[, cM]`) sidecar now, as shared vocabulary for
-sibling issue \#153; genome-wide F_ROH (new, Ceballos et al. 2018) plus
-genome-scale reruns of the existing kinship/heterozygosity/Fst
-functions, explicitly ceding effective-population-size-from-LD to \#153;
-a new tab inside the existing `modMarkerGenetics.R`, not a dedicated new
-module. Scoped as 5 future vertical slices (ingestion+fixture; a
-required
-[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)/[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
-performance rewrite; the new F_ROH metric; a new de-identification
-primitive; the full module tab + documentation), each its own future
-session. No code changed this session – design/planning only, matching
-the \#133/#136/#137/#145/#146/#147/#149/#150/#151 precedent. Issue \#152
-intentionally left open. **Next in the ratified Deferred-tier order:
-\#153 (linkage-aware/haplotype-block metrics), which can now reuse this
-session’s own `locusMetadata` vocabulary; \#148 (MHC) still needs its
-own scope-narrowing conversation first, per the sequencing audit’s
-Finding \#4.** See `CHANGELOG.md`.
-
-**Progress (S525, 2026-08-11):** Issue \#152 Slice 1 – sequence
-ingestion + fixture – is now DONE, per
-`docs/planning/issue152-sequence-input-genetic-metrics-plan.md` §5
-Slice 1. Full strict TDD PRE-RED-\>RED-\>GREEN cycle (REFACTOR: a real
-candidate was identified – a 3rd copy of
-[`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)’s
-structural-check logic – but declined via `AskUserQuestion` as out of
-this slice’s pre-declared file scope, matching the S521-S524 precedent
-of deferring cross-file refactors; noted for a future session). New
+**Progress, issue \#152 (whole-genome/whole-exome sequence input +
+sequence-based genetic metrics) – DONE, closed (design S517 through
+close-out S535, Sessions 517-535).** Design ratified S517
+(`docs/planning/issue152-sequence-input-genetic-metrics-plan.md` – two
+parallel background research agents plus direct verification of the
+load-bearing prior Bioconductor -Imports decline): sparse/GBS-scale
+scope tier (~50,000-locus ceiling); a shared `locusMetadata`
+(`locus, chrom, pos[, cM]`) sidecar reused by sibling issue \#153;
+genome-wide F_ROH (new, Ceballos et al. 2018) plus genome-scale reruns
+of the existing kinship/heterozygosity/Fst functions; a new tab inside
+the existing `modMarkerGenetics.R` rather than a dedicated module.
+Scoped as 5 vertical slices, each its own session, each a full
+strict-TDD PRE-RED-\>RED-\>GREEN(-\>REFACTOR) cycle gated by
+`AskUserQuestion`: - **Slice 1** (S525): new
 [`checkSequenceGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkSequenceGenotypeFile.md)
-(D2/D4): same structural rules as
-[`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md),
-plus two new rules this design adds – a literal `"."` (VCF
-missing-genotype placeholder) allele value is rejected before the
-biallelic count check runs (so the error is specific, not misleadingly
-“more than two alleles”), and a locus count above a `maxLoci` parameter
-(default `50000L`, D1’s scope-tier ceiling) triggers a
-[`warning()`](https://rdrr.io/r/base/warning.html), not a
-[`stop()`](https://rdrr.io/r/base/stop.html). A genuine PRE-RED
-discovery: the plan’s own §5 Slice 1 deliverable “a new locusMetadata
-validation helper” (D3) was **already shipped** – issue \#153 Slice 1
-(S520) built
-[`checkLocusMetadata()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md)
-against this exact schema, crediting \#152’s own design decision as its
-origin – so this slice reuses it directly rather than reimplementing it.
-Also, per PRE-RED `AskUserQuestion` (4 decisions, all recommended
-options chosen): returns the checked dataframe (not `TRUE` invisibly,
-the plan’s literal but since-superseded wording) to match the actual
-3-for-3 sibling-validator convention; `maxLoci` is a parameter, not a
-hardcoded constant; the literal-`"."` case is a hard
-[`stop()`](https://rdrr.io/r/base/stop.html), not a silent `NA`
-coercion. New `data-raw/generate_sequence_fixtures.R` (seeded
-`set_seed(152L)`) generates a 50-individual x 1,000-locus synthetic
-biallelic SNP panel across 20 chromosomes with ~2% missingness, plus a
-100%-“full”-coverage `locusMetadata` sidecar (deliberately not the
-sparse mix \#153’s own STR fixture models – this fixture’s stated
-purpose is scale/performance exercise, Slice 2, and reuse by the future
-F_ROH metric, Slice 3, which needs position data for every locus) –
-committed as `inst/extdata/examples/example_sequence_genotypes.csv` /
-`example_sequence_locus_metadata.csv`. 18 new `test_that` blocks, 0
-regressions. Full clean regression 5,408 passed/0 failed/0 error (17
-pre-existing warnings, all traced to 4 unrelated, already-known
-pre-existing test blocks);
-[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
-errors/0 warnings/3 NOTEs, all 3 independently confirmed pre-existing
-(top-level files; vignettes/figure leftover; the known ~69-70-word
-spelling-WORDLIST gap – direct diff confirmed zero flagged words trace
-to this session’s own new files); `lintr::lint_package()` 0 lints on
-touched files (1 line-length + 1 `stopifnot_all_linter` finding fixed).
-`_pkgdown.yml` reference-coverage guard fixed (new export added to the
-“All exposed functions” catch-all group). `inst/WORDLIST` gained 5 new
-entries (`GBS`, `VCF`, `VCF's`, `VCFtools`, `Danecek`) for this
-session’s own new citation/vocabulary – the Danecek et al. 2011 VCF
-citation was trimmed to first-author-plus-“et al.” (matching this
-codebase’s own `MacCluer JW, et al.` precedent) rather than listing all
-~12 co-authors, avoiding 4 additional WORDLIST entries for names with no
-other use in this package. `NEWS.Rmd`/`NEWS.md` terse entry added
-(deliberately matching the pre-1.0.8 style this file’s own flagged
-verbosity-drift item, above, asks future entries to return to). Citation
-checklist (issue \#120) and tutorial/article checklist (Session 436) do
-NOT yet apply – no UI/displayed statistic this slice, matching the
-\#146/#149/#150/#151/#153-Slice-1 precedent. Runtime smoke test: n/a –
-script-callable only, no Shiny wiring this slice (matches the
-[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)
-Slice 4 precedent). **Issue \#152 stays open – Slice 2 (the
-[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)/
-[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
-performance rewrite, D5) is the next planned slice**, a separate future
-session per the plan’s own session-boundary requirement. See
-`CHANGELOG.md`.
-
-**Progress (S526, 2026-08-11):** Issue \#152 Slice 2 – the
-[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)/
-[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
-performance rewrite (D5) – is now DONE, per
-`docs/planning/issue152-sequence-input-genetic-metrics-plan.md` §5 Slice
-2. Full strict TDD PRE-RED-\>RED-\>GREEN cycle (REFACTOR: a real
-candidate was identified – the
-alphabetically-first-observed-allele-as-reference idiom now exists
-independently in 3 places (`markerFst.R`, `markerParentageLikelihood.R`,
-the new `markerKinship.R`) – declined via `AskUserQuestion` as touching
-`markerFst.R`, outside this slice’s pre-declared file scope, matching
-the S521-S525 precedent). This slice is fundamentally a refactor
-(unchanged public signatures/output), so PRE-RED’s own `AskUserQuestion`
-round first resolved how RED applies: golden-master regression tests
-(dput()-captured current output, `expect_identical()`) pass immediately
-as a characterization safety net; two new precedent-setting
+structural validator (reuses issue \#153’s
+[`checkLocusMetadata()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md));
+`data-raw/generate_sequence_fixtures.R` (seeded 50-individual x
+1,000-locus synthetic biallelic SNP panel + `locusMetadata` sidecar,
+committed as `inst/extdata/examples/example_sequence_*.csv`). - **Slice
+2** (S526):
+[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)/[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
+performance rewrite – vectorized matrix algebra / precomputed per-locus
+allele-frequency tables – _(2x/)2.4x speedups, output unchanged
+(golden-master +
 [`system.time()`](https://rdrr.io/r/base/system.time.html) benchmark
-tests (no new dependency) are the slice’s actual RED, gated at
-thresholds tighter than this session’s own measured current runtime on
-the committed Slice 1 fixture
-([`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)
-~0.12-0.13s warm / 0.08s threshold;
-[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
-~0.84-0.88s warm / 0.5s threshold, explicit id/role/candidates call, no
-new fixture). A real PRE-RED finding: a plain
-[`dput()`](https://rdrr.io/r/base/dput.html) does not always round-trip
-a double exactly (found `-0.3` printing for an actual
-`-0.30000000000000004`) – both golden-master literals use
-`dput(x, control = c(..., "digits17"))` instead.
-[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)
-rewritten as vectorized matrix algebra (integer-count matrix products
-via `Hz`/`Gz`/`Z0`/`Z2` indicator matrices), achieving ~0.07-0.09s (a
-~2x speedup) while preserving the original’s per-pair undefined-kinship
-warning and ordering exactly.
-[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
-rewritten to precompute every locus’s allele-frequency table once per
-call (was: once per (offspring, candidate, locus) triple), achieving
-~0.35-0.39s (a ~2.4x speedup) for the 10-candidate benchmark scenario.
-Both new benchmark tests include an untimed warm-up call before timing –
-PRE-RED found the naive (no-warm-up) version flakes between ~0.12s and
-~0.26s depending on JIT warm-up state/test execution order – plus the
-MEDIAN of 3 timed reps rather than a single call, added after a
-single-call design still flaked once (system-noise variance, not JIT) in
-a full `test_dir()` run despite passing 5/5 isolated `test_file()`
-reruns
-([`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)’s
-threshold loosened 0.08s -\> 0.10s accordingly; both fixes are
-`PROJECT_LEARNINGS.md` Learning 532’s final form). 4 new `test_that`
-blocks (2 golden-master, 2 benchmark) across the 2 existing test files;
-0 regressions. Full clean regression 5,417 passed/0 failed/0 error (17
-pre-existing warnings, unchanged), re-confirmed clean across 2 further
-solo full-suite reruns after the median-of-3 fix;
-[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
-errors/0 warnings/3 NOTEs, all 3 confirmed pre-existing (top-level
-files; vignettes/figure leftover; the known ~77-word spelling-WORDLIST
-gap, up from ~69-70 – zero flagged words trace to this session’s own
-touched files; note the 3rd NOTE does not appear as its own `❯` bullet
-in
-[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)’s
-printed summary, only in the raw `Status:` line – this session
-independently reproduced the exact undercounting risk `BACKLOG.md`’s own
-S521 finding above already documents); `lintr::lint_package()` found and
-fixed 9 `implicit_integer_linter` findings in the new `markerKinship.R`
-matrix-algebra code (`0`/`2`/`4` -\> `0L`/`2L`/`4L`), 0 lints remaining.
-`_pkgdown.yml` unaffected (no new export – both functions already
-listed). `NEWS.Rmd`/`NEWS.md` terse entry added. Citation checklist
-(issue \#120) and tutorial/article checklist (Session 436) N/A – no
-new/displayed statistic, no UI change this slice. Runtime smoke test:
-n/a – script-callable only, no Shiny wiring touched this slice. **Issue
-\#152 stays open – Slice 3 (the new F_ROH metric,
-`R/computeGenomicROH.R`, D6) is the next planned slice**, a separate
-future session per the plan’s own session-boundary requirement. See
-`CHANGELOG.md`.
-
-**Progress (S532, 2026-08-12):** Issue \#152 Slice 3 – the new
+regression tests; the median-of-3 -reps timing-stability fix is
+`PROJECT_LEARNINGS.md` Learning 532). - **Slice 3** (S532): new
 [`computeGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/computeGenomicROH.md)
-F_ROH metric (D6) – is now DONE, per
-`docs/planning/issue152-sequence-input-genetic-metrics-plan.md` §5 Slice
-3. Full strict TDD PRE-RED-\>RED-\>GREEN-\>REFACTOR cycle, gated by an
-`AskUserQuestion` at every transition per `CLAUDE.md`‘s Development
-Process Contract. Three genuine judgment calls the design left open were
-ratified via a dedicated Pre-RED `AskUserQuestion` round (all
-recommended options chosen): both a heterozygous AND a missing genotype
-end a run-of-homozygosity; F_ROH’s denominator (`genomeLength`) is a
-single value shared across every individual – summed per-chromosome
-full-coverage-locus span from `locusMetadata`, Ceballos et al. (2018)’s
-L_autosome convention, not recomputed per individual (avoids conflating
-an individual’s own missingness with inbreeding); defaults
-`minSnp = 50L`, `minBp = 1e6` (1 Mb matches PLINK’s own `--homozyg-kb`
-default; 50 SNPs is scaled down from PLINK’s literal 100 for this
-package’s sparser GBS-scale target tier, D1). New
-`R/computeGenomicROH.R` reuses
+F_ROH metric (Ceballos et al. 2018 convention), reuses
 [`checkLocusMetadata()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md)’s
-existing 3-tier coverage classification to exclude any locus lacking
-full chrom+pos coverage from both the ordered walk and the denominator
-(warned, not treated as a run-breaking gap) – ~150 lines, loop-based per
-individual/per chromosome (this slice is new code, not one of D5’s two
-named rewrite targets, so no vectorization requirement applied). 9 new
-`test_that` blocks in `tests/testthat/test_computeGenomicROH.R` (40
-expectations): a hand-derived 3-individual/ 2-chromosome core fixture
-(exact-fraction expected values, matching `markerFst.R`’s own
-convention) plus 8 focused edge cases (heterozygous break, missing
-break, locus-exclusion +warning, dual-threshold both directions, a
-normal zero-segment case with no spurious warning, absent/NULL
-`locusMetadata` -\> [`stop()`](https://rdrr.io/r/base/stop.html), a
-zero-`genomeLength` -\> warning+`NA` case, and confirmation of the
-`minSnp`/`minBp` defaults). RED confirmed (9/9 blocks failing, function
-not found) before implementation; GREEN passed all 9 blocks (40/40
-expectations) on the first implementation attempt. REFACTOR: fixed 4
-`implicit_integer_linter` findings (bare `0`/`1e6` literals), 0 behavior
-change, re-confirmed 40/40 still passing. A real mid-close-out finding:
+coverage classification. `PROJECT_LEARNINGS.md` Learning 538 (a
+lower-than-baseline
 [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
-first reported only 2 NOTEs (not the expected 3, since the known
-~69-77-word spelling-WORDLIST gap did not fire) – direct
-[`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
-verification (not assumed) found this session’s own new content
-introduced 6 genuinely new flagged words (`bp`, `Ceballos`, `gapless`,
-`Joshi`, `PLINK's`, `ROH`), hand-added to `inst/WORDLIST` in `LC_ALL=C`
-byte-order position. Also found and fixed a `PROJECT_LEARNINGS.md`
-Learning 530 violation this slice’s own first draft made: the
-`@references Purcell et al. 2007` (PLINK) citation was copied verbatim
-from `checkLocusMetadata.R`’s existing 11-author form rather than
-trimmed to “Purcell, S., et al. (2007)” per Learning 530’s own
-\>6-author rule – fixed, removing `computeGenomicROH.Rd` as a second
-independent source of 5 already-known WORDLIST-gap surnames
-(`Bakker`/`Ferreira`/`Maller`/`Neale`/`Sklar`, still present via
-`checkLocusMetadata.R`’s own unchanged citation, out of this slice’s
-scope to fix). Citation checklist (issue \#120): new “Genomic Runs of
-Homozygosity (F_ROH)” entry added to
-`inst/extdata/ui_guidance/population_genetics_terms.html`, matching the
-file’s established per-metric style. `NEWS.Rmd`/`NEWS.md`: terse entry
-added (matching the Slice 1/2 entries’ own brevity, honoring this
-session’s own flagged NEWS-verbosity-drift backlog item rather than
-adding to it). `_pkgdown.yml`: new `computeGenomicROH` entry added at
-its correct alphabetical position in the “All exposed functions” group.
-[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
-run, `NAMESPACE`/ `man/computeGenomicROH.Rd` regenerated. Full clean
-regression 5,457 passed/0 failed/0 error (0 non-baseline offenders);
-[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
-errors/0 warnings/2 NOTEs, both confirmed pre-existing (top-level files;
-vignettes/figure leftover – the spelling NOTE is gone, not hidden:
-independently re-verified via direct
-[`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html),
-not the abbreviated `❯`-bullet table `BACKLOG.md`’s own S521/S526
-findings warn against trusting alone); `lintr::lint_package()` 0 lints
-on touched files. Runtime smoke test: n/a – script-callable only, no
-Shiny wiring touched this slice, matching the Slice 1/2 precedent.
-**Issue \#152 stays open – Slice 4 (the new de-identification primitive,
-`R/obfuscateGenotypeMatrix.R`, D7) is the next planned slice**, a
-separate future session per the plan’s own session-boundary requirement.
-See `CHANGELOG.md`.
-
-**Progress (S533, 2026-08-12):** Issue \#152 Slice 4 – the new
+NOTE count needs the same direct verification as a higher one)
+originates here. - **Slice 4** (S533): new
 [`obfuscateGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenotypeMatrix.md)
-de-identification primitive (D7) – is now DONE, per
-`docs/planning/issue152-sequence-input-genetic-metrics-plan.md` §5 Slice
-4. Full strict TDD PRE-RED-\>RED-\>GREEN-\>REFACTOR cycle, gated by an
-`AskUserQuestion` at every transition per `CLAUDE.md`’s Development
-Process Contract. D7 was already ratified at the design session (folded
-into D8’s own vote, §11), and the interface catalog (§4) fully specified
-the function’s shape, so this slice needed no fresh Pre-RED
-judgment-call round, unlike Slice 3’s 3 open decisions. New
-`R/obfuscateGenotypeMatrix.R` mirrors
-[`obfuscateTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateTwinRelations.md)’s/
-[`obfuscateLdBlocks()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateLdBlocks.md)’s
-established de-identification pattern exactly: reads
-`rownames(genotypeMatrix)` as the ids,
-[`stop()`](https://rdrr.io/r/base/stop.html)s loudly (never silently
-drops) if any id is absent from `map`, otherwise remaps rownames to
-their alias via `unname(map[ids])` – genotype cell values, column names
-(loci), and row/column order are all untouched by construction. 3 new
-`test_that` blocks in `tests/testthat/test_obfuscateGenotypeMatrix.R`:
-remap-and-values-unchanged, stop-on-missing-id, and a round-trip through
-the real map `obfuscatePed(ped, map = TRUE)` returns – mirroring the
-established test shape for this function family. RED confirmed (3/3
-blocks failing, function not found) before implementation; GREEN passed
-all 3 blocks on the first implementation attempt. REFACTOR: a first lint
-pass mistakenly used `lintr::linters_with_defaults()` instead of the
-project’s own `.lintr` config, surfacing 4 false-positive-looking
-findings (camelCase naming, indentation) this project’s own config
-explicitly permits/disables – caught before treating any of them as
-real; re-run with the correct `lintr::lint_package()` (no override)
-found 0 lints, so no refactor changes were needed.
-`PROJECT_LEARNINGS.md` Learning 539 records the near-miss.
-[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
-regenerated `NAMESPACE`/`man/obfuscateGenotypeMatrix.Rd` plus the
-`@family obfuscation` cross-reference in 6 sibling `.Rd` files
-(collateral, expected). `NEWS.Rmd` gained a terse entry (rendered to
-`NEWS.md` via
-[`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html),
-matching this file pair’s established regeneration convention);
-`_pkgdown.yml`’s “All exposed functions” group gained the new export at
-its correct alphabetical position, confirmed via
-`test_pkgdown_reference_config.R`. Citation checklist (issue \#120) and
-tutorial/article checklist (Session 436): N/A this slice, per the design
-doc’s own §9 checklist mapping (Slice 4 is not a displayed statistic and
-ships no UI). Full clean regression 0 failed/0 error;
-[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
-errors/0 warnings/2 NOTEs, both confirmed pre-existing (vignettes/figure
-leftover; top-level files – `methodology_trim.py`, root-caused this
-session to the `.Rbuildignore` typo above, not a mystery). A first
-`devtools::check(cran = FALSE)` call misleadingly returned only 1 NOTE –
-caught before accepting it, per Learning 538’s own “a lower NOTE count
-is not automatically good news” rule; `cran = FALSE` is a non-default
-argument that suppresses the CRAN-incoming-style top-level-files check,
-and re-running with the plain default (`cran` omitted, `= TRUE`)
-reproduced the documented 2-NOTE baseline exactly.
-`PROJECT_LEARNINGS.md` Learning 539. Runtime smoke test: n/a –
-script-callable only, no Shiny wiring touched this slice, matching the
-Slice 1/2/3 precedent. **Issue \#152 stays open – Slice 5 (the full
-module tab, wiring, curator-controlled export, and documentation, D8/D9)
-is the next and final planned slice**, a separate future session per the
-plan’s own session-boundary requirement. See `CHANGELOG.md`.
-
-**Progress (S535, 2026-08-12):** Issue \#152 Slice 5 – the full module
-tab, wiring, curator-controlled export, and documentation (D8/D9) – is
-now DONE, closing issue \#152 (all 5 slices shipped). Per
-`docs/planning/issue152-sequence-input-genetic-metrics-plan.md` §5 Slice
-5. A dedicated Pre-RED `AskUserQuestion` round resolved 3 genuine
-judgment calls the interface catalog left open (all recommended options
-chosen): genome-scale kinship/heterozygosity/Fst reruns reuse the
-EXISTING `genotypeFile`/`genotypeFileB` inputs (validator swapped to the
-confirmed-superset
-[`checkSequenceGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkSequenceGenotypeFile.md)),
-not a dedicated duplicate tab; F_ROH’s `locusMetadata` sidecar reuses
-the EXISTING `locusMetadataFile` input already wired to issue \#153’s
-own tab (D3’s shared-vocabulary intent); the curator export covers
-exactly 3 artifacts (de-identified genotype matrix, de-identified F_ROH
-table, manifest), not all 4-5 possible tables. New
-`R/obfuscateGenomicROH.R`
-([`obfuscateGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenomicROH.md),
-a new de-identification primitive for computeGenomicROH()’s id-column
-table shape – none of the existing `obfuscate*` siblings fit). New
-“Genomic ROH (F_ROH)” tab in `R/modMarkerGenetics.R`: `sequenceRohTable`
-reactive, curator confirm-gate export (Generate Preview -\> Confirm -\>
-Confirm-OK -\> 3 downloads), `.buildSequenceExportManifest()` helper. 13
-new tests (RED-\>GREEN-\>REFACTOR each gated by `AskUserQuestion`); full
-clean regression 0 failed/0 error (2,127 blocks). **A real bug found and
-fixed via this slice’s own Phase 3E live verification** (not caught by
-testServer alone): `sequenceRohTable` passed `locusMetadata()`’s
-ALREADY-checked output
-([`checkLocusMetadata()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md)
-appends a `coverage` column) into
+de-identification primitive, mirrors the established `obfuscate*` family
+pattern. `PROJECT_LEARNINGS.md` Learning 539 (verification tools must be
+invoked with the project’s own default config/args, not an override)
+originates here; found (not fixed) the `.Rbuildignore`
+`methodolog_trim.py` typo, fixed next session (Learning 540). - **Slice
+5** (S535, closes \#152): new “Genomic ROH (F_ROH)” tab in
+`R/modMarkerGenetics.R` (curator confirm-gate export: de-identified
+genotype matrix + F_ROH table + manifest), new
+[`obfuscateGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenomicROH.md).
+Live Phase 3E verification found and fixed a real bug –
+`sequenceRohTable` fed `locusMetadata()`’s
+already-[`checkLocusMetadata()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md)-processed
+output back into
 [`computeGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/computeGenomicROH.md),
-which internally re-runs
-[`checkLocusMetadata()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md)
-expecting the raw 3/4-column shape – silently mislabeled `coverage` as
-`cM` on a 3-column fixture (no error, wrong data) and threw loudly on a
-real 4-column (with `cM`) fixture, reproduced live against the actual
-committed Slice 1 fixture. Fixed by stripping the `coverage` column
-before the second check; a new regression test (4-column, with-`cM`
-fixture) added. **A second finding, NOT a defect**: a live probe found
-`shinytest2`/`chromote`’s headless browser never renders a `showModal()`
-modal’s DOM for EITHER this tab’s export gate OR the already-shipped
-issue \#153 LD-block export’s identical pattern – a pre-existing harness
-limitation predating this slice, filed to this file’s own Housekeeping
-section (found S535) rather than attempted mid-session. The live E2E
-test (`tests/testthat/test-e2e-marker-genetics-genomic-roh-module.R`)
-verifies everything through Generate Preview against the real Slice 1
-fixture at full 50x1,000-locus scale (zero console errors); the
-Confirm-modal step is documented and gracefully skipped, with the
-server-side confirm sequence proven correct by `testServer()`.
-[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
-errors/0 warnings/2 NOTEs (both confirmed pre-existing: vignette/figure
-leftover; the separately-tracked `inst/WORDLIST` gap) – verified via the
-RAW `Status: N NOTEs` line, not the abbreviated `❯`-bullet table alone,
-per Learning 538’s own discipline; 1 genuinely new flagged word
-(`computeGenomicROH`, this session’s own new file) hand-added to
-`inst/WORDLIST`, matching the Slice 1 precedent of adding only what the
-session’s own new content is responsible for. Citation checklist (issue
-\#120): N/A, already satisfied at Slice 3. Tutorial/article checklist
-(Session 436): DONE – a new “Genomic ROH (F_ROH)” section added to
-`vignettes/articles/colony-manager-guide.qmd` with a real screenshot
-from the live app. `_pkgdown.yml` reference-coverage guard: DONE
-(`obfuscateGenomicROH` added). `a2interactive.Rmd` checklist: deferred
-per its own standing rule, not this slice. `PROJECT_LEARNINGS.md`
-Learning 541. **Issue \#152 closed** – all 5 slices (ingestion+fixture,
-performance rewrite, F_ROH metric, de-identification primitive, full
-module+export+docs) shipped across Sessions 525-535. See `CHANGELOG.md`.
+which re-runs that same check internally, silently mislabeling a column
+(`PROJECT_LEARNINGS.md` Learning 541). S535 also suspected a
+`shinytest2`/`chromote` headless-modal-rendering harness limitation
+blocking the export-confirm modal – **`PROJECT_LEARNINGS.md` Learning
+542 (S536) corrects this: there was no harness limitation, the real
+cause was a test pedigree fixture missing the required `birth` column,
+which silently blocked `req()` upstream of `showModal()`; fixed by
+completing the fixture.**
+
+Each slice: full clean regression 0 failed/0 error,
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+clean modulo pre-existing NOTEs, citation/`NEWS.Rmd`/`_pkgdown.yml`
+checklists applied per-slice (tutorial/article checklist satisfied at
+Slice 5; `a2interactive.Rmd` deferred per its own standing rule). See
+`CHANGELOG.md` for the full session-by-session record.

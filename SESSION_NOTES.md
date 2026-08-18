@@ -28,6 +28,170 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 605 Handoff Evaluation (by Session 606)
+
+**Score: 8/10.** **What helped:** the `next_steps` field’s rendered
+priorities list (issue \#161 decision, Track 3’s disclosed trade-offs,
+MIT/REUSE badges, issue \#148 scope-narrowing) was accurate and directly
+reused in this session’s own Phase 0 report with no re-derivation
+needed. The `gotchas` field’s Phase 1B-recurrence finding (Learning 625)
+was read and this time actually acted on, not just quoted back: this
+session wrote and committed the `SESSION_NOTES.md` stub + `HANDOFFS.md`
+pending receipt before touching any `BACKLOG.md` content, breaking a
+2-session losing streak (S604, S605 both skipped it despite stating
+intentions not to). **What was missing:** nothing bearing on this
+session’s actual task — S605’s own work (WORDLIST) was unrelated to
+`BACKLOG.md` housekeeping, so there was no reason for its handoff to
+mention the S518 item’s own regrowth risk this session found. **What was
+wrong:** the `next_steps` field’s “the next push will confirm
+R-CMD-check.yaml itself goes green” was left unconfirmed by S605 itself
+(a forward-looking claim, correctly hedged as such, not a completed
+verification) — this session’s own Phase 0 found those checks still
+`in_progress`, consistent with S605’s own hedge, not a contradiction of
+it. **ROI:** high — the gotcha was the single most load-bearing field in
+the receipt, and this session is the first of 3 to actually apply it
+rather than merely read it.
+
+### What Session 606 Did
+
+**Deliverable: `BACKLOG.md` housekeeping — re-compressed the
+“Genetic-metrics PDF audit follow-ups” section.** **DONE.**
+**Started/Completed:** 2026-08-18.
+
+**What actually happened, in order:**
+
+1.  **Phase 0 orientation** — read `SESSION_RUNNER.md`/`SAFEGUARDS.md`
+    in full; `SESSION_NOTES.md` (S605’s active task, DONE);
+    `gh issue list` (13 open); `git status`/`log`/`diff --stat` (clean,
+    only pre-existing untracked clutter — 4 `docs/planning/*.html`,
+    `scratchpad/*.R`, the Office lock file, all already-reported);
+    `methodology_dashboard.py` (96/100 health, 0 High+ risk, local
+    script stale v2.14.0 vs. canonical v2.15.2, informational only);
+    `gh run list --branch master` (S605’s close-out commit still
+    `in_progress` on all 4 push-triggered workflows at check time — too
+    early to confirm the radix fix went green; `shinytest2.yaml`
+    scheduled run still red, pre-existing/intermittent, not diagnosed).
+    Ledger reconcile: `CHANGELOG.md`/ `HANDOFFS.md` frontiers both ==
+    `HEAD` (`702c69ac`) — no gap, no ghost session.
+2.  Rendered the `BACKLOG.md`-sourced priorities list (4 numbered items:
+    Track 3’s disclosed trade-offs, issue \#161 decision, MIT/REUSE
+    badges, `BACKLOG.md` housekeeping) via `AskUserQuestion` — **user
+    picked `BACKLOG.md` housekeeping.**
+3.  **Phase 1B claimed FIRST**, before any investigation of
+    `BACKLOG.md`’s own content: wrote the `SESSION_NOTES.md` stub and
+    the `HANDOFFS.md` `status: pending` receipt, committed (`a0c6b404`),
+    deliberately stricter than the S529 precedent (which deferred its
+    claim commit until after an inventory pass) — directly applying
+    `PROJECT_LEARNINGS.md` Learning 624/625.
+4.  **Scoping**: grepped `BACKLOG.md`’s `##` headers, found the 2
+    sections S529/530/531’s own tracking item named as remaining
+    oversized (“Pedigree diagram vs kinship2,” 179 lines;
+    “Genetic-metrics PDF audit,” 304 lines). Read both in full.
+    Cross-checked `CHANGELOG.md` (+ 5
+    `docs/archive/CHANGELOG-through-*.md` shards) for all 23 session
+    numbers either section might cite before committing to a scope — all
+    23 resolved (1 apparent gap, S492, was a search-pattern false
+    negative: the archive heading reads “Session 492,” not “S492”).
+    Presented the scope choice via a second `AskUserQuestion`
+    (Genetic-metrics PDF audit / Pedigree diagram vs kinship2 / both) —
+    **user picked Genetic-metrics PDF audit** (the larger single win:
+    issue \#152’s 6-paragraph, ~230-line closed-issue slice narrative).
+5.  **Compression, with 2 stale claims corrected, not merely
+    shortened:**
+    - Fixed the section’s own intro paragraph, which still read “#152
+      (Deferred) is in progress (Slice 3 next)” — contradicted by the
+      same section’s own later text showing \#152 closed at S535.
+      Independently confirmed via `gh issue view 152`/`153` (both
+      `CLOSED`), not assumed from prose.
+    - Condensed 6 sequential “Progress (SNNN…)” paragraphs (S517
+      design + Slices 1–5, ~265 lines) into 1 consolidated summary
+      retaining every session number, design-doc path, and
+      `PROJECT_LEARNINGS.md` Learning cross-reference
+      (532/538/539/540/541/542, all verified to resolve).
+    - Found and fixed a **live, previously-unpropagated correction**:
+      the S535 paragraph’s own claim of a `shinytest2`/`chromote`
+      headless-modal-rendering harness limitation was directly retracted
+      one session later by `PROJECT_LEARNINGS.md` Learning 542 (S536 —
+      the real cause was a test fixture missing a required `birth`
+      column) — but that correction was never back-ported into
+      `BACKLOG.md`’s own narrative, so the original text still asserted
+      a debunked finding. Rewrote it to state the corrected root cause
+      and cite Learning 542, rather than compressing the stale framing
+      into a shorter but still-wrong form.
+    - Re-read the full compressed section end-to-end (80 lines, down
+      from 304); confirmed EOF integrity and balanced `**` bold-markers
+      (36 occurrences, 18 pairs).
+    - Net: section 304→80 lines (−224); file total 1,881→1,657 before
+      the tracking-item update (−224), 1,686 after (+29 for the
+      correction note below). `git diff --stat`: `BACKLOG.md` +73/ −268
+      across the full session (2 targeted edits + 1 tracking-item
+      update).
+6.  **Updated the `BACKLOG.md`-own-housekeeping tracking item (found
+    S518)** with a correction, not just a progress note: its own text
+    claimed “the S518 item is now fully RESOLVED” after S531’s
+    2026-08-12 compression pass, but this session found the very section
+    S531 compressed (267 lines then) had regrown to 304 by this
+    session’s own read — 3 intervening sessions (S532/S533/ S535) each
+    appended their own progress paragraph as issue \#152’s slices
+    shipped, exactly the accumulation pattern the item’s own opening
+    paragraph names as the root problem. Recorded this explicitly (new
+    `PROJECT_LEARNINGS.md` Learning 626) rather than let the stale
+    “fully RESOLVED” framing stand uncorrected, and flagged that
+    “Pedigree diagram vs kinship2” (S530’s own prior target) was NOT
+    re-checked this session for the same regrowth risk — a future
+    session should.
+7.  **Close-out**: `PROJECT_LEARNINGS.md` Learning 626 (the regrowth +
+    stale-claim-propagation finding); `CLAUDE.md` (learnings-count
+    pointer 625→626, Sessions 1–605+→1–606+); `CHANGELOG.md`; this file;
+    `HANDOFFS.md`.
+
+**Runtime smoke test (Phase 3E):** N/A — pure
+`BACKLOG.md`/`PROJECT_LEARNINGS.md`/`CLAUDE.md` editorial edit, no
+`R/`/`tests/`/`man/`/`NAMESPACE`/`data/` content touched (confirmed via
+`git diff --stat`). Stated explicitly, not silently skipped.
+
+**Close-out checklist mapping** (`CLAUDE.md`):
+citation/tutorial/`NEWS.Rmd`/`a2interactive.Rmd`/ `_pkgdown.yml`
+checklists all N/A — no exported function, UI feature, or displayed
+statistic touched. GitHub issue close-out checklist N/A — no issue
+opened or closed this session (#152/#153 were already closed; this
+session only verified and cited their state). Lint close-out checklist
+N/A — no `.R` file touched.
+
+**Self-assessment (Session 606): 9/10.** **Strengths:** (1) Did not
+trust the S518 tracking item’s own “fully RESOLVED” claim at face value
+— measured the actual current section line count first, which is what
+surfaced the regrowth finding. (2) Verified `CHANGELOG.md` coverage
+across the live file + 5 archive shards for every session number before
+compressing to a pointer, catching a false “gap” (S492) via deeper
+investigation rather than either wrongly backfilling or wrongly leaving
+a real gap unaddressed. (3) Found and fixed a stale claim that had
+already been corrected elsewhere in the project’s own record (Learning
+542 retracting Learning 541) rather than mechanically shortening the
+debunked prose into a smaller but still-wrong form — matching
+`PROJECT_LEARNINGS.md`’s own new practical rule (Learning 626) this
+session wrote. (4) Independently confirmed issues \#152/#153’s CLOSED
+state via `gh issue view` rather than trusting `BACKLOG.md`’s own prose.
+(5) Broke a 2-session Phase 1B-skip streak (Learning 624/625) by writing
+and committing the claim stub before any investigation of `BACKLOG.md`’s
+own task content. **Weaknesses:** (1) A few `Read`/`Bash` calls against
+`HANDOFFS.md`’s own format (to confirm the exact field layout before
+writing the stub) preceded the stub commit — defensible as
+protocol-format lookup rather than task-content research, but not a
+fully pure “stub is the literal first tool call”; a future session
+aiming for stricter purity could instead reuse the format already
+documented in this file’s own “How to write a receipt” section from
+memory/context rather than re-reading it. (2) Did not re-check “Pedigree
+diagram vs kinship2” (179 lines, compressed by S530) for the same
+regrowth pattern this session found in the sibling section — out of this
+session’s own owner-picked scope, flagged for a future session rather
+than silently skipped. (3) The `BACKLOG.md`-own-housekeeping item is now
+a 2nd time “not actually finished” — future sessions should treat its
+“fully RESOLVED”/“DONE” language as a snapshot claim requiring
+re-verification, not a permanent state, per this session’s own Learning
+626. **Ledger:** recorded in `CHANGELOG.md` this session (claim + this
+compression + tracking-item correction).
+
 ### Session 604 Handoff Evaluation (by Session 605)
 
 **Score: 6/10.** **What helped:** the `gotchas` field (“this session
