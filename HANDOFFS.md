@@ -180,8 +180,8 @@ gotchas: A doc-housekeeping section marked "fully RESOLVED"/"DONE" in BACKLOG.md
   compression must fix a stale claim it finds, not merely shrink it.
 runtime_smoke: n/a -- pure BACKLOG.md/PROJECT_LEARNINGS.md/CLAUDE.md editorial edit, no
   R/tests/man/NAMESPACE/data content touched (confirmed via git diff --stat). Stated explicitly.
-changelog_ref: pending
-commit: pending
+changelog_ref: b10b6d2d
+commit: b10b6d2d
 ```
 <self_score breakdown: +2 did not trust the S518 tracking item's own "fully RESOLVED" claim at
 face value, measured the section's actual current line count first, which is what surfaced the

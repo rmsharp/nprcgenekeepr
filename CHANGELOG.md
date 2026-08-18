@@ -16,6 +16,11 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-18 · [ad hoc] S606: record close-out commit sha in HANDOFFS.md receipt (`b10b6d2d`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit`/`changelog_ref: pending`
+  -> `b10b6d2d` (the close-out commit whose sha the receipt itself couldn't name until after it was
+  made), matching the S600/S602/S603/S604/S605 self-reference-workaround precedent.
+
 ### 2026-08-18 · [BL-518] S606: `BACKLOG.md` "Genetic-metrics PDF audit follow-ups" section
 re-compressed; S518 item's "fully RESOLVED" claim corrected
 - **Deliverable:** Re-compressed `BACKLOG.md`'s "Genetic-metrics PDF audit follow-ups" section
