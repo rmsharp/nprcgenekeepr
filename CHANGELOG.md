@@ -16,6 +16,11 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-18 · [ad hoc] S607: record close-out commit sha in HANDOFFS.md receipt (`c871be1b`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> `c871be1b`
+  (the close-out commit whose sha the receipt itself couldn't name until after it was made),
+  matching the S600/S602/S603/S604/S605/S606 self-reference-workaround precedent.
+
 ### 2026-08-18 · [ad hoc] S607: MIT + REUSE license badges added to README.Rmd, full REUSE compliance
 - **Deliverable:** `BACKLOG.md` Housekeeping item (added S600, `[ad hoc]` entry above) — both halves
   DONE. **MIT badge:** static shields.io badge added to `README.Rmd`'s existing badges block;
