@@ -138,21 +138,63 @@ This file currently holds **12** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S602
 date: 2026-08-17
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Implement the Track-3-Engagement Gate design (investigation doc §11.4) -- the first
-  design across 5 workflow attempts in this investigation to survive full adversarial critique.
-  Gated by this project's TDD contract (PRE-RED -> RED -> GREEN -> REFACTOR, each transition via
-  AskUserQuestion).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 10
+active_task: Implemented the Track-3-Engagement Gate design (investigation doc §11.4) -- full TDD
+  RED->GREEN->REFACTOR cycle, closing the duplicate-occurrence-selection centering investigation (5
+  mechanism attempts across S598-S601) with shipped, tested code. DONE.
+what_was_done: Recovered 2 gaps the investigation doc's own prose left unstated (qualification rule
+  clauses, .computeDupNudge() signature) by reading both design workflows' raw journal.jsonl files
+  directly. RED: 7 new/modified tests in test_positionMatingUnitForest.R, all hand-constructed and
+  empirically verified against real source; caught and fixed one test that passed vacuously
+  pre-GREEN (Learning 622). GREEN: new internal .computeDupNudge() (R/makePedigreeDiagramData.R)
+  wired into .positionMatingUnitForest() at the confirmed insertion point; full clean regression 0
+  new failed/error, lintr 4 style nits fixed. REFACTOR: cached a duplicated parent-span computation;
+  byte-identical result re-confirmed. Runtime smoke test: headless, real 375-individual fixture
+  clean. Mid-session, built and published a 3-panel kinship2-vs-nprcgenekeepr before/after comparison
+  Artifact on user request, edge-traced against ground truth before trusting it. Updated NEWS.Rmd/
+  NEWS.md, BACKLOG.md, the investigation doc (status IMPLEMENTED, new §12), PROJECT_LEARNINGS.md
+  (Learnings 621-622), CLAUDE.md's learnings pointer. Commit sha filled below (Phase 3F).
+next_steps: BACKLOG.md's Track 3 trade-offs item still has one open half -- the D1 sibship-bar-vs-bar
+  x-overlap residual (a separate, not-yet-designed "bar-aware detect-and-jog repair," named in the
+  item's own text). No other pedigree-diagram work is queued; the next session should re-check
+  BACKLOG.md's own priorities list fresh (issue #162's locale bug, the MIT license badge, and the
+  stale-screenshot check were all deferred at this session's own Phase 0, not superseded).
+key_files: R/makePedigreeDiagramData.R (new .computeDupNudge(), wired into
+  .positionMatingUnitForest()), tests/testthat/test_positionMatingUnitForest.R (7 new/modified
+  tests), docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md:1073-1130
+  (new §12), BACKLOG.md (Track 3 trade-offs item), PROJECT_LEARNINGS.md (Learnings 621-622).
+gotchas: The raw workflow journals this session read (wf_2d657d34-184, wf_f8b481f4-0f8) live under
+  S601's own session directory, not this session's -- an OS temp-adjacent path, not guaranteed
+  permanent; the investigation doc's own new §12 is the durable record if it disappears. This
+  session's ~15 scratch files (fixture derivation, kinship2 comparison rendering) were not
+  committed, matching every prior session's own precedent. The published kinship2 comparison
+  Artifact is not linked from any committed file -- it exists only as a shared conversation link;
+  preserving it as a permanent project artifact is a future session's own decision. The
+  duplicate-occurrence-selection centering investigation is now CLOSED -- do not reopen its earlier
+  sections or re-run any of its 5 prior design workflows.
+runtime_smoke: headless -- confirmed runGeneKeepR() resolves and the app's own Pedigree Diagram call
+  chain (makePedigreeMatingLayout()) runs clean against the real 375-individual bundled fixture
+  (1412 nodes/1525 edges, no new errors). Not a full interactive browser click-through, disclosed
+  explicitly.
+changelog_ref: CHANGELOG.md 2026-08-17 S602 entry
+commit: pending -- filled at Phase 3F, same commit as this receipt.
 ```
+
+**Self-score breakdown:** +Took an honest doc-extraction agent's "this is a genuine gap, not safe to
+infer" seriously and closed it against the primary source (raw workflow journals) rather than
+guessing. +Empirically verified every fixture against real running code before writing any
+assertion -- F1/F2/F3 reproducing the investigation's own documented numbers exactly cross-checked
+the recovered formula. +Caught a vacuously-passing RED test by actually checking which of 7 tests
+failed, not assuming. +Followed every TDD phase gate via a compliant `AskUserQuestion`, including
+the separate pre-RED scope question `CLAUDE.md`'s own template distinguishes from the phase-gate
+question. +When asked for a visual demonstration mid-session, verified the "before" state via a git
+worktree at the pre-fix commit rather than reconstructing from memory, and traced every edge before
+trusting either rendering. -The mid-session demonstration request was not part of the originally-
+scoped deliverable; small and user-directed, but flagged rather than treated as automatic license.
+-Did not directly construct the §11.3-flagged "inner-engaged/outer-no-op" mirror-image corner as its
+own dedicated test, matching prior sessions' own disclosed-not-fixed precedent rather than a new gap.
 
 ```handoff
 session: S601

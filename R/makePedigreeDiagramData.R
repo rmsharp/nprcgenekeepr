@@ -519,6 +519,136 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
        childEdges = childEdges)
 }
 
+#' Compute the Track-3-Engagement-Gated post-hoc duplicate-occurrence nudge
+#'
+#' Internal helper for the kinship2-parity pedigree layout (Pedigree
+#' Diagram Option 2). Investigation
+#' \code{docs/planning/pedigree-diagram-duplicate-occurrence-centering-
+#' investigation.md} secs 10-11 (Sessions 598-601): a targeted correction
+#' for a mating unit \code{U} whose child-centered position (Track 6) is
+#' pulled off-center by a genuinely duplicated-occurrence child, applied
+#' strictly AFTER Track 3's parent-span clamp and gated on whether Track 3
+#' actually engaged for \code{U}.
+#'
+#' \strong{Qualification (per real child C of U, unchanged from the
+#' investigation's own literal rule):} C qualifies iff (a) C has EXACTLY
+#' ONE row in \code{duplicates} with \code{realId == C}, whose
+#' \code{matingUnitId} V has an "other parent" (V's sire/dam other than C)
+#' that is ALSO a real child of U, AND (b) NONE of C's other mating-unit
+#' memberships (excluding V) has an other-parent also a real child of U.
+#'
+#' \strong{Target (Stage 1, unconditional on qualification):} for each
+#' qualifying child, substitute the position of its duplicate node's own
+#' mating unit V (\code{finalUnitX[[V]] + minSep * 0.4} -- identical to
+#' this file's own \code{dupX} formula for V's duplicate node), clipped
+#' into \verb{[min(realKidX), max(realKidX)]}; every non-qualifying
+#' child keeps its own real x. \code{preReclampTarget} is the midpoint of
+#' this effective span. Provably within the real children's own footprint
+#' by construction -- the caller still applies Track 3's own \verb{[lo,
+#' hi]} parent-span clamp to it (Stage 2, mandatory, can erase Stage 1's
+#' correction -- the investigation's own disclosed, accepted trade-off,
+#' out of this gate's scope).
+#'
+#' \strong{Track-3-Engagement Gate (sec11.1):} \code{engaged} is TRUE only
+#' when Track 3's own clamp loop actually altered U's value --
+#' \code{rawFinalUnitX} (recomputed here from \code{nodes$x} of U's real
+#' children, matching Track 6's own raw formula -- no separate parameter
+#' needed, sec11.3 finding (a)) differs from the caller-supplied
+#' \code{finalUnitX[[U]]} (Track 3's already-clamped value) by more than a
+#' fixed \code{1e-9} absolute epsilon. When \code{engaged} is FALSE, the
+#' caller must leave U's value exactly as Track 3 alone left it,
+#' regardless of \code{qualifyingKids} -- a union Track 3's clamp never
+#' touched already carries its own correct, child-centered answer, and the
+#' nudge has no way to know that without this check (the worse-than-
+#' erasure nested/chained regression sec10.4 found). A dangling-parent
+#' union (Track 3's own clamp loop skips it, so
+#' \code{finalUnitX[[U]] == rawFinalUnitX[[U]]} always) is therefore
+#' always \code{engaged == FALSE} (sec11.3 finding (2), stated explicitly).
+#'
+#' @param matingUnits,duplicates,childEdges the 3 elements of
+#'   \code{\link{.buildMatingUnitForest}}'s own return value.
+#' @param nodes the in-progress \code{nodes} data frame -- real
+#'   individuals' \code{x} must already be final (post-sweep,
+#'   post-orderBySex); mating-unit \code{x} is not read from here (see
+#'   \code{finalUnitX}).
+#' @param finalUnitX a named numeric vector, one entry per
+#'   \code{matingUnits$id}, holding each union's ALREADY-Track-3-clamped
+#'   x (the same local variable \code{\link{.positionMatingUnitForest}}
+#'   already maintains, read here, never mutated by this function).
+#' @param minSep this file's own minimum-separation constant.
+#' @return A list keyed by \code{matingUnits$id}; each element is
+#'   \code{list(qualifyingKids = character(), preReclampTarget =
+#'   NA_real_, engaged = logical(1))}.
+#' @noRd
+.computeDupNudge <- function(matingUnits, duplicates, childEdges, nodes,
+                              finalUnitX, minSep) {
+  out <- vector("list", nrow(matingUnits))
+  names(out) <- matingUnits$id
+  for (i in seq_len(nrow(matingUnits))) {
+    uid <- matingUnits$id[i]
+    kids <- childEdges$to[childEdges$from == uid]
+    clampedX <- finalUnitX[[uid]]
+    rawX <- if (length(kids) >= 1L) {
+      kidX0 <- nodes$x[match(kids, nodes$id)]
+      (min(kidX0) + max(kidX0)) / 2L
+    } else {
+      NA_real_
+    }
+    engaged <- length(kids) >= 1L && !is.na(rawX) && !is.na(clampedX) &&
+      abs(rawX - clampedX) > 1e-9
+    if (length(kids) < 2L) {
+      out[[uid]] <- list(qualifyingKids = character(0L),
+                          preReclampTarget = NA_real_, engaged = engaged)
+      next
+    }
+    qualifyingKids <- character(0L)
+    for (kid in kids) {
+      dupRows <- duplicates[duplicates$realId == kid, , drop = FALSE]
+      if (nrow(dupRows) != 1L) next
+      vId <- dupRows$matingUnitId[1L]
+      vRow <- matingUnits[matingUnits$id == vId, ]
+      otherParent <- setdiff(c(vRow$sire, vRow$dam), kid)
+      if (length(otherParent) != 1L || !(otherParent %in% kids)) next
+      otherMemberships <- matingUnits[(matingUnits$sire == kid |
+                                          matingUnits$dam == kid) &
+                                         matingUnits$id != vId, ,
+                                       drop = FALSE]
+      failsClauseB <- FALSE
+      if (nrow(otherMemberships) > 0L) {
+        for (r in seq_len(nrow(otherMemberships))) {
+          otherParent2 <- setdiff(c(otherMemberships$sire[r],
+                                     otherMemberships$dam[r]), kid)
+          if (length(otherParent2) == 1L && otherParent2 %in% kids) {
+            failsClauseB <- TRUE
+            break
+          }
+        }
+      }
+      if (failsClauseB) next
+      qualifyingKids <- c(qualifyingKids, kid)
+    }
+    preReclampTarget <- NA_real_
+    if (length(qualifyingKids) > 0L) {
+      kidX <- nodes$x[match(kids, nodes$id)]
+      names(kidX) <- kids
+      loK <- min(kidX)
+      hiK <- max(kidX)
+      effX <- kidX
+      for (kid in qualifyingKids) {
+        dupRows <- duplicates[duplicates$realId == kid, , drop = FALSE]
+        vId <- dupRows$matingUnitId[1L]
+        dupXForV <- finalUnitX[[vId]] + minSep * 0.4
+        effX[[kid]] <- min(max(dupXForV, loK), hiK)
+      }
+      preReclampTarget <- (min(effX) + max(effX)) / 2L
+    }
+    out[[uid]] <- list(qualifyingKids = qualifyingKids,
+                        preReclampTarget = preReclampTarget,
+                        engaged = engaged)
+  }
+  out
+}
+
 #' Position a mating-unit forest (Option 2 layout, D3/D4/D5)
 #'
 #' Internal helper for the kinship2-parity pedigree layout (Pedigree
@@ -991,14 +1121,51 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   ## matching this function's own existing dangling-parent precedent
   ## elsewhere (found live this session, regressed 2 pre-existing tests
   ## before this guard was added).
+  ## parentLo/parentHi (REFACTOR, this session): cache each union's own
+  ## [lo, hi] parent-x span here, once, keyed by matingUnits$id -- an NA
+  ## entry means a dangling parent (no clamp target). Reused below by the
+  ## nudge-application loop so it need not re-run the same match()/min/max
+  ## work Track 3's own clamp loop already did for every union.
+  parentLo <- stats::setNames(rep(NA_real_, nrow(matingUnits)), matingUnits$id)
+  parentHi <- parentLo
   for (i in seq_len(nrow(matingUnits))) {
     uid <- matingUnits$id[i]
     parentX <- nodes$x[match(c(matingUnits$sire[i], matingUnits$dam[i]),
                               nodes$id)]
     if (!anyNA(parentX)) {
-      lo <- min(parentX)
-      hi <- max(parentX)
-      finalUnitX[[uid]] <- min(max(finalUnitX[[uid]], lo), hi)
+      parentLo[[uid]] <- min(parentX)
+      parentHi[[uid]] <- max(parentX)
+      finalUnitX[[uid]] <- min(max(finalUnitX[[uid]], parentLo[[uid]]),
+                                parentHi[[uid]])
+    }
+  }
+
+  ## Track-3-Engagement-Gated post-hoc duplicate-occurrence nudge
+  ## (docs/planning/pedigree-diagram-duplicate-occurrence-centering-
+  ## investigation.md sec10-sec11, PRE-RED->RED->GREEN this session): a
+  ## targeted correction for a union whose Track-6 child-centered position
+  ## was pulled off-center by a genuinely duplicated child, applied AFTER
+  ## Track 3's own clamp above and BEFORE nodes$x is synced/dupX is
+  ## computed below (sec10.1's confirmed insertion point), so it reads an
+  ## already-clamped, parent-span-safe starting point and both downstream
+  ## computations see the final (possibly nudged) union x. Gated on
+  ## .computeDupNudge()'s own "engaged" flag: a union Track 3's clamp
+  ## never touched already carries its own correct answer, and firing the
+  ## nudge anyway can leave it strictly worse than doing nothing at all
+  ## (sec10.4's live-verified nested/chained regression) -- this gate
+  ## closes that, confirmed by adversarial critique to leave the target
+  ## case (sec11.2 F1), the pre-existing no-op cases (F2/F3), and the
+  ## separately-accepted invariant-preservation erasure trade-off
+  ## (sec10.4 point 1, out of this gate's own scope) all unaffected.
+  nudge <- .computeDupNudge(matingUnits, duplicates, childEdges, nodes,
+                             finalUnitX, minSep)
+  for (i in seq_len(nrow(matingUnits))) {
+    uid <- matingUnits$id[i]
+    unitNudge <- nudge[[uid]]
+    if (isTRUE(unitNudge$engaged) && !is.na(unitNudge$preReclampTarget) &&
+          !is.na(parentLo[[uid]])) {
+      finalUnitX[[uid]] <- min(max(unitNudge$preReclampTarget,
+                                    parentLo[[uid]]), parentHi[[uid]])
     }
   }
 

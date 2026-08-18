@@ -1034,25 +1034,44 @@ test_that(".positionMatingUnitForest's every mating unit satisfies the
            Track 6 §2.4 invariant, LOOSENED by Track 3 (docs/planning/
            pedigree-diagram-same-row-collision-avoidance-plan.md §2.3/§6
            Session C, a disclosed reopening of §2.4's 'unconditionally'
-           wording, owner-ratified S592 §9): finalUnitX equals EITHER the
-           midpoint of its own children's final x (the original formula,
-           whenever that already falls inside the union's own 2 parents'
-           x-range) OR that midpoint clamped into the parents' [min, max]
-           range (whenever it doesn't) -- within the existing 1e-3
-           de-collision epsilon's own tolerance -- on the small
-           GA204Z/8LKBV9 loop fixture (single-child units) and the real
-           375-individual bundled fixture (multi-child units). Passes
-           identically on UNMODIFIED source (the 'formula' branch alone
-           already covers every case pre-Track-3, since no clamp exists
-           yet) -- this loosening adds no new passing case today; it only
-           keeps this invariant true once Track 3's GREEN phase ships the
-           clamp. The dedicated Track 3 tests below assert the clamp
-           itself (containment), confirmed failing pre-GREEN.", {
+           wording, owner-ratified S592 §9) and by the Track-3-Engagement-
+           Gated post-hoc duplicate-occurrence nudge (investigation doc
+           docs/planning/pedigree-diagram-duplicate-occurrence-centering-
+           investigation.md §10-§11, PRE-RED->RED this session): finalUnitX
+           equals ONE OF (a) the midpoint of its own children's final x (the
+           original Track 6 formula, whenever that already falls inside the
+           union's own 2 parents' x-range), (b) that midpoint clamped into
+           the parents' [min, max] range (Track 3, whenever (a) doesn't
+           hold), or (c) NEW: .computeDupNudge()'s own preReclampTarget for
+           this union, reclamped into the same [min, max] range Track 3
+           uses, whenever the union is Track-3-engaged AND has >=1
+           qualifying child -- within the existing 1e-3 de-collision
+           epsilon's own tolerance -- on the small GA204Z/8LKBV9 loop
+           fixture, the real 375-individual bundled fixture, and (NEW)
+           .commentOneFixture()'s own P1/P2/A/Y/X/W/C1/GC/C2 pedigree --
+           investigation doc §10.6/§11.3(a) established this is the ONLY
+           known fixture, among this project's own test corpora, where the
+           qualification rule actually fires (0/4 small, 0/237 real), so
+           branch (c) is DEAD CODE (vacuously true) without it -- widening
+           the disjunct alone, without this fixture, would not actually
+           test anything new (§10.4/§11.3(c)'s own 'must not forget for
+           RED' finding). Confirmed FAILING pre-GREEN this session (RED):
+           .computeDupNudge() does not exist yet, so checkInvariant() itself
+           errors on every call.", {
   checkInvariant <- function(ped) {
     forest <- .buildMatingUnitForest(ped)
     pos <- .positionMatingUnitForest(ped, forest)
     matingUnits <- forest$matingUnits
+    duplicates <- forest$duplicates
     childEdges <- forest$childEdges
+    ## NEW (investigation doc §11.1): finalUnitX passed to .computeDupNudge()
+    ## is the ALREADY-CLAMPED (Track-3-alone) union x -- exactly what
+    ## .positionMatingUnitForest() already has synced into pos$x for every
+    ## union id at this point in the real pipeline.
+    finalUnitX <- stats::setNames(pos$x[match(matingUnits$id, pos$id)],
+                                   matingUnits$id)
+    nudge <- .computeDupNudge(matingUnits, duplicates, childEdges, pos,
+                               finalUnitX, minSep = 1)
     for (i in seq_len(nrow(matingUnits))) {
       uid <- matingUnits$id[i]
       kids <- childEdges$to[childEdges$from == uid]
@@ -1062,6 +1081,12 @@ test_that(".positionMatingUnitForest's every mating unit satisfies the
       damX <- pos$x[pos$id == matingUnits$dam[i]]
       lo <- min(sireX, damX); hi <- max(sireX, damX)
       clampedX <- min(max(formulaX, lo), hi)
+      target <- nudge[[uid]]$preReclampTarget
+      nudgedX <- if (isTRUE(nudge[[uid]]$engaged) && !is.na(target)) {
+        min(max(target, lo), hi)
+      } else {
+        clampedX
+      }
       actual <- pos$x[pos$id == uid]
       ## Absolute-difference comparison (+ a 1e-9 float-representation
       ## buffer), matching the ORIGINAL expect_equal(actual, expected,
@@ -1079,9 +1104,10 @@ test_that(".positionMatingUnitForest's every mating unit satisfies the
       ## found live this session, Pre-RED).
       expect_true(
         abs(actual - formulaX) <= 2e-3 + 1e-9 ||
-          abs(actual - clampedX) <= 2e-3 + 1e-9,
+          abs(actual - clampedX) <= 2e-3 + 1e-9 ||
+          abs(actual - nudgedX) <= 2e-3 + 1e-9,
         info = paste("unit", uid, "formula", formulaX, "clamped",
-                      clampedX, "actual", actual))
+                      clampedX, "nudged", nudgedX, "actual", actual))
     }
   }
 
@@ -1102,6 +1128,24 @@ test_that(".positionMatingUnitForest's every mating unit satisfies the
     stringsAsFactors = FALSE
   )
   checkInvariant(real)
+
+  ## NEW: the only known fixture, among this project's own test corpora,
+  ## where the qualification rule actually fires (investigation doc
+  ## §10.6/§11.3(a)) -- P1,P2 -> X,A,Y,W,C1,GC,C2 (A x Y consanguineous,
+  ## Y duplicated there via her own outside mate W). Same pedigree as
+  ## test_resolveEdgeNodeCollisions.R's own .commentOneFixture(), inlined
+  ## here rather than called cross-file (that file's local helper is not a
+  ## shared package/testthat helper and this file loads first
+  ## alphabetically under test_dir()'s per-file sourcing order).
+  f1 <- data.frame(
+    id   = c("P1", "P2", "X", "A", "Y", "W", "C1", "GC", "C2"),
+    sire = c(NA, NA, NA, "P1", "P1", NA, "A", "A", "W"),
+    dam  = c(NA, NA, NA, "P2", "P2", NA, "X", "Y", "Y"),
+    sex  = c("M", "F", "F", "M", "F", "M", "F", "M", "M"),
+    stringsAsFactors = FALSE
+  )
+  f1$gen <- findGeneration(f1$id, f1$sire, f1$dam)
+  checkInvariant(f1)
 })
 
 test_that(".positionMatingUnitForest has zero exact x/gen coincidence
@@ -1216,4 +1260,290 @@ test_that(".positionMatingUnitForest clamps finalUnitX for every mating
                               "dam", matingUnits$dam[i], ") x", ux,
                               "parent range", lo, hi))
   }
+})
+
+## ---- Track-3-Engagement Gate (post-hoc duplicate-occurrence-selection
+## centering nudge): docs/planning/pedigree-diagram-duplicate-occurrence-
+## centering-investigation.md §10-§11. Closes the BACKLOG.md "Track 3's 2
+## disclosed trade-offs" item's child-centering half (the D1 bar-vs-bar
+## overlap half is untouched, tracked separately). A new internal helper,
+## .computeDupNudge(matingUnits, duplicates, childEdges, nodes, finalUnitX,
+## minSep), returns a list keyed by mating-unit id, each element
+## list(qualifyingKids = character(), preReclampTarget = NA_real_,
+## engaged = logical(1)) -- .positionMatingUnitForest() calls it strictly
+## between Track 3's clamp loop and the nodes$x sync/dupX computation, and
+## for every union where engaged is TRUE, reclamps preReclampTarget into
+## the SAME [lo, hi] parent span Track 3 already computes, exactly as
+## Track 3's own clamp does. All 6 fixtures below confirmed empirically
+## (Pre-RED, this session, via direct .buildMatingUnitForest()/
+## .positionMatingUnitForest()/makePedigreeMatingLayout() calls against
+## UNMODIFIED source, plus an independent scratch reimplementation of the
+## full gated design) -- not estimated or copied from the investigation
+## doc's own worked examples, which use different fixture constructions
+## with different (but qualitatively identical) numbers. -------------------
+
+test_that(".computeDupNudge() qualifies exactly the documented children and
+           computes the documented pre-reclamp target -- investigation doc
+           §10-§11's qualification rule: child C of union U (K = U's own
+           real children, |K|>=2) qualifies iff (a) C has EXACTLY ONE row
+           in 'duplicates' with realId==C, whose matingUnitId V has an
+           'other parent' also in K, AND (b) NONE of C's OTHER mating-unit
+           memberships (excluding V) has an other-parent also in K. Target
+           = midpoint of {non-qualifying kids' own real x} union
+           {qualifying kids' own duplicate-anchored x, clipped into
+           [min(realKidX), max(realKidX)]}. Confirmed FAILING pre-GREEN
+           (RED): .computeDupNudge() does not exist yet.", {
+  ## F1 (investigation doc's own target case, .commentOneFixture()'s
+  ## pedigree): P1,P2 -> A,Y; A x Y consanguineous (A anchors); Y also
+  ## mates outside founder W (duplicated at A x Y). __union_1's own child Y
+  ## qualifies (her one duplicate row's other-parent A is a __union_1
+  ## child too); A does not (0 duplicate rows -- she anchors everywhere).
+  f1 <- data.frame(
+    id   = c("P1", "P2", "X", "A", "Y", "W", "C1", "GC", "C2"),
+    sire = c(NA, NA, NA, "P1", "P1", NA, "A", "A", "W"),
+    dam  = c(NA, NA, NA, "P2", "P2", NA, "X", "Y", "Y"),
+    sex  = c("M", "F", "F", "M", "F", "M", "F", "M", "M"),
+    stringsAsFactors = FALSE
+  )
+  f1$gen <- findGeneration(f1$id, f1$sire, f1$dam)
+  forest1 <- .buildMatingUnitForest(f1)
+  pos1 <- .positionMatingUnitForest(f1, forest1)
+  finalUnitX1 <- stats::setNames(pos1$x[match(forest1$matingUnits$id, pos1$id)],
+                                  forest1$matingUnits$id)
+  nudge1 <- .computeDupNudge(forest1$matingUnits, forest1$duplicates,
+                              forest1$childEdges, pos1, finalUnitX1, minSep = 1)
+  expect_identical(nudge1[["__union_1"]]$qualifyingKids, "Y")
+  expect_equal(nudge1[["__union_1"]]$preReclampTarget, -0.05)
+  expect_true(nudge1[["__union_1"]]$engaged)
+
+  ## F2 (wrong-direction, investigation doc §5.2's shape): P1,P2 -> A,B,C;
+  ## A x B anchored by A, B x C anchored by C -- B is free-pass at A x B
+  ## (fails clause (b): that free membership's other-parent A is also a
+  ## __union_1 child) and duplicated only at B x C. 0 qualifying children.
+  f2 <- data.frame(
+    id   = c("P1", "P2", "A", "B", "C", "AB1", "BC1"),
+    sire = c(NA, NA, "P1", "P1", "P1", "A", "B"),
+    dam  = c(NA, NA, "P2", "P2", "P2", "B", "C"),
+    sex  = c("M", "F", "M", "F", "M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+  f2$gen <- findGeneration(f2$id, f2$sire, f2$dam)
+  forest2 <- .buildMatingUnitForest(f2)
+  pos2 <- .positionMatingUnitForest(f2, forest2)
+  finalUnitX2 <- stats::setNames(pos2$x[match(forest2$matingUnits$id, pos2$id)],
+                                  forest2$matingUnits$id)
+  nudge2 <- .computeDupNudge(forest2$matingUnits, forest2$duplicates,
+                              forest2$childEdges, pos2, finalUnitX2, minSep = 1)
+  expect_identical(nudge2[["__union_1"]]$qualifyingKids, character(0))
+  expect_true(is.na(nudge2[["__union_1"]]$preReclampTarget))
+
+  ## F3 (compounding, investigation doc §8.3's shape): P1,P2 -> A,Y,Q; Q
+  ## mates both A and Y (2 extra outside mates R1,R2 flip preferAnchor()'s
+  ## mate-count tie-break so Q, not A/Y, is the duplicated side at BOTH
+  ## A x Q and Y x Q) -- Q fails clause (a) outright (2 duplicate rows, not
+  ## exactly 1). 0 qualifying children.
+  f3 <- data.frame(
+    id   = c("P1", "P2", "A", "Y", "Q", "R1", "R2", "AQ1", "YQ1", "QR1c", "QR2c"),
+    sire = c(NA, NA, "P1", "P1", "P1", NA, NA, "A", "Y", "Q", "Q"),
+    dam  = c(NA, NA, "P2", "P2", "P2", NA, NA, "Q", "Q", "R1", "R2"),
+    sex  = c("M", "F", "M", "F", "F", "M", "M", "F", "F", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+  f3$gen <- findGeneration(f3$id, f3$sire, f3$dam)
+  forest3 <- .buildMatingUnitForest(f3)
+  pos3 <- .positionMatingUnitForest(f3, forest3)
+  finalUnitX3 <- stats::setNames(pos3$x[match(forest3$matingUnits$id, pos3$id)],
+                                  forest3$matingUnits$id)
+  nudge3 <- .computeDupNudge(forest3$matingUnits, forest3$duplicates,
+                              forest3$childEdges, pos3, finalUnitX3, minSep = 1)
+  expect_identical(nudge3[["__union_1"]]$qualifyingKids, character(0))
+  expect_true(is.na(nudge3[["__union_1"]]$preReclampTarget))
+})
+
+test_that(".computeDupNudge()'s target, once Stage 2's mandatory reclamp is
+           applied, is bit-identical to Track-3-alone's own value when the
+           reclamp fully erases it -- the already-accepted invariant-
+           preservation erasure trade-off (investigation doc §10.4 point 1),
+           explicitly NOT fixed by the Track-3-Engagement Gate (the gate's
+           own precondition, engaged==TRUE, is what makes a union eligible
+           for erasure in the first place, per §11.2's own
+           'provably out of scope' finding). Confirmed FAILING pre-GREEN
+           (RED): .computeDupNudge() does not exist yet.", {
+  ## Minimal P,Q -> B,A ; W x B -> BWkid (processed first, consumes B's
+  ## free-pass) ; A x B -> GC (B genuinely duplicated there). B qualifies
+  ## (her one duplicate row's other-parent A is a __union_1 child; her free
+  ## membership W x B's other-parent W is not). Stage 1's target lands
+  ## outside __union_1's own parent span; Stage 2's mandatory reclamp
+  ## forces it back to exactly Track-3-alone's own (engaged) clamped value.
+  erasure <- data.frame(
+    id   = c("P", "Q", "W", "B", "A", "BWkid", "GC"),
+    sire = c(NA, NA, NA, "P", "P", "W", "A"),
+    dam  = c(NA, NA, NA, "Q", "Q", "B", "B"),
+    sex  = c("M", "F", "M", "F", "M", "F", "M"),
+    stringsAsFactors = FALSE
+  )
+  erasure$gen <- findGeneration(erasure$id, erasure$sire, erasure$dam)
+  forest <- .buildMatingUnitForest(erasure)
+  pos <- .positionMatingUnitForest(erasure, forest)
+  finalUnitX <- stats::setNames(pos$x[match(forest$matingUnits$id, pos$id)],
+                                 forest$matingUnits$id)
+  nudge <- .computeDupNudge(forest$matingUnits, forest$duplicates,
+                             forest$childEdges, pos, finalUnitX, minSep = 1)
+  expect_identical(nudge[["__union_1"]]$qualifyingKids, "B")
+  expect_equal(nudge[["__union_1"]]$preReclampTarget, 1.25)
+  expect_true(nudge[["__union_1"]]$engaged)
+
+  ## Stage 2: reclamp preReclampTarget into __union_1's own [lo, hi] parent
+  ## span -- must land bit-identical to Track-3-alone's own shipped
+  ## (engaged) value, i.e. today's UNMODIFIED-source finalUnitX for
+  ## __union_1, confirming the reclamp neither improves nor worsens this
+  ## already-disclosed trade-off.
+  sireX <- pos$x[pos$id == forest$matingUnits$sire[1]]
+  damX <- pos$x[pos$id == forest$matingUnits$dam[1]]
+  lo <- min(sireX, damX); hi <- max(sireX, damX)
+  reclamped <- min(max(nudge[["__union_1"]]$preReclampTarget, lo), hi)
+  trackThreeAlone <- min(max((min(pos$x[pos$id %in% c("B", "A")]) +
+                                 max(pos$x[pos$id %in% c("B", "A")])) / 2,
+                              lo), hi)
+  expect_equal(reclamped, trackThreeAlone)
+})
+
+test_that("the Track-3-Engagement Gate suppresses a would-be-corrupting
+           nudge on a union whose own Track 3 clamp never engaged (the
+           worse-than-erasure nested/chained regression, investigation doc
+           §10.4/§11.1/§11.2) -- black-box, on the outer
+           makePedigreeMatingLayout() surface. P1,P2 -> A,Y; A x Y
+           (__union_2) -> GC1,GC2; GC1 x GC2 (__union_3) -> GGC; GC2 also
+           mates outside founder W2 -> GGC2 (duplicates GC2 at
+           __union_3). __union_2's own raw Track-6 midpoint of {GC1,GC2}
+           already equals its Track-3-clamped value (engaged==FALSE) --
+           Track 3 alone already has nothing to fix there. GC2 nevertheless
+           qualifies as __union_2's own child (her one duplicate row, at
+           __union_3, has other-parent GC1 also in K={GC1,GC2}), so an
+           UNGATED nudge would corrupt __union_2's already-correct output;
+           the gate must suppress it. Confirmed empirically this session
+           (Pre-RED, against UNMODIFIED source): __union_2 currently ships
+           at x=90 (0.75 abstract * xScale 120) -- this is what the gated
+           design must reproduce exactly. Confirmed FAILING pre-GREEN
+           (RED): the nudge does not exist yet, so this union's own value
+           is merely today's un-nudged Track-3-alone output, which happens
+           to already equal 90 for an unrelated reason (no code exists yet
+           to corrupt it) -- GREEN must prove this stays true once the
+           qualifying-but-not-engaged nudge is wired in, not merely that it
+           is untouched because nothing has been implemented -- a white-box
+           .computeDupNudge() assertion below (qualifyingKids=='GC2',
+           engaged==FALSE) makes this test FAIL pre-GREEN regardless (RED),
+           since that function does not exist yet; the black-box outer
+           assertion alone would otherwise pass vacuously today.", {
+  nested <- data.frame(
+    id   = c("P1", "P2", "A", "Y", "GC1", "GC2", "W2", "GGC", "GGC2"),
+    sire = c(NA, NA, "P1", "P1", "A", "A", NA, "GC1", "W2"),
+    dam  = c(NA, NA, "P2", "P2", "Y", "Y", NA, "GC2", "GC2"),
+    sex  = c("M", "F", "M", "F", "M", "F", "M", "M", "F"),
+    stringsAsFactors = FALSE
+  )
+  nested$gen <- findGeneration(nested$id, nested$sire, nested$dam)
+
+  forest <- .buildMatingUnitForest(nested)
+  pos <- .positionMatingUnitForest(nested, forest)
+  finalUnitX <- stats::setNames(pos$x[match(forest$matingUnits$id, pos$id)],
+                                 forest$matingUnits$id)
+  nudge <- .computeDupNudge(forest$matingUnits, forest$duplicates,
+                             forest$childEdges, pos, finalUnitX, minSep = 1)
+  expect_identical(nudge[["__union_2"]]$qualifyingKids, "GC2")
+  expect_false(nudge[["__union_2"]]$engaged)
+
+  layout <- makePedigreeMatingLayout(nested, edgeStyle = "direct")
+  expect_equal(layout$nodes$x[layout$nodes$id == "__union_2"], 90)
+})
+
+test_that("the Track-3-Engagement Gate does not over-suppress a genuinely
+           Track-3-engaged union's own legitimate correction (investigation
+           doc §11.3 finding 3's 'inner-engaged' corner) -- black-box, on
+           the outer makePedigreeMatingLayout() surface. Same base shape as
+           the nested-regression fixture above, but A additionally mates
+           outside founder X -> C1 (mirrors F1's own A x X shape), which
+           flips preferAnchor()'s tie-break so Y (not A) anchors A x Y --
+           A's own extra branch now makes __union_3 (A x Y) genuinely
+           Track-3-engaged (raw=1.875 != clamped=1.626, a real 0.249
+           clamp, confirmed via direct instrumentation this session, not
+           the ~0.001 de-collision-epsilon noise floor). GC2 qualifies as
+           __union_3's own child exactly as in the nested-regression
+           fixture; her Stage-1 target (1.0755 abstract) SURVIVES Stage 2's
+           reclamp (falls inside __union_3's own [-0.125, 1.625] parent
+           span) -- a real, needed correction the gate must NOT suppress.
+           Confirmed empirically this session (Pre-RED): __union_3 ships
+           today (UNMODIFIED source, Track-3-alone) at x=195.12; once
+           gated GREEN, it must move to 1.0755*120=129.06, confirming the
+           gate permits engaged unions through unchanged. Confirmed FAILING
+           pre-GREEN (RED): the nudge does not exist yet, so __union_3
+           stays at today's un-nudged 195.12, not the corrected 129.06.", {
+  notover <- data.frame(
+    id   = c("P1", "P2", "A", "Y", "X", "C1", "GC1", "GC2", "W2", "GGC", "GGC2"),
+    sire = c(NA, NA, "P1", "P1", NA, "A", "A", "A", NA, "GC1", "W2"),
+    dam  = c(NA, NA, "P2", "P2", NA, "X", "Y", "Y", NA, "GC2", "GC2"),
+    sex  = c("M", "F", "M", "F", "F", "F", "M", "F", "M", "M", "F"),
+    stringsAsFactors = FALSE
+  )
+  notover$gen <- findGeneration(notover$id, notover$sire, notover$dam)
+  layout <- makePedigreeMatingLayout(notover, edgeStyle = "direct")
+  expect_equal(layout$nodes$x[layout$nodes$id == "__union_3"], 129.06,
+               tolerance = 0.01)
+})
+
+test_that("the Track-3-Engagement Gate is always suppressed for a
+           dangling-parent mating unit (investigation doc §11.3 finding 2's
+           previously-undisclosed corollary): Track 3's own clamp loop
+           unconditionally skips a union whose sire or dam has no own row
+           in 'ped' (its own 'if (!anyNA(parentX))' guard), so
+           rawFinalUnitX and clampedFinalUnitX are always byte-identical
+           for such a union -- engaged is therefore always FALSE,
+           regardless of how many children would otherwise qualify. This
+           fixture has no qualifying children (no 'duplicates' rows at
+           all), so it exercises only the structural no-crash/no-change
+           half of the corollary, not a simultaneously-qualifying corner
+           (disclosed, not fixed, matching this investigation's own
+           established practice of naming an unexercised corner rather
+           than silently skipping it). Confirmed FAILING pre-GREEN (RED):
+           .computeDupNudge() does not exist yet.", {
+  dangling <- data.frame(
+    id   = c("M1", "F1", "K1", "K2"),
+    sire = c(NA, NA, "DANGLING_SIRE", "DANGLING_SIRE"),
+    dam  = c(NA, NA, "F1", "F1"),
+    sex  = c("M", "F", "M", "F"),
+    stringsAsFactors = FALSE
+  )
+  suppressWarnings(
+    dangling$gen <- findGeneration(dangling$id, dangling$sire, dangling$dam)
+  )
+  forest <- .buildMatingUnitForest(dangling)
+  pos <- .positionMatingUnitForest(dangling, forest)
+  finalUnitX <- stats::setNames(pos$x[match(forest$matingUnits$id, pos$id)],
+                                 forest$matingUnits$id)
+  nudge <- .computeDupNudge(forest$matingUnits, forest$duplicates,
+                             forest$childEdges, pos, finalUnitX, minSep = 1)
+  expect_false(nudge[["__union_1"]]$engaged)
+})
+
+test_that(".positionMatingUnitForest's F1 target case (investigation doc's
+           own .commentOneFixture() pedigree) produces the exact, single
+           documented nudged value on the outer makePedigreeMatingLayout()
+           surface -- a STRICT, single-value regression assertion
+           independent of checkInvariant()'s own loose 3-way OR sweep
+           above, which cannot by itself distinguish 'the nudge correctly
+           fired' from 'the whole mechanism silently never fired at all'
+           (investigation doc §11.3's own 'must-not-forget for RED'
+           finding). Confirmed FAILING pre-GREEN (RED): __union_1 ships
+           today (UNMODIFIED source) at x=0.12, not the documented
+           -6.0 (-0.05 abstract * xScale 120).", {
+  f1 <- data.frame(
+    id   = c("P1", "P2", "X", "A", "Y", "W", "C1", "GC", "C2"),
+    sire = c(NA, NA, NA, "P1", "P1", NA, "A", "A", "W"),
+    dam  = c(NA, NA, NA, "P2", "P2", NA, "X", "Y", "Y"),
+    sex  = c("M", "F", "F", "M", "F", "M", "F", "M", "M"),
+    stringsAsFactors = FALSE
+  )
+  f1$gen <- findGeneration(f1$id, f1$sire, f1$dam)
+  layout <- makePedigreeMatingLayout(f1, edgeStyle = "direct")
+  expect_equal(layout$nodes$x[layout$nodes$id == "__union_1"], -6.0)
 })

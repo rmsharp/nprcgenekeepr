@@ -16,6 +16,49 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-17 · [ad hoc] S602: Track-3-Engagement Gate — duplicate-occurrence-selection centering fix IMPLEMENTED (RED→GREEN→REFACTOR)
+- **Session summary:** implemented the design from the duplicate-occurrence-centering investigation's
+  §11.4 (5 workflow attempts across S598-S601, first sound design found S601), closing the
+  investigation with shipped, TDD-verified code. Two `AskUserQuestion` gates before RED: a pre-RED
+  scope decision (owner: full implementation now, over unit-tested-but-unwired or accepting the
+  trade-offs as permanent) and the mandatory `TDD: PRE-RED→RED` gate (owner: full scope). Recovered 2
+  gaps the investigation doc's own prose left only narratively described — the qualification rule's
+  literal (a)/(b) clauses and `.computeDupNudge()`'s full 6-argument signature — by reading both
+  design workflows' own raw `journal.jsonl` outputs directly (`wf_2d657d34-184`, `wf_f8b481f4-0f8`),
+  not by re-deriving from the doc's prose (`PROJECT_LEARNINGS.md` Learning 621). **RED:** 7 new/
+  modified tests in `tests/testthat/test_positionMatingUnitForest.R`, all hand-constructed and
+  empirically verified against real, unmodified source — F1/F2/F3 reproduce the investigation's own
+  documented values exactly; a fresh 9-individual nested/chained fixture reproduces the
+  worse-than-erasure regression from scratch; a variant confirms the gate doesn't over-suppress a
+  genuine correction; a dangling-parent fixture; the separately-accepted erasure trade-off confirmed
+  untouched; `checkInvariant()` gained a 3rd disjunct + `.commentOneFixture()` added to its call list
+  (avoiding a vacuous widened-disjunct-with-unwidened-call-list trap); a strict F1 regression
+  assertion. One test initially passed vacuously pre-GREEN (a "value must stay unchanged" black-box
+  claim, trivially true when nothing exists yet to change it) — caught and fixed with a paired
+  white-box assertion before treating RED as complete (`PROJECT_LEARNINGS.md` Learning 622). All 7
+  confirmed failing pre-GREEN, 0 collateral damage to the rest of the suite. **GREEN:** new internal
+  `.computeDupNudge()` (`R/makePedigreeDiagramData.R`, `@noRd`) implementing the qualification rule,
+  Stage-1 clip-and-average target, and the Track-3-Engagement Gate; wired into
+  `.positionMatingUnitForest()` at the confirmed insertion point. Full clean regression: 0 new
+  failed/error (only the pre-existing, unrelated `test_wordlist_coverage.R` failure). `lintr`: 4
+  `implicit_integer_linter` style nits, fixed. **REFACTOR:** cached each union's parent `[lo, hi]`
+  span (previously recomputed independently by Track 3's clamp loop and the new nudge loop) —
+  structure only, byte-identical result re-confirmed via a 3rd `TDD: GREEN→REFACTOR` gate. **Runtime
+  smoke test (Phase 3E):** headless — confirmed the app's own Pedigree Diagram call chain
+  (`makePedigreeMatingLayout()`) runs clean on the real 375-individual bundled fixture (1412 nodes/
+  1525 edges), no new errors. **Demonstration:** owner asked mid-session for a visual before/after
+  vs. `kinship2` comparison; built one from a temporary git worktree at the pre-fix commit (F1
+  fixture, `kinship2::plot.pedigree()` reference + nprcgenekeepr before/after), traced every
+  parent-child edge programmatically against the source pedigree before trusting either rendering,
+  and published as a shared Artifact (union x moves 0.12 → -6.0, matching kinship2's own centered
+  convergence point far more closely) — not committed to the repo (an ephemeral demonstration, not a
+  project deliverable). `NEWS.Rmd`/`NEWS.md`: new entry disclosing the fix and its 0/237 real-corpus
+  scope. `BACKLOG.md`: Track 3 trade-offs item's child-centering half marked DONE (D1 bar-vs-bar half
+  remains open). Investigation doc: status banner updated to IMPLEMENTED, new §12 recording the full
+  RED/GREEN/REFACTOR/smoke-test record. `PROJECT_LEARNINGS.md`: Learnings 621-622. No GitHub issue —
+  this item was tracked in `BACKLOG.md` only, matching the investigation's own established precedent.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-17 · [ad hoc] S601: duplicate-occurrence-selection centering — narrow repair converges (5th workflow attempt, first sound design in this investigation)
 - **Session summary:** owner directed a narrowly-scoped repair (fix only the worse-than-erasure
   regression the pivot workflow found; leave the separately-accepted erasure trade-off alone) rather

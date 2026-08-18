@@ -153,8 +153,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       item below).
 
 - [ ] **Track 3's 2 disclosed trade-offs (child-centering quality, D1 bar-vs-bar overlap) — accept
-      as shipped, or investigate a narrower mechanism** (found S596, 2026-08-16, Effort unknown —
-      DECISION NEEDED, not scoped) — plan §2.3/§6 Session C's parent-span clamp
+      as shipped, or investigate a narrower mechanism** (found S596, 2026-08-16 — **child-centering
+      half DONE S602, 2026-08-17**; D1 bar-vs-bar half READY, Effort unknown, not scoped) — plan
+      §2.3/§6 Session C's parent-span clamp
       (`docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`) was owner-accepted
       "as designed" this session via `AskUserQuestion`, but 2 costs were measured, not merely
       anticipated: (1) the plan's own §7 faithful child-centering metric on the real 375-individual
@@ -306,6 +307,33 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       requirement before any RED test is written. Full record:
       [`docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`](docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md)
       §11 — **start at §11.4** for a future session.
+
+      **Progress (S602, 2026-08-17), IMPLEMENTED — child-centering half DONE:** picked up §11.4's
+      standing obligation via a dedicated `TDD: PRE-RED→RED` `AskUserQuestion` (owner: "full scope"),
+      preceded by its own separate pre-RED scope `AskUserQuestion` (owner: full implementation now,
+      over unit-tested-but-unwired or accepting the trade-offs as permanent). Recovered 2 gaps the
+      investigation doc's own prose left unstated — the qualification rule's literal (a)/(b) clauses
+      and the Stage-1 substitution formula, plus `.computeDupNudge()`'s full 6-argument signature —
+      by reading both workflows' own raw journals directly (`wf_2d657d34-184`, `wf_f8b481f4-0f8`),
+      not by guessing. RED: 7 new/modified tests in `test_positionMatingUnitForest.R`, all
+      hand-constructed and empirically verified against real, unmodified source (not copied from the
+      doc's own worked examples) — F1/F2/F3 reproduce §10-11's documented values exactly; a fresh
+      nested/chained fixture reproduces the worse-than-erasure regression from scratch; a variant
+      confirms the gate doesn't over-suppress a genuine correction; a dangling-parent fixture; the
+      erasure trade-off stays untouched; `checkInvariant()` gained a 3rd disjunct + `.commentOneFixture()`
+      in its call list (avoiding the "widened disjunct, unwidened call list" vacuity trap §11.3
+      flagged); a strict F1 regression assertion. All 7 confirmed failing pre-GREEN, 0 collateral
+      damage. GREEN: new internal `.computeDupNudge()` + wiring at the confirmed insertion point.
+      Full clean regression: 0 new failed/error (only the pre-existing, unrelated
+      `test_wordlist_coverage.R` failure). `lintr::lint_package()`: 4 style nits fixed. REFACTOR:
+      cached the parent `[lo,hi]` span Track 3's clamp loop and the new nudge loop each independently
+      recomputed — structure only, byte-identical result re-confirmed. Runtime smoke test: headless —
+      confirmed the app's own Pedigree Diagram call chain (`makePedigreeMatingLayout()`) runs clean on
+      the real 375-individual bundled fixture (1412 nodes/1525 edges, no new errors). `NEWS.Rmd`/
+      `NEWS.md` entry added. Full record:
+      [`docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`](docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md)
+      §12. **The D1 bar-vs-bar overlap half of this item remains open** — a separate, not-yet-designed
+      "bar-aware detect-and-jog repair" (named above) — this session did not touch it.
 
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 *Resolves the former "Tracker reconciliation" decision item (S365) --

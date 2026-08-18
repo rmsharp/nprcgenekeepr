@@ -1,6 +1,6 @@
 # Pedigree Diagram: Duplicate-Occurrence-Selection Centering Fix — Investigation
 
-> **STATUS: INVESTIGATION ONLY — DESIGN FOUND SOUND (PRE-RED), NOT YET IMPLEMENTED.** This document is deliberately
+> **STATUS: IMPLEMENTED — SHIPPED S602 (2026-08-17).** See §12. This document is deliberately
 > **not** an implementation plan. Session 598 (2026-08-16) ran a research/verify/adversarial-critique
 > workflow against the previously-designed fix and found a genuine, live-verified correctness gap
 > *inside the design's own claimed scope* (§5.2). Presented with that finding via `AskUserQuestion`,
@@ -27,8 +27,8 @@
 > midpoint, in the *common* tightly-spaced case) plus a live scale bug in the design's own proposed
 > RED test. Presented via `AskUserQuestion` a third time, the owner again chose **"Hold — write up
 > findings, file the locale bug separately."** This document exists so a future session does not have
-> to re-derive any of the evidence below — it should start directly at **§11.4 (Status)**, which
-> supersedes every prior round's own open-questions section.
+> to re-derive any of the evidence below — it should start directly at **§12 (Session 602:
+> Implementation)**, which supersedes every prior round's own open-questions section.
 >
 > **Session 601 (2026-08-17), owner-directed via `AskUserQuestion` to pivot away from the pre-clamp
 > substitution mechanism S598-S600 all used, ran a 4th 12-agent workflow against a structurally
@@ -44,7 +44,8 @@
 > found a "Track-3-Engagement Gate" — the nudge fires only for unions Track 3's own clamp actually
 > altered — that closes the regression and survived a full, fresh 3-lens adversarial critique with
 > zero major findings (§11).** This is the first design across 5 workflow attempts in this
-> investigation to do so. It is still PRE-RED — see §11.4.
+> investigation to do so. **Session 602 (2026-08-17) implemented it — RED→GREEN→REFACTOR, TDD-gated
+> throughout — see §12.**
 
 ## 0. What this addresses (and what it deliberately does not)
 
@@ -1068,6 +1069,74 @@ any RED test is written. The 3 minor findings above (§11.3) are not blocking bu
 transition's scope: resolving the `.computeDupNudge()` signature question and stating the
 dangling-parent corollary explicitly are cheap, concrete pre-RED tasks; the untested inner-engaged/
 outer-no-op corner is a reasonable thing to check in the same pass rather than defer again.
+
+## 12. Session 602 (2026-08-17): Implementation — RED → GREEN → REFACTOR
+
+Owner picked up §11.4's own standing obligation via a dedicated `AskUserQuestion` (header
+`TDD: PRE-RED→RED`, matching this project's Phase-gate format) and chose "Yes, proceed to RED — full
+scope." A separate pre-RED scope decision (also via `AskUserQuestion`, per `CLAUDE.md`'s "scope or
+approach... is the author's to make, posed before declaring RED") resolved which of 3 alternatives to
+pursue — full implementation now / `.computeDupNudge()` unit-tested but unwired / accept as permanent
+and close the investigation — the owner chose **full implementation**.
+
+**Two gaps this document itself left unresolved, closed by reading the two workflows' own raw
+journals directly** (`wf_2d657d34-184` for §10's post-hoc-nudge design, `wf_f8b481f4-0f8` for §11's
+repair), rather than by re-deriving or guessing: (1) §10-§11's prose never states the qualification
+rule's literal (a)/(b) clauses or the Stage-1 substitution formula as a single verbatim expression —
+recovered from the §10 repair-round journal's own `qualificationRule`/`mechanism` fields, word-for-word.
+(2) §11.3 finding (a) left `.computeDupNudge()`'s 6-argument signature only 2/6 slots named — recovered
+from the §11 repair-round journal's own critique text: `.computeDupNudge(matingUnits, duplicates,
+childEdges, nodes, finalUnitX, minSep)`, where `finalUnitX` is the ALREADY-Track-3-clamped value (not
+`rawFinalUnitX`, which the round-2 critique's own live-verified fix recomputes internally from
+`nodes$x` instead of threading through as a 7th parameter).
+
+**RED** (`tests/testthat/test_positionMatingUnitForest.R`): 6 new fixtures, all hand-constructed and
+empirically verified against the real, unmodified `.buildMatingUnitForest()`/
+`.positionMatingUnitForest()`/`makePedigreeMatingLayout()` — not copied from this document's own
+worked examples, which use different constructions with different (qualitatively identical) numbers.
+F1/F2/F3 reproduce §10-11's own documented values exactly (confirms the qualification rule/Stage-1
+formula recovered from the journals above is correct). A minimal `P,Q→B,A` erasure fixture confirms
+the reclamp-erasure trade-off (§10.4 point 1) stays untouched. A fresh 9-individual nested/chained
+fixture (`P1,P2→A,Y; A×Y→GC1,GC2; GC1×GC2→GGC; GC2` also mates outside founder `W2`) reproduces §10.4's
+worse-than-erasure regression from scratch: `__union_2` (A×Y) is an exact, unambiguous Track-3 no-op
+(raw=clamped=0.75) yet has a qualifying child (GC2); ungated this computes 0.0 (worse than doing
+nothing), gated it must stay 0.75. A variant giving A an extra outside mate (mirroring F1's own
+shape) flips the anchor and makes the analogous union genuinely engaged (raw=1.875≠clamped=1.626, a
+real 0.249 clamp, not the ~0.001 de-collision-epsilon noise floor found incidentally during this
+verification and disclosed rather than silently worked around) — confirms the gate does not
+over-suppress a legitimate correction. A dangling-parent fixture confirms §11.3 finding (2)'s
+corollary directly. `checkInvariant()`'s existing 2-disjunct OR gained a 3rd (`.computeDupNudge()` +
+the same reclamp), and `.commentOneFixture()`'s own pedigree was added to its call list — per §11.3's
+own "must not forget," widening the disjunct alone (without the fixture) would have been vacuous,
+since neither of the project's 2 existing corpora ever qualify (§10.6, reconfirmed unaffected). A 7th,
+dedicated strict single-value assertion pins F1's own outer surface to exactly `-6.0`, independent of
+`checkInvariant()`'s own loose sweep. All 7 confirmed failing pre-GREEN (5 via `could not find function
+".computeDupNudge"`, 2 via a genuine numeric mismatch) — 0 collateral damage to the rest of the suite.
+
+**GREEN**: new internal `.computeDupNudge()` (`R/makePedigreeDiagramData.R`, `@noRd`) added directly
+after `.buildMatingUnitForest()`; wired into `.positionMatingUnitForest()` strictly between Track 3's
+clamp loop and the `nodes$x` sync, exactly at §10.1/§10.5's confirmed insertion point. Full clean
+regression: 0 new failed/error (the pre-existing, unrelated `test_wordlist_coverage.R` failure is the
+only non-clean result, matching every prior session's own documented baseline). `lintr::lint_package()`
+on the touched file: 4 `implicit_integer_linter` style nits, fixed (no behavior change).
+
+**REFACTOR**: Track 3's clamp loop and the new nudge-application loop each independently recomputed
+the same union's parent `[lo, hi]` span via `match()`+`min`/`max` — cached once (`parentLo`/`parentHi`,
+keyed by `matingUnits$id`) in Track 3's own loop, reused by the nudge loop. Structure only; full clean
+regression re-run afterward, byte-identical result (1 pre-existing, unrelated failure only).
+
+**Runtime smoke test (Phase 3E):** headless — confirmed `runGeneKeepR()` still resolves to a function
+with the changed code loaded, and exercised the exact call chain the Shiny app's Pedigree Diagram
+module uses (`makePedigreeMatingLayout()`) directly against the real 375-individual bundled fixture:
+1412 nodes / 1525 edges, no new errors (the pre-existing "47 same-row edge-node collision(s)" warning
+is unrelated — the qualifying condition this fix touches has 0/237 real-corpus impact, confirmed
+unchanged from before this session). Not a full interactive browser click-through — disclosed, not
+silently skipped, matching this investigation's own established practice.
+
+**Net result:** the duplicate-occurrence-selection centering investigation (5 mechanism attempts
+across Sessions 598-601, this document's own §§1-11) is now closed with a shipped, TDD-verified fix.
+`BACKLOG.md`'s own Track 3 trade-offs item is updated accordingly (child-centering half DONE; the
+separate D1 bar-vs-bar half remains its own, still-open follow-up).
 
 ## References
 
