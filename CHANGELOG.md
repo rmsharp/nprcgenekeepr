@@ -16,6 +16,11 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-18 · [ad hoc] S605: record close-out commit sha in HANDOFFS.md receipt (`3539bc38`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit`/`changelog_ref: pending`
+  -> `3539bc38` (the close-out commit whose sha the receipt itself couldn't name until after it was
+  made), matching the S600/S602/S603/S604 self-reference-workaround precedent.
+
 ### 2026-08-18 · [ad hoc] S605: fix R-CMD-check.yaml CI-red — `inst/WORDLIST` missing "radix"
 - **Deliverable:** `inst/WORDLIST` — added `radix` (before `RData`), the one word
   `spelling::spell_check_package()` flagged as uncovered. Root cause: S604's close-out edit to

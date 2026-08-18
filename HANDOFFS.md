@@ -152,9 +152,9 @@ what_was_done: inst/WORDLIST -- added "radix" (before RData), the one word
   test_wordlist_coverage.R assertion (no new test needed). Verification: target test 0 failures;
   full clean-regression suite 0 failed/0 error project-wide; direct
   spelling::spell_check_package(".", vignettes = TRUE) -- "No spelling errors found." No .R file
-  touched. Fix committed as 9d851fb5. This session's own close-out (docs) commit sha is pending
-  (self-reference workaround, matching S600/S602/S603/S604 precedent -- will be recorded via a
-  follow-up commit once this receipt's own commit is known).
+  touched. Fix committed as 9d851fb5; this session's own close-out (docs) commit is 3539bc38
+  (self-reference workaround, matching S600/S602/S603/S604 precedent -- this field itself had to
+  be updated by a follow-up commit, since a commit cannot name its own sha).
 next_steps: No further work on this item -- the CI-red is resolved (verified locally; the next push
   will confirm R-CMD-check.yaml itself goes green). shinytest2.yaml (scheduled) is also RED as of
   this session's Phase 0 check (intermittent history: red 08-12/13/14, green 08-15x2/08-16/08-17,
@@ -178,8 +178,8 @@ gotchas: This session's own Phase 1 response stated an intention to do "Phase 1B
   `gh api repos/{owner}/{repo}/actions/jobs/<job-id>/logs` instead to get the raw log.
 runtime_smoke: n/a -- inst/WORDLIST is a spell-check dictionary, not runtime code; no service
   registration, dispatch, or config-resolution behavior changed. Stated explicitly.
-changelog_ref: pending
-commit: pending
+changelog_ref: 3539bc38
+commit: 3539bc38
 ```
 <self_score breakdown: +2 root cause correctly traced (not just "radix isn't in the list" but WHY --
 S604's own close-out edit outran its own regression check), directly useful for Learning 625's
