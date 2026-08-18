@@ -140,7 +140,45 @@ when it reconstructs a receipt a crashed session never completed — you never w
 <p><strong>Archived 39 record(s), 2026-08-10 → 2026-08-12</strong> into <a href="docs/archive/HANDOFFS-through-2026-08-12.html"><code>docs/archive/HANDOFFS-through-2026-08-12.md</code></a> — same format, same order, frozen. Losslessness is proved by <a href="docs/archive/HANDOFFS-through-2026-08-12.md.verify.sh"><code>docs/archive/HANDOFFS-through-2026-08-12.md.verify.sh</code></a>, which re-derives L1/L2/L3 from git; run it rather than trusting this sentence. Written by <code>methodology_trim.py</code> v1.1.2.</p>
 <p><strong>Archived 17 record(s), 2026-08-12 → 2026-08-13</strong> into <a href="docs/archive/HANDOFFS-through-2026-08-13.html"><code>docs/archive/HANDOFFS-through-2026-08-13.md</code></a> — same format, same order, frozen. Losslessness is proved by <a href="docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh"><code>docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh</code></a>, which re-derives L1/L2/L3 from git; run it rather than trusting this sentence. Written by <code>methodology_trim.py</code> v1.1.2.</p>
 <p><strong>Archived 21 record(s), 2026-08-13 → 2026-08-14</strong> into <a href="docs/archive/HANDOFFS-through-2026-08-14.html"><code>docs/archive/HANDOFFS-through-2026-08-14.md</code></a> — same format, same order, frozen. Losslessness is proved by <a href="docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh"><code>docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh</code></a>, which re-derives L1/L2/L3 from git; run it rather than trusting this sentence. Written by <code>methodology_trim.py</code> v1.1.2.</p>
-<p>This file currently holds <strong>13</strong> receipt(s). Computed by <code>methodology_trim.py</code> on every <code>--check</code>/<code>--write</code> run, never hand-maintained.</p>
+<p>This file currently holds <strong>14</strong> receipt(s). Computed by <code>methodology_trim.py</code> on every <code>--check</code>/<code>--write</code> run, never hand-maintained.</p>
+<pre class="handoff"><code>session: S604
+date: 2026-08-18
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: DONE -- issue #162 (preferAnchor()'s locale-dependent final tie-break) fixed via full
+  TDD RED-&gt;GREEN-&gt;REFACTOR.
+what_was_done: R/makePedigreeDiagramData.R:410 -- preferAnchor()'s final `a &lt; b` character comparison
+  (locale-dependent via Scollate()) replaced with `order(c(a, b), method = "radix")[1L] == 1L`, the
+  same locale-independent byte-order technique Learning 585/588 established elsewhere in this file and
+  3 others (R/modBreedingGroups.R, R/orderReport.R, R/qcStudbook.R). Empirically reproduced the bug
+  live before writing any test (a1/A1 full-sibling fixture flips anchor selection between this
+  environment's default locale and byte order). 1 new test_that() in
+  tests/testthat/test_positionMatingUnitForest.R (after the Track 4 section), RED-confirmed failing
+  (2 assertions) pre-fix, GREEN-confirmed passing post-fix with 0 regressions. Full clean regression:
+  0 failed/0 error across the ENTIRE suite (Phase 0's own separate WORDLIST backfill this session
+  already cleared the one pre-existing failure). lintr::lint_package() 0 lints on both touched files
+  (1 nit found and fixed: bare [1] -&gt; [1L]). Runtime smoke test: makePedigreeMatingLayout() on the
+  real 375-individual bundled fixture, 714 nodes/827 edges, 0 NAs. GitHub issue #162 closed.
+next_steps: No further work on this item -- issue #162 is fully closed. Phase 1B was skipped this
+  session (see gotchas + PROJECT_LEARNINGS.md Learning 624) -- a future session on this project should
+  explicitly check off Phase 1B as its own line item, separate from the TDD phase-gate questions,
+  immediately after stating the deliverable back to the user.
+key_files: R/makePedigreeDiagramData.R:403-413 (preferAnchor(), the fix);
+  tests/testthat/test_positionMatingUnitForest.R (new test, "## ---- issue #162" section header,
+  right before "## ---- Track 6"); PROJECT_LEARNINGS.md Learning 585/588 (the precedent pattern) and
+  624 (this session's Phase 1B gap).
+gotchas: This session skipped Phase 1B (SESSION_NOTES.md claim stub + HANDOFFS.md pending receipt,
+  committed BEFORE technical work) -- went straight from the task-selection AskUserQuestion into
+  PRE-RED research. The TDD phase-gate AskUserQuestions (all followed correctly) are a DIFFERENT gate
+  and do not substitute for Phase 1B -- a future session should not assume visible TDD-gate compliance
+  means Phase 1B happened too. No actual harm this time (single continuous run, no crash), but check
+  explicitly next time.
+runtime_smoke: PASS -- makePedigreeMatingLayout() on the real 375-individual bundled fixture, 714
+  nodes/827 edges, 0 NA x/gen values (production R/ code changed, not skippable).
+changelog_ref: 6f645d4a
+commit: 6f645d4a</code></pre>
+<p>&lt;self_score breakdown: +2 root-cause fix matching established codebase precedent exactly, not a one-off patch; +2 empirically reproduced the bug live before writing any test rather than trusting the issue’s own claim; +2 full TDD cycle with all 3 gated AskUserQuestions, RED confirmed genuinely failing, GREEN confirmed with a full 0/0 clean-suite regression read (not just the target file); +1 runtime smoke test + lint + issue close-out all completed same-session, matching every relevant CLAUDE.md checklist; +1 the Phase 1B gap was self-caught and corrected with a new PROJECT_LEARNINGS.md entry rather than left undocumented; -1 for the Phase 1B gap itself, which should not have happened regardless of how it was caught. predecessor_score breakdown: 7/10 – S603’s own retraction work was accurate and independently re-verifiable, and its one thread relevant to this session (the WORDLIST/CI-red finding) was captured in HANDOFFS.md’s own next_steps field; docked for that same finding never becoming a proper BACKLOG.md-tagged item, which is the form this project’s own Phase 0 priorities render actually surfaces.&gt;</p>
 <pre class="handoff"><code>session: S603
 date: 2026-08-18
 status: complete

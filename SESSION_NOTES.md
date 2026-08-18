@@ -28,6 +28,147 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 603 Handoff Evaluation (by Session 604)
+
+**Score: 7/10.** **What helped:** S603’s own correction work (the
+child-centering retraction) was honest and thorough where it applied,
+but this session picked an unrelated `BACKLOG.md` item (issue \#162), so
+almost none of that content bore on this session’s actual deliverable.
+The one piece that DID matter — S603’s Phase 0 orientation flagging that
+`R-CMD-check.yaml` was red on `master` for a `test_wordlist_coverage.R`
+failure (`md's` missing from `inst/WORDLIST`) — was correctly captured
+in `HANDOFFS.md`’s `next_steps` field (“R-CMD-check.yaml is red on
+master (inst/WORDLIST missing ‘md’s’)… one-line fix, not yet applied”),
+which this session read and used when reconciling the owner’s own direct
+one-line fix at Phase 0. **What was missing:** S603’s SESSION_NOTES.md
+prose separately claimed the finding was “reported… see `BACKLOG.md`/the
+priorities list rendered this session” — a direct grep found **no
+matching `BACKLOG.md` entry was ever filed**. The `HANDOFFS.md` receipt
+saved it from being fully lost, but a finding that only lives in a
+HANDOFFS prose field (read by the next session, not surfaced by Phase
+0’s own `BACKLOG.md`-tag-driven priorities render) is weaker than a
+proper `(READY, Effort S)`-tagged item — it would not have appeared in a
+future session’s rendered priorities list the way this project’s own
+convention intends. **What was wrong:** nothing found in what S603
+actually claimed — its retraction was independently re-verifiable and
+checked out. **ROI:** good — the handoff was accurate and its one
+relevant thread was captured durably enough to be useful, just not in
+the strongest available form.
+
+### What Session 604 Did
+
+**Deliverable: fixed issue \#162** — `preferAnchor()`’s locale-dependent
+final anchor tie-break in `R/makePedigreeDiagramData.R`, via full TDD
+RED→GREEN→REFACTOR. **DONE.** **Started/Completed:** 2026-08-18.
+
+**Process note (self-flagged, not owner-caught):** this session skipped
+Phase 1B — the `SESSION_NOTES.md` claim stub + `HANDOFFS.md`
+`status: pending` receipt, committed BEFORE any technical work — going
+directly from the task-selection `AskUserQuestion` into PRE-RED
+research. The project’s own TDD phase-gate `AskUserQuestion`s
+(PRE-RED→RED, RED→GREEN, GREEN→REFACTOR) were all followed correctly,
+but that is a *different* gate than Phase 1B, and following it did not
+substitute for it. Caught only at close-out by re-reading
+`SESSION_RUNNER.md` directly. No actual harm resulted (the session ran
+to completion in one continuous pass, nothing crashed), but it is a real
+protocol gap — see the new `PROJECT_LEARNINGS.md` Learning 624 this
+session added, generalizing it for any future session on this project.
+
+**What actually happened, in order:**
+
+1.  **Phase 0 orientation** — read `SESSION_RUNNER.md`/`SAFEGUARDS.md`
+    in full; `SESSION_NOTES.md` (S603’s active task); `gh issue list`
+    (14 open); `git status`/`log`/`diff --stat`;
+    `methodology_dashboard.py` (96/100 health, 0 High+ risk, local
+    script stale v2.14.0 vs. canonical v2.15.2, informational only);
+    `gh run list --branch master` (per `CLAUDE.md`’s standing CI-status
+    check). **Found a real ledger gap:** `HEAD`
+    (`39de7dc2 added md's to WORDLIST`) was 1 commit ahead of
+    `CHANGELOG.md`’s frontier (`8321f149`) — a genuine, out-of-session,
+    human-authored one-line fix (confirmed via `git show`: author
+    `R. Mark Sharp <rmsharp@me.com>`, not a crashed agent session)
+    resolving exactly the CI-red finding S603 reported but never filed.
+    Backfilled per Phase 0 step 6 (`CHANGELOG.md` entry + standalone
+    commit `7dcf0fd5`, pushed with this session’s close-out). Untracked
+    files (`docs/planning/*.html`, `scratchpad/`) checked by mtime — all
+    predate today, already-reported S601/S602 artifacts, not a new ghost
+    session.
+2.  Rendered the `BACKLOG.md`-sourced priorities list (4 numbered items:
+    Track 3 trade-offs redesign, issue \#162, MIT license badge, issue
+    \#161 decision) via `AskUserQuestion` — **user picked issue \#162**
+    (`preferAnchor()`’s locale-dependent tie-break).
+3.  **Phase 1**: stated deliverable/workstream back to the user
+    (`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`, which
+    explicitly says a clear one-off bug doesn’t need full campaign
+    machinery — “just fix it”).
+4.  **PRE-RED research**: read the issue body in full
+    (`gh issue view 162`), the exact code
+    (`R/makePedigreeDiagramData.R:403-411`), the precedent fix (Learning
+    585/588, `order(x, method = "radix")`, already used in 4 other
+    files: `R/modBreedingGroups.R`, `R/orderReport.R`, `R/qcStudbook.R`,
+    and 2 spots in this same file). Grep-confirmed `preferAnchor()`’s
+    final `a < b` is the ONLY remaining bare character comparison in
+    this file (the file’s other
+    [`order()`](https://rdrr.io/r/base/order.html) calls are already
+    radix-fixed or sort non-character columns). **Empirically reproduced
+    the bug live** before writing any test: on a full-sibling
+    `"a1"`(sire)×`"A1"`(dam) pair tied on gen(1)+mateCount(1), this
+    environment’s default locale (`en_US.UTF-8`) gives `"a1" < "A1"` ==
+    `TRUE` → `"a1"` anchors (confirmed via `.buildMatingUnitForest()` on
+    unmodified source); byte/radix order says the opposite (`'A'`=65 \<
+    `'a'`=97) → `"A1"` should anchor.
+5.  **Pre-RED scope `AskUserQuestion`** (fix `preferAnchor()` only /
+    broader package-wide sweep for other bare `<` comparisons / hold) —
+    **user picked “fix `preferAnchor()` only.”**
+6.  **Compliant `TDD: PRE-RED→RED` `AskUserQuestion`** (proceed / hold
+    to review fixture wording) — **user picked “proceed.”**
+7.  **RED**: 1 new `test_that()` in
+    `tests/testthat/test_positionMatingUnitForest.R` (after the Track 4
+    section, before “## —- Track 6”), using the live-verified `a1`/`A1`
+    fixture, asserting `anchor == "A1"`/`nonAnchor == "a1"`. Confirmed
+    FAILING pre-GREEN (2 assertions, current source gives the swapped
+    `"a1"`/`"A1"`); every other test in the file (300+) still passed.
+8.  **`TDD: RED→GREEN` `AskUserQuestion`** (proceed / hold) — **user
+    picked “proceed.”**
+9.  **GREEN**: `R/makePedigreeDiagramData.R:410` — `a < b` →
+    `order(c(a, b), method = "radix")[1L] == 1L`, with a comment
+    matching the established convention. Re-ran the target test file (0
+    failures) and the full clean-regression suite: **0 failed / 0 error
+    across the entire suite** (the `test_wordlist_coverage.R` failure
+    this session’s own Phase 0 backfill already resolved).
+    `lintr::lint_package()` found 1 style nit (`implicit_integer_linter`
+    on the bare `[1]`), fixed to `[1L]`, re-linted clean (0 lints on
+    both touched files).
+10. **Runtime smoke test (Phase 3E)**:
+    [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+    run on the real 375-individual bundled fixture
+    (`obfuscated_rhesus_mhc_ped.csv`) — 714 nodes/827 edges, 0 NA x/gen
+    values.
+11. **`TDD: GREEN→REFACTOR` `AskUserQuestion`** (proceed, confirming no
+    restructuring needed / hold) — **user picked “proceed.”** REFACTOR
+    concluded as a genuine no-op: the fix is already the minimal,
+    established-pattern one-liner.
+12. **Close-out**: `CHANGELOG.md` (`[issue #162]`-tagged entry),
+    `BACKLOG.md` (Housekeeping item removed — completed),
+    `NEWS.Rmd`/`NEWS.md` (Fixed: bullet added, re-rendered, diff scoped
+    to exactly that bullet), `PROJECT_LEARNINGS.md` (Learning 624, the
+    Phase 1B gap above), `CLAUDE.md` (learnings-count pointer 623→624,
+    Sessions 1–603+→1–604+), this file, `HANDOFFS.md`. GitHub issue
+    \#162 closed citing the `CHANGELOG.md` entry and verification
+    evidence.
+
+**Runtime smoke test (Phase 3E):** PASS — see step 10 above. Production
+code (`R/`) changed, so this was not skippable.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A
+(no new displayed statistic). Tutorial/article checklist N/A (no new
+tab/control/interaction pattern — internal tie-break only). `NEWS.Rmd`
+checklist: satisfied (step 12). `a2interactive.Rmd` checklist: N/A
+(`preferAnchor()` is internal, not exported/script-callable). GitHub
+issue close-out checklist: satisfied (step 12). Lint close-out
+checklist: satisfied (step 9). `_pkgdown.yml` checklist: N/A (no new
+exported function).
+
 ### Session 602 Handoff Evaluation (by Session 603)
 
 **Score: 5/10.** **What helped:** every file/commit/fixture reference in
