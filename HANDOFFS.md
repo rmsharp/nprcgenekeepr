@@ -174,19 +174,68 @@ hand-maintained.
 ``` handoff
 session: S607
 date: 2026-08-18
-status: pending
-self_score: pending
+status: complete
+self_score: 9
 predecessor_score: 8
-active_task: Add MIT license badge to README.Rmd + resolve the REUSE-badge scope decision
-  (BACKLOG.md Housekeeping, found 2026-08-17).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+active_task: DONE -- MIT + REUSE license badges added to README.Rmd, full REUSE compliance
+  implemented (LICENSES/MIT.txt, REUSE.toml, 1234/1234 reuse lint compliant).
+what_was_done: MIT badge added to README.Rmd (7ff11d2c), README.md re-rendered. REUSE badge:
+  owner picked "do compliance work now" over skip/hold. Installed reuse CLI v6.2.0 (brew, not
+  previously available). reuse lint before: 0/1234 files licensed. Added LICENSES/MIT.txt (reuse
+  download MIT, network-verified) + REUSE.toml (blanket "**" = 2017-2026 R. Mark Sharp/MIT, plus
+  a carve-out for renv/activate.R + 4 man/figures/lifecycle-*.svg files, both confirmed MIT/Posit
+  Software PBC via each dependency's own installed DESCRIPTION). Master_Genetic_metrics PDF's
+  ambiguous provenance escalated to the owner via AskUserQuestion, not guessed -- confirmed
+  project's own MIT work. reuse lint after: 1234/1234 compliant. .Rbuildignore gained REUSE.toml/
+  LICENSES; devtools::check() confirmed 0 new NOTEs (c8ea1123). Pushed to origin (c8ea1123) so the
+  live REUSE badge can actually render.
+next_steps: BACKLOG.md priorities carried forward, unchanged by this session: issue #161 decision
+  (hide mating-unit node marker, DECISION NEEDED, Effort S if approved -- deferral condition now
+  satisfied); issue #148 scope-narrowing conversation (MHC haplotype reporting, per
+  docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md Finding #4); Track 3
+  child-centering redesign scoping (BLOCKED/high-stakes -- 5 failed workflow attempts + 1
+  retracted implementation, S598-S603, needs a dedicated scoping session, not a routine pickup).
+  Lower priority: 3 vignette screenshot staleness check (READY, Effort S, found S582); LabKey
+  integration remainder (BLOCKED on a live server). NEW from this session's own post-push
+  verification: the REUSE badge renders gray "unregistered," not green -- api.reuse.software
+  requires the owner to manually register (email confirmation) at
+  https://api.reuse.software/register before it will report real compliance; new BACKLOG.md item
+  filed (DECISION NEEDED / owner action, Effort S). The repo itself is reuse lint-compliant
+  (1234/1234) regardless.
+key_files: README.Rmd:14-25 (badges block), REUSE.toml (new, repo root), LICENSES/MIT.txt (new),
+  .Rbuildignore (REUSE.toml/LICENSES entries appended at EOF).
+gotchas: reuse lint scans the WHOLE working directory respecting .gitignore, not just
+  git-tracked files -- untracked scratchpad/docs-planning-evidence files got swept into the
+  blanket "**" declaration too (harmless, but a surprise if you assume git-tracking-scoped). Any
+  future file added under renv/ or man/figures/ that is itself third-party-vendored (not just
+  these 5) needs its own REUSE.toml carve-out -- check the vendoring package's own DESCRIPTION
+  before assuming project copyright. The REUSE badge is LIVE (queries api.reuse.software against
+  the pushed GitHub repo), unlike the static MIT badge -- it will not reflect local changes until
+  pushed.
+runtime_smoke: n/a -- docs-only change, no R/ code, no service registration/dispatch/config
+  resolution touched. devtools::check() run as the build-equivalent instead (0 errors, 1
+  pre-existing warning, 2 pre-existing notes, 0 new).
+changelog_ref: CHANGELOG.md 2026-08-18 S607 entry (MIT + REUSE license badges added to
+  README.Rmd, full REUSE compliance).
+commit: c871be1b
 ```
+
+Self-score breakdown: +ran the real `reuse` CLI before/after rather than
+approximating compliance from the config alone (matches
+`SAFEGUARDS.md`’s build-equivalent/render-dependency-completeness
+discipline applied to a compliance checker); +found and correctly
+attributed 2 third-party-vendored files instead of blanket-declaring
+everything as project copyright; +escalated a genuine
+copyright-provenance ambiguity to the owner rather than inferring;
++verified
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+introduced 0 new NOTEs after the `.Rbuildignore` change. −installed a
+new Homebrew package without a separate explicit ask (judged
+low-risk/reversible, in service of the owner-picked task); +caught, via
+direct post-push `curl` verification rather than assuming success, that
+the badge needs a one-time owner registration with api.reuse.software
+before it will ever render non-gray, and documented it as a new
+BACKLOG.md item instead of leaving a silently-unfulfilled deliverable.
 
 ``` handoff
 session: S606
