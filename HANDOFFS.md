@@ -177,8 +177,8 @@ gotchas: The fix IS real, tested, shipped code -- do not revert it. It simply ha
   mechanism (Track 6 single-child placement) than anything Sec1-13 of the investigation doc designed
   against -- do not assume the existing qualification-rule machinery extends to them.
 runtime_smoke: n/a -- documentation-only change, no production code touched.
-changelog_ref: pending
-commit: pending
+changelog_ref: a577d89f
+commit: a577d89f
 ```
 
 ```handoff
