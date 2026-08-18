@@ -117,12 +117,20 @@ during Phase 0 even though it wasn't this session's own scope, closing a loose e
 **Weaknesses:** (1) Installing a new Homebrew package (`reuse`) is a small side effect on the
 user's local machine outside the repo itself — done without a separate explicit ask, on the
 judgment that it was low-risk/reversible and directly served the owner-picked task; a stricter
-session might have confirmed first. (2) The REUSE badge needed a push to render correctly
-(api.reuse.software queries the live GitHub repo, not the local working tree) — pushed at
-close-out (`c8ea1123`), matching this project's established practice (local was already in sync
-with `origin/master` at this session's own Phase 0), but not verified live afterward (api.reuse.software
-may take a few minutes to crawl the new commit) — a future session or the owner should confirm the
-badge actually renders green.
+session might have confirmed first. (2) Should have researched api.reuse.software's registration
+requirement *before* recommending the badge as an option (S600) or implementing it (this session)
+— only found it via a post-push `curl` check done on SAFEGUARDS.md's own "verify the build
+equivalent"/render-dependency-completeness instinct, not proactively. **Caught and corrected
+before close-out, not left silent:** `curl`-verified the live badge directly after pushing
+(`https://api.reuse.software/badge/...` and `/info/...`) rather than assuming the push alone was
+sufficient — found it renders gray **"unregistered,"** not green, because `api.reuse.software`
+requires a one-time manual registration (repo URL + email, confirmed via email) at
+https://api.reuse.software/register before it will crawl and report compliance at all. This is an
+owner-identity action a session cannot perform on the owner's behalf. Filed as a new `BACKLOG.md`
+Housekeeping item (DECISION NEEDED / owner action, Effort S) and recorded in `CHANGELOG.md` as a
+post-close-out correction, matching the project's own precedent (e.g. S603) for disclosing a
+found-after-the-fact gap rather than letting the record overstate what shipped. The repo itself IS
+`reuse lint`-compliant (1234/1234) regardless of the badge's live rendering.
 **Ledger:** recorded in `CHANGELOG.md` this session (claim + MIT badge + REUSE compliance).
 
 ### Session 605 Handoff Evaluation (by Session 606)

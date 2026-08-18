@@ -437,6 +437,19 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `renv/activate.R` and the 4 `man/figures/lifecycle-*.svg` files, both third-party/Posit
       Software PBC). `reuse lint`: 1234/1234 compliant. `devtools::check()`: 0 new NOTEs. See
       `CHANGELOG.md` and `PROJECT_LEARNINGS.md` Learning 627.
+- [ ] **Register `rmsharp/nprcgenekeepr` with api.reuse.software so the REUSE badge renders its
+      real compliance status** (found S607, 2026-08-18, DECISION NEEDED / owner action, Effort S)
+      -- the badge added above currently renders gray **"unregistered,"** not green: hitting
+      `https://api.reuse.software/badge/github.com/rmsharp/nprcgenekeepr` directly returns an
+      "unregistered" SVG, and `https://api.reuse.software/info/...` returns "Project not
+      registered." This REUSE API service requires a one-time manual registration at
+      https://api.reuse.software/register (repo URL + an email address, confirmed via a
+      confirmation email) before it will crawl and report a project's actual compliance state --
+      this is not something a session can or should do on the owner's behalf (it ties an email
+      address to the public registration and is a one-way "join the registry" action). The repo
+      itself IS `reuse lint`-compliant now (1234/1234, verified locally); only the badge's live
+      display is blocked on this registration step. A future session can verify the badge went
+      green after the owner registers, but cannot perform the registration itself.
 - [x] (found S584, 2026-08-15, incidental to running the build equivalent during close-out,
       **RESOLVED S587.** Added the 4 flagged words (`matings`, `Rectilinear's`, `runnable`,
       `visNetwork's`) to `inst/WORDLIST`, each placed at its alphabetic neighbor; all 4 confirmed

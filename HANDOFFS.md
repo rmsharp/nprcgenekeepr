@@ -160,9 +160,12 @@ next_steps: BACKLOG.md priorities carried forward, unchanged by this session: is
   child-centering redesign scoping (BLOCKED/high-stakes -- 5 failed workflow attempts + 1
   retracted implementation, S598-S603, needs a dedicated scoping session, not a routine pickup).
   Lower priority: 3 vignette screenshot staleness check (READY, Effort S, found S582); LabKey
-  integration remainder (BLOCKED on a live server). A future session should confirm the REUSE
-  badge actually renders green on the live README (api.reuse.software may take a few minutes to
-  crawl c8ea1123 after this session's push) -- not verified live within this session.
+  integration remainder (BLOCKED on a live server). NEW from this session's own post-push
+  verification: the REUSE badge renders gray "unregistered," not green -- api.reuse.software
+  requires the owner to manually register (email confirmation) at
+  https://api.reuse.software/register before it will report real compliance; new BACKLOG.md item
+  filed (DECISION NEEDED / owner action, Effort S). The repo itself is reuse lint-compliant
+  (1234/1234) regardless.
 key_files: README.Rmd:14-25 (badges block), REUSE.toml (new, repo root), LICENSES/MIT.txt (new),
   .Rbuildignore (REUSE.toml/LICENSES entries appended at EOF).
 gotchas: reuse lint scans the WHOLE working directory respecting .gitignore, not just
@@ -186,9 +189,10 @@ discipline applied to a compliance checker); +found and correctly attributed 2 t
 files instead of blanket-declaring everything as project copyright; +escalated a genuine
 copyright-provenance ambiguity to the owner rather than inferring; +verified `devtools::check()`
 introduced 0 new NOTEs after the `.Rbuildignore` change. −installed a new Homebrew package without a
-separate explicit ask (judged low-risk/reversible, in service of the owner-picked task); −did not
-verify the REUSE badge actually renders green on the live README after pushing (api.reuse.software
-crawl timing is outside this session's control).
+separate explicit ask (judged low-risk/reversible, in service of the owner-picked task); +caught,
+via direct post-push `curl` verification rather than assuming success, that the badge needs a
+one-time owner registration with api.reuse.software before it will ever render non-gray, and
+documented it as a new BACKLOG.md item instead of leaving a silently-unfulfilled deliverable.
 
 ```handoff
 session: S606

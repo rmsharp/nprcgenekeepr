@@ -16,6 +16,18 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-18 · [ad hoc] S607: post-close-out correction — REUSE badge renders "unregistered," not green; new BACKLOG.md item for the owner action needed
+- **Deliverable:** After pushing S607's REUSE compliance work, verified the live badge directly
+  (`curl` against `api.reuse.software/badge/...` and `/info/...`) rather than assuming a push was
+  sufficient. Found it renders gray **"unregistered"** — `api.reuse.software` requires a one-time
+  manual registration (repo URL + email, confirmed via email) at
+  https://api.reuse.software/register before it will crawl and report compliance at all; this is a
+  registration step tied to the owner's own email/identity, not something a session can or should
+  perform. The repo itself IS `reuse lint`-compliant (1234/1234, verified locally) — only the
+  badge's live rendering is blocked on this owner step. New `BACKLOG.md` Housekeeping item filed
+  (DECISION NEEDED / owner action, Effort S) rather than leaving the gap undocumented.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-18 · [ad hoc] S607: record close-out commit sha in HANDOFFS.md receipt (`c871be1b`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit: pending` -> `c871be1b`
   (the close-out commit whose sha the receipt itself couldn't name until after it was made),
