@@ -16,6 +16,11 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-18 · [ad hoc] S604: record close-out commit sha in HANDOFFS.md receipt (`6f645d4a`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit`/`changelog_ref: pending` ->
+  `6f645d4a` (the close-out commit whose sha the receipt itself couldn't name until after it was
+  made), matching the S600/S602/S603 self-reference-workaround precedent.
+
 ### 2026-08-18 · [issue #162] S604: fix `preferAnchor()`'s locale-dependent final tie-break
 - **Deliverable:** `R/makePedigreeDiagramData.R:410` — `preferAnchor()`'s final anchor tie-break
   (reached when 2 candidate parents tie on both generation and mate count, guaranteed for every

@@ -171,8 +171,8 @@ gotchas: This session skipped Phase 1B (SESSION_NOTES.md claim stub + HANDOFFS.m
   explicitly next time.
 runtime_smoke: PASS -- makePedigreeMatingLayout() on the real 375-individual bundled fixture, 714
   nodes/827 edges, 0 NA x/gen values (production R/ code changed, not skippable).
-changelog_ref: pending
-commit: pending
+changelog_ref: 6f645d4a
+commit: 6f645d4a
 ```
 <self_score breakdown: +2 root-cause fix matching established codebase precedent exactly, not a
 one-off patch; +2 empirically reproduced the bug live before writing any test rather than trusting
