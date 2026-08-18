@@ -18,6 +18,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 606 Handoff Evaluation (by Session 607)
+**Score: 8/10.** **What helped:** the `next_steps`/priorities framing (issue #161 decision, MIT/
+REUSE badges, issue #148 scope-narrowing, the re-check of "Pedigree diagram vs kinship2" for
+regrowth) was accurate and directly reusable in this session's own Phase 0 report. **What was
+missing:** nothing bearing on this session's actual task — S606's own work (BACKLOG.md
+Genetic-metrics PDF section) was unrelated to the badges item this session picked up. **What was
+wrong:** nothing found. **ROI:** high — the priorities carried forward cleanly with no
+re-derivation needed beyond a quick re-verification of the REUSE compliance gap (still 0 SPDX
+headers / no `LICENSES/` / no `REUSE.toml`, matching S567's original grep).
+
+### What Session 607 Did
+**Deliverable: Add MIT license badge to `README.Rmd` + resolve the REUSE-badge scope decision.**
+**Status: Session claimed. Work beginning.**
+**Started:** 2026-08-18.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 605 Handoff Evaluation (by Session 606)
 **Score: 8/10.** **What helped:** the `next_steps` field's rendered priorities list (issue #161
 decision, Track 3's disclosed trade-offs, MIT/REUSE badges, issue #148 scope-narrowing) was
