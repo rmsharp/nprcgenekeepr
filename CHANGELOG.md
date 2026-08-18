@@ -16,6 +16,59 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-17 · [ad hoc] S601: duplicate-occurrence-selection centering — narrow repair converges (5th workflow attempt, first sound design in this investigation)
+- **Session summary:** owner directed a narrowly-scoped repair (fix only the worse-than-erasure
+  regression the pivot workflow found; leave the separately-accepted erasure trade-off alone) rather
+  than a full 6th redesign. A 6-agent `Workflow` (`wf_f8b481f4-0f8`, 0 errors, ~1.04M subagent
+  tokens, ~55 min): 2 independent repair candidates converged on an identical idea — a "Track-3-
+  Engagement Gate" (`engaged(U) := |rawFinalUnitX[U] - clampedFinalUnitX[U]| > 1e-9`; suppress the
+  nudge entirely when Track 3's own clamp never altered U's value, since a union it left untouched
+  has nothing to repair). Synthesized; **fresh 3-lens adversarial critique returned
+  `designStillSound: true` on all 3 lenses** — zero major findings, 3 minor ones. No 2nd repair round
+  needed. **First design across 5 workflow attempts in this investigation (S598, S599, S600,
+  S601×2) to survive a full adversarial critique cleanly.** Live-verified: closes the regression on
+  multiple nested/chained reconstructions, leaves the target case and both no-op fixtures
+  byte-identical to before, does not over-suppress a genuinely-needed correction, and is a provable
+  pure pass-through for the separate erasure trade-off. Presented the milestone via `AskUserQuestion`
+  (close out now / address 3 minor findings first); owner chose close out now, matching this
+  project's plan/implementation session-boundary discipline (still PRE-RED, no code written).
+  Appended full findings as the investigation doc's new §11; updated the doc's status banner and
+  "start here" pointer (now §11.4) across all 3 places it appears. Added `PROJECT_LEARNINGS.md`
+  Learnings 618-620 (a mandatory safety clamp can compose with a proven bound to produce a result
+  worse than doing nothing; gate a repair mechanism on whether its own target constraint was actually
+  binding; a fix's real-world qualifying frequency on the project's own test corpora is load-bearing
+  go/no-go evidence). Refreshed `CLAUDE.md`'s `PROJECT_LEARNINGS.md` pointer (617→620 learnings,
+  S600+→S601+).
+- **Files:** `docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md` (§11 +
+  banner), `BACKLOG.md` (Track 3 trade-offs progress note), `PROJECT_LEARNINGS.md` (Learnings
+  618-620), `CLAUDE.md` (pointer refresh), `SESSION_NOTES.md`, `HANDOFFS.md` (close-out).
+- **Model:** Claude Sonnet 5 (main loop); Claude Sonnet 5 (all subagents, both workflows).
+
+### 2026-08-17 · [ad hoc] S601: duplicate-occurrence-selection centering — pivot to post-hoc-bounded-nudge (4th workflow attempt), still not sound, plus a zero-real-impact finding
+- **Session summary:** picked up S600's investigation doc §9.7 item 1 go/no-go (`BACKLOG.md`'s Track
+  3 trade-offs follow-up). Posed the go/no-go as a dedicated `AskUserQuestion` (accept Track 3
+  trade-offs as permanent / pivot to post-hoc nudge / authorize a 4th pre-clamp attempt / hold);
+  owner picked "pivot" — a mechanism shape untried by S598/S599/S600, all of which stayed on a
+  pre-clamp substitution. A 12-agent `Workflow` (`wf_2d657d34-184`, 0 errors, ~2.10M subagent tokens,
+  ~92 min): 4 independent post-hoc-nudge candidates (2 of 4 verified **zero** dependency on
+  `preferAnchor()`/issue #162 — a genuine option no pre-clamp design ever had), synthesis, round-1
+  critique (**all 3 lenses `designStillSound: false`**), repair, round-2 critique (**still false on 2
+  of 3**): invariant-preservation reconfirmed a reclamp-erasure problem; edge-cases found something
+  *worse* — a nested/chained sibling-consanguineous shape where the nudge actively corrupts a union
+  Track 3 alone already positioned correctly, landing farther from the true center than either the
+  nudge's own uncapped target or doing nothing. **New, independent finding: the qualifying condition
+  never fires on either existing test corpus (0/4 `small`, 0/237 real 375-individual fixture)** — even
+  a sound version of this mechanism would currently touch zero pedigrees this package tests or ships.
+  **Four independent attempts across 2 structurally different mechanism families (S598-S600
+  pre-clamp, S601 post-hoc) have now all failed adversarial critique.** Presented via
+  `AskUserQuestion`; owner chose a narrowly-scoped repair over accepting Track 3's trade-offs as
+  permanent, a full 5th redesign, or holding (see the following entry, same session). Appended full
+  findings as the investigation doc's new §10 (workflow structure, 4-candidate table, synthesis, both
+  critique rounds, the repair, the zero-real-impact finding, updated §10.7 open questions).
+- **Files:** `docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md` (§10),
+  `BACKLOG.md` (Track 3 trade-offs progress note).
+- **Model:** Claude Sonnet 5 (main loop); Claude Sonnet 5 (all subagents).
+
 ### 2026-08-17 · [ad hoc] S600: duplicate-occurrence-selection centering — 3rd attempt (magnitude-bound), still not sound, plus an independent finding
 - **Session summary:** picked up S599's investigation doc §8.6 open questions (`BACKLOG.md`'s Track 3
   trade-offs follow-up). Posed the §8.6 item 3 go/no-go as a dedicated `AskUserQuestion`

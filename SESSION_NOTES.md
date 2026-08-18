@@ -18,20 +18,170 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 600 Handoff Evaluation (by Session 601)
+**Score: 9/10.** **What helped:** `HANDOFFS.md`'s `next_steps`/`gotchas` fields pointed directly at
+§9.7 (not §8.6) and framed the go/no-go question with much stronger evidence behind it after 3
+failed attempts — this session's own opening `AskUserQuestion` (accept-as-permanent / pivot to
+post-hoc nudge / authorize a 4th pre-clamp attempt / hold) was built directly from that framing with
+zero rediscovery. Gotcha 3 ("if a 4th attempt is chosen anyway, it cannot start from a magnitude
+bound alone — must resolve whether Layer 1's qualification rule is literal or restricted") became
+moot once the owner picked the pivot instead of a 4th pre-clamp attempt, but the underlying insight
+(Learning 615's silently-narrowed "given" rule) directly shaped this session's design-agent prompts
+("you are NOT bound by given, do not redesign — re-derive your own qualification rule from its
+literal wording"), and none of the 4 pivot candidates fell into that exact trap. Gotcha 4 (issue
+#162 independently actionable) was correctly left alone — not fixed, not re-investigated, no scope
+creep. Gotcha 5 (scratchpad scripts not committed) was followed. `key_files` and every carried-
+forward number (§9.5's "do not re-verify" list) were re-confirmed accurate wherever this session
+touched them. **What was wrong:** nothing found. **What was missing:** S600 could not have
+anticipated that the pivot itself would also fail, at a *worse-than-erasure* level distinct from any
+prior round's own failure shape (Learning 618) — genuinely new territory, not a fair gap in S600's
+own handoff. **ROI:** high — the "start at §9.7, stronger-evidence" framing drove this session's
+entire opening decision with no rediscovery cost.
+
 ### What Session 601 Did
-**Deliverable:** Resolve investigation doc §9.7 item 1's go/no-go
-(`docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`) — owner picked
-"pivot to post-hoc-bounded-nudge" via `AskUserQuestion`, over accepting Track 3's trade-offs as
-permanent or authorizing a 4th attempt at the same pre-clamp substitution mechanism 3 prior sessions
-(S598/S599/S600) failed. This session runs a fresh design→critique `Workflow` scoped specifically to
-the untried post-hoc mechanism shape (a bounded correction applied AFTER Track 3's clamp, per §8.6
-item 3's own suggestion — never tried across any of the 3 prior attempts, all of which stayed on the
-pre-clamp substitution layer). (IN PROGRESS)
-**Started:** 2026-08-17.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable: two further investigation-document sections, not a ratified plan** — appended §10 and
+§11 to
+[`docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`](docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md).
+Resolved investigation §9.7 item 1's go/no-go via `AskUserQuestion` (owner picked "pivot to
+post-hoc-bounded-nudge" — untried by S598/S599/S600, all of which stayed on a pre-clamp
+substitution). A 4th 12-agent `Workflow` (§10) found the pivot **also unsound** — a strictly
+worse-than-erasure regression on nested/chained sibling-consanguineous unions, plus a new,
+independent finding that the qualifying condition never fires on either existing test corpus (0/4
+`small`, 0/237 real 375-individual fixture). Presented via `AskUserQuestion`; owner chose a narrowly
+-scoped 5th repair (fix only the regression, leave the separately-accepted erasure trade-off alone)
+over accepting Track 3's trade-offs as permanent, a full 6th redesign, or holding. A 6-agent repair
+`Workflow` (§11) produced a **"Track-3-Engagement Gate"** that closed the regression and **survived a
+full, fresh 3-lens adversarial critique with zero major findings — the first design across 5 workflow
+attempts in this investigation's history (S598, S599, S600, S601×2) to do so.** Presented this
+milestone via a final `AskUserQuestion`; owner chose to close out now rather than address 3 remaining
+minor findings first, matching this project's own plan/implementation session-boundary discipline
+(the design stays PRE-RED; a dedicated PRE-RED→RED `AskUserQuestion` is next session's own first
+task, not drafted here). **DONE** in the sense the session's own final deliverable shape allows — the
+investigation now has, for the first time, a design ready for a future RED-implementation session,
+plus definitive evidence closing off exploration of both a full pre-clamp mechanism family (3
+sessions) and one post-hoc-nudge variant shape.
+**Started/Completed:** 2026-08-17.
+
+**What actually happened, in order:**
+
+1. **Full Phase 0 orientation** (`SESSION_RUNNER.md`/`SAFEGUARDS.md` read in full; `SESSION_NOTES.md`;
+   `gh issue list` — 14 open; `gh run list --branch master` — last 10 runs all `completed success`;
+   `git status`/`log`/`diff --stat` — clean tree except the same 4 untracked `docs/planning/*.html`
+   renders already investigated and cleared by S599/S600 (not a ghost session); `methodology_dashboard.py`
+   — 96/100 health, 0 High+ risk; ledger reconcile — `CHANGELOG.md`/`HANDOFFS.md` frontiers both ==
+   HEAD, no gap). Rendered a 4-item `BACKLOG.md`-sourced priorities picker via `AskUserQuestion`
+   (centering 4th-attempt go/no-go / `preferAnchor()` locale fix / MIT badge / screenshot staleness
+   check) — **user picked "Centering 4th-attempt go/no-go."**
+2. **Phase 1**: stated deliverable/workstream back to the user
+   (`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`, matching S598-S600's own precedent)
+   and declared TDD phase **PRE-RED** throughout the session (planning-only, no RED/GREEN/REFACTOR
+   code — confirmed at close-out via `git status`/`git diff --stat`, no `.R` file touched).
+3. **Posed the actual go/no-go decision as its own dedicated `AskUserQuestion`** before running any
+   workflow (accept-as-permanent / pivot to post-hoc nudge / 4th pre-clamp attempt / hold) — **user
+   picked "pivot to post-hoc-bounded-nudge."**
+4. **Phase 1B claim**: stub written to `SESSION_NOTES.md` + `status: pending` receipt opened in
+   `HANDOFFS.md`, committed (`d53d16e8`) before any technical work, per protocol.
+5. **First `Workflow` (`wf_2d657d34-184`, 12 agents, 0 errors, ~2.10M subagent tokens, ~92 min):** 4
+   independent post-hoc-nudge design candidates (2 of 4 verified **zero** `preferAnchor()`/issue #162
+   dependency — a genuine option no pre-clamp design ever had), synthesis, round-1 critique (**all 3
+   lenses `designStillSound: false`**), repair, round-2 critique (**still false on 2 of 3** —
+   invariant-preservation reconfirmed the reclamp-erasure problem; edge-cases found something *worse*:
+   a nested/chained sibling-consanguineous shape where the nudge actively corrupts a union Track 3
+   alone already positioned correctly). Repair round also discovered the qualifying condition never
+   fires on either test corpus (0/4, 0/237) — a new, independent, load-bearing finding. Appended §10
+   to the investigation doc (full workflow structure, 4-candidate table, synthesis, both critique
+   rounds, the repair, the zero-real-impact finding, updated §10.7 open questions).
+6. **Presented the §10 finding via `AskUserQuestion`** (accept-as-permanent / narrow repair / 5th
+   attempt different mechanism / hold). **User picked "narrow repair."**
+7. **Second `Workflow` (`wf_f8b481f4-0f8`, 6 agents, 0 errors, ~1.04M subagent tokens, ~55 min):**
+   scoped specifically to close the worse-than-erasure regression while leaving the separately-
+   accepted erasure trade-off untouched, per the owner's own directive. 2 candidates independently
+   converged on the identical idea — a "Track-3-Engagement Gate" (`engaged(U) := |raw-clamped| >
+   1e-9`; suppress the nudge entirely when Track 3's own clamp never altered U's value, since a union
+   Track 3 left untouched has nothing to repair). Synthesis combined both; **fresh 3-lens critique
+   returned `designStillSound: true` on all 3 lenses** — zero major findings, only 3 minor ones. No
+   2nd repair round was needed. Appended §11 to the investigation doc (root-cause diagnosis, the fix
+   verbatim, live verification, the 3 minor findings, and a §11.4 status section marking the design
+   PRE-RED-ready).
+8. **Presented the milestone via a final `AskUserQuestion`** (close out now / address the 3 minor
+   findings first). **User picked "close out now."**
+9. Updated `BACKLOG.md`'s Track 3 trade-offs item with S601 progress notes for both workflows (§10's
+   failure, §11's convergence). Updated the investigation doc's status banner
+   (`ROUND 3` → `ROUND 4` → `DESIGN FOUND SOUND (PRE-RED), NOT YET IMPLEMENTED`) and its own
+   "start here" pointer (§9.7 → §11.4) across all 3 places it appears.
+10. Added `PROJECT_LEARNINGS.md` Learnings 618 (a mandatory safety clamp composing with a proven
+    bound can still produce a result worse than doing nothing — a distinct failure class from mere
+    erasure), 619 (gate a repair mechanism on whether the constraint it exists to compensate for was
+    actually binding — the generalized "Track-3-Engagement Gate" pattern), and 620 (a fix's
+    real-world qualifying frequency on the project's own test corpora is load-bearing go/no-go
+    evidence, independent of correctness) — matching the file's own established format. Refreshed
+    `CLAUDE.md`'s `PROJECT_LEARNINGS.md` pointer line (617→620 learnings, S600+→S601+).
+
+**Runtime smoke test (Phase 3E):** n/a — docs-only planning/investigation session; no `R/`/`tests/`
+file touched or shipped (confirmed via `git status`/`git diff --stat` before close-out).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation/tutorial-article/`NEWS.Rmd`/
+`a2interactive.Rmd`/`_pkgdown.yml`/lint checklists all N/A (no `.R` file touched, no new exported
+function or Shiny feature, no runtime behavior changed). GitHub issue close-out: N/A (no `BACKLOG.md`
+item marked fully DONE this session — the Track 3 trade-offs item remains open, now carrying a
+PRE-RED-ready design rather than a DONE marker).
+
+**Self-assessment (Session 601): 9/10.** **Strengths:** (1) Posed the go/no-go as its own dedicated
+`AskUserQuestion` before running any workflow, and again after each workflow's own finding, matching
+and extending the project's own established rhythm across 3 decision points this session (pivot
+choice, narrow-repair choice, close-out choice) rather than defaulting any of them. (2) Explicitly
+engineered both Learning 615 (silently-narrowed "given" rule) and Learning 616 (wrong-reference-frame
+bound) directly into the first workflow's design/critique prompts as named traps to avoid — and it
+worked: none of the 4 pivot candidates fell into either, a genuine process improvement measurable
+against S600's own failure. (3) When the pivot itself failed, did not default to a full redesign —
+correctly scoped a narrower, targeted repair matching exactly what the owner asked for ("fix
+specifically the regression, leave the erasure trade-off alone"), which converged in one round where
+2 full prior redesigns had not. (4) Surfaced the 0/237 real-corpus finding explicitly as its own
+piece of evidence (now Learning 620) rather than letting it get buried inside a correctness
+write-up — this materially changes how a future session should weigh further investment here. (5)
+Delegated both large (170KB, 64KB) raw workflow-output extractions to subagents rather than reading
+raw JSON directly into context, preserving verbatim technical fidelity (formulas, exact numbers) for
+a document that needs it while keeping this session's own context budget intact. (6) Did not chase
+the milestone into RED/GREEN implementation despite reaching one — recognized the plan/implementation
+session boundary (`SESSION_RUNNER.md` FM #18) and closed out cleanly instead, on the owner's own
+explicit choice. **Weaknesses:** (1) This session's total scope (2 full workflows, ~18 agents,
+~3.15M subagent tokens combined) is roughly 1.5-2x any single prior session in this investigation
+(S598/S599/S600 each ran exactly one 12-agent workflow) — every expansion was owner-directed at an
+explicit decision point, but a stricter reading of "1 and done" might argue the narrow-repair attempt
+belonged in a fresh session rather than being offered as a same-session option. Flagging this
+explicitly rather than treating the owner's own selection as automatic license. (2) Did not sketch
+even an outline of the standing PRE-RED→RED `AskUserQuestion` (§11.4's own next-step obligation) —
+arguably correctly deferred (a phase-gate question should be posed fresh, at the point of actual
+transition, by the session that will act on the answer), but a named list of the option shapes could
+have saved the next session a small amount of setup. **ROI:** high — despite the large resource
+spend, this session produced definitive closure on 2 more mechanism-shape attempts (bringing the
+total to 5 across 2 families), the FIRST design in the investigation's history to survive full
+adversarial critique, and a new, independently valuable piece of real-world-impact evidence
+(Learning 620) that will shape every future decision here regardless of which design eventually ships.
+
+**Gotchas for the next session:** (1) Start at the investigation document's **§11.4 (Status)**, not
+§10.7 or any earlier open-questions section — it explicitly supersedes all of them. (2) The design
+that's ready for implementation is the **synthesis in §11.1**, not the pre-repair design in §10.3 —
+the pre-repair version has a proven, unfixed worse-than-erasure regression; only the §11 version (with
+the Track-3-Engagement Gate) survived critique. (3) Before writing any RED test, this project's TDD
+contract requires a dedicated `AskUserQuestion` (`TDD: PRE-RED→RED` header format, per `CLAUDE.md`'s
+own Phase-gate format section) — not drafted this session; a prior attempt at drafting one (inside
+this session's own repair workflow, not surfaced to the investigation doc) used a non-compliant header
+and conflated 2 alternatives into one option, so don't reuse that wording verbatim, write a fresh one
+against `CLAUDE.md`'s actual template. (4) §11.3's 3 minor findings are not blocking but should shape
+that question's scope: (a) the `.computeDupNudge()` white-box extraction's approved 6-argument
+signature has no slot for `rawFinalUnitX` — a live-verified no-new-parameter fix exists (recompute it
+inside the helper from `nodes$x`), stated in §11.3 but not yet written into any actual plan; (b) a
+dangling-parent union is always `engaged=FALSE` by construction (Track 3's own clamp skips it) — state
+this explicitly rather than leaving it implicit; (c) an inner-engaged/outer-no-op combination (the
+mirror image of every tested shape) was never directly constructed — no counter-evidence exists, but
+it's an open corner worth a quick check before or during RED. (5) The two workflows' own scratchpad R
+scripts were not committed (ephemeral, matching every prior session's established precedent in this
+investigation) — reconstruct fixtures from §10/§11's own prose (exact numbers given throughout) if
+needed again, not from memory of this note. (6) `BACKLOG.md`'s Track 3 trade-offs item (the one
+tracking this whole investigation) is still open, now pointing at §11.4 — do not mark it DONE until an
+actual implementation ships; the current state is "sound design found, not yet implemented," a
+meaningfully different status than any prior session left it in.
 
 ### Session 599 Handoff Evaluation (by Session 600)
 **Score: 9/10.** **What helped:** `HANDOFFS.md`'s `next_steps`/`gotchas` fields were precise and

@@ -138,22 +138,60 @@ This file currently holds **12** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S601
 date: 2026-08-17
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Resolve investigation doc §9.7 item 1's go/no-go
-  (docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md) -- owner picked
-  "pivot to post-hoc-bounded-nudge" via AskUserQuestion. Run a fresh design->critique Workflow scoped
-  to a bounded correction applied AFTER Track 3's clamp (untried across S598/S599/S600, which all
-  stayed on the pre-clamp substitution mechanism).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Resolved investigation doc §9.7 item 1's go/no-go (pivot to post-hoc-bounded-nudge, an
+  untried mechanism shape). The pivot itself also failed (§10) -- worse-than-erasure regression on
+  nested/chained unions, plus a new finding that the fix's qualifying condition never fires on either
+  test corpus (0/4, 0/237). A subsequent narrowly-scoped repair (§11) closed the regression with a
+  "Track-3-Engagement Gate" and survived full adversarial critique with zero major findings -- the
+  first sound design in this investigation's 5-workflow history. Owner chose to close out now; design
+  stays PRE-RED, not yet implemented.
+what_was_done: Ran 2 Workflows. (1) wf_2d657d34-184, 12 agents, 0 errors, ~2.10M tokens, ~92 min:
+  design->synthesize->critique->repair->critique against the post-hoc-nudge pivot; both critique
+  rounds designStillSound:false; found the qualifying condition fires 0/4 small, 0/237 real-corpus.
+  Appended investigation doc §10. (2) wf_f8b481f4-0f8, 6 agents, 0 errors, ~1.04M tokens, ~55 min: a
+  narrow repair (2 candidates -> synthesis -> fresh 3-lens critique) targeting only the worse-than-
+  erasure regression, per owner directive; all 3 lenses designStillSound:true. Appended investigation
+  doc §11. Updated BACKLOG.md's Track 3 trade-offs item (2 progress notes). Added
+  PROJECT_LEARNINGS.md Learnings 618-620; refreshed CLAUDE.md's learnings-count pointer. No commit sha
+  yet -- filled at Phase 3F just before this receipt's own final commit.
+next_steps: Start at investigation doc §11.4 (Status), not §10.7 or earlier. Draft the standing
+  PRE-RED->RED AskUserQuestion (CLAUDE.md's "TDD: PRE-RED->RETO" header format -- note: use the
+  literal "TDD: PRE-RED->RED" format, not the malformed draft one of this session's own repair-
+  workflow agents produced) before writing any RED test; the design to implement is the §11.1
+  synthesis (Track-3-Engagement Gate), NOT the pre-repair §10.3 design (proven unsound). Then resolve
+  §11.3's 3 minor findings as part of that same PRE-RED scoping: the .computeDupNudge() signature gap
+  (fix already known: recompute rawFinalUnitX inside the helper from nodes$x, no new parameter
+  needed), the dangling-parent corollary (state explicitly), and the untested inner-engaged/outer-
+  no-op corner (quick construction, no counter-evidence exists yet).
+key_files: docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md:788-969
+  (new §10-§11), R/makePedigreeDiagramData.R:966-1010 (exact insertion point, unchanged),
+  BACKLOG.md:240-303 (Track 3 trade-offs item), PROJECT_LEARNINGS.md:1927-1933 (Learnings 618-620).
+gotchas: See SESSION_NOTES.md's own "Gotchas for the next session" (6 items) -- most load-bearing:
+  the design ready to implement is §11's repaired synthesis, not §10's pre-repair one; a dedicated
+  PRE-RED->RED AskUserQuestion is mandatory before any RED test per this project's TDD contract and
+  was not drafted this session in investigation-doc form.
+runtime_smoke: n/a -- docs-only planning/investigation session, no R/ or tests/ file touched
+  (confirmed via git status/git diff --stat before close-out).
+changelog_ref: pending -- filled at Phase 3F, same commit as this receipt.
+commit: pending -- filled at Phase 3F, same commit as this receipt.
 ```
+
+**Self-score breakdown:** +Posed the go/no-go, the narrow-repair scope, and the close-out choice each
+as their own dedicated `AskUserQuestion` rather than defaulting any of them. +Explicitly engineered
+Learnings 615/616 into the pivot workflow's own prompts as named traps -- neither recurred. +Scoped
+the repair narrowly per the owner's own directive rather than defaulting to a full redesign, and it
+converged in one round. +Surfaced the 0/237 real-corpus finding as its own explicit piece of evidence
+(now Learning 620) rather than burying it in a correctness write-up. +Delegated both large raw
+workflow-output extractions to subagents, preserving verbatim technical fidelity without blowing this
+session's own context budget. +Did not chase the milestone into RED/GREEN implementation despite
+reaching one -- closed out cleanly at the plan/implementation boundary. -This session's total scope
+(2 full workflows, ~18 agents, ~3.15M subagent tokens) is ~1.5-2x any single prior session in this
+investigation; every expansion was owner-directed at an explicit decision point, but flagged here
+rather than treated as automatically licensed. -Did not sketch even an outline of the standing
+PRE-RED->RED question, though arguably correctly deferred to the session that will actually act on it.
 
 ```handoff
 session: S600
