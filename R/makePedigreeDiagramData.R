@@ -407,7 +407,10 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
       ca <- mateCountTab[[a]]
       cb <- mateCountTab[[b]]
       if (ca != cb) return(ca < cb)
-      a < b
+      # method = "radix": a/b are character ids -- plain `<` invokes the
+      # session's own locale-dependent Scollate() (Learning 585), method =
+      # "radix" is byte-order and locale-independent (issue #162).
+      order(c(a, b), method = "radix")[1L] == 1L
     }
 
     parentIds <- unique(c(unitSire, unitDam))

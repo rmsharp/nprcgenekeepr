@@ -1016,6 +1016,40 @@ test_that(".positionMatingUnitForest's every mating unit satisfies the
                unname(genOf[forest$matingUnits$anchor]))
 })
 
+## ---- issue #162: preferAnchor()'s final id tie-break is locale-independent
+##      byte/radix order, not the session's own `Scollate()` -------------
+test_that(".buildMatingUnitForest's D2 anchor tie-break falls back to
+           byte/radix id order, not the session's own locale collation,
+           when 2 candidates tie on both gen and mate count (issue #162)", {
+  ## a1 (sire) x A1 (dam) are full siblings of F1 x F2 and mate exactly
+  ## once each -> tied gen (1) and tied mate count (1) -> reaches
+  ## preferAnchor()'s final `a < b` clause with nothing else to break the
+  ## tie. Confirmed live this session, against UNMODIFIED source: this
+  ## environment's own default locale (en_US.UTF-8) gives "a1" < "A1" ==
+  ## TRUE (its Scollate() sorts lowercase before uppercase at a matching
+  ## digit), so "a1" currently anchors. Byte/radix order says the OPPOSITE
+  ## -- "A1" ('A' = 65) sorts before "a1" ('a' = 97) -- and under
+  ## `LC_COLLATE = "C"` the same `<` comparison flips to FALSE, matching
+  ## radix order exactly. This is the same defect class Learnings 585/588
+  ## fixed for `order()` calls elsewhere in this file; `preferAnchor()`'s
+  ## final clause was the one remaining bare character comparison (grep-
+  ## confirmed, no other locale-dependent `<`/`order()` in this file).
+  ## Expected (radix-correct, locale-STABLE) result: "A1" anchors.
+  ped <- data.frame(
+    id   = c("F1", "F2", "a1", "A1", "K"),
+    sire = c(NA, NA, "F1", "F1", "a1"),
+    dam  = c(NA, NA, "F2", "F2", "A1"),
+    sex  = c("M", "F", "M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+  ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
+  forest <- .buildMatingUnitForest(ped)
+
+  unit2 <- forest$matingUnits[forest$matingUnits$sire == "a1", ]
+  expect_equal(unit2$anchor, "A1")
+  expect_equal(unit2$nonAnchor, "a1")
+})
+
 ## ---- Track 6 (child-centered mating-unit position): docs/planning/
 ## pedigree-diagram-track6-child-centered-union-position-plan.md §2.4's
 ## own invariant, plus the §2.3 duplicate-vs-any-node de-collision
