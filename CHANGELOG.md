@@ -57,6 +57,10 @@ it is failure mode #27.
   remains open). Investigation doc: status banner updated to IMPLEMENTED, new §12 recording the full
   RED/GREEN/REFACTOR/smoke-test record. `PROJECT_LEARNINGS.md`: Learnings 621-622. No GitHub issue —
   this item was tracked in `BACKLOG.md` only, matching the investigation's own established precedent.
+  Follow-up commit `921d12f4`: corrected `HANDOFFS.md`'s own S602 receipt (its `commit:` field
+  initially said `pending` despite `status: complete` — self-referencing a commit's own sha inside
+  that same commit isn't possible; fixed to name both the claim and close-out commit shas, matching
+  S600's own established precedent for this field).
 - **Model:** Claude Sonnet 5.
 
 ### 2026-08-17 · [ad hoc] S601: duplicate-occurrence-selection centering — narrow repair converges (5th workflow attempt, first sound design in this investigation)
