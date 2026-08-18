@@ -18,6 +18,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 603 Did
+**Deliverable:** Post-close-out correction (owner-caught, not a claimed audit) — S602's "child-centering
+half DONE" claim (Track-3-Engagement Gate) retracted and corrected against ground truth. (IN PROGRESS)
+**Started:** 2026-08-18.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in `CHANGELOG.md` at
+Phase 3F. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 601 Handoff Evaluation (by Session 602)
 **Score: 10/10.** **What helped:** every one of S601's 6 gotchas was correct and load-bearing. (1)
 "Start at §11.4, not §10.7" — followed exactly. (2) "The design ready to implement is §11's repaired
