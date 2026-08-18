@@ -16,6 +16,38 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-18 · [BL-518] S606: `BACKLOG.md` "Genetic-metrics PDF audit follow-ups" section
+re-compressed; S518 item's "fully RESOLVED" claim corrected
+- **Deliverable:** Re-compressed `BACKLOG.md`'s "Genetic-metrics PDF audit follow-ups" section
+  (304→80 lines), continuing the S529/S530/S531 precedent. Fixed a stale intro claim ("#152
+  [Deferred] is in progress [Slice 3 next]" → closed, independently confirmed via `gh issue view
+  152`/`153`, both `CLOSED`). Condensed 6 sequential "Progress (SNNN...)" paragraphs (S517 design +
+  issue #152 Slices 1-5, ~265 lines) into 1 consolidated summary preserving every session number,
+  design-doc path, and `PROJECT_LEARNINGS.md` Learning cross-reference (532/538/539/540/541/542,
+  all verified to resolve). Found and fixed a live, previously-unpropagated correction: the S535
+  paragraph's own "`shinytest2`/`chromote` headless-modal-rendering harness limitation" finding was
+  retracted one session later by `PROJECT_LEARNINGS.md` Learning 542 (S536 — real cause was a test
+  fixture missing a required `birth` column) but never back-ported into `BACKLOG.md`'s own prose —
+  rewrote it to state the corrected root cause rather than compress the debunked framing into
+  shorter form. Verified `CHANGELOG.md` (+ 5 `docs/archive/CHANGELOG-through-*.md` shards) covers
+  all 23 candidate session numbers before compressing to a pointer (0 real gaps; 1 apparent gap,
+  S492, was a search-pattern false negative — the archive heading reads "Session 492," not "S492").
+- **Also found and corrected:** the S518 tracking item's own text (`BACKLOG.md` Housekeeping) had
+  claimed "fully RESOLVED" after S531's 2026-08-12 compression, but the very section S531
+  compressed (267 lines then) had regrown to 304 by this session's own read — 3 intervening
+  sessions (S532/S533/S535) each appended their own progress paragraph as issue #152's slices
+  shipped, the exact accumulation pattern the item's own opening paragraph names as the root
+  problem. Recorded as new `PROJECT_LEARNINGS.md` Learning 626 rather than left silently uncorrected.
+  "Pedigree diagram vs kinship2" (S530's own prior target) was NOT re-checked this session for the
+  same regrowth risk — flagged for a future session, not silently skipped.
+- **Process note:** claimed the session (Phase 1B `SESSION_NOTES.md` stub + `HANDOFFS.md`
+  `status: pending` receipt) BEFORE any investigation of `BACKLOG.md`'s own content, breaking the
+  2-session Phase 1B-skip streak `PROJECT_LEARNINGS.md` Learnings 624/625 documented (S604, S605).
+- TDD: N/A throughout — pure docs edit, no `R/`/`tests/`/`man/`/`NAMESPACE`/`data/` content
+  touched, matching the S529/S530/S531 precedent. `git diff --stat`: `BACKLOG.md` +73/−268 (net
+  −195 lines), `PROJECT_LEARNINGS.md` +1 new Learning (626), `CLAUDE.md` learnings-count pointer
+  625→626.
+
 ### 2026-08-18 · [ad hoc] S605: record close-out commit sha in HANDOFFS.md receipt (`3539bc38`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit`/`changelog_ref: pending`
   -> `3539bc38` (the close-out commit whose sha the receipt itself couldn't name until after it was

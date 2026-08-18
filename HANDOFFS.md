@@ -138,21 +138,67 @@ This file currently holds **14** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S606
 date: 2026-08-18
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS -- BACKLOG.md housekeeping, editorial compression of the 2 remaining
-  oversized sections ("Pedigree diagram vs kinship2," "Genetic-metrics PDF audit"), continuing the
-  S529/S530/S531 precedent. Exact scope not yet determined -- inventory pass pending.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- BACKLOG.md housekeeping, re-compressed the "Genetic-metrics PDF audit
+  follow-ups" section (304->80 lines).
+what_was_done: BACKLOG.md's "Genetic-metrics PDF audit follow-ups" section re-compressed: fixed a
+  stale intro claim ("#152 in progress" -> closed, confirmed via gh issue view), condensed 6
+  sequential Progress(SNNN) paragraphs (S517 design + issue #152 Slices 1-5, ~265 lines) into 1
+  consolidated summary preserving every session number/design-doc path/Learning cross-reference,
+  and corrected a live stale claim: S535's "shinytest2/chromote harness limitation" finding was
+  retracted by PROJECT_LEARNINGS.md Learning 542 (S536, real cause was a test fixture missing a
+  column) but never back-ported into BACKLOG.md's own prose until now. Also found and recorded
+  (new Learning 626) that the S518 tracking item's own "fully RESOLVED" claim (S531) was stale --
+  the section had regrown from 267 to 304 lines as 3 later sessions (S532/S533/S535) each appended
+  their own progress paragraph, the exact accumulation pattern the item names as the root problem.
+  Verified CHANGELOG.md (+ 5 docs/archive/CHANGELOG-through-*.md shards) covers all 23 candidate
+  session numbers before compressing (0 real gaps; 1 apparent gap, S492, was a search-pattern false
+  negative). Net: section 304->80 lines; file total 1,881->1,686 (some regrowth-note lines added
+  back). TDD: N/A throughout -- pure docs edit, no R/tests/man/NAMESPACE/data touched, matching the
+  S529/S530/S531 precedent. Committed across 3 commits: claim (a0c6b404), the compression +
+  tracking-item correction, and this close-out.
+next_steps: "Pedigree diagram vs kinship2" (179 lines, compressed by S530) was NOT re-checked this
+  session for the same regrowth pattern found in the sibling section -- a future session should
+  check whether it, too, has regrown since S530 before treating the S518 item as settled. Separately
+  (unrelated to this session, carried from S605's own next_steps, still open): issue #161 decision
+  (hide mating-unit node marker), Track 3's 2 disclosed trade-offs (accept or investigate), MIT/
+  REUSE license badges, issue #148 scope-narrowing conversation -- all still open, none newly
+  scoped this session. Also unconfirmed: whether S605's R-CMD-check.yaml push (702c69ac) actually
+  went green -- CI was still in_progress at this session's own Phase 0 check.
+key_files: BACKLOG.md:1578-1657 (the re-compressed section), BACKLOG.md:1270-1358 (the
+  ledger-size-housekeeping tracking item, with this session's correction appended);
+  PROJECT_LEARNINGS.md Learning 626 (new, the regrowth + stale-claim-propagation finding); Learning
+  542 (the S536 correction this session propagated into BACKLOG.md).
+gotchas: A doc-housekeeping section marked "fully RESOLVED"/"DONE" in BACKLOG.md is a snapshot
+  claim, not a permanent state, whenever the section remains a live target for ongoing progress
+  narrative (an open issue's slices, an ongoing audit) -- re-measure the section's current line
+  count against the note's own recorded post-compression figure before trusting it. Before
+  compressing any completed-work narrative, check whether its own factual claims were later
+  corrected elsewhere in the project's record (PROJECT_LEARNINGS.md/CHANGELOG.md/gh issue view) --
+  compression must fix a stale claim it finds, not merely shrink it.
+runtime_smoke: n/a -- pure BACKLOG.md/PROJECT_LEARNINGS.md/CLAUDE.md editorial edit, no
+  R/tests/man/NAMESPACE/data content touched (confirmed via git diff --stat). Stated explicitly.
 changelog_ref: pending
 commit: pending
 ```
-<claim stub -- filled at close-out (Phase 3D)>
+<self_score breakdown: +2 did not trust the S518 tracking item's own "fully RESOLVED" claim at
+face value, measured the section's actual current line count first, which is what surfaced the
+regrowth finding; +2 verified CHANGELOG.md coverage across the live file + 5 archive shards for
+every session number before compressing, catching a false "gap" (S492) via deeper investigation;
++2 found and fixed a stale claim already corrected elsewhere in the project's own record (Learning
+542) rather than mechanically shortening the debunked prose; +1 independently confirmed issues
+#152/#153's CLOSED state via gh issue view rather than trusting BACKLOG.md's own prose; +2 broke a
+2-session Phase 1B-skip streak (Learning 624/625) by writing and committing the claim stub before
+any investigation of BACKLOG.md's own task content; -1 a few Read/Bash calls against HANDOFFS.md's
+own format preceded the stub commit -- defensible as protocol-format lookup, not task-content
+research, but not fully pure "stub is the literal first tool call."
+predecessor_score breakdown: 8/10 -- S605's next_steps priorities list was accurate and reused
+directly; its gotchas field (Learning 625) was the single most load-bearing content in the receipt
+and this session is the first of 3 to actually apply it, not just read it; docked lightly only
+because the next_steps field's CI-status claim was left as an unconfirmed forward-looking hedge
+(correctly labeled as such, not a fault).>
 
 ```handoff
 session: S605
