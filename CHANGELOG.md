@@ -16,6 +16,42 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-18 · [ad hoc] S603: post-close-out correction — S602's "child-centering half DONE" claim RETRACTED
+- **Session summary:** owner reviewed S602's published comparison artifact and reported 3 observations
+  ("the after image still shows the union marker inside P2"; "X×A/A×Y descenders not centered"; "the
+  W×Y descender lands directly below Y") contradicting the artifact's own "verified"/"correct behavior"
+  framing, which this assistant had relayed without independent verification. Mid-session, the owner
+  gave a direct instruction to fix the underlying verification approach, not just this one instance.
+  All 3 observations independently reproduced against current source (not the artifact's own claims):
+  F1 fixture (`test_positionMatingUnitForest.R:1140-1146`) rendered via `visNetwork`/`chromote` at both
+  the pre-fix commit (`cdb9a167~1`, isolated `git worktree`, working tree untouched) and current
+  `HEAD`, positions read via `visNetwork`'s own live `getPositions()`. **Confirmed:** (1) the
+  Track-3-Engagement Gate fix moves `__union_1` 5px against P2's 25px node radius — code-correct,
+  TDD-green, and visually indistinguishable from doing nothing (3×-zoom before/after screenshots are
+  pixel-identical); (2)/(3) the X×A/A×Y/W×Y descender defects are real and — checked directly against
+  the gate's own qualification rule (none of these 3 unions' children are duplicated anywhere in the
+  fixture) — structurally unrelated to S602's fix; they are pure output of the earlier, separate
+  Track 6 "center on one child" design. The artifact's "correct behavior, verified" label for these
+  rested on the design's own stated intent, never the rendered geometry. Owner chose "record correction
+  now" (documentation only, no code changed) via `AskUserQuestion`. **Corrections made:** `BACKLOG.md`
+  (Track 3 trade-offs item's "DONE" header retracted, full correction paragraph appended);
+  investigation doc §12 "Net result" retracted, new §13 appended (methodology, numbers, root-cause
+  distinction, methodology note); `NEWS.Rmd`/`NEWS.md` (S602 bullet "Fixed:"→"Changed:", correction
+  paragraph appended, re-rendered — diff confirmed scoped to that one bullet); `PROJECT_LEARNINGS.md`
+  Learning 623 (this session's own methodology gap, generalized); `CLAUDE.md` learnings pointer
+  refreshed (622→623); the published artifact corrected in place to Revision 4 (same design system as
+  Revisions 1-3, new retraction box, fresh live-rendered before/after images replacing the prior
+  unverified ones); this assistant's own user-level `verify-diagrams-against-ground-truth` memory
+  updated with the second, distinct failure mode (magnitude/geometry verification, not just edge
+  topology; a design's stated intent is not proof of visual correctness). Also surfaced during this
+  session's own Phase 0 orientation, reported not fixed: `R-CMD-check.yaml` red on `master` for the
+  last-pushed commit (S601's close-out) — `test_wordlist_coverage.R` flags `md's` as uncovered by
+  `inst/WORDLIST`, same defect class as the S584/S587 precedent.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-18 · [ad hoc] S603: claim session (post-close-out correction: child-centering fix has no visible effect) (`9cb8528b`)
+- **Deliverable:** Phase 1B claim stub written to `SESSION_NOTES.md`/`HANDOFFS.md`.
+
 ### 2026-08-17 · [ad hoc] S602: Track-3-Engagement Gate — duplicate-occurrence-selection centering fix IMPLEMENTED (RED→GREEN→REFACTOR)
 - **Session summary:** implemented the design from the duplicate-occurrence-centering investigation's
   §11.4 (5 workflow attempts across S598-S601, first sound design found S601), closing the

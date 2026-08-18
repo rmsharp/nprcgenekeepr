@@ -18,13 +18,109 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 602 Handoff Evaluation (by Session 603)
+**Score: 5/10.** **What helped:** every file/commit/fixture reference in S602's handoff was accurate
+and saved real rediscovery time — the exact F1 fixture (`test_positionMatingUnitForest.R:1140-1146`),
+the exact GREEN commit (`cdb9a167`), the investigation doc's §12 location, and the artifact URL were
+all correct and used directly this session. **What was wrong:** the handoff's central claim — "child-
+centering half DONE," carried into `BACKLOG.md`, `NEWS.Rmd`, and the investigation doc's own "Net
+result" — was not true in the sense a reader would take it. The code is real and TDD-tested (that part
+of the claim holds), but S602 never independently rendered the fix's own effect and checked it against
+the node it was supposed to move away from; the correction moves 5px against a 25px node radius and is
+invisible. S602's own published artifact reached the same unverified conclusion ("correct direction,
+honestly small") and additionally mischaracterized 2 unrelated pre-existing descender defects as
+"correct behavior, verified" on the strength of a design comment, never the rendered geometry. **What
+was missing:** a rendered, pixel-level check of the fix's own visual effect — the gap this session's
+new `PROJECT_LEARNINGS.md` Learning 623 now names directly. **ROI:** mixed — strongly positive for
+navigation (nothing had to be rediscovered), strongly negative for trust in the completion claim
+itself, which is the more consequential half of a handoff. This assistant's own first response in this
+session repeated S602's "verified"/"correct behavior" framing without independently checking it,
+before the owner corrected that directly — so this evaluation is not solely about S602's gap, but
+about a gap this session initially inherited and repeated before catching it.
+
 ### What Session 603 Did
-**Deliverable:** Post-close-out correction (owner-caught, not a claimed audit) — S602's "child-centering
-half DONE" claim (Track-3-Engagement Gate) retracted and corrected against ground truth. (IN PROGRESS)
-**Started:** 2026-08-18.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in `CHANGELOG.md` at
-Phase 3F. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable: post-close-out correction** (owner-caught, not a claimed audit) — S602's "child-
+centering half DONE" claim (Track-3-Engagement Gate) retracted and corrected against ground truth,
+per 3 owner-provided observations against the published comparison artifact. **DONE.**
+**Started/Completed:** 2026-08-18.
+
+**What actually happened, in order:**
+
+1. **Phase 0 orientation** (full `SAFEGUARDS.md`/`SESSION_NOTES.md`/`gh issue list`/`git status`/
+   `git log`/`git diff --stat`/`methodology_dashboard.py`/ledger reconcile — all clean, no ghost
+   session, `CHANGELOG.md`/`HANDOFFS.md` frontiers both == HEAD). **New finding this session's own
+   orientation surfaced:** `R-CMD-check.yaml` red on `master` for the last-pushed commit (S601's
+   close-out) — `test_wordlist_coverage.R` flags `md's` as uncovered by `inst/WORDLIST`, the same
+   defect class as the S584/S587 precedent. **Reported, not fixed** (out of this session's own
+   scope — still open, see `BACKLOG.md`/the priorities list rendered this session).
+2. User asked what happened to incomplete pedigree-plotting work from the last session, then
+   directly stated: **"You failed to record that the child-centering does not work,"** citing a
+   published `claude.ai` artifact URL from S602. Checked project files for any record of that
+   feedback — none found (grepped `SESSION_NOTES.md`/`BACKLOG.md`/`HANDOFFS.md`/`CHANGELOG.md`/
+   `PROJECT_LEARNINGS.md`, no hits for the artifact ID or "doesn't work"). Explained the actual gap
+   honestly: this session had no channel into whatever context produced that feedback, and asked
+   the user to restate their observations directly rather than guess.
+3. **Fetched the artifact** (`bc0c5bb3-1a10-4cc6-9410-b9ff477868c5`, Revision 3, "corrected after
+   two rounds of direct owner review" per its own footer) and relayed its stated conclusions
+   ("correct direction, honestly small" for the union-marker shift; "correct behavior, verified"
+   for 3 flagged descender positions) — **without independently re-rendering either claim.** This
+   was the exact mistake the rest of the session exists to correct.
+4. **User gave 3 concrete observations** contradicting the artifact's framing: (1) the "after"
+   image still shows the union marker inside P2's own symbol; (2) X×A/A×Y descenders not centered;
+   (3) the W×Y descender lands directly below Y. Mid-turn, the user added the load-bearing
+   instruction: **"you need to modify your observation algorithm so that it detects such errors so
+   that you do not errantly call such figures correct."**
+5. **Independently re-derived all 3 findings from current source**, not from the artifact's own
+   claims: located the real F1 test fixture (`test_positionMatingUnitForest.R:1140-1146`); ran it
+   through `.buildMatingUnitForest()`/`.positionMatingUnitForest()`/`makePedigreeMatingLayout()`
+   directly; rendered it via `visNetwork` + `chromote`, at both the pre-fix commit (`cdb9a167~1`,
+   in an isolated `git worktree`, working tree never touched) and current `HEAD`; read live pixel
+   positions via `visNetwork`'s own `getPositions()` (the same method the artifact claims to use);
+   screenshotted both full-diagram and 3×-zoomed P1×P2 detail views for both commits.
+6. **All 3 findings confirmed, with a corrected root-cause account:**
+   - **(1)** `__union_1` moves from `(0,0)` (exactly on P2) to `(-5,0)` — against P2's 25px node
+     radius, invisible; before/after 3×-zoom screenshots are pixel-indistinguishable.
+   - **(2)/(3)** X×A/A×Y/W×Y descenders confirmed off-center, W×Y most severely (0.12 units from
+     Y itself). Checked directly against the Track-3-Engagement Gate's own qualification rule:
+     none of these 3 unions' children (C1, GC, C2) are duplicated anywhere in the fixture, so the
+     gate structurally cannot reach them — they are pure output of the earlier, separate Track 6
+     "center on one child" design, unrelated to S602's fix. The artifact's "correct behavior,
+     verified" label for these rested on the design's own stated intent, never the rendered
+     geometry — a descender 0.12 units from a parent is not a defensible result regardless of what
+     the code comment says it's doing on purpose.
+7. **Owner chose "Record correction now"** (via `AskUserQuestion`, over "record + start redesign"
+   or "discuss first") — documentation-only, no production code changed this session.
+8. **Corrections made, all this session:**
+   - `BACKLOG.md`: the Track 3 trade-offs item's "child-centering half DONE S602" header retracted;
+     a full correction paragraph appended with the evidence above.
+   - Investigation doc (`docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`):
+     §12's "Net result" retracted in place (pointing to §13); new §13 appended with full methodology,
+     numbers, root-cause distinction, and a methodology note.
+   - `NEWS.Rmd`: the S602 bullet changed from "Fixed:" to "Changed:" and amended with a correction
+     paragraph disclosing the visual-imperceptibility finding; `NEWS.md` re-rendered via
+     `rmarkdown::render()` (diff confirmed scoped to exactly that bullet's reflow, no other churn).
+   - `PROJECT_LEARNINGS.md` Learning 623 (this session's own methodology gap, generalized); `CLAUDE.md`'s
+     learnings-count pointer refreshed (622→623, S602+→S603+).
+   - The published artifact corrected in place to **Revision 4**: same design system/tokens as
+     Revision 1-3 (honored the existing system, not a redesign), new "What was wrong, three times"
+     retraction box, fresh before/after full-diagram renders, a 3×-zoom P1×P2 detail pair with the
+     `getPositions()` numbers as stat tiles, and a corrected descender table explicitly stating the
+     Track-3-Engagement Gate cannot reach the 3 flagged unions.
+   - This assistant's own user-level memory (`verify-diagrams-against-ground-truth.md`) updated
+     with a second, distinct instance: verifying edge *topology* (the memory's original finding) is
+     not the same check as verifying *magnitude/geometry* against actual rendered pixels, and a
+     design's stated intent is not proof the visual result is defensible.
+
+**Runtime smoke test (Phase 3E):** N/A — documentation-only change, no production code touched, no
+runtime behavior to verify. Stated explicitly, not silently skipped.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A. Tutorial/article checklist N/A
+(no new tab/control/interaction pattern). `NEWS.Rmd` checklist: N/A as a "new entry" (this is a
+correction to an existing entry, handled directly per step 8 above). `a2interactive.Rmd` checklist:
+N/A (no new/changed exported function). GitHub issue close-out checklist: N/A (this correction isn't
+tracked as its own GitHub issue — matches the existing `BACKLOG.md` item's own precedent of tracking
+this investigation there, not as a issue). Lint close-out checklist: N/A (no `.R` file touched).
+`_pkgdown.yml` checklist: N/A (no new exported function).
 
 ### Session 601 Handoff Evaluation (by Session 602)
 **Score: 10/10.** **What helped:** every one of S601's 6 gotchas was correct and load-bearing. (1)

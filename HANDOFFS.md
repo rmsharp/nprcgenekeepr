@@ -138,17 +138,45 @@ This file currently holds **13** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S603
 date: 2026-08-18
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Post-close-out correction -- S602's "child-centering half DONE" claim (Track-3-Engagement
-  Gate) retracted and corrected against ground truth, per 3 owner-provided observations against the
-  published comparison artifact.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
+status: complete
+self_score: 8
+predecessor_score: 5
+active_task: DONE -- S602's "child-centering half DONE" claim (Track-3-Engagement Gate) retracted and
+  corrected against ground truth, per 3 owner-provided observations against the published comparison
+  artifact. Documentation-only correction; no production code changed.
+what_was_done: Independently re-rendered the F1 fixture (test_positionMatingUnitForest.R:1140-1146) at
+  both cdb9a167~1 (pre-fix) and HEAD via visNetwork/chromote, reading live getPositions(). Confirmed
+  all 3 owner observations: (1) the Track-3-Engagement Gate fix moves __union_1 5px against P2's 25px
+  node radius -- code-correct, TDD-green, visually invisible (3x-zoom before/after screenshots
+  pixel-identical); (2)/(3) X/A/A-Y/W-Y descender defects real and, per the gate's own qualification
+  rule, structurally unrelated to S602's fix (none of C1/GC/C2 are duplicated) -- pure output of the
+  earlier Track 6 single-child-placement design. Corrected BACKLOG.md (DONE header retracted + full
+  correction paragraph), investigation doc (Sec12 retracted, new Sec13 appended), NEWS.Rmd/NEWS.md
+  (bullet reworded + correction appended, re-rendered), PROJECT_LEARNINGS.md (Learning 623),
+  CLAUDE.md (pointer refresh), the published artifact (Revision 4, live-rendered proof images), and
+  this assistant's own verify-diagrams-against-ground-truth user memory. Commits: 9cb8528b (claim),
+  plus this close-out commit.
+next_steps: Two separate, real gaps this session identified but did not fix (documentation-only scope):
+  (1) the Track-3-Engagement Gate's nudge magnitude needs a redesign that clears the target node's own
+  visual radius, not just moves "toward center" -- a future session should treat this as a new PRE-RED
+  design question, not a resumption of Sec11's already-shipped mechanism; (2) the X-A/A-Y/W-Y
+  single-child union placement (Track 6 design) is a newly-identified, separate, unscoped defect --
+  not yet a BACKLOG item, a future session should decide whether to fold it into this investigation or
+  track it independently. Separately, unrelated to this session: R-CMD-check.yaml is red on master
+  (inst/WORDLIST missing "md's", found this session's own Phase 0, same class as S584/S587) --
+  one-line fix, not yet applied.
+key_files: BACKLOG.md (Track 3 trade-offs item, ~line 155-370); docs/planning/pedigree-diagram-
+  duplicate-occurrence-centering-investigation.md Sec13 (full record); NEWS.Rmd/NEWS.md (S602 bullet,
+  ~line 295); PROJECT_LEARNINGS.md Learning 623; artifact https://claude.ai/code/artifact/bc0c5bb3-
+  1a10-4cc6-9410-b9ff477868c5 (Revision 4).
+gotchas: The fix IS real, tested, shipped code -- do not revert it. It simply has no visible effect on
+  the one case it targets and cannot reach the 3 descender defects at all (checked directly against its
+  own qualification rule, not assumed). Any future redesign of the nudge magnitude needs a hard
+  render-level success criterion (offset > target node's own radius), not a "moved in the right
+  direction" test, or it will repeat this exact mistake. The X-A/A-Y/W-Y defects are a DIFFERENT
+  mechanism (Track 6 single-child placement) than anything Sec1-13 of the investigation doc designed
+  against -- do not assume the existing qualification-rule machinery extends to them.
+runtime_smoke: n/a -- documentation-only change, no production code touched.
 changelog_ref: pending
 commit: pending
 ```

@@ -298,24 +298,31 @@ R. Mark Sharp, Ph.D.
   gap (a pre-existing, already-disclosed residual; 9 cases before this
   fix, 116 after, on the bundled example pedigree). Both are accepted,
   disclosed costs of fixing the more severe parent-span defect.
-- Fixed: in the Pedigree Diagram tab, the parent-span containment fix
+- Changed: in the Pedigree Diagram tab, the parent-span containment fix
   above's own disclosed child-centering trade-off is now partially
-  recovered for one specific, narrow shape: a mating union whose only
-  duplicated child's duplicate occurs at another union among that same
-  union's own children (a sibling-consanguineous mating). Such a union
-  is now nudged back toward its true child-centered position after the
-  parent-span clamp runs, but only when the clamp actually altered the
-  union's value in the first place -- a union the clamp already left
-  correct is left untouched, closing a worse-than-doing-nothing
-  regression an earlier design attempt found on nested/chained
-  consanguineous shapes (5 candidate mechanisms, 2 mechanism families,
-  investigated across Sessions 598-601 before one survived adversarial
-  review). This qualifying shape does not occur anywhere in the bundled
-  375-individual example pedigree or the package's own `small` test
-  fixture, so it has no effect on either today; it only changes output
-  for real colonies with a sibling-consanguineous mating meeting the
-  above description. The separate D1 sibship-bar-vs-bar overlap
-  trade-off above is untouched by this fix.
+  recovered, in code, for one specific, narrow shape: a mating union
+  whose only duplicated child's duplicate occurs at another union among
+  that same union's own children (a sibling-consanguineous mating). Such
+  a union is now nudged back toward its true child-centered position
+  after the parent-span clamp runs, but only when the clamp actually
+  altered the union's value in the first place -- a union the clamp
+  already left correct is left untouched, closing a
+  worse-than-doing-nothing regression an earlier design attempt found on
+  nested/chained consanguineous shapes (5 candidate mechanisms, 2
+  mechanism families, investigated across Sessions 598-601 before one
+  survived adversarial review). This qualifying shape does not occur
+  anywhere in the bundled 375-individual example pedigree or the
+  package's own `small` test fixture, so it has no effect on either
+  today; it only changes output for real colonies with a
+  sibling-consanguineous mating meeting the above description. The
+  separate D1 sibship-bar-vs-bar overlap trade-off above is untouched by
+  this fix. **Correction (Session 603):** even in the one fixture built
+  to exercise this, the nudge moves the union 5 rendered pixels against
+  a 25-pixel node radius -- verified via `visNetwork`'s own live
+  `getPositions()`, before/after screenshots at 3x zoom are
+  indistinguishable. The change is real and tested but currently
+  produces no visible correction in any case exercised so far; do not
+  read this entry as "the child-centering defect is fixed."
 
 # nprcgenekeepr 2.0.0 (20260708)
 

@@ -1134,9 +1134,118 @@ unchanged from before this session). Not a full interactive browser click-throug
 silently skipped, matching this investigation's own established practice.
 
 **Net result:** the duplicate-occurrence-selection centering investigation (5 mechanism attempts
-across Sessions 598-601, this document's own §§1-11) is now closed with a shipped, TDD-verified fix.
-`BACKLOG.md`'s own Track 3 trade-offs item is updated accordingly (child-centering half DONE; the
-separate D1 bar-vs-bar half remains its own, still-open follow-up).
+across Sessions 598-601, this document's own §§1-11) shipped a TDD-verified fix that is correct in
+code but was **not verified against how the diagram actually renders** before being called done.
+**See §13 (Session 603): this "Net result" was retracted the following session** — the fix produces
+no visible correction even in the one fixture built to exercise it. `BACKLOG.md`'s own Track 3
+trade-offs item was reopened accordingly; do not treat the child-centering half as shipped without
+reading §13 first.
+
+## 13. Session 603 (2026-08-18): Post-close-out correction — §12's "Net result" retracted
+
+### 13.1 What happened
+
+The owner reviewed S602's published comparison artifact (Revision 3, the same one §12 references)
+and reported 3 observations the artifact's own text had dismissed or undersold:
+
+1. The "after" image still shows the union marker sitting inside/on P2's own symbol — not
+   meaningfully different from "before."
+2. The X×A and A×Y descenders are not centered between their respective parents.
+3. The descender that is supposed to connect W and Y descends directly below Y.
+
+This assistant's first response relayed the artifact's own framing — *"correct direction, honestly
+small"* for (1), *"correct behavior, verified"* for (2)/(3) — without independently re-rendering or
+re-checking either claim. The owner correctly rejected that: **"you need to modify your observation
+algorithm so that it detects such errors so that you do not errantly call such figures correct."**
+Everything below was re-derived from current source, not from the artifact's prior claims.
+
+### 13.2 Methodology
+
+Same F1 fixture as §10-12 (`test_positionMatingUnitForest.R:1140-1146`):
+
+```r
+f1 <- data.frame(
+  id   = c("P1", "P2", "X", "A", "Y", "W", "C1", "GC", "C2"),
+  sire = c(NA, NA, NA, "P1", "P1", NA, "A", "A", "W"),
+  dam  = c(NA, NA, NA, "P2", "P2", NA, "X", "Y", "Y"),
+  sex  = c("M", "F", "F", "M", "F", "M", "F", "M", "M"))
+```
+
+Rendered via `makePedigreeMatingLayout(f1, edgeStyle = "rectilinear")` → `visNetwork` → `chromote`,
+at two commits: `cdb9a167~1` (immediately before S602's GREEN commit — "before") and current `HEAD`
+("after"), in an isolated `git worktree` for the "before" build (never touched the working tree).
+Node positions read via `visNetwork`'s own live `getPositions()` inside the rendered widget — the
+same method the artifact itself claims to use — not estimated from the unscaled internal `x` column.
+
+### 13.3 Finding 1 — the Track-3-Engagement Gate fix has no visible effect
+
+| | `__union_1` (P1×P2) | P2 | Offset |
+|---|---|---|---|
+| Before (`cdb9a167~1`) | `(0, 0)` | `(0, 0)` | 0px — exactly coincident |
+| After (`HEAD`) | `(-5, 0)` | `(0, 0)` | 5px |
+
+P2's rendered node size is 25 (radius, in the same pixel units `getPositions()` reports). A 5px
+shift against a 25px-radius node is not a "small" correction — it is invisible. Screenshots at 3×
+zoom, before vs. after, are pixel-indistinguishable (both show the union marker centered inside P2's
+circle). **The fix is real, correct per its own tests, and visually inert** for the exact case it
+was built to demonstrate. This is a distinct finding from §12's own disclosed "0/237 real-corpus
+impact" — that finding was about *how often* the fix engages; this one is about what happens *when
+it does*.
+
+### 13.4 Findings 2/3 — X×A / A×Y / W×Y descenders: real, and unrelated to this fix
+
+Live coordinates, current `HEAD`:
+
+| Union | Parents | Parent midpoint | Union lands at | Note |
+|---|---|---|---|---|
+| X×A (`__union_2`) | X=-225, A=-75 | -150 | -105 (= C1, its one child) | 45 off midpoint, toward A |
+| A×Y (`__union_3`) | A=-75, dup-Y=63 | -6 | 15 (= GC, its one child) | 21 off midpoint, toward GC |
+| W×Y (`__union_4`) | W=135, Y=255 | 195 | 255.12 (0.12 from Y itself) | descends directly out of Y |
+
+Checked against the Track-3-Engagement Gate's own qualification rule (§11.1): it fires only when a
+union's child is *itself* duplicated at another union among that *same* union's children. C1, GC,
+and C2 (these 3 unions' own children) are not duplicated anywhere in this fixture — only Y is, and
+Y is not a child of any of these 3 unions. **The gate structurally cannot reach any of these three**;
+they are pure output of the pre-existing Track 6 "center a union over its one child" design
+(`docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md`), unrelated to S602
+or this investigation's own fix.
+
+The artifact's Revision 3 called these "correct behavior, verified," reasoning that Track 6's
+design intent is to center over children rather than parents, and that kinship2 shows a similar
+pattern on the same fixture. **That reasoning does not survive inspection of the W×Y case**: a
+descender landing 0.12 units from a parent's own node — indistinguishable, at any normal zoom, from
+originating at that parent rather than at a point between the two mates — is a visual defect
+regardless of what the placement formula was designed to do. Design intent describes what the code
+is trying to do; it is not evidence that the rendered result looks correct. Both are real,
+previously-undisclosed-as-defects gaps in Track 6's single-child placement rule, independent of
+everything else in this document.
+
+### 13.5 Corrected status
+
+- **`BACKLOG.md`'s Track 3 trade-offs item**: the "child-centering half" is reopened — **not DONE**.
+  See its own S603 correction paragraph for the full retraction text.
+- **The published artifact** (`bc0c5bb3-1a10-4cc6-9410-b9ff477868c5`): corrected in place (Revision
+  4) to replace the "verified correct"/"honestly small" framing with the findings above.
+- **`NEWS.Rmd`**: the S602 entry is amended (not removed — the code change is real and shipped) to
+  disclose that even its one qualifying case produces no visible correction.
+- **This document's own §12 "Net result"**: retracted above; see §13.1-13.4 for why.
+- **Not re-opened by this correction**: the D1 bar-vs-bar overlap half (already open, untouched);
+  the broader Track 6 single-child placement defect (§13.4) is newly identified but not scoped —
+  a future session should decide whether to fold it into this investigation's own future work or
+  track it separately, given it is a different mechanism than anything §1-12 designed against.
+- **Not done this session**: no production code changed. This is a documentation-only correction,
+  per owner direction (`AskUserQuestion`: "Record correction now").
+
+### 13.6 A methodology note, not specific to this fix
+
+Every "verified"/"correct behavior" claim about a rendered diagram in this project's own history —
+including this document's own §11.2/§11.3 — should be read as verified against the *code's*
+behavior (coordinates, formulas, qualification rules) unless it also states that the *rendered
+visual result* was independently checked against a hard, render-level criterion (e.g., "does a
+marker's offset from a node clear that node's own visual radius"). Confirming that code executes as
+designed is not the same claim as confirming the resulting image looks right — this document
+conflated the two in §12 and this assistant repeated that conflation before the owner caught it.
+See `PROJECT_LEARNINGS.md` for the corresponding new learning.
 
 ## References
 

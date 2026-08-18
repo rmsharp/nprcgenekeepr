@@ -154,7 +154,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 - [ ] **Track 3's 2 disclosed trade-offs (child-centering quality, D1 bar-vs-bar overlap) — accept
       as shipped, or investigate a narrower mechanism** (found S596, 2026-08-16 — **child-centering
-      half DONE S602, 2026-08-17**; D1 bar-vs-bar half READY, Effort unknown, not scoped) — plan
+      half: S602 (2026-08-17) implementation RETRACTED as a fix S603 (2026-08-18), verified to
+      produce no visible correction — READY, see the S603 correction below, not scoped**; D1
+      bar-vs-bar half READY, Effort unknown, not scoped) — plan
       §2.3/§6 Session C's parent-span clamp
       (`docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`) was owner-accepted
       "as designed" this session via `AskUserQuestion`, but 2 costs were measured, not merely
@@ -334,6 +336,36 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       [`docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`](docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md)
       §12. **The D1 bar-vs-bar overlap half of this item remains open** — a separate, not-yet-designed
       "bar-aware detect-and-jog repair" (named above) — this session did not touch it.
+
+      **Correction (S603, 2026-08-18), post-close-out — S602's "child-centering half DONE" claim
+      RETRACTED:** owner reviewed the published comparison artifact (the same one S602 built) and
+      reported 3 observations the artifact's own "verified correct" framing had dismissed or
+      undersold. All 3 independently reproduced against current source (not re-derived from the
+      artifact's own claims) using the F1 fixture (`test_positionMatingUnitForest.R:1140-1146`,
+      `P1×P2→A,Y; A×Y` consanguineous, `A×X`/`W×Y` outside mates) and `visNetwork`'s own live
+      `getPositions()`, before (`cdb9a167~1`) vs. after (current `HEAD`), at matched zoom:
+      **(1) The Track-3-Engagement Gate fix (`.computeDupNudge()`) has no visible effect.**
+      `__union_1` (P1×P2) moves from `(0,0)` — exactly coincident with P2 — to `(-5,0)`. Against
+      P2's own 25px node radius, a 5px shift is invisible: before/after screenshots at 3× zoom are
+      indistinguishable. The fix is real in code and TDD-tested, but does not visibly correct the
+      defect it was built for, even in the one fixture constructed specifically to exercise it.
+      **(2)/(3) The X×A / A×Y / W×Y descenders are not centered, most severely W×Y**, whose union
+      lands at x=255.12 vs. Y's own x=255.00 — 0.12 units apart, visually indistinguishable from
+      descending directly out of Y rather than from between W and Y. Confirmed this is structurally
+      **unrelated to the Track-3-Engagement Gate** — none of C1/GC/C2 (these 3 unions' own children)
+      are themselves duplicated, so the gate's qualification rule never reaches them. This is pure
+      output of the earlier Track 6 "center a union over its one child" design, pre-dating S602
+      entirely. **What was wrong in S602's own artifact, and in this assistant's first relay of
+      it:** the artifact labeled (2)/(3) "correct behavior, verified" on the strength of Track 6's
+      stated design intent, without independently checking whether the geometric result was
+      defensible regardless of that intent — a descender landing 0.12 units from a parent's own
+      node is a visual defect by inspection, whatever the code comment says it is doing on purpose.
+      This assistant repeated that framing to the owner without re-verifying it; corrected here per
+      the owner's direct instruction (see `PROJECT_LEARNINGS.md`'s new learning on this). **Net
+      effect on this item's own status:** the "child-centering half" is **not DONE** — it is back to
+      OPEN, alongside the D1 bar-vs-bar half. The published artifact, `NEWS.Rmd`, and the
+      investigation doc's own §12 "Net result" claim are corrected in the same session (see
+      investigation doc §13 for the full record, methodology, and images).
 
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 *Resolves the former "Tracker reconciliation" decision item (S365) --
