@@ -17,6 +17,136 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-08-18 · \[ad hoc\] S603: record close-out commit sha in HANDOFFS.md receipt (`478a36af`)
+
+- **Deliverable:** Fixed this session’s own `HANDOFFS.md` receipt
+  `commit`/`changelog_ref: pending` -\> `a577d89f` (the close-out commit
+  whose sha the receipt itself couldn’t name until after it was made),
+  matching the S600/S602 self-reference-workaround precedent.
+
+### 2026-08-18 · \[ad hoc\] S603: post-close-out correction — S602’s “child-centering half DONE” claim RETRACTED
+
+- **Session summary:** owner reviewed S602’s published comparison
+  artifact and reported 3 observations (“the after image still shows the
+  union marker inside P2”; “X×A/A×Y descenders not centered”; “the W×Y
+  descender lands directly below Y”) contradicting the artifact’s own
+  “verified”/“correct behavior” framing, which this assistant had
+  relayed without independent verification. Mid-session, the owner gave
+  a direct instruction to fix the underlying verification approach, not
+  just this one instance. All 3 observations independently reproduced
+  against current source (not the artifact’s own claims): F1 fixture
+  (`test_positionMatingUnitForest.R:1140-1146`) rendered via
+  `visNetwork`/`chromote` at both the pre-fix commit (`cdb9a167~1`,
+  isolated `git worktree`, working tree untouched) and current `HEAD`,
+  positions read via `visNetwork`‘s own live `getPositions()`.
+  **Confirmed:** (1) the Track-3-Engagement Gate fix moves `__union_1`
+  5px against P2’s 25px node radius — code-correct, TDD-green, and
+  visually indistinguishable from doing nothing (3×-zoom before/after
+  screenshots are pixel-identical); (2)/(3) the X×A/A×Y/W×Y descender
+  defects are real and — checked directly against the gate’s own
+  qualification rule (none of these 3 unions’ children are duplicated
+  anywhere in the fixture) — structurally unrelated to S602’s fix; they
+  are pure output of the earlier, separate Track 6 “center on one child”
+  design. The artifact’s “correct behavior, verified” label for these
+  rested on the design’s own stated intent, never the rendered geometry.
+  Owner chose “record correction now” (documentation only, no code
+  changed) via `AskUserQuestion`. **Corrections made:** `BACKLOG.md`
+  (Track 3 trade-offs item’s “DONE” header retracted, full correction
+  paragraph appended); investigation doc §12 “Net result” retracted, new
+  §13 appended (methodology, numbers, root-cause distinction,
+  methodology note); `NEWS.Rmd`/`NEWS.md` (S602 bullet
+  “Fixed:”→“Changed:”, correction paragraph appended, re-rendered — diff
+  confirmed scoped to that one bullet); `PROJECT_LEARNINGS.md` Learning
+  623 (this session’s own methodology gap, generalized); `CLAUDE.md`
+  learnings pointer refreshed (622→623); the published artifact
+  corrected in place to Revision 4 (same design system as Revisions 1-3,
+  new retraction box, fresh live-rendered before/after images replacing
+  the prior unverified ones); this assistant’s own user-level
+  `verify-diagrams-against-ground-truth` memory updated with the second,
+  distinct failure mode (magnitude/geometry verification, not just edge
+  topology; a design’s stated intent is not proof of visual
+  correctness). Also surfaced during this session’s own Phase 0
+  orientation, reported not fixed: `R-CMD-check.yaml` red on `master`
+  for the last-pushed commit (S601’s close-out) —
+  `test_wordlist_coverage.R` flags `md's` as uncovered by
+  `inst/WORDLIST`, same defect class as the S584/S587 precedent.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-18 · \[ad hoc\] S603: claim session (post-close-out correction: child-centering fix has no visible effect) (`9cb8528b`)
+
+- **Deliverable:** Phase 1B claim stub written to
+  `SESSION_NOTES.md`/`HANDOFFS.md`.
+
+### 2026-08-17 · \[ad hoc\] S602: Track-3-Engagement Gate — duplicate-occurrence-selection centering fix IMPLEMENTED (RED→GREEN→REFACTOR)
+
+- **Session summary:** implemented the design from the
+  duplicate-occurrence-centering investigation’s §11.4 (5 workflow
+  attempts across S598-S601, first sound design found S601), closing the
+  investigation with shipped, TDD-verified code. Two `AskUserQuestion`
+  gates before RED: a pre-RED scope decision (owner: full implementation
+  now, over unit-tested-but-unwired or accepting the trade-offs as
+  permanent) and the mandatory `TDD: PRE-RED→RED` gate (owner: full
+  scope). Recovered 2 gaps the investigation doc’s own prose left only
+  narratively described — the qualification rule’s literal (a)/(b)
+  clauses and `.computeDupNudge()`‘s full 6-argument signature — by
+  reading both design workflows’ own raw `journal.jsonl` outputs
+  directly (`wf_2d657d34-184`, `wf_f8b481f4-0f8`), not by re-deriving
+  from the doc’s prose (`PROJECT_LEARNINGS.md` Learning 621). **RED:** 7
+  new/ modified tests in
+  `tests/testthat/test_positionMatingUnitForest.R`, all hand-constructed
+  and empirically verified against real, unmodified source — F1/F2/F3
+  reproduce the investigation’s own documented values exactly; a fresh
+  9-individual nested/chained fixture reproduces the worse-than-erasure
+  regression from scratch; a variant confirms the gate doesn’t
+  over-suppress a genuine correction; a dangling-parent fixture; the
+  separately-accepted erasure trade-off confirmed untouched;
+  `checkInvariant()` gained a 3rd disjunct + `.commentOneFixture()`
+  added to its call list (avoiding a vacuous
+  widened-disjunct-with-unwidened-call-list trap); a strict F1
+  regression assertion. One test initially passed vacuously pre-GREEN (a
+  “value must stay unchanged” black-box claim, trivially true when
+  nothing exists yet to change it) — caught and fixed with a paired
+  white-box assertion before treating RED as complete
+  (`PROJECT_LEARNINGS.md` Learning 622). All 7 confirmed failing
+  pre-GREEN, 0 collateral damage to the rest of the suite. **GREEN:**
+  new internal `.computeDupNudge()` (`R/makePedigreeDiagramData.R`,
+  `@noRd`) implementing the qualification rule, Stage-1 clip-and-average
+  target, and the Track-3-Engagement Gate; wired into
+  `.positionMatingUnitForest()` at the confirmed insertion point. Full
+  clean regression: 0 new failed/error (only the pre-existing, unrelated
+  `test_wordlist_coverage.R` failure). `lintr`: 4
+  `implicit_integer_linter` style nits, fixed. **REFACTOR:** cached each
+  union’s parent `[lo, hi]` span (previously recomputed independently by
+  Track 3’s clamp loop and the new nudge loop) — structure only,
+  byte-identical result re-confirmed via a 3rd `TDD: GREEN→REFACTOR`
+  gate. **Runtime smoke test (Phase 3E):** headless — confirmed the
+  app’s own Pedigree Diagram call chain
+  ([`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md))
+  runs clean on the real 375-individual bundled fixture (1412 nodes/
+  1525 edges), no new errors. **Demonstration:** owner asked mid-session
+  for a visual before/after vs. `kinship2` comparison; built one from a
+  temporary git worktree at the pre-fix commit (F1 fixture,
+  `kinship2::plot.pedigree()` reference + nprcgenekeepr before/after),
+  traced every parent-child edge programmatically against the source
+  pedigree before trusting either rendering, and published as a shared
+  Artifact (union x moves 0.12 → -6.0, matching kinship2’s own centered
+  convergence point far more closely) — not committed to the repo (an
+  ephemeral demonstration, not a project deliverable).
+  `NEWS.Rmd`/`NEWS.md`: new entry disclosing the fix and its 0/237
+  real-corpus scope. `BACKLOG.md`: Track 3 trade-offs item’s
+  child-centering half marked DONE (D1 bar-vs-bar half remains open).
+  Investigation doc: status banner updated to IMPLEMENTED, new §12
+  recording the full RED/GREEN/REFACTOR/smoke-test record.
+  `PROJECT_LEARNINGS.md`: Learnings 621-622. No GitHub issue — this item
+  was tracked in `BACKLOG.md` only, matching the investigation’s own
+  established precedent. Follow-up commit `921d12f4`: corrected
+  `HANDOFFS.md`’s own S602 receipt (its `commit:` field initially said
+  `pending` despite `status: complete` — self-referencing a commit’s own
+  sha inside that same commit isn’t possible; fixed to name both the
+  claim and close-out commit shas, matching S600’s own established
+  precedent for this field).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-17 · \[ad hoc\] S601: duplicate-occurrence-selection centering — narrow repair converges (5th workflow attempt, first sound design in this investigation)
 
 - **Session summary:** owner directed a narrowly-scoped repair (fix only

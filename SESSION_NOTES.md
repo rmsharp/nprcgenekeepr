@@ -28,6 +28,418 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 602 Handoff Evaluation (by Session 603)
+
+**Score: 5/10.** **What helped:** every file/commit/fixture reference in
+S602’s handoff was accurate and saved real rediscovery time — the exact
+F1 fixture (`test_positionMatingUnitForest.R:1140-1146`), the exact
+GREEN commit (`cdb9a167`), the investigation doc’s §12 location, and the
+artifact URL were all correct and used directly this session. **What was
+wrong:** the handoff’s central claim — “child- centering half DONE,”
+carried into `BACKLOG.md`, `NEWS.Rmd`, and the investigation doc’s own
+“Net result” — was not true in the sense a reader would take it. The
+code is real and TDD-tested (that part of the claim holds), but S602
+never independently rendered the fix’s own effect and checked it against
+the node it was supposed to move away from; the correction moves 5px
+against a 25px node radius and is invisible. S602’s own published
+artifact reached the same unverified conclusion (“correct direction,
+honestly small”) and additionally mischaracterized 2 unrelated
+pre-existing descender defects as “correct behavior, verified” on the
+strength of a design comment, never the rendered geometry. **What was
+missing:** a rendered, pixel-level check of the fix’s own visual effect
+— the gap this session’s new `PROJECT_LEARNINGS.md` Learning 623 now
+names directly. **ROI:** mixed — strongly positive for navigation
+(nothing had to be rediscovered), strongly negative for trust in the
+completion claim itself, which is the more consequential half of a
+handoff. This assistant’s own first response in this session repeated
+S602’s “verified”/“correct behavior” framing without independently
+checking it, before the owner corrected that directly — so this
+evaluation is not solely about S602’s gap, but about a gap this session
+initially inherited and repeated before catching it.
+
+### What Session 603 Did
+
+**Deliverable: post-close-out correction** (owner-caught, not a claimed
+audit) — S602’s “child- centering half DONE” claim (Track-3-Engagement
+Gate) retracted and corrected against ground truth, per 3 owner-provided
+observations against the published comparison artifact. **DONE.**
+**Started/Completed:** 2026-08-18.
+
+**What actually happened, in order:**
+
+1.  **Phase 0 orientation** (full
+    `SAFEGUARDS.md`/`SESSION_NOTES.md`/`gh issue list`/`git status`/
+    `git log`/`git diff --stat`/`methodology_dashboard.py`/ledger
+    reconcile — all clean, no ghost session,
+    `CHANGELOG.md`/`HANDOFFS.md` frontiers both == HEAD). **New finding
+    this session’s own orientation surfaced:** `R-CMD-check.yaml` red on
+    `master` for the last-pushed commit (S601’s close-out) —
+    `test_wordlist_coverage.R` flags `md's` as uncovered by
+    `inst/WORDLIST`, the same defect class as the S584/S587 precedent.
+    **Reported, not fixed** (out of this session’s own scope — still
+    open, see `BACKLOG.md`/the priorities list rendered this session).
+2.  User asked what happened to incomplete pedigree-plotting work from
+    the last session, then directly stated: **“You failed to record that
+    the child-centering does not work,”** citing a published `claude.ai`
+    artifact URL from S602. Checked project files for any record of that
+    feedback — none found (grepped
+    `SESSION_NOTES.md`/`BACKLOG.md`/`HANDOFFS.md`/`CHANGELOG.md`/
+    `PROJECT_LEARNINGS.md`, no hits for the artifact ID or “doesn’t
+    work”). Explained the actual gap honestly: this session had no
+    channel into whatever context produced that feedback, and asked the
+    user to restate their observations directly rather than guess.
+3.  **Fetched the artifact** (`bc0c5bb3-1a10-4cc6-9410-b9ff477868c5`,
+    Revision 3, “corrected after two rounds of direct owner review” per
+    its own footer) and relayed its stated conclusions (“correct
+    direction, honestly small” for the union-marker shift; “correct
+    behavior, verified” for 3 flagged descender positions) — **without
+    independently re-rendering either claim.** This was the exact
+    mistake the rest of the session exists to correct.
+4.  **User gave 3 concrete observations** contradicting the artifact’s
+    framing: (1) the “after” image still shows the union marker inside
+    P2’s own symbol; (2) X×A/A×Y descenders not centered;
+    3.  the W×Y descender lands directly below Y. Mid-turn, the user
+        added the load-bearing instruction: **“you need to modify your
+        observation algorithm so that it detects such errors so that you
+        do not errantly call such figures correct.”**
+5.  **Independently re-derived all 3 findings from current source**, not
+    from the artifact’s own claims: located the real F1 test fixture
+    (`test_positionMatingUnitForest.R:1140-1146`); ran it through
+    `.buildMatingUnitForest()`/`.positionMatingUnitForest()`/[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+    directly; rendered it via `visNetwork` + `chromote`, at both the
+    pre-fix commit (`cdb9a167~1`, in an isolated `git worktree`, working
+    tree never touched) and current `HEAD`; read live pixel positions
+    via `visNetwork`’s own `getPositions()` (the same method the
+    artifact claims to use); screenshotted both full-diagram and
+    3×-zoomed P1×P2 detail views for both commits.
+6.  **All 3 findings confirmed, with a corrected root-cause account:**
+    - **(1)** `__union_1` moves from `(0,0)` (exactly on P2) to `(-5,0)`
+      — against P2’s 25px node radius, invisible; before/after 3×-zoom
+      screenshots are pixel-indistinguishable.
+    - **(2)/(3)** X×A/A×Y/W×Y descenders confirmed off-center, W×Y most
+      severely (0.12 units from Y itself). Checked directly against the
+      Track-3-Engagement Gate’s own qualification rule: none of these 3
+      unions’ children (C1, GC, C2) are duplicated anywhere in the
+      fixture, so the gate structurally cannot reach them — they are
+      pure output of the earlier, separate Track 6 “center on one child”
+      design, unrelated to S602’s fix. The artifact’s “correct behavior,
+      verified” label for these rested on the design’s own stated
+      intent, never the rendered geometry — a descender 0.12 units from
+      a parent is not a defensible result regardless of what the code
+      comment says it’s doing on purpose.
+7.  **Owner chose “Record correction now”** (via `AskUserQuestion`, over
+    “record + start redesign” or “discuss first”) — documentation-only,
+    no production code changed this session.
+8.  **Corrections made, all this session:**
+    - `BACKLOG.md`: the Track 3 trade-offs item’s “child-centering half
+      DONE S602” header retracted; a full correction paragraph appended
+      with the evidence above.
+    - Investigation doc
+      (`docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`):
+      §12’s “Net result” retracted in place (pointing to §13); new §13
+      appended with full methodology, numbers, root-cause distinction,
+      and a methodology note.
+    - `NEWS.Rmd`: the S602 bullet changed from “Fixed:” to “Changed:”
+      and amended with a correction paragraph disclosing the
+      visual-imperceptibility finding; `NEWS.md` re-rendered via
+      [`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)
+      (diff confirmed scoped to exactly that bullet’s reflow, no other
+      churn).
+    - `PROJECT_LEARNINGS.md` Learning 623 (this session’s own
+      methodology gap, generalized); `CLAUDE.md`’s learnings-count
+      pointer refreshed (622→623, S602+→S603+).
+    - The published artifact corrected in place to **Revision 4**: same
+      design system/tokens as Revision 1-3 (honored the existing system,
+      not a redesign), new “What was wrong, three times” retraction box,
+      fresh before/after full-diagram renders, a 3×-zoom P1×P2 detail
+      pair with the `getPositions()` numbers as stat tiles, and a
+      corrected descender table explicitly stating the
+      Track-3-Engagement Gate cannot reach the 3 flagged unions.
+    - This assistant’s own user-level memory
+      (`verify-diagrams-against-ground-truth.md`) updated with a second,
+      distinct instance: verifying edge *topology* (the memory’s
+      original finding) is not the same check as verifying
+      *magnitude/geometry* against actual rendered pixels, and a
+      design’s stated intent is not proof the visual result is
+      defensible.
+
+**Runtime smoke test (Phase 3E):** N/A — documentation-only change, no
+production code touched, no runtime behavior to verify. Stated
+explicitly, not silently skipped.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A.
+Tutorial/article checklist N/A (no new tab/control/interaction pattern).
+`NEWS.Rmd` checklist: N/A as a “new entry” (this is a correction to an
+existing entry, handled directly per step 8 above). `a2interactive.Rmd`
+checklist: N/A (no new/changed exported function). GitHub issue
+close-out checklist: N/A (this correction isn’t tracked as its own
+GitHub issue — matches the existing `BACKLOG.md` item’s own precedent of
+tracking this investigation there, not as a issue). Lint close-out
+checklist: N/A (no `.R` file touched). `_pkgdown.yml` checklist: N/A (no
+new exported function).
+
+### Session 601 Handoff Evaluation (by Session 602)
+
+**Score: 10/10.** **What helped:** every one of S601’s 6 gotchas was
+correct and load-bearing. (1) “Start at §11.4, not §10.7” — followed
+exactly. (2) “The design ready to implement is §11’s repaired synthesis,
+not §10’s pre-repair one” — confirmed and used. (3) “A dedicated
+`AskUserQuestion` (`TDD: PRE-RED→RED` header format) is mandatory before
+any RED test… a prior attempt at drafting one (inside this session’s own
+repair workflow) used a non-compliant header and conflated 2
+alternatives into one option, don’t reuse that wording verbatim” — this
+was directly verified: reading the repair workflow’s own raw journal
+(`wf_2d657d34-184`) turned up exactly that malformed draft (header
+`"PRE-RED: dup-nudge?"`, a conflated `2a`/`2b` option) — S601’s warning
+meant it was recognized immediately as a draft to mine for content, not
+reuse verbatim, and this session wrote a fresh, compliant one. (4)
+§11.3’s 3 minor findings (the `.computeDupNudge()` signature gap, the
+dangling-parent corollary, the untested inner-engaged corner) were each
+folded into this session’s scope exactly as recommended. (5) “Scratchpad
+scripts not committed” — followed; this session’s own ~15 new scratch
+files also stayed uncommitted. (6) “`BACKLOG.md`’s Track 3 item still
+open, do not mark DONE until an actual implementation ships” —
+respected; only marked DONE this session, once implementation actually
+shipped. **What was wrong:** nothing found. **What was missing:** one
+gap, but not a fair one to expect from S601: the investigation doc’s own
+prose — despite S601’s own correct “PRE-RED-ready” characterization —
+never states the qualification rule’s literal clauses or
+`.computeDupNudge()`’s full signature as ONE verbatim expression
+anywhere; recovering these required going past the doc into the raw
+workflow journals (Learning 621). S601 could not have flagged this
+specifically since it authored the doc’s own prose; a `HANDOFFS.md`
+`key_files` pointer to the journal paths themselves would have saved a
+discovery step, but this is a refinement, not a gap in what S601 owed.
+**ROI:** very high — zero rediscovery cost on any of the 6 gotchas, and
+the explicit warning about the malformed draft question specifically
+prevented reusing bad wording.
+
+### What Session 602 Did
+
+**Deliverable: implemented the Track-3-Engagement Gate design**
+(investigation doc §11.4) — full TDD RED→GREEN→REFACTOR cycle, closing
+the duplicate-occurrence-selection centering investigation (5 mechanism
+attempts across S598-S601) with shipped, tested code. **DONE.**
+**Started/Completed:** 2026-08-17.
+
+**What actually happened, in order:**
+
+1.  **Full Phase 0 orientation** (`SESSION_RUNNER.md`/`SAFEGUARDS.md`
+    read in full; `SESSION_NOTES.md`; `gh issue list` — 14 open;
+    `gh run list --branch master` — last 30 runs all `completed success`
+    except the in-progress push from this same session’s own claim
+    commit; `git status`/`log`/ `diff --stat` — clean tree except the
+    same 4 untracked `docs/planning/*.html` renders + a `scratchpad/`
+    dir S601 already named and cleared, confirmed not a ghost session by
+    checking file mtimes (2026-08-13/15, predating this session);
+    `methodology_dashboard.py` — 96/100 health, 0 High+ risk (noted the
+    local dashboard script is stale, v2.14.0 vs canonical v2.15.2 —
+    informational only, not acted on); ledger reconcile —
+    `CHANGELOG.md`/`HANDOFFS.md` frontiers both == HEAD, no gap).
+    Rendered a 4-item `BACKLOG.md`-sourced priorities picker via
+    `AskUserQuestion` (Track-3- Engagement Gate implementation / issue
+    \#162 locale bug / MIT license badge / stale-screenshot check) —
+    **user picked “Track-3-Engagement Gate.”**
+2.  **Phase 1**: stated deliverable/workstream back to the user
+    (`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`) and
+    declared TDD phase at the top of every response throughout (PRE-RED
+    → RED → GREEN → REFACTOR).
+3.  **Dispatched a background `Workflow`** (2 parallel agents:
+    investigation-doc spec extraction, current-code state extraction) at
+    claim time, so the PRE-RED→RED gate could cite exact files/
+    lines/fixtures rather than working from memory of the 1000+-line
+    investigation doc.
+4.  **Phase 1B claim**: stub written to `SESSION_NOTES.md` +
+    `status: pending` receipt opened in `HANDOFFS.md`, committed
+    (`04ef1e80`) before any technical work, per protocol.
+5.  **The doc-spec extraction agent correctly flagged 2 genuine gaps**
+    rather than guessing: the qualification rule’s literal (a)/(b)
+    clauses and `.computeDupNudge()`‘s full 6-argument signature are
+    only narratively described across §10-11, never stated as one
+    verbatim expression. Resolved by reading both design workflows’ own
+    raw `journal.jsonl` files directly (still on disk under the S601
+    session’s own `.claude/projects/.../subagents/workflows/<runId>/`
+    directories) — the repair-round journal gave the qualification rule
+    as one literal sentence (independently re-derived, word-for-word
+    identical, by 2 candidate agents plus their synthesis) and the exact
+    signature
+    (`matingUnits, duplicates, childEdges, nodes, finalUnitX, minSep`).
+    New `PROJECT_LEARNINGS.md` Learning 621 records this as a general
+    practice: consult the raw workflow journal, not just the doc’s own
+    prose summary, before implementing a multi-session investigation’s
+    design.
+6.  **Pre-RED scope `AskUserQuestion`** (full implementation now /
+    `.computeDupNudge()` unit-tested- only, unwired / accept as
+    permanent and close the investigation / hold) — **user picked “full
+    implementation.”**
+7.  **Empirically derived and verified 7 fixtures** against the real,
+    unmodified running code (not copied from the investigation doc’s own
+    worked examples, which use different constructions) — F1/F2/F3
+    (reproduced the doc’s own documented values exactly, confirming the
+    recovered formula/ rule is correct), a minimal erasure fixture, a
+    fresh 9-individual nested/chained regression fixture (reproduced the
+    worse-than-erasure bug from scratch), a “not over-suppressive”
+    variant, and a dangling-parent fixture.
+8.  **Compliant `TDD: PRE-RED→RED` `AskUserQuestion`** (full scope /
+    hold for a narrower first slice) — **user picked “full scope.”**
+9.  **RED**: wrote 7 new/modified `test_that()` blocks in
+    `tests/testthat/test_positionMatingUnitForest.R`. One test (the
+    nested-regression black-box assertion) initially passed VACUOUSLY
+    pre-GREEN — a “value must stay unchanged” claim is trivially true
+    when nothing exists yet to change it — caught by noticing it was the
+    only one of 7 not failing, fixed by adding a paired white-box
+    `.computeDupNudge()` assertion before treating RED as complete. New
+    `PROJECT_LEARNINGS.md` Learning 622 records this as a general TDD
+    pitfall. All 7 confirmed failing for the right reason; full clean
+    regression showed 0 collateral damage (only the pre-existing,
+    unrelated `test_wordlist_coverage.R` failure).
+    `lintr::lint_package()` on the touched test file: 0 lints.
+10. **`TDD: RED→GREEN` `AskUserQuestion`** — **user picked “yes, proceed
+    to GREEN.”**
+11. **GREEN**: implemented `.computeDupNudge()`
+    (`R/makePedigreeDiagramData.R`, new, `@noRd`) and wired it into
+    `.positionMatingUnitForest()` at the confirmed insertion point
+    (between Track 3’s clamp loop and the `nodes$x` sync). All 7 RED
+    tests turned green on the first implementation attempt (the
+    extensive empirical fixture-derivation in step 7 meant the
+    implementation had nothing left to reverse-engineer). Full clean
+    regression: 0 new failed/error. `lintr`: 4 `implicit_integer_linter`
+    style nits, fixed (no behavior change), re-verified 0 lints + all
+    tests still green.
+12. **`TDD: GREEN→REFACTOR` `AskUserQuestion`** — **user picked “yes,
+    small refactor.”**
+13. **REFACTOR**: cached each union’s parent `[lo, hi]` span (previously
+    recomputed independently by Track 3’s clamp loop and the new
+    nudge-application loop) into `parentLo`/`parentHi` vectors, computed
+    once, reused by both. Structure only; re-ran full clean regression
+    (byte-identical: 0 new failed/error) and `lintr` (0 lints) to
+    confirm.
+14. **Phase 3E runtime smoke test**: headless — confirmed
+    [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+    resolves to a function with the changed code loaded, and exercised
+    the exact call chain the Shiny app’s Pedigree Diagram module uses
+    ([`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md))
+    directly against the real 375-individual bundled fixture (1412 nodes
+    / 1525 edges, no new errors; the pre-existing “47 same-row edge-node
+    collision(s)” warning is unrelated, confirmed unchanged by this
+    session’s own 0/237 real-corpus-impact finding). Not a full
+    interactive browser click-through — disclosed explicitly, not
+    silently skipped.
+15. **User asked mid-session** (“are you able to demonstrate the
+    performance of the pedigree drawing improvement… comparison of
+    output from kinship2 and nprcgenekeepr”) — built a 3-panel
+    before/after/kinship2-reference comparison using F1: a temporary
+    `git worktree` at the pre-fix commit for the “before” rendering
+    (never touched the actual working tree), the current code for
+    “after,” and `kinship2::plot.pedigree()` for the reference. **Traced
+    every parent-child edge in both renderings programmatically against
+    the source pedigree table before trusting either image** (per this
+    project’s own diagram-verification discipline) — one apparent
+    discrepancy (a duplicate- node edge not reached by a naive
+    one-directional BFS) turned out to be a limitation of the
+    verification script itself, not the diagrams; confirmed by direct
+    inspection of the actual edge list before dismissing it. Published
+    as a shared Artifact (not committed to the repo — an ephemeral
+    demonstration, not a project deliverable). Cleaned up the temporary
+    worktree afterward.
+16. Updated `NEWS.Rmd`/`NEWS.md` (new entry, matching this file’s own
+    established “Fixed:” convention for Pedigree Diagram positioning
+    changes, disclosing the 0/237 real-corpus scope honestly). Updated
+    `BACKLOG.md`’s Track 3 trade-offs item (child-centering half DONE;
+    D1 bar-vs-bar half still open). Updated the investigation doc’s
+    status banner (all 3 occurrences) to IMPLEMENTED and appended §12
+    recording the full RED/GREEN/REFACTOR/smoke-test record. Added
+    `PROJECT_LEARNINGS.md` Learnings 621-622; refreshed `CLAUDE.md`’s
+    pointer (620→622 learnings, S601+→S602+).
+
+**Runtime smoke test (Phase 3E):** done, see step 14 above — headless,
+not a full interactive click-through, disclosed explicitly.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A
+(no new displayed statistic). Tutorial/article checklist N/A (no new
+tab/control/interaction pattern — an internal positioning refinement to
+an existing feature). **`NEWS.Rmd` checklist: DONE** (step 16) — this
+project’s own established convention documents Pedigree Diagram bug
+fixes, not just new features, confirmed by reading several precedent
+entries before writing this one. `a2interactive.Rmd` checklist: N/A,
+correctly deferred (`.computeDupNudge()` is internal/unexported, not
+script-callable). `_pkgdown.yml` checklist: N/A (no new exported
+function). GitHub issue close-out: N/A (this item was tracked in
+`BACKLOG.md` only, no GitHub issue, matching the investigation’s own
+established precedent). **Lint checklist: DONE** — both touched files
+(`R/makePedigreeDiagramData.R`,
+`tests/testthat/test_positionMatingUnitForest.R`) confirmed 0 lints
+before commit.
+
+**Self-assessment (Session 602): 9/10.** **Strengths:** (1) Recognized
+that the investigation doc’s own “PRE-RED-ready” claim did not mean
+“fully specified” — a doc-extraction agent’s honest “this is a genuine
+gap, not something safe to infer” was taken seriously rather than
+papered over, and the gap was closed by going to the actual primary
+source (the workflow journals) rather than guessing or re-deriving from
+memory of the doc’s prose. (2) Empirically verified every fixture
+against the real, running code BEFORE writing any test assertion —
+F1/F2/F3 reproducing the investigation’s own documented numbers exactly
+was a genuine cross-check that the recovered formula/rule was right, not
+an assumption. (3) Caught and fixed a vacuously-passing RED test by
+actually running the RED suite and checking which of the 7 tests
+reported a failure, rather than assuming “I wrote 7 tests, 7 tests must
+be failing.” (4) Followed every TDD phase gate via a compliant
+`AskUserQuestion`, including a separate pre-RED scope question distinct
+from the phase-transition question itself, per `CLAUDE.md`‘s own
+template distinction. (5) When the user asked for a visual demonstration
+mid-session, treated the “before” state as something to verify
+empirically (a git worktree at the pre-fix commit) rather than
+reconstructing it from memory, and traced every edge before trusting
+either rendering — matching this project’s own established
+diagram-verification discipline exactly. **Weaknesses:** (1) The
+mid-session demonstration request (kinship2 comparison + published
+Artifact) was not part of the originally-scoped TDD deliverable — a
+stricter reading of “1 and done” might argue it belonged in its own
+follow-up rather than the same session, though it was small, did not
+touch any committed code, and was a direct, explicit user request rather
+than self-initiated scope creep. Flagging this rather than treating the
+request as automatic license. (2) Did not attempt the §11.3-flagged
+“inner-engaged/outer-no-op” untested corner as a dedicated 8th test —
+covered implicitly by the “not over-suppressive” fixture’s own
+inner-engaged case, but the specific mirror- image combination (inner
+engaged, outer no-op) was never directly constructed, matching the
+investigation’s own prior sessions’ disclosed-not-fixed precedent rather
+than a gap unique to this session. **ROI:** very high — a design 4
+sessions and 5 workflow attempts in the making shipped cleanly on the
+first implementation attempt, with 0 collateral regressions and a
+self-verified visual demonstration delivered on request.
+
+**Gotchas for the next session:** (1) `BACKLOG.md`’s Track 3 trade-offs
+item still has one open half — the D1 sibship-bar-vs-bar x-overlap
+residual, a separate, not-yet-designed “bar-aware detect-and- jog
+repair” (named in the item’s own text) that this session did not touch.
+(2) The raw workflow journals for this whole investigation
+(`wf_2d657d34-184`, `wf_f8b481f4-0f8`) live under S601’s own session
+directory (`~/.claude/projects/.../e5dce2bf-.../subagents/workflows/`),
+NOT this session’s — if a future session needs to re-consult them (e.g.,
+to resolve the untested inner-engaged/outer-no-op corner, or to
+double-check anything about the erasure trade-off’s own exact numbers),
+that path is still on disk as of this session but is an OS temp-adjacent
+location, not guaranteed permanent; the investigation doc’s own §12
+(this session’s addition) is the durable record if the journal ever
+disappears. (3) This session’s own ~15 new scratch files (fixture
+derivation, gated-nudge reimplementation, the kinship2 comparison
+rendering) were not committed, matching every prior session’s own
+established precedent — reconstruct from this note or from the
+investigation doc’s §12/test file’s own inline fixtures if needed again,
+not from memory. (4) The published kinship2 comparison Artifact is NOT
+part of the repo and NOT linked from any committed file — it exists only
+as a shared link in this conversation; if the owner wants it preserved
+as a permanent project artifact (e.g., linked from the investigation doc
+or a vignette), that is a future session’s own decision to make, not
+assumed here. (5) The duplicate-occurrence-selection centering
+investigation
+(`docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md`)
+is now CLOSED — do not reopen §§1-11 or re-run any of the 5 prior design
+workflows; §12 is the final word on the implementation, and the doc’s
+own status banner reflects this.
+
 ### Session 600 Handoff Evaluation (by Session 601)
 
 **Score: 9/10.** **What helped:** `HANDOFFS.md`’s `next_steps`/`gotchas`
