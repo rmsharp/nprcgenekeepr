@@ -16,6 +16,11 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-18 · [ad hoc] S603: record close-out commit sha in HANDOFFS.md receipt (`478a36af`)
+- **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit`/`changelog_ref: pending` ->
+  `a577d89f` (the close-out commit whose sha the receipt itself couldn't name until after it was made),
+  matching the S600/S602 self-reference-workaround precedent.
+
 ### 2026-08-18 · [ad hoc] S603: post-close-out correction — S602's "child-centering half DONE" claim RETRACTED
 - **Session summary:** owner reviewed S602's published comparison artifact and reported 3 observations
   ("the after image still shows the union marker inside P2"; "X×A/A×Y descenders not centered"; "the
