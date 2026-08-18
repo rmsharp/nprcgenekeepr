@@ -1,11 +1,11 @@
 README
 ================
 R. Mark Sharp, Ph.D.
-2026-07-28
+2026-08-18
 
 # nprcgenekeepr <a href="https://github.com/rmsharp/nprcgenekeepr"><img src="man/figures/logo.png" align="right" height="138" alt="" /></a>
 
-Version 2.0.0.9000 (2026-07-29)
+Version 2.0.0.9000 (2026-08-18)
 
 <!-- badges: start -->
 
@@ -13,6 +13,8 @@ Version 2.0.0.9000 (2026-07-29)
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+[![License:
+MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![CRAN_version](https://www.r-pkg.org/badges/version/nprcgenekeepr)](https://cran.r-project.org/package=nprcgenekeepr)
 [![CRAN_download](https://cranlogs.r-pkg.org/badges/nprcgenekeepr)](https://cran.r-project.org/package=nprcgenekeepr)
 [![CRAN_download_total](https://cranlogs.r-pkg.org/badges/grand-total/nprcgenekeepr)](https://cran.r-project.org/package=nprcgenekeepr)

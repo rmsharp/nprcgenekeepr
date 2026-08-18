@@ -15,6 +15,7 @@ output:
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![CRAN_version](https://www.r-pkg.org/badges/version/nprcgenekeepr)](https://cran.r-project.org/package=nprcgenekeepr)
 [![CRAN_download](https://cranlogs.r-pkg.org/badges/nprcgenekeepr)](https://cran.r-project.org/package=nprcgenekeepr)
 [![CRAN_download_total](https://cranlogs.r-pkg.org/badges/grand-total/nprcgenekeepr)](https://cran.r-project.org/package=nprcgenekeepr)
