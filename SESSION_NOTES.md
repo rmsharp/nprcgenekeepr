@@ -28,6 +28,154 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 604 Handoff Evaluation (by Session 605)
+
+**Score: 6/10.** **What helped:** the `gotchas` field (“this session
+skipped Phase 1B… a future session should explicitly check off Phase 1B
+as its own line item, separate from the TDD phase-gate questions”) was
+read and explicitly acted on at Phase 1 of this session — quoted back
+verbatim in this session’s own opening statement. `key_files`/Learning
+585/588 pointers were accurate context, though not directly needed for
+this session’s actual deliverable. **What was wrong:** the
+`what_was_done` field’s claim — “Full clean regression: 0 failed/0 error
+across the ENTIRE suite” — was true when measured but was stated as
+covering the final committed state; it didn’t. S604’s own step 12
+(NEWS.Rmd/NEWS.md close-out edit, adding the word “radix” to the issue
+\#162 changelog bullet) happened *after* that regression read and was
+never re-verified against `test_wordlist_coverage.R`, so it shipped a
+fresh WORDLIST gap in the same commit range the handoff called clean.
+This is the direct, traceable root cause of the `R-CMD-check.yaml`
+CI-red this session found and fixed. **What was missing:** a
+build-equivalent / spelling re-check after the LAST edit before commit,
+not just after the GREEN implementation edit — `SAFEGUARDS.md`’s “run
+the build-equivalent after every substantive change” applies to doc
+edits made during close-out too, not only to the RED/GREEN code edit.
+**ROI:** mixed — the Phase-1B gotcha was correctly surfaced and used
+(though this session then independently failed to act on it — see below,
+a separate finding), but the stale regression claim directly caused a
+red CI run that persisted from S604’s push until this session found it
+via the standing `gh run list` check. Ironically, quoting S604’s own
+Phase-1B gotcha did NOT prevent this session from repeating the
+identical Phase-1B skip — see `PROJECT_LEARNINGS.md` Learning 625.
+
+### What Session 605 Did
+
+**Deliverable: fixed the `R-CMD-check.yaml` CI-red finding** —
+`inst/WORDLIST` was missing “radix” (introduced into
+`NEWS.Rmd`/`NEWS.md` by S604’s own close-out, never re-verified).
+**DONE.** **Started/Completed:** 2026-08-18.
+
+**Process violation (self-flagged mid-session, not owner-caught):**
+stated an intention to do “Phase 1B (claim the session) and PRE-RED
+research first,” then performed only the PRE-RED research (reading
+`inst/WORDLIST`’s conventions, running the target test) and went
+straight into the GREEN edit without ever writing the `SESSION_NOTES.md`
+claim stub or opening the `HANDOFFS.md` `status: pending` receipt before
+touching a file. Caught only while writing this close-out — one step
+later than S604’s own catch (S604 caught it before any file was edited
+under a claimed-but-unstubbed session; this session caught it after the
+fix had already landed). New `PROJECT_LEARNINGS.md` Learning 625 records
+this as a *recurrence*, one session after Learning 624 named the exact
+same gap, and sharpens the practical rule: declaring an intention to do
+Phase 1B in prose is not the same event as emitting the tool calls for
+it, and a task that feels “too small to bother with the ceremony for” is
+empirically the shape of task most likely to get it skipped.
+
+**What actually happened, in order:**
+
+1.  **Phase 0 orientation** — read `SESSION_RUNNER.md`/`SAFEGUARDS.md`
+    in full; `SESSION_NOTES.md` (S604’s active task, DONE);
+    `gh issue list` (13 open, \#162 now closed);
+    `git status`/`log`/`diff --stat` (clean, only
+    pre-existing/already-reported untracked files — 4
+    `docs/planning/*.html` from S601/S602, `scratchpad/*.R` from
+    2026-08-17, and a Microsoft Office `~$` lock file dated *today* in
+    `inst/extdata/reference/` — read its contents, confirmed it’s a lock
+    file embedding the owner’s name, not a project artifact, flagged but
+    not touched); `methodology_dashboard.py` (96/100 health, 0 High+
+    risk, local script stale v2.14.0 vs. canonical v2.15.2,
+    informational only). Ledger reconcile: `CHANGELOG.md`/`HANDOFFS.md`
+    frontiers both == `HEAD` (`b91d607c`) — no gap, no ghost session.
+2.  **`gh run list --branch master`** (per `CLAUDE.md`’s standing
+    CI-status check) — found `R-CMD-check.yaml` RED on the latest push
+    (all 5 matrix jobs) and `shinytest2.yaml` (scheduled) also RED on
+    the latest nightly run (intermittent history, not diagnosed
+    further). Pulled the `ubuntu-latest (release)` job’s raw log via
+    `gh api .../actions/jobs/<id>/logs` (the `gh run view --log-failed`
+    / `--log` flags returned nothing useful for this run) — found
+    `test_wordlist_coverage.R:121` failing: “radix” flagged by
+    [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html),
+    not covered by `inst/WORDLIST`. Traced to `NEWS.Rmd`/`NEWS.md`’s
+    issue \#162 bullet (“byte/radix order”), added during S604’s own
+    close-out step 12, after S604’s own full-clean-regression check had
+    already run.
+3.  Rendered the `BACKLOG.md`-sourced priorities list (5 numbered items,
+    capped at 4 for the picker per `CLAUDE.md`’s convention: the new
+    WORDLIST finding, issue \#161 decision, Track 3 trade-offs, MIT
+    license badge; issue \#148’s scope-narrowing decision — governed by
+    `docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md`
+    Finding \#4 — named in prose as the 5th, per the sequencing-audit
+    first-class-surfacing convention) via `AskUserQuestion` — **user
+    picked the WORDLIST CI-red fix.**
+4.  **Phase 1**: stated deliverable/workstream back to the user
+    (`DEVELOPMENT_WORKSTREAM.md`, one-off bug, “just fix it” — matching
+    the issue \#162 precedent).
+5.  **PRE-RED research**: read `inst/WORDLIST`’s format (confirmed it is
+    NOT strictly sorted — e.g. `md's` landed after `merge's` in the
+    precedent commit despite being alphabetically earlier — so exact
+    insertion point doesn’t matter); ran `test_wordlist_coverage.R`
+    locally, confirmed it fails on unmodified source with exactly
+    “radix” flagged, matching the CI log byte-for-byte. Checked
+    `PROJECT_LEARNINGS.md` for a documented WORDLIST-update convention —
+    found an explicit warning (the CRAN-submission session’s own note)
+    against blindly running
+    [`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html)
+    without verifying each flagged word against its source first;
+    “radix” was independently confirmed legitimate (an R
+    [`order()`](https://rdrr.io/r/base/order.html) method argument, not
+    a typo), so a direct manual edit was safe.
+6.  **Compliant `TDD: PRE-RED→RED` `AskUserQuestion`** (proceed,
+    treating the already-existing, already-failing test as RED evidence
+    / hold to review test wording) — **user picked “proceed.”**
+7.  **RED confirmed**: re-ran `test_wordlist_coverage.R`, live-confirmed
+    the pre-existing failure (no new test authored — the existing
+    assertion fully captures the requirement).
+8.  **`TDD: RED→GREEN` `AskUserQuestion`** (proceed / hold) — **user
+    picked “proceed.”**
+9.  **GREEN**: `inst/WORDLIST` — added `radix` (inserted before `RData`,
+    its closest alphabetical neighbor in this loosely-ordered file).
+    Re-ran the target test (0 failures, 3/3 assertions passing) and the
+    full clean-regression suite (background task, `NOT_CRAN=true`,
+    `load_all()` first): **0 failed / 0 error project-wide**, 0
+    offenders outside `test-app-`/`test-e2e-` baseline noise. Direct
+    `spelling::spell_check_package(".", vignettes = TRUE)`: “No spelling
+    errors found.” No `.R` file touched (lint checklist N/A).
+10. **`TDD: GREEN→REFACTOR` `AskUserQuestion`** (proceed, confirming
+    no-op / hold) — **user picked “proceed.”** REFACTOR concluded as a
+    genuine no-op: a single-line addition to a flat word list.
+11. **Close-out**: `CHANGELOG.md` (`[ad hoc]`-tagged entry, including
+    the process-note paragraph); `PROJECT_LEARNINGS.md` (Learning 625,
+    the Phase 1B recurrence); `CLAUDE.md` (learnings-count pointer
+    624→625, Sessions 1–604+→1–605+); this file; `HANDOFFS.md`. Not
+    filed as/closed against a GitHub issue (matches the `md's` WORDLIST
+    precedent — pure CI hygiene, no issue was ever opened). Not added to
+    `BACKLOG.md` (found and fixed in the same session, per the “just fix
+    it” one-off convention — no window where it needed to persist as a
+    tracked item).
+
+**Runtime smoke test (Phase 3E):** N/A — `inst/WORDLIST` is a
+spell-check dictionary, not runtime code; no service registration,
+dispatch, or config-resolution behavior changed. Stated explicitly, not
+silently skipped.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A.
+Tutorial/article checklist N/A. `NEWS.Rmd` checklist N/A (no new
+exported function or user-facing feature — pure CI/doc hygiene).
+`a2interactive.Rmd` checklist N/A. GitHub issue close-out checklist N/A
+(no issue was filed, matching the `md's` precedent). Lint close-out
+checklist N/A (no `.R` file touched). `_pkgdown.yml` checklist N/A (no
+new exported function).
+
 ### Session 603 Handoff Evaluation (by Session 604)
 
 **Score: 7/10.** **What helped:** S603’s own correction work (the
