@@ -179,7 +179,8 @@ runtime_smoke: headless -- confirmed runGeneKeepR() resolves and the app's own P
   (1412 nodes/1525 edges, no new errors). Not a full interactive browser click-through, disclosed
   explicitly.
 changelog_ref: CHANGELOG.md 2026-08-17 S602 entry
-commit: pending -- filled at Phase 3F, same commit as this receipt.
+commit: 04ef1e80 (Phase 1B claim), cdb9a167 (this close-out commit -- self-referencing its own sha
+  is not possible, matching S600's own established precedent for this field).
 ```
 
 **Self-score breakdown:** +Took an honest doc-extraction agent's "this is a genuine gap, not safe to
