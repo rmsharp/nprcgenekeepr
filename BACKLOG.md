@@ -430,24 +430,6 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       connected-component walk).
 
 ## Housekeeping
-- [ ] **`preferAnchor()`'s final tie-break is locale-dependent, corrupts shipped output for
-      tied-generation sibling pairs** (found S600, 2026-08-17, incidental to an adversarial-critique
-      `Workflow` scoping an unrelated magnitude bound; filed as
-      [issue #162](https://github.com/rmsharp/nprcgenekeepr/issues/162), READY, Effort S) --
-      `preferAnchor()` (`R/makePedigreeDiagramData.R:403-411`, Track 4's gen->mateCount->id tie-break)
-      falls back to a bare `a < b` string comparison, confirmed live `LC_COLLATE`-locale-dependent
-      (e.g. `'a1' < 'A1'` flips between locale `"C"` and `"en_US.UTF-8"` on the real
-      `.buildMatingUnitForest()`) -- the same defect class `PROJECT_LEARNINGS.md` Learning 585
-      already fixed elsewhere in this exact function. Not a rare edge case: the tied-generation
-      precondition is structurally guaranteed for every full-sibling mate pair (proved from
-      `findGeneration()`'s BFS layering), and already corrupts a whole subtree's node positions
-      between locales with zero duplicate-occurrence/Pass-2 involvement -- confirmed on a trivial
-      2-generation fixture. 0 full-sibling mate pairs exist in the real 375-individual bundled
-      fixture today, so this isn't manifesting in the test corpus, but that's a property of one
-      dataset, not a structural guarantee, for a feature whose purpose is visualizing inbred
-      colonies. Suggested fix: reuse Learning 585's own radix-based comparator approach. Not fixed
-      this session (report, don't fix mid-session, per Learning 382) -- independent of, and
-      unblocked by, the duplicate-occurrence-selection centering investigation it was found during.
 - [ ] **Add MIT license badge + REUSE compliance badge to `README.Rmd`** (found 2026-08-17,
       owner-directed, Effort S for the MIT badge / DECISION NEEDED for the REUSE badge) -- the
       package is already MIT licensed (`DESCRIPTION`'s `License: MIT + file LICENSE`;

@@ -323,6 +323,15 @@ R. Mark Sharp, Ph.D.
   indistinguishable. The change is real and tested but currently
   produces no visible correction in any case exercised so far; do not
   read this entry as "the child-centering defect is fixed."
+- Fixed: in the Pedigree Diagram tab, the internal `preferAnchor()`
+  anchor tie-break's final clause -- used when 2 candidate parents tie
+  on both generation and mate count, a condition guaranteed for every
+  full-sibling mate pair -- fell back to a locale-dependent character
+  comparison, so which parent anchored a mating union (and, with it,
+  node x-positions across that anchor's own subtree) could differ
+  between machines or locales for the identical pedigree (issue \#162).
+  Now uses a byte/radix order comparison, matching the
+  locale-independent fix already applied elsewhere in this file.
 
 # nprcgenekeepr 2.0.0 (20260708)
 

@@ -16,6 +16,22 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-18 · [issue #162] S604: fix `preferAnchor()`'s locale-dependent final tie-break
+- **Deliverable:** `R/makePedigreeDiagramData.R:410` — `preferAnchor()`'s final anchor tie-break
+  (reached when 2 candidate parents tie on both generation and mate count, guaranteed for every
+  full-sibling mate pair) fell back to a bare `a < b` character comparison, which invokes the
+  session's own locale-dependent `Scollate()`. Replaced with
+  `order(c(a, b), method = "radix")[1L] == 1L`, the same locale-independent byte-order technique
+  Learning 585/588 already established in this file and 3 others. Full TDD RED→GREEN→REFACTOR: 1
+  new `test_that()` in `tests/testthat/test_positionMatingUnitForest.R` (full-sibling `a1`×`A1`
+  fixture, live-confirmed to flip anchor selection between this environment's default locale and
+  byte/radix order); RED confirmed failing pre-fix (2 assertions), GREEN confirmed passing
+  post-fix with 0 regressions in the file. Full clean regression: **0 failed / 0 error** across the
+  entire suite (the `test_wordlist_coverage.R` failure this session's own Phase 0 backfill entry
+  above already fixed). `lintr::lint_package()`: 0 lints on both touched files. Runtime smoke test:
+  `makePedigreeMatingLayout()` run on the real 375-individual bundled fixture (714 nodes/827 edges,
+  0 NAs). GitHub issue #162 closed citing this entry. **Model:** Claude Sonnet 5.
+
 ### 2026-08-18 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit `39de7dc2` — WORDLIST fix
 - **Deliverable:** `inst/WORDLIST` gained `md's` (alphabetic position, matching the S230 convention),
   fixing the `test_wordlist_coverage.R` failure that S603's orientation found making `R-CMD-check.yaml`
