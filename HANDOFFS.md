@@ -136,6 +136,25 @@ This file currently holds **12** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S602
+date: 2026-08-17
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement the Track-3-Engagement Gate design (investigation doc §11.4) -- the first
+  design across 5 workflow attempts in this investigation to survive full adversarial critique.
+  Gated by this project's TDD contract (PRE-RED -> RED -> GREEN -> REFACTOR, each transition via
+  AskUserQuestion).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S601
 date: 2026-08-17
 status: complete

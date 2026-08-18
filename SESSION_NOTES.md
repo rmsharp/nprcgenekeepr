@@ -18,6 +18,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 602 Did
+**Deliverable:** Implement the Track-3-Engagement Gate design
+(`docs/planning/pedigree-diagram-duplicate-occurrence-centering-investigation.md` §11.4) — the first
+design across 5 workflow attempts in this investigation to survive full adversarial critique. Owner
+picked this item at Phase 0 from a 4-option priorities picker (over issue #162, the MIT license badge,
+and the stale-screenshot check). Following `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`,
+gated by this project's TDD contract (PRE-RED → RED → GREEN → REFACTOR, each transition via
+`AskUserQuestion`). A background extraction pass (parallel doc-spec + code-state agents) was dispatched
+at claim time so the PRE-RED→RED gate can spell out precise actions rather than working from memory of
+the 1000+-line investigation doc. (IN PROGRESS)
+**Started:** 2026-08-17.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 600 Handoff Evaluation (by Session 601)
 **Score: 9/10.** **What helped:** `HANDOFFS.md`'s `next_steps`/`gotchas` fields pointed directly at
 §9.7 (not §8.6) and framed the go/no-go question with much stronger evidence behind it after 3
