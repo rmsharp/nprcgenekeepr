@@ -16,6 +16,14 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-18 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit `39de7dc2` — WORDLIST fix
+- **Deliverable:** `inst/WORDLIST` gained `md's` (alphabetic position, matching the S230 convention),
+  fixing the `test_wordlist_coverage.R` failure that S603's orientation found making `R-CMD-check.yaml`
+  red on `master` (S603 reported it as out of that session's own scope — "still open" — and did not fix
+  it). Committed directly by the project owner outside of a Claude Code session (no `SESSION_NOTES.md`
+  claim stub, no `HANDOFFS.md` receipt) — reconciled here per `SESSION_RUNNER.md` Phase 0 step 6, found
+  at Session 604's orientation. **Model:** none (human-authored commit, no assistant session).
+
 ### 2026-08-18 · [ad hoc] S603: record close-out commit sha in HANDOFFS.md receipt (`478a36af`)
 - **Deliverable:** Fixed this session's own `HANDOFFS.md` receipt `commit`/`changelog_ref: pending` ->
   `a577d89f` (the close-out commit whose sha the receipt itself couldn't name until after it was made),
