@@ -178,7 +178,7 @@ runtime_smoke: n/a -- docs-only change, no R/ code, no service registration/disp
   pre-existing warning, 2 pre-existing notes, 0 new).
 changelog_ref: CHANGELOG.md 2026-08-18 S607 entry (MIT + REUSE license badges added to
   README.Rmd, full REUSE compliance).
-commit: pending
+commit: c871be1b
 ```
 Self-score breakdown: +ran the real `reuse` CLI before/after rather than approximating compliance
 from the config alone (matches `SAFEGUARDS.md`'s build-equivalent/render-dependency-completeness
