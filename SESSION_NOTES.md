@@ -18,6 +18,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 612 Did
+**Deliverable:** Phase 1b of the Walker/BJL apportioning redesign — a research/design spike for the
+forest/mixed-generation reconciliation problem
+(`docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md` §"Phase 1b"). (IN
+PROGRESS)
+**Started:** 2026-08-19
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 610 Handoff Evaluation (by Session 611)
 **Score: 10/10.** **What helped:** `next_steps` named the exact deliverable almost verbatim
 ("a standalone, pedigree-agnostic BJL apportioning engine (proposed `R/positionTreeApportion.R`)

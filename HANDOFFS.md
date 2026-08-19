@@ -136,6 +136,25 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S612
+date: 2026-08-19
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Phase 1b of the Walker/BJL apportioning redesign -- forest/mixed-gen/cross-branch
+  reconciliation research/design spike, per
+  docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md's own Phase 1b section.
+  Gates Phase 2. May legitimately conclude "more research needed."
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S611
 date: 2026-08-19
 status: complete
