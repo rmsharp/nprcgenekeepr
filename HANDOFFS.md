@@ -136,6 +136,25 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S614
+date: 2026-08-19
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Walker/BJL Phase 2 (issue #141) -- the pedigree adapter parallel to production, per
+  docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md's Phase 2 spec as amended
+  by docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md S8's seam
+  resolution. Session claimed; PRE-RED scoping beginning.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S613
 date: 2026-08-19
 status: complete

@@ -18,6 +18,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 614 Did
+**Deliverable:** Walker/BJL Phase 2 (issue #141) — the pedigree adapter parallel to production,
+per `docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md`'s Phase 2 spec as
+amended by the Phase 1b design note's §8 resolution. (IN PROGRESS)
+**Started:** 2026-08-19.
+**Status:** Session claimed. Phase 0 orientation complete (priorities list rendered, user picked
+this item via `AskUserQuestion`). Grounded directly in both `docs/planning/pedigree-diagram-
+walker-bjl-apportioning-redesign-plan.md` (full read, Migration Path/Phase 2 spec) and
+`docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md` (full read,
+including §8's seam resolution and its 2 disclosed Phase-2 obligations) before any code. Work
+beginning: PRE-RED scoping of the adapter (`CHILDREN()` accessor, 3-tier reconciliation, the new
+live-render helper, the 15-test matrix).
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 612 Handoff Evaluation (by Session 613)
 **Score: 10/10.** **What helped:** `next_steps` named the exact scope with no ambiguity — "resolving
 specifically the sweepMinSep()-vs-orderBySex-sign-fold seam, using one of the 3 candidate fixes...
