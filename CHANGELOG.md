@@ -16,6 +16,43 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-19 · [ad hoc] S611: record the HANDOFFS.md sha-fix action itself (bd95d164)
+- **Deliverable:** the sha-fix commit itself (`bd95d164`) recorded here per failure mode #27
+  applying even to the self-referential sha-backfill commit — matching S600/S602-S610 precedent
+  exactly.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-19 · [ad hoc] S611: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S610 precedent)
+- **Deliverable:** `HANDOFFS.md`'s S611 receipt `commit:` field updated from `pending` to the
+  actual close-out commit sha (`8ac50a4e`).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-19 · [issue #141] S611: implement Phase 1a — standalone BJL apportioning engine (RED→GREEN→REFACTOR), commit `8ac50a4e`
+- **Deliverable:** `R/positionTreeApportion.R` (`.positionTreeApportion()`/
+  `.buildForestChildrenOf()`, internal/non-exported) + `tests/testthat/test_positionTreeApportion.R`
+  (5 `test_that()` blocks / 8 exact-value expectations: single node; balanced 3×3 n-ary tree;
+  asymmetric deep-narrow + wide-shallow tree; a 3-tree forest via a synthetic-super-root helper;
+  Walker's own 15-node worked example, TR89-034 Figure 12, as the required golden test). Zero
+  changes to `R/makePedigreeDiagramData.R` or any existing test file. `BACKLOG.md`'s Track 3 item
+  updated with Phase 1a progress. `PROJECT_LEARNINGS.md` gained Learnings 634-635
+  (d3-hierarchy-as-executable-oracle technique; the `test_dir()` Shiny-reactive-crash environment
+  gotcha, not previously documented). `CLAUDE.md`'s learnings-count pointer updated.
+- **PRE-RED research:** downloaded and read Walker's primary source (TR89-034, UNC, 1989)
+  directly, not a secondary summary. Installed real `d3-hierarchy` v3.1.2 via Node.js and ran it
+  to independently cross-check the primary-source extraction (exact match on all 15 nodes,
+  relative to root) and generate exact-value oracles for the other 3 fixtures by actually running
+  the reference implementation. **Found and proved** (via a constructed adversarial fixture, not
+  mere inspection) a real defect in the plan's own `apportion()` pseudocode: a missing modifier-
+  accumulator update (`vip_mod`/`vop_mod += shiftVal`) immediately after `moveSubtree()` fires,
+  present in real d3-hierarchy's own source (`sip`/`sop += shift`) but omitted from the plan.
+- **RED→GREEN→REFACTOR:** RED confirmed genuine (5/5 tests erroring "could not find function,"
+  not vacuous). GREEN: all 8 expectations passed on the **first** implementation attempt.
+  REFACTOR: 53→0 `lintr` findings (line-length, implicit-integer, one unnecessary-lambda),
+  structure only, re-verified 8/8 GREEN after. Full clean-regression read (277 files, excluding
+  documented `test-app-*`/`test-e2e-*`/`appServer`/`shinytest2` baseline noise) run 3 times
+  (RED/GREEN/REFACTOR checkpoints): 0 failed/0 error every time.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-19 · [ad hoc] S611: file BACKLOG.md item — investigate factoring out pedigree-diagram drawing into a separate R package
 - **Deliverable:** owner-directed `BACKLOG.md` "Up Next" item — research/scope whether to split the
   pedigree-diagram layout/rendering code out of `nprcgenekeepr` into its own dependency package
