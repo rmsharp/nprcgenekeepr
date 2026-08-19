@@ -16,6 +16,11 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-19 · [ad hoc] S613: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S612 precedent)
+- **Deliverable:** `HANDOFFS.md`'s S613 receipt `commit:` field updated from `pending` to the
+  actual close-out commit sha (`3d5019b0`).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-19 · [issue #141] S613: Phase 1b continuation -- sweepMinSep()/orderBySex seam RESOLVED, first-attempt sound
 - **Deliverable:** [`docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md`](docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md)
   §8 -- resolves the seam S612's round-4 critique found (§7): reinstating `sweepMinSep()` broke an

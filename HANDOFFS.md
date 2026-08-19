@@ -200,9 +200,7 @@ gotchas: (1) The design note's S8 formula applies ONLY to the B1 qualifying case
 runtime_smoke: n/a -- planning/research session, zero R/*.R or tests/*.R files touched throughout
   (git status --porcelain -- R/ tests/ empty).
 changelog_ref: CHANGELOG.md 2026-08-19, S613 entries.
-commit: pending -- see the next commit, which records this close-out commit's own sha
-  (self-reference workaround, matching the S600/S602-S612 precedent: this receipt ships inside the
-  very commit whose sha it would need to name).
+commit: 3d5019b0
 ```
 
 ```handoff
