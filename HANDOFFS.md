@@ -138,19 +138,56 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S612
 date: 2026-08-19
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Phase 1b of the Walker/BJL apportioning redesign -- forest/mixed-gen/cross-branch
-  reconciliation research/design spike, per
-  docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md's own Phase 1b section.
-  Gates Phase 2. May legitimately conclude "more research needed."
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 10
+active_task: DONE, honest non-terminal outcome (Phase 1b's own charter explicitly allows this).
+  Phase 1b design note written:
+  docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md. Cases
+  (a)/(b)/(c)/(d) and the core 2b architecture are validated across 3 critique rounds and safe to
+  build on. NOT settled: the interaction between the reinstated sweepMinSep() backstop and the
+  orderBySex sign-fold formula -- found broken by a 4th critique round, 3 candidate fixes proposed
+  in the design note's own S7 for a follow-up session.
+what_was_done: Ran a research->design->3-round-critique Workflow chain (19 agents total, ~87 min).
+  Round 1: 0/3 critique lenses sound (over-rendering, missing B2 gate, tier-staleness bugs) ->
+  repaired. Round 2: 0/3 sound again (orderBySex/tiering conflict, unproven sweepMinSep removal,
+  case-(d) overclaim for the exported API) -> repaired (sweepMinSep reinstated, orderBySex folded
+  into Tier 3 via a sex-aware sign formula). Round 3 (a separate, targeted follow-up Workflow):
+  still 0/3 sound -- all 3 lenses independently found and EXECUTED the same counter-example: the
+  reinstated sweepMinSep() breaks the sign-fold formula's own P.x==U.x_raw invariant, inverting the
+  male/female ordering guarantee. Deliberately stopped there (bounded, pre-declared) rather than a
+  4th repair round. Independently spot-verified the design note's own load-bearing claims (gen
+  field absence in R/positionTreeApportion.R, sweepMinSep()'s push formula, orderBySex's qualifying
+  gate, findGeneration()'s dangling-parent NA behavior) against the real shipped source before
+  publishing. Updated BACKLOG.md's Walker/BJL item. Recorded 2 learnings (PROJECT_LEARNINGS.md
+  636-637). Commits: dbc9c199 (claim), <this close-out commit, see git log>.
+next_steps: A Phase 1b CONTINUATION session (not a restart) resolving specifically the
+  sweepMinSep()-vs-orderBySex-sign-fold seam, using one of the 3 candidate fixes named in the
+  design note's S7 as a starting point (1: compare M_repr.x against P.x's own live final value
+  directly instead of assuming near-equality; 2: extend the B2-style exclusion to any B1 union
+  whose real children were touched by sweepMinSep(); 3: prevent sweepMinSep() from ever moving a
+  child of an orderBySex-qualifying B1 union). Whichever is chosen needs its own adversarial pass
+  before being trusted -- do NOT adopt one and proceed straight to Phase 2. Only after this seam
+  closes does Phase 2 (pedigree adapter, parallel to production) begin.
+key_files: docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md (the full
+  deliverable -- S7 is the required starting point); R/positionTreeApportion.R (Phase 1a's shipped
+  engine, ground truth for any apportion()/moveSubtree()/executeShifts() claim);
+  R/makePedigreeDiagramData.R:997-1015 (sweepMinSep()), :1054-1078 (orderBySex), :725-750 (dangling-
+  parent gen handling) -- all directly re-verified this session; PROJECT_LEARNINGS.md Learnings
+  636 (workflow-chaining-via-files pattern) and 637 (the interaction-seam critique pattern this
+  investigation now needs as standing practice).
+gotchas: (1) When chaining Workflow rounds where round N's output feeds round N+1, extract the
+  actual tasks/<id>.output JSON to files programmatically FIRST -- do not pass content via args
+  from memory or retype it; this session briefly launched a workflow with literal "PLACEHOLDER"
+  args, caught immediately, see Learning 636. (2) Any repair round that changes 2+ interacting
+  mechanisms needs its own dedicated "does fix A survive fix B" critique lens, not just N
+  per-fix-isolated critiques -- this is now a confirmed, recurring pattern in this specific
+  investigation (Learning 637), not a one-off. (3) Do not treat this session's own round-3 draft
+  (the bulk of the design note's S1-S6) as implementable as specified -- S3.1.2's sign-fold formula
+  is the one piece known-broken; everything else survived 3 rounds of adversarial critique.
+runtime_smoke: n/a -- planning/research session, zero R/*.R or tests/*.R files touched throughout
+  (git status --porcelain -- R/ tests/ empty).
+changelog_ref: CHANGELOG.md 2026-08-19, S612 entries.
 commit: pending
 ```
 

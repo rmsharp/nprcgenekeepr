@@ -16,6 +16,20 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-19 · [issue #141] S612: Phase 1b research/design spike -- substantial progress, honest non-terminal outcome
+- **Deliverable:** [`docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md`](docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md),
+  the Walker/BJL redesign's Phase 1b forest/mixed-gen reconciliation design note. Cases
+  (a)/(b)/(c)/(d) and the core "eliminate 0-delta edges from the recursion" architecture (Candidate
+  2b) validated across 3 adversarial critique rounds, corroborated by direct reads of CraneFoot's
+  and kinship2's own real source. A 4th critique round found the interaction between the reinstated
+  `sweepMinSep()` backstop and a new `orderBySex` sign-fold formula is unsound (executed
+  counter-example: the fix inverts the male/female ordering it exists to preserve) -- disclosed,
+  not hidden, with 3 candidate fixes named for a follow-up continuation session. Zero production
+  code touched. `BACKLOG.md`'s Walker/BJL item updated with the S612 progress paragraph.
+  `PROJECT_LEARNINGS.md` Learnings 636 (workflow-chaining-via-files) and 637
+  (interaction-seam critique pattern) recorded.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-19 · [ad hoc] S611: record the HANDOFFS.md sha-fix action itself (bd95d164)
 - **Deliverable:** the sha-fix commit itself (`bd95d164`) recorded here per failure mode #27
   applying even to the self-referential sha-backfill commit — matching S600/S602-S610 precedent
