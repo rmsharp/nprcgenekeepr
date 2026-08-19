@@ -136,6 +136,24 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S609
+date: 2026-08-18
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Track 6 targeted repair session — apply the already-verified one-line
+  self-duplicate-exclusion fix to `.computeSingleChildAntiCoincidence()` (investigation doc §7),
+  add diagnostic return fields, run a fresh Critique Round 3, then proceed PRE-RED→RED→GREEN.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S608
 date: 2026-08-18
 status: complete

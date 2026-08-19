@@ -18,6 +18,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 609 Did
+**Deliverable:** Track 6 targeted repair session — apply the already-verified one-line
+self-duplicate-exclusion fix to `.computeSingleChildAntiCoincidence()` (investigation doc §7),
+add diagnostic return fields, run a fresh Critique Round 3, then proceed PRE-RED→RED→GREEN.
+(IN PROGRESS)
+**Started:** 2026-08-18.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 607 Handoff Evaluation (by Session 608)
 **Score: 9/10.** **What helped:** every priority carried forward in `next_steps` matched this
 session's own independent Phase 0 findings exactly (issue #161, issue #148, Track 3
