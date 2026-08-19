@@ -16,6 +16,51 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-19 · [issue #141] S610: close out (Walker/BJL apportioning redesign — architecture plan)
+- **Deliverable:** [`docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md`](docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md)
+  (642 lines) — the planning session
+  `pedigree-diagram-single-child-union-parent-coincidence-investigation.md` §11 called for, scoping
+  a complete Reingold-Tilford/Walker/Buchheim-Jünger-Leipert apportioning redesign of D3
+  (`.positionMatingUnitForest()`) across 5 phases. **Planning only — no production code written or
+  modified** (`git status --porcelain -- R/ tests/` empty throughout).
+- **Method:** an 8-agent `Workflow` (3 parallel research passes → design synthesis → 3 parallel
+  adversarial critique lenses → repair; 162 tool calls, 1.24M subagent tokens, 0 errors).
+  **All 3 critique lenses returned `designSound: false` on the first draft.** The decisive finding:
+  the draft's own proposed reconciliation mechanism (a "global LEFTNEIGHBOR table") was
+  *misattributed* (real BJL **replaces** Walker's global per-level table with a purely local sibling
+  lookup — the draft claimed the opposite) and *mechanically unsound* (a non-sibling comparison
+  partner breaks `moveSubtree`/`executeShifts`'s sibling-indexed bookkeeping), and would have
+  reintroduced this investigation's own signature "one-directional sweep, first one wins" failure
+  shape **one level down, inside the replacement algorithm's own internals** — a 7th instance of the
+  same root cause, caught at the planning stage rather than after implementation.
+- **Independent verification found 2 errors the critiques missed**, both corrected and documented in
+  the plan as corrections: (1) a real file misattribution — the `-6.0`/`90`/`129.06` gate-behavior
+  pins are in `test_positionMatingUnitForest.R` (`:1582`/`:1491`/`:1524`), not
+  `test_makePedigreeMatingLayout.R` as the draft's inventory *and* its Phase 3 commit list both
+  claimed; traced to a critique agent conflating that file's name with the other file's line count
+  (`test_positionMatingUnitForest.R` is exactly 1,583 lines). (2) Two `test_that()` block counts
+  (18→19, 44→46).
+- **Plan shape:** Phase 1a standalone BJL engine (genuine trees only, cross-checked against
+  MIT-licensed `d3-hierarchy`); **Phase 1b (NEW, required, gates Phase 2)** a research/design spike
+  for the forest/mixed-gen reconciliation problem the literature does not address at all — this
+  project's forest has 0-delta tree edges no Reingold-Tilford/Walker/BJL no-overlap proof covers,
+  and 1b may legitimately conclude "more research needed"; Phase 2 adapter built parallel to
+  production plus a reusable `helper-live-render-positions.R` chromote harness; Phase 3 cutover in 2
+  scoped commits (4 files, then 2), each independently green; Phase 4 cleanup + close issue #141.
+  Removal of Track 3's clamp / Track 6's `finalUnitX` override / `.computeDupNudge()` / both
+  `sweepMinSep()` passes / the epsilon de-collision pass is **conditional** on Phase 2's
+  real-fixture zero-coincidence gate, never asserted in advance.
+- `BACKLOG.md` Track 3 item updated (status tag + S610 progress paragraph). Issue #141 deliberately
+  **not** closed and its `premature optimization` label deliberately **not** changed — both deferred
+  to the plan's own Phase 4 / the owner, matching S609's restraint.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-19 · [ad hoc] S610: claim session (Track 3 algorithm-family redesign scoping)
+- **Deliverable:** Phase 1B claim stub in `SESSION_NOTES.md` + `status: pending` `HANDOFFS.md`
+  receipt, committed (`99930551`) before any technical work — 2nd consecutive session claiming
+  correctly after the S606-S608 three-session lapse (Learnings 624/625/628).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-18 · [ad hoc] S609: record the HANDOFFS.md sha-fix action itself (03ada3bc)
 - **Deliverable:** the sha-fix commit itself (`03ada3bc`) recorded here per failure mode #27
   applying even to the self-referential sha-backfill commit — matching S600/S602-S608 precedent

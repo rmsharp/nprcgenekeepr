@@ -137,21 +137,79 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 
 ```handoff
 session: S610
-date: 2026-08-18
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Architecture planning session — scope a complete, correct
-  Reingold-Tilford/Walker/Buchheim-Jünger-Leipert (BJL) tree-positioning implementation for the
-  pedigree diagram's D3 layout, per investigation doc §11 and issue #141.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+date: 2026-08-19
+status: complete
+self_score: 9
+predecessor_score: 10
+active_task: DONE — the planning session investigation doc §11 called for is complete.
+  docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md (642 lines) scopes a
+  complete Walker/BJL apportioning redesign of D3 across 5 phases. Implementation is READY to
+  start at Phase 1a and is explicitly a SEPARATE future session. No production code touched.
+what_was_done: Ran an 8-agent Workflow (3 parallel research passes -> design synthesis -> 3
+  parallel adversarial critique lenses -> repair; 162 tool calls, 1.24M subagent tokens, 0
+  errors). All 3 critique lenses returned designSound:false on the first draft. Decisive finding:
+  the draft's own proposed reconciliation mechanism (a "global LEFTNEIGHBOR table") was
+  misattributed (real BJL REPLACES Walker's global per-level table with a purely local sibling
+  lookup; the draft claimed BJL keeps it unchanged) AND mechanically unsound (a non-sibling
+  comparison partner breaks moveSubtree/executeShifts's sibling-indexed bookkeeping) -- it would
+  have reintroduced this investigation's own signature "one-directional sweep, first one wins"
+  failure shape one level down, inside the replacement algorithm's own internals. A 7th instance
+  of the same root cause, caught before any code. Then independently re-verified the repaired
+  plan's evidence against the repo rather than trusting the agents, and FOUND 2 ERRORS the
+  critiques missed (see gotchas). Applied and documented both corrections in the plan, verified
+  every cited path resolves, updated BACKLOG.md's Track 3 item (status tag + S610 paragraph).
+  Commits: 99930551 (claim), <this close-out commit>.
+next_steps: Implementation Phase 1a of
+  docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md -- a standalone,
+  pedigree-agnostic BJL apportioning engine (proposed R/positionTreeApportion.R) with
+  tests/testthat/test_positionTreeApportion.R, GENUINE TREES ONLY, cross-checked against
+  MIT-licensed d3-hierarchy before writing GREEN code, every fixture carrying a strong
+  exact-value oracle (not weak structural assertions). Zero changes to
+  R/makePedigreeDiagramData.R in that phase -- it is purely additive, rollback is "delete the new
+  files." Phase 1b (the forest/mixed-gen reconciliation research spike) GATES Phase 2 and may
+  legitimately conclude "more research needed." Separately still open and out of this chain's
+  scope: issue #161 (hide the mating-unit marker), the D1 bar-vs-bar residual, and the newly
+  HIGH-flagged SESSION_NOTES.md 2,000-line archive trigger.
+key_files: docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md (the plan;
+  start at "This plan's own adversarial critique" then Migration Path Phase 1a);
+  R/makePedigreeDiagramData.R:717-1226 (.positionMatingUnitForest, the redesign target -- the
+  patch stack is 997-1223); R/makePedigreeDiagramData.R:1322-1323 (the only 2 call sites);
+  tests/testthat/test_positionMatingUnitForest.R:1185-1205 (the zero-coincidence gate -- the
+  single most important test in the migration, and the gate Phase 1b's mechanism must satisfy);
+  docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md 11
+  (the owner directive this plan executes); BACKLOG.md Active (Track 3 item).
+gotchas: I found 2 errors in the workflow's own output that all 3 critique lenses missed, both now
+  corrected and documented IN the plan. (1) A real file misattribution: the -6.0/90/129.06
+  gate-behavior pins are in test_positionMatingUnitForest.R (:1582/:1491/:1524), NOT in
+  test_makePedigreeMatingLayout.R as the draft's inventory AND its Phase 3 commit list both
+  claimed. Origin: a critique agent reported it had "independently re-verified... the F1 -6.0
+  regression pin at line 1583" of test_makePedigreeMatingLayout.R -- conflating that file's NAME
+  with the OTHER file's LINE COUNT (test_positionMatingUnitForest.R is exactly 1,583 lines;
+  test_makePedigreeMatingLayout.R is 1,363). A verification agent's confidently-stated false
+  claim, nested inside a critique whose other checks were all accurate -- do not treat an agent's
+  "I verified this down to line numbers" as verification. (2) Two test_that block counts were off
+  (18->19, 44->46). ALSO: Phase 1b is a genuine unsolved research question, not a formality -- the
+  plan says so plainly and a future session should not read the confident Phase 1a/2/3/4 structure
+  around it as implying 1b is routine. ALSO: S608/S609/S610's commits are unpushed and have never
+  been through CI.
+runtime_smoke: n/a — planning/docs-only session; zero R/*.R or tests/*.R files touched
+  (git status --porcelain -- R/ tests/ empty throughout).
+changelog_ref: CHANGELOG.md 2026-08-19, S610 entries.
 commit: pending
 ```
+Self-score breakdown: +claimed Phase 1B before any technical work (2nd consecutive session correct,
+after the S606-S608 lapse); +did not trust the workflow's own verification, independently re-checked
+the inventory against the repo and found a real misattribution 3 critique lenses missed, one of
+which had explicitly claimed to have verified that exact citation "down to line numbers";
++documented the corrections AS corrections with their origin traced, rather than silently fixing
+them; +held the planning/implementation boundary despite the plan being detailed enough to start
+coding from; +the critique round did real work, catching a draft that would have propagated this
+investigation's own root cause into its own replacement. −my Workflow prompt did not require the
+design agent to distinguish verified from inferred claims, which is a cheaper structural fix than
+the full critique round that eventually caught the misattribution. −I verified the plan's codebase
+citations exhaustively but only spot-checked its algorithm claims, relying on the fidelity critique's
+own 3-source verification for that half — a real asymmetry in my own verification depth, named
+rather than glossed.
 
 ```handoff
 session: S609

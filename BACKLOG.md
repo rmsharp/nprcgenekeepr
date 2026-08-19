@@ -156,7 +156,11 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       as shipped, or investigate a narrower mechanism** (found S596, 2026-08-16 — **child-centering
       half: S602 (2026-08-17) implementation RETRACTED as a fix S603 (2026-08-18), verified to
       produce no visible correction; single-child union/parent-coincidence sub-thread (S608-609)
-      NOT READY, needs a redesign session (not a repair attempt) — see the S609 correction below**;
+      redirected to a full algorithm-family redesign, **now SCOPED and READY to implement from
+      Phase 1a — S610 (2026-08-19),
+      [`docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md`](docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md),
+      Effort L overall (5+ sessions); note Phase 1b is a genuine open research question the plan
+      does not pretend to have solved — see the S610 entry below**;
       D1 bar-vs-bar half READY, Effort unknown, not scoped) — plan
       §2.3/§6 Session C's parent-span clamp
       (`docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`) was owner-accepted
@@ -450,6 +454,37 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       record, ratification, and the precise scope boundary for a future planning session:
       [`docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md`](docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md)
       §11.
+
+      **Scoped (S610, 2026-08-19) — the planning session §11 called for is DONE; implementation is
+      now READY to start at Phase 1a (Effort L overall, 5+ sessions):**
+      [`docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md`](docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md).
+      An 8-agent research→design→3-lens-critique→repair `Workflow` produced it; **all 3 critique
+      lenses returned `designStillSound: false` on the first draft**, and the repaired plan states
+      what they found rather than hiding it. The most consequential finding was structural: the
+      draft's own proposed reconciliation mechanism (a "global LEFTNEIGHBOR table") was both
+      *misattributed* (real BJL **replaces** Walker's global per-level table with a purely local
+      sibling lookup — the draft claimed BJL keeps it unchanged) and *mechanically unsound*
+      (grafting a non-sibling comparison partner into `moveSubtree`/`executeShifts`'s sibling-indexed
+      bookkeeping), and would have reintroduced this investigation's own signature "one-directional
+      sweep, first one wins" failure shape **one level down, inside the replacement algorithm's own
+      internals** — i.e. a 7th instance of the same root cause, caught at the planning stage this
+      time instead of after implementation. Phasing: **1a** standalone BJL apportioning engine
+      (genuine trees only, cross-checked against MIT-licensed `d3-hierarchy`, strong exact-value
+      oracles required on every fixture); **1b** (NEW, required, gates Phase 2) a research/design
+      spike for the forest/mixed-gen reconciliation problem the literature does not address at all —
+      this project's forest has 0-delta tree edges (an individual→its own anchored union, a
+      union→its non-anchor-parent phantom leaf) that no Reingold-Tilford/Walker/BJL no-overlap proof
+      covers, and 1b may legitimately conclude "more research needed"; **2** pedigree adapter built
+      parallel to production, A/B verified, plus a new reusable checked-in
+      `helper-live-render-positions.R` (chromote `getPositions()` ground-truth harness); **3**
+      cutover in 2 explicitly-scoped commits (4 files, then 2), each independently green;
+      **4** cleanup/docs + close issue #141. Track 3's clamp, Track 6's `finalUnitX` override,
+      `.computeDupNudge()`, both `sweepMinSep()` applications and the epsilon de-collision pass are
+      all targeted for removal — but **conditionally**, gated on Phase 2's real-fixture
+      zero-coincidence test (`test_positionMatingUnitForest.R:1185-1205`) actually passing, never
+      asserted in advance. D1/D2/D4/D5, Track 1, Track 2, and the D1 bar-vs-bar residual are all
+      explicitly OUT of scope. Issue #141 not closed and its `premature optimization` label not
+      changed — both deferred to Phase 4/the owner, matching S609's own restraint.
 
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 *Resolves the former "Tracker reconciliation" decision item (S365) --

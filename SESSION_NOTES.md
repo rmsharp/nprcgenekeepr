@@ -18,16 +18,116 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 609 Handoff Evaluation (by Session 610)
+**Score: 10/10.** **What helped:** the `next_steps` field was the rare handoff that named not just
+the task but its *correct shape* — "a future **PLANNING** session (not implementation)," with the
+four required outputs enumerated (evidence-based inventory, which family member, migration path,
+completion criteria) and the precedent that justifies the boundary ("Option 2/Track 4/Track 6 each
+got dedicated planning sessions"). This session's `Workflow` dispatch was built almost directly from
+it. The `key_files` pointer to investigation doc §10-11 was exact, and §11's own "BJL specifically
+vs. the family generally" note pre-empted what would otherwise have been this session's biggest
+open question (it correctly framed "which family member" as a *secondary* decision — the plan
+adopts that framing and justifies BJL concretely rather than re-litigating the family). **The
+single most valuable line** was the `gotchas` warning that the S609 scratch copy "is NOT a starting
+point for a future redesign (its whole architecture, a one-directional sweep, is the thing Critique
+Round 3 found broken)" — this session never opened it, saving real time and, more importantly,
+preventing an anchoring bias toward the broken approach. **What was missing:** nothing. **What was
+wrong:** nothing found inaccurate — every claim I checked (the 6-attempt tally, the owner directive
+quote at investigation doc:492, the §11 scope boundary, issue #141's label state) verified exactly.
+**ROI:** very high; this is the handoff quality bar the protocol exists to produce.
+
 ### What Session 610 Did
 **Deliverable:** Architecture planning session — scope a complete, correct
 Reingold-Tilford/Walker/Buchheim-Jünger-Leipert (BJL) tree-positioning implementation for the
 pedigree diagram's D3 layout, per investigation doc §11 and issue #141, following
-`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`. (IN PROGRESS)
-**Started:** 2026-08-18.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`. **DONE.** The plan is the deliverable;
+**no production code was written or modified** (`git status --porcelain -- R/ tests/` empty
+throughout). **Started/Completed:** 2026-08-18/19.
+
+**What actually happened, in order:**
+
+1. **Phase 0 orientation** — read `SESSION_RUNNER.md`/`SAFEGUARDS.md` in full; `SESSION_NOTES.md`
+   (S609's active task, DONE); `gh issue list` (13 open); `git status`/`log`/`diff --stat`.
+   Untracked files individually checked, all pre-existing, not a ghost session: 4
+   `docs/planning/*.html` are local Quarto renders of committed `.qmd` sources (S484/S588/S589/S590)
+   — confirmed *no* `docs/planning/*.html` has ever been committed, so the convention is
+   render-locally-don't-commit; plus the recurring Office lock-file and this session's own
+   scratchpad. `methodology_dashboard.py`: 96/100, but **1 HIGH risk flag newly crossed** —
+   `SESSION_NOTES.md` at 2,091 lines is past the 2,000-line agent-read truncation cap (S608/S609
+   both reported 0 High+; this appears to have crossed during S609's own long close-out).
+   `gh run list --branch master --limit 10`: all `completed success` (2 `cancelled` `pkgdown.yaml`
+   runs are the normal superseded-by-follow-up-push pattern) — but note all 10 are for S607's push;
+   **S608/S609's 8 commits are unpushed and have never been through CI.** Ledger reconcile:
+   `CHANGELOG.md` frontier == `HEAD`; `HANDOFFS.md` frontier 1 commit behind, that commit being its
+   own self-referential ledger entry (S600/602-609 precedent) — no backfill owed.
+2. Rendered the priorities list (3 numbered items) via `AskUserQuestion` — **user picked the Track 3
+   algorithm-family redesign scoping.**
+3. **Phase 1B claimed immediately, before any technical work** — stub + `HANDOFFS.md` pending
+   receipt committed (`99930551`).
+4. Read `ARCHITECTURE_WORKSTREAM.md`, then read the target code directly to ground the dispatch:
+   `.positionMatingUnitForest()` in full (`R/makePedigreeDiagramData.R:717-1226`), the investigation
+   doc's §11, the Option 2 design plan's §2.2/D1-D5, and the test-file inventory.
+5. **Dispatched an 8-agent background `Workflow`**: 3 parallel research passes (algorithm literature
+   with live WebSearch verification / full grep-based codebase inventory / the complete 6-attempt
+   failure history) → design synthesis → 3 parallel adversarial critique lenses
+   (correctness-failure-mode, migration-blast-radius-TDD, algorithm-fidelity) → repair. ~65 min,
+   162 tool calls, 1.24M subagent tokens, 0 errors.
+6. **All 3 critique lenses returned `designSound: false` on the first draft.** The decisive finding
+   was structural and, in this investigation's context, striking: the draft's own proposed
+   reconciliation mechanism (a "global LEFTNEIGHBOR table") was **misattributed** (real BJL
+   *replaces* Walker's global per-level table with a purely local sibling lookup — the draft claimed
+   BJL keeps it unchanged) **and mechanically unsound** (a non-sibling comparison partner breaks
+   `moveSubtree`/`executeShifts`'s sibling-indexed math), and would have reintroduced this
+   investigation's own signature "one-directional sweep, first one wins" failure shape *one level
+   down, inside the replacement algorithm's own internals*. That is a 7th instance of the same root
+   cause — caught at the planning stage this time, before any code.
+7. **Verified the repaired plan's evidence myself rather than trusting the agents** (per
+   `SESSION_RUNNER.md` §Vertical Slice Sessions' standing warning about confident-but-wrong subagent
+   output). Confirmed correct: all 5 call sites, both downstream Track 1/2 function boundaries,
+   `sibshipBarFraction`/`preferAnchor`/`unitGen`/`modPedigree.R:346` citations, the zero-coincidence
+   gate at `test_positionMatingUnitForest.R:1185-1205`, and every pinned count in
+   `test_addRectilinearWaypoints.R`/`test_resolveEdgeNodeCollisions.R`. **Found and fixed 2 errors**
+   — see "Gotchas" below.
+8. Wrote the plan to
+   `docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md` (642 lines) with the
+   corrections applied and *documented as corrections*, verified every cited file path resolves
+   (the only non-existent ones are the 4 files the plan itself proposes creating), and updated
+   `BACKLOG.md`'s Track 3 item (both its status tag and a new S610 progress paragraph).
+
+**Runtime smoke test (Phase 3E):** n/a — planning/docs-only session, zero `R/*.R` or `tests/*.R`
+files touched (`git status --porcelain -- R/ tests/` empty throughout).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation / tutorial-article / `NEWS.Rmd` /
+`a2interactive.Rmd` / `_pkgdown.yml` checklists all **N/A** (no shipped code, no exported function,
+no user-facing feature — the plan's own Phase 4 assigns `NEWS.Rmd` to the implementation chain).
+Lint checklist **N/A** (no `.R` files touched). GitHub issue close-out **N/A** — no `BACKLOG.md`
+item reached DONE; issue #141 is deliberately left open (the plan's Phase 4 closes it) and its
+`premature optimization` label deliberately unchanged, matching S609's own restraint.
+
+**Self-assessment (Session 610): 9/10.** **Strengths:** (1) Phase 1B claimed immediately after
+scope settled, before any research — second consecutive session getting this right after the
+S606-S608 three-session lapse. (2) Did not trust the workflow's own output: independently
+re-verified the inventory and **found a real file misattribution** that all 3 critique lenses
+missed — one of which had explicitly claimed to have "independently re-verified... down to line
+numbers" the very citation that was wrong. An executor trusting it would have searched the wrong
+file for the `-6.0` pin. (3) Recorded the corrections *in the plan as corrections*, with their
+origin traced, rather than silently fixing them — the error's provenance (a verification agent's
+confidently-false claim nested inside an otherwise-accurate critique) is the most transferable
+lesson this session produced. (4) Held the planning/implementation boundary despite the plan being
+detailed enough to start coding from — no production file was opened for editing. (5) The critique
+round did real work: it caught a draft that would have propagated this investigation's own root
+cause into its replacement. **Weaknesses:** (1) My `Workflow` prompt told the algorithm-research
+agent to get BJL's mechanism "precisely," but I did not require the *design* agent to state which
+specific claims it had verified vs. inferred — the misattribution the fidelity lens caught might
+have been avoided by a cheaper structural requirement in the original prompt rather than a full
+critique round. (2) I verified the plan's *codebase* citations exhaustively but spot-checked rather
+than fully re-derived its *algorithm* claims against primary sources — I relied on the fidelity
+critique's own independent 3-source verification for that half, which is reasonable given it
+disagreed with the draft and was specific/checkable, but it is a genuine asymmetry in my own
+verification depth and I am naming it rather than implying uniform rigor. **ROI:** high — a future
+implementer gets a phased, blast-radius-respecting plan with an honest open research question
+(Phase 1b) flagged as such, instead of a confident plan that would have failed at exactly the point
+six prior attempts failed.
 
 ### Session 608 Handoff Evaluation (by Session 609)
 **Score: 9/10.** **What helped:** the ratified scope in `next_steps` (apply the verified one-line
