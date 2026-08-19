@@ -138,24 +138,69 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S611
 date: 2026-08-19
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Implement Phase 1a of the Walker/BJL apportioning redesign -- standalone BJL
-  tree-apportioning engine (R/positionTreeApportion.R) + test file
-  (tests/testthat/test_positionTreeApportion.R), per
+status: complete
+self_score: 9
+predecessor_score: 10
+active_task: DONE -- Phase 1a of the Walker/BJL apportioning redesign implemented and fully
+  verified. R/positionTreeApportion.R (standalone BJL tree-apportioning engine) +
+  tests/testthat/test_positionTreeApportion.R, per
   docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md's Phase 1a section.
   Zero changes to R/makePedigreeDiagramData.R or any existing test file.
-what_was_done: pending
-next_steps: pending
-key_files: docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md (Phase 1a
-  section, lines 410-436)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+what_was_done: PRE-RED research: downloaded and read Walker's primary source (TR89-034, UNC,
+  1989) directly, extracted the 15-node golden example from the primary source itself.
+  Installed real d3-hierarchy v3.1.2 via Node.js, ran it to independently cross-check the
+  primary-source extraction (exact match) and generate exact-value oracles for 3 more required
+  fixtures by actually running the reference implementation (not hand-deriving). Read
+  d3-hierarchy's real tree.js source and found + proved (via a constructed adversarial fixture,
+  not inspection alone) a real defect in the plan's own apportion() pseudocode -- a missing
+  modifier-accumulator update after moveSubtree() fires. RED: 5 test_that()/8 expectations,
+  genuinely failing (not vacuous). GREEN: R/positionTreeApportion.R, 8/8 passed on the FIRST
+  implementation attempt. REFACTOR: 53->0 lintr findings, re-verified GREEN + full regression.
+  Full clean regression (277 files, excl. documented Shiny/e2e baseline noise) run 3x
+  (RED/GREEN/REFACTOR checkpoints): 0 failed/0 error every time. Also: owner-directed BACKLOG.md
+  item added mid-session (factor pedigree-drawing into a separate R package), its own commit.
+  Commits: acc79b44 (claim), 3220bc58 (BACKLOG item), <RED/GREEN/REFACTOR/close-out commits, see
+  git log>.
+next_steps: Phase 1b (forest/mixed-gen/cross-branch reconciliation research spike) is next,
+  per the plan's own phasing -- gates Phase 2, its own separate session. Genuinely open research;
+  may legitimately conclude "more research needed," not a routine implementation step. Do NOT
+  start sketching Phase 2's pedigree adapter before Phase 1b has a chosen, tested mechanism.
+key_files: R/positionTreeApportion.R (the new engine, 0 lints);
+  tests/testthat/test_positionTreeApportion.R (5 fixtures, 8 expectations, oracle provenance in
+  its own header comment); docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md
+  (Phase 1b section, "Decision" section's "gen-vs-depth adaptation" subsections -- required
+  reading before Phase 1b); PROJECT_LEARNINGS.md Learnings 634-635 (the oracle-generation
+  technique; the test_dir() crash environment gotcha).
+gotchas: (1) A full testthat::test_dir() run in this sandbox silently dies partway through
+  (exit 0, no error) on Shiny-reactive-crash test files that escape tryCatch -- CLAUDE.md's own
+  documented test-app-*/test-e2e-* exclusion filter is INCOMPLETE; also exclude
+  appServer|shinytest2 (case-insensitive), or the run will stall with no diagnostic. Use a
+  per-file test_file() loop with incrementally-flushed logging, not a single test_dir() call, so
+  a stall leaves partial results. (2) The plan's own wording calls d3-hierarchy "MIT-licensed" --
+  it is actually ISC-licensed (equally permissive, doesn't change the licensing rationale, but
+  don't propagate the wrong license name further). (3) Phase 1a's moveSubtree-accumulator
+  correction (vip_mod/vop_mod += shiftVal after moveSubtree fires) is NOT in the plan's own
+  published pseudocode -- it's this session's own addition, documented in the file's header and
+  inline at the call site; don't "restore" the plan's literal pseudocode if revisiting this file.
+runtime_smoke: n/a -- grep-confirmed zero references to any new function outside the 2 new
+  files, no exports (NAMESPACE unchanged); Phase 1a's own scope is explicitly zero production
+  wiring.
+changelog_ref: CHANGELOG.md 2026-08-19, S611 entries (RED/GREEN/REFACTOR/close-out/BACKLOG-item).
 commit: pending
 ```
-(claim stub -- filled at close-out)
+Self-score breakdown: +PRE-RED research was genuinely primary-source (read the actual 1989 paper)
+and executable-reference-based (ran real d3-hierarchy, not just described it) -- the strictest
+reading of the plan's own C2-3 oracle requirement; +found and PROVED (constructed an adversarial
+fixture showing divergence, not just asserted) a real, mechanically-significant defect in the
+parent plan's own pseudocode before any GREEN code existed; +every TDD gate held faithfully via
+AskUserQuestion, RED genuinely failing, GREEN passing 8/8 on the first attempt -- a direct payoff
+of the PRE-RED rigor; +ran the full clean-regression read 3 separate times (once per phase
+checkpoint), not once at the end; +handled a mid-session owner request cleanly in its own separate
+commit without derailing the TDD session. −spent real time trial-and-erroring the background-
+test-crash exclusion list before checking whether the pattern was already a documented project
+learning (it was not, but the check should have come first); −did not run devtools::check() (the
+project's general build-equivalent) -- a conscious match to the plan's own Phase 1a
+verification-commands list rather than an oversight, but named here for transparency.
 
 ```handoff
 session: S610

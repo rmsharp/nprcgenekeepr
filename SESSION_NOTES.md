@@ -18,17 +18,142 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 610 Handoff Evaluation (by Session 611)
+**Score: 10/10.** **What helped:** `next_steps` named the exact deliverable almost verbatim
+("a standalone, pedigree-agnostic BJL apportioning engine (proposed `R/positionTreeApportion.R`)
+with `tests/testthat/test_positionTreeApportion.R`, GENUINE TREES ONLY, cross-checked against
+[d3-hierarchy] before writing GREEN code, every fixture carrying a strong exact-value oracle")
+— this session's own deliverable statement and file names were built directly from it, zero
+re-derivation needed. `key_files` pointed exactly at the plan's own "Migration Path Phase 1a"
+section and the zero-coincidence gate test, both used directly. `gotchas`' warning that "Phase 1b
+is a genuine unsolved research question, not a formality" correctly primed this session to treat
+Phase 1a as fully self-contained and stop there, rather than being tempted to sketch ahead into
+Phase 1b's own undesigned mechanism. **What was missing:** nothing. **What was wrong:** one small
+inherited inaccuracy — `next_steps` (following the plan's own wording) called d3-hierarchy
+"MIT-licensed"; it is actually ISC-licensed (equally permissive, doesn't change the plan's
+GPL-avoidance reasoning, but worth correcting for the record — done in `BACKLOG.md`/this file/the
+new module's own header). **ROI:** very high — the precision of `next_steps` let this session go
+straight into PRE-RED primary-source research instead of re-deriving scope from the plan document
+itself.
+
 ### What Session 611 Did
-**Deliverable:** Implement Phase 1a of the Walker/BJL apportioning redesign — a standalone,
-pedigree-agnostic BJL tree-apportioning engine (`R/positionTreeApportion.R`) + test file
-(`tests/testthat/test_positionTreeApportion.R`), per
+**Deliverable:** Implemented Phase 1a of the Walker/BJL apportioning redesign — a standalone,
+pedigree-agnostic BJL tree-apportioning engine
+([`R/positionTreeApportion.R`](R/positionTreeApportion.R)) +
+[`tests/testthat/test_positionTreeApportion.R`](tests/testthat/test_positionTreeApportion.R), per
 `docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md`'s Phase 1a section.
-Zero changes to `R/makePedigreeDiagramData.R` or any existing test file. (IN PROGRESS)
-**Started:** 2026-08-19.
-**Status:** Session claimed. Work beginning — Strict TDD contract in effect (PRE-RED research next).
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**DONE.** Zero changes to `R/makePedigreeDiagramData.R` or any existing test file (`git status
+--porcelain -- R/ tests/` shows only the 2 new files throughout). **Started/Completed:**
+2026-08-19.
+
+**What actually happened, in order:**
+
+1. **Phase 0 orientation** — read `SESSION_RUNNER.md`/`SAFEGUARDS.md` in full; `SESSION_NOTES.md`
+   (S610's own active task, DONE); `gh issue list` (13 open); `git status`/`log`/`diff --stat`
+   (12 unpushed commits from S608-S610, all docs-only; untracked files individually checked --
+   4 `docs/planning/*.html` Quarto renders never committed [established convention],
+   `scratchpad/` disposable scratch, an Office lock-file -- none a ghost session);
+   `methodology_dashboard.py` (96/100, 2 HIGH flags: `SESSION_NOTES.md`/`HANDOFFS.md` both past
+   the 2,000-line read cap -- informational, not this session's scope); `gh run list --branch
+   master` (all `completed success`, but only through S607's push). Ledger reconcile: both
+   `CHANGELOG.md` and `HANDOFFS.md` frontiers current (the 1-commit `HANDOFFS.md` gap is the
+   established self-referential sha-fix pattern, S600/602-610 precedent -- no backfill owed).
+   Rendered the priorities list (2 numbered `AskUserQuestion` options) — **user picked the
+   Walker/BJL Phase 1a implementation.**
+2. **Mid-session owner request handled inline, separately ledgered:** user asked to add a
+   `BACKLOG.md` item investigating factoring the pedigree-diagram drawing code into its own R
+   package. Added (Up Next section, READY, Effort M, explicitly sequenced after this redesign to
+   avoid mid-algorithm package-boundary churn), `CHANGELOG.md` entry, own commit (`3220bc58`) --
+   kept separate from the TDD work below.
+3. **Phase 1B claimed immediately** — `SESSION_NOTES.md` stub + `HANDOFFS.md` `status: pending`
+   receipt, committed (`acc79b44`) before any research/technical work.
+4. **PRE-RED research** (no code written): downloaded and read Walker's primary source (TR89-034,
+   UNC, Sept. 1989, `cs.unc.edu/techreports/89-034.pdf`) directly, extracted Figure 12's 15-node
+   worked example and its published final x-coordinates from "Nodes Visited in the Second
+   Traversal" (pp.17-20) -- not a secondary summary. Installed real `d3-hierarchy` v3.1.2 via
+   Node.js (already available in this environment) and cross-checked: all 15 nodes matched the
+   primary-source extraction exactly (relative to root) -- independent confirmation of both the
+   primary-source reading and the plan's own claim that BJL and Walker agree on genuine trees.
+   Read `d3-hierarchy`'s actual `tree.js` source directly (not a secondary description) to
+   cross-check the plan's own corrected `apportion`/`moveSubtree`/`executeShifts`/
+   `nextLeft`/`nextRight`/`commonAncestor` pseudocode, per Phase 1a's own explicit requirement.
+   **Found a real defect**: the plan omits `vip_mod += shiftVal; vop_mod += shiftVal`
+   immediately after `moveSubtree()` fires; real d3-hierarchy's `apportion()` does this
+   (`sip += shift; sop += shift`). Proved this is mechanically necessary (not cosmetic) by
+   implementing both the plan's literal pseudocode and the corrected version in JS, constructing
+   an adversarial fixture forcing 2+ compounding shifts within one `apportion()` call, and
+   confirming only the corrected version matches the real d3-hierarchy reference exactly.
+   Generated exact-value oracles for the 3 other required fixtures (balanced 3x3 n-ary tree,
+   asymmetric deep-narrow+wide-shallow tree, a 3-tree forest via a synthetic super-root) by
+   actually running `d3-hierarchy` on identical input -- the most rigorous reading of the plan's
+   own C2-3 "strong, exact-value oracle" requirement.
+5. **`TDD: PRE-RED→RED` `AskUserQuestion` gate** -- approved.
+6. **RED**: wrote `tests/testthat/test_positionTreeApportion.R`, 5 `test_that()` blocks / 8
+   expectations (single node; balanced n-ary; asymmetric; forest via
+   `.buildForestChildrenOf()`; Walker's own golden 15-node example). Confirmed genuine RED
+   (5/5 erroring "could not find function," not vacuous passes) and zero collateral damage via a
+   full clean-regression read.
+7. **`TDD: RED→GREEN` `AskUserQuestion` gate** -- approved.
+8. **GREEN**: wrote `R/positionTreeApportion.R` (environment-based mutable per-node state,
+   directly mirroring the JS design verified in step 4, including the moveSubtree-accumulator
+   correction). **All 8 expectations passed on the first implementation attempt** -- zero debug
+   cycles, a direct payoff of the PRE-RED rigor. Full clean regression: 277/277 (non-Shiny-
+   reactive) files, 0 failed/0 error.
+9. **`TDD: GREEN→REFACTOR` `AskUserQuestion` gate** -- approved.
+10. **REFACTOR**: fixed all 53 `lintr` findings (line-length, implicit-integer literals, one
+    unnecessary-lambda -- `vapply(...get...)` replaced with `mget()`+`unlist()`), structure only.
+    Re-verified 8/8 GREEN, 0 lints, full clean regression 277/277 clean, after the refactor.
+
+**Environment gotcha, not this session's own defect, worth recording:** `testthat::test_dir()`
+over the FULL suite (including `test-app-*`/`test-e2e-*`/`test_appServer_*`/`shinytest2` files)
+silently terminates the R process partway through in this sandbox, with no crash/error message
+and exit code 0 -- traced to a `stop()` inside a Shiny `observe()` reactive (`appServer.R:169`,
+`inputResults$cleanedStudbook`) that appears to escape `tryCatch` (likely a `later`-scheduled
+callback firing outside the synchronous call stack). CLAUDE.md's own documented
+`test-app-*`/`test-e2e-*` exclusion filter was insufficient -- `test_appServer_*.R` (underscore,
+not the documented dash-prefixed pattern) and `shinytest2`-named files hit the same crash and
+needed adding to the exclusion set. Once excluded, the remaining 277 files ran to completion
+cleanly and repeatably (3 full runs, RED/GREEN/REFACTOR checkpoints). See gotchas below and
+Learnings.
+
+**Runtime smoke test (Phase 3E):** n/a -- grep-confirmed (`grep -rn "positionTreeApportion|
+buildForestChildrenOf" R/ tests/`) zero references to any new function outside the 2 new files;
+`NAMESPACE` confirms no accidental export. Phase 1a's own scope is explicitly "zero changes to
+R/makePedigreeDiagramData.R" -- no runtime path is reached by this change, verified by grep, not
+assumed.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A (no new displayed
+statistic). Tutorial/article + `a2interactive.Rmd` checklists N/A (no exported, script-callable
+function -- both new functions are `.`-prefixed internal, matching `.positionMatingUnitForest`'s
+own convention). `NEWS.Rmd` checklist N/A (same reason -- no exported function). `_pkgdown.yml`
+checklist N/A (not exported). GitHub issue close-out N/A -- issue #141 stays open (only Phase 1a
+of 5 is done; Phase 4 closes it, matching S609/S610's own restraint). Lint checklist: DONE, 0
+lints on both touched files.
+
+**Self-assessment (Session 611): 9/10.** **Strengths:** (1) PRE-RED research was genuinely
+primary-source, not secondary-summary -- downloaded and read Walker's actual 1989 tech report,
+and independently *ran* the real reference implementation (d3-hierarchy) rather than trusting a
+description of it, satisfying the plan's own C2-3 requirement at its strictest reading. (2) Found
+and *proved* (not merely asserted) a real, mechanically-significant defect in the plan's own
+pseudocode -- constructed an adversarial fixture demonstrating the corrected/uncorrected versions
+diverge, rather than taking either the plan's pseudocode or my own reasoning on faith. (3) Held
+every TDD gate faithfully via `AskUserQuestion`, with RED genuinely failing (not vacuous) and
+GREEN passing on the first attempt -- the rigor of the design work translated directly into
+implementation reliability. (4) Ran the full clean-regression read 3 separate times (RED/GREEN/
+REFACTOR checkpoints), not just once at the end, catching nothing but confirming nothing broke at
+each stage. (5) Handled the owner's mid-session BACKLOG.md request cleanly, in its own commit,
+without derailing the TDD session's own scope. **Weaknesses:** (1) Spent real time
+trial-and-erroring the background-test-crash exclusion list from scratch rather than first
+checking whether this exact pattern (Shiny-reactive crash escaping `tryCatch` during a full
+`test_dir()` run) was already a documented project learning -- it was not (checked this session),
+but the check itself should have come before, not after, several failed attempts. (2) Did not run
+`devtools::check()` (`CLAUDE.md`'s general build-equivalent) -- deliberately matched the plan's
+own Phase 1a verification-commands list instead (`test_file`/`test_dir`/`lintr`, no
+`devtools::check()` at this phase), a conscious scope decision rather than an oversight, but
+naming it here rather than letting it pass silently. **ROI:** high -- Phase 1a shipped fully
+verified on the first implementation attempt, with a genuine, disclosed correction to the parent
+plan's own pseudocode found before any GREEN code existed, exactly the discipline Phase 1a's own
+"not optional polish" language was written to produce.
 
 ### Session 609 Handoff Evaluation (by Session 610)
 **Score: 10/10.** **What helped:** the `next_steps` field was the rare handoff that named not just

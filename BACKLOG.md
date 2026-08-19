@@ -486,6 +486,46 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       explicitly OUT of scope. Issue #141 not closed and its `premature optimization` label not
       changed — both deferred to Phase 4/the owner, matching S609's own restraint.
 
+      **Phase 1a DONE — S611 (2026-08-19):** standalone, pedigree-agnostic BJL apportioning
+      engine, [`R/positionTreeApportion.R`](R/positionTreeApportion.R) (`.positionTreeApportion()`,
+      `.buildForestChildrenOf()`, both internal/non-exported) +
+      [`tests/testthat/test_positionTreeApportion.R`](tests/testthat/test_positionTreeApportion.R)
+      (5 `test_that()` blocks, 8 exact-value expectations). **Zero changes to
+      `R/makePedigreeDiagramData.R` or any existing test file** (`git status --porcelain -- R/
+      tests/` shows only the 2 new files throughout). Strict TDD followed: PRE-RED research →
+      `AskUserQuestion` gate → RED (genuine, 5/5 tests erroring on "could not find function," not
+      vacuous) → `AskUserQuestion` gate → GREEN (8/8 expectations passed on the first
+      implementation attempt) → `AskUserQuestion` gate → REFACTOR (53→0 lintr findings, all
+      style-only, re-verified 8/8 GREEN + full regression after). **PRE-RED research, done before
+      any code was written:** downloaded and read Walker's primary source (TR89-034, UNC, Sept.
+      1989) directly, extracted Figure 12's 15-node worked example and its published final
+      x-coordinates from "Nodes Visited in the Second Traversal" (pp.17-20) — not a secondary
+      summary. Independently cross-checked against real `d3-hierarchy` v3.1.2 (installed via
+      Node.js; **correction to the plan's own wording: ISC-licensed, not MIT** — equally
+      permissive and GPL-avoiding, so the plan's licensing rationale is unaffected): all 15 nodes
+      matched exactly (relative to root). Generated exact-value oracles for the other 3 required
+      fixtures (balanced 3×3 n-ary tree, asymmetric deep-narrow+wide-shallow tree, a 3-tree forest
+      via `.buildForestChildrenOf()`) by actually running `d3-hierarchy` on identical input —
+      satisfying the plan's own C2-3 "strong, exact-value oracle" requirement at its most rigorous
+      reading. **Found and fixed a real defect in the plan's own `apportion()` pseudocode** via
+      the required d3-hierarchy source cross-check: the plan omits `vip_mod += shiftVal;
+      vop_mod += shiftVal` immediately after `moveSubtree()` fires (real d3-hierarchy's
+      `apportion()` does this — `sip += shift; sop += shift`, `tree.js` lines ~163-165). Proved
+      this is mechanically necessary, not cosmetic, by implementing both the plan's literal
+      pseudocode and the corrected version in JS, constructing an adversarial fixture forcing 2+
+      compounding shifts within one `apportion()` call, and confirming only the corrected version
+      matches the real reference exactly. The R implementation includes this correction, documented
+      in the file's own header and inline at the call site. Full clean regression (277 files,
+      excluding the documented pre-existing `test-app-*`/`test-e2e-*`/`appServer`/`shinytest2`
+      baseline-noise set) run 3 times (RED baseline, GREEN, REFACTOR): 0 failed/0 error every
+      time, including `test_positionMatingUnitForest.R`/`test_buildMatingUnitForest.R`
+      unaffected. `lintr::lint()` on both new files: 0 lints. Runtime smoke test: n/a — grep-
+      confirmed zero references to any new function outside the 2 new files (no wiring, no
+      exports; matches Phase 1a's own explicit "zero changes" scope). **Next: Phase 1b** (forest/
+      mixed-gen/cross-branch reconciliation research spike, gates Phase 2) — its own separate
+      session, per the plan's own phase boundaries; may legitimately conclude "more research
+      needed."
+
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 *Resolves the former "Tracker reconciliation" decision item (S365) --
 `docs/audits/XARCH_TRACKER_RECONCILIATION_AUDIT_2026-07-11.md` re-verified all 8
