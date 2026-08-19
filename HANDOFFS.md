@@ -195,7 +195,7 @@ gotchas: I found 2 errors in the workflow's own output that all 3 critique lense
 runtime_smoke: n/a — planning/docs-only session; zero R/*.R or tests/*.R files touched
   (git status --porcelain -- R/ tests/ empty throughout).
 changelog_ref: CHANGELOG.md 2026-08-19, S610 entries.
-commit: pending
+commit: 3eb6c0bf
 ```
 Self-score breakdown: +claimed Phase 1B before any technical work (2nd consecutive session correct,
 after the S606-S608 lapse); +did not trust the workflow's own verification, independently re-checked

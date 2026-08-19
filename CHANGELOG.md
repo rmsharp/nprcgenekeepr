@@ -16,6 +16,11 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-19 · [ad hoc] S610: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S609 precedent)
+- **Deliverable:** `HANDOFFS.md`'s S610 receipt `commit:` field updated from `pending` to the
+  actual close-out commit sha (`3eb6c0bf`).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-19 · [issue #141] S610: close out (Walker/BJL apportioning redesign — architecture plan)
 - **Deliverable:** [`docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md`](docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md)
   (642 lines) — the planning session
