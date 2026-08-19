@@ -16,6 +16,12 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-19 · [ad hoc] S610: record the HANDOFFS.md sha-fix action itself (fd8c64d0)
+- **Deliverable:** the sha-fix commit itself (`fd8c64d0`) recorded here per failure mode #27
+  applying even to the self-referential sha-backfill commit — matching S600/S602-S609 precedent
+  exactly.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-19 · [ad hoc] S610: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S609 precedent)
 - **Deliverable:** `HANDOFFS.md`'s S610 receipt `commit:` field updated from `pending` to the
   actual close-out commit sha (`3eb6c0bf`).
