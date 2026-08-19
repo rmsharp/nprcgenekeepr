@@ -57,6 +57,157 @@
 <div class="section level2">
 <h2 id="id_2026-08">2026-08<a class="anchor" aria-label="anchor" href="#id_2026-08"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-08-19--ad-hoc-s612-record-close-out-commit-sha-in-handoffsmd-receipt-self-reference-workaround-matching-s600s602-s611-precedent">2026-08-19 · [ad hoc] S612: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S611 precedent)<a class="anchor" aria-label="anchor" href="#id_2026-08-19--ad-hoc-s612-record-close-out-commit-sha-in-handoffsmd-receipt-self-reference-workaround-matching-s600s602-s611-precedent"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> <code>HANDOFFS.md</code>’s S612 receipt <code>commit:</code> field updated from <code>pending</code> to the actual close-out commit sha (<code>c95b4b74</code>).</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-08-19--issue-141-s612-phase-1b-researchdesign-spike--substantial-progress-honest-non-terminal-outcome">2026-08-19 · [issue #141] S612: Phase 1b research/design spike – substantial progress, honest non-terminal outcome<a class="anchor" aria-label="anchor" href="#id_2026-08-19--issue-141-s612-phase-1b-researchdesign-spike--substantial-progress-honest-non-terminal-outcome"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> <a href="docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.html"><code>docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md</code></a>, the Walker/BJL redesign’s Phase 1b forest/mixed-gen reconciliation design note. Cases (a)/(b)/(c)/(d) and the core “eliminate 0-delta edges from the recursion” architecture (Candidate 2b) validated across 3 adversarial critique rounds, corroborated by direct reads of CraneFoot’s and kinship2’s own real source. A 4th critique round found the interaction between the reinstated <code>sweepMinSep()</code> backstop and a new <code>orderBySex</code> sign-fold formula is unsound (executed counter-example: the fix inverts the male/female ordering it exists to preserve) – disclosed, not hidden, with 3 candidate fixes named for a follow-up continuation session. Zero production code touched. <code>BACKLOG.md</code>’s Walker/BJL item updated with the S612 progress paragraph. <code>PROJECT_LEARNINGS.md</code> Learnings 636 (workflow-chaining-via-files) and 637 (interaction-seam critique pattern) recorded.</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-08-19--ad-hoc-s611-record-the-handoffsmd-sha-fix-action-itself-bd95d164">2026-08-19 · [ad hoc] S611: record the HANDOFFS.md sha-fix action itself (bd95d164)<a class="anchor" aria-label="anchor" href="#id_2026-08-19--ad-hoc-s611-record-the-handoffsmd-sha-fix-action-itself-bd95d164"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> the sha-fix commit itself (<code>bd95d164</code>) recorded here per failure mode #27 applying even to the self-referential sha-backfill commit — matching S600/S602-S610 precedent exactly.</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-08-19--ad-hoc-s611-record-close-out-commit-sha-in-handoffsmd-receipt-self-reference-workaround-matching-s600s602-s610-precedent">2026-08-19 · [ad hoc] S611: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S610 precedent)<a class="anchor" aria-label="anchor" href="#id_2026-08-19--ad-hoc-s611-record-close-out-commit-sha-in-handoffsmd-receipt-self-reference-workaround-matching-s600s602-s610-precedent"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> <code>HANDOFFS.md</code>’s S611 receipt <code>commit:</code> field updated from <code>pending</code> to the actual close-out commit sha (<code>8ac50a4e</code>).</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-08-19--issue-141-s611-implement-phase-1a--standalone-bjl-apportioning-engine-redgreenrefactor-commit-8ac50a4e">2026-08-19 · [issue #141] S611: implement Phase 1a — standalone BJL apportioning engine (RED→GREEN→REFACTOR), commit <code>8ac50a4e</code>
+<a class="anchor" aria-label="anchor" href="#id_2026-08-19--issue-141-s611-implement-phase-1a--standalone-bjl-apportioning-engine-redgreenrefactor-commit-8ac50a4e"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> <code>R/positionTreeApportion.R</code> (<code>.positionTreeApportion()</code>/ <code>.buildForestChildrenOf()</code>, internal/non-exported) + <code>tests/testthat/test_positionTreeApportion.R</code> (5 <code>test_that()</code> blocks / 8 exact-value expectations: single node; balanced 3×3 n-ary tree; asymmetric deep-narrow + wide-shallow tree; a 3-tree forest via a synthetic-super-root helper; Walker’s own 15-node worked example, TR89-034 Figure 12, as the required golden test). Zero changes to <code>R/makePedigreeDiagramData.R</code> or any existing test file. <code>BACKLOG.md</code>’s Track 3 item updated with Phase 1a progress. <code>PROJECT_LEARNINGS.md</code> gained Learnings 634-635 (d3-hierarchy-as-executable-oracle technique; the <code>test_dir()</code> Shiny-reactive-crash environment gotcha, not previously documented). <code>CLAUDE.md</code>’s learnings-count pointer updated.</li>
+<li>
+<strong>PRE-RED research:</strong> downloaded and read Walker’s primary source (TR89-034, UNC, 1989) directly, not a secondary summary. Installed real <code>d3-hierarchy</code> v3.1.2 via Node.js and ran it to independently cross-check the primary-source extraction (exact match on all 15 nodes, relative to root) and generate exact-value oracles for the other 3 fixtures by actually running the reference implementation. <strong>Found and proved</strong> (via a constructed adversarial fixture, not mere inspection) a real defect in the plan’s own <code>apportion()</code> pseudocode: a missing modifier- accumulator update (<code>vip_mod</code>/<code>vop_mod += shiftVal</code>) immediately after <code>moveSubtree()</code> fires, present in real d3-hierarchy’s own source (<code>sip</code>/<code>sop += shift</code>) but omitted from the plan.</li>
+<li>
+<strong>RED→GREEN→REFACTOR:</strong> RED confirmed genuine (5/5 tests erroring “could not find function,” not vacuous). GREEN: all 8 expectations passed on the <strong>first</strong> implementation attempt. REFACTOR: 53→0 <code>lintr</code> findings (line-length, implicit-integer, one unnecessary-lambda), structure only, re-verified 8/8 GREEN after. Full clean-regression read (277 files, excluding documented <code>test-app-*</code>/<code>test-e2e-*</code>/<code>appServer</code>/<code>shinytest2</code> baseline noise) run 3 times (RED/GREEN/REFACTOR checkpoints): 0 failed/0 error every time.</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-08-19--ad-hoc-s611-file-backlogmd-item--investigate-factoring-out-pedigree-diagram-drawing-into-a-separate-r-package">2026-08-19 · [ad hoc] S611: file BACKLOG.md item — investigate factoring out pedigree-diagram drawing into a separate R package<a class="anchor" aria-label="anchor" href="#id_2026-08-19--ad-hoc-s611-file-backlogmd-item--investigate-factoring-out-pedigree-diagram-drawing-into-a-separate-r-package"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> owner-directed <code>BACKLOG.md</code> “Up Next” item — research/scope whether to split the pedigree-diagram layout/rendering code out of <code>nprcgenekeepr</code> into its own dependency package (advantages/disadvantages, not a decision). Explicitly sequenced after the in-progress Walker/BJL apportioning redesign (issue #141) to avoid package-boundary churn mid-algorithm-change.</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-08-19--ad-hoc-s610-record-the-handoffsmd-sha-fix-action-itself-fd8c64d0">2026-08-19 · [ad hoc] S610: record the HANDOFFS.md sha-fix action itself (fd8c64d0)<a class="anchor" aria-label="anchor" href="#id_2026-08-19--ad-hoc-s610-record-the-handoffsmd-sha-fix-action-itself-fd8c64d0"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> the sha-fix commit itself (<code>fd8c64d0</code>) recorded here per failure mode #27 applying even to the self-referential sha-backfill commit — matching S600/S602-S609 precedent exactly.</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-08-19--ad-hoc-s610-record-close-out-commit-sha-in-handoffsmd-receipt-self-reference-workaround-matching-s600s602-s609-precedent">2026-08-19 · [ad hoc] S610: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S609 precedent)<a class="anchor" aria-label="anchor" href="#id_2026-08-19--ad-hoc-s610-record-close-out-commit-sha-in-handoffsmd-receipt-self-reference-workaround-matching-s600s602-s609-precedent"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> <code>HANDOFFS.md</code>’s S610 receipt <code>commit:</code> field updated from <code>pending</code> to the actual close-out commit sha (<code>3eb6c0bf</code>).</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-08-19--issue-141-s610-close-out-walkerbjl-apportioning-redesign--architecture-plan">2026-08-19 · [issue #141] S610: close out (Walker/BJL apportioning redesign — architecture plan)<a class="anchor" aria-label="anchor" href="#id_2026-08-19--issue-141-s610-close-out-walkerbjl-apportioning-redesign--architecture-plan"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> <a href="docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.html"><code>docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md</code></a> (642 lines) — the planning session <code>pedigree-diagram-single-child-union-parent-coincidence-investigation.md</code> §11 called for, scoping a complete Reingold-Tilford/Walker/Buchheim-Jünger-Leipert apportioning redesign of D3 (<code>.positionMatingUnitForest()</code>) across 5 phases. <strong>Planning only — no production code written or modified</strong> (<code>git status --porcelain -- R/ tests/</code> empty throughout).</li>
+<li>
+<strong>Method:</strong> an 8-agent <code>Workflow</code> (3 parallel research passes → design synthesis → 3 parallel adversarial critique lenses → repair; 162 tool calls, 1.24M subagent tokens, 0 errors). <strong>All 3 critique lenses returned <code>designSound: false</code> on the first draft.</strong> The decisive finding: the draft’s own proposed reconciliation mechanism (a “global LEFTNEIGHBOR table”) was <em>misattributed</em> (real BJL <strong>replaces</strong> Walker’s global per-level table with a purely local sibling lookup — the draft claimed the opposite) and <em>mechanically unsound</em> (a non-sibling comparison partner breaks <code>moveSubtree</code>/<code>executeShifts</code>’s sibling-indexed bookkeeping), and would have reintroduced this investigation’s own signature “one-directional sweep, first one wins” failure shape <strong>one level down, inside the replacement algorithm’s own internals</strong> — a 7th instance of the same root cause, caught at the planning stage rather than after implementation.</li>
+<li>
+<strong>Independent verification found 2 errors the critiques missed</strong>, both corrected and documented in the plan as corrections: (1) a real file misattribution — the <code>-6.0</code>/<code>90</code>/<code>129.06</code> gate-behavior pins are in <code>test_positionMatingUnitForest.R</code> (<code>:1582</code>/<code>:1491</code>/<code>:1524</code>), not <code>test_makePedigreeMatingLayout.R</code> as the draft’s inventory <em>and</em> its Phase 3 commit list both claimed; traced to a critique agent conflating that file’s name with the other file’s line count (<code>test_positionMatingUnitForest.R</code> is exactly 1,583 lines). (2) Two <code>test_that()</code> block counts (18→19, 44→46).</li>
+<li>
+<strong>Plan shape:</strong> Phase 1a standalone BJL engine (genuine trees only, cross-checked against MIT-licensed <code>d3-hierarchy</code>); <strong>Phase 1b (NEW, required, gates Phase 2)</strong> a research/design spike for the forest/mixed-gen reconciliation problem the literature does not address at all — this project’s forest has 0-delta tree edges no Reingold-Tilford/Walker/BJL no-overlap proof covers, and 1b may legitimately conclude “more research needed”; Phase 2 adapter built parallel to production plus a reusable <code>helper-live-render-positions.R</code> chromote harness; Phase 3 cutover in 2 scoped commits (4 files, then 2), each independently green; Phase 4 cleanup + close issue #141. Removal of Track 3’s clamp / Track 6’s <code>finalUnitX</code> override / <code>.computeDupNudge()</code> / both <code>sweepMinSep()</code> passes / the epsilon de-collision pass is <strong>conditional</strong> on Phase 2’s real-fixture zero-coincidence gate, never asserted in advance.</li>
+<li>
+<code>BACKLOG.md</code> Track 3 item updated (status tag + S610 progress paragraph). Issue #141 deliberately <strong>not</strong> closed and its <code>premature optimization</code> label deliberately <strong>not</strong> changed — both deferred to the plan’s own Phase 4 / the owner, matching S609’s restraint.</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-08-19--ad-hoc-s610-claim-session-track-3-algorithm-family-redesign-scoping">2026-08-19 · [ad hoc] S610: claim session (Track 3 algorithm-family redesign scoping)<a class="anchor" aria-label="anchor" href="#id_2026-08-19--ad-hoc-s610-claim-session-track-3-algorithm-family-redesign-scoping"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Phase 1B claim stub in <code>SESSION_NOTES.md</code> + <code>status: pending</code> <code>HANDOFFS.md</code> receipt, committed (<code>99930551</code>) before any technical work — 2nd consecutive session claiming correctly after the S606-S608 three-session lapse (Learnings 624/625/628).</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-08-18--ad-hoc-s609-record-the-handoffsmd-sha-fix-action-itself-03ada3bc">2026-08-18 · [ad hoc] S609: record the HANDOFFS.md sha-fix action itself (03ada3bc)<a class="anchor" aria-label="anchor" href="#id_2026-08-18--ad-hoc-s609-record-the-handoffsmd-sha-fix-action-itself-03ada3bc"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> the sha-fix commit itself (<code>03ada3bc</code>) recorded here per failure mode #27 applying even to the self-referential sha-backfill commit — matching S600/S602-S608 precedent exactly.</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-08-18--ad-hoc-s609-record-close-out-commit-sha-in-handoffsmd-receipt-self-reference-workaround-matching-s600s602-s608-precedent">2026-08-18 · [ad hoc] S609: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S608 precedent)<a class="anchor" aria-label="anchor" href="#id_2026-08-18--ad-hoc-s609-record-close-out-commit-sha-in-handoffsmd-receipt-self-reference-workaround-matching-s600s602-s608-precedent"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> <code>HANDOFFS.md</code>’s S609 receipt <code>commit:</code> field updated from <code>pending</code> to the actual close-out commit sha (<code>3344270c</code>).</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-08-18--ad-hoc-s609-close-out-track-6-d3-repair--critique-round-3-failed-redirected-to-algorithm-family-redesign">2026-08-18 · [ad hoc] S609: close out (Track 6 D3‴ repair — Critique Round 3 failed, redirected to algorithm-family redesign)<a class="anchor" aria-label="anchor" href="#id_2026-08-18--ad-hoc-s609-close-out-track-6-d3-repair--critique-round-3-failed-redirected-to-algorithm-family-redesign"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> built and Critique-Round-3’d “D3‴” (the Track 6 single-child union/parent- coincidence repair ratified S608 §9) in a scratch copy — all 3 independent critique lenses returned <code>designStillSound: false</code> (6th failed design attempt in this investigation’s history). A live owner architecture challenge, resolved by re-reading 3 primary sources in full, then redirected the defect class: pursue a complete Reingold-Tilford/Walker/Buchheim-Jünger-Leipert implementation (issue #141) rather than a 7th local patch. No production code changed.</li>
+<li>Published a verified kinship2-vs-nprcgenekeepr before/after comparison Artifact (F1 fixture, node coordinates traced programmatically before trusting the images).</li>
+<li>
+<code>docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md</code> §10 (Critique Round 3 findings) and §11 (owner-ratified redirect) added.</li>
+<li>
+<code>BACKLOG.md</code> Track 3 item updated with the S609 progress + redirect paragraphs.</li>
+<li>GitHub issue #141 commented (new correctness-based evidence; AI-authorship disclaimer; label not changed unilaterally).</li>
+<li>
+<code>PROJECT_LEARNINGS.md</code> Learnings 630 (adversarial mutation-test diagnostic-sufficiency claims; boolean <code>capped</code> fields need a magnitude check) and 631 (read full truncated Workflow output before reporting; re-read primary sources, not condensed restatements, under direct challenge).</li>
+<li>
+<code>CLAUDE.md</code> learnings-count pointer updated (627→631 learnings, Sessions 1–607+→1–609+ — also corrects a 2-learning drift S608 itself left unfixed).</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-08-18--ad-hoc-s609-claim-session-track-6-targeted-repair-cffc09b7">2026-08-18 · [ad hoc] S609: claim session (Track 6 targeted repair) (cffc09b7)<a class="anchor" aria-label="anchor" href="#id_2026-08-18--ad-hoc-s609-claim-session-track-6-targeted-repair-cffc09b7"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Phase 1B claim stub (<code>SESSION_NOTES.md</code>) + <code>HANDOFFS.md</code> <code>status: pending</code> receipt, written and committed before any technical work — correcting the pattern Learnings 624/625/628 flagged in the 3 immediately preceding sessions.</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-08-18--ad-hoc-s608-record-the-handoffsmd-sha-fix-action-itself-30631c83">2026-08-18 · [ad hoc] S608: record the HANDOFFS.md sha-fix action itself (30631c83)<a class="anchor" aria-label="anchor" href="#id_2026-08-18--ad-hoc-s608-record-the-handoffsmd-sha-fix-action-itself-30631c83"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> <code>HANDOFFS.md</code>’s S608 receipt <code>commit:</code> field updated from <code>pending</code> to the actual close-out commit sha (<code>8c697fab</code>), then this action itself recorded here per failure mode #27 applying even to the self-referential sha-backfill commit — matching S600/S602-S607 precedent exactly.</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-08-18--ad-hoc-s608-close-out--track-6-single-child-union-investigation">2026-08-18 · [ad hoc] S608: close out — Track 6 single-child union investigation<a class="anchor" aria-label="anchor" href="#id_2026-08-18--ad-hoc-s608-close-out--track-6-single-child-union-investigation"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Phase 3 close-out for the investigation below. Added <code>PROJECT_LEARNINGS.md</code> Learnings 628 (a third consecutive Phase 1B skip, despite Learnings 624/625 already documenting and sharpening the rule against exactly this — the practical rule is revised to bind the stub-writing tool calls syntactically to the last scope-fixing <code>AskUserQuestion</code>, not left as a remembered follow-up) and 629 (a repaired design’s own extensive self-verification missed a real bug a second, independently-scripted critique round found — a tautological invariant-test check that re-invoked the same function it was meant to verify). Completed the <code>HANDOFFS.md</code> S608 receipt (<code>status: complete</code>) and the Phase 3A evaluation of S607’s own handoff (9/10) in <code>SESSION_NOTES.md</code>.</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-08-18--ad-hoc-s608-investigate-the-track-6-single-child-unionparent-coincidence-defect-found-s603--investigation-only-no-production-code">2026-08-18 · [ad hoc] S608: investigate the Track 6 single-child union/parent-coincidence defect (found S603) — investigation only, no production code<a class="anchor" aria-label="anchor" href="#id_2026-08-18--ad-hoc-s608-investigate-the-track-6-single-child-unionparent-coincidence-defect-found-s603--investigation-only-no-production-code"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Picked up via <code>AskUserQuestion</code> as the Track 3 child-centering trade-off decision, then pivoted (owner-directed) away from the exhausted 5-attempt duplicate-occurrence-selection mechanism to S603’s own newly-found, structurally distinct defect: Track 6’s single-child union formula can place a union’s marker and both mate edges essentially on top of one of its own 2 parents. Ran a 15-agent Evidence→Design→Synthesize→Critique→Repair→Critique-2 <code>Workflow</code> (14/15 agents succeeded; 1 Design candidate hit a transient API error, disclosed not hidden). Found the defect is majority-prevalence on the real 375-individual bundled fixture (72% of all matings visually coincide with a parent, live-verified via chromote pixel-space rendering) — not the rare edge case S603’s own 3 examples suggested. A synthesized design (“D3”) had real correctness majors (worsened 3 established collision-metric tests, regressed a deliberately-correct S583 pinned test); a repair (“D3″”) addressed most of those, but Critique Round 2 found a new, live-verified bug (a “self-duplicate phantom obstacle” discarding 75% of the repair’s own residual improvement) with an already-verified one-line fix in hand. Wrote up the full investigation: <a href="docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.html"><code>docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md</code></a>. Owner ratified (via <code>AskUserQuestion</code>) a targeted future repair session (apply the one-line fix
+<ul><li>add diagnostic return fields + a fresh Critique Round 3, then PRE-RED→RED→GREEN) over accepting the defect as permanent, holding, or re-running the failed candidate first. <code>BACKLOG.md</code> Active updated with a Progress paragraph and a READY-tagged next-step pointer. No <code>R/*.R</code> file was modified — every live-verification in the <code>Workflow</code> ran against scratch copies under the session’s own harness scratchpad, confirmed via <code>git status --porcelain -- R/ tests/</code> empty throughout by multiple agents.</li>
+</ul></li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-08-18--ad-hoc-s608-claim-session-late-phase-1b-was-skipped-caught-and-corrected">2026-08-18 · [ad hoc] S608: claim session (late; Phase 1B was skipped, caught and corrected)<a class="anchor" aria-label="anchor" href="#id_2026-08-18--ad-hoc-s608-claim-session-late-phase-1b-was-skipped-caught-and-corrected"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> <code>SESSION_NOTES.md</code> stub + <code>HANDOFFS.md</code> <code>status: pending</code> receipt, committed (<code>0bb03e0f</code>) — written after research and a 1-agent scoping dispatch had already run (Phase 1B was skipped when the task was first picked), self-caught and corrected rather than deferred to a future session’s reconcile. See <code>PROJECT_LEARNINGS.md</code> Learning 628 for the pattern this recurrence confirms.</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-08-18--ad-hoc-s607-post-close-out-correction--reuse-badge-renders-unregistered-not-green-new-backlogmd-item-for-the-owner-action-needed">2026-08-18 · [ad hoc] S607: post-close-out correction — REUSE badge renders “unregistered,” not green; new BACKLOG.md item for the owner action needed<a class="anchor" aria-label="anchor" href="#id_2026-08-18--ad-hoc-s607-post-close-out-correction--reuse-badge-renders-unregistered-not-green-new-backlogmd-item-for-the-owner-action-needed"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> After pushing S607’s REUSE compliance work, verified the live badge directly (<code>curl</code> against <code>api.reuse.software/badge/...</code> and <code>/info/...</code>) rather than assuming a push was sufficient. Found it renders gray <strong>“unregistered”</strong> — <code>api.reuse.software</code> requires a one-time manual registration (repo URL + email, confirmed via email) at <a href="https://api.reuse.software/register" class="external-link uri">https://api.reuse.software/register</a> before it will crawl and report compliance at all; this is a registration step tied to the owner’s own email/identity, not something a session can or should perform. The repo itself IS <code>reuse lint</code>-compliant (1234/1234, verified locally) — only the badge’s live rendering is blocked on this owner step. New <code>BACKLOG.md</code> Housekeeping item filed (DECISION NEEDED / owner action, Effort S) rather than leaving the gap undocumented.</li>

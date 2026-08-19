@@ -78,7 +78,7 @@ ped <- qcStudbook(nprcgenekeepr::pedGood)
 obfuscatedPed <- obfuscatePed(ped)
 ped
 #>   id sire  dam sex gen      birth exit  age recordStatus
-#> 1 d1 <NA> <NA>   F   0 2003-04-13 <NA> 23.3     original
+#> 1 d1 <NA> <NA>   F   0 2003-04-13 <NA> 23.4     original
 #> 2 d2 <NA> <NA>   F   0 2002-06-22 <NA> 24.2     original
 #> 3 s1 <NA> <NA>   M   0 2000-07-18 <NA> 26.1     original
 #> 4 s2 <NA> <NA>   M   0 2005-06-19 <NA> 21.2     original

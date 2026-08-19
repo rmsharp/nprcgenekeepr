@@ -209,9 +209,15 @@ follow-up item below).
 bar-vs-bar overlap) — accept as shipped, or investigate a narrower
 mechanism** (found S596, 2026-08-16 — **child-centering half: S602
 (2026-08-17) implementation RETRACTED as a fix S603 (2026-08-18),
-verified to produce no visible correction — READY, see the S603
-correction below, not scoped**; D1 bar-vs-bar half READY, Effort
-unknown, not scoped) — plan §2.3/§6 Session C’s parent-span clamp
+verified to produce no visible correction; single-child
+union/parent-coincidence sub-thread (S608-609) redirected to a full
+algorithm-family redesign,** now SCOPED and READY to implement from
+Phase 1a — S610 (2026-08-19),
+[`docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md),
+Effort L overall (5+ sessions); note Phase 1b is a genuine open research
+question the plan does not pretend to have solved — see the S610 entry
+below\*\*; D1 bar-vs-bar half READY, Effort unknown, not scoped) — plan
+§2.3/§6 Session C’s parent-span clamp
 (`docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`)
 was owner-accepted “as designed” this session via `AskUserQuestion`, but
 2 costs were measured, not merely anticipated: (1) the plan’s own §7
@@ -427,6 +433,192 @@ effect on this item's own status:** the "child-centering half" is **not DONE** �
 OPEN, alongside the D1 bar-vs-bar half. The published artifact, `NEWS.Rmd`, and the
 investigation doc's own §12 "Net result" claim are corrected in the same session (see
 investigation doc §13 for the full record, methodology, and images).
+
+**Progress (S608, 2026-08-18), pivoted to a different mechanism entirely — investigation,
+not implementation:** owner picked up this item, then (via `AskUserQuestion`, given the
+duplicate-occurrence-selection mechanism was exhausted at 5 attempts) pivoted to S603's own
+newly-found, structurally distinct defect: Track 6's single-child union formula places a
+union's marker and both mate edges essentially on top of one of its own 2 parents. A
+15-agent Evidence→Design→Synthesize→Critique→Repair→Critique-2 `Workflow` found this is
+**majority-prevalence, not an edge case** — 72% of all matings in the real 375-individual
+fixture visually coincide with a parent (170/224 single-child unions, live-verified via
+chromote pixel-space rendering, not just internal coordinates). Produced a repaired
+candidate design ("D3″," a safety-gated engagement correction) that Critique Round 2 found
+still carries one live-verified bug — with an already-verified one-line fix in hand (residual
+drops 40/224→11/224) — plus 2 disclosed architectural gaps (a collision-safety guarantee
+that can't see 2 later pipeline passes; a tautological invariant-test surface). **Not yet
+PRE-RED-ready.** Owner-ratified next step (via `AskUserQuestion`, §9): a **targeted repair
+session (READY, Effort S)** — apply the already-verified one-line self-duplicate-exclusion
+fix (residual 40/224→11/224, already measured) + add diagnostic return fields to
+`.computeSingleChildAntiCoincidence()`, run a fresh Critique Round 3 against the result
+specifically, then proceed through PRE-RED→RED→GREEN. Full record, the ratification, and
+exact scope:
+[`docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md`](docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md)
+§7-9. Independent finding, unrelated to this item: Track 6's own "91% reduction" headline
+metric is stale at current HEAD (true baseline 53/251, not 9/251) — a separate housekeeping
+item. The original Track 3 child-centering/D1-bar-vs-bar decision (accept as permanent vs.
+investigate further) remains itself unresolved pending this new investigation's own outcome.
+
+**Progress (S609, 2026-08-18), "D3‴" built and Critique Round 3 run — still NOT sound,
+needs a redesign, not another repair attempt:** picked up §9's ratified targeted-repair
+scope via a `Workflow` (1 rebuild agent + 3 independent adversarial critique lenses, scratch
+copy only, zero production code touched). The rebuild reproduced every number the
+investigation had already established exactly (F1 `__union_4` = 224.00px; real-fixture
+residual 11/224; `resolveEdgeNodeCollisions` pairs = 1427; S583 pinned case = 29; Constraint
+1 bit-identical) and honestly fixed 2 further bugs beyond the ratified scope (a
+floating-point guard band; a latent direction-reversal risk in the safety cap) — but **all 3
+critique lenses independently returned `designStillSound: false`**, finding problems the
+rebuild's own honest disclosure did not reach: (1) **the shipped scratch copy regresses an
+existing, currently-green production test** — Track 6's own "zero exact coincidence"
+invariant guard — from 0 to 3 violations on the real fixture; (2) **7 of the 11 "residual"
+cases are not partial corrections, they are exact no-ops** (`target == curX`, the union
+renders on top of its parent, unchanged) — the `capped` diagnostic field is actively
+misleading for these; (3) a structurally separate, previously-unhypothesized bug: the
+narrow-parent-span midpoint-fallback branch is also defeated by the same obstacle cap; (4)
+the failure isn't limited to "shared founder boundary" as scoped — a hand-built case with 3
+independently-engaged unions (no shared parent) shows the identical collapse, because the
+sweep is a one-directional pass with no fixed-point reconciliation between overlapping local
+corrections; (5) the diagnostic fields fail adversarial mutation testing for a "wrong
+formula" bug class. **Six independent design attempts across this investigation's full
+history (S598, S599, S600, S601×1, S609) have now failed adversarial critique** — this is
+not a one-line-fix-away situation; the root cause is architectural (no reconciliation
+mechanism between 2+ single-child unions whose corrections overlap), matching this
+investigation's own repeated pattern. Full record:
+[`docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md`](docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md)
+§10 — **start at §10.3** for a future redesign session. Not scoped for that session (per
+this document's own bounds, §0): the D1 bar-vs-bar residual, the multi-child population, or
+re-litigating the duplicate-occurrence-selection mechanism (already separately exhausted at
+5 attempts).
+
+**Redirect (S609 continued, 2026-08-18) — owner-directed, informed by re-reading this
+project's own algorithm-design history:** in conversation, the owner challenged this
+whole repair thread against kinship2's own convention. Re-reading
+`pedigree-diagram-track6-child-centered-union-position-plan.md` and
+`pedigree-diagram-option2-layout-design-plan.md` in full (not from memory) established (a)
+nprcgenekeepr's *original* formula was parent-centered, like kinship2, and Track 6 moved
+away from it only after measuring a *worse* defect (max 10,687-unit sibship-bar drift for
+polygamous anchors); (b) kinship2 was never adopted directly because it is GPL (nprcgenekeepr
+is MIT) and its own source contains an uncapped factorial search plus a heuristic its own
+vignette admits "works 9 times out of 10." Reading `inst/extdata/reference/5201430.pdf` (the
+CraneFoot paper) directly then corrected this session's own framing: CraneFoot's published
+Aesthetic (4), "parents centred over children," is — through the mating-unit transformation —
+**Track 6's own rule, not kinship2's**; kinship2 and the Reingold-Tilford/Walker/BJL family
+are 2 different published conventions, not one "the" standard. **Owner directive: "go with
+CraneFoot / the Reingold-Tilford–Walker–BJL family this whole approach is built on"** —
+pursue a complete, correct implementation of that family (issue #141) as the direction for
+this whole defect class, rather than a 7th local-patch attempt or reverting to kinship2-style
+parent-centering. **This is a ratified direction, not a scoped plan** — no redesign session
+has been scheduled, no implementation started. A comment was added to issue #141 documenting
+that the evidence in hand (6 failed local-patch attempts, ordinary-scale correctness
+failures) is a different kind of justification than that issue's own filed text asks for
+(which was performance-only); the `premature optimization` label was deliberately not
+changed — that is a decision for a future planning session or the owner directly. Full
+record, ratification, and the precise scope boundary for a future planning session:
+[`docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md`](docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md)
+§11.
+
+**Scoped (S610, 2026-08-19) — the planning session §11 called for is DONE; implementation is
+now READY to start at Phase 1a (Effort L overall, 5+ sessions):**
+[`docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md`](docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md).
+An 8-agent research→design→3-lens-critique→repair `Workflow` produced it; **all 3 critique
+lenses returned `designStillSound: false` on the first draft**, and the repaired plan states
+what they found rather than hiding it. The most consequential finding was structural: the
+draft's own proposed reconciliation mechanism (a "global LEFTNEIGHBOR table") was both
+*misattributed* (real BJL **replaces** Walker's global per-level table with a purely local
+sibling lookup — the draft claimed BJL keeps it unchanged) and *mechanically unsound*
+(grafting a non-sibling comparison partner into `moveSubtree`/`executeShifts`'s sibling-indexed
+bookkeeping), and would have reintroduced this investigation's own signature "one-directional
+sweep, first one wins" failure shape **one level down, inside the replacement algorithm's own
+internals** — i.e. a 7th instance of the same root cause, caught at the planning stage this
+time instead of after implementation. Phasing: **1a** standalone BJL apportioning engine
+(genuine trees only, cross-checked against MIT-licensed `d3-hierarchy`, strong exact-value
+oracles required on every fixture); **1b** (NEW, required, gates Phase 2) a research/design
+spike for the forest/mixed-gen reconciliation problem the literature does not address at all —
+this project's forest has 0-delta tree edges (an individual→its own anchored union, a
+union→its non-anchor-parent phantom leaf) that no Reingold-Tilford/Walker/BJL no-overlap proof
+covers, and 1b may legitimately conclude "more research needed"; **2** pedigree adapter built
+parallel to production, A/B verified, plus a new reusable checked-in
+`helper-live-render-positions.R` (chromote `getPositions()` ground-truth harness); **3**
+cutover in 2 explicitly-scoped commits (4 files, then 2), each independently green;
+**4** cleanup/docs + close issue #141. Track 3's clamp, Track 6's `finalUnitX` override,
+`.computeDupNudge()`, both `sweepMinSep()` applications and the epsilon de-collision pass are
+all targeted for removal — but **conditionally**, gated on Phase 2's real-fixture
+zero-coincidence test (`test_positionMatingUnitForest.R:1185-1205`) actually passing, never
+asserted in advance. D1/D2/D4/D5, Track 1, Track 2, and the D1 bar-vs-bar residual are all
+explicitly OUT of scope. Issue #141 not closed and its `premature optimization` label not
+changed — both deferred to Phase 4/the owner, matching S609's own restraint.
+
+**Phase 1a DONE — S611 (2026-08-19):** standalone, pedigree-agnostic BJL apportioning
+engine, [`R/positionTreeApportion.R`](R/positionTreeApportion.R) (`.positionTreeApportion()`,
+`.buildForestChildrenOf()`, both internal/non-exported) +
+[`tests/testthat/test_positionTreeApportion.R`](tests/testthat/test_positionTreeApportion.R)
+(5 `test_that()` blocks, 8 exact-value expectations). **Zero changes to
+`R/makePedigreeDiagramData.R` or any existing test file** (`git status --porcelain -- R/
+tests/` shows only the 2 new files throughout). Strict TDD followed: PRE-RED research →
+`AskUserQuestion` gate → RED (genuine, 5/5 tests erroring on "could not find function," not
+vacuous) → `AskUserQuestion` gate → GREEN (8/8 expectations passed on the first
+implementation attempt) → `AskUserQuestion` gate → REFACTOR (53→0 lintr findings, all
+style-only, re-verified 8/8 GREEN + full regression after). **PRE-RED research, done before
+any code was written:** downloaded and read Walker's primary source (TR89-034, UNC, Sept.
+1989) directly, extracted Figure 12's 15-node worked example and its published final
+x-coordinates from "Nodes Visited in the Second Traversal" (pp.17-20) — not a secondary
+summary. Independently cross-checked against real `d3-hierarchy` v3.1.2 (installed via
+Node.js; **correction to the plan's own wording: ISC-licensed, not MIT** — equally
+permissive and GPL-avoiding, so the plan's licensing rationale is unaffected): all 15 nodes
+matched exactly (relative to root). Generated exact-value oracles for the other 3 required
+fixtures (balanced 3×3 n-ary tree, asymmetric deep-narrow+wide-shallow tree, a 3-tree forest
+via `.buildForestChildrenOf()`) by actually running `d3-hierarchy` on identical input —
+satisfying the plan's own C2-3 "strong, exact-value oracle" requirement at its most rigorous
+reading. **Found and fixed a real defect in the plan's own `apportion()` pseudocode** via
+the required d3-hierarchy source cross-check: the plan omits `vip_mod += shiftVal;
+vop_mod += shiftVal` immediately after `moveSubtree()` fires (real d3-hierarchy's
+`apportion()` does this — `sip += shift; sop += shift`, `tree.js` lines ~163-165). Proved
+this is mechanically necessary, not cosmetic, by implementing both the plan's literal
+pseudocode and the corrected version in JS, constructing an adversarial fixture forcing 2+
+compounding shifts within one `apportion()` call, and confirming only the corrected version
+matches the real reference exactly. The R implementation includes this correction, documented
+in the file's own header and inline at the call site. Full clean regression (277 files,
+excluding the documented pre-existing `test-app-*`/`test-e2e-*`/`appServer`/`shinytest2`
+baseline-noise set) run 3 times (RED baseline, GREEN, REFACTOR): 0 failed/0 error every
+time, including `test_positionMatingUnitForest.R`/`test_buildMatingUnitForest.R`
+unaffected. `lintr::lint()` on both new files: 0 lints. Runtime smoke test: n/a — grep-
+confirmed zero references to any new function outside the 2 new files (no wiring, no
+exports; matches Phase 1a's own explicit "zero changes" scope). **Next: Phase 1b** (forest/
+mixed-gen/cross-branch reconciliation research spike, gates Phase 2) — its own separate
+session, per the plan's own phase boundaries; may legitimately conclude "more research
+needed."
+
+**Phase 1b — S612 (2026-08-19): substantial progress, NOT DONE — honest "needs a
+continuation session" outcome, exactly the allowance the plan's own Phase 1b charter names.**
+[`docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md`](docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md).
+A research→design→critique→repair `Workflow` (research: gen-recompute call-site trace,
+layered-graph literature review, `apportion()` mechanics) → design synthesis → **3 further
+critique+repair rounds** (11 + 4 + 4 = 19 agents total, ~87 min combined). **Settled,
+validated, safe to build on:** the core architecture (Candidate 2b — eliminate every 0-delta
+edge from the tree recursion by reattaching a union's real children onto its anchor,
+representing everything else as a one-way-derived point) survived all 3 critique rounds
+unchallenged at the structural level, independently corroborated by direct reads of
+CraneFoot's actual C++ source and kinship2's own design vignette (both real pedigree tools
+independently never make a mating union a first-class tree-recursion node either). Candidates
+1 (revived global table) and 3 (same-rank/flat-edge, Sugiyama-literature) are conclusively
+ruled out. The B1/B2/B3 non-anchor-occurrence classification is sound. Case (d) (multi-gen
+forest roots) is resolved for the Shiny app's own reactive chain and, more importantly,
+covered generally by a reinstated `sweepMinSep()` backstop. **NOT settled:** round 4's own
+critique (3 lenses, all independently constructing and *executing* a counter-example) found
+that reinstating `sweepMinSep()` as a safety net (fixing one round-2 finding) breaks the
+invariant a new `orderBySex` sign-fold formula (fixing round 2's *other* finding) depends on
+— when `sweepMinSep()` moves a real child of an `orderBySex`-qualifying union, the drift
+(measured: 0.5 and 0.700 in 2 independent executed fixtures) reliably exceeds the sign-fold's
+own tolerance budget (0.4), inverting the male/female ordering the fix exists to preserve.
+This is the *same signature failure shape* (2+ locally-computed corrections whose interaction
+was never checked against each other) recurring a 4th time within this design-note stage
+alone, on top of the 6 prior full implementation attempts — found here, before any
+implementation code, which is exactly Phase 1b's own purpose. The design note's own §7
+proposes 3 concrete candidate fixes for a follow-up session to evaluate (none adopted here,
+deliberately — adopting one without its own adversarial pass would repeat the mistake this
+note documents). **Next: a Phase 1b continuation session** resolving specifically this seam
+(not a restart — cases (a)/(b)/(c)/(d) and the 2b architecture are settled inputs), THEN
+Phase 2. Effort S-M for the continuation.
 ```
 
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
@@ -519,6 +711,28 @@ explicitly defers until pull size is measured + per-center query
 availability/permissions are confirmed; needs a live LabKey server to
 test/observe, and a naive focal-id server filter is incompatible with
 the client-side connected-component walk).
+
+**Investigate factoring out the pedigree-diagram drawing functionality
+into a separate R package that `nprcgenekeepr` depends on** (found
+2026-08-19, owner-directed, READY, Effort M – a research/scoping
+session, not an implementation session) – look into the possibility,
+advantages, and disadvantages of splitting the pedigree-diagram
+layout/rendering code
+(`.buildMatingUnitForest()`/`.positionMatingUnitForest()`/`.addRectilinearWaypoints()`/
+`.resolveEdgeNodeCollisions()`/[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+in `R/makePedigreeDiagramData.R`, plus the Shiny Diagram-tab module) out
+of `nprcgenekeepr` into its own standalone package, with `nprcgenekeepr`
+then depending on it. A future session should weigh this independent of,
+and probably after, the Walker/BJL apportioning redesign
+(`docs/planning/ pedigree-diagram-walker-bjl-apportioning-redesign-plan.md`,
+issue \#141) currently in progress – splitting mid-redesign would add
+package-boundary churn on top of an already-large in-flight algorithm
+change. Not scoped further this session (out of Phase 1a’s own
+boundary); a future session should produce the actual
+advantages/disadvantages analysis (reuse potential outside this project,
+cleaner dependency graph, and versioning/release overhead, cross-package
+test/CI complexity, `@noRd`/internal-function visibility loss across a
+package boundary, etc.) before any decision to split.
 
 ## Housekeeping
 

@@ -28,6 +28,875 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 611 Handoff Evaluation (by Session 612)
+
+**Score: 10/10.** **What helped:** `next_steps` named the exact next
+phase precisely — “Phase 1b (forest/mixed-gen/cross-branch
+reconciliation research spike) is next… its own separate session” — and,
+critically, pre-legitimized the outcome this session actually reached:
+*“Genuinely open research; may legitimately conclude ‘more research
+needed,’ not a routine implementation step.”* When this session’s own
+3rd repair-and-critique round still failed adversarial critique, that
+line was the difference between confidently writing an honest
+“substantial progress, not yet a sound mechanism” design note and either
+second-guessing whether stopping was a failure, or being tempted to
+force a false “done” verdict to avoid an uncomfortable conclusion.
+`key_files` pointed exactly at the plan’s own “Phase 1b” Migration-Path
+subsection and the “Decision” section’s gen-vs-depth adaptation
+subsections — both were the actual task specification handed directly to
+every research agent this session, zero re-derivation needed. The gotcha
+about `R/positionTreeApportion.R`’s own undocumented
+`moveSubtree`-accumulator correction (not in the plan’s published
+pseudocode) correctly primed this session’s research agents to read the
+shipped engine directly rather than trust the plan’s own pseudocode —
+exactly what they did. **What was missing:** nothing. **What was
+wrong:** nothing found inaccurate this session. **ROI:** very high — the
+single most valuable line was the “may legitimately conclude ‘more
+research needed’” framing, which this session needed directly.
+
+### What Session 612 Did
+
+**Deliverable:** Phase 1b of the Walker/BJL apportioning redesign — a
+research/design spike for the forest/mixed-generation reconciliation
+problem, per
+`docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md`’s
+own “Phase 1b” subsection. **DONE, with an honest non-terminal outcome**
+(the phase’s own charter explicitly allows this): substantial, validated
+progress — NOT a finished, adversarially-clean mechanism. Deliverable:
+[`docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md).
+Zero production code touched (`git status --porcelain -- R/ tests/`
+empty throughout — this was a planning/research session by its own
+explicit charter). **Started/Completed:** 2026-08-19.
+
+**What actually happened, in order:**
+
+1.  **Phase 0 orientation** — read `SESSION_RUNNER.md`/`SAFEGUARDS.md`
+    in full; `SESSION_NOTES.md` (S611’s own active task, DONE);
+    `gh issue list` (13 open); `git status`/`log`/`diff --stat` (17
+    unpushed commits from S608-S611, all docs/module-only; untracked
+    files individually checked — 4 `docs/planning/*.html` pre-existing
+    Quarto renders, `scratchpad/` pre-existing disposable scratch from
+    S609’s own investigation \[read each of the 4 `.R` files directly to
+    confirm — not assumed\], an Office lock-file — none a ghost
+    session); `gh run list --branch master --limit 10` (all
+    `completed success` for S607’s push except one legitimate finding: a
+    scheduled `shinytest2.yaml` run timed out/cancelled at 30m, reported
+    per `CLAUDE.md`’s CI-check addition, not fixed);
+    `methodology_dashboard.py` (96/100, 1 HIGH flag —
+    `SESSION_NOTES.md`/`HANDOFFS.md` both past the 2,000-line read cap,
+    pre-existing, not this session’s scope). Ledger reconcile:
+    `CHANGELOG.md` frontier == `HEAD`; `HANDOFFS.md` frontier 1 commit
+    behind, that commit being its own self-referential sha-fix
+    (S600/S602-S611 precedent) — no backfill owed. Rendered the
+    priorities list (4 numbered `AskUserQuestion` options) — **user
+    picked the Walker/BJL Phase 1b spike.**
+2.  **Phase 1B claimed immediately** — `SESSION_NOTES.md` stub +
+    `HANDOFFS.md` `status: pending` receipt, committed (`dbc9c199`)
+    before any research work.
+3.  **Read the parent plan’s own Phase 1b task specification and
+    “Decision” section’s gen-vs-depth adaptation subsections in full**
+    (not skimmed), plus did my own direct primary-source grounding
+    before dispatching any agent: read `R/appServer.R` end-to-end and
+    confirmed its `shared` reactive-values architecture is strictly
+    one-way (`shared$currentPedigree` written only from
+    `modPedigreeServer`’s own output; the 3 other modules the plan
+    flagged as “unchecked” — GV, Breeding Groups, Summary Stats — only
+    ever *read* it, never write back) — this became the seeded lead for
+    the case-(d) research agent, saving it from blind re-exploration.
+4.  **Dispatched an 8-agent research→design→critique `Workflow`** (3
+    parallel research passes: a gen-recompute/case-(d) trace seeded with
+    the appServer.R finding above; a literature review \[Graphviz
+    `dot`’s real `flat_search()` mechanism; CraneFoot’s actual C++
+    source, not just its published paper; kinship2’s own design
+    vignette, read in full\] → design synthesis → 3-lens adversarial
+    critique). **Round 1: 0/3 lenses sound** — 3 major findings
+    (over-rendering, missing B2 gate, a tier-staleness bug). Repaired,
+    critiqued again inline (the workflow’s own bounded 2-round loop) —
+    **round 2: 0/3 lenses sound again** — 3 new major findings,
+    including case (d)’s own “not reachable” proof being overclaimed for
+    the exported, script-callable
+    [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+    contract specifically (vs. the Shiny app’s own protected path).
+5.  **Ran a 3rd repair-and-critique round myself** (a separate, targeted
+    4-agent `Workflow`) — caught and fixed my own mistake mid-launch
+    first (passed literal `"PLACEHOLDER"` `args` instead of the actual
+    round-2 output; `TaskStop`’d it immediately, extracted the real JSON
+    result to scratch files programmatically rather than risk manually
+    retyping ~50K characters, relaunched correctly — see
+    `PROJECT_LEARNINGS.md` Learning 636). **Round 3: still 0/3 lenses
+    sound** — this time all 3 lenses independently converged on the SAME
+    defect, each with its own executed counter-example: reinstating
+    `sweepMinSep()` (round 3’s own fix for round 2’s finding that it was
+    needed) breaks the invariant a new `orderBySex` sign-fold formula
+    (round 3’s own fix for round 2’s *other* finding) depends on — see
+    `PROJECT_LEARNINGS.md` Learning 637 for the full mechanism.
+6.  **Deliberately stopped at round 3** rather than attempting a 4th
+    repair — a bounded, pre-declared decision (stated to the user before
+    launching round 3), matching Phase 1b’s own explicit charter that
+    “more research needed… is an acceptable, honest outcome, not a
+    failure of the phase,” and `SESSION_RUNNER.md`’s own “1 and done”
+    discipline.
+7.  **Independently spot-verified the design note’s own most
+    load-bearing technical claims** against the real shipped source
+    before publishing (not trusting the agents’ output on faith) —
+    `R/positionTreeApportion.R` genuinely has no `gen` field anywhere
+    (grep-confirmed); `sweepMinSep()`’s exact push formula; Track 6’s
+    exact midpoint formula; `orderBySex`’s exact qualifying gate and
+    swap mechanism;
+    [`findGeneration()`](https://github.com/rmsharp/nprcgenekeepr/reference/findGeneration.md)’s
+    exact dangling-parent NA-propagation algorithm, read directly. Found
+    and corrected one overclaim in my own draft summary (a critique
+    lens’s “any single push is ≥ minSep” claim doesn’t hold in full
+    generality — tightened before publishing).
+8.  **Wrote the final design note** synthesizing all 3 rounds honestly:
+    what’s settled (cases (a)/(b)/(c)/(d), the core 2b architecture, the
+    literature corroboration) vs. what’s not (the
+    `sweepMinSep()`/`orderBySex` seam), with 3 concrete candidate fixes
+    named for a follow-up session. Updated `BACKLOG.md`’s Walker/BJL
+    item with the S612 progress paragraph.
+
+**Runtime smoke test (Phase 3E):** n/a — planning/research session, zero
+`R/*.R` or `tests/*.R` files touched throughout
+(`git status --porcelain -- R/ tests/` empty).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation /
+tutorial-article / `NEWS.Rmd` / `a2interactive.Rmd` / `_pkgdown.yml`
+checklists all **N/A** (no shipped code, no exported function). Lint
+checklist **N/A** (no `.R` files touched). GitHub issue close-out
+**N/A** — issue \#141 stays open (only Phase 1b of 5, itself not fully
+resolved, is done this session).
+
+**Self-assessment (Session 612): 8/10.** **Strengths:** (1) Ran a
+genuinely adversarial process against my own work — 3 full critique
+rounds, not stopping at the first “looks plausible” draft, and the 3rd
+round specifically targeted the *interaction* between 2
+individually-sound fixes rather than re-verifying each in isolation,
+which is exactly what found the real, remaining defect. (2) Did real
+primary-source grounding myself before dispatching agents (the
+`appServer.R` trace), not just delegating discovery entirely. (3)
+Independently spot-verified the agents’ own most load-bearing claims
+against the real shipped source before treating them as settled — caught
+and corrected one overclaim in my own summary before publishing. (4) Was
+honest about the outcome rather than either forcing a false “done”
+verdict or treating “not fully solved” as a failure to hide — the design
+note states plainly what’s settled and what isn’t, with concrete next
+steps. (5) Recovered cleanly from a real mid-session mistake
+(placeholder `args`) — caught before any agent ran on bad input, fixed
+with a more robust mechanism (file-based handoff between workflow
+rounds) rather than just re-typing correctly and moving on, and
+documented the pattern as a learning. **Weaknesses:** (1) The
+placeholder-`args` mistake shouldn’t have happened at all — a
+launched-workflow summary should be scanned for exactly this kind of
+copy-paste artifact before trusting it’s running for real, not caught by
+luck after the fact. (2) Did not attempt any of the 3 candidate fixes
+named in the design note’s own §7 — a deliberate scope decision
+(avoiding a 4th unbounded repair round within one session), but a
+reasonable case could be made that at least evaluating candidate fix 3
+(scoping `sweepMinSep()`’s own reach) would have been cheap and might
+have converged; chose the more conservative, bounded stopping point
+instead. (3) Spent real Workflow budget (19 agents combined across all
+rounds, ~87 minutes) without reaching a fully “DONE” mechanism — a
+legitimate, disclosed research outcome per the phase’s own charter, but
+worth naming plainly rather than only implicitly, since a future
+session’s own Phase 3A should judge whether this was the right amount of
+iteration for one session’s own Phase 1b. **ROI:** high — found a real,
+previously-unknown defect at the design-note stage (before any
+implementation code), which is exactly what Phase 1b exists to do; the
+4th failed round is expensive-feeling but is substantially cheaper than
+finding the same defect as a 7th failed implementation attempt, which is
+this investigation’s own well-documented alternative.
+
+### Session 610 Handoff Evaluation (by Session 611)
+
+**Score: 10/10.** **What helped:** `next_steps` named the exact
+deliverable almost verbatim (“a standalone, pedigree-agnostic BJL
+apportioning engine (proposed `R/positionTreeApportion.R`) with
+`tests/testthat/test_positionTreeApportion.R`, GENUINE TREES ONLY,
+cross-checked against \[d3-hierarchy\] before writing GREEN code, every
+fixture carrying a strong exact-value oracle”) — this session’s own
+deliverable statement and file names were built directly from it, zero
+re-derivation needed. `key_files` pointed exactly at the plan’s own
+“Migration Path Phase 1a” section and the zero-coincidence gate test,
+both used directly. `gotchas`’ warning that “Phase 1b is a genuine
+unsolved research question, not a formality” correctly primed this
+session to treat Phase 1a as fully self-contained and stop there, rather
+than being tempted to sketch ahead into Phase 1b’s own undesigned
+mechanism. **What was missing:** nothing. **What was wrong:** one small
+inherited inaccuracy — `next_steps` (following the plan’s own wording)
+called d3-hierarchy “MIT-licensed”; it is actually ISC-licensed (equally
+permissive, doesn’t change the plan’s GPL-avoidance reasoning, but worth
+correcting for the record — done in `BACKLOG.md`/this file/the new
+module’s own header). **ROI:** very high — the precision of `next_steps`
+let this session go straight into PRE-RED primary-source research
+instead of re-deriving scope from the plan document itself.
+
+### What Session 611 Did
+
+**Deliverable:** Implemented Phase 1a of the Walker/BJL apportioning
+redesign — a standalone, pedigree-agnostic BJL tree-apportioning engine
+([`R/positionTreeApportion.R`](https://github.com/rmsharp/nprcgenekeepr/R/positionTreeApportion.R)) +
+[`tests/testthat/test_positionTreeApportion.R`](https://github.com/rmsharp/nprcgenekeepr/tests/testthat/test_positionTreeApportion.R),
+per
+`docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md`’s
+Phase 1a section. **DONE.** Zero changes to
+`R/makePedigreeDiagramData.R` or any existing test file
+(`git status --porcelain -- R/ tests/` shows only the 2 new files
+throughout). **Started/Completed:** 2026-08-19.
+
+**What actually happened, in order:**
+
+1.  **Phase 0 orientation** — read `SESSION_RUNNER.md`/`SAFEGUARDS.md`
+    in full; `SESSION_NOTES.md` (S610’s own active task, DONE);
+    `gh issue list` (13 open); `git status`/`log`/`diff --stat` (12
+    unpushed commits from S608-S610, all docs-only; untracked files
+    individually checked – 4 `docs/planning/*.html` Quarto renders never
+    committed \[established convention\], `scratchpad/` disposable
+    scratch, an Office lock-file – none a ghost session);
+    `methodology_dashboard.py` (96/100, 2 HIGH flags:
+    `SESSION_NOTES.md`/`HANDOFFS.md` both past the 2,000-line read cap –
+    informational, not this session’s scope);
+    `gh run list --branch master` (all `completed success`, but only
+    through S607’s push). Ledger reconcile: both `CHANGELOG.md` and
+    `HANDOFFS.md` frontiers current (the 1-commit `HANDOFFS.md` gap is
+    the established self-referential sha-fix pattern, S600/602-610
+    precedent – no backfill owed). Rendered the priorities list (2
+    numbered `AskUserQuestion` options) — **user picked the Walker/BJL
+    Phase 1a implementation.**
+2.  **Mid-session owner request handled inline, separately ledgered:**
+    user asked to add a `BACKLOG.md` item investigating factoring the
+    pedigree-diagram drawing code into its own R package. Added (Up Next
+    section, READY, Effort M, explicitly sequenced after this redesign
+    to avoid mid-algorithm package-boundary churn), `CHANGELOG.md`
+    entry, own commit (`3220bc58`) – kept separate from the TDD work
+    below.
+3.  **Phase 1B claimed immediately** — `SESSION_NOTES.md` stub +
+    `HANDOFFS.md` `status: pending` receipt, committed (`acc79b44`)
+    before any research/technical work.
+4.  **PRE-RED research** (no code written): downloaded and read Walker’s
+    primary source (TR89-034, UNC, Sept. 1989,
+    `cs.unc.edu/techreports/89-034.pdf`) directly, extracted Figure 12’s
+    15-node worked example and its published final x-coordinates from
+    “Nodes Visited in the Second Traversal” (pp.17-20) – not a secondary
+    summary. Installed real `d3-hierarchy` v3.1.2 via Node.js (already
+    available in this environment) and cross-checked: all 15 nodes
+    matched the primary-source extraction exactly (relative to root) –
+    independent confirmation of both the primary-source reading and the
+    plan’s own claim that BJL and Walker agree on genuine trees. Read
+    `d3-hierarchy`’s actual `tree.js` source directly (not a secondary
+    description) to cross-check the plan’s own corrected
+    `apportion`/`moveSubtree`/`executeShifts`/
+    `nextLeft`/`nextRight`/`commonAncestor` pseudocode, per Phase 1a’s
+    own explicit requirement. **Found a real defect**: the plan omits
+    `vip_mod += shiftVal; vop_mod += shiftVal` immediately after
+    `moveSubtree()` fires; real d3-hierarchy’s `apportion()` does this
+    (`sip += shift; sop += shift`). Proved this is mechanically
+    necessary (not cosmetic) by implementing both the plan’s literal
+    pseudocode and the corrected version in JS, constructing an
+    adversarial fixture forcing 2+ compounding shifts within one
+    `apportion()` call, and confirming only the corrected version
+    matches the real d3-hierarchy reference exactly. Generated
+    exact-value oracles for the 3 other required fixtures (balanced 3x3
+    n-ary tree, asymmetric deep-narrow+wide-shallow tree, a 3-tree
+    forest via a synthetic super-root) by actually running
+    `d3-hierarchy` on identical input – the most rigorous reading of the
+    plan’s own C2-3 “strong, exact-value oracle” requirement.
+5.  **`TDD: PRE-RED→RED` `AskUserQuestion` gate** – approved.
+6.  **RED**: wrote `tests/testthat/test_positionTreeApportion.R`, 5
+    `test_that()` blocks / 8 expectations (single node; balanced n-ary;
+    asymmetric; forest via `.buildForestChildrenOf()`; Walker’s own
+    golden 15-node example). Confirmed genuine RED (5/5 erroring “could
+    not find function,” not vacuous passes) and zero collateral damage
+    via a full clean-regression read.
+7.  **`TDD: RED→GREEN` `AskUserQuestion` gate** – approved.
+8.  **GREEN**: wrote `R/positionTreeApportion.R` (environment-based
+    mutable per-node state, directly mirroring the JS design verified in
+    step 4, including the moveSubtree-accumulator correction). **All 8
+    expectations passed on the first implementation attempt** – zero
+    debug cycles, a direct payoff of the PRE-RED rigor. Full clean
+    regression: 277/277 (non-Shiny- reactive) files, 0 failed/0 error.
+9.  **`TDD: GREEN→REFACTOR` `AskUserQuestion` gate** – approved.
+10. **REFACTOR**: fixed all 53 `lintr` findings (line-length,
+    implicit-integer literals, one unnecessary-lambda –
+    `vapply(...get...)` replaced with
+    [`mget()`](https://rdrr.io/r/base/get.html)+[`unlist()`](https://rdrr.io/r/base/unlist.html)),
+    structure only. Re-verified 8/8 GREEN, 0 lints, full clean
+    regression 277/277 clean, after the refactor.
+
+**Environment gotcha, not this session’s own defect, worth recording:**
+[`testthat::test_dir()`](https://testthat.r-lib.org/reference/test_dir.html)
+over the FULL suite (including
+`test-app-*`/`test-e2e-*`/`test_appServer_*`/`shinytest2` files)
+silently terminates the R process partway through in this sandbox, with
+no crash/error message and exit code 0 – traced to a
+[`stop()`](https://rdrr.io/r/base/stop.html) inside a Shiny `observe()`
+reactive (`appServer.R:169`, `inputResults$cleanedStudbook`) that
+appears to escape `tryCatch` (likely a `later`-scheduled callback firing
+outside the synchronous call stack). CLAUDE.md’s own documented
+`test-app-*`/`test-e2e-*` exclusion filter was insufficient –
+`test_appServer_*.R` (underscore, not the documented dash-prefixed
+pattern) and `shinytest2`-named files hit the same crash and needed
+adding to the exclusion set. Once excluded, the remaining 277 files ran
+to completion cleanly and repeatably (3 full runs, RED/GREEN/REFACTOR
+checkpoints). See gotchas below and Learnings.
+
+**Runtime smoke test (Phase 3E):** n/a – grep-confirmed
+(`grep -rn "positionTreeApportion| buildForestChildrenOf" R/ tests/`)
+zero references to any new function outside the 2 new files; `NAMESPACE`
+confirms no accidental export. Phase 1a’s own scope is explicitly “zero
+changes to R/makePedigreeDiagramData.R” – no runtime path is reached by
+this change, verified by grep, not assumed.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist N/A
+(no new displayed statistic). Tutorial/article + `a2interactive.Rmd`
+checklists N/A (no exported, script-callable function – both new
+functions are `.`-prefixed internal, matching
+`.positionMatingUnitForest`’s own convention). `NEWS.Rmd` checklist N/A
+(same reason – no exported function). `_pkgdown.yml` checklist N/A (not
+exported). GitHub issue close-out N/A – issue \#141 stays open (only
+Phase 1a of 5 is done; Phase 4 closes it, matching S609/S610’s own
+restraint). Lint checklist: DONE, 0 lints on both touched files.
+
+**Self-assessment (Session 611): 9/10.** **Strengths:** (1) PRE-RED
+research was genuinely primary-source, not secondary-summary –
+downloaded and read Walker’s actual 1989 tech report, and independently
+*ran* the real reference implementation (d3-hierarchy) rather than
+trusting a description of it, satisfying the plan’s own C2-3 requirement
+at its strictest reading. (2) Found and *proved* (not merely asserted) a
+real, mechanically-significant defect in the plan’s own pseudocode –
+constructed an adversarial fixture demonstrating the
+corrected/uncorrected versions diverge, rather than taking either the
+plan’s pseudocode or my own reasoning on faith. (3) Held every TDD gate
+faithfully via `AskUserQuestion`, with RED genuinely failing (not
+vacuous) and GREEN passing on the first attempt – the rigor of the
+design work translated directly into implementation reliability. (4) Ran
+the full clean-regression read 3 separate times (RED/GREEN/ REFACTOR
+checkpoints), not just once at the end, catching nothing but confirming
+nothing broke at each stage. (5) Handled the owner’s mid-session
+BACKLOG.md request cleanly, in its own commit, without derailing the TDD
+session’s own scope. **Weaknesses:** (1) Spent real time
+trial-and-erroring the background-test-crash exclusion list from scratch
+rather than first checking whether this exact pattern (Shiny-reactive
+crash escaping `tryCatch` during a full `test_dir()` run) was already a
+documented project learning – it was not (checked this session), but the
+check itself should have come before, not after, several failed
+attempts. (2) Did not run
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+(`CLAUDE.md`’s general build-equivalent) – deliberately matched the
+plan’s own Phase 1a verification-commands list instead
+(`test_file`/`test_dir`/`lintr`, no
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+at this phase), a conscious scope decision rather than an oversight, but
+naming it here rather than letting it pass silently. **ROI:** high –
+Phase 1a shipped fully verified on the first implementation attempt,
+with a genuine, disclosed correction to the parent plan’s own pseudocode
+found before any GREEN code existed, exactly the discipline Phase 1a’s
+own “not optional polish” language was written to produce.
+
+### Session 609 Handoff Evaluation (by Session 610)
+
+**Score: 10/10.** **What helped:** the `next_steps` field was the rare
+handoff that named not just the task but its *correct shape* — “a future
+**PLANNING** session (not implementation),” with the four required
+outputs enumerated (evidence-based inventory, which family member,
+migration path, completion criteria) and the precedent that justifies
+the boundary (“Option 2/Track 4/Track 6 each got dedicated planning
+sessions”). This session’s `Workflow` dispatch was built almost directly
+from it. The `key_files` pointer to investigation doc §10-11 was exact,
+and §11’s own “BJL specifically vs. the family generally” note
+pre-empted what would otherwise have been this session’s biggest open
+question (it correctly framed “which family member” as a *secondary*
+decision — the plan adopts that framing and justifies BJL concretely
+rather than re-litigating the family). **The single most valuable line**
+was the `gotchas` warning that the S609 scratch copy “is NOT a starting
+point for a future redesign (its whole architecture, a one-directional
+sweep, is the thing Critique Round 3 found broken)” — this session never
+opened it, saving real time and, more importantly, preventing an
+anchoring bias toward the broken approach. **What was missing:**
+nothing. **What was wrong:** nothing found inaccurate — every claim I
+checked (the 6-attempt tally, the owner directive quote at investigation
+doc:492, the §11 scope boundary, issue \#141’s label state) verified
+exactly. **ROI:** very high; this is the handoff quality bar the
+protocol exists to produce.
+
+### What Session 610 Did
+
+**Deliverable:** Architecture planning session — scope a complete,
+correct Reingold-Tilford/Walker/Buchheim-Jünger-Leipert (BJL)
+tree-positioning implementation for the pedigree diagram’s D3 layout,
+per investigation doc §11 and issue \#141, following
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`. **DONE.** The
+plan is the deliverable; **no production code was written or modified**
+(`git status --porcelain -- R/ tests/` empty throughout).
+**Started/Completed:** 2026-08-18/19.
+
+**What actually happened, in order:**
+
+1.  **Phase 0 orientation** — read `SESSION_RUNNER.md`/`SAFEGUARDS.md`
+    in full; `SESSION_NOTES.md` (S609’s active task, DONE);
+    `gh issue list` (13 open); `git status`/`log`/`diff --stat`.
+    Untracked files individually checked, all pre-existing, not a ghost
+    session: 4 `docs/planning/*.html` are local Quarto renders of
+    committed `.qmd` sources (S484/S588/S589/S590) — confirmed *no*
+    `docs/planning/*.html` has ever been committed, so the convention is
+    render-locally-don’t-commit; plus the recurring Office lock-file and
+    this session’s own scratchpad. `methodology_dashboard.py`: 96/100,
+    but **1 HIGH risk flag newly crossed** — `SESSION_NOTES.md` at 2,091
+    lines is past the 2,000-line agent-read truncation cap (S608/S609
+    both reported 0 High+; this appears to have crossed during S609’s
+    own long close-out). `gh run list --branch master --limit 10`: all
+    `completed success` (2 `cancelled` `pkgdown.yaml` runs are the
+    normal superseded-by-follow-up-push pattern) — but note all 10 are
+    for S607’s push; **S608/S609’s 8 commits are unpushed and have never
+    been through CI.** Ledger reconcile: `CHANGELOG.md` frontier ==
+    `HEAD`; `HANDOFFS.md` frontier 1 commit behind, that commit being
+    its own self-referential ledger entry (S600/602-609 precedent) — no
+    backfill owed.
+2.  Rendered the priorities list (3 numbered items) via
+    `AskUserQuestion` — **user picked the Track 3 algorithm-family
+    redesign scoping.**
+3.  **Phase 1B claimed immediately, before any technical work** — stub +
+    `HANDOFFS.md` pending receipt committed (`99930551`).
+4.  Read `ARCHITECTURE_WORKSTREAM.md`, then read the target code
+    directly to ground the dispatch: `.positionMatingUnitForest()` in
+    full (`R/makePedigreeDiagramData.R:717-1226`), the investigation
+    doc’s §11, the Option 2 design plan’s §2.2/D1-D5, and the test-file
+    inventory.
+5.  **Dispatched an 8-agent background `Workflow`**: 3 parallel research
+    passes (algorithm literature with live WebSearch verification / full
+    grep-based codebase inventory / the complete 6-attempt failure
+    history) → design synthesis → 3 parallel adversarial critique lenses
+    (correctness-failure-mode, migration-blast-radius-TDD,
+    algorithm-fidelity) → repair. ~65 min, 162 tool calls, 1.24M
+    subagent tokens, 0 errors.
+6.  **All 3 critique lenses returned `designSound: false` on the first
+    draft.** The decisive finding was structural and, in this
+    investigation’s context, striking: the draft’s own proposed
+    reconciliation mechanism (a “global LEFTNEIGHBOR table”) was
+    **misattributed** (real BJL *replaces* Walker’s global per-level
+    table with a purely local sibling lookup — the draft claimed BJL
+    keeps it unchanged) **and mechanically unsound** (a non-sibling
+    comparison partner breaks `moveSubtree`/`executeShifts`’s
+    sibling-indexed math), and would have reintroduced this
+    investigation’s own signature “one-directional sweep, first one
+    wins” failure shape *one level down, inside the replacement
+    algorithm’s own internals*. That is a 7th instance of the same root
+    cause — caught at the planning stage this time, before any code.
+7.  **Verified the repaired plan’s evidence myself rather than trusting
+    the agents** (per `SESSION_RUNNER.md` §Vertical Slice Sessions’
+    standing warning about confident-but-wrong subagent output).
+    Confirmed correct: all 5 call sites, both downstream Track 1/2
+    function boundaries,
+    `sibshipBarFraction`/`preferAnchor`/`unitGen`/`modPedigree.R:346`
+    citations, the zero-coincidence gate at
+    `test_positionMatingUnitForest.R:1185-1205`, and every pinned count
+    in
+    `test_addRectilinearWaypoints.R`/`test_resolveEdgeNodeCollisions.R`.
+    **Found and fixed 2 errors** — see “Gotchas” below.
+8.  Wrote the plan to
+    `docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md`
+    (642 lines) with the corrections applied and *documented as
+    corrections*, verified every cited file path resolves (the only
+    non-existent ones are the 4 files the plan itself proposes
+    creating), and updated `BACKLOG.md`’s Track 3 item (both its status
+    tag and a new S610 progress paragraph).
+
+**Runtime smoke test (Phase 3E):** n/a — planning/docs-only session,
+zero `R/*.R` or `tests/*.R` files touched
+(`git status --porcelain -- R/ tests/` empty throughout).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation /
+tutorial-article / `NEWS.Rmd` / `a2interactive.Rmd` / `_pkgdown.yml`
+checklists all **N/A** (no shipped code, no exported function, no
+user-facing feature — the plan’s own Phase 4 assigns `NEWS.Rmd` to the
+implementation chain). Lint checklist **N/A** (no `.R` files touched).
+GitHub issue close-out **N/A** — no `BACKLOG.md` item reached DONE;
+issue \#141 is deliberately left open (the plan’s Phase 4 closes it) and
+its `premature optimization` label deliberately unchanged, matching
+S609’s own restraint.
+
+**Self-assessment (Session 610): 9/10.** **Strengths:** (1) Phase 1B
+claimed immediately after scope settled, before any research — second
+consecutive session getting this right after the S606-S608 three-session
+lapse. (2) Did not trust the workflow’s own output: independently
+re-verified the inventory and **found a real file misattribution** that
+all 3 critique lenses missed — one of which had explicitly claimed to
+have “independently re-verified… down to line numbers” the very citation
+that was wrong. An executor trusting it would have searched the wrong
+file for the `-6.0` pin. (3) Recorded the corrections *in the plan as
+corrections*, with their origin traced, rather than silently fixing them
+— the error’s provenance (a verification agent’s confidently-false claim
+nested inside an otherwise-accurate critique) is the most transferable
+lesson this session produced. (4) Held the planning/implementation
+boundary despite the plan being detailed enough to start coding from —
+no production file was opened for editing. (5) The critique round did
+real work: it caught a draft that would have propagated this
+investigation’s own root cause into its replacement. **Weaknesses:** (1)
+My `Workflow` prompt told the algorithm-research agent to get BJL’s
+mechanism “precisely,” but I did not require the *design* agent to state
+which specific claims it had verified vs. inferred — the misattribution
+the fidelity lens caught might have been avoided by a cheaper structural
+requirement in the original prompt rather than a full critique round.
+(2) I verified the plan’s *codebase* citations exhaustively but
+spot-checked rather than fully re-derived its *algorithm* claims against
+primary sources — I relied on the fidelity critique’s own independent
+3-source verification for that half, which is reasonable given it
+disagreed with the draft and was specific/checkable, but it is a genuine
+asymmetry in my own verification depth and I am naming it rather than
+implying uniform rigor. **ROI:** high — a future implementer gets a
+phased, blast-radius-respecting plan with an honest open research
+question (Phase 1b) flagged as such, instead of a confident plan that
+would have failed at exactly the point six prior attempts failed.
+
+### Session 608 Handoff Evaluation (by Session 609)
+
+**Score: 9/10.** **What helped:** the ratified scope in `next_steps`
+(apply the verified one-line self-duplicate-exclusion fix, add
+diagnostic return fields, run a fresh Critique Round 3, only then
+proceed PRE-RED→RED→GREEN) was exact and directly executable — this
+session’s own `Workflow` prompt was built almost verbatim from it, with
+zero re-derivation needed. The `gotchas` field (mating-union ids sort
+lexicographically not numerically; the collision-safety cap’s own
+guarantee doesn’t see 2 later pipeline passes) were both directly
+confirmed live this session — the second one recurred nearly
+word-for-word as one of Critique Round 3’s own findings. **What was
+missing:** nothing the handoff could reasonably have anticipated — it
+could not have known the D3‴ rebuild itself would fail a fresh Critique
+Round 3 (that’s this session’s own discovery, not an omission), and it
+explicitly scoped OUT re-litigating D1/D2/the duplicate-occurrence
+mechanism, which turned out to be exactly right restraint. **What was
+wrong:** nothing found inaccurate. **ROI:** high — the precision of the
+ratified scope let this session go straight into a well-specified
+`Workflow` dispatch instead of re-deriving requirements from the
+investigation doc’s prose.
+
+### What Session 609 Did
+
+**Deliverable:** Track 6 targeted repair session, as ratified by S608 §9
+— build “D3‴,” run Critique Round 3, and (only if sound) proceed through
+PRE-RED→RED→GREEN. **DONE, but redirected by the owner mid-session
+rather than reaching implementation** — Critique Round 3 found the
+design not sound (6th failed attempt in this investigation’s history),
+and a direct owner architectural challenge, resolved by reading 3
+primary sources in full, redirected the whole defect class toward a
+future algorithm-family redesign (issue \#141) instead of a 7th patch.
+**No production code was touched.** **Started/Completed:** 2026-08-18.
+
+**What actually happened, in order:**
+
+1.  **Phase 0 orientation** — read `SESSION_RUNNER.md`/`SAFEGUARDS.md`
+    in full; `SESSION_NOTES.md` (S608’s own active task, DONE);
+    `gh issue list` (13 open); `git status`/`log`/`diff --stat` (clean;
+    untracked evidence-doc `.html` render outputs and a recurring Office
+    lock-file individually checked and confirmed pre-existing, not a
+    ghost session); `methodology_dashboard.py` (96/100, 0 High+ risk,
+    dashboard itself flagged stale v2.14.0 vs canonical v2.15.2 —
+    informational); `gh run list --branch master` (last 10 runs all
+    `completed success`). Ledger reconcile: `CHANGELOG.md` frontier ==
+    `HEAD`, no gap; `HANDOFFS.md` frontier 1 commit behind but that
+    commit is itself a self-referential ledger entry (established
+    S600/602-607 precedent, no backfill owed). Cross-checked
+    `PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md` — its own
+    Tier 1/2 items are all already resolved, nothing new to surface.
+2.  Rendered the `BACKLOG.md`-sourced priorities list (4 items) via
+    `AskUserQuestion` — **user picked the Track 6 targeted repair
+    session** (the item S608 §9 ratified).
+3.  **Phase 1B claimed correctly this time** (the exact gap Learnings
+    624/625/628 flagged 3 consecutive prior sessions for) — wrote the
+    `SESSION_NOTES.md` stub and `HANDOFFS.md` `status: pending` receipt
+    and committed (`cffc09b7`) before any research/technical work.
+4.  Read `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`, the
+    full investigation doc (§0-9), `.computeDupNudge()`’s precedent
+    code, the pipeline insertion point
+    (`R/makePedigreeDiagramData.R:1099-1226`), and the relevant test
+    fixtures (`test_positionMatingUnitForest.R:229-326,1067-1183`) to
+    ground a precise `Workflow` dispatch.
+5.  Built a first-draft `.computeSingleChildAntiCoincidence()` in a
+    scratch copy myself (not delegated — needed surgical precision on
+    exact line numbers/formulas already in context), live-verified it
+    reproduces the investigation doc’s own F1-fixture number exactly
+    (`__union_4`: 255.12→224.00 scaled px), then found via live
+    measurement against the real 375-fixture that my own draft’s
+    collision-safety cap was too aggressive (79/224 residual vs. the
+    doc’s own target 11/224) — a genuine bug in my own construction,
+    diagnosed but not fully fixed solo.
+6.  **User asked for a kinship2-vs-nprcgenekeepr before/after visual
+    comparison** mid-session. Rendered all 3 (kinship2 reference,
+    current-HEAD “before,” scratch-repair “after”) for the F1 fixture
+    via `visNetwork` + `chromote`, verified the exact node coordinates
+    programmatically before trusting the images (per
+    `[[verify-diagrams-against-ground-truth]]`), and published a
+    comparison Artifact (design-system grounded in the diagrams’ own
+    Okabe-Ito palette).
+7.  **Dispatched a background `Workflow`** (1 rebuild agent + 3
+    independent Critique Round 3 lenses: correctness, edge-case,
+    blast-radius/TDD) to fix the safety-cap bug and re-verify against
+    every already-established number, matching this investigation’s own
+    established multi-agent methodology. Continued conversation with the
+    user while it ran (~1hr, 321 tool calls, 761K tokens across 4
+    agents).
+8.  **User pushed back directly**, mid-conversation, on the whole repair
+    thread: kinship2’s convention is “known to work, the community
+    standard,” and asked how “simple rules” (even spacing,
+    parent-centered descenders) could be hard to implement. Answered
+    from the codebase’s own source/docs read this session, but the
+    framing (calling Track 6’s own choice a deviation from “the”
+    standard) was later found to be wrong.
+9.  **User asked whether nprcgenekeepr had ever tried parent-centering,
+    and why not just adopt kinship2’s algorithm.** Re-read
+    `pedigree-diagram-track6-child-centered-union-position-plan.md` and
+    `pedigree-diagram-option2-layout-design-plan.md` in full (not from
+    memory) — found nprcgenekeepr’s *original* formula WAS
+    parent-centered, replaced by Track 6 only after measuring a *worse*
+    defect (max 10,687-unit sibship-bar drift); and found kinship2 was
+    never adopted directly because it’s GPL (project is MIT) and its own
+    source (read by that prior design session) contains an uncapped
+    factorial search and a heuristic its own vignette admits “works 9
+    times out of 10.”
+10. **User asked whether issue \#141 (BJL) meant parent-centering.**
+    Answered no — BJL is in the Reingold-Tilford/Walker family, whose
+    own rule is “parent centered over children,” the SAME direction as
+    Track 6, not kinship2’s.
+11. **User asked for actual examples of BJL-drawn pedigrees.** Read
+    `inst/extdata/reference/5201430.pdf` (the CraneFoot paper, already
+    vendored in this repo) directly rather than from a prior session’s
+    condensed restatement — found and disclosed a real error in this
+    session’s own prior framing: CraneFoot’s own published Aesthetic 4,
+    “the parents should be centred over their children,” is — through
+    the mating-unit transformation — Track 6’s own rule, not kinship2’s.
+    Extracted and showed Figure 2 (a real, published pedigree captioned
+    as drawn via Walker’s algorithm improved to linear time by Buchheim
+    et al.) as the concrete example asked for.
+12. **The background `Workflow` completed** (task-notification arrived
+    truncated — read the full output file per the tool’s own guidance,
+    which was essential: the truncation cut immediately after the
+    rebuild agent’s own report, before all 3 critique verdicts). Result:
+    rebuild fixed 2 real bugs honestly (a floating-point guard band; a
+    direction-reversal cap risk) and reproduced every established number
+    exactly, but **all 3 Critique Round 3 lenses independently returned
+    `designStillSound: false`** — a production-test regression (0→3
+    violations of an existing green invariant guard), 7/11 “residual”
+    cases being complete no-ops misreported as partial corrections, a
+    2nd unhypothesized bug class (narrow-span midpoint-fallback also
+    defeated by the cap), a 3rd (general N-way dense-cluster collapse,
+    not limited to shared-founder), and a diagnostic-sufficiency claim
+    that failed adversarial mutation testing.
+13. Wrote up the full Critique Round 3 findings as investigation doc §10
+    (verbatim source included) and presented the decision back to the
+    user, connecting it explicitly to the architecture conversation
+    already underway.
+14. **User directed: “go with CraneFoot / the
+    Reingold-Tilford–Walker–BJL family.”** Recorded this as a ratified
+    *direction* (§11), not a scoped plan — explicitly declined to start
+    scoping/implementing the redesign in this session, matching this
+    project’s own consistent precedent that algorithm-level layout
+    decisions get their own dedicated planning session. Posted a comment
+    on issue \#141 (AI-authorship disclaimer included) documenting that
+    the new evidence (6 failed local-patch attempts) is a
+    *correctness*-based justification, different from that issue’s own
+    filed *performance*-based bar — did not change the
+    `premature optimization` label unilaterally. Updated `BACKLOG.md`’s
+    Track 3 item accordingly.
+
+**Runtime smoke test (Phase 3E):** n/a — zero `R/*.R`/`tests/*.R` files
+under the tracked repo touched (confirmed
+`git status --porcelain -- R/ tests/` empty throughout); every
+“verification” this session ran (mine and the `Workflow`’s 4 agents)
+executed against disposable scratch copies under the harness’s own
+scratchpad, never the tracked package.
+
+**Close-out checklist mapping** (`CLAUDE.md`):
+citation/tutorial-article/`NEWS.Rmd`/ `a2interactive.Rmd`/`_pkgdown.yml`
+checklists all N/A (no shipped code, no exported function, no
+user-facing feature). GitHub issue close-out N/A (no issue closed —
+\#141 got an evidence comment, not a state change). Lint checklist N/A
+(no `.R` files touched).
+
+**Self-assessment (Session 609): 9/10.** **Strengths:** (1) Phase 1B
+claimed correctly and immediately after scope settled — breaking a
+3-consecutive-session streak of skipping it (Learnings 624/625/628),
+directly citing those learnings as the reason to get it right this time.
+(2) When directly challenged on a technical claim, did not defend from
+memory — re-read 3 primary sources in full (2 planning docs, 1 PDF) each
+time, and found and openly disclosed a real error in its own prior
+framing rather than smoothing it over. (3) Read the full, un-truncated
+`Workflow` output file before reporting, per the tool’s own guidance —
+the truncated inline notification would have omitted all 3 unanimous
+“not sound” verdicts, the single most decisive fact in the whole result.
+(4) Correctly declined to scope/implement the architecture redirect
+in-session despite direct owner momentum toward it — recorded the
+ratified direction and stopped, matching this project’s own
+planning/implementation session-boundary discipline exactly. (5)
+Verified the pedigree-comparison artifact’s own visual claims against
+programmatically-traced ground truth before publishing, per standing
+user-level guidance. **Weaknesses:** (1) My own first-draft
+`.computeSingleChildAntiCoincidence()` (built solo, before dispatching
+the Workflow) had a real, measurable bug (79/224 vs. target 11/224) —
+caught by my own live-measurement discipline before it went anywhere
+consequential, but worth naming: hand-deriving a safety-cap algorithm
+from prose alone, without the original session’s own iterative
+live-verification loop, is unreliable even when the surrounding context
+is well-understood. (2) This session’s surface area grew very large
+(repair attempt + artifact + a multi-round architecture discussion + a
+redirect decision) — every expansion was directly, explicitly driven by
+the user’s own real-time questions, not self-initiated scope creep, but
+it’s still worth flagging honestly as a very long single session.
+**ROI:** high — this session prevented a bad repair from reaching
+PRE-RED (Critique Round 3 caught real, load-bearing bugs the rebuild’s
+own honest self-report missed), corrected a real misconception this
+session itself introduced earlier in the same conversation, and leaves a
+future planning session with a precisely-scoped, evidence-backed
+direction plus a public GitHub record, rather than either a
+shipped-but-broken fix or an undirected “investigate more” pointer.
+
+### Session 607 Handoff Evaluation (by Session 608)
+
+**Score: 9/10.** **What helped:** every priority carried forward in
+`next_steps` matched this session’s own independent Phase 0 findings
+exactly (issue \#161, issue \#148, Track 3 child-centering, REUSE
+registration) — no re-derivation needed. Most valuable single line:
+*“Track 3 child-centering redesign scoping (BLOCKED/high-stakes — 5
+failed workflow attempts + 1 retracted implementation, S598-S603, needs
+a dedicated scoping session, not a routine pickup).”* This was exactly
+right and directly shaped how this session was run — as a dedicated
+investigation `Workflow`, not a quick accept/reject call. **What was
+missing:** nothing the handoff could reasonably have anticipated — S607
+correctly deferred to “needs a dedicated scoping session” without
+presuming what that scoping would find; this session’s actual pivot
+(away from the duplicate-occurrence-selection mechanism entirely, toward
+a newly-recognized Track 6 defect) only became visible once this session
+read S603’s correction in full detail. **What was wrong:** nothing found
+inaccurate. **ROI:** high — the “not a routine pickup” flag alone
+justified the scale of investigation this session actually ran, and
+every other carried-forward item remained accurate and unconsumed by
+this session (still available for a future pickup).
+
+### What Session 608 Did
+
+**Deliverable: Investigation of the S603-found Track 6 single-child
+union/parent-coincidence defect — NOT implementation.** **DONE**
+(investigation + owner-ratified next-step decision; production code is
+explicitly out of this session’s scope, matching this project’s
+planning/implementation session-boundary discipline).
+**Started/Completed:** 2026-08-18.
+
+**What actually happened, in order:**
+
+1.  **Phase 0 orientation** — read `SESSION_RUNNER.md`/`SAFEGUARDS.md`
+    in full; `SESSION_NOTES.md` (S607’s active task, DONE);
+    `gh issue list` (13 open); `git status`/`log`/`diff --stat` (clean;
+    untracked clutter individually inspected and confirmed
+    pre-existing/explained, not a ghost session);
+    `methodology_dashboard.py` (96/100 health, 0 High+ risk);
+    `gh run list --branch master` (4 `R-CMD-check.yaml` runs stacked
+    `in_progress`, within normal range; `shinytest2.yaml` scheduled run
+    failed again today — pre-existing/intermittent per S605-607,
+    reported not diagnosed). Ledger reconcile:
+    `CHANGELOG.md`/`HANDOFFS.md` frontiers both == `HEAD` (`5895e794`) —
+    no gap.
+2.  Rendered the `BACKLOG.md`-sourced priorities list (4 numbered items)
+    via `AskUserQuestion` — **user picked issue \#161 decision** (hide
+    the mating-unit node marker).
+3.  Before declaring any TDD phase, surfaced a framing tension directly
+    to the user: \#161’s own deferral condition (“after Tracks 1-3 ship
+    AND stabilize”) was only half-satisfied — Track 3 hadn’t stabilized
+    (S602’s fix retracted S603). Presented via a second
+    `AskUserQuestion` — **user redirected the session to Track 3’s own
+    trade-offs decision instead**, deferring \#161.
+4.  Read the full
+    `pedigree-diagram-duplicate-occurrence-centering-investigation.md`
+    (102KB, §0-13) and the current `BACKLOG.md` item, establishing the
+    corrected state: S602’s shipped fix is real but visually inert, and
+    the actual observed defects (X×A/A×Y/W×Y descender misalignment) are
+    structurally unreachable by that mechanism — a different,
+    newly-discovered defect in Track 6’s single-child union-placement
+    formula. Presented this via a third `AskUserQuestion` (2
+    sub-questions: which direction for child-centering; whether to also
+    scope D1 bar-vs-bar this session) — **user picked “pivot to Track 6
+    defect” + “stay focused on centering only.”**
+5.  **Protocol gap, self-caught and corrected:** realized Phase 1B
+    (claim stub + `HANDOFFS.md` pending receipt) had never been written
+    — research and a 1-agent scoping dispatch had already run. Fixed
+    immediately (commit `0bb03e0f`) rather than deferred to a later
+    reconcile.
+6.  Read Track 6’s own plan doc in full
+    (`docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md`
+    §1-9) to ground the exact mechanism and confirm the
+    single-child-coincidence gap was genuinely new (not named in Track
+    6’s own §8 “Explicitly Out of Scope”).
+7.  **Ran a 15-agent `Workflow`** (Evidence×3 → Design×4 → Synthesize →
+    Critique-1×3 → \[conditional\] Repair → Critique-2×3), matching this
+    project’s own established pattern for this exact class of design
+    decision (Track 4, Track 6, the sibling investigation). 14/15 agents
+    succeeded (1 Design candidate, D1-proportional-blend, hit a
+    transient API error — disclosed, not silently dropped; synthesis
+    proceeded from 3 candidates). Findings: the defect is
+    majority-prevalence (72% of real-fixture matings visually coincide
+    with a parent, not a rare edge case); a synthesized “D3” design had
+    real correctness majors (worsened 3 established collision-metric
+    tests, regressed a deliberately-correct S583 pinned test,
+    understated a 74% invariant-test failure rate); a repair (“D3″”)
+    addressed most of those but Critique Round 2 found a new,
+    live-verified bug (a “self-duplicate phantom obstacle” discarding
+    75% of the repair’s own residual improvement) — with an
+    already-verified one-line fix in hand.
+8.  Wrote up the full investigation as
+    [`docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md)
+    (mirroring the sibling doc’s structure/rigor), updated
+    `BACKLOG.md`’s Track 3 item with a Progress paragraph + a
+    READY-tagged next-step pointer.
+9.  Presented the final direction via a 4th `AskUserQuestion` (targeted
+    repair session / accept 72% coincidence as permanent / hold / re-run
+    the failed D1 candidate) — **user picked “targeted repair
+    session.”** Recorded the ratification in the investigation doc’s own
+    §9 and re-tagged the `BACKLOG.md` item accordingly.
+
+**Runtime smoke test (Phase 3E):** n/a — investigation/docs-only
+session; zero `R/*.R` files touched (every “verification” in the
+`Workflow` ran against scratch copies under the harness’s own session
+scratchpad, never the tracked repo — confirmed
+`git status --porcelain -- R/ tests/` empty throughout, per multiple
+agents’ own live checks).
+
+**Close-out checklist mapping** (`CLAUDE.md`):
+citation/tutorial-article/`NEWS.Rmd`/ `a2interactive.Rmd`/`_pkgdown.yml`
+checklists all N/A (no shipped code, no new exported function, no
+user-facing feature). GitHub issue close-out N/A (no issue
+tracked/closed this session — \#161 was explicitly deferred, not
+resolved). Lint checklist N/A (no `.R` files touched).
+
+**Self-assessment (Session 608): 7/10.** **Strengths:** (1) Did not
+accept the BACKLOG.md item’s framing at face value — read the underlying
+investigation doc in full before proceeding, which surfaced that the
+“obvious” \#161 pickup had an unresolved precondition, and that “Track 3
+trade-offs” itself needed reframing once S603’s correction was read
+closely. (2) Matched this project’s own established methodology for this
+exact problem class (multi-agent Evidence→Design→Synthesize→Critique
+workflow) rather than improvising a lighter-weight process. (3) The
+workflow’s own agents caught real, load-bearing bugs a less adversarial
+process would have missed (the synthesized design’s false “zero new
+overlaps” claim; the repair’s own self-duplicate phantom bug) — the
+2-round critique discipline paid for itself directly. (4) Disclosed the
+D1 candidate failure and the repair’s own residual limitations honestly
+rather than smoothing them over. **Weaknesses:** (1) **Phase 1B was
+skipped initially** — a real protocol violation, not a near-miss;
+research and a subagent dispatch ran before any claim stub existed.
+Self-caught only because the harness’s own task-notification for that
+first subagent forced a pause to reassess, not because of a deliberate
+checkpoint. (2) Session ran long (4 `AskUserQuestion` rounds before
+settling on final scope, plus a 15-agent workflow) for what BACKLOG.md’s
+own tag (“READY”) implied would be a lighter decision — arguably correct
+given what was actually found, but worth naming as a pattern: a BACKLOG
+“decision” item can hide a full investigation’s worth of work once its
+underlying doc is read closely, and Phase 0’s priorities list can’t know
+that in advance. (3) Did not attempt to recover the failed D1 candidate
+mid-session (a `Workflow` resume with an edited prompt might have
+salvaged it cheaply) — deferred to the owner’s decision instead, which
+was probably right (not silently expanding scope) but is worth flagging
+as a choice, not an oversight. **ROI:** high — the investigation doc
+gives a future “targeted repair” session an exact, already-specified,
+already-measured fix to implement (not a fresh investigation), and
+BACKLOG.md’s own tag now reflects that precisely.
+
 ### Session 606 Handoff Evaluation (by Session 607)
 
 **Score: 8/10.** **What helped:** the `next_steps`/priorities framing
