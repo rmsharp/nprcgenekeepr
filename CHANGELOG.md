@@ -16,6 +16,11 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-19 · [ad hoc] S612: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S611 precedent)
+- **Deliverable:** `HANDOFFS.md`'s S612 receipt `commit:` field updated from `pending` to the
+  actual close-out commit sha (`c95b4b74`).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-19 · [issue #141] S612: Phase 1b research/design spike -- substantial progress, honest non-terminal outcome
 - **Deliverable:** [`docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md`](docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md),
   the Walker/BJL redesign's Phase 1b forest/mixed-gen reconciliation design note. Cases

@@ -188,7 +188,7 @@ gotchas: (1) When chaining Workflow rounds where round N's output feeds round N+
 runtime_smoke: n/a -- planning/research session, zero R/*.R or tests/*.R files touched throughout
   (git status --porcelain -- R/ tests/ empty).
 changelog_ref: CHANGELOG.md 2026-08-19, S612 entries.
-commit: pending
+commit: c95b4b74
 ```
 
 ```handoff
