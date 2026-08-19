@@ -18,6 +18,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 610 Did
+**Deliverable:** Architecture planning session — scope a complete, correct
+Reingold-Tilford/Walker/Buchheim-Jünger-Leipert (BJL) tree-positioning implementation for the
+pedigree diagram's D3 layout, per investigation doc §11 and issue #141, following
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`. (IN PROGRESS)
+**Started:** 2026-08-18.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 608 Handoff Evaluation (by Session 609)
 **Score: 9/10.** **What helped:** the ratified scope in `next_steps` (apply the verified one-line
 self-duplicate-exclusion fix, add diagnostic return fields, run a fresh Critique Round 3, only

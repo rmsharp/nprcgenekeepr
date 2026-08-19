@@ -136,6 +136,24 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S610
+date: 2026-08-18
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Architecture planning session — scope a complete, correct
+  Reingold-Tilford/Walker/Buchheim-Jünger-Leipert (BJL) tree-positioning implementation for the
+  pedigree diagram's D3 layout, per investigation doc §11 and issue #141.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S609
 date: 2026-08-18
 status: complete
