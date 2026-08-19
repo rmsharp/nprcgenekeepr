@@ -1,11 +1,26 @@
 # Pedigree Diagram Walker/BJL Redesign — Phase 1b: Forest/Mixed-Gen Reconciliation Design Note
 
-**Session:** S612 (2026-08-19). **Parent plan:**
+**Session:** S612 (2026-08-19), continuation S613 (2026-08-19). **Parent plan:**
 [`pedigree-diagram-walker-bjl-apportioning-redesign-plan.md`](pedigree-diagram-walker-bjl-apportioning-redesign-plan.md),
 Phase 1b subsection under "Migration Path." **Supersedes/completes:** the Phase 1b deliverable
 that plan requires before Phase 2 can begin.
 
+> **✅ S613 update: the §7 seam is now RESOLVED — see §8.** The `sweepMinSep()`-vs-`orderBySex`
+> sign-fold interaction found by S612's round-4 critique has a repaired formula that survived a
+> full 3-lens adversarial critique on its first attempt (no repair-round-2 needed) — the first time
+> in this investigation's entire history (4 prior rounds inside this document, 6 full
+> implementation attempts before it) that a proposed fix has survived first-pass critique. Treat
+> §3.1.2/§3.3.3's Tier-3 formula as **superseded by §8's revised formula**, not as still-broken;
+> §7 is kept below verbatim as the historical record of the defect §8 fixes. **Phase 2 may now
+> begin**, subject to §8's own 2 disclosed implementation-time requirements (a required Test 15 and
+> an explicit P.x-freshness assertion) — these are conditions ON Phase 2, not further open design
+> questions.
+
 ## Executive summary — read this first
+
+**S613 update:** the outcome below describes S612's own honest conclusion at the time it was
+written. S613 resolved the specific gap it named — see the banner above and §8. The rest of this
+summary is preserved unedited as the historical record of what S612 established.
 
 Phase 1b's own charter explicitly allows two honest outcomes: a chosen, tested mechanism, **or**
 "more research needed... a clearly-scoped harder problem statement for a dedicated follow-up
@@ -64,6 +79,7 @@ short **Phase 1b continuation** (not a full restart) that resolves specifically 
 `sweepMinSep()`-vs-`orderBySex`-sign-fold seam, using one of the 3 concrete candidate fixes the
 round-4 critique itself proposed (§7 below) as a starting point — rather than proceeding to Phase 2
 on an unresolved mechanism, or discarding the substantial, validated progress documented here.
+**Done — see §8.**
 
 ---
 
@@ -526,3 +542,161 @@ one session (`SESSION_RUNNER.md`'s own "1 and done" discipline). **Phase 2 must 
 follow-up session resolves this specific seam** — the rest of this document (cases (a)/(b)/(c)/(d),
 the B1/B2/B3 classification, the literature corroboration, `sweepMinSep()`'s necessity) is settled
 enough to build on directly.
+
+---
+
+## 8. Round 5 (S613 continuation): the seam resolved
+
+A dedicated Phase 1b continuation session (S613, design/research only — zero production code
+touched) ran one repair→3-independent-lens-adversarial-critique cycle against specifically the §7
+seam, seeded with the hypothesis "anchor `M_repr.x` on `P.x` directly instead of `U.x(FINAL)`, for
+the B1 case only" (candidate fix 1 from §7, refined). **Round 1's repair survived all 3 lenses —
+`designStillSound: true` from every lens, each with its own independently-executed verification,
+not a rubber stamp of the repair author's claims.** No repair round 2 was needed. This is the
+first first-attempt-sound outcome in this investigation's entire recorded history (4 prior rounds
+inside this document — S612 rounds 1-3 plus the round-4 critique that produced §7 — and 6 full
+implementation attempts before this document existed at all).
+
+### 8.1 The fix
+
+Supersedes §3.1.2 Step 2 and the Tier-3 block of §3.3.3 identically. Only the qualifying-B1
+sub-case changes; B2 and B3 are untouched.
+
+```
+qualifies(U):                      -- the SAME gate orderBySex's shipped code already uses
+                                       (R/makePedigreeDiagramData.R:1057-1062), made EXPLICIT here
+                                       because §3.3.3's literal pseudocode omitted it even though
+                                       §3.1.2 Step 1's own invariant proof required it as a premise
+    P = U.anchor ; M = U's non-anchor party (U's PRIMARY occurrence of M)
+    mateCount(P) == 1 && mateCount(M) == 1 && !hasOwnDirectChild(P)
+    -- restated in full per §8.5 below: also requires both sireId/damId %in% realIds (line 1060)
+    -- and unambiguous opposite sex ((sireSex=="M"&&damSex=="F")||(sireSex=="F"&&damSex=="M")),
+    -- matching the shipped isQualifying test's actual 5 conjuncts, not the 3 originally stated.
+
+for U's own B1 non-anchor parent M:
+    if qualifies(U):
+        sign(M) = (sex(P) == "F" && sex(M) == "M") ? -1 : +1     -- UNCHANGED
+        M_repr.x = P.x + sign(M) * minSep * 0.4                  -- *** THE FIX ***
+            -- was: U.x(FINAL) + sign(M) * minSep * 0.4
+    else:
+        M_repr.x = U.x(FINAL) + minSep * 0.4                     -- UNCHANGED fallback (sign +1)
+    M_repr.gen = U.gen                                            -- UNCHANGED
+
+for every B3 duplicate occurrence of M elsewhere (M_repr), at its own unit U':
+    M_repr.x = U'.x(FINAL) + minSep * 0.4                         -- UNCHANGED, byte-for-byte
+    -- "M is B1" is always false for B3, so the P.x-anchor branch never applies here.
+```
+
+### 8.2 Why this closes the seam — proof, not just the 2 executed magnitudes
+
+Let `U.x(FINAL) = P.x + d` for drift `d` of any sign/magnitude introduced by `sweepMinSep()` moving
+one of `U`'s real children (or, per §8.4 below, `P` itself).
+
+- **OLD:** `M_repr.x = P.x + d + sign*0.4` — correctness requires `sign*0.4` to dominate `d`; false
+  whenever `|d| > minSep*0.4`, which is exactly the regime `sweepMinSep()`'s own push guarantees
+  (≥ `minSep`). This is why §7's counter-examples (`d = 0.5`, `d = 0.700`) broke it.
+- **NEW:** `M_repr.x = P.x + sign*0.4` — `d` does not appear in the formula at all. The guarantee
+  (`M_repr.x < P.x` when `sign=-1`; `> P.x` when `sign=+1`) holds **unconditionally, for every real
+  value of `d`**, not merely the 2 magnitudes §7 happened to execute. Both §7 counter-examples
+  re-verified independently under the new formula by 2 of the 3 critique lenses (direct execution,
+  not reasoning alone): `1.0 − 0.4 = 0.6 < 1.0` ✓; `5.000 − 0.4 = 4.600 < 5.000` ✓. 2 further
+  adversarial fixtures constructed by one lens — the untested `sign=+1` branch, and drift up to
+  20×`minSep` (far beyond the original 0.5/0.700) — also both pass, and a 20,000-trial randomized
+  check confirmed `sweepMinSep()`'s own push mechanic is monotonically non-decreasing (real-world
+  drift is structurally always ≥ 0, though the proof does not depend on that).
+
+**Why the seeded hypothesis alone was insufficient — the `qualifies(U)` gate is load-bearing, not
+decorative.** Applied unconditionally to every B1 case, `P.x` becomes one shared anchor point for
+however many non-anchor mates `P` has (the `WCPXHD` fixture, Test 6: one individual anchoring 5
+unions) — clustering all of them at `P.x ± 0.4` regardless of which of `P`'s several unions each
+actually belongs to. `mateCount(P)==1` already excludes this in today's shipped `orderBySex` gate;
+restating it (rather than inventing new behavior) closes the gap, verified by hand-deriving that the
+*ungated* hypothesis would regress Test 6 while the *gated* repair does not (Lens 3, §8 critique).
+
+### 8.3 Why not candidates 2 or 3 (§7's other 2 proposals)
+
+- **Candidate 2** (extend the B2-style exclusion to any touched B1 union) trades the ordering
+  guarantee away entirely for every union it fires on — strictly worse than a fix that preserves the
+  guarantee unconditionally with less new mechanism (no touched-child detection/bookkeeping needed).
+- **Candidate 3** (scope `sweepMinSep()` away from qualifying unions' children) repairs a soft,
+  cosmetic guarantee (`orderBySex`) by punching a hole in `sweepMinSep()`'s hard correctness
+  property (general minimum-separation) for a subset of nodes — reintroducing the same-gen-collision
+  defect `sweepMinSep()` was reinstated to prevent (§3.1.1's own `F0/D/C/G` counter-example),
+  for the benefit of one downstream formula.
+
+Fix 1 (§8.1) leaves both `sweepMinSep()`'s reach and `orderBySex`'s ordering guarantee fully
+general and unconditional — no trade-off against either of the 2 other properties this
+investigation has already established as necessary.
+
+### 8.4 What the critique found beyond "is it sound" — 2 disclosed implementation-time obligations
+
+Both are genuine, substantive findings the critique surfaced even while returning
+`designStillSound: true` — they do not reopen the seam, but a Phase 2 implementation that ignores
+either would risk reintroducing a variant of the same failure shape this investigation has now hit
+5 times.
+
+**Obligation 1 — `P.x` must be read from its genuinely final, post-`sweepMinSep()` value, never a
+pre-sweep intermediate.** Two of the 3 lenses, working independently, converged on the same
+concrete risk from different angles: today's *currently shipped* code computes a real individual's
+`x` in two stages — a pre-`sweepMinSep()` value populated via `assignAbs()`
+(`R/makePedigreeDiagramData.R:952-964`), then overwritten by `sweepMinSep()` itself (`:997-1015`).
+A correct implementation of §8.1's fix reads `P.x`'s truly final (post-sweep) value — but a
+careless implementation reaching for the earlier, pre-sweep intermediate would silently
+reintroduce a variant of exactly this seam's own failure shape, one tier earlier, undetected by any
+of the 14 existing tests (none of which exercises this specific staleness path). **Required for
+Phase 2:** an explicit **Test 15** — a B1 `orderBySex`-qualifying union where `sweepMinSep()`
+pushes `P` itself (not just `P`'s children, closing the related gap below) — plus an
+implementation-time assertion that nothing reads a genuine individual's `x` before `sweepMinSep()`
+has run.
+
+**Obligation 2 — `sweepMinSep()` pushing `P` itself, not just `P`'s real children, is a second,
+independent trigger for the same cosmetic (non-correctness) union-dot/`M_repr` visual-distance
+drift.** One lens hand-executed this case (`P.x` pushed `1.0→2.0` by an unrelated same-gen
+collision, `P`'s children untouched) and confirmed the **ordering guarantee still holds**
+(`M_repr.x = 1.6 < 2.0`) — this is not a correctness defect. But §8.1's own disclosed cosmetic
+trade-off (`M_repr` may render visually distant from its own union dot `U` in the drifted case) was
+originally scoped only to "`sweepMinSep()` moves `U`'s real children" (Test 14's own shape); this
+finding widens that disclosure to include "`sweepMinSep()` moves `P`" as an equally-real second
+trigger. No fix required — Phase 2 should measure both trigger shapes' real-fixture frequency
+together, not just the first.
+
+Both obligations are scoped to Phase 2 (implementation), not further open design questions — the
+repair itself, verified against both, is sound.
+
+### 8.5 Documentation-parity items (non-blocking, restated for precision)
+
+The critique found the `qualifies(U)` gate as originally stated (§8.1's first draft) cited only 3
+of the shipped `isQualifying` test's actual 5 conjuncts (`R/makePedigreeDiagramData.R:1057-1066`).
+Traced by 2 lenses independently: neither omission produces a wrong-side placement or breaks any
+test (a dangling `M` fails the sex comparison and degrades to `sign=+1`, the neutral default; an
+ambiguous-sex pair simply gets no ordering guarantee, as today) — but for parity with "the same gate
+already shipped," §8.1's pseudocode above restates the gate in full (5 conjuncts: `mateCount(P)==1`,
+`mateCount(M)==1`, `!hasOwnDirectChild(P)`, both ids in `realIds`, unambiguous opposite sex).
+
+### 8.6 Updated test matrix status
+
+All 14 tests from §4 re-verified against the repaired formula by Lens 3 (independently traced, not
+assumed): **all 14 PASS.** Test 11 (undrifted) and Test 14 (the required regression test) both
+directly re-derived; the remaining 12 were confirmed structurally unaffected (they exercise code
+paths the repair does not touch — Tier 1/Tier 2 mechanics, B2 exclusion, B3's formula, or
+`sweepMinSep()`'s backstop directly). **Test 15 is newly required** — see Obligation 1, §8.4.
+
+### 8.7 Coverage confirmation against §1 and §3.5 — updated
+
+- **(a)/(c)/(d)** — unchanged from §3.5, unaffected by this seam or its fix.
+- **(b)** — **now fully closed, not conditionally**: B1 gets the derived-point treatment with a
+  sign-aware formula that is sound (§8.1/§8.2), not merely specified; B2 remains excluded, at its
+  own genuine position.
+- **`orderBySex`'s own goal** — **preserved for B1 unconditionally** (§8.2's proof holds for any
+  drift magnitude); honestly dropped and disclosed for B2, unchanged from §3.5.
+
+### 8.8 What this means for Phase 2
+
+**Phase 2 (the pedigree adapter, parallel to production) may now begin.** Its own implementation
+session must additionally: (1) write Test 15 and the P.x-freshness assertion (§8.4, Obligation 1)
+as part of its own RED phase, not defer them; (2) fold Obligation 2's widened cosmetic-disclosure
+scope into whatever real-fixture measurement Phase 2 already owes per §5's "Real magnitude of the
+B2 behavior change is unmeasured" note; (3) restate `qualifies(U)`'s full 5-conjunct gate per §8.5
+in the actual implementation, not the abbreviated 3-conjunct form this section's first draft used.
+None of these are open design questions — they are implementation-time obligations a sound design
+still owes its executor.

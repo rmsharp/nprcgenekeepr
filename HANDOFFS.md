@@ -138,19 +138,71 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S613
 date: 2026-08-19
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Phase 1b CONTINUATION of the Walker/BJL apportioning redesign (issue #141) -- resolve
-  the sweepMinSep()-vs-orderBySex sign-fold seam found in S612's round-4 critique
-  (docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md S7).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 10
+active_task: DONE. Phase 1b of the Walker/BJL apportioning redesign (issue #141) is now FULLY
+  resolved -- the sweepMinSep()-vs-orderBySex sign-fold seam from S612's round-4 critique
+  (docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md S7) has a repaired
+  formula that survived a full 3-lens adversarial critique on its first attempt. Phase 2 (the
+  pedigree adapter, parallel to production) is now READY to start, subject to 2 disclosed
+  implementation-time obligations documented in the design note's new S8.
+what_was_done: Ran a repair->3-lens-adversarial-critique Workflow (4 agents) against specifically
+  the S7 seam, seeded with the hypothesis "anchor M_repr.x on P.x (Tier-1, frozen) instead of
+  U.x(FINAL) (Tier-2, drift-prone)". Round 1: all 3 independent lenses returned
+  designStillSound=true, each with its own executed verification (not trusting the repair
+  author's claims) -- no repair round 2 needed, the first first-attempt-sound outcome in this
+  investigation's 5-round design-note history plus 6 prior full implementation attempts. The
+  repair agent independently caught and fixed a gap the seeded hypothesis itself had (an ungated
+  P.x-anchor would regress the design note's own required Test 6, WCPXHD) by restating the
+  existing mateCount==1 qualifying gate. Wrote the resolved formula, its drift-independence proof,
+  and 2 disclosed implementation-time obligations (a required new Test 15 + a P.x-freshness
+  assertion; a widened cosmetic-disclosure scope) into a new S8 in the design note (supersedes
+  S3.1.2 Step 2/S3.3.3's Tier-3 block in place; S7 kept verbatim as historical record). Updated
+  BACKLOG.md's Walker/BJL item and recorded PROJECT_LEARNINGS.md Learning 638. Zero R/tests files
+  touched (git status --porcelain -- R/ tests/ empty throughout). Commits: 272c659f (claim),
+  <this close-out commit, see git log>.
+next_steps: Phase 2 (pedigree adapter, parallel to production) is the next session, per the parent
+  plan's own Migration Path (docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md).
+  It MUST incorporate S8's 2 disclosed obligations as part of its own RED phase, not defer them:
+  (1) write the new Test 15 (a B1 orderBySex-qualifying union where sweepMinSep() pushes P itself,
+  not just P's children) plus an explicit assertion that P.x is read from its genuinely final,
+  post-sweepMinSep() value -- today's shipped code has 2 distinct write-points for a real
+  individual's x (a pre-sweep assignAbs() intermediate, then the post-sweepMinSep() final value)
+  and a careless implementation reading the wrong one would silently reintroduce a one-tier-earlier
+  variant of this exact seam; (2) restate the qualifies(U) gate in the actual implementation using
+  the full 5 conjuncts design note S8.5 lists (the abbreviated 3-conjunct form in S8's first draft
+  is documentation-imprecise, though not incorrect); (3) fold the widened union-dot/M_repr cosmetic
+  drift disclosure (sweepMinSep() pushing P, not only children, is a second trigger) into whatever
+  real-fixture measurement Phase 2 already owed per the design note's S5. Separately, unrelated to
+  Walker/BJL: BACKLOG's other numbered priorities from this session's own Phase 0 report remain
+  untouched (SESSION_NOTES.md/HANDOFFS.md archiving -- both now past the 2,000-line cap AND their
+  byte-budget triggers fire; pedigree-diagram package-extraction scoping; BACKLOG.md's own
+  remaining ledger-size housekeeping).
+key_files: docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md S8 (the
+  full resolution -- S8.1 is the formula, S8.4 the 2 obligations Phase 2 must not skip);
+  R/makePedigreeDiagramData.R:997-1015 (sweepMinSep(), unchanged, ground truth for its push
+  mechanic), :1054-1078 (orderBySex, the shipped code the new qualifies() gate mirrors);
+  BACKLOG.md (Walker/BJL item, S613 progress paragraph); PROJECT_LEARNINGS.md Learning 638 (the
+  "eliminate the invariant dependency" pattern this session's success demonstrates).
+gotchas: (1) The design note's S8 formula applies ONLY to the B1 qualifying case -- B3 duplicates
+  and the non-qualifying B1 fallback are byte-identical to the pre-existing shipped
+  dupX/U.x(FINAL)+minSep*0.4 formula; do not generalize the P.x-anchor idea to those cases, no
+  critique round ever verified it there and one lens explicitly confirmed B3 has no defect to fix.
+  (2) The 2 implementation-time obligations in S8.4 are NOT optional follow-up polish -- 2 of the 3
+  critique lenses converged on the P.x-freshness risk independently, and this investigation has
+  now hit "a correction sound in isolation, broken by an implementation detail nobody checked"
+  6 times; treat Test 15 as a Phase-2 RED-phase requirement, not a nice-to-have. (3) Read the full
+  Workflow output file before reporting on a multi-agent result, not just the task-notification's
+  inline <result> -- this session's own notification truncated at ~35% of the actual content,
+  cutting off before the 2 most substantive critique findings (Learning 631's own rule, confirmed
+  again).
+runtime_smoke: n/a -- planning/research session, zero R/*.R or tests/*.R files touched throughout
+  (git status --porcelain -- R/ tests/ empty).
+changelog_ref: CHANGELOG.md 2026-08-19, S613 entries.
+commit: pending -- see the next commit, which records this close-out commit's own sha
+  (self-reference workaround, matching the S600/S602-S612 precedent: this receipt ships inside the
+  very commit whose sha it would need to name).
 ```
 
 ```handoff

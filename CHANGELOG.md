@@ -16,6 +16,23 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-19 · [issue #141] S613: Phase 1b continuation -- sweepMinSep()/orderBySex seam RESOLVED, first-attempt sound
+- **Deliverable:** [`docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md`](docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md)
+  §8 -- resolves the seam S612's round-4 critique found (§7): reinstating `sweepMinSep()` broke an
+  invariant the `orderBySex` sign-fold formula depended on. Fix: anchor `M_repr.x` on the frozen
+  Tier-1 `P.x` directly instead of the drift-prone Tier-2 `U.x(FINAL)`, gated on the same
+  `mateCount==1` qualifying test the shipped `orderBySex` code already uses. A repair→3-lens
+  adversarial-critique `Workflow` (4 agents) found this sound on its **first** attempt -- no repair
+  round 2 needed, the first first-attempt-sound outcome across this investigation's 5-round
+  design-note history plus 6 prior full implementation attempts. Proof holds for any drift
+  magnitude, not just the 2 executed counter-examples §7 produced. 2 implementation-time
+  obligations disclosed for Phase 2 (a required new Test 15 + a P.x-freshness assertion; a widened
+  cosmetic-disclosure scope), written into the design note as binding conditions, not open
+  questions. **Phase 2 (pedigree adapter, parallel to production) is now READY.** Zero production
+  code touched. `BACKLOG.md`'s Walker/BJL item updated with the S613 progress paragraph.
+  `PROJECT_LEARNINGS.md` Learning 638 recorded (eliminate-the-invariant-dependency pattern).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-19 · [ad hoc] S612: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S611 precedent)
 - **Deliverable:** `HANDOFFS.md`'s S612 receipt `commit:` field updated from `pending` to the
   actual close-out commit sha (`c95b4b74`).

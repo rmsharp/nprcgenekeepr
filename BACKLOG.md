@@ -558,6 +558,30 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (not a restart — cases (a)/(b)/(c)/(d) and the 2b architecture are settled inputs), THEN
       Phase 2. Effort S-M for the continuation.
 
+      **Phase 1b continuation — S613 (2026-08-19): SEAM RESOLVED, first-attempt sound.**
+      [`docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md`](docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md)
+      §8. A repair→3-lens-adversarial-critique `Workflow` (4 agents: 1 repair + 3 independent
+      critique lenses) resolved the `sweepMinSep()`-vs-`orderBySex` sign-fold seam on its **first**
+      repair attempt — every lens returned `designStillSound: true` with its own independently
+      executed verification, no repair round 2 needed. First first-attempt-sound outcome in this
+      investigation's full history (4 prior design-note rounds + 6 prior implementation attempts
+      all failed critique). **The fix:** anchor the non-anchor parent's derived x on the anchor's
+      own frozen Tier-1 `P.x` directly (`M_repr.x = P.x + sign(M)*minSep*0.4`) instead of the
+      drift-prone Tier-2 `U.x(FINAL)`, gated on the same `mateCount==1` qualifying test today's
+      shipped `orderBySex` already uses (restated in full, 5 conjuncts, since the design note's own
+      pseudocode had dropped 2 of them) — B3 duplicates and the non-qualifying fallback are
+      untouched. Provably correct for any drift magnitude/sign, not just the 2 magnitudes §7's own
+      counter-examples happened to execute. **2 disclosed implementation-time obligations for
+      Phase 2** (not further open design questions): (1) a required new Test 15 + an explicit
+      assertion that `P.x` is read post-`sweepMinSep()`, never a pre-sweep intermediate — the
+      critique found today's shipped code has exactly 2 write-points for a real individual's `x`
+      and a careless implementation could read the wrong one; (2) widen the disclosed
+      union-dot/`M_repr` cosmetic-distance trade-off to cover `sweepMinSep()` pushing `P` itself,
+      not only `P`'s children. **Phase 2 (the pedigree adapter, parallel to production) is now
+      READY** — design/research only this session, zero production code touched, matching Phase
+      1b's own precedent throughout. Effort L overall unchanged; Phase 2 itself Effort M-L,
+      5+ sessions per the parent plan's own estimate.
+
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 *Resolves the former "Tracker reconciliation" decision item (S365) --
 `docs/audits/XARCH_TRACKER_RECONCILIATION_AUDIT_2026-07-11.md` re-verified all 8

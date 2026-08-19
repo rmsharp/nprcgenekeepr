@@ -18,19 +18,118 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 612 Handoff Evaluation (by Session 613)
+**Score: 10/10.** **What helped:** `next_steps` named the exact scope with no ambiguity — "resolving
+specifically the sweepMinSep()-vs-orderBySex-sign-fold seam, using one of the 3 candidate fixes...
+Whichever is chosen needs its own adversarial pass before being trusted." `key_files` pointed
+directly at the design note's own §7 (the load-bearing section) and the exact shipped-code line
+ranges (`R/makePedigreeDiagramData.R:997-1015` for `sweepMinSep()`, `:1054-1078` for `orderBySex`)
+— both were read first-hand this session and matched the handoff's description exactly, with zero
+drift to reconcile. But the single highest-value asset wasn't in the handoff fields at all: the
+design note itself (S612's own deliverable) was precise enough — full pseudocode, a proven
+invariant with its own proof sketch, 2 fully-executed counter-examples with exact numbers (`1.0→1.5`,
+`5.000→5.700`) — that this session's workflow could be grounded entirely from primary-source
+reading, with no ambiguity about what "resolved" would even mean. **What was missing:** nothing.
+**What was wrong:** nothing found inaccurate. **ROI:** very high — a handoff this precise turned a
+"go figure out what's broken and fix it" task into "verify and close a fully-specified gap."
+
 ### What Session 613 Did
 **Deliverable:** Phase 1b CONTINUATION of the Walker/BJL apportioning redesign (issue #141) —
 resolve the `sweepMinSep()`-vs-`orderBySex` sign-fold seam found in S612's round-4 adversarial
-critique
-([`docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md`](docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md)
-§7), evaluating/selecting one of the 3 candidate fixes named there (or a synthesis), with its own
-fresh adversarial pass before being trusted. Per that document's own recommendation and Phase 1b's
-charter, this is design/research work (ARCHITECTURE_WORKSTREAM.md) — not yet Phase 2. (IN PROGRESS)
-**Started:** 2026-08-19
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+critique. **DONE — seam RESOLVED**, first-attempt-sound (no repair round 2 needed), a first for
+this investigation's 5-round design-note history plus 6 prior full implementation attempts before
+it. Design/research only (ARCHITECTURE_WORKSTREAM.md) — zero `R/`/`tests/` files touched
+(`git status --porcelain -- R/ tests/` empty throughout), matching Phase 1b's own precedent.
+**Started/Completed:** 2026-08-19.
+
+**What actually happened, in order:**
+
+1. **Phase 0 orientation** — read `SESSION_RUNNER.md`/`SAFEGUARDS.md` in full; `SESSION_NOTES.md`
+   (S612's own active task); `gh issue list` (13 open, unchanged); `git status`/`log`/`diff --stat`
+   (clean, pushed, S612's own untracked files unchanged from its own already-cleared set);
+   `gh run list --branch master --limit 10` (4 workflows `in_progress` for S612's own last commit;
+   most recent completed runs green; the S612-flagged scheduled `shinytest2.yaml` timeout still
+   noted, not re-investigated — out of this session's scope); `methodology_dashboard.py` (96/100,
+   1 HIGH risk — `SESSION_NOTES.md`/`HANDOFFS.md` both now past the 2,000-line read cap, plus
+   2 MEDIUM archive-trigger flags on the same 2 files and a LOW `BACKLOG.md`-migration flag; none
+   fixed this session, all surfaced in the priorities list per report-don't-fix). Ledger reconcile:
+   `CHANGELOG.md`/`HANDOFFS.md` frontiers both == HEAD, S612's own receipt `status: complete` —
+   no backfill owed. Rendered the priorities list (4 numbered `AskUserQuestion` options, cross-
+   checked the 2 stale 2026-08-08 sequencing audits against the current open-issue list and found
+   both fully superseded — every issue either audit named is now closed) — **user picked the
+   Walker/BJL Phase 1b continuation.**
+2. **Phase 1B claimed immediately** — `SESSION_NOTES.md` stub + `HANDOFFS.md` `status: pending`
+   receipt, committed (`272c659f`) before any technical work, per Learning 628's own hard-won
+   "claim at the literal next tool call after scope fixes" rule.
+3. **Grounded directly in primary source before dispatching anything** — read the design note's
+   full §3.1.1/§3.1.2/§3.3.3/§3.4/§7 (not skimmed) and the *currently shipped* `sweepMinSep()`/
+   `orderBySex` code (`R/makePedigreeDiagramData.R:985-1078`) myself, first. Formed and stated an
+   explicit hypothesis before delegating — anchor `M_repr.x` on `P.x` (Tier-1, frozen) instead of
+   `U.x(FINAL)` (Tier-2, drift-prone) — seeded into the workflow rather than leaving it to blind
+   exploration, matching S612's own established practice (the `appServer.R` trace precedent).
+4. **Dispatched a repair→3-lens-adversarial-critique `Workflow`** (4 agents: 1 repair, 3 independent
+   critique lenses — interaction-seam per Learning 637's own rule, execute-counter-examples,
+   scope-and-regression against the full 14-test matrix), with a conditional repair-round-2 branch
+   pre-wired but never triggered. **Round 1: 3/3 lenses `designStillSound: true`** — the repair
+   agent did not adopt the seeded hypothesis literally; it caught, unprompted, that an ungated
+   version would regress the design note's own required Test 6 (`WCPXHD`, a multi-union anchor)
+   and added back the `mateCount==1` qualifying gate the shipped code already uses. All 3 lenses
+   independently re-executed both of §7's own counter-examples against the repaired formula (both
+   now pass) and constructed their own additional adversarial fixtures (opposite sign, drift up to
+   20×`minSep`, `sweepMinSep()` pushing `P` itself rather than only its children) — all held.
+5. **Read the full workflow output file, not the truncated task-notification**, per Learning 631's
+   own rule — the inline `<result>` was truncated at ~35% of the actual content; the 2 most
+   substantive findings (the P.x-freshness implementation risk 2 lenses converged on independently,
+   and the widened cosmetic-drift disclosure) were both past the truncation boundary and would have
+   been missed relaying the notification alone.
+6. **Wrote the outcome into the design note as a new §8** (not a separate document — supersedes
+   §3.1.2 Step 2/§3.3.3's Tier-3 block in place, banner added at the top, §7 kept verbatim as the
+   historical record): the resolved formula, the drift-independence proof, why the other 2 §7
+   candidates were rejected, and — explicitly, not discarded because the overall verdict was
+   positive — the critique's 2 disclosed implementation-time obligations (a required new Test 15 +
+   a `P.x`-freshness assertion; a widened cosmetic-disclosure scope) as conditions Phase 2 owes,
+   not further open design questions. Updated `BACKLOG.md`'s Walker/BJL item with the S613 progress
+   paragraph — **Phase 2 is now READY.** Recorded `PROJECT_LEARNINGS.md` Learning 638 (the
+   "eliminate the invariant dependency, don't defend it" pattern — the structural reason this
+   attempt succeeded where 5 prior ones failed).
+
+**Runtime smoke test (Phase 3E):** n/a — planning/research session, zero `R/*.R` or `tests/*.R`
+files touched throughout (`git status --porcelain -- R/ tests/` empty).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation / tutorial-article / `NEWS.Rmd` /
+`a2interactive.Rmd` / `_pkgdown.yml` / lint checklists all **N/A** (no shipped code, no exported
+function, no `.R` files touched). GitHub issue close-out **N/A** — issue #141 stays open (Phase 1b
+is now fully resolved but Phase 2 of the parent plan's 5+ session estimate has not started).
+
+**Self-assessment (Session 613): 9/10.** **Strengths:** (1) Grounded directly in the shipped source
+and the design note's own proofs before writing a single agent prompt, then seeded a concrete,
+falsifiable hypothesis rather than delegating blind exploration — the hypothesis needed exactly one
+real refinement (the `qualifies()` gate), which the repair agent caught on its own rather than
+requiring a wasted critique round to surface it. (2) The critique design itself (interaction-seam /
+execute / scope-regression, 3 independent lenses) reflects this investigation's own accumulated
+methodology (Learnings 629/637) rather than reinventing verification from scratch, and it found the
+first first-attempt-sound result in the investigation's history — evidence the accumulated practice
+is working, not just evidence this particular fix was easy. (3) Did not treat "3/3 sound" as
+license to stop reading — read the full output file (Learning 631), and wrote the critique's own
+disclosed obligations into the design note as binding conditions on Phase 2, rather than treating a
+positive verdict as "nothing more to record." (4) Kept design-only scope disciplined despite the
+seam's resolution technically unblocking Phase 2 immediately — did not start implementing, matching
+the parent plan's own explicit phase-boundary gate and this project's planning/implementation
+session-separation precedent. **Weaknesses:** (1) Did not personally re-execute the critique
+lenses' "verified by direct R execution" claims in a live R session — verified the core proof
+algebraically by hand instead (sufficient here, since the final formula's drift-independence is a
+one-line substitution, unlike the multi-step numerical claims Learning 632 found actually wrong),
+but a stricter session would have run the fixtures itself rather than trust 2-of-3 lenses' mutual
+agreement as sufficient corroboration. (2) Stopped after round 1's unanimous "sound" rather than
+deliberately running a further, differently-lensed critique round anyway — defensible (round 1 was
+already 3 independent, freshly-instrumented lenses, not the repair's own self-verification that
+Learning 629 warned against, and each lens found and disclosed genuine refinements rather than
+rubber-stamping) but a future session auditing this seam's resolution should treat "first-attempt
+sound" as strong evidence, not proof, given this investigation's own 5-times-recurring history of
+looking sound and not being. **ROI:** high — closed a gate blocking a 5+ session Phase 2 effort,
+using 4 agents (~1 workflow round) rather than repeating the multi-round repair cycle every prior
+attempt needed; the 2 disclosed implementation-time obligations are cheap to carry forward now and
+expensive to rediscover as a 6th silent regression during Phase 2 implementation.
 
 ### Session 611 Handoff Evaluation (by Session 612)
 **Score: 10/10.** **What helped:** `next_steps` named the exact next phase precisely — "Phase 1b
