@@ -16,6 +16,52 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-18 · [ad hoc] S608: close out — Track 6 single-child union investigation
+- **Deliverable:** Phase 3 close-out for the investigation below. Added `PROJECT_LEARNINGS.md`
+  Learnings 628 (a third consecutive Phase 1B skip, despite Learnings 624/625 already documenting
+  and sharpening the rule against exactly this — the practical rule is revised to bind the
+  stub-writing tool calls syntactically to the last scope-fixing `AskUserQuestion`, not left as a
+  remembered follow-up) and 629 (a repaired design's own extensive self-verification missed a real
+  bug a second, independently-scripted critique round found — a tautological invariant-test check
+  that re-invoked the same function it was meant to verify). Completed the `HANDOFFS.md` S608
+  receipt (`status: complete`) and the Phase 3A evaluation of S607's own handoff (9/10) in
+  `SESSION_NOTES.md`.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-18 · [ad hoc] S608: investigate the Track 6 single-child union/parent-coincidence defect (found S603) — investigation only, no production code
+- **Deliverable:** Picked up via `AskUserQuestion` as the Track 3 child-centering trade-off
+  decision, then pivoted (owner-directed) away from the exhausted 5-attempt
+  duplicate-occurrence-selection mechanism to S603's own newly-found, structurally distinct
+  defect: Track 6's single-child union formula can place a union's marker and both mate edges
+  essentially on top of one of its own 2 parents. Ran a 15-agent
+  Evidence→Design→Synthesize→Critique→Repair→Critique-2 `Workflow` (14/15 agents succeeded; 1
+  Design candidate hit a transient API error, disclosed not hidden). Found the defect is
+  majority-prevalence on the real 375-individual bundled fixture (72% of all matings visually
+  coincide with a parent, live-verified via chromote pixel-space rendering) — not the rare edge
+  case S603's own 3 examples suggested. A synthesized design ("D3") had real correctness majors
+  (worsened 3 established collision-metric tests, regressed a deliberately-correct S583 pinned
+  test); a repair ("D3″") addressed most of those, but Critique Round 2 found a new,
+  live-verified bug (a "self-duplicate phantom obstacle" discarding 75% of the repair's own
+  residual improvement) with an already-verified one-line fix in hand. Wrote up the full
+  investigation:
+  [`docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md`](docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md).
+  Owner ratified (via `AskUserQuestion`) a targeted future repair session (apply the one-line fix
+  + add diagnostic return fields + a fresh Critique Round 3, then PRE-RED→RED→GREEN) over
+  accepting the defect as permanent, holding, or re-running the failed candidate first. `BACKLOG.md`
+  Active updated with a Progress paragraph and a READY-tagged next-step pointer. No `R/*.R` file
+  was modified — every live-verification in the `Workflow` ran against scratch copies under the
+  session's own harness scratchpad, confirmed via `git status --porcelain -- R/ tests/` empty
+  throughout by multiple agents.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-18 · [ad hoc] S608: claim session (late; Phase 1B was skipped, caught and corrected)
+- **Deliverable:** `SESSION_NOTES.md` stub + `HANDOFFS.md` `status: pending` receipt, committed
+  (`0bb03e0f`) — written after research and a 1-agent scoping dispatch had already run (Phase 1B
+  was skipped when the task was first picked), self-caught and corrected rather than deferred to a
+  future session's reconcile. See `PROJECT_LEARNINGS.md` Learning 628 for the pattern this
+  recurrence confirms.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-18 · [ad hoc] S607: post-close-out correction — REUSE badge renders "unregistered," not green; new BACKLOG.md item for the owner action needed
 - **Deliverable:** After pushing S607's REUSE compliance work, verified the live badge directly
   (`curl` against `api.reuse.software/badge/...` and `/info/...`) rather than assuming a push was

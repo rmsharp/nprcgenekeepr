@@ -18,20 +18,112 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 607 Handoff Evaluation (by Session 608)
+**Score: 9/10.** **What helped:** every priority carried forward in `next_steps` matched this
+session's own independent Phase 0 findings exactly (issue #161, issue #148, Track 3
+child-centering, REUSE registration) — no re-derivation needed. Most valuable single line: *"Track
+3 child-centering redesign scoping (BLOCKED/high-stakes — 5 failed workflow attempts + 1 retracted
+implementation, S598-S603, needs a dedicated scoping session, not a routine pickup)."* This was
+exactly right and directly shaped how this session was run — as a dedicated investigation
+`Workflow`, not a quick accept/reject call. **What was missing:** nothing the handoff could
+reasonably have anticipated — S607 correctly deferred to "needs a dedicated scoping session"
+without presuming what that scoping would find; this session's actual pivot (away from the
+duplicate-occurrence-selection mechanism entirely, toward a newly-recognized Track 6 defect) only
+became visible once this session read S603's correction in full detail. **What was wrong:**
+nothing found inaccurate. **ROI:** high — the "not a routine pickup" flag alone justified the
+scale of investigation this session actually ran, and every other carried-forward item remained
+accurate and unconsumed by this session (still available for a future pickup).
+
 ### What Session 608 Did
-**Deliverable:** Track 3's disclosed child-centering trade-off — decide accept-as-permanent vs.
-investigate a narrower mechanism, pivoted (owner-directed, `AskUserQuestion`) to investigating the
-newly-found, structurally distinct Track 6 single-child union/parent-coincidence defect (found
-S603) rather than the exhausted 5-attempt duplicate-occurrence-selection mechanism. (IN PROGRESS)
-**Started:** 2026-08-18.
-**Status:** Session claimed late — Phase 1B was skipped when the task was first picked (research
-and a 15-agent investigation `Workflow` were run before this stub was written); caught and
-corrected before any further work, not left for a future session's reconcile to catch. Investigation
-`Workflow` (Evidence → Design → Synthesize → Critique → Repair → Critique-2) already complete;
-write-up in progress.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable: Investigation of the S603-found Track 6 single-child union/parent-coincidence
+defect — NOT implementation.** **DONE** (investigation + owner-ratified next-step decision;
+production code is explicitly out of this session's scope, matching this project's
+planning/implementation session-boundary discipline).
+**Started/Completed:** 2026-08-18.
+
+**What actually happened, in order:**
+
+1. **Phase 0 orientation** — read `SESSION_RUNNER.md`/`SAFEGUARDS.md` in full; `SESSION_NOTES.md`
+   (S607's active task, DONE); `gh issue list` (13 open); `git status`/`log`/`diff --stat` (clean;
+   untracked clutter individually inspected and confirmed pre-existing/explained, not a ghost
+   session); `methodology_dashboard.py` (96/100 health, 0 High+ risk); `gh run list --branch
+   master` (4 `R-CMD-check.yaml` runs stacked `in_progress`, within normal range; `shinytest2.yaml`
+   scheduled run failed again today — pre-existing/intermittent per S605-607, reported not
+   diagnosed). Ledger reconcile: `CHANGELOG.md`/`HANDOFFS.md` frontiers both == `HEAD`
+   (`5895e794`) — no gap.
+2. Rendered the `BACKLOG.md`-sourced priorities list (4 numbered items) via `AskUserQuestion` —
+   **user picked issue #161 decision** (hide the mating-unit node marker).
+3. Before declaring any TDD phase, surfaced a framing tension directly to the user: #161's own
+   deferral condition ("after Tracks 1-3 ship AND stabilize") was only half-satisfied — Track 3
+   hadn't stabilized (S602's fix retracted S603). Presented via a second `AskUserQuestion` —
+   **user redirected the session to Track 3's own trade-offs decision instead**, deferring #161.
+4. Read the full `pedigree-diagram-duplicate-occurrence-centering-investigation.md` (102KB, §0-13)
+   and the current `BACKLOG.md` item, establishing the corrected state: S602's shipped fix is real
+   but visually inert, and the actual observed defects (X×A/A×Y/W×Y descender misalignment) are
+   structurally unreachable by that mechanism — a different, newly-discovered defect in Track 6's
+   single-child union-placement formula. Presented this via a third `AskUserQuestion` (2
+   sub-questions: which direction for child-centering; whether to also scope D1 bar-vs-bar this
+   session) — **user picked "pivot to Track 6 defect" + "stay focused on centering only."**
+5. **Protocol gap, self-caught and corrected:** realized Phase 1B (claim stub + `HANDOFFS.md`
+   pending receipt) had never been written — research and a 1-agent scoping dispatch had already
+   run. Fixed immediately (commit `0bb03e0f`) rather than deferred to a later reconcile.
+6. Read Track 6's own plan doc in full (`docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md`
+   §1-9) to ground the exact mechanism and confirm the single-child-coincidence gap was genuinely
+   new (not named in Track 6's own §8 "Explicitly Out of Scope").
+7. **Ran a 15-agent `Workflow`** (Evidence×3 → Design×4 → Synthesize → Critique-1×3 →
+   [conditional] Repair → Critique-2×3), matching this project's own established pattern for this
+   exact class of design decision (Track 4, Track 6, the sibling investigation). 14/15 agents
+   succeeded (1 Design candidate, D1-proportional-blend, hit a transient API error — disclosed,
+   not silently dropped; synthesis proceeded from 3 candidates). Findings: the defect is
+   majority-prevalence (72% of real-fixture matings visually coincide with a parent, not a rare
+   edge case); a synthesized "D3" design had real correctness majors (worsened 3 established
+   collision-metric tests, regressed a deliberately-correct S583 pinned test, understated a 74%
+   invariant-test failure rate); a repair ("D3″") addressed most of those but Critique Round 2
+   found a new, live-verified bug (a "self-duplicate phantom obstacle" discarding 75% of the
+   repair's own residual improvement) — with an already-verified one-line fix in hand.
+8. Wrote up the full investigation as
+   [`docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md`](docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md)
+   (mirroring the sibling doc's structure/rigor), updated `BACKLOG.md`'s Track 3 item with a
+   Progress paragraph + a READY-tagged next-step pointer.
+9. Presented the final direction via a 4th `AskUserQuestion` (targeted repair session / accept
+   72% coincidence as permanent / hold / re-run the failed D1 candidate) — **user picked "targeted
+   repair session."** Recorded the ratification in the investigation doc's own §9 and re-tagged
+   the `BACKLOG.md` item accordingly.
+
+**Runtime smoke test (Phase 3E):** n/a — investigation/docs-only session; zero `R/*.R` files
+touched (every "verification" in the `Workflow` ran against scratch copies under the harness's own
+session scratchpad, never the tracked repo — confirmed `git status --porcelain -- R/ tests/` empty
+throughout, per multiple agents' own live checks).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation/tutorial-article/`NEWS.Rmd`/
+`a2interactive.Rmd`/`_pkgdown.yml` checklists all N/A (no shipped code, no new exported function,
+no user-facing feature). GitHub issue close-out N/A (no issue tracked/closed this session — #161
+was explicitly deferred, not resolved). Lint checklist N/A (no `.R` files touched).
+
+**Self-assessment (Session 608): 7/10.** **Strengths:** (1) Did not accept the BACKLOG.md item's
+framing at face value — read the underlying investigation doc in full before proceeding, which
+surfaced that the "obvious" #161 pickup had an unresolved precondition, and that "Track 3
+trade-offs" itself needed reframing once S603's correction was read closely. (2) Matched this
+project's own established methodology for this exact problem class (multi-agent
+Evidence→Design→Synthesize→Critique workflow) rather than improvising a lighter-weight process.
+(3) The workflow's own agents caught real, load-bearing bugs a less adversarial process would have
+missed (the synthesized design's false "zero new overlaps" claim; the repair's own self-duplicate
+phantom bug) — the 2-round critique discipline paid for itself directly. (4) Disclosed the D1
+candidate failure and the repair's own residual limitations honestly rather than smoothing them
+over. **Weaknesses:** (1) **Phase 1B was skipped initially** — a real protocol violation, not a
+near-miss; research and a subagent dispatch ran before any claim stub existed. Self-caught only
+because the harness's own task-notification for that first subagent forced a pause to reassess,
+not because of a deliberate checkpoint. (2) Session ran long (4 `AskUserQuestion` rounds before
+settling on final scope, plus a 15-agent workflow) for what BACKLOG.md's own tag ("READY") implied
+would be a lighter decision — arguably correct given what was actually found, but worth naming as
+a pattern: a BACKLOG "decision" item can hide a full investigation's worth of work once its
+underlying doc is read closely, and Phase 0's priorities list can't know that in advance. (3) Did
+not attempt to recover the failed D1 candidate mid-session (a `Workflow` resume with an edited
+prompt might have salvaged it cheaply) — deferred to the owner's decision instead, which was
+probably right (not silently expanding scope) but is worth flagging as a choice, not an oversight.
+**ROI:** high — the investigation doc gives a future "targeted repair" session an exact,
+already-specified, already-measured fix to implement (not a fresh investigation), and BACKLOG.md's
+own tag now reflects that precisely.
 
 ### Session 606 Handoff Evaluation (by Session 607)
 **Score: 8/10.** **What helped:** the `next_steps`/priorities framing (issue #161 decision, MIT/

@@ -138,21 +138,65 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S608
 date: 2026-08-18
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Track 3 child-centering trade-off decision, pivoted to investigating the S603-found
-  Track 6 single-child union/parent-coincidence defect (distinct from the exhausted 5-attempt
-  duplicate-occurrence-selection mechanism S598-602).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 7
+predecessor_score: 9
+active_task: DONE — investigated the S603-found Track 6 single-child union/parent-coincidence
+  defect via a 15-agent Workflow; owner ratified a targeted future repair session as next step.
+  No production code changed (investigation session, not implementation).
+what_was_done: Ran a 15-agent Evidence→Design→Synthesize→Critique→Repair→Critique-2 Workflow
+  against the Track 6 single-child union/parent-coincidence defect (found S603). Found it is
+  majority-prevalence (72% of real-fixture matings visually coincide with a parent, live
+  chromote-verified). A synthesized design had real correctness majors (falsified by 3 established
+  tests, regressed S583's own deliberately-correct pinned test); a repair addressed most but
+  Critique Round 2 found a new bug (a "self-duplicate phantom obstacle") with a verified one-line
+  fix in hand (residual 40/224→11/224). Wrote up
+  docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md; updated
+  BACKLOG.md's Track 3 item with a Progress paragraph + READY tag. Commits: 0bb03e0f (claim),
+  <this close-out commit>.
+next_steps: A future session picks up the READY-tagged "targeted repair session" item in
+  BACKLOG.md's Track 3 trade-offs entry — apply the already-verified one-line
+  self-duplicate-exclusion fix to `.computeSingleChildAntiCoincidence()` (investigation doc §7:
+  add `duplicates$matingUnitId != uid` filtering, mirroring the adjacent `otherUnionIds` pattern),
+  add diagnostic return fields (mirroring `.computeDupNudge()`'s `engaged`/target shape) so the
+  §2.4 invariant test can verify the safety-cap arithmetic independently rather than
+  tautologically re-calling the same function, then run a fresh Critique Round 3 against the
+  result specifically before proceeding through PRE-RED→RED→GREEN. Issue #161's own decision
+  (deferred this session, still blocked on Track 3 "stabilizing") and D1 bar-vs-bar (untouched)
+  remain separately open.
+key_files: docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md
+  (new, full record + owner ratification §9); R/makePedigreeDiagramData.R:1099-1180 (the
+  finalUnitX/clamp/nudge/dupX pipeline a future repair touches); BACKLOG.md Active (Track 3 item,
+  ~line 155-395).
+gotchas: The verified one-line fix and diagnostic-field addition are NOT yet PRE-RED-ready as a
+  single unit — the diagnostic-field change is itself new code Critique Round 2 never saw, so a
+  future session's own PRE-RED gate should treat both changes together as needing a fresh Round-3
+  critique, not assume the self-dup fix alone (already twice-verified) is sufficient. The
+  collision-safety cap's own guarantee does not see 2 later pipeline passes (the broadened
+  de-collision epsilon pass, the final sweepMinSep reapplication) — empirically harmless on the
+  real fixture (0/43 cases made worse than baseline) but not a structural proof; a future session
+  should not claim it as one. Mating-union ids sort lexicographically, not numerically
+  (`"__union_10"` before `"__union_2"`) — a hand-built RED fixture for the partial-cap branch must
+  account for this.
+runtime_smoke: n/a — investigation/docs-only session, zero R/*.R files modified (confirmed
+  `git status --porcelain -- R/ tests/` empty throughout by multiple Workflow agents).
+changelog_ref: CHANGELOG.md 2026-08-18, 3 S608 entries (claim / investigation / close-out).
 commit: pending
 ```
-<free-text prose: filled at Phase 3D close-out>
+Self-score breakdown: +matched this project's own established multi-agent investigation pattern
+for this exact problem class rather than improvising a lighter process; +the 2-round critique
+discipline caught real, load-bearing bugs (a false "zero new overlaps" claim, a live-verified
+self-duplicate phantom bug) that a single-pass design would have shipped undetected; +disclosed
+the failed D1 candidate and the repair's own residual limitations honestly rather than smoothing
+them over; +did not accept BACKLOG.md's item framing at face value, read the underlying
+investigation doc first, which surfaced that #161's own precondition wasn't actually met. −Phase
+1B was skipped initially (research and a subagent dispatch ran before the claim stub existed) — a
+real protocol violation, the third consecutive occurrence of this exact pattern (Learnings
+624/625/628); self-caught only by an accidental pause point (a subagent's own completion
+notification), not a deliberate checkpoint. −Session ran long (4 `AskUserQuestion` rounds, a
+15-agent workflow) for what BACKLOG.md's own "READY" tag implied would be a lighter decision —
+arguably justified by what was actually found, but worth naming as a pattern where Phase 0's
+priorities list cannot see the work a "decision" item is actually hiding.
 
 ```handoff
 session: S607

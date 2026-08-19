@@ -367,6 +367,31 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       investigation doc's own §12 "Net result" claim are corrected in the same session (see
       investigation doc §13 for the full record, methodology, and images).
 
+      **Progress (S608, 2026-08-18), pivoted to a different mechanism entirely — investigation,
+      not implementation:** owner picked up this item, then (via `AskUserQuestion`, given the
+      duplicate-occurrence-selection mechanism was exhausted at 5 attempts) pivoted to S603's own
+      newly-found, structurally distinct defect: Track 6's single-child union formula places a
+      union's marker and both mate edges essentially on top of one of its own 2 parents. A
+      15-agent Evidence→Design→Synthesize→Critique→Repair→Critique-2 `Workflow` found this is
+      **majority-prevalence, not an edge case** — 72% of all matings in the real 375-individual
+      fixture visually coincide with a parent (170/224 single-child unions, live-verified via
+      chromote pixel-space rendering, not just internal coordinates). Produced a repaired
+      candidate design ("D3″," a safety-gated engagement correction) that Critique Round 2 found
+      still carries one live-verified bug — with an already-verified one-line fix in hand (residual
+      drops 40/224→11/224) — plus 2 disclosed architectural gaps (a collision-safety guarantee
+      that can't see 2 later pipeline passes; a tautological invariant-test surface). **Not yet
+      PRE-RED-ready.** Owner-ratified next step (via `AskUserQuestion`, §9): a **targeted repair
+      session (READY, Effort S)** — apply the already-verified one-line self-duplicate-exclusion
+      fix (residual 40/224→11/224, already measured) + add diagnostic return fields to
+      `.computeSingleChildAntiCoincidence()`, run a fresh Critique Round 3 against the result
+      specifically, then proceed through PRE-RED→RED→GREEN. Full record, the ratification, and
+      exact scope:
+      [`docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md`](docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md)
+      §7-9. Independent finding, unrelated to this item: Track 6's own "91% reduction" headline
+      metric is stale at current HEAD (true baseline 53/251, not 9/251) — a separate housekeeping
+      item. The original Track 3 child-centering/D1-bar-vs-bar decision (accept as permanent vs.
+      investigate further) remains itself unresolved pending this new investigation's own outcome.
+
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 *Resolves the former "Tracker reconciliation" decision item (S365) --
 `docs/audits/XARCH_TRACKER_RECONCILIATION_AUDIT_2026-07-11.md` re-verified all 8
