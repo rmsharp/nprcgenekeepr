@@ -16,6 +16,13 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-18 · [ad hoc] S608: record the HANDOFFS.md sha-fix action itself (30631c83)
+- **Deliverable:** `HANDOFFS.md`'s S608 receipt `commit:` field updated from `pending` to the
+  actual close-out commit sha (`8c697fab`), then this action itself recorded here per failure
+  mode #27 applying even to the self-referential sha-backfill commit — matching S600/S602-S607
+  precedent exactly.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-18 · [ad hoc] S608: close out — Track 6 single-child union investigation
 - **Deliverable:** Phase 3 close-out for the investigation below. Added `PROJECT_LEARNINGS.md`
   Learnings 628 (a third consecutive Phase 1B skip, despite Learnings 624/625 already documenting
