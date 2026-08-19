@@ -136,6 +136,24 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S613
+date: 2026-08-19
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Phase 1b CONTINUATION of the Walker/BJL apportioning redesign (issue #141) -- resolve
+  the sweepMinSep()-vs-orderBySex sign-fold seam found in S612's round-4 critique
+  (docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md S7).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S612
 date: 2026-08-19
 status: complete

@@ -18,6 +18,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 613 Did
+**Deliverable:** Phase 1b CONTINUATION of the Walker/BJL apportioning redesign (issue #141) —
+resolve the `sweepMinSep()`-vs-`orderBySex` sign-fold seam found in S612's round-4 adversarial
+critique
+([`docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md`](docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md)
+§7), evaluating/selecting one of the 3 candidate fixes named there (or a synthesis), with its own
+fresh adversarial pass before being trusted. Per that document's own recommendation and Phase 1b's
+charter, this is design/research work (ARCHITECTURE_WORKSTREAM.md) — not yet Phase 2. (IN PROGRESS)
+**Started:** 2026-08-19
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 611 Handoff Evaluation (by Session 612)
 **Score: 10/10.** **What helped:** `next_steps` named the exact next phase precisely — "Phase 1b
 (forest/mixed-gen/cross-branch reconciliation research spike) is next... its own separate session"
