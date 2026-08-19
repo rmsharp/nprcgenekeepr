@@ -547,6 +547,22 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       measured + per-center query availability/permissions are confirmed; needs a live LabKey server to
       test/observe, and a naive focal-id server filter is incompatible with the client-side
       connected-component walk).
+- [ ] **Investigate factoring out the pedigree-diagram drawing functionality into a separate R
+      package that `nprcgenekeepr` depends on** (found 2026-08-19, owner-directed, READY, Effort M
+      -- a research/scoping session, not an implementation session) -- look into the possibility,
+      advantages, and disadvantages of splitting the pedigree-diagram layout/rendering code
+      (`.buildMatingUnitForest()`/`.positionMatingUnitForest()`/`.addRectilinearWaypoints()`/
+      `.resolveEdgeNodeCollisions()`/`makePedigreeMatingLayout()` in `R/makePedigreeDiagramData.R`,
+      plus the Shiny Diagram-tab module) out of `nprcgenekeepr` into its own standalone package,
+      with `nprcgenekeepr` then depending on it. A future session should weigh this independent of,
+      and probably after, the Walker/BJL apportioning redesign (`docs/planning/
+      pedigree-diagram-walker-bjl-apportioning-redesign-plan.md`, issue #141) currently in
+      progress -- splitting mid-redesign would add package-boundary churn on top of an
+      already-large in-flight algorithm change. Not scoped further this session (out of Phase 1a's
+      own boundary); a future session should produce the actual advantages/disadvantages analysis
+      (reuse potential outside this project, cleaner dependency graph, and versioning/release
+      overhead, cross-package test/CI complexity, `@noRd`/internal-function visibility loss across
+      a package boundary, etc.) before any decision to split.
 
 ## Housekeeping
 - [x] **Add MIT license badge + REUSE compliance badge to `README.Rmd`** (found 2026-08-17,

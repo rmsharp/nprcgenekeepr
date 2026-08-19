@@ -16,6 +16,13 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-19 · [ad hoc] S611: file BACKLOG.md item — investigate factoring out pedigree-diagram drawing into a separate R package
+- **Deliverable:** owner-directed `BACKLOG.md` "Up Next" item — research/scope whether to split the
+  pedigree-diagram layout/rendering code out of `nprcgenekeepr` into its own dependency package
+  (advantages/disadvantages, not a decision). Explicitly sequenced after the in-progress Walker/BJL
+  apportioning redesign (issue #141) to avoid package-boundary churn mid-algorithm-change.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-19 · [ad hoc] S610: record the HANDOFFS.md sha-fix action itself (fd8c64d0)
 - **Deliverable:** the sha-fix commit itself (`fd8c64d0`) recorded here per failure mode #27
   applying even to the self-referential sha-backfill commit — matching S600/S602-S609 precedent
