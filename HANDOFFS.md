@@ -136,6 +136,28 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S611
+date: 2026-08-19
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement Phase 1a of the Walker/BJL apportioning redesign -- standalone BJL
+  tree-apportioning engine (R/positionTreeApportion.R) + test file
+  (tests/testthat/test_positionTreeApportion.R), per
+  docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md's Phase 1a section.
+  Zero changes to R/makePedigreeDiagramData.R or any existing test file.
+what_was_done: pending
+next_steps: pending
+key_files: docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md (Phase 1a
+  section, lines 410-436)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+(claim stub -- filled at close-out)
+
+```handoff
 session: S610
 date: 2026-08-19
 status: complete

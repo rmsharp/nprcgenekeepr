@@ -18,6 +18,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 611 Did
+**Deliverable:** Implement Phase 1a of the Walker/BJL apportioning redesign — a standalone,
+pedigree-agnostic BJL tree-apportioning engine (`R/positionTreeApportion.R`) + test file
+(`tests/testthat/test_positionTreeApportion.R`), per
+`docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md`'s Phase 1a section.
+Zero changes to `R/makePedigreeDiagramData.R` or any existing test file. (IN PROGRESS)
+**Started:** 2026-08-19.
+**Status:** Session claimed. Work beginning — Strict TDD contract in effect (PRE-RED research next).
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 609 Handoff Evaluation (by Session 610)
 **Score: 10/10.** **What helped:** the `next_steps` field was the rare handoff that named not just
 the task but its *correct shape* — "a future **PLANNING** session (not implementation)," with the
