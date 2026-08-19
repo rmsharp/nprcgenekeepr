@@ -187,7 +187,7 @@ gotchas: The scratch copy at
 runtime_smoke: n/a — zero R/*.R or tests/*.R files touched under the tracked repo; all
   verification (mine and the Workflow's 4 agents) ran against disposable scratch copies.
 changelog_ref: CHANGELOG.md 2026-08-18, S609 entries.
-commit: pending
+commit: 3344270c
 ```
 
 ```handoff

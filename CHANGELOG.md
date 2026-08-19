@@ -16,6 +16,11 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-18 · [ad hoc] S609: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S608 precedent)
+- **Deliverable:** `HANDOFFS.md`'s S609 receipt `commit:` field updated from `pending` to the
+  actual close-out commit sha (`3344270c`).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-18 · [ad hoc] S609: close out (Track 6 D3‴ repair — Critique Round 3 failed, redirected to algorithm-family redesign)
 - **Deliverable:** built and Critique-Round-3'd "D3‴" (the Track 6 single-child union/parent-
   coincidence repair ratified S608 §9) in a scratch copy — all 3 independent critique lenses
